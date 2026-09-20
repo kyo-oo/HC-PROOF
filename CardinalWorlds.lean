@@ -1,6 +1,4 @@
 import Mathlib
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 /-!
 # THE CARDINAL WORLDS — the deep theorems
