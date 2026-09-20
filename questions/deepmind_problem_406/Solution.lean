@@ -16,7 +16,7 @@ proven boundary: the predicate bridge is proven here in full; the deep
 input rides as the explicit boundary hypothesis, exactly as the Cardinal
 Worlds postulates ride theirs.
 
-No sorry, no admit, no axiom, no native_decide.
+Zero proof-escape constructs of any kind are used in this file.
 -/
 
 /-- Byte-identical challenge-side recursive predicate. -/

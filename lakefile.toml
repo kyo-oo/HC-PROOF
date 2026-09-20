@@ -1,6 +1,6 @@
 name = "HCProof"
 version = "0.1.0"
-defaultTargets = ["hcproof"]
+defaultTargets = ["HCProof"]
 
 [[require]]
 name = "mathlib"
