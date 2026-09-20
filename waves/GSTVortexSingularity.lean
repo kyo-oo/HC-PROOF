@@ -291,6 +291,5 @@ theorem vortex_energy_finite (R : Nat) :
   have h1 : R / 3^(R+1) = 0 := Nat.div_eq_of_lt (three_pow_succ_gt R)
   refine ⟨R+1, h1, ?_⟩
   rw [h1]
-  norm_num
 
 end GSTVortexSingularity
