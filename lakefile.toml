@@ -15,6 +15,7 @@ rev = "v4.33.0-rc2"
 name = "HCUniverse"
 roots = [
   "GSTTactic",
+  "GSTCoherentCosmology",
   "GST2DMixedEmergence",
   "GSTBladeWave",
   "GSTCanonicalCarryDynamics",
