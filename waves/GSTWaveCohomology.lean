@@ -149,8 +149,13 @@ Proof: a literal relifting of the machine-verified
 theorem wave_cell_decomposition (c : WaveCell) :
     waveTwoForm c =
       horizontalCoboundary c + verticalCoboundary c + waveSource c := by
-  unfold waveTwoForm horizontalCoboundary verticalCoboundary waveSource
-  exact mixed_cell_emergence c.carry c.digit c.hcarry c.hdigit
+  have h := mixed_cell_emergence c.carry c.digit c.hcarry c.hdigit
+  show mixedDensity c.carry c.digit =
+    infoPotential (outDigit c.carry c.digit) - infoPotential c.digit
+      + (7 * carryPotential c.carry
+          - 21 * carryPotential (nextCarry c.carry c.digit))
+      + 56 * surviveI c.carry c.digit
+  exact h
 
 /-- A wave is **source-free** on a cell when no BIG2 information survives
 in the interior: all 2-form value is coboundary there. -/
@@ -372,7 +377,6 @@ theorem sum_peel_first (g : ℕ → ℤ) (N : Nat) :
   | succ N ih =>
       have hL := Finset.sum_range_succ g (N+1)
       have hR := Finset.sum_range_succ (fun t => g (t+1)) N
-      simp only [] at hR
       rw [hL, ih, hR]
       ring
 
