@@ -35,7 +35,7 @@ The work, in order:
    wave-layer law.  Every upgrade is documented in the carrying
    theorem's docstring.
 
-3. **Prove everything.**  All 40 theorems of the wave layer carry real
+3. **Prove everything.**  All 41 theorems of the wave layer carry real
    proofs, in the house styles that already compile in this repository:
    the twelve-cell `rcases + norm_num` cascade, `omega` arithmetic,
    `decide` on finite orbits, verified-theorem instantiation, and
