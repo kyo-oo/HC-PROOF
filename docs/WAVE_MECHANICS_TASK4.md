@@ -4,7 +4,7 @@
 method as geometry, the Law of Controlled Emergence, and the WHY.
 Every claim in this document is machine-verified: the wave layer is part
 of the build registry (`waves.*` roots of `HCUniverse`, imported by
-`HCProof.lean`), compiled by the official comparator — 40 theorems,
+`HCProof.lean`), compiled by the official comparator — 41 theorems,
 0 sorries.*
 
 ---

@@ -6,7 +6,7 @@
 > **Wave Mechanics program** (two waves, the vortex-singularity method,
 > POSTULATE III) — merged, shaped, and comparator-gated.  The wave layer
 > is now FULLY PROVEN and part of the machine-checked build (Task 5
-> upgrade: 40 theorems, 0 sorries).
+> upgrade: 41 theorems, 0 sorries).
 
 Source: `kyo-oo/erdosternary2`, branch `sol/kyo-gate-universe-wire`
 (head `cb29501` — 2026-09-10 — *"fix cubic transport coefficient
@@ -23,7 +23,7 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 
 ```
 WAVE LAYER  THE WAVE MECHANICS      waves/ — Task 5: FULLY PROVEN, IN THE
-                                BUILD REGISTRY (40 theorems, 0 sorries):
+                                BUILD REGISTRY (41 theorems, 0 sorries):
                                 Wave I the discrete Hodge theory
                                 (GSTWaveCohomology — closedness law,
                                 row law, RECTANGLE Gauss–Bonnet,
@@ -188,7 +188,7 @@ The Task 4 layer — **the two waves and the vortex**:
 
 Full theory: `docs/WAVE_MECHANICS_TASK4.md`; the GST V2 law book:
 `docs/GST_V2_OPERATING_MANUAL.md`. **The wave layer is machine-checked:
-40 theorems, 0 sorries, in the build registry — see `waves/README.md`.**
+41 theorems, 0 sorries, in the build registry — see `waves/README.md`.**
 The Task-5 honesty ledger (8 of the 29 former spec statements were true
 as stated; 21 were upgraded to their true laws) is in
 `docs/WAVE_MECHANICS_TASK4.md` Part VI.
@@ -220,7 +220,7 @@ scripts/comparator.sh      # lake build → sorry_check.sh → verdict
 | `CardinalWorlds.lean` | ★ Layer 1 — the Cardinal Worlds (verbatim extraction) |
 | `MonolithBoundary.lean` | ★ Layer 5 — the terminal identity interface |
 | `HodgeDeRhamBridge.lean` | ★ Layer 6 — the absorption layer |
-| `waves/` | ★ Wave Mechanics (Tasks 4+5) — FULLY PROVEN wave layer, in the build registry: 40 theorems, 0 sorries |
+| `waves/` | ★ Wave Mechanics (Tasks 4+5) — FULLY PROVEN wave layer, in the build registry: 41 theorems, 0 sorries |
 | `HCProof.lean` | the universe's entry face (comparator receipts) |
 | `GSTGraphV2*.lean` (60 files) | Layers 2-3 — the GST Graph V2 Ontological Universe |
 | `GST*.lean` (67 files) | Layers 3-4 — dynamics, towers, fourth dimension, worldtrace |
@@ -246,7 +246,7 @@ See `docs/HC_UNIVERSE_MAP.md` for the full merge map.
 * The `waves/` layer: Task 4 delivered it as an explicitly-excluded
   spec layer (statements with documented routes, nothing claimed
   verified). **Task 5 closed it:** the layer is now fully proven, in
-  the build registry, and counted by the sorry gate (40 theorems,
+  the build registry, and counted by the sorry gate (41 theorems,
   0 sorries) — with the full upgrade record (which former statements
   were false and what their true laws are) in
   `docs/WAVE_MECHANICS_TASK4.md` Part VI.

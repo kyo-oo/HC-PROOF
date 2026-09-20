@@ -125,7 +125,7 @@ The newest stratum, riding on all seven layers:
   presentation + controller + ledger); dimensions emergent, not fixed.
 
 **TASK 5 UPGRADE (the major mathematical upgrade):** the layer is now
-FULLY PROVEN and IN THE BUILD — 40 theorems, 0 sorries, roots
+FULLY PROVEN and IN THE BUILD — 41 theorems, 0 sorries, roots
 `waves.*` of the HCUniverse registry, imported by `HCProof.lean`,
 counted by the sorry gate.  The former 29 spec statements were
 truth-checked first (8 true as stated; 21 false/vacuous as literally

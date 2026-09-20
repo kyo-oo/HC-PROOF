@@ -12,7 +12,7 @@ Task-5 upgrade it is **fully proven** and **part of the build registry**:
   `lake build` compiles them and the comparator checks them;
 * `scripts/sorry_check.sh` counts this directory like every other
   module — the old "uncompiled spec layer" exclusion is retired;
-* **40 theorems, 0 sorries.**
+* **41 theorems, 0 sorries.**
 
 ## What happened to the 29 spec statements
 
