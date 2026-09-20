@@ -41,17 +41,18 @@ One universe, assembled and merged:
   wired into the universe as finite comparison certificates.
 
 This file is the comparator's one-screen receipt of the whole universe.
+All declarations below are root-level (the modules carry no namespaces).
 -/
 
 /-! ## The Cardinal Worlds face -/
 
-#check CardinalWorlds.d_identity
-#check CardinalWorlds.bridge_sig_even
-#check CardinalWorlds.bridge_sig_j_mod6_3
-#check CardinalWorlds.four_mul_preserves_digit
-#check CardinalWorlds.gst_three_world_factor_rawS
-#check CardinalWorlds.gst_handwritten_three_world_joined_prefix_closedS
-#check CardinalWorlds.modular_check_base
+#check d_identity
+#check bridge_sig_even
+#check bridge_sig_j_mod6_3
+#check four_mul_preserves_digit
+#check gst_three_world_factor_rawS
+#check gst_handwritten_three_world_joined_prefix_closedS
+#check modular_check_base
 
 /-! ## The GST V2 ontological universe face -/
 
@@ -67,7 +68,7 @@ This file is the comparator's one-screen receipt of the whole universe.
 
 /-! ## The boundary face -/
 
-#check MonolithBoundary.erdos_even_conjecture_iff_tailF
-#check MonolithBoundary.erdos_ternary_2_universal_of_tailF
-#check MonolithBoundary.erdos_ternary_2_conjecture_odd
-#check MonolithBoundary.infinite_controller_ternary_two_chokehold
+#check erdos_even_conjecture_iff_tailF
+#check erdos_ternary_2_universal_of_tailF
+#check erdos_ternary_2_conjecture_odd
+#check infinite_controller_ternary_two_chokehold

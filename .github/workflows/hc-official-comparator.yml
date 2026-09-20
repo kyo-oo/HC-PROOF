@@ -121,11 +121,12 @@ jobs:
           import CardinalWorlds
           set_option maxHeartbeats 0
           set_option maxRecDepth 1000000
-          #print axioms noTernaryDigitTwo_eq_noTernaryTwo
-          #print axioms erdos_ternary_2_of_boundaries
-          #print axioms CardinalWorlds.d_identity
-          #print axioms CardinalWorlds.bridge_sig_even
-          #print axioms CardinalWorlds.modular_check_base
+          #print axioms d_identity
+          #print axioms bridge_sig_even
+          #print axioms bridge_sig_j_mod6_3
+          #print axioms four_mul_preserves_digit
+          #print axioms modular_check_base
+          #print axioms gst_handwritten_three_world_joined_prefix_closedS
           EOF
           lake env lean Problem406SolutionAxiomReport.lean 2>&1 | tee problem406-solution-axioms.log
           if grep -Fq 'sorryAx' problem406-solution-axioms.log; then
