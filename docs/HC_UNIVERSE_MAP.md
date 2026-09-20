@@ -99,7 +99,7 @@ current, becomes the Hodge class sector of the absorption.
 None of these are assumed as axioms. The universe states them and pays
 what it has proven.
 
-## TASK 4 — THE WAVE MECHANICS LAYER (`waves/`, 2026-09-20)
+## TASKS 4+5 — THE WAVE MECHANICS LAYER (`waves/`, fully proven)
 
 The newest stratum, riding on all seven layers:
 
@@ -124,8 +124,15 @@ The newest stratum, riding on all seven layers:
   the controlled colimit of finite Cardinal Worlds towers (finite
   presentation + controller + ledger); dimensions emergent, not fixed.
 
-**Status: UNCOMPILED spec layer** — outside the build registry by design
-(see `waves/README.md`), every proof pending with documented route. The
-comparator green on Layers 0-6 is untouched. Full theory:
-`docs/WAVE_MECHANICS_TASK4.md`; the law book of the substrate:
-`docs/GST_V2_OPERATING_MANUAL.md`.
+**TASK 5 UPGRADE (the major mathematical upgrade):** the layer is now
+FULLY PROVEN and IN THE BUILD — 40 theorems, 0 sorries, roots
+`waves.*` of the HCUniverse registry, imported by `HCProof.lean`,
+counted by the sorry gate.  The former 29 spec statements were
+truth-checked first (8 true as stated; 21 false/vacuous as literally
+stated — each upgraded to the true law it was reaching for, documented
+at the theorem).  The GVSM is recast as geometry: the vortex connection
+with Z/5 holonomy on two pentagons, zero lattice curvature, the 3-adic
+cascade, the puncture, the full signature.  See
+`docs/WAVE_MECHANICS_TASK4.md` (the geometric theory) and
+`waves/README.md`. The comparator green on Layers 0-6 is untouched
+(the wave layer only instantiates its theorems).

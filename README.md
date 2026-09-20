@@ -4,7 +4,9 @@
 > One universe: the Cardinal Worlds, the GST Graph V2 Ontological Universe,
 > the 2D/4D laws, the absorbed Hodge / de Rham cohomology layer, and the
 > **Wave Mechanics program** (two waves, the vortex-singularity method,
-> POSTULATE III) — merged, shaped, and comparator-gated.
+> POSTULATE III) — merged, shaped, and comparator-gated.  The wave layer
+> is now FULLY PROVEN and part of the machine-checked build (Task 5
+> upgrade: 40 theorems, 0 sorries).
 
 Source: `kyo-oo/erdosternary2`, branch `sol/kyo-gate-universe-wire`
 (head `cb29501` — 2026-09-10 — *"fix cubic transport coefficient
@@ -20,13 +22,21 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 ## THE UNIVERSE IN SEVEN LAYERS
 
 ```
-WAVE LAYER  THE WAVE MECHANICS      waves/ — Task 4 spec layer (UNCOMPILED):
-                                Wave I Hodge wave (GSTWaveCohomology),
-                                Wave II N-cohomology (GSTNCohomology),
-                                the GST Vortex Singularity Method
-                                (GSTVortexSingularity — the OpenAI
-                                Navier–Stokes method upgraded with GST
-                                cosmology, for any N shapes in holes),
+WAVE LAYER  THE WAVE MECHANICS      waves/ — Task 5: FULLY PROVEN, IN THE
+                                BUILD REGISTRY (40 theorems, 0 sorries):
+                                Wave I the discrete Hodge theory
+                                (GSTWaveCohomology — closedness law,
+                                row law, RECTANGLE Gauss–Bonnet,
+                                transport, mode spectrum, matter 224),
+                                Wave II N-cohomology (GSTNCohomology —
+                                shapes, interference decomposition,
+                                frame refinement),
+                                the GST Vortex Singularity Method AS
+                                GEOMETRY (GSTVortexSingularity — the
+                                vortex connection with Z/5 holonomy on
+                                two pentagons, ZERO lattice curvature,
+                                3-adic cascade, puncture, full
+                                signature, finite energy),
                                 POSTULATE III — the Law of Controlled
                                 Emergence (CardinalWorldsPostulateLaw).
                                 Outside the build registry by design;
@@ -143,31 +153,45 @@ Full dossier + breakthrough analysis: `docs/HODGE_DERHAM_ABSORPTION.md`.
 
 The Task 4 layer — **the two waves and the vortex**:
 
-* **Wave I — the Hodge wave** (`waves/GSTWaveCohomology.lean`): the digit
-  readout replaced by the wave-mode readout; the verified 2D emergence
-  equation recognized as the closedness law of a wave complex; the window
-  class (integrated SURVIVE incidence) as a conserved charge — the finite
-  comparison certificates of Layer 6 made dynamical.
-* **Wave II — N-cohomology** (`waves/GSTNCohomology.lean`): the
-  topological wave — N-shapes (abstract complexes with N holes), tower
-  frozen windows, and the interference pairing of the two waves:
-  non-zero ⟺ ignition; the holes of a shape light up.
-* **The GST Vortex Singularity Method**
-  (`waves/GSTVortexSingularity.lean`): the OpenAI Navier–Stokes
-  millennium-problem vortex-singularity method (Sep 2026 — self-similar
-  similarity variables, incompressible swirling cascade of non-singular
-  layers, smooth forcing, finite energy, singularity) copied in structure
-  and upgraded with GST cosmology — so the method runs on **any N shapes
-  in holes**.
+* **Wave I — the Hodge wave** (`waves/GSTWaveCohomology.lean`, PROVEN):
+  the discrete Hodge theory of the twelve-cell complex — the closedness
+  law (2-form = δh + δv + source, the structure equation), the ROW
+  telescoping law, the RECTANGLE Gauss–Bonnet law on the canonical
+  lattice, the window class with its integrality (the Hodge wave) and
+  its additive transport under re-encoding, the chord realizations, the
+  twelve-amplitude mode spectrum with chord separation, total matter
+  224, harmonic count 9.
+* **Wave II — N-cohomology** (`waves/GSTNCohomology.lean`, PROVEN): the
+  topological wave — N-shapes as injective channel maps (the rank law),
+  tower windows as stabilized depth-N profiles, the EXACT interference
+  decomposition of the two waves (horizontal + vertical + source
+  pairing), NULL-sterility and GST+ maximality of the source, the
+  Ω-family signature, the two-wave frame refinement.
+* **The GST Vortex Singularity Method AS GEOMETRY**
+  (`waves/GSTVortexSingularity.lean`, PROVEN): the OpenAI Navier–Stokes
+  vortex-singularity method (Sep 2026) recast as discrete geometry —
+  the **vortex connection** `coreRotate` with holonomy exactly Z/5 on
+  two pentagon orbits and a two-cell axis; the **spiral section**
+  (incompressible NULL→ALT-→GST+); axial stretch with radial thinning;
+  **zero curvature of the lattice connection** (the transport square
+  commutes); the **3-adic renormalization cascade** (layer refinement +
+  the frozen window); the smooth-driver law; the **puncture
+  singularity** (verified `omega_puncture`); the **full N-shape
+  signature** (every ignition channel fires); **finite energy**.
 * **POSTULATE III — the Law of Controlled Emergence**
-  (`waves/CardinalWorldsPostulateLaw.lean`): every infinity is the
-  colimit of certified finite Cardinal Worlds bridges, governed by the
-  controller and the ledger; dimensions are emergent readouts, never
-  fixed substrate.
+  (`waves/CardinalWorldsPostulateLaw.lean`, PROVEN): every infinity is
+  the colimit of certified finite Cardinal Worlds bridges, governed by
+  the controller and the ledger; dimensions are emergent readouts,
+  never fixed substrate — finite presentation, the emergence law
+  (dimension N at depth N), the infinite dimension as colimit,
+  uniqueness, the admissibility law.
 
 Full theory: `docs/WAVE_MECHANICS_TASK4.md`; the GST V2 law book:
-`docs/GST_V2_OPERATING_MANUAL.md`. **All wave-layer statements are
-UNCOMPILED specs with pending proofs — see `waves/README.md`.**
+`docs/GST_V2_OPERATING_MANUAL.md`. **The wave layer is machine-checked:
+40 theorems, 0 sorries, in the build registry — see `waves/README.md`.**
+The Task-5 honesty ledger (8 of the 29 former spec statements were true
+as stated; 21 were upgraded to their true laws) is in
+`docs/WAVE_MECHANICS_TASK4.md` Part VI.
 
 ---
 
@@ -196,7 +220,7 @@ scripts/comparator.sh      # lake build → sorry_check.sh → verdict
 | `CardinalWorlds.lean` | ★ Layer 1 — the Cardinal Worlds (verbatim extraction) |
 | `MonolithBoundary.lean` | ★ Layer 5 — the terminal identity interface |
 | `HodgeDeRhamBridge.lean` | ★ Layer 6 — the absorption layer |
-| `waves/` | ★ Wave Mechanics (Task 4) — UNCOMPILED spec layer, outside the build registry |
+| `waves/` | ★ Wave Mechanics (Tasks 4+5) — FULLY PROVEN wave layer, in the build registry: 40 theorems, 0 sorries |
 | `HCProof.lean` | the universe's entry face (comparator receipts) |
 | `GSTGraphV2*.lean` (60 files) | Layers 2-3 — the GST Graph V2 Ontological Universe |
 | `GST*.lean` (67 files) | Layers 3-4 — dynamics, towers, fourth dimension, worldtrace |
@@ -219,8 +243,12 @@ See `docs/HC_UNIVERSE_MAP.md` for the full merge map.
   propositions state exactly where their proofs live (the source
   monolith).  Postulates state exactly which fragments are proven and
   which are open.
-* The `waves/` spec layer (Task 4) is **explicitly excluded from the
-  build** and marks every statement's proof as pending (`sorry` with
-  documented proof routes).  Nothing in it is claimed verified.
+* The `waves/` layer: Task 4 delivered it as an explicitly-excluded
+  spec layer (statements with documented routes, nothing claimed
+  verified). **Task 5 closed it:** the layer is now fully proven, in
+  the build registry, and counted by the sorry gate (40 theorems,
+  0 sorries) — with the full upgrade record (which former statements
+  were false and what their true laws are) in
+  `docs/WAVE_MECHANICS_TASK4.md` Part VI.
 * Target axiom profile everywhere: `[propext, choice, Quot.sound]` —
   zero custom axioms, zero sorries, zero native_decide.

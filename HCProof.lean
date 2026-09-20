@@ -16,6 +16,10 @@ import GSTClimbInfiniteFamily
 import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import HodgeDeRhamBridge
+import waves.GSTWaveCohomology
+import waves.GSTNCohomology
+import waves.GSTVortexSingularity
+import waves.CardinalWorldsPostulateLaw
 
 /-!
 # HC PROOF — the universe's entry face
@@ -65,6 +69,24 @@ All declarations below are root-level (the modules carry no namespaces).
 #check HodgeDeRhamBridge.deRham_betti_comparison_finite
 #check HodgeDeRhamBridge.finite_hodge_characterization
 #check HodgeDeRhamBridge.period_rebase
+
+/-! ## The wave mechanics face (Task 4 — machine-checked) -/
+
+#check GSTWaveCohomology.wave_cell_decomposition
+#check GSTWaveCohomology.rectangle_gauss_law
+#check GSTWaveCohomology.wave_class_transport
+#check GSTWaveCohomology.total_matter
+#check GSTNCohomology.interference_decomposition
+#check GSTNCohomology.channel_embedding
+#check GSTNCohomology.two_wave_frame_refines
+#check GSTVortexSingularity.core_rotation_period_five
+#check GSTVortexSingularity.lattice_curvature_zero
+#check GSTVortexSingularity.vortex_singularity_forms
+#check GSTVortexSingularity.gvsm_full_signature
+#check GSTVortexSingularity.vortex_energy_finite
+#check CardinalWorldsPostulateLaw.emergent_dimension_full
+#check CardinalWorldsPostulateLaw.infinite_dimension_is_colimit
+#check CardinalWorldsPostulateLaw.postulate_three_law
 
 /-! ## The boundary face -/
 

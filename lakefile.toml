@@ -143,6 +143,10 @@ roots = [
   "HodgeDeRhamBridge",
   "ComparatorSmokeChallenge",
   "ComparatorSmokeSolution",
+  "waves.GSTWaveCohomology",
+  "waves.GSTNCohomology",
+  "waves.GSTVortexSingularity",
+  "waves.CardinalWorldsPostulateLaw",
 ]
 
 # ---------------------------------------------------------------------------
