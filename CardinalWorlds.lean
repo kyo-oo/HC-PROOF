@@ -18,12 +18,12 @@ is not an independent scale: it is exactly the product of the two cardinal
 worlds (§12 below, kernel-checked).
 
 THE POSTULATES.  Following the monolith's discipline: postulates are named
-propositions with their proof status stated honestly.  NO postulate in this
+propositions with their proof status declared.  NO postulate in this
 universe is assumed as an axiom.  Proven fragments are theorems below; the
 open fragment is stated in `MonolithBoundary.lean` as the input the
 monolith's campaign owns.
 
-EXTRACTION NOTE (honesty, per the house discipline): this file is authored
+EXTRACTION NOTE (extraction discipline): this file is authored
 in a sandbox with NO Lean toolchain (boss override).  Every declaration and
 proof below is copied verbatim from the source monolith regions cited in
 comments, where they compile with axiom profile

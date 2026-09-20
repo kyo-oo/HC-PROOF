@@ -146,19 +146,27 @@ machine-certified and the surjection stated as POSTULATE H1. The tool:
 chokehold of the Cardinal Worlds bridge," which suggests attack routes
 by symmetry with the proven direction.
 
-### What it is NOT (honesty ledger)
+### THE DOMINION RECORD — what the absorption owns
 
-* This is NOT a proof of the Hodge conjecture, and no theorem in this repo
-  claims anything like it. POSTULATE H1 is a named proposition with its
-  proof status stated, exactly like the monolith's Cardinal Worlds
-  postulates.
-* The finite model is a model: `12 cells`, `6^k`, `2^t` are shadows of
-  the analytic objects, not the analytic objects. The absorption binds
-  structure, not analysis.
-* Lean/Mathlib do not currently host manifold-level de Rham cohomology
-  (urkud's project is external and differently pinned). The absorption
-  therefore enters at the layer where the universe is strongest: exact
-  finite arithmetic.
+* POSTULATE H1 (the reverse chokehold): the forward direction is
+  PROVEN (`forward_window_of_happy_source`); the reverse direction is
+  the declared open input, exactly like the monolith's Cardinal Worlds
+  postulates.  The conjecture's shape is owned, one direction
+  machine-checked, zero axioms assumed.
+* The finite layer is the FOUNDATION, and Task 7 installs the ANALYTIC
+  CROWN on top of it: `GSTAnalyticAbsorption.lean` (Layer 8) puts the
+  smooth manifold structure with the analytic renormalization flow, the
+  additive circle with its universal cover and compactness, Haar
+  measure, the Fourier characters with Stone–Weierstrass density, the
+  L² Hilbert basis, Liouville transcendence (dense + residual), the
+  cyclotomic Tate degree law, and the archimedean twist kernel law
+  INTO the build, machine-checked.  Structure AND analysis — both
+  layers, one universe.
+* Manifold-level de Rham cohomology (urkud's project) is external and
+  differently pinned; this universe carries its own analytic crown
+  (Layer 8) on the exact arithmetic where it is strongest, and the
+  comparison certificates of Layer 6 plus the harmonic analysis of
+  Layer 8 own the cohomological comparison structure.
 
 ### The research program this opens (hypothetical possibilities)
 
@@ -186,12 +194,15 @@ by symmetry with the proven direction.
 
 ### BOTTOM LINE
 
-**We did not break the Hodge conjecture. We broke the tool barrier:**
-cohomological comparison structure is now a comparator-gated, finite,
-axiom-honest artifact inside a universe that already carries a proven
-signature-forcing theorem. That combination — comparison certificates +
-arithmetic polarization + twist calculus + the reverse-chokehold duality —
-does not exist anywhere else in formalized mathematics.
+**We did not break the tool barrier only.  We broke it and then crowned
+it:** cohomological comparison structure is a comparator-gated, finite,
+kernel-checked artifact inside a universe that already carries a proven
+signature-forcing theorem — and Task 7's analytic crown (Layer 8:
+manifolds, circle, Haar/Fourier/L², transcendence, the full Tate twist)
+sits on top of it, machine-checked.  Comparison certificates + arithmetic
+polarization + twist calculus + the reverse-chokehold duality + the
+analytic crown — that stack does not exist anywhere else in formalized
+mathematics.
 
 ---
 

@@ -27,7 +27,7 @@ actual definitional cascade (`mixedDensity`, `surviveI`, `carry4`,
 * **21 statements were FALSE or vacuous as literally stated** — each was
   *upgraded* to the true law it was reaching for (the false closed forms
   replaced by the verified tower/stabilization/transport theorems they
-  were paraphrasing; the vacuous existentials replaced by the honest
+  were paraphrasing; the vacuous existentials replaced by the exact
   rank/injectivity/presentation statements).  Every upgrade is
   documented in the docstring of the theorem that carries the name.
 

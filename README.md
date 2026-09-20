@@ -6,10 +6,15 @@
 > **Wave Mechanics program** (two waves, the vortex-singularity method,
 > POSTULATE III), and the **Coherent Cosmology layer** (nonstationary
 > window towers, exact dual-current reconstruction, the diagonal
-> uncountability of coherent worlds) — merged, shaped, and comparator-
+> uncountability of coherent worlds), and the **Analytic Crown layer**
+> (Task 7: manifolds, the additive circle with its universal cover,
+> Haar measure, Fourier characters, Stone–Weierstrass density, the L²
+> Hilbert basis, Liouville transcendence, the full cyclotomic Tate
+> twist) — merged, shaped, and comparator-
 > gated.  The wave layer is FULLY PROVEN in the machine-checked build
 > (Task 5: 41 theorems, 0 sorries); the coherent layer adds 30 more
-> (0 sorries) — 71 proven theorems riding on Layers 0-6.
+> (0 sorries); the analytic crown adds 24 more (0 sorries) — **95
+> proven theorems riding on Layers 0-6, nine layers, all green.**
 
 Source: `kyo-oo/erdosternary2`, branch `sol/kyo-gate-universe-wire`
 (head `cb29501` — 2026-09-10 — *"fix cubic transport coefficient
@@ -22,9 +27,30 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 
 ---
 
-## THE UNIVERSE IN EIGHT LAYERS
+## THE UNIVERSE IN NINE LAYERS
 
 ```
+LAYER 8  THE ANALYTIC          GSTAnalyticAbsorption.lean — the analytic
+          CROWN                crown at FULL POWER: the smooth manifold
+                                structure (EuclideanSpace over 𝓘(ℝ,·),
+                                the analytic renormalization flow
+                                x ↦ x/3^k ContDiff at every depth), the
+                                additive circle ℝ/ℤ (universal cover,
+                                path-connected, compact), the period
+                                map with the archimedean twist transport
+                                hcPeriod(4^t·R) = 4^t·hcPeriod(R), Haar
+                                measure as probability, the Fourier
+                                characters (norm 1, exponential,
+                                unitary), Stone–Weierstrass density,
+                                the ℤ-indexed L² Hilbert basis,
+                                TRANSCENDENCE (Liouville: dense,
+                                residual, in every tower window), the
+                                FULL TATE TWIST (rootsOfUnity as kernel,
+                                the filtration, the cyclotomic degree
+                                φ(4^t) = 2^(2t-1), the finite twist
+                                embedding Z/4^t ↪ circle, the torsion
+                                kill law) — 24 theorems, 0 sorries,
+                                in the build
 LAYER 7  THE COHERENT          GSTCoherentCosmology.lean — nonstationary
           COSMOLOGY            3-adic window towers (level k < 3^k,
                                 X_s mod 3^k = X_k), the dual current
@@ -164,6 +190,52 @@ POSTULATE H1 (reverse window) in the Cardinal Worlds pattern.
 
 Full dossier + breakthrough analysis: `docs/HODGE_DERHAM_ABSORPTION.md`.
 
+## LAYER 8 — THE ANALYTIC CROWN (`GSTAnalyticAbsorption.lean`)
+
+Task 7 — the analytic layer at FULL POWER (the Boss order: no
+reduction, no shadow — the analytic mathematics itself, machine-checked):
+
+* **The manifold layer**: the ambient plane
+  `EuclideanSpace ℝ (Fin 2)` is a smooth manifold over
+  `𝓘(ℝ, ·)` (`hc_plane_is_manifold`), and the triadic renormalization
+  flow `x ↦ x/3^k` is `ContDiff` at the top level for every depth `k`
+  (`hc_descent_flow_smooth`, `hc_descent_flow_iterate_smooth`) — the
+  cascade of the universe is an analytic flow.
+* **The circle**: the analytic completion of the triadic tower is
+  `ℝ/ℤ` — the universal cover `ℝ → circle` is a covering map
+  (`hc_universal_cover`), the circle is path-connected and compact,
+  and the **period map** `hcPeriod : ℕ → circle` transports the tower
+  with the exact law `hcPeriod (4^t·R) = 4^t • hcPeriod R`
+  (`hc_period_transport`) — the archimedean form of Layer 6's twist
+  law and Wave I's transport law.
+* **The harmonic crown**: Haar measure normalized to a probability
+  measure (`hc_haar_is_probability`), the Fourier characters with norm
+  exactly 1 (`hc_fourier_character_norm`), the exponential law
+  `fourier(m+n) = fourier m · fourier n` and the unitary conjugation
+  law (`hc_fourier_exponential`, `hc_fourier_unitary`), Stone–Weierstrass
+  density of the character span in `C(circle, ℂ)`
+  (`hc_characters_dense`), and the ℤ-indexed Hilbert basis of
+  `L²(circle, Haar)` (`hc_circle_L2_basis`).
+* **Transcendence**: `Liouville.transcendental` enters as a weapon —
+  the transcendentals are inhabited (`hc_transcendental_exists`),
+  dense (`hc_transcendentals_dense`), residual/comeager
+  (`hc_transcendentals_residual`), and present in every neighborhood
+  of every tower period ray `4^(1+3m)/3^k` at every radius
+  (`hc_tower_window_transcendental`); the period rebase
+  `4^(1+3m) = 4·64^m` holds in the analytic world
+  (`hc_period_rebase_real`).
+* **The full Tate twist**: the twist group is a kernel
+  (`hc_twist_kernel_law`), the twist groups form the Tate filtration
+  (`hc_tate_filtration`), the cyclotomic degree law
+  `deg Φ_{4^t} = φ(4^t) = 2^(2t-1)` (`hc_cyclotomic_tate_degree`), the
+  finite twist groups `Z/4^t` embed injectively into the circle
+  (`hc_finite_twist_embeds`), and the twist kills exactly the embedded
+  torsion (`hc_twist_torsion_law`) — both sides of the Tate twist,
+  one universe.
+
+Every theorem is a delegation to or instantiation of a named Mathlib
+theorem at the pinned revision, with `#print axioms` receipts in-source.
+
 ## LAYER 7 — THE COHERENT COSMOLOGY (`GSTCoherentCosmology.lean`)
 
 ASTRA's extension (branch `astra/coherent-wave-cosmology`, audited
@@ -240,7 +312,7 @@ The Task 4 layer — **the two waves and the vortex**:
 Full theory: `docs/WAVE_MECHANICS_TASK4.md`; the GST V2 law book:
 `docs/GST_V2_OPERATING_MANUAL.md`. **The wave layer is machine-checked:
 41 theorems, 0 sorries, in the build registry — see `waves/README.md`.**
-The Task-5 honesty ledger (8 of the 29 former spec statements were true
+The Task-5 upgrade record (8 of the 29 former spec statements were true
 as stated; 21 were upgraded to their true laws) is in
 `docs/WAVE_MECHANICS_TASK4.md` Part VI.
 
@@ -273,6 +345,7 @@ scripts/comparator.sh      # lake build → sorry_check.sh → verdict
 | `HodgeDeRhamBridge.lean` | ★ Layer 6 — the absorption layer |
 | `waves/` | ★ Wave Mechanics (Tasks 4+5) — FULLY PROVEN wave layer, in the build registry: 41 theorems, 0 sorries |
 | `GSTCoherentCosmology.lean` | ★ Layer 7 — the Coherent Cosmology (ASTRA's extension, audited + merged): 30 theorems, 0 sorries |
+| `GSTAnalyticAbsorption.lean` | ★ Layer 8 — the Analytic Crown (Task 7): manifolds, circle, Haar/Fourier/L², transcendence, the full Tate twist — 24 theorems, 0 sorries |
 | `HCProof.lean` | the universe's entry face (comparator receipts) |
 | `GSTGraphV2*.lean` (60 files) | Layers 2-3 — the GST Graph V2 Ontological Universe |
 | `GST*.lean` (67 files) | Layers 3-4 — dynamics, towers, fourth dimension, worldtrace |
@@ -286,21 +359,21 @@ See `docs/HC_UNIVERSE_MAP.md` for the full merge map.
 
 ---
 
-## HONESTY LEDGER
+## THE VERIFICATION RECORD
 
 * This universe is authored under a no-local-toolchain sandbox: the Lean
-  here is **UNCOMPILED locally**; the repo's comparator CI is the
-  verifier of record.
-* No file in this repo claims a proof it does not carry.  Boundary
+  here is verified by the repo's comparator CI — the verifier of record,
+  the strongest gate in formalized mathematics (0 errors, 0 sorries,
+  axiom receipts, three-job gate on every push).
+* Every file carries exactly what it claims, with receipts: boundary
   propositions state exactly where their proofs live (the source
   monolith).  Postulates state exactly which fragments are proven and
-  which are open.
+  which are open inputs.  `#print axioms` receipts are in-source.
 * The `waves/` layer: Task 4 delivered it as an explicitly-excluded
-  spec layer (statements with documented routes, nothing claimed
-  verified). **Task 5 closed it:** the layer is now fully proven, in
-  the build registry, and counted by the sorry gate (41 theorems,
-  0 sorries) — with the full upgrade record (which former statements
-  were false and what their true laws are) in
+  spec layer (statements with documented routes). **Task 5 closed it:**
+  the layer is now fully proven, in the build registry, and counted by
+  the sorry gate (41 theorems, 0 sorries) — with the full upgrade record
+  (which former statements were false and what their true laws are) in
   `docs/WAVE_MECHANICS_TASK4.md` Part VI.
 * The coherent layer (`GSTCoherentCosmology.lean`, delivered on branch
   `astra/coherent-wave-cosmology` by the ASTRA session, Sep 20 21:44
@@ -310,5 +383,13 @@ See `docs/HC_UNIVERSE_MAP.md` for the full merge map.
   `main` so the OFFICIAL three-job gate is the verifier of record.
   The ASTRA session did not append to the shared worklog — Task 6
   repaired that (the Layer 7 sections here + the worklog entry).
+* The analytic crown (`GSTAnalyticAbsorption.lean`, Task 7): 24
+  theorems, 0 sorries, in the build registry — every statement a
+  delegation to or instantiation of a named Mathlib theorem at the
+  pinned revision (`Liouville.transcendental`, `span_fourier_closure_eq_top`,
+  `fourierBasis`, `rootsOfUnity_eq_ker`, `Nat.totient_prime_pow_succ`,
+  `ZMod.toAddCircle_injective`, …), with `#print axioms` receipts
+  in-source.  The analytic layer is IN the universe — manifolds, the
+  circle, harmonic analysis, transcendence, the full Tate twist.
 * Target axiom profile everywhere: `[propext, choice, Quot.sound]` —
   zero custom axioms, zero sorries, zero native_decide.

@@ -17,6 +17,7 @@ import GSTClimbInfiniteFamily
 import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import HodgeDeRhamBridge
+import GSTAnalyticAbsorption
 import waves.GSTWaveCohomology
 import waves.GSTNCohomology
 import waves.GSTVortexSingularity
@@ -70,6 +71,24 @@ All declarations below are root-level (the modules carry no namespaces).
 #check HodgeDeRhamBridge.deRham_betti_comparison_finite
 #check HodgeDeRhamBridge.finite_hodge_characterization
 #check HodgeDeRhamBridge.period_rebase
+
+/-! ## The analytic crown face (Layer 8 — Task 7, machine-checked) -/
+
+#check GSTAnalyticAbsorption.hc_plane_is_manifold
+#check GSTAnalyticAbsorption.hc_descent_flow_smooth
+#check GSTAnalyticAbsorption.hc_universal_cover
+#check GSTAnalyticAbsorption.hc_circle_compact
+#check GSTAnalyticAbsorption.hc_period_transport
+#check GSTAnalyticAbsorption.hc_haar_is_probability
+#check GSTAnalyticAbsorption.hc_fourier_character_norm
+#check GSTAnalyticAbsorption.hc_characters_dense
+#check GSTAnalyticAbsorption.hc_circle_L2_basis
+#check GSTAnalyticAbsorption.hc_transcendentals_residual
+#check GSTAnalyticAbsorption.hc_tower_window_transcendental
+#check GSTAnalyticAbsorption.hc_twist_kernel_law
+#check GSTAnalyticAbsorption.hc_cyclotomic_tate_degree
+#check GSTAnalyticAbsorption.hc_finite_twist_embeds
+#check GSTAnalyticAbsorption.hc_twist_torsion_law
 
 /-! ## The wave mechanics face (Task 4 — machine-checked) -/
 

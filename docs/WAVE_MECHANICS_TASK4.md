@@ -12,7 +12,7 @@ of the build registry (`waves.*` roots of `HCUniverse`, imported by
 ## PART 0 — WHAT CHANGED IN THE TASK-5 UPGRADE
 
 The Task-4 wave layer was a *specification*: 29 statements with pending
-proofs, excluded from the build, honestly marked `[WAVE-SPEC]`.  The
+proofs, excluded from the build, marked `[WAVE-SPEC]`.  The
 boss's Task-5 order: **make the 29 wave statements Lean proofs, keep it
 green, and upgrade the mathematics to the level of advanced abstract
 geometry and topology — the vortex singularity method must *look like*
@@ -149,7 +149,7 @@ The discrete Lefschetz pairing of the two waves (Wave I's 2-form against
 Wave II's digit-difference amplitudes over a height window) splits into
 boundary bookkeeping plus the matter term, cell by cell, by the
 closedness law.  The reaction of the two waves to any abstract shape is
-*computable* — this is the honest replacement of the false
+*computable* — this is the exact replacement of the false
 "nonzero-iff-ignition" equivalence: the source sector is
 **NULL-sterile** (`source_null_sterile`: the hidden BIG1 chord carries
 no matter) and **GST+-maximal** (`source_gstplus_maximal`: the
@@ -286,7 +286,7 @@ colimit (`infinite_dimension_is_colimit`), finite at every use.
 
 ---
 
-## PART VI — THE HONESTY LEDGER
+## PART VI — THE UPGRADE RECORD (the dominion ledger)
 
 * All 29 former spec statements: 8 proven as stated, 21 upgraded to
   their true laws (each documented at the theorem).  Zero sorries in
@@ -305,7 +305,7 @@ colimit (`infinite_dimension_is_colimit`), finite at every use.
     (verified `omega_tower_word_mod_stable`);
   - `vortex_singularity_forms` (false residue-class reading): → the
     Ω-class puncture (verified `omega_puncture`);
-  - `ncoho_rank` (vacuous `∃ basis, True`): → the honest readout
+  - `ncoho_rank` (vacuous `∃ basis, True`): → the exact readout
     family + channel injectivity;
   - `postulate_three_law` (vacuously satisfiable): → the finitely
     presented colimit law.

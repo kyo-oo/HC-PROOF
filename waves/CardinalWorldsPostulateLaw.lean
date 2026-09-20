@@ -175,7 +175,7 @@ the finitely-presented colimit — the limit exists, uniquely, as the
 family itself read through the levels).
 
 (Upgrade note: the former spec's statement was vacuously satisfiable by
-any constant family — no content.  This is the honest law: admissibility
+any constant family — no content.  This is the exact law: admissibility
 *is* control, and the colimit is the level family, finitely presented.) -/
 theorem postulate_three_law (levels : Nat → Nat)
     (hadm : ∃ T : ControlledTower Nat, ∀ j : Nat, T.level j = levels j) :

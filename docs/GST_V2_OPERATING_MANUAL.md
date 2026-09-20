@@ -320,7 +320,7 @@ top of it — controlled, not assumed.** The new law is POSTULATE III
 `MonolithBoundary.lean`: four terminal theorems of the monolith (terminal
 identity iff, crown, odd half, chokehold) imported as *named boundary
 Props*, taken as explicit hypotheses downstream — 0 sorries, 0 custom
-axioms. The universe is honest about exactly what it assumes.
+axioms. The universe declares exactly what it assumes.
 
 ---
 

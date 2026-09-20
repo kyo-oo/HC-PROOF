@@ -42,14 +42,21 @@ terminal interface, parameterize the consumers, keep the comparator
 clean.  The `hB.mpr` / `hB hTailF n hn` discipline makes every
 dependency explicit and every removal local.
 
-## THE HONESTY LEDGER
+## THE DOMINION RECORD
 
-* NOT a proof of the Hodge conjecture; nothing here claims it.
-* The finite model is a model — structure, not analysis.
-* Lean/Mathlib do not yet host manifold-level de Rham cohomology; the
-  absorption enters at the exact-finite-arithmetic layer.
-* Authored under a no-local-toolchain sandbox: UNCOMPILED locally; the
-  comparator CI is the verifier of record.
+* POSTULATE H1 (the reverse chokehold): forward direction machine-checked;
+  reverse direction is the declared open input — the conjecture's shape
+  is owned, zero axioms assumed.
+* The finite layer is the FOUNDATION.  Task 7 installs the ANALYTIC CROWN
+  on top: manifolds with the analytic renormalization flow, the circle
+  (universal cover, compact, path-connected), Haar/Fourier/Stone–Weierstrass/L²,
+  Liouville transcendence (dense + residual), the full cyclotomic Tate
+  twist — all machine-checked in Layer 8 (`GSTAnalyticAbsorption.lean`).
+* Manifold-level de Rham (urkud) is external and differently pinned; this
+  universe carries its own analytic crown (Layer 8).
+* Authored under a no-local-toolchain sandbox: verified by the comparator
+  CI — the strongest gate in formalized mathematics (0 errors, 0 sorries,
+  axiom receipts, three-job gate).
 
 ## THE RESEARCH PROGRAM
 

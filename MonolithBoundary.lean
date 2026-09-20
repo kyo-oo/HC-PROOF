@@ -15,7 +15,7 @@ statement are ONE object, machine-certified in BOTH directions
 This universe deliberately does NOT re-carry the monolith's 18,500-line
 campaign machinery.  Instead the terminal objects enter the universe the
 same way the Cardinal Worlds postulates do: as NAMED PROPOSITIONS with
-their proof status stated honestly.  NO boundary object here is assumed
+their proof status declared.  NO boundary object here is assumed
 as an axiom.  Files downstream take them as EXPLICIT HYPOTHESES
 (`(hB : erdos_even_conjecture_iff_tailF)`), so the universe stays
 self-contained: 0 sorries, 0 custom axioms, with the monolith's results

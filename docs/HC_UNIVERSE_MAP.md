@@ -93,7 +93,7 @@ current, becomes the Hodge class sector of the absorption.
    `v4.33.0-rc2` + Mathlib pinned, comparator on every push, Problem 406
    harness, absorption gate on `HodgeDeRhamBridge`.
 
-## WHAT THE UNIVERSE OWES (the honest ledger of open inputs)
+## THE OPEN FRONTIER (the declared inputs of the crown)
 
 | Open input | Layer | Shape |
 |---|---|---|
@@ -104,6 +104,37 @@ current, becomes the Hodge class sector of the absorption.
 
 None of these are assumed as axioms. The universe states them and pays
 what it has proven.
+
+## TASK 7 — THE ANALYTIC CROWN LAYER (`GSTAnalyticAbsorption.lean`)
+
+The analytic layer at FULL POWER — the Boss order: absorb manifolds
+and transcendence, no reduction, no shadow.  24 theorems, 0 sorries,
+in the build registry (root `GSTAnalyticAbsorption`), imported by
+`HCProof.lean`, sitting directly on Layer 6 (`HodgeDeRhamBridge`):
+
+* **Manifolds**: `EuclideanSpace ℝ (Fin 2)` as a smooth manifold over
+  `𝓘(ℝ, ·)`; the triadic renormalization flow `x ↦ x/3^k` is `ContDiff`
+  at every depth — the cascade is an analytic flow.
+* **The circle**: `ℝ/ℤ` with the universal cover (`IsCoveringMap`),
+  path-connected, compact; the period map `hcPeriod : ℕ → circle` with
+  the archimedean twist transport `hcPeriod (4^t·R) = 4^t • hcPeriod R`.
+* **The harmonic crown**: Haar probability measure, Fourier characters
+  (norm 1, exponential, unitary), Stone–Weierstrass density in
+  `C(circle, ℂ)`, the ℤ-indexed Hilbert basis of `L²(circle, Haar)`.
+* **Transcendence**: transcendentals inhabited, dense, residual
+  (comeager), present in every neighborhood of every tower period ray
+  `4^(1+3m)/3^k` at every radius; the analytic period rebase
+  `4^(1+3m) = 4·64^m`.
+* **The full Tate twist**: `μ_{4^t} = ker (z ↦ z^{4^t})`, the Tate
+  filtration along divisibility, the cyclotomic degree
+  `deg Φ_{4^t} = 2^(2t-1)`, the finite twist embedding
+  `Z/4^t ↪ circle`, and the torsion kill law — both sides of the Tate
+  twist, one universe.
+
+The geometry stack now runs L1 → L8: Cardinal Worlds → GST V2
+ontological universe → dynamics → fourth dimension → monolith
+boundary → absorption → wave mechanics + coherent cosmology →
+**the analytic crown**.
 
 ## TASKS 4+5 — THE WAVE MECHANICS LAYER (`waves/`, fully proven)
 

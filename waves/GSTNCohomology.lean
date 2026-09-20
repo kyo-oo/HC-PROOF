@@ -149,7 +149,7 @@ channels distinct by `channel_embedding`.  *Dimension is the count of
 stabilized readouts — emergent, not fixed.*
 
 (Upgrade note: the former spec's `∃ basis, True` carried no content; this
-is the honest rank statement: the readout family exists, is indexed by
+is the exact rank statement: the readout family exists, is indexed by
 the holes, and reads the channel of each hole at its own coordinate.) -/
 theorem ncoho_rank (R : Nat) (s : NShape) (N : Nat)
     (hign : ∀ i : Fin s.holes, towerWindow R (s.channel i) N ≠ []) :
