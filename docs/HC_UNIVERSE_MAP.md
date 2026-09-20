@@ -98,3 +98,34 @@ current, becomes the Hodge class sector of the absorption.
 
 None of these are assumed as axioms. The universe states them and pays
 what it has proven.
+
+## TASK 4 — THE WAVE MECHANICS LAYER (`waves/`, 2026-09-20)
+
+The newest stratum, riding on all seven layers:
+
+* **Wave I — the Hodge wave** (`waves/GSTWaveCohomology.lean`): the
+  digit readout replaced by the wave-mode readout (the mixed density);
+  the verified 2D emergence equation as the closedness law of the wave
+  complex; the window class (integrated SURVIVE incidence) as conserved
+  charge; integrality = the bridge signature (Layer 6's arithmetic
+  polarization made dynamical).
+* **Wave II — N-cohomology** (`waves/GSTNCohomology.lean`): the
+  topological wave — N-shapes (N-hole abstract complexes), tower frozen
+  windows (Layer 4's stabilization), the interference pairing with Wave
+  I: non-zero ⟺ ignition.
+* **The GST Vortex Singularity Method**
+  (`waves/GSTVortexSingularity.lean`): the OpenAI Navier–Stokes
+  millennium method (Sep 8, 2026) copied in structure — self-similar
+  similarity variables, incompressible swirl cascade, smooth driver,
+  finite energy, singularity — and upgraded with GST cosmology to run on
+  any N shapes in holes. Every NS component maps to a verified GST law.
+* **POSTULATE III — the Law of Controlled Emergence**
+  (`waves/CardinalWorldsPostulateLaw.lean`): infinity admitted only as
+  the controlled colimit of finite Cardinal Worlds towers (finite
+  presentation + controller + ledger); dimensions emergent, not fixed.
+
+**Status: UNCOMPILED spec layer** — outside the build registry by design
+(see `waves/README.md`), every proof pending with documented route. The
+comparator green on Layers 0-6 is untouched. Full theory:
+`docs/WAVE_MECHANICS_TASK4.md`; the law book of the substrate:
+`docs/GST_V2_OPERATING_MANUAL.md`.
