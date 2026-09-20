@@ -32,6 +32,8 @@ jobs:
           lake build GSTCoherentCosmology 2>&1 | tee coherent-build.log
           lake env lean GSTCoherentCosmology.lean 2>&1 | tee coherent-axioms.log
           if grep -Eq 'sorryAx|ofReduceBool' coherent-axioms.log; then exit 1; fi
+      - name: Independent finite arithmetic checks
+        run: python3 scripts/check_coherent_cosmology.py
       - name: Verify complete universe
         run: |
           set -euo pipefail

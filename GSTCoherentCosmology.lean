@@ -183,7 +183,13 @@ theorem finite_realization (X : WindowTower) (K t p : Nat) (hp : p+1 ≤ K) :
   apply cell_coordinates_local
   have hs := X.coherent (p+1) K hp
   have hl := Nat.mod_eq_of_lt (X.bounded (p+1))
-  simp only [Nat.mul_mod, hs, hl]
+  calc
+    (4^t * X.level (p+1)) % 3^(p+1) =
+        (4^t % 3^(p+1) * (X.level (p+1) % 3^(p+1))) % 3^(p+1) :=
+      Nat.mul_mod _ _ _
+    _ = (4^t % 3^(p+1) * (X.level K % 3^(p+1))) % 3^(p+1) := by
+      rw [hl, hs]
+    _ = (4^t * X.level K) % 3^(p+1) := (Nat.mul_mod _ _ _).symm
 
 def towerCarry (X : WindowTower) (t p : Nat) : Nat :=
   carry4 (4^t * X.level (p+1)) p
@@ -261,6 +267,104 @@ theorem wave_stream_injective :
   funext K
   exact current_trace_reconstructs _ _ K (fun p _ => congrFun h p)
 
+/-- Every observable depth-K signature has exactly one finite representative.
+There are exactly 3^K possible representatives, each physically realized. -/
+theorem unique_finite_signature (X : WindowTower) (K : Nat) :
+    ∃! r : Fin (3^K), ∀ p, p < K →
+      towerCurrent (naturalTower r.val) 0 p = towerCurrent X 0 p := by
+  refine ⟨⟨X.level K, X.bounded K⟩, ?_, ?_⟩
+  · have he : (naturalTower (X.level K)).level K = X.level K :=
+      Nat.mod_eq_of_lt (X.bounded K)
+    exact (finite_observation_equivalence _ _ K).mp he 0
+  · intro r hr
+    apply Fin.ext
+    have he := current_trace_reconstructs (naturalTower r.val) X K hr
+    change r.val % 3^K = X.level K at he
+    simpa [Nat.mod_eq_of_lt r.isLt] using he
+
+/-- Read the innovation stream back from a coherent tower. -/
+def innovationStream (X : WindowTower) (p : Nat) : Fin 3 :=
+  ⟨towerDigit X 0 p, tower_digit_bound X 0 p⟩
+
+theorem innovation_reconstructs (X : WindowTower) (K : Nat) :
+    streamPrefix (innovationStream X) K = X.level K := by
+  induction K with
+  | zero =>
+    have h := X.bounded 0
+    norm_num at h
+    simpa [streamPrefix] using h.symm
+  | succ K ih =>
+    simp only [streamPrefix, innovationStream, ih]
+    exact (level_reconstruction X K).symm
+
+/-- Complete classification: every coherent tower has exactly one innovation
+stream. This supplies both directions, not just examples of towers. -/
+theorem unique_innovation_presentation (X : WindowTower) :
+    ∃! a : Nat → Fin 3, (streamTower a).level = X.level := by
+  refine ⟨innovationStream X, funext (innovation_reconstructs X), ?_⟩
+  intro a ha
+  apply stream_tower_injective
+  exact ha.trans (funext (innovation_reconstructs X)).symm
+
+/-- The innovation inserted at a level is exactly the trit later observed there. -/
+theorem stream_digit_exact (a : Nat → Fin 3) (p : Nat) :
+    towerDigit (streamTower a) 0 p = (a p).val := by
+  have h := level_reconstruction (streamTower a) p
+  change streamPrefix a (p+1) = streamPrefix a p +
+    3^p * towerDigit (streamTower a) 0 p at h
+  rw [streamPrefix] at h
+  exact (Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide))
+    (Nat.add_left_cancel h)).symm
+
+/-- Controlled infinity is not a countable catalogue: any proposed natural-
+indexed list of coherent worlds misses an explicitly constructed diagonal world. -/
+theorem no_countable_catalogue (worlds : Nat → WindowTower) :
+    ∃ X : WindowTower, ∀ n : Nat, X.level ≠ (worlds n).level := by
+  let a : Nat → Fin 3 := fun n =>
+    ⟨(towerDigit (worlds n) 0 n + 1) % 3, Nat.mod_lt _ (by decide)⟩
+  refine ⟨streamTower a, ?_⟩
+  intro n he
+  have hl := congrFun he (n+1)
+  have hd : towerDigit (streamTower a) 0 n = towerDigit (worlds n) 0 n := by
+    unfold towerDigit
+    rw [hl]
+  rw [stream_digit_exact] at hd
+  change (towerDigit (worlds n) 0 n + 1) % 3 = towerDigit (worlds n) 0 n at hd
+  have hb := tower_digit_bound (worlds n) 0 n
+  omega
+
+/-- The all-two world is an explicit infinite inhabitant. -/
+def allTwoTower : WindowTower := streamTower (fun _ => (2 : Fin 3))
+
+theorem all_two_exact (K : Nat) : allTwoTower.level K + 1 = 3^K := by
+  induction K with
+  | zero => rfl
+  | succ K ih =>
+    change streamPrefix (fun _ => (2 : Fin 3)) (K+1) + 1 = _
+    simp only [streamPrefix, Nat.pow_succ]
+    change streamPrefix (fun _ => (2 : Fin 3)) K + 1 = 3^K at ih
+    omega
+
+private theorem depth_dominates (R : Nat) : R + 1 < 3^(R+2) := by
+  induction R with
+  | zero => decide
+  | succ R ih =>
+    have hp : 3^(R+1+2) = 3^(R+2) * 3 := by
+      rw [show R+1+2 = (R+2)+1 by omega, Nat.pow_succ]
+    rw [hp]
+    omega
+
+/-- This tower has no finite natural energy representing all of its windows. -/
+theorem all_two_not_natural (R : Nat) :
+    allTwoTower.level ≠ (naturalTower R).level := by
+  intro h
+  have he := congrFun h (R+2)
+  have hc := all_two_exact (R+2)
+  have hb : R % 3^(R+2) ≤ R := Nat.mod_le _ _
+  have hg := depth_dominates R
+  change allTwoTower.level (R+2) = R % 3^(R+2) at he
+  omega
+
 /-- Every GST finite rectangle law extends to every coherent tower. -/
 theorem tower_rectangle_gauss (X : WindowTower) (N K : Nat) :
     (∑ p ∈ Finset.range K, (3:Int)^p * ∑ t ∈ Finset.range N,
@@ -293,6 +397,10 @@ theorem tower_no_erasure (X : WindowTower) (N q : Nat) (hN : 1 ≤ N)
 #print axioms stream_tower_injective
 #print axioms finite_observation_equivalence
 #print axioms wave_stream_injective
+#print axioms unique_finite_signature
+#print axioms unique_innovation_presentation
+#print axioms no_countable_catalogue
+#print axioms all_two_not_natural
 #print axioms tower_rectangle_gauss
 #print axioms tower_no_erasure
 
