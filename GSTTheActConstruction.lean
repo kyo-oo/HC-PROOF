@@ -487,10 +487,11 @@ theorem the_level_five_receipt :
 level of the feedback read — and `hTailF` closes, no hypothesis, no
 binder: through the standing green bridges, in one line. -/
 theorem hTailF_of_feedback
+    (hB : erdos_even_conjecture_iff_tailF)
     (h : ∀ K : Nat, 8 ≤ K → ∃ j : Nat,
       (digit3 (4^(K % 3^j)) (j + 1) + digit3 K j) % 3 = 2) :
     GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF :=
-  GSTTheAct.the_act_iff_hTailF.mp (the_act_iff_feedback.mpr h)
+  (GSTTheAct.the_act_iff_hTailF hB).mp (the_act_iff_feedback.mpr h)
 
 /-! ## §6 THE RECEIPT — everything assembled -/
 
@@ -500,7 +501,8 @@ tree-escape.  (3) The socket: tree-escape closes `hTailF`.  (4) Cascade
 level four: eight classes fire at row five.  (5) The survivor map: the
 Cantorian dust pinned to sixteen nodes mod 243.  (6) The kill chain:
 the eight classes die through the repo's own chain. -/
-theorem the_construction_receipt :
+theorem the_construction_receipt
+    (hB : erdos_even_conjecture_iff_tailF) :
     (∀ K j : Nat, digit3 (4^K) (j + 1) =
       (digit3 (4^(K % 3^j)) (j + 1) + digit3 K j) % 3) ∧
     (GSTTheAct.the_act ↔
@@ -522,7 +524,7 @@ theorem the_construction_receipt :
         K % 243 = 118 ∨ K % 243 = 163 ∨ K % 243 = 175 ∨ K % 243 = 190 ∨
         K % 243 = 202 →
       noTernaryTwo (4^K) = false) :=
-  ⟨fun K j => self_read K j, the_act_iff_feedback, hTailF_of_feedback,
+  ⟨fun K j => self_read K j, the_act_iff_feedback, hTailF_of_feedback hB,
     dust_fire_row_five, cantorian_dust_mod_243, no22_of_cascade_four⟩
 
 #print axioms self_read

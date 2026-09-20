@@ -218,6 +218,7 @@ explicit digit witnesses, the act, tailF, the full theorem, and the
 infinite-controller digit-two cell. -/
 theorem worldtrace_mahler_relative_precision_crown
     (hB : infinite_controller_ternary_two_chokehold)
+    (hBIff : erdos_even_conjecture_iff_tailF)
     (hOdd : erdos_ternary_2_conjecture_odd)
     (T : WorldtraceMahlerTheory) : WorldtraceMahlerCrown := by
   have hnc : ¬ ∃ K : Nat, 8 ≤ K ∧ GSTClimbInfiniteFamily.CantorianPower K :=
@@ -225,7 +226,7 @@ theorem worldtrace_mahler_relative_precision_crown
   have hAct : GSTTheAct.the_act :=
     GSTClimbInfiniteFamily.the_act_iff_no_cantorian.mpr hnc
   have hTail : GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF :=
-    GSTTheAct.the_act_iff_hTailF.mp hAct
+    (GSTTheAct.the_act_iff_hTailF hBIff).mp hAct
   refine ⟨hnc, worldtrace_mahler_kill_all T.mahler T.compression,
     hAct, hTail, GSTTheAct.full_erdos_of_the_act hOdd hAct, ?_⟩
   intro n hn

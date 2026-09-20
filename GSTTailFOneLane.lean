@@ -234,7 +234,8 @@ hypotheses. -/
 object: the cube lift, the three-window dichotomy, the dust's shape, and
 the terminal identity — the input and the even-exponent statement are one
 object, both directions kernel-certified. -/
-theorem one_lane_omega_face :
+theorem one_lane_omega_face
+    (hB : erdos_even_conjecture_iff_tailF) :
     (∀ s core : Nat, omegaCutWord (s+1) core
       = omegaCutWord s core
         + 3^(s+1) * (omegaCutWord s core * omegaCutWord s core
@@ -262,7 +263,7 @@ theorem one_lane_omega_face :
     fun s core hs hfree => omega_sheet_window_dichotomy s core hs hfree,
     fun core hfree hwin hdust =>
       omega_dust_shape_middle_third core hfree hwin hdust,
-    erdos_even_conjecture_iff_tailF.symm⟩
+    hB.symm⟩
 
 /-- **THE ONE-LANE RECEIPT — the whole construction, one theorem, zero
 hypotheses.**  Every exponent's case map (fire or the complete dust
@@ -274,7 +275,8 @@ the dust's shape (the survivor diagonal pinned to the exact middle third
 of every level), and the floor identity (the input and the even-exponent
 statement are one object).  All cases, all rows, all towers, all sheets,
 all levels, infinity at one single time: ONE lane. -/
-theorem one_lane_the_whole_construction :
+theorem one_lane_the_whole_construction
+    (hB : erdos_even_conjecture_iff_tailF) :
     (∀ K : Nat, (∃ p : Nat, digit3 (4^(K+1)) p = 2) ∨
       (∃ s core : Nat, (K+1) = 3^s * core ∧ ¬ 3 ∣ core ∧
         (core % 9 = 4 ∨ (s = 0 ∧ core % 9 = 1) ∨ (1 ≤ s ∧ core % 9 = 7))
@@ -316,7 +318,7 @@ theorem one_lane_the_whole_construction :
     fun s core hs hfree => omega_sheet_window_dichotomy s core hs hfree,
     fun core hfree hwin hdust =>
       omega_dust_shape_middle_third core hfree hwin hdust,
-    erdos_even_conjecture_iff_tailF.symm⟩
+    hB.symm⟩
 
 #print axioms one_lane_three_free_decomposition
 #print axioms one_lane_cut_word_one

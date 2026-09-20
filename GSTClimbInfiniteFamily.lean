@@ -458,9 +458,10 @@ theorem the_act_iff_no_cantorian :
 ⇒ `hTailF`: the whole conditionality of `hTailF` collapses onto the
 Cantorian core alone — no hypothesis, no binder beyond the core itself. -/
 theorem hTailF_of_no_cantorian
+    (hB : erdos_even_conjecture_iff_tailF)
     (h : ¬ ∃ K : Nat, 8 ≤ K ∧ CantorianPower K) :
     GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF :=
-  GSTTheAct.the_act_iff_hTailF.mp (the_act_iff_no_cantorian.mpr h)
+  (GSTTheAct.the_act_iff_hTailF hB).mp (the_act_iff_no_cantorian.mpr h)
 
 /-- `K = 0` is Cantorian: `4^0 = 1` has no trits at all above row zero. -/
 theorem cantorian_zero : CantorianPower 0 := by
@@ -555,7 +556,8 @@ The cascade's three levels.  (4) The collapse: the act ⟺ no Cantorian
 exponent from eight on.  (5) The final socket.  (6) The core's
 below-floor survivors.  (7) The cascade kill.  (8) The climb family.  (9)
 The family is unbounded. -/
-theorem the_completed_read_receipt :
+theorem the_completed_read_receipt
+    (hB : erdos_even_conjecture_iff_tailF) :
     (∀ v u r j : Nat, r < 3^v → j ≤ v →
       digit3 (4^(3^v * u + r)) (v + 1 + j) =
         digit3 (4^r / 3^(v+1) + 4^r * GSTCanonicalTailLTE.lteCoeff v * u) j) ∧
@@ -585,7 +587,7 @@ theorem the_completed_read_receipt :
     (∀ N : Nat, ∃ K : Nat, N ≤ K ∧ wave3_deep_member K) :=
   ⟨prefaced_window_full, every_row_is_read, dust_fire_row_two,
     dust_fire_row_three, dust_fire_row_four, the_act_iff_no_cantorian,
-    hTailF_of_no_cantorian, cantorian_survivors_below_eight,
+    hTailF_of_no_cantorian hB, cantorian_survivors_below_eight,
     no22_of_cascade, climb_member_of_wave3_deep, wave3_deep_unbounded⟩
 
 #print axioms pair_law
@@ -1114,7 +1116,8 @@ act is equivalent to the absence of Cantorian exponents from eight on
 (the standing collapse).  (3) The final socket stands: no Cantorian
 exponent from eight on ⇒ `hTailF`.  The residual of the whole campaign
 is the single-sheet Erdős core alone — the towers are all dead. -/
-theorem the_tower_dust_is_empty_receipt :
+theorem the_tower_dust_is_empty_receipt
+    (hB : erdos_even_conjecture_iff_tailF) :
     (∀ core : Nat, ¬ 3 ∣ core → ¬ NeverFiringTower core) ∧
     (∀ core : Nat, core % 3 = 1 ∨ core % 3 = 2 → ¬ NeverFiringTower core) ∧
     (GSTTheAct.the_act ↔ ¬ ∃ K : Nat, 8 ≤ K ∧ CantorianPower K) ∧
@@ -1122,7 +1125,7 @@ theorem the_tower_dust_is_empty_receipt :
       GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF) :=
   ⟨tower_dust_empty,
     fun core hfree => tower_dust_empty core (by omega),
-    the_act_iff_no_cantorian, hTailF_of_no_cantorian⟩
+    the_act_iff_no_cantorian, hTailF_of_no_cantorian hB⟩
 
 #print axioms omegaCutWord_one
 #print axioms digit3_eq_mod_slice

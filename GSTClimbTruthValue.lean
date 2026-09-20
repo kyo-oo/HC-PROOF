@@ -55,9 +55,10 @@ the repo's own green chain: `hTailF` consumes the climb, and the green
 unconditional iff `erdos_even_conjecture_iff_tailF` turns the tailF
 property into the statement.  Zero new input. -/
 theorem climb_implies_erdos
+    (hB : erdos_even_conjecture_iff_tailF)
     (hClimb : GSTInfiniteFourPowerNavigation.four_power_happy_climb) :
     ∀ K : Nat, 8 ≤ K → noTernaryTwo (4^K) = false :=
-  erdos_even_conjecture_iff_tailF.mpr (GSTTailFProof.hTailF hClimb)
+  hB.mpr (GSTTailFProof.hTailF hClimb)
 
 /-- Verified instance at `K = 5` (below the climb's floor). -/
 theorem no22_four_pow_five : noTernaryTwo (4^5) = false := by
@@ -85,6 +86,7 @@ every exponent `n ≥ 9` owns a ternary digit two.  This is the
 machine-checked reason `hTailF` is conditional: its one input carries
 the entire remaining content of the conjecture. -/
 theorem erdos_ternary_full_of_climb
+    (hB : erdos_even_conjecture_iff_tailF)
     (hOdd : erdos_ternary_2_conjecture_odd)
     (hClimb : GSTInfiniteFourPowerNavigation.four_power_happy_climb) :
     ∀ n : Nat, 9 ≤ n → noTernaryTwo (2^n) = false := by
@@ -98,7 +100,7 @@ theorem erdos_ternary_full_of_climb
       · exact no22_four_pow_five
       · exact no22_four_pow_six
       · exact no22_four_pow_seven
-    · exact climb_implies_erdos hClimb K hK8
+    · exact climb_implies_erdos hB hClimb K hK8
   · exact hOdd n hn (by omega)
 
 /-! ## §2 THE FLOOR WITNESS — the climb is the PAIR demand -/
@@ -163,6 +165,7 @@ the conjecture holds at `K = 7` while the climb fails there — the pair
 demand is strictly stronger.  (3) The truth face: the climb owns
 explicit Happy rows at `K = 8, 9, 10` — it is not false. -/
 theorem the_climbs_truth_value
+    (hB : erdos_even_conjecture_iff_tailF)
     (hOdd : erdos_ternary_2_conjecture_odd) :
     (GSTInfiniteFourPowerNavigation.four_power_happy_climb →
       ∀ n : Nat, 9 ≤ n → noTernaryTwo (2^n) = false) ∧
@@ -171,7 +174,7 @@ theorem the_climbs_truth_value
     (∃ p : Nat, 3 ≤ p ∧ HappyCell (carry4 (4^8) p) (digit3 (4^8) p)) ∧
     (∃ p : Nat, 3 ≤ p ∧ HappyCell (carry4 (4^9) p) (digit3 (4^9) p)) ∧
     (∃ p : Nat, 3 ≤ p ∧ HappyCell (carry4 (4^10) p) (digit3 (4^10) p)) :=
-  ⟨erdos_ternary_full_of_climb hOdd,
+  ⟨erdos_ternary_full_of_climb hB hOdd,
     ⟨no22_four_pow_seven, no_happy_row_at_seven⟩,
     climb_witness_eight, climb_witness_nine, climb_witness_ten⟩
 

@@ -394,9 +394,10 @@ theorem the_act_of_dust_empty
 the standing green bridges.  The one remaining mathematical object is
 named: kill the window-clean dust and the campaign closes. -/
 theorem hTailF_of_dust_empty
+    (hB : erdos_even_conjecture_iff_tailF)
     (h : ∀ K : Nat, 8 ≤ K → ¬ WindowCleanDust K) :
     GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF :=
-  GSTTheAct.the_act_iff_hTailF.mp (the_act_of_dust_empty h)
+  (GSTTheAct.the_act_iff_hTailF hB).mp (the_act_of_dust_empty h)
 
 /-! ## §5 THE RECEIPT — everything in one theorem -/
 
@@ -406,7 +407,8 @@ diagonal: the readable object is depth-invariant.  (3) The fire
 families: three ladder levels, uniform.  (4) The triage: every `K ≥ 8`
 fires or is dust.  (5) The socket: dust empty ⇒ `hTailF`.  (6) Witness
 receipts beyond every prior uniform witness. -/
-theorem the_diagonal_read_receipt :
+theorem the_diagonal_read_receipt
+    (hB : erdos_even_conjecture_iff_tailF) :
     (∀ v u j : Nat, j ≤ v →
       digit3 (4^(3^v * u)) (v + 1 + j) =
         digit3 (u * GSTCanonicalTailLTE.lteCoeff v) j) ∧
@@ -429,7 +431,7 @@ theorem the_diagonal_read_receipt :
     (noTernaryTwo (4^108) = false) :=
   ⟨diagonal_window_law, lteCoeff_stable,
     window_fire_level1, window_fire_level2, window_fire_level3,
-    every_exponent_fires, hTailF_of_dust_empty,
+    every_exponent_fires, hTailF_of_dust_empty hB,
     fire_nine_row_four, fire_108_row_seven, no22_four_pow_108⟩
 
 #print axioms binom_two_term

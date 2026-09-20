@@ -1903,19 +1903,21 @@ theorem tailF_of_tower_and_row_mod2187
 
 /-- **THE EVEN STATEMENT ON THE REPLACEMENT INPUT, LEVEL SEVEN.** -/
 theorem even_conjecture_of_tower_and_row_mod2187
+    (hB : erdos_even_conjecture_iff_tailF)
     (hTower : tailF_tower_primitive)
     (hRowMod : tailF_row_primitive_mod2187) :
     ∀ K : Nat, 8 ≤ K → noTernaryTwo (4^K) = false :=
-  erdos_even_conjecture_iff_tailF.mpr
+  hB.mpr
     (tailF_of_tower_and_row_mod2187 hTower hRowMod)
 
 /-- **THE CROWN ON THE REPLACEMENT INPUT, LEVEL SEVEN.** -/
 theorem erdos_ternary_2_universal_of_tower_and_row_mod2187
+    (hB : erdos_ternary_2_universal_of_tailF)
     (hTower : tailF_tower_primitive)
     (hRowMod : tailF_row_primitive_mod2187)
     (n : Nat) (hn : 9 ≤ n) :
     noTernaryTwo (2^n) = false :=
-  erdos_ternary_2_universal_of_tailF
+  hB
     (tailF_of_tower_and_row_mod2187 hTower hRowMod) n hn
 
 #print axioms four_pow_mod6561

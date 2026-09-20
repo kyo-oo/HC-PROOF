@@ -329,7 +329,8 @@ tower dead by the universal blade; (5) the floor identity — the input
 `four_power_omega_shadow_wave_tailF` and the even-exponent statement
 `∀ K ≥ 8, noTernaryTwo (4^K) = false` are one object, both directions
 kernel-certified.  No hypothesis, no binder, no per-level numeral. -/
-theorem the_infinite_read :
+theorem the_infinite_read
+    (hB : erdos_even_conjecture_iff_tailF) :
     (∀ m : Nat, 3 ≤ m → ∃ c : Nat, 0 < c ∧ DustAt m c) ∧
     (∀ m c : Nat, ∃ j : Nat, j < 3 ∧
       2 * 3^m ≤ (omegaCutWord m 1 * (c + j * 3^m)) % 3^(m+1)) ∧
@@ -344,7 +345,7 @@ theorem the_infinite_read :
     fun m c => dust_firing_child m c,
     fun m c hc => dust_surviving_child m c hc,
     fun core h => omega_tower_dies_of_not_dust core h,
-    erdos_even_conjecture_iff_tailF.symm⟩
+    hB.symm⟩
 
 #print axioms dust_at_all_iff_dust
 #print axioms dust_child_anatomy

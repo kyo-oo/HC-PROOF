@@ -50,12 +50,14 @@ This is the exact content whose absence is the whole conditionality of
 `hTailF` — no more, no less. -/
 def the_act : Prop := ∀ K : Nat, 8 ≤ K → noTernaryTwo (4^K) = false
 
-/-- **THE IDENTITY.**  Through the repo's own green unconditional iff,
-the act and `hTailF`'s target are one object: whatever proves the act
-proves `hTailF`, and nothing weaker than the act does. -/
-theorem the_act_iff_hTailF :
+/-- **THE IDENTITY.**  Through the repo's own green unconditional iff
+(carried as the explicit boundary input `hB`, proven in the source
+monolith), the act and `hTailF`'s target are one object: whatever proves
+the act proves `hTailF`, and nothing weaker than the act does. -/
+theorem the_act_iff_hTailF
+    (hB : erdos_even_conjecture_iff_tailF) :
     the_act ↔ GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF :=
-  erdos_even_conjecture_iff_tailF
+  hB
 
 /-! ## §1 THE ANSWER — Erdős closed ⇒ hTailF closed -/
 
@@ -73,9 +75,10 @@ construction, inside this repo or outside it — `hTailF` closes through
 this bridge.  The conditionality of `hTailF` is exactly the act, not the
 climb: the climb is overkill. -/
 theorem hTailF_of_full_erdos
+    (hB : erdos_even_conjecture_iff_tailF)
     (hFull : ∀ n : Nat, 9 ≤ n → noTernaryTwo (2^n) = false) :
     GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF :=
-  the_act_iff_hTailF.mp (the_act_of_full_erdos hFull)
+  hB.mp (the_act_of_full_erdos hFull)
 
 /-- The act plus the repo's green odd-exponent half and the verified
 below-floor instances assemble the FULL ternary statement. -/
@@ -106,9 +109,10 @@ theorem the_act_iff_full_erdos
 climb proves the act (the pair demand subsumes digit-two existence).
 The climb is an overkill route to `hTailF`, not a necessity. -/
 theorem climb_gives_the_act
+    (hB : erdos_even_conjecture_iff_tailF)
     (hClimb : GSTInfiniteFourPowerNavigation.four_power_happy_climb) :
     the_act :=
-  GSTClimbTruthValue.climb_implies_erdos hClimb
+  GSTClimbTruthValue.climb_implies_erdos hB hClimb
 
 /-! ## §2 THE FRONT LAW — the seed of the diagonal read -/
 
