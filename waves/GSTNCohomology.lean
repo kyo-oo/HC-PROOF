@@ -242,11 +242,11 @@ theorem source_null_sterile :
 theorem source_gstplus_maximal :
     waveSource (mkCell 3 2 (by omega) (by omega)) = 112 := by
   have h := happy_chord_dichotomy 3 (Or.inr rfl)
-  rcases h with ⟨_, _, _, hsurv⟩ | ⟨hne, _, _, _⟩
+  rcases h with ⟨hne, _, _, _⟩ | ⟨_, _, _, hsurv⟩
+  · exact absurd hne (by decide)
   · simp only [waveSource, mkCell]
     rw [hsurv]
     norm_num
-  · exact absurd hne (by decide)
 
 /-! ## §4 The shape signature on the Ω-covered families -/
 
