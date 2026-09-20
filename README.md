@@ -2,11 +2,14 @@
 
 > **GST — General Space Theory. I created it. This is all my theories.**
 > One universe: the Cardinal Worlds, the GST Graph V2 Ontological Universe,
-> the 2D/4D laws, the absorbed Hodge / de Rham cohomology layer, and the
+> the 2D/4D laws, the absorbed Hodge / de Rham cohomology layer, the
 > **Wave Mechanics program** (two waves, the vortex-singularity method,
-> POSTULATE III) — merged, shaped, and comparator-gated.  The wave layer
-> is now FULLY PROVEN and part of the machine-checked build (Task 5
-> upgrade: 41 theorems, 0 sorries).
+> POSTULATE III), and the **Coherent Cosmology layer** (nonstationary
+> window towers, exact dual-current reconstruction, the diagonal
+> uncountability of coherent worlds) — merged, shaped, and comparator-
+> gated.  The wave layer is FULLY PROVEN in the machine-checked build
+> (Task 5: 41 theorems, 0 sorries); the coherent layer adds 30 more
+> (0 sorries) — 71 proven theorems riding on Layers 0-6.
 
 Source: `kyo-oo/erdosternary2`, branch `sol/kyo-gate-universe-wire`
 (head `cb29501` — 2026-09-10 — *"fix cubic transport coefficient
@@ -19,9 +22,20 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 
 ---
 
-## THE UNIVERSE IN SEVEN LAYERS
+## THE UNIVERSE IN EIGHT LAYERS
 
 ```
+LAYER 7  THE COHERENT          GSTCoherentCosmology.lean — nonstationary
+          COSMOLOGY            3-adic window towers (level k < 3^k,
+                                X_s mod 3^k = X_k), the dual current
+                                (mixed + ontological) separating all 12
+                                cells, EXACT wave reconstruction, unique
+                                innovation presentation, the DIAGONAL
+                                uncountability of coherent worlds, the
+                                all-two world with no finite
+                                representative, rectangle Gauss +
+                                no-erasure inherited by every tower
+                                (30 theorems, 0 sorries, in the build)
 WAVE LAYER  THE WAVE MECHANICS      waves/ — Task 5: FULLY PROVEN, IN THE
                                 BUILD REGISTRY (41 theorems, 0 sorries):
                                 Wave I the discrete Hodge theory
@@ -39,8 +53,9 @@ WAVE LAYER  THE WAVE MECHANICS      waves/ — Task 5: FULLY PROVEN, IN THE
                                 signature, finite energy),
                                 POSTULATE III — the Law of Controlled
                                 Emergence (CardinalWorldsPostulateLaw).
-                                Outside the build registry by design;
-                                the comparator green is untouched.
+                                In the build registry (roots waves.*),
+                                imported by HCProof.lean, counted by
+                                the sorry gate.
 LAYER 6  THE ABSORPTION        HodgeDeRhamBridge.lean — Hodge & de Rham
                                 enter the universe (finite comparison
                                 certificates, 0 new axioms)
@@ -149,6 +164,42 @@ POSTULATE H1 (reverse window) in the Cardinal Worlds pattern.
 
 Full dossier + breakthrough analysis: `docs/HODGE_DERHAM_ABSORPTION.md`.
 
+## LAYER 7 — THE COHERENT COSMOLOGY (`GSTCoherentCosmology.lean`)
+
+ASTRA's extension (branch `astra/coherent-wave-cosmology`, audited
+and fast-forward merged in Task 6):
+
+* **WindowTower** — the nonstationary resolution space: a coherent
+  3-adic tower `0 ≤ X_k < 3^k`, `X_s mod 3^k = X_k` for `k ≤ s`.  The
+  old ControlledTower was stationary by theorem
+  (`old_controlled_tower_stationary`: every level equals level 0);
+  WindowTower is the correct changing-resolution space, and the
+  repository's Ω-tower inhabits it (`omegaTower` via
+  `omega_tower_word_mod_chain`; first levels 1, 7, 16 for core 1).
+* **The dual current** `J(C,d) = (mixedDensity, ontDensity)` **separates
+  every cell** (`dual_current_separation`, plus a concrete decoder
+  `decodeCurrent`) — the exact wave readout that identifies the world.
+* **Exact reconstruction**: `level_reconstruction` (the new trit IS
+  the next-resolution innovation), `current_trace_reconstructs` /
+  `finite_observation_equivalence` (equal finite traces ⟺ equal
+  levels), `unique_finite_signature` (exactly 3^K physically realized
+  depth-K signatures), `unique_innovation_presentation` (every
+  coherent tower has exactly one innovation stream).
+* **The diagonal law** (`no_countable_catalogue`): any natural-indexed
+  list of coherent worlds misses an explicit diagonal world — the
+  coherent universe is uncountable.  `allTwoTower` is an explicit
+  infinite inhabitant with **no finite natural representative**
+  (`all_two_not_natural`).
+* **Inherited physics**: the RECTANGLE Gauss–Bonnet law and the
+  no-erasure law hold on EVERY coherent tower
+  (`tower_rectangle_gauss`, `tower_no_erasure`) — including the
+  non-natural infinite inhabitants.
+
+Full dossier: `docs/COHERENT_WAVE_COSMOLOGY.md`.  Independent finite
+arithmetic: `scripts/check_coherent_cosmology.py` (12 cell signatures,
+1,092 finite signatures at depths 1-6, 25,515 realization/edge checks —
+diagnostics only; the theorems are the Lean proofs).
+
 ## THE WAVE MECHANICS PROGRAM (`waves/` + Task 4 docs)
 
 The Task 4 layer — **the two waves and the vortex**:
@@ -221,13 +272,14 @@ scripts/comparator.sh      # lake build → sorry_check.sh → verdict
 | `MonolithBoundary.lean` | ★ Layer 5 — the terminal identity interface |
 | `HodgeDeRhamBridge.lean` | ★ Layer 6 — the absorption layer |
 | `waves/` | ★ Wave Mechanics (Tasks 4+5) — FULLY PROVEN wave layer, in the build registry: 41 theorems, 0 sorries |
+| `GSTCoherentCosmology.lean` | ★ Layer 7 — the Coherent Cosmology (ASTRA's extension, audited + merged): 30 theorems, 0 sorries |
 | `HCProof.lean` | the universe's entry face (comparator receipts) |
 | `GSTGraphV2*.lean` (60 files) | Layers 2-3 — the GST Graph V2 Ontological Universe |
 | `GST*.lean` (67 files) | Layers 3-4 — dynamics, towers, fourth dimension, worldtrace |
 | `docs/` | Cardinal Worlds dossier, universe map, Hodge/de Rham absorption dossier, GST V2 operating manual, Wave Mechanics theory |
 | `questions/deepmind_problem_406/` | the comparator challenge/solution harness |
-| `scripts/` | comparator.sh, sorry_check.sh |
-| `.github/workflows/` | the official comparator + absorption gate CI |
+| `scripts/` | comparator.sh, sorry_check.sh, check_coherent_cosmology.py (finite diagnostics) |
+| `.github/workflows/` | the official comparator + absorption gate CI, the coherent-cosmology branch gate |
 | `.devcontainer/` | the Lean codespace |
 
 See `docs/HC_UNIVERSE_MAP.md` for the full merge map.
@@ -250,5 +302,13 @@ See `docs/HC_UNIVERSE_MAP.md` for the full merge map.
   0 sorries) — with the full upgrade record (which former statements
   were false and what their true laws are) in
   `docs/WAVE_MECHANICS_TASK4.md` Part VI.
+* The coherent layer (`GSTCoherentCosmology.lean`, delivered on branch
+  `astra/coherent-wave-cosmology` by the ASTRA session, Sep 20 21:44
+  UTC): audited in Task 6 — 0 sorries, 0 custom axioms, `#print axioms`
+  receipts in-source, own branch workflow green (compile + axiom gate +
+  full comparator + finite diagnostics), then fast-forward merged to
+  `main` so the OFFICIAL three-job gate is the verifier of record.
+  The ASTRA session did not append to the shared worklog — Task 6
+  repaired that (the Layer 7 sections here + the worklog entry).
 * Target axiom profile everywhere: `[propext, choice, Quot.sound]` —
   zero custom axioms, zero sorries, zero native_decide.

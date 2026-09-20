@@ -47,6 +47,12 @@ current, becomes the Hodge class sector of the absorption.
 
 ```
             ┌────────────────────────────────────────────┐
+            │ L7  GSTCoherentCosmology (the coherence)   │
+            │ window towers · dual current ·             │
+            │ exact reconstruction · diagonal worlds     │
+            └──────────────────────┬─────────────────────┘
+                                   │ instantiation only
+            ┌──────────────────────┴─────────────────────┐
             │   L6  HodgeDeRhamBridge (the absorption)   │
             │   comparison · period · twist · signature  │
             └──────────────────────┬─────────────────────┘
@@ -136,3 +142,38 @@ cascade, the puncture, the full signature.  See
 `docs/WAVE_MECHANICS_TASK4.md` (the geometric theory) and
 `waves/README.md`. The comparator green on Layers 0-6 is untouched
 (the wave layer only instantiates its theorems).
+
+## TASK 6 — THE COHERENT COSMOLOGY LAYER (`GSTCoherentCosmology.lean`)
+
+ASTRA's extension (branch `astra/coherent-wave-cosmology`, delivered
+Sep 20 21:44 UTC, audited and fast-forward merged to `main` at
+`d8194e8`):
+
+* **The nonstationary repair**: Task 5's ControlledTower was stationary
+  by theorem — `old_controlled_tower_stationary` proves level j =
+  level 0 for every j, so the controlled tower could not actually grow.
+  Layer 7 defines the correct space: **WindowTower** — 3-adic coherent
+  towers (`0 ≤ X_k < 3^k`, `X_s mod 3^k = X_k` for `k ≤ s`), inhabited
+  by the Ω-tower (`omegaTower`), by every natural residue
+  (`naturalTower`), and by arbitrary innovation streams (`streamTower`).
+* **The dual current** `J(C,d) = (mixedDensity, ontDensity)` separates
+  all 12 cells (decidable 12×12 certificate + the Nat-valued theorem
+  + a concrete decoder) — the exact wave readout that identifies the
+  world; `mixed_current_alias` shows one current alone cannot.
+* **Exact reconstruction**: levels are reconstructed from finite
+  wave-current traces; equality of worlds IS equality of observations
+  (`finite_observation_equivalence`); unique finite signature per depth
+  (exactly 3^K, all physically realized); unique innovation
+  presentation (the complete classification of coherent towers).
+* **Uncountability**: the diagonal construction defeats every
+  countable catalogue of coherent worlds (`no_countable_catalogue`);
+  the all-two world is an explicit infinite inhabitant with no finite
+  natural representative (`all_two_not_natural`).
+* **Physics inheritance**: the RECTANGLE Gauss–Bonnet law and the
+  no-erasure law hold on EVERY coherent tower
+  (`tower_rectangle_gauss`, `tower_no_erasure`) — natural or not.
+* **Verification**: own branch workflow (compile + axiom receipts +
+  full comparator + `scripts/check_coherent_cosmology.py` finite
+  diagnostics) GREEN on `d8194e8`; merged to `main` — the official
+  three-job gate is the verifier of record.  30 theorems, 0 sorries,
+  0 custom axioms.  Docs: `docs/COHERENT_WAVE_COSMOLOGY.md`.
