@@ -82,7 +82,7 @@ structure NShape where
 /-- The trivial shape: no holes, no channels. -/
 def emptyShape : NShape where
   holes := 0
-  channel := fun i => i.elim0
+  channel := fun i => absurd i.2 (Nat.not_lt_zero i.val)
   distinct := by intro i j _; exact absurd i.2 (by omega)
 
 /-- The channel map of an N-shape is **injective**: the N holes realize N
@@ -128,16 +128,19 @@ theorem towerWindow_length (R p N : Nat) :
 exactly when `1 ≤ N`. -/
 theorem towerWindow_pos (R p : Nat) (hN : 1 ≤ N) :
     towerWindow R p N ≠ [] := by
-  rw [towerWindow, List.map_eq_nil_iff, List.range_eq_nil]
+  intro hnil
+  have hlen := towerWindow_length R p N
+  rw [hnil] at hlen
+  simp at hlen
   omega
 
 /-- **N-COHOMOLOGY** (degree one) of the shape channel stack: the group of
-window readouts — a window profile per hole, with an integer class
-coordinate (the window's ℤ-invariant).  The rank statement is the
+window readouts — a depth-N window profile per hole (a list of N Wave II
+amplitudes), with an integer class coordinate.  The rank statement is the
 injectivity of the channel map: N holes carry N distinct window
 coordinates. -/
 def nCohoClasses (R : Nat) (s : NShape) (N : Nat) : Type :=
-  (Fin s.holes → towerWindow R · N) × ℤ
+  (Fin s.holes → List ℤ) × ℤ
 
 /-- **THE N-COHOMOLOGY RANK LAW.**  On an N-shape whose channels carry
 nonempty depth-N windows, the degree-one window readout family exists and
@@ -228,7 +231,7 @@ theorem source_null_sterile :
     waveSource (mkCell 0 2 (by omega) (by omega)) = 0 := by
   have h := happy_chord_dichotomy 0 (Or.inl rfl)
   rcases h with ⟨_, _, _, hsurv⟩ | ⟨hne, _, _, _⟩
-  · simp only [waveSource]
+  · simp only [waveSource, mkCell]
     rw [hsurv]
     norm_num
   · exact absurd hne (by decide)
@@ -240,7 +243,7 @@ theorem source_gstplus_maximal :
     waveSource (mkCell 3 2 (by omega) (by omega)) = 112 := by
   have h := happy_chord_dichotomy 3 (Or.inr rfl)
   rcases h with ⟨_, _, _, hsurv⟩ | ⟨hne, _, _, _⟩
-  · simp only [waveSource]
+  · simp only [waveSource, mkCell]
     rw [hsurv]
     norm_num
   · exact absurd hne (by decide)
@@ -286,20 +289,12 @@ theorem two_wave_frame_refines (R p : Nat) (hbig2 : digit3 R p = 2) :
   rw [hbig2]
   rcases hCc with h0 | h1 | h2 | h3
   · rw [h0]
-    norm_num [mixedDensity, sevenKernel, microSevenKernel, surviveI, twoI,
-      uJump, uCharge, finalMicroDigit, midDigit, microOutput, highBit,
-      lowBit, outDigit, nextCarry, carryPotential, infoPotential]
+    decide
   · rw [h1]
-    norm_num [mixedDensity, sevenKernel, microSevenKernel, surviveI, twoI,
-      uJump, uCharge, finalMicroDigit, midDigit, microOutput, highBit,
-      lowBit, outDigit, nextCarry, carryPotential, infoPotential]
+    decide
   · rw [h2]
-    norm_num [mixedDensity, sevenKernel, microSevenKernel, surviveI, twoI,
-      uJump, uCharge, finalMicroDigit, midDigit, microOutput, highBit,
-      lowBit, outDigit, nextCarry, carryPotential, infoPotential]
+    decide
   · rw [h3]
-    norm_num [mixedDensity, sevenKernel, microSevenKernel, surviveI, twoI,
-      uJump, uCharge, finalMicroDigit, midDigit, microOutput, highBit,
-      lowBit, outDigit, nextCarry, carryPotential, infoPotential]
+    decide
 
 end GSTNCohomology

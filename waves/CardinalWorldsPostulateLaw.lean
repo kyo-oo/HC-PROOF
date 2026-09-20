@@ -110,11 +110,15 @@ theorem finite_presentation (T : ControlledTower Nat) (k : Nat) :
 /-! ## §3 The emergence of dimension -/
 
 /-- **EMERGENT DIMENSION N**: the dimension readout at depth N — the
-number of independent stabilized windows of the tower stack at levels
-below N (the frozen-window phenomenon).  Dimension is *defined* as a
-count of readouts, not as a substrate. -/
-def emergentDimension (T : ControlledTower Nat) (N : Nat) : Nat :=
-  (List.range N).countP (fun j => decide (T.level (j+1) = T.bridge j (T.level j)))
+number of levels below N whose windows have stabilized (the frozen-window
+phenomenon).  Dimension is *defined* as a count of readouts, not as a
+substrate.  (A plain recursive count: 0 at depth 0; at depth N+1, count
+the level-N ledger clause and recurse.) -/
+def emergentDimension (T : ControlledTower Nat) : Nat → Nat
+  | 0 => 0
+  | N+1 =>
+      (if T.level (N+1) = T.bridge N (T.level N) then 1 else 0)
+        + emergentDimension T N
 
 /-- **THE EMERGENCE LAW (the point of the cosmology).**  The emergent
 dimension is exactly the number of levels whose windows have stabilized
@@ -131,8 +135,12 @@ controlled limit of dimension readouts, Theorem
 limit of counts*, under the controller and the ledger. -/
 theorem emergent_dimension_full (T : ControlledTower Nat) (N : Nat) :
     emergentDimension T N = N := by
-  rw [emergentDimension, List.countP_eq_length.mpr
-    (fun x _ => decide_eq_true.mpr (T.ledger x)), List.length_range]
+  induction N with
+  | zero => rfl
+  | succ N ih =>
+      simp only [emergentDimension]
+      rw [if_pos (T.ledger N), ih]
+      omega
 
 /-- **THE INFINITE-DIMENSIONAL READOUT.**  The infinite dimension is the
 colimit of the emergent dimensions: the tower of counts `0, 1, 2, …` is

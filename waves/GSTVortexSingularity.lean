@@ -91,7 +91,7 @@ returns you to your start — the rotation is a *closed* transport. -/
 theorem core_rotation_period_five (C d : Nat) (hC : C < 4) (hd : d < 3) :
     coreRotate (coreRotate (coreRotate (coreRotate (coreRotate (C, d)))))
       = (C, d) :=
-  GSTGraphV2Scratch.gst_local_rotate_fiveS C d hC hd
+  gst_local_rotate_fiveS C d hC hd
 
 /-- **THE VORTEX AXIS.**  The connection has exactly two fixed points —
 the NULL-still cell `(0,0)` and the GST+-still cell `(3,2)`: the axis

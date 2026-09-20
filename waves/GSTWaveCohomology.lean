@@ -149,8 +149,8 @@ Proof: a literal relifting of the machine-verified
 theorem wave_cell_decomposition (c : WaveCell) :
     waveTwoForm c =
       horizontalCoboundary c + verticalCoboundary c + waveSource c := by
-  simpa only [waveTwoForm, horizontalCoboundary, verticalCoboundary, waveSource]
-    using mixed_cell_emergence c.carry c.digit c.hcarry c.hdigit
+  unfold waveTwoForm horizontalCoboundary verticalCoboundary waveSource
+  exact mixed_cell_emergence c.carry c.digit c.hcarry c.hdigit
 
 /-- A wave is **source-free** on a cell when no BIG2 information survives
 in the interior: all 2-form value is coboundary there. -/
@@ -162,7 +162,8 @@ cells are the locally harmonic locus of Wave I — the vacuum of the wave
 universe. -/
 theorem sourcefree_exact (c : WaveCell) (hs : sourceFree c) :
     waveTwoForm c = horizontalCoboundary c + verticalCoboundary c := by
-  rw [wave_cell_decomposition, hs]
+  have h0 : waveSource c = 0 := hs
+  rw [wave_cell_decomposition, h0]
   ring
 
 /-! ## §3 The window laws — Stokes on the wave lattice -/
@@ -183,7 +184,8 @@ vertical carry flux (weighted endpoint carry potentials) plus the window
 class (the integrated SURVIVE incidence — the wave's matter).
 
 This is the window form of the discrete Gauss law: *what the wave carries
-across a window is boundary bookkeeping plus its class*.
+across a window is boundary bookkeeping plus its class*.  (The window
+starts at `4^0 * R = R`, stated in the row law's natural form.)
 
 (Uprade note: the former spec statement integrated over the *vertical*
 descent chain and telescoped the horizontal terms there — false as stated,
@@ -192,7 +194,7 @@ telescoping window is the row; this is that law, proven by instantiating
 the machine-verified `mixed_row_emergence` on the canonical row of `R`.) -/
 theorem window_integral_decomposition (R p N : Nat) :
     rowWindowIntegral R p N
-      = infoPotential (digit3 (4^N * R) p) - infoPotential (digit3 R p)
+      = infoPotential (digit3 (4^N * R) p) - infoPotential (digit3 (4^0 * R) p)
         + 7 * (∑ t ∈ Finset.range N, carryPotential (carry4 (4^t * R) p)
             - 3 * ∑ t ∈ Finset.range N, carryPotential (carry4 (4^t * R) (p+1)))
         + 56 * ∑ t ∈ Finset.range N,
@@ -232,12 +234,13 @@ of the wave integrates to exactly:
 
 Nothing else escapes the rectangle.  This is the machine-verified
 `mixed_rectangle_emergence` specialized to the canonical lattice — the
-Stokes/Gauss–Bonnet law of the GST wave universe. -/
+Stokes/Gauss–Bonnet law of the GST wave universe.  (The window starts at
+`4^0 * R = R`, stated in the rectangle law's natural form.) -/
 theorem rectangle_gauss_law (R N K : Nat) :
     ∑ p ∈ Finset.range K, (3:Int)^p * ∑ t ∈ Finset.range N,
         mixedDensity (carry4 (4^t * R) p) (digit3 (4^t * R) p)
       = ∑ p ∈ Finset.range K, (3:Int)^p *
-          (infoPotential (digit3 (4^N * R) p) - infoPotential (digit3 R p))
+          (infoPotential (digit3 (4^N * R) p) - infoPotential (digit3 (4^0 * R) p))
         + 7 * (∑ t ∈ Finset.range N, carryPotential (carry4 (4^t * R) 0)
             - (3:Int)^K * ∑ t ∈ Finset.range N,
                 carryPotential (carry4 (4^t * R) K))
@@ -316,7 +319,7 @@ theorem total_matter : (twelveCells.map waveSource).sum = 224 := by
 /-- **THE HARMONIC COUNT.**  Exactly `9` of the twelve cells are
 source-free — the harmonic locus of the wave complex. -/
 theorem harmonic_count :
-    (twelveCells.filter (fun c => decide (sourceFree c))).length = 9 := by
+    (twelveCells.filter (fun c => decide (waveSource c = 0))).length = 9 := by
   decide
 
 /-! ## §5 The Hodge wave — integrality as the bridge signature -/
@@ -359,6 +362,20 @@ theorem every_graph_is_hodge_wave (R : Nat) : HodgeWave R := by
 
 /-! ## §6 Transport invariance — the class survives re-encoding -/
 
+/-- The head-peel law for integer row sums: the sum over the first `N+1`
+indices is the head plus the shifted sum over `N` indices.  (Proven by
+induction on `N`; used by the transport law.) -/
+theorem sum_peel_first (g : ℕ → ℤ) (N : Nat) :
+    ∑ t ∈ Finset.range (N+1), g t = g 0 + ∑ t ∈ Finset.range N, g (t+1) := by
+  induction N with
+  | zero => simp
+  | succ N ih =>
+      have hL := Finset.sum_range_succ g (N+1)
+      have hR := Finset.sum_range_succ (fun t => g (t+1)) N
+      simp only [] at hR
+      rw [hL, ih, hR]
+      ring
+
 /-- **THE WAVE TRANSPORT LAW (mass re-encoding).**  Digit-two information
 surviving ×4 with re-encoding preserves the window class *additively*:
 the class of the row window of length `N+1` on `R` is the incoming cell's
@@ -374,9 +391,7 @@ one cell.  This is that law, proven exactly.) -/
 theorem wave_class_transport (R p N : Nat) :
     rowClass R p (N+1) = waveSource (cellOf R p) + rowClass (4 * R) p N := by
   unfold rowClass
-  have h0 : ∑ t ∈ Finset.range (N+1), rowClassAt R p t
-      = rowClassAt R p 0 + ∑ t ∈ Finset.range N, rowClassAt R p (t+1) :=
-    Finset.sum_range_succ' (rowClassAt R p) N
+  have h0 := sum_peel_first (rowClassAt R p) N
   rw [h0]
   rw [show rowClassAt R p 0 = waveSource (cellOf R p) from by
       unfold rowClassAt
@@ -403,14 +418,11 @@ determine cells, cells determine modes, and distinct Happy realizations
 wave mode `-56` and the GST+ chord carries wave mode `70`: different
 2-form amplitude, different SURVIVE incidence (0 vs 2), different source.
 
-Values certified by `norm_num` on the full twelve-cell definitional
+Values certified by `decide` on the full twelve-cell definitional
 cascade. -/
 theorem spectrum_separates_chords :
     waveMode (mkCell 0 2 (by omega) (by omega))
       ≠ waveMode (mkCell 3 2 (by omega) (by omega)) := by
-  norm_num [waveMode, waveTwoForm, mixedDensity, sevenKernel,
-    microSevenKernel, surviveI, twoI, uJump, uCharge, finalMicroDigit,
-    midDigit, microOutput, highBit, lowBit, outDigit, nextCarry,
-    carryPotential, infoPotential]
+  decide
 
 end GSTWaveCohomology
