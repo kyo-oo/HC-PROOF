@@ -236,9 +236,12 @@ theorem worldtrace_mahler_relative_precision_crown
 residual ghost compression is converted internally to scaled arithmetic
 compression before the Mahler collision. -/
 theorem worldtrace_mahler_crown_of_residual_ghost
+    (hB : infinite_controller_ternary_two_chokehold)
+    (hBIff : erdos_even_conjecture_iff_tailF)
+    (hOdd : erdos_ternary_2_conjecture_odd)
     (H : MahlerSharp) (HC : ResidualGhostCompression) :
     WorldtraceMahlerCrown :=
-  worldtrace_mahler_relative_precision_crown
+  worldtrace_mahler_relative_precision_crown hB hBIff hOdd
     ⟨H, scaled_compression_of_residual_ghost HC⟩
 
 #print axioms worldtrace_mahler_crown_of_residual_ghost
