@@ -154,7 +154,7 @@ scripts/comparator.sh      # lake build → sorry_check.sh → verdict
 | `CardinalWorlds.lean` | ★ Layer 1 — the Cardinal Worlds (verbatim extraction) |
 | `MonolithBoundary.lean` | ★ Layer 5 — the terminal identity interface |
 | `HodgeDeRhamBridge.lean` | ★ Layer 6 — the absorption layer |
-| `Main.lean` | the universe's entry face (comparator receipts) |
+| `HCProof.lean` | the universe's entry face (comparator receipts) |
 | `GSTGraphV2*.lean` (60 files) | Layers 2-3 — the GST Graph V2 Ontological Universe |
 | `GST*.lean` (67 files) | Layers 3-4 — dynamics, towers, fourth dimension, worldtrace |
 | `docs/` | Cardinal Worlds dossier, universe map, Hodge/de Rham absorption dossier |
