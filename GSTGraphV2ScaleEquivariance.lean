@@ -86,7 +86,7 @@ theorem u_absolute_energy_two_stage
 /-- The complete Graph-V2 information that is invariant under horizontal
 re-coordination.  Coordinate labels themselves are deliberately excluded;
 all arithmetic/physical observables are retained. -/
-structure PhysicalPacket where
+@[ext] structure PhysicalPacket where
   carry : Nat
   digit : Nat
   space : Space
@@ -181,7 +181,6 @@ theorem u_cut_semigroup_coherence
         (uPhaseShift t n K +
           uPhaseShift (t + K) (originSuffix n K) L + x) p := by
   rw [uTailEnergy_add, uPhaseShift_add]
-  rfl
 
 /-- Canonical perfect-power worlds inherit the complete packet transport, not
 only the carry/digit projection of the earlier n-wave theorem. -/
