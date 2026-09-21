@@ -554,6 +554,23 @@ theorem the_transfer_bridge :
 #check clV_fourth
 #check cl_monomial
 #check transfer_hodge_iff
+
+/-- Audit-accurate name for the integral finite address-ring theorem.
+The carrier here is ClRing = Fin 12 -> Z. -/
+theorem finite_address_hodge_classification
+    (p : Nat) (hp : p < 3) (phi : ClRing)
+    (hphi : isClHodge p phi) :
+    ∃ z : ℤ, ∀ i : Fin 12, phi i = z * clMono (4 * p) i :=
+  transferred_hodge_conjecture p hp phi hphi
+
+/-- Audit-accurate name for the rational finite address-ring theorem. -/
+theorem finite_address_rational_hodge_classification
+    (p : Nat) (hp : p < 3) (phi : ClRing)
+    (hphi : isClHodge p phi) :
+    ∃ q : ℚ, ∀ i : Fin 12,
+      (phi i : ℚ) = q * (clMono (4 * p) i : ℚ) :=
+  transferred_clay_hodge_conjecture p hp phi hphi
+
 #check transferred_hodge_conjecture
 #check transferred_clay_hodge_conjecture
 #check transferred_clay_witness
