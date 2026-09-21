@@ -341,7 +341,7 @@ theorem cup_comm (g : WaveCoef) :
       have hR : cupCarry (cupDigit g) ⟨C' + 1, d, hC, hd⟩
           = g ⟨C', d - 1, hC', hd'⟩ := by
         rw [cupCarry_at (cupDigit g) (C' + 1) d hC hd hC1 hCr]
-        exact cupDigit_at g C' (d - 1) hC' hd' hd1 hd'
+        exact cupDigit_at g C' d hC' hd hd1 hd'
       rw [hL, hR]
 
 /-- **THE 3-WORLD BOUNDARY `H³ = 0`.**  Three digit cups annihilate every
@@ -375,12 +375,12 @@ theorem cupCarry_fourth (g : WaveCoef) :
   intro C d hC hd
   show cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨C, d, hC, hd⟩ = 0
   interval_cases C
-  · exact cupCarry_zero_at (cupCarry (cupCarry (cupCarry g))) d hd
+  · exact cupCarry_zero_at (cupCarry (cupCarry (cupCarry g))) d (by decide) hd
   · have hA : cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨1, d, hC, hd⟩
         = cupCarry (cupCarry (cupCarry g)) ⟨0, d, by decide, hd⟩ :=
       cupCarry_at (cupCarry (cupCarry (cupCarry g))) 1 d hC hd (by decide) (by decide)
     rw [hA]
-    exact cupCarry_zero_at (cupCarry (cupCarry g)) d hd
+    exact cupCarry_zero_at (cupCarry (cupCarry g)) d (by decide) hd
   · have hA : cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨2, d, hC, hd⟩
         = cupCarry (cupCarry (cupCarry g)) ⟨1, d, by decide, hd⟩ :=
       cupCarry_at (cupCarry (cupCarry (cupCarry g))) 2 d hC hd (by decide) (by decide)
@@ -388,7 +388,7 @@ theorem cupCarry_fourth (g : WaveCoef) :
         = cupCarry (cupCarry g) ⟨0, d, by decide, hd⟩ :=
       cupCarry_at (cupCarry (cupCarry g)) 1 d (by decide) hd (by decide) (by decide)
     rw [hA, hB]
-    exact cupCarry_zero_at (cupCarry g) d hd
+    exact cupCarry_zero_at (cupCarry g) d (by decide) hd
   · have hA : cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨3, d, hC, hd⟩
         = cupCarry (cupCarry (cupCarry g)) ⟨2, d, by decide, hd⟩ :=
       cupCarry_at (cupCarry (cupCarry (cupCarry g))) 3 d hC hd (by decide) (by decide)
@@ -399,7 +399,7 @@ theorem cupCarry_fourth (g : WaveCoef) :
         = cupCarry g ⟨0, d, by decide, hd⟩ :=
       cupCarry_at (cupCarry g) 1 d (by decide) hd (by decide) (by decide)
     rw [hA, hB, hC2]
-    exact cupCarry_zero_at g d hd
+    exact cupCarry_zero_at g d (by decide) hd
 
 /-- **The iterated carry cup**: `n` carry cups read the cell `n` storeys
 down the carry tower, or vanish at the boundary. -/
@@ -412,7 +412,7 @@ theorem cupCarry_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
   | zero =>
       intro C d hC hd h2
       rw [if_pos (Nat.zero_le C)]
-      exact congrArg g (cell_eq' _ _ rfl (by omega))
+      exact congrArg g (cell_eq' _ _ rfl rfl)
   | succ n ih =>
       intro C d hC hd h2
       show (Nat.iterate cupCarry (n + 1) g) ⟨C, d, hC, hd⟩
@@ -433,7 +433,9 @@ theorem cupCarry_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
         rw [ih C' d hCr hd (by omega : C' - n < 4)]
         by_cases hn : n ≤ C'
         · rw [if_pos hn, if_pos (by omega)]
-          exact congrArg g (cell_eq' _ _ (by omega) rfl)
+          refine congrArg g (cell_eq' _ _ ?_ rfl)
+          show C' - n = C' + 1 - (n + 1)
+          omega
         · rw [if_neg hn, if_neg (by omega)]
 
 /-- **The iterated digit cup**: `n` digit cups read the cell `n` storeys
@@ -447,7 +449,7 @@ theorem cupDigit_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
   | zero =>
       intro C d hC hd h2
       rw [if_pos (Nat.zero_le d)]
-      exact congrArg g (cell_eq' _ _ rfl (by omega))
+      exact congrArg g (cell_eq' _ _ rfl rfl)
   | succ n ih =>
       intro C d hC hd h2
       show (Nat.iterate cupDigit (n + 1) g) ⟨C, d, hC, hd⟩
@@ -468,7 +470,9 @@ theorem cupDigit_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
         rw [ih C d' hC hdr (by omega : d' - n < 3)]
         by_cases hn : n ≤ d'
         · rw [if_pos hn, if_pos (by omega)]
-          exact congrArg g (cell_eq' _ _ rfl (by omega))
+          refine congrArg g (cell_eq' _ _ rfl ?_)
+          show d' - n = d' + 1 - (n + 1)
+          omega
         · rw [if_neg hn, if_neg (by omega)]
 
 /-- **THE MONOMIAL THEOREM.**  The cell class of index `3C + d` is exactly
@@ -487,7 +491,7 @@ theorem monomial_is_cellClass (C d : Nat) (hC : C < 4) (hd : d < 3) :
             ⟨C', d', hC', hd'⟩
           = unitCoef ⟨C' - C, d' - d, h1l, h2l⟩ := by
         rw [cupDigit_iterate _ d C' d' hC' hd' h2l, if_pos hdC]
-        rw [cupCarry_iterate _ C C' (d' - d) h1l h2l (by omega)]
+        rw [cupCarry_iterate _ C C' (d' - d) hC' h2l h1l]
         exact if_pos hCC
       have hB : unitCoef ⟨C' - C, d' - d, h1l, h2l⟩
           = (if 3 * (C' - C) + (d' - d) = 0 then (1 : ℤ) else 0) :=
@@ -1217,7 +1221,7 @@ theorem hodge_locus_mod_invariant (E E' p : Nat)
   have hd : digit3 E p = digit3 E' p := by
     rw [digit3_mod_eq, digit3_mod_eq, hmod]
   have hdvd : 3 ^ p ∣ 3 ^ (p + 1) :=
-    ⟨3, by rw [Nat.pow_succ]; exact Nat.mul_comm 3 (3 ^ p)⟩
+    ⟨3, by rw [Nat.pow_succ]⟩
   have hcarry : E % 3 ^ p = E' % 3 ^ p := by
     rw [← Nat.mod_mod_of_dvd E hdvd, hmod, Nat.mod_mod_of_dvd E' hdvd]
   have hc : carry4 E p = carry4 E' p := carry4_mod E E' p hcarry
