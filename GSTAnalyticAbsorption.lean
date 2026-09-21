@@ -304,7 +304,7 @@ theorem hc_twist_torsion_law (t : ℕ) (k : ℕ) :
     ring
   rw [← AddCircle.coe_zsmul, zsmul_eq_mul, hkey]
   exact (AddCircle.coe_eq_zero_iff (p := (1 : ℝ))).mpr ⟨(k : ℤ), by
-    rw [Int.smul_one_eq_cast]; push_cast⟩
+    rw [Int.smul_one_eq_cast]; push_cast; norm_num⟩
 
 /-! ## Receipts — the comparator face of the analytic crown -/
 
