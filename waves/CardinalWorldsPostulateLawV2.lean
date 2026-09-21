@@ -65,8 +65,8 @@ theorem transport_add {α : Type} (T : ControlledTowerV2 α)
   | zero => simp [transport]
   | succ m ih =>
       simp only [Nat.succ_add, transport]
-      rw [ih (j := j+1) (x := T.bridge j x)]
-      congr 2 <;> omega
+      simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+        (ih (j := j+1) (x := T.bridge j x))
 
 theorem level_transport_exact {α : Type} (T : ControlledTowerV2 α)
     (j n : Nat) :
@@ -80,8 +80,8 @@ theorem level_transport_exact {α : Type} (T : ControlledTowerV2 α)
             = T.bridge (j+n) (T.level (j+n)) := T.ledger (j+n)
         _ = T.bridge (j+n) (transport T j n (T.level j)) := by rw [ih]
         _ = transport T j (n+1) (T.level j) := by
-              rw [show n+1 = 1+n from by omega, transport_add]
-              rfl
+              have ht := (transport_add T j n 1 (T.level j)).symm
+              simpa [transport] using ht
 
 theorem admissible_transport {α : Type} (T : ControlledTowerV2 α)
     (j n : Nat) (x : α) (hx : T.admissible j x) :
@@ -113,9 +113,13 @@ def legacyEmbed (T : ControlledTower Nat) : ControlledTowerV2 Nat where
   level := T.level
   bridge := T.bridge
   admissible := fun _ x => x = x
-  level_admissible := by intro; rfl
+  level_admissible := by
+    intro j
+    rfl
   ledger := T.ledger
-  control_preserved := by intro; rfl
+  control_preserved := by
+    intro j x hx
+    rfl
 
 def successorTower : ControlledTowerV2 Nat where
   level := fun j => j
