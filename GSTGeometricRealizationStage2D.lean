@@ -65,11 +65,13 @@ theorem mem_codimensionCycles_iff
       Z.support ⊆ {x : X | Order.coheight x = p} :=
   Iff.rfl
 
-/-- Codimension one is exactly Mathlib's native Weil-divisor condition. -/
-theorem mem_codimensionCycles_one_iff_isWeilDivisor
+/-- Codimension one specializes to the expected coheight-one support
+condition.  The pinned Mathlib revision has native AlgebraicCycle but does
+not yet expose its later IsWeilDivisor predicate. -/
+theorem mem_codimensionCycles_one_iff
     (X : Scheme.{u}) (Z : AlgebraicCycle X ℚ) :
     Z ∈ codimensionCycles X 1 ↔
-      AlgebraicCycle.IsWeilDivisor Z :=
+      Z.support ⊆ {x : X | Order.coheight x = 1} :=
   Iff.rfl
 
 /-- A realization whose cycle domain is the canonical native codimension-p
@@ -95,7 +97,7 @@ variable {N p : Nat} {X : Scheme.{u}} {Coh : Type*}
 
 /-- Forgetting that the cycle submodule was canonically determined by
 codimension gives exactly a Stage-2C realization. -/
-def CodimensionHodgeRealization.toNativeSchemeRealization
+noncomputable def CodimensionHodgeRealization.toNativeSchemeRealization
     (R : CodimensionHodgeRealization N p X Coh) :
     NativeSchemeHodgeRealization N X Coh where
   hodge := R.hodge
@@ -213,7 +215,7 @@ theorem hodge_of_codimension_fiber_realization
 
 #check codimensionCycles
 #check mem_codimensionCycles_iff
-#check mem_codimensionCycles_one_iff_isWeilDivisor
+#check mem_codimensionCycles_one_iff
 #check CodimensionHodgeRealization
 #check hodge_class_has_codimension_cycle
 #check codimension_hodge_subspace_le_cycleClass_range
@@ -222,7 +224,7 @@ theorem hodge_of_codimension_fiber_realization
 #check CodimensionFiberRealizationObligation
 #check hodge_of_codimension_fiber_realization
 
-#print axioms mem_codimensionCycles_one_iff_isWeilDivisor
+#print axioms mem_codimensionCycles_one_iff
 #print axioms hodge_class_has_codimension_cycle
 #print axioms codimension_hodge_subspace_le_cycleClass_range
 #print axioms universal_codimension_hodge_of_realization_family
