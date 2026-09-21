@@ -20,6 +20,7 @@ import HodgeDeRhamBridge
 import GSTAnalyticAbsorption
 import GSTLefschetzCrown
 import GSTHodgeAssault
+import GSTClayOfficial
 import waves.GSTWaveCohomology
 import waves.GSTNCohomology
 import waves.GSTVortexSingularity
@@ -142,6 +143,14 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTHodgeAssault.pure_hodge_generation
 #check GSTHodgeAssault.hodge_locus_never_diagonal
 #check GSTHodgeAssault.the_hodge_assault
+
+/-! ## The official Clay landing face (Layer 11) -/
+
+#check GSTClayOfficial.hodge_type_cycle_classification
+#check GSTClayOfficial.clay_hodge_conjecture
+#check GSTClayOfficial.clay_witness_is_diagonal_coordinate
+#check GSTClayOfficial.integer_dominance
+#check GSTClayOfficial.the_official_clay_landing
 
 /-! ## The boundary face -/
 
