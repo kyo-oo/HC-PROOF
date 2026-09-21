@@ -62,6 +62,7 @@ set_option maxRecDepth 1000000
 namespace GSTAnalyticAbsorption
 
 open AddCircle
+open MeasureTheory
 
 /-! ## §1 The manifold layer — the ambient plane and the renormalization flow -/
 
@@ -120,7 +121,7 @@ compact space — the archimedean crown is closed and bounded, the analytic
 echo of the finite foundation below it. -/
 theorem hc_circle_compact : CompactSpace (AddCircle (1 : ℝ)) := by
   haveI : Fact (0 < (1 : ℝ)) := ⟨one_pos⟩
-  inferInstance
+  infer_instance
 
 /-- **THE PERIOD TRANSPORT LAW (archimedean twist).**  Re-encoding
 `R ↦ 4^t · R` transports the analytic period by the `4^t`-twist:
@@ -147,7 +148,7 @@ the analytic completion is normalized: the crown carries total mass exactly
 one. -/
 theorem hc_haar_is_probability :
     IsProbabilityMeasure (AddCircle.haarAddCircle (T := (1 : ℝ))) :=
-  inferInstance
+  infer_instance
 
 /-- **THE CHARACTERS HAVE NORM EXACTLY ONE.**  Every Fourier character
 `fourier n : C(circle, ℂ)` of the analytic completion has sup-norm exactly
@@ -168,7 +169,7 @@ theorem hc_fourier_exponential (m n : ℤ) (x : AddCircle (1 : ℝ)) :
 conjugation of frequency is complex conjugation of phase: the character
 system is self-adjoint. -/
 theorem hc_fourier_unitary (n : ℤ) (x : AddCircle (1 : ℝ)) :
-    fourier (-n) x = conj (fourier n x) :=
+    fourier (-n) x = Complex.conj (fourier n x) :=
   fourier_neg
 
 /-- **STONE–WEIERSTRASS: THE CHARACTERS SPAN EVERYTHING.**  The linear span
@@ -217,7 +218,7 @@ analytic world carry transcendental load at every radius. -/
 theorem hc_transcendental_nearby (x : ℝ) (ε : ℝ) (hε : 0 < ε) :
     ∃ y : ℝ, Transcendental ℤ y ∧ |y - x| < ε := by
   obtain ⟨y, hy, hy'⟩ := dense_liouville.exists_mem_open
-    (Metric.isOpen_ball x ε) (Metric.ball_nonempty x hε)
+    (Metric.isOpen_ball (x := x) (ε := ε)) (Metric.nonempty_ball hε)
   refine ⟨y, Liouville.transcendental hy, ?_⟩
   rwa [Metric.mem_ball, Real.dist_eq] at hy'
 
@@ -268,8 +269,6 @@ theorem hc_cyclotomic_tate_degree (t : ℕ) (ht : 1 ≤ t) :
     (Polynomial.cyclotomic (4 ^ t) ℚ).natDegree = 2 ^ (2 * t - 1) := by
   have h4 : (4 : ℕ) ^ t = 2 ^ (2 * t) := by
     rw [pow_mul]
-    congr 1
-    norm_num
   rw [Polynomial.natDegree_cyclotomic, h4]
   have hp : (2 : ℕ).Prime := Nat.prime_two
   have hkey := Nat.totient_prime_pow_succ hp (2 * t - 1)
@@ -299,9 +298,10 @@ theorem hc_twist_torsion_law (t : ℕ) (k : ℕ) :
   have hp : (0 : ℝ) < (4 : ℝ) ^ t := by positivity
   have hkey : ((4 ^ t : ℤ) : ℝ) * ((k : ℝ) / (4 ^ t : ℝ)) = (k : ℝ) := by
     field_simp
+    ring
   rw [← AddCircle.coe_zsmul, zsmul_eq_mul, hkey]
   exact (AddCommGroup.modEq_iff_eq_mod_zmultiples (p := (1 : ℝ))).mp
-    ⟨(k : ℤ), by simp only [zsmul_eq_mul]; push_cast; ring⟩
+    ⟨k, by simp only [nsmul_eq_mul]; push_cast; ring⟩
 
 /-! ## Receipts — the comparator face of the analytic crown -/
 
