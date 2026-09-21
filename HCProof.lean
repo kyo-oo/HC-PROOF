@@ -23,6 +23,7 @@ import GSTWorldCrownBridge
 import HodgeDeRhamBridge
 import HodgeDeRhamBridgeV2
 import GSTAnalyticAbsorption
+import GSTAnalyticAbsorptionV2
 import GSTLefschetzCrown
 import GSTHodgeAssault
 import GSTHodgeAssaultV2
