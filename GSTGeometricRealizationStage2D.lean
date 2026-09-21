@@ -173,7 +173,7 @@ theorem universal_codimension_hodge_of_realization_family
       (R X p hX) alpha halphaR
   refine ⟨⟨Z, hZmem⟩, ?_⟩
   have hcompat :=
-    LinearMap.congr_fun (hCycleClass X p hX) ⟨Z, hZmem⟩
+    congrArg (fun f => f ⟨Z, hZmem⟩) (hCycleClass X p hX)
   calc
     cycleClass X p ⟨Z, hZmem⟩
         = (R X p hX).cycleClass ⟨Z, hZmem⟩ := hcompat.symm
@@ -205,7 +205,7 @@ theorem hodge_of_codimension_fiber_realization
   obtain ⟨Z, hZmem, hZclass⟩ :=
     hodge_class_has_codimension_cycle R alpha halphaR
   refine ⟨⟨Z, hZmem⟩, ?_⟩
-  have hcompat := LinearMap.congr_fun hcl ⟨Z, hZmem⟩
+  have hcompat := congrArg (fun f => f ⟨Z, hZmem⟩) hcl
   calc
     cl ⟨Z, hZmem⟩
         = R.cycleClass ⟨Z, hZmem⟩ := hcompat.symm
