@@ -150,6 +150,7 @@ roots = [
   "waves.CardinalWorldsPostulateLaw",
   "GSTAnalyticAbsorption",
   "GSTLefschetzCrown",
+  "GSTHodgeAssault",
 ]
 
 # ---------------------------------------------------------------------------

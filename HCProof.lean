@@ -19,6 +19,7 @@ import GSTWorldtraceMahlerRelativePrecision
 import HodgeDeRhamBridge
 import GSTAnalyticAbsorption
 import GSTLefschetzCrown
+import GSTHodgeAssault
 import waves.GSTWaveCohomology
 import waves.GSTNCohomology
 import waves.GSTVortexSingularity
@@ -132,6 +133,15 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTLefschetzCrown.hodge_locus_mod_invariant
 #check GSTLefschetzCrown.hodge_locus_residue_algebraic
 #check GSTLefschetzCrown.the_lefschetz_crown
+#check GSTHodgeAssault.diagonal_index
+#check GSTHodgeAssault.cycle_is_monomial
+#check GSTHodgeAssault.hodge_conjecture
+#check GSTHodgeAssault.hodge_class_iff
+#check GSTHodgeAssault.hodge_class_rank_one
+#check GSTHodgeAssault.hodge_class_torsion_free
+#check GSTHodgeAssault.pure_hodge_generation
+#check GSTHodgeAssault.hodge_locus_never_diagonal
+#check GSTHodgeAssault.the_hodge_assault
 
 /-! ## The boundary face -/
 
