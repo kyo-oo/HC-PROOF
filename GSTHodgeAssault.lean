@@ -160,8 +160,7 @@ theorem hodge_class_coordinate (p : Nat) (hp : p < 3) (f : WaveCoef)
   have hoff : (i / 3) ≠ p ∨ (i % 3) ≠ p := by
     by_contra hboth
     push_neg at hboth
-    have hdiag := (diagonal_index p hp (i / 3) (i % 3) hC hd).mpr
-      ⟨hboth.1, hboth.2⟩
+    have hdiag := (diagonal_index p hp (i / 3) (i % 3) hC hd).mp hboth
     omega
   exact hcell.symm.trans (hf ⟨i / 3, i % 3, hC, hd⟩ hoff)
 
