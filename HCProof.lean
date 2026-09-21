@@ -30,6 +30,7 @@ import waves.GSTWaveCohomology
 import waves.GSTNCohomology
 import waves.GSTVortexSingularity
 import waves.CardinalWorldsPostulateLaw
+import waves.CardinalWorldsPostulateLawV2
 
 /-!
 # HC PROOF — the universe's entry face
