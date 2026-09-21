@@ -280,7 +280,8 @@ theorem pure_hodge_generation (f : WaveCoef) (hf : isPureHodge f) :
         cycle_at_offdiagonal 1 (by decide) 0 0 hC hd (by omega)
       have hc2 : cycleClass 2 ⟨0, 0, hC, hd⟩ = 0 :=
         cycle_at_offdiagonal 2 (by decide) 0 0 hC hd (by omega)
-      rw [hval, hc0, hc1, hc2, mul_one, mul_zero, mul_zero, add_zero, add_zero]
+      rw [hval, hc0, hc1, hc2]
+      ring
     · by_cases h1 : C = 1
       · subst h1
         have hval : f ⟨1, 1, hC, hd⟩ = gev f 4 := wave_coordinate_at f 1 1 hC hd
@@ -290,7 +291,8 @@ theorem pure_hodge_generation (f : WaveCoef) (hf : isPureHodge f) :
           cycle_at_diagonal 1 1 1 hC hd rfl rfl
         have hc2 : cycleClass 2 ⟨1, 1, hC, hd⟩ = 0 :=
           cycle_at_offdiagonal 2 (by decide) 1 1 hC hd (by omega)
-        rw [hval, hc0, hc1, hc2, mul_one, mul_zero, mul_zero, add_zero, add_zero]
+        rw [hval, hc0, hc1, hc2]
+        ring
       · by_cases h2 : C = 2
         · subst h2
           have hval : f ⟨2, 2, hC, hd⟩ = gev f 8 := wave_coordinate_at f 2 2 hC hd
@@ -300,7 +302,8 @@ theorem pure_hodge_generation (f : WaveCoef) (hf : isPureHodge f) :
             cycle_at_offdiagonal 1 (by decide) 2 2 hC hd (by omega)
           have hc2 : cycleClass 2 ⟨2, 2, hC, hd⟩ = 1 :=
             cycle_at_diagonal 2 2 2 hC hd rfl rfl
-          rw [hval, hc0, hc1, hc2, mul_one, mul_zero, mul_zero, add_zero, add_zero]
+          rw [hval, hc0, hc1, hc2]
+          ring
         · exfalso
           omega
   · have hval : f ⟨C, d, hC, hd⟩ = 0 := hf ⟨C, d, hC, hd⟩ hdiag
@@ -310,7 +313,8 @@ theorem pure_hodge_generation (f : WaveCoef) (hf : isPureHodge f) :
       cycle_at_offdiagonal 1 (by decide) C d hC hd (by omega)
     have hc2 : cycleClass 2 ⟨C, d, hC, hd⟩ = 0 :=
       cycle_at_offdiagonal 2 (by decide) C d hC hd (by omega)
-    rw [hval, hc0, hc1, hc2, mul_zero, mul_zero, mul_zero, add_zero, add_zero]
+    rw [hval, hc0, hc1, hc2]
+    ring
 
 /-! ## §5 The separation law — the signature sector and the diagonal
 
