@@ -1,4 +1,5 @@
 import GSTCoherentCosmology
+import GST2DMixedEmergenceUpgrade
 import CardinalWorlds
 import MonolithBoundary
 import GSTGraphV2Ontological
@@ -65,6 +66,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check gst_three_world_factor_rawS
 #check gst_handwritten_three_world_joined_prefix_closedS
 #check modular_check_base
+
+/-! ## The universal micro/macro face -/
+
+#check GST2DMixedEmergenceUpgrade.finalMicroDigit_eq_outDigit_universal
+#check GST2DMixedEmergenceUpgrade.cell_transition_exact_universal
+#check GST2DMixedEmergenceUpgrade.sevenKernel_micro_telescope_universal
+#check GST2DMixedEmergenceUpgrade.universal_micro_macro_receipt
 
 /-! ## The GST V2 ontological universe face -/
 
