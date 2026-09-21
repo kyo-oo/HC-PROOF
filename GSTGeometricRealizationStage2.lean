@@ -63,8 +63,8 @@ structure FiniteHodgeRealization
     [AddCommGroup Coh] [Module ℚ Coh]
     [AddCommGroup CycleQ] [Module ℚ CycleQ] where
   isHodge : Coh -> Prop
-  cycleClass : CycleQ ->ₗ[ℚ] Coh
-  encode : Coh ->ₗ[ℚ] RatAddress N
+  cycleClass : CycleQ →ₗ[ℚ] Coh
+  encode : Coh →ₗ[ℚ] RatAddress N
   encode_injective : Function.Injective encode
   hodgeSupport : Finset (Fin N)
   hodge_supported :
