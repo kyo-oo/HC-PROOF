@@ -230,7 +230,7 @@ theorem sum_pick_left (F G : Nat → ℤ) (N i₀ : Nat) (h : i₀ < N)
             have hmem := Finset.mem_range.mp hi
             rw [hF i (Nat.lt_succ_of_lt hmem) (by omega)]
             exact zero_mul (G i))
-        rw [hz, hF₀, mul_one, zero_add]
+        rw [hz, hF₀, one_mul, zero_add]
 
 /-! ## §1 The cup calculus — the divisor classes and the truncated ring
 
@@ -566,16 +566,16 @@ theorem lefschetz_iterate_zero (k : Nat) (g : WaveCoef) :
         rw [hd1]
         by_cases hC0 : C = 0
         · subst hC0
-          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨0, d, hC, hd⟩
-              = (0 : ℤ) := cupCarry_zero_at _ d hC hd
+          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨0, 0, hC, hd⟩
+              = (0 : ℤ) := cupCarry_zero_at _ 0 hC hd
           rw [h1]; ring
         · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
           subst hCe
           have hCr : C' + 1 - 1 < 4 := by omega
-          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨C' + 1, d, hC, hd⟩
-              = (Nat.iterate lefschetzOp k g) ⟨C', d, hCr, hd⟩ :=
-            cupCarry_at _ (C' + 1) d hC hd (by omega) hCr
-          rw [h1, ih C' d hCr hd (by omega)]; ring
+          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨C' + 1, 0, hC, hd⟩
+              = (Nat.iterate lefschetzOp k g) ⟨C', 0, hCr, hd⟩ :=
+            cupCarry_at _ (C' + 1) 0 hC hd (by omega) hCr
+          rw [h1, ih C' 0 hCr hd (by omega)]; ring
       · obtain ⟨d', hde⟩ : ∃ d', d = d' + 1 := ⟨d - 1, by omega⟩
         subst hde
         have hdr : d' + 1 - 1 < 3 := by omega
