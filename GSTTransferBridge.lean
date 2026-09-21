@@ -242,13 +242,14 @@ theorem clCupD_eq_mulH (φ : ClRing) : clCupD φ = clMul clH φ := by
         rfl
       rw [hb1, zero_mul]
     · rw [if_neg hcond]
+  symm
   calc clMul clH φ i
       = (∑ j ∈ (Finset.univ : Finset (Fin 12)),
           if (j:ℕ) ≤ (i:ℕ) ∧ (j:ℕ) % 3 + ((i:ℕ) - (j:ℕ)) % 3 < 3
             then clH j * φ ⟨(i:ℕ) - (j:ℕ), by have := hi; omega⟩ else 0) := rfl
-    _ = (if (1:ℕ) ≤ (i:ℕ) ∧ (1:ℕ) + ((i:ℕ) - 1) % 3 < 3
+    _ = (if (1:ℕ) ≤ (i:ℕ) ∧ (1:ℕ) % 3 + ((i:ℕ) - 1) % 3 < 3
           then clH ⟨1, by omega⟩ * φ ⟨(i:ℕ) - 1, by have := hi; omega⟩ else 0) :=
-        Finset.sum_eq_single (⟨1, by omega⟩ : Fin 12) h₀ (Finset.mem_univ _)
+        Finset.sum_eq_single_of_mem (⟨1, by omega⟩ : Fin 12) h₀ (Finset.mem_univ _)
     _ = (if (i:ℕ) % 3 ≠ 0 then φ ⟨(i:ℕ) - 1, by have := hi; omega⟩ else 0) := by
         have hH1 : clH ⟨1, by omega⟩ = (1:ℤ) := rfl
         rw [hH1, mul_one]
@@ -280,13 +281,14 @@ theorem clCupV_eq_mulV (φ : ClRing) : clCupV φ = clMul clV φ := by
         rfl
       rw [hb3, zero_mul]
     · rw [if_neg hcond]
+  symm
   calc clMul clV φ i
       = (∑ j ∈ (Finset.univ : Finset (Fin 12)),
           if (j:ℕ) ≤ (i:ℕ) ∧ (j:ℕ) % 3 + ((i:ℕ) - (j:ℕ)) % 3 < 3
             then clV j * φ ⟨(i:ℕ) - (j:ℕ), by have := hi; omega⟩ else 0) := rfl
     _ = (if (3:ℕ) ≤ (i:ℕ) ∧ (3:ℕ) % 3 + ((i:ℕ) - 3) % 3 < 3
           then clV ⟨3, by omega⟩ * φ ⟨(i:ℕ) - 3, by have := hi; omega⟩ else 0) :=
-        Finset.sum_eq_single (⟨3, by omega⟩ : Fin 12) h₀ (Finset.mem_univ _)
+        Finset.sum_eq_single_of_mem (⟨3, by omega⟩ : Fin 12) h₀ (Finset.mem_univ _)
     _ = (if 3 ≤ (i:ℕ) then φ ⟨(i:ℕ) - 3, by have := hi; omega⟩ else 0) := by
         have hV1 : clV ⟨3, by omega⟩ = (1:ℤ) := rfl
         rw [hV1, mul_one]
@@ -302,7 +304,7 @@ theorem clCupD_clCupV_comm (φ : ClRing) : clCupD (clCupV φ) = clCupV (clCupD �
   funext i
   obtain ⟨n, hn⟩ := i
   interval_cases n
-  all_goals rfl
+  all_goals simp [clCupD, clCupV]
 
 /-- **THE 3-WORLD BOUNDARY `H³ = 0` (classical address).**  Three digit
 cups annihilate every classical class — the transport of Layer 9's
@@ -311,7 +313,7 @@ theorem clH_cubed (φ : ClRing) : clCupD (clCupD (clCupD φ)) = fun _ => 0 := by
   funext i
   obtain ⟨n, hn⟩ := i
   interval_cases n
-  all_goals rfl
+  all_goals simp [clCupD]
 
 /-- **THE 4-WORLD BOUNDARY `V⁴ = 0` (classical address).**  Four carry
 cups annihilate every classical class — the transport of Layer 9's
@@ -335,8 +337,15 @@ commute. -/
 theorem addr_cupDigit (g : WaveCoef) : addr (cupDigit g) = clCupD (addr g) := by
   funext i
   obtain ⟨n, hn⟩ := i
-  interval_cases n
-  all_goals rfl
+  have hcd : cupDigit g
+      = S12 (fun i => if i % 3 ≠ 0 then gev g (i - 1) else 0) := rfl
+  have hL : addr (cupDigit g) ⟨n, hn⟩
+      = if n % 3 ≠ 0 then gev g (n - 1) else 0 := by
+    show gev (cupDigit g) n = if n % 3 ≠ 0 then gev g (n - 1) else 0
+    rw [hcd, gev_S12 (fun i => if i % 3 ≠ 0 then gev g (i - 1) else 0) n hn]
+  have hR : clCupD (addr g) ⟨n, hn⟩
+      = if n % 3 ≠ 0 then gev g (n - 1) else 0 := rfl
+  rw [hL, hR]
 
 /-- **THE CARRY CUP TRANSPORTS.**  The export of `cupCarry g` is the
 classical carry cup of the export: the dictionary and the V-cup
@@ -357,7 +366,7 @@ theorem addr_cupDigit_iterate : ∀ (n : Nat) (g : WaveCoef),
   | succ m ih =>
       intro g
       rw [Function.iterate_succ, Function.iterate_succ,
-          Function.comp_apply, Function.comp_apply, addr_cupDigit, ih]
+          Function.comp_apply, Function.comp_apply, ih, addr_cupDigit]
 
 /-- **THE ITERATED CARRY CUP TRANSPORTS.**  `p` GST carry cups export to
 `p` classical carry cups, for every `p`. -/
@@ -369,7 +378,7 @@ theorem addr_cupCarry_iterate : ∀ (n : Nat) (g : WaveCoef),
   | succ m ih =>
       intro g
       rw [Function.iterate_succ, Function.iterate_succ,
-          Function.comp_apply, Function.comp_apply, addr_cupCarry, ih]
+          Function.comp_apply, Function.comp_apply, ih, addr_cupCarry]
 
 /-- **THE MONOMIAL WITNESS TRANSPORTS.**  The classical codimension-`p`
 cycle class — the degree-`4p` monomial — is the `p`-fold digit cup of
@@ -468,11 +477,11 @@ theorem transferred_clay_witness (p : Nat) (hp : p < 3) (φ : ClRing)
   obtain ⟨z, hz⟩ := transferred_hodge_conjecture p hp φ hφ
   have hval : φ ⟨4 * p, by omega⟩ = z := by
     have h1 := hz ⟨4 * p, by omega⟩
-    have hmono : clMono (4 * p) ⟨4 * p, by omega⟩ = (1:ℤ) := rfl
+    have hmono : clMono (4 * p) ⟨4 * p, by omega⟩ = (1:ℤ) := by simp [clMono]
     rw [hmono, mul_one] at h1
     exact h1
   refine ⟨(z : ℚ), ?_, fun i => ?_⟩
-  · exact_mod_cast hval
+  · exact_mod_cast hval.symm
   · exact_mod_cast hz i
 
 /-! ## §5 The capstone — the whole bridge in one statement
@@ -497,7 +506,7 @@ theorem the_transfer_bridge :
         = clMono (4 * p))
     ∧ (∀ p : Nat, p < 3 → ∀ φ : ClRing, isClHodge p φ →
         ∃ z : ℤ, ∀ i : Fin 12, φ i = z * clMono (4 * p) i)
-    ∧ (∀ p : Nat, p < 3 → ∀ φ : ClRing, isClHodge p φ →
+    ∧ (∀ (p : Nat) (hp : p < 3), ∀ φ : ClRing, isClHodge p φ →
         ∃ q : ℚ, q = ((φ ⟨4 * p, by omega⟩ : ℤ) : ℚ) ∧
           ∀ i : Fin 12, (φ i : ℚ) = q * (clMono (4 * p) i : ℚ)) :=
   ⟨addr_bijective, addr_cupDigit, addr_cupCarry,
