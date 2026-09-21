@@ -248,3 +248,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2.hodge_class_has_cycle_witness
 #check GSTGeometricRealizationStage2.cycleClass_surjective_on_hodge
 #check GSTGeometricRealizationStage2.stage2_realization_crown
+
+
+/-! ## Audit-accurate Hodge theorem surface -/
+
+#check GSTHodgeAssault.finite_gst_hodge_classification
+#check GSTClayOfficial.finite_rational_gst_hodge_classification
+#check GSTTransferBridge.finite_address_hodge_classification
+#check GSTTransferBridge.finite_address_rational_hodge_classification
+#check GSTGeometricRealizationStage2.HodgeCycleSurjectivity
+#check GSTGeometricRealizationStage2.stage2_closes_cycle_surjectivity
