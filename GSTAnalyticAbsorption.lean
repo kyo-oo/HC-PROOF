@@ -63,6 +63,7 @@ namespace GSTAnalyticAbsorption
 
 open AddCircle
 open MeasureTheory
+open scoped ComplexConjugate
 
 /-! ## §1 The manifold layer — the ambient plane and the renormalization flow -/
 
@@ -148,7 +149,7 @@ the analytic completion is normalized: the crown carries total mass exactly
 one. -/
 theorem hc_haar_is_probability :
     IsProbabilityMeasure (AddCircle.haarAddCircle (T := (1 : ℝ))) :=
-  infer_instance
+  inferInstance
 
 /-- **THE CHARACTERS HAVE NORM EXACTLY ONE.**  Every Fourier character
 `fourier n : C(circle, ℂ)` of the analytic completion has sup-norm exactly
@@ -169,7 +170,7 @@ theorem hc_fourier_exponential (m n : ℤ) (x : AddCircle (1 : ℝ)) :
 conjugation of frequency is complex conjugation of phase: the character
 system is self-adjoint. -/
 theorem hc_fourier_unitary (n : ℤ) (x : AddCircle (1 : ℝ)) :
-    fourier (-n) x = Complex.conj (fourier n x) :=
+    fourier (-n) x = conj (fourier n x) :=
   fourier_neg
 
 /-- **STONE–WEIERSTRASS: THE CHARACTERS SPAN EVERYTHING.**  The linear span
@@ -218,7 +219,7 @@ analytic world carry transcendental load at every radius. -/
 theorem hc_transcendental_nearby (x : ℝ) (ε : ℝ) (hε : 0 < ε) :
     ∃ y : ℝ, Transcendental ℤ y ∧ |y - x| < ε := by
   obtain ⟨y, hy, hy'⟩ := dense_liouville.exists_mem_open
-    (Metric.isOpen_ball (x := x) (ε := ε)) (Metric.nonempty_ball hε)
+    (Metric.isOpen_ball (x := x) (ε := ε)) (Metric.nonempty_ball.mpr hε)
   refine ⟨y, Liouville.transcendental hy, ?_⟩
   rwa [Metric.mem_ball, Real.dist_eq] at hy'
 
@@ -269,6 +270,7 @@ theorem hc_cyclotomic_tate_degree (t : ℕ) (ht : 1 ≤ t) :
     (Polynomial.cyclotomic (4 ^ t) ℚ).natDegree = 2 ^ (2 * t - 1) := by
   have h4 : (4 : ℕ) ^ t = 2 ^ (2 * t) := by
     rw [pow_mul]
+    congr 1
   rw [Polynomial.natDegree_cyclotomic, h4]
   have hp : (2 : ℕ).Prime := Nat.prime_two
   have hkey := Nat.totient_prime_pow_succ hp (2 * t - 1)
@@ -293,15 +295,16 @@ kernel of the archimedean twist is the finite twist tower.  The
 archimedean twist is the circle-multiplication whose kernel is the finite
 twist group — the full Tate twist, both sides, one theorem. -/
 theorem hc_twist_torsion_law (t : ℕ) (k : ℕ) :
-    (4 ^ t : ℤ) • ((k : ℝ) / (4 ^ t : ℝ) : AddCircle (1 : ℝ))
-      = ((0 : ℝ) : AddCircle (1 : ℝ)) := by
+    (4 ^ t : ℤ) • ((k : ℝ) / (4 : ℝ) ^ t : AddCircle (1 : ℝ))
+      = (0 : AddCircle (1 : ℝ)) := by
   have hp : (0 : ℝ) < (4 : ℝ) ^ t := by positivity
-  have hkey : ((4 ^ t : ℤ) : ℝ) * ((k : ℝ) / (4 ^ t : ℝ)) = (k : ℝ) := by
+  have hkey : ((4 ^ t : ℤ) : ℝ) * ((k : ℝ) / (4 : ℝ) ^ t) = (k : ℝ) := by
     field_simp
+    push_cast
     ring
   rw [← AddCircle.coe_zsmul, zsmul_eq_mul, hkey]
-  exact (AddCommGroup.modEq_iff_eq_mod_zmultiples (p := (1 : ℝ))).mp
-    ⟨k, by simp only [nsmul_eq_mul]; push_cast; ring⟩
+  exact (AddCircle.coe_eq_zero_iff (p := (1 : ℝ))).mpr ⟨(k : ℤ), by
+    rw [Int.smul_one_eq_cast]; push_cast⟩
 
 /-! ## Receipts — the comparator face of the analytic crown -/
 
