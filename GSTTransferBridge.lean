@@ -62,13 +62,22 @@ load-bearing theorems:
   degree-`4p` coordinate.  GST's ℤ-strength carries Clay's ℚ-form across
   the bridge.
 
-## The next build targets (queued, constructive)
+## Stage 2 status
 
-Stage 2 of the bridge: the `MvPolynomial` presentation isomorphism with
-kernel exactness (the quotient `ℤ[X, Y] / (X³, Y⁴)` certified equal to
-`ClRing`), and the geometric realization of the address on an ambient
-classical variety — the same class of finite-certificate build as this
-layer.
+The former Stage-2 geometric-realization target is now split explicitly.
+
+* Stage 2A is built in GSTGeometricRealizationStage2: an arbitrary finite
+  rational address dimension, arbitrary finite Hodge-support rank, an
+  injective geometric cohomology address, and basis-by-basis algebraic
+  cycle realization imply cycle-class surjectivity on the represented
+  Hodge locus.
+* Stage 2B remains the genuine classical instantiation problem: supply
+  those realization data for the actual rational cohomology and algebraic
+  cycles of every smooth projective complex variety.
+
+The separate MvPolynomial presentation of the finite twelve-cell ring is
+still useful algebraically, but it is no longer conflated with the
+universal geometric-realization problem.
 
 Zero sorries, zero custom axioms; `#print axioms` receipts at the end.
 -/
