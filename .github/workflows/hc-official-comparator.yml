@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: hc-official-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   hc-universe-v5-comparator:
     name: The universe comparator (0 errors, 0 sorries)
