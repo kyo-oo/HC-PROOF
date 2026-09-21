@@ -171,6 +171,7 @@ roots = [
   "GSTGeometricRealizationStage2",
   "GSTGeometricRealizationStage2B",
   "GSTGeometricRealizationStage2C",
+  "GSTGeometricRealizationStage2D",
 ]
 
 # ---------------------------------------------------------------------------
