@@ -146,6 +146,7 @@ roots = [
   "CardinalWorlds",
   "MonolithBoundary",
   "HodgeDeRhamBridge",
+  "HodgeDeRhamBridgeV2",
   "ComparatorSmokeChallenge",
   "ComparatorSmokeSolution",
   "waves.GSTWaveCohomology",
