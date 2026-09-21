@@ -31,6 +31,7 @@ import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
 import waves.GSTNCohomologyV2
 import waves.GSTVortexSingularity
+import waves.GSTVortexSingularityV2
 import waves.CardinalWorldsPostulateLaw
 import waves.CardinalWorldsPostulateLawV2
 
