@@ -17,6 +17,7 @@ roots = [
   "GSTTactic",
   "GSTCoherentCosmology",
   "GST2DMixedEmergence",
+  "GST2DMixedEmergenceUpgrade",
   "GSTBladeWave",
   "GSTCanonicalCarryDynamics",
   "GSTCanonicalSevenAxisBridge",
