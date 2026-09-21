@@ -33,30 +33,53 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 
 ## FORMAL SCOPE OF THE HODGE CLAIMS — STAGE 2 STATUS
 
-The machine-checked Hodge statements in Layers 10-12 are finite GST
-classification theorems.  Their carriers are the twelve-cell cochain
-space and the finite address ring; in particular, the original exported
-carrier is `ClRing = Fin 12 → ℤ`.  Those theorems are genuine Lean
-theorems, but that finite carrier is not by itself the rational
-cohomology of an arbitrary smooth projective complex variety.
+The machine-checked Hodge statements in Layers 10-12 remain finite GST
+classification theorems.  Their original carriers are the twelve-cell
+cochain space and the finite address ring; in particular, Stage 1 exports
+to `ClRing = Fin 12 → ℤ`.  Those theorems are genuine Lean theorems, but
+that fixed carrier is not identified with the rational cohomology of an
+arbitrary smooth projective complex variety.
 
-The geometric-realization front is now split explicitly:
+The audit-driven geometric-realization front is now split into four
+machine-checked reductions:
 
 * **Stage 2A — PROVEN:** `GSTGeometricRealizationStage2.lean` gives a
-  variable-rank realization criterion.  For an arbitrary rational
-  cohomology carrier `Coh`, rational cycle carrier `CycleQ`, arbitrary
-  finite address dimension `N`, injective address map, finite Hodge
-  support, and basis-by-basis algebraic cycle realization, Lean constructs
-  an explicit cycle witness for every represented Hodge class.
-* **Stage 2A family form — PROVEN/CI-GATED:** the address dimension may
-  vary as `N(X,p)` with the geometric object and codimension.  Explicit
-  preservation hypotheses identify the realization's Hodge predicate and
-  cycle-class map with the intended geometric ones.
-* **Stage 2B — THE CLASSICAL INSTANTIATION TARGET:** construct those
-  realization data for the actual rational cohomology, rational
-  `(p,p)`-Hodge classes, algebraic cycles, and cycle-class map of every
-  smooth projective complex variety.  This is not supplied merely by the
-  twelve-cell GST carrier.
+  variable-rank finite realization criterion.  For arbitrary rational
+  carriers `Coh` and `CycleQ`, arbitrary finite address dimension
+  `N`, an injective address map, finite Hodge support, and explicit
+  basis-cycle realizations, Lean constructs a cycle witness for every
+  represented Hodge class.
+* **Stage 2B — PROVEN:** `GSTGeometricRealizationStage2B.lean` upgrades
+  the Hodge predicate to an actual rational submodule
+  `hodge : Submodule ℚ Coh` and proves the exact linear target
+  `hodge ≤ LinearMap.range cycleClass`.  The address dimension is still
+  allowed to vary with `(X,p)`.
+* **Stage 2C — PROVEN:** `GSTGeometricRealizationStage2C.lean` replaces
+  the abstract geometric object by an actual Mathlib `Scheme` and the
+  cycle carrier by actual Mathlib `AlgebraicGeometry.AlgebraicCycle X ℚ`.
+  The pinned Mathlib revision does not provide a rational module instance
+  for locally-finite cycles, so this layer proves the canonical pointwise
+  rational scalar action preserves local finiteness and pulls back the
+  function-space `ℚ`-module structure.
+* **Stage 2D — PROVEN:** `GSTGeometricRealizationStage2D.lean` removes
+  the arbitrary cycle-space parameter.  It defines the native
+  codimension-`p` rational cycle submodule by
+  `support Z ⊆ {x | Order.coheight x = p}` and proves the universal
+  variable-rank implication from a realization family to
+  `HodgeSubspace X p ≤ LinearMap.range (cycleClass X p)`.
+
+The dedicated Stage-2 realization gate is green on run
+`35669757803`: A+B+C+D compile, the proof-escape scan passes, and the
+`sorryAx` audit passes.
+
+**What is still not claimed:** the repo does not yet instantiate Stage 2D
+with the genuine rational cohomology `H^(2p)(X,ℚ)`, its genuine rational
+`(p,p)` Hodge subspace, the genuine cohomological cycle-class map, and a
+formal smooth-projective-over-`ℂ` eligibility package for every variety.
+Most importantly, the required basis-cycle realization family is the real
+geometric obligation; supplying it universally is not obtained merely from
+the finite GST carrier.  That remaining native classical instantiation is
+the next mathematical front, not a Lean-to-LaTeX conversion issue.
 
 Accordingly, names such as `hodge_conjecture`,
 `clay_hodge_conjecture`, and `transferred_hodge_conjecture` are retained
@@ -352,11 +375,14 @@ is an integer multiple of the algebraic monomial `H^p V^p`
 constructive coefficient is the degree-`4p` coordinate
 (`transferred_clay_witness`).
 
-Stage-2 status: the abstract, variable-rank geometric realization
-criterion is now built in `GSTGeometricRealizationStage2.lean` and has
-its own zero-proof-escape CI gate.  The remaining classical target is the
-actual instantiation of that criterion for every smooth projective complex
-variety.  The separate `MvPolynomial` presentation remains an algebraic
+Stage-2 status: the realization program is now machine-checked through
+Stages 2A-2D.  Stage 2B uses an honest rational Hodge submodule; Stage 2C
+quantifies over actual Mathlib schemes and actual Mathlib algebraic cycles;
+Stage 2D fixes the cycle domain canonically to native codimension-p cycles.
+The remaining classical target is the genuine smooth-projective-over-C
+instantiation: actual rational cohomology, actual (p,p) Hodge subspace,
+actual cycle-class map, and the universal basis-cycle realization family.
+The separate `MvPolynomial` presentation remains an algebraic
 presentation task, not a substitute for that geometric instantiation.
 
 ## LAYER 11 — THE OFFICIAL CLAY STATEMENT (`GSTClayOfficial.lean`)
