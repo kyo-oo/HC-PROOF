@@ -89,15 +89,12 @@ theorem packet_add (j k : Nat) :
     gstThreeWorldExponentialPacketS (j+k) =
       packetMul (gstThreeWorldExponentialPacketS j)
         (gstThreeWorldExponentialPacketS k) := by
-  cases h1 : gstThreeWorldExponentialPacketS (j+k)
-  cases h2 : packetMul (gstThreeWorldExponentialPacketS j)
-    (gstThreeWorldExponentialPacketS k)
-  simp [gstThreeWorldExponentialPacketS, packetMul,
-    gstBinaryWorldFactorS, gstTernaryWorldFactorS,
-    gstMixedWorldFactorS, pow_add] at h1 h2
-  subst h1
-  subst h2
-  rfl
+  change
+    GSTThreeWorldExponentialPacketS.mk
+      (2^(j+k)) (3^(j+k)) (6^(j+k)) =
+    GSTThreeWorldExponentialPacketS.mk
+      (2^j * 2^k) (3^j * 3^k) (6^j * 6^k)
+  rw [pow_add, pow_add, pow_add]
 
 /-- Packet multiplication is associative. -/
 theorem packetMul_assoc
