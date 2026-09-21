@@ -49,7 +49,6 @@ theorem signature_current_ne_zero
 theorem period_rebase_general (r m : Nat) :
     4^(r + 3*m) = 4^r * 64^m := by
   rw [Nat.pow_add, Nat.pow_mul]
-  norm_num
 
 /-- The old period rebase is the residue-one specialization. -/
 theorem period_rebase_absorbed (m : Nat) :
@@ -78,14 +77,15 @@ theorem mixed_period_three_split (a b c : Nat) :
       MixedPeriodLayer a * MixedPeriodLayer b * MixedPeriodLayer c := by
   rw [show a+b+c = (a+b)+c by omega,
       mixed_period_multiplicative, mixed_period_multiplicative]
-  ring
 
 /-- Exact two-world factorization after arbitrary depth concatenation. -/
 theorem comparison_period_concatenated (j k : Nat) :
     MixedPeriodLayer (j+k) =
       (BettiLayer j * BettiLayer k) *
       (DeRhamLayer j * DeRhamLayer k) := by
-  rw [mixed_period_exact, world_layers_multiplicative]
+  rw [mixed_period_exact]
+  rcases world_layers_multiplicative j k with ⟨hb, hd⟩
+  rw [hb, hd]
   ring
 
 theorem absorption_v2_crown :
@@ -95,9 +95,8 @@ theorem absorption_v2_crown :
     ∧ (∀ k t u x y,
       SixAdicIsoAt k ((4 : Int)^(t+u) * x) ((4 : Int)^(t+u) * y) ↔
         DyadicShadowAt (k-2*(t+u)) x y ∧ TriadicShadowAt k x y) := by
-  refine ⟨?_, period_rebase_general, finite_twist_composed⟩
-  intro C d hC hd
-  exact signature_current_exact C d hC hd
+  exact ⟨fun C d hC hd => signature_current_exact C d hC hd,
+    period_rebase_general, finite_twist_composed⟩
 
 #check signature_current_exact
 #check positive_current_exact
