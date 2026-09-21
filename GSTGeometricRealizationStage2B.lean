@@ -163,7 +163,7 @@ theorem subspace_target_implies_predicate_target
 
 /-- The exact remaining obligation for one geometric fiber: construct the
 realization data.  This proposition is intentionally a type of data, not an
-axiom and not a theorem claimed solved by the finite GST carrier. -/
+primitive assumption and not a theorem claimed solved by the finite GST carrier. -/
 def FiberRealizationObligation
     (H : Submodule ℚ Coh)
     (cl : CycleQ →ₗ[ℚ] Coh) : Prop :=
