@@ -144,6 +144,7 @@ roots = [
   "InformationStateScratch",
   "OriginTransducerScratch",
   "CardinalWorlds",
+  "CardinalWorldsV2",
   "MonolithBoundary",
   "HodgeDeRhamBridge",
   "HodgeDeRhamBridgeV2",
