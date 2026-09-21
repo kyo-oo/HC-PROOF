@@ -34,41 +34,15 @@ theorem liftWave_injective : Function.Injective liftWave := by
 theorem liftWave_cupDigit (g : WaveCoef) :
     liftWave (cupDigit g) = digitShiftN 1 (liftWave g) := by
   funext c
-  rcases c with ⟨C, d⟩
-  change
-    cupDigit g ⟨C.1, d.1, C.2, d.2⟩ =
-      if h : 1 ≤ d.1 then
-        g ⟨C.1, d.1 - 1, C.2, by omega⟩
-      else 0
-  by_cases h : 1 ≤ d.1
-  · rw [dif_pos h]
-    exact cupDigit_at g C.1 d.1 C.2 d.2 (by omega) (by omega)
-  · rw [dif_neg h]
-    have hd0 : d = (⟨0, by decide⟩ : Fin 3) := by
-      apply Fin.ext
-      omega
-    subst d
-    exact cupDigit_zero_at g C.1 C.2 (by decide)
+  rcases c with ⟨⟨C,hC⟩,⟨d,hd⟩⟩
+  interval_cases C <;> interval_cases d <;> rfl
 
 /-- The old carry-cup is exactly one native carry-axis transport. -/
 theorem liftWave_cupCarry (g : WaveCoef) :
     liftWave (cupCarry g) = carryShiftN 1 (liftWave g) := by
   funext c
-  rcases c with ⟨C, d⟩
-  change
-    cupCarry g ⟨C.1, d.1, C.2, d.2⟩ =
-      if h : 1 ≤ C.1 then
-        g ⟨C.1 - 1, d.1, by omega, d.2⟩
-      else 0
-  by_cases h : 1 ≤ C.1
-  · rw [dif_pos h]
-    exact cupCarry_at g C.1 d.1 C.2 d.2 h (by omega)
-  · rw [dif_neg h]
-    have hC0 : C = (⟨0, by decide⟩ : Fin 4) := by
-      apply Fin.ext
-      omega
-    subst C
-    exact cupCarry_zero_at g d.1 (by decide) d.2
+  rcases c with ⟨⟨C,hC⟩,⟨d,hd⟩⟩
+  interval_cases C <;> interval_cases d <;> rfl
 
 /-- **ABSORBED COMMUTATION.**  The old cup commutation is a chart theorem
 of the native rectangle law, not a separate twelve-case fact. -/
@@ -93,49 +67,61 @@ is three. -/
 theorem cupDigit_cubed_native_zero (g : WaveCoef) :
     cupDigit (cupDigit (cupDigit g)) = fun _ => 0 := by
   apply liftWave_injective
-  calc
-    liftWave (cupDigit (cupDigit (cupDigit g)))
-        = digitShiftN 1 (liftWave (cupDigit (cupDigit g))) :=
-            liftWave_cupDigit (cupDigit (cupDigit g))
-    _ = digitShiftN 1 (digitShiftN 1 (liftWave (cupDigit g))) := by
-          rw [liftWave_cupDigit]
-    _ = digitShiftN 1 (digitShiftN 1 (digitShiftN 1 (liftWave g))) := by
-          rw [liftWave_cupDigit]
-    _ = digitShiftN 2 (digitShiftN 1 (liftWave g)) :=
-          digitShiftN_add 1 1 (digitShiftN 1 (liftWave g))
-    _ = digitShiftN 3 (liftWave g) := by
-          simpa using digitShiftN_add 2 1 (liftWave g)
-    _ = (fun _ : WorldCell 4 3 => (0 : ℤ)) :=
-          digit_boundary_extinction (liftWave g)
-    _ = liftWave (fun _ : WaveCell => (0 : ℤ)) := by rfl
+  have hchain :
+      liftWave (cupDigit (cupDigit (cupDigit g))) =
+        digitShiftN 3 (liftWave g) := by
+    calc
+      liftWave (cupDigit (cupDigit (cupDigit g)))
+          = digitShiftN 1 (liftWave (cupDigit (cupDigit g))) :=
+              liftWave_cupDigit (cupDigit (cupDigit g))
+      _ = digitShiftN 1 (digitShiftN 1 (liftWave (cupDigit g))) := by
+            rw [liftWave_cupDigit]
+      _ = digitShiftN 1 (digitShiftN 1 (digitShiftN 1 (liftWave g))) := by
+            rw [liftWave_cupDigit]
+      _ = digitShiftN 2 (digitShiftN 1 (liftWave g)) :=
+            digitShiftN_add 1 1 (digitShiftN 1 (liftWave g))
+      _ = digitShiftN 3 (liftWave g) := by
+            simpa using digitShiftN_add 2 1 (liftWave g)
+  have hzero :
+      digitShiftN 3 (liftWave g) =
+        liftWave (fun _ : WaveCell => (0 : ℤ)) := by
+    rw [digit_boundary_extinction]
+    rfl
+  exact hchain.trans hzero
 
 /-- Four old carry cups vanish because the native carry depth of this chart
 is four. -/
 theorem cupCarry_fourth_native_zero (g : WaveCoef) :
     cupCarry (cupCarry (cupCarry (cupCarry g))) = fun _ => 0 := by
   apply liftWave_injective
-  calc
-    liftWave (cupCarry (cupCarry (cupCarry (cupCarry g))))
-        = carryShiftN 1 (liftWave (cupCarry (cupCarry (cupCarry g)))) :=
-            liftWave_cupCarry (cupCarry (cupCarry (cupCarry g)))
-    _ = carryShiftN 1 (carryShiftN 1 (liftWave (cupCarry (cupCarry g)))) := by
-          rw [liftWave_cupCarry]
-    _ = carryShiftN 1 (carryShiftN 1 (carryShiftN 1 (liftWave (cupCarry g)))) := by
-          rw [liftWave_cupCarry]
-    _ = carryShiftN 1
-          (carryShiftN 1 (carryShiftN 1 (carryShiftN 1 (liftWave g)))) := by
-          rw [liftWave_cupCarry]
-    _ = carryShiftN 2
-          (carryShiftN 1 (carryShiftN 1 (liftWave g))) :=
-          carryShiftN_add 1 1
-            (carryShiftN 1 (carryShiftN 1 (liftWave g)))
-    _ = carryShiftN 3 (carryShiftN 1 (liftWave g)) := by
-          simpa using carryShiftN_add 2 1 (carryShiftN 1 (liftWave g))
-    _ = carryShiftN 4 (liftWave g) := by
-          simpa using carryShiftN_add 3 1 (liftWave g)
-    _ = (fun _ : WorldCell 4 3 => (0 : ℤ)) :=
-          carry_boundary_extinction (liftWave g)
-    _ = liftWave (fun _ : WaveCell => (0 : ℤ)) := by rfl
+  have hchain :
+      liftWave (cupCarry (cupCarry (cupCarry (cupCarry g)))) =
+        carryShiftN 4 (liftWave g) := by
+    calc
+      liftWave (cupCarry (cupCarry (cupCarry (cupCarry g))))
+          = carryShiftN 1 (liftWave (cupCarry (cupCarry (cupCarry g)))) :=
+              liftWave_cupCarry (cupCarry (cupCarry (cupCarry g)))
+      _ = carryShiftN 1 (carryShiftN 1 (liftWave (cupCarry (cupCarry g)))) := by
+            rw [liftWave_cupCarry]
+      _ = carryShiftN 1 (carryShiftN 1 (carryShiftN 1 (liftWave (cupCarry g)))) := by
+            rw [liftWave_cupCarry]
+      _ = carryShiftN 1
+            (carryShiftN 1 (carryShiftN 1 (carryShiftN 1 (liftWave g)))) := by
+            rw [liftWave_cupCarry]
+      _ = carryShiftN 2
+            (carryShiftN 1 (carryShiftN 1 (liftWave g))) :=
+            carryShiftN_add 1 1
+              (carryShiftN 1 (carryShiftN 1 (liftWave g)))
+      _ = carryShiftN 3 (carryShiftN 1 (liftWave g)) := by
+            simpa using carryShiftN_add 2 1 (carryShiftN 1 (liftWave g))
+      _ = carryShiftN 4 (liftWave g) := by
+            simpa using carryShiftN_add 3 1 (liftWave g)
+  have hzero :
+      carryShiftN 4 (liftWave g) =
+        liftWave (fun _ : WaveCell => (0 : ℤ)) := by
+    rw [carry_boundary_extinction]
+    rfl
+  exact hchain.trans hzero
 
 /-- The original pointwise cubed theorem, now derived from the native
 dimension-free boundary law. -/
