@@ -76,8 +76,6 @@ theorem rowClass_three_way (R p A B C : Nat) :
       + rowClass (4^A * R) p B
       + rowClass (4^(A+B) * R) p C := by
   rw [show A+B+C = (A+B)+C by omega, rowClass_add, rowClass_add]
-  rw [Nat.pow_add]
-  ring
 
 /-- Wave transport by N cells is an exact cocycle, not merely a one-step
 shift. -/
