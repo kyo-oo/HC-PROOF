@@ -186,7 +186,7 @@ theorem sum_range_pick' (F : Nat → ℤ) (i₀ N : Nat) (h : i₀ < N) :
     intro i hi
     by_cases heq : i = i₀
     · subst heq; simp
-    · simp [heq]
+    · rw [if_neg (by omega), if_neg heq]
   rw [Finset.sum_congr rfl hconv]
   exact sum_range_pick F i₀ N h
 
@@ -201,19 +201,34 @@ theorem sum_pick_right (F G : Nat → ℤ) (N i₀ : Nat) (h : i₀ < N)
       by_cases hlt : i₀ < N
       · have hGN : G N = 0 := hG N (Nat.lt_succ_self N) (by omega)
         rw [hGN, mul_zero, add_zero]
-        exact ih hlt (fun i hi => hG i (Nat.lt_succ_of_lt hi) (by omega)) hG₀
+        exact ih hlt (fun i hi => hG i (Nat.lt_succ_of_lt hi)) hG₀
       · have heq : i₀ = N := by omega
         have hz : (∑ i ∈ Finset.range N, F i * G i) = 0 :=
           Finset.sum_eq_zero (fun i hi => by
             have hmem := Finset.mem_range.mp hi
-            rw [hG i hmem (by omega)]; exact mul_zero (F i))
+            rw [hG i (Nat.lt_succ_of_lt hmem) (by omega)]
+            exact mul_zero (F i))
         rw [hz, hG₀, mul_one, zero_add, ← heq]
 
 /-- Sum-pick with the surviving unit column on the left. -/
 theorem sum_pick_left (F G : Nat → ℤ) (N i₀ : Nat) (h : i₀ < N)
     (hF : ∀ i, i < N → i ≠ i₀ → F i = 0) (hF₀ : F i₀ = 1) :
-    (∑ i ∈ Finset.range N, F i * G i) = G i₀ :=
-  sum_pick_right G F N i₀ h hF hF₀
+    (∑ i ∈ Finset.range N, F i * G i) = G i₀ := by
+  induction N with
+  | zero => exact absurd h (by omega)
+  | succ N ih =>
+      rw [Finset.sum_range_succ]
+      by_cases hlt : i₀ < N
+      · have hFN : F N = 0 := hF N (Nat.lt_succ_self N) (by omega)
+        rw [hFN, mul_zero, add_zero]
+        exact ih hlt (fun i hi => hF i (Nat.lt_succ_of_lt hi)) hF₀
+      · have heq : i₀ = N := by omega
+        have hz : (∑ i ∈ Finset.range N, F i * G i) = 0 :=
+          Finset.sum_eq_zero (fun i hi => by
+            have hmem := Finset.mem_range.mp hi
+            rw [hF i (Nat.lt_succ_of_lt hmem) (by omega)]
+            exact mul_zero (G i))
+        rw [hz, hF₀, mul_one, zero_add, ← heq]
 
 /-! ## §1 The cup calculus — the divisor classes and the truncated ring
 
@@ -244,7 +259,7 @@ theorem cupDigit_at (g : WaveCoef) (C d : Nat) (hC : C < 4) (hd : d < 3)
     (h1 : 0 < d) (h2 : d - 1 < 3) :
     cupDigit g ⟨C, d, hC, hd⟩ = g ⟨C, d - 1, hC, h2⟩ := by
   have hmod : (3 * C + d) % 3 = d := by
-    rw [Nat.mul_comm, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hd]
+    rw [Nat.add_comm, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hd]
   have hr : cupDigit g ⟨C, d, hC, hd⟩
       = if (3 * C + d) % 3 ≠ 0 then gev g (3 * C + d - 1) else 0 :=
     S12_at (fun i => if i % 3 ≠ 0 then gev g (i - 1) else 0) C d hC hd
@@ -256,7 +271,7 @@ digit-zero cells. -/
 theorem cupDigit_zero_at (g : WaveCoef) (C : Nat) (hC : C < 4) (hd : 0 < 3) :
     cupDigit g ⟨C, 0, hC, hd⟩ = 0 := by
   have hz : (3 * C + 0) % 3 = 0 := by
-    rw [Nat.zero_add, Nat.mul_comm]; exact Nat.mul_mod_right C 3
+    rw [Nat.add_zero, Nat.mul_comm]; exact Nat.mul_mod_right C 3
   have hr : cupDigit g ⟨C, 0, hC, hd⟩
       = if (3 * C + 0) % 3 ≠ 0 then gev g (3 * C + 0 - 1) else 0 :=
     S12_at (fun i => if i % 3 ≠ 0 then gev g (i - 1) else 0) C 0 hC hd
@@ -295,27 +310,47 @@ theorem cup_comm (g : WaveCoef) :
     · subst hd0; rfl
     · have hd1 : 0 < d := by omega
       have h2 : d - 1 < 3 := by omega
-      rw [cupDigit_at _ _ _ hC hd hd1 h2, cupCarry_zero_at _ _ (by decide) hC]
-      ring
-  · have hC1 : 1 ≤ C := by omega
-    have hC' : C - 1 < 4 := by omega
+      have hL : cupDigit (cupCarry g) ⟨0, d, hC, hd⟩
+          = g ⟨0, d - 1, hC, h2⟩ := by
+        rw [cupDigit_at (cupCarry g) 0 d hC hd hd1 h2]
+        exact cupCarry_zero_at g (d - 1) hC h2
+      have hR : cupCarry (cupDigit g) ⟨0, d, hC, hd⟩
+          = g ⟨0, d - 1, hC, h2⟩ := by
+        rw [cupCarry_zero_at (cupDigit g) d hC hd]
+        exact cupDigit_at g 0 (d - 1) hC h2 hd1 h2
+      rw [hL, hR]
+  · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
+    subst hCe
+    have hC1 : 1 ≤ C' + 1 := by omega
+    have hC' : C' < 4 := by omega
+    have hCr : C' + 1 - 1 < 4 := by omega
     by_cases hd0 : d = 0
     · subst hd0
-      rw [cupCarry_at _ _ _ hC hd hC1 hC', cupDigit_zero_at _ _ hC (by decide)]
-      ring
+      have hL : cupDigit (cupCarry g) ⟨C' + 1, 0, hC, hd⟩ = (0 : ℤ) :=
+        cupDigit_zero_at (cupCarry g) (C' + 1) hC hd
+      have hR : cupCarry (cupDigit g) ⟨C' + 1, 0, hC, hd⟩ = (0 : ℤ) := by
+        rw [cupCarry_at (cupDigit g) (C' + 1) 0 hC hd hC1 hCr]
+        exact cupDigit_zero_at g C' hCr hd
+      rw [hL, hR]
     · have hd1 : 0 < d := by omega
       have hd' : d - 1 < 3 := by omega
-      rw [cupDigit_at _ _ _ hC hd hd1 hd', cupCarry_at _ _ _ hC hd hC1 hC',
-        cupCarry_at _ _ (d - 1) hC hd' hC1 hC, cupDigit_at _ (C - 1) d hC' hd hd1 hd']
-      exact congrArg g (cell_eq' _ _ (by omega) rfl)
+      have hL : cupDigit (cupCarry g) ⟨C' + 1, d, hC, hd⟩
+          = g ⟨C', d - 1, hC', hd'⟩ := by
+        rw [cupDigit_at (cupCarry g) (C' + 1) d hC hd hd1 hd']
+        exact cupCarry_at g (C' + 1) (d - 1) hC hd' hC1 hCr
+      have hR : cupCarry (cupDigit g) ⟨C' + 1, d, hC, hd⟩
+          = g ⟨C', d - 1, hC', hd'⟩ := by
+        rw [cupCarry_at (cupDigit g) (C' + 1) d hC hd hC1 hCr]
+        exact cupDigit_at g C' (d - 1) hC' hd' hd1 hd'
+      rw [hL, hR]
 
 /-- **THE 3-WORLD BOUNDARY `H³ = 0`.**  Three digit cups annihilate every
 cochain: the digit tower has exactly three storeys. -/
 theorem cupDigit_cubed (g : WaveCoef) :
     ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
-      (Function.iterate cupDigit 3 g) ⟨C, d, hC, hd⟩ = 0 := by
+      (Nat.iterate cupDigit 3 g) ⟨C, d, hC, hd⟩ = 0 := by
   intro C d hC hd
-  show (Function.iterate cupDigit (0 + 1 + 1 + 1) g) ⟨C, d, hC, hd⟩ = 0
+  show (Nat.iterate cupDigit (0 + 1 + 1 + 1) g) ⟨C, d, hC, hd⟩ = 0
   rw [Function.iterate_succ_apply, Function.iterate_succ_apply,
     Function.iterate_succ_apply]
   show cupDigit (cupDigit (cupDigit g)) ⟨C, d, hC, hd⟩ = 0
@@ -339,9 +374,9 @@ theorem cupDigit_cubed (g : WaveCoef) :
 cochain: the carry tower has exactly four storeys. -/
 theorem cupCarry_fourth (g : WaveCoef) :
     ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
-      (Function.iterate cupCarry 4 g) ⟨C, d, hC, hd⟩ = 0 := by
+      (Nat.iterate cupCarry 4 g) ⟨C, d, hC, hd⟩ = 0 := by
   intro C d hC hd
-  show (Function.iterate cupCarry (0 + 1 + 1 + 1 + 1) g) ⟨C, d, hC, hd⟩ = 0
+  show (Nat.iterate cupCarry (0 + 1 + 1 + 1 + 1) g) ⟨C, d, hC, hd⟩ = 0
   rw [Function.iterate_succ_apply, Function.iterate_succ_apply,
     Function.iterate_succ_apply, Function.iterate_succ_apply]
   show cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨C, d, hC, hd⟩ = 0
@@ -371,7 +406,7 @@ theorem cupCarry_fourth (g : WaveCoef) :
 down the carry tower, or vanish at the boundary. -/
 theorem cupCarry_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
     (hC : C < 4) (hd : d < 3) (h2 : C - n < 4),
-    (Function.iterate cupCarry n g) ⟨C, d, hC, hd⟩ =
+    (Nat.iterate cupCarry n g) ⟨C, d, hC, hd⟩ =
       if n ≤ C then g ⟨C - n, d, h2, hd⟩ else 0 := by
   intro n
   induction n with
@@ -399,7 +434,7 @@ theorem cupCarry_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
 down the digit tower, or vanish at the boundary. -/
 theorem cupDigit_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
     (hC : C < 4) (hd : d < 3) (h2 : d - n < 3),
-    (Function.iterate cupDigit n g) ⟨C, d, hC, hd⟩ =
+    (Nat.iterate cupDigit n g) ⟨C, d, hC, hd⟩ =
       if n ≤ d then g ⟨C, d - n, hC, h2⟩ else 0 := by
   intro n
   induction n with
@@ -427,7 +462,7 @@ theorem cupDigit_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
 the `d`-fold digit cup of the `C`-fold carry cup of the fundamental class —
 the monomial `H^d V^C` of the divisor ring. -/
 theorem monomial_is_cellClass (C d : Nat) (hC : C < 4) (hd : d < 3) :
-    (Function.iterate cupDigit d ((Function.iterate cupCarry C) unitCoef))
+    (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
       = cellClass (3 * C + d) := by
   funext c
   obtain ⟨C', d', hC', hd'⟩ := c
@@ -459,12 +494,15 @@ theorem divisor_generation (f : WaveCoef) :
       f ⟨C, d, hC, hd⟩
         = ∑ i ∈ Finset.range 12, gev f i * cellClass i ⟨C, d, hC, hd⟩ := by
   intro C d hC hd
-  rw [wave_coordinate_at f C d hC hd, cellClass_at]
-  exact (sum_pick_right (gev f)
-    (fun i => if 3 * C + d = i then 1 else 0) 12 (3 * C + d)
-    (by omega)
-    (fun i hi hne => if_neg (by omega))
-    (if_pos rfl)).symm
+  rw [wave_coordinate_at f C d hC hd]
+  refine (sum_pick_right (gev f)
+    (fun i => cellClass i ⟨C, d, hC, hd⟩) 12 (3 * C + d)
+    (by omega) ?_ ?_).symm
+  · intro i hi hne
+    rw [cellClass_at i C d hC hd]
+    exact if_neg (by omega)
+  · rw [cellClass_at (3 * C + d) C d hC hd]
+    exact if_pos rfl
 
 /-! ## §2 The Lefschetz operator — Hard Lefschetz with explicit sections -/
 
@@ -478,12 +516,12 @@ degree below `k`: the Lefschetz operator strictly raises degree, one storey
 per cup. -/
 theorem lefschetz_iterate_zero (k : Nat) (g : WaveCoef) :
     ∀ (C d : Nat) (hC : C < 4) (hd : d < 3),
-      C + d < k → (Function.iterate lefschetzOp k g) ⟨C, d, hC, hd⟩ = 0 := by
+      C + d < k → (Nat.iterate lefschetzOp k g) ⟨C, d, hC, hd⟩ = 0 := by
   induction k with
   | zero => intro C d hC hd h; exact absurd h (by omega)
   | succ k ih =>
       intro C d hC hd hlt
-      show (Function.iterate lefschetzOp (k + 1) g) ⟨C, d, hC, hd⟩ = 0
+      show (Nat.iterate lefschetzOp (k + 1) g) ⟨C, d, hC, hd⟩ = 0
       rw [Function.iterate_succ_apply, lefschetzOp_at]
       by_cases hd0 : d = 0
       · subst hd0
@@ -517,7 +555,7 @@ everything: the twelve-cell universe has top degree 5, and the sl₂ weight
 ladder stops there. -/
 theorem lefschetz_sixth_power (g : WaveCoef) :
     ∀ (C d : Nat) (hC : C < 4) (hd : d < 3),
-      (Function.iterate lefschetzOp 6 g) ⟨C, d, hC, hd⟩ = 0 :=
+      (Nat.iterate lefschetzOp 6 g) ⟨C, d, hC, hd⟩ = 0 :=
   lefschetz_iterate_zero 6 g
 
 /-- **THE HILBERT FUNCTION (the sector ranks).**  The degree-`k` sector of
@@ -550,26 +588,21 @@ theorem lefschetz_injective_below_middle (f : WaveCoef)
     have h := hL C d hC hd
     have hc : lefschetzOp (S12 (gev f)) ⟨C, d, hC, hd⟩
         = lefschetzOp f ⟨C, d, hC, hd⟩ :=
-      congrArg (fun g => lefschetzOp g ⟨C, d, hC, hd⟩) (wave_is_coordinates f)
-    rw [← hc]; exact h
-  -- the six load-bearing equations, each an omega-normalized ground evaluation:
-  have e0 : gev f 0 = 0 := by
-    have h := hL' (0 + 1) 0 (by decide) (by decide); omega
-  have e3 : gev f 3 = 0 := by
-    have h := hL' (1 + 1) 0 (by decide) (by decide); omega
-  have e1 : gev f 1 = 0 := by
-    have h := hL' (0 + 1) (0 + 1) (by decide) (by decide); omega
-  have e6 : gev f 6 = 0 := by
-    have h := hL' (2 + 1) 0 (by decide) (by decide); omega
-  have e4 : gev f 4 = 0 := by
-    have h := hL' (1 + 1) (0 + 1) (by decide) (by decide); omega
-  have e2 : gev f 2 = 0 := by
-    have h := hL' (0 + 1) (1 + 1) (by decide) (by decide); omega
+      (congrArg (fun g => lefschetzOp g ⟨C, d, hC, hd⟩)
+        (wave_is_coordinates f)).symm
+    rw [hc]; exact h
+  -- the six load-bearing equations, each a kernel ground evaluation:
+  have e0 : (0 : ℤ) + gev f 0 = 0 := hL' (0 + 1) 0 (by decide) (by decide)
+  have e3 : (0 : ℤ) + gev f 3 = 0 := hL' (1 + 1) 0 (by decide) (by decide)
+  have e1 : gev f 3 + gev f 1 = 0 := hL' (0 + 1) (0 + 1) (by decide) (by decide)
+  have e6 : (0 : ℤ) + gev f 6 = 0 := hL' (2 + 1) 0 (by decide) (by decide)
+  have e4 : gev f 6 + gev f 4 = 0 := hL' (1 + 1) (0 + 1) (by decide) (by decide)
+  have e2 : gev f 4 + gev f 2 = 0 := hL' (0 + 1) (1 + 1) (by decide) (by decide)
   intro C d hC hd
   rw [wave_coordinate_at f C d hC hd]
   interval_cases C <;> interval_cases d <;>
     first
-    | exact e0 | exact e1 | exact e2 | exact e3 | exact e4 | exact e6
+    | omega
     | exact hsup _ _ _ _ (by omega)
 
 /-! ### The surjectivity half, with the explicit sections
@@ -819,7 +852,7 @@ theorem proj_orthogonal (k j : Nat) (g : WaveCoef) (hkj : k ≠ j) :
   show (if C + d = k then (if C + d = j then g ⟨C, d, hC, hd⟩ else 0) else 0) = 0
   by_cases h : C + d = j
   · rw [if_pos h, if_neg (by omega)]
-  · rw [if_neg h]
+  · rw [if_neg h, if_neg (by omega : ¬(C + d = k))]
 
 /-- **THE KÜNNETH DECOMPOSITION**: the six sector projectors sum to the
 identity — the cohomology of the universe splits as the direct sum of its
@@ -932,7 +965,7 @@ def polyOp (p : Polynomial ℤ) (g : WaveCoef) : WaveCoef :=
 
 /-- **THE KÜNNETH POLYNOMIAL**: the explicit integer polynomial
 `∏_{j < 6, j ≠ k} (X − j)` — built as a list product. -/
-def kunnethPoly (k : Nat) : Polynomial ℤ :=
+noncomputable def kunnethPoly (k : Nat) : Polynomial ℤ :=
   ((List.range 6).filter (fun j => j ≠ k)).foldr
     (fun j (p : Polynomial ℤ) => (Polynomial.X - Polynomial.C (j : ℤ)) * p)
     (1 : Polynomial ℤ)
@@ -987,7 +1020,7 @@ theorem kunnethPoly_eval_zero (k x : Nat) (hx : x ≠ k) (hx6 : x < 6) :
       (1 : Polynomial ℤ)).eval ((x : Nat) : ℤ) = 0
   rw [eval_foldr_prod]
   exact foldr_zero_factor ((List.range 6).filter (fun j => j ≠ k)) x
-    (List.mem_filter.mpr ⟨List.mem_range.mpr hx6, hx⟩)
+    (List.mem_filter.mpr ⟨List.mem_range.mpr hx6, decide_eq_true hx⟩)
 
 /-- The Künneth polynomial at its own degree is the explicit nonzero scalar
 `k! · (5−k)!`. -/
@@ -998,7 +1031,7 @@ theorem kunnethPoly_eval_k (k : Nat) (hk : k < 6) :
       (1 : Polynomial ℤ)).eval ((k : Nat) : ℤ) ≠ 0
   rw [eval_foldr_prod]
   exact foldr_ne_zero ((List.range 6).filter (fun j => j ≠ k)) k
-    (fun j hj => (List.mem_filter.mp hj).2)
+    (fun j hj => of_decide_eq_true (List.mem_filter.mp hj).2)
 
 /-- **THE STANDARD CONJECTURE (Künneth TYPE) AS A THEOREM.**  Grothendieck
 conjectured the Künneth projectors are algebraic (motivated).  In the
@@ -1102,10 +1135,13 @@ theorem digit3_mod_eq (E p : Nat) :
     _ = 3 ^ p * (3 * (E / 3 ^ (p + 1))) + E % 3 ^ (p + 1) := by
         rw [Nat.pow_succ]; ring
     _ = (E % 3 ^ (p + 1)) + 3 ^ p * (3 * (E / 3 ^ (p + 1))) := Nat.add_comm _ _
-  calc digit3 E p = E / 3 ^ p % 3 := rfl
-  _ = ((E % 3 ^ (p + 1)) + 3 ^ p * (3 * (E / 3 ^ (p + 1)))) / 3 ^ p % 3 := by
-      conv_lhs => rw [hE]
-  _ = ((E % 3 ^ (p + 1)) / 3 ^ p) % 3 := div_split_mod _ _ p hp
+  have hE2 : E / 3 ^ p % 3
+      = ((E % 3 ^ (p + 1)) + 3 ^ p * (3 * (E / 3 ^ (p + 1)))) / 3 ^ p % 3 := by
+    conv_lhs => rw [hE]
+    rfl
+  show E / 3 ^ p % 3 = ((E % 3 ^ (p + 1)) / 3 ^ p) % 3
+  rw [hE2]
+  exact div_split_mod _ _ p hp
 
 /-- The carry reads the same residue: the whole cell of `E` at height `p`
 depends only on `E` modulo `3^(p+1)`. -/
