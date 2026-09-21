@@ -219,3 +219,22 @@ All declarations below are root-level (the modules carry no namespaces).
 #check erdos_ternary_2_universal_of_tailF
 #check erdos_ternary_2_conjecture_odd
 #check infinite_controller_ternary_two_chokehold
+
+
+/-! ## HC COSMOLOGY V2 — strengthened parent laws -/
+
+#check CardinalWorldsV2.cardinal_worlds_v2_crown
+#check CardinalWorldsPostulateLawV2.controlled_emergence_v2_crown
+#check GST2DMixedEmergenceUpgrade.universal_micro_macro_receipt
+#check GSTWorldCosmology.twelve_cell_is_native_chart
+#check GSTWorldCrownBridge.crown_laws_absorbed
+#check GSTGraphV2ScaleEquivariance.scale_equivariance_crown
+#check GSTWaveCohomologyV2.wave_I_v2_crown
+#check GSTNCohomologyV2.wave_II_v2_crown
+#check GSTVortexSingularityV2.gvsm_v2_crown
+#check HodgeDeRhamBridgeV2.absorption_v2_crown
+#check GSTAnalyticAbsorptionV2.analytic_v2_crown
+#check GSTLefschetzCrownV2.lefschetz_integral_profile
+#check GSTHodgeAssaultV2.hodge_v2_crown
+#check GSTClayOfficialV2.rational_v2_crown
+#check GSTTransferBridgeV2.transfer_v2_crown
