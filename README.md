@@ -29,16 +29,49 @@ the last 1%) continues THERE; THIS repo is the universe it stands on.
 monolith dump, not the CI-surgery archive.  It is the CURATED universe —
 the theorems and laws themselves, cut clean from the campaign machinery.
 
+## FORMAL SCOPE OF THE HODGE CLAIMS — STAGE 2 STATUS
+
+The machine-checked Hodge statements in Layers 10-12 are finite GST
+classification theorems.  Their carriers are the twelve-cell cochain
+space and the finite address ring; in particular, the original exported
+carrier is `ClRing = Fin 12 → ℤ`.  Those theorems are genuine Lean
+theorems, but that finite carrier is not by itself the rational
+cohomology of an arbitrary smooth projective complex variety.
+
+The geometric-realization front is now split explicitly:
+
+* **Stage 2A — PROVEN:** `GSTGeometricRealizationStage2.lean` gives a
+  variable-rank realization criterion.  For an arbitrary rational
+  cohomology carrier `Coh`, rational cycle carrier `CycleQ`, arbitrary
+  finite address dimension `N`, injective address map, finite Hodge
+  support, and basis-by-basis algebraic cycle realization, Lean constructs
+  an explicit cycle witness for every represented Hodge class.
+* **Stage 2A family form — PROVEN/CI-GATED:** the address dimension may
+  vary as `N(X,p)` with the geometric object and codimension.  Explicit
+  preservation hypotheses identify the realization's Hodge predicate and
+  cycle-class map with the intended geometric ones.
+* **Stage 2B — THE CLASSICAL INSTANTIATION TARGET:** construct those
+  realization data for the actual rational cohomology, rational
+  `(p,p)`-Hodge classes, algebraic cycles, and cycle-class map of every
+  smooth projective complex variety.  This is not supplied merely by the
+  twelve-cell GST carrier.
+
+Accordingly, names such as `hodge_conjecture`,
+`clay_hodge_conjecture`, and `transferred_hodge_conjecture` are retained
+for compatibility with the existing development, while the audit-accurate
+aliases `finite_gst_hodge_classification`,
+`finite_rational_gst_hodge_classification`, and
+`finite_address_hodge_classification` state their actual scope directly.
+
 ---
 
 ## THE UNIVERSE IN THIRTEEN LAYERS
 
 ```
 LAYER 12 THE TRANSFER BRIDGE     GSTTransferBridge.lean — the export of
-                                the GST world's Hodge theorem into the
-                                classical universe's own language (the
-                                queued Phase-2 front, built): the
-                                classical-address ring ClRing (the
+                                the GST finite Hodge theorem into the
+                                finite address-ring language (Stage 1):
+                                the address ring ClRing (the
                                 degree basis of Z[H,V]/(H^3,V^4)) with
                                 the truncated monomial product clMul
                                 (H^3 = 0, V^4 = 0 structural); the
@@ -317,9 +350,12 @@ is an integer multiple of the algebraic monomial `H^p V^p`
 constructive coefficient is the degree-`4p` coordinate
 (`transferred_clay_witness`).
 
-Queued stage-2 targets (constructive): the `MvPolynomial` presentation
-isomorphism with kernel exactness; the geometric realization of the
-address on an ambient classical variety.
+Stage-2 status: the abstract, variable-rank geometric realization
+criterion is now built in `GSTGeometricRealizationStage2.lean` and has
+its own zero-proof-escape CI gate.  The remaining classical target is the
+actual instantiation of that criterion for every smooth projective complex
+variety.  The separate `MvPolynomial` presentation remains an algebraic
+presentation task, not a substitute for that geometric instantiation.
 
 ## LAYER 11 — THE OFFICIAL CLAY STATEMENT (`GSTClayOfficial.lean`)
 
@@ -331,19 +367,20 @@ description by Pierre Deligne — taken as the target, verbatim
 > over C, any Hodge class is a rational linear combination of classes
 > cl(Z) of algebraic cycles."
 
-The official ingredients land on the lattice piece by piece: the
-projective world is the twelve-cell lattice; the Hodge classes are
+The official problem wording is used as motivation, while the theorem
+proved in this layer is the finite GST rational classification: its
+carrier is the twelve-cell lattice; its Hodge classes are
 Layer 10's diagonal-supported cochains; the cycle classes `cl(Z)` are
 the `H^p·V^p` monomial witnesses; the rational combinations are the
 new ℚ-coefficient structure (`RatCoef`, `rat`, `ratCycleClass`).  The
 landing:
 
-* **`clay_hodge_conjecture`** — THE OFFICIAL STATEMENT: every Hodge
-  class of every weight, rationalized, is a ℚ-multiple of the
-  codimension-`p` cycle class — the rational linear combination of
-  classes of algebraic cycles, exactly as the official words ask,
-  proven from the Layer-10 integral form with the coefficient
-  inclusion `ℤ → ℚ`.
+* **`clay_hodge_conjecture`** — the rational finite-GST theorem:
+  every GST Hodge class in the admitted weights, rationalized, is a
+  ℚ-multiple of the codimension-`p` GST cycle class, proven from the
+  Layer-10 integral form with the coefficient inclusion `ℤ → ℚ`.
+  The audit-accurate alias is
+  `finite_rational_gst_hodge_classification`.
 * **`clay_witness_is_diagonal_coordinate`** — the constructive
   coefficient: the rational multiple is the diagonal coordinate
   `gev f (4p)`, read off the class by the Layer-9 coordinate calculus —
@@ -362,8 +399,8 @@ rounds).
 
 ## LAYER 10 — THE HODGE ASSAULT (`GSTHodgeAssault.lean`)
 
-The Clay Millennium Problem itself, taken head-on in the absorbed world
-(Task 11).  The human statement — *every rational (p,p)-class is a
+The finite absorbed-world analogue of the Hodge problem (Task 11).
+The human statement — *every rational (p,p)-class is a
 rational combination of algebraic cycle classes* — lands with both
 upgrades the cosmology always delivers:
 
