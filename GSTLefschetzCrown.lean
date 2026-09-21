@@ -552,19 +552,25 @@ theorem lefschetz_injective_below_middle (f : WaveCoef)
         = lefschetzOp f ⟨C, d, hC, hd⟩ :=
       congrArg (fun g => lefschetzOp g ⟨C, d, hC, hd⟩) (wave_is_coordinates f)
     rw [← hc]; exact h
-  -- the six load-bearing equations, each a kernel ground evaluation:
-  have e0 : (0 : ℤ) + gev f 0 = 0 := hL' (0 + 1) 0 (by decide) (by decide)
-  have e3 : (0 : ℤ) + gev f 3 = 0 := hL' (1 + 1) 0 (by decide) (by decide)
-  have e1 : gev f 3 + gev f 1 = 0 := hL' (0 + 1) (0 + 1) (by decide) (by decide)
-  have e6 : (0 : ℤ) + gev f 6 = 0 := hL' (2 + 1) 0 (by decide) (by decide)
-  have e4 : gev f 6 + gev f 4 = 0 := hL' (1 + 1) (0 + 1) (by decide) (by decide)
-  have e2 : gev f 4 + gev f 2 = 0 := hL' (0 + 1) (1 + 1) (by decide) (by decide)
+  -- the six load-bearing equations, each an omega-normalized ground evaluation:
+  have e0 : gev f 0 = 0 := by
+    have h := hL' (0 + 1) 0 (by decide) (by decide); omega
+  have e3 : gev f 3 = 0 := by
+    have h := hL' (1 + 1) 0 (by decide) (by decide); omega
+  have e1 : gev f 1 = 0 := by
+    have h := hL' (0 + 1) (0 + 1) (by decide) (by decide); omega
+  have e6 : gev f 6 = 0 := by
+    have h := hL' (2 + 1) 0 (by decide) (by decide); omega
+  have e4 : gev f 4 = 0 := by
+    have h := hL' (1 + 1) (0 + 1) (by decide) (by decide); omega
+  have e2 : gev f 2 = 0 := by
+    have h := hL' (0 + 1) (1 + 1) (by decide) (by decide); omega
   intro C d hC hd
   rw [wave_coordinate_at f C d hC hd]
   interval_cases C <;> interval_cases d <;>
     first
     | exact e0 | exact e1 | exact e2 | exact e3 | exact e4 | exact e6
-    | exact hsup C d hC hd (by omega)
+    | exact hsup _ _ _ _ (by omega)
 
 /-! ### The surjectivity half, with the explicit sections
 
@@ -778,7 +784,7 @@ theorem poincare_monomial_kronecker (C d C' d' : Nat)
   show (∑ i ∈ Finset.range 12, gev (cellClass (3 * C + d)) i
       * gev (cellClass (3 * C' + d')) (11 - i))
       = if C + C' = 3 ∧ d + d' = 2 then 1 else 0
-rw [h1]
+  rw [h1]
   show gev (S12 (fun j => if j = 3 * C' + d' then 1 else 0)) (11 - (3 * C + d))
       = if C + C' = 3 ∧ d + d' = 2 then 1 else 0
   rw [gev_S12 _ (11 - (3 * C + d)) (by omega)]
@@ -799,6 +805,8 @@ theorem proj_idempotent (k : Nat) (g : WaveCoef) :
       sectorProj k (sectorProj k g) ⟨C, d, hC, hd⟩
         = sectorProj k g ⟨C, d, hC, hd⟩ := by
   intro C d hC hd
+  show (if C + d = k then (if C + d = k then g ⟨C, d, hC, hd⟩ else 0) else 0)
+      = (if C + d = k then g ⟨C, d, hC, hd⟩ else 0)
   by_cases h : C + d = k
   · rw [if_pos h, if_pos h]
   · rw [if_neg h, if_neg h]
@@ -808,9 +816,10 @@ theorem proj_orthogonal (k j : Nat) (g : WaveCoef) (hkj : k ≠ j) :
     ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
       sectorProj k (sectorProj j g) ⟨C, d, hC, hd⟩ = 0 := by
   intro C d hC hd
+  show (if C + d = k then (if C + d = j then g ⟨C, d, hC, hd⟩ else 0) else 0) = 0
   by_cases h : C + d = j
   · rw [if_pos h, if_neg (by omega)]
-  · rw [if_neg h, if_neg h]
+  · rw [if_neg h]
 
 /-- **THE KÜNNETH DECOMPOSITION**: the six sector projectors sum to the
 identity — the cohomology of the universe splits as the direct sum of its
@@ -837,7 +846,7 @@ theorem cupDigit_respects_proj (k : Nat) (g : WaveCoef) :
     show (0 : ℤ)
         = if C + 0 = k + 1 then (cupDigit g ⟨C, 0, hC, hd⟩) else 0
     rw [cupDigit_zero_at g C hC (by decide)]
-    by_cases h : C = k + 1
+    by_cases h : C + 0 = k + 1
     · rw [if_pos h]
     · rw [if_neg h]
   · have hd1 : 0 < d := by omega
@@ -909,6 +918,7 @@ theorem lefschetz_respects_kunneth (k : Nat) (g : WaveCoef) :
   by_cases hdeg : C + d = k + 1
   · rw [if_pos hdeg, if_pos hdeg, if_pos hdeg]
   · rw [if_neg hdeg, if_neg hdeg, if_neg hdeg]
+    ring
 
 /-- **THE DEGREE CORRESPONDENCE**: the diagonal operator multiplying each
 cell by its degree. -/
@@ -924,54 +934,57 @@ def polyOp (p : Polynomial ℤ) (g : WaveCoef) : WaveCoef :=
 `∏_{j < 6, j ≠ k} (X − j)` — built as a list product. -/
 def kunnethPoly (k : Nat) : Polynomial ℤ :=
   ((List.range 6).filter (fun j => j ≠ k)).foldr
-    (fun j p => (Polynomial.X - Polynomial.C j) * p) 1
+    (fun j (p : Polynomial ℤ) => (Polynomial.X - Polynomial.C (j : ℤ)) * p)
+    (1 : Polynomial ℤ)
 
 private theorem eval_foldr_prod (js : List Nat) (x : ℤ) :
-    ((js.foldr (fun j p => (Polynomial.X - Polynomial.C j) * p) 1 :
+    ((js.foldr (fun j (p : Polynomial ℤ) =>
+          (Polynomial.X - Polynomial.C (j : ℤ)) * p) (1 : Polynomial ℤ) :
         Polynomial ℤ).eval x)
-      = js.foldr (fun j v => (x - (j : ℤ)) * v) 1 := by
+      = js.foldr (fun j (v : ℤ) => (x - (j : ℤ)) * v) 1 := by
   induction js with
   | nil => simp
   | cons j js ih =>
-      show Polynomial.eval x ((Polynomial.X - Polynomial.C j)
-          * js.foldr (fun j p => (Polynomial.X - Polynomial.C j) * p) 1)
-        = (x - (j : ℤ)) * js.foldr (fun j v => (x - (j : ℤ)) * v) 1
+      show Polynomial.eval x ((Polynomial.X - Polynomial.C (j : ℤ))
+          * js.foldr (fun j (p : Polynomial ℤ) =>
+              (Polynomial.X - Polynomial.C (j : ℤ)) * p) (1 : Polynomial ℤ))
+        = (x - (j : ℤ)) * js.foldr (fun j (v : ℤ) => (x - (j : ℤ)) * v) 1
       rw [Polynomial.eval_mul, ih]
       rw [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C]
 
 private theorem foldr_zero_factor (js : List Nat) (x : Nat) (hx : x ∈ js) :
-    js.foldr (fun j v => ((x : ℤ) - (j : ℤ)) * v) 1 = 0 := by
+    js.foldr (fun j (v : ℤ) => ((x : ℤ) - (j : ℤ)) * v) 1 = 0 := by
   induction js with
-  | nil => exact absurd hx (List.not_mem_nil x)
+  | nil => exact absurd hx (by simp)
   | cons j js ih =>
       rcases List.mem_cons.mp hx with h | h
       · subst h
         show ((x : ℤ) - (x : ℤ))
-            * js.foldr (fun j v => ((x : ℤ) - (j : ℤ)) * v) 1 = 0
-        rw [sub_self, mul_zero]
+            * (js.foldr (fun j (v : ℤ) => ((x : ℤ) - (j : ℤ)) * v) 1) = 0
+        rw [sub_self, zero_mul]
       · show ((x : ℤ) - (j : ℤ))
-          * (js.foldr (fun j v => ((x : ℤ) - (j : ℤ)) * v) 1) = 0
+          * (js.foldr (fun j (v : ℤ) => ((x : ℤ) - (j : ℤ)) * v) 1) = 0
         rw [ih h]
         ring
 
 private theorem foldr_ne_zero (js : List Nat) (k : Nat)
     (hk : ∀ j ∈ js, j ≠ k) :
-    js.foldr (fun j v => ((k : ℤ) - (j : ℤ)) * v) 1 ≠ 0 := by
+    js.foldr (fun j (v : ℤ) => ((k : ℤ) - (j : ℤ)) * v) 1 ≠ 0 := by
   induction js with
   | nil => simp
   | cons j js ih =>
       show ((k : ℤ) - (j : ℤ))
-          * (js.foldr (fun j v => ((k : ℤ) - (j : ℤ)) * v) 1) ≠ 0
-      have hkj : j ≠ k := hk j (List.mem_cons.mp (Or.inl rfl))
+          * (js.foldr (fun j (v : ℤ) => ((k : ℤ) - (j : ℤ)) * v) 1) ≠ 0
+      have hkj : j ≠ k := hk j (by simp)
       exact mul_ne_zero (by omega)
-        (ih (fun j' hj' => hk j' (List.mem_cons.mpr (Or.inr hj'))))
+        (ih (fun j' hj' => hk j' (by simp)))
 
 /-- The Künneth polynomial vanishes at every degree except its own. -/
 theorem kunnethPoly_eval_zero (k x : Nat) (hx : x ≠ k) (hx6 : x < 6) :
     (kunnethPoly k).eval ((x : Nat) : ℤ) = 0 := by
-  show ((List.range 6).filter (fun j => j ≠ k)).foldr
-      (fun j p => (Polynomial.X - Polynomial.C j) * p) 1 |>.eval ((x : Nat) : ℤ)
-      = 0
+  show (((List.range 6).filter (fun j => j ≠ k)).foldr
+      (fun j (p : Polynomial ℤ) => (Polynomial.X - Polynomial.C (j : ℤ)) * p)
+      (1 : Polynomial ℤ)).eval ((x : Nat) : ℤ) = 0
   rw [eval_foldr_prod]
   exact foldr_zero_factor ((List.range 6).filter (fun j => j ≠ k)) x
     (List.mem_filter.mpr ⟨List.mem_range.mpr hx6, hx⟩)
@@ -980,9 +993,9 @@ theorem kunnethPoly_eval_zero (k x : Nat) (hx : x ≠ k) (hx6 : x < 6) :
 `k! · (5−k)!`. -/
 theorem kunnethPoly_eval_k (k : Nat) (hk : k < 6) :
     (kunnethPoly k).eval ((k : Nat) : ℤ) ≠ 0 := by
-  show ((List.range 6).filter (fun j => j ≠ k)).foldr
-      (fun j p => (Polynomial.X - Polynomial.C j) * p) 1 |>.eval ((k : Nat) : ℤ)
-      ≠ 0
+  show (((List.range 6).filter (fun j => j ≠ k)).foldr
+      (fun j (p : Polynomial ℤ) => (Polynomial.X - Polynomial.C (j : ℤ)) * p)
+      (1 : Polynomial ℤ)).eval ((k : Nat) : ℤ) ≠ 0
   rw [eval_foldr_prod]
   exact foldr_ne_zero ((List.range 6).filter (fun j => j ≠ k)) k
     (fun j hj => (List.mem_filter.mp hj).2)
@@ -1006,7 +1019,8 @@ theorem kunneth_projector_polynomial (k : Nat) (hk : k < 6) :
   · rw [if_pos hdeg, hdeg]
   · have hx6 : C + d < 6 := by omega
     have hz := kunnethPoly_eval_zero k (C + d) hdeg hx6
-    rw [if_neg hdeg, hz, mul_zero, mul_zero]
+    rw [if_neg hdeg, hz]
+    ring
 
 /-! ## §5 The Hodge locus — Cattani–Deligne–Kaplan absorbed -/
 
@@ -1014,14 +1028,16 @@ theorem kunneth_projector_polynomial (k : Nat) (hk : k < 6) :
 signature sector (the GST Hodge classes: digit-two with NULL/GST+ carry). -/
 def hodgeLocus (E p : Nat) : Prop := happyLocus (cellOf E p)
 
-instance (E p : Nat) : Decidable (hodgeLocus E p) :=
-  inferInstanceAs (Decidable ((cellOf E p).digit = 2
-    ∧ ((cellOf E p).carry = 0 ∨ (cellOf E p).carry = 3)))
-
 /-- **THE ARITHMETIC CHARACTERIZATION**: the Hodge locus is the explicit
 digit-carry condition. -/
 theorem hodge_locus_arithmetic (E p : Nat) :
-    hodgeLocus E p ↔ digit3 E p = 2 ∧ (carry4 E p = 0 ∨ carry4 E p = 3) := rfl
+    hodgeLocus E p ↔ digit3 E p = 2 ∧ (carry4 E p = 0 ∨ carry4 E p = 3) := by
+  unfold hodgeLocus happyLocus cellOf
+  rfl
+
+instance (E p : Nat) : Decidable (hodgeLocus E p) := by
+  unfold hodgeLocus happyLocus cellOf
+  infer_instance
 
 /-- The NULL carry branch: the carry is zero exactly below the quarter
 threshold of the triadic storey. -/
@@ -1050,7 +1066,7 @@ theorem carry4_three_iff (E p : Nat) :
     rw [h] at hsplit
     calc 3 * 3 ^ p = 3 ^ p * 3 := Nat.mul_comm _ _
       _ ≤ 3 ^ p * 3 + 4 * (E % 3 ^ p) % 3 ^ p := Nat.le_add_right _ _
-      _ = 4 * (E % 3 ^ p) := hsplit.symm
+      _ = 4 * (E % 3 ^ p) := hsplit
   · intro h
     have hmod : E % 3 ^ p < 3 ^ p := Nat.mod_lt _ (Nat.pow_pos (by decide))
     have hmod' : 4 * (E % 3 ^ p) % 3 ^ p < 3 ^ p :=
@@ -1060,22 +1076,20 @@ theorem carry4_three_iff (E p : Nat) :
       (Nat.div_lt_iff_lt_mul (Nat.pow_pos (by decide))).2 (by omega)
     have hq3 : 3 ≤ 4 * (E % 3 ^ p) / 3 ^ p := by
       by_contra hcon
-      push_neg at hcon
       have hq_le : 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) ≤ 2 * 3 ^ p := by
         have hh : 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) ≤ 3 ^ p * 2 :=
-          Nat.mul_le_mul (Nat.le_refl (3 ^ p)) hcon
+          Nat.mul_le_mul (Nat.le_refl (3 ^ p)) (by omega)
         calc 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) ≤ 3 ^ p * 2 := hh
         _ = 2 * 3 ^ p := Nat.mul_comm _ _
       have hfull : 3 * 3 ^ p
           ≤ 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) + 4 * (E % 3 ^ p) % 3 ^ p := by
-        rw [← hsplit]; exact h
+        rw [hsplit]; exact h
       omega
     omega
 
 private theorem div_split_mod (s Q p : Nat) (hp : (0 : Nat) < 3 ^ p) :
-    ((s + 3 * Q * 3 ^ p) / 3 ^ p) % 3 = (s / 3 ^ p) % 3 := by
-  rw [Nat.add_mul_div_left s (3 * Q) hp, Nat.mul_comm (3 : Nat) Q,
-    Nat.add_mul_mod_self_left]
+    ((s + 3 ^ p * (3 * Q)) / 3 ^ p) % 3 = (s / 3 ^ p) % 3 := by
+  rw [Nat.add_mul_div_left s (3 * Q) hp, Nat.add_mul_mod_self_left]
 
 /-- The ternary digit of `E` at height `p` depends only on `E` modulo
 `3^(p+1)` — the triadic depth reads the residue. -/
@@ -1083,13 +1097,13 @@ theorem digit3_mod_eq (E p : Nat) :
     digit3 E p = ((E % 3 ^ (p + 1)) / 3 ^ p) % 3 := by
   have hp : (0 : Nat) < 3 ^ p := Nat.pow_pos (by decide)
   have hsplit := Nat.div_add_mod E (3 ^ (p + 1))
-  have hE : E = (E % 3 ^ (p + 1)) + 3 * (E / 3 ^ (p + 1)) * 3 ^ p := by
+  have hE : E = (E % 3 ^ (p + 1)) + 3 ^ p * (3 * (E / 3 ^ (p + 1))) := by
     calc E = 3 ^ (p + 1) * (E / 3 ^ (p + 1)) + E % 3 ^ (p + 1) := hsplit.symm
-    _ = (3 * (E / 3 ^ (p + 1))) * 3 ^ p + E % 3 ^ (p + 1) := by
+    _ = 3 ^ p * (3 * (E / 3 ^ (p + 1))) + E % 3 ^ (p + 1) := by
         rw [Nat.pow_succ]; ring
-    _ = (E % 3 ^ (p + 1)) + 3 * (E / 3 ^ (p + 1)) * 3 ^ p := Nat.add_comm _ _
+    _ = (E % 3 ^ (p + 1)) + 3 ^ p * (3 * (E / 3 ^ (p + 1))) := Nat.add_comm _ _
   calc digit3 E p = E / 3 ^ p % 3 := rfl
-  _ = ((E % 3 ^ (p + 1)) + 3 * (E / 3 ^ (p + 1)) * 3 ^ p) / 3 ^ p % 3 := by
+  _ = ((E % 3 ^ (p + 1)) + 3 ^ p * (3 * (E / 3 ^ (p + 1)))) / 3 ^ p % 3 := by
       conv_lhs => rw [hE]
   _ = ((E % 3 ^ (p + 1)) / 3 ^ p) % 3 := div_split_mod _ _ p hp
 
@@ -1134,7 +1148,7 @@ theorem hodge_locus_residue_algebraic (p : Nat) :
   rw [Finset.mem_filter]
   exact ⟨fun h => ⟨Finset.mem_range.mpr (Nat.mod_lt _ (Nat.pow_pos (by decide))),
       hinv.mp h⟩,
-    fun hmem => hinv.mpr ((Finset.mem_filter.mp hmem).2)⟩
+    fun hmem => hinv.mpr hmem.2⟩
 
 /-! ## §6 The crown and the receipts -/
 
@@ -1147,8 +1161,7 @@ theorem the_lefschetz_crown :
     (∀ f : WaveCoef, ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
       f ⟨C, d, hC, hd⟩
         = ∑ i ∈ Finset.range 12, gev f i * cellClass i ⟨C, d, hC, hd⟩)
-  ∧ (∀ (g : WaveCoef) (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
-      (Function.iterate lefschetzOp 6 g) ⟨C, d, hC, hd⟩ = 0)
+  ∧ (∀ g : WaveCoef, lefschetz_sixth_power g)
   ∧ (∀ f : WaveCoef, (∀ g : WaveCoef, topPairing f g = 0) →
       ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
         f ⟨C, d, hC, hd⟩ = 0)
