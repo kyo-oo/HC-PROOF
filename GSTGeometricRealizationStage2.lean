@@ -191,6 +191,48 @@ theorem universal_hodge_of_fiberwise_surjectivity
   intro X hX p alpha halpha
   exact h X hX p alpha halpha
 
+
+/-- **VARIABLE-RANK STAGE-2 FAMILY THEOREM.**
+
+The address dimension is allowed to depend on both the geometric object X
+and the codimension p.  Two semantic preservation laws prevent a fake
+realization:
+
+* the internal realization predicate is equivalent to the intended Hodge
+  predicate on the actual cohomology fiber;
+* the internal linear cycle-class map agrees pointwise with the intended
+  geometric cycle-class map.
+
+Consequently, a FiniteHodgeRealization for every eligible X and p proves
+the exact universal Hodge target.  No global Fin 12 identification appears
+anywhere in this theorem. -/
+theorem universal_hodge_of_realization_family
+    {Variety : Type*}
+    (eligible : Variety -> Prop)
+    (Coh CycleQ : Variety -> Nat -> Type*)
+    [∀ X p, AddCommGroup (Coh X p)]
+    [∀ X p, Module ℚ (Coh X p)]
+    [∀ X p, AddCommGroup (CycleQ X p)]
+    [∀ X p, Module ℚ (CycleQ X p)]
+    (isHodge : ∀ X p, Coh X p -> Prop)
+    (cycleClass : ∀ X p, CycleQ X p -> Coh X p)
+    (N : Variety -> Nat -> Nat)
+    (R : ∀ X p, eligible X ->
+      FiniteHodgeRealization (N X p) (Coh X p) (CycleQ X p))
+    (hHodge : ∀ X p hX alpha,
+      (R X p hX).isHodge alpha ↔ isHodge X p alpha)
+    (hCycle : ∀ X p hX Z,
+      (R X p hX).cycleClass Z = cycleClass X p Z) :
+    UniversalHodgeStatement eligible Coh CycleQ isHodge cycleClass := by
+  intro X hX p alpha halpha
+  have hRealHodge : (R X p hX).isHodge alpha :=
+    (hHodge X p hX alpha).mpr halpha
+  obtain ⟨Z, hZ⟩ :=
+    hodge_class_has_cycle_witness (R X p hX) alpha hRealHodge
+  refine ⟨Z, ?_⟩
+  rw [← hCycle X p hX Z]
+  exact hZ
+
 #check RatAddress
 #check SupportedOn
 #check FiniteHodgeRealization
@@ -205,6 +247,7 @@ theorem universal_hodge_of_fiberwise_surjectivity
 #check stage2_closes_cycle_surjectivity
 #check UniversalHodgeStatement
 #check universal_hodge_of_fiberwise_surjectivity
+#check universal_hodge_of_realization_family
 
 #print axioms address_reconstruct
 #print axioms cycleWitness_address
@@ -212,5 +255,6 @@ theorem universal_hodge_of_fiberwise_surjectivity
 #print axioms stage2_realization_crown
 #print axioms stage2_closes_cycle_surjectivity
 #print axioms universal_hodge_of_fiberwise_surjectivity
+#print axioms universal_hodge_of_realization_family
 
 end GSTGeometricRealizationStage2
