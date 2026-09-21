@@ -61,9 +61,9 @@ theorem liftWave_cupCarry (g : WaveCoef) :
         g ⟨C.1 - 1, d.1, by omega, d.2⟩
       else 0
   by_cases h : 1 ≤ C.1
-  · rw [if_pos h]
+  · rw [dif_pos h]
     exact cupCarry_at g C.1 d.1 C.2 d.2 h (by omega)
-  · rw [if_neg h]
+  · rw [dif_neg h]
     have hC0 : C = (⟨0, by decide⟩ : Fin 4) := by
       apply Fin.ext
       omega
