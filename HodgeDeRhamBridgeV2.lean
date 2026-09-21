@@ -86,7 +86,6 @@ theorem comparison_period_concatenated (j k : Nat) :
   rw [mixed_period_exact]
   rcases world_layers_multiplicative j k with ⟨hb, hd⟩
   rw [hb, hd]
-  ring
 
 theorem absorption_v2_crown :
     (∀ C d, C < 4 → d < 3 →
