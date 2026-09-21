@@ -149,6 +149,7 @@ roots = [
   "ComparatorSmokeChallenge",
   "ComparatorSmokeSolution",
   "waves.GSTWaveCohomology",
+  "waves.GSTWaveCohomologyV2",
   "waves.GSTNCohomology",
   "waves.GSTVortexSingularity",
   "waves.CardinalWorldsPostulateLaw",
