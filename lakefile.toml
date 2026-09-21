@@ -164,6 +164,7 @@ roots = [
   "GSTHodgeAssault",
   "GSTHodgeAssaultV2",
   "GSTClayOfficial",
+  "GSTClayOfficialV2",
   "GSTTransferBridge",
 ]
 
