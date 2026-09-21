@@ -31,6 +31,7 @@ import GSTHodgeAssaultV2
 import GSTClayOfficial
 import GSTClayOfficialV2
 import GSTTransferBridge
+import GSTTransferBridgeV2
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
