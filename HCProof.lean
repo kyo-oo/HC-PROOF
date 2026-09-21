@@ -16,6 +16,7 @@ import GSTGhostRayExclusion
 import GSTClimbInfiniteFamily
 import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
+import GSTWorldCosmology
 import HodgeDeRhamBridge
 import GSTAnalyticAbsorption
 import GSTLefschetzCrown
@@ -111,6 +112,17 @@ All declarations below are root-level (the modules carry no namespaces).
 #check CardinalWorldsPostulateLaw.emergent_dimension_full
 #check CardinalWorldsPostulateLaw.infinite_dimension_is_colimit
 #check CardinalWorldsPostulateLaw.postulate_three_law
+
+/-! ## The dimension-free GST world face -/
+
+#check GSTWorldCosmology.digitShiftN_add
+#check GSTWorldCosmology.carryShiftN_add
+#check GSTWorldCosmology.axes_commute
+#check GSTWorldCosmology.digit_boundary_extinction
+#check GSTWorldCosmology.carry_boundary_extinction
+#check GSTWorldCosmology.mixed_boundary_extinction
+#check GSTWorldCosmology.waveWorldEquiv
+#check GSTWorldCosmology.twelve_cell_is_native_chart
 
 /-! ## The Lefschetz crown face (Layer 9) -/
 
