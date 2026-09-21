@@ -383,6 +383,15 @@ theorem the_hodge_assault :
 #check cycle_is_monomial
 #check cycle_at_diagonal
 #check cycle_at_offdiagonal
+
+/-- Audit-accurate name for the finite twelve-cell theorem.
+This is the exact content of hodge_conjecture without identifying WaveCoef
+with the cohomology of an arbitrary external variety. -/
+theorem finite_gst_hodge_classification
+    (p : Nat) (hp : p < 3) (f : WaveCoef) (hf : isHodgeClass p f) :
+    ∃ z : ℤ, ∀ c : WaveCell, f c = z * cycleClass p c :=
+  hodge_conjecture p hp f hf
+
 #check hodge_conjecture
 #check hodge_class_iff
 #check hodge_class_coordinate
