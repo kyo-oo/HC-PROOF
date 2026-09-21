@@ -166,6 +166,7 @@ roots = [
   "GSTClayOfficial",
   "GSTClayOfficialV2",
   "GSTTransferBridge",
+  "GSTTransferBridgeV2",
 ]
 
 # ---------------------------------------------------------------------------
