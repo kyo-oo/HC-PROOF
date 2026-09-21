@@ -45,7 +45,7 @@ def addressBasis {N : Nat} (i : Fin N) : RatAddress N :=
   fun j => if j = i then 1 else 0
 
 def SupportedOn {N : Nat} (S : Finset (Fin N)) (phi : RatAddress N) : Prop :=
-  forall i : Fin N, i ∉ S -> phi i = 0
+  ∀ i : Fin N, i ∉ S -> phi i = 0
 
 theorem address_reconstruct {N : Nat}
     (S : Finset (Fin N)) (phi : RatAddress N)
@@ -68,10 +68,10 @@ structure FiniteHodgeRealization
   encode_injective : Function.Injective encode
   hodgeSupport : Finset (Fin N)
   hodge_supported :
-    forall alpha : Coh, isHodge alpha -> SupportedOn hodgeSupport (encode alpha)
+    ∀ alpha : Coh, isHodge alpha -> SupportedOn hodgeSupport (encode alpha)
   basisCycle : Fin N -> CycleQ
   basisCycle_address :
-    forall i : Fin N, i ∈ hodgeSupport ->
+    ∀ i : Fin N, i ∈ hodgeSupport ->
       encode (cycleClass (basisCycle i)) = addressBasis i
 
 variable {N : Nat} {Coh CycleQ : Type*}
@@ -106,15 +106,15 @@ theorem cycleWitness_address
 theorem hodge_class_has_cycle_witness
     (R : FiniteHodgeRealization N Coh CycleQ)
     (alpha : Coh) (halpha : R.isHodge alpha) :
-    exists Z : CycleQ, R.cycleClass Z = alpha := by
+    ∃ Z : CycleQ, R.cycleClass Z = alpha := by
   refine ⟨cycleWitness R alpha, ?_⟩
   apply R.encode_injective
   exact cycleWitness_address R alpha halpha
 
 theorem cycleClass_surjective_on_hodge
     (R : FiniteHodgeRealization N Coh CycleQ) :
-    forall alpha : Coh, R.isHodge alpha ->
-      exists Z : CycleQ, R.cycleClass Z = alpha :=
+    ∀ alpha : Coh, R.isHodge alpha ->
+      ∃ Z : CycleQ, R.cycleClass Z = alpha :=
   fun alpha halpha => hodge_class_has_cycle_witness R alpha halpha
 
 theorem singleton_support_rank_one
@@ -130,8 +130,8 @@ theorem singleton_support_rank_one
 
 theorem stage2_realization_crown
     (R : FiniteHodgeRealization N Coh CycleQ) :
-    forall alpha : Coh, R.isHodge alpha ->
-      exists Z : CycleQ, R.cycleClass Z = alpha :=
+    ∀ alpha : Coh, R.isHodge alpha ->
+      ∃ Z : CycleQ, R.cycleClass Z = alpha :=
   cycleClass_surjective_on_hodge R
 
 #check RatAddress
