@@ -158,6 +158,7 @@ roots = [
   "waves.CardinalWorldsPostulateLaw",
   "waves.CardinalWorldsPostulateLawV2",
   "GSTAnalyticAbsorption",
+  "GSTAnalyticAbsorptionV2",
   "GSTLefschetzCrown",
   "GSTHodgeAssault",
   "GSTHodgeAssaultV2",
