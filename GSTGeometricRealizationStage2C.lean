@@ -40,6 +40,52 @@ open AlgebraicGeometry
 
 universe u
 
+/-! ### Rational scalar structure on native algebraic cycles
+
+The pinned Mathlib revision gives locally-finite algebraic cycles their
+additive-group structure, but not the ambient rational module instance.
+For rational coefficients the missing action is canonical: scalar
+multiplication is pointwise and cannot enlarge support, hence preserves
+local finiteness. -/
+
+noncomputable instance algebraicCycleRatSMul (X : Scheme.{u}) :
+    SMul ℚ (AlgebraicCycle X ℚ) where
+  smul q D :=
+    { toFun := fun x => q * D x
+      supportWithinDomain' := by
+        intro x hx
+        trivial
+      supportLocallyFiniteWithinDomain' := by
+        intro z hz
+        obtain ⟨t, ht, hfin⟩ :=
+          D.supportLocallyFiniteWithinDomain z (by trivial)
+        refine ⟨t, ht, hfin.subset ?_⟩
+        intro x hx
+        rcases hx with ⟨hxt, hxq⟩
+        refine ⟨hxt, ?_⟩
+        show D x ≠ 0
+        intro hDx
+        apply hxq
+        simp [hDx] }
+
+@[simp]
+theorem algebraicCycleRatSMul_apply
+    (X : Scheme.{u}) (q : ℚ) (D : AlgebraicCycle X ℚ) (x : X) :
+    (q • D) x = q * D x :=
+  rfl
+
+noncomputable instance algebraicCycleRatModule (X : Scheme.{u}) :
+    Module ℚ (AlgebraicCycle X ℚ) := by
+  let coeAdd : AlgebraicCycle X ℚ →+ (X → ℚ) :=
+    { toFun := fun D => D
+      map_zero' := rfl
+      map_add' := fun _ _ => rfl }
+  exact Function.Injective.module ℚ coeAdd
+    Function.locallyFinsuppWithin.coe_injective
+    (by
+      intro q D
+      rfl)
+
 /-- A Stage-2 realization whose geometric cycle carrier is Mathlib's actual
 algebraic-cycle type on an actual scheme. -/
 structure NativeSchemeHodgeRealization
