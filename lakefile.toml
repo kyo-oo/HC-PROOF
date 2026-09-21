@@ -153,6 +153,7 @@ roots = [
   "waves.GSTNCohomology",
   "waves.GSTNCohomologyV2",
   "waves.GSTVortexSingularity",
+  "waves.GSTVortexSingularityV2",
   "waves.CardinalWorldsPostulateLaw",
   "waves.CardinalWorldsPostulateLawV2",
   "GSTAnalyticAbsorption",
