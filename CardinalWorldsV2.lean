@@ -14,7 +14,6 @@ set_option maxRecDepth 1000000
 
 namespace CardinalWorldsV2
 
-open CardinalWorlds
 
 /-- The positive signature reader and the negative Cantor verdict are exact
 Boolean complements at the true/false level. -/
@@ -90,19 +89,27 @@ theorem packet_add (j k : Nat) :
     gstThreeWorldExponentialPacketS (j+k) =
       packetMul (gstThreeWorldExponentialPacketS j)
         (gstThreeWorldExponentialPacketS k) := by
-  apply GSTThreeWorldExponentialPacketS.ext <;>
-    simp [gstThreeWorldExponentialPacketS, packetMul,
-      gstBinaryWorldFactorS, gstTernaryWorldFactorS,
-      gstMixedWorldFactorS, pow_add]
+  cases h1 : gstThreeWorldExponentialPacketS (j+k)
+  cases h2 : packetMul (gstThreeWorldExponentialPacketS j)
+    (gstThreeWorldExponentialPacketS k)
+  simp [gstThreeWorldExponentialPacketS, packetMul,
+    gstBinaryWorldFactorS, gstTernaryWorldFactorS,
+    gstMixedWorldFactorS, pow_add] at h1 h2
+  subst h1
+  subst h2
+  rfl
 
 /-- Packet multiplication is associative. -/
 theorem packetMul_assoc
     (A B C : GSTThreeWorldExponentialPacketS) :
     packetMul (packetMul A B) C = packetMul A (packetMul B C) := by
-  cases A
-  cases B
-  cases C
-  rfl
+  cases A with
+  | mk Ab At Am =>
+    cases B with
+    | mk Bb Bt Bm =>
+      cases C with
+      | mk Cb Ct Cm =>
+        simp [packetMul, Nat.mul_assoc]
 
 /-- The mixed coordinate is determined by the two primitive world
 coordinates at every depth. -/
@@ -118,8 +125,8 @@ theorem joined_prefix_succ (K : Nat) :
       gstHandwrittenThreeWorldJoinedPrefixS K + 5 * 6^K := by
   unfold gstHandwrittenThreeWorldJoinedPrefixS
   rw [Finset.sum_range_succ, Nat.mul_add]
+  unfold gstBinaryWorldFactorS gstTernaryWorldFactorS
   rw [← gst_three_world_factor_rawS K]
-  ring
 
 /-- Exact reader/packet crown. -/
 theorem cardinal_worlds_v2_crown :
