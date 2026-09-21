@@ -24,6 +24,7 @@ import HodgeDeRhamBridge
 import GSTAnalyticAbsorption
 import GSTLefschetzCrown
 import GSTHodgeAssault
+import GSTHodgeAssaultV2
 import GSTClayOfficial
 import GSTTransferBridge
 import waves.GSTWaveCohomology
