@@ -41,9 +41,9 @@ theorem liftWave_cupDigit (g : WaveCoef) :
         g ⟨C.1, d.1 - 1, C.2, by omega⟩
       else 0
   by_cases h : 1 ≤ d.1
-  · rw [if_pos h]
+  · rw [dif_pos h]
     exact cupDigit_at g C.1 d.1 C.2 d.2 (by omega) (by omega)
-  · rw [if_neg h]
+  · rw [dif_neg h]
     have hd0 : d = (⟨0, by decide⟩ : Fin 3) := by
       apply Fin.ext
       omega
@@ -105,8 +105,9 @@ theorem cupDigit_cubed_native_zero (g : WaveCoef) :
           digitShiftN_add 1 1 (digitShiftN 1 (liftWave g))
     _ = digitShiftN 3 (liftWave g) := by
           simpa using digitShiftN_add 2 1 (liftWave g)
-    _ = fun _ => 0 := digit_boundary_extinction (liftWave g)
-    _ = liftWave (fun _ => 0) := by rfl
+    _ = (fun _ : WorldCell 4 3 => (0 : ℤ)) :=
+          digit_boundary_extinction (liftWave g)
+    _ = liftWave (fun _ : WaveCell => (0 : ℤ)) := by rfl
 
 /-- Four old carry cups vanish because the native carry depth of this chart
 is four. -/
@@ -132,8 +133,9 @@ theorem cupCarry_fourth_native_zero (g : WaveCoef) :
           simpa using carryShiftN_add 2 1 (carryShiftN 1 (liftWave g))
     _ = carryShiftN 4 (liftWave g) := by
           simpa using carryShiftN_add 3 1 (liftWave g)
-    _ = fun _ => 0 := carry_boundary_extinction (liftWave g)
-    _ = liftWave (fun _ => 0) := by rfl
+    _ = (fun _ : WorldCell 4 3 => (0 : ℤ)) :=
+          carry_boundary_extinction (liftWave g)
+    _ = liftWave (fun _ : WaveCell => (0 : ℤ)) := by rfl
 
 /-- The original pointwise cubed theorem, now derived from the native
 dimension-free boundary law. -/
