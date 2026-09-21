@@ -3,6 +3,7 @@ import GST2DMixedEmergenceUpgrade
 import CardinalWorlds
 import MonolithBoundary
 import GSTGraphV2Ontological
+import GSTGraphV2ScaleEquivariance
 import GSTGraphV2OmegaWaveLaw
 import GSTGraphV2SixAdicSynchronizedShadows
 import GSTGraphV2ProductionLaws
@@ -79,6 +80,11 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGraphV2Ontological.happy_iff_ontDensity_positive
 #check GSTGraphV2SixAdicSynchronizedShadows.six_iso_iff_synchronized_shadows
 #check GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF
+#check GSTGraphV2ScaleEquivariance.uPhaseShift_add
+#check GSTGraphV2ScaleEquivariance.uTailEnergy_add
+#check GSTGraphV2ScaleEquivariance.u_cut_plane_equivariance
+#check GSTGraphV2ScaleEquivariance.canonical_n_wave_plane_equivariance
+#check GSTGraphV2ScaleEquivariance.scale_equivariance_crown
 
 /-! ## The absorption face -/
 
