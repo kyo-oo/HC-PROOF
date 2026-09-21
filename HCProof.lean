@@ -29,6 +29,7 @@ import GSTTransferBridge
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
+import waves.GSTNCohomologyV2
 import waves.GSTVortexSingularity
 import waves.CardinalWorldsPostulateLaw
 import waves.CardinalWorldsPostulateLawV2
