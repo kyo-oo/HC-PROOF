@@ -154,14 +154,16 @@ theorem universal_native_scheme_hodge_of_realization_family
   obtain ⟨Z, hZmem, hZclass⟩ :=
     hodge_class_has_native_algebraic_cycle
       (R X p hX) alpha halphaR
-  refine ⟨⟨Z, ?_⟩, ?_⟩
-  · rw [← hCycles X p hX]
+  have hZtarget : Z ∈ CycleSpace X p := by
+    rw [← hCycles X p hX]
     exact hZmem
-  · have hcompat :=
-      hCycleClass X p hX
-        ⟨Z, hZmem⟩
-    rw [hcompat] at hZclass
-    exact hZclass
+  refine ⟨⟨Z, hZtarget⟩, ?_⟩
+  have hcompat :=
+    hCycleClass X p hX ⟨Z, hZmem⟩
+  calc
+    cycleClass X p ⟨Z, hZtarget⟩
+        = (R X p hX).cycleClass ⟨Z, hZmem⟩ := hcompat.symm
+    _ = alpha := hZclass
 
 /-- The exact remaining native geometric obligation for one scheme fiber.
 The equality of cycle submodules is bound before it is used to transport
@@ -198,15 +200,15 @@ theorem hodge_of_native_scheme_fiber_obligation
     exact halpha
   obtain ⟨Z, hZmem, hZclass⟩ :=
     hodge_class_has_native_algebraic_cycle R alpha halphaR
-  let Ztarget : CycleSpace :=
-    ⟨Z, by
-      rw [← hS]
-      exact hZmem⟩
-  refine ⟨Ztarget, ?_⟩
+  have hZtarget : Z ∈ CycleSpace := by
+    rw [← hS]
+    exact hZmem
+  refine ⟨⟨Z, hZtarget⟩, ?_⟩
   have hcompat := hcl ⟨Z, hZmem⟩
-  change cl Ztarget = alpha
-  rw [← hcompat]
-  exact hZclass
+  calc
+    cl ⟨Z, hZtarget⟩
+        = R.cycleClass ⟨Z, hZmem⟩ := hcompat.symm
+    _ = alpha := hZclass
 
 #check NativeSchemeHodgeRealization
 #check NativeSchemeHodgeRealization.toSubspaceRealization
