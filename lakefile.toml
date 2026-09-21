@@ -133,6 +133,7 @@ roots = [
   "GSTV2InfiniteCore",
   "GSTWorldtraceArithmetic",
   "GSTWorldtraceMahlerRelativePrecision",
+  "GSTWorldCosmology",
   "InformationBadTraceScratch",
   "InformationDescentScratch",
   "InformationGeometryScratch",
