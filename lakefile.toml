@@ -149,6 +149,7 @@ roots = [
   "waves.GSTVortexSingularity",
   "waves.CardinalWorldsPostulateLaw",
   "GSTAnalyticAbsorption",
+  "GSTLefschetzCrown",
 ]
 
 # ---------------------------------------------------------------------------

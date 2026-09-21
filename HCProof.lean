@@ -18,6 +18,7 @@ import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import HodgeDeRhamBridge
 import GSTAnalyticAbsorption
+import GSTLefschetzCrown
 import waves.GSTWaveCohomology
 import waves.GSTNCohomology
 import waves.GSTVortexSingularity
@@ -107,6 +108,30 @@ All declarations below are root-level (the modules carry no namespaces).
 #check CardinalWorldsPostulateLaw.emergent_dimension_full
 #check CardinalWorldsPostulateLaw.infinite_dimension_is_colimit
 #check CardinalWorldsPostulateLaw.postulate_three_law
+
+/-! ## The Lefschetz crown face (Layer 9) -/
+
+#check GSTLefschetzCrown.cup_comm
+#check GSTLefschetzCrown.cupDigit_cubed
+#check GSTLefschetzCrown.cupCarry_fourth
+#check GSTLefschetzCrown.monomial_is_cellClass
+#check GSTLefschetzCrown.divisor_generation
+#check GSTLefschetzCrown.lefschetz_iterate_zero
+#check GSTLefschetzCrown.lefschetz_sixth_power
+#check GSTLefschetzCrown.sector_rank_table
+#check GSTLefschetzCrown.lefschetz_injective_below_middle
+#check GSTLefschetzCrown.lefschetz_surjective_3
+#check GSTLefschetzCrown.lefschetz_surjective_4
+#check GSTLefschetzCrown.lefschetz_surjective_5
+#check GSTLefschetzCrown.pairing_nondegenerate_left
+#check GSTLefschetzCrown.pairing_nondegenerate_right
+#check GSTLefschetzCrown.poincare_monomial_kronecker
+#check GSTLefschetzCrown.proj_sum
+#check GSTLefschetzCrown.lefschetz_respects_kunneth
+#check GSTLefschetzCrown.kunneth_projector_polynomial
+#check GSTLefschetzCrown.hodge_locus_mod_invariant
+#check GSTLefschetzCrown.hodge_locus_residue_algebraic
+#check GSTLefschetzCrown.the_lefschetz_crown
 
 /-! ## The boundary face -/
 

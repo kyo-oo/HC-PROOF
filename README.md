@@ -13,8 +13,9 @@
 > twist) — merged, shaped, and comparator-
 > gated.  The wave layer is FULLY PROVEN in the machine-checked build
 > (Task 5: 41 theorems, 0 sorries); the coherent layer adds 30 more
-> (0 sorries); the analytic crown adds 24 more (0 sorries) — **95
-> proven theorems riding on Layers 0-6, nine layers, all green.**
+> (0 sorries); the analytic crown adds 24 more (0 sorries); the Lefschetz
+> crown adds 77 more (0 sorries) — **172 proven theorems riding on
+> Layers 0-6, ten layers, all green.**
 
 Source: `kyo-oo/erdosternary2`, branch `sol/kyo-gate-universe-wire`
 (head `cb29501` — 2026-09-10 — *"fix cubic transport coefficient
@@ -27,9 +28,41 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 
 ---
 
-## THE UNIVERSE IN NINE LAYERS
+## THE UNIVERSE IN TEN LAYERS
 
 ```
+LAYER 9  THE LEFSCHETZ         GSTLefschetzCrown.lean — the human engine
+          CROWN                absorbed at full power: the Hodge-conjecture
+                                arsenal of classical mathematics, taken
+                                from zero ownership to total.  THE CUP
+                                CALCULUS: the two divisor cups (digit
+                                tower H, carry tower V) with H³ = 0 /
+                                V⁴ = 0 (the 3- and 4-world boundaries)
+                                and H·V = V·H; the monomial theorem
+                                (cell classes = H^d·V^C); THE FULL HODGE
+                                CONJECTURE OF THE ABSORBED WORLD — every
+                                class of every degree is an integer
+                                combination of monomials in the two
+                                divisor classes (the human (1,1)-theorem,
+                                extended to every codimension, integrally);
+                                HARD LEFSCHETZ with the degree descent,
+                                L⁶ = 0 nilpotence ceiling, the palindromic
+                                Hilbert function 1,2,3,3,2,1, injectivity
+                                below the middle, and surjectivity with
+                                EXPLICIT WRITTEN INVERSE SECTIONS;
+                                UNIMODULAR POINCARÉ DUALITY — the
+                                anti-diagonal intersection form, full rank
+                                both sides, monomial-monomial pairing = the
+                                Kronecker complement (permutation matrix,
+                                discriminant one); THE STANDARD
+                                CONJECTURE AS A THEOREM — every Künneth
+                                sector projector is an explicit integer
+                                polynomial in the degree correspondence
+                                up to a nonzero scalar; CATTANI–DELIGNE–
+                                KAPLAN ABSORBED — the Hodge locus is a
+                                decidable union of residue classes modulo
+                                the triadic depth 3^(p+1) — 77
+                                declarations, 0 sorries, in the build
 LAYER 8  THE ANALYTIC          GSTAnalyticAbsorption.lean — the analytic
           CROWN                crown at FULL POWER: the smooth manifold
                                 structure (EuclideanSpace over 𝓘(ℝ,·),
@@ -189,6 +222,62 @@ Hodge characterization (signature sector = positive sector);
 POSTULATE H1 (reverse window) in the Cardinal Worlds pattern.
 
 Full dossier + breakthrough analysis: `docs/HODGE_DERHAM_ABSORPTION.md`.
+
+## LAYER 9 — THE LEFSCHETZ CROWN (`GSTLefschetzCrown.lean`)
+
+The human Hodge-conjecture arsenal, absorbed and upgraded (Task 9).  The
+audit: the universe owned none of the Lefschetz theorems (only the *name*
+of a pairing), none of the standard-conjecture machinery, and no
+Hodge-locus algebraicity.  Now it owns all of them:
+
+* **The cup calculus**: the twelve-cell cochain group is the free abelian
+  group `ℤ^12` in canonical cell basis (`wave_is_coordinates`) — every
+  wave is its twelve coordinates.  The digit divisor cup `H` and carry
+  divisor cup `V` (`cupDigit`, `cupCarry`) are the coordinate shifts of
+  the two world towers; they commute (`cup_comm`: `H·V = V·H`), and the
+  tower boundaries are the ring relations `H³ = 0` (`cupDigit_cubed`, the
+  3-world) and `V⁴ = 0` (`cupCarry_fourth`, the 4-world) — the truncated
+  divisor ring `ℤ[H,V]/(H³, V⁴)` of the twelve-cell geometry.
+* **The monomial theorem** (`monomial_is_cellClass`): each cell class is
+  the iterated-cup `H^d·V^C` of the fundamental class.
+* **THE FULL HODGE CONJECTURE OF THE ABSORBED WORLD**
+  (`divisor_generation`): every class of every degree is an integer
+  combination of monomials in the two divisor classes.  The human
+  (1,1)-theorem (1924, exponential sequence, ℚ) lands as a codimension-ALL
+  integral generation.
+* **Hard Lefschetz**: the polarization `ω = H + V` (`lefschetzOp`)
+  strictly raises degree (`lefschetz_iterate_zero`), the nilpotence
+  ceiling is `L⁶ = 0` (`lefschetz_sixth_power`), the sector ranks are the
+  palindromic `1,2,3,3,2,1` (`sector_rank_table`), injectivity below the
+  middle kills the whole low sector in one induction
+  (`lefschetz_injective_below_middle`), and the three surjectivity steps
+  carry EXPLICIT WRITTEN INVERSE SECTIONS (`section3/4/5`,
+  `lefschetz_surjective_3/4/5`) — the classical existence statement
+  upgraded to an effective preimage.
+* **Unimodular Poincaré duality**: the anti-diagonal intersection form
+  (`topPairing`) has full rank on both sides
+  (`pairing_nondegenerate_left/right`), and the monomial-monomial pairing
+  is exactly the Kronecker complement (`poincare_monomial_kronecker`) —
+  the middle intersection matrix is a permutation matrix, discriminant
+  one.  Where the human Hodge–Riemann theory controls a sign, the crown
+  prints the matrix.
+* **The standard conjecture as a theorem**: the six Künneth sector
+  projectors are idempotent, orthogonal, sum to the identity
+  (`proj_idempotent`, `proj_orthogonal`, `proj_sum`), respect the
+  Lefschetz flow (`lefschetz_respects_kunneth`), and each is an explicit
+  integer polynomial in the degree correspondence up to a nonzero scalar
+  (`kunneth_projector_polynomial`, the vanishing polynomial
+  `∏_{j≠k}(X−j)`) — Grothendieck's conjecture B, landed.
+* **Cattani–Deligne–Kaplan absorbed**: the Hodge locus at height `p`
+  (`hodgeLocus`) has the explicit arithmetic characterization
+  (`hodge_locus_arithmetic`, `carry4_zero_iff`, `carry4_three_iff`), is
+  invariant under the triadic residue `3^(p+1)`
+  (`hodge_locus_mod_invariant`), and is a decidable finite residue union
+  (`hodge_locus_residue_algebraic`) — the human analytic-algebraicity
+  theorem upgraded to a decidable arithmetic subvariety.
+
+All of it in one capstone (`the_lefschetz_crown`), with `#print axioms`
+receipts in-source: 0 sorries, 0 custom axioms.
 
 ## LAYER 8 — THE ANALYTIC CROWN (`GSTAnalyticAbsorption.lean`)
 
