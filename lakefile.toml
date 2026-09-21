@@ -169,6 +169,7 @@ roots = [
   "GSTTransferBridge",
   "GSTTransferBridgeV2",
   "GSTGeometricRealizationStage2",
+  "GSTGeometricRealizationStage2B",
 ]
 
 # ---------------------------------------------------------------------------
