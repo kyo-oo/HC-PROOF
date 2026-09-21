@@ -82,9 +82,8 @@ cycle witness drawn from an actual submodule of Mathlib algebraic cycles. -/
 theorem hodge_class_has_native_algebraic_cycle
     (R : NativeSchemeHodgeRealization N X Coh)
     (alpha : Coh) (halpha : alpha ∈ R.hodge) :
-    ∃ Z : AlgebraicCycle X ℚ,
-      Z ∈ R.cycleSpace ∧
-      R.cycleClass ⟨Z, by assumption⟩ = alpha := by
+    ∃ Z : AlgebraicCycle X ℚ, ∃ hZ : Z ∈ R.cycleSpace,
+      R.cycleClass ⟨Z, hZ⟩ = alpha := by
   obtain ⟨Z, hZ⟩ :=
     hodge_class_has_geometric_cycle
       R.toSubspaceRealization alpha halpha
@@ -164,7 +163,9 @@ theorem universal_native_scheme_hodge_of_realization_family
     rw [hcompat] at hZclass
     exact hZclass
 
-/-- The exact remaining native geometric obligation for one scheme fiber. -/
+/-- The exact remaining native geometric obligation for one scheme fiber.
+The equality of cycle submodules is bound before it is used to transport
+cycle witnesses into the intended cycle-class domain. -/
 def NativeSchemeFiberRealizationObligation
     (X : Scheme.{u}) (Coh : Type*)
     [AddCommGroup Coh] [Module ℚ Coh]
@@ -172,13 +173,40 @@ def NativeSchemeFiberRealizationObligation
     (CycleSpace : Submodule ℚ (AlgebraicCycle X ℚ))
     (cl : CycleSpace →ₗ[ℚ] Coh) : Prop :=
   ∃ N : Nat, ∃ R : NativeSchemeHodgeRealization N X Coh,
-    R.hodge = H ∧
-    R.cycleSpace = CycleSpace ∧
-    ∀ Z : R.cycleSpace,
-      R.cycleClass Z =
-        cl ⟨Z.1, by
-          rw [← R.cycleSpace]
-          exact Z.2⟩
+    ∃ hS : R.cycleSpace = CycleSpace,
+      R.hodge = H ∧
+      ∀ Z : R.cycleSpace,
+        R.cycleClass Z =
+          cl ⟨Z.1, by
+            rw [← hS]
+            exact Z.2⟩
+
+/-- A completed native-scheme fiber obligation implies the exact Hodge
+subspace inclusion for the intended cycle-class map. -/
+theorem hodge_of_native_scheme_fiber_obligation
+    (X : Scheme.{u}) (Coh : Type*)
+    [AddCommGroup Coh] [Module ℚ Coh]
+    (H : Submodule ℚ Coh)
+    (CycleSpace : Submodule ℚ (AlgebraicCycle X ℚ))
+    (cl : CycleSpace →ₗ[ℚ] Coh)
+    (hR : NativeSchemeFiberRealizationObligation X Coh H CycleSpace cl) :
+    H ≤ LinearMap.range cl := by
+  rcases hR with ⟨N, R, hS, hH, hcl⟩
+  intro alpha halpha
+  have halphaR : alpha ∈ R.hodge := by
+    rw [hH]
+    exact halpha
+  obtain ⟨Z, hZmem, hZclass⟩ :=
+    hodge_class_has_native_algebraic_cycle R alpha halphaR
+  let Ztarget : CycleSpace :=
+    ⟨Z, by
+      rw [← hS]
+      exact hZmem⟩
+  refine ⟨Ztarget, ?_⟩
+  have hcompat := hcl ⟨Z, hZmem⟩
+  change cl Ztarget = alpha
+  rw [← hcompat]
+  exact hZclass
 
 #check NativeSchemeHodgeRealization
 #check NativeSchemeHodgeRealization.toSubspaceRealization
@@ -186,9 +214,12 @@ def NativeSchemeFiberRealizationObligation
 #check native_hodge_subspace_le_cycleClass_range
 #check UniversalNativeSchemeHodgeStatement
 #check universal_native_scheme_hodge_of_realization_family
+#check NativeSchemeFiberRealizationObligation
+#check hodge_of_native_scheme_fiber_obligation
 
 #print axioms hodge_class_has_native_algebraic_cycle
 #print axioms native_hodge_subspace_le_cycleClass_range
 #print axioms universal_native_scheme_hodge_of_realization_family
+#print axioms hodge_of_native_scheme_fiber_obligation
 
 end GSTGeometricRealizationStage2C
