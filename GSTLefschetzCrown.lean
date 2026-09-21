@@ -592,8 +592,8 @@ theorem supported_eq_S3val (g : WaveCoef)
   intro C d hC hd
   interval_cases C <;> interval_cases d <;>
     first
-    | exact hs C d hC hd (by omega)
-    | exact wave_coordinate_at g C d hC hd
+    | exact hs _ _ _ _ (by omega)
+    | exact wave_coordinate_at g _ _ _ _
 
 /-- **HARD LEFSCHETZ, SURJECTIVITY AT THE MIDDLE STEP (upgraded: the
 preimage is a written cochain).**  Every degree-3 wave is the polarization
@@ -607,8 +607,8 @@ theorem lefschetz_surjective_3 (g : WaveCoef)
   intro C d hC hd
   rw [supported_eq_S3val g hs C d hC hd]
   interval_cases C <;> interval_cases d <;>
-    simp only [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12, S3val,
-      section3, decide := true] <;>
+    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12, S3val,
+      section3] <;>
     first | rfl | omega | ring
 
 /-- The degree-4 sector parameterized by its two coordinates. -/
@@ -628,8 +628,8 @@ theorem supported_eq_S4val (g : WaveCoef)
   intro C d hC hd
   interval_cases C <;> interval_cases d <;>
     first
-    | exact hs C d hC hd (by omega)
-    | exact wave_coordinate_at g C d hC hd
+    | exact hs _ _ _ _ (by omega)
+    | exact wave_coordinate_at g _ _ _ _
 
 /-- **HARD LEFSCHETZ, SURJECTIVITY INTO DEGREE 4.**  Every degree-4 wave is
 the polarization of an explicit degree-3 wave. -/
@@ -642,8 +642,8 @@ theorem lefschetz_surjective_4 (g : WaveCoef)
   intro C d hC hd
   rw [supported_eq_S4val g hs C d hC hd]
   interval_cases C <;> interval_cases d <;>
-    simp only [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12, S4val,
-      section4, decide := true] <;>
+    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12, S4val,
+      section4] <;>
     first | rfl | omega | ring
 
 /-- The degree-5 (top) sector parameterized by its coordinate. -/
@@ -661,8 +661,8 @@ theorem supported_eq_S5val (g : WaveCoef)
   intro C d hC hd
   interval_cases C <;> interval_cases d <;>
     first
-    | exact hs C d hC hd (by omega)
-    | exact wave_coordinate_at g C d hC hd
+    | exact hs _ _ _ _ (by omega)
+    | exact wave_coordinate_at g _ _ _ _
 
 /-- **HARD LEFSCHETZ, SURJECTIVITY INTO THE TOP SECTOR.**  Every top wave is
 the polarization of an explicit degree-4 wave. -/
@@ -675,8 +675,8 @@ theorem lefschetz_surjective_5 (g : WaveCoef)
   intro C d hC hd
   rw [supported_eq_S5val g hs C d hC hd]
   interval_cases C <;> interval_cases d <;>
-    simp only [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12, S5val,
-      section5, decide := true] <;>
+    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12, S5val,
+      section5] <;>
     first | rfl | omega | ring
 
 /-! ## §3 The Poincaré duality pairing — unimodular -/
@@ -698,7 +698,7 @@ theorem topPairing_pick_left (f : WaveCoef) (i₀ : Nat) (h : i₀ < 12) :
       (fun i => gev (S12 (fun j => if j = 11 - i₀ then 1 else 0)) (11 - i))
       12 i₀ h ?_ ?_
     · intro i hi hne
-      rw [gev_S12 _ i hi]
+      rw [gev_S12 _ (11 - i) (by omega)]
       exact if_neg (by omega)
     · rw [gev_S12 _ (11 - i₀) (by omega)]
       exact if_pos rfl
@@ -769,14 +769,19 @@ theorem poincare_monomial_kronecker (C d C' d' : Nat)
       (fun i => gev (cellClass (3 * C' + d')) (11 - i)) 12 (3 * C + d)
       (by omega) ?_ ?_
     · intro i hi hne
+      show gev (S12 (fun j => if j = 3 * C + d then 1 else 0)) i = 0
       rw [gev_S12 _ i hi]
       exact if_neg (by omega)
-    · rw [gev_S12 _ (3 * C + d) (by omega)]
+    · show gev (S12 (fun j => if j = 3 * C + d then 1 else 0)) (3 * C + d) = 1
+      rw [gev_S12 _ (3 * C + d) (by omega)]
       exact if_pos rfl
   show (∑ i ∈ Finset.range 12, gev (cellClass (3 * C + d)) i
       * gev (cellClass (3 * C' + d')) (11 - i))
       = if C + C' = 3 ∧ d + d' = 2 then 1 else 0
-  rw [h1, gev_S12 _ (11 - (3 * C + d)) (by omega)]
+rw [h1]
+  show gev (S12 (fun j => if j = 3 * C' + d' then 1 else 0)) (11 - (3 * C + d))
+      = if C + C' = 3 ∧ d + d' = 2 then 1 else 0
+  rw [gev_S12 _ (11 - (3 * C + d)) (by omega)]
   by_cases hcomp : 11 - (3 * C + d) = 3 * C' + d'
   · rw [if_pos hcomp, if_pos (by omega)]
   · rw [if_neg hcomp, if_neg (by omega)]
@@ -817,13 +822,7 @@ theorem proj_sum (g : WaveCoef) :
   intro C d hC hd
   show (∑ k ∈ Finset.range 6, if C + d = k then g ⟨C, d, hC, hd⟩ else 0)
       = g ⟨C, d, hC, hd⟩
-  rw [Finset.sum_congr rfl (fun k hk => by
-    show (if C + d = k then g ⟨C, d, hC, hd⟩ else 0)
-        = (if k = C + d then g ⟨C, d, hC, hd⟩ else 0)
-    by_cases hkC : k = C + d
-    · rw [if_pos (by omega), if_pos hkC]
-    · rw [if_neg (by omega), if_neg hkC])]
-  exact sum_range_pick (fun _ => g ⟨C, d, hC, hd⟩) (C + d) 6 (by omega)
+  exact sum_range_pick' (fun _ => g ⟨C, d, hC, hd⟩) (C + d) 6 (by omega)
 
 /-- **LEFSCHETZ RESPECTS THE KÜNNETH DECOMPOSITION (digit part)**: the
 digit cup carries the degree-`k` sector into the degree-`k+1` sector. -/
@@ -963,8 +962,9 @@ private theorem foldr_ne_zero (js : List Nat) (k : Nat)
   | cons j js ih =>
       show ((k : ℤ) - (j : ℤ))
           * (js.foldr (fun j v => ((k : ℤ) - (j : ℤ)) * v) 1) ≠ 0
-      refine mul_ne_zero ?_ (ih (fun j' hj' => hk j' (List.mem_cons_of_mem _ hj')))
-      exact sub_ne_zero_of_ne (fun h => hk j (List.mem_cons_self _ _) h)
+      have hkj : j ≠ k := hk j (List.mem_cons.mp (Or.inl rfl))
+      exact mul_ne_zero (by omega)
+        (ih (fun j' hj' => hk j' (List.mem_cons.mpr (Or.inr hj'))))
 
 /-- The Künneth polynomial vanishes at every degree except its own. -/
 theorem kunnethPoly_eval_zero (k x : Nat) (hx : x ≠ k) (hx6 : x < 6) :
@@ -1062,8 +1062,10 @@ theorem carry4_three_iff (E p : Nat) :
       by_contra hcon
       push_neg at hcon
       have hq_le : 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) ≤ 2 * 3 ^ p := by
-        have hh := Nat.mul_le_mul_left (3 ^ p) hcon
-        rwa [Nat.mul_comm 3 (3 ^ p)] at hh
+        have hh : 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) ≤ 3 ^ p * 2 :=
+          Nat.mul_le_mul (Nat.le_refl (3 ^ p)) hcon
+        calc 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) ≤ 3 ^ p * 2 := hh
+        _ = 2 * 3 ^ p := Nat.mul_comm _ _
       have hfull : 3 * 3 ^ p
           ≤ 3 ^ p * (4 * (E % 3 ^ p) / 3 ^ p) + 4 * (E % 3 ^ p) % 3 ^ p := by
         rw [← hsplit]; exact h
