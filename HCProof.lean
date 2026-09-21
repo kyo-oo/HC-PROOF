@@ -27,6 +27,7 @@ import GSTHodgeAssault
 import GSTClayOfficial
 import GSTTransferBridge
 import waves.GSTWaveCohomology
+import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
 import waves.GSTVortexSingularity
 import waves.CardinalWorldsPostulateLaw
