@@ -33,6 +33,7 @@ import GSTClayOfficial
 import GSTClayOfficialV2
 import GSTTransferBridge
 import GSTTransferBridgeV2
+import GSTGeometricRealizationStage2
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
@@ -238,3 +239,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTHodgeAssaultV2.hodge_v2_crown
 #check GSTClayOfficialV2.rational_v2_crown
 #check GSTTransferBridgeV2.transfer_v2_crown
+
+
+/-! ## Stage 2 geometric realization criterion -/
+
+#check GSTGeometricRealizationStage2.FiniteHodgeRealization
+#check GSTGeometricRealizationStage2.address_reconstruct
+#check GSTGeometricRealizationStage2.hodge_class_has_cycle_witness
+#check GSTGeometricRealizationStage2.cycleClass_surjective_on_hodge
+#check GSTGeometricRealizationStage2.stage2_realization_crown
