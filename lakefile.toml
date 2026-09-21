@@ -160,6 +160,7 @@ roots = [
   "GSTAnalyticAbsorption",
   "GSTAnalyticAbsorptionV2",
   "GSTLefschetzCrown",
+  "GSTLefschetzCrownV2",
   "GSTHodgeAssault",
   "GSTHodgeAssaultV2",
   "GSTClayOfficial",
