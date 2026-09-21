@@ -152,6 +152,7 @@ roots = [
   "GSTLefschetzCrown",
   "GSTHodgeAssault",
   "GSTClayOfficial",
+  "GSTTransferBridge",
 ]
 
 # ---------------------------------------------------------------------------

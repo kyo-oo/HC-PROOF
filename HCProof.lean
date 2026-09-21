@@ -21,6 +21,7 @@ import GSTAnalyticAbsorption
 import GSTLefschetzCrown
 import GSTHodgeAssault
 import GSTClayOfficial
+import GSTTransferBridge
 import waves.GSTWaveCohomology
 import waves.GSTNCohomology
 import waves.GSTVortexSingularity
@@ -151,6 +152,22 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTClayOfficial.clay_witness_is_diagonal_coordinate
 #check GSTClayOfficial.integer_dominance
 #check GSTClayOfficial.the_official_clay_landing
+
+/-! ## The transfer bridge face (Layer 12) -/
+
+#check GSTTransferBridge.addr_bijective
+#check GSTTransferBridge.addr_cupDigit
+#check GSTTransferBridge.addr_cupCarry
+#check GSTTransferBridge.clCupD_eq_mulH
+#check GSTTransferBridge.clCupV_eq_mulV
+#check GSTTransferBridge.clH_cubed
+#check GSTTransferBridge.clV_fourth
+#check GSTTransferBridge.cl_monomial
+#check GSTTransferBridge.transfer_hodge_iff
+#check GSTTransferBridge.transferred_hodge_conjecture
+#check GSTTransferBridge.transferred_clay_hodge_conjecture
+#check GSTTransferBridge.transferred_clay_witness
+#check GSTTransferBridge.the_transfer_bridge
 
 /-! ## The boundary face -/
 

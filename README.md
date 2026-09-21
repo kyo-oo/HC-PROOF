@@ -15,9 +15,10 @@
 > (Task 5: 41 theorems, 0 sorries); the coherent layer adds 30 more
 > (0 sorries); the analytic crown adds 24 more (0 sorries); the Lefschetz
 > crown adds 77 more (0 sorries); the Hodge assault adds 18 more
-> (0 sorries); the official Clay landing adds 8 more (0 sorries) —
-> **198 proven theorems riding on
-> Layers 0-6, twelve layers, all green.**
+> (0 sorries); the official Clay landing adds 8 more (0 sorries); the
+> transfer bridge adds 33 more (0 sorries) —
+> **231 proven theorems riding on
+> Layers 0-6, thirteen layers, all green.**
 
 Source: `kyo-oo/erdosternary2`, branch `sol/kyo-gate-universe-wire`
 (head `cb29501` — 2026-09-10 — *"fix cubic transport coefficient
@@ -30,9 +31,34 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 
 ---
 
-## THE UNIVERSE IN TWELVE LAYERS
+## THE UNIVERSE IN THIRTEEN LAYERS
 
 ```
+LAYER 12 THE TRANSFER BRIDGE     GSTTransferBridge.lean — the export of
+                                the GST world's Hodge theorem into the
+                                classical universe's own language (the
+                                queued Phase-2 front, built): the
+                                classical-address ring ClRing (the
+                                degree basis of Z[H,V]/(H^3,V^4)) with
+                                the truncated monomial product clMul
+                                (H^3 = 0, V^4 = 0 structural); the
+                                export dictionary addr (bijective,
+                                additive — an isomorphism of the cochain
+                                groups); the cup-operator identification
+                                (cupDigit/cupCarry = multiplication by
+                                the hyperplane classes clH/clV); the
+                                ring laws transported (H·V = V·H, the
+                                two truncations); the monomial witness
+                                transported (Layer 10's algebraicity
+                                inherited, not reproved); THE HODGE
+                                CONJECTURE AND THE OFFICIAL CLAY
+                                STATEMENT TRANSFERRED — every classical
+                                Hodge class an integer multiple of the
+                                algebraic monomial H^p·V^p, the rational
+                                Clay form riding the Z→Q inclusion, the
+                                constructive coefficient = the degree-4p
+                                coordinate, capstone the_transfer_bridge.
+
 LAYER 11 THE OFFICIAL CLAY     GSTClayOfficial.lean — the Clay Institute's
        STATEMENT                own words (Deligne's official problem
                                 description), landed on the lattice: the
@@ -256,6 +282,44 @@ Hodge characterization (signature sector = positive sector);
 POSTULATE H1 (reverse window) in the Cardinal Worlds pattern.
 
 Full dossier + breakthrough analysis: `docs/HODGE_DERHAM_ABSORPTION.md`.
+
+## LAYER 12 — THE TRANSFER BRIDGE (`GSTTransferBridge.lean`)
+
+The Task-12 verdict queued exactly one construction front on the Hodge
+campaign: **the transfer/export theorem** — the bridge carrying the GST
+world's machine-checked Hodge theorem out into the classical universe's
+own language.  Layers 1–9 absorbed classical → GST; this layer runs the
+construction in reverse (GST → classical), built entirely from the GST
+arsenal.
+
+The stage-1 construction — the ring-level export:
+
+* **`ClRing`** — the classical address: the free ℤ-module on the twelve
+degrees, the standard degree basis of `ℤ[H, V] / (H³, V⁴)` (degree `i`
+↔ `H^{i%3} V^{i/3}`), with **`clMul`** the truncated monomial product —
+`H³ = 0` and `V⁴ = 0` structural, no postulates.
+* **`addr`** — the export dictionary: the twelve GST coordinates read as
+the twelve classical degrees; **bijective and additive** — an
+isomorphism of the cochain groups.
+* **The operator identification** — the GST `cupDigit`/`cupCarry`
+operators ARE the classical multiplication by the hyperplane classes
+`clH`/`clV` (`clCupD_eq_mulH`, `clCupV_eq_mulV`): the GST cup calculus
+and the classical degree-basis product are one and the same operation.
+* **The ring laws transported** — `H · V = V · H`, `H³ = 0`, `V⁴ = 0`.
+* **The monomial witness transported** — the codimension-`p` cycle is
+the degree-`4p` monomial, carried over from Layer 10's
+`cycle_is_monomial` (algebraicity inherited, not reproved).
+* **THE HODGE CONJECTURE AND THE OFFICIAL CLAY STATEMENT,
+TRANSFERRED** — every classical Hodge class (every degree-`4p` class)
+is an integer multiple of the algebraic monomial `H^p V^p`
+(`transferred_hodge_conjecture`); the rational Clay form rides the
+ℤ → ℚ inclusion (`transferred_clay_hodge_conjecture`); the
+constructive coefficient is the degree-`4p` coordinate
+(`transferred_clay_witness`).
+
+Queued stage-2 targets (constructive): the `MvPolynomial` presentation
+isomorphism with kernel exactness; the geometric realization of the
+address on an ambient classical variety.
 
 ## LAYER 11 — THE OFFICIAL CLAY STATEMENT (`GSTClayOfficial.lean`)
 
@@ -549,6 +613,7 @@ scripts/comparator.sh      # lake build → sorry_check.sh → verdict
 | `GSTLefschetzCrown.lean` | ★ Layer 9 — the Lefschetz Crown (Task 9): the cup calculus, full integral generation, Hard Lefschetz with sections, unimodular duality, the standard conjecture as a theorem, decidable Hodge loci — 77 declarations, 0 sorries |
 | `GSTHodgeAssault.lean` | ★ Layer 10 — the Hodge Assault (Task 11): the Clay problem landed in the absorbed world — the (p,q) bigrading, integral Hodge classes, `H^p·V^p` cycle witnesses, the Hodge conjecture as a theorem, rank-one classification, total pure decomposition, the separation law — 18 declarations, 0 sorries |
 | `GSTClayOfficial.lean` | ★ Layer 11 — the Official Clay Statement (Task 13): the Clay Institute's own words (Deligne's official problem description) landed — the ℚ-coefficient structure, `clay_hodge_conjecture` (the official statement as a theorem), the constructive rational coefficient = the diagonal coordinate, the Hodge-type cycle classification, the ℤ-carries-ℚ domination — 8 declarations, 0 sorries |
+| `GSTTransferBridge.lean` | ★ Layer 12 — the Transfer Bridge (Task 14): the export of the GST world's Hodge theorem into the classical universe's language — the classical-address ring `ClRing` (degree basis of `ℤ[H,V]/(H³,V⁴)`), the bijective dictionary `addr`, the cup-operator = hyperplane-multiplication identification, the ring laws transported, the monomial witness transported, the Hodge conjecture and the official Clay statement transferred (integral + rational + constructive witness) — 33 declarations, 0 sorries |
 | `HCProof.lean` | the universe's entry face (comparator receipts) |
 | `GSTGraphV2*.lean` (60 files) | Layers 2-3 — the GST Graph V2 Ontological Universe |
 | `GST*.lean` (67 files) | Layers 3-4 — dynamics, towers, fourth dimension, worldtrace |
