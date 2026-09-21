@@ -35,6 +35,7 @@ import GSTTransferBridge
 import GSTTransferBridgeV2
 import GSTGeometricRealizationStage2
 import GSTGeometricRealizationStage2B
+import GSTGeometricRealizationStage2C
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
@@ -270,3 +271,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2B.universal_hodge_subspace_of_realization_family
 #check GSTGeometricRealizationStage2B.FiberRealizationObligation
 #check GSTGeometricRealizationStage2B.hodge_of_fiber_realization_obligation
+
+
+/-! ## Stage 2C — native scheme / algebraic-cycle front -/
+
+#check GSTGeometricRealizationStage2C.NativeSchemeHodgeRealization
+#check GSTGeometricRealizationStage2C.hodge_class_has_native_algebraic_cycle
+#check GSTGeometricRealizationStage2C.native_hodge_subspace_le_cycleClass_range
+#check GSTGeometricRealizationStage2C.UniversalNativeSchemeHodgeStatement
+#check GSTGeometricRealizationStage2C.universal_native_scheme_hodge_of_realization_family
