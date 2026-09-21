@@ -64,20 +64,36 @@ load-bearing theorems:
 
 ## Stage 2 status
 
-The former Stage-2 geometric-realization target is now split explicitly.
+The former Stage-2 geometric-realization target is now split explicitly
+and machine-checked through four progressively more geometric interfaces.
 
-* Stage 2A is built in GSTGeometricRealizationStage2: an arbitrary finite
-  rational address dimension, arbitrary finite Hodge-support rank, an
-  injective geometric cohomology address, and basis-by-basis algebraic
-  cycle realization imply cycle-class surjectivity on the represented
-  Hodge locus.
-* Stage 2B remains the genuine classical instantiation problem: supply
-  those realization data for the actual rational cohomology and algebraic
-  cycles of every smooth projective complex variety.
+* Stage 2A (GSTGeometricRealizationStage2) proves the variable-rank finite
+  coordinate realization criterion.
+* Stage 2B (GSTGeometricRealizationStage2B) replaces the generic Hodge
+  predicate by an honest rational Hodge submodule and proves
+  HodgeSubspace <= LinearMap.range cycleClass.
+* Stage 2C (GSTGeometricRealizationStage2C) quantifies over actual Mathlib
+  Scheme objects and actual Mathlib AlgebraicCycle X Q carriers.  Because
+  the pinned locally-finite-cycle API lacks a Q-module instance, Stage 2C
+  constructs the canonical pointwise rational module structure and proves
+  it preserves local finiteness.
+* Stage 2D (GSTGeometricRealizationStage2D) removes the arbitrary cycle
+  subspace: the domain is the native codimension-p cycle submodule cut out
+  by support on points with Order.coheight = p.
+
+The dedicated Stage-2 gate is green (run 35669757803): A+B+C+D compile,
+the proof-escape scan passes, and the sorryAx audit passes.
+
+The remaining classical instantiation problem is now narrower but still
+genuine: supply actual rational cohomology, its rational (p,p) Hodge
+subspace, the genuine cohomological cycle-class map, a formal
+smooth-projective-over-C eligibility package, and the universal
+basis-cycle realization family.  The finite twelve-cell carrier alone does
+not supply those data.
 
 The separate MvPolynomial presentation of the finite twelve-cell ring is
-still useful algebraically, but it is no longer conflated with the
-universal geometric-realization problem.
+still useful algebraically, but it is not a substitute for that geometric
+instantiation.
 
 Zero sorries, zero custom axioms; `#print axioms` receipts at the end.
 -/
