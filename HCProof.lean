@@ -34,6 +34,7 @@ import GSTClayOfficialV2
 import GSTTransferBridge
 import GSTTransferBridgeV2
 import GSTGeometricRealizationStage2
+import GSTGeometricRealizationStage2B
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
@@ -260,3 +261,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2.stage2_closes_cycle_surjectivity
 
 #check GSTGeometricRealizationStage2.universal_hodge_of_realization_family
+
+
+/-! ## Stage 2B — rational Hodge-subspace realization -/
+
+#check GSTGeometricRealizationStage2B.HodgeSubspaceRealization
+#check GSTGeometricRealizationStage2B.hodge_subspace_le_cycleClass_range
+#check GSTGeometricRealizationStage2B.universal_hodge_subspace_of_realization_family
+#check GSTGeometricRealizationStage2B.FiberRealizationObligation
+#check GSTGeometricRealizationStage2B.hodge_of_fiber_realization_obligation
