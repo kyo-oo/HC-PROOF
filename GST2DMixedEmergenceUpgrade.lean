@@ -31,7 +31,7 @@ theorem finalMicroDigit_eq_outDigit_universal (C d : Nat) :
 carry/output conservation, without physical bounds. -/
 theorem cell_transition_exact_universal (C d : Nat) :
     3 * nextCarry C d + outDigit C d = C + 4 * d := by
-  simpa [nextCarry, outDigit] using Nat.div_add_mod (C + 4 * d) 3
+  simpa [nextCarry, outDigit, Nat.mul_comm] using Nat.div_add_mod (C + 4 * d) 3
 
 /-- **UNIVERSAL MICROSCOPIC SEVEN-KERNEL TELESCOPE.**  The hidden midpoint
 cancels symbolically on every natural input.  The old bounded theorem is
