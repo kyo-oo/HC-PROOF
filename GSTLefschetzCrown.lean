@@ -350,25 +350,22 @@ theorem cupDigit_cubed (g : WaveCoef) :
     ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
       (Nat.iterate cupDigit 3 g) ⟨C, d, hC, hd⟩ = 0 := by
   intro C d hC hd
-  show (Nat.iterate cupDigit (0 + 1 + 1 + 1) g) ⟨C, d, hC, hd⟩ = 0
-  rw [Function.iterate_succ_apply, Function.iterate_succ_apply,
-    Function.iterate_succ_apply]
   show cupDigit (cupDigit (cupDigit g)) ⟨C, d, hC, hd⟩ = 0
-  by_cases hd0 : d = 0
-  · subst hd0
-    rw [cupDigit_zero_at _ _ hC (by decide)]
-  · have hd1 : 0 < d := by omega
-    have hd' : d - 1 < 3 := by omega
-    rw [cupDigit_at _ _ _ hC hd hd1 hd']
-    by_cases hd1' : d - 1 = 0
-    · subst hd1'
-      rw [cupDigit_zero_at _ _ hC (by decide)]
-    · have hd2 : 0 < d - 1 := by omega
-      have hd'' : d - 1 - 1 < 3 := by omega
-      rw [cupDigit_at _ _ _ hC hd' hd2 hd'']
-      have hd0'' : d - 1 - 1 = 0 := by omega
-      subst hd0''
-      rw [cupDigit_zero_at _ _ hC (by decide)]
+  interval_cases d
+  · exact cupDigit_zero_at (cupDigit (cupDigit g)) C hC hd
+  · have hA : cupDigit (cupDigit (cupDigit g)) ⟨C, 1, hC, hd⟩
+        = cupDigit (cupDigit g) ⟨C, 0, hC, by decide⟩ :=
+      cupDigit_at (cupDigit (cupDigit g)) C 1 hC hd (by decide) (by decide)
+    rw [hA]
+    exact cupDigit_zero_at (cupDigit g) C hC (by decide)
+  · have hA : cupDigit (cupDigit (cupDigit g)) ⟨C, 2, hC, hd⟩
+        = cupDigit (cupDigit g) ⟨C, 1, hC, by decide⟩ :=
+      cupDigit_at (cupDigit (cupDigit g)) C 2 hC hd (by decide) (by decide)
+    have hB : cupDigit (cupDigit g) ⟨C, 1, hC, by decide⟩
+        = cupDigit g ⟨C, 0, hC, by decide⟩ :=
+      cupDigit_at (cupDigit g) C 1 hC (by decide) (by decide) (by decide)
+    rw [hA, hB]
+    exact cupDigit_zero_at g C hC (by decide)
 
 /-- **THE 4-WORLD BOUNDARY `V⁴ = 0`.**  Four carry cups annihilate every
 cochain: the carry tower has exactly four storeys. -/
@@ -376,31 +373,33 @@ theorem cupCarry_fourth (g : WaveCoef) :
     ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
       (Nat.iterate cupCarry 4 g) ⟨C, d, hC, hd⟩ = 0 := by
   intro C d hC hd
-  show (Nat.iterate cupCarry (0 + 1 + 1 + 1 + 1) g) ⟨C, d, hC, hd⟩ = 0
-  rw [Function.iterate_succ_apply, Function.iterate_succ_apply,
-    Function.iterate_succ_apply, Function.iterate_succ_apply]
   show cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨C, d, hC, hd⟩ = 0
-  by_cases hC0 : C = 0
-  · subst hC0
-    rw [cupCarry_zero_at _ _ (by decide) hd]
-  · have hC1 : 1 ≤ C := by omega
-    have hC' : C - 1 < 4 := by omega
-    rw [cupCarry_at _ _ _ hC hd hC1 hC']
-    by_cases hC1' : C - 1 = 0
-    · subst hC1'
-      rw [cupCarry_zero_at _ _ (by decide) hd]
-    · have hC2 : 1 ≤ C - 1 := by omega
-      have hC'' : C - 1 - 1 < 4 := by omega
-      rw [cupCarry_at _ _ _ hC' hd hC2 hC'']
-      by_cases hC2' : C - 1 - 1 = 0
-      · subst hC2'
-        rw [cupCarry_zero_at _ _ (by decide) hd]
-      · have hC3 : 1 ≤ C - 1 - 1 := by omega
-        have hC''' : C - 1 - 1 - 1 < 4 := by omega
-        rw [cupCarry_at _ _ _ hC'' hd hC3 hC''']
-        have hC0''' : C - 1 - 1 - 1 = 0 := by omega
-        subst hC0'''
-        rw [cupCarry_zero_at _ _ (by decide) hd]
+  interval_cases C
+  · exact cupCarry_zero_at (cupCarry (cupCarry (cupCarry g))) d hd
+  · have hA : cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨1, d, hC, hd⟩
+        = cupCarry (cupCarry (cupCarry g)) ⟨0, d, by decide, hd⟩ :=
+      cupCarry_at (cupCarry (cupCarry (cupCarry g))) 1 d hC hd (by decide) (by decide)
+    rw [hA]
+    exact cupCarry_zero_at (cupCarry (cupCarry g)) d hd
+  · have hA : cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨2, d, hC, hd⟩
+        = cupCarry (cupCarry (cupCarry g)) ⟨1, d, by decide, hd⟩ :=
+      cupCarry_at (cupCarry (cupCarry (cupCarry g))) 2 d hC hd (by decide) (by decide)
+    have hB : cupCarry (cupCarry (cupCarry g)) ⟨1, d, by decide, hd⟩
+        = cupCarry (cupCarry g) ⟨0, d, by decide, hd⟩ :=
+      cupCarry_at (cupCarry (cupCarry g)) 1 d (by decide) hd (by decide) (by decide)
+    rw [hA, hB]
+    exact cupCarry_zero_at (cupCarry g) d hd
+  · have hA : cupCarry (cupCarry (cupCarry (cupCarry g))) ⟨3, d, hC, hd⟩
+        = cupCarry (cupCarry (cupCarry g)) ⟨2, d, by decide, hd⟩ :=
+      cupCarry_at (cupCarry (cupCarry (cupCarry g))) 3 d hC hd (by decide) (by decide)
+    have hB : cupCarry (cupCarry (cupCarry g)) ⟨2, d, by decide, hd⟩
+        = cupCarry (cupCarry g) ⟨1, d, by decide, hd⟩ :=
+      cupCarry_at (cupCarry (cupCarry g)) 2 d (by decide) hd (by decide) (by decide)
+    have hC2 : cupCarry (cupCarry g) ⟨1, d, by decide, hd⟩
+        = cupCarry g ⟨0, d, by decide, hd⟩ :=
+      cupCarry_at (cupCarry g) 1 d (by decide) hd (by decide) (by decide)
+    rw [hA, hB, hC2]
+    exact cupCarry_zero_at g d hd
 
 /-- **The iterated carry cup**: `n` carry cups read the cell `n` storeys
 down the carry tower, or vanish at the boundary. -/
@@ -416,16 +415,23 @@ theorem cupCarry_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
       exact congrArg g (cell_eq' _ _ rfl (by omega))
   | succ n ih =>
       intro C d hC hd h2
-      rw [Function.iterate_succ_apply]
+      show (Nat.iterate cupCarry (n + 1) g) ⟨C, d, hC, hd⟩
+        = (if n + 1 ≤ C then g ⟨C - (n + 1), d, h2, hd⟩ else 0)
+      rw [Function.iterate_succ', Function.comp_apply]
       by_cases hC0 : C = 0
       · subst hC0
-        rw [cupCarry_zero_at _ _ (by decide) hd, if_neg (by omega)]
-      · have hC1 : 1 ≤ C := by omega
-        have hC' : C - 1 < 4 := by omega
-        rw [cupCarry_at _ _ _ hC hd hC1 hC']
-        have h2' : C - 1 - n < 4 := by omega
-        rw [ih (C - 1) d hC' hd h2']
-        by_cases hn : n ≤ C - 1
+        have h1 : cupCarry (Nat.iterate cupCarry n g) ⟨0, d, hC, hd⟩ = (0 : ℤ) :=
+          cupCarry_zero_at _ d hC hd
+        rw [h1, if_neg (by omega)]
+      · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
+        subst hCe
+        have hCr : C' + 1 - 1 < 4 := by omega
+        have h1 : cupCarry (Nat.iterate cupCarry n g) ⟨C' + 1, d, hC, hd⟩
+            = (Nat.iterate cupCarry n g) ⟨C', d, hCr, hd⟩ :=
+          cupCarry_at _ (C' + 1) d hC hd (by omega) hCr
+        rw [h1]
+        rw [ih C' d hCr hd (by omega : C' - n < 4)]
+        by_cases hn : n ≤ C'
         · rw [if_pos hn, if_pos (by omega)]
           exact congrArg g (cell_eq' _ _ (by omega) rfl)
         · rw [if_neg hn, if_neg (by omega)]
@@ -444,16 +450,23 @@ theorem cupDigit_iterate (g : WaveCoef) : ∀ (n : Nat) (C d : Nat)
       exact congrArg g (cell_eq' _ _ rfl (by omega))
   | succ n ih =>
       intro C d hC hd h2
-      rw [Function.iterate_succ_apply]
+      show (Nat.iterate cupDigit (n + 1) g) ⟨C, d, hC, hd⟩
+        = (if n + 1 ≤ d then g ⟨C, d - (n + 1), hC, h2⟩ else 0)
+      rw [Function.iterate_succ', Function.comp_apply]
       by_cases hd0 : d = 0
       · subst hd0
-        rw [cupDigit_zero_at _ _ hC (by decide), if_neg (by omega)]
-      · have hd1 : 0 < d := by omega
-        have hd' : d - 1 < 3 := by omega
-        rw [cupDigit_at _ _ _ hC hd hd1 hd']
-        have h2' : d - 1 - n < 3 := by omega
-        rw [ih C (d - 1) hC hd' h2']
-        by_cases hn : n ≤ d - 1
+        have h1 : cupDigit (Nat.iterate cupDigit n g) ⟨C, 0, hC, hd⟩ = (0 : ℤ) :=
+          cupDigit_zero_at _ C hC hd
+        rw [h1, if_neg (by omega)]
+      · obtain ⟨d', hde⟩ : ∃ d', d = d' + 1 := ⟨d - 1, by omega⟩
+        subst hde
+        have hdr : d' + 1 - 1 < 3 := by omega
+        have h1 : cupDigit (Nat.iterate cupDigit n g) ⟨C, d' + 1, hC, hd⟩
+            = (Nat.iterate cupDigit n g) ⟨C, d', hC, hdr⟩ :=
+          cupDigit_at _ C (d' + 1) hC hd (by omega) hdr
+        rw [h1]
+        rw [ih C d' hC hdr (by omega : d' - n < 3)]
+        by_cases hn : n ≤ d'
         · rw [if_pos hn, if_pos (by omega)]
           exact congrArg g (cell_eq' _ _ rfl (by omega))
         · rw [if_neg hn, if_neg (by omega)]
@@ -466,17 +479,40 @@ theorem monomial_is_cellClass (C d : Nat) (hC : C < 4) (hd : d < 3) :
       = cellClass (3 * C + d) := by
   funext c
   obtain ⟨C', d', hC', hd'⟩ := c
-  rw [cupDigit_iterate _ d C' d' hC' hd' (by omega)]
   by_cases hdC : d ≤ d'
-  · rw [if_pos hdC, cupCarry_iterate _ C C (d' - d) hC' (by omega) hC
-      (by omega) (by omega)]
-    rw [if_pos (Nat.le_refl C), cellClass_at, if_pos (by omega)]
-    show (if C - C = 0 ∧ d' - d = 0 then (1 : ℤ) else 0)
-      = if 3 * C' + d' = 3 * C + d then 1 else 0
-    by_cases hEq : (C - C = 0 ∧ d' - d = 0)
-    · rw [if_pos hEq, if_pos (by omega)]
-    · rw [if_neg hEq, if_neg (by omega)]
-  · rw [if_neg hdC, cellClass_at, if_neg (by omega)]
+  · by_cases hCC : C ≤ C'
+    · have h1 : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
+            ⟨C', d', hC', hd'⟩
+          = ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩ := by
+        rw [cupDigit_iterate _ d C' d' hC' hd' (by omega)]
+        exact if_pos hdC
+      have h2 : ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩
+          = unitCoef ⟨C' - C, d' - d, by omega, by omega⟩ := by
+        rw [cupCarry_iterate _ C C' (d' - d) (by omega) (by omega) (by omega)]
+        exact if_pos hCC
+      have h3 : unitCoef ⟨C' - C, d' - d, by omega, by omega⟩
+          = (if C' = C ∧ d' = d then (1 : ℤ) else 0) := by
+        show (if C' - C = 0 ∧ d' - d = 0 then (1 : ℤ) else 0)
+          = (if C' = C ∧ d' = d then 1 else 0)
+        by_cases hEq : C' - C = 0 ∧ d' - d = 0
+        · rw [if_pos hEq, if_pos (by omega)]
+        · rw [if_neg hEq, if_neg (by omega)]
+      rw [h1, h2, h3, cellClass_at, if_pos (by omega)]
+    · have h1 : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
+            ⟨C', d', hC', hd'⟩
+          = ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩ := by
+        rw [cupDigit_iterate _ d C' d' hC' hd' (by omega)]
+        exact if_pos hdC
+      have h2 : ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩
+          = (0 : ℤ) := by
+        rw [cupCarry_iterate _ C C' (d' - d) (by omega) (by omega) (by omega)]
+        exact if_neg hCC
+      rw [h1, h2, cellClass_at, if_neg (by omega)]
+  · have h1 : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
+          ⟨C', d', hC', hd'⟩ = (0 : ℤ) := by
+      rw [cupDigit_iterate _ d C' d' hC' hd' (by omega)]
+      exact if_neg hdC
+    rw [h1, cellClass_at, if_neg (by omega)]
 
 /-- **THE FULL HODGE CONJECTURE OF THE ABSORBED WORLD** (Lefschetz (1,1)
 absorbed and extended to every codimension, integrally).  Every class of
@@ -522,33 +558,45 @@ theorem lefschetz_iterate_zero (k : Nat) (g : WaveCoef) :
   | succ k ih =>
       intro C d hC hd hlt
       show (Nat.iterate lefschetzOp (k + 1) g) ⟨C, d, hC, hd⟩ = 0
-      rw [Function.iterate_succ_apply, lefschetzOp_at]
+      rw [Function.iterate_succ', Function.comp_apply]
+      show cupDigit (Nat.iterate lefschetzOp k g) ⟨C, d, hC, hd⟩
+        + cupCarry (Nat.iterate lefschetzOp k g) ⟨C, d, hC, hd⟩ = 0
       by_cases hd0 : d = 0
       · subst hd0
-        rw [cupDigit_zero_at _ _ hC (by decide)]
+        have hd1 : cupDigit (Nat.iterate lefschetzOp k g) ⟨C, 0, hC, hd⟩
+            = (0 : ℤ) := cupDigit_zero_at _ C hC hd
+        rw [hd1, Nat.zero_add]
         by_cases hC0 : C = 0
         · subst hC0
-          rw [cupCarry_zero_at _ _ (by decide) (by decide)]
-          ring
-        · have hC1 : 1 ≤ C := by omega
-          have hC' : C - 1 < 4 := by omega
-          rw [cupCarry_at _ _ _ hC hd hC1 hC']
-          have h1 := ih (C - 1) d hC' hd (by omega)
-          rw [h1]; ring
-      · have hd1 : 0 < d := by omega
-        have hd' : d - 1 < 3 := by omega
-        rw [cupDigit_at _ _ _ hC hd hd1 hd']
-        have h1 := ih C (d - 1) hC hd' (by omega)
-        rw [h1]
+          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨0, d, hC, hd⟩
+              = (0 : ℤ) := cupCarry_zero_at _ d hC hd
+          rw [h1]
+        · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
+          subst hCe
+          have hCr : C' + 1 - 1 < 4 := by omega
+          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨C' + 1, d, hC, hd⟩
+              = (Nat.iterate lefschetzOp k g) ⟨C', d, hCr, hd⟩ :=
+            cupCarry_at _ (C' + 1) d hC hd (by omega) hCr
+          rw [h1, ih C' d hCr hd (by omega)]
+      · obtain ⟨d', hde⟩ : ∃ d', d = d' + 1 := ⟨d - 1, by omega⟩
+        subst hde
+        have hdr : d' + 1 - 1 < 3 := by omega
+        have hd1 : cupDigit (Nat.iterate lefschetzOp k g) ⟨C, d' + 1, hC, hd⟩
+            = (Nat.iterate lefschetzOp k g) ⟨C, d', hC, hdr⟩ :=
+          cupDigit_at _ C (d' + 1) hC hd (by omega) hdr
+        rw [hd1, ih C d' hC hdr (by omega)]
         by_cases hC0 : C = 0
         · subst hC0
-          rw [cupCarry_zero_at _ _ (by decide) hd]
-          ring
-        · have hC1 : 1 ≤ C := by omega
-          have hC' : C - 1 < 4 := by omega
-          rw [cupCarry_at _ _ _ hC hd hC1 hC']
-          have h2 := ih (C - 1) d hC' hd (by omega)
-          rw [h2]; ring
+          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨0, d' + 1, hC, hd⟩
+              = (0 : ℤ) := cupCarry_zero_at _ (d' + 1) hC hd
+          rw [h1]
+        · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
+          subst hCe
+          have hCr : C' + 1 - 1 < 4 := by omega
+          have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨C' + 1, d' + 1, hC, hd⟩
+              = (Nat.iterate lefschetzOp k g) ⟨C', d' + 1, hCr, hd⟩ :=
+            cupCarry_at _ (C' + 1) (d' + 1) hC hd (by omega) hCr
+          rw [h1, ih C' (d' + 1) hCr hd (by omega)]
 
 /-- **THE NILPOTENCE CEILING `L⁶ = 0`.**  Six polarizations annihilate
 everything: the twelve-cell universe has top degree 5, and the sl₂ weight
@@ -556,7 +604,7 @@ ladder stops there. -/
 theorem lefschetz_sixth_power (g : WaveCoef) :
     ∀ (C d : Nat) (hC : C < 4) (hd : d < 3),
       (Nat.iterate lefschetzOp 6 g) ⟨C, d, hC, hd⟩ = 0 :=
-  lefschetz_iterate_zero 6 g
+  fun C d hC hd => lefschetz_iterate_zero 6 g C d hC hd (by omega)
 
 /-- **THE HILBERT FUNCTION (the sector ranks).**  The degree-`k` sector of
 the twelve-cell lattice has rank `1, 2, 3, 3, 2, 1` — the palindromic
@@ -591,18 +639,32 @@ theorem lefschetz_injective_below_middle (f : WaveCoef)
       (congrArg (fun g => lefschetzOp g ⟨C, d, hC, hd⟩)
         (wave_is_coordinates f)).symm
     rw [hc]; exact h
+  -- pre-haved bounds (postponed tactic blocks break DEFEQ checks):
+  have b1 : 0 + 1 < 4 := by decide
+  have b2 : 1 + 1 < 4 := by decide
+  have b3 : 2 + 1 < 4 := by decide
+  have z3 : 0 < 3 := by decide
+  have o3 : 0 + 1 < 3 := by decide
+  have t3 : 1 + 1 < 3 := by decide
   -- the six load-bearing equations, each a kernel ground evaluation:
-  have e0 : (0 : ℤ) + gev f 0 = 0 := hL' (0 + 1) 0 (by decide) (by decide)
-  have e3 : (0 : ℤ) + gev f 3 = 0 := hL' (1 + 1) 0 (by decide) (by decide)
-  have e1 : gev f 3 + gev f 1 = 0 := hL' (0 + 1) (0 + 1) (by decide) (by decide)
-  have e6 : (0 : ℤ) + gev f 6 = 0 := hL' (2 + 1) 0 (by decide) (by decide)
-  have e4 : gev f 6 + gev f 4 = 0 := hL' (1 + 1) (0 + 1) (by decide) (by decide)
-  have e2 : gev f 4 + gev f 2 = 0 := hL' (0 + 1) (1 + 1) (by decide) (by decide)
+  have e0 : (0 : ℤ) + gev f 0 = 0 := hL' (0 + 1) 0 b1 z3
+  have e3 : (0 : ℤ) + gev f 3 = 0 := hL' (1 + 1) 0 b2 z3
+  have e1 : gev f 3 + gev f 1 = 0 := hL' (0 + 1) (0 + 1) b1 o3
+  have e6 : (0 : ℤ) + gev f 6 = 0 := hL' (2 + 1) 0 b3 z3
+  have e4 : gev f 6 + gev f 4 = 0 := hL' (1 + 1) (0 + 1) b2 o3
+  have e2 : gev f 4 + gev f 2 = 0 := hL' (0 + 1) (1 + 1) b1 t3
+  -- normalized coordinates (omega closes each from the system):
+  have e0' : gev f 0 = 0 := by omega
+  have e1' : gev f 1 = 0 := by omega
+  have e2' : gev f 2 = 0 := by omega
+  have e3' : gev f 3 = 0 := by omega
+  have e4' : gev f 4 = 0 := by omega
+  have e6' : gev f 6 = 0 := by omega
   intro C d hC hd
   rw [wave_coordinate_at f C d hC hd]
   interval_cases C <;> interval_cases d <;>
     first
-    | omega
+    | exact e0' | exact e1' | exact e2' | exact e3' | exact e4' | exact e6'
     | exact hsup _ _ _ _ (by omega)
 
 /-! ### The surjectivity half, with the explicit sections
@@ -1008,9 +1070,9 @@ private theorem foldr_ne_zero (js : List Nat) (k : Nat)
   | cons j js ih =>
       show ((k : ℤ) - (j : ℤ))
           * (js.foldr (fun j (v : ℤ) => ((k : ℤ) - (j : ℤ)) * v) 1) ≠ 0
-      have hkj : j ≠ k := hk j (by simp)
+      have hkj : j ≠ k := hk j (List.mem_cons_self j js)
       exact mul_ne_zero (by omega)
-        (ih (fun j' hj' => hk j' (by simp)))
+        (ih (fun j' hj' => hk j' (List.mem_cons.mpr (Or.inr hj'))))
 
 /-- The Künneth polynomial vanishes at every degree except its own. -/
 theorem kunnethPoly_eval_zero (k x : Nat) (hx : x ≠ k) (hx6 : x < 6) :
@@ -1138,7 +1200,7 @@ theorem digit3_mod_eq (E p : Nat) :
   have hE2 : E / 3 ^ p % 3
       = ((E % 3 ^ (p + 1)) + 3 ^ p * (3 * (E / 3 ^ (p + 1)))) / 3 ^ p % 3 := by
     conv_lhs => rw [hE]
-    rfl
+    try rfl
   show E / 3 ^ p % 3 = ((E % 3 ^ (p + 1)) / 3 ^ p) % 3
   rw [hE2]
   exact div_split_mod _ _ p hp
@@ -1197,7 +1259,8 @@ theorem the_lefschetz_crown :
     (∀ f : WaveCoef, ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
       f ⟨C, d, hC, hd⟩
         = ∑ i ∈ Finset.range 12, gev f i * cellClass i ⟨C, d, hC, hd⟩)
-  ∧ (∀ g : WaveCoef, lefschetz_sixth_power g)
+  ∧ (∀ (g : WaveCoef) (C d : Nat) (hC : C < 4) (hd : d < 3),
+      (Nat.iterate lefschetzOp 6 g) ⟨C, d, hC, hd⟩ = 0)
   ∧ (∀ f : WaveCoef, (∀ g : WaveCoef, topPairing f g = 0) →
       ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
         f ⟨C, d, hC, hd⟩ = 0)
