@@ -134,6 +134,24 @@ theorem stage2_realization_crown
       ∃ Z : CycleQ, R.cycleClass Z = alpha :=
   cycleClass_surjective_on_hodge R
 
+
+/-- The exact cycle-class-surjectivity statement for a supplied geometric
+cohomology/cycle pair.  In a native classical instantiation, isHodge is the
+rational (p,p)-Hodge predicate and cycleClass is the rational algebraic
+cycle-class map. -/
+def HodgeCycleSurjectivity
+    {Coh CycleQ : Type*}
+    (isHodge : Coh -> Prop) (cycleClass : CycleQ -> Coh) : Prop :=
+  ∀ alpha : Coh, isHodge alpha -> ∃ Z : CycleQ, cycleClass Z = alpha
+
+/-- Stage 2A closes the exact cycle-surjectivity target for every geometric
+fiber carrying a FiniteHodgeRealization.  Stage 2B is precisely the task of
+constructing such a realization for each genuine classical fiber. -/
+theorem stage2_closes_cycle_surjectivity
+    (R : FiniteHodgeRealization N Coh CycleQ) :
+    HodgeCycleSurjectivity R.isHodge R.cycleClass :=
+  stage2_realization_crown R
+
 #check RatAddress
 #check SupportedOn
 #check FiniteHodgeRealization
@@ -144,10 +162,13 @@ theorem stage2_realization_crown
 #check cycleClass_surjective_on_hodge
 #check singleton_support_rank_one
 #check stage2_realization_crown
+#check HodgeCycleSurjectivity
+#check stage2_closes_cycle_surjectivity
 
 #print axioms address_reconstruct
 #print axioms cycleWitness_address
 #print axioms hodge_class_has_cycle_witness
 #print axioms stage2_realization_crown
+#print axioms stage2_closes_cycle_surjectivity
 
 end GSTGeometricRealizationStage2
