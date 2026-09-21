@@ -29,6 +29,7 @@ import GSTLefschetzCrownV2
 import GSTHodgeAssault
 import GSTHodgeAssaultV2
 import GSTClayOfficial
+import GSTClayOfficialV2
 import GSTTransferBridge
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
