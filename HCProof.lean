@@ -25,6 +25,7 @@ import HodgeDeRhamBridgeV2
 import GSTAnalyticAbsorption
 import GSTAnalyticAbsorptionV2
 import GSTLefschetzCrown
+import GSTLefschetzCrownV2
 import GSTHodgeAssault
 import GSTHodgeAssaultV2
 import GSTClayOfficial
