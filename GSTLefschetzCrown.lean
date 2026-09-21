@@ -201,14 +201,15 @@ theorem sum_pick_right (F G : Nat → ℤ) (N i₀ : Nat) (h : i₀ < N)
       by_cases hlt : i₀ < N
       · have hGN : G N = 0 := hG N (Nat.lt_succ_self N) (by omega)
         rw [hGN, mul_zero, add_zero]
-        exact ih hlt (fun i hi => hG i (Nat.lt_succ_of_lt hi)) hG₀
+        exact ih hlt (fun i hi => hG i (Nat.lt_succ_of_lt hi))
       · have heq : i₀ = N := by omega
-        have hz : (∑ i ∈ Finset.range N, F i * G i) = 0 :=
+        subst heq
+        have hz : (∑ i ∈ Finset.range i₀, F i * G i) = 0 :=
           Finset.sum_eq_zero (fun i hi => by
             have hmem := Finset.mem_range.mp hi
             rw [hG i (Nat.lt_succ_of_lt hmem) (by omega)]
             exact mul_zero (F i))
-        rw [hz, hG₀, mul_one, zero_add, ← heq]
+        rw [hz, hG₀, mul_one, zero_add]
 
 /-- Sum-pick with the surviving unit column on the left. -/
 theorem sum_pick_left (F G : Nat → ℤ) (N i₀ : Nat) (h : i₀ < N)
@@ -220,15 +221,16 @@ theorem sum_pick_left (F G : Nat → ℤ) (N i₀ : Nat) (h : i₀ < N)
       rw [Finset.sum_range_succ]
       by_cases hlt : i₀ < N
       · have hFN : F N = 0 := hF N (Nat.lt_succ_self N) (by omega)
-        rw [hFN, mul_zero, add_zero]
-        exact ih hlt (fun i hi => hF i (Nat.lt_succ_of_lt hi)) hF₀
+        rw [hFN, zero_mul, add_zero]
+        exact ih hlt (fun i hi => hF i (Nat.lt_succ_of_lt hi))
       · have heq : i₀ = N := by omega
-        have hz : (∑ i ∈ Finset.range N, F i * G i) = 0 :=
+        subst heq
+        have hz : (∑ i ∈ Finset.range i₀, F i * G i) = 0 :=
           Finset.sum_eq_zero (fun i hi => by
             have hmem := Finset.mem_range.mp hi
             rw [hF i (Nat.lt_succ_of_lt hmem) (by omega)]
-            exact mul_zero (G i))
-        rw [hz, hF₀, mul_one, zero_add, ← heq]
+            exact zero_mul (G i))
+        rw [hz, hF₀, mul_one, zero_add]
 
 /-! ## §1 The cup calculus — the divisor classes and the truncated ring
 
@@ -271,7 +273,8 @@ digit-zero cells. -/
 theorem cupDigit_zero_at (g : WaveCoef) (C : Nat) (hC : C < 4) (hd : 0 < 3) :
     cupDigit g ⟨C, 0, hC, hd⟩ = 0 := by
   have hz : (3 * C + 0) % 3 = 0 := by
-    rw [Nat.add_zero, Nat.mul_comm]; exact Nat.mul_mod_right C 3
+    rw [Nat.add_zero]
+    exact Nat.mul_mod_right 3 C
   have hr : cupDigit g ⟨C, 0, hC, hd⟩
       = if (3 * C + 0) % 3 ≠ 0 then gev g (3 * C + 0 - 1) else 0 :=
     S12_at (fun i => if i % 3 ≠ 0 then gev g (i - 1) else 0) C 0 hC hd
@@ -310,14 +313,11 @@ theorem cup_comm (g : WaveCoef) :
     · subst hd0; rfl
     · have hd1 : 0 < d := by omega
       have h2 : d - 1 < 3 := by omega
-      have hL : cupDigit (cupCarry g) ⟨0, d, hC, hd⟩
-          = g ⟨0, d - 1, hC, h2⟩ := by
+      have hL : cupDigit (cupCarry g) ⟨0, d, hC, hd⟩ = (0 : ℤ) := by
         rw [cupDigit_at (cupCarry g) 0 d hC hd hd1 h2]
         exact cupCarry_zero_at g (d - 1) hC h2
-      have hR : cupCarry (cupDigit g) ⟨0, d, hC, hd⟩
-          = g ⟨0, d - 1, hC, h2⟩ := by
-        rw [cupCarry_zero_at (cupDigit g) d hC hd]
-        exact cupDigit_at g 0 (d - 1) hC h2 hd1 h2
+      have hR : cupCarry (cupDigit g) ⟨0, d, hC, hd⟩ = (0 : ℤ) :=
+        cupCarry_zero_at (cupDigit g) d hC hd
       rw [hL, hR]
   · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
     subst hCe
@@ -480,39 +480,33 @@ theorem monomial_is_cellClass (C d : Nat) (hC : C < 4) (hd : d < 3) :
   funext c
   obtain ⟨C', d', hC', hd'⟩ := c
   by_cases hdC : d ≤ d'
-  · by_cases hCC : C ≤ C'
-    · have h1 : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
+  · have h2l : d' - d < 3 := by omega
+    by_cases hCC : C ≤ C'
+    · have h1l : C' - C < 4 := by omega
+      have hA : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
             ⟨C', d', hC', hd'⟩
-          = ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩ := by
-        rw [cupDigit_iterate _ d C' d' hC' hd' (by omega)]
-        exact if_pos hdC
-      have h2 : ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩
-          = unitCoef ⟨C' - C, d' - d, by omega, by omega⟩ := by
-        rw [cupCarry_iterate _ C C' (d' - d) (by omega) (by omega) (by omega)]
+          = unitCoef ⟨C' - C, d' - d, h1l, h2l⟩ := by
+        rw [cupDigit_iterate _ d C' d' hC' hd' h2l, if_pos hdC]
+        rw [cupCarry_iterate _ C C' (d' - d) h1l h2l (by omega)]
         exact if_pos hCC
-      have h3 : unitCoef ⟨C' - C, d' - d, by omega, by omega⟩
-          = (if C' = C ∧ d' = d then (1 : ℤ) else 0) := by
-        show (if C' - C = 0 ∧ d' - d = 0 then (1 : ℤ) else 0)
-          = (if C' = C ∧ d' = d then 1 else 0)
-        by_cases hEq : C' - C = 0 ∧ d' - d = 0
-        · rw [if_pos hEq, if_pos (by omega)]
-        · rw [if_neg hEq, if_neg (by omega)]
-      rw [h1, h2, h3, cellClass_at, if_pos (by omega)]
-    · have h1 : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
-            ⟨C', d', hC', hd'⟩
-          = ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩ := by
-        rw [cupDigit_iterate _ d C' d' hC' hd' (by omega)]
-        exact if_pos hdC
-      have h2 : ((Nat.iterate cupCarry C) unitCoef) ⟨C', d' - d, hC', by omega⟩
-          = (0 : ℤ) := by
-        rw [cupCarry_iterate _ C C' (d' - d) (by omega) (by omega) (by omega)]
-        exact if_neg hCC
-      rw [h1, h2, cellClass_at, if_neg (by omega)]
-  · have h1 : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
+      have hB : unitCoef ⟨C' - C, d' - d, h1l, h2l⟩
+          = (if 3 * (C' - C) + (d' - d) = 0 then (1 : ℤ) else 0) :=
+        cellClass_at 0 (C' - C) (d' - d) h1l h2l
+      rw [hA, hB, cellClass_at]
+      by_cases hEq : 3 * (C' - C) + (d' - d) = 0
+      · rw [if_pos hEq, if_pos (by omega)]
+      · rw [if_neg hEq, if_neg (by omega)]
+    · have hA : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
           ⟨C', d', hC', hd'⟩ = (0 : ℤ) := by
+        rw [cupDigit_iterate _ d C' d' hC' hd' (by omega), if_pos hdC]
+        rw [cupCarry_iterate _ C C' (d' - d) (by omega) h2l (by omega)]
+        exact if_neg hCC
+      rw [hA, cellClass_at, if_neg (by omega)]
+  · have hA : (Nat.iterate cupDigit d ((Nat.iterate cupCarry C) unitCoef))
+        ⟨C', d', hC', hd'⟩ = (0 : ℤ) := by
       rw [cupDigit_iterate _ d C' d' hC' hd' (by omega)]
       exact if_neg hdC
-    rw [h1, cellClass_at, if_neg (by omega)]
+    rw [hA, cellClass_at, if_neg (by omega)]
 
 /-- **THE FULL HODGE CONJECTURE OF THE ABSORBED WORLD** (Lefschetz (1,1)
 absorbed and extended to every codimension, integrally).  Every class of
@@ -565,19 +559,19 @@ theorem lefschetz_iterate_zero (k : Nat) (g : WaveCoef) :
       · subst hd0
         have hd1 : cupDigit (Nat.iterate lefschetzOp k g) ⟨C, 0, hC, hd⟩
             = (0 : ℤ) := cupDigit_zero_at _ C hC hd
-        rw [hd1, Nat.zero_add]
+        rw [hd1]
         by_cases hC0 : C = 0
         · subst hC0
           have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨0, d, hC, hd⟩
               = (0 : ℤ) := cupCarry_zero_at _ d hC hd
-          rw [h1]
+          rw [h1]; ring
         · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
           subst hCe
           have hCr : C' + 1 - 1 < 4 := by omega
           have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨C' + 1, d, hC, hd⟩
               = (Nat.iterate lefschetzOp k g) ⟨C', d, hCr, hd⟩ :=
             cupCarry_at _ (C' + 1) d hC hd (by omega) hCr
-          rw [h1, ih C' d hCr hd (by omega)]
+          rw [h1, ih C' d hCr hd (by omega)]; ring
       · obtain ⟨d', hde⟩ : ∃ d', d = d' + 1 := ⟨d - 1, by omega⟩
         subst hde
         have hdr : d' + 1 - 1 < 3 := by omega
@@ -589,14 +583,14 @@ theorem lefschetz_iterate_zero (k : Nat) (g : WaveCoef) :
         · subst hC0
           have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨0, d' + 1, hC, hd⟩
               = (0 : ℤ) := cupCarry_zero_at _ (d' + 1) hC hd
-          rw [h1]
+          rw [h1]; ring
         · obtain ⟨C', hCe⟩ : ∃ C', C = C' + 1 := ⟨C - 1, by omega⟩
           subst hCe
           have hCr : C' + 1 - 1 < 4 := by omega
           have h1 : cupCarry (Nat.iterate lefschetzOp k g) ⟨C' + 1, d' + 1, hC, hd⟩
               = (Nat.iterate lefschetzOp k g) ⟨C', d' + 1, hCr, hd⟩ :=
             cupCarry_at _ (C' + 1) (d' + 1) hC hd (by omega) hCr
-          rw [h1, ih C' (d' + 1) hCr hd (by omega)]
+          rw [h1, ih C' (d' + 1) hCr hd (by omega)]; ring
 
 /-- **THE NILPOTENCE CEILING `L⁶ = 0`.**  Six polarizations annihilate
 everything: the twelve-cell universe has top degree 5, and the sl₂ weight
@@ -914,7 +908,8 @@ theorem proj_orthogonal (k j : Nat) (g : WaveCoef) (hkj : k ≠ j) :
   show (if C + d = k then (if C + d = j then g ⟨C, d, hC, hd⟩ else 0) else 0) = 0
   by_cases h : C + d = j
   · rw [if_pos h, if_neg (by omega)]
-  · rw [if_neg h, if_neg (by omega : ¬(C + d = k))]
+  · rw [if_neg h]
+    split_ifs <;> ring
 
 /-- **THE KÜNNETH DECOMPOSITION**: the six sector projectors sum to the
 identity — the cohomology of the universe splits as the direct sum of its
@@ -1070,7 +1065,7 @@ private theorem foldr_ne_zero (js : List Nat) (k : Nat)
   | cons j js ih =>
       show ((k : ℤ) - (j : ℤ))
           * (js.foldr (fun j (v : ℤ) => ((k : ℤ) - (j : ℤ)) * v) 1) ≠ 0
-      have hkj : j ≠ k := hk j (List.mem_cons_self j js)
+      have hkj : j ≠ k := hk j (by simp)
       exact mul_ne_zero (by omega)
         (ih (fun j' hj' => hk j' (List.mem_cons.mpr (Or.inr hj'))))
 
