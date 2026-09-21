@@ -36,7 +36,12 @@ theorem wave_source_support_exact (c : WaveCell) :
       (c.carry = 2 ∧ c.digit = 2) ∨
       (c.carry = 3 ∧ c.digit = 2) := by
   rcases c with ⟨C, d, hC, hd⟩
-  interval_cases C <;> interval_cases d <;> decide
+  have hCc : C = 0 ∨ C = 1 ∨ C = 2 ∨ C = 3 := by omega
+  have hdc : d = 0 ∨ d = 1 ∨ d = 2 := by omega
+  rcases hCc with rfl | rfl | rfl | rfl <;>
+    rcases hdc with rfl | rfl | rfl <;>
+    norm_num [waveSource, surviveI, twoI, midDigit, finalMicroDigit,
+      microOutput, highBit, lowBit]
 
 /-- Exact source-free classification: the harmonic locus is the complement
 of the three matter cells. -/
@@ -71,8 +76,6 @@ theorem rowClass_three_way (R p A B C : Nat) :
       + rowClass (4^A * R) p B
       + rowClass (4^(A+B) * R) p C := by
   rw [show A+B+C = (A+B)+C by omega, rowClass_add, rowClass_add]
-  ring_nf
-  congr 1
   rw [Nat.pow_add]
   ring
 
