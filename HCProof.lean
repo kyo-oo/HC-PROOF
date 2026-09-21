@@ -17,6 +17,7 @@ import GSTClimbInfiniteFamily
 import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
+import GSTWorldCrownBridge
 import HodgeDeRhamBridge
 import GSTAnalyticAbsorption
 import GSTLefschetzCrown
@@ -123,6 +124,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTWorldCosmology.mixed_boundary_extinction
 #check GSTWorldCosmology.waveWorldEquiv
 #check GSTWorldCosmology.twelve_cell_is_native_chart
+#check GSTWorldCrownBridge.liftWave_cupDigit
+#check GSTWorldCrownBridge.liftWave_cupCarry
+#check GSTWorldCrownBridge.cup_comm_from_native
+#check GSTWorldCrownBridge.cupDigit_cubed_from_native
+#check GSTWorldCrownBridge.cupCarry_fourth_from_native
+#check GSTWorldCrownBridge.crown_laws_absorbed
 
 /-! ## The Lefschetz crown face (Layer 9) -/
 
