@@ -167,14 +167,8 @@ theorem pure_hodge_coefficients_unique
   have h0 := congrArg (fun f : WaveCoef => f ⟨0,0,by decide,by decide⟩) h
   have h1 := congrArg (fun f : WaveCoef => f ⟨1,1,by decide,by decide⟩) h
   have h2 := congrArg (fun f : WaveCoef => f ⟨2,2,by decide,by decide⟩) h
-  simp [pureExpand, cycleClass, cellClass, S12] at h0 h1 h2
-  have e0 : a0 = b0 := by omega
-  have e1 : a1 = b1 := by omega
-  have e2 : a2 = b2 := by omega
-  subst b0
-  subst b1
-  subst b2
-  rfl
+  norm_num [pureExpand, cycleClass, cellClass, S12] at h0 h1 h2
+  exact Prod.ext h0 (Prod.ext h1 h2)
 
 theorem hodge_v2_crown :
     (∀ p f, isHodgeClass p f ↔
