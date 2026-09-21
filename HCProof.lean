@@ -21,6 +21,7 @@ import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
 import GSTWorldCrownBridge
 import HodgeDeRhamBridge
+import HodgeDeRhamBridgeV2
 import GSTAnalyticAbsorption
 import GSTLefschetzCrown
 import GSTHodgeAssault
