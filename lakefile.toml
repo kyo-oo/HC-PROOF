@@ -152,6 +152,7 @@ roots = [
   "waves.GSTNCohomology",
   "waves.GSTVortexSingularity",
   "waves.CardinalWorldsPostulateLaw",
+  "waves.CardinalWorldsPostulateLawV2",
   "GSTAnalyticAbsorption",
   "GSTLefschetzCrown",
   "GSTHodgeAssault",
