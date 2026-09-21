@@ -258,3 +258,5 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTTransferBridge.finite_address_rational_hodge_classification
 #check GSTGeometricRealizationStage2.HodgeCycleSurjectivity
 #check GSTGeometricRealizationStage2.stage2_closes_cycle_surjectivity
+
+#check GSTGeometricRealizationStage2.universal_hodge_of_realization_family
