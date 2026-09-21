@@ -249,13 +249,13 @@ theorem clCupD_eq_mulH (φ : ClRing) : clCupD φ = clMul clH φ := by
             then clH j * φ ⟨(i:ℕ) - (j:ℕ), by have := hi; omega⟩ else 0) := rfl
     _ = (if (1:ℕ) ≤ (i:ℕ) ∧ (1:ℕ) % 3 + ((i:ℕ) - 1) % 3 < 3
           then clH ⟨1, by omega⟩ * φ ⟨(i:ℕ) - 1, by have := hi; omega⟩ else 0) :=
-        Finset.sum_eq_single_of_mem (⟨1, by omega⟩ : Fin 12) h₀ (Finset.mem_univ _)
+        Finset.sum_eq_single_of_mem (⟨1, by omega⟩ : Fin 12) (Finset.mem_univ _) h₀
     _ = (if (i:ℕ) % 3 ≠ 0 then φ ⟨(i:ℕ) - 1, by have := hi; omega⟩ else 0) := by
         have hH1 : clH ⟨1, by omega⟩ = (1:ℤ) := rfl
-        rw [hH1, mul_one]
-        obtain ⟨n, hn⟩ := i
-        interval_cases n
-        all_goals rfl
+        rw [hH1, one_mul]
+        by_cases hmod : (i:ℕ) % 3 ≠ 0
+        · rw [if_pos hmod, if_pos ⟨by omega, by have := Nat.div_add_mod (i:ℕ) 3; omega⟩]
+        · rw [if_neg hmod, if_neg (by have := Nat.div_add_mod (i:ℕ) 3; omega)]
     _ = clCupD φ i := rfl
 
 /-- **THE V-CUP IS MULTIPLICATION BY THE HYPERPLANE CLASS.**  The
@@ -288,13 +288,13 @@ theorem clCupV_eq_mulV (φ : ClRing) : clCupV φ = clMul clV φ := by
             then clV j * φ ⟨(i:ℕ) - (j:ℕ), by have := hi; omega⟩ else 0) := rfl
     _ = (if (3:ℕ) ≤ (i:ℕ) ∧ (3:ℕ) % 3 + ((i:ℕ) - 3) % 3 < 3
           then clV ⟨3, by omega⟩ * φ ⟨(i:ℕ) - 3, by have := hi; omega⟩ else 0) :=
-        Finset.sum_eq_single_of_mem (⟨3, by omega⟩ : Fin 12) h₀ (Finset.mem_univ _)
+        Finset.sum_eq_single_of_mem (⟨3, by omega⟩ : Fin 12) (Finset.mem_univ _) h₀
     _ = (if 3 ≤ (i:ℕ) then φ ⟨(i:ℕ) - 3, by have := hi; omega⟩ else 0) := by
         have hV1 : clV ⟨3, by omega⟩ = (1:ℤ) := rfl
-        rw [hV1, mul_one]
-        obtain ⟨n, hn⟩ := i
-        interval_cases n
-        all_goals rfl
+        rw [hV1, one_mul]
+        by_cases h3 : 3 ≤ (i:ℕ)
+        · rw [if_pos h3, if_pos ⟨h3, by omega⟩]
+        · rw [if_neg h3, if_neg (by omega)]
     _ = clCupV φ i := rfl
 
 /-- **THE RING LAW `H · V = V · H` (classical address).**  The two
