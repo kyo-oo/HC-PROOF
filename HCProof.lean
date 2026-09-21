@@ -36,6 +36,7 @@ import GSTTransferBridgeV2
 import GSTGeometricRealizationStage2
 import GSTGeometricRealizationStage2B
 import GSTGeometricRealizationStage2C
+import GSTGeometricRealizationStage2D
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
@@ -280,3 +281,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2C.native_hodge_subspace_le_cycleClass_range
 #check GSTGeometricRealizationStage2C.UniversalNativeSchemeHodgeStatement
 #check GSTGeometricRealizationStage2C.universal_native_scheme_hodge_of_realization_family
+
+
+/-! ## Stage 2D — native codimension-p cycle front -/
+
+#check GSTGeometricRealizationStage2D.codimensionCycles
+#check GSTGeometricRealizationStage2D.mem_codimensionCycles_one_iff_isWeilDivisor
+#check GSTGeometricRealizationStage2D.CodimensionHodgeRealization
+#check GSTGeometricRealizationStage2D.hodge_class_has_codimension_cycle
+#check GSTGeometricRealizationStage2D.universal_codimension_hodge_of_realization_family
+#check GSTGeometricRealizationStage2D.hodge_of_codimension_fiber_realization
