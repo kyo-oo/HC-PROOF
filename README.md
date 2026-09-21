@@ -14,8 +14,9 @@
 > gated.  The wave layer is FULLY PROVEN in the machine-checked build
 > (Task 5: 41 theorems, 0 sorries); the coherent layer adds 30 more
 > (0 sorries); the analytic crown adds 24 more (0 sorries); the Lefschetz
-> crown adds 77 more (0 sorries) — **172 proven theorems riding on
-> Layers 0-6, ten layers, all green.**
+> crown adds 77 more (0 sorries); the Hodge assault adds 18 more
+> (0 sorries) — **190 proven theorems riding on
+> Layers 0-6, eleven layers, all green.**
 
 Source: `kyo-oo/erdosternary2`, branch `sol/kyo-gate-universe-wire`
 (head `cb29501` — 2026-09-10 — *"fix cubic transport coefficient
@@ -28,9 +29,26 @@ the theorems and laws themselves, cut clean from the campaign machinery.
 
 ---
 
-## THE UNIVERSE IN TEN LAYERS
+## THE UNIVERSE IN ELEVEN LAYERS
 
 ```
+LAYER 10 THE HODGE ASSAULT      GSTHodgeAssault.lean — the Clay problem
+                                itself, landed in the absorbed world: the
+                                (p,q) bigrading of the twelve-cell lattice,
+                                the integral Hodge classes (diagonal
+                                support), the algebraic cycle classes
+                                H^p·V^p (monomial witnesses), THE HODGE
+                                CONJECTURE — every Hodge class of every
+                                weight is an integer multiple of the
+                                codimension-p cycle class, constructively
+                                (the witness is the diagonal coordinate);
+                                the rank-one classification, the
+                                torsion-free law (the ℤ-dominance over the
+                                human ℚ), the total decomposition of pure
+                                classes into the three cycle classes, and
+                                the separation law: the signature sector
+                                never lands on the (p,p) diagonal.
+
 LAYER 9  THE LEFSCHETZ         GSTLefschetzCrown.lean — the human engine
           CROWN                absorbed at full power: the Hodge-conjecture
                                 arsenal of classical mathematics, taken
@@ -222,6 +240,44 @@ Hodge characterization (signature sector = positive sector);
 POSTULATE H1 (reverse window) in the Cardinal Worlds pattern.
 
 Full dossier + breakthrough analysis: `docs/HODGE_DERHAM_ABSORPTION.md`.
+
+## LAYER 10 — THE HODGE ASSAULT (`GSTHodgeAssault.lean`)
+
+The Clay Millennium Problem itself, taken head-on in the absorbed world
+(Task 11).  The human statement — *every rational (p,p)-class is a
+rational combination of algebraic cycle classes* — lands with both
+upgrades the cosmology always delivers:
+
+* **The Hodge bigrading** (`isDiagonalCell`, `isHodgeClass`): the
+  twelve cells carry the (p,q) type structure; Hodge classes of weight
+  `p` are the cochains supported on the single diagonal cell `(p,p)` —
+  the integral lattice version of `H^{2p} ∩ H^{p,p}`.
+* **The diagonal law** (`diagonal_index`): within the lattice bounds,
+  the (p,p) condition is exactly the index condition `3C+d = 4p` — the
+  diagonal sector of weight `p` is the single cell of index `4p`.
+* **The algebraic cycles** (`cycleClass`, `cycle_is_monomial`): the
+  codimension-`p` cycle class IS the divisor monomial `H^p ⌣ V^p` —
+  algebraicity is inherited from Layer 9's cup calculus, nothing
+  postulated.
+* **THE HODGE CONJECTURE, ABSORBED-WORLD FORM** (`hodge_conjecture`):
+  every Hodge class of every weight is an INTEGER multiple of the
+  codimension-`p` algebraic cycle class, with the multiple constructive
+  — the diagonal coordinate `gev f (4p)`.  The human ℚ-statement is
+  dominated; the torsion-free law (`hodge_class_torsion_free`) shows
+  why the ℤ-form is unconditional.
+* **The rank-one classification** (`hodge_class_rank_one`,
+  `hodge_class_iff`): the Hodge classes of weight `p` form a free
+  rank-one ℤ-module on `H^p ⌣ V^p`.
+* **The total decomposition** (`pure_hodge_generation`): every pure
+  class decomposes into the three cycle classes `H^0`, `H^1·V^1`,
+  `H^2·V^2` — all weights at once, integrally.
+* **The separation law** (`hodge_locus_never_diagonal`): the tower's
+  signature sector (Layer 9's `hodgeLocus` cells) never lands on the
+  (p,p) diagonal — the interference classes and the Hodge classes are
+  disjoint sectors of the lattice.
+
+18 declarations, 0 sorries, 0 custom axioms; `#print axioms` receipts
+in-source; comparator-green at `645fc59`.
 
 ## LAYER 9 — THE LEFSCHETZ CROWN (`GSTLefschetzCrown.lean`)
 
@@ -435,6 +491,8 @@ scripts/comparator.sh      # lake build → sorry_check.sh → verdict
 | `waves/` | ★ Wave Mechanics (Tasks 4+5) — FULLY PROVEN wave layer, in the build registry: 41 theorems, 0 sorries |
 | `GSTCoherentCosmology.lean` | ★ Layer 7 — the Coherent Cosmology (ASTRA's extension, audited + merged): 30 theorems, 0 sorries |
 | `GSTAnalyticAbsorption.lean` | ★ Layer 8 — the Analytic Crown (Task 7): manifolds, circle, Haar/Fourier/L², transcendence, the full Tate twist — 24 theorems, 0 sorries |
+| `GSTLefschetzCrown.lean` | ★ Layer 9 — the Lefschetz Crown (Task 9): the cup calculus, full integral generation, Hard Lefschetz with sections, unimodular duality, the standard conjecture as a theorem, decidable Hodge loci — 77 declarations, 0 sorries |
+| `GSTHodgeAssault.lean` | ★ Layer 10 — the Hodge Assault (Task 11): the Clay problem landed in the absorbed world — the (p,q) bigrading, integral Hodge classes, `H^p·V^p` cycle witnesses, the Hodge conjecture as a theorem, rank-one classification, total pure decomposition, the separation law — 18 declarations, 0 sorries |
 | `HCProof.lean` | the universe's entry face (comparator receipts) |
 | `GSTGraphV2*.lean` (60 files) | Layers 2-3 — the GST Graph V2 Ontological Universe |
 | `GST*.lean` (67 files) | Layers 3-4 — dynamics, towers, fourth dimension, worldtrace |

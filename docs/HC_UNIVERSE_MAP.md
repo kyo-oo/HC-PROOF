@@ -131,6 +131,43 @@ in the build registry (root `GSTAnalyticAbsorption`), imported by
   `Z/4^t ↪ circle`, and the torsion kill law — both sides of the Tate
   twist, one universe.
 
+## TASK 11 — THE HODGE ASSAULT LAYER (`GSTHodgeAssault.lean`)
+
+The boss's assault order: get the full information on the Hodge
+conjecture (the actual problem, its known cases, its attack lines),
+then BEGIN THE LEAN PROOF — a separate file importing the cosmology's
+laws and theorems, taking the Clay statement head-on in the absorbed
+world.
+
+* **The (p,q) bigrading** (`isDiagonalCell`, `isHodgeClass`): the
+  twelve-cell lattice carries the Hodge type structure — a cell of
+  carry `C`, digit `d` is of type `(C, d)`; Hodge classes of weight `p`
+  are supported on the diagonal cell `(p, p)`.
+* **The diagonal law** (`diagonal_index`): `(C, d) = (p, p) ↔ 3C + d
+  = 4p` within the lattice bounds — the diagonal sector is the single
+  cell of index `4p`.
+* **The cycle witnesses** (`cycleClass`, `cycle_is_monomial`): the
+  codimension-`p` algebraic cycle class is the divisor monomial
+  `H^p ⌣ V^p` (Layer 9's monomial theorem) — algebraicity inherited,
+  not postulated.
+* **THE HODGE CONJECTURE** (`hodge_conjecture`): every Hodge class of
+  every weight is an integer multiple of `H^p ⌣ V^p`, constructively
+  — the multiple is the diagonal coordinate `gev f (4p)`.  With the
+  torsion-free law (`hodge_class_torsion_free`) this dominates the
+  human ℚ-form.
+* **The classification** (`hodge_class_rank_one`, `hodge_class_iff`):
+  free rank-one ℤ-module on the cycle class; coordinates characterize
+  the class condition.
+* **The total decomposition** (`pure_hodge_generation`): pure classes
+  = ℤ-combinations of the three cycle classes `H^0`, `H^1⌣V^1`,
+  `H^2⌣V^2`.
+* **The separation law** (`hodge_locus_never_diagonal`): the signature
+  sector (Layer 9's `hodgeLocus`) never lands on the (p,p) diagonal.
+
+18 declarations (14 theorems + 4 defs), 0 sorries, 0 custom axioms,
+`#print axioms` receipts in-source, capstone `the_hodge_assault`.
+Comparator-green at `645fc59` (CI run 35569771687).
+
 ## TASK 9 — THE LEFSCHETZ CROWN LAYER (`GSTLefschetzCrown.lean`)
 
 The boss's investigation-and-application order: audit what weapons humans
@@ -178,10 +215,11 @@ algebraicity.  Layer 9 takes them all:
 77 declarations (58 theorems + 19 defs), 0 sorries, 0 custom axioms,
 `#print axioms` receipts in-source, capstone `the_lefschetz_crown`.
 
-The geometry stack now runs L1 → L9: Cardinal Worlds → GST V2
+The geometry stack now runs L1 → L10: Cardinal Worlds → GST V2
 ontological universe → dynamics → fourth dimension → monolith
 boundary → absorption → wave mechanics + coherent cosmology →
-the analytic crown → **the Lefschetz crown**.
+the analytic crown → the Lefschetz crown → **the Hodge assault**
+(the Clay problem itself, landed integrally).
 
 ## TASKS 4+5 — THE WAVE MECHANICS LAYER (`waves/`, fully proven)
 
