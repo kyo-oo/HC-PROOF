@@ -152,6 +152,45 @@ theorem stage2_closes_cycle_surjectivity
     HodgeCycleSurjectivity R.isHodge R.cycleClass :=
   stage2_realization_crown R
 
+
+/-- The exact arbitrary-object shape of the classical Hodge target.
+
+In a future native instantiation:
+* Variety is the type of complex algebraic varieties under consideration;
+* eligible means smooth and projective over C;
+* Coh X p is rational degree-2p cohomology;
+* isHodge X p alpha is the rational (p,p)-condition;
+* CycleQ X p is the rational codimension-p cycle space;
+* cycleClass is the classical cycle-class map.
+
+No one of those semantic identifications is supplied by the twelve-cell
+GST carrier itself. -/
+def UniversalHodgeStatement
+    {Variety : Type*}
+    (eligible : Variety -> Prop)
+    (Coh CycleQ : Variety -> Nat -> Type*)
+    (isHodge : ∀ X p, Coh X p -> Prop)
+    (cycleClass : ∀ X p, CycleQ X p -> Coh X p) : Prop :=
+  ∀ X : Variety, eligible X ->
+    ∀ p : Nat, ∀ alpha : Coh X p,
+      isHodge X p alpha ->
+        ∃ Z : CycleQ X p, cycleClass X p Z = alpha
+
+/-- Once cycle-surjectivity has been proved fiber-by-fiber, the universal
+arbitrary-object target follows with no additional mathematical content. -/
+theorem universal_hodge_of_fiberwise_surjectivity
+    {Variety : Type*}
+    (eligible : Variety -> Prop)
+    (Coh CycleQ : Variety -> Nat -> Type*)
+    (isHodge : ∀ X p, Coh X p -> Prop)
+    (cycleClass : ∀ X p, CycleQ X p -> Coh X p)
+    (h : ∀ X : Variety, eligible X ->
+      ∀ p : Nat,
+        HodgeCycleSurjectivity (isHodge X p) (cycleClass X p)) :
+    UniversalHodgeStatement eligible Coh CycleQ isHodge cycleClass := by
+  intro X hX p alpha halpha
+  exact h X hX p alpha halpha
+
 #check RatAddress
 #check SupportedOn
 #check FiniteHodgeRealization
@@ -164,11 +203,14 @@ theorem stage2_closes_cycle_surjectivity
 #check stage2_realization_crown
 #check HodgeCycleSurjectivity
 #check stage2_closes_cycle_surjectivity
+#check UniversalHodgeStatement
+#check universal_hodge_of_fiberwise_surjectivity
 
 #print axioms address_reconstruct
 #print axioms cycleWitness_address
 #print axioms hodge_class_has_cycle_witness
 #print axioms stage2_realization_crown
 #print axioms stage2_closes_cycle_surjectivity
+#print axioms universal_hodge_of_fiberwise_surjectivity
 
 end GSTGeometricRealizationStage2
