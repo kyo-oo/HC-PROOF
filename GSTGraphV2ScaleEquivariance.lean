@@ -168,8 +168,7 @@ theorem physicalPacket_u_cut_two_stage
           (uTailEnergy (t + K) (originSuffix n K) L)
           (uPhaseShift t n K +
             uPhaseShift (t + K) (originSuffix n K) L + x) p := by
-          congr 2
-          omega
+          simp [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
 
 /-- **CUT SEMIGROUP COHERENCE.**  The direct (K+L)-cut and the two-stage
 K-then-L cut are literally the same Graph-V2 physical re-coordination. -/
