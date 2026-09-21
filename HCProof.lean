@@ -286,7 +286,7 @@ All declarations below are root-level (the modules carry no namespaces).
 /-! ## Stage 2D — native codimension-p cycle front -/
 
 #check GSTGeometricRealizationStage2D.codimensionCycles
-#check GSTGeometricRealizationStage2D.mem_codimensionCycles_one_iff_isWeilDivisor
+#check GSTGeometricRealizationStage2D.mem_codimensionCycles_one_iff
 #check GSTGeometricRealizationStage2D.CodimensionHodgeRealization
 #check GSTGeometricRealizationStage2D.hodge_class_has_codimension_cycle
 #check GSTGeometricRealizationStage2D.universal_codimension_hodge_of_realization_family
