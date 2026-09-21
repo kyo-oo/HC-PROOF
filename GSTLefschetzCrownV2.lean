@@ -27,6 +27,43 @@ def S1val (a b : ℤ) : WaveCoef :=
 def S2val (a b c : ℤ) : WaveCoef :=
   S12 (fun i => if i = 2 then a else if i = 4 then b else if i = 6 then c else 0)
 
+
+/-- One polarization step from degree zero to degree one. -/
+theorem lefschetz_degree0_to1_exact (a : ℤ) :
+    lefschetzOp (S0val a) = S1val a a := by
+  funext cell
+  rcases cell with ⟨C,d,hC,hd⟩
+  interval_cases C <;> interval_cases d <;>
+    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12,
+      S0val, S1val] <;> ring
+
+/-- One polarization step from degree one to degree two. -/
+theorem lefschetz_degree1_to2_exact (a b : ℤ) :
+    lefschetzOp (S1val a b) = S2val a (a+b) b := by
+  funext cell
+  rcases cell with ⟨C,d,hC,hd⟩
+  interval_cases C <;> interval_cases d <;>
+    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12,
+      S1val, S2val] <;> ring
+
+/-- One polarization step from degree three to degree four. -/
+theorem lefschetz_degree3_to4_exact (x y z : ℤ) :
+    lefschetzOp (S3val x y z) = S4val (x+y) (y+z) := by
+  funext cell
+  rcases cell with ⟨C,d,hC,hd⟩
+  interval_cases C <;> interval_cases d <;>
+    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12,
+      S3val, S4val] <;> ring
+
+/-- One polarization step from degree four to the top degree. -/
+theorem lefschetz_degree4_to5_exact (x y : ℤ) :
+    lefschetzOp (S4val x y) = S5val (x+y) := by
+  funext cell
+  rcases cell with ⟨C,d,hC,hd⟩
+  interval_cases C <;> interval_cases d <;>
+    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12,
+      S4val, S5val] <;> ring
+
 /-- The middle complementary map is triangular and unimodular. -/
 theorem lefschetz_degree2_exact (a b c : ℤ) :
     lefschetzOp (S2val a b c) = S3val (a+b) (b+c) c := by
@@ -43,11 +80,9 @@ theorem lefschetz_degree1_third_exact (a b : ℤ) :
       S4val (3*a + 3*b) (a + 3*b) := by
   change lefschetzOp (lefschetzOp (lefschetzOp (S1val a b))) =
     S4val (3*a + 3*b) (a + 3*b)
-  funext cell
-  rcases cell with ⟨C,d,hC,hd⟩
-  interval_cases C <;> interval_cases d <;>
-    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12,
-      S1val, S4val] <;> ring
+  rw [lefschetz_degree1_to2_exact, lefschetz_degree2_exact,
+      lefschetz_degree3_to4_exact]
+  congr 1 <;> ring
 
 /-- The degree-zero complementary fifth power is multiplication by ten. -/
 theorem lefschetz_degree0_fifth_exact (a : ℤ) :
@@ -57,11 +92,11 @@ theorem lefschetz_degree0_fifth_exact (a : ℤ) :
       (lefschetzOp
         (lefschetzOp
           (lefschetzOp (S0val a))))) = S5val (10*a)
-  funext cell
-  rcases cell with ⟨C,d,hC,hd⟩
-  interval_cases C <;> interval_cases d <;>
-    simp [lefschetzOp, cupDigit, cupCarry, S12_at, gev_S12,
-      S0val, S5val] <;> ring
+  rw [lefschetz_degree0_to1_exact, lefschetz_degree1_to2_exact,
+      lefschetz_degree2_exact, lefschetz_degree3_to4_exact,
+      lefschetz_degree4_to5_exact]
+  congr 1
+  ring
 
 /-- The exact determinant at degree zero. -/
 theorem lefschetz_degree0_determinant : (10 : ℤ) ≠ 0 := by decide
@@ -144,7 +179,11 @@ theorem lefschetz_integral_profile :
 #check S0val
 #check S1val
 #check S2val
+#check lefschetz_degree0_to1_exact
+#check lefschetz_degree1_to2_exact
 #check lefschetz_degree2_exact
+#check lefschetz_degree3_to4_exact
+#check lefschetz_degree4_to5_exact
 #check lefschetz_degree1_third_exact
 #check lefschetz_degree0_fifth_exact
 #check lefschetz_degree2_section
