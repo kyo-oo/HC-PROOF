@@ -65,6 +65,7 @@ roots = [
   "GSTGraphV2CanonicalPhaseWaveProbe",
   "GSTGraphV2CanonicalRenormalization",
   "GSTGraphV2CanonicalSheetTranslation",
+  "GSTGraphV2ScaleEquivariance",
   "GSTGraphV2CanonicalSignedPrefixBridge",
   "GSTGraphV2CanonicalTerminalExtinctionProbe",
   "GSTGraphV2CanonicalTransparentBridgeProbe",
