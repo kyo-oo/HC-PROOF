@@ -28,6 +28,7 @@ open GSTTransferBridge
 theorem clMono_zero_of_twelve_le (n : Nat) (hn : 12 ≤ n) :
     clMono n = fun _ => 0 := by
   funext i
+  have hi : (i : Nat) < 12 := i.isLt
   unfold clMono
   rw [if_neg]
   omega
@@ -38,6 +39,7 @@ theorem clHodge_zero_of_three_le
     (hφ : isClHodge p φ) :
     φ = fun _ => 0 := by
   funext i
+  have hi : (i : Nat) < 12 := i.isLt
   exact hφ i (by omega)
 
 /-- Zero belongs to every classical-address Hodge sector. -/
