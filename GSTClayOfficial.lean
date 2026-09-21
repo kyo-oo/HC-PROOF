@@ -210,6 +210,16 @@ theorem the_official_clay_landing :
 #check rat
 #check ratCycleClass
 #check hodge_type_cycle_classification
+
+/-- Audit-accurate name for the rationalized finite GST theorem.
+It is a theorem about WaveCoef and RatCoef, not yet about arbitrary
+smooth projective complex varieties. -/
+theorem finite_rational_gst_hodge_classification
+    (p : Nat) (hp : p < 3) (f : WaveCoef) (hf : isHodgeClass p f) :
+    ∃ q : ℚ, ∀ c : WaveCell,
+      rat f c = q * ratCycleClass p c :=
+  clay_hodge_conjecture p hp f hf
+
 #check clay_hodge_conjecture
 #check clay_witness_is_diagonal_coordinate
 #check integer_dominance
