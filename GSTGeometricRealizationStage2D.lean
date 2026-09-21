@@ -46,7 +46,7 @@ noncomputable def codimensionCycles
     {Z | Z.support ⊆ {x : X | Order.coheight x = p}}
   zero_mem' := by
     intro x hx
-    simpa using hx
+    exact (hx rfl).elim
   add_mem' := by
     intro Z W hZ hW
     exact (Function.support_add _ _).trans (Set.union_subset hZ hW)
