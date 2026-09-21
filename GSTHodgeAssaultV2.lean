@@ -36,6 +36,7 @@ theorem hodge_class_zero_of_three_le
     (hf : isHodgeClass p f) :
     f = fun _ => 0 := by
   funext c
+  have hd : c.digit < 3 := c.hdigit
   exact hf c (Or.inr (by omega))
 
 /-- Zero is a Hodge class at every weight. -/
@@ -167,7 +168,13 @@ theorem pure_hodge_coefficients_unique
   have h1 := congrArg (fun f : WaveCoef => f ⟨1,1,by decide,by decide⟩) h
   have h2 := congrArg (fun f : WaveCoef => f ⟨2,2,by decide,by decide⟩) h
   simp [pureExpand, cycleClass, cellClass, S12] at h0 h1 h2
-  omega
+  have e0 : a0 = b0 := by omega
+  have e1 : a1 = b1 := by omega
+  have e2 : a2 = b2 := by omega
+  subst b0
+  subst b1
+  subst b2
+  rfl
 
 theorem hodge_v2_crown :
     (∀ p f, isHodgeClass p f ↔
