@@ -123,6 +123,41 @@ theorem composed_unit_isometry_iff
       SixAdicIsoAt k x y :=
   (A.mul D).mul_isometry_iff x y
 
+/-- **ITERATED UNIT ACTION.**  Every natural power of one certified
+six-adic unit remains an exact isometry at the same resolution.  Thus one
+certificate generates an infinite discrete isometry action. -/
+theorem SixAdicUnitCertificate.pow_isometry_iff
+    {k : Nat} {a : Int}
+    (U : SixAdicUnitCertificate k a) :
+    ∀ n : Nat, ∀ x y : Int,
+      SixAdicIsoAt k ((a^n)*x) ((a^n)*y)
+        ↔ SixAdicIsoAt k x y := by
+  intro n
+  induction n with
+  | zero =>
+      intro x y
+      simp
+  | succ n ih =>
+      intro x y
+      have hstep :=
+        U.mul_isometry_iff ((a^n)*x) ((a^n)*y)
+      have hstep' :
+          SixAdicIsoAt k ((a^(n+1))*x) ((a^(n+1))*y)
+            ↔ SixAdicIsoAt k ((a^n)*x) ((a^n)*y) := by
+        simpa [pow_succ, mul_assoc, mul_comm, mul_left_comm] using hstep
+      exact hstep'.trans (ih x y)
+
+/-- The iterated unit action remains exact after any common affine shift. -/
+theorem SixAdicUnitCertificate.pow_affine_isometry_iff
+    {k : Nat} {a : Int}
+    (U : SixAdicUnitCertificate k a)
+    (n : Nat) (shift x y : Int) :
+    SixAdicIsoAt k
+        (shift + (a^n)*x) (shift + (a^n)*y)
+      ↔ SixAdicIsoAt k x y := by
+  rw [six_iso_translate_iff]
+  exact U.pow_isometry_iff n x y
+
 /-- Multiplication by six is an exact similarity of the resolution tree:
     shifting both energies by one base-six factor raises the resolution by
     exactly one level, in both directions. -/
@@ -148,6 +183,8 @@ theorem six_scale_exact_iff {k : Nat} {x y : Int} :
 #check SixAdicUnitCertificate.mul
 #check SixAdicUnitCertificate.affine_isometry_iff
 #check composed_unit_isometry_iff
+#check SixAdicUnitCertificate.pow_isometry_iff
+#check SixAdicUnitCertificate.pow_affine_isometry_iff
 #check six_scale_exact_iff
 #print axioms six_iso_translate_iff
 #print axioms six_iso_mul_reflect_of_mod_inverse
@@ -155,6 +192,8 @@ theorem six_scale_exact_iff {k : Nat} {x y : Int} :
 #print axioms SixAdicUnitCertificate.mul_isometry_iff
 #print axioms SixAdicUnitCertificate.affine_isometry_iff
 #print axioms composed_unit_isometry_iff
+#print axioms SixAdicUnitCertificate.pow_isometry_iff
+#print axioms SixAdicUnitCertificate.pow_affine_isometry_iff
 #print axioms six_scale_exact_iff
 
 end GSTGraphV2SixAdicUnitIsometry
