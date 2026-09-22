@@ -68,7 +68,7 @@ import GSTInfiniteWorldRenormalization
 #print axioms GSTExactWorldOperatorPresentation.worldOperatorHom_injective
 #print axioms GSTExactWorldOperatorPresentation.evalWorldPoly_surjective
 #print axioms GSTExactWorldOperatorPresentation.worldOperatorEquiv
-#print axioms GSTInfiniteWorldRenormalization.prefix
+#print axioms GSTInfiniteWorldRenormalization.worldPrefix
 #print axioms GSTInfiniteWorldRenormalization.tail
 #print axioms GSTInfiniteWorldRenormalization.graft
 #print axioms GSTInfiniteWorldRenormalization.innovation_tail

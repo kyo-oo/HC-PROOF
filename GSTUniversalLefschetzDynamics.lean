@@ -92,8 +92,7 @@ theorem worldLefschetz_respects_degree
               rw [digitShiftN_respects_degree 1 k g,
                   carryShiftN_respects_degree 1 k g]
     _ = worldSectorProj (k+1) (worldLefschetz g) := by
-          simpa [worldLefschetz] using
-            (worldSectorProj_add (k+1)
+          exact (worldSectorProj_add (k+1)
               (digitShiftN 1 g) (carryShiftN 1 g)).symm
 
 /-- k iterations transport degree r exactly into degree r+k. -/
@@ -105,8 +104,7 @@ theorem worldLefschetz_iterate_respects_degree
   | zero =>
       simp
   | succ k ih =>
-      rw [Function.iterate_succ', Function.iterate_succ',
-        Function.comp_apply, Function.comp_apply, ih,
+      rw [Function.iterate_succ', Function.comp_apply, ih,
         worldLefschetz_respects_degree]
       congr 1
       omega
@@ -128,7 +126,8 @@ theorem worldLefschetz_iterate_zero
   | succ k ih =>
       intro C d hC hd hlt
       rw [Function.iterate_succ', Function.comp_apply]
-      unfold worldLefschetz
+      change digitShiftN 1 (Nat.iterate worldLefschetz k g) (⟨C,hC⟩,⟨d,hd⟩) +
+        carryShiftN 1 (Nat.iterate worldLefschetz k g) (⟨C,hC⟩,⟨d,hd⟩) = 0
       by_cases hd0 : d = 0
       · subst d
         rw [digitShift_one_zero
@@ -217,7 +216,8 @@ theorem lefschetz_sixth_power_from_universal
   have h :=
     worldLefschetz_nilpotent
       (A:=4) (B:=3) (by decide) (by decide) (liftWave g)
-  simpa [liftWave] using h
+  change Nat.iterate worldLefschetz 6 (liftWave g) = fun _ => 0
+  exact h
 
 /-- Capstone for dimension-free Lefschetz dynamics. -/
 theorem universal_lefschetz_crown :
@@ -232,9 +232,9 @@ theorem universal_lefschetz_crown :
       Nat.iterate worldLefschetz k (worldSectorProj r g) =
         worldSectorProj (r+k)
           (Nat.iterate worldLefschetz k g)) := by
-  exact ⟨worldLefschetz_iterate_zero,
-    worldLefschetz_nilpotent,
-    worldLefschetz_iterate_respects_degree⟩
+  exact ⟨fun A B => worldLefschetz_iterate_zero,
+    fun A B => worldLefschetz_nilpotent,
+    fun A B => worldLefschetz_iterate_respects_degree⟩
 
 #check worldLefschetz
 #check worldLefschetz_respects_degree

@@ -102,7 +102,12 @@ theorem shift_origin (hd : ∀ i, 0 < d i) (a : Cell d) :
   funext c
   by_cases hca : c = a
   · subst c
-    simp [shift, delta, origin]
+    simp only [shift, dif_pos (fun i => Nat.le_refl (a i).val)]
+    have hz : (fun i => (⟨(a i).val - (a i).val, by omega⟩ : Fin (d i))) = origin d hd := by
+      funext i
+      apply Fin.ext
+      simp [origin]
+    simp only [delta, hz, if_pos rfl]
   · by_cases h : ∀ i, (a i).val ≤ (c i).val
     · have hn : (fun i => (⟨(c i).val - (a i).val,
           lt_of_le_of_lt (Nat.sub_le _ _) (c i).isLt⟩ : Fin (d i))) ≠ origin d hd := by
@@ -115,10 +120,15 @@ theorem shift_origin (hd : ∀ i, 0 < d i) (a : Cell d) :
         change (c i).val - (a i).val = 0 at hi
         omega
       simp [shift, delta, h, hn, hca]
-    · simp [shift, h, delta, hca]
+    · simp only [shift, dif_neg h, delta, if_neg hca]
 
 section Finite
 variable [Fintype I]
+
+instance cellFintype : Fintype (Cell d) := by
+  classical
+  unfold Cell
+  infer_instance
 
 /-- Any world amplitude is the exact finite superposition of native cells. -/
 theorem delta_expansion (g : Coef d) :
@@ -201,7 +211,7 @@ theorem pairing_extract (f : Coef d) (a : Cell d) :
 theorem pairing_nondegenerate (f : Coef d)
     (h : ∀ g, pairing d f g = 0) : f = 0 := by
   funext a
-  simpa only [pairing_extract] using h (delta d (dual d a))
+  simpa only [pairing_extract, Pi.zero_apply] using h (delta d (dual d a))
 
 /-- Degree reflection around the dimension-derived top degree. -/
 theorem degree_dual (c : Cell d) :
@@ -217,7 +227,7 @@ end Finite
 /-- The rectangle is exactly the two-axis world, with carry then digit. -/
 def rectangleEquiv (A B : ℕ) :
     GSTWorldCosmology.WorldCell A B ≃ Cell (I:=Fin 2) ![A, B] where
-  toFun c := fun i => Fin.cases c.1 (fun j => Fin.cases c.2 Fin.elim0 j) i
+  toFun c := fun i => Fin.cases c.1 (fun j => Fin.cases c.2 (fun k => nomatch k) j) i
   invFun c := (c 0, c 1)
   left_inv c := rfl
   right_inv c := by

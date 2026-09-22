@@ -12,7 +12,7 @@ namespace GSTInfiniteWorldRenormalization
 open GSTCoherentCosmology GSTInfiniteWorldClassification
 
 /-- Retained innovation information in the first k layers. -/
-def prefix (k : ℕ) (X : WindowTower) : Fin k → Fin 3 :=
+def worldPrefix (k : ℕ) (X : WindowTower) : Fin k → Fin 3 :=
   fun i => innovationStream X i.val
 
 /-- Renormalize by discarding the first k innovation layers. -/
@@ -33,9 +33,9 @@ def graft (k : ℕ) (u : Fin k → Fin 3) (Y : WindowTower) : WindowTower :=
   simp [graft, innovationStream_streamTower]
 
 @[simp] theorem prefix_graft (k : ℕ) (u : Fin k → Fin 3) (Y : WindowTower) :
-    prefix k (graft k u Y) = u := by
+    worldPrefix k (graft k u Y) = u := by
   funext i
-  simp [prefix, i.isLt]
+  simp [worldPrefix, i.isLt]
 
 @[simp] theorem tail_graft (k : ℕ) (u : Fin k → Fin 3) (Y : WindowTower) :
     tail k (graft k u Y) = Y := by
@@ -46,10 +46,10 @@ def graft (k : ℕ) (u : Fin k → Fin 3) (Y : WindowTower) : WindowTower :=
 
 /-- Reconstruction across an arbitrary cut is exact, for every coherent world. -/
 @[simp] theorem graft_prefix_tail (k : ℕ) (X : WindowTower) :
-    graft k (prefix k X) (tail k X) = X := by
+    graft k (worldPrefix k X) (tail k X) = X := by
   apply windowTowerEquivStream.injective
   funext p
-  change innovationStream (graft k (prefix k X) (tail k X)) p = innovationStream X p
+  change innovationStream (graft k (worldPrefix k X) (tail k X)) p = innovationStream X p
   rw [innovation_graft]
   split_ifs with h
   · rfl
@@ -58,7 +58,7 @@ def graft (k : ℕ) (u : Fin k → Fin 3) (Y : WindowTower) : WindowTower :=
 /-- Complete self-similarity: a coherent infinity is exactly a finite prefix
 and an independent coherent infinity. -/
 def splitEquiv (k : ℕ) : WindowTower ≃ (Fin k → Fin 3) × WindowTower where
-  toFun X := (prefix k X, tail k X)
+  toFun X := (worldPrefix k X, tail k X)
   invFun z := graft k z.1 z.2
   left_inv := graft_prefix_tail k
   right_inv z := by simp
@@ -89,7 +89,7 @@ theorem graft_injective (k : ℕ) (u : Fin k → Fin 3) :
 
 /-- Equality at one resolution is precisely equality of the retained prefix. -/
 theorem level_eq_iff_prefix (X Y : WindowTower) (k : ℕ) :
-    X.level k = Y.level k ↔ prefix k X = prefix k Y := by
+    X.level k = Y.level k ↔ worldPrefix k X = worldPrefix k Y := by
   rw [level_eq_iff_stream_prefix]
   constructor
   · intro h
@@ -104,19 +104,19 @@ abbrev Cylinder (X : WindowTower) (k : ℕ) := {Y : WindowTower // Y.level k = X
 /-- Every finite observation cylinder is exactly the full coherent universe. -/
 def cylinderEquiv (X : WindowTower) (k : ℕ) : Cylinder X k ≃ WindowTower where
   toFun Y := tail k Y.val
-  invFun Z := ⟨graft k (prefix k X) Z, by
+  invFun Z := ⟨graft k (worldPrefix k X) Z, by
     apply (level_eq_iff_prefix _ _ k).mpr
     exact prefix_graft k _ Z⟩
   left_inv Y := by
     apply Subtype.ext
-    have hp : prefix k Y.val = prefix k X := (level_eq_iff_prefix _ _ k).mp Y.property
+    have hp : worldPrefix k Y.val = worldPrefix k X := (level_eq_iff_prefix _ _ k).mp Y.property
     rw [← hp, graft_prefix_tail]
   right_inv Z := tail_graft k _ Z
 
 /-- A fixed future has exactly one world for each k-trit prefix. -/
 def fiberEquiv (Y : WindowTower) (k : ℕ) :
     {X : WindowTower // tail k X = Y} ≃ (Fin k → Fin 3) where
-  toFun X := prefix k X.val
+  toFun X := worldPrefix k X.val
   invFun u := ⟨graft k u Y, tail_graft k u Y⟩
   left_inv X := by
     apply Subtype.ext

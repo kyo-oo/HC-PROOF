@@ -98,7 +98,9 @@ theorem carryEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
 /-- The digit operator is nilpotent at exactly the world digit depth. -/
 theorem digitEndo_pow_depth :
     (digitEndo A B)^B = 0 := by
-  ext g c
+  apply LinearMap.ext
+  intro g
+  funext c
   rw [digitEndo_pow_apply]
   have h := digit_boundary_extinction g
   rw [h]
@@ -107,7 +109,9 @@ theorem digitEndo_pow_depth :
 /-- The carry operator is nilpotent at the world carry depth. -/
 theorem carryEndo_pow_depth :
     (carryEndo A B)^A = 0 := by
-  ext g c
+  apply LinearMap.ext
+  intro g
+  funext c
   rw [carryEndo_pow_apply]
   have h := carry_boundary_extinction g
   rw [h]

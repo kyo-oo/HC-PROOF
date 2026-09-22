@@ -54,7 +54,6 @@ def shapeCodeEquiv {N : Nat} (S : GSTWorldShape N) :
 def worldCode {N : Nat} (S : GSTWorldShape N) (x : ShapeState S) : Nat :=
   (shapeCodeEquiv S x).1
 
-@[simp]
 theorem worldCode_expanded
     {N : Nat} (S : GSTWorldShape N) (x : ShapeState S) :
     worldCode S x = x.2.1 + S.cols * x.1.1 := by
@@ -86,7 +85,8 @@ theorem worldRecoordinate_unique
     worldRecoordinate S T x = y := by
   apply (shapeCodeEquiv T).injective
   apply Fin.ext
-  simpa [worldCode] using h.symm
+  change worldCode T (worldRecoordinate S T x) = worldCode T y
+  rw [worldRecoordinate_code, h]
 
 /-- Every source state has a unique equal-code target in every other shape. -/
 theorem existsUnique_worldRecoordinate
@@ -221,7 +221,7 @@ theorem transportCoef_codePolyOp
       worldCode S ((worldRecoordinate S T).symm y) =
         worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
-    exact (worldRecoordinate_code T S y).symm
+    exact worldRecoordinate_code T S y
   simp [transportCoef, codePolyOp, hcode]
 
 /-- Every code projector is an explicit integer spectral polynomial,
@@ -294,8 +294,9 @@ theorem world_recoordination_groupoid_crown :
         (p : Polynomial ℤ) (f : ShapeCoef S),
       transportCoef S T (codePolyOp S p f) =
         codePolyOp T p (transportCoef S T f)) := by
-  exact ⟨worldRecoordinate_code, worldRecoordinate_comp,
-    transportCoef_codeSectorProj, transportCoef_codePolyOp⟩
+  exact ⟨fun N => worldRecoordinate_code, fun N => worldRecoordinate_comp,
+    fun N S T f k => transportCoef_codeSectorProj S T k f,
+    fun N => transportCoef_codePolyOp⟩
 
 #check GSTWorldShape
 #check worldRecoordinate

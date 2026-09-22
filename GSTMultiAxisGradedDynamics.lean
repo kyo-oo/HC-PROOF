@@ -106,7 +106,7 @@ theorem raises_pow (r : ℕ) (T : Module.End ℤ (Coef d))
     rw [pow_succ', Module.End.mul_apply, ih, hT]
     rw [Module.End.mul_apply]
     congr 1
-    omega
+    simp [Nat.succ_mul, Nat.add_assoc]
 
 /-- Universal extinction: every positive-degree native operator dies when
 its accumulated degree exceeds the world's weighted top degree. -/
