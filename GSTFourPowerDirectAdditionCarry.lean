@@ -174,6 +174,42 @@ theorem pow4_binary_initial_state (K : Nat) :
   · unfold binaryCarry directCarry4 digit3
     simp [hmod]
 
+
+/-! ## Six-state binary-carry dynamics -/
+
+/-- Finite multiplication state at row `p`: current ternary digit together
+with the binary residual carry entering the next row. -/
+def binaryState (R p : Nat) : Nat × Nat :=
+  (digit3 R p, binaryCarry R (p+1))
+
+/-- Every binary state lies in the finite physical state space
+`Fin 3 × Fin 2` at the level of bounds. -/
+theorem binaryState_physical (R p : Nat) :
+    (binaryState R p).1 < 3 ∧ (binaryState R p).2 < 2 := by
+  exact ⟨digit3_lt_three R p,
+    binaryCarry_lt_two R (p+1) (by omega)⟩
+
+/-- **DETERMINISTIC BINARY STATE TRANSITION.**  The second coordinate of the
+next state is determined by the current digit, previous digit, and incoming
+binary carry; no four-valued carry remains in the transition law. -/
+theorem binaryState_next_exact (R p : Nat) :
+    binaryState R (p+1) =
+      (digit3 R (p+1),
+        (digit3 R (p+1) + digit3 R p + binaryCarry R (p+1)) / 3) := by
+  apply Prod.ext
+  · rfl
+  · change binaryCarry R ((p+1)+1) =
+      (digit3 R (p+1) + digit3 R p + binaryCarry R (p+1)) / 3
+    exact binaryCarry_forward_exact R (p+1) (by omega)
+
+/-- The power-of-four automaton starts in the exact finite state `(1,0)`. -/
+theorem pow4_binaryState_zero (K : Nat) :
+    binaryState (4^K) 0 = (1,0) := by
+  apply Prod.ext
+  · exact (pow4_binary_initial_state K).1
+  · exact (pow4_binary_initial_state K).2
+
+
 #check directCarry4
 #check binaryCarry
 #check directCarry4_forward_exact_all
@@ -183,6 +219,10 @@ theorem pow4_binary_initial_state (K : Nat) :
 #check common_two_row_iff_forbidden_edges
 #check binaryCarry_forward_exact
 #check pow4_binary_initial_state
+#check binaryState
+#check binaryState_physical
+#check binaryState_next_exact
+#check pow4_binaryState_zero
 #print axioms directCarry4_forward_exact_all
 #print axioms directCarry4_eq_prev_digit_add_binary
 #print axioms binaryCarry_lt_two
@@ -190,5 +230,6 @@ theorem pow4_binary_initial_state (K : Nat) :
 #print axioms common_two_row_iff_forbidden_edges
 #print axioms binaryCarry_forward_exact
 #print axioms pow4_binary_initial_state
+#print axioms binaryState_next_exact
 
 end GSTFourPowerDirectAdditionCarry
