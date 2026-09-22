@@ -167,17 +167,43 @@ theorem no_relocated_happy_forbids_mod9_five_six
       1 (K+1) 2).2 (by
         simpa [graph, cell, GSTCanonicalSevenAxisBridge.vertex] using hov)
 
+
+/-! ## Exact relocated row-two phase classification -/
+
+/-- The relocated physical cell at row two is Happy exactly in the two
+intrinsic mod-nine classes of the relocated exponent. -/
+theorem relocated_row_two_happy_iff_mod9_five_six
+    (K : Nat) :
+    HappyCell
+        (graph 1 (K+1) 2).seven.carry
+        (graph 1 (K+1) 2).seven.digit
+      ↔ ((K+1) % 9 = 5 ∨ (K+1) % 9 = 6) := by
+  rw [GSTGraphV2FourPowerRelocation.graph_happy_iff_consecutive_digit_two]
+  have h :
+      ((graph 1 (K+1) 2).seven.digit = 2 ∧
+        (graph 1 ((K+1)+1) 2).seven.digit = 2)
+      ↔
+      (digit3 (4^(K+1)) 2 = 2 ∧
+        digit3 (4^((K+1)+1)) 2 = 2) := by
+    simp [graph, cell, GSTCanonicalSevenAxisBridge.vertex,
+      GSTCanonicalSevenAxisBridge.digit3, digit3]
+  rw [h]
+  exact row_two_overlap_iff_mod9_five_or_six (K+1)
+
+
 #check digit3_eq_of_mod_next
 #check pow4_digit_period
 #check row_two_overlap_of_mod9_five_or_six
 #check row_two_overlap_iff_mod9_five_or_six
 #check no_common_two_forbids_mod9_five_six
 #check no_relocated_happy_forbids_mod9_five_six
+#check relocated_row_two_happy_iff_mod9_five_six
 #print axioms digit3_eq_of_mod_next
 #print axioms pow4_digit_period
 #print axioms row_two_overlap_of_mod9_five_or_six
 #print axioms row_two_overlap_iff_mod9_five_or_six
 #print axioms no_common_two_forbids_mod9_five_six
 #print axioms no_relocated_happy_forbids_mod9_five_six
+#print axioms relocated_row_two_happy_iff_mod9_five_six
 
 end GSTGraphV2FourPowerResidueObstruction
