@@ -37,6 +37,8 @@ import GSTGeometricRealizationStage2
 import GSTGeometricRealizationStage2B
 import GSTGeometricRealizationStage2C
 import GSTGeometricRealizationStage2D
+import GSTProjectiveOverC
+import GSTGeometricRealizationStage2E
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
@@ -291,3 +293,15 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2D.hodge_class_has_codimension_cycle
 #check GSTGeometricRealizationStage2D.universal_codimension_hodge_of_realization_family
 #check GSTGeometricRealizationStage2D.hodge_of_codimension_fiber_realization
+
+
+/-! ## Stage 2E — classical smooth-projective / Hodge semantic landing -/
+
+#check GSTProjectiveOverC.SmoothProjectiveComplexScheme
+#check GSTProjectiveOverC.ProjectiveOverC
+#check GSTGeometricRealizationStage2E.ClassicalHodgeData
+#check GSTGeometricRealizationStage2E.ClassicalHodgeStatement
+#check GSTGeometricRealizationStage2E.hodge_class_has_classical_cycle
+#check GSTGeometricRealizationStage2E.classical_hodge_of_stage2e_family
+#check GSTGeometricRealizationStage2E.UniversalClassicalHodgeStatement
+#check GSTGeometricRealizationStage2E.Stage2ERealizationObligation
