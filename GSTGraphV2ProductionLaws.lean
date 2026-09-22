@@ -63,11 +63,11 @@ theorem origin_frame_phased_state_exact
 because it preserves the complete carry/digit state. -/
 theorem origin_frame_happy_iff
     (t n K x p : Nat) :
-    GST2DMixedEmergence.HappyCell
+    GSTU2DEventTransport.HappyCell
         (originFrame t n K x p).full.seven.carry
         (originFrame t n K x p).full.seven.digit
       ↔
-    GST2DMixedEmergence.HappyCell
+    GSTU2DEventTransport.HappyCell
         (originFrame t n K x p).phasedTail.seven.carry
         (originFrame t n K x p).phasedTail.seven.digit := by
   have h := origin_frame_phased_state_exact t n K x p
@@ -162,11 +162,11 @@ have exactly the same Happy semantics. -/
 theorem residual_gate_left_happy_iff
     (s k m j : Nat) :
     let F := residualGateFrame s k m j
-    GST2DMixedEmergence.HappyCell
+    GSTU2DEventTransport.HappyCell
         F.residual.block.left.seven.carry
         F.residual.block.left.seven.digit
       ↔
-    GST2DMixedEmergence.HappyCell
+    GSTU2DEventTransport.HappyCell
         F.originFrame.phasedTail.seven.carry
         F.originFrame.phasedTail.seven.digit := by
   dsimp only
@@ -206,11 +206,11 @@ of the parent perfect-power sheet. -/
 theorem residual_right_happy_iff_absolute
     (s k m p : Nat) :
     let F := residualFrame s k m p
-    GST2DMixedEmergence.HappyCell
+    GSTU2DEventTransport.HappyCell
         F.block.right.seven.carry
         F.block.right.seven.digit
       ↔
-    GST2DMixedEmergence.HappyCell
+    GSTU2DEventTransport.HappyCell
         (GSTGraphV2Production.cell 1 F.parentExponent p).seven.carry
         (GSTGraphV2Production.cell 1 F.parentExponent p).seven.digit := by
   dsimp only
@@ -220,20 +220,20 @@ theorem residual_right_happy_iff_absolute
 /-- Semantic production crown: re-phasing and both residual rectangle
 boundaries preserve the physical Happy classifier exactly. -/
 theorem production_semantic_transport_crown :
-    (∀ t n K x p, GST2DMixedEmergence.HappyCell
+    (∀ t n K x p, GSTU2DEventTransport.HappyCell
         (originFrame t n K x p).full.seven.carry
         (originFrame t n K x p).full.seven.digit
-      ↔ GST2DMixedEmergence.HappyCell
+      ↔ GSTU2DEventTransport.HappyCell
         (originFrame t n K x p).phasedTail.seven.carry
         (originFrame t n K x p).phasedTail.seven.digit)
     ∧
     (∀ s k m j,
       let F := residualGateFrame s k m j
-      GST2DMixedEmergence.HappyCell
+      GSTU2DEventTransport.HappyCell
           F.residual.block.left.seven.carry
           F.residual.block.left.seven.digit
         ↔
-      GST2DMixedEmergence.HappyCell
+      GSTU2DEventTransport.HappyCell
           F.originFrame.phasedTail.seven.carry
           F.originFrame.phasedTail.seven.digit) := by
   exact ⟨origin_frame_happy_iff, residual_gate_left_happy_iff⟩
