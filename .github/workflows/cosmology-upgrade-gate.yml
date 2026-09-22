@@ -4,12 +4,14 @@ on:
   push:
     branches:
       - main
+      - cosmology-legacy-absorption
     paths:
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
       - 'GSTUniversalAddressBridge.lean'
       - 'GSTDimensionFreeHodgeDiagonal.lean'
+      - 'GSTLegacyHodgeAbsorption.lean'
       - 'GSTGlobalPureHodgeCosmology.lean'
       - 'GSTUniversalLefschetzDynamics.lean'
       - 'GSTUniversalLefschetzCosmology.lean'
@@ -73,6 +75,7 @@ jobs:
             GSTWorldRecoordinationGroupoid.lean
             GSTUniversalAddressBridge.lean
             GSTDimensionFreeHodgeDiagonal.lean
+            GSTLegacyHodgeAbsorption.lean
             GSTGlobalPureHodgeCosmology.lean
             GSTUniversalLefschetzDynamics.lean
             GSTUniversalLefschetzCosmology.lean
@@ -113,6 +116,7 @@ jobs:
             GSTWorldRecoordinationGroupoid \
             GSTUniversalAddressBridge \
             GSTDimensionFreeHodgeDiagonal \
+            GSTLegacyHodgeAbsorption \
             GSTGlobalPureHodgeCosmology \
             GSTUniversalLefschetzDynamics \
             GSTUniversalLefschetzCosmology \
