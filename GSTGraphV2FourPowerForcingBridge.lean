@@ -63,6 +63,19 @@ theorem graph_forcing_iff_creation_master :
   exact ⟨graph_forcing_to_creation_master,
     creation_master_to_graph_forcing⟩
 
+
+/-- **GRAPH FORCING / DIRECT EXISTENCE EQUIVALENCE.**  The literal physical
+Graph-V2 forcing law, the creation master, and the direct arithmetic target
+are now interchangeable interfaces. -/
+theorem graph_forcing_iff_direct_existence :
+    FourPowerGraphForcing ↔ FourPowerDirectExistence := by
+  calc
+    FourPowerGraphForcing ↔ FourPowerCreationMaster :=
+      graph_forcing_iff_creation_master
+    _ ↔ FourPowerDirectExistence :=
+      GSTFourPowerDirectCreationMaster.directExistence_iff_creation_master.symm
+
+
 #check direct_existence_to_graph_forcing
 #check GSTFourPowerDirectHappyBridge.four_power_happy_propagates
 #check graph_forcing_to_creation_master
@@ -70,5 +83,6 @@ theorem graph_forcing_iff_creation_master :
 #print axioms direct_existence_to_graph_forcing
 #print axioms GSTFourPowerDirectHappyBridge.four_power_happy_propagates
 #print axioms graph_forcing_iff_creation_master
+#print axioms graph_forcing_iff_direct_existence
 
 end GSTGraphV2FourPowerForcingBridge
