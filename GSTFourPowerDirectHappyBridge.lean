@@ -2,6 +2,7 @@ import GSTFourPowerDirectExistence
 import GSTFourPowerDirectAdditionCarry
 import GSTCanonicalTailStateIso
 import GSTFourPowerAffineTwoTritClassifier
+import GSTFourPowerDirectCreationMaster
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
@@ -136,6 +137,45 @@ theorem four_power_happy_propagates
         (GSTCanonicalTailStateIso.digit3 (4^(K+1)) q) := by
   exact directExistence_forces_relocated_physical_happy hDirect K p hK hp hHappy
 
+
+/-! ## Exact physical/arithmetic interface -/
+
+/-- **COMMONTWO / HAPPY EXACTNESS.**  On four-powers, a direct common-two
+witness exists exactly when the source sheet contains a physical Happy row at
+a positive ternary coordinate. -/
+theorem commonTwo_iff_physical_happy_row (K : Nat) :
+    CommonTwo K ↔
+      ∃ q : Nat, 1 ≤ q ∧
+        GSTCanonicalTailStateIso.HappyCell
+          (GSTCanonicalTailStateIso.carry4 (4^K) q)
+          (GSTCanonicalTailStateIso.digit3 (4^K) q) := by
+  constructor
+  · exact commonTwo_to_physical_happy_row K
+  · rintro ⟨q, hq, hHappy⟩
+    have hNav : GSTCanonicalTailStateIso.Navigation (4^K) :=
+      ⟨q, hHappy⟩
+    have hCreate :=
+      GSTFourPowerOntologicalAdapter.navigation_to_creation_certificate_fourPower
+        K hNav
+    exact
+      GSTFourPowerDirectCreationMaster.creation_certificate_to_commonTwo
+        K hCreate
+
+/-- The universal direct-existence statement is therefore equivalent to
+positive-row physical Happy forcing throughout its production range. -/
+theorem directExistence_iff_physical_happy_forcing :
+    FourPowerDirectExistence ↔
+      ∀ K : Nat, 5 ≤ K → K ≠ 7 →
+        ∃ q : Nat, 1 ≤ q ∧
+          GSTCanonicalTailStateIso.HappyCell
+            (GSTCanonicalTailStateIso.carry4 (4^K) q)
+            (GSTCanonicalTailStateIso.digit3 (4^K) q) := by
+  constructor
+  · exact directExistence_to_physical_happy_forcing
+  · intro h K hK5 hK7
+    exact (commonTwo_iff_physical_happy_row K).2 (h K hK5 hK7)
+
+
 #check commonTwo_to_physical_happy_row
 #check affine_zero_two_to_physical_happy
 #check affine_two_one_to_physical_happy
@@ -144,6 +184,8 @@ theorem four_power_happy_propagates
 #check directExistence_to_physical_happy_forcing
 #check directExistence_forces_relocated_physical_happy
 #check four_power_happy_propagates
+#check commonTwo_iff_physical_happy_row
+#check directExistence_iff_physical_happy_forcing
 #print axioms commonTwo_to_physical_happy_row
 #print axioms affine_zero_two_to_physical_happy
 #print axioms affine_two_one_to_physical_happy
@@ -152,5 +194,7 @@ theorem four_power_happy_propagates
 #print axioms directExistence_to_physical_happy_forcing
 #print axioms directExistence_forces_relocated_physical_happy
 #print axioms four_power_happy_propagates
+#print axioms commonTwo_iff_physical_happy_row
+#print axioms directExistence_iff_physical_happy_forcing
 
 end GSTFourPowerDirectHappyBridge
