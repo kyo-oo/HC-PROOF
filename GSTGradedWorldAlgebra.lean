@@ -46,11 +46,10 @@ theorem worldSectorProj_orthogonal
     worldSectorProj k (worldSectorProj j g) = fun _ => 0 := by
   funext c
   by_cases hj : worldDegree c = j
-  · have hk : worldDegree c ≠ k := by
+  · have hjk : j ≠ k := by
       intro h
-      apply hkj
-      omega
-    simp [worldSectorProj, hj, hk]
+      exact hkj h.symm
+    simp [worldSectorProj, hj, hjk]
   · simp [worldSectorProj, hj]
 
 /-- Every live cell has degree strictly below A+B. -/
@@ -72,14 +71,16 @@ theorem worldSectorProj_sum
   rw [Finset.sum_eq_single (worldDegree c)]
   · simp [worldSectorProj]
   · intro b hb hne
-    simp [worldSectorProj, hne.symm]
-  · exact hmem
+    have hne' : worldDegree c ≠ b := hne.symm
+    simp [worldSectorProj, hne']
+  · intro hnot
+    exact (hnot hmem).elim
 
 /-- Projection distributes over addition. -/
 theorem worldSectorProj_add
     {A B : Nat} (k : Nat) (f g : WorldCoef A B) :
-    worldSectorProj k (f + g) =
-      worldSectorProj k f + worldSectorProj k g := by
+    worldSectorProj k (fun c => f c + g c) =
+      (fun c => worldSectorProj k f c + worldSectorProj k g c) := by
   funext c
   by_cases h : worldDegree c = k <;>
     simp [worldSectorProj, h]
@@ -91,18 +92,12 @@ theorem digitShiftN_respects_degree
       worldSectorProj (k+n) (digitShiftN n g) := by
   funext c
   by_cases hn : n ≤ c.2.1
-  · by_cases hdeg : worldDegree c = k+n
-    · have hsrc : c.1.1 + (c.2.1 - n) = k := by
-        unfold worldDegree at hdeg
-        omega
-      simp [digitShiftN, worldSectorProj, worldDegree, hn, hdeg, hsrc]
-    · have hsrc : c.1.1 + (c.2.1 - n) ≠ k := by
-        intro hs
-        apply hdeg
-        unfold worldDegree
-        omega
-      simp [digitShiftN, worldSectorProj, worldDegree, hn, hdeg, hsrc]
-  · simp [digitShiftN, worldSectorProj, hn]
+  · have hiff :
+        (c.1.1 + (c.2.1 - n) = k) ↔
+          (c.1.1 + c.2.1 = k+n) := by
+      omega
+    simp [digitShiftN, worldSectorProj, worldDegree, hn, hiff]
+  · simp [digitShiftN, worldSectorProj, worldDegree, hn]
 
 /-- Arbitrary carry transport raises total degree by exactly n. -/
 theorem carryShiftN_respects_degree
@@ -111,18 +106,12 @@ theorem carryShiftN_respects_degree
       worldSectorProj (k+n) (carryShiftN n g) := by
   funext c
   by_cases hn : n ≤ c.1.1
-  · by_cases hdeg : worldDegree c = k+n
-    · have hsrc : (c.1.1 - n) + c.2.1 = k := by
-        unfold worldDegree at hdeg
-        omega
-      simp [carryShiftN, worldSectorProj, worldDegree, hn, hdeg, hsrc]
-    · have hsrc : (c.1.1 - n) + c.2.1 ≠ k := by
-        intro hs
-        apply hdeg
-        unfold worldDegree
-        omega
-      simp [carryShiftN, worldSectorProj, worldDegree, hn, hdeg, hsrc]
-  · simp [carryShiftN, worldSectorProj, hn]
+  · have hiff :
+        ((c.1.1 - n) + c.2.1 = k) ↔
+          (c.1.1 + c.2.1 = k+n) := by
+      omega
+    simp [carryShiftN, worldSectorProj, worldDegree, hn, hiff]
+  · simp [carryShiftN, worldSectorProj, worldDegree, hn]
 
 /-- Native degree correspondence on arbitrary worlds. -/
 def worldDegreeOp {A B : Nat}
@@ -138,47 +127,47 @@ def worldPolyOp {A B : Nat}
 noncomputable def worldKunnethPoly
     (bound k : Nat) : Polynomial Int :=
   ((List.range bound).filter (fun j => j ≠ k)).foldr
-    (fun j (p : Polynomial Int) =>
+    (fun (j : Nat) (p : Polynomial Int) =>
       (Polynomial.X - Polynomial.C (j : Int)) * p)
     (1 : Polynomial Int)
 
 private theorem eval_worldKunneth_foldr
     (js : List Nat) (x : Int) :
     ((js.foldr
-      (fun j (p : Polynomial Int) =>
+      (fun (j : Nat) (p : Polynomial Int) =>
         (Polynomial.X - Polynomial.C (j : Int)) * p)
       (1 : Polynomial Int)).eval x)
       =
-    js.foldr (fun j (v : Int) => (x - (j : Int)) * v) 1 := by
+    js.foldr (fun (j : Nat) (v : Int) => (x - (j : Int)) * v) 1 := by
   induction js with
   | nil => simp
   | cons j js ih =>
-      rw [Polynomial.eval_mul, ih,
-        Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C]
+      simp only [List.foldr]
+      rw [Polynomial.eval_mul, Polynomial.eval_sub,
+        Polynomial.eval_X, Polynomial.eval_C, ih]
 
 private theorem worldKunneth_foldr_zero
     (js : List Nat) (x : Nat) (hx : x ∈ js) :
-    js.foldr (fun j (v : Int) => ((x : Int) - (j : Int)) * v) 1 = 0 := by
+    js.foldr (fun (j : Nat) (v : Int) => ((x : Int) - (j : Int)) * v) 1 = 0 := by
   induction js with
   | nil => exact absurd hx (by simp)
   | cons j js ih =>
       rcases List.mem_cons.mp hx with h | h
       · subst j
         simp
-      · simp only [List.foldr]
-        rw [ih h, mul_zero]
+      · rw [ih h, mul_zero]
 
 private theorem worldKunneth_foldr_ne_zero
     (js : List Nat) (k : Nat)
     (hk : ∀ j ∈ js, j ≠ k) :
-    js.foldr (fun j (v : Int) => ((k : Int) - (j : Int)) * v) 1 ≠ 0 := by
+    js.foldr (fun (j : Nat) (v : Int) => ((k : Int) - (j : Int)) * v) 1 ≠ 0 := by
   induction js with
   | nil => simp
   | cons j js ih =>
-      simp only [List.foldr]
       have hjk : j ≠ k := hk j (by simp)
       exact mul_ne_zero (by omega)
-        (ih (fun j' hj' => hk j' (by simp [hj'])))
+        (ih (fun j' hj' => hk j' (by
+          exact List.mem_cons_of_mem j hj')))
 
 /-- The universal Kunneth polynomial vanishes on every other degree below
 the chosen finite bound. -/
