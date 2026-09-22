@@ -17,6 +17,8 @@ on:
       - 'GSTWorldCrownBridge.lean'
       - 'GST2DMixedEmergenceUpgrade.lean'
       - 'GSTGraphV2ScaleEquivariance.lean'
+      - 'GSTCoherentCosmology.lean'
+      - 'GSTInfiniteWorldClassification.lean'
       - 'CardinalWorldsV2.lean'
       - 'waves/CardinalWorldsPostulateLawV2.lean'
       - 'waves/GSTWaveCohomologyV2.lean'
@@ -75,6 +77,7 @@ jobs:
             GSTWorldCrownBridge.lean
             GST2DMixedEmergenceUpgrade.lean
             GSTGraphV2ScaleEquivariance.lean
+            GSTInfiniteWorldClassification.lean
             CardinalWorldsV2.lean
             waves/CardinalWorldsPostulateLawV2.lean
             waves/GSTWaveCohomologyV2.lean
@@ -109,6 +112,7 @@ jobs:
             CardinalWorldsPrefixClassifier \
             GSTWorldCrownBridge \
             GSTGraphV2ScaleEquivariance \
+            GSTInfiniteWorldClassification \
             CardinalWorldsV2 \
             waves.CardinalWorldsPostulateLawV2 \
             waves.GSTWaveCohomologyV2 \
