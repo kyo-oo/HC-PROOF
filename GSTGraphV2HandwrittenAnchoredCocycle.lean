@@ -170,7 +170,7 @@ theorem graphUVerticalFlux_horizontal_cocycle_exact
     (E start p K : Nat) :
     graphUVerticalFlux E start 0 p K = 0 := by
   rw [graphUVerticalFlux_closed]
-  simp [graphUPotential]
+  simp [graphUPotential, carryWord]
 
 /-- Zero vertical height is likewise the neutral bicocycle element. -/
 @[simp] theorem graphUVerticalFlux_zero_height
