@@ -207,6 +207,42 @@ def FourPowerHappyGeThreeFromMonolith : Prop :=
         (GSTCanonicalTailStateIso.carry4 (4^K) p)
         (GSTCanonicalTailStateIso.digit3 (4^K) p)
 
+
+/-! ## Exact provider equivalence -/
+
+/-- **PREFIX-HIT EXACTNESS.**  A row-three-or-higher common-two witness is
+equivalent to one exact killing-trit hit in the exponent-prefix geometry.
+Thus the provider language and the arithmetic witness language are identical,
+not merely connected in one direction. -/
+theorem commonTwoGeThree_iff_prefixHitGeThree (K : Nat) :
+    CommonTwoGeThree K ↔ PrefixHitGeThree K := by
+  constructor
+  · rintro ⟨q, hq, hs, ht⟩
+    let p := q - 1
+    have hp : 2 ≤ p := by
+      dsimp [p]
+      omega
+    have hpq : p + 1 = q := by
+      dsimp [p]
+      omega
+    have hpair :
+        GSTFourPowerDirectResidue.digit3 (4^K) (p+1) = 2 ∧
+        GSTFourPowerDirectResidue.digit3 (4^(K+1)) (p+1) = 2 := by
+      rw [hpq]
+      exact ⟨hs, ht⟩
+    have hcrit :=
+      (GSTFourPowerExponentTritObstruction.row_common_two_iff_prefix_killing_trit
+        K p).1 hpair
+    exact ⟨p, hp, hcrit.1, hcrit.2⟩
+  · exact commonTwoGeThree_of_prefixHitGeThree K
+
+/-- The no-provider condition is equivalently the universal failure of every
+eligible prefix killing hit. -/
+theorem noCommonTwoGeThree_iff_noPrefixHitGeThree (K : Nat) :
+    (¬ CommonTwoGeThree K) ↔ ¬ PrefixHitGeThree K :=
+  not_congr (commonTwoGeThree_iff_prefixHitGeThree K)
+
+
 #check CommonTwoGeThree
 #check PrefixHitGeThree
 #check commonTwoAt_ge_three_to_physical_happy
@@ -222,6 +258,8 @@ def FourPowerHappyGeThreeFromMonolith : Prop :=
 #check four_power_happy_ge_three_from_commonTwoGeThree
 #check four_power_happy_ge_three_from_prefixHitGeThree
 #check FourPowerHappyGeThreeFromMonolith
+#check commonTwoGeThree_iff_prefixHitGeThree
+#check noCommonTwoGeThree_iff_noPrefixHitGeThree
 #print axioms commonTwoAt_ge_three_to_physical_happy
 #print axioms commonTwoGeThree_to_physical_happy_ge_three
 #print axioms row_three_commonTwoGeThree_of_mod27_classes
@@ -234,5 +272,6 @@ def FourPowerHappyGeThreeFromMonolith : Prop :=
 #print axioms happy_ge_three_of_prefixHitGeThree
 #print axioms four_power_happy_ge_three_from_commonTwoGeThree
 #print axioms four_power_happy_ge_three_from_prefixHitGeThree
+#print axioms commonTwoGeThree_iff_prefixHitGeThree
 
 end GSTFourPowerHappyProvider
