@@ -130,6 +130,62 @@ theorem weighted_mixed_rectangle_emergence
       rw [pow_succ]
       ring
 
+/-- **ATOMIC SOURCE EXTRACTION.**
+After subtracting the horizontal information boundary and the vertical carry
+boundary from an arbitrarily weighted mixed rectangle, the remainder is
+exactly 56 times the weighted SURVIVE incidence. -/
+theorem weighted_mixed_rectangle_source_extraction
+    (w : Nat → Int)
+    (C d : Nat → Nat → Nat) (N K : Nat)
+    (hcell : ∀ t p, t < N → p < K →
+      C t p < 4 ∧ d t p < 3 ∧
+      outDigit (C t p) (d t p) = d (t+1) p ∧
+      nextCarry (C t p) (d t p) = C t (p+1)) :
+    Finset.sum (Finset.range K) (fun p =>
+      (3 : Int)^p * Finset.sum (Finset.range N) (fun t =>
+        w t * mixedDensity (C t p) (d t p)))
+      -
+      Finset.sum (Finset.range K) (fun p =>
+        (3 : Int)^p * Finset.sum (Finset.range N) (fun t =>
+          w t * (infoPotential (d (t+1) p) - infoPotential (d t p))))
+      -
+      7 * (Finset.sum (Finset.range N) (fun t =>
+          w t * carryPotential (C t 0)) -
+        (3 : Int)^K * Finset.sum (Finset.range N) (fun t =>
+          w t * carryPotential (C t K)))
+      =
+      56 * Finset.sum (Finset.range K) (fun p =>
+        (3 : Int)^p * Finset.sum (Finset.range N) (fun t =>
+          w t * surviveI (C t p) (d t p))) := by
+  have h := weighted_mixed_rectangle_emergence w C d N K hcell
+  linarith
+
+/-- The boundary-subtracted mixed rectangle is universally divisible by 56. -/
+theorem weighted_mixed_rectangle_source_divisible
+    (w : Nat → Int)
+    (C d : Nat → Nat → Nat) (N K : Nat)
+    (hcell : ∀ t p, t < N → p < K →
+      C t p < 4 ∧ d t p < 3 ∧
+      outDigit (C t p) (d t p) = d (t+1) p ∧
+      nextCarry (C t p) (d t p) = C t (p+1)) :
+    (56 : Int) ∣
+      Finset.sum (Finset.range K) (fun p =>
+        (3 : Int)^p * Finset.sum (Finset.range N) (fun t =>
+          w t * mixedDensity (C t p) (d t p)))
+      -
+      Finset.sum (Finset.range K) (fun p =>
+        (3 : Int)^p * Finset.sum (Finset.range N) (fun t =>
+          w t * (infoPotential (d (t+1) p) - infoPotential (d t p))))
+      -
+      7 * (Finset.sum (Finset.range N) (fun t =>
+          w t * carryPotential (C t 0)) -
+        (3 : Int)^K * Finset.sum (Finset.range N) (fun t =>
+          w t * carryPotential (C t K))) := by
+  refine ⟨Finset.sum (Finset.range K) (fun p =>
+    (3 : Int)^p * Finset.sum (Finset.range N) (fun t =>
+      w t * surviveI (C t p) (d t p))), ?_⟩
+  exact weighted_mixed_rectangle_source_extraction w C d N K hcell
+
 /-- Exact geometric horizontal summation.  This is the algebraic kernel used
 when the arbitrary weight in `weighted_mixed_rectangle_emergence` is chosen to
 be a power of four. -/
@@ -160,9 +216,13 @@ theorem infoPotential_nonpositive
 #check gst_coupled_potential_as_mixed_boundary
 #check weighted_mixed_row_emergence
 #check weighted_mixed_rectangle_emergence
+#check weighted_mixed_rectangle_source_extraction
+#check weighted_mixed_rectangle_source_divisible
 #check weighted_info_boundary_exact
 #print axioms gst_coupled_potential_as_mixed_boundary
 #print axioms weighted_mixed_rectangle_emergence
+#print axioms weighted_mixed_rectangle_source_extraction
+#print axioms weighted_mixed_rectangle_source_divisible
 #print axioms weighted_info_boundary_exact
 
 end GSTU2DAtomicBridge
