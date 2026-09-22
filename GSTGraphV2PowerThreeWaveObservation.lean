@@ -122,7 +122,53 @@ theorem power_three_wave_observation
     norm_num
     nlinarith
 
+
+/-! ## Quantized three-wave pressure -/
+
+/-- The positive U derivative forced by a disappearing width-three Happy wave
+is integer-quantized: it is at least one unit, not merely abstractly positive. -/
+theorem power_three_wave_u_derivative_ge_one
+    (K q : Nat)
+    (hChild : HappyCell
+      (graph (4^K) 0 (3+q)).seven.carry
+      (graph (4^K) 0 (3+q)).seven.digit)
+    (hRightBad : ∀ j, ¬ HappyCell
+      (graph (4^K) 3 (3+j)).seven.carry
+      (graph (4^K) 3 (3+j)).seven.digit) :
+    (1 : Int) ≤
+      3 * potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 ((3+q)+1)).core -
+        potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 (3+q)).core := by
+  have hpos :=
+    (power_three_wave_observation K q hChild hRightBad).2.2.2
+  omega
+
+/-- The observation packet therefore has strict sign separation on both
+phase and U channels simultaneously. -/
+theorem power_three_wave_sign_packet
+    (K q : Nat)
+    (hChild : HappyCell
+      (graph (4^K) 0 (3+q)).seven.carry
+      (graph (4^K) 0 (3+q)).seven.digit)
+    (hRightBad : ∀ j, ¬ HappyCell
+      (graph (4^K) 3 (3+j)).seven.carry
+      (graph (4^K) 3 (3+j)).seven.digit) :
+    0 < graphPhaseWindow (4^K) 0 3 (q+1) ∧
+    graphPhaseWindow (4^K) 3 3 (q+1) ≤ 0 ∧
+    (1 : Int) ≤
+      3 * potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 ((3+q)+1)).core -
+        potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 (3+q)).core := by
+  have h := power_three_wave_observation K q hChild hRightBad
+  exact ⟨h.1, h.2.1,
+    power_three_wave_u_derivative_ge_one K q hChild hRightBad⟩
+
+
 #check power_three_wave_observation
 #print axioms power_three_wave_observation
+#print axioms power_three_wave_u_derivative_ge_one
+#print axioms power_three_wave_sign_packet
 
 end GSTGraphV2PowerThreeWaveObservation
