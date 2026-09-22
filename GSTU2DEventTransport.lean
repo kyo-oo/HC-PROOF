@@ -63,6 +63,43 @@ theorem happyCell_positive_and_preserves_big2
     norm_num [eventDensity, eventCarryPotential, twoI, outDigit, nextCarry,
       surviveI, midDigit, finalMicroDigit, microOutput, highBit, lowBit]
 
+/-- **EVENT-DENSITY SIGN CLASSIFICATION.**
+On physical cells, positive event density is exactly the Happy locus. -/
+theorem happy_iff_eventDensity_positive
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    HappyCell C d ↔ 0 < eventDensity C d := by
+  have hCc : C = 0 ∨ C = 1 ∨ C = 2 ∨ C = 3 := by omega
+  have hdc : d = 0 ∨ d = 1 ∨ d = 2 := by omega
+  rcases hCc with rfl | rfl | rfl | rfl <;>
+    rcases hdc with rfl | rfl | rfl <;>
+    norm_num [HappyCell, eventDensity, eventCarryPotential, twoI,
+      outDigit, nextCarry, surviveI, midDigit, finalMicroDigit,
+      microOutput, highBit, lowBit]
+
+/-- The complete positive spectrum consists of the two values 2 and 3. -/
+theorem eventDensity_positive_spectrum
+    (C d : Nat) (hC : C < 4) (hd : d < 3)
+    (hpos : 0 < eventDensity C d) :
+    eventDensity C d = 2 ∨ eventDensity C d = 3 := by
+  have hHappy := (happy_iff_eventDensity_positive C d hC hd).2 hpos
+  rcases hHappy with ⟨rfl,h0 | h3⟩
+  · subst C
+    right
+    decide
+  · subst C
+    left
+    decide
+
+/-- Every physical event density is either nonpositive or one of the two
+quantized Happy values. -/
+theorem eventDensity_spectral_dichotomy
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    eventDensity C d ≤ 0 ∨
+      eventDensity C d = 2 ∨ eventDensity C d = 3 := by
+  by_cases hpos : 0 < eventDensity C d
+  · exact Or.inr (eventDensity_positive_spectrum C d hC hd hpos)
+  · exact Or.inl (by omega)
+
 /-- Reverse-base-four accumulation of one horizontal event row.  Earlier
 horizontal cells receive larger powers of four, matching the physical carry
 word orientation of Equation III. -/
@@ -134,7 +171,12 @@ theorem reverseEventCode_positive_one
 #check eventDensity_physical_table
 #check eventDensity_ge_neg_eight
 #check happyCell_positive_and_preserves_big2
+#check happy_iff_eventDensity_positive
+#check eventDensity_positive_spectrum
+#check eventDensity_spectral_dichotomy
 #check reverseEventCode_ge_eight_of_leading_happy
+#print axioms happy_iff_eventDensity_positive
+#print axioms eventDensity_positive_spectrum
 #print axioms reverseEventCode_ge_eight_of_leading_happy
 
 end GSTU2DEventTransport
