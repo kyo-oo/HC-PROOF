@@ -147,6 +147,7 @@ roots = [
   "OriginTransducerScratch",
   "CardinalWorlds",
   "CardinalWorldsV2",
+  "CardinalWorldsPrefixClassifier",
   "MonolithBoundary",
   "HodgeDeRhamBridge",
   "HodgeDeRhamBridgeV2",
