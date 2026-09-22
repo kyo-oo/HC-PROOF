@@ -88,10 +88,18 @@ def SixAdicUnitCertificate.mul
   correction :=
     D.correction + D.inverse * A.correction * d
   inverse_exact := by
-    rw [mul_assoc, ← mul_assoc A.inverse a d, A.inverse_exact]
-    rw [mul_add]
-    rw [← mul_assoc D.inverse 1 d, one_mul, D.inverse_exact]
-    ring
+    calc
+      (D.inverse * A.inverse) * (a*d) =
+          D.inverse * (A.inverse*a) * d := by ring
+      _ = D.inverse * (1 + (6 : Int)^k * A.correction) * d := by
+          rw [A.inverse_exact]
+      _ = (D.inverse*d) +
+          (6 : Int)^k * (D.inverse * A.correction * d) := by ring
+      _ = (1 + (6 : Int)^k * D.correction) +
+          (6 : Int)^k * (D.inverse * A.correction * d) := by
+          rw [D.inverse_exact]
+      _ = 1 + (6 : Int)^k *
+          (D.correction + D.inverse * A.correction * d) := by ring
 
 /-- A certified multiplier remains an exact six-adic isometry after an
 arbitrary affine translation. -/
