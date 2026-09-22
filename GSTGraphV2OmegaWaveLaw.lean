@@ -3045,8 +3045,18 @@ theorem omega_tower_level_not_two_iff
     (s core k : Nat) (hk : 3 ≤ k) (hks : k ≤ s+1) :
     digit3 (4^(3^s * core)) (s+k) ≠ 2
       ↔ (omegaCutWord s 1 * core) % 3^k < 2 * 3^(k-1) := by
-  rw [not_congr (omega_tower_level_digit_two_iff s core k hk hks)]
-  omega
+  constructor
+  · intro hNotTwo
+    have hNotGate :
+        ¬ (2 * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k) := by
+      intro hGate
+      exact hNotTwo
+        ((omega_tower_level_digit_two_iff s core k hk hks).2 hGate)
+    omega
+  · intro hBelow hTwo
+    have hGate :=
+      (omega_tower_level_digit_two_iff s core k hk hks).1 hTwo
+    omega
 
 
 #check omega_row_level_digit_two
