@@ -75,7 +75,8 @@ theorem power_origin_rebase_observables_exact
         (graph (4^(K+L)) t p).survive := by
   have h1 := power_origin_observables_exact K (L+t) p
   have h2 := power_origin_observables_exact (K+L) t p
-  simpa [Nat.add_assoc] using
+  rw [Nat.add_assoc] at h2
+  exact
     ⟨h1.1.trans h2.1.symm,
       h1.2.1.trans h2.2.1.symm,
       h1.2.2.1.trans h2.2.2.1.symm,
