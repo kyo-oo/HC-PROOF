@@ -102,4 +102,40 @@ theorem coupled_happy_transports_information
   · simpa [coupledOrbit, coupledStep] using hnext
   · simpa [coupledOrbit, coupledStep] using hnext0
 
+
+/-! ## Exact latent-sector decoding -/
+
+/-- Inside a Happy cell, latent next carry two occurs exactly in the NULL
+carry sector. -/
+theorem happy_next_carry_two_iff_carry_zero
+    (carry d : Nat) (h : Happy carry d) :
+    cellNextCarry carry d = 2 ↔ carry = 0 := by
+  rcases h with ⟨rfl, h0 | h3⟩
+  · subst carry
+    norm_num [cellNextCarry, cellMass]
+  · subst carry
+    norm_num [cellNextCarry, cellMass]
+
+/-- Inside a Happy cell, latent next carry three occurs exactly in the GST+
+carry sector. -/
+theorem happy_next_carry_three_iff_carry_three
+    (carry d : Nat) (h : Happy carry d) :
+    cellNextCarry carry d = 3 ↔ carry = 3 := by
+  rcases h with ⟨rfl, h0 | h3⟩
+  · subst carry
+    norm_num [cellNextCarry, cellMass]
+  · subst carry
+    norm_num [cellNextCarry, cellMass]
+
+/-- The latent carry therefore remembers the original Happy sector exactly. -/
+theorem happy_latent_sector_decoder
+    (carry d : Nat) (h : Happy carry d) :
+    (cellNextCarry carry d = 2 ↔ carry = 0) ∧
+    (cellNextCarry carry d = 3 ↔ carry = 3) :=
+  ⟨happy_next_carry_two_iff_carry_zero carry d h,
+    happy_next_carry_three_iff_carry_three carry d h⟩
+
+#check happy_latent_sector_decoder
+#print axioms happy_latent_sector_decoder
+
 end GSTV2
