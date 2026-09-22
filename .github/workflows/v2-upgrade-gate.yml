@@ -51,33 +51,18 @@ jobs:
         run: |
           set -uo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          files=(
-            CardinalWorldsV2.lean
-            waves/CardinalWorldsPostulateLawV2.lean
-            waves/GSTWaveCohomologyV2.lean
-            waves/GSTNCohomologyV2.lean
-            waves/GSTVortexSingularityV2.lean
-            HodgeDeRhamBridgeV2.lean
-            GSTAnalyticAbsorptionV2.lean
-            GSTLefschetzCrownV2.lean
-            GSTHodgeAssaultV2.lean
-            GSTClayOfficialV2.lean
-            GSTTransferBridgeV2.lean
-          )
-          failed=0
-          : > v2-upgrade.log
-          for f in "${files[@]}"; do
-            echo "=== COMPILE $f ===" | tee -a v2-upgrade.log
-            lake env lean "$f" 2>&1 | tee -a v2-upgrade.log
-            rc=${PIPESTATUS[0]}
-            if [ "$rc" -ne 0 ]; then
-              echo "V2_FILE_FAILED=$f" | tee -a v2-upgrade.log
-              failed=1
-            else
-              echo "V2_FILE_GREEN=$f" | tee -a v2-upgrade.log
-            fi
-          done
-          exit "$failed"
+          lake build \
+            CardinalWorldsV2 \
+            waves.CardinalWorldsPostulateLawV2 \
+            waves.GSTWaveCohomologyV2 \
+            waves.GSTNCohomologyV2 \
+            waves.GSTVortexSingularityV2 \
+            HodgeDeRhamBridgeV2 \
+            GSTAnalyticAbsorptionV2 \
+            GSTLefschetzCrownV2 \
+            GSTHodgeAssaultV2 \
+            GSTClayOfficialV2 \
+            GSTTransferBridgeV2 2>&1 | tee v2-upgrade.log
 
       - name: Reject proof escapes in strengthened layers
         if: always()
