@@ -28,6 +28,7 @@ import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
 import GSTUniversalAddressBridge
+import GSTDimensionFreeHodgeDiagonal
 import GSTUniversalLefschetzDynamics
 import GSTWorldPoincareDuality
 import GSTWorldCrownBridge
@@ -437,3 +438,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTUniversalAddressBridge.worldAddress_codeSectorProj
 #check GSTUniversalAddressBridge.worldAddress_worldBasis
 #check GSTUniversalAddressBridge.universal_address_bridge_crown
+
+
+/-! ## Dimension-free Hodge diagonal -/
+
+#check GSTDimensionFreeHodgeDiagonal.diagonalAddress_val
+#check GSTDimensionFreeHodgeDiagonal.world_hodge_rank_one
+#check GSTDimensionFreeHodgeDiagonal.world_hodge_zero_outside
+#check GSTDimensionFreeHodgeDiagonal.worldAddress_diagonalClass
+#check GSTDimensionFreeHodgeDiagonal.dimension_free_hodge_crown
