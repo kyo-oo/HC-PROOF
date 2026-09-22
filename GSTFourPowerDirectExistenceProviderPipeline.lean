@@ -65,6 +65,59 @@ def FourPowerDirectNoCounterexampleClosure : Prop :=
 def FourPowerDirectNoBadAffineChannelOne : Prop :=
   ∀ K : Nat, 5 ≤ K → K ≠ 7 → ¬ BadChannel 1 (affineOrbit K)
 
+/-- The complete four-power production universe.  The historically
+separate gate languages are stored together with the direct theorem, the
+creation master, and every per-exponent creation certificate. -/
+structure FourPowerProductionUniverse : Prop where
+  directExistence : FourPowerDirectExistence
+  noBadAffineChannelOne : FourPowerDirectNoBadAffineChannelOne
+  noCounterexampleClosure : FourPowerDirectNoCounterexampleClosure
+  creationMaster : GSTFourPowerOntologicalAdapter.FourPowerCreationMaster
+  creationCertificate :
+    ∀ K : Nat, 5 ≤ K → K ≠ 7 →
+      GSTFourPowerOntologicalAdapter.CreationCertificate (4^K)
+
+/-- Direct existence already contains the entire production universe: the
+affine bad-channel language and the no-counterexample language are equivalent
+to it, while the creation layer is functorially generated from it. -/
+theorem fourPowerProductionUniverse_of_directExistence
+    (hDirect : FourPowerDirectExistence) :
+    FourPowerProductionUniverse := by
+  have hNoBad : FourPowerDirectNoBadAffineChannelOne := by
+    simpa [FourPowerDirectNoBadAffineChannelOne] using
+      (chat2_fourPowerDirectExistence_iff_no_bad_affine_channel_one.mp hDirect)
+  have hClosed : FourPowerDirectNoCounterexampleClosure := by
+    exact (chat2_counterexample_closure_iff_no_bad_affine_channel_one).mpr hNoBad
+  have hMaster : GSTFourPowerOntologicalAdapter.FourPowerCreationMaster :=
+    GSTFourPowerDirectCreationMaster.directExistence_to_creation_master hDirect
+  exact ⟨hDirect, hNoBad, hClosed, hMaster,
+    fun K hK5 hK7 => hMaster K hK5 hK7⟩
+
+/-- The complete production universe is equivalent to the original direct
+existence target, so the stronger object adds structure without changing the
+mathematical burden. -/
+theorem fourPowerProductionUniverse_iff_directExistence :
+    FourPowerProductionUniverse ↔ FourPowerDirectExistence := by
+  constructor
+  · intro U
+    exact U.directExistence
+  · exact fourPowerProductionUniverse_of_directExistence
+
+/-- The single bad affine channel is therefore an exact presentation of the
+entire production universe. -/
+theorem fourPowerProductionUniverse_iff_noBadAffineChannelOne :
+    FourPowerProductionUniverse ↔ FourPowerDirectNoBadAffineChannelOne := by
+  rw [fourPowerProductionUniverse_iff_directExistence]
+  simpa [FourPowerDirectNoBadAffineChannelOne] using
+    chat2_fourPowerDirectExistence_iff_no_bad_affine_channel_one
+
+/-- The no-counterexample closure is another exact presentation of the same
+production universe. -/
+theorem fourPowerProductionUniverse_iff_noCounterexampleClosure :
+    FourPowerProductionUniverse ↔ FourPowerDirectNoCounterexampleClosure := by
+  rw [fourPowerProductionUniverse_iff_noBadAffineChannelOne]
+  exact chat2_counterexample_closure_iff_no_bad_affine_channel_one.symm
+
 /-- Monolith-mined provider gate: once row-three-or-higher direct common-two
 witnesses are mined, the physical Happy-row provider follows immediately. -/
 theorem fourPowerHappyGeThreeProvider_from_commonTwoGeThree
@@ -197,6 +250,11 @@ theorem fourPowerCreationCertificate_noAxiom_from_no_bad_affine_channel_one
 #check FourPowerCommonTwoGeThreeProvider
 #check FourPowerDirectNoCounterexampleClosure
 #check FourPowerDirectNoBadAffineChannelOne
+#check FourPowerProductionUniverse
+#check fourPowerProductionUniverse_of_directExistence
+#check fourPowerProductionUniverse_iff_directExistence
+#check fourPowerProductionUniverse_iff_noBadAffineChannelOne
+#check fourPowerProductionUniverse_iff_noCounterexampleClosure
 #check fourPowerHappyGeThreeProvider_from_commonTwoGeThree
 #check fourPowerDirectExistence_noAxiom_from_provider
 #check fourPowerDirectExistence_noAxiom_from_commonTwoGeThree
@@ -212,6 +270,10 @@ theorem fourPowerCreationCertificate_noAxiom_from_no_bad_affine_channel_one
 #check fourPowerCreationCertificate_noAxiom_from_commonTwoGeThree
 #check fourPowerCreationCertificate_noAxiom_from_chat2_closure
 #check fourPowerCreationCertificate_noAxiom_from_no_bad_affine_channel_one
+#print axioms fourPowerProductionUniverse_of_directExistence
+#print axioms fourPowerProductionUniverse_iff_directExistence
+#print axioms fourPowerProductionUniverse_iff_noBadAffineChannelOne
+#print axioms fourPowerProductionUniverse_iff_noCounterexampleClosure
 #print axioms fourPowerHappyGeThreeProvider_from_commonTwoGeThree
 #print axioms fourPowerDirectExistence_noAxiom_from_provider
 #print axioms fourPowerDirectExistence_noAxiom_from_commonTwoGeThree
