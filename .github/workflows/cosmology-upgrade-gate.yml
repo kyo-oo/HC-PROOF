@@ -6,6 +6,9 @@ on:
       - main
       - gst-cosmology-strengthening
     paths:
+      - 'HCProof.lean'
+      - 'lakefile.toml'
+      - 'GSTCosmologyStrengtheningAudit.lean'
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
@@ -183,6 +186,13 @@ jobs:
           print(f'HC_STRENGTHENING_PUBLIC_AXIOM_AUDIT=PASS ({len(receipts)} nonempty receipts)')
           PYCODE
 
+      - name: Compile full HCProof integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build HCProof 2>&1 | tee cosmology-hcproof-integration.log
+          echo HC_STRENGTHENING_HCPROOF_INTEGRATION=PASS
+
       - name: Upload upgrade diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -191,6 +201,7 @@ jobs:
           path: |
             cosmology-upgrade.log
             cosmology-strengthening-axioms.log
+            cosmology-hcproof-integration.log
           if-no-files-found: ignore
 
       - uses: actions/cache/save@v4

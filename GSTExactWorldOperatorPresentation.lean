@@ -39,9 +39,10 @@ private theorem monomial_factor (e : Fin 2 →₀ ℕ) (z : ℤ) :
   symm
   rw [C_mul_X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul]
   simp only [mul_one]
-  congr 1
-  ext i
-  fin_cases i <;> simp
+  have he : Finsupp.single 0 (e 0) + Finsupp.single 1 (e 1) = e := by
+    ext i
+    fin_cases i <;> simp
+  rw [he]
 
 private theorem shifted_origin_at (hA : 0 < A) (hB : 0 < B)
     (m n : ℕ) (c : WorldCell A B) :
@@ -73,8 +74,14 @@ theorem origin_coefficient (hA : 0 < A) (hB : 0 < B)
     have ha : evalEndo A B (C z * Hpoly ^ e 0 * Vpoly ^ e 1)
         (basis (origin A B hA hB)) c =
         z * digitShiftN (e 0) (carryShiftN (e 1) (basis (origin A B hA hB))) c := by
-      simp [evalEndo, evalWorldPoly, Module.End.mul_apply,
-        digitEndo_pow_apply, carryEndo_pow_apply]
+      have hz : evalEndo A B (C z) = (z : Module.End ℤ (WorldCoef A B)) := by
+        have hc : (C z : WorldPoly) = (z : WorldPoly) := by simp
+        rw [hc, map_intCast]
+      have hh : evalEndo A B Hpoly = digitEndo A B := by simp [evalEndo]
+      have hv : evalEndo A B Vpoly = carryEndo A B := by simp [evalEndo]
+      rw [map_mul, map_mul, map_pow, map_pow, hz, hh, hv]
+      simp [Module.End.mul_apply, digitEndo_pow_apply, carryEndo_pow_apply,
+        zsmul_eq_mul]
     rw [ha, shifted_origin_at]
     rw [← monomial_factor]
     simp only [coeff_monomial, exponent_eq_iff]
