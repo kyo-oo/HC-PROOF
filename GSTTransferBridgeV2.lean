@@ -48,6 +48,14 @@ theorem zero_isClHodge (p : Nat) :
   intro i hi
   rfl
 
+/-- The address of the zero wave is the zero address. -/
+theorem addr_zero :
+    addr (fun _ : WaveCell => (0 : ℤ)) = (fun _ => 0) := by
+  funext i
+  rcases i with ⟨i, hi⟩
+  unfold addr
+  interval_cases i <;> rfl
+
 /-- **ALL-WEIGHT HODGE TRANSPORT.**  The address support condition and the
 GST diagonal support condition agree for every natural weight. -/
 theorem transfer_hodge_iff_all_weights (p : Nat) (f : WaveCoef) :
@@ -58,17 +66,15 @@ theorem transfer_hodge_iff_all_weights (p : Nat) (f : WaveCoef) :
     constructor
     · intro hcl
       have hazero := clHodge_zero_of_three_le p hp3 (addr f) hcl
-      have haddr0 : addr f = addr (fun _ : WaveCell => (0:ℤ)) := by
-        rw [hazero]
-        rfl
+      have haddr0 : addr f = addr (fun _ : WaveCell => (0:ℤ)) :=
+        hazero.trans addr_zero.symm
       have hf0 := addr_injective haddr0
       rw [hf0]
       exact zero_isHodgeClass p
     · intro hf
       have hf0 := hodge_class_zero_of_three_le p hp3 f hf
-      rw [hf0]
-      intro i hi
-      rfl
+      rw [hf0, addr_zero]
+      exact zero_isClHodge p
 
 /-- **ALL-WEIGHT ADDRESS CLASSIFICATION.**  Every address-Hodge class is
 exactly a scalar multiple of its degree-4p monomial.  For p >= 3 this is
@@ -148,13 +154,14 @@ theorem transfer_v2_crown :
     (∀ p f, isClHodge p (addr f) ↔ isHodgeClass p f)
     ∧ (∀ p φ, isClHodge p φ ↔
       ∃ z : ℤ, ∀ i : Fin 12, φ i = z * clMono (4*p) i)
-    ∧ (∀ p, p < 3 → ∀ φ, isClHodge p φ →
+    ∧ (∀ p (hp : p < 3) (φ : ClRing), isClHodge p φ →
       ∀ i : Fin 12,
         φ i = φ ⟨4*p, by omega⟩ * clMono (4*p) i) := by
   exact ⟨transfer_hodge_iff_all_weights,
     transferred_hodge_all_weights,
     transferred_coefficient_exact⟩
 
+#check addr_zero
 #check clMono_zero_of_twelve_le
 #check clHodge_zero_of_three_le
 #check transfer_hodge_iff_all_weights
