@@ -193,6 +193,51 @@ theorem six_iso_mul_four_pow_iff_truncated_skew_shadows
     dyadic_shadow_mul_four_pow_iff_truncated k t x y,
     triadic_shadow_mul_four_pow_iff k t x y]
 
+/-- **DYADIC-SATURATION PHASE TRANSITION.**
+Once the x4 chart has supplied at least k dyadic factors, six-adic resolution
+at depth k is governed purely by the surviving triadic shadow. -/
+theorem six_iso_mul_four_pow_iff_triadic_of_saturated
+    (k t : Nat) (hkt : k ≤ 2*t) (x y : Int) :
+    SixAdicIsoAt k ((4 : Int)^t*x) ((4 : Int)^t*y) ↔
+      TriadicShadowAt k x y := by
+  rw [six_iso_mul_four_pow_iff_truncated_skew_shadows]
+  have hsub : k - 2*t = 0 := Nat.sub_eq_zero_of_le hkt
+  rw [hsub]
+  constructor
+  · rintro ⟨h2,h3⟩
+    exact h3
+  · intro h3
+    exact ⟨dyadic_shadow_zero x y,h3⟩
+
+/-- Before saturation, the exact residual dyadic depth is k-2t and the full
+triadic depth k survives unchanged; after saturation, the dyadic condition
+disappears. -/
+theorem six_iso_four_pow_phase_dichotomy
+    (k t : Nat) (x y : Int) :
+    (2*t ≤ k ∧
+      (SixAdicIsoAt k ((4 : Int)^t*x) ((4 : Int)^t*y) ↔
+        DyadicShadowAt (k-2*t) x y ∧ TriadicShadowAt k x y))
+    ∨
+    (k ≤ 2*t ∧
+      (SixAdicIsoAt k ((4 : Int)^t*x) ((4 : Int)^t*y) ↔
+        TriadicShadowAt k x y)) := by
+  by_cases h : 2*t ≤ k
+  · exact Or.inl ⟨h,
+      six_iso_mul_four_pow_iff_truncated_skew_shadows k t x y⟩
+  · have h' : k ≤ 2*t := by omega
+    exact Or.inr ⟨h',
+      six_iso_mul_four_pow_iff_triadic_of_saturated
+        k t h' x y⟩
+
+/-- Iterated x4 scaling depends only on total scale depth. -/
+theorem six_iso_mul_four_pow_add
+    (k t u : Nat) (x y : Int) :
+    SixAdicIsoAt k ((4 : Int)^(t+u)*x) ((4 : Int)^(t+u)*y) ↔
+      DyadicShadowAt (k-2*(t+u)) x y ∧
+        TriadicShadowAt k x y :=
+  six_iso_mul_four_pow_iff_truncated_skew_shadows
+    k (t+u) x y
+
 /-- Divisibility-form boxed law:
     `6^k ∣ 4^t*(x-y)` iff the triadic depth `3^k` divides `x-y` and the
     residual dyadic depth `2^(k-2*t)` divides `x-y`. -/
@@ -224,5 +269,11 @@ theorem six_pow_dvd_four_pow_mul_sub_iff_truncated
       (4 : Int)^t*(x-y) = (4 : Int)^t*x - (4 : Int)^t*y := by ring
       _ = (6 : Int)^k*q := hq
 
+
+#check six_iso_mul_four_pow_iff_triadic_of_saturated
+#check six_iso_four_pow_phase_dichotomy
+#check six_iso_mul_four_pow_add
+#print axioms six_iso_mul_four_pow_iff_triadic_of_saturated
+#print axioms six_iso_four_pow_phase_dichotomy
 
 end GSTGraphV2SixAdicSynchronizedShadows
