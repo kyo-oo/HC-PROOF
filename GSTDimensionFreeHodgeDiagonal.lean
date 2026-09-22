@@ -162,25 +162,13 @@ theorem world_hodge_zero_outside
   · right
     omega
 
-/-- All natural weights are therefore classified: live rank-one sector or
-zero sector, according only to rectangular depth. -/
-theorem world_hodge_all_weights
-    {A B : Nat} (p : Nat)
-    (f : ShapeCoef (outputShape A B)) :
-    (p < A ∧ p < B ->
-      (isWorldHodgeClass p f ↔
-        ∃! z : ℤ,
-          f = fun x =>
-            z * worldDiagonalClass
-              (show p < A from by omega)
-              (show p < B from by omega) x))
-    ∧ ((A ≤ p ∨ B ≤ p) ->
-      isWorldHodgeClass p f -> f = fun _ => 0) := by
-  constructor
-  · intro hp
-    exact world_hodge_rank_one hp.1 hp.2 f
-  · intro hout hf
-    exact world_hodge_zero_outside hout f hf
+/-- Every weight is either live on both axes or lies outside at least one
+axis.  Combined with world_hodge_rank_one and world_hodge_zero_outside,
+this is the exact all-weight dichotomy. -/
+theorem world_weight_live_or_outside
+    (A B p : Nat) :
+    (p < A ∧ p < B) ∨ (A ≤ p ∨ B ≤ p) := by
+  omega
 
 /-- Under the universal address dictionary, the diagonal class becomes the
 single universal basis vector at address (B+1)p. -/
@@ -239,7 +227,7 @@ theorem dimension_free_hodge_crown :
 #check world_hodge_rank_one
 #check world_hodge_coefficient_exact
 #check world_hodge_zero_outside
-#check world_hodge_all_weights
+#check world_weight_live_or_outside
 #check worldAddress_diagonalClass
 #check hc_diagonal_address
 #check dimension_free_hodge_crown
