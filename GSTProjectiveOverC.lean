@@ -49,20 +49,25 @@ by Mathlib's projective spectrum of the standard graded polynomial ring. -/
 noncomputable def projectiveSpace (n : Nat) : Scheme :=
   Proj (ProjectiveGrading n)
 
+/-- The canonical structure morphism from standard projective n-space to
+Spec(C).  Mathlib supplies Proj.toSpecZero to the degree-zero homogeneous
+piece; composing with Spec.map of the scalar algebra map lands in Spec(C). -/
+noncomputable def projectiveSpaceToBase (n : Nat) :
+    projectiveSpace n ⟶ complexBase :=
+  Proj.toSpecZero (ProjectiveGrading n) ≫
+    Spec.map (CommRingCat.ofHom
+      (algebraMap ℂ (ProjectiveGrading n 0)))
+
 /-- A fully geometric witness that a given complex-scheme structure map is
 projective: the source embeds as a closed subscheme of an actual standard
-projective space, and that embedding commutes with the maps to Spec(C).
-
-ambientMap is kept explicit because the pinned Mathlib revision does not
-yet package the standard projective-space structure morphism to Spec(C) as
-a reusable projective-space API. -/
+projective space and the embedding commutes with the canonical projective
+space structure morphism to Spec(C). -/
 structure ProjectiveOverC
     (X : Scheme) (structureMap : X ⟶ complexBase) where
   n : Nat
-  ambientMap : projectiveSpace n ⟶ complexBase
   immersion : X ⟶ projectiveSpace n
   closedImmersion : IsClosedImmersion immersion
-  over_base : immersion ≫ ambientMap = structureMap
+  over_base : immersion ≫ projectiveSpaceToBase n = structureMap
 
 /-- The exact geometric carrier for the classical Hodge statement used by
 Stage 2E: an actual complex scheme with actual smoothness and an actual
@@ -83,13 +88,15 @@ theorem projective_closed_immersion
 
 theorem projective_embedding_over_base
     (V : SmoothProjectiveComplexScheme) :
-    V.projective.immersion ≫ V.projective.ambientMap = V.structureMap :=
+    V.projective.immersion ≫
+      projectiveSpaceToBase V.projective.n = V.structureMap :=
   V.projective.over_base
 
 #check complexBase
 #check ProjectiveCoordinateRing
 #check ProjectiveGrading
 #check projectiveSpace
+#check projectiveSpaceToBase
 #check ProjectiveOverC
 #check SmoothProjectiveComplexScheme
 #check projective_closed_immersion
