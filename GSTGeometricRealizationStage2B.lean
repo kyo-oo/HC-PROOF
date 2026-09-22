@@ -79,6 +79,22 @@ theorem subspaceCycleWitness_address
       R.encode alpha := by
   exact cycleWitness_address R.toFiniteHodgeRealization alpha halpha
 
+/-- Explicit cycle selector on the Hodge submodule of a Stage-2B
+realization. -/
+noncomputable def subspaceCycleSelector
+    (R : HodgeSubspaceRealization N Coh CycleQ)
+    (alpha : R.hodge) : CycleQ :=
+  subspaceCycleWitness R alpha.1
+
+/-- The Stage-2B selector is a verified right inverse of the linear cycle
+class map on the Hodge submodule. -/
+theorem subspaceCycleSelector_spec
+    (R : HodgeSubspaceRealization N Coh CycleQ)
+    (alpha : R.hodge) :
+    R.cycleClass (subspaceCycleSelector R alpha) = alpha.1 := by
+  apply R.encode_injective
+  exact subspaceCycleWitness_address R alpha.1 alpha.2
+
 /-- **STAGE-2B FIBER THEOREM.**
 Every class in the rational Hodge subspace lies in the linear range of the
 cycle-class map.  This is the exact submodule form of the target. -/
@@ -191,6 +207,8 @@ theorem hodge_of_fiber_realization_obligation
 #check HodgeSubspaceRealization.toFiniteHodgeRealization
 #check subspaceCycleWitness
 #check subspaceCycleWitness_address
+#check subspaceCycleSelector
+#check subspaceCycleSelector_spec
 #check hodge_subspace_le_cycleClass_range
 #check hodge_class_has_geometric_cycle
 #check UniversalHodgeSubspaceStatement
@@ -200,6 +218,7 @@ theorem hodge_of_fiber_realization_obligation
 #check hodge_of_fiber_realization_obligation
 
 #print axioms subspaceCycleWitness_address
+#print axioms subspaceCycleSelector_spec
 #print axioms hodge_subspace_le_cycleClass_range
 #print axioms hodge_class_has_geometric_cycle
 #print axioms universal_hodge_subspace_of_realization_family
