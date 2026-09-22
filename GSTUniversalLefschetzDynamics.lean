@@ -92,9 +92,9 @@ theorem worldLefschetz_respects_degree
               rw [digitShiftN_respects_degree 1 k g,
                   carryShiftN_respects_degree 1 k g]
     _ = worldSectorProj (k+1) (worldLefschetz g) := by
-          symm
-          exact worldSectorProj_add (k+1)
-            (digitShiftN 1 g) (carryShiftN 1 g)
+          simpa [worldLefschetz] using
+            (worldSectorProj_add (k+1)
+              (digitShiftN 1 g) (carryShiftN 1 g)).symm
 
 /-- k iterations transport degree r exactly into degree r+k. -/
 theorem worldLefschetz_iterate_respects_degree
@@ -217,7 +217,7 @@ theorem lefschetz_sixth_power_from_universal
   have h :=
     worldLefschetz_nilpotent
       (A:=4) (B:=3) (by decide) (by decide) (liftWave g)
-  simpa using h
+  simpa [liftWave] using h
 
 /-- Capstone for dimension-free Lefschetz dynamics. -/
 theorem universal_lefschetz_crown :
