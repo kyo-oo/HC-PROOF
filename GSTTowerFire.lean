@@ -230,8 +230,8 @@ theorem towerReadProfile_exact
 /-- Every predicate on the finite read profile can therefore be transferred
 between the perfect-power tower and the compact coefficient profile. -/
 theorem towerReadProfile_predicate_iff
-    (P : (Fin (n+1) → Nat) → Prop)
-    (j n : Nat) :
+    (j n : Nat)
+    (P : (Fin (n+1) → Nat) → Prop) :
     P (towerReadProfile j n) ↔
       P (towerCoefficientProfile j n) := by
   rw [towerReadProfile_exact]
@@ -240,8 +240,8 @@ theorem towerReadProfile_predicate_iff
 the tower and coefficient presentations. -/
 theorem towerReadProfile_observable_exact
     {α : Type}
-    (F : (Fin (n+1) → Nat) → α)
-    (j n : Nat) :
+    (j n : Nat)
+    (F : (Fin (n+1) → Nat) → α) :
     F (towerReadProfile j n) =
       F (towerCoefficientProfile j n) :=
   congrArg F (towerReadProfile_exact j n)
