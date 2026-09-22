@@ -59,7 +59,11 @@ noncomputable def digitEndo (A B : Nat) :
     change digitShiftN 1 (z • f) c =
       z • digitShiftN 1 f c
     unfold digitShiftN
-    split_ifs <;> simp
+    split_ifs with h
+    · change z * f (c.1, ⟨c.2.1 - 1, by omega⟩) =
+        z * f (c.1, ⟨c.2.1 - 1, by omega⟩)
+      rfl
+    · simp
 
 noncomputable def carryEndo (A B : Nat) :
     Module.End ℤ (WorldCoef A B) where
@@ -70,14 +74,25 @@ noncomputable def carryEndo (A B : Nat) :
     change carryShiftN 1 (f + g) c =
       carryShiftN 1 f c + carryShiftN 1 g c
     unfold carryShiftN
-    split_ifs <;> simp
+    split_ifs with h
+    · change
+        f (⟨c.1.1 - 1, by omega⟩, c.2) +
+          g (⟨c.1.1 - 1, by omega⟩, c.2) =
+        f (⟨c.1.1 - 1, by omega⟩, c.2) +
+          g (⟨c.1.1 - 1, by omega⟩, c.2)
+      rfl
+    · rfl
   map_smul' := by
     intro z f
     funext c
     change carryShiftN 1 (z • f) c =
       z • carryShiftN 1 f c
     unfold carryShiftN
-    split_ifs <;> rfl
+    split_ifs with h
+    · change z * f (⟨c.1.1 - 1, by omega⟩, c.2) =
+        z * f (⟨c.1.1 - 1, by omega⟩, c.2)
+      rfl
+    · simp
 
 @[simp]
 theorem digitEndo_apply (g : WorldCoef A B) :
