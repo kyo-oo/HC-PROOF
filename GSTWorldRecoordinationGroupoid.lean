@@ -200,7 +200,7 @@ theorem transportCoef_codeSectorProj
       worldCode S ((worldRecoordinate S T).symm y) =
         worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
-    exact (worldRecoordinate_code T S y).symm
+    exact worldRecoordinate_code T S y
   by_cases h : worldCode T y = k <;>
     simp [transportCoef, codeSectorProj, h, hcode]
 
