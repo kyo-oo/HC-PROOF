@@ -17,6 +17,7 @@ on:
       - 'GSTUniversalLefschetzCosmology.lean'
       - 'GSTUniversalLefschetzPathFormula.lean'
       - 'GSTUniversalLefschetzKernel.lean'
+      - 'GSTUniversalLefschetzCausalGeometry.lean'
       - 'GSTTruncatedWorldCohomologyRing.lean'
       - 'GSTWorldPoincareDuality.lean'
       - 'CardinalWorldsPrefixClassifier.lean'
@@ -84,6 +85,7 @@ jobs:
             GSTUniversalLefschetzCosmology.lean
             GSTUniversalLefschetzPathFormula.lean
             GSTUniversalLefschetzKernel.lean
+            GSTUniversalLefschetzCausalGeometry.lean
             GSTTruncatedWorldCohomologyRing.lean
             GSTWorldPoincareDuality.lean
             CardinalWorldsPrefixClassifier.lean
@@ -128,6 +130,7 @@ jobs:
             GSTUniversalLefschetzCosmology \
             GSTUniversalLefschetzPathFormula \
             GSTUniversalLefschetzKernel \
+            GSTUniversalLefschetzCausalGeometry \
             GSTTruncatedWorldCohomologyRing \
             GSTWorldPoincareDuality \
             CardinalWorldsPrefixClassifier \
