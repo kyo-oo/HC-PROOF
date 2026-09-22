@@ -39,6 +39,7 @@ import GSTGeometricRealizationStage2C
 import GSTGeometricRealizationStage2D
 import GSTProjectiveOverC
 import GSTGeometricRealizationStage2E
+import GSTGeometricRealizationStage2F
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
@@ -305,3 +306,15 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2E.classical_hodge_of_stage2e_family
 #check GSTGeometricRealizationStage2E.UniversalClassicalHodgeStatement
 #check GSTGeometricRealizationStage2E.Stage2ERealizationObligation
+
+
+/-! ## Stage 2F — native analytification / rational Betti front -/
+
+#check GSTGeometricRealizationStage2F.ComplexPoint
+#check GSTGeometricRealizationStage2F.AnalytificationData
+#check GSTGeometricRealizationStage2F.rationalSingularCohomologyObj
+#check GSTGeometricRealizationStage2F.BettiHodgeData
+#check GSTGeometricRealizationStage2F.BettiHodgeStatement
+#check GSTGeometricRealizationStage2F.hodge_class_has_betti_cycle
+#check GSTGeometricRealizationStage2F.betti_hodge_of_stage2f_family
+#check GSTGeometricRealizationStage2F.Stage2FRealizationObligation
