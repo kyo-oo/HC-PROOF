@@ -234,12 +234,52 @@ theorem unified_u_potential_is_graph_horizontal_flux
     (unifiedState_parentCarry_lt_four E N p)
     (unifiedState_childCarry_lt_four E N p)
 
+
+/-! ## Native horizontal word semigroup -/
+
+/-- Reverse-base-four carry words compose exactly under concatenation of
+horizontal intervals.  The right block is unscaled; the left block is shifted
+by the exact width of the right block. -/
+theorem carryWord_append_exact_native
+    (E p start P : Nat) : ∀ N : Nat,
+    carryWord E p start (P+N) =
+      4^N * carryWord E p start P +
+        carryWord E p (start+P) N := by
+  intro N
+  induction N with
+  | zero =>
+      simp [carryWord]
+  | succ N ih =>
+      have hlen : P + (N+1) = (P+N)+1 := by omega
+      have hidx : start + (P+N) = (start+P)+N := by omega
+      rw [hlen, carryWord, ih, carryWord, Nat.pow_succ, hidx]
+      ring
+
+/-- The native carry-word action is associative under three consecutive
+horizontal blocks. -/
+theorem carryWord_three_block_exact
+    (E p start A B C : Nat) :
+    carryWord E p start (A+B+C) =
+      4^(B+C) * carryWord E p start A +
+      4^C * carryWord E p (start+A) B +
+      carryWord E p (start+A+B) C := by
+  rw [show A+B+C = A+(B+C) by omega,
+      carryWord_append_exact_native E p start A (B+C),
+      carryWord_append_exact_native E p (start+A) B C,
+      pow_add]
+  ring
+
+
 #check unifiedState_physicalInvariant
 #check unifiedState_parentDigit_exact
 #check unified_equationIII_graph_exact
 #check unified_u_potential_is_graph_horizontal_flux
+#check carryWord_append_exact_native
+#check carryWord_three_block_exact
 #print axioms unifiedState_physicalInvariant
 #print axioms unified_equationIII_graph_exact
 #print axioms unified_u_potential_is_graph_horizontal_flux
+#print axioms carryWord_append_exact_native
+#print axioms carryWord_three_block_exact
 
 end GSTGraphV2UnifiedPowerRectangle
