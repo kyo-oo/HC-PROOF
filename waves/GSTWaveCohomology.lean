@@ -403,6 +403,49 @@ theorem wave_class_transport (R p N : Nat) :
       rw [show (4:Nat)^(t+1) * R = 4^t * (4 * R) from by
           rw [Nat.pow_succ]; ring])]
 
+/-- **ARBITRARY-DEPTH WAVE-CLASS COCYCLE.**
+Splitting a row window after M horizontal x4 steps gives exactly the class
+accumulated in the first M steps plus the class of the remaining N-step
+window in the M-times re-encoded world. -/
+theorem wave_class_transport_add
+    (R p M N : Nat) :
+    rowClass R p (M+N) =
+      rowClass R p M + rowClass (4^M * R) p N := by
+  induction M generalizing R with
+  | zero =>
+      simp [rowClass]
+  | succ M ih =>
+      have hleft := wave_class_transport R p (M+N)
+      have hfirst := wave_class_transport R p M
+      have htail := ih (4*R)
+      rw [show M.succ + N = (M+N)+1 by omega] at hleft
+      rw [hleft, hfirst, htail]
+      congr 1
+      rw [Nat.pow_succ]
+      ring
+
+/-- Re-encoding by M then N steps is exactly re-encoding by M+N steps at the
+level of residual row classes. -/
+theorem wave_class_transport_semigroup
+    (R p M N K : Nat) :
+    rowClass (4^(M+N) * R) p K =
+      rowClass (4^N * (4^M * R)) p K := by
+  congr 2
+  rw [pow_add]
+  ring
+
+/-- The row-class calculus is therefore an exact additive cocycle over the
+horizontal x4 semigroup. -/
+theorem wave_class_cocycle_crown :
+    (∀ R p M N,
+      rowClass R p (M+N) =
+        rowClass R p M + rowClass (4^M * R) p N)
+    ∧
+    (∀ R p M N K,
+      rowClass (4^(M+N) * R) p K =
+        rowClass (4^N * (4^M * R)) p K) := by
+  exact ⟨wave_class_transport_add, wave_class_transport_semigroup⟩
+
 /-! ## §7 The mode spectrum replaces the digit -/
 
 /-- The **mode spectrum** of the twelve cells: the list of wave-mode
@@ -424,5 +467,11 @@ theorem spectrum_separates_chords :
     waveMode (mkCell 0 2 (by omega) (by omega))
       ≠ waveMode (mkCell 3 2 (by omega) (by omega)) := by
   decide
+
+#check wave_class_transport_add
+#check wave_class_transport_semigroup
+#check wave_class_cocycle_crown
+#print axioms wave_class_transport_add
+#print axioms wave_class_cocycle_crown
 
 end GSTWaveCohomology
