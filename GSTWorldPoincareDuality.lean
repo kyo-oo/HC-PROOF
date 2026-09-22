@@ -252,8 +252,15 @@ theorem world_poincare_duality_crown :
     ∧ (∀ A B (f : WorldCoef A B),
       (∀ g : WorldCoef A B, worldTopPairing f g = 0) →
         f = fun _ => 0) := by
-  exact ⟨fun A B => worldDual_involutive, fun A B => worldDegree_dual_sum,
-    fun A B => degreeCell_card_symmetry, fun A B => worldTopPairing_nondegenerate_left⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro A B c
+    exact worldDual_involutive c
+  · intro A B c
+    exact worldDegree_dual_sum c
+  · intro A B k hk
+    exact degreeCell_card_symmetry k hk
+  · intro A B f h
+    exact worldTopPairing_nondegenerate_left f h
 
 #check complementFin
 #check worldDual

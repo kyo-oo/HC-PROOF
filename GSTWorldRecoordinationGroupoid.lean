@@ -54,6 +54,7 @@ def shapeCodeEquiv {N : Nat} (S : GSTWorldShape N) :
 def worldCode {N : Nat} (S : GSTWorldShape N) (x : ShapeState S) : Nat :=
   (shapeCodeEquiv S x).1
 
+@[simp]
 theorem worldCode_expanded
     {N : Nat} (S : GSTWorldShape N) (x : ShapeState S) :
     worldCode S x = x.2.1 + S.cols * x.1.1 := by
@@ -86,7 +87,7 @@ theorem worldRecoordinate_unique
   apply (shapeCodeEquiv T).injective
   apply Fin.ext
   change worldCode T (worldRecoordinate S T x) = worldCode T y
-  rw [worldRecoordinate_code, h]
+  exact (worldRecoordinate_code S T x).trans h.symm
 
 /-- Every source state has a unique equal-code target in every other shape. -/
 theorem existsUnique_worldRecoordinate
@@ -157,20 +158,32 @@ theorem codeSectorProj_idempotent
     codeSectorProj S k (codeSectorProj S k f) =
       codeSectorProj S k f := by
   funext x
-  by_cases h : worldCode S x = k <;>
-    simp [codeSectorProj, h]
+  change
+    (if worldCode S x = k then
+      (if worldCode S x = k then f x else 0)
+    else 0)
+      =
+    (if worldCode S x = k then f x else 0)
+  by_cases h : worldCode S x = k
+  · rw [if_pos h, if_pos h]
+  · rw [if_neg h, if_neg h]
 
 theorem codeSectorProj_orthogonal
     {N : Nat} (S : GSTWorldShape N)
     (j k : Nat) (hjk : j ≠ k) (f : ShapeCoef S) :
     codeSectorProj S j (codeSectorProj S k f) = fun _ => 0 := by
   funext x
-  by_cases hk : worldCode S x = k
-  · have hj : worldCode S x ≠ j := by
-      intro h
-      exact hjk (h.symm.trans hk)
-    simp [codeSectorProj, hk, hj, Ne.symm hjk]
-  · simp [codeSectorProj, hk]
+  change
+    (if worldCode S x = j then
+      (if worldCode S x = k then f x else 0)
+    else 0) = 0
+  by_cases hj : worldCode S x = j
+  · have hk : worldCode S x ≠ k := by
+      intro hk
+      apply hjk
+      exact hj.symm.trans hk
+    rw [if_pos hj, if_neg hk]
+  · rw [if_neg hj]
 
 /-- All N code sectors sum exactly to the coefficient field. -/
 theorem codeSectorProj_sum
@@ -181,10 +194,12 @@ theorem codeSectorProj_sum
   have hmem : worldCode S x ∈ Finset.range N :=
     Finset.mem_range.mpr (worldCode_lt S x)
   rw [Finset.sum_eq_single (worldCode S x)]
-  · simp [codeSectorProj]
+  · change (if worldCode S x = worldCode S x then f x else 0) = f x
+    rw [if_pos rfl]
   · intro b hb hne
+    change (if worldCode S x = b then f x else 0) = 0
     have hne' : worldCode S x ≠ b := hne.symm
-    simp [codeSectorProj, hne']
+    rw [if_neg hne']
   · intro hnot
     exact (hnot hmem).elim
 
@@ -201,8 +216,14 @@ theorem transportCoef_codeSectorProj
         worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
     exact worldRecoordinate_code T S y
-  by_cases h : worldCode T y = k <;>
-    simp [transportCoef, codeSectorProj, h, hcode]
+  unfold transportCoef
+  change
+    (if worldCode S ((worldRecoordinate S T).symm y) = k then
+      f ((worldRecoordinate S T).symm y) else 0)
+      =
+    (if worldCode T y = k then
+      f ((worldRecoordinate S T).symm y) else 0)
+  rw [hcode]
 
 /-- Polynomial functional calculus of the invariant code observable. -/
 def codePolyOp
@@ -222,7 +243,8 @@ theorem transportCoef_codePolyOp
         worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
     exact worldRecoordinate_code T S y
-  simp [transportCoef, codePolyOp, hcode]
+  unfold transportCoef codePolyOp
+  rw [hcode]
 
 /-- Every code projector is an explicit integer spectral polynomial,
 up to a nonzero integer scalar, on every shaped N-state world. -/
@@ -236,13 +258,16 @@ theorem codeSector_projector_polynomial
     (worldKunnethPoly N k).eval (k : ℤ),
     worldKunnethPoly_eval_self_ne_zero N k hk, ?_⟩
   intro f x
-  unfold codePolyOp codeSectorProj
+  change
+    (worldKunnethPoly N k).eval (worldCode S x : ℤ) * f x =
+      (worldKunnethPoly N k).eval (k : ℤ) *
+        (if worldCode S x = k then f x else 0)
   by_cases h : worldCode S x = k
-  · simp [h]
+  · rw [if_pos h, h]
   · have hlt := worldCode_lt S x
     have hz :=
       worldKunnethPoly_eval_zero N k (worldCode S x) hlt h
-    simp [h, hz]
+    rw [if_neg h, hz, zero_mul, mul_zero]
 
 /-- Standard output-oriented rectangular shape. -/
 def outputShape (s b : Nat) : GSTWorldShape (s*b) where
@@ -294,9 +319,15 @@ theorem world_recoordination_groupoid_crown :
         (p : Polynomial ℤ) (f : ShapeCoef S),
       transportCoef S T (codePolyOp S p f) =
         codePolyOp T p (transportCoef S T f)) := by
-  exact ⟨fun N => worldRecoordinate_code, fun N => worldRecoordinate_comp,
-    fun N S T f k => transportCoef_codeSectorProj S T k f,
-    fun N => transportCoef_codePolyOp⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro N S T x
+    exact worldRecoordinate_code S T x
+  · intro N S T U x
+    exact worldRecoordinate_comp S T U x
+  · intro N S T f k
+    exact transportCoef_codeSectorProj S T k f
+  · intro N S T p f
+    exact transportCoef_codePolyOp S T p f
 
 #check GSTWorldShape
 #check worldRecoordinate

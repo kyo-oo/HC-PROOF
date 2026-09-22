@@ -12,8 +12,12 @@ on:
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
+      - 'GSTUniversalAddressBridge.lean'
+      - 'GSTDimensionFreeHodgeDiagonal.lean'
+      - 'GSTGlobalPureHodgeCosmology.lean'
       - 'GSTUniversalLefschetzDynamics.lean'
       - 'GSTUniversalLefschetzCosmology.lean'
+      - 'GSTUniversalLefschetzPathFormula.lean'
       - 'GSTTruncatedWorldCohomologyRing.lean'
       - 'GSTWorldPoincareDuality.lean'
       - 'CardinalWorldsPrefixClassifier.lean'
@@ -88,8 +92,12 @@ jobs:
             GSTRadixWorldDynamics.lean
             GSTGradedWorldAlgebra.lean
             GSTWorldRecoordinationGroupoid.lean
+            GSTUniversalAddressBridge.lean
+            GSTDimensionFreeHodgeDiagonal.lean
+            GSTGlobalPureHodgeCosmology.lean
             GSTUniversalLefschetzDynamics.lean
             GSTUniversalLefschetzCosmology.lean
+            GSTUniversalLefschetzPathFormula.lean
             GSTTruncatedWorldCohomologyRing.lean
             GSTWorldPoincareDuality.lean
             CardinalWorldsPrefixClassifier.lean
@@ -130,8 +138,12 @@ jobs:
             GSTRadixWorldDynamics \
             GSTGradedWorldAlgebra \
             GSTWorldRecoordinationGroupoid \
+            GSTUniversalAddressBridge \
+            GSTDimensionFreeHodgeDiagonal \
+            GSTGlobalPureHodgeCosmology \
             GSTUniversalLefschetzDynamics \
             GSTUniversalLefschetzCosmology \
+            GSTUniversalLefschetzPathFormula \
             GSTTruncatedWorldCohomologyRing \
             GSTWorldPoincareDuality \
             CardinalWorldsPrefixClassifier \

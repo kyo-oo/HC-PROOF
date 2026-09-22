@@ -28,6 +28,21 @@ abbrev WorldCell (carryDepth digitDepth : Nat) : Type :=
 abbrev WorldCoef (carryDepth digitDepth : Nat) : Type :=
   WorldCell carryDepth digitDepth → ℤ
 
+/-- Pointwise additive group structure on world amplitudes.  WorldCoef is a
+named function-space definition, so the pointwise instance is exposed
+explicitly for downstream linear/operator algebra. -/
+instance worldCoefAddCommGroup (carryDepth digitDepth : Nat) :
+    AddCommGroup (WorldCoef carryDepth digitDepth) :=
+  inferInstanceAs
+    (AddCommGroup (WorldCell carryDepth digitDepth → ℤ))
+
+/-- Pointwise integer module structure on world amplitudes. -/
+instance worldCoefIntModule (carryDepth digitDepth : Nat) :
+    Module ℤ (WorldCoef carryDepth digitDepth) :=
+  inferInstanceAs
+    (Module ℤ (WorldCell carryDepth digitDepth → ℤ))
+
+
 /-- Native digit-axis transport by `n` layers.  No truncation constant is
 built into the operator: the active world supplies the boundary. -/
 def digitShiftN {carryDepth digitDepth : Nat} (n : Nat)

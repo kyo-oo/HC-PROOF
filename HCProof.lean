@@ -28,10 +28,14 @@ import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
 import GSTUniversalLefschetzCosmology
+import GSTUniversalLefschetzPathFormula
 import GSTTruncatedWorldCohomologyRing
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
+import GSTUniversalAddressBridge
+import GSTDimensionFreeHodgeDiagonal
+import GSTGlobalPureHodgeCosmology
 import GSTUniversalLefschetzDynamics
 import GSTWorldPoincareDuality
 import GSTWorldCrownBridge
@@ -432,3 +436,40 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTInfiniteWorldClassification.towerCurrent_trace_injective
 #check GSTInfiniteWorldClassification.windowTower_eq_iff_all_observations
 #check GSTInfiniteWorldClassification.infinite_world_classification_crown
+
+
+/-! ## Universal address bridge -/
+
+#check GSTUniversalAddressBridge.worldAddressLinearEquiv
+#check GSTUniversalAddressBridge.worldAddress_transportCoef
+#check GSTUniversalAddressBridge.worldAddress_codeSectorProj
+#check GSTUniversalAddressBridge.worldAddress_worldBasis
+#check GSTUniversalAddressBridge.universal_address_bridge_crown
+
+
+/-! ## Dimension-free Hodge diagonal -/
+
+#check GSTDimensionFreeHodgeDiagonal.diagonalAddress_val
+#check GSTDimensionFreeHodgeDiagonal.world_hodge_rank_one
+#check GSTDimensionFreeHodgeDiagonal.world_hodge_zero_outside
+#check GSTDimensionFreeHodgeDiagonal.worldAddress_diagonalClass
+#check GSTDimensionFreeHodgeDiagonal.dimension_free_hodge_crown
+
+
+/-! ## Global pure-Hodge cosmology -/
+
+#check GSTGlobalPureHodgeCosmology.pureHodgeLinearEquiv
+#check GSTGlobalPureHodgeCosmology.pure_hodge_classification
+#check GSTGlobalPureHodgeCosmology.hc_pure_hodge_equiv
+#check GSTGlobalPureHodgeCosmology.worldAddress_pure_support
+#check GSTGlobalPureHodgeCosmology.global_pure_hodge_crown
+
+
+/-! ## Universal Lefschetz path calculus -/
+
+#check GSTUniversalLefschetzPathFormula.L_pow_expansion
+#check GSTUniversalLefschetzPathFormula.worldAct_L_pow_paths
+#check GSTUniversalLefschetzPathFormula.worldAct_L_pow_coordinate_formula
+#check GSTUniversalLefschetzPathFormula.path_formula_exact_boundary
+#check GSTUniversalLefschetzPathFormula.hc_bottom_to_top_coefficient
+#check GSTUniversalLefschetzPathFormula.universal_lefschetz_path_crown

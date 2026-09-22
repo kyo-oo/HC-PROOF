@@ -55,7 +55,7 @@ private theorem shifted_origin_at (hA : 0 < A) (hB : 0 < B)
           origin A B hA hB ↔ n = c.1.val ∧ m = c.2.val := by
       simp only [origin, Prod.mk.injEq, Fin.mk.injEq]
       omega
-    simp [digitShiftN, carryShiftN, basis, hn, hm, he]
+    simp [digitShiftN, carryShiftN, basis, GSTWorldPoincareDuality.worldBasis, hn, hm, he]
   · have he : ¬ (n = c.1.val ∧ m = c.2.val) := by omega
     simp [digitShiftN, hm, he]
   · have he : ¬ (n = c.1.val ∧ m = c.2.val) := by omega

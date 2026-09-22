@@ -35,9 +35,9 @@ theorem windowTower_ext
   cases X with
   | mk lx bx cx =>
     cases Y with
-    | mk ly byBound cy =>
+    | mk ly byd cy =>
       cases h
-      rfl
+      congr
 
 /-- Reconstructing a coherent world from its innovation stream returns the
 world itself, not just an isomorphic observation trace. -/
@@ -180,7 +180,9 @@ theorem stream_to_current_injective :
   intro a b h
   have hw : streamTower a = streamTower b :=
     towerCurrent_trace_injective h
-  simpa only [innovationStream_streamTower] using congrArg innovationStream hw
+  have hs := congrArg innovationStream hw
+  rw [innovationStream_streamTower a, innovationStream_streamTower b] at hs
+  exact hs
 
 /-- Capstone: coherent GST infinity is exactly ternary stream space and the
 two-current trace is a complete global observable. -/
