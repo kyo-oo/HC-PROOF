@@ -137,11 +137,49 @@ theorem canonical_happy_iff_event_eight (E t p : Nat) :
   exact happy_iff_event_eight _ _ (vertex_carry_lt_four E t p)
     (vertex_digit_lt_three E t p)
 
+/-- The canonical physical vertex is Happy exactly when its optimized
+crossing charge is the rigid positive value 105. -/
+theorem canonical_happy_iff_crossDensity_105
+    (E t p : Nat) :
+    HappyCell (vertex E t p).carry (vertex E t p).digit ↔
+      GSTU2DExactCrossingCharge.crossDensity
+        (vertex E t p).carry (vertex E t p).digit = 105 := by
+  exact GSTU2DExactCrossingCharge.happy_iff_crossDensity_eq_105
+    _ _ (vertex_carry_lt_four E t p) (vertex_digit_lt_three E t p)
+
+/-- Event eight and crossing charge 105 are therefore two exact coordinate
+presentations of the same canonical seven-axis state. -/
+theorem canonical_event_eight_iff_crossDensity_105
+    (E t p : Nat) :
+    event (vertex E t p).carry (vertex E t p).digit = 8 ↔
+      GSTU2DExactCrossingCharge.crossDensity
+        (vertex E t p).carry (vertex E t p).digit = 105 := by
+  rw [← canonical_happy_iff_event_eight E t p,
+      canonical_happy_iff_crossDensity_105 E t p]
+
+/-- Canonical event/charge crown. -/
+theorem canonical_event_charge_crown :
+    ∀ E t p,
+      (HappyCell (vertex E t p).carry (vertex E t p).digit ↔
+        event (vertex E t p).carry (vertex E t p).digit = 8)
+      ∧
+      (event (vertex E t p).carry (vertex E t p).digit = 8 ↔
+        GSTU2DExactCrossingCharge.crossDensity
+          (vertex E t p).carry (vertex E t p).digit = 105) := by
+  intro E t p
+  exact ⟨canonical_happy_iff_event_eight E t p,
+    canonical_event_eight_iff_crossDensity_105 E t p⟩
+
 #check canonical_cell_exact
 #check event_balance_exact
 #check canonical_happy_iff_event_eight
+#check canonical_happy_iff_crossDensity_105
+#check canonical_event_eight_iff_crossDensity_105
+#check canonical_event_charge_crown
 #print axioms canonical_cell_exact
 #print axioms event_balance_exact
 #print axioms canonical_happy_iff_event_eight
+#print axioms canonical_event_eight_iff_crossDensity_105
+#print axioms canonical_event_charge_crown
 
 end GSTCanonicalSevenAxisBridge
