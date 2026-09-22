@@ -73,9 +73,10 @@ theorem phaseDensity_positive_iff_eq_two
 theorem phaseDensity_spectral_gap
     (C d : Nat) (hC : C < 4) (hd : d < 3) :
     phaseDensity C d ≤ 0 ∨ phaseDensity C d = 2 := by
-  by_cases h : HappyCell C d
-  · exact Or.inr ((happy_iff_phaseDensity_eq_two C d hC hd).1 h)
-  · exact Or.inl (phaseDensity_nonpositive_of_not_happy C d hC hd h)
+  by_cases hpos : 0 < phaseDensity C d
+  · exact Or.inr
+      ((phaseDensity_positive_iff_eq_two C d hC hd).1 hpos)
+  · exact Or.inl (by omega)
 
 /-- Uniform physical floor used by highest-row domination. -/
 theorem phaseDensity_ge_neg_four
