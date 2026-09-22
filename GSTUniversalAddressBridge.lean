@@ -159,12 +159,12 @@ theorem addressSectorProj_orthogonal
     (phi : AddressRing N) :
     addressSectorProj j (addressSectorProj k phi) = fun _ => 0 := by
   funext i
-  by_cases hk : i.1 = k
-  · have hj : i.1 ≠ j := by
+  by_cases hj : i.1 = j
+  · have hk : i.1 ≠ k := by
       intro h
-      exact hjk (h.symm.trans hk)
-    simp [addressSectorProj, hk, hj]
-  · simp [addressSectorProj, hk]
+      exact hjk (hj.symm.trans h)
+    simp [addressSectorProj, hj, hk]
+  · simp [addressSectorProj, hj]
 
 /-- Every address vector is the sum of its N exact coordinate sectors. -/
 theorem addressSectorProj_sum
