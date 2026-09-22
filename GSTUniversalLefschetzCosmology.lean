@@ -1,27 +1,32 @@
 import Mathlib
 import Mathlib.RingTheory.Nilpotent.Basic
-import GSTWorldCosmology
+import GSTUniversalLefschetzDynamics
+import GSTWorldPoincareDuality
 
 /-!
 # GST UNIVERSAL LEFSCHETZ COSMOLOGY
 
-The original HC crown lives on one 4 x 3 chart.  This file extracts the
-parent algebra valid on every finite rectangular GST world.
+This file is the operator-algebra integration layer of the upgraded HC
+cosmology.
 
-For an A x B world:
+The grading and duality parts are deliberately sourced from their stronger
+parent modules:
 
-* H is the digit-axis endomorphism;
-* V is the carry-axis endomorphism;
-* H^B = 0 and V^A = 0;
-* H and V commute;
-* L = H + V therefore satisfies the exact commuting binomial calculus;
-* L^(A+B-1) = 0;
-* every degree sector has a canonical idempotent projector;
-* the sectors are pairwise orthogonal and sum to the identity;
-* the complementary-cell pairing is integral and nondegenerate.
+* GSTGradedWorldAlgebra
+* GSTUniversalLefschetzDynamics
+* GSTWorldPoincareDuality
 
-Thus the familiar H^3 = 0, V^4 = 0 and L^6 = 0 laws are not primitive.
-They are the A=4, B=3 shadow of a dimension-free operator theorem.
+The genuinely new structure here is the linear endomorphism algebra:
+
+    H := one-step digit transport
+    V := one-step carry transport
+    L := H + V
+
+on every A x B world.
+
+The powers of H and V are the native arbitrary-depth transports, H and V
+commute, and L obeys the exact commuting binomial calculus.  The old
+4 x 3 Crown is one specialization.
 -/
 
 set_option maxHeartbeats 20000000
@@ -30,10 +35,13 @@ set_option maxRecDepth 1000000
 namespace GSTUniversalLefschetzCosmology
 
 open GSTWorldCosmology
+open GSTGradedWorldAlgebra
+open GSTUniversalLefschetzDynamics
+open GSTWorldPoincareDuality
 
 variable {A B : Nat}
 
-/-! ## 1. Native axis operators as linear endomorphisms -/
+/-! ## 1. Native axis operators as integer-linear endomorphisms -/
 
 noncomputable def digitEndo (A B : Nat) :
     Module.End ℤ (WorldCoef A B) where
@@ -65,13 +73,15 @@ noncomputable def carryEndo (A B : Nat) :
 
 @[simp]
 theorem digitEndo_apply (g : WorldCoef A B) :
-    digitEndo A B g = digitShiftN 1 g := rfl
+    digitEndo A B g = digitShiftN 1 g :=
+  rfl
 
 @[simp]
 theorem carryEndo_apply (g : WorldCoef A B) :
-    carryEndo A B g = carryShiftN 1 g := rfl
+    carryEndo A B g = carryShiftN 1 g :=
+  rfl
 
-/-- Powers of H are exactly arbitrary digit-axis transports. -/
+/-- H^n is exactly native digit transport by n layers. -/
 theorem digitEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
     ((digitEndo A B)^n) g = digitShiftN n g := by
   induction n with
@@ -80,10 +90,9 @@ theorem digitEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
   | succ n ih =>
       rw [pow_succ, Module.End.mul_apply, ih]
       change digitShiftN 1 (digitShiftN n g) = digitShiftN (n+1) g
-      simpa [Nat.add_comm] using
-        (digitShiftN_add 1 n g)
+      simpa [Nat.add_comm] using digitShiftN_add 1 n g
 
-/-- Powers of V are exactly arbitrary carry-axis transports. -/
+/-- V^n is exactly native carry transport by n layers. -/
 theorem carryEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
     ((carryEndo A B)^n) g = carryShiftN n g := by
   induction n with
@@ -92,28 +101,25 @@ theorem carryEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
   | succ n ih =>
       rw [pow_succ, Module.End.mul_apply, ih]
       change carryShiftN 1 (carryShiftN n g) = carryShiftN (n+1) g
-      simpa [Nat.add_comm] using
-        (carryShiftN_add 1 n g)
+      simpa [Nat.add_comm] using carryShiftN_add 1 n g
 
-/-- The digit operator is nilpotent at exactly the world digit depth. -/
+/-- H is nilpotent at digit depth B. -/
 theorem digitEndo_pow_depth :
     (digitEndo A B)^B = 0 := by
-  ext g c
+  apply LinearMap.ext
+  intro g
   rw [digitEndo_pow_apply]
-  have h := digit_boundary_extinction g
-  rw [h]
-  rfl
+  exact digit_boundary_extinction g
 
-/-- The carry operator is nilpotent at the world carry depth. -/
+/-- V is nilpotent at carry depth A. -/
 theorem carryEndo_pow_depth :
     (carryEndo A B)^A = 0 := by
-  ext g c
+  apply LinearMap.ext
+  intro g
   rw [carryEndo_pow_apply]
-  have h := carry_boundary_extinction g
-  rw [h]
-  rfl
+  exact carry_boundary_extinction g
 
-/-- H and V commute as genuine endomorphisms, not merely pointwise shifts. -/
+/-- The two native axes commute as genuine endomorphisms. -/
 theorem digit_carry_commute :
     Commute (digitEndo A B) (carryEndo A B) := by
   apply LinearMap.ext
@@ -122,7 +128,7 @@ theorem digit_carry_commute :
     carryShiftN 1 (digitShiftN 1 g)
   exact axes_commute 1 1 g
 
-/-! ## 2. The universal Lefschetz operator -/
+/-! ## 2. Universal Lefschetz endomorphism -/
 
 noncomputable def lefschetzEndo (A B : Nat) :
     Module.End ℤ (WorldCoef A B) :=
@@ -130,13 +136,10 @@ noncomputable def lefschetzEndo (A B : Nat) :
 
 @[simp]
 theorem lefschetzEndo_apply (g : WorldCoef A B) :
-    lefschetzEndo A B g =
-      fun c => digitShiftN 1 g c + carryShiftN 1 g c := by
+    lefschetzEndo A B g = worldLefschetz g := by
   rfl
 
-/-- Exact binomial calculus for every iterate of the universal Lefschetz
-operator.  This is the parent law behind every finite complementary-power
-matrix in the original crown. -/
+/-- Exact commuting binomial calculus for every Lefschetz power. -/
 theorem lefschetz_binomial (n : Nat) :
     (lefschetzEndo A B)^n =
       ∑ m ∈ Finset.range (n+1),
@@ -145,8 +148,7 @@ theorem lefschetz_binomial (n : Nat) :
           (n.choose m : Module.End ℤ (WorldCoef A B)) := by
   exact (digit_carry_commute (A:=A) (B:=B)).add_pow n
 
-/-- **UNIVERSAL LEFSCHETZ NILPOTENCE.**
-On every A x B rectangle the total polarization dies at A+B-1. -/
+/-- The endomorphism form of the dimension-derived Lefschetz ceiling. -/
 theorem lefschetz_pow_boundary :
     (lefschetzEndo A B)^(A+B-1) = 0 := by
   have h :=
@@ -155,165 +157,95 @@ theorem lefschetz_pow_boundary :
       (carryEndo_pow_depth (A:=A) (B:=B))
   simpa [lefschetzEndo, Nat.add_comm] using h
 
-/-- Every later Lefschetz power also vanishes. -/
 theorem lefschetz_pow_zero_of_boundary_le
     (n : Nat) (h : A+B-1 ≤ n) :
-    (lefschetzEndo A B)^n = 0 := by
-  exact pow_eq_zero_of_le h (lefschetz_pow_boundary (A:=A) (B:=B))
+    (lefschetzEndo A B)^n = 0 :=
+  pow_eq_zero_of_le h lefschetz_pow_boundary
 
-/-! ## 3. Dimension-free Kunneth sectors -/
+/-! ## 3. Canonical grading interface
 
-def sectorProj (k : Nat) (g : WorldCoef A B) : WorldCoef A B :=
-  fun c => if c.1.1 + c.2.1 = k then g c else 0
+These names preserve the public interface of the earlier experimental file,
+but the proofs now come from GSTGradedWorldAlgebra.
+-/
+
+abbrev sectorProj (k : Nat) (g : WorldCoef A B) : WorldCoef A B :=
+  worldSectorProj k g
 
 theorem sectorProj_idempotent (k : Nat) (g : WorldCoef A B) :
-    sectorProj k (sectorProj k g) = sectorProj k g := by
-  funext c
-  simp only [sectorProj]
-  split_ifs <;> rfl
+    sectorProj k (sectorProj k g) = sectorProj k g :=
+  worldSectorProj_idempotent k g
 
 theorem sectorProj_orthogonal
     (j k : Nat) (hjk : j ≠ k) (g : WorldCoef A B) :
-    sectorProj j (sectorProj k g) = fun _ => 0 := by
-  funext c
-  simp only [sectorProj]
-  by_cases hj : c.1.1 + c.2.1 = j
-  · have hk : c.1.1 + c.2.1 ≠ k := by
-      intro h
-      apply hjk
-      omega
-    simp [hj, hk]
-  · simp [hj]
+    sectorProj j (sectorProj k g) = fun _ => 0 :=
+  worldSectorProj_orthogonal j k hjk g
 
-/-- Every rectangular world is the direct sum of its degree sectors.
-The range A+B is uniform and also handles degenerate empty rectangles. -/
 theorem sectorProj_sum (g : WorldCoef A B) :
-    (fun c =>
-      ∑ k ∈ Finset.range (A+B), sectorProj k g c) = g := by
-  funext c
-  let d := c.1.1 + c.2.1
-  have hd : d < A+B := by omega
-  simp only [sectorProj]
-  rw [Finset.sum_eq_single d]
-  · simp
-  · intro b hb hbd
-    simp [hbd.symm]
-  · intro hnot
-    exact (hnot (Finset.mem_range.mpr hd)).elim
+    (fun c => ∑ k ∈ Finset.range (A+B), sectorProj k g c) = g :=
+  worldSectorProj_sum g
 
-/-- Arbitrary digit transport raises degree by exactly n. -/
 theorem digitShift_respects_sector
     (k n : Nat) (g : WorldCoef A B) :
     digitShiftN n (sectorProj k g) =
-      sectorProj (k+n) (digitShiftN n g) := by
-  funext c
-  by_cases hn : n ≤ c.2.1
-  · simp only [digitShiftN, dif_pos hn, sectorProj]
-    by_cases hk : c.1.1 + (c.2.1 - n) = k
-    · have hkn : c.1.1 + c.2.1 = k+n := by omega
-      simp [hk, hkn]
-    · have hkn : c.1.1 + c.2.1 ≠ k+n := by omega
-      simp [hk, hkn]
-  · simp [digitShiftN, hn, sectorProj]
+      sectorProj (k+n) (digitShiftN n g) :=
+  digitShiftN_respects_degree n k g
 
-/-- Arbitrary carry transport raises degree by exactly n. -/
 theorem carryShift_respects_sector
     (k n : Nat) (g : WorldCoef A B) :
     carryShiftN n (sectorProj k g) =
-      sectorProj (k+n) (carryShiftN n g) := by
-  funext c
-  by_cases hn : n ≤ c.1.1
-  · simp only [carryShiftN, dif_pos hn, sectorProj]
-    by_cases hk : (c.1.1 - n) + c.2.1 = k
-    · have hkn : c.1.1 + c.2.1 = k+n := by omega
-      simp [hk, hkn]
-    · have hkn : c.1.1 + c.2.1 ≠ k+n := by omega
-      simp [hk, hkn]
-  · simp [carryShiftN, hn, sectorProj]
+      sectorProj (k+n) (carryShiftN n g) :=
+  carryShiftN_respects_degree n k g
 
-/-- L raises the grading by one in every rectangular world. -/
+/-- L raises total degree by exactly one. -/
 theorem lefschetz_respects_sector
     (k : Nat) (g : WorldCoef A B) :
     lefschetzEndo A B (sectorProj k g) =
       sectorProj (k+1) (lefschetzEndo A B g) := by
-  change
-    (fun c =>
-      digitShiftN 1 (sectorProj k g) c +
-      carryShiftN 1 (sectorProj k g) c) =
-    sectorProj (k+1)
-      (fun c => digitShiftN 1 g c + carryShiftN 1 g c)
-  rw [digitShift_respects_sector k 1 g,
-      carryShift_respects_sector k 1 g]
-  rfl
+  change worldLefschetz (worldSectorProj k g) =
+    worldSectorProj (k+1) (worldLefschetz g)
+  exact worldLefschetz_respects_degree k g
 
-/-! ## 4. Universal complementary pairing -/
+/-! ## 4. Canonical Poincare interface
 
-def complementCell (c : WorldCell A B) : WorldCell A B :=
-  (⟨A-1-c.1.1, by omega⟩, ⟨B-1-c.2.1, by omega⟩)
+Again, the mathematics is sourced from the stronger parent duality module.
+-/
+
+abbrev complementCell (c : WorldCell A B) : WorldCell A B :=
+  worldDual c
 
 theorem complementCell_involutive (c : WorldCell A B) :
-    complementCell (complementCell c) = c := by
-  rcases c with ⟨C,d⟩
-  apply Prod.ext
-  · apply Fin.ext
-    omega
-  · apply Fin.ext
-    omega
+    complementCell (complementCell c) = c :=
+  worldDual_involutive c
 
-def basis (c₀ : WorldCell A B) : WorldCoef A B :=
-  fun c => if c = c₀ then 1 else 0
+abbrev basis (c : WorldCell A B) : WorldCoef A B :=
+  worldBasis c
 
-def topPairing (f g : WorldCoef A B) : ℤ :=
-  ∑ c : WorldCell A B, f c * g (complementCell c)
+abbrev topPairing (f g : WorldCoef A B) : ℤ :=
+  worldTopPairing f g
 
 theorem topPairing_basis_right
-    (f : WorldCoef A B) (c₀ : WorldCell A B) :
-    topPairing f (basis (complementCell c₀)) = f c₀ := by
-  classical
-  unfold topPairing basis
-  rw [Finset.sum_eq_single c₀]
-  · simp [complementCell_involutive]
-  · intro c hc hne
-    have hcomp : complementCell c ≠ complementCell c₀ := by
-      intro h
-      apply hne
-      have := congrArg complementCell h
-      simpa [complementCell_involutive] using this
-    simp [hcomp]
-  · simp
+    (f : WorldCoef A B) (c : WorldCell A B) :
+    topPairing f (basis (complementCell c)) = f c :=
+  worldTopPairing_pick_left f c
 
 theorem topPairing_basis_left
-    (g : WorldCoef A B) (c₀ : WorldCell A B) :
-    topPairing (basis c₀) g = g (complementCell c₀) := by
-  classical
-  unfold topPairing basis
-  rw [Finset.sum_eq_single c₀]
-  · simp
-  · intro c hc hne
-    simp [hne]
-  · simp
+    (g : WorldCoef A B) (c : WorldCell A B) :
+    topPairing (basis c) g = g (complementCell c) := by
+  simpa only [worldDual_involutive] using
+    (worldTopPairing_pick_right g (complementCell c))
 
-/-- **UNIVERSAL INTEGRAL POINCARE NONDEGENERACY, LEFT.** -/
 theorem topPairing_nondegenerate_left
     (f : WorldCoef A B)
     (h : ∀ g : WorldCoef A B, topPairing f g = 0) :
-    f = fun _ => 0 := by
-  funext c
-  have hc := h (basis (complementCell c))
-  rw [topPairing_basis_right] at hc
-  exact hc
+    f = fun _ => 0 :=
+  worldTopPairing_nondegenerate_left f h
 
-/-- **UNIVERSAL INTEGRAL POINCARE NONDEGENERACY, RIGHT.** -/
 theorem topPairing_nondegenerate_right
     (g : WorldCoef A B)
     (h : ∀ f : WorldCoef A B, topPairing f g = 0) :
-    g = fun _ => 0 := by
-  funext c
-  have hc := h (basis (complementCell c))
-  rw [topPairing_basis_left] at hc
-  simpa [complementCell_involutive] using hc
+    g = fun _ => 0 :=
+  worldTopPairing_nondegenerate_right g h
 
-/-- Basis vectors pair by exact complementary Kronecker duality. -/
 theorem topPairing_basis_basis
     (c d : WorldCell A B) :
     topPairing (basis c) (basis d) =
@@ -321,10 +253,11 @@ theorem topPairing_basis_basis
   rw [topPairing_basis_left]
   unfold basis
   by_cases h : complementCell c = d
-  · rw [if_pos h, if_pos h.symm]
-  · rw [if_neg h, if_neg (Ne.symm h)]
+  · simp [h]
+  · have h' : d ≠ complementCell c := Ne.symm h
+    simp [worldBasis, h, h']
 
-/-! ## 5. The original HC rectangle is a specialization -/
+/-! ## 5. The historical HC rectangle is one specialization -/
 
 theorem hc_digit_nilpotence :
     (digitEndo 4 3)^3 = 0 :=
@@ -338,7 +271,7 @@ theorem hc_lefschetz_nilpotence :
     (lefschetzEndo 4 3)^6 = 0 := by
   simpa using (lefschetz_pow_boundary (A:=4) (B:=3))
 
-/-- One crown collecting the dimension-free upgrade. -/
+/-- Unified operator/graded/duality crown. -/
 theorem universal_lefschetz_crown :
     (∀ A B : Nat,
       Commute (digitEndo A B) (carryEndo A B))
