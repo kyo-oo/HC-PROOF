@@ -1,5 +1,6 @@
 import GSTFourPowerAffineTwoTritClassifier
 import GSTFourPowerDirectFailedRelocationState
+import GSTFourPowerDirectCreationMaster
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
@@ -181,6 +182,18 @@ theorem chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one :
   · intro hNoBad K hK5 hK7 hNo
     exact hNoBad K hK5 hK7 ((chat2_noCommonTwo_iff_bad_channel_one K).1 hNo)
 
+
+/-- **CHAT-2 / CREATION MASTER EXACT INTERFACE.**  Killing the affine bad
+channel throughout the production range is exactly equivalent to the
+historical four-power creation master. -/
+theorem chat2_creationMaster_iff_no_bad_affine_channel_one :
+    GSTFourPowerOntologicalAdapter.FourPowerCreationMaster ↔
+      ∀ K : Nat, 5 ≤ K → K ≠ 7 →
+        ¬ BadChannel 1 (affineOrbit K) := by
+  rw [← GSTFourPowerDirectCreationMaster.directExistence_iff_creation_master]
+  exact chat2_fourPowerDirectExistence_iff_no_bad_affine_channel_one
+
+
 #check chat2_commonTwo_iff_affine_channel_one
 #check chat2_noCommonTwo_iff_bad_channel_one
 #check chat2_first_trit_counterexample_split
@@ -194,6 +207,7 @@ theorem chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one :
 #check chat2_fourPowerDirectExistence_from_no_counterexample
 #check chat2_fourPowerDirectExistence_iff_no_bad_affine_channel_one
 #check chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one
+#check chat2_creationMaster_iff_no_bad_affine_channel_one
 #print axioms chat2_commonTwo_iff_affine_channel_one
 #print axioms chat2_noCommonTwo_iff_bad_channel_one
 #print axioms chat2_first_trit_counterexample_split
@@ -205,5 +219,6 @@ theorem chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one :
 #print axioms chat2_fourPowerDirectExistence_from_no_counterexample
 #print axioms chat2_fourPowerDirectExistence_iff_no_bad_affine_channel_one
 #print axioms chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one
+#print axioms chat2_creationMaster_iff_no_bad_affine_channel_one
 
 end GSTFourPowerDirectChat2Application
