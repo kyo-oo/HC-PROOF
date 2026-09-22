@@ -157,4 +157,40 @@ theorem infinite_bad_coupled_control
     childCarryExact := coupledOrbit_childCarry_exact A initial hC0
   }
 
+
+/-! ## Re-based all-depth badness -/
+
+/-- After any finite observation depth K, the regenerated parent state remains
+a complete bad-language origin for every subsequent depth L. -/
+theorem coupledOrbit_parent_bad_rebase
+    (A : Nat) (initial : CoupledState)
+    (hbad : SeededBadTrace initial.parentSeed (initial.parentWord A))
+    (K : Nat) :
+    ∀ L : Nat,
+      ¬ Happy
+        (coupledOrbit A (coupledOrbit A initial K) L).parentSeed
+        (((coupledOrbit A (coupledOrbit A initial K) L).parentOffset +
+          A * ((coupledOrbit A (coupledOrbit A initial K) L).childTail % 3)) % 3) := by
+  have hsuffix := coupledOrbit_parent_bad_suffix A initial hbad K
+  exact coupledOrbit_parent_bad_current
+    A (coupledOrbit A initial K) hsuffix
+
+/-- The bad-language suffix operation is therefore closed under arbitrary
+controller re-basing. -/
+theorem coupledOrbit_parent_bad_suffix_rebase
+    (A : Nat) (initial : CoupledState)
+    (hbad : SeededBadTrace initial.parentSeed (initial.parentWord A))
+    (K : Nat) :
+    ∀ L : Nat,
+      SeededBadTrace
+        (coupledOrbit A (coupledOrbit A initial K) L).parentSeed
+        ((coupledOrbit A (coupledOrbit A initial K) L).parentWord A) := by
+  have hsuffix := coupledOrbit_parent_bad_suffix A initial hbad K
+  exact coupledOrbit_parent_bad_suffix
+    A (coupledOrbit A initial K) hsuffix
+
+#check coupledOrbit_parent_bad_rebase
+#check coupledOrbit_parent_bad_suffix_rebase
+#print axioms coupledOrbit_parent_bad_rebase
+
 end GSTV2
