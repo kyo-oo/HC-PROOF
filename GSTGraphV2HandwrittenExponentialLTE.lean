@@ -200,8 +200,9 @@ theorem uTailEnergy_cut_null_sector
   have h := uTailEnergy_cut_neutral t n K hcut
   refine ⟨h.1, h.2.1, h.2.2, ?_⟩
   intro hh
-  rw [h.2.1] at hh
-  exact Nat.zero_ne_bit0 (Nat.zero_ne_one) hh.1
+  have hd : (graph (uTailEnergy t n K) 0 (t+K)).seven.digit = 2 := hh.1
+  rw [h.2.1] at hd
+  omega
 
 
 #check pow4_three_power_lte_exact
