@@ -136,6 +136,7 @@ roots = [
   "GSTWorldtraceArithmetic",
   "GSTWorldtraceMahlerRelativePrecision",
   "GSTWorldCosmology",
+  "GSTUniversalLefschetzCosmology",
   "GSTRadixWorldDynamics",
   "GSTGradedWorldAlgebra",
   "GSTWorldRecoordinationGroupoid",
