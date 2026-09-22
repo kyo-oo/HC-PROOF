@@ -40,6 +40,7 @@ import GSTGeometricRealizationStage2D
 import GSTProjectiveOverC
 import GSTGeometricRealizationStage2E
 import GSTGeometricRealizationStage2F
+import GSTGeometricRealizationStage2G
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
@@ -318,3 +319,15 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2F.hodge_class_has_betti_cycle
 #check GSTGeometricRealizationStage2F.betti_hodge_of_stage2f_family
 #check GSTGeometricRealizationStage2F.Stage2FRealizationObligation
+
+
+/-! ## Stage 2G — derived Hodge bigrading front -/
+
+#check GSTGeometricRealizationStage2G.Complexification
+#check GSTGeometricRealizationStage2G.complexificationMapQ
+#check GSTGeometricRealizationStage2G.HodgeBigrading
+#check GSTGeometricRealizationStage2G.rationalHodgeSubspace
+#check GSTGeometricRealizationStage2G.HodgeBigradedBettiData
+#check GSTGeometricRealizationStage2G.BigradedBettiHodgeStatement
+#check GSTGeometricRealizationStage2G.hodge_class_has_bigraded_cycle
+#check GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_family
