@@ -41,6 +41,7 @@ def graft (k : ℕ) (u : Fin k → Fin 3) (Y : WindowTower) : WindowTower :=
     tail k (graft k u Y) = Y := by
   apply windowTowerEquivStream.injective
   funext p
+  change innovationStream (tail k (graft k u Y)) p = innovationStream Y p
   simp [show ¬ k+p < k by omega]
 
 /-- Reconstruction across an arbitrary cut is exact, for every coherent world. -/
@@ -65,6 +66,7 @@ def splitEquiv (k : ℕ) : WindowTower ≃ (Fin k → Fin 3) × WindowTower wher
 @[simp] theorem tail_zero (X : WindowTower) : tail 0 X = X := by
   apply windowTowerEquivStream.injective
   funext p
+  change innovationStream (tail 0 X) p = innovationStream X p
   simp
 
 /-- Arbitrary-depth renormalization is an exact additive semigroup action. -/
@@ -72,6 +74,7 @@ theorem tail_add (k l : ℕ) (X : WindowTower) :
     tail l (tail k X) = tail (k+l) X := by
   apply windowTowerEquivStream.injective
   funext p
+  change innovationStream (tail l (tail k X)) p = innovationStream (tail (k+l) X) p
   simp [Nat.add_assoc]
 
 /-- Every future world has all finite-prefix realizations. -/

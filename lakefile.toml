@@ -21,6 +21,7 @@ roots = [
   "GSTMultiAxisCohomology",
   "GSTExactWorldOperatorPresentation",
   "GSTMultiAxisCosmology",
+  "GSTMultiAxisGradedDynamics",
   "GST2DMixedEmergence",
   "GST2DMixedEmergenceUpgrade",
   "GSTBladeWave",

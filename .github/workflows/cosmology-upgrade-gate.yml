@@ -24,6 +24,7 @@ on:
       - 'GSTMultiAxisCohomology.lean'
       - 'GSTExactWorldOperatorPresentation.lean'
       - 'GSTMultiAxisCosmology.lean'
+      - 'GSTMultiAxisGradedDynamics.lean'
       - 'CardinalWorldsV2.lean'
       - 'waves/CardinalWorldsPostulateLawV2.lean'
       - 'waves/GSTWaveCohomologyV2.lean'
@@ -98,6 +99,7 @@ jobs:
             GSTMultiAxisCohomology.lean
             GSTExactWorldOperatorPresentation.lean
             GSTMultiAxisCosmology.lean
+            GSTMultiAxisGradedDynamics.lean
             CardinalWorldsV2.lean
             waves/CardinalWorldsPostulateLawV2.lean
             waves/GSTWaveCohomologyV2.lean
@@ -137,6 +139,7 @@ jobs:
             GSTMultiAxisCohomology \
             GSTExactWorldOperatorPresentation \
             GSTMultiAxisCosmology \
+            GSTMultiAxisGradedDynamics \
             CardinalWorldsV2 \
             waves.CardinalWorldsPostulateLawV2 \
             waves.GSTWaveCohomologyV2 \
