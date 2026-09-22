@@ -29,7 +29,7 @@ theorem towerWindow_nil_iff (R p N : Nat) :
     have hlen := towerWindow_length R p N
     rw [h] at hlen
     simp at hlen
-    exact hlen
+    exact hlen.symm
   · intro h
     subst N
     simp [towerWindow]
@@ -37,8 +37,16 @@ theorem towerWindow_nil_iff (R p N : Nat) :
 /-- Positive depth is exactly nonemptiness, not merely sufficient for it. -/
 theorem towerWindow_nonempty_iff (R p N : Nat) :
     towerWindow R p N ≠ [] ↔ 0 < N := by
-  rw [not_congr (towerWindow_nil_iff R p N)]
-  omega
+  constructor
+  · intro hne
+    have hN : N ≠ 0 := by
+      intro hz
+      apply hne
+      exact (towerWindow_nil_iff R p N).2 hz
+    omega
+  · intro hpos hnil
+    have hz := (towerWindow_nil_iff R p N).1 hnil
+    omega
 
 /-- The canonical N-cohomology basis exists without any ignition or
 nonemptiness hypothesis. -/
