@@ -252,6 +252,47 @@ theorem vortex_singularity_forms (a core : Nat) (ha : 2 ≤ a)
         ¬ HappyCell (carry4 (4^(3^a * core)) p) (digit3 (4^(3^a * core)) p)) :=
   GSTGraphV2OmegaWaveLaw.omega_puncture a core ha hcore
 
+/-- **IGNITION WITNESS EXTRACTION.**
+The existential ignition predicate already contains an exact cut row:
+every igniting exponent carries a Happy cell at p = a+1 for one of its
+canonical decompositions K = 3^a·core. -/
+theorem ignitionCondition_happy_witness
+    (K : Nat) (hign : ignitionCondition K) :
+    ∃ a core : Nat,
+      2 ≤ a ∧ core % 3 = 2 ∧
+      K = 3^a * core ∧
+      HappyCell
+        (carry4 (4^K) (a+1))
+        (digit3 (4^K) (a+1)) := by
+  obtain ⟨a,core,ha,hcore,hK⟩ := hign
+  refine ⟨a,core,ha,hcore,hK,?_⟩
+  rw [hK]
+  exact GSTGraphV2OmegaWaveLaw.omega_cut_happy_gate
+    a core (by omega) hcore
+
+/-- Ignition therefore implies an explicit physical Happy row at depth at
+least three. -/
+theorem ignitionCondition_has_happy
+    (K : Nat) (hign : ignitionCondition K) :
+    ∃ p : Nat, 3 ≤ p ∧
+      HappyCell (carry4 (4^K) p) (digit3 (4^K) p) := by
+  obtain ⟨a,core,ha,hcore,hK,hHappy⟩ :=
+    ignitionCondition_happy_witness K hign
+  exact ⟨a+1,by omega,hHappy⟩
+
+/-- The former contradiction form of singularity formation is strengthened
+to a constructive witness statement. -/
+theorem vortex_singularity_constructive
+    (a core : Nat) (ha : 2 ≤ a)
+    (hcore : core % 3 = 2) :
+    ∃ p : Nat, 3 ≤ p ∧
+      HappyCell
+        (carry4 (4^(3^a*core)) p)
+        (digit3 (4^(3^a*core)) p) := by
+  exact ⟨a+1,by omega,
+    GSTGraphV2OmegaWaveLaw.omega_cut_happy_gate
+      a core (by omega) hcore⟩
+
 /-! ## §5 The method, assembled — any N shapes in holes -/
 
 /-- **THE GST VORTEX SINGULARITY METHOD (GVSM)** — the full construction
@@ -291,5 +332,24 @@ theorem vortex_energy_finite (R : Nat) :
   have h1 : R / 3^(R+1) = 0 := Nat.div_eq_of_lt (three_pow_succ_gt R)
   refine ⟨R+1, h1, ?_⟩
   rw [h1]
+
+/-- Ignition simultaneously produces a finite-depth Happy concentration and a
+finite exhaustion depth for the underlying exponent. -/
+theorem ignition_concentration_finite_packet
+    (K : Nat) (hign : ignitionCondition K) :
+    (∃ p : Nat, 3 ≤ p ∧
+      HappyCell (carry4 (4^K) p) (digit3 (4^K) p))
+    ∧
+    (∃ D : Nat, K / 3^D = 0 ∧ 4 * (K / 3^D) = 0) := by
+  exact ⟨ignitionCondition_has_happy K hign,
+    vortex_energy_finite K⟩
+
+#check ignitionCondition_happy_witness
+#check ignitionCondition_has_happy
+#check vortex_singularity_constructive
+#check ignition_concentration_finite_packet
+#print axioms ignitionCondition_happy_witness
+#print axioms vortex_singularity_constructive
+#print axioms ignition_concentration_finite_packet
 
 end GSTVortexSingularity
