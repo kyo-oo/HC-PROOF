@@ -139,8 +139,8 @@ theorem representation_ext (f g : AxisRing d →+* R)
   obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective z
   exact DFunLike.congr_fun hc p
 
-/-- Universal property with uniqueness, for arbitrary axis sets. -/
 include hx in
+/-- Universal property with uniqueness, for arbitrary axis sets. -/
 theorem existsUnique_representation :
     ∃! f : AxisRing d →+* R, ∀ i, f (axis d i) = x i := by
   refine ⟨represent d x hx, represent_axis d x hx, ?_⟩
