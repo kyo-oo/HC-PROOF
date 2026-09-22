@@ -121,12 +121,61 @@ theorem seedHappy_one_iff
   rw [seededCarry_one_one]
   rfl
 
+
+/-! ## Two-step lossless prefix transport -/
+
+/-- Two successive seeded strips compose exactly.  The first two ternary
+digits are absorbed into the lower prefix while the remaining source is
+divided by nine. -/
+theorem seedHappy_strip_two
+    (D k x q : Nat) :
+    SeedHappy D k x (q+2) ↔
+      SeedHappy
+        ((D + 3^k * (x % 3)) +
+          3^(k+1) * ((x / 3) % 3))
+        (k+2)
+        ((x / 3) / 3)
+        q := by
+  have h1 := seedHappy_strip D k x (q+1)
+  have h2 := seedHappy_strip
+    (D + 3^k * (x % 3)) (k+1) (x/3) q
+  simpa [Nat.add_assoc] using h1.trans h2
+
+/-- The same two-step law holds separately for the physical carry. -/
+theorem seededCarry_strip_two
+    (D k x q : Nat) :
+    seededCarry D k x (q+2) =
+      seededCarry
+        ((D + 3^k * (x % 3)) +
+          3^(k+1) * ((x / 3) % 3))
+        (k+2)
+        ((x / 3) / 3)
+        q := by
+  have h1 := seededCarry_strip D k x (q+1)
+  have h2 := seededCarry_strip
+    (D + 3^k * (x % 3)) (k+1) (x/3) q
+  simpa [Nat.add_assoc] using h1.trans h2
+
+/-- And for the exposed information digit. -/
+theorem seededDigit_strip_two
+    (x q : Nat) :
+    seededDigit x (q+2) =
+      seededDigit ((x / 3) / 3) q := by
+  have h1 := seededDigit_strip x (q+1)
+  have h2 := seededDigit_strip (x/3) q
+  simpa [Nat.add_assoc] using h1.trans h2
+
+
 #check seededResidue_strip
 #check seededCarry_strip
 #check seededDigit_strip
 #check seedHappy_strip
 #check seedHappy_zero_iff
 #check seedHappy_one_iff
+#check seedHappy_strip_two
+#check seededCarry_strip_two
+#check seededDigit_strip_two
 #print axioms seedHappy_strip
+#print axioms seedHappy_strip_two
 
 end GSTGraphV2SeededPrefix
