@@ -373,6 +373,43 @@ theorem every_exponent_fires (K : Nat) (hK : 8 ≤ K) :
     rw [hKu, hf]
     exact hu2
 
+/-- Canonical least firing row for every exponent outside the
+window-clean dust. -/
+noncomputable def firstFireRow
+    (K : Nat) (hK : 8 ≤ K)
+    (hNotDust : ¬ WindowCleanDust K) : Nat :=
+  Nat.find ((every_exponent_fires K hK).resolve_right hNotDust)
+
+/-- The canonical row really fires. -/
+theorem firstFireRow_fires
+    (K : Nat) (hK : 8 ≤ K)
+    (hNotDust : ¬ WindowCleanDust K) :
+    digit3 (4^K) (firstFireRow K hK hNotDust) = 2 := by
+  exact Nat.find_spec
+    ((every_exponent_fires K hK).resolve_right hNotDust)
+
+/-- **LEAST-FIRE RIGIDITY.**
+No smaller ternary row than firstFireRow can carry digit two. -/
+theorem firstFireRow_minimal
+    (K : Nat) (hK : 8 ≤ K)
+    (hNotDust : ¬ WindowCleanDust K)
+    (p : Nat)
+    (hp : digit3 (4^K) p = 2) :
+    firstFireRow K hK hNotDust ≤ p := by
+  exact Nat.find_min'
+    ((every_exponent_fires K hK).resolve_right hNotDust) hp
+
+/-- Every row strictly before the canonical fire is digit-two free. -/
+theorem before_firstFireRow_not_two
+    (K : Nat) (hK : 8 ≤ K)
+    (hNotDust : ¬ WindowCleanDust K)
+    (p : Nat)
+    (hp : p < firstFireRow K hK hNotDust) :
+    digit3 (4^K) p ≠ 2 := by
+  intro htwo
+  have hle := firstFireRow_minimal K hK hNotDust p htwo
+  omega
+
 /-- **THE READ KILLS THE COMPLEMENT.**  Every `K ≥ 8` outside the
 window-clean dust owns its digit two: `noTernaryTwo (4^K) = false`,
 through the repo's own kill chain. -/
@@ -453,6 +490,9 @@ theorem the_diagonal_read_receipt
 #print axioms no22_four_pow_108
 #print axioms valuation_decomp
 #print axioms every_exponent_fires
+#print axioms firstFireRow_fires
+#print axioms firstFireRow_minimal
+#print axioms before_firstFireRow_not_two
 #print axioms no22_of_not_dust
 #print axioms the_act_of_dust_empty
 #print axioms hTailF_of_dust_empty
