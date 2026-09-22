@@ -173,6 +173,58 @@ theorem coupledOrbit_past_synchronization
     Nat.add_right_cancel hCancel
   simpa [st] using hCore.symm
 
+/-- **LEDGER RESIDUE RECONSTRUCTION.**
+The parent past and the child emitted packet determine the same residue at
+every ternary depth.  The live future term disappears modulo 3^K. -/
+theorem coupledOrbit_past_residue_exact
+    (A : Nat) (initial : CoupledState)
+    (hA : 0 < A) (h0 : CoupledInvariant A initial)
+    (K : Nat) :
+    initial.parentPast A K % 3^K =
+      (initial.childResidue + A * initial.childPast K) % 3^K := by
+  have h := coupledOrbit_past_synchronization A initial hA h0 K
+  have hmod := congrArg (fun n : Nat => n % 3^K) h
+  simpa [Nat.add_mod, Nat.mul_mod] using hmod
+
+/-- The parent past is always a genuine K-trit residue. -/
+theorem parentPast_lt_depth
+    (A : Nat) (initial : CoupledState) (K : Nat) :
+    initial.parentPast A K < 3^K := by
+  unfold CoupledState.parentPast seededPast
+  exact Nat.mod_lt _ (Nat.pow_pos (by decide))
+
+/-- **EXACT SMALL-PACKET RECONSTRUCTION.**
+If the emitted child packet already fits below the K-trit modulus, the ledger
+congruence rigidifies to literal equality with the parent past. -/
+theorem coupledOrbit_past_reconstruct_exact
+    (A : Nat) (initial : CoupledState)
+    (hA : 0 < A) (h0 : CoupledInvariant A initial)
+    (K : Nat)
+    (hsmall :
+      initial.childResidue + A * initial.childPast K < 3^K) :
+    initial.parentPast A K =
+      initial.childResidue + A * initial.childPast K := by
+  have hmod := coupledOrbit_past_residue_exact A initial hA h0 K
+  rw [Nat.mod_eq_of_lt (parentPast_lt_depth A initial K),
+      Nat.mod_eq_of_lt hsmall] at hmod
+  exact hmod
+
+/-- The all-depth coupled ledger therefore carries both a global conservation
+law and an exact finite-depth residue reconstruction law. -/
+theorem coupled_ledger_reconstruction_crown
+    (A : Nat) (initial : CoupledState)
+    (hA : 0 < A) (h0 : CoupledInvariant A initial) :
+    (∀ K,
+      initial.parentPast A K +
+          3^K * (coupledOrbit A initial K).childResidue =
+        initial.childResidue + A * initial.childPast K)
+    ∧
+    (∀ K,
+      initial.parentPast A K % 3^K =
+        (initial.childResidue + A * initial.childPast K) % 3^K) := by
+  exact ⟨coupledOrbit_past_synchronization A initial hA h0,
+    coupledOrbit_past_residue_exact A initial hA h0⟩
+
 /-- The same synchronization packaged as an all-Nat controller. -/
 structure InfiniteCoupledLedger
     (A : Nat) (initial : CoupledState) : Prop where
