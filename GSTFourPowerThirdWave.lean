@@ -1,4 +1,5 @@
 import GSTFourPowerDirectExistence
+import GSTFourPowerExponentTritObstruction
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
@@ -51,6 +52,7 @@ namespace GSTFourPowerThirdWave
 
 open GSTFourPowerDirectResidue
 open GSTFourPowerDirectExistence
+open GSTFourPowerExponentTritObstruction
 
 /-- Outer quarter-band condition on the row-`p` prefix of `4^K`:
 the value of `4^K` below row `p` lies in the lowest quarter or the
