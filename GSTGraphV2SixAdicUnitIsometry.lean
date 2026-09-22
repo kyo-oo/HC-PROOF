@@ -52,6 +52,69 @@ theorem six_iso_mul_iff_of_mod_inverse
   · intro h
     exact six_iso_mul k a x y h
 
+/-- A finite-resolution six-adic unit certificate for a chart
+multiplier.  It records an explicit inverse and the exact multiple of 6^k by
+which inverse multiplication differs from one. -/
+structure SixAdicUnitCertificate (k : Nat) (a : Int) where
+  inverse : Int
+  correction : Int
+  inverse_exact :
+    inverse * a = 1 + (6 : Int)^k * correction
+
+/-- Every unit certificate induces an exact multiplicative isometry. -/
+theorem SixAdicUnitCertificate.mul_isometry_iff
+    {k : Nat} {a : Int}
+    (U : SixAdicUnitCertificate k a)
+    (x y : Int) :
+    SixAdicIsoAt k (a*x) (a*y) ↔ SixAdicIsoAt k x y :=
+  six_iso_mul_iff_of_mod_inverse U.inverse_exact
+
+/-- Identity is a certified unit at every resolution. -/
+def SixAdicUnitCertificate.one (k : Nat) :
+    SixAdicUnitCertificate k 1 where
+  inverse := 1
+  correction := 0
+  inverse_exact := by ring
+
+/-- **UNIT-CERTIFICATE COMPOSITION.**
+Certified chart multipliers are closed under multiplication, with an explicit
+composed inverse and correction term. -/
+def SixAdicUnitCertificate.mul
+    {k : Nat} {a d : Int}
+    (A : SixAdicUnitCertificate k a)
+    (D : SixAdicUnitCertificate k d) :
+    SixAdicUnitCertificate k (a*d) where
+  inverse := D.inverse * A.inverse
+  correction :=
+    D.correction + D.inverse * A.correction * d
+  inverse_exact := by
+    rw [mul_assoc, ← mul_assoc A.inverse a d, A.inverse_exact]
+    rw [mul_add]
+    rw [← mul_assoc D.inverse 1 d, one_mul, D.inverse_exact]
+    ring
+
+/-- A certified multiplier remains an exact six-adic isometry after an
+arbitrary affine translation. -/
+theorem SixAdicUnitCertificate.affine_isometry_iff
+    {k : Nat} {a : Int}
+    (U : SixAdicUnitCertificate k a)
+    (shift x y : Int) :
+    SixAdicIsoAt k (shift + a*x) (shift + a*y) ↔
+      SixAdicIsoAt k x y := by
+  rw [six_iso_translate_iff]
+  exact U.mul_isometry_iff x y
+
+/-- Any finite product of two certified chart transformations preserves and
+reflects the exact same six-adic resolution relation. -/
+theorem composed_unit_isometry_iff
+    {k : Nat} {a d : Int}
+    (A : SixAdicUnitCertificate k a)
+    (D : SixAdicUnitCertificate k d)
+    (x y : Int) :
+    SixAdicIsoAt k ((a*d)*x) ((a*d)*y) ↔
+      SixAdicIsoAt k x y :=
+  (A.mul D).mul_isometry_iff x y
+
 /-- Multiplication by six is an exact similarity of the resolution tree:
     shifting both energies by one base-six factor raises the resolution by
     exactly one level, in both directions. -/
@@ -71,10 +134,19 @@ theorem six_scale_exact_iff {k : Nat} {x y : Int} :
 #check six_iso_translate_iff
 #check six_iso_mul_reflect_of_mod_inverse
 #check six_iso_mul_iff_of_mod_inverse
+#check SixAdicUnitCertificate
+#check SixAdicUnitCertificate.mul_isometry_iff
+#check SixAdicUnitCertificate.one
+#check SixAdicUnitCertificate.mul
+#check SixAdicUnitCertificate.affine_isometry_iff
+#check composed_unit_isometry_iff
 #check six_scale_exact_iff
 #print axioms six_iso_translate_iff
 #print axioms six_iso_mul_reflect_of_mod_inverse
 #print axioms six_iso_mul_iff_of_mod_inverse
+#print axioms SixAdicUnitCertificate.mul_isometry_iff
+#print axioms SixAdicUnitCertificate.affine_isometry_iff
+#print axioms composed_unit_isometry_iff
 #print axioms six_scale_exact_iff
 
 end GSTGraphV2SixAdicUnitIsometry
