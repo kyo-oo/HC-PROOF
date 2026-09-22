@@ -50,14 +50,14 @@ noncomputable def digitEndo (A B : Nat) :
     intro f g
     funext c
     by_cases h : 1 ≤ c.2.1
-    · simp only [digitShiftN, h, if_pos, Pi.add_apply]
-    · simp only [digitShiftN, h, if_neg, Pi.add_apply, add_zero]
+    · simp only [digitShiftN, h, dif_pos, Pi.add_apply]
+    · simp only [digitShiftN, h, dif_neg, Pi.add_apply, add_zero]
   map_smul' := by
     intro z f
     funext c
     by_cases h : 1 ≤ c.2.1
-    · simp only [digitShiftN, h, if_pos, Pi.smul_apply]
-    · simp only [digitShiftN, h, if_neg, Pi.smul_apply, smul_zero]
+    · simp only [digitShiftN, h, dif_pos, Pi.smul_apply, RingHom.id_apply]
+    · simp only [digitShiftN, h, dif_neg, Pi.smul_apply, RingHom.id_apply, smul_zero]
 
 noncomputable def carryEndo (A B : Nat) :
     Module.End ℤ (WorldCoef A B) where
@@ -66,14 +66,14 @@ noncomputable def carryEndo (A B : Nat) :
     intro f g
     funext c
     by_cases h : 1 ≤ c.1.1
-    · simp only [carryShiftN, h, if_pos, Pi.add_apply]
-    · simp only [carryShiftN, h, if_neg, Pi.add_apply, add_zero]
+    · simp only [carryShiftN, h, dif_pos, Pi.add_apply]
+    · simp only [carryShiftN, h, dif_neg, Pi.add_apply, add_zero]
   map_smul' := by
     intro z f
     funext c
     by_cases h : 1 ≤ c.1.1
-    · simp only [carryShiftN, h, if_pos, Pi.smul_apply]
-    · simp only [carryShiftN, h, if_neg, Pi.smul_apply, smul_zero]
+    · simp only [carryShiftN, h, dif_pos, Pi.smul_apply, RingHom.id_apply]
+    · simp only [carryShiftN, h, dif_neg, Pi.smul_apply, RingHom.id_apply, smul_zero]
 
 @[simp]
 theorem digitEndo_apply (g : WorldCoef A B) :
