@@ -51,11 +51,61 @@ theorem power_origin_event_eight_iff
       (graph 1 (K+t) p).eventCode = 8 := by
   rw [(power_origin_observables_exact K t p).2.2.1]
 
+
+/-! ## Perfect-power horizontal action -/
+
+/-- Re-basing a perfect-power world after `L` horizontal waves is exactly
+the same physical world as increasing its perfect-power origin from `K` to
+`K+L`.  All enriched observables agree. -/
+theorem power_origin_rebase_observables_exact
+    (K L t p : Nat) :
+    (graph (4^K) (L+t) p).seven.carry =
+        (graph (4^(K+L)) t p).seven.carry ∧
+    (graph (4^K) (L+t) p).seven.digit =
+        (graph (4^(K+L)) t p).seven.digit ∧
+    (graph (4^K) (L+t) p).eventCode =
+        (graph (4^(K+L)) t p).eventCode ∧
+    (graph (4^K) (L+t) p).uCharge =
+        (graph (4^(K+L)) t p).uCharge ∧
+    (graph (4^K) (L+t) p).mixedCharge =
+        (graph (4^(K+L)) t p).mixedCharge ∧
+    (graph (4^K) (L+t) p).crossingCharge =
+        (graph (4^(K+L)) t p).crossingCharge ∧
+    (graph (4^K) (L+t) p).survive =
+        (graph (4^(K+L)) t p).survive := by
+  have h1 := power_origin_observables_exact K (L+t) p
+  have h2 := power_origin_observables_exact (K+L) t p
+  simpa [Nat.add_assoc] using
+    ⟨h1.1.trans h2.1.symm,
+      h1.2.1.trans h2.2.1.symm,
+      h1.2.2.1.trans h2.2.2.1.symm,
+      h1.2.2.2.1.trans h2.2.2.2.1.symm,
+      h1.2.2.2.2.1.trans h2.2.2.2.2.1.symm,
+      h1.2.2.2.2.2.1.trans h2.2.2.2.2.2.1.symm,
+      h1.2.2.2.2.2.2.trans h2.2.2.2.2.2.2.symm⟩
+
+/-- Happy transport is invariant under the same perfect-power re-basing. -/
+theorem power_origin_rebase_happy_iff
+    (K L t p : Nat) :
+    HappyCell
+        (graph (4^K) (L+t) p).seven.carry
+        (graph (4^K) (L+t) p).seven.digit
+      ↔
+    HappyCell
+        (graph (4^(K+L)) t p).seven.carry
+        (graph (4^(K+L)) t p).seven.digit := by
+  rw [(power_origin_rebase_observables_exact K L t p).1,
+      (power_origin_rebase_observables_exact K L t p).2.1]
+
+
 #check power_origin_observables_exact
 #check power_origin_happy_iff
 #check power_origin_event_eight_iff
+#check power_origin_rebase_observables_exact
+#check power_origin_rebase_happy_iff
 #print axioms power_origin_observables_exact
 #print axioms power_origin_happy_iff
 #print axioms power_origin_event_eight_iff
+#print axioms power_origin_rebase_observables_exact
 
 end GSTGraphV2PerfectPowerAncestry
