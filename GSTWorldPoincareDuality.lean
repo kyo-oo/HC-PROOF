@@ -96,7 +96,8 @@ def degreeDualEquiv
       rw [worldDegree_dual, c.2]⟩
   invFun c :=
     ⟨worldDual c.1, by
-      rw [worldDegree_dual, c.2]⟩
+      rw [worldDegree_dual, c.2]
+      omega⟩
   left_inv c := by
     apply Subtype.ext
     simp
