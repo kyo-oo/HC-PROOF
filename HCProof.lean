@@ -23,6 +23,7 @@ import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
 import GSTUniversalLefschetzCosmology
+import GSTUniversalLefschetzPathFormula
 import GSTTruncatedWorldCohomologyRing
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
@@ -457,3 +458,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGlobalPureHodgeCosmology.hc_pure_hodge_equiv
 #check GSTGlobalPureHodgeCosmology.worldAddress_pure_support
 #check GSTGlobalPureHodgeCosmology.global_pure_hodge_crown
+
+
+/-! ## Universal Lefschetz path calculus -/
+
+#check GSTUniversalLefschetzPathFormula.L_pow_expansion
+#check GSTUniversalLefschetzPathFormula.worldAct_L_pow_paths
+#check GSTUniversalLefschetzPathFormula.worldAct_L_pow_coordinate_formula
+#check GSTUniversalLefschetzPathFormula.path_formula_exact_boundary
+#check GSTUniversalLefschetzPathFormula.hc_bottom_to_top_coefficient
+#check GSTUniversalLefschetzPathFormula.universal_lefschetz_path_crown
