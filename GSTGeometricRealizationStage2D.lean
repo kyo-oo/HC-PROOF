@@ -110,6 +110,20 @@ noncomputable def CodimensionHodgeRealization.toNativeSchemeRealization
   basisCycle := R.basisCycle
   basisCycle_address := R.basisCycle_address
 
+/-- Explicit codimension-p cycle selector on the Hodge submodule. -/
+noncomputable def codimensionCycleSelector
+    (R : CodimensionHodgeRealization N p X Coh)
+    (alpha : R.hodge) : codimensionCycles X p :=
+  nativeCycleSelector R.toNativeSchemeRealization alpha
+
+/-- The codimension selector is a verified right inverse of the canonical
+codimension-p cycle-class map on the Hodge sector. -/
+theorem codimensionCycleSelector_spec
+    (R : CodimensionHodgeRealization N p X Coh)
+    (alpha : R.hodge) :
+    R.cycleClass (codimensionCycleSelector R alpha) = alpha.1 := by
+  exact nativeCycleSelector_spec R.toNativeSchemeRealization alpha
+
 /-- **NATIVE CODIMENSION-p FIBER THEOREM.**
 Every Hodge class in a supplied realization is represented by an actual
 Mathlib algebraic cycle supported in codimension p. -/
@@ -217,6 +231,8 @@ theorem hodge_of_codimension_fiber_realization
 #check mem_codimensionCycles_iff
 #check mem_codimensionCycles_one_iff
 #check CodimensionHodgeRealization
+#check codimensionCycleSelector
+#check codimensionCycleSelector_spec
 #check hodge_class_has_codimension_cycle
 #check codimension_hodge_subspace_le_cycleClass_range
 #check UniversalCodimensionHodgeStatement
@@ -225,6 +241,7 @@ theorem hodge_of_codimension_fiber_realization
 #check hodge_of_codimension_fiber_realization
 
 #print axioms mem_codimensionCycles_one_iff
+#print axioms codimensionCycleSelector_spec
 #print axioms hodge_class_has_codimension_cycle
 #print axioms codimension_hodge_subspace_le_cycleClass_range
 #print axioms universal_codimension_hodge_of_realization_family
