@@ -119,8 +119,8 @@ theorem omega_future_add_exact (t N K L : Nat) :
       N / 3^(K+L) = (N / 3^K) / 3^L := by
     rw [Nat.pow_add, Nat.div_div_eq_div_mul]
   rw [hdiv]
-  congr 1
-  omega
+  have hexp : t + 1 + (K+L) = t + K + 1 + L := by omega
+  rw [hexp]
 
 /-- **TWO-STAGE CONSERVATION.**  Past information from the first block,
 past information from the renormalized second block, and the twice-renormalized
