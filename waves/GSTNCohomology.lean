@@ -219,6 +219,69 @@ theorem interference_decomposition (R lo hi : Nat) :
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
   ring
 
+/-- Unweighted SURVIVE incidence paired against Wave II. -/
+def sourceIncidencePairing (R lo hi : Nat) : ℤ :=
+  ∑ p ∈ Finset.Icc lo hi,
+    surviveI (carry4 R p) (digit3 R p) * waveIIAmplitude R p
+
+/-- **EXACT MATTER FACTORIZATION.**
+The source channel of two-wave interference is globally divisible by 56:
+the cohomological matter coefficient factors out of the entire window. -/
+theorem sourcePairing_eq_56_mul_incidence
+    (R lo hi : Nat) :
+    sourcePairing R lo hi =
+      56 * sourceIncidencePairing R lo hi := by
+  unfold sourcePairing sourceIncidencePairing
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro p hp
+  unfold waveSource cellOf
+  ring
+
+/-- The full interference law with the universal matter factor exposed. -/
+theorem interference_factored
+    (R lo hi : Nat) :
+    interference R lo hi =
+      horizontalPairing R lo hi +
+        verticalPairing R lo hi +
+          56 * sourceIncidencePairing R lo hi := by
+  rw [interference_decomposition,
+      sourcePairing_eq_56_mul_incidence]
+
+/-- **EXACT SOURCE EXTRACTION.**
+Subtracting the two boundary channels from the total interference leaves
+exactly 56 times the paired SURVIVE incidence. -/
+theorem interference_source_extraction
+    (R lo hi : Nat) :
+    interference R lo hi -
+        horizontalPairing R lo hi -
+        verticalPairing R lo hi =
+      56 * sourceIncidencePairing R lo hi := by
+  rw [interference_factored]
+  ring
+
+/-- When horizontal and vertical boundary bookkeeping cancels, the entire
+two-wave reaction is pure 56-quantized matter. -/
+theorem interference_of_boundary_cancel
+    (R lo hi : Nat)
+    (hboundary :
+      horizontalPairing R lo hi +
+        verticalPairing R lo hi = 0) :
+    interference R lo hi =
+      56 * sourceIncidencePairing R lo hi := by
+  rw [interference_factored]
+  rw [hboundary, zero_add]
+
+/-- The boundary-subtracted interference is always divisible by 56. -/
+theorem interference_source_divisible_56
+    (R lo hi : Nat) :
+    (56 : ℤ) ∣
+      interference R lo hi -
+        horizontalPairing R lo hi -
+        verticalPairing R lo hi := by
+  refine ⟨sourceIncidencePairing R lo hi, ?_⟩
+  exact interference_source_extraction R lo hi
+
 /-- **NULL STERILITY (the chord law of the source).**  The NULL Happy
 chord `(C, d) = (0, 2)` carries no source: its SURVIVE incidence is
 exactly zero — the hidden BIG1 chord `2 → 1 → 2` survives as *boundary*,
@@ -296,5 +359,15 @@ theorem two_wave_frame_refines (R p : Nat) (hbig2 : digit3 R p = 2) :
     decide
   · rw [h3]
     decide
+
+#check sourceIncidencePairing
+#check sourcePairing_eq_56_mul_incidence
+#check interference_factored
+#check interference_source_extraction
+#check interference_of_boundary_cancel
+#check interference_source_divisible_56
+#print axioms sourcePairing_eq_56_mul_incidence
+#print axioms interference_source_extraction
+#print axioms interference_source_divisible_56
 
 end GSTNCohomology
