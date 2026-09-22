@@ -249,6 +249,40 @@ theorem future_bad_of_no_relocated_happy
   exact ⟨p+1+r, by omega, hHappy⟩
 
 #check FourPowerHappyPropagation
+
+/-! ## Exact relocation target interfaces -/
+
+/-- The canonical physical Happy target is exactly the direct arithmetic
+existence surface.  Relocation therefore changes coordinates, not content. -/
+theorem four_power_canonical_target_iff_direct_existence :
+    FourPowerCanonicalHappyTarget ↔
+      GSTFourPowerDirectExistence.FourPowerDirectExistence := by
+  rw [four_power_canonical_target_iff_digit_overlap]
+  constructor
+  · intro h K hK5 hK7
+    obtain ⟨p, hp, hs, ht⟩ := h K hK5 hK7
+    exact ⟨p, hp, by
+      simpa [GSTCanonicalTailStateIso.digit3,
+        GSTFourPowerDirectResidue.digit3] using hs, by
+      simpa [GSTCanonicalTailStateIso.digit3,
+        GSTFourPowerDirectResidue.digit3] using ht⟩
+  · intro h K hK5 hK7
+    obtain ⟨p, hp, hs, ht⟩ := h K hK5 hK7
+    exact ⟨p, hp, by
+      simpa [GSTCanonicalTailStateIso.digit3,
+        GSTFourPowerDirectResidue.digit3] using hs, by
+      simpa [GSTCanonicalTailStateIso.digit3,
+        GSTFourPowerDirectResidue.digit3] using ht⟩
+
+/-- The pure digit-overlap target is likewise exactly the direct existence
+proposition. -/
+theorem four_power_digit_overlap_iff_direct_existence :
+    FourPowerDigitOverlap ↔
+      GSTFourPowerDirectExistence.FourPowerDirectExistence := by
+  rw [← four_power_canonical_target_iff_digit_overlap]
+  exact four_power_canonical_target_iff_direct_existence
+
+
 #check FourPowerCanonicalHappyTarget
 #check FourPowerDigitOverlap
 #check graph_happy_iff_consecutive_digit_two
@@ -264,6 +298,8 @@ theorem future_bad_of_no_relocated_happy
 #check four_power_graph_neutral_at_support_cutoff
 #check latent_vertical_future_packet
 #check future_bad_of_no_relocated_happy
+#check four_power_canonical_target_iff_direct_existence
+#check four_power_digit_overlap_iff_direct_existence
 #print axioms graph_happy_iff_consecutive_digit_two
 #print axioms four_power_happy_iff_consecutive_digit_two
 #print axioms four_power_canonical_target_iff_digit_overlap
@@ -276,5 +312,6 @@ theorem future_bad_of_no_relocated_happy
 #print axioms four_power_graph_neutral_at_support_cutoff
 #print axioms latent_vertical_future_packet
 #print axioms future_bad_of_no_relocated_happy
+#print axioms four_power_canonical_target_iff_direct_existence
 
 end GSTGraphV2FourPowerRelocation
