@@ -122,6 +122,63 @@ theorem graph_u_equationIII_shifted_telescope
       push_cast
       ring
 
+
+/-! ## The two-dimensional U bicocycle -/
+
+/-- Vertical Equation-III flux of an arbitrary horizontal interval.  The
+horizontal width and vertical window are now one compositional object. -/
+def graphUVerticalFlux
+    (E start N p K : Nat) : Int :=
+  Finset.sum (Finset.range K) (fun j =>
+    (((3^j : Nat) : Int)) *
+      (gstUJumpExact
+          (graph E (start+N) (p+j)).seven.carry
+          (graph E (start+N) (p+j)).seven.digit -
+        (((4^N : Nat) : Int)) *
+          gstUJumpExact
+            (graph E start (p+j)).seven.carry
+            (graph E start (p+j)).seven.digit))
+
+/-- Closed boundary form of the two-dimensional flux. -/
+theorem graphUVerticalFlux_closed
+    (E start N p K : Nat) :
+    graphUVerticalFlux E start N p K =
+      (((3^K : Nat) : Int)) * graphUPotential E start N (p+K) -
+        graphUPotential E start N p := by
+  exact graph_u_equationIII_shifted_telescope E start N p K
+
+/-- **HORIZONTAL/VERTICAL BICOCYCLE.**  Vertical flux across a concatenated
+horizontal block `P+N` equals the flux of the right block plus `4^N` times
+the flux of the left block.  Together with the ternary boundary weight in the
+closed form, this gives one exact two-axis cocycle on the infinite Graph-V2
+sheet. -/
+theorem graphUVerticalFlux_horizontal_cocycle_exact
+    (E start P N p K : Nat) :
+    graphUVerticalFlux E start (P+N) p K =
+      graphUVerticalFlux E (start+P) N p K +
+        (((4^N : Nat) : Int)) *
+          graphUVerticalFlux E start P p K := by
+  rw [graphUVerticalFlux_closed E start (P+N) p K,
+      graphUVerticalFlux_closed E (start+P) N p K,
+      graphUVerticalFlux_closed E start P p K]
+  rw [graph_u_potential_cocycle_exact E start P N (p+K),
+      graph_u_potential_cocycle_exact E start P N p]
+  ring
+
+/-- Zero horizontal width carries zero two-dimensional U flux. -/
+@[simp] theorem graphUVerticalFlux_zero_width
+    (E start p K : Nat) :
+    graphUVerticalFlux E start 0 p K = 0 := by
+  rw [graphUVerticalFlux_closed]
+  simp [graphUPotential]
+
+/-- Zero vertical height is likewise the neutral bicocycle element. -/
+@[simp] theorem graphUVerticalFlux_zero_height
+    (E start N p : Nat) :
+    graphUVerticalFlux E start N p 0 = 0 := by
+  simp [graphUVerticalFlux]
+
+
 /-- On the twelve physical GST cells, a Happy Gate is exactly a negative U
 jump.  This gives the ordered form needed by the monolith surgery. -/
 theorem happy_iff_gst_u_jump_negative
@@ -257,12 +314,15 @@ theorem handwritten_u_anchored_cocycle_exact
 #check graph_u_potential_cocycle_exact
 #check graph_u_equationIII_shifted_exact
 #check graph_u_equationIII_shifted_telescope
+#check graphUVerticalFlux_closed
+#check graphUVerticalFlux_horizontal_cocycle_exact
 #check happy_iff_gst_u_jump_negative
 #check graph_u_derivative_positive_of_child_happy_right_bad
 #check graph_u_jump_cocycle_exact
 #check canonical_u_recoordinate_exact
 #check handwritten_u_anchored_cocycle_exact
 #print axioms graph_u_equationIII_shifted_telescope
+#print axioms graphUVerticalFlux_horizontal_cocycle_exact
 #print axioms graph_u_derivative_positive_of_child_happy_right_bad
 #print axioms handwritten_u_anchored_cocycle_exact
 
