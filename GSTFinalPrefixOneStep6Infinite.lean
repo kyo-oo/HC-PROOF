@@ -265,6 +265,31 @@ theorem weighted_cross_mixed_controller_exact
           push_cast
           ring
 
+
+/-! ## Canonical controller re-basing -/
+
+/-- The canonical all-depth controller is coherent under arbitrary re-basing:
+after K physical rows, L further abstract controller steps are exactly the
+literal graph state at depth K+L. -/
+theorem canonical_controller_rebase_all_depth
+    (s n K L : Nat) :
+    GSTV2.coupledOrbit (4^(infN s))
+        (graphCoupledState (infE s n) (infN s) (infB s + K)) L =
+      graphCoupledState (infE s n) (infN s) (infB s + K + L) := by
+  exact graphCoupledState_rebase_exact
+    (infE s n) (infN s) (infB s) K L
+
+/-- The canonical controller therefore carries a literal vertical Nat-action
+at every origin and every residual scale. -/
+theorem canonical_controller_action_crown
+    (s n : Nat) :
+    ∀ K L : Nat,
+      GSTV2.coupledOrbit (4^(infN s))
+          (graphCoupledState (infE s n) (infN s) (infB s + K)) L =
+        graphCoupledState (infE s n) (infN s) (infB s + K + L) :=
+  canonical_controller_rebase_all_depth s n
+
+
 #check infinite_base_carry_zero
 #check canonical_infinite_bad_control
 #check canonical_infinite_ledger
@@ -274,6 +299,8 @@ theorem weighted_cross_mixed_controller_exact
 #check cross_mixed_controller_divergence
 #check reverse_cross_mixed_controller_exact
 #check weighted_cross_mixed_controller_exact
+#check canonical_controller_rebase_all_depth
+#check canonical_controller_action_crown
 #print axioms infinite_base_carry_zero
 #print axioms canonical_infinite_bad_control
 #print axioms canonical_infinite_ledger
@@ -283,5 +310,6 @@ theorem weighted_cross_mixed_controller_exact
 #print axioms cross_mixed_controller_divergence
 #print axioms reverse_cross_mixed_controller_exact
 #print axioms weighted_cross_mixed_controller_exact
+#print axioms canonical_controller_rebase_all_depth
 
 end GSTFinalPrefixOneStep6Infinite
