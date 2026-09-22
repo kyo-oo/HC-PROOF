@@ -139,6 +139,7 @@ roots = [
   "GSTWorldCosmology",
   "GSTUniversalLefschetzCosmology",
   "GSTTruncatedWorldCohomologyRing",
+  "GSTSharpAxisSpectrum",
   "GSTRadixWorldDynamics",
   "GSTGradedWorldAlgebra",
   "GSTWorldRecoordinationGroupoid",
