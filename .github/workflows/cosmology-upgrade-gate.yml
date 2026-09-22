@@ -163,12 +163,34 @@ jobs:
           fi
           echo HC_UPGRADE_AXIOM_AUDIT=PASS
 
+      - name: Audit every public strengthening declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTCosmologyStrengtheningAudit.lean 2>&1 | tee cosmology-strengthening-axioms.log
+          python3 - <<'PYCODE'
+          import re
+          from pathlib import Path
+          text = Path('cosmology-strengthening-axioms.log').read_text()
+          receipts = re.findall(r"depends on axioms:\s*\[([^]]*)\]", text)
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          assert receipts, 'No axiom receipts were produced'
+          for receipt in receipts:
+              names = {x.strip() for x in receipt.split(',') if x.strip()}
+              assert names <= allowed, f'Unexpected axioms: {names - allowed}'
+          assert 'sorryAx' not in text
+          print(f'HC_STRENGTHENING_PUBLIC_AXIOM_AUDIT=PASS ({len(receipts)} nonempty receipts)')
+          PYCODE
+
       - name: Upload upgrade diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hc-cosmology-upgrade-diagnostics
-          path: cosmology-upgrade.log
+          path: |
+            cosmology-upgrade.log
+            cosmology-strengthening-axioms.log
           if-no-files-found: ignore
 
       - uses: actions/cache/save@v4
