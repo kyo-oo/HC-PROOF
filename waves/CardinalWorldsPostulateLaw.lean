@@ -96,6 +96,39 @@ two invariants — the only infinity POSTULATE III admits. -/
 def controlledLimit (T : ControlledTower Nat) : Nat → Nat :=
   T.level
 
+/-- **CONTROLLED-TOWER RIGIDITY.**
+The controller and ledger clauses force each successor level to equal its
+predecessor: both are identified with the same bridge-fixed state. -/
+theorem controlled_level_succ_eq
+    {α : Type} (T : ControlledTower α) (j : Nat) :
+    T.level (j+1) = T.level j := by
+  exact (T.ledger j).trans (T.controller j).symm
+
+/-- Every level of a controlled tower is therefore equal to level zero. -/
+theorem controlled_level_eq_zero
+    {α : Type} (T : ControlledTower α) :
+    ∀ j : Nat, T.level j = T.level 0 := by
+  intro j
+  induction j with
+  | zero => rfl
+  | succ j ih =>
+      exact (controlled_level_succ_eq T j).trans ih
+
+/-- Any two levels of one controlled tower coincide. -/
+theorem controlled_level_eq
+    {α : Type} (T : ControlledTower α)
+    (j k : Nat) :
+    T.level j = T.level k := by
+  exact (controlled_level_eq_zero T j).trans
+    (controlled_level_eq_zero T k).symm
+
+/-- The controlled limit is extensionally the constant level-zero family. -/
+theorem controlledLimit_constant
+    (T : ControlledTower Nat) :
+    controlledLimit T = fun _ => T.level 0 := by
+  funext j
+  exact controlled_level_eq_zero T j
+
 /-! ## §2 CLAUSE 1 — finite presentation -/
 
 /-- **FINITE PRESENTATION LAW.**  Every value of the controlled limit is
@@ -142,6 +175,16 @@ theorem emergent_dimension_full (T : ControlledTower Nat) (N : Nat) :
       rw [if_pos (T.ledger N), ih]
       omega
 
+/-- **RIGID CARRIER / EMERGENT DIMENSION DUALITY.**
+Although every controlled level carries the same stabilized state, the
+dimension readout still grows exactly with depth. -/
+theorem rigid_carrier_emergent_dimension
+    (T : ControlledTower Nat) (N : Nat) :
+    T.level N = T.level 0 ∧
+      emergentDimension T N = N := by
+  exact ⟨controlled_level_eq_zero T N,
+    emergent_dimension_full T N⟩
+
 /-- **THE INFINITE-DIMENSIONAL READOUT.**  The infinite dimension is the
 colimit of the emergent dimensions: the tower of counts `0, 1, 2, …` is
 unbounded — but every *use* of the infinite dimension factors through a
@@ -182,5 +225,14 @@ theorem postulate_three_law (levels : Nat → Nat)
     ∃ (colimit : Nat → Nat), colimit = levels ∧
       ∀ k : Nat, ∃ j : Nat, k ≤ j ∧ colimit k = levels j := by
   exact ⟨levels, rfl, fun k => ⟨k, Nat.le_refl k, rfl⟩⟩
+
+#check controlled_level_succ_eq
+#check controlled_level_eq_zero
+#check controlled_level_eq
+#check controlledLimit_constant
+#check rigid_carrier_emergent_dimension
+#print axioms controlled_level_eq_zero
+#print axioms controlledLimit_constant
+#print axioms rigid_carrier_emergent_dimension
 
 end CardinalWorldsPostulateLaw
