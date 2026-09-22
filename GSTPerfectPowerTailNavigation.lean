@@ -77,6 +77,20 @@ theorem perfect_power_happy_position_ge_cut
   rw [canonical_tail_decomposition s b] at h
   exact forced_prefix_not_happy (s+1) (canonicalTail s b) p (by omega) hp h
 
+/-- Canonical Tail Lift Theorem.
+Every Happy witness of the canonical tail lifts back to the full perfect power
+at the exact shifted ternary position. -/
+theorem canonical_tail_lift
+    (s b : Nat) (hs : 1 ≤ s)
+    (hNav : Navigation (canonicalTail s b)) :
+    Navigation (4^(3^s * b)) := by
+  obtain ⟨j,hHappy⟩ := hNav
+  refine ⟨s+1+j, ?_⟩
+  rw [canonical_tail_decomposition s b]
+  exact
+    (canonical_tail_happy_iff
+      (s+1) (canonicalTail s b) j (by omega)).2 hHappy
+
 /-- Canonical Tail Projection Theorem.
 Navigation of the full perfect power projects exactly to Navigation of `Q_s(b)`. -/
 theorem canonical_tail_projection
@@ -96,5 +110,37 @@ theorem canonical_tail_projection
   rw [canonical_tail_decomposition s b] at h
   rw [hpEq] at h
   exact h
+
+/-- **CANONICAL NAVIGATION EQUIVALENCE.**
+For every positive canonical scale, the full perfect power and its canonical
+tail have exactly the same Navigation truth value.  The forced low prefix is
+mathematically inert for Navigation. -/
+theorem canonical_tail_navigation_iff
+    (s b : Nat) (hs : 1 ≤ s) :
+    Navigation (4^(3^s * b)) ↔ Navigation (canonicalTail s b) := by
+  constructor
+  · exact canonical_tail_projection s b hs
+  · exact canonical_tail_lift s b hs
+
+/-- Any proposition depending only on the Navigation truth value can therefore
+be transferred across the canonical perfect-power cut. -/
+theorem canonical_tail_navigation_predicate_iff
+    (s b : Nat) (hs : 1 ≤ s)
+    (P : Prop → Prop) :
+    P (Navigation (4^(3^s * b))) ↔
+      P (Navigation (canonicalTail s b)) := by
+  rw [canonical_tail_navigation_iff s b hs]
+
+/-- Canonical navigation crown: witness positions live above the cut and the
+cut itself is an exact equivalence of Navigation states. -/
+theorem canonical_tail_navigation_crown :
+    (∀ s b p, 1 ≤ s →
+      HappyCell (carry4 (4^(3^s*b)) p) (digit3 (4^(3^s*b)) p) →
+      s+1 ≤ p)
+    ∧
+    (∀ s b, 1 ≤ s →
+      (Navigation (4^(3^s*b)) ↔ Navigation (canonicalTail s b))) := by
+  exact ⟨perfect_power_happy_position_ge_cut,
+    canonical_tail_navigation_iff⟩
 
 end GSTPerfectPowerTailNavigation
