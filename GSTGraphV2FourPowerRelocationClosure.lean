@@ -98,9 +98,30 @@ theorem four_power_creation_master :
   GSTGraphV2FourPowerForcingBridge.graph_forcing_to_creation_master
     four_power_graph_forcing
 
+
+/-! ## Closed production interfaces -/
+
+/-- The relocation closure proves the direct arithmetic target outright. -/
+theorem four_power_direct_existence :
+    GSTFourPowerDirectExistence.FourPowerDirectExistence :=
+  (GSTGraphV2FourPowerForcingBridge.graph_forcing_iff_direct_existence).1
+    four_power_graph_forcing
+
+/-- Consequently every equivalent production language is closed
+simultaneously: physical forcing, direct overlap, and creation master. -/
+theorem four_power_closed_interface_crown :
+    GSTGraphV2FourPowerForcingBridge.FourPowerGraphForcing ∧
+    GSTFourPowerDirectExistence.FourPowerDirectExistence ∧
+    GSTFourPowerOntologicalAdapter.FourPowerCreationMaster :=
+  ⟨four_power_graph_forcing, four_power_direct_existence,
+    four_power_creation_master⟩
+
+
 #check four_power_happy_propagates
 #check four_power_graph_forcing
 #check four_power_creation_master
+#check four_power_direct_existence
+#check four_power_closed_interface_crown
 #print axioms GSTInfiniteFourPowerNavigation.power_three_step_collision
 #print axioms GSTInfiniteFourPowerNavigation.four_power_happy_ge_three
 #print axioms four_power_happy_propagates
@@ -110,5 +131,7 @@ theorem four_power_creation_master :
 #print axioms four_power_happy_all_from_eight
 #print axioms four_power_graph_forcing
 #print axioms four_power_creation_master
+#print axioms four_power_direct_existence
+#print axioms four_power_closed_interface_crown
 
 end GSTGraphV2FourPowerRelocationClosure
