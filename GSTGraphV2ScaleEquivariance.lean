@@ -203,6 +203,101 @@ theorem canonical_n_wave_plane_equivariance
   funext x p
   exact canonical_n_wave_packet_exact s n K x p
 
+/-- **UNIVERSAL OBSERVABLE TRANSPORT.**
+Every observable of the physical packet is automatically invariant under an
+arbitrary finite U-cut.  No new proof is needed for future observables: packet
+equality transports them all at once. -/
+theorem u_cut_observable_exact
+    {α : Type} (F : PhysicalPacket → α)
+    (t n K x p : Nat) :
+    F (physicalPacket (4^(3^t*n)) x p) =
+      F (physicalPacket (uTailEnergy t n K)
+        (uPhaseShift t n K + x) p) :=
+  congrArg F (physicalPacket_u_cut_exact t n K x p)
+
+/-- **UNIVERSAL PREDICATE TRANSPORT.**
+Every proposition depending only on the physical packet is preserved exactly
+by arbitrary finite U-cuts. -/
+theorem u_cut_predicate_iff
+    (P : PhysicalPacket → Prop)
+    (t n K x p : Nat) :
+    P (physicalPacket (4^(3^t*n)) x p) ↔
+      P (physicalPacket (uTailEnergy t n K)
+        (uPhaseShift t n K + x) p) := by
+  rw [physicalPacket_u_cut_exact]
+
+/-- Every binary relation on two physical packets is transported
+simultaneously by the same finite U-cut. -/
+theorem u_cut_binary_relation_iff
+    (R : PhysicalPacket → PhysicalPacket → Prop)
+    (t n K x₁ p₁ x₂ p₂ : Nat) :
+    R
+        (physicalPacket (4^(3^t*n)) x₁ p₁)
+        (physicalPacket (4^(3^t*n)) x₂ p₂)
+      ↔
+    R
+        (physicalPacket (uTailEnergy t n K)
+          (uPhaseShift t n K + x₁) p₁)
+        (physicalPacket (uTailEnergy t n K)
+          (uPhaseShift t n K + x₂) p₂) := by
+  rw [physicalPacket_u_cut_exact, physicalPacket_u_cut_exact]
+
+/-- Two-stage cuts preserve every predicate on the physical packet, so
+semigroup coherence is inherited by arbitrary packet-defined laws. -/
+theorem u_cut_two_stage_predicate_iff
+    (P : PhysicalPacket → Prop)
+    (t n K L x p : Nat) :
+    P (physicalPacket (4^(3^t*n)) x p) ↔
+      P (physicalPacket
+        (uTailEnergy (t + K) (originSuffix n K) L)
+        (uPhaseShift t n K +
+          uPhaseShift (t + K) (originSuffix n K) L + x) p) := by
+  rw [physicalPacket_u_cut_two_stage]
+
+/-- Canonical N-wave renormalization preserves every observable of the
+physical packet, not merely the coordinates explicitly named today. -/
+theorem canonical_n_wave_observable_exact
+    {α : Type} (F : PhysicalPacket → α)
+    (s n K x p : Nat) :
+    F (physicalPacket (canonicalEnergy s n) x p) =
+      F (physicalPacket (nWaveEnergy s n K)
+        (nWaveShift s n K + x) p) :=
+  congrArg F (canonical_n_wave_packet_exact s n K x p)
+
+/-- Canonical N-wave renormalization preserves every packet-defined
+predicate. -/
+theorem canonical_n_wave_predicate_iff
+    (P : PhysicalPacket → Prop)
+    (s n K x p : Nat) :
+    P (physicalPacket (canonicalEnergy s n) x p) ↔
+      P (physicalPacket (nWaveEnergy s n K)
+        (nWaveShift s n K + x) p) := by
+  rw [canonical_n_wave_packet_exact]
+
+/-- Universal capstone: the finite-cut action transports arbitrary
+observables, arbitrary predicates, and arbitrary binary relations on the
+physical state space. -/
+theorem scale_equivariance_universal_observable_crown :
+    (∀ (α : Type) (F : PhysicalPacket → α) t n K x p,
+      F (physicalPacket (4^(3^t*n)) x p) =
+        F (physicalPacket (uTailEnergy t n K)
+          (uPhaseShift t n K + x) p))
+    ∧ (∀ (P : PhysicalPacket → Prop) t n K x p,
+      P (physicalPacket (4^(3^t*n)) x p) ↔
+        P (physicalPacket (uTailEnergy t n K)
+          (uPhaseShift t n K + x) p))
+    ∧ (∀ (R : PhysicalPacket → PhysicalPacket → Prop)
+        t n K x₁ p₁ x₂ p₂,
+      R (physicalPacket (4^(3^t*n)) x₁ p₁)
+          (physicalPacket (4^(3^t*n)) x₂ p₂) ↔
+        R
+          (physicalPacket (uTailEnergy t n K)
+            (uPhaseShift t n K + x₁) p₁)
+          (physicalPacket (uTailEnergy t n K)
+            (uPhaseShift t n K + x₂) p₂)) := by
+  exact ⟨u_cut_observable_exact, u_cut_predicate_iff,
+    u_cut_binary_relation_iff⟩
+
 /-- One capstone receipt for the strengthened scale-equivariant cosmology. -/
 theorem scale_equivariance_crown :
     (∀ t n K L,
@@ -235,6 +330,13 @@ theorem scale_equivariance_crown :
 #check u_cut_semigroup_coherence
 #check canonical_n_wave_packet_exact
 #check canonical_n_wave_plane_equivariance
+#check u_cut_observable_exact
+#check u_cut_predicate_iff
+#check u_cut_binary_relation_iff
+#check u_cut_two_stage_predicate_iff
+#check canonical_n_wave_observable_exact
+#check canonical_n_wave_predicate_iff
+#check scale_equivariance_universal_observable_crown
 #check scale_equivariance_crown
 
 #print axioms uPhaseShift_add
@@ -244,6 +346,10 @@ theorem scale_equivariance_crown :
 #print axioms physicalPacket_u_cut_two_stage
 #print axioms u_cut_semigroup_coherence
 #print axioms canonical_n_wave_plane_equivariance
+#print axioms u_cut_observable_exact
+#print axioms u_cut_predicate_iff
+#print axioms u_cut_binary_relation_iff
+#print axioms scale_equivariance_universal_observable_crown
 #print axioms scale_equivariance_crown
 
 end GSTGraphV2ScaleEquivariance
