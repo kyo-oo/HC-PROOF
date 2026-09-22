@@ -172,22 +172,6 @@ theorem worldtrace_mahler_core_spectrum
   · exact Or.inl hu
   · exact Or.inr (worldtrace_mahler_fracture_ge_two H u hu)
 
-/-- Relative lock and Mahler fracture are mutually exclusive on every
-three-free core, stated as an explicit incompatibility law. -/
-theorem relativeLock_mahler_incompatible
-    (H : MahlerSharp) (u : Nat) (hu : ¬ 3 ∣ u) :
-    RelativeLock u →
-      ∃ q : Nat, 2 ≤ q ∧
-        ∀ S : Nat, ∃ s : Nat, S ≤ s ∧
-          ¬ ((3 : ℤ)^(s+q) ∣ worldtraceWitness u s) → False := by
-  intro hlock
-  obtain ⟨q,hq2,hq⟩ := worldtrace_mahler_fracture_ge_two H u hu
-  exact ⟨q,hq2,fun S => by
-    obtain ⟨s,hs,hfail⟩ := hq S
-    refine ⟨s,hs,?_⟩
-    intro _
-    exact (mahler_excludes_relative_lock H u hu) hlock⟩
-
 /-- The intrinsic output of the Worldtrace/Mahler theory, before any external
 Erdős boundary interface is attached. -/
 structure WorldtraceMahlerSpectrum : Prop where
