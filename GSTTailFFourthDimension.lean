@@ -2268,6 +2268,77 @@ theorem omega_sheet_window_dichotomy (s core : Nat) (hs : 1 ≤ s)
     · push_neg at h2
       exact Or.inr (Or.inl h2)
 
+/-- **NONBOTTOM RIGIDITY.**
+For a three-free core, if a sheet is not in the bottom third and does not fire
+immediately, then the middle-third branch is forced and every later sheet
+fires at the synchronized diagonal offset. -/
+theorem omega_nonbottom_nonfire_forces_future_fire
+    (s core : Nat) (hs : 1 ≤ s)
+    (hfree : core % 3 = 1 ∨ core % 3 = 2)
+    (hbottom : 3^(s+1) ≤ (omegaCutWord s core) % 3^(s+2))
+    (hnow : digit3 (4^(3^s * core)) (2*s+2) ≠ 2) :
+    ∀ S : Nat, s+1 ≤ S →
+      digit3 (4^(3^S * core)) (S + (s+2)) = 2 := by
+  rcases omega_sheet_window_dichotomy s core hs hfree with
+    htop | hlow | hmid
+  · exact False.elim (hnow htop.2)
+  · omega
+  · exact hmid.2.2
+
+/-- **TWO-SHEET SILENCE FORCES BOTTOM DODGE.**
+If the current synchronized observation does not fire and at least one later
+sheet also avoids the forced synchronized fire, then the present window must
+lie in the bottom third. -/
+theorem omega_two_sheet_silence_forces_bottom
+    (s core : Nat) (hs : 1 ≤ s)
+    (hfree : core % 3 = 1 ∨ core % 3 = 2)
+    (hnow : digit3 (4^(3^s * core)) (2*s+2) ≠ 2)
+    (hlater : ∃ S : Nat, s+1 ≤ S ∧
+      digit3 (4^(3^S * core)) (S + (s+2)) ≠ 2) :
+    (omegaCutWord s core) % 3^(s+2) < 3^(s+1) := by
+  by_contra hnot
+  push_neg at hnot
+  obtain ⟨S,hS,hSnot⟩ := hlater
+  have hall :=
+    omega_nonbottom_nonfire_forces_future_fire
+      s core hs hfree hnot hnow
+  exact hSnot (hall S hS)
+
+/-- Every nonbottom window has an exact dynamical alternative: immediate fire
+or synchronized permanent future fire. -/
+theorem omega_nonbottom_fire_or_permanent_future
+    (s core : Nat) (hs : 1 ≤ s)
+    (hfree : core % 3 = 1 ∨ core % 3 = 2)
+    (hbottom : 3^(s+1) ≤ (omegaCutWord s core) % 3^(s+2)) :
+    digit3 (4^(3^s * core)) (2*s+2) = 2
+    ∨
+    (∀ S : Nat, s+1 ≤ S →
+      digit3 (4^(3^S * core)) (S + (s+2)) = 2) := by
+  by_cases hnow : digit3 (4^(3^s * core)) (2*s+2) = 2
+  · exact Or.inl hnow
+  · exact Or.inr
+      (omega_nonbottom_nonfire_forces_future_fire
+        s core hs hfree hbottom hnow)
+
+/-- Dynamical crown of the three-window law: the nonbottom region has no
+long-lived silent phase. -/
+theorem omega_window_rigidity_crown :
+    (∀ s core, 1 ≤ s →
+      (core % 3 = 1 ∨ core % 3 = 2) →
+      3^(s+1) ≤ (omegaCutWord s core) % 3^(s+2) →
+      digit3 (4^(3^s * core)) (2*s+2) ≠ 2 →
+      ∀ S, s+1 ≤ S →
+        digit3 (4^(3^S * core)) (S + (s+2)) = 2)
+    ∧
+    (∀ s core, 1 ≤ s →
+      (core % 3 = 1 ∨ core % 3 = 2) →
+      digit3 (4^(3^s * core)) (2*s+2) ≠ 2 →
+      (∃ S, s+1 ≤ S ∧
+        digit3 (4^(3^S * core)) (S + (s+2)) ≠ 2) →
+      (omegaCutWord s core) % 3^(s+2) < 3^(s+1)) := by
+  exact ⟨omega_nonbottom_nonfire_forces_future_fire,
+    omega_two_sheet_silence_forces_bottom⟩
+
 /-- **THE ESCALATION LAW — a dodging core never parks its diagonal in the
 bottom third.**  If every sheet `s ≥ 1` of a three-free core dodges its
 own window (the shadow package's clause A, all sheets at once), then at
@@ -2335,6 +2406,10 @@ theorem omega_dust_shape_middle_third (core : Nat)
 #print axioms omega_cut_word_cube_lift_exact
 #print axioms omega_cut_word_lift_one
 #print axioms omega_sheet_window_dichotomy
+#print axioms omega_nonbottom_nonfire_forces_future_fire
+#print axioms omega_two_sheet_silence_forces_bottom
+#print axioms omega_nonbottom_fire_or_permanent_future
+#print axioms omega_window_rigidity_crown
 #print axioms omega_window_dodge_escalates
 #print axioms omega_dust_shape_middle_third
 
