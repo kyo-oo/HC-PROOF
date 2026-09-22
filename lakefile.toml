@@ -141,6 +141,7 @@ roots = [
   "GSTUniversalLefschetzPathFormula",
   "GSTUniversalLefschetzKernel",
   "GSTUniversalLefschetzCausalGeometry",
+  "GSTLefschetzPoincareReciprocity",
   "GSTTruncatedWorldCohomologyRing",
   "GSTRadixWorldDynamics",
   "GSTGradedWorldAlgebra",
