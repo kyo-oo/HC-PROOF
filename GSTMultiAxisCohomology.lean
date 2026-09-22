@@ -127,8 +127,11 @@ theorem representation_ext (f g : AxisRing d →+* R)
     (h : ∀ i, f (axis d i) = g (axis d i)) : f = g := by
   have hc : f.comp (Ideal.Quotient.mk (boundaryIdeal d)) =
       g.comp (Ideal.Quotient.mk (boundaryIdeal d)) := by
-    ext i
-    exact h i
+    apply MvPolynomial.ringHom_ext
+    · intro z
+      simp
+    · intro i
+      exact h i
   ext z
   obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective z
   exact DFunLike.congr_fun hc p

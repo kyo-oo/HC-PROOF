@@ -22,6 +22,7 @@ on:
       - 'GSTInfiniteWorldClassification.lean'
       - 'GSTInfiniteWorldRenormalization.lean'
       - 'GSTMultiAxisCohomology.lean'
+      - 'GSTExactWorldOperatorPresentation.lean'
       - 'GSTMultiAxisCosmology.lean'
       - 'CardinalWorldsV2.lean'
       - 'waves/CardinalWorldsPostulateLawV2.lean'
@@ -95,6 +96,7 @@ jobs:
             GSTInfiniteWorldClassification.lean
             GSTInfiniteWorldRenormalization.lean
             GSTMultiAxisCohomology.lean
+            GSTExactWorldOperatorPresentation.lean
             GSTMultiAxisCosmology.lean
             CardinalWorldsV2.lean
             waves/CardinalWorldsPostulateLawV2.lean
@@ -133,6 +135,7 @@ jobs:
             GSTInfiniteWorldClassification \
             GSTInfiniteWorldRenormalization \
             GSTMultiAxisCohomology \
+            GSTExactWorldOperatorPresentation \
             GSTMultiAxisCosmology \
             CardinalWorldsV2 \
             waves.CardinalWorldsPostulateLawV2 \

@@ -19,6 +19,7 @@ roots = [
   "GSTInfiniteWorldClassification",
   "GSTInfiniteWorldRenormalization",
   "GSTMultiAxisCohomology",
+  "GSTExactWorldOperatorPresentation",
   "GSTMultiAxisCosmology",
   "GST2DMixedEmergence",
   "GST2DMixedEmergenceUpgrade",
