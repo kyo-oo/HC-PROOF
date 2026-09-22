@@ -173,6 +173,69 @@ theorem residual_gate_left_happy_iff
   have h := residual_gate_left_is_phased_tail s k m j
   rw [h.1, h.2]
 
+/-- The residual left endpoint preserves the exact radix-event value of
+its phased origin frame, not only its Happy predicate. -/
+theorem residual_gate_left_event_exact
+    (s k m j : Nat) :
+    let F := residualGateFrame s k m j
+    GSTCanonicalSevenAxisBridge.event
+        F.residual.block.left.seven.carry
+        F.residual.block.left.seven.digit
+      =
+    GSTCanonicalSevenAxisBridge.event
+        F.originFrame.phasedTail.seven.carry
+        F.originFrame.phasedTail.seven.digit := by
+  dsimp only
+  have h := residual_gate_left_is_phased_tail s k m j
+  rw [h.1, h.2]
+
+/-- **LEFT-ENDPOINT BISIMULATION.**  The absolute full-energy origin cell
+and the residual rectangle's left endpoint have exactly the same physical
+Happy classification.  Re-phasing is therefore semantically invisible even
+after entering the residual production frame. -/
+theorem residual_gate_full_happy_iff_left
+    (s k m j : Nat) :
+    let F := residualGateFrame s k m j
+    GSTU2DEventTransport.HappyCell
+        F.originFrame.full.seven.carry
+        F.originFrame.full.seven.digit
+      ↔
+    GSTU2DEventTransport.HappyCell
+        F.residual.block.left.seven.carry
+        F.residual.block.left.seven.digit := by
+  dsimp only
+  exact
+    (origin_frame_happy_iff
+      (s+k) m (j+1) 0 (residualGateRow s k j)).trans
+      (residual_gate_left_happy_iff s k m j).symm
+
+/-- The same left-endpoint bisimulation is exact at the event-code level. -/
+theorem residual_gate_full_event_exact
+    (s k m j : Nat) :
+    let F := residualGateFrame s k m j
+    GSTCanonicalSevenAxisBridge.event
+        F.originFrame.full.seven.carry
+        F.originFrame.full.seven.digit
+      =
+    GSTCanonicalSevenAxisBridge.event
+        F.residual.block.left.seven.carry
+        F.residual.block.left.seven.digit := by
+  dsimp only
+  calc
+    GSTCanonicalSevenAxisBridge.event
+        (originFrame (s+k) m (j+1) 0 (residualGateRow s k j)).full.seven.carry
+        (originFrame (s+k) m (j+1) 0 (residualGateRow s k j)).full.seven.digit
+      =
+    GSTCanonicalSevenAxisBridge.event
+        (originFrame (s+k) m (j+1) 0 (residualGateRow s k j)).phasedTail.seven.carry
+        (originFrame (s+k) m (j+1) 0 (residualGateRow s k j)).phasedTail.seven.digit :=
+      origin_frame_event_exact (s+k) m (j+1) 0 (residualGateRow s k j)
+    _ =
+    GSTCanonicalSevenAxisBridge.event
+        (residualFrame s k m (residualGateRow s k j)).block.left.seven.carry
+        (residualFrame s k m (residualGateRow s k j)).block.left.seven.digit :=
+      (residual_gate_left_event_exact s k m j).symm
+
 /-- The right endpoint of every residual production rectangle is exactly the
 absolute parent perfect-power sheet, in all observables needed by the proof. -/
 theorem residual_right_absolute_state_exact
@@ -280,6 +343,9 @@ theorem residual_level_one_origin_one_energy_step
 #check residual_gate_neutral_tail
 #check residual_gate_left_is_phased_tail
 #check residual_gate_left_happy_iff
+#check residual_gate_left_event_exact
+#check residual_gate_full_happy_iff_left
+#check residual_gate_full_event_exact
 #check residual_right_absolute_state_exact
 #check residual_right_happy_iff_absolute
 #check production_semantic_transport_crown
@@ -294,6 +360,8 @@ theorem residual_level_one_origin_one_energy_step
 #print axioms canonical_cut_neutral_tail
 #print axioms residual_gate_neutral_tail
 #print axioms residual_gate_left_is_phased_tail
+#print axioms residual_gate_full_happy_iff_left
+#print axioms residual_gate_full_event_exact
 #print axioms residual_right_absolute_state_exact
 #print axioms residual_right_happy_iff_absolute
 #print axioms production_semantic_transport_crown
