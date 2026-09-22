@@ -47,7 +47,7 @@ theorem diagonalAddress_val
     (diagonalAddress hpA hpB).1 = (B+1)*p := by
   unfold diagonalAddress diagonalState
   change p + B*p = (B+1)*p
-  omega
+  ring
 
 /-- Diagonal Kronecker class in an arbitrary rectangular world. -/
 def worldDiagonalClass
@@ -127,6 +127,7 @@ theorem world_hodge_rank_one
   · rintro ⟨z, hz, huniq⟩
     intro x hx
     rw [hz]
+    change z * worldDiagonalClass hpA hpB x = 0
     rw [worldDiagonalClass_off_diagonal hpA hpB x hx]
     ring
 
@@ -141,10 +142,9 @@ theorem world_hodge_coefficient_exact
           worldDiagonalClass hpA hpB x := by
   obtain ⟨z, hz, huniq⟩ :=
     (world_hodge_rank_one hpA hpB f).mp hf
-  have hdiag := congrFun hz (diagonalState hpA hpB)
-  simp at hdiag
   intro x
-  rw [hz, hdiag]
+  rw [hz]
+  simp
 
 /-- If the weight lies outside either rectangle depth, every weight-p Hodge
 class is forced to be zero. -/
@@ -158,8 +158,12 @@ theorem world_hodge_zero_outside
   apply hf x
   rcases hout with hA | hB
   · left
+    have hxA : x.1.1 < A := by
+      simpa [outputShape] using x.1.2
     omega
   · right
+    have hxB : x.2.1 < B := by
+      simpa [outputShape] using x.2.2
     omega
 
 /-- Every weight is either live on both axes or lies outside at least one
@@ -216,10 +220,13 @@ theorem dimension_free_hodge_crown :
         isWorldHodgeClass p f -> f = fun _ => 0)
     ∧ (∀ A B p (hpA : p < A) (hpB : p < B),
       (diagonalAddress hpA hpB).1 = (B+1)*p) := by
-  exact ⟨
-    world_hodge_rank_one,
-    world_hodge_zero_outside,
-    diagonalAddress_val⟩
+  refine ⟨?_, ?_, ?_⟩
+  · intro A B p hpA hpB f
+    exact world_hodge_rank_one hpA hpB f
+  · intro A B p f hout hf
+    exact world_hodge_zero_outside hout f hf
+  · intro A B p hpA hpB
+    exact diagonalAddress_val hpA hpB
 
 #check diagonalAddress_val
 #check worldDiagonalClass
