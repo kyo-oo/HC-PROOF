@@ -214,8 +214,25 @@ theorem thirdWave_of_mod27_row_three (K : Nat)
   obtain ⟨p, hp1, hd, hd2⟩ := commonTwo_of_mod27_row_three K hres
   exact ⟨p, hp1, (row_pair_iff_band K p).mp ⟨hd, hd2⟩⟩
 
+
+/-! ## Third wave as exponent-prefix phase geometry -/
+
+/-- **THIRD-WAVE / KILLING-TRIT EQUIVALENCE.**  The geometric third wave
+fires exactly when some exponent-prefix scale hits its unique killing trit.
+This identifies the wave picture with the recursive exponent geometry. -/
+theorem thirdWave_iff_exists_killingTrit_hit (K : Nat) :
+    thirdWave K ↔
+      ∃ p : Nat,
+        digit3 (4^(exponentPrefix K p)) (p+1) =
+          digit3 (4^((exponentPrefix K p)+1)) (p+1) ∧
+        exponentTrit K p = killingTrit K p := by
+  rw [thirdWave_iff_commonTwo]
+  exact commonTwo_iff_exists_killingTrit_hit K
+
+
 #print axioms row_pair_iff_band
 #print axioms thirdWave_iff_commonTwo
 #print axioms fourPowerDirectExistence_iff_thirdWave
+#print axioms thirdWave_iff_exists_killingTrit_hit
 
 end GSTFourPowerThirdWave
