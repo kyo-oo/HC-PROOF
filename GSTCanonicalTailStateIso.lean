@@ -84,6 +84,24 @@ theorem prefix_slice_happy_iff
   rw [prefix_slice_digit_exact b P tail q hP]
   rw [prefix_slice_carry_seed_zero b P tail q hP hseed]
 
+/-- Navigation restricted to rows at or above a fixed prefix cut. -/
+def NavigationAbove (b N : Nat) : Prop :=
+  ∃ q : Nat, HappyCell (carry4 N (b+q)) (digit3 N (b+q))
+
+/-- **SEED-ZERO DEEP NAVIGATION ISOMORPHISM.**
+Any prefix whose fourfold value stays below its cut is completely invisible
+to Navigation above the cut. -/
+theorem prefix_slice_navigationAbove_iff
+    (b P tail : Nat)
+    (hP : P < 3^b)
+    (hseed : 4*P < 3^b) :
+    NavigationAbove b (P + 3^b*tail) ↔ Navigation tail := by
+  constructor
+  · rintro ⟨q,hq⟩
+    exact ⟨q,(prefix_slice_happy_iff b P tail q hP hseed).mp hq⟩
+  · rintro ⟨q,hq⟩
+    exact ⟨q,(prefix_slice_happy_iff b P tail q hP hseed).mpr hq⟩
+
 /-- A canonical prefix `1` is seed-zero at every cut of width at least two. -/
 theorem one_prefix_bounds
     (b : Nat) (hb : 2 ≤ b) :
@@ -112,5 +130,9 @@ theorem canonical_tail_happy_iff
       HappyCell (carry4 Q j) (digit3 Q j) := by
   have hbounds := one_prefix_bounds b hb
   exact prefix_slice_happy_iff b 1 Q j hbounds.1 (by simpa using hbounds.2)
+
+#check NavigationAbove
+#check prefix_slice_navigationAbove_iff
+#print axioms prefix_slice_navigationAbove_iff
 
 end GSTCanonicalTailStateIso
