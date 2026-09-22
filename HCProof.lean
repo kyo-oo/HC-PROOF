@@ -25,6 +25,7 @@ import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
 import GSTUniversalLefschetzDynamics
+import GSTWorldPoincareDuality
 import GSTWorldCrownBridge
 import HodgeDeRhamBridge
 import HodgeDeRhamBridgeV2
@@ -382,3 +383,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTUniversalLefschetzDynamics.liftWave_lefschetz_iterate
 #check GSTUniversalLefschetzDynamics.lefschetz_sixth_power_from_universal
 #check GSTUniversalLefschetzDynamics.universal_lefschetz_crown
+
+
+/-! ## Dimension-free Poincare duality -/
+
+#check GSTWorldPoincareDuality.worldDual
+#check GSTWorldPoincareDuality.worldDegree_dual_sum
+#check GSTWorldPoincareDuality.degreeCell_card_symmetry
+#check GSTWorldPoincareDuality.worldTopPairing_nondegenerate_left
+#check GSTWorldPoincareDuality.complementary_sector_nondegenerate_left
+#check GSTWorldPoincareDuality.world_poincare_duality_crown
