@@ -242,6 +242,64 @@ theorem forward_window_of_happy_source (E N b q : Nat) (hN : 1 ≤ N)
     0 < graphOntWindow E N b (q + 1) :=
   graphOntWindow_positive_of_happy E N b q hN hHappy
 
+/-- Under the reverse-window premise, the proven forward implication
+upgrades to an exact characterization of positive production windows. -/
+theorem reverse_window_happy_iff
+    (H : ReverseOntologicalWindow)
+    (E N b q : Nat) (hN : 1 ≤ N) :
+    0 < graphOntWindow E N b (q+1) ↔
+      HappyCell
+        (graph E 0 (b+q)).seven.carry
+        (graph E 0 (b+q)).seven.digit := by
+  constructor
+  · exact H E N b q
+  · exact forward_window_of_happy_source E N b q hN
+
+/-- Under the same premise, a positive production window is exactly a positive
+ontological-current source. -/
+theorem reverse_window_current_positive_iff
+    (H : ReverseOntologicalWindow)
+    (E N b q : Nat) (hN : 1 ≤ N) :
+    0 < graphOntWindow E N b (q+1) ↔
+      0 < ontDensity
+        (graph E 0 (b+q)).seven.carry
+        (graph E 0 (b+q)).seven.digit := by
+  rw [reverse_window_happy_iff H E N b q hN]
+  exact happy_iff_ontDensity_positive
+    _ _
+    (graph_carry_lt_four E 0 (b+q))
+    (graph_digit_lt_three E 0 (b+q))
+
+/-- Positive windows therefore inject at least the exact ontological threshold
+42 at their source. -/
+theorem reverse_window_injects_ontological_threshold
+    (H : ReverseOntologicalWindow)
+    (E N b q : Nat)
+    (hpos : 0 < graphOntWindow E N b (q+1)) :
+    42 ≤ ontDensity
+      (graph E 0 (b+q)).seven.carry
+      (graph E 0 (b+q)).seven.digit := by
+  exact ontDensity_ge_42_of_happy _ _
+    (H E N b q hpos)
+
+/-- Conditional absorption crown: the reverse-window premise makes window
+positivity, Happy signature, and positive ontological current one object. -/
+theorem reverse_window_exact_crown
+    (H : ReverseOntologicalWindow) :
+    ∀ E N b q, 1 ≤ N →
+      (0 < graphOntWindow E N b (q+1) ↔
+        HappyCell
+          (graph E 0 (b+q)).seven.carry
+          (graph E 0 (b+q)).seven.digit)
+      ∧
+      (0 < graphOntWindow E N b (q+1) ↔
+        0 < ontDensity
+          (graph E 0 (b+q)).seven.carry
+          (graph E 0 (b+q)).seven.digit) := by
+  intro E N b q hN
+  exact ⟨reverse_window_happy_iff H E N b q hN,
+    reverse_window_current_positive_iff H E N b q hN⟩
+
 /-- **THE UNIVERSE CHOKEHOLD STATEMENT** (the terminal object the monolith
 machine-certifies against `hTailF`): every even exponent from eight onward
 owns its ternary digit two.  The monolith proves this equivalent to the
@@ -264,6 +322,10 @@ def HCUniverseChokehold : Prop :=
 #check period_rebase
 #check forward_window_of_happy_source
 #check ReverseOntologicalWindow
+#check reverse_window_happy_iff
+#check reverse_window_current_positive_iff
+#check reverse_window_injects_ontological_threshold
+#check reverse_window_exact_crown
 #check HCUniverseChokehold
 
 #print axioms mixed_period_exact
@@ -277,5 +339,8 @@ def HCUniverseChokehold : Prop :=
 #print axioms the_finite_hodge_table
 #print axioms period_rebase
 #print axioms forward_window_of_happy_source
+#print axioms reverse_window_happy_iff
+#print axioms reverse_window_current_positive_iff
+#print axioms reverse_window_exact_crown
 
 end HodgeDeRhamBridge
