@@ -203,6 +203,34 @@ theorem ghost_convergence (u : Nat) (hg : GhostRay u) :
   obtain ⟨m, hm⟩ := ghost_witness u hg s (by omega)
   exact (pow_dvd_pow (3:ℤ) (by omega)).trans ⟨m, hm⟩
 
+/-- **GHOST RELATIVE-PRECISION AMPLIFICATION.**
+A ghost ray yields more than ordinary 3-adic convergence: for every fixed
+relative precision q, all sufficiently deep sheet-s witnesses are divisible
+by 3^(s+q). -/
+theorem ghost_relative_precision
+    (u : Nat) (hg : GhostRay u) (q : Nat) :
+    ∃ S : Nat, ∀ s : Nat, S ≤ s →
+      (3:ℤ)^(s+q) ∣
+        (2*(u:ℤ) * ((4:ℤ)^(3^s) - 1)
+          - ((6*(((GSTTowerFire.c 1 * u) % 9 : Nat) : ℤ) - 27)
+            * (3:ℤ)^s)) := by
+  refine ⟨max 2 q, ?_⟩
+  intro s hs
+  obtain ⟨m,hm⟩ := ghost_witness u hg s (by omega)
+  have hexp : s+q ≤ 2*s+2 := by omega
+  exact (pow_dvd_pow (3:ℤ) hexp).trans ⟨m,hm⟩
+
+/-- The relative precision can be made arbitrarily far above the baseline
+sheet precision, while retaining the same fixed ghost head. -/
+theorem ghost_unbounded_relative_precision
+    (u : Nat) (hg : GhostRay u) :
+    ∀ q : Nat, ∃ S : Nat, ∀ s : Nat, S ≤ s →
+      (3:ℤ)^(s+q) ∣
+        (2*(u:ℤ) * ((4:ℤ)^(3^s) - 1)
+          - ((6*(((GSTTowerFire.c 1 * u) % 9 : Nat) : ℤ) - 27)
+            * (3:ℤ)^s)) :=
+  ghost_relative_precision u hg
+
 /-! ## §6 The canonical head is a three-adic unit -/
 
 /-- The ghost head \`a = (c 1 * u) % 9\` is not divisible by three: the
@@ -221,6 +249,21 @@ theorem ghost_head_unit (u : Nat) (h3 : ¬ 3 ∣ u) :
     Nat.dvd_iff_mod_eq_zero.mp hd
   have : u % 3 = 0 := by omega
   exact Nat.dvd_iff_mod_eq_zero.mpr this
+
+/-- A three-free ghost head lies in exactly one of the six nonzero
+residue classes modulo nine. -/
+theorem ghost_head_residue_spectrum
+    (u : Nat) (h3 : ¬ 3 ∣ u) :
+    let a := (GSTTowerFire.c 1 * u) % 9
+    a = 1 ∨ a = 2 ∨ a = 4 ∨ a = 5 ∨ a = 7 ∨ a = 8 := by
+  dsimp only
+  have ha : (GSTTowerFire.c 1 * u) % 9 < 9 :=
+    Nat.mod_lt _ (by decide)
+  have hunit := ghost_head_unit u h3
+  have hmod : (GSTTowerFire.c 1 * u) % 9 % 3 ≠ 0 := by
+    intro h
+    exact hunit (Nat.dvd_iff_mod_eq_zero.mpr h)
+  omega
 
 /-! ## §7 The three-free decomposition socket -/
 
@@ -257,7 +300,10 @@ theory in `GSTWorldtraceMahlerRelativePrecision`.
 #print axioms ghost_tower_lock
 #print axioms ghost_witness
 #print axioms ghost_convergence
+#print axioms ghost_relative_precision
+#print axioms ghost_unbounded_relative_precision
 #print axioms ghost_head_unit
+#print axioms ghost_head_residue_spectrum
 #print axioms exists_three_free_decomp
 
 end GSTGhostRay
