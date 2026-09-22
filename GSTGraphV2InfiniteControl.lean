@@ -202,8 +202,7 @@ theorem prefix_generated_seed_lt_four
     (b P : Nat) (hP : P < 3^b) :
     (4 * P) / 3^b < 4 := by
   have hp : 0 < 3^b := Nat.pow_pos (by decide)
-  have hmul : 4 * P < 4 * 3^b :=
-    Nat.mul_lt_mul_left 4 hP
+  have hmul : 4 * P < 4 * 3^b := by omega
   exact (Nat.div_lt_iff_lt_mul hp).2 hmul
 
 /-- The prefix-generated seed is therefore exactly one of the four physical
@@ -230,7 +229,7 @@ theorem prefix_slice_physical
     have hp : 0 < 3^q := Nat.pow_pos (by decide)
     have htail : tail % 3^q < 3^q := Nat.mod_lt _ hp
     apply (Nat.div_lt_iff_lt_mul hp).2
-    nlinarith
+    omega
   · unfold digit3
     exact Nat.mod_lt _ (by decide)
 
