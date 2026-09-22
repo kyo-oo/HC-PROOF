@@ -22,6 +22,9 @@ import GSTInfiniteWorldRenormalization
 #print axioms GSTMultiAxisCosmology.synthesis_injective
 #print axioms GSTMultiAxisCosmology.commuting_operator_delta
 #print axioms GSTMultiAxisCosmology.commuting_operator_ext
+#print axioms GSTMultiAxisCosmology.synthesis_commutes
+#print axioms GSTMultiAxisCosmology.commuting_operator_classification
+#print axioms GSTMultiAxisCosmology.commutantEquiv
 #print axioms GSTMultiAxisCosmology.dual
 #print axioms GSTMultiAxisCosmology.dual_involutive
 #print axioms GSTMultiAxisCosmology.pairing

@@ -122,7 +122,7 @@ def fiberEquiv (Y : WindowTower) (k : ℕ) :
   left_inv X := by
     apply Subtype.ext
     change graft k (worldPrefix k X.val) Y = X.val
-    rw [← X.property, graft_prefix_tail]
+    simpa only [X.property] using graft_prefix_tail k X.val
   right_inv u := prefix_graft k u Y
 
 /-- Renormalization loses exactly 3^k possible prefixes, not an unspecified

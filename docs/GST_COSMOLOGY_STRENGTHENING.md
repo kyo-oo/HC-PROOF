@@ -34,7 +34,9 @@ For finite `I`, bounded displacements send the origin delta to all distinct
 cell deltas. `synthesis_injective` rules out every linear relation among
 these native operators. `commuting_operator_ext` says that an operator
 commuting with all native transports is completely determined by its
-response at the origin. Complementary-coordinate probing gives an integral
+response at the origin. `commutantEquiv` goes further: every such operator is
+exactly the mixed-shift synthesis of its origin response, giving a complete
+classification of the displacement commutant. Complementary-coordinate probing gives an integral
 nondegenerate pairing in every finite dimension.
 
 `GSTMultiAxisCohomology` constructs the corresponding quotient for arbitrary
@@ -87,7 +89,7 @@ the existing GST innovation classification and finite-current completeness.
 | Digit/carry commutation | Arbitrary simultaneous axis displacements |
 | Rectangular boundary extinction | Any-axis boundary extinction |
 | Bounded monomial action | Unique mixed-shift synthesis |
-| Individual operator identities | Origin-response uniqueness for the full commutant |
+| Individual operator identities | Exact synthesis classification of the full commutant |
 | Two-axis truncation ring | Arbitrary-axis quotient with exact coefficient equality |
 | Canonical representation | Unique representation into every suitable commutative ring |
 | Lefschetz action nilpotence | Quotient nilpotence and arbitrary weighted polarization |

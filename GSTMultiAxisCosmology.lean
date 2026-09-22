@@ -179,6 +179,39 @@ theorem commuting_operator_ext (hd : ∀ i, 0 < d i)
   rw [map_smul, map_smul, commuting_operator_delta d hd T hT,
     commuting_operator_delta d hd U hU, h0]
 
+/-- Every synthesized native operator commutes with every displacement. -/
+theorem synthesis_commutes (g : Coef d) (m : I → ℕ) :
+    Commute (synthesis d g) (shiftEndo d m) := by
+  apply LinearMap.ext
+  intro f
+  change synthesis d g (shiftEndo d m f) = shiftEndo d m (synthesis d g f)
+  simp only [synthesis, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
+  apply Finset.sum_congr rfl
+  intro a ha
+  congr 1
+  exact shifts_commute d (fun i => (a i).val) m f
+
+/-- Complete classification, beyond uniqueness: every commuting operator is
+exactly the mixed-shift synthesis of its origin response. -/
+theorem commuting_operator_classification (hd : ∀ i, 0 < d i)
+    (T : Module.End ℤ (Coef d))
+    (hT : ∀ m, Commute T (shiftEndo d m)) :
+    T = synthesis d (T (delta d (origin d hd))) := by
+  apply commuting_operator_ext d hd T _ hT
+    (synthesis_commutes d (T (delta d (origin d hd))))
+  exact (synthesis_origin d hd _).symm
+
+/-- The entire displacement commutant is exactly the native coefficient
+world. This classifies arbitrary linear symmetries, not only given shifts. -/
+def commutantEquiv (hd : ∀ i, 0 < d i) :
+    {T : Module.End ℤ (Coef d) // ∀ m, Commute T (shiftEndo d m)} ≃ Coef d where
+  toFun T := T.val (delta d (origin d hd))
+  invFun g := ⟨synthesis d g, synthesis_commutes d g⟩
+  left_inv T := by
+    apply Subtype.ext
+    exact (commuting_operator_classification d hd T.val T.property).symm
+  right_inv g := synthesis_origin d hd g
+
 /-- Multi-axis complementary cell, with every depth supplied by the world. -/
 def dual (c : Cell d) : Cell d :=
   fun i => ⟨d i - 1 - (c i).val, by have := (c i).isLt; omega⟩

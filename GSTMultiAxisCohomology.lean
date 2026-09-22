@@ -32,6 +32,7 @@ def axis (i : I) : AxisRing d := Ideal.Quotient.mk (boundaryIdeal d) (X i)
 /-- The monomial presentation is exactly the ideal of the axis depth powers. -/
 theorem boundaryIdeal_eq_span_powers :
     boundaryIdeal d = Ideal.span (Set.range (fun i => (X i : MvPolynomial I ℤ) ^ d i)) := by
+  unfold boundaryIdeal
   congr 1
   ext p
   simp only [Set.mem_image, Set.mem_range]
@@ -114,6 +115,7 @@ variable {R : Type*} [CommRing R] (x : I → R) (hx : ∀ i, x i ^ d i = 0)
 def represent : AxisRing d →+* R :=
   Ideal.Quotient.lift (boundaryIdeal d)
     (eval₂Hom (Int.castRingHom R) x) (by
+      change boundaryIdeal d ≤ RingHom.ker (eval₂Hom (Int.castRingHom R) x)
       rw [boundaryIdeal_eq_span_powers, Ideal.span_le]
       rintro p ⟨i, rfl⟩
       change eval₂Hom (Int.castRingHom R) x (X i ^ d i) = 0
@@ -132,11 +134,13 @@ theorem representation_ext (f g : AxisRing d →+* R)
       simp
     · intro i
       exact h i
-  ext z
+  apply RingHom.ext
+  intro z
   obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective z
   exact DFunLike.congr_fun hc p
 
 /-- Universal property with uniqueness, for arbitrary axis sets. -/
+include hx in
 theorem existsUnique_representation :
     ∃! f : AxisRing d →+* R, ∀ i, f (axis d i) = x i := by
   refine ⟨represent d x hx, represent_axis d x hx, ?_⟩
@@ -162,7 +166,10 @@ theorem finite_polarization_bound {R : Type*} [CommRing R]
     have hs := ih (fun j hj => hd j (Finset.mem_insert_of_mem hj))
       (fun j hj => hx j (Finset.mem_insert_of_mem hj))
     have h := (Commute.all (x i) (∑ j ∈ s, x j)).add_pow_add_eq_zero_of_pow_eq_zero hxi hs
-    convert h using 1 <;> omega
+    have he : d i - 1 + (∑ j ∈ s, (d j - 1)) + 1 =
+        d i + ((∑ j ∈ s, (d j - 1)) + 1) - 1 := by omega
+    rw [he]
+    exact h
 
 /-- Arbitrarily weighted GST polarization, directly inside the quotient. -/
 theorem weighted_axis_polarization_bound [Fintype I]
