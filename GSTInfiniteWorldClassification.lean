@@ -148,7 +148,8 @@ theorem windowTower_eq_iff_current_trace
   constructor
   · intro h
     simpa [h]
-  · exact towerCurrent_trace_injective h
+  · intro h
+    exact towerCurrent_trace_injective h
 
 /-- One horizontal slice already determines every finite world level, hence
 the entire coherent world. -/
