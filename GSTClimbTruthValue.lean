@@ -192,4 +192,27 @@ theorem the_climbs_truth_value
 #print axioms the_floor_is_exact
 #print axioms the_climbs_truth_value
 
+
+/-- **EXACT CLIMB FLOOR UNDER THE GLOBAL CLIMB LAW.**  Once the universal
+climb is available, the physical Happy-row demand on four-powers is true
+exactly from exponent eight onward on the domain `K ≥ 7`. -/
+theorem climb_floor_iff
+    (hClimb : GSTInfiniteFourPowerNavigation.four_power_happy_climb) :
+    ∀ K : Nat, 7 ≤ K →
+      ((∃ p : Nat, 3 ≤ p ∧
+          HappyCell (carry4 (4^K) p) (digit3 (4^K) p))
+        ↔ 8 ≤ K) := by
+  intro K hK7
+  constructor
+  · intro hHappy
+    by_contra hNot8
+    have hK : K = 7 := by omega
+    subst K
+    exact no_happy_row_at_seven hHappy
+  · intro hK8
+    exact hClimb K hK8
+
+#check climb_floor_iff
+#print axioms climb_floor_iff
+
 end GSTClimbTruthValue
