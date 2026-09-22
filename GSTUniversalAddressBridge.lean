@@ -163,8 +163,10 @@ theorem addressSectorProj_orthogonal
   · have hk : i.1 ≠ k := by
       intro h
       exact hjk (hj.symm.trans h)
-    simp [addressSectorProj, hj, hk]
-  · simp [addressSectorProj, hj]
+    unfold addressSectorProj
+    rw [if_pos hj, if_neg hk]
+  · unfold addressSectorProj
+    rw [if_neg hj]
 
 /-- Every address vector is the sum of its N exact coordinate sectors. -/
 theorem addressSectorProj_sum
