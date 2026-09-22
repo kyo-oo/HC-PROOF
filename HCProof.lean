@@ -21,6 +21,7 @@ import GSTClimbInfiniteFamily
 import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
+import GSTUniversalLefschetzCosmology
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
@@ -393,3 +394,14 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTWorldPoincareDuality.worldTopPairing_nondegenerate_left
 #check GSTWorldPoincareDuality.complementary_sector_nondegenerate_left
 #check GSTWorldPoincareDuality.world_poincare_duality_crown
+
+
+/-! ## Universal rectangular Lefschetz cosmology -/
+
+#check GSTUniversalLefschetzCosmology.digit_carry_commute
+#check GSTUniversalLefschetzCosmology.lefschetz_binomial
+#check GSTUniversalLefschetzCosmology.lefschetz_pow_boundary
+#check GSTUniversalLefschetzCosmology.sectorProj_sum
+#check GSTUniversalLefschetzCosmology.topPairing_nondegenerate_left
+#check GSTUniversalLefschetzCosmology.topPairing_basis_basis
+#check GSTUniversalLefschetzCosmology.universal_lefschetz_crown
