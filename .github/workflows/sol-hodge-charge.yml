@@ -1,0 +1,55 @@
+name: SOL Hodge Charge Branch Gate
+
+on:
+  push:
+    branches:
+      - 'sol/hodge-charge-cosmology'
+    paths:
+      - 'GSTHodgePoincareStrands.lean'
+      - '.github/workflows/sol-hodge-charge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sol-hodge-charge-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hodge-charge:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+
+      - name: Install Lean and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+
+      - name: Reject proof escapes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' GSTHodgePoincareStrands.lean; then
+            exit 1
+          fi
+
+      - name: Compile parent and charge geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTGlobalPureHodgeCosmology
+          lake env lean GSTHodgePoincareStrands.lean 2>&1 | tee sol-hodge-charge.log
+          if grep -Fq 'sorryAx' sol-hodge-charge.log; then
+            exit 1
+          fi
