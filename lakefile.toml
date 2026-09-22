@@ -137,6 +137,7 @@ roots = [
   "GSTWorldtraceMahlerRelativePrecision",
   "GSTWorldCosmology",
   "GSTRadixWorldDynamics",
+  "GSTGradedWorldAlgebra",
   "GSTWorldCrownBridge",
   "InformationBadTraceScratch",
   "InformationDescentScratch",
