@@ -96,6 +96,45 @@ theorem lowDigit_peel2_affineOrbit (q : Nat) :
     _ = (q % 3 + 1 % 3) % 3 := by rw [affineOrbit_mod_three]
     _ = (q + 1) % 3 := (Nat.add_mod q 1 3).symm
 
+
+/-! ## Phase-indexed affine renormalization -/
+
+/-- The three polynomial peels assembled into one ternary-phase
+renormalization operator. -/
+def peelPhase (r x : Nat) : Nat :=
+  if r % 3 = 0 then peel0 x
+  else if r % 3 = 1 then peel1 x
+  else peel2 x
+
+/-- **AFFINE RENORMALIZATION LAW.**  Removing the low ternary exponent phase
+from an arbitrary exponent `K` and removing the low ternary digit from its
+affine orbit are the same operation after applying the phase-indexed peel. -/
+theorem tail3_affineOrbit_phase_exact (K : Nat) :
+    tail3 (affineOrbit K) =
+      peelPhase (K % 3) (affineOrbit (K / 3)) := by
+  have hlt : K % 3 < 3 := Nat.mod_lt K (by decide)
+  have hs := Nat.mod_add_div K 3
+  have hcases : K % 3 = 0 ∨ K % 3 = 1 ∨ K % 3 = 2 := by
+    omega
+  rcases hcases with h0 | h1 | h2
+  · have hK : K = 3 * (K / 3) := by omega
+    rw [hK, tail3_affineOrbit_three_mul, h0]
+    norm_num [peelPhase]
+  · have hK : K = 3 * (K / 3) + 1 := by omega
+    rw [hK, tail3_affineOrbit_three_mul_add_one, h1]
+    norm_num [peelPhase]
+  · have hK : K = 3 * (K / 3) + 2 := by omega
+    rw [hK, tail3_affineOrbit_three_mul_add_two, h2]
+    norm_num [peelPhase]
+
+/-- The first unread channel digit after renormalization is therefore a
+deterministic function of the next exponent trit and the consumed phase. -/
+theorem lowDigit_phase_tail_exact (K : Nat) :
+    lowDigit (tail3 (affineOrbit K)) =
+      lowDigit (peelPhase (K % 3) (affineOrbit (K / 3))) := by
+  rw [tail3_affineOrbit_phase_exact]
+
+
 #check tail3_affineOrbit_three_mul
 #check tail3_affineOrbit_three_mul_add_one
 #check tail3_affineOrbit_three_mul_add_two
@@ -105,8 +144,11 @@ theorem lowDigit_peel2_affineOrbit (q : Nat) :
 #check lowDigit_peel0_affineOrbit
 #check lowDigit_peel1_affineOrbit
 #check lowDigit_peel2_affineOrbit
+#check tail3_affineOrbit_phase_exact
+#check lowDigit_phase_tail_exact
 #print axioms noCommonTwo_three_mul_iff
 #print axioms noCommonTwo_three_mul_add_one_iff
 #print axioms noCommonTwo_three_mul_add_two_iff
+#print axioms tail3_affineOrbit_phase_exact
 
 end GSTFourPowerAffinePeelClassifier
