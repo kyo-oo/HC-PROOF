@@ -7,6 +7,7 @@ on:
     paths:
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
+      - 'GSTWorldRecoordinationGroupoid.lean'
       - 'CardinalWorldsPrefixClassifier.lean'
       - 'GSTWorldCosmology.lean'
       - 'GSTWorldCrownBridge.lean'
@@ -60,6 +61,7 @@ jobs:
           files=(
             GSTRadixWorldDynamics.lean
             GSTGradedWorldAlgebra.lean
+            GSTWorldRecoordinationGroupoid.lean
             CardinalWorldsPrefixClassifier.lean
             GSTWorldCosmology.lean
             GSTWorldCrownBridge.lean
@@ -91,6 +93,7 @@ jobs:
           lake build \
             GSTRadixWorldDynamics \
             GSTGradedWorldAlgebra \
+            GSTWorldRecoordinationGroupoid \
             CardinalWorldsPrefixClassifier \
             GSTWorldCrownBridge \
             GSTGraphV2ScaleEquivariance \
