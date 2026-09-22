@@ -73,12 +73,55 @@ theorem no_common_two_forbids_mod81_classes
   apply hNo
   exact ⟨4, by norm_num, hr.1, hr.2⟩
 
+
+/-- **EXACT ROW-FOUR CLASSIFICATION.**  RowFourClass is precisely the set
+of exponent residues whose consecutive four-powers share digit two at row
+four; the fourteen classes are exhaustive, not merely sufficient. -/
+theorem row_four_overlap_iff_mod81_classes
+    (K : Nat) :
+    (digit3 (4^K) 4 = 2 ∧ digit3 (4^(K+1)) 4 = 2)
+      ↔ RowFourClass (K % 81) := by
+  constructor
+  · intro hov
+    let r := K % 81
+    have hr : r < 81 := by
+      dsimp [r]
+      exact Nat.mod_lt _ (by norm_num)
+    have hm := Nat.mod_add_div K 81
+    have hshape : K = r + 81 * (K / 81) := by
+      dsimp [r]
+      omega
+    have hshape1 : K+1 = (r+1) + 81 * (K / 81) := by
+      omega
+    have h0 : digit3 (4^r) 4 = 2 := by
+      have h := hov.1
+      rw [hshape] at h
+      have hp := pow4_digit_period 4 r (K / 81)
+      norm_num at hp
+      rw [hp] at h
+      exact h
+    have h1 : digit3 (4^(r+1)) 4 = 2 := by
+      have h := hov.2
+      rw [hshape1] at h
+      have hp := pow4_digit_period 4 (r+1) (K / 81)
+      norm_num at hp
+      rw [hp] at h
+      exact h
+    have hclass : RowFourClass r := by
+      interval_cases r <;> norm_num [RowFourClass, digit3] at *
+    simpa [r] using hclass
+  · intro hclass
+    exact row_four_overlap_of_mod81_classes K hclass
+
+
 #check RowFourClass
 #check row_four_overlap_of_mod81_residue
 #check row_four_overlap_of_mod81_classes
 #check no_common_two_forbids_mod81_classes
+#check row_four_overlap_iff_mod81_classes
 #print axioms row_four_overlap_of_mod81_residue
 #print axioms row_four_overlap_of_mod81_classes
 #print axioms no_common_two_forbids_mod81_classes
+#print axioms row_four_overlap_iff_mod81_classes
 
 end GSTFourPowerDirectResidue81
