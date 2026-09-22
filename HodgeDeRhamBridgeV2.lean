@@ -89,7 +89,7 @@ theorem comparison_period_concatenated (j k : Nat) :
 
 theorem absorption_v2_crown :
     (∀ C d, C < 4 → d < 3 →
-      HappyCell C d ↔ ontDensity C d = 84 ∨ ontDensity C d = 42)
+      (HappyCell C d ↔ ontDensity C d = 84 ∨ ontDensity C d = 42))
     ∧ (∀ r m, 4^(r+3*m) = 4^r * 64^m)
     ∧ (∀ k t u x y,
       SixAdicIsoAt k ((4 : Int)^(t+u) * x) ((4 : Int)^(t+u) * y) ↔
