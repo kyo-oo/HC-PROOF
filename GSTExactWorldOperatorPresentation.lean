@@ -1,4 +1,5 @@
 import GSTMultiAxisCohomology
+import GSTUniversalLefschetzPathFormula
 
 /-!
 # Exact GST operator presentation
@@ -153,8 +154,39 @@ def worldOperatorEquiv : WorldCohomologyRing A B ≃+* WorldOperatorRing A B :=
       obtain ⟨p,hp⟩ := evalWorldPoly_surjective A B o
       exact ⟨Ideal.Quotient.mk (truncIdeal A B) p, hp⟩⟩
 
+/-- The last possible polarization power really survives in every nonempty
+rectangle: the extinction ceiling is optimal, not merely an upper bound. -/
+theorem L_pow_top_ne_zero (hA : 0 < A) (hB : 0 < B) :
+    L A B ^ (A+B-2) ≠ 0 := by
+  intro hz
+  have h := GSTUniversalLefschetzPathFormula.path_formula_exact_boundary
+    A B (A-1) (B-1) (by omega) (by omega) (basis (origin A B hA hB))
+  have hD : A-1 + (B-1) = A+B-2 := by omega
+  rw [hD, hz, worldAct_zero] at h
+  have hb : basis (origin A B hA hB)
+      ((⟨0, by omega⟩ : Fin A), (⟨0, by omega⟩ : Fin B)) = 1 := by
+    simp [basis, GSTWorldPoincareDuality.worldBasis, origin]
+  rw [hb, mul_one] at h
+  have hc : 0 < (A+B-2).choose (B-1) := Nat.choose_pos (by omega)
+  have hci : (0 : ℤ) < ((A+B-2).choose (B-1) : ℤ) := by exact_mod_cast hc
+  exact (ne_of_gt hci) h.symm
+
+/-- Exact polarization lifetime: every earlier power survives, and every
+power at or beyond the dimension-derived boundary vanishes. -/
+theorem L_pow_eq_zero_iff (hA : 0 < A) (hB : 0 < B) (n : ℕ) :
+    L A B ^ n = 0 ↔ A+B-1 ≤ n := by
+  constructor
+  · intro hn
+    by_contra hlt
+    have hle : n ≤ A+B-2 := by omega
+    exact L_pow_top_ne_zero A B hA hB (pow_eq_zero_of_le hle hn)
+  · intro hn
+    exact pow_eq_zero_of_le hn (rectangular_L_pow_boundary A B)
+
 #print axioms origin_coefficient
 #print axioms ker_evalWorldPoly_exact
 #print axioms worldOperatorHom_injective
 #print axioms worldOperatorEquiv
+#print axioms L_pow_top_ne_zero
+#print axioms L_pow_eq_zero_iff
 end GSTExactWorldOperatorPresentation

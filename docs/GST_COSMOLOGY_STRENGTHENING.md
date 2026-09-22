@@ -22,6 +22,16 @@ operator to the native origin delta extracts its coefficient at every live
 world cell. It proves faithfulness without assuming the desired kernel
 identity. Surjectivity follows from generation of the native operator ring.
 
+For positive depths, the merged exact path calculus additionally proves the
+optimal lifetime, not just an upper bound:
+
+```
+L A B ^ n = 0 ↔ A+B-1 ≤ n
+```
+
+The surviving top power is certified by its nonzero origin-to-top binomial
+coefficient.
+
 ## Arbitrary axis families
 
 `GSTMultiAxisCosmology` replaces a pair of axes by a type `I` with depth
@@ -113,7 +123,7 @@ and audits transitive axioms. `GSTCosmologyStrengtheningAudit.lean` lists the
 public declarations individually. Permitted dependencies are only
 `propext`, `Classical.choice` and `Quot.sound`.
 
-Verified Lean source commit: `51be1fd14b64bdad6351d2461534fa4af4ba7037`.
+Initial verified Lean source commit: `51be1fd14b64bdad6351d2461534fa4af4ba7037`.
 [Successful verification run](https://github.com/kyo-oo/HC-PROOF/actions/runs/35706311719)
 completed on 2026-09-22.
 
