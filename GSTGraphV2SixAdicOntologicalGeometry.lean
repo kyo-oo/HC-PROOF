@@ -61,10 +61,67 @@ structure ResolvedGraph where
   ambient : GSTGraphV2NonEuclidean.Graph
   resolution : Nat
 
+
+/-- Two resolved graphs are ontologically equivalent when they live at the
+same resolution and their ambient energies are six-adically identical there. -/
+def ResolvedIso (G H : ResolvedGraph) : Prop :=
+  G.resolution = H.resolution ∧
+    GraphIsoAt G.resolution G.ambient H.ambient
+
+/-- Identity morphism of the resolved six-adic universe. -/
+theorem resolvedIso_refl (G : ResolvedGraph) :
+    ResolvedIso G G := by
+  refine ⟨rfl, ?_⟩
+  refine ⟨0, ?_⟩
+  simp [GraphIsoAt, SixAdicIsoAt]
+
+/-- Resolved equivalence is symmetric. -/
+theorem resolvedIso_symm {G H : ResolvedGraph}
+    (h : ResolvedIso G H) :
+    ResolvedIso H G := by
+  rcases h with ⟨hres, ⟨q, hq⟩⟩
+  refine ⟨hres.symm, ?_⟩
+  change SixAdicIsoAt H.resolution
+    (H.ambient.energy : Int) (G.ambient.energy : Int)
+  rw [← hres]
+  refine ⟨-q, ?_⟩
+  calc
+    (H.ambient.energy : Int) - (G.ambient.energy : Int) =
+        -((G.ambient.energy : Int) - (H.ambient.energy : Int)) := by ring
+    _ = -((6 : Int)^G.resolution * q) := by rw [hq]
+    _ = (6 : Int)^G.resolution * (-q) := by ring
+
+/-- Resolved equivalence is transitive, so equal-resolution energy charts form
+an intrinsic six-adic groupoid relation before any additional laws are loaded. -/
+theorem resolvedIso_trans {G H J : ResolvedGraph}
+    (hGH : ResolvedIso G H) (hHJ : ResolvedIso H J) :
+    ResolvedIso G J := by
+  rcases hGH with ⟨hGHr, ⟨q, hq⟩⟩
+  rcases hHJ with ⟨hHJr, ⟨r, hr⟩⟩
+  refine ⟨hGHr.trans hHJr, ?_⟩
+  change SixAdicIsoAt G.resolution
+    (G.ambient.energy : Int) (J.ambient.energy : Int)
+  rw [← hGHr] at hr
+  refine ⟨q+r, ?_⟩
+  calc
+    (G.ambient.energy : Int) - (J.ambient.energy : Int) =
+        ((G.ambient.energy : Int) - (H.ambient.energy : Int)) +
+        ((H.ambient.energy : Int) - (J.ambient.energy : Int)) := by ring
+    _ = (6 : Int)^G.resolution * q +
+        (6 : Int)^G.resolution * r := by rw [hq, hr]
+    _ = (6 : Int)^G.resolution * (q+r) := by ring
+
+
 /-- Resolution is an overlay: resolving a graph never changes the underlying
     GST vertex selected at position `p`. -/
 def resolvedVertex (G : ResolvedGraph) (p : Nat) :
     GSTGraphV2NonEuclidean.Vertex :=
   GSTGraphV2NonEuclidean.vertex G.ambient p
+
+#check ResolvedIso
+#check resolvedIso_refl
+#check resolvedIso_symm
+#check resolvedIso_trans
+#print axioms resolvedIso_trans
 
 end GSTGraphV2SixAdicOntologicalGeometry
