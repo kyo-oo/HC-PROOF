@@ -33,6 +33,49 @@ theorem canonical_n_wave_physical
   simpa [nWaveEnergy, nWaveShift] using
     canonical_graph_u_cut_recoordinate_exact s n K x p
 
+/-- Canonical n-wave transport as equality of the complete physical
+carry/digit state. -/
+theorem canonical_n_wave_cell_exact
+    (s n K x p : Nat) :
+    ((graph (canonicalEnergy s n) x p).seven.carry,
+      (graph (canonicalEnergy s n) x p).seven.digit)
+      =
+    ((graph (nWaveEnergy s n K)
+      (nWaveShift s n K + x) p).seven.carry,
+      (graph (nWaveEnergy s n K)
+      (nWaveShift s n K + x) p).seven.digit) := by
+  exact Prod.ext
+    (canonical_n_wave_physical s n K x p).1
+    (canonical_n_wave_physical s n K x p).2
+
+/-- Every observable of the physical carry/digit state is transported through
+an arbitrary canonical n-wave depth. -/
+theorem canonical_n_wave_cell_observable_exact
+    {α : Type} (F : Nat × Nat → α)
+    (s n K x p : Nat) :
+    F ((graph (canonicalEnergy s n) x p).seven.carry,
+       (graph (canonicalEnergy s n) x p).seven.digit)
+      =
+    F ((graph (nWaveEnergy s n K)
+      (nWaveShift s n K + x) p).seven.carry,
+       (graph (nWaveEnergy s n K)
+      (nWaveShift s n K + x) p).seven.digit) :=
+  congrArg F (canonical_n_wave_cell_exact s n K x p)
+
+/-- Every predicate on the physical carry/digit state is exactly invariant
+under canonical n-wave transport. -/
+theorem canonical_n_wave_cell_predicate_iff
+    (P : Nat × Nat → Prop)
+    (s n K x p : Nat) :
+    P ((graph (canonicalEnergy s n) x p).seven.carry,
+       (graph (canonicalEnergy s n) x p).seven.digit)
+      ↔
+    P ((graph (nWaveEnergy s n K)
+      (nWaveShift s n K + x) p).seven.carry,
+       (graph (nWaveEnergy s n K)
+      (nWaveShift s n K + x) p).seven.digit) := by
+  rw [canonical_n_wave_cell_exact]
+
 /-- Happy observables transport through every layer of the n-wave. -/
 theorem canonical_n_wave_happy_iff
     (s n K x p : Nat) :
@@ -120,11 +163,16 @@ theorem canonical_n_wave_terminal_strip_packet_iff
   exact h
 
 #check canonical_n_wave_physical
+#check canonical_n_wave_cell_exact
+#check canonical_n_wave_cell_observable_exact
+#check canonical_n_wave_cell_predicate_iff
 #check canonical_n_wave_happy_iff
 #check canonical_n_wave_bad_trace_iff
 #check canonical_n_wave_strip_packet_iff
 #check canonical_n_wave_terminal_energy
 #check canonical_n_wave_terminal_strip_packet_iff
+#print axioms canonical_n_wave_cell_exact
+#print axioms canonical_n_wave_cell_observable_exact
 #print axioms canonical_n_wave_bad_trace_iff
 #print axioms canonical_n_wave_strip_packet_iff
 #print axioms canonical_n_wave_terminal_strip_packet_iff
