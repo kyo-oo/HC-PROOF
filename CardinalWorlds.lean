@@ -1091,6 +1091,16 @@ theorem erdos_even_conjecture_of_kill_all
   obtain ⟨p, hp⟩ := hKill K hK
   exact has_two_imp_not_no_two (4^K) (hasTernaryTwo_of_digit (4^K) p hp)
 
+/-- **EVEN-WORLD VERDICT/WITNESS EQUIVALENCE.**
+The Boolean no-two verdict and the explicit ternary digit-two witness are
+exactly the same global statement on the even-power axis. -/
+theorem erdos_even_verdict_iff_digit_witness :
+    (∀ K : Nat, 8 ≤ K → noTernaryTwo (4^K) = false)
+      ↔
+    (∀ K : Nat, 8 ≤ K → ∃ p : Nat, 4^K / 3^p % 3 = 2) := by
+  exact ⟨omega_shadow_kill_all_of_even_conjecture,
+    erdos_even_conjecture_of_kill_all⟩
+
 /-! ## §12 THE THREE WORLDS — the exponential bridge factors
 
 (verbatim from `GSTHandwrittenBigNThreeWorldFactors`, the pure
@@ -1142,6 +1152,46 @@ theorem gst_three_world_factor_addS (j k : Nat) :
   simp [gstBinaryWorldFactorS, gstTernaryWorldFactorS,
     gstMixedWorldFactorS, pow_add]
 
+/-- Componentwise multiplication of two three-world packets. -/
+def gstThreeWorldPacketMul
+    (A B : GSTThreeWorldExponentialPacketS) :
+    GSTThreeWorldExponentialPacketS :=
+  ⟨A.binary * B.binary,
+    A.ternary * B.ternary,
+    A.mixed * B.mixed⟩
+
+/-- Identity packet at depth zero. -/
+theorem gstThreeWorldPacket_zero :
+    gstThreeWorldExponentialPacketS 0 =
+      ⟨1,1,1⟩ := by
+  rfl
+
+/-- **THREE-WORLD PACKET SEMIGROUP.**
+Concatenating information depths is exactly componentwise packet
+multiplication. -/
+theorem gstThreeWorldPacket_add
+    (j k : Nat) :
+    gstThreeWorldExponentialPacketS (j+k) =
+      gstThreeWorldPacketMul
+        (gstThreeWorldExponentialPacketS j)
+        (gstThreeWorldExponentialPacketS k) := by
+  apply GSTThreeWorldExponentialPacketS.ext <;>
+    simp [gstThreeWorldExponentialPacketS,
+      gstThreeWorldPacketMul,
+      gstBinaryWorldFactorS,
+      gstTernaryWorldFactorS,
+      gstMixedWorldFactorS,
+      pow_add]
+
+/-- The mixed component remains exactly the binary×ternary composite at every
+packet depth. -/
+theorem gstThreeWorldPacket_mixed_exact
+    (j : Nat) :
+    (gstThreeWorldExponentialPacketS j).mixed =
+      (gstThreeWorldExponentialPacketS j).binary *
+        (gstThreeWorldExponentialPacketS j).ternary := by
+  exact gst_three_world_mixed_factor_exactS j
+
 /-- Literal joined prefix from the handwritten equation.  Every completed
 microscopic world contributes the aligned factor `2^j * 3^j`, weighted by
 the five-unit full SURVIVE mass. -/
@@ -1177,7 +1227,11 @@ theorem gst_handwritten_three_world_joined_prefix_closedS (K : Nat) :
 #check no_two_false_digit_witness
 #check omega_shadow_kill_all_of_even_conjecture
 #check erdos_even_conjecture_of_kill_all
+#check erdos_even_verdict_iff_digit_witness
 #check gst_three_world_factor_rawS
+#check gstThreeWorldPacketMul
+#check gstThreeWorldPacket_add
+#check gstThreeWorldPacket_mixed_exact
 #check gst_handwritten_three_world_joined_prefix_closedS
 
 #print axioms d_identity
@@ -1190,5 +1244,8 @@ theorem gst_handwritten_three_world_joined_prefix_closedS (K : Nat) :
 #print axioms no_two_false_digit_witness
 #print axioms omega_shadow_kill_all_of_even_conjecture
 #print axioms erdos_even_conjecture_of_kill_all
+#print axioms erdos_even_verdict_iff_digit_witness
 #print axioms gst_three_world_factor_rawS
+#print axioms gstThreeWorldPacket_add
+#print axioms gstThreeWorldPacket_mixed_exact
 #print axioms gst_handwritten_three_world_joined_prefix_closedS
