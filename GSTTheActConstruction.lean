@@ -409,7 +409,13 @@ theorem child_live_iff_ne_deadChild
     (r j t : Nat) (ht : t < 3) :
     (digit3 (4^r) (j+1) + t) % 3 ≠ 2 ↔
       t ≠ deadChild r j := by
-  rw [child_fires_iff_eq_deadChild r j t ht]
+  constructor
+  · intro hLive hDead
+    exact hLive
+      ((child_fires_iff_eq_deadChild r j t ht).2 hDead)
+  · intro hNe hFire
+    exact hNe
+      ((child_fires_iff_eq_deadChild r j t ht).1 hFire)
 
 /-- Functional feedback crown: every node carries one canonical forbidden
 child and the other children are exactly its live complement. -/
