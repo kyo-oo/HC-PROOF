@@ -18,6 +18,7 @@ on:
       - 'GSTUniversalLefschetzPathFormula.lean'
       - 'GSTUniversalLefschetzKernel.lean'
       - 'GSTUniversalLefschetzCausalGeometry.lean'
+      - 'GSTLefschetzPoincareReciprocity.lean'
       - 'GSTTruncatedWorldCohomologyRing.lean'
       - 'GSTWorldPoincareDuality.lean'
       - 'CardinalWorldsPrefixClassifier.lean'
@@ -86,6 +87,7 @@ jobs:
             GSTUniversalLefschetzPathFormula.lean
             GSTUniversalLefschetzKernel.lean
             GSTUniversalLefschetzCausalGeometry.lean
+            GSTLefschetzPoincareReciprocity.lean
             GSTTruncatedWorldCohomologyRing.lean
             GSTWorldPoincareDuality.lean
             CardinalWorldsPrefixClassifier.lean
@@ -131,6 +133,7 @@ jobs:
             GSTUniversalLefschetzPathFormula \
             GSTUniversalLefschetzKernel \
             GSTUniversalLefschetzCausalGeometry \
+            GSTLefschetzPoincareReciprocity \
             GSTTruncatedWorldCohomologyRing \
             GSTWorldPoincareDuality \
             CardinalWorldsPrefixClassifier \
