@@ -415,14 +415,15 @@ theorem wave_class_transport_add
   | zero =>
       simp [rowClass]
   | succ M ih =>
-      have hleft := wave_class_transport R p (M+N)
-      have hfirst := wave_class_transport R p M
-      have htail := ih (4*R)
-      rw [show M.succ + N = (M+N)+1 by omega] at hleft
-      rw [hleft, hfirst, htail]
-      congr 1
-      rw [Nat.pow_succ]
-      ring
+      rw [show M.succ + N = (M+N)+1 by omega]
+      rw [wave_class_transport R p (M+N)]
+      rw [ih (4*R)]
+      rw [wave_class_transport R p M]
+      have hscale : 4^M * (4*R) = 4^(M+1) * R := by
+        rw [Nat.pow_succ]
+        ring
+      rw [hscale]
+      simp [Nat.add_assoc]
 
 /-- Re-encoding by M then N steps is exactly re-encoding by M+N steps at the
 level of residual row classes. -/
@@ -430,7 +431,7 @@ theorem wave_class_transport_semigroup
     (R p M N K : Nat) :
     rowClass (4^(M+N) * R) p K =
       rowClass (4^N * (4^M * R)) p K := by
-  congr 2
+  apply congrArg (fun E : Nat => rowClass E p K)
   rw [pow_add]
   ring
 
