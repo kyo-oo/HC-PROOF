@@ -164,7 +164,9 @@ theorem codeSectorProj_idempotent
     else 0)
       =
     (if worldCode S x = k then f x else 0)
-  by_cases h : worldCode S x = k <;> simp [h]
+  by_cases h : worldCode S x = k
+  · rw [if_pos h, if_pos h]
+  · rw [if_neg h, if_neg h]
 
 theorem codeSectorProj_orthogonal
     {N : Nat} (S : GSTWorldShape N)
@@ -180,8 +182,8 @@ theorem codeSectorProj_orthogonal
       intro hk
       apply hjk
       exact hj.symm.trans hk
-    simp [hj, hk]
-  · simp [hj]
+    rw [if_pos hj, if_neg hk]
+  · rw [if_neg hj]
 
 /-- All N code sectors sum exactly to the coefficient field. -/
 theorem codeSectorProj_sum
@@ -193,11 +195,11 @@ theorem codeSectorProj_sum
     Finset.mem_range.mpr (worldCode_lt S x)
   rw [Finset.sum_eq_single (worldCode S x)]
   · change (if worldCode S x = worldCode S x then f x else 0) = f x
-    simp
+    rw [if_pos rfl]
   · intro b hb hne
     change (if worldCode S x = b then f x else 0) = 0
     have hne' : worldCode S x ≠ b := hne.symm
-    simp [hne']
+    rw [if_neg hne']
   · intro hnot
     exact (hnot hmem).elim
 
@@ -261,13 +263,11 @@ theorem codeSector_projector_polynomial
       (worldKunnethPoly N k).eval (k : ℤ) *
         (if worldCode S x = k then f x else 0)
   by_cases h : worldCode S x = k
-  · rw [h]
-    simp
+  · rw [if_pos h, h]
   · have hlt := worldCode_lt S x
     have hz :=
       worldKunnethPoly_eval_zero N k (worldCode S x) hlt h
-    rw [hz]
-    simp [h]
+    rw [if_neg h, hz, zero_mul, mul_zero]
 
 /-- Standard output-oriented rectangular shape. -/
 def outputShape (s b : Nat) : GSTWorldShape (s*b) where
