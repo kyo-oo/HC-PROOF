@@ -48,6 +48,35 @@ theorem happy_iff_phaseDensity_positive
       phaseCarryPotential, outDigit, nextCarry, surviveI,
       midDigit, finalMicroDigit, microOutput, highBit, lowBit, twoI]
 
+/-- **EXACT PHASE SPECTRUM.**
+On physical cells the positive phase sector is the single eigenvalue 2,
+and it is exactly the Happy locus. -/
+theorem happy_iff_phaseDensity_eq_two
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    HappyCell C d ↔ phaseDensity C d = 2 := by
+  have hCc : C = 0 ∨ C = 1 ∨ C = 2 ∨ C = 3 := by omega
+  have hdc : d = 0 ∨ d = 1 ∨ d = 2 := by omega
+  rcases hCc with rfl | rfl | rfl | rfl <;>
+    rcases hdc with rfl | rfl | rfl <;>
+    norm_num [HappyCell, phaseDensity, phaseDigitPotential,
+      phaseCarryPotential, outDigit, nextCarry, surviveI,
+      midDigit, finalMicroDigit, microOutput, highBit, lowBit, twoI]
+
+/-- Positivity of the phase density is rigidly quantized to the value two. -/
+theorem phaseDensity_positive_iff_eq_two
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    0 < phaseDensity C d ↔ phaseDensity C d = 2 := by
+  rw [← happy_iff_phaseDensity_positive C d hC hd,
+      happy_iff_phaseDensity_eq_two C d hC hd]
+
+/-- There is no physical phase density in the open interval (0,2). -/
+theorem phaseDensity_spectral_gap
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    phaseDensity C d ≤ 0 ∨ phaseDensity C d = 2 := by
+  by_cases h : HappyCell C d
+  · exact Or.inr ((happy_iff_phaseDensity_eq_two C d hC hd).1 h)
+  · exact Or.inl (phaseDensity_nonpositive_of_not_happy C d hC hd h)
+
 /-- Uniform physical floor used by highest-row domination. -/
 theorem phaseDensity_ge_neg_four
     (C d : Nat) (hC : C < 4) (hd : d < 3) :
@@ -279,10 +308,15 @@ theorem phaseRectangle_exact
 
 #check phaseDensity_physical_table
 #check happy_iff_phaseDensity_positive
+#check happy_iff_phaseDensity_eq_two
+#check phaseDensity_positive_iff_eq_two
+#check phaseDensity_spectral_gap
 #check weightedPhaseColumnPrefix_ge_floor
 #check weightedPhaseColumnPrefix_positive_of_top_happy
 #check phaseRectangle_exact
 #print axioms phaseDensity_physical_table
+#print axioms happy_iff_phaseDensity_eq_two
+#print axioms phaseDensity_positive_iff_eq_two
 #print axioms weightedPhaseColumnPrefix_positive_of_top_happy
 #print axioms phaseRectangle_exact
 
