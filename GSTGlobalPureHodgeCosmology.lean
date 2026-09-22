@@ -110,7 +110,7 @@ theorem pureReassemble_pureCoordinates
       · apply Fin.ext
         rfl
       · apply Fin.ext
-        exact hdiag.symm
+        exact hdiag
     rw [hx]
   · simp [pureReassemble, hdiag, hf x hdiag]
 
