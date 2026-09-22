@@ -292,14 +292,78 @@ theorem happy_iff_crossDensity_positive
     have hnonpos := crossDensity_nonpositive_of_not_happy C d hC hd hbad
     omega
 
+/-- **EXACT POSITIVE-CHARGE CLASSIFICATION.**
+On the physical twelve-cell system, positivity is not merely a sign test:
+every positive crossing charge is exactly the unique value 105, and this is
+equivalent to Happy. -/
+theorem happy_iff_crossDensity_eq_105
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    HappyCell C d ↔ crossDensity C d = 105 := by
+  constructor
+  · exact crossDensity_happy_exact C d
+  · intro h105
+    apply (happy_iff_crossDensity_positive C d hC hd).2
+    rw [h105]
+    norm_num
+
+/-- Every positive physical crossing density is forced to the exact source
+charge 105. -/
+theorem crossDensity_positive_iff_eq_105
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    0 < crossDensity C d ↔ crossDensity C d = 105 := by
+  rw [← happy_iff_crossDensity_positive C d hC hd,
+      happy_iff_crossDensity_eq_105 C d hC hd]
+
+/-- Every physical event belongs to one of two exact charge sectors:
+the unique positive Happy source 105, or the nonpositive complement. -/
+theorem crossDensity_exact_sector_dichotomy
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    crossDensity C d = 105 ∨ crossDensity C d ≤ 0 := by
+  by_cases h : HappyCell C d
+  · exact Or.inl (crossDensity_happy_exact C d h)
+  · exact Or.inr (crossDensity_nonpositive_of_not_happy C d hC hd h)
+
+/-- The positive sector is rigid: two positive physical cells have identical
+crossing charge, independently of their coordinates. -/
+theorem crossDensity_positive_rigidity
+    (C₁ d₁ C₂ d₂ : Nat)
+    (hC₁ : C₁ < 4) (hd₁ : d₁ < 3)
+    (hC₂ : C₂ < 4) (hd₂ : d₂ < 3)
+    (h₁ : 0 < crossDensity C₁ d₁)
+    (h₂ : 0 < crossDensity C₂ d₂) :
+    crossDensity C₁ d₁ = crossDensity C₂ d₂ := by
+  rw [(crossDensity_positive_iff_eq_105 C₁ d₁ hC₁ hd₁).mp h₁,
+      (crossDensity_positive_iff_eq_105 C₂ d₂ hC₂ hd₂).mp h₂]
+
+/-- Crown for the strengthened exact-charge semantics. -/
+theorem exact_crossing_charge_classification_crown :
+    (∀ C d, C < 4 → d < 3 →
+      (HappyCell C d ↔ crossDensity C d = 105))
+    ∧ (∀ C d, C < 4 → d < 3 →
+      (0 < crossDensity C d ↔ crossDensity C d = 105))
+    ∧ (∀ C d, C < 4 → d < 3 →
+      crossDensity C d = 105 ∨ crossDensity C d ≤ 0) := by
+  exact ⟨happy_iff_crossDensity_eq_105,
+    crossDensity_positive_iff_eq_105,
+    crossDensity_exact_sector_dichotomy⟩
+
 #check crossDensity_physical_table
 #check reverseCrossCode_exact
 #check reverseCrossCode_ge_exponential_of_leading_happy
 #check reverseCrossRectangle_exact
 #check happy_iff_crossDensity_positive
+#check happy_iff_crossDensity_eq_105
+#check crossDensity_positive_iff_eq_105
+#check crossDensity_exact_sector_dichotomy
+#check crossDensity_positive_rigidity
+#check exact_crossing_charge_classification_crown
 #print axioms reverseCrossCode_exact
 #print axioms reverseCrossCode_ge_exponential_of_leading_happy
 #print axioms reverseCrossRectangle_exact
 #print axioms happy_iff_crossDensity_positive
+#print axioms happy_iff_crossDensity_eq_105
+#print axioms crossDensity_positive_iff_eq_105
+#print axioms crossDensity_positive_rigidity
+#print axioms exact_crossing_charge_classification_crown
 
 end GSTU2DExactCrossingCharge
