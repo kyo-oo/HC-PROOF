@@ -105,6 +105,24 @@ theorem the_act_iff_full_erdos
     the_act ↔ (∀ n : Nat, 9 ≤ n → noTernaryTwo (2^n) = false) :=
   ⟨full_erdos_of_the_act hOdd, the_act_of_full_erdos⟩
 
+/-- **THREE-WAY TRUTH-STATE EQUIVALENCE.**
+Given the repo's explicit tail boundary and odd-exponent theorem, the Act,
+TailF target, and full ternary statement are pairwise equivalent. -/
+theorem act_tailF_full_equivalence
+    (hB : erdos_even_conjecture_iff_tailF)
+    (hOdd : erdos_ternary_2_conjecture_odd) :
+    (the_act ↔
+      GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF)
+    ∧
+    (the_act ↔
+      ∀ n : Nat, 9 ≤ n → noTernaryTwo (2^n) = false)
+    ∧
+    (GSTGraphV2OmegaWaveLaw.four_power_omega_shadow_wave_tailF ↔
+      ∀ n : Nat, 9 ≤ n → noTernaryTwo (2^n) = false) := by
+  exact ⟨the_act_iff_hTailF hB,
+    the_act_iff_full_erdos hOdd,
+    hB.symm.trans (the_act_iff_full_erdos hOdd)⟩
+
 /-- The climb carries strictly more than the act: whoever proves the
 climb proves the act (the pair demand subsumes digit-two existence).
 The climb is an overkill route to `hTailF`, not a necessity. -/
@@ -148,6 +166,32 @@ theorem front_law (v : Nat) : ∀ a : Nat,
 #print axioms full_erdos_of_the_act
 #print axioms the_act_iff_full_erdos
 #print axioms climb_gives_the_act
+/-- The front digit is two exactly on reduced exponent residue two. -/
+theorem front_law_two_iff
+    (v a : Nat) :
+    digit3 (4^(3^v*a)) (v+1) = 2 ↔ a % 3 = 2 := by
+  rw [front_law v a]
+
+/-- Likewise the front digit is one exactly on residue one. -/
+theorem front_law_one_iff
+    (v a : Nat) :
+    digit3 (4^(3^v*a)) (v+1) = 1 ↔ a % 3 = 1 := by
+  rw [front_law v a]
+
+/-- Front-law crown: the first live tower row is a lossless readout of the
+reduced exponent trit. -/
+theorem front_law_classifier_crown :
+    ∀ v a,
+      digit3 (4^(3^v*a)) (v+1) = a % 3
+      ∧ (digit3 (4^(3^v*a)) (v+1) = 2 ↔ a % 3 = 2)
+      ∧ (digit3 (4^(3^v*a)) (v+1) = 1 ↔ a % 3 = 1) := by
+  intro v a
+  exact ⟨front_law v a, front_law_two_iff v a,
+    front_law_one_iff v a⟩
+
+#print axioms act_tailF_full_equivalence
 #print axioms front_law
+#print axioms front_law_two_iff
+#print axioms front_law_classifier_crown
 
 end GSTTheAct
