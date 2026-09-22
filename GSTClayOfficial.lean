@@ -161,6 +161,100 @@ theorem clay_witness_is_diagonal_coordinate (p : Nat) (hp : p < 3)
   · show (f c : ℚ) = (z : ℚ) * (cycleClass p c : ℚ)
     exact_mod_cast hz c
 
+/-- **RATIONAL COEFFICIENT RIGIDITY.**
+Two rational coefficients producing the same rationalized Hodge class must
+coincide, because the diagonal cycle coordinate is exactly one. -/
+theorem clay_coefficient_unique
+    (p : Nat) (hp : p < 3) (f : WaveCoef)
+    (q r : ℚ)
+    (hq : ∀ c : WaveCell, rat f c = q * ratCycleClass p c)
+    (hr : ∀ c : WaveCell, rat f c = r * ratCycleClass p c) :
+    q = r := by
+  have hp4 : p < 4 := by omega
+  let d : WaveCell := ⟨p,p,hp4,hp⟩
+  have hcycle : ratCycleClass p d = 1 := by
+    unfold ratCycleClass
+    dsimp [d]
+    rw [cycle_at_diagonal p p p hp4 hp rfl rfl]
+    norm_num
+  have hq' := hq d
+  have hr' := hr d
+  rw [hcycle, mul_one] at hq' hr'
+  exact hq'.symm.trans hr'
+
+/-- Any rational coefficient representing a Hodge class equals the
+rationalized diagonal coordinate. -/
+theorem clay_coefficient_eq_diagonal
+    (p : Nat) (hp : p < 3) (f : WaveCoef)
+    (q : ℚ)
+    (hq : ∀ c : WaveCell, rat f c = q * ratCycleClass p c) :
+    q = ((gev f (4*p) : ℤ) : ℚ) := by
+  obtain ⟨r,hrdiag,hr⟩ :=
+    clay_witness_is_diagonal_coordinate p hp f
+      ((hodge_class_rank_one p hp f).2
+        (by
+          have hp4 : p < 4 := by omega
+          let d : WaveCell := ⟨p,p,hp4,hp⟩
+          have hcycle : ratCycleClass p d = 1 := by
+            unfold ratCycleClass
+            dsimp [d]
+            rw [cycle_at_diagonal p p p hp4 hp rfl rfl]
+            norm_num
+          have hq' := hq d
+          rw [hcycle, mul_one] at hq'
+          -- Recover the integral Hodge condition from support below.
+          exact hodge_class_iff.mpr (by
+            intro i hi hine
+            have hC : i / 3 < 4 := by omega
+            have hd : i % 3 < 3 := by omega
+            let ci : WaveCell := ⟨i/3,i%3,hC,hd⟩
+            have hmono : ratCycleClass p ci = 0 := by
+              unfold ratCycleClass
+              dsimp [ci]
+              rw [cycle_at_offdiagonal p hp (i/3) (i%3) hC hd]
+              · norm_num
+              · intro hdiag
+                have hidx : 3*(i/3)+i%3=i := by omega
+                have hpidx := (diagonal_index p hp (i/3) (i%3) hC hd).mp hdiag
+                omega
+            have hqi := hq ci
+            rw [hmono, mul_zero] at hqi
+            have hcell : rat f ci = (gev f i : ℤ) := by
+              unfold rat
+              dsimp [ci]
+              rw [wave_coordinate_at f (i/3) (i%3) hC hd]
+              congr 1
+              omega
+            rw [hcell] at hqi
+            exact_mod_cast hqi)))
+  exact (clay_coefficient_unique p hp f q r hq hr).trans hrdiag
+
+/-- **UNIQUE RATIONAL CLASSIFICATION.**
+Every finite GST Hodge class has one and only one rational cycle
+coefficient. -/
+theorem clay_hodge_unique_classification
+    (p : Nat) (hp : p < 3) (f : WaveCoef)
+    (hf : isHodgeClass p f) :
+    ∃! q : ℚ, ∀ c : WaveCell,
+      rat f c = q * ratCycleClass p c := by
+  obtain ⟨q,hq⟩ := clay_hodge_conjecture p hp f hf
+  refine ⟨q,hq,?_⟩
+  intro r hr
+  exact clay_coefficient_unique p hp f r q hr hq
+
+/-- The unique rational coefficient is exactly the diagonal coordinate. -/
+theorem clay_hodge_unique_diagonal_witness
+    (p : Nat) (hp : p < 3) (f : WaveCoef)
+    (hf : isHodgeClass p f) :
+    ∃! q : ℚ,
+      q = ((gev f (4*p) : ℤ) : ℚ) ∧
+      ∀ c : WaveCell, rat f c = q * ratCycleClass p c := by
+  obtain ⟨q,hqdiag,hq⟩ :=
+    clay_witness_is_diagonal_coordinate p hp f hf
+  refine ⟨q,⟨hqdiag,hq⟩,?_⟩
+  intro r hr
+  exact hr.1.trans hqdiag.symm
+
 /-! ## §4 The coefficient domination — ℤ carries ℤ carries ℚ
 
 The official statement asks for rational combinations.  The cosmology
@@ -222,12 +316,18 @@ theorem finite_rational_gst_hodge_classification
 
 #check clay_hodge_conjecture
 #check clay_witness_is_diagonal_coordinate
+#check clay_coefficient_unique
+#check clay_hodge_unique_classification
+#check clay_hodge_unique_diagonal_witness
 #check integer_dominance
 #check the_official_clay_landing
 
 #print axioms hodge_type_cycle_classification
 #print axioms clay_hodge_conjecture
 #print axioms clay_witness_is_diagonal_coordinate
+#print axioms clay_coefficient_unique
+#print axioms clay_hodge_unique_classification
+#print axioms clay_hodge_unique_diagonal_witness
 #print axioms integer_dominance
 #print axioms the_official_clay_landing
 
