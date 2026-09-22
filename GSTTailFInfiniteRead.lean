@@ -347,6 +347,43 @@ theorem the_infinite_read
     fun core h => omega_tower_dies_of_not_dust core h,
     hB.symm⟩
 
+
+/-! ## Genuine branching of the survivor dust -/
+
+/-- At every nontrivial dust level, the firing child and a surviving child can
+be chosen distinct.  The infinite dust therefore branches while the universal
+blade simultaneously removes a different branch. -/
+theorem dust_fire_survive_distinct
+    (m c : Nat) (hm : 2 ≤ m) (hc : DustAt m c) :
+    ∃ jFire jSurvive : Nat,
+      jFire < 3 ∧ jSurvive < 3 ∧ jFire ≠ jSurvive ∧
+      2 * 3^m ≤
+        (omegaCutWord m 1 * (c + jFire * 3^m)) % 3^(m+1) ∧
+      DustAt (m+1) (c + jSurvive * 3^m) := by
+  obtain ⟨jf, hjf, hfire⟩ := dust_firing_child m c
+  obtain ⟨js, hjs, hsurv⟩ := dust_surviving_child m c hc
+  have hne : jf ≠ js := by
+    intro heq
+    subst js
+    have hlow := hsurv (m+1) (by omega) (by omega)
+    exact (Nat.not_le_of_gt hlow) hfire
+  exact ⟨jf, js, hjf, hjs, hne, hfire, hsurv⟩
+
+/-- The survivor tree therefore contains, at every level m≥2, a simultaneous
+extinction branch and continuation branch. -/
+theorem dust_branching_crown :
+    ∀ m c : Nat, 2 ≤ m → DustAt m c →
+      ∃ jFire jSurvive : Nat,
+        jFire < 3 ∧ jSurvive < 3 ∧ jFire ≠ jSurvive ∧
+        2 * 3^m ≤
+          (omegaCutWord m 1 * (c + jFire * 3^m)) % 3^(m+1) ∧
+        DustAt (m+1) (c + jSurvive * 3^m) :=
+  dust_fire_survive_distinct
+
+#check dust_fire_survive_distinct
+#check dust_branching_crown
+#print axioms dust_fire_survive_distinct
+
 #print axioms dust_at_all_iff_dust
 #print axioms dust_child_anatomy
 #print axioms dust_firing_child
