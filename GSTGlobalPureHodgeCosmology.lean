@@ -191,8 +191,10 @@ theorem hc_pure_coordinate_depth :
 /-- The historical three-generator theorem is therefore the 4 x 3 shadow of
 the universal min(A,B)-coordinate classification. -/
 noncomputable def hc_pure_hodge_equiv :
-    PureWorldHodge 4 3 ≃ₗ[ℤ] (Fin 3 -> ℤ) := by
-  simpa [PureHodgeCoordinates] using pureHodgeLinearEquiv 4 3
+    PureWorldHodge 4 3 ≃ₗ[ℤ] (Fin 3 -> ℤ) :=
+  (pureHodgeLinearEquiv 4 3).trans
+    (LinearEquiv.piCongrLeft ℤ (fun _ : Fin 3 => ℤ)
+      (finCongr hc_pure_coordinate_depth))
 
 /-- Canonical pure basis vector at one diagonal weight. -/
 def pureBasis
