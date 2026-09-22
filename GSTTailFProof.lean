@@ -3,6 +3,7 @@ import GSTGraphV2Ontological
 import GSTGraphV2PowerThreeWaveObservation
 import MonolithBoundary
 import GSTFourPowerDirectExistence
+import GSTFourPowerDirectExistenceFromHappy
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
