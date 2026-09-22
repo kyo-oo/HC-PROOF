@@ -107,6 +107,45 @@ theorem prefix_one_tail_shape
   rw [canonical_prefix_recurrence s n, unitTail_prefix_one s]
   ring
 
+/-- **PREFIX-ONE NAVIGATION EQUIVALENCE.**
+The canonical prefix-one tail is not merely shaped like 1+3X: its ordinary
+Navigation truth value is exactly the seed-one witness truth value of the
+residual affine packet. -/
+theorem prefix_one_navigation_iff_seed_one
+    (s n : Nat) :
+    Navigation (canonicalTail s (1 + 3*n)) ↔
+      SeedOneWitness
+        (prefixOffset s +
+          4^(3^s) * canonicalTail (s+1) n) := by
+  rw [prefix_one_tail_shape s n]
+  exact navigation_prefixed_one_iff_seed_one
+    (prefixOffset s + 4^(3^s) * canonicalTail (s+1) n)
+
+/-- Every predicate on the Navigation state transfers exactly to the
+corresponding seed-one state. -/
+theorem prefix_one_navigation_predicate_iff
+    (s n : Nat) (P : Prop → Prop) :
+    P (Navigation (canonicalTail s (1 + 3*n))) ↔
+      P (SeedOneWitness
+        (prefixOffset s +
+          4^(3^s) * canonicalTail (s+1) n)) := by
+  rw [prefix_one_navigation_iff_seed_one s n]
+
+/-- Prefix-one crown: exact arithmetic shape and exact logical Navigation
+shape are two views of the same residual packet. -/
+theorem prefix_one_seed_core_crown :
+    (∀ s n,
+      canonicalTail s (1 + 3*n) =
+        1 + 3 * (prefixOffset s +
+          4^(3^s) * canonicalTail (s+1) n))
+    ∧
+    (∀ s n,
+      Navigation (canonicalTail s (1 + 3*n)) ↔
+        SeedOneWitness
+          (prefixOffset s +
+            4^(3^s) * canonicalTail (s+1) n)) := by
+  exact ⟨prefix_one_tail_shape, prefix_one_navigation_iff_seed_one⟩
+
 /-- Strengthened seed core: no child witness is required once the independent
 four-power creation master is supplied. -/
 theorem gst_prefix_one_seed_one_parent_of_master
