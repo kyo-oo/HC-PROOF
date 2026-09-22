@@ -239,7 +239,7 @@ theorem graphCoupledState_add_action
         (GSTV2.coupledOrbit (4^N)
           (graphCoupledState E N b) K) L =
       graphCoupledState E N (b + (K+L)) := by
-  rw [GSTV2.coupledOrbit_add]
+  rw [← GSTV2.coupledOrbit_add]
   exact graphCoupledOrbit_exact E N b (K+L)
 
 #check graphCoupledState_rebase_exact
