@@ -59,7 +59,7 @@ noncomputable def digitEndo (A B : Nat) :
     change digitShiftN 1 (z • f) c =
       z • digitShiftN 1 f c
     unfold digitShiftN
-    split_ifs <;> rfl
+    split_ifs <;> simp
 
 noncomputable def carryEndo (A B : Nat) :
     Module.End ℤ (WorldCoef A B) where
@@ -70,7 +70,7 @@ noncomputable def carryEndo (A B : Nat) :
     change carryShiftN 1 (f + g) c =
       carryShiftN 1 f c + carryShiftN 1 g c
     unfold carryShiftN
-    split_ifs <;> rfl
+    split_ifs <;> simp
   map_smul' := by
     intro z f
     funext c
