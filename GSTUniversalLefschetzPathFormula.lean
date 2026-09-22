@@ -91,9 +91,8 @@ theorem worldAct_L_pow_paths
           digitShiftN m (carryShiftN (n-m) g) := by
   rw [worldAct_L_pow_eq_endo]
   rw [lefschetz_binomial]
-  simp only [Module.End.mul_apply, digitEndo_pow_apply,
-    carryEndo_pow_apply]
-  rfl
+  simp only [LinearMap.sum_apply, Module.End.mul_apply, Module.End.natCast_apply, map_nsmul]
+  simp [digitEndo_pow_apply, carryEndo_pow_apply]
 
 /-- Pointwise form of the universal path formula. -/
 theorem worldAct_L_pow_paths_at
@@ -145,7 +144,7 @@ theorem path_formula_zero_below_degree
     intro h
     rcases h with ⟨hdm,hCm⟩
     omega
-  simp [hnot]
+  simp only [dif_neg hnot]
 
 /-- At the exact boundary degree C+d=n, only one path can survive, and its
 coefficient is the corresponding binomial coefficient. -/
@@ -164,8 +163,8 @@ theorem path_formula_exact_boundary
       intro h
       rcases h with ⟨hmle,hcarry⟩
       have : d ≤ m := by omega
-      exact hmd (Nat.le_antisymm this hmle)
-    simp [hnot]
+      exact hmd (Nat.le_antisymm hmle this)
+    simp only [dif_neg hnot]
   · intro hnot
     have : d < C+d+1 := by omega
     exact (hnot (Finset.mem_range.mpr this)).elim
@@ -176,7 +175,7 @@ theorem hc_bottom_to_top_coefficient
     (g : WorldCoef 4 3) :
     worldAct 4 3 ((L 4 3)^5) g (⟨3,by decide⟩,⟨2,by decide⟩) =
       10 * g (⟨0,by decide⟩,⟨0,by decide⟩) := by
-  simpa using
+  simpa [show Nat.choose 5 2 = 10 by decide] using
     (path_formula_exact_boundary
       4 3 3 2 (by decide) (by decide) g)
 

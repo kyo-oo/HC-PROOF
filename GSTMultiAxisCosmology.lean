@@ -1,0 +1,276 @@
+import Mathlib
+import GSTWorldCosmology
+
+/-!
+# GST multi-axis worlds and exact operator reconstruction
+
+The digit/carry rectangle is the two-axis instance of simultaneous native
+transport. The basis orbit is cyclic: the origin generates every cell.
+Consequently a commuting operator is determined by one origin experiment.
+-/
+noncomputable section
+open scoped BigOperators
+
+namespace GSTMultiAxisCosmology
+
+variable {I : Type*} (d : I → ℕ)
+abbrev Cell := (i : I) → Fin (d i)
+abbrev Coef := Cell d → ℤ
+
+/-- Transport by an arbitrary simultaneous axis displacement. -/
+def shift (m : I → ℕ) (g : Coef d) : Coef d := by
+  classical
+  exact fun c => if h : ∀ i, m i ≤ (c i).val then
+    g (fun i => ⟨(c i).val - m i, lt_of_le_of_lt (Nat.sub_le _ _) (c i).isLt⟩)
+  else 0
+
+@[simp] theorem shift_zero (g : Coef d) : shift d (fun _ => 0) g = g := by
+  classical
+  funext c
+  simp [shift]
+
+/-- The full displacement monoid acts: all axes compose simultaneously. -/
+theorem shift_add (m n : I → ℕ) (g : Coef d) :
+    shift d m (shift d n g) = shift d (fun i => m i + n i) g := by
+  classical
+  funext c
+  by_cases h : ∀ i, m i + n i ≤ (c i).val
+  · have hm : ∀ i, m i ≤ (c i).val := fun i => by have := h i; omega
+    have hn : ∀ i, n i ≤ (c i).val - m i := fun i => by have := h i; omega
+    simp [shift, h, hm, hn, Nat.sub_sub]
+  · by_cases hm : ∀ i, m i ≤ (c i).val
+    · have hn : ¬ ∀ i, n i ≤ (c i).val - m i := by
+        intro hn
+        apply h
+        intro i
+        have := hm i
+        have := hn i
+        omega
+      simp [shift, h, hm, hn]
+    · simp [shift, h, hm]
+
+/-- No finite dimensionality is needed for axis commutation. -/
+theorem shifts_commute (m n : I → ℕ) (g : Coef d) :
+    shift d m (shift d n g) = shift d n (shift d m g) := by
+  rw [shift_add, shift_add]
+  simp only [Nat.add_comm]
+
+/-- One boundary crossing extinguishes the whole multi-axis transport. -/
+theorem shift_boundary (m : I → ℕ) (g : Coef d)
+    (h : ∃ i, d i ≤ m i) : shift d m g = 0 := by
+  classical
+  obtain ⟨i, hi⟩ := h
+  funext c
+  have hn : ¬ ∀ j, m j ≤ (c j).val := by
+    intro hh
+    have := hh i
+    have := (c i).isLt
+    omega
+  simp [shift, hn]
+
+/-- Native transports as integer-linear operators. -/
+def shiftEndo (m : I → ℕ) : Module.End ℤ (Coef d) where
+  toFun := shift d m
+  map_add' f g := by
+    classical
+    funext c
+    by_cases h : ∀ i, m i ≤ (c i).val <;> simp [shift, h]
+  map_smul' z g := by
+    classical
+    funext c
+    by_cases h : ∀ i, m i ≤ (c i).val <;> simp [shift, h]
+
+@[simp] theorem shiftEndo_apply (m : I → ℕ) (g : Coef d) :
+    shiftEndo d m g = shift d m g := rfl
+
+theorem shiftEndo_mul (m n : I → ℕ) :
+    shiftEndo d m * shiftEndo d n = shiftEndo d (fun i => m i + n i) := by
+  apply LinearMap.ext
+  intro g
+  exact shift_add d m n g
+
+def origin (hd : ∀ i, 0 < d i) : Cell d := fun i => ⟨0, hd i⟩
+
+def delta (a : Cell d) : Coef d := by
+  classical
+  exact fun c => if c = a then 1 else 0
+
+/-- Every cell is reached uniquely by applying its displacement to the origin. -/
+theorem shift_origin (hd : ∀ i, 0 < d i) (a : Cell d) :
+    shift d (fun i => (a i).val) (delta d (origin d hd)) = delta d a := by
+  classical
+  funext c
+  by_cases hca : c = a
+  · subst c
+    simp only [shift, dif_pos (fun i => Nat.le_refl (a i).val)]
+    have hz : (fun i => (⟨(a i).val - (a i).val, by omega⟩ : Fin (d i))) = origin d hd := by
+      funext i
+      apply Fin.ext
+      simp [origin]
+    simp only [delta, hz, if_pos rfl]
+  · by_cases h : ∀ i, (a i).val ≤ (c i).val
+    · have hn : (fun i => (⟨(c i).val - (a i).val,
+          lt_of_le_of_lt (Nat.sub_le _ _) (c i).isLt⟩ : Fin (d i))) ≠ origin d hd := by
+        intro he
+        apply hca
+        funext i
+        apply Fin.ext
+        have hi := congrArg (fun f : Cell d => (f i).val) he
+        have := h i
+        change (c i).val - (a i).val = 0 at hi
+        omega
+      simp [shift, delta, h, hn, hca]
+    · simp only [shift, dif_neg h, delta, if_neg hca]
+
+section Finite
+variable [Fintype I]
+
+instance cellFintype : Fintype (Cell d) := by
+  classical
+  unfold Cell
+  infer_instance
+
+/-- Any world amplitude is the exact finite superposition of native cells. -/
+theorem delta_expansion (g : Coef d) :
+    (∑ a : Cell d, g a • delta d a) = g := by
+  classical
+  funext c
+  simp [delta, Finset.sum_apply, zsmul_eq_mul]
+
+/-- Synthesize a native mixed-shift operator from its coefficient world. -/
+def synthesis (g : Coef d) : Module.End ℤ (Coef d) :=
+  ∑ a : Cell d, g a • shiftEndo d (fun i => (a i).val)
+
+/-- One origin experiment recovers every operator coefficient exactly. -/
+theorem synthesis_origin (hd : ∀ i, 0 < d i) (g : Coef d) :
+    synthesis d g (delta d (origin d hd)) = g := by
+  classical
+  simp only [synthesis, LinearMap.sum_apply, LinearMap.smul_apply,
+    shiftEndo_apply, shift_origin]
+  exact delta_expansion d g
+
+/-- There are no hidden relations among bounded native mixed shifts. -/
+theorem synthesis_injective (hd : ∀ i, 0 < d i) :
+    Function.Injective (synthesis d) := by
+  intro f g h
+  have hh := congrArg (fun T : Module.End ℤ (Coef d) => T (delta d (origin d hd))) h
+  simpa only [synthesis_origin] using hh
+
+/-- A commuting operator is determined by its origin response on every cell. -/
+theorem commuting_operator_delta (hd : ∀ i, 0 < d i)
+    (T : Module.End ℤ (Coef d))
+    (hT : ∀ m, Commute T (shiftEndo d m)) (a : Cell d) :
+    T (delta d a) = shift d (fun i => (a i).val) (T (delta d (origin d hd))) := by
+  rw [← shift_origin d hd a]
+  exact congrArg (fun U : Module.End ℤ (Coef d) => U (delta d (origin d hd)))
+    (hT (fun i => (a i).val)).eq
+
+/-- Exact uniqueness from one origin observation, for the entire commutant. -/
+theorem commuting_operator_ext (hd : ∀ i, 0 < d i)
+    (T U : Module.End ℤ (Coef d))
+    (hT : ∀ m, Commute T (shiftEndo d m))
+    (hU : ∀ m, Commute U (shiftEndo d m))
+    (h0 : T (delta d (origin d hd)) = U (delta d (origin d hd))) : T = U := by
+  apply LinearMap.ext
+  intro g
+  rw [← delta_expansion d g, map_sum, map_sum]
+  apply Finset.sum_congr rfl
+  intro a ha
+  rw [map_smul, map_smul, commuting_operator_delta d hd T hT,
+    commuting_operator_delta d hd U hU, h0]
+
+/-- Every synthesized native operator commutes with every displacement. -/
+theorem synthesis_commutes (g : Coef d) (m : I → ℕ) :
+    Commute (synthesis d g) (shiftEndo d m) := by
+  apply LinearMap.ext
+  intro f
+  change synthesis d g (shiftEndo d m f) = shiftEndo d m (synthesis d g f)
+  simp only [synthesis, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul]
+  apply Finset.sum_congr rfl
+  intro a ha
+  congr 1
+  exact shifts_commute d (fun i => (a i).val) m f
+
+/-- Complete classification, beyond uniqueness: every commuting operator is
+exactly the mixed-shift synthesis of its origin response. -/
+theorem commuting_operator_classification (hd : ∀ i, 0 < d i)
+    (T : Module.End ℤ (Coef d))
+    (hT : ∀ m, Commute T (shiftEndo d m)) :
+    T = synthesis d (T (delta d (origin d hd))) := by
+  apply commuting_operator_ext d hd T _ hT
+    (synthesis_commutes d (T (delta d (origin d hd))))
+  exact (synthesis_origin d hd _).symm
+
+/-- The entire displacement commutant is exactly the native coefficient
+world. This classifies arbitrary linear symmetries, not only given shifts. -/
+def commutantEquiv (hd : ∀ i, 0 < d i) :
+    {T : Module.End ℤ (Coef d) // ∀ m, Commute T (shiftEndo d m)} ≃ Coef d where
+  toFun T := T.val (delta d (origin d hd))
+  invFun g := ⟨synthesis d g, synthesis_commutes d g⟩
+  left_inv T := by
+    apply Subtype.ext
+    exact (commuting_operator_classification d hd T.val T.property).symm
+  right_inv g := synthesis_origin d hd g
+
+/-- Multi-axis complementary cell, with every depth supplied by the world. -/
+def dual (c : Cell d) : Cell d :=
+  fun i => ⟨d i - 1 - (c i).val, by have := (c i).isLt; omega⟩
+
+@[simp] theorem dual_involutive (c : Cell d) : dual d (dual d c) = c := by
+  funext i
+  apply Fin.ext
+  have := (c i).isLt
+  simp only [dual]
+  omega
+
+def pairing (f g : Coef d) : ℤ := ∑ c : Cell d, f c * g (dual d c)
+
+/-- Complementary probing extracts an arbitrary coordinate exactly. -/
+theorem pairing_extract (f : Coef d) (a : Cell d) :
+    pairing d f (delta d (dual d a)) = f a := by
+  classical
+  unfold pairing
+  rw [Finset.sum_eq_single a]
+  · simp [delta]
+  · intro b hb hba
+    have hn : dual d b ≠ dual d a := by
+      intro h
+      apply hba
+      simpa using congrArg (dual d) h
+    simp [delta, hn]
+  · simp
+
+/-- Integral nondegeneracy in arbitrary finite dimension and arbitrary depths. -/
+theorem pairing_nondegenerate (f : Coef d)
+    (h : ∀ g, pairing d f g = 0) : f = 0 := by
+  funext a
+  simpa only [pairing_extract, Pi.zero_apply] using h (delta d (dual d a))
+
+/-- Degree reflection around the dimension-derived top degree. -/
+theorem degree_dual (c : Cell d) :
+    (∑ i, (dual d c i).val) + (∑ i, (c i).val) = ∑ i, (d i - 1) := by
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have := (c i).isLt
+  simp only [dual]
+  omega
+end Finite
+
+/-- The rectangle is exactly the two-axis world, with carry then digit. -/
+def rectangleEquiv (A B : ℕ) :
+    GSTWorldCosmology.WorldCell A B ≃ Cell (I:=Fin 2) ![A, B] where
+  toFun c := fun i => Fin.cases c.1 (fun j => Fin.cases c.2 (fun k => nomatch k) j) i
+  invFun c := (c 0, c 1)
+  left_inv c := rfl
+  right_inv c := by
+    funext i
+    fin_cases i <;> rfl
+
+#print axioms shift_add
+#print axioms shift_boundary
+#print axioms synthesis_injective
+#print axioms commuting_operator_ext
+#print axioms pairing_nondegenerate
+#print axioms degree_dual
+end GSTMultiAxisCosmology

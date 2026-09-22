@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
+      - gst-cosmology-strengthening
     paths:
+      - 'HCProof.lean'
+      - 'lakefile.toml'
+      - 'GSTCosmologyStrengtheningAudit.lean'
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
@@ -23,6 +27,11 @@ on:
       - 'GSTGraphV2ScaleEquivariance.lean'
       - 'GSTCoherentCosmology.lean'
       - 'GSTInfiniteWorldClassification.lean'
+      - 'GSTInfiniteWorldRenormalization.lean'
+      - 'GSTMultiAxisCohomology.lean'
+      - 'GSTExactWorldOperatorPresentation.lean'
+      - 'GSTMultiAxisCosmology.lean'
+      - 'GSTMultiAxisGradedDynamics.lean'
       - 'CardinalWorldsV2.lean'
       - 'waves/CardinalWorldsPostulateLawV2.lean'
       - 'waves/GSTWaveCohomologyV2.lean'
@@ -42,7 +51,7 @@ permissions:
 
 concurrency:
   group: hc-cosmology-upgrade-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   cosmology-upgrade:
@@ -51,17 +60,28 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
+
+      - uses: actions/cache/restore@v4
+        id: lean-cache
+        with:
+          path: |
+            ~/.elan
+            .lake
+          key: hc-cosmology-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            hc-cosmology-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
 
       - name: Install Lean and pinned Mathlib
         shell: bash
         run: |
           set -euo pipefail
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
-          lake update
           lake exe cache get
 
       - name: Reject proof escapes
@@ -86,6 +106,11 @@ jobs:
             GST2DMixedEmergenceUpgrade.lean
             GSTGraphV2ScaleEquivariance.lean
             GSTInfiniteWorldClassification.lean
+            GSTInfiniteWorldRenormalization.lean
+            GSTMultiAxisCohomology.lean
+            GSTExactWorldOperatorPresentation.lean
+            GSTMultiAxisCosmology.lean
+            GSTMultiAxisGradedDynamics.lean
             CardinalWorldsV2.lean
             waves/CardinalWorldsPostulateLawV2.lean
             waves/GSTWaveCohomologyV2.lean
@@ -125,6 +150,11 @@ jobs:
             GSTWorldCrownBridge \
             GSTGraphV2ScaleEquivariance \
             GSTInfiniteWorldClassification \
+            GSTInfiniteWorldRenormalization \
+            GSTMultiAxisCohomology \
+            GSTExactWorldOperatorPresentation \
+            GSTMultiAxisCosmology \
+            GSTMultiAxisGradedDynamics \
             CardinalWorldsV2 \
             waves.CardinalWorldsPostulateLawV2 \
             waves.GSTWaveCohomologyV2 \
@@ -148,10 +178,48 @@ jobs:
           fi
           echo HC_UPGRADE_AXIOM_AUDIT=PASS
 
+      - name: Audit every public strengthening declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTCosmologyStrengtheningAudit.lean 2>&1 | tee cosmology-strengthening-axioms.log
+          python3 - <<'PYCODE'
+          import re
+          from pathlib import Path
+          text = Path('cosmology-strengthening-axioms.log').read_text()
+          receipts = re.findall(r"depends on axioms:\s*\[([^]]*)\]", text)
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          assert receipts, 'No axiom receipts were produced'
+          for receipt in receipts:
+              names = {x.strip() for x in receipt.split(',') if x.strip()}
+              assert names <= allowed, f'Unexpected axioms: {names - allowed}'
+          assert 'sorryAx' not in text
+          print(f'HC_STRENGTHENING_PUBLIC_AXIOM_AUDIT=PASS ({len(receipts)} nonempty receipts)')
+          PYCODE
+
+      - name: Compile full HCProof integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build HCProof 2>&1 | tee cosmology-hcproof-integration.log
+          echo HC_STRENGTHENING_HCPROOF_INTEGRATION=PASS
+
       - name: Upload upgrade diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hc-cosmology-upgrade-diagnostics
-          path: cosmology-upgrade.log
+          path: |
+            cosmology-upgrade.log
+            cosmology-strengthening-axioms.log
+            cosmology-hcproof-integration.log
           if-no-files-found: ignore
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: |
+            ~/.elan
+            .lake
+          key: ${{ steps.lean-cache.outputs.cache-primary-key }}
