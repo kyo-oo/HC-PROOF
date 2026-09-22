@@ -20,6 +20,9 @@ on:
       - 'GSTGraphV2ScaleEquivariance.lean'
       - 'GSTCoherentCosmology.lean'
       - 'GSTInfiniteWorldClassification.lean'
+      - 'GSTInfiniteWorldRenormalization.lean'
+      - 'GSTMultiAxisCohomology.lean'
+      - 'GSTMultiAxisCosmology.lean'
       - 'CardinalWorldsV2.lean'
       - 'waves/CardinalWorldsPostulateLawV2.lean'
       - 'waves/GSTWaveCohomologyV2.lean'
@@ -39,7 +42,7 @@ permissions:
 
 concurrency:
   group: hc-cosmology-upgrade-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   cosmology-upgrade:
@@ -90,6 +93,9 @@ jobs:
             GST2DMixedEmergenceUpgrade.lean
             GSTGraphV2ScaleEquivariance.lean
             GSTInfiniteWorldClassification.lean
+            GSTInfiniteWorldRenormalization.lean
+            GSTMultiAxisCohomology.lean
+            GSTMultiAxisCosmology.lean
             CardinalWorldsV2.lean
             waves/CardinalWorldsPostulateLawV2.lean
             waves/GSTWaveCohomologyV2.lean
@@ -125,6 +131,9 @@ jobs:
             GSTWorldCrownBridge \
             GSTGraphV2ScaleEquivariance \
             GSTInfiniteWorldClassification \
+            GSTInfiniteWorldRenormalization \
+            GSTMultiAxisCohomology \
+            GSTMultiAxisCosmology \
             CardinalWorldsV2 \
             waves.CardinalWorldsPostulateLawV2 \
             waves.GSTWaveCohomologyV2 \
