@@ -155,6 +155,50 @@ def forwardPath (R N start L : Nat) : ForwardPath :=
     node := fun i => axes R N (start + i)
   }
 
+
+/-! ## Forward-path calculus -/
+
+/-- Every consecutive pair of canonical forward-path nodes is a genuine
+forward edge of the ambient non-Euclidean graph. -/
+theorem forwardPath_edge_exact
+    (R N start L i : Nat) :
+    ForwardEdge
+      ((forwardPath R N start L).node i)
+      ((forwardPath R N start L).node (i+1)) := by
+  simp [forwardPath, axes, ForwardEdge]
+  omega
+
+/-- Re-basing a path after i steps and then reading j more nodes is exactly
+the same node as reading i+j steps from the original path. -/
+theorem forwardPath_rebase_exact
+    (R N start L i j : Nat) :
+    (forwardPath R N start L).node (i+j) =
+      (forwardPath R N (start+i) L).node j := by
+  simp [forwardPath, Nat.add_assoc]
+
+/-- The canonical path action is associative under repeated re-basing. -/
+theorem forwardPath_rebase_assoc
+    (R N start L i j k : Nat) :
+    (forwardPath R N start L).node ((i+j)+k) =
+      (forwardPath R N (start+i) L).node (j+k) := by
+  simp [forwardPath, Nat.add_assoc]
+
+/-- The horizontal x-coordinate of every path node is its literal path
+parameter added to the starting position. -/
+theorem forwardPath_x_exact
+    (R N start L i : Nat) :
+    ((forwardPath R N start L).node i).x = start+i := by
+  rfl
+
+/-- The path's N-axis is the exact pair of successive ternary quotients at
+every node. -/
+theorem forwardPath_nAxis_exact
+    (R N start L i : Nat) :
+    ((forwardPath R N start L).node i).nAxis =
+      (R / 3^(start+i), R / 3^((start+i)+1)) := by
+  rfl
+
+
 #check Space
 #check SevenAxes
 #check Overlay
@@ -169,5 +213,10 @@ def forwardPath (R N start L : Nat) : ForwardPath :=
 #check projectPhysicalCell
 #check ForwardPath
 #check forwardPath
+#check forwardPath_edge_exact
+#check forwardPath_rebase_exact
+#check forwardPath_rebase_assoc
+#check forwardPath_x_exact
+#check forwardPath_nAxis_exact
 
 end GSTGraphV2NonEuclidean
