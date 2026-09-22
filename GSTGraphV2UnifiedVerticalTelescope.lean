@@ -140,11 +140,75 @@ theorem unified_equationIII_vertical_telescope
       push_cast
       ring
 
+
+/-! ## Vertical flux windows as an exact cocycle -/
+
+/-- The weighted Equation-III defect accumulated over a vertical window. -/
+def verticalFluxWindow (E N p K : Nat) : Int :=
+  Finset.sum (Finset.range K) (fun j =>
+    (((3^j : Nat) : Int)) *
+      (gstUJumpExact
+          (graph E N (p+j)).seven.carry
+          (graph E N (p+j)).seven.digit -
+        ((4^N : Nat) : Int) *
+          gstUJumpExact
+            (graph E 0 (p+j)).seven.carry
+            (graph E 0 (p+j)).seven.digit))
+
+/-- Every vertical flux window is exactly the boundary difference of the
+renormalized U-potential. -/
+theorem verticalFluxWindow_closed
+    (E N p K : Nat) :
+    verticalFluxWindow E N p K =
+      (((3^K : Nat) : Int)) *
+          potentialWith gstUChargeExact (4^N)
+            (unifiedState E N (p+K)).core -
+        potentialWith gstUChargeExact (4^N)
+          (unifiedState E N p).core := by
+  exact unified_equationIII_vertical_telescope E N p K
+
+/-- **VERTICAL COCYCLE LAW.**  Concatenating a K-window with an L-window is
+exactly the K-window plus the L-window transported by the ternary weight
+`3^K`.  Thus Equation III is a genuine compositional cocycle on arbitrary
+vertical intervals. -/
+theorem verticalFluxWindow_add_exact
+    (E N p K L : Nat) :
+    verticalFluxWindow E N p (K+L) =
+      verticalFluxWindow E N p K +
+        (((3^K : Nat) : Int)) *
+          verticalFluxWindow E N (p+K) L := by
+  rw [verticalFluxWindow_closed E N p (K+L),
+      verticalFluxWindow_closed E N p K,
+      verticalFluxWindow_closed E N (p+K) L]
+  have hidx : p + (K + L) = (p + K) + L := by omega
+  rw [hidx, Nat.pow_add]
+  push_cast
+  ring
+
+/-- The zero-length vertical window is the neutral cocycle element. -/
+@[simp] theorem verticalFluxWindow_zero (E N p : Nat) :
+    verticalFluxWindow E N p 0 = 0 := by
+  simp [verticalFluxWindow]
+
+/-- One-row windows recover the local closed Equation-III defect exactly. -/
+theorem verticalFluxWindow_one (E N p : Nat) :
+    verticalFluxWindow E N p 1 =
+      3 * potentialWith gstUChargeExact (4^N)
+            (unifiedState E N (p+1)).core -
+        potentialWith gstUChargeExact (4^N)
+            (unifiedState E N p).core := by
+  simpa using verticalFluxWindow_closed E N p 1
+
+
 #check carryWord_vertical_balance
 #check unifiedState_core_step_exact
 #check unified_equationIII_graph_closed
 #check unified_equationIII_vertical_telescope
+#check verticalFluxWindow_closed
+#check verticalFluxWindow_add_exact
+#check verticalFluxWindow_one
 #print axioms unifiedState_core_step_exact
 #print axioms unified_equationIII_vertical_telescope
+#print axioms verticalFluxWindow_add_exact
 
 end GSTGraphV2UnifiedVerticalTelescope
