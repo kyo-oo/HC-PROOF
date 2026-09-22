@@ -82,7 +82,39 @@ theorem pow4_mod_one_iff_three_pow_dvd : ∀ p n : Nat,
       · rintro ⟨u, rfl⟩
         simpa using pow4_scaled_mod_next (p+1) u
 
+
+/-- **EXACT UNIVERSAL PERIOD CLASSIFICATION.**  A shift `T` preserves every
+four-power residue modulo `3^(p+1)` exactly when `T` is divisible by the
+intrinsic period `3^p`.  Thus `3^p` is not merely a period; it generates
+all universal periods at this precision. -/
+theorem pow4_universal_period_iff
+    (p T : Nat) :
+    (∀ n : Nat,
+      4^(n+T) % 3^(p+1) = 4^n % 3^(p+1))
+      ↔ 3^p ∣ T := by
+  constructor
+  · intro h
+    have h0 := h 0
+    have hM : 1 < 3^(p+1) := by
+      have h3 : 3 ≤ 3^(p+1) := by
+        exact Nat.pow_le_pow_right (by decide) (by omega)
+      omega
+    have hOne : 4^T % 3^(p+1) = 1 := by
+      simpa [Nat.mod_eq_of_lt hM] using h0
+    exact (pow4_mod_one_iff_three_pow_dvd p T).1 hOne
+  · rintro ⟨u, rfl⟩
+    intro n
+    rw [Nat.pow_add, Nat.mul_mod, pow4_scaled_mod_next p u]
+    simp
+
+/-- The intrinsic period itself acts identically on every exponent residue. -/
+theorem pow4_intrinsic_period (p n : Nat) :
+    4^(n + 3^p) % 3^(p+1) = 4^n % 3^(p+1) := by
+  exact (pow4_universal_period_iff p (3^p)).2 ⟨1, by simp⟩ n
+
+
 #check pow4_mod_one_iff_three_pow_dvd
 #print axioms pow4_mod_one_iff_three_pow_dvd
+#print axioms pow4_universal_period_iff
 
 end GSTFourPowerExactExponentPeriod
