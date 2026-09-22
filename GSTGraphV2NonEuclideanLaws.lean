@@ -81,6 +81,62 @@ theorem gstPlus_big2_propagates
   · simpa [axes] using hnext
   · simp [axes, GSTGraphV2NonEuclidean.spaceOfCarry, hnext]
 
+/-- **WITNESS FORWARD-FATE DICHOTOMY.**
+Every ambient BIG2 witness has exactly the two native forward fates already
+encoded by GST space dynamics: NULL regenerates into ALT- with carry two,
+while GST+ persists with carry three. -/
+theorem witness_forward_space_dichotomy
+    (R N p : Nat)
+    (hW : WitnessAt (axes R N p)) :
+    ((axes R N (p+1)).y = 2 ∧
+      (axes R N (p+1)).yPrime = .altMinus)
+    ∨
+    ((axes R N (p+1)).y = 3 ∧
+      (axes R N (p+1)).yPrime = .gstPlus) := by
+  rcases hW with ⟨hbig2,hspace⟩
+  rcases hspace with hnull | hplus
+  · exact Or.inl (null_big2_regenerates_alt R N p hnull hbig2)
+  · exact Or.inr (gstPlus_big2_propagates R N p hplus hbig2)
+
+/-- A witness can never evolve into NULL on the immediately following
+vertical edge. -/
+theorem witness_forward_not_null
+    (R N p : Nat)
+    (hW : WitnessAt (axes R N p)) :
+    (axes R N (p+1)).yPrime ≠ .null := by
+  rcases witness_forward_space_dichotomy R N p hW with h | h
+  · rw [h.2]
+    decide
+  · rw [h.2]
+    decide
+
+/-- Every witness injects a nonzero forward carry. -/
+theorem witness_forward_carry_positive
+    (R N p : Nat)
+    (hW : WitnessAt (axes R N p)) :
+    0 < (axes R N (p+1)).y := by
+  rcases witness_forward_space_dichotomy R N p hW with h | h
+  · rw [h.1]
+    decide
+  · rw [h.1]
+    decide
+
+/-- The local witness dynamics are therefore completely classified at the
+next vertical step. -/
+theorem witness_forward_fate_crown :
+    ∀ R N p, WitnessAt (axes R N p) →
+      (((axes R N (p+1)).y = 2 ∧
+          (axes R N (p+1)).yPrime = .altMinus)
+       ∨
+       ((axes R N (p+1)).y = 3 ∧
+          (axes R N (p+1)).yPrime = .gstPlus))
+      ∧ (axes R N (p+1)).yPrime ≠ .null
+      ∧ 0 < (axes R N (p+1)).y := by
+  intro R N p hW
+  exact ⟨witness_forward_space_dichotomy R N p hW,
+    witness_forward_not_null R N p hW,
+    witness_forward_carry_positive R N p hW⟩
+
 /-- The old arithmetic sheet's carry is exactly the y coordinate of its
 ambient GST projection. -/
 theorem physical_projection_y_exact (E N t p : Nat) :
@@ -143,6 +199,10 @@ theorem physical_happy_iff_ambient_witness
 #check nAxis_glues_exact
 #check null_big2_regenerates_alt
 #check gstPlus_big2_propagates
+#check witness_forward_space_dichotomy
+#check witness_forward_not_null
+#check witness_forward_carry_positive
+#check witness_forward_fate_crown
 #check physical_projection_y_exact
 #check physical_projection_z_exact
 #check physical_projection_space_exact
@@ -151,6 +211,9 @@ theorem physical_happy_iff_ambient_witness
 #print axioms boundary_strict
 #print axioms nAxis_forward_exact
 #print axioms null_big2_regenerates_alt
+#print axioms witness_forward_space_dichotomy
+#print axioms witness_forward_not_null
+#print axioms witness_forward_fate_crown
 #print axioms physical_happy_iff_ambient_witness
 
 end GSTGraphV2NonEuclideanLaws
