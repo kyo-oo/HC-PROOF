@@ -148,7 +148,6 @@ theorem hc_descent_flow_add
   funext x
   rw [pow_add]
   field_simp
-  ring
 
 /-- **PERIOD-ACTION SEMIGROUP.**
 The archimedean period transport is a genuine action of the x4-depth
