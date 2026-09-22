@@ -172,6 +172,68 @@ theorem uTailEnergy_eventually_one (t n : Nat) :
     uTailEnergy t n (n+1) = 1 := by
   simp [uTailEnergy, uTailExponent, originSuffix_eventually_zero]
 
+
+/-! ## Intrinsic finite-cut semigroup -/
+
+/-- Successive origin suffixes compose exactly at arbitrary cut depths. -/
+theorem originSuffix_add_exact (n K L : Nat) :
+    originSuffix n (K+L) =
+      originSuffix (originSuffix n K) L := by
+  unfold originSuffix
+  rw [pow_add, ← Nat.div_div_eq_div_mul]
+
+/-- The consumed prefix of a composite cut is the old prefix plus the newly
+exposed prefix of the old suffix at its exact ternary weight. -/
+theorem originPrefix_add_exact (n K L : Nat) :
+    originPrefix n (K+L) =
+      originPrefix n K +
+        3^K * originPrefix (originSuffix n K) L := by
+  unfold originPrefix originSuffix
+  rw [pow_add, Nat.mod_mul]
+
+/-- Horizontal U phase is a cocycle under successive finite cuts. -/
+theorem uPhaseShift_add_exact (t n K L : Nat) :
+    uPhaseShift t n (K+L) =
+      uPhaseShift t n K +
+        uPhaseShift (t+K) (originSuffix n K) L := by
+  unfold uPhaseShift
+  rw [originPrefix_add_exact, pow_add]
+  ring
+
+/-- Tail exponents form the corresponding residual semigroup. -/
+theorem uTailExponent_add_exact (t n K L : Nat) :
+    uTailExponent t n (K+L) =
+      uTailExponent (t+K) (originSuffix n K) L := by
+  unfold uTailExponent
+  rw [originSuffix_add_exact]
+  simp [Nat.add_assoc]
+
+/-- Tail energies therefore compose by literal equality under successive
+renormalization. -/
+theorem uTailEnergy_add_exact (t n K L : Nat) :
+    uTailEnergy t n (K+L) =
+      uTailEnergy (t+K) (originSuffix n K) L := by
+  unfold uTailEnergy
+  rw [uTailExponent_add_exact]
+
+/-- Any cut beyond the explicit natural support depth consumes the whole
+origin. -/
+theorem originSuffix_zero_of_large_cut
+    (n K : Nat) (hK : n+1 ≤ K) :
+    originSuffix n K = 0 := by
+  unfold originSuffix
+  have hpow0 : n < 3^(n+1) := nat_lt_three_pow_succ n
+  have hpowle : 3^(n+1) ≤ 3^K :=
+    Nat.pow_le_pow_right (by decide) hK
+  exact Nat.div_eq_of_lt (lt_of_lt_of_le hpow0 hpowle)
+
+/-- Consequently every sufficiently deep residual U world is the unit world. -/
+theorem uTailEnergy_one_of_large_cut
+    (t n K : Nat) (hK : n+1 ≤ K) :
+    uTailEnergy t n K = 1 := by
+  simp [uTailEnergy, uTailExponent, originSuffix_zero_of_large_cut n K hK]
+
+
 #check origin_block_split_exact
 #check perfect_power_u_block_exact
 #check graph_u_block_observables_exact
@@ -180,8 +242,18 @@ theorem uTailEnergy_eventually_one (t n : Nat) :
 #check handwritten_exponential_navigation_flux_exact
 #check originSuffix_eventually_zero
 #check uTailEnergy_eventually_one
+#check originSuffix_add_exact
+#check originPrefix_add_exact
+#check uPhaseShift_add_exact
+#check uTailExponent_add_exact
+#check uTailEnergy_add_exact
+#check originSuffix_zero_of_large_cut
+#check uTailEnergy_one_of_large_cut
 #print axioms perfect_power_u_block_exact
 #print axioms graph_u_block_observables_exact
 #print axioms handwritten_exponential_navigation_flux_exact
+#print axioms uPhaseShift_add_exact
+#print axioms uTailEnergy_add_exact
+#print axioms uTailEnergy_one_of_large_cut
 
 end GSTGraphV2HandwrittenExponentialCascade
