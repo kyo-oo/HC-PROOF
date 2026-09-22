@@ -320,6 +320,42 @@ theorem one_lane_the_whole_construction
       omega_dust_shape_middle_third core hfree hwin hdust,
     hB.symm⟩
 
+
+/-! ## Exact certificate under global no-fire -/
+
+/-- If a four-power has no ternary digit two at all, the one-lane dichotomy
+cannot take its fired branch and therefore produces the complete residual
+dust certificate explicitly. -/
+theorem one_lane_certificate_of_no_fire
+    (K : Nat)
+    (hNo : ¬ ∃ p : Nat, digit3 (4^(K+1)) p = 2) :
+    ∃ s core : Nat, (K+1) = 3^s * core ∧ ¬ 3 ∣ core ∧
+      (core % 9 = 4 ∨ (s = 0 ∧ core % 9 = 1) ∨
+        (1 ≤ s ∧ core % 9 = 7)) ∧
+      (∀ i : Nat,
+        (omegaCutWord s core) % 3^(i+1) < 2 * 3^i) := by
+  rcases one_lane_complete K with hFire | hCert
+  · exact False.elim (hNo hFire)
+  · exact hCert
+
+/-- Every no-fire exponent therefore lands directly in the certificate's
+window, diagonal, and row-all-depths faces. -/
+theorem one_lane_faces_of_no_fire
+    (K : Nat)
+    (hNo : ¬ ∃ p : Nat, digit3 (4^(K+1)) p = 2) :
+    ∃ s core : Nat, (K+1) = 3^s * core ∧ ¬ 3 ∣ core ∧
+      (omegaCutWord s core) % 3^(s+2) < 2 * 3^(s+1) ∧
+      (∀ k : Nat, 3 ≤ k → k ≤ s+1 →
+        (omegaCutWord s 1 * core) % 3^k < 2 * 3^(k-1)) := by
+  obtain ⟨s, core, hK, hfree, hfam, hnever⟩ :=
+    one_lane_certificate_of_no_fire K hNo
+  have hfaces := one_lane_certificate_faces s core hfam hnever
+  exact ⟨s, core, hK, hfree, hfaces.1, hfaces.2.1⟩
+
+#check one_lane_certificate_of_no_fire
+#check one_lane_faces_of_no_fire
+#print axioms one_lane_certificate_of_no_fire
+
 #print axioms one_lane_three_free_decomposition
 #print axioms one_lane_cut_word_one
 #print axioms one_lane_fire_of_mod3_two
