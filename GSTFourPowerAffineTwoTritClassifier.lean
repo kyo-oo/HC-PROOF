@@ -83,8 +83,9 @@ theorem commonTwo_of_mod9_six_structural
   have hq : q % 3 = 2 := by
     have hres : (3*q) % 9 = 6 := by
       simpa [q, hshape] using hK
-    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul] at hres
-    simp at hres
+    have hlow : (3*q) % 3 = 0 := by omega
+    have hdiv : (3*q) / 3 = q := by omega
+    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul, hlow, hdiv] at hres
     omega
   rw [hshape]
   exact commonTwo_three_mul_of_q_mod_three_two q hq
@@ -107,8 +108,9 @@ theorem commonTwo_of_mod9_five_structural
   have hq : q % 3 = 1 := by
     have hres : (3*q + 2) % 9 = 5 := by
       simpa [q, hshape] using hK
-    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul] at hres
-    simp at hres
+    have hlow : (3*q + 2) % 3 = 2 := by omega
+    have hdiv : (3*q + 2) / 3 = q := by omega
+    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul, hlow, hdiv] at hres
     omega
   rw [hshape]
   exact commonTwo_three_mul_add_two_of_q_mod_three_one q hq
