@@ -59,6 +59,34 @@ theorem origin_frame_phased_state_exact
       GSTGraphV2Production.originCoordinates,
       GSTGraphV2Production.cell] using h.2.1
 
+/-- Origin-frame re-phasing preserves every physical Happy decision
+because it preserves the complete carry/digit state. -/
+theorem origin_frame_happy_iff
+    (t n K x p : Nat) :
+    GST2DMixedEmergence.HappyCell
+        (originFrame t n K x p).full.seven.carry
+        (originFrame t n K x p).full.seven.digit
+      ↔
+    GST2DMixedEmergence.HappyCell
+        (originFrame t n K x p).phasedTail.seven.carry
+        (originFrame t n K x p).phasedTail.seven.digit := by
+  have h := origin_frame_phased_state_exact t n K x p
+  rw [h.1, h.2]
+
+/-- The radix-event coordinate is exactly invariant under origin-frame
+re-phasing. -/
+theorem origin_frame_event_exact
+    (t n K x p : Nat) :
+    GSTCanonicalSevenAxisBridge.event
+        (originFrame t n K x p).full.seven.carry
+        (originFrame t n K x p).full.seven.digit
+      =
+    GSTCanonicalSevenAxisBridge.event
+        (originFrame t n K x p).phasedTail.seven.carry
+        (originFrame t n K x p).phasedTail.seven.digit := by
+  have h := origin_frame_phased_state_exact t n K x p
+  rw [h.1, h.2]
+
 /-- At the canonical production cut, the unphased higher-level U tail is the
 exact neutral NULL/zero-information state. -/
 theorem canonical_cut_neutral_tail
@@ -129,6 +157,22 @@ theorem residual_gate_left_is_phased_tail
       GSTGraphV2Production.originCoordinates,
       GSTGraphV2Production.cell] using h.2.1
 
+/-- The residual gate left endpoint and its phased-tail presentation
+have exactly the same Happy semantics. -/
+theorem residual_gate_left_happy_iff
+    (s k m j : Nat) :
+    let F := residualGateFrame s k m j
+    GST2DMixedEmergence.HappyCell
+        F.residual.block.left.seven.carry
+        F.residual.block.left.seven.digit
+      ↔
+    GST2DMixedEmergence.HappyCell
+        F.originFrame.phasedTail.seven.carry
+        F.originFrame.phasedTail.seven.digit := by
+  dsimp only
+  have h := residual_gate_left_is_phased_tail s k m j
+  rw [h.1, h.2]
+
 /-- The right endpoint of every residual production rectangle is exactly the
 absolute parent perfect-power sheet, in all observables needed by the proof. -/
 theorem residual_right_absolute_state_exact
@@ -156,6 +200,43 @@ theorem residual_right_absolute_state_exact
     GSTGraphV2Production.residualEnergy,
     GSTGraphV2HandwrittenOmegaUBlock.residualEnergy,
     GSTGraphV2Production.cell] using h
+
+/-- The absolute right endpoint preserves the Happy classification
+of the parent perfect-power sheet. -/
+theorem residual_right_happy_iff_absolute
+    (s k m p : Nat) :
+    let F := residualFrame s k m p
+    GST2DMixedEmergence.HappyCell
+        F.block.right.seven.carry
+        F.block.right.seven.digit
+      ↔
+    GST2DMixedEmergence.HappyCell
+        (GSTGraphV2Production.cell 1 F.parentExponent p).seven.carry
+        (GSTGraphV2Production.cell 1 F.parentExponent p).seven.digit := by
+  dsimp only
+  have h := residual_right_absolute_state_exact s k m p
+  rw [h.1, h.2.1]
+
+/-- Semantic production crown: re-phasing and both residual rectangle
+boundaries preserve the physical Happy classifier exactly. -/
+theorem production_semantic_transport_crown :
+    (∀ t n K x p, GST2DMixedEmergence.HappyCell
+        (originFrame t n K x p).full.seven.carry
+        (originFrame t n K x p).full.seven.digit
+      ↔ GST2DMixedEmergence.HappyCell
+        (originFrame t n K x p).phasedTail.seven.carry
+        (originFrame t n K x p).phasedTail.seven.digit)
+    ∧
+    (∀ s k m j,
+      let F := residualGateFrame s k m j
+      GST2DMixedEmergence.HappyCell
+          F.residual.block.left.seven.carry
+          F.residual.block.left.seven.digit
+        ↔
+      GST2DMixedEmergence.HappyCell
+          F.originFrame.phasedTail.seven.carry
+          F.originFrame.phasedTail.seven.digit) := by
+  exact ⟨origin_frame_happy_iff, residual_gate_left_happy_iff⟩
 
 /-- In the sole unbounded classifier level `s=1`, the parent block is exactly
 three horizontal x4 edges. -/
@@ -193,20 +274,29 @@ theorem residual_level_one_origin_one_energy_step
 #check vertical_carry_exact
 #check navigation_nullspace_flux_exact
 #check origin_frame_phased_state_exact
+#check origin_frame_happy_iff
+#check origin_frame_event_exact
 #check canonical_cut_neutral_tail
 #check residual_gate_neutral_tail
 #check residual_gate_left_is_phased_tail
+#check residual_gate_left_happy_iff
 #check residual_right_absolute_state_exact
+#check residual_right_happy_iff_absolute
+#check production_semantic_transport_crown
 #check residual_level_one_width
 #check residual_level_one_parent_exponent
 #check residual_level_one_origin_one_energy_step
 
 #print axioms horizontal_digit_exact
 #print axioms origin_frame_phased_state_exact
+#print axioms origin_frame_happy_iff
+#print axioms origin_frame_event_exact
 #print axioms canonical_cut_neutral_tail
 #print axioms residual_gate_neutral_tail
 #print axioms residual_gate_left_is_phased_tail
 #print axioms residual_right_absolute_state_exact
+#print axioms residual_right_happy_iff_absolute
+#print axioms production_semantic_transport_crown
 #print axioms residual_level_one_origin_one_energy_step
 
 end GSTGraphV2ProductionLaws
