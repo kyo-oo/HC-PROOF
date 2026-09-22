@@ -213,8 +213,13 @@ theorem prefix_generated_seed_cases
     (4 * P) / 3^b = 1 ∨
     (4 * P) / 3^b = 2 ∨
     (4 * P) / 3^b = 3 := by
-  have h := prefix_generated_seed_lt_four b P hP
-  omega
+  let s := (4 * P) / 3^b
+  have hs : s < 4 := by
+    dsimp [s]
+    exact prefix_generated_seed_lt_four b P hP
+  have hcases : s = 0 ∨ s = 1 ∨ s = 2 ∨ s = 3 := by
+    omega
+  simpa [s] using hcases
 
 /-- Every exact prefix slice exposes a genuinely physical seeded cell:
 the generated carry lies below four and the exposed tail digit lies below
