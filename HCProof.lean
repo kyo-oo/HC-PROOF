@@ -25,6 +25,7 @@ import GSTWorldCosmology
 import GSTUniversalLefschetzCosmology
 import GSTUniversalLefschetzPathFormula
 import GSTUniversalLefschetzKernel
+import GSTUniversalLefschetzCausalGeometry
 import GSTTruncatedWorldCohomologyRing
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
@@ -499,3 +500,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTUniversalLefschetzKernel.nonzero_lefschetz_transition_forces_causality
 #check GSTUniversalLefschetzKernel.origin_to_cell_kernel
 #check GSTUniversalLefschetzKernel.universal_lefschetz_kernel_crown
+
+
+/-! ## Universal Lefschetz causal geometry -/
+
+#check GSTUniversalLefschetzCausalGeometry.worldForward_antisymm
+#check GSTUniversalLefschetzCausalGeometry.worldCausalDistance_add
+#check GSTUniversalLefschetzCausalGeometry.nonzero_transition_degree_exact
+#check GSTUniversalLefschetzCausalGeometry.nonzero_transition_time_unique
+#check GSTUniversalLefschetzCausalGeometry.bidirectional_nonzero_transition_trivial
+#check GSTUniversalLefschetzCausalGeometry.universal_lefschetz_causal_crown
