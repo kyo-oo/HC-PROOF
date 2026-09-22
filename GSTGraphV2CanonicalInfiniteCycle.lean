@@ -255,6 +255,74 @@ theorem canonical_graph_state_cycle_multiple
   exact canonical_graph_state_cycle_all_turns s n a L hcycle q
 
 
+/-! ## Period algebra of the all-depth controller -/
+
+/-- A period of the coupled controller measured from recurrence base `a`. -/
+def IsCoupledPeriod
+    (A : Nat) (initial : CoupledState) (a L : Nat) : Prop :=
+  coupledOrbit A initial a =
+    coupledOrbit A initial (a + L)
+
+/-- Zero is always a controller period. -/
+theorem isCoupledPeriod_zero
+    (A : Nat) (initial : CoupledState) (a : Nat) :
+    IsCoupledPeriod A initial a 0 := by
+  simp [IsCoupledPeriod]
+
+/-- **ADDITIVE PERIOD CLOSURE.**  Two periods at the same recurrence base
+compose to a period of their sum.  Thus recurrence lengths form an additive
+submonoid of the natural-time action. -/
+theorem isCoupledPeriod_add
+    (A : Nat) (initial : CoupledState) (a L M : Nat)
+    (hL : IsCoupledPeriod A initial a L)
+    (hM : IsCoupledPeriod A initial a M) :
+    IsCoupledPeriod A initial a (L+M) := by
+  unfold IsCoupledPeriod at hL hM ⊢
+  calc
+    coupledOrbit A initial a
+        = coupledOrbit A (coupledOrbit A initial a) M := by
+            rw [← coupledOrbit_add_exact A initial a M]
+            exact hM
+    _ = coupledOrbit A (coupledOrbit A initial (a+L)) M := by
+          rw [← hL]
+    _ = coupledOrbit A initial ((a+L)+M) :=
+          (coupledOrbit_add_exact A initial (a+L) M).symm
+    _ = coupledOrbit A initial (a+(L+M)) := by
+          congr 2
+          omega
+
+/-- Every natural multiple of a period remains a period. -/
+theorem isCoupledPeriod_nsmul
+    (A : Nat) (initial : CoupledState) (a L q : Nat)
+    (hL : IsCoupledPeriod A initial a L) :
+    IsCoupledPeriod A initial a (q*L) := by
+  unfold IsCoupledPeriod at hL ⊢
+  simpa [Nat.mul_comm] using
+    (coupledOrbit_cycle_multiple A initial a L q hL)
+
+/-- Period-algebra crown for the infinite controller. -/
+theorem coupled_period_additive_crown
+    (A : Nat) (initial : CoupledState) (a : Nat) :
+    IsCoupledPeriod A initial a 0
+    ∧ (∀ L M,
+      IsCoupledPeriod A initial a L →
+      IsCoupledPeriod A initial a M →
+      IsCoupledPeriod A initial a (L+M))
+    ∧ (∀ L q,
+      IsCoupledPeriod A initial a L →
+      IsCoupledPeriod A initial a (q*L)) := by
+  exact ⟨isCoupledPeriod_zero A initial a,
+    fun L M => isCoupledPeriod_add A initial a L M,
+    fun L q => isCoupledPeriod_nsmul A initial a L q⟩
+
+#check IsCoupledPeriod
+#check isCoupledPeriod_zero
+#check isCoupledPeriod_add
+#check isCoupledPeriod_nsmul
+#check coupled_period_additive_crown
+#print axioms isCoupledPeriod_add
+#print axioms coupled_period_additive_crown
+
 #check coupledOrbit_add_exact
 #check coupledOrbit_cycle_all_turns
 #check coupledOrbit_cycle_pairwise
