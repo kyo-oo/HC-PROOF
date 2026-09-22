@@ -133,8 +133,8 @@ theorem gvsm_global_cut_selector (s : GSTNCohomology.NShape)
 /-- Capstone of the strengthened vortex layer. -/
 theorem gvsm_v2_crown :
     (∀ C d, C < 4 → d < 3 →
-      coreRotate (C,d) = (C,d) ↔
-        (C = 0 ∧ d = 0) ∨ (C = 3 ∧ d = 2))
+      (coreRotate (C,d) = (C,d) ↔
+        (C = 0 ∧ d = 0) ∨ (C = 3 ∧ d = 2)))
     ∧ (∀ core k S T, k-1 ≤ S → k-1 ≤ T →
       (GSTGraphV2OmegaWaveLaw.omegaCutWord S 1 * core) % 3^k =
         (GSTGraphV2OmegaWaveLaw.omegaCutWord T 1 * core) % 3^k)
