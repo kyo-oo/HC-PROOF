@@ -118,7 +118,7 @@ theorem four_pow_signature_free_iff_all_prefixes_avoid
     contradiction
   · intro hall
     cases hscan : hasTernaryTwo (4^K) with
-    | false => exact hscan
+    | false => rfl
     | true =>
         obtain ⟨p,hp⟩ :=
           has_two_exposes_prefix_fire K hscan
