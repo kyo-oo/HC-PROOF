@@ -7,7 +7,6 @@ import CardinalWorldsPrefixClassifier
 import MonolithBoundary
 import GSTGraphV2Ontological
 import GSTGraphV2ScaleEquivariance
-import GSTGraphV2ScaleOntologicalInvariant
 import GSTGraphV2OmegaWaveLaw
 import GSTGraphV2SixAdicSynchronizedShadows
 import GSTGraphV2ProductionLaws
@@ -123,11 +122,11 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGraphV2ScaleEquivariance.u_cut_plane_equivariance
 #check GSTGraphV2ScaleEquivariance.canonical_n_wave_plane_equivariance
 #check GSTGraphV2ScaleEquivariance.scale_equivariance_crown
-#check GSTGraphV2ScaleOntologicalInvariant.u_cut_happy_iff
-#check GSTGraphV2ScaleOntologicalInvariant.u_cut_ontDensity_exact
-#check GSTGraphV2ScaleOntologicalInvariant.u_cut_two_stage_happy_iff
-#check GSTGraphV2ScaleOntologicalInvariant.canonical_n_wave_ontDensity_exact
-#check GSTGraphV2ScaleOntologicalInvariant.scale_ontological_invariance_crown
+#check GSTGraphV2ScaleEquivariance.u_cut_happy_iff
+#check GSTGraphV2ScaleEquivariance.u_cut_ontDensity_exact
+#check GSTGraphV2ScaleEquivariance.u_cut_two_stage_happy_iff
+#check GSTGraphV2ScaleEquivariance.canonical_n_wave_ontDensity_exact
+#check GSTGraphV2ScaleEquivariance.scale_ontological_invariance_crown
 
 /-! ## The absorption face -/
 
