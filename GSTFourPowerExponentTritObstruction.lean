@@ -191,6 +191,52 @@ theorem no_common_two_exponent_trit_obstruction
   apply hNo
   exact ⟨p+1, by omega, hrow.1, hrow.2⟩
 
+
+/-! ## Unique killing-trit geometry -/
+
+/-- The unique ternary phase that turns an equal prefix pair into a common-two
+row at scale `p+1`. -/
+def killingTrit (K p : Nat) : Nat :=
+  2 - digit3 (4^(exponentPrefix K p)) (p+1)
+
+/-- The killing phase is always a genuine ternary digit. -/
+theorem killingTrit_lt_three (K p : Nat) :
+    killingTrit K p < 3 := by
+  unfold killingTrit
+  have hd := digit3_lt_three (4^(exponentPrefix K p)) (p+1)
+  omega
+
+/-- The row-common-two criterion written as an exact named phase law. -/
+theorem row_common_two_iff_killingTrit (K p : Nat) :
+    (digit3 (4^K) (p+1) = 2 ∧
+      digit3 (4^(K+1)) (p+1) = 2)
+      ↔
+    (digit3 (4^(exponentPrefix K p)) (p+1) =
+        digit3 (4^((exponentPrefix K p)+1)) (p+1) ∧
+      exponentTrit K p = killingTrit K p) := by
+  simpa [killingTrit] using row_common_two_iff_prefix_killing_trit K p
+
+/-- **UNIQUENESS OF THE KILLING PHASE.**  Once the two prefix rows agree,
+there is exactly one physical ternary phase that shifts both of them to digit
+two. -/
+theorem killingTrit_unique
+    (K p a : Nat) (ha : a < 3)
+    (heq :
+      digit3 (4^(exponentPrefix K p)) (p+1) =
+        digit3 (4^((exponentPrefix K p)+1)) (p+1))
+    (hpair :
+      (digit3 (4^(exponentPrefix K p)) (p+1) + a) % 3 = 2 ∧
+      (digit3 (4^((exponentPrefix K p)+1)) (p+1) + a) % 3 = 2) :
+    a = killingTrit K p := by
+  have hd0 := digit3_lt_three (4^(exponentPrefix K p)) (p+1)
+  have hd1 := digit3_lt_three (4^((exponentPrefix K p)+1)) (p+1)
+  have h := (shifted_pair_eq_two_iff
+    (digit3 (4^(exponentPrefix K p)) (p+1))
+    (digit3 (4^((exponentPrefix K p)+1)) (p+1))
+    a hd0 hd1 ha).1 hpair
+  simpa [killingTrit] using h.2
+
+
 #check exponentPrefix
 #check exponentTrit
 #check exponent_prefix_trit_decomposition
@@ -201,6 +247,10 @@ theorem no_common_two_exponent_trit_obstruction
 #check pow4_digit_from_exponent_trit
 #check equal_prefix_pair_has_killing_trit
 #check no_common_two_exponent_trit_obstruction
+#check killingTrit
+#check killingTrit_lt_three
+#check row_common_two_iff_killingTrit
+#check killingTrit_unique
 #print axioms exponent_prefix_trit_decomposition
 #print axioms pow4_shared_trit_pair
 #print axioms pow4_pair_from_exponent_trit
@@ -209,5 +259,6 @@ theorem no_common_two_exponent_trit_obstruction
 #print axioms pow4_digit_from_exponent_trit
 #print axioms equal_prefix_pair_has_killing_trit
 #print axioms no_common_two_exponent_trit_obstruction
+#print axioms killingTrit_unique
 
 end GSTFourPowerExponentTritObstruction
