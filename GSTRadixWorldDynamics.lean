@@ -133,7 +133,7 @@ theorem existsUnique_balanced_predecessor
         ((mixedRadixTranspose s b).symm y))
   · intro x hx
     apply (mixedRadixTranspose s b).injective
-    exact mixedRadixTranspose_unique x y hx
+    simpa using (mixedRadixTranspose_unique x y hx)
 
 /-- The canonical quotient/remainder transition on unrestricted naturals. -/
 def radixOut (s b C d : Nat) : Nat :=
@@ -216,10 +216,16 @@ theorem twelve_cell_transition_is_mixedRadixTranspose
           simpa [outDigit_is_radixOut] using
             (radixOut_lt (s:=4) (b:=3) (C:=C) (d:=d)
               (by decide))⟩) := by
-  simpa [nextCarry_is_radixCarry, outDigit_is_radixOut] using
-    (mixedRadixTranspose_eq_radixSuccessor
+  have h :=
+    mixedRadixTranspose_eq_radixSuccessor
       (s:=4) (b:=3) (by decide) (by decide)
-      (⟨C,hC⟩, ⟨d,hd⟩))
+      (⟨C,hC⟩, ⟨d,hd⟩)
+  rw [h]
+  apply Prod.ext
+  · apply Fin.ext
+    rfl
+  · apply Fin.ext
+    rfl
 
 /-- Capstone: exact balance, unique solvability, bijectivity, finite-world
 closure, and recovery of the physical 4x3 GST cell are all consequences of
