@@ -294,6 +294,28 @@ def Stage2GRealizationObligation
     ∀ p : Nat,
       Nonempty (Stage2GClassRealization V H p (N p))
 
+
+/-- Stage 2G refines the Hodge-subspace semantics by deriving them from the
+bigrading, but its finite realization obligation is exactly the Stage-2F
+obligation for the induced Betti package. -/
+theorem stage2G_obligation_iff_stage2F
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    Stage2GRealizationObligation V H ↔
+      Stage2FRealizationObligation V H.toBettiHodgeData :=
+  Iff.rfl
+
+/-- Consequently the Stage-2G realization obligation is also exactly the
+Stage-2E obligation after both canonical semantic forgetful maps. -/
+theorem stage2G_obligation_iff_stage2E
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    Stage2GRealizationObligation V H ↔
+      Stage2ERealizationObligation
+        V H.toBettiHodgeData.toClassicalHodgeData := by
+  exact (stage2G_obligation_iff_stage2F V H).trans
+    (stage2F_obligation_iff_stage2E V H.toBettiHodgeData)
+
 theorem bigraded_betti_hodge_of_stage2g_obligation
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -322,6 +344,8 @@ theorem bigraded_betti_hodge_of_stage2g_obligation
 #check hodge_class_has_bigraded_cycle
 #check bigraded_betti_hodge_of_stage2g_family
 #check Stage2GRealizationObligation
+#check stage2G_obligation_iff_stage2F
+#check stage2G_obligation_iff_stage2E
 #check bigraded_betti_hodge_of_stage2g_obligation
 
 #print axioms mem_rationalHodgeSubspace_iff
@@ -331,5 +355,7 @@ theorem bigraded_betti_hodge_of_stage2g_obligation
 #print axioms hodge_class_has_bigraded_cycle
 #print axioms bigraded_betti_hodge_of_stage2g_family
 #print axioms bigraded_betti_hodge_of_stage2g_obligation
+#print axioms stage2G_obligation_iff_stage2F
+#print axioms stage2G_obligation_iff_stage2E
 
 end GSTGeometricRealizationStage2G
