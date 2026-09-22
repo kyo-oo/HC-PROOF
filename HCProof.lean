@@ -2,6 +2,7 @@ import GSTCoherentCosmology
 import GST2DMixedEmergenceUpgrade
 import CardinalWorlds
 import CardinalWorldsV2
+import CardinalWorldsPrefixClassifier
 import MonolithBoundary
 import GSTGraphV2Ontological
 import GSTGraphV2ScaleEquivariance
@@ -351,3 +352,10 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGradedWorldAlgebra.carryShiftN_respects_degree
 #check GSTGradedWorldAlgebra.worldKunneth_projector_polynomial
 #check GSTGradedWorldAlgebra.graded_world_crown
+
+
+/-! ## Cardinal Worlds arbitrary-prefix upgrade -/
+
+#check CardinalWorldsPrefixClassifier.four_pow_has_two_iff_prefix_trit
+#check CardinalWorldsPrefixClassifier.four_pow_signature_free_iff_all_prefixes_avoid
+#check CardinalWorldsPrefixClassifier.prefix_classifier_crown
