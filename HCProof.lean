@@ -24,6 +24,7 @@ import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
 import GSTUniversalLefschetzCosmology
 import GSTUniversalLefschetzPathFormula
+import GSTUniversalLefschetzKernel
 import GSTTruncatedWorldCohomologyRing
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
@@ -468,3 +469,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTUniversalLefschetzPathFormula.path_formula_exact_boundary
 #check GSTUniversalLefschetzPathFormula.hc_bottom_to_top_coefficient
 #check GSTUniversalLefschetzPathFormula.universal_lefschetz_path_crown
+
+
+/-! ## Universal Lefschetz transition kernel -/
+
+#check GSTUniversalLefschetzKernel.worldForward
+#check GSTUniversalLefschetzKernel.worldCausalDistance
+#check GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel
+#check GSTUniversalLefschetzKernel.nonzero_lefschetz_transition_forces_causality
+#check GSTUniversalLefschetzKernel.origin_to_cell_kernel
+#check GSTUniversalLefschetzKernel.universal_lefschetz_kernel_crown
