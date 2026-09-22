@@ -156,6 +156,80 @@ def BigradedBettiHodgeStatement
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
       LinearMap.range (H.cycleClass p)
 
+/-- **EXPLICIT BIGRADED WITNESS NORMAL FORM.**
+The Stage-2G Hodge target is equivalent to an elementwise statement: every
+rational class whose complexification lies in H^(p,p) has an actual
+codimension-p cycle mapping to it. -/
+theorem bigradedBettiHodgeStatement_iff_explicit_witness
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    BigradedBettiHodgeStatement V H ↔
+      ∀ p : Nat,
+      ∀ alpha :
+        RationalSingularCohomology H.analytification (2 * p),
+        complexificationMapQ
+            (RationalSingularCohomology H.analytification (2 * p))
+            alpha
+          ∈ (H.hodgeBigrading p).ppComponent →
+        ∃ Z : codimensionCycles V.X p,
+          H.cycleClass p Z = alpha := by
+  constructor
+  · intro h p alpha halpha
+    have hmem :
+        alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) :=
+      (mem_rationalHodgeSubspace_iff
+        (H.hodgeBigrading p) alpha).2 halpha
+    rcases h p hmem with ⟨Z,hZ⟩
+    exact ⟨Z,hZ⟩
+  · intro h p alpha halpha
+    have hcomplex :
+        complexificationMapQ
+            (RationalSingularCohomology H.analytification (2 * p))
+            alpha
+          ∈ (H.hodgeBigrading p).ppComponent :=
+      (mem_rationalHodgeSubspace_iff
+        (H.hodgeBigrading p) alpha).1 halpha
+    rcases h p alpha hcomplex with ⟨Z,hZ⟩
+    exact ⟨Z,hZ⟩
+
+/-- Once the Stage-2G statement holds, choose an actual algebraic-cycle
+representative for every rational (p,p) class. -/
+noncomputable def bigradedCycleSelector
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (h : BigradedBettiHodgeStatement V H)
+    (p : Nat)
+    (alpha :
+      RationalSingularCohomology H.analytification (2 * p))
+    (halpha :
+      complexificationMapQ
+          (RationalSingularCohomology H.analytification (2 * p))
+          alpha
+        ∈ (H.hodgeBigrading p).ppComponent) :
+    codimensionCycles V.X p :=
+  Classical.choose
+    ((bigradedBettiHodgeStatement_iff_explicit_witness V H).mp h
+      p alpha halpha)
+
+/-- The selected cycle reconstructs the original Hodge class exactly. -/
+theorem bigradedCycleSelector_spec
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (h : BigradedBettiHodgeStatement V H)
+    (p : Nat)
+    (alpha :
+      RationalSingularCohomology H.analytification (2 * p))
+    (halpha :
+      complexificationMapQ
+          (RationalSingularCohomology H.analytification (2 * p))
+          alpha
+        ∈ (H.hodgeBigrading p).ppComponent) :
+    H.cycleClass p
+      (bigradedCycleSelector V H h p alpha halpha) = alpha :=
+  Classical.choose_spec
+    ((bigradedBettiHodgeStatement_iff_explicit_witness V H).mp h
+      p alpha halpha)
+
 /-- Stage-2G's target is definitionally Stage-2F's target under the derived
 Hodge-subspace specialization. -/
 theorem bigradedBettiHodgeStatement_iff_stage2f
@@ -240,6 +314,9 @@ theorem bigraded_betti_hodge_of_stage2g_obligation
 #check HodgeBigradedBettiData
 #check HodgeBigradedBettiData.toBettiHodgeData
 #check BigradedBettiHodgeStatement
+#check bigradedBettiHodgeStatement_iff_explicit_witness
+#check bigradedCycleSelector
+#check bigradedCycleSelector_spec
 #check bigradedBettiHodgeStatement_iff_stage2f
 #check Stage2GClassRealization
 #check hodge_class_has_bigraded_cycle
@@ -248,6 +325,8 @@ theorem bigraded_betti_hodge_of_stage2g_obligation
 #check bigraded_betti_hodge_of_stage2g_obligation
 
 #print axioms mem_rationalHodgeSubspace_iff
+#print axioms bigradedBettiHodgeStatement_iff_explicit_witness
+#print axioms bigradedCycleSelector_spec
 #print axioms bigradedBettiHodgeStatement_iff_stage2f
 #print axioms hodge_class_has_bigraded_cycle
 #print axioms bigraded_betti_hodge_of_stage2g_family
