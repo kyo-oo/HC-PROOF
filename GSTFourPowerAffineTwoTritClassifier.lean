@@ -62,13 +62,90 @@ theorem commonTwo_three_mul_add_two_of_q_mod_three_one
       omega
     omega
 
+
+/-! ## Structural mod-nine classification from the affine automaton -/
+
+/-- Residue six modulo nine is killed structurally by the branch
+`K = 3*q`, `q mod 3 = 2`; no power table is used. -/
+theorem commonTwo_of_mod9_six_structural
+    (K : Nat) (hK : K % 9 = 6) :
+    CommonTwo K := by
+  have hsplit3 := Nat.mod_add_div K 3
+  have hmod3 : K % 3 = 0 := by
+    have hdvd : 3 ∣ 9 := by norm_num
+    have h := Nat.mod_mod_of_dvd K hdvd
+    rw [hK] at h
+    norm_num at h ⊢
+    exact h.symm
+  have hshape : K = 3 * (K / 3) := by
+    omega
+  let q := K / 3
+  have hq : q % 3 = 2 := by
+    have hres : (3*q) % 9 = 6 := by
+      simpa [q, hshape] using hK
+    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul] at hres
+    simp at hres
+    omega
+  rw [hshape]
+  exact commonTwo_three_mul_of_q_mod_three_two q hq
+
+/-- Residue five modulo nine is killed structurally by the branch
+`K = 3*q+2`, `q mod 3 = 1`. -/
+theorem commonTwo_of_mod9_five_structural
+    (K : Nat) (hK : K % 9 = 5) :
+    CommonTwo K := by
+  have hsplit3 := Nat.mod_add_div K 3
+  have hmod3 : K % 3 = 2 := by
+    have hdvd : 3 ∣ 9 := by norm_num
+    have h := Nat.mod_mod_of_dvd K hdvd
+    rw [hK] at h
+    norm_num at h ⊢
+    exact h.symm
+  have hshape : K = 3 * (K / 3) + 2 := by
+    omega
+  let q := K / 3
+  have hq : q % 3 = 1 := by
+    have hres : (3*q + 2) % 9 = 5 := by
+      simpa [q, hshape] using hK
+    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul] at hres
+    simp at hres
+    omega
+  rw [hshape]
+  exact commonTwo_three_mul_add_two_of_q_mod_three_one q hq
+
+/-- The two killing classes are therefore an intrinsic theorem of the affine
+transducer, independent of the direct residue classifier. -/
+theorem commonTwo_of_mod9_five_or_six_structural
+    (K : Nat) (hK : K % 9 = 5 ∨ K % 9 = 6) :
+    CommonTwo K := by
+  rcases hK with h5 | h6
+  · exact commonTwo_of_mod9_five_structural K h5
+  · exact commonTwo_of_mod9_six_structural K h6
+
+/-- Any affine-transducer counterexample excludes both structural killing
+classes. -/
+theorem noCommonTwo_forbids_mod9_five_six_structural
+    (K : Nat) (hNo : ¬ CommonTwo K) :
+    K % 9 ≠ 5 ∧ K % 9 ≠ 6 := by
+  constructor
+  · intro h5
+    exact hNo (commonTwo_of_mod9_five_structural K h5)
+  · intro h6
+    exact hNo (commonTwo_of_mod9_six_structural K h6)
+
+
 #check noCommonTwo_three_mul_second_iff
 #check noCommonTwo_three_mul_add_one_second_iff
 #check noCommonTwo_three_mul_add_two_second_iff
 #check commonTwo_three_mul_of_q_mod_three_two
 #check commonTwo_three_mul_add_two_of_q_mod_three_one
+#check commonTwo_of_mod9_five_structural
+#check commonTwo_of_mod9_six_structural
+#check commonTwo_of_mod9_five_or_six_structural
+#check noCommonTwo_forbids_mod9_five_six_structural
 #print axioms noCommonTwo_three_mul_second_iff
 #print axioms noCommonTwo_three_mul_add_one_second_iff
 #print axioms noCommonTwo_three_mul_add_two_second_iff
+#print axioms commonTwo_of_mod9_five_or_six_structural
 
 end GSTFourPowerAffineTwoTritClassifier
