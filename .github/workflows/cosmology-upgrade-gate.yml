@@ -9,7 +9,7 @@ on:
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
       - 'GSTUniversalAddressBridge.lean'
-      - 'GSTDimensionFreeHodgeDiagonal.lean GSTGlobalPureHodgeCosmology.lean'
+      - 'GSTDimensionFreeHodgeDiagonal.lean'
       - 'GSTGlobalPureHodgeCosmology.lean'
       - 'GSTUniversalLefschetzDynamics.lean'
       - 'GSTUniversalLefschetzCosmology.lean'
@@ -73,6 +73,7 @@ jobs:
             GSTWorldRecoordinationGroupoid.lean
             GSTUniversalAddressBridge.lean
             GSTDimensionFreeHodgeDiagonal.lean
+            GSTGlobalPureHodgeCosmology.lean
             GSTUniversalLefschetzDynamics.lean
             GSTUniversalLefschetzCosmology.lean
             GSTTruncatedWorldCohomologyRing.lean
@@ -112,6 +113,7 @@ jobs:
             GSTWorldRecoordinationGroupoid \
             GSTUniversalAddressBridge \
             GSTDimensionFreeHodgeDiagonal \
+            GSTGlobalPureHodgeCosmology \
             GSTUniversalLefschetzDynamics \
             GSTUniversalLefschetzCosmology \
             GSTTruncatedWorldCohomologyRing \
