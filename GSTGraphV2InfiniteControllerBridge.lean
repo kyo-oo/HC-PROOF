@@ -218,4 +218,32 @@ theorem graph_child_happy_latent_transfer
     (graph_infinite_bad_control E N b hChildCarryZero hRightBad)
     (graph_child_happy_to_controller E N b q hChild)
 
+
+/-! ## Graph-state vertical action -/
+
+/-- Re-basing the coupled controller after K rows and then iterating L more is
+exactly the literal graph state at depth b+K+L. -/
+theorem graphCoupledState_rebase_exact
+    (E N b K L : Nat) :
+    GSTV2.coupledOrbit (4^N)
+        (graphCoupledState E N (b+K)) L =
+      graphCoupledState E N (b+K+L) := by
+  simpa [Nat.add_assoc] using
+    graphCoupledOrbit_exact E N (b+K) L
+
+/-- **VERTICAL NAT-ACTION COHERENCE.**  The graph embedding intertwines
+addition of vertical depth with the abstract coupled-state Nat action. -/
+theorem graphCoupledState_add_action
+    (E N b K L : Nat) :
+    GSTV2.coupledOrbit (4^N)
+        (GSTV2.coupledOrbit (4^N)
+          (graphCoupledState E N b) K) L =
+      graphCoupledState E N (b + (K+L)) := by
+  rw [GSTV2.coupledOrbit_add]
+  exact graphCoupledOrbit_exact E N b (K+L)
+
+#check graphCoupledState_rebase_exact
+#check graphCoupledState_add_action
+#print axioms graphCoupledState_add_action
+
 end GSTGraphV2InfiniteControllerBridge
