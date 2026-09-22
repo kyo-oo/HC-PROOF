@@ -63,7 +63,7 @@ abbrev WorldOperatorRing : Type :=
 
 instance : IsMulCommutative (WorldOperatorRing A B) :=
   Subring.isMulCommutative_closure
-    (axis_generators_commute A B)
+    (fun x hx y hy => axis_generators_commute A B hx hy)
 
 def hOp : WorldOperatorRing A B :=
   ⟨digitEndo A B,
@@ -209,6 +209,7 @@ theorem worldAct_add
     (g : WorldCoef A B) :
     worldAct A B (r+s) g =
       fun c => worldAct A B r g c + worldAct A B s g c := by
+  funext c
   simp [worldAct]
 
 theorem worldAct_mul

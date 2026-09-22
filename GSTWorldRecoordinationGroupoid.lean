@@ -169,7 +169,7 @@ theorem codeSectorProj_orthogonal
   · have hj : worldCode S x ≠ j := by
       intro h
       exact hjk (h.symm.trans hk)
-    simp [codeSectorProj, hk, hj]
+    simp [codeSectorProj, hk, hj, Ne.symm hjk]
   · simp [codeSectorProj, hk]
 
 /-- All N code sectors sum exactly to the coefficient field. -/

@@ -107,7 +107,6 @@ theorem worldLefschetz_iterate_respects_degree
       rw [Function.iterate_succ', Function.comp_apply, ih,
         worldLefschetz_respects_degree]
       congr 1
-      omega
 
 /-- **DIMENSION-FREE DEGREE DESCENT.**
 

@@ -76,7 +76,7 @@ theorem shift_sector (m : I → ℕ) (k : ℕ) (g : Coef d) :
     simp only [shift, dif_pos h, sector]
     change (if degree d w b = k then g b else 0) =
       if degree d w c = k + ∑ i, w i * m i then g b else 0
-    rw [he]
+    simp only [he]
   · simp [shift, sector, h]
 
 /-- Every weighting has an exact complementary degree reflection. -/

@@ -110,6 +110,7 @@ def cylinderEquiv (X : WindowTower) (k : ℕ) : Cylinder X k ≃ WindowTower whe
   left_inv Y := by
     apply Subtype.ext
     have hp : worldPrefix k Y.val = worldPrefix k X := (level_eq_iff_prefix _ _ k).mp Y.property
+    change graft k (worldPrefix k X) (tail k Y.val) = Y.val
     rw [← hp, graft_prefix_tail]
   right_inv Z := tail_graft k _ Z
 
@@ -120,6 +121,7 @@ def fiberEquiv (Y : WindowTower) (k : ℕ) :
   invFun u := ⟨graft k u Y, tail_graft k u Y⟩
   left_inv X := by
     apply Subtype.ext
+    change graft k (worldPrefix k X.val) Y = X.val
     rw [← X.property, graft_prefix_tail]
   right_inv u := prefix_graft k u Y
 
