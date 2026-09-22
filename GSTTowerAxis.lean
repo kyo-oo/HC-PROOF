@@ -118,6 +118,42 @@ theorem tower_axis_level_three (s c : Nat) (hs : 3 ≤ s)
   · rw [h49]; norm_num
   · rw [h70]; norm_num
 
+/-- Unified residue predicate for the three certified tower-axis fire
+families. -/
+def TowerAxisClass (s c : Nat) : Prop :=
+  c % 9 = 1 ∨
+    (2 ≤ s ∧ (c % 27 = 13 ∨ c % 27 = 25)) ∨
+    (3 ≤ s ∧
+      (c % 81 = 4 ∨ c % 81 = 34 ∨
+       c % 81 = 49 ∨ c % 81 = 70))
+
+/-- **UNIFORM TOWER-AXIS FIRE WINDOW.**
+Every covered tower-axis core fires within the three-row window
+{s+2,s+3,s+4}. -/
+theorem tower_axis_uniform_fire_window
+    (s c : Nat) (hs : 1 ≤ s)
+    (hclass : TowerAxisClass s c) :
+    ∃ δ : Nat, 2 ≤ δ ∧ δ ≤ 4 ∧
+      digit3 (4^(3^s*c)) (s+δ) = 2 := by
+  rcases hclass with h1 | ⟨hs2,h2⟩ | ⟨hs3,h3⟩
+  · exact ⟨2,by omega,by omega,
+      tower_axis_level_one s c hs h1⟩
+  · exact ⟨3,by omega,by omega,
+      tower_axis_level_two s c hs2 h2⟩
+  · exact ⟨4,by omega,by omega,
+      tower_axis_level_three s c hs3 h3⟩
+
+/-- Every covered tower-axis exponent has an explicit digit-two witness at a
+row no more than four above its valuation depth. -/
+theorem tower_axis_navigation_bounded
+    (s c : Nat) (hs : 1 ≤ s)
+    (hclass : TowerAxisClass s c) :
+    ∃ p : Nat, s+2 ≤ p ∧ p ≤ s+4 ∧
+      digit3 (4^(3^s*c)) p = 2 := by
+  obtain ⟨δ,hδ2,hδ4,hfire⟩ :=
+    tower_axis_uniform_fire_window s c hs hclass
+  exact ⟨s+δ,by omega,by omega,hfire⟩
+
 /-! ## §4 THE KILLS — Cantorian exclusion and the act's coverage grows -/
 
 /-- **NO TOWER-AXIS EXPONENT IS CANTORIAN.**  Every `K = 3^s · c`
@@ -159,6 +195,22 @@ theorem no22_of_tower_axis {K s c : Nat} (hK : K = 3^s * c)
 
 /-! ## §5 THE RECEIPT — the tower axis, assembled -/
 
+/-- Unified tower-axis crown: a single residue predicate implies a
+uniformly bounded firing row and hence a non-Cantorian verdict. -/
+theorem tower_axis_uniform_crown :
+    (∀ s c, 1 ≤ s → TowerAxisClass s c →
+      ∃ p, s+2 ≤ p ∧ p ≤ s+4 ∧
+        digit3 (4^(3^s*c)) p = 2)
+    ∧
+    (∀ K s c, K = 3^s*c → 1 ≤ s → TowerAxisClass s c →
+      noTernaryTwo (4^K) = false) := by
+  constructor
+  · exact tower_axis_navigation_bounded
+  · intro K s c hK hs hclass
+    obtain ⟨p,hlo,hhi,hfire⟩ :=
+      tower_axis_navigation_bounded s c hs hclass
+    exact no22_of_digit_two K p (by simpa [hK] using hfire)
+
 /-- **THE TOWER-AXIS RECEIPT.**  The three structural fire levels, the
 Cantorian exclusion, and the verdict kill — all unconditional, all
 standing on the green deep-hider master lemma and the tower
@@ -191,6 +243,9 @@ theorem the_tower_axis_receipt :
 #print axioms c_mod27_ge_two
 #print axioms tower_axis_level_two
 #print axioms tower_axis_level_three
+#print axioms tower_axis_uniform_fire_window
+#print axioms tower_axis_navigation_bounded
+#print axioms tower_axis_uniform_crown
 #print axioms not_cantorian_of_tower_axis
 #print axioms no22_of_tower_axis
 #print axioms the_tower_axis_receipt
