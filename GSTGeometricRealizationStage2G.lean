@@ -52,19 +52,19 @@ namespace GSTGeometricRealizationStage2G
 
 /-- Scalar extension of a rational vector space to the complex numbers. -/
 abbrev Complexification
-    (VQ : Type*) [AddCommGroup VQ] [Module ℚ VQ] : Type :=
+    (VQ : Type) [AddCommGroup VQ] [Module ℚ VQ] : Type :=
   TensorProduct ℚ ℂ VQ
 
 /-- The canonical rational-linear inclusion into complexification,
 alpha |-> 1 tensor alpha. -/
 noncomputable def complexificationMapQ
-    (VQ : Type*) [AddCommGroup VQ] [Module ℚ VQ] :
+    (VQ : Type) [AddCommGroup VQ] [Module ℚ VQ] :
     VQ →ₗ[ℚ] Complexification VQ :=
   TensorProduct.mk ℚ ℂ VQ 1
 
 @[simp]
 theorem complexificationMapQ_apply
-    (VQ : Type*) [AddCommGroup VQ] [Module ℚ VQ]
+    (VQ : Type) [AddCommGroup VQ] [Module ℚ VQ]
     (x : VQ) :
     complexificationMapQ VQ x = (1 : ℂ) ⊗ₜ[ℚ] x :=
   rfl
@@ -75,7 +75,7 @@ Index a : Fin (n+1) represents the component H^(a,n-a).
 The two fields say exactly that these components form an internal direct
 sum whose total is the whole complexification. -/
 structure HodgeBigrading
-    (VQ : Type*) [AddCommGroup VQ] [Module ℚ VQ]
+    (VQ : Type) [AddCommGroup VQ] [Module ℚ VQ]
     (n : Nat) where
   component :
     Fin (n + 1) → Submodule ℂ (Complexification VQ)
@@ -90,7 +90,7 @@ def ppIndex (p : Nat) : Fin (2 * p + 1) :=
 
 /-- The complex H^(p,p) component in weight 2p. -/
 def HodgeBigrading.ppComponent
-    {VQ : Type*} [AddCommGroup VQ] [Module ℚ VQ]
+    {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ]
     {p : Nat}
     (D : HodgeBigrading VQ (2 * p)) :
     Submodule ℂ (Complexification VQ) :=
@@ -101,7 +101,7 @@ def HodgeBigrading.ppComponent
 They are the pullback of the complex H^(p,p) summand along the canonical
 rational-to-complex scalar-extension map. -/
 noncomputable def rationalHodgeSubspace
-    {VQ : Type*} [AddCommGroup VQ] [Module ℚ VQ]
+    {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ]
     {p : Nat}
     (D : HodgeBigrading VQ (2 * p)) :
     Submodule ℚ VQ :=
@@ -109,7 +109,7 @@ noncomputable def rationalHodgeSubspace
     (complexificationMapQ VQ)
 
 theorem mem_rationalHodgeSubspace_iff
-    {VQ : Type*} [AddCommGroup VQ] [Module ℚ VQ]
+    {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ]
     {p : Nat}
     (D : HodgeBigrading VQ (2 * p))
     (alpha : VQ) :
