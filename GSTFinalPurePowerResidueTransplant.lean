@@ -257,6 +257,50 @@ theorem residueTower_step
   rw [Nat.pow_succ, Nat.mod_mul]
   ring
 
+/-- One residue-tower refinement differs from the previous layer by
+exactly one ternary digit times the current modulus. -/
+theorem residueTower_increment_exact
+    (D T q : Nat) :
+    (1 + 3*D*(T % 3^(q+1))) -
+        (1 + 3*D*(T % 3^q)) =
+      residueTowerModulus D q * digit3 T q := by
+  have h := residueTower_step D T q
+  omega
+
+/-- **RESIDUE-TOWER COHERENCE.**
+Every deeper residue layer projects exactly to the preceding layer modulo
+the preceding modulus. -/
+theorem residueTower_refines_mod
+    (D T q : Nat) :
+    (1 + 3*D*(T % 3^(q+1))) %
+        residueTowerModulus D q
+      =
+    (1 + 3*D*(T % 3^q)) %
+        residueTowerModulus D q := by
+  rw [residueTower_step]
+  simp [Nat.add_mod, Nat.mul_mod]
+
+/-- The residue tower is monotone as an ordinary natural-number lift. -/
+theorem residueTower_monotone
+    (D T q : Nat) :
+    1 + 3*D*(T % 3^q) ≤
+      1 + 3*D*(T % 3^(q+1)) := by
+  have h := residueTower_step D T q
+  omega
+
+/-- When D is live, the normalized increment reads exactly the q-th ternary
+digit of the hidden tail. -/
+theorem residueTower_increment_reads_digit
+    (D T q : Nat) (hD : 1 ≤ D) :
+    ((1 + 3*D*(T % 3^(q+1))) -
+      (1 + 3*D*(T % 3^q))) /
+        residueTowerModulus D q
+      = digit3 T q := by
+  rw [residueTower_increment_exact]
+  unfold residueTowerModulus
+  have hpos : 0 < 3*D*3^q := by positivity
+  exact Nat.mul_div_left _ hpos
+
 theorem purePowerStripInputResidue
     (D T E K q : Nat)
     (hD : 1 ≤ D)
@@ -354,8 +398,17 @@ theorem exactPowerRectangle_conservation
 #check stripCarry_is_information_digit
 #check stripConservation_exact
 #check pow4_exponent_trit_lift_digit
+#check residueTower_increment_exact
+#check residueTower_refines_mod
+#check residueTower_monotone
+#check residueTower_increment_reads_digit
 #check purePowerStripInputResidue
 #check residueStripCarry_is_exact_power_carry
 #check exactPowerRectangle_conservation
+
+#print axioms residueTower_increment_exact
+#print axioms residueTower_refines_mod
+#print axioms residueTower_increment_reads_digit
+#print axioms exactPowerRectangle_conservation
 
 end GSTFinalPurePowerResidueTransplant
