@@ -138,6 +138,7 @@ roots = [
   "GSTWorldCosmology",
   "GSTRadixWorldDynamics",
   "GSTGradedWorldAlgebra",
+  "GSTWorldRecoordinationGroupoid",
   "GSTWorldCrownBridge",
   "InformationBadTraceScratch",
   "InformationDescentScratch",
