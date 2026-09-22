@@ -143,6 +143,53 @@ theorem residual_parent_happy_iff
   rw [(residual_parent_observables_exact s k m p).1,
       (residual_parent_observables_exact s k m p).2.1]
 
+
+/-! ## Two-trit handwritten U factorization -/
+
+/-- Exact two-trit decomposition of an ordinary natural origin. -/
+theorem origin_two_trit_split_exact (n : Nat) :
+    n =
+      originTrit n +
+        3 * originTrit (originTail n) +
+        9 * originTail (originTail n) := by
+  have h0 := origin_split_exact n
+  have h1 := origin_split_exact (originTail n)
+  rw [h1] at h0
+  omega
+
+/-- The perfect-power universe factors through two successive handwritten
+U-cuts with both consumed ternary phases exposed explicitly. -/
+theorem perfect_power_u_two_trit_exact (t n : Nat) :
+    4^(3^t * n) =
+      4^(3^t * originTrit n) *
+        4^(3^(t+1) * originTrit (originTail n)) *
+          4^(3^(t+2) * originTail (originTail n)) := by
+  calc
+    4^(3^t * n) =
+        4^(3^t * originTrit n) *
+          4^(3^(t+1) * originTail n) :=
+      perfect_power_u_mul_div_exact t n
+    _ = 4^(3^t * originTrit n) *
+        (4^(3^(t+1) * originTrit (originTail n)) *
+          4^(3^((t+1)+1) * originTail (originTail n))) := by
+      rw [perfect_power_u_mul_div_exact (t+1) (originTail n)]
+    _ = 4^(3^t * originTrit n) *
+        4^(3^(t+1) * originTrit (originTail n)) *
+          4^(3^(t+2) * originTail (originTail n)) := by
+      rw [show (t+1)+1 = t+2 by omega]
+      ring
+
+/-- The residual child energy admits the same two-trit factorization at its
+absolute scale. -/
+theorem residual_energy_two_trit_exact (s k m : Nat) :
+    residualEnergy s k m =
+      4^(3^(s+k) * originTrit m) *
+        4^(3^(s+k+1) * originTrit (originTail m)) *
+          4^(3^(s+k+2) * originTail (originTail m)) := by
+  simpa [residualEnergy, Nat.add_assoc] using
+    perfect_power_u_two_trit_exact (s+k) m
+
+
 #check origin_split_exact
 #check perfect_power_u_mul_div_exact
 #check residual_energy_u_mul_div_exact
@@ -150,8 +197,12 @@ theorem residual_parent_happy_iff
 #check residual_parent_u_mul_div_exact
 #check residual_parent_observables_exact
 #check residual_parent_happy_iff
+#check origin_two_trit_split_exact
+#check perfect_power_u_two_trit_exact
+#check residual_energy_two_trit_exact
 #print axioms perfect_power_u_mul_div_exact
 #print axioms residual_parent_u_mul_div_exact
 #print axioms residual_parent_observables_exact
+#print axioms perfect_power_u_two_trit_exact
 
 end GSTGraphV2HandwrittenOmegaUBlock
