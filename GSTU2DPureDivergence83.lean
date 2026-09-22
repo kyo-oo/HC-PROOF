@@ -39,6 +39,42 @@ theorem happy_iff_density83_positive
     norm_num [HappyCell, density83, digitPotential83, carryPotential83,
       outDigit, nextCarry]
 
+/-- **PURE-DIVERGENCE POSITIVE SPECTRUM.**
+The positive 8x3 divergence values are exactly 84 and 168, corresponding to
+the two Happy orientations. -/
+theorem density83_positive_spectrum
+    (C d : Nat) (hC : C < 4) (hd : d < 3)
+    (hpos : 0 < density83 C d) :
+    density83 C d = 84 ∨ density83 C d = 168 := by
+  have hHappy := (happy_iff_density83_positive C d hC hd).2 hpos
+  rcases hHappy with ⟨rfl,h0 | h3⟩
+  · subst C
+    right
+    decide
+  · subst C
+    left
+    decide
+
+/-- Every physical divergence is nonpositive or lies in the exact positive
+spectrum {84,168}. -/
+theorem density83_spectral_dichotomy
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    density83 C d ≤ 0 ∨
+      density83 C d = 84 ∨ density83 C d = 168 := by
+  by_cases hpos : 0 < density83 C d
+  · exact Or.inr (density83_positive_spectrum C d hC hd hpos)
+  · exact Or.inl (by omega)
+
+/-- The pure divergence has a strict physical spectral gap:
+no positive value lies below 84. -/
+theorem density83_positive_ge_84
+    (C d : Nat) (hC : C < 4) (hd : d < 3)
+    (hpos : 0 < density83 C d) :
+    84 ≤ density83 C d := by
+  rcases density83_positive_spectrum C d hC hd hpos with h | h
+  · rw [h]
+  · rw [h]
+
 theorem density83_ge_neg105
     (C d : Nat) (hC : C < 4) (hd : d < 3) :
     (-105 : Int) ≤ density83 C d := by
@@ -360,10 +396,15 @@ theorem graph_density83_rectangle_exact (E N K : Nat) :
 
 #check density83_physical_table
 #check happy_iff_density83_positive
+#check density83_positive_spectrum
+#check density83_spectral_dichotomy
+#check density83_positive_ge_84
 #check reverseDensity83_exact
 #check density83_rectangle_exact
 #check weightedRectanglePrefix83_positive_of_top_leading_happy
 #check graph_density83_rectangle_exact
+#print axioms density83_positive_spectrum
+#print axioms density83_spectral_dichotomy
 #print axioms density83_rectangle_exact
 #print axioms weightedRectanglePrefix83_positive_of_top_leading_happy
 #print axioms graph_density83_rectangle_exact
