@@ -233,6 +233,34 @@ theorem canonical_graphCoupledState_cut_packet
   · exact canonical_graph_childTail_cut_exact s n
   · exact canonical_graph_parentWord_cut_exact s n
 
+
+/-! ## Coordinate collapse at the canonical cut -/
+
+/-- The parent-word coordinate of the coupled controller is literally the
+right-edge seven-axis descent coordinate at the canonical cut.  Two previously
+separate coordinate systems therefore collapse to one exact arithmetic object. -/
+theorem canonical_cut_parentWord_eq_right_descent
+    (s n : Nat) :
+    (graphCoupledState (canonicalEnergy s n) (canonicalWidth s) (s+2)).parentWord
+        (4^(canonicalWidth s)) =
+      (graph (canonicalEnergy s n) (canonicalWidth s) (s+2)).seven.descent := by
+  rw [canonical_graph_parentWord_cut_exact,
+      canonical_graph_right_descent_cut_exact]
+
+/-- The canonical cut therefore exposes its tail and its parent descent as two
+exact projections of the same coupled state. -/
+theorem canonical_cut_tail_descent_pair
+    (s n : Nat) :
+    ( (graphCoupledState (canonicalEnergy s n) (canonicalWidth s) (s+2)).childTail,
+      (graphCoupledState (canonicalEnergy s n) (canonicalWidth s) (s+2)).parentWord
+        (4^(canonicalWidth s)) ) =
+    ( canonicalTail (s+1) n,
+      prefixOffset s + 4^(3^s) * canonicalTail (s+1) n ) := by
+  apply Prod.ext
+  · exact canonical_graph_childTail_cut_exact s n
+  · exact canonical_graph_parentWord_cut_exact s n
+
+
 #check canonical_right_energy_cut_decomposition
 #check canonical_graph_childCarry_cut_zero
 #check canonical_graph_parentSeed_cut_one
@@ -240,6 +268,9 @@ theorem canonical_graphCoupledState_cut_packet
 #check canonical_graph_childResidue_cut_exact
 #check canonical_graph_parentWord_cut_exact
 #check canonical_graphCoupledState_cut_packet
+#check canonical_cut_parentWord_eq_right_descent
+#check canonical_cut_tail_descent_pair
 #print axioms canonical_graphCoupledState_cut_packet
+#print axioms canonical_cut_parentWord_eq_right_descent
 
 end GSTGraphV2CanonicalDescentOntology
