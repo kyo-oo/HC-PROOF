@@ -67,4 +67,25 @@ theorem pow4_scaled_mod_next (r u : Nat) :
     simp [Nat.add_mod, Nat.mul_mod, Nat.mod_eq_of_lt hMgt1]
   simpa [hbase, Nat.mod_eq_of_lt hMgt1]
 
+
+/-! ## Exact scaled LTE action -/
+
+/-- Multiples of a ternary scale are not only congruent to one at the next
+cut: their entire four-power is the corresponding power of the exact LTE
+generator. -/
+theorem pow4_scaled_exact (r u : Nat) :
+    4^(3^r * u) =
+      (1 + 3^(r+1) * lteCoeff r)^u := by
+  rw [Nat.pow_mul, pow4_three_power_lte_exact]
+
+/-- Scaled LTE blocks compose exactly under addition of the multiplier. -/
+theorem pow4_scaled_add_exact (r u v : Nat) :
+    4^(3^r * (u+v)) =
+      4^(3^r*u) * 4^(3^r*v) := by
+  rw [Nat.mul_add, Nat.pow_add]
+
+#check pow4_scaled_exact
+#check pow4_scaled_add_exact
+#print axioms pow4_scaled_exact
+
 end GSTCanonicalTailLTE
