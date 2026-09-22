@@ -134,19 +134,22 @@ theorem affineOrbit_low_trit_exact (K : Nat) :
   · have hK : K = 3 * (K / 3) := by omega
     calc
       digit3 (affineOrbit K) 0 =
-          digit3 (affineOrbit (3 * (K / 3))) 0 := by rw [hK]
+          digit3 (affineOrbit (3 * (K / 3))) 0 :=
+        congrArg (fun e : Nat => digit3 (affineOrbit e) 0) hK
       _ = 0 := affineOrbit_low_trit_zero (K / 3)
       _ = K % 3 := h0.symm
   · have hK : K = 3 * (K / 3) + 1 := by omega
     calc
       digit3 (affineOrbit K) 0 =
-          digit3 (affineOrbit (3 * (K / 3) + 1)) 0 := by rw [hK]
+          digit3 (affineOrbit (3 * (K / 3) + 1)) 0 :=
+        congrArg (fun e : Nat => digit3 (affineOrbit e) 0) hK
       _ = 1 := affineOrbit_low_trit_one (K / 3)
       _ = K % 3 := h1.symm
   · have hK : K = 3 * (K / 3) + 2 := by omega
     calc
       digit3 (affineOrbit K) 0 =
-          digit3 (affineOrbit (3 * (K / 3) + 2)) 0 := by rw [hK]
+          digit3 (affineOrbit (3 * (K / 3) + 2)) 0 :=
+        congrArg (fun e : Nat => digit3 (affineOrbit e) 0) hK
       _ = 2 := affineOrbit_low_trit_two (K / 3)
       _ = K % 3 := h2.symm
 
