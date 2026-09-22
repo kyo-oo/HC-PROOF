@@ -72,9 +72,9 @@ theorem worldAct_L_pow_basis_kernel
   unfold worldForward worldCausalDistance carryDistance digitDistance
   rw [worldAct_L_pow_coordinate_formula]
   by_cases hfuture : Cs ≤ Ct ∧ ds ≤ dt
-  · rw [dif_pos hfuture]
+  · simp only [hfuture]
     by_cases htime : n = (Ct-Cs) + (dt-ds)
-    · rw [dif_pos htime]
+    · simp only [htime]
       rw [Finset.sum_eq_single (dt-ds)]
       · have hpath :
             dt-ds ≤ dt ∧ n-(dt-ds) ≤ Ct := by
@@ -112,7 +112,7 @@ theorem worldAct_L_pow_basis_kernel
           apply Finset.mem_range.mpr
           omega
         exact (hnot hmem).elim
-    · rw [dif_neg htime]
+    · simp only [htime]
       apply Finset.sum_eq_zero
       intro m hm
       by_cases hpath : m ≤ dt ∧ n-m ≤ Ct
@@ -133,7 +133,7 @@ theorem worldAct_L_pow_basis_kernel
           omega
         simp [worldBasis, hpred_ne]
       · simp [hpath]
-  · rw [dif_neg hfuture]
+  · simp only [hfuture]
     have hout : Ct < Cs ∨ dt < ds := by
       omega
     apply Finset.sum_eq_zero
