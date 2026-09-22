@@ -87,4 +87,39 @@ theorem navigation_prefixed_one_iff_seed_one (X : Nat) :
     · rw [prefixed_one_carry_shift]
       exact hC
 
+
+/-! ## Intrinsic physicality of the seed-one chart -/
+
+/-- Every seed-one carry lies in the physical four-state carry sector. -/
+theorem seedOneCarry_lt_four (X j : Nat) :
+    seedOneCarry X j < 4 := by
+  unfold seedOneCarry
+  have hp : 0 < 3^j := Nat.pow_pos (by decide)
+  have hr : X % 3^j < 3^j := Nat.mod_lt _ hp
+  apply (Nat.div_lt_iff_lt_mul hp).2
+  nlinarith
+
+/-- Hence every seed-one carry is exactly one of the four physical carry
+states. -/
+theorem seedOneCarry_cases (X j : Nat) :
+    seedOneCarry X j = 0 ∨ seedOneCarry X j = 1 ∨
+    seedOneCarry X j = 2 ∨ seedOneCarry X j = 3 := by
+  have h := seedOneCarry_lt_four X j
+  omega
+
+/-- Every seed-one witness is an intrinsically physical digit-two event. -/
+theorem seedOneWitness_physical
+    (X : Nat) (h : SeedOneWitness X) :
+    ∃ j : Nat,
+      digit3 X j = 2 ∧
+      seedOneCarry X j < 4 ∧
+      (seedOneCarry X j = 0 ∨ seedOneCarry X j = 3) := by
+  rcases h with ⟨j, hd, hc⟩
+  exact ⟨j, hd, seedOneCarry_lt_four X j, hc⟩
+
+#check seedOneCarry_lt_four
+#check seedOneCarry_cases
+#check seedOneWitness_physical
+#print axioms seedOneCarry_lt_four
+
 end GSTSeedOneShift
