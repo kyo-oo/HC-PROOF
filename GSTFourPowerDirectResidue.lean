@@ -124,8 +124,11 @@ theorem pow4_digit_eq_residue_representative
   have hshape :
       K = K % 3^p + 3^p * (K / 3^p) := by
     simpa [Nat.add_comm, Nat.mul_comm] using hs.symm
-  rw [hshape]
-  exact pow4_digit_period p (K % 3^p) (K / 3^p)
+  calc
+    digit3 (4^K) p =
+        digit3 (4^(K % 3^p + 3^p * (K / 3^p))) p := by rw [hshape]
+    _ = digit3 (4^(K % 3^p)) p :=
+      pow4_digit_period p (K % 3^p) (K / 3^p)
 
 /-- **FINITE-QUOTIENT CLASSIFIER.**  Equal exponent residues modulo `3^p`
 force exactly equal row-`p` ternary digits.  Hence every row of the
