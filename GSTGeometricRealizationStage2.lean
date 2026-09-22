@@ -170,8 +170,9 @@ right-inverse selector on Hodge classes. -/
 theorem finite_realization_selector_spec
     (R : FiniteHodgeRealization N Coh CycleQ)
     (alpha : {alpha : Coh // R.isHodge alpha}) :
-    R.cycleClass (cycleWitness R alpha.1) = alpha.1 :=
-  (hodge_class_has_cycle_witness R alpha.1 alpha.2).choose_spec
+    R.cycleClass (cycleWitness R alpha.1) = alpha.1 := by
+  apply R.encode_injective
+  exact cycleWitness_address R alpha.1 alpha.2
 
 /-- Stage 2A closes the exact cycle-surjectivity target for every geometric
 fiber carrying a FiniteHodgeRealization.  Stage 2B is precisely the task of
