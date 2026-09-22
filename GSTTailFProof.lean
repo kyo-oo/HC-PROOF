@@ -2,6 +2,7 @@ import GSTTailFFourthDimension
 import GSTGraphV2Ontological
 import GSTGraphV2PowerThreeWaveObservation
 import MonolithBoundary
+import GSTFourPowerDirectExistence
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
@@ -220,6 +221,30 @@ theorem hTailF
   obtain ⟨p, _hp3, ⟨hd2, _⟩⟩ := hClimb K (by omega)
   exact ⟨p, hd2⟩
 
+
+/-- **hTailF FROM THE DIRECT ARITHMETIC INTERFACE.**  The second-observer
+target needs no shadow decomposition once the direct common-two surface is
+available: every exponent in the tailF range already owns a source digit two.
+This separates the fourth-dimensional target from the stronger climb witness
+used by the historical route. -/
+theorem hTailF_of_direct_existence
+    (hDirect : GSTFourPowerDirectExistence.FourPowerDirectExistence) :
+    four_power_omega_shadow_wave_tailF := by
+  intro K hK _hshadow
+  obtain ⟨p, _hp, hd, _ht⟩ := hDirect K (by omega) (by omega)
+  refine ⟨p, ?_⟩
+  simpa [GSTFourPowerDirectResidue.digit3,
+    GSTCanonicalSevenAxisBridge.digit3] using hd
+
+/-- The climb route factors through the direct arithmetic interface and the
+same observer target. -/
+theorem hTailF_of_climb_via_direct
+    (hClimb : GSTInfiniteFourPowerNavigation.four_power_happy_climb) :
+    four_power_omega_shadow_wave_tailF := by
+  exact hTailF_of_direct_existence
+    (GSTFourPowerDirectExistenceFromHappy.fourPowerDirectExistence_closed hClimb)
+
+
 /-! ## §4 The lattice record — the shrunk row law kept as a receipt
 
 The row lattice — the cycle laws of levels 27/81/243/729, the thirty
@@ -319,6 +344,8 @@ theorem even_conjecture_of_climb
 #print axioms tower_dodge_is_diagonal_dodge
 #print axioms emergent_dimension_kill
 #print axioms hTailF
+#print axioms hTailF_of_direct_existence
+#print axioms hTailF_of_climb_via_direct
 #print axioms new_law_four_pow_mod2187
 #print axioms hTailF_of_tower_and_row_mod729
 theorem hTailF_of_tower_and_row_mod2187
