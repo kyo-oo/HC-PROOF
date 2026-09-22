@@ -509,6 +509,93 @@ theorem transferred_clay_witness (p : Nat) (hp : p < 3) (φ : ClRing)
   · exact_mod_cast hval.symm
   · exact_mod_cast hz i
 
+/-- **TRANSFERRED INTEGRAL COEFFICIENT RIGIDITY.**
+The classical address-ring Hodge coefficient is unique because the degree-4p
+monomial is one at its own basis coordinate. -/
+theorem transferred_hodge_coefficient_unique
+    (p : Nat) (hp : p < 3) (φ : ClRing)
+    (z w : ℤ)
+    (hz : ∀ i : Fin 12, φ i = z * clMono (4*p) i)
+    (hw : ∀ i : Fin 12, φ i = w * clMono (4*p) i) :
+    z = w := by
+  let i : Fin 12 := ⟨4*p, by omega⟩
+  have hmono : clMono (4*p) i = (1 : ℤ) := by
+    simp [i, clMono]
+  have hz' := hz i
+  have hw' := hw i
+  rw [hmono, mul_one] at hz' hw'
+  exact hz'.symm.trans hw'
+
+/-- The unique transferred integral coefficient is the degree-4p address
+coordinate itself. -/
+theorem transferred_hodge_coefficient_eq_coordinate
+    (p : Nat) (hp : p < 3) (φ : ClRing)
+    (z : ℤ)
+    (hz : ∀ i : Fin 12, φ i = z * clMono (4*p) i) :
+    z = φ ⟨4*p, by omega⟩ := by
+  let i : Fin 12 := ⟨4*p, by omega⟩
+  have hmono : clMono (4*p) i = (1 : ℤ) := by
+    simp [i, clMono]
+  have h := hz i
+  rw [hmono, mul_one] at h
+  exact h.symm
+
+/-- **UNIQUE TRANSFERRED HODGE CLASSIFICATION.**
+Every classical address-ring Hodge class has a unique integral coordinate on
+the algebraic monomial. -/
+theorem transferred_hodge_unique_classification
+    (p : Nat) (hp : p < 3) (φ : ClRing)
+    (hφ : isClHodge p φ) :
+    ∃! z : ℤ, ∀ i : Fin 12, φ i = z * clMono (4*p) i := by
+  obtain ⟨z,hz⟩ := transferred_hodge_conjecture p hp φ hφ
+  refine ⟨z,hz,?_⟩
+  intro w hw
+  exact transferred_hodge_coefficient_unique p hp φ w z hw hz
+
+/-- **TRANSFERRED RATIONAL COEFFICIENT RIGIDITY.** -/
+theorem transferred_clay_coefficient_unique
+    (p : Nat) (hp : p < 3) (φ : ClRing)
+    (q r : ℚ)
+    (hq : ∀ i : Fin 12,
+      (φ i : ℚ) = q * (clMono (4*p) i : ℚ))
+    (hr : ∀ i : Fin 12,
+      (φ i : ℚ) = r * (clMono (4*p) i : ℚ)) :
+    q = r := by
+  let i : Fin 12 := ⟨4*p, by omega⟩
+  have hmono : (clMono (4*p) i : ℚ) = 1 := by
+    have hz : clMono (4*p) i = (1 : ℤ) := by
+      simp [i, clMono]
+    exact_mod_cast hz
+  have hq' := hq i
+  have hr' := hr i
+  rw [hmono, mul_one] at hq' hr'
+  exact hq'.symm.trans hr'
+
+/-- The rational transferred classification is unique as well. -/
+theorem transferred_clay_unique_classification
+    (p : Nat) (hp : p < 3) (φ : ClRing)
+    (hφ : isClHodge p φ) :
+    ∃! q : ℚ, ∀ i : Fin 12,
+      (φ i : ℚ) = q * (clMono (4*p) i : ℚ) := by
+  obtain ⟨q,hq⟩ := transferred_clay_hodge_conjecture p hp φ hφ
+  refine ⟨q,hq,?_⟩
+  intro r hr
+  exact transferred_clay_coefficient_unique p hp φ r q hr hq
+
+/-- The unique rational transferred coefficient is exactly the canonical
+degree-4p address coordinate. -/
+theorem transferred_clay_unique_coordinate
+    (p : Nat) (hp : p < 3) (φ : ClRing)
+    (hφ : isClHodge p φ) :
+    ∃! q : ℚ,
+      q = ((φ ⟨4*p, by omega⟩ : ℤ) : ℚ) ∧
+      ∀ i : Fin 12,
+        (φ i : ℚ) = q * (clMono (4*p) i : ℚ) := by
+  obtain ⟨q,hqcoord,hq⟩ := transferred_clay_witness p hp φ hφ
+  refine ⟨q,⟨hqcoord,hq⟩,?_⟩
+  intro r hr
+  exact hr.1.trans hqcoord.symm
+
 /-! ## §5 The capstone — the whole bridge in one statement
 
 Eleven conjuncts: the bijection; the two cup transports; the two
@@ -588,6 +675,12 @@ theorem finite_address_rational_hodge_classification
   transferred_clay_hodge_conjecture p hp phi hphi
 
 #check transferred_hodge_conjecture
+#check transferred_hodge_coefficient_unique
+#check transferred_hodge_coefficient_eq_coordinate
+#check transferred_hodge_unique_classification
+#check transferred_clay_coefficient_unique
+#check transferred_clay_unique_classification
+#check transferred_clay_unique_coordinate
 #check transferred_clay_hodge_conjecture
 #check transferred_clay_witness
 #check the_transfer_bridge
@@ -612,6 +705,10 @@ theorem finite_address_rational_hodge_classification
 #print axioms cl_monomial
 #print axioms transfer_hodge_iff
 #print axioms transferred_hodge_conjecture
+#print axioms transferred_hodge_coefficient_unique
+#print axioms transferred_hodge_unique_classification
+#print axioms transferred_clay_coefficient_unique
+#print axioms transferred_clay_unique_classification
 #print axioms transferred_clay_hodge_conjecture
 #print axioms transferred_clay_witness
 #print axioms the_transfer_bridge
