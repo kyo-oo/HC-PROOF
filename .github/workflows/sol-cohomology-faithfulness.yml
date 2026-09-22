@@ -45,6 +45,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTTruncatedWorldCohomologyRing
           lake env lean GSTTruncatedWorldCohomologyFaithful.lean 2>&1 | tee sol-cohomology-faithfulness.log
           if grep -Fq 'sorryAx' sol-cohomology-faithfulness.log; then
             exit 1
