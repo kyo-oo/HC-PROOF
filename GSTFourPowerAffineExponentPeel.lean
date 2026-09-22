@@ -117,4 +117,49 @@ theorem peel0_affine_succ (x : Nat) :
   unfold peel0 peel2
   ring
 
+
+/-! ## Exact exponent/affine trit conjugacy -/
+
+/-- **LOW-TRIT CONJUGACY.**  The least ternary digit of the affine orbit is
+not merely classified on three named branches: it is exactly the least
+ternary digit of the exponent itself.  Thus the exponent shift and affine
+state are synchronized at the first ternary coordinate for every `K`. -/
+theorem affineOrbit_low_trit_exact (K : Nat) :
+    digit3 (affineOrbit K) 0 = K % 3 := by
+  have hlt : K % 3 < 3 := Nat.mod_lt K (by decide)
+  have hsplit := Nat.mod_add_div K 3
+  have hcases : K % 3 = 0 ∨ K % 3 = 1 ∨ K % 3 = 2 := by
+    omega
+  rcases hcases with h0 | h1 | h2
+  · have hK : K = 3 * (K / 3) := by omega
+    rw [hK, affineOrbit_low_trit_zero, h0]
+  · have hK : K = 3 * (K / 3) + 1 := by omega
+    rw [hK, affineOrbit_low_trit_one, h1]
+  · have hK : K = 3 * (K / 3) + 2 := by omega
+    rw [hK, affineOrbit_low_trit_two, h2]
+
+/-- Equality tests on the first affine-orbit trit are literally equality
+tests on the exponent trit.  This is the branch-free classifier interface. -/
+theorem affineOrbit_low_trit_eq_iff (K r : Nat) :
+    digit3 (affineOrbit K) 0 = r ↔ K % 3 = r := by
+  rw [affineOrbit_low_trit_exact]
+
+/-- The three explicit peel branches are exhaustive for every exponent. -/
+theorem affineOrbit_exponent_trichotomy (K : Nat) :
+    (K % 3 = 0 ∧ digit3 (affineOrbit K) 0 = 0) ∨
+    (K % 3 = 1 ∧ digit3 (affineOrbit K) 0 = 1) ∨
+    (K % 3 = 2 ∧ digit3 (affineOrbit K) 0 = 2) := by
+  have hlt : K % 3 < 3 := Nat.mod_lt K (by decide)
+  have hcases : K % 3 = 0 ∨ K % 3 = 1 ∨ K % 3 = 2 := by
+    omega
+  rcases hcases with h0 | h1 | h2
+  · exact Or.inl ⟨h0, by simpa [affineOrbit_low_trit_exact, h0]⟩
+  · exact Or.inr (Or.inl ⟨h1, by simpa [affineOrbit_low_trit_exact, h1]⟩)
+  · exact Or.inr (Or.inr ⟨h2, by simpa [affineOrbit_low_trit_exact, h2]⟩)
+
+#check affineOrbit_low_trit_exact
+#check affineOrbit_low_trit_eq_iff
+#check affineOrbit_exponent_trichotomy
+#print axioms affineOrbit_low_trit_exact
+
 end GSTFourPowerAffineExponentPeel
