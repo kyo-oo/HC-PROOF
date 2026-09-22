@@ -123,6 +123,60 @@ theorem coupled_u_flux_telescope_exact
       rw [pow_succ]
       ring
 
+/-- **CLOSED-ORBIT FLUX LAW.**
+If the potential returns to its initial value after K steps, the entire
+weighted coupled flux is exactly (3^K-1) times that potential. -/
+theorem coupled_u_flux_closed_orbit_exact
+    (charge : Nat → Int) (nextCarry : Nat → Nat → Nat)
+    (A : Nat) (initial : State) (K : Nat)
+    (hclose :
+      potentialWith charge A (orbitWith nextCarry A initial K) =
+        potentialWith charge A initial) :
+    Finset.sum (Finset.range K) (fun j =>
+      ((3^j : Nat) : Int) *
+        (parentJumpWith charge nextCarry A
+            (orbitWith nextCarry A initial j) -
+          (A : Int) * childJumpWith charge nextCarry
+            (orbitWith nextCarry A initial j))) =
+      ((((3^K : Nat) : Int)) - 1) *
+        potentialWith charge A initial := by
+  rw [coupled_u_flux_telescope_exact, hclose]
+  ring
+
+/-- A zero-potential orbit has zero total weighted coupled flux at every
+observation depth whose endpoint potential also vanishes. -/
+theorem coupled_u_flux_zero_boundary
+    (charge : Nat → Int) (nextCarry : Nat → Nat → Nat)
+    (A : Nat) (initial : State) (K : Nat)
+    (h0 : potentialWith charge A initial = 0)
+    (hK : potentialWith charge A (orbitWith nextCarry A initial K) = 0) :
+    Finset.sum (Finset.range K) (fun j =>
+      ((3^j : Nat) : Int) *
+        (parentJumpWith charge nextCarry A
+            (orbitWith nextCarry A initial j) -
+          (A : Int) * childJumpWith charge nextCarry
+            (orbitWith nextCarry A initial j))) = 0 := by
+  rw [coupled_u_flux_telescope_exact, h0, hK]
+  ring
+
+/-- Conversely, vanishing weighted flux pins the endpoint potential to the
+exact scaled boundary relation 3^K P_K = P_0. -/
+theorem coupled_u_flux_zero_iff_scaled_boundary
+    (charge : Nat → Int) (nextCarry : Nat → Nat → Nat)
+    (A : Nat) (initial : State) (K : Nat) :
+    (Finset.sum (Finset.range K) (fun j =>
+      ((3^j : Nat) : Int) *
+        (parentJumpWith charge nextCarry A
+            (orbitWith nextCarry A initial j) -
+          (A : Int) * childJumpWith charge nextCarry
+            (orbitWith nextCarry A initial j))) = 0)
+      ↔
+    ((3^K : Nat) : Int) *
+        potentialWith charge A (orbitWith nextCarry A initial K) =
+      potentialWith charge A initial := by
+  rw [coupled_u_flux_telescope_exact]
+  constructor <;> intro h <;> linarith
+
 /-! ## Exact standalone GST specialization -/
 
 def gstStepCarryExact (C d : Nat) : Nat := (C + 4*d) / 3
@@ -163,10 +217,15 @@ theorem mixed_world_scale_exact (K : Nat) :
 
 #check coupled_u_flux_step_exact
 #check coupled_u_flux_telescope_exact
+#check coupled_u_flux_closed_orbit_exact
+#check coupled_u_flux_zero_boundary
+#check coupled_u_flux_zero_iff_scaled_boundary
 #check gst_coupled_u_flux_step_exact
 #check mixed_world_scale_exact
 #print axioms coupled_u_flux_step_exact
 #print axioms coupled_u_flux_telescope_exact
+#print axioms coupled_u_flux_closed_orbit_exact
+#print axioms coupled_u_flux_zero_iff_scaled_boundary
 #print axioms gst_coupled_u_flux_step_exact
 #print axioms mixed_world_scale_exact
 
