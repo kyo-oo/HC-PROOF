@@ -1145,6 +1145,67 @@ theorem worldtraceWindowClass_idempotent
   unfold worldtraceWindowClass
   rw [Nat.mod_mod]
 
+/-! ## Worldtrace window filtration -/
+
+/-- **COARSE-AFTER-FINE ABSORPTION.**  Projecting first to a deeper visible
+window and then to a shallower one is exactly the shallow projection. -/
+theorem worldtraceWindowClass_nested
+    (X s t : Nat) (hst : s ≤ t) :
+    worldtraceWindowClass (worldtraceWindowClass X t) s =
+      worldtraceWindowClass X s := by
+  unfold worldtraceWindowClass
+  have hdvd : 3^(s+1) ∣ 3^(t+1) :=
+    Nat.pow_dvd_pow 3 (by omega)
+  exact Nat.mod_mod_of_dvd X hdvd
+
+/-- **FINE-AFTER-COARSE STABILITY.**  Once information has been truncated to
+a shallow window, asking for any deeper window leaves it unchanged. -/
+theorem worldtraceWindowClass_coarse_stable
+    (X s t : Nat) (hst : s ≤ t) :
+    worldtraceWindowClass (worldtraceWindowClass X s) t =
+      worldtraceWindowClass X s := by
+  unfold worldtraceWindowClass
+  apply Nat.mod_eq_of_lt
+  have hmod : X % 3^(s+1) < 3^(s+1) :=
+    Nat.mod_lt _ (Nat.pow_pos (by decide))
+  have hpow : 3^(s+1) ≤ 3^(t+1) :=
+    Nat.pow_le_pow_of_le (by decide : 1 < 3) (by omega)
+  exact Nat.lt_of_lt_of_le hmod hpow
+
+/-- Equality at a deeper Worldtrace window implies equality at every coarser
+visible window.  Finite read equivalence therefore forms a nested filtration. -/
+theorem worldtraceWindowClass_eq_descends
+    (X Y s t : Nat) (hst : s ≤ t)
+    (hXY : worldtraceWindowClass X t =
+      worldtraceWindowClass Y t) :
+    worldtraceWindowClass X s =
+      worldtraceWindowClass Y s := by
+  calc
+    worldtraceWindowClass X s =
+        worldtraceWindowClass (worldtraceWindowClass X t) s :=
+      (worldtraceWindowClass_nested X s t hst).symm
+    _ = worldtraceWindowClass (worldtraceWindowClass Y t) s := by rw [hXY]
+    _ = worldtraceWindowClass Y s :=
+      worldtraceWindowClass_nested Y s t hst
+
+/-- **WORLDTRACE FILTRATION CROWN.**  The visible quotient windows are
+idempotent, nested projectors with exact absorption in both orders. -/
+theorem worldtrace_window_filtration_crown :
+    (∀ X s,
+      worldtraceWindowClass (worldtraceWindowClass X s) s =
+        worldtraceWindowClass X s)
+    ∧
+    (∀ X s t, s ≤ t →
+      worldtraceWindowClass (worldtraceWindowClass X t) s =
+        worldtraceWindowClass X s)
+    ∧
+    (∀ X s t, s ≤ t →
+      worldtraceWindowClass (worldtraceWindowClass X s) t =
+        worldtraceWindowClass X s) := by
+  exact ⟨worldtraceWindowClass_idempotent,
+    worldtraceWindowClass_nested,
+    worldtraceWindowClass_coarse_stable⟩
+
 /-- Quotient-window crown: every row read factors through one finite
 idempotent projection. -/
 theorem worldtrace_window_quotient_crown :
@@ -1277,6 +1338,10 @@ theorem the_worldtrace_receipt_seven :
 #print axioms window_class_invariant
 #print axioms worldtraceWindowClass_idempotent
 #print axioms worldtrace_window_quotient_crown
+#print axioms worldtraceWindowClass_nested
+#print axioms worldtraceWindowClass_coarse_stable
+#print axioms worldtraceWindowClass_eq_descends
+#print axioms worldtrace_window_filtration_crown
 #print axioms the_dust_window_receipt
 
 end GSTWorldtraceArithmetic
