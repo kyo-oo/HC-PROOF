@@ -151,6 +151,52 @@ theorem four_power_happy_ge_three
     ∃ p : Nat, 3 ≤ p ∧ HappyCell (carry4 (4^k) p) (digit3 (4^k) p) :=
   hClimb k hk
 
+/-- Canonical least physical Happy row delivered by the explicit climb
+primitive. -/
+noncomputable def climbFireRow
+    (hClimb : four_power_happy_climb)
+    (k : Nat) (hk : 8 ≤ k) : Nat :=
+  Nat.find (four_power_happy_ge_three hClimb k hk)
+
+/-- The canonical climb row lies in the physical region p ≥ 3. -/
+theorem climbFireRow_ge_three
+    (hClimb : four_power_happy_climb)
+    (k : Nat) (hk : 8 ≤ k) :
+    3 ≤ climbFireRow hClimb k hk :=
+  (Nat.find_spec (four_power_happy_ge_three hClimb k hk)).1
+
+/-- The canonical climb row is Happy. -/
+theorem climbFireRow_happy
+    (hClimb : four_power_happy_climb)
+    (k : Nat) (hk : 8 ≤ k) :
+    HappyCell
+      (carry4 (4^k) (climbFireRow hClimb k hk))
+      (digit3 (4^k) (climbFireRow hClimb k hk)) :=
+  (Nat.find_spec (four_power_happy_ge_three hClimb k hk)).2
+
+/-- **CLIMB-WITNESS MINIMALITY.**
+The selected row is no larger than any other physical Happy row. -/
+theorem climbFireRow_minimal
+    (hClimb : four_power_happy_climb)
+    (k : Nat) (hk : 8 ≤ k)
+    (p : Nat) (hp3 : 3 ≤ p)
+    (hp : HappyCell (carry4 (4^k) p) (digit3 (4^k) p)) :
+    climbFireRow hClimb k hk ≤ p := by
+  exact Nat.find_min'
+    (four_power_happy_ge_three hClimb k hk)
+    ⟨hp3,hp⟩
+
+/-- No earlier physical row can be Happy. -/
+theorem before_climbFireRow_not_happy
+    (hClimb : four_power_happy_climb)
+    (k : Nat) (hk : 8 ≤ k)
+    (p : Nat) (hp3 : 3 ≤ p)
+    (hlt : p < climbFireRow hClimb k hk) :
+    ¬ HappyCell (carry4 (4^k) p) (digit3 (4^k) p) := by
+  intro hp
+  have hle := climbFireRow_minimal hClimb k hk p hp3 hp
+  omega
+
 /-- A Happy cell is the first branch of the creation certificate. -/
 theorem happy_to_creation_certificate
     (R p : Nat) (hp : 1 ≤ p)
@@ -195,6 +241,10 @@ theorem gst_four_power_navigation_universal
 #print axioms power_width_three_u_derivative_positive
 #print axioms four_power_happy_climb
 #print axioms four_power_happy_ge_three
+#print axioms climbFireRow_ge_three
+#print axioms climbFireRow_happy
+#print axioms climbFireRow_minimal
+#print axioms before_climbFireRow_not_happy
 #print axioms gst_four_power_navigation_universal
 
 end GSTInfiniteFourPowerNavigation
