@@ -111,6 +111,45 @@ theorem pow4_digit_period
   rw [pow4_scaled_mod_next p u]
   simp
 
+
+/-! ## Exponent quotient factorization -/
+
+/-- Row `p` does not merely have period `3^p`: it factors exactly through
+the exponent residue class modulo `3^p`. -/
+theorem pow4_digit_eq_residue_representative
+    (p K : Nat) :
+    digit3 (4^K) p =
+      digit3 (4^(K % 3^p)) p := by
+  have hs := Nat.mod_add_div K (3^p)
+  have hshape :
+      K = K % 3^p + 3^p * (K / 3^p) := by
+    simpa [Nat.add_comm, Nat.mul_comm] using hs.symm
+  rw [hshape]
+  exact pow4_digit_period p (K % 3^p) (K / 3^p)
+
+/-- **FINITE-QUOTIENT CLASSIFIER.**  Equal exponent residues modulo `3^p`
+force exactly equal row-`p` ternary digits.  Hence every row of the
+four-power digit field descends to the finite exponent quotient
+`Nat / 3^p` without any additional hypothesis. -/
+theorem pow4_digit_eq_of_exponent_mod
+    (p K L : Nat)
+    (hmod : K % 3^p = L % 3^p) :
+    digit3 (4^K) p = digit3 (4^L) p := by
+  rw [pow4_digit_eq_residue_representative p K,
+      pow4_digit_eq_residue_representative p L,
+      hmod]
+
+/-- Consecutive row values are therefore determined entirely by one residue
+representative and its successor. -/
+theorem pow4_digit_pair_eq_residue_pair
+    (p K : Nat) :
+    (digit3 (4^K) p, digit3 (4^(K+1)) p) =
+      (digit3 (4^(K % 3^p)) p,
+        digit3 (4^((K+1) % 3^p)) p) := by
+  rw [pow4_digit_eq_residue_representative p K,
+      pow4_digit_eq_residue_representative p (K+1)]
+
+
 /-- Every power of four is one modulo three. -/
 theorem pow4_mod3_one (m : Nat) : 4^m % 3 = 1 := by
   rw [Nat.pow_mod]
@@ -269,6 +308,9 @@ theorem no_common_two_forbids_mod9_five_six
 #check pow4_scaled_mod_next
 #check digit3_eq_of_mod_next
 #check pow4_digit_period
+#check pow4_digit_eq_residue_representative
+#check pow4_digit_eq_of_exponent_mod
+#check pow4_digit_pair_eq_residue_pair
 #check pow4_exponent_trit_lift_digit
 #check row_two_overlap_of_mod9_five_or_six
 #check row_two_overlap_iff_mod9_five_or_six
@@ -278,6 +320,7 @@ theorem no_common_two_forbids_mod9_five_six
 #print axioms pow4_scaled_mod_next
 #print axioms digit3_eq_of_mod_next
 #print axioms pow4_digit_period
+#print axioms pow4_digit_eq_of_exponent_mod
 #print axioms pow4_exponent_trit_lift_digit
 #print axioms row_two_overlap_of_mod9_five_or_six
 #print axioms row_two_overlap_iff_mod9_five_or_six
