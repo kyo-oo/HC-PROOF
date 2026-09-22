@@ -172,6 +172,38 @@ theorem canonical_child_u_cut_neutral
   have h := uTailEnergy_cut_neutral (s+1) n (q+1) hcut
   simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using h
 
+
+/-! ## Exact null sector at an LTE cut -/
+
+/-- The scaled four-power cut is not only carry/digit neutral: it is
+provably outside the physical Happy sector at the cut itself. -/
+theorem pow4_scaled_cut_not_happy
+    (r u : Nat) (hr : 2 ≤ r) :
+    ¬ HappyCell
+      (carry4 (4^(3^r*u)) r)
+      (digit3 (4^(3^r*u)) r) := by
+  intro hHappy
+  have hd := hHappy.1
+  rw [pow4_scaled_cut_digit_zero r u hr] at hd
+  omega
+
+/-- The residual U-tail world is exactly null/non-Happy at its canonical
+unphased cut. -/
+theorem uTailEnergy_cut_null_sector
+    (t n K : Nat) (hcut : 2 ≤ t+K) :
+    (graph (uTailEnergy t n K) 0 (t+K)).seven.carry = 0 ∧
+    (graph (uTailEnergy t n K) 0 (t+K)).seven.digit = 0 ∧
+    (graph (uTailEnergy t n K) 0 (t+K)).seven.space = .null ∧
+    ¬ HappyCell
+      (graph (uTailEnergy t n K) 0 (t+K)).seven.carry
+      (graph (uTailEnergy t n K) 0 (t+K)).seven.digit := by
+  have h := uTailEnergy_cut_neutral t n K hcut
+  refine ⟨h.1, h.2.1, h.2.2, ?_⟩
+  intro hh
+  rw [h.2.1] at hh
+  exact Nat.zero_ne_bit0 (Nat.zero_ne_one) hh.1
+
+
 #check pow4_three_power_lte_exact
 #check lteCoeff_mod3_one
 #check pow4_scaled_mod_next
@@ -179,7 +211,10 @@ theorem canonical_child_u_cut_neutral
 #check pow4_scaled_cut_digit_zero
 #check uTailEnergy_cut_neutral
 #check canonical_child_u_cut_neutral
+#check pow4_scaled_cut_not_happy
+#check uTailEnergy_cut_null_sector
 #print axioms pow4_three_power_lte_exact
 #print axioms uTailEnergy_cut_neutral
+#print axioms uTailEnergy_cut_null_sector
 
 end GSTGraphV2HandwrittenExponentialLTE
