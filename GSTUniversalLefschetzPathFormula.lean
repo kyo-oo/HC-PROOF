@@ -153,7 +153,8 @@ theorem path_formula_exact_boundary
     (A B C d : Nat) (hC : C < A) (hd : d < B)
     (g : WorldCoef A B) :
     worldAct A B ((L A B)^(C+d)) g (⟨C,hC⟩,⟨d,hd⟩) =
-      ((C+d).choose d : ℤ) * g (⟨0,hC⟩,⟨0,hd⟩) := by
+      ((C+d).choose d : ℤ) *
+        g (⟨0,by omega⟩,⟨0,by omega⟩) := by
   rw [worldAct_L_pow_coordinate_formula]
   classical
   rw [Finset.sum_eq_single d]
