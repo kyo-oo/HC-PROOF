@@ -112,9 +112,54 @@ theorem no_common_two_forbids_mod27_classes
     have hr := row_three_overlap_of_mod27_classes K (Or.inr (Or.inr (Or.inr h)))
     exact ⟨3, by norm_num, hr.1, hr.2⟩
 
+
+/-- **EXACT ROW-THREE CLASSIFICATION.**  The four listed residue classes are
+not merely sufficient: they are exactly all exponents whose consecutive
+four-powers share digit two at row three. -/
+theorem row_three_overlap_iff_mod27_classes
+    (K : Nat) :
+    (digit3 (4^K) 3 = 2 ∧ digit3 (4^(K+1)) 3 = 2)
+      ↔
+    (K % 27 = 14 ∨ K % 27 = 18 ∨
+      K % 27 = 19 ∨ K % 27 = 25) := by
+  constructor
+  · intro hov
+    let r := K % 27
+    have hr : r < 27 := by
+      dsimp [r]
+      exact Nat.mod_lt _ (by norm_num)
+    have hs := Nat.mod_add_div K 27
+    have hshape : K = r + 27 * (K / 27) := by
+      dsimp [r]
+      omega
+    have hshape1 : K+1 = (r+1) + 27 * (K / 27) := by
+      omega
+    have h0 : digit3 (4^r) 3 = 2 := by
+      have h := hov.1
+      rw [hshape] at h
+      have hp := pow4_digit_period 3 r (K / 27)
+      norm_num at hp
+      rw [hp] at h
+      exact h
+    have h1 : digit3 (4^(r+1)) 3 = 2 := by
+      have h := hov.2
+      rw [hshape1] at h
+      have hp := pow4_digit_period 3 (r+1) (K / 27)
+      norm_num at hp
+      rw [hp] at h
+      exact h
+    have hres :
+        r = 14 ∨ r = 18 ∨ r = 19 ∨ r = 25 := by
+      interval_cases r <;> norm_num [digit3] at *
+    simpa [r] using hres
+  · exact row_three_overlap_of_mod27_classes K
+
+
 #check row_three_overlap_of_mod27_classes
 #check no_common_two_forbids_mod27_classes
+#check row_three_overlap_iff_mod27_classes
 #print axioms row_three_overlap_of_mod27_classes
 #print axioms no_common_two_forbids_mod27_classes
+#print axioms row_three_overlap_iff_mod27_classes
 
 end GSTFourPowerDirectResidue27
