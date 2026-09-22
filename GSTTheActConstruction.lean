@@ -361,6 +361,68 @@ theorem unique_dead_child (r j : Nat) :
   intro t ht
   omega
 
+/-- The deterministic dead-child operator of one feedback node. -/
+def deadChild (r j : Nat) : Nat :=
+  2 - digit3 (4^r) (j+1)
+
+/-- The dead child is always one of the three ternary children. -/
+theorem deadChild_lt_three (r j : Nat) :
+    deadChild r j < 3 := by
+  unfold deadChild
+  have hd : digit3 (4^r) (j+1) < 3 := by
+    unfold digit3
+    exact Nat.mod_lt _ (by decide)
+  omega
+
+/-- The dead-child operator really lands on the firing value two. -/
+theorem deadChild_fires (r j : Nat) :
+    (digit3 (4^r) (j+1) + deadChild r j) % 3 = 2 := by
+  unfold deadChild
+  have hd : digit3 (4^r) (j+1) < 3 := by
+    unfold digit3
+    exact Nat.mod_lt _ (by decide)
+  omega
+
+/-- **DETERMINISTIC FEEDBACK TRANSITION.**
+Among the three child trits, a child fires exactly when it is the value of the
+dead-child operator.  The existential unique-dead-child theorem is therefore
+promoted to a functional classifier. -/
+theorem child_fires_iff_eq_deadChild
+    (r j t : Nat) (ht : t < 3) :
+    (digit3 (4^r) (j+1) + t) % 3 = 2 ↔
+      t = deadChild r j := by
+  obtain ⟨w,hw,huniq⟩ := unique_dead_child r j
+  constructor
+  · intro hfire
+    have htw : t = w := huniq t ⟨ht,hfire⟩
+    have hdw : deadChild r j = w :=
+      huniq (deadChild r j)
+        ⟨deadChild_lt_three r j, deadChild_fires r j⟩
+    exact htw.trans hdw.symm
+  · intro htdead
+    subst t
+    exact deadChild_fires r j
+
+/-- A ternary child is live exactly when it differs from the deterministic
+dead-child operator. -/
+theorem child_live_iff_ne_deadChild
+    (r j t : Nat) (ht : t < 3) :
+    (digit3 (4^r) (j+1) + t) % 3 ≠ 2 ↔
+      t ≠ deadChild r j := by
+  rw [child_fires_iff_eq_deadChild r j t ht]
+
+/-- Functional feedback crown: every node carries one canonical forbidden
+child and the other children are exactly its live complement. -/
+theorem deterministic_feedback_crown :
+    (∀ r j, deadChild r j < 3)
+    ∧ (∀ r j,
+      (digit3 (4^r) (j+1) + deadChild r j) % 3 = 2)
+    ∧ (∀ r j t, t < 3 →
+      ((digit3 (4^r) (j+1) + t) % 3 = 2 ↔
+        t = deadChild r j)) := by
+  exact ⟨deadChild_lt_three, deadChild_fires,
+    child_fires_iff_eq_deadChild⟩
+
 /-- **THE UNIFORM KILL, LEVEL-FIVE FORM.**  Same engine, one level
 deeper: `K ≡ r + 243·t mod 729` fires at row six when the noise
 receipt holds.  All arithmetic literal. -/
@@ -476,6 +538,10 @@ theorem the_level_five_receipt :
 
 #print axioms noise_window_law
 #print axioms unique_dead_child
+#print axioms deadChild_lt_three
+#print axioms deadChild_fires
+#print axioms child_fires_iff_eq_deadChild
+#print axioms deterministic_feedback_crown
 #print axioms fire_of_mod729
 #print axioms dust_fire_row_six
 #print axioms no22_of_cascade_five
