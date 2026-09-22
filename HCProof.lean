@@ -21,6 +21,7 @@ import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
 import GSTRadixWorldDynamics
+import GSTGradedWorldAlgebra
 import GSTWorldCrownBridge
 import HodgeDeRhamBridge
 import HodgeDeRhamBridgeV2
@@ -341,3 +342,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTRadixWorldDynamics.mixedRadixTranspose_unique
 #check GSTRadixWorldDynamics.twelve_cell_transition_is_mixedRadixTranspose
 #check GSTRadixWorldDynamics.mixed_radix_world_crown
+
+
+/-! ## GST graded-world algebra upgrade -/
+
+#check GSTGradedWorldAlgebra.worldSectorProj_sum
+#check GSTGradedWorldAlgebra.digitShiftN_respects_degree
+#check GSTGradedWorldAlgebra.carryShiftN_respects_degree
+#check GSTGradedWorldAlgebra.worldKunneth_projector_polynomial
+#check GSTGradedWorldAlgebra.graded_world_crown
