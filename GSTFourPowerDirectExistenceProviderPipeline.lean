@@ -87,7 +87,7 @@ theorem fourPowerProductionUniverse_of_directExistence
     simpa [FourPowerDirectNoBadAffineChannelOne] using
       (chat2_fourPowerDirectExistence_iff_no_bad_affine_channel_one.mp hDirect)
   have hClosed : FourPowerDirectNoCounterexampleClosure := by
-    exact (chat2_counterexample_closure_iff_no_bad_affine_channel_one).mpr hNoBad
+    exact (chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one).mpr hNoBad
   have hMaster : GSTFourPowerOntologicalAdapter.FourPowerCreationMaster :=
     GSTFourPowerDirectCreationMaster.directExistence_to_creation_master hDirect
   exact ⟨hDirect, hNoBad, hClosed, hMaster,
@@ -116,7 +116,7 @@ production universe. -/
 theorem fourPowerProductionUniverse_iff_noCounterexampleClosure :
     FourPowerProductionUniverse ↔ FourPowerDirectNoCounterexampleClosure := by
   rw [fourPowerProductionUniverse_iff_noBadAffineChannelOne]
-  exact chat2_counterexample_closure_iff_no_bad_affine_channel_one.symm
+  exact chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one.symm
 
 /-- Monolith-mined provider gate: once row-three-or-higher direct common-two
 witnesses are mined, the physical Happy-row provider follows immediately. -/
