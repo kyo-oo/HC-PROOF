@@ -1,6 +1,7 @@
 import GSTFourPowerDirectExistence
 import GSTFourPowerDirectAdditionCarry
 import GSTCanonicalTailStateIso
+import GSTFourPowerDirectHappyBridge
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
@@ -83,6 +84,23 @@ theorem fourPowerDirectExistence_from_physical_happy_ge_three
     · exact commonTwo_five
     · exact commonTwo_six
     · exact (hK7 rfl).elim
+
+
+/-- **NO-AXIOM EXACT PHYSICAL INTERFACE.**  The direct arithmetic target is
+equivalent to positive-row physical Happy forcing over precisely the same
+production domain.  The stronger row-three provider above remains a sufficient
+subtheory, while this theorem identifies the exact boundary. -/
+theorem fourPowerDirectExistence_iff_physical_happy_positive :
+    FourPowerDirectExistence ↔
+      ∀ K : Nat, 5 ≤ K → K ≠ 7 →
+        ∃ p : Nat, 1 ≤ p ∧
+          GSTCanonicalTailStateIso.HappyCell
+            (GSTCanonicalTailStateIso.carry4 (4^K) p)
+            (GSTCanonicalTailStateIso.digit3 (4^K) p) :=
+  GSTFourPowerDirectHappyBridge.directExistence_iff_physical_happy_forcing
+
+#check fourPowerDirectExistence_iff_physical_happy_positive
+#print axioms fourPowerDirectExistence_iff_physical_happy_positive
 
 #print axioms happyCell_to_commonTwo
 #print axioms commonTwo_five
