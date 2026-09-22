@@ -92,6 +92,28 @@ theorem projective_embedding_over_base
       projectiveSpaceToBase V.projective.n = V.structureMap :=
   V.projective.over_base
 
+/-- Every smooth projective complex scheme exports its projective witness
+as an ordinary existential factorization.  Downstream stages can consume the
+geometry without destructing the bundled certificate manually. -/
+theorem exists_closed_projective_embedding
+    (V : SmoothProjectiveComplexScheme) :
+    ∃ n : Nat, ∃ f : V.X ⟶ projectiveSpace n,
+      IsClosedImmersion f ∧
+        f ≫ projectiveSpaceToBase n = V.structureMap := by
+  exact ⟨V.projective.n, V.projective.immersion,
+    V.projective.closedImmersion, V.projective.over_base⟩
+
+/-- **SMOOTH-PROJECTIVE GEOMETRY CROWN.**  The geometric carrier exposes
+smoothness and an actual closed projective factorization over Spec(C) at the
+same time. -/
+theorem smooth_projective_geometry_crown
+    (V : SmoothProjectiveComplexScheme) :
+    Smooth V.structureMap ∧
+      ∃ n : Nat, ∃ f : V.X ⟶ projectiveSpace n,
+        IsClosedImmersion f ∧
+          f ≫ projectiveSpaceToBase n = V.structureMap := by
+  exact ⟨V.smooth, exists_closed_projective_embedding V⟩
+
 #check complexBase
 #check ProjectiveCoordinateRing
 #check ProjectiveGrading
@@ -101,8 +123,12 @@ theorem projective_embedding_over_base
 #check SmoothProjectiveComplexScheme
 #check projective_closed_immersion
 #check projective_embedding_over_base
+#check exists_closed_projective_embedding
+#check smooth_projective_geometry_crown
 
 #print axioms projective_closed_immersion
 #print axioms projective_embedding_over_base
+#print axioms exists_closed_projective_embedding
+#print axioms smooth_projective_geometry_crown
 
 end GSTProjectiveOverC
