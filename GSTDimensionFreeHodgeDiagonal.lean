@@ -1,0 +1,253 @@
+import Mathlib
+import GSTUniversalAddressBridge
+
+/-!
+# GST DIMENSION-FREE HODGE DIAGONAL
+
+The historical HC Hodge layer is tied to the 4 x 3 chart:
+the live weights are p < 3 and the diagonal address is 4*p.
+
+Both facts are shadows of one rectangular theorem.
+
+In an A x B output world:
+* a weight-p diagonal cell exists exactly when p < A and p < B;
+* its row-major address is p + B*p = (B+1)*p;
+* a Hodge class supported on that one diagonal cell is exactly one integer
+  multiple of the diagonal basis class;
+* if p is outside either world depth, the Hodge sector is zero.
+
+Thus the old p < 3 / address 4p mechanism is replaced by a
+dimension-free Hodge diagonal law.
+-/
+
+set_option maxHeartbeats 10000000
+set_option maxRecDepth 1000000
+
+namespace GSTDimensionFreeHodgeDiagonal
+
+open GSTWorldRecoordinationGroupoid
+open GSTUniversalAddressBridge
+
+/-- Diagonal cell of weight p in an A x B output chart. -/
+def diagonalState
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    ShapeState (outputShape A B) :=
+  (⟨p, hpA⟩, ⟨p, hpB⟩)
+
+/-- Canonical invariant address of the diagonal cell. -/
+def diagonalAddress
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    Fin (A*B) :=
+  shapeCodeEquiv (outputShape A B) (diagonalState hpA hpB)
+
+/-- **GENERAL DIAGONAL CODE LAW.**
+The old 4p address is the B=3 specialization of (B+1)p. -/
+theorem diagonalAddress_val
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    (diagonalAddress hpA hpB).1 = (B+1)*p := by
+  unfold diagonalAddress diagonalState
+  change p + B*p = (B+1)*p
+  omega
+
+/-- Diagonal Kronecker class in an arbitrary rectangular world. -/
+def worldDiagonalClass
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    ShapeCoef (outputShape A B) :=
+  worldBasis (outputShape A B) (diagonalState hpA hpB)
+
+/-- Weight-p Hodge support means all amplitudes vanish off the p,p cell. -/
+def isWorldHodgeClass
+    {A B : Nat} (p : Nat)
+    (f : ShapeCoef (outputShape A B)) : Prop :=
+  ∀ x : ShapeState (outputShape A B),
+    x.1.1 ≠ p ∨ x.2.1 ≠ p -> f x = 0
+
+/-- The diagonal class has value one at its own diagonal cell. -/
+@[simp]
+theorem worldDiagonalClass_at_diagonal
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    worldDiagonalClass hpA hpB (diagonalState hpA hpB) = 1 := by
+  simp [worldDiagonalClass, worldBasis]
+
+/-- The diagonal class vanishes at every other state. -/
+theorem worldDiagonalClass_off_diagonal
+    {A B p : Nat} (hpA : p < A) (hpB : p < B)
+    (x : ShapeState (outputShape A B))
+    (hx : x.1.1 ≠ p ∨ x.2.1 ≠ p) :
+    worldDiagonalClass hpA hpB x = 0 := by
+  unfold worldDiagonalClass worldBasis
+  have hne : x ≠ diagonalState hpA hpB := by
+    intro h
+    apply hx.elim
+    · intro hC
+      apply hC
+      simpa [diagonalState] using congrArg (fun y => y.1.1) h
+    · intro hd
+      apply hd
+      simpa [diagonalState] using congrArg (fun y => y.2.1) h
+  simp [hne]
+
+/-- **DIMENSION-FREE RANK-ONE HODGE CLASSIFICATION.**
+Every live weight-p Hodge sector is exactly Z on its diagonal generator,
+with a unique coefficient read directly at the diagonal cell. -/
+theorem world_hodge_rank_one
+    {A B p : Nat} (hpA : p < A) (hpB : p < B)
+    (f : ShapeCoef (outputShape A B)) :
+    isWorldHodgeClass p f ↔
+      ∃! z : ℤ,
+        f = fun x => z * worldDiagonalClass hpA hpB x := by
+  constructor
+  · intro hf
+    let d := diagonalState hpA hpB
+    refine ⟨f d, ?_, ?_⟩
+    · funext x
+      by_cases hC : x.1.1 = p
+      · by_cases hd : x.2.1 = p
+        · have hx : x = d := by
+            apply Prod.ext
+            · apply Fin.ext
+              simpa [d, diagonalState] using hC
+            · apply Fin.ext
+              simpa [d, diagonalState] using hd
+          subst x
+          simp [d]
+        · have hzero := hf x (Or.inr hd)
+          rw [hzero]
+          simp [worldDiagonalClass_off_diagonal hpA hpB x (Or.inr hd)]
+      · have hzero := hf x (Or.inl hC)
+        rw [hzero]
+        simp [worldDiagonalClass_off_diagonal hpA hpB x (Or.inl hC)]
+    · intro z hz
+      have hdiag := congrFun hz d
+      have hclass :
+          worldDiagonalClass hpA hpB d = 1 := by
+        simp [d]
+      rw [hclass, mul_one] at hdiag
+      exact hdiag.symm
+  · rintro ⟨z, hz, huniq⟩
+    intro x hx
+    rw [hz]
+    rw [worldDiagonalClass_off_diagonal hpA hpB x hx]
+    ring
+
+/-- The unique coefficient is exactly the diagonal evaluation. -/
+theorem world_hodge_coefficient_exact
+    {A B p : Nat} (hpA : p < A) (hpB : p < B)
+    (f : ShapeCoef (outputShape A B))
+    (hf : isWorldHodgeClass p f) :
+    ∀ x : ShapeState (outputShape A B),
+      f x =
+        f (diagonalState hpA hpB) *
+          worldDiagonalClass hpA hpB x := by
+  obtain ⟨z, hz, huniq⟩ :=
+    (world_hodge_rank_one hpA hpB f).mp hf
+  have hdiag := congrFun hz (diagonalState hpA hpB)
+  simp at hdiag
+  intro x
+  rw [hz, hdiag]
+
+/-- If the weight lies outside either rectangle depth, every weight-p Hodge
+class is forced to be zero. -/
+theorem world_hodge_zero_outside
+    {A B p : Nat}
+    (hout : A ≤ p ∨ B ≤ p)
+    (f : ShapeCoef (outputShape A B))
+    (hf : isWorldHodgeClass p f) :
+    f = fun _ => 0 := by
+  funext x
+  apply hf x
+  rcases hout with hA | hB
+  · left
+    omega
+  · right
+    omega
+
+/-- All natural weights are therefore classified: live rank-one sector or
+zero sector, according only to rectangular depth. -/
+theorem world_hodge_all_weights
+    {A B : Nat} (p : Nat)
+    (f : ShapeCoef (outputShape A B)) :
+    (p < A ∧ p < B ->
+      (isWorldHodgeClass p f ↔
+        ∃! z : ℤ,
+          f = fun x =>
+            z * worldDiagonalClass
+              (show p < A from by omega)
+              (show p < B from by omega) x))
+    ∧ ((A ≤ p ∨ B ≤ p) ->
+      isWorldHodgeClass p f -> f = fun _ => 0) := by
+  constructor
+  · intro hp
+    exact world_hodge_rank_one hp.1 hp.2 f
+  · intro hout hf
+    exact world_hodge_zero_outside hout f hf
+
+/-- Under the universal address dictionary, the diagonal class becomes the
+single universal basis vector at address (B+1)p. -/
+theorem worldAddress_diagonalClass
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    worldAddress (outputShape A B)
+        (worldDiagonalClass hpA hpB)
+      =
+    addressBasis (diagonalAddress hpA hpB) := by
+  exact worldAddress_worldBasis
+    (outputShape A B) (diagonalState hpA hpB)
+
+/-- Exact numeric version of the address theorem. -/
+theorem worldAddress_diagonal_support_code
+    {A B p : Nat} (hpA : p < A) (hpB : p < B)
+    (i : Fin (A*B))
+    (hi : i.1 ≠ (B+1)*p) :
+    worldAddress (outputShape A B)
+      (worldDiagonalClass hpA hpB) i = 0 := by
+  rw [worldAddress_diagonalClass]
+  unfold addressBasis
+  have hne : i ≠ diagonalAddress hpA hpB := by
+    intro h
+    apply hi
+    rw [h, diagonalAddress_val hpA hpB]
+  simp [hne]
+
+/-- The historical diagonal index 4p is exactly the 4 x 3 specialization. -/
+theorem hc_diagonal_address
+    {p : Nat} (hp : p < 3) :
+    (diagonalAddress (A:=4) (B:=3) (p:=p) (by omega) hp).1 = 4*p := by
+  simpa using
+    (diagonalAddress_val
+      (A:=4) (B:=3) (p:=p) (by omega) hp)
+
+/-- One crown collecting the dimension-free Hodge diagonal upgrade. -/
+theorem dimension_free_hodge_crown :
+    (∀ A B p (hpA : p < A) (hpB : p < B)
+        (f : ShapeCoef (outputShape A B)),
+      isWorldHodgeClass p f ↔
+        ∃! z : ℤ,
+          f = fun x => z * worldDiagonalClass hpA hpB x)
+    ∧ (∀ A B p (f : ShapeCoef (outputShape A B)),
+      (A ≤ p ∨ B ≤ p) ->
+        isWorldHodgeClass p f -> f = fun _ => 0)
+    ∧ (∀ A B p (hpA : p < A) (hpB : p < B),
+      (diagonalAddress hpA hpB).1 = (B+1)*p) := by
+  exact ⟨
+    world_hodge_rank_one,
+    world_hodge_zero_outside,
+    diagonalAddress_val⟩
+
+#check diagonalAddress_val
+#check worldDiagonalClass
+#check isWorldHodgeClass
+#check world_hodge_rank_one
+#check world_hodge_coefficient_exact
+#check world_hodge_zero_outside
+#check world_hodge_all_weights
+#check worldAddress_diagonalClass
+#check hc_diagonal_address
+#check dimension_free_hodge_crown
+
+#print axioms world_hodge_rank_one
+#print axioms world_hodge_coefficient_exact
+#print axioms world_hodge_zero_outside
+#print axioms worldAddress_diagonalClass
+#print axioms dimension_free_hodge_crown
+
+end GSTDimensionFreeHodgeDiagonal
