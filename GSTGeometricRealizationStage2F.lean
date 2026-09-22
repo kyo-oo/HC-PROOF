@@ -213,16 +213,6 @@ theorem bettiCycleSelector_spec
     H.cycleClass p (bettiCycleSelector V H R alpha) = alpha.1 := by
   exact classicalCycleSelector_spec V H.toClassicalHodgeData R alpha
 
-/-- Stage 2F changes the cohomology carrier to native singular cohomology but
-does not change the realization obligation itself: the Betti obligation is
-definitionally the Stage-2E obligation for the induced classical package. -/
-theorem stage2F_obligation_iff_stage2E
-    (V : SmoothProjectiveComplexScheme)
-    (H : BettiHodgeData V) :
-    Stage2FRealizationObligation V H ↔
-      Stage2ERealizationObligation V H.toClassicalHodgeData :=
-  Iff.rfl
-
 /-- **STAGE-2F BETTI LANDING THEOREM.**
 
 Once every degree admits an explicit finite realization certificate, the
@@ -245,6 +235,16 @@ def Stage2FRealizationObligation
   ∃ N : Nat -> Nat,
     ∀ p : Nat,
       Nonempty (Stage2FClassRealization V H p (N p))
+
+/-- Stage 2F changes the cohomology carrier to native singular cohomology but
+does not change the realization obligation itself: the Betti obligation is
+definitionally the Stage-2E obligation for the induced classical package. -/
+theorem stage2F_obligation_iff_stage2E
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V) :
+    Stage2FRealizationObligation V H ↔
+      Stage2ERealizationObligation V H.toClassicalHodgeData :=
+  Iff.rfl
 
 theorem betti_hodge_of_stage2f_obligation
     (V : SmoothProjectiveComplexScheme)
