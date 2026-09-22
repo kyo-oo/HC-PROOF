@@ -95,14 +95,41 @@ theorem no22_nine_power_bound
       rw [hpow]
       omega
 
+
+/-! ## Tail-local magnitude control -/
+
+/-- Every ternary suffix of a No22 word obeys the same sharp finite-window
+magnitude estimate.  Thus the bound is stable under arbitrary low-digit
+deletion, not only at the original origin. -/
+theorem no22_tail_nine_power_bound
+    (X q m : Nat)
+    (hTail : X / 3^q < 9^m)
+    (hno : No22Ternary X) :
+    8 * (X / 3^q) ≤ 7 * (9^m - 1) := by
+  exact no22_nine_power_bound (X / 3^q) m hTail
+    (no22_div_three_pow X q hno)
+
+/-- Uniform form over every suffix whose observed length is bounded by m
+base-nine blocks. -/
+theorem no22_all_tails_nine_power_bound
+    (X m : Nat) (hno : No22Ternary X)
+    (hTail : ∀ q : Nat, X / 3^q < 9^m) :
+    ∀ q : Nat, 8 * (X / 3^q) ≤ 7 * (9^m - 1) := by
+  intro q
+  exact no22_tail_nine_power_bound X q m (hTail q) hno
+
+
 #check No22Ternary
 #check digit3_div_three_pow_shift
 #check no22_div_three_pow
 #check no22_low_pair_le_seven
 #check no22_nine_power_bound
+#check no22_tail_nine_power_bound
+#check no22_all_tails_nine_power_bound
 #print axioms digit3_div_three_pow_shift
 #print axioms no22_div_three_pow
 #print axioms no22_low_pair_le_seven
 #print axioms no22_nine_power_bound
+#print axioms no22_tail_nine_power_bound
 
 end GSTFourPowerNo22Magnitude
