@@ -74,6 +74,7 @@ theorem density83_positive_ge_84
   rcases density83_positive_spectrum C d hC hd hpos with h | h
   · rw [h]
   · rw [h]
+    norm_num
 
 theorem density83_ge_neg105
     (C d : Nat) (hC : C < 4) (hd : d < 3) :
