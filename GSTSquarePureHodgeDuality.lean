@@ -77,7 +77,9 @@ def squarePureDual
     apply Fin.ext
     exact hdual
   have hinv := congrArg complementFin hfin
-  simpa using hinv
+  have hxfin : x.1 = x.2 := by
+    simpa using hinv
+  exact congrArg Fin.val hxfin
 
 @[simp]
 theorem squarePureDual_involutive
