@@ -121,13 +121,40 @@ theorem affineCommonTwo_three_mul_add_two_iff (q : Nat) :
       rw [hnext, digit_peel_zero (q+1) j, htail]
       exact hj1
 
+
+/-! ## Exact negative branch calculus -/
+
+/-- Counterexample transport through exponent phase zero. -/
+theorem noAffineCommonTwo_three_mul_iff (q : Nat) :
+    (¬ AffineCommonTwo (3*q)) ↔
+      ¬ PairCommonTwo (peel0 (affineOrbit q)) (peel1 (affineOrbit q)) :=
+  not_congr (affineCommonTwo_three_mul_iff q)
+
+/-- Counterexample transport through exponent phase one. -/
+theorem noAffineCommonTwo_three_mul_add_one_iff (q : Nat) :
+    (¬ AffineCommonTwo (3*q+1)) ↔
+      ¬ PairCommonTwo (peel1 (affineOrbit q)) (peel2 (affineOrbit q)) :=
+  not_congr (affineCommonTwo_three_mul_add_one_iff q)
+
+/-- Counterexample transport through exponent phase two. -/
+theorem noAffineCommonTwo_three_mul_add_two_iff (q : Nat) :
+    (¬ AffineCommonTwo (3*q+2)) ↔
+      ¬ PairCommonTwo (peel2 (affineOrbit q))
+        (4 * peel2 (affineOrbit q) + 3) :=
+  not_congr (affineCommonTwo_three_mul_add_two_iff q)
+
+
 #check commonTwo_iff_affineCommonTwo
 #check noCommonTwo_iff_noAffineCommonTwo
 #check affineCommonTwo_three_mul_iff
 #check affineCommonTwo_three_mul_add_one_iff
 #check affineCommonTwo_three_mul_add_two_iff
+#check noAffineCommonTwo_three_mul_iff
+#check noAffineCommonTwo_three_mul_add_one_iff
+#check noAffineCommonTwo_three_mul_add_two_iff
 #print axioms affineCommonTwo_three_mul_iff
 #print axioms affineCommonTwo_three_mul_add_one_iff
 #print axioms affineCommonTwo_three_mul_add_two_iff
+#print axioms noAffineCommonTwo_three_mul_add_two_iff
 
 end GSTFourPowerAffineBadState
