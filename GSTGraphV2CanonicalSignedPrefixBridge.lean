@@ -83,11 +83,30 @@ theorem canonical_graph_u_potential_growth_positive
   simpa [Nat.add_assoc] using
     canonical_graph_u_gap_positive s n q hs hChild hRightBad
 
+
+/-! ## Canonical positivity in bicocycle coordinates -/
+
+/-- The canonical signed-prefix gap is exactly positive two-dimensional U flux
+through the canonical rectangle.  This places the obstruction directly in the
+horizontal/vertical bicocycle calculus. -/
+theorem canonical_graph_u_bicocycle_positive
+    (s n q : Nat) (hs : 1 ≤ s)
+    (hChild : SeedHappy 0 0 (canonicalChildTail s n) q)
+    (hRightBad : ∀ j,
+      ¬ SeedHappy 1 1 (canonicalParentTail s n) j) :
+    0 < graphUVerticalFlux
+      (canonicalEnergy s n) 0 (canonicalWidth s) (s+2) (q+1) := by
+  simpa [graphUVerticalFlux, Nat.add_assoc] using
+    canonical_graph_u_gap_positive s n q hs hChild hRightBad
+
+
 #check canonical_seeded_u_gap_positive
 #check canonical_graph_u_gap_positive
 #check canonical_graph_u_potential_growth_positive
+#check canonical_graph_u_bicocycle_positive
 #print axioms canonical_seeded_u_gap_positive
 #print axioms canonical_graph_u_gap_positive
 #print axioms canonical_graph_u_potential_growth_positive
+#print axioms canonical_graph_u_bicocycle_positive
 
 end GSTGraphV2CanonicalSignedPrefixBridge
