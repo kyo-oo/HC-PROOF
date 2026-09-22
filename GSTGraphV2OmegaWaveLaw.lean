@@ -3015,12 +3015,49 @@ sheet-zero row cycle, each collapsed to one all-depths clause. -/
 def four_power_omega_shadow_wave_tailF : Prop :=
   ∀ K : Nat, 500 < K → omegaShadowTailF K → ∃ p : Nat, digit3 (4^K) p = 2
 
+
+/-! ## Exact observer threshold -/
+
+/-- **TOWER OBSERVER IFF.**  Inside every legal tower window, digit two is
+equivalent to the mean rotation lying in the top third of its exact ternary
+residue window.  The earlier gate theorem supplied the forward implication;
+the observer formula supplies the converse. -/
+theorem omega_tower_level_digit_two_iff
+    (s core k : Nat) (hk : 3 ≤ k) (hks : k ≤ s+1) :
+    digit3 (4^(3^s * core)) (s+k) = 2
+      ↔ 2 * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k := by
+  constructor
+  · intro hd
+    have hobs := omega_observed_digit s core k (by omega) hks
+    rw [hd] at hobs
+    have hpos : 0 < 3^(k-1) := Nat.pow_pos (by decide)
+    have hq :
+        2 ≤ ((omegaCutWord s 1 * core) % 3^k) / 3^(k-1) := by
+      omega
+    have hmul := (Nat.le_div_iff_mul_le hpos).1 hq
+    simpa [Nat.mul_comm] using hmul
+  · intro hg
+    exact omega_tower_level_digit_two s core k hk hks hg
+
+/-- The observer therefore gives an exact Boolean-style classifier of every
+tower level in its admissible window. -/
+theorem omega_tower_level_not_two_iff
+    (s core k : Nat) (hk : 3 ≤ k) (hks : k ≤ s+1) :
+    digit3 (4^(3^s * core)) (s+k) ≠ 2
+      ↔ (omegaCutWord s 1 * core) % 3^k < 2 * 3^(k-1) := by
+  rw [not_congr (omega_tower_level_digit_two_iff s core k hk hks)]
+  omega
+
+
 #check omega_row_level_digit_two
 #check omegaShadowTailF
 #check four_power_omega_shadow_wave_tailF
+#check omega_tower_level_digit_two_iff
+#check omega_tower_level_not_two_iff
 #print axioms omega_row_level_digit_two
 #print axioms omegaShadowTailF
 #print axioms four_power_omega_shadow_wave_tailF
+#print axioms omega_tower_level_digit_two_iff
 
 end GSTGraphV2OmegaWaveLaw
 
