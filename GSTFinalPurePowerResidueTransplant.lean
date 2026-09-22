@@ -299,6 +299,10 @@ theorem residueTower_increment_reads_digit
   rw [residueTower_increment_exact]
   unfold residueTowerModulus
   have hpos : 0 < 3*D*3^q := by positivity
+  have hshape :
+      3 * D * 3^q * digit3 T q =
+        digit3 T q * (3 * D * 3^q) := by ring
+  rw [hshape]
   exact Nat.mul_div_left _ hpos
 
 theorem purePowerStripInputResidue
