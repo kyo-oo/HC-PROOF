@@ -47,9 +47,29 @@ theorem pure_power_right_edge_bad_forbids_origin_mod9_three_four
   apply canonical_parent_bad_forbids_mod9_three_four s n hs
   exact pure_power_right_edge_no_happy_to_parent_bad s n (by omega) hNo
 
+
+/-! ## Exact surviving origin phase sector -/
+
+/-- Under global right-edge badness, the origin phase is forced into the exact
+seven-class complement of residues three and four modulo nine. -/
+theorem pure_power_right_edge_bad_origin_mod9_survivor
+    (s n : Nat) (hs : 2 ≤ s)
+    (hNo : ¬ ∃ q : Nat, 1 ≤ q ∧
+      HappyCell (graph 1 (3^(s+1) * n + 3^s) q).seven.carry
+        (graph 1 (3^(s+1) * n + 3^s) q).seven.digit) :
+    n % 9 = 0 ∨ n % 9 = 1 ∨ n % 9 = 2 ∨
+    n % 9 = 5 ∨ n % 9 = 6 ∨ n % 9 = 7 ∨ n % 9 = 8 := by
+  have hobs :=
+    pure_power_right_edge_bad_forbids_origin_mod9_three_four s n hs hNo
+  have hr : n % 9 < 9 := Nat.mod_lt _ (by norm_num)
+  omega
+
+
 #check pure_power_right_edge_no_happy_to_parent_bad
 #check pure_power_right_edge_bad_forbids_origin_mod9_three_four
+#check pure_power_right_edge_bad_origin_mod9_survivor
 #print axioms pure_power_right_edge_no_happy_to_parent_bad
 #print axioms pure_power_right_edge_bad_forbids_origin_mod9_three_four
+#print axioms pure_power_right_edge_bad_origin_mod9_survivor
 
 end GSTGraphV2FourPowerCanonicalParentObstruction
