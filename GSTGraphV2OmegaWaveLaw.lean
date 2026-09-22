@@ -3031,25 +3031,9 @@ theorem omega_row_level_not_two_iff
     have hge := (omega_row_level_digit_two_iff core j).1 hTwo
     omega
 
-/-- **TWO-OBSERVER CROWN.**  Both the sheet-zero row axis and every legal
-tower axis are now exact Boolean classifiers of their respective ternary
-windows. -/
-theorem omega_two_observer_classifier_crown :
-    (∀ core j,
-      digit3 (4^core) (1+j) = 2
-        ↔ 2 * 3^j ≤ (omegaCutWord 0 core) % 3^(j+1))
-    ∧
-    (∀ s core k, 3 ≤ k → k ≤ s+1 →
-      (digit3 (4^(3^s * core)) (s+k) = 2
-        ↔ 2 * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k)) := by
-  exact ⟨omega_row_level_digit_two_iff,
-    fun s core k hk hks => omega_tower_level_digit_two_iff s core k hk hks⟩
-
 #check omega_row_level_digit_two_iff
 #check omega_row_level_not_two_iff
-#check omega_two_observer_classifier_crown
 #print axioms omega_row_level_digit_two_iff
-#print axioms omega_two_observer_classifier_crown
 
 /-- **THE Ω-SHADOW TAIL (SECOND OBSERVER FORM)** — the residual input
 after the kernel-checked base, the Ω-sheet gate, the Ω-second-sheet
@@ -3124,6 +3108,22 @@ theorem omega_tower_level_not_two_iff
       (omega_tower_level_digit_two_iff s core k hk hks).1 hTwo
     omega
 
+/-- **TWO-OBSERVER CROWN.**  Both the sheet-zero row axis and every legal
+tower axis are now exact Boolean classifiers of their respective ternary
+windows. -/
+theorem omega_two_observer_classifier_crown :
+    (∀ core j,
+      digit3 (4^core) (1+j) = 2
+        ↔ 2 * 3^j ≤ (omegaCutWord 0 core) % 3^(j+1))
+    ∧
+    (∀ s core k, 3 ≤ k → k ≤ s+1 →
+      (digit3 (4^(3^s * core)) (s+k) = 2
+        ↔ 2 * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k)) := by
+  exact ⟨omega_row_level_digit_two_iff,
+    fun s core k hk hks => omega_tower_level_digit_two_iff s core k hk hks⟩
+
+#check omega_two_observer_classifier_crown
+#print axioms omega_two_observer_classifier_crown
 
 #check omega_row_level_digit_two
 #check omegaShadowTailF
