@@ -96,8 +96,8 @@ theorem pow4_universal_period_iff
   · intro h
     have h0 := h 0
     have hM : 1 < 3^(p+1) := by
-      have h3 : 3 ≤ 3^(p+1) := by
-        exact Nat.pow_le_pow_right (by decide) (by omega)
+      have hp0 : 0 < 3^p := Nat.pow_pos (by decide)
+      rw [Nat.pow_succ]
       omega
     have hRight : 4^0 % 3^(p+1) = 1 := by
       rw [pow_zero]
