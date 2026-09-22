@@ -155,15 +155,17 @@ theorem four_power_happy_ge_three
 primitive. -/
 noncomputable def climbFireRow
     (hClimb : four_power_happy_climb)
-    (k : Nat) (hk : 8 ≤ k) : Nat :=
-  Nat.find (four_power_happy_ge_three hClimb k hk)
+    (k : Nat) (hk : 8 ≤ k) : Nat := by
+  classical
+  exact Nat.find (four_power_happy_ge_three hClimb k hk)
 
 /-- The canonical climb row lies in the physical region p ≥ 3. -/
 theorem climbFireRow_ge_three
     (hClimb : four_power_happy_climb)
     (k : Nat) (hk : 8 ≤ k) :
-    3 ≤ climbFireRow hClimb k hk :=
-  (Nat.find_spec (four_power_happy_ge_three hClimb k hk)).1
+    3 ≤ climbFireRow hClimb k hk := by
+  classical
+  exact (Nat.find_spec (four_power_happy_ge_three hClimb k hk)).1
 
 /-- The canonical climb row is Happy. -/
 theorem climbFireRow_happy
@@ -171,8 +173,9 @@ theorem climbFireRow_happy
     (k : Nat) (hk : 8 ≤ k) :
     HappyCell
       (carry4 (4^k) (climbFireRow hClimb k hk))
-      (digit3 (4^k) (climbFireRow hClimb k hk)) :=
-  (Nat.find_spec (four_power_happy_ge_three hClimb k hk)).2
+      (digit3 (4^k) (climbFireRow hClimb k hk)) := by
+  classical
+  exact (Nat.find_spec (four_power_happy_ge_three hClimb k hk)).2
 
 /-- **CLIMB-WITNESS MINIMALITY.**
 The selected row is no larger than any other physical Happy row. -/
@@ -182,6 +185,7 @@ theorem climbFireRow_minimal
     (p : Nat) (hp3 : 3 ≤ p)
     (hp : HappyCell (carry4 (4^k) p) (digit3 (4^k) p)) :
     climbFireRow hClimb k hk ≤ p := by
+  classical
   exact Nat.find_min'
     (four_power_happy_ge_three hClimb k hk)
     ⟨hp3,hp⟩
