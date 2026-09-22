@@ -155,16 +155,39 @@ theorem fourPowerCreationMaster_direct
     GSTFourPowerOntologicalAdapter.FourPowerCreationMaster :=
   directExistence_to_creation_master (fourPowerDirectExistence_closed hClimb)
 
+
+/-! ## Closed interface stack from the climb -/
+
+/-- One climb hypothesis now closes all three equivalent production
+interfaces at once: direct common-two arithmetic, historical creation, and
+physical navigation. -/
+theorem climb_closes_direct_creation_navigation
+    (hClimb : GSTInfiniteFourPowerNavigation.four_power_happy_climb) :
+    FourPowerDirectExistence ∧
+    GSTFourPowerOntologicalAdapter.FourPowerCreationMaster ∧
+    (∀ K : Nat, 5 ≤ K → K ≠ 7 →
+      GSTCanonicalTailStateIso.Navigation (4^K)) := by
+  have hDirect := fourPowerDirectExistence_closed hClimb
+  have hMaster := fourPowerCreationMaster_direct hClimb
+  refine ⟨hDirect, hMaster, ?_⟩
+  intro K hK5 hK7
+  exact
+    GSTFourPowerOntologicalAdapter.gst_four_power_ontological_navigation_of_master
+      hMaster K hK5 hK7
+
+
 #check DirectBadDossier
 #check noCommonTwo_builds_direct_bad_dossier
 #check happy_row_to_commonTwo
 #check fourPowerDirectExistence_closed
 #check creation_certificate_inline_direct
 #check fourPowerCreationMaster_direct
+#check climb_closes_direct_creation_navigation
 #print axioms noCommonTwo_builds_direct_bad_dossier
 #print axioms happy_row_to_commonTwo
 #print axioms fourPowerDirectExistence_closed
 #print axioms creation_certificate_inline_direct
 #print axioms fourPowerCreationMaster_direct
+#print axioms climb_closes_direct_creation_navigation
 
 end GSTFourPowerDirectExistenceFromHappy
