@@ -118,14 +118,38 @@ theorem tail3_affineOrbit_phase_exact (K : Nat) :
     omega
   rcases hcases with h0 | h1 | h2
   · have hK : K = 3 * (K / 3) := by omega
-    rw [hK, tail3_affineOrbit_three_mul, h0]
-    norm_num [peelPhase]
+    calc
+      tail3 (affineOrbit K) =
+          tail3 (affineOrbit (3 * (K / 3))) :=
+        congrArg (fun e : Nat => tail3 (affineOrbit e)) hK
+      _ = peel0 (affineOrbit (K / 3)) :=
+        tail3_affineOrbit_three_mul (K / 3)
+      _ = peelPhase 0 (affineOrbit (K / 3)) := by
+        simp [peelPhase]
+      _ = peelPhase (K % 3) (affineOrbit (K / 3)) := by
+        rw [h0]
   · have hK : K = 3 * (K / 3) + 1 := by omega
-    rw [hK, tail3_affineOrbit_three_mul_add_one, h1]
-    norm_num [peelPhase]
+    calc
+      tail3 (affineOrbit K) =
+          tail3 (affineOrbit (3 * (K / 3) + 1)) :=
+        congrArg (fun e : Nat => tail3 (affineOrbit e)) hK
+      _ = peel1 (affineOrbit (K / 3)) :=
+        tail3_affineOrbit_three_mul_add_one (K / 3)
+      _ = peelPhase 1 (affineOrbit (K / 3)) := by
+        simp [peelPhase]
+      _ = peelPhase (K % 3) (affineOrbit (K / 3)) := by
+        rw [h1]
   · have hK : K = 3 * (K / 3) + 2 := by omega
-    rw [hK, tail3_affineOrbit_three_mul_add_two, h2]
-    norm_num [peelPhase]
+    calc
+      tail3 (affineOrbit K) =
+          tail3 (affineOrbit (3 * (K / 3) + 2)) :=
+        congrArg (fun e : Nat => tail3 (affineOrbit e)) hK
+      _ = peel2 (affineOrbit (K / 3)) :=
+        tail3_affineOrbit_three_mul_add_two (K / 3)
+      _ = peelPhase 2 (affineOrbit (K / 3)) := by
+        simp [peelPhase]
+      _ = peelPhase (K % 3) (affineOrbit (K / 3)) := by
+        rw [h2]
 
 /-- The first unread channel digit after renormalization is therefore a
 deterministic function of the next exponent trit and the consumed phase. -/
