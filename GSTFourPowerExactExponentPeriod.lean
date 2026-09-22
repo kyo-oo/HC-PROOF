@@ -99,8 +99,14 @@ theorem pow4_universal_period_iff
       have h3 : 3 ≤ 3^(p+1) := by
         exact Nat.pow_le_pow_right (by decide) (by omega)
       omega
+    have hRight : 4^0 % 3^(p+1) = 1 := by
+      rw [pow_zero]
+      exact Nat.mod_eq_of_lt hM
     have hOne : 4^T % 3^(p+1) = 1 := by
-      simpa [Nat.mod_eq_of_lt hM] using h0
+      calc
+        4^T % 3^(p+1) = 4^(0+T) % 3^(p+1) := by simp
+        _ = 4^0 % 3^(p+1) := h0
+        _ = 1 := hRight
     exact (pow4_mod_one_iff_three_pow_dvd p T).1 hOne
   · rintro ⟨u, rfl⟩
     intro n
