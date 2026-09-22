@@ -256,9 +256,67 @@ theorem wave_digit_periodic (a n core t : Nat) :
     digit3_mod_pow (4^(3^a * core)) (a + n),
     wave_mod a n core t]
 
+/-- **FULL PREFIX WAVE PERIODICITY.**
+The residue theorem freezes every ternary digit at or below the wave height
+a+n, not only the terminal digit. -/
+theorem wave_prefix_digit_periodic
+    (a n core t j : Nat) (hj : j ≤ a+n) :
+    digit3 (4^(3^a * (core + 3^n * t))) j =
+      digit3 (4^(3^a * core)) j := by
+  let X := 4^(3^a * (core + 3^n * t))
+  let Y := 4^(3^a * core)
+  have hhigh : X % 3^(a+n+1) = Y % 3^(a+n+1) := by
+    simpa [X,Y] using wave_mod a n core t
+  have hdiv : 3^(j+1) ∣ 3^(a+n+1) :=
+    pow_dvd_pow 3 (by omega)
+  have hlow : X % 3^(j+1) = Y % 3^(j+1) := by
+    calc
+      X % 3^(j+1) =
+          (X % 3^(a+n+1)) % 3^(j+1) :=
+        (Nat.mod_mod_of_dvd X hdiv).symm
+      _ = (Y % 3^(a+n+1)) % 3^(j+1) := by rw [hhigh]
+      _ = Y % 3^(j+1) :=
+        Nat.mod_mod_of_dvd Y hdiv
+  exact digit3_congr hlow
+
+/-- Complete visible wave prefix through height a+n. -/
+def wavePrefix (a n core : Nat) :
+    Fin (a+n+1) → Nat :=
+  fun j => digit3 (4^(3^a*core)) j.1
+
+/-- The entire visible wave-prefix vector depends only on the core modulo
+3^n. -/
+theorem wavePrefix_periodic
+    (a n core t : Nat) :
+    wavePrefix a n (core + 3^n*t) =
+      wavePrefix a n core := by
+  funext j
+  exact wave_prefix_digit_periodic
+    a n core t j.1 (by omega)
+
+/-- Wave periodicity crown: residue, every visible digit, and the whole prefix
+vector are one periodic object. -/
+theorem wave_periodicity_crown :
+    (∀ a n core t,
+      4^(3^a*(core+3^n*t)) % 3^(a+n+1) =
+        4^(3^a*core) % 3^(a+n+1))
+    ∧
+    (∀ a n core t j, j ≤ a+n →
+      digit3 (4^(3^a*(core+3^n*t))) j =
+        digit3 (4^(3^a*core)) j)
+    ∧
+    (∀ a n core t,
+      wavePrefix a n (core+3^n*t) =
+        wavePrefix a n core) := by
+  exact ⟨wave_mod, wave_prefix_digit_periodic,
+    wavePrefix_periodic⟩
+
 #print axioms digit_two_of_dust_root
 #print axioms digit_three_of_dust_root
 #print axioms digit_four_of_dust_root
 #print axioms wave_digit_periodic
+#print axioms wave_prefix_digit_periodic
+#print axioms wavePrefix_periodic
+#print axioms wave_periodicity_crown
 
 end GSTBladeWave
