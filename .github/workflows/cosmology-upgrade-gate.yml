@@ -9,6 +9,8 @@ on:
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
       - 'GSTUniversalLefschetzDynamics.lean'
+      - 'GSTUniversalLefschetzCosmology.lean'
+      - 'GSTTruncatedWorldCohomologyRing.lean'
       - 'GSTWorldPoincareDuality.lean'
       - 'CardinalWorldsPrefixClassifier.lean'
       - 'GSTWorldCosmology.lean'
@@ -65,6 +67,8 @@ jobs:
             GSTGradedWorldAlgebra.lean
             GSTWorldRecoordinationGroupoid.lean
             GSTUniversalLefschetzDynamics.lean
+            GSTUniversalLefschetzCosmology.lean
+            GSTTruncatedWorldCohomologyRing.lean
             GSTWorldPoincareDuality.lean
             CardinalWorldsPrefixClassifier.lean
             GSTWorldCosmology.lean
@@ -99,6 +103,8 @@ jobs:
             GSTGradedWorldAlgebra \
             GSTWorldRecoordinationGroupoid \
             GSTUniversalLefschetzDynamics \
+            GSTUniversalLefschetzCosmology \
+            GSTTruncatedWorldCohomologyRing \
             GSTWorldPoincareDuality \
             CardinalWorldsPrefixClassifier \
             GSTWorldCrownBridge \
