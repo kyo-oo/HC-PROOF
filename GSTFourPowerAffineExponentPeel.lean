@@ -132,11 +132,23 @@ theorem affineOrbit_low_trit_exact (K : Nat) :
     omega
   rcases hcases with h0 | h1 | h2
   · have hK : K = 3 * (K / 3) := by omega
-    rw [hK, affineOrbit_low_trit_zero, h0]
+    calc
+      digit3 (affineOrbit K) 0 =
+          digit3 (affineOrbit (3 * (K / 3))) 0 := by rw [hK]
+      _ = 0 := affineOrbit_low_trit_zero (K / 3)
+      _ = K % 3 := h0.symm
   · have hK : K = 3 * (K / 3) + 1 := by omega
-    rw [hK, affineOrbit_low_trit_one, h1]
+    calc
+      digit3 (affineOrbit K) 0 =
+          digit3 (affineOrbit (3 * (K / 3) + 1)) 0 := by rw [hK]
+      _ = 1 := affineOrbit_low_trit_one (K / 3)
+      _ = K % 3 := h1.symm
   · have hK : K = 3 * (K / 3) + 2 := by omega
-    rw [hK, affineOrbit_low_trit_two, h2]
+    calc
+      digit3 (affineOrbit K) 0 =
+          digit3 (affineOrbit (3 * (K / 3) + 2)) 0 := by rw [hK]
+      _ = 2 := affineOrbit_low_trit_two (K / 3)
+      _ = K % 3 := h2.symm
 
 /-- Equality tests on the first affine-orbit trit are literally equality
 tests on the exponent trit.  This is the branch-free classifier interface. -/
