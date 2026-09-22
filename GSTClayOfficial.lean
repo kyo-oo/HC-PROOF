@@ -182,53 +182,6 @@ theorem clay_coefficient_unique
   rw [hcycle, mul_one] at hq' hr'
   exact hq'.symm.trans hr'
 
-/-- Any rational coefficient representing a Hodge class equals the
-rationalized diagonal coordinate. -/
-theorem clay_coefficient_eq_diagonal
-    (p : Nat) (hp : p < 3) (f : WaveCoef)
-    (q : ℚ)
-    (hq : ∀ c : WaveCell, rat f c = q * ratCycleClass p c) :
-    q = ((gev f (4*p) : ℤ) : ℚ) := by
-  obtain ⟨r,hrdiag,hr⟩ :=
-    clay_witness_is_diagonal_coordinate p hp f
-      ((hodge_class_rank_one p hp f).2
-        (by
-          have hp4 : p < 4 := by omega
-          let d : WaveCell := ⟨p,p,hp4,hp⟩
-          have hcycle : ratCycleClass p d = 1 := by
-            unfold ratCycleClass
-            dsimp [d]
-            rw [cycle_at_diagonal p p p hp4 hp rfl rfl]
-            norm_num
-          have hq' := hq d
-          rw [hcycle, mul_one] at hq'
-          -- Recover the integral Hodge condition from support below.
-          exact hodge_class_iff.mpr (by
-            intro i hi hine
-            have hC : i / 3 < 4 := by omega
-            have hd : i % 3 < 3 := by omega
-            let ci : WaveCell := ⟨i/3,i%3,hC,hd⟩
-            have hmono : ratCycleClass p ci = 0 := by
-              unfold ratCycleClass
-              dsimp [ci]
-              rw [cycle_at_offdiagonal p hp (i/3) (i%3) hC hd]
-              · norm_num
-              · intro hdiag
-                have hidx : 3*(i/3)+i%3=i := by omega
-                have hpidx := (diagonal_index p hp (i/3) (i%3) hC hd).mp hdiag
-                omega
-            have hqi := hq ci
-            rw [hmono, mul_zero] at hqi
-            have hcell : rat f ci = (gev f i : ℤ) := by
-              unfold rat
-              dsimp [ci]
-              rw [wave_coordinate_at f (i/3) (i%3) hC hd]
-              congr 1
-              omega
-            rw [hcell] at hqi
-            exact_mod_cast hqi)))
-  exact (clay_coefficient_unique p hp f q r hq hr).trans hrdiag
-
 /-- **UNIQUE RATIONAL CLASSIFICATION.**
 Every finite GST Hodge class has one and only one rational cycle
 coefficient. -/
