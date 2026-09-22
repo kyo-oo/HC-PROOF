@@ -276,6 +276,43 @@ theorem weightedCrossPrefix_positive_of_top_leading_happy
   have hsumpos : 0 < P + w*R := by omega
   simpa [weightedCrossPrefix, P, R, w] using hsumpos
 
+
+/-! ## Quantized global crossing pressure -/
+
+/-- Highest-Happy-row domination is integer-quantized: the complete weighted
+crossing prefix contains at least one full positive unit. -/
+theorem weightedCrossPrefix_ge_one_of_top_leading_happy
+    (C d : Nat → Nat → Nat) (N q : Nat)
+    (hN : 1 ≤ N)
+    (hC : ∀ t p, t < N → p ≤ q → C t p < 4)
+    (hd : ∀ t p, t < N → p ≤ q → d t p < 3)
+    (hout : ∀ t p, t < N → p ≤ q →
+      outDigit (C t p) (d t p) = d (t+1) p)
+    (hHappy : HappyCell (C 0 q) (d 0 q)) :
+    (1 : Int) ≤ weightedCrossPrefix C d N (q+1) := by
+  have hpos :=
+    weightedCrossPrefix_positive_of_top_leading_happy
+      C d N q hN hC hd hout hHappy
+  omega
+
+/-- The sharp crossing theorem therefore yields a discrete positive-pressure
+sector rather than only an order-theoretic sign. -/
+theorem weightedCrossPrefix_quantized_crown
+    (C d : Nat → Nat → Nat) (N q : Nat)
+    (hN : 1 ≤ N)
+    (hC : ∀ t p, t < N → p ≤ q → C t p < 4)
+    (hd : ∀ t p, t < N → p ≤ q → d t p < 3)
+    (hout : ∀ t p, t < N → p ≤ q →
+      outDigit (C t p) (d t p) = d (t+1) p)
+    (hHappy : HappyCell (C 0 q) (d 0 q)) :
+    0 < weightedCrossPrefix C d N (q+1) ∧
+      (1 : Int) ≤ weightedCrossPrefix C d N (q+1) :=
+  ⟨weightedCrossPrefix_positive_of_top_leading_happy
+      C d N q hN hC hd hout hHappy,
+    weightedCrossPrefix_ge_one_of_top_leading_happy
+      C d N q hN hC hd hout hHappy⟩
+
+
 #check sharpTerminalPotential_step
 #check reverseCrossCode_ge_sharp_of_leading_happy
 #check reverseCrossCode_ge_global_floor
@@ -286,5 +323,7 @@ theorem weightedCrossPrefix_positive_of_top_leading_happy
 #print axioms reverseCrossCode_ge_global_floor
 #print axioms weightedCrossPrefix_ge_global_floor
 #print axioms weightedCrossPrefix_positive_of_top_leading_happy
+#print axioms weightedCrossPrefix_ge_one_of_top_leading_happy
+#print axioms weightedCrossPrefix_quantized_crown
 
 end GSTU2DExactCrossingCharge
