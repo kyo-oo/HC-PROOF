@@ -73,9 +73,60 @@ theorem four_power_happy_lifts_or_latent
         (graph 1 (K+1) (p+1)).seven.carry = 3) := by
   exact graph_happy_lifts_or_latent 1 K p hHappy
 
+
+/-! ## Exact latent-sector extraction -/
+
+/-- If a Happy source fails to remain Happy one horizontal wave later, then
+the entire latent packet is forced: digit two survives, the new carry lies in
+the ALT-minus sector {1,2}, and the next vertical carry is exactly three. -/
+theorem graph_happy_forces_latent_of_next_bad
+    (E t p : Nat)
+    (hHappy : HappyCell
+      (graph E t p).seven.carry
+      (graph E t p).seven.digit)
+    (hBad : ¬ HappyCell
+      (graph E (t+1) p).seven.carry
+      (graph E (t+1) p).seven.digit) :
+    (graph E (t+1) p).seven.digit = 2 ∧
+      ((graph E (t+1) p).seven.carry = 1 ∨
+       (graph E (t+1) p).seven.carry = 2) ∧
+      (graph E (t+1) (p+1)).seven.carry = 3 := by
+  rcases graph_happy_lifts_or_latent E t p hHappy with hStay | hLatent
+  · exact False.elim (hBad hStay)
+  · exact hLatent
+
+/-- Conversely, a Happy source has exactly two mutually exhaustive outcomes:
+persistent Happy transport or forced latent transport. -/
+theorem graph_happy_transport_dichotomy
+    (E t p : Nat)
+    (hHappy : HappyCell
+      (graph E t p).seven.carry
+      (graph E t p).seven.digit) :
+    (HappyCell
+        (graph E (t+1) p).seven.carry
+        (graph E (t+1) p).seven.digit)
+      ∨
+    ((¬ HappyCell
+        (graph E (t+1) p).seven.carry
+        (graph E (t+1) p).seven.digit) ∧
+      (graph E (t+1) p).seven.digit = 2 ∧
+      ((graph E (t+1) p).seven.carry = 1 ∨
+       (graph E (t+1) p).seven.carry = 2) ∧
+      (graph E (t+1) (p+1)).seven.carry = 3) := by
+  by_cases hStay : HappyCell
+      (graph E (t+1) p).seven.carry
+      (graph E (t+1) p).seven.digit
+  · exact Or.inl hStay
+  · exact Or.inr ⟨hStay,
+      graph_happy_forces_latent_of_next_bad E t p hHappy hStay⟩
+
+
 #check graph_happy_lifts_or_latent
 #check four_power_happy_lifts_or_latent
+#check graph_happy_forces_latent_of_next_bad
+#check graph_happy_transport_dichotomy
 #print axioms graph_happy_lifts_or_latent
 #print axioms four_power_happy_lifts_or_latent
+#print axioms graph_happy_transport_dichotomy
 
 end GSTGraphV2NonlocalCascade
