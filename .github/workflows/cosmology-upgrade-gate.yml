@@ -8,6 +8,7 @@ on:
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
+      - 'GSTUniversalLefschetzDynamics.lean'
       - 'CardinalWorldsPrefixClassifier.lean'
       - 'GSTWorldCosmology.lean'
       - 'GSTWorldCrownBridge.lean'
@@ -62,6 +63,7 @@ jobs:
             GSTRadixWorldDynamics.lean
             GSTGradedWorldAlgebra.lean
             GSTWorldRecoordinationGroupoid.lean
+            GSTUniversalLefschetzDynamics.lean
             CardinalWorldsPrefixClassifier.lean
             GSTWorldCosmology.lean
             GSTWorldCrownBridge.lean
@@ -94,6 +96,7 @@ jobs:
             GSTRadixWorldDynamics \
             GSTGradedWorldAlgebra \
             GSTWorldRecoordinationGroupoid \
+            GSTUniversalLefschetzDynamics \
             CardinalWorldsPrefixClassifier \
             GSTWorldCrownBridge \
             GSTGraphV2ScaleEquivariance \
