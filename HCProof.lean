@@ -22,6 +22,7 @@ import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
 import GSTUniversalLefschetzCosmology
+import GSTTruncatedWorldCohomologyRing
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
@@ -405,3 +406,14 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTUniversalLefschetzCosmology.topPairing_nondegenerate_left
 #check GSTUniversalLefschetzCosmology.topPairing_basis_basis
 #check GSTUniversalLefschetzCosmology.universal_lefschetz_crown
+
+
+/-! ## Universal truncated GST cohomology ring -/
+
+#check GSTTruncatedWorldCohomologyRing.WorldCohomologyRing
+#check GSTTruncatedWorldCohomologyRing.H
+#check GSTTruncatedWorldCohomologyRing.V
+#check GSTTruncatedWorldCohomologyRing.L
+#check GSTTruncatedWorldCohomologyRing.worldOperatorHom
+#check GSTTruncatedWorldCohomologyRing.worldAct_monomial
+#check GSTTruncatedWorldCohomologyRing.truncated_world_ring_crown
