@@ -49,13 +49,15 @@ noncomputable def digitEndo (A B : Nat) :
   map_add' := by
     intro f g
     funext c
-    by_cases h : 1 ≤ c.2.1 <;>
-      simp [digitShiftN, h]
+    by_cases h : 1 ≤ c.2.1
+    · simp only [digitShiftN, h, if_pos, Pi.add_apply]
+    · simp only [digitShiftN, h, if_neg, Pi.add_apply, add_zero]
   map_smul' := by
     intro z f
     funext c
-    by_cases h : 1 ≤ c.2.1 <;>
-      simp [digitShiftN, h]
+    by_cases h : 1 ≤ c.2.1
+    · simp only [digitShiftN, h, if_pos, Pi.smul_apply]
+    · simp only [digitShiftN, h, if_neg, Pi.smul_apply, smul_zero]
 
 noncomputable def carryEndo (A B : Nat) :
     Module.End ℤ (WorldCoef A B) where
@@ -63,13 +65,15 @@ noncomputable def carryEndo (A B : Nat) :
   map_add' := by
     intro f g
     funext c
-    by_cases h : 1 ≤ c.1.1 <;>
-      simp [carryShiftN, h]
+    by_cases h : 1 ≤ c.1.1
+    · simp only [carryShiftN, h, if_pos, Pi.add_apply]
+    · simp only [carryShiftN, h, if_neg, Pi.add_apply, add_zero]
   map_smul' := by
     intro z f
     funext c
-    by_cases h : 1 ≤ c.1.1 <;>
-      simp [carryShiftN, h]
+    by_cases h : 1 ≤ c.1.1
+    · simp only [carryShiftN, h, if_pos, Pi.smul_apply]
+    · simp only [carryShiftN, h, if_neg, Pi.smul_apply, smul_zero]
 
 @[simp]
 theorem digitEndo_apply (g : WorldCoef A B) :
@@ -84,24 +88,28 @@ theorem carryEndo_apply (g : WorldCoef A B) :
 /-- H^n is exactly native digit transport by n layers. -/
 theorem digitEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
     ((digitEndo A B)^n) g = digitShiftN n g := by
-  induction n with
+  induction n generalizing g with
   | zero =>
       simp [digitShiftN_zero]
   | succ n ih =>
-      rw [pow_succ, Module.End.mul_apply, ih]
-      change digitShiftN 1 (digitShiftN n g) = digitShiftN (n+1) g
-      simpa [Nat.add_comm] using digitShiftN_add 1 n g
+      rw [pow_succ, Module.End.mul_apply]
+      change ((digitEndo A B)^n) (digitShiftN 1 g) =
+        digitShiftN (n+1) g
+      rw [ih]
+      simpa using digitShiftN_add n 1 g
 
 /-- V^n is exactly native carry transport by n layers. -/
 theorem carryEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
     ((carryEndo A B)^n) g = carryShiftN n g := by
-  induction n with
+  induction n generalizing g with
   | zero =>
       simp [carryShiftN_zero]
   | succ n ih =>
-      rw [pow_succ, Module.End.mul_apply, ih]
-      change carryShiftN 1 (carryShiftN n g) = carryShiftN (n+1) g
-      simpa [Nat.add_comm] using carryShiftN_add 1 n g
+      rw [pow_succ, Module.End.mul_apply]
+      change ((carryEndo A B)^n) (carryShiftN 1 g) =
+        carryShiftN (n+1) g
+      rw [ih]
+      simpa using carryShiftN_add n 1 g
 
 /-- H is nilpotent at digit depth B. -/
 theorem digitEndo_pow_depth :
@@ -251,11 +259,11 @@ theorem topPairing_basis_basis
     topPairing (basis c) (basis d) =
       if d = complementCell c then 1 else 0 := by
   rw [topPairing_basis_left]
-  unfold basis
   by_cases h : complementCell c = d
-  · simp [h]
+  · subst d
+    simp [basis, worldBasis]
   · have h' : d ≠ complementCell c := Ne.symm h
-    simp [worldBasis, h, h']
+    simp [basis, worldBasis, h, h']
 
 /-! ## 5. The historical HC rectangle is one specialization -/
 
