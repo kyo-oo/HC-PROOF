@@ -1118,7 +1118,7 @@ def gstTernaryWorldFactorS (j : Nat) : Nat := 3^j
 def gstMixedWorldFactorS (j : Nat) : Nat := 6^j
 
 /-- The three exponential worlds carried as one packet. -/
-structure GSTThreeWorldExponentialPacketS where
+@[ext] structure GSTThreeWorldExponentialPacketS where
   binary : Nat
   ternary : Nat
   mixed : Nat
