@@ -927,6 +927,90 @@ theorem proj_sum (g : WaveCoef) :
       = g ⟨C, d, hC, hd⟩
   exact sum_range_pick' (fun _ => g ⟨C, d, hC, hd⟩) (C + d) 6 (by omega)
 
+/-- **EXACT SECTOR FIXED-POINT CLASSIFICATION.**
+A cochain is fixed by the degree-k projector exactly when it is supported
+entirely on degree k. -/
+theorem sectorProj_eq_self_iff
+    (k : Nat) (g : WaveCoef) :
+    sectorProj k g = g ↔
+      ∀ (C : Nat) (d : Nat) (hC : C < 4) (hd : d < 3),
+        C+d ≠ k → g ⟨C,d,hC,hd⟩ = 0 := by
+  constructor
+  · intro h C d hC hd hne
+    have hc := congrFun h ⟨C,d,hC,hd⟩
+    unfold sectorProj at hc
+    rw [if_neg hne] at hc
+    exact hc.symm
+  · intro hs
+    funext cell
+    rcases cell with ⟨C,d,hC,hd⟩
+    unfold sectorProj
+    by_cases hdeg : C+d = k
+    · rw [if_pos hdeg]
+    · rw [if_neg hdeg, hs C d hC hd hdeg]
+
+/-- A sector projector outside the six live total degrees is identically
+zero. -/
+theorem sectorProj_zero_of_six_le
+    (k : Nat) (hk : 6 ≤ k) (g : WaveCoef) :
+    sectorProj k g = fun _ => 0 := by
+  funext cell
+  rcases cell with ⟨C,d,hC,hd⟩
+  unfold sectorProj
+  have hne : C+d ≠ k := by omega
+  rw [if_neg hne]
+
+/-- The six Künneth sectors reconstruct the whole cochain as a function
+equality, not merely pointwise. -/
+theorem sectorProj_sum_function
+    (g : WaveCoef) :
+    (fun cell =>
+      ∑ k ∈ Finset.range 6, sectorProj k g cell) = g := by
+  funext cell
+  rcases cell with ⟨C,d,hC,hd⟩
+  exact proj_sum g C d hC hd
+
+/-- A cochain supported simultaneously in two distinct exact sectors is
+forced to vanish. -/
+theorem distinct_sector_support_zero
+    (j k : Nat) (hjk : j ≠ k) (g : WaveCoef)
+    (hj : sectorProj j g = g)
+    (hk : sectorProj k g = g) :
+    g = fun _ => 0 := by
+  have horth := proj_orthogonal j k g hjk
+  funext cell
+  rcases cell with ⟨C,d,hC,hd⟩
+  have hc := horth C d hC hd
+  have hjc := congrFun hj ⟨C,d,hC,hd⟩
+  have hkc := congrFun hk ⟨C,d,hC,hd⟩
+  unfold sectorProj at hc hjc hkc
+  by_cases hdj : C+d = j
+  · have hdk : C+d ≠ k := by
+      intro h
+      exact hjk (hdj.symm.trans h)
+    rw [if_pos hdj, if_neg hdk] at hjc hkc hc
+    exact hkc.symm
+  · rw [if_neg hdj] at hjc
+    exact hjc.symm
+
+/-- Künneth rigidity crown: exact support, bounded live degree, complete
+reconstruction, and disjointness are one projector calculus. -/
+theorem kunneth_sector_rigidity_crown :
+    (∀ k g,
+      sectorProj k g = g ↔
+        ∀ C d (hC : C < 4) (hd : d < 3),
+          C+d ≠ k → g ⟨C,d,hC,hd⟩ = 0)
+    ∧
+    (∀ k, 6 ≤ k → ∀ g : WaveCoef,
+      sectorProj k g = fun _ => 0)
+    ∧
+    (∀ g : WaveCoef,
+      (fun cell =>
+        ∑ k ∈ Finset.range 6, sectorProj k g cell) = g) := by
+  exact ⟨sectorProj_eq_self_iff,
+    sectorProj_zero_of_six_le,
+    sectorProj_sum_function⟩
+
 /-- **LEFSCHETZ RESPECTS THE KÜNNETH DECOMPOSITION (digit part)**: the
 digit cup carries the degree-`k` sector into the degree-`k+1` sector. -/
 theorem cupDigit_respects_proj (k : Nat) (g : WaveCoef) :
@@ -1291,6 +1375,11 @@ theorem the_lefschetz_crown :
 #check pairing_nondegenerate_right
 #check poincare_monomial_kronecker
 #check proj_sum
+#check sectorProj_eq_self_iff
+#check sectorProj_zero_of_six_le
+#check sectorProj_sum_function
+#check distinct_sector_support_zero
+#check kunneth_sector_rigidity_crown
 #check lefschetz_respects_kunneth
 #check kunnethPoly_eval_zero
 #check kunnethPoly_eval_k
@@ -1317,6 +1406,10 @@ theorem the_lefschetz_crown :
 #print axioms pairing_nondegenerate_right
 #print axioms poincare_monomial_kronecker
 #print axioms proj_sum
+#print axioms sectorProj_eq_self_iff
+#print axioms sectorProj_zero_of_six_le
+#print axioms distinct_sector_support_zero
+#print axioms kunneth_sector_rigidity_crown
 #print axioms lefschetz_respects_kunneth
 #print axioms kunneth_projector_polynomial
 #print axioms hodge_locus_mod_invariant
