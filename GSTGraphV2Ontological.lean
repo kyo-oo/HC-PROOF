@@ -96,6 +96,47 @@ theorem happy_iff_ontDensity_positive
     have hnonpos := ontDensity_nonpositive_of_not_happy C d hC hd hbad
     omega
 
+/-- **ONTOLOGICAL SPECTRAL GAP.**
+On every physical cell, Happy is exactly the sector at density at least 42.
+Thus the interval 1..41 is forbidden by the finite ontological dynamics. -/
+theorem happy_iff_ontDensity_ge_42
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    HappyCell C d ↔ 42 ≤ ontDensity C d := by
+  constructor
+  · exact ontDensity_ge_42_of_happy C d
+  · intro h42
+    apply (happy_iff_ontDensity_positive C d hC hd).2
+    omega
+
+/-- Every physical ontological density lies in one of two separated sectors:
+nonpositive, or at least 42. -/
+theorem ontDensity_gap_dichotomy
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    ontDensity C d ≤ 0 ∨ 42 ≤ ontDensity C d := by
+  by_cases h : HappyCell C d
+  · exact Or.inr (ontDensity_ge_42_of_happy C d h)
+  · exact Or.inl (ontDensity_nonpositive_of_not_happy C d hC hd h)
+
+/-- No physical cell can carry ontological density strictly between zero and
+the Happy threshold 42. -/
+theorem ontDensity_gap_exclusion
+    (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    ¬ (0 < ontDensity C d ∧ ontDensity C d < 42) := by
+  intro hgap
+  rcases ontDensity_gap_dichotomy C d hC hd with hnon | hhigh
+  · omega
+  · omega
+
+/-- The threshold 42 is therefore an exact classifier, not merely a lower
+bound on already-known Happy cells. -/
+theorem ontological_threshold_crown :
+    (∀ C d, C < 4 → d < 3 →
+      (HappyCell C d ↔ 42 ≤ ontDensity C d))
+    ∧
+    (∀ C d, C < 4 → d < 3 →
+      ontDensity C d ≤ 0 ∨ 42 ≤ ontDensity C d) := by
+  exact ⟨happy_iff_ontDensity_ge_42, ontDensity_gap_dichotomy⟩
+
 /-- Reverse-base-seven accumulation of one horizontal graph row. -/
 def reverseOntCode (C d : Nat → Nat) : Nat → Int
   | 0 => 0
@@ -376,9 +417,17 @@ theorem weightedOntPrefix_eq_sum (C d : Nat → Nat → Nat) (N : Nat) :
 
 #check ontDensity_physical_table
 #check happy_iff_ontDensity_positive
+#check happy_iff_ontDensity_ge_42
+#check ontDensity_gap_dichotomy
+#check ontDensity_gap_exclusion
+#check ontological_threshold_crown
 #check reverseOntCode_ge_scaled_of_leading_happy
 #check weightedOntPrefix_positive_of_top_leading_happy
 #check graphOntWindow_positive_of_happy
+#print axioms happy_iff_ontDensity_ge_42
+#print axioms ontDensity_gap_dichotomy
+#print axioms ontDensity_gap_exclusion
+#print axioms ontological_threshold_crown
 #print axioms weightedOntPrefix_positive_of_top_leading_happy
 
 end GSTGraphV2Ontological
