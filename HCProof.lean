@@ -32,6 +32,7 @@ import GSTWorldRecoordinationGroupoid
 import GSTUniversalAddressBridge
 import GSTDimensionFreeHodgeDiagonal
 import GSTGlobalPureHodgeCosmology
+import GSTPureHodgeLefschetzKernel
 import GSTSquarePureHodgeDuality
 import GSTUniversalLefschetzDynamics
 import GSTWorldPoincareDuality
@@ -469,6 +470,15 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTSquarePureHodgeDuality.pureCoordinates_squarePureDual
 #check GSTSquarePureHodgeDuality.pureHodgeLinearEquiv_conjugates_duality
 #check GSTSquarePureHodgeDuality.square_pure_hodge_duality_crown
+
+
+/-! ## Pure-Hodge Lefschetz central-binomial kernel -/
+
+#check GSTPureHodgeLefschetzKernel.pureWeightGap
+#check GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_forward_exact
+#check GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_kernel
+#check GSTPureHodgeLefschetzKernel.hc_pure_zero_to_two_kernel
+#check GSTPureHodgeLefschetzKernel.pure_hodge_lefschetz_kernel_crown
 
 
 /-! ## Universal Lefschetz path calculus -/
