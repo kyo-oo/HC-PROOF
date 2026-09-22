@@ -134,6 +134,31 @@ theorem hodge_class_has_classical_cycle
         = R.realization.cycleClass Zp := hcompat.symm
     _ = alpha := hZclass
 
+/-- Explicit algebraic-cycle selector attached to one Stage-2E
+realization certificate.  The selector is defined only after the realization
+data exists; it does not smuggle algebraicity into the semantic package. -/
+noncomputable def classicalCycleSelector
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    {p N : Nat}
+    (R : Stage2EClassRealization V H p N)
+    (alpha : H.hodgePP p) :
+    codimensionCycles V.X p :=
+  Classical.choose
+    (hodge_class_has_classical_cycle V H R alpha.1 alpha.2)
+
+/-- The Stage-2E selector is a verified right inverse on the intended
+rational (p,p)-sector. -/
+theorem classicalCycleSelector_spec
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    {p N : Nat}
+    (R : Stage2EClassRealization V H p N)
+    (alpha : H.hodgePP p) :
+    H.cycleClass p (classicalCycleSelector V H R alpha) = alpha.1 :=
+  Classical.choose_spec
+    (hodge_class_has_classical_cycle V H R alpha.1 alpha.2)
+
 /-- **STAGE-2E CLASSICAL LANDING THEOREM.**
 
 If every codimension p of one genuine smooth projective complex scheme has
@@ -197,6 +222,8 @@ theorem classical_hodge_of_stage2e_obligation
 #check classicalHodgeStatement_iff
 #check Stage2EClassRealization
 #check hodge_class_has_classical_cycle
+#check classicalCycleSelector
+#check classicalCycleSelector_spec
 #check classical_hodge_of_stage2e_family
 #check UniversalClassicalHodgeStatement
 #check universal_classical_hodge_of_stage2e_family
@@ -205,6 +232,7 @@ theorem classical_hodge_of_stage2e_obligation
 
 #print axioms classicalHodgeStatement_iff
 #print axioms hodge_class_has_classical_cycle
+#print axioms classicalCycleSelector_spec
 #print axioms classical_hodge_of_stage2e_family
 #print axioms universal_classical_hodge_of_stage2e_family
 #print axioms classical_hodge_of_stage2e_obligation
