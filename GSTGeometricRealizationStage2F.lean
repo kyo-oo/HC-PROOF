@@ -191,6 +191,38 @@ theorem hodge_class_has_betti_cycle
   exact hodge_class_has_classical_cycle
     V H.toClassicalHodgeData R alpha halpha
 
+/-- Explicit algebraic-cycle selector for one native Betti-Hodge
+realization certificate. -/
+noncomputable def bettiCycleSelector
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    {p N : Nat}
+    (R : Stage2FClassRealization V H p N)
+    (alpha : H.hodgePP p) :
+    codimensionCycles V.X p :=
+  classicalCycleSelector V H.toClassicalHodgeData R alpha
+
+/-- The Betti selector is a verified right inverse of the native Betti
+cycle-class map on the intended Hodge sector. -/
+theorem bettiCycleSelector_spec
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    {p N : Nat}
+    (R : Stage2FClassRealization V H p N)
+    (alpha : H.hodgePP p) :
+    H.cycleClass p (bettiCycleSelector V H R alpha) = alpha.1 := by
+  exact classicalCycleSelector_spec V H.toClassicalHodgeData R alpha
+
+/-- Stage 2F changes the cohomology carrier to native singular cohomology but
+does not change the realization obligation itself: the Betti obligation is
+definitionally the Stage-2E obligation for the induced classical package. -/
+theorem stage2F_obligation_iff_stage2E
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V) :
+    Stage2FRealizationObligation V H ↔
+      Stage2ERealizationObligation V H.toClassicalHodgeData :=
+  Iff.rfl
+
 /-- **STAGE-2F BETTI LANDING THEOREM.**
 
 Once every degree admits an explicit finite realization certificate, the
@@ -237,12 +269,17 @@ theorem betti_hodge_of_stage2f_obligation
 #check bettiHodgeStatement_iff_stage2e
 #check Stage2FClassRealization
 #check hodge_class_has_betti_cycle
+#check bettiCycleSelector
+#check bettiCycleSelector_spec
 #check betti_hodge_of_stage2f_family
 #check Stage2FRealizationObligation
+#check stage2F_obligation_iff_stage2E
 #check betti_hodge_of_stage2f_obligation
 
 #print axioms bettiHodgeStatement_iff_stage2e
 #print axioms hodge_class_has_betti_cycle
+#print axioms bettiCycleSelector_spec
+#print axioms stage2F_obligation_iff_stage2E
 #print axioms betti_hodge_of_stage2f_family
 #print axioms betti_hodge_of_stage2f_obligation
 
