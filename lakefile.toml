@@ -16,6 +16,7 @@ name = "HCUniverse"
 roots = [
   "GSTTactic",
   "GSTCoherentCosmology",
+  "GSTInfiniteWorldClassification",
   "GST2DMixedEmergence",
   "GST2DMixedEmergenceUpgrade",
   "GSTBladeWave",
