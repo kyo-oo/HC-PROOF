@@ -82,9 +82,57 @@ theorem power_width_three_u_derivative_positive_at_cut
   norm_num
   nlinarith
 
+
+/-! ## Quantized transparent pressure -/
+
+/-- Width-three positivity is integer-quantized: disappearance of a Happy
+source forces at least one full unit of vertical U pressure. -/
+theorem power_width_three_u_derivative_ge_one_at_cut
+    (K b q : Nat)
+    (hChild : HappyCell
+      (graph (4^K) 0 (b+q)).seven.carry
+      (graph (4^K) 0 (b+q)).seven.digit)
+    (hRight : ¬ HappyCell
+      (graph (4^K) 3 (b+q)).seven.carry
+      (graph (4^K) 3 (b+q)).seven.digit) :
+    (1 : Int) ≤
+      3 * potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 ((b+q)+1)).core -
+        potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 (b+q)).core := by
+  have h :=
+    power_width_three_u_derivative_positive_at_cut K b q hChild hRight
+  omega
+
+/-- Transparent width three simultaneously carries exact conservation and
+strictly quantized U pressure. -/
+theorem power_width_three_conservation_pressure_packet
+    (K b q : Nat)
+    (hChild : HappyCell
+      (graph (4^K) 0 (b+q)).seven.carry
+      (graph (4^K) 0 (b+q)).seven.digit)
+    (hRight : ¬ HappyCell
+      (graph (4^K) 3 (b+q)).seven.carry
+      (graph (4^K) 3 (b+q)).seven.digit) :
+    (64 * (graph (4^K) 0 (b+q)).seven.digit +
+        wideCarry 64 (4^K) (b+q) =
+      (graph (4^K) 3 (b+q)).seven.digit +
+        3 * wideCarry 64 (4^K) ((b+q)+1))
+    ∧
+    (1 : Int) ≤
+      3 * potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 ((b+q)+1)).core -
+        potentialWith gstUChargeExact (4^3)
+          (unifiedState (4^K) 3 (b+q)).core :=
+  ⟨power_width_three_exact_conservation_at_cut K b q,
+    power_width_three_u_derivative_ge_one_at_cut K b q hChild hRight⟩
+
+
 #check power_width_three_exact_conservation_at_cut
 #check power_width_three_u_derivative_positive_at_cut
 #print axioms power_width_three_exact_conservation_at_cut
 #print axioms power_width_three_u_derivative_positive_at_cut
+#print axioms power_width_three_u_derivative_ge_one_at_cut
+#print axioms power_width_three_conservation_pressure_packet
 
 end GSTGraphV2TransparentWidthThree
