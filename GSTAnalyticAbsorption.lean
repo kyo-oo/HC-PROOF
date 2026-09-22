@@ -138,6 +138,51 @@ theorem hc_period_transport (t R : ℕ) :
   push_cast
   ring
 
+/-- **DESCENT SEMIGROUP LAW.**
+Triadic analytic descent by m+n is exactly descent by m followed by descent
+by n. -/
+theorem hc_descent_flow_add
+    (m n : Nat) :
+    (fun x : ℝ => x / (3 : ℝ)^(m+n)) =
+      (fun x : ℝ => (x / (3 : ℝ)^m) / (3 : ℝ)^n) := by
+  funext x
+  rw [pow_add]
+  field_simp
+  ring
+
+/-- **PERIOD-ACTION SEMIGROUP.**
+The archimedean period transport is a genuine action of the x4-depth
+semigroup: a combined (m+n)-twist is exactly two successive twists. -/
+theorem hc_period_transport_add
+    (m n R : Nat) :
+    hcPeriod (4^(m+n) * R) =
+      (4^m : ℤ) • ((4^n : ℤ) • hcPeriod R) := by
+  rw [hc_period_transport]
+  rw [pow_add]
+  push_cast
+  rw [mul_smul]
+
+/-- Direct and sequential analytic period re-encodings are identical. -/
+theorem hc_period_transport_coherent
+    (m n R : Nat) :
+    hcPeriod (4^(m+n) * R) =
+      hcPeriod (4^m * (4^n * R)) := by
+  congr 1
+  rw [pow_add]
+  ring
+
+/-- Analytic transport crown: both the smooth descent maps and circle periods
+carry exact semigroup actions. -/
+theorem hc_analytic_semigroup_crown :
+    (∀ m n,
+      (fun x : ℝ => x / (3 : ℝ)^(m+n)) =
+        (fun x : ℝ => (x / (3 : ℝ)^m) / (3 : ℝ)^n))
+    ∧
+    (∀ m n R,
+      hcPeriod (4^(m+n) * R) =
+        (4^m : ℤ) • ((4^n : ℤ) • hcPeriod R)) := by
+  exact ⟨hc_descent_flow_add, hc_period_transport_add⟩
+
 /-! ## §3 The harmonic crown — Haar, characters, Stone–Weierstrass, L² -/
 
 section Harmonic
@@ -315,6 +360,10 @@ theorem hc_twist_torsion_law (t : ℕ) (k : ℕ) :
 #check hc_circle_path_connected
 #check hc_circle_compact
 #check hc_period_transport
+#check hc_descent_flow_add
+#check hc_period_transport_add
+#check hc_period_transport_coherent
+#check hc_analytic_semigroup_crown
 #check hc_haar_is_probability
 #check hc_fourier_character_norm
 #check hc_fourier_exponential
@@ -340,6 +389,9 @@ theorem hc_twist_torsion_law (t : ℕ) (k : ℕ) :
 #print axioms hc_circle_path_connected
 #print axioms hc_circle_compact
 #print axioms hc_period_transport
+#print axioms hc_descent_flow_add
+#print axioms hc_period_transport_add
+#print axioms hc_analytic_semigroup_crown
 #print axioms hc_haar_is_probability
 #print axioms hc_fourier_character_norm
 #print axioms hc_fourier_exponential
