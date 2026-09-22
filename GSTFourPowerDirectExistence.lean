@@ -122,6 +122,54 @@ theorem directExistence_implies_source_two
     ∃ p : Nat, 1 ≤ p ∧ digit3 (4^K) p = 2 := by
   exact commonTwo_has_source_two K (h K hK h7)
 
+
+/-! ## Global killing-trit reformulation -/
+
+/-- **COMMONTWO AS A PREFIX-PHASE HIT.**  A direct common-two witness exists
+exactly when some ternary exponent scale has equal prefix-row values and the
+actual exponent trit equals that scale's unique killing trit. -/
+theorem commonTwo_iff_exists_killingTrit_hit (K : Nat) :
+    CommonTwo K ↔
+      ∃ p : Nat,
+        digit3 (4^(exponentPrefix K p)) (p+1) =
+          digit3 (4^((exponentPrefix K p)+1)) (p+1) ∧
+        exponentTrit K p = killingTrit K p := by
+  constructor
+  · rintro ⟨q, hq, hs, ht⟩
+    let p := q - 1
+    have hpq : p + 1 = q := by
+      dsimp [p]
+      omega
+    have hrow :
+        digit3 (4^K) (p+1) = 2 ∧
+        digit3 (4^(K+1)) (p+1) = 2 := by
+      rw [hpq]
+      exact ⟨hs, ht⟩
+    have hcrit := (row_common_two_iff_killingTrit K p).1 hrow
+    exact ⟨p, hcrit.1, hcrit.2⟩
+  · rintro ⟨p, heq, hkill⟩
+    have hrow :=
+      (row_common_two_iff_killingTrit K p).2 ⟨heq, hkill⟩
+    exact ⟨p+1, by omega, hrow.1, hrow.2⟩
+
+/-- A counterexample is therefore exactly a universe in which every scale
+fails its killing-trit hit whenever the corresponding prefix pair agrees. -/
+theorem noCommonTwo_iff_all_killingTrits_avoided (K : Nat) :
+    (¬ CommonTwo K) ↔
+      ∀ p : Nat,
+        digit3 (4^(exponentPrefix K p)) (p+1) =
+          digit3 (4^((exponentPrefix K p)+1)) (p+1) →
+        exponentTrit K p ≠ killingTrit K p := by
+  constructor
+  · intro hNo p heq hkill
+    exact hNo ((commonTwo_iff_exists_killingTrit_hit K).2
+      ⟨p, heq, hkill⟩)
+  · intro hAvoid hCommon
+    rcases (commonTwo_iff_exists_killingTrit_hit K).1 hCommon with
+      ⟨p, heq, hkill⟩
+    exact hAvoid p heq hkill
+
+
 #check CommonTwo
 #check FourPowerDirectExistence
 #check commonTwo_has_source_two
@@ -135,6 +183,8 @@ theorem directExistence_implies_source_two
 #check noCommonTwo_exponent_trit_law
 #check noCommonTwo_all_exponent_trit_laws
 #check directExistence_implies_source_two
+#check commonTwo_iff_exists_killingTrit_hit
+#check noCommonTwo_iff_all_killingTrits_avoided
 #print axioms commonTwo_has_source_two
 #print axioms commonTwo_has_target_two
 #print axioms commonTwo_of_mod9_five_or_six
@@ -146,5 +196,7 @@ theorem directExistence_implies_source_two
 #print axioms noCommonTwo_exponent_trit_law
 #print axioms noCommonTwo_all_exponent_trit_laws
 #print axioms directExistence_implies_source_two
+#print axioms commonTwo_iff_exists_killingTrit_hit
+#print axioms noCommonTwo_iff_all_killingTrits_avoided
 
 end GSTFourPowerDirectExistence
