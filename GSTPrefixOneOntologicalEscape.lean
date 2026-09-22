@@ -142,6 +142,34 @@ theorem gst_four_power_creation_certificate_inline
   (GSTFourPowerDirectCreationMaster.directExistence_to_creation_master
     (gst_four_power_direct_existence_inline hClimb)) K hK5 hK7
 
+
+/-! ## Exact four-power interface equivalences -/
+
+/-- Third-wave language and historical creation language are exactly
+equivalent at each exponent. -/
+theorem gst_thirdWave_iff_creationCertificate (K : Nat) :
+    GSTFourPowerThirdWave.thirdWave K ↔
+      GSTFourPowerOntologicalAdapter.CreationCertificate (4^K) := by
+  calc
+    GSTFourPowerThirdWave.thirdWave K
+        ↔ GSTFourPowerDirectExistence.CommonTwo K :=
+      GSTFourPowerThirdWave.thirdWave_iff_commonTwo K
+    _ ↔ GSTFourPowerOntologicalAdapter.CreationCertificate (4^K) :=
+      GSTFourPowerDirectCreationMaster.commonTwo_iff_creation_certificate K
+
+/-- Third-wave language is likewise exactly equivalent to physical
+Navigation on the four-power sheet. -/
+theorem gst_thirdWave_iff_navigation (K : Nat) :
+    GSTFourPowerThirdWave.thirdWave K ↔
+      GSTCanonicalTailStateIso.Navigation (4^K) := by
+  calc
+    GSTFourPowerThirdWave.thirdWave K
+        ↔ GSTFourPowerOntologicalAdapter.CreationCertificate (4^K) :=
+      gst_thirdWave_iff_creationCertificate K
+    _ ↔ GSTCanonicalTailStateIso.Navigation (4^K) :=
+      GSTFourPowerOntologicalAdapter.creation_certificate_iff_navigation_fourPower K
+
+
 #check gst_four_power_creation_certificate_noAxiom_from_provider
 #check gst_four_power_creation_certificate_noAxiom_from_commonTwoGeThree
 #check gst_four_power_creation_certificate_noAxiom_from_prefixHitGeThree
@@ -155,3 +183,5 @@ theorem gst_four_power_creation_certificate_inline
 #print axioms gst_four_power_third_wave_gate
 #print axioms gst_four_power_direct_existence_inline
 #print axioms gst_four_power_creation_certificate_inline
+#print axioms gst_thirdWave_iff_creationCertificate
+#print axioms gst_thirdWave_iff_navigation
