@@ -24,6 +24,7 @@ import GSTWorldCosmology
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
+import GSTUniversalLefschetzDynamics
 import GSTWorldCrownBridge
 import HodgeDeRhamBridge
 import HodgeDeRhamBridgeV2
@@ -371,3 +372,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTWorldRecoordinationGroupoid.codeSector_projector_polynomial
 #check GSTWorldRecoordinationGroupoid.mixedRadixTranspose_is_worldRecoordinate
 #check GSTWorldRecoordinationGroupoid.world_recoordination_groupoid_crown
+
+
+/-! ## Dimension-free universal Lefschetz dynamics -/
+
+#check GSTUniversalLefschetzDynamics.worldLefschetz
+#check GSTUniversalLefschetzDynamics.worldLefschetz_iterate_zero
+#check GSTUniversalLefschetzDynamics.worldLefschetz_nilpotent
+#check GSTUniversalLefschetzDynamics.liftWave_lefschetz_iterate
+#check GSTUniversalLefschetzDynamics.lefschetz_sixth_power_from_universal
+#check GSTUniversalLefschetzDynamics.universal_lefschetz_crown
