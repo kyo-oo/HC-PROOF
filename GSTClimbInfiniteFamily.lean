@@ -1108,6 +1108,70 @@ theorem tower_dust_empty (core : Nat) (hfree : ¬ 3 ∣ core) :
         · omega
   · exact never_firing_fire_front h (by omega)
 
+/-- **CONSTRUCTIVE TOWER FIRE.**
+The emptiness theorem is exported positively: every three-free core owns an
+actual sheet and an actual relative row where the ternary digit is two. -/
+theorem tower_fire_exists
+    (core : Nat) (hfree : ¬ 3 ∣ core) :
+    ∃ S p : Nat,
+      digit3 (4^(3^S * core)) (S + 1 + p) = 2 := by
+  have h := tower_dust_empty core hfree
+  unfold NeverFiringTower at h
+  push_neg at h
+  exact h
+
+/-- Residue-form constructive fire: every core in either nonzero ternary
+residue class has a concrete firing sheet. -/
+theorem tower_fire_exists_of_mod_three_nonzero
+    (core : Nat)
+    (hfree : core % 3 = 1 ∨ core % 3 = 2) :
+    ∃ S p : Nat,
+      digit3 (4^(3^S * core)) (S + 1 + p) = 2 := by
+  apply tower_fire_exists core
+  intro hdiv
+  have hz : core % 3 = 0 := Nat.mod_eq_zero_of_dvd hdiv
+  omega
+
+/-- **GLOBAL CORE DICHOTOMY.**
+Every natural core is either ternarily divisible or emits a digit-two event
+somewhere on its multiplicative-three tower. -/
+theorem core_divisible_or_tower_fire
+    (core : Nat) :
+    3 ∣ core ∨
+      ∃ S p : Nat,
+        digit3 (4^(3^S * core)) (S + 1 + p) = 2 := by
+  by_cases hfree : 3 ∣ core
+  · exact Or.inl hfree
+  · exact Or.inr (tower_fire_exists core hfree)
+
+/-- The tower fire is stable as a purely existential event under arbitrary
+choice of a lower search bound on the sheet index: either a fire already
+occurs below the bound or a fire occurs at/above it. -/
+theorem tower_fire_split_at
+    (core B : Nat) (hfree : ¬ 3 ∣ core) :
+    (∃ S p : Nat, S < B ∧
+      digit3 (4^(3^S * core)) (S + 1 + p) = 2)
+    ∨
+    (∃ S p : Nat, B ≤ S ∧
+      digit3 (4^(3^S * core)) (S + 1 + p) = 2) := by
+  obtain ⟨S,p,hfire⟩ := tower_fire_exists core hfree
+  by_cases hSB : S < B
+  · exact Or.inl ⟨S,p,hSB,hfire⟩
+  · exact Or.inr ⟨S,p,by omega,hfire⟩
+
+/-- Strengthened tower crown: dust emptiness, constructive firing, and the
+global divisibility/fire dichotomy are one theorem surface. -/
+theorem tower_fire_crown :
+    (∀ core : Nat, ¬ 3 ∣ core →
+      ∃ S p : Nat,
+        digit3 (4^(3^S * core)) (S + 1 + p) = 2)
+    ∧
+    (∀ core : Nat,
+      3 ∣ core ∨
+        ∃ S p : Nat,
+          digit3 (4^(3^S * core)) (S + 1 + p) = 2) := by
+  exact ⟨tower_fire_exists, core_divisible_or_tower_fire⟩
+
 /-! ## §8 THE RECEIPT — the extermination, assembled -/
 
 /-- **THE TOWER DUST EXTERMINATION, ASSEMBLED.**  (1) No three-free core
@@ -1150,6 +1214,10 @@ theorem the_tower_dust_is_empty_receipt
 #print axioms never_firing_fire_deepA
 #print axioms never_firing_fire_deepB
 #print axioms tower_dust_empty
+#print axioms tower_fire_exists
+#print axioms core_divisible_or_tower_fire
+#print axioms tower_fire_split_at
+#print axioms tower_fire_crown
 #print axioms the_tower_dust_is_empty_receipt
 
 end GSTClimbInfiniteFamily
