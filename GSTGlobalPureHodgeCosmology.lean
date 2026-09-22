@@ -66,8 +66,10 @@ def pureReassemble
   fun x =>
     if h : x.1.1 = x.2.1 then
       a ⟨x.1.1, by
-        have hA := x.1.2
-        have hB := x.2.2
+        have hA : x.1.1 < A := by
+          simpa [outputShape] using x.1.2
+        have hB : x.2.1 < B := by
+          simpa [outputShape] using x.2.2
         omega⟩
     else 0
 
@@ -188,9 +190,9 @@ theorem hc_pure_coordinate_depth :
 
 /-- The historical three-generator theorem is therefore the 4 x 3 shadow of
 the universal min(A,B)-coordinate classification. -/
-theorem hc_pure_hodge_equiv :
+noncomputable def hc_pure_hodge_equiv :
     PureWorldHodge 4 3 ≃ₗ[ℤ] (Fin 3 -> ℤ) := by
-  simpa using pureHodgeLinearEquiv 4 3
+  simpa [PureHodgeCoordinates] using pureHodgeLinearEquiv 4 3
 
 /-- Canonical pure basis vector at one diagonal weight. -/
 def pureBasis
