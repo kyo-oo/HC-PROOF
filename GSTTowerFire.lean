@@ -207,6 +207,45 @@ theorem tower_digit_read (j n k : Nat) (hk : k ≤ n) :
     exact ⟨3^(n-k) * (c n * c n * R), by ring⟩
   omega
 
+/-- The complete finite read profile exposed by one scaled tower. -/
+def towerReadProfile (j n : Nat) :
+    Fin (n+1) → Nat :=
+  fun k => digit3 (4^(j * 3^n)) (n+1+k.1)
+
+/-- The coefficient-side profile controlling the same tower window. -/
+def towerCoefficientProfile (j n : Nat) :
+    Fin (n+1) → Nat :=
+  fun k => digit3 (j * c n) k.1
+
+/-- **FINITE-PROFILE TOWER ISOMORPHISM.**
+The deep-hider lemma upgrades from pointwise equality to equality of the
+entire n+1-coordinate read profile. -/
+theorem towerReadProfile_exact
+    (j n : Nat) :
+    towerReadProfile j n = towerCoefficientProfile j n := by
+  funext k
+  unfold towerReadProfile towerCoefficientProfile
+  exact tower_digit_read j n k.1 (by omega)
+
+/-- Every predicate on the finite read profile can therefore be transferred
+between the perfect-power tower and the compact coefficient profile. -/
+theorem towerReadProfile_predicate_iff
+    (P : (Fin (n+1) → Nat) → Prop)
+    (j n : Nat) :
+    P (towerReadProfile j n) ↔
+      P (towerCoefficientProfile j n) := by
+  rw [towerReadProfile_exact]
+
+/-- Every functional observable of the finite read profile is identical on
+the tower and coefficient presentations. -/
+theorem towerReadProfile_observable_exact
+    {α : Type}
+    (F : (Fin (n+1) → Nat) → α)
+    (j n : Nat) :
+    F (towerReadProfile j n) =
+      F (towerCoefficientProfile j n) :=
+  congrArg F (towerReadProfile_exact j n)
+
 /-- **THE n+2 LAW (Lane D's L7).**  `3^n` fires at row `n+2` for every
 `n ≥ 1`: the first rows are zero (the valuation), row `n+1` is one,
 row `n+2` is TWO — the tower constant's second trit. -/
@@ -251,5 +290,8 @@ theorem three_pow_plus_one_fires (n : Nat) (hn : 3 ≤ n) :
 #print axioms two_mul_three_pow_fires
 #print axioms three_pow_plus_one_fires
 #print axioms tower_digit_read
+#print axioms towerReadProfile_exact
+#print axioms towerReadProfile_predicate_iff
+#print axioms towerReadProfile_observable_exact
 
 end GSTTowerFire
