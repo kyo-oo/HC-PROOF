@@ -102,6 +102,70 @@ theorem six_iso_weaken {k : Nat} {x y : Int}
     x - y = (6 : Int) ^ (k + 1) * q := hq
     _ = (6 : Int) ^ k * (6 * q) := by rw [pow_succ]; ring
 
+
+/-! ## Arbitrary-depth resolution calculus -/
+
+/-- Finer indistinguishability can be weakened by an arbitrary finite depth,
+not only one level. -/
+theorem six_iso_weaken_many
+    (k r : Nat) {x y : Int}
+    (h : SixAdicIsoAt (k + r) x y) :
+    SixAdicIsoAt k x y := by
+  induction r with
+  | zero =>
+      simpa using h
+  | succ r ih =>
+      apply ih
+      apply six_iso_weaken
+      simpa [Nat.add_assoc] using h
+
+/-- Multiplication by `6^r` raises six-adic resolution by exactly `r`
+levels.  This is the iterated form of the one-step scale law. -/
+theorem six_iso_scale_pow
+    (k r : Nat) {x y : Int}
+    (h : SixAdicIsoAt k x y) :
+    SixAdicIsoAt (k + r)
+      ((6 : Int)^r * x) ((6 : Int)^r * y) := by
+  induction r with
+  | zero =>
+      simpa using h
+  | succ r ih =>
+      have hs := six_iso_scale_six ih
+      simpa [pow_succ, Nat.add_assoc, mul_assoc, mul_comm, mul_left_comm] using hs
+
+/-- **EXACT RESOLUTION SHIFT.**  Scaling both coordinates by `6^r` is
+equivalent to shifting the resolution index upward by `r`.  Hence the
+six-adic overlay carries an exact scale action, not merely a non-expansive
+one. -/
+theorem six_iso_scale_pow_iff
+    (k r : Nat) (x y : Int) :
+    SixAdicIsoAt (k + r)
+        ((6 : Int)^r * x) ((6 : Int)^r * y)
+      ↔ SixAdicIsoAt k x y := by
+  constructor
+  · rintro ⟨q, hq⟩
+    refine ⟨q, ?_⟩
+    have hc :
+        (6 : Int)^r * (x - y) =
+          (6 : Int)^r * ((6 : Int)^k * q) := by
+      calc
+        (6 : Int)^r * (x - y) =
+            (6 : Int)^r * x - (6 : Int)^r * y := by ring
+        _ = (6 : Int)^(k+r) * q := hq
+        _ = (6 : Int)^r * ((6 : Int)^k * q) := by
+          rw [pow_add]
+          ring
+    exact mul_left_cancel₀ (by positivity : (6 : Int)^r ≠ 0) hc
+  · intro h
+    exact six_iso_scale_pow k r h
+
+/-- Arbitrarily deeper balls are nested in their coarse ancestor. -/
+theorem six_ball_nested_many (k r : Nat) (c : Int) :
+    SixAdicBall (k + r) c ⊆ SixAdicBall k c := by
+  intro x hx
+  exact six_iso_weaken_many k r hx
+
+
 /-! ## Dyadic and triadic shadows -/
 
 theorem six_iso_to_dyadic {k : Nat} {x y : Int}
@@ -228,5 +292,11 @@ theorem resolved_vertex_axes_exact (G : ResolvedGraph) (p : Nat) :
 theorem resolved_vertex_exact (G : ResolvedGraph) (p : Nat) :
     resolvedVertex G p = GSTGraphV2NonEuclidean.vertex G.ambient p := by
   rfl
+
+#check six_iso_weaken_many
+#check six_iso_scale_pow
+#check six_iso_scale_pow_iff
+#check six_ball_nested_many
+#print axioms six_iso_scale_pow_iff
 
 end GSTGraphV2SixAdicOntologicalGeometryLaws
