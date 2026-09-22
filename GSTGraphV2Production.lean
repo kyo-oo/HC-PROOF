@@ -322,6 +322,46 @@ def canonicalCutFrame (s n q : Nat) : CanonicalCutFrame :=
     uFrame := originFrame (s+1) n (q+1) 0 p
   }
 
+
+/-! ## Certified production records -/
+
+/-- Every production rectangle carries a physical coupled state satisfying the
+exact shared-information invariant at multiplier 4^width. -/
+theorem rectangle_physicalInvariant
+    (E N p : Nat) :
+    GSTGraphV2CoupledUPhysicalBridge.PhysicalInvariant
+      (4^N) (rectangle E N p).physical := by
+  simpa [rectangle] using
+    GSTGraphV2UnifiedPowerRectangle.unifiedState_physicalInvariant E N p
+
+/-- The rectangle's retained U coordinate is definitionally the exact
+horizontal Graph-V2 U potential of the same physical interval. -/
+theorem rectangle_uPotential_exact
+    (E N p : Nat) :
+    (rectangle E N p).uPotential =
+      GSTGraphV2HandwrittenAnchoredCocycle.graphUPotential E 0 N p := by
+  rfl
+
+/-- Canonical rectangles inherit the same physical invariant. -/
+theorem canonicalRectangle_physicalInvariant
+    (s n p : Nat) :
+    GSTGraphV2CoupledUPhysicalBridge.PhysicalInvariant
+      (4^(canonicalWidth s))
+      (canonicalRectangle s n p).physical := by
+  exact rectangle_physicalInvariant
+    (canonicalEnergy s n) (canonicalWidth s) p
+
+/-- Residual rectangles likewise inherit the invariant at every residual
+scale. -/
+theorem residualRectangle_physicalInvariant
+    (s k m p : Nat) :
+    GSTGraphV2CoupledUPhysicalBridge.PhysicalInvariant
+      (4^(residualWidth s))
+      (residualRectangle s k m p).physical := by
+  exact rectangle_physicalInvariant
+    (residualEnergy s k m) (residualWidth s) p
+
+
 #check Cell
 #check graph
 #check Direction
@@ -351,5 +391,9 @@ def canonicalCutFrame (s n q : Nat) : CanonicalCutFrame :=
 #check residualGateFrame
 #check CanonicalCutFrame
 #check canonicalCutFrame
+#check rectangle_physicalInvariant
+#check rectangle_uPotential_exact
+#check canonicalRectangle_physicalInvariant
+#check residualRectangle_physicalInvariant
 
 end GSTGraphV2Production
