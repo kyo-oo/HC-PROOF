@@ -203,7 +203,9 @@ def killingTrit (K p : Nat) : Nat :=
 theorem killingTrit_lt_three (K p : Nat) :
     killingTrit K p < 3 := by
   unfold killingTrit
-  have hd := digit3_lt_three (4^(exponentPrefix K p)) (p+1)
+  have hd : digit3 (4^(exponentPrefix K p)) (p+1) < 3 := by
+    unfold digit3
+    exact Nat.mod_lt _ (by decide)
   omega
 
 /-- The row-common-two criterion written as an exact named phase law. -/
@@ -228,8 +230,12 @@ theorem killingTrit_unique
       (digit3 (4^(exponentPrefix K p)) (p+1) + a) % 3 = 2 ∧
       (digit3 (4^((exponentPrefix K p)+1)) (p+1) + a) % 3 = 2) :
     a = killingTrit K p := by
-  have hd0 := digit3_lt_three (4^(exponentPrefix K p)) (p+1)
-  have hd1 := digit3_lt_three (4^((exponentPrefix K p)+1)) (p+1)
+  have hd0 : digit3 (4^(exponentPrefix K p)) (p+1) < 3 := by
+    unfold digit3
+    exact Nat.mod_lt _ (by decide)
+  have hd1 : digit3 (4^((exponentPrefix K p)+1)) (p+1) < 3 := by
+    unfold digit3
+    exact Nat.mod_lt _ (by decide)
   have h := (shifted_pair_eq_two_iff
     (digit3 (4^(exponentPrefix K p)) (p+1))
     (digit3 (4^((exponentPrefix K p)+1)) (p+1))
