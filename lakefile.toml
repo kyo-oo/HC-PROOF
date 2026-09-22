@@ -139,6 +139,7 @@ roots = [
   "GSTRadixWorldDynamics",
   "GSTGradedWorldAlgebra",
   "GSTWorldRecoordinationGroupoid",
+  "GSTUniversalLefschetzDynamics",
   "GSTWorldCrownBridge",
   "InformationBadTraceScratch",
   "InformationDescentScratch",
