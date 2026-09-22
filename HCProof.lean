@@ -27,6 +27,7 @@ import GSTTruncatedWorldCohomologyRing
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
+import GSTUniversalAddressBridge
 import GSTUniversalLefschetzDynamics
 import GSTWorldPoincareDuality
 import GSTWorldCrownBridge
@@ -427,3 +428,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTInfiniteWorldClassification.towerCurrent_trace_injective
 #check GSTInfiniteWorldClassification.windowTower_eq_iff_all_observations
 #check GSTInfiniteWorldClassification.infinite_world_classification_crown
+
+
+/-! ## Universal address bridge -/
+
+#check GSTUniversalAddressBridge.worldAddressLinearEquiv
+#check GSTUniversalAddressBridge.worldAddress_transportCoef
+#check GSTUniversalAddressBridge.worldAddress_codeSectorProj
+#check GSTUniversalAddressBridge.worldAddress_worldBasis
+#check GSTUniversalAddressBridge.universal_address_bridge_crown
