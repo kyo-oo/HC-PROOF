@@ -29,6 +29,7 @@ import GSTGradedWorldAlgebra
 import GSTWorldRecoordinationGroupoid
 import GSTUniversalAddressBridge
 import GSTDimensionFreeHodgeDiagonal
+import GSTGlobalPureHodgeCosmology
 import GSTUniversalLefschetzDynamics
 import GSTWorldPoincareDuality
 import GSTWorldCrownBridge
@@ -447,3 +448,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTDimensionFreeHodgeDiagonal.world_hodge_zero_outside
 #check GSTDimensionFreeHodgeDiagonal.worldAddress_diagonalClass
 #check GSTDimensionFreeHodgeDiagonal.dimension_free_hodge_crown
+
+
+/-! ## Global pure-Hodge cosmology -/
+
+#check GSTGlobalPureHodgeCosmology.pureHodgeLinearEquiv
+#check GSTGlobalPureHodgeCosmology.pure_hodge_classification
+#check GSTGlobalPureHodgeCosmology.hc_pure_hodge_equiv
+#check GSTGlobalPureHodgeCosmology.worldAddress_pure_support
+#check GSTGlobalPureHodgeCosmology.global_pure_hodge_crown
