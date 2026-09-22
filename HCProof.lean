@@ -23,6 +23,7 @@ import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
+import GSTWorldRecoordinationGroupoid
 import GSTWorldCrownBridge
 import HodgeDeRhamBridge
 import HodgeDeRhamBridgeV2
@@ -359,3 +360,14 @@ All declarations below are root-level (the modules carry no namespaces).
 #check CardinalWorldsPrefixClassifier.four_pow_has_two_iff_prefix_trit
 #check CardinalWorldsPrefixClassifier.four_pow_signature_free_iff_all_prefixes_avoid
 #check CardinalWorldsPrefixClassifier.prefix_classifier_crown
+
+
+/-! ## GST equal-cardinality world recoordination groupoid -/
+
+#check GSTWorldRecoordinationGroupoid.GSTWorldShape
+#check GSTWorldRecoordinationGroupoid.worldRecoordinate
+#check GSTWorldRecoordinationGroupoid.worldRecoordinate_comp
+#check GSTWorldRecoordinationGroupoid.transportCoef_comp
+#check GSTWorldRecoordinationGroupoid.codeSector_projector_polynomial
+#check GSTWorldRecoordinationGroupoid.mixedRadixTranspose_is_worldRecoordinate
+#check GSTWorldRecoordinationGroupoid.world_recoordination_groupoid_crown
