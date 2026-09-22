@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - cosmology-lefschetz-path
     paths:
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
@@ -12,6 +13,7 @@ on:
       - 'GSTDimensionFreeHodgeDiagonal.lean'
       - 'GSTGlobalPureHodgeCosmology.lean'
       - 'GSTUniversalLefschetzDynamics.lean'
+      - 'GSTLefschetzPathKernel.lean'
       - 'GSTUniversalLefschetzCosmology.lean'
       - 'GSTTruncatedWorldCohomologyRing.lean'
       - 'GSTWorldPoincareDuality.lean'
@@ -75,6 +77,7 @@ jobs:
             GSTDimensionFreeHodgeDiagonal.lean
             GSTGlobalPureHodgeCosmology.lean
             GSTUniversalLefschetzDynamics.lean
+            GSTLefschetzPathKernel.lean
             GSTUniversalLefschetzCosmology.lean
             GSTTruncatedWorldCohomologyRing.lean
             GSTWorldPoincareDuality.lean
@@ -115,6 +118,7 @@ jobs:
             GSTDimensionFreeHodgeDiagonal \
             GSTGlobalPureHodgeCosmology \
             GSTUniversalLefschetzDynamics \
+            GSTLefschetzPathKernel \
             GSTUniversalLefschetzCosmology \
             GSTTruncatedWorldCohomologyRing \
             GSTWorldPoincareDuality \
