@@ -162,8 +162,7 @@ theorem addressSectorProj_orthogonal
   by_cases hk : i.1 = k
   · have hj : i.1 ≠ j := by
       intro h
-      apply hjk
-      omega
+      exact hjk (h.symm.trans hk)
     simp [addressSectorProj, hk, hj]
   · simp [addressSectorProj, hk]
 
@@ -271,11 +270,15 @@ theorem universal_address_bridge_crown :
         (p : Polynomial ℤ) (f : ShapeCoef S),
       worldAddress S (codePolyOp S p f) =
         addressPolyOp p (worldAddress S f)) := by
-  exact ⟨
-    fun N S => (worldAddressLinearEquiv S).bijective,
-    worldAddress_transportCoef,
-    worldAddress_codeSectorProj,
-    worldAddress_codePolyOp⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro N S
+    exact (worldAddressLinearEquiv S).bijective
+  · intro N S T f
+    exact worldAddress_transportCoef S T f
+  · intro N S k f
+    exact worldAddress_codeSectorProj S k f
+  · intro N S p f
+    exact worldAddress_codePolyOp S p f
 
 #check AddressRing
 #check worldAddressLinearEquiv
