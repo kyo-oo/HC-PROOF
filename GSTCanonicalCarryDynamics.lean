@@ -41,8 +41,8 @@ theorem carry4_state_decomposition
       3*carry4 R (p+1) + carry4Emit R p := by
   unfold carry4Emit
   rw [carry4_forward_exact]
-  exact (Nat.mod_add_div
-    (carry4 R p + 4*digit3 R p) 3).symm
+  simpa [Nat.add_comm] using
+    (Nat.mod_add_div (carry4 R p + 4*digit3 R p) 3).symm
 
 /-- The emitted transition residue is always a genuine ternary digit. -/
 theorem carry4Emit_lt_three
