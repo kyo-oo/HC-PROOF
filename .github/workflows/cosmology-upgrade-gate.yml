@@ -11,6 +11,7 @@ on:
       - 'GSTUniversalAddressBridge.lean'
       - 'GSTDimensionFreeHodgeDiagonal.lean'
       - 'GSTGlobalPureHodgeCosmology.lean'
+      - 'GSTSquarePureHodgeDuality.lean'
       - 'GSTUniversalLefschetzDynamics.lean'
       - 'GSTUniversalLefschetzCosmology.lean'
       - 'GSTUniversalLefschetzPathFormula.lean'
@@ -76,6 +77,7 @@ jobs:
             GSTUniversalAddressBridge.lean
             GSTDimensionFreeHodgeDiagonal.lean
             GSTGlobalPureHodgeCosmology.lean
+            GSTSquarePureHodgeDuality.lean
             GSTUniversalLefschetzDynamics.lean
             GSTUniversalLefschetzCosmology.lean
             GSTUniversalLefschetzPathFormula.lean
@@ -118,6 +120,7 @@ jobs:
             GSTUniversalAddressBridge \
             GSTDimensionFreeHodgeDiagonal \
             GSTGlobalPureHodgeCosmology \
+            GSTSquarePureHodgeDuality \
             GSTUniversalLefschetzDynamics \
             GSTUniversalLefschetzCosmology \
             GSTUniversalLefschetzPathFormula \
