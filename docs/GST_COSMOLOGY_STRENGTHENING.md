@@ -113,8 +113,18 @@ and audits transitive axioms. `GSTCosmologyStrengtheningAudit.lean` lists the
 public declarations individually. Permitted dependencies are only
 `propext`, `Classical.choice` and `Quot.sound`.
 
-This document is a map of the submitted proofs. The GitHub Actions result
-for the exact branch head is the verification receipt. It does not claim a
-ranking against Millennium Problems or that all 2,044 existing declarations
-have individually been replaced. General rational strong Lefschetz is not
-asserted here.
+Verified Lean source commit: `51be1fd14b64bdad6351d2461534fa4af4ba7037`.
+[Successful verification run](https://github.com/kyo-oo/HC-PROOF/actions/runs/35706311719)
+completed on 2026-09-22.
+
+- All upgraded cosmology build targets passed.
+- The proof-escape check and `sorryAx` check passed.
+- All 85 public declarations across the five new modules were audited:
+  83 reported permitted axioms and two required no axioms.
+- The full `lake build HCProof` integration passed.
+- The new modules contain 59 public theorems plus three private proof lemmas.
+
+This document records the verified theorem-family upgrade. It does not claim
+that all 2,044 existing declarations have individually been replaced.
+General rational strong Lefschetz and comparisons with Millennium Problems
+are not asserted here.
