@@ -8,6 +8,7 @@ on:
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
+      - 'GSTUniversalAddressBridge.lean'
       - 'GSTUniversalLefschetzDynamics.lean'
       - 'GSTUniversalLefschetzCosmology.lean'
       - 'GSTTruncatedWorldCohomologyRing.lean'
@@ -68,6 +69,7 @@ jobs:
             GSTRadixWorldDynamics.lean
             GSTGradedWorldAlgebra.lean
             GSTWorldRecoordinationGroupoid.lean
+            GSTUniversalAddressBridge.lean
             GSTUniversalLefschetzDynamics.lean
             GSTUniversalLefschetzCosmology.lean
             GSTTruncatedWorldCohomologyRing.lean
@@ -105,6 +107,7 @@ jobs:
             GSTRadixWorldDynamics \
             GSTGradedWorldAlgebra \
             GSTWorldRecoordinationGroupoid \
+            GSTUniversalAddressBridge \
             GSTUniversalLefschetzDynamics \
             GSTUniversalLefschetzCosmology \
             GSTTruncatedWorldCohomologyRing \
