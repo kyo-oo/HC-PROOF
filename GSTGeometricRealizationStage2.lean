@@ -144,6 +144,35 @@ def HodgeCycleSurjectivity
     (isHodge : Coh -> Prop) (cycleClass : CycleQ -> Coh) : Prop :=
   ∀ alpha : Coh, isHodge alpha -> ∃ Z : CycleQ, cycleClass Z = alpha
 
+/-- **SURJECTIVE TARGET SELECTOR.**  Any supplied cycle-surjectivity
+proof can be Skolemized into an explicit witness function on the Hodge
+subtype.  No realization data is invented: the selector exists exactly when
+the stated surjectivity proof is available. -/
+noncomputable def hodgeCycleSelector
+    {Coh CycleQ : Type*}
+    (isHodge : Coh -> Prop) (cycleClass : CycleQ -> Coh)
+    (h : HodgeCycleSurjectivity isHodge cycleClass) :
+    {alpha : Coh // isHodge alpha} -> CycleQ :=
+  fun alpha => Classical.choose (h alpha.1 alpha.2)
+
+/-- The selector is a verified right inverse of the cycle-class map on the
+Hodge sector. -/
+theorem hodgeCycleSelector_spec
+    {Coh CycleQ : Type*}
+    (isHodge : Coh -> Prop) (cycleClass : CycleQ -> Coh)
+    (h : HodgeCycleSurjectivity isHodge cycleClass)
+    (alpha : {alpha : Coh // isHodge alpha}) :
+    cycleClass (hodgeCycleSelector isHodge cycleClass h alpha) = alpha.1 :=
+  Classical.choose_spec (h alpha.1 alpha.2)
+
+/-- A concrete finite realization therefore carries its own explicit
+right-inverse selector on Hodge classes. -/
+theorem finite_realization_selector_spec
+    (R : FiniteHodgeRealization N Coh CycleQ)
+    (alpha : {alpha : Coh // R.isHodge alpha}) :
+    R.cycleClass (cycleWitness R alpha.1) = alpha.1 :=
+  (hodge_class_has_cycle_witness R alpha.1 alpha.2).choose_spec
+
 /-- Stage 2A closes the exact cycle-surjectivity target for every geometric
 fiber carrying a FiniteHodgeRealization.  Stage 2B is precisely the task of
 constructing such a realization for each genuine classical fiber. -/
@@ -244,6 +273,9 @@ theorem universal_hodge_of_realization_family
 #check singleton_support_rank_one
 #check stage2_realization_crown
 #check HodgeCycleSurjectivity
+#check hodgeCycleSelector
+#check hodgeCycleSelector_spec
+#check finite_realization_selector_spec
 #check stage2_closes_cycle_surjectivity
 #check UniversalHodgeStatement
 #check universal_hodge_of_fiberwise_surjectivity
@@ -254,6 +286,8 @@ theorem universal_hodge_of_realization_family
 #print axioms hodge_class_has_cycle_witness
 #print axioms stage2_realization_crown
 #print axioms stage2_closes_cycle_surjectivity
+#print axioms hodgeCycleSelector_spec
+#print axioms finite_realization_selector_spec
 #print axioms universal_hodge_of_fiberwise_surjectivity
 #print axioms universal_hodge_of_realization_family
 
