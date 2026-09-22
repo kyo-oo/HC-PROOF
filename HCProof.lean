@@ -1,4 +1,5 @@
 import GSTCoherentCosmology
+import GSTInfiniteWorldClassification
 import GST2DMixedEmergenceUpgrade
 import CardinalWorlds
 import CardinalWorldsV2
@@ -417,3 +418,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTTruncatedWorldCohomologyRing.worldOperatorHom
 #check GSTTruncatedWorldCohomologyRing.worldAct_monomial
 #check GSTTruncatedWorldCohomologyRing.truncated_world_ring_crown
+
+
+/-! ## Exact classification of coherent GST infinity -/
+
+#check GSTInfiniteWorldClassification.windowTowerEquivStream
+#check GSTInfiniteWorldClassification.level_eq_iff_stream_prefix
+#check GSTInfiniteWorldClassification.towerCurrent_trace_injective
+#check GSTInfiniteWorldClassification.windowTower_eq_iff_all_observations
+#check GSTInfiniteWorldClassification.infinite_world_classification_crown
