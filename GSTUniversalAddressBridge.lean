@@ -155,12 +155,12 @@ theorem addressSectorProj_idempotent
     simp [addressSectorProj, h]
 
 theorem addressSectorProj_orthogonal
-    {N : Nat} (j k : Nat) (hjk : j != k)
+    {N : Nat} (j k : Nat) (hjk : j ≠ k)
     (phi : AddressRing N) :
     addressSectorProj j (addressSectorProj k phi) = fun _ => 0 := by
   funext i
   by_cases hk : i.1 = k
-  · have hj : i.1 != j := by
+  · have hj : i.1 ≠ j := by
       intro h
       apply hjk
       omega
@@ -176,7 +176,7 @@ theorem addressSectorProj_sum
   rw [Finset.sum_eq_single i.1]
   · simp [addressSectorProj]
   · intro b hb hbi
-    have hne : i.1 != b := hbi.symm
+    have hne : i.1 ≠ b := hbi.symm
     simp [addressSectorProj, hne]
   · intro hnot
     exact (hnot (Finset.mem_range.mpr i.2)).elim
@@ -230,19 +230,15 @@ theorem worldAddress_worldBasis
       addressBasis (shapeCodeEquiv S x) := by
   funext i
   unfold worldAddress worldBasis addressBasis
-  constructor <;> intro h
-  · simp only [if_pos h]
-    have : (shapeCodeEquiv S).symm i = x := by
-      apply (shapeCodeEquiv S).injective
-      simp [h]
-    simp [this]
-  · by_cases hi : i = shapeCodeEquiv S x
-    · simp [hi]
-    · simp [hi]
-      intro hx
+  by_cases hi : i = shapeCodeEquiv S x
+  · subst i
+    simp
+  · have hx : (shapeCodeEquiv S).symm i ≠ x := by
+      intro hxeq
       apply hi
-      have := congrArg (shapeCodeEquiv S) hx
-      simpa using this
+      have hcode := congrArg (shapeCodeEquiv S) hxeq
+      simpa using hcode
+    simp [hi, hx]
 
 /-- One address coordinate completely separates shaped coefficient fields. -/
 theorem worldAddress_injective
