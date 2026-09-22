@@ -25,7 +25,7 @@ abbrev WorldCell (carryDepth digitDepth : Nat) : Type :=
   Fin carryDepth × Fin digitDepth
 
 /-- Integer amplitudes on a native GST world. -/
-def WorldCoef (carryDepth digitDepth : Nat) : Type :=
+abbrev WorldCoef (carryDepth digitDepth : Nat) : Type :=
   WorldCell carryDepth digitDepth → ℤ
 
 /-- Native digit-axis transport by `n` layers.  No truncation constant is

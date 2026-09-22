@@ -155,7 +155,7 @@ private theorem worldKunneth_foldr_zero
       rcases List.mem_cons.mp hx with h | h
       · subst j
         simp
-      · rw [ih h, mul_zero]
+      · simp only [List.foldr_cons, ih h, mul_zero]
 
 private theorem worldKunneth_foldr_ne_zero
     (js : List Nat) (k : Nat)

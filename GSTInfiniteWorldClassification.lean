@@ -35,7 +35,7 @@ theorem windowTower_ext
   cases X with
   | mk lx bx cx =>
     cases Y with
-    | mk ly by cy =>
+    | mk ly byBound cy =>
       cases h
       rfl
 
@@ -148,7 +148,8 @@ theorem windowTower_eq_iff_current_trace
   constructor
   · intro h
     simpa [h]
-  · exact towerCurrent_trace_injective
+  · intro h
+    exact towerCurrent_trace_injective h
 
 /-- One horizontal slice already determines every finite world level, hence
 the entire coherent world. -/
@@ -179,8 +180,7 @@ theorem stream_to_current_injective :
   intro a b h
   have hw : streamTower a = streamTower b :=
     towerCurrent_trace_injective h
-  exact windowTowerEquivStream.injective (by
-    simpa using congrArg innovationStream hw)
+  simpa only [innovationStream_streamTower] using congrArg innovationStream hw
 
 /-- Capstone: coherent GST infinity is exactly ternary stream space and the
 two-current trace is a complete global observable. -/

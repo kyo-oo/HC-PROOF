@@ -78,7 +78,7 @@ theorem digitEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
   | zero =>
       simp [digitShiftN_zero]
   | succ n ih =>
-      rw [pow_succ, Module.End.mul_apply, ih]
+      rw [pow_succ', Module.End.mul_apply, ih]
       change digitShiftN 1 (digitShiftN n g) = digitShiftN (n+1) g
       simpa [Nat.add_comm] using
         (digitShiftN_add 1 n g)
@@ -90,7 +90,7 @@ theorem carryEndo_pow_apply (n : Nat) (g : WorldCoef A B) :
   | zero =>
       simp [carryShiftN_zero]
   | succ n ih =>
-      rw [pow_succ, Module.End.mul_apply, ih]
+      rw [pow_succ', Module.End.mul_apply, ih]
       change carryShiftN 1 (carryShiftN n g) = carryShiftN (n+1) g
       simpa [Nat.add_comm] using
         (carryShiftN_add 1 n g)
@@ -182,7 +182,7 @@ theorem sectorProj_orthogonal
       intro h
       apply hjk
       omega
-    simp [hj, hk]
+    simp [hj, hjk]
   · simp [hj]
 
 /-- Every rectangular world is the direct sum of its degree sectors.
@@ -195,9 +195,9 @@ theorem sectorProj_sum (g : WorldCoef A B) :
   have hd : d < A+B := by omega
   simp only [sectorProj]
   rw [Finset.sum_eq_single d]
-  · simp
+  · simp [d]
   · intro b hb hbd
-    simp [hbd.symm]
+    simp [show c.1.1 + c.2.1 ≠ b from hbd.symm]
   · intro hnot
     exact (hnot (Finset.mem_range.mpr hd)).elim
 
@@ -244,7 +244,9 @@ theorem lefschetz_respects_sector
       (fun c => digitShiftN 1 g c + carryShiftN 1 g c)
   rw [digitShift_respects_sector k 1 g,
       carryShift_respects_sector k 1 g]
-  rfl
+  funext c
+  simp only [sectorProj]
+  split_ifs <;> simp
 
 /-! ## 4. Universal complementary pairing -/
 
@@ -256,8 +258,10 @@ theorem complementCell_involutive (c : WorldCell A B) :
   rcases c with ⟨C,d⟩
   apply Prod.ext
   · apply Fin.ext
+    simp only [complementCell]
     omega
   · apply Fin.ext
+    simp only [complementCell]
     omega
 
 def basis (c₀ : WorldCell A B) : WorldCoef A B :=
