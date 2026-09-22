@@ -193,6 +193,47 @@ theorem prefix_slice_carry_exact
         4 * P + 3^b * (4 * (tail % 3^q)) := by ring
   rw [hshape, Nat.add_mul_div_left _ _ hp]
 
+
+/-! ## Physicality of every generated prefix seed -/
+
+/-- Every seed generated from a legal ternary prefix lies automatically in the
+four-state physical carry sector. -/
+theorem prefix_generated_seed_lt_four
+    (b P : Nat) (hP : P < 3^b) :
+    (4 * P) / 3^b < 4 := by
+  have hp : 0 < 3^b := Nat.pow_pos (by decide)
+  apply (Nat.div_lt_iff_lt_mul hp).2
+  nlinarith
+
+/-- The prefix-generated seed is therefore exactly one of the four physical
+carry states, with no external seed hypothesis. -/
+theorem prefix_generated_seed_cases
+    (b P : Nat) (hP : P < 3^b) :
+    (4 * P) / 3^b = 0 ∨
+    (4 * P) / 3^b = 1 ∨
+    (4 * P) / 3^b = 2 ∨
+    (4 * P) / 3^b = 3 := by
+  have h := prefix_generated_seed_lt_four b P hP
+  omega
+
+/-- Every exact prefix slice exposes a genuinely physical seeded cell:
+the generated carry lies below four and the exposed tail digit lies below
+three at every depth. -/
+theorem prefix_slice_physical
+    (b P tail q : Nat) (hP : P < 3^b) :
+    seededCarry ((4 * P) / 3^b) tail q < 4 ∧
+      digit3 tail q < 3 := by
+  constructor
+  · have hseed := prefix_generated_seed_lt_four b P hP
+    unfold seededCarry
+    have hp : 0 < 3^q := Nat.pow_pos (by decide)
+    have htail : tail % 3^q < 3^q := Nat.mod_lt _ hp
+    apply (Nat.div_lt_iff_lt_mul hp).2
+    nlinarith
+  · unfold digit3
+    exact Nat.mod_lt _ (by decide)
+
+
 /-- Seed-zero specialization: a prefix whose fourfold copy remains below the
 slice modulus exposes the ordinary child carry. -/
 theorem prefix_slice_seed_zero
@@ -256,5 +297,10 @@ theorem graph_prefix_slice_happy_iff
   have hslice := graph_prefix_slice_exact E t b P tail q hE hP
   unfold HappyCell
   rw [hslice.1, hslice.2]
+
+#check prefix_generated_seed_lt_four
+#check prefix_generated_seed_cases
+#check prefix_slice_physical
+#print axioms prefix_slice_physical
 
 end GSTGraphV2InfiniteControl
