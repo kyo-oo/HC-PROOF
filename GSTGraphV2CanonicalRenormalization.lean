@@ -230,6 +230,46 @@ theorem canonicalTail_three_adic_strip
   unfold phaseOffset
   ring
 
+/-- **EXACT PHASE COORDINATE.**
+After one canonical renormalization step the low ternary coordinate is exactly
+the supplied phase a. -/
+theorem canonicalTail_phase_exact
+    (r a m : Nat) (ha : a < 3) :
+    canonicalTail r (a + 3*m) % 3 = a := by
+  rw [canonicalTail_three_adic_strip r a m ha]
+  simp [Nat.add_mod, Nat.mul_mod, Nat.mod_eq_of_lt ha]
+
+/-- **EXACT RENORMALIZED QUOTIENT.**
+The quotient after removing the phase trit is exactly the residual affine
+packet appearing in the canonical strip law. -/
+theorem canonicalTail_quotient_exact
+    (r a m : Nat) (ha : a < 3) :
+    canonicalTail r (a + 3*m) / 3 =
+      phaseOffset r a +
+        4^(a * 3^r) * canonicalTail (r+1) m := by
+  let Q :=
+    phaseOffset r a +
+      4^(a * 3^r) * canonicalTail (r+1) m
+  have hshape :
+      canonicalTail r (a + 3*m) = a + 3*Q := by
+    simpa [Q] using canonicalTail_three_adic_strip r a m ha
+  have hmod := Nat.mod_add_div (canonicalTail r (a + 3*m)) 3
+  rw [canonicalTail_phase_exact r a m ha, hshape] at hmod
+  have : canonicalTail r (a + 3*m) / 3 = Q := by omega
+  simpa [Q] using this
+
+/-- Canonical renormalization is therefore an exact two-coordinate state
+decomposition: phase plus residual quotient. -/
+theorem canonicalTail_recoordination_exact
+    (r a m : Nat) (ha : a < 3) :
+    canonicalTail r (a + 3*m) % 3 = a
+    ∧
+    canonicalTail r (a + 3*m) / 3 =
+      phaseOffset r a +
+        4^(a * 3^r) * canonicalTail (r+1) m := by
+  exact ⟨canonicalTail_phase_exact r a m ha,
+    canonicalTail_quotient_exact r a m ha⟩
+
 /-- Zero-phase specialization of canonical renormalization. -/
 theorem canonicalTail_zero_strip
     (r m : Nat) :
@@ -256,8 +296,14 @@ theorem canonicalTail_one_strip
 #check canonicalTail_zero_power_strip
 #check canonicalTail_mod_three
 #check canonicalTail_three_adic_strip
+#check canonicalTail_phase_exact
+#check canonicalTail_quotient_exact
+#check canonicalTail_recoordination_exact
 #check canonicalTail_zero_strip
 #check canonicalTail_one_strip
 #print axioms canonicalTail_three_adic_strip
+#print axioms canonicalTail_phase_exact
+#print axioms canonicalTail_quotient_exact
+#print axioms canonicalTail_recoordination_exact
 
 end GSTGraphV2CanonicalRenormalization
