@@ -88,38 +88,27 @@ theorem carryWord_block_cocycle
     carryWord E p start (M+N) =
       carryWord E p (start+M) N +
         4^N * carryWord E p start M := by
-  have hDirect :=
-    graph_descent_horizontal_block_exact E p start (M+N)
-  have hLeft :=
-    graph_descent_horizontal_block_exact E p start M
-  have hRight :=
-    graph_descent_horizontal_block_exact E p (start+M) N
-  have hidx : start + (M+N) = (start+M)+N := by omega
-  rw [hidx] at hDirect
-  rw [hLeft] at hRight
-  have hpow : 4^(M+N) = 4^N * 4^M := by
-    rw [pow_add]
-    ring
-  rw [hpow] at hDirect
-  omega
+  induction N with
+  | zero =>
+      simp [carryWord]
+  | succ N ih =>
+      have hidx : start + (M + N) = (start + M) + N := by omega
+      rw [show M + (N+1) = (M+N)+1 by omega,
+        carryWord, ih, carryWord, Nat.pow_succ, hidx]
+      ring
 
 /-- Zero-width horizontal descent has zero affine defect. -/
 theorem carryWord_zero
     (E p start : Nat) :
     carryWord E p start 0 = 0 := by
-  have h := graph_descent_horizontal_block_exact E p start 0
-  simp at h
-  exact Nat.eq_zero_of_add_eq_self_left h.symm
+  simp [carryWord]
 
 /-- One-step horizontal defect is exactly the local carry. -/
 theorem carryWord_one
     (E p start : Nat) :
     carryWord E p start 1 =
       (graph E start p).seven.carry := by
-  have hBlock := graph_descent_horizontal_block_exact E p start 1
-  have hStep := graph_descent_horizontal_step_exact E start p
-  simp only [Nat.add_one, pow_one] at hBlock
-  omega
+  simp [carryWord]
 
 /-- Descent cocycle crown: one-step carry, arbitrary block defect, and exact
 block composition are one affine transport calculus. -/
