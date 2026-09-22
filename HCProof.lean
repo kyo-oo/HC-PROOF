@@ -26,6 +26,7 @@ import GSTUniversalLefschetzCosmology
 import GSTUniversalLefschetzPathFormula
 import GSTUniversalLefschetzKernel
 import GSTUniversalLefschetzCausalGeometry
+import GSTLefschetzPoincareReciprocity
 import GSTTruncatedWorldCohomologyRing
 import GSTRadixWorldDynamics
 import GSTGradedWorldAlgebra
@@ -510,3 +511,13 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTUniversalLefschetzCausalGeometry.nonzero_transition_time_unique
 #check GSTUniversalLefschetzCausalGeometry.bidirectional_nonzero_transition_trivial
 #check GSTUniversalLefschetzCausalGeometry.universal_lefschetz_causal_crown
+
+
+/-! ## Lefschetz--Poincare reciprocity -/
+
+#check GSTLefschetzPoincareReciprocity.worldForward_dual_iff
+#check GSTLefschetzPoincareReciprocity.worldCausalDistance_dual_reverse
+#check GSTLefschetzPoincareReciprocity.lefschetz_kernel_poincare_reciprocity
+#check GSTLefschetzPoincareReciprocity.nonzero_transition_dual_iff
+#check GSTLefschetzPoincareReciprocity.dual_transition_degree_balance
+#check GSTLefschetzPoincareReciprocity.lefschetz_poincare_reciprocity_crown
