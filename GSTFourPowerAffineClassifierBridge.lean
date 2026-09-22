@@ -82,12 +82,59 @@ theorem noCommonTwo_mod_three_two
   · omega
   · exact h2.2
 
+
+/-! ## Branch-free counterexample transition -/
+
+/-- Total next-channel map selected by the low ternary exponent phase. -/
+def counterexampleNextChannel (r : Nat) : Nat :=
+  if r % 3 = 0 then 0 else if r % 3 = 1 then 1 else 3
+
+/-- The transition map has the exact three-phase spectrum. -/
+theorem counterexampleNextChannel_spectrum :
+    counterexampleNextChannel 0 = 0 ∧
+    counterexampleNextChannel 1 = 1 ∧
+    counterexampleNextChannel 2 = 3 := by
+  decide
+
+/-- **TOTAL COUNTEREXAMPLE TRANSITION.**  Any direct counterexample determines
+one exact next automaton channel from its low exponent trit, with no external
+case split in the theorem statement. -/
+theorem noCommonTwo_next_channel
+    (K : Nat) (hNo : ¬ CommonTwo K) :
+    BadChannel (counterexampleNextChannel (K % 3))
+      (tail3 (affineOrbit K)) := by
+  have hlt : K % 3 < 3 := Nat.mod_lt K (by decide)
+  have hcases : K % 3 = 0 ∨ K % 3 = 1 ∨ K % 3 = 2 := by
+    omega
+  rcases hcases with h0 | h1 | h2
+  · rw [h0]
+    norm_num [counterexampleNextChannel]
+    exact noCommonTwo_mod_three_zero hNo h0
+  · rw [h1]
+    norm_num [counterexampleNextChannel]
+    exact noCommonTwo_mod_three_one hNo h1
+  · rw [h2]
+    norm_num [counterexampleNextChannel]
+    exact noCommonTwo_mod_three_two hNo h2
+
+/-- The next counterexample channel always remains physical. -/
+theorem counterexampleNextChannel_lt_four (K : Nat) :
+    counterexampleNextChannel (K % 3) < 4 := by
+  have hlt : K % 3 < 3 := Nat.mod_lt K (by decide)
+  interval_cases h : K % 3 <;>
+    norm_num [counterexampleNextChannel, h]
+
+
 #check commonTwo_iff_channel_one
 #check noCommonTwo_iff_badChannel_one
 #check noCommonTwo_low_trit_branch
 #check noCommonTwo_mod_three_zero
 #check noCommonTwo_mod_three_one
 #check noCommonTwo_mod_three_two
+#check counterexampleNextChannel_spectrum
+#check noCommonTwo_next_channel
+#check counterexampleNextChannel_lt_four
 #print axioms noCommonTwo_low_trit_branch
+#print axioms noCommonTwo_next_channel
 
 end GSTFourPowerAffineClassifierBridge
