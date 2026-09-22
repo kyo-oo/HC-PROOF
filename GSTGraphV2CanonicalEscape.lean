@@ -465,6 +465,36 @@ theorem nat_no_unbounded_ternary_support
   have hdiv : n / 3^r = 0 := Nat.div_eq_of_lt hpow
   simp [hdiv] at hnonzero
 
+
+/-! ## Explicit finite-support extinction -/
+
+/-- Every natural origin has an explicit ternary extinction depth: from
+`n+1` onward every quotient, hence every ternary digit, is zero. -/
+theorem nat_ternary_support_eventually_zero
+    (n : Nat) :
+    ∀ r : Nat, n + 1 ≤ r → (n / 3^r) % 3 = 0 := by
+  intro r hr
+  have hnr : n < r := by omega
+  have hpow : n < 3^r := lt_of_lt_of_le hnr (index_le_three_pow r)
+  have hdiv : n / 3^r = 0 := Nat.div_eq_of_lt hpow
+  simp [hdiv]
+
+/-- The same explicit cutoff says the entire higher ternary quotient vanishes,
+not merely its first visible digit. -/
+theorem nat_ternary_tail_eventually_zero
+    (n : Nat) :
+    ∀ r : Nat, n + 1 ≤ r → n / 3^r = 0 := by
+  intro r hr
+  have hnr : n < r := by omega
+  exact Nat.div_eq_of_lt (lt_of_lt_of_le hnr (index_le_three_pow r))
+
+/-- Hence every natural origin has a concrete finite support witness. -/
+theorem nat_has_finite_ternary_support
+    (n : Nat) :
+    ∃ K : Nat, ∀ r : Nat, K ≤ r → (n / 3^r) % 3 = 0 :=
+  ⟨n+1, nat_ternary_support_eventually_zero n⟩
+
+
 #check canonical_child_energy_decomposition
 #check canonical_left_seed_adapter
 #check canonical_right_seed_adapter
@@ -479,7 +509,12 @@ theorem nat_no_unbounded_ternary_support
 #check canonical_origin_packet_nonzero
 #check canonical_parent_energy_decomposition
 #check nat_no_unbounded_ternary_support
+#check nat_ternary_support_eventually_zero
+#check nat_ternary_tail_eventually_zero
+#check nat_has_finite_ternary_support
 #print axioms canonical_parent_energy_decomposition
 #print axioms nat_no_unbounded_ternary_support
+#print axioms nat_ternary_support_eventually_zero
+#print axioms nat_has_finite_ternary_support
 
 end GSTGraphV2CanonicalEscape
