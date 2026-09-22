@@ -139,6 +139,7 @@ roots = [
   "GSTWorldCosmology",
   "GSTUniversalLefschetzCosmology",
   "GSTUniversalLefschetzPathFormula",
+  "GSTUniversalLefschetzKernel",
   "GSTTruncatedWorldCohomologyRing",
   "GSTRadixWorldDynamics",
   "GSTGradedWorldAlgebra",
