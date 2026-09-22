@@ -157,6 +157,50 @@ theorem worldtrace_mahler_fracture_ge_two
     exact hd.trans (worldtraceWitness_baseline u s)
   exact ⟨q, hq2, hq⟩
 
+/-- **WORLDTRACE CORE-SPECTRUM DICHOTOMY.**
+Every natural core is either visibly three-divisible, or else its Mahler
+witness fractures at some genuinely super-baseline precision q ≥ 2
+arbitrarily far out.  This removes the three-free premise from the outer
+statement and makes the fracture a total classification of cores. -/
+theorem worldtrace_mahler_core_spectrum
+    (H : MahlerSharp) (u : Nat) :
+    3 ∣ u ∨
+      ∃ q : Nat, 2 ≤ q ∧
+        ∀ S : Nat, ∃ s : Nat, S ≤ s ∧
+          ¬ ((3 : ℤ)^(s+q) ∣ worldtraceWitness u s) := by
+  by_cases hu : 3 ∣ u
+  · exact Or.inl hu
+  · exact Or.inr (worldtrace_mahler_fracture_ge_two H u hu)
+
+/-- Relative lock and Mahler fracture are mutually exclusive on every
+three-free core, stated as an explicit incompatibility law. -/
+theorem relativeLock_mahler_incompatible
+    (H : MahlerSharp) (u : Nat) (hu : ¬ 3 ∣ u) :
+    RelativeLock u →
+      ∃ q : Nat, 2 ≤ q ∧
+        ∀ S : Nat, ∃ s : Nat, S ≤ s ∧
+          ¬ ((3 : ℤ)^(s+q) ∣ worldtraceWitness u s) → False := by
+  intro hlock
+  obtain ⟨q,hq2,hq⟩ := worldtrace_mahler_fracture_ge_two H u hu
+  exact ⟨q,hq2,fun S => by
+    obtain ⟨s,hs,hfail⟩ := hq S
+    refine ⟨s,hs,?_⟩
+    intro _
+    exact (mahler_excludes_relative_lock H u hu) hlock⟩
+
+/-- The intrinsic output of the Worldtrace/Mahler theory, before any external
+Erdős boundary interface is attached. -/
+structure WorldtraceMahlerSpectrum : Prop where
+  coreSpectrum :
+    ∀ u : Nat,
+      3 ∣ u ∨
+        ∃ q : Nat, 2 ≤ q ∧
+          ∀ S : Nat, ∃ s : Nat, S ≤ s ∧
+            ¬ ((3 : ℤ)^(s+q) ∣ worldtraceWitness u s)
+  extinctionAboveKernel :
+    ∀ K : Nat, 500 < K →
+      ¬ GSTClimbInfiniteFamily.CantorianPower K
+
 /-- THE EXTINCTION THEOREM ABOVE THE KERNEL BASE.  Scaled compression
 forces a lock; Mahler forces a fracture of that same integer witness. -/
 theorem worldtrace_mahler_extinction
@@ -167,6 +211,16 @@ theorem worldtrace_mahler_extinction
     GSTGhostRay.exists_three_free_decomp K K (by omega) (by omega)
   have hlock : RelativeLock u := HC K sigma u hK hKu hu hCant
   exact (mahler_excludes_relative_lock H u hu) hlock
+
+/-- Every Worldtrace/Mahler theory canonically determines its complete
+internal spectrum: universal core fracture plus Cantorian extinction above
+the finite kernel. -/
+theorem WorldtraceMahlerTheory.toSpectrum
+    (T : WorldtraceMahlerTheory) :
+    WorldtraceMahlerSpectrum := by
+  exact ⟨
+    worldtrace_mahler_core_spectrum T.mahler,
+    worldtrace_mahler_extinction T.mahler T.compression⟩
 
 /-- The finite kernel plus extinction removes every Cantorian exponent
 from the actual theorem range K >= 8. -/
@@ -250,6 +304,8 @@ theorem worldtrace_mahler_crown_of_residual_ghost
 #print axioms ghost_implies_relative_lock
 #print axioms mahler_excludes_relative_lock
 #print axioms worldtrace_mahler_fracture_ge_two
+#print axioms worldtrace_mahler_core_spectrum
+#print axioms WorldtraceMahlerTheory.toSpectrum
 #print axioms worldtrace_mahler_extinction
 #print axioms worldtrace_mahler_relative_precision_crown
 
