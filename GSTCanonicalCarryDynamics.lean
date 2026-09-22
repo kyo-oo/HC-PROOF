@@ -28,4 +28,44 @@ theorem carry4_forward_exact (R p : Nat) :
     ring
   rw [hshape, Nat.add_mul_div_left _ _ hM]
 
+/-- Emitted ternary residue of one canonical x4 carry transition. -/
+def carry4Emit (R p : Nat) : Nat :=
+  (carry4 R p + 4*digit3 R p) % 3
+
+/-- **EXACT CARRY STATE DECOMPOSITION.**
+One physical transition is completely reconstructed from the next carry and
+its emitted ternary residue. -/
+theorem carry4_state_decomposition
+    (R p : Nat) :
+    carry4 R p + 4*digit3 R p =
+      3*carry4 R (p+1) + carry4Emit R p := by
+  unfold carry4Emit
+  rw [carry4_forward_exact]
+  exact (Nat.mod_add_div
+    (carry4 R p + 4*digit3 R p) 3).symm
+
+/-- The emitted transition residue is always a genuine ternary digit. -/
+theorem carry4Emit_lt_three
+    (R p : Nat) :
+    carry4Emit R p < 3 := by
+  unfold carry4Emit
+  exact Nat.mod_lt _ (by decide)
+
+/-- The pair (next carry, emitted trit) uniquely encodes the transition
+numerator. -/
+theorem carry4_transition_packet
+    (R p : Nat) :
+    (carry4 R (p+1), carry4Emit R p) =
+      ((carry4 R p + 4*digit3 R p) / 3,
+       (carry4 R p + 4*digit3 R p) % 3) := by
+  rw [carry4_forward_exact]
+  rfl
+
+#check carry4Emit
+#check carry4_state_decomposition
+#check carry4Emit_lt_three
+#check carry4_transition_packet
+#print axioms carry4_state_decomposition
+#print axioms carry4_transition_packet
+
 end GSTCanonicalCarryDynamics
