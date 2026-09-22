@@ -122,6 +122,21 @@ def NativeSchemeHodgeRealization.toSubspaceRealization
   basisCycle := R.basisCycle
   basisCycle_address := R.basisCycle_address
 
+/-- Explicit native algebraic-cycle selector on the Hodge submodule.  Its
+value lies in the supplied geometric cycle submodule by construction. -/
+noncomputable def nativeCycleSelector
+    (R : NativeSchemeHodgeRealization N X Coh)
+    (alpha : R.hodge) : R.cycleSpace :=
+  subspaceCycleSelector R.toSubspaceRealization alpha
+
+/-- The native selector is a verified right inverse of the native cycle-class
+map on the Hodge sector. -/
+theorem nativeCycleSelector_spec
+    (R : NativeSchemeHodgeRealization N X Coh)
+    (alpha : R.hodge) :
+    R.cycleClass (nativeCycleSelector R alpha) = alpha.1 := by
+  exact subspaceCycleSelector_spec R.toSubspaceRealization alpha
+
 /-- **NATIVE SCHEME FIBER THEOREM.**
 Every rational Hodge class in a supplied native scheme realization has a
 cycle witness drawn from an actual submodule of Mathlib algebraic cycles. -/
@@ -258,6 +273,8 @@ theorem hodge_of_native_scheme_fiber_obligation
 
 #check NativeSchemeHodgeRealization
 #check NativeSchemeHodgeRealization.toSubspaceRealization
+#check nativeCycleSelector
+#check nativeCycleSelector_spec
 #check hodge_class_has_native_algebraic_cycle
 #check native_hodge_subspace_le_cycleClass_range
 #check UniversalNativeSchemeHodgeStatement
@@ -265,6 +282,7 @@ theorem hodge_of_native_scheme_fiber_obligation
 #check NativeSchemeFiberRealizationObligation
 #check hodge_of_native_scheme_fiber_obligation
 
+#print axioms nativeCycleSelector_spec
 #print axioms hodge_class_has_native_algebraic_cycle
 #print axioms native_hodge_subspace_le_cycleClass_range
 #print axioms universal_native_scheme_hodge_of_realization_family
