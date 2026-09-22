@@ -1102,6 +1102,63 @@ theorem window_reduce (A X H s : Nat) :
   rw [hfold]
   exact Nat.add_mul_mod_self_left _ _ _
 
+/-- Canonical finite window class seen by a row-H+1+s Worldtrace read. -/
+def worldtraceWindowClass (X s : Nat) : Nat :=
+  X % 3^(s+1)
+
+/-- The Worldtrace read factors exactly through the finite window class. -/
+theorem window_read_factors
+    (A X H s : Nat) :
+    digit3 (A + 3^(H+1) * X) (H+1+s) =
+      digit3
+        (A + 3^(H+1) * worldtraceWindowClass X s)
+        (H+1+s) := by
+  exact window_reduce A X H s
+
+/-- **WINDOW-QUOTIENT INVARIANCE.**
+Two branch factors with the same visible window class are indistinguishable
+to the row-H+1+s read. -/
+theorem window_class_invariant
+    (A X Y H s : Nat)
+    (hXY : worldtraceWindowClass X s =
+      worldtraceWindowClass Y s) :
+    digit3 (A + 3^(H+1) * X) (H+1+s) =
+      digit3 (A + 3^(H+1) * Y) (H+1+s) := by
+  rw [window_read_factors A X H s,
+      window_read_factors A Y H s,
+      hXY]
+
+/-- Congruence modulo the visible window modulus is sufficient for exact read
+equality. -/
+theorem window_mod_congr_invariant
+    (A X Y H s : Nat)
+    (hXY : X % 3^(s+1) = Y % 3^(s+1)) :
+    digit3 (A + 3^(H+1) * X) (H+1+s) =
+      digit3 (A + 3^(H+1) * Y) (H+1+s) := by
+  exact window_class_invariant A X Y H s hXY
+
+/-- The finite window projection is idempotent. -/
+theorem worldtraceWindowClass_idempotent
+    (X s : Nat) :
+    worldtraceWindowClass (worldtraceWindowClass X s) s =
+      worldtraceWindowClass X s := by
+  unfold worldtraceWindowClass
+  rw [Nat.mod_mod]
+
+/-- Quotient-window crown: every row read factors through one finite
+idempotent projection. -/
+theorem worldtrace_window_quotient_crown :
+    (∀ A X H s,
+      digit3 (A + 3^(H+1) * X) (H+1+s) =
+        digit3
+          (A + 3^(H+1) * worldtraceWindowClass X s)
+          (H+1+s))
+    ∧
+    (∀ X s,
+      worldtraceWindowClass (worldtraceWindowClass X s) s =
+        worldtraceWindowClass X s) := by
+  exact ⟨window_read_factors, worldtraceWindowClass_idempotent⟩
+
 /-- **THE DUST WINDOW RECEIPT.**  The period law, the branch vanishing,
 the clean row-(H+2) law, and the reduction handle. -/
 theorem the_dust_window_receipt :
@@ -1216,6 +1273,10 @@ theorem the_worldtrace_receipt_seven :
 #print axioms dust_branch_mod9
 #print axioms window_row_two_dust
 #print axioms window_reduce
+#print axioms window_read_factors
+#print axioms window_class_invariant
+#print axioms worldtraceWindowClass_idempotent
+#print axioms worldtrace_window_quotient_crown
 #print axioms the_dust_window_receipt
 
 end GSTWorldtraceArithmetic
