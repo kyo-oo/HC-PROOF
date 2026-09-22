@@ -80,6 +80,60 @@ theorem graph_descent_horizontal_block_exact
       rw [hstep, ih, carryWord, Nat.pow_succ]
       ring
 
+/-- **HORIZONTAL DESCENT COCYCLE.**
+The affine defect of a concatenated horizontal block is the later block
+defect plus the earlier defect transported by the exact 4^N scale. -/
+theorem carryWord_block_cocycle
+    (E p start M N : Nat) :
+    carryWord E p start (M+N) =
+      carryWord E p (start+M) N +
+        4^N * carryWord E p start M := by
+  have hDirect :=
+    graph_descent_horizontal_block_exact E p start (M+N)
+  have hLeft :=
+    graph_descent_horizontal_block_exact E p start M
+  have hRight :=
+    graph_descent_horizontal_block_exact E p (start+M) N
+  have hidx : start + (M+N) = (start+M)+N := by omega
+  rw [hidx] at hDirect
+  rw [hLeft] at hRight
+  have hpow : 4^(M+N) = 4^N * 4^M := by
+    rw [pow_add]
+    ring
+  rw [hpow] at hDirect
+  omega
+
+/-- Zero-width horizontal descent has zero affine defect. -/
+theorem carryWord_zero
+    (E p start : Nat) :
+    carryWord E p start 0 = 0 := by
+  have h := graph_descent_horizontal_block_exact E p start 0
+  simp at h
+  exact Nat.eq_zero_of_add_eq_self_left h.symm
+
+/-- One-step horizontal defect is exactly the local carry. -/
+theorem carryWord_one
+    (E p start : Nat) :
+    carryWord E p start 1 =
+      (graph E start p).seven.carry := by
+  have hBlock := graph_descent_horizontal_block_exact E p start 1
+  have hStep := graph_descent_horizontal_step_exact E start p
+  simp only [Nat.add_one, pow_one] at hBlock
+  omega
+
+/-- Descent cocycle crown: one-step carry, arbitrary block defect, and exact
+block composition are one affine transport calculus. -/
+theorem descent_cocycle_crown :
+    (∀ E p start,
+      carryWord E p start 1 =
+        (graph E start p).seven.carry)
+    ∧
+    (∀ E p start M N,
+      carryWord E p start (M+N) =
+        carryWord E p (start+M) N +
+          4^N * carryWord E p start M) := by
+  exact ⟨carryWord_one, carryWord_block_cocycle⟩
+
 /-- The coupled invariant is an exact Euclidean quotient/remainder encoding by
 its macro multiplier `A`: child carry is the quotient sector and child residue
 is the exact remainder of `parentSeed + 4*parentOffset`. -/
@@ -199,12 +253,18 @@ theorem graphCoupledState_euclidean_decode
 #check graph_descent_vertical_exact
 #check graph_descent_horizontal_step_exact
 #check graph_descent_horizontal_block_exact
+#check carryWord_block_cocycle
+#check carryWord_zero
+#check carryWord_one
+#check descent_cocycle_crown
 #check coupledInvariant_euclidean_decode
 #check child_happy_extreme_sector
 #check graphCoupledState_parentWord_eq_right_descent
 #check graphCoupledState_childResidue_descent_exact
 #check graphCoupledState_euclidean_decode
 #print axioms graph_descent_horizontal_block_exact
+#print axioms carryWord_block_cocycle
+#print axioms descent_cocycle_crown
 #print axioms coupledInvariant_euclidean_decode
 #print axioms graphCoupledState_parentWord_eq_right_descent
 #print axioms graphCoupledState_euclidean_decode
