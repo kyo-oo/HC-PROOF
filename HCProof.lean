@@ -20,6 +20,7 @@ import GSTClimbInfiniteFamily
 import GSTTheActConstruction
 import GSTWorldtraceMahlerRelativePrecision
 import GSTWorldCosmology
+import GSTRadixWorldDynamics
 import GSTWorldCrownBridge
 import HodgeDeRhamBridge
 import HodgeDeRhamBridgeV2
@@ -331,3 +332,12 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2G.BigradedBettiHodgeStatement
 #check GSTGeometricRealizationStage2G.hodge_class_has_bigraded_cycle
 #check GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_family
+
+
+/-! ## GST mixed-radix world upgrade -/
+
+#check GSTRadixWorldDynamics.mixedRadixTranspose
+#check GSTRadixWorldDynamics.mixedRadixTranspose_conservation
+#check GSTRadixWorldDynamics.mixedRadixTranspose_unique
+#check GSTRadixWorldDynamics.twelve_cell_transition_is_mixedRadixTranspose
+#check GSTRadixWorldDynamics.mixed_radix_world_crown
