@@ -49,15 +49,17 @@ noncomputable def digitEndo (A B : Nat) :
   map_add' := by
     intro f g
     funext c
-    by_cases h : 1 ≤ c.2.1
-    · simp only [digitShiftN, h, dif_pos, Pi.add_apply]
-    · simp only [digitShiftN, h, dif_neg, Pi.add_apply, add_zero]
+    change digitShiftN 1 (f + g) c =
+      digitShiftN 1 f c + digitShiftN 1 g c
+    unfold digitShiftN
+    split_ifs <;> rfl
   map_smul' := by
     intro z f
     funext c
-    by_cases h : 1 ≤ c.2.1
-    · simp only [digitShiftN, h, dif_pos, Pi.smul_apply, RingHom.id_apply]
-    · simp only [digitShiftN, h, dif_neg, Pi.smul_apply, RingHom.id_apply, smul_zero]
+    change digitShiftN 1 (z • f) c =
+      z • digitShiftN 1 f c
+    unfold digitShiftN
+    split_ifs <;> rfl
 
 noncomputable def carryEndo (A B : Nat) :
     Module.End ℤ (WorldCoef A B) where
@@ -65,15 +67,17 @@ noncomputable def carryEndo (A B : Nat) :
   map_add' := by
     intro f g
     funext c
-    by_cases h : 1 ≤ c.1.1
-    · simp only [carryShiftN, h, dif_pos, Pi.add_apply]
-    · simp only [carryShiftN, h, dif_neg, Pi.add_apply, add_zero]
+    change carryShiftN 1 (f + g) c =
+      carryShiftN 1 f c + carryShiftN 1 g c
+    unfold carryShiftN
+    split_ifs <;> rfl
   map_smul' := by
     intro z f
     funext c
-    by_cases h : 1 ≤ c.1.1
-    · simp only [carryShiftN, h, dif_pos, Pi.smul_apply, RingHom.id_apply]
-    · simp only [carryShiftN, h, dif_neg, Pi.smul_apply, RingHom.id_apply, smul_zero]
+    change carryShiftN 1 (z • f) c =
+      z • carryShiftN 1 f c
+    unfold carryShiftN
+    split_ifs <;> rfl
 
 @[simp]
 theorem digitEndo_apply (g : WorldCoef A B) :
