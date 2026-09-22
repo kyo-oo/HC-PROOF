@@ -172,12 +172,42 @@ theorem canonical_perfect_power_block_terminal_packet
       s n K 0 (s+2) q hterm).mp hPacket
   simpa [K, Nat.add_assoc] using hTerminal
 
+
+/-! ## Terminal density extinction -/
+
+/-- Every finite density observation of the terminal right boundary is
+nonpositive.  The arbitrary-depth N-wave terminal packet therefore lands
+directly inside the pure block-density cone. -/
+theorem canonical_terminal_right_density_nonpositive
+    (s n q H : Nat) (hs : 1 ≤ s) (hn : 1 ≤ n)
+    (hChild : HappyCell
+      (graph (canonicalEnergy s n) 0 (s+2+q)).seven.carry
+      (graph (canonicalEnergy s n) 0 (s+2+q)).seven.digit)
+    (hRightBad : ∀ j, ¬ HappyCell
+      (graph (canonicalEnergy s n) (canonicalWidth s) (s+2+j)).seven.carry
+      (graph (canonicalEnergy s n) (canonicalWidth s) (s+2+j)).seven.digit) :
+    Finset.sum (Finset.range H) (fun j =>
+      (((3^j : Nat) : Int)) *
+        blockDensity
+          (graph 1 (nWaveShift s n (n+1) + canonicalWidth s)
+            (s+2+j)).seven.carry
+          (graph 1 (nWaveShift s n (n+1) + canonicalWidth s)
+            (s+2+j)).seven.digit) ≤ 0 := by
+  have hterm :=
+    canonical_perfect_power_block_terminal_packet s n q hs hn hChild hRightBad
+  exact blockDensity_prefix_nonpositive_of_bad
+    1 (nWaveShift s n (n+1) + canonicalWidth s) (s+2) H
+    (fun j _ => hterm.2 j)
+
+
 #check blockDensity_physical_table
 #check happy_iff_blockDensity_positive
 #check blockDensity_column_exact
 #check canonical_perfect_power_block_terminal_packet
+#check canonical_terminal_right_density_nonpositive
 #print axioms blockDensity_column_exact
 #print axioms canonical_perfect_power_block_terminal_packet
+#print axioms canonical_terminal_right_density_nonpositive
 
 end GSTGraphV2PerfectPowerBlockCollision
 
