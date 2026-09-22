@@ -107,10 +107,55 @@ theorem canonical_graph_three_adic_bad_trace_iff
   · exact h j ((canonical_graph_three_adic_happy_iff s a m t (b+j)).mpr hHappy)
   · exact h j ((canonical_graph_three_adic_happy_iff s a m t (b+j)).mp hHappy)
 
+
+/-! ## Composed ternary-sheet translation -/
+
+/-- Consuming two origin trits in succession is exactly one accumulated
+horizontal phase followed by the twice-renormalized canonical world. -/
+theorem canonicalEnergy_two_trit_translate
+    (s a b m : Nat) :
+    canonicalEnergy s (a + 3 * (b + 3*m)) =
+      4^(a * 3^(s+1) + b * 3^(s+2)) *
+        canonicalEnergy (s+2) m := by
+  calc
+    canonicalEnergy s (a + 3 * (b + 3*m)) =
+        4^(a * 3^(s+1)) * canonicalEnergy (s+1) (b + 3*m) :=
+      canonicalEnergy_three_adic_translate s a (b + 3*m)
+    _ = 4^(a * 3^(s+1)) *
+        (4^(b * 3^((s+1)+1)) * canonicalEnergy ((s+1)+1) m) := by
+      rw [canonicalEnergy_three_adic_translate (s+1) b m]
+    _ = 4^(a * 3^(s+1) + b * 3^(s+2)) *
+        canonicalEnergy (s+2) m := by
+      rw [show (s+1)+1 = s+2 by omega]
+      rw [Nat.pow_add]
+      ring
+
+/-- Happy status transports exactly through the composed two-trit
+renormalization. -/
+theorem canonical_graph_two_trit_happy_iff
+    (s a b m t p : Nat) :
+    HappyCell
+        (graph (canonicalEnergy s (a + 3 * (b + 3*m))) t p).seven.carry
+        (graph (canonicalEnergy s (a + 3 * (b + 3*m))) t p).seven.digit
+      ↔
+    HappyCell
+        (graph (canonicalEnergy (s+2) m)
+          (a * 3^(s+1) + b * 3^(s+2) + t) p).seven.carry
+        (graph (canonicalEnergy (s+2) m)
+          (a * 3^(s+1) + b * 3^(s+2) + t) p).seven.digit := by
+  rw [canonicalEnergy_two_trit_translate]
+  exact graph_energy_shift_happy_iff
+    (canonicalEnergy (s+2) m)
+    (a * 3^(s+1) + b * 3^(s+2)) t p
+
+
 #check canonicalEnergy_three_adic_translate
 #check canonical_graph_three_adic_physical
 #check canonical_graph_three_adic_happy_iff
 #check canonical_graph_three_adic_bad_trace_iff
+#check canonicalEnergy_two_trit_translate
+#check canonical_graph_two_trit_happy_iff
 #print axioms canonical_graph_three_adic_happy_iff
+#print axioms canonicalEnergy_two_trit_translate
 
 end GSTGraphV2CanonicalSheetTranslation
