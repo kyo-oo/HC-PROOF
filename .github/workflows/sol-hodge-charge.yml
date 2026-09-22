@@ -6,6 +6,7 @@ on:
       - 'sol/hodge-charge-cosmology'
     paths:
       - 'GSTHodgePoincareStrands.lean'
+      - 'GSTWorldRecoordinationGroupoid.lean'
       - '.github/workflows/sol-hodge-charge.yml'
   workflow_dispatch:
 
