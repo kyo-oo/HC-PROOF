@@ -104,8 +104,8 @@ theorem pureReassemble_pureCoordinates
           (p:=x.1.1)
           (by exact x.1.2)
           (by
-            rw [← hdiag]
-            exact x.1.2) = x := by
+            rw [hdiag]
+            exact x.2.2) = x := by
       apply Prod.ext
       · apply Fin.ext
         rfl
@@ -220,22 +220,25 @@ theorem worldAddress_pure_support
         i ≠ shapeCodeEquiv (outputShape A B) (pureDiagonalState p)) :
     worldAddress (outputShape A B) f i = 0 := by
   unfold worldAddress
-  apply hf
-  intro hdiag
   let x := (shapeCodeEquiv (outputShape A B)).symm i
+  apply hf x
+  intro hdiag
   have hxA : x.1.1 < A := x.1.2
   have hxB : x.2.1 < B := x.2.2
   let p : Fin (min A B) :=
     ⟨x.1.1, by omega⟩
   apply hi p
-  apply (shapeCodeEquiv (outputShape A B)).injective
-  simp only [Equiv.apply_symm_apply]
-  unfold pureDiagonalState diagonalState
-  apply Prod.ext
-  · apply Fin.ext
-    rfl
-  · apply Fin.ext
-    exact hdiag.symm
+  calc
+    i = shapeCodeEquiv (outputShape A B) x := by
+      simp [x]
+    _ = shapeCodeEquiv (outputShape A B) (pureDiagonalState p) := by
+      congr 1
+      unfold pureDiagonalState diagonalState
+      apply Prod.ext
+      · apply Fin.ext
+        rfl
+      · apply Fin.ext
+        exact hdiag.symm
 
 /-- One capstone collecting the global pure-Hodge upgrade. -/
 theorem global_pure_hodge_crown :
