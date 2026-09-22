@@ -7,6 +7,7 @@ namespace GSTGraphV2HandwrittenExponentialLTE
 
 open GSTCanonicalSevenAxisBridge
 open GSTGraphV2InfiniteControl
+open GSTU2DEventTransport
 open GSTGraphV2HandwrittenExponentialCascade
 
 /-!
