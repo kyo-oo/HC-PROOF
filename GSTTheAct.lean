@@ -178,6 +178,22 @@ theorem front_law_one_iff
     digit3 (4^(3^v*a)) (v+1) = 1 ↔ a % 3 = 1 := by
   rw [front_law v a]
 
+/-- The front digit is zero exactly on reduced exponent residue zero. -/
+theorem front_law_zero_iff
+    (v a : Nat) :
+    digit3 (4^(3^v*a)) (v+1) = 0 ↔ a % 3 = 0 := by
+  rw [front_law v a]
+
+/-- **LOSSLESS FRONT READOUT.**  Equality of two front digits is equivalent
+to equality of the reduced exponent trits.  The first live tower row therefore
+remembers the entire residue class modulo three, not only the firing sector. -/
+theorem front_law_eq_iff_residue_eq
+    (v a b : Nat) :
+    digit3 (4^(3^v*a)) (v+1) =
+        digit3 (4^(3^v*b)) (v+1)
+      ↔ a % 3 = b % 3 := by
+  rw [front_law v a, front_law v b]
+
 /-- Front-law crown: the first live tower row is a lossless readout of the
 reduced exponent trit. -/
 theorem front_law_classifier_crown :
@@ -192,6 +208,8 @@ theorem front_law_classifier_crown :
 #print axioms act_tailF_full_equivalence
 #print axioms front_law
 #print axioms front_law_two_iff
+#print axioms front_law_zero_iff
+#print axioms front_law_eq_iff_residue_eq
 #print axioms front_law_classifier_crown
 
 end GSTTheAct
