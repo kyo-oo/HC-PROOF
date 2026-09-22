@@ -70,23 +70,21 @@ theorem commonTwo_three_mul_add_two_of_q_mod_three_one
 theorem commonTwo_of_mod9_six_structural
     (K : Nat) (hK : K % 9 = 6) :
     CommonTwo K := by
-  have hsplit3 := Nat.mod_add_div K 3
-  have hmod3 : K % 3 = 0 := by
-    have hdvd : 3 ∣ 9 := by norm_num
-    have h := Nat.mod_mod_of_dvd K hdvd
-    rw [hK] at h
-    norm_num at h ⊢
-    exact h.symm
-  have hshape : K = 3 * (K / 3) := by
+  have hs := Nat.mod_add_div K 9
+  have hshape9 : K = 6 + 9 * (K / 9) := by
+    rw [hK] at hs
     omega
   let q := K / 3
-  have hq : q % 3 = 2 := by
-    have hres : (3*q) % 9 = 6 := by
-      simpa [q, hshape] using hK
-    have hlow : (3*q) % 3 = 0 := by omega
-    have hdiv : (3*q) / 3 = q := by omega
-    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul, hlow, hdiv] at hres
+  have hqShape : q = 2 + 3 * (K / 9) := by
+    dsimp [q]
+    rw [hshape9]
     omega
+  have hshape : K = 3 * q := by
+    rw [hshape9, hqShape]
+    ring
+  have hq : q % 3 = 2 := by
+    rw [hqShape]
+    simp
   rw [hshape]
   exact commonTwo_three_mul_of_q_mod_three_two q hq
 
@@ -95,23 +93,21 @@ theorem commonTwo_of_mod9_six_structural
 theorem commonTwo_of_mod9_five_structural
     (K : Nat) (hK : K % 9 = 5) :
     CommonTwo K := by
-  have hsplit3 := Nat.mod_add_div K 3
-  have hmod3 : K % 3 = 2 := by
-    have hdvd : 3 ∣ 9 := by norm_num
-    have h := Nat.mod_mod_of_dvd K hdvd
-    rw [hK] at h
-    norm_num at h ⊢
-    exact h.symm
-  have hshape : K = 3 * (K / 3) + 2 := by
+  have hs := Nat.mod_add_div K 9
+  have hshape9 : K = 5 + 9 * (K / 9) := by
+    rw [hK] at hs
     omega
   let q := K / 3
-  have hq : q % 3 = 1 := by
-    have hres : (3*q + 2) % 9 = 5 := by
-      simpa [q, hshape] using hK
-    have hlow : (3*q + 2) % 3 = 2 := by omega
-    have hdiv : (3*q + 2) / 3 = q := by omega
-    rw [show 9 = 3 * 3 by norm_num, Nat.mod_mul, hlow, hdiv] at hres
+  have hqShape : q = 1 + 3 * (K / 9) := by
+    dsimp [q]
+    rw [hshape9]
     omega
+  have hshape : K = 3 * q + 2 := by
+    rw [hshape9, hqShape]
+    ring
+  have hq : q % 3 = 1 := by
+    rw [hqShape]
+    simp
   rw [hshape]
   exact commonTwo_three_mul_add_two_of_q_mod_three_one q hq
 
