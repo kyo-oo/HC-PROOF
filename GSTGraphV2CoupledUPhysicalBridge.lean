@@ -183,9 +183,12 @@ theorem base4_ext_of_prefix_and_tail
     (hPrefix : S % 4^N = T % 4^N)
     (hTail : S / 4^N = T / 4^N) :
     S = T := by
-  have hS := Nat.mod_add_div S (4^N)
-  have hT := Nat.mod_add_div T (4^N)
-  omega
+  calc
+    S = S % 4^N + 4^N * (S / 4^N) :=
+      (Nat.mod_add_div S (4^N)).symm
+    _ = T % 4^N + 4^N * (T / 4^N) := by
+      rw [hPrefix, hTail]
+    _ = T := Nat.mod_add_div T (4^N)
 
 
 #check potential_shared_rewrite
