@@ -2985,6 +2985,72 @@ theorem omega_row_level_digit_two (core : Nat) (j : Nat)
   rw [hd, Nat.add_comm, show 2 * 3^j = 3^j * 2 from by ring,
     Nat.add_mul_div_left _ _ hpos, Nat.div_eq_of_lt hdlt]
 
+/-! ## Exact row observer threshold -/
+
+/-- **ROW OBSERVER IFF.**  The sheet-zero row law is lossless: digit two at
+position `1+j` is equivalent to the row word lying in the top third of its
+exact residue window modulo `3^(j+1)`.  This closes the symmetry with the
+tower observer. -/
+theorem omega_row_level_digit_two_iff
+    (core j : Nat) :
+    digit3 (4^core) (1+j) = 2
+      ↔ 2 * 3^j ≤ (omegaCutWord 0 core) % 3^(j+1) := by
+  constructor
+  · intro hd
+    have h1 : (1:Nat) < 3^1 := by decide
+    have hslice :=
+      prefix_slice_digit_exact 1 1 (omegaCutWord 0 core) j h1
+    have hf : 4^core = 1 + 3^1 * omegaCutWord 0 core := by
+      have h := omega_cut_factor 0 core
+      have h0 : (3:Nat)^0 * core = core := by
+        rw [Nat.pow_zero, Nat.one_mul]
+      rw [h0] at h
+      exact h
+    have hword : digit3 (omegaCutWord 0 core) j = 2 := by
+      rw [hf, hslice] at hd
+      exact hd
+    unfold digit3 at hword
+    rw [digit3_window] at hword
+    have hpos : 0 < 3^j := Nat.pow_pos (by decide)
+    have hq :
+        2 ≤ ((omegaCutWord 0 core) % 3^(j+1)) / 3^j := by
+      simpa [hword]
+    exact (Nat.le_div_iff_mul_le hpos).1 hq
+  · exact omega_row_level_digit_two core j
+
+/-- The complementary sheet-zero classifier is exact as well. -/
+theorem omega_row_level_not_two_iff
+    (core j : Nat) :
+    digit3 (4^core) (1+j) ≠ 2
+      ↔ (omegaCutWord 0 core) % 3^(j+1) < 2 * 3^j := by
+  constructor
+  · intro hNot
+    by_contra hge
+    exact hNot ((omega_row_level_digit_two_iff core j).2 (by omega))
+  · intro hlt hTwo
+    have hge := (omega_row_level_digit_two_iff core j).1 hTwo
+    omega
+
+/-- **TWO-OBSERVER CROWN.**  Both the sheet-zero row axis and every legal
+tower axis are now exact Boolean classifiers of their respective ternary
+windows. -/
+theorem omega_two_observer_classifier_crown :
+    (∀ core j,
+      digit3 (4^core) (1+j) = 2
+        ↔ 2 * 3^j ≤ (omegaCutWord 0 core) % 3^(j+1))
+    ∧
+    (∀ s core k, 3 ≤ k → k ≤ s+1 →
+      (digit3 (4^(3^s * core)) (s+k) = 2
+        ↔ 2 * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k)) := by
+  exact ⟨omega_row_level_digit_two_iff,
+    fun s core k hk hks => omega_tower_level_digit_two_iff s core k hk hks⟩
+
+#check omega_row_level_digit_two_iff
+#check omega_row_level_not_two_iff
+#check omega_two_observer_classifier_crown
+#print axioms omega_row_level_digit_two_iff
+#print axioms omega_two_observer_classifier_crown
+
 /-- **THE Ω-SHADOW TAIL (SECOND OBSERVER FORM)** — the residual input
 after the kernel-checked base, the Ω-sheet gate, the Ω-second-sheet
 gates, and BOTH observers: the tower observer of §7.13 (every tower
