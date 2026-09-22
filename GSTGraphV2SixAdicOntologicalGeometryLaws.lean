@@ -166,6 +166,30 @@ theorem six_ball_nested_many (k r : Nat) (c : Int) :
   exact six_iso_weaken_many k r hx
 
 
+/-- **BALL-LEVEL EXACT SCALE SIMILARITY.**  Scaling both a point and its
+center by `6^r` while increasing the resolution by `r` preserves ball
+membership in both directions. -/
+theorem six_scale_ball_membership_iff
+    (k r : Nat) (c x : Int) :
+    ((6 : Int)^r * x) ∈
+        SixAdicBall (k+r) ((6 : Int)^r * c)
+      ↔ x ∈ SixAdicBall k c := by
+  change
+    SixAdicIsoAt (k+r) ((6 : Int)^r * x) ((6 : Int)^r * c)
+      ↔ SixAdicIsoAt k x c
+  exact six_iso_scale_pow_iff k r x c
+
+/-- The preceding similarity is an equality of the full preimage set, not
+just a pointwise transport lemma. -/
+theorem six_scale_ball_preimage_exact
+    (k r : Nat) (c : Int) :
+    {x : Int |
+      ((6 : Int)^r * x) ∈
+        SixAdicBall (k+r) ((6 : Int)^r * c)}
+      = SixAdicBall k c := by
+  ext x
+  exact six_scale_ball_membership_iff k r c x
+
 /-! ## Dyadic and triadic shadows -/
 
 theorem six_iso_to_dyadic {k : Nat} {x y : Int}
@@ -234,6 +258,18 @@ theorem six_child_center_in_parent (k : Nat) (c : Int) (j : Fin 6) :
   simp [sixChildCenter]
   ring
 
+/-- Every canonical child ball is contained in its parent ball.  The six-way
+tree is therefore a genuine refinement geometry at the level of whole
+resolution neighborhoods, not only a list of child centers. -/
+theorem six_child_ball_nested
+    (k : Nat) (c : Int) (j : Fin 6) :
+    SixAdicBall (k+1) (sixChildCenter k c j) ⊆
+      SixAdicBall k c := by
+  intro x hx
+  have hxk : SixAdicIsoAt k x (sixChildCenter k c j) :=
+    six_iso_weaken hx
+  exact six_iso_trans hxk (six_child_center_in_parent k c j)
+
 /-- The six canonical child centers at each node are genuinely distinct. -/
 theorem six_child_centers_injective (k : Nat) (c : Int) :
     Function.Injective (sixChildCenter k c) := by
@@ -298,5 +334,11 @@ theorem resolved_vertex_exact (G : ResolvedGraph) (p : Nat) :
 #check six_iso_scale_pow_iff
 #check six_ball_nested_many
 #print axioms six_iso_scale_pow_iff
+
+#check six_scale_ball_membership_iff
+#check six_scale_ball_preimage_exact
+#check six_child_ball_nested
+#print axioms six_scale_ball_preimage_exact
+#print axioms six_child_ball_nested
 
 end GSTGraphV2SixAdicOntologicalGeometryLaws
