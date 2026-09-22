@@ -147,6 +147,7 @@ roots = [
   "GSTUniversalAddressBridge",
   "GSTDimensionFreeHodgeDiagonal",
   "GSTGlobalPureHodgeCosmology",
+  "GSTSquarePureHodgeDuality",
   "GSTUniversalLefschetzDynamics",
   "GSTWorldPoincareDuality",
   "GSTWorldCrownBridge",
