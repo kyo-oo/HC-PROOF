@@ -71,4 +71,48 @@ theorem affineOrbit_forward (K : Nat) :
     affineOrbit (K+1) = 4 * affineOrbit K + 1 := by
   rfl
 
+
+/-! ## Affine time as an exact semigroup action -/
+
+/-- **AFFINE ORBIT COCYCLE.**  Advancing by `L` exponent steps from time
+`K` is exactly multiplication of the old affine state by `4^L`, followed
+by the intrinsic `L`-step affine state.  Thus exponent addition acts on the
+orbit without any loss of information. -/
+theorem affineOrbit_add_exact (K L : Nat) :
+    affineOrbit (K + L) = 4^L * affineOrbit K + affineOrbit L := by
+  induction L with
+  | zero =>
+      simp [affineOrbit]
+  | succ L ih =>
+      rw [show K + (L + 1) = (K + L) + 1 by omega,
+        affineOrbit_succ, ih, affineOrbit_succ, pow_succ]
+      ring
+
+/-- A one-step shift after an arbitrary block is the same affine action
+written in block coordinates. -/
+theorem affineOrbit_add_succ_exact (K L : Nat) :
+    affineOrbit (K + L + 1) =
+      4^(L+1) * affineOrbit K + affineOrbit (L+1) := by
+  simpa [Nat.add_assoc] using affineOrbit_add_exact K (L+1)
+
+/-- **THREE-BLOCK RENORMALIZATION.**  Every three-step exponent block acts
+by the exact scale `64` plus the universal three-step offset. -/
+theorem affineOrbit_add_three_exact (K : Nat) :
+    affineOrbit (K + 3) = 64 * affineOrbit K + 21 := by
+  simpa [affineOrbit] using affineOrbit_add_exact K 3
+
+/-- The four-power lift intertwines the affine cocycle with ordinary exponent
+addition: no separate transition law is needed above the affine state. -/
+theorem four_pow_from_affine_cocycle (K L : Nat) :
+    4^(K+L) =
+      1 + 3 * (4^L * affineOrbit K + affineOrbit L) := by
+  rw [four_pow_eq_one_plus_three_affineOrbit, affineOrbit_add_exact]
+
+#check affineOrbit_add_exact
+#check affineOrbit_add_succ_exact
+#check affineOrbit_add_three_exact
+#check four_pow_from_affine_cocycle
+#print axioms affineOrbit_add_exact
+#print axioms affineOrbit_add_three_exact
+
 end GSTFourPowerAffineOrbit
