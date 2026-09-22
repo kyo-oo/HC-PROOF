@@ -163,12 +163,40 @@ theorem gst_u_potential_is_horizontal_base4_flux
   exact coupled_potential_is_horizontal_base4_flux
     gstUChargeExact A N st hA hInv hResidue hParent hChild
 
+
+/-! ## Full base-four prefix/tail reconstruction -/
+
+/-- The finite base-four prefix and the residual quotient reconstruct the
+entire source word exactly.  This is the lossless companion to
+`base4_prefix_value`. -/
+theorem base4_prefix_tail_reconstruction (S N : Nat) :
+    S =
+      Finset.sum (Finset.range N) (fun i => 4^i * base4Digit S i) +
+        4^N * (S / 4^N) := by
+  rw [base4_prefix_value]
+  exact (Nat.mod_add_div S (4^N)).symm
+
+/-- Hence two natural words with equal observed prefix and equal residual tail
+are globally identical. -/
+theorem base4_ext_of_prefix_and_tail
+    (S T N : Nat)
+    (hPrefix : S % 4^N = T % 4^N)
+    (hTail : S / 4^N = T / 4^N) :
+    S = T := by
+  have hS := Nat.mod_add_div S (4^N)
+  have hT := Nat.mod_add_div T (4^N)
+  omega
+
+
 #check potential_shared_rewrite
 #check base4_prefix_value
 #check horizontal_flux_telescope
 #check coupled_potential_is_horizontal_base4_flux
 #check gst_u_potential_is_horizontal_base4_flux
+#check base4_prefix_tail_reconstruction
+#check base4_ext_of_prefix_and_tail
 #print axioms coupled_potential_is_horizontal_base4_flux
 #print axioms gst_u_potential_is_horizontal_base4_flux
+#print axioms base4_prefix_tail_reconstruction
 
 end GSTGraphV2CoupledUPhysicalBridge
