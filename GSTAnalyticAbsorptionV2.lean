@@ -34,10 +34,6 @@ theorem hc_period_transport_compose (m n R : Nat) :
     hcPeriod (m * (n * R)) =
       (m : ℤ) • ((n : ℤ) • hcPeriod R) := by
   rw [hc_period_transport_nat, hc_period_transport_nat]
-  rw [smul_smul]
-  congr 1
-  push_cast
-  ring
 
 /-- The old physical transport is a specialization of arbitrary multiplier
 equivariance. -/
@@ -53,7 +49,6 @@ theorem hc_descent_flow_add (a b : Nat) :
   funext x
   rw [pow_add]
   field_simp
-  ring
 
 /-- Every composed descent remains smooth. -/
 theorem hc_descent_flow_composed_smooth (a b : Nat) :
@@ -106,7 +101,7 @@ theorem analytic_v2_crown :
       (fun x : ℝ => (x/(3:ℝ)^a)/(3:ℝ)^b) =
         (fun x : ℝ => x/(3:ℝ)^(a+b)))
     ∧ (∀ t u,
-      rootsOfUnity (4^t) ℂ ≤ rootsOfUnity (4^(t+u))) := by
+      rootsOfUnity (4^t) ℂ ≤ rootsOfUnity (4^(t+u)) ℂ) := by
   exact ⟨hc_period_transport_nat, hc_descent_flow_add,
     hc_physical_tate_tower⟩
 
