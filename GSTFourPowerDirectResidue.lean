@@ -126,7 +126,8 @@ theorem pow4_digit_eq_residue_representative
     simpa [Nat.add_comm, Nat.mul_comm] using hs.symm
   calc
     digit3 (4^K) p =
-        digit3 (4^(K % 3^p + 3^p * (K / 3^p))) p := by rw [hshape]
+        digit3 (4^(K % 3^p + 3^p * (K / 3^p))) p := by
+          exact congrArg (fun e : Nat => digit3 (4^e) p) hshape
     _ = digit3 (4^(K % 3^p)) p :=
       pow4_digit_period p (K % 3^p) (K / 3^p)
 
