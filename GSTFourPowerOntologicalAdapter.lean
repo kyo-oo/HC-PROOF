@@ -47,6 +47,41 @@ theorem creation_certificate_to_navigation
       simpa [digit3] using hone.2
     exact ⟨p+1, hdnext, Or.inr hCnext⟩
 
+
+/-- On a four-power, every physical Navigation witness already supplies the
+historical creation certificate.  Row zero is impossible because the low
+ternary digit of every four-power is one. -/
+theorem navigation_to_creation_certificate_fourPower
+    (K : Nat) (hNav : Navigation (4^K)) :
+    CreationCertificate (4^K) := by
+  rcases hNav with ⟨p, hHappy⟩
+  rcases hHappy with ⟨hd, hC⟩
+  have hp : 1 ≤ p := by
+    by_contra hnot
+    have hp0 : p = 0 := by omega
+    subst p
+    have hbase : digit3 (4^K) 0 = 1 := by
+      unfold digit3
+      simp [Nat.pow_mod]
+    omega
+  refine ⟨p, hp, ?_, ?_⟩
+  · simpa [digit3] using hd
+  · left
+    have hCmod : carry4 (4^K) p % 3 = 0 := by
+      rcases hC with h0 | h3
+      · simp [h0]
+      · simp [h3]
+    simpa [carry4] using hCmod
+
+/-- **CREATION/NAVIGATION EQUIVALENCE ON FOUR-POWERS.**  The historical
+certificate and the physical GST navigation statement are the same object
+on every four-power sheet. -/
+theorem creation_certificate_iff_navigation_fourPower (K : Nat) :
+    CreationCertificate (4^K) ↔ Navigation (4^K) :=
+  ⟨creation_certificate_to_navigation (4^K),
+    navigation_to_creation_certificate_fourPower K⟩
+
+
 /-- FP-NAV, with the exact historical creation theorem exposed as its one
 mathematical input. -/
 theorem gst_four_power_ontological_navigation_of_master
@@ -54,5 +89,9 @@ theorem gst_four_power_ontological_navigation_of_master
     (K : Nat) (hK5 : 5 ≤ K) (hK7 : K ≠ 7) :
     Navigation (4^K) :=
   creation_certificate_to_navigation (4^K) (hMaster K hK5 hK7)
+
+#check navigation_to_creation_certificate_fourPower
+#check creation_certificate_iff_navigation_fourPower
+#print axioms creation_certificate_iff_navigation_fourPower
 
 end GSTFourPowerOntologicalAdapter
