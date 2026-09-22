@@ -143,6 +143,7 @@ roots = [
   "GSTGradedWorldAlgebra",
   "GSTWorldRecoordinationGroupoid",
   "GSTUniversalAddressBridge",
+  "GSTDimensionFreeHodgeDiagonal",
   "GSTUniversalLefschetzDynamics",
   "GSTWorldPoincareDuality",
   "GSTWorldCrownBridge",
