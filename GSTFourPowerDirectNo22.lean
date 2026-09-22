@@ -96,14 +96,48 @@ theorem no_common_pow4_forbids_all_22
   · have hp : 1 ≤ p := by omega
     exact no_common_pow4_forbids_positive_22 K p hp hNo h22
 
+
+/-! ## Exact isolation packet for every source digit two -/
+
+/-- Under a direct counterexample, every source digit two is intrinsically
+isolated: it occurs at a positive row, forces the next binary carry to one,
+and forbids another source digit two immediately above it. -/
+theorem no_common_pow4_source_two_isolation
+    (K p : Nat)
+    (hNo : ¬ ∃ q : Nat, 1 ≤ q ∧
+      digit3 (4^K) q = 2 ∧ digit3 (4^(K+1)) q = 2)
+    (h2 : digit3 (4^K) p = 2) :
+    1 ≤ p ∧
+      binaryCarry (4^K) (p+1) = 1 ∧
+      digit3 (4^K) (p+1) ≠ 2 := by
+  have hp : 1 ≤ p := by
+    by_contra hp
+    have hp0 : p = 0 := by omega
+    subst p
+    have h0 := (pow4_binary_initial_state K).1
+    omega
+  have hNoMul : ¬ ∃ q : Nat, 1 ≤ q ∧
+      digit3 (4^K) q = 2 ∧ digit3 (4 * (4^K)) q = 2 := by
+    intro h
+    rcases h with ⟨q, hq, hs, ht⟩
+    apply hNo
+    refine ⟨q, hq, hs, ?_⟩
+    simpa [pow_succ, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using ht
+  exact ⟨hp,
+    source_two_forces_next_binary_one_of_no_common (4^K) p hp hNoMul h2,
+    no_common_forbids_source_22 (4^K) p hp hNoMul h2⟩
+
+
 #check next_binary_zero_after_two_iff
 #check source_two_forces_next_binary_one_of_no_common
 #check no_common_forbids_source_22
 #check no_common_pow4_forbids_positive_22
 #check no_common_pow4_forbids_all_22
+#check no_common_pow4_source_two_isolation
 #print axioms source_two_forces_next_binary_one_of_no_common
 #print axioms no_common_forbids_source_22
 #print axioms no_common_pow4_forbids_positive_22
 #print axioms no_common_pow4_forbids_all_22
+#print axioms no_common_pow4_source_two_isolation
 
 end GSTFourPowerDirectNo22
