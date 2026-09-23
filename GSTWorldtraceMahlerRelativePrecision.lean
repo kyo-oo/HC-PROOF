@@ -92,9 +92,6 @@ theorem worldtraceWitness_baseline (u s : Nat) :
   exact ⟨2 * (u : ℤ) * (GSTTowerFire.c s : ℤ)
     - 2 * (worldtraceHead u : ℤ) + 9, rfl⟩
 
-/-- The existing ghost theorem is strictly stronger than the new
-terminal interface: its quadratic-depth witness gives every requested
-relative precision. -/
 /-- Removing the automatic baseline gives an exact divisibility criterion,
 including the first additional precision digit. -/
 theorem worldtraceWitness_relative_dvd_iff (u s q : Nat) :
@@ -131,6 +128,9 @@ theorem relativeLock_iff_normalized (u : Nat) :
     have hd := (worldtraceWitness_relative_dvd_iff u s q).mpr (hS s hs)
     exact (pow_dvd_pow (3 : ℤ) (by omega : s+q ≤ s+1+q)).trans hd
 
+/-- The existing ghost theorem is strictly stronger than the new
+terminal interface: its quadratic-depth witness gives every requested
+relative precision. -/
 theorem ghost_implies_relative_lock (u : Nat)
     (hg : GSTGhostRay.GhostRay u) : RelativeLock u := by
   intro q
