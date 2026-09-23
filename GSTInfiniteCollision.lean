@@ -242,6 +242,40 @@ theorem coupledOrbit_childDigit_exact
   rw [coupledOrbit_childTail_exact]
   rfl
 
+/-! ## Orbit semigroup structure -/
+
+/-- **COUPLED ORBIT SEMIGROUP.**  Iterating for `K+L` steps is exactly
+iteration for `K` steps followed by `L` steps from the transported state.
+This promotes the all-depth controller from a recursive sequence to an exact
+Nat-action on coupled states. -/
+theorem coupledOrbit_add
+    (A : Nat) (initial : CoupledState) (K L : Nat) :
+    coupledOrbit A initial (K+L) =
+      coupledOrbit A (coupledOrbit A initial K) L := by
+  induction L with
+  | zero =>
+      simp [coupledOrbit]
+  | succ L ih =>
+      rw [show K + (L+1) = (K+L)+1 by omega,
+        coupledOrbit, ih, coupledOrbit]
+
+/-- Parent-word transport is compatible with orbit concatenation at every
+pair of depths. -/
+theorem coupledOrbit_parentWord_add
+    (A : Nat) (initial : CoupledState) (K L : Nat) :
+    (coupledOrbit A initial (K+L)).parentWord A =
+      ((coupledOrbit A initial K).parentWord A) / 3^L := by
+  rw [coupledOrbit_add]
+  exact coupledOrbit_parentWord_exact A (coupledOrbit A initial K) L
+
+/-- Child-tail transport obeys the same exact depth action. -/
+theorem coupledOrbit_childTail_add
+    (A : Nat) (initial : CoupledState) (K L : Nat) :
+    (coupledOrbit A initial (K+L)).childTail =
+      (coupledOrbit A initial K).childTail / 3^L := by
+  rw [coupledOrbit_add]
+  exact coupledOrbit_childTail_exact A (coupledOrbit A initial K) L
+
 structure InfiniteCoupledControl
     (A : Nat) (initial : CoupledState) : Prop where
   multiplierPositive : 0 < A
@@ -266,13 +300,6 @@ theorem infinite_coupled_control
   }
 
 /-- Restarting the controller at any depth preserves the entire future orbit. -/
-theorem coupledOrbit_add (A : Nat) (initial : CoupledState) (q j : Nat) :
-    coupledOrbit A initial (q+j) = coupledOrbit A (coupledOrbit A initial q) j := by
-  induction j with
-  | zero => simp [coupledOrbit]
-  | succ j ih => simpa only [Nat.add_assoc, coupledOrbit, ih]
-
-/-- The all-depth invariant may be restarted at every observation coordinate. -/
 theorem infinite_coupled_control_restart
     (A : Nat) (initial : CoupledState) (q : Nat)
     (h : InfiniteCoupledControl A initial) :
@@ -280,5 +307,9 @@ theorem infinite_coupled_control_restart
   exact infinite_coupled_control A (coupledOrbit A initial q)
     h.multiplierPositive (h.invariantAll q)
 
+#check coupledOrbit_add
+#check coupledOrbit_parentWord_add
+#check coupledOrbit_childTail_add
+#print axioms coupledOrbit_add
 
 end GSTV2
