@@ -93,6 +93,6 @@ theorem pair_read_fire_iff (T u j : Nat) (hj : 2 ≤ j)
       18 ≤ (4^T * u * 16) % 27 := by
   rw [pair_read_formula T u j (by omega) hT]
   rw [digit3_row_two_iff_residue]
-  exact pair_residue_mod27 T u j hj ▸ Iff.rfl
+  rw [pair_residue_mod27 T u j hj]
 """,
 )
