@@ -68,9 +68,13 @@ theorem null_imp_gst_positive (R p : Nat)
 theorem gst_positive_iff_endpoint (R p : Nat) :
     is_gst_positive R p ↔
       (4 * (R % 3^p)) / 3^p = 0 ∨ (4 * (R % 3^p)) / 3^p = 3 := by
-  have hr : R % 3^p < 3^p := Nat.mod_lt _ (Nat.pow_pos (by decide))
-  have hc : (4 * (R % 3^p)) / 3^p < 4 :=
-    Nat.div_lt_of_lt_mul (by omega)
+  have hm : 0 < 3^p := Nat.pow_pos (by decide)
+  have hr : R % 3^p < 3^p := Nat.mod_lt _ hm
+  have hnum : 4 * (R % 3^p) < 4 * 3^p :=
+    Nat.mul_lt_mul_left 4 hr
+  have hc : (4 * (R % 3^p)) / 3^p < 4 := by
+    apply (Nat.div_lt_iff_lt_mul hm).2
+    simpa [Nat.mul_comm] using hnum
   unfold is_gst_positive
   omega
 
@@ -78,9 +82,13 @@ theorem gst_positive_iff_endpoint (R p : Nat) :
 theorem alt_negative_iff_interior (R p : Nat) :
     is_alt_negative R p ↔
       (4 * (R % 3^p)) / 3^p = 1 ∨ (4 * (R % 3^p)) / 3^p = 2 := by
-  have hr : R % 3^p < 3^p := Nat.mod_lt _ (Nat.pow_pos (by decide))
-  have hc : (4 * (R % 3^p)) / 3^p < 4 :=
-    Nat.div_lt_of_lt_mul (by omega)
+  have hm : 0 < 3^p := Nat.pow_pos (by decide)
+  have hr : R % 3^p < 3^p := Nat.mod_lt _ hm
+  have hnum : 4 * (R % 3^p) < 4 * 3^p :=
+    Nat.mul_lt_mul_left 4 hr
+  have hc : (4 * (R % 3^p)) / 3^p < 4 := by
+    apply (Nat.div_lt_iff_lt_mul hm).2
+    simpa [Nat.mul_comm] using hnum
   unfold is_alt_negative
   omega
 
