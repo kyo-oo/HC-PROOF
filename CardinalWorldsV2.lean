@@ -14,7 +14,6 @@ set_option maxRecDepth 1000000
 
 namespace CardinalWorldsV2
 
-
 /-- The positive signature reader and the negative Cantor verdict are exact
 Boolean complements at the true/false level. -/
 theorem has_two_iff_no_two_false (n : Nat) :
@@ -125,7 +124,6 @@ theorem joined_prefix_succ (K : Nat) :
   unfold gstBinaryWorldFactorS gstTernaryWorldFactorS
   rw [← gst_three_world_factor_rawS K]
 
-/-- Exact reader/packet crown. -/
 /-- Concatenating finite joined prefixes scales the second block by the
 complete mixed-world weight of the first block. -/
 theorem joined_prefix_add (j k : Nat) :
@@ -147,6 +145,7 @@ theorem joined_prefix_add (j k : Nat) :
   rw [pow_add, ← hj, ← hk] at hjk
   nlinarith
 
+/-- Exact reader/packet crown. -/
 theorem cardinal_worlds_v2_crown :
     (∀ n, hasTernaryTwo n = true ↔ noTernaryTwo n = false)
     ∧ (∀ R, carryAtPos R 1 = R % 3)
