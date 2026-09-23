@@ -190,8 +190,8 @@ theorem pure_hodge_eq_zero_iff_coordinates_zero
     rfl
   · intro h
     apply (pureHodgeLinearEquiv A B).injective
-    change pureCoordinates f.1 = pureCoordinates (0 : PureWorldHodge A B).1
-    simpa using h
+    rw [map_zero]
+    exact h
 
 /-- Every pure class is exactly the reassembly of a unique coordinate family. -/
 theorem pure_hodge_classification
@@ -246,8 +246,13 @@ theorem pure_hodge_basis_expansion
     {A B : Nat} (f : PureWorldHodge A B) :
     f = ∑ p : Fin (min A B), (pureCoordinates f.1 p) • pureBasis p := by
   apply (pureHodgeLinearEquiv A B).injective
+  rw [map_sum]
+  simp only [LinearEquiv.map_smul]
+  change pureCoordinates f.1 =
+    ∑ p : Fin (min A B), (pureCoordinates f.1 p) •
+      (fun q => if q = p then 1 else 0)
   funext q
-  simp [pureBasis]
+  simp
 
 /-- Universal-address image of a pure class is supported exactly on the
 finite set of diagonal codes (B+1)p. -/
