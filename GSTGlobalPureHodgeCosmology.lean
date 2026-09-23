@@ -248,11 +248,9 @@ theorem pure_hodge_basis_expansion
   apply (pureHodgeLinearEquiv A B).injective
   rw [map_sum]
   simp only [LinearEquiv.map_smul]
-  change pureCoordinates f.1 =
-    ∑ p : Fin (min A B), (pureCoordinates f.1 p) •
-      (fun q => if q = p then 1 else 0)
   funext q
-  simp
+  change pureCoordinates f.1 q = _
+  simp [pureBasis]
 
 /-- Universal-address image of a pure class is supported exactly on the
 finite set of diagonal codes (B+1)p. -/
