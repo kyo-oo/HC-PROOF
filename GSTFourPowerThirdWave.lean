@@ -1,4 +1,5 @@
 import GSTFourPowerDirectExistence
+import GSTFourPowerExponentTritObstruction
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 20000000
@@ -6,71 +7,31 @@ set_option maxHeartbeats 20000000
 /-!
 # The Third Wave: band reformulation of the four-power direct existence law
 
-This file is the Lean core of the third-wave analysis produced by the
-six-agent strike on the legacy production boundary
-`gst_four_power_direct_existence_inline`.
-
-## The reformulation
-
-For every row `p`, write `b := 4^K % 3^p` for the prefix of `4^K` below
-row `p`.  Multiplication by four acts on row `p` by the carry law
-
-    digit3 (4 * R) p = (4 * digit3 R p + c) % 3,   c := 4 * (R % 3^p) / 3^p ≤ 3,
-
-so a row-`p` digit two of `4^K` survives the passage to `4^(K+1)` exactly
-when the prefix `b` lies in the outer quarter bands
-
-    prefixBand K p :=  4 * b < 3^p   ∨   3 * 3^p ≤ 4 * b.
-
-Consequently the direct existence law is *equivalent* to the statement that
-every exponent `K ≥ 5`, `K ≠ 7`, has some row `p ≥ 1` whose row digit is
-two while its prefix lies in the outer quarter band — the gate predicate of
-the third wave.  This file proves that equivalence unconditionally, with
-no unproven assertion of any kind.
-
-## Research record of the strike (not discharged here)
-
-The six-agent strike established, outside this file:
-
-* the exponent trie `K mod 3^p ↦ 4^K mod 3^(p+1)` is a bijection onto the
-  principal units (the residue files carry the exact period law
-  `pow4_digit_period` and the LTE identity `pow4_three_power_lte_exact`);
-* at each trie level the new row digit can be steered freely by the
-  exponent trit (`pow4_exponent_trit_lift_digit`), so the gate structure is
-  a self-similar walk on the prefix value;
-* the set of exponent classes dodging every gate grows geometrically at
-  rate ≈ 2.48 per level against 3 per level of the trie, and the measured
-  exception set is exactly `{0, 1, 2, 3, 4, 7}`.
-
-Closing the final step — that no natural exponent `K ≥ 8` follows a
-gate-dodging walk forever — is the open boundary that the legacy
-declaration was holding.  It is deliberately NOT asserted here.
+For every row `p`, the third-wave gate records a row digit two together with
+its exact outer-quarter prefix band.  The file identifies this geometric gate
+with the common-two existence predicate and then links the same gate to the
+recursive exponent-prefix killing-trit geometry.
 -/
 
 namespace GSTFourPowerThirdWave
 
 open GSTFourPowerDirectResidue
 open GSTFourPowerDirectExistence
+open GSTFourPowerExponentTritObstruction
 
-/-- Outer quarter-band condition on the row-`p` prefix of `4^K`:
-the value of `4^K` below row `p` lies in the lowest quarter or the
-highest quarter of the block `[0, 3^p)`.  This is the gate band of the
-third wave. -/
+/-- Outer quarter-band condition on the row-`p` prefix of `4^K`. -/
 def prefixBand (K p : Nat) : Prop :=
   4 * (4^K % 3^p) < 3^p ∨ 3 * 3^p ≤ 4 * (4^K % 3^p)
 
-/-- The row-`p` gate of the third wave: row digit two with a band prefix. -/
+/-- The row-`p` gate of the third wave. -/
 def thirdWaveRow (K p : Nat) : Prop :=
   digit3 (4^K) p = 2 ∧ prefixBand K p
 
-/-- The third wave of `K`: some row gate fires. -/
+/-- The third wave of `K`: some positive row gate fires. -/
 def thirdWave (K : Nat) : Prop :=
   ∃ p : Nat, 1 ≤ p ∧ thirdWaveRow K p
 
-/-! ## The multiplication-by-four row law -/
-
-/-- Row law, low band: prefix in the lowest quarter (carry `c = 0`).
-The row-`p` digit of `4 * R` is then just the quadrupled row digit of `R`. -/
+/-- Row law in the lowest quarter band. -/
 theorem digit3_four_mul_of_lt (R p : Nat)
     (hband : 4 * (R % 3^p) < 3^p) :
     digit3 (4 * R) p = (4 * (R / 3^p)) % 3 := by
@@ -84,7 +45,7 @@ theorem digit3_four_mul_of_lt (R p : Nat)
   rw [h4R, Nat.add_mul_div_left _ _ hpow, Nat.div_eq_of_lt hband]
   omega
 
-/-- Row law, high band: prefix in the top quarter (carry `c = 3`). -/
+/-- Row law in the highest quarter band. -/
 theorem digit3_four_mul_of_ge (R p : Nat)
     (hband : 3 * 3^p ≤ 4 * (R % 3^p)) :
     digit3 (4 * R) p = (4 * (R / 3^p) + 3) % 3 := by
@@ -103,7 +64,7 @@ theorem digit3_four_mul_of_ge (R p : Nat)
   rw [h4R, Nat.add_mul_div_left _ _ hpow, hdiv]
   omega
 
-/-- Row law, low-middle band: prefix in the second quarter (carry `c = 1`). -/
+/-- Row law in the second quarter band. -/
 theorem digit3_four_mul_of_mid1 (R p : Nat)
     (hlo : 3^p ≤ 4 * (R % 3^p)) (hhi : 4 * (R % 3^p) < 2 * 3^p) :
     digit3 (4 * R) p = (4 * (R / 3^p) + 1) % 3 := by
@@ -122,7 +83,7 @@ theorem digit3_four_mul_of_mid1 (R p : Nat)
   rw [h4R, Nat.add_mul_div_left _ _ hpow, hdiv]
   omega
 
-/-- Row law, high-middle band: prefix in the third quarter (carry `c = 2`). -/
+/-- Row law in the third quarter band. -/
 theorem digit3_four_mul_of_mid2 (R p : Nat)
     (hlo : 2 * 3^p ≤ 4 * (R % 3^p)) (hhi : 4 * (R % 3^p) < 3 * 3^p) :
     digit3 (4 * R) p = (4 * (R / 3^p) + 2) % 3 := by
@@ -141,13 +102,7 @@ theorem digit3_four_mul_of_mid2 (R p : Nat)
   rw [h4R, Nat.add_mul_div_left _ _ hpow, hdiv]
   omega
 
-/-! ## The gate equivalence -/
-
-/-- **Row gate equivalence — the interval law at every row.**
-A row-`p` pair of digit twos (`4^K` and `4^(K+1)`) is the same thing as a
-row-`p` digit two of `4^K` whose prefix lies in the outer quarter band.
-This upgrades the per-class row overlap theorems of the residue tower into
-one uniform law. -/
+/-- Row-pair overlap is exactly the third-wave outer-band gate. -/
 theorem row_pair_iff_band (K p : Nat) :
     (digit3 (4^K) p = 2 ∧ digit3 (4^(K+1)) p = 2) ↔
       thirdWaveRow K p := by
@@ -183,7 +138,7 @@ theorem row_pair_iff_band (K p : Nat) :
       unfold digit3 at hd
       omega
 
-/-- **The third wave is the direct existence law, exponent by exponent.** -/
+/-- The third wave is the direct existence law exponent by exponent. -/
 theorem thirdWave_iff_commonTwo (K : Nat) :
     thirdWave K ↔ CommonTwo K := by
   constructor
@@ -192,7 +147,7 @@ theorem thirdWave_iff_commonTwo (K : Nat) :
   · rintro ⟨p, hp1, hd, hd2⟩
     exact ⟨p, hp1, (row_pair_iff_band K p).mp ⟨hd, hd2⟩⟩
 
-/-- **The full law restated in wave language.** -/
+/-- The full direct-existence law restated in wave language. -/
 theorem fourPowerDirectExistence_iff_thirdWave :
     FourPowerDirectExistence ↔ ∀ K : Nat, 5 ≤ K → K ≠ 7 → thirdWave K := by
   constructor
@@ -201,7 +156,7 @@ theorem fourPowerDirectExistence_iff_thirdWave :
   · intro h K hK5 hK7
     exact (thirdWave_iff_commonTwo K).mp (h K hK5 hK7)
 
-/-- Every established row overlap class fires the third wave. -/
+/-- Every established row-two overlap class fires the third wave. -/
 theorem thirdWave_of_mod9_five_or_six (K : Nat)
     (hres : K % 9 = 5 ∨ K % 9 = 6) : thirdWave K := by
   obtain ⟨p, hp1, hd, hd2⟩ := commonTwo_of_mod9_five_or_six K hres
@@ -214,27 +169,38 @@ theorem thirdWave_of_mod27_row_three (K : Nat)
   obtain ⟨p, hp1, hd, hd2⟩ := commonTwo_of_mod27_row_three K hres
   exact ⟨p, hp1, (row_pair_iff_band K p).mp ⟨hd, hd2⟩⟩
 
-#print axioms row_pair_iff_band
-#print axioms thirdWave_iff_commonTwo
-#print axioms fourPowerDirectExistence_iff_thirdWave
+/-- **THIRD-WAVE / KILLING-TRIT EQUIVALENCE.**  The geometric third wave
+fires exactly when some exponent-prefix scale hits its unique killing trit. -/
+theorem thirdWave_iff_exists_killingTrit_hit (K : Nat) :
+    thirdWave K ↔
+      ∃ p : Nat,
+        digit3 (4^(exponentPrefix K p)) (p+1) =
+          digit3 (4^((exponentPrefix K p)+1)) (p+1) ∧
+        exponentTrit K p = killingTrit K p := by
+  rw [thirdWave_iff_commonTwo]
+  exact commonTwo_iff_exists_killingTrit_hit K
 
-
-/-- A gate is determined by a finite exponent class, uniformly at every row
-and with arbitrary offsets. The interval formulation therefore inherits the
-exact same residue normalization as the digit-pair formulation. -/
+/-- A gate is determined by a finite exponent class uniformly at every row
+and with arbitrary offsets. -/
 theorem thirdWaveRow_reduce_offset (K p t : Nat) :
     thirdWaveRow (K+t) p ↔ thirdWaveRow (K % 3^p+t) p := by
   rw [← row_pair_iff_band, ← row_pair_iff_band]
   rw [pow4_digit_reduce_offset p K t]
   have hs := pow4_digit_reduce_offset p K (t+1)
   simpa only [Nat.add_assoc] using
-    (and_congr_right fun _ => congrArg (fun d : Nat => d = 2) hs)
+    Iff.of_eq (congrArg (fun d : Nat => d = 2) hs)
 
-/-- Every gate produces an infinite family of gates at its original row, not
-just unlocated third-wave witnesses at the translated exponents. -/
+/-- Every gate produces an infinite family of gates at its original row. -/
 theorem thirdWaveRow_period (K p u : Nat) :
     thirdWaveRow (K + 3^p*u) p ↔ thirdWaveRow K p := by
   rw [← row_pair_iff_band, ← row_pair_iff_band, pow4_digit_period]
   rw [show K + 3^p*u + 1 = (K+1) + 3^p*u by omega, pow4_digit_period]
+
+#print axioms row_pair_iff_band
+#print axioms thirdWave_iff_commonTwo
+#print axioms fourPowerDirectExistence_iff_thirdWave
+#print axioms thirdWave_iff_exists_killingTrit_hit
+#print axioms thirdWaveRow_reduce_offset
+#print axioms thirdWaveRow_period
 
 end GSTFourPowerThirdWave
