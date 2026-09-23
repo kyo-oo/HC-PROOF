@@ -86,6 +86,13 @@ theorem quotient_eq_iff_coeff (p q : MvPolynomial I ℤ) :
   rw [← map_pow, Ideal.Quotient.eq_zero_iff_mem, boundaryIdeal_eq_span_powers]
   exact Ideal.subset_span ⟨i, rfl⟩
 
+/-- Every power at or beyond an axis boundary vanishes, not only the first
+boundary power itself. -/
+theorem axis_pow_eq_zero_of_depth_le (i : I) (n : Nat) (h : d i ≤ n) :
+    axis d i ^ n = 0 := by
+  have hn : n = d i + (n - d i) := by omega
+  rw [hn, pow_add, axis_pow_depth, zero_mul]
+
 /-- Exact survival for every integer amplitude: precisely the nonzero
 amplitudes whose displacement stays below every axis boundary survive. -/
 theorem monomial_class_ne_zero (e : I →₀ ℕ) (a : ℤ) :
@@ -112,6 +119,30 @@ theorem monomial_class_ne_zero (e : I →₀ ℕ) (a : ℤ) :
     have h := (mem_boundaryIdeal_iff_coeff d _).mp hm e he
     exact ha (by simpa using h)
 
+/-- Exact extinction classification for a single weighted monomial. -/
+theorem monomial_class_eq_zero_iff (e : I →₀ ℕ) (a : ℤ) :
+    Ideal.Quotient.mk (boundaryIdeal d) (monomial e a) = 0 ↔
+      a = 0 ∨ ∃ i, d i ≤ e i := by
+  classical
+  constructor
+  · intro hz
+    by_cases ha : a = 0
+    · exact Or.inl ha
+    · right
+      by_contra hcross
+      have hsmall : ∀ i, e i < d i := by
+        intro i
+        exact Nat.lt_of_not_ge (fun hi => hcross ⟨i, hi⟩)
+      exact (monomial_class_ne_zero d e a).2 ⟨ha, hsmall⟩ hz
+  · rintro (rfl | ⟨i, hi⟩)
+    · simp
+    · apply Ideal.Quotient.eq_zero_iff_mem.mpr
+      apply (mem_boundaryIdeal_iff d _).mpr
+      intro f hf
+      have hfe : f = e := Finset.mem_singleton.mp (support_monomial_subset hf)
+      subst f
+      exact ⟨i, hi⟩
+
 /-- A polynomial supported strictly within the world has no hidden relation. -/
 theorem bounded_polynomial_faithful (p : MvPolynomial I ℤ)
     (hp : ∀ e ∈ p.support, ∀ i, e i < d i)
@@ -123,6 +154,32 @@ theorem bounded_polynomial_faithful (p : MvPolynomial I ℤ)
   · simpa using (mem_boundaryIdeal_iff_coeff d p).mp
       (Ideal.Quotient.eq_zero_iff_mem.mp hz) e (hp e he)
   · simpa using (notMem_support_iff.mp he)
+
+/-- **EXACT BOUNDED NORMAL FORM.**  Two representatives whose support stays
+strictly inside every axis boundary represent the same cohomology class iff
+they are literally the same polynomial. -/
+theorem bounded_quotient_injective (p q : MvPolynomial I ℤ)
+    (hp : ∀ e ∈ p.support, ∀ i, e i < d i)
+    (hq : ∀ e ∈ q.support, ∀ i, e i < d i) :
+    Ideal.Quotient.mk (boundaryIdeal d) p =
+        Ideal.Quotient.mk (boundaryIdeal d) q ↔ p = q := by
+  classical
+  constructor
+  · intro h
+    apply MvPolynomial.ext
+    intro e
+    by_cases hb : ∀ i, e i < d i
+    · exact (quotient_eq_iff_coeff d p q).1 h e hb
+    · have hp0 : e ∉ p.support := by
+        intro he
+        exact hb (hp e he)
+      have hq0 : e ∉ q.support := by
+        intro he
+        exact hb (hq e he)
+      rw [notMem_support_iff.mp hp0, notMem_support_iff.mp hq0]
+  · intro h
+    subst q
+    rfl
 
 section Representation
 variable {R : Type*} [CommRing R] (x : I → R) (hx : ∀ i, x i ^ d i = 0)
@@ -223,8 +280,14 @@ theorem rectangular_L_pow_boundary (A B : ℕ) :
       (Commute.all (H A B) (V A B)).add_pow_add_eq_zero_of_pow_eq_zero
         (H_pow_depth A B) (V_pow_depth A B)
 
+#check axis_pow_eq_zero_of_depth_le
+#check monomial_class_eq_zero_iff
+#check bounded_quotient_injective
 #print axioms quotient_eq_iff_coeff
+#print axioms axis_pow_eq_zero_of_depth_le
+#print axioms monomial_class_eq_zero_iff
 #print axioms bounded_polynomial_faithful
+#print axioms bounded_quotient_injective
 #print axioms existsUnique_representation
 #print axioms weighted_axis_polarization_bound
 #print axioms rectangular_L_pow_boundary
