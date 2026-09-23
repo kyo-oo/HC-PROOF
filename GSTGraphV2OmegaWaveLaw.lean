@@ -3040,12 +3040,16 @@ theorem omega_observed_digit_iff_interval
     have he := Nat.mod_add_div r m
     have hb := Nat.mod_lt r hm
     rw [h] at he
-    constructor <;> nlinarith
+    have he' : r % m + d * m = r := by
+      simpa [Nat.mul_comm] using he
+    constructor
+    · omega
+    · calc
+        r = r % m + d * m := he'.symm
+        _ < m + d * m := Nat.add_lt_add_right hb (d * m)
+        _ = (d + 1) * m := by simp [Nat.add_mul, Nat.add_comm]
   · rintro ⟨hlo, hhi⟩
-    have he : r = (r-d*m) + m*d := by omega
-    have hb : r-d*m < m := by nlinarith
-    rw [he, Nat.add_mul_div_left _ _ hm, Nat.div_eq_of_lt hb]
-    simp
+    exact Nat.div_eq_of_lt_le hlo hhi
 
 end GSTGraphV2OmegaWaveLaw
 

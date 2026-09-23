@@ -293,7 +293,8 @@ theorem reverseMixedCode_add (C d : Nat → Nat) (n m : Nat) :
   induction m with
   | zero => simp [reverseMixedCode]
   | succ m ih =>
-      simp only [Nat.add_assoc, reverseMixedCode, ih, pow_succ]
+      simp only [Nat.add_succ, reverseMixedCode, pow_succ]
+      rw [ih]
       ring
 
 end GSTFinalPrefixOneStep6Infinite
