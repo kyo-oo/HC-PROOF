@@ -186,7 +186,7 @@ MvPolynomial is already a finitely-supported coefficient map, normalization
 is literally coefficient filtering by the native depth predicate. -/
 noncomputable def boundedNormalForm (p : MvPolynomial I ℤ) : MvPolynomial I ℤ := by
   classical
-  exact Finsupp.filter (fun e => ∀ i, e i < d i) p
+  exact Finsupp.filter (fun e : I →₀ ℕ => ∀ i, e i < d i) p
 
 /-- Every live coefficient survives canonical normalization literally. -/
 theorem coeff_boundedNormalForm_of_live
