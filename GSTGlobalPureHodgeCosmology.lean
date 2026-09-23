@@ -166,6 +166,33 @@ theorem pure_hodge_ext
       ← pureReassemble_pureCoordinates g hg,
       hcoord]
 
+/-- Equality inside the pure-Hodge module is exactly coordinate equality. -/
+theorem pure_hodge_eq_iff_coordinates
+    {A B : Nat} (f g : PureWorldHodge A B) :
+    f = g ↔ pureCoordinates f.1 = pureCoordinates g.1 := by
+  constructor
+  · intro h
+    subst g
+    rfl
+  · intro h
+    apply (pureHodgeLinearEquiv A B).injective
+    change pureCoordinates f.1 = pureCoordinates g.1
+    exact h
+
+/-- Vanishing of a pure-Hodge class is exactly simultaneous vanishing of all
+of its canonical diagonal coordinates. -/
+theorem pure_hodge_eq_zero_iff_coordinates_zero
+    {A B : Nat} (f : PureWorldHodge A B) :
+    f = 0 ↔ pureCoordinates f.1 = 0 := by
+  constructor
+  · intro h
+    subst f
+    rfl
+  · intro h
+    apply (pureHodgeLinearEquiv A B).injective
+    change pureCoordinates f.1 = pureCoordinates (0 : PureWorldHodge A B).1
+    simpa using h
+
 /-- Every pure class is exactly the reassembly of a unique coordinate family. -/
 theorem pure_hodge_classification
     {A B : Nat}
@@ -210,6 +237,16 @@ theorem pureCoordinates_pureBasis
       fun q => if q = p then 1 else 0 := by
   change pureHodgeLinearEquiv A B (pureBasis p) =
     fun q => if q = p then 1 else 0
+  simp [pureBasis]
+
+/-- **CANONICAL BASIS EXPANSION.**  Every pure-Hodge class is exactly the
+finite linear combination of its diagonal coordinates against the intrinsic
+pure basis. -/
+theorem pure_hodge_basis_expansion
+    {A B : Nat} (f : PureWorldHodge A B) :
+    f = ∑ p : Fin (min A B), (pureCoordinates f.1 p) • pureBasis p := by
+  apply (pureHodgeLinearEquiv A B).injective
+  funext q
   simp [pureBasis]
 
 /-- Universal-address image of a pure class is supported exactly on the
@@ -265,15 +302,21 @@ theorem global_pure_hodge_crown :
 #check PureWorldHodge
 #check pureHodgeLinearEquiv
 #check pure_hodge_ext
+#check pure_hodge_eq_iff_coordinates
+#check pure_hodge_eq_zero_iff_coordinates_zero
 #check pure_hodge_classification
 #check hc_pure_hodge_equiv
 #check pureBasis
+#check pure_hodge_basis_expansion
 #check worldAddress_pure_support
 #check global_pure_hodge_crown
 
 #print axioms pureHodgeLinearEquiv
+#print axioms pure_hodge_eq_iff_coordinates
+#print axioms pure_hodge_eq_zero_iff_coordinates_zero
 #print axioms pure_hodge_classification
 #print axioms hc_pure_hodge_equiv
+#print axioms pure_hodge_basis_expansion
 #print axioms worldAddress_pure_support
 #print axioms global_pure_hodge_crown
 
