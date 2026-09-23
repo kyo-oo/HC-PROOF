@@ -184,13 +184,19 @@ theorem uTailEnergy_eventually_one (t n : Nat) :
 #print axioms graph_u_block_observables_exact
 #print axioms handwritten_exponential_navigation_flux_exact
 
-
 /-- The exhaustion depth is characterized exactly by the size of the origin,
 rather than by the coarse sufficient bound `n+1`. -/
 theorem originSuffix_zero_iff (n K : Nat) :
     originSuffix n K = 0 ↔ n < 3^K := by
   unfold originSuffix
-  exact Nat.div_eq_zero_iff (by positivity)
+  constructor
+  · intro hzero
+    by_contra hnot
+    have hle : 3^K ≤ n := Nat.le_of_not_gt hnot
+    have hpos : 0 < 3^K := Nat.pow_pos (by decide)
+    have hdivpos : 0 < n / 3^K := Nat.div_pos hle hpos
+    omega
+  · exact Nat.div_eq_of_lt
 
 /-- Once a cut exhausts the origin, every later cut retains the entire phase
 and has exactly unit residual energy. -/
