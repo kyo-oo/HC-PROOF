@@ -164,6 +164,18 @@ theorem V_pow_depth :
   exact Ideal.subset_span
     (Set.mem_insert_of_mem _ (Set.mem_singleton _))
 
+/-- Every digit-axis power at or beyond the native depth vanishes already
+inside the cohomology ring, before applying the representation. -/
+theorem H_pow_eq_zero_of_depth_le (n : Nat) (h : B ≤ n) :
+    (H A B)^n = 0 :=
+  pow_eq_zero_of_le h (H_pow_depth A B)
+
+/-- Every carry-axis power at or beyond the native depth vanishes already
+inside the cohomology ring. -/
+theorem V_pow_eq_zero_of_depth_le (n : Nat) (h : A ≤ n) :
+    (V A B)^n = 0 :=
+  pow_eq_zero_of_le h (V_pow_depth A B)
+
 /-- The polynomial GST action descends canonically through the quotient. -/
 def worldOperatorHom :
     WorldCohomologyRing A B →+* WorldOperatorRing A B :=
@@ -219,6 +231,57 @@ theorem worldAct_mul
       worldAct A B r (worldAct A B s g) := by
   simp [worldAct, Module.End.mul_apply]
 
+/-- Exact additive inverse compatibility of the native action. -/
+theorem worldAct_neg
+    (r : WorldCohomologyRing A B)
+    (g : WorldCoef A B) :
+    worldAct A B (-r) g = - worldAct A B r g := by
+  simp [worldAct]
+
+/-- Powers in the cohomology ring compose as powers of the native action. -/
+theorem worldAct_pow_add
+    (r : WorldCohomologyRing A B)
+    (m n : Nat)
+    (g : WorldCoef A B) :
+    worldAct A B (r^(m+n)) g =
+      worldAct A B (r^m) (worldAct A B (r^n) g) := by
+  rw [pow_add, worldAct_mul]
+
+/-- Two classes induce the same action on every world coefficient exactly
+when their native operator representatives are equal.  This is the precise
+operational extensionality law, valid even for degenerate rectangles. -/
+theorem worldAct_eq_iff_operator_eq
+    (r s : WorldCohomologyRing A B) :
+    (∀ g : WorldCoef A B, worldAct A B r g = worldAct A B s g) ↔
+      worldOperatorHom A B r = worldOperatorHom A B s := by
+  constructor
+  · intro h
+    apply Subtype.ext
+    apply LinearMap.ext
+    intro g
+    exact h g
+  · intro h g
+    unfold worldAct
+    rw [h]
+
+/-- The representation kernel is exactly the set of cohomology classes that
+annihilate every native world coefficient. -/
+theorem mem_worldOperatorHom_ker_iff_annihilates
+    (r : WorldCohomologyRing A B) :
+    r ∈ RingHom.ker (worldOperatorHom A B) ↔
+      ∀ g : WorldCoef A B, worldAct A B r g = 0 := by
+  change worldOperatorHom A B r = 0 ↔ _
+  constructor
+  · intro h g
+    unfold worldAct
+    rw [h]
+    rfl
+  · intro h
+    apply Subtype.ext
+    apply LinearMap.ext
+    intro g
+    exact h g
+
 @[simp]
 theorem worldAct_H (g : WorldCoef A B) :
     worldAct A B (H A B) g = digitShiftN 1 g := by
@@ -260,43 +323,37 @@ theorem worldAct_L (g : WorldCoef A B) :
   ext c
   simp [L, worldAct, lefschetzEndo]
 
+/-- Exact binomial calculus for every power of the Lefschetz class inside
+the cohomology ring itself. -/
+theorem L_binomial (n : Nat) :
+    (L A B)^n =
+      ∑ m ∈ Finset.range (n+1),
+        (H A B)^m * (V A B)^(n-m) *
+          (n.choose m : WorldCohomologyRing A B) := by
+  exact (Commute.all (H A B) (V A B)).add_pow n
+
+/-- The universal Lefschetz class vanishes in the quotient ring itself at
+the rectangular ceiling; this is strictly stronger than action-level
+annihilation. -/
+@[simp]
+theorem L_pow_boundary :
+    (L A B)^(A+B-1) = 0 := by
+  simpa [L, Nat.add_comm] using
+    (Commute.all (H A B) (V A B)).add_pow_add_eq_zero_of_pow_eq_zero
+      (H_pow_depth A B) (V_pow_depth A B)
+
+/-- Every higher Lefschetz power also vanishes in the cohomology ring. -/
+theorem L_pow_eq_zero_of_boundary_le
+    (n : Nat) (h : A+B-1 ≤ n) :
+    (L A B)^n = 0 :=
+  pow_eq_zero_of_le h (L_pow_boundary A B)
+
 /-- The universal Lefschetz class is nilpotent at the sharp rectangular
 ceiling inherited from the native operator action. -/
 theorem worldAct_L_pow_boundary
     (g : WorldCoef A B) :
     worldAct A B ((L A B)^(A+B-1)) g = 0 := by
-  change
-    ((worldOperatorHom A B ((L A B)^(A+B-1)) :
-      WorldOperatorRing A B) :
-      Module.End ℤ (WorldCoef A B)) g = 0
-  rw [map_pow]
-  have hL :
-      worldOperatorHom A B (L A B) =
-        ⟨lefschetzEndo A B, by
-          rw [lefschetzEndo]
-          exact Subring.add_mem _
-            (Subring.subset_closure (Set.mem_insert _ _))
-            (Subring.subset_closure
-              (Set.mem_insert_of_mem _ (Set.mem_singleton _)))⟩ := by
-    apply Subtype.ext
-    ext x
-    simp [L, lefschetzEndo, worldOperatorHom_H, worldOperatorHom_V]
-  rw [hL]
-  have hz :
-      (lefschetzEndo A B)^(A+B-1) = 0 :=
-    lefschetz_pow_boundary (A:=A) (B:=B)
-  have hz' :
-      (⟨lefschetzEndo A B, by
-          rw [lefschetzEndo]
-          exact Subring.add_mem _
-            (Subring.subset_closure (Set.mem_insert _ _))
-            (Subring.subset_closure
-              (Set.mem_insert_of_mem _ (Set.mem_singleton _)))⟩ :
-        WorldOperatorRing A B)^(A+B-1) = 0 := by
-    apply Subtype.ext
-    exact hz
-  rw [hz']
-  rfl
+  rw [L_pow_boundary, worldAct_zero]
 
 /-- The historical HC chart is exactly the quotient Z[H,V]/(H^3,V^4). -/
 abbrev HCCohomologyRing : Type :=
@@ -339,18 +396,35 @@ theorem truncated_world_ring_crown :
 #check L
 #check H_pow_depth
 #check V_pow_depth
+#check H_pow_eq_zero_of_depth_le
+#check V_pow_eq_zero_of_depth_le
 #check worldOperatorHom
+#check worldAct_neg
+#check worldAct_pow_add
+#check worldAct_eq_iff_operator_eq
+#check mem_worldOperatorHom_ker_iff_annihilates
 #check worldAct_H
 #check worldAct_V
 #check worldAct_monomial
 #check worldAct_monomial_zero
 #check worldAct_L
+#check L_binomial
+#check L_pow_boundary
+#check L_pow_eq_zero_of_boundary_le
 #check worldAct_L_pow_boundary
 #check HCCohomologyRing
 #check truncated_world_ring_crown
 
 #print axioms truncIdeal_le_ker_evalWorldPoly
+#print axioms H_pow_eq_zero_of_depth_le
+#print axioms V_pow_eq_zero_of_depth_le
+#print axioms worldAct_pow_add
+#print axioms worldAct_eq_iff_operator_eq
+#print axioms mem_worldOperatorHom_ker_iff_annihilates
 #print axioms worldAct_monomial
+#print axioms L_binomial
+#print axioms L_pow_boundary
+#print axioms L_pow_eq_zero_of_boundary_le
 #print axioms worldAct_L_pow_boundary
 #print axioms truncated_world_ring_crown
 
