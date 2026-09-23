@@ -181,6 +181,88 @@ theorem bounded_quotient_injective (p q : MvPolynomial I ℤ)
     subst q
     rfl
 
+/-- Canonical truncation of a polynomial to the exact live exponent box.
+Every monomial crossing at least one axis boundary is deleted, while every
+coefficient strictly below all boundaries is preserved literally. -/
+noncomputable def boundedNormalForm (p : MvPolynomial I ℤ) : MvPolynomial I ℤ := by
+  classical
+  exact ∑ e ∈ p.support,
+    if (∀ i, e i < d i) then monomial e (coeff e p) else 0
+
+/-- Coefficients of the canonical bounded normal form are exactly the live
+coefficients of the original polynomial and zero outside the live box. -/
+theorem coeff_boundedNormalForm (p : MvPolynomial I ℤ) (e : I →₀ ℕ) :
+    coeff e (boundedNormalForm d p) =
+      if (∀ i, e i < d i) then coeff e p else 0 := by
+  classical
+  by_cases he : e ∈ p.support
+  · simp [boundedNormalForm, he]
+  · have hz : coeff e p = 0 := notMem_support_iff.mp he
+    simp [boundedNormalForm, he, hz]
+
+/-- The canonical normal form is supported strictly inside every boundary. -/
+theorem boundedNormalForm_support (p : MvPolynomial I ℤ) :
+    ∀ e ∈ (boundedNormalForm d p).support, ∀ i, e i < d i := by
+  classical
+  intro e he i
+  have hnz : coeff e (boundedNormalForm d p) ≠ 0 := mem_support_iff.mp he
+  by_contra hbad
+  have hout : ¬ (∀ j, e j < d j) := by
+    intro hall
+    exact hbad (hall i)
+  rw [coeff_boundedNormalForm, if_neg hout] at hnz
+  exact hnz rfl
+
+/-- Canonical normalization does not change the cohomology class. -/
+theorem quotient_boundedNormalForm (p : MvPolynomial I ℤ) :
+    Ideal.Quotient.mk (boundaryIdeal d) (boundedNormalForm d p) =
+      Ideal.Quotient.mk (boundaryIdeal d) p := by
+  apply (quotient_eq_iff_coeff d _ _).2
+  intro e he
+  rw [coeff_boundedNormalForm]
+  simp [he]
+
+/-- Canonical normalization is idempotent. -/
+theorem boundedNormalForm_idempotent (p : MvPolynomial I ℤ) :
+    boundedNormalForm d (boundedNormalForm d p) = boundedNormalForm d p := by
+  apply MvPolynomial.ext
+  intro e
+  rw [coeff_boundedNormalForm, coeff_boundedNormalForm]
+  by_cases he : ∀ i, e i < d i <;> simp [he]
+
+/-- Equal cohomology classes have literally identical canonical normal forms. -/
+theorem boundedNormalForm_eq_of_quotient_eq
+    (p q : MvPolynomial I ℤ)
+    (h : Ideal.Quotient.mk (boundaryIdeal d) p =
+      Ideal.Quotient.mk (boundaryIdeal d) q) :
+    boundedNormalForm d p = boundedNormalForm d q := by
+  apply (bounded_quotient_injective d
+    (boundedNormalForm d p) (boundedNormalForm d q)
+    (boundedNormalForm_support d p) (boundedNormalForm_support d q)).1
+  calc
+    Ideal.Quotient.mk (boundaryIdeal d) (boundedNormalForm d p) =
+        Ideal.Quotient.mk (boundaryIdeal d) p := quotient_boundedNormalForm d p
+    _ = Ideal.Quotient.mk (boundaryIdeal d) q := h
+    _ = Ideal.Quotient.mk (boundaryIdeal d) (boundedNormalForm d q) :=
+      (quotient_boundedNormalForm d q).symm
+
+/-- **CANONICAL REPRESENTATIVE THEOREM.**  Every arbitrary-axis GST
+cohomology class has exactly one polynomial representative supported strictly
+inside the complete depth box.  Hence the quotient is not merely controlled
+by bounded representatives: each class has a unique canonical one. -/
+theorem existsUnique_bounded_representative (z : AxisRing d) :
+    ∃! p : MvPolynomial I ℤ,
+      (∀ e ∈ p.support, ∀ i, e i < d i) ∧
+      Ideal.Quotient.mk (boundaryIdeal d) p = z := by
+  obtain ⟨q, rfl⟩ := Ideal.Quotient.mk_surjective z
+  refine ⟨boundedNormalForm d q, ?_, ?_⟩
+  · exact ⟨boundedNormalForm_support d q, quotient_boundedNormalForm d q⟩
+  · intro p hp
+    rcases hp with ⟨hbound, hclass⟩
+    apply (bounded_quotient_injective d p (boundedNormalForm d q)
+      hbound (boundedNormalForm_support d q)).1
+    exact hclass.trans (quotient_boundedNormalForm d q).symm
+
 section Representation
 variable {R : Type*} [CommRing R] (x : I → R) (hx : ∀ i, x i ^ d i = 0)
 
@@ -283,11 +365,24 @@ theorem rectangular_L_pow_boundary (A B : ℕ) :
 #check axis_pow_eq_zero_of_depth_le
 #check monomial_class_eq_zero_iff
 #check bounded_quotient_injective
+#check boundedNormalForm
+#check coeff_boundedNormalForm
+#check boundedNormalForm_support
+#check quotient_boundedNormalForm
+#check boundedNormalForm_idempotent
+#check boundedNormalForm_eq_of_quotient_eq
+#check existsUnique_bounded_representative
 #print axioms quotient_eq_iff_coeff
 #print axioms axis_pow_eq_zero_of_depth_le
 #print axioms monomial_class_eq_zero_iff
 #print axioms bounded_polynomial_faithful
 #print axioms bounded_quotient_injective
+#print axioms coeff_boundedNormalForm
+#print axioms boundedNormalForm_support
+#print axioms quotient_boundedNormalForm
+#print axioms boundedNormalForm_idempotent
+#print axioms boundedNormalForm_eq_of_quotient_eq
+#print axioms existsUnique_bounded_representative
 #print axioms existsUnique_representation
 #print axioms weighted_axis_polarization_bound
 #print axioms rectangular_L_pow_boundary
