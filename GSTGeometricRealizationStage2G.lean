@@ -4,6 +4,7 @@ import Mathlib.Algebra.Module.Submodule.RestrictScalars
 import Mathlib.Order.SupIndep
 import GSTGeometricRealizationStage2F
 import GSTGlobalPureHodgeCosmology
+import GSTMultiAxisCosmology
 
 /-!
 # STAGE 2G — HODGE BIGRADING AND DERIVED RATIONAL (p,p)-CLASSES
@@ -436,6 +437,59 @@ theorem bigraded_betti_hodge_of_cosmology_obligation
   rcases hR with ⟨A, B, hAB⟩
   exact bigraded_betti_hodge_of_cosmology_family
     V H A B (fun p => (hAB p).some)
+
+/-- Apply native transport/duality generation to the actual cycle image.
+
+Only one nonzero algebraic class is required. The other cycle witnesses are
+obtained by native transport, reflection, and rational superposition, provided
+those operations have compatible linear actions on the geometric cycle space.
+No list of algebraic basis representatives is an input to this theorem.
+
+The compatibility equations are geometric obligations: the native GST laws
+alone do not construct the cycle-space operators appearing here. -/
+theorem hodge_sector_of_transport_duality
+    (V : SmoothProjectiveComplexScheme) (H : HodgeBigradedBettiData V)
+    (p : Nat) {I : Type} [Fintype I] (d : I → ℕ)
+    (chart : rationalHodgeSubspace (H.hodgeBigrading p) ≃ₗ[ℚ]
+      GSTMultiAxisCosmology.RationalCoef d)
+    (hcycles : ∀ Z : codimensionCycles V.X p,
+      H.cycleClass p Z ∈ rationalHodgeSubspace (H.hodgeBigrading p))
+    (cycleShift : (I → ℕ) → Module.End ℚ (codimensionCycles V.X p))
+    (cycleMirror : Module.End ℚ (codimensionCycles V.X p))
+    (hshift : ∀ m Z,
+      chart ⟨H.cycleClass p (cycleShift m Z), hcycles _⟩ =
+        GSTMultiAxisCosmology.rationalShift d m
+          (chart ⟨H.cycleClass p Z, hcycles Z⟩))
+    (hmirror : ∀ Z,
+      chart ⟨H.cycleClass p (cycleMirror Z), hcycles _⟩ =
+        GSTMultiAxisCosmology.rationalMirror d
+          (chart ⟨H.cycleClass p Z, hcycles Z⟩))
+    (seed : codimensionCycles V.X p) (hseed : H.cycleClass p seed ≠ 0) :
+    rationalHodgeSubspace (H.hodgeBigrading p) ≤ LinearMap.range (H.cycleClass p) := by
+  let read : codimensionCycles V.X p →ₗ[ℚ] GSTMultiAxisCosmology.RationalCoef d :=
+    chart.toLinearMap.comp ((H.cycleClass p).codRestrict
+      (rationalHodgeSubspace (H.hodgeBigrading p)) hcycles)
+  have hshiftRange : ∀ m f, f ∈ LinearMap.range read →
+      GSTMultiAxisCosmology.rationalShift d m f ∈ LinearMap.range read := by
+    rintro m f ⟨Z, rfl⟩
+    exact ⟨cycleShift m Z, hshift m Z⟩
+  have hmirrorRange : ∀ f, f ∈ LinearMap.range read →
+      GSTMultiAxisCosmology.rationalMirror d f ∈ LinearMap.range read := by
+    rintro f ⟨Z, rfl⟩
+    exact ⟨cycleMirror Z, hmirror Z⟩
+  have hseedRead : read seed ≠ 0 := by
+    intro hz
+    have he : chart ⟨H.cycleClass p seed, hcycles seed⟩ = chart 0 := by
+      simpa only [map_zero] using hz
+    exact hseed (congrArg Subtype.val (chart.injective he))
+  have hfull := GSTMultiAxisCosmology.rational_transport_duality_generation d
+    (LinearMap.range read) hshiftRange hmirrorRange (read seed) ⟨seed, rfl⟩ hseedRead
+  intro alpha halpha
+  have hm : chart ⟨alpha, halpha⟩ ∈ LinearMap.range read := by
+    rw [hfull]
+    trivial
+  obtain ⟨Z, hZ⟩ := hm
+  exact ⟨Z, congrArg Subtype.val (chart.injective hZ)⟩
 
 /-- For a fixed pure-coordinate chart, constructing its cycle realization
 is equivalent to algebraicity of the entire Hodge sector. The chart alone

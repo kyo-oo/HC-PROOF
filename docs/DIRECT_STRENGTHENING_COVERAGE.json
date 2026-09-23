@@ -646,7 +646,21 @@
       "GSTMultiAxisCosmology.shift_boundary": "theorem",
       "GSTMultiAxisCosmology.shiftEndo_pow": "theorem",
       "GSTMultiAxisCosmology.shiftEndo_pow_eq_zero_iff": "theorem",
-      "GSTMultiAxisCosmology.synthesis_injective": "theorem"
+      "GSTMultiAxisCosmology.synthesis_injective": "theorem",
+      "GSTMultiAxisCosmology.RationalCoef": "abbrev",
+      "GSTMultiAxisCosmology.rationalDelta": "def",
+      "GSTMultiAxisCosmology.rationalShift": "def",
+      "GSTMultiAxisCosmology.rationalMirror": "def",
+      "GSTMultiAxisCosmology.rationalShift_cast": "theorem",
+      "GSTMultiAxisCosmology.rationalShift_smul": "theorem",
+      "GSTMultiAxisCosmology.rationalShift_origin": "theorem",
+      "GSTMultiAxisCosmology.rationalMirror_smul": "theorem",
+      "GSTMultiAxisCosmology.rationalMirror_delta": "theorem",
+      "GSTMultiAxisCosmology.rationalShift_top": "theorem",
+      "GSTMultiAxisCosmology.rationalShift_dual_at_top": "theorem",
+      "GSTMultiAxisCosmology.rational_origin_extraction": "theorem",
+      "GSTMultiAxisCosmology.rational_delta_expansion": "theorem",
+      "GSTMultiAxisCosmology.rational_transport_duality_generation": "theorem"
     }
   },
   {
@@ -973,7 +987,8 @@
       "GSTGeometricRealizationStage2G.CosmologyStage2GRealizationObligation": "def",
       "GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_cosmology_obligation": "theorem",
       "GSTGeometricRealizationStage2G.cosmology_chart_realization_iff": "theorem",
-      "GSTGeometricRealizationStage2G.zero_cycleClass_hodge_iff": "theorem"
+      "GSTGeometricRealizationStage2G.zero_cycleClass_hodge_iff": "theorem",
+      "GSTGeometricRealizationStage2G.hodge_sector_of_transport_duality": "theorem"
     }
   }
 ]

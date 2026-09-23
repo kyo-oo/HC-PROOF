@@ -544,3 +544,33 @@ import waves.GSTWaveCohomologyV2
 #print axioms GSTGeometricRealizationStage2G.HodgeBigrading.ppComponent
 
 #print axioms GSTGeometricRealizationStage2G.HodgeBigradedBettiData.toBettiHodgeData
+
+#print axioms GSTMultiAxisCosmology.RationalCoef
+
+#print axioms GSTMultiAxisCosmology.rationalDelta
+
+#print axioms GSTMultiAxisCosmology.rationalShift
+
+#print axioms GSTMultiAxisCosmology.rationalMirror
+
+#print axioms GSTMultiAxisCosmology.rationalShift_cast
+
+#print axioms GSTMultiAxisCosmology.rationalShift_smul
+
+#print axioms GSTMultiAxisCosmology.rationalShift_origin
+
+#print axioms GSTMultiAxisCosmology.rationalMirror_smul
+
+#print axioms GSTMultiAxisCosmology.rationalMirror_delta
+
+#print axioms GSTMultiAxisCosmology.rationalShift_top
+
+#print axioms GSTMultiAxisCosmology.rationalShift_dual_at_top
+
+#print axioms GSTMultiAxisCosmology.rational_origin_extraction
+
+#print axioms GSTMultiAxisCosmology.rational_delta_expansion
+
+#print axioms GSTMultiAxisCosmology.rational_transport_duality_generation
+
+#print axioms GSTGeometricRealizationStage2G.hodge_sector_of_transport_duality

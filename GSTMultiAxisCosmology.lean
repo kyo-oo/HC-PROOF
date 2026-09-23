@@ -298,6 +298,154 @@ theorem degree_dual (c : Cell d) :
   omega
 end Finite
 
+/-! ## Rational transport and generation by duality
+
+These are the same native displacements and complementary cells with rational
+amplitudes. Rational coefficients allow a nonzero extracted amplitude to be
+normalized, which is essential when applying the native laws to Hodge classes.
+-/
+
+abbrev RationalCoef := Cell d → ℚ
+
+def rationalDelta (a : Cell d) : RationalCoef d := fun c => (delta d a c : ℚ)
+
+def rationalShift (m : I → ℕ) (f : RationalCoef d) : RationalCoef d := by
+  classical
+  exact fun c => if h : ∀ i, m i ≤ (c i).val then
+    f (fun i => ⟨(c i).val - m i, lt_of_le_of_lt (Nat.sub_le _ _) (c i).isLt⟩)
+  else 0
+
+def rationalMirror (f : RationalCoef d) : RationalCoef d := fun c => f (dual d c)
+
+/-- Rational transport agrees exactly with the existing integral transport. -/
+theorem rationalShift_cast (m : I → ℕ) (f : Coef d) :
+    rationalShift d m (fun c => (f c : ℚ)) = fun c => (shift d m f c : ℚ) := by
+  classical
+  funext c
+  by_cases h : ∀ i, m i ≤ (c i).val <;> simp [rationalShift, shift, h]
+
+theorem rationalShift_smul (m : I → ℕ) (q : ℚ) (f : RationalCoef d) :
+    rationalShift d m (q • f) = q • rationalShift d m f := by
+  classical
+  funext c
+  by_cases h : ∀ i, m i ≤ (c i).val <;> simp [rationalShift, h]
+
+/-- The original GST origin-orbit theorem supplies rational basis generation. -/
+theorem rationalShift_origin (hd : ∀ i, 0 < d i) (a : Cell d) :
+    rationalShift d (fun i => (a i).val) (rationalDelta d (origin d hd)) =
+      rationalDelta d a := by
+  unfold rationalDelta
+  rw [rationalShift_cast, shift_origin]
+
+theorem rationalMirror_smul (q : ℚ) (f : RationalCoef d) :
+    rationalMirror d (q • f) = q • rationalMirror d f := rfl
+
+theorem rationalMirror_delta (a : Cell d) :
+    rationalMirror d (rationalDelta d a) = rationalDelta d (dual d a) := by
+  classical
+  funext c
+  have he : dual d c = a ↔ c = dual d a := by
+    constructor
+    · intro h
+      simpa using congrArg (dual d) h
+    · rintro rfl
+      exact dual_involutive d a
+  simp [rationalMirror, rationalDelta, delta, he]
+
+/-- Moving to the top corner extracts exactly the origin amplitude. -/
+theorem rationalShift_top (hd : ∀ i, 0 < d i) (f : RationalCoef d) :
+    rationalShift d (fun i => d i - 1) f =
+      f (origin d hd) • rationalDelta d (dual d (origin d hd)) := by
+  classical
+  funext c
+  by_cases hc : c = dual d (origin d hd)
+  · subst c
+    have hm : ∀ i, d i - 1 ≤ (dual d (origin d hd) i).val := by
+      intro i
+      simp [dual, origin]
+    have he : (fun i => (⟨(dual d (origin d hd) i).val - (d i - 1),
+        lt_of_le_of_lt (Nat.sub_le _ _) (dual d (origin d hd) i).isLt⟩ : Fin (d i))) =
+        origin d hd := by
+      funext i
+      apply Fin.ext
+      simp [dual, origin]
+    simp [rationalShift, hm, he, rationalDelta, delta]
+  · have hm : ¬ ∀ i, d i - 1 ≤ (c i).val := by
+      intro h
+      apply hc
+      funext i
+      apply Fin.ext
+      have := h i
+      have := (c i).isLt
+      simp only [dual, origin]
+      omega
+    simp [rationalShift, hm, rationalDelta, delta, hc]
+
+/-- Complementary displacement reads any chosen amplitude at the top corner. -/
+theorem rationalShift_dual_at_top (hd : ∀ i, 0 < d i)
+    (a : Cell d) (f : RationalCoef d) :
+    rationalShift d (fun i => (dual d a i).val) f (dual d (origin d hd)) = f a := by
+  classical
+  have hm : ∀ i, (dual d a i).val ≤ (dual d (origin d hd) i).val := by
+    intro i
+    simp only [dual, origin]
+    omega
+  simp only [rationalShift, dif_pos hm]
+  congr 1
+  funext i
+  apply Fin.ext
+  have := (a i).isLt
+  simp only [dual, origin]
+  omega
+
+/-- Four native operations extract a selected coordinate into the origin.
+This is an explicit word in transport and complementary reflection. -/
+theorem rational_origin_extraction (hd : ∀ i, 0 < d i)
+    (a : Cell d) (f : RationalCoef d) :
+    rationalMirror d (rationalShift d (fun i => d i - 1)
+      (rationalMirror d (rationalShift d (fun i => (dual d a i).val) f))) =
+      f a • rationalDelta d (origin d hd) := by
+  rw [rationalShift_top d hd, rationalMirror_smul, rationalMirror_delta, dual_involutive]
+  congr 1
+  exact rationalShift_dual_at_top d hd a f
+
+theorem rational_delta_expansion [Fintype I] (f : RationalCoef d) :
+    (∑ a : Cell d, f a • rationalDelta d a) = f := by
+  classical
+  funext c
+  simp [rationalDelta, delta, Finset.sum_apply]
+
+/-- Joint native transport and duality are irreducible over rational
+amplitudes: a stable subspace containing one nonzero world contains every
+world. There is no bound on the number of finite axes or their depths. -/
+theorem rational_transport_duality_generation [Fintype I]
+    (W : Submodule ℚ (RationalCoef d))
+    (hshift : ∀ m f, f ∈ W → rationalShift d m f ∈ W)
+    (hmirror : ∀ f, f ∈ W → rationalMirror d f ∈ W)
+    (f : RationalCoef d) (hf : f ∈ W) (hne : f ≠ 0) : W = ⊤ := by
+  classical
+  have ha : ∃ a, f a ≠ 0 := by
+    by_contra h
+    apply hne
+    funext a
+    by_contra hfa
+    exact h ⟨a, hfa⟩
+  obtain ⟨a, hfa⟩ := ha
+  have hd : ∀ i, 0 < d i := fun i => by have := (a i).isLt; omega
+  have he := hmirror _ (hshift (fun i => d i - 1) _
+    (hmirror _ (hshift (fun i => (dual d a i).val) f hf)))
+  rw [rational_origin_extraction d hd a f] at he
+  have h0 : rationalDelta d (origin d hd) ∈ W := by
+    have hscale := W.smul_mem (f a)⁻¹ he
+    simpa only [smul_smul, inv_mul_cancel₀ hfa, one_smul] using hscale
+  have hb : ∀ b : Cell d, rationalDelta d b ∈ W := by
+    intro b
+    simpa only [rationalShift_origin] using hshift (fun i => (b i).val) _ h0
+  apply top_unique
+  intro g hg
+  rw [← rational_delta_expansion d g]
+  exact W.sum_mem (fun b _ => W.smul_mem (g b) (hb b))
+
 /-- The rectangle is exactly the two-axis world, with carry then digit. -/
 def rectangleEquiv (A B : ℕ) :
     GSTWorldCosmology.WorldCell A B ≃ Cell (I:=Fin 2) ![A, B] where
