@@ -169,7 +169,6 @@ theorem wave_I_v2_crown :
 #print axioms shifted_rectangle_gauss_law
 #print axioms wave_I_v2_crown
 
-
 /-- All prefix classes determine the entire row mode sequence.  This is
 faithfulness of the integrated readout, not just its forward transport law. -/
 theorem rowClass_faithful (R S p q : Nat) :
@@ -184,5 +183,43 @@ theorem rowClass_faithful (R S p q : Nat) :
   · intro h N
     unfold rowClass
     exact Finset.sum_congr rfl (fun t _ => h t)
+
+/-- **EXACT LOCAL RECONSTRUCTION.**  The local Wave-I class is the discrete
+finite difference of the integrated prefix class.  No information is lost by
+passing from local modes to all prefix classes. -/
+theorem rowClassAt_recovered (R p N : Nat) :
+    rowClassAt R p N = rowClass R p (N+1) - rowClass R p N := by
+  rw [show N+1 = Nat.succ N by omega]
+  unfold rowClass
+  rw [Finset.sum_range_succ]
+  ring
+
+/-- The integrated Wave-I readout vanishes at every prefix exactly when the
+entire local mode field vanishes. -/
+theorem rowClass_all_zero_iff (R p : Nat) :
+    (∀ N, rowClass R p N = 0) ↔ ∀ t, rowClassAt R p t = 0 := by
+  constructor
+  · intro h t
+    rw [rowClassAt_recovered R p t, h (t+1), h t]
+    ring
+  · intro h N
+    unfold rowClass
+    apply Finset.sum_eq_zero
+    intro t ht
+    exact h t
+
+/-- Equality of all integrated prefixes is therefore an exact complete
+observable for the full local row-class field. -/
+theorem rowClass_complete_observable (R S p q : Nat) :
+    (∀ N, rowClass R p N = rowClass S q N) ↔
+      (∀ t, rowClassAt R p t = rowClassAt S q t) :=
+  rowClass_faithful R S p q
+
+#check rowClassAt_recovered
+#check rowClass_all_zero_iff
+#check rowClass_complete_observable
+#print axioms rowClassAt_recovered
+#print axioms rowClass_all_zero_iff
+#print axioms rowClass_complete_observable
 
 end GSTWaveCohomologyV2
