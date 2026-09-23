@@ -297,7 +297,6 @@ theorem two_wave_frame_refines (R p : Nat) (hbig2 : digit3 R p = 2) :
   · rw [h3]
     decide
 
-
 /-- Wave II is a discrete derivative: its integral on any finite height
 interval is precisely the two endpoint digits. -/
 theorem waveIIAmplitude_telescope (R p N : Nat) :
@@ -309,5 +308,63 @@ theorem waveIIAmplitude_telescope (R p N : Nat) :
       rw [Finset.sum_range_succ, ih, waveIIAmplitude_eq]
       rw [show p + (N+1) = (p+N)+1 by omega]
       ring
+
+/-- **EXACT PREFIX RECONSTRUCTION.**  Every local Wave-II amplitude is the
+discrete derivative of the integrated prefix readout.  Thus finite prefix
+integration loses no local information. -/
+theorem waveIIAmplitude_prefix_recovered (R p N : Nat) :
+    waveIIAmplitude R (p+N) =
+      (∑ k ∈ Finset.range (N+1), waveIIAmplitude R (p+k)) -
+      (∑ k ∈ Finset.range N, waveIIAmplitude R (p+k)) := by
+  rw [Finset.sum_range_succ]
+  ring
+
+/-- Prefix integration is an exact additive cocycle under every finite cut. -/
+theorem waveII_prefix_add (R p M N : Nat) :
+    (∑ k ∈ Finset.range (M+N), waveIIAmplitude R (p+k)) =
+      (∑ k ∈ Finset.range M, waveIIAmplitude R (p+k)) +
+      (∑ k ∈ Finset.range N, waveIIAmplitude R ((p+M)+k)) := by
+  simpa [Nat.add_assoc] using
+    (Finset.sum_range_add (fun k => waveIIAmplitude R (p+k)) M N)
+
+/-- **COMPLETE PREFIX OBSERVABLE.**  Two Wave-II channels have identical
+integrated prefixes at every depth exactly when their entire local amplitude
+fields agree pointwise. -/
+theorem waveII_prefix_complete_observable (R S p q : Nat) :
+    (∀ N,
+      (∑ k ∈ Finset.range N, waveIIAmplitude R (p+k)) =
+      (∑ k ∈ Finset.range N, waveIIAmplitude S (q+k))) ↔
+      ∀ t, waveIIAmplitude R (p+t) = waveIIAmplitude S (q+t) := by
+  constructor
+  · intro h t
+    have hnext := h (t+1)
+    have hprev := h t
+    rw [Finset.sum_range_succ, Finset.sum_range_succ] at hnext
+    linarith
+  · intro h N
+    exact Finset.sum_congr rfl (fun t _ => h t)
+
+/-- All Wave-II prefixes vanish exactly when every local amplitude vanishes. -/
+theorem waveII_prefix_all_zero_iff (R p : Nat) :
+    (∀ N, (∑ k ∈ Finset.range N, waveIIAmplitude R (p+k)) = 0) ↔
+      ∀ t, waveIIAmplitude R (p+t) = 0 := by
+  constructor
+  · intro h t
+    rw [waveIIAmplitude_prefix_recovered R p t, h (t+1), h t]
+    ring
+  · intro h N
+    apply Finset.sum_eq_zero
+    intro t ht
+    exact h t
+
+#check waveIIAmplitude_telescope
+#check waveIIAmplitude_prefix_recovered
+#check waveII_prefix_add
+#check waveII_prefix_complete_observable
+#check waveII_prefix_all_zero_iff
+#print axioms waveIIAmplitude_prefix_recovered
+#print axioms waveII_prefix_add
+#print axioms waveII_prefix_complete_observable
+#print axioms waveII_prefix_all_zero_iff
 
 end GSTNCohomology
