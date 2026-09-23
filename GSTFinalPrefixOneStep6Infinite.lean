@@ -294,7 +294,8 @@ theorem reverseMixedCode_add (C d : Nat → Nat) (n m : Nat) :
   | zero => simp [reverseMixedCode]
   | succ m ih =>
       simp only [Nat.add_assoc, reverseMixedCode, ih, pow_succ]
+      have hindex : m + n = n + m := Nat.add_comm m n
+      rw [hindex]
       ring
-
 
 end GSTFinalPrefixOneStep6Infinite
