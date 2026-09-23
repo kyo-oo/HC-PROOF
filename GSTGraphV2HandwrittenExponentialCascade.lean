@@ -73,12 +73,7 @@ theorem u_absolute_energy_exact (t n K x : Nat) :
   rw [Nat.pow_add]
   ring
 
-/-- Full physical-observable transport on the enriched Graph-V2 sheet.
-
-The seven-axis horizontal coordinate is translated by `uPhaseShift`; all
-physical state observables (carry/space information through carry, digit,
-event, U, mixed, crossing and SURVIVE) are unchanged because both sides are
-the same absolute perfect-power energy. -/
+/-- Full physical-observable transport on the enriched Graph-V2 sheet. -/
 theorem graph_u_block_observables_exact
     (t n K x p : Nat) :
     (graph (4^(3^t*n)) x p).seven.carry =
@@ -120,8 +115,7 @@ theorem graph_u_block_horizontal_axes_exact
 def navigationNullspace (R p : Nat) : Nat :=
   (4 * (R % 3^p)) % 3^p
 
-/-- Handwritten Equation I on an arbitrary Graph-V2 cell: the visible x4
-remainder splits exactly into the vertical carry and unresolved nullspace. -/
+/-- Handwritten Equation I on an arbitrary Graph-V2 cell. -/
 theorem graph_navigation_nullspace_flux_exact
     (E x p : Nat) :
     4 * ((4^x * E) % 3^p) =
@@ -133,11 +127,7 @@ theorem graph_navigation_nullspace_flux_exact
       3^p * ((4 * ((4^x * E) % 3^p)) / 3^p)
   exact (Nat.mod_add_div (4 * ((4^x * E) % 3^p)) (3^p)).symm
 
-/-- **Combined advanced application.**  The repeated handwritten exponential
-operator performs the horizontal origin-prefix phase shift, while Equation I
-reads the vertical navigation/nullspace flux of that exact same transported
-energy.  This is a genuine 2D Graph-V2 identity rather than an isolated
-factorization. -/
+/-- Combined exact exponential/navigation flux identity. -/
 theorem handwritten_exponential_navigation_flux_exact
     (t n K x p : Nat) :
     4 * ((4^(uPhaseShift t n K + x) * uTailEnergy t n K) % 3^p) =
@@ -150,8 +140,7 @@ theorem handwritten_exponential_navigation_flux_exact
   exact hFlux
 
 /-- Every natural origin is exhausted by a finite member of the handwritten
-K→∞ family.  This is ordinary finite-support arithmetic, not a terminal-space
-axiom. -/
+K→∞ family. -/
 theorem nat_lt_three_pow_succ : ∀ n : Nat, n < 3^(n+1)
   | 0 => by decide
   | n+1 => by
@@ -166,26 +155,12 @@ theorem originSuffix_eventually_zero (n : Nat) :
   unfold originSuffix
   exact Nat.div_eq_of_lt (nat_lt_three_pow_succ n)
 
-/-- Therefore the remaining perfect-power factor of the repeated U operation
-is exactly one at that finite depth. -/
+/-- Therefore the remaining perfect-power factor is exactly one. -/
 theorem uTailEnergy_eventually_one (t n : Nat) :
     uTailEnergy t n (n+1) = 1 := by
   simp [uTailEnergy, uTailExponent, originSuffix_eventually_zero]
 
-#check origin_block_split_exact
-#check perfect_power_u_block_exact
-#check graph_u_block_observables_exact
-#check graph_u_block_horizontal_axes_exact
-#check graph_navigation_nullspace_flux_exact
-#check handwritten_exponential_navigation_flux_exact
-#check originSuffix_eventually_zero
-#check uTailEnergy_eventually_one
-#print axioms perfect_power_u_block_exact
-#print axioms graph_u_block_observables_exact
-#print axioms handwritten_exponential_navigation_flux_exact
-
-/-- The exhaustion depth is characterized exactly by the size of the origin,
-rather than by the coarse sufficient bound `n+1`. -/
+/-- Exact characterization of exhausted cuts. -/
 theorem originSuffix_zero_iff (n K : Nat) :
     originSuffix n K = 0 ↔ n < 3^K := by
   unfold originSuffix
@@ -198,8 +173,8 @@ theorem originSuffix_zero_iff (n K : Nat) :
     omega
   · exact Nat.div_eq_of_lt
 
-/-- Once a cut exhausts the origin, every later cut retains the entire phase
-and has exactly unit residual energy. -/
+/-- Once a cut exhausts the origin, every later cut retains the whole phase
+and has unit residual energy. -/
 theorem exhausted_cut_stable (t n K L : Nat) (h : n < 3^K) :
     originPrefix n (K+L) = n ∧ originSuffix n (K+L) = 0 ∧
       uPhaseShift t n (K+L) = 3^t*n ∧ uTailEnergy t n (K+L) = 1 := by
@@ -208,5 +183,100 @@ theorem exhausted_cut_stable (t n K L : Nat) (h : n < 3^K) :
   have hs := (originSuffix_zero_iff n (K+L)).2 hn
   simp [originPrefix, Nat.mod_eq_of_lt hn, hs, uPhaseShift,
     uTailEnergy, uTailExponent]
+
+/-! ## Exact finite-cut renormalization semigroup -/
+
+/-- Successive origin suffixes compose exactly at arbitrary cut depths. -/
+theorem originSuffix_add_exact (n K L : Nat) :
+    originSuffix n (K+L) =
+      originSuffix (originSuffix n K) L := by
+  unfold originSuffix
+  rw [pow_add, ← Nat.div_div_eq_div_mul]
+
+/-- A composite prefix consists exactly of the first prefix followed by the
+newly exposed prefix of the residual suffix at weight `3^K`. -/
+theorem originPrefix_add_exact (n K L : Nat) :
+    originPrefix n (K+L) =
+      originPrefix n K +
+        3^K * originPrefix (originSuffix n K) L := by
+  unfold originPrefix originSuffix
+  rw [pow_add, Nat.mod_mul]
+
+/-- Horizontal U phase is a cocycle under successive finite cuts. -/
+theorem uPhaseShift_add_exact (t n K L : Nat) :
+    uPhaseShift t n (K+L) =
+      uPhaseShift t n K +
+        uPhaseShift (t+K) (originSuffix n K) L := by
+  unfold uPhaseShift
+  rw [originPrefix_add_exact, pow_add]
+  ring
+
+/-- Tail exponents form the corresponding exact residual semigroup. -/
+theorem uTailExponent_add_exact (t n K L : Nat) :
+    uTailExponent t n (K+L) =
+      uTailExponent (t+K) (originSuffix n K) L := by
+  unfold uTailExponent
+  rw [originSuffix_add_exact]
+  simp [Nat.add_assoc]
+
+/-- Tail energies inherit the exact renormalization semigroup. -/
+theorem uTailEnergy_add_exact (t n K L : Nat) :
+    uTailEnergy t n (K+L) =
+      uTailEnergy (t+K) (originSuffix n K) L := by
+  unfold uTailEnergy
+  rw [uTailExponent_add_exact]
+
+/-- Any cut beyond the explicit support depth consumes the full origin. -/
+theorem originSuffix_zero_of_large_cut
+    (n K : Nat) (hK : n+1 ≤ K) :
+    originSuffix n K = 0 := by
+  unfold originSuffix
+  have hpow0 : n < 3^(n+1) := nat_lt_three_pow_succ n
+  have hpowle : 3^(n+1) ≤ 3^K :=
+    Nat.pow_le_pow_right (by decide) hK
+  exact Nat.div_eq_of_lt (lt_of_lt_of_le hpow0 hpowle)
+
+/-- Consequently every sufficiently deep residual U world is the unit world. -/
+theorem uTailEnergy_one_of_large_cut
+    (t n K : Nat) (hK : n+1 ≤ K) :
+    uTailEnergy t n K = 1 := by
+  simp [uTailEnergy, uTailExponent, originSuffix_zero_of_large_cut n K hK]
+
+/-- **RENORMALIZATION CROWN.**  Every two-stage finite cut is exactly one
+composite cut simultaneously in prefix phase and residual energy. -/
+theorem finite_cut_renormalization_crown :
+    (∀ n K L,
+      originSuffix n (K+L) = originSuffix (originSuffix n K) L) ∧
+    (∀ t n K L,
+      uPhaseShift t n (K+L) =
+        uPhaseShift t n K +
+          uPhaseShift (t+K) (originSuffix n K) L) ∧
+    (∀ t n K L,
+      uTailEnergy t n (K+L) =
+        uTailEnergy (t+K) (originSuffix n K) L) := by
+  exact ⟨originSuffix_add_exact, uPhaseShift_add_exact, uTailEnergy_add_exact⟩
+
+#check origin_block_split_exact
+#check perfect_power_u_block_exact
+#check graph_u_block_observables_exact
+#check handwritten_exponential_navigation_flux_exact
+#check originSuffix_zero_iff
+#check exhausted_cut_stable
+#check originSuffix_add_exact
+#check originPrefix_add_exact
+#check uPhaseShift_add_exact
+#check uTailExponent_add_exact
+#check uTailEnergy_add_exact
+#check originSuffix_zero_of_large_cut
+#check uTailEnergy_one_of_large_cut
+#check finite_cut_renormalization_crown
+
+#print axioms perfect_power_u_block_exact
+#print axioms graph_u_block_observables_exact
+#print axioms handwritten_exponential_navigation_flux_exact
+#print axioms originSuffix_zero_iff
+#print axioms uPhaseShift_add_exact
+#print axioms uTailEnergy_add_exact
+#print axioms finite_cut_renormalization_crown
 
 end GSTGraphV2HandwrittenExponentialCascade
