@@ -249,7 +249,8 @@ theorem canonical_left_descent_all_depths (s n q : Nat) :
       canonicalTail (s+1) n / 3^q := by
   change (4^0 * canonicalEnergy s n) / 3^(s+2+q) = _
   rw [pow_zero, one_mul, canonicalEnergy_cut_decomposition]
-  exact prefix_slice_quotient_exact (s+2) 1 (canonicalTail (s+1) n) q
+  exact GSTGraphV2InfiniteControl.prefix_slice_quotient_exact
+    (s+2) 1 (canonicalTail (s+1) n) q
     (one_prefix_bounds (s+2) (by omega)).1
 
 

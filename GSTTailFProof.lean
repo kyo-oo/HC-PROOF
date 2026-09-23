@@ -447,7 +447,8 @@ theorem tower_observation_iff_interval (s core j d : Nat) :
     norm_num at h
     omega
   rw [omega_cut_factor s core,
-    prefix_slice_digit_exact (s+1) 1 (omegaCutWord s core) j hprefix]
+    GSTGraphV2InfiniteControl.prefix_slice_digit_exact
+      (s+1) 1 (omegaCutWord s core) j hprefix]
   unfold digit3
   rw [digit3_window]
   set r := omegaCutWord s core % 3^(j+1)
@@ -458,12 +459,16 @@ theorem tower_observation_iff_interval (s core j d : Nat) :
     have he := Nat.mod_add_div r m
     have hb := Nat.mod_lt r hm
     rw [h] at he
-    constructor <;> nlinarith
+    have he' : r % m + d * m = r := by
+      simpa [Nat.mul_comm] using he
+    constructor
+    · omega
+    · calc
+        r = r % m + d * m := he'.symm
+        _ < m + d * m := Nat.add_lt_add_right hb (d * m)
+        _ = (d + 1) * m := by simp [Nat.add_mul, Nat.add_comm]
   · rintro ⟨hlo, hhi⟩
-    have he : r = (r-d*m) + m*d := by omega
-    have hb : r-d*m < m := by nlinarith
-    rw [he, Nat.add_mul_div_left _ _ hm, Nat.div_eq_of_lt hb]
-    simp
+    exact Nat.div_eq_of_lt_le hlo hhi
 
 
 end GSTTailFProof
