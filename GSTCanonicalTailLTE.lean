@@ -76,12 +76,18 @@ theorem pow4_three_power_lte_not_dvd_next (r : Nat) :
   have hc := lteCoeff_mod3_one r
   intro h
   obtain ⟨k, hk⟩ := h
+  have hsub :
+      (1 + 3^(r+1) * lteCoeff r) - 1 =
+        3^(r+1) * lteCoeff r := by omega
+  have hpow : 3^(r+2) = 3^(r+1) * 3 := by
+    calc
+      3^(r+2) = 3^((r+1)+1) := by congr 1 <;> omega
+      _ = 3^(r+1) * 3 := by rw [Nat.pow_succ]
+  rw [hsub, hpow] at hk
   have he : 3^(r+1) * lteCoeff r = 3^(r+1) * (3*k) := by
-    simpa [show r+2 = (r+1)+1 by omega, pow_succ,
-      Nat.mul_assoc] using hk
+    simpa [Nat.mul_assoc] using hk
   have hec : lteCoeff r = 3*k := by nlinarith
   rw [hec] at hc
   simp at hc
-
 
 end GSTCanonicalTailLTE
