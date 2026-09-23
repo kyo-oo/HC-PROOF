@@ -165,4 +165,16 @@ theorem controlled_emergence_v2_crown :
 #print axioms tower_ext_of_initial_and_bridge
 #print axioms controlled_emergence_v2_crown
 
+
+/-- Information-preserving bridges give information-preserving transport
+across every finite interval, including intervals beginning away from zero. -/
+theorem transport_injective {α : Type} (T : ControlledTowerV2 α)
+    (hb : ∀ j, Function.Injective (T.bridge j)) (j n : Nat) :
+    Function.Injective (transport T j n) := by
+  induction n generalizing j with
+  | zero => intro x y h; exact h
+  | succ n ih =>
+      intro x y h
+      exact hb j ((ih (j+1)) h)
+
 end CardinalWorldsPostulateLawV2

@@ -228,4 +228,26 @@ theorem fourPowerCreationCertificate_noAxiom_from_no_bad_affine_channel_one
 #print axioms fourPowerCreationCertificate_noAxiom_from_chat2_closure
 #print axioms fourPowerCreationCertificate_noAxiom_from_no_bad_affine_channel_one
 
+
+/-- The physical and arithmetic high-row providers are equivalent, so the
+physical formulation cannot discharge a weaker obligation accidentally. -/
+theorem happy_provider_iff_commonTwoGeThree_provider :
+    FourPowerHappyGeThreeProvider ↔ FourPowerCommonTwoGeThreeProvider := by
+  constructor
+  · intro h K hK
+    exact (GSTFourPowerHappyProvider.commonTwoGeThree_iff_physical_happy K).2 (h K hK)
+  · exact fourPowerHappyGeThreeProvider_from_commonTwoGeThree
+
+/-- The remaining high-row provider is also exactly the uniform prefix-hit
+obligation. This supplies the converse missing from the provider pipeline. -/
+theorem happy_provider_iff_prefix_hits :
+    FourPowerHappyGeThreeProvider ↔
+      ∀ K : Nat, 8 ≤ K → GSTFourPowerHappyProvider.PrefixHitGeThree K := by
+  rw [happy_provider_iff_commonTwoGeThree_provider]
+  constructor
+  · intro h K hK
+    exact (GSTFourPowerHappyProvider.commonTwoGeThree_iff_prefixHitGeThree K).1 (h K hK)
+  · intro h K hK
+    exact (GSTFourPowerHappyProvider.commonTwoGeThree_iff_prefixHitGeThree K).2 (h K hK)
+
 end GSTFourPowerDirectExistenceProviderPipeline

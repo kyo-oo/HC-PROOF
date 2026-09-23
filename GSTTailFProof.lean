@@ -435,4 +435,35 @@ theorem wave_engine_all_sheets_one_lane :
 #print axioms wave_engine_dust_shape_law
 #print axioms wave_engine_all_sheets_one_lane
 
+/-- Every digit value at every tail depth has an exact residue interval
+certificate, including the converse and depths beyond the stable window. -/
+theorem tower_observation_iff_interval (s core j d : Nat) :
+    digit3 (4^(3^s*core)) (s+1+j) = d ↔
+      d * 3^j ≤ omegaCutWord s core % 3^(j+1) ∧
+      omegaCutWord s core % 3^(j+1) < (d+1)*3^j := by
+  have hprefix : (1:Nat) < 3^(s+1) := by
+    have h := Nat.pow_le_pow_of_le (by decide : 1 < (3:Nat))
+      (show 1 ≤ s+1 by omega)
+    norm_num at h
+    omega
+  rw [omega_cut_factor s core,
+    prefix_slice_digit_exact (s+1) 1 (omegaCutWord s core) j hprefix]
+  unfold digit3
+  rw [digit3_window]
+  set r := omegaCutWord s core % 3^(j+1)
+  set m := 3^j
+  have hm : 0 < m := Nat.pow_pos (by decide)
+  constructor
+  · intro h
+    have he := Nat.mod_add_div r m
+    have hb := Nat.mod_lt r hm
+    rw [h] at he
+    constructor <;> nlinarith
+  · rintro ⟨hlo, hhi⟩
+    have he : r = (r-d*m) + m*d := by omega
+    have hb : r-d*m < m := by nlinarith
+    rw [he, Nat.add_mul_div_left _ _ hm, Nat.div_eq_of_lt hb]
+    simp
+
+
 end GSTTailFProof

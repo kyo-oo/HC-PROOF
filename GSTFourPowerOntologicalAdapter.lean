@@ -55,4 +55,27 @@ theorem gst_four_power_ontological_navigation_of_master
     Navigation (4^K) :=
   creation_certificate_to_navigation (4^K) (hMaster K hK5 hK7)
 
+
+/-- The historical certificate and positive-row Happy existence are exactly
+interchangeable. The carry-one alternative never creates extra sources. -/
+theorem creation_certificate_iff_positive_happy (R : Nat) :
+    CreationCertificate R ↔ ∃ p : Nat, 1 ≤ p ∧
+      HappyCell (carry4 R p) (digit3 R p) := by
+  constructor
+  · rintro ⟨p, hp, hd, hc⟩
+    have hd' : digit3 R p = 2 := hd
+    have hlt := carry4_lt_four R p
+    rcases hc with hzero | hone
+    · have hc' : carry4 R p % 3 = 0 := hzero
+      exact ⟨p, hp, hd', by omega⟩
+    · have hc' : carry4 R p % 3 = 1 := hone.1
+      have hcone : carry4 R p = 1 := by omega
+      have hnext := carry4_forward_exact R p
+      rw [hcone, hd'] at hnext
+      exact ⟨p+1, by omega, hone.2, Or.inr (by simpa using hnext)⟩
+  · rintro ⟨p, hp, hd, hc⟩
+    refine ⟨p, hp, hd, Or.inl ?_⟩
+    change carry4 R p % 3 = 0
+    rcases hc with hc | hc <;> simp [hc]
+
 end GSTFourPowerOntologicalAdapter

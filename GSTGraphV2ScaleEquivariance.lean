@@ -246,4 +246,19 @@ theorem scale_equivariance_crown :
 #print axioms canonical_n_wave_plane_equivariance
 #print axioms scale_equivariance_crown
 
+
+/-- Equal absolute energies are sufficient for equality of the full physical
+packet, even for arbitrary origins and unrelated phase coordinates. -/
+theorem physicalPacket_eq_of_absolute_energy (E F x y p : Nat)
+    (h : 4^x*E = 4^y*F) : physicalPacket E x p = physicalPacket F y p := by
+  ext <;> simp [physicalPacket, graph, cell, GSTCanonicalSevenAxisBridge.vertex, h]
+
+/-- Phase accumulation is monotone with cut depth; the exact increment is
+nonnegative even when the remaining origin is exhausted. -/
+theorem uPhaseShift_mono (t n : Nat) : Monotone (uPhaseShift t n) := by
+  intro K L hKL
+  obtain ⟨r, rfl⟩ := Nat.exists_eq_add_of_le hKL
+  rw [uPhaseShift_add]
+  omega
+
 end GSTGraphV2ScaleEquivariance

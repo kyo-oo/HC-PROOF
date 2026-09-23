@@ -278,4 +278,12 @@ def HCUniverseChokehold : Prop :=
 #print axioms period_rebase
 #print axioms forward_window_of_happy_source
 
+
+/-- The complete physical current has a sharp two-sided bound.  Both
+endpoints are attained in the displayed finite Hodge table. -/
+theorem current_sharp_bounds (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    (-54 : Int) ≤ ontDensity C d ∧ ontDensity C d ≤ 84 := by
+  interval_cases C <;> interval_cases d <;>
+    norm_num [ontDensity, ontDigitPotential, ontCarryPotential, outDigit, nextCarry]
+
 end HodgeDeRhamBridge

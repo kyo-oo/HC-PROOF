@@ -56,6 +56,22 @@ theorem gst_information_high_coordinatesS
 def gstInformationCarryAtS (S i : Nat) : Nat :=
   S / 4^i % 4
 
+/-- The entire quaternary information word reindexes under an arbitrary cut. -/
+theorem gst_information_digit_shiftS (S q j : Nat) :
+    gstInformationCarryAtS S (q+j) = gstInformationCarryAtS (S / 4^q) j := by
+  simp only [gstInformationCarryAtS, Nat.pow_add, Nat.div_div_eq_div_mul]
+
+/-- Normalized mixed-radix coordinates determine the information word uniquely. -/
+theorem gst_information_coordinates_iffS (S W A C : Nat) (hA : 0 < A)
+    (hW : W < A) :
+    S = W + A*C ↔ S % A = W ∧ S / A = C := by
+  constructor
+  · exact gst_information_high_coordinatesS S W A C hA hW
+  · rintro ⟨hr, hq⟩
+    have h := Nat.mod_add_div S A
+    rw [hr, hq] at h
+    exact h.symm
+
 /-- When A=4^N, the two GST decompositions are literally the bottom and top
     base-4 coordinates of one finite information word. -/
 theorem gst_information_bottom_top_coordinatesS

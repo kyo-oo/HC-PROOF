@@ -157,4 +157,21 @@ theorem infinite_bad_coupled_control
     childCarryExact := coupledOrbit_childCarry_exact A initial hC0
   }
 
+/-- Complete badness is exactly finite-prefix badness plus the regenerated suffix.
+This converse allows independently checked windows to be glued without a lost cell. -/
+theorem seededBadTrace_split_iff (D X q : Nat) :
+    SeededBadTrace D X ↔
+      (∀ k, k < q → ¬ Happy (affineCarry D X k) (digit X k)) ∧
+      SeededBadTrace (affineCarry D X q) (X / 3^q) := by
+  constructor
+  · intro h
+    exact ⟨fun k _ => h k, seededBadTrace_suffix D X q h⟩
+  · rintro ⟨hp, hs⟩ k
+    by_cases hk : k < q
+    · exact hp k hk
+    · have heq : k = q + (k-q) := by omega
+      rw [heq, affineCarry_semigroup, digit_shift]
+      exact hs (k-q)
+
+
 end GSTV2

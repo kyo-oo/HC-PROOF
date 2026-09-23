@@ -106,4 +106,25 @@ theorem no_common_pow4_forbids_all_22
 #print axioms no_common_pow4_forbids_positive_22
 #print axioms no_common_pow4_forbids_all_22
 
+
+/-- A source `22` block constructively localizes an overlap to one of its two
+rows. The global no-common hypothesis is unnecessary for this positive law. -/
+theorem source_22_forces_common_in_pair (R p : Nat) (hp : 1 ≤ p)
+    (h0 : digit3 R p = 2) (h1 : digit3 R (p+1) = 2) :
+    (digit3 R p = 2 ∧ digit3 (4*R) p = 2) ∨
+      (digit3 R (p+1) = 2 ∧ digit3 (4*R) (p+1) = 2) := by
+  have hb := binaryCarry_lt_two R (p+1) (by omega)
+  by_cases hbit : binaryCarry R (p+1) = 0
+  · left
+    apply (common_two_row_iff_forbidden_edges R p hp).2
+    have hrec := binaryCarry_forward_exact R p hp
+    rw [h0, hbit] at hrec
+    have hedge := (next_binary_zero_after_two_iff
+      (digit3 R (p-1)) (binaryCarry R p)
+      (digit3_lt_three R (p-1)) (binaryCarry_lt_two R p hp)).1 hrec.symm
+    exact ⟨h0, Or.inl hedge⟩
+  · right
+    apply (common_two_row_iff_forbidden_edges R (p+1) (by omega)).2
+    exact ⟨h1, Or.inr ⟨by simpa using h0, by omega⟩⟩
+
 end GSTFourPowerDirectNo22

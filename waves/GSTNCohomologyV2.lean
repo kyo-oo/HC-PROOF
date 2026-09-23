@@ -202,4 +202,30 @@ theorem wave_II_v2_crown :
 #print axioms digit_two_mode_classification
 #print axioms wave_II_v2_crown
 
+
+/-- Testing against every amplitude detects exactly the vanishing mode
+field on the chosen interval. -/
+theorem weighted_interference_separates (R lo hi : Nat) :
+    (∀ A : Nat → ℤ, weightedInterference R lo hi A = 0) ↔
+      ∀ p ∈ Finset.Icc lo hi, waveTwoForm (cellOf R p) = 0 := by
+  classical
+  constructor
+  · intro h p hp
+    have ht := h (fun k => if k = p then 1 else 0)
+    have heval : weightedInterference R lo hi (fun k => if k = p then 1 else 0) =
+        waveTwoForm (cellOf R p) := by
+      unfold weightedInterference
+      rw [Finset.sum_eq_single p]
+      · simp
+      · intro b hb hbp
+        simp [hbp]
+      · intro hnot
+        exact (hnot hp).elim
+    rwa [heval] at ht
+  · intro h A
+    unfold weightedInterference
+    apply Finset.sum_eq_zero
+    intro p hp
+    rw [h p hp, zero_mul]
+
 end GSTNCohomologyV2

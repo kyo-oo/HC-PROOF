@@ -283,4 +283,27 @@ theorem no_common_two_forbids_mod9_five_six
 #print axioms row_two_overlap_iff_mod9_five_or_six
 #print axioms no_common_two_forbids_mod9_five_six
 
+
+/-- Arbitrary exponent increments, not merely a single ternary trit, act by
+translation on the next digit. -/
+theorem pow4_exponent_lift_digit (p m a : Nat) :
+    digit3 (4^(m + a * 3^p)) (p+1) =
+      (digit3 (4^m) (p+1) + a) % 3 := by
+  induction a with
+  | zero => simp [digit3]
+  | succ a ih =>
+      have hs : m + (a+1) * 3^p = (m + a * 3^p) + 3^p := by ring
+      rw [hs, pow4_exponent_lift_one_digit p (m + a * 3^p)
+        (lteCoeff p) (pow4_three_power_lte_exact p) (lteCoeff_mod3_one p), ih]
+      omega
+
+/-- Simultaneous normalization of any offset exponent to a finite residue
+representative. The offset is unrestricted and need not stay in the period. -/
+theorem pow4_digit_reduce_offset (p K t : Nat) :
+    digit3 (4^(K+t)) p = digit3 (4^(K % 3^p+t)) p := by
+  have hs : K+t = (K % 3^p+t) + 3^p * (K / 3^p) := by
+    have h := Nat.mod_add_div K (3^p)
+    omega
+  rw [hs, pow4_digit_period]
+
 end GSTFourPowerDirectResidue

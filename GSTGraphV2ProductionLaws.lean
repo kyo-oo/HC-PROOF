@@ -209,4 +209,19 @@ theorem residual_level_one_origin_one_energy_step
 #print axioms residual_right_absolute_state_exact
 #print axioms residual_level_one_origin_one_energy_step
 
+
+/-- Equality of absolute energy transports all newly added production
+charges, beyond the carry/digit pair. -/
+theorem production_charges_eq_of_absolute_energy (E F t u p : Nat)
+    (h : 4^t*E = 4^u*F) :
+    (GSTGraphV2Production.cell E t p).uJump = (GSTGraphV2Production.cell F u p).uJump ∧
+    (GSTGraphV2Production.cell E t p).phaseDensity =
+      (GSTGraphV2Production.cell F u p).phaseDensity ∧
+    (GSTGraphV2Production.cell E t p).density83 =
+      (GSTGraphV2Production.cell F u p).density83 ∧
+    (GSTGraphV2Production.cell E t p).navigationNullspace =
+      (GSTGraphV2Production.cell F u p).navigationNullspace := by
+  simp [GSTGraphV2Production.cell, GSTGraphV2InfiniteControl.graph,
+    GSTGraphV2InfiniteControl.cell, GSTCanonicalSevenAxisBridge.vertex, h]
+
 end GSTGraphV2ProductionLaws

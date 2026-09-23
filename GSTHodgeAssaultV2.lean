@@ -196,4 +196,25 @@ theorem hodge_v2_crown :
 #print axioms hodge_coefficient_eq_coordinate
 #print axioms hodge_v2_crown
 
+
+/-- The three cycle coefficients parametrize exactly the pure sector;
+existence and uniqueness hold in both directions. -/
+theorem pure_hodge_iff_unique_expansion (f : WaveCoef) :
+    isPureHodge f ↔ ∃! a : PureCoeffs, f = pureExpand a := by
+  constructor
+  · intro hf
+    refine ⟨(gev f 0, gev f 4, gev f 8), pure_hodge_expansion f hf, ?_⟩
+    intro a ha
+    exact pure_hodge_coefficients_unique a _ (ha.symm.trans (pure_hodge_expansion f hf))
+  · rintro ⟨a, rfl, _⟩ c hc
+    rcases c with ⟨C,d,hC,hd⟩
+    have h0 : ¬ (C = 0 ∧ d = 0) := by omega
+    have h1 : ¬ (C = 1 ∧ d = 1) := by omega
+    have h2 : ¬ (C = 2 ∧ d = 2) := by omega
+    unfold pureExpand
+    rw [cycle_at_offdiagonal 0 (by decide) C d hC hd h0,
+      cycle_at_offdiagonal 1 (by decide) C d hC hd h1,
+      cycle_at_offdiagonal 2 (by decide) C d hC hd h2]
+    ring
+
 end GSTHodgeAssaultV2

@@ -231,4 +231,23 @@ theorem finite_rational_gst_hodge_classification
 #print axioms integer_dominance
 #print axioms the_official_clay_landing
 
+
+/-- A rational multiple representing an integral cochain at a live weight
+has an integral coefficient.  Rationalization introduces no denominators
+on this rank-one lattice, even without a prior Hodge-class hypothesis. -/
+theorem rational_cycle_coefficient_integral (p : Nat) (hp : p < 3)
+    (f : WaveCoef) (q : ℚ)
+    (hq : ∀ c : WaveCell, rat f c = q * ratCycleClass p c) :
+    ∃ z : ℤ, q = (z : ℚ) := by
+  have hp4 : p < 4 := by omega
+  let c : WaveCell := ⟨p,p,hp4,hp⟩
+  refine ⟨f c, ?_⟩
+  have h := hq c
+  have hc : ratCycleClass p c = 1 := by
+    unfold ratCycleClass c
+    rw [cycle_at_diagonal p p p hp4 hp rfl rfl]
+    norm_num
+  rw [hc, mul_one] at h
+  exact h.symm
+
 end GSTClayOfficial

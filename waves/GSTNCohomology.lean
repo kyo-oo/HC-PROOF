@@ -297,4 +297,17 @@ theorem two_wave_frame_refines (R p : Nat) (hbig2 : digit3 R p = 2) :
   · rw [h3]
     decide
 
+
+/-- Wave II is a discrete derivative: its integral on any finite height
+interval is precisely the two endpoint digits. -/
+theorem waveIIAmplitude_telescope (R p N : Nat) :
+    (∑ k ∈ Finset.range N, waveIIAmplitude R (p+k)) =
+      (digit3 R p : ℤ) - (digit3 R (p+N) : ℤ) := by
+  induction N with
+  | zero => simp
+  | succ N ih =>
+      rw [Finset.sum_range_succ, ih, waveIIAmplitude_eq]
+      rw [show p + (N+1) = (p+N)+1 by omega]
+      ring
+
 end GSTNCohomology

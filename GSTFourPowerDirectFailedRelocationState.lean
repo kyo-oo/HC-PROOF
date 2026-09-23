@@ -211,4 +211,28 @@ theorem commonTwo_failed_relocation_two_step_physical_state
 #print axioms carry_three_non_two_state_next_carry
 #print axioms commonTwo_failed_relocation_two_step_physical_state
 
+
+/-- The forced state depends only on a two in the failing source itself;
+no predecessor exponent or inherited common-two witness is required. -/
+theorem no_common_source_two_forces_state (R p : Nat) (hp : 1 ≤ p)
+    (hNo : ¬ ∃ q : Nat, 1 ≤ q ∧ digit3 R q = 2 ∧ digit3 (4*R) q = 2)
+    (hs : digit3 R p = 2) :
+    binaryCarry R (p+1) = 1 ∧ directCarry4 R (p+1) = 3 ∧
+      digit3 R (p+1) < 2 := by
+  have hb := source_two_forces_next_binary_one_of_no_common R p hp hNo hs
+  have hc := directCarry4_eq_prev_digit_add_binary R (p+1) (by omega)
+  simp only [Nat.add_sub_cancel] at hc
+  rw [hs, hb] at hc
+  have hn := no_common_forbids_source_22 R p hp hNo hs
+  have hd := digit3_lt_three R (p+1)
+  exact ⟨hb, hc, by omega⟩
+
+/-- Carry three has a deterministic next carry for every source digit,
+including two. This removes the previous-digit and binary-carry hypotheses. -/
+theorem carry_three_forward_exact (R q : Nat) (hc : directCarry4 R q = 3) :
+    directCarry4 R (q+1) = digit3 R q + 1 := by
+  rw [directCarry4_forward_exact_all, hc]
+  have hd := digit3_lt_three R q
+  omega
+
 end GSTFourPowerDirectFailedRelocationState

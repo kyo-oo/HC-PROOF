@@ -218,4 +218,23 @@ theorem thirdWave_of_mod27_row_three (K : Nat)
 #print axioms thirdWave_iff_commonTwo
 #print axioms fourPowerDirectExistence_iff_thirdWave
 
+
+/-- A gate is determined by a finite exponent class, uniformly at every row
+and with arbitrary offsets. The interval formulation therefore inherits the
+exact same residue normalization as the digit-pair formulation. -/
+theorem thirdWaveRow_reduce_offset (K p t : Nat) :
+    thirdWaveRow (K+t) p ↔ thirdWaveRow (K % 3^p+t) p := by
+  rw [← row_pair_iff_band, ← row_pair_iff_band]
+  rw [pow4_digit_reduce_offset p K t]
+  have hs := pow4_digit_reduce_offset p K (t+1)
+  simpa only [Nat.add_assoc] using
+    (and_congr_right fun _ => congrArg (fun d : Nat => d = 2) hs)
+
+/-- Every gate produces an infinite family of gates at its original row, not
+just unlocated third-wave witnesses at the translated exponents. -/
+theorem thirdWaveRow_period (K p u : Nat) :
+    thirdWaveRow (K + 3^p*u) p ↔ thirdWaveRow K p := by
+  rw [← row_pair_iff_band, ← row_pair_iff_band, pow4_digit_period]
+  rw [show K + 3^p*u + 1 = (K+1) + 3^p*u by omega, pow4_digit_period]
+
 end GSTFourPowerThirdWave

@@ -1167,6 +1167,30 @@ theorem gst_handwritten_three_world_joined_prefix_closedS (K : Nat) :
 
 /-! ## §13 Receipts — the comparator face of the Cardinal Worlds -/
 
+/-- An arbitrary finite observation window reports a two exactly when one
+of its indexed digits is two.  No bound on the input number is needed. -/
+theorem hasTwoInFirstKStruct_iff_digit (n k : Nat) :
+    hasTwoInFirstKStruct n k = true ↔
+      ∃ p, p < k ∧ n / 3^p % 3 = 2 := by
+  induction k generalizing n with
+  | zero => simp [hasTwoInFirstKStruct]
+  | succ k ih =>
+    rw [hasTwoInFirstKStruct_succ]
+    by_cases h : n % 3 = 2
+    · simp only [h, if_true, true_iff]
+      exact ⟨0, by omega, by simpa using h⟩
+    · rw [if_neg h, ih]
+      constructor
+      · rintro ⟨p, hp, hd⟩
+        refine ⟨p+1, by omega, ?_⟩
+        simpa [Nat.pow_succ, Nat.mul_comm, Nat.div_div_eq_div_mul] using hd
+      · rintro ⟨p, hp, hd⟩
+        cases p with
+        | zero => exact (h (by simpa using hd)).elim
+        | succ p =>
+          refine ⟨p, by omega, ?_⟩
+          simpa [Nat.pow_succ, Nat.mul_comm, Nat.div_div_eq_div_mul] using hd
+
 #check d_identity
 #check bridge_sig_even
 #check bridge_sig_j_mod6_3

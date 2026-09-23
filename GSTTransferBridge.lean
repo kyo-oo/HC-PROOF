@@ -616,4 +616,14 @@ theorem finite_address_rational_hodge_classification
 #print axioms transferred_clay_witness
 #print axioms the_transfer_bridge
 
+
+/-- The address dictionary preserves arbitrary integral linear combinations,
+so its bijection identifies the integral module structures. -/
+theorem addr_linear_combination (a b : ℤ) (f g : WaveCoef) :
+    addr (fun c => a * f c + b * g c) =
+      fun i => a * addr f i + b * addr g i := by
+  funext i
+  rcases i with ⟨n,hn⟩
+  interval_cases n <;> rfl
+
 end GSTTransferBridge

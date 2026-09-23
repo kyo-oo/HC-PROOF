@@ -170,4 +170,19 @@ def forwardPath (R N start L : Nat) : ForwardPath :=
 #check ForwardPath
 #check forwardPath
 
+/-- The genuine edge relation recognizes precisely consecutive positions,
+even across charts with different energies and horizons. -/
+theorem forwardEdge_axes_iff (R N p S M q : Nat) :
+    ForwardEdge (axes R N p) (axes S M q) ↔ q = p+1 := by
+  rfl
+
+/-- Every finite forward path has distinct nodes at distinct indices. -/
+theorem forwardPath_node_injective (R N start L : Nat) :
+    Function.Injective (forwardPath R N start L).node := by
+  intro i j h
+  have hx := congrArg SevenAxes.x h
+  change start + i = start + j at hx
+  omega
+
+
 end GSTGraphV2NonEuclidean

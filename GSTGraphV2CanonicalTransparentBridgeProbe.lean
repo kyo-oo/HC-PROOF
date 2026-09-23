@@ -22,4 +22,18 @@ theorem canonicalWidth_eq_three_mul
 #check canonicalWidth_eq_three_mul
 #print axioms canonicalWidth_eq_three_mul
 
+/-- Every transparent width is identified by its exact number of blocks;
+the converse excludes scale zero without a separate scale hypothesis. -/
+theorem canonicalWidth_three_dvd_iff (s : Nat) :
+    3 ∣ canonicalWidth s ↔ 1 ≤ s := by
+  cases s with
+  | zero => norm_num [canonicalWidth]
+  | succ s =>
+      constructor
+      · intro _; omega
+      · intro _
+        refine ⟨3^s, ?_⟩
+        simp [canonicalWidth, pow_succ, Nat.mul_comm]
+
+
 end GSTGraphV2CanonicalTransparentBridgeProbe

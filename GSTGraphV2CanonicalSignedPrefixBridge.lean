@@ -90,4 +90,40 @@ theorem canonical_graph_u_potential_growth_positive
 #print axioms canonical_graph_u_gap_positive
 #print axioms canonical_graph_u_potential_growth_positive
 
+/-- The physical canonical gap grows by at least the full block multiplier,
+a uniform quantitative strengthening of strict positivity. -/
+theorem canonical_graph_u_gap_lower_bound
+    (s n q : Nat) (hs : 1 ≤ s)
+    (hChild : SeedHappy 0 0 (canonicalChildTail s n) q)
+    (hRightBad : ∀ j, ¬ SeedHappy 1 1 (canonicalParentTail s n) j) :
+    (((4^(canonicalWidth s) : Nat) : Int)) ≤
+      Finset.sum (Finset.range (q+1)) (fun j =>
+        (((3^j : Nat) : Int)) *
+          (gstUJumpExact
+            (graph (canonicalEnergy s n) (canonicalWidth s) (s+2+j)).seven.carry
+            (graph (canonicalEnergy s n) (canonicalWidth s) (s+2+j)).seven.digit -
+          (((4^(canonicalWidth s) : Nat) : Int)) *
+            gstUJumpExact
+              (graph (canonicalEnergy s n) 0 (s+2+j)).seven.carry
+              (graph (canonicalEnergy s n) 0 (s+2+j)).seven.digit)) := by
+  have hC : GSTV2.Happy
+      (GSTV2.naturalCarry (canonicalChildTail s n) q)
+      (GSTV2.digit (canonicalChildTail s n) q) := by
+    have h := (seedHappy_zero_iff (canonicalChildTail s n) q).1 hChild
+    simpa [GSTV2.Happy, HappyCell, GSTV2.naturalCarry, GSTV2.digit,
+      carry4, digit3] using h
+  have hP : GSTV2.SeededBadTrace 1 (canonicalParentTail s n) := by
+    intro j hHappy
+    apply hRightBad j
+    rw [seedHappy_one_iff]
+    simpa [GSTV2.Happy, HappyCell, GSTGraphV2InfiniteControl.seededCarry,
+      GSTV2.affineCarry, GSTV2.digit, digit3] using hHappy
+  have h := seeded_coupled_weighted_u_gap_lower_bound
+    (4^(3^s)) (canonicalChildTail s n) (canonicalParentTail s n) q
+    (by positivity) hC hP
+  simpa [canonicalEnergy, canonicalWidth,
+    canonical_left_u_jump_adapter s n _ hs,
+    canonical_right_u_jump_adapter s n _ hs] using h
+
+
 end GSTGraphV2CanonicalSignedPrefixBridge

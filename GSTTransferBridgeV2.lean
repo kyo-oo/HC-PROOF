@@ -178,4 +178,24 @@ theorem transfer_v2_crown :
 #print axioms transferred_coefficient_unique
 #print axioms transfer_v2_crown
 
+
+/-- Unique address-cycle coordinates exist exactly in the three live
+weights.  In the zero sectors every scalar represents the same class. -/
+theorem transferred_unique_iff_live (p : Nat) (φ : ClRing)
+    (hφ : isClHodge p φ) :
+    (∃! z : ℤ, ∀ i : Fin 12, φ i = z * clMono (4*p) i) ↔ p < 3 := by
+  constructor
+  · rintro ⟨z,hz,hu⟩
+    by_contra hp
+    have hm := clMono_zero_of_twelve_le (4*p) (by omega)
+    have hzero := clHodge_zero_of_three_le p (by omega) φ hφ
+    have h0 : (0 : ℤ) = z := hu 0 (by intro i; simp [hzero])
+    have h1 : (1 : ℤ) = z := hu 1 (by intro i; simp [hzero, hm])
+    omega
+  · intro hp
+    obtain ⟨z,hz⟩ := transferred_hodge_conjecture p hp φ hφ
+    refine ⟨z,hz,?_⟩
+    intro w hw
+    exact transferred_coefficient_unique p hp φ w z hw hz
+
 end GSTTransferBridgeV2

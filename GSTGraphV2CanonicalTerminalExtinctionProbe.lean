@@ -341,4 +341,67 @@ theorem unit_graph_cell_neutral_of_pow_lt
 #print axioms graph_u_potential_vacuum_baseline_of_window_neutral
 #print axioms unit_graph_cell_neutral_of_pow_lt
 
+/-- The coupled signed gap has a quantitative lower bound equal to the
+horizontal multiplier, rather than merely a positive sign. -/
+theorem seeded_coupled_weighted_u_gap_lower_bound
+    (A child parent q : Nat)
+    (hA : 0 < A)
+    (hChild : GSTV2.Happy
+      (GSTV2.naturalCarry child q) (GSTV2.digit child q))
+    (hParentBad : GSTV2.SeededBadTrace 1 parent) :
+    (A : Int) ≤ Finset.sum (Finset.range (q+1)) (fun j =>
+      (((3^j : Nat) : Int)) *
+        (gstUJumpExact (GSTV2.affineCarry 1 parent j) (GSTV2.digit parent j) -
+          (A : Int) *
+            gstUJumpExact (GSTV2.affineCarry 0 child j) (GSTV2.digit child j))) := by
+  have hParent := seeded_one_bad_weighted_u_prefix_nonnegative parent (q+1) hParentBad
+  have hChildSum := seeded_zero_weighted_u_prefix_negative_of_happy child q hChild
+  have hSplit :
+      Finset.sum (Finset.range (q+1)) (fun j =>
+        (((3^j : Nat) : Int)) *
+          (gstUJumpExact (GSTV2.affineCarry 1 parent j) (GSTV2.digit parent j) -
+            (A : Int) *
+              gstUJumpExact (GSTV2.affineCarry 0 child j) (GSTV2.digit child j))) =
+      Finset.sum (Finset.range (q+1)) (fun j =>
+        (((3^j : Nat) : Int)) *
+          gstUJumpExact (GSTV2.affineCarry 1 parent j) (GSTV2.digit parent j)) -
+      (A : Int) * Finset.sum (Finset.range (q+1)) (fun j =>
+        (((3^j : Nat) : Int)) *
+          gstUJumpExact (GSTV2.affineCarry 0 child j) (GSTV2.digit child j)) := by
+    rw [Finset.mul_sum, ← Finset.sum_sub_distrib]
+    apply Finset.sum_congr rfl
+    intro j _
+    ring
+  rw [hSplit]
+  have hAInt : (0 : Int) < A := by exact_mod_cast hA
+  have hChildBound : Finset.sum (Finset.range (q+1)) (fun j =>
+      (((3^j : Nat) : Int)) *
+        gstUJumpExact (GSTV2.affineCarry 0 child j) (GSTV2.digit child j)) ≤ -1 := by
+    omega
+  nlinarith
+
+/-- One upper energy bound neutralizes every endpoint of a finite horizontal
+window and determines the complete retained U potential exactly. -/
+theorem unit_window_vacuum_of_pow_lt
+    (start N p : Nat) (hpow : 4^(start+N+1) < 3^p) :
+    (∀ j, j ≤ N →
+      (graph 1 (start+j) p).seven.carry = 0 ∧
+      (graph 1 (start+j) p).seven.digit = 0) ∧
+    graphUPotential 1 start N p = 5 - (((4^N : Nat) : Int)) * 5 := by
+  have hAll : ∀ j, j ≤ N →
+      (graph 1 (start+j) p).seven.carry = 0 ∧
+      (graph 1 (start+j) p).seven.digit = 0 := by
+    intro j hj
+    apply unit_graph_cell_neutral_of_pow_lt
+    have hm : 4^(start+j+1) ≤ 4^(start+N+1) :=
+      Nat.pow_le_pow_of_le (by decide : 1 < 4) (by omega)
+    exact lt_of_le_of_lt hm hpow
+  refine ⟨hAll, ?_⟩
+  apply graph_u_potential_vacuum_baseline_of_window_neutral
+  · simpa using (hAll 0 (by omega)).1
+  · exact (hAll N le_rfl).1
+  · intro j hj
+    exact (hAll j (by omega)).1
+
+
 end GSTGraphV2CanonicalTerminalExtinctionProbe

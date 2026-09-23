@@ -81,4 +81,20 @@ theorem no_common_two_forbids_mod81_classes
 #print axioms row_four_overlap_of_mod81_classes
 #print axioms no_common_two_forbids_mod81_classes
 
+
+/-- Completeness of the row-four table. In particular, absence from the table
+is equivalent to failure at this row, not merely a necessary global filter. -/
+theorem row_four_overlap_iff_mod81_classes (K : Nat) :
+    (digit3 (4^K) 4 = 2 ∧ digit3 (4^(K+1)) 4 = 2) ↔
+      RowFourClass (K % 81) := by
+  constructor
+  · intro h
+    have h0 := pow4_digit_reduce_offset 4 K 0
+    have h1 := pow4_digit_reduce_offset 4 K 1
+    norm_num at h0 h1
+    rw [h0, h1] at h
+    have hr : K % 81 < 81 := Nat.mod_lt _ (by decide)
+    interval_cases K % 81 <;> norm_num [digit3, RowFourClass] at *
+  · exact row_four_overlap_of_mod81_classes K
+
 end GSTFourPowerDirectResidue81

@@ -265,4 +265,20 @@ theorem infinite_coupled_control
     parentWordExact := coupledOrbit_parentWord_exact A initial
   }
 
+/-- Restarting the controller at any depth preserves the entire future orbit. -/
+theorem coupledOrbit_add (A : Nat) (initial : CoupledState) (q j : Nat) :
+    coupledOrbit A initial (q+j) = coupledOrbit A (coupledOrbit A initial q) j := by
+  induction j with
+  | zero => simp [coupledOrbit]
+  | succ j ih => simpa only [Nat.add_assoc, coupledOrbit, ih]
+
+/-- The all-depth invariant may be restarted at every observation coordinate. -/
+theorem infinite_coupled_control_restart
+    (A : Nat) (initial : CoupledState) (q : Nat)
+    (h : InfiniteCoupledControl A initial) :
+    InfiniteCoupledControl A (coupledOrbit A initial q) := by
+  exact infinite_coupled_control A (coupledOrbit A initial q)
+    h.multiplierPositive (h.invariantAll q)
+
+
 end GSTV2

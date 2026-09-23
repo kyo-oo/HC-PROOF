@@ -171,4 +171,24 @@ theorem gst_u_potential_is_horizontal_base4_flux
 #print axioms coupled_potential_is_horizontal_base4_flux
 #print axioms gst_u_potential_is_horizontal_base4_flux
 
+
+/-- The reduced-charge formula detects precisely the physical invariant.
+Thus the bridge equation cannot hold accidentally for an unphysical state,
+regardless of the chosen charge function. -/
+theorem potential_shared_rewrite_iff
+    (charge : Nat → Int) (A : Nat) (st : PhysicalState) :
+    potentialWith charge A st.core =
+      reducedChargeWith charge st.core.parentSeed -
+        (A : Int) * reducedChargeWith charge st.core.childCarry +
+        6 * (st.childResidue : Int) ↔ PhysicalInvariant A st := by
+  constructor
+  · intro h
+    unfold potentialWith reducedChargeWith at h
+    have he : (st.core.parentSeed : Int) + 4 * (st.core.parentOffset : Int) =
+        (st.childResidue : Int) + (A : Int) * (st.core.childCarry : Int) := by
+      nlinarith [h]
+    unfold PhysicalInvariant
+    exact_mod_cast he
+  · exact potential_shared_rewrite charge A st
+
 end GSTGraphV2CoupledUPhysicalBridge

@@ -105,4 +105,24 @@ theorem no22_nine_power_bound
 #print axioms no22_low_pair_le_seven
 #print axioms no22_nine_power_bound
 
+
+/-- Exact local recursion for the no-22 language: removing the low digit loses
+only the boundary pair, and no other information. -/
+theorem no22_iff_tail_and_boundary (X : Nat) :
+    No22Ternary X ↔ No22Ternary (X / 3) ∧
+      ¬ (digit3 X 0 = 2 ∧ digit3 X 1 = 2) := by
+  constructor
+  · intro h
+    exact ⟨by simpa using no22_div_three_pow X 1 h, h 0⟩
+  · rintro ⟨ht, hb⟩ j hj
+    cases j with
+    | zero => exact hb hj
+    | succ j =>
+        apply ht j
+        constructor
+        · have hs := digit3_div_three_pow_shift X 1 j
+          simpa [Nat.add_comm] using hs.trans (by simpa [Nat.add_comm] using hj.1)
+        · have hs := digit3_div_three_pow_shift X 1 (j+1)
+          simpa [Nat.add_comm, Nat.add_assoc] using hs.trans (by simpa [Nat.add_comm, Nat.add_assoc] using hj.2)
+
 end GSTFourPowerNo22Magnitude

@@ -229,4 +229,42 @@ theorem resolved_vertex_exact (G : ResolvedGraph) (p : Nat) :
     resolvedVertex G p = GSTGraphV2NonEuclidean.vertex G.ambient p := by
   rfl
 
+
+/-- Resolution may be weakened by any number of levels. -/
+theorem six_iso_weaken_of_le {k l : Nat} {x y : Int}
+    (hkl : k ≤ l) (h : SixAdicIsoAt l x y) : SixAdicIsoAt k x y := by
+  obtain ⟨r, rfl⟩ := Nat.exists_eq_add_of_le hkl
+  induction r with
+  | zero => simpa using h
+  | succ r ih => exact ih (six_iso_weaken h)
+
+/-- Intersecting balls of unequal resolution are nested in the exact
+resolution order. -/
+theorem intersecting_balls_nested {k l : Nat} {c d : Int}
+    (hkl : k ≤ l) (h : (SixAdicBall k c ∩ SixAdicBall l d).Nonempty) :
+    SixAdicBall l d ⊆ SixAdicBall k c := by
+  rcases h with ⟨x, hxc, hxd⟩
+  intro y hyd
+  exact six_iso_trans
+    (six_iso_weaken_of_le hkl (six_iso_trans hyd (six_iso_symm hxd))) hxc
+
+/-- Distinct child labels represent distinct residue classes one level down,
+which is stronger than distinctness of their integer centers. -/
+theorem six_child_resolution_iff (k : Nat) (c : Int) (i j : Fin 6) :
+    SixAdicIsoAt (k+1) (sixChildCenter k c i) (sixChildCenter k c j) ↔ i = j := by
+  constructor
+  · rintro ⟨q, hq⟩
+    have hp : 0 < (6 : Int)^k := by positivity
+    have he : (i.val : Int) - j.val = 6*q := by
+      dsimp [sixChildCenter] at hq
+      rw [pow_succ] at hq
+      nlinarith
+    have hi : (i.val : Int) < 6 := by exact_mod_cast i.isLt
+    have hj : (j.val : Int) < 6 := by exact_mod_cast j.isLt
+    have hij : (i.val : Int) = j.val := by omega
+    apply Fin.ext
+    exact_mod_cast hij
+  · rintro rfl
+    exact six_iso_refl _ _
+
 end GSTGraphV2SixAdicOntologicalGeometryLaws

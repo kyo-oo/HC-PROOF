@@ -818,6 +818,17 @@ theorem pair_read_fire_general (T u j : Nat) (hj : 4 ≤ j) (hT : 4^T < 3^(j+2))
 
 /-- **THE GENERAL PAIR-READ KILL.**  The family dies outright through
 the repo's own kill chain. -/
+/-- The residue kill zone is necessary as well as sufficient, already from
+depth two; it exactly classifies the pair-read digit. -/
+theorem pair_read_fire_iff (T u j : Nat) (hj : 2 ≤ j)
+    (hT : 4^T < 3^(j+2)) :
+    digit3 (4^(T + 3^(j+1)*u)) (j+4) = 2 ↔
+      18 ≤ (4^T * u * 16) % 27 := by
+  rw [pair_read_formula T u j (by omega) hT]
+  have hres := pair_residue_mod27 T u j hj
+  change (4^T * u * GSTTowerFire.c (j+1)) / 9 % 3 = 2 ↔ _
+  omega
+
 theorem no22_of_pair_read_general (T u j : Nat) (hj : 4 ≤ j) (hT : 4^T < 3^(j+2))
     (hkill : 18 ≤ (4^T * u * 16) % 27) :
     noTernaryTwo (4^(T + 3^(j+1)*u)) = false :=

@@ -77,4 +77,19 @@ theorem six_scale_exact_iff {k : Nat} {x y : Int} :
 #print axioms six_iso_mul_iff_of_mod_inverse
 #print axioms six_scale_exact_iff
 
+
+/-- Exact similarity holds for any number of scale steps, with an arbitrary
+common translation of the scaled coordinates. -/
+theorem six_scale_power_translate_iff (k r : Nat) (a x y : Int) :
+    SixAdicIsoAt (k+r) (a + 6^r*x) (a + 6^r*y) ↔
+      SixAdicIsoAt k x y := by
+  rw [six_iso_translate_iff]
+  induction r with
+  | zero => simp
+  | succ r ih =>
+      have hx : (6 : Int)^(r+1)*x = 6*(6^r*x) := by rw [pow_succ]; ring
+      have hy : (6 : Int)^(r+1)*y = 6*(6^r*y) := by rw [pow_succ]; ring
+      rw [hx, hy, show k+(r+1) = (k+r)+1 by omega, six_scale_exact_iff]
+      exact ih
+
 end GSTGraphV2SixAdicUnitIsometry

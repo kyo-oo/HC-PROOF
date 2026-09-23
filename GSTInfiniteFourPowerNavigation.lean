@@ -197,6 +197,17 @@ theorem gst_four_power_navigation_universal
 #print axioms four_power_happy_ge_three
 #print axioms gst_four_power_navigation_universal
 
+/-- The exact handwritten U jump detects Happy in both directions on physical cells. -/
+theorem gst_u_jump_negative_iff_happy (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    gstUJumpExact C d < 0 ↔ HappyCell C d := by
+  constructor
+  · intro hneg
+    by_contra hbad
+    have hnonneg := gst_u_jump_nonnegative_of_not_happy_local C d hC hd hbad
+    omega
+  · exact gst_u_jump_negative_of_happy_local C d
+
+
 end GSTInfiniteFourPowerNavigation
 
 /-- Legacy infinite-route compatibility export, intentionally not using the

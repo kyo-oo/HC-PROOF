@@ -102,4 +102,20 @@ theorem coupled_happy_transports_information
   · simpa [coupledOrbit, coupledStep] using hnext
   · simpa [coupledOrbit, coupledStep] using hnext0
 
+/-- On a physical digit-two input the emitted digit and latent carry recover
+Happy exactly; the converse is essential when reading a transported gate. -/
+theorem happy_iff_output_and_next (carry : Nat) :
+    Happy carry 2 ↔ cellOutput carry 2 = 2 ∧
+      (cellNextCarry carry 2 = 2 ∨ cellNextCarry carry 2 = 3) := by
+  constructor
+  · intro h
+    exact ⟨happy_output_two carry 2 h, happy_next_carry_two_or_three carry 2 h⟩
+  · rintro ⟨hout, hn⟩
+    have hm := cell_mass_conservation carry 2
+    rw [hout] at hm
+    unfold cellMass at hm
+    refine ⟨rfl, ?_⟩
+    rcases hn with hn | hn <;> rw [hn] at hm <;> omega
+
+
 end GSTV2

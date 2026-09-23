@@ -208,4 +208,39 @@ theorem badChannel_three_iff (x : Nat) :
 #print axioms badChannel_two_iff
 #print axioms badChannel_three_iff
 
+
+/-- The exact channel/source state after consuming an arbitrary finite prefix. -/
+def channelRun (c x : Nat) : Nat → Nat × Nat
+  | 0 => (c, x)
+  | n+1 => channelRun (channelNext c (lowDigit x)) (tail3 x) n
+
+/-- Arbitrary-depth acceptance law. All consumed rows must fail, and the
+remaining suffix must be bad in precisely the computed carry state. -/
+theorem badChannel_iff_run (c x n : Nat) :
+    BadChannel c x ↔
+      (∀ i : Nat, i < n →
+        ¬ lowSuccess (channelRun c x i).1 (channelRun c x i).2) ∧
+      BadChannel (channelRun c x n).1 (channelRun c x n).2 := by
+  induction n generalizing c x with
+  | zero => simp [channelRun]
+  | succ n ih =>
+      rw [badChannel_iff, ih]
+      constructor
+      · rintro ⟨h0, hrest, hlast⟩
+        refine ⟨?_, hlast⟩
+        intro i hi
+        cases i with
+        | zero => exact h0
+        | succ i => exact hrest i (by omega)
+      · rintro ⟨hrows, hlast⟩
+        refine ⟨hrows 0 (by omega), ?_, hlast⟩
+        intro i hi
+        exact hrows (i+1) (by omega)
+
+/-- The four physical states are closed under every legal ternary input. -/
+theorem channelNext_lt_four (c a : Nat) (hc : c < 4) (ha : a < 3) :
+    channelNext c a < 4 := by
+  unfold channelNext
+  omega
+
 end GSTFourPowerAffineChannelAutomaton

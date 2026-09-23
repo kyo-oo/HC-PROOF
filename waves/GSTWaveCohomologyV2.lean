@@ -169,4 +169,20 @@ theorem wave_I_v2_crown :
 #print axioms shifted_rectangle_gauss_law
 #print axioms wave_I_v2_crown
 
+
+/-- All prefix classes determine the entire row mode sequence.  This is
+faithfulness of the integrated readout, not just its forward transport law. -/
+theorem rowClass_faithful (R S p q : Nat) :
+    (∀ N, rowClass R p N = rowClass S q N) ↔
+      ∀ t, rowClassAt R p t = rowClassAt S q t := by
+  constructor
+  · intro h t
+    have hnext := h (t+1)
+    have hprev := h t
+    simp only [rowClass, Finset.sum_range_succ] at hnext hprev
+    omega
+  · intro h N
+    unfold rowClass
+    exact Finset.sum_congr rfl (fun t _ => h t)
+
 end GSTWaveCohomologyV2

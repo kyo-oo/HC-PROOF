@@ -135,3 +135,16 @@ theorem gst_parent_digit_from_informationS
     (Nat.add_mod
       (gstAffineMulCarryS A z T q)
       (T / 3^q % 3) 3).symm
+
+/-- Both high coordinates are recovered for every admissible multiplier;
+no perfect-power shape for A is required. -/
+theorem gst_shared_information_high_coordinates_exactS
+    (A z T q : Nat) (hz : 1 + 4*z < A) :
+    gstAffineMulCarryS (4*A) (1 + 4*z) T q % A =
+      gstAffineMulCarryS A (1 + 4*z) (4*T) q ∧
+    gstAffineMulCarryS (4*A) (1 + 4*z) T q / A = gstCarryS T q := by
+  have hA : 0 < A := by omega
+  apply gst_information_high_coordinatesS _ _ _ _ hA
+    (gst_affine_carry_lt_multiplierS A (1 + 4*z) (4*T) q hA hz)
+  rw [gst_shared_information_state_exactS]
+  exact (gst_shared_information_carry_equationS A z T q).symm

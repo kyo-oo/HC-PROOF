@@ -85,4 +85,15 @@ theorem pow4_mod_one_iff_three_pow_dvd : ∀ p n : Nat,
 #check pow4_mod_one_iff_three_pow_dvd
 #print axioms pow4_mod_one_iff_three_pow_dvd
 
+
+/-- At the first row above a scale, a translation by any multiple of that
+scale preserves the digit exactly when its multiplier is divisible by three.
+This is an exact stabilizer law at every starting exponent. -/
+theorem next_digit_translation_iff (p m a : Nat) :
+    digit3 (4^(m + a * 3^p)) (p+1) = digit3 (4^m) (p+1) ↔
+      3 ∣ a := by
+  rw [pow4_exponent_lift_digit, Nat.dvd_iff_mod_eq_zero]
+  have hd : digit3 (4^m) (p+1) < 3 := Nat.mod_lt _ (by decide)
+  omega
+
 end GSTFourPowerExactExponentPeriod

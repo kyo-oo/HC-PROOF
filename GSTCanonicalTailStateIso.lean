@@ -113,4 +113,18 @@ theorem canonical_tail_happy_iff
   have hbounds := one_prefix_bounds b hb
   exact prefix_slice_happy_iff b 1 Q j hbounds.1 (by simpa using hbounds.2)
 
+/-- A prefix cut retains its exact carry seed, even when that seed is nonzero. -/
+theorem prefix_slice_carry_seed_exact
+    (b P tail q : Nat) (hP : P < 3^b) :
+    carry4 (P + 3^b * tail) (b+q) =
+      ((4 * P) / 3^b + 4 * (tail % 3^q)) / 3^q := by
+  unfold carry4
+  rw [pow_add, prefix_deep_mod_exact b P tail q hP,
+    ← Nat.div_div_eq_div_mul]
+  have hp : 0 < 3^b := Nat.pow_pos (by decide)
+  have hshape : 4 * (P + 3^b * (tail % 3^q)) =
+      4 * P + 3^b * (4 * (tail % 3^q)) := by ring
+  rw [hshape, Nat.add_mul_div_left _ _ hp]
+
+
 end GSTCanonicalTailStateIso

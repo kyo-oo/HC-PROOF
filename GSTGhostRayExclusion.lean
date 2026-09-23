@@ -260,4 +260,26 @@ theory in `GSTWorldtraceMahlerRelativePrecision`.
 #print axioms ghost_head_unit
 #print axioms exists_three_free_decomp
 
+/-- The exact all-ones residue shape characterizes a ghost ray in both
+ directions, so the algebraic head identity is a complete certificate. -/
+theorem ghostRay_iff_residue_shape (u : Nat) :
+    GhostRay u ↔ ∀ k : Nat, 3 ≤ k →
+      2 * ((GSTTowerFire.c (k-1) * u) % 3^k) + 9 =
+        2 * ((GSTTowerFire.c 1 * u) % 9) + 3^k := by
+  constructor
+  · exact ghost_residue_shape u
+  · intro h k hk
+    have heq := h k hk
+    have hh : (GSTTowerFire.c 1 * u) % 9 < 9 := Nat.mod_lt _ (by decide)
+    have hp : 9 ≤ 3^(k-1) := by
+      simpa using (Nat.pow_le_pow_of_le (by decide : 1 < (3:Nat))
+        (show 2 ≤ k-1 by omega))
+    have hpow : 3^k = 3 * 3^(k-1) := by
+      calc
+        3^k = 3^((k-1)+1) := by congr 1; omega
+        _ = 3 * 3^(k-1) := by rw [Nat.pow_succ]; ring
+    rw [hpow] at heq
+    constructor <;> nlinarith
+
+
 end GSTGhostRay

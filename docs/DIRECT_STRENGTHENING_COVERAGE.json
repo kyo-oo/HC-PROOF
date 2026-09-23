@@ -1,0 +1,825 @@
+[
+  {
+    "file": "CardinalWorlds.lean",
+    "module": "CardinalWorlds",
+    "declarations": {
+      "hasTwoInFirstKStruct_iff_digit": "theorem"
+    }
+  },
+  {
+    "file": "CardinalWorldsPrefixClassifier.lean",
+    "module": "CardinalWorldsPrefixClassifier",
+    "declarations": {
+      "CardinalWorldsPrefixClassifier.four_pow_has_two_iff_unique_first_prefix": "theorem"
+    }
+  },
+  {
+    "file": "CardinalWorldsV2.lean",
+    "module": "CardinalWorldsV2",
+    "declarations": {
+      "CardinalWorldsV2.joined_prefix_add": "theorem"
+    }
+  },
+  {
+    "file": "GSTAnalyticAbsorption.lean",
+    "module": "GSTAnalyticAbsorption",
+    "declarations": {
+      "GSTAnalyticAbsorption.hc_period_eq_zero": "theorem"
+    }
+  },
+  {
+    "file": "GSTAnalyticAbsorptionV2.lean",
+    "module": "GSTAnalyticAbsorptionV2",
+    "declarations": {
+      "GSTAnalyticAbsorptionV2.hc_descent_flow_bijective": "theorem"
+    }
+  },
+  {
+    "file": "GSTCanonicalCarryDynamics.lean",
+    "module": "GSTCanonicalCarryDynamics",
+    "declarations": {
+      "GSTCanonicalCarryDynamics.carry4_block_exact": "theorem"
+    }
+  },
+  {
+    "file": "GSTCanonicalSevenAxisBridge.lean",
+    "module": "GSTCanonicalSevenAxisBridge",
+    "declarations": {
+      "GSTCanonicalSevenAxisBridge.event_nextCarry_injective": "theorem"
+    }
+  },
+  {
+    "file": "GSTCanonicalTailLTE.lean",
+    "module": "GSTCanonicalTailLTE",
+    "declarations": {
+      "GSTCanonicalTailLTE.pow4_three_power_lte_not_dvd_next": "theorem"
+    }
+  },
+  {
+    "file": "GSTCanonicalTailStateIso.lean",
+    "module": "GSTCanonicalTailStateIso",
+    "declarations": {
+      "GSTCanonicalTailStateIso.prefix_slice_carry_seed_exact": "theorem"
+    }
+  },
+  {
+    "file": "GSTClayOfficial.lean",
+    "module": "GSTClayOfficial",
+    "declarations": {
+      "GSTClayOfficial.rational_cycle_coefficient_integral": "theorem"
+    }
+  },
+  {
+    "file": "GSTClayOfficialV2.lean",
+    "module": "GSTClayOfficialV2",
+    "declarations": {
+      "GSTClayOfficialV2.rational_hodge_iff_all_weights": "theorem"
+    }
+  },
+  {
+    "file": "GSTFinalPrefixOneStep6Infinite.lean",
+    "module": "GSTFinalPrefixOneStep6Infinite",
+    "declarations": {
+      "GSTFinalPrefixOneStep6Infinite.reverseMixedCode_add": "theorem"
+    }
+  },
+  {
+    "file": "GSTFinalPurePowerResidueTransplant.lean",
+    "module": "GSTFinalPurePowerResidueTransplant",
+    "declarations": {
+      "GSTFinalPurePowerResidueTransplant.pow4_exponent_lift_digit_all": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerAffineBadState.lean",
+    "module": "GSTFourPowerAffineBadState",
+    "declarations": {
+      "GSTFourPowerAffineBadState.pairCommonTwo_iff_low_or_tail": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerAffineChannelAutomaton.lean",
+    "module": "GSTFourPowerAffineChannelAutomaton",
+    "declarations": {
+      "GSTFourPowerAffineChannelAutomaton.channelRun": "def",
+      "GSTFourPowerAffineChannelAutomaton.badChannel_iff_run": "theorem",
+      "GSTFourPowerAffineChannelAutomaton.channelNext_lt_four": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerAffineClassifierBridge.lean",
+    "module": "GSTFourPowerAffineClassifierBridge",
+    "declarations": {
+      "GSTFourPowerAffineClassifierBridge.noCommonTwo_iff_affine_run": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerAffineExponentPeel.lean",
+    "module": "GSTFourPowerAffineExponentPeel",
+    "declarations": {
+      "GSTFourPowerAffineExponentPeel.affineOrbit_three_mul_add": "theorem",
+      "GSTFourPowerAffineExponentPeel.peel0_le_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerAffineOrbit.lean",
+    "module": "GSTFourPowerAffineOrbit",
+    "declarations": {
+      "GSTFourPowerAffineOrbit.affineOrbit_add": "theorem",
+      "GSTFourPowerAffineOrbit.affineOrbit_strictMono": "theorem",
+      "GSTFourPowerAffineOrbit.affineOrbit_injective": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerAffinePeelClassifier.lean",
+    "module": "GSTFourPowerAffinePeelClassifier",
+    "declarations": {
+      "GSTFourPowerAffinePeelClassifier.noCommonTwo_iff_quotient_peel": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerAffineTwoTritClassifier.lean",
+    "module": "GSTFourPowerAffineTwoTritClassifier",
+    "declarations": {
+      "GSTFourPowerAffineTwoTritClassifier.commonTwo_three_mul_iff_second": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectAdditionCarry.lean",
+    "module": "GSTFourPowerDirectAdditionCarry",
+    "declarations": {
+      "GSTFourPowerDirectAdditionCarry.directCarry4_eq_iff_band": "theorem",
+      "GSTFourPowerDirectAdditionCarry.digit3_four_mul_eq_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectChat2Application.lean",
+    "module": "GSTFourPowerDirectChat2Application",
+    "declarations": {
+      "GSTFourPowerDirectChat2Application.chat2_bad_channel_iff_all_prefix_obstructions": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectCreationMaster.lean",
+    "module": "GSTFourPowerDirectCreationMaster",
+    "declarations": {
+      "GSTFourPowerDirectCreationMaster.commonTwo_iff_creation_certificate": "theorem",
+      "GSTFourPowerDirectCreationMaster.directExistence_iff_creation_master": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectExistence.lean",
+    "module": "GSTFourPowerDirectExistence",
+    "declarations": {
+      "GSTFourPowerDirectExistence.commonTwo_of_periodic_row": "theorem",
+      "GSTFourPowerDirectExistence.commonTwo_has_periodic_progression": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectExistenceFromHappy.lean",
+    "module": "GSTFourPowerDirectExistenceFromHappy",
+    "declarations": {
+      "GSTFourPowerDirectExistenceFromHappy.directBadDossier_iff_noCommonTwo": "theorem",
+      "GSTFourPowerDirectExistenceFromHappy.directExistence_iff_no_dossier": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectExistenceNoAxiom.lean",
+    "module": "GSTFourPowerDirectExistenceNoAxiom",
+    "declarations": {
+      "GSTFourPowerDirectExistenceNoAxiom.fourPowerDirectExistence_iff_ge_eight": "theorem",
+      "GSTFourPowerDirectExistenceNoAxiom.fourPowerDirectExistence_from_physical_happy_positive": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectExistenceProviderPipeline.lean",
+    "module": "GSTFourPowerDirectExistenceProviderPipeline",
+    "declarations": {
+      "GSTFourPowerDirectExistenceProviderPipeline.happy_provider_iff_commonTwoGeThree_provider": "theorem",
+      "GSTFourPowerDirectExistenceProviderPipeline.happy_provider_iff_prefix_hits": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectFailedRelocationState.lean",
+    "module": "GSTFourPowerDirectFailedRelocationState",
+    "declarations": {
+      "GSTFourPowerDirectFailedRelocationState.no_common_source_two_forces_state": "theorem",
+      "GSTFourPowerDirectFailedRelocationState.carry_three_forward_exact": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectHappyBridge.lean",
+    "module": "GSTFourPowerDirectHappyBridge",
+    "declarations": {
+      "GSTFourPowerDirectHappyBridge.physical_happy_iff_row_pair": "theorem",
+      "GSTFourPowerDirectHappyBridge.physical_happy_cutoff_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectNo22.lean",
+    "module": "GSTFourPowerDirectNo22",
+    "declarations": {
+      "GSTFourPowerDirectNo22.source_22_forces_common_in_pair": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectResidue.lean",
+    "module": "GSTFourPowerDirectResidue",
+    "declarations": {
+      "GSTFourPowerDirectResidue.pow4_exponent_lift_digit": "theorem",
+      "GSTFourPowerDirectResidue.pow4_digit_reduce_offset": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectResidue27.lean",
+    "module": "GSTFourPowerDirectResidue27",
+    "declarations": {
+      "GSTFourPowerDirectResidue27.row_three_overlap_iff_mod27_classes": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerDirectResidue81.lean",
+    "module": "GSTFourPowerDirectResidue81",
+    "declarations": {
+      "GSTFourPowerDirectResidue81.row_four_overlap_iff_mod81_classes": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerExactExponentPeriod.lean",
+    "module": "GSTFourPowerExactExponentPeriod",
+    "declarations": {
+      "GSTFourPowerExactExponentPeriod.next_digit_translation_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerExponentTritObstruction.lean",
+    "module": "GSTFourPowerExponentTritObstruction",
+    "declarations": {
+      "GSTFourPowerExponentTritObstruction.no_common_two_iff_all_trit_obstructions": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerHappyProvider.lean",
+    "module": "GSTFourPowerHappyProvider",
+    "declarations": {
+      "GSTFourPowerHappyProvider.commonTwoGeThree_iff_prefixHitGeThree": "theorem",
+      "GSTFourPowerHappyProvider.commonTwoGeThree_iff_physical_happy": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerNo22Magnitude.lean",
+    "module": "GSTFourPowerNo22Magnitude",
+    "declarations": {
+      "GSTFourPowerNo22Magnitude.no22_iff_tail_and_boundary": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerOntologicalAdapter.lean",
+    "module": "GSTFourPowerOntologicalAdapter",
+    "declarations": {
+      "GSTFourPowerOntologicalAdapter.creation_certificate_iff_positive_happy": "theorem"
+    }
+  },
+  {
+    "file": "GSTFourPowerThirdWave.lean",
+    "module": "GSTFourPowerThirdWave",
+    "declarations": {
+      "GSTFourPowerThirdWave.thirdWaveRow_reduce_offset": "theorem",
+      "GSTFourPowerThirdWave.thirdWaveRow_period": "theorem"
+    }
+  },
+  {
+    "file": "GSTGhostRayExclusion.lean",
+    "module": "GSTGhostRayExclusion",
+    "declarations": {
+      "GSTGhostRay.ghostRay_iff_residue_shape": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalDescentOntology.lean",
+    "module": "GSTGraphV2CanonicalDescentOntology",
+    "declarations": {
+      "GSTGraphV2CanonicalDescentOntology.canonical_left_descent_all_depths": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalEscape.lean",
+    "module": "GSTGraphV2CanonicalEscape",
+    "declarations": {
+      "GSTGraphV2CanonicalEscape.canonicalTail_pow_dvd_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalInfiniteCycle.lean",
+    "module": "GSTGraphV2CanonicalInfiniteCycle",
+    "declarations": {
+      "GSTGraphV2CanonicalInfiniteCycle.coupledOrbit_cycle_all_offsets": "theorem",
+      "GSTGraphV2CanonicalInfiniteCycle.coupledOrbit_cycle_mod_exact": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalNWave.lean",
+    "module": "GSTGraphV2CanonicalNWave",
+    "declarations": {
+      "GSTGraphV2CanonicalNWave.nWaveShift_add_exact": "theorem",
+      "GSTGraphV2CanonicalNWave.nWaveEnergy_add_exact": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalPhaseSteering.lean",
+    "module": "GSTGraphV2CanonicalPhaseSteering",
+    "declarations": {
+      "GSTGraphV2CanonicalPhaseSteering.canonical_right_next_seed_phase_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalPhaseWaveProbe.lean",
+    "module": "GSTGraphV2CanonicalPhaseWaveProbe",
+    "declarations": {
+      "GSTGraphV2CanonicalPhaseWaveProbe.canonical_parent_row_one_happy_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalRenormalization.lean",
+    "module": "GSTGraphV2CanonicalRenormalization",
+    "declarations": {
+      "GSTGraphV2CanonicalRenormalization.canonicalTail_residue_three_exact": "theorem",
+      "GSTGraphV2CanonicalRenormalization.canonicalTail_prefix_local": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalSheetTranslation.lean",
+    "module": "GSTGraphV2CanonicalSheetTranslation",
+    "declarations": {
+      "GSTGraphV2CanonicalSheetTranslation.canonicalEnergy_block_translate": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalSignedPrefixBridge.lean",
+    "module": "GSTGraphV2CanonicalSignedPrefixBridge",
+    "declarations": {
+      "GSTGraphV2CanonicalSignedPrefixBridge.canonical_graph_u_gap_lower_bound": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalTerminalExtinctionProbe.lean",
+    "module": "GSTGraphV2CanonicalTerminalExtinctionProbe",
+    "declarations": {
+      "GSTGraphV2CanonicalTerminalExtinctionProbe.seeded_coupled_weighted_u_gap_lower_bound": "theorem",
+      "GSTGraphV2CanonicalTerminalExtinctionProbe.unit_window_vacuum_of_pow_lt": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CanonicalTransparentBridgeProbe.lean",
+    "module": "GSTGraphV2CanonicalTransparentBridgeProbe",
+    "declarations": {
+      "GSTGraphV2CanonicalTransparentBridgeProbe.canonicalWidth_three_dvd_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CoupledUFlux.lean",
+    "module": "GSTGraphV2CoupledUFlux",
+    "declarations": {
+      "GSTGraphV2CoupledUFlux.orbitWith_add": "theorem",
+      "GSTGraphV2CoupledUFlux.coupled_u_flux_window_exact": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2CoupledUPhysicalBridge.lean",
+    "module": "GSTGraphV2CoupledUPhysicalBridge",
+    "declarations": {
+      "GSTGraphV2CoupledUPhysicalBridge.potential_shared_rewrite_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2FourPowerResidueObstruction.lean",
+    "module": "GSTGraphV2FourPowerResidueObstruction",
+    "declarations": {
+      "GSTGraphV2FourPowerResidueObstruction.pow4_digit_eq_of_exponent_mod": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2HandwrittenExponentialCascade.lean",
+    "module": "GSTGraphV2HandwrittenExponentialCascade",
+    "declarations": {
+      "GSTGraphV2HandwrittenExponentialCascade.originSuffix_zero_iff": "theorem",
+      "GSTGraphV2HandwrittenExponentialCascade.exhausted_cut_stable": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2HandwrittenExponentialLTE.lean",
+    "module": "GSTGraphV2HandwrittenExponentialLTE",
+    "declarations": {
+      "GSTGraphV2HandwrittenExponentialLTE.pow4_scaled_mod_all_lower": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2HandwrittenOmegaUBlock.lean",
+    "module": "GSTGraphV2HandwrittenOmegaUBlock",
+    "declarations": {
+      "GSTGraphV2HandwrittenOmegaUBlock.origin_coordinates_iff": "theorem",
+      "GSTGraphV2HandwrittenOmegaUBlock.originTail_lt": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2InfiniteControl.lean",
+    "module": "GSTGraphV2InfiniteControl",
+    "declarations": {
+      "GSTGraphV2InfiniteControl.graph_local_mass_conservation": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2NonEuclidean.lean",
+    "module": "GSTGraphV2NonEuclidean",
+    "declarations": {
+      "GSTGraphV2NonEuclidean.forwardEdge_axes_iff": "theorem",
+      "GSTGraphV2NonEuclidean.forwardPath_node_injective": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2NonEuclideanLaws.lean",
+    "module": "GSTGraphV2NonEuclideanLaws",
+    "declarations": {
+      "GSTGraphV2NonEuclideanLaws.forward_displacement_exact": "theorem",
+      "GSTGraphV2NonEuclideanLaws.boundary_displacement_strict_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2NonlocalCascade.lean",
+    "module": "GSTGraphV2NonlocalCascade",
+    "declarations": {
+      "GSTGraphV2NonlocalCascade.latent_next_happy_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2OmegaWaveLaw.lean",
+    "module": "GSTGraphV2OmegaWaveLaw",
+    "declarations": {
+      "GSTGraphV2OmegaWaveLaw.omega_observed_digit_iff_interval": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2PerfectPowerAncestry.lean",
+    "module": "GSTGraphV2PerfectPowerAncestry",
+    "declarations": {
+      "GSTGraphV2PerfectPowerAncestry.scaled_origin_observables_exact": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2PhysicalSignedKernelTelescopeScratch.lean",
+    "module": "GSTGraphV2PhysicalSignedKernelTelescopeScratch",
+    "declarations": {
+      "GSTPhysicalKernel.signedKernelTwice_boundary_lower_bound": "theorem",
+      "GSTPhysicalKernel.signedKernelTwice_eq_boundary_iff_no_survive": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2Production.lean",
+    "module": "GSTGraphV2Production",
+    "declarations": {
+      "GSTGraphV2Production.originCoordinates_decode": "theorem",
+      "GSTGraphV2Production.originFrame_absolute_energy": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2ProductionLaws.lean",
+    "module": "GSTGraphV2ProductionLaws",
+    "declarations": {
+      "GSTGraphV2ProductionLaws.production_charges_eq_of_absolute_energy": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2ScaleEquivariance.lean",
+    "module": "GSTGraphV2ScaleEquivariance",
+    "declarations": {
+      "GSTGraphV2ScaleEquivariance.physicalPacket_eq_of_absolute_energy": "theorem",
+      "GSTGraphV2ScaleEquivariance.uPhaseShift_mono": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2SeededPrefix.lean",
+    "module": "GSTGraphV2SeededPrefix",
+    "declarations": {
+      "GSTGraphV2SeededPrefix.seededResidue_strip_block": "theorem",
+      "GSTGraphV2SeededPrefix.seeded_observables_strip_block": "theorem",
+      "GSTGraphV2SeededPrefix.seedHappy_strip_block": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2SixAdicOntologicalGeometryLaws.lean",
+    "module": "GSTGraphV2SixAdicOntologicalGeometryLaws",
+    "declarations": {
+      "GSTGraphV2SixAdicOntologicalGeometryLaws.six_iso_weaken_of_le": "theorem",
+      "GSTGraphV2SixAdicOntologicalGeometryLaws.intersecting_balls_nested": "theorem",
+      "GSTGraphV2SixAdicOntologicalGeometryLaws.six_child_resolution_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2SixAdicUnitIsometry.lean",
+    "module": "GSTGraphV2SixAdicUnitIsometry",
+    "declarations": {
+      "GSTGraphV2SixAdicUnitIsometry.six_scale_power_translate_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGraphV2TransparentWidthThree.lean",
+    "module": "GSTGraphV2TransparentWidthThree",
+    "declarations": {
+      "GSTGraphV2TransparentWidthThree.power_width_three_u_derivative_lower_bound": "theorem"
+    }
+  },
+  {
+    "file": "GSTHodgeAssault.lean",
+    "module": "GSTHodgeAssault",
+    "declarations": {
+      "GSTHodgeAssault.hodge_weight_intersection": "theorem"
+    }
+  },
+  {
+    "file": "GSTHodgeAssaultV2.lean",
+    "module": "GSTHodgeAssaultV2",
+    "declarations": {
+      "GSTHodgeAssaultV2.pure_hodge_iff_unique_expansion": "theorem"
+    }
+  },
+  {
+    "file": "GSTInfiniteBadTransport.lean",
+    "module": "GSTInfiniteBadTransport",
+    "declarations": {
+      "GSTV2.seededBadTrace_split_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTInfiniteCollision.lean",
+    "module": "GSTInfiniteCollision",
+    "declarations": {
+      "GSTV2.coupledOrbit_add": "theorem",
+      "GSTV2.infinite_coupled_control_restart": "theorem"
+    }
+  },
+  {
+    "file": "GSTInfiniteCoupledLedger.lean",
+    "module": "GSTInfiniteCoupledLedger",
+    "declarations": {
+      "GSTV2.seededPast_eq_mass_mod": "theorem",
+      "GSTV2.seededPast_add": "theorem"
+    }
+  },
+  {
+    "file": "GSTInfiniteFourPowerNavigation.lean",
+    "module": "GSTInfiniteFourPowerNavigation",
+    "declarations": {
+      "GSTInfiniteFourPowerNavigation.gst_u_jump_negative_iff_happy": "theorem"
+    }
+  },
+  {
+    "file": "GSTInfiniteGateTransport.lean",
+    "module": "GSTInfiniteGateTransport",
+    "declarations": {
+      "GSTV2.happy_iff_output_and_next": "theorem"
+    }
+  },
+  {
+    "file": "GSTLefschetzCrown.lean",
+    "module": "GSTLefschetzCrown",
+    "declarations": {
+      "GSTLefschetzCrown.S12_eq_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTLefschetzCrownV2.lean",
+    "module": "GSTLefschetzCrownV2",
+    "declarations": {
+      "GSTLefschetzCrownV2.lefschetz_degree0_image_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTPerfectPowerTailNavigation.lean",
+    "module": "GSTPerfectPowerTailNavigation",
+    "declarations": {
+      "GSTPerfectPowerTailNavigation.canonical_tail_navigation_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTPrefixOneOntologicalEscape.lean",
+    "module": "GSTPrefixOneOntologicalEscape",
+    "declarations": {
+      "GSTPrefixOneOntologicalEscape.gst_prefix_one_escape_all_tails_of_master": "theorem"
+    }
+  },
+  {
+    "file": "GSTPrefixOneSeedCore.lean",
+    "module": "GSTPrefixOneSeedCore",
+    "declarations": {
+      "GSTPrefixOneSeedCore.prefix_one_tail_residue_quotient": "theorem"
+    }
+  },
+  {
+    "file": "GSTSeedOneShift.lean",
+    "module": "GSTSeedOneShift",
+    "declarations": {
+      "GSTSeedOneShift.seedOneCarry_step": "theorem"
+    }
+  },
+  {
+    "file": "GSTTactic.lean",
+    "module": "GSTTactic",
+    "declarations": {
+      "gst_positive_iff_endpoint": "theorem",
+      "alt_negative_iff_interior": "theorem"
+    }
+  },
+  {
+    "file": "GSTTailFFourthDimension.lean",
+    "module": "GSTTailFFourthDimension",
+    "declarations": {
+      "GSTTailFFourthDimension.omega_observed_digit_sheet_independent": "theorem"
+    }
+  },
+  {
+    "file": "GSTTailFInfiniteRead.lean",
+    "module": "GSTTailFInfiniteRead",
+    "declarations": {
+      "GSTTailFInfiniteRead.dustAt_add_multiple_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTTailFOneLane.lean",
+    "module": "GSTTailFOneLane",
+    "declarations": {
+      "GSTTailFOneLane.one_lane_three_free_unique": "theorem"
+    }
+  },
+  {
+    "file": "GSTTailFProof.lean",
+    "module": "GSTTailFProof",
+    "declarations": {
+      "GSTTailFProof.tower_observation_iff_interval": "theorem"
+    }
+  },
+  {
+    "file": "GSTTheAct.lean",
+    "module": "GSTTheAct",
+    "declarations": {
+      "GSTTheAct.front_residue_law": "theorem"
+    }
+  },
+  {
+    "file": "GSTTheActConstruction.lean",
+    "module": "GSTTheActConstruction",
+    "declarations": {
+      "GSTTheActConstruction.feedback_fire_iff_residue": "theorem"
+    }
+  },
+  {
+    "file": "GSTTransferBridge.lean",
+    "module": "GSTTransferBridge",
+    "declarations": {
+      "GSTTransferBridge.addr_linear_combination": "theorem"
+    }
+  },
+  {
+    "file": "GSTTransferBridgeV2.lean",
+    "module": "GSTTransferBridgeV2",
+    "declarations": {
+      "GSTTransferBridgeV2.transferred_unique_iff_live": "theorem"
+    }
+  },
+  {
+    "file": "GSTV2InfiniteCore.lean",
+    "module": "GSTV2InfiniteCore",
+    "declarations": {
+      "GSTV2.omega_future_step": "theorem",
+      "GSTV2.omega_window_conservation": "theorem"
+    }
+  },
+  {
+    "file": "GSTWorldtraceArithmetic.lean",
+    "module": "GSTWorldtraceArithmetic",
+    "declarations": {
+      "GSTWorldtraceArithmetic.pair_read_fire_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTWorldtraceMahlerRelativePrecision.lean",
+    "module": "GSTWorldtraceMahlerRelativePrecision",
+    "declarations": {
+      "GSTWorldtraceMahler.worldtraceWitness_relative_dvd_iff": "theorem",
+      "GSTWorldtraceMahler.relativeLock_iff_normalized": "theorem"
+    }
+  },
+  {
+    "file": "HodgeDeRhamBridge.lean",
+    "module": "HodgeDeRhamBridge",
+    "declarations": {
+      "HodgeDeRhamBridge.current_sharp_bounds": "theorem"
+    }
+  },
+  {
+    "file": "HodgeDeRhamBridgeV2.lean",
+    "module": "HodgeDeRhamBridgeV2",
+    "declarations": {
+      "HodgeDeRhamBridgeV2.zero_current_exact": "theorem"
+    }
+  },
+  {
+    "file": "InformationBadTraceScratch.lean",
+    "module": "InformationBadTraceScratch",
+    "declarations": {
+      "gst_bad_two_state_exactS": "theorem"
+    }
+  },
+  {
+    "file": "InformationDescentScratch.lean",
+    "module": "InformationDescentScratch",
+    "declarations": {
+      "gst_affine_carry_semigroup_generalS": "theorem"
+    }
+  },
+  {
+    "file": "InformationGeometryScratch.lean",
+    "module": "InformationGeometryScratch",
+    "declarations": {
+      "gst_information_digit_shiftS": "theorem",
+      "gst_information_coordinates_iffS": "theorem"
+    }
+  },
+  {
+    "file": "InformationRegenerationScratch.lean",
+    "module": "InformationRegenerationScratch",
+    "declarations": {
+      "gst_seeded_bad_trace_cut_iffS": "theorem"
+    }
+  },
+  {
+    "file": "InformationStateScratch.lean",
+    "module": "InformationStateScratch",
+    "declarations": {
+      "gst_shared_information_high_coordinates_exactS": "theorem"
+    }
+  },
+  {
+    "file": "OriginTransducerScratch.lean",
+    "module": "OriginTransducerScratch",
+    "declarations": {
+      "affine_origin_step_coordinatesS": "theorem"
+    }
+  },
+  {
+    "file": "waves/CardinalWorldsPostulateLaw.lean",
+    "module": "waves.CardinalWorldsPostulateLaw",
+    "declarations": {
+      "CardinalWorldsPostulateLaw.controlled_level_constant": "theorem",
+      "CardinalWorldsPostulateLaw.controlled_presentation_iff_constant": "theorem"
+    }
+  },
+  {
+    "file": "waves/CardinalWorldsPostulateLawV2.lean",
+    "module": "waves.CardinalWorldsPostulateLawV2",
+    "declarations": {
+      "CardinalWorldsPostulateLawV2.transport_injective": "theorem"
+    }
+  },
+  {
+    "file": "waves/GSTNCohomology.lean",
+    "module": "waves.GSTNCohomology",
+    "declarations": {
+      "GSTNCohomology.waveIIAmplitude_telescope": "theorem"
+    }
+  },
+  {
+    "file": "waves/GSTNCohomologyV2.lean",
+    "module": "waves.GSTNCohomologyV2",
+    "declarations": {
+      "GSTNCohomologyV2.weighted_interference_separates": "theorem"
+    }
+  },
+  {
+    "file": "waves/GSTVortexSingularity.lean",
+    "module": "waves.GSTVortexSingularity",
+    "declarations": {
+      "GSTVortexSingularity.core_rotation_injective": "theorem"
+    }
+  },
+  {
+    "file": "waves/GSTVortexSingularityV2.lean",
+    "module": "waves.GSTVortexSingularityV2",
+    "declarations": {
+      "GSTVortexSingularityV2.core_rotation_no_early_return": "theorem"
+    }
+  },
+  {
+    "file": "waves/GSTWaveCohomology.lean",
+    "module": "waves.GSTWaveCohomology",
+    "declarations": {
+      "GSTWaveCohomology.finite_weighted_wave_decomposition": "theorem"
+    }
+  },
+  {
+    "file": "waves/GSTWaveCohomologyV2.lean",
+    "module": "waves.GSTWaveCohomologyV2",
+    "declarations": {
+      "GSTWaveCohomologyV2.rowClass_faithful": "theorem"
+    }
+  }
+]

@@ -357,4 +357,27 @@ theorem the_infinite_read
 #print axioms dust_blade_eats_one_of_three
 #print axioms the_infinite_read
 
+/-- Every complete residue class modulo the observation precision has exactly
+its representative's dust status; inheritance is reversible at that precision. -/
+theorem dustAt_add_multiple_iff (m c j : Nat) :
+    DustAt m (c+j*3^m) ↔ DustAt m c := by
+  have hres (k : Nat) (hk : k ≤ m) :
+      (omegaCutWord (k-1) 1 * (c+j*3^m)) % 3^k =
+        (omegaCutWord (k-1) 1 * c) % 3^k := by
+    have hp : 3^m = 3^k * 3^(m-k) := by
+      rw [← Nat.pow_add, Nat.add_sub_of_le hk]
+    have heq : omegaCutWord (k-1) 1 * (c+j*3^m) =
+        omegaCutWord (k-1) 1 * c +
+          3^k * (omegaCutWord (k-1) 1 * j * 3^(m-k)) := by
+      rw [hp]
+      ring
+    rw [heq, Nat.add_mul_mod_self_left]
+  constructor
+  · intro h k hk hkm
+    simpa only [hres k hkm] using h k hk hkm
+  · intro h k hk hkm
+    rw [hres k hkm]
+    exact h k hk hkm
+
+
 end GSTTailFInfiniteRead

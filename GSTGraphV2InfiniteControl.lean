@@ -257,4 +257,14 @@ theorem graph_prefix_slice_happy_iff
   unfold HappyCell
   rw [hslice.1, hslice.2]
 
+
+/-- Local mass conservation couples the horizontal output and vertical carry
+in one lattice identity at every point of the infinite graph. -/
+theorem graph_local_mass_conservation (E t p : Nat) :
+    (graph E t p).seven.carry + 4*(graph E t p).seven.digit =
+      (graph E (t+1) p).seven.digit + 3*(graph E t (p+1)).seven.carry := by
+  rw [← (graph_cell_exact E t p).1, ← (graph_cell_exact E t p).2]
+  exact (Nat.mod_add_div
+    ((graph E t p).seven.carry + 4*(graph E t p).seven.digit) 3).symm
+
 end GSTGraphV2InfiniteControl

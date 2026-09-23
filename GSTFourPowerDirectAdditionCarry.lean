@@ -191,4 +191,38 @@ theorem pow4_binary_initial_state (K : Nat) :
 #print axioms binaryCarry_forward_exact
 #print axioms pow4_binary_initial_state
 
+
+/-- Every carry state, not just the two Happy states, has an exact interval
+criterion on the lower ternary prefix. -/
+theorem directCarry4_eq_iff_band (R p c : Nat) :
+    directCarry4 R p = c ↔
+      c * 3^p ≤ 4 * (R % 3^p) ∧ 4 * (R % 3^p) < (c+1) * 3^p := by
+  unfold directCarry4
+  have hp : 0 < 3^p := Nat.pow_pos (by decide)
+  constructor
+  · intro hc
+    have hlo := Nat.div_mul_le_self (4 * (R % 3^p)) (3^p)
+    have hhi := Nat.mod_lt (4 * (R % 3^p)) hp
+    have hs := Nat.mod_add_div (4 * (R % 3^p)) (3^p)
+    rw [hc] at hlo hs
+    constructor
+    · exact hlo
+    · nlinarith
+  · rintro ⟨hlo, hhi⟩
+    have hupper : 4 * (R % 3^p) / 3^p < c+1 :=
+      (Nat.div_lt_iff_lt_mul hp).2 hhi
+    have hlower : c ≤ 4 * (R % 3^p) / 3^p :=
+      (Nat.le_div_iff_mul_le hp).2 hlo
+    omega
+
+/-- Equality of source and target digits is exactly carry zero modulo three;
+this works for every source digit, not just digit two. -/
+theorem digit3_four_mul_eq_iff (R p : Nat) :
+    digit3 (4*R) p = digit3 R p ↔
+      directCarry4 R p = 0 ∨ directCarry4 R p = 3 := by
+  rw [digit3_four_mul]
+  have hd := digit3_lt_three R p
+  have hc := directCarry4_lt_four R p
+  omega
+
 end GSTFourPowerDirectAdditionCarry

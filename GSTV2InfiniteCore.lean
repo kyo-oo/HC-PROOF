@@ -86,4 +86,19 @@ theorem omega_past_step (t N K : Nat) :
   unfold omegaPast
   rw [Finset.sum_range_succ]
 
+/-- The unconsumed information pays exactly for the next emitted packet. -/
+theorem omega_future_step (t N K : Nat) :
+    omegaFuture t N K = omegaTransfer t N K + omegaFuture t N (K+1) := by
+  have h0 := omega_past_future_conservation t N K
+  have h1 := omega_past_future_conservation t N (K+1)
+  rw [omega_past_step] at h1
+  omega
+
+/-- Every finite observation window conserves its complete information mass. -/
+theorem omega_window_conservation (t N K L : Nat) :
+    omegaPast t N (K+L) + omegaFuture t N (K+L) =
+      omegaPast t N K + omegaFuture t N K := by
+  rw [omega_past_future_conservation, omega_past_future_conservation]
+
+
 end GSTV2

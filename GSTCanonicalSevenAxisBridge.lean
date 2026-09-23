@@ -144,4 +144,23 @@ theorem canonical_happy_iff_event_eight (E t p : Nat) :
 #print axioms event_balance_exact
 #print axioms canonical_happy_iff_event_eight
 
+/-- Event and outgoing carry jointly encode the entire input cell, with no
+physical carry bound required. -/
+theorem event_nextCarry_injective
+    (C d C' d' : Nat) (hd : d < 3) (hd' : d' < 3)
+    (he : event C d = event C' d')
+    (hc : nextCarry C d = nextCarry C' d') :
+    C = C' ∧ d = d' := by
+  have hmod := congrArg (fun n : Nat => n % 3) he
+  have hdd : d = d' := by
+    simpa [event, Nat.add_mod, Nat.mod_eq_of_lt hd,
+      Nat.mod_eq_of_lt hd'] using hmod
+  have hb := event_balance_exact C d
+  have hb' := event_balance_exact C' d'
+  rw [he, hc, hdd] at hb
+  constructor
+  · omega
+  · exact hdd
+
+
 end GSTCanonicalSevenAxisBridge

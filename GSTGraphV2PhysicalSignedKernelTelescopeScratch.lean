@@ -143,4 +143,48 @@ theorem signedKernelTwice_eq_boundary_of_no_survive
   rw [hzero]
   ring
 
+
+/-- The total residual is nonnegative, so boundary flux is a sharp lower
+bound even when SURVIVE events are present. -/
+theorem signedKernelTwice_boundary_lower_bound (R p L : Nat) :
+    14 * (twoIndicator (binaryColumnDigit R p L) -
+      twoIndicator (binaryColumnDigit R p 0)) ≤
+    Finset.sum (Finset.range L) (fun r => signedKernelTwice
+      (binaryColumnCarry R p r) (binaryColumnDigit R p r)) := by
+  rw [signedKernelTwice_physical_telescope]
+  have hn : 0 ≤ Finset.sum (Finset.range L) (fun r =>
+      twoIndicator (binaryColumnDigit R p r) *
+        twoIndicator (binaryColumnDigit R p (r+1))) := by
+    apply Finset.sum_nonneg
+    intro r _
+    unfold twoIndicator
+    split_ifs <;> norm_num
+  linarith
+
+/-- Pure boundary flux is equivalent to the absence of every SURVIVE event;
+positive residuals cannot cancel each other. -/
+theorem signedKernelTwice_eq_boundary_iff_no_survive (R p L : Nat) :
+    Finset.sum (Finset.range L) (fun r => signedKernelTwice
+      (binaryColumnCarry R p r) (binaryColumnDigit R p r)) =
+      14 * (twoIndicator (binaryColumnDigit R p L) -
+        twoIndicator (binaryColumnDigit R p 0)) ↔
+    ∀ r, r < L → ¬ (binaryColumnDigit R p r = 2 ∧
+      binaryColumnDigit R p (r+1) = 2) := by
+  constructor
+  · intro h r hr hsurvive
+    rw [signedKernelTwice_physical_telescope] at h
+    have hzero : Finset.sum (Finset.range L) (fun j =>
+        twoIndicator (binaryColumnDigit R p j) *
+          twoIndicator (binaryColumnDigit R p (j+1))) = 0 := by omega
+    have hle := Finset.single_le_sum (f := fun j =>
+        twoIndicator (binaryColumnDigit R p j) *
+          twoIndicator (binaryColumnDigit R p (j+1)))
+      (fun j (_ : j ∈ Finset.range L) => by
+        unfold twoIndicator
+        split_ifs <;> norm_num)
+      (Finset.mem_range.mpr hr)
+    rw [hzero] at hle
+    simp [twoIndicator, hsurvive.1, hsurvive.2] at hle
+  · exact signedKernelTwice_eq_boundary_of_no_survive R p L
+
 end GSTPhysicalKernel

@@ -184,4 +184,23 @@ theorem uTailEnergy_eventually_one (t n : Nat) :
 #print axioms graph_u_block_observables_exact
 #print axioms handwritten_exponential_navigation_flux_exact
 
+
+/-- The exhaustion depth is characterized exactly by the size of the origin,
+rather than by the coarse sufficient bound `n+1`. -/
+theorem originSuffix_zero_iff (n K : Nat) :
+    originSuffix n K = 0 ↔ n < 3^K := by
+  unfold originSuffix
+  exact Nat.div_eq_zero_iff (by positivity)
+
+/-- Once a cut exhausts the origin, every later cut retains the entire phase
+and has exactly unit residual energy. -/
+theorem exhausted_cut_stable (t n K L : Nat) (h : n < 3^K) :
+    originPrefix n (K+L) = n ∧ originSuffix n (K+L) = 0 ∧
+      uPhaseShift t n (K+L) = 3^t*n ∧ uTailEnergy t n (K+L) = 1 := by
+  have hpow : 3^K ≤ 3^(K+L) := Nat.pow_le_pow_right (by decide) (by omega)
+  have hn : n < 3^(K+L) := lt_of_lt_of_le h hpow
+  have hs := (originSuffix_zero_iff n (K+L)).2 hn
+  simp [originPrefix, Nat.mod_eq_of_lt hn, hs, uPhaseShift,
+    uTailEnergy, uTailExponent]
+
 end GSTGraphV2HandwrittenExponentialCascade

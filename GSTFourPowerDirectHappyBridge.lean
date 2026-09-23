@@ -153,4 +153,28 @@ theorem four_power_happy_propagates
 #print axioms directExistence_forces_relocated_physical_happy
 #print axioms four_power_happy_propagates
 
+
+/-- Same-row equivalence for every natural source and every row. The physical
+Happy predicate is precisely equality to two on source and fourfold target. -/
+theorem physical_happy_iff_row_pair (R p : Nat) :
+    GSTCanonicalTailStateIso.HappyCell
+      (GSTCanonicalTailStateIso.carry4 R p)
+      (GSTCanonicalTailStateIso.digit3 R p) ↔
+    digit3 R p = 2 ∧ digit3 (4*R) p = 2 := by
+  change (digit3 R p = 2 ∧ (directCarry4 R p = 0 ∨ directCarry4 R p = 3)) ↔ _
+  constructor
+  · rintro ⟨hs, hc⟩
+    exact ⟨hs, ((digit3_four_mul_eq_iff R p).2 hc).trans hs⟩
+  · rintro ⟨hs, ht⟩
+    exact ⟨hs, (digit3_four_mul_eq_iff R p).1 (ht.trans hs.symm)⟩
+
+/-- Row bounds survive in both directions, for any requested cutoff. -/
+theorem physical_happy_cutoff_iff (K b : Nat) :
+    (∃ p : Nat, b ≤ p ∧ GSTCanonicalTailStateIso.HappyCell
+      (GSTCanonicalTailStateIso.carry4 (4^K) p)
+      (GSTCanonicalTailStateIso.digit3 (4^K) p)) ↔
+    (∃ p : Nat, b ≤ p ∧ digit3 (4^K) p = 2 ∧ digit3 (4^(K+1)) p = 2) := by
+  simp only [physical_happy_iff_row_pair]
+  rw [show 4^(K+1) = 4 * 4^K by rw [pow_succ]; ring]
+
 end GSTFourPowerDirectHappyBridge

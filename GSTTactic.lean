@@ -64,6 +64,26 @@ theorem null_imp_gst_positive (R p : Nat)
     is_gst_positive R p := by
   simpa [is_null_space, is_gst_positive] using congrArg (fun x => x % 3) h_null
 
+/-- GST positivity is exactly the union of the two endpoint carry states. -/
+theorem gst_positive_iff_endpoint (R p : Nat) :
+    is_gst_positive R p ↔
+      (4 * (R % 3^p)) / 3^p = 0 ∨ (4 * (R % 3^p)) / 3^p = 3 := by
+  have hr : R % 3^p < 3^p := Nat.mod_lt _ (Nat.pow_pos (by decide))
+  have hc : (4 * (R % 3^p)) / 3^p < 4 :=
+    Nat.div_lt_of_lt_mul (by omega)
+  unfold is_gst_positive
+  omega
+
+/-- ALT is exactly the pair of interior carry states. -/
+theorem alt_negative_iff_interior (R p : Nat) :
+    is_alt_negative R p ↔
+      (4 * (R % 3^p)) / 3^p = 1 ∨ (4 * (R % 3^p)) / 3^p = 2 := by
+  have hr : R % 3^p < 3^p := Nat.mod_lt _ (Nat.pow_pos (by decide))
+  have hc : (4 * (R % 3^p)) / 3^p < 4 :=
+    Nat.div_lt_of_lt_mul (by omega)
+  unfold is_alt_negative
+  omega
+
 /-- A witness lies in GST+. -/
 theorem witness_is_gst_positive (R p : Nat)
     (hd2 : R / 3^p % 3 = 2)

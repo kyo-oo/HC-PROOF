@@ -154,4 +154,22 @@ theorem residual_parent_happy_iff
 #print axioms residual_parent_u_mul_div_exact
 #print axioms residual_parent_observables_exact
 
+
+/-- The trit/tail split is a lossless coordinate system: every bounded trit
+and arbitrary tail reconstruct uniquely. -/
+theorem origin_coordinates_iff (n d q : Nat) (hd : d < 3) :
+    originTrit n = d ∧ originTail n = q ↔ n = d + 3*q := by
+  constructor
+  · rintro ⟨h0, h1⟩
+    simpa [h0, h1] using origin_split_exact n
+  · rintro rfl
+    simp [originTrit, originTail, Nat.add_mod, Nat.mod_eq_of_lt hd,
+      Nat.add_mul_div_left, Nat.div_eq_of_lt hd]
+
+/-- Consuming a nonzero natural origin strictly decreases the remaining
+origin, supplying a well-founded measure for the U cascade. -/
+theorem originTail_lt (n : Nat) (hn : 0 < n) : originTail n < n := by
+  unfold originTail
+  exact Nat.div_lt_self hn (by decide)
+
 end GSTGraphV2HandwrittenOmegaUBlock

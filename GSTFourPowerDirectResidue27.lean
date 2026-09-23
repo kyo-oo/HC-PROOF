@@ -117,4 +117,20 @@ theorem no_common_two_forbids_mod27_classes
 #print axioms row_three_overlap_of_mod27_classes
 #print axioms no_common_two_forbids_mod27_classes
 
+
+/-- Completeness of the row-three table: these four classes are necessary as
+well as sufficient, at every exponent. -/
+theorem row_three_overlap_iff_mod27_classes (K : Nat) :
+    (digit3 (4^K) 3 = 2 ∧ digit3 (4^(K+1)) 3 = 2) ↔
+      (K % 27 = 14 ∨ K % 27 = 18 ∨ K % 27 = 19 ∨ K % 27 = 25) := by
+  constructor
+  · intro h
+    have h0 := pow4_digit_reduce_offset 3 K 0
+    have h1 := pow4_digit_reduce_offset 3 K 1
+    norm_num at h0 h1
+    rw [h0, h1] at h
+    have hr : K % 27 < 27 := Nat.mod_lt _ (by decide)
+    interval_cases K % 27 <;> norm_num [digit3] at *
+  · exact row_three_overlap_of_mod27_classes K
+
 end GSTFourPowerDirectResidue27

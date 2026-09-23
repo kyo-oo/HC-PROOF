@@ -148,4 +148,25 @@ theorem canonical_right_phase_two_next_seed
 #check canonical_right_phase_two_next_seed
 #print axioms canonical_right_digit_cut_phase
 
+/-- The next seed determines the origin phase uniquely; phase steering has
+an exact converse and excludes the fourth carry value. -/
+theorem canonical_right_next_seed_phase_iff
+    (s n : Nat) (hs : 1 ≤ s) :
+    ((graph (canonicalEnergy s n) (canonicalWidth s) (s+3)).seven.carry = 3 ↔
+      n % 3 = 0) ∧
+    ((graph (canonicalEnergy s n) (canonicalWidth s) (s+3)).seven.carry = 0 ↔
+      n % 3 = 1) ∧
+    ((graph (canonicalEnergy s n) (canonicalWidth s) (s+3)).seven.carry = 1 ↔
+      n % 3 = 2) ∧
+    (graph (canonicalEnergy s n) (canonicalWidth s) (s+3)).seven.carry ≠ 2 := by
+  have hn : n % 3 = 0 ∨ n % 3 = 1 ∨ n % 3 = 2 := by omega
+  rcases hn with hn | hn | hn
+  · rw [canonical_right_phase_zero_next_seed s n hs hn, hn]
+    norm_num
+  · rw [canonical_right_phase_one_next_seed s n hs hn, hn]
+    norm_num
+  · rw [canonical_right_phase_two_next_seed s n hs hn, hn]
+    norm_num
+
+
 end GSTGraphV2CanonicalPhaseSteering

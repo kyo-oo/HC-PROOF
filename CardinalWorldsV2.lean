@@ -126,6 +126,27 @@ theorem joined_prefix_succ (K : Nat) :
   rw [← gst_three_world_factor_rawS K]
 
 /-- Exact reader/packet crown. -/
+/-- Concatenating finite joined prefixes scales the second block by the
+complete mixed-world weight of the first block. -/
+theorem joined_prefix_add (j k : Nat) :
+    gstHandwrittenThreeWorldJoinedPrefixS (j+k) =
+      gstHandwrittenThreeWorldJoinedPrefixS j +
+        6^j * gstHandwrittenThreeWorldJoinedPrefixS k := by
+  have hj : gstHandwrittenThreeWorldJoinedPrefixS j + 1 = 6^j := by
+    rw [gst_handwritten_three_world_joined_prefix_closedS]
+    have := Nat.pow_pos (by decide : 0 < 6) (n := j)
+    omega
+  have hk : gstHandwrittenThreeWorldJoinedPrefixS k + 1 = 6^k := by
+    rw [gst_handwritten_three_world_joined_prefix_closedS]
+    have := Nat.pow_pos (by decide : 0 < 6) (n := k)
+    omega
+  have hjk : gstHandwrittenThreeWorldJoinedPrefixS (j+k) + 1 = 6^(j+k) := by
+    rw [gst_handwritten_three_world_joined_prefix_closedS]
+    have := Nat.pow_pos (by decide : 0 < 6) (n := j+k)
+    omega
+  rw [pow_add, ← hj, ← hk] at hjk
+  nlinarith
+
 theorem cardinal_worlds_v2_crown :
     (∀ n, hasTernaryTwo n = true ↔ noTernaryTwo n = false)
     ∧ (∀ R, carryAtPos R 1 = R % 3)

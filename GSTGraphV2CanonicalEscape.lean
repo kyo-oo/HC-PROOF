@@ -482,4 +482,32 @@ theorem nat_no_unbounded_ternary_support
 #print axioms canonical_parent_energy_decomposition
 #print axioms nat_no_unbounded_ternary_support
 
+/-- Canonical renormalization preserves the exact ternary divisibility depth
+in both directions, including arbitrarily many stripped zero phases. -/
+theorem canonicalTail_pow_dvd_iff (r n K : Nat) :
+    3^K ∣ canonicalTail r n ↔ 3^K ∣ n := by
+  constructor
+  · intro h
+    induction K generalizing r n with
+    | zero => simp
+    | succ K ih =>
+        obtain ⟨z, hz⟩ := h
+        have hzero : canonicalTail r n % 3 = 0 := by
+          rw [hz, pow_succ]
+          simp [Nat.mul_mod, Nat.mul_assoc]
+        rw [canonicalTail_residue_three_exact] at hzero
+        obtain ⟨m, hm⟩ := Nat.dvd_of_mod_eq_zero hzero
+        rw [hm, canonicalTail_zero_strip, pow_succ] at hz
+        have hinner : 3^K ∣ canonicalTail (r+1) m := by
+          refine ⟨z, ?_⟩
+          have hshape : 3^K * 3 * z = 3 * (3^K * z) := by ring
+          rw [hshape] at hz
+          omega
+        obtain ⟨w, hw⟩ := ih (r+1) m hinner
+        refine ⟨w, ?_⟩
+        rw [hm, hw, pow_succ]
+        ring
+  · exact canonicalTail_pow_dvd_of_origin_pow_dvd r n K
+
+
 end GSTGraphV2CanonicalEscape

@@ -201,4 +201,31 @@ theorem canonical_graph_observables_cycle_all_turns
 #print axioms canonical_graph_state_cycle_all_turns
 #print axioms canonical_graph_observables_cycle_all_turns
 
+/-- A repeated complete state gives periodicity at every future offset,
+not just at multiples of the cycle length. -/
+theorem coupledOrbit_cycle_all_offsets
+    (A : Nat) (initial : CoupledState) (a L : Nat)
+    (hcycle : coupledOrbit A initial a = coupledOrbit A initial (a+L))
+    (m k : Nat) :
+    coupledOrbit A initial (a + m*L + k) =
+      coupledOrbit A initial (a+k) := by
+  rw [coupledOrbit_add_exact A initial (a+m*L) k,
+    coupledOrbit_add_exact A initial a k,
+    coupledOrbit_cycle_all_turns A initial a L hcycle m]
+
+/-- The entire future orbit reduces by remainder to one period, retaining
+the full coupled state; period zero is included by the total remainder law. -/
+theorem coupledOrbit_cycle_mod_exact
+    (A : Nat) (initial : CoupledState) (a L : Nat)
+    (hcycle : coupledOrbit A initial a = coupledOrbit A initial (a+L))
+    (k : Nat) :
+    coupledOrbit A initial (a+k) = coupledOrbit A initial (a+k%L) := by
+  have hsplit : a+k = a+(k/L)*L+k%L := by
+    have h := Nat.mod_add_div k L
+    rw [Nat.mul_comm L (k/L)] at h
+    omega
+  rw [hsplit]
+  exact coupledOrbit_cycle_all_offsets A initial a L hcycle (k/L) (k%L)
+
+
 end GSTGraphV2CanonicalInfiniteCycle

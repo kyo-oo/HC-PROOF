@@ -87,4 +87,26 @@ theorem power_width_three_u_derivative_positive_at_cut
 #print axioms power_width_three_exact_conservation_at_cut
 #print axioms power_width_three_u_derivative_positive_at_cut
 
+
+/-- The width-three derivative has a uniform positive gap: Happy child
+jumps are at most minus six, and every bad parent jump is nonnegative. -/
+theorem power_width_three_u_derivative_lower_bound (K p : Nat)
+    (hChild : HappyCell (graph (4^K) 0 p).seven.carry
+      (graph (4^K) 0 p).seven.digit)
+    (hRight : ¬ HappyCell (graph (4^K) 3 p).seven.carry
+      (graph (4^K) 3 p).seven.digit) :
+    384 ≤ 3 * potentialWith gstUChargeExact (4^3)
+      (unifiedState (4^K) 3 (p+1)).core -
+      potentialWith gstUChargeExact (4^3) (unifiedState (4^K) 3 p).core := by
+  rw [← unified_equationIII_graph_closed]
+  have hr := u_jump_nonnegative_of_not_happy _ _
+    (graph_carry_lt_four (4^K) 3 p) (graph_digit_lt_three (4^K) 3 p) hRight
+  have hc : gstUJumpExact (graph (4^K) 0 p).seven.carry
+      (graph (4^K) 0 p).seven.digit ≤ -6 := by
+    rcases hChild with ⟨hd, h0 | h3⟩
+    · rw [hd, h0]; norm_num [gstUJumpExact, jumpWith, gstUChargeExact, gstStepCarryExact]
+    · rw [hd, h3]; norm_num [gstUJumpExact, jumpWith, gstUChargeExact, gstStepCarryExact]
+  norm_num
+  linarith
+
 end GSTGraphV2TransparentWidthThree

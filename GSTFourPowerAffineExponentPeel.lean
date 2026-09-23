@@ -117,4 +117,21 @@ theorem peel0_affine_succ (x : Nat) :
   unfold peel0 peel2
   ring
 
+
+/-- Uniform peel in the exponent trit: the three displayed cubic polynomials
+are the quotients of one affine composition formula. -/
+theorem affineOrbit_three_mul_add (q r : Nat) :
+    affineOrbit (3*q+r) = 3 * (4^r * peel0 (affineOrbit q)) + affineOrbit r := by
+  rw [affineOrbit_add, affineOrbit_three_mul]
+  ring
+
+/-- The cubic core preserves and reflects order, including equality. -/
+theorem peel0_le_iff (x y : Nat) : peel0 x ≤ peel0 y ↔ x ≤ y := by
+  have hmono : StrictMono peel0 := by
+    apply strictMono_nat_of_lt_succ
+    intro n
+    unfold peel0
+    nlinarith [Nat.zero_le n]
+  exact hmono.le_iff_le
+
 end GSTFourPowerAffineExponentPeel

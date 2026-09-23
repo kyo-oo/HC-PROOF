@@ -187,4 +187,23 @@ theorem canonical_parent_bad_forbids_mod9_three_four
 #check canonical_parent_bad_forbids_mod9_three_four
 #print axioms canonical_parent_bad_forbids_mod9_three_four
 
+/-- The two observed Happy phases exhaust the second-layer parent gate:
+there are no additional origin residues hidden by the forward implications. -/
+theorem canonical_parent_row_one_happy_iff
+    (s n : Nat) (hs : 2 ≤ s) :
+    SeedHappy 1 1
+      (prefixOffset s + 4^(3^s) * canonicalTail (s+1) n) 1 ↔
+      n % 9 = 3 ∨ n % 9 = 4 := by
+  let X := prefixOffset s + 4^(3^s) * canonicalTail (s+1) n
+  have hX : X % 9 = (5 + 7*n) % 9 := canonical_parent_tail_mod9 s n hs
+  constructor
+  · intro h
+    change GSTU2DEventTransport.HappyCell
+      (4 * (1 + 3 * (X % 3)) / 9) ((X / 3) % 3) at h
+    rcases h with ⟨hd, hc | hc⟩ <;> omega
+  · rintro (h3 | h4)
+    · exact canonical_parent_mod9_three_happy s n hs h3
+    · exact canonical_parent_mod9_four_happy s n hs h4
+
+
 end GSTGraphV2CanonicalPhaseWaveProbe

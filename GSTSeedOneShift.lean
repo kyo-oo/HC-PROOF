@@ -87,4 +87,16 @@ theorem navigation_prefixed_one_iff_seed_one (X : Nat) :
     · rw [prefixed_one_carry_shift]
       exact hC
 
+/-- Seed-one cells satisfy the affine carry recurrence at every depth. -/
+theorem seedOneCarry_step (X j : Nat) :
+    seedOneCarry X (j+1) =
+      (seedOneCarry X j + 4 * digit3 X j) / 3 := by
+  unfold seedOneCarry digit3
+  rw [Nat.pow_succ, Nat.mod_mul]
+  have hshape : 1 + 4 * (X % 3^j + 3^j * (X / 3^j % 3)) =
+      (1 + 4*(X % 3^j)) + 3^j * (4*(X / 3^j % 3)) := by ring
+  rw [hshape, ← Nat.div_div_eq_div_mul,
+    Nat.add_mul_div_left _ _ (Nat.pow_pos (by decide))]
+
+
 end GSTSeedOneShift

@@ -112,4 +112,29 @@ theorem rational_v2_crown :
 #print axioms rational_hodge_coefficient_unique
 #print axioms rational_v2_crown
 
+
+/-- Rational cycle representability reflects the integral Hodge condition
+at every weight, so the rational theorem has a full converse. -/
+theorem rational_hodge_iff_all_weights (p : Nat) (f : WaveCoef) :
+    isHodgeClass p f ↔ ∃ q : ℚ, ∀ c : WaveCell,
+      rat f c = q * ratCycleClass p c := by
+  constructor
+  · exact rational_hodge_all_weights p f
+  · rintro ⟨q,hq⟩
+    by_cases hp : p < 3
+    · intro c hc
+      rcases c with ⟨C,d,hC,hd⟩
+      have hzero := cycle_at_offdiagonal p hp C d hC hd (by omega)
+      have h := hq ⟨C,d,hC,hd⟩
+      change (f ⟨C,d,hC,hd⟩ : ℚ) = q * (cycleClass p ⟨C,d,hC,hd⟩ : ℚ) at h
+      rw [hzero] at h
+      norm_num at h
+      exact_mod_cast h
+    · intro c hc
+      have h := hq c
+      rw [ratCycleClass_zero_of_three_le p (by omega)] at h
+      change (f c : ℚ) = q * 0 at h
+      norm_num at h
+      exact_mod_cast h
+
 end GSTClayOfficialV2

@@ -21,6 +21,13 @@ set_option maxHeartbeats 10000000
 def GSTBadPairS (C d : Nat) : Prop :=
   ¬ (d = 2 ∧ (C = 0 ∨ C = 3))
 
+/-- Exact local classification of surviving digit-two states: the next carry
+is forced to three, so another two cannot survive. -/
+theorem gst_bad_two_state_exactS (C : Nat) (hC : C < 4) :
+    GSTBadPairS C 2 ↔ (C = 1 ∨ C = 2) ∧ gstStepCarryS C 2 = 3 := by
+  unfold GSTBadPairS gstStepCarryS
+  omega
+
 /-- A seed-retaining affine bad trace cannot contain the universal 22 synchronizer. -/
 theorem gst_bad_trace_forbids_22S
     (D X : Nat)

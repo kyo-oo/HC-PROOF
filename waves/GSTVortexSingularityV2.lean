@@ -163,4 +163,14 @@ theorem gvsm_v2_crown :
 #print axioms gvsm_exact_cut_signature
 #print axioms gvsm_v2_crown
 
+
+/-- Every non-axial legal cell has least positive return time five, rather
+than only the representative cell appearing in the original pentagon law. -/
+theorem core_rotation_no_early_return (C d k : Nat)
+    (hC : C < 4) (hd : d < 3) (hk : 0 < k) (hk5 : k < 5)
+    (haxis : ¬ ((C = 0 ∧ d = 0) ∨ (C = 3 ∧ d = 2))) :
+    coreRotate^[k] (C,d) ≠ (C,d) := by
+  interval_cases C <;> interval_cases d <;> interval_cases k <;>
+    norm_num at haxis ⊢ <;> decide
+
 end GSTVortexSingularityV2

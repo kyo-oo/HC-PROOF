@@ -78,4 +78,18 @@ theorem four_power_happy_lifts_or_latent
 #print axioms graph_happy_lifts_or_latent
 #print axioms four_power_happy_lifts_or_latent
 
+
+/-- In the latent branch, relocation one row upward is characterized exactly
+by the next digit. The carry-three conclusion alone is insufficient. -/
+theorem latent_next_happy_iff (E t p : Nat)
+    (hHappy : HappyCell (graph E t p).seven.carry (graph E t p).seven.digit)
+    (hBad : ¬ HappyCell (graph E (t+1) p).seven.carry
+      (graph E (t+1) p).seven.digit) :
+    HappyCell (graph E (t+1) (p+1)).seven.carry
+      (graph E (t+1) (p+1)).seven.digit ↔
+      (graph E (t+1) (p+1)).seven.digit = 2 := by
+  rcases graph_happy_lifts_or_latent E t p hHappy with h | h
+  · exact False.elim (hBad h)
+  · simp [HappyCell, h.2.2]
+
 end GSTGraphV2NonlocalCascade

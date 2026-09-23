@@ -89,4 +89,34 @@ theorem fourPowerDirectExistence_from_physical_happy_ge_three
 #print axioms commonTwo_six
 #print axioms fourPowerDirectExistence_from_physical_happy_ge_three
 
+
+/-- Exact residual boundary after the two proved base cases: direct existence
+is equivalent to unrestricted common-two existence for every exponent ≥ 8.
+No row-three requirement is needed for this equivalence. -/
+theorem fourPowerDirectExistence_iff_ge_eight :
+    FourPowerDirectExistence ↔ ∀ K : Nat, 8 ≤ K → CommonTwo K := by
+  constructor
+  · intro h K hK
+    exact h K (by omega) (by omega)
+  · intro h K hK h7
+    by_cases h8 : 8 ≤ K
+    · exact h K h8
+    · have hc : K = 5 ∨ K = 6 := by omega
+      rcases hc with rfl | rfl
+      · exact commonTwo_five
+      · exact commonTwo_six
+
+/-- Positive-row providers suffice; the former lower bound three on the
+physical witness is stronger than the direct bridge requires. -/
+theorem fourPowerDirectExistence_from_physical_happy_positive
+    (hProvider : ∀ K : Nat, 8 ≤ K →
+      ∃ p : Nat, 1 ≤ p ∧ GSTCanonicalTailStateIso.HappyCell
+        (GSTCanonicalTailStateIso.carry4 (4^K) p)
+        (GSTCanonicalTailStateIso.digit3 (4^K) p)) :
+    FourPowerDirectExistence := by
+  apply fourPowerDirectExistence_iff_ge_eight.mpr
+  intro K hK
+  obtain ⟨p, hp, hh⟩ := hProvider K hK
+  exact happyCell_to_commonTwo K p hp hh
+
 end GSTFourPowerDirectExistenceNoAxiom

@@ -180,4 +180,22 @@ theorem no_relocated_happy_forbids_mod9_five_six
 #print axioms no_common_two_forbids_mod9_five_six
 #print axioms no_relocated_happy_forbids_mod9_five_six
 
+
+/-- Equal exponent residues produce the same complete observable digit at
+any row. This permits arbitrary representatives, not just forward shifts. -/
+theorem pow4_digit_eq_of_exponent_mod (p K L : Nat)
+    (h : K % 3^p = L % 3^p) :
+    digit3 (4^K) p = digit3 (4^L) p := by
+  have hK : K = K % 3^p + 3^p * (K / 3^p) := (Nat.mod_add_div K (3^p)).symm
+  have hL : L = L % 3^p + 3^p * (L / 3^p) := (Nat.mod_add_div L (3^p)).symm
+  calc
+    digit3 (4^K) p = digit3 (4^(K % 3^p)) p := by
+      conv_lhs => rw [hK]
+      exact pow4_digit_period p (K % 3^p) (K / 3^p)
+    _ = digit3 (4^(L % 3^p)) p := by rw [h]
+    _ = digit3 (4^L) p := by
+      symm
+      conv_lhs => rw [hL]
+      exact pow4_digit_period p (L % 3^p) (L / 3^p)
+
 end GSTGraphV2FourPowerResidueObstruction

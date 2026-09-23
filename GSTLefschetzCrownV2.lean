@@ -199,4 +199,20 @@ theorem lefschetz_integral_profile :
 #print axioms lefschetz_degree0_not_integrally_surjective
 #print axioms lefschetz_integral_profile
 
+
+/-- The full integral obstruction at top degree is divisibility by ten;
+this classifies every target, extending the isolated failure at one. -/
+theorem lefschetz_degree0_image_iff (x : ℤ) :
+    (∃ a : ℤ, (Nat.iterate lefschetzOp 5) (S0val a) = S5val x) ↔
+      10 ∣ x := by
+  constructor
+  · rintro ⟨a,ha⟩
+    rw [lefschetz_degree0_fifth_exact] at ha
+    have h := congrArg (fun f : WaveCoef => gev f 11) ha
+    simp [S5val, gev_S12] at h
+    exact ⟨a, h.symm⟩
+  · rintro ⟨a,ha⟩
+    refine ⟨a, ?_⟩
+    rw [lefschetz_degree0_fifth_exact, ha]
+
 end GSTLefschetzCrownV2

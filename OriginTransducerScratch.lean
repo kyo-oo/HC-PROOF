@@ -108,6 +108,19 @@ theorem natural_origin_div3_strictS (n : Nat) (hn : 0 < n) :
     n / 3 < n := by
   exact Nat.div_lt_self hn (by decide : 1 < 3)
 
+/-- The affine step determines both emitted digit and regenerated quotient,
+so its decomposition is reversible without any extra low-digit hypothesis. -/
+theorem affine_origin_step_coordinatesS
+    (Q : Nat → Nat → Nat) (t u d z m A : Nat)
+    (hrec : Q t (3*u+d) = Q t d + 3 * A^d * Q (t+1) u) :
+    (z + m * Q t (3*u+d)) % 3 = (z + m * Q t d) % 3 ∧
+    (z + m * Q t (3*u+d)) / 3 =
+      (z + m * Q t d) / 3 + m * A^d * Q (t+1) u := by
+  have h := affine_origin_stepS Q t u d z m A hrec
+  dsimp only at h
+  have hr := Nat.mod_lt (z + m * Q t d) (by decide : 0 < 3)
+  constructor <;> omega
+
 /-!
 Canonical three-phase GST orbit algebra.
 

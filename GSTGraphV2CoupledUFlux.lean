@@ -170,4 +170,31 @@ theorem mixed_world_scale_exact (K : Nat) :
 #print axioms gst_coupled_u_flux_step_exact
 #print axioms mixed_world_scale_exact
 
+
+/-- Splitting an orbit at any observation time is exact for arbitrary carry
+rules; no physical-state invariant is required. -/
+theorem orbitWith_add
+    (nextCarry : Nat → Nat → Nat) (A : Nat) (initial : State) (b K : Nat) :
+    orbitWith nextCarry A initial (b + K) =
+      orbitWith nextCarry A (orbitWith nextCarry A initial b) K := by
+  induction K with
+  | zero => simp [orbitWith]
+  | succ K ih => simpa [orbitWith, Nat.add_assoc] using congrArg (stepWith nextCarry A) ih
+
+/-- The flux telescope holds on every translated observation interval, with
+weights based at its left endpoint. -/
+theorem coupled_u_flux_window_exact
+    (charge : Nat → Int) (nextCarry : Nat → Nat → Nat)
+    (A : Nat) (initial : State) (b K : Nat) :
+    Finset.sum (Finset.range K) (fun j =>
+      ((3^j : Nat) : Int) *
+        (parentJumpWith charge nextCarry A (orbitWith nextCarry A initial (b+j)) -
+          (A : Int) * childJumpWith charge nextCarry
+            (orbitWith nextCarry A initial (b+j)))) =
+      ((3^K : Nat) : Int) * potentialWith charge A
+        (orbitWith nextCarry A initial (b+K)) -
+      potentialWith charge A (orbitWith nextCarry A initial b) := by
+  simpa only [orbitWith_add] using coupled_u_flux_telescope_exact
+    charge nextCarry A (orbitWith nextCarry A initial b) K
+
 end GSTGraphV2CoupledUFlux

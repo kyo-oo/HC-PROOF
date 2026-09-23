@@ -71,4 +71,15 @@ theorem commonTwo_three_mul_add_two_of_q_mod_three_one
 #print axioms noCommonTwo_three_mul_add_one_second_iff
 #print axioms noCommonTwo_three_mul_add_two_second_iff
 
+
+/-- Complete success classification on branch zero. In addition to the
+immediate killing trit, success may occur in either surviving suffix channel. -/
+theorem commonTwo_three_mul_iff_second (q : Nat) :
+    CommonTwo (3*q) ↔ q % 3 = 2 ∨
+      (q % 3 = 0 ∧ ¬ BadChannel 0 (tail3 (peel0 (affineOrbit q)))) ∨
+      (q % 3 = 1 ∧ ¬ BadChannel 1 (tail3 (peel0 (affineOrbit q)))) := by
+  have he := noCommonTwo_three_mul_second_iff q
+  have hr : q % 3 < 3 := Nat.mod_lt _ (by decide)
+  interval_cases h : q % 3 <;> simp only [h] at he ⊢ <;> tauto
+
 end GSTFourPowerAffineTwoTritClassifier

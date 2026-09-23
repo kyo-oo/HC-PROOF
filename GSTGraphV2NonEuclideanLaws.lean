@@ -153,4 +153,23 @@ theorem physical_happy_iff_ambient_witness
 #print axioms null_big2_regenerates_alt
 #print axioms physical_happy_iff_ambient_witness
 
+/-- Arbitrary forward displacement acts by exact ternary quotient on the
+whole descent coordinate and saturating subtraction on the boundary. -/
+theorem forward_displacement_exact (R N p k : Nat) :
+    (axes R N (p+k)).nAxis.1 = (axes R N p).nAxis.1 / 3^k ∧
+    (axes R N (p+k)).zPrime = (axes R N p).zPrime - k := by
+  constructor
+  · simp only [axes, pow_add, Nat.div_div_eq_div_mul]
+  · simp only [axes]
+    omega
+
+/-- Strict boundary descent is equivalent to a positive displacement from a
+live vertex; this includes arbitrary jumps and terminal saturation. -/
+theorem boundary_displacement_strict_iff (R N p k : Nat) :
+    (axes R N (p+k)).zPrime < (axes R N p).zPrime ↔
+      p < N ∧ 0 < k := by
+  simp only [axes]
+  omega
+
+
 end GSTGraphV2NonEuclideanLaws

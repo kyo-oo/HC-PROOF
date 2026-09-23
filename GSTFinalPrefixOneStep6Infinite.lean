@@ -284,4 +284,17 @@ theorem weighted_cross_mixed_controller_exact
 #print axioms reverse_cross_mixed_controller_exact
 #print axioms weighted_cross_mixed_controller_exact
 
+/-- Exact concatenation of horizontal mixed ledgers, with the first window
+rescaled by the length of the appended window. -/
+theorem reverseMixedCode_add (C d : Nat → Nat) (n m : Nat) :
+    reverseMixedCode C d (n+m) =
+      (4 : Int)^m * reverseMixedCode C d n +
+        reverseMixedCode (fun i => C (n+i)) (fun i => d (n+i)) m := by
+  induction m with
+  | zero => simp [reverseMixedCode]
+  | succ m ih =>
+      simp only [Nat.add_assoc, reverseMixedCode, ih, pow_succ]
+      ring
+
+
 end GSTFinalPrefixOneStep6Infinite

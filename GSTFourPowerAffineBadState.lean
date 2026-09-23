@@ -130,4 +130,21 @@ theorem affineCommonTwo_three_mul_add_two_iff (q : Nat) :
 #print axioms affineCommonTwo_three_mul_add_one_iff
 #print axioms affineCommonTwo_three_mul_add_two_iff
 
+
+/-- Exact recursion for an arbitrary pair, with no affine-orbit assumption.
+A shared two is either the low pair or a shared two in the two quotients. -/
+theorem pairCommonTwo_iff_low_or_tail (x y : Nat) :
+    PairCommonTwo x y ↔
+      (x % 3 = 2 ∧ y % 3 = 2) ∨ PairCommonTwo (x / 3) (y / 3) := by
+  have hs (z j : Nat) : digit3 z (j+1) = digit3 (z / 3) j := by
+    simp [digit3, Nat.div_div_eq_div_mul, pow_succ, Nat.mul_comm]
+  constructor
+  · rintro ⟨j, hx, hy⟩
+    cases j with
+    | zero => exact Or.inl ⟨by simpa [digit3] using hx, by simpa [digit3] using hy⟩
+    | succ j => exact Or.inr ⟨j, (hs x j).symm.trans hx, (hs y j).symm.trans hy⟩
+  · rintro (⟨hx, hy⟩ | ⟨j, hx, hy⟩)
+    · exact ⟨0, by simpa [digit3] using hx, by simpa [digit3] using hy⟩
+    · exact ⟨j+1, (hs x j).trans hx, (hs y j).trans hy⟩
+
 end GSTFourPowerAffineBadState

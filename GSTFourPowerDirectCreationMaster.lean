@@ -58,4 +58,28 @@ theorem directExistence_to_creation_master
 #print axioms commonTwo_to_creation_certificate
 #print axioms directExistence_to_creation_master
 
+
+/-- Creation certificates have no more power than direct common-two
+arithmetic: even the historical carry-one branch gives an actual next row. -/
+theorem commonTwo_iff_creation_certificate (K : Nat) :
+    CommonTwo K ↔ CreationCertificate (4^K) := by
+  constructor
+  · exact commonTwo_to_creation_certificate K
+  · intro h
+    obtain ⟨p, hp, hd, hc⟩ :=
+      (creation_certificate_iff_positive_happy (4^K)).1 h
+    have hs : digit3 (4^K) p = 2 := hd
+    have hc' : directCarry4 (4^K) p = 0 ∨ directCarry4 (4^K) p = 3 := hc
+    have ht := ((digit3_four_mul_eq_iff (4^K) p).2 hc').trans hs
+    exact ⟨p, hp, hs, by simpa [pow_succ, Nat.mul_comm] using ht⟩
+
+/-- The production creation master is an equivalent boundary, not a weaker
+consequence that could hide the direct existence obligation. -/
+theorem directExistence_iff_creation_master :
+    FourPowerDirectExistence ↔ FourPowerCreationMaster := by
+  constructor
+  · exact directExistence_to_creation_master
+  · intro h K hK h7
+    exact (commonTwo_iff_creation_certificate K).2 (h K hK h7)
+
 end GSTFourPowerDirectCreationMaster

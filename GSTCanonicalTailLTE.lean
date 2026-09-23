@@ -67,4 +67,21 @@ theorem pow4_scaled_mod_next (r u : Nat) :
     simp [Nat.add_mod, Nat.mul_mod, Nat.mod_eq_of_lt hMgt1]
   simpa [hbase, Nat.mod_eq_of_lt hMgt1]
 
+/-- The LTE scale is exact: one further ternary power never divides the
+power-of-four increment. -/
+theorem pow4_three_power_lte_not_dvd_next (r : Nat) :
+    ¬ 3^(r+2) ∣ 4^(3^r) - 1 := by
+  rw [pow4_three_power_lte_exact]
+  have hp : 0 < 3^(r+1) := by positivity
+  have hc := lteCoeff_mod3_one r
+  intro h
+  obtain ⟨k, hk⟩ := h
+  have he : 3^(r+1) * lteCoeff r = 3^(r+1) * (3*k) := by
+    simpa [show r+2 = (r+1)+1 by omega, pow_succ,
+      Nat.mul_assoc] using hk
+  have hec : lteCoeff r = 3*k := by nlinarith
+  rw [hec] at hc
+  simp at hc
+
+
 end GSTCanonicalTailLTE

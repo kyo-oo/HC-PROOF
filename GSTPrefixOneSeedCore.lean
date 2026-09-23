@@ -119,4 +119,16 @@ theorem gst_prefix_one_seed_one_parent_of_master
   exact (navigation_prefixed_one_iff_seed_one
     (prefixOffset s + 4^(3^s) * canonicalTail (s+1) n)).1 hNav
 
+/-- Prefix stripping reconstructs both the residue and the complete affine quotient. -/
+theorem prefix_one_tail_residue_quotient (s n : Nat) :
+    canonicalTail s (1+3*n) % 3 = 1 ∧
+    canonicalTail s (1+3*n) / 3 =
+      prefixOffset s + 4^(3^s) * canonicalTail (s+1) n := by
+  rw [prefix_one_tail_shape]
+  constructor
+  · omega
+  · rw [Nat.add_mul_div_left _ _ (by decide : 0 < (3:Nat))]
+    simp
+
+
 end GSTPrefixOneSeedCore

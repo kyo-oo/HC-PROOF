@@ -122,4 +122,17 @@ theorem analytic_v2_crown :
 #print axioms hc_cyclotomic_degree_succ
 #print axioms analytic_v2_crown
 
+
+/-- Every finite descent is reversible on the real line; its inverse is
+multiplication by the same power of three. -/
+theorem hc_descent_flow_bijective (k : Nat) :
+    Function.Bijective (fun x : ℝ => x / (3:ℝ)^k) := by
+  have hpow : (3:ℝ)^k ≠ 0 := by positivity
+  constructor
+  · intro x y h
+    exact (div_left_inj' hpow).mp h
+  · intro y
+    refine ⟨y * (3:ℝ)^k, ?_⟩
+    exact mul_div_cancel_right₀ y hpow
+
 end GSTAnalyticAbsorptionV2

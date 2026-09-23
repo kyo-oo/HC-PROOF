@@ -126,6 +126,30 @@ theorem four_pow_signature_free_iff_all_prefixes_avoid
 
 /-- The old finite congruence cases now sit below one exact all-depth
 classifier rather than defining the architecture. -/
+/-- A signature has a unique first firing exponent prefix, with all earlier
+prefixes certified nonfiring. -/
+theorem four_pow_has_two_iff_unique_first_prefix (K : Nat) :
+    hasTernaryTwo (4^K) = true ↔
+      ∃! p : Nat,
+        (digit3 (4^(exponentPrefix K p)) (p+1) + exponentTrit K p) % 3 = 2 ∧
+        ∀ q, q < p →
+          (digit3 (4^(exponentPrefix K q)) (q+1) + exponentTrit K q) % 3 ≠ 2 := by
+  classical
+  let P := fun p =>
+    (digit3 (4^(exponentPrefix K p)) (p+1) + exponentTrit K p) % 3 = 2
+  constructor
+  · intro h
+    have hex : ∃ p, P p := (four_pow_has_two_iff_prefix_trit K).mp h
+    refine ⟨Nat.find hex, ⟨Nat.find_spec hex, ?_⟩, ?_⟩
+    · intro q hq
+      exact Nat.find_min hex hq
+    · intro p hp
+      have hle := Nat.find_min' hex hp.1
+      by_contra hne
+      exact hp.2 (Nat.find hex) (by omega) (Nat.find_spec hex)
+  · rintro ⟨p, hp, _⟩
+    exact (four_pow_has_two_iff_prefix_trit K).mpr ⟨p, hp.1⟩
+
 theorem prefix_classifier_crown (K : Nat) :
     (hasTernaryTwo (4^K) = true ↔
       ∃ p : Nat,

@@ -330,4 +330,33 @@ theorem one_lane_the_whole_construction
 #print axioms one_lane_omega_face
 #print axioms one_lane_the_whole_construction
 
+/-- The three-free sheet/core decomposition is unique, so transport along the
+canonical lane cannot silently change either its sheet or its core. -/
+theorem one_lane_three_free_unique (s t a b : Nat)
+    (ha : ¬ 3 ∣ a) (hb : ¬ 3 ∣ b)
+    (heq : 3^s*a = 3^t*b) : s = t ∧ a = b := by
+  have no_rise (v w x y : Nat) (hx : ¬ 3 ∣ x)
+      (hvw : v ≤ w) (hxy : 3^v*x = 3^w*y) : w ≤ v := by
+    by_contra hn
+    have hd : 1 ≤ w-v := by omega
+    have hp : 3^w = 3^v * 3^(w-v) := by
+      rw [← Nat.pow_add, Nat.add_sub_of_le hvw]
+    rw [hp, Nat.mul_assoc] at hxy
+    have hxval : x = 3^(w-v)*y :=
+      Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide)) hxy
+    apply hx
+    rw [hxval]
+    exact dvd_mul_of_dvd_left
+      (by simpa using (Nat.pow_dvd_pow 3 hd)) y
+  have hst : s = t := by
+    rcases Nat.le_total s t with h | h
+    · have := no_rise s t a b ha h heq
+      omega
+    · have := no_rise t s b a hb h heq.symm
+      omega
+  refine ⟨hst, ?_⟩
+  rw [hst] at heq
+  exact Nat.eq_of_mul_eq_mul_left (Nat.pow_pos (by decide)) heq
+
+
 end GSTTailFOneLane

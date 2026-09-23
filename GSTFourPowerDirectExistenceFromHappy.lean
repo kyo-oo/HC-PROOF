@@ -167,4 +167,26 @@ theorem fourPowerCreationMaster_direct
 #print axioms creation_certificate_inline_direct
 #print axioms fourPowerCreationMaster_direct
 
+
+/-- The complete dossier exactly characterizes failure. In particular its
+fields are jointly sufficient, so the dossier loses no mathematical data. -/
+theorem directBadDossier_iff_noCommonTwo (K : Nat) :
+    DirectBadDossier K ↔ ¬ CommonTwo K := by
+  constructor
+  · intro h
+    exact (noCommonTwo_low_trit_branch K).2 h.affineLowBranch
+  · exact noCommonTwo_builds_direct_bad_dossier K
+
+/-- Eliminating dossiers is precisely the direct existence obligation; it
+neither assumes a Happy provider nor weakens the required exponent range. -/
+theorem directExistence_iff_no_dossier :
+    FourPowerDirectExistence ↔
+      ∀ K : Nat, 5 ≤ K → K ≠ 7 → ¬ DirectBadDossier K := by
+  constructor
+  · intro h K hK h7 hd
+    exact (directBadDossier_iff_noCommonTwo K).1 hd (h K hK h7)
+  · intro h K hK h7
+    by_contra hn
+    exact h K hK h7 ((directBadDossier_iff_noCommonTwo K).2 hn)
+
 end GSTFourPowerDirectExistenceFromHappy

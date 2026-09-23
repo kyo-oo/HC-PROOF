@@ -3022,6 +3022,31 @@ def four_power_omega_shadow_wave_tailF : Prop :=
 #print axioms omegaShadowTailF
 #print axioms four_power_omega_shadow_wave_tailF
 
+
+/-- Exact observer classification for every digit value and every observable
+tower level, including levels one and two. The interval condition is both
+necessary and sufficient, not merely a sufficient gate for digit two. -/
+theorem omega_observed_digit_iff_interval
+    (s core k d : Nat) (hk : 1 ≤ k) (hks : k ≤ s+1) :
+    digit3 (4^(3^s * core)) (s+k) = d ↔
+      d * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k ∧
+      (omegaCutWord s 1 * core) % 3^k < (d+1) * 3^(k-1) := by
+  rw [omega_observed_digit s core k hk hks]
+  set r := (omegaCutWord s 1 * core) % 3^k
+  set m := 3^(k-1)
+  have hm : 0 < m := by dsimp [m]; positivity
+  constructor
+  · intro h
+    have he := Nat.mod_add_div r m
+    have hb := Nat.mod_lt r hm
+    rw [h] at he
+    constructor <;> nlinarith
+  · rintro ⟨hlo, hhi⟩
+    have he : r = (r-d*m) + m*d := by omega
+    have hb : r-d*m < m := by nlinarith
+    rw [he, Nat.add_mul_div_left _ _ hm, Nat.div_eq_of_lt hb]
+    simp
+
 end GSTGraphV2OmegaWaveLaw
 
 /-- Monolith transplant route: the class-two family's creation certificate,

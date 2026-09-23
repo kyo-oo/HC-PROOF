@@ -41,6 +41,19 @@ theorem gst_prefix_one_ontological_escape_of_master
     gst_four_power_ontological_navigation_of_master hMaster K (by omega) (by omega)
   exact canonical_tail_projection s (1 + 3*n) hs (by simpa [K] using hFull)
 
+/-- Above sheet one, escape also includes the unit core `n = 0`.
+The master is retained explicitly; no positive-tail hypothesis is needed. -/
+theorem gst_prefix_one_escape_all_tails_of_master
+    (hMaster : FourPowerCreationMaster) (s n : Nat) (hs : 2 ≤ s) :
+    Navigation (canonicalTail s (1+3*n)) := by
+  have hpow : 9 ≤ 3^s := by
+    simpa using (Nat.pow_le_pow_of_le (by decide : 1 < (3:Nat)) hs)
+  have hK : 9 ≤ 3^s * (1+3*n) := by nlinarith
+  apply canonical_tail_projection s (1+3*n) (by omega)
+  exact gst_four_power_ontological_navigation_of_master hMaster
+    (3^s * (1+3*n)) (by omega) (by omega)
+
+
 end GSTPrefixOneOntologicalEscape
 
 /-- Monolith transplant entrypoint from the checked physical Happy provider.

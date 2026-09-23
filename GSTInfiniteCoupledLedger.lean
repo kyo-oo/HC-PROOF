@@ -192,4 +192,25 @@ theorem infinite_coupled_ledger
     pastSynchronized := coupledOrbit_past_synchronization A initial hA h0
   }
 
+/-- The emitted ledger is the exact residue of the complete seeded mass. -/
+theorem seededPast_eq_mass_mod (D X K : Nat) :
+    seededPast D X K = (D + 4*X) % 3^K := by
+  simp [seededPast, Nat.add_mod, Nat.mul_mod]
+
+/-- Splitting at two arbitrary depths gives an exact prefix/suffix ledger law. -/
+theorem seededPast_add (D X q j : Nat) :
+    seededPast D X (q+j) = seededPast D X q +
+      3^q * seededPast (affineCarry D X q) (X / 3^q) j := by
+  rw [seededPast_eq_mass_mod D X (q+j), Nat.pow_add, Nat.mod_mul,
+    ← seededPast_eq_mass_mod D X q]
+  have hmass := seeded_mass_past_future D X q
+  have hsmall : seededPast D X q < 3^q := by
+    unfold seededPast
+    exact Nat.mod_lt _ (Nat.pow_pos (by decide))
+  have hdiv : (D + 4*X) / 3^q = affineCarry D X q + 4*(X / 3^q) := by
+    rw [hmass, Nat.add_mul_div_left _ _ (Nat.pow_pos (by decide)),
+      Nat.div_eq_of_lt hsmall, Nat.zero_add]
+  rw [hdiv, seededPast_eq_mass_mod (affineCarry D X q) (X / 3^q) j]
+
+
 end GSTV2

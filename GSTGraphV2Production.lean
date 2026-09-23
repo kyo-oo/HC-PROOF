@@ -352,4 +352,22 @@ def canonicalCutFrame (s n q : Nat) : CanonicalCutFrame :=
 #check CanonicalCutFrame
 #check canonicalCutFrame
 
+
+/-- Reading the original origin from its production coordinates is lossless;
+the bound makes this an exact quotient/remainder encoding. -/
+theorem originCoordinates_decode (t n K : Nat) :
+    (originCoordinates t n K).originPrefixValue < 3^K ∧
+    n = (originCoordinates t n K).originPrefixValue +
+      3^K*(originCoordinates t n K).originSuffixValue := by
+  constructor
+  · exact Nat.mod_lt _ (by positivity)
+  · exact GSTGraphV2HandwrittenExponentialCascade.origin_block_split_exact n K
+
+/-- The production U frame conserves absolute energy, including an arbitrary
+horizontal observation offset. -/
+theorem originFrame_absolute_energy (t n K x p : Nat) :
+    (originFrame t n K x p).full.absoluteEnergy =
+      (originFrame t n K x p).phasedTail.absoluteEnergy := by
+  exact GSTGraphV2HandwrittenExponentialCascade.u_absolute_energy_exact t n K x
+
 end GSTGraphV2Production

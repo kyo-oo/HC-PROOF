@@ -210,4 +210,24 @@ theorem no_common_two_exponent_trit_obstruction
 #print axioms equal_prefix_pair_has_killing_trit
 #print axioms no_common_two_exponent_trit_obstruction
 
+
+/-- The entire obstruction family is sufficient as well as necessary. Thus
+there are no additional hidden conditions in the exponent-trit encoding. -/
+theorem no_common_two_iff_all_trit_obstructions (K : Nat) :
+    (¬ ∃ q : Nat, 1 ≤ q ∧
+      digit3 (4^K) q = 2 ∧ digit3 (4^(K+1)) q = 2) ↔
+    (∀ p : Nat,
+      digit3 (4^(exponentPrefix K p)) (p+1) =
+        digit3 (4^(exponentPrefix K p+1)) (p+1) →
+      exponentTrit K p ≠ 2 - digit3 (4^(exponentPrefix K p)) (p+1)) := by
+  constructor
+  · intro h p
+    exact no_common_two_exponent_trit_obstruction K p h
+  · intro h ⟨q, hq, hs, ht⟩
+    cases q with
+    | zero => omega
+    | succ p =>
+        have hp := (row_common_two_iff_prefix_killing_trit K p).1 ⟨hs, ht⟩
+        exact h p hp.1 hp.2
+
 end GSTFourPowerExponentTritObstruction

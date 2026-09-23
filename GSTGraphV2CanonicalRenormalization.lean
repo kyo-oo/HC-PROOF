@@ -260,4 +260,26 @@ theorem canonicalTail_one_strip
 #check canonicalTail_one_strip
 #print axioms canonicalTail_three_adic_strip
 
+/-- Origin phase is recovered exactly for every origin, not only one trit. -/
+theorem canonicalTail_residue_three_exact (r n : Nat) :
+    canonicalTail r n % 3 = n % 3 := by
+  have hn : n = n % 3 + 3 * (n / 3) := (Nat.mod_add_div n 3).symm
+  have h := canonicalTail_three_adic_strip r (n % 3) (n / 3)
+    (Nat.mod_lt n (by decide))
+  rw [← hn] at h
+  rw [h]
+  simp
+
+/-- Low canonical residues depend only on the low origin prefix at the same
+arbitrary cutoff. -/
+theorem canonicalTail_prefix_local (r n K : Nat) :
+    canonicalTail r n % 3^K = canonicalTail r (n % 3^K) % 3^K := by
+  have hn : n = n % 3^K + 3^K * (n / 3^K) :=
+    (Nat.mod_add_div n (3^K)).symm
+  have h := canonicalTail_power_block_recurrence r (n % 3^K) (n / 3^K) K
+  rw [← hn] at h
+  rw [h]
+  simp [Nat.add_mod, Nat.mul_mod, Nat.mul_assoc]
+
+
 end GSTGraphV2CanonicalRenormalization

@@ -71,4 +71,26 @@ theorem affineOrbit_forward (K : Nat) :
     affineOrbit (K+1) = 4 * affineOrbit K + 1 := by
   rfl
 
+
+/-- Exact composition law for an arbitrary number of affine steps. -/
+theorem affineOrbit_add (m n : Nat) :
+    affineOrbit (m+n) = 4^n * affineOrbit m + affineOrbit n := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [show m+(n+1) = (m+n)+1 by omega, affineOrbit_succ, ih,
+        affineOrbit_succ, pow_succ]
+      ring
+
+/-- The orbit is strictly increasing, so an affine coordinate determines its
+exponent uniquely. -/
+theorem affineOrbit_strictMono : StrictMono affineOrbit := by
+  apply strictMono_nat_of_lt_succ
+  intro n
+  rw [affineOrbit_succ]
+  omega
+
+theorem affineOrbit_injective : Function.Injective affineOrbit :=
+  affineOrbit_strictMono.injective
+
 end GSTFourPowerAffineOrbit

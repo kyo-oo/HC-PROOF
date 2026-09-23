@@ -417,4 +417,15 @@ theorem finite_gst_hodge_classification
 #print axioms hodge_locus_never_diagonal
 #print axioms the_hodge_assault
 
+
+/-- Distinct Hodge weights intersect only in the zero cochain, uniformly
+in all natural weights (including the empty sectors). -/
+theorem hodge_weight_intersection (p q : Nat) (hpq : p ≠ q)
+    (f : WaveCoef) (hp : isHodgeClass p f) (hq : isHodgeClass q f) :
+    f = fun _ => 0 := by
+  funext c
+  by_cases hcp : c.carry = p
+  · exact hq c (Or.inl (by omega))
+  · exact hp c (Or.inl hcp)
+
 end GSTHodgeAssault

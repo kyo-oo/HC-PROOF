@@ -90,4 +90,16 @@ theorem noCommonTwo_mod_three_two
 #check noCommonTwo_mod_three_two
 #print axioms noCommonTwo_low_trit_branch
 
+
+/-- The exponent classification extends to every prefix length: the finite
+trace plus the exact residual state is equivalent to a counterexample. -/
+theorem noCommonTwo_iff_affine_run (K n : Nat) :
+    (¬ CommonTwo K) ↔
+      (∀ i : Nat, i < n →
+        ¬ lowSuccess (channelRun 1 (affineOrbit K) i).1
+          (channelRun 1 (affineOrbit K) i).2) ∧
+      BadChannel (channelRun 1 (affineOrbit K) n).1
+        (channelRun 1 (affineOrbit K) n).2 := by
+  rw [noCommonTwo_iff_badChannel_one, badChannel_iff_run]
+
 end GSTFourPowerAffineClassifierBridge

@@ -358,4 +358,13 @@ theorem hc_twist_torsion_law (t : ℕ) (k : ℕ) :
 #print axioms hc_finite_twist_embeds
 #print axioms hc_twist_torsion_law
 
+
+/-- The natural-valued period map actually has trivial image: every
+integer lies in the defining lattice of R/Z.  Consequently its transport
+identities alone cannot witness nontrivial analytic torsion. -/
+theorem hc_period_eq_zero (R : ℕ) : hcPeriod R = 0 := by
+  unfold hcPeriod
+  exact (AddCircle.coe_eq_zero_iff (p := (1 : ℝ))).mpr
+    ⟨(R : ℤ), by simp [Int.smul_one_eq_cast]⟩
+
 end GSTAnalyticAbsorption

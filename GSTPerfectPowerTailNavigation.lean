@@ -97,4 +97,15 @@ theorem canonical_tail_projection
   rw [hpEq] at h
   exact h
 
+/-- The canonical tail projection is reversible: no Happy information is lost. -/
+theorem canonical_tail_navigation_iff (s b : Nat) (hs : 1 ≤ s) :
+    Navigation (4^(3^s * b)) ↔ Navigation (canonicalTail s b) := by
+  constructor
+  · exact canonical_tail_projection s b hs
+  · rintro ⟨j, hj⟩
+    refine ⟨s+1+j, ?_⟩
+    rw [canonical_tail_decomposition s b]
+    exact (canonical_tail_happy_iff (s+1) (canonicalTail s b) j (by omega)).2 hj
+
+
 end GSTPerfectPowerTailNavigation

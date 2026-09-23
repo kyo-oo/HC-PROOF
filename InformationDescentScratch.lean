@@ -47,6 +47,17 @@ def gstStepCarryS (C d : Nat) : Nat := (C + 4*d) / 3
 def gstAffineMulCarryS (A z T p : Nat) : Nat :=
   (z + A * (T % 3^p)) / 3^p
 
+/-- Arbitrary affine multipliers retain their complete carry under every cut. -/
+theorem gst_affine_carry_semigroup_generalS (A D X q j : Nat) :
+    gstAffineMulCarryS A D X (q+j) =
+      gstAffineMulCarryS A (gstAffineMulCarryS A D X q) (X / 3^q) j := by
+  simp only [gstAffineMulCarryS]
+  rw [Nat.pow_add, Nat.mod_mul]
+  have hq : 0 < 3^q := Nat.pow_pos (by decide)
+  have hshape : D + A * (X % 3^q + 3^q * (X / 3^q % 3^j)) =
+      (D + A * (X % 3^q)) + 3^q * (A * (X / 3^q % 3^j)) := by ring
+  rw [hshape, ← Nat.div_div_eq_div_mul, Nat.add_mul_div_left _ _ hq]
+
 /-- Exact carry recurrence, including the p=0 seam. -/
 theorem gstCarryS_forward_exact_all (R p : Nat) :
     gstCarryS R (p+1) = gstStepCarryS (gstCarryS R p) (gstDigitS R p) := by

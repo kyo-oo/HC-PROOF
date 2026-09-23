@@ -28,4 +28,17 @@ theorem carry4_forward_exact (R p : Nat) :
     ring
   rw [hshape, Nat.add_mul_div_left _ _ hM]
 
+/-- The carry after an arbitrary block depends exactly on the entering carry
+and the full block value; no intermediate digit is discarded. -/
+theorem carry4_block_exact (R p k : Nat) :
+    carry4 R (p+k) =
+      (carry4 R p + 4 * ((R / 3^p) % 3^k)) / 3^k := by
+  unfold carry4
+  rw [pow_add, Nat.mod_mul, ← Nat.div_div_eq_div_mul]
+  have hp : 0 < 3^p := Nat.pow_pos (by decide)
+  have hshape : 4 * (R % 3^p + 3^p * (R / 3^p % 3^k)) =
+      4 * (R % 3^p) + 3^p * (4 * (R / 3^p % 3^k)) := by ring
+  rw [hshape, Nat.add_mul_div_left _ _ hp]
+
+
 end GSTCanonicalCarryDynamics

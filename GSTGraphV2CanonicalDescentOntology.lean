@@ -242,4 +242,15 @@ theorem canonical_graphCoupledState_cut_packet
 #check canonical_graphCoupledState_cut_packet
 #print axioms canonical_graphCoupledState_cut_packet
 
+/-- The complete left descent remains the canonical tail quotient at every
+height above the production cut, including scale zero. -/
+theorem canonical_left_descent_all_depths (s n q : Nat) :
+    (graph (canonicalEnergy s n) 0 (s+2+q)).seven.descent =
+      canonicalTail (s+1) n / 3^q := by
+  change (4^0 * canonicalEnergy s n) / 3^(s+2+q) = _
+  rw [pow_zero, one_mul, canonicalEnergy_cut_decomposition]
+  exact prefix_slice_quotient_exact (s+2) 1 (canonicalTail (s+1) n) q
+    (one_prefix_bounds (s+2) (by omega)).1
+
+
 end GSTGraphV2CanonicalDescentOntology

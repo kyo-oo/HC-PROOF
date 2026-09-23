@@ -129,4 +129,33 @@ theorem seedHappy_one_iff
 #check seedHappy_one_iff
 #print axioms seedHappy_strip
 
+
+/-- A lossless strip can consume an arbitrary block in one operation. -/
+theorem seededResidue_strip_block (D k x b q : Nat) :
+    seededResidue D k x (b+q) =
+      seededResidue (seededResidue D k x b) (k+b) (x / 3^b) q := by
+  unfold seededResidue
+  rw [Nat.pow_add, Nat.mod_mul, Nat.pow_add]
+  ring
+
+/-- Block stripping preserves the physical carry and next digit together. -/
+theorem seeded_observables_strip_block (D k x b q : Nat) :
+    seededCarry D k x (b+q) =
+        seededCarry (seededResidue D k x b) (k+b) (x / 3^b) q ∧
+      seededDigit x (b+q) = seededDigit (x / 3^b) q := by
+  constructor
+  · unfold seededCarry
+    rw [seededResidue_strip_block]
+    simp only [Nat.add_assoc]
+  · unfold seededDigit
+    rw [Nat.pow_add, Nat.div_div_eq_div_mul]
+
+/-- The entire Happy predicate is invariant under arbitrary block cuts. -/
+theorem seedHappy_strip_block (D k x b q : Nat) :
+    SeedHappy D k x (b+q) ↔
+      SeedHappy (seededResidue D k x b) (k+b) (x / 3^b) q := by
+  unfold SeedHappy
+  rw [(seeded_observables_strip_block D k x b q).1,
+    (seeded_observables_strip_block D k x b q).2]
+
 end GSTGraphV2SeededPrefix

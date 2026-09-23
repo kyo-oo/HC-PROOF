@@ -292,4 +292,17 @@ theorem vortex_energy_finite (R : Nat) :
   refine ⟨R+1, h1, ?_⟩
   rw [h1]
 
+
+/-- Core transport cannot identify distinct legal cells: four additional
+turns recover the input from its image. -/
+theorem core_rotation_injective (C d C' d' : Nat)
+    (hC : C < 4) (hd : d < 3) (hC' : C' < 4) (hd' : d' < 3)
+    (h : coreRotate (C,d) = coreRotate (C',d')) :
+    (C,d) = (C',d') := by
+  have hback := congrArg
+    (fun x => coreRotate (coreRotate (coreRotate (coreRotate x)))) h
+  rw [core_rotation_period_five C d hC hd,
+    core_rotation_period_five C' d' hC' hd'] at hback
+  exact hback
+
 end GSTVortexSingularity

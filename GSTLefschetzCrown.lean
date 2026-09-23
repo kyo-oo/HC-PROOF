@@ -1323,4 +1323,19 @@ theorem the_lefschetz_crown :
 #print axioms hodge_locus_residue_algebraic
 #print axioms the_lefschetz_crown
 
+
+/-- Reassembly forgets exactly the coordinates outside the twelve-cell
+range; equality of cochains is equivalent to equality on that range. -/
+theorem S12_eq_iff (v w : Nat → ℤ) :
+    S12 v = S12 w ↔ ∀ i, i < 12 → v i = w i := by
+  constructor
+  · intro h i hi
+    have hcoord := congrArg (fun f => gev f i) h
+    simpa only [gev_S12 v i hi, gev_S12 w i hi] using hcoord
+  · intro h
+    funext c
+    rcases c with ⟨C,d,hC,hd⟩
+    rw [S12_at, S12_at]
+    exact h (3*C+d) (by omega)
+
 end GSTLefschetzCrown

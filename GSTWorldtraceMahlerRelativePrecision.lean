@@ -95,6 +95,42 @@ theorem worldtraceWitness_baseline (u s : Nat) :
 /-- The existing ghost theorem is strictly stronger than the new
 terminal interface: its quadratic-depth witness gives every requested
 relative precision. -/
+/-- Removing the automatic baseline gives an exact divisibility criterion,
+including the first additional precision digit. -/
+theorem worldtraceWitness_relative_dvd_iff (u s q : Nat) :
+    (3 : ℤ)^(s+1+q) ∣ worldtraceWitness u s ↔
+      (3 : ℤ)^q ∣
+        2 * (u : ℤ) * (GSTTowerFire.c s : ℤ) -
+          2 * (worldtraceHead u : ℤ) + 9 := by
+  rw [worldtraceWitness_factor, pow_add]
+  have hbase : (3 : ℤ)^(s+1) ≠ 0 := pow_ne_zero _ (by norm_num)
+  constructor
+  · rintro ⟨z, hz⟩
+    refine ⟨z, ?_⟩
+    apply mul_left_cancel₀ hbase
+    simpa only [mul_assoc] using hz
+  · rintro ⟨z, hz⟩
+    refine ⟨z, ?_⟩
+    rw [hz, mul_assoc]
+
+/-- Relative locking is precisely ordinary 3-adic convergence of the
+normalized integer sequence after the baseline has been removed. -/
+theorem relativeLock_iff_normalized (u : Nat) :
+    RelativeLock u ↔
+      ∀ q : Nat, ∃ S : Nat, ∀ s : Nat, S ≤ s →
+        (3 : ℤ)^q ∣ 2 * (u : ℤ) * (GSTTowerFire.c s : ℤ) -
+          2 * (worldtraceHead u : ℤ) + 9 := by
+  constructor
+  · intro h q
+    obtain ⟨S, hS⟩ := h (q+1)
+    refine ⟨S, fun s hs => (worldtraceWitness_relative_dvd_iff u s q).mp ?_⟩
+    simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hS s hs
+  · intro h q
+    obtain ⟨S, hS⟩ := h q
+    refine ⟨S, fun s hs => ?_⟩
+    have hd := (worldtraceWitness_relative_dvd_iff u s q).mpr (hS s hs)
+    exact (pow_dvd_pow (3 : ℤ) (by omega : s+q ≤ s+1+q)).trans hd
+
 theorem ghost_implies_relative_lock (u : Nat)
     (hg : GSTGhostRay.GhostRay u) : RelativeLock u := by
   intro q

@@ -206,4 +206,16 @@ theorem chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one :
 #print axioms chat2_fourPowerDirectExistence_iff_no_bad_affine_channel_one
 #print axioms chat2_noCounterexampleClosure_iff_no_bad_affine_channel_one
 
+
+/-- The prefix obstruction language is a complete counterexample classifier,
+not merely an exported collection of necessary tests. -/
+theorem chat2_bad_channel_iff_all_prefix_obstructions (K : Nat) :
+    BadChannel 1 (affineOrbit K) ↔
+      ∀ p : Nat,
+        digit3 (4^(exponentPrefix K p)) (p+1) =
+          digit3 (4^(exponentPrefix K p+1)) (p+1) →
+        exponentTrit K p ≠ 2 - digit3 (4^(exponentPrefix K p)) (p+1) := by
+  rw [← chat2_noCommonTwo_iff_bad_channel_one]
+  exact no_common_two_iff_all_trit_obstructions K
+
 end GSTFourPowerDirectChat2Application

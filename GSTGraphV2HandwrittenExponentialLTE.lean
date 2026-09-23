@@ -182,4 +182,16 @@ theorem canonical_child_u_cut_neutral
 #print axioms pow4_three_power_lte_exact
 #print axioms uTailEnergy_cut_neutral
 
+
+/-- The scaled power is one at every positive cut below its defining cut,
+not just at the two adjacent cuts. -/
+theorem pow4_scaled_mod_all_lower (r u p : Nat) (hp : 1 ≤ p) (hpr : p ≤ r+1) :
+    4^(3^r*u) % 3^p = 1 := by
+  have hdvd : 3^p ∣ 3^(r+1) := Nat.pow_dvd_pow 3 hpr
+  have h := Nat.mod_mod_of_dvd (4^(3^r*u)) hdvd
+  rw [pow4_scaled_mod_next] at h
+  have h3 : 3 ≤ 3^p := by
+    simpa using Nat.pow_le_pow_right (by decide : 1 ≤ 3) hp
+  simpa [Nat.mod_eq_of_lt (by omega : 1 < 3^p)] using h.symm
+
 end GSTGraphV2HandwrittenExponentialLTE

@@ -111,4 +111,14 @@ theorem absorption_v2_crown :
 #print axioms finite_twist_composed
 #print axioms absorption_v2_crown
 
+
+/-- Exact neutral sector: zero polarization occurs on precisely these
+four cells, complementing the positive-sector classification. -/
+theorem zero_current_exact (C d : Nat) (hC : C < 4) (hd : d < 3) :
+    ontDensity C d = 0 ↔
+      (C = 1 ∧ d = 1) ∨ (C = 2 ∧ d = 0) ∨
+      (C = 2 ∧ d = 2) ∨ (C = 3 ∧ d = 1) := by
+  interval_cases C <;> interval_cases d <;>
+    norm_num [ontDensity, ontDigitPotential, ontCarryPotential, outDigit, nextCarry]
+
 end HodgeDeRhamBridgeV2

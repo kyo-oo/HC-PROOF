@@ -425,4 +425,16 @@ theorem spectrum_separates_chords :
       ≠ waveMode (mkCell 3 2 (by omega) (by omega)) := by
   decide
 
+
+/-- The local structure equation integrates over any finite collection of
+cells with arbitrary signed multiplicities; no rectangular shape is needed. -/
+theorem finite_weighted_wave_decomposition {ι : Type*} (s : Finset ι)
+    (cell : ι → WaveCell) (weight : ι → ℤ) :
+    (∑ i ∈ s, weight i * waveTwoForm (cell i)) =
+      (∑ i ∈ s, weight i * horizontalCoboundary (cell i)) +
+      (∑ i ∈ s, weight i * verticalCoboundary (cell i)) +
+      (∑ i ∈ s, weight i * waveSource (cell i)) := by
+  simp_rw [wave_cell_decomposition, mul_add]
+  rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+
 end GSTWaveCohomology

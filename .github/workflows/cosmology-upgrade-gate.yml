@@ -6,43 +6,8 @@ on:
       - main
       - gst-cosmology-strengthening
     paths:
-      - 'HCProof.lean'
+      - '**/*.lean'
       - 'lakefile.toml'
-      - 'GSTCosmologyStrengtheningAudit.lean'
-      - 'GSTRadixWorldDynamics.lean'
-      - 'GSTGradedWorldAlgebra.lean'
-      - 'GSTWorldRecoordinationGroupoid.lean'
-      - 'GSTUniversalAddressBridge.lean'
-      - 'GSTDimensionFreeHodgeDiagonal.lean'
-      - 'GSTGlobalPureHodgeCosmology.lean'
-      - 'GSTUniversalLefschetzDynamics.lean'
-      - 'GSTUniversalLefschetzCosmology.lean'
-      - 'GSTUniversalLefschetzPathFormula.lean'
-      - 'GSTTruncatedWorldCohomologyRing.lean'
-      - 'GSTWorldPoincareDuality.lean'
-      - 'CardinalWorldsPrefixClassifier.lean'
-      - 'GSTWorldCosmology.lean'
-      - 'GSTWorldCrownBridge.lean'
-      - 'GST2DMixedEmergenceUpgrade.lean'
-      - 'GSTGraphV2ScaleEquivariance.lean'
-      - 'GSTCoherentCosmology.lean'
-      - 'GSTInfiniteWorldClassification.lean'
-      - 'GSTInfiniteWorldRenormalization.lean'
-      - 'GSTMultiAxisCohomology.lean'
-      - 'GSTExactWorldOperatorPresentation.lean'
-      - 'GSTMultiAxisCosmology.lean'
-      - 'GSTMultiAxisGradedDynamics.lean'
-      - 'CardinalWorldsV2.lean'
-      - 'waves/CardinalWorldsPostulateLawV2.lean'
-      - 'waves/GSTWaveCohomologyV2.lean'
-      - 'waves/GSTNCohomologyV2.lean'
-      - 'waves/GSTVortexSingularityV2.lean'
-      - 'HodgeDeRhamBridgeV2.lean'
-      - 'GSTAnalyticAbsorptionV2.lean'
-      - 'GSTLefschetzCrownV2.lean'
-      - 'GSTHodgeAssaultV2.lean'
-      - 'GSTClayOfficialV2.lean'
-      - 'GSTTransferBridgeV2.lean'
       - '.github/workflows/cosmology-upgrade-gate.yml'
   workflow_dispatch:
 
@@ -89,39 +54,138 @@ jobs:
         run: |
           set -euo pipefail
           files=(
-            GSTRadixWorldDynamics.lean
-            GSTGradedWorldAlgebra.lean
-            GSTWorldRecoordinationGroupoid.lean
-            GSTUniversalAddressBridge.lean
-            GSTDimensionFreeHodgeDiagonal.lean
-            GSTGlobalPureHodgeCosmology.lean
-            GSTUniversalLefschetzDynamics.lean
-            GSTUniversalLefschetzCosmology.lean
-            GSTUniversalLefschetzPathFormula.lean
-            GSTTruncatedWorldCohomologyRing.lean
-            GSTWorldPoincareDuality.lean
+            CardinalWorlds.lean
             CardinalWorldsPrefixClassifier.lean
-            GSTWorldCosmology.lean
-            GSTWorldCrownBridge.lean
+            CardinalWorldsV2.lean
             GST2DMixedEmergenceUpgrade.lean
+            GSTAnalyticAbsorption.lean
+            GSTAnalyticAbsorptionV2.lean
+            GSTCanonicalCarryDynamics.lean
+            GSTCanonicalSevenAxisBridge.lean
+            GSTCanonicalTailLTE.lean
+            GSTCanonicalTailStateIso.lean
+            GSTClayOfficial.lean
+            GSTClayOfficialV2.lean
+            GSTDimensionFreeHodgeDiagonal.lean
+            GSTExactWorldOperatorPresentation.lean
+            GSTFinalPrefixOneStep6Infinite.lean
+            GSTFinalPurePowerResidueTransplant.lean
+            GSTFourPowerAffineBadState.lean
+            GSTFourPowerAffineChannelAutomaton.lean
+            GSTFourPowerAffineClassifierBridge.lean
+            GSTFourPowerAffineExponentPeel.lean
+            GSTFourPowerAffineOrbit.lean
+            GSTFourPowerAffinePeelClassifier.lean
+            GSTFourPowerAffineTwoTritClassifier.lean
+            GSTFourPowerDirectAdditionCarry.lean
+            GSTFourPowerDirectChat2Application.lean
+            GSTFourPowerDirectCreationMaster.lean
+            GSTFourPowerDirectExistence.lean
+            GSTFourPowerDirectExistenceFromHappy.lean
+            GSTFourPowerDirectExistenceNoAxiom.lean
+            GSTFourPowerDirectExistenceProviderPipeline.lean
+            GSTFourPowerDirectFailedRelocationState.lean
+            GSTFourPowerDirectHappyBridge.lean
+            GSTFourPowerDirectNo22.lean
+            GSTFourPowerDirectResidue.lean
+            GSTFourPowerDirectResidue27.lean
+            GSTFourPowerDirectResidue81.lean
+            GSTFourPowerExactExponentPeriod.lean
+            GSTFourPowerExponentTritObstruction.lean
+            GSTFourPowerHappyProvider.lean
+            GSTFourPowerNo22Magnitude.lean
+            GSTFourPowerOntologicalAdapter.lean
+            GSTFourPowerThirdWave.lean
+            GSTGhostRayExclusion.lean
+            GSTGlobalPureHodgeCosmology.lean
+            GSTGradedWorldAlgebra.lean
+            GSTGraphV2CanonicalDescentOntology.lean
+            GSTGraphV2CanonicalEscape.lean
+            GSTGraphV2CanonicalInfiniteCycle.lean
+            GSTGraphV2CanonicalNWave.lean
+            GSTGraphV2CanonicalPhaseSteering.lean
+            GSTGraphV2CanonicalPhaseWaveProbe.lean
+            GSTGraphV2CanonicalRenormalization.lean
+            GSTGraphV2CanonicalSheetTranslation.lean
+            GSTGraphV2CanonicalSignedPrefixBridge.lean
+            GSTGraphV2CanonicalTerminalExtinctionProbe.lean
+            GSTGraphV2CanonicalTransparentBridgeProbe.lean
+            GSTGraphV2CoupledUFlux.lean
+            GSTGraphV2CoupledUPhysicalBridge.lean
+            GSTGraphV2FourPowerResidueObstruction.lean
+            GSTGraphV2HandwrittenExponentialCascade.lean
+            GSTGraphV2HandwrittenExponentialLTE.lean
+            GSTGraphV2HandwrittenOmegaUBlock.lean
+            GSTGraphV2InfiniteControl.lean
+            GSTGraphV2NonEuclidean.lean
+            GSTGraphV2NonEuclideanLaws.lean
+            GSTGraphV2NonlocalCascade.lean
+            GSTGraphV2OmegaWaveLaw.lean
+            GSTGraphV2PerfectPowerAncestry.lean
+            GSTGraphV2PhysicalSignedKernelTelescopeScratch.lean
+            GSTGraphV2Production.lean
+            GSTGraphV2ProductionLaws.lean
             GSTGraphV2ScaleEquivariance.lean
+            GSTGraphV2SeededPrefix.lean
+            GSTGraphV2SixAdicOntologicalGeometryLaws.lean
+            GSTGraphV2SixAdicUnitIsometry.lean
+            GSTGraphV2TransparentWidthThree.lean
+            GSTHodgeAssault.lean
+            GSTHodgeAssaultV2.lean
+            GSTInfiniteBadTransport.lean
+            GSTInfiniteCollision.lean
+            GSTInfiniteCoupledLedger.lean
+            GSTInfiniteFourPowerNavigation.lean
+            GSTInfiniteGateTransport.lean
             GSTInfiniteWorldClassification.lean
             GSTInfiniteWorldRenormalization.lean
+            GSTLefschetzCrown.lean
+            GSTLefschetzCrownV2.lean
             GSTMultiAxisCohomology.lean
-            GSTExactWorldOperatorPresentation.lean
             GSTMultiAxisCosmology.lean
             GSTMultiAxisGradedDynamics.lean
-            CardinalWorldsV2.lean
-            waves/CardinalWorldsPostulateLawV2.lean
-            waves/GSTWaveCohomologyV2.lean
-            waves/GSTNCohomologyV2.lean
-            waves/GSTVortexSingularityV2.lean
-            HodgeDeRhamBridgeV2.lean
-            GSTAnalyticAbsorptionV2.lean
-            GSTLefschetzCrownV2.lean
-            GSTHodgeAssaultV2.lean
-            GSTClayOfficialV2.lean
+            GSTPerfectPowerTailNavigation.lean
+            GSTPrefixOneOntologicalEscape.lean
+            GSTPrefixOneSeedCore.lean
+            GSTRadixWorldDynamics.lean
+            GSTSeedOneShift.lean
+            GSTTactic.lean
+            GSTTailFFourthDimension.lean
+            GSTTailFInfiniteRead.lean
+            GSTTailFOneLane.lean
+            GSTTailFProof.lean
+            GSTTheAct.lean
+            GSTTheActConstruction.lean
+            GSTTransferBridge.lean
             GSTTransferBridgeV2.lean
+            GSTTruncatedWorldCohomologyRing.lean
+            GSTUniversalAddressBridge.lean
+            GSTUniversalLefschetzCosmology.lean
+            GSTUniversalLefschetzDynamics.lean
+            GSTUniversalLefschetzPathFormula.lean
+            GSTV2InfiniteCore.lean
+            GSTWorldCosmology.lean
+            GSTWorldCrownBridge.lean
+            GSTWorldPoincareDuality.lean
+            GSTWorldRecoordinationGroupoid.lean
+            GSTWorldtraceArithmetic.lean
+            GSTWorldtraceMahlerRelativePrecision.lean
+            HodgeDeRhamBridge.lean
+            HodgeDeRhamBridgeV2.lean
+            InformationBadTraceScratch.lean
+            InformationDescentScratch.lean
+            InformationGeometryScratch.lean
+            InformationRegenerationScratch.lean
+            InformationStateScratch.lean
+            OriginTransducerScratch.lean
+            waves/CardinalWorldsPostulateLaw.lean
+            waves/CardinalWorldsPostulateLawV2.lean
+            waves/GSTNCohomology.lean
+            waves/GSTNCohomologyV2.lean
+            waves/GSTVortexSingularity.lean
+            waves/GSTVortexSingularityV2.lean
+            waves/GSTWaveCohomology.lean
+            waves/GSTWaveCohomologyV2.lean
           )
           if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' "${files[@]}"; then
             echo HC_UPGRADE_FORBIDDEN_PROOF_ESCAPE=1
@@ -135,37 +199,136 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake build \
-            GSTRadixWorldDynamics \
-            GSTGradedWorldAlgebra \
-            GSTWorldRecoordinationGroupoid \
-            GSTUniversalAddressBridge \
-            GSTDimensionFreeHodgeDiagonal \
-            GSTGlobalPureHodgeCosmology \
-            GSTUniversalLefschetzDynamics \
-            GSTUniversalLefschetzCosmology \
-            GSTUniversalLefschetzPathFormula \
-            GSTTruncatedWorldCohomologyRing \
-            GSTWorldPoincareDuality \
+            CardinalWorlds \
             CardinalWorldsPrefixClassifier \
-            GSTWorldCrownBridge \
+            CardinalWorldsV2 \
+            GSTAnalyticAbsorption \
+            GSTAnalyticAbsorptionV2 \
+            GSTCanonicalCarryDynamics \
+            GSTCanonicalSevenAxisBridge \
+            GSTCanonicalTailLTE \
+            GSTCanonicalTailStateIso \
+            GSTClayOfficial \
+            GSTClayOfficialV2 \
+            GSTDimensionFreeHodgeDiagonal \
+            GSTExactWorldOperatorPresentation \
+            GSTFinalPrefixOneStep6Infinite \
+            GSTFinalPurePowerResidueTransplant \
+            GSTFourPowerAffineBadState \
+            GSTFourPowerAffineChannelAutomaton \
+            GSTFourPowerAffineClassifierBridge \
+            GSTFourPowerAffineExponentPeel \
+            GSTFourPowerAffineOrbit \
+            GSTFourPowerAffinePeelClassifier \
+            GSTFourPowerAffineTwoTritClassifier \
+            GSTFourPowerDirectAdditionCarry \
+            GSTFourPowerDirectChat2Application \
+            GSTFourPowerDirectCreationMaster \
+            GSTFourPowerDirectExistence \
+            GSTFourPowerDirectExistenceFromHappy \
+            GSTFourPowerDirectExistenceNoAxiom \
+            GSTFourPowerDirectExistenceProviderPipeline \
+            GSTFourPowerDirectFailedRelocationState \
+            GSTFourPowerDirectHappyBridge \
+            GSTFourPowerDirectNo22 \
+            GSTFourPowerDirectResidue \
+            GSTFourPowerDirectResidue27 \
+            GSTFourPowerDirectResidue81 \
+            GSTFourPowerExactExponentPeriod \
+            GSTFourPowerExponentTritObstruction \
+            GSTFourPowerHappyProvider \
+            GSTFourPowerNo22Magnitude \
+            GSTFourPowerOntologicalAdapter \
+            GSTFourPowerThirdWave \
+            GSTGhostRayExclusion \
+            GSTGlobalPureHodgeCosmology \
+            GSTGradedWorldAlgebra \
+            GSTGraphV2CanonicalDescentOntology \
+            GSTGraphV2CanonicalEscape \
+            GSTGraphV2CanonicalInfiniteCycle \
+            GSTGraphV2CanonicalNWave \
+            GSTGraphV2CanonicalPhaseSteering \
+            GSTGraphV2CanonicalPhaseWaveProbe \
+            GSTGraphV2CanonicalRenormalization \
+            GSTGraphV2CanonicalSheetTranslation \
+            GSTGraphV2CanonicalSignedPrefixBridge \
+            GSTGraphV2CanonicalTerminalExtinctionProbe \
+            GSTGraphV2CanonicalTransparentBridgeProbe \
+            GSTGraphV2CoupledUFlux \
+            GSTGraphV2CoupledUPhysicalBridge \
+            GSTGraphV2FourPowerResidueObstruction \
+            GSTGraphV2HandwrittenExponentialCascade \
+            GSTGraphV2HandwrittenExponentialLTE \
+            GSTGraphV2HandwrittenOmegaUBlock \
+            GSTGraphV2InfiniteControl \
+            GSTGraphV2NonEuclidean \
+            GSTGraphV2NonEuclideanLaws \
+            GSTGraphV2NonlocalCascade \
+            GSTGraphV2OmegaWaveLaw \
+            GSTGraphV2PerfectPowerAncestry \
+            GSTGraphV2PhysicalSignedKernelTelescopeScratch \
+            GSTGraphV2Production \
+            GSTGraphV2ProductionLaws \
             GSTGraphV2ScaleEquivariance \
+            GSTGraphV2SeededPrefix \
+            GSTGraphV2SixAdicOntologicalGeometryLaws \
+            GSTGraphV2SixAdicUnitIsometry \
+            GSTGraphV2TransparentWidthThree \
+            GSTHodgeAssault \
+            GSTHodgeAssaultV2 \
+            GSTInfiniteBadTransport \
+            GSTInfiniteCollision \
+            GSTInfiniteCoupledLedger \
+            GSTInfiniteFourPowerNavigation \
+            GSTInfiniteGateTransport \
             GSTInfiniteWorldClassification \
             GSTInfiniteWorldRenormalization \
+            GSTLefschetzCrown \
+            GSTLefschetzCrownV2 \
             GSTMultiAxisCohomology \
-            GSTExactWorldOperatorPresentation \
             GSTMultiAxisCosmology \
             GSTMultiAxisGradedDynamics \
-            CardinalWorldsV2 \
-            waves.CardinalWorldsPostulateLawV2 \
-            waves.GSTWaveCohomologyV2 \
-            waves.GSTNCohomologyV2 \
-            waves.GSTVortexSingularityV2 \
+            GSTPerfectPowerTailNavigation \
+            GSTPrefixOneOntologicalEscape \
+            GSTPrefixOneSeedCore \
+            GSTRadixWorldDynamics \
+            GSTSeedOneShift \
+            GSTTactic \
+            GSTTailFFourthDimension \
+            GSTTailFInfiniteRead \
+            GSTTailFOneLane \
+            GSTTailFProof \
+            GSTTheAct \
+            GSTTheActConstruction \
+            GSTTransferBridge \
+            GSTTransferBridgeV2 \
+            GSTTruncatedWorldCohomologyRing \
+            GSTUniversalAddressBridge \
+            GSTUniversalLefschetzCosmology \
+            GSTUniversalLefschetzDynamics \
+            GSTUniversalLefschetzPathFormula \
+            GSTV2InfiniteCore \
+            GSTWorldCrownBridge \
+            GSTWorldPoincareDuality \
+            GSTWorldRecoordinationGroupoid \
+            GSTWorldtraceArithmetic \
+            GSTWorldtraceMahlerRelativePrecision \
+            HodgeDeRhamBridge \
             HodgeDeRhamBridgeV2 \
-            GSTAnalyticAbsorptionV2 \
-            GSTLefschetzCrownV2 \
-            GSTHodgeAssaultV2 \
-            GSTClayOfficialV2 \
-            GSTTransferBridgeV2 2>&1 | tee cosmology-upgrade.log
+            InformationBadTraceScratch \
+            InformationDescentScratch \
+            InformationGeometryScratch \
+            InformationRegenerationScratch \
+            InformationStateScratch \
+            OriginTransducerScratch \
+            waves.CardinalWorldsPostulateLaw \
+            waves.CardinalWorldsPostulateLawV2 \
+            waves.GSTNCohomology \
+            waves.GSTNCohomologyV2 \
+            waves.GSTVortexSingularity \
+            waves.GSTVortexSingularityV2 \
+            waves.GSTWaveCohomology \
+            waves.GSTWaveCohomologyV2 2>&1 | tee cosmology-upgrade.log
           echo HC_UPGRADE_BUILD_GREEN=1
 
       - name: Verify no sorryAx in upgraded crowns

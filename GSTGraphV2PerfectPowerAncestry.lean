@@ -58,4 +58,15 @@ theorem power_origin_event_eight_iff
 #print axioms power_origin_happy_iff
 #print axioms power_origin_event_eight_iff
 
+
+/-- Perfect-power ancestry transports arbitrary base energies, so the unit
+sheet restriction is unnecessary for the physical observables. -/
+theorem scaled_origin_observables_exact (E K t p : Nat) :
+    (graph (4^K*E) t p).seven.carry = (graph E (K+t) p).seven.carry ∧
+    (graph (4^K*E) t p).seven.digit = (graph E (K+t) p).seven.digit ∧
+    (graph (4^K*E) t p).seven.descent = (graph E (K+t) p).seven.descent ∧
+    (graph (4^K*E) t p).eventCode = (graph E (K+t) p).eventCode := by
+  have he : 4^t*(4^K*E) = 4^(K+t)*E := by rw [pow_add]; ring
+  simp [graph, cell, GSTCanonicalSevenAxisBridge.vertex, he]
+
 end GSTGraphV2PerfectPowerAncestry

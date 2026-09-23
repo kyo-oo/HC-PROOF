@@ -113,4 +113,18 @@ theorem canonical_graph_three_adic_bad_trace_iff
 #check canonical_graph_three_adic_bad_trace_iff
 #print axioms canonical_graph_three_adic_happy_iff
 
+/-- An arbitrary block of origin trits has one exact canonical sheet
+translation, with the entire consumed phase retained. -/
+theorem canonicalEnergy_block_translate (s a m K : Nat) :
+    canonicalEnergy s (a + 3^K * m) =
+      4^(a * 3^(s+1)) * canonicalEnergy (s+K) m := by
+  unfold canonicalEnergy
+  have hexp : 3^(s+1) * (a + 3^K * m) =
+      a * 3^(s+1) + 3^((s+K)+1) * m := by
+    rw [show 3^((s+K)+1) = 3^(s+1) * 3^K by
+      rw [show (s+K)+1 = (s+1)+K by omega, pow_add]]
+    ring
+  rw [hexp, pow_add]
+
+
 end GSTGraphV2CanonicalSheetTranslation

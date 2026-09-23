@@ -147,4 +147,24 @@ theorem directExistence_implies_source_two
 #print axioms noCommonTwo_all_exponent_trit_laws
 #print axioms directExistence_implies_source_two
 
+
+/-- Every existing witness survives an arbitrary higher exponent suffix.
+This supplies an infinite arithmetic progression of positive exponents from
+one certified row, without a global existence assumption. -/
+theorem commonTwo_of_periodic_row (K p u : Nat) (hp : 1 ≤ p)
+    (hs : digit3 (4^K) p = 2) (ht : digit3 (4^(K+1)) p = 2) :
+    CommonTwo (K + 3^p*u) := by
+  refine ⟨p, hp, ?_, ?_⟩
+  · rw [pow4_digit_period]
+    exact hs
+  · rw [show K + 3^p*u + 1 = (K+1) + 3^p*u by omega,
+      pow4_digit_period]
+    exact ht
+
+/-- A single common-two exponent determines an entire certified progression. -/
+theorem commonTwo_has_periodic_progression (K : Nat) (h : CommonTwo K) :
+    ∃ p : Nat, 1 ≤ p ∧ ∀ u : Nat, CommonTwo (K + 3^p*u) := by
+  obtain ⟨p, hp, hs, ht⟩ := h
+  exact ⟨p, hp, fun u => commonTwo_of_periodic_row K p u hp hs ht⟩
+
 end GSTFourPowerDirectExistence

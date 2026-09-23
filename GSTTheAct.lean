@@ -150,4 +150,14 @@ theorem front_law (v : Nat) : ∀ a : Nat,
 #print axioms climb_gives_the_act
 #print axioms front_law
 
+/-- The front law reconstructs the complete residue through the first free trit,
+not merely the trit itself. -/
+theorem front_residue_law (v a : Nat) :
+    4^(3^v*a) % 3^(v+2) = 1 + 3^(v+1) * (a % 3) := by
+  rw [show v+2 = (v+1)+1 by omega, Nat.pow_succ, Nat.mod_mul,
+    GSTCanonicalTailLTE.pow4_scaled_mod_next v a]
+  change 1 + 3^(v+1) * digit3 (4^(3^v*a)) (v+1) = _
+  rw [front_law]
+
+
 end GSTTheAct

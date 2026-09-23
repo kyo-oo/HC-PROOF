@@ -235,4 +235,27 @@ def FourPowerHappyGeThreeFromMonolith : Prop :=
 #print axioms four_power_happy_ge_three_from_commonTwoGeThree
 #print axioms four_power_happy_ge_three_from_prefixHitGeThree
 
+
+/-- The prefix-hit encoding is exact, including the row cutoff in the reverse
+direction; any high common-two row recovers its unique exponent scale. -/
+theorem commonTwoGeThree_iff_prefixHitGeThree (K : Nat) :
+    CommonTwoGeThree K ↔ PrefixHitGeThree K := by
+  constructor
+  · rintro ⟨p, hp, hs, ht⟩
+    cases p with
+    | zero => omega
+    | succ q =>
+        have h := (GSTFourPowerExponentTritObstruction.row_common_two_iff_prefix_killing_trit K q).1 ⟨hs, ht⟩
+        exact ⟨q, by omega, h.1, h.2⟩
+  · exact commonTwoGeThree_of_prefixHitGeThree K
+
+/-- High physical Happy rows and high arithmetic common-two rows are
+interchangeable with no change of coordinate. -/
+theorem commonTwoGeThree_iff_physical_happy (K : Nat) :
+    CommonTwoGeThree K ↔ ∃ p : Nat, 3 ≤ p ∧
+      GSTCanonicalTailStateIso.HappyCell
+        (GSTCanonicalTailStateIso.carry4 (4^K) p)
+        (GSTCanonicalTailStateIso.digit3 (4^K) p) := by
+  exact (GSTFourPowerDirectHappyBridge.physical_happy_cutoff_iff K 3).symm
+
 end GSTFourPowerHappyProvider

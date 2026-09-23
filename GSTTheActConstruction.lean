@@ -544,4 +544,26 @@ theorem the_construction_receipt
 #print axioms hTailF_of_feedback
 #print axioms the_construction_receipt
 
+/-- Exact inverse feedback: the unique firing residue is recovered from the
+lower exponent prefix and its noise, at every depth. -/
+theorem feedback_fire_iff_residue (K j : Nat) :
+    digit3 (4^K) (j+1) = 2 ↔
+      K % 3^(j+1) = K % 3^j +
+        3^j * (2 - digit3 (4^(K % 3^j)) (j+1)) := by
+  have hn : digit3 (4^(K % 3^j)) (j+1) < 3 :=
+    Nat.mod_lt _ (by decide)
+  have hd : digit3 K j < 3 := Nat.mod_lt _ (by decide)
+  have hpos : 0 < 3^j := Nat.pow_pos (by decide)
+  rw [self_read, Nat.pow_succ, Nat.mod_mul]
+  change (_ + digit3 K j) % 3 = 2 ↔
+    K % 3^j + 3^j * digit3 K j = _
+  constructor
+  · intro h
+    have heq : digit3 K j = 2 - digit3 (4^(K % 3^j)) (j+1) := by omega
+    rw [heq]
+  · intro h
+    have heq : digit3 K j = 2 - digit3 (4^(K % 3^j)) (j+1) := by nlinarith
+    omega
+
+
 end GSTTheActConstruction

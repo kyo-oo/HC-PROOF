@@ -25,6 +25,25 @@ set_option maxHeartbeats 10000000
 def GSTSeededBadTraceS (seed R : Nat) : Prop :=
   ∀ j, GSTBadPairS (gstAffineMulCarryS 4 seed R j) (gstDigitS R j)
 
+/-- Exact prefix/tail factorization of the bad language at any cut. -/
+theorem gst_seeded_bad_trace_cut_iffS (D X q : Nat) :
+    GSTSeededBadTraceS D X ↔
+      (∀ j, j < q → GSTBadPairS (gstAffineMulCarryS 4 D X j) (gstDigitS X j)) ∧
+      GSTSeededBadTraceS (gstAffineMulCarryS 4 D X q) (X / 3^q) := by
+  constructor
+  · intro h
+    refine ⟨fun j _ => h j, ?_⟩
+    intro j
+    have hj := h (q+j)
+    rw [gst_seeded_affine_carry_semigroupS, gst_seeded_affine_digit_shiftS] at hj
+    exact hj
+  · rintro ⟨hpre, htail⟩ j
+    by_cases hj : j < q
+    · exact hpre j hj
+    · have heq : j = q + (j-q) := by omega
+      rw [heq, gst_seeded_affine_carry_semigroupS, gst_seeded_affine_digit_shiftS]
+      exact htail (j-q)
+
 /-- Dividing a relative affine realization by one ternary position preserves
     the same relative multiplier.  Only the finite offset is regenerated. -/
 theorem gst_relative_affine_tail_divS

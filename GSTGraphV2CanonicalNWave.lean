@@ -130,4 +130,23 @@ theorem canonical_n_wave_terminal_strip_packet_iff
 #print axioms canonical_n_wave_terminal_strip_packet_iff
 
 -- Kernel trigger after sheet-translation closure.
+/-- Successive arbitrary n-wave cuts compose exactly in horizontal phase.
+The second cut is taken in the residual origin at its updated scale. -/
+theorem nWaveShift_add_exact (s n K L : Nat) :
+    nWaveShift s n (K+L) =
+      nWaveShift s n K + nWaveShift (s+K) (n / 3^K) L := by
+  unfold nWaveShift uPhaseShift originPrefix
+  rw [show 3^(K+L) = 3^K * 3^L by rw [pow_add], Nat.mod_mul]
+  rw [show 3^((s+K)+1) = 3^(s+1) * 3^K by
+    rw [show (s+K)+1 = (s+1)+K by omega, pow_add]]
+  ring
+
+/-- The energy remaining after two cuts is exactly that after their sum. -/
+theorem nWaveEnergy_add_exact (s n K L : Nat) :
+    nWaveEnergy s n (K+L) = nWaveEnergy (s+K) (n / 3^K) L := by
+  unfold nWaveEnergy uTailEnergy uTailExponent originSuffix
+  rw [Nat.div_div_eq_div_mul, ← pow_add]
+  rw [show s+1+(K+L) = (s+K)+1+L by omega]
+
+
 end GSTGraphV2CanonicalNWave

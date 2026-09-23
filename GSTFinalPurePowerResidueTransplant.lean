@@ -358,4 +358,20 @@ theorem exactPowerRectangle_conservation
 #check residueStripCarry_is_exact_power_carry
 #check exactPowerRectangle_conservation
 
+/-- The exponent lift works for any number of trit increments, including wraps. -/
+theorem pow4_exponent_lift_digit_all (p m c a : Nat)
+    (hA : 4^(3^p) = 1 + 3^(p+1)*c) (hc : c % 3 = 1) :
+    digit3 (4^(m + a*3^p)) (p+1) =
+      (digit3 (4^m) (p+1) + a) % 3 := by
+  induction a with
+  | zero =>
+      simp only [Nat.zero_mul, Nat.add_zero]
+      unfold digit3
+      exact (Nat.mod_mod _ _).symm
+  | succ a ih =>
+      rw [show m + (a+1)*3^p = (m+a*3^p)+3^p by ring,
+        pow4_exponent_lift_one_digit p (m+a*3^p) c hA hc, ih]
+      omega
+
+
 end GSTFinalPurePowerResidueTransplant

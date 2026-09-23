@@ -109,4 +109,28 @@ theorem lowDigit_peel2_affineOrbit (q : Nat) :
 #print axioms noCommonTwo_three_mul_add_one_iff
 #print axioms noCommonTwo_three_mul_add_two_iff
 
+
+/-- Quotient/remainder normal form of the full first-trit classifier, valid
+for every exponent without first supplying a branch representation. -/
+theorem noCommonTwo_iff_quotient_peel (K : Nat) :
+    (¬ CommonTwo K) ↔
+      (K % 3 = 0 ∧ BadChannel 0 (peel0 (affineOrbit (K / 3)))) ∨
+      (K % 3 = 1 ∧ BadChannel 1 (peel1 (affineOrbit (K / 3)))) ∨
+      (K % 3 = 2 ∧ BadChannel 3 (peel2 (affineOrbit (K / 3)))) := by
+  have hr : K % 3 < 3 := Nat.mod_lt _ (by decide)
+  have hs := Nat.mod_add_div K 3
+  interval_cases h : K % 3
+  · have he : K = 3*(K/3) := by omega
+    have hc := noCommonTwo_three_mul_iff (K/3)
+    rw [← he] at hc
+    simpa [h] using hc
+  · have he : K = 3*(K/3)+1 := by omega
+    have hc := noCommonTwo_three_mul_add_one_iff (K/3)
+    rw [← he] at hc
+    simpa [h] using hc
+  · have he : K = 3*(K/3)+2 := by omega
+    have hc := noCommonTwo_three_mul_add_two_iff (K/3)
+    rw [← he] at hc
+    simpa [h] using hc
+
 end GSTFourPowerAffinePeelClassifier

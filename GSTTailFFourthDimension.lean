@@ -2338,4 +2338,15 @@ theorem omega_dust_shape_middle_third (core : Nat)
 #print axioms omega_window_dodge_escalates
 #print axioms omega_dust_shape_middle_third
 
+/-- The whole observed digit, not just the digit-two sector, is identical on
+any two sheets whose stable windows contain the coordinate. -/
+theorem omega_observed_digit_sheet_independent (core k s t : Nat)
+    (hk : 1 ≤ k) (hs : k ≤ s+1) (ht : k ≤ t+1) :
+    digit3 (4^(3^s*core)) (s+k) = digit3 (4^(3^t*core)) (t+k) := by
+  rw [omega_observed_digit s core k hk hs,
+    omega_observed_digit t core k hk ht,
+    omega_tower_word_mod_chain core k s (by omega),
+    omega_tower_word_mod_chain core k t (by omega)]
+
+
 end GSTTailFFourthDimension
