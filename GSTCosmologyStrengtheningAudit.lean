@@ -481,3 +481,11 @@ import waves.GSTWaveCohomologyV2
 #print axioms GSTNCohomologyV2.weighted_interference_ext
 
 #print axioms GSTNCohomologyV2.weighted_interference_single_probe
+
+#print axioms GSTNCohomology.ncoho_rank
+
+#print axioms GSTNCohomologyV2.canonicalNCohoBasis
+
+#print axioms GSTNCohomologyV2.ncoho_rank_unconditional
+
+#print axioms GSTNCohomologyV2.canonicalNCohoBasis_injective

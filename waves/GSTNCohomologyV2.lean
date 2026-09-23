@@ -48,23 +48,32 @@ theorem towerWindow_nonempty_iff (R p N : Nat) :
     have hz := (towerWindow_nil_iff R p N).1 hnil
     omega
 
-/-- The canonical N-cohomology basis exists without any ignition or
-nonemptiness hypothesis. -/
+/-- Canonical isolated channel readouts, defined at every depth. -/
 def canonicalNCohoBasis (R : Nat) (s : NShape) (N : Nat) :
     Fin s.holes → nCohoClasses R s N :=
-  fun _ => (fun j => towerWindow R (s.channel j) N, 0)
+  fun i => (fun j => if j = i then towerWindow R (s.channel j) N else [], 0)
 
-/-- **UNCONDITIONAL RANK LAW.**  Every N-shape has one canonical readout
-coordinate per hole at every depth, including depth zero. -/
+/-- Every N-shape has its prescribed readout at each hole at every depth,
+including zero. Distinctness is certified separately at positive depth. -/
 theorem ncoho_rank_unconditional (R : Nat) (s : NShape) (N : Nat) :
     ∀ i : Fin s.holes,
       (canonicalNCohoBasis R s N i).1 i =
         towerWindow R (s.channel i) N := by
   intro i
-  rfl
+  simp [canonicalNCohoBasis]
 
-/-- The original rank theorem is now an immediate specialization; its old
-nonempty-window hypothesis carries no mathematical load. -/
+/-- Distinct holes have distinct canonical readouts at every positive depth. -/
+theorem canonicalNCohoBasis_injective (R : Nat) (s : NShape) (N : Nat)
+    (hN : 0 < N) : Function.Injective (canonicalNCohoBasis R s N) := by
+  intro i j hij
+  by_contra hne
+  have hcoord := congrArg (fun z : nCohoClasses R s N => z.1 i) hij
+  have hz : towerWindow R (s.channel i) N = [] := by
+    simpa [canonicalNCohoBasis, hne] using hcoord
+  exact (towerWindow_nonempty_iff R (s.channel i) N).2 hN hz
+
+/-- Diagonal readout availability needs no nonempty-window hypothesis.
+The stronger injectivity conclusion of `ncoho_rank` uses nonemptiness. -/
 theorem ncoho_rank_absorbed (R : Nat) (s : NShape) (N : Nat) :
     ∃ (basis : Fin s.holes → nCohoClasses R s N),
       ∀ i : Fin s.holes, (basis i).1 i =

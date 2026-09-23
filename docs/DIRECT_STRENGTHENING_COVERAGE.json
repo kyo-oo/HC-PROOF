@@ -855,7 +855,8 @@
       "GSTNCohomology.waveII_channel_reconstruction": "theorem",
       "GSTNCohomology.waveII_prefix_add": "theorem",
       "GSTNCohomology.waveII_prefix_all_zero_iff": "theorem",
-      "GSTNCohomology.waveII_prefix_complete_observable": "theorem"
+      "GSTNCohomology.waveII_prefix_complete_observable": "theorem",
+      "GSTNCohomology.ncoho_rank": "theorem"
     }
   },
   {
@@ -866,7 +867,10 @@
       "GSTNCohomologyV2.weightedInterference_delta": "theorem",
       "GSTNCohomologyV2.weighted_interference_energy": "theorem",
       "GSTNCohomologyV2.weighted_interference_ext": "theorem",
-      "GSTNCohomologyV2.weighted_interference_single_probe": "theorem"
+      "GSTNCohomologyV2.weighted_interference_single_probe": "theorem",
+      "GSTNCohomologyV2.canonicalNCohoBasis": "def",
+      "GSTNCohomologyV2.ncoho_rank_unconditional": "theorem",
+      "GSTNCohomologyV2.canonicalNCohoBasis_injective": "theorem"
     }
   },
   {

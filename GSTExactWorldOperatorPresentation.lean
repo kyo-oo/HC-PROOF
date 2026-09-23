@@ -189,12 +189,12 @@ theorem L_pow_eq_zero_iff (n : ℕ) :
     · have hone : (1 : WorldCohomologyRing A B) = 0 := by
         simpa [hA] using V_pow_depth A B
       calc
-        _ = _ * 1 := (mul_one _).symm
+        L A B ^ n = (L A B ^ n) * (1 : WorldCohomologyRing A B) := (mul_one _).symm
         _ = 0 := by rw [hone, mul_zero]
     · have hone : (1 : WorldCohomologyRing A B) = 0 := by
         simpa [hB] using H_pow_depth A B
       calc
-        _ = _ * 1 := (mul_one _).symm
+        L A B ^ n = (L A B ^ n) * (1 : WorldCohomologyRing A B) := (mul_one _).symm
         _ = 0 := by rw [hone, mul_zero]
     · exact pow_eq_zero_of_le hn (rectangular_L_pow_boundary A B)
 

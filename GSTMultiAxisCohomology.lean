@@ -332,19 +332,31 @@ theorem boundedNormalForm_comp (b : I → ℕ) (p : MvPolynomial I ℤ) :
     rw [coeff_boundedNormalForm_of_not_live d _ e hd,
       coeff_boundedNormalForm_of_not_live _ _ e hm]
 
-/-- All depth observations jointly recover the complete polynomial. For
-each coefficient there is a native depth profile in which it remains live. -/
-theorem all_depths_separate (p q : MvPolynomial I ℤ) :
-    (∀ b : I → ℕ, boundedNormalForm b p = boundedNormalForm b q) ↔ p = q := by
+/-- Any cofinal schedule of uniform-depth observations recovers the complete
+polynomial, even over infinitely many axes. Finite exponent support makes
+each individual coefficient visible at one of the scheduled resolutions. -/
+theorem all_depths_separate (p q : MvPolynomial I ℤ)
+    {J : Type*} (resolution : J → ℕ)
+    (hcofinal : ∀ K, ∃ j, K ≤ resolution j) :
+    (∀ j, boundedNormalForm (fun _ => resolution j) p =
+      boundedNormalForm (fun _ => resolution j) q) ↔ p = q := by
+  classical
   constructor
   · intro h
     apply MvPolynomial.ext
     intro e
-    have hc := congrArg (coeff e) (h (fun i => e i + 1))
-    simpa only [coeff_boundedNormalForm_of_live _ _ e (fun i => Nat.lt_succ_self (e i))]
-      using hc
+    obtain ⟨j, hj⟩ := hcofinal (e.support.sup (fun i => e i) + 1)
+    have hlive : ∀ i, e i < resolution j := by
+      intro i
+      by_cases hi : i ∈ e.support
+      · have hle : e i ≤ e.support.sup (fun i => e i) := Finset.le_sup hi
+        omega
+      · have hz : e i = 0 := Finsupp.notMem_support_iff.mp hi
+        omega
+    have hc := congrArg (coeff e) (h j)
+    simpa only [coeff_boundedNormalForm_of_live _ _ e hlive] using hc
   · rintro rfl
-    intro b
+    intro j
     rfl
 
 section Representation

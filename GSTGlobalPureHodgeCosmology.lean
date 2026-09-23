@@ -231,7 +231,9 @@ theorem pure_residual_decomposition {A B : Nat} (f : ShapeCoef (outputShape A B)
         f = parts.1 + parts.2 := by
   refine ⟨(pureProjection f, f - pureProjection f), ?_, ?_⟩
   · refine ⟨pureReassemble_isPure _, pureCoordinates_residual f, ?_⟩
-    abel
+    funext x
+    change f x = pureProjection f x + (f x - pureProjection f x)
+    ring
   · rintro ⟨g, r⟩ ⟨hg, hr, hsplit⟩
     have hcoord : pureCoordinates g = pureCoordinates f := by
       funext p
@@ -246,9 +248,12 @@ theorem pure_residual_decomposition {A B : Nat} (f : ShapeCoef (outputShape A B)
       pure_hodge_ext hg (pureReassemble_isPure _)
         (hcoord.trans (pureCoordinates_pureReassemble _).symm)
     apply Prod.ext hgproj
-    dsimp
-    rw [hsplit, hgproj]
-    abel
+    funext x
+    have hx := congrFun hsplit x
+    have hgx := congrFun hgproj x
+    change f x = g x + r x at hx
+    change r x = f x - pureProjection f x
+    linarith
 
 /-- The historical HC pure sector has exactly three canonical coordinates. -/
 theorem hc_pure_coordinate_depth :

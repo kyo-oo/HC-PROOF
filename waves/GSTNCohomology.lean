@@ -134,29 +134,35 @@ theorem towerWindow_pos (R p : Nat) (hN : 1 ≤ N) :
   simp at hlen
   omega
 
-/-- **N-COHOMOLOGY** (degree one) of the shape channel stack: the group of
-window readouts — a depth-N window profile per hole (a list of N Wave II
-amplitudes), with an integer class coordinate.  The rank statement is the
-injectivity of the channel map: N holes carry N distinct window
-coordinates. -/
+/-- Native channel readout space: a list at each hole, together with an
+integer class coordinate. The type permits arbitrary lists; the canonical
+readouts below supply the specified depth-N windows. -/
 def nCohoClasses (R : Nat) (s : NShape) (N : Nat) : Type :=
   (Fin s.holes → List ℤ) × ℤ
 
-/-- **THE N-COHOMOLOGY RANK LAW.**  On an N-shape whose channels carry
-nonempty depth-N windows, the degree-one window readout family exists and
-is indexed by the N holes — one independent window class per hole, the
-channels distinct by `channel_embedding`.  *Dimension is the count of
-stabilized readouts — emergent, not fixed.*
-
-(Upgrade note: the former spec's `∃ basis, True` carried no content; this
-is the exact rank statement: the readout family exists, is indexed by
-the holes, and reads the channel of each hole at its own coordinate.) -/
+/-- **N-CHANNEL SEPARATION.** Each hole has its own isolated nonempty
+readout, and distinct holes yield distinct classes. The off-diagonal
+coordinates are empty. This is an injective native readout family; no
+module structure on lists is asserted. -/
 theorem ncoho_rank (R : Nat) (s : NShape) (N : Nat)
     (hign : ∀ i : Fin s.holes, towerWindow R (s.channel i) N ≠ []) :
     ∃ (basis : Fin s.holes → nCohoClasses R s N),
-      ∀ i : Fin s.holes, (basis i).1 i = towerWindow R (s.channel i) N := by
-  refine ⟨fun i => (fun j => towerWindow R (s.channel j) N, 0), fun i => ?_⟩
-  rfl
+      Function.Injective basis ∧
+      (∀ i : Fin s.holes, (basis i).1 i = towerWindow R (s.channel i) N) ∧
+      (∀ i j : Fin s.holes, j ≠ i → (basis i).1 j = []) := by
+  let basis : Fin s.holes → nCohoClasses R s N :=
+    fun i => (fun j => if j = i then towerWindow R (s.channel j) N else [], 0)
+  refine ⟨basis, ?_, ?_, ?_⟩
+  · intro i j hij
+    by_contra hne
+    have hcoord := congrArg (fun z : nCohoClasses R s N => z.1 i) hij
+    have hz : towerWindow R (s.channel i) N = [] := by
+      simpa [basis, hne] using hcoord
+    exact hign i hz
+  · intro i
+    simp [basis]
+  · intro i j hji
+    simp [basis, hji]
 
 /-! ## §3 The interference pairing — how the two waves react -/
 
