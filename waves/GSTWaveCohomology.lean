@@ -278,6 +278,74 @@ def rowClassAt (R p t : Nat) : ℤ :=
 def rowClass (R p N : Nat) : ℤ :=
   ∑ t ∈ Finset.range N, rowClassAt R p t
 
+/-- **EXACT ROW-CLASS COCYCLE.**  Every finite row class splits at an
+arbitrary horizontal cut into the incoming prefix plus the class of the
+re-encoded tail.  Thus `rowClass` is a genuine additive transport cocycle
+for the `R ↦ 4^M·R` dynamics, not merely a one-step recurrence. -/
+theorem rowClass_add_exact (R p M N : Nat) :
+    rowClass R p (M + N) =
+      rowClass R p M + rowClass (4^M * R) p N := by
+  unfold rowClass
+  rw [Finset.sum_range_add]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro t ht
+  unfold rowClassAt
+  rw [show (4:Nat)^(M+t) * R = 4^t * (4^M * R) by
+    rw [Nat.pow_add]
+    ring]
+
+/-- **LOCAL INVERSION.**  Every local Wave-I matter class is recovered as
+the exact discrete derivative of two consecutive integrated row classes. -/
+theorem rowClassAt_recovered_exact (R p N : Nat) :
+    rowClassAt R p N = rowClass R p (N+1) - rowClass R p N := by
+  rw [show N+1 = Nat.succ N by omega]
+  unfold rowClass
+  rw [Finset.sum_range_succ]
+  ring
+
+/-- **ARBITRARY-CUT TRANSPORT.**  The difference between any later row
+prefix and an earlier one is exactly the class of the re-encoded interval
+starting at that cut. -/
+theorem rowClass_cut_exact (R p M N : Nat) (hMN : M ≤ N) :
+    rowClass R p N =
+      rowClass R p M + rowClass (4^M * R) p (N-M) := by
+  calc
+    rowClass R p N = rowClass R p (M + (N-M)) := by
+      congr 1
+      omega
+    _ = rowClass R p M + rowClass (4^M * R) p (N-M) :=
+      rowClass_add_exact R p M (N-M)
+
+/-- **COMPLETE PREFIX OBSERVABLE.**  Equality of every integrated Wave-I
+prefix is equivalent to pointwise equality of the entire local matter
+field.  No information is lost by passing from local classes to prefixes. -/
+theorem rowClass_prefix_complete (R S p q : Nat) :
+    (∀ N, rowClass R p N = rowClass S q N) ↔
+      ∀ t, rowClassAt R p t = rowClassAt S q t := by
+  constructor
+  · intro h t
+    rw [rowClassAt_recovered_exact R p t,
+        rowClassAt_recovered_exact S q t,
+        h (t+1), h t]
+  · intro h N
+    unfold rowClass
+    exact Finset.sum_congr rfl (fun t _ => h t)
+
+/-- All Wave-I prefixes vanish exactly when every local matter class
+vanishes.  This is the zero-fiber form of complete prefix observability. -/
+theorem rowClass_all_zero_iff_exact (R p : Nat) :
+    (∀ N, rowClass R p N = 0) ↔ ∀ t, rowClassAt R p t = 0 := by
+  constructor
+  · intro h t
+    rw [rowClassAt_recovered_exact R p t, h (t+1), h t]
+    ring
+  · intro h N
+    unfold rowClass
+    apply Finset.sum_eq_zero
+    intro t ht
+    exact h t
+
 /-- The HAPPY LOCUS of the twelve cells: cells realizing digit-two
 survival in the NULL or GST+ carry sector (the certified Happy cells of
 `GSTU2DEventTransport.HappyCell`). -/
@@ -436,5 +504,16 @@ theorem finite_weighted_wave_decomposition {ι : Type*} (s : Finset ι)
       (∑ i ∈ s, weight i * waveSource (cell i)) := by
   simp_rw [wave_cell_decomposition, mul_add]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+
+#check rowClass_add_exact
+#check rowClassAt_recovered_exact
+#check rowClass_cut_exact
+#check rowClass_prefix_complete
+#check rowClass_all_zero_iff_exact
+#print axioms rowClass_add_exact
+#print axioms rowClassAt_recovered_exact
+#print axioms rowClass_cut_exact
+#print axioms rowClass_prefix_complete
+#print axioms rowClass_all_zero_iff_exact
 
 end GSTWaveCohomology
