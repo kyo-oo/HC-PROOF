@@ -1,3 +1,5 @@
+import GSTGlobalPureHodgeCosmology
+import GSTTruncatedWorldCohomologyRing
 import CardinalWorlds
 import CardinalWorldsPrefixClassifier
 import CardinalWorldsV2
@@ -371,3 +373,111 @@ import waves.GSTWaveCohomologyV2
 #print axioms GSTInfiniteWorldRenormalization.level_eq_iff_prefix_tail
 
 #print axioms GSTInfiniteWorldRenormalization.graft_level_eq_iff
+
+#print axioms GSTMultiAxisCohomology.all_depths_separate
+
+#print axioms GSTMultiAxisCohomology.axis_pow_eq_zero_of_depth_le
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm_add
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm_comp
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm_eq_iff
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm_eq_of_quotient_eq
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm_idempotent
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm_mul
+
+#print axioms GSTMultiAxisCohomology.boundedNormalForm_support
+
+#print axioms GSTMultiAxisCohomology.bounded_quotient_injective
+
+#print axioms GSTMultiAxisCohomology.coeff_boundedNormalForm_of_live
+
+#print axioms GSTMultiAxisCohomology.coeff_boundedNormalForm_of_not_live
+
+#print axioms GSTMultiAxisCohomology.depthRestriction
+
+#print axioms GSTMultiAxisCohomology.depthRestriction_comp
+
+#print axioms GSTMultiAxisCohomology.depthRestriction_eq_iff
+
+#print axioms GSTMultiAxisCohomology.depthRestriction_mk
+
+#print axioms GSTMultiAxisCohomology.depthRestriction_surjective
+
+#print axioms GSTMultiAxisCohomology.existsUnique_bounded_representative
+
+#print axioms GSTMultiAxisCohomology.monomial_class_eq_zero_iff
+
+#print axioms GSTMultiAxisCohomology.quotient_boundedNormalForm
+
+#print axioms GSTTruncatedWorldCohomologyRing.H_pow_eq_zero_of_depth_le
+
+#print axioms GSTTruncatedWorldCohomologyRing.L_binomial
+
+#print axioms GSTTruncatedWorldCohomologyRing.L_pow_boundary
+
+#print axioms GSTTruncatedWorldCohomologyRing.L_pow_eq_zero_of_boundary_le
+
+#print axioms GSTTruncatedWorldCohomologyRing.V_pow_eq_zero_of_depth_le
+
+#print axioms GSTTruncatedWorldCohomologyRing.mem_worldOperatorHom_ker_iff_annihilates
+
+#print axioms GSTTruncatedWorldCohomologyRing.worldAct_eq_iff_operator_eq
+
+#print axioms GSTTruncatedWorldCohomologyRing.worldAct_monomial_zero
+
+#print axioms GSTTruncatedWorldCohomologyRing.worldAct_neg
+
+#print axioms GSTTruncatedWorldCohomologyRing.worldAct_pow_add
+
+#print axioms GSTGlobalPureHodgeCosmology.pureCoordinates_residual
+
+#print axioms GSTGlobalPureHodgeCosmology.pureProjection
+
+#print axioms GSTGlobalPureHodgeCosmology.pure_hodge_basis_expansion
+
+#print axioms GSTGlobalPureHodgeCosmology.pure_hodge_eq_iff_coordinates
+
+#print axioms GSTGlobalPureHodgeCosmology.pure_hodge_eq_zero_iff_coordinates_zero
+
+#print axioms GSTGlobalPureHodgeCosmology.pure_residual_decomposition
+
+#print axioms GSTWaveCohomology.rowClassAt_recovered_exact
+
+#print axioms GSTWaveCohomology.rowClass_add_exact
+
+#print axioms GSTWaveCohomology.rowClass_all_zero_iff_exact
+
+#print axioms GSTWaveCohomology.rowClass_cut_exact
+
+#print axioms GSTWaveCohomology.rowClass_prefix_complete
+
+#print axioms GSTWaveCohomologyV2.rowClassAt_recovered
+
+#print axioms GSTWaveCohomologyV2.rowClass_all_zero_iff
+
+#print axioms GSTWaveCohomologyV2.rowClass_complete_observable
+
+#print axioms GSTNCohomology.waveIIAmplitude_prefix_recovered
+
+#print axioms GSTNCohomology.waveII_channel_reconstruction
+
+#print axioms GSTNCohomology.waveII_prefix_add
+
+#print axioms GSTNCohomology.waveII_prefix_all_zero_iff
+
+#print axioms GSTNCohomology.waveII_prefix_complete_observable
+
+#print axioms GSTNCohomologyV2.weightedInterference_delta
+
+#print axioms GSTNCohomologyV2.weighted_interference_energy
+
+#print axioms GSTNCohomologyV2.weighted_interference_ext
+
+#print axioms GSTNCohomologyV2.weighted_interference_single_probe

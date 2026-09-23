@@ -200,7 +200,7 @@ theorem coeff_boundedNormalForm_of_live
     (he : ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = coeff e p := by
   classical
-  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) (AddMonoidAlgebra.coeff p)) e = coeff e p
+  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) (AddMonoidAlgebra.coeff p)) e = (AddMonoidAlgebra.coeff p) e
   simp [he]
 
 /-- Every coefficient crossing at least one boundary is deleted by canonical
@@ -458,7 +458,7 @@ theorem finite_polarization_bound {R : Type*} [CommRing R]
           d i + ((∑ j ∈ s, (d j - 1)) + 1) - 1 := by omega
       rw [he]
       exact h
-  · push_neg at hd
+  · push Not at hd
     obtain ⟨i, hi, hdi⟩ := hd
     have hz : d i = 0 := by omega
     have hone : (1 : R) = 0 := by simpa [hz] using hx i hi

@@ -211,6 +211,45 @@ theorem pure_hodge_classification
   · rintro ⟨a, rfl, huniq⟩
     exact pureReassemble_isPure a
 
+/-- The pure part of an arbitrary world, without a purity hypothesis. -/
+def pureProjection {A B : Nat} (f : ShapeCoef (outputShape A B)) :
+    ShapeCoef (outputShape A B) := pureReassemble (pureCoordinates f)
+
+/-- The complementary part is invisible to every diagonal coordinate. -/
+theorem pureCoordinates_residual {A B : Nat} (f : ShapeCoef (outputShape A B)) :
+    pureCoordinates (f - pureProjection f) = 0 := by
+  have h := pureCoordinates_pureReassemble (pureCoordinates f)
+  funext p
+  change pureCoordinates f p - pureCoordinates (pureProjection f) p = 0
+  exact sub_eq_zero.mpr (congrFun h p).symm
+
+/-- Every world has a unique pure/residual decomposition. The pure piece
+contains all diagonal information; the residual has zero diagonal readout. -/
+theorem pure_residual_decomposition {A B : Nat} (f : ShapeCoef (outputShape A B)) :
+    ∃! parts : ShapeCoef (outputShape A B) × ShapeCoef (outputShape A B),
+      isWorldPureHodge parts.1 ∧ pureCoordinates parts.2 = 0 ∧
+        f = parts.1 + parts.2 := by
+  refine ⟨(pureProjection f, f - pureProjection f), ?_, ?_⟩
+  · refine ⟨pureReassemble_isPure _, pureCoordinates_residual f, ?_⟩
+    abel
+  · rintro ⟨g, r⟩ ⟨hg, hr, hsplit⟩
+    have hcoord : pureCoordinates g = pureCoordinates f := by
+      funext p
+      have hz := congrFun hr p
+      have hs := congrFun hsplit (pureDiagonalState p)
+      change r (pureDiagonalState p) = 0 at hz
+      change g (pureDiagonalState p) = f (pureDiagonalState p)
+      simp only [Pi.add_apply] at hs
+      rw [hz, add_zero] at hs
+      exact hs.symm
+    have hgproj : g = pureProjection f :=
+      pure_hodge_ext hg (pureReassemble_isPure _)
+        (hcoord.trans (pureCoordinates_pureReassemble _).symm)
+    apply Prod.ext hgproj
+    dsimp
+    rw [hsplit, hgproj]
+    abel
+
 /-- The historical HC pure sector has exactly three canonical coordinates. -/
 theorem hc_pure_coordinate_depth :
     min 4 3 = 3 := by decide

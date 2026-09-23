@@ -300,16 +300,25 @@ theorem worldAct_monomial
   simp [worldAct, Module.End.mul_apply, digitEndo_pow_apply,
     carryEndo_pow_apply]
 
-/-- Mixed monomials crossing either rectangle boundary act as zero. -/
+/-- Exact mixed-transport extinction. A monomial annihilates every world
+if and only if one displacement crosses its corresponding boundary. -/
 theorem worldAct_monomial_zero
-    (m n : Nat) (g : WorldCoef A B)
-    (h : B ≤ m ∨ A ≤ n) :
-    worldAct A B ((H A B)^m * (V A B)^n) g = 0 := by
-  rw [worldAct_monomial]
-  exact mixed_boundary_extinction g (by
-    rcases h with hm | hn
-    · exact Or.inr hm
-    · exact Or.inl hn)
+    (m n : Nat) :
+    (∀ g : WorldCoef A B, worldAct A B ((H A B)^m * (V A B)^n) g = 0) ↔
+      B ≤ m ∨ A ≤ n := by
+  constructor
+  · intro h
+    by_contra hn
+    have hmB : m < B := by omega
+    have hnA : n < A := by omega
+    have ht := congrFun (h (fun _ => 1)) (⟨n, hnA⟩, ⟨m, hmB⟩)
+    simpa [worldAct_monomial, digitShiftN, carryShiftN] using ht
+  · intro h g
+    rw [worldAct_monomial]
+    exact mixed_boundary_extinction g (by
+      rcases h with hm | hn
+      · exact Or.inr hm
+      · exact Or.inl hn)
 
 /-! ## 4. Lefschetz element and recovery of the old crown -/
 

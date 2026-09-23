@@ -317,20 +317,19 @@ theorem rowClass_cut_exact (R p M N : Nat) (hMN : M ≤ N) :
     _ = rowClass R p M + rowClass (4^M * R) p (N-M) :=
       rowClass_add_exact R p M (N-M)
 
-/-- **COMPLETE PREFIX OBSERVABLE.**  Equality of every integrated Wave-I
-prefix is equivalent to pointwise equality of the entire local matter
-field.  No information is lost by passing from local classes to prefixes. -/
-theorem rowClass_prefix_complete (R S p q : Nat) :
-    (∀ N, rowClass R p N = rowClass S q N) ↔
-      ∀ t, rowClassAt R p t = rowClassAt S q t := by
+/-- **FINITE PREFIX OBSERVABLE.** The prefixes up to K determine exactly
+the first K local matter classes, including the empty observation window. -/
+theorem rowClass_prefix_complete (R S p q K : Nat) :
+    (∀ N, N ≤ K → rowClass R p N = rowClass S q N) ↔
+      ∀ t, t < K → rowClassAt R p t = rowClassAt S q t := by
   constructor
-  · intro h t
+  · intro h t ht
     rw [rowClassAt_recovered_exact R p t,
         rowClassAt_recovered_exact S q t,
-        h (t+1), h t]
-  · intro h N
+        h (t+1) (by omega), h t (by omega)]
+  · intro h N hN
     unfold rowClass
-    exact Finset.sum_congr rfl (fun t _ => h t)
+    exact Finset.sum_congr rfl (fun t ht => h t (by have := Finset.mem_range.mp ht; omega))
 
 /-- All Wave-I prefixes vanish exactly when every local matter class
 vanishes.  This is the zero-fiber form of complete prefix observability. -/

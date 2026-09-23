@@ -241,6 +241,28 @@ theorem weightedInterference_delta
   · intro hnot
     exact (hnot hp).elim
 
+/-- Pairing the field difference with itself measures its exact squared
+discrepancy. Cancellation between distinct channels cannot hide a mismatch. -/
+theorem weighted_interference_energy (R S lo hi : Nat) :
+    weightedInterference R lo hi (fun p => waveTwoForm (cellOf R p) - waveTwoForm (cellOf S p)) -
+      weightedInterference S lo hi (fun p => waveTwoForm (cellOf R p) - waveTwoForm (cellOf S p)) =
+      ∑ p ∈ Finset.Icc lo hi, (waveTwoForm (cellOf R p) - waveTwoForm (cellOf S p))^2 := by
+  unfold weightedInterference
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro p hp
+  ring
+
+/-- A single difference-amplitude experiment separates two given worlds
+exactly; universal quantification over all probe amplitudes is unnecessary. -/
+theorem weighted_interference_single_probe (R S lo hi : Nat) :
+    weightedInterference R lo hi (fun p => waveTwoForm (cellOf R p) - waveTwoForm (cellOf S p)) =
+      weightedInterference S lo hi (fun p => waveTwoForm (cellOf R p) - waveTwoForm (cellOf S p)) ↔
+      ∀ p ∈ Finset.Icc lo hi, waveTwoForm (cellOf R p) = waveTwoForm (cellOf S p) := by
+  rw [← sub_eq_zero, weighted_interference_energy]
+  rw [Finset.sum_eq_zero_iff_of_nonneg (fun p _ => sq_nonneg _)]
+  simp only [sq_eq_zero_iff, sub_eq_zero]
+
 /-- **COMPLETE INTERFERENCE TOMOGRAPHY.**  Two worlds have identical response
 to every integer amplitude field exactly when their local Wave-I mode fields
 agree pointwise on the observed interval. -/
@@ -251,11 +273,8 @@ theorem weighted_interference_ext (R S lo hi : Nat) :
         waveTwoForm (cellOf R p) = waveTwoForm (cellOf S p) := by
   classical
   constructor
-  · intro h p hp
-    have ht := h (fun k => if k = p then 1 else 0)
-    rw [weightedInterference_delta R lo hi p hp,
-        weightedInterference_delta S lo hi p hp] at ht
-    exact ht
+  · intro h
+    exact (weighted_interference_single_probe R S lo hi).1 (h _)
   · intro h A
     unfold weightedInterference
     apply Finset.sum_congr rfl

@@ -327,22 +327,41 @@ theorem waveII_prefix_add (R p M N : Nat) :
   simpa [Nat.add_assoc] using
     (Finset.sum_range_add (fun k => waveIIAmplitude R (p+k)) M N)
 
-/-- **COMPLETE PREFIX OBSERVABLE.**  Two Wave-II channels have identical
-integrated prefixes at every depth exactly when their entire local amplitude
-fields agree pointwise. -/
-theorem waveII_prefix_complete_observable (R S p q : Nat) :
-    (∀ N,
+/-- **FINITE PREFIX OBSERVABLE.** Two Wave-II channels agree on all prefixes
+up to K exactly when their local amplitudes agree throughout that window. -/
+theorem waveII_prefix_complete_observable (R S p q K : Nat) :
+    (∀ N, N ≤ K →
       (∑ k ∈ Finset.range N, waveIIAmplitude R (p+k)) =
       (∑ k ∈ Finset.range N, waveIIAmplitude S (q+k))) ↔
-      ∀ t, waveIIAmplitude R (p+t) = waveIIAmplitude S (q+t) := by
+      ∀ t, t < K → waveIIAmplitude R (p+t) = waveIIAmplitude S (q+t) := by
   constructor
-  · intro h t
-    have hnext := h (t+1)
-    have hprev := h t
+  · intro h t ht
+    have hnext := h (t+1) (by omega)
+    have hprev := h t (by omega)
     rw [Finset.sum_range_succ, Finset.sum_range_succ] at hnext
     linarith
-  · intro h N
-    exact Finset.sum_congr rfl (fun t _ => h t)
+  · intro h N hN
+    exact Finset.sum_congr rfl (fun t ht => h t (by have := Finset.mem_range.mp ht; omega))
+
+/-- A Wave-II window plus one endpoint digit reconstructs every digit in
+the window. This states the exact missing boundary datum of differentiation. -/
+theorem waveII_channel_reconstruction (R S p q K : Nat) :
+    (digit3 R p = digit3 S q ∧
+      ∀ t, t < K → waveIIAmplitude R (p+t) = waveIIAmplitude S (q+t)) ↔
+      ∀ t, t ≤ K → digit3 R (p+t) = digit3 S (q+t) := by
+  constructor
+  · rintro ⟨hbase, hamp⟩ t ht
+    have hs := (waveII_prefix_complete_observable R S p q K).2 hamp t ht
+    rw [waveIIAmplitude_telescope, waveIIAmplitude_telescope, hbase] at hs
+    have hz : (digit3 R (p+t) : ℤ) = (digit3 S (q+t) : ℤ) := by linarith
+    exact_mod_cast hz
+  · intro h
+    refine ⟨by simpa using h 0 (Nat.zero_le K), ?_⟩
+    intro t ht
+    rw [waveIIAmplitude_eq, waveIIAmplitude_eq, h t (by omega)]
+    have hn := h (t+1) (by omega)
+    simpa only [Nat.add_assoc] using congrArg (fun n : Nat =>
+      (digit3 S (q+t) : ℤ) - (n : ℤ)) hn
 
 /-- All Wave-II prefixes vanish exactly when every local amplitude vanishes. -/
 theorem waveII_prefix_all_zero_iff (R p : Nat) :

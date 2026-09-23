@@ -208,12 +208,13 @@ theorem rowClass_all_zero_iff (R p : Nat) :
     intro t ht
     exact h t
 
-/-- Equality of all integrated prefixes is therefore an exact complete
-observable for the full local row-class field. -/
-theorem rowClass_complete_observable (R S p q : Nat) :
-    (∀ N, rowClass R p N = rowClass S q N) ↔
-      (∀ t, rowClassAt R p t = rowClassAt S q t) :=
-  rowClass_faithful R S p q
+/-- Every translated finite window is completely observable: prefix classes
+of re-encoded worlds recover precisely the local matter field in that window. -/
+theorem rowClass_complete_observable (R S p q A K : Nat) :
+    (∀ N, N ≤ K → rowClass (4^A * R) p N = rowClass (4^A * S) q N) ↔
+      ∀ t, t < K → rowClassAt R p (A+t) = rowClassAt S q (A+t) := by
+  simpa [rowClassAt, Nat.pow_add, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using
+    rowClass_prefix_complete (4^A * R) (4^A * S) p q K
 
 #check rowClassAt_recovered
 #check rowClass_all_zero_iff

@@ -612,7 +612,31 @@
     "file": "GSTMultiAxisCohomology.lean",
     "module": "GSTMultiAxisCohomology",
     "declarations": {
-      "GSTMultiAxisCohomology.monomial_class_ne_zero": "theorem"
+      "GSTMultiAxisCohomology.monomial_class_ne_zero": "theorem",
+      "GSTMultiAxisCohomology.all_depths_separate": "theorem",
+      "GSTMultiAxisCohomology.axis_pow_eq_zero_of_depth_le": "theorem",
+      "GSTMultiAxisCohomology.boundedNormalForm": "def",
+      "GSTMultiAxisCohomology.boundedNormalForm_add": "theorem",
+      "GSTMultiAxisCohomology.boundedNormalForm_comp": "theorem",
+      "GSTMultiAxisCohomology.boundedNormalForm_eq_iff": "theorem",
+      "GSTMultiAxisCohomology.boundedNormalForm_eq_of_quotient_eq": "theorem",
+      "GSTMultiAxisCohomology.boundedNormalForm_idempotent": "theorem",
+      "GSTMultiAxisCohomology.boundedNormalForm_mul": "theorem",
+      "GSTMultiAxisCohomology.boundedNormalForm_support": "theorem",
+      "GSTMultiAxisCohomology.bounded_polynomial_faithful": "theorem",
+      "GSTMultiAxisCohomology.bounded_quotient_injective": "theorem",
+      "GSTMultiAxisCohomology.coeff_boundedNormalForm_of_live": "theorem",
+      "GSTMultiAxisCohomology.coeff_boundedNormalForm_of_not_live": "theorem",
+      "GSTMultiAxisCohomology.depthRestriction": "def",
+      "GSTMultiAxisCohomology.depthRestriction_comp": "theorem",
+      "GSTMultiAxisCohomology.depthRestriction_eq_iff": "theorem",
+      "GSTMultiAxisCohomology.depthRestriction_mk": "theorem",
+      "GSTMultiAxisCohomology.depthRestriction_surjective": "theorem",
+      "GSTMultiAxisCohomology.existsUnique_bounded_representative": "theorem",
+      "GSTMultiAxisCohomology.finite_polarization_bound": "theorem",
+      "GSTMultiAxisCohomology.monomial_class_eq_zero_iff": "theorem",
+      "GSTMultiAxisCohomology.quotient_boundedNormalForm": "theorem",
+      "GSTMultiAxisCohomology.weighted_axis_polarization_bound": "theorem"
     }
   },
   {
@@ -826,14 +850,23 @@
     "file": "waves/GSTNCohomology.lean",
     "module": "waves.GSTNCohomology",
     "declarations": {
-      "GSTNCohomology.waveIIAmplitude_telescope": "theorem"
+      "GSTNCohomology.waveIIAmplitude_telescope": "theorem",
+      "GSTNCohomology.waveIIAmplitude_prefix_recovered": "theorem",
+      "GSTNCohomology.waveII_channel_reconstruction": "theorem",
+      "GSTNCohomology.waveII_prefix_add": "theorem",
+      "GSTNCohomology.waveII_prefix_all_zero_iff": "theorem",
+      "GSTNCohomology.waveII_prefix_complete_observable": "theorem"
     }
   },
   {
     "file": "waves/GSTNCohomologyV2.lean",
     "module": "waves.GSTNCohomologyV2",
     "declarations": {
-      "GSTNCohomologyV2.weighted_interference_separates": "theorem"
+      "GSTNCohomologyV2.weighted_interference_separates": "theorem",
+      "GSTNCohomologyV2.weightedInterference_delta": "theorem",
+      "GSTNCohomologyV2.weighted_interference_energy": "theorem",
+      "GSTNCohomologyV2.weighted_interference_ext": "theorem",
+      "GSTNCohomologyV2.weighted_interference_single_probe": "theorem"
     }
   },
   {
@@ -854,14 +887,57 @@
     "file": "waves/GSTWaveCohomology.lean",
     "module": "waves.GSTWaveCohomology",
     "declarations": {
-      "GSTWaveCohomology.finite_weighted_wave_decomposition": "theorem"
+      "GSTWaveCohomology.finite_weighted_wave_decomposition": "theorem",
+      "GSTWaveCohomology.rowClassAt_recovered_exact": "theorem",
+      "GSTWaveCohomology.rowClass_add_exact": "theorem",
+      "GSTWaveCohomology.rowClass_all_zero_iff_exact": "theorem",
+      "GSTWaveCohomology.rowClass_cut_exact": "theorem",
+      "GSTWaveCohomology.rowClass_prefix_complete": "theorem"
     }
   },
   {
     "file": "waves/GSTWaveCohomologyV2.lean",
     "module": "waves.GSTWaveCohomologyV2",
     "declarations": {
-      "GSTWaveCohomologyV2.rowClass_faithful": "theorem"
+      "GSTWaveCohomologyV2.rowClass_faithful": "theorem",
+      "GSTWaveCohomologyV2.rowClassAt_recovered": "theorem",
+      "GSTWaveCohomologyV2.rowClass_all_zero_iff": "theorem",
+      "GSTWaveCohomologyV2.rowClass_complete_observable": "theorem"
+    }
+  },
+  {
+    "file": "GSTTruncatedWorldCohomologyRing.lean",
+    "module": "GSTTruncatedWorldCohomologyRing",
+    "declarations": {
+      "GSTTruncatedWorldCohomologyRing.H_pow_eq_zero_of_depth_le": "theorem",
+      "GSTTruncatedWorldCohomologyRing.L_binomial": "theorem",
+      "GSTTruncatedWorldCohomologyRing.L_pow_boundary": "theorem",
+      "GSTTruncatedWorldCohomologyRing.L_pow_eq_zero_of_boundary_le": "theorem",
+      "GSTTruncatedWorldCohomologyRing.V_pow_eq_zero_of_depth_le": "theorem",
+      "GSTTruncatedWorldCohomologyRing.mem_worldOperatorHom_ker_iff_annihilates": "theorem",
+      "GSTTruncatedWorldCohomologyRing.worldAct_eq_iff_operator_eq": "theorem",
+      "GSTTruncatedWorldCohomologyRing.worldAct_monomial_zero": "theorem",
+      "GSTTruncatedWorldCohomologyRing.worldAct_neg": "theorem",
+      "GSTTruncatedWorldCohomologyRing.worldAct_pow_add": "theorem"
+    }
+  },
+  {
+    "file": "GSTExactWorldOperatorPresentation.lean",
+    "module": "GSTExactWorldOperatorPresentation",
+    "declarations": {
+      "GSTExactWorldOperatorPresentation.L_pow_eq_zero_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTGlobalPureHodgeCosmology.lean",
+    "module": "GSTGlobalPureHodgeCosmology",
+    "declarations": {
+      "GSTGlobalPureHodgeCosmology.pureCoordinates_residual": "theorem",
+      "GSTGlobalPureHodgeCosmology.pureProjection": "def",
+      "GSTGlobalPureHodgeCosmology.pure_hodge_basis_expansion": "theorem",
+      "GSTGlobalPureHodgeCosmology.pure_hodge_eq_iff_coordinates": "theorem",
+      "GSTGlobalPureHodgeCosmology.pure_hodge_eq_zero_iff_coordinates_zero": "theorem",
+      "GSTGlobalPureHodgeCosmology.pure_residual_decomposition": "theorem"
     }
   }
 ]
