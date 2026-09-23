@@ -816,18 +816,25 @@ theorem pair_read_fire_general (T u j : Nat) (hj : 4 ≤ j) (hT : 4^T < 3^(j+2))
     rw [pair_residue_mod27 T u j (by omega)]
     exact hkill)
 
-/-- **THE GENERAL PAIR-READ KILL.**  The family dies outright through
-the repo's own kill chain. -/
-/-- The residue kill zone is necessary as well as sufficient, already from
-depth two; it exactly classifies the pair-read digit. -/
+/-- **THE GENERAL PAIR-READ EXACT CLASSIFIER.**  The residue kill zone is
+necessary as well as sufficient, already from depth two; it exactly classifies
+the pair-read digit and therefore the corresponding kill channel. -/
+theorem digit3_row_two_iff_residue (x : Nat) :
+    digit3 x 2 = 2 ↔ 18 ≤ x % 27 := by
+  constructor
+  · intro hx
+    have hlt : x % 27 < 27 := Nat.mod_lt _ (by decide : 0 < 27)
+    change x / 9 % 3 = 2 at hx
+    omega
+  · exact digit3_row_two_of_residue x
+
 theorem pair_read_fire_iff (T u j : Nat) (hj : 2 ≤ j)
     (hT : 4^T < 3^(j+2)) :
     digit3 (4^(T + 3^(j+1)*u)) (j+4) = 2 ↔
       18 ≤ (4^T * u * 16) % 27 := by
   rw [pair_read_formula T u j (by omega) hT]
-  have hres := pair_residue_mod27 T u j hj
-  change (4^T * u * GSTTowerFire.c (j+1)) / 9 % 3 = 2 ↔ _
-  omega
+  rw [digit3_row_two_iff_residue]
+  rw [pair_residue_mod27 T u j hj]
 
 theorem no22_of_pair_read_general (T u j : Nat) (hj : 4 ≤ j) (hT : 4^T < 3^(j+2))
     (hkill : 18 ≤ (4^T * u * 16) % 27) :

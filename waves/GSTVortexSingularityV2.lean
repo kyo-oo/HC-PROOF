@@ -173,6 +173,6 @@ theorem core_rotation_no_early_return (C d k : Nat)
   have hk' : k = 1 ∨ k = 2 ∨ k = 3 ∨ k = 4 := by omega
   rcases hk' with rfl | rfl | rfl | rfl <;>
     interval_cases C <;> interval_cases d <;>
-    norm_num [coreRotate, Function.iterate_succ_apply] at haxis ⊢
+    simp_all [coreRotate, Function.iterate_succ_apply]
 
 end GSTVortexSingularityV2

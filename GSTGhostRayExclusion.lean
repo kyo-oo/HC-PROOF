@@ -279,7 +279,7 @@ theorem ghostRay_iff_residue_shape (u : Nat) :
         3^k = 3^((k-1)+1) := by congr 1; omega
         _ = 3 * 3^(k-1) := by rw [Nat.pow_succ]; ring
     rw [hpow] at heq
-    constructor <;> nlinarith
+    constructor <;> omega
 
 
 end GSTGhostRay
