@@ -229,14 +229,17 @@ theorem resolved_vertex_exact (G : ResolvedGraph) (p : Nat) :
     resolvedVertex G p = GSTGraphV2NonEuclidean.vertex G.ambient p := by
   rfl
 
-
 /-- Resolution may be weakened by any number of levels. -/
 theorem six_iso_weaken_of_le {k l : Nat} {x y : Int}
     (hkl : k ≤ l) (h : SixAdicIsoAt l x y) : SixAdicIsoAt k x y := by
-  obtain ⟨r, rfl⟩ := Nat.exists_eq_add_of_le hkl
-  induction r with
-  | zero => simpa using h
-  | succ r ih => exact ih (six_iso_weaken h)
+  obtain ⟨r, hr⟩ := Nat.exists_eq_add_of_le hkl
+  subst l
+  rcases h with ⟨q, hq⟩
+  refine ⟨(6 : Int)^r * q, ?_⟩
+  calc
+    x - y = (6 : Int) ^ (k + r) * q := hq
+    _ = ((6 : Int)^k * (6 : Int)^r) * q := by rw [pow_add]
+    _ = (6 : Int)^k * ((6 : Int)^r * q) := by ring
 
 /-- Intersecting balls of unequal resolution are nested in the exact
 resolution order. -/
