@@ -181,13 +181,12 @@ theorem bounded_quotient_injective (p q : MvPolynomial I ℤ)
     subst q
     rfl
 
-/-- Canonical truncation of a polynomial to the exact live exponent box.
-Every monomial crossing at least one axis boundary is deleted, while every
-coefficient strictly below all boundaries is preserved literally. -/
+/-- Canonical truncation to the exact live exponent box.  Because an
+MvPolynomial is already a finitely-supported coefficient map, normalization
+is literally coefficient filtering by the native depth predicate. -/
 noncomputable def boundedNormalForm (p : MvPolynomial I ℤ) : MvPolynomial I ℤ := by
   classical
-  exact ∑ e ∈ p.support,
-    if (∀ i, e i < d i) then monomial e (coeff e p) else 0
+  exact Finsupp.filter (fun e => ∀ i, e i < d i) p
 
 /-- Every live coefficient survives canonical normalization literally. -/
 theorem coeff_boundedNormalForm_of_live
@@ -195,7 +194,7 @@ theorem coeff_boundedNormalForm_of_live
     (he : ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = coeff e p := by
   classical
-  simp [boundedNormalForm, coeff_sum, he]
+  simp [boundedNormalForm, MvPolynomial, Finsupp.filter_apply, he]
 
 /-- Every coefficient crossing at least one boundary is deleted by canonical
 normalization. -/
@@ -204,7 +203,7 @@ theorem coeff_boundedNormalForm_of_not_live
     (he : ¬ ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = 0 := by
   classical
-  simp [boundedNormalForm, coeff_sum, he]
+  simp [boundedNormalForm, MvPolynomial, Finsupp.filter_apply, he]
 
 /-- The canonical normal form is supported strictly inside every boundary. -/
 theorem boundedNormalForm_support (p : MvPolynomial I ℤ) :
