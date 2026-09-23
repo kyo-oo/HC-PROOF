@@ -57,10 +57,16 @@ or algebraic-cycle representatives. These fields remain visible in theorem
 signatures; none has been promoted to an axiom or silently instantiated with
 the desired conclusion.
 
-Verification receipt: pending the Hodge-front branch gate. Stage 2G is now
-included explicitly in the cosmology build and its public declarations in
-the transitive axiom audit, rather than being checked only through the final
-integration import.
+Verification: proof and audit commit
+`73891d76d35c6707d684966984027a72ab451ab1`,
+[run 110](https://github.com/kyo-oo/HC-PROOF/actions/runs/35931094769).
+The cosmology build, source proof-escape check, `sorryAx` rejection, public
+axiom audit, and full `HCProof` integration all passed. Stage 2G is now
+included explicitly in the cosmology build and all 26 of its public definitions
+and theorems are included in the transitive axiom audit. Only `propext`,
+`Classical.choice`, and `Quot.sound` are permitted by that audit. This receipt
+verifies the conditional reconstruction and scope theorems above; it is not
+an official Hodge-conjecture proof certificate.
 
 ## Cohomology continuation from run 103
 
