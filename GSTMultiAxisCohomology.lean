@@ -196,7 +196,8 @@ theorem coeff_boundedNormalForm_of_live
     (he : ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = coeff e p := by
   classical
-  simp [boundedNormalForm, he]
+  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) p.coeff) e = p.coeff e
+  simp [he]
 
 /-- Every coefficient crossing at least one boundary is deleted by canonical
 normalization. -/
@@ -205,7 +206,8 @@ theorem coeff_boundedNormalForm_of_not_live
     (he : ¬ ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = 0 := by
   classical
-  simp [boundedNormalForm, he]
+  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) p.coeff) e = 0
+  simp [he]
 
 /-- The canonical normal form is supported strictly inside every boundary. -/
 theorem boundedNormalForm_support (p : MvPolynomial I ℤ) :
