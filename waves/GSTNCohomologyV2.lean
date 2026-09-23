@@ -202,7 +202,6 @@ theorem wave_II_v2_crown :
 #print axioms digit_two_mode_classification
 #print axioms wave_II_v2_crown
 
-
 /-- Testing against every amplitude detects exactly the vanishing mode
 field on the chosen interval. -/
 theorem weighted_interference_separates (R lo hi : Nat) :
@@ -227,5 +226,45 @@ theorem weighted_interference_separates (R lo hi : Nat) :
     apply Finset.sum_eq_zero
     intro p hp
     rw [h p hp, zero_mul]
+
+/-- A Kronecker amplitude probes one local mode exactly. -/
+theorem weightedInterference_delta
+    (R lo hi p : Nat) (hp : p ∈ Finset.Icc lo hi) :
+    weightedInterference R lo hi (fun k => if k = p then 1 else 0) =
+      waveTwoForm (cellOf R p) := by
+  classical
+  unfold weightedInterference
+  rw [Finset.sum_eq_single p]
+  · simp
+  · intro b hb hbp
+    simp [hbp]
+  · intro hnot
+    exact (hnot hp).elim
+
+/-- **COMPLETE INTERFERENCE TOMOGRAPHY.**  Two worlds have identical response
+to every integer amplitude field exactly when their local Wave-I mode fields
+agree pointwise on the observed interval. -/
+theorem weighted_interference_ext (R S lo hi : Nat) :
+    (∀ A : Nat → ℤ,
+      weightedInterference R lo hi A = weightedInterference S lo hi A) ↔
+      ∀ p ∈ Finset.Icc lo hi,
+        waveTwoForm (cellOf R p) = waveTwoForm (cellOf S p) := by
+  classical
+  constructor
+  · intro h p hp
+    have ht := h (fun k => if k = p then 1 else 0)
+    rw [weightedInterference_delta R lo hi p hp,
+        weightedInterference_delta S lo hi p hp] at ht
+    exact ht
+  · intro h A
+    unfold weightedInterference
+    apply Finset.sum_congr rfl
+    intro p hp
+    rw [h p hp]
+
+#check weightedInterference_delta
+#check weighted_interference_ext
+#print axioms weightedInterference_delta
+#print axioms weighted_interference_ext
 
 end GSTNCohomologyV2
