@@ -2,6 +2,86 @@
 
 Base: `c833d9bd23d376eeb14246b675572f2cb8c66e51`.
 
+## Cohomology continuation from run 103
+
+This continuation preserves Sol's work through
+`7e02441b94c0f129580480e2f41356dbeeebd03f` and edits eight existing mathematical
+modules. It adds no replacement module or alternate proof route.
+
+### Repair and strengthened statements
+
+Run 103 stopped at two coefficient reductions in the canonical normal form.
+The polynomial coefficient accessor and the underlying finite-support accessor
+were being conflated. Both sides are now reduced explicitly to
+`AddMonoidAlgebra.coeff` before filtering. The stored coefficients and the
+mathematical definitions are unchanged.
+
+| Existing module | Strengthened content |
+|---|---|
+| `GSTMultiAxisCohomology` | Exact bounded faithfulness; positive-depth assumptions removed from finite and weighted polarization; canonical addition/product laws; composition of depth restrictions; surjective restriction with exact fibers; reconstruction from any cofinal uniform-depth schedule, even with infinitely many axes |
+| `GSTTruncatedWorldCohomologyRing` | Mixed transport annihilates every world **iff** it crosses a boundary; the reverse direction is witnessed by an explicit live cell |
+| `GSTExactWorldOperatorPresentation` | Exact lifetime includes empty rectangles and the zeroth power, without positivity assumptions |
+| `GSTGlobalPureHodgeCosmology` | Every world has a unique decomposition into a pure diagonal part and a part with zero diagonal coordinates |
+| `waves/GSTWaveCohomology` | Prefix observations through depth K recover exactly the first K local matter classes |
+| `waves/GSTWaveCohomologyV2` | Exact finite reconstruction in every translated horizontal window |
+| `waves/GSTNCohomology` | Finite prefix reconstruction; one endpoint digit plus Wave-II amplitudes recovers the whole digit window; injective isolated channel readouts |
+| `waves/GSTNCohomologyV2` | Isolated canonical channels are injective at positive depth; a single difference-amplitude probe separates two given mode fields exactly |
+
+Nine existing theorem interfaces are strengthened directly. Additional
+statements provide the composition, reconstruction and uniqueness laws needed
+to use these interfaces together. No unchanged theorem is counted as a new
+strengthening merely because an audit entry was added.
+
+### Interpretation
+
+Canonical normalization retains exactly the live coefficients. Multiplying
+normalized representatives and normalizing again gives precisely the normal
+form of their product: discarded boundary terms cannot return. Two successive
+normalizations intersect their depth profiles, while restriction maps compose
+through any nested chain of worlds. Every shallower class lifts, and the
+coefficients in its live box describe its entire restriction fiber.
+
+For infinitely many axes, each monomial still has finite exponent support.
+Consequently any cofinal schedule of uniform depths eventually exposes each
+coefficient. Equality at those scheduled observations therefore determines the
+complete polynomial; this is not a claim that every infinite compatible family
+comes from a finite polynomial.
+
+The old channel family in `ncoho_rank` repeated the same object at every index.
+It established diagonal readout availability but did not establish distinct
+classes. The revised construction isolates each hole, proves the other
+coordinates empty, and uses nonempty windows to prove injectivity. The native
+readout type is a family of lists with an integer coordinate; these theorems
+do not assert a module rank for that unrestricted list type. At depth zero,
+canonical windows are empty and distinctness is not claimed.
+
+The interference probe uses the difference of two given fields as its
+amplitude. The response difference is the sum of squared local differences,
+so cancellation cannot hide a mismatch. This is an exact comparison theorem
+for given fields, not an assertion that one fixed probe reconstructs every
+unknown field.
+
+### Verification
+
+Verified proof-source commit: `9ff97bf3fb9c7335412a8ca20b0a3e71d99da4de`.
+[Cosmology upgrade run 107](https://github.com/kyo-oo/HC-PROOF/actions/runs/35869033096)
+passed upgraded cosmology compilation, source proof-escape rejection,
+absence of `sorryAx`, the public declaration axiom audit, and full `HCProof`
+integration. The public audit emitted 298 nonempty axiom receipts.
+The audit permits only `propext`, `Classical.choice`, and
+`Quot.sound`; no custom axiom is admitted by that gate.
+
+Independent finite checks passed for 1,428 normal-form composition/product
+cases, including empty axis sets and zero depths, and 15,625 signed field
+pairs for the difference probe. The existing coherent-cosmology check also
+passed: 12 cell signatures, 1,092 finite signatures, and 25,515 realization
+and edge checks. These finite checks supplement Lean verification.
+
+The accumulated inventory now contains 120 files and 225 named declarations.
+All inventory declarations have explicit entries in the transitive axiom
+audit. These totals include earlier work and are not a percentage of completion
+or a count of new discoveries in this continuation.
+
 ## Run 86 continuation — verified in run 88
 
 This continuation starts from `624a97f30f53decf45b9fedb8a759b6655096e09`
