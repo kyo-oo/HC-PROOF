@@ -65,8 +65,7 @@ theorem first_carry_two_iff (R : Nat) :
     carryAtPos R 1 = 2 ↔ R % 3 = 2 := by
   rw [carryAtPos_one_exact]
 
-/-- Multiplication by any ternary power preserves the 2-adic depth reader;
-the old one-step invariance is the a=1 specialization. -/
+/-- Multiplication by any ternary power preserves the 2-adic depth reader. -/
 theorem v2r_ternary_scaling (a c : Nat) :
     v2r (3^a * c) = v2r c :=
   v2r_mul_three_pow a c
@@ -77,13 +76,15 @@ def packetMul
     GSTThreeWorldExponentialPacketS :=
   ⟨A.binary * B.binary, A.ternary * B.ternary, A.mixed * B.mixed⟩
 
+/-- Unit packet of the three-world composition algebra. -/
+def packetOne : GSTThreeWorldExponentialPacketS := ⟨1,1,1⟩
+
 /-- Zero information depth is the multiplicative identity packet. -/
 theorem packet_zero :
-    gstThreeWorldExponentialPacketS 0 = ⟨1,1,1⟩ := by
+    gstThreeWorldExponentialPacketS 0 = packetOne := by
   rfl
 
-/-- **THREE-WORLD COMPOSITION LAW.**  Concatenating information depths is
-literally coordinatewise packet multiplication. -/
+/-- Three-world composition law. -/
 theorem packet_add (j k : Nat) :
     gstThreeWorldExponentialPacketS (j+k) =
       packetMul (gstThreeWorldExponentialPacketS j)
@@ -106,6 +107,38 @@ theorem packetMul_assoc
       cases C with
       | mk Cb Ct Cm =>
         simp [packetMul, Nat.mul_assoc]
+
+/-- Packet multiplication is commutative. -/
+theorem packetMul_comm
+    (A B : GSTThreeWorldExponentialPacketS) :
+    packetMul A B = packetMul B A := by
+  cases A with
+  | mk Ab At Am =>
+    cases B with
+    | mk Bb Bt Bm =>
+      simp [packetMul, Nat.mul_comm]
+
+/-- The unit packet acts neutrally on the left. -/
+theorem packetMul_one_left
+    (A : GSTThreeWorldExponentialPacketS) :
+    packetMul packetOne A = A := by
+  cases A <;> simp [packetMul, packetOne]
+
+/-- The unit packet acts neutrally on the right. -/
+theorem packetMul_one_right
+    (A : GSTThreeWorldExponentialPacketS) :
+    packetMul A packetOne = A := by
+  rw [packetMul_comm]
+  exact packetMul_one_left A
+
+/-- Addition of depths is represented faithfully by the commutative packet
+composition operation. -/
+theorem packet_add_comm (j k : Nat) :
+    packetMul (gstThreeWorldExponentialPacketS j)
+      (gstThreeWorldExponentialPacketS k) =
+    packetMul (gstThreeWorldExponentialPacketS k)
+      (gstThreeWorldExponentialPacketS j) :=
+  packetMul_comm _ _
 
 /-- The mixed coordinate is determined by the two primitive world
 coordinates at every depth. -/
@@ -157,22 +190,31 @@ theorem cardinal_worlds_v2_crown :
   ⟨has_two_iff_no_two_false, carryAtPos_one_exact,
     v2r_ternary_scaling, packet_add⟩
 
+/-- Algebraic packet crown: the composition inherited from depth addition is
+an exact commutative unital semigroup on the packet carrier. -/
+theorem packet_composition_crown :
+    (∀ A B C,
+      packetMul (packetMul A B) C = packetMul A (packetMul B C)) ∧
+    (∀ A B, packetMul A B = packetMul B A) ∧
+    (∀ A, packetMul packetOne A = A ∧ packetMul A packetOne = A) := by
+  exact ⟨packetMul_assoc, packetMul_comm,
+    fun A => ⟨packetMul_one_left A, packetMul_one_right A⟩⟩
+
 #check has_two_iff_no_two_false
-#check has_two_iff_first_signature
-#check no_two_false_iff_digit_witness
 #check carryAtPos_one_exact
-#check first_carry_two_iff
-#check v2r_ternary_scaling
 #check packet_add
 #check packetMul_assoc
+#check packetMul_comm
+#check packetMul_one_left
+#check packetMul_one_right
 #check packet_mixed_reconstruct
-#check joined_prefix_succ
+#check joined_prefix_add
 #check cardinal_worlds_v2_crown
+#check packet_composition_crown
 
 #print axioms has_two_iff_no_two_false
-#print axioms has_two_iff_first_signature
 #print axioms carryAtPos_one_exact
 #print axioms packet_add
-#print axioms cardinal_worlds_v2_crown
+#print axioms packet_composition_crown
 
 end CardinalWorldsV2
