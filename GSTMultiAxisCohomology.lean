@@ -189,16 +189,22 @@ noncomputable def boundedNormalForm (p : MvPolynomial I ℤ) : MvPolynomial I �
   exact ∑ e ∈ p.support,
     if (∀ i, e i < d i) then monomial e (coeff e p) else 0
 
-/-- Coefficients of the canonical bounded normal form are exactly the live
-coefficients of the original polynomial and zero outside the live box. -/
-theorem coeff_boundedNormalForm (p : MvPolynomial I ℤ) (e : I →₀ ℕ) :
-    coeff e (boundedNormalForm d p) =
-      if (∀ i, e i < d i) then coeff e p else 0 := by
+/-- Every live coefficient survives canonical normalization literally. -/
+theorem coeff_boundedNormalForm_of_live
+    (p : MvPolynomial I ℤ) (e : I →₀ ℕ)
+    (he : ∀ i, e i < d i) :
+    coeff e (boundedNormalForm d p) = coeff e p := by
   classical
-  by_cases he : e ∈ p.support
-  · simp [boundedNormalForm, he]
-  · have hz : coeff e p = 0 := notMem_support_iff.mp he
-    simp [boundedNormalForm, he, hz]
+  simp [boundedNormalForm, coeff_sum, he]
+
+/-- Every coefficient crossing at least one boundary is deleted by canonical
+normalization. -/
+theorem coeff_boundedNormalForm_of_not_live
+    (p : MvPolynomial I ℤ) (e : I →₀ ℕ)
+    (he : ¬ ∀ i, e i < d i) :
+    coeff e (boundedNormalForm d p) = 0 := by
+  classical
+  simp [boundedNormalForm, coeff_sum, he]
 
 /-- The canonical normal form is supported strictly inside every boundary. -/
 theorem boundedNormalForm_support (p : MvPolynomial I ℤ) :
@@ -210,8 +216,8 @@ theorem boundedNormalForm_support (p : MvPolynomial I ℤ) :
   have hout : ¬ (∀ j, e j < d j) := by
     intro hall
     exact hbad (hall i)
-  rw [coeff_boundedNormalForm, if_neg hout] at hnz
-  exact hnz rfl
+  apply hnz
+  exact coeff_boundedNormalForm_of_not_live d p e hout
 
 /-- Canonical normalization does not change the cohomology class. -/
 theorem quotient_boundedNormalForm (p : MvPolynomial I ℤ) :
@@ -219,16 +225,18 @@ theorem quotient_boundedNormalForm (p : MvPolynomial I ℤ) :
       Ideal.Quotient.mk (boundaryIdeal d) p := by
   apply (quotient_eq_iff_coeff d _ _).2
   intro e he
-  rw [coeff_boundedNormalForm]
-  simp [he]
+  exact coeff_boundedNormalForm_of_live d p e he
 
 /-- Canonical normalization is idempotent. -/
 theorem boundedNormalForm_idempotent (p : MvPolynomial I ℤ) :
     boundedNormalForm d (boundedNormalForm d p) = boundedNormalForm d p := by
   apply MvPolynomial.ext
   intro e
-  rw [coeff_boundedNormalForm, coeff_boundedNormalForm]
-  by_cases he : ∀ i, e i < d i <;> simp [he]
+  by_cases he : ∀ i, e i < d i
+  · rw [coeff_boundedNormalForm_of_live d _ e he,
+        coeff_boundedNormalForm_of_live d p e he]
+  · rw [coeff_boundedNormalForm_of_not_live d _ e he,
+        coeff_boundedNormalForm_of_not_live d p e he]
 
 /-- Equal cohomology classes have literally identical canonical normal forms. -/
 theorem boundedNormalForm_eq_of_quotient_eq
@@ -366,7 +374,8 @@ theorem rectangular_L_pow_boundary (A B : ℕ) :
 #check monomial_class_eq_zero_iff
 #check bounded_quotient_injective
 #check boundedNormalForm
-#check coeff_boundedNormalForm
+#check coeff_boundedNormalForm_of_live
+#check coeff_boundedNormalForm_of_not_live
 #check boundedNormalForm_support
 #check quotient_boundedNormalForm
 #check boundedNormalForm_idempotent
@@ -377,7 +386,8 @@ theorem rectangular_L_pow_boundary (A B : ℕ) :
 #print axioms monomial_class_eq_zero_iff
 #print axioms bounded_polynomial_faithful
 #print axioms bounded_quotient_injective
-#print axioms coeff_boundedNormalForm
+#print axioms coeff_boundedNormalForm_of_live
+#print axioms coeff_boundedNormalForm_of_not_live
 #print axioms boundedNormalForm_support
 #print axioms quotient_boundedNormalForm
 #print axioms boundedNormalForm_idempotent
