@@ -169,6 +169,42 @@ theorem thirdWave_of_mod27_row_three (K : Nat)
   obtain ⟨p, hp1, hd, hd2⟩ := commonTwo_of_mod27_row_three K hres
   exact ⟨p, hp1, (row_pair_iff_band K p).mp ⟨hd, hd2⟩⟩
 
+/-- The unique exponent-trit value that converts an equal prefix row into a
+common-two row. -/
+def killingTrit (K p : Nat) : Nat :=
+  2 - digit3 (4^(exponentPrefix K p)) (p+1)
+
+/-- Common-two existence is exactly the existence of a prefix scale whose
+pair is equal and whose exponent trit is the corresponding killing trit. -/
+theorem commonTwo_iff_exists_killingTrit_hit (K : Nat) :
+    CommonTwo K ↔
+      ∃ p : Nat,
+        digit3 (4^(exponentPrefix K p)) (p+1) =
+          digit3 (4^((exponentPrefix K p)+1)) (p+1) ∧
+        exponentTrit K p = killingTrit K p := by
+  constructor
+  · rintro ⟨q, hq, h0, h1⟩
+    have hqpos : 0 < q := by omega
+    let p := q - 1
+    have hqp : q = p + 1 := by
+      dsimp [p]
+      omega
+    refine ⟨p, ?_⟩
+    have hrow :
+        digit3 (4^K) (p+1) = 2 ∧ digit3 (4^(K+1)) (p+1) = 2 := by
+      simpa [hqp] using And.intro h0 h1
+    have hk := (row_common_two_iff_prefix_killing_trit K p).mp hrow
+    simpa [killingTrit] using hk
+  · rintro ⟨p, heq, hkill⟩
+    have hk :
+        digit3 (4^(exponentPrefix K p)) (p+1) =
+            digit3 (4^((exponentPrefix K p)+1)) (p+1) ∧
+          exponentTrit K p =
+            2 - digit3 (4^(exponentPrefix K p)) (p+1) := by
+      simpa [killingTrit] using And.intro heq hkill
+    have hrow := (row_common_two_iff_prefix_killing_trit K p).mpr hk
+    exact ⟨p+1, by omega, hrow.1, hrow.2⟩
+
 /-- **THIRD-WAVE / KILLING-TRIT EQUIVALENCE.**  The geometric third wave
 fires exactly when some exponent-prefix scale hits its unique killing trit. -/
 theorem thirdWave_iff_exists_killingTrit_hit (K : Nat) :
@@ -185,10 +221,23 @@ and with arbitrary offsets. -/
 theorem thirdWaveRow_reduce_offset (K p t : Nat) :
     thirdWaveRow (K+t) p ↔ thirdWaveRow (K % 3^p+t) p := by
   rw [← row_pair_iff_band, ← row_pair_iff_band]
-  rw [pow4_digit_reduce_offset p K t]
-  have hs := pow4_digit_reduce_offset p K (t+1)
-  simpa only [Nat.add_assoc] using
-    Iff.of_eq (congrArg (fun d : Nat => d = 2) hs)
+  constructor
+  · rintro ⟨h0, h1⟩
+    constructor
+    · rw [pow4_digit_reduce_offset p K t] at h0
+      exact h0
+    · have hs := pow4_digit_reduce_offset p K (t+1)
+      rw [show K + t + 1 = K + (t+1) by omega] at h1
+      rw [hs] at h1
+      simpa [Nat.add_assoc] using h1
+  · rintro ⟨h0, h1⟩
+    constructor
+    · rw [pow4_digit_reduce_offset p K t]
+      exact h0
+    · have hs := pow4_digit_reduce_offset p K (t+1)
+      rw [show K + t + 1 = K + (t+1) by omega]
+      rw [hs]
+      simpa [Nat.add_assoc] using h1
 
 /-- Every gate produces an infinite family of gates at its original row. -/
 theorem thirdWaveRow_period (K p u : Nat) :
