@@ -2,7 +2,7 @@
 
 Base: `c833d9bd23d376eeb14246b675572f2cb8c66e51`.
 
-## Run 86 continuation — pending compiler verification
+## Run 86 continuation — verified in run 88
 
 This continuation starts from `624a97f30f53decf45b9fedb8a759b6655096e09`
 on `gst-cosmology-strengthening`, preserving the intervening repair work.
@@ -34,13 +34,25 @@ The coverage inventory now contains 117 files and 163 named declarations;
 these are accumulated counts, not newly verified results. Every added
 declaration is included in the transitive axiom audit.
 
-Source checks and the existing finite observation checks pass. Independent
-finite checks covered 4,464 ghost-shape cases and 20,480 displacement cases.
-These checks do not replace Lean compilation. Local dependency downloads
-previously failed with HTTP CONNECT 403 errors, and automatic approval review
-blocked the public push pending explicit authorization. The repository gate
-and axiom audit must therefore still run on these edits. Historical green
-runs below validate their stated commits only.
+Run 87 compiled the strengthened modules and confirmed both run 86 repairs,
+then exposed adjacent documentation comments in
+`GSTWorldtraceMahlerRelativePrecision.lean`. Moving the ghost-lock comment
+back to its theorem repaired that parser error without changing a proof.
+
+The complete cosmology upgrade gate passed on proof-source commit
+`301f7c496b215840455b606b8dd2c20930d162c2` in
+[run 88](https://github.com/kyo-oo/HC-PROOF/actions/runs/35833172844):
+source proof-escape rejection, upgraded cosmology compilation, absence of
+`sorryAx` in the upgraded crowns, the public strengthening declaration axiom
+audit, and full `HCProof` integration compilation. This is the verification
+receipt for the current continuation; historical runs below validate their
+stated commits only.
+
+The existing finite observation checks also pass. Independent finite checks
+covered 4,464 ghost-shape cases and 20,480 displacement cases; these supplement
+the Lean gate and do not replace it. The gate certifies the formal statements
+under the repository's definitions and audited assumptions, not empirical
+cosmological validity or an external assessment of novelty.
 
 The work uses the repository's native world cells, shifts, coefficient
 lattices, depth boundaries, coherent towers and innovation/current laws.
