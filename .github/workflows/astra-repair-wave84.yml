@@ -1,0 +1,35 @@
+name: Astra Repair Wave 84
+
+on:
+  push:
+    branches: [gst-cosmology-strengthening]
+    paths:
+      - '.github/workflows/astra-repair-wave84.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: gst-cosmology-strengthening
+          fetch-depth: 0
+
+      - name: Apply four live Lean repairs
+        run: python3 scripts/astra_repair_wave84.py
+
+      - name: Commit surgical repairs and remove temporary repair files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/astra-repair-wave84.yml
+          rm scripts/astra_repair_wave84.py
+          rm -f AstraGateTrigger.lean
+          git config user.name kyo-oo
+          git config user.email kyo-oo@users.noreply.github.com
+          git add -A
+          git commit -m 'Repair run 84 cosmology compile failures'
+          git push origin HEAD:gst-cosmology-strengthening
