@@ -124,7 +124,9 @@ theorem rational_hodge_iff_all_weights (p : Nat) (f : WaveCoef) :
     by_cases hp : p < 3
     · intro c hc
       rcases c with ⟨C,d,hC,hd⟩
-      have hzero := cycle_at_offdiagonal p hp C d hC hd (by omega)
+      change C ≠ p ∨ d ≠ p at hc
+      have hzero := cycle_at_offdiagonal p hp C d hC hd (fun hdiag =>
+        hc.elim (fun hCne => hCne hdiag.1) (fun hdne => hdne hdiag.2))
       have h := hq ⟨C,d,hC,hd⟩
       change (f ⟨C,d,hC,hd⟩ : ℚ) = q * (cycleClass p ⟨C,d,hC,hd⟩ : ℚ) at h
       rw [hzero] at h

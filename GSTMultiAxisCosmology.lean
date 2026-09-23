@@ -55,18 +55,26 @@ theorem shifts_commute (m n : I → ℕ) (g : Coef d) :
   rw [shift_add, shift_add]
   simp only [Nat.add_comm]
 
-/-- One boundary crossing extinguishes the whole multi-axis transport. -/
-theorem shift_boundary (m : I → ℕ) (g : Coef d)
-    (h : ∃ i, d i ≤ m i) : shift d m g = 0 := by
+/-- Boundary crossing is the only way a displacement extinguishes every
+world, including infinite axis sets and zero-depth worlds. -/
+theorem shift_boundary (m : I → ℕ) :
+    (∀ g : Coef d, shift d m g = 0) ↔ ∃ i, d i ≤ m i := by
   classical
-  obtain ⟨i, hi⟩ := h
-  funext c
-  have hn : ¬ ∀ j, m j ≤ (c j).val := by
-    intro hh
-    have := hh i
-    have := (c i).isLt
-    omega
-  simp [shift, hn]
+  constructor
+  · intro hz
+    by_contra h
+    have hm : ∀ i, m i < d i := fun i =>
+      Nat.lt_of_not_ge (fun hi => h ⟨i, hi⟩)
+    have he := congrFun (hz (fun _ => 1)) (fun i => ⟨m i, hm i⟩)
+    simp [shift] at he
+  · rintro ⟨i, hi⟩ g
+    funext c
+    have hn : ¬ ∀ j, m j ≤ (c j).val := by
+      intro hh
+      have := hh i
+      have := (c i).isLt
+      omega
+    simp [shift, hn]
 
 /-- Native transports as integer-linear operators. -/
 def shiftEndo (m : I → ℕ) : Module.End ℤ (Coef d) where
@@ -88,6 +96,35 @@ theorem shiftEndo_mul (m n : I → ℕ) :
   apply LinearMap.ext
   intro g
   exact shift_add d m n g
+
+/-- Iteration scales all native displacement coordinates simultaneously. -/
+theorem shiftEndo_pow (m : I → ℕ) (n : ℕ) :
+    shiftEndo d m ^ n = shiftEndo d (fun i => n * m i) := by
+  induction n with
+  | zero =>
+      apply LinearMap.ext
+      intro g
+      simpa using (shift_zero d g).symm
+  | succ n ih =>
+      rw [pow_succ, ih, shiftEndo_mul]
+      congr 1
+      funext i
+      exact (Nat.succ_mul n (m i)).symm
+
+/-- Exact extinction at every exponent, without positive-depth or finite-axis
+assumptions. -/
+theorem shiftEndo_pow_eq_zero_iff (m : I → ℕ) (n : ℕ) :
+    shiftEndo d m ^ n = 0 ↔ ∃ i, d i ≤ n * m i := by
+  rw [shiftEndo_pow]
+  constructor
+  · intro h
+    apply (shift_boundary d _).mp
+    intro g
+    exact congrArg (fun T : Module.End ℤ (Coef d) => T g) h
+  · intro h
+    apply LinearMap.ext
+    intro g
+    exact (shift_boundary d _).mpr h g
 
 def origin (hd : ∀ i, 0 < d i) : Cell d := fun i => ⟨0, hd i⟩
 
@@ -149,12 +186,16 @@ theorem synthesis_origin (hd : ∀ i, 0 < d i) (g : Coef d) :
     shiftEndo_apply, shift_origin]
   exact delta_expansion d g
 
-/-- There are no hidden relations among bounded native mixed shifts. -/
-theorem synthesis_injective (hd : ∀ i, 0 < d i) :
+/-- Bounded native mixed shifts have no hidden relations, even when a world
+has a zero-depth axis. No positivity premise is needed. -/
+theorem synthesis_injective :
     Function.Injective (synthesis d) := by
   intro f g h
+  funext c
+  have hd : ∀ i, 0 < d i := fun i => by have := (c i).isLt; omega
   have hh := congrArg (fun T : Module.End ℤ (Coef d) => T (delta d (origin d hd))) h
-  simpa only [synthesis_origin] using hh
+  have hfg : f = g := by simpa only [synthesis_origin] using hh
+  exact congrFun hfg c
 
 /-- A commuting operator is determined by its origin response on every cell. -/
 theorem commuting_operator_delta (hd : ∀ i, 0 < d i)

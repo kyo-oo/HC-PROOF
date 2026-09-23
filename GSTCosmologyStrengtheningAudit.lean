@@ -355,3 +355,19 @@ import waves.GSTWaveCohomologyV2
 #print axioms GSTVortexSingularityV2.core_rotation_no_early_return
 #print axioms GSTWaveCohomology.finite_weighted_wave_decomposition
 #print axioms GSTWaveCohomologyV2.rowClass_faithful
+
+#print axioms GSTMultiAxisCosmology.shiftEndo_pow
+
+#print axioms GSTMultiAxisCosmology.shiftEndo_pow_eq_zero_iff
+
+#print axioms GSTMultiAxisGradedDynamics.raises_mul
+
+#print axioms GSTMultiAxisGradedDynamics.raises_list_prod
+
+#print axioms GSTMultiAxisGradedDynamics.raising_sequence_extinction
+
+#print axioms GSTInfiniteWorldClassification.windowTower_eq_iff_cofinal_levels
+
+#print axioms GSTInfiniteWorldRenormalization.level_eq_iff_prefix_tail
+
+#print axioms GSTInfiniteWorldRenormalization.graft_level_eq_iff

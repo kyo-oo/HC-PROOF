@@ -278,15 +278,12 @@ theorem ghostRay_iff_residue_shape (u : Nat) :
       calc
         3^k = 3^((k-1)+1) := by congr 1; omega
         _ = 3 * 3^(k-1) := by rw [Nat.pow_succ]; ring
-    rw [hpow] at heq
-    generalize hr : (GSTTowerFire.c (k-1) * u) % 3^k = r at heq ⊢
-    generalize ha : (GSTTowerFire.c 1 * u) % 9 = a at heq
-    generalize hpw : 3^(k-1) = p at heq ⊢
-    have ha_lt : a < 9 := by
-      rw [← ha]
-      exact Nat.mod_lt _ (by decide)
-    have hp_ge : 9 ≤ p := by
-      simpa [hpw] using hp
+    -- Rewrite only the free scale, preserving the residue's original modulus.
+    have hshape :
+        2 * ((GSTTowerFire.c (k-1) * u) % 3^k) + 9 =
+          2 * ((GSTTowerFire.c 1 * u) % 9) + 3 * 3^(k-1) :=
+      heq.trans (congrArg
+        (fun scale : Nat => 2 * ((GSTTowerFire.c 1 * u) % 9) + scale) hpow)
     constructor <;> omega
 
 

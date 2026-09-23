@@ -39,6 +39,22 @@ theorem windowTower_ext
       cases h
       congr
 
+/-- Any cofinal family of resolutions determines the whole coherent world;
+the observer index type is arbitrary and monotonicity is not required. -/
+theorem windowTower_eq_iff_cofinal_levels
+    {J : Type*} (X Y : WindowTower) (resolution : J → Nat)
+    (hcofinal : ∀ K, ∃ n, K ≤ resolution n) :
+    X = Y ↔ ∀ n, X.level (resolution n) = Y.level (resolution n) := by
+  constructor
+  · rintro rfl n
+    rfl
+  · intro h
+    apply windowTower_ext
+    funext K
+    obtain ⟨n, hn⟩ := hcofinal K
+    rw [← X.coherent K (resolution n) hn,
+      ← Y.coherent K (resolution n) hn, h n]
+
 /-- Reconstructing a coherent world from its innovation stream returns the
 world itself, not just an isomorphic observation trace. -/
 theorem streamTower_innovationStream

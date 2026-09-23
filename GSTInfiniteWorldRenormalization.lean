@@ -98,6 +98,33 @@ theorem level_eq_iff_prefix (X Y : WindowTower) (k : ℕ) :
   · intro h p hp
     exact congrFun h ⟨p,hp⟩
 
+/-- Every finite observation splits exactly into retained prefix and the
+following tail window. -/
+theorem level_eq_iff_prefix_tail (X Y : WindowTower) (k l : ℕ) :
+    X.level (k+l) = Y.level (k+l) ↔
+      worldPrefix k X = worldPrefix k Y ∧
+        (tail k X).level l = (tail k Y).level l := by
+  rw [level_eq_iff_stream_prefix, level_eq_iff_stream_prefix]
+  constructor
+  · intro h
+    constructor
+    · funext i
+      exact h i.val (by have := i.isLt; omega)
+    · intro p hp
+      simpa only [innovation_tail] using h (k+p) (by omega)
+  · rintro ⟨hprefix, htail⟩ p hp
+    by_cases hpk : p < k
+    · exact congrFun hprefix ⟨p, hpk⟩
+    · have he := htail (p-k) (by omega)
+      simpa only [innovation_tail, Nat.add_sub_of_le (by omega : k ≤ p)] using he
+
+/-- A common graft preserves exactly the finite distinctions of its futures. -/
+theorem graft_level_eq_iff (k l : ℕ) (u : Fin k → Fin 3) (X Y : WindowTower) :
+    (graft k u X).level (k+l) = (graft k u Y).level (k+l) ↔
+      X.level l = Y.level l := by
+  rw [level_eq_iff_prefix_tail]
+  simp
+
 /-- Worlds sharing one finite observation. -/
 abbrev Cylinder (X : WindowTower) (k : ℕ) := {Y : WindowTower // Y.level k = X.level k}
 

@@ -580,6 +580,21 @@
     }
   },
   {
+    "file": "GSTInfiniteWorldClassification.lean",
+    "module": "GSTInfiniteWorldClassification",
+    "declarations": {
+      "GSTInfiniteWorldClassification.windowTower_eq_iff_cofinal_levels": "theorem"
+    }
+  },
+  {
+    "file": "GSTInfiniteWorldRenormalization.lean",
+    "module": "GSTInfiniteWorldRenormalization",
+    "declarations": {
+      "GSTInfiniteWorldRenormalization.level_eq_iff_prefix_tail": "theorem",
+      "GSTInfiniteWorldRenormalization.graft_level_eq_iff": "theorem"
+    }
+  },
+  {
     "file": "GSTLefschetzCrown.lean",
     "module": "GSTLefschetzCrown",
     "declarations": {
@@ -591,6 +606,33 @@
     "module": "GSTLefschetzCrownV2",
     "declarations": {
       "GSTLefschetzCrownV2.lefschetz_degree0_image_iff": "theorem"
+    }
+  },
+  {
+    "file": "GSTMultiAxisCohomology.lean",
+    "module": "GSTMultiAxisCohomology",
+    "declarations": {
+      "GSTMultiAxisCohomology.monomial_class_ne_zero": "theorem"
+    }
+  },
+  {
+    "file": "GSTMultiAxisCosmology.lean",
+    "module": "GSTMultiAxisCosmology",
+    "declarations": {
+      "GSTMultiAxisCosmology.shift_boundary": "theorem",
+      "GSTMultiAxisCosmology.shiftEndo_pow": "theorem",
+      "GSTMultiAxisCosmology.shiftEndo_pow_eq_zero_iff": "theorem",
+      "GSTMultiAxisCosmology.synthesis_injective": "theorem"
+    }
+  },
+  {
+    "file": "GSTMultiAxisGradedDynamics.lean",
+    "module": "GSTMultiAxisGradedDynamics",
+    "declarations": {
+      "GSTMultiAxisGradedDynamics.raises_mul": "theorem",
+      "GSTMultiAxisGradedDynamics.raises_list_prod": "theorem",
+      "GSTMultiAxisGradedDynamics.raising_sequence_extinction": "theorem",
+      "GSTMultiAxisGradedDynamics.raising_operator_nilpotent": "theorem"
     }
   },
   {

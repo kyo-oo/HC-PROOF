@@ -96,6 +96,40 @@ theorem weighted_dual_degree (c : Cell d) :
 def Raises (r : ℕ) (T : Module.End ℤ (Coef d)) : Prop :=
   ∀ k g, T (sector d w k g) = sector d w (k+r) (T g)
 
+/-- Native degree increments add under composition, without commutation. -/
+theorem raises_mul (r s : ℕ) (T U : Module.End ℤ (Coef d))
+    (hT : Raises d w r T) (hU : Raises d w s U) :
+    Raises d w (r+s) (T*U) := by
+  intro k g
+  rw [Module.End.mul_apply, hU, hT, Module.End.mul_apply]
+  congr 1
+  omega
+
+/-- Arbitrary ordered dynamics carry the sum of the individual increments. -/
+theorem raises_list_prod (ops : List (ℕ × Module.End ℤ (Coef d)))
+    (hops : ∀ a ∈ ops, Raises d w a.1 a.2) :
+    Raises d w (ops.map Prod.fst).sum (ops.map Prod.snd).prod := by
+  induction ops with
+  | nil => intro k g; simp
+  | cons a ops ih =>
+      simpa using raises_mul d w a.1 (ops.map Prod.fst).sum a.2
+        (ops.map Prod.snd).prod (hops a (by simp))
+        (ih (fun b hb => hops b (by simp [hb])))
+
+/-- Even nonstationary, noncommuting dynamics vanish once their accumulated
+degree exceeds the world's weighted capacity. -/
+theorem raising_sequence_extinction (ops : List (ℕ × Module.End ℤ (Coef d)))
+    (hops : ∀ a ∈ ops, Raises d w a.1 a.2)
+    (hbound : topDegree d w < (ops.map Prod.fst).sum) :
+    (ops.map Prod.snd).prod = 0 := by
+  apply LinearMap.ext
+  intro g
+  rw [← sector_sum d w g, map_sum]
+  apply Finset.sum_eq_zero
+  intro k hk
+  rw [raises_list_prod d w ops hops k g,
+    sector_zero_above d w _ (by omega)]
+
 /-- Degree laws compose for every operator, not just a polarization sum. -/
 theorem raises_pow (r : ℕ) (T : Module.End ℤ (Coef d))
     (hT : Raises d w r T) (n : ℕ) : Raises d w (n*r) (T^n) := by
@@ -119,12 +153,13 @@ theorem raising_operator_extinction (r n : ℕ) (T : Module.End ℤ (Coef d))
   intro k hk
   rw [raises_pow d w r T hT n k g, sector_zero_above d w (k+n*r) (by omega)]
 
-/-- Uniform extinction at top+1 steps for any positive degree increment. -/
+/-- Degree-sensitive extinction at top/r+1 steps for positive increment r. -/
 theorem raising_operator_nilpotent (r : ℕ) (hr : 0 < r)
     (T : Module.End ℤ (Coef d)) (hT : Raises d w r T) :
-    T^(topDegree d w+1) = 0 := by
+    T^(topDegree d w/r+1) = 0 := by
   apply raising_operator_extinction d w r _ T hT
-  have h := Nat.mul_le_mul_left (topDegree d w+1) hr
+  have h := Nat.mod_lt (topDegree d w) hr
+  have he := Nat.mod_add_div (topDegree d w) r
   nlinarith
 
 #print axioms sector_sum

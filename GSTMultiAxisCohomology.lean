@@ -86,15 +86,31 @@ theorem quotient_eq_iff_coeff (p q : MvPolynomial I ℤ) :
   rw [← map_pow, Ideal.Quotient.eq_zero_iff_mem, boundaryIdeal_eq_span_powers]
   exact Ideal.subset_span ⟨i, rfl⟩
 
-/-- Every bounded monomial survives, with no positivity assumption on other
-coefficients. Boundary crossing is the only monomial extinction mechanism. -/
-theorem monomial_class_ne_zero (e : I →₀ ℕ) (he : ∀ i, e i < d i) :
-    Ideal.Quotient.mk (boundaryIdeal d) (monomial e (1 : ℤ)) ≠ 0 := by
+/-- Exact survival for every integer amplitude: precisely the nonzero
+amplitudes whose displacement stays below every axis boundary survive. -/
+theorem monomial_class_ne_zero (e : I →₀ ℕ) (a : ℤ) :
+    Ideal.Quotient.mk (boundaryIdeal d) (monomial e a) ≠ 0 ↔
+      a ≠ 0 ∧ ∀ i, e i < d i := by
   classical
-  intro hz
-  have hm := (Ideal.Quotient.eq_zero_iff_mem.mp hz)
-  have h := (mem_boundaryIdeal_iff_coeff d _).mp hm e he
-  simpa using h
+  constructor
+  · intro h
+    refine ⟨?_, ?_⟩
+    · intro ha
+      apply h
+      simp [ha]
+    · intro i
+      by_contra hi
+      apply h
+      apply Ideal.Quotient.eq_zero_iff_mem.mpr
+      apply (mem_boundaryIdeal_iff d _).mpr
+      intro f hf
+      have he : f = e := Finset.mem_singleton.mp (support_monomial_subset hf)
+      subst f
+      exact ⟨i, Nat.le_of_not_gt hi⟩
+  · rintro ⟨ha, he⟩ hz
+    have hm := Ideal.Quotient.eq_zero_iff_mem.mp hz
+    have h := (mem_boundaryIdeal_iff_coeff d _).mp hm e he
+    exact ha (by simpa using h)
 
 /-- A polynomial supported strictly within the world has no hidden relation. -/
 theorem bounded_polynomial_faithful (p : MvPolynomial I ℤ)

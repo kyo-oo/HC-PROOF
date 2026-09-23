@@ -2,6 +2,46 @@
 
 Base: `c833d9bd23d376eeb14246b675572f2cb8c66e51`.
 
+## Run 86 continuation — pending compiler verification
+
+This continuation starts from `624a97f30f53decf45b9fedb8a759b6655096e09`
+on `gst-cosmology-strengthening`, preserving the intervening repair work.
+Run `35829999299` (number 86) failed in two modules:
+
+- `GSTGhostRayExclusion.ghostRay_iff_residue_shape`: rewriting `3^k`
+  throughout the shape identity also changed the modulus of the residue.
+  The repair transports only the free scale on the right side of the
+  equality, keeping the same residue in the equation and the goal.
+- `GSTClayOfficialV2.rational_hodge_iff_all_weights`: the off-diagonal
+  hypothesis retained record projections. The repair exposes the carry and
+  digit fields and passes the off-diagonal contradiction directly.
+
+Four existing theorem statements are strengthened in place:
+
+| Declaration | Stronger statement |
+|---|---|
+| `shift_boundary` | Extinction of every world iff some axis boundary is crossed; arbitrary axis sets and zero depths are included |
+| `synthesis_injective` | Positive-depth assumption removed |
+| `monomial_class_ne_zero` | Arbitrary integer amplitude survives iff nonzero and bounded on every axis |
+| `raising_operator_nilpotent` | Extinction by `topDegree / r + 1` steps instead of `topDegree + 1` |
+
+Additional derivations in the existing files give exact displacement-iterate
+extinction, accumulated-degree extinction for ordered noncommuting dynamics,
+coherent-world reconstruction from arbitrary cofinal observation families,
+and exact prefix/tail splitting of finite observations.
+
+The coverage inventory now contains 117 files and 163 named declarations;
+these are accumulated counts, not newly verified results. Every added
+declaration is included in the transitive axiom audit.
+
+Source checks and the existing finite observation checks pass. Independent
+finite checks covered 4,464 ghost-shape cases and 20,480 displacement cases.
+These checks do not replace Lean compilation. Local dependency downloads
+previously failed with HTTP CONNECT 403 errors, and automatic approval review
+blocked the public push pending explicit authorization. The repository gate
+and axiom audit must therefore still run on these edits. Historical green
+runs below validate their stated commits only.
+
 The work uses the repository's native world cells, shifts, coefficient
 lattices, depth boundaries, coherent towers and innovation/current laws.
 The new results extend shared structures; they do not replace unrelated
