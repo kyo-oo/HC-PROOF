@@ -250,8 +250,8 @@ From those data the cycle witness is reconstructed directly, so the older
 ambient Stage-2G address certificate is unnecessary for the final implication.
 -/
 
-/-- Rational scalar extension of the upgraded global pure-Hodge coordinate
-space `PureHodgeCoordinates A B`. -/
+/-- Rational-coordinate analogue of `PureHodgeCoordinates A B`.
+This definition does not itself identify a geometric Hodge sector with GST. -/
 abbrev CosmologyPureCoordinates (A B : Nat) : Type :=
   Fin (min A B) → ℚ
 
@@ -268,16 +268,17 @@ theorem cosmology_coordinate_reconstruct
       (phi i) • cosmologyCoordinateBasis i := by
   classical
   funext j
+  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
   rw [Finset.sum_eq_single j]
   · simp [cosmologyCoordinateBasis]
   · intro b hb hbj
-    simp [cosmologyCoordinateBasis, hbj]
+    simp [cosmologyCoordinateBasis, hbj, Ne.symm hbj]
   · simp
 
 /-- A direct cosmology chart of one native rational Hodge sector.
-
-The coordinate rank is not an arbitrary address size: it is the intrinsic
-`min A B` diagonal rank of the upgraded global pure-Hodge cosmology. -/
+The chart must prove that its dimension matches the chosen GST diagonal
+rank `min A B`. The geometric algebraicity requirement is explicit in
+`basisCycle_class`; coordinate reconstruction alone does not supply it. -/
 structure CosmologyHodgeRealization
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -337,6 +338,59 @@ theorem cosmologyCycleWitness_spec
     _ = alpha := by
           simpa [a] using (congrArg Subtype.val hchart).symm
 
+/-- Cycle reconstruction respects the rational linear structure. Once the
+geometric basis witnesses are supplied, this is a simultaneous linear lift
+of the entire Hodge sector, not a separate choice for each input class. -/
+noncomputable def cosmologyCycleLift
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    {p A B : Nat} (R : CosmologyHodgeRealization V H p A B) :
+    rationalHodgeSubspace (H.hodgeBigrading p) →ₗ[ℚ] codimensionCycles V.X p where
+  toFun := fun a => cosmologyCycleWitness R a.1 a.2
+  map_add' := by
+    intro a b
+    change (∑ i, (R.chart (a+b) i) • R.basisCycle i) =
+      (∑ i, (R.chart a i) • R.basisCycle i) + (∑ i, (R.chart b i) • R.basisCycle i)
+    simp only [map_add, Pi.add_apply, add_smul, Finset.sum_add_distrib]
+  map_smul' := by
+    intro q a
+    change (∑ i, (R.chart (q • a) i) • R.basisCycle i) =
+      q • (∑ i, (R.chart a i) • R.basisCycle i)
+    simp only [map_smul, Pi.smul_apply, Finset.smul_sum, smul_smul, smul_eq_mul]
+
+/-- The lift is a right inverse of the cycle-class map on the Hodge sector. -/
+theorem cosmologyCycleLift_section
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    {p A B : Nat} (R : CosmologyHodgeRealization V H p A B) :
+    (H.cycleClass p).comp (cosmologyCycleLift R) =
+      (rationalHodgeSubspace (H.hodgeBigrading p)).subtype := by
+  ext a
+  exact cosmologyCycleWitness_spec R a.1 a.2
+
+/-- All algebraic witnesses of one Hodge class are its reconstructed cycle
+plus a cycle in the kernel. Reconstruction does not imply uniqueness of the
+algebraic cycle itself. -/
+theorem cosmology_cycle_fiber_exact
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    {p A B : Nat} (R : CosmologyHodgeRealization V H p A B)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p))
+    (Z : codimensionCycles V.X p) :
+    H.cycleClass p Z = alpha ↔
+      ∃ K ∈ LinearMap.ker (H.cycleClass p), Z = cosmologyCycleWitness R alpha halpha + K := by
+  constructor
+  · intro hZ
+    refine ⟨Z - cosmologyCycleWitness R alpha halpha, ?_, ?_⟩
+    · change H.cycleClass p (Z - cosmologyCycleWitness R alpha halpha) = 0
+      rw [map_sub, hZ, cosmologyCycleWitness_spec, sub_self]
+    · calc
+        Z = (Z - cosmologyCycleWitness R alpha halpha) +
+            cosmologyCycleWitness R alpha halpha := (sub_add_cancel _ _).symm
+        _ = cosmologyCycleWitness R alpha halpha +
+            (Z - cosmologyCycleWitness R alpha halpha) := add_comm _ _
+  · rintro ⟨K, hK, rfl⟩
+    change H.cycleClass p K = 0 at hK
+    rw [map_add, cosmologyCycleWitness_spec, hK, add_zero]
+
 /-- Every native rational Hodge class represented by a cosmology chart has a
 constructive codimension-p algebraic-cycle witness. -/
 theorem hodge_class_has_cosmology_cycle
@@ -382,6 +436,40 @@ theorem bigraded_betti_hodge_of_cosmology_obligation
   rcases hR with ⟨A, B, hAB⟩
   exact bigraded_betti_hodge_of_cosmology_family
     V H A B (fun p => (hAB p).some)
+
+/-- For a fixed pure-coordinate chart, constructing its cycle realization
+is equivalent to algebraicity of the entire Hodge sector. The chart alone
+does not establish this: the forward and reverse implications expose the
+precise mathematical content of the basis-cycle field. -/
+theorem cosmology_chart_realization_iff
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p A B : Nat)
+    (chart : rationalHodgeSubspace (H.hodgeBigrading p) ≃ₗ[ℚ]
+      CosmologyPureCoordinates A B) :
+    (∃ R : CosmologyHodgeRealization V H p A B, R.chart = chart) ↔
+      rationalHodgeSubspace (H.hodgeBigrading p) ≤ LinearMap.range (H.cycleClass p) := by
+  classical
+  constructor
+  · rintro ⟨R, hchart⟩ alpha halpha
+    exact hodge_class_has_cosmology_cycle V H R alpha halpha
+  · intro h
+    have hb : ∀ i : Fin (min A B), ∃ Z : codimensionCycles V.X p,
+        H.cycleClass p Z = (chart.symm (cosmologyCoordinateBasis i)).1 := by
+      intro i
+      exact h (chart.symm (cosmologyCoordinateBasis i)).2
+    choose Z hZ using hb
+    exact ⟨{ chart := chart, basisCycle := Z, basisCycle_class := hZ }, rfl⟩
+
+/-- A zero cycle-class map realizes exactly the zero Hodge sector. This
+checks that no unconditional algebraicity conclusion follows just from a
+semantic package with an arbitrary linear cycle-class field. -/
+theorem zero_cycleClass_hodge_iff
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat)
+    (hzero : H.cycleClass p = 0) :
+    rationalHodgeSubspace (H.hodgeBigrading p) ≤ LinearMap.range (H.cycleClass p) ↔
+      rationalHodgeSubspace (H.hodgeBigrading p) = ⊥ := by
+  simp [hzero]
 
 #check Complexification
 #check complexificationMapQ

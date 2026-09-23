@@ -97,6 +97,7 @@ jobs:
             GSTFourPowerOntologicalAdapter.lean
             GSTFourPowerThirdWave.lean
             GSTGhostRayExclusion.lean
+            GSTGeometricRealizationStage2G.lean
             GSTGlobalPureHodgeCosmology.lean
             GSTGradedWorldAlgebra.lean
             GSTGraphV2CanonicalDescentOntology.lean
@@ -241,6 +242,7 @@ jobs:
             GSTFourPowerOntologicalAdapter \
             GSTFourPowerThirdWave \
             GSTGhostRayExclusion \
+            GSTGeometricRealizationStage2G \
             GSTGlobalPureHodgeCosmology \
             GSTGradedWorldAlgebra \
             GSTGraphV2CanonicalDescentOntology \

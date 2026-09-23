@@ -1,3 +1,4 @@
+import GSTGeometricRealizationStage2G
 import GSTGlobalPureHodgeCosmology
 import GSTTruncatedWorldCohomologyRing
 import CardinalWorlds
@@ -489,3 +490,55 @@ import waves.GSTWaveCohomologyV2
 #print axioms GSTNCohomologyV2.ncoho_rank_unconditional
 
 #print axioms GSTNCohomologyV2.canonicalNCohoBasis_injective
+
+#print axioms GSTGeometricRealizationStage2G.complexificationMapQ
+
+#print axioms GSTGeometricRealizationStage2G.complexificationMapQ_apply
+
+#print axioms GSTGeometricRealizationStage2G.ppIndex
+
+#print axioms GSTGeometricRealizationStage2G.HodgeBigrading
+
+#print axioms GSTGeometricRealizationStage2G.rationalHodgeSubspace
+
+#print axioms GSTGeometricRealizationStage2G.mem_rationalHodgeSubspace_iff
+
+#print axioms GSTGeometricRealizationStage2G.HodgeBigradedBettiData
+
+#print axioms GSTGeometricRealizationStage2G.BigradedBettiHodgeStatement
+
+#print axioms GSTGeometricRealizationStage2G.bigradedBettiHodgeStatement_iff_stage2f
+
+#print axioms GSTGeometricRealizationStage2G.hodge_class_has_bigraded_cycle
+
+#print axioms GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_family
+
+#print axioms GSTGeometricRealizationStage2G.Stage2GRealizationObligation
+
+#print axioms GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_obligation
+
+#print axioms GSTGeometricRealizationStage2G.cosmologyCoordinateBasis
+
+#print axioms GSTGeometricRealizationStage2G.cosmology_coordinate_reconstruct
+
+#print axioms GSTGeometricRealizationStage2G.cosmologyCycleWitness
+
+#print axioms GSTGeometricRealizationStage2G.cosmologyCycleWitness_spec
+
+#print axioms GSTGeometricRealizationStage2G.cosmologyCycleLift
+
+#print axioms GSTGeometricRealizationStage2G.cosmologyCycleLift_section
+
+#print axioms GSTGeometricRealizationStage2G.cosmology_cycle_fiber_exact
+
+#print axioms GSTGeometricRealizationStage2G.hodge_class_has_cosmology_cycle
+
+#print axioms GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_cosmology_family
+
+#print axioms GSTGeometricRealizationStage2G.CosmologyStage2GRealizationObligation
+
+#print axioms GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_cosmology_obligation
+
+#print axioms GSTGeometricRealizationStage2G.cosmology_chart_realization_iff
+
+#print axioms GSTGeometricRealizationStage2G.zero_cycleClass_hodge_iff
