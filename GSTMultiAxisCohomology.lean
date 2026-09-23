@@ -187,7 +187,8 @@ normalization is coefficient filtering followed by exact reconstruction. -/
 noncomputable def boundedNormalForm (p : MvPolynomial I ℤ) : MvPolynomial I ℤ := by
   classical
   exact AddMonoidAlgebra.ofCoeff
-    (Finsupp.filter (fun e : I →₀ ℕ => ∀ i, e i < d i) p.coeff)
+    (Finsupp.filter (fun e : I →₀ ℕ => ∀ i, e i < d i)
+      (AddMonoidAlgebra.coeff p))
 
 /-- Every live coefficient survives canonical normalization literally. -/
 theorem coeff_boundedNormalForm_of_live
@@ -195,8 +196,7 @@ theorem coeff_boundedNormalForm_of_live
     (he : ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = coeff e p := by
   classical
-  change (boundedNormalForm d p).coeff e = p.coeff e
-  simp [boundedNormalForm, Finsupp.filter_apply, he]
+  simp [boundedNormalForm, he]
 
 /-- Every coefficient crossing at least one boundary is deleted by canonical
 normalization. -/
@@ -205,8 +205,7 @@ theorem coeff_boundedNormalForm_of_not_live
     (he : ¬ ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = 0 := by
   classical
-  change (boundedNormalForm d p).coeff e = 0
-  simp [boundedNormalForm, Finsupp.filter_apply, he]
+  simp [boundedNormalForm, he]
 
 /-- The canonical normal form is supported strictly inside every boundary. -/
 theorem boundedNormalForm_support (p : MvPolynomial I ℤ) :
