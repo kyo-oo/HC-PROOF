@@ -1,115 +1,33 @@
-name: Astra One-Shot Source Repair
+name: Astra One Shot Source Repair
 
 on:
   push:
-    branches:
-      - gst-cosmology-strengthening
+    branches: [gst-cosmology-strengthening]
     paths:
       - '.github/workflows/astra-surgical-repair.yml'
 
-permissions:
-  contents: write
-
 jobs:
   repair:
-    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
         with:
           ref: gst-cosmology-strengthening
           fetch-depth: 0
 
-      - name: Patch the two live Lean failures in place
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
+      - name: Patch original Lean sources
+        run: python3 scripts/astra_surgical_repair.py
 
-          # 1) Horizontal mixed-ledger concatenation: unfold the successor
-          # recurrence before using the induction hypothesis.
-          p = Path('GSTFinalPrefixOneStep6Infinite.lean')
-          s = p.read_text()
-          old = '''  induction m with
-  | zero => simp [reverseMixedCode]
-  | succ m ih =>
-      simp only [Nat.add_assoc, reverseMixedCode, ih, pow_succ]
-      ring
-'''
-          new = '''  induction m with
-  | zero => simp [reverseMixedCode]
-  | succ m ih =>
-      simp only [Nat.add_succ, reverseMixedCode, pow_succ]
-      rw [ih]
-      ring
-'''
-          if s.count(old) != 1:
-              raise SystemExit(f'expected one reverseMixedCode_add body, found {s.count(old)}')
-          p.write_text(s.replace(old, new))
-
-          # 2) Exact Omega observer interval: use quotient/remainder arithmetic
-          # and the kernel division interval theorem; avoid nonlinear Nat
-          # subtraction reasoning.
-          p = Path('GSTGraphV2OmegaWaveLaw.lean')
-          s = p.read_text()
-          old = '''theorem omega_observed_digit_iff_interval
-    (s core k d : Nat) (hk : 1 ≤ k) (hks : k ≤ s+1) :
-    digit3 (4^(3^s * core)) (s+k) = d ↔
-      d * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k ∧
-      (omegaCutWord s 1 * core) % 3^k < (d+1) * 3^(k-1) := by
-  rw [omega_observed_digit s core k hk hks]
-  set r := (omegaCutWord s 1 * core) % 3^k
-  set m := 3^(k-1)
-  have hm : 0 < m := by dsimp [m]; positivity
-  constructor
-  · intro h
-    have he := Nat.mod_add_div r m
-    have hb := Nat.mod_lt r hm
-    rw [h] at he
-    constructor <;> nlinarith
-  · rintro ⟨hlo, hhi⟩
-    have he : r = (r-d*m) + m*d := by omega
-    have hb : r-d*m < m := by nlinarith
-    rw [he, Nat.add_mul_div_left _ _ hm, Nat.div_eq_of_lt hb]
-    simp
-'''
-          new = '''theorem omega_observed_digit_iff_interval
-    (s core k d : Nat) (hk : 1 ≤ k) (hks : k ≤ s+1) :
-    digit3 (4^(3^s * core)) (s+k) = d ↔
-      d * 3^(k-1) ≤ (omegaCutWord s 1 * core) % 3^k ∧
-      (omegaCutWord s 1 * core) % 3^k < (d+1) * 3^(k-1) := by
-  rw [omega_observed_digit s core k hk hks]
-  set r := (omegaCutWord s 1 * core) % 3^k
-  set m := 3^(k-1)
-  have hm : 0 < m := by dsimp [m]; positivity
-  constructor
-  · intro h
-    have he := Nat.mod_add_div r m
-    have hb := Nat.mod_lt r hm
-    rw [h] at he
-    have he' : r % m + d * m = r := by
-      simpa [Nat.mul_comm] using he
-    constructor
-    · omega
-    · calc
-        r = r % m + d * m := he'.symm
-        _ < m + d * m := Nat.add_lt_add_right hb (d * m)
-        _ = (d + 1) * m := by simp [Nat.add_mul, Nat.add_comm]
-  · rintro ⟨hlo, hhi⟩
-    exact Nat.div_eq_of_lt_le hlo hhi
-'''
-          if s.count(old) != 1:
-              raise SystemExit(f'expected one omega interval body, found {s.count(old)}')
-          p.write_text(s.replace(old, new))
-          PY
-
-      - name: Commit direct source repairs and remove this one-shot workflow
+      - name: Commit direct repairs and remove temporary surgery files
         shell: bash
         run: |
           set -euo pipefail
           rm .github/workflows/astra-surgical-repair.yml
-          git config user.name 'kyo-oo'
-          git config user.email 'kyo-oo@users.noreply.github.com'
-          git add GSTFinalPrefixOneStep6Infinite.lean GSTGraphV2OmegaWaveLaw.lean .github/workflows/astra-surgical-repair.yml
+          rm scripts/astra_surgical_repair.py
+          git config user.name kyo-oo
+          git config user.email kyo-oo@users.noreply.github.com
+          git add -A
           git commit -m 'Repair mixed-ledger concatenation and Omega observer interval'
           git push origin HEAD:gst-cosmology-strengthening
