@@ -145,15 +145,19 @@ theorem monomial_class_eq_zero_iff (e : I →₀ ℕ) (a : ℤ) :
 
 /-- A polynomial supported strictly within the world has no hidden relation. -/
 theorem bounded_polynomial_faithful (p : MvPolynomial I ℤ)
-    (hp : ∀ e ∈ p.support, ∀ i, e i < d i)
-    (hz : Ideal.Quotient.mk (boundaryIdeal d) p = 0) : p = 0 := by
+    (hp : ∀ e ∈ p.support, ∀ i, e i < d i) :
+    Ideal.Quotient.mk (boundaryIdeal d) p = 0 ↔ p = 0 := by
   classical
-  apply MvPolynomial.ext
-  intro e
-  by_cases he : e ∈ p.support
-  · simpa using (mem_boundaryIdeal_iff_coeff d p).mp
-      (Ideal.Quotient.eq_zero_iff_mem.mp hz) e (hp e he)
-  · simpa using (notMem_support_iff.mp he)
+  constructor
+  · intro hz
+    apply MvPolynomial.ext
+    intro e
+    by_cases he : e ∈ p.support
+    · simpa using (mem_boundaryIdeal_iff_coeff d p).mp
+        (Ideal.Quotient.eq_zero_iff_mem.mp hz) e (hp e he)
+    · simpa using (notMem_support_iff.mp he)
+  · rintro rfl
+    exact map_zero _
 
 /-- **EXACT BOUNDED NORMAL FORM.**  Two representatives whose support stays
 strictly inside every axis boundary represent the same cohomology class iff
@@ -196,7 +200,7 @@ theorem coeff_boundedNormalForm_of_live
     (he : ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = coeff e p := by
   classical
-  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) p.coeff) e = p.coeff e
+  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) (AddMonoidAlgebra.coeff p)) e = coeff e p
   simp [he]
 
 /-- Every coefficient crossing at least one boundary is deleted by canonical
@@ -206,7 +210,7 @@ theorem coeff_boundedNormalForm_of_not_live
     (he : ¬ ∀ i, e i < d i) :
     coeff e (boundedNormalForm d p) = 0 := by
   classical
-  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) p.coeff) e = 0
+  change (Finsupp.filter (fun f : I →₀ ℕ => ∀ i, f i < d i) (AddMonoidAlgebra.coeff p)) e = 0
   simp [he]
 
 /-- The canonical normal form is supported strictly inside every boundary. -/
@@ -274,6 +278,75 @@ theorem existsUnique_bounded_representative (z : AxisRing d) :
       hbound (boundedNormalForm_support d q)).1
     exact hclass.trans (quotient_boundedNormalForm d q).symm
 
+/-- Equality of normal forms is an exact decision criterion for quotient
+equality, in both directions and at arbitrary axis depth. -/
+theorem boundedNormalForm_eq_iff (p q : MvPolynomial I ℤ) :
+    boundedNormalForm d p = boundedNormalForm d q ↔
+      Ideal.Quotient.mk (boundaryIdeal d) p =
+        Ideal.Quotient.mk (boundaryIdeal d) q := by
+  constructor
+  · intro h
+    rw [← quotient_boundedNormalForm d p, ← quotient_boundedNormalForm d q, h]
+  · exact boundedNormalForm_eq_of_quotient_eq d p q
+
+/-- Canonical representatives add coefficientwise, with no second reduction. -/
+theorem boundedNormalForm_add (p q : MvPolynomial I ℤ) :
+    boundedNormalForm d (p + q) = boundedNormalForm d p + boundedNormalForm d q := by
+  apply MvPolynomial.ext
+  intro e
+  by_cases he : ∀ i, e i < d i
+  · simp only [coeff_boundedNormalForm_of_live d _ e he, coeff_add]
+  · simp only [coeff_boundedNormalForm_of_not_live d _ e he, coeff_add, add_zero]
+
+/-- Multiplication can be performed entirely on canonical representatives:
+discarded boundary terms never return to the live world under products. -/
+theorem boundedNormalForm_mul (p q : MvPolynomial I ℤ) :
+    boundedNormalForm d (p * q) =
+      boundedNormalForm d (boundedNormalForm d p * boundedNormalForm d q) := by
+  apply (boundedNormalForm_eq_iff d _ _).2
+  simp only [map_mul, quotient_boundedNormalForm]
+
+/-- Restricting successively to two depth profiles is exactly restriction
+to their intersection. No finiteness or positive-depth assumption is needed. -/
+theorem boundedNormalForm_comp (b : I → ℕ) (p : MvPolynomial I ℤ) :
+    boundedNormalForm d (boundedNormalForm b p) =
+      boundedNormalForm (fun i => min (d i) (b i)) p := by
+  apply MvPolynomial.ext
+  intro e
+  by_cases hd : ∀ i, e i < d i <;> by_cases hb : ∀ i, e i < b i
+  · have hm : ∀ i, e i < min (d i) (b i) := fun i => lt_min (hd i) (hb i)
+    rw [coeff_boundedNormalForm_of_live d _ e hd,
+      coeff_boundedNormalForm_of_live b _ e hb,
+      coeff_boundedNormalForm_of_live _ _ e hm]
+  · have hm : ¬ ∀ i, e i < min (d i) (b i) :=
+      fun h => hb (fun i => (lt_min_iff.mp (h i)).2)
+    rw [coeff_boundedNormalForm_of_live d _ e hd,
+      coeff_boundedNormalForm_of_not_live b _ e hb,
+      coeff_boundedNormalForm_of_not_live _ _ e hm]
+  · have hm : ¬ ∀ i, e i < min (d i) (b i) :=
+      fun h => hd (fun i => (lt_min_iff.mp (h i)).1)
+    rw [coeff_boundedNormalForm_of_not_live d _ e hd,
+      coeff_boundedNormalForm_of_not_live _ _ e hm]
+  · have hm : ¬ ∀ i, e i < min (d i) (b i) :=
+      fun h => hd (fun i => (lt_min_iff.mp (h i)).1)
+    rw [coeff_boundedNormalForm_of_not_live d _ e hd,
+      coeff_boundedNormalForm_of_not_live _ _ e hm]
+
+/-- All depth observations jointly recover the complete polynomial. For
+each coefficient there is a native depth profile in which it remains live. -/
+theorem all_depths_separate (p q : MvPolynomial I ℤ) :
+    (∀ b : I → ℕ, boundedNormalForm b p = boundedNormalForm b q) ↔ p = q := by
+  constructor
+  · intro h
+    apply MvPolynomial.ext
+    intro e
+    have hc := congrArg (coeff e) (h (fun i => e i + 1))
+    simpa only [coeff_boundedNormalForm_of_live _ _ e (fun i => Nat.lt_succ_self (e i))]
+      using hc
+  · rintro rfl
+    intro b
+    rfl
+
 section Representation
 variable {R : Type*} [CommRing R] (x : I → R) (hx : ∀ i, x i ^ d i = 0)
 
@@ -316,36 +389,90 @@ theorem existsUnique_representation :
   rw [hf i, represent_axis]
 end Representation
 
+/-- Forget the layers beyond a smaller native depth profile. -/
+def depthRestriction (b : I → ℕ) (h : ∀ i, b i ≤ d i) :
+    AxisRing d →+* AxisRing b :=
+  represent d (axis b) (fun i => pow_eq_zero_of_le (h i) (axis_pow_depth b i))
+
+@[simp] theorem depthRestriction_axis (b : I → ℕ) (h : ∀ i, b i ≤ d i) (i : I) :
+    depthRestriction d b h (axis d i) = axis b i := by
+  exact represent_axis d _ _ i
+
+/-- Restriction is coherent under every chain of nested native worlds. -/
+theorem depthRestriction_comp (b c : I → ℕ)
+    (hbd : ∀ i, b i ≤ d i) (hcb : ∀ i, c i ≤ b i) :
+    (depthRestriction b c hcb).comp (depthRestriction d b hbd) =
+      depthRestriction d c (fun i => (hcb i).trans (hbd i)) := by
+  apply representation_ext d
+  intro i
+  simp
+
+/-- Polynomial representatives restrict by keeping the same expression. -/
+theorem depthRestriction_mk (b : I → ℕ) (h : ∀ i, b i ≤ d i)
+    (p : MvPolynomial I ℤ) :
+    depthRestriction d b h (Ideal.Quotient.mk (boundaryIdeal d) p) =
+      Ideal.Quotient.mk (boundaryIdeal b) p := by
+  have he : (depthRestriction d b h).comp (Ideal.Quotient.mk (boundaryIdeal d)) =
+      Ideal.Quotient.mk (boundaryIdeal b) := by
+    apply MvPolynomial.ringHom_ext
+    · intro z
+      simp
+    · intro i
+      exact depthRestriction_axis d b h i
+  exact DFunLike.congr_fun he p
+
+/-- Every shallower cohomology class has a lift to each deeper world. -/
+theorem depthRestriction_surjective (b : I → ℕ) (h : ∀ i, b i ≤ d i) :
+    Function.Surjective (depthRestriction d b h) := by
+  intro z
+  obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective z
+  exact ⟨Ideal.Quotient.mk (boundaryIdeal d) p, depthRestriction_mk d b h p⟩
+
+/-- The information lost by restriction is exactly the coefficient field
+outside the smaller live box. This identifies every restriction fiber. -/
+theorem depthRestriction_eq_iff (b : I → ℕ) (h : ∀ i, b i ≤ d i)
+    (p q : MvPolynomial I ℤ) :
+    depthRestriction d b h (Ideal.Quotient.mk (boundaryIdeal d) p) =
+        depthRestriction d b h (Ideal.Quotient.mk (boundaryIdeal d) q) ↔
+      ∀ e, (∀ i, e i < b i) → coeff e p = coeff e q := by
+  rw [depthRestriction_mk, depthRestriction_mk, quotient_eq_iff_coeff]
+
 /-- Finite polarized sums have a sharp dimension-derived ceiling even when
 the axis coefficients are arbitrary ring elements. -/
 theorem finite_polarization_bound {R : Type*} [CommRing R]
-    (s : Finset I) (x : I → R) (hd : ∀ i ∈ s, 0 < d i)
+    (s : Finset I) (x : I → R)
     (hx : ∀ i ∈ s, x i ^ d i = 0) :
     (∑ i ∈ s, x i) ^ ((∑ i ∈ s, (d i - 1)) + 1) = 0 := by
   classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | @insert i s hi ih =>
-    rw [Finset.sum_insert hi, Finset.sum_insert hi]
-    have hdi := hd i (Finset.mem_insert_self i s)
-    have hxi := hx i (Finset.mem_insert_self i s)
-    have hs := ih (fun j hj => hd j (Finset.mem_insert_of_mem hj))
-      (fun j hj => hx j (Finset.mem_insert_of_mem hj))
-    have h := (Commute.all (x i) (∑ j ∈ s, x j)).add_pow_add_eq_zero_of_pow_eq_zero hxi hs
-    have he : d i - 1 + (∑ j ∈ s, (d j - 1)) + 1 =
-        d i + ((∑ j ∈ s, (d j - 1)) + 1) - 1 := by omega
-    rw [he]
-    exact h
+  by_cases hd : ∀ i ∈ s, 0 < d i
+  · induction s using Finset.induction_on with
+    | empty => simp
+    | @insert i s hi ih =>
+      rw [Finset.sum_insert hi, Finset.sum_insert hi]
+      have hdi := hd i (Finset.mem_insert_self i s)
+      have hxi := hx i (Finset.mem_insert_self i s)
+      have hs := ih (fun j hj => hx j (Finset.mem_insert_of_mem hj))
+        (fun j hj => hd j (Finset.mem_insert_of_mem hj))
+      have h := (Commute.all (x i) (∑ j ∈ s, x j)).add_pow_add_eq_zero_of_pow_eq_zero hxi hs
+      have he : d i - 1 + (∑ j ∈ s, (d j - 1)) + 1 =
+          d i + ((∑ j ∈ s, (d j - 1)) + 1) - 1 := by omega
+      rw [he]
+      exact h
+  · push_neg at hd
+    obtain ⟨i, hi, hdi⟩ := hd
+    have hz : d i = 0 := by omega
+    have hone : (1 : R) = 0 := by simpa [hz] using hx i hi
+    calc
+      _ = _ * (1 : R) := (mul_one _).symm
+      _ = 0 := by rw [hone, mul_zero]
 
 /-- Arbitrarily weighted GST polarization, directly inside the quotient. -/
 theorem weighted_axis_polarization_bound [Fintype I]
-    (hd : ∀ i, 0 < d i) (w : I → AxisRing d) :
+    (w : I → AxisRing d) :
     (∑ i, w i * axis d i) ^ ((∑ i, (d i - 1)) + 1) = 0 := by
   apply finite_polarization_bound d Finset.univ
-  · intro i hi
-    exact hd i
-  · intro i hi
-    rw [mul_pow, axis_pow_depth, mul_zero]
+  intro i hi
+  rw [mul_pow, axis_pow_depth, mul_zero]
 
 /-- Exact recovery of the rectangular boundary ideal. -/
 theorem rectangular_boundary :
