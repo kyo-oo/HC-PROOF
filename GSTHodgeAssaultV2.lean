@@ -208,9 +208,16 @@ theorem pure_hodge_iff_unique_expansion (f : WaveCoef) :
     exact pure_hodge_coefficients_unique a _ (ha.symm.trans (pure_hodge_expansion f hf))
   · rintro ⟨a, rfl, _⟩ c hc
     rcases c with ⟨C,d,hC,hd⟩
-    have h0 : ¬ (C = 0 ∧ d = 0) := by omega
-    have h1 : ¬ (C = 1 ∧ d = 1) := by omega
-    have h2 : ¬ (C = 2 ∧ d = 2) := by omega
+    have hoff : C ≠ d := hc
+    have h0 : ¬ (C = 0 ∧ d = 0) := by
+      rintro ⟨hC0, hd0⟩
+      exact hoff (hC0.trans hd0.symm)
+    have h1 : ¬ (C = 1 ∧ d = 1) := by
+      rintro ⟨hC1, hd1⟩
+      exact hoff (hC1.trans hd1.symm)
+    have h2 : ¬ (C = 2 ∧ d = 2) := by
+      rintro ⟨hC2, hd2⟩
+      exact hoff (hC2.trans hd2.symm)
     unfold pureExpand
     rw [cycle_at_offdiagonal 0 (by decide) C d hC hd h0,
       cycle_at_offdiagonal 1 (by decide) C d hC hd h1,
