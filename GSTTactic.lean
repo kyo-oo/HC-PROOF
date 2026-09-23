@@ -68,29 +68,35 @@ theorem null_imp_gst_positive (R p : Nat)
 theorem gst_positive_iff_endpoint (R p : Nat) :
     is_gst_positive R p ↔
       (4 * (R % 3^p)) / 3^p = 0 ∨ (4 * (R % 3^p)) / 3^p = 3 := by
-  have hm : 0 < 3^p := Nat.pow_pos (by decide)
+  have hm : 0 < 3^p := by positivity
   have hr : R % 3^p < 3^p := Nat.mod_lt _ hm
   have hnum : 4 * (R % 3^p) < 4 * 3^p :=
     Nat.mul_lt_mul_left 4 hr
   have hc : (4 * (R % 3^p)) / 3^p < 4 := by
     apply (Nat.div_lt_iff_lt_mul hm).2
     simpa [Nat.mul_comm] using hnum
-  unfold is_gst_positive
-  omega
+  rcases nat_lt_four_cases ((4 * (R % 3^p)) / 3^p) hc with h0 | h1 | h2 | h3
+  · simp [is_gst_positive, h0]
+  · simp [is_gst_positive, h1]
+  · simp [is_gst_positive, h2]
+  · simp [is_gst_positive, h3]
 
 /-- ALT is exactly the pair of interior carry states. -/
 theorem alt_negative_iff_interior (R p : Nat) :
     is_alt_negative R p ↔
       (4 * (R % 3^p)) / 3^p = 1 ∨ (4 * (R % 3^p)) / 3^p = 2 := by
-  have hm : 0 < 3^p := Nat.pow_pos (by decide)
+  have hm : 0 < 3^p := by positivity
   have hr : R % 3^p < 3^p := Nat.mod_lt _ hm
   have hnum : 4 * (R % 3^p) < 4 * 3^p :=
     Nat.mul_lt_mul_left 4 hr
   have hc : (4 * (R % 3^p)) / 3^p < 4 := by
     apply (Nat.div_lt_iff_lt_mul hm).2
     simpa [Nat.mul_comm] using hnum
-  unfold is_alt_negative
-  omega
+  rcases nat_lt_four_cases ((4 * (R % 3^p)) / 3^p) hc with h0 | h1 | h2 | h3
+  · simp [is_alt_negative, h0]
+  · simp [is_alt_negative, h1]
+  · simp [is_alt_negative, h2]
+  · simp [is_alt_negative, h3]
 
 /-- A witness lies in GST+. -/
 theorem witness_is_gst_positive (R p : Nat)
