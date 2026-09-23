@@ -2,6 +2,66 @@
 
 Base: `c833d9bd23d376eeb14246b675572f2cb8c66e51`.
 
+## Official Hodge target: reconstruction and its geometric obligation
+
+The Hodge-front continuation starts from
+`84a951bfaf5213cd2c4377b0fb916b6ef6f30087`. Its run 108 failed because
+`cosmology_coordinate_reconstruct` eliminated a sum of whole coordinate
+functions before reducing evaluation at the selected coordinate. The repaired
+proof first distributes evaluation and scalar multiplication through the sum.
+
+The strengthened Stage 2G now proves:
+
+- `cosmologyCycleLift`: a rational-linear cycle lift from a supplied cosmology
+  realization of the Hodge sector.
+- `cosmologyCycleLift_section`: composition with the supplied cycle-class map
+  is the inclusion of that Hodge sector.
+- `cosmology_cycle_fiber_exact`: all cycle representatives are the constructed
+  representative plus an element of the cycle-class kernel.
+- `cosmology_chart_realization_iff`: for a fixed coordinate chart, existence
+  of the required basis-cycle realization is **equivalent** to the whole Hodge
+  sector lying in the cycle-class image.
+- `zero_cycleClass_hodge_iff`: a zero cycle-class map realizes precisely a
+  zero Hodge sector. An unconstrained linear map field cannot establish
+  algebraicity from coordinate reconstruction alone.
+
+The last two results audit the scope of the reconstruction argument. They are
+not counterexamples to the official Hodge conjecture. They show why an
+arbitrary supplied semantic package cannot be treated as the canonical
+geometric package, and why selecting a pure-coordinate chart does not prove
+that its basis classes are algebraic.
+
+### What is still required for the official conclusion
+
+`SmoothProjectiveComplexScheme` specifies actual smooth projective complex
+schemes, and `codimensionCycles` uses native scheme cycles. The cohomology
+construction computes singular cohomology of the supplied topological space.
+However, the repository still supplies these pieces as input:
+
+1. `AnalytificationData.space`, together with only a point-set equivalence;
+   the genuine analytic topology is not constructed or characterized by that
+   equivalence alone.
+2. `HodgeBigradedBettiData.hodgeBigrading`, which gives independent spanning
+   complex subspaces, but not their identification with the analytic Hodge
+   decomposition.
+3. `HodgeBigradedBettiData.cycleClass`, an arbitrary rational-linear map of
+   the correct type, not a construction of the geometric cycle-class map.
+4. `CosmologyHodgeRealization.basisCycle_class`, which must be proved for
+   actual algebraic cycles after the above identifications.
+
+Thus the current GST theorems establish a verified reconstruction mechanism
+and an exact reduction. They do **not** yet prove the official Hodge
+conjecture. Infinite-axis reconstruction, purity classification, and transport
+extinction do not by themselves construct the missing geometric identifications
+or algebraic-cycle representatives. These fields remain visible in theorem
+signatures; none has been promoted to an axiom or silently instantiated with
+the desired conclusion.
+
+Verification receipt: pending the Hodge-front branch gate. Stage 2G is now
+included explicitly in the cosmology build and its public declarations in
+the transitive axiom audit, rather than being checked only through the final
+integration import.
+
 ## Cohomology continuation from run 103
 
 This continuation preserves Sol's work through

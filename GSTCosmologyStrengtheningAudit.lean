@@ -497,13 +497,11 @@ import waves.GSTWaveCohomologyV2
 
 #print axioms GSTGeometricRealizationStage2G.ppIndex
 
-#print axioms GSTGeometricRealizationStage2G.HodgeBigrading
 
 #print axioms GSTGeometricRealizationStage2G.rationalHodgeSubspace
 
 #print axioms GSTGeometricRealizationStage2G.mem_rationalHodgeSubspace_iff
 
-#print axioms GSTGeometricRealizationStage2G.HodgeBigradedBettiData
 
 #print axioms GSTGeometricRealizationStage2G.BigradedBettiHodgeStatement
 
@@ -542,3 +540,7 @@ import waves.GSTWaveCohomologyV2
 #print axioms GSTGeometricRealizationStage2G.cosmology_chart_realization_iff
 
 #print axioms GSTGeometricRealizationStage2G.zero_cycleClass_hodge_iff
+
+#print axioms GSTGeometricRealizationStage2G.HodgeBigrading.ppComponent
+
+#print axioms GSTGeometricRealizationStage2G.HodgeBigradedBettiData.toBettiHodgeData
