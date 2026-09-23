@@ -70,8 +70,8 @@ theorem gst_positive_iff_endpoint (R p : Nat) :
       (4 * (R % 3^p)) / 3^p = 0 ∨ (4 * (R % 3^p)) / 3^p = 3 := by
   have hm : 0 < 3^p := by positivity
   have hr : R % 3^p < 3^p := Nat.mod_lt _ hm
-  have hnum : 4 * (R % 3^p) < 4 * 3^p :=
-    Nat.mul_lt_mul_left 4 hr
+  have hnum : 4 * (R % 3^p) < 4 * 3^p := by
+    omega
   have hc : (4 * (R % 3^p)) / 3^p < 4 := by
     apply (Nat.div_lt_iff_lt_mul hm).2
     simpa [Nat.mul_comm] using hnum
@@ -87,8 +87,8 @@ theorem alt_negative_iff_interior (R p : Nat) :
       (4 * (R % 3^p)) / 3^p = 1 ∨ (4 * (R % 3^p)) / 3^p = 2 := by
   have hm : 0 < 3^p := by positivity
   have hr : R % 3^p < 3^p := Nat.mod_lt _ hm
-  have hnum : 4 * (R % 3^p) < 4 * 3^p :=
-    Nat.mul_lt_mul_left 4 hr
+  have hnum : 4 * (R % 3^p) < 4 * 3^p := by
+    omega
   have hc : (4 * (R % 3^p)) / 3^p < 4 := by
     apply (Nat.div_lt_iff_lt_mul hm).2
     simpa [Nat.mul_comm] using hnum
