@@ -183,7 +183,6 @@ theorem postulate_three_law (levels : Nat → Nat)
       ∀ k : Nat, ∃ j : Nat, k ≤ j ∧ colimit k = levels j := by
   exact ⟨levels, rfl, fun k => ⟨k, Nat.le_refl k, rfl⟩⟩
 
-
 /-- The controller and ledger force stationarity at every level, over any
 state type.  Thus the admissible level families are exactly constant ones. -/
 theorem controlled_level_constant {α : Type} (T : ControlledTower α) (n : Nat) :
@@ -200,9 +199,16 @@ theorem controlled_presentation_iff_constant {α : Type} (levels : Nat → α) :
     rw [← hT n, ← hT 0]
     exact controlled_level_constant T n
   · intro h
-    refine ⟨{ level := levels, bridge := fun _ x => x,
-      controller := fun _ => rfl, ledger := ?_ }, fun _ => rfl⟩
-    intro n
-    exact (h (n+1)).trans (h n).symm
+    let T : ControlledTower α := {
+      level := levels
+      bridge := fun _ x => x
+      controller := by
+        intro j
+        rfl
+      ledger := by
+        intro n
+        exact (h (n+1)).trans (h n).symm
+    }
+    exact ⟨T, fun _ => rfl⟩
 
 end CardinalWorldsPostulateLaw
