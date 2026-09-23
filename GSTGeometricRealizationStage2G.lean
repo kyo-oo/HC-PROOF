@@ -3,6 +3,7 @@ import Mathlib.LinearAlgebra.TensorProduct.Basic
 import Mathlib.Algebra.Module.Submodule.RestrictScalars
 import Mathlib.Order.SupIndep
 import GSTGeometricRealizationStage2F
+import GSTGlobalPureHodgeCosmology
 
 /-!
 # STAGE 2G — HODGE BIGRADING AND DERIVED RATIONAL (p,p)-CLASSES
@@ -47,6 +48,7 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2E
 open GSTGeometricRealizationStage2F
+open GSTGlobalPureHodgeCosmology
 
 namespace GSTGeometricRealizationStage2G
 
@@ -229,6 +231,158 @@ theorem bigraded_betti_hodge_of_stage2g_obligation
   exact bigraded_betti_hodge_of_stage2g_family
     V H N (fun p => (hN p).some)
 
+/-! ## Cosmology-strengthened pure-coordinate realization
+
+The modern cosmology no longer needs an injective coordinate system on the
+entire ambient cohomology group in order to reconstruct a Hodge class.  The
+global pure-Hodge theorem identifies a pure world by its complete diagonal
+coordinate vector of rank `min A B`.  Over Q we use the same canonical shape
+as the rational scalar extension of that coordinate module.
+
+A `CosmologyHodgeRealization` therefore asks only for:
+* an exact linear chart from the derived rational Hodge subspace to one
+  global pure-Hodge coordinate space;
+* one native codimension-p algebraic cycle for each intrinsic diagonal basis
+  coordinate;
+* exact compatibility of those basis cycles with the chart.
+
+From those data the cycle witness is reconstructed directly, so the older
+ambient Stage-2G address certificate is unnecessary for the final implication.
+-/
+
+/-- Rational scalar extension of the upgraded global pure-Hodge coordinate
+space `PureHodgeCoordinates A B`. -/
+abbrev CosmologyPureCoordinates (A B : Nat) : Type :=
+  Fin (min A B) → ℚ
+
+/-- Intrinsic Kronecker basis of the rationalized global pure-Hodge coordinates. -/
+def cosmologyCoordinateBasis
+    {A B : Nat} (i : Fin (min A B)) :
+    CosmologyPureCoordinates A B :=
+  fun j => if j = i then 1 else 0
+
+/-- Exact reconstruction from every intrinsic pure-Hodge coordinate. -/
+theorem cosmology_coordinate_reconstruct
+    {A B : Nat} (phi : CosmologyPureCoordinates A B) :
+    phi = ∑ i : Fin (min A B),
+      (phi i) • cosmologyCoordinateBasis i := by
+  classical
+  funext j
+  rw [Finset.sum_eq_single j]
+  · simp [cosmologyCoordinateBasis]
+  · intro b hb hbj
+    simp [cosmologyCoordinateBasis, hbj]
+  · simp
+
+/-- A direct cosmology chart of one native rational Hodge sector.
+
+The coordinate rank is not an arbitrary address size: it is the intrinsic
+`min A B` diagonal rank of the upgraded global pure-Hodge cosmology. -/
+structure CosmologyHodgeRealization
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p A B : Nat) where
+  chart :
+    rationalHodgeSubspace (H.hodgeBigrading p) ≃ₗ[ℚ]
+      CosmologyPureCoordinates A B
+  basisCycle :
+    Fin (min A B) → codimensionCycles V.X p
+  basisCycle_class :
+    ∀ i : Fin (min A B),
+      H.cycleClass p (basisCycle i) =
+        (chart.symm (cosmologyCoordinateBasis i)).1
+
+/-- Construct the native algebraic cycle dictated by the complete cosmology
+coordinate vector of one rational Hodge class. -/
+noncomputable def cosmologyCycleWitness
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    {p A B : Nat}
+    (R : CosmologyHodgeRealization V H p A B)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    codimensionCycles V.X p :=
+  ∑ i : Fin (min A B),
+    (R.chart ⟨alpha, halpha⟩ i) • R.basisCycle i
+
+/-- **COSMOLOGY CYCLE RECONSTRUCTION.**  The cycle built from the intrinsic
+pure-Hodge coordinates has exactly the requested native Betti class. -/
+theorem cosmologyCycleWitness_spec
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    {p A B : Nat}
+    (R : CosmologyHodgeRealization V H p A B)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    H.cycleClass p (cosmologyCycleWitness R alpha halpha) = alpha := by
+  let a : rationalHodgeSubspace (H.hodgeBigrading p) := ⟨alpha, halpha⟩
+  have hchart :
+      a = ∑ i : Fin (min A B),
+        (R.chart a i) • R.chart.symm (cosmologyCoordinateBasis i) := by
+    apply R.chart.injective
+    rw [map_sum]
+    simp only [LinearEquiv.map_smul, LinearEquiv.apply_symm_apply]
+    exact cosmology_coordinate_reconstruct (R.chart a)
+  calc
+    H.cycleClass p (cosmologyCycleWitness R alpha halpha) =
+        ∑ i : Fin (min A B),
+          (R.chart a i) • H.cycleClass p (R.basisCycle i) := by
+            simp [cosmologyCycleWitness, a]
+    _ = ∑ i : Fin (min A B),
+          (R.chart a i) •
+            (R.chart.symm (cosmologyCoordinateBasis i)).1 := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [R.basisCycle_class i]
+    _ = alpha := by
+          simpa [a] using (congrArg Subtype.val hchart).symm
+
+/-- Every native rational Hodge class represented by a cosmology chart has a
+constructive codimension-p algebraic-cycle witness. -/
+theorem hodge_class_has_cosmology_cycle
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    {p A B : Nat}
+    (R : CosmologyHodgeRealization V H p A B)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha :=
+  ⟨cosmologyCycleWitness R alpha halpha,
+    cosmologyCycleWitness_spec R alpha halpha⟩
+
+/-- **COSMOLOGY-STRENGTHENED HODGE LANDING.**  A pure-world realization in
+all codimensions closes the native bigraded Betti Hodge statement directly,
+without the older ambient finite-address realization structure. -/
+theorem bigraded_betti_hodge_of_cosmology_family
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (A B : Nat → Nat)
+    (R : ∀ p : Nat,
+      CosmologyHodgeRealization V H p (A p) (B p)) :
+    BigradedBettiHodgeStatement V H := by
+  intro p alpha halpha
+  exact hodge_class_has_cosmology_cycle V H (R p) alpha halpha
+
+/-- The remaining realization target after importing the upgraded global
+pure-Hodge coordinate theorem into the native Stage-2G front. -/
+def CosmologyStage2GRealizationObligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) : Prop :=
+  ∃ A B : Nat → Nat,
+    ∀ p : Nat,
+      Nonempty (CosmologyHodgeRealization V H p (A p) (B p))
+
+/-- The cosmology-level obligation directly implies the native Hodge target. -/
+theorem bigraded_betti_hodge_of_cosmology_obligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (hR : CosmologyStage2GRealizationObligation V H) :
+    BigradedBettiHodgeStatement V H := by
+  rcases hR with ⟨A, B, hAB⟩
+  exact bigraded_betti_hodge_of_cosmology_family
+    V H A B (fun p => (hAB p).some)
+
 #check Complexification
 #check complexificationMapQ
 #check complexificationMapQ_apply
@@ -246,11 +400,25 @@ theorem bigraded_betti_hodge_of_stage2g_obligation
 #check bigraded_betti_hodge_of_stage2g_family
 #check Stage2GRealizationObligation
 #check bigraded_betti_hodge_of_stage2g_obligation
+#check CosmologyPureCoordinates
+#check cosmologyCoordinateBasis
+#check cosmology_coordinate_reconstruct
+#check CosmologyHodgeRealization
+#check cosmologyCycleWitness
+#check cosmologyCycleWitness_spec
+#check hodge_class_has_cosmology_cycle
+#check bigraded_betti_hodge_of_cosmology_family
+#check CosmologyStage2GRealizationObligation
+#check bigraded_betti_hodge_of_cosmology_obligation
 
 #print axioms mem_rationalHodgeSubspace_iff
 #print axioms bigradedBettiHodgeStatement_iff_stage2f
 #print axioms hodge_class_has_bigraded_cycle
 #print axioms bigraded_betti_hodge_of_stage2g_family
 #print axioms bigraded_betti_hodge_of_stage2g_obligation
+#print axioms cosmology_coordinate_reconstruct
+#print axioms cosmologyCycleWitness_spec
+#print axioms bigraded_betti_hodge_of_cosmology_family
+#print axioms bigraded_betti_hodge_of_cosmology_obligation
 
 end GSTGeometricRealizationStage2G
