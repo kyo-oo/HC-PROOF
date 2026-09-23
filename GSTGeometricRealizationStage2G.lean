@@ -438,6 +438,53 @@ theorem bigraded_betti_hodge_of_cosmology_obligation
   exact bigraded_betti_hodge_of_cosmology_family
     V H A B (fun p => (hAB p).some)
 
+/-- An explicit native codimension-p cycle, built from one seed by a finite
+word of cycle operations and rational superposition. No basis cycles are
+chosen: complementary transport extracts a seed amplitude, and origin
+transport creates the requested coordinate vector. -/
+noncomputable def transportDualityCycleWitness
+    {V : SmoothProjectiveComplexScheme} {p : Nat}
+    {I : Type} [Fintype I] (d : I → ℕ)
+    (read : codimensionCycles V.X p →ₗ[ℚ] GSTMultiAxisCosmology.RationalCoef d)
+    (cycleShift : (I → ℕ) → Module.End ℚ (codimensionCycles V.X p))
+    (cycleMirror : Module.End ℚ (codimensionCycles V.X p))
+    (seed : codimensionCycles V.X p) (a : GSTMultiAxisCosmology.Cell d)
+    (target : GSTMultiAxisCosmology.RationalCoef d) : codimensionCycles V.X p :=
+  ∑ b : GSTMultiAxisCosmology.Cell d, target b •
+    cycleShift (fun i => (b i).val)
+      ((read seed a)⁻¹ • cycleMirror (cycleShift (fun i => d i - 1)
+        (cycleMirror (cycleShift (fun i => (GSTMultiAxisCosmology.dual d a i).val) seed))))
+
+/-- Exactness of the explicit seed-to-cycle construction under the two
+operator compatibility laws. -/
+theorem transportDualityCycleWitness_spec
+    {V : SmoothProjectiveComplexScheme} {p : Nat}
+    {I : Type} [Fintype I] (d : I → ℕ)
+    (read : codimensionCycles V.X p →ₗ[ℚ] GSTMultiAxisCosmology.RationalCoef d)
+    (cycleShift : (I → ℕ) → Module.End ℚ (codimensionCycles V.X p))
+    (cycleMirror : Module.End ℚ (codimensionCycles V.X p))
+    (hshift : ∀ m Z, read (cycleShift m Z) =
+      GSTMultiAxisCosmology.rationalShift d m (read Z))
+    (hmirror : ∀ Z, read (cycleMirror Z) = GSTMultiAxisCosmology.rationalMirror d (read Z))
+    (seed : codimensionCycles V.X p) (a : GSTMultiAxisCosmology.Cell d)
+    (ha : read seed a ≠ 0) (target : GSTMultiAxisCosmology.RationalCoef d) :
+    read (transportDualityCycleWitness d read cycleShift cycleMirror seed a target) = target := by
+  classical
+  have hd : ∀ i, 0 < d i := fun i => by have := (a i).isLt; omega
+  let normalized := (read seed a)⁻¹ • cycleMirror (cycleShift (fun i => d i - 1)
+    (cycleMirror (cycleShift (fun i => (GSTMultiAxisCosmology.dual d a i).val) seed)))
+  have hnorm : read normalized =
+      GSTMultiAxisCosmology.rationalDelta d (GSTMultiAxisCosmology.origin d hd) := by
+    dsimp only [normalized]
+    rw [map_smul, hmirror, hshift, hmirror, hshift,
+      GSTMultiAxisCosmology.rational_origin_extraction d hd a (read seed)]
+    simp only [smul_smul, inv_mul_cancel₀ ha, one_smul]
+  change read (∑ b : GSTMultiAxisCosmology.Cell d,
+    target b • cycleShift (fun i => (b i).val) normalized) = target
+  simp only [map_sum, map_smul, hshift, hnorm,
+    GSTMultiAxisCosmology.rationalShift_origin]
+  exact GSTMultiAxisCosmology.rational_delta_expansion d target
+
 /-- Apply native transport/duality generation to the actual cycle image.
 
 Only one nonzero algebraic class is required. The other cycle witnesses are

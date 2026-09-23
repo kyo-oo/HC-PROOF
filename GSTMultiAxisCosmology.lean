@@ -340,7 +340,7 @@ theorem rationalShift_origin (hd : ∀ i, 0 < d i) (a : Cell d) :
 theorem rationalMirror_smul (q : ℚ) (f : RationalCoef d) :
     rationalMirror d (q • f) = q • rationalMirror d f := rfl
 
-theorem rationalMirror_delta (a : Cell d) :
+theorem rationalMirror_delta [Fintype I] (a : Cell d) :
     rationalMirror d (rationalDelta d a) = rationalDelta d (dual d a) := by
   classical
   funext c
@@ -379,7 +379,8 @@ theorem rationalShift_top (hd : ∀ i, 0 < d i) (f : RationalCoef d) :
       have := (c i).isLt
       simp only [dual, origin]
       omega
-    simp [rationalShift, hm, rationalDelta, delta, hc]
+    simp only [rationalShift, dif_neg hm]
+    simp [rationalDelta, delta, hc]
 
 /-- Complementary displacement reads any chosen amplitude at the top corner. -/
 theorem rationalShift_dual_at_top (hd : ∀ i, 0 < d i)
@@ -400,7 +401,7 @@ theorem rationalShift_dual_at_top (hd : ∀ i, 0 < d i)
 
 /-- Four native operations extract a selected coordinate into the origin.
 This is an explicit word in transport and complementary reflection. -/
-theorem rational_origin_extraction (hd : ∀ i, 0 < d i)
+theorem rational_origin_extraction [Fintype I] (hd : ∀ i, 0 < d i)
     (a : Cell d) (f : RationalCoef d) :
     rationalMirror d (rationalShift d (fun i => d i - 1)
       (rationalMirror d (rationalShift d (fun i => (dual d a i).val) f))) =

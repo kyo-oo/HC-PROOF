@@ -574,3 +574,7 @@ import waves.GSTWaveCohomologyV2
 #print axioms GSTMultiAxisCosmology.rational_transport_duality_generation
 
 #print axioms GSTGeometricRealizationStage2G.hodge_sector_of_transport_duality
+
+#print axioms GSTGeometricRealizationStage2G.transportDualityCycleWitness
+
+#print axioms GSTGeometricRealizationStage2G.transportDualityCycleWitness_spec

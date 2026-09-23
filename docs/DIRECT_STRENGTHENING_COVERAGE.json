@@ -988,7 +988,9 @@
       "GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_cosmology_obligation": "theorem",
       "GSTGeometricRealizationStage2G.cosmology_chart_realization_iff": "theorem",
       "GSTGeometricRealizationStage2G.zero_cycleClass_hodge_iff": "theorem",
-      "GSTGeometricRealizationStage2G.hodge_sector_of_transport_duality": "theorem"
+      "GSTGeometricRealizationStage2G.hodge_sector_of_transport_duality": "theorem",
+      "GSTGeometricRealizationStage2G.transportDualityCycleWitness": "def",
+      "GSTGeometricRealizationStage2G.transportDualityCycleWitness_spec": "theorem"
     }
   }
 ]
