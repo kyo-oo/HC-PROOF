@@ -124,10 +124,9 @@ theorem four_pow_signature_free_iff_all_prefixes_avoid
           has_two_exposes_prefix_fire K hscan
         exact absurd hp (hall p)
 
-/-- The old finite congruence cases now sit below one exact all-depth
-classifier rather than defining the architecture. -/
 /-- A signature has a unique first firing exponent prefix, with all earlier
-prefixes certified nonfiring. -/
+prefixes certified nonfiring. This places the old finite congruence cases
+below one exact all-depth classifier rather than using them as architecture. -/
 theorem four_pow_has_two_iff_unique_first_prefix (K : Nat) :
     hasTernaryTwo (4^K) = true ↔
       ∃! p : Nat,
