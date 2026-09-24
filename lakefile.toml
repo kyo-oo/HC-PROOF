@@ -15,6 +15,8 @@ rev = "v4.33.0-rc2"
 name = "HCUniverse"
 roots = [
   "GSTTactic",
+  "GSTLimitlessWorld",
+  "GSTLimitlessWorldTest",
   "GSTCoherentCosmology",
   "GSTInfiniteWorldClassification",
   "GST2DMixedEmergence",
