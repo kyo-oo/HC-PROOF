@@ -33,6 +33,7 @@ on:
       - 'GSTCoherentCosmology.lean'
       - 'GSTInfiniteWorldClassification.lean'
       - 'CardinalWorldsV2.lean'
+      - 'waves/GSTWaveCohomology.lean'
       - 'waves/CardinalWorldsPostulateLawV2.lean'
       - 'waves/GSTWaveCohomologyV2.lean'
       - 'waves/GSTNCohomologyV2.lean'
@@ -102,6 +103,7 @@ jobs:
             GSTGraphV2ScaleEquivariance.lean
             GSTInfiniteWorldClassification.lean
             CardinalWorldsV2.lean
+            waves/GSTWaveCohomology.lean
             waves/CardinalWorldsPostulateLawV2.lean
             waves/GSTWaveCohomologyV2.lean
             waves/GSTNCohomologyV2.lean
@@ -136,6 +138,7 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake build \
+            waves.GSTWaveCohomology \
             GSTRadixWorldDynamics \
             GSTGradedWorldAlgebra \
             GSTWorldRecoordinationGroupoid \
