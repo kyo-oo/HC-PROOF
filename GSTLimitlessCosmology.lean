@@ -102,7 +102,8 @@ empty rectangular worlds. -/
 theorem windowRestrict_windowExtend (A B : Nat) (g : WorldCoef A B) :
     windowRestrict A B (windowExtend A B g) = g := by
   funext c
-  simp [windowRestrict, windowExtend]
+  simp only [windowRestrict, windowExtend, Finsupp.embDomain_apply_self]
+  exact congrFun (Finsupp.equivFunOnFinite.apply_symm_apply g) c
 
 #check CosmicCell
 #check CosmicCoef
