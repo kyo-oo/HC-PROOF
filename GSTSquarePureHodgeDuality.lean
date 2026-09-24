@@ -45,8 +45,7 @@ theorem pureMirror_involutive
     pureMirror (pureMirror p) = p := by
   apply Fin.ext
   unfold pureMirror
-  have hp : p.1 < N := by
-    simpa using p.2
+  simp only
   omega
 
 /-- The world Poincare complement of a pure diagonal cell is the mirrored
@@ -76,9 +75,12 @@ def squarePureDual
       complementFin x.1 = complementFin x.2 := by
     apply Fin.ext
     exact hdual
-  have hinv := congrArg complementFin hfin
   have hxfin : x.1 = x.2 := by
-    simpa using hinv
+    calc x.1 = complementFin (complementFin x.1) :=
+        (complementFin_involutive x.1).symm
+      _ = complementFin (complementFin x.2) :=
+        congrArg complementFin hfin
+      _ = x.2 := complementFin_involutive x.2
   exact congrArg Fin.val hxfin
 
 @[simp]

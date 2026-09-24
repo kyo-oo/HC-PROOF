@@ -235,13 +235,11 @@ theorem continuous_iff_all_windows {T : Type*} [TopologicalSpace T]
   · intro h
     apply continuous_pi
     rintro ⟨i, j⟩
-    let c' : WorldCell (i+1) (j+1) :=
-      (⟨i, by omega⟩, ⟨j, by omega⟩)
-    have heval : Continuous
-        (fun g : WorldCoef (i+1) (j+1) => g c') :=
-      continuous_apply c'
-    simpa [c', observe, Function.comp_apply] using
-      heval.comp (h (i+1) (j+1))
+    exact
+      (continuous_apply
+        (⟨i, by omega⟩, ⟨j, by omega⟩ :
+          WorldCell (i+1) (j+1))).comp
+        (h (i+1) (j+1))
 
 instance : TopologicalSpace WindowTower :=
   TopologicalSpace.induced innovationStream inferInstance
