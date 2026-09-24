@@ -56,6 +56,7 @@ theorem pure_diagonal_lefschetz_forward_exact
     exact ⟨hpq, hpq⟩
   · unfold worldCausalDistance carryDistance digitDistance
     unfold pureWeightGap pureDiagonalState diagonalState
+    simp only
     omega
 
 /-- Inside the forward Hodge cone, every time other than 2(q-p) vanishes. -/
@@ -72,7 +73,9 @@ theorem pure_diagonal_lefschetz_wrong_time_zero
   · unfold worldForward pureDiagonalState diagonalState
     exact ⟨hpq, hpq⟩
   · unfold worldCausalDistance carryDistance digitDistance
-    unfold pureWeightGap pureDiagonalState diagonalState
+    unfold pureDiagonalState diagonalState
+    unfold pureWeightGap at htime
+    simp only
     omega
 
 /-- Pure-Hodge propagation is strictly forward in weight. -/
@@ -86,6 +89,7 @@ theorem pure_diagonal_lefschetz_backward_zero
         (pureDiagonalState q) = 0 := by
   apply worldAct_L_pow_basis_outside_future_zero
   unfold worldForward pureDiagonalState diagonalState
+  simp only
   omega
 
 /-- **UNIVERSAL PURE-HODGE LEFSCHETZ KERNEL.**
@@ -105,14 +109,14 @@ theorem pure_diagonal_lefschetz_kernel
         else 0
       else 0 := by
   by_cases hpq : p.1 ≤ q.1
-  · rw [if_pos hpq]
+  · rw [dif_pos hpq]
     by_cases htime : n = 2 * pureWeightGap p q
-    · rw [if_pos htime]
+    · rw [dif_pos htime]
       subst n
       exact pure_diagonal_lefschetz_forward_exact p q hpq
-    · rw [if_neg htime]
+    · rw [dif_neg htime]
       exact pure_diagonal_lefschetz_wrong_time_zero p q hpq htime
-  · rw [if_neg hpq]
+  · rw [dif_neg hpq]
     exact pure_diagonal_lefschetz_backward_zero
       (n:=n) p q (by omega)
 
@@ -126,7 +130,7 @@ theorem hc_pure_zero_to_two_kernel :
             (A:=4) (B:=3) (⟨0, by decide⟩ : Fin (min 4 3))))
         (pureDiagonalState
           (A:=4) (B:=3) (⟨2, by decide⟩ : Fin (min 4 3))) = 6 := by
-  simpa [pureWeightGap] using
+  simpa [pureWeightGap, show (Nat.choose 4 2 : ℤ) = 6 from by decide] using
     (pure_diagonal_lefschetz_forward_exact
       (A:=4) (B:=3)
       (⟨0, by decide⟩ : Fin (min 4 3))

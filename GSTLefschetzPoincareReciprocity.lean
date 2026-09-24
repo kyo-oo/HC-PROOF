@@ -103,6 +103,7 @@ theorem lefschetz_kernel_poincare_reciprocity
       intro h
       exact hforward ((worldForward_dual_iff s t).mpr h)
     simp only [hforward, hdual]
+    rfl
 
 /-- Nonzero propagation is exactly invariant under Poincare reversal. -/
 theorem nonzero_transition_dual_iff
