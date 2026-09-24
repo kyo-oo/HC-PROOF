@@ -102,7 +102,21 @@ theorem windowRestrict_windowExtend (A B : Nat) (g : WorldCoef A B) :
     windowRestrict A B (windowExtend A B g) = g := by
   funext c
   classical
-  simp [windowRestrict, windowExtend, worldCellEmbedding]
+  change
+    (∑ c' : WorldCell A B,
+      Finsupp.single (worldCellEmbedding A B c') (g c'))
+        (worldCellEmbedding A B c) = g c
+  rw [Finset.sum_apply]
+  apply Finset.sum_eq_single c
+  · intro c' _ hc'
+    simp only [Finsupp.single_apply]
+    rw [if_neg]
+    intro hEq
+    apply hc'
+    exact (worldCellEmbedding A B).injective hEq
+  · intro hc
+    exact False.elim (hc (Finset.mem_univ c))
+  · simp
 
 #check CosmicCell
 #check CosmicCoef
