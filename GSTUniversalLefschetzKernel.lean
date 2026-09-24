@@ -79,9 +79,14 @@ theorem worldAct_L_pow_basis_kernel
   dsimp only
   rw [worldAct_L_pow_coordinate_formula]
   by_cases hfuture : Cs ≤ Ct ∧ ds ≤ dt
-  · rw [dif_pos hfuture]
+  · rw [show dite (Cs ≤ Ct ∧ ds ≤ dt)
+        (fun hfuture => if htime : n = Ct - Cs + (dt - ds) then (n.choose (dt - ds) : ℤ) else 0)
+        (fun _ => 0) = (if htime : n = Ct - Cs + (dt - ds) then (n.choose (dt - ds) : ℤ) else 0) from
+      dif_pos hfuture]
     by_cases htime : n = (Ct-Cs) + (dt-ds)
-    · rw [dif_pos htime]
+    · rw [show dite (n = Ct - Cs + (dt - ds))
+        (fun htime => (n.choose (dt - ds) : ℤ)) (fun _ => 0)
+        = (n.choose (dt - ds) : ℤ) from dif_pos htime]
       rw [Finset.sum_eq_single (dt-ds)]
       · have hpath :
             dt-ds ≤ dt ∧ n-(dt-ds) ≤ Ct := by
@@ -121,7 +126,9 @@ theorem worldAct_L_pow_basis_kernel
           apply Finset.mem_range.mpr
           omega
         exact (hnot hmem).elim
-    · rw [dif_neg htime]
+    · rw [show dite (n = Ct - Cs + (dt - ds))
+        (fun htime => (n.choose (dt - ds) : ℤ)) (fun _ => 0)
+        = 0 from dif_neg htime]
       apply Finset.sum_eq_zero
       intro m hm
       by_cases hpath : m ≤ dt ∧ n-m ≤ Ct
@@ -137,7 +144,9 @@ theorem worldAct_L_pow_basis_kernel
           exact htime (by omega)
         simp [worldBasis, hpred_ne]
       · rw [dif_neg hpath]
-  · rw [dif_neg hfuture]
+  · rw [show dite (Cs ≤ Ct ∧ ds ≤ dt)
+        (fun hfuture => if htime : n = Ct - Cs + (dt - ds) then (n.choose (dt - ds) : ℤ) else 0)
+        (fun _ => 0) = 0 from dif_neg hfuture]
     apply Finset.sum_eq_zero
     intro m hm
     by_cases hpath : m ≤ dt ∧ n-m ≤ Ct
@@ -308,13 +317,13 @@ theorem cosmicLefschetz_kernel (n : ℕ) (s t : CosmicCell) :
       simpa [observe, worldForward, worldCausalDistance, carryDistance,
         digitDistance, sf, tf] using ho.symm
     · rw [dif_neg htime] at ho
-      rw [if_neg (c := (t.1-s.1)+(t.2-s.2))
-        (show ¬ n = (t.1-s.1)+(t.2-s.2) from htime)]
+      have hne : ¬ n = (t.1-s.1)+(t.2-s.2) := htime
+      rw [if_neg hne]
       simpa [observe, worldForward, worldCausalDistance, carryDistance,
         digitDistance, sf, tf] using ho.symm
   · rw [dif_neg hcond] at ho
-    rw [if_neg (c := s.1 ≤ t.1 ∧ s.2 ≤ t.2)
-      (show ¬ (s.1 ≤ t.1 ∧ s.2 ≤ t.2) from hcond)]
+    have hne : ¬ (s.1 ≤ t.1 ∧ s.2 ≤ t.2) := hcond
+    rw [if_neg hne]
     simpa [observe, worldForward, worldCausalDistance, carryDistance,
       digitDistance, sf, tf] using ho.symm
 
