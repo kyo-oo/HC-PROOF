@@ -115,7 +115,9 @@ theorem worldAct_L_pow_paths_at
       = ∑ m ∈ Finset.range (n+1),
         ((n.choose m : ℤ) •
           digitShiftN m (carryShiftN (n-m) g)) c :=
-    Finset.sum_apply c
+    Finset.sum_apply c (Finset.range (n+1))
+      (fun m => (n.choose m : ℤ) •
+        digitShiftN m (carryShiftN (n-m) g))
   rw [h, hsum]
   exact Finset.sum_congr rfl fun m hm => rfl
 
