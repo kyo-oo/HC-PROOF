@@ -423,7 +423,7 @@ theorem wave_class_transport_add
         rw [Nat.pow_succ]
         ring
       rw [hscale]
-      simp [Nat.add_assoc]
+      rw [add_assoc]
 
 /-- Re-encoding by M then N steps is exactly re-encoding by M+N steps at the
 level of residual row classes. -/
