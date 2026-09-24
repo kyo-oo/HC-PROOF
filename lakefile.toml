@@ -137,6 +137,7 @@ roots = [
   "GSTWorldtraceArithmetic",
   "GSTWorldtraceMahlerRelativePrecision",
   "GSTWorldCosmology",
+  "GSTLimitlessCosmology",
   "GSTUniversalLefschetzCosmology",
   "GSTUniversalLefschetzPathFormula",
   "GSTUniversalLefschetzKernel",
