@@ -5,8 +5,8 @@ import waves.GSTWaveCohomology
 # GST WORLD COSMOLOGY — dimension-free native carrier
 
 This layer removes the fixed twelve-cell ceiling from the wave geometry.
-The old world `carry < 4, digit < 3` is retained as one chart, but the
-native carrier is now an arbitrary rectangular GST world.
+The unbounded carrier is `Nat × Nat`. Finite-support algebraic fields and
+completed fields are distinct; arbitrary rectangular worlds are exact observations.
 
 No geometric interpretation is assumed.  The laws below are internal:
 axis transport, transport composition, axis commutation, boundary
@@ -43,6 +43,193 @@ instance worldCoefIntModule (carryDepth digitDepth : Nat) :
     (Module ℤ (WorldCell carryDepth digitDepth → ℤ))
 
 
+
+/-! ## Limitless carriers and exact finite observations -/
+
+abbrev CosmicCell := ℕ × ℕ
+abbrev CompletedCosmos := CosmicCell → ℤ
+abbrev CompactCosmos := CosmicCell →₀ ℤ
+
+def observe (A B : ℕ) (f : CompletedCosmos) : WorldCoef A B :=
+  fun c => f (c.1.val, c.2.val)
+
+def extendWindow {A B : ℕ} (f : WorldCoef A B) : CompletedCosmos :=
+  fun c => if h : c.1 < A ∧ c.2 < B then
+    f (⟨c.1, h.1⟩, ⟨c.2, h.2⟩) else 0
+
+@[simp] theorem observe_extendWindow {A B : ℕ} (f : WorldCoef A B) :
+    observe A B (extendWindow f) = f := by
+  funext c
+  simp [observe, extendWindow, c.1.isLt, c.2.isLt]
+
+def SupportedIn (A B : ℕ) (f : CompletedCosmos) : Prop :=
+  ∀ c, ¬ (c.1 < A ∧ c.2 < B) → f c = 0
+
+theorem extendWindow_observe_iff (A B : ℕ) (f : CompletedCosmos) :
+    extendWindow (observe A B f) = f ↔ SupportedIn A B f := by
+  constructor
+  · intro h c hc
+    rw [← h]
+    simp [extendWindow, hc]
+  · intro h
+    funext c
+    by_cases hc : c.1 < A ∧ c.2 < B
+    · simp [extendWindow, observe, hc]
+    · simp [extendWindow, hc, h c hc]
+
+theorem observations_separate {f g : CompletedCosmos}
+    (h : ∀ A B, observe A B f = observe A B g) : f = g := by
+  funext c
+  exact congrFun (h (c.1 + 1) (c.2 + 1))
+    (⟨c.1, by omega⟩, ⟨c.2, by omega⟩)
+
+def restrictWindow {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D)
+    (f : WorldCoef C D) : WorldCoef A B :=
+  fun c => f (⟨c.1.val, lt_of_lt_of_le c.1.isLt hA⟩,
+    ⟨c.2.val, lt_of_lt_of_le c.2.isLt hB⟩)
+
+@[simp] theorem restrict_observe {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D)
+    (f : CompletedCosmos) :
+    restrictWindow hA hB (observe C D f) = observe A B f := rfl
+
+theorem restrictWindow_trans {A B C D E F : ℕ}
+    (hAC : A ≤ C) (hBD : B ≤ D) (hCE : C ≤ E) (hDF : D ≤ F)
+    (f : WorldCoef E F) :
+    restrictWindow hAC hBD (restrictWindow hCE hDF f) =
+      restrictWindow (hAC.trans hCE) (hBD.trans hDF) f := rfl
+
+/-- Completed observations carry coherence, not a terminal window. -/
+structure CosmicObservations where
+  window : ∀ A B, WorldCoef A B
+  coherent : ∀ {A B C D} (hA : A ≤ C) (hB : B ≤ D),
+    restrictWindow hA hB (window C D) = window A B
+
+def completeObservations (f : CompletedCosmos) : CosmicObservations where
+  window := fun A B => observe A B f
+  coherent := fun _ _ => rfl
+
+def reconstructCosmos (X : CosmicObservations) : CompletedCosmos :=
+  fun c => X.window (c.1 + 1) (c.2 + 1)
+    (⟨c.1, by omega⟩, ⟨c.2, by omega⟩)
+
+@[simp] theorem reconstruct_complete (f : CompletedCosmos) :
+    reconstructCosmos (completeObservations f) = f := rfl
+
+@[simp] theorem observe_reconstruct (X : CosmicObservations) (A B : ℕ) :
+    observe A B (reconstructCosmos X) = X.window A B := by
+  funext c
+  have h := congrFun (X.coherent
+    (A := c.1.val + 1) (B := c.2.val + 1) (C := A) (D := B)
+    (by omega) (by omega)) (⟨c.1.val, by omega⟩, ⟨c.2.val, by omega⟩)
+  exact h.symm
+
+def cosmicObservationEquiv : CompletedCosmos ≃ CosmicObservations where
+  toFun := completeObservations
+  invFun := reconstructCosmos
+  left_inv := reconstruct_complete
+  right_inv := by
+    intro X
+    have h : (completeObservations (reconstructCosmos X)).window = X.window := by
+      funext A B
+      exact observe_reconstruct X A B
+    cases X
+    cases h
+    rfl
+
+noncomputable def compactWindow {A B : ℕ} (f : WorldCoef A B) : CompactCosmos :=
+  Finsupp.onFinset (Finset.range A ×ˢ Finset.range B) (extendWindow f) (by
+    intro c hc
+    by_contra hout
+    have h : ¬ (c.1 < A ∧ c.2 < B) := by simpa using hout
+    exact hc (by simp [extendWindow, h]))
+
+@[simp] theorem compactWindow_apply {A B : ℕ} (f : WorldCoef A B) (c : CosmicCell) :
+    compactWindow f c = extendWindow f c := rfl
+
+/-- Every finite-support field has an exact finite recovery window. -/
+theorem compact_has_window (f : CompactCosmos) :
+    ∃ A B, SupportedIn A B f := by
+  refine ⟨f.support.sup Prod.fst + 1, f.support.sup Prod.snd + 1, ?_⟩
+  intro c hc
+  by_contra hn
+  have hm : c ∈ f.support := Finsupp.mem_support_iff.mpr hn
+  have hA : c.1 ≤ f.support.sup Prod.fst := Finset.le_sup hm
+  have hB : c.2 ≤ f.support.sup Prod.snd := Finset.le_sup hm
+  exact hc ⟨by omega, by omega⟩
+
+theorem compact_exact_recovery (f : CompactCosmos) :
+    ∃ A B, compactWindow (observe A B f) = f := by
+  obtain ⟨A, B, h⟩ := compact_has_window f
+  refine ⟨A, B, ?_⟩
+  apply Finsupp.ext
+  intro c
+  exact congrFun ((extendWindow_observe_iff A B f).mpr h) c
+
+/-- The completed sector is strictly larger than finite support. -/
+theorem constant_one_not_compact :
+    ¬ ∃ f : CompactCosmos, (fun c => f c) = (fun _ => (1 : ℤ)) := by
+  rintro ⟨f, hf⟩
+  obtain ⟨A, B, h⟩ := compact_has_window f
+  have hz := h (A, B) (by simp)
+  have ho := congrFun hf (A, B)
+  omega
+
+/-- Global forward transport has no upper wall. -/
+def cosmicDigitShift (n : ℕ) (f : CompletedCosmos) : CompletedCosmos :=
+  fun c => if n ≤ c.2 then f (c.1, c.2 - n) else 0
+
+def cosmicCarryShift (n : ℕ) (f : CompletedCosmos) : CompletedCosmos :=
+  fun c => if n ≤ c.1 then f (c.1 - n, c.2) else 0
+
+@[simp] theorem cosmicDigitShift_zero (f : CompletedCosmos) :
+    cosmicDigitShift 0 f = f := by funext c; simp [cosmicDigitShift]
+
+@[simp] theorem cosmicCarryShift_zero (f : CompletedCosmos) :
+    cosmicCarryShift 0 f = f := by funext c; simp [cosmicCarryShift]
+
+theorem cosmicDigitShift_add (m n : ℕ) (f : CompletedCosmos) :
+    cosmicDigitShift m (cosmicDigitShift n f) = cosmicDigitShift (m+n) f := by
+  funext c
+  by_cases hm : m ≤ c.2
+  · by_cases hn : n ≤ c.2-m
+    · have hmn : m+n ≤ c.2 := by omega
+      simp [cosmicDigitShift, hm, hn, hmn, Nat.sub_sub]
+    · have hmn : ¬ m+n ≤ c.2 := by omega
+      simp [cosmicDigitShift, hm, hn, hmn]
+  · have hmn : ¬ m+n ≤ c.2 := by omega
+    simp [cosmicDigitShift, hm, hmn]
+
+theorem cosmicCarryShift_add (m n : ℕ) (f : CompletedCosmos) :
+    cosmicCarryShift m (cosmicCarryShift n f) = cosmicCarryShift (m+n) f := by
+  funext c
+  by_cases hm : m ≤ c.1
+  · by_cases hn : n ≤ c.1-m
+    · have hmn : m+n ≤ c.1 := by omega
+      simp [cosmicCarryShift, hm, hn, hmn, Nat.sub_sub]
+    · have hmn : ¬ m+n ≤ c.1 := by omega
+      simp [cosmicCarryShift, hm, hn, hmn]
+  · have hmn : ¬ m+n ≤ c.1 := by omega
+    simp [cosmicCarryShift, hm, hmn]
+
+theorem cosmic_axes_commute (m n : ℕ) (f : CompletedCosmos) :
+    cosmicDigitShift n (cosmicCarryShift m f) =
+      cosmicCarryShift m (cosmicDigitShift n f) := by
+  funext c
+  by_cases hm : m ≤ c.1 <;> by_cases hn : n ≤ c.2 <;>
+    simp [cosmicDigitShift, cosmicCarryShift, hm, hn]
+
+theorem cosmicDigitShift_injective (n : ℕ) : Function.Injective (cosmicDigitShift n) := by
+  intro f g h
+  funext c
+  have hx := congrFun h (c.1, c.2+n)
+  simpa [cosmicDigitShift] using hx
+
+theorem cosmicCarryShift_injective (n : ℕ) : Function.Injective (cosmicCarryShift n) := by
+  intro f g h
+  funext c
+  have hx := congrFun h (c.1+n, c.2)
+  simpa [cosmicCarryShift] using hx
+
 /-- Native digit-axis transport by `n` layers.  No truncation constant is
 built into the operator: the active world supplies the boundary. -/
 def digitShiftN {carryDepth digitDepth : Nat} (n : Nat)
@@ -61,6 +248,20 @@ def carryShiftN {carryDepth digitDepth : Nat} (n : Nat)
     if h : n ≤ c.1.1 then
       g (⟨c.1.1 - n, by omega⟩, c.2)
     else 0
+
+
+/-- Finite transport is exactly observation of global transport. -/
+@[simp] theorem observe_cosmicDigitShift (A B n : ℕ) (f : CompletedCosmos) :
+    observe A B (cosmicDigitShift n f) = digitShiftN n (observe A B f) := by
+  funext c
+  simp only [observe, cosmicDigitShift, digitShiftN]
+  split_ifs <;> rfl
+
+@[simp] theorem observe_cosmicCarryShift (A B n : ℕ) (f : CompletedCosmos) :
+    observe A B (cosmicCarryShift n f) = carryShiftN n (observe A B f) := by
+  funext c
+  simp only [observe, cosmicCarryShift, carryShiftN]
+  split_ifs <;> rfl
 
 /-- Zero transport is the identity on every GST world. -/
 theorem digitShiftN_zero {carryDepth digitDepth : Nat}
