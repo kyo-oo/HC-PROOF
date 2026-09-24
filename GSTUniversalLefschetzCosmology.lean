@@ -341,4 +341,80 @@ theorem universal_lefschetz_crown :
 #print axioms topPairing_basis_basis
 #print axioms universal_lefschetz_crown
 
+
+/-! ## Global operator algebra: no terminal extinction -/
+def cosmicDigitEndo : Module.End ℤ CompletedCosmos where
+  toFun := cosmicDigitShift 1
+  map_add' := by
+    intro f g; funext c
+    simp only [cosmicDigitShift, Pi.add_apply]
+    split_ifs <;> simp
+  map_smul' := by
+    intro z f; funext c
+    simp only [cosmicDigitShift, Pi.smul_apply]
+    split_ifs <;> simp
+
+def cosmicCarryEndo : Module.End ℤ CompletedCosmos where
+  toFun := cosmicCarryShift 1
+  map_add' := by
+    intro f g; funext c
+    simp only [cosmicCarryShift, Pi.add_apply]
+    split_ifs <;> simp
+  map_smul' := by
+    intro z f; funext c
+    simp only [cosmicCarryShift, Pi.smul_apply]
+    split_ifs <;> simp
+
+def cosmicLefschetz : Module.End ℤ CompletedCosmos := cosmicDigitEndo + cosmicCarryEndo
+
+theorem cosmic_digit_carry_commute : Commute cosmicDigitEndo cosmicCarryEndo := by
+  apply LinearMap.ext
+  intro f
+  exact cosmic_axes_commute 1 1 f
+
+theorem cosmicDigitEndo_pow_apply (n : ℕ) (f : CompletedCosmos) :
+    (cosmicDigitEndo^n) f = cosmicDigitShift n f := by
+  induction n generalizing f with
+  | zero => simp
+  | succ n ih =>
+    rw [pow_succ, Module.End.mul_apply, ih]
+    exact cosmicDigitShift_add n 1 f
+
+theorem cosmicCarryEndo_pow_apply (n : ℕ) (f : CompletedCosmos) :
+    (cosmicCarryEndo^n) f = cosmicCarryShift n f := by
+  induction n generalizing f with
+  | zero => simp
+  | succ n ih =>
+    rw [pow_succ, Module.End.mul_apply, ih]
+    exact cosmicCarryShift_add n 1 f
+
+theorem cosmic_lefschetz_binomial (n : ℕ) :
+    cosmicLefschetz^n = ∑ m ∈ Finset.range (n+1),
+      cosmicDigitEndo^m * cosmicCarryEndo^(n-m) *
+        (n.choose m : Module.End ℤ CompletedCosmos) :=
+  cosmic_digit_carry_commute.add_pow n
+
+@[simp] theorem observe_cosmicLefschetz (A B : ℕ) (f : CompletedCosmos) :
+    observe A B (cosmicLefschetz f) = lefschetzEndo A B (observe A B f) := by
+  change observe A B (cosmicDigitShift 1 f + cosmicCarryShift 1 f) = _
+  have hd := observe_cosmicDigitShift A B 1 f
+  have hv := observe_cosmicCarryShift A B 1 f
+  funext c
+  exact congrFun (congrArg₂ (fun x y : WorldCoef A B => x+y) hd hv) c
+
+/-- Every finite operator power is the exact observation of global evolution. -/
+theorem observe_cosmicLefschetz_pow (A B n : ℕ) (f : CompletedCosmos) :
+    observe A B ((cosmicLefschetz^n) f) =
+      (lefschetzEndo A B ^ n) (observe A B f) := by
+  induction n generalizing f with
+  | zero => rfl
+  | succ n ih =>
+    rw [pow_succ, Module.End.mul_apply, ih, observe_cosmicLefschetz,
+      pow_succ, Module.End.mul_apply]
+
+theorem cosmic_evolution_add (m n : ℕ) (f : CompletedCosmos) :
+    (cosmicLefschetz^(m+n)) f =
+      (cosmicLefschetz^m) ((cosmicLefschetz^n) f) := by
+  rw [pow_add, Module.End.mul_apply]
+
 end GSTUniversalLefschetzCosmology

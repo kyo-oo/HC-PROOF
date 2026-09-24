@@ -367,4 +367,49 @@ theorem truncated_world_ring_crown :
 #print axioms worldAct_L_pow_boundary
 #print axioms truncated_world_ring_crown
 
+
+/-! ## Universal coordinate geometry and its inverse system of quotients -/
+/-- Every finite geometry is projected from the same two-generator algebra. -/
+def coordinateProjection : WorldPoly →+* WorldCohomologyRing A B :=
+  Ideal.Quotient.mk (truncIdeal A B)
+
+/-- Enlarging a window weakens its ideal; restriction is a genuine ring map. -/
+def quotientRestriction {C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
+    WorldCohomologyRing C D →+* WorldCohomologyRing A B :=
+  Ideal.Quotient.lift (truncIdeal C D) (coordinateProjection A B) (by
+    rw [truncIdeal, Ideal.span_le]
+    intro p hp
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
+    rcases hp with rfl | rfl
+    · change coordinateProjection A B (Hpoly^D) = 0
+      rw [map_pow]
+      exact pow_eq_zero_of_le hB (H_pow_depth A B)
+    · change coordinateProjection A B (Vpoly^C) = 0
+      rw [map_pow]
+      exact pow_eq_zero_of_le hA (V_pow_depth A B))
+
+@[simp] theorem quotientRestriction_projection {C D : ℕ}
+    (hA : A ≤ C) (hB : B ≤ D) (p : WorldPoly) :
+    quotientRestriction A B hA hB (coordinateProjection C D p) =
+      coordinateProjection A B p := rfl
+
+theorem quotientRestriction_trans {C D E F : ℕ}
+    (hAC : A ≤ C) (hBD : B ≤ D) (hCE : C ≤ E) (hDF : D ≤ F)
+    (x : WorldCohomologyRing E F) :
+    quotientRestriction A B hAC hBD (quotientRestriction C D hCE hDF x) =
+      quotientRestriction A B (hAC.trans hCE) (hBD.trans hDF) x := by
+  refine Quotient.inductionOn x ?_
+  intro p
+  rfl
+
+/-- Formal coordinate completion is explicitly a compatible family of
+quotient geometries; no unsupported identification with algebraic fields. -/
+def FormalCoordinateCosmos :=
+  {x : ∀ A B, WorldCohomologyRing A B //
+    ∀ A B C D (hA : A ≤ C) (hB : B ≤ D),
+      quotientRestriction A B hA hB (x C D) = x A B}
+
+def polynomialCompletion (p : WorldPoly) : FormalCoordinateCosmos :=
+  ⟨fun A B => coordinateProjection A B p, by intros; rfl⟩
+
 end GSTTruncatedWorldCohomologyRing

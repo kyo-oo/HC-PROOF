@@ -218,4 +218,25 @@ theorem universal_lefschetz_path_crown :
 #print axioms hc_bottom_to_top_coefficient
 #print axioms universal_lefschetz_path_crown
 
+
+/-! ## Limitless path law and exact quotient recovery -/
+theorem cosmicLefschetz_paths (n : ℕ) (f : CompletedCosmos) :
+    (cosmicLefschetz^n) f = ∑ m ∈ Finset.range (n+1),
+      (n.choose m : ℤ) • cosmicDigitShift m (cosmicCarryShift (n-m) f) := by
+  rw [cosmic_lefschetz_binomial]
+  simp only [Module.End.mul_apply, cosmicDigitEndo_pow_apply,
+    cosmicCarryEndo_pow_apply]
+  rfl
+
+theorem worldAct_is_cosmic_observation (A B n : ℕ) (f : CompletedCosmos) :
+    worldAct A B ((L A B)^n) (observe A B f) =
+      observe A B ((cosmicLefschetz^n) f) := by
+  rw [worldAct_L_pow_eq_endo, observe_cosmicLefschetz_pow]
+
+/-- Finite nilpotence measures loss of visibility in that window. -/
+theorem cosmic_evolution_invisible (A B n : ℕ) (h : A+B-1 ≤ n)
+    (f : CompletedCosmos) : observe A B ((cosmicLefschetz^n) f) = 0 := by
+  rw [observe_cosmicLefschetz_pow, lefschetz_pow_zero_of_boundary_le n h]
+  rfl
+
 end GSTUniversalLefschetzPathFormula

@@ -275,4 +275,41 @@ theorem universal_lefschetz_kernel_crown :
 #print axioms origin_to_cell_kernel
 #print axioms universal_lefschetz_kernel_crown
 
+
+/-! ## The exact kernel on the unbounded grid -/
+open GSTUniversalLefschetzCosmology
+
+def cosmicBasis (s : CosmicCell) : CompletedCosmos := fun t => if t=s then 1 else 0
+
+theorem cosmicLefschetz_kernel (n : ℕ) (s t : CosmicCell) :
+    (cosmicLefschetz^n) (cosmicBasis s) t =
+      if s.1 ≤ t.1 ∧ s.2 ≤ t.2 then
+        if n = (t.1-s.1)+(t.2-s.2) then (n.choose (t.2-s.2) : ℤ) else 0
+      else 0 := by
+  let A := max s.1 t.1 + 1
+  let B := max s.2 t.2 + 1
+  let sf : WorldCell A B := (⟨s.1, by dsimp [A]; omega⟩,⟨s.2, by dsimp [B]; omega⟩)
+  let tf : WorldCell A B := (⟨t.1, by dsimp [A]; omega⟩,⟨t.2, by dsimp [B]; omega⟩)
+  have hb : observe A B (cosmicBasis s) = worldBasis sf := by
+    funext c
+    simp [observe, cosmicBasis, worldBasis, sf, Prod.ext_iff, Fin.ext_iff]
+  have ho := congrFun (worldAct_is_cosmic_observation A B n (cosmicBasis s)) tf
+  rw [hb, worldAct_L_pow_basis_kernel] at ho
+  simpa [observe, worldForward, worldCausalDistance, carryDistance, digitDistance, sf, tf]
+    using ho.symm
+
+/-- A unit source propagates at every natural time: there is no global ceiling. -/
+theorem cosmicLefschetz_never_extinguishes (n : ℕ) :
+    (cosmicLefschetz^n) (cosmicBasis (0,0)) (0,n) = 1 := by
+  simp [cosmicLefschetz_kernel]
+
+theorem cosmicLefschetz_not_nilpotent : ¬ IsNilpotent cosmicLefschetz := by
+  rintro ⟨n, hn⟩
+  have h := cosmicLefschetz_never_extinguishes n
+  rw [hn] at h
+  norm_num at h
+
+#print axioms cosmicLefschetz_kernel
+#print axioms cosmicLefschetz_not_nilpotent
+
 end GSTUniversalLefschetzKernel

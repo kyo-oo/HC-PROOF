@@ -252,4 +252,51 @@ theorem graded_world_crown :
 #print axioms worldKunneth_projector_polynomial
 #print axioms graded_world_crown
 
+
+/-! ## Unbounded grading, independent of a window -/
+def cosmicDegree (c : CosmicCell) : ℕ := c.1+c.2
+
+def cosmicCharge (c : CosmicCell) : ℤ := (c.1 : ℤ)-c.2
+
+/-- Degree and signed charge jointly determine the two native coordinates. -/
+theorem cosmic_degree_charge_injective :
+    Function.Injective (fun c : CosmicCell => (cosmicDegree c, cosmicCharge c)) := by
+  intro c d h
+  have ht := congrArg Prod.fst h
+  have hc := congrArg Prod.snd h
+  simp only [cosmicDegree, cosmicCharge] at ht hc
+  apply Prod.ext <;> omega
+
+def cosmicSector (k : ℕ) (f : CompletedCosmos) : CompletedCosmos :=
+  fun c => if cosmicDegree c=k then f c else 0
+
+@[simp] theorem observe_cosmicSector (A B k : ℕ) (f : CompletedCosmos) :
+    observe A B (cosmicSector k f) = worldSectorProj k (observe A B f) := rfl
+
+theorem cosmicSector_idempotent (k : ℕ) (f : CompletedCosmos) :
+    cosmicSector k (cosmicSector k f) = cosmicSector k f := by
+  funext c; simp [cosmicSector]
+
+theorem cosmicSector_orthogonal (k j : ℕ) (h : k ≠ j) (f : CompletedCosmos) :
+    cosmicSector k (cosmicSector j f) = 0 := by
+  funext c
+  by_cases hk : cosmicDegree c=k
+  · have hj : cosmicDegree c ≠ j := by omega
+    simp [cosmicSector, hk, hj]
+  · simp [cosmicSector, hk]
+
+theorem cosmic_digit_grading (n k : ℕ) (f : CompletedCosmos) :
+    cosmicDigitShift n (cosmicSector k f) =
+      cosmicSector (k+n) (cosmicDigitShift n f) := by
+  apply observations_separate
+  intro A B
+  simpa using digitShiftN_respects_degree (A:=A) (B:=B) n k (observe A B f)
+
+theorem cosmic_carry_grading (n k : ℕ) (f : CompletedCosmos) :
+    cosmicCarryShift n (cosmicSector k f) =
+      cosmicSector (k+n) (cosmicCarryShift n f) := by
+  apply observations_separate
+  intro A B
+  simpa using carryShiftN_respects_degree (A:=A) (B:=B) n k (observe A B f)
+
 end GSTGradedWorldAlgebra
