@@ -69,15 +69,19 @@ theorem includeWindow_apply_inside {carryDepth digitDepth : Nat}
   rw [includeWindow]
   simp only [Finset.sum_apply, Finsupp.single_apply]
   rw [Finset.sum_eq_single target]
-  · simp [target, windowCell]
+  · have hkey : windowCell target = (C, d) := by
+      rfl
+    rw [if_pos hkey]
+    rfl
   · intro c _ hc
     have hneq : windowCell c ≠ (C, d) := by
       intro h
       apply hc
       apply windowCell_injective
-      simpa [target, windowCell] using h
-    simp [hneq]
-  · simp
+      simpa only [target, windowCell] using h
+    rw [if_neg hneq]
+  · intro hnot
+    exact False.elim (hnot (Finset.mem_univ target))
 
 /-- Exact evaluation of zero-extension outside the observation window. -/
 theorem includeWindow_apply_outside {carryDepth digitDepth : Nat}
@@ -98,7 +102,7 @@ theorem includeWindow_apply_outside {carryDepth digitDepth : Nat}
     · have hv := congrArg Prod.snd heq
       dsimp [windowCell] at hv
       omega
-  simp [hneq]
+  rw [if_neg hneq]
 
 /-- Restricting an included finite world returns exactly the original world. -/
 theorem restrictWindow_includeWindow {carryDepth digitDepth : Nat}
