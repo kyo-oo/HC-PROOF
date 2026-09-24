@@ -93,11 +93,12 @@ theorem worldAct_L_pow_paths
     LinearMap.sum_apply]
   refine Finset.sum_congr rfl ?_
   intro m hm
-  simp only [Module.End.mul_apply, digitEndo_pow_apply,
-    carryEndo_pow_apply, Module.End.natCast_apply]
-  funext c
-  simp only [digitShiftN, carryShiftN, Pi.smul_apply, smul_eq_mul]
-  split_ifs <;> simp
+  have h1 : (n.choose m : Module.End ℤ (WorldCoef A B)) g
+      = (n.choose m : ℤ) • g := by
+    rw [Module.End.natCast_apply, ← Nat.cast_smul_eq_nsmul]
+  rw [Module.End.mul_apply, Module.End.mul_apply, h1,
+    map_smul, map_smul,
+    digitEndo_pow_apply, carryEndo_pow_apply]
 
 /-- Pointwise form of the universal path formula. -/
 theorem worldAct_L_pow_paths_at
@@ -107,15 +108,8 @@ theorem worldAct_L_pow_paths_at
       ∑ m ∈ Finset.range (n+1),
         (n.choose m : ℤ) *
           digitShiftN m (carryShiftN (n-m) g) c := by
-  rw [worldAct_L_pow_eq_endo, lefschetz_binomial,
-    LinearMap.sum_apply]
-  refine Finset.sum_congr rfl ?_
-  intro m hm
-  simp only [Module.End.mul_apply, digitEndo_pow_apply,
-    carryEndo_pow_apply, Module.End.natCast_apply,
-    Pi.smul_apply, smul_eq_mul]
-  simp only [digitShiftN, carryShiftN]
-  split_ifs <;> simp
+  have h := congrFun (worldAct_L_pow_paths A B n g) c
+  simpa [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using h
 
 /-- Exact surviving-path formula at one coordinate.  A path contributes
 iff the evaluation cell has enough digit depth for its m digit steps and
@@ -236,10 +230,15 @@ theorem universal_lefschetz_path_crown :
 theorem cosmicLefschetz_paths (n : ℕ) (f : CompletedCosmos) :
     (cosmicLefschetz^n) f = ∑ m ∈ Finset.range (n+1),
       (n.choose m : ℤ) • cosmicDigitShift m (cosmicCarryShift (n-m) f) := by
-  rw [cosmic_lefschetz_binomial]
-  simp only [Module.End.mul_apply, cosmicDigitEndo_pow_apply,
-    cosmicCarryEndo_pow_apply]
-  rfl
+  rw [cosmic_lefschetz_binomial, LinearMap.sum_apply]
+  refine Finset.sum_congr rfl ?_
+  intro m hm
+  have h1 : (n.choose m : Module.End ℤ CompletedCosmos) f
+      = (n.choose m : ℤ) • f := by
+    rw [Module.End.natCast_apply, ← Nat.cast_smul_eq_nsmul]
+  rw [Module.End.mul_apply, Module.End.mul_apply, h1,
+    map_smul, map_smul,
+    cosmicDigitEndo_pow_apply, cosmicCarryEndo_pow_apply]
 
 theorem worldAct_is_cosmic_observation (A B n : ℕ) (f : CompletedCosmos) :
     worldAct A B ((L A B)^n) (observe A B f) =
