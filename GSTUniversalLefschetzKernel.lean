@@ -100,8 +100,13 @@ theorem worldAct_L_pow_basis_kernel
               (⟨Cs,hCs⟩,⟨ds,hds⟩) := by
           apply Prod.ext
           · apply Fin.ext
+            have hsd : ds ≤ dt := hfuture.2
+            have hss : Cs ≤ Ct := hfuture.1
+            have htm : n = (Ct-Cs) + (dt-ds) := htime
             omega
           · apply Fin.ext
+            have hsd : ds ≤ dt := hfuture.2
+            have htm : n = (Ct-Cs) + (dt-ds) := htime
             omega
         rw [hpred]
         simp [worldBasis]
@@ -159,6 +164,7 @@ theorem worldAct_L_pow_basis_kernel
         have hC := congrArg (fun x : WorldCell A B => x.1.1) heq
         have hd := congrArg (fun x : WorldCell A B => x.2.1) heq
         simp only at hC hd
+        push_neg at hfuture
         rcases hfuture with hCout | hdout
         · omega
         · omega
