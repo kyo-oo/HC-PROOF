@@ -316,7 +316,8 @@ theorem windowScheme_triangle {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
   have hring : CommRingCat.ofHom (coordinateProjection C D) ≫
       CommRingCat.ofHom (quotientRestriction A B hA hB) =
       CommRingCat.ofHom (coordinateProjection A B) := by
-    ext p
+    refine Eq.trans (CommRingCat.ofHom_comp
+      (coordinateProjection C D) (quotientRestriction A B hA hB)).symm ?_
     rfl
   unfold windowSchemeInclusion windowToCosmicScheme
     windowCoordinateScheme cosmicCoordinateScheme
