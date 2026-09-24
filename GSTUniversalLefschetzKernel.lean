@@ -52,6 +52,13 @@ def worldCausalDistance
     {A B : Nat} (s t : WorldCell A B) : Nat :=
   carryDistance s t + digitDistance s t
 
+/-- Forwardness of world cells is decidable: it is a conjunction of
+natural order comparisons. -/
+instance worldForward_decidable {A B : Nat} (s t : WorldCell A B) :
+    Decidable (worldForward s t) := by
+  unfold worldForward
+  infer_instance
+
 /-- **UNIVERSAL LEFSCHETZ TRANSITION KERNEL.**
 
 Every matrix coefficient of every power of the universal Lefschetz class is
@@ -231,7 +238,10 @@ theorem hc_origin_to_top_kernel :
       (worldBasis
         (⟨0, by decide⟩, ⟨0, by decide⟩))
       (⟨3, by decide⟩, ⟨2, by decide⟩) = 10 := by
-  simpa using origin_to_cell_kernel 4 3 3 2 (by decide) (by decide)
+  have h := origin_to_cell_kernel 4 3 3 2 (by decide) (by decide)
+  have hten : ((3+2 : ℕ).choose 2 : ℤ) = 10 := rfl
+  rw [hten] at h
+  simpa using h
 
 /-- Capstone: every matrix entry is classified, every nonzero transition has
 a unique causal time, and the historical coefficient 10 is absorbed as one
@@ -316,7 +326,8 @@ theorem cosmicLefschetz_not_nilpotent : ¬ IsNilpotent cosmicLefschetz := by
 must never be confused with a fixed observation boundary for all time. -/
 theorem compactEvolution_never_extinguishes (n : ℕ) :
     compactEvolution n (Finsupp.single (0,0) 1) (0,n) = 1 := by
-  have hb : (fun c => (Finsupp.single (0,0) (1 : ℤ) : CompactCosmos) c) =
+  have hb : ((Finsupp.single (0,0) (1 : ℤ) :
+      CompactCosmos) : CompletedCosmos) =
       cosmicBasis (0,0) := by
     funext c
     simp [cosmicBasis, Finsupp.single_apply, eq_comm]
