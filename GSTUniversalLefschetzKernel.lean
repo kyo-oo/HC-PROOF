@@ -73,7 +73,6 @@ theorem worldAct_L_pow_basis_kernel
           (n.choose (digitDistance s t) : ℤ)
         else 0
       else 0 := by
-  classical
   rcases s with ⟨⟨Cs,hCs⟩,⟨ds,hds⟩⟩
   rcases t with ⟨⟨Ct,hCt⟩,⟨dt,hdt⟩⟩
   unfold worldForward worldCausalDistance carryDistance digitDistance
@@ -299,19 +298,23 @@ theorem cosmicLefschetz_kernel (n : ℕ) (s t : CosmicCell) :
   have ho := congrFun (worldAct_is_cosmic_observation A B n (cosmicBasis s)) tf
   rw [hb, worldAct_L_pow_basis_kernel] at ho
   by_cases hcond : worldForward sf tf
-  · rw [dif_pos hcond] at ho
-    rw [if_pos hcond]
+  · have hcond' : s.1 ≤ t.1 ∧ s.2 ≤ t.2 := hcond
+    rw [dif_pos hcond] at ho
+    rw [if_pos hcond']
     by_cases htime : n = worldCausalDistance sf tf
-    · rw [dif_pos htime] at ho
-      rw [if_pos htime]
+    · have htime' : n = (t.1-s.1)+(t.2-s.2) := htime
+      rw [dif_pos htime] at ho
+      rw [if_pos htime']
       simpa [observe, worldForward, worldCausalDistance, carryDistance,
         digitDistance, sf, tf] using ho.symm
     · rw [dif_neg htime] at ho
-      rw [if_neg htime]
+      rw [if_neg (c := (t.1-s.1)+(t.2-s.2))
+        (show ¬ n = (t.1-s.1)+(t.2-s.2) from htime)]
       simpa [observe, worldForward, worldCausalDistance, carryDistance,
         digitDistance, sf, tf] using ho.symm
   · rw [dif_neg hcond] at ho
-    rw [if_neg hcond]
+    rw [if_neg (c := s.1 ≤ t.1 ∧ s.2 ≤ t.2)
+      (show ¬ (s.1 ≤ t.1 ∧ s.2 ≤ t.2) from hcond)]
     simpa [observe, worldForward, worldCausalDistance, carryDistance,
       digitDistance, sf, tf] using ho.symm
 
