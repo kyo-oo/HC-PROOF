@@ -498,26 +498,32 @@ def windowD0 (A B : ℕ) : WorldCoef (A+2) (B+2) →ₗ[ℤ]
     (WorldCoef (A+1) (B+1) × WorldCoef (A+1) (B+1)) where
   toFun := fun f => (windowDeltaCarry (A+1) (B+1) f, windowDeltaDigit (A+1) (B+1) f)
   map_add' := by
-    intro f g; apply Prod.ext <;> funext c <;>
-      simp [windowDeltaCarry, windowDeltaDigit] <;> ring
+    intro f g
+    apply Prod.ext <;> funext c <;>
+      simp [windowDeltaCarry, windowDeltaDigit, Pi.add_apply] <;> ring
   map_smul' := by
-    intro z f; apply Prod.ext <;> funext c <;>
-      simp [windowDeltaCarry, windowDeltaDigit, mul_sub]
+    intro z f
+    apply Prod.ext <;> funext c <;>
+      simp [windowDeltaCarry, windowDeltaDigit, Pi.smul_apply, smul_eq_mul, mul_sub]
 
 def windowD1 (A B : ℕ) :
     (WorldCoef (A+1) (B+1) × WorldCoef (A+1) (B+1)) →ₗ[ℤ] WorldCoef A B where
   toFun := fun w => windowDeltaCarry A B w.2 - windowDeltaDigit A B w.1
   map_add' := by
-    intro f g; funext c
-    simp [windowDeltaCarry, windowDeltaDigit]; ring
+    intro f g
+    funext c
+    simp [windowDeltaCarry, windowDeltaDigit, Pi.add_apply]
+    ring
   map_smul' := by
-    intro z f; funext c
-    simp [windowDeltaCarry, windowDeltaDigit, mul_sub]; ring
+    intro z f
+    funext c
+    simp [windowDeltaCarry, windowDeltaDigit, Pi.smul_apply, smul_eq_mul, mul_sub]
+    ring
 
 theorem windowD1_D0 (A B : ℕ) (f : WorldCoef (A+2) (B+2)) :
     windowD1 A B (windowD0 A B f)=0 := by
   funext c
-  simp [windowD1, windowD0, windowDeltaCarry, windowDeltaDigit]
+  simp only [windowD1, windowD0, windowDeltaCarry, windowDeltaDigit]
   ring
 
 def windowCoboundary (A B : ℕ) :

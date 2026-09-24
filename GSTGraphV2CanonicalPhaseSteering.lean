@@ -178,8 +178,11 @@ theorem rightSeedPhaseTransfer_injective_on_trits
     {a b : Nat} (ha : a < 3) (hb : b < 3)
     (h : rightSeedPhaseTransfer a = rightSeedPhaseTransfer b) :
     a = b := by
-  interval_cases a <;> interval_cases b
-  all_goals norm_num [rightSeedPhaseTransfer] at h ⊢
+  have ha_cases : a = 0 ∨ a = 1 ∨ a = 2 := by omega
+  have hb_cases : b = 0 ∨ b = 1 ∨ b = 2 := by omega
+  rcases ha_cases with rfl | rfl | rfl <;>
+    rcases hb_cases with rfl | rfl | rfl <;>
+    norm_num [rightSeedPhaseTransfer] at h ⊢
 
 /-- Hence equality of next canonical right seeds forces equality of origin
 phases.  The steering law is reversible at the phase level. -/
