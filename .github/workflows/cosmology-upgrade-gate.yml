@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
+      - sol/limitless-cosmology-universalization
     paths:
+      - 'GSTLimitlessWorld.lean'
+      - 'HCProof.lean'
+      - 'lakefile.toml'
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
@@ -74,6 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           files=(
+            GSTLimitlessWorld.lean
             GSTRadixWorldDynamics.lean
             GSTGradedWorldAlgebra.lean
             GSTWorldRecoordinationGroupoid.lean
@@ -108,11 +113,22 @@ jobs:
             GSTClayOfficialV2.lean
             GSTTransferBridgeV2.lean
           )
-          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' "${files[@]}"; then
+          existing=()
+          for f in "${files[@]}"; do
+            [[ -f "$f" ]] && existing+=("$f")
+          done
+          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' "${existing[@]}"; then
             echo HC_UPGRADE_FORBIDDEN_PROOF_ESCAPE=1
             exit 1
           fi
           echo HC_UPGRADE_PROOF_ESCAPE_CHECK=PASS
+
+      - name: Compile limitless foundation probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTLimitlessWorld.lean
 
       - name: Compile upgraded cosmology
         shell: bash
