@@ -72,9 +72,7 @@ theorem cosmicBasis_zero : cosmicBasis (0, 0) = (1 : CosmicCoef) := by
 theorem cosmicBasis_add (a b : CosmicCell) :
     cosmicBasis a * cosmicBasis b = cosmicBasis (a + b) := by
   rw [cosmicBasis, cosmicBasis, cosmicBasis, MonoidAlgebra.single_mul_single]
-  congr 2
-  · rfl
-  · norm_num
+  congr
 
 /-- Global digit-axis transport. There is no digit ceiling. -/
 def cosmicDigitShiftN (n : Nat) (f : CosmicCoef) : CosmicCoef :=
@@ -146,10 +144,12 @@ theorem cosmicEval_extendWorld {A B : Nat} (g : WorldCoef A B) (c : CosmicCell) 
   unfold cosmicEval extendWorld cosmicBasis
   rw [MonoidAlgebra.coeff_sum]
   change
-    (∑ d : WorldCell A B,
+    ((∑ d ∈ (Finset.univ : Finset (WorldCell A B)),
       Finsupp.single (Multiplicative.ofAdd (d.1.1, d.2.1)) (g d))
-        (Multiplicative.ofAdd c) = _
-  rw [Finset.sum_apply]
+        (Multiplicative.ofAdd c)) =
+      ∑ d ∈ (Finset.univ : Finset (WorldCell A B)),
+        if (d.1.1, d.2.1) = c then g d else 0
+  rw [Finsupp.finsetSum_apply]
   apply Finset.sum_congr rfl
   intro d _
   by_cases h : (d.1.1, d.2.1) = c
