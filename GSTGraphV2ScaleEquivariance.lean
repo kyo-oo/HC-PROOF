@@ -296,7 +296,7 @@ theorem scale_equivariance_universal_observable_crown :
             (uPhaseShift t n K + x₁) p₁)
           (physicalPacket (uTailEnergy t n K)
             (uPhaseShift t n K + x₂) p₂)) := by
-  exact ⟨u_cut_observable_exact, u_cut_predicate_iff,
+  exact ⟨fun α => @u_cut_observable_exact α, u_cut_predicate_iff,
     u_cut_binary_relation_iff⟩
 
 /-- One capstone receipt for the strengthened scale-equivariant cosmology. -/
@@ -387,11 +387,11 @@ Happy status is not tied to one presentation of a perfect-power world:
 every finite U-cut preserves it exactly. -/
 theorem u_cut_happy_iff
     (t n K x p : Nat) :
-    HappyCell
+    GSTU2DEventTransport.HappyCell
         (graph (4^(3^t*n)) x p).seven.carry
         (graph (4^(3^t*n)) x p).seven.digit
       ↔
-    HappyCell
+    GSTU2DEventTransport.HappyCell
         (graph (uTailEnergy t n K)
           (uPhaseShift t n K + x) p).seven.carry
         (graph (uTailEnergy t n K)
@@ -437,7 +437,7 @@ theorem u_cut_ontDensity_positive_iff
 finite U-cut. -/
 theorem u_cut_happy_iff_positive_iff
     (t n K x p : Nat) :
-    HappyCell
+    GSTU2DEventTransport.HappyCell
         (graph (4^(3^t*n)) x p).seven.carry
         (graph (4^(3^t*n)) x p).seven.digit
       ↔
@@ -480,11 +480,11 @@ theorem u_cut_two_stage_digit_exact
 Happy status is preserved by the full two-stage scale action. -/
 theorem u_cut_two_stage_happy_iff
     (t n K L x p : Nat) :
-    HappyCell
+    GSTU2DEventTransport.HappyCell
         (graph (4^(3^t*n)) x p).seven.carry
         (graph (4^(3^t*n)) x p).seven.digit
       ↔
-    HappyCell
+    GSTU2DEventTransport.HappyCell
         (graph
           (uTailEnergy (t+K) (originSuffix n K) L)
           (uPhaseShift t n K +
@@ -550,11 +550,11 @@ theorem canonical_n_wave_ontDensity_positive_iff
 sector and its exact ontological-current certificate. -/
 theorem scale_ontological_invariance_crown :
     (∀ t n K x p,
-      HappyCell
+      GSTU2DEventTransport.HappyCell
           (graph (4^(3^t*n)) x p).seven.carry
           (graph (4^(3^t*n)) x p).seven.digit
         ↔
-      HappyCell
+      GSTU2DEventTransport.HappyCell
           (graph (uTailEnergy t n K)
             (uPhaseShift t n K + x) p).seven.carry
           (graph (uTailEnergy t n K)
@@ -570,11 +570,11 @@ theorem scale_ontological_invariance_crown :
           (graph (uTailEnergy t n K)
             (uPhaseShift t n K + x) p).seven.digit)
     ∧ (∀ t n K L x p,
-      HappyCell
+      GSTU2DEventTransport.HappyCell
           (graph (4^(3^t*n)) x p).seven.carry
           (graph (4^(3^t*n)) x p).seven.digit
         ↔
-      HappyCell
+      GSTU2DEventTransport.HappyCell
           (graph
             (uTailEnergy (t+K) (originSuffix n K) L)
             (uPhaseShift t n K +

@@ -317,7 +317,7 @@ theorem cosmicPairing_local (f : CompactCosmos) (g h : CompletedCosmos)
   unfold cosmicPairing Finsupp.sum
   apply Finset.sum_congr rfl
   intro c hc
-  rw [heq c hc]
+  exact congrArg (fun z : ℤ => f c * z) (heq c hc)
 
 #print axioms cosmicPairing_nondegenerate_left
 #print axioms cosmicPairing_nondegenerate_right

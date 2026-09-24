@@ -249,7 +249,7 @@ theorem dimension_free_hodge_crown :
 /-! ## The Hodge generator at every natural weight -/
 open GSTWorldCosmology
 
-def cosmicDiagonalClass (p : ℕ) : CompactCosmos := Finsupp.single (p,p) 1
+noncomputable def cosmicDiagonalClass (p : ℕ) : CompactCosmos := Finsupp.single (p,p) 1
 
 def isCosmicHodgeClass (p : ℕ) (f : CompletedCosmos) : Prop :=
   ∀ c, c ≠ (p,p) → f c = 0
@@ -277,8 +277,11 @@ theorem cosmic_hodge_rank_one (p : ℕ) (f : CompletedCosmos) :
 theorem observe_cosmicDiagonalClass {A B p : ℕ} (hA : p < A) (hB : p < B) :
     observe A B (cosmicDiagonalClass p) = worldDiagonalClass hA hB := by
   funext c
-  simp [observe, cosmicDiagonalClass, worldDiagonalClass, worldBasis,
-    diagonalState, Prod.ext_iff, Fin.ext_iff, eq_comm]
+  change Finsupp.single (p,p) (1 : ℤ) (c.1.val,c.2.val) =
+    if c = (⟨p,hA⟩,⟨p,hB⟩) then 1 else 0
+  have he : (p,p) = (c.1.val,c.2.val) ↔ c = (⟨p,hA⟩,⟨p,hB⟩) := by
+    simp only [Prod.mk.injEq, Prod.ext_iff, Fin.ext_iff, eq_comm]
+  simp only [Finsupp.single_apply, he]
 
 theorem cosmic_weight_invisible {A B p : ℕ} (h : A ≤ p ∨ B ≤ p) :
     observe A B (cosmicDiagonalClass p) = 0 := by
@@ -288,7 +291,8 @@ theorem cosmic_weight_invisible {A B p : ℕ} (h : A ≤ p ∨ B ≤ p) :
     have h1 := congrArg Prod.fst he
     have h2 := congrArg Prod.snd he
     rcases h with h | h <;> omega
-  simp [observe, cosmicDiagonalClass, hn, Ne.symm hn]
+  change cosmicDiagonalClass p (c.1.val,c.2.val) = (0 : ℤ)
+  simp [cosmicDiagonalClass, hn, Ne.symm hn]
 
 #print axioms cosmic_hodge_rank_one
 
