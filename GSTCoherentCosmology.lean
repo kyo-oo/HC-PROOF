@@ -486,10 +486,10 @@ def cosmicD1Linear : (CompletedCosmos × CompletedCosmos) →ₗ[ℤ] CompletedC
   map_add' := by
     intro f g
     funext c
-    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit]
+    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit] <;> ring
   map_smul' := by
     intro z f; funext c
-    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit, mul_sub]; ring
+    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit, mul_sub]
 
 def cosmicCoboundary : CompletedCosmos →ₗ[ℤ] LinearMap.ker cosmicD1Linear :=
   cosmicD0Linear.codRestrict _ (fun f => cosmicD1_D0 f)

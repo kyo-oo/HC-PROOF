@@ -1,4 +1,4 @@
-name: Limitless Live Repair
+name: Limitless Compile Check
 
 on:
   push:
@@ -7,9 +7,12 @@ on:
     paths:
       - ".github/workflows/limitless-repair-live.yml"
       - "scripts/limitless_repair.py"
+      - "GSTCoherentCosmology.lean"
+      - "GSTGradedWorldAlgebra.lean"
+      - "GSTGraphV2CanonicalPhaseSteering.lean"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   repair:
@@ -18,26 +21,13 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v5
         with:
-          ref: "sol/limitless-cosmology-bursts"
+          ref: ${{ github.sha }}
           fetch-depth: 0
-      - name: Apply repairs
+      - name: Check committed source
         run: |
           set -euo pipefail
-          python3 scripts/limitless_repair.py
           git diff --check
-          if grep -R --line-number -E '\bsorry\b|sorryAx' GSTGradedWorldAlgebra.lean GSTGraphV2CanonicalPhaseSteering.lean GSTCoherentCosmology.lean; then exit 1; fi
-      - name: Commit source repairs
-        run: |
-          set -euo pipefail
-          git config user.name "kyo-oo"
-          git config user.email "lordoftreasures7@gmail.com"
-          git add GSTGradedWorldAlgebra.lean GSTGraphV2CanonicalPhaseSteering.lean GSTCoherentCosmology.lean
-          if git diff --cached --quiet; then
-            echo "No source repair diff to commit"
-          else
-            git commit -m "Repair limitless grading phase steering and cohomology"
-            git push origin HEAD:sol/limitless-cosmology-bursts
-          fi
+          if grep -nE '\bsorry\b|sorryAx' GSTGradedWorldAlgebra.lean GSTGraphV2CanonicalPhaseSteering.lean GSTCoherentCosmology.lean; then exit 1; fi
       - name: Install Lean
         run: |
           set -euo pipefail
