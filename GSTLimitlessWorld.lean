@@ -33,7 +33,7 @@ abbrev CosmicCell : Type := Nat × Nat
 /-- Finitely supported fields on the unbounded GST cosmos over an arbitrary
 coefficient type with zero.  This is the compact algebraic face of the
 limitless universe. -/
-abbrev CosmicField (R : Type*) [Zero R] : Type := CosmicCell →₀ R
+abbrev CosmicField (R : Type) [Zero R] : Type := CosmicCell →₀ R
 
 /-- The integral cosmic coefficient field used by the existing GST world
 algebra. -/
