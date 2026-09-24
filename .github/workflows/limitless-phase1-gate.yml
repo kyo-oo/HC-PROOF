@@ -1,0 +1,74 @@
+name: Limitless Cosmology Phase 1 Gate
+
+on:
+  push:
+    branches:
+      - sol/limitless-cosmology-phase1
+    paths:
+      - 'GSTLimitlessWorld.lean'
+      - 'GSTLimitlessWorldTest.lean'
+      - 'GSTWorldCosmology.lean'
+      - 'GSTUniversalLefschetzCosmology.lean'
+      - 'GSTUniversalLefschetzPathFormula.lean'
+      - 'GSTUniversalLefschetzKernel.lean'
+      - 'lakefile.toml'
+      - '.github/workflows/limitless-phase1-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: limitless-phase1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lean:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+
+      - name: Install Lean and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+
+      - name: Reject proof escapes
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' \
+            GSTLimitlessWorld.lean GSTLimitlessWorldTest.lean && exit 1 || true
+
+      - name: Compile limitless foundation
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTLimitlessWorld GSTLimitlessWorldTest 2>&1 | tee limitless-phase1.log
+
+      - name: Reject sorryAx
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -Fq 'sorryAx' limitless-phase1.log; then
+            echo LIMITLESS_PHASE1_SORRYAX=1
+            exit 1
+          fi
+          echo LIMITLESS_PHASE1_FOUNDATION_GREEN=1
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: limitless-phase1-diagnostics
+          path: limitless-phase1.log
+          if-no-files-found: ignore
