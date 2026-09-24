@@ -4,12 +4,12 @@ import Mathlib
 # GST LIMITLESS WORLD — unbounded algebraic cosmos
 
 The finite rectangular GST worlds remain exact observation windows, but they
-are no longer the ambient universe.  The algebraic limitless cosmos is an
+are no longer the ambient universe. The algebraic limitless cosmos is an
 integer monoid algebra on the multiplicative image of `Nat × Nat`: an integer
 field with finite support and no terminal carry row or digit column.
 
 The `Multiplicative` wrapper makes monomial multiplication perform addition of
-ordinary cosmic coordinates.  The two global axes therefore act by genuine
+ordinary cosmic coordinates. The two global axes therefore act by genuine
 unbounded translation, while finite extinction remains a property of finite
 observation windows rather than of the cosmos itself.
 -/
@@ -48,9 +48,9 @@ abbrev CosmicCell : Type := Nat × Nat
 
 /-- Finite-support integer amplitudes on the limitless GST cosmos.
 
-Mathlib's `MonoidAlgebra` is a structure whose coefficient field is a
-finitely-supported function.  The multiplicative wrapper converts addition
-of ordinary cosmic coordinates into monomial multiplication. -/
+Mathlib's `MonoidAlgebra` stores coefficients as a finitely-supported function.
+The multiplicative wrapper converts addition of ordinary cosmic coordinates
+into monomial multiplication. -/
 abbrev CosmicCoef : Type := MonoidAlgebra ℤ (Multiplicative CosmicCell)
 
 /-- Basis state concentrated at one ordinary cosmic coordinate. -/
@@ -61,37 +61,56 @@ def cosmicBasis (c : CosmicCell) (z : ℤ := 1) : CosmicCoef :=
 def cosmicEval (f : CosmicCoef) (c : CosmicCell) : ℤ :=
   f.coeff (Multiplicative.ofAdd c)
 
-/-- Global digit-axis transport.  There is no digit ceiling. -/
+/-- The cosmic origin basis state is exactly the multiplicative unit. -/
+@[simp]
+theorem cosmicBasis_zero : cosmicBasis (0, 0) = (1 : CosmicCoef) := by
+  change MonoidAlgebra.single (1 : Multiplicative CosmicCell) 1 = (1 : CosmicCoef)
+  exact MonoidAlgebra.one_def.symm
+
+/-- Monomial multiplication is literal addition of cosmic coordinates. -/
+@[simp]
+theorem cosmicBasis_add (a b : CosmicCell) :
+    cosmicBasis a * cosmicBasis b = cosmicBasis (a + b) := by
+  rw [cosmicBasis, cosmicBasis, cosmicBasis, MonoidAlgebra.single_mul_single]
+  congr 2
+  · rfl
+  · norm_num
+
+/-- Global digit-axis transport. There is no digit ceiling. -/
 def cosmicDigitShiftN (n : Nat) (f : CosmicCoef) : CosmicCoef :=
   cosmicBasis (0, n) * f
 
-/-- Global carry-axis transport.  There is no carry ceiling. -/
+/-- Global carry-axis transport. There is no carry ceiling. -/
 def cosmicCarryShiftN (n : Nat) (f : CosmicCoef) : CosmicCoef :=
   cosmicBasis (n, 0) * f
 
 @[simp]
 theorem cosmic_digitShiftN_zero (f : CosmicCoef) :
     cosmicDigitShiftN 0 f = f := by
-  simp [cosmicDigitShiftN, cosmicBasis]
+  simp [cosmicDigitShiftN]
 
 @[simp]
 theorem cosmic_carryShiftN_zero (f : CosmicCoef) :
     cosmicCarryShiftN 0 f = f := by
-  simp [cosmicCarryShiftN, cosmicBasis]
+  simp [cosmicCarryShiftN]
 
 /-- Digit transport composes at arbitrary depth with no terminal wall. -/
 theorem cosmic_digitShiftN_add (m n : Nat) (f : CosmicCoef) :
     cosmicDigitShiftN m (cosmicDigitShiftN n f) =
       cosmicDigitShiftN (m + n) f := by
-  simp [cosmicDigitShiftN, cosmicBasis, mul_assoc]
+  rw [cosmicDigitShiftN, cosmicDigitShiftN, cosmicDigitShiftN, ← mul_assoc,
+    cosmicBasis_add]
+  rfl
 
 /-- Carry transport composes at arbitrary depth with no terminal wall. -/
 theorem cosmic_carryShiftN_add (m n : Nat) (f : CosmicCoef) :
     cosmicCarryShiftN m (cosmicCarryShiftN n f) =
       cosmicCarryShiftN (m + n) f := by
-  simp [cosmicCarryShiftN, cosmicBasis, mul_assoc]
+  rw [cosmicCarryShiftN, cosmicCarryShiftN, cosmicCarryShiftN, ← mul_assoc,
+    cosmicBasis_add]
+  rfl
 
-/-- **LIMITLESS AXIS LAW.**  The two cosmic axes commute at every pair of
+/-- **LIMITLESS AXIS LAW.** The two cosmic axes commute at every pair of
 natural depths. -/
 theorem cosmic_axes_commute (m n : Nat) (f : CosmicCoef) :
     cosmicDigitShiftN n (cosmicCarryShiftN m f) =
@@ -118,15 +137,33 @@ private theorem finiteCell_nat_injective {A B : Nat}
   · apply Fin.ext
     exact congrArg Prod.snd h
 
+/-- Exact scalar evaluation of a finite-world extension. -/
+theorem cosmicEval_extendWorld {A B : Nat} (g : WorldCoef A B) (c : CosmicCell) :
+    cosmicEval (extendWorld g) c =
+      ∑ d : WorldCell A B,
+        if (d.1.1, d.2.1) = c then g d else 0 := by
+  classical
+  unfold cosmicEval extendWorld cosmicBasis
+  rw [MonoidAlgebra.coeff_sum]
+  change
+    (∑ d : WorldCell A B,
+      Finsupp.single (Multiplicative.ofAdd (d.1.1, d.2.1)) (g d))
+        (Multiplicative.ofAdd c) = _
+  rw [Finset.sum_apply]
+  apply Finset.sum_congr rfl
+  intro d _
+  by_cases h : (d.1.1, d.2.1) = c
+  · subst c
+    simp
+  · simp [h]
+
 /-- Finite observation after extension is exactly the original world. -/
 @[simp]
 theorem restrictWorld_extendWorld {A B : Nat} (g : WorldCoef A B) :
     restrictWorld A B (extendWorld g) = g := by
   classical
   funext c
-  simp only [restrictWorld, cosmicEval, extendWorld,
-    MonoidAlgebra.coeff_sum, Finset.sum_apply,
-    cosmicBasis, MonoidAlgebra.coeff_single]
+  rw [restrictWorld, cosmicEval_extendWorld]
   rw [Finset.sum_eq_single c]
   · simp
   · intro d _ hdc
@@ -146,12 +183,10 @@ theorem supportInside_extendWorld {A B : Nat} (g : WorldCoef A B) :
     SupportInside A B (extendWorld g) := by
   classical
   intro c hc
-  by_contra hout
-  push Not at hout
+  by_contra hinside
+  have hout : A ≤ c.1 ∨ B ≤ c.2 := by omega
   have hzero : cosmicEval (extendWorld g) c = 0 := by
-    simp only [cosmicEval, extendWorld,
-      MonoidAlgebra.coeff_sum, Finset.sum_apply,
-      cosmicBasis, MonoidAlgebra.coeff_single]
+    rw [cosmicEval_extendWorld]
     apply Finset.sum_eq_zero
     intro d _
     have hne : (d.1.1, d.2.1) ≠ c := by
@@ -162,7 +197,7 @@ theorem supportInside_extendWorld {A B : Nat} (g : WorldCoef A B) :
       have hB : c.2 < B := by
         rw [← congrArg Prod.snd h]
         exact d.2.2
-      exact hout hA hB
+      omega
     simp [hne]
   exact hc hzero
 
@@ -170,6 +205,8 @@ theorem supportInside_extendWorld {A B : Nat} (g : WorldCoef A B) :
 #check CosmicCoef
 #check cosmicBasis
 #check cosmicEval
+#check cosmicBasis_zero
+#check cosmicBasis_add
 #check cosmicDigitShiftN
 #check cosmicCarryShiftN
 #check cosmic_digitShiftN_add
@@ -177,12 +214,15 @@ theorem supportInside_extendWorld {A B : Nat} (g : WorldCoef A B) :
 #check cosmic_axes_commute
 #check extendWorld
 #check restrictWorld
+#check cosmicEval_extendWorld
 #check restrictWorld_extendWorld
 #check supportInside_extendWorld
 
+#print axioms cosmicBasis_add
 #print axioms cosmic_digitShiftN_add
 #print axioms cosmic_carryShiftN_add
 #print axioms cosmic_axes_commute
+#print axioms cosmicEval_extendWorld
 #print axioms restrictWorld_extendWorld
 #print axioms supportInside_extendWorld
 
