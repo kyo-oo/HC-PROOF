@@ -128,7 +128,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTLimitlessWorld.lean
+          lake build GSTLimitlessWorld
 
       - name: Compile upgraded cosmology
         shell: bash
