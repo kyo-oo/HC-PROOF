@@ -4,13 +4,14 @@ import Mathlib
 # GST LIMITLESS WORLD — unbounded algebraic cosmos
 
 The finite rectangular GST worlds remain exact observation windows, but they
-are no longer the ambient universe.  The algebraic limitless cosmos is the
-additive monoid algebra on `Nat × Nat`: an integer field with finite support
-and no terminal carry row or digit column.
+are no longer the ambient universe.  The algebraic limitless cosmos is an
+integer monoid algebra on the multiplicative image of `Nat × Nat`: an integer
+field with finite support and no terminal carry row or digit column.
 
-The two global axes act by monomial translation.  Their powers therefore
-exist at every natural depth; there is no global boundary-extinction law.
-Finite extinction belongs to finite observation windows, not to this carrier.
+The `Multiplicative` wrapper makes monomial multiplication perform addition of
+ordinary cosmic coordinates.  The two global axes therefore act by genuine
+unbounded translation, while finite extinction remains a property of finite
+observation windows rather than of the cosmos itself.
 -/
 
 set_option maxHeartbeats 10000000
@@ -48,12 +49,12 @@ abbrev CosmicCell : Type := Nat × Nat
 
 /-- Finite-support integer amplitudes on the limitless GST cosmos.
 
-`AddMonoidAlgebra` stores additive coordinates through their multiplicative
-wrapper, so multiplication of basis states performs coordinate addition.
-This is the algebraic direct-limit face of the limitless universe. -/
-abbrev CosmicCoef : Type := AddMonoidAlgebra ℤ CosmicCell
+This is definitionally a finitely supported function on multiplicative
+wrappers of cosmic cells, while its convolution multiplication adds the
+underlying ordinary coordinates. -/
+abbrev CosmicCoef : Type := MonoidAlgebra ℤ (Multiplicative CosmicCell)
 
-/-- Basis state concentrated at one cosmic cell. -/
+/-- Basis state concentrated at one ordinary cosmic coordinate. -/
 def cosmicBasis (c : CosmicCell) (z : ℤ := 1) : CosmicCoef :=
   Finsupp.single (Multiplicative.ofAdd c) z
 
@@ -143,7 +144,7 @@ theorem supportInside_extendWorld {A B : Nat} (g : WorldCoef A B) :
     SupportInside A B (extendWorld g) := by
   intro c hc
   by_contra hout
-  push_neg at hout
+  push Not at hout
   have hzero : cosmicEval (extendWorld g) c = 0 := by
     simp only [cosmicEval, extendWorld, Finset.sum_apply]
     apply Finset.sum_eq_zero
