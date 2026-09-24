@@ -1,5 +1,7 @@
 import Mathlib
 
+noncomputable section
+
 abbrev ProbeCell : Type := Nat × Nat
 abbrev ProbeCoefArrow : Type := ProbeCell →₀ ℤ
 abbrev ProbeCoefExplicit : Type := Finsupp ProbeCell ℤ
