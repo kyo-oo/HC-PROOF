@@ -417,4 +417,54 @@ theorem cosmic_evolution_add (m n : ℕ) (f : CompletedCosmos) :
       (cosmicLefschetz^m) ((cosmicLefschetz^n) f) := by
   rw [pow_add, Module.End.mul_apply]
 
+/-! ## Compact evolution and its exact completed image -/
+
+/-- One native step preserves finite support without imposing a fixed window. -/
+noncomputable def compactLefschetz (f : CompactCosmos) : CompactCosmos :=
+  compactTranslate 0 1 f + compactTranslate 1 0 f
+
+theorem compactLefschetz_completed (f : CompactCosmos) :
+    (fun c => compactLefschetz f c) = cosmicLefschetz f := by
+  have hd := compactTranslate_completed 0 1 f
+  have hv := compactTranslate_completed 1 0 f
+  simp only [cosmicCarryShift_zero] at hd
+  simp only [cosmicDigitShift_zero] at hv
+  exact congrArg₂ (fun x y : CompletedCosmos => x + y) hd hv
+
+/-- Every natural evolution depth stays inside the compact algebraic cosmos. -/
+noncomputable def compactEvolution : ℕ → CompactCosmos → CompactCosmos
+  | 0, f => f
+  | n+1, f => compactLefschetz (compactEvolution n f)
+
+theorem compactEvolution_completed (n : ℕ) (f : CompactCosmos) :
+    (fun c => compactEvolution n f c) = (cosmicLefschetz^n) f := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    change (fun c => compactLefschetz (compactEvolution n f) c) = _
+    rw [compactLefschetz_completed, ih, pow_succ', Module.End.mul_apply]
+
+theorem compactEvolution_add (m n : ℕ) (f : CompactCosmos) :
+    compactEvolution (m+n) f = compactEvolution m (compactEvolution n f) := by
+  apply Finsupp.ext
+  intro c
+  have h := cosmic_evolution_add m n (fun c => f c)
+  rw [← compactEvolution_completed, ← compactEvolution_completed,
+    ← compactEvolution_completed] at h
+  exact congrFun h c
+
+/-- Finite evolution is observation of the same compact trajectory. -/
+theorem observe_compactEvolution (A B n : ℕ) (f : CompactCosmos) :
+    observe A B (compactEvolution n f) =
+      (lefschetzEndo A B ^ n) (observe A B f) := by
+  rw [compactEvolution_completed, observe_cosmicLefschetz_pow]
+
+/-- An enclosing window exists at each time, with no uniform global cutoff. -/
+theorem compactEvolution_exact_recovery (n : ℕ) (f : CompactCosmos) :
+    ∃ A B, compactWindow (observe A B (compactEvolution n f)) = compactEvolution n f :=
+  compact_exact_recovery (compactEvolution n f)
+
+#print axioms compactEvolution_completed
+#print axioms compactEvolution_add
+
 end GSTUniversalLefschetzCosmology

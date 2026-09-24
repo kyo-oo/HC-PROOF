@@ -423,4 +423,31 @@ theorem mem_truncIdeal_iff (p : WorldPoly) :
   simpa [truncIdeal, Hpoly, Vpoly, Set.image_insert_eq, Set.image_singleton,
     ← MvPolynomial.X_pow_eq_monomial, Finsupp.single_le_iff] using h
 
+/-- No nonzero polynomial disappears in every finite quotient geometry. -/
+theorem coordinateProjections_separate {p q : WorldPoly}
+    (h : ∀ A B, coordinateProjection A B p = coordinateProjection A B q) : p = q := by
+  apply sub_eq_zero.mp
+  apply MvPolynomial.ext
+  intro d
+  rw [MvPolynomial.coeff_zero]
+  by_contra hd
+  have hs : d ∈ (p-q).support := MvPolynomial.mem_support_iff.mpr hd
+  have hi : p-q ∈ truncIdeal (d 1 + 1) (d 0 + 1) := by
+    apply Ideal.Quotient.eq_zero_iff_mem.mp
+    change coordinateProjection (d 1 + 1) (d 0 + 1) (p-q) = 0
+    rw [map_sub, h, sub_self]
+  have hb := (mem_truncIdeal_iff (d 1 + 1) (d 0 + 1) (p-q)).mp hi d hs
+  omega
+
+/-- Passing from algebraic coordinates to formal observations loses no
+polynomial information; surjectivity is deliberately not asserted. -/
+theorem polynomialCompletion_injective : Function.Injective polynomialCompletion := by
+  intro p q h
+  apply coordinateProjections_separate
+  intro A B
+  exact congrArg (fun x : FormalCoordinateCosmos => x.val A B) h
+
+#print axioms coordinateProjections_separate
+#print axioms polynomialCompletion_injective
+
 end GSTTruncatedWorldCohomologyRing

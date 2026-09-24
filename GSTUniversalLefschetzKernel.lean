@@ -312,4 +312,18 @@ theorem cosmicLefschetz_not_nilpotent : ¬ IsNilpotent cosmicLefschetz := by
 #print axioms cosmicLefschetz_kernel
 #print axioms cosmicLefschetz_not_nilpotent
 
+/-- A compact source also survives every depth. Finite support at each time
+must never be confused with a fixed observation boundary for all time. -/
+theorem compactEvolution_never_extinguishes (n : ℕ) :
+    compactEvolution n (Finsupp.single (0,0) 1) (0,n) = 1 := by
+  have hb : (fun c => (Finsupp.single (0,0) (1 : ℤ) : CompactCosmos) c) =
+      cosmicBasis (0,0) := by
+    funext c
+    simp [cosmicBasis, Finsupp.single_apply, eq_comm]
+  have h := congrFun (compactEvolution_completed n (Finsupp.single (0,0) 1)) (0,n)
+  rw [hb, cosmicLefschetz_never_extinguishes] at h
+  exact h
+
+#print axioms compactEvolution_never_extinguishes
+
 end GSTUniversalLefschetzKernel

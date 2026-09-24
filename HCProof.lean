@@ -536,3 +536,8 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTLefschetzPoincareReciprocity.nonzero_transition_dual_iff
 #check GSTLefschetzPoincareReciprocity.dual_transition_degree_balance
 #check GSTLefschetzPoincareReciprocity.lefschetz_poincare_reciprocity_crown
+
+/-! ## Faithful algebraic completion and compact unbounded evolution -/
+#print axioms GSTTruncatedWorldCohomologyRing.polynomialCompletion_injective
+#print axioms GSTUniversalLefschetzCosmology.compactEvolution_completed
+#print axioms GSTUniversalLefschetzKernel.compactEvolution_never_extinguishes
