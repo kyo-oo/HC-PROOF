@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: limitless-cosmology-${{ github.ref }}
@@ -44,12 +44,54 @@ jobs:
           fi
           echo LIMITLESS_PROOF_ESCAPE_CHECK=PASS
 
+      - name: Apply exact Wave I associativity repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('waves/GSTWaveCohomology.lean')
+          s = p.read_text()
+          old = '      simp [Nat.add_assoc]\n'
+          new = '      abel\n'
+          count = s.count(old)
+          if count == 1:
+              p.write_text(s.replace(old, new, 1))
+              print('WAVE_I_PATCH=APPLIED')
+          elif count == 0 and new in s:
+              print('WAVE_I_PATCH=ALREADY_PRESENT')
+          else:
+              raise SystemExit(f'unexpected Wave I patch state: old_count={count}')
+          PY
+          git diff --check
+
+      - name: Compile repaired Wave I
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build waves.GSTWaveCohomology 2>&1 | tee limitless-cosmology.log
+
+      - name: Persist verified Wave I repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! git diff --quiet -- waves/GSTWaveCohomology.lean; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add waves/GSTWaveCohomology.lean
+            git commit -m "fix: make Wave I cocycle associativity type-correct"
+            git push origin HEAD:sol/limitless-cosmology
+          else
+            echo WAVE_I_SOURCE_ALREADY_VERIFIED=1
+          fi
+
       - name: Compile limitless module
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTLimitlessCosmology 2>&1 | tee limitless-cosmology.log
+          lake build GSTLimitlessCosmology 2>&1 | tee -a limitless-cosmology.log
 
       - name: Compile limitless smoke
         shell: bash
