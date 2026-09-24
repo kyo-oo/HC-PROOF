@@ -412,4 +412,15 @@ def FormalCoordinateCosmos :=
 def polynomialCompletion (p : WorldPoly) : FormalCoordinateCosmos :=
   ⟨fun A B => coordinateProjection A B p, by intros; rfl⟩
 
+
+/-- Exact generic support criterion for the window ideal: every monomial
+lies beyond at least one of the two observation depths. -/
+theorem mem_truncIdeal_iff (p : WorldPoly) :
+    p ∈ truncIdeal A B ↔ ∀ d ∈ p.support, B ≤ d 0 ∨ A ≤ d 1 := by
+  have h := (MvPolynomial.mem_ideal_span_monomial_image
+    (x:=p) (s:=({Finsupp.single (0 : Fin 2) B,
+      Finsupp.single (1 : Fin 2) A} : Set (Fin 2 →₀ ℕ))))
+  simpa [truncIdeal, Hpoly, Vpoly, Set.image_insert_eq, Set.image_singleton,
+    ← MvPolynomial.X_pow_eq_monomial, Finsupp.single_le_iff] using h
+
 end GSTTruncatedWorldCohomologyRing

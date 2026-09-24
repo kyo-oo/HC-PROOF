@@ -445,4 +445,45 @@ theorem twelve_cell_is_native_chart :
 #print axioms mixed_boundary_extinction
 #print axioms twelve_cell_is_native_chart
 
+
+/-! ## Compact algebraic transport embeds into completed transport -/
+def cosmicTranslation (m n : ℕ) : CosmicCell ↪ CosmicCell where
+  toFun := fun c => (c.1+m,c.2+n)
+  inj' := by intro c d h; apply Prod.ext <;> have h1 := congrArg Prod.fst h <;>
+    have h2 := congrArg Prod.snd h <;> simp_all
+
+noncomputable def compactTranslate (m n : ℕ) (f : CompactCosmos) : CompactCosmos :=
+  Finsupp.embDomain (cosmicTranslation m n) f
+
+theorem compactTranslate_completed (m n : ℕ) (f : CompactCosmos) :
+    (fun c => compactTranslate m n f c) = cosmicDigitShift n (cosmicCarryShift m f) := by
+  funext c
+  by_cases hm : m ≤ c.1
+  · by_cases hn : n ≤ c.2
+    · have he : cosmicTranslation m n (c.1-m,c.2-n)=c := by
+        apply Prod.ext <;> simp [cosmicTranslation, Nat.sub_add_cancel, hm, hn]
+      rw [← he]
+      change Finsupp.embDomain (cosmicTranslation m n) f
+        (cosmicTranslation m n (c.1-m,c.2-n)) = _
+      rw [Finsupp.embDomain_apply_self]
+      simp [cosmicDigitShift, cosmicCarryShift, cosmicTranslation]
+    · have hout : c ∉ Set.range (cosmicTranslation m n) := by
+        rintro ⟨d, hd⟩
+        have h := congrArg Prod.snd hd
+        simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h
+        omega
+      rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]
+      simp [cosmicDigitShift, hn]
+  · have hout : c ∉ Set.range (cosmicTranslation m n) := by
+      rintro ⟨d, hd⟩
+      have h := congrArg Prod.fst hd
+      simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h
+      omega
+    rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]
+    simp [cosmicDigitShift, cosmicCarryShift, hm]
+
+#print axioms cosmicObservationEquiv
+#print axioms compact_exact_recovery
+#print axioms constant_one_not_compact
+
 end GSTWorldCosmology

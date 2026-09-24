@@ -325,4 +325,43 @@ theorem compact_pure_has_finite_weights (f : compactPureHodge) :
 
 #print axioms cosmicPureEquiv
 
+
+def diagonalEmbedding : ℕ ↪ CosmicCell :=
+  ⟨fun p => (p,p), by intro a b h; exact congrArg Prod.fst h⟩
+
+/-- The compact pure sector is exactly finitely supported diagonal coordinates. -/
+noncomputable def compactPureEquiv : compactPureHodge ≃ (ℕ →₀ ℤ) where
+  toFun := fun f => Finsupp.comapDomain (fun p => (p,p)) f.val
+    (by intro a ha b hb h; exact congrArg Prod.fst h)
+  invFun := fun a => ⟨Finsupp.embDomain diagonalEmbedding a, by
+    intro c hc
+    apply Finsupp.embDomain_of_notMem_range
+    rintro ⟨p,hp⟩
+    have h1 := congrArg Prod.fst hp
+    have h2 := congrArg Prod.snd hp
+    exact hc (h1.symm.trans h2)⟩
+  left_inv := by
+    intro f
+    apply Subtype.ext
+    apply Finsupp.ext
+    intro c
+    by_cases hc : c.1=c.2
+    · have he : diagonalEmbedding c.1=c := by
+        apply Prod.ext
+        · rfl
+        · exact hc
+      rw [← he, Finsupp.embDomain_apply_self]
+      rfl
+    · have hout : c ∉ Set.range diagonalEmbedding := by
+        rintro ⟨p,hp⟩
+        have h1 := congrArg Prod.fst hp
+        have h2 := congrArg Prod.snd hp
+        exact hc (h1.symm.trans h2)
+      rw [Finsupp.embDomain_of_notMem_range _ _ _ hout, f.property c hc]
+  right_inv := by
+    intro a
+    apply Finsupp.ext
+    intro p
+    exact Finsupp.embDomain_apply_self diagonalEmbedding a p
+
 end GSTGlobalPureHodgeCosmology

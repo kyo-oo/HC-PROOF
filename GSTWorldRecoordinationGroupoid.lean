@@ -378,6 +378,6 @@ theorem cosmicRechart_observation_ext (e : CosmicCell ≃ CosmicCell)
 
 /-- Finite support is transported by an actual coordinate equivalence. -/
 noncomputable def compactRechart (e : CosmicCell ≃ CosmicCell) :
-    CompactCosmos ≃ CompactCosmos := Finsupp.domCongr e
+    CompactCosmos ≃+ CompactCosmos := Finsupp.domCongr e
 
 end GSTWorldRecoordinationGroupoid

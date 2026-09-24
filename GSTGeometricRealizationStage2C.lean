@@ -1,3 +1,4 @@
+import GSTTruncatedWorldCohomologyRing
 import Mathlib
 import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 import GSTGeometricRealizationStage2B
@@ -287,5 +288,35 @@ theorem hodge_of_native_scheme_fiber_obligation
 #print axioms native_hodge_subspace_le_cycleClass_range
 #print axioms universal_native_scheme_hodge_of_realization_family
 #print axioms hodge_of_native_scheme_fiber_obligation
+
+
+/-! ## Actual affine schemes for GST universal and finite coordinate geometry -/
+open CategoryTheory GSTTruncatedWorldCohomologyRing
+
+noncomputable def cosmicCoordinateScheme : Scheme :=
+  Spec (CommRingCat.of WorldPoly)
+
+noncomputable def windowCoordinateScheme (A B : ℕ) : Scheme :=
+  Spec (CommRingCat.of (WorldCohomologyRing A B))
+
+/-- This is an actual Mathlib scheme morphism induced by the quotient map. -/
+noncomputable def windowToCosmicScheme (A B : ℕ) :
+    windowCoordinateScheme A B ⟶ cosmicCoordinateScheme :=
+  Spec.map (CommRingCat.ofHom (coordinateProjection A B))
+
+noncomputable def windowSchemeInclusion {A B C D : ℕ}
+    (hA : A ≤ C) (hB : B ≤ D) :
+    windowCoordinateScheme A B ⟶ windowCoordinateScheme C D :=
+  Spec.map (CommRingCat.ofHom (quotientRestriction A B hA hB))
+
+/-- Contravariance reverses the quotient maps into compatible inclusions. -/
+theorem windowScheme_triangle {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
+    windowSchemeInclusion hA hB ≫ windowToCosmicScheme C D =
+      windowToCosmicScheme A B := by
+  unfold windowSchemeInclusion windowToCosmicScheme
+  rw [← Spec.map_comp]
+  congr 1
+  ext p
+  rfl
 
 end GSTGeometricRealizationStage2C

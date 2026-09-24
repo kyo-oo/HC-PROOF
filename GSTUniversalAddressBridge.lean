@@ -317,7 +317,7 @@ def completedAddressEquiv : CompletedCosmos ≃ₗ[ℤ] (ℕ → ℤ) where
   map_add' := by intros; rfl
   map_smul' := by intros; rfl
 
-noncomputable def compactAddressEquiv : CompactCosmos ≃ (ℕ →₀ ℤ) :=
+noncomputable def compactAddressEquiv : CompactCosmos ≃+ (ℕ →₀ ℤ) :=
   Finsupp.domCongr cosmicAddressEquiv
 
 @[simp] theorem cosmic_address_reads_window (A B : ℕ) (f : CompletedCosmos)
