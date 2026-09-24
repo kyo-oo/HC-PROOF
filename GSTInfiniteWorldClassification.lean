@@ -235,9 +235,12 @@ theorem continuous_iff_all_windows {T : Type*} [TopologicalSpace T]
   · intro h
     apply continuous_pi
     intro c
-    exact (continuous_apply (⟨c.1, by omega⟩, ⟨c.2, by omega⟩) :
-      Continuous (fun g : WorldCoef (c.1+1) (c.2+1) =>
-        g (⟨c.1, by omega⟩, ⟨c.2, by omega⟩))).comp (h (c.1+1) (c.2+1))
+    let c' : WorldCell (c.1+1) (c.2+1) :=
+      (⟨c.1, by omega⟩, ⟨c.2, by omega⟩)
+    have heval : Continuous
+        (fun g : WorldCoef (c.1+1) (c.2+1) => g c') :=
+      continuous_apply c'
+    simpa [c', observe] using heval.comp (h (c.1+1) (c.2+1))
 
 instance : TopologicalSpace WindowTower :=
   TopologicalSpace.induced innovationStream inferInstance
@@ -248,6 +251,7 @@ def windowTowerHomeomorph : WindowTower ≃ₜ (ℕ → Fin 3) where
   continuous_toFun := continuous_induced_dom
   continuous_invFun := by
     apply continuous_induced_rng.mpr
+    change Continuous (innovationStream ∘ streamTower)
     have h : innovationStream ∘ streamTower = id := by
       funext a
       exact innovationStream_streamTower a

@@ -442,7 +442,9 @@ theorem compactEvolution_completed (n : ℕ) (f : CompactCosmos) :
   | zero => rfl
   | succ n ih =>
     change (fun c => compactLefschetz (compactEvolution n f) c) = _
-    rw [compactLefschetz_completed, ih, pow_succ', Module.End.mul_apply]
+    rw [compactLefschetz_completed]
+    change cosmicLefschetz (fun c => compactEvolution n f c) = _
+    rw [ih, pow_succ', Module.End.mul_apply]
 
 theorem compactEvolution_add (m n : ℕ) (f : CompactCosmos) :
     compactEvolution (m+n) f = compactEvolution m (compactEvolution n f) := by
@@ -457,6 +459,7 @@ theorem compactEvolution_add (m n : ℕ) (f : CompactCosmos) :
 theorem observe_compactEvolution (A B n : ℕ) (f : CompactCosmos) :
     observe A B (compactEvolution n f) =
       (lefschetzEndo A B ^ n) (observe A B f) := by
+  change observe A B (fun c => compactEvolution n f c) = _
   rw [compactEvolution_completed, observe_cosmicLefschetz_pow]
 
 /-- An enclosing window exists at each time, with no uniform global cutoff. -/

@@ -174,7 +174,7 @@ abbrev CompactClRing : Type := ℕ →₀ ℤ
 
 def compactClCode (p : Nat) : Nat := Nat.pair p p
 
-def compactClMono (p : Nat) : CompactClRing :=
+noncomputable def compactClMono (p : Nat) : CompactClRing :=
   Finsupp.single (compactClCode p) 1
 
 /-- Weight-p compact address classes are supported only at the unique

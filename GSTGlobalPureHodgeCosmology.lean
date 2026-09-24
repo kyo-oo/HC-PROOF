@@ -283,7 +283,7 @@ open GSTWorldCosmology
 
 def CosmicPureHodge : Submodule ℤ CompletedCosmos where
   carrier := {f | ∀ c, c.1 ≠ c.2 → f c=0}
-  zero_mem' := by intros; rfl
+  zero_mem' := by simp
   add_mem' := by intro f g hf hg c hc; simp [hf c hc, hg c hc]
   smul_mem' := by intro z f hf c hc; simp [hf c hc]
 
@@ -298,9 +298,11 @@ def cosmicPureEquiv : CosmicPureHodge ≃ₗ[ℤ] (ℕ → ℤ) where
     intro f
     apply Subtype.ext
     funext c
-    by_cases h : c.1=c.2
-    · simp [cosmicPureReassemble, h]
-    · simp [cosmicPureReassemble, h, f.property c h]
+    rcases c with ⟨i, j⟩
+    by_cases h : i = j
+    · subst j
+      simp [cosmicPureReassemble]
+    · simp [cosmicPureReassemble, h, f.property (i, j) h]
   right_inv := by intro a; funext p; simp [cosmicPureReassemble]
   map_add' := by intros; rfl
   map_smul' := by intros; rfl
