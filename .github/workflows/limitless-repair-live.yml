@@ -1,4 +1,4 @@
-name: Limitless Compile Check
+name: Limitless Live Repair
 
 on:
   push:
@@ -7,12 +7,9 @@ on:
     paths:
       - ".github/workflows/limitless-repair-live.yml"
       - "scripts/limitless_repair.py"
-      - "GSTCoherentCosmology.lean"
-      - "GSTGradedWorldAlgebra.lean"
-      - "GSTGraphV2CanonicalPhaseSteering.lean"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   repair:
@@ -21,13 +18,34 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.sha }}
+          ref: "sol/limitless-cosmology-bursts"
           fetch-depth: 0
-      - name: Check committed source
+      - name: Apply exact limitless repairs
         run: |
           set -euo pipefail
+          python3 scripts/limitless_repair.py
           git diff --check
-          if grep -nE '\bsorry\b|sorryAx' GSTGradedWorldAlgebra.lean GSTGraphV2CanonicalPhaseSteering.lean GSTCoherentCosmology.lean; then exit 1; fi
+          if grep -nE '\bsorry\b|sorryAx' \
+            GSTUniversalLefschetzCosmology.lean \
+            GSTGlobalPureHodgeCosmology.lean \
+            GSTInfiniteWorldClassification.lean \
+            GSTTransferBridgeV2.lean; then exit 1; fi
+      - name: Commit repaired source
+        run: |
+          set -euo pipefail
+          git config user.name "kyo-oo"
+          git config user.email "lordoftreasures7@gmail.com"
+          git add \
+            GSTUniversalLefschetzCosmology.lean \
+            GSTGlobalPureHodgeCosmology.lean \
+            GSTInfiniteWorldClassification.lean \
+            GSTTransferBridgeV2.lean
+          if git diff --cached --quiet; then
+            echo "No source repair diff to commit"
+          else
+            git commit -m "Repair final limitless cosmology compile obligations"
+            git push origin HEAD:sol/limitless-cosmology-bursts
+          fi
       - name: Install Lean
         run: |
           set -euo pipefail
@@ -36,15 +54,19 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake update
           lake exe cache get
-      - name: Compile repairs
+      - name: Compile repaired limitless modules
         run: |
           set -o pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTGradedWorldAlgebra GSTGraphV2CanonicalPhaseSteering GSTCoherentCosmology 2>&1 | tee repair-build.log
-      - name: Upload repair build log
+          lake build \
+            GSTUniversalLefschetzCosmology \
+            GSTGlobalPureHodgeCosmology \
+            GSTInfiniteWorldClassification \
+            GSTTransferBridgeV2 2>&1 | tee limitless-repair-build.log
+      - name: Upload limitless repair build log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: limitless-repair-build-log
-          path: repair-build.log
+          path: limitless-repair-build.log
           if-no-files-found: ignore
