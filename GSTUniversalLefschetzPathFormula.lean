@@ -95,7 +95,8 @@ theorem worldAct_L_pow_paths
   intro m hm
   have h1 : (n.choose m : Module.End ℤ (WorldCoef A B)) g
       = (n.choose m : ℤ) • g := by
-    rw [Module.End.natCast_apply, ← Nat.cast_smul_eq_nsmul]
+    rw [Module.End.natCast_apply,
+      ← Nat.cast_smul_eq_nsmul (R := ℤ)]
   rw [Module.End.mul_apply, Module.End.mul_apply, h1,
     map_smul, map_smul,
     digitEndo_pow_apply, carryEndo_pow_apply]
@@ -109,7 +110,10 @@ theorem worldAct_L_pow_paths_at
         (n.choose m : ℤ) *
           digitShiftN m (carryShiftN (n-m) g) c := by
   have h := congrFun (worldAct_L_pow_paths A B n g) c
-  simpa [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using h
+  rw [Finset.sum_apply'] at h
+  refine Eq.trans h (Finset.sum_congr rfl ?_)
+  intro m hm
+  rfl
 
 /-- Exact surviving-path formula at one coordinate.  A path contributes
 iff the evaluation cell has enough digit depth for its m digit steps and
@@ -235,7 +239,8 @@ theorem cosmicLefschetz_paths (n : ℕ) (f : CompletedCosmos) :
   intro m hm
   have h1 : (n.choose m : Module.End ℤ CompletedCosmos) f
       = (n.choose m : ℤ) • f := by
-    rw [Module.End.natCast_apply, ← Nat.cast_smul_eq_nsmul]
+    rw [Module.End.natCast_apply,
+      ← Nat.cast_smul_eq_nsmul (R := ℤ)]
   rw [Module.End.mul_apply, Module.End.mul_apply, h1,
     map_smul, map_smul,
     cosmicDigitEndo_pow_apply, cosmicCarryEndo_pow_apply]
