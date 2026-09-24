@@ -1,4 +1,4 @@
-name: Limitless Proof Repair
+name: Limitless Universalization Burst
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  repair-and-compile:
+  universalize-and-compile:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
@@ -19,40 +19,337 @@ jobs:
           ref: sol/limitless-cosmology-bursts
           fetch-depth: 1
 
-      - name: Apply exact proof repairs
+      - name: Apply limitless transfer and Stage-2 burst
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
-          def replace_exact(path, old, new):
+          def replace_once(path, old, new):
               p = Path(path)
               text = p.read_text()
               if old not in text:
-                  raise SystemExit(f"expected repair block not found in {path}")
+                  raise SystemExit(f"expected block not found in {path}")
               if text.count(old) != 1:
-                  raise SystemExit(f"repair block is not unique in {path}")
+                  raise SystemExit(f"block not unique in {path}")
               p.write_text(text.replace(old, new))
 
-          replace_exact(
-              'GSTGeometricRealizationStage2.lean',
-              '''  rw [hb]\n  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using (R.encode alpha).sum_single\n''',
-              '''  rw [hb]\n  simp only [Finsupp.smul_single, smul_eq_mul, mul_one]\n  change (R.encode alpha).sum Finsupp.single = R.encode alpha\n  exact (R.encode alpha).sum_single\n''')
+          def insert_before(path, marker, block, sentinel):
+              p = Path(path)
+              text = p.read_text()
+              if sentinel in text:
+                  raise SystemExit(f"sentinel already present in {path}: {sentinel}")
+              if marker not in text:
+                  raise SystemExit(f"marker not found in {path}: {marker}")
+              p.write_text(text.replace(marker, block + "\n\n" + marker, 1))
 
-          replace_exact(
-              'GSTWorldCosmology.lean',
-              '''def cosmicObservationEquiv : CompletedCosmos ≃ CosmicObservations where\n  toFun := completeObservations\n  invFun := reconstructCosmos\n  left_inv := reconstruct_complete\n  right_inv := by\n    intro X\n    have h : (completeObservations (reconstructCosmos X)).window = X.window := by\n      funext A B\n      exact observe_reconstruct X A B\n    cases X\n    cases h\n    rfl\n''',
-              '''@[ext] theorem CosmicObservations.ext {X Y : CosmicObservations}\n    (h : ∀ A B, X.window A B = Y.window A B) : X = Y := by\n  cases X with\n  | mk X hX =>\n    cases Y with\n    | mk Y hY =>\n      have hXY : X = Y := by\n        funext A B\n        exact h A B\n      subst Y\n      rfl\n\ndef cosmicObservationEquiv : CompletedCosmos ≃ CosmicObservations where\n  toFun := completeObservations\n  invFun := reconstructCosmos\n  left_inv := reconstruct_complete\n  right_inv := by\n    intro X\n    apply CosmicObservations.ext\n    intro A B\n    exact observe_reconstruct X A B\n''')
+          replace_once(
+              'GSTTransferBridgeV2.lean',
+              'import GSTClayOfficialV2\n',
+              'import GSTClayOfficialV2\nimport GSTUniversalAddressBridge\nimport GSTDimensionFreeHodgeDiagonal\n')
 
-          replace_exact(
-              'GSTWorldCosmology.lean',
-              '''theorem compactTranslate_completed (m n : ℕ) (f : CompactCosmos) :\n    (fun c => compactTranslate m n f c) = cosmicDigitShift n (cosmicCarryShift m f) := by\n  funext c\n  by_cases hm : m ≤ c.1\n  · by_cases hn : n ≤ c.2\n    · have he : cosmicTranslation m n (c.1-m,c.2-n)=c := by\n        apply Prod.ext <;> simp [cosmicTranslation, Nat.sub_add_cancel, hm, hn]\n      rw [← he]\n      change Finsupp.embDomain (cosmicTranslation m n) f\n        (cosmicTranslation m n (c.1-m,c.2-n)) = _\n      rw [Finsupp.embDomain_apply_self]\n      simp [cosmicDigitShift, cosmicCarryShift, cosmicTranslation]\n    · have hout : c ∉ Set.range (cosmicTranslation m n) := by\n        rintro ⟨d, hd⟩\n        have h := congrArg Prod.snd hd\n        simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h\n        omega\n      rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]\n      simp [cosmicDigitShift, hn]\n  · have hout : c ∉ Set.range (cosmicTranslation m n) := by\n      rintro ⟨d, hd⟩\n      have h := congrArg Prod.fst hd\n      simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h\n      omega\n    rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]\n    simp [cosmicDigitShift, cosmicCarryShift, hm]\n''',
-              '''theorem compactTranslate_completed (m n : ℕ) (f : CompactCosmos) :\n    (fun c => compactTranslate m n f c) = cosmicDigitShift n (cosmicCarryShift m f) := by\n  funext c\n  by_cases hr : c ∈ Set.range (cosmicTranslation m n)\n  · rcases hr with ⟨d, rfl⟩\n    rw [compactTranslate, Finsupp.embDomain_apply_self]\n    change f d = cosmicDigitShift n (cosmicCarryShift m f) (d.1 + m, d.2 + n)\n    simp [cosmicDigitShift, cosmicCarryShift]\n  · rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hr]\n    by_cases hm : m ≤ c.1\n    · by_cases hn : n ≤ c.2\n      · exfalso\n        apply hr\n        refine ⟨(c.1 - m, c.2 - n), ?_⟩\n        change ((c.1 - m) + m, (c.2 - n) + n) = c\n        apply Prod.ext\n        · exact Nat.sub_add_cancel hm\n        · exact Nat.sub_add_cancel hn\n      · simp [cosmicDigitShift, hn]\n    · simp [cosmicDigitShift, cosmicCarryShift, hm]\n''')
+          transfer = r'''
+/-! ## Limitless compact address classification
 
-          replace_exact(
-              'GSTLefschetzCrown.lean',
-              '''theorem distinct_sector_support_zero\n    (j k : Nat) (hjk : j ≠ k) (g : WaveCoef)\n    (hj : sectorProj j g = g)\n    (hk : sectorProj k g = g) :\n    g = fun _ => 0 := by\n  have horth := proj_orthogonal j k g hjk\n  funext cell\n  rcases cell with ⟨C,d,hC,hd⟩\n  have hc := horth C d hC hd\n  have hjc := congrFun hj ⟨C,d,hC,hd⟩\n  have hkc := congrFun hk ⟨C,d,hC,hd⟩\n  unfold sectorProj at hc hjc hkc\n  by_cases hdj : C+d = j\n  · have hdk : C+d ≠ k := by\n      intro h\n      exact hjk (hdj.symm.trans h)\n    rw [if_pos hdj, if_neg hdk] at hjc hkc hc\n    exact hkc.symm\n  · rw [if_neg hdj] at hjc\n    exact hjc.symm\n''',
-              '''theorem distinct_sector_support_zero\n    (j k : Nat) (hjk : j ≠ k) (g : WaveCoef)\n    (hj : sectorProj j g = g)\n    (hk : sectorProj k g = g) :\n    g = fun _ => 0 := by\n  have hjs := (sectorProj_eq_self_iff j g).1 hj\n  have hks := (sectorProj_eq_self_iff k g).1 hk\n  funext cell\n  rcases cell with ⟨C,d,hC,hd⟩\n  by_cases hdj : C + d = j\n  · apply hks C d hC hd\n    intro hdk\n    exact hjk (hdj.symm.trans hdk)\n  · exact hjs C d hC hd hdj\n''')
+The historical `Fin 12` address ring remains an exact finite chart.  The
+stronger carrier below is countable and finitely supported, so no global
+address rank or terminal Hodge weight is built into the transfer layer.
+-/
+
+abbrev CompactClRing : Type := ℕ →₀ ℤ
+
+def compactClCode (p : Nat) : Nat := Nat.pair p p
+
+def compactClMono (p : Nat) : CompactClRing :=
+  Finsupp.single (compactClCode p) 1
+
+/-- Weight-p compact address classes are supported only at the unique
+unbounded diagonal code attached to p. -/
+def isCompactClHodge (p : Nat) (φ : CompactClRing) : Prop :=
+  ∀ i : Nat, i ≠ compactClCode p → φ i = 0
+
+/-- Every natural weight has a nonzero compact-address Hodge generator. -/
+theorem compactClMono_isHodge (p : Nat) :
+    isCompactClHodge p (compactClMono p) := by
+  intro i hi
+  simp [compactClMono, hi]
+
+/-- **RANK-FREE COMPACT ADDRESS CLASSIFICATION.**  At every natural weight,
+the compact Hodge sector is rank one, with no `Fin 12` or `p < 3` ceiling. -/
+theorem compactClHodge_rank_one (p : Nat) (φ : CompactClRing) :
+    isCompactClHodge p φ ↔
+      ∃! z : ℤ, φ = z • compactClMono p := by
+  constructor
+  · intro hφ
+    refine ⟨φ (compactClCode p), ?_, ?_⟩
+    · ext i
+      by_cases hi : i = compactClCode p
+      · subst i
+        simp [compactClMono]
+      · simp [compactClMono, hi, hφ i hi]
+    · intro z hz
+      have hread := congrArg
+        (fun ψ : CompactClRing => ψ (compactClCode p)) hz
+      simpa [compactClMono] using hread.symm
+  · rintro ⟨z, hz, _⟩
+    intro i hi
+    rw [hz]
+    simp [compactClMono, hi]
+
+/-- The unique scalar is read directly at the unbounded diagonal code. -/
+theorem compactClHodge_coefficient_exact
+    (p : Nat) (φ : CompactClRing)
+    (hφ : isCompactClHodge p φ) :
+    φ = (φ (compactClCode p)) • compactClMono p := by
+  rcases (compactClHodge_rank_one p φ).1 hφ with ⟨z, hz, _⟩
+  have hread := congrArg
+    (fun ψ : CompactClRing => ψ (compactClCode p)) hz
+  have hzread : z = φ (compactClCode p) := by
+    simpa [compactClMono] using hread.symm
+  simpa [hzread] using hz
+
+/-- Limitless transfer crown: the finite twelve-coordinate theorem survives
+as a specialization, while the strongest address classification is now
+countable, finitely supported, and valid at every natural weight. -/
+theorem transfer_v2_limitless_crown :
+    (∀ p : Nat, isCompactClHodge p (compactClMono p))
+    ∧ (∀ p : Nat, ∀ φ : CompactClRing,
+      isCompactClHodge p φ ↔
+        ∃! z : ℤ, φ = z • compactClMono p)
+    ∧ (∀ p : Nat, ∀ φ : CompactClRing,
+      isCompactClHodge p φ →
+        φ = (φ (compactClCode p)) • compactClMono p) := by
+  exact ⟨compactClMono_isHodge,
+    compactClHodge_rank_one,
+    compactClHodge_coefficient_exact⟩
+'''
+          insert_before(
+              'GSTTransferBridgeV2.lean',
+              '#check addr_zero',
+              transfer,
+              'theorem transfer_v2_limitless_crown')
+
+          stage2e = r'''
+/-! ## Rank-free compact Stage-2E route
+
+The finite-rank certificate remains available for compatibility.  This
+route instead uses `CompactHodgeRealization ℕ`: each encoded class is
+finitely supported, but there is no globally fixed address dimension `N`.
+The basis-cycle data remains an explicit geometric obligation.
+-/
+
+structure Stage2ECompactRealization
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    (p : Nat) where
+  realization :
+    CompactHodgeRealization ℕ (H.cohomology p) (codimensionCycles V.X p)
+  hodge_iff :
+    ∀ alpha : H.cohomology p,
+      realization.isHodge alpha ↔ alpha ∈ H.hodgePP p
+  cycleClass_eq :
+    realization.cycleClass = H.cycleClass p
+
+/-- A rank-free compact realization produces an actual codimension-p cycle
+for every intended classical Hodge class. -/
+theorem hodge_class_has_classical_cycle_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    {p : Nat}
+    (R : Stage2ECompactRealization V H p)
+    (alpha : H.cohomology p)
+    (halpha : alpha ∈ H.hodgePP p) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  have hr : R.realization.isHodge alpha :=
+    (R.hodge_iff alpha).2 halpha
+  obtain ⟨Z, hZ⟩ :=
+    compact_realization_surjectivity R.realization alpha hr
+  refine ⟨Z, ?_⟩
+  rw [← R.cycleClass_eq]
+  exact hZ
+
+/-- **RANK-FREE STAGE-2E LANDING.**  No address-rank function occurs. -/
+theorem classical_hodge_of_stage2e_compact_family
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    (R : ∀ p : Nat, Stage2ECompactRealization V H p) :
+    ClassicalHodgeStatement V H := by
+  intro p alpha halpha
+  exact hodge_class_has_classical_cycle_compact
+    V H (R p) alpha halpha
+
+/-- Exact remaining compact geometric obligation.  It is rank-free but does
+not assume the Hodge conclusion or cycle-class surjectivity. -/
+def Stage2ECompactRealizationObligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V) : Prop :=
+  ∀ p : Nat, Nonempty (Stage2ECompactRealization V H p)
+
+theorem classical_hodge_of_stage2e_compact_obligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    (hR : Stage2ECompactRealizationObligation V H) :
+    ClassicalHodgeStatement V H := by
+  exact classical_hodge_of_stage2e_compact_family
+    V H (fun p => (hR p).some)
+'''
+          insert_before(
+              'GSTGeometricRealizationStage2E.lean',
+              '#check RationalVectorSpace',
+              stage2e,
+              'structure Stage2ECompactRealization')
+
+          stage2f = r'''
+/-! ## Rank-free compact Stage-2F route -/
+
+abbrev Stage2FCompactRealization
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    (p : Nat) :=
+  Stage2ECompactRealization V H.toClassicalHodgeData p
+
+/-- Native Betti cohomology now inherits the same countable finite-support
+realization route, with no global coordinate rank. -/
+theorem hodge_class_has_betti_cycle_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    {p : Nat}
+    (R : Stage2FCompactRealization V H p)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ H.hodgePP p) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  exact hodge_class_has_classical_cycle_compact
+    V H.toClassicalHodgeData R alpha halpha
+
+/-- **RANK-FREE STAGE-2F BETTI LANDING.** -/
+theorem betti_hodge_of_stage2f_compact_family
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    (R : ∀ p : Nat, Stage2FCompactRealization V H p) :
+    BettiHodgeStatement V H := by
+  intro p alpha halpha
+  exact hodge_class_has_betti_cycle_compact
+    V H (R p) alpha halpha
+
+def Stage2FCompactRealizationObligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V) : Prop :=
+  ∀ p : Nat, Nonempty (Stage2FCompactRealization V H p)
+
+theorem stage2F_compact_obligation_iff_stage2E_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V) :
+    Stage2FCompactRealizationObligation V H ↔
+      Stage2ECompactRealizationObligation V H.toClassicalHodgeData :=
+  Iff.rfl
+
+theorem betti_hodge_of_stage2f_compact_obligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    (hR : Stage2FCompactRealizationObligation V H) :
+    BettiHodgeStatement V H := by
+  exact betti_hodge_of_stage2f_compact_family
+    V H (fun p => (hR p).some)
+'''
+          insert_before(
+              'GSTGeometricRealizationStage2F.lean',
+              '#check ComplexPoint',
+              stage2f,
+              'abbrev Stage2FCompactRealization')
+
+          stage2g = r'''
+/-! ## Rank-free compact Stage-2G route -/
+
+abbrev Stage2GCompactRealization
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) :=
+  Stage2FCompactRealization V H.toBettiHodgeData p
+
+/-- Every derived rational (p,p)-class obtains a codimension-p cycle from
+the compact countable realization, with no finite-rank parameter. -/
+theorem hodge_class_has_bigraded_cycle_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    {p : Nat}
+    (R : Stage2GCompactRealization V H p)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha :
+      complexificationMapQ
+          (RationalSingularCohomology H.analytification (2 * p)) alpha
+        ∈ (H.hodgeBigrading p).ppComponent) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  apply hodge_class_has_betti_cycle_compact
+    V H.toBettiHodgeData R alpha
+  exact (mem_rationalHodgeSubspace_iff
+    (H.hodgeBigrading p) alpha).2 halpha
+
+/-- **RANK-FREE STAGE-2G LANDING.**  The strongest reduction no longer
+contains `N : Nat → Nat`; only the explicit compact geometric realization
+family remains. -/
+theorem bigraded_betti_hodge_of_stage2g_compact_family
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (R : ∀ p : Nat, Stage2GCompactRealization V H p) :
+    BigradedBettiHodgeStatement V H := by
+  intro p alpha halpha
+  exact hodge_class_has_betti_cycle_compact
+    V H.toBettiHodgeData (R p) alpha halpha
+
+def Stage2GCompactRealizationObligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) : Prop :=
+  ∀ p : Nat, Nonempty (Stage2GCompactRealization V H p)
+
+theorem stage2G_compact_obligation_iff_stage2F_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    Stage2GCompactRealizationObligation V H ↔
+      Stage2FCompactRealizationObligation V H.toBettiHodgeData :=
+  Iff.rfl
+
+theorem stage2G_compact_obligation_iff_stage2E_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    Stage2GCompactRealizationObligation V H ↔
+      Stage2ECompactRealizationObligation
+        V H.toBettiHodgeData.toClassicalHodgeData := by
+  exact (stage2G_compact_obligation_iff_stage2F_compact V H).trans
+    (stage2F_compact_obligation_iff_stage2E_compact V H.toBettiHodgeData)
+
+theorem bigraded_betti_hodge_of_stage2g_compact_obligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (hR : Stage2GCompactRealizationObligation V H) :
+    BigradedBettiHodgeStatement V H := by
+  exact bigraded_betti_hodge_of_stage2g_compact_family
+    V H (fun p => (hR p).some)
+'''
+          insert_before(
+              'GSTGeometricRealizationStage2G.lean',
+              '#check Complexification',
+              stage2g,
+              'abbrev Stage2GCompactRealization')
+
+          replace_once(
+              'HCProof.lean',
+              '#check GSTTransferBridgeV2.transfer_v2_crown\n',
+              '#check GSTTransferBridgeV2.transfer_v2_crown\n#check GSTTransferBridgeV2.transfer_v2_limitless_crown\n')
+          replace_once(
+              'HCProof.lean',
+              '#check GSTGeometricRealizationStage2E.Stage2ERealizationObligation\n',
+              '#check GSTGeometricRealizationStage2E.Stage2ERealizationObligation\n#check GSTGeometricRealizationStage2E.Stage2ECompactRealization\n#check GSTGeometricRealizationStage2E.classical_hodge_of_stage2e_compact_family\n#check GSTGeometricRealizationStage2E.Stage2ECompactRealizationObligation\n')
+          replace_once(
+              'HCProof.lean',
+              '#check GSTGeometricRealizationStage2F.Stage2FRealizationObligation\n',
+              '#check GSTGeometricRealizationStage2F.Stage2FRealizationObligation\n#check GSTGeometricRealizationStage2F.Stage2FCompactRealization\n#check GSTGeometricRealizationStage2F.betti_hodge_of_stage2f_compact_family\n#check GSTGeometricRealizationStage2F.Stage2FCompactRealizationObligation\n')
+          replace_once(
+              'HCProof.lean',
+              '#check GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_family\n',
+              '#check GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_family\n#check GSTGeometricRealizationStage2G.Stage2GCompactRealization\n#check GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_compact_family\n#check GSTGeometricRealizationStage2G.Stage2GCompactRealizationObligation\n')
           PY
 
       - name: Install Lean and pinned Mathlib
@@ -65,28 +362,41 @@ jobs:
           lake update
           lake exe cache get
 
-      - name: Reject proof escapes in repaired modules
+      - name: Reject proof escapes in universalization burst
         shell: bash
         run: |
           set -euo pipefail
           if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' \
-            GSTWorldCosmology.lean GSTLefschetzCrown.lean GSTGeometricRealizationStage2.lean; then
+            GSTTransferBridgeV2.lean \
+            GSTGeometricRealizationStage2E.lean \
+            GSTGeometricRealizationStage2F.lean \
+            GSTGeometricRealizationStage2G.lean; then
             exit 1
           fi
 
-      - name: Compile repaired modules
+      - name: Compile full universalization burst
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTWorldCosmology GSTLefschetzCrown GSTGeometricRealizationStage2
+          lake build \
+            GSTTransferBridgeV2 \
+            GSTGeometricRealizationStage2E \
+            GSTGeometricRealizationStage2F \
+            GSTGeometricRealizationStage2G \
+            HCProof
 
-      - name: Commit green repairs
+      - name: Commit green universalization burst
         shell: bash
         run: |
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add GSTWorldCosmology.lean GSTLefschetzCrown.lean GSTGeometricRealizationStage2.lean
-          git commit -m "Repair limitless cosmology proof obligations"
+          git add \
+            GSTTransferBridgeV2.lean \
+            GSTGeometricRealizationStage2E.lean \
+            GSTGeometricRealizationStage2F.lean \
+            GSTGeometricRealizationStage2G.lean \
+            HCProof.lean
+          git commit -m "Remove finite-rank ceilings from transfer and Stage 2"
           git push origin HEAD:sol/limitless-cosmology-bursts
