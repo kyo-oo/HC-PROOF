@@ -99,18 +99,16 @@ theorem worldAct_L_pow_basis_kernel
               ⟨dt-(dt-ds), by omega⟩) : WorldCell A B) =
               (⟨Cs,hCs⟩,⟨ds,hds⟩) := by
           apply Prod.ext
-          · show (⟨Ct-(n-(dt-ds)), by omega⟩ : Fin A).val
-              = (⟨Cs,hCs⟩ : Fin A).val
+          · apply Fin.ext
+            show Ct-(n-(dt-ds)) = Cs
             have hsd : ds ≤ dt := hfuture.2
             have hss : Cs ≤ Ct := hfuture.1
             have htm : n = (Ct-Cs) + (dt-ds) := htime
-            simp only
             omega
-          · show (⟨dt-(dt-ds), by omega⟩ : Fin B).val
-              = (⟨ds,hds⟩ : Fin B).val
+          · apply Fin.ext
+            show dt-(dt-ds) = ds
             have hsd : ds ≤ dt := hfuture.2
             have htm : n = (Ct-Cs) + (dt-ds) := htime
-            simp only
             omega
         rw [hpred]
         simp [worldBasis]
@@ -153,8 +151,9 @@ theorem worldAct_L_pow_basis_kernel
           have hd := congrArg (fun x : WorldCell A B => x.2.1) heq
           simp only at hC hd
           have hmd : m ≤ dt := hpath.1
-        have hnd : n = (Ct-Cs) + (dt-ds) := htime
-        exact htime (by omega)
+          have hnm : n - m ≤ Ct := hpath.2
+          have hmn : m ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hm)
+          exact htime (by omega)
         simp [worldBasis, hpred_ne]
       · rw [dif_neg hpath]
   · rw [show dite (Cs ≤ Ct ∧ ds ≤ dt)
@@ -176,7 +175,7 @@ theorem worldAct_L_pow_basis_kernel
         by_cases hCC : Cs ≤ Ct
         · have hdout : dt < ds := hfuture hCC
           omega
-        · have hCout : Cs > Ct := hCC
+        · have hCout : Cs > Ct := by omega
           omega
       simp [worldBasis, hpred_ne]
     · rw [dif_neg hpath]
