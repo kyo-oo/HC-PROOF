@@ -52,10 +52,7 @@ def digitEmbedding (n : Nat) : CosmicCell ↪ CosmicCell where
   toFun c := (c.1, c.2 + n)
   inj' := by
     intro x y h
-    have hfst : x.1 = y.1 := by
-      exact congrArg (fun p : CosmicCell => p.1) h
-    have hsnd : x.2 + n = y.2 + n := by
-      exact congrArg (fun p : CosmicCell => p.2) h
+    injection h with hfst hsnd
     exact Prod.ext hfst (Nat.add_right_cancel hsnd)
 
 /-- The injective limitless carry translation by `n` layers. -/
@@ -63,10 +60,7 @@ def carryEmbedding (n : Nat) : CosmicCell ↪ CosmicCell where
   toFun c := (c.1 + n, c.2)
   inj' := by
     intro x y h
-    have hfst : x.1 + n = y.1 + n := by
-      exact congrArg (fun p : CosmicCell => p.1) h
-    have hsnd : x.2 = y.2 := by
-      exact congrArg (fun p : CosmicCell => p.2) h
+    injection h with hfst hsnd
     exact Prod.ext (Nat.add_right_cancel hfst) hsnd
 
 /-- Forget finite support and observe a compact algebraic field globally. -/
