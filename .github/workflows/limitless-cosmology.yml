@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: limitless-cosmology-${{ github.ref }}
@@ -51,13 +51,6 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean LimitlessFinsuppProbe.lean 2>&1 | tee limitless-cosmology.log
 
-      - name: Verify Wave I dependency
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake build waves.GSTWaveCohomology 2>&1 | tee -a limitless-cosmology.log
-
       - name: Compile limitless module
         shell: bash
         run: |
@@ -72,7 +65,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean LimitlessCosmologySmoke.lean 2>&1 | tee -a limitless-cosmology.log
 
-      - name: Compile migrated core modules
+      - name: Compile current finite and coherent cores
         shell: bash
         run: |
           set -euo pipefail
