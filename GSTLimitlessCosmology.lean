@@ -22,6 +22,8 @@ set_option maxRecDepth 1000000
 
 namespace GSTLimitlessCosmology
 
+noncomputable section
+
 open GSTWorldCosmology
 open scoped BigOperators
 
@@ -68,7 +70,7 @@ def windowRestrict (A B : Nat) (f : CosmicCoef) : WorldCoef A B :=
 
 /-- Extend a finite rectangular world into the limitless algebraic cosmos.
 Outside the selected finite chart the extension is zero. -/
-noncomputable def windowExtend (A B : Nat) (g : WorldCoef A B) : CosmicCoef :=
+def windowExtend (A B : Nat) (g : WorldCoef A B) : CosmicCoef :=
   ∑ c : WorldCell A B,
     Finsupp.single (worldCellEmbedding A B c) (g c)
 
