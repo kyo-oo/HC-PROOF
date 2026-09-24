@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main
+      - sol/limitless-cosmology-phase1
     paths:
+      - 'GSTLimitlessWorld.lean'
+      - 'GSTLimitlessWorldTest.lean'
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
       - 'GSTWorldRecoordinationGroupoid.lean'
@@ -74,6 +77,8 @@ jobs:
         run: |
           set -euo pipefail
           files=(
+            GSTLimitlessWorld.lean
+            GSTLimitlessWorldTest.lean
             GSTRadixWorldDynamics.lean
             GSTGradedWorldAlgebra.lean
             GSTWorldRecoordinationGroupoid.lean
@@ -108,6 +113,16 @@ jobs:
             GSTClayOfficialV2.lean
             GSTTransferBridgeV2.lean
           )
+          missing=0
+          for f in "${files[@]}"; do
+            if [[ ! -f "$f" ]]; then
+              echo "HC_UPGRADE_EXPECTED_FILE_MISSING=$f"
+              missing=1
+            fi
+          done
+          if [[ "$missing" -ne 0 ]]; then
+            exit 1
+          fi
           if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' "${files[@]}"; then
             echo HC_UPGRADE_FORBIDDEN_PROOF_ESCAPE=1
             exit 1
@@ -120,6 +135,8 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake build \
+            GSTLimitlessWorld \
+            GSTLimitlessWorldTest \
             GSTRadixWorldDynamics \
             GSTGradedWorldAlgebra \
             GSTWorldRecoordinationGroupoid \
@@ -137,6 +154,7 @@ jobs:
             GSTTruncatedWorldCohomologyRing \
             GSTWorldPoincareDuality \
             CardinalWorldsPrefixClassifier \
+            GSTWorldCosmology \
             GSTWorldCrownBridge \
             GSTGraphV2ScaleEquivariance \
             GSTInfiniteWorldClassification \
