@@ -76,6 +76,17 @@ noncomputable def windowExtend {carryDepth digitDepth : Nat}
     (f : WorldCoef carryDepth digitDepth) : CosmicCoef :=
   Finsupp.embDomain (windowCellEmbedding carryDepth digitDepth) (windowFinsupp f)
 
+/-- Evaluation of zero-extension at an embedded finite cell.  This explicit
+law prevents the concrete `(Nat × Nat)` coordinates of a cell from obscuring
+the exact `Finsupp.embDomain` image used by later reconstruction proofs. -/
+@[simp]
+theorem windowExtend_apply {carryDepth digitDepth : Nat}
+    (f : WorldCoef carryDepth digitDepth)
+    (c : WorldCell carryDepth digitDepth) :
+    windowExtend f (windowCellEmbedding carryDepth digitDepth c) = f c := by
+  rw [windowExtend]
+  simp [windowFinsupp]
+
 /-- Observe an unbounded compact cosmic state through the finite `A × B`
 window.  No information outside the window is asserted to vanish globally. -/
 def windowRestrict (carryDepth digitDepth : Nat) (g : CosmicCoef) :
@@ -95,7 +106,7 @@ theorem windowRestrict_windowExtend {carryDepth digitDepth : Nat}
     (f : WorldCoef carryDepth digitDepth) :
     windowRestrict carryDepth digitDepth (windowExtend f) = f := by
   funext c
-  simp [windowRestrict, windowExtend, windowFinsupp]
+  exact windowExtend_apply f c
 
 /-- Every zero-extended finite state is genuinely supported inside the window
 from which it came. -/
@@ -120,7 +131,7 @@ theorem windowExtend_windowRestrict_of_support
   classical
   by_cases hRange : x ∈ Set.range (windowCellEmbedding carryDepth digitDepth)
   · rcases hRange with ⟨c, rfl⟩
-    simp [windowExtend, windowRestrict, windowFinsupp]
+    exact windowExtend_apply (windowRestrict carryDepth digitDepth g) c
   · have hx : x ∉ g.support := by
       intro hx
       exact hRange (h hx)
