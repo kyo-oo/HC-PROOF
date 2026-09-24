@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - sol/limitless-cosmology-bursts
     paths:
       - 'GSTRadixWorldDynamics.lean'
       - 'GSTGradedWorldAlgebra.lean'
