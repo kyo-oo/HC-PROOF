@@ -313,10 +313,13 @@ noncomputable def windowSchemeInclusion {A B C D : ℕ}
 theorem windowScheme_triangle {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
     windowSchemeInclusion hA hB ≫ windowToCosmicScheme C D =
       windowToCosmicScheme A B := by
+  have hring : CommRingCat.ofHom (coordinateProjection C D) ≫
+      CommRingCat.ofHom (quotientRestriction A B hA hB) =
+      CommRingCat.ofHom (coordinateProjection A B) := by
+    ext p
+    rfl
   unfold windowSchemeInclusion windowToCosmicScheme
-  rw [← Spec.map_comp]
-  congr 1
-  ext p
-  rfl
+    windowCoordinateScheme cosmicCoordinateScheme
+  rw [← Spec.map_comp, hring]
 
 end GSTGeometricRealizationStage2C
