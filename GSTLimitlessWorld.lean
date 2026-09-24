@@ -3,11 +3,12 @@ import GSTWorldCosmology
 /-!
 # GST Limitless World — RED specification probe
 
-This file begins as the executable specification for the unbounded compact
-algebraic cosmos.  The declarations checked below intentionally do not exist
-at the RED stage.  Task 1 is green only when the exact interfaces and laws are
-implemented without weakening the existing finite `WorldCell` / `WorldCoef`
-API.
+This file is the executable specification for the unbounded compact algebraic
+cosmos.  The declarations checked below intentionally do not exist at the RED
+stage.  The imported baseline has now been compiler-repaired, so failures in
+this file must come from the missing limitless interfaces themselves.
+Task 1 is green only when the exact interfaces and laws are implemented
+without weakening the existing finite `WorldCell` / `WorldCoef` API.
 -/
 
 namespace GSTLimitlessWorld
