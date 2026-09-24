@@ -84,4 +84,6 @@ def windowExtend (A B : Nat) (g : WorldCoef A B) : CosmicCoef :=
 #check windowExtend
 #check compactToGlobal
 
+end
+
 end GSTLimitlessCosmology
