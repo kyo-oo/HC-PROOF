@@ -89,11 +89,15 @@ theorem worldAct_L_pow_paths
       ∑ m ∈ Finset.range (n+1),
         (n.choose m : ℤ) •
           digitShiftN m (carryShiftN (n-m) g) := by
-  rw [worldAct_L_pow_eq_endo]
-  rw [lefschetz_binomial]
+  rw [worldAct_L_pow_eq_endo, lefschetz_binomial,
+    LinearMap.sum_apply]
+  refine Finset.sum_congr rfl ?_
+  intro m hm
   simp only [Module.End.mul_apply, digitEndo_pow_apply,
-    carryEndo_pow_apply]
-  rfl
+    carryEndo_pow_apply, Module.End.natCast_apply]
+  funext c
+  simp only [digitShiftN, carryShiftN, Pi.smul_apply, smul_eq_mul]
+  split_ifs <;> simp
 
 /-- Pointwise form of the universal path formula. -/
 theorem worldAct_L_pow_paths_at
@@ -103,8 +107,15 @@ theorem worldAct_L_pow_paths_at
       ∑ m ∈ Finset.range (n+1),
         (n.choose m : ℤ) *
           digitShiftN m (carryShiftN (n-m) g) c := by
-  have h := congrFun (worldAct_L_pow_paths A B n g) c
-  simpa using h
+  rw [worldAct_L_pow_eq_endo, lefschetz_binomial,
+    LinearMap.sum_apply]
+  refine Finset.sum_congr rfl ?_
+  intro m hm
+  simp only [Module.End.mul_apply, digitEndo_pow_apply,
+    carryEndo_pow_apply, Module.End.natCast_apply,
+    Pi.smul_apply, smul_eq_mul]
+  simp only [digitShiftN, carryShiftN]
+  split_ifs <;> simp
 
 /-- Exact surviving-path formula at one coordinate.  A path contributes
 iff the evaluation cell has enough digit depth for its m digit steps and
@@ -139,13 +150,13 @@ theorem path_formula_zero_below_degree
     (hdeg : C+d < n) :
     worldAct A B ((L A B)^n) g (⟨C,hC⟩,⟨d,hd⟩) = 0 := by
   rw [worldAct_L_pow_coordinate_formula]
-  apply Finset.sum_eq_zero
+  refine Finset.sum_eq_zero ?_
   intro m hm
   have hnot : ¬ (m ≤ d ∧ n-m ≤ C) := by
     intro h
     rcases h with ⟨hdm,hCm⟩
     omega
-  simp [hnot]
+  rw [dif_neg hnot]
 
 /-- At the exact boundary degree C+d=n, only one path can survive, and its
 coefficient is the corresponding binomial coefficient. -/
@@ -163,9 +174,9 @@ theorem path_formula_exact_boundary
     have hnot : ¬ (m ≤ d ∧ C+d-m ≤ C) := by
       intro h
       rcases h with ⟨hmle,hcarry⟩
-      have : d ≤ m := by omega
-      exact hmd (Nat.le_antisymm this hmle)
-    simp [hnot]
+      have hdm : d ≤ m := by omega
+      exact hmd (Nat.le_antisymm hmle hdm)
+    rw [dif_neg hnot]
   · intro hnot
     have : d < C+d+1 := by omega
     exact (hnot (Finset.mem_range.mpr this)).elim
@@ -176,9 +187,11 @@ theorem hc_bottom_to_top_coefficient
     (g : WorldCoef 4 3) :
     worldAct 4 3 ((L 4 3)^5) g (⟨3,by decide⟩,⟨2,by decide⟩) =
       10 * g (⟨0,by decide⟩,⟨0,by decide⟩) := by
-  simpa using
-    (path_formula_exact_boundary
-      4 3 3 2 (by decide) (by decide) g)
+  have h := path_formula_exact_boundary
+    4 3 3 2 (by decide) (by decide) g
+  have hten : ((3+2 : ℕ).choose 2 : ℤ) = 10 := rfl
+  rw [hten] at h
+  simpa using h
 
 /-- Capstone: ring expansion, path expansion, exact coordinate formula,
 and historical 10-fold top coefficient are all one theorem family. -/

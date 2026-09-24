@@ -131,7 +131,8 @@ theorem pureCoordinates_squarePureDual
     pureCoordinates (squarePureDual f).1 =
       pureCoordinateReverse (pureCoordinates f.1) := by
   funext p
-  unfold pureCoordinates pureCoordinateReverse squarePureDual
+  show f.1 (worldDual (pureDiagonalState p))
+    = f.1 (pureDiagonalState (pureMirror p))
   rw [worldDual_pureDiagonalState]
 
 /-- The global pure-Hodge linear equivalence conjugates square-world
