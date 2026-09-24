@@ -1,0 +1,92 @@
+name: Limitless Proof Repair
+
+on:
+  push:
+    branches:
+      - sol/limitless-cosmology-bursts
+    paths:
+      - '.github/workflows/limitless-proof-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair-and-compile:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: sol/limitless-cosmology-bursts
+          fetch-depth: 1
+
+      - name: Apply exact proof repairs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_exact(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f"expected repair block not found in {path}")
+              if text.count(old) != 1:
+                  raise SystemExit(f"repair block is not unique in {path}")
+              p.write_text(text.replace(old, new))
+
+          replace_exact(
+              'GSTGeometricRealizationStage2.lean',
+              '''  rw [hb]\n  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using (R.encode alpha).sum_single\n''',
+              '''  rw [hb]\n  simp only [Finsupp.smul_single, smul_eq_mul, mul_one]\n  change (R.encode alpha).sum Finsupp.single = R.encode alpha\n  exact (R.encode alpha).sum_single\n''')
+
+          replace_exact(
+              'GSTWorldCosmology.lean',
+              '''def cosmicObservationEquiv : CompletedCosmos ≃ CosmicObservations where\n  toFun := completeObservations\n  invFun := reconstructCosmos\n  left_inv := reconstruct_complete\n  right_inv := by\n    intro X\n    have h : (completeObservations (reconstructCosmos X)).window = X.window := by\n      funext A B\n      exact observe_reconstruct X A B\n    cases X\n    cases h\n    rfl\n''',
+              '''@[ext] theorem CosmicObservations.ext {X Y : CosmicObservations}\n    (h : ∀ A B, X.window A B = Y.window A B) : X = Y := by\n  cases X with\n  | mk X hX =>\n    cases Y with\n    | mk Y hY =>\n      have hXY : X = Y := by\n        funext A B\n        exact h A B\n      subst Y\n      rfl\n\ndef cosmicObservationEquiv : CompletedCosmos ≃ CosmicObservations where\n  toFun := completeObservations\n  invFun := reconstructCosmos\n  left_inv := reconstruct_complete\n  right_inv := by\n    intro X\n    apply CosmicObservations.ext\n    intro A B\n    exact observe_reconstruct X A B\n''')
+
+          replace_exact(
+              'GSTWorldCosmology.lean',
+              '''theorem compactTranslate_completed (m n : ℕ) (f : CompactCosmos) :\n    (fun c => compactTranslate m n f c) = cosmicDigitShift n (cosmicCarryShift m f) := by\n  funext c\n  by_cases hm : m ≤ c.1\n  · by_cases hn : n ≤ c.2\n    · have he : cosmicTranslation m n (c.1-m,c.2-n)=c := by\n        apply Prod.ext <;> simp [cosmicTranslation, Nat.sub_add_cancel, hm, hn]\n      rw [← he]\n      change Finsupp.embDomain (cosmicTranslation m n) f\n        (cosmicTranslation m n (c.1-m,c.2-n)) = _\n      rw [Finsupp.embDomain_apply_self]\n      simp [cosmicDigitShift, cosmicCarryShift, cosmicTranslation]\n    · have hout : c ∉ Set.range (cosmicTranslation m n) := by\n        rintro ⟨d, hd⟩\n        have h := congrArg Prod.snd hd\n        simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h\n        omega\n      rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]\n      simp [cosmicDigitShift, hn]\n  · have hout : c ∉ Set.range (cosmicTranslation m n) := by\n      rintro ⟨d, hd⟩\n      have h := congrArg Prod.fst hd\n      simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h\n      omega\n    rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]\n    simp [cosmicDigitShift, cosmicCarryShift, hm]\n''',
+              '''theorem compactTranslate_completed (m n : ℕ) (f : CompactCosmos) :\n    (fun c => compactTranslate m n f c) = cosmicDigitShift n (cosmicCarryShift m f) := by\n  funext c\n  by_cases hr : c ∈ Set.range (cosmicTranslation m n)\n  · rcases hr with ⟨d, rfl⟩\n    rw [compactTranslate, Finsupp.embDomain_apply_self]\n    simp [cosmicDigitShift, cosmicCarryShift, cosmicTranslation]\n  · rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hr]\n    by_cases hm : m ≤ c.1\n    · by_cases hn : n ≤ c.2\n      · exfalso\n        apply hr\n        refine ⟨(c.1 - m, c.2 - n), ?_⟩\n        apply Prod.ext\n        · simp [cosmicTranslation, Nat.sub_add_cancel hm]\n        · simp [cosmicTranslation, Nat.sub_add_cancel hn]\n      · simp [cosmicDigitShift, hn]\n    · simp [cosmicDigitShift, cosmicCarryShift, hm]\n''')
+
+          replace_exact(
+              'GSTLefschetzCrown.lean',
+              '''theorem distinct_sector_support_zero\n    (j k : Nat) (hjk : j ≠ k) (g : WaveCoef)\n    (hj : sectorProj j g = g)\n    (hk : sectorProj k g = g) :\n    g = fun _ => 0 := by\n  have horth := proj_orthogonal j k g hjk\n  funext cell\n  rcases cell with ⟨C,d,hC,hd⟩\n  have hc := horth C d hC hd\n  have hjc := congrFun hj ⟨C,d,hC,hd⟩\n  have hkc := congrFun hk ⟨C,d,hC,hd⟩\n  unfold sectorProj at hc hjc hkc\n  by_cases hdj : C+d = j\n  · have hdk : C+d ≠ k := by\n      intro h\n      exact hjk (hdj.symm.trans h)\n    rw [if_pos hdj, if_neg hdk] at hjc hkc hc\n    exact hkc.symm\n  · rw [if_neg hdj] at hjc\n    exact hjc.symm\n''',
+              '''theorem distinct_sector_support_zero\n    (j k : Nat) (hjk : j ≠ k) (g : WaveCoef)\n    (hj : sectorProj j g = g)\n    (hk : sectorProj k g = g) :\n    g = fun _ => 0 := by\n  have hjs := (sectorProj_eq_self_iff j g).1 hj\n  have hks := (sectorProj_eq_self_iff k g).1 hk\n  funext cell\n  rcases cell with ⟨C,d,hC,hd⟩\n  by_cases hdj : C + d = j\n  · apply hks C d hC hd\n    intro hdk\n    exact hjk (hdj.symm.trans hdk)\n  · exact hjs C d hC hd hdj\n''')
+          PY
+
+      - name: Install Lean and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+
+      - name: Reject proof escapes in repaired modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' \
+            GSTWorldCosmology.lean GSTLefschetzCrown.lean GSTGeometricRealizationStage2.lean; then
+            exit 1
+          fi
+
+      - name: Compile repaired modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTWorldCosmology GSTLefschetzCrown GSTGeometricRealizationStage2
+
+      - name: Commit green repairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add GSTWorldCosmology.lean GSTLefschetzCrown.lean GSTGeometricRealizationStage2.lean
+          git commit -m "Repair limitless cosmology proof obligations"
+          git push origin HEAD:sol/limitless-cosmology-bursts
