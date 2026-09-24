@@ -476,7 +476,7 @@ def cosmicD0Linear : CompletedCosmos →ₗ[ℤ] (CompletedCosmos × CompletedCo
   map_add' := by
     intro f g
     apply Prod.ext <;> funext c <;>
-      simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit]
+      simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit] <;> ring
   map_smul' := by
     intro z f; apply Prod.ext <;> funext c <;>
       simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit, mul_sub]
@@ -484,8 +484,9 @@ def cosmicD0Linear : CompletedCosmos →ₗ[ℤ] (CompletedCosmos × CompletedCo
 def cosmicD1Linear : (CompletedCosmos × CompletedCosmos) →ₗ[ℤ] CompletedCosmos where
   toFun := cosmicD1
   map_add' := by
-    intro f g; funext c
-    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit]; ring
+    intro f g
+    funext c
+    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit]
   map_smul' := by
     intro z f; funext c
     simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit, mul_sub]; ring
