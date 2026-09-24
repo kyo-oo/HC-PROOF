@@ -84,8 +84,11 @@ theorem windowExtend_apply {carryDepth digitDepth : Nat}
     (f : WorldCoef carryDepth digitDepth)
     (c : WorldCell carryDepth digitDepth) :
     windowExtend f (windowCellEmbedding carryDepth digitDepth c) = f c := by
-  rw [windowExtend]
-  simp [windowFinsupp]
+  change
+    (Finsupp.embDomain (windowCellEmbedding carryDepth digitDepth) (windowFinsupp f))
+        (windowCellEmbedding carryDepth digitDepth c) = f c
+  rw [Finsupp.embDomain_apply_self]
+  exact windowFinsupp_apply f c
 
 /-- Observe an unbounded compact cosmic state through the finite `A × B`
 window.  No information outside the window is asserted to vanish globally. -/
