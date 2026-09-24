@@ -1,0 +1,71 @@
+name: Limitless Cosmology Compiler Gate
+
+on:
+  push:
+    branches:
+      - sol/limitless-cosmology
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: limitless-cosmology-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    name: Lean compile limitless cosmology
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+
+      - name: Install Lean and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+
+      - name: Reject proof escapes in limitless modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(LimitlessCosmologySmoke.lean)
+          [[ -f GSTLimitlessCosmology.lean ]] && files+=(GSTLimitlessCosmology.lean)
+          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' "${files[@]}"; then
+            echo LIMITLESS_FORBIDDEN_PROOF_ESCAPE=1
+            exit 1
+          fi
+          echo LIMITLESS_PROOF_ESCAPE_CHECK=PASS
+
+      - name: Compile limitless smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean LimitlessCosmologySmoke.lean 2>&1 | tee limitless-cosmology.log
+
+      - name: Compile migrated core modules
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if [[ -f GSTLimitlessCosmology.lean ]]; then
+            lake build GSTLimitlessCosmology GSTWorldCosmology GSTCoherentCosmology GSTInfiniteWorldClassification
+          fi
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: limitless-cosmology-diagnostics
+          path: limitless-cosmology.log
+          if-no-files-found: ignore
