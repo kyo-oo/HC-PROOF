@@ -298,4 +298,41 @@ theorem universal_address_bridge_crown :
 #print axioms worldAddress_worldBasis
 #print axioms universal_address_bridge_crown
 
+
+/-! ## Countably infinite addresses -/
+open GSTWorldCosmology
+
+/-- The cosmic address dictionary uses both unbounded coordinates. -/
+def cosmicAddressEquiv : CosmicCell ≃ ℕ where
+  toFun := fun c => Nat.pair c.1 c.2
+  invFun := Nat.unpair
+  left_inv := by intro c; exact Nat.unpair_pair c.1 c.2
+  right_inv := Nat.pair_unpair
+
+def completedAddressEquiv : CompletedCosmos ≃ₗ[ℤ] (ℕ → ℤ) where
+  toFun := fun f n => f (cosmicAddressEquiv.symm n)
+  invFun := fun a c => a (cosmicAddressEquiv c)
+  left_inv := by intro f; funext c; simp
+  right_inv := by intro a; funext n; simp
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+noncomputable def compactAddressEquiv : CompactCosmos ≃ (ℕ →₀ ℤ) :=
+  Finsupp.domCongr cosmicAddressEquiv
+
+@[simp] theorem cosmic_address_reads_window (A B : ℕ) (f : CompletedCosmos)
+    (c : WorldCell A B) :
+    completedAddressEquiv f (cosmicAddressEquiv (c.1.val, c.2.val)) =
+      observe A B f c := by simp [completedAddressEquiv, observe]
+
+/-- The historical row-major finite code is a chart coordinate; its cosmic
+address is obtained by decoding that chart first. -/
+theorem finite_address_cosmic_naturality {A B : ℕ} (f : CompletedCosmos)
+    (i : Fin (A*B)) :
+    worldAddress (outputShape A B) (observe A B f) i =
+      completedAddressEquiv f (cosmicAddressEquiv
+        (((shapeCodeEquiv (outputShape A B)).symm i).1.val,
+         ((shapeCodeEquiv (outputShape A B)).symm i).2.val)) := by
+  simp [completedAddressEquiv, worldAddress, observe]
+
 end GSTUniversalAddressBridge

@@ -352,4 +352,32 @@ theorem world_recoordination_groupoid_crown :
 #print axioms mixedRadixTranspose_is_worldRecoordinate
 #print axioms world_recoordination_groupoid_crown
 
+
+/-! ## Global chart calculus: reindexing without a finite shape ceiling -/
+open GSTWorldCosmology
+
+def cosmicRechart (e : CosmicCell ≃ CosmicCell) :
+    CompletedCosmos ≃ₗ[ℤ] CompletedCosmos where
+  toFun := fun f c => f (e.symm c)
+  invFun := fun f c => f (e c)
+  left_inv := by intro f; funext c; simp
+  right_inv := by intro f; funext c; simp
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+@[simp] theorem cosmicRechart_trans (e d : CosmicCell ≃ CosmicCell)
+    (f : CompletedCosmos) :
+    cosmicRechart d (cosmicRechart e f) = cosmicRechart (e.trans d) f := rfl
+
+/-- Any global chart change is faithfully detected by all finite windows. -/
+theorem cosmicRechart_observation_ext (e : CosmicCell ≃ CosmicCell)
+    {f g : CompletedCosmos}
+    (h : ∀ A B, observe A B (cosmicRechart e f) =
+      observe A B (cosmicRechart e g)) : f = g :=
+  (cosmicRechart e).injective (observations_separate h)
+
+/-- Finite support is transported by an actual coordinate equivalence. -/
+noncomputable def compactRechart (e : CosmicCell ≃ CosmicCell) :
+    CompactCosmos ≃ CompactCosmos := Finsupp.domCongr e
+
 end GSTWorldRecoordinationGroupoid

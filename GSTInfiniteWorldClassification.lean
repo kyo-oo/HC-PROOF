@@ -1,3 +1,4 @@
+import GSTWorldCosmology
 import Mathlib
 import GSTCoherentCosmology
 
@@ -211,5 +212,46 @@ theorem infinite_world_classification_crown :
 #print axioms towerCurrent_trace_injective
 #print axioms windowTower_eq_iff_all_observations
 #print axioms infinite_world_classification_crown
+
+
+/-! ## Topology of completed observation -/
+open GSTWorldCosmology
+
+instance (A B : ℕ) : TopologicalSpace (WorldCoef A B) :=
+  inferInstanceAs (TopologicalSpace (WorldCell A B → ℤ))
+
+theorem continuous_observe (A B : ℕ) : Continuous (observe A B) := by
+  apply continuous_pi
+  intro c
+  exact continuous_apply (c.1.val, c.2.val)
+
+/-- Continuity is detected exactly by all finite observation maps. -/
+theorem continuous_iff_all_windows {T : Type*} [TopologicalSpace T]
+    (f : T → CompletedCosmos) :
+    Continuous f ↔ ∀ A B, Continuous (fun t => observe A B (f t)) := by
+  constructor
+  · intro hf A B
+    exact (continuous_observe A B).comp hf
+  · intro h
+    apply continuous_pi
+    intro c
+    exact (continuous_apply (⟨c.1, by omega⟩, ⟨c.2, by omega⟩) :
+      Continuous (fun g : WorldCoef (c.1+1) (c.2+1) =>
+        g (⟨c.1, by omega⟩, ⟨c.2, by omega⟩))).comp (h (c.1+1) (c.2+1))
+
+instance : TopologicalSpace WindowTower :=
+  TopologicalSpace.induced innovationStream inferInstance
+
+/-- Stream classification is also a topological classification. -/
+def windowTowerHomeomorph : WindowTower ≃ₜ (ℕ → Fin 3) where
+  toEquiv := windowTowerEquivStream
+  continuous_toFun := continuous_induced_dom
+  continuous_invFun := by
+    apply continuous_induced_rng.mpr
+    have h : innovationStream ∘ streamTower = id := by
+      funext a
+      exact innovationStream_streamTower a
+    rw [h]
+    exact continuous_id
 
 end GSTInfiniteWorldClassification

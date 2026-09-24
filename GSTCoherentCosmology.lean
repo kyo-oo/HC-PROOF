@@ -1,3 +1,4 @@
+import GSTWorldCosmology
 import waves.GSTWaveCohomology
 import waves.CardinalWorldsPostulateLaw
 import GSTGraphV2Ontological
@@ -403,5 +404,69 @@ theorem tower_no_erasure (X : WindowTower) (N q : Nat) (hN : 1 ≤ N)
 #print axioms all_two_not_natural
 #print axioms tower_rectangle_gauss
 #print axioms tower_no_erasure
+
+
+/-! ## Completed spacetime cochains and their exact differential -/
+open GSTWorldCosmology
+
+def cosmicDeltaCarry (f : CompletedCosmos) : CompletedCosmos :=
+  fun c => f (c.1+1,c.2) - f c
+
+def cosmicDeltaDigit (f : CompletedCosmos) : CompletedCosmos :=
+  fun c => f (c.1,c.2+1) - f c
+
+theorem cosmic_differentials_commute (f : CompletedCosmos) :
+    cosmicDeltaCarry (cosmicDeltaDigit f) =
+      cosmicDeltaDigit (cosmicDeltaCarry f) := by
+  funext c
+  simp only [cosmicDeltaCarry, cosmicDeltaDigit]
+  ring
+
+def cosmicD0 (f : CompletedCosmos) : CompletedCosmos × CompletedCosmos :=
+  (cosmicDeltaCarry f, cosmicDeltaDigit f)
+
+def cosmicD1 (w : CompletedCosmos × CompletedCosmos) : CompletedCosmos :=
+  cosmicDeltaCarry w.2 - cosmicDeltaDigit w.1
+
+/-- No upper time or height is used in the completed cochain complex. -/
+theorem cosmicD1_D0 (f : CompletedCosmos) : cosmicD1 (cosmicD0 f) = 0 := by
+  unfold cosmicD1 cosmicD0
+  rw [cosmic_differentials_commute, sub_self]
+
+/-- A finite differential reads the next larger window, so no artificial
+boundary value is silently inserted. -/
+def windowDeltaCarry (A B : ℕ) (f : WorldCoef (A+1) (B+1)) : WorldCoef A B :=
+  fun c => f (⟨c.1.val+1, by omega⟩,⟨c.2.val, by omega⟩) -
+    f (⟨c.1.val, by omega⟩,⟨c.2.val, by omega⟩)
+
+def windowDeltaDigit (A B : ℕ) (f : WorldCoef (A+1) (B+1)) : WorldCoef A B :=
+  fun c => f (⟨c.1.val, by omega⟩,⟨c.2.val+1, by omega⟩) -
+    f (⟨c.1.val, by omega⟩,⟨c.2.val, by omega⟩)
+
+@[simp] theorem observe_deltaCarry (A B : ℕ) (f : CompletedCosmos) :
+    observe A B (cosmicDeltaCarry f) =
+      windowDeltaCarry A B (observe (A+1) (B+1) f) := rfl
+
+@[simp] theorem observe_deltaDigit (A B : ℕ) (f : CompletedCosmos) :
+    observe A B (cosmicDeltaDigit f) =
+      windowDeltaDigit A B (observe (A+1) (B+1) f) := rfl
+
+/-- The existing physical current is an actual completed spacetime field. -/
+def completedTowerCurrent (X : WindowTower) : CompletedCosmos :=
+  fun c => (towerCurrent X c.1 c.2).1
+
+def completedTowerDualCurrent (X : WindowTower) : CompletedCosmos :=
+  fun c => (towerCurrent X c.1 c.2).2
+
+theorem tower_completed_currents_faithful {X Y : WindowTower}
+    (h : completedTowerCurrent X = completedTowerCurrent Y)
+    (hdual : completedTowerDualCurrent X = completedTowerDualCurrent Y) :
+    X.level = Y.level := by
+  funext K
+  apply current_trace_reconstructs X Y K
+  intro p hp
+  apply Prod.ext
+  · exact congrFun h (0,p)
+  · exact congrFun hdual (0,p)
 
 end GSTCoherentCosmology
