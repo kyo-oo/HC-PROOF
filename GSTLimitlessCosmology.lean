@@ -52,18 +52,22 @@ def digitEmbedding (n : Nat) : CosmicCell ↪ CosmicCell where
   toFun c := (c.1, c.2 + n)
   inj' := by
     intro x y h
-    apply Prod.ext
-    · exact congrArg Prod.fst h
-    · exact Nat.add_right_cancel (congrArg Prod.snd h)
+    have hfst : x.1 = y.1 := by
+      exact congrArg (fun p : CosmicCell => p.1) h
+    have hsnd : x.2 + n = y.2 + n := by
+      exact congrArg (fun p : CosmicCell => p.2) h
+    exact Prod.ext hfst (Nat.add_right_cancel hsnd)
 
 /-- The injective limitless carry translation by `n` layers. -/
 def carryEmbedding (n : Nat) : CosmicCell ↪ CosmicCell where
   toFun c := (c.1 + n, c.2)
   inj' := by
     intro x y h
-    apply Prod.ext
-    · exact Nat.add_right_cancel (congrArg Prod.fst h)
-    · exact congrArg Prod.snd h
+    have hfst : x.1 + n = y.1 + n := by
+      exact congrArg (fun p : CosmicCell => p.1) h
+    have hsnd : x.2 = y.2 := by
+      exact congrArg (fun p : CosmicCell => p.2) h
+    exact Prod.ext (Nat.add_right_cancel hfst) hsnd
 
 /-- Forget finite support and observe a compact algebraic field globally. -/
 def compactToGlobal (f : CosmicCoef) : GlobalCoef :=
@@ -105,14 +109,16 @@ arbitrary depth. There is no global digit wall. -/
 @[simp] theorem digitShift_single (n : Nat) (c : CosmicCell) (z : ℤ) :
     digitShift n (Finsupp.single c z) =
       Finsupp.single (c.1, c.2 + n) z := by
-  simp [digitShift, digitEmbedding]
+  rw [digitShift, Finsupp.embDomain_single]
+  rfl
 
 /-- A basis state translated along the carry axis remains a basis state at
 arbitrary depth. There is no global carry wall. -/
 @[simp] theorem carryShift_single (n : Nat) (c : CosmicCell) (z : ℤ) :
     carryShift n (Finsupp.single c z) =
       Finsupp.single (c.1 + n, c.2) z := by
-  simp [carryShift, carryEmbedding]
+  rw [carryShift, Finsupp.embDomain_single]
+  rfl
 
 /-- Extending a finite world into the limitless cosmos and observing the same
 window recovers the finite world exactly. This holds uniformly, including
