@@ -180,12 +180,12 @@ noncomputable def worldOperatorHom :
 @[simp]
 theorem worldOperatorHom_H :
     worldOperatorHom A B (H A B) = hOp A B := by
-  simp [worldOperatorHom, H, evalWorldPoly]
+  simp [worldOperatorHom, H]
 
 @[simp]
 theorem worldOperatorHom_V :
     worldOperatorHom A B (V A B) = vOp A B := by
-  simp [worldOperatorHom, V, evalWorldPoly]
+  simp [worldOperatorHom, V]
 
 /-! ## 3. The quotient ring acts on the world coefficient lattice -/
 

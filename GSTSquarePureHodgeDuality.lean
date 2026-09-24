@@ -75,10 +75,10 @@ def squarePureDual
       complementFin x.1 = complementFin x.2 := by
     apply Fin.ext
     exact hdual
-  have hxfin : x.1 = x.2 := by
-    have hinv := congrArg complementFin hfin
-    rw [complementFin_involutive x.1, complementFin_involutive x.2] at hinv
-    exact hinv
+  have hxfin : x.1 = x.2 :=
+    (complementFin_involutive x.1).symm.trans
+      ((congrArg complementFin hfin).trans
+        (complementFin_involutive x.2))
   exact congrArg Fin.val hxfin
 
 @[simp]
