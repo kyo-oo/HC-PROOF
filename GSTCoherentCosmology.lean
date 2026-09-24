@@ -474,8 +474,9 @@ theorem tower_completed_currents_faithful {X Y : WindowTower}
 def cosmicD0Linear : CompletedCosmos →ₗ[ℤ] (CompletedCosmos × CompletedCosmos) where
   toFun := cosmicD0
   map_add' := by
-    intro f g; apply Prod.ext <;> funext c <;>
-      simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit] <;> ring
+    intro f g
+    apply Prod.ext <;> funext c <;>
+      simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit]
   map_smul' := by
     intro z f; apply Prod.ext <;> funext c <;>
       simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit, mul_sub]
@@ -494,37 +495,80 @@ def cosmicCoboundary : CompletedCosmos →ₗ[ℤ] LinearMap.ker cosmicD1Linear 
 
 abbrev CosmicH1 := (LinearMap.ker cosmicD1Linear) ⧸ LinearMap.range cosmicCoboundary
 
+theorem windowDeltaCarry_add_exact (A B : ℕ)
+    (f g : WorldCoef (A+1) (B+1)) :
+    windowDeltaCarry A B (f + g) =
+      windowDeltaCarry A B f + windowDeltaCarry A B g := by
+  funext c
+  change (f _ + g _) - (f _ + g _) = (f _ - f _) + (g _ - g _)
+  ring
+
+theorem windowDeltaDigit_add_exact (A B : ℕ)
+    (f g : WorldCoef (A+1) (B+1)) :
+    windowDeltaDigit A B (f + g) =
+      windowDeltaDigit A B f + windowDeltaDigit A B g := by
+  funext c
+  change (f _ + g _) - (f _ + g _) = (f _ - f _) + (g _ - g _)
+  ring
+
+theorem windowDeltaCarry_smul_exact (A B : ℕ) (z : ℤ)
+    (f : WorldCoef (A+1) (B+1)) :
+    windowDeltaCarry A B (z • f) = z • windowDeltaCarry A B f := by
+  funext c
+  change z * f _ - z * f _ = z * (f _ - f _)
+  ring
+
+theorem windowDeltaDigit_smul_exact (A B : ℕ) (z : ℤ)
+    (f : WorldCoef (A+1) (B+1)) :
+    windowDeltaDigit A B (z • f) = z • windowDeltaDigit A B f := by
+  funext c
+  change z * f _ - z * f _ = z * (f _ - f _)
+  ring
+
+theorem window_differentials_commute_exact (A B : ℕ)
+    (f : WorldCoef (A+2) (B+2)) :
+    windowDeltaCarry A B (windowDeltaDigit (A+1) (B+1) f) =
+      windowDeltaDigit A B (windowDeltaCarry (A+1) (B+1) f) := by
+  funext c
+  change (f _ - f _) - (f _ - f _) = (f _ - f _) - (f _ - f _)
+  ring
+
 def windowD0 (A B : ℕ) : WorldCoef (A+2) (B+2) →ₗ[ℤ]
     (WorldCoef (A+1) (B+1) × WorldCoef (A+1) (B+1)) where
   toFun := fun f => (windowDeltaCarry (A+1) (B+1) f, windowDeltaDigit (A+1) (B+1) f)
   map_add' := by
     intro f g
-    apply Prod.ext <;> funext c <;>
-      simp [windowDeltaCarry, windowDeltaDigit, Pi.add_apply] <;> ring
+    apply Prod.ext
+    · exact windowDeltaCarry_add_exact (A+1) (B+1) f g
+    · exact windowDeltaDigit_add_exact (A+1) (B+1) f g
   map_smul' := by
     intro z f
-    apply Prod.ext <;> funext c <;>
-      simp [windowDeltaCarry, windowDeltaDigit, Pi.smul_apply, smul_eq_mul, mul_sub]
+    apply Prod.ext
+    · exact windowDeltaCarry_smul_exact (A+1) (B+1) z f
+    · exact windowDeltaDigit_smul_exact (A+1) (B+1) z f
 
 def windowD1 (A B : ℕ) :
     (WorldCoef (A+1) (B+1) × WorldCoef (A+1) (B+1)) →ₗ[ℤ] WorldCoef A B where
   toFun := fun w => windowDeltaCarry A B w.2 - windowDeltaDigit A B w.1
   map_add' := by
     intro f g
-    funext c
-    simp [windowDeltaCarry, windowDeltaDigit, Pi.add_apply]
-    ring
+    change windowDeltaCarry A B (f.2 + g.2) - windowDeltaDigit A B (f.1 + g.1) =
+      (windowDeltaCarry A B f.2 - windowDeltaDigit A B f.1) +
+        (windowDeltaCarry A B g.2 - windowDeltaDigit A B g.1)
+    rw [windowDeltaCarry_add_exact, windowDeltaDigit_add_exact]
+    abel
   map_smul' := by
     intro z f
-    funext c
-    simp [windowDeltaCarry, windowDeltaDigit, Pi.smul_apply, smul_eq_mul, mul_sub]
-    ring
+    change windowDeltaCarry A B (z • f.2) - windowDeltaDigit A B (z • f.1) =
+      z • (windowDeltaCarry A B f.2 - windowDeltaDigit A B f.1)
+    rw [windowDeltaCarry_smul_exact, windowDeltaDigit_smul_exact]
+    exact (smul_sub z _ _).symm
 
 theorem windowD1_D0 (A B : ℕ) (f : WorldCoef (A+2) (B+2)) :
     windowD1 A B (windowD0 A B f)=0 := by
-  funext c
-  simp only [windowD1, windowD0, windowDeltaCarry, windowDeltaDigit]
-  ring
+  change windowDeltaCarry A B (windowDeltaDigit (A+1) (B+1) f) -
+    windowDeltaDigit A B (windowDeltaCarry (A+1) (B+1) f) = 0
+  rw [window_differentials_commute_exact, sub_self]
 
 def windowCoboundary (A B : ℕ) :
     WorldCoef (A+2) (B+2) →ₗ[ℤ] LinearMap.ker (windowD1 A B) :=

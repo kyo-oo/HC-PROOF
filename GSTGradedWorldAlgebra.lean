@@ -276,22 +276,25 @@ def cosmicSector (k : ℕ) (f : CompletedCosmos) : CompletedCosmos :=
 theorem cosmicSector_idempotent (k : ℕ) (f : CompletedCosmos) :
     cosmicSector k (cosmicSector k f) = cosmicSector k f := by
   funext c
-  simp only [cosmicSector]
+  change (if cosmicDegree c = k then
+      (if cosmicDegree c = k then f c else 0) else 0) =
+    (if cosmicDegree c = k then f c else 0)
   by_cases hk : cosmicDegree c = k
-  · rw [if_pos hk, if_pos hk]
-  · rw [if_neg hk]
+  · simp only [if_pos hk]
+  · simp only [if_neg hk]
 
 theorem cosmicSector_orthogonal (k j : ℕ) (h : k ≠ j) (f : CompletedCosmos) :
     cosmicSector k (cosmicSector j f) = 0 := by
   funext c
-  simp only [cosmicSector]
+  change (if cosmicDegree c = k then
+      (if cosmicDegree c = j then f c else 0) else 0) = 0
   by_cases hk : cosmicDegree c = k
   · have hj : cosmicDegree c ≠ j := by
       intro hcj
       apply h
       exact hk.symm.trans hcj
-    rw [if_pos hk, if_neg hj]
-  · rw [if_neg hk]
+    simp only [if_pos hk, if_neg hj]
+  · simp only [if_neg hk]
 
 theorem cosmic_digit_grading (n k : ℕ) (f : CompletedCosmos) :
     cosmicDigitShift n (cosmicSector k f) =
