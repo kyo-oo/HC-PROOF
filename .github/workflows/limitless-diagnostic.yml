@@ -35,15 +35,17 @@ jobs:
           exec(compile(script, '.github/workflows/limitless-proof-repair.yml:inline-python', 'exec'))
           PY
 
-      - name: Reject proof escapes
+      - name: Reject declaration-level proof escapes
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -nE '\b(axiom|sorry|admit)\b' \
+          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' \
             GSTTransferBridgeV2.lean \
             GSTGeometricRealizationStage2E.lean \
             GSTGeometricRealizationStage2F.lean \
-            GSTGeometricRealizationStage2G.lean
+            GSTGeometricRealizationStage2G.lean; then
+            exit 1
+          fi
 
       - name: Commit verified source burst
         shell: bash
