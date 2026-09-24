@@ -182,6 +182,26 @@ unbounded diagonal code attached to p. -/
 def isCompactClHodge (p : Nat) (φ : CompactClRing) : Prop :=
   ∀ i : Nat, i ≠ compactClCode p → φ i = 0
 
+/-- The compact transfer code is literally the universal address of the
+weight-p cosmic diagonal cell.  There is no parallel address convention. -/
+theorem compactClCode_eq_cosmicAddress (p : Nat) :
+    compactClCode p =
+      GSTUniversalAddressBridge.cosmicAddressEquiv (p, p) := by
+  rfl
+
+/-- The limitless transfer generator is exactly the universal-address image
+of the genuine compact cosmic diagonal class.  Thus the transfer layer and
+the dimension-free Hodge cosmology use one and the same unbounded object. -/
+theorem compactClMono_eq_cosmicDiagonalAddress (p : Nat) :
+    compactClMono p =
+      GSTUniversalAddressBridge.compactAddressEquiv
+        (GSTDimensionFreeHodgeDiagonal.cosmicDiagonalClass p) := by
+  ext i
+  simp [compactClMono, compactClCode,
+    GSTUniversalAddressBridge.compactAddressEquiv,
+    GSTUniversalAddressBridge.cosmicAddressEquiv,
+    GSTDimensionFreeHodgeDiagonal.cosmicDiagonalClass]
+
 /-- Every natural weight has a nonzero compact-address Hodge generator. -/
 theorem compactClMono_isHodge (p : Nat) :
     isCompactClHodge p (compactClMono p) := by
@@ -237,6 +257,19 @@ theorem transfer_v2_limitless_crown :
     compactClHodge_rank_one,
     compactClHodge_coefficient_exact⟩
 
+/-- Cosmic integration crown: every limitless transfer generator is the
+universal address of the corresponding cosmic Hodge generator. -/
+theorem transfer_v2_cosmic_integration_crown :
+    ∀ p : Nat,
+      compactClCode p =
+        GSTUniversalAddressBridge.cosmicAddressEquiv (p, p)
+      ∧ compactClMono p =
+        GSTUniversalAddressBridge.compactAddressEquiv
+          (GSTDimensionFreeHodgeDiagonal.cosmicDiagonalClass p) := by
+  intro p
+  exact ⟨compactClCode_eq_cosmicAddress p,
+    compactClMono_eq_cosmicDiagonalAddress p⟩
+
 #check addr_zero
 #check clMono_zero_of_twelve_le
 #check clHodge_zero_of_three_le
@@ -247,11 +280,17 @@ theorem transfer_v2_limitless_crown :
 #check transferred_zero_sector
 #check addr_mixed_cup_iterate
 #check transfer_v2_crown
+#check compactClCode_eq_cosmicAddress
+#check compactClMono_eq_cosmicDiagonalAddress
+#check transfer_v2_limitless_crown
+#check transfer_v2_cosmic_integration_crown
 
 #print axioms transfer_hodge_iff_all_weights
 #print axioms transferred_hodge_all_weights
 #print axioms transferred_coefficient_exact
 #print axioms transferred_coefficient_unique
 #print axioms transfer_v2_crown
+#print axioms compactClMono_eq_cosmicDiagonalAddress
+#print axioms transfer_v2_cosmic_integration_crown
 
 end GSTTransferBridgeV2
