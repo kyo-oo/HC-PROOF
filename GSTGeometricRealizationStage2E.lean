@@ -216,6 +216,70 @@ theorem classical_hodge_of_stage2e_obligation
   exact classical_hodge_of_stage2e_family
     V H N (fun p => (hN p).some)
 
+/-! ## Rank-free compact Stage-2E route
+
+The finite-rank certificate remains available for compatibility.  This
+route instead uses `CompactHodgeRealization ℕ`: each encoded class is
+finitely supported, but there is no globally fixed address dimension `N`.
+The basis-cycle data remains an explicit geometric obligation.
+-/
+
+structure Stage2ECompactRealization
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    (p : Nat) where
+  realization :
+    CompactHodgeRealization ℕ (H.cohomology p) (codimensionCycles V.X p)
+  hodge_iff :
+    ∀ alpha : H.cohomology p,
+      realization.isHodge alpha ↔ alpha ∈ H.hodgePP p
+  cycleClass_eq :
+    realization.cycleClass = H.cycleClass p
+
+/-- A rank-free compact realization produces an actual codimension-p cycle
+for every intended classical Hodge class. -/
+theorem hodge_class_has_classical_cycle_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    {p : Nat}
+    (R : Stage2ECompactRealization V H p)
+    (alpha : H.cohomology p)
+    (halpha : alpha ∈ H.hodgePP p) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  have hr : R.realization.isHodge alpha :=
+    (R.hodge_iff alpha).2 halpha
+  obtain ⟨Z, hZ⟩ :=
+    compact_realization_surjectivity R.realization alpha hr
+  refine ⟨Z, ?_⟩
+  rw [← R.cycleClass_eq]
+  exact hZ
+
+/-- **RANK-FREE STAGE-2E LANDING.**  No address-rank function occurs. -/
+theorem classical_hodge_of_stage2e_compact_family
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    (R : ∀ p : Nat, Stage2ECompactRealization V H p) :
+    ClassicalHodgeStatement V H := by
+  intro p alpha halpha
+  exact hodge_class_has_classical_cycle_compact
+    V H (R p) alpha halpha
+
+/-- Exact remaining compact geometric obligation.  It is rank-free but does
+not assume the Hodge conclusion or cycle-class surjectivity. -/
+def Stage2ECompactRealizationObligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V) : Prop :=
+  ∀ p : Nat, Nonempty (Stage2ECompactRealization V H p)
+
+theorem classical_hodge_of_stage2e_compact_obligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : ClassicalHodgeData V)
+    (hR : Stage2ECompactRealizationObligation V H) :
+    ClassicalHodgeStatement V H := by
+  exact classical_hodge_of_stage2e_compact_family
+    V H (fun p => (hR p).some)
+
 #check RationalVectorSpace
 #check ClassicalHodgeData
 #check ClassicalHodgeStatement

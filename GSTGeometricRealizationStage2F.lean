@@ -255,6 +255,58 @@ theorem betti_hodge_of_stage2f_obligation
   exact betti_hodge_of_stage2f_family
     V H N (fun p => (hN p).some)
 
+/-! ## Rank-free compact Stage-2F route -/
+
+abbrev Stage2FCompactRealization
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    (p : Nat) :=
+  Stage2ECompactRealization V H.toClassicalHodgeData p
+
+/-- Native Betti cohomology now inherits the same countable finite-support
+realization route, with no global coordinate rank. -/
+theorem hodge_class_has_betti_cycle_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    {p : Nat}
+    (R : Stage2FCompactRealization V H p)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ H.hodgePP p) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  exact hodge_class_has_classical_cycle_compact
+    V H.toClassicalHodgeData R alpha halpha
+
+/-- **RANK-FREE STAGE-2F BETTI LANDING.** -/
+theorem betti_hodge_of_stage2f_compact_family
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    (R : ∀ p : Nat, Stage2FCompactRealization V H p) :
+    BettiHodgeStatement V H := by
+  intro p alpha halpha
+  exact hodge_class_has_betti_cycle_compact
+    V H (R p) alpha halpha
+
+def Stage2FCompactRealizationObligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V) : Prop :=
+  ∀ p : Nat, Nonempty (Stage2FCompactRealization V H p)
+
+theorem stage2F_compact_obligation_iff_stage2E_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V) :
+    Stage2FCompactRealizationObligation V H ↔
+      Stage2ECompactRealizationObligation V H.toClassicalHodgeData :=
+  Iff.rfl
+
+theorem betti_hodge_of_stage2f_compact_obligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : BettiHodgeData V)
+    (hR : Stage2FCompactRealizationObligation V H) :
+    BettiHodgeStatement V H := by
+  exact betti_hodge_of_stage2f_compact_family
+    V H (fun p => (hR p).some)
+
 #check ComplexPoint
 #check AnalytificationData
 #check rationalCoefficient

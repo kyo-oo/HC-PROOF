@@ -269,6 +269,7 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTHodgeAssaultV2.hodge_v2_crown
 #check GSTClayOfficialV2.rational_v2_crown
 #check GSTTransferBridgeV2.transfer_v2_crown
+#check GSTTransferBridgeV2.transfer_v2_limitless_crown
 
 
 /-! ## Stage 2 geometric realization criterion -/
@@ -330,6 +331,9 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2E.classical_hodge_of_stage2e_family
 #check GSTGeometricRealizationStage2E.UniversalClassicalHodgeStatement
 #check GSTGeometricRealizationStage2E.Stage2ERealizationObligation
+#check GSTGeometricRealizationStage2E.Stage2ECompactRealization
+#check GSTGeometricRealizationStage2E.classical_hodge_of_stage2e_compact_family
+#check GSTGeometricRealizationStage2E.Stage2ECompactRealizationObligation
 
 
 /-! ## Stage 2F — native analytification / rational Betti front -/
@@ -342,6 +346,9 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2F.hodge_class_has_betti_cycle
 #check GSTGeometricRealizationStage2F.betti_hodge_of_stage2f_family
 #check GSTGeometricRealizationStage2F.Stage2FRealizationObligation
+#check GSTGeometricRealizationStage2F.Stage2FCompactRealization
+#check GSTGeometricRealizationStage2F.betti_hodge_of_stage2f_compact_family
+#check GSTGeometricRealizationStage2F.Stage2FCompactRealizationObligation
 
 
 /-! ## Stage 2G — derived Hodge bigrading front -/
@@ -354,6 +361,9 @@ All declarations below are root-level (the modules carry no namespaces).
 #check GSTGeometricRealizationStage2G.BigradedBettiHodgeStatement
 #check GSTGeometricRealizationStage2G.hodge_class_has_bigraded_cycle
 #check GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_family
+#check GSTGeometricRealizationStage2G.Stage2GCompactRealization
+#check GSTGeometricRealizationStage2G.bigraded_betti_hodge_of_stage2g_compact_family
+#check GSTGeometricRealizationStage2G.Stage2GCompactRealizationObligation
 
 
 /-! ## GST mixed-radix world upgrade -/

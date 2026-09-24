@@ -325,6 +325,74 @@ theorem bigraded_betti_hodge_of_stage2g_obligation
   exact bigraded_betti_hodge_of_stage2g_family
     V H N (fun p => (hN p).some)
 
+/-! ## Rank-free compact Stage-2G route -/
+
+abbrev Stage2GCompactRealization
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) :=
+  Stage2FCompactRealization V H.toBettiHodgeData p
+
+/-- Every derived rational (p,p)-class obtains a codimension-p cycle from
+the compact countable realization, with no finite-rank parameter. -/
+theorem hodge_class_has_bigraded_cycle_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    {p : Nat}
+    (R : Stage2GCompactRealization V H p)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha :
+      complexificationMapQ
+          (RationalSingularCohomology H.analytification (2 * p)) alpha
+        ∈ (H.hodgeBigrading p).ppComponent) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  apply hodge_class_has_betti_cycle_compact
+    V H.toBettiHodgeData R alpha
+  exact (mem_rationalHodgeSubspace_iff
+    (H.hodgeBigrading p) alpha).2 halpha
+
+/-- **RANK-FREE STAGE-2G LANDING.**  The strongest reduction no longer
+contains `N : Nat → Nat`; only the explicit compact geometric realization
+family remains. -/
+theorem bigraded_betti_hodge_of_stage2g_compact_family
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (R : ∀ p : Nat, Stage2GCompactRealization V H p) :
+    BigradedBettiHodgeStatement V H := by
+  intro p alpha halpha
+  exact hodge_class_has_betti_cycle_compact
+    V H.toBettiHodgeData (R p) alpha halpha
+
+def Stage2GCompactRealizationObligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) : Prop :=
+  ∀ p : Nat, Nonempty (Stage2GCompactRealization V H p)
+
+theorem stage2G_compact_obligation_iff_stage2F_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    Stage2GCompactRealizationObligation V H ↔
+      Stage2FCompactRealizationObligation V H.toBettiHodgeData :=
+  Iff.rfl
+
+theorem stage2G_compact_obligation_iff_stage2E_compact
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    Stage2GCompactRealizationObligation V H ↔
+      Stage2ECompactRealizationObligation
+        V H.toBettiHodgeData.toClassicalHodgeData := by
+  exact (stage2G_compact_obligation_iff_stage2F_compact V H).trans
+    (stage2F_compact_obligation_iff_stage2E_compact V H.toBettiHodgeData)
+
+theorem bigraded_betti_hodge_of_stage2g_compact_obligation
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (hR : Stage2GCompactRealizationObligation V H) :
+    BigradedBettiHodgeStatement V H := by
+  exact bigraded_betti_hodge_of_stage2g_compact_family
+    V H (fun p => (hR p).some)
+
 #check Complexification
 #check complexificationMapQ
 #check complexificationMapQ_apply

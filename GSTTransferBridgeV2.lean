@@ -2,6 +2,8 @@ import Mathlib
 import GSTTransferBridge
 import GSTHodgeAssaultV2
 import GSTClayOfficialV2
+import GSTUniversalAddressBridge
+import GSTDimensionFreeHodgeDiagonal
 
 /-!
 # TRANSFER BRIDGE V2 — ALL-WEIGHT EXACT ADDRESS CLASSIFICATION
@@ -160,6 +162,80 @@ theorem transfer_v2_crown :
   exact ⟨transfer_hodge_iff_all_weights,
     transferred_hodge_all_weights,
     transferred_coefficient_exact⟩
+
+/-! ## Limitless compact address classification
+
+The historical `Fin 12` address ring remains an exact finite chart.  The
+stronger carrier below is countable and finitely supported, so no global
+address rank or terminal Hodge weight is built into the transfer layer.
+-/
+
+abbrev CompactClRing : Type := ℕ →₀ ℤ
+
+def compactClCode (p : Nat) : Nat := Nat.pair p p
+
+def compactClMono (p : Nat) : CompactClRing :=
+  Finsupp.single (compactClCode p) 1
+
+/-- Weight-p compact address classes are supported only at the unique
+unbounded diagonal code attached to p. -/
+def isCompactClHodge (p : Nat) (φ : CompactClRing) : Prop :=
+  ∀ i : Nat, i ≠ compactClCode p → φ i = 0
+
+/-- Every natural weight has a nonzero compact-address Hodge generator. -/
+theorem compactClMono_isHodge (p : Nat) :
+    isCompactClHodge p (compactClMono p) := by
+  intro i hi
+  simp [compactClMono, hi]
+
+/-- **RANK-FREE COMPACT ADDRESS CLASSIFICATION.**  At every natural weight,
+the compact Hodge sector is rank one, with no `Fin 12` or `p < 3` ceiling. -/
+theorem compactClHodge_rank_one (p : Nat) (φ : CompactClRing) :
+    isCompactClHodge p φ ↔
+      ∃! z : ℤ, φ = z • compactClMono p := by
+  constructor
+  · intro hφ
+    refine ⟨φ (compactClCode p), ?_, ?_⟩
+    · ext i
+      by_cases hi : i = compactClCode p
+      · subst i
+        simp [compactClMono]
+      · simp [compactClMono, hi, hφ i hi]
+    · intro z hz
+      have hread := congrArg
+        (fun ψ : CompactClRing => ψ (compactClCode p)) hz
+      simpa [compactClMono] using hread.symm
+  · rintro ⟨z, hz, _⟩
+    intro i hi
+    rw [hz]
+    simp [compactClMono, hi]
+
+/-- The unique scalar is read directly at the unbounded diagonal code. -/
+theorem compactClHodge_coefficient_exact
+    (p : Nat) (φ : CompactClRing)
+    (hφ : isCompactClHodge p φ) :
+    φ = (φ (compactClCode p)) • compactClMono p := by
+  rcases (compactClHodge_rank_one p φ).1 hφ with ⟨z, hz, _⟩
+  have hread := congrArg
+    (fun ψ : CompactClRing => ψ (compactClCode p)) hz
+  have hzread : z = φ (compactClCode p) := by
+    simpa [compactClMono] using hread.symm
+  simpa [hzread] using hz
+
+/-- Limitless transfer crown: the finite twelve-coordinate theorem survives
+as a specialization, while the strongest address classification is now
+countable, finitely supported, and valid at every natural weight. -/
+theorem transfer_v2_limitless_crown :
+    (∀ p : Nat, isCompactClHodge p (compactClMono p))
+    ∧ (∀ p : Nat, ∀ φ : CompactClRing,
+      isCompactClHodge p φ ↔
+        ∃! z : ℤ, φ = z • compactClMono p)
+    ∧ (∀ p : Nat, ∀ φ : CompactClRing,
+      isCompactClHodge p φ →
+        φ = (φ (compactClCode p)) • compactClMono p) := by
+  exact ⟨compactClMono_isHodge,
+    compactClHodge_rank_one,
+    compactClHodge_coefficient_exact⟩
 
 #check addr_zero
 #check clMono_zero_of_twelve_le
