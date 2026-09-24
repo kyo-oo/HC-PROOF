@@ -77,6 +77,7 @@ theorem worldAct_L_pow_basis_kernel
   rcases s with ⟨⟨Cs,hCs⟩,⟨ds,hds⟩⟩
   rcases t with ⟨⟨Ct,hCt⟩,⟨dt,hdt⟩⟩
   unfold worldForward worldCausalDistance carryDistance digitDistance
+  dsimp only
   rw [worldAct_L_pow_coordinate_formula]
   by_cases hfuture : Cs ≤ Ct ∧ ds ≤ dt
   · rw [dif_pos hfuture]
@@ -297,16 +298,22 @@ theorem cosmicLefschetz_kernel (n : ℕ) (s t : CosmicCell) :
     simp [observe, cosmicBasis, worldBasis, sf, Prod.ext_iff, Fin.ext_iff]
   have ho := congrFun (worldAct_is_cosmic_observation A B n (cosmicBasis s)) tf
   rw [hb, worldAct_L_pow_basis_kernel] at ho
-  have hdite : (if hfuture : worldForward sf tf then
-      if htime : n = worldCausalDistance sf tf then
-        (n.choose (digitDistance sf tf) : ℤ) else 0 else 0) =
-      (if worldForward sf tf then
-        if n = worldCausalDistance sf tf then
-          (n.choose (digitDistance sf tf) : ℤ) else 0 else 0) := by
-    by_cases h : worldForward sf tf <;> simp [h]
-  rw [hdite] at ho
-  simpa [observe, worldForward, worldCausalDistance, carryDistance, digitDistance, sf, tf]
-    using ho.symm
+  by_cases hcond : worldForward sf tf
+  · rw [dif_pos hcond] at ho
+    rw [if_pos hcond]
+    by_cases htime : n = worldCausalDistance sf tf
+    · rw [dif_pos htime] at ho
+      rw [if_pos htime]
+      simpa [observe, worldForward, worldCausalDistance, carryDistance,
+        digitDistance, sf, tf] using ho.symm
+    · rw [dif_neg htime] at ho
+      rw [if_neg htime]
+      simpa [observe, worldForward, worldCausalDistance, carryDistance,
+        digitDistance, sf, tf] using ho.symm
+  · rw [dif_neg hcond] at ho
+    rw [if_neg hcond]
+    simpa [observe, worldForward, worldCausalDistance, carryDistance,
+      digitDistance, sf, tf] using ho.symm
 
 /-- A unit source propagates at every natural time: there is no global ceiling. -/
 theorem cosmicLefschetz_never_extinguishes (n : ℕ) :
