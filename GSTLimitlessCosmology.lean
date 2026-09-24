@@ -69,10 +69,11 @@ def windowRestrict (A B : Nat) (f : CosmicCoef) : WorldCoef A B :=
   fun c => f (worldCellEmbedding A B c)
 
 /-- Extend a finite rectangular world into the limitless algebraic cosmos.
-Outside the selected finite chart the extension is zero. -/
+The finite function is first viewed as a finitely supported function on its
+finite domain, then transported along the injective chart embedding. -/
 def windowExtend (A B : Nat) (g : WorldCoef A B) : CosmicCoef :=
-  ∑ c : WorldCell A B,
-    Finsupp.single (worldCellEmbedding A B c) (g c)
+  Finsupp.embDomain (worldCellEmbedding A B)
+    (Finsupp.equivFunOnFinite.symm g)
 
 /-- Compact algebraic data embeds faithfully in the unrestricted observational
 cosmos.  Completion adds observations; it does not identify compact states. -/
@@ -101,22 +102,7 @@ empty rectangular worlds. -/
 theorem windowRestrict_windowExtend (A B : Nat) (g : WorldCoef A B) :
     windowRestrict A B (windowExtend A B g) = g := by
   funext c
-  classical
-  change
-    (∑ c' : WorldCell A B,
-      Finsupp.single (worldCellEmbedding A B c') (g c'))
-        (worldCellEmbedding A B c) = g c
-  rw [Finset.sum_apply]
-  apply Finset.sum_eq_single c
-  · intro c' _ hc'
-    simp only [Finsupp.single_apply]
-    rw [if_neg]
-    intro hEq
-    apply hc'
-    exact (worldCellEmbedding A B).injective hEq
-  · intro hc
-    exact False.elim (hc (Finset.mem_univ c))
-  · simp
+  simp [windowRestrict, windowExtend]
 
 #check CosmicCell
 #check CosmicCoef
