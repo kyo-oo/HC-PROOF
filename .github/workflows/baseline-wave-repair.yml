@@ -48,7 +48,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean waves/GSTWaveCohomology.lean
+          lake build waves.GSTWaveCohomology
           if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' waves/GSTWaveCohomology.lean; then
             exit 1
           fi
