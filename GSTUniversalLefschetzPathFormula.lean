@@ -110,10 +110,18 @@ theorem worldAct_L_pow_paths_at
         (n.choose m : ℤ) *
           digitShiftN m (carryShiftN (n-m) g) c := by
   have h := congrFun (worldAct_L_pow_paths A B n g) c
-  rw [Finset.sum_apply'] at h
-  refine Eq.trans h (Finset.sum_congr rfl ?_)
-  intro m hm
-  rfl
+  have hsum : (∑ m ∈ Finset.range (n+1),
+      (n.choose m : ℤ) • digitShiftN m (carryShiftN (n-m) g)) c
+      = ∑ m ∈ Finset.range (n+1),
+        ((n.choose m : ℤ) •
+          digitShiftN m (carryShiftN (n-m) g)) c :=
+    Finset.sum_apply'
+      (s := Finset.range (n+1))
+      (f := fun m => (n.choose m : ℤ) •
+        digitShiftN m (carryShiftN (n-m) g))
+      (i := c)
+  rw [h, hsum]
+  exact Finset.sum_congr rfl fun m hm => rfl
 
 /-- Exact surviving-path formula at one coordinate.  A path contributes
 iff the evaluation cell has enough digit depth for its m digit steps and
