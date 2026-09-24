@@ -37,30 +37,33 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          files=(LimitlessCosmologySmoke.lean)
-          [[ -f GSTLimitlessCosmology.lean ]] && files+=(GSTLimitlessCosmology.lean)
+          files=(LimitlessCosmologySmoke.lean GSTLimitlessCosmology.lean)
           if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' "${files[@]}"; then
             echo LIMITLESS_FORBIDDEN_PROOF_ESCAPE=1
             exit 1
           fi
           echo LIMITLESS_PROOF_ESCAPE_CHECK=PASS
 
+      - name: Compile limitless module
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTLimitlessCosmology 2>&1 | tee limitless-cosmology.log
+
       - name: Compile limitless smoke
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean LimitlessCosmologySmoke.lean 2>&1 | tee limitless-cosmology.log
+          lake env lean LimitlessCosmologySmoke.lean 2>&1 | tee -a limitless-cosmology.log
 
       - name: Compile migrated core modules
-        if: success()
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if [[ -f GSTLimitlessCosmology.lean ]]; then
-            lake build GSTLimitlessCosmology GSTWorldCosmology GSTCoherentCosmology GSTInfiniteWorldClassification
-          fi
+          lake build GSTWorldCosmology GSTCoherentCosmology GSTInfiniteWorldClassification 2>&1 | tee -a limitless-cosmology.log
 
       - name: Upload diagnostics
         if: always()
