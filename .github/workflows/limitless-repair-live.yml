@@ -37,9 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTGradedWorldAlgebra.lean
-          lake env lean GSTGraphV2CanonicalPhaseSteering.lean
-          lake env lean GSTCoherentCosmology.lean
+          lake build GSTGradedWorldAlgebra GSTGraphV2CanonicalPhaseSteering GSTCoherentCosmology
       - name: Commit green repairs
         run: |
           set -euo pipefail
