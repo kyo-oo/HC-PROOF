@@ -25,6 +25,18 @@ jobs:
           python3 scripts/limitless_repair.py
           git diff --check
           if grep -R --line-number -E '\bsorry\b|sorryAx' GSTGradedWorldAlgebra.lean GSTGraphV2CanonicalPhaseSteering.lean GSTCoherentCosmology.lean; then exit 1; fi
+      - name: Commit source repairs
+        run: |
+          set -euo pipefail
+          git config user.name "kyo-oo"
+          git config user.email "lordoftreasures7@gmail.com"
+          git add GSTGradedWorldAlgebra.lean GSTGraphV2CanonicalPhaseSteering.lean GSTCoherentCosmology.lean
+          if git diff --cached --quiet; then
+            echo "No source repair diff to commit"
+          else
+            git commit -m "Repair limitless grading phase steering and cohomology"
+            git push origin HEAD:sol/limitless-cosmology-bursts
+          fi
       - name: Install Lean
         run: |
           set -euo pipefail
@@ -35,15 +47,13 @@ jobs:
           lake exe cache get
       - name: Compile repairs
         run: |
-          set -euo pipefail
+          set -o pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTGradedWorldAlgebra GSTGraphV2CanonicalPhaseSteering GSTCoherentCosmology
-      - name: Commit green repairs
-        run: |
-          set -euo pipefail
-          rm .github/workflows/limitless-repair-live.yml scripts/limitless_repair.py
-          git config user.name "kyo-oo"
-          git config user.email "lordoftreasures7@gmail.com"
-          git add GSTGradedWorldAlgebra.lean GSTGraphV2CanonicalPhaseSteering.lean GSTCoherentCosmology.lean .github/workflows/limitless-repair-live.yml scripts/limitless_repair.py
-          git commit -m "Repair limitless grading phase steering and cohomology"
-          git push origin HEAD:sol/limitless-cosmology-bursts
+          lake build GSTGradedWorldAlgebra GSTGraphV2CanonicalPhaseSteering GSTCoherentCosmology 2>&1 | tee repair-build.log
+      - name: Upload repair build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: limitless-repair-build-log
+          path: repair-build.log
+          if-no-files-found: ignore
