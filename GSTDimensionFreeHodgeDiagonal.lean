@@ -245,4 +245,51 @@ theorem dimension_free_hodge_crown :
 #print axioms worldAddress_diagonalClass
 #print axioms dimension_free_hodge_crown
 
+
+/-! ## The Hodge generator at every natural weight -/
+open GSTWorldCosmology
+
+def cosmicDiagonalClass (p : ℕ) : CompactCosmos := Finsupp.single (p,p) 1
+
+def isCosmicHodgeClass (p : ℕ) (f : CompletedCosmos) : Prop :=
+  ∀ c, c ≠ (p,p) → f c = 0
+
+/-- There is no global upper weight. -/
+@[simp] theorem cosmicDiagonalClass_self (p : ℕ) : cosmicDiagonalClass p (p,p) = 1 := by
+  simp [cosmicDiagonalClass]
+
+theorem cosmic_hodge_rank_one (p : ℕ) (f : CompletedCosmos) :
+    isCosmicHodgeClass p f ↔
+      ∃! z : ℤ, f = fun c => z * cosmicDiagonalClass p c := by
+  constructor
+  · intro hf
+    refine ⟨f (p,p), ?_, ?_⟩
+    · funext c
+      by_cases hc : c=(p,p)
+      · subst c; simp
+      · simp [hf c hc, cosmicDiagonalClass, hc, Ne.symm hc]
+    · intro z hz
+      have h := congrFun hz (p,p)
+      simpa using h.symm
+  · rintro ⟨z, rfl, _⟩ c hc
+    simp [cosmicDiagonalClass, hc, Ne.symm hc]
+
+theorem observe_cosmicDiagonalClass {A B p : ℕ} (hA : p < A) (hB : p < B) :
+    observe A B (cosmicDiagonalClass p) = worldDiagonalClass hA hB := by
+  funext c
+  simp [observe, cosmicDiagonalClass, worldDiagonalClass, worldBasis,
+    diagonalState, Prod.ext_iff, Fin.ext_iff, eq_comm]
+
+theorem cosmic_weight_invisible {A B p : ℕ} (h : A ≤ p ∨ B ≤ p) :
+    observe A B (cosmicDiagonalClass p) = 0 := by
+  funext c
+  have hn : (c.1.val,c.2.val) ≠ (p,p) := by
+    intro he
+    have h1 := congrArg Prod.fst he
+    have h2 := congrArg Prod.snd he
+    rcases h with h | h <;> omega
+  simp [observe, cosmicDiagonalClass, hn, Ne.symm hn]
+
+#print axioms cosmic_hodge_rank_one
+
 end GSTDimensionFreeHodgeDiagonal

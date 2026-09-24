@@ -277,4 +277,52 @@ theorem global_pure_hodge_crown :
 #print axioms worldAddress_pure_support
 #print axioms global_pure_hodge_crown
 
+
+/-! ## Completed pure Hodge sector: every diagonal weight at once -/
+open GSTWorldCosmology
+
+def CosmicPureHodge : Submodule ℤ CompletedCosmos where
+  carrier := {f | ∀ c, c.1 ≠ c.2 → f c=0}
+  zero_mem' := by intros; rfl
+  add_mem' := by intro f g hf hg c hc; simp [hf c hc, hg c hc]
+  smul_mem' := by intro z f hf c hc; simp [hf c hc]
+
+def cosmicPureReassemble (a : ℕ → ℤ) : CompletedCosmos :=
+  fun c => if c.1=c.2 then a c.1 else 0
+
+def cosmicPureEquiv : CosmicPureHodge ≃ₗ[ℤ] (ℕ → ℤ) where
+  toFun := fun f p => f.val (p,p)
+  invFun := fun a => ⟨cosmicPureReassemble a, by
+    intro c hc; simp [cosmicPureReassemble, hc]⟩
+  left_inv := by
+    intro f
+    apply Subtype.ext
+    funext c
+    by_cases h : c.1=c.2
+    · simp [cosmicPureReassemble, h]
+    · simp [cosmicPureReassemble, h, f.property c h]
+  right_inv := by intro a; funext p; simp [cosmicPureReassemble]
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+/-- Finite pure-Hodge coordinates are exact diagonal observations. -/
+theorem cosmicPure_finite_coordinates (A B : ℕ) (a : ℕ → ℤ) :
+    pureCoordinates (observe A B (cosmicPureReassemble a)) =
+      fun p : Fin (min A B) => a p.val := by
+  funext p
+  simp [pureCoordinates, observe, cosmicPureReassemble, pureDiagonalState, diagonalState]
+
+def compactPureHodge := {f : CompactCosmos // ∀ c, c.1 ≠ c.2 → f c=0}
+
+/-- Algebraic pure classes have finite diagonal support, unlike arbitrary
+completed pure classes. -/
+theorem compact_pure_has_finite_weights (f : compactPureHodge) :
+    ∃ N, ∀ p, N ≤ p → f.val (p,p)=0 := by
+  obtain ⟨A,B,h⟩ := compact_has_window f.val
+  refine ⟨A, ?_⟩
+  intro p hp
+  exact h (p,p) (by omega)
+
+#print axioms cosmicPureEquiv
+
 end GSTGlobalPureHodgeCosmology

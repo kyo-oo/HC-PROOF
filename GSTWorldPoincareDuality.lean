@@ -281,4 +281,45 @@ theorem world_poincare_duality_crown :
 #print axioms complementary_sector_nondegenerate_left
 #print axioms world_poincare_duality_crown
 
+
+/-! ## Compact-support/ordinary pairing without a global top cell -/
+def cosmicPairing (f : CompactCosmos) (g : CompletedCosmos) : ℤ :=
+  f.sum (fun c z => z*g c)
+
+@[simp] theorem cosmicPairing_single (c : CosmicCell) (z : ℤ) (g : CompletedCosmos) :
+    cosmicPairing (Finsupp.single c z) g = z*g c := by
+  simp [cosmicPairing]
+
+def cosmicProbe (c : CosmicCell) : CompletedCosmos := fun d => if d=c then 1 else 0
+
+@[simp] theorem cosmicPairing_probe (f : CompactCosmos) (c : CosmicCell) :
+    cosmicPairing f (cosmicProbe c) = f c := by
+  classical
+  by_cases hc : f c=0
+  · simp [cosmicPairing, Finsupp.sum, cosmicProbe, hc]
+  · simp [cosmicPairing, Finsupp.sum, cosmicProbe, Finsupp.mem_support_iff, hc]
+
+theorem cosmicPairing_nondegenerate_left (f : CompactCosmos)
+    (h : ∀ g : CompletedCosmos, cosmicPairing f g=0) : f=0 := by
+  apply Finsupp.ext
+  intro c
+  simpa using h (cosmicProbe c)
+
+theorem cosmicPairing_nondegenerate_right (g : CompletedCosmos)
+    (h : ∀ f : CompactCosmos, cosmicPairing f g=0) : g=0 := by
+  funext c
+  simpa using h (Finsupp.single c 1)
+
+/-- Observational equality on a support envelope suffices for every compact
+pairing; there is no appeal to a fictional last cell at infinity. -/
+theorem cosmicPairing_local (f : CompactCosmos) (g h : CompletedCosmos)
+    (heq : ∀ c ∈ f.support, g c=h c) : cosmicPairing f g=cosmicPairing f h := by
+  unfold cosmicPairing Finsupp.sum
+  apply Finset.sum_congr rfl
+  intro c hc
+  rw [heq c hc]
+
+#print axioms cosmicPairing_nondegenerate_left
+#print axioms cosmicPairing_nondegenerate_right
+
 end GSTWorldPoincareDuality

@@ -292,4 +292,55 @@ theorem universal_hodge_of_realization_family
 #print axioms universal_hodge_of_fiberwise_surjectivity
 #print axioms universal_hodge_of_realization_family
 
+
+/-! ## Unbounded algebraic address realization
+
+The address universe need not have any fixed finite rank. Each encoded class
+has its own finite support. Basis cycle generation remains an explicit
+geometric obligation and is not inferred from GST coordinates alone.
+-/
+structure CompactHodgeRealization (ι : Type*) (Coh CycleQ : Type*)
+    [AddCommGroup Coh] [Module ℚ Coh] [AddCommGroup CycleQ] [Module ℚ CycleQ] where
+  isHodge : Coh → Prop
+  cycleClass : CycleQ →ₗ[ℚ] Coh
+  encode : Coh →ₗ[ℚ] (ι →₀ ℚ)
+  encode_injective : Function.Injective encode
+  hodgeSupport : Set ι
+  hodge_supported : ∀ alpha, isHodge alpha →
+    ∀ i ∈ (encode alpha).support, i ∈ hodgeSupport
+  basisCycle : ι → CycleQ
+  basisCycle_address : ∀ i ∈ hodgeSupport,
+    encode (cycleClass (basisCycle i)) = Finsupp.single i 1
+
+noncomputable def compactCycleWitness {ι : Type*}
+    (R : CompactHodgeRealization ι Coh CycleQ) (alpha : Coh) : CycleQ :=
+  (R.encode alpha).sum (fun i q => q • R.basisCycle i)
+
+theorem compactCycleWitness_spec {ι : Type*}
+    (R : CompactHodgeRealization ι Coh CycleQ) (alpha : Coh) (ha : R.isHodge alpha) :
+    R.cycleClass (compactCycleWitness R alpha) = alpha := by
+  classical
+  apply R.encode_injective
+  change R.encode (R.cycleClass
+    (∑ i ∈ (R.encode alpha).support, (R.encode alpha i) • R.basisCycle i)) = _
+  simp only [map_sum, map_smul]
+  have hb : (∑ i ∈ (R.encode alpha).support,
+      (R.encode alpha i) • R.encode (R.cycleClass (R.basisCycle i))) =
+      ∑ i ∈ (R.encode alpha).support,
+        (R.encode alpha i) • Finsupp.single i 1 := by
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [R.basisCycle_address i (R.hodge_supported alpha ha i hi)]
+  rw [hb]
+  ext j
+  simp
+
+theorem compact_realization_surjectivity {ι : Type*}
+    (R : CompactHodgeRealization ι Coh CycleQ) :
+    ∀ alpha, R.isHodge alpha → ∃ Z, R.cycleClass Z=alpha := by
+  intro alpha ha
+  exact ⟨compactCycleWitness R alpha, compactCycleWitness_spec R alpha ha⟩
+
+#print axioms compactCycleWitness_spec
+
 end GSTGeometricRealizationStage2
