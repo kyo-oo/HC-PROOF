@@ -413,7 +413,8 @@ theorem wave_class_transport_add
       rowClass R p M + rowClass (4^M * R) p N := by
   induction M generalizing R with
   | zero =>
-      simp [rowClass]
+      simp only [Nat.zero_add, rowClass, Finset.range_zero, Finset.sum_empty,
+        zero_add, Nat.pow_zero, Nat.one_mul]
   | succ M ih =>
       rw [show M.succ + N = (M+N)+1 by omega]
       rw [wave_class_transport R p (M+N)]
