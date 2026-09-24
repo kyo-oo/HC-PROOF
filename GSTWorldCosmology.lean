@@ -282,29 +282,17 @@ theorem carryShiftN_zero {carryDepth digitDepth : Nat}
 theorem digitShiftN_add {carryDepth digitDepth : Nat}
     (m n : Nat) (g : WorldCoef carryDepth digitDepth) :
     digitShiftN m (digitShiftN n g) = digitShiftN (m + n) g := by
-  funext c
-  by_cases hmn : m + n ≤ c.2.1
-  · have hm : m ≤ c.2.1 := by omega
-    have hn : n ≤ c.2.1 - m := by omega
-    simp [digitShiftN, hm, hn, hmn, Nat.sub_sub]
-  · by_cases hm : m ≤ c.2.1
-    · have hn : ¬ n ≤ c.2.1 - m := by omega
-      simp [digitShiftN, hm, hn, hmn]
-    · simp [digitShiftN, hm, hmn]
+  have h := congrArg (observe carryDepth digitDepth)
+    (cosmicDigitShift_add m n (extendWindow g))
+  simpa using h
 
 /-- Carry transport composes additively. -/
 theorem carryShiftN_add {carryDepth digitDepth : Nat}
     (m n : Nat) (g : WorldCoef carryDepth digitDepth) :
     carryShiftN m (carryShiftN n g) = carryShiftN (m + n) g := by
-  funext c
-  by_cases hmn : m + n ≤ c.1.1
-  · have hm : m ≤ c.1.1 := by omega
-    have hn : n ≤ c.1.1 - m := by omega
-    simp [carryShiftN, hm, hn, hmn, Nat.sub_sub]
-  · by_cases hm : m ≤ c.1.1
-    · have hn : ¬ n ≤ c.1.1 - m := by omega
-      simp [carryShiftN, hm, hn, hmn]
-    · simp [carryShiftN, hm, hmn]
+  have h := congrArg (observe carryDepth digitDepth)
+    (cosmicCarryShift_add m n (extendWindow g))
+  simpa using h
 
 /-- **THE NATIVE RECTANGLE LAW.**  Carry transport and digit transport
 commute at every depth in every rectangular GST world.  The old
@@ -314,10 +302,9 @@ theorem axes_commute {carryDepth digitDepth : Nat}
     (m n : Nat) (g : WorldCoef carryDepth digitDepth) :
     digitShiftN n (carryShiftN m g) =
       carryShiftN m (digitShiftN n g) := by
-  funext c
-  by_cases hm : m ≤ c.1.1 <;>
-    by_cases hn : n ≤ c.2.1 <;>
-      simp [digitShiftN, carryShiftN, hm, hn]
+  have h := congrArg (observe carryDepth digitDepth)
+    (cosmic_axes_commute m n (extendWindow g))
+  simpa using h
 
 /-- The digit axis extinguishes exactly at the world depth. -/
 theorem digit_boundary_extinction {carryDepth digitDepth : Nat}

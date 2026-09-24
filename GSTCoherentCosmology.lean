@@ -469,4 +469,112 @@ theorem tower_completed_currents_faithful {X Y : WindowTower}
   · exact congrFun h (0,p)
   · exact congrFun hdual (0,p)
 
+
+/-! ## Genuine completed and window cohomology quotients -/
+def cosmicD0Linear : CompletedCosmos →ₗ[ℤ] (CompletedCosmos × CompletedCosmos) where
+  toFun := cosmicD0
+  map_add' := by
+    intro f g; apply Prod.ext <;> funext c <;>
+      simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit] <;> ring
+  map_smul' := by
+    intro z f; apply Prod.ext <;> funext c <;>
+      simp [cosmicD0, cosmicDeltaCarry, cosmicDeltaDigit, mul_sub]
+
+def cosmicD1Linear : (CompletedCosmos × CompletedCosmos) →ₗ[ℤ] CompletedCosmos where
+  toFun := cosmicD1
+  map_add' := by
+    intro f g; funext c
+    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit]; ring
+  map_smul' := by
+    intro z f; funext c
+    simp [cosmicD1, cosmicDeltaCarry, cosmicDeltaDigit, mul_sub]; ring
+
+def cosmicCoboundary : CompletedCosmos →ₗ[ℤ] LinearMap.ker cosmicD1Linear :=
+  cosmicD0Linear.codRestrict _ (fun f => cosmicD1_D0 f)
+
+abbrev CosmicH1 := (LinearMap.ker cosmicD1Linear) ⧸ LinearMap.range cosmicCoboundary
+
+def windowD0 (A B : ℕ) : WorldCoef (A+2) (B+2) →ₗ[ℤ]
+    (WorldCoef (A+1) (B+1) × WorldCoef (A+1) (B+1)) where
+  toFun := fun f => (windowDeltaCarry (A+1) (B+1) f, windowDeltaDigit (A+1) (B+1) f)
+  map_add' := by
+    intro f g; apply Prod.ext <;> funext c <;>
+      simp [windowDeltaCarry, windowDeltaDigit] <;> ring
+  map_smul' := by
+    intro z f; apply Prod.ext <;> funext c <;>
+      simp [windowDeltaCarry, windowDeltaDigit, mul_sub]
+
+def windowD1 (A B : ℕ) :
+    (WorldCoef (A+1) (B+1) × WorldCoef (A+1) (B+1)) →ₗ[ℤ] WorldCoef A B where
+  toFun := fun w => windowDeltaCarry A B w.2 - windowDeltaDigit A B w.1
+  map_add' := by
+    intro f g; funext c
+    simp [windowDeltaCarry, windowDeltaDigit]; ring
+  map_smul' := by
+    intro z f; funext c
+    simp [windowDeltaCarry, windowDeltaDigit, mul_sub]; ring
+
+theorem windowD1_D0 (A B : ℕ) (f : WorldCoef (A+2) (B+2)) :
+    windowD1 A B (windowD0 A B f)=0 := by
+  funext c
+  simp [windowD1, windowD0, windowDeltaCarry, windowDeltaDigit]
+  ring
+
+def windowCoboundary (A B : ℕ) :
+    WorldCoef (A+2) (B+2) →ₗ[ℤ] LinearMap.ker (windowD1 A B) :=
+  (windowD0 A B).codRestrict _ (windowD1_D0 A B)
+
+abbrev WindowH1 (A B : ℕ) :=
+  (LinearMap.ker (windowD1 A B)) ⧸ LinearMap.range (windowCoboundary A B)
+
+def observeClosed (A B : ℕ) :
+    LinearMap.ker cosmicD1Linear →ₗ[ℤ] LinearMap.ker (windowD1 A B) where
+  toFun := fun w => ⟨(observe (A+1) (B+1) w.val.1, observe (A+1) (B+1) w.val.2), by
+    change windowD1 A B _ = 0
+    have h := congrArg (observe A B) w.property
+    exact h⟩
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+def observeH1 (A B : ℕ) : CosmicH1 →ₗ[ℤ] WindowH1 A B :=
+  (LinearMap.range cosmicCoboundary).mapQ
+    (LinearMap.range (windowCoboundary A B)) (observeClosed A B) (by
+      rintro x ⟨f,rfl⟩
+      exact ⟨observe (A+2) (B+2) f, rfl⟩)
+
+def restrictClosed {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
+    LinearMap.ker (windowD1 C D) →ₗ[ℤ] LinearMap.ker (windowD1 A B) where
+  toFun := fun w => ⟨(restrictWindow (by omega) (by omega) w.val.1,
+    restrictWindow (by omega) (by omega) w.val.2), by
+      have h := congrArg (restrictWindow hA hB) w.property
+      exact h⟩
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+def restrictH1 {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
+    WindowH1 C D →ₗ[ℤ] WindowH1 A B :=
+  (LinearMap.range (windowCoboundary C D)).mapQ
+    (LinearMap.range (windowCoboundary A B)) (restrictClosed hA hB) (by
+      rintro x ⟨f,rfl⟩
+      exact ⟨restrictWindow (A:=A+2) (B:=B+2) (by omega) (by omega) f, rfl⟩)
+
+theorem observeH1_natural {A B C D : ℕ} (hA : A ≤ C) (hB : B ≤ D)
+    (x : CosmicH1) : restrictH1 hA hB (observeH1 C D x) = observeH1 A B x := by
+  refine Quotient.inductionOn x ?_
+  intro w
+  rfl
+
+theorem restrictH1_trans {A B C D E F : ℕ}
+    (hAC : A ≤ C) (hBD : B ≤ D) (hCE : C ≤ E) (hDF : D ≤ F)
+    (x : WindowH1 E F) :
+    restrictH1 hAC hBD (restrictH1 hCE hDF x) =
+      restrictH1 (hAC.trans hCE) (hBD.trans hDF) x := by
+  refine Quotient.inductionOn x ?_
+  intro w
+  rfl
+
+#print axioms windowD1_D0
+#print axioms observeH1_natural
+#print axioms restrictH1_trans
+
 end GSTCoherentCosmology
