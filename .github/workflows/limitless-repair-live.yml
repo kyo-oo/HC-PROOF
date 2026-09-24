@@ -6,6 +6,7 @@ on:
       - "sol/limitless-cosmology-bursts"
     paths:
       - ".github/workflows/limitless-repair-live.yml"
+      - "scripts/limitless_repair.py"
 
 permissions:
   contents: write
