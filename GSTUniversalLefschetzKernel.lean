@@ -79,9 +79,9 @@ theorem worldAct_L_pow_basis_kernel
   unfold worldForward worldCausalDistance carryDistance digitDistance
   rw [worldAct_L_pow_coordinate_formula]
   by_cases hfuture : Cs ≤ Ct ∧ ds ≤ dt
-  · simp only [hfuture]
+  · rw [dif_pos hfuture]
     by_cases htime : n = (Ct-Cs) + (dt-ds)
-    · simp only [htime]
+    · rw [dif_pos htime]
       rw [Finset.sum_eq_single (dt-ds)]
       · have hpath :
             dt-ds ≤ dt ∧ n-(dt-ds) ≤ Ct := by
@@ -103,46 +103,41 @@ theorem worldAct_L_pow_basis_kernel
       · intro m hm hne
         by_cases hpath : m ≤ dt ∧ n-m ≤ Ct
         · rw [dif_pos hpath]
+          have hdne : dt - m ≠ ds := by
+            intro heq
+            exact hne (by omega)
           have hpred_ne :
               ((⟨Ct-(n-m), by omega⟩,
                 ⟨dt-m, by omega⟩) : WorldCell A B) ≠
                 (⟨Cs,hCs⟩,⟨ds,hds⟩) := by
             intro heq
-            have hdEq :=
-              congrArg (fun x : WorldCell A B => x.2.1) heq
-            apply hne
-            omega
+            have h := congrArg (fun x : WorldCell A B => x.2.1) heq
+            simp only at h
+            exact hdne h
           simp [worldBasis, hpred_ne]
-        · simp [hpath]
+        · rw [dif_neg hpath]
       · intro hnot
         have hmem : dt-ds ∈ Finset.range (n+1) := by
           apply Finset.mem_range.mpr
           omega
         exact (hnot hmem).elim
-    · simp only [htime]
+    · rw [dif_neg htime]
       apply Finset.sum_eq_zero
       intro m hm
       by_cases hpath : m ≤ dt ∧ n-m ≤ Ct
       · rw [dif_pos hpath]
-        have hmn : m ≤ n := by
-          have hm' := Finset.mem_range.mp hm
-          omega
         have hpred_ne :
             ((⟨Ct-(n-m), by omega⟩,
               ⟨dt-m, by omega⟩) : WorldCell A B) ≠
-              (⟨Cs,hCs⟩,⟨ds,hds⟩) := by
+                (⟨Cs,hCs⟩,⟨ds,hds⟩) := by
           intro heq
-          have hCEq :=
-            congrArg (fun x : WorldCell A B => x.1.1) heq
-          have hdEq :=
-            congrArg (fun x : WorldCell A B => x.2.1) heq
-          apply htime
-          omega
+          have hC := congrArg (fun x : WorldCell A B => x.1.1) heq
+          have hd := congrArg (fun x : WorldCell A B => x.2.1) heq
+          simp only at hC hd
+          exact htime (by omega)
         simp [worldBasis, hpred_ne]
-      · simp [hpath]
-  · simp only [hfuture]
-    have hout : Ct < Cs ∨ dt < ds := by
-      omega
+      · rw [dif_neg hpath]
+  · rw [dif_neg hfuture]
     apply Finset.sum_eq_zero
     intro m hm
     by_cases hpath : m ≤ dt ∧ n-m ≤ Ct
@@ -150,19 +145,16 @@ theorem worldAct_L_pow_basis_kernel
       have hpred_ne :
           ((⟨Ct-(n-m), by omega⟩,
             ⟨dt-m, by omega⟩) : WorldCell A B) ≠
-            (⟨Cs,hCs⟩,⟨ds,hds⟩) := by
+              (⟨Cs,hCs⟩,⟨ds,hds⟩) := by
         intro heq
-        have hCEq :=
-          congrArg (fun x : WorldCell A B => x.1.1) heq
-        have hdEq :=
-          congrArg (fun x : WorldCell A B => x.2.1) heq
-        rcases hout with hCout | hdout
-        · have hle : Ct-(n-m) ≤ Ct := Nat.sub_le _ _
-          omega
-        · have hle : dt-m ≤ dt := Nat.sub_le _ _
-          omega
+        have hC := congrArg (fun x : WorldCell A B => x.1.1) heq
+        have hd := congrArg (fun x : WorldCell A B => x.2.1) heq
+        simp only at hC hd
+        rcases hfuture with hCout | hdout
+        · omega
+        · omega
       simp [worldBasis, hpred_ne]
-    · simp [hpath]
+    · rw [dif_neg hpath]
 
 /-- Exact coefficient at the unique causal time. -/
 theorem worldAct_L_pow_basis_exact
@@ -305,6 +297,14 @@ theorem cosmicLefschetz_kernel (n : ℕ) (s t : CosmicCell) :
     simp [observe, cosmicBasis, worldBasis, sf, Prod.ext_iff, Fin.ext_iff]
   have ho := congrFun (worldAct_is_cosmic_observation A B n (cosmicBasis s)) tf
   rw [hb, worldAct_L_pow_basis_kernel] at ho
+  have hdite : (if hfuture : worldForward sf tf then
+      if htime : n = worldCausalDistance sf tf then
+        (n.choose (digitDistance sf tf) : ℤ) else 0 else 0) =
+      (if worldForward sf tf then
+        if n = worldCausalDistance sf tf then
+          (n.choose (digitDistance sf tf) : ℤ) else 0 else 0) := by
+    by_cases h : worldForward sf tf <;> simp [h]
+  rw [hdite] at ho
   simpa [observe, worldForward, worldCausalDistance, carryDistance, digitDistance, sf, tf]
     using ho.symm
 
