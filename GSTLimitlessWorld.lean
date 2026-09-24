@@ -40,7 +40,6 @@ end GSTWorldCosmology
 namespace GSTLimitlessWorld
 
 open GSTWorldCosmology
-open Finsupp
 
 noncomputable section
 
@@ -49,18 +48,18 @@ abbrev CosmicCell : Type := Nat × Nat
 
 /-- Finite-support integer amplitudes on the limitless GST cosmos.
 
-This is definitionally a finitely supported function on multiplicative
-wrappers of cosmic cells, while its convolution multiplication adds the
-underlying ordinary coordinates. -/
+Mathlib's `MonoidAlgebra` is a structure whose coefficient field is a
+finitely-supported function.  The multiplicative wrapper converts addition
+of ordinary cosmic coordinates into monomial multiplication. -/
 abbrev CosmicCoef : Type := MonoidAlgebra ℤ (Multiplicative CosmicCell)
 
 /-- Basis state concentrated at one ordinary cosmic coordinate. -/
 def cosmicBasis (c : CosmicCell) (z : ℤ := 1) : CosmicCoef :=
-  Finsupp.single (Multiplicative.ofAdd c) z
+  MonoidAlgebra.single (Multiplicative.ofAdd c) z
 
 /-- Read a compact cosmic field at an ordinary additive coordinate. -/
 def cosmicEval (f : CosmicCoef) (c : CosmicCell) : ℤ :=
-  f (Multiplicative.ofAdd c)
+  f.coeff (Multiplicative.ofAdd c)
 
 /-- Global digit-axis transport.  There is no digit ceiling. -/
 def cosmicDigitShiftN (n : Nat) (f : CosmicCoef) : CosmicCoef :=
@@ -123,15 +122,18 @@ private theorem finiteCell_nat_injective {A B : Nat}
 @[simp]
 theorem restrictWorld_extendWorld {A B : Nat} (g : WorldCoef A B) :
     restrictWorld A B (extendWorld g) = g := by
+  classical
   funext c
-  simp only [restrictWorld, cosmicEval, extendWorld, Finset.sum_apply]
+  simp only [restrictWorld, cosmicEval, extendWorld,
+    MonoidAlgebra.coeff_sum, Finset.sum_apply,
+    cosmicBasis, MonoidAlgebra.coeff_single]
   rw [Finset.sum_eq_single c]
-  · simp [cosmicBasis]
+  · simp
   · intro d _ hdc
     have hne : (d.1.1, d.2.1) ≠ (c.1.1, c.2.1) := by
       intro h
       exact hdc (finiteCell_nat_injective h)
-    simp [cosmicBasis, hne]
+    simp [hne]
   · simp
 
 /-- A compact cosmic field lies inside an `A × B` window when every nonzero
@@ -142,11 +144,14 @@ def SupportInside (A B : Nat) (f : CosmicCoef) : Prop :=
 /-- Every finite-world extension is supported inside its source window. -/
 theorem supportInside_extendWorld {A B : Nat} (g : WorldCoef A B) :
     SupportInside A B (extendWorld g) := by
+  classical
   intro c hc
   by_contra hout
   push Not at hout
   have hzero : cosmicEval (extendWorld g) c = 0 := by
-    simp only [cosmicEval, extendWorld, Finset.sum_apply]
+    simp only [cosmicEval, extendWorld,
+      MonoidAlgebra.coeff_sum, Finset.sum_apply,
+      cosmicBasis, MonoidAlgebra.coeff_single]
     apply Finset.sum_eq_zero
     intro d _
     have hne : (d.1.1, d.2.1) ≠ c := by
@@ -158,7 +163,7 @@ theorem supportInside_extendWorld {A B : Nat} (g : WorldCoef A B) :
         rw [← congrArg Prod.snd h]
         exact d.2.2
       exact hout hA hB
-    simp [cosmicBasis, hne]
+    simp [hne]
   exact hc hzero
 
 #check CosmicCell
