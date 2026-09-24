@@ -108,7 +108,7 @@ noncomputable def truncIdeal : Ideal WorldPoly :=
     ({Hpoly ^ B, Vpoly ^ A} : Set WorldPoly)
 
 /-- Polynomial evaluation at the native GST axis operators. -/
-def evalWorldPoly :
+noncomputable def evalWorldPoly :
     WorldPoly →+* WorldOperatorRing A B :=
   eval₂Hom (Int.castRingHom (WorldOperatorRing A B))
     ![hOp A B, vOp A B]
@@ -116,12 +116,16 @@ def evalWorldPoly :
 @[simp]
 theorem evalWorldPoly_H :
     evalWorldPoly A B Hpoly = hOp A B := by
-  simp [evalWorldPoly, Hpoly]
+  unfold evalWorldPoly Hpoly
+  rw [eval₂Hom_X']
+  simp
 
 @[simp]
 theorem evalWorldPoly_V :
     evalWorldPoly A B Vpoly = vOp A B := by
-  simp [evalWorldPoly, Vpoly]
+  unfold evalWorldPoly Vpoly
+  rw [eval₂Hom_X']
+  simp
 
 /-- The native representation kills both truncation generators. -/
 theorem truncIdeal_le_ker_evalWorldPoly :
@@ -132,10 +136,8 @@ theorem truncIdeal_le_ker_evalWorldPoly :
     intro p hp
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
     rcases hp with rfl | rfl
-    · rw [RingHom.mem_ker, map_pow, evalWorldPoly_H]
-      exact hOp_pow_depth A B
-    · rw [RingHom.mem_ker, map_pow, evalWorldPoly_V]
-      exact vOp_pow_depth A B
+    · simp [map_pow, evalWorldPoly_H, hOp_pow_depth]
+    · simp [map_pow, evalWorldPoly_V, vOp_pow_depth]
   have hle : truncIdeal A B ≤ RingHom.ker (evalWorldPoly A B) := by
     rw [truncIdeal, Ideal.span_le]
     exact hgen
@@ -168,7 +170,7 @@ theorem V_pow_depth :
     (Set.mem_insert_of_mem _ (Set.mem_singleton _))
 
 /-- The polynomial GST action descends canonically through the quotient. -/
-def worldOperatorHom :
+noncomputable def worldOperatorHom :
     WorldCohomologyRing A B →+* WorldOperatorRing A B :=
   Ideal.Quotient.lift
     (truncIdeal A B)
@@ -189,7 +191,7 @@ theorem worldOperatorHom_V :
 
 /-- Action of a cohomology-ring element through its native operator
 representation. -/
-def worldAct
+noncomputable def worldAct
     (r : WorldCohomologyRing A B)
     (g : WorldCoef A B) :
     WorldCoef A B :=
@@ -405,9 +407,9 @@ private theorem restriction_kernel {C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
     intro p hp
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
     rcases hp with rfl | rfl
-    · rw [RingHom.mem_ker, map_pow]
+    · simp [map_pow]
       exact pow_eq_zero_of_le hB (H_pow_depth A B)
-    · rw [RingHom.mem_ker, map_pow]
+    · simp [map_pow]
       exact pow_eq_zero_of_le hA (V_pow_depth A B)
   have hle : truncIdeal C D ≤ RingHom.ker (coordinateProjection A B) := by
     rw [truncIdeal, Ideal.span_le]
@@ -419,7 +421,7 @@ private theorem restriction_kernel {C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
 noncomputable def quotientRestriction {C D : ℕ} (hA : A ≤ C) (hB : B ≤ D) :
     WorldCohomologyRing C D →+* WorldCohomologyRing A B :=
   Ideal.Quotient.lift (truncIdeal C D) (coordinateProjection A B)
-    (restriction_kernel hA hB)
+    (restriction_kernel A B hA hB)
 
 @[simp] theorem quotientRestriction_projection {C D : ℕ}
     (hA : A ≤ C) (hB : B ≤ D) (p : WorldPoly) :
