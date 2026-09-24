@@ -1,4 +1,5 @@
 name: HC Cosmology Upgrade Gate
+# Explicit verification trigger for the repaired limitless cosmology head.
 
 on:
   push:
