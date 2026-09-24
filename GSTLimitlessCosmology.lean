@@ -74,6 +74,36 @@ def windowExtend (A B : Nat) (g : WorldCoef A B) : CosmicCoef :=
   ∑ c : WorldCell A B,
     Finsupp.single (worldCellEmbedding A B c) (g c)
 
+/-- Compact algebraic data embeds faithfully in the unrestricted observational
+cosmos.  Completion adds observations; it does not identify compact states. -/
+theorem compactToGlobal_injective : Function.Injective compactToGlobal := by
+  intro f g h
+  ext c
+  exact congrFun h c
+
+/-- A basis state translated along the digit axis remains a basis state at
+arbitrary depth.  There is no global digit wall. -/
+@[simp] theorem digitShift_single (n : Nat) (c : CosmicCell) (z : ℤ) :
+    digitShift n (Finsupp.single c z) =
+      Finsupp.single (c.1, c.2 + n) z := by
+  simp [digitShift]
+
+/-- A basis state translated along the carry axis remains a basis state at
+arbitrary depth.  There is no global carry wall. -/
+@[simp] theorem carryShift_single (n : Nat) (c : CosmicCell) (z : ℤ) :
+    carryShift n (Finsupp.single c z) =
+      Finsupp.single (c.1 + n, c.2) z := by
+  simp [carryShift]
+
+/-- Extending a finite world into the limitless cosmos and observing the same
+window recovers the finite world exactly.  This holds uniformly, including
+empty rectangular worlds. -/
+theorem windowRestrict_windowExtend (A B : Nat) (g : WorldCoef A B) :
+    windowRestrict A B (windowExtend A B g) = g := by
+  funext c
+  classical
+  simp [windowRestrict, windowExtend, worldCellEmbedding]
+
 #check CosmicCell
 #check CosmicCoef
 #check GlobalCoef
@@ -83,6 +113,10 @@ def windowExtend (A B : Nat) (g : WorldCoef A B) : CosmicCoef :=
 #check windowRestrict
 #check windowExtend
 #check compactToGlobal
+#check compactToGlobal_injective
+#check digitShift_single
+#check carryShift_single
+#check windowRestrict_windowExtend
 
 end
 
