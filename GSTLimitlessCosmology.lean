@@ -142,9 +142,10 @@ theorem windowRestrict_digitShift_windowExtend
     have hcoord :
         worldCellEmbedding A B c =
           digitEmbedding n (worldCellEmbedding A B p) := by
+      change (c.1.1, c.2.1) = (p.1.1, p.2.1 + n)
       apply Prod.ext
       · rfl
-      · dsimp [worldCellEmbedding, digitEmbedding, p]
+      · dsimp [p]
         omega
     change
       (Finsupp.embDomain (digitEmbedding n) (windowExtend A B g))
@@ -160,7 +161,7 @@ theorem windowRestrict_digitShift_windowExtend
     intro hrange
     rcases hrange with ⟨x, hx⟩
     have hsnd := congrArg Prod.snd hx
-    dsimp [digitEmbedding, worldCellEmbedding] at hsnd
+    change x.2 + n = c.2.1 at hsnd
     omega
 
 /-- Finite carry transport is exactly limitless carry transport observed back
@@ -182,8 +183,9 @@ theorem windowRestrict_carryShift_windowExtend
     have hcoord :
         worldCellEmbedding A B c =
           carryEmbedding n (worldCellEmbedding A B p) := by
+      change (c.1.1, c.2.1) = (p.1.1 + n, p.2.1)
       apply Prod.ext
-      · dsimp [worldCellEmbedding, carryEmbedding, p]
+      · dsimp [p]
         omega
       · rfl
     change
@@ -200,7 +202,7 @@ theorem windowRestrict_carryShift_windowExtend
     intro hrange
     rcases hrange with ⟨x, hx⟩
     have hfst := congrArg Prod.fst hx
-    dsimp [carryEmbedding, worldCellEmbedding] at hfst
+    change x.1 + n = c.1.1 at hfst
     omega
 
 #check CosmicCell
