@@ -977,21 +977,15 @@ theorem distinct_sector_support_zero
     (hj : sectorProj j g = g)
     (hk : sectorProj k g = g) :
     g = fun _ => 0 := by
-  have horth := proj_orthogonal j k g hjk
+  have hjs := (sectorProj_eq_self_iff j g).1 hj
+  have hks := (sectorProj_eq_self_iff k g).1 hk
   funext cell
   rcases cell with ⟨C,d,hC,hd⟩
-  have hc := horth C d hC hd
-  have hjc := congrFun hj ⟨C,d,hC,hd⟩
-  have hkc := congrFun hk ⟨C,d,hC,hd⟩
-  unfold sectorProj at hc hjc hkc
-  by_cases hdj : C+d = j
-  · have hdk : C+d ≠ k := by
-      intro h
-      exact hjk (hdj.symm.trans h)
-    rw [if_pos hdj, if_neg hdk] at hjc hkc hc
-    exact hkc.symm
-  · rw [if_neg hdj] at hjc
-    exact hjc.symm
+  by_cases hdj : C + d = j
+  · apply hks C d hC hd
+    intro hdk
+    exact hjk (hdj.symm.trans hdk)
+  · exact hjs C d hC hd hdj
 
 /-- Künneth rigidity crown: exact support, bounded live degree, complete
 reconstruction, and disjointness are one projector calculus. -/

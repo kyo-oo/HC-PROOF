@@ -123,18 +123,27 @@ def reconstructCosmos (X : CosmicObservations) : CompletedCosmos :=
     (by omega) (by omega)) (⟨c.1.val, by omega⟩, ⟨c.2.val, by omega⟩)
   exact h.symm
 
+@[ext] theorem CosmicObservations.ext {X Y : CosmicObservations}
+    (h : ∀ A B, X.window A B = Y.window A B) : X = Y := by
+  cases X with
+  | mk X hX =>
+    cases Y with
+    | mk Y hY =>
+      have hXY : X = Y := by
+        funext A B
+        exact h A B
+      subst Y
+      rfl
+
 def cosmicObservationEquiv : CompletedCosmos ≃ CosmicObservations where
   toFun := completeObservations
   invFun := reconstructCosmos
   left_inv := reconstruct_complete
   right_inv := by
     intro X
-    have h : (completeObservations (reconstructCosmos X)).window = X.window := by
-      funext A B
-      exact observe_reconstruct X A B
-    cases X
-    cases h
-    rfl
+    apply CosmicObservations.ext
+    intro A B
+    exact observe_reconstruct X A B
 
 noncomputable def compactWindow {A B : ℕ} (f : WorldCoef A B) : CompactCosmos :=
   Finsupp.onFinset (Finset.range A ×ˢ Finset.range B) (extendWindow f) (by
@@ -445,29 +454,23 @@ noncomputable def compactTranslate (m n : ℕ) (f : CompactCosmos) : CompactCosm
 theorem compactTranslate_completed (m n : ℕ) (f : CompactCosmos) :
     (fun c => compactTranslate m n f c) = cosmicDigitShift n (cosmicCarryShift m f) := by
   funext c
-  by_cases hm : m ≤ c.1
-  · by_cases hn : n ≤ c.2
-    · have he : cosmicTranslation m n (c.1-m,c.2-n)=c := by
-        apply Prod.ext <;> simp [cosmicTranslation, Nat.sub_add_cancel, hm, hn]
-      rw [← he]
-      change Finsupp.embDomain (cosmicTranslation m n) f
-        (cosmicTranslation m n (c.1-m,c.2-n)) = _
-      rw [Finsupp.embDomain_apply_self]
-      simp [cosmicDigitShift, cosmicCarryShift, cosmicTranslation]
-    · have hout : c ∉ Set.range (cosmicTranslation m n) := by
-        rintro ⟨d, hd⟩
-        have h := congrArg Prod.snd hd
-        simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h
-        omega
-      rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]
-      simp [cosmicDigitShift, hn]
-  · have hout : c ∉ Set.range (cosmicTranslation m n) := by
-      rintro ⟨d, hd⟩
-      have h := congrArg Prod.fst hd
-      simp only [cosmicTranslation, Function.Embedding.coeFn_mk] at h
-      omega
-    rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hout]
-    simp [cosmicDigitShift, cosmicCarryShift, hm]
+  by_cases hr : c ∈ Set.range (cosmicTranslation m n)
+  · rcases hr with ⟨d, rfl⟩
+    rw [compactTranslate, Finsupp.embDomain_apply_self]
+    change f d = cosmicDigitShift n (cosmicCarryShift m f) (d.1 + m, d.2 + n)
+    simp [cosmicDigitShift, cosmicCarryShift]
+  · rw [compactTranslate, Finsupp.embDomain_of_notMem_range _ _ _ hr]
+    by_cases hm : m ≤ c.1
+    · by_cases hn : n ≤ c.2
+      · exfalso
+        apply hr
+        refine ⟨(c.1 - m, c.2 - n), ?_⟩
+        change ((c.1 - m) + m, (c.2 - n) + n) = c
+        apply Prod.ext
+        · exact Nat.sub_add_cancel hm
+        · exact Nat.sub_add_cancel hn
+      · simp [cosmicDigitShift, hn]
+    · simp [cosmicDigitShift, cosmicCarryShift, hm]
 
 #print axioms cosmicObservationEquiv
 #print axioms compact_exact_recovery

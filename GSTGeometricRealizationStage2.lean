@@ -332,7 +332,9 @@ theorem compactCycleWitness_spec {ι : Type*}
     intro i hi
     rw [R.basisCycle_address i (R.hodge_supported alpha ha i hi)]
   rw [hb]
-  simpa only [Finsupp.smul_single, smul_eq_mul, mul_one] using (R.encode alpha).sum_single
+  simp only [Finsupp.smul_single, smul_eq_mul, mul_one]
+  change (R.encode alpha).sum Finsupp.single = R.encode alpha
+  exact (R.encode alpha).sum_single
 
 theorem compact_realization_surjectivity {ι : Type*}
     (R : CompactHodgeRealization ι Coh CycleQ) :
