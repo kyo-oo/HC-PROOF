@@ -18,7 +18,7 @@ This module resolves that mismatch without collapsing either side:
 * a genuine basis index of the classical rational Hodge fiber is the
   **multiplicity fiber** above `p`;
 * a classical Hodge class has finite support in its basis fiber because
-  `Basis.repr` is a `Finsupp`;
+  `Module.Basis.repr` is a `Finsupp`;
 * forgetting the multiplicity fiber sends every basis direction above `p`
   to the existing limitless GST generator at the universal cosmic diagonal
   address of `(p,p)`.
@@ -58,7 +58,7 @@ noncomputable def classicalHodgeBasis
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
     (p : Nat) :
-    Basis (ClassicalHodgeBasisIndex V H p) ℚ
+    Module.Basis (ClassicalHodgeBasisIndex V H p) ℚ
       (ClassicalHodgeFiber V H p) :=
   Module.Free.chooseBasis ℚ (ClassicalHodgeFiber V H p)
 
@@ -115,8 +115,7 @@ theorem fiberedWeightCoordinates_injective
     Function.Injective (fiberedWeightCoordinates V H p) := by
   intro a b hab
   apply (classicalHodgeBasis V H p).repr.injective
-  apply Finsupp.embDomain_injective
-  exact hab
+  exact Finsupp.embDomain_injective (weightFiberEmbedding V H p) hab
 
 /-- Rationalized limitless GST compact-address carrier. -/
 abbrev RationalCompactGSTAddress := Nat →₀ ℚ
