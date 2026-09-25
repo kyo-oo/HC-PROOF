@@ -35,7 +35,8 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTCompactNativeCyclePresentation.lean 2>&1 | tee compact-cycle.log
+          lake build GSTNativeCodimensionCyclePresentation GSTProjectiveOverC 2>&1 | tee compact-cycle.log
+          lake env lean GSTCompactNativeCyclePresentation.lean 2>&1 | tee -a compact-cycle.log
       - name: Upload diagnostics
         if: always()
         uses: actions/upload-artifact@v4
