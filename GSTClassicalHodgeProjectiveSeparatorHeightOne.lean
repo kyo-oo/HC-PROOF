@@ -16,8 +16,13 @@ prime and the relevance-selected separator is homogeneous of strictly positive
 degree, its quotient class is automatically a nonunit.
 
 Consequently the projective separator has exact principal height one at every
-Proj source point.  This is the unconditional local codimension-one receipt
-needed by the recursive projective cutting engine.
+Proj source point.  Moreover every minimal prime over that singleton-generated
+principal ideal has prime height exactly one: monotonicity gives the lower
+bound from the principal ideal, while Krull's height theorem for a one-element
+generating set gives the upper bound.
+
+This is the unconditional local codimension-one receipt needed by the recursive
+projective cutting engine.
 -/
 
 set_option maxHeartbeats 30000000
@@ -69,6 +74,30 @@ theorem separator_minimalPrime_height_one_unconditional
   exact separator_minimalPrime_height_one n x
     (separatorClass_not_isUnit n x) hq
 
+/-- **MINIMAL-PRIME HEIGHT CROWN.**  Every minimal prime over the surviving
+separator class has prime height exactly one in the source-prime quotient. -/
+theorem separator_minimalPrime_prime_height_one
+    (n : Nat) (x : projectiveSpace n)
+    {q : Ideal (pointQuotient n x)}
+    (hq : q ∈ (Ideal.span ({separatorClass n x} : Set (pointQuotient n x))).minimalPrimes) :
+    q.height = 1 := by
+  classical
+  let I : Ideal (pointQuotient n x) :=
+    Ideal.span ({separatorClass n x} : Set (pointQuotient n x))
+  have hI : I.height = 1 := by
+    simpa [I] using separatorClass_height_one n x
+  have hlower : (1 : _) ≤ q.height := by
+    rw [← hI]
+    exact Ideal.height_mono hq.le
+  have hqFin :
+      q ∈ (Ideal.span (({separatorClass n x} : Finset (pointQuotient n x)) :
+        Set (pointQuotient n x))).minimalPrimes := by
+    simpa using hq
+  have hupper : q.height ≤ (1 : ℕ) := by
+    simpa using
+      (Ideal.height_le_card_of_mem_minimalPrimes_span_finset hqFin)
+  exact le_antisymm hupper hlower
+
 /-- The old projective Krull dichotomy collapses to its height-one branch. -/
 theorem separator_unit_or_height_one_collapses
     (n : Nat) (x : projectiveSpace n) :
@@ -79,11 +108,13 @@ theorem separator_unit_or_height_one_collapses
 #check separatorClass_not_isUnit
 #check separatorClass_height_one
 #check separator_minimalPrime_height_one_unconditional
+#check separator_minimalPrime_prime_height_one
 #check separator_unit_or_height_one_collapses
 
 #print axioms separatorClass_not_isUnit
 #print axioms separatorClass_height_one
 #print axioms separator_minimalPrime_height_one_unconditional
+#print axioms separator_minimalPrime_prime_height_one
 #print axioms separator_unit_or_height_one_collapses
 
 end GSTClassicalHodgeProjectiveSeparatorHeightOne
