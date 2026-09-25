@@ -54,7 +54,7 @@ noncomputable def fiberedBasisCycleLift
     (H : HodgeBigradedBettiData V)
     (p : Nat)
     (R : FiberedBasisCycleBridge V H p) :
-    ClassicalHodgeFiber V H p ->ₗ[ℚ] codimensionCycles V.X p :=
+    ClassicalHodgeFiber V H p →ₗ[ℚ] codimensionCycles V.X p :=
   (classicalHodgeBasis V H p).constr ℚ R.basisCycle
 
 @[simp]
