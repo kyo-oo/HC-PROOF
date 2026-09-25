@@ -32,13 +32,14 @@ namespace GSTClassicalHodgeProperCutCodimensionOne
 
 /-- A proper closed subset of a Noetherian quasi-sober irreducible space has
 only finitely many ambient points of coheight one. -/
+attribute [local instance] specializationOrder in
 theorem finite_coheight_one_of_proper_closed
     {X : Type*} [TopologicalSpace X] [QuasiSober X] [IrreducibleSpace X]
     [T0Space X] [NoetherianSpace X]
     (C : Set X) (hC : IsClosed C) (hproper : C ≠ Set.univ) :
     {x ∈ C | Order.coheight x = 1}.Finite := by
   letI : T0Space C := inferInstance
-  letI : NoetherianSpace C := hC.isNoetherian
+  letI : NoetherianSpace C := inferInstance
   letI : QuasiSober C := Topology.IsClosedEmbedding.quasiSober
     (Topology.IsClosedEmbedding.subtypeVal hC)
   apply TopologicalSpace.NoetherianSpace.finite_coheight_one_of_closure_ne_univ

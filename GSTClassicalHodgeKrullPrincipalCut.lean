@@ -61,7 +61,7 @@ theorem minimalPrime_over_principal_height_one
     (Ideal.span {f}).height = 1 ∧
       Ideal.span {f} ≤ q ∧ q.IsPrime := by
   refine ⟨principal_height_eq_one hf0 hfunit, hq.1.2, ?_⟩
-  exact Ideal.minimalPrimes_isPrime hq
+  exact hq.1.1
 
 /-- The exact-height result is stable under replacing the equation by an
 associate; projective local equations may therefore be normalized by units. -/
@@ -72,7 +72,7 @@ theorem principal_height_eq_one_of_associated
     (Ideal.span {g}).height = 1 := by
   have hg0 : g ≠ 0 := by
     intro hg
-    have : f = 0 := hfg.eq_zero_iff.mp hg
+    have : f = 0 := hfg.eq_zero_iff.mpr hg
     exact hf0 this
   have hgunit : ¬ IsUnit g := by
     intro hg

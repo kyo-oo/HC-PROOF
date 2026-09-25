@@ -56,7 +56,7 @@ theorem realize_presentationOfNativeCycle
       codimensionPointCycle, x, Finsupp.sum, Finsupp.ofSupportFinite,
       Function.locallyFinsuppWithin.coe_sum,
       Function.locallyFinsuppWithin.single_apply, Pi.smul_apply, smul_eq_mul]
-    refine (Finset.sum_eq_single (β := ℚ) (⟨y, hy⟩ : CodimensionPoint X p) ?_ ?_).trans ?_
+    refine (Finset.sum_eq_single (M := ℚ) (⟨y, hy⟩ : CodimensionPoint X p) ?_ ?_).trans ?_
     · intro b _ hb
       have hne : y ≠ b.1 := by
         intro heq; subst heq
