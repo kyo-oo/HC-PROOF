@@ -38,12 +38,12 @@ noncomputable def codimensionPointCycle
     (X : Scheme.{u}) (p : Nat) (x : CodimensionPoint X p) :
     codimensionCycles X p := by
   classical
-  refine ⟨Function.locallyFinsupp.single x.1 (1 : ℚ), ?_⟩
+  refine ⟨Function.locallyFinsuppWithin.single x.1 (1 : ℚ), ?_⟩
   intro y hy
   have hyx : y = x.1 := by
     by_contra hne
     apply hy
-    simp [Function.locallyFinsupp.single_apply, hne]
+    simp [Function.locallyFinsuppWithin.single_apply, hne]
   subst y
   exact x.2
 
@@ -101,7 +101,12 @@ theorem linearMap_realizeFiniteCodimensionPresentation
     cl (realizeFiniteCodimensionPresentation X p φ) =
       φ.sum (fun x q => q • cl (codimensionPointCycle X p x)) := by
   classical
-  simp [realizeFiniteCodimensionPresentation]
+  induction φ using Finsupp.induction_linear with
+  | zero => simp [realizeFiniteCodimensionPresentation]
+  | add f g hf hg =>
+      simp [realizeFiniteCodimensionPresentation, hf, hg]
+  | single x q =>
+      simp [realizeFiniteCodimensionPresentation]
 
 /-- Singleton specialization: the class of one weighted codimension point is
 the same scalar multiple of the class of its unit point cycle. -/
