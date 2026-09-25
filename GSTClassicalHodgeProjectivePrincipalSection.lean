@@ -61,7 +61,7 @@ noncomputable def positiveHomogeneousSeparator
   push_neg at hnot
   obtain ⟨d, hd, hpiece⟩ := hnot
   have hsubset :
-      ¬ SetLike.GradedMonoid.ofClass (ProjectiveGrading n d) ≤
+      ¬ AddSubmonoid.ofClass (ProjectiveGrading n d) ≤
         x.asHomogeneousIdeal.toAddSubmonoid :=
     hpiece
   rw [SetLike.not_le_iff_exists] at hsubset

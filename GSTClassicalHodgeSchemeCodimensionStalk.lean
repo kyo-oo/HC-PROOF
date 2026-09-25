@@ -31,7 +31,7 @@ namespace GSTClassicalHodgeSchemeCodimensionStalk
 theorem stalk_dimension_eq_coheight
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
     ringKrullDim (V.X.presheaf.stalk x) = Order.coheight x := by
-  exact Scheme.ringKrullDim_stalk_eq_coheight x
+  exact ringKrullDim_stalk_eq_coheight x
 
 /-- A native codimension-p point has stalk Krull dimension exactly p. -/
 theorem stalk_dimension_of_codimensionPoint
@@ -39,6 +39,7 @@ theorem stalk_dimension_of_codimensionPoint
     (x : CodimensionPoint V.X p) :
     ringKrullDim (V.X.presheaf.stalk x.1) = p := by
   rw [stalk_dimension_eq_coheight V x.1, x.2]
+  push_cast
 
 /-- Conversely a point whose stalk has dimension p is a native
 codimension-p point. -/
@@ -47,7 +48,10 @@ noncomputable def codimensionPointOfStalkDimension
     (x : V.X)
     (hx : ringKrullDim (V.X.presheaf.stalk x) = p) :
     CodimensionPoint V.X p :=
-  ⟨x, by simpa [stalk_dimension_eq_coheight V x] using hx⟩
+  ⟨x, by
+    have h1 := stalk_dimension_eq_coheight V x
+    rw [h1] at hx
+    exact_mod_cast hx⟩
 
 /-- Exact codimension stratum as a subset of the projective carrier. -/
 def codimensionStratum
@@ -60,7 +64,8 @@ theorem mem_codimensionStratum_iff_stalk
     x ∈ codimensionStratum V p ↔
       ringKrullDim (V.X.presheaf.stalk x) = p := by
   rw [stalk_dimension_eq_coheight V x]
-  rfl
+  exact ⟨fun h => by exact_mod_cast h,
+    fun h => by exact WithBot.coe_injective h⟩
 
 /-- Native codimension points are exactly the subtype of the codimension
 stratum. -/

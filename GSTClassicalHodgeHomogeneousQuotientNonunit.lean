@@ -83,7 +83,7 @@ theorem quotient_mk_not_isUnit_of_positive
     simpa [projZero_mul_sub_one_of_positive 𝒜 hf hn] using hproj_mem
   have hone : (1 : A) ∈ P.toIdeal := by
     simpa using P.toIdeal.neg_mem hneg_one
-  exact hP (Ideal.eq_top_iff_one.mpr hone)
+  exact hP ((Ideal.eq_top_iff_one (I := P.toIdeal)).mpr hone)
 
 /-- Prime homogeneous ideals are automatically proper, so the theorem applies
 directly to homogeneous prime quotients. -/
