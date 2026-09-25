@@ -65,7 +65,8 @@ theorem quotient_mk_not_isUnit_of_positive
   intro hunit
   obtain ⟨u, hu⟩ := hunit
   let uinv : (A ⧸ P.toIdeal)ˣ := u⁻¹
-  obtain ⟨g, hg⟩ := Ideal.Quotient.mk_surjective P.toIdeal (uinv : A ⧸ P.toIdeal)
+  obtain ⟨g, hg⟩ := Ideal.Quotient.mk_surjective (I := P.toIdeal)
+    (uinv : A ⧸ P.toIdeal)
   have hmulq :
       Ideal.Quotient.mk P.toIdeal (f * g) = 1 := by
     rw [map_mul, hg]

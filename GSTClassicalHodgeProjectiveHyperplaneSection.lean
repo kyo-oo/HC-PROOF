@@ -79,11 +79,12 @@ noncomputable def projectiveHyperplaneι
     projectiveHyperplane n i ⟶ projectiveSpace n :=
   (projectiveHyperplaneIdeal n i).subschemeι
 
+set_option trace.Meta.synthInstance true in
 instance projectiveHyperplane_isClosedImmersion
     (n : Nat) (i : Fin (n + 1)) :
-    IsClosedImmersion (projectiveHyperplaneι n i) := by
-  dsimp [projectiveHyperplaneι]
-  infer_instance
+    IsClosedImmersion (projectiveHyperplaneι n i) :=
+  inferInstanceAs (IsClosedImmersion
+    (Scheme.IdealSheafData.subschemeι (projectiveHyperplaneIdeal n i)))
 
 /-- The reduced coordinate-hyperplane subscheme has exactly the intended
 projective zero locus as support. -/
@@ -120,9 +121,9 @@ noncomputable def hyperplaneSectionι
 instance hyperplaneSection_isClosedImmersion
     (V : SmoothProjectiveComplexScheme)
     (i : Fin (V.projective.n + 1)) :
-    IsClosedImmersion (hyperplaneSectionι V i) := by
-  dsimp [hyperplaneSectionι]
-  infer_instance
+    IsClosedImmersion (hyperplaneSectionι V i) :=
+  inferInstanceAs (IsClosedImmersion
+    (Scheme.IdealSheafData.subschemeι (hyperplaneSectionIdeal V i)))
 
 /-- The hyperplane section is canonically isomorphic to the fibred product of
 V with the coordinate hyperplane over projective space. -/
@@ -181,8 +182,11 @@ theorem mem_hyperplaneSection_support_iff_coordinate
       hyperplaneCoordinate V.projective.n i ∈
         (V.projective.immersion x).asHomogeneousIdeal := by
   rw [mem_hyperplaneSection_support_iff]
-  unfold projectiveHyperplaneSet
-  rw [ProjectiveSpectrum.mem_zeroLocus, Set.singleton_subset_iff]
+  exact (ProjectiveSpectrum.mem_zeroLocus (ProjectiveGrading V.projective.n)
+      (V.projective.immersion x)
+      ({hyperplaneCoordinate V.projective.n i} :
+        Set (ProjectiveCoordinateRing V.projective.n))).trans
+    Set.singleton_subset_iff
 
 #check hyperplaneCoordinate
 #check projectiveHyperplaneSet
