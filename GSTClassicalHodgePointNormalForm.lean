@@ -35,6 +35,45 @@ namespace GSTClassicalHodgePointNormalForm
 
 universe u
 
+/-- Pointwise evaluation of a realized finite codimension presentation.
+The realized cycle takes at `y` exactly the finite rational combination of
+the indicators of the presentation's codimension-p points. -/
+theorem realizeFiniteCodimensionPresentation_apply
+    (X : Scheme.{u}) [CompactSpace X] (p : Nat)
+    (φ : FiniteCodimensionPresentation X p) (y : X) :
+    (realizeFiniteCodimensionPresentation X p φ : AlgebraicCycle X ℚ) y
+      = φ.sum (fun x q => q * (if y = x.1 then (1 : ℚ) else 0)) := by
+  classical
+  -- evaluation at y as a rational-linear functional on native cycles
+  let ev : codimensionCycles X p →ₗ[ℚ] ℚ :=
+    { toFun := fun W => (W : AlgebraicCycle X ℚ) y
+      map_add' := by
+        intro W₁ W₂
+        show ((W₁ + W₂ : codimensionCycles X p) : AlgebraicCycle X ℚ) y
+            = (W₁ : AlgebraicCycle X ℚ) y + (W₂ : AlgebraicCycle X ℚ) y
+        simp [Function.locallyFinsuppWithin.coe_add, Pi.add_apply]
+      map_smul' := by
+        intro r W
+        show ((r • W : codimensionCycles X p) : AlgebraicCycle X ℚ) y
+            = (r : ℚ) * ((W : codimensionCycles X p) : AlgebraicCycle X ℚ) y
+        rw [Submodule.coe_smul]
+        simp [GSTGeometricRealizationStage2C.algebraicCycleRatSMul_apply,
+          smul_eq_mul] }
+  -- the linear image formula holds for every rational-linear functional
+  have hev := linearMap_realizeFiniteCodimensionPresentation X p ev φ
+  -- evaluation of a point cycle is the indicator of the point
+  have hevapply : ∀ x : CodimensionPoint X p,
+      ev (codimensionPointCycle X p x) = if y = x.1 then (1 : ℚ) else 0 := by
+    intro x
+    show (codimensionPointCycle X p x : AlgebraicCycle X ℚ) y
+        = if y = x.1 then (1 : ℚ) else 0
+    simp [codimensionPointCycle, Function.locallyFinsuppWithin.single_apply]
+  calc (realizeFiniteCodimensionPresentation X p φ : AlgebraicCycle X ℚ) y
+      = ev (realizeFiniteCodimensionPresentation X p φ) := rfl
+    _ = φ.sum (fun x q => q • ev (codimensionPointCycle X p x)) := hev
+    _ = φ.sum (fun x q => q * (if y = x.1 then (1 : ℚ) else 0)) := by
+        simp only [hevapply, smul_eq_mul]
+
 /-- Compact native codimension cycles are reconstructed exactly from the
 finite presentation consisting of their genuine codimension-p coefficients. -/
 theorem realize_presentationOfNativeCycle
@@ -46,47 +85,38 @@ theorem realize_presentationOfNativeCycle
   apply Subtype.ext
   ext y
   by_cases hy : Order.coheight y = p
-  · let x : CodimensionPoint X p := ⟨y, hy⟩
-    change
-      (realizeFiniteCodimensionPresentation X p
-          (presentationOfNativeCycle X p Z) : AlgebraicCycle X ℚ) y =
-        (Z.1 : AlgebraicCycle X ℚ) y
-    classical
-    simp only [realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
-      codimensionPointCycle, x, Finsupp.sum, Finsupp.ofSupportFinite,
-      Function.locallyFinsuppWithin.coe_sum,
-      Function.locallyFinsuppWithin.single_apply, Pi.smul_apply, smul_eq_mul]
-    refine (Finset.sum_eq_single (M := ℚ) (⟨y, hy⟩ : CodimensionPoint X p) ?_ ?_).trans ?_
+  · show (realizeFiniteCodimensionPresentation X p
+        (presentationOfNativeCycle X p Z) : AlgebraicCycle X ℚ) y
+      = (Z.1 : AlgebraicCycle X ℚ) y
+    rw [realizeFiniteCodimensionPresentation_apply X p
+      (presentationOfNativeCycle X p Z) y]
+    simp only [Finsupp.sum, smul_eq_mul]
+    refine (Finset.sum_eq_single (⟨y, hy⟩ : CodimensionPoint X p) ?_ ?_).trans ?_
     · intro b _ hb
       have hne : y ≠ b.1 := by
-        intro heq; subst heq
-        exact hb (Subtype.ext rfl)
+        intro heq
+        exact hb (Subtype.ext heq)
       simp [hne]
     · intro hout
-      by_cases hZy : (Z.1 : AlgebraicCycle X ℚ) y = 0
-      · simp [hZy]
-      · exact absurd (Finsupp.mem_support_iff.mpr hZy) hout
-    · simp
+      simp [Finsupp.notMem_support_iff.mp hout]
+    · simp [presentationOfNativeCycle_apply]
   · have hZy : (Z.1 : AlgebraicCycle X ℚ) y = 0 := by
       by_contra hne
       have hySupport : y ∈ (Z.1 : AlgebraicCycle X ℚ).support := hne
       exact hy (Z.2 hySupport)
-    change
-      (realizeFiniteCodimensionPresentation X p
-          (presentationOfNativeCycle X p Z) : AlgebraicCycle X ℚ) y =
-        (Z.1 : AlgebraicCycle X ℚ) y
-    rw [hZy]
-    classical
-    have hny : ∀ x' : CodimensionPoint X p, y ≠ x'.1 := by
-      intro x' heq
+    show (realizeFiniteCodimensionPresentation X p
+      (presentationOfNativeCycle X p Z) : AlgebraicCycle X ℚ) y
+      = (Z.1 : AlgebraicCycle X ℚ) y
+    rw [realizeFiniteCodimensionPresentation_apply X p
+      (presentationOfNativeCycle X p Z) y, hZy]
+    simp only [Finsupp.sum, smul_eq_mul]
+    refine Finset.sum_eq_zero fun x _ => ?_
+    have hne : y ≠ x.1 := by
+      intro heq
       apply hy
       rw [heq]
-      exact x'.2
-    simp [hny, realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
-      codimensionPointCycle, Finsupp.sum, Finsupp.ofSupportFinite,
-      Function.locallyFinsuppWithin.coe_sum,
-      Function.locallyFinsuppWithin.single_apply, Pi.smul_apply,
-      smul_eq_mul, mul_ite, mul_zero, mul_one, Finset.sum_const_zero]
+      exact x.2
+    simp [hne]
 
 /-- On a bundled smooth projective complex scheme, every native Hodge-basis
 cycle bridge canonically yields a finite codimension-point presentation
@@ -117,7 +147,7 @@ theorem fiberedBasisCycleBridge_iff_presentationBridge
       Nonempty (FiberedBasisPresentationBridge V H p) := by
   constructor
   · rintro ⟨R⟩
-    exact ⟨R.toPresentationBridge⟩
+    exact ⟨FiberedBasisCycleBridge.toPresentationBridge R⟩
   · rintro ⟨R⟩
     exact ⟨R.toBasisCycleBridge⟩
 

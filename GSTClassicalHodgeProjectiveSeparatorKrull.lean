@@ -1,5 +1,8 @@
 import GSTClassicalHodgeKrullPrincipalCut
 import GSTClassicalHodgeProjectivePrincipalSection
+import Mathlib.RingTheory.Ideal.Quotient.Basic
+import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+import Mathlib.RingTheory.Polynomial.Basic
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE SEPARATOR KRULL DICHOTOMY
@@ -33,16 +36,18 @@ namespace GSTClassicalHodgeProjectiveSeparatorKrull
 attribute [local instance] MvPolynomial.gradedAlgebra
 
 /-- Quotient of the projective coordinate ring by the homogeneous prime of a
-Proj point. -/
+Proj point.  The homogeneous prime is converted to a genuine ideal through
+`HomogeneousIdeal.toIdeal`, which is the coercion under which Mathlib's
+quotient-ring API (membership, domain, Noetherianity) is available. -/
 abbrev pointQuotient
     (n : Nat) (x : projectiveSpace n) :=
-  ProjectiveCoordinateRing n ⧸ x.asHomogeneousIdeal
+  ProjectiveCoordinateRing n ⧸ x.asHomogeneousIdeal.toIdeal
 
 /-- Image of the canonical positive homogeneous separator in the point-prime
 quotient. -/
 noncomputable def separatorClass
     (n : Nat) (x : projectiveSpace n) : pointQuotient n x :=
-  Ideal.Quotient.mk x.asHomogeneousIdeal
+  Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal
     (positiveHomogeneousSeparator n x).equation
 
 /-- The separator survives nontrivially after quotienting by the point prime. -/
@@ -52,20 +57,25 @@ theorem separatorClass_ne_zero
   intro h
   have hmem :
       (positiveHomogeneousSeparator n x).equation ∈ x.asHomogeneousIdeal := by
-    exact Ideal.Quotient.eq_zero_iff_mem.mp h
+    exact HomogeneousIdeal.mem_iff.mp
+      (Ideal.Quotient.eq_zero_iff_mem.mp h)
   exact (positiveHomogeneousSeparator n x).not_mem_prime hmem
 
-/-- The point-prime quotient is a domain. -/
+/-- The point-prime quotient is a domain: the point prime is a genuine prime
+ideal, and quotients of prime ideals are domains. -/
 noncomputable def pointQuotientIsDomain
     (n : Nat) (x : projectiveSpace n) :
     IsDomain (pointQuotient n x) := by
-  letI := x.asHomogeneousIdeal.isPrime
   infer_instance
 
-/-- The point-prime quotient is Noetherian. -/
+/-- The point-prime quotient is Noetherian: the polynomial coordinate ring is
+Noetherian (Hilbert basis theorem for `Fin (n+1)` variables over a field), and
+quotients of Noetherian rings are Noetherian. -/
 noncomputable def pointQuotientIsNoetherian
     (n : Nat) (x : projectiveSpace n) :
     IsNoetherianRing (pointQuotient n x) := by
+  letI : IsNoetherianRing (ProjectiveCoordinateRing n) :=
+    Polynomial.isNoetherianRing_fin (n := n + 1)
   infer_instance
 
 /-- **PROJECTIVE KRULL DICHOTOMY.**  At every projective source point the
