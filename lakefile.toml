@@ -202,6 +202,36 @@ roots = [
 ]
 
 # ---------------------------------------------------------------------------
+# PURE-MATH CLASSICAL HODGE GEOMETRY LANE
+# Keep the rapidly evolving geometry/codimension engine isolated from the
+# historical universe while still registering every module in its active
+# dependency closure.  This lets Lake build the proof lane transitively.
+# ---------------------------------------------------------------------------
+[[lean_lib]]
+name = "HodgePureMath"
+roots = [
+  "GSTCompactNativeCyclePresentation",
+  "GSTSmoothProjectiveNoetherian",
+  "GSTClassicalHodgeProjectiveHyperplaneSection",
+  "GSTClassicalHodgeProjectivePrincipalSection",
+  "GSTClassicalHodgePrincipalSectionNoetherian",
+  "GSTClassicalHodgePrincipalSectionDescent",
+  "GSTClassicalHodgeKrullPrincipalCut",
+  "GSTClassicalHodgeProjectiveSeparatorKrull",
+  "GSTClassicalHodgePositiveDegreeNonunit",
+  "GSTClassicalHodgeHomogeneousQuotientNonunit",
+  "GSTClassicalHodgeProjectiveSeparatorHeightOne",
+  "GSTClassicalHodgePointClosurePrincipalCut",
+  "GSTClassicalHodgePointClosureIrreducible",
+  "GSTClassicalHodgeProperCutCodimensionOne",
+  "GSTClassicalHodgePointClosureRelativeCut",
+  "GSTClassicalHodgeSchemeCodimensionStalk",
+  "GSTClassicalHodgePrincipalCutSuccessorOperator",
+  "GSTClassicalHodgeRelativeSuccessorLowerBound",
+  "GSTClassicalHodgeRelativeSuccessorProjectivePrime",
+]
+
+# ---------------------------------------------------------------------------
 # THE COMPARATOR TARGET — the entry face as a bare lib (module-level build
 # path: HCProof.lean imports the entire universe transitively).
 # ---------------------------------------------------------------------------
