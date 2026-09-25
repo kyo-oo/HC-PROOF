@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   hodge-conjecture:
-    name: Classical Hodge landing (full universe + axiom audit)
+    name: Classical Hodge landing (fast slice + full universe audit)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
@@ -50,21 +50,21 @@ jobs:
           fi
           echo HODGE_PROOF_ESCAPE_CHECK=PASS
 
+      - name: Compile Hodge dependency slice first
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build HodgeConjecture 2>&1 | tee hodge-conjecture.log
+          echo HODGE_CONJECTURE_MODULE_GREEN=1
+
       - name: Build the complete limitless universe
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build HCUniverse 2>&1 | tee hodge-conjecture.log
+          lake build HCUniverse 2>&1 | tee -a hodge-conjecture.log
           echo HODGE_FULL_UNIVERSE_GREEN=1
-
-      - name: Compile classical Hodge landing
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean HodgeConjecture.lean 2>&1 | tee -a hodge-conjecture.log
-          echo HODGE_CONJECTURE_MODULE_GREEN=1
 
       - name: Build universe entry face
         shell: bash
