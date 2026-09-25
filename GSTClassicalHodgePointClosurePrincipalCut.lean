@@ -59,9 +59,9 @@ noncomputable def pointClosureι
 
 instance pointClosure_isClosedImmersion
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    IsClosedImmersion (pointClosureι V x) := by
-  dsimp [pointClosureι]
-  infer_instance
+    IsClosedImmersion (pointClosureι V x) :=
+  inferInstanceAs (IsClosedImmersion
+    (Scheme.IdealSheafData.subschemeι (pointClosureIdeal V x)))
 
 /-- Scheme-theoretic intersection of the irreducible point closure with the
 source-specific projective principal section. -/

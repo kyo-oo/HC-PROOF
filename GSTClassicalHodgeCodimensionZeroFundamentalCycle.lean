@@ -56,7 +56,10 @@ theorem finite_coheight_zero
     subset_closure (hleW (subset_closure (Set.mem_singleton x)))
   have hxγ : x ≤ γ := hγ.specializes hxW
   have hγx : γ ≤ x := hmax hxγ
-  have hxeq : x = γ := le_antisymm hxγ hγx
+  have hxeq : x = γ := by
+    refine (inseparable_iff_eq).mp ⟨?_⟩
+    show 𝓝 x = 𝓝 γ
+    exact le_antisymm (show 𝓝 x ≤ 𝓝 γ from hγx) (show 𝓝 γ ≤ 𝓝 x from hxγ)
   have hclos : closure (W : Set V.X) = closure ({x} : Set V.X) := by
     rw [hxeq]
     exact hγ.def.symm
@@ -71,10 +74,10 @@ noncomputable def codimensionZeroPointFinset
   let s : Set V.X := {x : V.X | Order.coheight x = 0}
   have hs : s.Finite := finite_coheight_zero V
   exact hs.toFinset.attach.map
-    ⟨fun x => (⟨x.1, x.2⟩ : CodimensionPoint V.X 0),
+    ⟨fun x => (⟨x.1, s.mem_toFinset.mp x.2⟩ : CodimensionPoint V.X 0),
       by
         intro a b h
-        exact Subtype.ext (congrArg Subtype.val h)⟩
+        exact Subtype.ext (congrArg (Subtype.val : CodimensionPoint V.X 0 → V.X) h)⟩
 
 /-- Canonical finite codimension-zero presentation: coefficient one on every
 irreducible-component generic point. -/

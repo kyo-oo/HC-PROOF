@@ -39,10 +39,10 @@ open GSTSmoothProjectiveNoetherian
 The relative-successor module refers to these statements under their exact
 names, so they are provided here once, in the module below that entire chain. -/
 
+attribute [local instance] specializationOrder in
 /-- Membership characterization of the specialization order: `a ≤ b` holds
 exactly when `a` lies in the closure of `b`.  The successor-layer modules
 refer to this statement under this exact name. -/
-attribute [local instance] specializationOrder in
 theorem specializationOrder_iff_specializes
     {X : Type*} [TopologicalSpace X] [T0Space X] {a b : X} :
     a ≤ b ↔ a ∈ closure ({b} : Set X) := by
@@ -132,7 +132,7 @@ theorem TopologicalSpace.NoetherianSpace.finite_coheight_one_of_closure_ne_univ
         subset_closure (Set.mem_singleton x)
       rw [← hbridge] at hxmem
       obtain ⟨v, hv, hval⟩ := hxmem
-      have hvW : (v : X) ∈ Subtype.val '' W := ⟨v, hleW hv, hval⟩
+      have hvW : x ∈ Subtype.val '' W := ⟨v, hleW hv, hval⟩
       exact subset_closure hvW
     -- the ambient closure of the image of W has a generic point
     obtain ⟨γ, hγW⟩ : ∃ γ : X, IsGenericPoint γ (closure (Subtype.val '' W)) :=
@@ -207,7 +207,7 @@ theorem finite_principal_cut_coheight_one
   · intro h
     refine principalSectionAt_support_ne_univ V x ?_
     apply TopologicalSpace.Closeds.ext
-    simp [cutSupport, h]
+    simpa [cutSupport] using h
 
 /-- A nonempty codimension-one locus of the selected cut can be packaged as a
 finite set of genuine Stage-2D codimension-one points. -/

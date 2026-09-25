@@ -46,6 +46,7 @@ theorem separatorClass_not_isUnit
     (n : Nat) (x : projectiveSpace n) :
     ¬ IsUnit (separatorClass n x) := by
   let P := x.asHomogeneousIdeal
+  haveI : P.toIdeal.IsPrime := x.isPrime
   have hhom :
       (positiveHomogeneousSeparator n x).equation ∈
         ProjectiveGrading n (positiveHomogeneousSeparator n x).degree :=

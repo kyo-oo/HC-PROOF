@@ -35,10 +35,10 @@ namespace GSTClassicalHodgePointNormalForm
 
 universe u
 
+open Classical in
 /-- Pointwise evaluation of a realized finite codimension presentation.
 The realized cycle takes at `y` exactly the finite rational combination of
 the indicators of the presentation's codimension-p points. -/
-open Classical in
 theorem realizeFiniteCodimensionPresentation_apply
     (X : Scheme.{u}) [CompactSpace X] (p : Nat)
     (φ : FiniteCodimensionPresentation X p) (y : X) :
@@ -96,7 +96,7 @@ theorem realize_presentationOfNativeCycle
     · intro b _ hb
       have hne : y ≠ b.1 := by
         intro heq
-        exact hb (Subtype.ext heq)
+        exact hb (Subtype.ext heq.symm)
       simp [hne]
     · intro hout
       simp [Finsupp.notMem_support_iff.mp hout]
