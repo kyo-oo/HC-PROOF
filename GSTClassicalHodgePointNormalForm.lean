@@ -238,4 +238,22 @@ theorem limitless_global_atlas_to_fibered_gst_algebraicity
 #print axioms bigradedBettiHodgeStatement_iff_limitless_global_atlas
 #print axioms limitless_global_atlas_to_fibered_gst_algebraicity
 
+/-- Native point cycles detect every linear operator on the projective cycle
+space. This uses the exact compact point normal form, with no cycle-class
+surjectivity hypothesis. -/
+theorem nativeOperator_eq_zero_of_points
+    (V : SmoothProjectiveComplexScheme) (p : Nat)
+    (A : Module.End ℚ (codimensionCycles V.X p))
+    (hA : ∀ x : CodimensionPoint V.X p, A (codimensionPointCycle V.X p x) = 0) :
+    A = 0 := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  apply LinearMap.ext
+  intro Z
+  change A Z = 0
+  rw [← realize_presentationOfNativeCycle V.X p Z]
+  rw [GSTNativeCodimensionCyclePresentation.linearMap_realizeFiniteCodimensionPresentation]
+  simp [hA]
+
+#print axioms nativeOperator_eq_zero_of_points
+
 end GSTClassicalHodgePointNormalForm

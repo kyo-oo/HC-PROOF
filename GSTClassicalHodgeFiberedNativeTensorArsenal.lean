@@ -276,4 +276,106 @@ theorem fibered_native_tensor_arsenal_crown :
 #print axioms tensorWord_nativeFace_atom_source
 #print axioms fibered_native_tensor_arsenal_crown
 
+/-! ## Exact descent through the native face
+
+Commutation on the labelled universe does not by itself produce a native
+operator after labels are forgotten. The following calculation determines
+that descent question exactly for the tensor words constructed above.
+-/
+
+/-- Two distinct labels on the same native point differ by a native-kernel
+vector. Its multiplicity information remains nonzero. -/
+def sheetDifference
+    (i k : ClassicalHodgeBasisIndex V H p) (x : CodimensionPoint V.X p) :
+    FiberedNativeAddress V H p := atom V H p i x - atom V H p k x
+
+@[simp] theorem sheetDifference_nativeFace
+    (i k : ClassicalHodgeBasisIndex V H p) (x : CodimensionPoint V.X p) :
+    toNativeCycle V H p (sheetDifference i k x) = 0 := by
+  simp [sheetDifference]
+
+theorem sheetDifference_multiplicityFace_ne_zero
+    (i k : ClassicalHodgeBasisIndex V H p) (hik : i ≠ k)
+    (x : CodimensionPoint V.X p) :
+    forgetPoint V H p (sheetDifference i k x) ≠ 0 := by
+  intro hz
+  have hi := congrArg (fun a : ClassicalHodgeBasisIndex V H p →₀ ℚ => a i) hz
+  simpa [sheetDifference, hik, Ne.symm hik] using hi
+
+/-- Exact native face of an arbitrary tensor word. The selected multiplicity
+slice, rather than the sum of all slices, is what feeds the native operator. -/
+theorem tensorWord_nativeFace
+    (i j : ClassicalHodgeBasisIndex V H p)
+    (A : Module.End ℚ (codimensionCycles V.X p))
+    (Φ : FiberedNativeAddress V H p) :
+    toNativeCycle V H p (tensorWord i j A Φ) =
+      A (toNativeCycle V H p (multiplicityMatrixUnit i j Φ)) := by
+  calc
+    toNativeCycle V H p (tensorWord i j A Φ) =
+        toNativeCycle V H p (liftNativeOperator A (multiplicityMatrixUnit i j Φ)) :=
+      congrArg (toNativeCycle V H p)
+        (LinearMap.congr_fun (multiplicityMatrixUnit_commutes_liftNativeOperator i j A) Φ)
+    _ = _ := toNativeCycle_liftNativeOperator A _
+
+/-- A tensor word sends a native-kernel difference to the actual native
+image of its point atom. This is the precise obstruction to descent. -/
+theorem tensorWord_sheetDifference_nativeFace
+    (i j k : ClassicalHodgeBasisIndex V H p) (hki : k ≠ i)
+    (A : Module.End ℚ (codimensionCycles V.X p))
+    (x : CodimensionPoint V.X p) :
+    toNativeCycle V H p (tensorWord i j A (sheetDifference i k x)) =
+      A (codimensionPointCycle V.X p x) := by
+  rw [tensorWord_nativeFace]
+  simp [sheetDifference, multiplicityMatrixUnit_atom_other i j k hki]
+
+/-- With two source labels available, a tensor word factors through the
+native-cycle projection exactly when its native operator is zero. Thus
+arbitrary multiplicity matrix units cannot be externalized merely by their
+commutation with lifted projective operators. -/
+theorem tensorWord_descends_native_iff_zero
+    (i j k : ClassicalHodgeBasisIndex V H p) (hki : k ≠ i)
+    (A : Module.End ℚ (codimensionCycles V.X p)) :
+    (∃ B : Module.End ℚ (codimensionCycles V.X p),
+      (toNativeCycle V H p).comp (tensorWord i j A) =
+        B.comp (toNativeCycle V H p)) ↔ A = 0 := by
+  constructor
+  · rintro ⟨B, hB⟩
+    apply GSTClassicalHodgePointNormalForm.nativeOperator_eq_zero_of_points V p A
+    intro x
+    have hx := LinearMap.congr_fun hB (sheetDifference i k x)
+    change toNativeCycle V H p (tensorWord i j A (sheetDifference i k x)) =
+      B (toNativeCycle V H p (sheetDifference i k x)) at hx
+    rw [tensorWord_sheetDifference_nativeFace i j k hki,
+      sheetDifference_nativeFace, map_zero] at hx
+    exact hx
+  · rintro rfl
+    refine ⟨0, ?_⟩
+    apply LinearMap.ext
+    intro Φ
+    change toNativeCycle V H p (tensorWord i j 0 Φ) = 0
+    rw [tensorWord_nativeFace]
+    rfl
+
+/-- The original multiplicity matrix unit itself fails to descend whenever
+there are two labels and one genuine native point. -/
+theorem multiplicityMatrixUnit_not_descend_native
+    (i j k : ClassicalHodgeBasisIndex V H p) (hki : k ≠ i)
+    (x : CodimensionPoint V.X p) :
+    ¬ ∃ B : Module.End ℚ (codimensionCycles V.X p),
+      (toNativeCycle V H p).comp (multiplicityMatrixUnit i j) =
+        B.comp (toNativeCycle V H p) := by
+  rintro ⟨B, hB⟩
+  have hx := LinearMap.congr_fun hB (sheetDifference i k x)
+  change toNativeCycle V H p (multiplicityMatrixUnit i j (sheetDifference i k x)) =
+    B (toNativeCycle V H p (sheetDifference i k x)) at hx
+  have hz : codimensionPointCycle V.X p x = 0 := by
+    simpa [sheetDifference, multiplicityMatrixUnit_atom_other i j k hki] using hx
+  have hm := GSTClassicalHodgeNativeCycleCosmicShadow.nativeCycleMass_point V p x
+  rw [hz, map_zero] at hm
+  norm_num at hm
+
+#print axioms sheetDifference_multiplicityFace_ne_zero
+#print axioms tensorWord_descends_native_iff_zero
+#print axioms multiplicityMatrixUnit_not_descend_native
+
 end GSTClassicalHodgeFiberedNativeTensorArsenal
