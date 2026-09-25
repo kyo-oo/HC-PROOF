@@ -282,4 +282,128 @@ theorem fibered_native_pullback_crown :
 #print axioms atom_three_faces
 #print axioms fibered_native_pullback_crown
 
+/-! ## Explicit simultaneous lifting of the two finite marginals -/
+
+/-- Augmentation of a full multiplicity address, before forgetting its labels. -/
+noncomputable def multiplicityMass :
+    (ClassicalHodgeBasisIndex V H p →₀ ℚ) →ₗ[ℚ] ℚ where
+  toFun a := a.sum fun _ q => q
+  map_add' := by intro a b; classical; simp
+  map_smul' := by intro q a; classical; simp [smul_eq_mul]
+
+@[simp] theorem multiplicityMass_single
+    (i : ClassicalHodgeBasisIndex V H p) (q : ℚ) :
+    multiplicityMass V H p (Finsupp.single i q) = q := by
+  classical
+  simp [multiplicityMass]
+
+/-- Attach one native point to every entry of a multiplicity address. -/
+noncomputable def attachPoint (x : CodimensionPoint V.X p) :
+    (ClassicalHodgeBasisIndex V H p →₀ ℚ) →ₗ[ℚ] FiberedNativeAddress V H p where
+  toFun a := a.sum fun i q => q • atom V H p i x
+  map_add' := by intro a b; classical; simp
+  map_smul' := by intro q a; classical; simp [smul_smul]
+
+/-- Attach one multiplicity label to a genuine finite native presentation. -/
+noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
+    FiniteCodimensionPresentation V.X p →ₗ[ℚ] FiberedNativeAddress V H p where
+  toFun b := b.sum fun x q => q • atom V H p i x
+  map_add' := by intro a b; classical; simp
+  map_smul' := by intro q a; classical; simp [smul_smul]
+
+@[simp] theorem forgetPoint_attachPoint (x : CodimensionPoint V.X p)
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ) :
+    forgetPoint V H p (attachPoint V H p x a) = a := by
+  classical
+  induction a using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single i q => simp [attachPoint, atom, forgetPoint]
+
+@[simp] theorem forgetMultiplicity_attachPoint (x : CodimensionPoint V.X p)
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ) :
+    forgetMultiplicity V H p (attachPoint V H p x a) =
+      multiplicityMass V H p a • Finsupp.single x 1 := by
+  classical
+  induction a using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb, add_smul]
+  | single i q => simp [attachPoint, atom, forgetMultiplicity]
+
+@[simp] theorem forgetMultiplicity_attachSheet (i : ClassicalHodgeBasisIndex V H p)
+    (b : FiniteCodimensionPresentation V.X p) :
+    forgetMultiplicity V H p (attachSheet V H p i b) = b := by
+  classical
+  induction b using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single x q => simp [attachSheet, atom, forgetMultiplicity]
+
+@[simp] theorem forgetPoint_attachSheet (i : ClassicalHodgeBasisIndex V H p)
+    (b : FiniteCodimensionPresentation V.X p) :
+    forgetPoint V H p (attachSheet V H p i b) =
+      presentationMass b • Finsupp.single i 1 := by
+  classical
+  induction b using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb, add_smul]
+  | single x q => simp [attachSheet, atom, forgetPoint]
+
+/-- Both marginals have the same augmentation for every finite atom state. -/
+theorem marginal_mass_balance (Φ : FiberedNativeAddress V H p) :
+    multiplicityMass V H p (forgetPoint V H p Φ) =
+      presentationMass (forgetMultiplicity V H p Φ) := by
+  classical
+  induction Φ using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single ix q =>
+    simp [forgetPoint, forgetMultiplicity, multiplicityMass, presentationMass]
+
+/-- An explicit gluing formula. The subtracted anchor removes the duplicated
+mass; no basis-cycle or cycle-class surjectivity hypothesis is used. -/
+noncomputable def glueMarginals
+    (i₀ : ClassicalHodgeBasisIndex V H p) (x₀ : CodimensionPoint V.X p)
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b : FiniteCodimensionPresentation V.X p) : FiberedNativeAddress V H p :=
+  attachPoint V H p x₀ a + attachSheet V H p i₀ b -
+    multiplicityMass V H p a • atom V H p i₀ x₀
+
+theorem glueMarginals_forgetPoint
+    (i₀ : ClassicalHodgeBasisIndex V H p) (x₀ : CodimensionPoint V.X p)
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b : FiniteCodimensionPresentation V.X p)
+    (hm : multiplicityMass V H p a = presentationMass b) :
+    forgetPoint V H p (glueMarginals V H p i₀ x₀ a b) = a := by
+  simp [glueMarginals, hm]
+
+theorem glueMarginals_forgetMultiplicity
+    (i₀ : ClassicalHodgeBasisIndex V H p) (x₀ : CodimensionPoint V.X p)
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b : FiniteCodimensionPresentation V.X p) :
+    forgetMultiplicity V H p (glueMarginals V H p i₀ x₀ a b) = b := by
+  simp [glueMarginals, add_sub_cancel_left]
+
+/-- Exact image of the two-marginal map, including arbitrary multiplicity:
+equal mass is precisely enough to glue finite addresses. This theorem is
+about the address projections, not an identification with `H.cycleClass`. -/
+theorem exists_joint_marginals_iff
+    (i₀ : ClassicalHodgeBasisIndex V H p) (x₀ : CodimensionPoint V.X p)
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b : FiniteCodimensionPresentation V.X p) :
+    (∃ Φ : FiberedNativeAddress V H p,
+      forgetPoint V H p Φ = a ∧ forgetMultiplicity V H p Φ = b) ↔
+      multiplicityMass V H p a = presentationMass b := by
+  constructor
+  · rintro ⟨Φ, rfl, rfl⟩
+    exact marginal_mass_balance V H p Φ
+  · intro hm
+    exact ⟨glueMarginals V H p i₀ x₀ a b,
+      glueMarginals_forgetPoint V H p i₀ x₀ a b hm,
+      glueMarginals_forgetMultiplicity V H p i₀ x₀ a b⟩
+
+#print axioms exists_joint_marginals_iff
+#print axioms glueMarginals_forgetPoint
+#print axioms glueMarginals_forgetMultiplicity
+
 end GSTClassicalHodgeFiberedNativePullback
