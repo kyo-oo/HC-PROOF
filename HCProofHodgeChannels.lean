@@ -3,16 +3,26 @@ import GSTMultiChannelHodgeCosmology
 import GSTHodgeChannelAddressBridge
 import GSTHodgeChannelMaterialization
 import GSTHodgeChannelRetract
+import GSTHodgeChannelQuotient
+import GSTMathlibFiniteBasis
+import GSTHodgeChannelFiniteBasis
+import GSTHodgeChannelFinale
 
 /-!
-# HC PROOF — MULTI-CHANNEL HODGE MATERIALIZATION RECEIPT
+# HC PROOF — MULTI-CHANNEL HODGE ARCHITECTURE RECEIPT
 
-Parallel entry face for the new fixed-weight multiplicity theorem, the
-unbounded natural-address bridge, the Stage-2G generator-materialization
-bridge, and the stronger split-retract landing theorem.
+Parallel entry face for the complete fixed-weight multi-channel architecture:
 
-This file is intentionally separate from `HCProof.lean` while the main entry
-face is being repaired in parallel.  It changes no existing route.
+* arbitrary same-weight Wave-II multiplicity;
+* faithful embedding into the unbounded natural address universe;
+* generator materialization by exact coordinates;
+* split-retract materialization;
+* the weaker and mathematically minimal surjective quotient theorem;
+* automatic quotient construction from a finite Hodge basis;
+* the final canonical-basis algebraization equivalence.
+
+This file remains separate from `HCProof.lean` while GLM repairs the main
+entry face in parallel.  It changes no existing theorem route.
 -/
 
 #check GSTMultiChannelHodgeCosmology.HodgeChannel
@@ -28,31 +38,50 @@ face is being repaired in parallel.  It changes no existing route.
 #check GSTHodgeChannelAddressBridge.channel_address_bridge_crown
 
 #check GSTHodgeChannelMaterialization.ChannelHodgeRealization
-#check GSTHodgeChannelMaterialization.channelCycleWitness
 #check GSTHodgeChannelMaterialization.channelCycleWitness_spec
-#check GSTHodgeChannelMaterialization.channel_hodge_le_cycleClass_range
-#check GSTHodgeChannelMaterialization.Stage2GChannelMaterialization
-#check GSTHodgeChannelMaterialization.hodge_class_has_stage2g_channel_cycle
-#check GSTHodgeChannelMaterialization.bigraded_betti_hodge_of_channel_materialization_family
-#check GSTHodgeChannelMaterialization.Stage2GChannelMaterializationObligation
 #check GSTHodgeChannelMaterialization.hodge_channel_materialization_crown
 
 #check GSTHodgeChannelRetract.ChannelHodgeRetract
-#check GSTHodgeChannelRetract.retractCycleWitness
 #check GSTHodgeChannelRetract.retractCycleWitness_spec
-#check GSTHodgeChannelRetract.retract_hodge_le_cycleClass_range
-#check GSTHodgeChannelRetract.ChannelHodgeRealization.toRetract
-#check GSTHodgeChannelRetract.Stage2GChannelRetract
-#check GSTHodgeChannelRetract.hodge_class_has_stage2g_retract_cycle
-#check GSTHodgeChannelRetract.bigraded_betti_hodge_of_channel_retract_family
-#check GSTHodgeChannelRetract.Stage2GChannelRetractObligation
 #check GSTHodgeChannelRetract.hodge_channel_retract_crown
+
+#check GSTHodgeChannelQuotient.ChannelHodgeQuotient
+#check GSTHodgeChannelQuotient.quotientCoordinates
+#check GSTHodgeChannelQuotient.quotientCycleWitness_spec
+#check GSTHodgeChannelQuotient.ChannelHodgeRetract.toQuotient
+#check GSTHodgeChannelQuotient.Stage2GChannelQuotient
+#check GSTHodgeChannelQuotient.bigraded_betti_hodge_of_channel_quotient_family
+#check GSTHodgeChannelQuotient.hodge_channel_quotient_crown
+
+#check GSTMathlibFiniteBasis.basisCoordinates
+#check GSTMathlibFiniteBasis.basisDecode
+#check GSTMathlibFiniteBasis.basisCoordinateEquiv
+#check GSTMathlibFiniteBasis.finite_basis_adapter_crown
+
+#check GSTHodgeChannelFiniteBasis.FiniteBasisAlgebraization
+#check GSTHodgeChannelFiniteBasis.FiniteBasisAlgebraization.toChannelQuotient
+#check GSTHodgeChannelFiniteBasis.Stage2GFiniteBasisAlgebraization
+#check GSTHodgeChannelFiniteBasis.Stage2GFiniteBasisAlgebraization.toChannelQuotient
+#check GSTHodgeChannelFiniteBasis.CanonicalBasisCycleSupply
+#check GSTHodgeChannelFiniteBasis.hodge_class_has_canonical_basis_cycle
+#check GSTHodgeChannelFiniteBasis.finite_basis_algebraization_crown
+
+#check GSTHodgeChannelFinale.Stage2GHodgeFiniteness
+#check GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation
+#check GSTHodgeChannelFinale.canonicalBasisCycleSupplyOfHodge
+#check GSTHodgeChannelFinale.hodge_of_canonical_basis_algebraization
+#check GSTHodgeChannelFinale.canonical_basis_algebraization_iff_hodge
+#check GSTHodgeChannelFinale.canonical_basis_obligation_implies_channel_quotient
+#check GSTHodgeChannelFinale.no_same_weight_rank_ceiling
+#check GSTHodgeChannelFinale.hodge_channel_finale_crown
 
 #print axioms GSTMultiChannelHodgeCosmology.same_weight_channel_crown
 #print axioms GSTHodgeChannelAddressBridge.channel_address_bridge_crown
 #print axioms GSTHodgeChannelMaterialization.channelCycleWitness_spec
-#print axioms GSTHodgeChannelMaterialization.bigraded_betti_hodge_of_channel_materialization_family
-#print axioms GSTHodgeChannelMaterialization.hodge_channel_materialization_crown
 #print axioms GSTHodgeChannelRetract.retractCycleWitness_spec
-#print axioms GSTHodgeChannelRetract.bigraded_betti_hodge_of_channel_retract_family
-#print axioms GSTHodgeChannelRetract.hodge_channel_retract_crown
+#print axioms GSTHodgeChannelQuotient.quotientCycleWitness_spec
+#print axioms GSTMathlibFiniteBasis.finite_basis_adapter_crown
+#print axioms GSTHodgeChannelFiniteBasis.finiteBasisCycleWitness_spec
+#print axioms GSTHodgeChannelFiniteBasis.hodge_class_has_canonical_basis_cycle
+#print axioms GSTHodgeChannelFinale.canonical_basis_algebraization_iff_hodge
+#print axioms GSTHodgeChannelFinale.hodge_channel_finale_crown
