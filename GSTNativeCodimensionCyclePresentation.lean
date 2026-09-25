@@ -10,7 +10,9 @@ the required coheight.  Finite rational combinations are then formed inside
 `codimensionCycles X p`, so every object produced here is a native Mathlib
 `AlgebraicCycle` with the codimension condition proved by construction.
 
-No cohomological cycle-class statement is asserted in this file.
+No cohomological cycle-class surjectivity statement is asserted in this file.
+The final section instead proves the exact linear formula for the image of a
+finite presentation under any supplied rational cycle-class map.
 -/
 
 set_option maxHeartbeats 10000000
@@ -85,6 +87,35 @@ theorem finite_presentation_is_native_codimension_cycle
       codimensionCycles X p :=
   (realizeFiniteCodimensionPresentation X p φ).2
 
+/-! ## Exact image under an arbitrary rational cycle-class map -/
+
+/-- Applying any rational-linear map to a finite codimension presentation is
+exactly the finite linear combination of the images of its genuine point
+cycles.  For the Stage-2G classical landing, instantiate `cl` with the actual
+supplied cycle-class map. -/
+theorem linearMap_realizeFiniteCodimensionPresentation
+    {Coh : Type*} [AddCommGroup Coh] [Module ℚ Coh]
+    (X : Scheme.{u}) (p : Nat)
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (φ : FiniteCodimensionPresentation X p) :
+    cl (realizeFiniteCodimensionPresentation X p φ) =
+      φ.sum (fun x q => q • cl (codimensionPointCycle X p x)) := by
+  classical
+  simp [realizeFiniteCodimensionPresentation]
+
+/-- Singleton specialization: the class of one weighted codimension point is
+the same scalar multiple of the class of its unit point cycle. -/
+@[simp]
+theorem linearMap_realizeFiniteCodimensionPresentation_single
+    {Coh : Type*} [AddCommGroup Coh] [Module ℚ Coh]
+    (X : Scheme.{u}) (p : Nat)
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (x : CodimensionPoint X p) (q : ℚ) :
+    cl (realizeFiniteCodimensionPresentation X p (Finsupp.single x q)) =
+      q • cl (codimensionPointCycle X p x) := by
+  rw [realizeFiniteCodimensionPresentation_single]
+  exact cl.map_smul q (codimensionPointCycle X p x)
+
 #check CodimensionPoint
 #check codimensionPointCycle
 #check FiniteCodimensionPresentation
@@ -92,9 +123,13 @@ theorem finite_presentation_is_native_codimension_cycle
 #check realizeFiniteCodimensionPresentation_zero
 #check realizeFiniteCodimensionPresentation_single
 #check finite_presentation_is_native_codimension_cycle
+#check linearMap_realizeFiniteCodimensionPresentation
+#check linearMap_realizeFiniteCodimensionPresentation_single
 
 #print axioms codimensionPointCycle
 #print axioms realizeFiniteCodimensionPresentation_single
 #print axioms finite_presentation_is_native_codimension_cycle
+#print axioms linearMap_realizeFiniteCodimensionPresentation
+#print axioms linearMap_realizeFiniteCodimensionPresentation_single
 
 end GSTNativeCodimensionCyclePresentation
