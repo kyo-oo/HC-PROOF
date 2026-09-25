@@ -1,0 +1,35 @@
+import HCProof
+import GSTMultiChannelHodgeCosmology
+import GSTHodgeChannelMaterialization
+
+/-!
+# HC PROOF — MULTI-CHANNEL HODGE MATERIALIZATION RECEIPT
+
+Parallel entry face for the new fixed-weight multiplicity theorem and the
+Stage-2G generator-materialization bridge.
+
+This file is intentionally separate from `HCProof.lean` while the main entry
+face is being repaired in parallel.  It changes no existing route.
+-/
+
+#check GSTMultiChannelHodgeCosmology.HodgeChannel
+#check GSTMultiChannelHodgeCosmology.FixedWeightChannelCoordinates
+#check GSTMultiChannelHodgeCosmology.standardChannelShape
+#check GSTMultiChannelHodgeCosmology.arbitrary_same_weight_rank
+#check GSTMultiChannelHodgeCosmology.channel_reconstruct
+#check GSTMultiChannelHodgeCosmology.same_weight_channel_crown
+
+#check GSTHodgeChannelMaterialization.ChannelHodgeRealization
+#check GSTHodgeChannelMaterialization.channelCycleWitness
+#check GSTHodgeChannelMaterialization.channelCycleWitness_spec
+#check GSTHodgeChannelMaterialization.channel_hodge_le_cycleClass_range
+#check GSTHodgeChannelMaterialization.Stage2GChannelMaterialization
+#check GSTHodgeChannelMaterialization.hodge_class_has_stage2g_channel_cycle
+#check GSTHodgeChannelMaterialization.bigraded_betti_hodge_of_channel_materialization_family
+#check GSTHodgeChannelMaterialization.Stage2GChannelMaterializationObligation
+#check GSTHodgeChannelMaterialization.hodge_channel_materialization_crown
+
+#print axioms GSTMultiChannelHodgeCosmology.same_weight_channel_crown
+#print axioms GSTHodgeChannelMaterialization.channelCycleWitness_spec
+#print axioms GSTHodgeChannelMaterialization.bigraded_betti_hodge_of_channel_materialization_family
+#print axioms GSTHodgeChannelMaterialization.hodge_channel_materialization_crown
