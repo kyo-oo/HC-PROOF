@@ -40,6 +40,7 @@ theorem stalk_dimension_of_codimensionPoint
     ringKrullDim (V.X.presheaf.stalk x.1) = p := by
   rw [stalk_dimension_eq_coheight V x.1, x.2]
   push_cast
+  rfl
 
 /-- Conversely a point whose stalk has dimension p is a native
 codimension-p point. -/

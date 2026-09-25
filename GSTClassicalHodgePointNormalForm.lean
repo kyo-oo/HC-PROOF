@@ -52,8 +52,11 @@ theorem realize_presentationOfNativeCycle
           (presentationOfNativeCycle X p Z) : AlgebraicCycle X ℚ) y =
         (Z.1 : AlgebraicCycle X ℚ) y
     classical
-    simp [realizeFiniteCodimensionPresentation,
-      presentationOfNativeCycle, codimensionPointCycle, x]
+    simp [realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
+      codimensionPointCycle, x, Finsupp.sum, Finsupp.ofSupportFinite,
+      Function.locallyFinsuppWithin.coe_sum,
+      Function.locallyFinsuppWithin.single_apply, Pi.smul_apply,
+      smul_eq_mul]
   · have hZy : (Z.1 : AlgebraicCycle X ℚ) y = 0 := by
       by_contra hne
       have hySupport : y ∈ (Z.1 : AlgebraicCycle X ℚ).support := hne
@@ -64,8 +67,12 @@ theorem realize_presentationOfNativeCycle
         (Z.1 : AlgebraicCycle X ℚ) y
     rw [hZy]
     classical
-    simp [realizeFiniteCodimensionPresentation,
-      presentationOfNativeCycle, codimensionPointCycle, hy]
+    simp [realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
+      codimensionPointCycle, hy, Finsupp.sum, Finsupp.ofSupportFinite,
+      Function.locallyFinsuppWithin.coe_sum,
+      Function.locallyFinsuppWithin.single_apply, Pi.smul_apply,
+      smul_eq_mul, Finset.sum_ite_eq', mul_ite, mul_zero, mul_one,
+      Finset.sum_const_zero]
 
 /-- On a bundled smooth projective complex scheme, every native Hodge-basis
 cycle bridge canonically yields a finite codimension-point presentation

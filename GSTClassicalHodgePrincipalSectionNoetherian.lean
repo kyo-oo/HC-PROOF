@@ -100,7 +100,7 @@ theorem principalSectionAt_support_ne_univ
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
     (principalSectionIdeal V
       (positiveHomogeneousSeparator V.projective.n
-        (V.projective.immersion x)).equation).support ≠ Set.univ := by
+        (V.projective.immersion x)).equation).support ≠ ⊤ := by
   intro h
   have hx : x ∈
       (principalSectionIdeal V
@@ -118,7 +118,7 @@ theorem principalSectionAt_strict_cut_crown
     (irreducibleComponents (principalSectionAt V x)).Finite
       ∧ (principalSectionIdeal V
           (positiveHomogeneousSeparator V.projective.n
-            (V.projective.immersion x)).equation).support ≠ Set.univ := by
+            (V.projective.immersion x)).equation).support ≠ ⊤ := by
   exact ⟨finite_principalSectionAt_irreducibleComponents V x,
     principalSectionAt_support_ne_univ V x⟩
 
