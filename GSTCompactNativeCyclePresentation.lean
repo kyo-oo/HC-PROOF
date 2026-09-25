@@ -44,9 +44,7 @@ noncomputable def presentationOfNativeCycle
       have hpre :
           ((fun x : CodimensionPoint X p => x.1) ⁻¹'
             (Z.1 : AlgebraicCycle X ℚ).support).Finite :=
-        hfin.preimage (by
-          intro a b h
-          exact Subtype.ext h)
+        hfin.preimage (fun a _ b _ h => Subtype.ext h)
       simpa [Function.support] using hpre)
 
 @[simp]
@@ -58,6 +56,7 @@ theorem presentationOfNativeCycle_apply
   rfl
 
 /-- Standard projective space over C is compact in its Zariski topology. -/
+set_option trace.Meta.synthInstance true in
 theorem projectiveSpace_isCompact_univ (n : Nat) :
     IsCompact (Set.univ : Set (projectiveSpace n)) := by
   change IsCompact (Set.univ : Set (Proj (ProjectiveGrading n)))
