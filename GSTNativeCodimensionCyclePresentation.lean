@@ -101,7 +101,9 @@ theorem linearMap_realizeFiniteCodimensionPresentation
     cl (realizeFiniteCodimensionPresentation X p φ) =
       φ.sum (fun x q => q • cl (codimensionPointCycle X p x)) := by
   classical
-  simp [realizeFiniteCodimensionPresentation, Finsupp.sum]
+  simpa [realizeFiniteCodimensionPresentation] using
+    (map_finsupp_sum cl φ
+      (fun x q => q • codimensionPointCycle X p x))
 
 /-- Singleton specialization: the class of one weighted codimension point is
 the same scalar multiple of the class of its unit point cycle. -/
