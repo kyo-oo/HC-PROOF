@@ -219,10 +219,13 @@ noncomputable def principalCutCodimensionOneFinset
   let s : Set V.X := {y ∈ cutSupport V x | Order.coheight y = 1}
   have hs : s.Finite := finite_principal_cut_coheight_one V x
   exact hs.toFinset.attach.map
-    ⟨fun y => (⟨y.1, y.2.2⟩ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X 1),
+    ⟨fun y => (⟨y.1, ((Set.Finite.mem_toFinset hs).mp y.2).2⟩ :
+        GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X 1),
       by
         intro a b h
-        exact Subtype.ext (congrArg Subtype.val h)⟩
+        exact Subtype.ext
+          (congrArg (Subtype.val :
+            GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X 1 → V.X) h)⟩
 
 /-- Numerical one-step crown: strict projective cutting has a finite native
 codimension-one target locus, expressed directly in the coheight convention
