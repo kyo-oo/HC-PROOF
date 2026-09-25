@@ -195,6 +195,7 @@ roots = [
   "GSTGeometricRealizationStage2F",
   "GSTGeometricRealizationStage2G",
   "GSTClassicalHodgeFiberedCosmology",
+  "GSTNativeCodimensionCyclePresentation",
   "HodgeConjecture",
 ]
 
