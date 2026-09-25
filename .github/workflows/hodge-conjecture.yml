@@ -8,6 +8,8 @@ on:
       - 'HodgeConjecture.lean'
       - 'GSTClassicalHodgeFiberedCosmology.lean'
       - 'GSTClassicalHodgeCycleLanding.lean'
+      - 'GSTNativeCodimensionCyclePresentation.lean'
+      - 'GSTClassicalHodgePresentationLanding.lean'
       - '*.lean'
       - 'waves/*.lean'
       - 'lakefile.toml'
@@ -49,7 +51,9 @@ jobs:
           if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' \
             HodgeConjecture.lean \
             GSTClassicalHodgeFiberedCosmology.lean \
-            GSTClassicalHodgeCycleLanding.lean; then
+            GSTClassicalHodgeCycleLanding.lean \
+            GSTNativeCodimensionCyclePresentation.lean \
+            GSTClassicalHodgePresentationLanding.lean; then
             echo HODGE_FORBIDDEN_PROOF_ESCAPE=1
             exit 1
           fi
@@ -62,6 +66,8 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake build GSTClassicalHodgeFiberedCosmology HodgeConjecture 2>&1 | tee hodge-conjecture.log
           lake env lean GSTClassicalHodgeCycleLanding.lean 2>&1 | tee -a hodge-conjecture.log
+          lake env lean GSTNativeCodimensionCyclePresentation.lean 2>&1 | tee -a hodge-conjecture.log
+          lake env lean GSTClassicalHodgePresentationLanding.lean 2>&1 | tee -a hodge-conjecture.log
           echo HODGE_FAST_SLICE_GREEN=1
 
       - name: Build the complete limitless universe
