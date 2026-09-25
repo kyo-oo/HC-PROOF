@@ -76,7 +76,7 @@ theorem realizeFiniteCodimensionPresentation_single
   by_cases hq : q = 0
   · subst q
     simp
-  · simp [realizeFiniteCodimensionPresentation, hq]
+  · simp [realizeFiniteCodimensionPresentation]
 
 /-- Native-cycle receipt: every finite presentation lands in the exact
 Stage-2D codimension-p cycle submodule. -/
@@ -101,12 +101,7 @@ theorem linearMap_realizeFiniteCodimensionPresentation
     cl (realizeFiniteCodimensionPresentation X p φ) =
       φ.sum (fun x q => q • cl (codimensionPointCycle X p x)) := by
   classical
-  induction φ using Finsupp.induction_linear with
-  | zero => simp [realizeFiniteCodimensionPresentation]
-  | add f g hf hg =>
-      simp [realizeFiniteCodimensionPresentation, hf, hg]
-  | single x q =>
-      simp [realizeFiniteCodimensionPresentation]
+  simp [realizeFiniteCodimensionPresentation, Finsupp.sum]
 
 /-- Singleton specialization: the class of one weighted codimension point is
 the same scalar multiple of the class of its unit point cycle. -/
