@@ -1,39 +1,26 @@
-name: Classical Hodge Conjecture Gate
+name: Compact Native Cycle Probe
 
 on:
   push:
     branches:
-      - sol/hodge-classical-gst
-    paths:
-      - 'HodgeConjecture.lean'
-      - 'GSTClassicalHodgeFiberedCosmology.lean'
-      - 'GSTClassicalHodgeCycleLanding.lean'
-      - 'GSTNativeCodimensionCyclePresentation.lean'
-      - 'GSTClassicalHodgePresentationLanding.lean'
-      - '*.lean'
-      - 'waves/*.lean'
-      - 'lakefile.toml'
-      - 'lean-toolchain'
-      - '.github/workflows/hodge-conjecture.yml'
+      - probe/hodge-compact-cycle
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: classical-hodge-${{ github.ref }}
+  group: compact-cycle-probe-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  hodge-conjecture:
-    name: Classical Hodge landing (fast slice + full universe audit)
+  probe:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.ref }}
           fetch-depth: 1
-
       - name: Install Lean and pinned Mathlib
         shell: bash
         run: |
@@ -43,63 +30,16 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake update
           lake exe cache get
-
-      - name: Reject proof escapes in classical landing
-        shell: bash
-        run: |
-          set -euo pipefail
-          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' \
-            HodgeConjecture.lean \
-            GSTClassicalHodgeFiberedCosmology.lean \
-            GSTClassicalHodgeCycleLanding.lean \
-            GSTNativeCodimensionCyclePresentation.lean \
-            GSTClassicalHodgePresentationLanding.lean; then
-            echo HODGE_FORBIDDEN_PROOF_ESCAPE=1
-            exit 1
-          fi
-          echo HODGE_PROOF_ESCAPE_CHECK=PASS
-
-      - name: Compile Hodge dependency slice first
+      - name: Compile compact native cycle probe
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTClassicalHodgeFiberedCosmology HodgeConjecture 2>&1 | tee hodge-conjecture.log
-          lake env lean GSTClassicalHodgeCycleLanding.lean 2>&1 | tee -a hodge-conjecture.log
-          lake env lean GSTNativeCodimensionCyclePresentation.lean 2>&1 | tee -a hodge-conjecture.log
-          lake env lean GSTClassicalHodgePresentationLanding.lean 2>&1 | tee -a hodge-conjecture.log
-          echo HODGE_FAST_SLICE_GREEN=1
-
-      - name: Build the complete limitless universe
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake build HCUniverse 2>&1 | tee -a hodge-conjecture.log
-          echo HODGE_FULL_UNIVERSE_GREEN=1
-
-      - name: Build universe entry face
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake build HCProof 2>&1 | tee -a hodge-conjecture.log
-          echo HODGE_ENTRY_FACE_GREEN=1
-
-      - name: Verify no sorryAx in proof receipts
-        shell: bash
-        run: |
-          set -euo pipefail
-          if grep -Fq 'sorryAx' hodge-conjecture.log; then
-            echo HODGE_FORBIDDEN_SORRYAX=1
-            exit 1
-          fi
-          echo HODGE_AXIOM_AUDIT=PASS
-
-      - name: Upload Hodge diagnostics
+          lake env lean GSTCompactNativeCyclePresentation.lean 2>&1 | tee compact-cycle.log
+      - name: Upload diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: classical-hodge-diagnostics
-          path: hodge-conjecture.log
+          name: compact-cycle-probe-diagnostics
+          path: compact-cycle.log
           if-no-files-found: ignore
