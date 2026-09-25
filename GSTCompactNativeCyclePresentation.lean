@@ -72,7 +72,7 @@ theorem projectiveSpace_isCompact_univ (n : Nat) :
     refine top_unique fun p hp => ?_
     clear hp
     induction p using MvPolynomial.induction_on with
-    | C a => exact S.algebraMap_mem ⟨C a, isHomogeneous_C a⟩
+    | C a => exact S.algebraMap_mem ⟨MvPolynomial.C a, MvPolynomial.isHomogeneous_C a⟩
     | add p q hp hq => exact S.add_mem hp hq
     | mul_X p i hp =>
         exact S.mul_mem hp (Algebra.subset_adjoin (Set.mem_range_self i))
