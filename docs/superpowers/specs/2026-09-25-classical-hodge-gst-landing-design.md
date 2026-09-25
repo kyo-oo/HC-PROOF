@@ -24,7 +24,7 @@ The new file will reuse the current green stack rather than recreate it:
 - `GSTGeometricRealizationStage2D`: native codimension-`p` algebraic-cycle submodule.
 - `GSTGeometricRealizationStage2F`: native rational singular cohomology of the supplied analytification.
 - `GSTGeometricRealizationStage2G`: Hodge bigrading, derived rational `(p,p)` subspace, and the exact classical landing theorem from a compact realization family.
-- `GSTWorldCosmology`, `GSTUniversalAddressBridge`, `GSTDimensionFreeHodgeDiagonal`, `GSTGlobalPureHodgeCosmology`, `GSTTruncatedWorldCohomologyRing`, `GSTWorldPoincareDuality`, `GSTUniversalLefschetz*`, `GSTTransferBridgeV2`, and related limitless modules: unbounded address, diagonal, grading, transport, cohomology, duality, and operator structure to be used as the constructive source.
+- `GSTWorldCosmology`, `GSTUniversalAddressBridge`, `GSTDimensionFreeHodgeDiagonal`, `GSTGlobalPureHodgeCosmology`, `GSTTruncatedWorldCohomologyRing`, `GSTWorldPoincareDuality`, `GSTUniversalLefschetzCosmology`, `GSTUniversalLefschetzDynamics`, `GSTUniversalLefschetzKernel`, `GSTUniversalLefschetzPathFormula`, `GSTTransferBridgeV2`, and related limitless modules: unbounded address, diagonal, grading, transport, cohomology, duality, and operator structure to be used as the constructive source.
 
 No theorem in the above list may be treated as stronger than its formal type.
 
@@ -34,20 +34,23 @@ No theorem in the above list may be treated as stronger than its formal type.
 
 `HodgeConjecture.lean` will expose a transparent target definition/theorem at the Stage-2G level rather than inventing a weaker surrogate.
 
+The first target will not quantify over an arbitrary fake cycle-class map. It will work with the repository's Stage-2G classical semantic package and will preserve the distinction between supplied semantic data and the theorem being proved.
+
 ### 2. Exact missing theorem
 
-The first substantive construction target is the rank-free Stage-2G obligation:
+The first substantive construction target is the rank-free Stage-2G obligation with no additional conclusion-bearing hypothesis:
 
 ```lean
 theorem gst_classical_compact_realization
     (V : SmoothProjectiveComplexScheme)
-    (H : HodgeBigradedBettiData V)
-    (... genuine semantic bridge hypotheses only ...) :
+    (H : HodgeBigradedBettiData V) :
     Stage2GCompactRealizationObligation V H := by
-  ...
+  -- constructive proof only
 ```
 
 This theorem must construct, for every `p`, a `Stage2GCompactRealization V H p`.
+
+If Lean shows that `HodgeBigradedBettiData` still lacks a genuinely canonical geometric datum needed to even state the intended classical object, that missing datum must be introduced in a separate definition/theorem with a precise semantic role. It may not contain cycle-surjectivity, basis-cycle preimages, `Stage2GCompactRealizationObligation`, `BigradedBettiHodgeStatement`, or anything propositionally equivalent to them.
 
 The construction must eventually populate the underlying
 
@@ -103,7 +106,7 @@ After `gst_classical_compact_realization` is proved, the final theorem should cl
 exact
   GSTGeometricRealizationStage2G
     .bigraded_betti_hodge_of_stage2g_compact_obligation
-      V H (gst_classical_compact_realization V H ...)
+      V H (gst_classical_compact_realization V H)
 ```
 
 No additional mathematics should remain after that call except universal quantifier plumbing.
