@@ -18,6 +18,8 @@ namespace GSTCompactNativeCyclePresentation
 
 universe u
 
+attribute [local instance] MvPolynomial.gradedAlgebra
+
 /-- On a compact scheme every locally finite algebraic cycle has globally
 finite support. -/
 theorem native_cycle_support_finite
@@ -40,8 +42,11 @@ noncomputable def presentationOfNativeCycle
       have hfin : (Z.1 : AlgebraicCycle X ℚ).support.Finite :=
         native_cycle_support_finite X Z.1
       have hpre :
-          (Subtype.val ⁻¹' (Z.1 : AlgebraicCycle X ℚ).support).Finite :=
-        hfin.preimage Subtype.val_injective.injOn
+          ((fun x : CodimensionPoint X p => x.1) ⁻¹'
+            (Z.1 : AlgebraicCycle X ℚ).support).Finite :=
+        hfin.preimage (by
+          intro a b h
+          exact Subtype.ext h)
       simpa [Function.support] using hpre)
 
 @[simp]
@@ -55,6 +60,7 @@ theorem presentationOfNativeCycle_apply
 /-- Standard projective space over C is compact in its Zariski topology. -/
 theorem projectiveSpace_isCompact_univ (n : Nat) :
     IsCompact (Set.univ : Set (projectiveSpace n)) := by
+  change IsCompact (Set.univ : Set (Proj (ProjectiveGrading n)))
   have hbase :
       IsCompact (Set.univ : Set (Spec (.of (ProjectiveGrading n 0)))) :=
     isCompact_univ
@@ -62,7 +68,7 @@ theorem projectiveSpace_isCompact_univ (n : Nat) :
     QuasiCompact.isCompact_preimage
       (f := Proj.toSpecZero (ProjectiveGrading n))
       Set.univ isOpen_univ hbase
-  simpa [projectiveSpace] using hpre
+  simpa using hpre
 
 /-- Every bundled smooth projective complex scheme has compact underlying
 Zariski space, obtained from its closed immersion into projective space. -/
@@ -81,7 +87,7 @@ theorem smoothProjective_isCompact_univ
 /-- Local compact-space instance usable inside downstream constructions. -/
 noncomputable def smoothProjectiveCompactSpace
     (V : SmoothProjectiveComplexScheme) : CompactSpace V.X :=
-  isCompact_iff_compactSpace.mp (smoothProjective_isCompact_univ V)
+  ⟨smoothProjective_isCompact_univ V⟩
 
 #check native_cycle_support_finite
 #check presentationOfNativeCycle
