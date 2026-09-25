@@ -30,9 +30,9 @@ open GSTSmoothProjectiveNoetherian
 
 namespace GSTClassicalHodgeProperCutCodimensionOne
 
+attribute [local instance] specializationOrder in
 /-- A proper closed subset of a Noetherian quasi-sober irreducible space has
 only finitely many ambient points of coheight one. -/
-attribute [local instance] specializationOrder in
 theorem finite_coheight_one_of_proper_closed
     {X : Type*} [TopologicalSpace X] [QuasiSober X] [IrreducibleSpace X]
     [T0Space X] [NoetherianSpace X]
