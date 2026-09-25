@@ -238,6 +238,22 @@ theorem limitless_global_atlas_to_fibered_gst_algebraicity
 #print axioms bigradedBettiHodgeStatement_iff_limitless_global_atlas
 #print axioms limitless_global_atlas_to_fibered_gst_algebraicity
 
+/-- Point normal form detects arbitrary rational-linear maps out of native
+cycles, including the genuine cycle-class map composed with an operator. -/
+theorem nativeLinearMap_eq_zero_of_points
+    (V : SmoothProjectiveComplexScheme) (p : Nat)
+    {M : Type*} [AddCommGroup M] [Module ℚ M]
+    (F : codimensionCycles V.X p →ₗ[ℚ] M)
+    (hF : ∀ x : CodimensionPoint V.X p, F (codimensionPointCycle V.X p x) = 0) :
+    F = 0 := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  apply LinearMap.ext
+  intro Z
+  change F Z = 0
+  rw [← realize_presentationOfNativeCycle V.X p Z]
+  rw [GSTNativeCodimensionCyclePresentation.linearMap_realizeFiniteCodimensionPresentation]
+  simp [hF]
+
 /-- Native point cycles detect every linear operator on the projective cycle
 space. This uses the exact compact point normal form, with no cycle-class
 surjectivity hypothesis. -/

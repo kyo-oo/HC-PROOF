@@ -378,4 +378,39 @@ theorem multiplicityMatrixUnit_not_descend_native
 #print axioms tensorWord_descends_native_iff_zero
 #print axioms multiplicityMatrixUnit_not_descend_native
 
+/-- Even descent through actual cycle class, which is weaker than native
+cycle descent, forces the entire native image to be homologically zero.
+This rules out obtaining a nonzero Hodge matrix-unit action merely by tensoring
+an independent multiplicity rewrite with a native operator. -/
+theorem tensorWord_descends_cycleClass_iff_zero
+    (i j k : ClassicalHodgeBasisIndex V H p) (hki : k ≠ i)
+    (A : Module.End ℚ (codimensionCycles V.X p)) :
+    (∃ T : Module.End ℚ
+        (GSTGeometricRealizationStage2F.RationalSingularCohomology
+          H.analytification (2*p)),
+      ((H.cycleClass p).comp (toNativeCycle V H p)).comp (tensorWord i j A) =
+        T.comp ((H.cycleClass p).comp (toNativeCycle V H p))) ↔
+      (H.cycleClass p).comp A = 0 := by
+  constructor
+  · rintro ⟨T, hT⟩
+    apply GSTClassicalHodgePointNormalForm.nativeLinearMap_eq_zero_of_points
+      V p ((H.cycleClass p).comp A)
+    intro x
+    have hx := LinearMap.congr_fun hT (sheetDifference i k x)
+    change H.cycleClass p
+        (toNativeCycle V H p (tensorWord i j A (sheetDifference i k x))) =
+      T (H.cycleClass p (toNativeCycle V H p (sheetDifference i k x))) at hx
+    rw [tensorWord_sheetDifference_nativeFace i j k hki,
+      sheetDifference_nativeFace, map_zero, map_zero] at hx
+    exact hx
+  · intro hA
+    refine ⟨0, ?_⟩
+    apply LinearMap.ext
+    intro Φ
+    change H.cycleClass p (toNativeCycle V H p (tensorWord i j A Φ)) = 0
+    rw [tensorWord_nativeFace]
+    exact LinearMap.congr_fun hA (toNativeCycle V H p (multiplicityMatrixUnit i j Φ))
+
+#print axioms tensorWord_descends_cycleClass_iff_zero
+
 end GSTClassicalHodgeFiberedNativeTensorArsenal
