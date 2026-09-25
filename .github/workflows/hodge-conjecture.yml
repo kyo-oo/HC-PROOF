@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' HodgeConjecture.lean; then
+          if grep -nE '^[[:space:]]*(axiom|sorry|admit)[[:space:]]' HodgeConjecture.lean GSTClassicalHodgeFiberedCosmology.lean; then
             echo HODGE_FORBIDDEN_PROOF_ESCAPE=1
             exit 1
           fi
@@ -55,8 +55,8 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build HodgeConjecture 2>&1 | tee hodge-conjecture.log
-          echo HODGE_CONJECTURE_MODULE_GREEN=1
+          lake build GSTClassicalHodgeFiberedCosmology HodgeConjecture 2>&1 | tee hodge-conjecture.log
+          echo HODGE_FAST_SLICE_GREEN=1
 
       - name: Build the complete limitless universe
         shell: bash
