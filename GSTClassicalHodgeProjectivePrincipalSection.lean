@@ -52,6 +52,7 @@ positive-degree homogeneous equation which is nonzero at that point. -/
 noncomputable def positiveHomogeneousSeparator
     (n : Nat) (x : projectiveSpace n) :
     PositiveHomogeneousSeparator n x := by
+  apply Classical.choice
   have hnot :
       ¬ HomogeneousIdeal.irrelevant (ProjectiveGrading n) ≤
         x.asHomogeneousIdeal :=
@@ -65,13 +66,13 @@ noncomputable def positiveHomogeneousSeparator
     hpiece
   rw [SetLike.not_le_iff_exists] at hsubset
   obtain ⟨f, hfdeg, hfnot⟩ := hsubset
-  exact {
+  exact ⟨{
     degree := d
     degree_pos := hd
     equation := f
     homogeneous := hfdeg
     not_mem_prime := hfnot
-  }
+  }⟩
 
 @[simp]
 theorem positiveHomogeneousSeparator_degree_pos
@@ -130,9 +131,18 @@ noncomputable def projectivePrincipalSectionι
 
 instance projectivePrincipalSection_isClosedImmersion
     (n : Nat) (f : ProjectiveCoordinateRing n) :
-    IsClosedImmersion (projectivePrincipalSectionι n f) := by
-  dsimp [projectivePrincipalSectionι]
-  infer_instance
+    IsClosedImmersion (projectivePrincipalSectionι n f) :=
+  inferInstanceAs (IsClosedImmersion
+    (Scheme.IdealSheafData.subschemeι (projectivePrincipalIdeal n f)))
+
+/-- The reduced principal-section subscheme has exactly the intended
+projective principal zero locus as support. -/
+theorem projectivePrincipalIdeal_support
+    (n : Nat) (f : ProjectiveCoordinateRing n) :
+    (projectivePrincipalIdeal n f).support =
+      projectivePrincipalClosed n f := by
+  apply TopologicalSpace.Closeds.ext
+  simp [projectivePrincipalIdeal, projectivePrincipalClosed]
 
 /-- Pull a principal projective section back to an actual smooth projective
 scheme through its given closed projective embedding. -/
@@ -157,9 +167,9 @@ noncomputable def principalSectionι
 instance principalSection_isClosedImmersion
     (V : SmoothProjectiveComplexScheme)
     (f : ProjectiveCoordinateRing V.projective.n) :
-    IsClosedImmersion (principalSectionι V f) := by
-  dsimp [principalSectionι]
-  infer_instance
+    IsClosedImmersion (principalSectionι V f) :=
+  inferInstanceAs (IsClosedImmersion
+    (Scheme.IdealSheafData.subschemeι (principalSectionIdeal V f)))
 
 /-- The principal section is the actual scheme-theoretic pullback of the
 projective principal subscheme. -/
@@ -191,9 +201,11 @@ theorem mem_principalSection_support_iff
     (x : V.X) :
     x ∈ (principalSectionIdeal V f).support ↔
       f ∈ (V.projective.immersion x).asHomogeneousIdeal := by
-  rw [principalSectionIdeal_support]
-  simp [projectivePrincipalIdeal, projectivePrincipalClosed,
-    projectivePrincipalSet]
+  rw [principalSectionIdeal_support, projectivePrincipalIdeal_support]
+  exact (Set.mem_preimage).trans ((ProjectiveSpectrum.mem_zeroLocus
+      (ProjectiveGrading V.projective.n) (V.projective.immersion x)
+      ({f} : Set (ProjectiveCoordinateRing V.projective.n))).trans
+    Set.singleton_subset_iff)
 
 /-- The relevance-selected equation genuinely avoids its source point. -/
 theorem source_not_mem_principalSection

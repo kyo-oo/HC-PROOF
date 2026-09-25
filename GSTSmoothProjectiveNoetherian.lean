@@ -58,7 +58,7 @@ noncomputable def smoothProjectiveIsNoetherian
 Noetherian topological space. -/
 noncomputable def smoothProjectiveNoetherianSpace
     (V : SmoothProjectiveComplexScheme) :
-    NoetherianSpace V.X := by
+    TopologicalSpace.NoetherianSpace V.X := by
   letI : IsNoetherian V.X := smoothProjectiveIsNoetherian V
   infer_instance
 

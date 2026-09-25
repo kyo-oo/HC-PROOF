@@ -59,7 +59,7 @@ noncomputable def classicalHodgeBasis
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
     (p : Nat) :
-    Basis (ClassicalHodgeBasisIndex V H p) ℚ
+    Module.Basis (ClassicalHodgeBasisIndex V H p) ℚ
       (ClassicalHodgeFiber V H p) :=
   Module.Free.chooseBasis ℚ (ClassicalHodgeFiber V H p)
 

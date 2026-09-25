@@ -77,7 +77,8 @@ theorem quotient_mk_not_isUnit_of_positive
     rw [map_sub, hmulq, map_one, sub_self]
   have hproj_mem :
       GradedRing.projZeroRingHom 𝒜 (f * g - 1) ∈ P.toIdeal :=
-    (Ideal.IsHomogeneous.mem_iff P.isHomogeneous).mp hmem 0
+    (Ideal.IsHomogeneous.mem_iff 𝒜 P.isHomogeneous
+      (x := f * g - 1)).mp hmem 0
   have hneg_one : (-1 : A) ∈ P.toIdeal := by
     simpa [projZero_mul_sub_one_of_positive 𝒜 hf hn] using hproj_mem
   have hone : (1 : A) ∈ P.toIdeal := by
