@@ -1,5 +1,6 @@
 import HCProof
 import GSTMultiChannelHodgeCosmology
+import GSTHodgeChannelAddressBridge
 import GSTHodgeChannelMaterialization
 import GSTHodgeChannelRetract
 
@@ -7,8 +8,8 @@ import GSTHodgeChannelRetract
 # HC PROOF — MULTI-CHANNEL HODGE MATERIALIZATION RECEIPT
 
 Parallel entry face for the new fixed-weight multiplicity theorem, the
-Stage-2G generator-materialization bridge, and the stronger split-retract
-landing theorem.
+unbounded natural-address bridge, the Stage-2G generator-materialization
+bridge, and the stronger split-retract landing theorem.
 
 This file is intentionally separate from `HCProof.lean` while the main entry
 face is being repaired in parallel.  It changes no existing route.
@@ -20,6 +21,11 @@ face is being repaired in parallel.  It changes no existing route.
 #check GSTMultiChannelHodgeCosmology.arbitrary_same_weight_rank
 #check GSTMultiChannelHodgeCosmology.channel_reconstruct
 #check GSTMultiChannelHodgeCosmology.same_weight_channel_crown
+
+#check GSTHodgeChannelAddressBridge.channelAddressLift
+#check GSTHodgeChannelAddressBridge.channelAddressLift_at
+#check GSTHodgeChannelAddressBridge.channelAddressLift_injective
+#check GSTHodgeChannelAddressBridge.channel_address_bridge_crown
 
 #check GSTHodgeChannelMaterialization.ChannelHodgeRealization
 #check GSTHodgeChannelMaterialization.channelCycleWitness
@@ -43,6 +49,7 @@ face is being repaired in parallel.  It changes no existing route.
 #check GSTHodgeChannelRetract.hodge_channel_retract_crown
 
 #print axioms GSTMultiChannelHodgeCosmology.same_weight_channel_crown
+#print axioms GSTHodgeChannelAddressBridge.channel_address_bridge_crown
 #print axioms GSTHodgeChannelMaterialization.channelCycleWitness_spec
 #print axioms GSTHodgeChannelMaterialization.bigraded_betti_hodge_of_channel_materialization_family
 #print axioms GSTHodgeChannelMaterialization.hodge_channel_materialization_crown
