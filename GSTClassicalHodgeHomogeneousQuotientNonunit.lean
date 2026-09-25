@@ -1,5 +1,7 @@
 import GSTClassicalHodgePositiveDegreeNonunit
 import Mathlib.RingTheory.GradedAlgebra.Homogeneous.Ideal
+import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.RingTheory.Ideal.Lattice
 
 /-!
 # GST CLASSICAL HODGE — POSITIVE HOMOGENEOUS NONUNITS IN HOMOGENEOUS QUOTIENTS
@@ -73,8 +75,8 @@ theorem quotient_mk_not_isUnit_of_positive
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     rw [map_sub, hmulq, map_one, sub_self]
   have hproj_mem :
-      GradedRing.projZeroRingHom 𝒜 (f * g - 1) ∈ P.toIdeal := by
-    exact P.isHomogeneous 0 hmem
+      GradedRing.projZeroRingHom 𝒜 (f * g - 1) ∈ P.toIdeal :=
+    (Ideal.IsHomogeneous.mem_iff P.isHomogeneous).mp hmem 0
   have hneg_one : (-1 : A) ∈ P.toIdeal := by
     simpa [projZero_mul_sub_one_of_positive 𝒜 hf hn] using hproj_mem
   have hone : (1 : A) ∈ P.toIdeal := by
@@ -90,7 +92,7 @@ theorem quotient_mk_not_isUnit_of_positive_prime
     (hf : f ∈ 𝒜 n) (hn : 0 < n) :
     ¬ IsUnit (Ideal.Quotient.mk P.toIdeal f) := by
   exact quotient_mk_not_isUnit_of_positive 𝒜 P
-    (Ideal.IsPrime.ne_top P.toIdeal) hf hn
+    (Ideal.IsPrime.ne_top ‹P.toIdeal.IsPrime›) hf hn
 
 #check projZero_mul_eq_zero_of_positive
 #check projZero_mul_sub_one_of_positive

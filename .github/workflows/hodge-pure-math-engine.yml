@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - sol/hodge-pure-math-engine
+      - astra/hodge-proof-development
   workflow_dispatch:
 
 permissions:

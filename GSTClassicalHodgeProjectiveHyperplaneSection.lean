@@ -1,4 +1,5 @@
 import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Topology
 import GSTProjectiveOverC
 
@@ -166,9 +167,8 @@ theorem mem_hyperplaneSection_support_iff
     x ∈ (hyperplaneSectionIdeal V i).support ↔
       V.projective.immersion x ∈
         projectiveHyperplaneSet V.projective.n i := by
-  rw [hyperplaneSectionIdeal_support]
-  simp [projectiveHyperplaneIdeal_support,
-    projectiveHyperplaneClosed, projectiveHyperplaneSet]
+  rw [hyperplaneSectionIdeal_support, projectiveHyperplaneIdeal_support]
+  rfl
 
 /-- Algebraic characterization of section membership: the chosen homogeneous
 coordinate belongs to the relevant homogeneous prime corresponding to the
@@ -181,7 +181,8 @@ theorem mem_hyperplaneSection_support_iff_coordinate
       hyperplaneCoordinate V.projective.n i ∈
         (V.projective.immersion x).asHomogeneousIdeal := by
   rw [mem_hyperplaneSection_support_iff]
-  rfl
+  unfold projectiveHyperplaneSet
+  rw [ProjectiveSpectrum.mem_zeroLocus, Set.singleton_subset_iff]
 
 #check hyperplaneCoordinate
 #check projectiveHyperplaneSet
