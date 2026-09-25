@@ -52,11 +52,21 @@ theorem realize_presentationOfNativeCycle
           (presentationOfNativeCycle X p Z) : AlgebraicCycle X ℚ) y =
         (Z.1 : AlgebraicCycle X ℚ) y
     classical
-    simp [realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
+    simp only [realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
       codimensionPointCycle, x, Finsupp.sum, Finsupp.ofSupportFinite,
       Function.locallyFinsuppWithin.coe_sum,
-      Function.locallyFinsuppWithin.single_apply, Pi.smul_apply,
-      smul_eq_mul]
+      Function.locallyFinsuppWithin.single_apply, Pi.smul_apply, smul_eq_mul]
+    refine (Finset.sum_eq_single (⟨y, hy⟩ : CodimensionPoint X p) ?_ ?_).trans ?_
+    · intro b _ hb
+      have hne : y ≠ b.1 := by
+        intro heq; subst heq
+        exact hb (Subtype.ext rfl)
+      simp [hne]
+    · intro hout
+      by_cases hZy : (Z.1 : AlgebraicCycle X ℚ) y = 0
+      · simp [hZy]
+      · exact absurd (Finsupp.mem_support_iff.mpr hZy) hout
+    · simp
   · have hZy : (Z.1 : AlgebraicCycle X ℚ) y = 0 := by
       by_contra hne
       have hySupport : y ∈ (Z.1 : AlgebraicCycle X ℚ).support := hne
@@ -67,12 +77,16 @@ theorem realize_presentationOfNativeCycle
         (Z.1 : AlgebraicCycle X ℚ) y
     rw [hZy]
     classical
-    simp [realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
-      codimensionPointCycle, hy, Finsupp.sum, Finsupp.ofSupportFinite,
+    have hny : ∀ x' : CodimensionPoint X p, y ≠ x'.1 := by
+      intro x' heq
+      apply hy
+      rw [heq]
+      exact x'.2
+    simp [hny, realizeFiniteCodimensionPresentation, presentationOfNativeCycle,
+      codimensionPointCycle, Finsupp.sum, Finsupp.ofSupportFinite,
       Function.locallyFinsuppWithin.coe_sum,
       Function.locallyFinsuppWithin.single_apply, Pi.smul_apply,
-      smul_eq_mul, Finset.sum_ite_eq', mul_ite, mul_zero, mul_one,
-      Finset.sum_const_zero]
+      smul_eq_mul, mul_ite, mul_zero, mul_one, Finset.sum_const_zero]
 
 /-- On a bundled smooth projective complex scheme, every native Hodge-basis
 cycle bridge canonically yields a finite codimension-point presentation

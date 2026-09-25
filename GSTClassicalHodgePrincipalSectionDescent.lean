@@ -71,7 +71,7 @@ theorem descendSet_isClosed
   apply hC.inter
   exact (principalSectionIdeal V
     (positiveHomogeneousSeparator V.projective.n
-      (V.projective.immersion x)).equation).isClosed_support
+      (V.projective.immersion x)).equation).support.isClosed
 
 /-- Bundled strict closed descent crown. -/
 theorem strict_closed_descent
