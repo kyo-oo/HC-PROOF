@@ -92,8 +92,6 @@ theorem finite_relative_coheight_one
     pointClosureIsNoetherian V x
   letI : NoetherianSpace (pointClosureScheme V x) := by infer_instance
   let C := relativeCutSet V x
-  letI : T0Space C := Topology.IsInducing.subtypeVal.t0Space
-  letI : NoetherianSpace C := (relativeCutSet_isClosed V x).noetherianSpace
   letI : QuasiSober C := Topology.IsClosedEmbedding.quasiSober
     (Topology.IsClosedEmbedding.subtypeVal (relativeCutSet_isClosed V x))
   exact TopologicalSpace.NoetherianSpace.finite_coheight_one_of_closure_ne_univ

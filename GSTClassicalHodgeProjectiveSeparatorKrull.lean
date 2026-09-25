@@ -66,16 +66,15 @@ ideal, and quotients of prime ideals are domains. -/
 noncomputable def pointQuotientIsDomain
     (n : Nat) (x : projectiveSpace n) :
     IsDomain (pointQuotient n x) := by
+  haveI : (x.asHomogeneousIdeal.toIdeal).IsPrime := x.isPrime
   infer_instance
 
 /-- The point-prime quotient is Noetherian: the polynomial coordinate ring is
-Noetherian (Hilbert basis theorem for `Fin (n+1)` variables over a field), and
-quotients of Noetherian rings are Noetherian. -/
+Noetherian (Hilbert basis theorem for finitely many variables over a field),
+and quotients of Noetherian rings are Noetherian. -/
 noncomputable def pointQuotientIsNoetherian
     (n : Nat) (x : projectiveSpace n) :
     IsNoetherianRing (pointQuotient n x) := by
-  letI : IsNoetherianRing (ProjectiveCoordinateRing n) :=
-    Polynomial.isNoetherianRing_fin (n := n + 1)
   infer_instance
 
 /-- **PROJECTIVE KRULL DICHOTOMY.**  At every projective source point the

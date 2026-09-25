@@ -38,6 +38,7 @@ universe u
 /-- Pointwise evaluation of a realized finite codimension presentation.
 The realized cycle takes at `y` exactly the finite rational combination of
 the indicators of the presentation's codimension-p points. -/
+open Classical in
 theorem realizeFiniteCodimensionPresentation_apply
     (X : Scheme.{u}) [CompactSpace X] (p : Nat)
     (φ : FiniteCodimensionPresentation X p) (y : X) :

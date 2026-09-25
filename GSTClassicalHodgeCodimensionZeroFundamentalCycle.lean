@@ -29,10 +29,13 @@ open TopologicalSpace
 open GSTProjectiveOverC
 open GSTSmoothProjectiveNoetherian
 open GSTNativeCodimensionCyclePresentation
+open GSTGeometricRealizationStage2D
 
 namespace GSTClassicalHodgeCodimensionZeroFundamentalCycle
 
-/-- The coheight-zero locus of a smooth projective carrier is finite. -/
+/-- The coheight-zero locus of a smooth projective carrier is finite: the
+coheight-zero points are exactly the generic points of the finitely many
+irreducible components of the Noetherian carrier. -/
 theorem finite_coheight_zero
     (V : SmoothProjectiveComplexScheme) :
     {x : V.X | Order.coheight x = 0}.Finite := by
@@ -40,8 +43,25 @@ theorem finite_coheight_zero
   letI : NoetherianSpace V.X := smoothProjectiveNoetherianSpace V
   have hcomp : (irreducibleComponents V.X).Finite :=
     TopologicalSpace.NoetherianSpace.finite_irreducibleComponents
-  let e := coheightZeroSetOrderIsoIrreducibleComponents (X := V.X)
-  exact (Equiv.finite_iff e.toEquiv).mpr hcomp
+  have hgenfin : (genericPoints V.X).Finite := genericPoints.finite hcomp
+  refine hgenfin.subset ?_
+  intro x hx
+  have hmax : IsMax x := (Order.coheight_eq_zero).mp hx
+  show closure ({x} : Set V.X) ∈ irreducibleComponents V.X
+  refine ⟨IsIrreducible.closure isIrreducible_singleton, ?_⟩
+  intro W hWirr hleW
+  obtain ⟨γ, hγ⟩ : ∃ γ : V.X, IsGenericPoint γ (closure (W : Set V.X)) :=
+    QuasiSober.sober (IsIrreducible.closure hWirr) isClosed_closure
+  have hxW : x ∈ closure (W : Set V.X) :=
+    subset_closure (hleW (subset_closure (Set.mem_singleton x)))
+  have hxγ : x ≤ γ := hγ.specializes hxW
+  have hγx : γ ≤ x := hmax hxγ
+  have hxeq : x = γ := le_antisymm hxγ hγx
+  have hclos : closure (W : Set V.X) = closure ({x} : Set V.X) := by
+    rw [hxeq]
+    exact hγ.def.symm
+  calc W ⊆ closure (W : Set V.X) := subset_closure
+    _ = closure ({x} : Set V.X) := hclos
 
 /-- Finite set of all genuine codimension-zero generic points. -/
 noncomputable def codimensionZeroPointFinset
@@ -54,8 +74,7 @@ noncomputable def codimensionZeroPointFinset
     ⟨fun x => (⟨x.1, x.2⟩ : CodimensionPoint V.X 0),
       by
         intro a b h
-        apply Subtype.ext
-        simpa using congrArg Subtype.val h⟩
+        exact Subtype.ext (congrArg Subtype.val h)⟩
 
 /-- Canonical finite codimension-zero presentation: coefficient one on every
 irreducible-component generic point. -/

@@ -40,7 +40,9 @@ The relative-successor module refers to these statements under their exact
 names, so they are provided here once, in the module below that entire chain. -/
 
 /-- Membership characterization of the specialization order: `a ≤ b` holds
-exactly when `a` lies in the closure of `b`. -/
+exactly when `a` lies in the closure of `b`.  The successor-layer modules
+refer to this statement under this exact name. -/
+attribute [local instance] specializationOrder in
 theorem specializationOrder_iff_specializes
     {X : Type*} [TopologicalSpace X] [T0Space X] {a b : X} :
     a ≤ b ↔ a ∈ closure ({b} : Set X) := by
@@ -49,21 +51,6 @@ theorem specializationOrder_iff_specializes
     exact (specializes_iff_mem_closure (x := b) (y := a)).mp h
   · intro h
     exact (specializes_iff_mem_closure (x := b) (y := a)).mpr h
-
-/-- A strict generalization step raises coheight by at least one. -/
-theorem Order.coheight_add_one_le
-    {X : Type*} [TopologicalSpace X] [T0Space X] {a b : X}
-    (h : a < b) :
-    Order.coheight b + 1 ≤ Order.coheight a := by
-  by_cases hfin : Order.coheight b < ⊤
-  · exact (ENat.add_one_le_iff (LT.lt.ne hfin)).mpr
-      (Order.coheight_strictAnti h hfin)
-  · have hbtop : Order.coheight b = ⊤ := by
-      by_contra hne
-      exact hfin ((WithTop.lt_top_iff_ne_top).mpr hne)
-    calc Order.coheight b + 1 = ⊤ + 1 := by rw [hbtop]
-      _ = (⊤ : ℕ∞) := top_add _
-      _ ≤ Order.coheight a := le_top
 
 attribute [local instance] specializationOrder in
 /-- In a Noetherian quasi-sober irreducible T0-space, a subset whose closure is
@@ -95,7 +82,7 @@ theorem TopologicalSpace.NoetherianSpace.finite_coheight_one_of_closure_ne_univ
       exact WithTop.natCast_lt_top 1
     have hstrict : Order.coheight γ < Order.coheight x :=
       Order.coheight_strictAnti hγ htop
-    rw [← hco] at hstrict
+    rw [hco] at hstrict
     have hc0 : Order.coheight γ = 0 := (Order.lt_one_iff).mp hstrict
     have hmax : IsMax γ := (Order.coheight_eq_zero).mp hc0
     -- γ ≤ η since the generic point's closure is everything; maximality
@@ -143,8 +130,10 @@ theorem TopologicalSpace.NoetherianSpace.finite_coheight_one_of_closure_ne_univ
     have hxK' : x ∈ closure (Subtype.val '' W) := by
       have hxmem : x ∈ closure ({x} : Set X) :=
         subset_closure (Set.mem_singleton x)
-      rw [← hbridge]
-      exact ⟨⟨x, hxD⟩, subset_closure (Set.mem_singleton _), rfl⟩
+      rw [← hbridge] at hxmem
+      obtain ⟨v, hv, hval⟩ := hxmem
+      have hvW : (v : X) ∈ Subtype.val '' W := ⟨v, hleW hv, hval⟩
+      exact subset_closure hvW
     -- the ambient closure of the image of W has a generic point
     obtain ⟨γ, hγW⟩ : ∃ γ : X, IsGenericPoint γ (closure (Subtype.val '' W)) :=
       QuasiSober.sober (IsIrreducible.closure hWirrImg) isClosed_closure
@@ -175,12 +164,11 @@ theorem TopologicalSpace.NoetherianSpace.finite_coheight_one_of_closure_ne_univ
       rw [hK'univ] at hK'D
       exact absurd (Set.eq_univ_of_univ_subset hK'D) hDne
   -- STEP 3: finiteness of the generic points of the components of D
-  haveI : NoetherianSpace D := hDclosed.noetherianSpace
+  -- (subtype T0 and subtype Noetherian are global Mathlib instances)
   have hcomp : (irreducibleComponents D).Finite :=
     NoetherianSpace.finite_irreducibleComponents
-  have hgenfin : (genericPoints D).Finite := by
-    letI : T0Space D := Topology.IsInducing.subtypeVal.t0Space
-    exact genericPoints.finite hcomp
+  have hgenfin : (genericPoints D).Finite :=
+    genericPoints.finite hcomp
   -- assemble the finite bound
   have hfinimg : (Subtype.val '' (genericPoints D : Set D)).Finite :=
     hgenfin.image Subtype.val
@@ -216,7 +204,10 @@ theorem finite_principal_cut_coheight_one
   · exact (principalSectionIdeal V
       (positiveHomogeneousSeparator V.projective.n
         (V.projective.immersion x)).equation).support.isClosed
-  · exact principalSectionAt_support_ne_univ V x
+  · intro h
+    refine principalSectionAt_support_ne_univ V x ?_
+    apply TopologicalSpace.Closeds.ext
+    simp [cutSupport, h]
 
 /-- A nonempty codimension-one locus of the selected cut can be packaged as a
 finite set of genuine Stage-2D codimension-one points. -/
@@ -231,8 +222,7 @@ noncomputable def principalCutCodimensionOneFinset
     ⟨fun y => (⟨y.1, y.2.2⟩ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X 1),
       by
         intro a b h
-        apply Subtype.ext
-        simpa using congrArg Subtype.val h⟩
+        exact Subtype.ext (congrArg Subtype.val h)⟩
 
 /-- Numerical one-step crown: strict projective cutting has a finite native
 codimension-one target locus, expressed directly in the coheight convention
