@@ -32,8 +32,8 @@ theorem nonzero_mem_nonZeroDivisors
     {f : R} (hf : f ≠ 0) :
     f ∈ nonZeroDivisors R := by
   rw [mem_nonZeroDivisors_iff]
-  intro g hfg
-  exact (mul_eq_zero.mp hfg).resolve_left hf
+  refine ⟨fun g hfg => (mul_eq_zero.mp hfg).resolve_left hf,
+    fun g hfg => (mul_eq_zero.mp hfg).resolve_right hf⟩
 
 /-- **EXACT PRINCIPAL CODIMENSION.**
 In a Noetherian domain every nonzero nonunit principal equation has height one. -/

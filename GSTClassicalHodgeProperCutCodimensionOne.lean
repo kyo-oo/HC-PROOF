@@ -37,12 +37,12 @@ theorem finite_coheight_one_of_proper_closed
     [T0Space X] [NoetherianSpace X]
     (C : Set X) (hC : IsClosed C) (hproper : C ≠ Set.univ) :
     {x ∈ C | Order.coheight x = 1}.Finite := by
-  letI : T0Space C := Topology.IsInducing.subtypeVal.t0Space
-  letI : NoetherianSpace C := hC.noetherianSpace
+  letI : T0Space C := inferInstance
+  letI : NoetherianSpace C := hC.isNoetherian
   letI : QuasiSober C := Topology.IsClosedEmbedding.quasiSober
     (Topology.IsClosedEmbedding.subtypeVal hC)
   apply TopologicalSpace.NoetherianSpace.finite_coheight_one_of_closure_ne_univ
-  simpa [hC.closure_eq] using hproper
+  simpa [C.closure_eq] using hproper
 
 /-- Every source-specific principal cut in an irreducible smooth projective
 carrier has only finitely many ambient codimension-one points. -/
