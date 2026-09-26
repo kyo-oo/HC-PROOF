@@ -1,6 +1,7 @@
 import GSTClassicalHodgeFiniteSupportChart
 import GSTHodgePoincareStrands
 import GSTSquarePureHodgeDuality
+import GSTWorldCosmology
 
 /-!
 # GST CLASSICAL HODGE — PURE SQUARE STRAND LOCALIZATION
@@ -31,6 +32,7 @@ open GSTClassicalHodgeSeparatorProbe
 open GSTClassicalHodgeFiniteSupportChart
 open GSTHodgePoincareStrands
 open GSTWorldPoincareDuality
+open GSTWorldCosmology
 
 namespace GSTClassicalHodgeSquareStrandLocalization
 

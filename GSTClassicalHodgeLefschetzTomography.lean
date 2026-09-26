@@ -1,6 +1,7 @@
 import GSTClassicalHodgeFiniteSupportChart
 import GSTPureHodgeLefschetzKernel
 import GSTLefschetzPoincareReciprocity
+import GSTGlobalPureHodgeCosmology
 
 /-!
 # GST CLASSICAL HODGE — FINITE LEFSCHETZ TOMOGRAPHY
@@ -34,6 +35,7 @@ open GSTPureHodgeLefschetzKernel
 open GSTWorldCosmology
 open GSTWorldPoincareDuality
 open GSTTruncatedWorldCohomologyRing
+open GSTGlobalPureHodgeCosmology
 
 namespace GSTClassicalHodgeLefschetzTomography
 
