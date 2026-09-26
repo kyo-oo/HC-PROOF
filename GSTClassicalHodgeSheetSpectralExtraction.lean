@@ -39,6 +39,7 @@ open GSTClassicalHodgeSquareStrandLocalization
 open GSTClassicalHodgeIntegralSquareLocalization
 open GSTWorldCosmology
 open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeFiniteSupportChart
 
 namespace GSTClassicalHodgeSheetSpectralExtraction
 
