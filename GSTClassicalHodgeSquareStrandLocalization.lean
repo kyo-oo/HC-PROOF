@@ -136,7 +136,7 @@ theorem supportDiagonalWorld_eq_zero_iff
       let i := fiberedSupportEquivFin f slive
       have hi := congrFun hz (i,i)
       simpa [i,slive] using hi
-    · exact Finsupp.not_mem_support_iff.mp hs
+    · exact Finsupp.notMem_support_iff.mp hs
   · rintro rfl
     funext c
     simp [supportDiagonalWorld]
@@ -289,7 +289,8 @@ theorem atomicSeparatorProbe_has_pureSquare_witness
             (functionalHodgeProbe V H p S.detector) := by
       classical
       unfold f g fiberedPairing hodgeFiberPairing fiberedWeightCoordinates
-      simp [weightFiberEmbedding]
+      simp [weightFiberEmbedding, Finsupp.sum_embDomain]
+      rfl
     rw [hcoords]
     exact S.pairing_nonzero
   rw [fiberedPairing_eq_pureSquarePoincare f g] at hpair

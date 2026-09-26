@@ -105,17 +105,15 @@ theorem lefschetzTomography_triangular
   unfold lefschetzTomography
   rw [hsplit, multiplicityLefschetzKernel_self, one_mul]
   apply congrArg (fun z : ℚ => a q + z)
-  refine Finset.sum_subset ?_ ?_
+  refine (Finset.sum_subset ?_ ?_).symm
   · intro i hi
-    simp only [Finset.mem_filter] at hi
-    have hi2 : i.1 < q.1 := hi.2
+    have hi2 : i.1 < q.1 := (Finset.mem_filter.mp hi).2
     refine Finset.mem_erase.mpr ⟨?_, Finset.mem_univ i⟩
     intro hval
     subst hval
     omega
   · intro i hiE hiF
-    simp only [Finset.mem_filter] at hiF
-    push_neg at hiF
+    have hiF2 : ¬ i.1 < q.1 := fun hlt => hiF (Finset.mem_filter.mpr ⟨Finset.mem_univ i, hlt⟩)
     rcases Finset.mem_erase.mp hiE with ⟨hine, _⟩
     have hne : i.1 ≠ q.1 := by
       intro hval
@@ -218,7 +216,7 @@ theorem supportCoordinateVector_eq_zero_iff
     · let slive : LiveFiberedAddress f := ⟨s, hs⟩
       have hi := congrFun hz (fiberedSupportEquivFin f slive)
       simpa [supportCoordinateVector, slive] using hi
-    · exact Finsupp.not_mem_support_iff.mp hs
+    · exact Finsupp.notMem_support_iff.mp hs
   · rintro rfl
     funext i
     simp [supportCoordinateVector]
