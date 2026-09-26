@@ -114,8 +114,9 @@ def rationalPureCoordinates
 rational diagonal coordinates. -/
 def clearedIntegralWorld
     {N : Nat} (a : RationalWorldCoef N) :
-    ShapeCoef (outputShape N N) :=
-  fun c =>
+    ShapeCoef (outputShape N N) := by
+  classical
+  exact fun c =>
     if h : c.1 = c.2 then
       clearedCoordinate (rationalPureCoordinates a) c.1
     else 0
@@ -149,7 +150,8 @@ theorem clearedIntegralWorld_pointwise
       (clearedIntegralWorld a c : ℚ) := by
   by_cases hdiag : c.1.1 = c.2.1
   · have heq : c.1 = c.2 := Fin.ext hdiag
-    subst c.2
+    have hcc : c = (c.1, c.2) := rfl
+    rw [hcc, ← heq]
     exact clearedIntegralWorld_diagonal a c.1
   · have hazero := ha c hdiag
     have hne : c.1 ≠ c.2 := by
@@ -191,11 +193,16 @@ theorem canonicalIntegralPureSquareModel_ne_zero
   have hscaled :=
     (canonicalIntegralPureSquareModel a ha).scaled_eq c
   rw [hw] at hscaled
-  simp at hscaled
+  have hzc : ((0 : ShapeCoef (outputShape N N)) c : ℚ) = 0 := by
+    simp
+  rw [hzc] at hscaled
   have hD :
       (canonicalIntegralPureSquareModel a ha).scale ≠ 0 :=
     Nat.ne_of_gt (canonicalIntegralPureSquareModel a ha).scale_pos
-  exact (mul_eq_zero.mp hscaled).resolve_left (by exact_mod_cast hD)
+  have hDz :
+      ((canonicalIntegralPureSquareModel a ha).scale : ℚ) ≠ 0 := by
+    exact_mod_cast hD
+  exact (mul_eq_zero.mp hscaled).resolve_left hDz
 
 /-! ## 3. Pairing transport from Q to Z -/
 
@@ -220,7 +227,7 @@ theorem integralModels_pairing_scale
   intro c hc
   have haC := (canonicalIntegralPureSquareModel a ha).scaled_eq c
   have hbC := (canonicalIntegralPureSquareModel b hb).scaled_eq (worldDual c)
-  rw [← Int.cast_mul]
+  rw [Int.cast_mul]
   rw [← haC, ← hbC]
   ring
 
@@ -246,7 +253,8 @@ theorem nonzero_rationalPairing_yields_nonzero_integralPairing
       ((canonicalIntegralPureSquareModel b hb).scale : ℚ) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt
       (canonicalIntegralPureSquareModel b hb).scale_pos
-  exact hpair ((mul_eq_zero.mp hscale).resolve_left (mul_ne_zero hDa hDb))
+  exact hpair ((mul_eq_zero.mp (by simpa using hscale)).resolve_left
+    (mul_ne_zero hDa hDb))
 
 /-- **INTEGRAL PURE-SQUARE REDUCTION OF HODGE FAILURE.**
 Any classical Stage-2G separator witness gives one finite square and two
