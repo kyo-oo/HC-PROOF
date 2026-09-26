@@ -136,8 +136,10 @@ theorem clearedIntegralWorld_diagonal
     {N : Nat} (a : RationalWorldCoef N) (i : Fin N) :
     (commonDenominator (rationalPureCoordinates a) : ℚ) * a (i,i) =
       (clearedIntegralWorld a (i,i) : ℚ) := by
-  simp only [clearedIntegralWorld, rationalPureCoordinates]
-  rw [dif_pos rfl]
+  have hdite : (clearedIntegralWorld a (i,i) : ℤ) =
+      (clearedCoordinate (rationalPureCoordinates a) i : ℤ) :=
+    dif_pos (rfl : (i, i).1 = (i, i).2)
+  rw [hdite]
   exact commonDenominator_mul_eq_clearedCoordinate
       (rationalPureCoordinates a) i
 
@@ -160,8 +162,9 @@ theorem clearedIntegralWorld_pointwise
       exact hdiag (congrArg Fin.val h)
     have hdite : clearedIntegralWorld a c = 0 := by
       simp only [clearedIntegralWorld]
-      rw [dif_neg hne]
+      exact dif_neg hne
     rw [hdite]
+    push_cast
     rw [mul_eq_zero]
     exact Or.inr hazero
 
@@ -232,8 +235,24 @@ theorem integralModels_pairing_scale
   intro c hc
   have haC := (canonicalIntegralPureSquareModel a ha).scaled_eq c
   have hbC := (canonicalIntegralPureSquareModel b hb).scaled_eq (worldDual c)
-  rw [← haC, ← hbC]
-  ring
+  have hcongr :
+      (((canonicalIntegralPureSquareModel a ha).scale : ℚ) * a c) *
+      (((canonicalIntegralPureSquareModel b hb).scale : ℚ) *
+        b (worldDual c)) =
+      (((canonicalIntegralPureSquareModel a ha).world c : ℤ) : ℚ) *
+      (((canonicalIntegralPureSquareModel b hb).world (worldDual c) : ℤ) :
+        ℚ) :=
+    congrArg₂ (fun x y : ℚ => x * y) haC hbC
+  calc (((canonicalIntegralPureSquareModel a ha).scale : ℚ) *
+      ((canonicalIntegralPureSquareModel b hb).scale : ℚ)) *
+      (a c * b (worldDual c))
+      = (((canonicalIntegralPureSquareModel a ha).scale : ℚ) * a c) *
+        (((canonicalIntegralPureSquareModel b hb).scale : ℚ) *
+          b (worldDual c)) := by
+        ring
+    _ = (((canonicalIntegralPureSquareModel a ha).world c : ℤ) : ℚ) *
+        (((canonicalIntegralPureSquareModel b hb).world (worldDual c) : ℤ) :
+          ℚ) := hcongr
 
 /-- Nonzero rational pure pairing survives denominator clearing as a nonzero
 integral GST Poincare pairing. -/

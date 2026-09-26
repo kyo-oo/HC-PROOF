@@ -147,20 +147,26 @@ theorem fibered_transformed_hodge
   by_cases hqp : q = p
   · subst q
     classical
-    have hgoalL : Finsupp.embDomain (Function.Embedding.sigmaMk p)
+    have hgoalL : Finsupp.embDomain (weightFiberEmbedding V H p)
         ((classicalHodgeBasis V H p).repr alpha) ⟨p, j⟩ =
         ((classicalHodgeBasis V H p).repr alpha) j :=
-      Finsupp.embDomain_apply_self (Function.Embedding.sigmaMk p)
+      Finsupp.embDomain_apply_self (weightFiberEmbedding V H p)
         ((classicalHodgeBasis V H p).repr alpha) j
     rw [hgoalL]
-    simp [fiberedSheetGenerator, weightFiberEmbedding,
+    simp [fiberedSheetGenerator,
       Finsupp.single_apply, Finsupp.sum]
   · classical
-    simp only [fiberedWeightCoordinates, weightFiberEmbedding]
-    refine Finsupp.embDomain_of_notMem_range _ _ _ ?_
-    intro hin
-    rcases Set.mem_range.mp hin with ⟨i, hi⟩
-    exact hqp (by rw [← hi]; rfl)
+    have hL : Finsupp.embDomain (weightFiberEmbedding V H p)
+        ((classicalHodgeBasis V H p).repr alpha) ⟨q, j⟩ = 0 := by
+      refine Finsupp.embDomain_of_notMem_range _ _ _ ?_
+      intro hin
+      rcases Set.mem_range.mp hin with ⟨i, hi⟩
+      exact hqp (by rw [← hi]; rfl)
+    have hR : (((classicalHodgeBasis V H p).repr alpha).sum
+        (fun i q => q • fiberedSheetGenerator V H ⟨p, i⟩)) ⟨q, j⟩ = 0 := by
+      simp [fiberedSheetGenerator, Finsupp.sum, Finsupp.single_apply,
+        Ne.symm hqp]
+    rw [hL, hR]
 
 /-- Uniqueness of the sheet coefficients: the fibered completion introduces
 no artificial relations between independent classical multiplicity sheets. -/
@@ -181,7 +187,7 @@ theorem fibered_transformed_hodge_coeff_unique
   have hi := congrArg
     (fun φ : FiberedHodgeAddress V H => φ ⟨p,i⟩) h
   classical
-  simp only [fiberedSheetGenerator, Finsupp.single_apply, Finsupp.sum] at hi
+  simp [fiberedSheetGenerator] at hi
   split_ifs at hi <;> simp_all
 
 /-- The unique coefficients are exactly the genuine basis coordinates. -/
@@ -203,14 +209,8 @@ theorem fibered_transformed_hodge_coeff_exact
       have hi := congrArg
         (fun φ : FiberedHodgeAddress V H => φ ⟨p,i⟩) hb
       classical
-      have hself : Finsupp.embDomain (Function.Embedding.sigmaMk p)
-          ((classicalHodgeBasis V H p).repr alpha) ⟨p, i⟩ =
-          ((classicalHodgeBasis V H p).repr alpha) i :=
-        Finsupp.embDomain_apply_self (Function.Embedding.sigmaMk p)
-          ((classicalHodgeBasis V H p).repr alpha) i
-      simp only [fiberedSheetGenerator, fiberedWeightCoordinates,
-        weightFiberEmbedding, Finsupp.single_apply, Finsupp.sum] at hi
-      rw [hself] at hi
+      simp [fiberedSheetGenerator, fiberedWeightCoordinates,
+        weightFiberEmbedding] at hi
       split_ifs at hi <;> simp_all
     simpa [hbexact] using hb
 
