@@ -111,7 +111,7 @@ theorem fiberedWeightCoordinates_isHodge
   refine Finsupp.embDomain_of_notMem_range _ _ _ ?_
   intro hin
   rcases Set.mem_range.mp hin with ⟨i, hi⟩
-  exact hs (by rw [← hi])
+  exact hs (by rw [← hi]; rfl)
 
 /-- **EXACT SHEET DECOMPOSITION.**  Every finite fibered address is the
 finite sum of its scalar multiples of independent sheet generators. -/
@@ -147,10 +147,12 @@ theorem fibered_transformed_hodge
   by_cases hqp : q = p
   · subst q
     classical
-    show Finsupp.embDomain (Function.Embedding.sigmaMk p)
-        ((classicalHodgeBasis V H p).repr alpha)
-        (Function.Embedding.sigmaMk p j) = _
-    rw [Finsupp.embDomain_apply_self]
+    have hgoalL : Finsupp.embDomain (Function.Embedding.sigmaMk p)
+        ((classicalHodgeBasis V H p).repr alpha) ⟨p, j⟩ =
+        ((classicalHodgeBasis V H p).repr alpha) j :=
+      Finsupp.embDomain_apply_self (Function.Embedding.sigmaMk p)
+        ((classicalHodgeBasis V H p).repr alpha) j
+    rw [hgoalL]
     simp [fiberedSheetGenerator, weightFiberEmbedding,
       Finsupp.single_apply, Finsupp.sum]
   · classical
@@ -158,7 +160,7 @@ theorem fibered_transformed_hodge
     refine Finsupp.embDomain_of_notMem_range _ _ _ ?_
     intro hin
     rcases Set.mem_range.mp hin with ⟨i, hi⟩
-    exact hqp (by rw [← hi])
+    exact hqp (by rw [← hi]; rfl)
 
 /-- Uniqueness of the sheet coefficients: the fibered completion introduces
 no artificial relations between independent classical multiplicity sheets. -/
@@ -179,7 +181,8 @@ theorem fibered_transformed_hodge_coeff_unique
   have hi := congrArg
     (fun φ : FiberedHodgeAddress V H => φ ⟨p,i⟩) h
   classical
-  simpa [fiberedSheetGenerator, Finsupp.single_apply, Finsupp.sum] using hi
+  simp only [fiberedSheetGenerator, Finsupp.single_apply, Finsupp.sum] at hi
+  split_ifs at hi <;> simp_all
 
 /-- The unique coefficients are exactly the genuine basis coordinates. -/
 theorem fibered_transformed_hodge_coeff_exact
@@ -200,8 +203,15 @@ theorem fibered_transformed_hodge_coeff_exact
       have hi := congrArg
         (fun φ : FiberedHodgeAddress V H => φ ⟨p,i⟩) hb
       classical
-      simpa [fiberedSheetGenerator, fiberedWeightCoordinates,
-        weightFiberEmbedding, Finsupp.single_apply, Finsupp.sum] using hi.symm
+      have hself : Finsupp.embDomain (Function.Embedding.sigmaMk p)
+          ((classicalHodgeBasis V H p).repr alpha) ⟨p, i⟩ =
+          ((classicalHodgeBasis V H p).repr alpha) i :=
+        Finsupp.embDomain_apply_self (Function.Embedding.sigmaMk p)
+          ((classicalHodgeBasis V H p).repr alpha) i
+      simp only [fiberedSheetGenerator, fiberedWeightCoordinates,
+        weightFiberEmbedding, Finsupp.single_apply, Finsupp.sum] at hi
+      rw [hself] at hi
+      split_ifs at hi <;> simp_all
     simpa [hbexact] using hb
 
 /-- The projection to the GST base is the finite sum of the coefficients at
@@ -222,7 +232,8 @@ theorem forgetMultiplicity_fiberedWeightCoordinates
   classical
   simp [forgetMultiplicityToGST, fiberedSheetGenerator,
     GSTTransferBridgeV2.compactClCode_eq_cosmicAddress,
-    Finsupp.single_apply, Finsupp.sum]
+    Finsupp.single_apply, Finsupp.sum, Finsupp.sum_single_index,
+    Finset.sum_ite_eq']
 
 /-- Fibered transfer crown: independent sheets, exact finite decomposition,
 unique coefficients, and exact projection to the established limitless GST
