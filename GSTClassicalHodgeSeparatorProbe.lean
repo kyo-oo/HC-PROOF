@@ -109,7 +109,9 @@ theorem functional_detects_hodge_iff_probe_pairing_ne_zero
       hodgeFiberPairing
         ((classicalHodgeBasis V H p).repr alpha)
         (functionalHodgeProbe V H p ell) ≠ 0 := by
-  rw [restrictedHodgeFunctional_eq_probe_pairing V H p ell alpha]
+  have h := restrictedHodgeFunctional_eq_probe_pairing V H p ell alpha
+  show restrictedHodgeFunctional V H p ell alpha ≠ 0 ↔ _ ≠ 0
+  rw [h]
 
 /-- A concrete separator package in pure compact/completed coordinate form. -/
 structure AtomicSeparatorProbe
