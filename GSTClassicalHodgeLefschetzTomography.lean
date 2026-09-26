@@ -36,6 +36,7 @@ open GSTWorldCosmology
 open GSTWorldPoincareDuality
 open GSTTruncatedWorldCohomologyRing
 open GSTGlobalPureHodgeCosmology
+open GSTGeometricRealizationStage2G
 
 namespace GSTClassicalHodgeLefschetzTomography
 
@@ -65,11 +66,18 @@ theorem multiplicityLefschetzKernel_eq_worldAct
     {N : Nat} (i j : Fin N) (hij : i.1 ≤ j.1) :
     multiplicityLefschetzKernel i j =
       (worldAct N N
-        ((L N N)^(2 * pureWeightGap i j))
-        (GSTWorldPoincareDuality.worldBasis (pureDiagonalState i))
-        (pureDiagonalState j) : ℚ) := by
-  rw [pure_diagonal_lefschetz_forward_exact i j hij]
-  simp [multiplicityLefschetzKernel, hij, pureWeightGap]
+        ((L N N)^(2 * pureWeightGap
+          (Fin.castLE (show N ≤ min N N by omega) i)
+          (Fin.castLE (show N ≤ min N N by omega) j)))
+        (GSTWorldPoincareDuality.worldBasis
+          (pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) i)))
+        (pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) j)) : ℚ) := by
+  rw [pure_diagonal_lefschetz_forward_exact
+    (Fin.castLE (show N ≤ min N N by omega) i)
+    (Fin.castLE (show N ≤ min N N by omega) j)
+    (by simpa [Fin.val_castLE] using hij)]
+  simp [multiplicityLefschetzKernel, hij, pureWeightGap, Fin.val_castLE]
+  try push_cast
 
 /-- Exact finite Lefschetz tomography transform.  The q-th moment receives
 contributions only from source coordinates i <= q. -/
@@ -84,69 +92,82 @@ theorem lefschetzTomography_triangular
     lefschetzTomography a q =
       a q +
         ∑ i : Fin N with i.1 < q.1,
-          multiplicityLefschetzKernel i q * a i := by
+            multiplicityLefschetzKernel i q * a i := by
   classical
+  have hsplit :
+      ∑ i : Fin N, multiplicityLefschetzKernel i q * a i
+        = multiplicityLefschetzKernel q q * a q
+          + ∑ i ∈ (Finset.univ : Finset (Fin N)).erase q,
+              multiplicityLefschetzKernel i q * a i :=
+    (Finset.add_sum_erase Finset.univ
+      (fun i => multiplicityLefschetzKernel i q * a i)
+      (Finset.mem_univ q)).symm
   unfold lefschetzTomography
-  rw [Finset.sum_eq_add_sum_diff_singleton q]
-  · rw [multiplicityLefschetzKernel_self, one_mul]
-    apply congrArg (fun z : ℚ => a q + z)
-    apply Finset.sum_subset
-    · intro i hi
-      simp only [Finset.mem_filter]
-      constructor
-      · exact Finset.mem_univ i
-      · by_contra hnot
-        have hge : q.1 ≤ i.1 := by omega
-        have hne : i ≠ q := by
-          intro heq
-          subst i
-          omega
-        have hgt : q.1 < i.1 := lt_of_le_of_ne hge (by
-          intro hval
-          apply hne
-          apply Fin.ext
-          exact hval.symm)
-        rw [multiplicityLefschetzKernel_zero_of_lt i q hgt]
-        simp
-    · intro i hiU hiNot
-      simp only [Finset.mem_filter] at hiNot
-      push_neg at hiNot
-      have hqi : q.1 ≤ i.1 := by omega
-      by_cases hiq : i = q
-      · subst i
-        simp at hiNot
-      · have hgt : q.1 < i.1 := by
-          omega
-        rw [multiplicityLefschetzKernel_zero_of_lt i q hgt]
-        simp
-  · simp
+  rw [hsplit, multiplicityLefschetzKernel_self, one_mul]
+  apply congrArg (fun z : ℚ => a q + z)
+  refine Finset.sum_subset ?_ ?_
+  · intro i hi
+    simp only [Finset.mem_filter] at hi
+    have hi2 : i.1 < q.1 := hi.2
+    refine Finset.mem_erase.mpr ⟨?_, Finset.mem_univ i⟩
+    intro hval
+    subst hval
+    omega
+  · intro i hiE hiF
+    simp only [Finset.mem_filter] at hiF
+    push_neg at hiF
+    rcases Finset.mem_erase.mp hiE with ⟨hine, _⟩
+    have hne : i.1 ≠ q.1 := by
+      intro hval
+      exact hine (Fin.ext hval)
+    have hgt : q.1 < i.1 := by omega
+    rw [multiplicityLefschetzKernel_zero_of_lt i q hgt]
+    simp
 
 /-- **UNIT-TRIANGULAR INJECTIVITY.**  Exact Lefschetz tomography loses no
 finite multiplicity information. -/
 theorem lefschetzTomography_injective
     {N : Nat} : Function.Injective (@lefschetzTomography N) := by
   intro a b hab
-  funext q
-  induction q using Fin.induction with
-  | zero =>
-      have hq := congrFun hab ⟨0, q.2⟩
-      rw [lefschetzTomography_triangular,
-          lefschetzTomography_triangular] at hq
-      simpa using hq
-  | succ q ih =>
-      have hq := congrFun hab q.succ
-      rw [lefschetzTomography_triangular,
-          lefschetzTomography_triangular] at hq
-      have hlower :
-          (∑ i : Fin N with i.1 < q.succ.1,
-            multiplicityLefschetzKernel i q.succ * a i) =
-          ∑ i : Fin N with i.1 < q.succ.1,
-            multiplicityLefschetzKernel i q.succ * b i := by
-        apply Finset.sum_congr rfl
+  have key : ∀ k : Nat, ∀ i : Fin N, i.1 ≤ k → a i = b i := by
+    intro k
+    induction k with
+    | zero =>
         intro i hi
-        rw [ih i (by simpa using hi)]
-      rw [hlower] at hq
-      exact add_right_cancel hq
+        have hq := congrFun hab i
+        rw [lefschetzTomography_triangular a i,
+            lefschetzTomography_triangular b i] at hq
+        have hza : ∑ j : Fin N with j.1 < i.1,
+            multiplicityLefschetzKernel j i * a j = 0 := by
+          refine Finset.sum_eq_zero ?_
+          intro j hj
+          simp only [Finset.mem_filter] at hj
+          exact absurd hj.2 (by omega)
+        have hzb : ∑ j : Fin N with j.1 < i.1,
+            multiplicityLefschetzKernel j i * b j = 0 := by
+          refine Finset.sum_eq_zero ?_
+          intro j hj
+          simp only [Finset.mem_filter] at hj
+          exact absurd hj.2 (by omega)
+        rw [hza, hzb] at hq
+        simpa using hq
+    | succ k ih =>
+        intro i hi
+        have hq := congrFun hab i
+        rw [lefschetzTomography_triangular a i,
+            lefschetzTomography_triangular b i] at hq
+        have hsum : (∑ j : Fin N with j.1 < i.1,
+              multiplicityLefschetzKernel j i * a j) =
+            (∑ j : Fin N with j.1 < i.1,
+              multiplicityLefschetzKernel j i * b j) := by
+          refine Finset.sum_congr rfl ?_
+          intro j hj
+          simp only [Finset.mem_filter] at hj
+          rw [ih j (by omega)]
+        rw [hsum] at hq
+        exact add_right_cancel hq
+  funext q
+  exact key q.1 q le_rfl
 
 /-- Zero tomography is equivalent to a zero finite state. -/
 theorem lefschetzTomography_eq_zero_iff
@@ -154,8 +175,10 @@ theorem lefschetzTomography_eq_zero_iff
     lefschetzTomography a = 0 ↔ a = 0 := by
   constructor
   · intro h
-    apply lefschetzTomography_injective
-    simpa using h
+    have h0 : lefschetzTomography (0 : Fin N → ℚ) = 0 := by
+      funext q
+      simp [lefschetzTomography]
+    exact lefschetzTomography_injective (h.trans h0.symm)
   · rintro rfl
     funext q
     simp [lefschetzTomography]

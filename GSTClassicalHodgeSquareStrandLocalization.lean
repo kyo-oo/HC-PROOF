@@ -33,6 +33,7 @@ open GSTClassicalHodgeFiniteSupportChart
 open GSTHodgePoincareStrands
 open GSTWorldPoincareDuality
 open GSTWorldCosmology
+open GSTGeometricRealizationStage2G
 
 namespace GSTClassicalHodgeSquareStrandLocalization
 
@@ -163,7 +164,6 @@ theorem fiberedPairing_eq_squarePoincare
         (supportDiagonalWorld f)
         (dualizedSquareProbe f g) := by
   classical
-  unfold rationalWorldTopPairing dualizedSquareProbe
   have hoff :
       ∀ c : WorldCell (fiberedSupportSize f) (fiberedSupportSize f),
         c.1 ≠ c.2 →
@@ -172,26 +172,44 @@ theorem fiberedPairing_eq_squarePoincare
             (worldDual (worldDual c)).1).1) = 0 := by
     intro c hc
     simp [supportDiagonalWorld, hc]
-  rw [fiberedPairing, Finsupp.sum]
-  -- Both sides are the same finite sum after discarding off-diagonal cells
-  -- and reindexing the diagonal by the support equivalence.
-  rw [Finset.sum_subtype
-    (p := fun s => s ∈ f.support)
-    (f := fun s => f s * g s)
-    (by intro s; simp)]
-  exact Fintype.sum_equiv
-    (fun s : LiveFiberedAddress f =>
-      ((fiberedSupportEquivFin f s,
-        fiberedSupportEquivFin f s) :
-        WorldCell (fiberedSupportSize f) (fiberedSupportSize f)))
-    (fun s => f s.1 * g s.1)
-    (fun c =>
-      supportDiagonalWorld f c *
-        dualizedSquareProbe f g (worldDual c))
-    (by
-      intro s
-      simp [supportDiagonalWorld, dualizedSquareProbe])
-
+  calc fiberedPairing f g
+      = ∑ s : LiveFiberedAddress f, f s.1 * g s.1 :=
+        (supportSubtype_sum_eq_fiberedPairing f g).symm
+    _ = ∑ i : Fin (fiberedSupportSize f),
+          supportDiagonalWorld f (i,i) *
+            g (((fiberedSupportEquivFin f).symm
+              (worldDual (worldDual (i,i))).1).1) := by
+        exact Fintype.sum_equiv (fiberedSupportEquivFin f)
+          (fun s => f s.1 * g s.1)
+          (fun i => supportDiagonalWorld f (i,i) *
+            g (((fiberedSupportEquivFin f).symm
+              (worldDual (worldDual (i,i))).1).1))
+          (by intro s; simp)
+    _ = ∑ c : WorldCell (fiberedSupportSize f) (fiberedSupportSize f),
+          supportDiagonalWorld f c *
+            g (((fiberedSupportEquivFin f).symm
+              (worldDual (worldDual c)).1).1) := by
+        have hinj : Function.Injective
+            (fun i : Fin (fiberedSupportSize f) => (i, i)) :=
+          fun i j h => congrArg Prod.fst h
+        rw [← Finset.sum_image
+          (s := (Finset.univ : Finset (Fin (fiberedSupportSize f))))
+          (f := fun c => supportDiagonalWorld f c *
+            g (((fiberedSupportEquivFin f).symm
+              (worldDual (worldDual c)).1).1))
+          (g := fun i : Fin (fiberedSupportSize f) => (i, i))
+          hinj.injOn]
+        exact Finset.sum_subset (Finset.subset_univ _)
+          (by
+            intro c _ hni
+            refine hoff c ?_
+            intro hcc
+            exact hni (Finset.mem_image.mpr
+              ⟨c.1, Finset.mem_univ _,
+                congrArg (fun x : Fin (fiberedSupportSize f) => (c.1, x)) hcc⟩))
+    _ = rationalWorldTopPairing
+          (supportDiagonalWorld f) (dualizedSquareProbe f g) := by
+        rfl
 /-- A pure square state pairs only with the zero-charge part of any probe. -/
 theorem rationalWorldTopPairing_eq_zeroChargeProbe
     {N : Nat}
