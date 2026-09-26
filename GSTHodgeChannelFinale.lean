@@ -77,7 +77,7 @@ noncomputable def canonicalBasisCycleSupplyOfHodge
     @CanonicalBasisCycleSupply V H p (F.finite p) := by
   letI : FiniteDimensional ℚ
       (rationalHodgeSubspace (H.hodgeBigrading p)) := F.finite p
-  let B := FiniteDimensional.finBasis ℚ
+  let B := Module.finBasis ℚ
     (rationalHodgeSubspace (H.hodgeBigrading p))
   refine {
     basisCycle := fun i => Classical.choose (h p (B i).1 (B i).2)

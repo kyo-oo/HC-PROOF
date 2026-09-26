@@ -186,7 +186,7 @@ noncomputable def hodgeBasis
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
     (p : Nat) :
-    Basis (HodgeBasisIndex V H p) ℚ (HodgeFiber V H p) :=
+    Module.Basis (HodgeBasisIndex V H p) ℚ (HodgeFiber V H p) :=
   Module.Free.chooseBasis ℚ (HodgeFiber V H p)
 
 /-- Limitless finite-support coordinates of a genuine Hodge class.  No fixed

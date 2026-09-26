@@ -30,6 +30,7 @@ open GSTWorldCosmology
 open GSTGradedWorldAlgebra
 open GSTWorldPoincareDuality
 open GSTGlobalPureHodgeCosmology
+open GSTWorldRecoordinationGroupoid
 
 /-- Signed Hodge charge of one world cell. -/
 def worldHodgeCharge {A B : Nat} (c : WorldCell A B) : Int :=
@@ -108,7 +109,7 @@ theorem worldHodgeStrandProj_orthogonal
       intro h
       apply hqr
       linarith
-    simp [worldHodgeStrandProj, hq, hr]
+    simp [worldHodgeStrandProj, hq, hr, hqr]
   · simp [worldHodgeStrandProj, hq]
 
 /-- Digit-axis transport lowers Hodge charge by exactly n. -/
@@ -118,12 +119,13 @@ theorem digitShiftN_respects_hodgeCharge
       worldHodgeStrandProj (q - (n : Int)) (digitShiftN n f) := by
   funext c
   by_cases hn : n ≤ c.2.1
-  · have hiff :
+  · have hiff : ∀ p : c.2.1 - n < B,
         worldHodgeCharge
-            (c.1, ⟨c.2.1 - n, by omega⟩) = q ↔
+            ((c.1, ⟨c.2.1 - n, p⟩) : WorldCell A B) = q ↔
           worldHodgeCharge c = q - (n : Int) := by
-      unfold worldHodgeCharge
-      omega
+    intro p
+    unfold worldHodgeCharge
+    omega
     simp [digitShiftN, worldHodgeStrandProj, hn, hiff]
   · simp [digitShiftN, worldHodgeStrandProj, hn]
 
@@ -134,12 +136,13 @@ theorem carryShiftN_respects_hodgeCharge
       worldHodgeStrandProj (q + (n : Int)) (carryShiftN n f) := by
   funext c
   by_cases hn : n ≤ c.1.1
-  · have hiff :
+  · have hiff : ∀ p : c.1.1 - n < A,
         worldHodgeCharge
-            (⟨c.1.1 - n, by omega⟩, c.2) = q ↔
+            ((⟨c.1.1 - n, p⟩, c.2) : WorldCell A B) = q ↔
           worldHodgeCharge c = q + (n : Int) := by
-      unfold worldHodgeCharge
-      omega
+    intro p
+    unfold worldHodgeCharge
+    omega
     simp [carryShiftN, worldHodgeStrandProj, hn, hiff]
   · simp [carryShiftN, worldHodgeStrandProj, hn]
 

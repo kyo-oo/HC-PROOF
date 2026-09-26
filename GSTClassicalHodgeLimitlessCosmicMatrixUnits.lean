@@ -48,11 +48,11 @@ def cosmicDiagonalMatrixUnit (i j : ℕ) : Module.End ℤ CompactCosmos where
   map_add' := by
     intro f g
     ext c
-    simp [cosmicPairing, mul_add]
+    simp [cosmicPairing_probe, Finsupp.single_add, Finsupp.add_apply]
   map_smul' := by
     intro z f
     ext c
-    simp [cosmicPairing, mul_assoc]
+    simp [cosmicPairing_probe, Finsupp.smul_single, smul_eq_mul]
 
 @[simp]
 theorem cosmicDiagonalMatrixUnit_apply
@@ -107,7 +107,8 @@ theorem cosmicDiagonalMatrixUnit_preserves_pure
     ∀ c, c.1 ≠ c.2 → cosmicDiagonalMatrixUnit i j f.1 c = 0 := by
   intro c hc
   rw [cosmicDiagonalMatrixUnit_apply]
-  simp [hc]
+  have hne : c ≠ (j, j) := fun heq => hc (by simp [heq])
+  simp [hne]
 
 /-- The universal address dictionary reads a cosmic matrix unit as one exact
 address basis vector. -/
@@ -138,7 +139,7 @@ theorem observe_cosmicDiagonalMatrixUnit
   rw [cosmicDiagonalMatrixUnit_apply]
   have hobs := observe_cosmicDiagonalClass (A:=A) (B:=B) hjA hjB
   simpa [cosmicDiagonalClass] using
-    congrArg (fun g : CompletedCosmos => f (i,i) • g) hobs
+    congrArg (fun g : WorldCoef A B => f (i,i) • g) hobs
 
 /-- If the target weight lies outside a finite observation window, the same
 limitless matrix-unit action becomes invisible rather than ceasing to exist. -/
@@ -150,7 +151,7 @@ theorem observe_cosmicDiagonalMatrixUnit_invisible
   rw [cosmicDiagonalMatrixUnit_apply]
   have hzero := cosmic_weight_invisible (A:=A) (B:=B) (p:=j) hout
   simpa [cosmicDiagonalClass] using
-    congrArg (fun g : CompletedCosmos => f (i,i) • g) hzero
+    congrArg (fun g : WorldCoef A B => f (i,i) • g) hzero
 
 /-! ## Rational limitless pure-address algebra
 
@@ -226,7 +227,9 @@ theorem rationalCosmic_invariant_eq_top
     · intro hf
       simpa [h f hf]
     · intro hf
-      simpa using hf
+      rw [Submodule.mem_bot] at hf
+      subst hf
+      exact Submodule.zero_mem S
   obtain ⟨i, hi⟩ := exists_nonzero_rationalCosmicCoordinate hf0
   have hbasis : ∀ j : ℕ, rationalCosmicBasis j ∈ S := by
     intro j
@@ -236,7 +239,9 @@ theorem rationalCosmic_invariant_eq_top
     have hinv := S.smul_mem ((f i)⁻¹) hscaled
     simpa [hi, smul_smul] using hinv
   rw [← g.sum_single]
-  exact S.sum_mem fun j hj => S.smul_mem (g j) (hbasis j)
+  refine S.sum_mem fun j _ => ?_
+  simpa [rationalCosmicBasis, Finsupp.smul_single, smul_eq_mul, mul_one] using
+    S.smul_mem (g j) (hbasis j)
 
 /-- Crown collecting the actual limitless Hodge artery: unbounded generators,
 universal addresses, Poincare read/write matrix units, and rational

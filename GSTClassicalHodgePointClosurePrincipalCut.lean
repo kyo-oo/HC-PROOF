@@ -92,16 +92,20 @@ theorem closurePrincipalCut_condition
 point closure. -/
 instance closurePrincipalCutToClosure_isClosedImmersion
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    IsClosedImmersion (closurePrincipalCutToClosure V x) := by
-  dsimp [closurePrincipalCutToClosure]
-  infer_instance
+    IsClosedImmersion (closurePrincipalCutToClosure V x) :=
+  MorphismProperty.pullback_fst
+    (P := @IsClosedImmersion)
+    (pointClosureι V x) (principalSectionAtι V x)
+    (principalSectionAt_isClosedImmersion V x)
 
 /-- The same intersection is also closed inside the principal section. -/
 instance closurePrincipalCutToSection_isClosedImmersion
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    IsClosedImmersion (closurePrincipalCutToSection V x) := by
-  dsimp [closurePrincipalCutToSection]
-  infer_instance
+    IsClosedImmersion (closurePrincipalCutToSection V x) :=
+  MorphismProperty.pullback_snd
+    (P := @IsClosedImmersion)
+    (pointClosureι V x) (principalSectionAtι V x)
+    (pointClosure_isClosedImmersion V x)
 
 /-- The point closure is itself compact as a closed subspace of a smooth
 projective carrier. -/
