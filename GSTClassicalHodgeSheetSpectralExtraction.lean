@@ -37,6 +37,8 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeSeparatorProbe
 open GSTClassicalHodgeSquareStrandLocalization
 open GSTClassicalHodgeIntegralSquareLocalization
+open GSTWorldCosmology
+open GSTGeometricRealizationStage2G
 
 namespace GSTClassicalHodgeSheetSpectralExtraction
 
