@@ -2,6 +2,9 @@ import GSTClassicalHodgeSeparatorProbe
 import GSTWorldRecoordinationGroupoid
 import GSTUniversalAddressBridge
 import GSTWorldPoincareDuality
+import GSTGeometricRealizationStage2G
+import GSTWorldCosmology
+import GSTClassicalHodgeFiberedCosmology
 
 /-!
 # GST CLASSICAL HODGE — FINITE-SUPPORT LOCAL GST CHARTS
@@ -33,6 +36,8 @@ open GSTClassicalHodgeAtomicDefectDuality
 open GSTClassicalHodgeSeparatorProbe
 open GSTWorldRecoordinationGroupoid
 open GSTWorldPoincareDuality
+open GSTGeometricRealizationStage2G
+open GSTWorldCosmology
 
 namespace GSTClassicalHodgeFiniteSupportChart
 
