@@ -136,8 +136,9 @@ theorem clearedIntegralWorld_diagonal
     {N : Nat} (a : RationalWorldCoef N) (i : Fin N) :
     (commonDenominator (rationalPureCoordinates a) : ℚ) * a (i,i) =
       (clearedIntegralWorld a (i,i) : ℚ) := by
-  simpa [clearedIntegralWorld, rationalPureCoordinates] using
-    commonDenominator_mul_eq_clearedCoordinate
+  simp only [clearedIntegralWorld, rationalPureCoordinates]
+  rw [dif_pos rfl]
+  exact commonDenominator_mul_eq_clearedCoordinate
       (rationalPureCoordinates a) i
 
 /-- For a rational pure state, denominator clearing agrees pointwise on the
@@ -157,7 +158,12 @@ theorem clearedIntegralWorld_pointwise
     have hne : c.1 ≠ c.2 := by
       intro h
       exact hdiag (congrArg Fin.val h)
-    simp [clearedIntegralWorld, hne, hazero]
+    have hdite : clearedIntegralWorld a c = 0 := by
+      simp only [clearedIntegralWorld]
+      rw [dif_neg hne]
+    rw [hdite]
+    rw [mul_eq_zero]
+    exact Or.inr hazero
 
 /-- Package one rational pure state together with its exact positive integral
 scaling and integral GST representative. -/
@@ -193,8 +199,7 @@ theorem canonicalIntegralPureSquareModel_ne_zero
   have hscaled :=
     (canonicalIntegralPureSquareModel a ha).scaled_eq c
   rw [hw] at hscaled
-  have hzc : ((0 : ShapeCoef (outputShape N N)) c : ℚ) = 0 := by
-    simp
+  have hzc : ((0 : ShapeCoef (outputShape N N)) c : ℚ) = 0 := rfl
   rw [hzc] at hscaled
   have hD :
       (canonicalIntegralPureSquareModel a ha).scale ≠ 0 :=
@@ -227,7 +232,6 @@ theorem integralModels_pairing_scale
   intro c hc
   have haC := (canonicalIntegralPureSquareModel a ha).scaled_eq c
   have hbC := (canonicalIntegralPureSquareModel b hb).scaled_eq (worldDual c)
-  rw [Int.cast_mul]
   rw [← haC, ← hbC]
   ring
 
