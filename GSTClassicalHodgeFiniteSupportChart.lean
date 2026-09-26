@@ -150,7 +150,7 @@ theorem supportSubtype_sum_eq_fiberedPairing
   classical
   rw [fiberedPairing]
   rw [Finsupp.sum]
-  rw [Finset.sum_subtype
+  rw [← Finset.sum_subtype (s := f.support)
     (p := fun s => s ∈ f.support)
     (f := fun s => f s * g s)
     (by intro s; simp)]
