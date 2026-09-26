@@ -55,7 +55,7 @@ theorem closureGenericPoint_not_mem_relativeCut
       principalSectionAtι V x (closurePrincipalCutToSection V x z) = x := by
     have hcond := congrArg (fun f => f z)
       (closurePrincipalCut_condition V x)
-    rw [Scheme.comp_apply, Scheme.comp_apply, hz,
+    rw [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, hz,
       closureGenericPoint_maps_to_source V x] at hcond
     exact hcond.symm
   have hxrange : x ∈ Set.range (principalSectionAtι V x) :=
@@ -111,8 +111,9 @@ noncomputable def relativeCodimensionOneFinset
   have hs : s.Finite := finite_relative_coheight_one V x
   exact hs.toFinset.attach.map
     ⟨fun y => ⟨y.1, by
-        have hy : y.1 ∈ s := by simpa using y.2
-        exact (Set.mem_sep.mp hy).2⟩,
+        have h2 : y.1 ∈ hs.toFinset := y.2
+        rw [Set.Finite.mem_toFinset] at h2
+        exact (Set.mem_sep_iff.mp h2).2⟩,
       by
         intro a b h
         apply Subtype.ext

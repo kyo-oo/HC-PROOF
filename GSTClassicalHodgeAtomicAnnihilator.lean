@@ -57,13 +57,15 @@ theorem exists_linearFunctional_separating_submodule
   have hi : (b.repr q) i ≠ 0 := by
     exact Finsupp.mem_support_iff.mp hsupp.choose_spec
   let coord : Q →ₗ[ℚ] ℚ :=
-    (Finsupp.lapply i ℚ).comp b.repr.toLinearMap
+    (Finsupp.lapply i).comp b.repr.toLinearMap
   let ell : M →ₗ[ℚ] ℚ :=
     coord.comp (Submodule.mkQ W)
   refine ⟨ell, ?_, ?_⟩
   · intro w hw
     change coord (Submodule.mkQ W w) = 0
-    rw [Submodule.Quotient.eq_zero_iff_mem.mpr hw]
+    have h0 : Submodule.mkQ W w = 0 :=
+      (Submodule.Quotient.mk_eq_zero W).mpr hw
+    rw [h0]
     exact coord.map_zero
   · change coord q ≠ 0
     simpa [coord, q, i] using hi

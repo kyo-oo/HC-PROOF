@@ -222,7 +222,7 @@ theorem worldHodgeClass_iff_bidegree_fixed {A B p : Nat} (hpA : p < A) (hpB : p 
         exact (hdiag this).elim
       · simp [hb, hf0]
   · intro hfix c hoff
-    have hc := congrFun hfix c
+    have hc : worldHodgeBidegreeProj (2*p) 0 f c = f c := congrFun hfix c
     rw [worldHodgeBidegreeProj_apply] at hc
     by_cases hb : worldHodgeBidegree c = (2*p,0)
     · have hq := congrArg Prod.snd hb

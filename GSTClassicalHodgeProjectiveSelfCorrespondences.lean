@@ -103,10 +103,10 @@ theorem graph_id :
 local instance projectiveSpace_separated (n : Nat) :
     IsSeparated (projectiveSpaceToBase n) := by
   unfold projectiveSpaceToBase
-  haveI : IsSeparated (Proj.toSpecZero (ProjectiveGrading n)) := inferInstance
-  haveI : IsSeparated (Spec.map (CommRingCat.ofHom
+  haveI hF : IsSeparated (Proj.toSpecZero (ProjectiveGrading n)) := inferInstance
+  haveI hG : IsSeparated (Spec.map (CommRingCat.ofHom
       (algebraMap ℂ (ProjectiveGrading n 0)))) := inferInstance
-  infer_instance
+  exact IsSeparated.stableUnderComposition.comp_mem _ _ hF hG
 
 /-- Every smooth projective complex carrier in the repository is separated
 over the complex base, derived from its closed projective embedding. -/
@@ -117,8 +117,9 @@ instance smoothProjective_isSeparated : IsSeparated V.structureMap := by
   infer_instance
 
 /-- The algebraic diagonal is a genuine closed immersion. -/
-instance diagonal_isClosedImmersion : IsClosedImmersion (diagonal V) :=
-  IsSeparated.isClosedImmersion_diagonal V.structureMap
+instance diagonal_isClosedImmersion : IsClosedImmersion (diagonal V) := by
+  show IsClosedImmersion (pullback.diagonal V.structureMap)
+  infer_instance
 
 /-- The `(a, b) ↦ (f a, b)`-twist of the self-product. -/
 noncomputable def twist (f : ComplexSchemeEndomorphism V) :
@@ -133,7 +134,7 @@ private theorem graph_isPullback (f : ComplexSchemeEndomorphism V) :
   have hcond1 : pullback.fst (pullback.diagonal V.structureMap) (twist V f) =
       pullback.snd (pullback.diagonal V.structureMap) (twist V f) ≫ (fst V ≫ f.hom) := by
     have h := congrArg (fun g => g ≫ fst V)
-      (pullback.condition (pullback.diagonal V.structureMap) (twist V f))
+      (pullback.condition (f := pullback.diagonal V.structureMap) (g := twist V f))
     simp only [twist] at h
     rw [Category.assoc, Category.assoc, pullback.diagonal_fst, Category.comp_id,
       pullback.lift_fst] at h
@@ -141,7 +142,7 @@ private theorem graph_isPullback (f : ComplexSchemeEndomorphism V) :
   have hcond2 : pullback.fst (pullback.diagonal V.structureMap) (twist V f) =
       pullback.snd (pullback.diagonal V.structureMap) (twist V f) ≫ snd V := by
     have h := congrArg (fun g => g ≫ snd V)
-      (pullback.condition (pullback.diagonal V.structureMap) (twist V f))
+      (pullback.condition (f := pullback.diagonal V.structureMap) (g := twist V f))
     simp only [twist] at h
     rw [Category.assoc, Category.assoc, pullback.diagonal_snd, Category.comp_id,
       pullback.lift_snd] at h
@@ -171,8 +172,8 @@ projective self-product. -/
 instance graph_isClosedImmersion
     (f : ComplexSchemeEndomorphism V) :
     IsClosedImmersion (graph V f) :=
-  IsClosedImmersion.isStableUnderBaseChange.of_isPullback
-    (graph_isPullback V f) (IsSeparated.isClosedImmersion_diagonal V.structureMap)
+  IsClosedImmersion.isStableUnderBaseChange.of_isPullback (graph_isPullback V f)
+    (inferInstanceAs (IsClosedImmersion (pullback.diagonal V.structureMap)))
 
 /-- Universal characterization of the graph by its two projections. -/
 theorem graph_unique
