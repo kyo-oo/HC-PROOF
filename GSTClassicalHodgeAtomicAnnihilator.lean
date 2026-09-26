@@ -40,12 +40,12 @@ theorem exists_linearFunctional_separating_submodule
     (hx : x ∉ W) :
     ∃ ell : M →ₗ[ℚ] ℚ,
       (∀ w : M, w ∈ W → ell w = 0) ∧ ell x ≠ 0 := by
-  let Q := Submodule.Quotient W
+  let Q := M ⧸ W
   let q : Q := Submodule.Quotient.mk x
   have hq : q ≠ 0 := by
     intro hzero
     apply hx
-    exact Submodule.Quotient.eq_zero_iff_mem.mp hzero
+    exact (Submodule.Quotient.mk_eq_zero W).mp hzero
   let b := Module.Free.chooseBasis ℚ Q
   have hrepr : b.repr q ≠ 0 := by
     intro hzero
@@ -172,7 +172,12 @@ theorem not_bigradedBettiHodgeStatement_iff_exists_atomic_separator
   · intro hnot
     rw [bigradedBettiHodgeStatement_iff_atomic_span V H] at hnot
     push_neg at hnot
-    obtain ⟨p, alpha, halpha, hnotmem⟩ := hnot
+    obtain ⟨p, hle⟩ := hnot
+    have hle' : ¬ (∀ ⦃α : RationalSingularCohomology H.analytification (2 * p)⦄,
+        α ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
+        α ∈ pointCycleClassSpan p (H.cycleClass p)) := hle
+    push_neg at hle'
+    obtain ⟨alpha, halpha, hnotmem⟩ := hle'
     obtain ⟨ell, hellSpan, hellAlpha⟩ :=
       exists_linearFunctional_separating_submodule
         (pointCycleClassSpan p (H.cycleClass p)) alpha hnotmem

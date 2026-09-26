@@ -80,7 +80,7 @@ theorem not_bigradedBettiHodge_zeroCycleClass
   intro h
   have hrange :
       alpha ∈ LinearMap.range ((zeroCycleClassData H).cycleClass p) := by
-    exact h p alpha halpha
+    exact h p halpha
   exact nonzero_hodge_not_in_zero_cycleClass_range H p alpha halpha0 hrange
 
 /-- Submodule form: any nontrivial Hodge fiber produces a Stage-2G package with
@@ -91,8 +91,7 @@ theorem exists_semantic_countermodel_of_nontrivial_hodge
     (p : Nat)
     (hH : rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥) :
     ∃ H0 : HodgeBigradedBettiData V,
-      H0.analytification = H.analytification ∧
-      H0.hodgeBigrading = H.hodgeBigrading ∧
+      H0 = zeroCycleClassData H ∧
       ¬ BigradedBettiHodgeStatement V H0 := by
   have hex : ∃ alpha : RationalSingularCohomology H.analytification (2 * p),
       alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) ∧ alpha ≠ 0 := by
@@ -105,10 +104,12 @@ theorem exists_semantic_countermodel_of_nontrivial_hodge
       have hz := h alpha ha
       simpa [hz]
     · intro ha
-      simpa using ha
+      have h0 : alpha = 0 := by simpa using ha
+      rw [h0]
+      exact Submodule.zero_mem _
   obtain ⟨alpha, halpha, halpha0⟩ := hex
-  refine ⟨zeroCycleClassData H, rfl, rfl, ?_⟩
-  exact not_bigradedBettiHodge_zeroCycleClass H p alpha halpha halpha0
+  exact ⟨zeroCycleClassData H, rfl,
+    not_bigradedBettiHodge_zeroCycleClass H p alpha halpha halpha0⟩
 
 /-- The semantic correction demanded by the classical landing: an
 unconditional result must quantify over a type in which the cycle-class map is
@@ -120,7 +121,7 @@ theorem arbitrary_cycleClass_semantics_cannot_be_final_target
     ¬ (∀ H' : HodgeBigradedBettiData V,
       BigradedBettiHodgeStatement V H') := by
   intro hall
-  obtain ⟨H0, _, _, hnot⟩ :=
+  obtain ⟨H0, _, hnot⟩ :=
     exists_semantic_countermodel_of_nontrivial_hodge H p hH
   exact hnot (hall H0)
 

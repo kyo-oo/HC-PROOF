@@ -195,7 +195,7 @@ theorem diagonalState_bidegree {A B p : Nat} (hpA : p < A) (hpB : p < B) :
 
 /-- A live weight-p Hodge class is exactly a fixed vector of the single bidegree projector (2p,0). -/
 theorem worldHodgeClass_iff_bidegree_fixed {A B p : Nat} (hpA : p < A) (hpB : p < B)
-    (f : ShapeCoef (outputShape A B)) :
+    (f : WorldCoef A B) :
     isWorldHodgeClass p f ↔ worldHodgeBidegreeProj (2*p) 0 f = f := by
   constructor
   · intro hf
@@ -204,7 +204,6 @@ theorem worldHodgeClass_iff_bidegree_fixed {A B p : Nat} (hpA : p < A) (hpB : p 
     · rcases hdiag with ⟨hC,hd⟩
       have hb : worldHodgeBidegree c = (2*p,0) := by
         unfold worldHodgeBidegree worldDegree worldHodgeCharge
-        simp only
         apply Prod.ext
         · simp only
           omega
@@ -248,7 +247,9 @@ theorem hodge_bigraded_cosmology_crown :
       worldHodgeBidegree (worldDual c) =
         (A+B-2-worldDegree c,
           worldChargeCenter A B-worldHodgeCharge c)) := by
-  refine ⟨?_, digitShiftN_respects_bidegree, carryShiftN_respects_bidegree, worldHodgeBidegree_dual⟩
+  refine ⟨?_, fun A B => digitShiftN_respects_bidegree,
+    fun A B => carryShiftN_respects_bidegree,
+    fun A B c => worldHodgeBidegree_dual c⟩
   intro A B
   exact worldHodgeBidegree_injective
 

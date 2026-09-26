@@ -43,7 +43,7 @@ def relativeCutSet
 theorem relativeCutSet_isClosed
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
     IsClosed (relativeCutSet V x) := by
-  exact (closurePrincipalCutToClosure V x).isClosedImmersion.isClosed_range
+  exact (closurePrincipalCutToClosure V x).isClosedEmbedding.isClosed_range
 
 /-- The lifted generic point of the closure is not contained in the restricted
 principal cut. -/
@@ -55,7 +55,8 @@ theorem closureGenericPoint_not_mem_relativeCut
       principalSectionAtι V x (closurePrincipalCutToSection V x z) = x := by
     have hcond := congrArg (fun f => f z)
       (closurePrincipalCut_condition V x)
-    rw [hz, closureGenericPoint_maps_to_source V x] at hcond
+    rw [Scheme.comp_apply, Scheme.comp_apply, hz,
+      closureGenericPoint_maps_to_source V x] at hcond
     exact hcond.symm
   have hxrange : x ∈ Set.range (principalSectionAtι V x) :=
     ⟨closurePrincipalCutToSection V x z, hamb⟩
@@ -63,7 +64,10 @@ theorem closureGenericPoint_not_mem_relativeCut
       (principalSectionIdeal V
         (positiveHomogeneousSeparator V.projective.n
           (V.projective.immersion x)).equation).support := by
-    simpa [principalSectionAtι, principalSectionAt] using hxrange
+    exact (Scheme.IdealSheafData.range_subschemeι
+      (principalSectionIdeal V
+        (positiveHomogeneousSeparator V.projective.n
+          (V.projective.immersion x)).equation)).subset hxrange
   exact source_not_mem_principalSection V x hxsupport
 
 /-- The relative principal cut is genuinely proper in the point closure. -/
@@ -106,7 +110,9 @@ noncomputable def relativeCodimensionOneFinset
     {y ∈ relativeCutSet V x | Order.coheight y = 1}
   have hs : s.Finite := finite_relative_coheight_one V x
   exact hs.toFinset.attach.map
-    ⟨fun y => ⟨y.1, y.2.2⟩,
+    ⟨fun y => ⟨y.1, by
+        have hy : y.1 ∈ s := by simpa using y.2
+        exact (Set.mem_sep.mp hy).2⟩,
       by
         intro a b h
         apply Subtype.ext
