@@ -26,6 +26,7 @@ noncomputable section
 open scoped BigOperators
 open GSTProjectiveOverC
 open GSTClassicalHodgeFiberedCosmology
+open GSTGeometricRealizationStage2G
 
 namespace GSTClassicalHodgeFiberedTransferCompletion
 

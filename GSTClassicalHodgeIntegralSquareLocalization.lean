@@ -31,6 +31,10 @@ open GSTClassicalHodgeSeparatorProbe
 open GSTClassicalHodgeSquareStrandLocalization
 open GSTWorldPoincareDuality
 open GSTGlobalPureHodgeCosmology
+open GSTWorldRecoordinationGroupoid
+open GSTWorldCosmology
+open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeFiniteSupportChart
 
 namespace GSTClassicalHodgeIntegralSquareLocalization
 
@@ -70,8 +74,7 @@ theorem commonDenominator_integral
   refine ⟨(a i).num * (k : ℤ), ?_⟩
   rw [hk]
   push_cast
-  rw [mul_assoc, Rat.den_mul_eq_num]
-  push_cast
+  rw [mul_comm ((a i).den : ℚ) (k : ℚ), mul_assoc, Rat.den_mul_eq_num]
   ring
 
 /-- Canonically choose the integral coordinate produced by denominator
@@ -111,7 +114,7 @@ def rationalPureCoordinates
 rational diagonal coordinates. -/
 def clearedIntegralWorld
     {N : Nat} (a : RationalWorldCoef N) :
-    ShapeCoef (GSTWorldCosmology.outputShape N N) :=
+    ShapeCoef (outputShape N N) :=
   fun c =>
     if h : c.1 = c.2 then
       clearedCoordinate (rationalPureCoordinates a) c.1
@@ -160,7 +163,7 @@ structure IntegralPureSquareModel
     {N : Nat} (a : RationalWorldCoef N) where
   scale : Nat
   scale_pos : 0 < scale
-  world : ShapeCoef (GSTWorldCosmology.outputShape N N)
+  world : ShapeCoef (outputShape N N)
   world_pure : isWorldPureHodge world
   scaled_eq : ∀ c : WorldCell N N,
     (scale : ℚ) * a c = (world c : ℚ)
@@ -253,7 +256,7 @@ theorem not_hodge_yields_nonzero_integralPureSquare_pairing
     (H : HodgeBigradedBettiData V)
     (hnot : ¬ GSTGeometricRealizationStage2G.BigradedBettiHodgeStatement V H) :
     ∃ N : Nat,
-    ∃ A B : ShapeCoef (GSTWorldCosmology.outputShape N N),
+    ∃ A B : ShapeCoef (outputShape N N),
       isWorldPureHodge A ∧
       isWorldPureHodge B ∧
       worldTopPairing A B ≠ 0 := by
