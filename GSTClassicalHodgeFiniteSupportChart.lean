@@ -152,7 +152,7 @@ theorem supportSubtype_sum_eq_fiberedPairing
   rw [Finsupp.sum]
   exact Finset.sum_subtype (p := fun s => s ∈ f.support)
     (f := fun s => f s * g s)
-    (by intro s; simp)
+    (by simp)
 
 /-- **FINITE-SUPPORT POINCARE IDENTIFICATION.**
 
@@ -225,7 +225,7 @@ theorem nonzero_fiberedAddress_has_finiteGST_probe
   · let slive : LiveFiberedAddress f := ⟨s, hs⟩
     have hz := congrFun hzero (liveAddressToSupportState f slive)
     simpa [slive] using hz
-  · exact Finsupp.not_mem_support_iff.mp hs
+  · exact Finsupp.notMem_support.mp hs
 
 /-- A nonzero atomic separator probe produces an honest finite GST world in
 which its Hodge state has a nonzero Poincare pairing. -/
@@ -259,7 +259,7 @@ theorem atomicSeparatorProbe_has_finiteGST_witness
             (functionalHodgeProbe V H p S.detector) := by
       classical
       unfold f g fiberedPairing hodgeFiberPairing fiberedWeightCoordinates
-      simp [weightFiberEmbedding]
+      simp [weightFiberEmbedding, Finsupp.sum_embDomain]
     rw [hcoords]
     exact S.pairing_nonzero
   rw [fiberedPairing_eq_finiteGSTPoincare f g] at hpair
