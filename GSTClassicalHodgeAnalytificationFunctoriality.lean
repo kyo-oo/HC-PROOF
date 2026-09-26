@@ -120,7 +120,7 @@ noncomputable def toTopCatHom
 noncomputable def id : AnalyticEndomorphism A where
   algebraic := ComplexSchemeEndomorphism.id V
   continuous_toFun := by
-    have hmap : transportedPointMap A (ComplexSchemeEndomorphism.id V) = id := by
+    have hmap : transportedPointMap A (ComplexSchemeEndomorphism.id V) = _root_.id := by
       funext x
       simp
     rw [hmap]

@@ -35,6 +35,7 @@ open GSTWorldCosmology
 open GSTGradedWorldAlgebra
 open GSTWorldPoincareDuality
 open GSTHodgePoincareStrands
+open GSTWorldRecoordinationGroupoid
 open GSTUniversalLefschetzDynamics
 open GSTDimensionFreeHodgeDiagonal
 
@@ -121,12 +122,11 @@ theorem worldHodgeBidegreeProj_orthogonal {A B : Nat}
   funext c
   rw [worldHodgeBidegreeProj_apply, worldHodgeBidegreeProj_apply]
   by_cases h1 : worldHodgeBidegree c = (k,q)
-  · have h2 : worldHodgeBidegree c ≠ (j,r) := by
-      intro h
-      apply hneq
-      exact h1.symm.trans h
-    simp [h1, h2]
-  · simp [h1]
+  · rw [if_pos h1]
+    by_cases h2 : worldHodgeBidegree c = (j,r)
+    · exact absurd (h1.symm.trans h2) hneq
+    · rw [if_neg h2]
+  · rw [if_neg h1]
 
 /-- Digit-axis transport moves bidegree by (n,-n). -/
 theorem digitShiftN_respects_bidegree {A B : Nat} (n k : Nat) (q : Int)
@@ -135,8 +135,8 @@ theorem digitShiftN_respects_bidegree {A B : Nat} (n k : Nat) (q : Int)
       worldHodgeBidegreeProj (k+n) (q-(n:Int)) (digitShiftN n f) := by
   unfold worldHodgeBidegreeProj
   rw [degree_charge_projectors_commute]
-  rw [digitShiftN_respects_degree]
   rw [digitShiftN_respects_hodgeCharge]
+  rw [digitShiftN_respects_degree]
   rw [degree_charge_projectors_commute]
 
 /-- Carry-axis transport moves bidegree by (n,+n). -/
@@ -146,8 +146,8 @@ theorem carryShiftN_respects_bidegree {A B : Nat} (n k : Nat) (q : Int)
       worldHodgeBidegreeProj (k+n) (q+(n:Int)) (carryShiftN n f) := by
   unfold worldHodgeBidegreeProj
   rw [degree_charge_projectors_commute]
-  rw [carryShiftN_respects_degree]
   rw [carryShiftN_respects_hodgeCharge]
+  rw [carryShiftN_respects_degree]
   rw [degree_charge_projectors_commute]
 
 /-- Poincare complement transforms the complete bidegree exactly. -/
@@ -166,21 +166,19 @@ def hodgeBidegreeDualEquiv {A B : Nat} (k : Nat) (q : Int)
   toFun c :=
     ⟨worldDual c.1, by
       rw [worldHodgeBidegree_dual]
-      rw [congrArg Prod.fst c.2, congrArg Prod.snd c.2]
-      congr
-      omega⟩
+      have hk' : worldDegree ↑c.1 = k := congrArg Prod.fst c.2
+      have hq' : worldHodgeCharge ↑c.1 = q := congrArg Prod.snd c.2
+      rw [hk', hq']⟩
   invFun c :=
     ⟨worldDual c.1, by
       rw [worldHodgeBidegree_dual]
-      have hk' := congrArg Prod.fst c.2
-      have hq' := congrArg Prod.snd c.2
-      simp only at hk' hq'
+      have hk' : worldDegree ↑c.1 = A+B-2-k := congrArg Prod.fst c.2
+      have hq' : worldHodgeCharge ↑c.1 = worldChargeCenter A B - q :=
+        congrArg Prod.snd c.2
+      rw [hk', hq']
       apply Prod.ext
-      · simp only
-        omega
-      · simp only
-        rw [hq']
-        ring⟩
+      · omega
+      · ring⟩
   left_inv c := by
     apply Subtype.ext
     simp
@@ -193,7 +191,7 @@ theorem diagonalState_bidegree {A B p : Nat} (hpA : p < A) (hpB : p < B) :
     worldHodgeBidegree (diagonalState hpA hpB) = (2*p,0) := by
   unfold worldHodgeBidegree worldDegree worldHodgeCharge diagonalState
   simp
-  constructor <;> omega
+  omega
 
 /-- A live weight-p Hodge class is exactly a fixed vector of the single bidegree projector (2p,0). -/
 theorem worldHodgeClass_iff_bidegree_fixed {A B p : Nat} (hpA : p < A) (hpB : p < B)
@@ -239,7 +237,7 @@ theorem worldHodgeClass_iff_bidegree_fixed {A B p : Nat} (hpA : p < A) (hpB : p 
 
 /-- Capstone: multiplicity-free bidegrees, exact axis motion, Poincare reflection and identification of the Hodge diagonal all coexist. -/
 theorem hodge_bigraded_cosmology_crown :
-    Function.Injective (@worldHodgeBidegree)
+    (∀ A B : Nat, Function.Injective (@worldHodgeBidegree A B))
     ∧ (∀ A B n k (q : Int) (f : WorldCoef A B),
       digitShiftN n (worldHodgeBidegreeProj k q f) =
         worldHodgeBidegreeProj (k+n) (q-(n:Int)) (digitShiftN n f))

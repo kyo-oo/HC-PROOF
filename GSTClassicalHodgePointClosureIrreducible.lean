@@ -40,8 +40,10 @@ theorem pointClosureIdeal_support
 theorem range_pointClosureι
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
     Set.range (pointClosureι V x) = closure ({x} : Set V.X) := by
-  rw [pointClosureι, Scheme.IdealSheafData.range_subschemeι,
-    pointClosureIdeal_support]
+  have h1 : Set.range (pointClosureι V x)
+      = (pointClosureIdeal V x).support :=
+    Scheme.IdealSheafData.range_subschemeι (pointClosureIdeal V x)
+  rw [h1, pointClosureIdeal_support]
   rfl
 
 /-- Homeomorphism from the reduced point-closure scheme to the topological

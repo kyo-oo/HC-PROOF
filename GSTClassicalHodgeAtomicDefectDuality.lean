@@ -185,11 +185,13 @@ theorem atomicDefectLinearMap_eq_zero_iff
     have hz : atomicDefectLinearMap V H p alphaH = 0 := by
       rw [h]
       rfl
-    exact Submodule.Quotient.mk_eq_zero.mp hz
+    exact (Submodule.Quotient.mk_eq_zero
+      (pointCycleClassSpan p (H.cycleClass p))).mp hz
   · intro h
     apply LinearMap.ext
     intro alpha
-    apply Submodule.Quotient.mk_eq_zero.mpr
+    apply (Submodule.Quotient.mk_eq_zero
+      (pointCycleClassSpan p (H.cycleClass p))).mpr
     exact h alpha.2
 
 /-- **ATOMIC DEFECT VANISHING FORM OF HODGE.**  The genuine Stage-2G Hodge
