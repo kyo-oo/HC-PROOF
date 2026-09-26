@@ -69,6 +69,18 @@ theorem fiberedPairing_probe
   · simp [fiberedPairing, Finsupp.sum, fiberedProbe,
       Finsupp.mem_support_iff, hs]
 
+/-- Pairing against a Kronecker-single address reads off one probe value. -/
+theorem fiberedPairing_single_left
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (s : FiberedHodgeIndex V H)
+    (g : FiberedCompletedAddress V H) :
+    fiberedPairing (Finsupp.single s 1) g = g s := by
+  have h1 : fiberedPairing (Finsupp.single s 1) g = 1 * g s :=
+    Finsupp.sum_single_index (a := s) (b := 1)
+      (h := fun t (q : ℚ) => q * g t) (by simp)
+  simpa using h1
+
 /-- **FIBERED LEFT NONDEGENERACY.**  A compact fibered Hodge address that
 pairs to zero against every completed probe is the zero address. -/
 theorem fiberedPairing_nondegenerate_left
@@ -92,7 +104,9 @@ theorem fiberedPairing_nondegenerate_right
       fiberedPairing f g = 0) :
     g = 0 := by
   funext s
-  simpa using h (Finsupp.single s 1)
+  have h2 := h (Finsupp.single s 1)
+  rw [fiberedPairing_single_left s g] at h2
+  simpa using h2
 
 /-- Every genuine class in a fixed rational `(p,p)` Hodge fiber is perfectly
 detected after embedding its basis coordinates into the total limitless
@@ -133,7 +147,8 @@ abbrev AtomicDefectSpace
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
     (p : Nat) :=
-  Submodule.Quotient (pointCycleClassSpan p (H.cycleClass p))
+  RationalSingularCohomology H.analytification (2 * p) ⧸
+    pointCycleClassSpan p (H.cycleClass p)
 
 /-- The atomic defect map: include the rational `(p,p)` Hodge fiber into
 cohomology and then quotient by the span of genuine point-cycle classes. -/
@@ -170,11 +185,11 @@ theorem atomicDefectLinearMap_eq_zero_iff
     have hz : atomicDefectLinearMap V H p alphaH = 0 := by
       rw [h]
       rfl
-    exact Submodule.Quotient.eq_zero_iff_mem.mp hz
+    exact Submodule.Quotient.mk_eq_zero.mp hz
   · intro h
     apply LinearMap.ext
     intro alpha
-    apply Submodule.Quotient.eq_zero_iff_mem.mpr
+    apply Submodule.Quotient.mk_eq_zero.mpr
     exact h alpha.2
 
 /-- **ATOMIC DEFECT VANISHING FORM OF HODGE.**  The genuine Stage-2G Hodge

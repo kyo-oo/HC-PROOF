@@ -112,36 +112,43 @@ namespace AnalyticEndomorphism
 
 /-- The corresponding actual morphism in `TopCat`. -/
 noncomputable def toTopCatHom
-    (f : AnalyticEndomorphism A) : A.space ⟶ A.space where
-  toFun := transportedPointMap A f.algebraic
-  continuous_toFun := f.continuous_toFun
+    (f : AnalyticEndomorphism A) : A.space ⟶ A.space :=
+  ConcreteCategory.ofHom (C := TopCat)
+    (ContinuousMap.mk (transportedPointMap A f.algebraic) f.continuous_toFun)
 
 /-- Identity analytification endomorphism. -/
 noncomputable def id : AnalyticEndomorphism A where
   algebraic := ComplexSchemeEndomorphism.id V
   continuous_toFun := by
-    simpa only [transportedPointMap_id] using continuous_id
+    have hmap : transportedPointMap A (ComplexSchemeEndomorphism.id V) = id := by
+      funext x
+      simp
+    rw [hmap]
+    exact continuous_id
 
 /-- Analytic endomorphisms compose. -/
 noncomputable def comp
     (f g : AnalyticEndomorphism A) : AnalyticEndomorphism A where
   algebraic := ComplexSchemeEndomorphism.comp f.algebraic g.algebraic
   continuous_toFun := by
-    simpa only [transportedPointMap_comp] using
-      g.continuous_toFun.comp f.continuous_toFun
+    have hmap : transportedPointMap A
+        (ComplexSchemeEndomorphism.comp f.algebraic g.algebraic)
+        = transportedPointMap A g.algebraic ∘ transportedPointMap A f.algebraic := by
+      funext x
+      exact transportedPointMap_comp A f.algebraic g.algebraic x
+    rw [hmap]
+    exact g.continuous_toFun.comp f.continuous_toFun
 
 @[simp]
 theorem toTopCatHom_id :
-    (id (A := A)).toTopCatHom = 𝟙 A.space := by
-  ext x
-  simp [toTopCatHom, id]
+    (id (A := A)).toTopCatHom = 𝟙 A.space :=
+  TopCat.ext (fun x => transportedPointMap_id A x)
 
 @[simp]
 theorem toTopCatHom_comp
     (f g : AnalyticEndomorphism A) :
-    (comp f g).toTopCatHom = f.toTopCatHom ≫ g.toTopCatHom := by
-  ext x
-  simp [toTopCatHom, comp, transportedPointMap_comp]
+    (comp (A := A) f g).toTopCatHom = f.toTopCatHom ≫ g.toTopCatHom :=
+  TopCat.ext (fun x => transportedPointMap_comp A f.algebraic g.algebraic x)
 
 end AnalyticEndomorphism
 
@@ -155,7 +162,7 @@ structure EndomorphismAnalytification where
     AnalyticEndomorphism.id (A := A)
   lift_comp : ∀ f g,
     lift (ComplexSchemeEndomorphism.comp f g) =
-      AnalyticEndomorphism.comp (lift f) (lift g)
+      AnalyticEndomorphism.comp (A := A) (lift f) (lift g)
 
 #check ComplexSchemeEndomorphism
 #check ComplexSchemeEndomorphism.complexPointMap

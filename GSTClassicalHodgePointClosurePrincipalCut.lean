@@ -92,24 +92,16 @@ theorem closurePrincipalCut_condition
 point closure. -/
 instance closurePrincipalCutToClosure_isClosedImmersion
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    IsClosedImmersion (closurePrincipalCutToClosure V x) := by
-  haveI : MorphismProperty.IsStableUnderBaseChange (@IsClosedImmersion) :=
-    AlgebraicGeometry.IsClosedImmersion.isStableUnderBaseChange
-  exact MorphismProperty.pullback_fst
-    (P := @IsClosedImmersion)
-    (pointClosureι V x) (principalSectionAtι V x)
-    (principalSectionAt_isClosedImmersion V x)
+    IsClosedImmersion (closurePrincipalCutToClosure V x) :=
+  inferInstanceAs (IsClosedImmersion
+    (Limits.pullback.fst (pointClosureι V x) (principalSectionAtι V x)))
 
 /-- The same intersection is also closed inside the principal section. -/
 instance closurePrincipalCutToSection_isClosedImmersion
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    IsClosedImmersion (closurePrincipalCutToSection V x) := by
-  haveI : MorphismProperty.IsStableUnderBaseChange (@IsClosedImmersion) :=
-    AlgebraicGeometry.IsClosedImmersion.isStableUnderBaseChange
-  exact MorphismProperty.pullback_snd
-    (P := @IsClosedImmersion)
-    (pointClosureι V x) (principalSectionAtι V x)
-    (pointClosure_isClosedImmersion V x)
+    IsClosedImmersion (closurePrincipalCutToSection V x) :=
+  inferInstanceAs (IsClosedImmersion
+    (Limits.pullback.snd (pointClosureι V x) (principalSectionAtι V x)))
 
 /-- The point closure is itself compact as a closed subspace of a smooth
 projective carrier. -/

@@ -141,7 +141,12 @@ theorem observe_cosmicDiagonalMatrixUnit
   have hlin : observe A B (Finsupp.single (j, j) (f (i, i))) =
       f (i, i) • observe A B (cosmicDiagonalClass j) := by
     funext c
-    simp [observe, cosmicDiagonalClass, Pi.smul_apply, smul_eq_mul]
+    have hsmul : (f (i, i) • observe A B (cosmicDiagonalClass j)) c
+        = f (i, i) * observe A B (cosmicDiagonalClass j) c := rfl
+    rw [hsmul]
+    by_cases hc : (j, j) = (↑c.1, ↑c.2)
+    · simp [observe, cosmicDiagonalClass, Finsupp.single_apply, hc, mul_one]
+    · simp [observe, cosmicDiagonalClass, Finsupp.single_apply, hc, mul_zero]
   rw [hlin]
   exact congrArg (fun g : WorldCoef A B => f (i,i) • g) hobs
 
@@ -157,7 +162,12 @@ theorem observe_cosmicDiagonalMatrixUnit_invisible
   have hlin : observe A B (Finsupp.single (j, j) (f (i, i))) =
       f (i, i) • observe A B (cosmicDiagonalClass j) := by
     funext c
-    simp [observe, cosmicDiagonalClass, Pi.smul_apply, smul_eq_mul]
+    have hsmul : (f (i, i) • observe A B (cosmicDiagonalClass j)) c
+        = f (i, i) * observe A B (cosmicDiagonalClass j) c := rfl
+    rw [hsmul]
+    by_cases hc : (j, j) = (↑c.1, ↑c.2)
+    · simp [observe, cosmicDiagonalClass, Finsupp.single_apply, hc, mul_one]
+    · simp [observe, cosmicDiagonalClass, Finsupp.single_apply, hc, mul_zero]
   rw [hlin, hzero, smul_zero]
 
 /-! ## Rational limitless pure-address algebra

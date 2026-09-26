@@ -124,7 +124,8 @@ theorem digitShiftN_respects_hodgeCharge
             ((c.1, ⟨c.2.1 - n, p⟩) : WorldCell A B) = q ↔
           worldHodgeCharge c = q - (n : Int) := by
       intro p
-      unfold worldHodgeCharge
+      show ((c.1).1 : Int) - ((c.2.1 - n : Nat) : Int) = q ↔
+        ((c.1).1 : Int) - ((c.2).1 : Int) = q - (n : Int)
       omega
     simp [digitShiftN, worldHodgeStrandProj, hn, hiff]
   · simp [digitShiftN, worldHodgeStrandProj, hn]
@@ -141,7 +142,8 @@ theorem carryShiftN_respects_hodgeCharge
             ((⟨c.1.1 - n, p⟩, c.2) : WorldCell A B) = q ↔
           worldHodgeCharge c = q + (n : Int) := by
       intro p
-      unfold worldHodgeCharge
+      show ((c.1.1 - n : Nat) : Int) - ((c.2).1 : Int) = q ↔
+        ((c.1).1 : Int) - ((c.2).1 : Int) = q + (n : Int)
       omega
     simp [carryShiftN, worldHodgeStrandProj, hn, hiff]
   · simp [carryShiftN, worldHodgeStrandProj, hn]
@@ -228,17 +230,22 @@ theorem worldDualPullback_preserves_pure_square
     {A : Nat} (f : ShapeCoef (outputShape A A))
     (hf : isWorldPureHodge f) :
     isWorldPureHodge (worldDualPullback f) := by
-  rw [pure_iff_zero_charge_fixed (A := A) (B := A)] at hf ⊢
-  have hstrand :=
-    worldDualPullback_strand (A:=A) (B:=A) 0 f
-  have hreflect :
-      worldDualPullback (worldHodgeStrandProj 0 f) =
-        worldHodgeStrandProj 0 (worldDualPullback f) := by
-    simpa [worldChargeCenter] using hstrand
-  calc
-    worldHodgeStrandProj 0 (worldDualPullback f)
-        = worldDualPullback (worldHodgeStrandProj 0 f) := hreflect.symm
-    _ = worldDualPullback f := by rw [hf]
+  rw [pure_iff_zero_charge_fixed (A := A) (B := A)] at hf
+  have hstep1 : worldDualPullback f =
+      worldDualPullback (worldHodgeStrandProj 0 f) :=
+    congrArg worldDualPullback hf.symm
+  have hstrand : worldDualPullback (worldHodgeStrandProj 0 f) =
+      worldHodgeStrandProj (worldChargeCenter A A - 0) (worldDualPullback f) :=
+    worldDualPullback_strand (A := A) (B := A) 0 f
+  have hcenter : worldChargeCenter A A - 0 = 0 := by
+    unfold worldChargeCenter
+    ring
+  rw [hcenter] at hstrand
+  have hfinal : worldDualPullback f =
+      worldHodgeStrandProj 0 (worldDualPullback f) :=
+    hstep1.trans hstrand
+  exact (pure_iff_zero_charge_fixed (A := A) (B := A) (worldDualPullback f)).mpr
+    hfinal.symm
 
 /-- The diagonal charge is Poincare self-complementary exactly for balanced
 world dimensions. -/

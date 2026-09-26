@@ -72,8 +72,7 @@ noncomputable def FiniteBasisAlgebraization.toChannelQuotient
     intro i
     rw [A.basisCycle_class i]
     congr 1
-    simpa [channelBasis, standardChannelShape] using
-      basisDecode_kronecker A.basis i
+    exact (basisDecode_kronecker A.basis i).symm
 
 /-- Basis algebraicity already implies the complete Hodge sector lies in the
 cycle-class range. -/
