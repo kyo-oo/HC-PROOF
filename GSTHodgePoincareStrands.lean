@@ -123,9 +123,9 @@ theorem digitShiftN_respects_hodgeCharge
         worldHodgeCharge
             ((c.1, ⟨c.2.1 - n, p⟩) : WorldCell A B) = q ↔
           worldHodgeCharge c = q - (n : Int) := by
-    intro p
-    unfold worldHodgeCharge
-    omega
+      intro p
+      unfold worldHodgeCharge
+      omega
     simp [digitShiftN, worldHodgeStrandProj, hn, hiff]
   · simp [digitShiftN, worldHodgeStrandProj, hn]
 
@@ -140,9 +140,9 @@ theorem carryShiftN_respects_hodgeCharge
         worldHodgeCharge
             ((⟨c.1.1 - n, p⟩, c.2) : WorldCell A B) = q ↔
           worldHodgeCharge c = q + (n : Int) := by
-    intro p
-    unfold worldHodgeCharge
-    omega
+      intro p
+      unfold worldHodgeCharge
+      omega
     simp [carryShiftN, worldHodgeStrandProj, hn, hiff]
   · simp [carryShiftN, worldHodgeStrandProj, hn]
 
@@ -228,7 +228,7 @@ theorem worldDualPullback_preserves_pure_square
     {A : Nat} (f : ShapeCoef (outputShape A A))
     (hf : isWorldPureHodge f) :
     isWorldPureHodge (worldDualPullback f) := by
-  rw [pure_iff_zero_charge_fixed] at hf ⊢
+  rw [pure_iff_zero_charge_fixed (A := A) (B := A)] at hf ⊢
   have hstrand :=
     worldDualPullback_strand (A:=A) (B:=A) 0 f
   have hreflect :
@@ -267,10 +267,10 @@ theorem hodge_poincare_strand_crown :
       isWorldPureHodge f ->
         isWorldPureHodge (worldDualPullback f)) := by
   exact ⟨
-    worldHodgeCharge_dual,
-    chargeCell_card_symmetry,
-    worldTopPairing_charge_strands_zero,
-    worldDualPullback_preserves_pure_square⟩
+    fun A B c => @worldHodgeCharge_dual A B c,
+    fun A B q => @chargeCell_card_symmetry A B q,
+    fun A B q r hqr f g => @worldTopPairing_charge_strands_zero A B q r hqr f g,
+    fun A f hf => @worldDualPullback_preserves_pure_square A f hf⟩
 
 #check worldHodgeCharge
 #check worldHodgeCharge_dual

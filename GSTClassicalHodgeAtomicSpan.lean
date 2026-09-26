@@ -79,8 +79,8 @@ theorem range_finitePointCycleClassMap
     LinearMap.range (finitePointCycleClassMap p cl) =
       pointCycleClassSpan p cl := by
   simpa [finitePointCycleClassMap, pointCycleClassSpan, pointCycleClassSet]
-    using Finsupp.range_linearCombination ℚ
-      (fun x : CodimensionPoint X p =>
+    using Finsupp.range_linearCombination (R := ℚ)
+      (v := fun x : CodimensionPoint X p =>
         cl (codimensionPointCycle X p x))
 
 /-- On a compact carrier, every class in the full native cycle-class range

@@ -138,8 +138,12 @@ theorem observe_cosmicDiagonalMatrixUnit
       f (i,i) • worldDiagonalClass hjA hjB := by
   rw [cosmicDiagonalMatrixUnit_apply]
   have hobs := observe_cosmicDiagonalClass (A:=A) (B:=B) hjA hjB
-  simpa [cosmicDiagonalClass] using
-    congrArg (fun g : WorldCoef A B => f (i,i) • g) hobs
+  have hlin : observe A B (Finsupp.single (j, j) (f (i, i))) =
+      f (i, i) • observe A B (cosmicDiagonalClass j) := by
+    funext c
+    simp [observe, cosmicDiagonalClass, Pi.smul_apply, smul_eq_mul]
+  rw [hlin]
+  exact congrArg (fun g : WorldCoef A B => f (i,i) • g) hobs
 
 /-- If the target weight lies outside a finite observation window, the same
 limitless matrix-unit action becomes invisible rather than ceasing to exist. -/
@@ -150,8 +154,11 @@ theorem observe_cosmicDiagonalMatrixUnit_invisible
     observe A B (cosmicDiagonalMatrixUnit i j f) = 0 := by
   rw [cosmicDiagonalMatrixUnit_apply]
   have hzero := cosmic_weight_invisible (A:=A) (B:=B) (p:=j) hout
-  simpa [cosmicDiagonalClass] using
-    congrArg (fun g : WorldCoef A B => f (i,i) • g) hzero
+  have hlin : observe A B (Finsupp.single (j, j) (f (i, i))) =
+      f (i, i) • observe A B (cosmicDiagonalClass j) := by
+    funext c
+    simp [observe, cosmicDiagonalClass, Pi.smul_apply, smul_eq_mul]
+  rw [hlin, hzero, smul_zero]
 
 /-! ## Rational limitless pure-address algebra
 

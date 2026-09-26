@@ -92,8 +92,10 @@ theorem closurePrincipalCut_condition
 point closure. -/
 instance closurePrincipalCutToClosure_isClosedImmersion
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    IsClosedImmersion (closurePrincipalCutToClosure V x) :=
-  MorphismProperty.pullback_fst
+    IsClosedImmersion (closurePrincipalCutToClosure V x) := by
+  haveI : MorphismProperty.IsStableUnderBaseChange (@IsClosedImmersion) :=
+    AlgebraicGeometry.IsClosedImmersion.isStableUnderBaseChange
+  exact MorphismProperty.pullback_fst
     (P := @IsClosedImmersion)
     (pointClosureι V x) (principalSectionAtι V x)
     (principalSectionAt_isClosedImmersion V x)
@@ -101,8 +103,10 @@ instance closurePrincipalCutToClosure_isClosedImmersion
 /-- The same intersection is also closed inside the principal section. -/
 instance closurePrincipalCutToSection_isClosedImmersion
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    IsClosedImmersion (closurePrincipalCutToSection V x) :=
-  MorphismProperty.pullback_snd
+    IsClosedImmersion (closurePrincipalCutToSection V x) := by
+  haveI : MorphismProperty.IsStableUnderBaseChange (@IsClosedImmersion) :=
+    AlgebraicGeometry.IsClosedImmersion.isStableUnderBaseChange
+  exact MorphismProperty.pullback_snd
     (P := @IsClosedImmersion)
     (pointClosureι V x) (principalSectionAtι V x)
     (pointClosure_isClosedImmersion V x)
