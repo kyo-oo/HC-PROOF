@@ -58,7 +58,7 @@ theorem finite_coheight_zero
   have hγx : γ ≤ x := hmax hxγ
   have hxeq : x = γ := by
     refine (inseparable_iff_eq).mp ?_
-    exact le_antisymm (show 𝓝 x ≤ 𝓝 γ from hγx) (show 𝓝 γ ≤ 𝓝 x from hxγ)
+    exact le_antisymm (show nhds x ≤ nhds γ from hγx) (show nhds γ ≤ nhds x from hxγ)
   have hclos : closure (W : Set V.X) = closure ({x} : Set V.X) := by
     rw [hxeq]
     exact hγ.def.symm
