@@ -221,6 +221,24 @@ theorem fibered_transformed_hodge_coeff_exact
       split_ifs at hi <;> simp_all
     simpa [hbexact] using hb
 
+/-- Summing singleton carriers at one fixed address aggregates the
+coefficients into one singleton carrier at that address. -/
+theorem sum_single_address
+    {ι : Type*} {κ : Type*} {M : Type*} [Zero M] [AddCommMonoid M]
+    (f : ι →₀ M) (c : κ) :
+    f.sum (fun _ q => Finsupp.single c q) =
+      Finsupp.single c (f.sum fun _ q => q) := by
+  classical
+  apply Finsupp.ext
+  intro a
+  by_cases hac : a = c
+  · subst hac
+    simp [Finsupp.sum_apply, Finsupp.single_eq_same]
+  · have hv : ∀ b : M, (Finsupp.single c b) a = 0 :=
+      fun b => Finsupp.single_eq_of_ne hac
+    simp only [Finsupp.sum_apply, hv]
+    simp [Finsupp.sum]
+
 /-- The projection to the GST base is the finite sum of the coefficients at
 the single limitless diagonal generator.  Multiplicity is deliberately
 retained in the sheet universe until this final projection. -/
@@ -234,13 +252,14 @@ theorem forgetMultiplicity_fiberedWeightCoordinates
         (GSTUniversalAddressBridge.cosmicAddressEquiv (p,p))
         (((classicalHodgeBasis V H p).repr alpha).sum (fun _ q => q)) := by
   classical
-  rcases fibered_transformed_hodge V H p alpha with ⟨coeff,hcoeff⟩
-  rw [hcoeff]
-  classical
-  simp [forgetMultiplicityToGST, fiberedSheetGenerator,
-    GSTTransferBridgeV2.compactClCode_eq_cosmicAddress,
-    Finsupp.single_apply, Finsupp.sum, Finsupp.sum_single_index,
-    Finset.sum_ite_eq']
+  simp only [forgetMultiplicityToGST, fiberedWeightCoordinates,
+    weightFiberEmbedding]
+  rw [Finsupp.sum_embDomain]
+  have haddr : ∀ a : ClassicalHodgeBasisIndex V H p,
+      ((Function.Embedding.sigmaMk p) a).1 = p := fun _ => rfl
+  simp only [haddr]
+  rw [sum_single_address]
+  rfl
 
 /-- Fibered transfer crown: independent sheets, exact finite decomposition,
 unique coefficients, and exact projection to the established limitless GST
@@ -274,6 +293,7 @@ theorem fibered_transfer_completion_crown
 #check fibered_transformed_hodge
 #check fibered_transformed_hodge_coeff_unique
 #check fibered_transformed_hodge_coeff_exact
+#check sum_single_address
 #check forgetMultiplicity_fiberedWeightCoordinates
 #check fibered_transfer_completion_crown
 

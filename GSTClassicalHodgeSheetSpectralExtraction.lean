@@ -53,6 +53,9 @@ theorem sheetCode_val
     sheetCode i = (N + 1) * i.1 := by
   unfold sheetCode
   rw [worldCode_expanded]
+  show i.1 + (outputShape N N).cols * i.1 = (N + 1) * i.1
+  have hcols : (outputShape N N).cols = N := rfl
+  rw [hcols]
   ring
 
 /-- The world-code observable is injective on every shaped world because its
@@ -104,8 +107,14 @@ theorem sheetSpectralProj_pure_eq_atom
   · have hx : x = (i,i) :=
       worldCode_injective (outputShape N N) hcode
     subst x
-    simp [sheetSpectralProj, codeSectorProj,
-      sheetDiagonalAtom, sheetCode, worldDiagonalClass, worldBasis]
+    have hcond : worldCode (outputShape N N) (i,i) = sheetCode i := rfl
+    have hdiag : worldDiagonalClass i.2 i.2 (i,i) = 1 := by
+      show (if (i,i) = diagonalState i.2 i.2 then 1 else 0) = 1
+      exact if_pos rfl
+    show (if worldCode (outputShape N N) (i,i) = sheetCode i
+        then f (i,i) else 0) =
+      f (i,i) * worldDiagonalClass i.2 i.2 (i,i)
+    rw [if_pos hcond, hdiag, mul_one]
   · have hxne : x ≠ (i,i) := by
       intro hx
       subst x
@@ -121,33 +130,31 @@ theorem sheetSpectralProj_pure_eq_atom
           simpa [hxi] using hd.symm
         exact hxne (Prod.ext hxi hyi)
       · exact Or.inl hd
-    rw [show sheetSpectralProj i f x = 0 by
-      simp [sheetSpectralProj, codeSectorProj, hcode]]
+    have hzero : sheetSpectralProj i f x = 0 := by
+      show (if worldCode (outputShape N N) x = sheetCode i
+        then f x else 0) = 0
+      exact if_neg hcode
+    rw [hzero]
     rcases hdiagOr with hoff | ⟨hdiag,hxi⟩
-    · simp [sheetDiagonalAtom,
-        worldDiagonalClass_off_diagonal i.2 i.2 x
-          (Or.inl (by
-            intro hxp
-            have : x.1.1 = i.1 := hxp
-            exact hoff (this.trans (by
-              have := congrArg Fin.val
-                (show x.2 = i from by
-                  apply Fin.ext
-                  omega)
-              simpa using this.symm))))]
-    · have hright : x.2 ≠ i := by
-        intro hxi2
-        apply hxi
-        apply Fin.ext
-        have := congrArg Fin.val hxi2
-        omega
-      have hoffWeight : x.1.1 ≠ i.1 ∨ x.2.1 ≠ i.1 := by
+    · have hoff' : x.1.1 ≠ i.1 ∨ x.2.1 ≠ i.1 := by
+        by_cases hxi : x.1.1 = i.1
+        · exact Or.inr (fun h => hoff (hxi.trans h.symm))
+        · exact Or.inl hxi
+      have hvw : worldDiagonalClass i.2 i.2 x = 0 :=
+        worldDiagonalClass_off_diagonal i.2 i.2 x hoff'
+      show (0 : ℤ) = f (i,i) * worldDiagonalClass i.2 i.2 x
+      rw [hvw]
+      simp
+    · have hoffWeight : x.1.1 ≠ i.1 ∨ x.2.1 ≠ i.1 := by
         left
         intro hval
         apply hxi
         exact Fin.ext hval
-      simp [sheetDiagonalAtom,
-        worldDiagonalClass_off_diagonal i.2 i.2 x hoffWeight]
+      have hvw : worldDiagonalClass i.2 i.2 x = 0 :=
+        worldDiagonalClass_off_diagonal i.2 i.2 x hoffWeight
+      show (0 : ℤ) = f (i,i) * worldDiagonalClass i.2 i.2 x
+      rw [hvw]
+      simp
 
 /-- Different local sheet projectors are orthogonal. -/
 theorem sheetSpectralProj_orthogonal
@@ -169,36 +176,45 @@ theorem pureWorld_sheet_decomposition
     f = ∑ i : Fin N, sheetDiagonalAtom i (f (i,i)) := by
   funext x
   by_cases hdiag : x.1.1 = x.2.1
-  · let i : Fin N := x.1
-    have hx : x = (i,i) := by
+  · have hx : x = (x.1, x.1) := by
       apply Prod.ext
       · rfl
       · apply Fin.ext
         exact hdiag.symm
-    subst x
+    rw [hx]
     classical
-    rw [Finset.sum_eq_single i]
-    · simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis]
-    · intro j hj hji
-      have hne : (i,i) ≠ (j,j) := by
-        intro h
-        exact hji (congrArg Prod.fst h).symm
-      simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis, hne]
+    rw [Finset.sum_apply]
+    rw [Finset.sum_eq_single (x.1 : Fin N)]
+    · have hdiagval : worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) = 1 := by
+        show (if (x.1, x.1) = diagonalState (x.1).2 (x.1).2
+            then 1 else 0) = 1
+        exact if_pos rfl
+      show f (x.1, x.1) =
+        f (x.1, x.1) * worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1)
+      rw [hdiagval, mul_one]
+    · intro b hb hne
+      have hoff' : (x.1, x.1).1.1 ≠ b.1 ∨ (x.1, x.1).2.1 ≠ b.1 :=
+        Or.inl (fun hval => hne (Fin.ext hval.symm))
+      have hvw : worldDiagonalClass b.2 b.2 (x.1, x.1) = 0 :=
+        worldDiagonalClass_off_diagonal b.2 b.2 (x.1, x.1) hoff'
+      show f (b,b) * worldDiagonalClass b.2 b.2 (x.1, x.1) = 0
+      rw [hvw]
+      simp
     · simp
   · rw [hf x hdiag]
-    classical
+    rw [Finset.sum_apply]
+    symm
     apply Finset.sum_eq_zero
     intro i hi
-    simp [sheetDiagonalAtom,
-      worldDiagonalClass_off_diagonal i.2 i.2 x
-        (Or.inl (by
-          intro hxi
-          apply hdiag
-          have h1 : x.1 = i := Fin.ext hxi
-          have h2 : x.2 = i := by
-            apply Fin.ext
-            omega
-          exact congrArg Fin.val (h1.trans h2.symm)))]
+    have hoff' : x.1.1 ≠ i.1 ∨ x.2.1 ≠ i.1 := by
+      by_cases hxi : x.1.1 = i.1
+      · exact Or.inr (fun h => hdiag (hxi.trans h.symm))
+      · exact Or.inl hxi
+    have hvw : worldDiagonalClass i.2 i.2 x = 0 :=
+      worldDiagonalClass_off_diagonal i.2 i.2 x hoff'
+    show f (i,i) * worldDiagonalClass i.2 i.2 x = 0
+    rw [hvw]
+    simp
 
 /-- Complementary local multiplicity-sheet index under square Poincare
 reflection. -/
@@ -228,14 +244,13 @@ theorem nonzero_purePairing_yields_nonzero_sheet_product
   apply Finset.sum_eq_zero
   intro c hc
   by_cases hdiag : c.1.1 = c.2.1
-  · let i : Fin N := c.1
-    have hcdiag : c = (i,i) := by
+  · have hcdiag : c = (c.1, c.1) := by
       apply Prod.ext
       · rfl
       · apply Fin.ext
         exact hdiag.symm
-    subst c
-    simpa [sheetMirror] using hnone i
+    rw [hcdiag]
+    simpa [sheetMirror] using hnone c.1
   · simp [hA c hdiag]
 
 /-- The corresponding single-sheet spectral projectors already retain a
@@ -255,15 +270,28 @@ theorem nonzero_purePairing_yields_nonzero_projected_pairing
   refine ⟨i, ?_⟩
   rw [sheetSpectralProj_pure_eq_atom i A hA]
   rw [sheetSpectralProj_pure_eq_atom (sheetMirror i) B hB]
+  have hdiagA : worldDiagonalClass i.2 i.2 (i,i) = 1 := by
+    show (if (i,i) = diagonalState i.2 i.2 then 1 else 0) = 1
+    exact if_pos rfl
+  have hdiagB : worldDiagonalClass (sheetMirror i).2 (sheetMirror i).2
+      (sheetMirror i, sheetMirror i) = 1 := by
+    show (if (sheetMirror i, sheetMirror i) =
+        diagonalState (sheetMirror i).2 (sheetMirror i).2
+        then 1 else 0) = 1
+    exact if_pos rfl
+  have hdual : worldDual ((i,i) : WorldCell N N) =
+      (sheetMirror i, sheetMirror i) := rfl
   classical
   unfold worldTopPairing sheetDiagonalAtom
   rw [Finset.sum_eq_single ((i,i) : WorldCell N N)]
-  · simpa [worldDual_sheetDiagonal, worldDiagonalClass, worldBasis,
-      sheetMirror] using hi
+  · simpa [hdiagA, hdiagB, hdual] using hi
   · intro c hc hci
+    have hcne : c ≠ diagonalState i.2 i.2 := by
+      intro hce
+      exact hci (show c = (i,i) from hce)
     have hzero : worldDiagonalClass i.2 i.2 c = 0 := by
-      unfold worldDiagonalClass worldBasis
-      simp [hci]
+      show (if c = diagonalState i.2 i.2 then 1 else 0) = 0
+      exact if_neg hcne
     simp [hzero]
   · simp
 
