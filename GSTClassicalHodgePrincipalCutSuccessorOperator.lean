@@ -1,6 +1,7 @@
 import GSTClassicalHodgePointClosureRelativeCut
 import GSTClassicalHodgeSchemeCodimensionStalk
 import GSTCompactNativeCyclePresentation
+import GSTGeometricRealizationStage2D
 
 /-!
 # GST CLASSICAL HODGE — EXACT-STRATUM PRINCIPAL-CUT SUCCESSOR OPERATOR
@@ -111,8 +112,9 @@ noncomputable def successorPresentationOperator
     simp
   map_smul' := by
     intro q φ
-    classical
-    simp [smul_smul]
+    apply Finsupp.ext
+    intro x
+    simp [Finsupp.sum_smul_index', smul_smul]
 
 @[simp]
 theorem successorPresentationOperator_single

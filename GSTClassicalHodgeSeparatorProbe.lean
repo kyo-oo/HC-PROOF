@@ -69,7 +69,7 @@ noncomputable def hodgeFiberProbeLinearMap
     (p : Nat)
     (g : HodgeFiberProbe V H p) :
     (ClassicalHodgeBasisIndex V H p →₀ ℚ) →ₗ[ℚ] ℚ :=
-  Finsupp.total (ClassicalHodgeBasisIndex V H p) ℚ ℚ g
+  Finsupp.linearCombination ℚ g
 
 /-- **FUNCTIONAL/PROBE IDENTIFICATION.**  Every ambient rational detector,
 when restricted to the Hodge fiber, is exactly the pairing of the class's
@@ -109,7 +109,7 @@ theorem functional_detects_hodge_iff_probe_pairing_ne_zero
       hodgeFiberPairing
         ((classicalHodgeBasis V H p).repr alpha)
         (functionalHodgeProbe V H p ell) ≠ 0 := by
-  exact ne_congr (restrictedHodgeFunctional_eq_probe_pairing V H p ell alpha)
+  rw [restrictedHodgeFunctional_eq_probe_pairing V H p ell alpha]
 
 /-- A concrete separator package in pure compact/completed coordinate form. -/
 structure AtomicSeparatorProbe

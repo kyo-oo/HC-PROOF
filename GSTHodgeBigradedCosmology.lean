@@ -222,17 +222,18 @@ theorem worldHodgeClass_iff_bidegree_fixed {A B p : Nat} (hpA : p < A) (hpB : p 
         exact (hdiag this).elim
       · simp [hb, hf0]
   · intro hfix c hoff
-    have hc : worldHodgeBidegreeProj (2*p) 0 f c = f c := congrFun hfix c
-    rw [worldHodgeBidegreeProj_apply] at hc
-    by_cases hb : worldHodgeBidegree c = (2*p,0)
-    · have hq := congrArg Prod.snd hb
-      have hk := congrArg Prod.fst hb
+    have hb : worldHodgeBidegree c ≠ (2*p,0) := by
+      intro hbc
+      have hq := congrArg Prod.snd hbc
+      have hk := congrArg Prod.fst hbc
       unfold worldHodgeBidegree worldDegree worldHodgeCharge at hk hq
-      exfalso
       rcases hoff with hC | hd
-      · apply hC; omega
-      · apply hd; omega
-    · simpa [hb] using hc.symm
+      · exact hC (by omega)
+      · exact hd (by omega)
+    have hc0 : worldHodgeBidegreeProj (2*p) 0 f c = 0 :=
+      (worldHodgeBidegreeProj_apply (2*p) 0 f c).trans (if_neg hb)
+    rw [← hfix]
+    exact hc0
 
 /-- Capstone: multiplicity-free bidegrees, exact axis motion, Poincare reflection and identification of the Hodge diagonal all coexist. -/
 theorem hodge_bigraded_cosmology_crown :
