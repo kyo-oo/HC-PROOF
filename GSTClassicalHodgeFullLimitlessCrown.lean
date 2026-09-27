@@ -1,7 +1,6 @@
 import GSTClassicalHodgeFullLimitlessExternalization
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
-import HodgeConjecture
 
 /-!
 # GST CLASSICAL HODGE — FULL LIMITLESS CROWN
@@ -31,6 +30,11 @@ about the *genuine* classical cycle-class semantics are established:
 Neither item is a basis-cycle family or a surjectivity statement.  The theorem
 below shows that after the entire limitless cosmology has been used, there are
 no further internal GST obligations hiding behind the classical landing.
+
+This module deliberately lands in `BigradedBettiHodgeStatement` directly and
+has no dependency on the public `HodgeConjecture` entry face.  That keeps the
+final dependency direction acyclic: this crown is geometry/mathematics below,
+while `HodgeConjecture.lean` imports this crown and exposes the final theorem.
 -/
 
 set_option maxHeartbeats 100000000
@@ -136,13 +140,14 @@ theorem bigradedBettiHodge
       (canonicalCosmicNaturality_of_fullProjectiveExternalization G R p)
       halpha
 
-/-- The same crown lands directly in the exact public target isolated by
-`HodgeConjecture.lean`. -/
+/-- Public-name compatibility receipt for the exact Stage-2G target.  The
+actual public alias `HodgeConjecture.ClassicalHodgeTarget` is introduced one
+layer above in `HodgeConjecture.lean`. -/
 theorem classicalHodgeTarget
     (G : GeometricCycleClassSpine V H)
     (hNV : SpineTowerNonvanishing G)
     (R : FullProjectiveCosmicExternalization G) :
-    HodgeConjecture.ClassicalHodgeTarget V H :=
+    BigradedBettiHodgeStatement V H :=
   bigradedBettiHodge G hNV R
 
 /-- Elementwise form: every genuine rational `(p,p)` class receives an actual
@@ -168,7 +173,7 @@ theorem full_limitless_rank_free_crown
     (∀ p : Nat,
       rationalHodgeSubspace (H.hodgeBigrading p) ≤
         LinearMap.range (H.cycleClass p))
-    ∧ HodgeConjecture.ClassicalHodgeTarget V H := by
+    ∧ BigradedBettiHodgeStatement V H := by
   have h := bigradedBettiHodge G hNV R
   exact ⟨h, h⟩
 
