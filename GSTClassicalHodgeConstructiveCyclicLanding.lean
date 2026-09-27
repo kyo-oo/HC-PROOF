@@ -2,6 +2,7 @@ import GSTClassicalHodgeCycleOperatorNaturality
 import GSTClassicalHodgeLocalCyclicCriterion
 import GSTCompactNativeCyclePresentation
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgePointNormalForm
 
 /-!
 # GST CLASSICAL HODGE — CONSTRUCTIVE CYCLIC LANDING
@@ -41,6 +42,7 @@ open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTCompactNativeCyclePresentation
 open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgePointNormalForm
 
 namespace GSTClassicalHodgeConstructiveCyclicLanding
 
