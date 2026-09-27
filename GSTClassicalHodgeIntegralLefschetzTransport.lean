@@ -40,6 +40,7 @@ open GSTSquarePureHodgeDuality
 open GSTClassicalHodgeSheetSpectralExtraction
 open GSTClassicalHodgeLiveSheetIntertwining
 open GSTClassicalHodgeFullArsenalIrreducibility
+open GSTClassicalHodgeExplicitArsenalGeneration
 
 namespace GSTClassicalHodgeIntegralLefschetzTransport
 
@@ -79,8 +80,9 @@ theorem sheetAtom_lefschetz_forward_exact
     (Fin.castLE (show N ≤ min N N by omega) r)
     (Fin.castLE (show N ≤ min N N by omega) s)
     (by simpa using hrs)
-  simpa [pureWeightGap, pureDiagonalState, diagonalState] using
-    congrArg (fun q : ℤ => z * q) hkernel
+  have h := congrArg (fun q : ℤ => z * q) hkernel
+  simp only [pureWeightGap, pureDiagonalState, diagonalState] at h
+  exact h
 
 /-- The central-binomial movement coefficient is nonzero. -/
 theorem sheetAtom_forward_scalar_ne_zero
@@ -128,7 +130,9 @@ theorem sheetAtom_lefschetz_wrong_time_zero
     (Fin.castLE (show N ≤ min N N by omega) s)
     (by simpa using hrs)
     (by simpa [pureWeightGap] using htime)
-  simpa [pureDiagonalState, diagonalState] using congrArg (fun q : ℤ => z*q) hz
+  have h := congrArg (fun q : ℤ => z * q) hz
+  simp only [pureDiagonalState, diagonalState] at h
+  exact h
 
 /-- Poincare reflection turns every backward sheet request into an ordered
 forward request on the mirrored diagonal. -/
@@ -138,10 +142,7 @@ theorem backward_request_reflects_forward
     (hsr : s.1 ≤ r.1) :
     (pureMirror (Fin.castLE (show N ≤ min N N by omega) r)).1 ≤
       (pureMirror (Fin.castLE (show N ≤ min N N by omega) s)).1 := by
-  exact mirror_turns_backward_forward
-    (Fin.castLE (show N ≤ min N N by omega) r)
-    (Fin.castLE (show N ≤ min N N by omega) s)
-    (by simpa using hsr)
+  exact mirror_turns_backward_forward r s hsr
 
 /-- The Poincare dual of a sheet atom is the mirrored sheet atom with the same
 integer coefficient. -/

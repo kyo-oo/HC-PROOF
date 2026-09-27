@@ -85,7 +85,8 @@ theorem transportCoefQ_codeSectorProjQ
       worldCode S ((worldRecoordinate S T).symm y) = worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
     exact worldRecoordinate_code T S y
-  simp [transportCoefQ, codeSectorProjQ, hcode]
+  simp only [transportCoefQ, codeSectorProjQ]
+  rw [hcode]
 
 /-- The projector for a live classical slot isolates that exact slot in the
 canonical live GST chart. -/
@@ -156,8 +157,11 @@ theorem recoordination_arsenal_crown
     apply Finsupp.ext
     intro i
     by_contra hi
+    have hzero : ((classicalHodgeBasis V H p).repr alpha) i ≠ 0 := by
+      intro h
+      exact hi (by simp [h, map_zero])
     have himem : i ∈ ((classicalHodgeBasis V H p).repr alpha).support :=
-      Finsupp.mem_support_iff.mpr hi
+      Finsupp.mem_support_iff.mpr hzero
     exact isEmptyElim (⟨i, himem⟩ : HodgeSupportIndex alpha)
   let r : Fin (liveRank alpha) := ⟨0, hcard⟩
   exact ⟨⟨r, liveCoordinateVector_ne_zero_at alpha r⟩,

@@ -34,6 +34,8 @@ open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeConcreteFailureDichotomy
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeFiberedCosmology
 
 /-- Embed a finite rational pure-Hodge window into the unrestricted rational
 compact cosmos at the corresponding natural weights. -/
@@ -61,7 +63,7 @@ theorem embedWindow_apply_fin
     {N : Nat} (a : RationalPureWindow N) (r : Fin N) :
     embedWindow a r.1 = a r := by
   classical
-  unfold embedWindow
+  show (∑ s : Fin N, Finsupp.single s.1 (a s)) ↑r.1 = a r
   rw [Finset.sum_apply]
   rw [Finset.sum_eq_single r]
   · simp
@@ -91,9 +93,10 @@ theorem embedWindow_basis
     simp [rationalCosmicBasis, rationalPureBasis,
       embedWindow_apply_fin]
   · classical
-    unfold embedWindow rationalCosmicBasis
+    show (∑ s : Fin N, Finsupp.single s.1 (rationalPureBasis r s)) n
+        = rationalCosmicBasis r.1 n
     rw [Finset.sum_apply]
-    simp [rationalPureBasis, hn]
+    simp [rationalPureBasis, rationalCosmicBasis, hn]
 
 /-- A limitless matrix unit acting between two visible finite weights stays in
 that observation window and reads back as the usual finite matrix unit. -/

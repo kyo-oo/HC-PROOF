@@ -54,7 +54,6 @@ noncomputable def fromLiveFibered
     LiveFiberedAddress (fiberedWeightCoordinates V H p alpha) →
       HodgeSupportIndex alpha := by
   intro s
-  refine ⟨s.1.2, ?_⟩
   have hs :
       fiberedWeightCoordinates V H p alpha s.1 ≠ 0 :=
     Finsupp.mem_support_iff.mp s.2
@@ -63,6 +62,7 @@ noncomputable def fromLiveFibered
     by_contra h
     simp [fiberedWeightCoordinates, weightFiberEmbedding, h] at hs
   subst q
+  refine ⟨i, ?_⟩
   simpa [fiberedWeightCoordinates, weightFiberEmbedding] using hs
 
 /-- The two live-support types are canonically equivalent. -/
@@ -79,13 +79,13 @@ noncomputable def hodgeSupportEquivFibered
   right_inv := by
     intro s
     apply Subtype.ext
-    rcases s.1 with ⟨q,i⟩
-    have hs :
+    rcases s with ⟨⟨q,i⟩, hs⟩
+    have hne :
         fiberedWeightCoordinates V H p alpha ⟨q,i⟩ ≠ 0 :=
-      Finsupp.mem_support_iff.mp s.2
+      Finsupp.mem_support_iff.mp hs
     have hqp : q = p := by
       by_contra h
-      simp [fiberedWeightCoordinates, weightFiberEmbedding, h] at hs
+      simp [fiberedWeightCoordinates, weightFiberEmbedding, h] at hne
     subst q
     rfl
 

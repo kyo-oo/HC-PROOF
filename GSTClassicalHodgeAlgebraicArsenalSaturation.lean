@@ -121,7 +121,7 @@ theorem bigradedBettiHodge_of_algebraicArsenalSeeds
   let alphaH : ClassicalHodgeFiber V H p := ⟨alpha, halpha⟩
   by_cases hzero : alphaH = 0
   · refine ⟨0, ?_⟩
-    simpa [alphaH] using hzero
+    simpa [alphaH] using hzero.symm
   · letI : Nontrivial (ClassicalHodgeFiber V H p) :=
       ⟨⟨0, alphaH, by simpa [Ne.symm hzero]⟩⟩
     let S := Classical.choice (hseed p inferInstance)
