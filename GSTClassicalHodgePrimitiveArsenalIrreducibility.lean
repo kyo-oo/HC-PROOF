@@ -63,9 +63,12 @@ theorem rawForwardWord_mem
     (p q : Fin N) :
     ∀ a ∈ S, rawForwardWord p q a ∈ S := by
   rcases h with ⟨hproj, hL, hP⟩
+  intro a ha
+  unfold rawForwardWord
   exact comp_mem (hproj q)
-    (comp_mem (hL (2 * GSTPureHodgeLefschetzKernel.pureWeightGap p q))
-      (hproj p))
+    (comp_mem (hL (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+      (Fin.castLE (show N ≤ min N N by omega) p)
+      (Fin.castLE (show N ≤ min N N by omega) q))) (hproj p)) a ha
 
 /-- Every normalized forward word preserves S. -/
 theorem forwardArsenalWord_mem
@@ -90,7 +93,7 @@ theorem backwardArsenalWord_mem
     (p q : Fin N) :
     ∀ a ∈ S, backwardArsenalWord p q a ∈ S := by
   exact poincareConjugate_mem h
-    (forwardArsenalWord_mem h (pureMirror p) (pureMirror q))
+    (forwardArsenalWord_mem h (mirrorFin p) (mirrorFin q))
 
 /-- **PRIMITIVE ARSENAL ⇒ FULL MATRIX-UNIT ARSENAL.** -/
 theorem fullArsenalInvariant

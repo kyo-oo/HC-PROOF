@@ -87,10 +87,36 @@ theorem hodgeClass_eq_support_sum
       ∑ i : HodgeSupportIndex alpha,
         ((classicalHodgeBasis V H p).repr alpha i.1) •
           (classicalHodgeBasis V H p i.1).1 := by
-  have hreconstruct := (classicalHodgeBasis V H p).sum_repr alpha
-  change alpha.1 = _
-  rw [← Subtype.coe_inj]
-  simpa [Finsupp.sum, HodgeSupportIndex] using hreconstruct.symm
+  have hcomb : Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
+      ((classicalHodgeBasis V H p).repr alpha) = alpha :=
+    (classicalHodgeBasis V H p).linearCombination_repr alpha
+  have hpush : (ClassicalHodgeFiber V H p).subtype
+      (((classicalHodgeBasis V H p).repr alpha).sum
+        (fun i c => c • (classicalHodgeBasis V H p i)))
+      = ∑ i ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+          ((classicalHodgeBasis V H p).repr alpha i) •
+            (classicalHodgeBasis V H p i).1 := by
+    rw [map_finsuppSum]
+    simp only [Finsupp.sum]
+    exact Finset.sum_congr rfl fun i _ =>
+      map_smul (ClassicalHodgeFiber V H p).subtype _ _
+  calc alpha.1
+      = (Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
+          ((classicalHodgeBasis V H p).repr alpha)).1 := by
+        rw [hcomb]
+    _ = ((classicalHodgeBasis V H p).repr alpha).sum
+        (fun i c => c • (classicalHodgeBasis V H p i)).1 := by
+        rw [Finsupp.linearCombination_apply]
+    _ = ∑ i ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+        ((classicalHodgeBasis V H p).repr alpha i) •
+          (classicalHodgeBasis V H p i).1 := hpush
+    _ = ∑ i : HodgeSupportIndex alpha,
+        ((classicalHodgeBasis V H p).repr alpha i.1) •
+          (classicalHodgeBasis V H p i.1).1 :=
+      (Finset.sum_coe_sort
+        (s := ((classicalHodgeBasis V H p).repr alpha).support)
+        (f := fun j => ((classicalHodgeBasis V H p).repr alpha j) •
+          (classicalHodgeBasis V H p j).1)).symm
 
 /-- A local cyclic realization of precisely the live support of one Hodge
 class.  No algebraicity of the class itself or of any individual basis vector
@@ -132,9 +158,13 @@ theorem live_basis_mem_atomic
           (classicalHodgeBasis V H p
             (R.spectral.basisIndex i)).1) ∈
         pointCycleClassSpan p (H.cycleClass p) := by
-    simpa [R.spectral_basisIndex] using R.seed_mem_atomic
+    simp only [one_smul]
+    rw [R.spectral_basisIndex]
+    exact R.seed_mem_atomic
   intro i
-  simpa [R.spectral_basisIndex] using h hseed i
+  have hi := h hseed i
+  rw [R.spectral_basisIndex] at hi
+  exact hi
 
 /-- **LOCAL CYCLIC ALGEBRAICITY.**  A Hodge class admitting a local cyclic
 realization is already in the genuine atomic algebraic span. -/
@@ -216,9 +246,8 @@ theorem bigradedBettiHodgeStatement_iff_supportCertificates
         SupportAlgebraicityCertificate V H p alpha := by
   constructor
   · intro h p alpha i
-    have hspan :=
-      (bigradedBettiHodgeStatement_iff_atomic_span V H).mp h p alpha.1 alpha.2
-    exact hspan
+    exact (bigradedBettiHodgeStatement_iff_atomic_span V H).mp h p
+      (classicalHodgeBasis V H p i.1).2
   · intro h
     apply (bigradedBettiHodgeStatement_iff_atomic_span V H).mpr
     intro p x hx
