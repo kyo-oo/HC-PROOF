@@ -2,6 +2,7 @@ import GSTClassicalHodgeLiveSheetIntertwining
 import GSTPureHodgeLefschetzKernel
 import GSTSquarePureHodgeDuality
 import GSTClassicalHodgeFullArsenalIrreducibility
+import GSTClassicalHodgeExplicitArsenalGeneration
 
 /-!
 # GST CLASSICAL HODGE — INTEGRAL LEFSCHETZ SHEET TRANSPORT
@@ -49,7 +50,8 @@ theorem sheetDiagonalAtom_eq_smul_basis
     sheetDiagonalAtom r z =
       z • worldBasis ((r,r) : WorldCell N N) := by
   funext x
-  simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis]
+  simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis];
+  rfl
 
 /-- Exact forward transport coefficient of one isolated integral sheet atom. -/
 theorem sheetAtom_lefschetz_forward_exact
@@ -74,8 +76,8 @@ theorem sheetAtom_lefschetz_forward_exact
       (worldBasis ((r,r) : WorldCell N N)) ((s,s) : WorldCell N N) = _
   have hkernel := pure_diagonal_lefschetz_forward_exact
     (A := N) (B := N)
-    (show Fin (min N N) from r)
-    (show Fin (min N N) from s)
+    (Fin.castLE (show N ≤ min N N by omega) r)
+    (Fin.castLE (show N ≤ min N N by omega) s)
     (by simpa using hrs)
   simpa [pureWeightGap, pureDiagonalState, diagonalState] using
     congrArg (fun q : ℤ => z * q) hkernel
@@ -111,13 +113,19 @@ theorem sheetAtom_lefschetz_wrong_time_zero
         (sheetDiagonalAtom r z)
         ((s,s) : WorldCell N N) = 0 := by
   rw [sheetDiagonalAtom_eq_smul_basis]
+  change
+    ((worldOperatorHom N N
+      ((L N N) ^ n) : WorldOperatorRing N N) :
+        Module.End ℤ (WorldCoef N N))
+      (z • worldBasis ((r,r) : WorldCell N N)) ((s,s) : WorldCell N N) = 0
+  rw [LinearMap.map_smul]
   change z *
       worldAct N N ((L N N)^n)
         (worldBasis ((r,r) : WorldCell N N)) ((s,s) : WorldCell N N) = 0
   have hz := pure_diagonal_lefschetz_wrong_time_zero
     (A := N) (B := N) (n := n)
-    (show Fin (min N N) from r)
-    (show Fin (min N N) from s)
+    (Fin.castLE (show N ≤ min N N by omega) r)
+    (Fin.castLE (show N ≤ min N N by omega) s)
     (by simpa using hrs)
     (by simpa [pureWeightGap] using htime)
   simpa [pureDiagonalState, diagonalState] using congrArg (fun q : ℤ => z*q) hz
@@ -128,11 +136,11 @@ theorem backward_request_reflects_forward
     {N : Nat}
     (r s : Fin N)
     (hsr : s.1 ≤ r.1) :
-    (pureMirror (show Fin (min N N) from r)).1 ≤
-      (pureMirror (show Fin (min N N) from s)).1 := by
+    (pureMirror (Fin.castLE (show N ≤ min N N by omega) r)).1 ≤
+      (pureMirror (Fin.castLE (show N ≤ min N N by omega) s)).1 := by
   exact mirror_turns_backward_forward
-    (show Fin (min N N) from r)
-    (show Fin (min N N) from s)
+    (Fin.castLE (show N ≤ min N N by omega) r)
+    (Fin.castLE (show N ≤ min N N by omega) s)
     (by simpa using hsr)
 
 /-- The Poincare dual of a sheet atom is the mirrored sheet atom with the same
@@ -142,13 +150,24 @@ theorem squarePureDual_sheetAtom
     squarePureDual
       (⟨sheetDiagonalAtom r z, by
         intro x hx
-        simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis, hx]⟩ :
+        have hoff : x.1.1 ≠ r.1 ∨ x.2.1 ≠ r.1 := by
+          by_cases hx1 : x.1.1 = r.1
+          · exact Or.inr (fun h => hx (hx1.trans h.symm))
+          · exact Or.inl hx1
+        simp [sheetDiagonalAtom,
+          worldDiagonalClass_off_diagonal r.2 r.2 x hoff]⟩ :
         PureWorldHodge N N) =
       (⟨sheetDiagonalAtom
-          (show Fin N from pureMirror (show Fin (min N N) from r)) z,
+          (mirrorFin r) z,
         by
           intro x hx
-          simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis, hx]⟩ :
+          have hoff : x.1.1 ≠ (mirrorFin r).1 ∨ x.2.1 ≠ (mirrorFin r).1 := by
+            by_cases hx1 : x.1.1 = (mirrorFin r).1
+            · exact Or.inr (fun h => hx (hx1.trans h.symm))
+            · exact Or.inl hx1
+          simp [sheetDiagonalAtom,
+            worldDiagonalClass_off_diagonal
+              (mirrorFin r).2 (mirrorFin r).2 x hoff]⟩ :
         PureWorldHodge N N) := by
   apply Subtype.ext
   funext x

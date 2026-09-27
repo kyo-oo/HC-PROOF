@@ -26,6 +26,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeLocalCyclicCriterion
 
 namespace GSTClassicalHodgeRecoordinationArsenalCrown
 

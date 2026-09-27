@@ -70,7 +70,7 @@ theorem commonDenominator_mul_coordinate_isInt
           = (k : ℚ) * (((f i).den : ℚ) * f i) := by ring
       _ = (k : ℚ) * ((f i).num : ℚ) := by rw [hden]
       _ = (((k : ℤ) * (f i).num : ℤ) : ℚ) := by push_cast; ring
-  · have hzero : f i = 0 := Finsupp.not_mem_support_iff.mp hi
+  · have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
     exact ⟨0, by simp [hzero]⟩
 
 /-- Chosen integral coefficient of one coordinate after common-denominator
@@ -95,7 +95,7 @@ noncomputable def integralize
   Finsupp.onFinset f.support (integralCoefficient f)
     (by
       intro i hi
-      have hzero : f i = 0 := Finsupp.not_mem_support_iff.mp hi
+      have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
       have hspec := integralCoefficient_spec f i
       simp [hzero] at hspec
       exact_mod_cast hspec)
@@ -109,7 +109,7 @@ theorem integralize_spec
   classical
   by_cases hi : i ∈ f.support
   · simp [integralize, hi, integralCoefficient_spec]
-  · have hzero : f i = 0 := Finsupp.not_mem_support_iff.mp hi
+  · have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
     simp [integralize, hi, hzero]
 
 /-- The scaling integer is nonzero in `Q`. -/

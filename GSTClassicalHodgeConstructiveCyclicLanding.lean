@@ -1,5 +1,7 @@
 import GSTClassicalHodgeCycleOperatorNaturality
 import GSTClassicalHodgeLocalCyclicCriterion
+import GSTCompactNativeCyclePresentation
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — CONSTRUCTIVE CYCLIC LANDING
@@ -37,6 +39,8 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeCycleOperatorNaturality
+open GSTCompactNativeCyclePresentation
+open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeConstructiveCyclicLanding
 
