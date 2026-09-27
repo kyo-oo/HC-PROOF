@@ -98,14 +98,19 @@ noncomputable def poincareReverseQ
     intro c a
     rfl
 
+/-- Pointwise action of the Poincare reversal equiv. -/
+@[simp]
+theorem poincareReverseQ_apply
+    {N : Nat} (a : RationalPureWindow N) (q : Fin N) :
+    poincareReverseQ N a q = a (windowMirror q) := rfl
+
 @[simp]
 theorem poincareReverseQ_basis
     {N : Nat} (p : Fin N) :
     poincareReverseQ N (rationalPureBasis p) =
       rationalPureBasis (windowMirror p) := by
   funext q
-  change (if windowMirror q = p then (1 : ℚ) else 0) =
-    (if q = windowMirror p then 1 else 0)
+  simp only [poincareReverseQ_apply, rationalPureBasis]
   by_cases hL : windowMirror q = p
   · rw [if_pos hL, if_pos
       ((windowMirror_involutive q).symm.trans (congrArg windowMirror hL))]
@@ -161,20 +166,14 @@ theorem forwardArsenalWord_eq_matrixUnit
   intro r _
   by_cases hrp : r = p
   · subst r
-    apply congrArg (fun v : RationalPureWindow N => a p • v)
-    change (forwardScalar p q : ℚ)⁻¹ •
-      rawForwardWord p q (rationalPureBasis p) = _
+    simp only [forwardArsenalWord, LinearMap.smul_apply]
     rw [rawForwardWord_basis_source p q hpq]
     have hscalar : (forwardScalar p q : ℚ) ≠ 0 := by
       exact_mod_cast (ne_of_gt (forwardScalar_pos p q))
-    rw [smul_smul, inv_mul_cancel₀ hscalar, one_smul,
-      pureMatrixUnit_basis_source]
-  · apply congrArg (fun v : RationalPureWindow N => a r • v)
-    change (forwardScalar p q : ℚ)⁻¹ •
-      rawForwardWord p q (rationalPureBasis r) = _
-    rw [rawForwardWord_basis_other p q r hrp,
-      pureMatrixUnit_basis_other p q r hrp]
-    simp
+    simp [pureMatrixUnit_basis_source, hscalar]
+  · simp only [forwardArsenalWord, LinearMap.smul_apply]
+    rw [rawForwardWord_basis_other p q r hrp]
+    simp [pureMatrixUnit_basis_other p q r hrp]
 
 /-- Poincare conjugate of an operator on a finite pure window. -/
 noncomputable def poincareConjugate
@@ -183,12 +182,51 @@ noncomputable def poincareConjugate
   (poincareReverseQ N).toLinearMap.comp
     (T.comp (poincareReverseQ N).toLinearMap)
 
+/-- Pointwise action of Poincare conjugation. -/
+theorem poincareConjugate_apply
+    {N : Nat} (T : Module.End ℚ (RationalPureWindow N))
+    (a : RationalPureWindow N) :
+    poincareConjugate T a
+      = poincareReverseQ N (T (poincareReverseQ N a)) := rfl
+
+/-- Native `Fin N` mirror matching `pureMirror` through the canonical
+min-casts, so the backward-word construction crosses no type boundary
+(the same cure already applied to `windowMirror`). -/
+def mirrorFin {N : Nat} (p : Fin N) : Fin N :=
+  Fin.castLE (show min N N ≤ N by omega)
+    (pureMirror (Fin.castLE (show N ≤ min N N by omega) p))
+
+theorem mirrorFin_val {N : Nat} (p : Fin N) :
+    (mirrorFin p).1 = N - 1 - p.1 := by
+  simp [mirrorFin, pureMirror, Fin.val_castLE]
+
+theorem windowMirror_eq_mirrorFin {N : Nat} (p : Fin N) :
+    windowMirror p = mirrorFin p := by
+  apply Fin.ext
+  rw [mirrorFin_val]
+  rfl
+
+theorem mirrorFin_involutive {N : Nat} (p : Fin N) :
+    mirrorFin (mirrorFin p) = p := by
+  rw [← windowMirror_eq_mirrorFin (mirrorFin p),
+    ← windowMirror_eq_mirrorFin p, windowMirror_involutive]
+
+theorem mirrorFin_injective {N : Nat} :
+    Function.Injective (mirrorFin (N := N)) := by
+  intro a b h
+  apply Fin.ext
+  have hval : (mirrorFin a).1 = (mirrorFin b).1 := congrArg Fin.val h
+  rw [mirrorFin_val, mirrorFin_val] at hval
+  have := a.2
+  have := b.2
+  omega
+
 /-- Poincare conjugation turns the mirrored matrix unit back into the original
 matrix unit. -/
 theorem poincareConjugate_matrixUnit
     {N : Nat} (p q : Fin N) :
     poincareConjugate
-        (pureMatrixUnit (windowMirror p) (windowMirror q)) =
+        (pureMatrixUnit (mirrorFin p) (mirrorFin q)) =
       pureMatrixUnit p q := by
   apply LinearMap.ext
   intro a
@@ -198,28 +236,52 @@ theorem poincareConjugate_matrixUnit
   intro r _
   by_cases hrp : r = p
   · subst r
-    simp [poincareConjugate]
-  · have hmirror : windowMirror r ≠ windowMirror p := by
-      intro h
-      apply hrp
-      simpa using congrArg windowMirror h
-    simp [poincareConjugate, pureMatrixUnit_basis_other, hrp, hmirror]
+    have hrev : poincareReverseQ N (rationalPureBasis p)
+        = rationalPureBasis (mirrorFin p) := by
+      rw [poincareReverseQ_basis, windowMirror_eq_mirrorFin]
+    have hmid : (pureMatrixUnit (mirrorFin p) (mirrorFin q))
+        (poincareReverseQ N (rationalPureBasis p))
+        = rationalPureBasis (mirrorFin q) := by
+      rw [hrev, pureMatrixUnit_basis_source]
+    have hout : poincareReverseQ N (rationalPureBasis (mirrorFin q))
+        = rationalPureBasis q := by
+      rw [poincareReverseQ_basis, windowMirror_eq_mirrorFin,
+        mirrorFin_involutive]
+    calc a p • poincareConjugate
+            (pureMatrixUnit (mirrorFin p) (mirrorFin q))
+            (rationalPureBasis p)
+        = a p • poincareReverseQ N
+            ((pureMatrixUnit (mirrorFin p) (mirrorFin q))
+              (poincareReverseQ N (rationalPureBasis p))) := by
+          rw [poincareConjugate_apply]
+      _ = a p • rationalPureBasis q := by
+          rw [hmid, hout]
+      _ = a p • pureMatrixUnit p q (rationalPureBasis p) := by
+          rw [pureMatrixUnit_basis_source]
+  · have hmirror : mirrorFin r ≠ mirrorFin p := fun h =>
+      hrp (mirrorFin_injective h)
+    have hrev : poincareReverseQ N (rationalPureBasis r)
+        = rationalPureBasis (mirrorFin r) := by
+      rw [poincareReverseQ_basis, windowMirror_eq_mirrorFin]
+    rw [poincareConjugate_apply, hrev,
+      pureMatrixUnit_basis_other _ _ _ hmirror, map_zero,
+      pureMatrixUnit_basis_other p q r hrp]
 
 /-- Backward GST word: mirror, perform the now-forward transfer, mirror back. -/
 noncomputable def backwardArsenalWord
     {N : Nat} (p q : Fin N) : Module.End ℚ (RationalPureWindow N) :=
   poincareConjugate
-    (forwardArsenalWord (windowMirror p) (windowMirror q))
+    (forwardArsenalWord (mirrorFin p) (mirrorFin q))
 
 /-- **BACKWARD MATRIX UNIT IS AN ACTUAL GST OPERATOR WORD.** -/
 theorem backwardArsenalWord_eq_matrixUnit
     {N : Nat} (p q : Fin N) (hqp : q.1 ≤ p.1) :
     backwardArsenalWord p q = pureMatrixUnit p q := by
-  have hforward : (windowMirror p).1 ≤ (windowMirror q).1 := by
-    change N - 1 - p.1 ≤ N - 1 - q.1
+  have hforward : (mirrorFin p).1 ≤ (mirrorFin q).1 := by
+    rw [mirrorFin_val, mirrorFin_val]
     omega
-  rw [backwardArsenalWord,
-    forwardArsenalWord_eq_matrixUnit (windowMirror p) (windowMirror q) hforward]
+  simp only [backwardArsenalWord]
+  rw [forwardArsenalWord_eq_matrixUnit (mirrorFin p) (mirrorFin q) hforward]
   exact poincareConjugate_matrixUnit p q
 
 /-- Every finite matrix unit is generated by the actual GST
