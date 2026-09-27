@@ -1,5 +1,6 @@
 import GSTClassicalHodgeSingleSheetCrown
 import GSTWorldRecoordinationGroupoid
+import Mathlib.Algebra.Polynomial.AlgebraMap
 
 /-!
 # GST CLASSICAL HODGE — CYCLIC SPECTRAL GENERATION
@@ -34,7 +35,18 @@ variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 /-- Polynomial functional calculus of a rational linear endomorphism. -/
 noncomputable def linearPolyEval
     (T : M →ₗ[ℚ] M) (P : Polynomial ℚ) : M →ₗ[ℚ] M :=
-  Polynomial.eval₂ (LinearMap.id.codRestrict ⊤ (1 : M →ₗ[ℚ] M) (by simp)) T P
+  Polynomial.aeval T P
+
+@[simp]
+theorem linearPolyEval_add (T : M →ₗ[ℚ] M) (P Q : Polynomial ℚ) :
+    linearPolyEval T (P + Q) = linearPolyEval T P + linearPolyEval T Q := by
+  exact map_add (Polynomial.aeval T) P Q
+
+@[simp]
+theorem linearPolyEval_monomial (T : M →ₗ[ℚ] M)
+    (n : Nat) (a : ℚ) (x : M) :
+    linearPolyEval T (Polynomial.monomial n a) x = a • (T ^ n) x := by
+  simp [linearPolyEval, Module.End.mul_apply, Module.algebraMap_end_apply]
 
 /-- More explicit pointwise recursion characterization of the polynomial
 functional calculus.  GLM may normalize this definition against the pinned
@@ -53,15 +65,17 @@ theorem polynomialStable_of_operatorStable
   intro P
   refine Polynomial.induction_on' P ?add ?monomial
   · intro P Q hP hQ x hx
-    simpa [linearPolyEval] using W.add_mem (hP x hx) (hQ x hx)
+    simpa only [linearPolyEval_add, LinearMap.add_apply] using
+      W.add_mem (hP x hx) (hQ x hx)
   · intro n a x hx
-    induction n with
-    | zero =>
-        simpa [linearPolyEval] using W.smul_mem a hx
-    | succ n ih =>
-        have hTx := hT x hx
-        -- Polynomial monomials act by repeated application of T.
-        simpa [linearPolyEval, pow_succ] using ih (T x) hTx
+    have hpow : ∀ k : Nat, (T ^ k) x ∈ W := by
+      intro k
+      induction k with
+      | zero => simpa using hx
+      | succ k ih =>
+          simpa only [pow_succ', Module.End.mul_apply] using hT _ ih
+    rw [linearPolyEval_monomial]
+    exact W.smul_mem a (hpow n)
 
 /-- Finite spectral package: chosen directions are eigenvectors of one
 observable with pairwise distinct eigenvalues. -/
@@ -106,26 +120,31 @@ theorem isolatorScale_ne_zero (i : ι) :
   classical
   unfold isolatorScale isolatorPolynomial
   rw [Polynomial.eval_prod]
-  apply Finset.prod_ne_zero
+  apply Finset.prod_ne_zero_iff.mpr
   intro j hj
   have hji : j ≠ i := (Finset.mem_erase.mp hj).1
   simp only [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C]
-  exact sub_ne_zero.mpr (S.eigenvalue_injective.ne hji)
+  exact sub_ne_zero.mpr (S.eigenvalue_injective.ne hji.symm)
 
 /-- Polynomial action on one chosen eigenvector is scalar evaluation. -/
 theorem linearPolyEval_eigenvector
     (P : Polynomial ℚ) (i : ι) :
     linearPolyEval S.observable P (S.vector i) =
       P.eval (S.eigenvalue i) • S.vector i := by
+  have hpow : ∀ n : Nat,
+      (S.observable ^ n) (S.vector i) = S.eigenvalue i ^ n • S.vector i := by
+    intro n
+    induction n with
+    | zero => simp
+    | succ n ih =>
+        rw [pow_succ', Module.End.mul_apply, ih, map_smul, S.eigenvector]
+        simp only [smul_smul, pow_succ]
   induction P using Polynomial.induction_on' with
   | add P Q hP hQ =>
-      simp [linearPolyEval, hP, hQ, add_smul]
+      rw [linearPolyEval_add, LinearMap.add_apply, hP, hQ,
+        Polynomial.eval_add, add_smul]
   | monomial n a =>
-      induction n with
-      | zero => simp [linearPolyEval]
-      | succ n ih =>
-          simp [linearPolyEval, pow_succ, ih, S.eigenvector,
-            mul_smul]
+      rw [linearPolyEval_monomial, hpow, Polynomial.eval_monomial, mul_smul]
 
 /-- The isolator kills every non-selected eigenvector. -/
 theorem isolator_kills_other
@@ -154,6 +173,7 @@ theorem isolator_on_combination
       (S.spectralCombination a) =
       (a i * S.isolatorScale i) • S.vector i := by
   classical
+  unfold spectralCombination
   rw [map_sum]
   simp_rw [LinearMap.map_smul]
   rw [Finset.sum_eq_single i]
@@ -186,7 +206,7 @@ theorem every_vector_mem_of_cyclic_seed
   have hscale : a i * S.isolatorScale i ≠ 0 :=
     mul_ne_zero (ha i) (S.isolatorScale_ne_zero i)
   have hinv := W.smul_mem ((a i * S.isolatorScale i)⁻¹) hpoly
-  simpa [hscale] using hinv
+  simpa only [smul_smul, inv_mul_cancel₀ hscale, one_smul] using hinv
 
 /-- If the selected spectral directions span the ambient finite module, the
 same hypotheses force the stable algebraic submodule to be all of M. -/
@@ -279,7 +299,7 @@ theorem selected_basis_algebraic_of_cyclic_seed
   have h := F.every_vector_mem_of_cyclic_seed
     (pointCycleClassSpan p (H.cycleClass p))
     S.atomic_stable a ha
-  simpa [F, FiniteSpectralFamily.spectralCombination] using h hseed
+  exact h hseed
 
 /-- If a finite selected family exhausts the chosen Hodge basis index, then
 one cyclic algebraic seed plus one stable spectral operator proves the full
@@ -303,10 +323,18 @@ theorem weight_hodge_of_cyclic_spectral_generation
     intro j
     obtain ⟨i,rfl⟩ := hsurj j
     exact S.selected_basis_algebraic_of_cyclic_seed a ha hseed i
-  have hreconstruct := (classicalHodgeBasis V H p).sum_repr alphaH
-  rw [← hreconstruct]
-  exact Submodule.sum_mem _ fun j hj =>
-    Submodule.smul_mem _ _ (hbasis j)
+  let W : Submodule ℚ (ClassicalHodgeFiber V H p) :=
+    (pointCycleClassSpan p (H.cycleClass p)).comap
+      (rationalHodgeSubspace (H.hodgeBigrading p)).subtype
+  have htop : W = ⊤ := by
+    apply top_unique
+    rw [← (classicalHodgeBasis V H p).span_eq, Submodule.span_le]
+    rintro _ ⟨j, rfl⟩
+    exact hbasis j
+  have hmem : alphaH ∈ W := by rw [htop]; trivial
+  exact hmem
+
+end ClassicalHodgeSpectralOperator
 
 #check ClassicalHodgeSpectralOperator
 #check ClassicalHodgeSpectralOperator.toFiniteSpectralFamily
