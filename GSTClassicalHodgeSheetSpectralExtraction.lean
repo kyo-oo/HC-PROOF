@@ -110,6 +110,7 @@ theorem sheetSpectralProj_pure_eq_atom
     have hcond : worldCode (outputShape N N) (i,i) = sheetCode i := rfl
     have hdiag : worldDiagonalClass i.2 i.2 (i,i) = 1 := by
       simp [worldDiagonalClass, GSTUniversalAddressBridge.worldBasis]
+      rfl
     show (if worldCode (outputShape N N) (i,i) = sheetCode i
         then f (i,i) else 0) =
       f (i,i) * worldDiagonalClass i.2 i.2 (i,i)
@@ -202,6 +203,7 @@ theorem pureWorld_sheet_decomposition
         = f (x.1, x.1) * worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) := rfl
     have hdiagval : worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) = 1 := by
       simp [worldDiagonalClass, GSTUniversalAddressBridge.worldBasis]
+      rfl
     have hf : f (x.1, x.1) * worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1)
         = f (x.1, x.1) :=
       (congrArg (fun z : ℤ => f (x.1, x.1) * z) hdiagval).trans (mul_one _)
