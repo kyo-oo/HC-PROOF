@@ -109,8 +109,7 @@ theorem sheetSpectralProj_pure_eq_atom
     subst x
     have hcond : worldCode (outputShape N N) (i,i) = sheetCode i := rfl
     have hdiag : worldDiagonalClass i.2 i.2 (i,i) = 1 := by
-      show (if (i,i) = diagonalState i.2 i.2 then 1 else 0) = 1
-      exact if_pos rfl
+      simp [worldDiagonalClass, worldBasis]
     show (if worldCode (outputShape N N) (i,i) = sheetCode i
         then f (i,i) else 0) =
       f (i,i) * worldDiagonalClass i.2 i.2 (i,i)
@@ -183,26 +182,32 @@ theorem pureWorld_sheet_decomposition
         exact hdiag.symm
     rw [hx]
     classical
-    rw [Finset.sum_apply]
-    rw [Finset.sum_eq_single (x.1 : Fin N)]
-    · have hdiagval : worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) = 1 := by
-        show (if (x.1, x.1) = diagonalState (x.1).2 (x.1).2
-            then 1 else 0) = 1
-        exact if_pos rfl
-      show f (x.1, x.1) =
-        f (x.1, x.1) * worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1)
-      rw [hdiagval, mul_one]
-    · intro b hb hne
-      have hoff' : (x.1, x.1).1.1 ≠ b.1 ∨ (x.1, x.1).2.1 ≠ b.1 :=
-        Or.inl (fun hval => hne (Fin.ext hval.symm))
-      have hvw : worldDiagonalClass b.2 b.2 (x.1, x.1) = 0 :=
-        worldDiagonalClass_off_diagonal b.2 b.2 (x.1, x.1) hoff'
-      show f (b,b) * worldDiagonalClass b.2 b.2 (x.1, x.1) = 0
-      rw [hvw]
-      simp
-    · simp
+    have happlied : (∑ i : Fin N, sheetDiagonalAtom i (f (i, i))) (x.1, x.1)
+        = ∑ i : Fin N, sheetDiagonalAtom i (f (i, i)) (x.1, x.1) :=
+      Finset.sum_apply _ _ _
+    rw [happlied]
+    have hsingle : ∑ i : Fin N, sheetDiagonalAtom i (f (i, i)) (x.1, x.1)
+        = sheetDiagonalAtom (x.1 : Fin N) (f (x.1, x.1)) (x.1, x.1) :=
+      Finset.sum_eq_single (x.1 : Fin N)
+        (fun b _ hne => by
+          have hoff' : (x.1, x.1).1.1 ≠ b.1 ∨ (x.1, x.1).2.1 ≠ b.1 :=
+            Or.inl (fun hval => hne (Fin.ext hval.symm))
+          have hvw : worldDiagonalClass b.2 b.2 (x.1, x.1) = 0 :=
+            worldDiagonalClass_off_diagonal b.2 b.2 (x.1, x.1) hoff'
+          show f (b, b) * worldDiagonalClass b.2 b.2 (x.1, x.1) = 0
+          rw [hvw, mul_zero])
+        (fun hnomem => absurd (Finset.mem_univ _) hnomem)
+    rw [hsingle]
+    have hz : sheetDiagonalAtom (x.1 : Fin N) (f (x.1, x.1)) (x.1, x.1)
+        = f (x.1, x.1) * worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) := rfl
+    have hdiagval : worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) = 1 := by
+      simp [worldDiagonalClass, worldBasis]
+    rw [hz, hdiagval, mul_one]
   · rw [hf x hdiag]
-    rw [Finset.sum_apply]
+    have happlied : (∑ i : Fin N, sheetDiagonalAtom i (f (i, i))) x
+        = ∑ i : Fin N, sheetDiagonalAtom i (f (i, i)) x :=
+      Finset.sum_apply _ _ _
+    rw [happlied]
     symm
     apply Finset.sum_eq_zero
     intro i hi
@@ -250,7 +255,7 @@ theorem nonzero_purePairing_yields_nonzero_sheet_product
       · apply Fin.ext
         exact hdiag.symm
     rw [hcdiag]
-    simpa [sheetMirror] using hnone c.1
+    simpa [sheetMirror, worldDual] using hnone c.1
   · simp [hA c hdiag]
 
 /-- The corresponding single-sheet spectral projectors already retain a
@@ -270,30 +275,39 @@ theorem nonzero_purePairing_yields_nonzero_projected_pairing
   refine ⟨i, ?_⟩
   rw [sheetSpectralProj_pure_eq_atom i A hA]
   rw [sheetSpectralProj_pure_eq_atom (sheetMirror i) B hB]
-  have hdiagA : worldDiagonalClass i.2 i.2 (i,i) = 1 := by
-    show (if (i,i) = diagonalState i.2 i.2 then 1 else 0) = 1
-    exact if_pos rfl
-  have hdiagB : worldDiagonalClass (sheetMirror i).2 (sheetMirror i).2
-      (sheetMirror i, sheetMirror i) = 1 := by
-    show (if (sheetMirror i, sheetMirror i) =
-        diagonalState (sheetMirror i).2 (sheetMirror i).2
-        then 1 else 0) = 1
-    exact if_pos rfl
-  have hdual : worldDual ((i,i) : WorldCell N N) =
-      (sheetMirror i, sheetMirror i) := rfl
-  classical
-  unfold worldTopPairing sheetDiagonalAtom
-  rw [Finset.sum_eq_single ((i,i) : WorldCell N N)]
-  · simpa [hdiagA, hdiagB, hdual] using hi
-  · intro c hc hci
-    have hcne : c ≠ diagonalState i.2 i.2 := by
-      intro hce
-      exact hci (show c = (i,i) from hce)
-    have hzero : worldDiagonalClass i.2 i.2 c = 0 := by
-      show (if c = diagonalState i.2 i.2 then 1 else 0) = 0
-      exact if_neg hcne
-    simp [hzero]
-  · simp
+  have hsingle : worldTopPairing (sheetDiagonalAtom i (A (i,i)))
+      (sheetDiagonalAtom (sheetMirror i) (B (sheetMirror i, sheetMirror i)))
+      = A (i,i) * B (sheetMirror i, sheetMirror i) := by
+    classical
+    unfold worldTopPairing sheetDiagonalAtom
+    rw [Finset.sum_eq_single (diagonalState i.2 i.2)]
+    · show A (i,i) * worldDiagonalClass i.2 i.2 (diagonalState i.2 i.2)
+          * (B (sheetMirror i, sheetMirror i)
+            * worldDiagonalClass (sheetMirror i).2 (sheetMirror i).2
+              (worldDual (diagonalState i.2 i.2)))
+          ≠ 0
+      rw [worldDiagonalClass_at_diagonal]
+      have hB1 : worldDiagonalClass (sheetMirror i).2 (sheetMirror i).2
+          (worldDual (diagonalState i.2 i.2)) = 1 :=
+        worldDiagonalClass_at_diagonal (sheetMirror i).2 (sheetMirror i).2
+      rw [hB1, mul_one, mul_one]
+      exact hi
+    · intro c hc hci
+      have hoff' : c.1.1 ≠ i.1 ∨ c.2.1 ≠ i.1 := by
+        by_contra hcon
+        push_neg at hcon
+        exact hci (Prod.ext (Fin.ext hcon.1) (Fin.ext hcon.2))
+      have hvw : worldDiagonalClass i.2 i.2 c = 0 :=
+        worldDiagonalClass_off_diagonal i.2 i.2 c hoff'
+      show A (i,i) * worldDiagonalClass i.2 i.2 c
+          * (B (sheetMirror i, sheetMirror i)
+            * worldDiagonalClass (sheetMirror i).2 (sheetMirror i).2 (worldDual c)) = 0
+      rw [hvw, mul_zero, zero_mul]
+    · simp
+  rw [hsingle]
+  exact hi
+
+
 
 /-- **SINGLE-SHEET REDUCTION OF CLASSICAL HODGE FAILURE.**
 Any Stage-2G failure witness yields a finite integral pure square and one

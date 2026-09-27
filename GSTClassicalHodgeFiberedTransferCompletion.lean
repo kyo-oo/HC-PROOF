@@ -224,20 +224,11 @@ theorem fibered_transformed_hodge_coeff_exact
 /-- Summing singleton carriers at one fixed address aggregates the
 coefficients into one singleton carrier at that address. -/
 theorem sum_single_address
-    {ι : Type*} {κ : Type*} {M : Type*} [Zero M] [AddCommMonoid M]
-    (f : ι →₀ M) (c : κ) :
+    {ι : Type*} {κ : Type*}
+    (f : ι →₀ ℚ) (c : κ) :
     f.sum (fun _ q => Finsupp.single c q) =
-      Finsupp.single c (f.sum fun _ q => q) := by
-  classical
-  apply Finsupp.ext
-  intro a
-  by_cases hac : a = c
-  · subst hac
-    simp [Finsupp.sum_apply, Finsupp.single_eq_same]
-  · have hv : ∀ b : M, (Finsupp.single c b) a = 0 :=
-      fun b => Finsupp.single_eq_of_ne hac
-    simp only [Finsupp.sum_apply, hv]
-    simp [Finsupp.sum]
+      Finsupp.single c (f.sum fun _ q => q) :=
+  (Finsupp.single_sum f (fun _ q => q) c).symm
 
 /-- The projection to the GST base is the finite sum of the coefficients at
 the single limitless diagonal generator.  Multiplicity is deliberately
