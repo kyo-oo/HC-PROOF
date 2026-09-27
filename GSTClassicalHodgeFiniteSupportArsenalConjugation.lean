@@ -107,7 +107,7 @@ theorem conjugatedMatrixUnit_live_other
   apply htr
   apply (liveEquivFin alpha).symm.injective
   apply Subtype.ext
-  simpa [liveBasisIndex] using hidx
+  simpa [liveBasisIndex] using hidx.symm
 
 /-- Exact finite-window conjugation receipt: both the GST pure matrix unit and
 the transported classical matrix unit send their source basis sheet to the

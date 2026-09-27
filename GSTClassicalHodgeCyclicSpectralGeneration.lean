@@ -28,7 +28,7 @@ open scoped BigOperators
 
 namespace GSTClassicalHodgeCyclicSpectralGeneration
 
-universe u
+universe u v
 
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 
@@ -47,6 +47,46 @@ theorem linearPolyEval_monomial (T : M →ₗ[ℚ] M)
     (n : Nat) (a : ℚ) (x : M) :
     linearPolyEval T (Polynomial.monomial n a) x = a • (T ^ n) x := by
   simp [linearPolyEval, Module.End.mul_apply, Module.algebraMap_end_apply]
+
+/-- Polynomial transport preserves an existing intertwining square.  The
+statement applies equally to native cycles and their cohomological images. -/
+theorem linearPolyEval_intertwines
+    {N : Type v} [AddCommGroup N] [Module ℚ N]
+    (f : M →ₗ[ℚ] N) (T : Module.End ℚ M) (U : Module.End ℚ N)
+    (h : ∀ x, f (T x) = U (f x)) (P : Polynomial ℚ) (x : M) :
+    f (linearPolyEval T P x) = linearPolyEval U P (f x) := by
+  have hpows : ∀ (n : Nat) (y : M), f ((T ^ n) y) = (U ^ n) (f y) := by
+    intro n
+    induction n with
+    | zero => intro y; simp
+    | succ n ih =>
+        intro y
+        simp only [pow_succ', Module.End.mul_apply, h, ih]
+  induction P using Polynomial.induction_on' with
+  | add P Q hP hQ =>
+      simp only [linearPolyEval_add, LinearMap.add_apply, map_add, hP, hQ]
+  | monomial n a =>
+      rw [linearPolyEval_monomial, linearPolyEval_monomial, map_smul, hpows]
+
+/-- The spectral evaluation law includes the zero eigenspace, so a polynomial
+with zero constant term also annihilates the observable's kernel. -/
+theorem linearPolyEval_of_eigenvector
+    (T : Module.End ℚ M) (x : M) (c : ℚ) (hx : T x = c • x)
+    (P : Polynomial ℚ) :
+    linearPolyEval T P x = P.eval c • x := by
+  have hpow : ∀ n : Nat, (T ^ n) x = c ^ n • x := by
+    intro n
+    induction n with
+    | zero => simp
+    | succ n ih =>
+        rw [pow_succ', Module.End.mul_apply, ih, map_smul, hx]
+        simp only [smul_smul, pow_succ]
+  induction P using Polynomial.induction_on' with
+  | add P Q hP hQ =>
+      rw [linearPolyEval_add, LinearMap.add_apply, hP, hQ,
+        Polynomial.eval_add, add_smul]
+  | monomial n a =>
+      rw [linearPolyEval_monomial, hpow, Polynomial.eval_monomial, mul_smul]
 
 /-- More explicit pointwise recursion characterization of the polynomial
 functional calculus.  GLM may normalize this definition against the pinned
@@ -131,20 +171,8 @@ theorem linearPolyEval_eigenvector
     (P : Polynomial ℚ) (i : ι) :
     linearPolyEval S.observable P (S.vector i) =
       P.eval (S.eigenvalue i) • S.vector i := by
-  have hpow : ∀ n : Nat,
-      (S.observable ^ n) (S.vector i) = S.eigenvalue i ^ n • S.vector i := by
-    intro n
-    induction n with
-    | zero => simp
-    | succ n ih =>
-        rw [pow_succ', Module.End.mul_apply, ih, map_smul, S.eigenvector]
-        simp only [smul_smul, pow_succ]
-  induction P using Polynomial.induction_on' with
-  | add P Q hP hQ =>
-      rw [linearPolyEval_add, LinearMap.add_apply, hP, hQ,
-        Polynomial.eval_add, add_smul]
-  | monomial n a =>
-      rw [linearPolyEval_monomial, hpow, Polynomial.eval_monomial, mul_smul]
+  exact linearPolyEval_of_eigenvector S.observable (S.vector i)
+    (S.eigenvalue i) (S.eigenvector i) P
 
 /-- The isolator kills every non-selected eigenvector. -/
 theorem isolator_kills_other
@@ -342,6 +370,8 @@ end ClassicalHodgeSpectralOperator
 #check ClassicalHodgeSpectralOperator.weight_hodge_of_cyclic_spectral_generation
 
 #print axioms FiniteSpectralFamily.every_vector_mem_of_cyclic_seed
+#print axioms linearPolyEval_intertwines
+#print axioms linearPolyEval_of_eigenvector
 #print axioms FiniteSpectralFamily.eq_top_of_cyclic_seed
 #print axioms ClassicalHodgeSpectralOperator.selected_basis_algebraic_of_cyclic_seed
 #print axioms ClassicalHodgeSpectralOperator.weight_hodge_of_cyclic_spectral_generation

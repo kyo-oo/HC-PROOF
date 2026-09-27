@@ -157,15 +157,9 @@ theorem cycleClass_cyclePolyEval
     H.cycleClass p (S.cyclePolyEval P Z) =
       linearPolyEval S.operatorPair.cohomologyOperator P
         (H.cycleClass p Z) := by
-  induction P using Polynomial.induction_on' with
-  | add P Q hP hQ =>
-      simp [cyclePolyEval, linearPolyEval, hP, hQ]
-  | monomial n a =>
-      induction n with
-      | zero => simp [cyclePolyEval, linearPolyEval]
-      | succ n ih =>
-          simp [cyclePolyEval, linearPolyEval, pow_succ, ih,
-            S.operatorPair.cycleClass_cycleOperator]
+  exact linearPolyEval_intertwines (H.cycleClass p)
+    S.operatorPair.cycleOperator S.operatorPair.cohomologyOperator
+    S.operatorPair.cycleClass_cycleOperator P Z
 
 /-- One native cyclic seed cycle with prescribed nonzero components in every
 selected Hodge eigendirection.  This is a single cycle witness, not one cycle

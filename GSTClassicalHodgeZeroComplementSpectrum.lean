@@ -208,7 +208,9 @@ theorem augmentedIsolator_kills_complement
         (W.augmentedIsolatorPolynomial i) x.1 = 0 := by
   have hzero : W.zeroComplementObservable x.1 = 0 :=
     W.zeroComplementObservable_on_complement x
-  simp [augmentedIsolatorPolynomial, linearPolyEval, hzero]
+  rw [linearPolyEval_of_eigenvector W.zeroComplementObservable x.1 0
+    (by simpa using hzero)]
+  simp [augmentedIsolatorPolynomial]
 
 #check hodgeComplement
 #check hodgeProjection

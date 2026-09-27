@@ -161,15 +161,17 @@ theorem forwardArsenalWord_eq_matrixUnit
   intro r _
   by_cases hrp : r = p
   · subst r
-    change a p • ((forwardScalar p q : ℚ)⁻¹ •
-      rawForwardWord p q (rationalPureBasis p)) = _
+    apply congrArg (fun v : RationalPureWindow N => a p • v)
+    change (forwardScalar p q : ℚ)⁻¹ •
+      rawForwardWord p q (rationalPureBasis p) = _
     rw [rawForwardWord_basis_source p q hpq]
     have hscalar : (forwardScalar p q : ℚ) ≠ 0 := by
       exact_mod_cast (ne_of_gt (forwardScalar_pos p q))
     rw [smul_smul, inv_mul_cancel₀ hscalar, one_smul,
       pureMatrixUnit_basis_source]
-  · change a r • ((forwardScalar p q : ℚ)⁻¹ •
-      rawForwardWord p q (rationalPureBasis r)) = _
+  · apply congrArg (fun v : RationalPureWindow N => a r • v)
+    change (forwardScalar p q : ℚ)⁻¹ •
+      rawForwardWord p q (rationalPureBasis r) = _
     rw [rawForwardWord_basis_other p q r hrp,
       pureMatrixUnit_basis_other p q r hrp]
     simp
