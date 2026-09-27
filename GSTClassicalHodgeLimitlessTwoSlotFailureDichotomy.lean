@@ -227,6 +227,16 @@ end GSTClassicalHodgeConcreteFailureDichotomy
 
 namespace GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeFullArsenalIrreducibility
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeConcreteFailureDichotomy
+open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeFiberedCosmology
+
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}

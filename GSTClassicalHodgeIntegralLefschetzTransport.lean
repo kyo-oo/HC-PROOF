@@ -126,12 +126,13 @@ theorem sheetAtom_lefschetz_wrong_time_zero
         (worldBasis ((r,r) : WorldCell N N)) ((s,s) : WorldCell N N) = 0
   have hz := pure_diagonal_lefschetz_wrong_time_zero
     (A := N) (B := N) (n := n)
-    (show (r : Fin (min N N)) from r)
-    (show (s : Fin (min N N)) from s)
+    (Fin.castLE (show N ≤ min N N by omega) r)
+    (Fin.castLE (show N ≤ min N N by omega) s)
     (by simpa using hrs)
     (by simpa [pureWeightGap] using htime)
   have h := congrArg (fun q : ℤ => z * q) hz
-  simpa only [pureDiagonalState, diagonalState, mul_zero] using h
+  simp only [pureDiagonalState, diagonalState] at h
+  exact h.trans (mul_zero z)
 
 /-- Poincare reflection turns every backward sheet request into an ordered
 forward request on the mirrored diagonal. -/

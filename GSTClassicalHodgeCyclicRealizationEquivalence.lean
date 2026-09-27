@@ -44,6 +44,7 @@ open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeConstructiveCyclicLanding
 open GSTClassicalHodgeRangeLiftedSpectralOperator
+open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeCyclicRealizationEquivalence
 
@@ -51,6 +52,8 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 variable {alpha : ClassicalHodgeFiber V H p}
+
+namespace GSTClassicalHodgeConstructiveCyclicLanding
 
 /-- Every live direction of a native local spectral realization lies in the
 actual point-cycle atomic span. -/
@@ -85,12 +88,20 @@ noncomputable def LocalCycleSpectralRealization.toLocalCyclicRealization
     exact R.spectral_basisIndex
   seed_mem_atomic := R.unit_seed_mem_atomic
 
+end GSTClassicalHodgeConstructiveCyclicLanding
+
 /-- The forward range-lift conversion followed by forgetting explicit native
 witnesses still gives a valid local cyclic realization. -/
+namespace GSTClassicalHodgeLocalCyclicCriterion
+
 noncomputable def LocalCyclicRealization.nativeUpgrade
     (R : LocalCyclicRealization V H p alpha) :
     LocalCycleSpectralRealization V H p alpha :=
   R.toLocalCycleSpectralRealization
+
+end GSTClassicalHodgeLocalCyclicCriterion
+
+namespace GSTClassicalHodgeCyclicRealizationEquivalence
 
 /-- **LOCAL CYCLIC REALIZATION EQUIVALENCE.**  The two realization packages
 are inhabited under exactly the same circumstances. -/

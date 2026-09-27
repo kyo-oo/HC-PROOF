@@ -71,6 +71,7 @@ theorem commonDenominator_mul_coordinate_isInt
       _ = (k : ℚ) * ((f i).num : ℚ) := by rw [hden]
       _ = (((k : ℤ) * (f i).num : ℤ) : ℚ) := by
         push_cast [Int.cast_mul, Int.cast_natCast]
+        rfl
   · have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
     exact ⟨0, by simp [hzero]⟩
 
