@@ -100,8 +100,16 @@ theorem basis_atomicDefect_zero_iff_no_separator
     (i : ClassicalHodgeBasisIndex V H p) :
     atomicDefectLinearMap V H p (classicalHodgeBasis V H p i) = 0 ↔
       IsEmpty (BasisAtomicSeparator V H p i) := by
-  rw [Submodule.Quotient.eq_zero_iff_mem]
-  exact basis_mem_atomicSpan_iff_no_separator V H p i
+  rw [atomicDefectLinearMap_apply]
+  constructor
+  · intro hzero
+    exact (basis_mem_atomicSpan_iff_no_separator V H p i).mp
+      ((Submodule.Quotient.mk_eq_zero
+        (pointCycleClassSpan p (H.cycleClass p))).mp hzero)
+  · intro hsep
+    exact (Submodule.Quotient.mk_eq_zero
+      (pointCycleClassSpan p (H.cycleClass p))).mpr
+      ((basis_mem_atomicSpan_iff_no_separator V H p i).mpr hsep)
 
 /-- **SINGLE-SHEET FORM OF THE CLASSICAL HODGE TARGET.**
 The complete Stage-2G statement is equivalent to the nonexistence of a
@@ -179,7 +187,7 @@ theorem not_bigradedBettiHodgeStatement_iff_exists_basis_separator
     push_neg at hnot
     obtain ⟨p,i,hne⟩ := hnot
     have hnonempty : Nonempty (BasisAtomicSeparator V H p i) := by
-      exact not_isEmpty_iff.mp hne
+      exact not_isEmpty_iff.mpr hne
     exact ⟨p,i,hnonempty⟩
   · rintro ⟨p,i,⟨S⟩⟩ hHodge
     have hnone :=

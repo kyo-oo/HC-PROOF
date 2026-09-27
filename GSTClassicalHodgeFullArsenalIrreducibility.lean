@@ -103,7 +103,9 @@ theorem sheetProjectorQ_basis_other
     {N : Nat} (p q : Fin N) (hqp : q ≠ p) :
     sheetProjectorQ p (rationalPureBasis q) = 0 := by
   funext r
-  simp [sheetProjectorQ, rationalPureBasis, hqp]
+  simp [sheetProjectorQ, rationalPureBasis]
+  intro hr hpq
+  exact hqp hpq.symm
 
 /-- The universal forward pure-Hodge Lefschetz coefficient. -/
 def forwardScalar {N : Nat} (p q : Fin N) : Nat :=
@@ -122,20 +124,29 @@ of diagonal sheets the exact matrix coefficient is the central binomial
 theorem gst_forward_scalar_receipt
     {N : Nat} (p q : Fin N) (hpq : p.1 ≤ q.1) :
     worldAct N N
-        ((L N N)^(2 * pureWeightGap p q))
-        (worldBasis (pureDiagonalState p))
-        (pureDiagonalState q) =
+        ((L N N)^(2 * pureWeightGap
+          (Fin.castLE (show N ≤ min N N by omega) p)
+          (Fin.castLE (show N ≤ min N N by omega) q)))
+        (worldBasis (pureDiagonalState
+          (Fin.castLE (show N ≤ min N N by omega) p)))
+        (pureDiagonalState
+          (Fin.castLE (show N ≤ min N N by omega) q)) =
       (forwardScalar p q : ℤ) := by
-  simpa [forwardScalar, pureWeightGap] using
+  simpa [forwardScalar, pureWeightGap, Fin.val_castLE] using
     (pure_diagonal_lefschetz_forward_exact
-      (A := N) (B := N) p q hpq)
+      (A := N) (B := N)
+      (Fin.castLE (show N ≤ min N N by omega) p)
+      (Fin.castLE (show N ≤ min N N by omega) q)
+      (by simpa [Fin.val_castLE] using hpq))
 
 /-- Poincare reverses every pure coordinate, so a backward requested transfer
 `p -> q` becomes the forward transfer `mirror p -> mirror q`. -/
 theorem mirror_turns_backward_forward
     {N : Nat} (p q : Fin N) (hqp : q.1 ≤ p.1) :
-    (pureMirror p).1 ≤ (pureMirror q).1 := by
+    (pureMirror (Fin.castLE (show N ≤ min N N by omega) p)).1 ≤
+      (pureMirror (Fin.castLE (show N ≤ min N N by omega) q)).1 := by
   unfold pureMirror
+  simp only [Fin.val_castLE]
   omega
 
 /-- Matrix unit sending the p-th coordinate to the q-th coordinate and
@@ -168,7 +179,9 @@ theorem pureMatrixUnit_basis_other
     {N : Nat} (p q r : Fin N) (hrp : r ≠ p) :
     pureMatrixUnit p q (rationalPureBasis r) = 0 := by
   funext s
-  simp [pureMatrixUnit, rationalPureBasis, hrp]
+  simp [pureMatrixUnit, rationalPureBasis]
+  intro hs hpr
+  exact hrp hpr.symm
 
 /-- The complete rational matrix-unit arsenal generated abstractly by the GST
 projector/Lefschetz/Poincare mechanism. -/
@@ -215,7 +228,9 @@ theorem fullArsenalInvariant_eq_top
       have := h x hx
       simpa using this
     · intro hx
-      simpa using hx
+      have hx0 : x = 0 := by simpa using hx
+      rw [hx0]
+      exact S.zero_mem
   obtain ⟨x, hxS, hx0⟩ := hex
   obtain ⟨p, hp⟩ := exists_nonzero_coordinate hx0
   have hbasis : ∀ q : Fin N, rationalPureBasis q ∈ S := by
@@ -263,12 +278,17 @@ irreducibility of the resulting rational matrix-unit action. -/
 theorem full_arsenal_irreducibility_crown :
     (∀ N (p q : Fin N), p.1 ≤ q.1 →
       worldAct N N
-          ((L N N)^(2 * pureWeightGap p q))
-          (worldBasis (pureDiagonalState p))
-          (pureDiagonalState q) =
+          ((L N N)^(2 * pureWeightGap
+            (Fin.castLE (show N ≤ min N N by omega) p)
+            (Fin.castLE (show N ≤ min N N by omega) q)))
+          (worldBasis (pureDiagonalState
+            (Fin.castLE (show N ≤ min N N by omega) p)))
+          (pureDiagonalState
+            (Fin.castLE (show N ≤ min N N by omega) q)) =
         (forwardScalar p q : ℤ))
     ∧ (∀ N (p q : Fin N), q.1 ≤ p.1 →
-      (pureMirror p).1 ≤ (pureMirror q).1)
+      (pureMirror (Fin.castLE (show N ≤ min N N by omega) p)).1 ≤
+        (pureMirror (Fin.castLE (show N ≤ min N N by omega) q)).1)
     ∧ (∀ N (S : Submodule ℚ (RationalPureWindow N)),
       FullArsenalInvariant S → S ≠ ⊥ → S = ⊤) := by
   exact ⟨
