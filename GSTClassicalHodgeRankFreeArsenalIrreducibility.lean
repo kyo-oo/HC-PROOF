@@ -48,7 +48,7 @@ variable {p : Nat}
 noncomputable def hodgeCoordinate
     (i : ClassicalHodgeBasisIndex V H p) :
     ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ :=
-  (Finsupp.lapply i ℚ).comp
+  (Finsupp.lapply i).comp
     (classicalHodgeBasis V H p).repr.toLinearMap
 
 @[simp]
@@ -59,9 +59,9 @@ theorem hodgeCoordinate_basis_self
 
 @[simp]
 theorem hodgeCoordinate_basis_other
-    (i j : ClassicalHodgeBasisIndex V H p) (hji : j ≠ i) :
+    (i j : ClassicalHodgeBasisIndex V H p) (hij : i ≠ j) :
     hodgeCoordinate i (classicalHodgeBasis V H p j) = 0 := by
-  simp [hodgeCoordinate, hji]
+  simp [hodgeCoordinate, hij]
 
 /-- Rank-free matrix unit on the genuine Hodge fiber: read coordinate `i`,
 write that scalar into basis direction `j`. -/
@@ -122,7 +122,6 @@ theorem rankFreeArsenalInvariant_eq_top
     (hne : S ≠ ⊥) :
     S = ⊤ := by
   apply top_unique
-  intro alpha _
   have hex : ∃ x : ClassicalHodgeFiber V H p, x ∈ S ∧ x ≠ 0 := by
     by_contra h
     push_neg at h
@@ -133,7 +132,9 @@ theorem rankFreeArsenalInvariant_eq_top
       have hx0 := h x hx
       simpa [hx0]
     · intro hx
-      simpa using hx
+      have hx0 : x = 0 := by simpa using hx
+      rw [hx0]
+      exact S.zero_mem
   obtain ⟨x, hxS, hx0⟩ := hex
   obtain ⟨i, hi⟩ := exists_nonzero_hodgeCoordinate hx0
   have hbasis : ∀ j : ClassicalHodgeBasisIndex V H p,
@@ -145,11 +146,9 @@ theorem rankFreeArsenalInvariant_eq_top
       simpa [hodgeMatrixUnit_apply] using hmove
     have hinv := S.smul_mem ((hodgeCoordinate i x)⁻¹) hscaled
     simpa [hi] using hinv
-  have hrepr := (classicalHodgeBasis V H p).sum_repr alpha
-  rw [← hrepr]
-  exact S.sum_mem fun j hj =>
-    S.smul_mem (((classicalHodgeBasis V H p).repr alpha) j)
-      (hbasis j)
+  rw [← (classicalHodgeBasis V H p).span_eq, Submodule.span_le]
+  rintro _ ⟨j, hj⟩
+  exact hj ▸ hbasis j
 
 /-- Equivalent zero-or-everything dichotomy. -/
 theorem rankFreeArsenalInvariant_bot_or_top

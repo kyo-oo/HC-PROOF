@@ -187,7 +187,7 @@ theorem not_bigradedBettiHodgeStatement_iff_exists_basis_separator
     push_neg at hnot
     obtain ⟨p,i,hne⟩ := hnot
     have hnonempty : Nonempty (BasisAtomicSeparator V H p i) := by
-      exact not_isEmpty_iff.mpr hne
+      exact hne
     exact ⟨p,i,hnonempty⟩
   · rintro ⟨p,i,⟨S⟩⟩ hHodge
     have hnone :=

@@ -51,7 +51,7 @@ noncomputable def diagonalLefschetzQ
   toFun a := fun q =>
     ∑ p : Fin N,
       (worldAct N N ((L N N)^t)
-        (worldBasis (pureDiagonalState p))
+        (worldBasis (pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) p)))
         (pureDiagonalState q) : ℚ) * a p
   map_add' := by
     intro a b
@@ -60,14 +60,14 @@ noncomputable def diagonalLefschetzQ
   map_smul' := by
     intro c a
     funext q
-    simp [mul_assoc, Finset.mul_sum]
+    simp [Finset.mul_sum, smul_eq_mul, mul_left_comm]
 
 /-- Rational Poincare reversal on the finite pure window. -/
 noncomputable def poincareReverseQ
     (N : Nat) :
     RationalPureWindow N ≃ₗ[ℚ] RationalPureWindow N where
-  toFun a := fun q => a (pureMirror q)
-  invFun a := fun q => a (pureMirror q)
+  toFun a := fun q => a (pureMirror (show Fin (min N N) from q))
+  invFun a := fun q => a (pureMirror (show Fin (min N N) from q))
   left_inv := by
     intro a
     funext q
@@ -87,20 +87,25 @@ noncomputable def poincareReverseQ
 theorem poincareReverseQ_basis
     {N : Nat} (p : Fin N) :
     poincareReverseQ N (rationalPureBasis p) =
-      rationalPureBasis (pureMirror p) := by
+      rationalPureBasis
+        (show Fin N from pureMirror (show Fin (min N N) from p)) := by
   funext q
-  simp [poincareReverseQ, rationalPureBasis]
-  constructor
-  · intro h
-    apply pureMirror_involutive p ▸ congrArg pureMirror h
-  · intro h
-    simpa [h]
+  simp only [poincareReverseQ, rationalPureBasis]
+  by_cases hL : pureMirror (show Fin (min N N) from q) = p
+  · rw [if_pos hL, if_pos (by
+      have h2 := congrArg (pureMirror (N := N)) hL
+      simpa using h2)]
+  · rw [if_neg hL, if_neg (by
+      intro hq
+      exact hL (by
+        have h2 := congrArg (pureMirror (N := N)) hq
+        simpa using h2))]
 
 /-- Raw forward arsenal word before central-binomial normalization. -/
 noncomputable def rawForwardWord
     {N : Nat} (p q : Fin N) : Module.End ℚ (RationalPureWindow N) :=
   (sheetProjectorQ q).comp
-    ((diagonalLefschetzQ N (2 * pureWeightGap p q)).comp
+    ((diagonalLefschetzQ N (2 * pureWeightGap (Fin.castLE (show N ≤ min N N by omega) p) (Fin.castLE (show N ≤ min N N by omega) q))).comp
       (sheetProjectorQ p))
 
 /-- The raw forward word has the exact GST central-binomial coefficient on its
