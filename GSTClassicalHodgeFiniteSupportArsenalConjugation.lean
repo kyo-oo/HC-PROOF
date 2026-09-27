@@ -70,9 +70,7 @@ theorem liveCoordinateVector_ne_zero_at
     (alpha : ClassicalHodgeFiber V H p)
     (r : Fin (liveRank alpha)) :
     liveCoordinateVector alpha r ≠ 0 := by
-  let i : HodgeSupportIndex alpha := (liveEquivFin alpha).symm r
-  simpa [liveCoordinateVector, liveBasisIndex, i] using
-    support_coefficient_ne_zero alpha i
+  exact support_coefficient_ne_zero alpha ((liveEquivFin alpha).symm r)
 
 /-- The classical Hodge basis vector occupying one live finite slot. -/
 noncomputable def liveBasisVector

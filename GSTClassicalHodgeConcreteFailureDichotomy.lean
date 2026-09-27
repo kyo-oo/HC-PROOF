@@ -34,6 +34,7 @@ open GSTClassicalHodgePrimitiveArsenalRationalization
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeArsenalNonCircularity
+open GSTClassicalHodgeExplicitArsenalGeneration
 
 namespace GSTClassicalHodgeConcreteFailureDichotomy
 

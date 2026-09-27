@@ -208,7 +208,7 @@ theorem extractedBasisCycle_spec
   rw [LinearMap.map_smul, hc]
   have hnonzero : seed.coefficient i * F.isolatorScale i ≠ 0 :=
     mul_ne_zero (seed.coefficient_ne_zero i) (F.isolatorScale_ne_zero i)
-  simp [F, hnonzero, mul_smul]
+  exact inv_smul_smul₀ hnonzero _
 
 /-- The selected finite Hodge family therefore has an actual native
 basis-cycle bridge, constructed from one seed cycle. -/

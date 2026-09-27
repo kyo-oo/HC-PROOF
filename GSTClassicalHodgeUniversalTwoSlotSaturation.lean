@@ -24,6 +24,7 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFullArsenalIrreducibility

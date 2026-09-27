@@ -32,6 +32,7 @@ open GSTWorldPoincareDuality
 open GSTDimensionFreeHodgeDiagonal
 open GSTGlobalPureHodgeCosmology
 open GSTSquarePureHodgeDuality
+open GSTTruncatedWorldCohomologyRing
 open GSTClassicalHodgeSheetSpectralExtraction
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeExplicitArsenalGeneration
@@ -58,7 +59,7 @@ noncomputable def rationalizedSheetSpectralProj
   map_smul' := by
     intro c a
     funext q
-    simp [mul_assoc, Finset.mul_sum]
+    simp [mul_left_comm, Finset.mul_sum]
 
 /-- The actual integer spectral projector sends a pure basis atom to itself
 when its code matches the selected sheet and to zero otherwise. -/
@@ -70,18 +71,35 @@ theorem sheetSpectralProj_basis_atom
   · subst r
     rw [sheetSpectralProj_pure_eq_atom]
     · funext x
-      simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis]
+      have hdiag : worldDiagonalClass i.2 i.2 (i, i) = 1 := by
+        simp [worldDiagonalClass, GSTUniversalAddressBridge.worldBasis]
+        rfl
+      show ((1 : ℤ) * worldDiagonalClass i.2 i.2 (i, i)) *
+          worldDiagonalClass i.2 i.2 x =
+        (if i = i then sheetDiagonalAtom i 1 else 0) x
+      rw [if_pos rfl, hdiag]
+      simp [sheetDiagonalAtom]
     · intro x hx
+      have hoff : x.1.1 ≠ i.1 ∨ x.2.1 ≠ i.1 := by
+        by_cases hx1 : x.1.1 = i.1
+        · exact Or.inr (fun h => hx (hx1.trans h.symm))
+        · exact Or.inl hx1
       simp [sheetDiagonalAtom,
-        worldDiagonalClass_off_diagonal r.2 r.2 x (Or.inl hx)]
-  · apply sheetSpectralProj_orthogonal i r hri
-      (sheetDiagonalAtom r 1) |>.symm.trans ?_
-    rw [sheetSpectralProj_pure_eq_atom]
+        worldDiagonalClass_off_diagonal i.2 i.2 x hoff]
+  · rw [if_neg hri]
+    rw [sheetSpectralProj_pure_eq_atom i (sheetDiagonalAtom r 1)]
     · funext x
-      simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis]
-    · intro x hx
+      have hoffq : (i, i).1.1 ≠ r.1 ∨ (i, i).2.1 ≠ r.1 :=
+        Or.inl (fun h => hri (Fin.ext h).symm)
       simp [sheetDiagonalAtom,
-        worldDiagonalClass_off_diagonal r.2 r.2 x (Or.inl hx)]
+        worldDiagonalClass_off_diagonal r.2 r.2 (i, i) hoffq]
+    · intro x hx
+      have hoff : x.1.1 ≠ r.1 ∨ x.2.1 ≠ r.1 := by
+        by_cases hx1 : x.1.1 = r.1
+        · exact Or.inr (fun h => hx (hx1.trans h.symm))
+        · exact Or.inl hx1
+      simp [sheetDiagonalAtom,
+        worldDiagonalClass_off_diagonal r.2 r.2 x hoff]
 
 /-- Exact matrix coefficient of the native spectral projector. -/
 theorem spectralProjectorMatrixCoeff_eq
@@ -92,7 +110,14 @@ theorem spectralProjectorMatrixCoeff_eq
   rw [sheetSpectralProj_basis_atom i r]
   by_cases hri : r = i
   · subst r
-    simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis]
+    by_cases hq : q = i
+    · subst q
+      simp [sheetDiagonalAtom, worldDiagonalClass,
+        GSTUniversalAddressBridge.worldBasis]
+      rfl
+    · simp [sheetDiagonalAtom, hq,
+        worldDiagonalClass_off_diagonal i.2 i.2 (q, q)
+          (Or.inl (fun h => hq (Fin.ext h)))]
   · simp [hri]
 
 /-- **NATIVE SPECTRAL PROJECTOR = RATIONAL SHEET PROJECTOR.** -/
@@ -104,11 +129,14 @@ theorem rationalizedSheetSpectralProj_eq
   funext q
   simp [rationalizedSheetSpectralProj, spectralProjectorMatrixCoeff_eq,
     sheetProjectorQ, rationalPureBasis]
+  by_cases hq : q = i
+  · simp [hq, Finset.sum_ite_eq']
+  · simp [hq]
 
 /-- Matrix coefficient of the rationalized native Poincare involution. -/
 def poincareMatrixCoeff
     {N : Nat} (r q : Fin N) : ℚ :=
-  if q = pureMirror r then 1 else 0
+  if q = windowMirror r then 1 else 0
 
 /-- Rational matrix extension of native pure-Hodge Poincare reversal. -/
 noncomputable def rationalizedWorldPoincare
@@ -122,7 +150,7 @@ noncomputable def rationalizedWorldPoincare
   map_smul' := by
     intro c a
     funext q
-    simp [mul_assoc, Finset.mul_sum]
+    simp [mul_left_comm, Finset.mul_sum]
 
 /-- Native Poincare scalar extension is exactly coordinate reversal. -/
 theorem rationalizedWorldPoincare_eq
@@ -131,9 +159,23 @@ theorem rationalizedWorldPoincare_eq
   apply LinearMap.ext
   intro a
   funext q
-  classical
-  simp [rationalizedWorldPoincare, poincareMatrixCoeff,
-    poincareReverseQ]
+  have hstep : (∑ r : Fin N, poincareMatrixCoeff r q * a r) = a (windowMirror q) := by
+    rw [Finset.sum_eq_single (windowMirror q)]
+    · simp only [poincareMatrixCoeff]
+      rw [if_pos (windowMirror_involutive q).symm, one_mul]
+    · intro r _ hr
+      simp only [poincareMatrixCoeff]
+      rw [if_neg]
+      · simp
+      · intro hq
+        exact hr (((congrArg windowMirror hq).trans
+          (windowMirror_involutive r)).symm)
+    · intro h
+      exact absurd (Finset.mem_univ _) h
+  show (∑ r : Fin N, poincareMatrixCoeff r q * a r) =
+    (poincareReverseQ N).toLinearMap a q
+  rw [hstep]
+  rfl
 
 /-- The Lefschetz primitive was already defined directly from native world
 matrix coefficients; this theorem records the exact basis formula. -/
@@ -141,8 +183,10 @@ theorem diagonalLefschetzQ_basis
     {N t : Nat} (p q : Fin N) :
     diagonalLefschetzQ N t (rationalPureBasis p) q =
       (worldAct N N ((L N N)^t)
-        (worldBasis (pureDiagonalState p))
-        (pureDiagonalState q) : ℚ) := by
+        (worldBasis (pureDiagonalState
+          (Fin.castLE (show N ≤ min N N by omega) p)))
+        (pureDiagonalState
+          (Fin.castLE (show N ≤ min N N by omega) q)) : ℚ) := by
   simp [diagonalLefschetzQ, rationalPureBasis]
 
 /-- Primitive-arena identification crown. -/
@@ -154,8 +198,10 @@ theorem primitive_arsenal_rationalization_crown :
     ∧ (∀ N t (p q : Fin N),
       diagonalLefschetzQ N t (rationalPureBasis p) q =
         (worldAct N N ((L N N)^t)
-          (worldBasis (pureDiagonalState p))
-          (pureDiagonalState q) : ℚ)) := by
+          (worldBasis (pureDiagonalState
+            (Fin.castLE (show N ≤ min N N by omega) p)))
+          (pureDiagonalState
+            (Fin.castLE (show N ≤ min N N by omega) q)) : ℚ)) := by
   exact ⟨
     fun _ i => rationalizedSheetSpectralProj_eq i,
     rationalizedWorldPoincare_eq,

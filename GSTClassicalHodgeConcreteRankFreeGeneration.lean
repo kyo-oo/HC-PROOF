@@ -163,10 +163,16 @@ theorem hodgeClass_eq_sum_concreteGenerators
     beta =
       ((classicalHodgeBasis V H p).repr beta).sum
         (fun j q => q • concreteBasisGenerator alpha halpha j) := by
-  rw [← (classicalHodgeBasis V H p).sum_repr beta]
-  apply Finsupp.sum_congr
-  intro j q hj
-  rw [concreteBasisGenerator_eq_basis]
+  calc beta
+      = Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
+          ((classicalHodgeBasis V H p).repr beta) :=
+        (classicalHodgeBasis V H p).linearCombination_repr beta
+    _ = ((classicalHodgeBasis V H p).repr beta).sum
+        (fun j q => q • concreteBasisGenerator alpha halpha j) := by
+        rw [Finsupp.linearCombination_apply]
+        apply Finsupp.sum_congr
+        intro j hj
+        rw [concreteBasisGenerator_eq_basis]
 
 /-- **UNRESTRICTED CONCRETE CYCLICITY CROWN.** One nonzero genuine Hodge state
 concretely generates the entire unrestricted Hodge fiber through finite GST

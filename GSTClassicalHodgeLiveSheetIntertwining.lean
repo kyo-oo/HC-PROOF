@@ -33,6 +33,8 @@ open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTDimensionFreeHodgeDiagonal
+open GSTWorldRecoordinationGroupoid
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeFiniteSupportChart
@@ -59,10 +61,12 @@ theorem liveFiberedIndex_mem_support
     (i : HodgeSupportIndex alpha) :
     liveFiberedIndex i ∈
       (fiberedWeightCoordinates V H p alpha).support := by
-  classical
   rw [Finsupp.mem_support_iff]
-  simp [liveFiberedIndex, fiberedWeightCoordinates,
-    weightFiberEmbedding, support_coefficient_ne_zero alpha i]
+  show (Finsupp.embDomain (Function.Embedding.sigmaMk p)
+      ((classicalHodgeBasis V H p).repr alpha))
+      (Function.Embedding.sigmaMk p i.1) ≠ 0
+  rw [Finsupp.embDomain_apply_self]
+  exact support_coefficient_ne_zero alpha i
 
 /-- The corresponding live fibered-address subtype element. -/
 noncomputable def liveFiberedAddress
@@ -89,8 +93,25 @@ theorem supportDiagonalWorld_liveSheet
         (liveSheetIndex alpha i, liveSheetIndex alpha i) =
       (classicalHodgeBasis V H p).repr alpha i.1 := by
   rw [supportDiagonalWorld_at_diagonal]
-  simp [liveSheetIndex, liveFiberedAddress, liveFiberedIndex,
-    fiberedWeightCoordinates, weightFiberEmbedding]
+  have haddr : ((fiberedSupportEquivFin
+      (fiberedWeightCoordinates V H p alpha)).symm
+      (liveSheetIndex alpha i)).1 = liveFiberedIndex i := by
+    have h1 := (fiberedSupportEquivFin
+      (fiberedWeightCoordinates V H p alpha)).symm_apply_apply
+      (liveFiberedAddress alpha i)
+    show ((fiberedSupportEquivFin
+      (fiberedWeightCoordinates V H p alpha)).symm
+      ((fiberedSupportEquivFin
+        (fiberedWeightCoordinates V H p alpha))
+        (liveFiberedAddress alpha i))).1 = liveFiberedIndex i
+    rw [h1]
+    rfl
+  rw [haddr]
+  show (Finsupp.embDomain (Function.Embedding.sigmaMk p)
+      ((classicalHodgeBasis V H p).repr alpha))
+      (Function.Embedding.sigmaMk p i.1) =
+    (classicalHodgeBasis V H p).repr alpha i.1
+  rw [Finsupp.embDomain_apply_self]
 
 /-- Every such local sheet coefficient is nonzero. -/
 theorem supportDiagonalWorld_liveSheet_ne_zero
@@ -119,12 +140,18 @@ theorem integralHodgeSquare_liveSheet_ne_zero
   intro hz
   have hscaled := (integralHodgeSquare alpha).scaled_eq
     (liveSheetIndex alpha i, liveSheetIndex alpha i)
-  rw [hz] at hscaled
-  simp at hscaled
+  have hcast : ((integralHodgeSquare alpha).world
+      (liveSheetIndex alpha i, liveSheetIndex alpha i) : ℚ) = 0 := by
+    simp [hz]
+  have hcombined : ((integralHodgeSquare alpha).scale : ℚ) *
+      supportDiagonalWorld (fiberedWeightCoordinates V H p alpha)
+        (liveSheetIndex alpha i, liveSheetIndex alpha i) = 0 := by
+    rw [← hcast]
+    exact hscaled
   have hscale : ((integralHodgeSquare alpha).scale : ℚ) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt (integralHodgeSquare alpha).scale_pos
-  exact (supportDiagonalWorld_liveSheet_ne_zero alpha i)
-    ((mul_eq_zero.mp hscaled).resolve_left hscale)
+  exact supportDiagonalWorld_liveSheet_ne_zero alpha i
+    ((mul_eq_zero.mp hcombined).resolve_left hscale)
 
 /-- The existing integer GST code-sector projector at the tethered live sheet
 is exactly the corresponding nonzero diagonal sheet atom. -/
@@ -149,10 +176,19 @@ theorem sheetProjector_integralHodgeSquare_ne_zero
       (integralHodgeSquare alpha).world ≠ 0 := by
   rw [sheetProjector_integralHodgeSquare_eq_liveAtom alpha i]
   intro hz
-  have hdiag := congrFun hz
-    ((liveSheetIndex alpha i, liveSheetIndex alpha i))
-  simp [sheetDiagonalAtom, worldDiagonalClass, worldBasis] at hdiag
-  exact integralHodgeSquare_liveSheet_ne_zero alpha i hdiag
+  have hdiag1 : worldDiagonalClass (liveSheetIndex alpha i).2
+      (liveSheetIndex alpha i).2
+      (liveSheetIndex alpha i, liveSheetIndex alpha i) = 1 := by
+    simp [worldDiagonalClass, GSTUniversalAddressBridge.worldBasis]
+    rfl
+  have hdiag0 : ((integralHodgeSquare alpha).world
+      (liveSheetIndex alpha i, liveSheetIndex alpha i)) *
+      worldDiagonalClass (liveSheetIndex alpha i).2
+        (liveSheetIndex alpha i).2
+        (liveSheetIndex alpha i, liveSheetIndex alpha i) = 0 :=
+    congrFun hz (liveSheetIndex alpha i, liveSheetIndex alpha i)
+  rw [hdiag1, mul_one] at hdiag0
+  exact integralHodgeSquare_liveSheet_ne_zero alpha i hdiag0
 
 /-- The tethered projector is an explicit integer spectral polynomial with a
 nonzero normalization scalar. -/
@@ -161,15 +197,15 @@ theorem liveSheet_projector_is_polynomial
     (i : HodgeSupportIndex alpha) :
     ∃ (P : Polynomial ℤ) (c : ℤ), c ≠ 0 ∧
       ∀ (f : ShapeCoef
-          (GSTWorldCosmology.outputShape
+          (outputShape
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))))
         (x : ShapeState
-          (GSTWorldCosmology.outputShape
+          (outputShape
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha)))),
         codePolyOp
-          (GSTWorldCosmology.outputShape
+          (outputShape
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha)))
           P f x =
