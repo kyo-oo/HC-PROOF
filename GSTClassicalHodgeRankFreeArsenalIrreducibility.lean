@@ -91,7 +91,7 @@ theorem hodgeMatrixUnit_basis_other
     (i j k : ClassicalHodgeBasisIndex V H p)
     (hik : i ≠ k) :
     hodgeMatrixUnit i j (classicalHodgeBasis V H p k) = 0 := by
-  simp [hodgeMatrixUnit, hki]
+  simp [hodgeMatrixUnit, hik]
 
 /-- Stability under the limitless local matrix-unit arsenal. -/
 def RankFreeArsenalInvariant

@@ -31,10 +31,39 @@ universe u
 
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 
-/-- Polynomial functional calculus of a rational linear endomorphism. -/
+/-- The canonical scalar ring homomorphism into the endomorphism ring. -/
+noncomputable def scalarRingHom : ℚ →+* (Module.End ℚ M) where
+  toFun q := q • LinearMap.id
+  map_one' := by
+    show (1 : ℚ) • (LinearMap.id : Module.End ℚ M) = 1
+    exact one_smul ℚ LinearMap.id
+  map_mul' q r := by
+    apply LinearMap.ext
+    intro x
+    show (q * r) • x = q • r • x
+    exact (smul_smul q r x).symm
+  map_zero' := by
+    show (0 : ℚ) • (LinearMap.id : Module.End ℚ M) = 0
+    exact zero_smul ℚ LinearMap.id
+  map_add' q r := by
+    apply LinearMap.ext
+    intro x
+    show (q + r) • x = q • x + r • x
+    exact add_smul q r x
+
+/-- Polynomial functional calculus of a rational linear endomorphism,
+assembled from Mathlib's `Polynomial.eval₂` over the canonical scalar
+ring homomorphism into the endomorphism ring. -/
 noncomputable def linearPolyEval
     (T : M →ₗ[ℚ] M) (P : Polynomial ℚ) : M →ₗ[ℚ] M :=
-  Polynomial.eval₂ (LinearMap.id.codRestrict ⊤ (1 : M →ₗ[ℚ] M) (by simp)) T P
+  Polynomial.eval₂ scalarRingHom T P
+
+/-- Monomials act by scalar multiples of operator powers. -/
+theorem linearPolyEval_monomial
+    (T : M →ₗ[ℚ] M) (n : ℕ) (a : ℚ) (x : M) :
+    linearPolyEval T (Polynomial.monomial n a) x = a • (T ^ n) x := by
+  simp only [linearPolyEval, Polynomial.eval₂_monomial]
+  rfl
 
 /-- More explicit pointwise recursion characterization of the polynomial
 functional calculus.  GLM may normalize this definition against the pinned
@@ -44,24 +73,41 @@ def PolynomialStable
     (T : M →ₗ[ℚ] M) : Prop :=
   ∀ (P : Polynomial ℚ) (x : M), x ∈ W → linearPolyEval T P x ∈ W
 
+/-- Stability under T implies stability under all operator powers. -/
+theorem pow_mem_of_mem
+    (W : Submodule ℚ M) (T : M →ₗ[ℚ] M)
+    (hT : ∀ x : M, x ∈ W → T x ∈ W) (n : ℕ) :
+    ∀ x : M, x ∈ W → (T ^ n) x ∈ W := by
+  induction n with
+  | zero =>
+      intro x hx
+      simpa using hx
+  | succ n ih =>
+      intro x hx
+      rw [pow_succ]
+      exact ih (T x) (hT x hx)
+
 /-- Stability under T implies stability under all polynomials in T. -/
 theorem polynomialStable_of_operatorStable
     (W : Submodule ℚ M)
     (T : M →ₗ[ℚ] M)
     (hT : ∀ x : M, x ∈ W → T x ∈ W) :
     PolynomialStable W T := by
-  intro P
-  refine Polynomial.induction_on' P ?add ?monomial
-  · intro P Q hP hQ x hx
-    simpa [linearPolyEval] using W.add_mem (hP x hx) (hQ x hx)
-  · intro n a x hx
-    induction n with
-    | zero =>
-        simpa [linearPolyEval] using W.smul_mem a hx
-    | succ n ih =>
-        have hTx := hT x hx
-        -- Polynomial monomials act by repeated application of T.
-        simpa [linearPolyEval, pow_succ] using ih (T x) hTx
+  intro P x hx
+  induction P using Polynomial.induction_on' with
+  | add P Q hP hQ =>
+      have hsum : linearPolyEval T (P + Q) x
+          = linearPolyEval T P x + linearPolyEval T Q x := by
+        show (Polynomial.eval₂ scalarRingHom T (P + Q)) x
+            = (Polynomial.eval₂ scalarRingHom T P) x
+              + (Polynomial.eval₂ scalarRingHom T Q) x
+        rw [Polynomial.eval₂_add]
+        rfl
+      rw [hsum]
+      exact W.add_mem hP hQ
+  | monomial n a =>
+      rw [linearPolyEval_monomial]
+      exact W.smul_mem a (pow_mem_of_mem W T hT n x hx)
 
 /-- Finite spectral package: chosen directions are eigenvectors of one
 observable with pairwise distinct eigenvalues. -/
@@ -106,11 +152,22 @@ theorem isolatorScale_ne_zero (i : ι) :
   classical
   unfold isolatorScale isolatorPolynomial
   rw [Polynomial.eval_prod]
-  apply Finset.prod_ne_zero
+  apply Finset.prod_ne_zero_iff.mpr
   intro j hj
   have hji : j ≠ i := (Finset.mem_erase.mp hj).1
   simp only [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C]
   exact sub_ne_zero.mpr (S.eigenvalue_injective.ne hji)
+
+/-- Operator powers act on chosen eigenvectors by scalar powers. -/
+theorem eigenvector_pow
+    (n : ℕ) (i : ι) :
+    (S.observable ^ n) (S.vector i) =
+      (S.eigenvalue i ^ n) • S.vector i := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [pow_succ, Module.End.mul_apply, S.eigenvector i,
+        LinearMap.map_smul, ih, smul_smul, pow_succ]
 
 /-- Polynomial action on one chosen eigenvector is scalar evaluation. -/
 theorem linearPolyEval_eigenvector
@@ -119,13 +176,11 @@ theorem linearPolyEval_eigenvector
       P.eval (S.eigenvalue i) • S.vector i := by
   induction P using Polynomial.induction_on' with
   | add P Q hP hQ =>
-      simp [linearPolyEval, hP, hQ, add_smul]
+      rw [hP, hQ]
+      simp [Polynomial.eval_add, add_smul]
   | monomial n a =>
-      induction n with
-      | zero => simp [linearPolyEval]
-      | succ n ih =>
-          simp [linearPolyEval, pow_succ, ih, S.eigenvector,
-            mul_smul]
+      rw [linearPolyEval_monomial, eigenvector_pow]
+      simp [Polynomial.eval_monomial]
 
 /-- The isolator kills every non-selected eigenvector. -/
 theorem isolator_kills_other
@@ -154,6 +209,7 @@ theorem isolator_on_combination
       (S.spectralCombination a) =
       (a i * S.isolatorScale i) • S.vector i := by
   classical
+  simp only [spectralCombination]
   rw [map_sum]
   simp_rw [LinearMap.map_smul]
   rw [Finset.sum_eq_single i]
@@ -162,7 +218,8 @@ theorem isolator_on_combination
   · intro j hj hji
     rw [S.isolator_kills_other i j hji]
     simp
-  · simp
+  · intro h
+    exact absurd (Finset.mem_univ i) h
 
 /-- **CYCLIC SPECTRAL GENERATION.**
 
@@ -186,7 +243,8 @@ theorem every_vector_mem_of_cyclic_seed
   have hscale : a i * S.isolatorScale i ≠ 0 :=
     mul_ne_zero (ha i) (S.isolatorScale_ne_zero i)
   have hinv := W.smul_mem ((a i * S.isolatorScale i)⁻¹) hpoly
-  simpa [hscale] using hinv
+  rw [inv_smul_smul₀ hscale] at hinv
+  exact hinv
 
 /-- If the selected spectral directions span the ambient finite module, the
 same hypotheses force the stable algebraic submodule to be all of M. -/
@@ -275,11 +333,11 @@ theorem selected_basis_algebraic_of_cyclic_seed
     ∀ i : ι,
       (classicalHodgeBasis V H p (S.basisIndex i)).1 ∈
         pointCycleClassSpan p (H.cycleClass p) := by
-  let F := S.toFiniteSpectralFamily
-  have h := F.every_vector_mem_of_cyclic_seed
-    (pointCycleClassSpan p (H.cycleClass p))
-    S.atomic_stable a ha
-  simpa [F, FiniteSpectralFamily.spectralCombination] using h hseed
+  have hseed' : S.toFiniteSpectralFamily.spectralCombination a ∈
+      pointCycleClassSpan p (H.cycleClass p) := hseed
+  intro i
+  exact S.toFiniteSpectralFamily.every_vector_mem_of_cyclic_seed
+    (pointCycleClassSpan p (H.cycleClass p)) S.atomic_stable a ha hseed' i
 
 /-- If a finite selected family exhausts the chosen Hodge basis index, then
 one cyclic algebraic seed plus one stable spectral operator proves the full
@@ -296,17 +354,26 @@ theorem weight_hodge_of_cyclic_spectral_generation
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
       pointCycleClassSpan p (H.cycleClass p) := by
   intro alpha halpha
-  let alphaH : ClassicalHodgeFiber V H p := ⟨alpha,halpha⟩
   have hbasis : ∀ j : ClassicalHodgeBasisIndex V H p,
       (classicalHodgeBasis V H p j).1 ∈
         pointCycleClassSpan p (H.cycleClass p) := by
     intro j
     obtain ⟨i,rfl⟩ := hsurj j
     exact S.selected_basis_algebraic_of_cyclic_seed a ha hseed i
-  have hreconstruct := (classicalHodgeBasis V H p).sum_repr alphaH
-  rw [← hreconstruct]
-  exact Submodule.sum_mem _ fun j hj =>
-    Submodule.smul_mem _ _ (hbasis j)
+  have hle : Submodule.span ℚ
+      (Set.range (classicalHodgeBasis V H p)) ≤
+      (pointCycleClassSpan p (H.cycleClass p)).comap
+        (ClassicalHodgeFiber V H p).subtype := by
+    rw [Submodule.span_le]
+    rintro x ⟨j, rfl⟩
+    exact hbasis j
+  have hmem : (⟨alpha, halpha⟩ : ClassicalHodgeFiber V H p) ∈
+      Submodule.span ℚ (Set.range (classicalHodgeBasis V H p)) := by
+    rw [(classicalHodgeBasis V H p).span_eq]
+    exact Submodule.mem_top
+  exact hle hmem
+
+end ClassicalHodgeSpectralOperator
 
 #check ClassicalHodgeSpectralOperator
 #check ClassicalHodgeSpectralOperator.toFiniteSpectralFamily

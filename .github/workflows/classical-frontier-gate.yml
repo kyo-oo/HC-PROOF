@@ -1,0 +1,70 @@
+name: Classical Frontier Gate
+
+# Fast verification gate for the classical arsenal frontier repair on the
+# glm53/classical-frontier branch.  Builds the full HodgePureMath target with
+# repository build-artifact caching so each repair round only recompiles the
+# modules that actually changed.
+
+on:
+  push:
+    branches:
+      - glm53/classical-frontier
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: classical-frontier-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  classical:
+    name: Classical arsenal line (0 errors)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+
+      - name: Install exact Lean RC2 and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+
+      - name: Restore repository build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: classical-frontier-build-${{ hashFiles('**/*.lean') }}
+          restore-keys: |
+            classical-frontier-build-
+
+      - name: Compile the classical pure-math geometry library
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build HodgePureMath 2>&1 | tee classical-frontier.log
+
+      - name: Save repository build cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: classical-frontier-build-run-${{ github.run_id }}
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: classical-frontier-diagnostics
+          path: classical-frontier.log
+          if-no-files-found: ignore
