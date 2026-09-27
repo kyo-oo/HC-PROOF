@@ -197,15 +197,15 @@ theorem liveSheet_projector_is_polynomial
     (i : HodgeSupportIndex alpha) :
     ∃ (P : Polynomial ℤ) (c : ℤ), c ≠ 0 ∧
       ∀ (f : ShapeCoef
-          (GSTWorldCosmology.outputShape
+          (outputShape
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))))
         (x : ShapeState
-          (GSTWorldCosmology.outputShape
+          (outputShape
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha)))),
         codePolyOp
-          (GSTWorldCosmology.outputShape
+          (outputShape
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha))
             (fiberedSupportSize (fiberedWeightCoordinates V H p alpha)))
           P f x =

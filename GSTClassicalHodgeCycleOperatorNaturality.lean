@@ -168,7 +168,8 @@ theorem cycleClass_cyclePolyEval
     | succ n ih =>
         intro W
         simp only [pow_succ, Module.End.mul_apply]
-        rw [S.operatorPair.cycleClass_cycleOperator, ih W]
+        rw [ih (S.operatorPair.cycleOperator W),
+          S.operatorPair.cycleClass_cycleOperator]
   induction P using Polynomial.induction_on' with
   | add P Q hP hQ =>
       have hsum : S.cyclePolyEval (P + Q) Z
