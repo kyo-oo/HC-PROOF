@@ -104,8 +104,8 @@ theorem hodgeClass_eq_support_sum
       = (Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
           ((classicalHodgeBasis V H p).repr alpha)).1 := by
         rw [hcomb]
-    _ = ((classicalHodgeBasis V H p).repr alpha).sum
-        (fun i c => c • (classicalHodgeBasis V H p i)).1 := by
+    _ = (((classicalHodgeBasis V H p).repr alpha).sum
+        (fun i c => c • (classicalHodgeBasis V H p i))).1 := by
         rw [Finsupp.linearCombination_apply]
     _ = ∑ i ∈ ((classicalHodgeBasis V H p).repr alpha).support,
         ((classicalHodgeBasis V H p).repr alpha i) •
