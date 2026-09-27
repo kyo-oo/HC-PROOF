@@ -98,12 +98,18 @@ theorem live_projector_isolates_slot
       if s = r then liveCoordinateVector alpha r else 0 := by
   by_cases hsr : s = r
   · subst s
-    simp [codeSectorProjQ, liveShapeState_code, liveShapeCoefQ]
+    simp only [codeSectorProjQ, liveShapeCoefQ]
+    rw [liveShapeState_code, if_pos rfl, if_pos rfl]
+    rfl
   · have hcode : s.1 ≠ r.1 := by
       intro h
       apply hsr
       exact Fin.ext h
-    simp [codeSectorProjQ, liveShapeState_code, liveShapeCoefQ, hcode, hsr]
+    have hkey : worldCode (liveLinearShape alpha) (liveShapeState alpha s) ≠ r.1 := by
+      rw [liveShapeState_code]
+      exact hcode
+    simp only [codeSectorProjQ, liveShapeCoefQ]
+    rw [if_neg hkey, if_neg hsr]
 
 /-- **SHAPE-INDEPENDENT LIVE SHEET ISOLATION.**  Recoordinate the live support
 into any equal-cardinality GST world.  Projecting by the invariant state code

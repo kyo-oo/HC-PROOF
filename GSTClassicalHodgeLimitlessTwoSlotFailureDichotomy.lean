@@ -63,16 +63,19 @@ theorem embedWindow_apply_fin
     {N : Nat} (a : RationalPureWindow N) (r : Fin N) :
     embedWindow a r.1 = a r := by
   classical
-  show (∑ s : Fin N, Finsupp.single s.1 (a s)) ↑r.1 = a r
-  rw [Finset.sum_apply]
-  rw [Finset.sum_eq_single r]
-  · simp
-  · intro s hs hsr
-    have hval : s.1 ≠ r.1 := by
-      intro h
-      exact hsr (Fin.ext h)
-    simp [hval]
-  · simp
+  have key : (Finsupp.lapply r.1)
+      (∑ s : Fin N, Finsupp.single s.1 (a s)) = a r := by
+    rw [map_sum, Finset.sum_eq_single r]
+    · show (Finsupp.single r.1 (a r)) r.1 = a r
+      rw [Finsupp.single_apply, if_pos rfl]
+    · intro s _ hsr
+      show (Finsupp.single s.1 (a s)) r.1 = (0 : ℚ)
+      have hval : s.1 ≠ r.1 := by
+        intro h
+        exact hsr (Fin.ext h)
+      rw [Finsupp.single_apply, if_neg hval]
+    · simp
+  exact key
 
 /-- Exact finite observation: embedding and reading back loses nothing. -/
 @[simp]
@@ -93,10 +96,27 @@ theorem embedWindow_basis
     simp [rationalCosmicBasis, rationalPureBasis,
       embedWindow_apply_fin]
   · classical
-    show (∑ s : Fin N, Finsupp.single s.1 (rationalPureBasis r s)) n
+    have key : (Finsupp.lapply n)
+        (∑ s : Fin N, Finsupp.single s.1 (rationalPureBasis r s))
+        = rationalCosmicBasis r.1 n := by
+      rw [map_sum]
+      apply Finset.sum_eq_zero
+      intro s _
+      show (Finsupp.single s.1 (rationalPureBasis r s)) n
         = rationalCosmicBasis r.1 n
-    rw [Finset.sum_apply]
-    simp [rationalPureBasis, rationalCosmicBasis, hn]
+      rw [Finsupp.single_apply]
+      by_cases hsn : s.1 = n
+      · rw [if_pos hsn]
+        have hsr : s ≠ r := by
+          intro h
+          apply hn
+          rw [← hsn, h]
+        simp only [rationalPureBasis, rationalCosmicBasis,
+          if_neg hsr, Finsupp.single_apply, if_neg (Ne.symm hn)]
+      · rw [if_neg hsn]
+        simp only [rationalCosmicBasis, Finsupp.single_apply,
+          if_neg (Ne.symm hn)]
+    exact key
 
 /-- A limitless matrix unit acting between two visible finite weights stays in
 that observation window and reads back as the usual finite matrix unit. -/
@@ -186,18 +206,27 @@ structure LimitlessCosmicEscape where
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha ∉
       AlgebraicFiber (V:=V) (H:=H) (p:=p)
 
+end GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
+
+namespace GSTClassicalHodgeConcreteFailureDichotomy
+
 /-- Every old two-slot escape is exactly a limitless cosmic escape. -/
 noncomputable def TwoSlotEscape.toLimitlessCosmicEscape
     (E : TwoSlotEscape (V:=V) (H:=H) (p:=p)) :
-    LimitlessCosmicEscape (V:=V) (H:=H) (p:=p) where
+    GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.LimitlessCosmicEscape
+      (V:=V) (H:=H) (p:=p) where
   source := E.source
   target := E.target
   alpha := E.alpha
   alpha_algebraic := E.alpha_algebraic
   escapes := by
-    rw [← twoSlotWord_apply_eq_limitless_cosmic
-      E.source E.target E.alpha]
+    rw [← GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.
+      twoSlotWord_apply_eq_limitless_cosmic E.source E.target E.alpha]
     exact E.escapes
+
+end GSTClassicalHodgeConcreteFailureDichotomy
+
+namespace GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 
 /-- **LIMITLESS FAILURE DICHOTOMY.** If the genuine algebraic Hodge fiber is
 proper, then either it contains no nonzero seed or the actual unrestricted

@@ -48,22 +48,73 @@ noncomputable def toLiveFibered
       LiveFiberedAddress (fiberedWeightCoordinates V H p alpha) :=
   liveFiberedAddress alpha
 
+/-- Every live fibered address carries a genuine classical basis index whose
+embedded address is exactly it. -/
+theorem liveFiberedAddress_witness
+    (alpha : ClassicalHodgeFiber V H p)
+    (s : LiveFiberedAddress (fiberedWeightCoordinates V H p alpha)) :
+    ∃ idx : ClassicalHodgeBasisIndex V H p,
+      idx ∈ ((classicalHodgeBasis V H p).repr alpha).support ∧
+        (⟨p, idx⟩ : FiberedHodgeIndex V H) = s.1 := by
+  rcases s with ⟨⟨q, i⟩, hs⟩
+  have hsup : fiberedWeightCoordinates V H p alpha
+      (⟨q, i⟩ : FiberedHodgeIndex V H) ≠ 0 :=
+    Finsupp.mem_support_iff.mp hs
+  by_cases hqp : q = p
+  · subst q
+    have hval : fiberedWeightCoordinates V H p alpha
+        (⟨p, i⟩ : FiberedHodgeIndex V H)
+        = (classicalHodgeBasis V H p).repr alpha i :=
+      Finsupp.embDomain_apply_self (weightFiberEmbedding V H p)
+        ((classicalHodgeBasis V H p).repr alpha) i
+    rw [hval] at hsup
+    exact ⟨i, Finsupp.mem_support_iff.mpr hsup, rfl⟩
+  · exfalso
+    apply hsup
+    simp only [fiberedWeightCoordinates, weightFiberEmbedding]
+    apply Finsupp.embDomain_of_notMem_range
+    intro hm
+    rcases hm with ⟨a, ha⟩
+    have ha' : (⟨p, a⟩ : FiberedHodgeIndex V H) = ⟨q, i⟩ := ha
+    injection ha' with hp _
+    exact hqp hp.symm
+
 /-- Remove the fixed weight label from one live fibered address. -/
 noncomputable def fromLiveFibered
     (alpha : ClassicalHodgeFiber V H p) :
     LiveFiberedAddress (fiberedWeightCoordinates V H p alpha) →
-      HodgeSupportIndex alpha := by
-  intro s
-  have hs :
-      fiberedWeightCoordinates V H p alpha s.1 ≠ 0 :=
-    Finsupp.mem_support_iff.mp s.2
-  rcases s.1 with ⟨q,i⟩
-  have hqp : q = p := by
-    by_contra h
-    simp [fiberedWeightCoordinates, weightFiberEmbedding, h] at hs
-  subst q
-  refine ⟨i, ?_⟩
-  simpa [fiberedWeightCoordinates, weightFiberEmbedding] using hs
+      HodgeSupportIndex alpha :=
+  fun s =>
+    ⟨Classical.choose (liveFiberedAddress_witness alpha s),
+     (Classical.choose_spec (liveFiberedAddress_witness alpha s)).1⟩
+
+/-- The classical witness of a live fibered address embeds back to it. -/
+theorem fromLiveFibered_apply
+    (alpha : ClassicalHodgeFiber V H p)
+    (s : LiveFiberedAddress (fiberedWeightCoordinates V H p alpha)) :
+    (⟨p, (fromLiveFibered alpha s).1⟩ : FiberedHodgeIndex V H) = s.1 :=
+  (Classical.choose_spec (liveFiberedAddress_witness alpha s)).2
+
+theorem fromLiveFibered_toLiveFibered
+    (alpha : ClassicalHodgeFiber V H p)
+    (i : HodgeSupportIndex alpha) :
+    fromLiveFibered alpha (toLiveFibered alpha i) = i := by
+  apply Subtype.ext
+  have h1 := fromLiveFibered_apply alpha (toLiveFibered alpha i)
+  have h2 : (toLiveFibered alpha i).1
+      = (⟨p, i.1⟩ : FiberedHodgeIndex V H) := rfl
+  rw [h2] at h1
+  injection h1 with _ heq
+  exact heq
+
+theorem toLiveFibered_fromLiveFibered
+    (alpha : ClassicalHodgeFiber V H p)
+    (s : LiveFiberedAddress (fiberedWeightCoordinates V H p alpha)) :
+    toLiveFibered alpha (fromLiveFibered alpha s) = s := by
+  apply Subtype.ext
+  have h3 : (toLiveFibered alpha (fromLiveFibered alpha s)).1
+      = (⟨p, (fromLiveFibered alpha s).1⟩ : FiberedHodgeIndex V H) := rfl
+  rw [h3, fromLiveFibered_apply alpha s]
 
 /-- The two live-support types are canonically equivalent. -/
 noncomputable def hodgeSupportEquivFibered
@@ -72,22 +123,8 @@ noncomputable def hodgeSupportEquivFibered
       LiveFiberedAddress (fiberedWeightCoordinates V H p alpha) where
   toFun := toLiveFibered alpha
   invFun := fromLiveFibered alpha
-  left_inv := by
-    intro i
-    apply Subtype.ext
-    rfl
-  right_inv := by
-    intro s
-    apply Subtype.ext
-    rcases s with ⟨⟨q,i⟩, hs⟩
-    have hne :
-        fiberedWeightCoordinates V H p alpha ⟨q,i⟩ ≠ 0 :=
-      Finsupp.mem_support_iff.mp hs
-    have hqp : q = p := by
-      by_contra h
-      simp [fiberedWeightCoordinates, weightFiberEmbedding, h] at hne
-    subst q
-    rfl
+  left_inv := fromLiveFibered_toLiveFibered alpha
+  right_inv := toLiveFibered_fromLiveFibered alpha
 
 /-- The classical live rank and fibered support size are exactly equal. -/
 theorem liveRank_eq_fiberedSupportSize

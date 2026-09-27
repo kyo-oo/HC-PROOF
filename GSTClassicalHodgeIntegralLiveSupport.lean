@@ -69,7 +69,7 @@ theorem commonDenominator_mul_coordinate_isInt
       ((f i).den : ℚ) * (k : ℚ) * f i
           = (k : ℚ) * (((f i).den : ℚ) * f i) := by ring
       _ = (k : ℚ) * ((f i).num : ℚ) := by rw [hden]
-      _ = (((k : ℤ) * (f i).num : ℤ) : ℚ) := by push_cast; ring
+      _ = (((k : ℤ) * (f i).num : ℤ) : ℚ) := by rw [Int.cast_mul, Int.cast_natCast]
   · have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
     exact ⟨0, by simp [hzero]⟩
 
@@ -95,10 +95,11 @@ noncomputable def integralize
   Finsupp.onFinset f.support (integralCoefficient f)
     (by
       intro i hi
-      have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
+      by_contra hmem
+      have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hmem
       have hspec := integralCoefficient_spec f i
-      simp [hzero] at hspec
-      exact_mod_cast hspec)
+      rw [hzero, mul_zero] at hspec
+      exact hi (by exact_mod_cast hspec.symm))
 
 /-- Exact coordinatewise scaling law for integralization. -/
 theorem integralize_spec
@@ -110,7 +111,10 @@ theorem integralize_spec
   by_cases hi : i ∈ f.support
   · simp [integralize, hi, integralCoefficient_spec]
   · have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
-    simp [integralize, hi, hzero]
+    have hspec := integralCoefficient_spec f i
+    rw [hzero, mul_zero] at hspec
+    simp only [integralize, Finsupp.onFinset_apply, hzero, mul_zero]
+    exact hspec.symm
 
 /-- The scaling integer is nonzero in `Q`. -/
 theorem commonDenominator_cast_ne_zero

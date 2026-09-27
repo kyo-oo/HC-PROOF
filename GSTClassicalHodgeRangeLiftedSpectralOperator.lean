@@ -146,8 +146,6 @@ noncomputable def ofRangeStable
     ext Z
     exact cycleClass_liftedCycleOperator T hstable Z
 
-/-- On a smooth projective scheme, atomic-span stability is the same range
-stability needed by the range-lift theorem. -/
 end CycleClassOperatorPair
 end GSTClassicalHodgeCycleOperatorNaturality
 
@@ -172,11 +170,6 @@ theorem cycleClassRange_stable
 /-- **AUTOMATIC NATIVE SPECTRAL LIFT.**  Every classical Hodge spectral
 operator already carries enough information to become a native spectral cycle
 operator; no independent native operator datum is required. -/
-
-
-/-- **AUTOMATIC NATIVE SPECTRAL LIFT.**  Every classical Hodge spectral
-operator already carries enough information to become a native spectral cycle
-operator; no independent native operator datum is required. -/
 noncomputable def toSpectralCycleOperatorViaRange
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : ClassicalHodgeSpectralOperator V H p ι) :
@@ -192,24 +185,12 @@ noncomputable def toSpectralCycleOperatorViaRange
 /-- The automatically lifted spectral operator preserves the original selected
 basis indexing exactly. -/
 @[simp]
-
-
-/-- The automatically lifted spectral operator preserves the original selected
-basis indexing exactly. -/
-@[simp]
 theorem toSpectralCycleOperatorViaRange_basisIndex
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : ClassicalHodgeSpectralOperator V H p ι) :
     S.toSpectralCycleOperatorViaRange.basisIndex = S.basisIndex :=
   rfl
 
-/-- **LOCAL CYCLIC → CONSTRUCTIVE NATIVE UPGRADE.**
-
-A local cyclic realization already contains every mathematical ingredient
-needed for explicit native cycle construction.  Its atomic seed belongs to
-the actual cycle-class range, so choose one native seed cycle representing it;
-its atomic-stable spectral observable automatically lifts to native cycles by
-the range-lift theorem above. -/
 end ClassicalHodgeSpectralOperator
 end GSTClassicalHodgeCyclicSpectralGeneration
 
@@ -230,7 +211,9 @@ noncomputable def toLocalCycleSpectralRealization
   let S := R.spectral.toSpectralCycleOperatorViaRange
   have hseedRange := R.seed_mem_atomic
   rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hseedRange
-  obtain ⟨Z, hZ⟩ := hseedRange
+  rw [LinearMap.mem_range] at hseedRange
+  have Z : codimensionCycles V.X p := Classical.choose hseedRange
+  have hZ := Classical.choose_spec hseedRange
   have hSindex : S.basisIndex = HodgeSupportIndex.include := by
     exact R.spectral_basisIndex
   refine {
@@ -250,20 +233,12 @@ noncomputable def toLocalCycleSpectralRealization
 
 /-- Every local cyclic realization therefore constructs an explicit native
 cycle for the original Hodge class. -/
-
-
-/-- Every local cyclic realization therefore constructs an explicit native
-cycle for the original Hodge class. -/
 theorem exists_native_cycle_constructive
     {alpha : ClassicalHodgeFiber V H p}
     (R : LocalCyclicRealization V H p alpha) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha.1 :=
   R.toLocalCycleSpectralRealization.exists_native_cycle
-
-/-- Every local cyclic realization also constructs an explicit finite
-codimension-point presentation of the original Hodge class. -/
-
 
 /-- Every local cyclic realization also constructs an explicit finite
 codimension-point presentation of the original Hodge class. -/

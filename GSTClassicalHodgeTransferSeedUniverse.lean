@@ -1,6 +1,5 @@
 import GSTClassicalHodgeFiberedTransferCompletion
 import GSTClassicalHodgeFiniteSupportArsenalConjugation
-import GSTClassicalHodgeNativeTransferAddressIdentification
 import GSTTransferBridgeV2
 
 /-!
@@ -40,9 +39,10 @@ variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
 /-- Canonical limitless GST transfer seed at one weight, in the rationalized
-(ℚ-world) address universe that `forgetMultiplicityToGST` lands in. -/
+(ℚ-world) address universe that `forgetMultiplicityToGST` lands in: the
+universal address basis of the diagonal cosmic cell `(p,p)`. -/
 noncomputable def cosmicTransferSeed (p : Nat) : RationalCompactGSTAddress :=
-  rationalizeCompactAddress (compactClMono p)
+  Finsupp.single (GSTUniversalAddressBridge.cosmicAddressEquiv (p, p)) (1 : ℚ)
 
 /-- ℚ-world twin of the compact-address Hodge support condition: the
 rationalized seed is supported only at the cosmic diagonal address. -/
@@ -53,16 +53,18 @@ def isRationalCompactHodge (p : Nat) (φ : RationalCompactGSTAddress) : Prop :=
 theorem cosmicTransferSeed_isHodge (p : Nat) :
     isRationalCompactHodge p (cosmicTransferSeed p) := by
   intro i hi
-  rw [cosmicTransferSeed, rationalize_compactClMono, Finsupp.single_apply, if_neg hi]
+  simp only [cosmicTransferSeed, Finsupp.single_apply]
+  exact if_neg (Ne.symm hi)
 
 /-- The canonical transfer seed is nonzero. -/
 theorem cosmicTransferSeed_ne_zero (p : Nat) :
     cosmicTransferSeed p ≠ 0 := by
   intro h
   have hv := congrArg
-    (fun φ : RationalCompactGSTAddress => φ (pureWeightAddress p)) h
-  rw [cosmicTransferSeed, rationalize_compactClMono] at hv
-  simp at hv
+    (fun φ : RationalCompactGSTAddress =>
+      φ (GSTUniversalAddressBridge.cosmicAddressEquiv (p, p))) h
+  simp only [cosmicTransferSeed, Finsupp.single_apply, Finsupp.zero_apply] at hv
+  exact absurd hv one_ne_zero
 
 /-- Every genuine multiplicity sheet above weight `p` projects to the exact
 canonical limitless transfer seed. -/
@@ -70,8 +72,7 @@ theorem fiberedSheet_projects_to_transferSeed
     (i : ClassicalHodgeBasisIndex V H p) :
     forgetMultiplicityToGST (fiberedSheetGenerator V H ⟨p,i⟩) =
       cosmicTransferSeed p := by
-  rw [cosmicTransferSeed, fiberedSheet_projects_to_cosmicGenerator V H p i,
-    rationalize_compactClMono]
+  rw [fiberedSheet_projects_to_cosmicGenerator V H p i]
   rfl
 
 /-- A nonzero genuine Hodge state has at least one live basis coordinate. -/
