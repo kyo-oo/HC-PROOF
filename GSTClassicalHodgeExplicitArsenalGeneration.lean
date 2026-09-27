@@ -52,7 +52,7 @@ noncomputable def diagonalLefschetzQ
     ∑ p : Fin N,
       (worldAct N N ((L N N)^t)
         (worldBasis (pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) p)))
-        (pureDiagonalState q) : ℚ) * a p
+        (pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) q)) : ℚ) * a p
   map_add' := by
     intro a b
     funext q
@@ -62,12 +62,27 @@ noncomputable def diagonalLefschetzQ
     funext q
     simp [Finset.mul_sum, smul_eq_mul, mul_left_comm]
 
+-- The window mirror defined natively at Fin N, avoiding the Fin (min N N)
+-- type boundary inside equiv field elaboration.
+/-- Mirror one pure-window coordinate natively at Fin N. -/
+def windowMirror {N : Nat} (q : Fin N) : Fin N :=
+  ⟨N - 1 - q.1, by have := q.2; omega⟩
+
+@[simp]
+theorem windowMirror_involutive {N : Nat} (q : Fin N) :
+    windowMirror (windowMirror q) = q := by
+  apply Fin.ext
+  unfold windowMirror
+  simp only
+  have := q.2
+  omega
+
 /-- Rational Poincare reversal on the finite pure window. -/
 noncomputable def poincareReverseQ
     (N : Nat) :
     RationalPureWindow N ≃ₗ[ℚ] RationalPureWindow N where
-  toFun a := fun q => a (pureMirror (show Fin (min N N) from q))
-  invFun a := fun q => a (pureMirror (show Fin (min N N) from q))
+  toFun a := fun q => a (windowMirror q)
+  invFun a := fun q => a (windowMirror q)
   left_inv := by
     intro a
     funext q
@@ -87,19 +102,16 @@ noncomputable def poincareReverseQ
 theorem poincareReverseQ_basis
     {N : Nat} (p : Fin N) :
     poincareReverseQ N (rationalPureBasis p) =
-      rationalPureBasis
-        (show Fin N from pureMirror (show Fin (min N N) from p)) := by
+      rationalPureBasis (windowMirror p) := by
   funext q
   simp only [poincareReverseQ, rationalPureBasis]
-  by_cases hL : pureMirror (show Fin (min N N) from q) = p
-  · rw [if_pos hL, if_pos (by
-      have h2 := congrArg (pureMirror (N := N)) hL
-      simpa using h2)]
+  by_cases hL : windowMirror q = p
+  · rw [if_pos hL, if_pos
+      ((windowMirror_involutive q).symm.trans (congrArg windowMirror hL))]
   · rw [if_neg hL, if_neg (by
       intro hq
-      exact hL (by
-        have h2 := congrArg (pureMirror (N := N)) hq
-        simpa using h2))]
+      exact hL ((congrArg windowMirror hq).trans (windowMirror_involutive p)))]
+
 
 /-- Raw forward arsenal word before central-binomial normalization. -/
 noncomputable def rawForwardWord
