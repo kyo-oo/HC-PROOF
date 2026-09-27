@@ -125,7 +125,11 @@ theorem reconstructedPresentation_spec
           (codimensionPointCycle V.X p x)) = alpha.1 := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   rw [← linearMap_realizeFiniteCodimensionPresentation]
-  rw [realize_presentationOfNativeCycle V.X p R.reconstructedCycle]
+  have hpres : R.reconstructedPresentation
+      = presentationOfNativeCycle V.X p R.reconstructedCycle := by
+    unfold reconstructedPresentation
+    rfl
+  rw [hpres, realize_presentationOfNativeCycle V.X p R.reconstructedCycle]
   exact R.reconstructedCycle_spec
 
 end LocalCycleSpectralRealization

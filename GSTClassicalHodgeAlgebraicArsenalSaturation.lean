@@ -33,6 +33,7 @@ open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeArsenalOrbitSaturation
+open GSTClassicalHodgeAtomicDefectDuality
 
 namespace GSTClassicalHodgeAlgebraicArsenalSaturation
 

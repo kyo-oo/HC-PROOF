@@ -32,6 +32,8 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiniteSupportChart
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeLiveSheetIntertwining
+open GSTClassicalHodgeLocalCyclicCriterion
+open GSTClassicalHodgeSquareStrandLocalization
 
 namespace GSTClassicalHodgeSupportCardinalityBridge
 
