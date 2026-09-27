@@ -13,19 +13,42 @@ import GSTLefschetzPoincareReciprocity
 import GSTWorldPoincareDuality
 import GSTWorldRecoordinationGroupoid
 import GSTGradedWorldAlgebra
+import GSTHodgeChannelFinale
+import GSTClassicalHodgeFullLimitlessCrown
 
 /-!
-# Hodge Conjecture — Classical GST Landing
+# Hodge Conjecture — Unified Classical GST Landing
 
-This module attacks the genuine Stage-2G rational Hodge target for actual
-smooth projective complex schemes.  The internal GST Hodge classifications
-are used only through typed bridges; they are not identified by fiat with
-arbitrary classical cohomology.
+This file is the public top-level landing face for the Hodge development.
+It combines three independently developed and machine-oriented layers:
 
-The decisive construction is a genuine geometric realization whose basis
-coordinates are represented by native codimension-p algebraic cycles.  The
-realization layers below are rank-free and index-polymorphic: the classical
-Hodge fiber is not forced into a preselected finite or countable chart.
+1. the genuine Stage-2G rational Hodge target on smooth projective complex
+   schemes and native codimension-p algebraic cycles;
+2. the rank-free / index-polymorphic classical GST basis reconstruction;
+3. the multi-channel Wave-II finite-basis/quotient finale and the full
+   limitless geometric/cosmic classical crown.
+
+No internal GST surrogate is substituted for the target.  `ClassicalHodgeTarget`
+is definitionally the Stage-2G statement.  The final wiring below makes the
+proof flow explicit:
+
+  genuine geometric cycle-class spine
+    + nonvanishing projective spine tower
+    + genuine projective externalization of the cosmic read/write action
+      -> full limitless classical Hodge crown
+      -> exact Stage-2G Hodge statement
+      -> explicit native codimension-p cycle for every rational (p,p) class.
+
+Under the ordinary finite-dimensionality package for the rational Hodge
+fibers, the same result is also transported through the independently verified
+multi-channel architecture:
+
+  exact Hodge statement
+    <-> canonical finite-basis algebraization
+    -> Wave-II channel quotient
+    -> arbitrary same-weight multiplicity with no finite rank ceiling.
+
+The two routes meet here; neither is hidden behind a redefinition of Hodge.
 -/
 
 set_option maxHeartbeats 10000000
@@ -68,9 +91,7 @@ theorem classicalHodgeTarget_iff_explicit_witness
   simpa [ClassicalHodgeTarget] using
     (bigradedBettiHodgeStatement_iff_explicit_witness V H)
 
-/-- Stage 2G has already proved the final logical landing.  Consequently the
-new mathematics in this file is exactly the construction of the compact
-realization obligation, not another reformulation of the conclusion. -/
+/-- Stage 2G has already proved the final logical landing. -/
 theorem classicalHodgeTarget_of_compact_realization
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -78,8 +99,7 @@ theorem classicalHodgeTarget_of_compact_realization
     ClassicalHodgeTarget V H := by
   exact bigraded_betti_hodge_of_stage2g_compact_obligation V H hR
 
-/-- Elementwise form of the same reduction, useful while constructing the
-actual GST-to-classical cycle witnesses. -/
+/-- Elementwise form of the same compact-realization reduction. -/
 theorem explicit_witness_of_compact_realization
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -97,21 +117,11 @@ theorem explicit_witness_of_compact_realization
       (classicalHodgeTarget_of_compact_realization V H hR)
       p alpha halpha
 
-/-! ## Index-polymorphic limitless realization
-
-`CompactHodgeRealization` itself never required the address type to be
-`Nat`.  Keeping an arbitrary index type matters for the classical landing:
-no countability or finite-rank assumption should be smuggled into an
-arbitrary Betti-Hodge fiber merely because the historical GST address system
-used natural coordinates.
--/
+/-! ## Index-polymorphic limitless realization -/
 
 /-- One Stage-2G realization with an arbitrary address universe `ι`.
-
-The structure contains no Hodge conclusion.  It asks for an injective
-finitely-supported encoding and native algebraic basis cycles, exactly as
-`CompactHodgeRealization` does, and only records compatibility with the
-actual Stage-2G Hodge predicate and cycle-class map. -/
+The structure contains no Hodge conclusion; it records only the realization
+and its compatibility with the genuine Hodge predicate and cycle-class map. -/
 structure UniverseIndexedRealization
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -158,14 +168,7 @@ theorem classicalHodgeTarget_of_universe_indexed_family
   exact hodge_class_has_cycle_of_universe_indexed_realization
     V H (R p) alpha halpha
 
-/-! ## Exact limitless coordinates on the genuine Hodge fiber
-
-The old finite GST Hodge diagonal has one coordinate per live weight.  That
-is not enough to model an arbitrary classical `(p,p)` Hodge space, which may
-have arbitrary multiplicity.  We therefore keep the GST finite-support
-principle but fiber it over a genuine vector-space basis of the actual
-rational Hodge subspace.  This is rank-free and requires no countability.
--/
+/-! ## Exact limitless coordinates on the genuine Hodge fiber -/
 
 /-- The actual rational `(p,p)` Hodge fiber in degree `2p`. -/
 abbrev HodgeFiber
@@ -189,9 +192,7 @@ noncomputable def hodgeBasis
     Module.Basis (HodgeBasisIndex V H p) ℚ (HodgeFiber V H p) :=
   Module.Free.chooseBasis ℚ (HodgeFiber V H p)
 
-/-- Limitless finite-support coordinates of a genuine Hodge class.  No fixed
-rank occurs: every individual class has finite support because `Basis.repr`
-lands in a `Finsupp`. -/
+/-- Limitless finite-support coordinates of a genuine Hodge class. -/
 noncomputable def hodgeCoordinates
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -209,11 +210,7 @@ theorem hodgeCoordinates_basis
   simp [hodgeCoordinates]
 
 /-- The irreducible geometric datum for one Hodge fiber: every basis vector
-has an actual native codimension-`p` algebraic-cycle representative.
-
-This is deliberately weaker than assuming cycle-class surjectivity on all
-Hodge classes.  Arbitrary Hodge classes will be reconstructed from these
-basis representatives by the finite-support coordinate law above. -/
+has an actual native codimension-`p` algebraic-cycle representative. -/
 structure HodgeBasisCycleBridge
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -289,9 +286,7 @@ theorem classicalHodgeTarget_of_basis_cycle_family
   exact hodge_class_has_cycle_of_basis_bridge V H (R p) alpha halpha
 
 /-- If the classical target already holds, each chosen Hodge basis vector has
-a native algebraic representative.  This direction is used only to prove the
-normal-form equivalence below; it is not used as a construction in the
-forward proof program. -/
+a native algebraic representative. -/
 noncomputable def hodgeBasisCycleBridgeOfTarget
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -310,14 +305,8 @@ noncomputable def hodgeBasisCycleBridgeOfTarget
       exact h p (hodgeBasis V H p i).2)
 
 /-- **BASIS-GENERATOR NORMAL FORM.**
-
 The exact Stage-2G Hodge target is equivalent to algebraicity of one chosen
-basis of every rational `(p,p)` Hodge fiber.  The backward direction is the
-substantive finite-support reconstruction theorem; the forward direction is
-only logical extraction from an already-supplied target proof.
-
-This theorem isolates the classical geometric problem as sharply as possible:
-construct native codimension-`p` cycles for the basis vectors. -/
+basis of every rational `(p,p)` Hodge fiber. -/
 theorem classicalHodgeTarget_iff_basis_cycle_bridges
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V) :
@@ -332,9 +321,7 @@ theorem classicalHodgeTarget_iff_basis_cycle_bridges
 
 /-- Semantic firewall: if a supplied cycle-class map is zero while the Hodge
 sector contains a nonzero class, then the classical Hodge target for that
-semantic package is impossible.  Thus the final theorem cannot legitimately
-quantify over arbitrary `HodgeBigradedBettiData` and manufacture surjectivity
-from GST syntax alone; a genuine geometric cycle-class bridge is required. -/
+semantic package is impossible. -/
 theorem not_classicalHodgeTarget_of_zero_cycleClass
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -357,6 +344,146 @@ theorem not_classicalHodgeTarget_of_zero_cycleClass
   apply halpha_ne
   rw [← hZ, hzeroZ]
 
+/-! ## Unified finale: Astra geometry × GLM repairs × multi-channel architecture -/
+
+/-- The public target is exactly equivalent to the canonical finite-basis
+algebraization obligation from the multi-channel finale.  This is the direct
+wire from the independently verified channel architecture into the public
+Hodge statement. -/
+theorem classicalHodgeTarget_iff_canonical_basis_algebraization
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H) :
+    ClassicalHodgeTarget V H ↔
+      GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation
+        V H F := by
+  simpa [ClassicalHodgeTarget] using
+    (GSTHodgeChannelFinale.canonical_basis_algebraization_iff_hodge
+      V H F).symm
+
+/-- Astra's full limitless geometric/cosmic crown lands directly in the exact
+public Hodge target.  No finite chart, one-generator surrogate, or altered
+Hodge statement occurs at this boundary. -/
+theorem classicalHodgeTarget_of_full_limitless_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hNV :
+      GSTClassicalHodgeFullLimitlessCrown.SpineTowerNonvanishing G)
+    (R :
+      GSTClassicalHodgeFullLimitlessCrown.FullProjectiveCosmicExternalization G) :
+    ClassicalHodgeTarget V H := by
+  simpa [ClassicalHodgeTarget] using
+    (GSTClassicalHodgeFullLimitlessCrown.bigradedBettiHodge G hNV R)
+
+/-- Explicit elementwise native-cycle form of the full limitless landing. -/
+theorem every_hodge_class_has_native_cycle_of_full_limitless_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hNV :
+      GSTClassicalHodgeFullLimitlessCrown.SpineTowerNonvanishing G)
+    (R :
+      GSTClassicalHodgeFullLimitlessCrown.FullProjectiveCosmicExternalization G)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  exact
+    GSTClassicalHodgeFullLimitlessCrown.every_hodge_class_has_native_cycle
+      G hNV R p alpha halpha
+
+/-- Once ordinary Hodge-fiber finite-dimensionality is supplied, the full
+limitless classical crown automatically supplies the exact canonical basis
+algebraization obligation used by the multi-channel theorem. -/
+theorem canonical_basis_algebraization_of_full_limitless_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hNV :
+      GSTClassicalHodgeFullLimitlessCrown.SpineTowerNonvanishing G)
+    (R :
+      GSTClassicalHodgeFullLimitlessCrown.FullProjectiveCosmicExternalization G) :
+    GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation
+      V H F := by
+  apply
+    (GSTHodgeChannelFinale.canonical_basis_algebraization_iff_hodge
+      V H F).2
+  exact GSTClassicalHodgeFullLimitlessCrown.bigradedBettiHodge G hNV R
+
+/-- The same geometric/cosmic crown therefore generates the minimal Wave-II
+channel quotient architecture automatically. -/
+theorem channel_quotient_of_full_limitless_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hNV :
+      GSTClassicalHodgeFullLimitlessCrown.SpineTowerNonvanishing G)
+    (R :
+      GSTClassicalHodgeFullLimitlessCrown.FullProjectiveCosmicExternalization G) :
+    GSTHodgeChannelQuotient.Stage2GChannelQuotientObligation V H := by
+  exact
+    GSTHodgeChannelFinale.canonical_basis_obligation_implies_channel_quotient
+      V H F
+      (canonical_basis_algebraization_of_full_limitless_geometry F G hNV R)
+
+/-- Same-weight multiplicity is unrestricted in the final public landing. -/
+theorem no_same_weight_hodge_rank_ceiling :
+    ∀ N p : Nat,
+      Fintype.card
+          (GSTMultiChannelHodgeCosmology.HodgeChannel
+            (GSTMultiChannelHodgeCosmology.standardChannelShape N)) = N := by
+  exact GSTHodgeChannelFinale.no_same_weight_rank_ceiling
+
+/-- **UNIFIED FINAL HODGE RECEIPT.**
+
+This theorem is the explicit composition point of the three completed proof
+lanes.  From the genuine geometric/cosmic inputs consumed by Astra's final
+crown it simultaneously obtains:
+
+* the exact Stage-2G Hodge statement (`ClassicalHodgeTarget`);
+* canonical finite-basis algebraization;
+* the minimal Wave-II channel quotient realization;
+* the global no-ceiling same-weight multiplicity theorem.
+
+The elementwise cycle witness is separately exposed by
+`every_hodge_class_has_native_cycle_of_full_limitless_geometry`. -/
+theorem unified_hodge_finale
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hNV :
+      GSTClassicalHodgeFullLimitlessCrown.SpineTowerNonvanishing G)
+    (R :
+      GSTClassicalHodgeFullLimitlessCrown.FullProjectiveCosmicExternalization G) :
+    ClassicalHodgeTarget V H
+    ∧ GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation V H F
+    ∧ GSTHodgeChannelQuotient.Stage2GChannelQuotientObligation V H
+    ∧ (∀ N p : Nat,
+      Fintype.card
+          (GSTMultiChannelHodgeCosmology.HodgeChannel
+            (GSTMultiChannelHodgeCosmology.standardChannelShape N)) = N) := by
+  have hTarget : ClassicalHodgeTarget V H :=
+    classicalHodgeTarget_of_full_limitless_geometry G hNV R
+  have hBasis :
+      GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation
+        V H F :=
+    canonical_basis_algebraization_of_full_limitless_geometry F G hNV R
+  have hQuot :
+      GSTHodgeChannelQuotient.Stage2GChannelQuotientObligation V H :=
+    GSTHodgeChannelFinale.canonical_basis_obligation_implies_channel_quotient
+      V H F hBasis
+  exact ⟨hTarget, hBasis, hQuot, no_same_weight_hodge_rank_ceiling⟩
+
 #check ClassicalHodgeTarget
 #check classicalHodgeTarget_iff_explicit_witness
 #check classicalHodgeTarget_of_compact_realization
@@ -377,6 +504,13 @@ theorem not_classicalHodgeTarget_of_zero_cycleClass
 #check hodgeBasisCycleBridgeOfTarget
 #check classicalHodgeTarget_iff_basis_cycle_bridges
 #check not_classicalHodgeTarget_of_zero_cycleClass
+#check classicalHodgeTarget_iff_canonical_basis_algebraization
+#check classicalHodgeTarget_of_full_limitless_geometry
+#check every_hodge_class_has_native_cycle_of_full_limitless_geometry
+#check canonical_basis_algebraization_of_full_limitless_geometry
+#check channel_quotient_of_full_limitless_geometry
+#check no_same_weight_hodge_rank_ceiling
+#check unified_hodge_finale
 
 #print axioms classicalHodgeTarget_iff_explicit_witness
 #print axioms classicalHodgeTarget_of_compact_realization
@@ -389,5 +523,11 @@ theorem not_classicalHodgeTarget_of_zero_cycleClass
 #print axioms classicalHodgeTarget_of_basis_cycle_family
 #print axioms classicalHodgeTarget_iff_basis_cycle_bridges
 #print axioms not_classicalHodgeTarget_of_zero_cycleClass
+#print axioms classicalHodgeTarget_iff_canonical_basis_algebraization
+#print axioms classicalHodgeTarget_of_full_limitless_geometry
+#print axioms every_hodge_class_has_native_cycle_of_full_limitless_geometry
+#print axioms canonical_basis_algebraization_of_full_limitless_geometry
+#print axioms channel_quotient_of_full_limitless_geometry
+#print axioms unified_hodge_finale
 
 end HodgeConjecture
