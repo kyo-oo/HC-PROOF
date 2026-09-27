@@ -157,15 +157,55 @@ theorem cycleClass_cyclePolyEval
     H.cycleClass p (S.cyclePolyEval P Z) =
       linearPolyEval S.operatorPair.cohomologyOperator P
         (H.cycleClass p Z) := by
+  have hnatpow : ∀ (n : ℕ) (W : codimensionCycles V.X p),
+      H.cycleClass p ((S.operatorPair.cycleOperator ^ n) W) =
+        (S.operatorPair.cohomologyOperator ^ n) (H.cycleClass p W) := by
+    intro n
+    induction n with
+    | zero =>
+        intro W
+        simp
+    | succ n ih =>
+        intro W
+        simp only [pow_succ, Module.End.mul_apply]
+        rw [S.operatorPair.cycleClass_cycleOperator, ih W]
   induction P using Polynomial.induction_on' with
   | add P Q hP hQ =>
-      simp [cyclePolyEval, linearPolyEval, hP, hQ]
+      have hsum : S.cyclePolyEval (P + Q) Z
+          = S.cyclePolyEval P Z + S.cyclePolyEval Q Z := by
+        show (Polynomial.eval₂ scalarRingHom
+            S.operatorPair.cycleOperator (P + Q)) Z =
+          (Polynomial.eval₂ scalarRingHom
+            S.operatorPair.cycleOperator P) Z +
+          (Polynomial.eval₂ scalarRingHom
+            S.operatorPair.cycleOperator Q) Z
+        rw [Polynomial.eval₂_add]
+        rfl
+      have hsum' : linearPolyEval
+          S.operatorPair.cohomologyOperator (P + Q)
+          (H.cycleClass p Z) =
+          linearPolyEval S.operatorPair.cohomologyOperator P
+            (H.cycleClass p Z) +
+          linearPolyEval S.operatorPair.cohomologyOperator Q
+            (H.cycleClass p Z) := by
+        show (Polynomial.eval₂ scalarRingHom
+            S.operatorPair.cohomologyOperator (P + Q))
+            (H.cycleClass p Z) = _
+        rw [Polynomial.eval₂_add]
+        rfl
+      show H.cycleClass p (S.cyclePolyEval (P + Q) Z) = _
+      rw [hsum, map_add, hP, hQ, hsum']
   | monomial n a =>
-      induction n with
-      | zero => simp [cyclePolyEval, linearPolyEval]
-      | succ n ih =>
-          simp [cyclePolyEval, linearPolyEval, pow_succ, ih,
-            S.operatorPair.cycleClass_cycleOperator]
+      show H.cycleClass p
+          (linearPolyEval S.operatorPair.cycleOperator
+            (Polynomial.monomial n a) Z) = _
+      rw [linearPolyEval_monomial]
+      have hsmul : H.cycleClass p
+          (a • ((S.operatorPair.cycleOperator ^ n) Z)) =
+          a • H.cycleClass p
+            ((S.operatorPair.cycleOperator ^ n) Z) :=
+        LinearMap.map_smul _ _ _
+      rw [hsmul, linearPolyEval_monomial, hnatpow n Z]
 
 /-- One native cyclic seed cycle with prescribed nonzero components in every
 selected Hodge eigendirection.  This is a single cycle witness, not one cycle
@@ -199,22 +239,30 @@ theorem extractedBasisCycle_spec
     (i : ι) :
     H.cycleClass p (S.extractedBasisCycle seed i) =
       (classicalHodgeBasis V H p (S.basisIndex i)).1 := by
-  let F := S.cohomologyFamily
   have hc :
       H.cycleClass p
-        (S.cyclePolyEval (F.isolatorPolynomial i) seed.cycle) =
-      (seed.coefficient i * F.isolatorScale i) •
+        (S.cyclePolyEval
+          (S.cohomologyFamily.isolatorPolynomial i) seed.cycle) =
+      (seed.coefficient i * S.cohomologyFamily.isolatorScale i) •
         (classicalHodgeBasis V H p (S.basisIndex i)).1 := by
     rw [S.cycleClass_cyclePolyEval]
     rw [seed.class_eq]
-    change linearPolyEval F.observable (F.isolatorPolynomial i)
-      (F.spectralCombination seed.coefficient) = _
-    exact F.isolator_on_combination seed.coefficient i
-  unfold extractedBasisCycle
+    change linearPolyEval S.cohomologyFamily.observable
+        (S.cohomologyFamily.isolatorPolynomial i)
+        (S.cohomologyFamily.spectralCombination seed.coefficient) = _
+    exact S.cohomologyFamily.isolator_on_combination seed.coefficient i
+  show H.cycleClass p
+      (((seed.coefficient i *
+          S.cohomologyFamily.isolatorScale i)⁻¹) •
+        S.cyclePolyEval
+          (S.cohomologyFamily.isolatorPolynomial i) seed.cycle) =
+    (classicalHodgeBasis V H p (S.basisIndex i)).1
   rw [LinearMap.map_smul, hc]
-  have hnonzero : seed.coefficient i * F.isolatorScale i ≠ 0 :=
-    mul_ne_zero (seed.coefficient_ne_zero i) (F.isolatorScale_ne_zero i)
-  simp [F, hnonzero, mul_smul]
+  have hnonzero : seed.coefficient i *
+      S.cohomologyFamily.isolatorScale i ≠ 0 :=
+    mul_ne_zero (seed.coefficient_ne_zero i)
+      (S.cohomologyFamily.isolatorScale_ne_zero i)
+  rw [inv_smul_smul₀ hnonzero]
 
 /-- The selected finite Hodge family therefore has an actual native
 basis-cycle bridge, constructed from one seed cycle. -/

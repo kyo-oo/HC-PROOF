@@ -74,7 +74,8 @@ theorem liveBasisCycle_spec
     H.cycleClass p (R.liveBasisCycle i) =
       (classicalHodgeBasis V H p i.1).1 := by
   have h := R.spectral.extractedBasisCycle_spec R.seed i
-  simpa [liveBasisCycle, R.spectral_basisIndex] using h
+  rw [R.spectral_basisIndex] at h
+  exact h
 
 /-- Reassemble the actual Hodge class coefficients on the extracted native
 basis cycles. -/

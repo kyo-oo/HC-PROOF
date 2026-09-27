@@ -168,7 +168,8 @@ theorem rationalizedWorldPoincare_eq
       rw [if_neg]
       · simp
       · intro hq
-        exact hr ((congrArg windowMirror hq).trans (windowMirror_involutive r))
+        exact hr (((congrArg windowMirror hq).trans
+          (windowMirror_involutive r)).symm)
     · intro h
       exact absurd (Finset.mem_univ _) h
   show (∑ r : Fin N, poincareMatrixCoeff r q * a r) =

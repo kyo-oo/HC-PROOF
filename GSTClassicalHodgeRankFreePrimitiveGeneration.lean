@@ -92,7 +92,7 @@ theorem liftFiniteHodgeOperator_matrixUnit
   apply LinearMap.ext
   intro alpha
   simp [liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
-    pureMatrixUnit, hodgeMatrixUnit_apply]
+    pureMatrixUnit, hodgeMatrixUnit_apply, rationalPureBasis]
 
 /-- Two-slot selector containing any ordered pair of genuine Hodge-basis
 indices.  World recoordination means the abstract names of the two directions
@@ -138,7 +138,7 @@ theorem twoSlot_matrixUnit_eq_forwardArsenalWord :
       forwardArsenalWord sourceSlot targetSlot := by
   symm
   apply forwardArsenalWord_eq_matrixUnit
-  omega
+  decide
 
 /-- **RANK-FREE MATRIX UNIT = LIFTED ACTUAL GST WORD.**
 Every global matrix unit on the genuine classical Hodge basis is the lift of
