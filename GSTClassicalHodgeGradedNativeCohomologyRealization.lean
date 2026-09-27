@@ -40,10 +40,14 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p q : Nat}
 
-abbrev SourceCycles := codimensionCycles V.X p
-abbrev TargetCycles := codimensionCycles V.X q
-abbrev SourceCoh := RationalSingularCohomology H.analytification (2 * p)
-abbrev TargetCoh := RationalSingularCohomology H.analytification (2 * q)
+abbrev SourceCycles (V : SmoothProjectiveComplexScheme) (p : Nat) :=
+  codimensionCycles V.X p
+abbrev TargetCycles (V : SmoothProjectiveComplexScheme) (q : Nat) :=
+  codimensionCycles V.X q
+abbrev SourceCoh (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev TargetCoh (H : HodgeBigradedBettiData V) (q : Nat) :=
+  RationalSingularCohomology H.analytification (2 * q)
 
 /-- A graded native operator respects source cycle-class equivalence. -/
 def GradedKernelStable

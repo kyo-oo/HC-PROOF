@@ -33,6 +33,7 @@ open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeArsenalOrbitSaturation
 open GSTClassicalHodgeAlgebraicArsenalSaturation
 open GSTClassicalHodgeCrossWeightNativePropagation
+open GSTClassicalHodgeAtomicDefectDuality
 
 namespace GSTClassicalHodgeGlobalArsenalPropagationCrown
 

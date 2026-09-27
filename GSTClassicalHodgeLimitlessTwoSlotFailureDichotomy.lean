@@ -63,7 +63,7 @@ theorem embedWindow_apply_fin
     {N : Nat} (a : RationalPureWindow N) (r : Fin N) :
     embedWindow a r.1 = a r := by
   classical
-  have key : (Finsupp.lapply r.1)
+  have key : (Finsupp.lapply r.1 : (ℕ →₀ ℚ) →ₗ[ℚ] ℚ)
       (∑ s : Fin N, Finsupp.single s.1 (a s)) = a r := by
     rw [map_sum, Finset.sum_eq_single r]
     · show (Finsupp.single r.1 (a r)) r.1 = a r
@@ -96,7 +96,7 @@ theorem embedWindow_basis
     simp [rationalCosmicBasis, rationalPureBasis,
       embedWindow_apply_fin]
   · classical
-    have key : (Finsupp.lapply n)
+    have key : (Finsupp.lapply n : (ℕ →₀ ℚ) →ₗ[ℚ] ℚ)
         (∑ s : Fin N, Finsupp.single s.1 (rationalPureBasis r s))
         = rationalCosmicBasis r.1 n := by
       rw [map_sum]
@@ -227,6 +227,10 @@ noncomputable def TwoSlotEscape.toLimitlessCosmicEscape
 end GSTClassicalHodgeConcreteFailureDichotomy
 
 namespace GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
+
+variable {V : SmoothProjectiveComplexScheme}
+variable {H : HodgeBigradedBettiData V}
+variable {p : Nat}
 
 /-- **LIMITLESS FAILURE DICHOTOMY.** If the genuine algebraic Hodge fiber is
 proper, then either it contains no nonzero seed or the actual unrestricted

@@ -69,7 +69,8 @@ theorem commonDenominator_mul_coordinate_isInt
       ((f i).den : ℚ) * (k : ℚ) * f i
           = (k : ℚ) * (((f i).den : ℚ) * f i) := by ring
       _ = (k : ℚ) * ((f i).num : ℚ) := by rw [hden]
-      _ = (((k : ℤ) * (f i).num : ℤ) : ℚ) := by rw [Int.cast_mul, Int.cast_natCast]
+      _ = (((k : ℤ) * (f i).num : ℤ) : ℚ) := by
+        simp only [Int.cast_mul, Int.cast_natCast]
   · have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
     exact ⟨0, by simp [hzero]⟩
 

@@ -212,7 +212,6 @@ noncomputable def toLocalCycleSpectralRealization
   have hseedRange := R.seed_mem_atomic
   rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hseedRange
   rw [LinearMap.mem_range] at hseedRange
-  have Z : codimensionCycles V.X p := Classical.choose hseedRange
   have hZ := Classical.choose_spec hseedRange
   have hSindex : S.basisIndex = HodgeSupportIndex.include := by
     exact R.spectral_basisIndex
@@ -220,7 +219,7 @@ noncomputable def toLocalCycleSpectralRealization
     spectral := S
     spectral_basisIndex := hSindex
     seed := {
-      cycle := Z
+      cycle := Classical.choose hseedRange
       coefficient := fun _ => 1
       coefficient_ne_zero := by
         intro i

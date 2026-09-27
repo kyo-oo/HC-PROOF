@@ -105,7 +105,6 @@ theorem fromLiveFibered_toLiveFibered
       = (⟨p, i.1⟩ : FiberedHodgeIndex V H) := rfl
   rw [h2] at h1
   injection h1 with _ heq
-  exact heq
 
 theorem toLiveFibered_fromLiveFibered
     (alpha : ClassicalHodgeFiber V H p)

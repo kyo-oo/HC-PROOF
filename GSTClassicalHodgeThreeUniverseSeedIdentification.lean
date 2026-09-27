@@ -154,10 +154,9 @@ theorem nonzeroHodge_liveSheet_native_transfer_tether
   obtain ⟨i,hi,htransfer⟩ :=
     nonzero_hodge_has_transfer_seed_sheet (V:=V) (H:=H) alpha halpha
   refine ⟨i,hi,?_,nativePoint_shadow_eq_rationalized_transfer V p x⟩
-  rw [htransfer]
-  rw [nativeCycleCosmicShadow_point]
-  rw [pureWeightToUniversalAddress_basis]
-  rw [rationalize_compactClMono]
+  rw [htransfer, nativeCycleCosmicShadow_point,
+    pureWeightToUniversalAddress_basis]
+  rfl
 
 /-- Grand seed identity across all three mathematical universes. -/
 theorem three_universe_seed_crown

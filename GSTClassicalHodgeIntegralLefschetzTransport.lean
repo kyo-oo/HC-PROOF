@@ -131,8 +131,7 @@ theorem sheetAtom_lefschetz_wrong_time_zero
     (by simpa using hrs)
     (by simpa [pureWeightGap] using htime)
   have h := congrArg (fun q : ℤ => z * q) hz
-  simp only [pureDiagonalState, diagonalState] at h
-  exact h
+  simpa only [pureDiagonalState, diagonalState, mul_zero] using h
 
 /-- Poincare reflection turns every backward sheet request into an ordered
 forward request on the mirrored diagonal. -/

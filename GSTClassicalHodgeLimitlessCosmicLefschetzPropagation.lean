@@ -38,8 +38,18 @@ open scoped BigOperators
 has no terminal weight. -/
 def completedDiagonalProjector (p : ℕ) : Module.End ℤ CompletedCosmos where
   toFun f := fun c => if c = (p,p) then f c else 0
-  map_add' := by intro f g; funext c; split_ifs <;> simp
-  map_smul' := by intro z f; funext c; split_ifs <;> simp
+  map_add' := by
+    intro f g
+    funext c
+    by_cases h : c = (p, p)
+    · simp [completedDiagonalProjector, h]
+    · simp [completedDiagonalProjector, h]
+  map_smul' := by
+    intro z f
+    funext c
+    by_cases h : c = (p, p)
+    · simp [completedDiagonalProjector, h]
+    · simp [completedDiagonalProjector, h]
 
 @[simp]
 theorem completedDiagonalProjector_apply_self
@@ -69,7 +79,12 @@ theorem cosmic_mixed_path_to_diagonal
       if m = d then 1 else 0 := by
   by_cases hmd : m = d
   · subst m
-    simp [cosmicDigitShift, cosmicCarryShift, cosmicDiagonalClass]
+    have h1 : d ≤ p + d := by omega
+    have h2 : 2 * d - d ≤ p + d := by omega
+    have h3 : p + d - (2 * d - d) = p := by omega
+    have h4 : p + d - d = p := by omega
+    simp [cosmicDigitShift, cosmicCarryShift, cosmicDiagonalClass,
+      h1, h2, h3, h4]
   · by_cases hm : m ≤ p+d
     · by_cases hc : 2*d-m ≤ p+d
       · simp only [cosmicDigitShift, if_pos hm,

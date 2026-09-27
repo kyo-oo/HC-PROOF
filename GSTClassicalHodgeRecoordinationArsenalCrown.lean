@@ -99,8 +99,8 @@ theorem live_projector_isolates_slot
   by_cases hsr : s = r
   · subst s
     simp only [codeSectorProjQ, liveShapeCoefQ]
-    rw [liveShapeState_code, if_pos rfl, if_pos rfl]
-    rfl
+    rw [liveShapeState_code, if_pos rfl]
+    simp [liveShapeState]
   · have hcode : s.1 ≠ r.1 := by
       intro h
       apply hsr
