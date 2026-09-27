@@ -77,13 +77,13 @@ noncomputable def canonicalBasisCycleSupplyOfHodge
     @CanonicalBasisCycleSupply V H p (F.finite p) := by
   letI : FiniteDimensional ℚ
       (rationalHodgeSubspace (H.hodgeBigrading p)) := F.finite p
-  let B := FiniteDimensional.finBasis ℚ
+  let B := Module.finBasis ℚ
     (rationalHodgeSubspace (H.hodgeBigrading p))
   refine {
-    basisCycle := fun i => Classical.choose (h p (B i).1 (B i).2)
+    basisCycle := fun i => Classical.choose (h p (B i).2)
     basisCycle_class := ?_ }
   intro i
-  exact Classical.choose_spec (h p (B i).1 (B i).2)
+  exact Classical.choose_spec (h p (B i).2)
 
 /-- Conversely, canonical basis algebraization produces a finite-basis
 algebraization in every p and therefore the complete Stage-2G statement. -/

@@ -113,6 +113,7 @@ theorem channelHodgeWitness_coordinates
           (R.coordinates alpha i) • channelBasis R.shape p i := by
           apply Finset.sum_congr rfl
           intro i hi
+          simp only [channelClassInHodge]
           rw [R.channelCycle_coordinate i]
     _ = R.coordinates alpha :=
       (channel_reconstruct R.shape p (R.coordinates alpha)).symm

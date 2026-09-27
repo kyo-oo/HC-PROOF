@@ -194,6 +194,15 @@ roots = [
   "GSTGeometricRealizationStage2E",
   "GSTGeometricRealizationStage2F",
   "GSTGeometricRealizationStage2G",
+  "GSTMultiChannelHodgeCosmology",
+  "GSTHodgeChannelAddressBridge",
+  "GSTHodgeChannelMaterialization",
+  "GSTHodgeChannelRetract",
+  "GSTHodgeChannelQuotient",
+  "GSTMathlibFiniteBasis",
+  "GSTHodgeChannelFiniteBasis",
+  "GSTHodgeChannelFinale",
+  "HCProofHodgeChannels",
 ]
 
 # ---------------------------------------------------------------------------

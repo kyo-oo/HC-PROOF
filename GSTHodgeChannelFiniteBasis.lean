@@ -46,7 +46,7 @@ structure FiniteBasisAlgebraization
     [AddCommGroup CycleQ] [Module ℚ CycleQ]
     (hodge : Submodule ℚ Coh)
     (cycleClass : CycleQ →ₗ[ℚ] Coh) where
-  basis : Basis (Fin N) ℚ hodge
+  basis : Module.Basis (Fin N) ℚ hodge
   basisCycle : Fin N → CycleQ
   basisCycle_class :
     ∀ i : Fin N,
@@ -72,8 +72,7 @@ noncomputable def FiniteBasisAlgebraization.toChannelQuotient
     intro i
     rw [A.basisCycle_class i]
     congr 1
-    simpa [channelBasis, standardChannelShape] using
-      basisDecode_kronecker A.basis i
+    exact (basisDecode_kronecker A.basis i).symm
 
 /-- Basis algebraicity already implies the complete Hodge sector lies in the
 cycle-class range. -/
@@ -104,7 +103,7 @@ structure Stage2GFiniteBasisAlgebraization
     (p : Nat) where
   N : Nat
   basis :
-    Basis (Fin N) ℚ (rationalHodgeSubspace (H.hodgeBigrading p))
+    Module.Basis (Fin N) ℚ (rationalHodgeSubspace (H.hodgeBigrading p))
   basisCycle : Fin N → codimensionCycles V.X p
   basisCycle_class :
     ∀ i : Fin N,
@@ -187,13 +186,13 @@ structure CanonicalBasisCycleSupply
     (p : Nat)
     [FiniteDimensional ℚ (rationalHodgeSubspace (H.hodgeBigrading p))] where
   basisCycle :
-    Fin (FiniteDimensional.finrank ℚ
+    Fin (Module.finrank ℚ
       (rationalHodgeSubspace (H.hodgeBigrading p))) →
       codimensionCycles V.X p
   basisCycle_class :
     ∀ i,
       H.cycleClass p (basisCycle i) =
-        ((FiniteDimensional.finBasis ℚ
+        ((Module.finBasis ℚ
           (rationalHodgeSubspace (H.hodgeBigrading p))) i).1
 
 /-- Canonical basis-cycle supply becomes a full finite-basis algebraization. -/
@@ -204,9 +203,9 @@ noncomputable def CanonicalBasisCycleSupply.toFiniteBasisAlgebraization
     [FiniteDimensional ℚ (rationalHodgeSubspace (H.hodgeBigrading p))]
     (A : CanonicalBasisCycleSupply V H p) :
     Stage2GFiniteBasisAlgebraization V H p where
-  N := FiniteDimensional.finrank ℚ
+  N := Module.finrank ℚ
     (rationalHodgeSubspace (H.hodgeBigrading p))
-  basis := FiniteDimensional.finBasis ℚ
+  basis := Module.finBasis ℚ
     (rationalHodgeSubspace (H.hodgeBigrading p))
   basisCycle := A.basisCycle
   basisCycle_class := A.basisCycle_class

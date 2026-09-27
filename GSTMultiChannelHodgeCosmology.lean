@@ -74,7 +74,8 @@ theorem hodgeChannel_card (S : NShape) :
 /-- Arbitrarily large multiplicity is available at every fixed Hodge weight. -/
 theorem arbitrary_same_weight_rank (N p : Nat) :
     Fintype.card (HodgeChannel (standardChannelShape N)) = N := by
-  simp [HodgeChannel, standardChannelShape]
+  simp only [HodgeChannel, standardChannelShape]
+  exact Fintype.card_fin N
 
 /-- Canonical Kronecker generator of one channel at fixed weight p. -/
 def channelBasis (S : NShape) (p : Nat) (i : HodgeChannel S) :
