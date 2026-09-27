@@ -1,26 +1,27 @@
-name: Compact Native Cycle Probe
+name: Hodge Conjecture Final Integration Gate
 
 on:
   push:
     branches:
-      - probe/hodge-compact-cycle
+      - sol/hodge-conjecture-final-integration
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: compact-cycle-probe-${{ github.ref }}
+  group: hodge-conjecture-final-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  probe:
+  final-hodge-integration:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.ref }}
           fetch-depth: 1
+
       - name: Install Lean and pinned Mathlib
         shell: bash
         run: |
@@ -30,17 +31,35 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake update
           lake exe cache get
-      - name: Compile compact native cycle probe
+
+      - name: Compile complete classical Hodge mathematics lane
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTNativeCodimensionCyclePresentation GSTProjectiveOverC 2>&1 | tee compact-cycle.log
-          lake env lean GSTCompactNativeCyclePresentation.lean 2>&1 | tee -a compact-cycle.log
-      - name: Upload diagnostics
+          lake build HodgePureMath 2>&1 | tee hodge-final.log
+
+      - name: Compile unified HodgeConjecture landing
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean HodgeConjecture.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Final trust audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -E "declaration uses 'sorry'|sorryAx" hodge-final.log; then
+            echo "FINAL HODGE GATE FAILED: unresolved sorry/sorryAx detected"
+            exit 1
+          fi
+          echo "FINAL HODGE GATE: no sorry/sorryAx detected in compiled receipts"
+
+      - name: Upload final diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: compact-cycle-probe-diagnostics
-          path: compact-cycle.log
-          if-no-files-found: ignore
+          name: hodge-conjecture-final-integration-diagnostics
+          path: hodge-final.log
+          if-no-files-found: error
