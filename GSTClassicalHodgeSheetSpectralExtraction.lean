@@ -109,11 +109,12 @@ theorem sheetSpectralProj_pure_eq_atom
     subst x
     have hcond : worldCode (outputShape N N) (i,i) = sheetCode i := rfl
     have hdiag : worldDiagonalClass i.2 i.2 (i,i) = 1 := by
-      simp [worldDiagonalClass, worldBasis]
+      simp [worldDiagonalClass, GSTUniversalAddressBridge.worldBasis]
     show (if worldCode (outputShape N N) (i,i) = sheetCode i
         then f (i,i) else 0) =
       f (i,i) * worldDiagonalClass i.2 i.2 (i,i)
-    rw [if_pos hcond, hdiag, mul_one]
+    rw [if_pos hcond]
+    exact ((congrArg (fun z : ℤ => f (i, i) * z) hdiag).trans (mul_one _)).symm
   · have hxne : x ≠ (i,i) := by
       intro hx
       subst x
@@ -182,10 +183,10 @@ theorem pureWorld_sheet_decomposition
         exact hdiag.symm
     rw [hx]
     classical
-    have happlied : (∑ i : Fin N, sheetDiagonalAtom i (f (i, i))) (x.1, x.1)
-        = ∑ i : Fin N, sheetDiagonalAtom i (f (i, i)) (x.1, x.1) :=
-      Finset.sum_apply _ _ _
-    rw [happlied]
+    have happlied : ∀ y : ShapeState (outputShape N N),
+        (∑ i : Fin N, sheetDiagonalAtom i (f (i, i))) y
+        = ∑ i : Fin N, sheetDiagonalAtom i (f (i, i)) y :=
+      fun y => Finset.sum_apply _ _ _
     have hsingle : ∑ i : Fin N, sheetDiagonalAtom i (f (i, i)) (x.1, x.1)
         = sheetDiagonalAtom (x.1 : Fin N) (f (x.1, x.1)) (x.1, x.1) :=
       Finset.sum_eq_single (x.1 : Fin N)
@@ -197,12 +198,14 @@ theorem pureWorld_sheet_decomposition
           show f (b, b) * worldDiagonalClass b.2 b.2 (x.1, x.1) = 0
           rw [hvw, mul_zero])
         (fun hnomem => absurd (Finset.mem_univ _) hnomem)
-    rw [hsingle]
     have hz : sheetDiagonalAtom (x.1 : Fin N) (f (x.1, x.1)) (x.1, x.1)
         = f (x.1, x.1) * worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) := rfl
     have hdiagval : worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1) = 1 := by
-      simp [worldDiagonalClass, worldBasis]
-    rw [hz, hdiagval, mul_one]
+      simp [worldDiagonalClass, GSTUniversalAddressBridge.worldBasis]
+    have hf : f (x.1, x.1) * worldDiagonalClass (x.1).2 (x.1).2 (x.1, x.1)
+        = f (x.1, x.1) :=
+      (congrArg (fun z : ℤ => f (x.1, x.1) * z) hdiagval).trans (mul_one _)
+    exact (((happlied (x.1, x.1)).trans hsingle).trans (hz.trans hf)).symm
   · rw [hf x hdiag]
     have happlied : (∑ i : Fin N, sheetDiagonalAtom i (f (i, i))) x
         = ∑ i : Fin N, sheetDiagonalAtom i (f (i, i)) x :=
@@ -255,7 +258,7 @@ theorem nonzero_purePairing_yields_nonzero_sheet_product
       · apply Fin.ext
         exact hdiag.symm
     rw [hcdiag]
-    simpa [sheetMirror, worldDual] using hnone c.1
+    exact hnone c.1
   · simp [hA c hdiag]
 
 /-- The corresponding single-sheet spectral projectors already retain a
@@ -277,7 +280,7 @@ theorem nonzero_purePairing_yields_nonzero_projected_pairing
   rw [sheetSpectralProj_pure_eq_atom (sheetMirror i) B hB]
   have hsingle : worldTopPairing (sheetDiagonalAtom i (A (i,i)))
       (sheetDiagonalAtom (sheetMirror i) (B (sheetMirror i, sheetMirror i)))
-      = A (i,i) * B (sheetMirror i, sheetMirror i) := by
+      ≠ 0 := by
     classical
     unfold worldTopPairing sheetDiagonalAtom
     rw [Finset.sum_eq_single (diagonalState i.2 i.2)]
@@ -304,8 +307,7 @@ theorem nonzero_purePairing_yields_nonzero_projected_pairing
             * worldDiagonalClass (sheetMirror i).2 (sheetMirror i).2 (worldDual c)) = 0
       rw [hvw, mul_zero, zero_mul]
     · simp
-  rw [hsingle]
-  exact hi
+  exact hsingle
 
 
 
