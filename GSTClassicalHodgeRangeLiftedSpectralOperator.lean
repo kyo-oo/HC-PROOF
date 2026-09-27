@@ -228,7 +228,8 @@ noncomputable def toLocalCycleSpectralRealization
     }
   }
   rw [hSindex]
-  simpa using hZ
+  exact hZ.trans (Finset.sum_congr rfl fun i _ => by
+    simp only [one_smul, HodgeSupportIndex.include])
 
 /-- Every local cyclic realization therefore constructs an explicit native
 cycle for the original Hodge class. -/

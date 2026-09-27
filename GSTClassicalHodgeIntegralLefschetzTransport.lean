@@ -126,8 +126,8 @@ theorem sheetAtom_lefschetz_wrong_time_zero
         (worldBasis ((r,r) : WorldCell N N)) ((s,s) : WorldCell N N) = 0
   have hz := pure_diagonal_lefschetz_wrong_time_zero
     (A := N) (B := N) (n := n)
-    (Fin.castLE (show N ≤ min N N by omega) r)
-    (Fin.castLE (show N ≤ min N N by omega) s)
+    (show (r : Fin (min N N)) from r)
+    (show (s : Fin (min N N)) from s)
     (by simpa using hrs)
     (by simpa [pureWeightGap] using htime)
   have h := congrArg (fun q : ℤ => z * q) hz

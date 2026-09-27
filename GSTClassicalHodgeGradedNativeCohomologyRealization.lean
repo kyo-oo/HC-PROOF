@@ -65,7 +65,7 @@ theorem class_congr_of_gradedKernelStable
   have hker : H.cycleClass p (Z - W) = 0 := by
     simp [hZW]
   have himage := hA (Z - W) hker
-  simpa using himage
+  exact sub_eq_zero.mp himage
 
 /-- Chosen native representative of one source cycle class. -/
 noncomputable def sourceRangeRepresentative

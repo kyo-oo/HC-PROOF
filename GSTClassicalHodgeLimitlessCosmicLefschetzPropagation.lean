@@ -42,14 +42,14 @@ def completedDiagonalProjector (p : ℕ) : Module.End ℤ CompletedCosmos where
     intro f g
     funext c
     by_cases h : c = (p, p)
-    · simp [completedDiagonalProjector, h]
-    · simp [completedDiagonalProjector, h]
+    · simp [h]
+    · simp [h]
   map_smul' := by
     intro z f
     funext c
     by_cases h : c = (p, p)
-    · simp [completedDiagonalProjector, h]
-    · simp [completedDiagonalProjector, h]
+    · simp [h]
+    · simp [h]
 
 @[simp]
 theorem completedDiagonalProjector_apply_self

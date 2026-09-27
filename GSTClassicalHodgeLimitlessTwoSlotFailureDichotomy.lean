@@ -96,14 +96,16 @@ theorem embedWindow_basis
     simp [rationalCosmicBasis, rationalPureBasis,
       embedWindow_apply_fin]
   · classical
+    have hrcb : rationalCosmicBasis r.1 n = 0 := by
+      show (Finsupp.single r.1 (1 : ℚ)) n = 0
+      rw [Finsupp.single_apply, if_neg (Ne.symm hn)]
     have key : (Finsupp.lapply n : (ℕ →₀ ℚ) →ₗ[ℚ] ℚ)
         (∑ s : Fin N, Finsupp.single s.1 (rationalPureBasis r s))
         = rationalCosmicBasis r.1 n := by
-      rw [map_sum]
+      rw [map_sum, hrcb]
       apply Finset.sum_eq_zero
       intro s _
-      show (Finsupp.single s.1 (rationalPureBasis r s)) n
-        = rationalCosmicBasis r.1 n
+      show (Finsupp.single s.1 (rationalPureBasis r s)) n = (0 : ℚ)
       rw [Finsupp.single_apply]
       by_cases hsn : s.1 = n
       · rw [if_pos hsn]
@@ -111,11 +113,8 @@ theorem embedWindow_basis
           intro h
           apply hn
           rw [← hsn, h]
-        simp only [rationalPureBasis, rationalCosmicBasis,
-          if_neg hsr, Finsupp.single_apply, if_neg (Ne.symm hn)]
+        simp only [rationalPureBasis, if_neg hsr]
       · rw [if_neg hsn]
-        simp only [rationalCosmicBasis, Finsupp.single_apply,
-          if_neg (Ne.symm hn)]
     exact key
 
 /-- A limitless matrix unit acting between two visible finite weights stays in
@@ -220,8 +219,8 @@ noncomputable def TwoSlotEscape.toLimitlessCosmicEscape
   alpha := E.alpha
   alpha_algebraic := E.alpha_algebraic
   escapes := by
-    rw [← GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.
-      twoSlotWord_apply_eq_limitless_cosmic E.source E.target E.alpha]
+    rw [← GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.twoSlotWord_apply_eq_limitless_cosmic
+      E.source E.target E.alpha]
     exact E.escapes
 
 end GSTClassicalHodgeConcreteFailureDichotomy
