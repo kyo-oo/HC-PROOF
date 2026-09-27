@@ -156,7 +156,7 @@ theorem isolatorScale_ne_zero (i : ι) :
   intro j hj
   have hji : j ≠ i := (Finset.mem_erase.mp hj).1
   simp only [Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C]
-  exact sub_ne_zero.mpr (S.eigenvalue_injective.ne hji)
+  exact sub_ne_zero.mpr (fun h => hji (S.eigenvalue_injective h).symm)
 
 /-- Operator powers act on chosen eigenvectors by scalar powers. -/
 theorem eigenvector_pow
@@ -167,7 +167,7 @@ theorem eigenvector_pow
   | zero => simp
   | succ n ih =>
       rw [pow_succ, Module.End.mul_apply, S.eigenvector i,
-        LinearMap.map_smul, ih, smul_smul, pow_succ]
+        LinearMap.map_smul, ih, smul_smul, pow_succ']
 
 /-- Polynomial action on one chosen eigenvector is scalar evaluation. -/
 theorem linearPolyEval_eigenvector
@@ -176,11 +176,20 @@ theorem linearPolyEval_eigenvector
       P.eval (S.eigenvalue i) • S.vector i := by
   induction P using Polynomial.induction_on' with
   | add P Q hP hQ =>
-      rw [hP, hQ]
+      have hsum : linearPolyEval S.observable (P + Q) (S.vector i)
+          = linearPolyEval S.observable P (S.vector i)
+            + linearPolyEval S.observable Q (S.vector i) := by
+        show (Polynomial.eval₂ scalarRingHom S.observable (P + Q))
+            (S.vector i)
+            = (Polynomial.eval₂ scalarRingHom S.observable P) (S.vector i)
+              + (Polynomial.eval₂ scalarRingHom S.observable Q) (S.vector i)
+        rw [Polynomial.eval₂_add]
+        rfl
+      rw [hsum, hP, hQ]
       simp [Polynomial.eval_add, add_smul]
   | monomial n a =>
-      rw [linearPolyEval_monomial, eigenvector_pow]
-      simp [Polynomial.eval_monomial]
+      rw [linearPolyEval_monomial, eigenvector_pow,
+        Polynomial.eval_monomial, smul_smul]
 
 /-- The isolator kills every non-selected eigenvector. -/
 theorem isolator_kills_other

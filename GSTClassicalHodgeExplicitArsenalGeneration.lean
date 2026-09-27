@@ -215,7 +215,8 @@ theorem mirrorFin_injective {N : Nat} :
     Function.Injective (mirrorFin (N := N)) := by
   intro a b h
   apply Fin.ext
-  rw [mirrorFin_val, mirrorFin_val] at h
+  have hval : (mirrorFin a).1 = (mirrorFin b).1 := congrArg Fin.val h
+  rw [mirrorFin_val, mirrorFin_val] at hval
   have := a.2
   have := b.2
   omega
@@ -263,8 +264,8 @@ theorem poincareConjugate_matrixUnit
         = rationalPureBasis (mirrorFin r) := by
       rw [poincareReverseQ_basis, windowMirror_eq_mirrorFin]
     rw [poincareConjugate_apply, hrev,
-      pureMatrixUnit_basis_other _ _ _ hmirror]
-    simp
+      pureMatrixUnit_basis_other _ _ _ hmirror, map_zero,
+      pureMatrixUnit_basis_other p q r hrp]
 
 /-- Backward GST word: mirror, perform the now-forward transfer, mirror back. -/
 noncomputable def backwardArsenalWord
