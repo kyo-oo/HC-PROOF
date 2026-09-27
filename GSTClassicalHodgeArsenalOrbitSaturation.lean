@@ -88,8 +88,8 @@ theorem arsenalOrbitSpan_eq_top
   apply top_unique
   intro beta _
   have hbasis := basis_mem_arsenalOrbitSpan_of_coordinate alpha i hi
-  have hrepr := (classicalHodgeBasis V H p).sum_repr beta
-  rw [← hrepr]
+  rw [← (classicalHodgeBasis V H p).linearCombination_repr beta,
+    Finsupp.linearCombination_apply, Finsupp.sum]
   exact (arsenalOrbitSpan alpha).sum_mem fun j hj =>
     (arsenalOrbitSpan alpha).smul_mem
       (((classicalHodgeBasis V H p).repr beta) j)
