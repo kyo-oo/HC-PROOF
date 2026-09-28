@@ -6,18 +6,20 @@ import GSTClassicalHodgeProjectiveDetectorMomentCollision
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE VISIBILITY SEPARATION
 
-This file specializes the broad projective-orbit irreducibility law to the
-canonical algebraic spine source carried by an omniversal separator ghost.
+This file specializes an explicit `ProjectiveOrbitIrreducibility` certificate
+to the canonical algebraic spine source carried by an omniversal separator
+ghost.
 
 The source is genuinely algebraic and nonzero by the native-mass bridge.  The
 ghost detector is genuinely Hodge-visible because it detects its stored basis
-sheet.  Therefore genuine cycle-class geometry supplies a projective kernel
-with nonzero detector readout.  That is exactly `ProjectiveDetectorVisible`.
+sheet.  Hence a supplied orbit-irreducibility certificate produces a genuine
+projective kernel with nonzero detector readout.  The existing rational
+rescaling theorem then converts that visibility into an exact hit on the
+nonzero finite GST Lefschetz-tomography moment.
 
-The already-proved rational rescaling theorem then converts visibility into an
-exact hit on the nonzero finite GST Lefschetz-tomography moment.  No target
-basis cycle, exact matrix-unit realization, or point-transition kernel is
-introduced here.
+This module is therefore a reduction layer, not an independent construction of
+horizontal visibility.  `GenuineCycleClassGeometry` alone is deliberately not
+sufficient for the theorem statements below.
 -/
 
 set_option maxHeartbeats 100000000
@@ -74,21 +76,22 @@ theorem ghost_detector_hodge_visible
   E.separator.detects_basis
 
 /--
-**FINITE PROJECTIVE VISIBILITY SEPARATION.**
+**FINITE PROJECTIVE VISIBILITY SEPARATION — CONDITIONAL FORM.**
 
-The new genuine-geometry law applied to the nonzero canonical spine source and
-the basis state detected by the ghost produces one actual projective kernel
-whose detector response is nonzero.
+The explicit orbit-irreducibility certificate applied to the nonzero canonical
+spine source and the basis state detected by the ghost produces one actual
+projective kernel whose detector response is nonzero.
 -/
 theorem exists_projectiveDetectorVisible
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost J.spine) :
     Nonempty (ProjectiveDetectorVisible J.spine M E) := by
   let S := ghostSpineSeed J.spine M E
   obtain ⟨K, hK⟩ :=
     exists_nonzero_projectiveDetectorReadout
-      J E.weight S.cycle
+      J R E.weight S.cycle
       (ghostSpine_cycleClass_ne_zero J M E)
       (classicalHodgeBasis V H E.weight E.sheet)
       E.separator.detector
@@ -101,20 +104,21 @@ theorem exists_projectiveDetectorVisible
   rw [S.class_eq] at hK
   simpa [S] using hK
 
-/-- The same visibility can be normalized to the exact nonzero tomography
-moment selected by the ghost. -/
+/-- The same conditional visibility can be normalized to the exact nonzero
+tomography moment selected by the ghost. -/
 theorem exists_projectiveDetectorMomentHit
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost J.spine) :
     Nonempty (ProjectiveDetectorMomentHit J.spine M E) := by
-  rcases exists_projectiveDetectorVisible J M E with ⟨R⟩
-  exact ⟨R.toMomentHit⟩
+  rcases exists_projectiveDetectorVisible J R M E with ⟨D⟩
+  exact ⟨D.toMomentHit⟩
 
-/-- Explicit scalar form: some genuine projective kernel has separator readout
-exactly equal to the ghost's finite GST tomography moment. -/
+/-- Explicit scalar form of the conditional reduction. -/
 theorem exists_projectiveKernel_readout_eq_ghostMoment
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost J.spine) :
     ∃ K : ProjectiveNativeKernel V E.weight,
@@ -126,8 +130,8 @@ theorem exists_projectiveKernel_readout_eq_ghostMoment
             (fiberedWeightCoordinates V H E.weight
               (classicalHodgeBasis V H E.weight E.sheet)))
           (ghostMomentIndex J.spine E) := by
-  rcases exists_projectiveDetectorMomentHit J M E with ⟨R⟩
-  exact ⟨R.kernel, R.detector_eq_moment⟩
+  rcases exists_projectiveDetectorMomentHit J R M E with ⟨D⟩
+  exact ⟨D.kernel, D.detector_eq_moment⟩
 
 #check ghostSpine_cycleClass_ne_zero
 #check ghost_detector_hodge_visible
