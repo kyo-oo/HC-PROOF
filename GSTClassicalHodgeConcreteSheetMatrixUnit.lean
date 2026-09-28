@@ -32,6 +32,8 @@ open GSTTruncatedWorldCohomologyRing
 open GSTUniversalLefschetzCosmology
 open GSTClassicalHodgeSheetSpectralExtraction
 open GSTClassicalHodgeIntegralLefschetzTransport
+open GSTSquarePureHodgeDuality
+open GSTWorldRecoordinationGroupoid
 
 namespace GSTClassicalHodgeConcreteSheetMatrixUnit
 
@@ -117,7 +119,10 @@ theorem forwardSheetMatrixUnit_target
   unfold forwardSheetMatrixUnit
   rw [forwardSheetWord_target r s hrs f hf]
   push_cast
-  field_simp [forwardNormalizeScalar, forwardNormalizeScalar_ne_zero r s]
+  unfold forwardNormalizeScalar
+  have hc : ((2 * (s.1 - r.1)).choose (s.1 - r.1) : ℚ) ≠ 0 := by
+    exact_mod_cast Nat.choose_pos (by omega)
+  field_simp
 
 /-- The target projector kills every state other than the target diagonal
 sheet. -/

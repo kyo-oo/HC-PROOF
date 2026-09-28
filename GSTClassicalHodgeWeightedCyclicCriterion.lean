@@ -122,7 +122,7 @@ noncomputable def toLocalCycleSpectralRealization
       H.cycleClass p Z =
         ∑ i : HodgeSupportIndex alpha,
           R.coefficient i • (classicalHodgeBasis V H p i.1).1 :=
-    (LinearMap.mem_range _ _).mp R.seed_mem_cycleClass_range
+    LinearMap.mem_range.mp R.seed_mem_cycleClass_range
   let Z := Classical.choose hex
   have hZ := Classical.choose_spec hex
   have hSindex : S.basisIndex = HodgeSupportIndex.include := by
