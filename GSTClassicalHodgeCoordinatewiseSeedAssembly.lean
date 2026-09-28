@@ -198,12 +198,17 @@ noncomputable def toWeightedLocalCyclicRealization
     rcases R.visible i with ⟨a, haW, hai⟩
     let aa : F.admissibleCoefficientSpace W := ⟨a, ?_⟩
     · exact ⟨aa, hai⟩
-    · simpa [F, W, FiniteSpectralFamily.admissibleCoefficientSpace,
-        FiniteSpectralFamily.spectralCombinationLinear,
-        FiniteSpectralFamily.spectralCombination, R.spectral_basisIndex]
-        using haW
-  obtain ⟨a, haNZ, haW⟩ :=
-    F.exists_cyclic_seed_of_coordinatewise_visible W hvisible
+    · simp only [FiniteSpectralFamily.admissibleCoefficientSpace,
+        FiniteSpectralFamily.spectralCombinationLinear_apply,
+        Submodule.mem_comap,
+        FiniteSpectralFamily.spectralCombination,
+        ClassicalHodgeSpectralOperator.toFiniteSpectralFamily]
+      rw [R.spectral_basisIndex]
+      exact haW
+  have hex := F.exists_cyclic_seed_of_coordinatewise_visible W hvisible
+  let a := Classical.choose hex
+  have ha := Classical.choose_spec hex
+  obtain ⟨haNZ, haW⟩ := ha
   refine {
     spectral := R.spectral
     spectral_basisIndex := R.spectral_basisIndex
@@ -211,8 +216,10 @@ noncomputable def toWeightedLocalCyclicRealization
     coefficient_ne_zero := haNZ
     seed_mem_atomic := ?_
   }
-  simpa [F, W, FiniteSpectralFamily.spectralCombination,
-    R.spectral_basisIndex] using haW
+  simp only [FiniteSpectralFamily.spectralCombination,
+    ClassicalHodgeSpectralOperator.toFiniteSpectralFamily]
+  rw [R.spectral_basisIndex]
+  exact haW
 
 /-- Coordinatewise visibility therefore constructs an exact native cycle for
 the original genuine Hodge class. -/

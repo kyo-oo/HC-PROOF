@@ -123,7 +123,7 @@ theorem forwardSheetMatrixUnit_target
   have hc : ((2 * (s.1 - r.1)).choose (s.1 - r.1) : ℚ) ≠ 0 := by
     have hpos : 0 < (2 * (s.1 - r.1)).choose (s.1 - r.1) :=
       Nat.choose_pos (by omega)
-    exact_mod_cast hpos
+    exact_mod_cast Nat.ne_of_gt hpos
   field_simp
 
 /-- The target projector kills every state other than the target diagonal
