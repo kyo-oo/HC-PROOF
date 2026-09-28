@@ -18,12 +18,23 @@ A `FiniteClosedCorrespondence` consists of
 
 For a codimension-p source point x we enumerate the finite left fiber, project
 each correspondence point through the right projection, retain exactly the
-targets of ambient codimension p, weight by the residue degree of the left
-map, and realize the resulting finite presentation as an actual native
-codimension-p cycle.
+targets of ambient codimension p, and apply the residue-degree multiplicity of
+the RIGHT projection when realizing the target cycle.
 
-This is the point-generator push-pull shadow required by the sharpened cosmic
-externalization theorem.  It is strictly broader than a graph of one
+The direction of that residue degree is essential.  For the graph Γ_f of an
+actual endomorphism f, the left projection is the identity while the right
+projection is f.  Weighting by the left residue degree would therefore erase
+the genuine degree carried by f and would fail to recover the already-proved
+native pushforward.  Weighting by the right projection is the graph-compatible
+pushforward convention.
+
+At this layer the finite left fiber is treated with reduced/set-theoretic
+multiplicity one.  A later scheme-theoretic pullback refinement may replace
+that unit left-fiber multiplicity by local intersection/length multiplicity;
+the right-pushforward residue degree remains the required factor.
+
+This is the point-generator correspondence shadow required by the sharpened
+cosmic externalization theorem.  It is strictly broader than a graph of one
 endomorphism: one source point may have several right-hand images.
 
 No Hodge-surjectivity statement and no arbitrary coordinate operator is built
@@ -99,8 +110,12 @@ theorem mem_leftFiberFinset
   simp [leftFiberFinset, leftFiber]
 
 /-- One point of a finite correspondence fiber contributes its right-hand
-image with left residue-degree multiplicity whenever the target remains in the
-requested codimension stratum. -/
+image with the residue-degree multiplicity of the RIGHT projection whenever
+the target remains in the requested codimension stratum.
+
+For graph correspondences this is exactly the residue-degree factor of the
+underlying endomorphism, so the construction is compatible with genuine
+native point pushforward. -/
 noncomputable def targetAtomPresentation
     (K : FiniteClosedCorrespondence V)
     (p : Nat)
@@ -110,7 +125,7 @@ noncomputable def targetAtomPresentation
   by_cases hz : Order.coheight (K.right z) = p
   · exact Finsupp.single
       (⟨K.right z, hz⟩ : CodimensionPoint V.X p)
-      (pointResidueWeight K.left z)
+      (pointResidueWeight K.right z)
   · exact 0
 
 /-- Exact target presentation of one source point under a finite closed
@@ -141,7 +156,7 @@ theorem targetAtomPresentation_eq_single
     K.targetAtomPresentation p z =
       Finsupp.single
         (⟨K.right z, hz⟩ : CodimensionPoint V.X p)
-        (pointResidueWeight K.left z) := by
+        (pointResidueWeight K.right z) := by
   classical
   simp [targetAtomPresentation, hz]
 
