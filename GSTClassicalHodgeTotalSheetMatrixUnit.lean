@@ -88,10 +88,13 @@ theorem integerSquareDual_diagonal
     integerSquareDual f (squareMirror r, squareMirror r) =
       f (r,r) := by
   unfold integerSquareDual
-  have hpair : ((squareMirror r, squareMirror r) : WorldCell N N)
-      = pureDiagonalState (pureMirror (Fin.castLE (show N ≤ min N N by omega) r)) :=
-    rfl
-  rw [hpair, worldDual_pureDiagonalState, pureMirror_involutive]
+  have h1 : worldDual (squareMirror r, squareMirror r : WorldCell N N)
+      = pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) r) := by
+    have h2 := worldDual_pureDiagonalState
+        (pureMirror (Fin.castLE (show N ≤ min N N by omega) r))
+    rw [pureMirror_involutive] at h2
+    exact h2
+  rw [h1]
   rfl
 
 /-- Backward matrix unit via Poincare reflection, forward transport, and dual
@@ -124,10 +127,12 @@ theorem backwardSheetMatrixUnit_exact
   rw [hforward]
   funext x
   unfold rationalSquareDual
+  by_cases hx : x = (s,s)
   · subst x
     have hdual : worldDual ((s,s) : WorldCell N N) = (ms,ms) := by
-      have hpair : ((s,s) : WorldCell N N)
-          = pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) s) := rfl
+      have h2 := worldDual_pureDiagonalState
+          (Fin.castLE (show N ≤ min N N by omega) s)
+      exact h2
       rw [hpair, worldDual_pureDiagonalState]
       rfl
     rw [hdual]
@@ -138,8 +143,10 @@ theorem backwardSheetMatrixUnit_exact
       have h1 := congrArg worldDual h
       rw [worldDual_involutive] at h1
       have h2 : worldDual ((ms, ms) : WorldCell N N) = ((s,s) : WorldCell N N) := by
-        have hpair : ((ms, ms) : WorldCell N N)
-            = pureDiagonalState (pureMirror (Fin.castLE (show N ≤ min N N by omega) s)) := rfl
+        have h3 := worldDual_pureDiagonalState
+            (pureMirror (Fin.castLE (show N ≤ min N N by omega) s))
+        rw [pureMirror_involutive] at h3
+        exact h3
         rw [hpair, worldDual_pureDiagonalState, pureMirror_involutive]
         rfl
       rw [h2] at h1

@@ -81,6 +81,11 @@ end GSTClassicalHodgeCyclicSpectralGeneration
 
 namespace GSTClassicalHodgeSpectralSeparatorCollision
 
+universe u
+variable {M : Type u} [AddCommGroup M] [Module ℚ M]
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+
 /-- Equivalent positive form: W-invariance plus a cyclic seed rules out every
 functional that annihilates W and detects a selected eigendirection. -/
 theorem no_separator_of_stable_cyclic_seed
