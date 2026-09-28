@@ -7,6 +7,7 @@ import GSTClassicalHodgeProjectiveOrbitIrreducibilityAudit
 import GSTClassicalHodgeNormalizedFiberedDefectBarrier
 import GSTClassicalHodgeProjectiveVisibilityNoGo
 import GSTClassicalHodgeCohomologicalPairingFrontier
+import GSTClassicalHodgePolarizedHodgeGhost
 
 /-!
 # GST CLASSICAL HODGE — TWO-BURST CLOSURE RECEIPT
@@ -14,19 +15,22 @@ import GSTClassicalHodgeCohomologicalPairingFrontier
 Compiler receipt for the corrected genuine cycle-class / projective tomography
 upgrade.  It deliberately separates independently geometric semantics from the
 Hodge-strength horizontal orbit certificate and imports the active circularity
-barriers plus the new pairing-dual transformation:
+barriers plus the pairing-dual transformations:
 
 * normalized fibered zero defect is exactly a basis-cycle equality;
 * ordinary genuine projective-correspondence images of the algebraic ghost
   spine have identically zero ghost-detector readout;
 * a perfect classical cohomological pairing transforms a surviving separator
   into one concrete nonzero cohomology class orthogonal to every genuine
-  atomic cycle class while still detecting the obstructed Hodge direction.
+  atomic cycle class while still detecting the obstructed Hodge direction;
+* a perfect pairing restricted directly to the rational `(p,p)` Hodge fiber
+  sharpens this further to a nonzero Hodge class orthogonal to every algebraic
+  Hodge class.
 
 Accordingly the conditional orbit-irreducibility crown below is retained as a
 reduction target only; it is not promoted to a foundational geometry theorem.
-The pairing transformation is likewise not claimed to finish Hodge by itself:
-its purpose is to move the residual obstruction into a concrete dual class for
+The pairing transformations likewise are not claimed to finish Hodge by
+themselves: they move the residual obstruction into concrete dual classes for
 an independent polarization / primitive-form attack.
 -/
 
@@ -70,6 +74,12 @@ open AlgebraicGeometry
 #check GSTClassicalHodgeCohomologicalPairingFrontier.ghostDualClass_orthogonal_atomic
 #check GSTClassicalHodgeCohomologicalPairingFrontier.ghostDualClass_detects_ghost
 #check GSTClassicalHodgeCohomologicalPairingFrontier.failure_yields_pairingOrthogonalGhost
+#check GSTClassicalHodgePolarizedHodgeGhost.PerfectHodgeFiberPairing
+#check GSTClassicalHodgePolarizedHodgeGhost.separatorOnHodge_ne_zero
+#check GSTClassicalHodgePolarizedHodgeGhost.ghostHodgeDual_ne_zero
+#check GSTClassicalHodgePolarizedHodgeGhost.ghostHodgeDual_orthogonal
+#check GSTClassicalHodgePolarizedHodgeGhost.ghostHodgeDual_detects
+#check GSTClassicalHodgePolarizedHodgeGhost.failure_yields_polarizedHodgeGhost
 
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.not_nonempty_zeroCycleClassData
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.cycleClass_ne_zero
@@ -84,3 +94,5 @@ open AlgebraicGeometry
 #print axioms GSTClassicalHodgeProjectiveVisibilityNoGo.projectiveOrbitIrreducibility_isEmpty_of_ghost
 #print axioms GSTClassicalHodgeCohomologicalPairingFrontier.ghostDualClass_orthogonal_atomic
 #print axioms GSTClassicalHodgeCohomologicalPairingFrontier.failure_yields_pairingOrthogonalGhost
+#print axioms GSTClassicalHodgePolarizedHodgeGhost.ghostHodgeDual_orthogonal
+#print axioms GSTClassicalHodgePolarizedHodgeGhost.failure_yields_polarizedHodgeGhost
