@@ -32,6 +32,8 @@ open GSTTruncatedWorldCohomologyRing
 open GSTUniversalLefschetzCosmology
 open GSTClassicalHodgeSheetSpectralExtraction
 open GSTClassicalHodgeIntegralLefschetzTransport
+open GSTGlobalPureHodgeCosmology
+open GSTWorldRecoordinationGroupoid
 
 namespace GSTClassicalHodgeConcreteSheetMatrixUnit
 
@@ -103,8 +105,8 @@ theorem forwardSheetWord_target
       worldAct N N ((L N N) ^ (2 * (s.1-r.1)))
           (sheetDiagonalAtom r (f (r,r))) (s,s) := by
     simp [sheetSpectralProj, codeSectorProj, sheetCode]
-  rw [hcode]
-  exact hmove
+    rfl
+  exact hcode.trans hmove
 
 /-- After normalization, the target coordinate is exactly the original source
 coordinate. -/
@@ -117,7 +119,12 @@ theorem forwardSheetMatrixUnit_target
   unfold forwardSheetMatrixUnit
   rw [forwardSheetWord_target r s hrs f hf]
   push_cast
-  field_simp [forwardNormalizeScalar, forwardNormalizeScalar_ne_zero r s]
+  unfold forwardNormalizeScalar
+  have hc : ((2 * (s.1 - r.1)).choose (s.1 - r.1) : ℚ) ≠ 0 := by
+    have hpos : 0 < (2 * (s.1 - r.1)).choose (s.1 - r.1) :=
+      Nat.choose_pos (by omega)
+    exact_mod_cast Nat.ne_of_gt hpos
+  field_simp
 
 /-- The target projector kills every state other than the target diagonal
 sheet. -/
@@ -163,6 +170,7 @@ theorem forwardSheetMatrixUnit_nonzero
   intro hz
   have hs := congrFun hz ((s,s) : WorldCell N N)
   rw [forwardSheetMatrixUnit_target r s hrs f hf] at hs
+  simp only [Pi.zero_apply] at hs
   exact hr (by exact_mod_cast hs)
 
 #check RationalSquareCoef
