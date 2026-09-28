@@ -132,6 +132,8 @@ noncomputable def ProjectiveDetectorVisible.toMomentHit
           (GSTClassicalHodgeFiberedCosmology.classicalHodgeBasis
             V H E.weight E.sheet)))
       (ghostMomentIndex G E)
+  have hv : v ≠ 0 := by
+    simpa [v] using R.detector_nonzero
   let q : ℚ := m / v
   refine {
     kernel := scaleProjectiveKernel q R.kernel
@@ -141,7 +143,7 @@ noncomputable def ProjectiveDetectorVisible.toMomentHit
   rw [map_smul]
   change q * v = m
   dsimp [q]
-  field_simp [R.detector_nonzero]
+  field_simp [hv]
 
 /-- A surviving ghost has no nonzero projective detector visibility. -/
 theorem no_projectiveDetectorVisible
