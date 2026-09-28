@@ -1,4 +1,4 @@
-import Mathlib.LinearAlgebra.Finsupp
+import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import GSTClassicalHodgePointKernelOperatorLift
 import GSTClassicalHodgeGradedNativeCohomologyRealization
 
