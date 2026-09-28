@@ -4,25 +4,17 @@ import GSTClassicalHodgeOmniversalSeparatorGhostCrown
 /-!
 # GST CLASSICAL HODGE — GENUINE SEMANTIC CLOSURE
 
-This is the Burst-2 semantic landing for the strengthened cycle-class package.
-It is intentionally *not* a theorem over arbitrary `HodgeBigradedBettiData`:
-the Stage-2G semantic-rigidity audit proves that such a theorem is impossible
-because the raw carrier admits the zero cycle-class countermodel.
+This file is the exact conditional landing for the two-burst route.
 
-Instead, once a Stage-2G package is certified by `GenuineCycleClassGeometry`
-and carries the already-developed native-mass bridge, the projective tomography
-visibility crown eliminates every omniversal separator ghost.  The existing
-single-sheet/omniversal equivalence then gives the full rational `(p,p)`
-cycle-class landing.
+`GenuineCycleClassGeometry` is now deliberately limited to independently
+geometric information: the established geometric spine and positive
+projective-degree trace.  Horizontal projective-orbit irreducibility is a
+separate explicit certificate because the repository's visibility-equivalence
+audit shows that universal detector visibility is already Hodge-strength.
 
-The logical route is therefore exactly:
-
-  genuine cycle-class geometry
-    + native nonzero spine
-    -> projective orbit visibility
-    -> nonzero finite GST tomography hit
-    -> no omniversal separator ghost
-    -> `BigradedBettiHodgeStatement`.
+Therefore every theorem below displays the horizontal certificate in its
+signature.  This makes the remaining mathematical obligation impossible to
+hide under the name "genuine geometry".
 -/
 
 set_option maxHeartbeats 100000000
@@ -47,35 +39,39 @@ open GSTClassicalHodgeTomographyVisibilityCrown
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 
-/-- Any negation of the Hodge target contradicts the genuine projective
-visibility/tomography crown. -/
-theorem not_hodge_impossible
+/-- Any negation of the Hodge target contradicts an explicit horizontal
+projective-orbit irreducibility certificate. -/
+theorem not_hodge_impossible_of_projectiveOrbitIrreducibility
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (hnot : ¬ BigradedBettiHodgeStatement V H) : False := by
   rcases
       (not_hodge_iff_nonempty_omniversalSeparatorGhost J.spine).mp hnot with
     ⟨E⟩
-  exact omniversalGhost_false J M E
+  exact omniversalGhost_false J R M E
 
 /--
-**GENUINE SEMANTIC HODGE CLOSURE.**
+**CONDITIONAL SEMANTIC HODGE CLOSURE.**
 
-The full Stage-2G rational `(p,p)` cycle-class landing follows from the
-strengthened genuine cycle-class geometry plus the native-mass bridge.
+The full Stage-2G rational `(p,p)` cycle-class landing follows from independently
+certified genuine cycle-class geometry, the native-mass bridge, and the
+explicit horizontal projective-orbit irreducibility certificate.
 -/
-theorem bigradedBettiHodge_of_genuineCycleClassGeometry
+theorem bigradedBettiHodge_of_projectiveOrbitIrreducibility
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H) :
     BigradedBettiHodgeStatement V H := by
   exact
     (hodge_iff_no_omniversalSeparatorGhost J.spine).2
-      (no_omniversalSeparatorGhost J M)
+      (no_omniversalSeparatorGhost J R M)
 
 /-- Direct contradiction form exposing the terminal projective-tomography
 collision selected by any alleged counterexample. -/
 theorem counterexample_yields_projective_tomography_contradiction
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (hnot : ¬ BigradedBettiHodgeStatement V H) :
     ∃ E : OmniversalSeparatorGhost J.spine,
@@ -88,30 +84,31 @@ theorem counterexample_yields_projective_tomography_contradiction
   rcases
       (not_hodge_iff_nonempty_omniversalSeparatorGhost J.spine).mp hnot with
     ⟨E⟩
-  refine ⟨E, omniversalGhost_has_tomography_moment_hit J M E, ?_⟩
+  refine ⟨E, omniversalGhost_has_tomography_moment_hit J R M E, ?_⟩
   exact
     GSTClassicalHodgeProjectiveDetectorMomentCollision.no_projectiveDetectorMomentHit
       J.spine M E
 
-/-- Public Burst-2 crown: Hodge closure and extinction of the exact
-omniversal obstruction are obtained simultaneously. -/
-theorem genuine_semantic_closure_crown
+/-- Conditional Burst-2 crown with the unresolved horizontal certificate
+exposed rather than hidden. -/
+theorem conditional_semantic_closure_crown
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H) :
     BigradedBettiHodgeStatement V H
     ∧ IsEmpty (OmniversalSeparatorGhost J.spine) := by
   exact ⟨
-    bigradedBettiHodge_of_genuineCycleClassGeometry J M,
-    no_omniversalSeparatorGhost J M⟩
+    bigradedBettiHodge_of_projectiveOrbitIrreducibility J R M,
+    no_omniversalSeparatorGhost J R M⟩
 
-#check not_hodge_impossible
-#check bigradedBettiHodge_of_genuineCycleClassGeometry
+#check not_hodge_impossible_of_projectiveOrbitIrreducibility
+#check bigradedBettiHodge_of_projectiveOrbitIrreducibility
 #check counterexample_yields_projective_tomography_contradiction
-#check genuine_semantic_closure_crown
+#check conditional_semantic_closure_crown
 
-#print axioms not_hodge_impossible
-#print axioms bigradedBettiHodge_of_genuineCycleClassGeometry
+#print axioms not_hodge_impossible_of_projectiveOrbitIrreducibility
+#print axioms bigradedBettiHodge_of_projectiveOrbitIrreducibility
 #print axioms counterexample_yields_projective_tomography_contradiction
-#print axioms genuine_semantic_closure_crown
+#print axioms conditional_semantic_closure_crown
 
 end GSTClassicalHodgeGenuineSemanticClosure
