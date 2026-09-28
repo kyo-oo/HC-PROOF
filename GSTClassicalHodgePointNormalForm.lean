@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.Finsupp
 import GSTCompactNativeCyclePresentation
 import GSTClassicalHodgePresentationLanding
 
@@ -148,7 +149,7 @@ theorem presentationOfNativeCycleLinear_apply
 noncomputable def realizePresentationLinear
     (X : Scheme.{u}) (p : Nat) :
     FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles X p :=
-  Finsupp.total (CodimensionPoint X p) (codimensionCycles X p) ℚ
+  Finsupp.linearCombination ℚ
     (fun x => codimensionPointCycle X p x)
 
 @[simp]

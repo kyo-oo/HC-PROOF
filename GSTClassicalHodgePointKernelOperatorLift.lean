@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.Finsupp
 import GSTClassicalHodgeAtomicOperatorAlgebra
 import GSTClassicalHodgeCycleOperatorNaturality
 
@@ -95,8 +96,7 @@ noncomputable def PointClassTransitionKernel.presentationOperator
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
     FiniteCodimensionPresentation X p →ₗ[ℚ]
       FiniteCodimensionPresentation X p :=
-  Finsupp.total (CodimensionPoint X p)
-    (FiniteCodimensionPresentation X p) ℚ K.transition
+  Finsupp.linearCombination ℚ K.transition
 
 @[simp]
 theorem PointClassTransitionKernel.presentationOperator_single
