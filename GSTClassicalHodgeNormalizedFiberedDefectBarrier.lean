@@ -44,6 +44,9 @@ open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeFiberedNativeRecoordination
 open GSTClassicalHodgeNormalizedFiberedSpectralAtom
 open GSTClassicalHodgeSynchronizedDefectOrbit
+open GSTNativeCodimensionCyclePresentation
+open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

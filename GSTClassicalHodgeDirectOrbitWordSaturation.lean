@@ -50,6 +50,7 @@ open GSTClassicalHodgeProjectiveWordOrbit
 open GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 open GSTClassicalHodgeGradedGeometricProgramOrbit
 open GSTClassicalHodgeGradedGeometricOrbitAlgebra
+open GSTGeometricRealizationStage2D
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

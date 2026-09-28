@@ -42,6 +42,8 @@ open GSTClassicalHodgeStage2GSemanticRigidity
 open GSTClassicalHodgeZeroDefectCoupledSector
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeFiberedCycleClassDefect
+open GSTClassicalHodgeFiberedCosmology
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

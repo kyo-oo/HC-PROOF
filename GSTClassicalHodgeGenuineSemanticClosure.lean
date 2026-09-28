@@ -35,6 +35,7 @@ open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 open GSTClassicalHodgeGenuineCycleClassGeometry
 open GSTClassicalHodgeTomographyVisibilityCrown
+open GSTClassicalHodgeLimitlessSpinePropagation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

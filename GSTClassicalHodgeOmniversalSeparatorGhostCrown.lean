@@ -39,6 +39,7 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGradedGeometricProgramOrbit
 open GSTClassicalHodgeLimitlessSeparatorGhost
 open GSTClassicalHodgeGradedSeparatorBackpropagation
+open GSTClassicalHodgeAtomicDefectDuality
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

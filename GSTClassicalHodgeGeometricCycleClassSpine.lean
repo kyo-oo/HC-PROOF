@@ -49,6 +49,7 @@ open GSTClassicalHodgePrimitivePushforwardNaturality
 open GSTClassicalHodgeCrossWeightNativePropagation
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeCodimensionZeroFundamentalCycle
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

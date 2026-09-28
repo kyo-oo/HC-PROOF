@@ -64,6 +64,7 @@ open GSTClassicalHodgeLimitlessTowerOrbitCrown
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeProjectiveCorrespondenceAlgebra
 open GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
+open GSTClassicalHodgeRankFreeLimitlessAssembly
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

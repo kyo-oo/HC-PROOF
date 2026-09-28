@@ -35,6 +35,10 @@ open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTClassicalHodgeThreeUniverseSeedIdentification
 open GSTTransferBridgeV2
+open GSTNativeCodimensionCyclePresentation
+open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
+open GSTClassicalHodgeFiberedTransferCompletion
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

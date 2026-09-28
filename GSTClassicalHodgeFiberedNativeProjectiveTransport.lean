@@ -36,6 +36,8 @@ open GSTClassicalHodgeFiberedNativeSpectralProjectors
 open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedTransferCompletion
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

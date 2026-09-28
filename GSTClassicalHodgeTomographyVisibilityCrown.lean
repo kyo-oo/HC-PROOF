@@ -41,6 +41,7 @@ open GSTClassicalHodgeProjectiveDetectorMomentCollision
 open GSTClassicalHodgeProjectiveDetectorVisibility
 open GSTClassicalHodgeProjectiveVisibilitySeparation
 open GSTClassicalHodgeGenuineCycleClassGeometry
+open GSTClassicalHodgeLimitlessSpinePropagation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

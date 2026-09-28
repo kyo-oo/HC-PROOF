@@ -45,6 +45,7 @@ open GSTClassicalHodgeGhostSpineCosmicLeak
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeAtomicAnnihilator
+open GSTClassicalHodgeLimitlessSpinePropagation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

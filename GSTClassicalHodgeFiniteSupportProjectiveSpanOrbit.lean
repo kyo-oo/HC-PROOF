@@ -46,6 +46,7 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeFiniteSpineMomentOrbit
 open GSTClassicalHodgeProjectiveSpanWordSaturation
 open GSTClassicalHodgeProjectiveWordOrbit
+open GSTClassicalHodgeSynchronizedDefectOrbit
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

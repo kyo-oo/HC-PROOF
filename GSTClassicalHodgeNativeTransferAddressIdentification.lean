@@ -34,6 +34,7 @@ open GSTUniversalAddressBridge
 open GSTTransferBridgeV2
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeNativeCycleCosmicShadow
+open GSTNativeCodimensionCyclePresentation
 
 /-- Universal cosmic address of the diagonal cell at Hodge weight `p`. -/
 def pureWeightAddress (p : Nat) : Nat :=

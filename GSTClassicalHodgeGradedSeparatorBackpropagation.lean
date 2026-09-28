@@ -44,6 +44,7 @@ open GSTClassicalHodgeSingleSheetCrown
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGradedGeometricProgramOrbit
 open GSTClassicalHodgeLimitlessSeparatorGhost
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

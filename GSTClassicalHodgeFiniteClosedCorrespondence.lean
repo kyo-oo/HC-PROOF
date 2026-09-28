@@ -50,6 +50,7 @@ open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeProjectiveSelfCorrespondences
 open GSTClassicalHodgePointwiseNativeCosmicClosure
 open GSTClassicalHodgeCanonicalCosmicRealizationEquivalence
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

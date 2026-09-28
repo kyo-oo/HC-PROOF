@@ -47,6 +47,7 @@ open GSTClassicalHodgeProjectiveDegreeTrace
 open GSTClassicalHodgeProjectiveCorrespondenceAlgebra
 open GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
 open GSTClassicalHodgeStage2GSemanticRigidity
+open GSTNativeCodimensionCyclePresentation
 
 /--
 Independently geometric Stage-2G strengthening used by the Hodge landing.

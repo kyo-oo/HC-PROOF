@@ -41,6 +41,7 @@ open GSTClassicalHodgeFiberedNativeTensorArsenal
 open GSTClassicalHodgeFiberedCycleClassDefect
 open GSTClassicalHodgeFiberedDefectEquivariance
 open GSTClassicalHodgeCycleOperatorNaturality
+open GSTClassicalHodgeRankFreeLimitlessAssembly
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

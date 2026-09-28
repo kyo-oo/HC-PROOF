@@ -50,6 +50,9 @@ open GSTClassicalHodgeFiberedCycleClassDefect
 open GSTClassicalHodgeFiberedDefectEquivariance
 open GSTClassicalHodgeFiberedSeparatorDefect
 open GSTClassicalHodgeSingleSheetCrown
+open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
+open GSTClassicalHodgeFiberedNativeRecoordination
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

@@ -73,6 +73,8 @@ open GSTGeometricRealizationStage2
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeRankFreeLimitlessAssembly
+open GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 
 namespace HodgeConjecture
 

@@ -45,6 +45,7 @@ open GSTClassicalHodgeProjectiveDetectorVisibility
 open GSTClassicalHodgeGhostSpineCosmicLeak
 open GSTClassicalHodgeLefschetzTomography
 open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeLimitlessSpinePropagation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

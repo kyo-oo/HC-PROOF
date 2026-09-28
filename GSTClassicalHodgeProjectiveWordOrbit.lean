@@ -56,6 +56,7 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeFiniteSpineMomentOrbit
+open GSTClassicalHodgeRankFreeLimitlessAssembly
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

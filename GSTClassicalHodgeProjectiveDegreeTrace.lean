@@ -52,6 +52,7 @@ open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeSingleExactSuccessorSurvival
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

@@ -65,6 +65,8 @@ open GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 open GSTClassicalHodgeProjectiveCorrespondenceAlgebra
 open GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
 open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedTransferCompletion
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

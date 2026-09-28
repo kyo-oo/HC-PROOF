@@ -51,6 +51,9 @@ open GSTClassicalHodgeGradedGeometricOrbitAlgebra
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeUniversalTwoSlotSaturation
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeAugmentedTargetWindow
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

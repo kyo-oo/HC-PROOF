@@ -44,6 +44,7 @@ open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeGhostSpineCosmicLeak
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeUniversalTwoSlotSaturation
+open GSTClassicalHodgeLimitlessSpinePropagation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

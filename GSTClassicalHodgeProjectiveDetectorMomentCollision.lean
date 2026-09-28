@@ -49,6 +49,8 @@ open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 open GSTClassicalHodgeTomographyDefectSplice
 open GSTClassicalHodgeLefschetzTomography
 open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeLimitlessSpinePropagation
+open GSTClassicalHodgeFiniteSupportChart
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

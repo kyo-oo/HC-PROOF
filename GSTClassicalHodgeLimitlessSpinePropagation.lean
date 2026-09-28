@@ -66,6 +66,7 @@ open GSTClassicalHodgeCodimensionZeroFundamentalCycle
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

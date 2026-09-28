@@ -54,6 +54,7 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

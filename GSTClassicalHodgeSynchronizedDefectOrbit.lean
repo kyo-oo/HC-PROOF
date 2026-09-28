@@ -46,6 +46,7 @@ open GSTClassicalHodgeConcreteRankFreeGeneration
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgeGeometryFirstTwoGenerator
+open GSTClassicalHodgeRankFreeLimitlessAssembly
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

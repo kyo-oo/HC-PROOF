@@ -35,6 +35,7 @@ open GSTClassicalHodgeVisibilityEquivalenceAudit
 open GSTClassicalHodgeGenuineCycleClassGeometry
 open GSTClassicalHodgeProjectiveVisibilitySeparation
 open GSTClassicalHodgeGenuineSemanticClosure
+open GSTClassicalHodgeLimitlessSpinePropagation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

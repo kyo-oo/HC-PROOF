@@ -39,6 +39,7 @@ open GSTClassicalHodgeTransferSeedUniverse
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTTransferBridgeV2
+open GSTNativeCodimensionCyclePresentation
 
 /-- **THREE-UNIVERSE BASIS-SEED IDENTITY.**
 For every genuine Hodge basis sheet and every genuine native codimension-p

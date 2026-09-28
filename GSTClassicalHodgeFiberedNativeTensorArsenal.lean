@@ -43,6 +43,8 @@ open GSTClassicalHodgeFiberedNativeOperatorLift
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedTransferCompletion
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

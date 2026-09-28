@@ -48,6 +48,8 @@ open GSTClassicalHodgeZeroDefectCoupledSector
 open GSTClassicalHodgeLefschetzTomography
 open GSTClassicalHodgeSingleSheetCrown
 open GSTClassicalHodgeDegreeRigidCycleClassUpgrade
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiniteSupportChart
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

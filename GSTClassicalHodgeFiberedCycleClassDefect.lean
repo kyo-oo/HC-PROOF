@@ -37,6 +37,9 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeNormalizedFiberedSpectralAtom
+open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
+open GSTClassicalHodgeFiberedNativeRecoordination
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

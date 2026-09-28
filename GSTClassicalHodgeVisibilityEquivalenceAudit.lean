@@ -43,6 +43,7 @@ open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 open GSTClassicalHodgeProjectiveDetectorVisibility
 open GSTClassicalHodgeFiniteCorrespondenceCohomologyNaturality
+open GSTClassicalHodgeLimitlessSpinePropagation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
