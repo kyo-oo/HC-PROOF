@@ -61,6 +61,34 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeAtomicDefectTomographyGhost.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile atomic-defect tomography synchronization
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeAtomicDefectTomographySynchronization.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile atomic-defect operator descent
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeAtomicDefectOperatorDescent.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile atomic-defect equivariant irreducibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeAtomicDefectEquivariantIrreducibility.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile multiplicity-forgetting kernel audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeMultiplicityForgettingKernel.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile cohomological pairing frontier
         shell: bash
         run: |
