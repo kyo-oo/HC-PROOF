@@ -6,23 +6,19 @@ import GSTClassicalHodgeOmniversalSeparatorGhostCrown
 /-!
 # GST CLASSICAL HODGE — TOMOGRAPHY VISIBILITY CROWN
 
-Burst 2 begins here.  The strengthened genuine cycle-class geometry supplies
-one nonzero projective detector readout on the canonical nonzero algebraic
-spine source of every omniversal ghost.  The existing rational scaling law
-normalizes that readout to the exact nonzero finite GST Lefschetz-tomography
-moment selected by the ghost.
+This module records the exact consequence of an explicit horizontal
+`ProjectiveOrbitIrreducibility` certificate.
 
-But the existing detector-moment collision theorem proves that no surviving
-ghost can admit such a projective moment hit.  Thus the two independently
-developed fronts collide directly:
+The independently geometric `GenuineCycleClassGeometry` package supplies the
+nonzero genuine cycle-class foundation.  The separate orbit certificate then
+supplies one nonzero projective detector readout on the canonical algebraic
+spine source of every omniversal ghost.  Existing rational scaling normalizes
+that readout to the exact nonzero finite GST Lefschetz-tomography moment.
 
-  genuine projective-orbit visibility
-    -> exact finite tomography moment hit
-    -> ghost annihilates every projective image
-    -> contradiction.
-
-No all-pairs matrix-unit realization or target basis-cycle witness is used in
-this composition.
+The existing detector-moment collision theorem proves that no surviving ghost
+can admit such a hit.  Thus this file is an exact conditional crown and makes
+the remaining horizontal theorem explicit rather than hiding it in the
+geometry package.
 -/
 
 set_option maxHeartbeats 100000000
@@ -49,55 +45,58 @@ open GSTClassicalHodgeGenuineCycleClassGeometry
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 
-/-- Every omniversal ghost under genuine cycle-class geometry produces the
-projective detector visibility datum that the old ghost laws forbid. -/
+/-- Every omniversal ghost under an explicit orbit-irreducibility certificate
+produces the projective detector visibility datum forbidden by the old ghost
+laws. -/
 theorem omniversalGhost_has_projective_visibility
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost J.spine) :
     Nonempty (ProjectiveDetectorVisible J.spine M E) :=
-  exists_projectiveDetectorVisible J M E
+  exists_projectiveDetectorVisible J R M E
 
 /-- Every omniversal ghost also produces an exact hit on its selected nonzero
 finite GST tomography moment. -/
 theorem omniversalGhost_has_tomography_moment_hit
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost J.spine) :
     Nonempty (ProjectiveDetectorMomentHit J.spine M E) :=
-  exists_projectiveDetectorMomentHit J M E
+  exists_projectiveDetectorMomentHit J R M E
 
-/-- **PROJECTIVE TOMOGRAPHY COLLISION.**  A surviving omniversal ghost is
-incompatible with genuine cycle-class geometry plus the native-mass spine. -/
+/-- **PROJECTIVE TOMOGRAPHY COLLISION — CONDITIONAL FORM.** -/
 theorem omniversalGhost_false
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost J.spine) : False := by
-  rcases omniversalGhost_has_tomography_moment_hit J M E with ⟨R⟩
-  exact (no_projectiveDetectorMomentHit J.spine M E).false R
+  rcases omniversalGhost_has_tomography_moment_hit J R M E with ⟨D⟩
+  exact (no_projectiveDetectorMomentHit J.spine M E).false D
 
-/-- Visibility-level proof of the same contradiction, useful as an audit that
-the exact moment normalization is not mathematically essential. -/
+/-- Visibility-level proof of the same conditional contradiction. -/
 theorem omniversalGhost_false_of_visibility
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost J.spine) : False := by
-  rcases omniversalGhost_has_projective_visibility J M E with ⟨R⟩
-  exact (no_projectiveDetectorVisible J.spine M E).false R
+  rcases omniversalGhost_has_projective_visibility J R M E with ⟨D⟩
+  exact (no_projectiveDetectorVisible J.spine M E).false D
 
-/-- Under the strengthened geometry package there are no omniversal separator
-ghosts at all. -/
+/-- An orbit-irreducibility certificate makes the omniversal ghost type empty. -/
 theorem no_omniversalSeparatorGhost
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H) :
     IsEmpty (OmniversalSeparatorGhost J.spine) :=
-  ⟨fun E => omniversalGhost_false J M E⟩
+  ⟨fun E => omniversalGhost_false J R M E⟩
 
-/-- Burst-2 crown: every hypothetical ghost generates both the nonzero
-visibility datum and the exact tomography hit, yet the entire ghost type is
-empty. -/
+/-- Conditional tomography visibility crown with the horizontal certificate
+shown explicitly in the theorem signature. -/
 theorem tomography_visibility_crown
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H) :
     (∀ E : OmniversalSeparatorGhost J.spine,
       Nonempty (ProjectiveDetectorVisible J.spine M E))
@@ -105,9 +104,9 @@ theorem tomography_visibility_crown
       Nonempty (ProjectiveDetectorMomentHit J.spine M E))
     ∧ IsEmpty (OmniversalSeparatorGhost J.spine) := by
   exact ⟨
-    omniversalGhost_has_projective_visibility J M,
-    omniversalGhost_has_tomography_moment_hit J M,
-    no_omniversalSeparatorGhost J M⟩
+    omniversalGhost_has_projective_visibility J R M,
+    omniversalGhost_has_tomography_moment_hit J R M,
+    no_omniversalSeparatorGhost J R M⟩
 
 #check omniversalGhost_has_projective_visibility
 #check omniversalGhost_has_tomography_moment_hit
