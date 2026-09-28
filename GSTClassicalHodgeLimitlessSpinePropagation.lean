@@ -163,6 +163,20 @@ theorem spineHodgeSeed_ne_zero_iff_cycleClass_ne_zero
     apply h
     simpa [hseed]
 
+/-- Whenever the canonical spine tower is nonzero in a weight, it supplies the
+nontrivial algebraic Hodge subspace required by rank-free limitless
+irreducibility. -/
+theorem algebraicHodgeSubspace_ne_bot_of_spineSeed
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    (hne : spineHodgeSeed G p ≠ 0) :
+    AlgebraicHodgeSubspace V H p ≠ ⊥ := by
+  intro hbot
+  have hmem := spineHodgeSeed_algebraic G p
+  rw [hbot] at hmem
+  have hz : spineHodgeSeed G p = 0 := by simpa using hmem
+  exact hne hz
+
 /-! ## Conserved geometric charge
 
 The previous theorem identifies the exact remaining nonvanishing question.  We
@@ -259,20 +273,6 @@ theorem algebraicHodgeSubspace_ne_bot
 
 end SpineTowerConservedCharge
 
-/-- Whenever the canonical spine tower is nonzero in a weight, it supplies the
-nontrivial algebraic Hodge subspace required by rank-free limitless
-irreducibility. -/
-theorem algebraicHodgeSubspace_ne_bot_of_spineSeed
-    (G : GeometricCycleClassSpine V H)
-    (p : Nat)
-    (hne : spineHodgeSeed G p ≠ 0) :
-    AlgebraicHodgeSubspace V H p ≠ ⊥ := by
-  intro hbot
-  have hmem := spineHodgeSeed_algebraic G p
-  rw [hbot] at hmem
-  have hz : spineHodgeSeed G p = 0 := by simpa using hmem
-  exact hne hz
-
 /-- The old tower-intertwining successor formula is now a theorem generated
 from the spine rather than supplied as data. -/
 theorem spine_limitless_successor_crown
@@ -292,18 +292,19 @@ theorem spine_limitless_successor_crown
 #check spineNativeTower_cycleClass
 #check spineHodgeSeed_algebraic
 #check spineHodgeSeed_ne_zero_iff_cycleClass_ne_zero
+#check algebraicHodgeSubspace_ne_bot_of_spineSeed
 #check SpineTowerConservedCharge
 #check SpineTowerConservedCharge.nativeRead_spineNativeTower
 #check SpineTowerConservedCharge.nativeRead_spineNativeTower_ne_zero
 #check SpineTowerConservedCharge.cycleClass_spineNativeTower_ne_zero
 #check SpineTowerConservedCharge.spineHodgeSeed_ne_zero
 #check SpineTowerConservedCharge.algebraicHodgeSubspace_ne_bot
-#check algebraicHodgeSubspace_ne_bot_of_spineSeed
 #check spine_limitless_successor_crown
 
 #print axioms spineHodgeSeed_successor_formula
 #print axioms spineNativeTower_cycleClass
 #print axioms spineHodgeSeed_algebraic
+#print axioms algebraicHodgeSubspace_ne_bot_of_spineSeed
 #print axioms SpineTowerConservedCharge.nativeRead_spineNativeTower
 #print axioms SpineTowerConservedCharge.cycleClass_spineNativeTower_ne_zero
 #print axioms SpineTowerConservedCharge.spineHodgeSeed_ne_zero
