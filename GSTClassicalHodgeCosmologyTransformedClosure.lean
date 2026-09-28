@@ -2,6 +2,7 @@ import GSTClassicalHodgeGradedGeometricOrbitAlgebra
 import GSTClassicalHodgeOmniversalSeparatorGhostCrown
 import GSTClassicalHodgeUniversalTwoSlotSaturation
 import GSTClassicalHodgeLimitlessSpinePropagation
+import GSTClassicalHodgeProjectiveGeneratorWordCompiler
 
 /-!
 # GST CLASSICAL HODGE — COSMOLOGY-TRANSFORMED CLOSURE
@@ -19,11 +20,12 @@ single universal two-slot word is the whole Hodge fiber.  Therefore, once the
 program orbit is closed under the transformed universal two-slot machine and
 contains one nonzero spine state, an omniversal ghost is impossible.
 
-The only bridge exposed below is a genuinely cosmological realization law:
-for each ordered pair of Hodge sheets, the universal two-slot GST word is the
-Hodge restriction of some already-verified graded geometric program.  This is
-strictly a program-realization statement; it contains no basis-cycle witness,
-no Hodge-surjectivity clause, and no algebraicity conclusion.
+The key strengthening is orbit-locality.  We never need to identify a
+projective word with a GST word on arbitrary ambient or nonalgebraic Hodge
+states.  Every state of the transformed orbit is already a genuine cycle
+class.  Exact cycle-class naturality therefore identifies the compiled
+projective word with the GST universal word on precisely the states where
+invariance is consumed.
 -/
 
 set_option maxHeartbeats 100000000
@@ -45,7 +47,12 @@ open GSTClassicalHodgeGradedGeometricOrbitAlgebra
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 open GSTClassicalHodgeUniversalTwoSlotSaturation
 open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeLimitlessSpinePropagation
+open GSTClassicalHodgeGeometryFirstTwoGenerator
+open GSTClassicalHodgeProjectiveTwoGeneratorExternalization
+open GSTClassicalHodgeProjectiveWordOrbit
+open GSTClassicalHodgeProjectiveGeneratorWordCompiler
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -145,9 +152,9 @@ theorem bigradedBettiHodge_of_transformed_cosmology
   · exact hodge_weight_of_transformed_cosmology
       G p (hInv p) (hspine p hH) halpha
 
-/-- The exact transformation bridge: each recoordination of the universal
-2-slot GST word is represented by one verified native graded program at the
-same weight. -/
+/-- Strong program-realization form: each recoordination of the universal
+2-slot GST word is represented by one verified native graded program on the
+whole Hodge fiber. -/
 def UniversalTwoSlotProgramRealization
     (G : GeometricCycleClassSpine V H)
     (p : Nat) : Prop :=
@@ -172,6 +179,70 @@ theorem transformedInvariant_of_programRealization
     program_maps_geometricProgramOrbitModule G P halpha
   rw [hP alpha] at himage
   exact himage
+
+/-- **ORBIT-LOCAL PROJECTIVE -> GST TRANSFORMATION.**
+Two genuine projective primitives are enough to realize the universal GST word
+on every state where orbit invariance is actually consumed.  No equality on
+arbitrary nonalgebraic Hodge states is needed: an orbit state already has a
+native cycle representative, so the two cycle-class naturality squares and the
+projective-word compiler identify the two actions there. -/
+theorem transformedInvariant_of_projectiveTwoGenerators
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
+      ProjectiveTwoGenerator (V := V) (H := H) i j) :
+    TransformedTwoSlotOrbitInvariant G p := by
+  intro i j alpha halpha
+  let Rij := R i j
+  let T := Rij.toGeometryFirst
+  let W := compileProjectiveTwoGenerator Rij
+  have hrange : alpha.1 ∈ LinearMap.range (H.cycleClass p) :=
+    geometricProgramOrbitModule_le_cycleClass_range G p halpha
+  rcases hrange with ⟨Z, hZ⟩
+  have himage :
+      (GradedGeometricProgram.word W).cohomologyEval G alpha.1 ∈
+        geometricProgramOrbitModule G p :=
+    program_maps_geometricProgramOrbitModule G
+      (GradedGeometricProgram.word W) halpha
+  have haction :
+      (GradedGeometricProgram.word W).cohomologyEval G alpha.1 =
+        (liftFiniteHodgeOperator (pairBasisIndex i j)
+          (forwardArsenalWord sourceSlot targetSlot) alpha).1 := by
+    change (W.operatorPair G).cohomologyOperator alpha.1 = _
+    calc
+      (W.operatorPair G).cohomologyOperator alpha.1 =
+          H.cycleClass p (W.eval Z) := by
+            rw [← hZ]
+            exact (W.cycleClass_eval G Z).symm
+      _ = H.cycleClass p ((geometryFirstWordPair T).cycleOperator Z) := by
+            rw [compileProjectiveTwoGenerator_eval Rij]
+      _ = (geometryFirstWordPair T).cohomologyOperator
+            (H.cycleClass p Z) := by
+            exact (geometryFirstWordPair T).cycleClass_cycleOperator Z
+      _ = (geometryFirstWordPair T).cohomologyOperator alpha.1 := by
+            rw [hZ]
+      _ = (hodgeMatrixUnit i j alpha).1 := by
+            exact geometryFirstWordPair_on_hodge T alpha
+      _ = (liftFiniteHodgeOperator (pairBasisIndex i j)
+            (forwardArsenalWord sourceSlot targetSlot) alpha).1 := by
+            rw [rankFreeMatrixUnit_eq_lifted_GST_word i j]
+  rw [haction] at himage
+  exact himage
+
+/-- All-pairs projective two-generator data therefore close the transformed
+cosmology without a separate global ambient externalization theorem. -/
+theorem bigradedBettiHodge_of_projectiveTwoGenerators_transformed
+    (G : GeometricCycleClassSpine V H)
+    (R : ∀ p : Nat,
+      ∀ i j : ClassicalHodgeBasisIndex V H p,
+        ProjectiveTwoGenerator (V := V) (H := H) i j)
+    (hspine : ∀ p : Nat,
+      rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥ →
+        spineHodgeSeed G p ≠ 0) :
+    BigradedBettiHodgeStatement V H := by
+  exact bigradedBettiHodge_of_transformed_cosmology G
+    (fun p => transformedInvariant_of_projectiveTwoGenerators G p (R p))
+    hspine
 
 /-- **COSMOLOGY-TRANSFORMED CROWN.**
 After the classical obstruction has been transformed into the GST graded orbit,
@@ -205,12 +276,16 @@ theorem no_omniversalSeparatorGhost_of_transformed_cosmology
 #check TransformedTwoSlotOrbitInvariant
 #check UniversalTwoSlotProgramRealization
 #check transformedInvariant_of_programRealization
+#check transformedInvariant_of_projectiveTwoGenerators
 #check bigradedBettiHodge_of_transformed_cosmology
+#check bigradedBettiHodge_of_projectiveTwoGenerators_transformed
 #check bigradedBettiHodge_of_program_realization
 #check no_omniversalSeparatorGhost_of_transformed_cosmology
 
 #print axioms transformedInvariant_of_programRealization
+#print axioms transformedInvariant_of_projectiveTwoGenerators
 #print axioms bigradedBettiHodge_of_transformed_cosmology
+#print axioms bigradedBettiHodge_of_projectiveTwoGenerators_transformed
 #print axioms bigradedBettiHodge_of_program_realization
 
 end GSTClassicalHodgeCosmologyTransformedClosure
