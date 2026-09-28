@@ -198,8 +198,7 @@ theorem squarePureDual_sheetAtom
         · exact Fin.ext h2
       have hinv := congrArg worldDual hxeq
       rw [worldDual_involutive] at hinv
-      rw [hdual'] at hinv
-      exact hx hinv
+      exact hx (hinv.trans hdual')
     have hneR : worldDiagonalClass (mirrorFin r).2 (mirrorFin r).2 x = 0 := by
       apply worldDiagonalClass_off_diagonal
       by_contra hpush

@@ -32,6 +32,7 @@ open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
+open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeCyclicSpectralGeneration
 open GSTClassicalHodgeLocalCyclicCriterion
@@ -82,9 +83,12 @@ theorem live_basis_mem_atomic
           (classicalHodgeBasis V H p
             (R.spectral.basisIndex i)).1) ∈
         pointCycleClassSpan p (H.cycleClass p) := by
-    simpa [R.spectral_basisIndex] using R.seed_mem_atomic
+    rw [R.spectral_basisIndex]
+    exact R.seed_mem_atomic
   intro i
-  simpa [R.spectral_basisIndex] using h hseed i
+  have hi := h hseed i
+  rw [R.spectral_basisIndex] at hi
+  exact hi
 
 /-- Weighted local cyclic data already reconstruct the original Hodge class
 inside the atomic span. -/
@@ -103,7 +107,8 @@ theorem seed_mem_cycleClass_range
     (∑ i : HodgeSupportIndex alpha,
       R.coefficient i • (classicalHodgeBasis V H p i.1).1) ∈
         LinearMap.range (H.cycleClass p) := by
-  rwa [smoothProjective_cycleClass_range_eq_atomic_span V H p]
+  rw [smoothProjective_cycleClass_range_eq_atomic_span V H p]
+  exact R.seed_mem_atomic
 
 /-- **WEIGHTED NATIVE UPGRADE.**  The arbitrary nonzero atomic seed can be
 lifted to one actual native seed cycle.  Range stability automatically lifts
@@ -113,7 +118,13 @@ noncomputable def toLocalCycleSpectralRealization
     (R : WeightedLocalCyclicRealization V H p alpha) :
     LocalCycleSpectralRealization V H p alpha := by
   let S := R.spectral.toSpectralCycleOperatorViaRange
-  obtain ⟨Z, hZ⟩ := R.seed_mem_cycleClass_range
+  have hex : ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z =
+        ∑ i : HodgeSupportIndex alpha,
+          R.coefficient i • (classicalHodgeBasis V H p i.1).1 :=
+    (LinearMap.mem_range _ _).mp R.seed_mem_cycleClass_range
+  let Z := Classical.choose hex
+  have hZ := Classical.choose_spec hex
   have hSindex : S.basisIndex = HodgeSupportIndex.include := by
     exact R.spectral_basisIndex
   refine {
@@ -127,7 +138,7 @@ noncomputable def toLocalCycleSpectralRealization
     }
   }
   rw [hSindex]
-  simpa using hZ
+  exact hZ
 
 /-- Every weighted local cyclic realization constructs an exact native
 codimension-p algebraic cycle representing the original Hodge class. -/

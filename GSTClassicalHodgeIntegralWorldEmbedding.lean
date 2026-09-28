@@ -100,7 +100,8 @@ theorem integer_projector_live_self
     codeSectorProj (liveLinearShape alpha) r.1 (integralLiveWorld alpha)
         (liveShapeState alpha r) =
       integralLiveWorld alpha (liveShapeState alpha r) := by
-  simp [codeSectorProj, liveShapeState_code]
+  simp only [codeSectorProj]
+  rw [if_pos (liveShapeState_code alpha r)]
 
 /-- Exact integer code projector kills every other live slot. -/
 theorem integer_projector_live_other
@@ -113,7 +114,11 @@ theorem integer_projector_live_other
     intro h
     apply hsr
     exact Fin.ext h
-  simp [codeSectorProj, liveShapeState_code, hcode]
+  have hcode' : ¬ worldCode (liveLinearShape alpha) (liveShapeState alpha s) = r.1 := by
+    rw [liveShapeState_code alpha s]
+    exact hcode
+  simp only [codeSectorProj]
+  rw [if_neg hcode']
 
 /-- Integer live projectors commute with arbitrary equal-cardinality GST world
 recoordination by the original groupoid theorem. -/
@@ -138,8 +143,9 @@ theorem integral_live_projector_polynomial
         codePolyOp (liveLinearShape alpha) P (integralLiveWorld alpha) x =
           c * codeSectorProj (liveLinearShape alpha) r.1
             (integralLiveWorld alpha) x := by
-  exact codeSector_projector_polynomial
+  obtain ⟨P, c, hc, hP⟩ := codeSector_projector_polynomial
     (liveLinearShape alpha) r.1 r.2
+  exact ⟨P, c, hc, fun x => hP (integralLiveWorld alpha) x⟩
 
 /-- **INTEGRAL WORLD CROWN.** Every nonzero genuine rational Hodge class has
 an actual finite integer GST world observation in which every live coordinate
