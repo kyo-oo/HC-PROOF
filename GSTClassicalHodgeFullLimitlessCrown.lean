@@ -146,34 +146,23 @@ theorem spineTowerNonvanishing
 
 end LiveSpineMassSurvival
 
-/-- The stronger exact conserved-charge package automatically supplies the
-weaker live-mass survival interface.  This keeps all previously built routes
-compatible while allowing the new geometry lane to avoid exact scalar
-matching. -/
-noncomputable def liveSpineMassSurvival_of_conservedCharge
+/-- The native-mass conserved-charge package already built in the lower spine
+layer implies the weaker live-mass interface.  Unlike an arbitrary conserved
+detector, this conversion is valid because `NativeMassCycleClassBridge`
+constructs its detector from `nativeCycleMass` itself. -/
+noncomputable def liveSpineMassSurvival_of_nativeMassBridge
     (G : GeometricCycleClassSpine V H)
-    (D : SpineTowerConservedCharge G) :
+    (M : NativeMassCycleClassBridge V H) :
     LiveSpineMassSurvival G where
-  kernel_mass_zero := by
-    intro p Z hzero
-    have hread := D.cycleClass_read p Z
-    rw [hzero] at hread
-    simp only [LinearMap.map_zero] at hread
-    -- A general conserved charge need not literally be the canonical native
-    -- mass, so this compatibility conversion is unavailable without a mass
-    -- identification.  Keep the construction intentionally unimplemented at
-    -- the generic charge level rather than asserting a false equality.
-    exact False.elim (by
-      have := hread
-      contradiction)
+  kernel_mass_zero := M.kernel_mass_zero
   live_tower_mass_ne_zero := by
     intro p _hH
-    -- Same reason as above: an arbitrary conserved detector need not equal the
-    -- canonical native mass.
-    exact False.elim (by contradiction)
+    exact (M.toConservedCharge G).nativeRead_spineNativeTower_ne_zero p
 
 /-- Genuine projective realization of the one true limitless cosmic read/write
-operator in every weight and every ordered multiplicity pair. -/
+operator in every weight and every ordered multiplicity pair.  The operator is
+not an abstract Hodge matrix unit: it must come from the actual projective
+correspondence sector constructed from scheme geometry. -/
 def FullProjectiveCosmicExternalization
     (G : GeometricCycleClassSpine V H) : Prop :=
   ∀ p : Nat,
@@ -362,6 +351,7 @@ theorem full_limitless_rank_free_crown_of_liveMassSurvival
 #check LiveSpineMassSurvival.cycleClass_ne_zero_of_live
 #check LiveSpineMassSurvival.spineHodgeSeed_ne_zero_of_live
 #check LiveSpineMassSurvival.spineTowerNonvanishing
+#check liveSpineMassSurvival_of_nativeMassBridge
 #check FullProjectiveCosmicExternalization
 #check canonicalCosmicNaturality_of_fullProjectiveExternalization
 #check algebraicFiber_ne_bot_of_spineTower
@@ -382,6 +372,7 @@ theorem full_limitless_rank_free_crown_of_liveMassSurvival
 #print axioms LiveSpineMassSurvival.cycleClass_spineNativeTower_ne_zero
 #print axioms LiveSpineMassSurvival.cycleClass_ne_zero_of_live
 #print axioms LiveSpineMassSurvival.spineTowerNonvanishing
+#print axioms liveSpineMassSurvival_of_nativeMassBridge
 #print axioms canonicalCosmicNaturality_of_fullProjectiveExternalization
 #print axioms algebraicFiber_ne_bot_of_spineTower
 #print axioms bigradedBettiHodge
