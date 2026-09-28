@@ -33,6 +33,7 @@ open scoped BigOperators
 open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeFiberedCosmology
@@ -44,10 +45,14 @@ namespace GSTClassicalHodgeCoordinatewiseSeedAssembly
 
 universe u
 
+end GSTClassicalHodgeCoordinatewiseSeedAssembly
+
+namespace GSTClassicalHodgeCyclicSpectralGeneration
+namespace FiniteSpectralFamily
+
+universe u
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-
-namespace FiniteSpectralFamily
 
 /-- Linearization of the finite spectral-combination operation in its
 coefficient vector. -/
@@ -151,6 +156,9 @@ theorem exists_cyclic_seed_of_coordinatewise_visible
   · exact a.2
 
 end FiniteSpectralFamily
+end GSTClassicalHodgeCyclicSpectralGeneration
+
+namespace GSTClassicalHodgeCoordinatewiseSeedAssembly
 
 /-- Classical-Hodge specialization: every live sheet is separately visible in
 some atomic spectral combination.  Different sheets may use different
@@ -190,12 +198,15 @@ noncomputable def toWeightedLocalCyclicRealization
     rcases R.visible i with ⟨a, haW, hai⟩
     let aa : F.admissibleCoefficientSpace W := ⟨a, ?_⟩
     · exact ⟨aa, hai⟩
-    · simpa [F, W, FiniteSpectralFamily.admissibleCoefficientSpace,
-        FiniteSpectralFamily.spectralCombinationLinear,
-        FiniteSpectralFamily.spectralCombination, R.spectral_basisIndex]
-        using haW
-  obtain ⟨a, haNZ, haW⟩ :=
-    F.exists_cyclic_seed_of_coordinatewise_visible W hvisible
+    · have h1 :
+          (∑ i, a i • (classicalHodgeBasis V H p (R.spectral.basisIndex i)).1) ∈ W := by
+        rw [R.spectral_basisIndex]
+        exact haW
+      exact h1
+  have hex := F.exists_cyclic_seed_of_coordinatewise_visible W hvisible
+  let a := Classical.choose hex
+  have ha := Classical.choose_spec hex
+  obtain ⟨haNZ, haW⟩ := ha
   refine {
     spectral := R.spectral
     spectral_basisIndex := R.spectral_basisIndex
@@ -203,8 +214,10 @@ noncomputable def toWeightedLocalCyclicRealization
     coefficient_ne_zero := haNZ
     seed_mem_atomic := ?_
   }
-  simpa [F, W, FiniteSpectralFamily.spectralCombination,
-    R.spectral_basisIndex] using haW
+  have h1 :
+      (∑ i, a i • (classicalHodgeBasis V H p (R.spectral.basisIndex i)).1) ∈ W := haW
+  rw [R.spectral_basisIndex] at h1
+  exact h1
 
 /-- Coordinatewise visibility therefore constructs an exact native cycle for
 the original genuine Hodge class. -/

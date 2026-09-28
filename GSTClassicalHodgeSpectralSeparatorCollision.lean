@@ -47,6 +47,15 @@ universe u
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
+end GSTClassicalHodgeSpectralSeparatorCollision
+
+namespace GSTClassicalHodgeCyclicSpectralGeneration
+namespace FiniteSpectralFamily
+
+universe u
+variable {M : Type u} [AddCommGroup M] [Module ℚ M]
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
 /-- **ABSTRACT SPECTRAL-SEPARATOR COLLISION.**
 A detector annihilating W but detecting one spectral direction forces any
 observable admitting a W-valued cyclic seed to fail W-invariance. -/
@@ -65,6 +74,17 @@ theorem separator_forces_observable_instability
   have hiW : S.vector i ∈ W :=
     S.every_vector_mem_of_cyclic_seed W hstable a ha hseed i
   exact hdetect (hann hiW)
+
+
+end FiniteSpectralFamily
+end GSTClassicalHodgeCyclicSpectralGeneration
+
+namespace GSTClassicalHodgeSpectralSeparatorCollision
+
+universe u
+variable {M : Type u} [AddCommGroup M] [Module ℚ M]
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
 
 /-- Equivalent positive form: W-invariance plus a cyclic seed rules out every
 functional that annihilates W and detects a selected eigendirection. -/
@@ -163,13 +183,10 @@ theorem basisSeparator_forces_not_atomicStable
         LinearMap.ker Sep.detector :=
     (annihilatesPointCycles_iff_atomicSpan_le_ker
       p (H.cycleClass p) Sep.detector).mp Sep.annihilates_atoms
-  apply F.separator_forces_observable_instability
+  exact F.separator_forces_observable_instability
     (pointCycleClassSpan p (H.cycleClass p))
     Sep.detector hann i
-  · simpa [F] using Sep.detects_basis
-  · exact a
-  · exact ha
-  · simpa [F, FiniteSpectralFamily.spectralCombination] using hseed
+    Sep.detects_basis a ha hseed
 
 /-- Positive contradiction form: atomic stability and one cyclic seed eliminate
 any basis separator on every selected sheet. -/
@@ -190,7 +207,7 @@ theorem isEmpty_basisAtomicSeparator_of_stable_seed
 
 end RawClassicalHodgeSpectralObservable
 
-#check separator_forces_observable_instability
+#check FiniteSpectralFamily.separator_forces_observable_instability
 #check no_separator_of_stable_cyclic_seed
 #check RawClassicalHodgeSpectralObservable
 #check RawClassicalHodgeSpectralObservable.AtomicStable
@@ -198,7 +215,7 @@ end RawClassicalHodgeSpectralObservable
 #check RawClassicalHodgeSpectralObservable.basisSeparator_forces_not_atomicStable
 #check RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_stable_seed
 
-#print axioms separator_forces_observable_instability
+#print axioms FiniteSpectralFamily.separator_forces_observable_instability
 #print axioms no_separator_of_stable_cyclic_seed
 #print axioms RawClassicalHodgeSpectralObservable.basisSeparator_forces_not_atomicStable
 #print axioms RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_stable_seed

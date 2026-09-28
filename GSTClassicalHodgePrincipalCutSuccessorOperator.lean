@@ -41,6 +41,7 @@ open GSTClassicalHodgePointClosureRelativeCut
 open GSTClassicalHodgeSchemeCodimensionStalk
 open GSTGeometricRealizationStage2D
 open GSTClassicalHodgePointKernelOperatorLift
+open GSTClassicalHodgePointNormalForm
 
 namespace GSTClassicalHodgePrincipalCutSuccessorOperator
 
