@@ -174,36 +174,29 @@ theorem squarePureDual_sheetAtom
   funext x
   have hdual : worldDual ((mirrorFin r, mirrorFin r) : WorldCell N N)
       = ((r, r) : WorldCell N N) := by
-    apply Prod.ext
-    · apply Fin.ext
-      simp only [worldDual, complementFin, mirrorFin_val]
-      omega
-    · apply Fin.ext
-      simp only [worldDual, complementFin, mirrorFin_val]
-      omega
+    apply Prod.ext <;> apply Fin.ext <;>
+      simp [worldDual, complementFin, mirrorFin_val]
   have hdual' : worldDual ((r, r) : WorldCell N N)
       = ((mirrorFin r, mirrorFin r) : WorldCell N N) := by
-    apply Prod.ext
-    · apply Fin.ext
-      simp only [worldDual, complementFin, mirrorFin_val]
-      omega
-    · apply Fin.ext
-      simp only [worldDual, complementFin, mirrorFin_val]
-      omega
-  have keyiff : ∀ y : WorldCell N N,
-      worldDual y = ((r, r) : WorldCell N N) ↔
-        y = ((mirrorFin r, mirrorFin r) : WorldCell N N) := by
-    intro y
-    constructor
-    · intro h
-      have h2 := congrArg worldDual h
-      rw [worldDual_involutive] at h2
-      rw [hdual'] at h2
-      exact h2
-    · intro h
-      rw [h, hdual]
-  simp [squarePureDual, sheetDiagonalAtom, worldDiagonalClass,
-    worldBasis, keyiff]
+    apply Prod.ext <;> apply Fin.ext <;>
+      simp [worldDual, complementFin, mirrorFin_val]
+  by_cases hz : z = 0
+  · simp [hz]
+  · refine Or.inl ?_
+    by_cases hx : x = ((mirrorFin r, mirrorFin r) : WorldCell N N)
+    · subst x
+      rw [hdual]
+      simp only [worldBasis]
+      simp
+    · have hne : worldDual x ≠ ((r, r) : WorldCell N N) := by
+        intro h
+        apply hx
+        have h2 := congrArg worldDual h
+        rw [worldDual_involutive] at h2
+        rw [hdual'] at h2
+        exact h2
+      simp only [worldBasis]
+      rw [if_neg (by exact hne), if_neg (by exact hx)]
 
 #check sheetDiagonalAtom_eq_smul_basis
 #check sheetAtom_lefschetz_forward_exact

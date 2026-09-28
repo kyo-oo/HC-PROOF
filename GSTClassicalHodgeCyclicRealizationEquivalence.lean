@@ -54,10 +54,11 @@ variable {p : Nat}
 variable {alpha : ClassicalHodgeFiber V H p}
 
 namespace GSTClassicalHodgeConstructiveCyclicLanding
+namespace LocalCycleSpectralRealization
 
 /-- Every live direction of a native local spectral realization lies in the
 actual point-cycle atomic span. -/
-theorem LocalCycleSpectralRealization.live_basis_mem_atomic
+theorem live_basis_mem_atomic
     (R : LocalCycleSpectralRealization V H p alpha)
     (i : HodgeSupportIndex alpha) :
     (classicalHodgeBasis V H p i.1).1 ∈
@@ -69,7 +70,7 @@ theorem LocalCycleSpectralRealization.live_basis_mem_atomic
   rwa [smoothProjective_cycleClass_range_eq_atomic_span V H p] at hrange
 
 /-- Consequently the unit sum of all live directions is an atomic seed. -/
-theorem LocalCycleSpectralRealization.unit_seed_mem_atomic
+theorem unit_seed_mem_atomic
     (R : LocalCycleSpectralRealization V H p alpha) :
     (∑ i : HodgeSupportIndex alpha,
       (classicalHodgeBasis V H p i.1).1) ∈
@@ -80,7 +81,7 @@ theorem LocalCycleSpectralRealization.unit_seed_mem_atomic
 
 /-- Forget the explicit native witnesses while retaining the exact local
 cyclic criterion. -/
-noncomputable def LocalCycleSpectralRealization.toLocalCyclicRealization
+noncomputable def toLocalCyclicRealization
     (R : LocalCycleSpectralRealization V H p alpha) :
     LocalCyclicRealization V H p alpha where
   spectral := R.spectral.toClassicalHodgeSpectralOperator
@@ -88,17 +89,20 @@ noncomputable def LocalCycleSpectralRealization.toLocalCyclicRealization
     exact R.spectral_basisIndex
   seed_mem_atomic := R.unit_seed_mem_atomic
 
+end LocalCycleSpectralRealization
 end GSTClassicalHodgeConstructiveCyclicLanding
 
 namespace GSTClassicalHodgeLocalCyclicCriterion
+namespace LocalCyclicRealization
 
 /-- The forward range-lift conversion followed by forgetting explicit native
 witnesses still gives a valid local cyclic realization. -/
-noncomputable def LocalCyclicRealization.nativeUpgrade
+noncomputable def nativeUpgrade
     (R : LocalCyclicRealization V H p alpha) :
     LocalCycleSpectralRealization V H p alpha :=
   R.toLocalCycleSpectralRealization
 
+end LocalCyclicRealization
 end GSTClassicalHodgeLocalCyclicCriterion
 
 namespace GSTClassicalHodgeCyclicRealizationEquivalence
