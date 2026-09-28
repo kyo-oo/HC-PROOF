@@ -5,13 +5,22 @@ import GSTClassicalHodgeTomographyVisibilityCrown
 import GSTClassicalHodgeGenuineSemanticClosure
 import GSTClassicalHodgeProjectiveOrbitIrreducibilityAudit
 import GSTClassicalHodgeNormalizedFiberedDefectBarrier
+import GSTClassicalHodgeProjectiveVisibilityNoGo
 
 /-!
 # GST CLASSICAL HODGE — TWO-BURST CLOSURE RECEIPT
 
 Compiler receipt for the corrected genuine cycle-class / projective tomography
 upgrade.  It deliberately separates independently geometric semantics from the
-Hodge-strength horizontal orbit certificate and imports the circularity audit.
+Hodge-strength horizontal orbit certificate and imports both circularity
+barriers:
+
+* normalized fibered zero defect is exactly a basis-cycle equality;
+* ordinary genuine projective-correspondence images of the algebraic ghost
+  spine have identically zero ghost-detector readout.
+
+Accordingly the conditional orbit-irreducibility crown below is retained as a
+reduction target only; it is not promoted to a foundational geometry theorem.
 -/
 
 set_option maxHeartbeats 100000000
@@ -45,6 +54,10 @@ open AlgebraicGeometry
 #check GSTClassicalHodgeNormalizedFiberedDefectBarrier.normalizedSpectral_defect_zero_iff_point_represents_basis
 #check GSTClassicalHodgeNormalizedFiberedDefectBarrier.basis_mem_cycleClass_range_of_normalizedSpectral_defect_zero
 #check GSTClassicalHodgeNormalizedFiberedDefectBarrier.recoordination_defect_zero_iff
+#check GSTClassicalHodgeProjectiveVisibilityNoGo.projectiveDetectorReadout_ghostSpine_eq_zero
+#check GSTClassicalHodgeProjectiveVisibilityNoGo.no_nonzero_projectiveDetectorReadout_on_ghostSpine
+#check GSTClassicalHodgeProjectiveVisibilityNoGo.projectiveOrbitIrreducibility_isEmpty_of_ghost
+#check GSTClassicalHodgeProjectiveVisibilityNoGo.universal_projectiveOrbitIrreducibility_is_hodge_strength
 
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.not_nonempty_zeroCycleClassData
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.cycleClass_ne_zero
@@ -55,3 +68,5 @@ open AlgebraicGeometry
 #print axioms GSTClassicalHodgeProjectiveOrbitIrreducibilityAudit.projectiveOrbitIrreducibility_implies_hodge
 #print axioms GSTClassicalHodgeNormalizedFiberedDefectBarrier.normalizedSpectral_defect_zero_iff_point_represents_basis
 #print axioms GSTClassicalHodgeNormalizedFiberedDefectBarrier.recoordination_defect_zero_iff
+#print axioms GSTClassicalHodgeProjectiveVisibilityNoGo.projectiveDetectorReadout_ghostSpine_eq_zero
+#print axioms GSTClassicalHodgeProjectiveVisibilityNoGo.projectiveOrbitIrreducibility_isEmpty_of_ghost
