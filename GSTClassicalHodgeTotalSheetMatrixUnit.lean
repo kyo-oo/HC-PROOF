@@ -27,6 +27,8 @@ open GSTWorldPoincareDuality
 open GSTSquarePureHodgeDuality
 open GSTClassicalHodgeConcreteSheetMatrixUnit
 open GSTClassicalHodgeSheetSpectralExtraction
+open GSTDimensionFreeHodgeDiagonal
+open GSTGlobalPureHodgeCosmology
 
 namespace GSTClassicalHodgeTotalSheetMatrixUnit
 
@@ -53,6 +55,13 @@ theorem rationalSquareDual_involutive
   funext x
   simp [rationalSquareDual]
 
+/-- The canonical pure mirror of a square-world diagonal coordinate, viewed
+in the native `Fin N` indexing of `WorldCell N N` (matching the green
+`Fin.castLE` bridge pattern of `backward_request_reflects_forward`). -/
+def squareMirror {N : Nat} (r : Fin N) : Fin N :=
+  Fin.cast (show min N N = N by omega)
+    (pureMirror (Fin.castLE (show N ≤ min N N by omega) r))
+
 /-- Integer Poincare duality preserves pure diagonal support. -/
 theorem integerSquareDual_isPure
     {N : Nat} (f : WorldCoef N N)
@@ -75,22 +84,22 @@ theorem integerSquareDual_isPure
 /-- Poincare dual reads the mirrored diagonal coefficient. -/
 theorem integerSquareDual_diagonal
     {N : Nat} (f : WorldCoef N N) (r : Fin N) :
-    integerSquareDual f
-      ((show Fin N from pureMirror (show Fin (min N N) from r)),
-       (show Fin N from pureMirror (show Fin (min N N) from r))) =
+    integerSquareDual f (squareMirror r, squareMirror r) =
       f (r,r) := by
   unfold integerSquareDual
-  simp [worldDual_pureDiagonalState, pureDiagonalState, diagonalState]
+  have hpair : (squareMirror r, squareMirror r : WorldCell N N)
+      = pureDiagonalState (pureMirror (Fin.castLE (show N ≤ min N N by omega) r)) :=
+    rfl
+  rw [hpair, worldDual_pureDiagonalState, pureMirror_involutive]
+  rfl
 
 /-- Backward matrix unit via Poincare reflection, forward transport, and dual
 return. -/
 def backwardSheetMatrixUnit
     {N : Nat} (r s : Fin N)
     (f : WorldCoef N N) : RationalSquareCoef N :=
-  let mr : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from r)
-  let ms : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from s)
+  let mr : Fin N := squareMirror r
+  let ms : Fin N := squareMirror s
   rationalSquareDual
     (forwardSheetMatrixUnit mr ms (integerSquareDual f))
 
@@ -102,10 +111,8 @@ theorem backwardSheetMatrixUnit_exact
     (hf : isWorldPureHodge f) :
     backwardSheetMatrixUnit r s f =
       fun x => if x = (s,s) then (f (r,r) : ℚ) else 0 := by
-  let mr : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from r)
-  let ms : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from s)
+  let mr : Fin N := squareMirror r
+  let ms : Fin N := squareMirror s
   have hmrs : mr.1 ≤ ms.1 := by
     exact backward_request_reflects_forward r s hsr
   have hforward := forwardSheetMatrixUnit_exact
@@ -119,16 +126,25 @@ theorem backwardSheetMatrixUnit_exact
   by_cases hx : x = (s,s)
   · subst x
     have hdual : worldDual ((s,s) : WorldCell N N) = (ms,ms) := by
-      simpa [ms, pureDiagonalState, diagonalState] using
-        (worldDual_pureDiagonalState
+      have hpair : ((s,s) : WorldCell N N)
+          = pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) s) := rfl
+      rw [hpair, worldDual_pureDiagonalState]
+      rfl
           (show Fin (min N N) from s))
     rw [hdual]
     simp [integerSquareDual_diagonal, mr]
-  · have hdualne : worldDual x ≠ (ms,ms) := by
+    have hdualne : worldDual x ≠ (ms,ms) := by
       intro h
       apply hx
-      have := congrArg worldDual h
-      simpa [ms, pureDiagonalState, diagonalState] using this
+      have h1 := congrArg worldDual h
+      rw [worldDual_involutive] at h1
+      have h2 : worldDual ((ms, ms) : WorldCell N N) = ((s,s) : WorldCell N N) := by
+        have hpair : ((ms, ms) : WorldCell N N)
+            = pureDiagonalState (pureMirror (Fin.castLE (show N ≤ min N N by omega) s)) := rfl
+        rw [hpair, worldDual_pureDiagonalState, pureMirror_involutive]
+        rfl
+      rw [h2] at h1
+      exact h1
     simp [hdualne, hx]
 
 /-- Total concrete GST matrix unit between arbitrary sheets. -/
