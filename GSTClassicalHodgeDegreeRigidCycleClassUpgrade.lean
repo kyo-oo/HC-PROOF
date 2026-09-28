@@ -41,6 +41,7 @@ open GSTClassicalHodgeProjectiveDegreeTrace
 open GSTClassicalHodgeStage2GSemanticRigidity
 open GSTClassicalHodgeZeroDefectCoupledSector
 open GSTClassicalHodgeFiberedNativePullback
+open GSTClassicalHodgeFiberedCycleClassDefect
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -130,11 +131,14 @@ theorem zeroDefect_atom_common_class_ne_zero
   have hagree :=
     (mem_zeroDefectSector_iff (V := V) (H := H)
       (p := p) (atom V H p i x)).mp hzero
-  rw [toNativeCycle_atom] at hagree
+  have hagree' :
+      H.cycleClass p (codimensionPointCycle V.X p x) =
+        (classicalHodgeBasis V H p i).1 := by
+    simpa using hagree
   intro hbasis
   have hpoint :
       H.cycleClass p (codimensionPointCycle V.X p x) = 0 := by
-    rw [hagree, hbasis]
+    rw [hagree', hbasis]
   exact R.point_visible p x hpoint
 
 end DegreeRigidGeometricSemantics
