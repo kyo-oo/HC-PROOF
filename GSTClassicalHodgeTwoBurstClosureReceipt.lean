@@ -8,30 +8,30 @@ import GSTClassicalHodgeNormalizedFiberedDefectBarrier
 import GSTClassicalHodgeProjectiveVisibilityNoGo
 import GSTClassicalHodgeCohomologicalPairingFrontier
 import GSTClassicalHodgePolarizedHodgeGhost
+import GSTClassicalHodgeAtomicDefectTomographyGhost
+import GSTClassicalHodgePolarizedOrthogonalExtinctionAudit
 
 /-!
 # GST CLASSICAL HODGE — TWO-BURST CLOSURE RECEIPT
 
-Compiler receipt for the corrected genuine cycle-class / projective tomography
-upgrade.  It deliberately separates independently geometric semantics from the
-Hodge-strength horizontal orbit certificate and imports the active circularity
-barriers plus the pairing-dual transformations:
+Compiler receipt for the corrected genuine cycle-class / tomography upgrade.
+It deliberately separates independently geometric semantics from every
+Hodge-strength horizontal certificate and keeps the active circularity barriers
+visible.
 
-* normalized fibered zero defect is exactly a basis-cycle equality;
-* ordinary genuine projective-correspondence images of the algebraic ghost
-  spine have identically zero ghost-detector readout;
-* a perfect classical cohomological pairing transforms a surviving separator
-  into one concrete nonzero cohomology class orthogonal to every genuine
-  atomic cycle class while still detecting the obstructed Hodge direction;
-* a perfect pairing restricted directly to the rational `(p,p)` Hodge fiber
-  sharpens this further to a nonzero Hodge class orthogonal to every algebraic
-  Hodge class.
+The transformed residual obstruction is now recorded simultaneously in four
+compatible languages:
 
-Accordingly the conditional orbit-irreducibility crown below is retained as a
-reduction target only; it is not promoted to a foundational geometry theorem.
-The pairing transformations likewise are not claimed to finish Hodge by
-themselves: they move the residual obstruction into concrete dual classes for
-an independent polarization / primitive-form attack.
+* an omniversal separator ghost in classical cohomology;
+* a nonzero quotient class in the genuine atomic defect space;
+* a nonzero finite GST Lefschetz-tomography moment on the same Hodge sheet;
+* a nonzero polarized Hodge-fiber dual orthogonal to every algebraic Hodge
+  vector.
+
+Ordinary cycle-natural projective images cannot kill this obstruction: they
+remain algebraic and are annihilated by the separator. Likewise universal
+algebraic pairing separation is audited as Hodge-equivalent and is not admitted
+as a free geometry field.
 -/
 
 set_option maxHeartbeats 100000000
@@ -80,6 +80,12 @@ open AlgebraicGeometry
 #check GSTClassicalHodgePolarizedHodgeGhost.ghostHodgeDual_orthogonal
 #check GSTClassicalHodgePolarizedHodgeGhost.ghostHodgeDual_detects
 #check GSTClassicalHodgePolarizedHodgeGhost.failure_yields_polarizedHodgeGhost
+#check GSTClassicalHodgeAtomicDefectTomographyGhost.ghostAtomicDefect_ne_zero
+#check GSTClassicalHodgeAtomicDefectTomographyGhost.ghost_basis_has_nonzero_lefschetzMoment
+#check GSTClassicalHodgeAtomicDefectTomographyGhost.failure_yields_atomicDefectTomographyGhost
+#check GSTClassicalHodgeAtomicDefectTomographyGhost.not_hodge_iff_nonempty_atomicDefectTomographyGhost
+#check GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.AlgebraicPairingSeparates
+#check GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.algebraicPairingSeparates_iff_hodge
 
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.not_nonempty_zeroCycleClassData
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.cycleClass_ne_zero
@@ -96,3 +102,6 @@ open AlgebraicGeometry
 #print axioms GSTClassicalHodgeCohomologicalPairingFrontier.failure_yields_pairingOrthogonalGhost
 #print axioms GSTClassicalHodgePolarizedHodgeGhost.ghostHodgeDual_orthogonal
 #print axioms GSTClassicalHodgePolarizedHodgeGhost.failure_yields_polarizedHodgeGhost
+#print axioms GSTClassicalHodgeAtomicDefectTomographyGhost.ghostAtomicDefect_ne_zero
+#print axioms GSTClassicalHodgeAtomicDefectTomographyGhost.not_hodge_iff_nonempty_atomicDefectTomographyGhost
+#print axioms GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.algebraicPairingSeparates_iff_hodge
