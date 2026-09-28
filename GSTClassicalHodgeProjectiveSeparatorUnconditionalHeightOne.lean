@@ -16,8 +16,9 @@ prime cannot be invertible.
 
 Consequently every relevance-selected projective separator is
 unconditionally a genuine height-one equation in the source-prime quotient.
-This removes a branch from the recursive projective-cut geometry; no Hodge
-class, cycle-class surjectivity, or external realization hypothesis occurs.
+Moreover its principal ideal is proper and therefore has an actual minimal
+prime.  This upgrades the earlier dichotomy into an existence-bearing
+height-one geometric package.
 -/
 
 set_option maxHeartbeats 40000000
@@ -46,6 +47,14 @@ theorem separatorClass_not_isUnit
     x.asHomogeneousIdeal
     (positiveHomogeneousSeparator_homogeneous n x)
     (positiveHomogeneousSeparator_degree_pos n x)
+
+/-- The separator principal ideal in the source-prime quotient is genuinely
+proper. -/
+theorem separatorPrincipal_ne_top
+    (n : Nat) (x : projectiveSpace n) :
+    Ideal.span ({separatorClass n x} : Set (pointQuotient n x)) ≠ ⊤ := by
+  rw [Ideal.span_singleton_eq_top]
+  exact separatorClass_not_isUnit n x
 
 /-- **UNCONDITIONAL PROJECTIVE HEIGHT-ONE LAW.**
 The actual separator chosen at every projective source point always lies in
@@ -77,14 +86,47 @@ theorem separator_minimalPrime_crown
   exact separator_minimalPrime_height_one n x
     (separatorClass_not_isUnit n x) hq
 
+/-- **MINIMAL-PRIME EXISTENCE OVER THE SEPARATOR.**
+The proper height-one separator ideal has an actual minimal prime above it. -/
+theorem exists_separator_minimalPrime
+    (n : Nat) (x : projectiveSpace n) :
+    ∃ q : Ideal (pointQuotient n x),
+      q ∈ (Ideal.span ({separatorClass n x} : Set (pointQuotient n x))).minimalPrimes := by
+  let I : Ideal (pointQuotient n x) :=
+    Ideal.span ({separatorClass n x} : Set (pointQuotient n x))
+  have hI : I ≠ ⊤ := by
+    simpa [I] using separatorPrincipal_ne_top n x
+  obtain ⟨m, hm, hIm⟩ := Ideal.exists_le_maximal I hI
+  have hmPrime : m.IsPrime := hm.isPrime
+  obtain ⟨q, hq, hqm⟩ := Ideal.exists_minimalPrimes_le hIm
+  exact ⟨q, hq⟩
+
+/-- Existence-bearing crown: every source point produces an actual prime above
+the separator equation, and the principal equation underneath it has exact
+height one. -/
+theorem exists_heightOne_separatorPrime
+    (n : Nat) (x : projectiveSpace n) :
+    ∃ q : Ideal (pointQuotient n x),
+      (Ideal.span ({separatorClass n x} : Set (pointQuotient n x))).height = 1
+      ∧ Ideal.span ({separatorClass n x} : Set (pointQuotient n x)) ≤ q
+      ∧ q.IsPrime := by
+  obtain ⟨q,hq⟩ := exists_separator_minimalPrime n x
+  exact ⟨q, separator_minimalPrime_crown n x hq⟩
+
 #check separatorClass_not_isUnit
+#check separatorPrincipal_ne_top
 #check separator_height_one
 #check separator_unit_or_height_one_collapses
 #check separator_minimalPrime_crown
+#check exists_separator_minimalPrime
+#check exists_heightOne_separatorPrime
 
 #print axioms separatorClass_not_isUnit
+#print axioms separatorPrincipal_ne_top
 #print axioms separator_height_one
 #print axioms separator_unit_or_height_one_collapses
 #print axioms separator_minimalPrime_crown
+#print axioms exists_separator_minimalPrime
+#print axioms exists_heightOne_separatorPrime
 
 end GSTClassicalHodgeProjectiveSeparatorUnconditionalHeightOne
