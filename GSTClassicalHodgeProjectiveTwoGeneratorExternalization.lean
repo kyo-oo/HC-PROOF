@@ -65,6 +65,12 @@ structure ProjectivePrimitiveRealization
     (T : Module.End ℚ (ClassicalHodgeFiber V H p)) where
   map : V.X ⟶ V.X
   naturality : GeometricPushforwardNaturality V H p map
+  ambient_agrees :
+    ∀ x : RationalSingularCohomology H.analytification (2 * p),
+      ambientOperator (H := H)
+          (smoothProjectiveNativePushforward V map p)
+          naturality.kernelStable x =
+        naturality.cohomologyPushforward x
   restricts_to_hodge :
     ∀ alpha : ClassicalHodgeFiber V H p,
       naturality.cohomologyPushforward alpha.1 = (T alpha).1
@@ -80,17 +86,7 @@ noncomputable def toNativeHodgePrimitive
   kernelStable := R.naturality.kernelStable
   restricts_to_hodge := by
     intro alpha
-    have hcanonical :=
-      ambientOperator_agrees_with_realization
-        (H := H)
-        (smoothProjectiveNativePushforward V R.map p)
-        R.naturality.kernelStable
-        R.naturality.cohomologyPushforward
-        (by
-          ext Z
-          exact R.naturality.naturality Z)
-        alpha.1
-    rw [hcanonical]
+    exact (R.ambient_agrees alpha.1).trans (R.restricts_to_hodge alpha)
     exact R.restricts_to_hodge alpha
 
 /-- The canonical ambient action generated from the native pushforward agrees
@@ -102,15 +98,7 @@ theorem ambient_eq_geometric
       R.naturality.cohomologyPushforward := by
   apply LinearMap.ext
   intro alpha
-  exact ambientOperator_agrees_with_realization
-    (H := H)
-    (smoothProjectiveNativePushforward V R.map p)
-    R.naturality.kernelStable
-    R.naturality.cohomologyPushforward
-    (by
-      ext Z
-      exact R.naturality.naturality Z)
-    alpha
+  exact R.ambient_agrees alpha
 
 end ProjectivePrimitiveRealization
 
