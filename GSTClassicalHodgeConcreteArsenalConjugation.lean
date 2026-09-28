@@ -36,6 +36,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeFiniteSupportChart
+open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeIntegralSquareLocalization
 open GSTClassicalHodgeLiveSheetIntertwining
 open GSTClassicalHodgeSupportCardinalityBridge
@@ -170,7 +171,6 @@ theorem concreteHodgeMatrixUnit_eq
   have hscale := integralHodgeSquare_scale_ne_zero alpha
   rw [smul_smul]
   simp [hscale]
-  rw [hodgeMatrixUnit_apply]
   unfold hodgeCoordinate liveBasisVector
   simp [liveBasisIndex]
 
