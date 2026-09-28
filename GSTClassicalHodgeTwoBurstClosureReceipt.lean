@@ -11,6 +11,7 @@ import GSTClassicalHodgePolarizedHodgeGhost
 import GSTClassicalHodgeAtomicDefectTomographyGhost
 import GSTClassicalHodgePolarizedOrthogonalExtinctionAudit
 import GSTClassicalHodgeAtomicDefectTomographySynchronization
+import GSTClassicalHodgeTomographySynchronizationAudit
 
 /-!
 # GST CLASSICAL HODGE — TWO-BURST CLOSURE RECEIPT
@@ -36,7 +37,9 @@ Ordinary cycle-natural projective images cannot kill this obstruction: they
 remain algebraic and are annihilated by the separator. Likewise universal
 algebraic pairing separation is audited as Hodge-equivalent and is not admitted
 as a free geometry field.  The quotient synchronization introduces no cycle
-representative and no GST/native operator externalization.
+representative and no GST/native operator externalization.  Its existence is
+itself audited as exactly equivalent to failure, so tomography injectivity or
+normalization alone cannot be mistaken for a contradiction.
 -/
 
 set_option maxHeartbeats 100000000
@@ -97,6 +100,9 @@ open AlgebraicGeometry
 #check GSTClassicalHodgeAtomicDefectTomographySynchronization.synchronizedDefectRead_ghostAtomicDefect
 #check GSTClassicalHodgeAtomicDefectTomographySynchronization.synchronizedDefectRead_ne_zero
 #check GSTClassicalHodgeAtomicDefectTomographySynchronization.failure_yields_synchronizedAtomicDefectGhost
+#check GSTClassicalHodgeTomographySynchronizationAudit.not_hodge_iff_nonempty_synchronizedAtomicDefectGhost
+#check GSTClassicalHodgeTomographySynchronizationAudit.hodge_of_no_synchronizedAtomicDefectGhost
+#check GSTClassicalHodgeTomographySynchronizationAudit.synchronizedAtomicDefectGhost_empty_iff_hodge
 
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.not_nonempty_zeroCycleClassData
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.cycleClass_ne_zero
@@ -118,3 +124,5 @@ open AlgebraicGeometry
 #print axioms GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.algebraicPairingSeparates_iff_hodge
 #print axioms GSTClassicalHodgeAtomicDefectTomographySynchronization.synchronizedDefectRead_ghostAtomicDefect
 #print axioms GSTClassicalHodgeAtomicDefectTomographySynchronization.failure_yields_synchronizedAtomicDefectGhost
+#print axioms GSTClassicalHodgeTomographySynchronizationAudit.not_hodge_iff_nonempty_synchronizedAtomicDefectGhost
+#print axioms GSTClassicalHodgeTomographySynchronizationAudit.synchronizedAtomicDefectGhost_empty_iff_hodge
