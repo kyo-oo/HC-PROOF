@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - sol/hodge-conjecture-final-integration
+      - sol/hodge-single-separator-successor
   workflow_dispatch:
 
 permissions:
@@ -38,6 +39,27 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake build HodgePureMath 2>&1 | tee hodge-final.log
+
+      - name: Compile degree-rigid cycle-class upgrade
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeDegreeRigidCycleClassUpgrade.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile tomography defect splice
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeTomographyDefectSplice.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile projective detector-moment collision
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeProjectiveDetectorMomentCollision.lean 2>&1 | tee -a hodge-final.log
 
       - name: Compile direct orbit-word saturation
         shell: bash
