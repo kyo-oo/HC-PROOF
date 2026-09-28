@@ -82,6 +82,20 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeFiniteCorrespondenceCohomologyNaturality.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile visibility equivalence audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeVisibilityEquivalenceAudit.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile universal cycle-naturality barrier
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeUniversalNaturalityBarrier.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile direct orbit-word saturation
         shell: bash
         run: |
