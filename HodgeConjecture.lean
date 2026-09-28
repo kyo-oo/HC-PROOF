@@ -15,6 +15,7 @@ import GSTWorldRecoordinationGroupoid
 import GSTGradedWorldAlgebra
 import GSTHodgeChannelFinale
 import GSTClassicalHodgeFullLimitlessCrown
+import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -29,26 +30,36 @@ It combines three independently developed and machine-oriented layers:
    limitless geometric/cosmic classical crown.
 
 No internal GST surrogate is substituted for the target.  `ClassicalHodgeTarget`
-is definitionally the Stage-2G statement.  The final wiring below makes the
-proof flow explicit:
+is definitionally the Stage-2G statement.
+
+The original compatibility landing is retained:
 
   genuine geometric cycle-class spine
     + nonvanishing projective spine tower
     + genuine projective externalization of the cosmic read/write action
-      -> full limitless classical Hodge crown
+      -> full limitless classical Hodge crown.
+
+The strengthened geometry-first landing removes both of those large supplied
+interfaces from its public input surface:
+
+  genuine geometric cycle-class spine
+    + one conserved native/cohomological tower charge
+      -> all-weight spine nonvanishing as a theorem
+    + two genuine projective primitive actions per ordered Hodge pair
+      -> all rank-free matrix units by the internal GST word algebra
       -> exact Stage-2G Hodge statement
       -> explicit native codimension-p cycle for every rational (p,p) class.
 
 Under the ordinary finite-dimensionality package for the rational Hodge
-fibers, the same result is also transported through the independently verified
-multi-channel architecture:
+fibers, either exact Hodge landing is transported through the independently
+verified multi-channel architecture:
 
   exact Hodge statement
     <-> canonical finite-basis algebraization
     -> Wave-II channel quotient
     -> arbitrary same-weight multiplicity with no finite rank ceiling.
 
-The two routes meet here; neither is hidden behind a redefinition of Hodge.
+The routes meet here; none is hidden behind a redefinition of Hodge.
 -/
 
 set_option maxHeartbeats 10000000
@@ -396,6 +407,53 @@ theorem every_hodge_class_has_native_cycle_of_full_limitless_geometry
     GSTClassicalHodgeFullLimitlessCrown.every_hodge_class_has_native_cycle
       G hNV R p alpha halpha
 
+/-- **GEOMETRY-FIRST BRUTE-FORCE PUBLIC LANDING.**
+
+This strengthened public theorem removes both large compatibility inputs of the
+older limitless crown.  The tower-nonvanishing family is generated internally
+from one conserved native/cohomological charge.  Full projective matrix-unit
+externalization is replaced by two actual projective primitive actions per
+ordered Hodge pair; the complete rank-free matrix-unit arsenal is synthesized
+by the internal GST two-generator word. -/
+theorem classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (D :
+      GSTClassicalHodgeLimitlessSpinePropagation.SpineTowerConservedCharge G)
+    (R : ∀ q : Nat,
+      ∀ i j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H q,
+        GSTClassicalHodgeProjectiveTwoGeneratorExternalization.ProjectiveTwoGenerator
+          (V := V) (H := H) i j) :
+    ClassicalHodgeTarget V H := by
+  simpa [ClassicalHodgeTarget] using
+    (GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
+      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+        G D R)
+
+/-- Elementwise cycle witness for the geometry-first brute-force landing. -/
+theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (D :
+      GSTClassicalHodgeLimitlessSpinePropagation.SpineTowerConservedCharge G)
+    (R : ∀ q : Nat,
+      ∀ i j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H q,
+        GSTClassicalHodgeProjectiveTwoGeneratorExternalization.ProjectiveTwoGenerator
+          (V := V) (H := H) i j)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  exact
+    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
+      every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
+        G D R p alpha halpha
+
 /-- Once ordinary Hodge-fiber finite-dimensionality is supplied, the full
 limitless classical crown automatically supplies the exact canonical basis
 algebraization obligation used by the multi-channel theorem. -/
@@ -416,6 +474,30 @@ theorem canonical_basis_algebraization_of_full_limitless_geometry
       V H F).2
   exact GSTClassicalHodgeFullLimitlessCrown.bigradedBettiHodge G hNV R
 
+/-- Canonical finite-basis algebraization generated from the strengthened
+conserved-spine/projective-two-generator route. -/
+theorem canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (D :
+      GSTClassicalHodgeLimitlessSpinePropagation.SpineTowerConservedCharge G)
+    (R : ∀ q : Nat,
+      ∀ i j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H q,
+        GSTClassicalHodgeProjectiveTwoGeneratorExternalization.ProjectiveTwoGenerator
+          (V := V) (H := H) i j) :
+    GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation
+      V H F := by
+  apply
+    (GSTHodgeChannelFinale.canonical_basis_algebraization_iff_hodge
+      V H F).2
+  exact
+    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
+      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+        G D R
+
 /-- The same geometric/cosmic crown therefore generates the minimal Wave-II
 channel quotient architecture automatically. -/
 theorem channel_quotient_of_full_limitless_geometry
@@ -434,6 +516,27 @@ theorem channel_quotient_of_full_limitless_geometry
       V H F
       (canonical_basis_algebraization_of_full_limitless_geometry F G hNV R)
 
+/-- Wave-II channel quotient generated from the strengthened geometry-first
+route. -/
+theorem channel_quotient_of_conserved_spine_and_projective_two_generators
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (D :
+      GSTClassicalHodgeLimitlessSpinePropagation.SpineTowerConservedCharge G)
+    (R : ∀ q : Nat,
+      ∀ i j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H q,
+        GSTClassicalHodgeProjectiveTwoGeneratorExternalization.ProjectiveTwoGenerator
+          (V := V) (H := H) i j) :
+    GSTHodgeChannelQuotient.Stage2GChannelQuotientObligation V H := by
+  exact
+    GSTHodgeChannelFinale.canonical_basis_obligation_implies_channel_quotient
+      V H F
+      (canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
+        F G D R)
+
 /-- Same-weight multiplicity is unrestricted in the final public landing. -/
 theorem no_same_weight_hodge_rank_ceiling :
     ∀ N p : Nat,
@@ -444,17 +547,9 @@ theorem no_same_weight_hodge_rank_ceiling :
 
 /-- **UNIFIED FINAL HODGE RECEIPT.**
 
-This theorem is the explicit composition point of the three completed proof
-lanes.  From the genuine geometric/cosmic inputs consumed by Astra's final
-crown it simultaneously obtains:
-
-* the exact Stage-2G Hodge statement (`ClassicalHodgeTarget`);
-* canonical finite-basis algebraization;
-* the minimal Wave-II channel quotient realization;
-* the global no-ceiling same-weight multiplicity theorem.
-
-The elementwise cycle witness is separately exposed by
-`every_hodge_class_has_native_cycle_of_full_limitless_geometry`. -/
+This theorem is the explicit composition point of the original full-limitless
+compatibility lane and the multi-channel architecture.  It is retained for
+backward compatibility with existing callers. -/
 theorem unified_hodge_finale
     {V : SmoothProjectiveComplexScheme}
     {H : HodgeBigradedBettiData V}
@@ -484,6 +579,45 @@ theorem unified_hodge_finale
       V H F hBasis
   exact ⟨hTarget, hBasis, hQuot, no_same_weight_hodge_rank_ceiling⟩
 
+/-- **UNIFIED GEOMETRY-FIRST BRUTE-FORCE HODGE RECEIPT.**
+
+The old `hNV` and full projective-kernel externalization arguments are absent
+from this strengthened public finale.  Nonvanishing is generated recursively
+from the conserved charge and all matrix units are generated from the two
+actual projective primitive actions. -/
+theorem unified_hodge_finale_conserved_spine_projective_two_generators
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (D :
+      GSTClassicalHodgeLimitlessSpinePropagation.SpineTowerConservedCharge G)
+    (R : ∀ q : Nat,
+      ∀ i j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H q,
+        GSTClassicalHodgeProjectiveTwoGeneratorExternalization.ProjectiveTwoGenerator
+          (V := V) (H := H) i j) :
+    ClassicalHodgeTarget V H
+    ∧ GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation V H F
+    ∧ GSTHodgeChannelQuotient.Stage2GChannelQuotientObligation V H
+    ∧ (∀ N p : Nat,
+      Fintype.card
+          (GSTMultiChannelHodgeCosmology.HodgeChannel
+            (GSTMultiChannelHodgeCosmology.standardChannelShape N)) = N) := by
+  have hTarget : ClassicalHodgeTarget V H :=
+    classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
+      G D R
+  have hBasis :
+      GSTHodgeChannelFinale.Stage2GCanonicalBasisAlgebraizationObligation
+        V H F :=
+    canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
+      F G D R
+  have hQuot :
+      GSTHodgeChannelQuotient.Stage2GChannelQuotientObligation V H :=
+    GSTHodgeChannelFinale.canonical_basis_obligation_implies_channel_quotient
+      V H F hBasis
+  exact ⟨hTarget, hBasis, hQuot, no_same_weight_hodge_rank_ceiling⟩
+
 #check ClassicalHodgeTarget
 #check classicalHodgeTarget_iff_explicit_witness
 #check classicalHodgeTarget_of_compact_realization
@@ -507,10 +641,15 @@ theorem unified_hodge_finale
 #check classicalHodgeTarget_iff_canonical_basis_algebraization
 #check classicalHodgeTarget_of_full_limitless_geometry
 #check every_hodge_class_has_native_cycle_of_full_limitless_geometry
+#check classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
+#check every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
 #check canonical_basis_algebraization_of_full_limitless_geometry
+#check canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
 #check channel_quotient_of_full_limitless_geometry
+#check channel_quotient_of_conserved_spine_and_projective_two_generators
 #check no_same_weight_hodge_rank_ceiling
 #check unified_hodge_finale
+#check unified_hodge_finale_conserved_spine_projective_two_generators
 
 #print axioms classicalHodgeTarget_iff_explicit_witness
 #print axioms classicalHodgeTarget_of_compact_realization
@@ -526,8 +665,13 @@ theorem unified_hodge_finale
 #print axioms classicalHodgeTarget_iff_canonical_basis_algebraization
 #print axioms classicalHodgeTarget_of_full_limitless_geometry
 #print axioms every_hodge_class_has_native_cycle_of_full_limitless_geometry
+#print axioms classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
+#print axioms every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
 #print axioms canonical_basis_algebraization_of_full_limitless_geometry
+#print axioms canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
 #print axioms channel_quotient_of_full_limitless_geometry
+#print axioms channel_quotient_of_conserved_spine_and_projective_two_generators
 #print axioms unified_hodge_finale
+#print axioms unified_hodge_finale_conserved_spine_projective_two_generators
 
 end HodgeConjecture
