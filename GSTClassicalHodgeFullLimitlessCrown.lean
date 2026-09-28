@@ -19,17 +19,14 @@ All internal algebra has already been discharged upstream:
 * tensor commutation of multiplicity and projective actions;
 * rank-free irreducibility/no-escape saturation.
 
-The geometric cycle-class spine now generates the cross-weight algebraic tower
-itself.  Thus the global Hodge statement follows as soon as two geometric facts
-about the *genuine* classical cycle-class semantics are established:
+The geometric cycle-class spine generates the cross-weight algebraic tower
+itself.  The strengthened spine layer now reduces tower nonvanishing to one
+conserved geometric charge: a base value, one successor law, and compatibility
+of native/cohomological readout.  Thus the old per-weight nonvanishing artery
+is no longer primitive once such a charge is constructed.
 
-1. the canonical spine tower is nonzero in every nonzero Hodge weight;
-2. the true limitless cosmic read/write action is externalized by genuine
-   projective-correspondence operators.
-
-Neither item is a basis-cycle family or a surjectivity statement.  The theorem
-below shows that after the entire limitless cosmology has been used, there are
-no further internal GST obligations hiding behind the classical landing.
+The remaining independent external artery is genuine projective
+externalization of the limitless cosmic read/write action.
 
 This module deliberately lands in `BigradedBettiHodgeStatement` directly and
 has no dependency on the public `HodgeConjecture` entry face.  That keeps the
@@ -61,14 +58,27 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 
 /-- The canonical projective/Hodge spine tower does not vanish in a live Hodge
-weight.  This is the standard geometric nonvanishing artery: the seed itself
-is already constructed by `spineHodgeSeed`; only its nonvanishing is asserted
-here. -/
+weight.  This is retained as the compatibility interface consumed by the
+older crown; the conserved-charge theorem below now manufactures it from a
+single recursive geometric invariant. -/
 def SpineTowerNonvanishing
     (G : GeometricCycleClassSpine V H) : Prop :=
   ∀ p : Nat,
     rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥ →
       spineHodgeSeed G p ≠ 0
+
+/-- **NONVANISHING FROM ONE CONSERVED CHARGE.**
+The infinite family `SpineTowerNonvanishing G` is a theorem once the geometric
+spine carries a conserved native/cohomological charge.  The Hodge-fiber
+liveness premise is no longer used to prove the seed nonzero: the conserved
+charge proves a stronger unconditional nonvanishing statement at every tower
+level. -/
+theorem spineTowerNonvanishing_of_conservedCharge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G) :
+    SpineTowerNonvanishing G := by
+  intro p _hH
+  exact D.spineHodgeSeed_ne_zero p
 
 /-- Genuine projective realization of the one true limitless cosmic read/write
 operator in every weight and every ordered multiplicity pair.  The operator is
@@ -140,6 +150,18 @@ theorem bigradedBettiHodge
       (canonicalCosmicNaturality_of_fullProjectiveExternalization G R p)
       halpha
 
+/-- **CONSERVED-CHARGE LIMITLESS CROWN.**
+This is the strengthened landing: tower nonvanishing is no longer an input.
+One conserved geometric charge generates it internally and the remaining
+projective externalization artery then closes the exact Stage-2G statement. -/
+theorem bigradedBettiHodge_of_conservedCharge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G)
+    (R : FullProjectiveCosmicExternalization G) :
+    BigradedBettiHodgeStatement V H :=
+  bigradedBettiHodge G
+    (spineTowerNonvanishing_of_conservedCharge G D) R
+
 /-- Public-name compatibility receipt for the exact Stage-2G target.  The
 actual public alias `HodgeConjecture.ClassicalHodgeTarget` is introduced one
 layer above in `HodgeConjecture.lean`. -/
@@ -149,6 +171,14 @@ theorem classicalHodgeTarget
     (R : FullProjectiveCosmicExternalization G) :
     BigradedBettiHodgeStatement V H :=
   bigradedBettiHodge G hNV R
+
+/-- Conserved-charge public-name compatibility receipt. -/
+theorem classicalHodgeTarget_of_conservedCharge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G)
+    (R : FullProjectiveCosmicExternalization G) :
+    BigradedBettiHodgeStatement V H :=
+  bigradedBettiHodge_of_conservedCharge G D R
 
 /-- Elementwise form: every genuine rational `(p,p)` class receives an actual
 native codimension-p algebraic cycle. -/
@@ -162,6 +192,18 @@ theorem every_hodge_class_has_native_cycle
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
   exact bigradedBettiHodge G hNV R p alpha halpha
+
+/-- Elementwise conserved-charge landing. -/
+theorem every_hodge_class_has_native_cycle_of_conservedCharge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G)
+    (R : FullProjectiveCosmicExternalization G)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  exact bigradedBettiHodge_of_conservedCharge G D R p alpha halpha
 
 /-- There is no remaining finite-rank/countability restriction in the final
 crown: every Hodge fiber uses its unrestricted basis index and every actual
@@ -177,19 +219,42 @@ theorem full_limitless_rank_free_crown
   have h := bigradedBettiHodge G hNV R
   exact ⟨h, h⟩
 
+/-- Rank-free crown with nonvanishing generated internally from the conserved
+geometric charge. -/
+theorem full_limitless_rank_free_crown_of_conservedCharge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G)
+    (R : FullProjectiveCosmicExternalization G) :
+    (∀ p : Nat,
+      rationalHodgeSubspace (H.hodgeBigrading p) ≤
+        LinearMap.range (H.cycleClass p))
+    ∧ BigradedBettiHodgeStatement V H := by
+  have h := bigradedBettiHodge_of_conservedCharge G D R
+  exact ⟨h, h⟩
+
 #check SpineTowerNonvanishing
+#check spineTowerNonvanishing_of_conservedCharge
 #check FullProjectiveCosmicExternalization
 #check canonicalCosmicNaturality_of_fullProjectiveExternalization
 #check algebraicFiber_ne_bot_of_spineTower
 #check bigradedBettiHodge
+#check bigradedBettiHodge_of_conservedCharge
 #check classicalHodgeTarget
+#check classicalHodgeTarget_of_conservedCharge
 #check every_hodge_class_has_native_cycle
+#check every_hodge_class_has_native_cycle_of_conservedCharge
 #check full_limitless_rank_free_crown
+#check full_limitless_rank_free_crown_of_conservedCharge
 
+#print axioms spineTowerNonvanishing_of_conservedCharge
 #print axioms canonicalCosmicNaturality_of_fullProjectiveExternalization
 #print axioms algebraicFiber_ne_bot_of_spineTower
 #print axioms bigradedBettiHodge
+#print axioms bigradedBettiHodge_of_conservedCharge
 #print axioms classicalHodgeTarget
+#print axioms classicalHodgeTarget_of_conservedCharge
+#print axioms every_hodge_class_has_native_cycle_of_conservedCharge
 #print axioms full_limitless_rank_free_crown
+#print axioms full_limitless_rank_free_crown_of_conservedCharge
 
 end GSTClassicalHodgeFullLimitlessCrown
