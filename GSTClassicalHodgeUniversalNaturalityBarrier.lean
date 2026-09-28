@@ -42,6 +42,8 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeGhostSpineCosmicLeak
+open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeUniversalTwoSlotSaturation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -105,32 +107,35 @@ theorem no_cycleNatural_visible_target
   rw [← haction]
   exact ghost_kills_every_cycleNatural_image G E A Z
 
-/-- In particular, the nonzero GST ghost leak from the canonical spine cannot
-be the action of any genuine cycle-class-natural operator while the ghost
-survives. -/
-theorem canonicalGhostLeak_not_cycleNatural
+/-- In particular, the exact nonzero two-slot GST image from the canonical
+spine source to the ghost sheet cannot be the action of any genuine
+cycle-class-natural operator while the ghost survives. -/
+theorem ghostSpine_twoSlot_not_cycleNatural
     (G : GeometricCycleClassSpine V H)
     (M : NativeMassCycleClassBridge V H)
     (E : OmniversalSeparatorGhost G)
     (A : CycleClassOperatorPair V H E.weight)
     (haction :
-      A.cohomologyOperator (ghostSpineSeed G M E).hodge.1 =
-        canonicalGhostLeak G M E) :
+      let S := ghostSpineSeed G M E
+      A.cohomologyOperator S.hodge.1 =
+        (liftFiniteHodgeOperator
+          (pairBasisIndex S.sourceIndex E.sheet)
+          (forwardArsenalWord sourceSlot targetSlot) S.hodge).1) :
     False := by
-  have hvisible := ghostLeak_detected_nonzero G M E
-  exact no_cycleNatural_visible_target
-    G E A (ghostSpineSeed G M E).cycle
-      (canonicalGhostLeak G M E) hvisible
-      (by simpa [(ghostSpineSeed G M E).class_eq] using haction)
+  have hzero := ghost_kills_every_cycleNatural_spine_image G M E A
+  have hvisible := ghostSpine_twoSlot_detector_ne_zero G M E
+  dsimp only at haction hvisible
+  rw [haction] at hzero
+  exact hvisible hzero
 
 #check ghost_kills_every_cycleNatural_image
 #check ghost_kills_every_cycleNatural_spine_image
 #check no_cycleNatural_visible_target
-#check canonicalGhostLeak_not_cycleNatural
+#check ghostSpine_twoSlot_not_cycleNatural
 
 #print axioms ghost_kills_every_cycleNatural_image
 #print axioms ghost_kills_every_cycleNatural_spine_image
 #print axioms no_cycleNatural_visible_target
-#print axioms canonicalGhostLeak_not_cycleNatural
+#print axioms ghostSpine_twoSlot_not_cycleNatural
 
 end GSTClassicalHodgeUniversalNaturalityBarrier
