@@ -123,6 +123,18 @@ noncomputable def successorMass
     (p : Nat) (x : CodimensionPoint V.X p) : ℚ :=
   presentationMass (successorPresentation V p x)
 
+/-- The native mass of one geometry-built successor point cycle is exactly the
+finite mass of its successor presentation. -/
+theorem nativeCycleMass_successor_point
+    (V : SmoothProjectiveComplexScheme)
+    (p : Nat) (x : CodimensionPoint V.X p) :
+    nativeCycleMass V (p + 1)
+      (successorNativeOperator V p (codimensionPointCycle V.X p x)) =
+      successorMass V p x := by
+  rw [successorNativeOperator_point]
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  simp [nativeCycleMass, successorMass, presentationMass]
+
 /-- The cosmic shadow of one geometry-built successor cycle is exactly its
 finite successor mass on the next limitless weight. -/
 theorem successorNativeOperator_cosmicShadow_point
@@ -136,6 +148,32 @@ theorem successorNativeOperator_cosmicShadow_point
   congr 1
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   simp [nativeCycleMass, successorMass, presentationMass]
+
+/-- **POINT-TO-GLOBAL MASS PROPAGATION.**
+If every genuine codimension-p point acquires the same limitless successor
+mass, then the entire native principal-cut operator multiplies canonical mass
+by that scalar.  The proof uses the exact compact point normal form, so no
+arbitrary-cycle hypothesis is required. -/
+theorem nativeCycleMass_successor_of_pointMass
+    (V : SmoothProjectiveComplexScheme)
+    (p : Nat)
+    (hpoint : ∀ x : CodimensionPoint V.X p,
+      successorMass V p x = successorScalar p)
+    (Z : codimensionCycles V.X p) :
+    nativeCycleMass V (p + 1) (successorNativeOperator V p Z) =
+      successorScalar p * nativeCycleMass V p Z := by
+  have hzero :
+      (nativeCycleMass V (p + 1)).comp (successorNativeOperator V p) -
+          (successorScalar p) • nativeCycleMass V p = 0 := by
+    apply nativeLinearMap_eq_zero_of_points V p
+    intro x
+    simp [nativeCycleMass_successor_point, hpoint x, smul_eq_mul]
+  have heq :
+      (nativeCycleMass V (p + 1)).comp (successorNativeOperator V p) =
+          (successorScalar p) • nativeCycleMass V p :=
+    sub_eq_zero.mp hzero
+  have hZ := LinearMap.congr_fun heq Z
+  simpa [smul_eq_mul] using hZ
 
 /-- Linear form of the principal-cut shadow law. -/
 theorem successorNativeOperator_cosmicShadow
@@ -201,6 +239,8 @@ theorem native_cycle_limitless_shadow_crown
 #check nativeCycleCosmicShadow
 #check nativeCycleCosmicShadow_point
 #check cosmicMatrixUnit_nativeCycleShadow
+#check nativeCycleMass_successor_point
+#check nativeCycleMass_successor_of_pointMass
 #check successorNativeOperator_cosmicShadow_point
 #check projectiveTowerCosmicShadow
 #check native_cycle_limitless_shadow_crown
@@ -208,6 +248,8 @@ theorem native_cycle_limitless_shadow_crown
 #print axioms nativeCycleMass_point
 #print axioms nativeCycleCosmicShadow_point
 #print axioms cosmicMatrixUnit_nativeCycleShadow
+#print axioms nativeCycleMass_successor_point
+#print axioms nativeCycleMass_successor_of_pointMass
 #print axioms successorNativeOperator_cosmicShadow_point
 #print axioms projectiveTowerShadow_transfer_direction
 #print axioms native_cycle_limitless_shadow_crown
