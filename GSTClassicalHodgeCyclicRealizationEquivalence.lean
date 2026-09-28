@@ -53,6 +53,8 @@ variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 variable {alpha : ClassicalHodgeFiber V H p}
 
+end GSTClassicalHodgeCyclicRealizationEquivalence
+
 namespace GSTClassicalHodgeConstructiveCyclicLanding
 namespace LocalCycleSpectralRealization
 
@@ -91,6 +93,12 @@ noncomputable def toLocalCyclicRealization
 
 end LocalCycleSpectralRealization
 end GSTClassicalHodgeConstructiveCyclicLanding
+
+namespace GSTClassicalHodgeCyclicRealizationEquivalence
+
+theorem cre_placeholder_unused : True := trivial
+
+end GSTClassicalHodgeCyclicRealizationEquivalence
 
 namespace GSTClassicalHodgeLocalCyclicCriterion
 namespace LocalCyclicRealization

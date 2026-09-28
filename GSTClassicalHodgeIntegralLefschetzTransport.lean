@@ -172,31 +172,44 @@ theorem squarePureDual_sheetAtom
         PureWorldHodge N N) := by
   apply Subtype.ext
   funext x
+  show sheetDiagonalAtom r z (worldDual x) = sheetDiagonalAtom (mirrorFin r) z x
   have hdual : worldDual ((mirrorFin r, mirrorFin r) : WorldCell N N)
       = ((r, r) : WorldCell N N) := by
     apply Prod.ext <;> apply Fin.ext <;>
-      simp [worldDual, complementFin, mirrorFin_val]
+      simp [worldDual, complementFin, mirrorFin_val] <;> omega
   have hdual' : worldDual ((r, r) : WorldCell N N)
       = ((mirrorFin r, mirrorFin r) : WorldCell N N) := by
     apply Prod.ext <;> apply Fin.ext <;>
-      simp [worldDual, complementFin, mirrorFin_val]
-  by_cases hz : z = 0
-  · simp [hz]
-  · refine Or.inl ?_
-    by_cases hx : x = ((mirrorFin r, mirrorFin r) : WorldCell N N)
-    · subst x
-      rw [hdual]
-      simp only [worldBasis]
-      simp
-    · have hne : worldDual x ≠ ((r, r) : WorldCell N N) := by
-        intro h
-        apply hx
-        have h2 := congrArg worldDual h
-        rw [worldDual_involutive] at h2
-        rw [hdual'] at h2
-        exact h2
-      simp only [worldBasis]
-      rw [if_neg (by exact hne), if_neg (by exact hx)]
+      simp [worldDual, complementFin, mirrorFin_val] <;> omega
+  by_cases hx : x = diagonalState (mirrorFin r).2 (mirrorFin r).2
+  · subst x
+    have hd : worldDual (diagonalState (mirrorFin r).2 (mirrorFin r).2)
+        = diagonalState r.2 r.2 := hdual
+    rw [hd]
+    simp [sheetDiagonalAtom]
+  · have hneL : worldDiagonalClass r.2 r.2 (worldDual x) = 0 := by
+      apply worldDiagonalClass_off_diagonal
+      by_contra hpush
+      push_neg at hpush
+      obtain ⟨h1, h2⟩ := hpush
+      have hxeq : worldDual x = ((r, r) : WorldCell N N) := by
+        apply Prod.ext
+        · exact Fin.ext h1
+        · exact Fin.ext h2
+      have hinv := congrArg worldDual hxeq
+      rw [worldDual_involutive] at hinv
+      rw [hdual'] at hinv
+      exact hx hinv
+    have hneR : worldDiagonalClass (mirrorFin r).2 (mirrorFin r).2 x = 0 := by
+      apply worldDiagonalClass_off_diagonal
+      by_contra hpush
+      push_neg at hpush
+      obtain ⟨h1, h2⟩ := hpush
+      apply hx
+      apply Prod.ext
+      · exact Fin.ext h1
+      · exact Fin.ext h2
+    simp [sheetDiagonalAtom, hneL, hneR]
 
 #check sheetDiagonalAtom_eq_smul_basis
 #check sheetAtom_lefschetz_forward_exact
