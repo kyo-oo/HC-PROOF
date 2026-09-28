@@ -172,8 +172,38 @@ theorem squarePureDual_sheetAtom
         PureWorldHodge N N) := by
   apply Subtype.ext
   funext x
+  have hdual : worldDual ((mirrorFin r, mirrorFin r) : WorldCell N N)
+      = ((r, r) : WorldCell N N) := by
+    apply Prod.ext
+    · apply Fin.ext
+      simp only [worldDual, complementFin, mirrorFin_val]
+      omega
+    · apply Fin.ext
+      simp only [worldDual, complementFin, mirrorFin_val]
+      omega
+  have hdual' : worldDual ((r, r) : WorldCell N N)
+      = ((mirrorFin r, mirrorFin r) : WorldCell N N) := by
+    apply Prod.ext
+    · apply Fin.ext
+      simp only [worldDual, complementFin, mirrorFin_val]
+      omega
+    · apply Fin.ext
+      simp only [worldDual, complementFin, mirrorFin_val]
+      omega
+  have keyiff : ∀ y : WorldCell N N,
+      worldDual y = ((r, r) : WorldCell N N) ↔
+        y = ((mirrorFin r, mirrorFin r) : WorldCell N N) := by
+    intro y
+    constructor
+    · intro h
+      have h2 := congrArg worldDual h
+      rw [worldDual_involutive] at h2
+      rw [hdual'] at h2
+      exact h2
+    · intro h
+      rw [h, hdual]
   simp [squarePureDual, sheetDiagonalAtom, worldDiagonalClass,
-    worldBasis, worldDual_pureDiagonalState]
+    worldBasis, keyiff]
 
 #check sheetDiagonalAtom_eq_smul_basis
 #check sheetAtom_lefschetz_forward_exact

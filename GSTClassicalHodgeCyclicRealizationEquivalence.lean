@@ -90,10 +90,10 @@ noncomputable def LocalCycleSpectralRealization.toLocalCyclicRealization
 
 end GSTClassicalHodgeConstructiveCyclicLanding
 
-/-- The forward range-lift conversion followed by forgetting explicit native
-witnesses still gives a valid local cyclic realization. -/
 namespace GSTClassicalHodgeLocalCyclicCriterion
 
+/-- The forward range-lift conversion followed by forgetting explicit native
+witnesses still gives a valid local cyclic realization. -/
 noncomputable def LocalCyclicRealization.nativeUpgrade
     (R : LocalCyclicRealization V H p alpha) :
     LocalCycleSpectralRealization V H p alpha :=

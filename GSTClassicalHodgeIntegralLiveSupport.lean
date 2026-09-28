@@ -63,15 +63,7 @@ theorem commonDenominator_mul_coordinate_isInt
   · obtain ⟨k, hk⟩ := den_dvd_commonDenominator f hi
     refine ⟨(k : ℤ) * (f i).num, ?_⟩
     have hden := Rat.den_mul_eq_num (f i)
-    rw [hk]
-    push_cast
-    calc
-      ((f i).den : ℚ) * (k : ℚ) * f i
-          = (k : ℚ) * (((f i).den : ℚ) * f i) := by ring
-      _ = (k : ℚ) * ((f i).num : ℚ) := by rw [hden]
-      _ = (((k : ℤ) * (f i).num : ℤ) : ℚ) := by
-        push_cast [Int.cast_mul, Int.cast_natCast]
-        rfl
+    norm_num [hk, hden]
   · have hzero : f i = 0 := Finsupp.notMem_support_iff.mp hi
     exact ⟨0, by simp [hzero]⟩
 
