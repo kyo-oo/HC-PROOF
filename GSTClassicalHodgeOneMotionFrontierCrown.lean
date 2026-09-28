@@ -119,60 +119,6 @@ theorem bigradedBettiHodge_of_one_motion_frontier
     exact minimalGhost_false_of_positiveWeight_separator_and_bareLefschetz
       G M P (by simpa [P] using hLpositive M hM)
 
-/-- Contrapositive statement in the exact local form useful for the next
-brute-force attack: a genuine Hodge failure forces its own least-weight ghost
-to violate either positive-weight canonical-successor geometry or the one
-bare-L^2 native point-lift law. -/
-theorem failure_forces_one_motion_frontier_break
-    [Nonempty V.X]
-    (G : GeometricCycleClassSpine V H)
-    (D : ProjectiveDegreeTraceSemantics V H)
-    (hnot : ¬ BigradedBettiHodgeStatement V H) :
-    let M : MinimalPrimitiveGhost G := minimalPrimitiveGhostOfFailure G hnot
-    (M.weight = 0 ∧
-      ¬ HasNativePointLifts
-        (p := M.weight) (cl := H.cycleClass M.weight)
-        (ambientTwoStepLefschetz
-          (zeroWeightLocalSeed G D M rfl).sourceIndex M.sheet))
-    ∨
-    (M.weight ≠ 0 ∧
-      ∀ P : PositiveMinimalGhostSuccessor G M,
-        ¬ HasNativePointLifts
-          (p := M.weight) (cl := H.cycleClass M.weight)
-          (ambientTwoStepLefschetz
-            ((P.toSeparatorSeed G D M).localSeed G M).sourceIndex M.sheet))
-    ∨
-    (M.weight ≠ 0 ∧ IsEmpty (PositiveMinimalGhostSuccessor G M)) := by
-  dsimp
-  by_cases hM : M.weight = 0
-  · left
-    refine ⟨hM, ?_⟩
-    intro hL
-    exact hnot (by
-      apply bigradedBettiHodge_of_localSeeds_bareLefschetz G
-      · intro N
-        by_cases hN : N.weight = 0
-        · exact ⟨zeroWeightLocalSeed G D N hN⟩
-        · exact False.elim (by
-            -- This branch is not used for M; the theorem is only an
-            -- obstruction statement for the chosen minimal ghost.
-            exact (Classical.choice (show Nonempty False from ?_)))
-      · intro N S
-        by_cases hEq : N = M
-        · subst hEq
-          simpa [hM] using hL
-        · exact False.elim (by
-            exact (Classical.choice (show Nonempty False from ?_))))
-  · by_cases hP : Nonempty (PositiveMinimalGhostSuccessor G M)
-    · right; left
-      refine ⟨hM, ?_⟩
-      intro P hL
-      let Q : PositiveWeightSeparatorSeed G M := P.toSeparatorSeed G D M
-      exact minimalGhost_false_of_positiveWeight_separator_and_bareLefschetz
-        G M Q (by simpa [Q] using hL)
-    · right; right
-      exact ⟨hM, isEmpty_iff.mpr (by intro P; exact hP ⟨P⟩)⟩
-
 #check PositiveMinimalGhostSuccessor
 #check PositiveMinimalGhostSuccessor.toSeparatorSeed
 #check bigradedBettiHodge_of_one_motion_frontier
