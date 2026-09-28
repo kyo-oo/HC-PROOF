@@ -37,6 +37,7 @@ open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeConcreteArsenalConjugation
 open GSTClassicalHodgeTotalSheetMatrixUnit
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeSquareStrandLocalization
 
 namespace GSTClassicalHodgeAugmentedTargetWindow
 

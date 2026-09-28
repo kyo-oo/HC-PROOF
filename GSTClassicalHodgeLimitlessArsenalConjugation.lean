@@ -50,6 +50,7 @@ open GSTClassicalHodgeSupportCardinalityBridge
 open GSTClassicalHodgeTotalSheetMatrixUnit
 open GSTClassicalHodgeConcreteArsenalConjugation
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTClassicalHodgeLiveSheetIntertwining
 
 /-- Embed one finite integral pure square into the genuine compact cosmos by
 placing every diagonal coefficient at the identically numbered cosmic weight. -/
