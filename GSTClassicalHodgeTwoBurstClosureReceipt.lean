@@ -10,6 +10,7 @@ import GSTClassicalHodgeCohomologicalPairingFrontier
 import GSTClassicalHodgePolarizedHodgeGhost
 import GSTClassicalHodgeAtomicDefectTomographyGhost
 import GSTClassicalHodgePolarizedOrthogonalExtinctionAudit
+import GSTClassicalHodgeAtomicDefectTomographySynchronization
 
 /-!
 # GST CLASSICAL HODGE — TWO-BURST CLOSURE RECEIPT
@@ -19,19 +20,23 @@ It deliberately separates independently geometric semantics from every
 Hodge-strength horizontal certificate and keeps the active circularity barriers
 visible.
 
-The transformed residual obstruction is now recorded simultaneously in four
+The transformed residual obstruction is now recorded simultaneously in five
 compatible languages:
 
 * an omniversal separator ghost in classical cohomology;
 * a nonzero quotient class in the genuine atomic defect space;
 * a nonzero finite GST Lefschetz-tomography moment on the same Hodge sheet;
 * a nonzero polarized Hodge-fiber dual orthogonal to every algebraic Hodge
-  vector.
+  vector;
+* a descended nonzero linear functional on the atomic defect quotient whose
+  value on the ghost defect is normalized to exactly the selected nonzero GST
+  tomography moment.
 
 Ordinary cycle-natural projective images cannot kill this obstruction: they
 remain algebraic and are annihilated by the separator. Likewise universal
 algebraic pairing separation is audited as Hodge-equivalent and is not admitted
-as a free geometry field.
+as a free geometry field.  The quotient synchronization introduces no cycle
+representative and no GST/native operator externalization.
 -/
 
 set_option maxHeartbeats 100000000
@@ -86,6 +91,12 @@ open AlgebraicGeometry
 #check GSTClassicalHodgeAtomicDefectTomographyGhost.not_hodge_iff_nonempty_atomicDefectTomographyGhost
 #check GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.AlgebraicPairingSeparates
 #check GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.algebraicPairingSeparates_iff_hodge
+#check GSTClassicalHodgeAtomicDefectTomographySynchronization.ghostDefectDetector
+#check GSTClassicalHodgeAtomicDefectTomographySynchronization.ghostDefectDetector_ghostAtomicDefect_ne_zero
+#check GSTClassicalHodgeAtomicDefectTomographySynchronization.ghostTomographyScalar_ne_zero
+#check GSTClassicalHodgeAtomicDefectTomographySynchronization.synchronizedDefectRead_ghostAtomicDefect
+#check GSTClassicalHodgeAtomicDefectTomographySynchronization.synchronizedDefectRead_ne_zero
+#check GSTClassicalHodgeAtomicDefectTomographySynchronization.failure_yields_synchronizedAtomicDefectGhost
 
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.not_nonempty_zeroCycleClassData
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.cycleClass_ne_zero
@@ -105,3 +116,5 @@ open AlgebraicGeometry
 #print axioms GSTClassicalHodgeAtomicDefectTomographyGhost.ghostAtomicDefect_ne_zero
 #print axioms GSTClassicalHodgeAtomicDefectTomographyGhost.not_hodge_iff_nonempty_atomicDefectTomographyGhost
 #print axioms GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.algebraicPairingSeparates_iff_hodge
+#print axioms GSTClassicalHodgeAtomicDefectTomographySynchronization.synchronizedDefectRead_ghostAtomicDefect
+#print axioms GSTClassicalHodgeAtomicDefectTomographySynchronization.failure_yields_synchronizedAtomicDefectGhost
