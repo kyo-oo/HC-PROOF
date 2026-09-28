@@ -39,6 +39,7 @@ open GSTGeometricRealizationStage2D
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgeGeneratorwiseAtomicStability
+open GSTClassicalHodgePointNormalForm
 
 namespace GSTClassicalHodgeProjectivePointTransport
 
@@ -92,11 +93,15 @@ noncomputable def pushforwardPresentation
   map_add' := by
     intro φ ψ
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun a => by simp) (fun a b₁ b₂ => by rw [add_smul])
   map_smul' := by
     intro q φ
     classical
-    simp [smul_smul]
+    have h0 : ∀ i, (fun x c => c • pointPushforwardPresentation f p x) i 0 = 0 :=
+      fun i => by simp
+    rw [Finsupp.sum_smul_index' h0, smul_smul]
+    simp only [Finsupp.sum, Finset.sum_smul]
 
 @[simp]
 theorem pushforwardPresentation_single
@@ -132,26 +137,8 @@ theorem nativePointPushforward_eq
 /-- Realize finite geometric transport as a native codimension-p cycle. -/
 noncomputable def realizePushforwardPresentation
     (f : X ⟶ Y) (p : Nat) :
-    FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles Y p where
-  toFun φ :=
-    realizeFiniteCodimensionPresentation Y p
-      (pushforwardPresentation f p φ)
-  map_add' := by
-    intro φ ψ
-    simp [pushforwardPresentation,
-      realizeFiniteCodimensionPresentation]
-  map_smul' := by
-    intro q φ
-    simp [pushforwardPresentation,
-      realizeFiniteCodimensionPresentation, smul_smul]
-
-@[simp]
-theorem realizePushforwardPresentation_single
-    (f : X ⟶ Y) (p : Nat)
-    (x : CodimensionPoint X p) :
-    realizePushforwardPresentation f p (Finsupp.single x 1) =
-      nativePointPushforward f p x := by
-  simp [realizePushforwardPresentation, nativePointPushforward]
+    FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles Y p :=
+  (realizePresentationLinear Y p).comp (pushforwardPresentation f p)
 
 /-- On a smooth projective source, every native codimension-p cycle admits a
 finite point normal form, so point transport extends canonically to all native
@@ -174,11 +161,26 @@ theorem smoothProjectiveNativePushforward_point
         (codimensionPointCycle V.X p x) =
       nativePointPushforward f p x := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [smoothProjectiveNativePushforward,
-    presentationOfNativeCycleLinear,
-    realizePushforwardPresentation]
+  have hcomp : smoothProjectiveNativePushforward V f p =
+      (realizePushforwardPresentation f p).comp
+        (presentationOfNativeCycleLinear V.X p) := rfl
+  have h1 : presentationOfNativeCycleLinear V.X p
+      (codimensionPointCycle V.X p x) = Finsupp.single x (1 : ℚ) := by
+    rw [presentationOfNativeCycleLinear_apply]
+    ext y
+    show ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1
+      = (Finsupp.single x (1 : ℚ)) y
+    by_cases hy : y = x
+    · rw [hy]
+      simp [codimensionPointCycle, Function.locallyFinsuppWithin.single_apply]
+    · have hne : y.1 ≠ x.1 := fun heq => hy (Subtype.ext heq)
+      have hz : ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1 = 0 := by
+        simp [codimensionPointCycle, hne, Function.locallyFinsuppWithin.single_apply]
+      rw [hz, Finsupp.single_apply, if_neg hy]
+  rw [hcomp, LinearMap.coe_comp, Function.comp_apply, h1,
+    realizePushforwardPresentation_single]
 
-/-- The native transport construction itself supplies a point-lift family for
+/-- The native transport construction itself/-- The native transport construction itself supplies a point-lift family for
 its own point-generator action. -/
 theorem nativePointPushforward_exists
     (V : SmoothProjectiveComplexScheme)

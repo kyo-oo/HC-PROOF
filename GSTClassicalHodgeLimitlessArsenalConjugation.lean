@@ -46,6 +46,8 @@ open GSTClassicalHodgeConcreteArsenalConjugation
 open GSTClassicalHodgeIntegralSquareLocalization
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeIntegralSquareLocalization
+open GSTClassicalHodgeFiniteSupportChart
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeSupportCardinalityBridge
 open GSTClassicalHodgeTotalSheetMatrixUnit
 open GSTClassicalHodgeConcreteArsenalConjugation
@@ -63,7 +65,7 @@ def squareDiagonalToCosmos
 theorem squareDiagonalToCosmos_diagonal
     {N : ℕ} (f : WorldCoef N N) (r : Fin N) :
     squareDiagonalToCosmos f (r.1,r.1) = f (r,r) := by
-  have key : (Finsupp.lapply (r.1, r.1) : CosmicCell →₀ ℤ →ₗ[ℤ] ℤ)
+  have key : (Finsupp.lapply (r.1, r.1) : (CosmicCell →₀ ℤ) →ₗ[ℤ] ℤ)
       (∑ s : Fin N, Finsupp.single (s.1, s.1) (f (s, s))) = f (r, r) := by
     rw [map_sum, Finset.sum_eq_single r]
     · show (Finsupp.single (r.1, r.1) (f (r, r))) (r.1, r.1) = f (r, r)
@@ -88,7 +90,7 @@ theorem squareDiagonalToCosmos_off_diagonal
     {N : ℕ} (f : WorldCoef N N)
     (c : CosmicCell) (hc : c.1 ≠ c.2) :
     squareDiagonalToCosmos f c = 0 := by
-  have key : (Finsupp.lapply c : CosmicCell →₀ ℤ →ₗ[ℤ] ℤ)
+  have key : (Finsupp.lapply c : (CosmicCell →₀ ℤ) →ₗ[ℤ] ℤ)
       (∑ r : Fin N, Finsupp.single (r.1, r.1) (f (r, r))) = 0 := by
     rw [map_sum]
     apply Finset.sum_eq_zero
@@ -119,13 +121,14 @@ theorem observe_squareDiagonalToCosmos
     (hf : isWorldPureHodge f) :
     observe N N (squareDiagonalToCosmos f) = f := by
   funext c
-  by_cases hdiag : c.1.1 = c.2.1
-  · have heq : c.1 = c.2 := Fin.ext hdiag
-    subst c.2
-    simpa using squareDiagonalToCosmos_diagonal f c.1
-  · have hc : (c.1.1,c.2.1).1 ≠ (c.1.1,c.2.1).2 := hdiag
-    rw [hf c hdiag]
-    exact squareDiagonalToCosmos_off_diagonal f (c.1.1,c.2.1) hc
+  obtain ⟨c1, c2⟩ := c
+  by_cases hdiag : c1.1 = c2.1
+  · have heq : c1 = c2 := Fin.ext hdiag
+    subst heq
+    exact squareDiagonalToCosmos_diagonal f c1
+  · have hc : (c1.1,c2.1).1 ≠ (c1.1,c2.1).2 := hdiag
+    rw [hf (c1, c2) hdiag]
+    exact squareDiagonalToCosmos_off_diagonal f (c1.1,c2.1) hc
 
 /-- **FINITE TOTAL MATRIX UNIT = LIMITLESS COSMIC SHADOW.**
 For every pure integral square, the explicit finite projector/Lefschetz/
@@ -212,9 +215,12 @@ theorem liveCosmicMatrixUnit_exact
         ((integralHodgeSquare alpha).world
           (squareSheetOfLiveSlot alpha r,
            squareSheetOfLiveSlot alpha r)) := by
-  unfold liveCosmicMatrixUnit integralHodgeCosmos
-  rw [cosmicDiagonalMatrixUnit_apply]
-  rw [squareDiagonalToCosmos_diagonal]
+  have h2 := cosmicDiagonalMatrixUnit_apply
+    (squareSheetOfLiveSlot alpha r).1
+    (squareSheetOfLiveSlot alpha s).1
+    (integralHodgeCosmos alpha)
+  rw [integralHodgeCosmos_live_coefficient alpha r] at h2
+  exact h2
 
 /-- The historical finite total-sheet operator is therefore precisely the
 finite rational observation of `liveCosmicMatrixUnit`. -/

@@ -118,6 +118,31 @@ theorem realize_presentationOfNativeCycle
       rw [heq]
       exact x.2
     simp [hne]
+/-- On a compact scheme, coefficient extraction from a native cycle is a
+rational linear map. -/
+noncomputable def presentationOfNativeCycleLinear
+    (X : Scheme.{u}) [CompactSpace X] (p : Nat) :
+    codimensionCycles X p →ₗ[ℚ] FiniteCodimensionPresentation X p where
+  toFun := presentationOfNativeCycle X p
+  map_add' := by
+    intro Z W
+    apply Finsupp.ext
+    intro x
+    simp [presentationOfNativeCycle_apply]
+  map_smul' := by
+    intro q Z
+    apply Finsupp.ext
+    intro x
+    simp [presentationOfNativeCycle_apply]
+
+@[simp]
+theorem presentationOfNativeCycleLinear_apply
+    (X : Scheme.{u}) [CompactSpace X] (p : Nat)
+    (Z : codimensionCycles X p) :
+    presentationOfNativeCycleLinear X p Z =
+      presentationOfNativeCycle X p Z :=
+  rfl
+
 
 /-- On a bundled smooth projective complex scheme, every native Hodge-basis
 cycle bridge canonically yields a finite codimension-point presentation

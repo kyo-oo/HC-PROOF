@@ -65,31 +65,6 @@ theorem realizePresentationLinear_apply
       realizeFiniteCodimensionPresentation X p φ := by
   rfl
 
-/-- On a compact scheme, coefficient extraction from a native cycle is a
-rational linear map. -/
-noncomputable def presentationOfNativeCycleLinear
-    (X : Scheme.{u}) [CompactSpace X] (p : Nat) :
-    codimensionCycles X p →ₗ[ℚ] FiniteCodimensionPresentation X p where
-  toFun := presentationOfNativeCycle X p
-  map_add' := by
-    intro Z W
-    apply Finsupp.ext
-    intro x
-    simp [presentationOfNativeCycle_apply]
-  map_smul' := by
-    intro q Z
-    apply Finsupp.ext
-    intro x
-    simp [presentationOfNativeCycle_apply]
-
-@[simp]
-theorem presentationOfNativeCycleLinear_apply
-    (X : Scheme.{u}) [CompactSpace X] (p : Nat)
-    (Z : codimensionCycles X p) :
-    presentationOfNativeCycleLinear X p Z =
-      presentationOfNativeCycle X p Z :=
-  rfl
-
 /-- Coefficient extraction after realization recovers the original finite
 presentation exactly. -/
 theorem presentation_realizeFiniteCodimensionPresentation
