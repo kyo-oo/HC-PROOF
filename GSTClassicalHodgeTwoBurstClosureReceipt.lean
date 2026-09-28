@@ -12,6 +12,7 @@ import GSTClassicalHodgeAtomicDefectTomographyGhost
 import GSTClassicalHodgePolarizedOrthogonalExtinctionAudit
 import GSTClassicalHodgeAtomicDefectTomographySynchronization
 import GSTClassicalHodgeTomographySynchronizationAudit
+import GSTClassicalHodgeMultiplicityForgettingKernel
 
 /-!
 # GST CLASSICAL HODGE — TWO-BURST CLOSURE RECEIPT
@@ -40,6 +41,12 @@ as a free geometry field.  The quotient synchronization introduces no cycle
 representative and no GST/native operator externalization.  Its existence is
 itself audited as exactly equivalent to failure, so tomography injectivity or
 normalization alone cannot be mistaken for a contradiction.
+
+Finally, the original un-fibered GST transfer universe is formally shown to
+forget genuine multiplicity: whenever two Hodge sheets exist over one weight,
+their nonzero fibered difference lies in the kernel of
+`forgetMultiplicityToGST`.  Thus the final geometry must resolve multiplicity
+before any descent to the base GST address universe.
 -/
 
 set_option maxHeartbeats 100000000
@@ -103,6 +110,10 @@ open AlgebraicGeometry
 #check GSTClassicalHodgeTomographySynchronizationAudit.not_hodge_iff_nonempty_synchronizedAtomicDefectGhost
 #check GSTClassicalHodgeTomographySynchronizationAudit.hodge_of_no_synchronizedAtomicDefectGhost
 #check GSTClassicalHodgeTomographySynchronizationAudit.synchronizedAtomicDefectGhost_empty_iff_hodge
+#check GSTClassicalHodgeMultiplicityForgettingKernel.sheetDifference_ne_zero
+#check GSTClassicalHodgeMultiplicityForgettingKernel.forgetMultiplicity_sheetDifference
+#check GSTClassicalHodgeMultiplicityForgettingKernel.forgetMultiplicityToGST_not_injective_of_two_sheets
+#check GSTClassicalHodgeMultiplicityForgettingKernel.distinct_basis_same_baseGST_image
 
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.not_nonempty_zeroCycleClassData
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.cycleClass_ne_zero
@@ -126,3 +137,5 @@ open AlgebraicGeometry
 #print axioms GSTClassicalHodgeAtomicDefectTomographySynchronization.failure_yields_synchronizedAtomicDefectGhost
 #print axioms GSTClassicalHodgeTomographySynchronizationAudit.not_hodge_iff_nonempty_synchronizedAtomicDefectGhost
 #print axioms GSTClassicalHodgeTomographySynchronizationAudit.synchronizedAtomicDefectGhost_empty_iff_hodge
+#print axioms GSTClassicalHodgeMultiplicityForgettingKernel.forgetMultiplicity_sheetDifference
+#print axioms GSTClassicalHodgeMultiplicityForgettingKernel.forgetMultiplicityToGST_not_injective_of_two_sheets
