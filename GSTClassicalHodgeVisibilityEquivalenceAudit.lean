@@ -59,7 +59,7 @@ theorem hodge_iff_projectiveDetectorVisibility
   · intro h E
     exfalso
     have hno : IsEmpty (OmniversalSeparatorGhost G) :=
-      (hodge_iff_isEmpty_omniversalSeparatorGhost G).mp h
+      (hodge_iff_no_omniversalSeparatorGhost G).mp h
     exact hno.false E
   · intro hvis
     exact bigradedBettiHodge_of_projectiveDetectorVisibility G M hvis
@@ -76,7 +76,7 @@ theorem hodge_iff_finiteCorrespondenceDetectorVisibility
   · intro h E
     exfalso
     have hno : IsEmpty (OmniversalSeparatorGhost G) :=
-      (hodge_iff_isEmpty_omniversalSeparatorGhost G).mp h
+      (hodge_iff_no_omniversalSeparatorGhost G).mp h
     exact hno.false E
   · intro hvis
     exact bigradedBettiHodge_of_finiteCorrespondenceDetectorVisibility G M hvis
