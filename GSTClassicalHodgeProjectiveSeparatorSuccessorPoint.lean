@@ -57,16 +57,16 @@ theorem separatorQuotientIdeal_ne_top
 /-- Choose one minimal prime over the surviving separator. -/
 noncomputable def separatorMinimalPrime
     (n : Nat) (x : projectiveSpace n) : Ideal (pointQuotient n x) :=
-  Classical.choice (Ideal.nonempty_minimalPrimes
-    (separatorQuotientIdeal_ne_top n x))
+  (Classical.choice (Ideal.nonempty_minimalPrimes
+    (separatorQuotientIdeal_ne_top n x))).val
 
 /-- Receipt that the chosen quotient prime is genuinely minimal over the
 separator ideal. -/
 theorem separatorMinimalPrime_mem
     (n : Nat) (x : projectiveSpace n) :
     separatorMinimalPrime n x ∈ (separatorQuotientIdeal n x).minimalPrimes :=
-  Classical.choose_spec (Ideal.nonempty_minimalPrimes
-    (separatorQuotientIdeal_ne_top n x))
+  (Classical.choice (Ideal.nonempty_minimalPrimes
+    (separatorQuotientIdeal_ne_top n x))).property
 
 /-- The chosen quotient prime has exact height one. -/
 theorem separatorMinimalPrime_height_one

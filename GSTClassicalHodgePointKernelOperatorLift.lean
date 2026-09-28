@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import GSTClassicalHodgeAtomicOperatorAlgebra
 import GSTClassicalHodgeCycleOperatorNaturality
 
@@ -50,46 +51,6 @@ variable {Coh : Type v} [AddCommGroup Coh] [Module ℚ Coh]
 variable {p : Nat}
 variable {cl : codimensionCycles X p →ₗ[ℚ] Coh}
 
-/-- Linear realization of finite point presentations as native cycles. -/
-noncomputable def realizePresentationLinear
-    (X : Scheme.{u}) (p : Nat) :
-    FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles X p :=
-  Finsupp.total (CodimensionPoint X p) (codimensionCycles X p) ℚ
-    (fun x => codimensionPointCycle X p x)
-
-@[simp]
-theorem realizePresentationLinear_apply
-    (X : Scheme.{u}) (p : Nat)
-    (φ : FiniteCodimensionPresentation X p) :
-    realizePresentationLinear X p φ =
-      realizeFiniteCodimensionPresentation X p φ := by
-  rfl
-
-/-- On a compact scheme, coefficient extraction from a native cycle is a
-rational linear map. -/
-noncomputable def presentationOfNativeCycleLinear
-    (X : Scheme.{u}) [CompactSpace X] (p : Nat) :
-    codimensionCycles X p →ₗ[ℚ] FiniteCodimensionPresentation X p where
-  toFun := presentationOfNativeCycle X p
-  map_add' := by
-    intro Z W
-    apply Finsupp.ext
-    intro x
-    simp [presentationOfNativeCycle_apply]
-  map_smul' := by
-    intro q Z
-    apply Finsupp.ext
-    intro x
-    simp [presentationOfNativeCycle_apply]
-
-@[simp]
-theorem presentationOfNativeCycleLinear_apply
-    (X : Scheme.{u}) [CompactSpace X] (p : Nat)
-    (Z : codimensionCycles X p) :
-    presentationOfNativeCycleLinear X p Z =
-      presentationOfNativeCycle X p Z :=
-  rfl
-
 /-- Coefficient extraction after realization recovers the original finite
 presentation exactly. -/
 theorem presentation_realizeFiniteCodimensionPresentation
@@ -100,8 +61,16 @@ theorem presentation_realizeFiniteCodimensionPresentation
   classical
   apply Finsupp.ext
   intro x
-  simp [presentationOfNativeCycle_apply,
-    realizeFiniteCodimensionPresentation, codimensionPointCycle]
+  rw [presentationOfNativeCycle_apply,
+    realizeFiniteCodimensionPresentation_apply X p φ x.1]
+  simp only [Finsupp.sum, smul_eq_mul]
+  refine (Finset.sum_eq_single x ?_ ?_).trans ?_
+  · intro b _ hb
+    have hne : x.1 ≠ b.1 := fun heq => hb (Subtype.ext heq.symm)
+    simp [hne]
+  · intro hout
+    simp [Finsupp.notMem_support_iff.mp hout]
+  · simp
 
 /-- **COMPACT CYCLE/PRESENTATION LINEAR EQUIVALENCE.** -/
 noncomputable def compactCyclePresentationLinearEquiv
@@ -130,13 +99,28 @@ theorem compactCyclePresentationLinearEquiv_symm_apply
 
 /-- Free linear extension of a point-transition kernel to arbitrary finite
 point presentations. -/
+
+-- ISLAND-FROM-ROOT (empirically verified: dot-decl prefixes do NOT consult
+-- `open`s — `PointClassTransitionKernel.x` declared in this file's own
+-- namespace lands in the WRONG island and every dot-usage fails with
+-- 'environment does not contain'. The extensions must be declared from the
+-- structure's home namespace at top level.)
+end GSTClassicalHodgePointKernelOperatorLift
+
+namespace GSTClassicalHodgeGeneratorwiseAtomicStability
+open GSTClassicalHodgePointKernelOperatorLift
+
+variable {X : Scheme.{u}}
+variable {Coh : Type v} [AddCommGroup Coh] [Module ℚ Coh]
+variable {p : Nat}
+variable {cl : codimensionCycles X p →ₗ[ℚ] Coh}
+
 noncomputable def PointClassTransitionKernel.presentationOperator
     {T : Coh →ₗ[ℚ] Coh}
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
     FiniteCodimensionPresentation X p →ₗ[ℚ]
       FiniteCodimensionPresentation X p :=
-  Finsupp.total (CodimensionPoint X p)
-    (FiniteCodimensionPresentation X p) ℚ K.transition
+  Finsupp.linearCombination ℚ K.transition
 
 @[simp]
 theorem PointClassTransitionKernel.presentationOperator_single
@@ -207,6 +191,10 @@ noncomputable def PointClassTransitionKernel.toCycleClassOperatorPair
     cohomologyOperator := T
     cycleClass_natural := K.nativeCycleOperator_natural
   }
+
+end GSTClassicalHodgeGeneratorwiseAtomicStability
+
+namespace GSTClassicalHodgePointKernelOperatorLift
 
 /-- Every raw spectral observable equipped only with a point-transition kernel
 therefore upgrades to the old full native spectral-cycle operator package. -/

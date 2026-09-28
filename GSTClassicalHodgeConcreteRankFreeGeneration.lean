@@ -34,6 +34,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeAugmentedTargetWindow
 open GSTClassicalHodgeTotalSheetMatrixUnit
+open GSTClassicalHodgeLocalCyclicCriterion
 
 namespace GSTClassicalHodgeConcreteRankFreeGeneration
 
@@ -49,7 +50,7 @@ noncomputable def chosenLiveSource
     rw [Finsupp.support_nonempty_iff]
     intro hzero
     apply halpha
-    exact (classicalHodgeBasis V H p).repr.injective hzero
+    exact (classicalHodgeBasis V H p).repr.injective (by simpa using hzero)
   exact ⟨hsupp.choose, hsupp.choose_spec⟩
 
 /-- The chosen live source coefficient is nonzero. -/
@@ -94,9 +95,13 @@ theorem arbitraryTargetGSTOutput_exact
   funext x
   by_cases hx : x = (targetSlot alpha j, targetSlot alpha j)
   · subst x
-    simp
-    rw [augmentedIntegralSquare_diagonal]
-    rw [augmentedCoordinate_liveSource]
+    have hd := augmentedIntegralSquare_diagonal alpha j
+      (liveSourceSlot alpha j (chosenLiveSource alpha halpha))
+    have hl := augmentedCoordinate_liveSource alpha j
+      (chosenLiveSource alpha halpha)
+    rw [hl] at hd
+    rw [if_pos rfl, if_pos rfl]
+    exact hd
   · simp [hx]
 
 /-- Reading the concrete GST output back into the genuine Hodge fiber gives
@@ -152,7 +157,7 @@ theorem concreteBasisGenerator_eq_basis
   unfold concreteBasisGenerator
   rw [read_arbitraryTargetGSTOutput]
   have hc := arbitraryTarget_normalization_ne_zero alpha halpha j
-  simp [hc]
+  simp only [smul_smul, div_self hc, inv_mul_cancel₀ hc, one_smul]
 
 /-- Every Hodge class is therefore a finite rational linear combination of
 concrete GST-generated basis vectors from one fixed nonzero source state. -/
@@ -166,7 +171,7 @@ theorem hodgeClass_eq_sum_concreteGenerators
   calc beta
       = Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
           ((classicalHodgeBasis V H p).repr beta) :=
-        (classicalHodgeBasis V H p).linearCombination_repr beta
+        ((classicalHodgeBasis V H p).linearCombination_repr beta).symm
     _ = ((classicalHodgeBasis V H p).repr beta).sum
         (fun j q => q • concreteBasisGenerator alpha halpha j) := by
         rw [Finsupp.linearCombination_apply]
