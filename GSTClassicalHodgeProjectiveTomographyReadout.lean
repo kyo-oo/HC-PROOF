@@ -4,18 +4,19 @@ import GSTClassicalHodgeProjectiveDetectorVisibility
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE TOMOGRAPHY READOUT
 
-This module isolates the scalar interface between genuine projective geometry
-and the existing GST tomography collision machinery.
+This module isolates the scalar interface between independently certified
+cycle-class geometry and the explicit horizontal projective-orbit closure
+certificate.
 
 For a native source cycle `Z`, a rational detector `ell`, and a genuine
-projective kernel `K`, the projective readout is simply `ell` evaluated on the
-cohomological projective image of `cl(Z)`.  The new genuine-geometry
-irreducibility law says that whenever `cl(Z)` is nonzero and `ell` sees some
-rational Hodge state, one such readout is nonzero.
+projective kernel `K`, the projective readout is `ell` evaluated on the
+cohomological projective image of `cl(Z)`.  Rational scaling of projective
+kernels scales this readout, so any nonzero response can be normalized to any
+prescribed finite GST tomography scalar.
 
-Because the projective kernel sector is a rational span, any nonzero readout
-can then be normalized to any prescribed rational scalar.  No target basis
-cycle and no exact GST operator identity is used.
+Crucially, existence of a nonzero readout is now parameterized explicitly by
+`ProjectiveOrbitIrreducibility`; it is not a theorem of
+`GenuineCycleClassGeometry` alone.  This keeps the circularity boundary visible.
 -/
 
 set_option maxHeartbeats 100000000
@@ -69,9 +70,12 @@ theorem projectiveDetectorReadout_scale
   rw [scaled_projectivePair_on_cycleClass J.spine q K Z]
   simp
 
-/-- Genuine projective-orbit irreducibility produces a nonzero readout. -/
+/-- An explicit projective-orbit irreducibility certificate produces a
+nonzero readout.  The certificate is deliberately separate from genuine
+cycle-class geometry. -/
 theorem exists_nonzero_projectiveDetectorReadout
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (p : Nat)
     (Z : codimensionCycles V.X p)
     (hZ : H.cycleClass p Z ≠ 0)
@@ -82,7 +86,7 @@ theorem exists_nonzero_projectiveDetectorReadout
     ∃ K : ProjectiveNativeKernel V p,
       projectiveDetectorReadout J p Z detector K ≠ 0 := by
   simpa [projectiveDetectorReadout] using
-    J.orbitIrreducibility.separates p Z hZ alpha detector hdet
+    R.separates p Z hZ alpha detector hdet
 
 /-- Normalize one projective kernel so that its scalar readout equals `target`. -/
 noncomputable def normalizeProjectiveReadout
@@ -115,6 +119,7 @@ theorem normalizeProjectiveReadout_spec
 /-- Combined existence/normalization form used by finite GST tomography. -/
 theorem exists_projectiveDetectorReadout_eq
     (J : GenuineCycleClassGeometry V H)
+    (R : ProjectiveOrbitIrreducibility V H J)
     (p : Nat)
     (Z : codimensionCycles V.X p)
     (hZ : H.cycleClass p Z ≠ 0)
@@ -126,7 +131,7 @@ theorem exists_projectiveDetectorReadout_eq
     ∃ K : ProjectiveNativeKernel V p,
       projectiveDetectorReadout J p Z detector K = target := by
   obtain ⟨K, hK⟩ :=
-    exists_nonzero_projectiveDetectorReadout J p Z hZ alpha detector hdet
+    exists_nonzero_projectiveDetectorReadout J R p Z hZ alpha detector hdet
   exact ⟨normalizeProjectiveReadout J p Z detector K target,
     normalizeProjectiveReadout_spec J p Z detector K hK target⟩
 
