@@ -143,41 +143,6 @@ theorem no_zeroDefect_transport_to_separator_atom
         zeroDefectSector (V := V) (H := H) (p := p) := by
     rw [← htarget]
     exact preserves source hsource
-  exact separator_excludes_normalizedSpectralAtom
-    Sep (classicalHodgeBasis V H p i)
-    (GSTClassicalHodgeFiniteSupportChart.supportShape
-      (fiberedWeightCoordinates V H p (classicalHodgeBasis V H p i)))
-    (Classical.choice
-      (GSTClassicalHodgeFiniteSupportChart.supportShape_nonempty
-        (fiberedWeightCoordinates V H p (classicalHodgeBasis V H p i))))
-    x
-    (by
-      -- The abstract normalized-spectral route is stronger than needed here;
-      -- the raw atom contradiction follows directly from separator detection.
-      sorry)
-    (by
-      -- Replaced below by the direct defect contradiction once elaborated.
-      sorry)
-
-/-- Direct, assumption-free version of the previous collision.  This is the
-one intended for downstream use and avoids any spectral-chart bookkeeping. -/
-theorem no_zeroDefect_transport_to_separator_atom_direct
-    {i : ClassicalHodgeBasisIndex V H p}
-    (Sep : BasisAtomicSeparator V H p i)
-    (x : CodimensionPoint V.X p)
-    (A : Module.End ℚ (FiberedNativeAddress V H p))
-    (preserves : ∀ Φ : FiberedNativeAddress V H p,
-      Φ ∈ zeroDefectSector (V := V) (H := H) (p := p) →
-      A Φ ∈ zeroDefectSector (V := V) (H := H) (p := p))
-    (source : FiberedNativeAddress V H p)
-    (hsource :
-      source ∈ zeroDefectSector (V := V) (H := H) (p := p))
-    (htarget : A source = atom V H p i x) : False := by
-  have htargetZero :
-      atom V H p i x ∈
-        zeroDefectSector (V := V) (H := H) (p := p) := by
-    rw [← htarget]
-    exact preserves source hsource
   have hz :
       fiberedCycleClassDefect (V := V) (H := H) (p := p)
         (atom V H p i x) = 0 := by
@@ -189,10 +154,10 @@ theorem no_zeroDefect_transport_to_separator_atom_direct
 #check TomographyDefectWitness
 #check tomographyDefectWitnessOfSeparator
 #check tomographyDefectWitness_detector_nonzero
-#check no_zeroDefect_transport_to_separator_atom_direct
+#check no_zeroDefect_transport_to_separator_atom
 
 #print axioms separator_basis_has_nonzero_lefschetzMoment
 #print axioms tomographyDefectWitnessOfSeparator
-#print axioms no_zeroDefect_transport_to_separator_atom_direct
+#print axioms no_zeroDefect_transport_to_separator_atom
 
 end GSTClassicalHodgeTomographyDefectSplice
