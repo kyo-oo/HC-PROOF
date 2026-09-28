@@ -100,7 +100,15 @@ noncomputable def pushforwardPresentation
     classical
     have h0 : ∀ i, (fun x c => c • pointPushforwardPresentation f p x) i 0 = 0 :=
       fun i => by simp
-    rw [Finsupp.sum_smul_index' h0, smul_smul]
+    have key : ∀ (r c : ℚ) (x : CodimensionPoint X p),
+        (r • c) • pointPushforwardPresentation f p x
+          = r • (c • pointPushforwardPresentation f p x) := by
+      intro r c x
+      rw [smul_smul, smul_eq_mul]
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [key]
+    show (Finsupp.sum φ fun i c => q • (c • pointPushforwardPresentation f p i))
+        = q • (Finsupp.sum φ fun i c => c • pointPushforwardPresentation f p i)
     simp only [Finsupp.sum, Finset.sum_smul]
 
 @[simp]
@@ -140,6 +148,17 @@ noncomputable def realizePushforwardPresentation
     FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles Y p :=
   (realizePresentationLinear Y p).comp (pushforwardPresentation f p)
 
+@[simp]
+theorem realizePushforwardPresentation_single
+    (f : X ⟶ Y) (p : Nat)
+    (x : CodimensionPoint X p) :
+    realizePushforwardPresentation f p (Finsupp.single x 1) =
+      nativePointPushforward f p x := by
+  simp [realizePushforwardPresentation, nativePointPushforward,
+    pushforwardPresentation_single, realizePresentationLinear_apply,
+    one_smul]
+
+
 /-- On a smooth projective source, every native codimension-p cycle admits a
 finite point normal form, so point transport extends canonically to all native
 cycles. -/
@@ -166,6 +185,7 @@ theorem smoothProjectiveNativePushforward_point
         (presentationOfNativeCycleLinear V.X p) := rfl
   have h1 : presentationOfNativeCycleLinear V.X p
       (codimensionPointCycle V.X p x) = Finsupp.single x (1 : ℚ) := by
+    classical
     rw [presentationOfNativeCycleLinear_apply]
     ext y
     show ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1
@@ -176,11 +196,12 @@ theorem smoothProjectiveNativePushforward_point
     · have hne : y.1 ≠ x.1 := fun heq => hy (Subtype.ext heq)
       have hz : ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1 = 0 := by
         simp [codimensionPointCycle, hne, Function.locallyFinsuppWithin.single_apply]
-      rw [hz, Finsupp.single_apply, if_neg hy]
+      rw [hz]
+      simp [hy]
   rw [hcomp, LinearMap.coe_comp, Function.comp_apply, h1,
     realizePushforwardPresentation_single]
 
-/-- The native transport construction itself/-- The native transport construction itself supplies a point-lift family for
+/-- The native transport construction itself supplies a point-lift family for
 its own point-generator action. -/
 theorem nativePointPushforward_exists
     (V : SmoothProjectiveComplexScheme)

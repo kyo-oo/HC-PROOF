@@ -50,21 +50,6 @@ variable {Coh : Type v} [AddCommGroup Coh] [Module ℚ Coh]
 variable {p : Nat}
 variable {cl : codimensionCycles X p →ₗ[ℚ] Coh}
 
-/-- Linear realization of finite point presentations as native cycles. -/
-noncomputable def realizePresentationLinear
-    (X : Scheme.{u}) (p : Nat) :
-    FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles X p :=
-  Finsupp.total (CodimensionPoint X p) (codimensionCycles X p) ℚ
-    (fun x => codimensionPointCycle X p x)
-
-@[simp]
-theorem realizePresentationLinear_apply
-    (X : Scheme.{u}) (p : Nat)
-    (φ : FiniteCodimensionPresentation X p) :
-    realizePresentationLinear X p φ =
-      realizeFiniteCodimensionPresentation X p φ := by
-  rfl
-
 /-- Coefficient extraction after realization recovers the original finite
 presentation exactly. -/
 theorem presentation_realizeFiniteCodimensionPresentation

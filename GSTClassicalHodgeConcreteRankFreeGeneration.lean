@@ -34,6 +34,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeAugmentedTargetWindow
 open GSTClassicalHodgeTotalSheetMatrixUnit
+open GSTClassicalHodgeLocalCyclicCriterion
 
 namespace GSTClassicalHodgeConcreteRankFreeGeneration
 

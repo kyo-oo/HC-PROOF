@@ -196,8 +196,7 @@ theorem augmentedIntegralSquare_diagonal
   have h := (augmentedIntegralSquare alpha j).scaled_eq (r,r)
   have hite : augmentedRationalSquare alpha j (r,r)
       = augmentedCoordinateVector alpha j r := by
-    simp only [augmentedRationalSquare]
-    exact if_pos rfl
+    simp [augmentedRationalSquare]
   rw [hite] at h
   exact h.symm
 

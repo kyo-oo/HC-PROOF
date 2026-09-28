@@ -36,7 +36,6 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgePointNormalForm
-open GSTClassicalHodgePointKernelOperatorLift
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeGeneratorwiseAtomicStability

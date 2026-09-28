@@ -78,12 +78,6 @@ theorem squareDiagonalToCosmos_diagonal
       rw [Finsupp.single_apply, if_neg hval]
     · simp
   exact key
-  · intro s hs hsr
-    have hval : s.1 ≠ r.1 := by
-      intro h
-      exact hsr (Fin.ext h)
-    simp [hval]
-  · simp
 
 /-- Off the cosmic diagonal the embedded finite square vanishes. -/
 theorem squareDiagonalToCosmos_off_diagonal
@@ -95,14 +89,15 @@ theorem squareDiagonalToCosmos_off_diagonal
     rw [map_sum]
     apply Finset.sum_eq_zero
     intro r _
-    show (Finsupp.single (r.1, r.1) (f (r, r))) c = 0
-    rw [Finsupp.single_apply]
-    have hne : ¬(c = (r.1, r.1)) := by
-      intro h
-      apply hc
-      rw [h]
-      simp
-    rw [if_neg hne]
+    have hsingle : (Finsupp.single (r.1, r.1) (f (r, r))) c = 0 := by
+      rw [Finsupp.single_apply]
+      have hne : ¬((r.1, r.1) = c) := by
+        intro h
+        apply hc
+        rw [← h]
+        simp
+      exact if_neg hne
+    exact hsingle
   exact key
 
 /-- Every finite square embeds into the compact pure-Hodge cosmos after its
@@ -127,8 +122,12 @@ theorem observe_squareDiagonalToCosmos
     subst heq
     exact squareDiagonalToCosmos_diagonal f c1
   · have hc : (c1.1,c2.1).1 ≠ (c1.1,c2.1).2 := hdiag
-    rw [hf (c1, c2) hdiag]
-    exact squareDiagonalToCosmos_off_diagonal f (c1.1,c2.1) hc
+    have hoff := squareDiagonalToCosmos_off_diagonal f (c1.1, c2.1) hc
+    have hfz : f (c1, c2) = 0 := hf (c1, c2) hdiag
+    calc observe N N ⇑(squareDiagonalToCosmos f) (c1, c2)
+        = squareDiagonalToCosmos f (c1.1, c2.1) := rfl
+      _ = (0 : ℤ) := hoff
+      _ = f (c1, c2) := hfz.symm
 
 /-- **FINITE TOTAL MATRIX UNIT = LIMITLESS COSMIC SHADOW.**
 For every pure integral square, the explicit finite projector/Lefschetz/
