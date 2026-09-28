@@ -50,7 +50,7 @@ def augmentedSupport
     (alpha : ClassicalHodgeFiber V H p)
     (j : ClassicalHodgeBasisIndex V H p) :
     Finset (ClassicalHodgeBasisIndex V H p) :=
-  ((classicalHodgeBasis V H p).repr alpha).support.insert j
+  insert j ((classicalHodgeBasis V H p).repr alpha).support
 
 /-- Finite index type of the augmented observation window. -/
 abbrev AugmentedIndex

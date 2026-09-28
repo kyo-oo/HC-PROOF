@@ -42,9 +42,9 @@ open GSTClassicalHodgeGeneratorwiseAtomicStability
 
 namespace GSTClassicalHodgeProjectivePointTransport
 
-universe u v
+universe u
 
-variable {X : Scheme.{u}} {Y : Scheme.{v}}
+variable {X Y : Scheme.{u}}
 
 /-- Residue-degree coefficient carried by one point under a scheme morphism. -/
 noncomputable def pointResidueWeight

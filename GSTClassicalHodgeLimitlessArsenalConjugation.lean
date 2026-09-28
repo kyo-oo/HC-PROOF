@@ -62,11 +62,19 @@ def squareDiagonalToCosmos
 theorem squareDiagonalToCosmos_diagonal
     {N : ℕ} (f : WorldCoef N N) (r : Fin N) :
     squareDiagonalToCosmos f (r.1,r.1) = f (r,r) := by
-  classical
-  unfold squareDiagonalToCosmos
-  rw [Finset.sum_apply]
-  rw [Finset.sum_eq_single r]
-  · simp
+  have key : (Finsupp.lapply (r.1, r.1) : CosmicCell →₀ ℤ →ₗ[ℤ] ℤ)
+      (∑ s : Fin N, Finsupp.single (s.1, s.1) (f (s, s))) = f (r, r) := by
+    rw [map_sum, Finset.sum_eq_single r]
+    · show (Finsupp.single (r.1, r.1) (f (r, r))) (r.1, r.1) = f (r, r)
+      rw [Finsupp.single_apply, if_pos rfl]
+    · intro s _ hsr
+      show (Finsupp.single (s.1, s.1) (f (s, s))) (r.1, r.1) = (0 : ℤ)
+      have hval : (s.1, s.1) ≠ (r.1, r.1) := by
+        intro h
+        exact hsr (Fin.ext (congrArg Prod.fst h))
+      rw [Finsupp.single_apply, if_neg hval]
+    · simp
+  exact key
   · intro s hs hsr
     have hval : s.1 ≠ r.1 := by
       intro h
@@ -79,12 +87,20 @@ theorem squareDiagonalToCosmos_off_diagonal
     {N : ℕ} (f : WorldCoef N N)
     (c : CosmicCell) (hc : c.1 ≠ c.2) :
     squareDiagonalToCosmos f c = 0 := by
-  classical
-  unfold squareDiagonalToCosmos
-  rw [Finset.sum_apply]
-  apply Finset.sum_eq_zero
-  intro r hr
-  simp [hc]
+  have key : (Finsupp.lapply c : CosmicCell →₀ ℤ →ₗ[ℤ] ℤ)
+      (∑ r : Fin N, Finsupp.single (r.1, r.1) (f (r, r))) = 0 := by
+    rw [map_sum]
+    apply Finset.sum_eq_zero
+    intro r _
+    show (Finsupp.single (r.1, r.1) (f (r, r))) c = 0
+    rw [Finsupp.single_apply]
+    have hne : ¬(c = (r.1, r.1)) := by
+      intro h
+      apply hc
+      rw [h]
+      simp
+    rw [if_neg hne]
+  exact key
 
 /-- Every finite square embeds into the compact pure-Hodge cosmos after its
 off-diagonal part has been discarded.  If the source is already pure, nothing
