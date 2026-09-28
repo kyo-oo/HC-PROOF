@@ -68,6 +68,13 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeProjectiveDetectorVisibility.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile two-burst cycle-class tomography receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeTwoBurstClosureReceipt.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile degree-rigid tomographic blackout synthesis
         shell: bash
         run: |
