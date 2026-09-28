@@ -9,11 +9,11 @@ Do NOT revive the old projective-detector-visibility route as an unconditional t
 The active noncircular route is now:
 
 1. `GenuineCycleClassGeometry` excludes the Stage-2G zero-cycle-class countermodel using positive projective-degree trace semantics.
-2. A hypothetical Hodge failure gives an `OmniversalSeparatorGhost` and, more sharply, a synchronized nonzero `AtomicDefectTomographyGhost` in the genuine quotient
-   `H^(2p)(X,Q) / span{point-cycle classes}` together with a nonzero finite GST Lefschetz-tomography moment on the same sheet.
+2. A hypothetical Hodge failure gives an `OmniversalSeparatorGhost` and, more sharply, a synchronized nonzero `AtomicDefectTomographyGhost` in the genuine quotient `H^(2p)(X,Q) / span{point-cycle classes}` together with a nonzero finite GST Lefschetz-tomography moment on the same sheet.
 3. `GSTClassicalHodgeAtomicDefectOperatorDescent` proves every ambient cohomological operator preserving the atomic span descends canonically to that defect quotient; genuine projective-correspondence operators are included.
-4. NEW splice: `GSTClassicalHodgeAtomicDefectEquivariantIrreducibility` defines `AtomicNaturalHodgeOperator`, proves defect equivariance and preservation of `AlgebraicHodgeSubspace`, closes these operators under identity/rational scaling/addition/composition, and packages an `AtomicNaturalMatrixArsenal`. Its crown `bigradedBettiHodge_of_atomicNaturalMatrixArsenal` composes these independently geometric operators with the existing rank-free GST irreducibility theorem.
-5. The assistant lane is now compressing the remaining geometric obligation from all matrix units to the already-proved two-slot Lefschetz–Poincare primitive generation. The target is NOT to assume matrix-unit naturality; it is to show independently constructed atomic-natural primitive operators generate the required Hodge actions.
+4. `GSTClassicalHodgeAtomicDefectEquivariantIrreducibility` defines `AtomicNaturalHodgeOperator`, proves defect equivariance and preservation of `AlgebraicHodgeSubspace`, closes these operators under identity/rational scaling/addition/composition, and packages an `AtomicNaturalMatrixArsenal`. Its crown is a conditional irreducibility splice, not a geometric construction of the arsenal.
+5. `GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity` now audits the proposed primitive compression. On one live algebraic source, an atomic-natural operator whose Hodge restriction is the universal two-slot bare `L^2` primitive already forces the target basis sheet algebraic. Thus the bare-Lefschetz primitive CANNOT be inserted as an automatic geometry theorem on a ghost crossing.
+6. Any actual closure must go below this interface: independently construct geometry whose Hodge restriction theorem is proved without assuming the target sheet or equivalent matrix-unit naturality.
 
 The cohomological/polarized pairing files remain useful obstruction translations/audits, but do not assert `orthogonal complement = 0`; universal algebraic pairing separation is audited as Hodge-equivalent.
 
@@ -37,16 +37,17 @@ The cohomological/polarized pairing files remain useful obstruction translations
 - `AtomicNaturalHodgeOperator`
 - `AtomicNaturalHodgeOperator.defect_equivariant`
 - `AtomicNaturalHodgeOperator.preserves_algebraicHodge`
-- `AtomicNaturalHodgeOperator.id`
-- `AtomicNaturalHodgeOperator.smul`
-- `AtomicNaturalHodgeOperator.add`
-- `AtomicNaturalHodgeOperator.comp`
 - `AtomicNaturalMatrixArsenal`
-- `AtomicNaturalMatrixArsenal.rankFreeInvariant`
 - `AtomicNaturalMatrixArsenal.atomicDefect_eq_zero`
 - `bigradedBettiHodge_of_atomicNaturalMatrixArsenal`
 
-Latest assistant mathematics commit introducing the equivariant splice: `ffbd51353dbcab735ffcf332a3c6482505fa4831` (the branch may have advanced after this; repair the live head).
+### `GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity.lean`
+- `bareTwoSlotLefschetzHodge`
+- `bareTwoSlotLefschetzHodge_eq_scaled_matrixUnit`
+- `targetBasis_algebraic_of_atomicNatural_bareLefschetz`
+- `no_atomicNatural_bareLefschetz_to_separatorSheet`
+
+This last file is a hard mathematical firewall. Preserve the theorem statements: it proves that primitive compression does not magically weaken the missing geometry.
 
 ## Files that must remain intact
 
@@ -57,6 +58,7 @@ Latest assistant mathematics commit introducing the equivariant splice: `ffbd513
 - `GSTClassicalHodgeAtomicDefectTomographySynchronization.lean`
 - `GSTClassicalHodgeAtomicDefectOperatorDescent.lean`
 - `GSTClassicalHodgeAtomicDefectEquivariantIrreducibility.lean`
+- `GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity.lean`
 - `GSTClassicalHodgeMultiplicityForgettingKernel.lean`
 - `GSTClassicalHodgeArsenalNonCircularity.lean`
 - `GSTClassicalHodgeBareLefschetzNonCircularity.lean`
@@ -72,11 +74,12 @@ Repair parser/elaboration/namespace/Mathlib/tactic/API failures only. Keep theor
 - do not replace `AtomicSpanStable` by a stronger matrix-unit/Hodge assumption;
 - do not insert a basis-cycle bridge;
 - do not add `source_action`, `acts_as_GST`, exact cosmic matrix-unit realization, or arbitrary point-transition kernels as axioms;
+- do not promote the bare `L^2` primitive to automatic native/atomic naturality: the new audit proves that would force target algebraicity;
 - do not delete semantic-rigidity or noncircularity audits;
-- if `Submodule.liftQ`, quotient induction, linear-map coercions, or namespace APIs differ in pinned Mathlib, repair those bodies surgically while preserving statements.
+- if `Submodule.liftQ`, quotient induction, linear-map coercions, `map_sub`, or namespace APIs differ in pinned Mathlib, repair those bodies surgically while preserving statements.
 
-The assistant lane continues the Lefschetz–Poincare primitive compression and higher-level integration in parallel.
+The assistant lane now audits/derives only genuinely weaker geometric statements below the bare-Lefschetz interface and reconciles CI in parallel.
 
 ## CI target
 
-The branch workflow `.github/workflows/hodge-conjecture.yml` should compile the transformed defect layers explicitly. Prioritize failures in the new quotient/equivariance files and preserve green older modules.
+The branch workflow `.github/workflows/hodge-conjecture.yml` should compile the transformed defect/equivariance layers explicitly and compile `GSTClassicalHodgeTwoBurstClosureReceipt.lean`, which imports the new bare-Lefschetz firewall. Preserve green older modules.
