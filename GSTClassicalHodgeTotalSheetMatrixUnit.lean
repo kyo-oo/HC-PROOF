@@ -29,6 +29,7 @@ open GSTClassicalHodgeConcreteSheetMatrixUnit
 open GSTClassicalHodgeSheetSpectralExtraction
 open GSTDimensionFreeHodgeDiagonal
 open GSTGlobalPureHodgeCosmology
+open GSTClassicalHodgeIntegralLefschetzTransport
 
 namespace GSTClassicalHodgeTotalSheetMatrixUnit
 
@@ -87,7 +88,7 @@ theorem integerSquareDual_diagonal
     integerSquareDual f (squareMirror r, squareMirror r) =
       f (r,r) := by
   unfold integerSquareDual
-  have hpair : (squareMirror r, squareMirror r : WorldCell N N)
+  have hpair : ((squareMirror r, squareMirror r) : WorldCell N N)
       = pureDiagonalState (pureMirror (Fin.castLE (show N ≤ min N N by omega) r)) :=
     rfl
   rw [hpair, worldDual_pureDiagonalState, pureMirror_involutive]
@@ -123,17 +124,15 @@ theorem backwardSheetMatrixUnit_exact
   rw [hforward]
   funext x
   unfold rationalSquareDual
-  by_cases hx : x = (s,s)
   · subst x
     have hdual : worldDual ((s,s) : WorldCell N N) = (ms,ms) := by
       have hpair : ((s,s) : WorldCell N N)
           = pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) s) := rfl
       rw [hpair, worldDual_pureDiagonalState]
       rfl
-          (show Fin (min N N) from s))
     rw [hdual]
     simp [integerSquareDual_diagonal, mr]
-    have hdualne : worldDual x ≠ (ms,ms) := by
+  · have hdualne : worldDual x ≠ (ms,ms) := by
       intro h
       apply hx
       have h1 := congrArg worldDual h
