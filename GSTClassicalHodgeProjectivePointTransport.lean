@@ -109,7 +109,9 @@ noncomputable def pushforwardPresentation
     simp only [key]
     show (Finsupp.sum φ fun i c => q • (c • pointPushforwardPresentation f p i))
         = q • (Finsupp.sum φ fun i c => c • pointPushforwardPresentation f p i)
-    simp only [Finsupp.sum, Finset.sum_smul]
+    simp only [Finsupp.sum]
+    exact Finset.sum_smul q
+      (fun x => φ x • pointPushforwardPresentation f p x)
 
 @[simp]
 theorem pushforwardPresentation_single

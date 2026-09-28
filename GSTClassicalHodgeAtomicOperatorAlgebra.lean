@@ -112,10 +112,11 @@ theorem atomicSpanStable_pow
   intro n
   induction n with
   | zero =>
-      simpa using (atomicSpanStable_id (p := p) (cl := cl))
+      rw [pow_zero]
+      exact atomicSpanStable_id (p := p) (cl := cl)
   | succ n ih =>
       rw [pow_succ]
-      exact atomicSpanStable_comp hT ih
+      exact atomicSpanStable_comp ih hT
 
 /-- Polynomial closure, restated as the algebraic crown of the operator
 closure package. -/

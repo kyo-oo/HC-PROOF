@@ -95,7 +95,6 @@ theorem squareDiagonalToCosmos_off_diagonal
         intro h
         apply hc
         rw [← h]
-        simp
       exact if_neg hne
     exact hsingle
   exact key
