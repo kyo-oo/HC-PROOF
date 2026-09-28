@@ -19,8 +19,14 @@ intertwining structure.
 
 At every step we normalize by the inverse cosmic coefficient.  Naturality of
 the spine then proves that the recursively generated native cycle has exactly
-the recursively generated Hodge class.  This removes the old
-`ProjectiveTowerHodgeIntertwining` scaffolding from the mathematical core.
+the recursively generated Hodge class.
+
+The strengthened layer below also isolates a conserved geometric charge.  A
+single native readout, a compatible cohomological readout, one nonzero base
+value, and one successor transport law force the normalized charge to remain
+constant through the entire unbounded projective tower.  Consequently the
+cycle class of every tower level is nonzero.  This reduces infinitely many
+nonvanishing obligations to one base case and one recursive geometric law.
 -/
 
 set_option maxHeartbeats 90000000
@@ -34,6 +40,7 @@ namespace GSTClassicalHodgeLimitlessSpinePropagation
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
@@ -156,6 +163,102 @@ theorem spineHodgeSeed_ne_zero_iff_cycleClass_ne_zero
     apply h
     simpa [hseed]
 
+/-! ## Conserved geometric charge
+
+The previous theorem identifies the exact remaining nonvanishing question.  We
+now compress the whole infinite tower to a conserved one-dimensional readout.
+This package is deliberately weaker than Hodge surjectivity and contains no
+basis-cycle witness: it only says that one geometric charge is visible both on
+native cycles and after applying the genuine cycle-class map, and that the
+unnormalized principal cut multiplies that charge by the same scalar used to
+normalize the limitless tower. -/
+
+/-- A conserved native/cohomological charge for the canonical projective spine.
+
+`nativeRead` measures a rational charge on native codimension cycles.
+`cohomologyRead` measures the same charge after geometric realization.
+`cycleClass_read` is the separating square between the two measurements.
+`base_ne_zero` is one codimension-zero geometric fact.
+`successor_read` is the single recursive transport law.
+
+Because `spineNativeTower` divides by `successorScalar p`, the measured charge
+is exactly conserved at every weight. -/
+structure SpineTowerConservedCharge
+    (G : GeometricCycleClassSpine V H) where
+  nativeRead :
+    ∀ p : Nat, codimensionCycles V.X p →ₗ[ℚ] ℚ
+  cohomologyRead :
+    ∀ p : Nat,
+      RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ] ℚ
+  cycleClass_read :
+    ∀ p : Nat, ∀ Z : codimensionCycles V.X p,
+      cohomologyRead p (H.cycleClass p Z) = nativeRead p Z
+  base_ne_zero :
+    nativeRead 0 (codimensionZeroFundamentalCycle V) ≠ 0
+  successor_read :
+    ∀ p : Nat, ∀ Z : codimensionCycles V.X p,
+      nativeRead (p + 1) (successorNativeOperator V p Z) =
+        successorScalar p * nativeRead p Z
+
+namespace SpineTowerConservedCharge
+
+/-- **CONSERVATION LAW.**  The normalized projective tower has exactly the
+same native charge in every weight as its codimension-zero fundamental seed. -/
+theorem nativeRead_spineNativeTower
+    (D : SpineTowerConservedCharge (V := V) (H := H) G) :
+    ∀ p : Nat,
+      D.nativeRead p (spineNativeTower G p) =
+        D.nativeRead 0 (codimensionZeroFundamentalCycle V) := by
+  intro p
+  induction p with
+  | zero => rfl
+  | succ p ih =>
+      rw [spineNativeTower_succ]
+      rw [LinearMap.map_smul]
+      rw [D.successor_read p (spineNativeTower G p)]
+      simp [successorScalar_ne_zero, ih]
+
+/-- The conserved native charge is nonzero at every level of the unbounded
+normalized projective tower. -/
+theorem nativeRead_spineNativeTower_ne_zero
+    (D : SpineTowerConservedCharge (V := V) (H := H) G)
+    (p : Nat) :
+    D.nativeRead p (spineNativeTower G p) ≠ 0 := by
+  rw [D.nativeRead_spineNativeTower p]
+  exact D.base_ne_zero
+
+/-- Compatibility of the charge with the actual cycle-class map converts the
+native conservation law into genuine cohomological nonvanishing. -/
+theorem cycleClass_spineNativeTower_ne_zero
+    (D : SpineTowerConservedCharge (V := V) (H := H) G)
+    (p : Nat) :
+    H.cycleClass p (spineNativeTower G p) ≠ 0 := by
+  intro hz
+  have hcompat := D.cycleClass_read p (spineNativeTower G p)
+  rw [hz] at hcompat
+  simp only [LinearMap.map_zero] at hcompat
+  exact D.nativeRead_spineNativeTower_ne_zero p hcompat.symm
+
+/-- Hence every recursively generated Hodge seed is nonzero.  No per-weight
+nonvanishing assumption remains once the conserved charge is constructed. -/
+theorem spineHodgeSeed_ne_zero
+    (D : SpineTowerConservedCharge (V := V) (H := H) G)
+    (p : Nat) :
+    spineHodgeSeed G p ≠ 0 :=
+  (spineHodgeSeed_ne_zero_iff_cycleClass_ne_zero G p).2
+    (D.cycleClass_spineNativeTower_ne_zero p)
+
+/-- The conserved charge simultaneously certifies that the algebraic Hodge
+subspace is nontrivial in every weight. -/
+theorem algebraicHodgeSubspace_ne_bot
+    (D : SpineTowerConservedCharge (V := V) (H := H) G)
+    (p : Nat) :
+    AlgebraicHodgeSubspace V H p ≠ ⊥ :=
+  algebraicHodgeSubspace_ne_bot_of_spineSeed G p
+    (D.spineHodgeSeed_ne_zero p)
+
+end SpineTowerConservedCharge
+
 /-- Whenever the canonical spine tower is nonzero in a weight, it supplies the
 nontrivial algebraic Hodge subspace required by rank-free limitless
 irreducibility. -/
@@ -189,12 +292,22 @@ theorem spine_limitless_successor_crown
 #check spineNativeTower_cycleClass
 #check spineHodgeSeed_algebraic
 #check spineHodgeSeed_ne_zero_iff_cycleClass_ne_zero
+#check SpineTowerConservedCharge
+#check SpineTowerConservedCharge.nativeRead_spineNativeTower
+#check SpineTowerConservedCharge.nativeRead_spineNativeTower_ne_zero
+#check SpineTowerConservedCharge.cycleClass_spineNativeTower_ne_zero
+#check SpineTowerConservedCharge.spineHodgeSeed_ne_zero
+#check SpineTowerConservedCharge.algebraicHodgeSubspace_ne_bot
 #check algebraicHodgeSubspace_ne_bot_of_spineSeed
 #check spine_limitless_successor_crown
 
 #print axioms spineHodgeSeed_successor_formula
 #print axioms spineNativeTower_cycleClass
 #print axioms spineHodgeSeed_algebraic
+#print axioms SpineTowerConservedCharge.nativeRead_spineNativeTower
+#print axioms SpineTowerConservedCharge.cycleClass_spineNativeTower_ne_zero
+#print axioms SpineTowerConservedCharge.spineHodgeSeed_ne_zero
+#print axioms SpineTowerConservedCharge.algebraicHodgeSubspace_ne_bot
 #print axioms spine_limitless_successor_crown
 
 end GSTClassicalHodgeLimitlessSpinePropagation
