@@ -253,6 +253,20 @@ theorem cycleClass_spineNativeTower_ne_zero
   simp only [LinearMap.map_zero] at hcompat
   exact D.nativeRead_spineNativeTower_ne_zero p hcompat.symm
 
+/-- **SEMANTIC ZERO-MAP EXCLUSION.**
+A conserved geometric charge makes the zero cycle-class map impossible in
+every weight.  This is stronger than nonvanishing of one selected Hodge seed:
+it rules out the exact degenerate semantic model in which the geometric spine
+could coexist with `cycleClass = 0`. -/
+theorem cycleClass_ne_zero
+    (D : SpineTowerConservedCharge (V := V) (H := H) G)
+    (p : Nat) :
+    H.cycleClass p ≠ 0 := by
+  intro hzero
+  apply D.cycleClass_spineNativeTower_ne_zero p
+  rw [hzero]
+  rfl
+
 /-- Hence every recursively generated Hodge seed is nonzero.  No per-weight
 nonvanishing assumption remains once the conserved charge is constructed. -/
 theorem spineHodgeSeed_ne_zero
@@ -297,6 +311,7 @@ theorem spine_limitless_successor_crown
 #check SpineTowerConservedCharge.nativeRead_spineNativeTower
 #check SpineTowerConservedCharge.nativeRead_spineNativeTower_ne_zero
 #check SpineTowerConservedCharge.cycleClass_spineNativeTower_ne_zero
+#check SpineTowerConservedCharge.cycleClass_ne_zero
 #check SpineTowerConservedCharge.spineHodgeSeed_ne_zero
 #check SpineTowerConservedCharge.algebraicHodgeSubspace_ne_bot
 #check spine_limitless_successor_crown
@@ -307,6 +322,7 @@ theorem spine_limitless_successor_crown
 #print axioms algebraicHodgeSubspace_ne_bot_of_spineSeed
 #print axioms SpineTowerConservedCharge.nativeRead_spineNativeTower
 #print axioms SpineTowerConservedCharge.cycleClass_spineNativeTower_ne_zero
+#print axioms SpineTowerConservedCharge.cycleClass_ne_zero
 #print axioms SpineTowerConservedCharge.spineHodgeSeed_ne_zero
 #print axioms SpineTowerConservedCharge.algebraicHodgeSubspace_ne_bot
 #print axioms spine_limitless_successor_crown
