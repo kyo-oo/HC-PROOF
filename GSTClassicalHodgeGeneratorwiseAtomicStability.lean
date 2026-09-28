@@ -223,7 +223,7 @@ theorem selected_basis_mem_atomic_of_transitionKernel
   let Sop := S.toClassicalHodgeSpectralOperator
     (S.atomicStable_of_pointTransitionKernel K)
   have h := Sop.selected_basis_algebraic_of_cyclic_seed a ha
-  simpa [Sop] using h hseed
+  exact h hseed
 
 end RawClassicalHodgeSpectralObservable
 end GSTClassicalHodgeSpectralSeparatorCollision
