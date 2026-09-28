@@ -17,6 +17,8 @@ import GSTClassicalHodgeTwoBurstCorrectedFrontier
 import GSTClassicalHodgeAtomicDefectOperatorDescent
 import GSTClassicalHodgeAtomicDefectEquivariantIrreducibility
 import GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity
+import GSTClassicalHodgeAtomicNaturalLefschetzPoincareClosure
+import GSTClassicalHodgeLefschetzPoincarePrimitiveNonCircularity
 
 /-!
 # GST CLASSICAL HODGE — TWO-BURST CLOSURE RECEIPT
@@ -26,12 +28,14 @@ The active source cleanly separates semantic repair, multiplicity-preserving
 tomography, quotient synchronization, quotient operator descent, and the
 remaining genuinely geometric extinction problem.
 
-The quotient-equivariant irreducibility splice is intentionally conditional:
-an independently constructed atomic-natural matrix arsenal saturates a seeded
-algebraic Hodge subspace.  The bare-Lefschetz audit immediately below prevents
-this reduction from being mistaken for the missing proof: on a live algebraic
-source, atomic naturality of the universal two-slot L^2 primitive already
-forces the target Hodge sheet algebraic.
+The quotient-equivariant irreducibility and Lefschetz–Poincare primitive
+splices are intentionally conditional.  The noncircularity files prove why:
+on one live algebraic source, atomic naturality of the universal two-slot L²
+primitive already forces the target Hodge sheet algebraic.  Consequently an
+atomic-natural Lefschetz–Poincare primitive pair is impossible when a separator
+annihilates the atomic span and detects that target.  Compression is retained
+as a compiler from genuine geometry to Hodge closure, never as the missing
+geometry itself.
 -/
 
 set_option maxHeartbeats 100000000
@@ -63,6 +67,12 @@ open AlgebraicGeometry
 #check GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity.bareTwoSlotLefschetzHodge_eq_scaled_matrixUnit
 #check GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity.targetBasis_algebraic_of_atomicNatural_bareLefschetz
 #check GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity.no_atomicNatural_bareLefschetz_to_separatorSheet
+#check GSTClassicalHodgeAtomicNaturalLefschetzPoincareClosure.AtomicNaturalLefschetzPoincarePair
+#check GSTClassicalHodgeAtomicNaturalLefschetzPoincareClosure.atomicNaturalMatrixArsenal_of_lefschetzPoincare
+#check GSTClassicalHodgeAtomicNaturalLefschetzPoincareClosure.bigradedBettiHodge_of_atomicNaturalLefschetzPoincare
+#check GSTClassicalHodgeLefschetzPoincarePrimitiveNonCircularity.targetBasis_algebraic_of_lefschetzPoincarePair
+#check GSTClassicalHodgeLefschetzPoincarePrimitiveNonCircularity.no_lefschetzPoincarePair_to_separatorSheet
+#check GSTClassicalHodgeLefschetzPoincarePrimitiveNonCircularity.lefschetzPoincarePair_false_of_separator
 
 #print axioms GSTClassicalHodgeGenuineCycleClassGeometry.GenuineCycleClassGeometry.not_nonempty_zeroCycleClassData
 #print axioms GSTClassicalHodgeProjectiveVisibilityNoGo.projectiveDetectorReadout_ghostSpine_eq_zero
@@ -79,3 +89,5 @@ open AlgebraicGeometry
 #print axioms GSTClassicalHodgeAtomicDefectEquivariantIrreducibility.bigradedBettiHodge_of_atomicNaturalMatrixArsenal
 #print axioms GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity.targetBasis_algebraic_of_atomicNatural_bareLefschetz
 #print axioms GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity.no_atomicNatural_bareLefschetz_to_separatorSheet
+#print axioms GSTClassicalHodgeAtomicNaturalLefschetzPoincareClosure.atomicNaturalMatrixArsenal_of_lefschetzPoincare
+#print axioms GSTClassicalHodgeLefschetzPoincarePrimitiveNonCircularity.no_lefschetzPoincarePair_to_separatorSheet
