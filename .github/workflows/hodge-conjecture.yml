@@ -61,6 +61,13 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeProjectiveDetectorMomentCollision.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile projective detector visibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeProjectiveDetectorVisibility.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile direct orbit-word saturation
         shell: bash
         run: |
