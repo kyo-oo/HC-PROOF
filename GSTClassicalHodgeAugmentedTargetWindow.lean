@@ -33,6 +33,8 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeIntegralSquareLocalization
+open GSTClassicalHodgeLocalCyclicCriterion
+open GSTClassicalHodgeConcreteArsenalConjugation
 open GSTClassicalHodgeTotalSheetMatrixUnit
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 
