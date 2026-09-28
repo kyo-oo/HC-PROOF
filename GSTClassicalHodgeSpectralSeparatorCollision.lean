@@ -186,10 +186,10 @@ theorem basisSeparator_forces_not_atomicStable
   apply F.separator_forces_observable_instability
     (pointCycleClassSpan p (H.cycleClass p))
     Sep.detector hann i
-  · simpa [F] using Sep.detects_basis
+  · exact Sep.detects_basis
   · exact a
   · exact ha
-  · simpa [F, FiniteSpectralFamily.spectralCombination] using hseed
+  · exact hseed
 
 /-- Positive contradiction form: atomic stability and one cyclic seed eliminate
 any basis separator on every selected sheet. -/

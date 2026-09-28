@@ -88,7 +88,7 @@ theorem integerSquareDual_diagonal
     integerSquareDual f (squareMirror r, squareMirror r) =
       f (r,r) := by
   unfold integerSquareDual
-  have h1 : worldDual (squareMirror r, squareMirror r : WorldCell N N)
+  have h1 : worldDual ((squareMirror r, squareMirror r) : WorldCell N N)
       = pureDiagonalState (Fin.castLE (show N ≤ min N N by omega) r) := by
     have h2 := worldDual_pureDiagonalState
         (pureMirror (Fin.castLE (show N ≤ min N N by omega) r))
@@ -133,8 +133,6 @@ theorem backwardSheetMatrixUnit_exact
       have h2 := worldDual_pureDiagonalState
           (Fin.castLE (show N ≤ min N N by omega) s)
       exact h2
-      rw [hpair, worldDual_pureDiagonalState]
-      rfl
     rw [hdual]
     simp [integerSquareDual_diagonal, mr]
   · have hdualne : worldDual x ≠ (ms,ms) := by
@@ -147,8 +145,6 @@ theorem backwardSheetMatrixUnit_exact
             (pureMirror (Fin.castLE (show N ≤ min N N by omega) s))
         rw [pureMirror_involutive] at h3
         exact h3
-        rw [hpair, worldDual_pureDiagonalState, pureMirror_involutive]
-        rfl
       rw [h2] at h1
       exact h1
     simp [hdualne, hx]
