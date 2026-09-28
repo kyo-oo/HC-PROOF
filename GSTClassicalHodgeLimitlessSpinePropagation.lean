@@ -2,6 +2,8 @@ import GSTClassicalHodgeGeometricCycleClassSpine
 import GSTClassicalHodgeLimitlessTowerOrbitCrown
 import GSTClassicalHodgeLimitlessProjectiveLefschetzTower
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
+import GSTClassicalHodgeNativeCycleCosmicShadow
+import GSTClassicalHodgeNativeOperatorCohomologyRealization
 
 /-!
 # GST CLASSICAL HODGE — LIMITLESS SPINE PROPAGATION
@@ -27,6 +29,20 @@ value, and one successor transport law force the normalized charge to remain
 constant through the entire unbounded projective tower.  Consequently the
 cycle class of every tower level is nonzero.  This reduces infinitely many
 nonvanishing obligations to one base case and one recursive geometric law.
+
+Finally, the native-cycle cosmic-shadow calculus constructs that conserved
+charge from the canonical native mass.  The only residual semantic laws are:
+
+* native mass vanishes on the kernel of the genuine cycle-class map;
+* the codimension-zero fundamental cycle has nonzero native mass;
+* every genuine point successor has the already-proved limitless successor
+  scalar as its native mass.
+
+The point-normal-form theorem upgrades the last pointwise law to every native
+cycle.  Kernel annihilation makes native mass descend through the actual
+cycle-class range, and ordinary rational-linear extension manufactures the
+ambient cohomological readout.  Thus `SpineTowerConservedCharge` is no longer
+an independent package once these three native geometric laws are supplied.
 -/
 
 set_option maxHeartbeats 90000000
@@ -48,6 +64,8 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeCodimensionZeroFundamentalCycle
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
+open GSTClassicalHodgeNativeCycleCosmicShadow
+open GSTClassicalHodgeNativeOperatorCohomologyRealization
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -177,26 +195,9 @@ theorem algebraicHodgeSubspace_ne_bot_of_spineSeed
   have hz : spineHodgeSeed G p = 0 := by simpa using hmem
   exact hne hz
 
-/-! ## Conserved geometric charge
+/-! ## Conserved geometric charge -/
 
-The previous theorem identifies the exact remaining nonvanishing question.  We
-now compress the whole infinite tower to a conserved one-dimensional readout.
-This package is deliberately weaker than Hodge surjectivity and contains no
-basis-cycle witness: it only says that one geometric charge is visible both on
-native cycles and after applying the genuine cycle-class map, and that the
-unnormalized principal cut multiplies that charge by the same scalar used to
-normalize the limitless tower. -/
-
-/-- A conserved native/cohomological charge for the canonical projective spine.
-
-`nativeRead` measures a rational charge on native codimension cycles.
-`cohomologyRead` measures the same charge after geometric realization.
-`cycleClass_read` is the separating square between the two measurements.
-`base_ne_zero` is one codimension-zero geometric fact.
-`successor_read` is the single recursive transport law.
-
-Because `spineNativeTower` divides by `successorScalar p`, the measured charge
-is exactly conserved at every weight. -/
+/-- A conserved native/cohomological charge for the canonical projective spine. -/
 structure SpineTowerConservedCharge
     (G : GeometricCycleClassSpine V H) where
   nativeRead :
@@ -255,9 +256,7 @@ theorem cycleClass_spineNativeTower_ne_zero
 
 /-- **SEMANTIC ZERO-MAP EXCLUSION.**
 A conserved geometric charge makes the zero cycle-class map impossible in
-every weight.  This is stronger than nonvanishing of one selected Hodge seed:
-it rules out the exact degenerate semantic model in which the geometric spine
-could coexist with `cycleClass = 0`. -/
+every weight. -/
 theorem cycleClass_ne_zero
     (D : SpineTowerConservedCharge (V := V) (H := H) G)
     (p : Nat) :
@@ -267,8 +266,7 @@ theorem cycleClass_ne_zero
   rw [hzero]
   rfl
 
-/-- Hence every recursively generated Hodge seed is nonzero.  No per-weight
-nonvanishing assumption remains once the conserved charge is constructed. -/
+/-- Hence every recursively generated Hodge seed is nonzero. -/
 theorem spineHodgeSeed_ne_zero
     (D : SpineTowerConservedCharge (V := V) (H := H) G)
     (p : Nat) :
@@ -286,6 +284,151 @@ theorem algebraicHodgeSubspace_ne_bot
     (D.spineHodgeSeed_ne_zero p)
 
 end SpineTowerConservedCharge
+
+/-! ## Native mass manufactures the conserved charge
+
+The unrestricted cosmic shadow already assigns every native cycle a canonical
+rational mass.  We isolate only the three geometric facts required to make that
+mass a separating, conserved cycle-class charge.  In particular no ambient
+cohomological functional is supplied: it is constructed by descending mass to
+the actual cycle-class range and extending linearly. -/
+
+/-- Minimal native-mass laws needed by the limitless spine.
+
+`kernel_mass_zero` says native mass depends only on the genuine cycle class.
+`base_mass_ne_zero` is one codimension-zero geometric nonemptiness statement.
+`successor_point_mass` is pointwise and is promoted to every native cycle by
+exact point normal form. -/
+structure NativeMassCycleClassBridge
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) where
+  kernel_mass_zero :
+    ∀ p : Nat, ∀ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = 0 → nativeCycleMass V p Z = 0
+  base_mass_ne_zero :
+    nativeCycleMass V 0 (codimensionZeroFundamentalCycle V) ≠ 0
+  successor_point_mass :
+    ∀ p : Nat, ∀ x : CodimensionPoint V.X p,
+      successorMass V p x = successorScalar p
+
+namespace NativeMassCycleClassBridge
+
+/-- Equal genuine cycle classes have equal canonical native mass. -/
+theorem mass_congr
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat)
+    {Z W : codimensionCycles V.X p}
+    (hZW : H.cycleClass p Z = H.cycleClass p W) :
+    nativeCycleMass V p Z = nativeCycleMass V p W := by
+  have hker : H.cycleClass p (Z - W) = 0 := by
+    simp [hZW]
+  have hmass := M.kernel_mass_zero p (Z - W) hker
+  simpa using hmass
+
+/-- Native mass descended to the actual cycle-class range. -/
+noncomputable def rangeMassRead
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat) :
+    LinearMap.range (H.cycleClass p) →ₗ[ℚ] ℚ where
+  toFun := fun x => nativeCycleMass V p (rangeRepresentative x)
+  map_add' := by
+    intro x y
+    have hrep :
+        H.cycleClass p (rangeRepresentative (x + y)) =
+          H.cycleClass p (rangeRepresentative x + rangeRepresentative y) := by
+      simp [rangeRepresentative_spec]
+    rw [M.mass_congr p hrep]
+    simp
+  map_smul' := by
+    intro q x
+    have hrep :
+        H.cycleClass p (rangeRepresentative (q • x)) =
+          H.cycleClass p (q • rangeRepresentative x) := by
+      simp [rangeRepresentative_spec]
+    rw [M.mass_congr p hrep]
+    simp
+
+/-- Extend the descended native mass from the actual cycle-class range to the
+whole ambient rational cohomology space. -/
+noncomputable def ambientMassRead
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat) :
+    RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ] ℚ :=
+  Classical.choose (LinearMap.exists_extend (M.rangeMassRead p))
+
+/-- The ambient mass extension agrees with descended mass on the actual
+cycle-class range. -/
+theorem ambientMassRead_comp_rangeSubtype
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat) :
+    (M.ambientMassRead p).comp (LinearMap.range (H.cycleClass p)).subtype =
+      M.rangeMassRead p :=
+  Classical.choose_spec (LinearMap.exists_extend (M.rangeMassRead p))
+
+/-- The manufactured ambient readout evaluates every genuine cycle class to
+exactly its canonical native mass. -/
+theorem ambientMassRead_cycleClass
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat)
+    (Z : codimensionCycles V.X p) :
+    M.ambientMassRead p (H.cycleClass p Z) = nativeCycleMass V p Z := by
+  have hcomp := LinearMap.congr_fun (M.ambientMassRead_comp_rangeSubtype p)
+    ((H.cycleClass p).rangeRestrict Z)
+  have hrep :
+      H.cycleClass p
+        (rangeRepresentative ((H.cycleClass p).rangeRestrict Z)) =
+        H.cycleClass p Z := by
+    exact rangeRepresentative_spec _
+  have hmass := M.mass_congr p hrep
+  simpa [rangeMassRead, hmass] using hcomp
+
+/-- **NATIVE-MASS CHARGE CONSTRUCTION.**
+The canonical native mass, together with the three minimal bridge laws,
+manufactures the complete conserved spine charge.  In particular the ambient
+cohomological readout and the all-native-cycle successor law are theorems. -/
+noncomputable def toConservedCharge
+    (M : NativeMassCycleClassBridge V H)
+    (G : GeometricCycleClassSpine V H) :
+    SpineTowerConservedCharge G where
+  nativeRead := nativeCycleMass V
+  cohomologyRead := M.ambientMassRead
+  cycleClass_read := by
+    intro p Z
+    exact M.ambientMassRead_cycleClass p Z
+  base_ne_zero := M.base_mass_ne_zero
+  successor_read := by
+    intro p Z
+    exact nativeCycleMass_successor_of_pointMass V p
+      (M.successor_point_mass p) Z
+
+/-- The native-mass bridge rules out zero cycle-class semantics in every
+weight without separately supplying a cohomological detector. -/
+theorem cycleClass_ne_zero
+    (M : NativeMassCycleClassBridge V H)
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat) :
+    H.cycleClass p ≠ 0 :=
+  (M.toConservedCharge G).cycleClass_ne_zero p
+
+/-- Native mass also manufactures unconditional nonvanishing of every
+normalized projective spine seed. -/
+theorem spineHodgeSeed_ne_zero
+    (M : NativeMassCycleClassBridge V H)
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat) :
+    spineHodgeSeed G p ≠ 0 :=
+  (M.toConservedCharge G).spineHodgeSeed_ne_zero p
+
+/-- Therefore every algebraic Hodge fiber contains a nonzero canonical spine
+class once the native-mass bridge laws hold. -/
+theorem algebraicHodgeSubspace_ne_bot
+    (M : NativeMassCycleClassBridge V H)
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat) :
+    AlgebraicHodgeSubspace V H p ≠ ⊥ :=
+  (M.toConservedCharge G).algebraicHodgeSubspace_ne_bot p
+
+end NativeMassCycleClassBridge
 
 /-- The old tower-intertwining successor formula is now a theorem generated
 from the spine rather than supplied as data. -/
@@ -314,6 +457,15 @@ theorem spine_limitless_successor_crown
 #check SpineTowerConservedCharge.cycleClass_ne_zero
 #check SpineTowerConservedCharge.spineHodgeSeed_ne_zero
 #check SpineTowerConservedCharge.algebraicHodgeSubspace_ne_bot
+#check NativeMassCycleClassBridge
+#check NativeMassCycleClassBridge.mass_congr
+#check NativeMassCycleClassBridge.rangeMassRead
+#check NativeMassCycleClassBridge.ambientMassRead
+#check NativeMassCycleClassBridge.ambientMassRead_cycleClass
+#check NativeMassCycleClassBridge.toConservedCharge
+#check NativeMassCycleClassBridge.cycleClass_ne_zero
+#check NativeMassCycleClassBridge.spineHodgeSeed_ne_zero
+#check NativeMassCycleClassBridge.algebraicHodgeSubspace_ne_bot
 #check spine_limitless_successor_crown
 
 #print axioms spineHodgeSeed_successor_formula
@@ -325,6 +477,12 @@ theorem spine_limitless_successor_crown
 #print axioms SpineTowerConservedCharge.cycleClass_ne_zero
 #print axioms SpineTowerConservedCharge.spineHodgeSeed_ne_zero
 #print axioms SpineTowerConservedCharge.algebraicHodgeSubspace_ne_bot
+#print axioms NativeMassCycleClassBridge.mass_congr
+#print axioms NativeMassCycleClassBridge.ambientMassRead_cycleClass
+#print axioms NativeMassCycleClassBridge.toConservedCharge
+#print axioms NativeMassCycleClassBridge.cycleClass_ne_zero
+#print axioms NativeMassCycleClassBridge.spineHodgeSeed_ne_zero
+#print axioms NativeMassCycleClassBridge.algebraicHodgeSubspace_ne_bot
 #print axioms spine_limitless_successor_crown
 
 end GSTClassicalHodgeLimitlessSpinePropagation
