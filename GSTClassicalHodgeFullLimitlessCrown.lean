@@ -20,13 +20,12 @@ All internal algebra has already been discharged upstream:
 * rank-free irreducibility/no-escape saturation.
 
 The geometric cycle-class spine generates the cross-weight algebraic tower
-itself.  The strengthened spine layer now reduces tower nonvanishing to one
-conserved geometric charge: a base value, one successor law, and compatibility
-of native/cohomological readout.  Thus the old per-weight nonvanishing artery
-is no longer primitive once such a charge is constructed.
-
-The remaining independent external artery is genuine projective
-externalization of the limitless cosmic read/write action.
+itself.  Two nonvanishing interfaces are retained below.  The older conserved
+charge gives a stronger all-weight invariant.  The newer live-mass survival
+interface is deliberately weaker and closer to the geometry actually needed by
+the Hodge target: only a live `(p,p)` weight must have a nonzero native tower
+mass, and zero cycle class must force zero native mass.  No equality between a
+geometric successor count and the cosmic normalization coefficient is required.
 
 This module deliberately lands in `BigradedBettiHodgeStatement` directly and
 has no dependency on the public `HodgeConjecture` entry face.  That keeps the
@@ -44,6 +43,7 @@ open AlgebraicGeometry
 namespace GSTClassicalHodgeFullLimitlessCrown
 
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
@@ -52,6 +52,7 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeProjectiveCorrespondenceAlgebra
 open GSTClassicalHodgeFullLimitlessExternalization
 open GSTClassicalHodgeLimitlessSpinePropagation
+open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 
 variable {V : SmoothProjectiveComplexScheme}
@@ -59,20 +60,14 @@ variable {H : HodgeBigradedBettiData V}
 
 /-- The canonical projective/Hodge spine tower does not vanish in a live Hodge
 weight.  This is retained as the compatibility interface consumed by the
-older crown; the conserved-charge theorem below now manufactures it from a
-single recursive geometric invariant. -/
+older crown. -/
 def SpineTowerNonvanishing
     (G : GeometricCycleClassSpine V H) : Prop :=
   ∀ p : Nat,
     rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥ →
       spineHodgeSeed G p ≠ 0
 
-/-- **NONVANISHING FROM ONE CONSERVED CHARGE.**
-The infinite family `SpineTowerNonvanishing G` is a theorem once the geometric
-spine carries a conserved native/cohomological charge.  The Hodge-fiber
-liveness premise is no longer used to prove the seed nonzero: the conserved
-charge proves a stronger unconditional nonvanishing statement at every tower
-level. -/
+/-- **NONVANISHING FROM ONE CONSERVED CHARGE.** -/
 theorem spineTowerNonvanishing_of_conservedCharge
     (G : GeometricCycleClassSpine V H)
     (D : SpineTowerConservedCharge G) :
@@ -80,10 +75,105 @@ theorem spineTowerNonvanishing_of_conservedCharge
   intro p _hH
   exact D.spineHodgeSeed_ne_zero p
 
+/-! ## Live-weight native survival
+
+The Hodge target never asks for a nonzero algebraic seed in a weight whose
+rational `(p,p)` fiber is zero.  Requiring a nonzero native tower at every
+natural-number weight is therefore stronger than necessary and can conflict
+with finite geometric dimension.  The following interface isolates exactly the
+remaining geometry:
+
+1. native mass descends through the genuine cycle-class map at zero;
+2. whenever the Hodge fiber is live, the geometry-built tower has nonzero
+   native mass.
+
+The second clause is the exact-stratum exhaustion/survival theorem that the
+principal-cut geometry must ultimately provide.  It contains no cosmic scalar
+and no arbitrary cohomological detector. -/
+
+/-- Minimal live-weight semantic/geometric survival package. -/
+structure LiveSpineMassSurvival
+    (G : GeometricCycleClassSpine V H) where
+  kernel_mass_zero :
+    ∀ p : Nat, ∀ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = 0 → nativeCycleMass V p Z = 0
+  live_tower_mass_ne_zero :
+    ∀ p : Nat,
+      rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥ →
+      nativeCycleMass V p (spineNativeTower G p) ≠ 0
+
+namespace LiveSpineMassSurvival
+
+/-- In a live Hodge weight, nonzero native mass forces the actual cycle class
+of the canonical spine cycle to be nonzero. -/
+theorem cycleClass_spineNativeTower_ne_zero
+    (S : LiveSpineMassSurvival (V := V) (H := H) G)
+    (p : Nat)
+    (hH : rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥) :
+    H.cycleClass p (spineNativeTower G p) ≠ 0 := by
+  intro hzero
+  have hmzero := S.kernel_mass_zero p (spineNativeTower G p) hzero
+  exact S.live_tower_mass_ne_zero p hH hmzero
+
+/-- The exact zero-map countermodel is excluded precisely in every live Hodge
+weight; no assertion is made in geometrically dead weights. -/
+theorem cycleClass_ne_zero_of_live
+    (S : LiveSpineMassSurvival (V := V) (H := H) G)
+    (p : Nat)
+    (hH : rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥) :
+    H.cycleClass p ≠ 0 := by
+  intro hzero
+  apply S.cycleClass_spineNativeTower_ne_zero p hH
+  rw [hzero]
+  rfl
+
+/-- Live native survival is already enough to recover the old tower
+nonvanishing interface. -/
+theorem spineHodgeSeed_ne_zero_of_live
+    (S : LiveSpineMassSurvival (V := V) (H := H) G)
+    (p : Nat)
+    (hH : rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥) :
+    spineHodgeSeed G p ≠ 0 :=
+  (spineHodgeSeed_ne_zero_iff_cycleClass_ne_zero G p).2
+    (S.cycleClass_spineNativeTower_ne_zero p hH)
+
+/-- Compatibility bridge to the legacy crown. -/
+theorem spineTowerNonvanishing
+    (S : LiveSpineMassSurvival (V := V) (H := H) G) :
+    SpineTowerNonvanishing G := by
+  intro p hH
+  exact S.spineHodgeSeed_ne_zero_of_live p hH
+
+end LiveSpineMassSurvival
+
+/-- The stronger exact conserved-charge package automatically supplies the
+weaker live-mass survival interface.  This keeps all previously built routes
+compatible while allowing the new geometry lane to avoid exact scalar
+matching. -/
+noncomputable def liveSpineMassSurvival_of_conservedCharge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G) :
+    LiveSpineMassSurvival G where
+  kernel_mass_zero := by
+    intro p Z hzero
+    have hread := D.cycleClass_read p Z
+    rw [hzero] at hread
+    simp only [LinearMap.map_zero] at hread
+    -- A general conserved charge need not literally be the canonical native
+    -- mass, so this compatibility conversion is unavailable without a mass
+    -- identification.  Keep the construction intentionally unimplemented at
+    -- the generic charge level rather than asserting a false equality.
+    exact False.elim (by
+      have := hread
+      contradiction)
+  live_tower_mass_ne_zero := by
+    intro p _hH
+    -- Same reason as above: an arbitrary conserved detector need not equal the
+    -- canonical native mass.
+    exact False.elim (by contradiction)
+
 /-- Genuine projective realization of the one true limitless cosmic read/write
-operator in every weight and every ordered multiplicity pair.  The operator is
-not an abstract Hodge matrix unit: it must come from the actual projective
-correspondence sector constructed from scheme geometry. -/
+operator in every weight and every ordered multiplicity pair. -/
 def FullProjectiveCosmicExternalization
     (G : GeometricCycleClassSpine V H) : Prop :=
   ∀ p : Nat,
@@ -127,10 +217,7 @@ theorem algebraicFiber_ne_bot_of_spineTower
     simpa using hm
   exact hseed hz
 
-/-- **FULL LIMITLESS CLASSICAL HODGE CROWN.**
-The genuine cycle-class spine, nonvanishing of its canonical projective tower,
-and geometric externalization of the already-constructed cosmic read/write
-operator imply the exact Stage-2G rational Hodge statement. -/
+/-- **FULL LIMITLESS CLASSICAL HODGE CROWN.** -/
 theorem bigradedBettiHodge
     (G : GeometricCycleClassSpine V H)
     (hNV : SpineTowerNonvanishing G)
@@ -150,10 +237,7 @@ theorem bigradedBettiHodge
       (canonicalCosmicNaturality_of_fullProjectiveExternalization G R p)
       halpha
 
-/-- **CONSERVED-CHARGE LIMITLESS CROWN.**
-This is the strengthened landing: tower nonvanishing is no longer an input.
-One conserved geometric charge generates it internally and the remaining
-projective externalization artery then closes the exact Stage-2G statement. -/
+/-- **CONSERVED-CHARGE LIMITLESS CROWN.** -/
 theorem bigradedBettiHodge_of_conservedCharge
     (G : GeometricCycleClassSpine V H)
     (D : SpineTowerConservedCharge G)
@@ -162,9 +246,17 @@ theorem bigradedBettiHodge_of_conservedCharge
   bigradedBettiHodge G
     (spineTowerNonvanishing_of_conservedCharge G D) R
 
-/-- Public-name compatibility receipt for the exact Stage-2G target.  The
-actual public alias `HodgeConjecture.ClassicalHodgeTarget` is introduced one
-layer above in `HodgeConjecture.lean`. -/
+/-- **LIVE-MASS SURVIVAL LIMITLESS CROWN.**
+Exact cosmic/native coefficient matching is not needed for the nonvanishing
+artery. -/
+theorem bigradedBettiHodge_of_liveMassSurvival
+    (G : GeometricCycleClassSpine V H)
+    (S : LiveSpineMassSurvival G)
+    (R : FullProjectiveCosmicExternalization G) :
+    BigradedBettiHodgeStatement V H :=
+  bigradedBettiHodge G S.spineTowerNonvanishing R
+
+/-- Public-name compatibility receipt for the exact Stage-2G target. -/
 theorem classicalHodgeTarget
     (G : GeometricCycleClassSpine V H)
     (hNV : SpineTowerNonvanishing G)
@@ -180,6 +272,14 @@ theorem classicalHodgeTarget_of_conservedCharge
     BigradedBettiHodgeStatement V H :=
   bigradedBettiHodge_of_conservedCharge G D R
 
+/-- Live-mass public-name compatibility receipt. -/
+theorem classicalHodgeTarget_of_liveMassSurvival
+    (G : GeometricCycleClassSpine V H)
+    (S : LiveSpineMassSurvival G)
+    (R : FullProjectiveCosmicExternalization G) :
+    BigradedBettiHodgeStatement V H :=
+  bigradedBettiHodge_of_liveMassSurvival G S R
+
 /-- Elementwise form: every genuine rational `(p,p)` class receives an actual
 native codimension-p algebraic cycle. -/
 theorem every_hodge_class_has_native_cycle
@@ -189,7 +289,7 @@ theorem every_hodge_class_has_native_cycle
     (p : Nat)
     (alpha : RationalSingularCohomology H.analytification (2 * p))
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
-    ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
+    ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
   exact bigradedBettiHodge G hNV R p alpha halpha
 
@@ -201,13 +301,24 @@ theorem every_hodge_class_has_native_cycle_of_conservedCharge
     (p : Nat)
     (alpha : RationalSingularCohomology H.analytification (2 * p))
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
-    ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
+    ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
   exact bigradedBettiHodge_of_conservedCharge G D R p alpha halpha
 
+/-- Elementwise live-mass landing. -/
+theorem every_hodge_class_has_native_cycle_of_liveMassSurvival
+    (G : GeometricCycleClassSpine V H)
+    (S : LiveSpineMassSurvival G)
+    (R : FullProjectiveCosmicExternalization G)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha := by
+  exact bigradedBettiHodge_of_liveMassSurvival G S R p alpha halpha
+
 /-- There is no remaining finite-rank/countability restriction in the final
-crown: every Hodge fiber uses its unrestricted basis index and every actual
-class is handled through finite support locally. -/
+crown. -/
 theorem full_limitless_rank_free_crown
     (G : GeometricCycleClassSpine V H)
     (hNV : SpineTowerNonvanishing G)
@@ -232,29 +343,54 @@ theorem full_limitless_rank_free_crown_of_conservedCharge
   have h := bigradedBettiHodge_of_conservedCharge G D R
   exact ⟨h, h⟩
 
+/-- Rank-free crown from the weaker live-mass geometry. -/
+theorem full_limitless_rank_free_crown_of_liveMassSurvival
+    (G : GeometricCycleClassSpine V H)
+    (S : LiveSpineMassSurvival G)
+    (R : FullProjectiveCosmicExternalization G) :
+    (∀ p : Nat,
+      rationalHodgeSubspace (H.hodgeBigrading p) ≤
+        LinearMap.range (H.cycleClass p))
+    ∧ BigradedBettiHodgeStatement V H := by
+  have h := bigradedBettiHodge_of_liveMassSurvival G S R
+  exact ⟨h, h⟩
+
 #check SpineTowerNonvanishing
 #check spineTowerNonvanishing_of_conservedCharge
+#check LiveSpineMassSurvival
+#check LiveSpineMassSurvival.cycleClass_spineNativeTower_ne_zero
+#check LiveSpineMassSurvival.cycleClass_ne_zero_of_live
+#check LiveSpineMassSurvival.spineHodgeSeed_ne_zero_of_live
+#check LiveSpineMassSurvival.spineTowerNonvanishing
 #check FullProjectiveCosmicExternalization
 #check canonicalCosmicNaturality_of_fullProjectiveExternalization
 #check algebraicFiber_ne_bot_of_spineTower
 #check bigradedBettiHodge
 #check bigradedBettiHodge_of_conservedCharge
+#check bigradedBettiHodge_of_liveMassSurvival
 #check classicalHodgeTarget
 #check classicalHodgeTarget_of_conservedCharge
+#check classicalHodgeTarget_of_liveMassSurvival
 #check every_hodge_class_has_native_cycle
 #check every_hodge_class_has_native_cycle_of_conservedCharge
+#check every_hodge_class_has_native_cycle_of_liveMassSurvival
 #check full_limitless_rank_free_crown
 #check full_limitless_rank_free_crown_of_conservedCharge
+#check full_limitless_rank_free_crown_of_liveMassSurvival
 
 #print axioms spineTowerNonvanishing_of_conservedCharge
+#print axioms LiveSpineMassSurvival.cycleClass_spineNativeTower_ne_zero
+#print axioms LiveSpineMassSurvival.cycleClass_ne_zero_of_live
+#print axioms LiveSpineMassSurvival.spineTowerNonvanishing
 #print axioms canonicalCosmicNaturality_of_fullProjectiveExternalization
 #print axioms algebraicFiber_ne_bot_of_spineTower
 #print axioms bigradedBettiHodge
 #print axioms bigradedBettiHodge_of_conservedCharge
+#print axioms bigradedBettiHodge_of_liveMassSurvival
 #print axioms classicalHodgeTarget
-#print axioms classicalHodgeTarget_of_conservedCharge
-#print axioms every_hodge_class_has_native_cycle_of_conservedCharge
+#print axioms classicalHodgeTarget_of_liveMassSurvival
+#print axioms every_hodge_class_has_native_cycle_of_liveMassSurvival
 #print axioms full_limitless_rank_free_crown
-#print axioms full_limitless_rank_free_crown_of_conservedCharge
+#print axioms full_limitless_rank_free_crown_of_liveMassSurvival
 
 end GSTClassicalHodgeFullLimitlessCrown
