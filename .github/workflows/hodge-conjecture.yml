@@ -54,6 +54,34 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeTomographyDefectSplice.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile atomic-defect tomography ghost
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeAtomicDefectTomographyGhost.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile cohomological pairing frontier
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeCohomologicalPairingFrontier.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile polarized Hodge ghost
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgePolarizedHodgeGhost.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile polarized orthogonal extinction audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgePolarizedOrthogonalExtinctionAudit.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile projective detector-moment collision
         shell: bash
         run: |
