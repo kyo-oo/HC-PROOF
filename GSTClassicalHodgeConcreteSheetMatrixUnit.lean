@@ -32,7 +32,7 @@ open GSTTruncatedWorldCohomologyRing
 open GSTUniversalLefschetzCosmology
 open GSTClassicalHodgeSheetSpectralExtraction
 open GSTClassicalHodgeIntegralLefschetzTransport
-open GSTSquarePureHodgeDuality
+open GSTGlobalPureHodgeCosmology
 open GSTWorldRecoordinationGroupoid
 
 namespace GSTClassicalHodgeConcreteSheetMatrixUnit

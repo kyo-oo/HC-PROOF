@@ -33,6 +33,7 @@ open scoped BigOperators
 open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeFiberedCosmology
@@ -47,6 +48,7 @@ universe u
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
+namespace GSTClassicalHodgeCyclicSpectralGeneration
 namespace FiniteSpectralFamily
 
 /-- Linearization of the finite spectral-combination operation in its
@@ -151,6 +153,7 @@ theorem exists_cyclic_seed_of_coordinatewise_visible
   · exact a.2
 
 end FiniteSpectralFamily
+end GSTClassicalHodgeCyclicSpectralGeneration
 
 /-- Classical-Hodge specialization: every live sheet is separately visible in
 some atomic spectral combination.  Different sheets may use different
