@@ -53,13 +53,18 @@ fiber. -/
 structure PerfectHodgeFiberPairing (p : Nat) where
   pair : HFiber (V := V) (H := H) p →ₗ[ℚ]
     HFiber (V := V) (H := H) p →ₗ[ℚ] ℚ
-  toDual : HFiber (V := V) (H := H) p →ₗ[ℚ]
-      (HFiber (V := V) (H := H) p →ₗ[ℚ] ℚ) := pair
-  toDual_bijective : Function.Bijective toDual
+  toDual_bijective : Function.Bijective pair
 
 namespace PerfectHodgeFiberPairing
 
 variable {p : Nat}
+
+/-- The adjoint map `u ↦ pair u`.  Definitionally equal to `pair`, so every
+`toDual` statement below is a statement about `pair` itself. -/
+def toDual (P : PerfectHodgeFiberPairing (V := V) (H := H) p) :
+    HFiber (V := V) (H := H) p →ₗ[ℚ]
+      (HFiber (V := V) (H := H) p →ₗ[ℚ] ℚ) :=
+  P.pair
 
 noncomputable def dualClass
     (P : PerfectHodgeFiberPairing (V := V) (H := H) p)
@@ -112,8 +117,9 @@ theorem separatorOnHodge_ne_zero
     (E : OmniversalSeparatorGhost G) :
     separatorOnHodge E.separator.detector ≠ 0 := by
   intro hz
-  have hv := LinearMap.congr_fun hz E.hodge
-  exact E.separator.detects hv
+  have hv := LinearMap.congr_fun hz
+    (classicalHodgeBasis V H E.weight E.sheet)
+  exact E.separator.detects_basis hv
 
 /-- Pairing-orthogonality to every actual algebraic Hodge vector. -/
 def OrthogonalToAlgebraicHodge
@@ -156,9 +162,9 @@ theorem ghostHodgeDual_detects
     (P : PerfectHodgeFiberPairing (V := V) (H := H) E.weight) :
     P.pair
         (P.dualClass (separatorOnHodge E.separator.detector))
-        E.hodge ≠ 0 := by
+        (classicalHodgeBasis V H E.weight E.sheet) ≠ 0 := by
   rw [P.pair_dualClass]
-  exact E.separator.detects
+  exact E.separator.detects_basis
 
 /-- Concrete Hodge-fiber residual obstruction after polarization. -/
 structure PolarizedHodgeGhost
@@ -179,7 +185,7 @@ noncomputable def OmniversalSeparatorGhost.toPolarizedHodgeGhost
   dual := P.dualClass (separatorOnHodge E.separator.detector)
   dual_ne_zero := ghostHodgeDual_ne_zero E P
   orthogonal_algebraic := ghostHodgeDual_orthogonal E P
-  witness := E.hodge
+  witness := classicalHodgeBasis V H E.weight E.sheet
   detects_witness := ghostHodgeDual_detects E P
 
 /-- **HODGE FAILURE -> NONZERO POLARIZED ORTHOGONAL HODGE CLASS.** -/

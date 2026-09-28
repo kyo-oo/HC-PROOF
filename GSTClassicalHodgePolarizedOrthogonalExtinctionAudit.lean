@@ -42,6 +42,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgePolarizedHodgeGhost
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -67,9 +68,9 @@ theorem algebraicPairingSeparates_of_hodge
   intro p u hu
   have hdual0 : (P p).toDual u ≠ 0 := by
     intro hz
-    have hinj := (P p).toDual_bijective.1
-    have : u = 0 := hinj (by simpa using hz)
-    exact hu this
+    have hu0 : u = 0 :=
+      (P p).toDual_bijective.1 (hz.trans (map_zero (P p).toDual).symm)
+    exact hu hu0
   have hex : ∃ a : ClassicalHodgeFiber V H p,
       (P p).pair u a ≠ 0 := by
     by_contra h

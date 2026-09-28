@@ -50,6 +50,7 @@ open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeGenuineCycleClassGeometry
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -65,13 +66,17 @@ the Stage-2G carrier. -/
 structure PerfectCohomologicalPairing
     (H : HodgeBigradedBettiData V) (p : Nat) where
   pair : Coh H p →ₗ[ℚ] Coh H p →ₗ[ℚ] ℚ
-  toDual : Coh H p →ₗ[ℚ] (Coh H p →ₗ[ℚ] ℚ) :=
-    pair
-  toDual_bijective : Function.Bijective toDual
+  toDual_bijective : Function.Bijective pair
 
 namespace PerfectCohomologicalPairing
 
 variable {p : Nat}
+
+/-- The adjoint map `u ↦ pair u`.  Definitionally equal to `pair`, so every
+`toDual` statement below is a statement about `pair` itself. -/
+def toDual (P : PerfectCohomologicalPairing H p) :
+    Coh H p →ₗ[ℚ] (Coh H p →ₗ[ℚ] ℚ) :=
+  P.pair
 
 /-- The unique cohomology class representing a rational detector under the
 perfect pairing. -/
@@ -136,7 +141,10 @@ theorem ghostDualClass_ne_zero
     (E : OmniversalSeparatorGhost G)
     (P : PerfectCohomologicalPairing H E.weight) :
     P.dualClass E.separator.detector ≠ 0 := by
-  exact P.dualClass_ne_zero E.separator.detector E.separator.detector_nonzero
+  have hdet : E.separator.detector ≠ 0 := by
+    intro h
+    exact E.separator.detects_basis (by rw [h]; simp)
+  exact P.dualClass_ne_zero E.separator.detector hdet
 
 /-- **GHOST -> ALGEBRAIC ORTHOGONALITY.**  The pairing-dual ghost class is
 orthogonal to the entire genuine atomic cycle-class span. -/
@@ -161,9 +169,10 @@ theorem ghostDualClass_detects_ghost
     {G : GeometricCycleClassSpine V H}
     (E : OmniversalSeparatorGhost G)
     (P : PerfectCohomologicalPairing H E.weight) :
-    P.pair (P.dualClass E.separator.detector) E.hodge.1 ≠ 0 := by
+    P.pair (P.dualClass E.separator.detector)
+      (classicalHodgeBasis V H E.weight E.sheet).1 ≠ 0 := by
   rw [P.pair_dualClass]
-  exact E.separator.detects
+  exact E.separator.detects_basis
 
 /-- Concrete transformed obstruction packet produced by a hypothetical Hodge
 failure once a perfect cohomological pairing is available. -/
@@ -186,7 +195,7 @@ noncomputable def OmniversalSeparatorGhost.toPairingOrthogonalGhost
     PairingOrthogonalGhost G E.weight P where
   dual := P.dualClass E.separator.detector
   dual_ne_zero := ghostDualClass_ne_zero E P
-  hodge := E.hodge
+  hodge := classicalHodgeBasis V H E.weight E.sheet
   orthogonal_atomic := ghostDualClass_orthogonal_atomic E P
   detects_hodge := ghostDualClass_detects_ghost E P
 

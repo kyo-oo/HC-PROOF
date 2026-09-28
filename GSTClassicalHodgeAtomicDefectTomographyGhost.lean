@@ -43,6 +43,8 @@ open GSTClassicalHodgeAtomicDefectDuality
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 open GSTClassicalHodgeLefschetzTomography
+open GSTClassicalHodgeSingleSheetCrown
+open GSTClassicalHodgeFiniteSupportChart
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
