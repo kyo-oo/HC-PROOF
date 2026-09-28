@@ -112,8 +112,8 @@ theorem normalizeProjectiveReadout_spec
     (target : ℚ) :
     projectiveDetectorReadout J p Z detector
         (normalizeProjectiveReadout J p Z detector K target) = target := by
-  rw [projectiveDetectorReadout_scale]
   unfold normalizeProjectiveReadout
+  rw [projectiveDetectorReadout_scale]
   field_simp [hK]
 
 /-- Combined existence/normalization form used by finite GST tomography. -/

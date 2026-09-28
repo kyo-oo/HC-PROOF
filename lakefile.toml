@@ -342,6 +342,21 @@ roots = [
   "GSTClassicalHodgeTwoGeneratorNativeArsenal",
   "GSTClassicalHodgeUniversalTwoSlotNativeClosure",
   "GSTClassicalHodgeUniversalTwoSlotSaturation",
+  # GLM repair wiring: the Hodge gate's `lake env lean` steps below need these
+  # modules' oleans prebuilt; they were outside HodgePureMath's import closure,
+  # so the gate steps could never resolve their imports. Registering them here
+  # makes `lake build HodgePureMath` compile the complete gate surface.
+  "GSTClassicalHodgeDegreeRigidCycleClassUpgrade",
+  "GSTClassicalHodgeTomographyDefectSplice",
+  "GSTClassicalHodgeProjectiveDetectorMomentCollision",
+  "GSTClassicalHodgeProjectiveDetectorVisibility",
+  "GSTClassicalHodgeTwoBurstClosureReceipt",
+  "GSTClassicalHodgeDegreeRigidTomographicBlackout",
+  "GSTClassicalHodgeFiniteCorrespondenceCohomologyNaturality",
+  "GSTClassicalHodgeVisibilityEquivalenceAudit",
+  "GSTClassicalHodgeUniversalNaturalityBarrier",
+  "GSTClassicalHodgeDirectOrbitWordSaturation",
+  "HodgeConjecture",
 ]
 
 # ---------------------------------------------------------------------------

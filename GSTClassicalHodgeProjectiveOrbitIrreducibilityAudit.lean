@@ -45,7 +45,8 @@ theorem projectiveOrbitIrreducibility_implies_visibilityForAllGhosts
     (J : GenuineCycleClassGeometry V H)
     (R : ProjectiveOrbitIrreducibility V H J)
     (M : NativeMassCycleClassBridge V H) :
-    ProjectiveVisibilityForAllGhosts J.spine M := by
+    ∀ E : OmniversalSeparatorGhost J.spine,
+      Nonempty (ProjectiveDetectorVisible J.spine M E) := by
   intro E
   exact exists_projectiveDetectorVisible J R M E
 
@@ -58,7 +59,7 @@ theorem projectiveOrbitIrreducibility_implies_hodge
     (M : NativeMassCycleClassBridge V H) :
     BigradedBettiHodgeStatement V H := by
   exact
-    (projectiveVisibilityForAllGhosts_iff_hodge J.spine M).1
+    (hodge_iff_projectiveDetectorVisibility J.spine M).2
       (projectiveOrbitIrreducibility_implies_visibilityForAllGhosts J R M)
 
 /-- The conditional closure theorem and the visibility-equivalence audit land
@@ -70,7 +71,7 @@ theorem conditional_closure_agrees_with_visibility_audit
     (M : NativeMassCycleClassBridge V H) :
     bigradedBettiHodge_of_projectiveOrbitIrreducibility J R M =
       projectiveOrbitIrreducibility_implies_hodge J R M := by
-  apply proof_irrel_heq
+  apply proof_irrel
 
 #check projectiveOrbitIrreducibility_implies_visibilityForAllGhosts
 #check projectiveOrbitIrreducibility_implies_hodge
