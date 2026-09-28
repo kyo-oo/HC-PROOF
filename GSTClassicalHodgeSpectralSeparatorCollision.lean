@@ -183,13 +183,10 @@ theorem basisSeparator_forces_not_atomicStable
         LinearMap.ker Sep.detector :=
     (annihilatesPointCycles_iff_atomicSpan_le_ker
       p (H.cycleClass p) Sep.detector).mp Sep.annihilates_atoms
-  apply F.separator_forces_observable_instability
+  exact F.separator_forces_observable_instability
     (pointCycleClassSpan p (H.cycleClass p))
     Sep.detector hann i
-  · exact Sep.detects_basis
-  · exact a
-  · exact ha
-  · exact hseed
+    Sep.detects_basis a ha hseed
 
 /-- Positive contradiction form: atomic stability and one cyclic seed eliminate
 any basis separator on every selected sheet. -/
