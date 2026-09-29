@@ -59,7 +59,8 @@ theorem class_congr_of_kernelStable
   have hker : H.cycleClass p (Z - W) = 0 := by
     simp [hZW]
   have himage := hA (Z - W) hker
-  simpa using himage
+  rw [LinearMap.map_sub, LinearMap.map_sub] at himage
+  exact sub_eq_zero.mp himage
 
 /-- Canonical chosen representative of a class in the actual cycle-class
 range. -/
@@ -83,22 +84,27 @@ noncomputable def rangeOperator
     ⟨A (rangeRepresentative x), rfl⟩⟩
   map_add' := by
     intro x y
-    apply Subtype.ext
     have hrep :
         H.cycleClass p (rangeRepresentative (x + y)) =
           H.cycleClass p (rangeRepresentative x + rangeRepresentative y) := by
       simp [rangeRepresentative_spec]
-    rw [class_congr_of_kernelStable A hA hrep]
-    simp
+    have key : H.cycleClass p (A (rangeRepresentative (x + y)))
+        = H.cycleClass p (A (rangeRepresentative x))
+          + H.cycleClass p (A (rangeRepresentative y)) := by
+      rw [class_congr_of_kernelStable A hA hrep, LinearMap.map_add, LinearMap.map_add]
+    apply Subtype.ext
+    exact key
   map_smul' := by
     intro q x
-    apply Subtype.ext
     have hrep :
         H.cycleClass p (rangeRepresentative (q • x)) =
           H.cycleClass p (q • rangeRepresentative x) := by
       simp [rangeRepresentative_spec]
-    rw [class_congr_of_kernelStable A hA hrep]
-    simp
+    have key : H.cycleClass p (A (rangeRepresentative (q • x)))
+        = q • H.cycleClass p (A (rangeRepresentative x)) := by
+      rw [class_congr_of_kernelStable A hA hrep, LinearMap.map_smul, LinearMap.map_smul]
+    apply Subtype.ext
+    exact key
 
 /-- The descended range operator has the expected action on every actual
 cycle class. -/

@@ -2,6 +2,7 @@ import Mathlib.Algebra.Module.Projective
 import GSTClassicalHodgeConcreteRankFreeGeneration
 import GSTClassicalHodgePointKernelOperatorLift
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
+import GSTClassicalHodgeNativeArsenalRepresentation
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL AMBIENT ARSENAL
@@ -88,7 +89,7 @@ theorem ambientHodgeMatrixUnit_basis_other
     ambientHodgeMatrixUnit (V:=V) (H:=H) i j
         (classicalHodgeBasis V H p k).1 = 0 := by
   rw [ambientHodgeMatrixUnit_on_hodge]
-  simp [hki]
+  simp [hodgeCoordinate_basis_other i k (Ne.symm hki)]
 
 /-- Point-transition kernel required only for the canonical ambient matrix
 unit.  There is no separately supplied cohomological observable anymore. -/
@@ -112,7 +113,7 @@ theorem nativeMatrixUnitOperatorPair_hodge_action
     (i j : ClassicalHodgeBasisIndex V H p)
     (K : AmbientMatrixUnitPointKernel (V:=V) (H:=H) i j)
     (Z : codimensionCycles V.X p)
-    (alpha : HFiber)
+    (alpha : HFiber V H p)
     (hZ : H.cycleClass p Z = alpha.1) :
     H.cycleClass p ((nativeMatrixUnitOperatorPair i j K).cycleOperator Z) =
       (hodgeMatrixUnit i j alpha).1 := by

@@ -117,10 +117,11 @@ noncomputable def successorPresentationOperator
       (fun x _ a b => add_smul a b _)
   map_smul' := by
     intro q φ
-    apply Finsupp.ext
-    intro x
-    simp [Finsupp.sum, Finsupp.smul_apply, Finset.mul_sum,
-      Finset.smul_sum, Pi.smul_apply, smul_eq_mul, mul_assoc]
+    show (q • φ).sum (fun x c => c • successorPresentation V p x) =
+      q • φ.sum (fun x c => c • successorPresentation V p x)
+    rw [Finsupp.sum_smul_index' (fun x => zero_smul _ _)]
+    simp only [smul_smul, Finsupp.sum]
+    rw [Finset.smul_sum]
 
 @[simp]
 theorem successorPresentationOperator_single
@@ -133,6 +134,28 @@ theorem successorPresentationOperator_single
   classical
   simp [successorPresentationOperator]
 
+/-- Realization of finite presentations is additive. -/
+theorem realizeFiniteCodimensionPresentation_add
+    (X : Scheme) (p : Nat)
+    (φ ψ : FiniteCodimensionPresentation X p) :
+    realizeFiniteCodimensionPresentation X p (φ + ψ) =
+      realizeFiniteCodimensionPresentation X p φ +
+        realizeFiniteCodimensionPresentation X p ψ := by
+  refine Finsupp.sum_add_index' (fun x => zero_smul _ _)
+    (fun x a b => add_smul a b _)
+
+/-- Realization of finite presentations is homogeneous. -/
+theorem realizeFiniteCodimensionPresentation_smul
+    (X : Scheme) (p : Nat) (q : ℚ)
+    (φ : FiniteCodimensionPresentation X p) :
+    realizeFiniteCodimensionPresentation X p (q • φ) =
+      q • realizeFiniteCodimensionPresentation X p φ := by
+  show (q • φ).sum (fun x c => c • codimensionPointCycle X p x) =
+    q • φ.sum (fun x c => c • codimensionPointCycle X p x)
+  rw [Finsupp.sum_smul_index' (fun x => zero_smul _ _)]
+  simp only [smul_smul, Finsupp.sum]
+  rw [Finset.smul_sum]
+
 /-- Realize the successor presentation as an actual native target cycle. -/
 noncomputable def successorFiniteNativeOperator
     (V : SmoothProjectiveComplexScheme)
@@ -144,12 +167,12 @@ noncomputable def successorFiniteNativeOperator
       (successorPresentationOperator V p φ)
   map_add' := by
     intro φ ψ
-    rw [map_add]
-    exact map_add _ _ _
+    rw [LinearMap.map_add]
+    exact realizeFiniteCodimensionPresentation_add V.X (p + 1) _ _
   map_smul' := by
     intro q φ
-    rw [map_smul]
-    exact map_smul _ _ _
+    rw [LinearMap.map_smul]
+    exact realizeFiniteCodimensionPresentation_smul V.X (p + 1) q _
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator

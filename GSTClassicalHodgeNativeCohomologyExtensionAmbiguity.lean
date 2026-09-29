@@ -40,6 +40,7 @@ namespace GSTClassicalHodgeNativeCohomologyExtensionAmbiguity
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTGeometricRealizationStage2D
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeAtomicDefectDuality
 open GSTClassicalHodgeCrossWeightNativePropagation
@@ -129,7 +130,7 @@ theorem extensionAmbiguity_eq_zero_of_cohomologyOperator_eq
     extensionAmbiguity A B hnative = 0 := by
   apply LinearMap.ext
   intro z
-  refine Submodule.Quotient.induction_on z ?_
+  refine Submodule.Quotient.induction_on _ z ?_
   intro alpha
   rw [extensionAmbiguity_mk]
   rw [hcoh]
