@@ -419,6 +419,11 @@ roots = [
   "GSTClassicalHodgeComplementaryDefectReciprocity",
   "GSTClassicalHodgeDefectModuloAtomicReciprocity",
   "GSTClassicalHodgeGradedFiniteClosedCorrespondence",
+  "GSTClassicalHodgeDefectAnnihilatorReciprocity",
+  "GSTClassicalHodgePolarizedAdjointReciprocity",
+  "GSTClassicalHodgePolarizedDefectReciprocity",
+  "GSTClassicalHodgePolarizedGradedCorrespondenceCrown",
+  "GSTClassicalHodgePrimitiveAtomicDefectReduction",
   "HodgeConjecture",
 ]
 
