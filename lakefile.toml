@@ -416,6 +416,9 @@ roots = [
   "GSTClassicalHodgeCrossWeightAtomicDefectDescent",
   "GSTClassicalHodgeCrossWeightDefectRetraction",
   "GSTClassicalHodgeCrossWeightDefectTerminalCrown",
+  "GSTClassicalHodgeComplementaryDefectReciprocity",
+  "GSTClassicalHodgeDefectModuloAtomicReciprocity",
+  "GSTClassicalHodgeGradedFiniteClosedCorrespondence",
   "HodgeConjecture",
 ]
 
