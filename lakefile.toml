@@ -463,6 +463,10 @@ roots = [
   "GSTClassicalHodgeBasisTomographyPoincareUnit",
   "GSTClassicalHodgeFirstFailureDetectorTransverseReturn",
   "GSTClassicalHodgeSeparatorFiniteGSTPoincare",
+  "GSTClassicalHodgeFirstFailureBiFinitePoincareTranspose",
+  "GSTClassicalHodgeFirstFailureBiFiniteTransposePureTransversality",
+  "GSTClassicalHodgeFirstFailureBiFiniteTransposeTransversality",
+  "GSTClassicalHodgeFirstFailurePoincareReadCollision",
   "HodgeConjecture",
 ]
 
