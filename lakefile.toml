@@ -472,6 +472,7 @@ roots = [
   "GSTClassicalHodgePrincipalCutIncidenceTransposeCosmology",
   "GSTClassicalHodgeNativeCohomologyExtensionAmbiguity",
   "GSTClassicalHodgePrincipalCutFlagDiscoveryCrown",
+  "GSTClassicalHodgeAtomicDefectWorldtraceRigidityExpansion",
   "HodgeConjecture",
 ]
 
