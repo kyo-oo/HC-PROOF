@@ -112,6 +112,7 @@ noncomputable def successorPresentationOperator
   toFun φ := φ.sum fun x q => q • successorPresentation V p x
   map_add' := by
     intro φ ψ
+    classical
     refine Finsupp.sum_add_index (fun x _ => zero_smul _ _)
       (fun x _ a b => add_smul a b _)
   map_smul' := by
