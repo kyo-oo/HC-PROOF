@@ -470,6 +470,8 @@ roots = [
   "GSTClassicalHodgePrincipalCutFlagAdjointCosmology",
   "GSTClassicalHodgePrincipalCutFlagNativeReturn",
   "GSTClassicalHodgePrincipalCutIncidenceTransposeCosmology",
+  "GSTClassicalHodgeNativeCohomologyExtensionAmbiguity",
+  "GSTClassicalHodgePrincipalCutFlagDiscoveryCrown",
   "HodgeConjecture",
 ]
 
