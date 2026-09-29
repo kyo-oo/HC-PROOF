@@ -119,9 +119,10 @@ noncomputable def successorPresentationOperator
     intro q φ
     show (q • φ).sum (fun x c => c • successorPresentation V p x) =
       q • φ.sum (fun x c => c • successorPresentation V p x)
-    rw [Finsupp.sum_smul_index' (fun x => zero_smul _ _)]
-    simp only [smul_smul, Finsupp.sum]
-    rw [Finset.smul_sum]
+    rw [Finsupp.sum_smul_index']
+    · simp only [smul_smul, Finsupp.sum]
+      rw [Finset.smul_sum]
+    · exact fun x => zero_smul _ _
 
 @[simp]
 theorem successorPresentationOperator_single
@@ -152,9 +153,10 @@ theorem realizeFiniteCodimensionPresentation_smul
       q • realizeFiniteCodimensionPresentation X p φ := by
   show (q • φ).sum (fun x c => c • codimensionPointCycle X p x) =
     q • φ.sum (fun x c => c • codimensionPointCycle X p x)
-  rw [Finsupp.sum_smul_index' (fun x => zero_smul _ _)]
-  simp only [smul_smul, Finsupp.sum]
-  rw [Finset.smul_sum]
+  rw [Finsupp.sum_smul_index']
+  · simp only [smul_smul, Finsupp.sum]
+    rw [Finset.smul_sum]
+  · exact fun x => zero_smul _ _
 
 /-- Realize the successor presentation as an actual native target cycle. -/
 noncomputable def successorFiniteNativeOperator

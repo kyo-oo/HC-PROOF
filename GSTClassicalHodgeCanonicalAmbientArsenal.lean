@@ -117,7 +117,11 @@ theorem nativeMatrixUnitOperatorPair_hodge_action
     (hZ : H.cycleClass p Z = alpha.1) :
     H.cycleClass p ((nativeMatrixUnitOperatorPair i j K).cycleOperator Z) =
       (hodgeMatrixUnit i j alpha).1 := by
-  rw [(nativeMatrixUnitOperatorPair i j K).cycleClass_natural, hZ]
+  have hnat : (H.cycleClass p)
+      ((nativeMatrixUnitOperatorPair i j K).cycleOperator Z) =
+      (nativeMatrixUnitOperatorPair i j K).cohomologyOperator (H.cycleClass p Z) :=
+    LinearMap.congr_fun (nativeMatrixUnitOperatorPair i j K).cycleClass_natural Z
+  rw [hnat, hZ]
   exact ambientHodgeMatrixUnit_on_hodge i j alpha
 
 /-- Canonical matrix-unit point kernels at every pair produce the full native
