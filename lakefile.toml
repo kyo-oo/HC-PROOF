@@ -455,6 +455,7 @@ roots = [
   "GSTClassicalHodgeFiniteCorrespondenceGhostSpectralExtinction",
   "GSTClassicalHodgeFiniteCorrespondenceOperatorAlgebra",
   "GSTClassicalHodgeFiniteCorrespondenceSpectralSaturation",
+  "GSTClassicalHodgeCurrentCosmologyTerminalPacket",
   "HodgeConjecture",
 ]
 
