@@ -1,5 +1,6 @@
 import GSTCompactNativeCyclePresentation
 import GSTClassicalHodgePresentationLanding
+import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 /-!
 # GST CLASSICAL HODGE — LIMITLESS POINT NORMAL FORM
@@ -34,6 +35,46 @@ open GSTClassicalHodgePresentationLanding
 namespace GSTClassicalHodgePointNormalForm
 
 universe u
+
+/-- Linearly bundled native-cycle presentation (the inverse direction of
+realization on compact spaces). -/
+noncomputable def presentationOfNativeCycleLinear
+    (X : Scheme.{u}) [CompactSpace X] (p : Nat) :
+    codimensionCycles X p →ₗ[ℚ] FiniteCodimensionPresentation X p where
+  toFun := presentationOfNativeCycle X p
+  map_add' := by
+    intro Z W
+    apply Finsupp.ext
+    intro x
+    simp [presentationOfNativeCycle_apply]
+  map_smul' := by
+    intro q Z
+    apply Finsupp.ext
+    intro x
+    simp [presentationOfNativeCycle_apply]
+
+@[simp]
+theorem presentationOfNativeCycleLinear_apply
+    (X : Scheme.{u}) [CompactSpace X] (p : Nat)
+    (Z : codimensionCycles X p) :
+    presentationOfNativeCycleLinear X p Z =
+      presentationOfNativeCycle X p Z :=
+  rfl
+
+/-- Linearly bundled realization of finite point presentations. -/
+noncomputable def realizePresentationLinear
+    (X : Scheme.{u}) (p : Nat) :
+    FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles X p :=
+  Finsupp.linearCombination ℚ
+    (fun x => codimensionPointCycle X p x)
+
+@[simp]
+theorem realizePresentationLinear_apply
+    (X : Scheme.{u}) (p : Nat)
+    (φ : FiniteCodimensionPresentation X p) :
+    realizePresentationLinear X p φ =
+      realizeFiniteCodimensionPresentation X p φ := by
+  rfl
 
 open Classical in
 /-- Pointwise evaluation of a realized finite codimension presentation.

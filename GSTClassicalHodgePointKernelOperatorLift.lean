@@ -115,6 +115,13 @@ variable {Coh : Type v} [AddCommGroup Coh] [Module ℚ Coh]
 variable {p : Nat}
 variable {cl : codimensionCycles X p →ₗ[ℚ] Coh}
 
+-- ISLAND-FROM-ROOT (empirically verified: dot-decl prefixes do NOT consult
+-- `open`s — `PointClassTransitionKernel.x` declared in this file's own
+-- namespace lands in the WRONG island and every dot-usage fails with
+-- 'environment does not contain'. The extensions must be declared from the
+-- structure's home namespace at top level.)
+/-- Free linear extension of a point-transition kernel to arbitrary finite
+point presentations. -/
 noncomputable def PointClassTransitionKernel.presentationOperator
     {T : Coh →ₗ[ℚ] Coh}
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
@@ -139,8 +146,11 @@ theorem PointClassTransitionKernel.finitePointClass_natural
       T.comp (finitePointCycleClassMap p cl) := by
   apply Finsupp.lhom_ext
   intro x q
-  simp [PointClassTransitionKernel.presentationOperator,
-    finitePointCycleClassMap, K.transition_spec x]
+  have hspec := K.transition_spec x
+  simp only [PointClassTransitionKernel.presentationOperator]
+  rw [Finsupp.linearCombination_single, map_smul, hspec,
+    finitePointCycleClassMap_eq_cycleClass_realize,
+    realizeFiniteCodimensionPresentation_single, map_smul]
 
 /-- Conjugate the free presentation operator through the compact cycle/
 presentation equivalence to obtain an operator on all native cycles. -/
@@ -163,15 +173,18 @@ theorem PointClassTransitionKernel.nativeCycleOperator_natural
     cl.comp K.nativeCycleOperator = T.comp cl := by
   apply LinearMap.ext
   intro Z
-  let φ := presentationOfNativeCycle X p Z
-  have hZ : realizeFiniteCodimensionPresentation X p φ = Z :=
+  have hZ : realizeFiniteCodimensionPresentation X p
+      (presentationOfNativeCycle X p Z) = Z :=
     realize_presentationOfNativeCycle X p Z
-  have hfree := LinearMap.congr_fun K.finitePointClass_natural φ
+  have hfree' := LinearMap.congr_fun K.finitePointClass_natural
+    (presentationOfNativeCycle X p Z)
+  simp only [finitePointCycleClassMap_eq_cycleClass_realize] at hfree'
+  rw [hZ] at hfree'
   change cl (K.nativeCycleOperator Z) = T (cl Z)
-  rw [← hZ]
-  simpa [PointClassTransitionKernel.nativeCycleOperator, φ,
-    finitePointCycleClassMap_eq_cycleClass_realize]
-    using hfree
+  simp only [PointClassTransitionKernel.nativeCycleOperator, LinearMap.coe_comp,
+    Function.comp_apply, compactCyclePresentationLinearEquiv_symm_apply,
+    compactCyclePresentationLinearEquiv_apply, realizePresentationLinear_apply]
+  exact hfree'
 
 /-- Package the derived native operator and the original cohomological
 observable into the exact commuting-square interface used by the constructive

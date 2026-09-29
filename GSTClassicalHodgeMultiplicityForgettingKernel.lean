@@ -64,8 +64,9 @@ theorem forgetMultiplicityToGST_sub
   refine Finsupp.sum_sub_index fun s q₁ q₂ => ?_
   ext t
   simp only [Finsupp.single_apply, Finsupp.sub_apply]
-  by_cases ht : t = GSTTransferBridgeV2.compactClCode s.1 <;>
-    simp [ht]
+  by_cases ht : t = GSTTransferBridgeV2.compactClCode s.1
+  · rw [if_pos ht, if_pos ht, if_pos ht]
+  · rw [if_neg ht, if_neg ht, if_neg ht, sub_self]
 
 /-- Distinct multiplicity sheets have a genuinely nonzero difference before
 multiplicity is forgotten. -/
