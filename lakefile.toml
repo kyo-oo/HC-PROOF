@@ -442,6 +442,10 @@ roots = [
   "GSTClassicalHodgeFirstPrimitiveProjectiveDualSector",
   "GSTClassicalHodgeFirstPrimitiveSectorRetraction",
   "GSTClassicalHodgeFirstGhostCorrespondenceCollision",
+  "GSTClassicalHodgeFiniteClosedCorrespondenceTranspose",
+  "GSTClassicalHodgeFirstGhostAdjointScaledCriterion",
+  "GSTClassicalHodgeFirstGhostCorrespondenceFrontier",
+  "GSTClassicalHodgeFirstGhostPolarizedCorrespondenceCriterion",
   "HodgeConjecture",
 ]
 
