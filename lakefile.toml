@@ -342,6 +342,8 @@ roots = [
   "GSTClassicalHodgeTwoGeneratorNativeArsenal",
   "GSTClassicalHodgeUniversalTwoSlotNativeClosure",
   "GSTClassicalHodgeUniversalTwoSlotSaturation",
+  "GSTClassicalHodgeMicroscopicProjectorCriterion",
+  "GSTClassicalHodgeRankFreeLimitlessAssembly",
 ]
 
 # ---------------------------------------------------------------------------

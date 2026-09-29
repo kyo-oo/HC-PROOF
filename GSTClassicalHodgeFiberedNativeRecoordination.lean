@@ -35,7 +35,6 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
-open GSTClassicalHodgeSupportCardinalityBridge
 open GSTClassicalHodgeRecoordinationArsenalCrown
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeNativeCycleCosmicShadow

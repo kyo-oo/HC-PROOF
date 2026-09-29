@@ -1,6 +1,7 @@
 import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeConcreteRankFreeGeneration
 import GSTClassicalHodgeCycleOperatorNaturality
+import GSTClassicalHodgeRankFreeLimitlessAssembly
 
 /-!
 # GST CLASSICAL HODGE — SYNCHRONIZED DEFECT ORBITS
