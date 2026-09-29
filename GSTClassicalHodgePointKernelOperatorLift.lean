@@ -97,9 +97,6 @@ theorem compactCyclePresentationLinearEquiv_symm_apply
       presentationOfNativeCycle X p Z :=
   rfl
 
-/-- Free linear extension of a point-transition kernel to arbitrary finite
-point presentations. -/
-
 -- ISLAND-FROM-ROOT (empirically verified: dot-decl prefixes do NOT consult
 -- `open`s — `PointClassTransitionKernel.x` declared in this file's own
 -- namespace lands in the WRONG island and every dot-usage fails with
@@ -148,7 +145,8 @@ theorem PointClassTransitionKernel.finitePointClass_natural
   intro x q
   have hspec := K.transition_spec x
   simp only [PointClassTransitionKernel.presentationOperator]
-  rw [Finsupp.linearCombination_single, map_smul, hspec,
+  rw [LinearMap.comp_apply, LinearMap.comp_apply,
+    Finsupp.linearCombination_single, map_smul, hspec,
     finitePointCycleClassMap_eq_cycleClass_realize,
     realizeFiniteCodimensionPresentation_single, map_smul]
 
@@ -178,12 +176,9 @@ theorem PointClassTransitionKernel.nativeCycleOperator_natural
     realize_presentationOfNativeCycle X p Z
   have hfree' := LinearMap.congr_fun K.finitePointClass_natural
     (presentationOfNativeCycle X p Z)
-  simp only [finitePointCycleClassMap_eq_cycleClass_realize] at hfree'
+  simp only [LinearMap.comp_apply,
+    finitePointCycleClassMap_eq_cycleClass_realize] at hfree'
   rw [hZ] at hfree'
-  change cl (K.nativeCycleOperator Z) = T (cl Z)
-  simp only [PointClassTransitionKernel.nativeCycleOperator, LinearMap.coe_comp,
-    Function.comp_apply, compactCyclePresentationLinearEquiv_symm_apply,
-    compactCyclePresentationLinearEquiv_apply, realizePresentationLinear_apply]
   exact hfree'
 
 /-- Package the derived native operator and the original cohomological

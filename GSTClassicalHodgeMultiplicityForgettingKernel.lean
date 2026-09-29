@@ -63,6 +63,7 @@ theorem forgetMultiplicityToGST_sub
   unfold forgetMultiplicityToGST
   refine Finsupp.sum_sub_index fun s q₁ q₂ => ?_
   ext t
+  classical
   simp only [Finsupp.single_apply, Finsupp.sub_apply]
   by_cases ht : t = GSTTransferBridgeV2.compactClCode s.1
   · rw [if_pos ht, if_pos ht, if_pos ht]
