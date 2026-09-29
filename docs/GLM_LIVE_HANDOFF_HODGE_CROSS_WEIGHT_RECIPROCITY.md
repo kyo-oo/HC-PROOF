@@ -71,9 +71,7 @@ File:
 
 `GSTClassicalHodgeComplementaryDefectReciprocity.lean`
 
-This is the live target.
-
-It constructs:
+This constructs:
 
 - `gradedIdentityPair`
 - `principalCutPairIterate G p n`
@@ -86,6 +84,39 @@ It constructs:
 - `complementaryExponent d p := d - 2*p`
 - `ComplementaryPrincipalCutReturnLaw G d p`
 - target arithmetic `p + (d - 2*p) = d-p` in the lower-half range.
+
+### 5. Preferred weaker route: reciprocity only modulo algebraic classes
+
+Commit:
+
+`6081815f4443d674f99e13113e5981800228aa83`
+
+File:
+
+`GSTClassicalHodgeDefectModuloAtomicReciprocity.lean`
+
+**This is now the preferred target.**  Exact ambient inversion is unnecessary.
+It is enough to construct a genuine return pair satisfying, for Hodge inputs,
+
+`R (L^n alpha) - scalar • alpha ∈ AtomicSpanAt H p`
+
+with `scalar ≠ 0`.
+
+Because the error term is algebraic, it is zero in the atomic-defect quotient.
+The file proves that target Hodge-defect vanishing then propagates back to the
+source weight.
+
+Key structures/theorems:
+
+- `HodgeDefectReturnModuloAtomic`
+- `HodgeDefectReturnModuloAtomic.defect_roundtrip_on_hodge`
+- `HodgeDefectReturnModuloAtomic.source_hodge_of_target_hodge`
+- `PrincipalCutPowerReturnModuloAtomic`
+- `PrincipalCutPowerReturnModuloAtomic.source_hodge_of_target_hodge`
+- `ComplementaryReturnModuloAtomic`.
+
+This is strictly weaker than `PrincipalCutPowerReturnLaw`: GLM must preserve
+that weakening and must not silently strengthen it back to exact equality.
 
 ## Mathematical firewall
 
@@ -101,17 +132,16 @@ Those interfaces have already been audited as Hodge-strength/circular.
 
 ## Current independent geometry frontier
 
-The desired classical/native theorem is now sharply localized:
-
 For each relevant lower-half weight `p`, construct a genuine native graded
 return operator for the **whole complementary principal-cut power**
 
 `p -> d-p`
 
-whose cycle-class action satisfies a nonzero-scaled round trip on ambient
-cohomology.
+but only prove the round trip **modulo the genuine atomic cycle-class span**:
 
-This is the correct hard-Lefschetz/Poincare-shaped externalization target.
+`R (L^(d-2p) alpha) = scalar • alpha + algebraic_error`.
+
+This is the correct quotient-level Lefschetz/Poincare externalization target.
 It should be attacked using the repo's genuine principal-section geometry,
 Poincare reciprocity, projective correspondences, and GST dual/recoordination
 laws — but the final return must be an actual `GradedCycleClassOperatorPair`,
@@ -130,11 +160,14 @@ silent field into Hodge data.
 
 ## GLM task
 
-1. Register `GSTClassicalHodgeComplementaryDefectReciprocity` in the lake root
-   set/workflow.
-2. Repair syntax/elaboration only; preserve all theorem statements unless a
+1. Register and compile:
+   - `GSTClassicalHodgeComplementaryDefectReciprocity`
+   - `GSTClassicalHodgeDefectModuloAtomicReciprocity`
+2. Repair syntax/elaboration only; preserve theorem strength/direction unless a
    statement is formally ill-typed.
-3. Keep the mathematical distinction above: the complementary-power law is
-   the live route; the one-step family is diagnostic.
+3. Keep the mathematical hierarchy straight:
+   - one-step return family = diagnostic / too strong globally;
+   - exact complementary-power return = valid but stronger than necessary;
+   - modulo-atomic complementary return = preferred live frontier.
 4. Report exact compile failures and repairs without replacing the route with a
    Hodge-equivalent interface.
