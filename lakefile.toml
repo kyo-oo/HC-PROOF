@@ -441,6 +441,7 @@ roots = [
   "GSTClassicalHodgeFirstPrimitiveProjectiveSector",
   "GSTClassicalHodgeFirstPrimitiveProjectiveDualSector",
   "GSTClassicalHodgeFirstPrimitiveSectorRetraction",
+  "GSTClassicalHodgeFirstGhostCorrespondenceCollision",
   "HodgeConjecture",
 ]
 
