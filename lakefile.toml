@@ -467,6 +467,9 @@ roots = [
   "GSTClassicalHodgeFirstFailureBiFiniteTransposePureTransversality",
   "GSTClassicalHodgeFirstFailureBiFiniteTransposeTransversality",
   "GSTClassicalHodgeFirstFailurePoincareReadCollision",
+  "GSTClassicalHodgePrincipalCutFlagAdjointCosmology",
+  "GSTClassicalHodgePrincipalCutFlagNativeReturn",
+  "GSTClassicalHodgePrincipalCutIncidenceTransposeCosmology",
   "HodgeConjecture",
 ]
 
