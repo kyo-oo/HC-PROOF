@@ -481,6 +481,7 @@ roots = [
   "GSTClassicalHodgeSingleStateBareLefschetzExtinction",
   "GSTClassicalHodgeZeroOneHighSingleStateCrown",
   "GSTClassicalHodgeLocalSeedProjectiveWordExtinction",
+  "GSTClassicalHodgeSingleStateExactFrontierAudit",
   "HodgeConjecture",
 ]
 
