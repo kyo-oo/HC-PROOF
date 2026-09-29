@@ -225,9 +225,11 @@ theorem separatorSuccessorPoint_mem_principalSet
     (hlive : ProjectivelyLiveSource n x) :
     separatorSuccessorPoint n x hlive ∈
       projectivePrincipalSet n (positiveHomogeneousSeparator n x).equation := by
-  show {(positiveHomogeneousSeparator n x).equation} ⊆
-      (separatorSuccessorPoint n x hlive :
-        ProjectiveSpectrum (ProjectiveGrading n)).asHomogeneousIdeal
+  show ({(positiveHomogeneousSeparator n x).equation} :
+      Set (ProjectiveCoordinateRing n)) ⊆
+      ((separatorSuccessorPoint n x hlive :
+          ProjectiveSpectrum (ProjectiveGrading n)).asHomogeneousIdeal :
+        Set (ProjectiveCoordinateRing n))
   simpa [separatorSuccessorPoint, separatorAmbientHomogeneousPrime] using
     separator_mem_separatorAmbientPrime n x
 
