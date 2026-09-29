@@ -447,6 +447,7 @@ roots = [
   "GSTClassicalHodgeFirstGhostCorrespondenceFrontier",
   "GSTClassicalHodgeFirstGhostPolarizedCorrespondenceCriterion",
   "GSTClassicalHodgeFirstGhostTransposeAdjointGeometry",
+  "GSTClassicalHodgeFirstGhostTransposeCycleCorrection",
   "HodgeConjecture",
 ]
 
