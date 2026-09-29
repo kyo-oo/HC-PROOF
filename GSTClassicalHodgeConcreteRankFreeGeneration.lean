@@ -100,6 +100,7 @@ theorem arbitraryTargetGSTOutput_exact
     have hl := augmentedCoordinate_liveSource alpha j
       (chosenLiveSource alpha halpha)
     rw [hl] at hd
+    rw [if_pos rfl, if_pos rfl]
     exact hd
   · simp [hx]
 
@@ -158,6 +159,7 @@ theorem concreteBasisGenerator_eq_basis
   have hc := arbitraryTarget_normalization_ne_zero alpha halpha j
   simp only [smul_smul]
   field_simp [hc, one_smul]
+  rw [div_self hc, one_smul]
 
 /-- Every Hodge class is therefore a finite rational linear combination of
 concrete GST-generated basis vectors from one fixed nonzero source state. -/
