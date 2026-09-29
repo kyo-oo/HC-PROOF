@@ -414,6 +414,8 @@ roots = [
   "GSTClassicalHodgeAtomicNaturalLefschetzPoincareClosure",
   "GSTClassicalHodgeLefschetzPoincarePrimitiveNonCircularity",
   "GSTClassicalHodgeCrossWeightAtomicDefectDescent",
+  "GSTClassicalHodgeCrossWeightDefectRetraction",
+  "GSTClassicalHodgeCrossWeightDefectTerminalCrown",
   "HodgeConjecture",
 ]
 
