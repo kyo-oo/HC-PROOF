@@ -452,6 +452,9 @@ roots = [
   "GSTClassicalHodgeGhostSpineDetectorReadCollision",
   "GSTClassicalHodgeFirstGhostTransposeModAtomicClosure",
   "GSTClassicalHodgeGhostSpineDetectorReadCollision",
+  "GSTClassicalHodgeFiniteCorrespondenceGhostSpectralExtinction",
+  "GSTClassicalHodgeFiniteCorrespondenceOperatorAlgebra",
+  "GSTClassicalHodgeFiniteCorrespondenceSpectralSaturation",
   "HodgeConjecture",
 ]
 
