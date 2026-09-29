@@ -448,6 +448,10 @@ roots = [
   "GSTClassicalHodgeFirstGhostPolarizedCorrespondenceCriterion",
   "GSTClassicalHodgeFirstGhostTransposeAdjointGeometry",
   "GSTClassicalHodgeFirstGhostTransposeCycleCorrection",
+  "GSTClassicalHodgeFirstGhostTransposeModAtomicClosure",
+  "GSTClassicalHodgeGhostSpineDetectorReadCollision",
+  "GSTClassicalHodgeFirstGhostTransposeModAtomicClosure",
+  "GSTClassicalHodgeGhostSpineDetectorReadCollision",
   "HodgeConjecture",
 ]
 
