@@ -482,6 +482,7 @@ roots = [
   "GSTClassicalHodgeZeroOneHighSingleStateCrown",
   "GSTClassicalHodgeLocalSeedProjectiveWordExtinction",
   "GSTClassicalHodgeSingleStateExactFrontierAudit",
+  "GSTClassicalHodgePrincipalCutFlagHomologicalDescent",
   "HodgeConjecture",
 ]
 
