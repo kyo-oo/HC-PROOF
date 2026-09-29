@@ -112,8 +112,8 @@ noncomputable def successorPresentationOperator
   toFun φ := φ.sum fun x q => q • successorPresentation V p x
   map_add' := by
     intro φ ψ
-    exact Finsupp.sum_add_index (fun _ => zero_smul _ _)
-      (fun _ a b => add_smul a b _)
+    refine Finsupp.sum_add_index (fun x _ => zero_smul _ _)
+      (fun x _ a b => add_smul a b _)
   map_smul' := by
     intro q φ
     apply Finsupp.ext
@@ -143,10 +143,12 @@ noncomputable def successorFiniteNativeOperator
       (successorPresentationOperator V p φ)
   map_add' := by
     intro φ ψ
-    rw [map_add, map_add]
+    rw [map_add]
+    exact map_add _ _ _
   map_smul' := by
     intro q φ
-    rw [map_smul, map_smul]
+    rw [map_smul]
+    exact map_smul _ _ _
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator
@@ -181,7 +183,7 @@ theorem successorNativeOperator_point
       have hz : ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1 = 0 := by
         simp [codimensionPointCycle, hne, Function.locallyFinsuppWithin.single_apply]
       rw [hz]
-      simp
+      simp [hy]
   show (successorFiniteNativeOperator V p).comp
       (presentationOfNativeCycleLinear V.X p)
       (codimensionPointCycle V.X p x) =

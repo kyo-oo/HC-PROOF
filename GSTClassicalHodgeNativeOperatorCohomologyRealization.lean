@@ -36,8 +36,10 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev Cycles := codimensionCycles V.X p
-abbrev Coh := RationalSingularCohomology H.analytification (2 * p)
+abbrev Cycles (V : SmoothProjectiveComplexScheme) (p : Nat) :=
+  codimensionCycles V.X p
+abbrev Coh (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
 
 /-- A native cycle operator respects cycle-class equivalence precisely when it
 maps the kernel of cycle class into itself. -/

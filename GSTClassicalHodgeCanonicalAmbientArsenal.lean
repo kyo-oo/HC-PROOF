@@ -42,27 +42,29 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev Coh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HFiber := ClassicalHodgeFiber V H p
+abbrev Coh (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev HFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) := ClassicalHodgeFiber V H p
 
 /-- Hodge-fiber matrix unit followed by the inclusion into ambient cohomology. -/
 noncomputable def hodgeMatrixUnitIntoAmbient
     (i j : ClassicalHodgeBasisIndex V H p) :
-    HFiber →ₗ[ℚ] Coh :=
+    HFiber V H p →ₗ[ℚ] Coh H p :=
   (rationalHodgeSubspace (H.hodgeBigrading p)).subtype.comp
     (hodgeMatrixUnit i j)
 
 /-- Extend one Hodge matrix unit to an ambient cohomological endomorphism. -/
 noncomputable def ambientHodgeMatrixUnit
     (i j : ClassicalHodgeBasisIndex V H p) :
-    Coh →ₗ[ℚ] Coh :=
+    Coh H p →ₗ[ℚ] Coh H p :=
   Classical.choose (LinearMap.exists_extend (hodgeMatrixUnitIntoAmbient (V:=V) (H:=H) i j))
 
 /-- The ambient extension agrees exactly with the rank-free GST matrix unit on
 all genuine Hodge classes. -/
 theorem ambientHodgeMatrixUnit_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
-    (alpha : HFiber) :
+    (alpha : HFiber V H p) :
     ambientHodgeMatrixUnit (V:=V) (H:=H) i j alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
   have h := Classical.choose_spec
