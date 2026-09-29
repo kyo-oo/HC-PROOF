@@ -47,8 +47,14 @@ noncomputable def presentationMass
     {X : Scheme} {p : Nat} :
     FiniteCodimensionPresentation X p →ₗ[ℚ] ℚ where
   toFun φ := φ.sum fun _ q => q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp
+  map_smul' := by
+    intro q φ
+    classical
+    simp [smul_eq_mul]
 
 @[simp]
 theorem presentationMass_single
@@ -67,13 +73,35 @@ noncomputable def nativeCycleMass
   exact presentationMass.comp (presentationOfNativeCycleLinear V.X p)
 
 /-- The mass of a unit point cycle is one. -/
+/-- Compact point normal form: the presentation of a genuine point cycle is
+the single atom with coefficient one (the PKOL point-cycle bridge). -/
+theorem presentationOfNativeCycle_pointCycle_single
+    (V : SmoothProjectiveComplexScheme) (p : Nat)
+    (x : CodimensionPoint V.X p) :
+    presentationOfNativeCycle V.X p (codimensionPointCycle V.X p x) =
+      Finsupp.single x (1 : ℚ) := by
+  classical
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  ext y
+  show ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1
+      = (Finsupp.single x (1 : ℚ)) y
+  by_cases hy : y = x
+  · rw [← hy]
+    simp [codimensionPointCycle, Function.locallyFinsuppWithin.single_apply]
+  · have hne : y.1 ≠ x.1 := fun heq => hy (Subtype.ext heq)
+    have hz : ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1 = 0 := by
+      simp [codimensionPointCycle, hne, Function.locallyFinsuppWithin.single_apply]
+    rw [hz]
+    simp [hy]
+
 @[simp]
 theorem nativeCycleMass_point
     (V : SmoothProjectiveComplexScheme)
     (p : Nat) (x : CodimensionPoint V.X p) :
     nativeCycleMass V p (codimensionPointCycle V.X p x) = 1 := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [nativeCycleMass, presentationMass]
+  simp [nativeCycleMass, presentationMass,
+    presentationOfNativeCycle_pointCycle_single]
 
 /-- Canonical limitless rational cosmic shadow of a native codimension-p
 cycle. -/
@@ -133,7 +161,8 @@ theorem nativeCycleMass_successor_point
       successorMass V p x := by
   rw [successorNativeOperator_point]
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [nativeCycleMass, successorMass, presentationMass]
+  simp [nativeCycleMass, successorMass, presentationMass,
+    presentation_realizeFiniteCodimensionPresentation]
 
 /-- The cosmic shadow of one geometry-built successor cycle is exactly its
 finite successor mass on the next limitless weight. -/
@@ -147,7 +176,8 @@ theorem successorNativeOperator_cosmicShadow_point
   rw [nativeCycleCosmicShadow_eq_mass_smul]
   congr 1
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [nativeCycleMass, successorMass, presentationMass]
+  simp [nativeCycleMass, successorMass, presentationMass,
+    presentation_realizeFiniteCodimensionPresentation]
 
 /-- **POINT-TO-GLOBAL MASS PROPAGATION.**
 If every genuine codimension-p point acquires the same limitless successor

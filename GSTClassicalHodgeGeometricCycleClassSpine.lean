@@ -37,6 +37,7 @@ noncomputable section
 
 open CategoryTheory
 open AlgebraicGeometry
+open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeGeometricCycleClassSpine
 
