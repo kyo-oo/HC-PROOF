@@ -54,7 +54,11 @@ noncomputable def nativeCutIterate
   | p, d + 1 => by
       have hprev := nativeCutIterate V p d
       have hnext := successorNativeOperator V (p + d)
-      simpa [Nat.add_assoc] using hnext.comp hprev
+      have hcomp : codimensionCycles V.X p →ₗ[ℚ]
+          codimensionCycles V.X (p + d + 1) :=
+        hnext.comp hprev
+      rw [← Nat.add_assoc]
+      exact hcomp
 
 @[simp]
 theorem nativeCutIterate_zero
@@ -92,7 +96,8 @@ theorem projectiveCutTower_succ
     (p : Nat) :
     projectiveCutTower V (p+1) =
       successorNativeOperator V p (projectiveCutTower V p) := by
-  simp [projectiveCutTower, nativeCutIterate_succ, Nat.add_assoc]
+  simp [projectiveCutTower, nativeCutIterate_succ, Nat.add_assoc,
+    Nat.zero_add, Nat.add_zero]
 
 /-- Every level of the projective tower is an actual native codimension-p
 algebraic cycle. -/

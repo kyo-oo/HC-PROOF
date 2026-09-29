@@ -21,6 +21,8 @@ noncomputable section
 
 open TopologicalSpace
 open AlgebraicGeometry
+
+attribute [local instance] specializationOrder
 open GSTProjectiveOverC
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgePointClosurePrincipalCut
