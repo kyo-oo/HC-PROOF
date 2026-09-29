@@ -460,6 +460,9 @@ roots = [
   "GSTClassicalHodgeDefectHamelPolarization",
   "GSTClassicalHodgeDefectPolarizedCoupledReciprocity",
   "GSTClassicalHodgeFirstFailureScalarDetectorCollision",
+  "GSTClassicalHodgeBasisTomographyPoincareUnit",
+  "GSTClassicalHodgeFirstFailureDetectorTransverseReturn",
+  "GSTClassicalHodgeSeparatorFiniteGSTPoincare",
   "HodgeConjecture",
 ]
 
