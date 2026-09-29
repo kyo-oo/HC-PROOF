@@ -2,172 +2,197 @@
 
 Branch: `sol/hodge-single-separator-successor`
 
-## New mathematics from Sol
+## Foundation already present
 
-### 1. Cross-weight defect descent
+### Cross-weight defect descent
 
-Existing commit:
-
-`572eeec867b6f145d91a511843fb2371a6d64ba6`
-
-File:
+Commit `572eeec867b6f145d91a511843fb2371a6d64ba6`
 
 `GSTClassicalHodgeCrossWeightAtomicDefectDescent.lean`
 
-Core result: every genuine `GradedCycleClassOperatorPair V H p q` descends
-canonically to
+Every genuine `GradedCycleClassOperatorPair V H p q` descends to the atomic
+defect quotient. The genuine principal-cut spine therefore gives an
+unconditional defect ladder `D_p -> D_(p+1)`.
 
-`AtomicDefectSpace V H p -> AtomicDefectSpace V H q`.
+### Generic exact return — diagnostic
 
-The projective principal-cut pair therefore gives the unconditional defect
-ladder `D_p -> D_(p+1)`.
-
-### 2. Generic nonzero-scaled return law
-
-Commit:
-
-`cdb6c24f8b36c04d00bf49b282cf83127255dd88`
-
-File:
+Commit `cdb6c24f8b36c04d00bf49b282cf83127255dd88`
 
 `GSTClassicalHodgeCrossWeightDefectRetraction.lean`
 
-Core theorem:
+A nonzero-scaled exact round trip makes the descended forward defect map
+injective.
 
-if genuine graded pairs `forward : p -> q` and `backward : q -> p` satisfy
+### One-step terminal crown — diagnostic only
 
-`backward.cohomologyOperator (forward.cohomologyOperator alpha) = scalar • alpha`
-
-for nonzero `scalar`, then the descended forward defect operator is injective.
-
-This is noncircular: no basis-cycle representative, Hodge surjectivity, or
-same-weight matrix unit occurs.
-
-### 3. Terminal crown — diagnostic only
-
-Commit:
-
-`c981f2737b0126193f08ff9fc5046f656643afe0`
-
-File:
+Commit `c981f2737b0126193f08ff9fc5046f656643afe0`
 
 `GSTClassicalHodgeCrossWeightDefectTerminalCrown.lean`
 
-This proves:
+Do **not** chase a return for every one-step principal cut. That condition is
+stronger than the correct hard-Lefschetz geometry.
 
-`one-step return family + eventual zero ambient cohomology -> full Hodge`.
+## Correct complementary-power hierarchy
 
-**Important: do not treat the one-step return family as the intended geometry
-frontier.**  It is stronger than the actual hard-Lefschetz shape and was
-written as a generic diagnostic reduction.
+### Complementary power
 
-### 4. Corrected complementary-power route
-
-Commit:
-
-`7bebd74b756066c73a24ec0f081f78e7b2e8b755`
-
-File:
+Commit `7bebd74b756066c73a24ec0f081f78e7b2e8b755`
 
 `GSTClassicalHodgeComplementaryDefectReciprocity.lean`
 
-This constructs:
+Builds the genuine n-fold principal-cut operator pair, proves its defect action
+is the existing defect iterate, proves Hodge preservation, and isolates one
+return for the whole complementary power `n = d - 2*p`.
 
-- `gradedIdentityPair`
-- `principalCutPairIterate G p n`
-- exact identification of the iterate's defect action with
-  `principalCutDefectIterate G p n`
-- Hodge preservation of the entire iterate
-- `PrincipalCutPowerReturnLaw G p n`
-- injectivity of the n-step defect transport from one nonzero-scaled return
-- backward propagation of atomic-defect/Hodge vanishing
-- `complementaryExponent d p := d - 2*p`
-- `ComplementaryPrincipalCutReturnLaw G d p`
-- target arithmetic `p + (d - 2*p) = d-p` in the lower-half range.
+### Preferred modulo-atomic return
 
-### 5. Preferred weaker route: reciprocity only modulo algebraic classes
-
-Commit:
-
-`6081815f4443d674f99e13113e5981800228aa83`
-
-File:
+Commit `6081815f4443d674f99e13113e5981800228aa83`
 
 `GSTClassicalHodgeDefectModuloAtomicReciprocity.lean`
 
-**This is now the preferred target.**  Exact ambient inversion is unnecessary.
-It is enough to construct a genuine return pair satisfying, for Hodge inputs,
+Preferred over exact inversion. It is enough that
 
 `R (L^n alpha) - scalar • alpha ∈ AtomicSpanAt H p`
 
-with `scalar ≠ 0`.
+for Hodge inputs and `scalar != 0`.
 
-Because the error term is algebraic, it is zero in the atomic-defect quotient.
-The file proves that target Hodge-defect vanishing then propagates back to the
-source weight.
+### Genuine graded finite closed correspondence carrier
 
-Key structures/theorems:
+Commit `137cf68f6e85e90e1be2950290c104dbff906533`
 
-- `HodgeDefectReturnModuloAtomic`
-- `HodgeDefectReturnModuloAtomic.defect_roundtrip_on_hodge`
-- `HodgeDefectReturnModuloAtomic.source_hodge_of_target_hodge`
-- `PrincipalCutPowerReturnModuloAtomic`
-- `PrincipalCutPowerReturnModuloAtomic.source_hodge_of_target_hodge`
-- `ComplementaryReturnModuloAtomic`.
+`GSTClassicalHodgeGradedFiniteClosedCorrespondence.lean`
 
-This is strictly weaker than `PrincipalCutPowerReturnLaw`: GLM must preserve
-that weakening and must not silently strengthen it back to exact equality.
+This unlocks arbitrary source/target codimensions for the existing genuine
+finite closed correspondence geometry:
+
+- `gradedTransition`
+- `gradedNativePointImage`
+- `gradedPresentationOperator`
+- `gradedNativeCycleOperator : cycles_p -> cycles_q`
+- point-generator formula
+- `GradedCorrespondencePointNaturality`
+- pointwise naturality -> full `GradedCycleClassOperatorPair` by compact point
+  normal form.
+
+This file is important: the complementary return no longer needs an abstract
+native cycle operator.
+
+### Annihilator reduction
+
+Commit `330897dd331ee84eb9c3c579fa8258f1175d8db1`
+
+`GSTClassicalHodgeDefectAnnihilatorReciprocity.lean`
+
+Proves atomic membership iff every atomic annihilator kills the class, then
+reduces the modulo-atomic return law to detector identities. Also specializes
+the return carrier to an actual graded finite closed correspondence.
+
+### Polarized double-orthogonal reduction
+
+Commit `b8e4fc0026901408c04ddcefa486047f99c8769c`
+
+`GSTClassicalHodgePolarizedDefectReciprocity.lean`
+
+For a perfect Hodge-fiber pairing:
+
+`alpha ∈ AtomicSpan`
+
+iff
+
+`pair u alpha = 0` for every Hodge vector `u` orthogonal to all algebraic Hodge
+vectors.
+
+Defines a Hodge-stable graded return and turns an orthogonal-pairing roundtrip
+law into modulo-atomic reciprocity.
+
+### Adjointness + scaled pairing
+
+Commit `a4f99a284a7a4da62d1e3526738f196761ff5452`
+
+`GSTClassicalHodgePolarizedAdjointReciprocity.lean`
+
+Shows the orthogonal roundtrip law follows from two operator identities:
+
+1. projection-formula adjointness
+   `P(u, R beta) = Q(F u, beta)`;
+2. scaled Lefschetz pairing
+   `Q(F u, F alpha) = scalar * P(u, alpha)`.
+
+These imply zero pairing with the roundtrip error for **every** Hodge vector,
+therefore in particular the algebraic orthogonal complement.
+
+### Concrete complementary transport crown
+
+Commit `0dc13922a79d0a729d35a1419d89dd9ca18a0639`
+
+`GSTClassicalHodgePolarizedGradedCorrespondenceCrown.lean`
+
+Forward = genuine iterated principal cut.
+Backward = actual graded finite closed correspondence.
+
+Under:
+
+- return Hodge preservation,
+- pairing adjointness,
+- nonzero-scaled Lefschetz pairing,
+- forward Hodge surjectivity,
+
+it proves
+
+`atomicDefectLinearMap V H p = 0 ↔ atomicDefectLinearMap V H (p+n) = 0`.
+
+This cleanly separates complementary transport from the remaining primitive
+Hodge obstruction.
 
 ## Mathematical firewall
 
-Do NOT repair this route by introducing any of the following as hypotheses:
+Do NOT repair any file by introducing:
 
 - basis cycles for arbitrary Hodge directions;
 - bare same-weight `L^2` native realization;
 - `ProjectiveOrbitIrreducibility`;
 - projective visibility of a separator ghost;
-- an operator that is already equivalent to target-sheet algebraicity.
+- universal algebraic pairing separation;
+- an operator statement already equivalent to target-sheet algebraicity.
 
-Those interfaces have already been audited as Hodge-strength/circular.
+Those have been formally audited as Hodge-strength/circular.
 
-## Current independent geometry frontier
+Internal GST Poincare reversal is **not** by itself a classical native return.
+The actual backward operator must remain an honest graded native/cycle-class
+operator, preferably through the new finite closed correspondence carrier.
 
-For each relevant lower-half weight `p`, construct a genuine native graded
-return operator for the **whole complementary principal-cut power**
+## Correct live geometry target
 
-`p -> d-p`
+For the complementary power `F = L^(d-2p)`, construct an actual graded finite
+closed correspondence return `R` and prove geometric identities such as:
 
-but only prove the round trip **modulo the genuine atomic cycle-class span**:
+1. pointwise Betti/cycle-class naturality;
+2. return Hodge preservation;
+3. projection-formula adjointness;
+4. nonzero-scaled polarized Lefschetz pairing;
+5. hard-Lefschetz surjectivity of `F` on the Hodge fibers.
 
-`R (L^(d-2p) alpha) = scalar • alpha + algebraic_error`.
+These are operator/pairing statements, not algebraicity statements. They are
+the intended noncircular frontier.
 
-This is the correct quotient-level Lefschetz/Poincare externalization target.
-It should be attacked using the repo's genuine principal-section geometry,
-Poincare reciprocity, projective correspondences, and GST dual/recoordination
-laws — but the final return must be an actual `GradedCycleClassOperatorPair`,
-not merely an internal GST address involution.
+## Primitive residual
 
-## Separate analytic frontier
-
-`HodgeBigradedBettiData` uses actual Mathlib singular cohomology of a supplied
-`AnalytificationData`, but that structure does not itself encode finite
-complex dimension or top-degree vanishing.
-
-Therefore any terminal-cohomology argument must first prove, independently,
-that the supplied analytification of the smooth projective scheme has the
-expected finite-dimensional cohomological vanishing.  Do not insert this as a
-silent field into Hodge data.
+Even perfect complementary transport does **not** solve the primitive/middle
+Hodge defect. Do not claim otherwise. The next mathematical burst must attack
+that residual with the repo's primitive GST cosmology without reintroducing a
+same-weight Hodge-equivalent externalization hypothesis.
 
 ## GLM task
 
-1. Register and compile:
-   - `GSTClassicalHodgeComplementaryDefectReciprocity`
-   - `GSTClassicalHodgeDefectModuloAtomicReciprocity`
-2. Repair syntax/elaboration only; preserve theorem strength/direction unless a
-   statement is formally ill-typed.
-3. Keep the mathematical hierarchy straight:
-   - one-step return family = diagnostic / too strong globally;
-   - exact complementary-power return = valid but stronger than necessary;
-   - modulo-atomic complementary return = preferred live frontier.
-4. Report exact compile failures and repairs without replacing the route with a
-   Hodge-equivalent interface.
+Register and compile, preserving mathematical strength/direction:
+
+- `GSTClassicalHodgeComplementaryDefectReciprocity`
+- `GSTClassicalHodgeDefectModuloAtomicReciprocity`
+- `GSTClassicalHodgeGradedFiniteClosedCorrespondence`
+- `GSTClassicalHodgeDefectAnnihilatorReciprocity`
+- `GSTClassicalHodgePolarizedDefectReciprocity`
+- `GSTClassicalHodgePolarizedAdjointReciprocity`
+- `GSTClassicalHodgePolarizedGradedCorrespondenceCrown`
+
+Repair syntax/elaboration only. Do not replace a weakened quotient/pairing law
+with a stronger Hodge-equivalent interface.
