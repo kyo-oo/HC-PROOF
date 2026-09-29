@@ -65,7 +65,7 @@ theorem forgetMultiplicityToGST_sub
   ext t
   classical
   simp only [Finsupp.single_apply, Finsupp.sub_apply]
-  by_cases ht : t = GSTTransferBridgeV2.compactClCode s.1
+  by_cases ht : GSTTransferBridgeV2.compactClCode s.1 = t
   · rw [if_pos ht, if_pos ht, if_pos ht]
   · rw [if_neg ht, if_neg ht, if_neg ht, sub_self]
 

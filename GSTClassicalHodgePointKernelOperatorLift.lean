@@ -148,7 +148,7 @@ theorem PointClassTransitionKernel.finitePointClass_natural
   rw [LinearMap.comp_apply, LinearMap.comp_apply,
     Finsupp.linearCombination_single, map_smul, hspec,
     finitePointCycleClassMap_eq_cycleClass_realize,
-    realizeFiniteCodimensionPresentation_single, map_smul]
+    realizeFiniteCodimensionPresentation_single, map_smul, map_smul]
 
 /-- Conjugate the free presentation operator through the compact cycle/
 presentation equivalence to obtain an operator on all native cycles. -/
