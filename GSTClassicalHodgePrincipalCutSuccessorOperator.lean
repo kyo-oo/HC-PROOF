@@ -120,7 +120,7 @@ noncomputable def successorPresentationOperator
     show (q • φ).sum (fun x c => c • successorPresentation V p x) =
       q • φ.sum (fun x c => c • successorPresentation V p x)
     rw [Finsupp.sum_smul_index']
-    · simp only [smul_smul, Finsupp.sum]
+    · simp only [smul_eq_mul, mul_smul, Finsupp.sum]
       rw [Finset.smul_sum]
     · exact fun x => zero_smul _ _
 
@@ -154,7 +154,7 @@ theorem realizeFiniteCodimensionPresentation_smul
   show (q • φ).sum (fun x c => c • codimensionPointCycle X p x) =
     q • φ.sum (fun x c => c • codimensionPointCycle X p x)
   rw [Finsupp.sum_smul_index']
-  · simp only [smul_smul, Finsupp.sum]
+  · simp only [smul_eq_mul, mul_smul, Finsupp.sum]
     rw [Finset.smul_sum]
   · exact fun x => zero_smul _ _
 

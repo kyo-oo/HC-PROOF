@@ -46,6 +46,7 @@ open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeNativeGeneratorNaturality
+open GSTClassicalHodgeCanonicalAmbientArsenal
 
 namespace GSTClassicalHodgeUniversalTwoSlotNativeClosure
 
@@ -126,7 +127,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   have hword :
       forwardArsenalWord sourceSlot targetSlot =
         pureMatrixUnit sourceSlot targetSlot :=
-    forwardArsenalWord_eq_matrixUnit sourceSlot targetSlot (by omega)
+    forwardArsenalWord_eq_matrixUnit sourceSlot targetSlot (by decide)
   have hlift :
       liftFiniteHodgeOperator (pairBasisIndex i j)
           (forwardArsenalWord sourceSlot targetSlot) =
@@ -181,10 +182,34 @@ theorem universalWord_nativePointLifts
     (R : PrimitiveNativeTwoSlot (V:=V) (H:=H) i j) :
     HasNativePointLifts (p:=p) (cl:=H.cycleClass p)
       (ambientUniversalTwoSlotWord i j) := by
-  unfold ambientUniversalTwoSlotWord
-  apply GSTClassicalHodgeNativeGeneratorNaturality.HasNativePointLifts.smul
-  apply nativePointLifts_comp R.target
-  exact nativePointLifts_comp R.lefschetz R.source
+  have hS : AtomicSpanStable (p:=p) (cl:=H.cycleClass p)
+      (ambientSourceProjector i j) :=
+    (smoothProjective_atomicStable_iff_nativePointLifts
+      (ambientSourceProjector i j)).mpr R.source
+  have hL : AtomicSpanStable (p:=p) (cl:=H.cycleClass p)
+      (ambientTwoStepLefschetz i j) :=
+    (smoothProjective_atomicStable_iff_nativePointLifts
+      (ambientTwoStepLefschetz i j)).mpr R.lefschetz
+  have hT : AtomicSpanStable (p:=p) (cl:=H.cycleClass p)
+      (ambientTargetProjector i j) :=
+    (smoothProjective_atomicStable_iff_nativePointLifts
+      (ambientTargetProjector i j)).mpr R.target
+  have hcomp : AtomicSpanStable (p:=p) (cl:=H.cycleClass p)
+      ((ambientTargetProjector i j).comp
+        ((ambientTwoStepLefschetz i j).comp
+          (ambientSourceProjector i j))) :=
+    fun _ hy => hT _ (hL _ (hS _ hy))
+  have hsmul : AtomicSpanStable (p:=p) (cl:=H.cycleClass p)
+      ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
+        ((ambientTargetProjector i j).comp
+          ((ambientTwoStepLefschetz i j).comp
+            (ambientSourceProjector i j)))) := by
+    intro y hy
+    rw [LinearMap.smul_apply]
+    exact (pointCycleClassSpan p (H.cycleClass p)).smul_mem _
+      (hcomp y hy)
+  exact nativePointLifts_of_atomicSpanStable
+    (ambientUniversalTwoSlotWord i j) hsmul
 
 /-- The full universal two-slot word therefore preserves the entire atomic
 cycle-class span. -/

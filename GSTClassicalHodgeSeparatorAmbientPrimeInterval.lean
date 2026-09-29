@@ -43,14 +43,18 @@ theorem prime_between_source_separator_eq_endpoint
     dsimp [r, π, P]
     exact Ideal.isPrime_map_quotientMk_of_isPrime hsource
   have hrle : r ≤ separatorMinimalPrime n x := by
-    dsimp [r, π, P]
-    have hmap := Ideal.map_mono hsucc
+    have hmap : R.map (Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal) ≤
+        (separatorAmbientPrime n x).map
+          (Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal) :=
+      Ideal.map_mono (f := Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal) hsucc
     have hsuccMap : (separatorAmbientPrime n x).map
         (Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal) =
           separatorMinimalPrime n x := by
       unfold separatorAmbientPrime
       exact Ideal.map_comap_of_surjective _ Ideal.Quotient.mk_surjective _
-    simpa [hsuccMap] using hmap
+    show R.map (Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal) ≤
+      separatorMinimalPrime n x
+    exact le_trans hmap (le_of_eq hsuccMap)
   rcases prime_le_separator_eq_bot_or_self n x r hrPrime hrle with hbot | hself
   · left
     have hcomap := congrArg (Ideal.comap π) hbot
@@ -58,7 +62,7 @@ theorem prime_between_source_separator_eq_endpoint
       simpa [π, P] using Ideal.comap_map_quotientMk P R
     have hbotComap : (⊥ : Ideal (pointQuotient n x)).comap π = P := by
       ext a
-      simp [π, P]
+      simp [π, P, Ideal.Quotient.eq_zero_iff_mem]
     rw [hRP, hbotComap] at hcomap
     exact (sup_eq_right.mpr hsource).symm.trans hcomap
   · right
@@ -68,7 +72,7 @@ theorem prime_between_source_separator_eq_endpoint
     have hQP : (separatorMinimalPrime n x).comap π =
         separatorAmbientPrime n x := rfl
     rw [hRP, hQP] at hcomap
-    simpa [sup_eq_right.mpr hsource] using hcomap
+    exact (sup_eq_right.mpr hsource).symm.trans hcomap
 
 /-- Strict form: no ambient prime lies strictly between source and successor. -/
 theorem no_prime_strictly_between_source_separator

@@ -72,8 +72,9 @@ theorem sub_kernelStable
     {A B : NativeEnd V p}
     (hA : KernelStable (H := H) A)
     (hB : KernelStable (H := H) B) :
-    KernelStable (H := H) (A - B) :=
-  add_kernelStable hA (neg_kernelStable hB)
+    KernelStable (H := H) (A - B) := by
+  rw [sub_eq_add_neg]
+  exact add_kernelStable hA (neg_kernelStable hB)
 
 /-- Kernel stability is preserved by rational scaling. -/
 theorem smul_kernelStable
@@ -97,10 +98,12 @@ theorem pow_kernelStable
     {A : NativeEnd V p}
     (hA : KernelStable (H := H) A) :
     ∀ n : Nat, KernelStable (H := H) (A ^ n)
-  | 0 => by simpa using (id_kernelStable (V := V) (H := H) (p := p))
+  | 0 => by
+      rw [pow_zero]
+      exact id_kernelStable (V := V) (H := H) (p := p)
   | n + 1 => by
-      simpa [pow_succ] using
-        comp_kernelStable hA (pow_kernelStable hA n)
+      rw [pow_succ']
+      exact comp_kernelStable (pow_kernelStable hA n) hA
 
 /-- Finite sums of kernel-stable native operators are kernel-stable. -/
 theorem finset_sum_kernelStable

@@ -44,7 +44,8 @@ theorem separatorSuccessorPoint_mem_source_closure
     (n : Nat) (x : projectiveSpace n)
     (hlive : ProjectivelyLiveSource n x) :
     separatorSuccessorPoint n x hlive ∈ closure ({x} : Set (projectiveSpace n)) := by
-  show separatorSuccessorPoint n x hlive ∈
+  show (separatorSuccessorPoint n x hlive :
+      ProjectiveSpectrum (ProjectiveGrading n)) ∈
     closure ({x} : Set (ProjectiveSpectrum (ProjectiveGrading n)))
   rw [← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
     ProjectiveSpectrum.vanishingIdeal_singleton]
