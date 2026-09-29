@@ -428,6 +428,10 @@ roots = [
   "GSTClassicalHodgePrimitiveDefectTomographyGhost",
   "GSTClassicalHodgeTraceZeroDefectProjector",
   "GSTClassicalHodgeTraceZeroPrimitiveTomographyGhost",
+  "GSTClassicalHodgeTraceZeroAtomicOperatorRepresentation",
+  "GSTClassicalHodgeHodgeFunctorialProjectiveDynamics",
+  "GSTClassicalHodgePrimitiveProjectiveDefectModule",
+  "GSTClassicalHodgePrimitiveProjectiveFailureCrown",
   "HodgeConjecture",
 ]
 
