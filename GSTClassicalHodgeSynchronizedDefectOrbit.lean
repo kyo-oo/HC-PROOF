@@ -46,14 +46,18 @@ open GSTClassicalHodgeConcreteRankFreeGeneration
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgeGeometryFirstTwoGenerator
+open GSTClassicalHodgeRankFreeLimitlessAssembly
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev NativeCycles := codimensionCycles V.X p
-abbrev AmbientCoh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HodgeFiber := ClassicalHodgeFiber V H p
+abbrev NativeCycles (V : SmoothProjectiveComplexScheme) (p : Nat) :=
+  codimensionCycles V.X p
+abbrev AmbientCoh (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev HodgeFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) := ClassicalHodgeFiber V H p
 
 /-! ## Operator-pair algebra -/
 

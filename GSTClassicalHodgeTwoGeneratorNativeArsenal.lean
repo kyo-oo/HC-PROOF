@@ -41,6 +41,7 @@ open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeNativeGeneratorNaturality
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
+open GSTClassicalHodgeFiberedCosmology
 
 namespace GSTClassicalHodgeTwoGeneratorNativeArsenal
 

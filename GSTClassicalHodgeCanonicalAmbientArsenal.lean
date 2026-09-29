@@ -2,6 +2,7 @@ import Mathlib.Algebra.Module.Projective
 import GSTClassicalHodgeConcreteRankFreeGeneration
 import GSTClassicalHodgePointKernelOperatorLift
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
+import GSTClassicalHodgeNativeArsenalRepresentation
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL AMBIENT ARSENAL
@@ -42,8 +43,10 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev Coh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HFiber := ClassicalHodgeFiber V H p
+abbrev Coh (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev HFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) := ClassicalHodgeFiber V H p
 
 /-- Hodge-fiber matrix unit followed by the inclusion into ambient cohomology. -/
 noncomputable def hodgeMatrixUnitIntoAmbient
@@ -86,7 +89,7 @@ theorem ambientHodgeMatrixUnit_basis_other
     ambientHodgeMatrixUnit (V:=V) (H:=H) i j
         (classicalHodgeBasis V H p k).1 = 0 := by
   rw [ambientHodgeMatrixUnit_on_hodge]
-  simp [hki]
+  simp [hodgeCoordinate_basis_other i k (Ne.symm hki)]
 
 /-- Point-transition kernel required only for the canonical ambient matrix
 unit.  There is no separately supplied cohomological observable anymore. -/
@@ -114,7 +117,11 @@ theorem nativeMatrixUnitOperatorPair_hodge_action
     (hZ : H.cycleClass p Z = alpha.1) :
     H.cycleClass p ((nativeMatrixUnitOperatorPair i j K).cycleOperator Z) =
       (hodgeMatrixUnit i j alpha).1 := by
-  rw [(nativeMatrixUnitOperatorPair i j K).cycleClass_natural, hZ]
+  have hnat : (H.cycleClass p)
+      ((nativeMatrixUnitOperatorPair i j K).cycleOperator Z) =
+      (nativeMatrixUnitOperatorPair i j K).cohomologyOperator (H.cycleClass p Z) :=
+    LinearMap.congr_fun (nativeMatrixUnitOperatorPair i j K).cycleClass_natural Z
+  rw [hnat, hZ]
   exact ambientHodgeMatrixUnit_on_hodge i j alpha
 
 /-- Canonical matrix-unit point kernels at every pair produce the full native
