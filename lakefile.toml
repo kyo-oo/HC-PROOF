@@ -457,6 +457,9 @@ roots = [
   "GSTClassicalHodgeFiniteCorrespondenceSpectralSaturation",
   "GSTClassicalHodgeCurrentCosmologyTerminalPacket",
   "GSTClassicalHodgeCoupledDefectLedger",
+  "GSTClassicalHodgeDefectHamelPolarization",
+  "GSTClassicalHodgeDefectPolarizedCoupledReciprocity",
+  "GSTClassicalHodgeFirstFailureScalarDetectorCollision",
   "HodgeConjecture",
 ]
 
