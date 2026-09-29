@@ -230,7 +230,7 @@ theorem separatorSuccessorPoint_mem_principalSet
       ((separatorSuccessorPoint n x hlive :
           ProjectiveSpectrum (ProjectiveGrading n)).asHomogeneousIdeal :
         Set (ProjectiveCoordinateRing n))
-  refine Set.subset_singleton_iff.2 ?_
+  refine Set.singleton_subset_iff.2 ?_
   exact separator_mem_separatorAmbientPrime n x
 
 /-- Projective successor crown. -/
