@@ -483,6 +483,7 @@ roots = [
   "GSTClassicalHodgeLocalSeedProjectiveWordExtinction",
   "GSTClassicalHodgeSingleStateExactFrontierAudit",
   "GSTClassicalHodgePrincipalCutFlagHomologicalDescent",
+  "GSTClassicalHodgePrincipalCutFlagCohomologicalDescent",
   "HodgeConjecture",
 ]
 
