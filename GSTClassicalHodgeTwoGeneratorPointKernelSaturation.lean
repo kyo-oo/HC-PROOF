@@ -61,7 +61,8 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev HFiber := ClassicalHodgeFiber V H p
+abbrev HFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) := ClassicalHodgeFiber V H p
 
 /-- The exact normalized two-generator ambient word. -/
 noncomputable def twoGeneratorAmbientWord

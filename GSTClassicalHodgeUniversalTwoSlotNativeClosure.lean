@@ -53,8 +53,10 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev Coh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HFiber := ClassicalHodgeFiber V H p
+abbrev Coh (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev HFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) := ClassicalHodgeFiber V H p
 
 /-- Extend an arbitrary endomorphism of the genuine Hodge fiber to ambient
 rational cohomology. -/
