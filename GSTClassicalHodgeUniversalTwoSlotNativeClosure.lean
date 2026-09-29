@@ -46,7 +46,7 @@ open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeNativeGeneratorNaturality
-open GSTClassicalHodgeCanonicalAmbientArsenal
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 
 namespace GSTClassicalHodgeUniversalTwoSlotNativeClosure
 
@@ -206,8 +206,8 @@ theorem universalWord_nativePointLifts
             (ambientSourceProjector i j)))) := by
     intro y hy
     rw [LinearMap.smul_apply]
-    exact (pointCycleClassSpan p (H.cycleClass p)).smul_mem _
-      (hcomp y hy)
+    exact (GSTClassicalHodgeAtomicSpan.pointCycleClassSpan p
+      (H.cycleClass p)).smul_mem _ (hcomp y hy)
   exact nativePointLifts_of_atomicSpanStable
     (ambientUniversalTwoSlotWord i j) hsmul
 
