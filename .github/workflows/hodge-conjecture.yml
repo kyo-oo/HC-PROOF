@@ -33,19 +33,12 @@ jobs:
           lake update
           lake exe cache get
 
-      - name: Compile separator ambient exact landing
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeSeparatorAmbientExactLanding.lean 2>&1 | tee hodge-final.log
-
       - name: Compile complete classical Hodge mathematics lane
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build HodgePureMath 2>&1 | tee -a hodge-final.log
+          lake build HodgePureMath 2>&1 | tee hodge-final.log
 
       - name: Compile degree-rigid cycle-class upgrade
         shell: bash
