@@ -475,6 +475,9 @@ roots = [
   "GSTClassicalHodgeAtomicDefectWorldtraceRigidityExpansion",
   "GSTClassicalHodgeSeparatorAmbientExactLanding",
   "GSTClassicalHodgeSeparatorGenericExact",
+  "GSTClassicalHodgeGenericSeparatorDegreeSeed",
+  "GSTClassicalHodgeWeightOneGenericSeparatorExtinction",
+  "GSTClassicalHodgeZeroOneHighFrontierCrown",
   "HodgeConjecture",
 ]
 
