@@ -424,6 +424,10 @@ roots = [
   "GSTClassicalHodgePolarizedDefectReciprocity",
   "GSTClassicalHodgePolarizedGradedCorrespondenceCrown",
   "GSTClassicalHodgePrimitiveAtomicDefectReduction",
+  "GSTClassicalHodgeAtomicDefectTraceNormalization",
+  "GSTClassicalHodgePrimitiveDefectTomographyGhost",
+  "GSTClassicalHodgeTraceZeroDefectProjector",
+  "GSTClassicalHodgeTraceZeroPrimitiveTomographyGhost",
   "HodgeConjecture",
 ]
 
