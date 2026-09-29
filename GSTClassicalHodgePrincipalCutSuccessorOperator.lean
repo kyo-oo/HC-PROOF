@@ -112,14 +112,14 @@ noncomputable def successorPresentationOperator
   toFun φ := φ.sum fun x q => q • successorPresentation V p x
   map_add' := by
     intro φ ψ
-    classical
-    simp
+    exact Finsupp.sum_add_index (fun _ => zero_smul _ _)
+      (fun _ a b => add_smul a b _)
   map_smul' := by
     intro q φ
     apply Finsupp.ext
     intro x
-    simp [Finsupp.sum_apply, Finsupp.sum_smul_index', smul_smul,
-      Pi.smul_apply, smul_eq_mul]
+    simp [Finsupp.sum, Finsupp.smul_apply, Finset.mul_sum,
+      Finset.smul_sum, Pi.smul_apply, smul_eq_mul, mul_assoc]
 
 @[simp]
 theorem successorPresentationOperator_single
@@ -143,12 +143,10 @@ noncomputable def successorFiniteNativeOperator
       (successorPresentationOperator V p φ)
   map_add' := by
     intro φ ψ
-    simp [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation]
+    rw [map_add, map_add]
   map_smul' := by
     intro q φ
-    simp [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation, smul_smul]
+    rw [map_smul, map_smul]
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator
@@ -169,8 +167,32 @@ theorem successorNativeOperator_point
       realizeFiniteCodimensionPresentation V.X (p + 1)
         (successorPresentation V p x) := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [successorNativeOperator, successorFiniteNativeOperator,
-    successorPresentationOperator]
+  have h1 : presentationOfNativeCycleLinear V.X p
+      (codimensionPointCycle V.X p x) = Finsupp.single x (1 : ℚ) := by
+    classical
+    rw [presentationOfNativeCycleLinear_apply]
+    ext y
+    show ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1
+      = (Finsupp.single x (1 : ℚ)) y
+    by_cases hy : y = x
+    · rw [hy]
+      simp [codimensionPointCycle, Function.locallyFinsuppWithin.single_apply]
+    · have hne : y.1 ≠ x.1 := fun heq => hy (Subtype.ext heq)
+      have hz : ((codimensionPointCycle V.X p x).1 : AlgebraicCycle V.X ℚ) y.1 = 0 := by
+        simp [codimensionPointCycle, hne, Function.locallyFinsuppWithin.single_apply]
+      rw [hz]
+      simp
+  show (successorFiniteNativeOperator V p).comp
+      (presentationOfNativeCycleLinear V.X p)
+      (codimensionPointCycle V.X p x) =
+    realizeFiniteCodimensionPresentation V.X (p + 1)
+      (successorPresentation V p x)
+  rw [LinearMap.comp_apply, h1]
+  show realizeFiniteCodimensionPresentation V.X (p + 1)
+      (successorPresentationOperator V p (Finsupp.single x (1 : ℚ))) =
+    realizeFiniteCodimensionPresentation V.X (p + 1)
+      (successorPresentation V p x)
+  rw [successorPresentationOperator_single, one_smul]
 
 /-- Every generator image is explicitly represented by finitely many exact
 ambient codimension-p+1 point atoms. -/

@@ -48,21 +48,21 @@ abbrev HFiber := ClassicalHodgeFiber V H p
 /-- Hodge-fiber matrix unit followed by the inclusion into ambient cohomology. -/
 noncomputable def hodgeMatrixUnitIntoAmbient
     (i j : ClassicalHodgeBasisIndex V H p) :
-    HFiber V H p →ₗ[ℚ] Coh H p :=
+    HFiber →ₗ[ℚ] Coh :=
   (rationalHodgeSubspace (H.hodgeBigrading p)).subtype.comp
     (hodgeMatrixUnit i j)
 
 /-- Extend one Hodge matrix unit to an ambient cohomological endomorphism. -/
 noncomputable def ambientHodgeMatrixUnit
     (i j : ClassicalHodgeBasisIndex V H p) :
-    Coh H p →ₗ[ℚ] Coh H p :=
+    Coh →ₗ[ℚ] Coh :=
   Classical.choose (LinearMap.exists_extend (hodgeMatrixUnitIntoAmbient (V:=V) (H:=H) i j))
 
 /-- The ambient extension agrees exactly with the rank-free GST matrix unit on
 all genuine Hodge classes. -/
 theorem ambientHodgeMatrixUnit_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
-    (alpha : HFiber V H p) :
+    (alpha : HFiber) :
     ambientHodgeMatrixUnit (V:=V) (H:=H) i j alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
   have h := Classical.choose_spec
@@ -110,7 +110,7 @@ theorem nativeMatrixUnitOperatorPair_hodge_action
     (i j : ClassicalHodgeBasisIndex V H p)
     (K : AmbientMatrixUnitPointKernel (V:=V) (H:=H) i j)
     (Z : codimensionCycles V.X p)
-    (alpha : HFiber V H p)
+    (alpha : HFiber)
     (hZ : H.cycleClass p Z = alpha.1) :
     H.cycleClass p ((nativeMatrixUnitOperatorPair i j K).cycleOperator Z) =
       (hodgeMatrixUnit i j alpha).1 := by
