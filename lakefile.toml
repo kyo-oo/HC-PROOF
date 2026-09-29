@@ -479,6 +479,7 @@ roots = [
   "GSTClassicalHodgeWeightOneGenericSeparatorExtinction",
   "GSTClassicalHodgeZeroOneHighFrontierCrown",
   "GSTClassicalHodgeSingleStateBareLefschetzExtinction",
+  "GSTClassicalHodgeZeroOneHighSingleStateCrown",
   "HodgeConjecture",
 ]
 
