@@ -94,6 +94,7 @@ theorem defect_equivariant
     atomicDefectLinearMap V H p (T.hodge alpha) =
       T.defectOperator (atomicDefectLinearMap V H p alpha) := by
   rw [atomicDefectLinearMap_apply, atomicDefectLinearMap_apply]
+  unfold AtomicNaturalHodgeOperator.defectOperator
   rw [atomicDefectOperator_mk]
   rw [T.restricts]
 

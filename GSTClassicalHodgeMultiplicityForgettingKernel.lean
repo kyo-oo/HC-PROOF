@@ -45,6 +45,28 @@ def sheetDifference
   Finsupp.single (⟨p, i⟩ : FiberedHodgeIndex V H) 1 -
     Finsupp.single (⟨p, j⟩ : FiberedHodgeIndex V H) 1
 
+/-- The multiplicity-forgetting projection kills the zero address. -/
+theorem forgetMultiplicityToGST_zero
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    forgetMultiplicityToGST (0 : FiberedHodgeAddress V H) = 0 := by
+  simp [forgetMultiplicityToGST, Finsupp.sum_zero_index]
+
+/-- The multiplicity-forgetting projection is a group homomorphism on finite
+addresses, hence distributes over subtraction. -/
+theorem forgetMultiplicityToGST_sub
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (φ ψ : FiberedHodgeAddress V H) :
+    forgetMultiplicityToGST (φ - ψ) =
+      forgetMultiplicityToGST φ - forgetMultiplicityToGST ψ := by
+  unfold forgetMultiplicityToGST
+  refine Finsupp.sum_sub_index fun s q₁ q₂ => ?_
+  ext t
+  simp only [Finsupp.single_apply, Finsupp.sub_apply]
+  by_cases ht : t = GSTTransferBridgeV2.compactClCode s.1 <;>
+    simp [ht]
+
 /-- Distinct multiplicity sheets have a genuinely nonzero difference before
 multiplicity is forgotten. -/
 theorem sheetDifference_ne_zero
@@ -64,7 +86,7 @@ theorem forgetMultiplicity_sheetDifference
     forgetMultiplicityToGST
       (sheetDifference (V := V) (H := H) i j) = 0 := by
   unfold sheetDifference
-  rw [map_sub]
+  rw [forgetMultiplicityToGST_sub]
   rw [forgetMultiplicityToGST_single V H p i 1]
   rw [forgetMultiplicityToGST_single V H p j 1]
   simp
@@ -80,7 +102,7 @@ theorem forgetMultiplicityToGST_not_injective_of_two_sheets
   have hzero := forgetMultiplicity_sheetDifference (V := V) (H := H) i j
   have hsame :
       sheetDifference (V := V) (H := H) i j = 0 :=
-    hinj (by simpa using hzero)
+    hinj (hzero.trans (forgetMultiplicityToGST_zero V H).symm)
   exact sheetDifference_ne_zero (V := V) (H := H) i j hij hsame
 
 /-- Basis-vector form: two distinct genuine classical Hodge basis vectors have

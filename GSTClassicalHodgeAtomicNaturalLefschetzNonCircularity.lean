@@ -42,6 +42,7 @@ open GSTClassicalHodgeExplicitArsenalGeneration
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTClassicalHodgeTwoSlotLefschetzCollapse
 open GSTClassicalHodgeAtomicDefectEquivariantIrreducibility
+open GSTClassicalHodgeFullArsenalIrreducibility
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

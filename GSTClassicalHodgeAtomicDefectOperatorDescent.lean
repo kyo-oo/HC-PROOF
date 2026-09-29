@@ -44,6 +44,9 @@ open GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
 open GSTClassicalHodgeAtomicDefectTomographyGhost
 open GSTClassicalHodgeAtomicDefectTomographySynchronization
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
