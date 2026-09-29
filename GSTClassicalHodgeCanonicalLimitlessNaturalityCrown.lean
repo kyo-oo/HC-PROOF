@@ -2,6 +2,7 @@ import GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 import GSTClassicalHodgeLimitlessProjectiveLefschetzTower
 import GSTClassicalHodgeCrossWeightNativePropagation
 import GSTClassicalHodgeAtomicSpan
+import GSTClassicalHodgeConcreteFailureDichotomy
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL LIMITLESS NATURALITY CROWN
@@ -46,6 +47,8 @@ open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeCrossWeightNativePropagation
+open GSTClassicalHodgeConcreteFailureDichotomy
+open GSTClassicalHodgeRankFreePrimitiveGeneration
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

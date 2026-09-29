@@ -51,11 +51,9 @@ theorem mem_relativeCodimensionOneFinset_cut
   classical
   unfold relativeCodimensionOneFinset at hy
   rcases Finset.mem_map.mp hy with ⟨a, ha, hya⟩
-  have hset : a.1 ∈ {y : pointClosureScheme V x |
-      y ∈ relativeCutSet V x ∧ Order.coheight y = 1} :=
-    (Set.mem_filter.mp
-      (Set.Finite.mem_toFinset.mp
-        (Finset.mem_attach.mp ha)))
+  have hset : a.1 ∈ relativeCutSet V x ∧ Order.coheight a.1 = 1 :=
+    Set.Finite.mem_toFinset.mp
+      (Finset.mem_attach.mp ha)
   have hacut : a.1 ∈ relativeCutSet V x := hset.1
   have hval : a.1 = y.1 := congrArg Subtype.val hya
   simpa [← hval] using hacut

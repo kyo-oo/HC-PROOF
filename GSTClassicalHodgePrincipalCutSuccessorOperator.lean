@@ -222,6 +222,11 @@ theorem successorNativeOperator_point
       (successorPresentation V p x)
   rw [successorPresentationOperator_single, one_smul]
 
+/-- Uniform mass scaling of the canonical single-separator successor: each
+successor point atom carries coefficient one, so the successor operator scales
+every native mass by exactly this scalar (hypothesis-bound at every use). -/
+def successorScalar (p : Nat) : ℚ := 1
+
 /-- Every generator image is explicitly represented by finitely many exact
 ambient codimension-p+1 point atoms. -/
 theorem successorNativeOperator_has_finite_target
