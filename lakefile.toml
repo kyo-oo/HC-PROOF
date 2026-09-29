@@ -432,6 +432,15 @@ roots = [
   "GSTClassicalHodgeHodgeFunctorialProjectiveDynamics",
   "GSTClassicalHodgePrimitiveProjectiveDefectModule",
   "GSTClassicalHodgePrimitiveProjectiveFailureCrown",
+  "GSTClassicalHodgeHodgeDefectImageFunctoriality",
+  "GSTClassicalHodgeFirstFailureCokernelRigidity",
+  "GSTClassicalHodgeFirstFailurePrimitiveImage",
+  "GSTClassicalHodgeFirstPrimitiveProjectiveFailure",
+  "GSTClassicalHodgePrimitiveProjectiveDualOrbit",
+  "GSTClassicalHodgePrimitiveProjectiveMomentProfile",
+  "GSTClassicalHodgeFirstPrimitiveProjectiveSector",
+  "GSTClassicalHodgeFirstPrimitiveProjectiveDualSector",
+  "GSTClassicalHodgeFirstPrimitiveSectorRetraction",
   "HodgeConjecture",
 ]
 
