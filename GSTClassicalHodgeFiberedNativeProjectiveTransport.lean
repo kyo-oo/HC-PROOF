@@ -67,7 +67,7 @@ noncomputable def fiberedNativePushforward
     intro φ ψ
     classical
     exact Finsupp.sum_add_index'
-      (fun _ => by simp) (fun _ _ _ => by simp)
+      (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _)
   map_smul' := by
     intro q φ
     classical

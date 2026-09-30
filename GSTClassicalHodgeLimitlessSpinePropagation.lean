@@ -214,7 +214,8 @@ structure SpineTowerConservedCharge
   successor_read :
     ∀ p : Nat, ∀ Z : codimensionCycles V.X p,
       nativeRead (p + 1) (successorNativeOperator V p Z) =
-        GSTClassicalHodgeLimitlessTowerOrbitCrown.successorScalar p * nativeRead p Z
+        GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar p *
+          nativeRead p Z
 
 namespace SpineTowerConservedCharge
 
