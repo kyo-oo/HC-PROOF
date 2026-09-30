@@ -150,7 +150,8 @@ theorem normalizedSpectralAtom_defect
         classicalHodgeBasis V H p (shapedLiveBasisIndex alpha S y) := by
     apply (classicalHodgeBasis V H p).repr.injective
     apply Finsupp.embDomain_injective (weightFiberEmbedding V H p)
-    simpa [fiberedHodgeClass] using normalized_hodgeFace_exact alpha S y x
+    simpa [fiberedHodgeClass, toGlobalHodgeAddress, fiberedSheetGenerator] using
+      normalized_hodgeFace_exact alpha S y x
   rw [hhodge]
   rfl
 
@@ -164,7 +165,7 @@ theorem defect_eq_zero_iff_faces_agree
   change
     fiberedNativeCycleClass (V := V) (H := H) (p := p) Φ -
         fiberedHodgeAmbient (V := V) (H := H) (p := p) Φ = 0 ↔ _
-  simp [fiberedNativeCycleClass, fiberedHodgeAmbient]
+  simp [fiberedNativeCycleClass, fiberedHodgeAmbient, sub_eq_zero]
 
 /-- If one defect-zero fibered state realizes every Hodge basis sheet, then the
 exact Stage-2G statement follows by unrestricted finite-support reconstruction.

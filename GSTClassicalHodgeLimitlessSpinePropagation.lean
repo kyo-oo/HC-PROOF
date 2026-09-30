@@ -310,7 +310,8 @@ structure NativeMassCycleClassBridge
     nativeCycleMass V 0 (codimensionZeroFundamentalCycle V) ≠ 0
   successor_point_mass :
     ∀ p : Nat, ∀ x : CodimensionPoint V.X p,
-      successorMass V p x = GSTClassicalHodgeLimitlessTowerOrbitCrown.successorScalar p
+      successorMass V p x =
+        GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar p
 
 namespace NativeMassCycleClassBridge
 
@@ -324,7 +325,7 @@ theorem mass_congr
   have hker : H.cycleClass p (Z - W) = 0 := by
     simp [hZW]
   have hmass := M.kernel_mass_zero p (Z - W) hker
-  simpa using hmass
+  simpa [sub_eq_zero] using hmass
 
 /-- Native mass descended to the actual cycle-class range. -/
 noncomputable def rangeMassRead
