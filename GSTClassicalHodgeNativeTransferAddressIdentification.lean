@@ -84,7 +84,7 @@ noncomputable def rationalizeCompactAddress :
     intro z φ
     classical
     have h0 : ∀ i : Nat,
-        (fun _ (b : ℤ) => Finsupp.single i (b : ℚ)) i 0 = 0 :=
+        (fun n (z : ℤ) => Finsupp.single n (z : ℚ)) i 0 = 0 :=
       fun _ => by simp
     rw [Finsupp.sum_smul_index' h0]
     ext n
