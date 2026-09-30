@@ -260,7 +260,7 @@ theorem classicalProjection_to_limitless
       totalMass V H p φ •
         rationalizeCompactAddress (compactClMono p) := by
   classical
-  have hzero : forgetMultiplicityToGST 0 = 0 := by
+  have hzero : forgetMultiplicityToGST (0 : FiberedHodgeAddress V H) = 0 := by
     simp [forgetMultiplicityToGST]
   have hadd : ∀ (a b : FiberedHodgeAddress V H),
       forgetMultiplicityToGST (a + b) =

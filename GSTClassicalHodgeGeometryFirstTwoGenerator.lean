@@ -175,7 +175,7 @@ theorem ambientWord_hasNativePointLifts
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientWord := by
   unfold ambientWord
-  apply hasNativePointLifts_smul
+  apply TwoGeneratorNative.hasNativePointLifts_smul
   exact nativePointLifts_comp R.code.hasNativePointLifts
     (nativePointLifts_comp R.lefschetz.hasNativePointLifts
       R.source_hasNativePointLifts)
@@ -219,15 +219,15 @@ theorem ambientWord_on_hodge
           ((GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2).comp
             (LinearMap.id - twoSlotCode)))) =
         pureMatrixUnit sourceSlot targetSlot := by
-    rw [← sheetProjectorQ_target_eq_code,
-      ← sheetProjectorQ_source_eq_id_sub_code]
+    rw [← sheetProjectorQ_source_eq_id_sub_code,
+      ← sheetProjectorQ_target_eq_code]
     exact forwardArsenalWord_eq_matrixUnit
       sourceSlot targetSlot (by omega)
   have hlift :
       liftFiniteHodgeOperator (pairBasisIndex i j)
           (pureMatrixUnit sourceSlot targetSlot) =
         hodgeMatrixUnit i j :=
-    exact rankFreeMatrixUnit_eq_lifted_GST_word i j |>.symm
+    (rankFreeMatrixUnit_eq_lifted_GST_word i j).symm
   simpa [src, mid, twoSlotCodeHodge, twoSlotHodgeOperator,
     hfinite, hlift]
 
