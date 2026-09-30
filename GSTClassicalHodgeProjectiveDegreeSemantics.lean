@@ -55,7 +55,7 @@ theorem trace_realize_presentation
   classical
   simp only [map_finsuppSum, LinearMap.map_smul, smul_eq_mul]
   apply Finsupp.sum_congr
-  intro x a ha
+  intro x _
   rw [D.trace_point_cycleClass]
 
 

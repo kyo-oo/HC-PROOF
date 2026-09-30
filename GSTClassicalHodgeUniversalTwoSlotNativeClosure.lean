@@ -122,19 +122,75 @@ handles repeated Hodge basis indices; no injectivity of the selector is needed. 
 theorem twoSlotLefschetz_kernel :
     diagonalLefschetzQ 2 2 =
       (2 : ℚ) • pureMatrixUnit sourceSlot targetSlot := by
+  -- The two pure basis evaluations, via the universal Lefschetz kernel API.
+  have hb0 : diagonalLefschetzQ 2 2 (rationalPureBasis sourceSlot)
+      = (forwardScalar sourceSlot targetSlot : ℚ)
+        • rationalPureBasis targetSlot := by
+    have hop : diagonalLefschetzQ 2 2
+        = diagonalLefschetzQ 2
+            (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))) := rfl
+    rw [hop]
+    funext q
+    fin_cases q <;>
+      simp [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (A := 2) (B := 2)
+        (0 : Fin 2) (0 : Fin 2)
+        (show (0 : ℕ) ≤ 0 by decide)
+        (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (0 : Fin 2) (1 : Fin 2)
+          ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (0 : Fin 2) (0 : Fin 2) by decide)]
+      norm_num [forwardScalar, sourceSlot, targetSlot]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_kernel
+        (A := 2) (B := 2)
+        (n := 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+          (0 : Fin 2) (1 : Fin 2))
+        (0 : Fin 2) (1 : Fin 2)]
+      norm_num [forwardScalar, sourceSlot, targetSlot,
+        GSTPureHodgeLefschetzKernel.pureWeightGap]
+  have hb1 : diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
+    have hop : diagonalLefschetzQ 2 2
+        = diagonalLefschetzQ 2
+            (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))) := rfl
+    rw [hop]
+    funext q
+    fin_cases q <;>
+      simp [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_backward_zero
+        (A := 2) (B := 2)
+        (1 : Fin 2) (0 : Fin 2)
+        (show (0:ℕ) < 1 by decide)]
+      norm_num [forwardScalar, sourceSlot, targetSlot]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (A := 2) (B := 2)
+        (1 : Fin 2) (1 : Fin 2)
+        (show (1 : ℕ) ≤ 1 by decide)
+        (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (0 : Fin 2) (1 : Fin 2)
+          ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (1 : Fin 2) (1 : Fin 2) by decide)]
+      norm_num [forwardScalar, sourceSlot, targetSlot]
+  -- The two-slot forward scalar is the central binomial coefficient C(2,1) = 2.
+  have hfs : (forwardScalar sourceSlot targetSlot : ℚ) = 2 := by
+    decide
+  rw [hfs] at hb0
+  -- Both operators act identically on the pure window basis.
   apply LinearMap.ext
   intro a
-  funext q
-  fin_cases q <;>
-    norm_num [diagonalLefschetzQ, pureMatrixUnit, rationalPureBasis,
-      sourceSlot, targetSlot, Fin.sum_univ_two,
-      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel,
-      GSTUniversalLefschetzKernel.worldForward,
-      GSTUniversalLefschetzKernel.worldCausalDistance,
-      GSTUniversalLefschetzKernel.carryDistance,
-      GSTUniversalLefschetzKernel.digitDistance,
-      GSTGlobalPureHodgeCosmology.pureDiagonalState,
-      GSTDimensionFreeHodgeDiagonal.diagonalState]
+  have ha : a = (a sourceSlot) • rationalPureBasis sourceSlot
+      + (a targetSlot) • rationalPureBasis targetSlot := by
+    classical
+    funext q
+    fin_cases q <;> simp [rationalPureBasis, sourceSlot, targetSlot]
+  rw [ha]
+  simp only [map_add, map_smul, hb0, hb1, smul_zero, add_zero, smul_smul]
+  simp [rationalPureBasis, sourceSlot, targetSlot, pureMatrixUnit,
+    mul_comm, mul_left_comm]
 
 /-- On the genuine Hodge fiber, the ambient universal word is exactly the
 rank-free matrix unit. -/
@@ -210,6 +266,11 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   congr 1
   norm_num [forwardScalar, sourceSlot, targetSlot,
     hodgeMatrixUnit_apply, map_smul, smul_smul]
+  have hscalar : (1 / 2 : ℚ) *
+      (hodgeCoordinate i alpha * 2) =
+      hodgeCoordinate i alpha := by
+    ring
+  rw [hscalar]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot
