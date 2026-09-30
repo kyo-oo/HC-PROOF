@@ -71,10 +71,10 @@ theorem kernelStable_ambient_hasNativePointLifts
     HasNativePointLifts (p := p) (cl := H.cycleClass p)
       (ambientOperator (H := H) A hA) := by
   intro x
-  refine ⟨A (codimensionPointCycle V.X p x), ?_⟩
+  refine ⟨A (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x), ?_⟩
   symm
   exact cycleClass_ambientOperator (H := H) A hA
-    (codimensionPointCycle V.X p x)
+    (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x)
 
 /-- Geometry-first realization of one Hodge-fiber primitive.
 
@@ -127,7 +127,7 @@ structure GeometryFirstTwoGenerator
   code : NativeHodgePrimitive (V := V) (H := H)
     (twoSlotCodeHodge i j)
   lefschetz : NativeHodgePrimitive (V := V) (H := H)
-    (twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
+    (twoSlotHodgeOperator i j (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2))
 
 namespace GeometryFirstTwoGenerator
 
@@ -166,7 +166,7 @@ theorem source_hasNativePointLifts
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientSource := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    ((smoothProjective_atomicStable_iff_nativePointLifts).2
+    ((smoothProjective_atomicStable_iff_nativePointLifts _).2
       R.code.hasNativePointLifts)
 
 /-- The universal geometry-first word is native-natural by pure operator
@@ -175,7 +175,7 @@ theorem ambientWord_hasNativePointLifts
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientWord := by
   unfold ambientWord
-  apply GSTClassicalHodgeNativeGeneratorNaturality.HasNativePointLifts.smul
+  apply hasNativePointLifts_smul
   exact nativePointLifts_comp R.code.hasNativePointLifts
     (nativePointLifts_comp R.lefschetz.hasNativePointLifts
       R.source_hasNativePointLifts)
@@ -186,7 +186,8 @@ theorem ambientSource_on_hodge
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
     (alpha : HodgeFiber V H p) :
     R.ambientSource alpha.1 =
-      ((LinearMap.id - twoSlotCodeHodge i j) alpha).1 := by
+      ((LinearMap.id - twoSlotCodeHodge i j :
+        Module.End ℚ (ClassicalHodgeFiber V H p)) alpha).1 := by
   simp [ambientSource, ambientCode, NativeHodgePrimitive.ambient_on_hodge]
 
 /-- **GEOMETRY-FIRST UNIVERSAL WORD.**
@@ -198,9 +199,11 @@ theorem ambientWord_on_hodge
     (alpha : HodgeFiber V H p) :
     R.ambientWord alpha.1 = (hodgeMatrixUnit i j alpha).1 := by
   let src : HodgeFiber V H p :=
-    (LinearMap.id - twoSlotCodeHodge i j) alpha
+    (LinearMap.id - twoSlotCodeHodge i j :
+      Module.End ℚ (ClassicalHodgeFiber V H p)) alpha
   let mid : HodgeFiber V H p :=
-    twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) src
+    twoSlotHodgeOperator i j
+      (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2) src
   have hsrc : R.ambientSource alpha.1 = src.1 := by
     simpa [src] using R.ambientSource_on_hodge alpha
   have hmid : R.ambientLefschetz src.1 = mid.1 := by
@@ -213,7 +216,7 @@ theorem ambientWord_on_hodge
   have hfinite :
       ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
         ((twoSlotCode).comp
-          ((diagonalLefschetzQ 2 2).comp
+          ((GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2).comp
             (LinearMap.id - twoSlotCode)))) =
         pureMatrixUnit sourceSlot targetSlot := by
     rw [← sheetProjectorQ_target_eq_code,
@@ -235,9 +238,10 @@ theorem matrixUnit_mem_algebraic
     (alpha : HodgeFiber V H p)
     (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
     hodgeMatrixUnit i j alpha ∈ AlgebraicHodgeSubspace V H p := by
-  have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
+  have hstable : GSTClassicalHodgeGeneratorwiseAtomicStability.AtomicSpanStable
+      (p := p) (cl := H.cycleClass p)
       R.ambientWord :=
-    (smoothProjective_atomicStable_iff_nativePointLifts).2
+    (smoothProjective_atomicStable_iff_nativePointLifts _).2
       R.ambientWord_hasNativePointLifts
   have himage := hstable alpha.1 halpha
   rw [R.ambientWord_on_hodge alpha] at himage
