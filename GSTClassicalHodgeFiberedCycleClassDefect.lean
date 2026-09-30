@@ -36,6 +36,7 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedNativePullback
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeNormalizedFiberedSpectralAtom
 
 variable {V : SmoothProjectiveComplexScheme}

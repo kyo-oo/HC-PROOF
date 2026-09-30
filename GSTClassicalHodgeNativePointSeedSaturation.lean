@@ -34,6 +34,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeGeometryFirstTwoGenerator
+open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeNativePointSeedSaturation
 

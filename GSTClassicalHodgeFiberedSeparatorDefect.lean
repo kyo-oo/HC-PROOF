@@ -32,6 +32,7 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeFiberedCycleClassDefect
