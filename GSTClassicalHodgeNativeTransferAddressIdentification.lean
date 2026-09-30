@@ -61,7 +61,7 @@ noncomputable def pureWeightToUniversalAddress :
   map_smul' := by
     intro q φ
     ext n
-    by_cases hn : n ∈ Set.range pureWeightAddress
+    by_cases hn : n ∈ Set.range (pureWeightAddressEmbedding : Nat → Nat)
     · rcases hn with ⟨p, hp⟩
       subst hp
       show (Finsupp.embDomain pureWeightAddressEmbedding (q • φ))
@@ -92,15 +92,16 @@ noncomputable def rationalizeCompactAddress :
     intro φ ψ
     classical
     exact Finsupp.sum_add_index'
-      (fun _ => by decide) (fun _ _ _ => by decide)
+      (fun _ => by norm_num) (fun _ _ _ => by norm_num)
   map_smul' := by
     intro z φ
     show (z • φ).sum (fun n z => Finsupp.single n (z : ℚ)) =
       z • φ.sum (fun n z => Finsupp.single n (z : ℚ))
     rw [Finsupp.sum_smul_index']
-    · simp only [smul_eq_mul, Int.cast_mul, Finsupp.sum]
+    · simp only [Finsupp.sum]
+      rw [Finset.smul_sum]
       simp
-    · exact fun n => by decide
+    · exact fun n => by norm_num
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]
@@ -120,7 +121,8 @@ theorem rationalize_compactClMono
       Finsupp.single (pureWeightAddress p) 1 := by
   ext n
   simp [rationalizeCompactAddress, compactClMono, compactClCode,
-    pureWeightAddress, compactClCode_eq_cosmicAddress]
+    pureWeightAddress, compactClCode_eq_cosmicAddress,
+    cosmicAddressEquiv, Nat.pair]
 
 /-- **NATIVE POINT = LIMITLESS TRANSFER GENERATOR.**
 Every genuine codimension-p point cycle has exactly the same rational universal
