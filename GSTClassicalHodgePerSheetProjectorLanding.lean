@@ -105,6 +105,16 @@ noncomputable def extractedLiveBasisCycle
     (C : PerSheetProjectorCertificate V H p alpha)
     (i : HodgeSupportIndex alpha) :
     codimensionCycles V.X p :=
+  let S := C.nativeSpectral
+  let F := C.spectral.toFiniteSpectralFamily
+  let c := C.isolatedCoefficient i * F.isolatorScale i
+  c⁻¹ • S.cyclePolyEval (F.isolatorPolynomial i) (C.seedCycle i)
+
+theorem extractedLiveBasisCycle_spec
+    (C : PerSheetProjectorCertificate V H p alpha)
+    (i : HodgeSupportIndex alpha) :
+    H.cycleClass p (C.extractedLiveBasisCycle i) =
+      (classicalHodgeBasis V H p i.1).1 := by
   have hc : C.isolatedCoefficient i *
       C.spectral.toFiniteSpectralFamily.isolatorScale i ≠ 0 :=
     mul_ne_zero (C.isolatedCoefficient_ne_zero i)
