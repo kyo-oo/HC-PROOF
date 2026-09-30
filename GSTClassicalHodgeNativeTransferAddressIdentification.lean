@@ -58,7 +58,14 @@ noncomputable def pureWeightToUniversalAddress :
     RationalPureCosmos →ₗ[ℚ] RationalCosmicAddress where
   toFun φ := Finsupp.embDomain pureWeightAddressEmbedding φ
   map_add' := by intro φ ψ; simp
-  map_smul' := by intro q φ; simp
+  map_smul' := by
+    intro q φ
+    ext n
+    by_cases hn : n ∈ Set.range pureWeightAddress
+    · rcases hn with ⟨p, hp⟩
+      subst hp
+      simp [pureWeightToUniversalAddress, Finsupp.embDomain_apply_self]
+    · simp [pureWeightToUniversalAddress, Finsupp.embDomain_of_notMem_range, hn]
 
 /-- A pure weight basis becomes the universal address basis of its diagonal
 cosmic cell. -/
@@ -83,12 +90,9 @@ noncomputable def rationalizeCompactAddress :
   map_smul' := by
     intro z φ
     classical
-    have h0 : ∀ i : Nat,
-        (fun n (z : ℤ) => Finsupp.single n (z : ℚ)) i 0 = 0 :=
-      fun _ => by simp
-    rw [Finsupp.sum_smul_index' h0]
     ext n
-    simp only [Finsupp.sum_apply]
+    simp only [rationalizeCompactAddress, Finsupp.sum_apply,
+      Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, Int.cast_mul]
     simp
 
 /-- Rationalization of one integral address basis vector. -/

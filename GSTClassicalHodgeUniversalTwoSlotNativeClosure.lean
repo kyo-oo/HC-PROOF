@@ -177,14 +177,17 @@ theorem ambientUniversalTwoSlotWord_on_hodge
     fin_cases q <;>
       simp [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (A := 2) (B := 2)
         (0 : Fin 2) (0 : Fin 2)
         (show (0 : ℕ) ≤ 0 by decide)
         (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (0 : Fin 2) (1 : Fin 2)
           ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (0 : Fin 2) (0 : Fin 2) by decide)]
       norm_num
-    · rw [gst_forward_scalar_receipt (0 : Fin 2) (1 : Fin 2)
-        (show (0 : ℕ) ≤ 1 by decide)]
-      norm_num
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_kernel
+        (A := 2) (B := 2)
+        (n := 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (0 : Fin 2) (1 : Fin 2))
+        (0 : Fin 2) (1 : Fin 2)]
+      norm_num [forwardScalar, sourceSlot, targetSlot]
   have hb1 : diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
     have hop : diagonalLefschetzQ 2 2
         = diagonalLefschetzQ 2 (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
@@ -195,10 +198,12 @@ theorem ambientUniversalTwoSlotWord_on_hodge
     fin_cases q <;>
       simp [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_backward_zero
+        (A := 2) (B := 2)
         (1 : Fin 2) (0 : Fin 2)
         (show (0:ℕ) < 1 by decide)]
       norm_num
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (A := 2) (B := 2)
         (1 : Fin 2) (1 : Fin 2)
         (show (1 : ℕ) ≤ 1 by decide)
         (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (0 : Fin 2) (1 : Fin 2)
