@@ -103,11 +103,13 @@ noncomputable def classicalHodgeMass
   map_add' := by
     intro a b
     classical
+    simp only [map_add]
     exact Finsupp.sum_add_index'
       (fun _ => rfl) (fun _ _ _ => rfl)
   map_smul' := by
     intro q a
     classical
+    simp only [map_smul, Finsupp.coe_smul, Pi.smul_apply]
     have h0 : ∀ i : ClassicalHodgeBasisIndex V H p,
         (fun _ (c : ℚ) => c) i 0 = 0 :=
       fun _ => rfl

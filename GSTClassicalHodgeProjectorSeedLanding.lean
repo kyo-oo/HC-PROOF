@@ -139,7 +139,7 @@ theorem extractedLiveBasisCycle_spec
       C.spectral.toFiniteSpectralFamily.isolatorScale i)⁻¹ *
       (C.isolatedCoefficient i *
         C.spectral.toFiniteSpectralFamily.isolatorScale i) = 1 := by
-    field_simp
+    rw [inv_mul_cancel₀ hc]
   rw [hproj, smul_smul, hinv, one_smul]
 
 /-- Reassemble the original Hodge class from the projector-extracted native

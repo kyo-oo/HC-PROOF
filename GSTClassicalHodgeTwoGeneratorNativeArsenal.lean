@@ -53,13 +53,13 @@ variable {p : Nat}
 def twoSlotCode : Module.End ℚ (RationalPureWindow 2) where
   toFun a := fun r => (r.1 : ℚ) * a r
   map_add' := by intro a b; funext r; simp [mul_add]
-  map_smul' := by intro q a; funext r; simp [mul_assoc]
+  map_smul' := by intro q a; funext r; simp [mul_left_comm]
 
 @[simp]
 theorem twoSlotCode_source
     (a : RationalPureWindow 2) :
     twoSlotCode a sourceSlot = 0 := by
-  rfl
+  simp
 
 @[simp]
 theorem twoSlotCode_target
@@ -103,6 +103,7 @@ theorem ambientTargetProjector_on_hodge_eq_code
     (alpha : ClassicalHodgeFiber V H p) :
     ambientTargetProjector i j alpha.1 =
       ambientTwoSlotCode i j alpha.1 := by
+  unfold ambientTargetProjector ambientTwoSlotCode
   rw [extendHodgeEndomorphism_on_hodge,
     extendHodgeEndomorphism_on_hodge]
   unfold twoSlotHodgeOperator twoSlotCodeHodge
@@ -115,6 +116,7 @@ theorem ambientSourceProjector_on_hodge_eq_id_sub_code
     (alpha : ClassicalHodgeFiber V H p) :
     ambientSourceProjector i j alpha.1 =
       alpha.1 - ambientTwoSlotCode i j alpha.1 := by
+  unfold ambientSourceProjector ambientTwoSlotCode
   rw [extendHodgeEndomorphism_on_hodge,
     extendHodgeEndomorphism_on_hodge]
   unfold twoSlotHodgeOperator twoSlotCodeHodge
@@ -161,6 +163,19 @@ theorem codeLefschetzCodeWord_nativePointLifts
   exact nativePointLifts_comp R.code
     (nativePointLifts_comp R.lefschetz R.idSubCode_nativePointLifts)
 
+/-- Rational rescaling preserves native point lifts. -/
+theorem hasNativePointLifts_smul
+    {i j : ClassicalHodgeBasisIndex V H p}
+    (c : ℚ)
+    (T : RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
+      RationalSingularCohomology H.analytification (2 * p))
+    (h : HasNativePointLifts (p := p) (cl := H.cycleClass p) T) :
+    HasNativePointLifts (p := p) (cl := H.cycleClass p) (c • T) := by
+  intro x
+  obtain ⟨Z, hZ⟩ := h x
+  refine ⟨c • Z, ?_⟩
+  rw [map_smul, LinearMap.smul_apply, hZ]
+
 /-- Rational normalization preserves native point lifts, giving the complete
 normalized universal transfer word. -/
 theorem normalizedWord_nativePointLifts
@@ -171,8 +186,8 @@ theorem normalizedWord_nativePointLifts
         ((ambientTwoSlotCode i j).comp
           ((ambientTwoStepLefschetz i j).comp
             (LinearMap.id - ambientTwoSlotCode i j)))) := by
-  exact GSTClassicalHodgeNativeGeneratorNaturality.HasNativePointLifts.smul
-    R.codeLefschetzCodeWord_nativePointLifts
+  exact hasNativePointLifts_smul _
+    _ R.codeLefschetzCodeWord_nativePointLifts
 
 end TwoGeneratorNative
 
