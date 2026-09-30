@@ -49,9 +49,10 @@ variable {p : Nat}
 
 /-- Compile the exact normalized GST word
 
-    scalar^-1 * code o lefschetz o (id - code)
+    scalar^-1 * code o lefschetz o source
 
-from the two actual projective self-maps. -/
+from the actual projective self-maps (the source-sheet projector, the code
+observable, and the two-step Lefschetz transport). -/
 noncomputable def compileProjectiveTwoGenerator
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : ProjectiveTwoGenerator (V := V) (H := H) i j) :
@@ -59,7 +60,7 @@ noncomputable def compileProjectiveTwoGenerator
   .smul (forwardScalar sourceSlot targetSlot : ℚ)⁻¹
     (.comp (.geometric R.code.map)
       (.comp (.geometric R.lefschetz.map)
-        (.add .id (.smul (-1) (.geometric R.code.map)))))
+        (.geometric R.source.map)))
 
 /-- Native interpretation of the compiled word is exactly the native face of
 the already-verified geometry-first GST word. -/
@@ -71,7 +72,7 @@ theorem compileProjectiveTwoGenerator_eval
   ext Z
   simp [compileProjectiveTwoGenerator,
     ProjectiveOperatorWord.eval,
-    geometryFirstWordPair, pairSmul, pairComp, pairSub, pairId,
+    geometryFirstWordPair, pairSmul, pairComp,
     primitivePair,
     ProjectiveTwoGenerator.toGeometryFirst,
     ProjectivePrimitiveRealization.toNativeHodgePrimitive]

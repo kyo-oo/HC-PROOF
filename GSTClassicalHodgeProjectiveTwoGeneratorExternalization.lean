@@ -48,6 +48,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgePrimitivePushforwardNaturality
 open GSTClassicalHodgeProjectivePointTransport
+open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
@@ -102,9 +103,13 @@ theorem ambient_eq_geometric
 
 end ProjectivePrimitiveRealization
 
-/-- Exactly two genuine projective primitives for one ordered Hodge-basis pair. -/
+/-- The source-sheet projector and the two genuine projective primitives for
+one ordered Hodge-basis pair. -/
 structure ProjectiveTwoGenerator
     (i j : ClassicalHodgeBasisIndex V H p) where
+  source : ProjectivePrimitiveRealization
+    (V := V) (H := H)
+    (twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot))
   code : ProjectivePrimitiveRealization
     (V := V) (H := H) (twoSlotCodeHodge i j)
   lefschetz : ProjectivePrimitiveRealization
@@ -119,6 +124,7 @@ noncomputable def toGeometryFirst
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : ProjectiveTwoGenerator (V := V) (H := H) i j) :
     GeometryFirstTwoGenerator (V := V) (H := H) i j where
+  source := R.source.toNativeHodgePrimitive
   code := R.code.toNativeHodgePrimitive
   lefschetz := R.lefschetz.toNativeHodgePrimitive
 
