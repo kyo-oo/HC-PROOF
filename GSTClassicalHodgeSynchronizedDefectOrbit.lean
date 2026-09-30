@@ -133,13 +133,8 @@ theorem geometryFirstWordPair_on_hodge
     (alpha : HodgeFiber V H p) :
     (geometryFirstWordPair R).cohomologyOperator alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
-  simpa [geometryFirstWordPair, pairSmul, pairComp, pairSub, pairId,
-    primitivePair, NativeHodgePrimitive.ambient,
-    GeometryFirstTwoGenerator.ambientWord,
-    GeometryFirstTwoGenerator.ambientCode,
-    GeometryFirstTwoGenerator.ambientLefschetz,
-    GeometryFirstTwoGenerator.ambientSource] using
-      R.ambientWord_on_hodge alpha
+  show R.ambientWord alpha.1 = (hodgeMatrixUnit i j alpha).1
+  exact R.ambientWord_on_hodge alpha
 
 /-! ## Synchronized native/classical states -/
 
@@ -324,7 +319,6 @@ theorem bigradedBettiHodge_of_synchronized_limitless_orbits
 #check NativeHodgeOrbitSeed
 #check NativeHodgeOrbitSeed.targetCycle
 #check NativeHodgeOrbitSeed.targetCycle_spec
-#check NativeHodgeOrbitSeed.basisCycleBridge
 #check bigradedBettiHodge_of_synchronized_limitless_orbits
 
 #print axioms synchronizedDefect_map
