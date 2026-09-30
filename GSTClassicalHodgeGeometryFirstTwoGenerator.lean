@@ -227,7 +227,8 @@ theorem ambientWord_on_hodge
       liftFiniteHodgeOperator (pairBasisIndex i j)
           (pureMatrixUnit sourceSlot targetSlot) =
         hodgeMatrixUnit i j := by
-    rw [← hfinite]
+    rw [← GSTClassicalHodgeExplicitArsenalGeneration.forwardArsenalWord_eq_matrixUnit
+      sourceSlot targetSlot (by decide)]
     exact (rankFreeMatrixUnit_eq_lifted_GST_word i j).symm
   simpa [src, mid, twoSlotCodeHodge, twoSlotHodgeOperator,
     hfinite, hlift]
