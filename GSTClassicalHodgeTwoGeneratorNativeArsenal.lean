@@ -59,7 +59,7 @@ def twoSlotCode : Module.End ℚ (RationalPureWindow 2) where
 theorem twoSlotCode_source
     (a : RationalPureWindow 2) :
     twoSlotCode a sourceSlot = 0 := by
-  simp [sourceSlot]
+  simp [twoSlotCode, sourceSlot]
 
 @[simp]
 theorem twoSlotCode_target
@@ -116,7 +116,7 @@ theorem ambientSourceProjector_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
     (alpha : ClassicalHodgeFiber V H p) :
     ambientSourceProjector i j alpha.1 =
-      (hodgeCoordinate i) alpha •
+      (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate i) alpha •
         ↑(classicalHodgeBasis V H p i) := by
   unfold ambientSourceProjector
   rw [extendHodgeEndomorphism_on_hodge]
@@ -128,7 +128,8 @@ theorem ambientSourceProjector_on_hodge
     fin_cases r <;> simp [rationalPureBasis]
   have hsrc : (sheetProjectorQ sourceSlot)
       ((finiteHodgeRead (pairBasisIndex i j)) alpha)
-      = ((hodgeCoordinate i) alpha) • rationalPureBasis sourceSlot := by
+      = ((GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate i) alpha) •
+        rationalPureBasis sourceSlot := by
     rfl
   simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
     LinearMap.comp_apply, hsrc, hW, pairBasisIndex_source]
@@ -151,7 +152,7 @@ theorem idSubCode_nativePointLifts
       (LinearMap.id - ambientTwoSlotCode i j) := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    ((smoothProjective_atomicStable_iff_nativePointLifts).2 R.code)
+    ((smoothProjective_atomicStable_iff_nativePointLifts _).2 R.code)
 
 /-- The code observable itself gives the target projector naturality. -/
 theorem targetProjector_nativePointLifts_on_hodge
@@ -177,8 +178,10 @@ theorem codeLefschetzCodeWord_nativePointLifts
 theorem hasNativePointLifts_smul
     {i j : ClassicalHodgeBasisIndex V H p}
     (c : ℚ)
-    {T : RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
-      RationalSingularCohomology H.analytification (2 * p)}
+    {T : GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * p) →ₗ[ℚ]
+      GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * p)}
     (h : HasNativePointLifts (p := p) (cl := H.cycleClass p) T) :
     HasNativePointLifts (p := p) (cl := H.cycleClass p) (c • T) := by
   intro x

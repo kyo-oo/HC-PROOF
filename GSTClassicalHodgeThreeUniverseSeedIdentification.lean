@@ -130,7 +130,7 @@ theorem classicalHodge_forgetMultiplicity_eq_mass_transfer
   rw [forgetMultiplicity_fiberedWeightCoordinates]
   rw [rationalize_compactClMono]
   ext n
-  simp [classicalHodgeMass, smul_eq_mul]
+  simp [classicalHodgeMass, smul_eq_mul, pureWeightAddress]
 
 /-- If a native cycle and a classical Hodge class have the same total rational
 mass, then their multiplicity-forgotten limitless cosmic addresses coincide

@@ -112,25 +112,27 @@ theorem extractedBasisCycle_spec
     (C : BasisProjectorCertificate V H p i) :
     H.cycleClass p C.extractedBasisCycle =
       (classicalHodgeBasis V H p i).1 := by
-  let S := C.nativeSpectral
-  let F := C.spectral.toFiniteSpectralFamily
-  let c := C.isolatedCoefficient * F.isolatorScale C.slot
-  have hc : c ≠ 0 :=
+  have hc : C.isolatedCoefficient *
+      C.spectral.toFiniteSpectralFamily.isolatorScale C.slot ≠ 0 :=
     mul_ne_zero C.isolatedCoefficient_ne_zero
-      (F.isolatorScale_ne_zero C.slot)
+      (C.spectral.toFiniteSpectralFamily.isolatorScale_ne_zero C.slot)
+  have hinv : (C.isolatedCoefficient *
+      C.spectral.toFiniteSpectralFamily.isolatorScale C.slot)⁻¹ *
+      (C.isolatedCoefficient *
+        C.spectral.toFiniteSpectralFamily.isolatorScale C.slot) = 1 := by
+    rw [inv_mul_cancel₀ hc]
   have hproj := C.isolator_seed
   unfold extractedBasisCycle
   rw [LinearMap.map_smul]
-  rw [S.cycleClass_cyclePolyEval]
+  rw [C.nativeSpectral.cycleClass_cyclePolyEval]
   rw [C.seedCycle_class]
-  have hpoly :
-      linearPolyEval S.operatorPair.cohomologyOperator
-          (F.isolatorPolynomial C.slot)
-          (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) =
-        c • (classicalHodgeBasis V H p i).1 := by
-    simpa [S, F, c, C.nativeSpectral, C.targets_basis] using hproj
-  rw [hpoly]
-  simp [c, hc, mul_smul]
+  change (C.isolatedCoefficient *
+      C.spectral.toFiniteSpectralFamily.isolatorScale C.slot)⁻¹ •
+      linearPolyEval C.spectral.observable
+        (C.spectral.toFiniteSpectralFamily.isolatorPolynomial C.slot)
+        (finitePointCycleClassMap p (H.cycleClass p)
+          C.seedPresentation) = _
+  rw [hproj, smul_smul, hinv, one_smul]
 
 /-- Every microscopic certificate places the selected basis sheet in the
 actual atomic point-cycle span. -/
