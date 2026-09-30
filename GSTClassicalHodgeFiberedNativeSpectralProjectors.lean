@@ -42,6 +42,7 @@ open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeFiberedNativeRecoordination
+open GSTClassicalHodgeFiberedTransferCompletion
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTWorldRecoordinationGroupoid
@@ -99,6 +100,7 @@ theorem codeProj_shapedField_isolates
       apply (shapeCodeEquiv S).injective
       apply Fin.ext
       exact h
+    simp only [worldCode_expanded] at hcode
     simp [fiberedNativeCodeProj, shapedFiberedNativeField, hzy, hcode]
 
 /-- Sum a pullback-valued shaped field over its finite GST observation chart. -/
@@ -123,7 +125,8 @@ theorem sum_codeProj_shapedField
   classical
   unfold sumShapedField
   rw [Finset.sum_eq_single y]
-  · simp [codeProj_shapedField_isolates]
+  · rw [codeProj_shapedField_isolates]
+    simp
   · intro z hz hzy
     rw [codeProj_shapedField_isolates]
     simp [hzy]
@@ -145,6 +148,7 @@ theorem projected_hodgeFace_exact
           ⟨p, shapedLiveBasisIndex alpha S y⟩ := by
   rw [sum_codeProj_shapedField]
   rw [map_smul]
+  simp only [shapedLiveNativeAtom]
   rw [toGlobalHodgeAddress_atom]
 
 /-- Genuine native projective-cycle face of the same isolated live sheet. -/
@@ -161,6 +165,7 @@ theorem projected_nativeFace_exact
         codimensionPointCycle V.X p x := by
   rw [sum_codeProj_shapedField]
   rw [map_smul]
+  simp only [shapedLiveNativeAtom]
   rw [toNativeCycle_atom]
 
 /-- Limitless universal-address face of the isolated native atom. -/

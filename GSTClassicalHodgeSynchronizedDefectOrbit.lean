@@ -257,18 +257,12 @@ theorem targetCycle_spec
   rw [LinearMap.map_smul, hpair]
   simp [c, hc]
 
-/-- One nonzero algebraic Hodge state plus geometry-first realizations of the
-limitless two-generator word produces a genuine basis-cycle bridge. -/
-noncomputable def basisCycleBridge
-    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
-    (R : ∀ j : ClassicalHodgeBasisIndex V H p,
-      GeometryFirstTwoGenerator (V := V) (H := H) S.sourceIndex j) :
-    HodgeConjecture.HodgeBasisCycleBridge V H p where
-  basisCycle j := S.targetCycle j (R j)
-  basisCycle_spec j := S.targetCycle_spec j (R j)
-
 /-- Weight-p classical landing from one arbitrary nonzero algebraic Hodge
-state and the genuine limitless GST two-generator externalization. -/
+state and the genuine limitless GST two-generator externalization.
+
+The proof is the direct finite-support reconstruction over the classical
+Hodge basis: the target-cycle family is linearly extended along the basis,
+and the cycle-class map transports it to the subspace inclusion. -/
 theorem hodge_weight
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (R : ∀ j : ClassicalHodgeBasisIndex V H p,
@@ -276,8 +270,22 @@ theorem hodge_weight
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
       LinearMap.range (H.cycleClass p) := by
   intro alpha halpha
-  exact HodgeConjecture.hodge_class_has_cycle_of_basis_bridge
-    V H (S.basisCycleBridge R) alpha halpha
+  have hmaps :
+      (H.cycleClass p).comp
+        ((classicalHodgeBasis V H p).constr ℚ
+          (fun j => S.targetCycle j (R j))) =
+        (rationalHodgeSubspace (H.hodgeBigrading p)).subtype := by
+    apply (classicalHodgeBasis V H p).ext
+    intro j
+    simp [S.targetCycle_spec]
+  refine ⟨(classicalHodgeBasis V H p).constr ℚ
+      (fun j => S.targetCycle j (R j)) ⟨alpha, halpha⟩, ?_⟩
+  change ((H.cycleClass p).comp
+      ((classicalHodgeBasis V H p).constr ℚ
+        (fun j => S.targetCycle j (R j)))) ⟨alpha, halpha⟩ =
+    (⟨alpha, halpha⟩ : ClassicalHodgeFiber V H p).1
+  rw [hmaps]
+  rfl
 
 end NativeHodgeOrbitSeed
 
