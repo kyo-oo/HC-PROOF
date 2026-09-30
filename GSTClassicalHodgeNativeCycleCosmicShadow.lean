@@ -61,7 +61,7 @@ noncomputable def presentationMass
       fun _ => rfl
     rw [Finsupp.sum_smul_index' h0]
     simp only [Finsupp.sum, Finset.smul_sum]
-    rw [smul_eq_mul]
+    simp
 
 @[simp]
 theorem presentationMass_single

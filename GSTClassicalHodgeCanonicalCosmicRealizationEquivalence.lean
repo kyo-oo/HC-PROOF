@@ -148,11 +148,11 @@ theorem preserves_algebraicFiber
   have hnat := R.naturality Z
   rw [hZ, canonicalCosmicAmbient_on_hodge i j alpha] at hnat
   have hout :
-      liftCosmicWindowOperator
+      ↑(liftCosmicWindowOperator
           (GSTClassicalHodgeRankFreePrimitiveGeneration.pairBasisIndex i j)
           (rationalCosmicMatrixUnit
             GSTClassicalHodgeRankFreePrimitiveGeneration.sourceSlot.1
-            GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1) alpha ∈
+            GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1) alpha) ∈
         LinearMap.range (H.cycleClass p) :=
     ⟨R.native Z, hnat⟩
   rw [smoothProjective_cycleClass_range_eq_atomic_span V H p] at hout

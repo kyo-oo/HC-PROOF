@@ -139,7 +139,14 @@ theorem exists_point_presentation
   let R := C.toLocalCycleSpectralRealization
   refine ⟨R.reconstructedPresentation, ?_⟩
   rw [finitePointCycleClassMap_eq_cycleClass_realize]
-  rw [GSTClassicalHodgePointNormalForm.realize_presentationOfNativeCycle]
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  have hpres : R.reconstructedPresentation
+      = presentationOfNativeCycle V.X p R.reconstructedCycle := by
+    unfold LocalCycleSpectralRealization.reconstructedPresentation
+    rfl
+  rw [hpres,
+    GSTClassicalHodgePointNormalForm.realize_presentationOfNativeCycle V.X p
+      R.reconstructedCycle]
   exact R.reconstructedCycle_spec
 
 end PointKernelCyclicCertificate

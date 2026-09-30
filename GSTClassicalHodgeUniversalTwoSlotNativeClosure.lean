@@ -170,50 +170,50 @@ theorem ambientUniversalTwoSlotWord_on_hodge
         • rationalPureBasis targetSlot := by
     have hop : diagonalLefschetzQ 2 2
         = diagonalLefschetzQ 2 (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)) := rfl
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))) := rfl
     rw [hop]
     funext q
-    simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
-    fin_cases q
+    fin_cases q <;>
+      simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
-        (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
-        (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
-        (show sourceSlot.1 ≤ sourceSlot.1 by decide)
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+        (show (0 : ℕ) ≤ 0 by decide)
         (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))
           ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot) by decide)]
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2)) by decide)]
       norm_num
-    · rw [gst_forward_scalar_receipt sourceSlot targetSlot
-        (show sourceSlot.1 ≤ targetSlot.1 by decide)]
+    · rw [gst_forward_scalar_receipt (0 : Fin 2) (1 : Fin 2)
+        (show (0 : ℕ) ≤ 1 by decide)]
       norm_num
   have hb1 : diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
     have hop : diagonalLefschetzQ 2 2
         = diagonalLefschetzQ 2 (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)) := rfl
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))) := rfl
     rw [hop]
     funext q
-    simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
-    fin_cases q
+    fin_cases q <;>
+      simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_backward_zero
-        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
-        (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
         (show (0:ℕ) < 1 by decide)]
       norm_num
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
-        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
-        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
-        (show targetSlot.1 ≤ targetSlot.1 by decide)
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))
+        (show (1 : ℕ) ≤ 1 by decide)
         (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))
           ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
-            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot) by decide)]
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2)) by decide)]
       norm_num
   -- Hence the two-slot Lefschetz word reads only the source sheet.
   have hdiag : ∀ w : RationalPureWindow 2,
