@@ -121,27 +121,22 @@ theorem extractedLiveBasisCycle_spec
     (i : HodgeSupportIndex alpha) :
     H.cycleClass p (C.extractedLiveBasisCycle i) =
       (classicalHodgeBasis V H p i.1).1 := by
-  let S := C.nativeSpectral
-  let F := C.spectral.toFiniteSpectralFamily
-  let c := C.isolatedCoefficient i * F.isolatorScale i
-  have hc : c ≠ 0 :=
+  have hc : C.isolatedCoefficient i *
+      C.spectral.toFiniteSpectralFamily.isolatorScale i ≠ 0 :=
     mul_ne_zero (C.isolatedCoefficient_ne_zero i)
-      (F.isolatorScale_ne_zero i)
+      (C.spectral.toFiniteSpectralFamily.isolatorScale_ne_zero i)
   have hproj := C.isolator_seed i
   unfold extractedLiveBasisCycle
   rw [LinearMap.map_smul]
-  rw [S.cycleClass_cyclePolyEval]
+  rw [C.nativeSpectral.cycleClass_cyclePolyEval]
   rw [C.seedCycle_class]
-  have hpoly :
+  change (C.isolatedCoefficient i *
+      C.spectral.toFiniteSpectralFamily.isolatorScale i)⁻¹ •
       linearPolyEval C.spectral.observable
-          (C.spectral.toFiniteSpectralFamily.isolatorPolynomial i)
-          (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) =
-      (C.isolatedCoefficient i *
-          C.spectral.toFiniteSpectralFamily.isolatorScale i) •
-        (classicalHodgeBasis V H p i.1).1 := by
-    simpa only [C.spectral_basisIndex] using hproj
-  rw [hpoly]
-  simp [hc, mul_smul]
+        (C.spectral.toFiniteSpectralFamily.isolatorPolynomial i)
+        (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) = _
+  rw [hproj]
+  simp [hc]
 
 /-- Reassemble the original Hodge class from the projector-extracted native
 basis cycles on its finite live support. -/

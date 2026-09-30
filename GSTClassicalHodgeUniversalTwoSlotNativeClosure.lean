@@ -184,7 +184,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
             (0 : Fin 2) (1 : Fin 2)
           ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
             (0 : Fin 2) (0 : Fin 2) by decide)]
-      norm_num
+      norm_num [forwardScalar, sourceSlot, targetSlot]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_kernel
         (A := 2) (B := 2)
         (n := 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2) (0 : Fin 2) (1 : Fin 2))
@@ -203,7 +203,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
         (A := 2) (B := 2)
         (1 : Fin 2) (0 : Fin 2)
         (show (0:ℕ) < 1 by decide)]
-      norm_num
+      norm_num [forwardScalar, sourceSlot, targetSlot]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
         (A := 2) (B := 2)
         (1 : Fin 2) (1 : Fin 2)
@@ -212,7 +212,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
             (0 : Fin 2) (1 : Fin 2)
           ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
             (1 : Fin 2) (1 : Fin 2) by decide)]
-      norm_num
+      norm_num [forwardScalar, sourceSlot, targetSlot]
   -- Hence the two-slot Lefschetz word reads only the source sheet.
   have hdiag : ∀ w : RationalPureWindow 2,
       diagonalLefschetzQ 2 2 w
