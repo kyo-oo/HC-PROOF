@@ -138,8 +138,8 @@ theorem extractedLiveBasisCycle_spec
   have hinv : (C.isolatedCoefficient i *
       C.spectral.toFiniteSpectralFamily.isolatorScale i)⁻¹ *
       (C.isolatedCoefficient i *
-        C.spectral.toFiniteSpectralFamily.isolatorScale i) = 1 :=
-    inv_mul_cancel _ hc
+        C.spectral.toFiniteSpectralFamily.isolatorScale i) = 1 := by
+    field_simp
   rw [hproj, smul_smul, hinv, one_smul]
 
 /-- Reassemble the original Hodge class from the projector-extracted native

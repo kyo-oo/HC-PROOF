@@ -279,6 +279,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
         classicalHodgeBasis V H p j)).1 =
     ((hodgeCoordinate i) alpha • classicalHodgeBasis V H p j).1
   rw [Submodule.coe_smul, Submodule.coe_smul, smul_smul, hscalar]
+  simp [Submodule.coe_smul]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot

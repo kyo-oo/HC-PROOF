@@ -100,8 +100,20 @@ noncomputable def classicalHodgeMass
     (p : Nat) : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ where
   toFun alpha :=
     ((classicalHodgeBasis V H p).repr alpha).sum fun _ q => q
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro a b
+    classical
+    exact Finsupp.sum_add_index'
+      (fun _ => rfl) (fun _ _ _ => rfl)
+  map_smul' := by
+    intro q a
+    classical
+    have h0 : ∀ i : ClassicalHodgeBasisIndex V H p,
+        (fun _ (c : ℚ) => c) i 0 = 0 :=
+      fun _ => rfl
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp
 
 /-- Forgetting multiplicity from an arbitrary genuine Hodge class gives its
 finite total basis mass times the common limitless transfer direction. -/
