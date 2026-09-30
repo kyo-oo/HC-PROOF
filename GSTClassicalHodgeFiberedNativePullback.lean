@@ -182,8 +182,8 @@ theorem toGlobalHodgeAddress_atom
     (x : CodimensionPoint V.X p) :
     toGlobalHodgeAddress V H p (atom V H p i x) =
       fiberedSheetGenerator V H ⟨p,i⟩ := by
-  rw [toGlobalHodgeAddress, forgetPoint_atom]
-  simp [fiberedSheetGenerator, weightFiberEmbedding]
+  simp [toGlobalHodgeAddress, forgetPoint_atom,
+    fiberedSheetGenerator, weightFiberEmbedding]
 
 @[simp]
 theorem toNativeCycle_atom
@@ -260,9 +260,31 @@ theorem classicalProjection_to_limitless
       totalMass V H p φ •
         rationalizeCompactAddress (compactClMono p) := by
   classical
+  have hzero : forgetMultiplicityToGST 0 = 0 := by
+    simp [forgetMultiplicityToGST]
+  have hadd : ∀ (a b : FiberedHodgeAddress V H),
+      forgetMultiplicityToGST (a + b) =
+        forgetMultiplicityToGST a + forgetMultiplicityToGST b := by
+    intro a b
+    classical
+    simp only [forgetMultiplicityToGST]
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp)
+  have hsmul : ∀ (q : ℚ) (ψ : FiberedHodgeAddress V H),
+      forgetMultiplicityToGST (q • ψ) = q • forgetMultiplicityToGST ψ := by
+    intro q ψ
+    classical
+    have h0 : ∀ s : FiberedHodgeIndex V H,
+        (fun s (c : ℚ) => Finsupp.single (GSTTransferBridgeV2.compactClCode s.1) c) s 0 = 0 :=
+      fun _ => by simp
+    simp only [forgetMultiplicityToGST]
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp
   induction φ using Finsupp.induction_linear with
-  | zero => simp
-  | add a b ha hb => simp [ha, hb]
+  | zero => simp [hzero]
+  | add a b ha hb =>
+    simp only [LinearMap.map_add, hadd, ha, hb, add_smul]
   | single ix q =>
     have hφ : Finsupp.single ix q = q • atom V H p ix.1 ix.2 := by
       classical
@@ -270,10 +292,9 @@ theorem classicalProjection_to_limitless
       by_cases hj : j = ix
       · simp [hj, atom]
       · simp [hj, atom]
-    rw [hφ, toGlobalHodgeAddress.map_smul, toGlobalHodgeAddress_atom,
-      forgetMultiplicityToGST.map_smul,
-      classicalSheet_eq_rationalized_transfer]
-    simp [totalMass_atom]
+    rw [hφ]
+    simp [LinearMap.map_smul, toGlobalHodgeAddress_atom, hsmul,
+      classicalSheet_eq_rationalized_transfer, totalMass_atom]
 
 /-- Forgetting multiplicity to an actual native cycle and then taking its
 limitless cosmic shadow lands on the exact same transfer ray with the exact
@@ -393,7 +414,7 @@ noncomputable def attachPoint (x : CodimensionPoint V.X p) :
     intro a b
     classical
     exact Finsupp.sum_add_index'
-      (fun _ => by simp) (fun _ _ _ => by simp)
+      (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _)
   map_smul' := by
     intro q a
     classical
@@ -412,7 +433,7 @@ noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
     intro a b
     classical
     exact Finsupp.sum_add_index'
-      (fun _ => by simp) (fun _ _ _ => by simp)
+      (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _)
   map_smul' := by
     intro q a
     classical
