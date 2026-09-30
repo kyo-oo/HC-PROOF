@@ -156,14 +156,120 @@ theorem ambientUniversalTwoSlotWord_on_hodge
       (twoSlotHodgeOperator i j (sheetProjectorQ targetSlot))
         ((twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
           ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha))).1 = _
-  have hfinite :
-      ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
-        ((sheetProjectorQ targetSlot).comp
-          ((diagonalLefschetzQ 2 2).comp
-            (sheetProjectorQ sourceSlot)))) =
-      forwardArsenalWord sourceSlot targetSlot := by
-    rfl
-  simpa [twoSlotHodgeOperator, hfinite, hlift]
+  -- The write map on pure basis sheets.
+  have hW : ∀ (k : ℚ) (r : Fin 2),
+      finiteHodgeWrite (pairBasisIndex i j) (k • rationalPureBasis r) =
+        k • classicalHodgeBasis V H p (pairBasisIndex i j r) := by
+    intro k r
+    simp only [finiteHodgeWrite, map_smul, Fin.sum_univ_two]
+    fin_cases r <;> simp [rationalPureBasis]
+  -- The normalized forward Lefschetz word moves the source sheet to the
+  -- target sheet with the exact forward scalar, and kills the target sheet.
+  have hb0 : diagonalLefschetzQ 2 2 (rationalPureBasis sourceSlot)
+      = (forwardScalar sourceSlot targetSlot : ℚ)
+        • rationalPureBasis targetSlot := by
+    have hop : diagonalLefschetzQ 2 2
+        = diagonalLefschetzQ 2 (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)) := rfl
+    rw [hop]
+    funext q
+    simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
+    fin_cases q
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+        (show sourceSlot.1 ≤ sourceSlot.1 by decide)
+        (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+          ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot) by decide)]
+      norm_num
+    · rw [gst_forward_scalar_receipt sourceSlot targetSlot
+        (show sourceSlot.1 ≤ targetSlot.1 by decide)]
+      norm_num
+  have hb1 : diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
+    have hop : diagonalLefschetzQ 2 2
+        = diagonalLefschetzQ 2 (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)) := rfl
+    rw [hop]
+    funext q
+    simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
+    fin_cases q
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_backward_zero
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+        (show (0:ℕ) < 1 by decide)]
+      norm_num
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+        (show targetSlot.1 ≤ targetSlot.1 by decide)
+        (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+          ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot) by decide)]
+      norm_num
+  -- Hence the two-slot Lefschetz word reads only the source sheet.
+  have hdiag : ∀ w : RationalPureWindow 2,
+      diagonalLefschetzQ 2 2 w
+        = ((w sourceSlot) * (forwardScalar sourceSlot targetSlot : ℚ))
+          • rationalPureBasis targetSlot := by
+    intro w
+    have hw : w = (w sourceSlot) • rationalPureBasis sourceSlot
+        + (w targetSlot) • rationalPureBasis targetSlot := by
+      simpa [Fin.sum_univ_two, sourceSlot, targetSlot] using
+        rationalPureWindow_eq_sum_basis w
+    rw [hw]
+    simp only [map_add, map_smul, hb0, hb1, smul_zero, add_zero, smul_smul]
+  -- The three fiber-level steps of the ambient universal two-slot word.
+  have hstep1 : (twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha
+      = (hodgeCoordinate i) alpha • classicalHodgeBasis V H p i := by
+    have hsrc : (sheetProjectorQ sourceSlot)
+        ((finiteHodgeRead (pairBasisIndex i j)) alpha)
+        = ((hodgeCoordinate i) alpha) • rationalPureBasis sourceSlot := by
+      rfl
+    simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+      LinearMap.comp_apply, hsrc, hW, pairBasisIndex_source]
+  have hstep2 : (twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
+        ((hodgeCoordinate i) alpha • classicalHodgeBasis V H p i)
+      = (((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+        • classicalHodgeBasis V H p j := by
+    have hread : (finiteHodgeRead (pairBasisIndex i j))
+        ((hodgeCoordinate i) alpha • classicalHodgeBasis V H p i) sourceSlot
+        = (hodgeCoordinate i) alpha := by
+      simp [finiteHodgeRead]
+    simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+      LinearMap.comp_apply, hdiag, hread, hW, pairBasisIndex_target]
+  have hstep3 : (twoSlotHodgeOperator i j (sheetProjectorQ targetSlot))
+        ((((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+          • classicalHodgeBasis V H p j)
+      = (((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+        • classicalHodgeBasis V H p j := by
+    have hread2 : (finiteHodgeRead (pairBasisIndex i j))
+        ((((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+          • classicalHodgeBasis V H p j) targetSlot
+        = ((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ) := by
+      simp [finiteHodgeRead]
+    simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+      LinearMap.comp_apply, sheetProjectorQ_apply, hread2, hW,
+      pairBasisIndex_target]
+  rw [hstep1, hstep2, hstep3, hodgeMatrixUnit_apply]
+  have hc : (forwardScalar sourceSlot targetSlot : ℚ) ≠ 0 := by
+    exact_mod_cast (ne_of_gt (forwardScalar_pos sourceSlot targetSlot))
+  simp only [Submodule.coe_smul]
+  congr 1
+  field_simp
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot

@@ -51,7 +51,7 @@ theorem mem_relativeCodimensionOneFinset_cut
   classical
   unfold relativeCodimensionOneFinset at hy
   rcases Finset.mem_map.mp hy with ⟨a, ha, hya⟩
-  have h2 := Finset.mem_attach.mp ha
+  have h2 := a.2
   rw [Set.Finite.mem_toFinset] at h2
   have hset : a.1 ∈ relativeCutSet V x ∧ Order.coheight a.1 = 1 :=
     Set.mem_sep_iff.mp h2

@@ -134,13 +134,13 @@ theorem preserves_algebraicFiber
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : NativeCanonicalCosmicRealization (V := V) (H := H) i j)
     (alpha : ClassicalHodgeFiber V H p)
-    (halg : alpha ∈ AlgebraicFiber (V := V) (H := H) (p := p)) :
+    (halg : alpha ∈ GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p) :
     liftCosmicWindowOperator
         (GSTClassicalHodgeRankFreePrimitiveGeneration.pairBasisIndex i j)
         (rationalCosmicMatrixUnit
           GSTClassicalHodgeRankFreePrimitiveGeneration.sourceSlot.1
           GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1) alpha ∈
-      AlgebraicFiber (V := V) (H := H) (p := p) := by
+      GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p := by
   have hrange : alpha.1 ∈ LinearMap.range (H.cycleClass p) := by
     rw [smoothProjective_cycleClass_range_eq_atomic_span V H p]
     exact halg
@@ -187,7 +187,7 @@ theorem nativeRealization_of_range_stable
 
 /-- Exact realization form of the canonical fixed-weight target. -/
 theorem nativeCanonicalRealizations_imply_hodgeWeight
-    (hseed : AlgebraicFiber (V := V) (H := H) (p := p) ≠ ⊥)
+    (hseed : GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       NativeCanonicalCosmicRealization (V := V) (H := H) i j) :
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
@@ -198,10 +198,10 @@ theorem nativeCanonicalRealizations_imply_hodgeWeight
 of the canonical limitless cosmic matrix units is sufficient for complete
 fixed-weight Hodge saturation. -/
 theorem algebraicFiber_eq_top_of_nativeCanonicalRealizations
-    (hseed : AlgebraicFiber (V := V) (H := H) (p := p) ≠ ⊥)
+    (hseed : GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       NativeCanonicalCosmicRealization (V := V) (H := H) i j) :
-    AlgebraicFiber (V := V) (H := H) (p := p) = ⊤ := by
+    GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p = ⊤ := by
   exact algebraicFiber_eq_top hseed
     (canonicalCosmicNaturality_of_nativeRealizations R)
 

@@ -57,7 +57,7 @@ noncomputable def presentationMass
   map_smul' := by
     intro q φ
     classical
-    have h0 : ∀ i : CodimensionPoint X p, (fun _ c => c) i 0 = 0 :=
+    have h0 : ∀ i : CodimensionPoint X p, (fun _ (c : ℚ) => c) i 0 = 0 :=
       fun _ => rfl
     rw [Finsupp.sum_smul_index' h0]
     simp only [Finsupp.sum, Finset.smul_sum]
@@ -83,7 +83,7 @@ noncomputable def nativeCycleMass
 the single atom with coefficient one (the PKOL point-cycle bridge). -/
 theorem presentationOfNativeCycle_pointCycle_single
     (V : SmoothProjectiveComplexScheme) (p : Nat)
-    (x : CodimensionPoint V.X p) :
+    (x : CodimensionPoint V.X p) [CompactSpace V.X] :
     presentationOfNativeCycle V.X p (codimensionPointCycle V.X p x) =
       Finsupp.single x (1 : ℚ) := by
   classical
