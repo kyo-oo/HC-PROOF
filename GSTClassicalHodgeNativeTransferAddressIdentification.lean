@@ -33,6 +33,7 @@ open GSTGeometricRealizationStage2D
 open GSTUniversalAddressBridge
 open GSTTransferBridgeV2
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeNativeCycleCosmicShadow
 
 /-- Universal cosmic address of the diagonal cell at Hodge weight `p`. -/
@@ -77,12 +78,18 @@ noncomputable def rationalizeCompactAddress :
   map_add' := by
     intro φ ψ
     classical
-    simp [Finset.sum_add_distrib]
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp)
   map_smul' := by
     intro z φ
     classical
+    have h0 : ∀ i : Nat,
+        (fun _ (b : ℤ) => Finsupp.single i (b : ℚ)) i 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
     ext n
-    simp [smul_eq_mul, mul_assoc]
+    simp only [Finsupp.sum_apply]
+    simp
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]

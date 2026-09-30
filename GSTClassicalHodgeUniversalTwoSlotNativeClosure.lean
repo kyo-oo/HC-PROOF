@@ -175,7 +175,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
     rw [hop]
     funext q
     fin_cases q <;>
-      simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
+      simp [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
         (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
         (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
@@ -198,7 +198,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
     rw [hop]
     funext q
     fin_cases q <;>
-      simp only [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
+      simp [diagonalLefschetzQ, Fin.sum_univ_two, rationalPureBasis]
     · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_backward_zero
         (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))
         (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))

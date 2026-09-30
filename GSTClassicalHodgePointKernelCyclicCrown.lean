@@ -139,9 +139,11 @@ theorem exists_point_presentation
   let R := C.toLocalCycleSpectralRealization
   refine ⟨R.reconstructedPresentation, ?_⟩
   rw [finitePointCycleClassMap_eq_cycleClass_realize]
-  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  letI : CompactSpace V.X :=
+    GSTCompactNativeCyclePresentation.smoothProjectiveCompactSpace V
   have hpres : R.reconstructedPresentation
-      = presentationOfNativeCycle V.X p R.reconstructedCycle := by
+      = GSTCompactNativeCyclePresentation.presentationOfNativeCycle V.X p
+          R.reconstructedCycle := by
     unfold LocalCycleSpectralRealization.reconstructedPresentation
     rfl
   rw [hpres,

@@ -96,16 +96,14 @@ theorem preserves_algebraicFiber
     (R : ProjectiveCosmicRealization G i j)
     (alpha : ClassicalHodgeFiber V H p)
     (halg : alpha ∈
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
-        (V := V) (H := H) (p := p)) :
+      GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p) :
     GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.liftCosmicWindowOperator
-        (GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.pairBasisIndex i j)
+        (GSTClassicalHodgeRankFreePrimitiveGeneration.pairBasisIndex i j)
         (GSTClassicalHodgeLimitlessCosmicMatrixUnits.rationalCosmicMatrixUnit
-          GSTClassicalHodgeFullArsenalIrreducibility.sourceSlot.1
-          GSTClassicalHodgeFullArsenalIrreducibility.targetSlot.1)
+          GSTClassicalHodgeRankFreePrimitiveGeneration.sourceSlot.1
+          GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1)
         alpha ∈
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
-        (V := V) (H := H) (p := p) :=
+      GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p :=
   R.toNativeCanonical.preserves_algebraicFiber alpha halg
 
 end ProjectiveCosmicRealization
@@ -126,12 +124,10 @@ limitless read/write operation saturates the entire Hodge fiber. -/
 theorem algebraicFiber_eq_top_of_projectiveCosmicRealizations
     (G : GeometricCycleClassSpine V H)
     (hseed :
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
-        (V := V) (H := H) (p := p) ≠ ⊥)
+      GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       ProjectiveCosmicRealization G i j) :
-    GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
-        (V := V) (H := H) (p := p) = ⊤ := by
+    GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p = ⊤ := by
   exact algebraicFiber_eq_top hseed
     (canonicalCosmicNaturality_of_projectiveCorrespondences G R)
 
@@ -140,8 +136,7 @@ correspondence algebra. -/
 theorem hodge_weight_of_projectiveCosmicRealizations
     (G : GeometricCycleClassSpine V H)
     (hseed :
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
-        (V := V) (H := H) (p := p) ≠ ⊥)
+      GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       ProjectiveCosmicRealization G i j) :
     rationalHodgeSubspace (H.hodgeBigrading p) ≤

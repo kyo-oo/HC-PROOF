@@ -52,7 +52,7 @@ variable {p : Nat}
 /-- If the algebraic Hodge fiber is already the whole Hodge fiber, canonical
 cosmic naturality is automatic. -/
 theorem canonicalCosmicNaturality_of_eq_top
-    (htop : AlgebraicFiber (V := V) (H := H) (p := p) = ⊤) :
+    (htop : GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p = ⊤) :
     CanonicalCosmicNaturality (V := V) (H := H) p := by
   intro i j alpha halpha
   rw [htop]
@@ -62,9 +62,9 @@ theorem canonicalCosmicNaturality_of_eq_top
 Hodge seed, preservation by the one true limitless cosmic read/write operator
 is equivalent to complete algebraic saturation of the weight-p Hodge fiber. -/
 theorem canonicalCosmicNaturality_iff_algebraicFiber_eq_top
-    (hseed : AlgebraicFiber (V := V) (H := H) (p := p) ≠ ⊥) :
+    (hseed : GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p ≠ ⊥) :
     CanonicalCosmicNaturality (V := V) (H := H) p ↔
-      AlgebraicFiber (V := V) (H := H) (p := p) = ⊤ := by
+      GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p = ⊤ := by
   constructor
   · intro hcosmic
     exact algebraicFiber_eq_top hseed hcosmic
@@ -75,7 +75,7 @@ algebraic Hodge fiber. -/
 theorem hodgeWeight_iff_algebraicFiber_eq_top :
     (rationalHodgeSubspace (H.hodgeBigrading p) ≤
       LinearMap.range (H.cycleClass p)) ↔
-      AlgebraicFiber (V := V) (H := H) (p := p) = ⊤ := by
+      GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p = ⊤ := by
   constructor
   · intro h
     apply top_unique
@@ -86,7 +86,7 @@ theorem hodgeWeight_iff_algebraicFiber_eq_top :
     exact hrange
   · intro htop alpha halpha
     let alphaH : ClassicalHodgeFiber V H p := ⟨alpha, halpha⟩
-    have halg : alphaH ∈ AlgebraicFiber (V := V) (H := H) (p := p) := by
+    have halg : alphaH ∈ GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p := by
       rw [htop]
       trivial
     rw [smoothProjective_cycleClass_range_eq_atomic_span V H p]
@@ -95,7 +95,7 @@ theorem hodgeWeight_iff_algebraicFiber_eq_top :
 /-- With a seed, the one canonical limitless naturality law is therefore
 literally equivalent to the exact weight-p Hodge target. -/
 theorem canonicalCosmicNaturality_iff_hodgeWeight
-    (hseed : AlgebraicFiber (V := V) (H := H) (p := p) ≠ ⊥) :
+    (hseed : GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p ≠ ⊥) :
     CanonicalCosmicNaturality (V := V) (H := H) p ↔
       rationalHodgeSubspace (H.hodgeBigrading p) ≤
         LinearMap.range (H.cycleClass p) := by
@@ -130,7 +130,7 @@ theorem all_native_point_cycles_have_same_base_shadow
 while the sole fixed-weight completion target is canonical multiplicity
 naturality. -/
 theorem canonical_naturality_equivalence_crown
-    (hseed : AlgebraicFiber (V := V) (H := H) (p := p) ≠ ⊥) :
+    (hseed : GSTClassicalHodgeRankFreeArsenalIrreducibility.AlgebraicHodgeSubspace V H p ≠ ⊥) :
     (CanonicalCosmicNaturality (V := V) (H := H) p ↔
       rationalHodgeSubspace (H.hodgeBigrading p) ≤
         LinearMap.range (H.cycleClass p))
