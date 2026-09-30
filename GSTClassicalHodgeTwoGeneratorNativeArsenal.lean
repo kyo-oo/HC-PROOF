@@ -133,6 +133,7 @@ theorem ambientSourceProjector_on_hodge
     rfl
   simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
     LinearMap.comp_apply, hsrc, hW, pairBasisIndex_source]
+  simp [Submodule.coe_smul]
 
 /-- Native point-lift realization of the two minimal noncommuting primitives. -/
 structure TwoGeneratorNative
@@ -176,7 +177,6 @@ theorem codeLefschetzCodeWord_nativePointLifts
 
 /-- Rational rescaling preserves native point lifts. -/
 theorem hasNativePointLifts_smul
-    {i j : ClassicalHodgeBasisIndex V H p}
     (c : ℚ)
     {T : GSTGeometricRealizationStage2F.RationalSingularCohomology
         H.analytification (2 * p) →ₗ[ℚ]

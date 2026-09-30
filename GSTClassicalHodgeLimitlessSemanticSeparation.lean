@@ -113,8 +113,9 @@ theorem canonicalCosmicAmbient_on_hodge_zeroCycleClassData
     canonicalCosmicAmbient (V := V) (H := zeroCycleClassData H) i j alpha.1 =
       (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit
         (V := V) (H := H) i j alpha).1 := by
-  rw [canonicalCosmicAmbient_on_hodge]
-  rw [GSTClassicalHodgeLimitlessCosmicMatrixUnits.hodgeMatrixUnit_eq_lift_limitless_cosmic]
+  simp only [canonicalCosmicAmbient]
+  rw [extendHodgeEndomorphism_on_hodge,
+    hodgeMatrixUnit_zeroCycleClassData]
   rfl
 
 /-- **LIMITLESS SEMANTIC-SEPARATION CROWN.**
@@ -142,9 +143,8 @@ theorem final_externalization_must_use_cycleClass_semantics
     (p : Nat)
     (hH : rationalHodgeSubspace (H.hodgeBigrading p) ≠ ⊥) :
     ∃ H0 : HodgeBigradedBettiData V,
-      H0.analytification = H.analytification
-      ∧ H0.hodgeBigrading = H.hodgeBigrading
-      ∧ ¬ BigradedBettiHodgeStatement V H0 :=
+      H0 = zeroCycleClassData H ∧
+      ¬ BigradedBettiHodgeStatement V H0 :=
   exists_semantic_countermodel_of_nontrivial_hodge H p hH
 
 #check rationalHodgeSubspace_zeroCycleClassData
