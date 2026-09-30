@@ -117,6 +117,25 @@ noncomputable def ambientUniversalTwoSlotWord
       ((ambientTwoStepLefschetz i j).comp
         (ambientSourceProjector i j)))
 
+/-- Compute the actual two-slot GST kernel before lifting.  This identity also
+handles repeated Hodge basis indices; no injectivity of the selector is needed. -/
+theorem twoSlotLefschetz_kernel :
+    diagonalLefschetzQ 2 2 =
+      (2 : ℚ) • pureMatrixUnit sourceSlot targetSlot := by
+  apply LinearMap.ext
+  intro a
+  funext q
+  fin_cases q <;>
+    norm_num [diagonalLefschetzQ, pureMatrixUnit, rationalPureBasis,
+      sourceSlot, targetSlot, Fin.sum_univ_two,
+      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel,
+      GSTUniversalLefschetzKernel.worldForward,
+      GSTUniversalLefschetzKernel.worldCausalDistance,
+      GSTUniversalLefschetzKernel.carryDistance,
+      GSTUniversalLefschetzKernel.digitDistance,
+      GSTGlobalPureHodgeCosmology.pureDiagonalState,
+      GSTDimensionFreeHodgeDiagonal.diagonalState]
+
 /-- On the genuine Hodge fiber, the ambient universal word is exactly the
 rank-free matrix unit. -/
 theorem ambientUniversalTwoSlotWord_on_hodge
@@ -156,14 +175,33 @@ theorem ambientUniversalTwoSlotWord_on_hodge
       (twoSlotHodgeOperator i j (sheetProjectorQ targetSlot))
         ((twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
           ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha))).1 = _
-  have hfinite :
-      ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
-        ((sheetProjectorQ targetSlot).comp
-          ((diagonalLefschetzQ 2 2).comp
-            (sheetProjectorQ sourceSlot)))) =
-      forwardArsenalWord sourceSlot targetSlot := by
+  have hproj (r : Fin 2) :
+      sheetProjectorQ r = pureMatrixUnit r r := rfl
+  have hscale :
+      liftFiniteHodgeOperator (pairBasisIndex i j)
+        ((2 : ℚ) • pureMatrixUnit sourceSlot targetSlot) =
+      (2 : ℚ) • hodgeMatrixUnit i j := by
+    ext a
+    simp [liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
+      pureMatrixUnit, rationalPureBasis, hodgeMatrixUnit_apply]
+  have hsrc' :
+      twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot) =
+        hodgeMatrixUnit i i := by
+    rw [twoSlotHodgeOperator, hproj, liftFiniteHodgeOperator_matrixUnit]
     rfl
-  simpa [twoSlotHodgeOperator, hfinite, hlift]
+  have htgt' :
+      twoSlotHodgeOperator i j (sheetProjectorQ targetSlot) =
+        hodgeMatrixUnit j j := by
+    rw [twoSlotHodgeOperator, hproj, liftFiniteHodgeOperator_matrixUnit]
+    rfl
+  have hL' :
+      twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) =
+        (2 : ℚ) • hodgeMatrixUnit i j := by
+    rw [twoSlotHodgeOperator, twoSlotLefschetz_kernel, hscale]
+  rw [hsrc', htgt', hL']
+  congr 1
+  norm_num [forwardScalar, sourceSlot, targetSlot,
+    hodgeMatrixUnit_apply, map_smul, smul_smul]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot

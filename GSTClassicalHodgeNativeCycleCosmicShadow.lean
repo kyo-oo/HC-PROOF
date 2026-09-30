@@ -37,6 +37,7 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointKernelOperatorLift
 open GSTClassicalHodgePointNormalForm
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
@@ -50,11 +51,13 @@ noncomputable def presentationMass
   map_add' := by
     intro φ ψ
     classical
-    simp
+    exact Finsupp.sum_add_index' (fun _ => rfl) (fun _ _ _ => rfl)
   map_smul' := by
     intro q φ
     classical
-    simp [smul_eq_mul]
+    change (q • φ).sum (fun _ c => c) = q • φ.sum (fun _ c => c)
+    rw [Finsupp.sum_smul_index' (fun _ => rfl)]
+    simp only [Finsupp.sum, smul_eq_mul, Finset.mul_sum]
 
 @[simp]
 theorem presentationMass_single
@@ -72,12 +75,12 @@ noncomputable def nativeCycleMass
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   exact presentationMass.comp (presentationOfNativeCycleLinear V.X p)
 
-/-- The mass of a unit point cycle is one. -/
 /-- Compact point normal form: the presentation of a genuine point cycle is
 the single atom with coefficient one (the PKOL point-cycle bridge). -/
 theorem presentationOfNativeCycle_pointCycle_single
     (V : SmoothProjectiveComplexScheme) (p : Nat)
     (x : CodimensionPoint V.X p) :
+    letI : CompactSpace V.X := smoothProjectiveCompactSpace V
     presentationOfNativeCycle V.X p (codimensionPointCycle V.X p x) =
       Finsupp.single x (1 : ℚ) := by
   classical

@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
 
       - name: Install Lean and pinned Mathlib
@@ -31,6 +31,14 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake update
           lake exe cache get
+
+      - name: Restore compiled project modules
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: universal-cycle-lean433-${{ runner.os }}-${{ github.sha }}-${{ github.run_attempt }}
+          restore-keys: |
+            universal-cycle-lean433-${{ runner.os }}-
 
       - name: Build theorem dependency closure
         shell: bash
@@ -55,6 +63,13 @@ jobs:
             exit 1
           fi
           echo "UNIVERSAL LIMITLESS CYCLE GEOMETRY GATE: no sorry/sorryAx detected"
+
+      - name: Save compiled project modules
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: universal-cycle-lean433-${{ runner.os }}-${{ github.sha }}-${{ github.run_attempt }}
 
       - name: Upload diagnostics
         if: always()
