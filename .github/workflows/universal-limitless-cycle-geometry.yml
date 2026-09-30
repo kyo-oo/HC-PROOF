@@ -45,7 +45,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTClassicalHodgeGeometricCycleClassSpine GSTClassicalHodgeProjectiveDegreeTrace 2>&1 | tee universal-limitless-cycle-geometry.log
+          lake build GSTClassicalHodgeGeometricCycleClassSpine GSTClassicalHodgeProjectiveDegreeSemantics 2>&1 | tee universal-limitless-cycle-geometry.log
 
       - name: Compile universal limitless cycle geometry theorem
         shell: bash

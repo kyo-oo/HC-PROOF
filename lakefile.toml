@@ -223,6 +223,7 @@ roots = [
   "GSTClassicalHodgeOmniversalSeparatorGhostCrown",
   "GSTClassicalHodgePointwiseNativeCosmicClosure",
   "GSTClassicalHodgeProjectiveDegreeTrace",
+  "GSTClassicalHodgeProjectiveDegreeSemantics",
   "GSTClassicalHodgeProjectiveOrbitIrreducibilityAudit",
   "GSTClassicalHodgeProjectiveSeparatorCarrierDescent",
   "GSTClassicalHodgeProjectiveSeparatorSuccessorPoint",

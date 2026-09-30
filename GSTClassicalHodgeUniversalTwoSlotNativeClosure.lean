@@ -181,19 +181,27 @@ theorem ambientUniversalTwoSlotWord_on_hodge
       liftFiniteHodgeOperator (pairBasisIndex i j)
         ((2 : ℚ) • pureMatrixUnit sourceSlot targetSlot) =
       (2 : ℚ) • hodgeMatrixUnit i j := by
-    ext a
-    simp [liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
-      pureMatrixUnit, rationalPureBasis, hodgeMatrixUnit_apply]
+    have hs :
+        liftFiniteHodgeOperator (pairBasisIndex i j)
+          ((2 : ℚ) • pureMatrixUnit sourceSlot targetSlot) =
+        (2 : ℚ) • liftFiniteHodgeOperator (pairBasisIndex i j)
+          (pureMatrixUnit sourceSlot targetSlot) := by
+      apply LinearMap.ext
+      intro a
+      simp [liftFiniteHodgeOperator]
+    exact hs.trans (congrArg (fun T => (2 : ℚ) • T)
+      (liftFiniteHodgeOperator_matrixUnit
+        (pairBasisIndex i j) sourceSlot targetSlot))
   have hsrc' :
       twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot) =
-        hodgeMatrixUnit i i := by
-    rw [twoSlotHodgeOperator, hproj, liftFiniteHodgeOperator_matrixUnit]
-    rfl
+        hodgeMatrixUnit i i :=
+    liftFiniteHodgeOperator_matrixUnit
+      (pairBasisIndex i j) sourceSlot sourceSlot
   have htgt' :
       twoSlotHodgeOperator i j (sheetProjectorQ targetSlot) =
-        hodgeMatrixUnit j j := by
-    rw [twoSlotHodgeOperator, hproj, liftFiniteHodgeOperator_matrixUnit]
-    rfl
+        hodgeMatrixUnit j j :=
+    liftFiniteHodgeOperator_matrixUnit
+      (pairBasisIndex i j) targetSlot targetSlot
   have hL' :
       twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) =
         (2 : ℚ) • hodgeMatrixUnit i j := by

@@ -1,5 +1,5 @@
 import GSTClassicalHodgeGeometricCycleClassSpine
-import GSTClassicalHodgeProjectiveDegreeTrace
+import GSTClassicalHodgeProjectiveDegreeSemantics
 
 /-!
 # GST CLASSICAL HODGE — UNIVERSAL LIMITLESS CYCLE GEOMETRY
