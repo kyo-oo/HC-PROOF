@@ -56,8 +56,20 @@ noncomputable def labelPresentation
     FiniteCodimensionPresentation V.X p →ₗ[ℚ]
       FiberedNativeAddress V H p where
   toFun φ := φ.sum fun x q => q • atom V H p i x
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+  map_add' := by
+    intro φ ψ
+    classical
+    exact Finsupp.sum_add_index'
+      (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _)
+  map_smul' := by
+    intro q φ
+    classical
+    have h0 : ∀ x : CodimensionPoint V.X p,
+        (fun x (c : ℚ) => c • atom V H p i x) x 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp [smul_smul]
 
 @[simp]
 theorem labelPresentation_single
@@ -78,7 +90,8 @@ theorem toNativeCycle_labelPresentation
   classical
   induction φ using Finsupp.induction_linear with
   | zero => simp [labelPresentation, toNativeCycle]
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg =>
+      simp [hf, hg, realizeFiniteCodimensionPresentation_add]
   | single x q =>
       simp [labelPresentation_single, toNativeCycle_atom,
         realizeFiniteCodimensionPresentation_single]
@@ -92,8 +105,22 @@ noncomputable def liftNativeOperator
     q • labelPresentation ix.1
       (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
         V p A ix.2)
-  map_add' := by intro Φ Ψ; classical; simp
-  map_smul' := by intro q Φ; classical; simp [smul_smul]
+  map_add' := by
+    intro Φ Ψ
+    classical
+    exact Finsupp.sum_add_index'
+      (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _)
+  map_smul' := by
+    intro q Φ
+    classical
+    have h0 : ∀ ix : FiberedNativeAtom V H p,
+        (fun ix (c : ℚ) => c • labelPresentation ix.1
+          (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
+            V p A ix.2)) ix 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp [smul_smul]
 
 /-- Exact action of the lifted operator on a common-refinement atom. -/
 @[simp]
