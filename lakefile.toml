@@ -384,6 +384,8 @@ roots = [
   "GSTClassicalHodgeSupportCardinalityBridge",
   "GSTClassicalHodgeTotalSheetMatrixUnit",
   "GSTClassicalHodgeTwoGeneratorNativeArsenal",
+  "GSTClassicalHodgeUniversalLimitlessCycleGeometry",
+  "GSTClassicalHodgeUniversalLimitlessCycleGeometryFinale",
   "GSTClassicalHodgeUniversalTwoSlotNativeClosure",
   "GSTClassicalHodgeUniversalTwoSlotSaturation",
   # GLM repair wiring: the Hodge gate's `lake env lean` steps below need these
