@@ -189,8 +189,8 @@ theorem twoSlotLefschetz_kernel :
     fin_cases q <;> simp [rationalPureBasis, sourceSlot, targetSlot]
   rw [ha]
   simp only [map_add, map_smul, hb0, hb1, smul_zero, add_zero, smul_smul]
-  simp [rationalPureBasis, sourceSlot, targetSlot, pureMatrixUnit,
-    mul_comm, mul_left_comm]
+  simp [rationalPureBasis, sourceSlot, targetSlot, pureMatrixUnit]
+  rw [smul_smul, mul_comm]
 
 /-- On the genuine Hodge fiber, the ambient universal word is exactly the
 rank-free matrix unit. -/
