@@ -91,7 +91,8 @@ theorem toNativeCycle_labelPresentation
   induction φ using Finsupp.induction_linear with
   | zero => simp [labelPresentation, toNativeCycle]
   | add f g hf hg =>
-      simp [hf, hg, realizeFiniteCodimensionPresentation_add]
+      simp [hf, hg,
+        GSTClassicalHodgePrincipalCutSuccessorOperator.realizeFiniteCodimensionPresentation_add]
   | single x q =>
       simp [labelPresentation_single, toNativeCycle_atom,
         realizeFiniteCodimensionPresentation_single]
@@ -156,6 +157,7 @@ theorem toNativeCycle_liftNativeOperator
       rw [toNativeCycle_labelPresentation]
       rw [GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation_realize]
       rw [toNativeCycle_atom]
+      rw [map_smul]
 
 /-- Operator equality form of the strict commuting square. -/
 theorem toNativeCycle_comp_liftNativeOperator
@@ -211,7 +213,7 @@ theorem toNativeCycle_liftProjectiveKernel
     (K : ProjectiveNativeKernel V p)
     (Φ : FiberedNativeAddress V H p) :
     toNativeCycle V H p (liftProjectiveKernel K Φ) =
-      K.operator (toNativeCycle V H p Φ) :=
+      ProjectiveNativeKernel.operator K (toNativeCycle V H p Φ) :=
   toNativeCycle_liftNativeOperator K.operator Φ
 
 /-- The limitless base face of a lifted native operator is exactly the cosmic
