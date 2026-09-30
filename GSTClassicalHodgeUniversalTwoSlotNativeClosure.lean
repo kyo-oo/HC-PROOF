@@ -189,7 +189,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
         (A := 2) (B := 2)
         (n := 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2) (0 : Fin 2) (1 : Fin 2))
         (0 : Fin 2) (1 : Fin 2)]
-      norm_num [forwardScalar, sourceSlot, targetSlot]
+      norm_num [forwardScalar, sourceSlot, targetSlot, pureWeightGap]
   have hb1 : diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
     have hop : diagonalLefschetzQ 2 2
         = diagonalLefschetzQ 2 (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
@@ -221,8 +221,9 @@ theorem ambientUniversalTwoSlotWord_on_hodge
     intro w
     have hw : w = (w sourceSlot) • rationalPureBasis sourceSlot
         + (w targetSlot) • rationalPureBasis targetSlot := by
-      simpa [Fin.sum_univ_two, sourceSlot, targetSlot] using
-        rationalPureWindow_eq_sum_basis w
+      classical
+      funext r
+      fin_cases r <;> simp [rationalPureBasis, sourceSlot, targetSlot]
     rw [hw]
     simp only [map_add, map_smul, hb0, hb1, smul_zero, add_zero, smul_smul]
   -- The three fiber-level steps of the ambient universal two-slot word.

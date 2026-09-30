@@ -136,7 +136,7 @@ theorem extractedLiveBasisCycle_spec
         (C.spectral.toFiniteSpectralFamily.isolatorPolynomial i)
         (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) = _
   rw [hproj]
-  simp [hc]
+  field_simp [hc]
 
 /-- Reassemble the original Hodge class from the projector-extracted native
 basis cycles on its finite live support. -/
