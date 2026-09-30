@@ -52,14 +52,14 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeUniversalLimitlessCycleGeometry.lean 2>&1 | tee -a universal-limitless-cycle-geometry.log
+          lake build GSTClassicalHodgeUniversalLimitlessCycleGeometry 2>&1 | tee -a universal-limitless-cycle-geometry.log
 
       - name: Compile universal limitless cycle geometry finale
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeUniversalLimitlessCycleGeometryFinale.lean 2>&1 | tee -a universal-limitless-cycle-geometry.log
+          lake build GSTClassicalHodgeUniversalLimitlessCycleGeometryFinale 2>&1 | tee -a universal-limitless-cycle-geometry.log
 
       - name: Trust audit
         shell: bash
