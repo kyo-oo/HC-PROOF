@@ -50,13 +50,31 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
+/-- Ambient extension of one endomorphism of the genuine classical Hodge
+fiber to rational cohomology. -/
+noncomputable def extendHodgeEndomorphism
+    (T : Module.End ℚ (ClassicalHodgeFiber V H p)) :
+    Module.End ℚ (RationalSingularCohomology H.analytification (2 * p)) :=
+  Classical.choose
+    (LinearMap.exists_extend
+      ((rationalHodgeSubspace (H.hodgeBigrading p)).subtype.comp T))
+
+/-- Exact restriction law of the ambient extension on the genuine fiber. -/
+theorem extendHodgeEndomorphism_on_hodge
+    (T : Module.End ℚ (ClassicalHodgeFiber V H p))
+    (alpha : ClassicalHodgeFiber V H p) :
+    extendHodgeEndomorphism T alpha.1 = (T alpha).1 := by
+  have h := Classical.choose_spec
+    (LinearMap.exists_extend
+      ((rationalHodgeSubspace (H.hodgeBigrading p)).subtype.comp T))
+  exact LinearMap.congr_fun h alpha
+
 /-- Ambient canonical limitless matrix-unit operator attached to one ordered
 pair of genuine Hodge-basis directions. -/
 noncomputable def canonicalCosmicAmbient
     (i j : ClassicalHodgeBasisIndex V H p) :
     Module.End ℚ (RationalSingularCohomology H.analytification (2 * p)) :=
-  GSTClassicalHodgeRankFreePrimitiveGeneration.extendHodgeEndomorphism
-    (V := V) (H := H)
+  extendHodgeEndomorphism
     (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit i j)
 
 /-- On the genuine Hodge fiber this ambient extension is exactly the observed
@@ -65,10 +83,14 @@ theorem canonicalCosmicAmbient_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
     (alpha : ClassicalHodgeFiber V H p) :
     canonicalCosmicAmbient i j alpha.1 =
-      liftCosmicWindowOperator (pairBasisIndex i j)
-        (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha := by
-  rw [GSTClassicalHodgeRankFreePrimitiveGeneration.extendHodgeEndomorphism_on_hodge]
-  rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
+      liftCosmicWindowOperator
+        (GSTClassicalHodgeRankFreePrimitiveGeneration.pairBasisIndex i j)
+        (rationalCosmicMatrixUnit
+          GSTClassicalHodgeRankFreePrimitiveGeneration.sourceSlot.1
+          GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1) alpha := by
+  simp only [canonicalCosmicAmbient]
+  rw [extendHodgeEndomorphism_on_hodge,
+    hodgeMatrixUnit_eq_lift_limitless_cosmic]
 
 /-- A genuine native realization of the canonical cosmic read/write action.
 The commuting-square law is required on all native cycles; the cohomological
@@ -113,8 +135,11 @@ theorem preserves_algebraicFiber
     (R : NativeCanonicalCosmicRealization (V := V) (H := H) i j)
     (alpha : ClassicalHodgeFiber V H p)
     (halg : alpha ∈ AlgebraicFiber (V := V) (H := H) (p := p)) :
-    liftCosmicWindowOperator (pairBasisIndex i j)
-        (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha ∈
+    liftCosmicWindowOperator
+        (GSTClassicalHodgeRankFreePrimitiveGeneration.pairBasisIndex i j)
+        (rationalCosmicMatrixUnit
+          GSTClassicalHodgeRankFreePrimitiveGeneration.sourceSlot.1
+          GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1) alpha ∈
       AlgebraicFiber (V := V) (H := H) (p := p) := by
   have hrange : alpha.1 ∈ LinearMap.range (H.cycleClass p) := by
     rw [smoothProjective_cycleClass_range_eq_atomic_span V H p]
@@ -123,8 +148,11 @@ theorem preserves_algebraicFiber
   have hnat := R.naturality Z
   rw [hZ, canonicalCosmicAmbient_on_hodge i j alpha] at hnat
   have hout :
-      liftCosmicWindowOperator (pairBasisIndex i j)
-          (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha ∈
+      liftCosmicWindowOperator
+          (GSTClassicalHodgeRankFreePrimitiveGeneration.pairBasisIndex i j)
+          (rationalCosmicMatrixUnit
+            GSTClassicalHodgeRankFreePrimitiveGeneration.sourceSlot.1
+            GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1) alpha ∈
         LinearMap.range (H.cycleClass p) :=
     ⟨R.native Z, hnat⟩
   rw [smoothProjective_cycleClass_range_eq_atomic_span V H p] at hout
@@ -150,19 +178,12 @@ theorem nativeRealization_of_range_stable
       ∀ alpha ∈ LinearMap.range (H.cycleClass p),
         canonicalCosmicAmbient i j alpha ∈ LinearMap.range (H.cycleClass p)) :
     Nonempty (NativeCanonicalCosmicRealization (V := V) (H := H) i j) := by
-  let A : AtomicStableOperator (V := V) (H := H) (p := p) where
-    operator := canonicalCosmicAmbient i j
-    atomic_stable := by
-      intro alpha halpha
-      rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halpha ⊢
-      exact hstable alpha halpha
-  let L := liftedCycleOperator A
   refine ⟨{
-    native := L
+    native := liftedCycleOperator (canonicalCosmicAmbient i j) hstable
     naturality := ?_
   }⟩
   intro Z
-  exact liftedCycleOperator_commutes A Z
+  exact cycleClass_liftedCycleOperator (canonicalCosmicAmbient i j) hstable Z
 
 /-- Exact realization form of the canonical fixed-weight target. -/
 theorem nativeCanonicalRealizations_imply_hodgeWeight
