@@ -59,7 +59,7 @@ def twoSlotCode : Module.End ℚ (RationalPureWindow 2) where
 theorem twoSlotCode_source
     (a : RationalPureWindow 2) :
     twoSlotCode a sourceSlot = 0 := by
-  simp
+  simp [sourceSlot]
 
 @[simp]
 theorem twoSlotCode_target
@@ -108,20 +108,30 @@ theorem ambientTargetProjector_on_hodge_eq_code
     extendHodgeEndomorphism_on_hodge]
   unfold twoSlotHodgeOperator twoSlotCodeHodge
   rw [sheetProjectorQ_target_eq_code]
+  rfl
 
 /-- The source projector ambient action agrees on the Hodge fiber with
 identity minus the code observable. -/
-theorem ambientSourceProjector_on_hodge_eq_id_sub_code
+theorem ambientSourceProjector_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
     (alpha : ClassicalHodgeFiber V H p) :
     ambientSourceProjector i j alpha.1 =
-      alpha.1 - ambientTwoSlotCode i j alpha.1 := by
-  unfold ambientSourceProjector ambientTwoSlotCode
-  rw [extendHodgeEndomorphism_on_hodge,
-    extendHodgeEndomorphism_on_hodge]
-  unfold twoSlotHodgeOperator twoSlotCodeHodge
-  rw [sheetProjectorQ_source_eq_id_sub_code]
-  rfl
+      (hodgeCoordinate i) alpha •
+        ↑(classicalHodgeBasis V H p i) := by
+  unfold ambientSourceProjector
+  rw [extendHodgeEndomorphism_on_hodge]
+  have hW : ∀ (k : ℚ) (r : Fin 2),
+      finiteHodgeWrite (pairBasisIndex i j) (k • rationalPureBasis r) =
+        k • classicalHodgeBasis V H p (pairBasisIndex i j r) := by
+    intro k r
+    simp only [finiteHodgeWrite, map_smul, Fin.sum_univ_two]
+    fin_cases r <;> simp [rationalPureBasis]
+  have hsrc : (sheetProjectorQ sourceSlot)
+      ((finiteHodgeRead (pairBasisIndex i j)) alpha)
+      = ((hodgeCoordinate i) alpha) • rationalPureBasis sourceSlot := by
+    rfl
+  simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+    LinearMap.comp_apply, hsrc, hW, pairBasisIndex_source]
 
 /-- Native point-lift realization of the two minimal noncommuting primitives. -/
 structure TwoGeneratorNative
@@ -167,8 +177,8 @@ theorem codeLefschetzCodeWord_nativePointLifts
 theorem hasNativePointLifts_smul
     {i j : ClassicalHodgeBasisIndex V H p}
     (c : ℚ)
-    (T : RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
-      RationalSingularCohomology H.analytification (2 * p))
+    {T : RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
+      RationalSingularCohomology H.analytification (2 * p)}
     (h : HasNativePointLifts (p := p) (cl := H.cycleClass p) T) :
     HasNativePointLifts (p := p) (cl := H.cycleClass p) (c • T) := by
   intro x
@@ -187,7 +197,7 @@ theorem normalizedWord_nativePointLifts
           ((ambientTwoStepLefschetz i j).comp
             (LinearMap.id - ambientTwoSlotCode i j)))) := by
   exact hasNativePointLifts_smul _
-    _ R.codeLefschetzCodeWord_nativePointLifts
+    R.codeLefschetzCodeWord_nativePointLifts
 
 end TwoGeneratorNative
 
