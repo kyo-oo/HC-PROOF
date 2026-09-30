@@ -64,8 +64,8 @@ noncomputable def pureWeightToUniversalAddress :
     by_cases hn : n ∈ Set.range pureWeightAddress
     · rcases hn with ⟨p, hp⟩
       subst hp
-      simp [pureWeightToUniversalAddress, Finsupp.embDomain_apply_self]
-    · simp [pureWeightToUniversalAddress, Finsupp.embDomain_of_notMem_range, hn]
+      simp [Finsupp.embDomain_apply_self]
+    · simp [Finsupp.embDomain_of_notMem_range, hn]
 
 /-- A pure weight basis becomes the universal address basis of its diagonal
 cosmic cell. -/
@@ -91,8 +91,8 @@ noncomputable def rationalizeCompactAddress :
     intro z φ
     classical
     ext n
-    simp only [rationalizeCompactAddress, Finsupp.sum_apply,
-      Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, Int.cast_mul]
+    simp only [Finsupp.sum_apply, Finsupp.coe_smul,
+      Pi.smul_apply, smul_eq_mul, Int.cast_mul]
     simp
 
 /-- Rationalization of one integral address basis vector. -/

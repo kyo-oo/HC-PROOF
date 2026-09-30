@@ -133,13 +133,15 @@ theorem extractedLiveBasisCycle_spec
   rw [S.cycleClass_cyclePolyEval]
   rw [C.seedCycle_class]
   have hpoly :
-      linearPolyEval S.operatorPair.cohomologyOperator
-          (F.isolatorPolynomial i)
+      linearPolyEval C.spectral.observable
+          (C.spectral.toFiniteSpectralFamily.isolatorPolynomial i)
           (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) =
-        c • (classicalHodgeBasis V H p i.1).1 := by
-    simpa [S, F, c, C.nativeSpectral, C.spectral_basisIndex] using hproj
+      (C.isolatedCoefficient i *
+          C.spectral.toFiniteSpectralFamily.isolatorScale i) •
+        (classicalHodgeBasis V H p i.1).1 := by
+    simpa only [C.spectral_basisIndex] using hproj
   rw [hpoly]
-  simp [c, hc, mul_smul]
+  simp [hc, mul_smul]
 
 /-- Reassemble the original Hodge class from the projector-extracted native
 basis cycles on its finite live support. -/
