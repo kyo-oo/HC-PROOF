@@ -114,9 +114,12 @@ theorem canonicalCosmicAmbient_on_hodge_zeroCycleClassData
       (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit
         (V := V) (H := H) i j alpha).1 := by
   simp only [canonicalCosmicAmbient]
-  rw [extendHodgeEndomorphism_on_hodge,
-    hodgeMatrixUnit_zeroCycleClassData]
-  rfl
+  have hstep := extendHodgeEndomorphism_on_hodge
+    (V := V) (H := zeroCycleClassData H)
+    (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit
+      (V := V) (H := zeroCycleClassData H) i j) alpha
+  rw [hstep]
+  exact congrArg Subtype.val (hodgeMatrixUnit_zeroCycleClassData H p i j alpha)
 
 /-- **LIMITLESS SEMANTIC-SEPARATION CROWN.**
 A nonzero rational Hodge class is seen by exactly the same unrestricted Hodge
