@@ -32,6 +32,7 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open AlgebraicGeometry
+open scoped BigOperators
 open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeUniversalLimitlessCycleGeometry
@@ -227,5 +228,118 @@ theorem occupied_stratum_hodge_and_cycle_range_nontrivial
 #print axioms cycleClass_nonzero_on_every_occupied_stratum
 #print axioms occupied_stratum_hodge_and_cycle_range_nontrivial
 #print axioms UniversalLimitlessCycleGeometry.zeroCycleClassData_impossible_of_nonempty
+
+
+/-- Nonzero effective native presentations have strictly positive Betti trace.
+This proves nonvanishing for arbitrary finite positive combinations, not just
+for the unit point generators. -/
+theorem effective_presentation_trace_pos
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (φ : FiniteCodimensionPresentation V.X q)
+    (heff : ∀ x, 0 ≤ φ x) (hne : φ ≠ 0) :
+    0 < D.trace q
+      (H.cycleClass q (realizeFiniteCodimensionPresentation V.X q φ)) := by
+  classical
+  rw [D.trace_realize_presentation]
+  change 0 < ∑ x ∈ φ.support, φ x * D.pointDegree q x
+  apply Finset.sum_pos
+  · intro x _
+    exact mul_nonneg (heff x) (le_of_lt (D.pointDegree_pos q x))
+  · obtain ⟨x, hx⟩ := Finsupp.support_nonempty_iff.mpr hne
+    refine ⟨x, hx, mul_pos ?_ (D.pointDegree_pos q x)⟩
+    exact lt_of_le_of_ne (heff x) (Ne.symm (Finsupp.mem_support_iff.mp hx))
+
+/-- Positive-cone faithfulness: no nonzero effective finite cycle can disappear
+under the genuine cycle-class map. -/
+theorem effective_presentation_cycleClass_ne_zero
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (φ : FiniteCodimensionPresentation V.X q)
+    (heff : ∀ x, 0 ≤ φ x) (hne : φ ≠ 0) :
+    H.cycleClass q (realizeFiniteCodimensionPresentation V.X q φ) ≠ 0 := by
+  intro hz
+  have hp := effective_presentation_trace_pos D q φ heff hne
+  rw [hz, map_zero] at hp
+  exact lt_irrefl 0 hp
+
+/-- An explicit linear native return along the degree-detected cycle direction.
+The denominator is computed from the cycle itself. -/
+noncomputable def degreeNormalizedReturn
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (Z : codimensionCycles V.X q) :
+    RationalSingularCohomology H.analytification (2 * q) →ₗ[ℚ]
+      codimensionCycles V.X q :=
+  LinearMap.smulRight (D.trace q)
+    ((D.trace q (H.cycleClass q Z))⁻¹ • Z)
+
+theorem degreeNormalizedReturn_apply
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (Z : codimensionCycles V.X q)
+    (alpha : RationalSingularCohomology H.analytification (2 * q)) :
+    degreeNormalizedReturn D q Z alpha =
+      (D.trace q alpha * (D.trace q (H.cycleClass q Z))⁻¹) • Z := by
+  simp [degreeNormalizedReturn, smul_smul]
+
+/-- Exact native round-trip, with nonvanishing supplied by the positive-degree
+calculation for every nonzero effective cycle. -/
+theorem degreeNormalizedReturn_roundTrip
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (Z : codimensionCycles V.X q)
+    (hz : D.trace q (H.cycleClass q Z) ≠ 0) :
+    degreeNormalizedReturn D q Z (H.cycleClass q Z) = Z := by
+  rw [degreeNormalizedReturn_apply]
+  simp [hz]
+
+/-- The induced native operator is idempotent. -/
+theorem degreeNormalizedReturn_native_idempotent
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (Z : codimensionCycles V.X q)
+    (hz : D.trace q (H.cycleClass q Z) ≠ 0)
+    (W : codimensionCycles V.X q) :
+    degreeNormalizedReturn D q Z
+        (H.cycleClass q (degreeNormalizedReturn D q Z (H.cycleClass q W))) =
+      degreeNormalizedReturn D q Z (H.cycleClass q W) := by
+  let c := D.trace q (H.cycleClass q W) *
+    (D.trace q (H.cycleClass q Z))⁻¹
+  have hw : degreeNormalizedReturn D q Z (H.cycleClass q W) = c • Z :=
+    degreeNormalizedReturn_apply D q Z _
+  rw [hw, map_smul, map_smul, degreeNormalizedReturn_roundTrip D q Z hz]
+
+/-- The remainder after the explicit return has zero degree trace.
+This is a decomposition into a detected algebraic direction and a trace-zero
+remainder; it does not assert that the remainder itself vanishes. -/
+theorem degreeNormalizedReturn_trace_remainder
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (Z : codimensionCycles V.X q)
+    (hz : D.trace q (H.cycleClass q Z) ≠ 0)
+    (alpha : RationalSingularCohomology H.analytification (2 * q)) :
+    D.trace q
+      (alpha - H.cycleClass q (degreeNormalizedReturn D q Z alpha)) = 0 := by
+  rw [degreeNormalizedReturn_apply, map_sub, map_smul, map_smul]
+  simp [smul_eq_mul, mul_assoc, hz]
+
+/-- Universal effective-cycle crown: positive trace, a nonzero algebraic Hodge
+class, and an explicit native round-trip all hold simultaneously. -/
+theorem universal_effective_cycle_geometry
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat) (φ : FiniteCodimensionPresentation V.X q)
+    (heff : ∀ x, 0 ≤ φ x) (hne : φ ≠ 0) :
+    let Z := realizeFiniteCodimensionPresentation V.X q φ
+    0 < D.trace q (H.cycleClass q Z) ∧
+    H.cycleClass q Z ≠ 0 ∧
+    H.cycleClass q Z ∈ rationalHodgeSubspace (H.hodgeBigrading q) ∧
+    degreeNormalizedReturn D q Z (H.cycleClass q Z) = Z := by
+  dsimp only
+  have hp := effective_presentation_trace_pos D q φ heff hne
+  exact ⟨hp, effective_presentation_cycleClass_ne_zero D q φ heff hne,
+    G.algebraic_is_hodge q _,
+    degreeNormalizedReturn_roundTrip D q _ (ne_of_gt hp)⟩
+
+#print axioms effective_presentation_trace_pos
+#print axioms effective_presentation_cycleClass_ne_zero
+#print axioms degreeNormalizedReturn_roundTrip
+#print axioms degreeNormalizedReturn_native_idempotent
+#print axioms degreeNormalizedReturn_trace_remainder
+#print axioms universal_effective_cycle_geometry
 
 end GSTClassicalHodgeUniversalLimitlessCycleGeometry
