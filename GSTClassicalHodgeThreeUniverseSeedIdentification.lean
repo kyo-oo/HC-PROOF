@@ -27,6 +27,7 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open AlgebraicGeometry
+open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeThreeUniverseSeedIdentification
 

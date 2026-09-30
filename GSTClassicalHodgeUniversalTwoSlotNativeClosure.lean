@@ -268,9 +268,17 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   rw [hstep1, hstep2, hstep3, hodgeMatrixUnit_apply]
   have hc : (forwardScalar sourceSlot targetSlot : ℚ) ≠ 0 := by
     exact_mod_cast (ne_of_gt (forwardScalar_pos sourceSlot targetSlot))
-  simp only [Submodule.coe_smul]
-  congr 1
-  field_simp
+  have hscalar : (forwardScalar sourceSlot targetSlot : ℚ)⁻¹ *
+      ((hodgeCoordinate i) alpha *
+        (forwardScalar sourceSlot targetSlot : ℚ)) =
+      (hodgeCoordinate i) alpha := by
+    field_simp
+  show ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
+      (((hodgeCoordinate i) alpha *
+        (forwardScalar sourceSlot targetSlot : ℚ)) •
+        classicalHodgeBasis V H p j)).1 =
+    ((hodgeCoordinate i) alpha • classicalHodgeBasis V H p j).1
+  rw [Submodule.coe_smul, Submodule.coe_smul, smul_smul, hscalar]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot
