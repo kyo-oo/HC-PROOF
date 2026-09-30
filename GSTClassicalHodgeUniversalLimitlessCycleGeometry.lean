@@ -242,7 +242,7 @@ theorem effective_presentation_trace_pos
   classical
   rw [D.trace_realize_presentation]
   change 0 < ∑ x ∈ φ.support, φ x * D.pointDegree q x
-  apply Finset.sum_pos
+  apply Finset.sum_pos'
   · intro x _
     exact mul_nonneg (heff x) (le_of_lt (D.pointDegree_pos q x))
   · obtain ⟨x, hx⟩ := Finsupp.support_nonempty_iff.mpr hne
