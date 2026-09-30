@@ -92,15 +92,15 @@ noncomputable def rationalizeCompactAddress :
     intro φ ψ
     classical
     exact Finsupp.sum_add_index'
-      (fun _ => by simp) (fun _ _ _ => by simp)
+      (fun _ => by decide) (fun _ _ _ => by decide)
   map_smul' := by
     intro z φ
     show (z • φ).sum (fun n z => Finsupp.single n (z : ℚ)) =
       z • φ.sum (fun n z => Finsupp.single n (z : ℚ))
     rw [Finsupp.sum_smul_index']
-    · simp only [smul_eq_mul, mul_smul, Int.cast_mul, Finsupp.sum]
-      rw [Finset.smul_sum]
-    · exact fun n => by simp
+    · simp only [smul_eq_mul, Int.cast_mul, Finsupp.sum]
+      simp
+    · exact fun n => by decide
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]
