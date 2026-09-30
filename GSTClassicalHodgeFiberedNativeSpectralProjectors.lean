@@ -38,6 +38,8 @@ open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRecoordinationArsenalCrown
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
+open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeFiberedNativeRecoordination
 open GSTClassicalHodgeNativeCycleCosmicShadow
@@ -72,6 +74,7 @@ theorem transportFiberedNative_codeProj
       worldCode S ((worldRecoordinate S T).symm y) = worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
     exact worldRecoordinate_code T S y
+  simp only [worldCode_expanded] at hcode
   simp [transportFiberedNative, fiberedNativeCodeProj, hcode]
 
 /-- A code projector keyed by one shaped state isolates exactly that state,

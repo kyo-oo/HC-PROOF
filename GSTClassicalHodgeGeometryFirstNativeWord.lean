@@ -43,11 +43,11 @@ variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 variable {i j : ClassicalHodgeBasisIndex V H p}
 
-/-- Native source-sheet projector: identity minus the native code observable. -/
+/-- Native source-sheet projector from the geometry-first source primitive. -/
 noncomputable def nativeSource
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
     Module.End ℚ (codimensionCycles V.X p) :=
-  LinearMap.id - R.code.cycleOperator
+  R.source.cycleOperator
 
 /-- **THE ACTUAL NATIVE GST MATRIX-UNIT WORD.**
 This is the native-cycle counterpart of `GeometryFirstTwoGenerator.ambientWord`.
@@ -67,10 +67,9 @@ theorem cycleClass_nativeSource
     H.cycleClass p (nativeSource R Z) =
       R.ambientSource (H.cycleClass p Z) := by
   unfold nativeSource GeometryFirstTwoGenerator.ambientSource
-  rw [LinearMap.sub_apply, LinearMap.map_sub]
-  rw [cycleClass_ambientOperator
-    (H := H) R.code.cycleOperator R.code.kernelStable Z]
-  rfl
+    NativeHodgePrimitive.ambient
+  exact (cycleClass_ambientOperator
+    (H := H) R.source.cycleOperator R.source.kernelStable Z).symm
 
 /-- **NATIVE/AMBIENT WORD COMMUTING SQUARE.**
 The complete native GST word commutes with the actual cycle-class map and the

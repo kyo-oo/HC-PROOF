@@ -117,13 +117,16 @@ theorem ambient_on_hodge
 
 end NativeHodgePrimitive
 
-/-- The two genuinely noncommuting native geometric primitives.
+/-- The source-sheet projector and the two genuinely noncommuting native
+geometric primitives.
 
 Unlike `TwoGeneratorNative`, this structure stores native algebraic-cycle
 operators.  Their ambient cohomological actions are derived from kernel
 stability. -/
 structure GeometryFirstTwoGenerator
     (i j : ClassicalHodgeBasisIndex V H p) where
+  source : NativeHodgePrimitive (V := V) (H := H)
+    (twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot))
   code : NativeHodgePrimitive (V := V) (H := H)
     (twoSlotCodeHodge i j)
   lefschetz : NativeHodgePrimitive (V := V) (H := H)
@@ -145,12 +148,12 @@ noncomputable def ambientLefschetz
     AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
   R.lefschetz.ambient
 
-/-- Source projector generated polynomially from the geometry-first code
-observable. -/
+/-- Geometry-generated source-sheet projector action on ambient rational
+cohomology. -/
 noncomputable def ambientSource
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
     AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
-  LinearMap.id - R.ambientCode
+  R.source.ambient
 
 /-- Universal normalized two-slot transfer word generated entirely from the
 two native geometric primitives. -/
@@ -160,14 +163,11 @@ noncomputable def ambientWord
   (forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
     (R.ambientCode.comp (R.ambientLefschetz.comp R.ambientSource))
 
-/-- Identity-minus-code remains native-natural. -/
+/-- The geometry-generated source projector is native-natural. -/
 theorem source_hasNativePointLifts
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
-    HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientSource := by
-  rw [← smoothProjective_atomicStable_iff_nativePointLifts]
-  exact atomicSpanStable_sub atomicSpanStable_id
-    ((smoothProjective_atomicStable_iff_nativePointLifts _).2
-      R.code.hasNativePointLifts)
+    HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientSource :=
+  R.source.hasNativePointLifts
 
 /-- The universal geometry-first word is native-natural by pure operator
 closure; no basis cycle is chosen. -/
@@ -186,9 +186,8 @@ theorem ambientSource_on_hodge
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
     (alpha : HodgeFiber V H p) :
     R.ambientSource alpha.1 =
-      ((LinearMap.id - twoSlotCodeHodge i j :
-        Module.End ℚ (ClassicalHodgeFiber V H p)) alpha).1 := by
-  simp [ambientSource, ambientCode, NativeHodgePrimitive.ambient_on_hodge]
+      ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha).1 :=
+    R.source.ambient_on_hodge alpha
 
 /-- **GEOMETRY-FIRST UNIVERSAL WORD.**
 On the genuine Hodge fiber the native-geometric word is exactly the rank-free
@@ -198,40 +197,163 @@ theorem ambientWord_on_hodge
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
     (alpha : HodgeFiber V H p) :
     R.ambientWord alpha.1 = (hodgeMatrixUnit i j alpha).1 := by
-  let src : HodgeFiber V H p :=
-    (LinearMap.id - twoSlotCodeHodge i j :
-      Module.End ℚ (ClassicalHodgeFiber V H p)) alpha
-  let mid : HodgeFiber V H p :=
-    twoSlotHodgeOperator i j
-      (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2) src
-  have hsrc : R.ambientSource alpha.1 = src.1 := by
-    simpa [src] using R.ambientSource_on_hodge alpha
-  have hmid : R.ambientLefschetz src.1 = mid.1 := by
-    simpa [ambientLefschetz, mid] using R.lefschetz.ambient_on_hodge src
-  have htgt : R.ambientCode mid.1 = (twoSlotCodeHodge i j mid).1 := by
-    simpa [ambientCode] using R.code.ambient_on_hodge mid
-  unfold ambientWord
+  -- The three fiber-level legs, via the geometry-generated primitives.
+  have hsrc : R.ambientSource alpha.1 =
+      ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha).1 :=
+    R.source.ambient_on_hodge alpha
+  have hmid : R.ambientLefschetz
+      ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha).1 =
+      ((twoSlotHodgeOperator i j
+        (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2))
+        ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha)).1 :=
+    R.lefschetz.ambient_on_hodge
+      ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha)
+  have htgt : R.ambientCode
+      ((twoSlotHodgeOperator i j
+        (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2))
+        ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha)).1 =
+      ((twoSlotCodeHodge i j)
+        ((twoSlotHodgeOperator i j
+          (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2))
+          ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha))).1 :=
+    R.code.ambient_on_hodge _
+  rw [ambientWord]
   simp only [LinearMap.smul_apply, LinearMap.comp_apply]
   rw [hsrc, hmid, htgt]
-  have hfinite :
-      ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
-        ((twoSlotCode).comp
-          ((GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2).comp
-            (LinearMap.id - twoSlotCode)))) =
-        pureMatrixUnit sourceSlot targetSlot := by
-    rw [← sheetProjectorQ_source_eq_id_sub_code,
-      ← sheetProjectorQ_target_eq_code]
-    exact GSTClassicalHodgeExplicitArsenalGeneration.forwardArsenalWord_eq_matrixUnit
-      sourceSlot targetSlot (by decide)
-  have hlift :
-      liftFiniteHodgeOperator (pairBasisIndex i j)
-          (pureMatrixUnit sourceSlot targetSlot) =
-        hodgeMatrixUnit i j := by
-    rw [← GSTClassicalHodgeExplicitArsenalGeneration.forwardArsenalWord_eq_matrixUnit
-      sourceSlot targetSlot (by decide)]
-    exact (rankFreeMatrixUnit_eq_lifted_GST_word i j).symm
-  simpa [src, mid, twoSlotCodeHodge, twoSlotHodgeOperator,
-    hfinite, hlift]
+  -- The write map on pure basis sheets.
+  have hW : ∀ (k : ℚ) (r : Fin 2),
+      finiteHodgeWrite (pairBasisIndex i j) (k • rationalPureBasis r) =
+        k • classicalHodgeBasis V H p (pairBasisIndex i j r) := by
+    intro k r
+    simp only [finiteHodgeWrite, map_smul, Fin.sum_univ_two]
+    fin_cases r <;> simp [rationalPureBasis]
+  -- The normalized forward Lefschetz word moves the source sheet to the
+  -- target sheet with the exact forward scalar, and kills the target sheet.
+  have hb0 : GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2
+      (rationalPureBasis sourceSlot)
+      = (forwardScalar sourceSlot targetSlot : ℚ)
+        • rationalPureBasis targetSlot := by
+    have hop : GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2
+        = GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2
+            (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))) := rfl
+    rw [hop]
+    funext q
+    fin_cases q <;>
+      simp [GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ,
+        Fin.sum_univ_two, rationalPureBasis]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (A := 2) (B := 2)
+        (0 : Fin 2) (0 : Fin 2)
+        (show (0 : ℕ) ≤ 0 by decide)
+        (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (0 : Fin 2) (1 : Fin 2)
+          ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (0 : Fin 2) (0 : Fin 2) by decide)]
+      norm_num [forwardScalar, sourceSlot, targetSlot]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_kernel
+        (A := 2) (B := 2)
+        (n := 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+          (0 : Fin 2) (1 : Fin 2))
+        (0 : Fin 2) (1 : Fin 2)]
+      norm_num [forwardScalar, sourceSlot, targetSlot,
+        GSTPureHodgeLefschetzKernel.pureWeightGap]
+  have hb1 : GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2
+      (rationalPureBasis targetSlot) = 0 := by
+    have hop : GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2
+        = GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2
+            (2 * GSTPureHodgeLefschetzKernel.pureWeightGap
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (0 : Fin 2))
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) (1 : Fin 2))) := rfl
+    rw [hop]
+    funext q
+    fin_cases q <;>
+      simp [GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ,
+        Fin.sum_univ_two, rationalPureBasis]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_backward_zero
+        (A := 2) (B := 2)
+        (1 : Fin 2) (0 : Fin 2)
+        (show (0:ℕ) < 1 by decide)]
+      norm_num [forwardScalar, sourceSlot, targetSlot]
+    · rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_wrong_time_zero
+        (A := 2) (B := 2)
+        (1 : Fin 2) (1 : Fin 2)
+        (show (1 : ℕ) ≤ 1 by decide)
+        (show 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (0 : Fin 2) (1 : Fin 2)
+          ≠ 2 * GSTPureHodgeLefschetzKernel.pureWeightGap (A := 2) (B := 2)
+            (1 : Fin 2) (1 : Fin 2) by decide)]
+      norm_num [forwardScalar, sourceSlot, targetSlot]
+  -- Hence the two-slot Lefschetz word reads only the source sheet.
+  have hdiag : ∀ w : RationalPureWindow 2,
+      GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2 w
+        = ((w sourceSlot) * (forwardScalar sourceSlot targetSlot : ℚ))
+          • rationalPureBasis targetSlot := by
+    intro w
+    have hw : w = (w sourceSlot) • rationalPureBasis sourceSlot
+        + (w targetSlot) • rationalPureBasis targetSlot := by
+      classical
+      funext r
+      fin_cases r <;> simp [rationalPureBasis, sourceSlot, targetSlot]
+    rw [hw]
+    simp only [map_add, map_smul, hb0, hb1, smul_zero, add_zero, smul_smul]
+    simp [rationalPureBasis, sourceSlot, targetSlot]
+  -- The three fiber-level steps of the geometry-first word.
+  have hstep1 : (twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha
+      = (hodgeCoordinate i) alpha • classicalHodgeBasis V H p i := by
+    have hs : (sheetProjectorQ sourceSlot)
+        ((finiteHodgeRead (pairBasisIndex i j)) alpha)
+        = ((hodgeCoordinate i) alpha) • rationalPureBasis sourceSlot := by
+      rfl
+    simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+      LinearMap.comp_apply, hs, hW, pairBasisIndex_source]
+  have hstep2 : (twoSlotHodgeOperator i j
+        (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2))
+        ((hodgeCoordinate i) alpha • classicalHodgeBasis V H p i)
+      = (((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+        • classicalHodgeBasis V H p j := by
+    have hread : (finiteHodgeRead (pairBasisIndex i j))
+        ((hodgeCoordinate i) alpha • classicalHodgeBasis V H p i) sourceSlot
+        = (hodgeCoordinate i) alpha := by
+      simp [finiteHodgeRead]
+    simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+      LinearMap.comp_apply, hdiag, hread, hW, pairBasisIndex_target]
+  have hstep3 : (twoSlotHodgeOperator i j (sheetProjectorQ targetSlot))
+      ((((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+        • classicalHodgeBasis V H p j)
+      = (((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+        • classicalHodgeBasis V H p j := by
+    have hread2 : (finiteHodgeRead (pairBasisIndex i j))
+        ((((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ))
+          • classicalHodgeBasis V H p j) targetSlot
+        = ((hodgeCoordinate i) alpha)
+          * (forwardScalar sourceSlot targetSlot : ℚ) := by
+      simp [finiteHodgeRead]
+    simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+      LinearMap.comp_apply, sheetProjectorQ_apply, hread2, hW,
+      pairBasisIndex_target]
+  rw [hstep1, hstep2]
+  unfold twoSlotCodeHodge
+  rw [← sheetProjectorQ_target_eq_code, hstep3, hodgeMatrixUnit_apply]
+  have hc : (forwardScalar sourceSlot targetSlot : ℚ) ≠ 0 := by
+    exact_mod_cast (ne_of_gt (forwardScalar_pos sourceSlot targetSlot))
+  have hscalar : (forwardScalar sourceSlot targetSlot : ℚ)⁻¹ *
+      ((hodgeCoordinate i) alpha *
+        (forwardScalar sourceSlot targetSlot : ℚ)) =
+      (hodgeCoordinate i) alpha := by
+    field_simp
+  show ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
+      (((hodgeCoordinate i) alpha *
+        (forwardScalar sourceSlot targetSlot : ℚ)) •
+        classicalHodgeBasis V H p j)).1 =
+    ((hodgeCoordinate i) alpha • classicalHodgeBasis V H p j).1
+  rw [Submodule.coe_smul, Submodule.coe_smul, smul_smul, hscalar]
+  simp [Submodule.coe_smul]
 
 /-- Every geometry-first two-generator realization forces the corresponding
 rank-free matrix unit to preserve the actual algebraic Hodge subspace. -/
