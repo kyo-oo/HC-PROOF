@@ -124,7 +124,7 @@ theorem spineHodgeSeed_successor_formula
       ((GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar p)⁻¹ •
         (G.principalCutPair p).cohomologyOperator (spineHodgeSeed G p).1)
   rw [smul_smul]
-  simp [successorScalar_ne_zero]
+  simp [GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar]
 
 /-- Native recursion law. -/
 theorem spineNativeTower_succ
@@ -233,7 +233,7 @@ theorem nativeRead_spineNativeTower
       rw [spineNativeTower_succ]
       rw [LinearMap.map_smul]
       rw [D.successor_read p (spineNativeTower G p)]
-      simp [successorScalar_ne_zero, ih]
+      simp [GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar, ih]
 
 /-- The conserved native charge is nonzero at every level of the unbounded
 normalized projective tower. -/
