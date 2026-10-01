@@ -44,11 +44,13 @@ theorem carrierSeparatorSuccessor_mem_principalSectionRange
     (x : V.X)
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
     carrierSeparatorSuccessor V x hlive ∈ Set.range (principalSectionAtι V x) := by
-  rw [show principalSectionAtι V x =
+  have hrange : Set.range (principalSectionAtι V x) =
       (principalSectionIdeal V
         (positiveHomogeneousSeparator V.projective.n
-          (V.projective.immersion x)).equation).subschemeι from rfl,
-    Scheme.IdealSheafData.range_subschemeι]
+          (V.projective.immersion x)).equation).support := by
+    simp only [principalSectionAtι, principalSectionι,
+      Scheme.IdealSheafData.range_subschemeι]
+  rw [hrange]
   exact carrierSeparatorSuccessor_mem_principalSection V x hlive
 
 /-- **GENUINE RELATIVE-CUT LANDING.**
@@ -59,13 +61,11 @@ theorem pointClosureSeparatorSuccessor_mem_relativeCut
     (x : V.X)
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
     pointClosureSeparatorSuccessor V x hlive ∈ relativeCutSet V x := by
-  show pointClosureSeparatorSuccessor V x hlive ∈
-    Set.range (closurePrincipalCutToClosure V x)
-  rw [show (closurePrincipalCutToClosure V x :
-      closurePrincipalCut V x ⟶ pointClosureScheme V x) =
-      pullback.fst (pointClosureι V x) (principalSectionAtι V x) from rfl,
-    Scheme.Pullback.range_fst, Set.mem_preimage,
-    pointClosureSeparatorSuccessor_maps]
+  have hrange : relativeCutSet V x =
+      (pointClosureι V x) ⁻¹' Set.range (principalSectionAtι V x) := by
+    simp only [relativeCutSet, closurePrincipalCutToClosure,
+      Scheme.Pullback.range_fst]
+  rw [hrange, Set.mem_preimage, pointClosureSeparatorSuccessor_maps]
   exact carrierSeparatorSuccessor_mem_principalSectionRange V x hlive
 
 /-- The landed relative-cut point is non-generic. -/

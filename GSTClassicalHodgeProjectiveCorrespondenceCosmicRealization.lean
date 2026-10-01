@@ -99,10 +99,10 @@ theorem preserves_algebraicFiber
       GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p)) :
     GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.liftCosmicWindowOperator
-        (GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.pairBasisIndex i j)
+        (GSTClassicalHodgeRankFreePrimitiveGeneration.pairBasisIndex i j)
         (GSTClassicalHodgeLimitlessCosmicMatrixUnits.rationalCosmicMatrixUnit
-          GSTClassicalHodgeFullArsenalIrreducibility.sourceSlot.1
-          GSTClassicalHodgeFullArsenalIrreducibility.targetSlot.1)
+          GSTClassicalHodgeRankFreePrimitiveGeneration.sourceSlot.1
+          GSTClassicalHodgeRankFreePrimitiveGeneration.targetSlot.1)
         alpha ∈
       GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) :=
