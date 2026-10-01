@@ -45,12 +45,13 @@ theorem projective_le_iff_prime_reverse_le
     {n : Nat} {a b : projectiveSpace n} :
     a ≤ b ↔ b.asHomogeneousIdeal.toIdeal ≤ a.asHomogeneousIdeal.toIdeal := by
   have key : ∀ (a' b' : ProjectiveSpectrum (ProjectiveGrading n)),
-      a' ≤ b' ↔ b'.asHomogeneousIdeal.toIdeal ≤ a'.asHomogeneousIdeal.toIdeal := by
+      a' ∈ closure ({b'} : Set (ProjectiveSpectrum (ProjectiveGrading n))) ↔
+        b'.asHomogeneousIdeal.toIdeal ≤ a'.asHomogeneousIdeal.toIdeal := by
     intro a' b'
-    rw [specializationOrder_iff_specializes,
-      ← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
+    rw [← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
       ProjectiveSpectrum.vanishingIdeal_singleton]
     exact ProjectiveSpectrum.mem_zeroLocus _ _ _
+  rw [specializationOrder_iff_specializes]
   exact key a b
 
 /-- Every point of the reduced source closure maps to a projective prime above

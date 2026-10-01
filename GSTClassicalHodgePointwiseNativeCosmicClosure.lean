@@ -103,6 +103,8 @@ theorem hodgeMatrixUnit_mem_algebraic_of_pointLifts
   have hstable := cosmic_atomicSpanStable i j hij
   have himage := hstable alpha.1 halpha
   rw [canonicalCosmicAmbient_on_hodge i j alpha] at himage
+  rw [mem_AlgebraicHodgeSubspace_iff,
+    GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.hodgeMatrixUnit_eq_lift_limitless_cosmic]
   exact himage
 
 /-- A nonzero algebraic seed determines one live source coordinate.  Native
@@ -150,6 +152,7 @@ theorem hodge_weight_of_liveSource_pointLifts
         pointCycleClassSpan p (H.cycleClass p) :=
     every_basis_algebraic_of_liveSource_pointLifts S hLift
   have halg : alpha ∈ pointCycleClassSpan p (H.cycleClass p) := by
+    show alphaH.1 ∈ pointCycleClassSpan p (H.cycleClass p)
     rw [show alphaH =
       ∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
         ((classicalHodgeBasis V H p).repr alphaH j) •
