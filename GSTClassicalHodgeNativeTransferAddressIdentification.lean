@@ -33,8 +33,8 @@ open GSTGeometricRealizationStage2D
 open GSTUniversalAddressBridge
 open GSTTransferBridgeV2
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
-open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeNativeCycleCosmicShadow
 
 /-- Universal cosmic address of the diagonal cell at Hodge weight `p`. -/
 def pureWeightAddress (p : Nat) : Nat :=
@@ -58,7 +58,20 @@ noncomputable def pureWeightToUniversalAddress :
     RationalPureCosmos →ₗ[ℚ] RationalCosmicAddress where
   toFun φ := Finsupp.embDomain pureWeightAddressEmbedding φ
   map_add' := by intro φ ψ; simp
-  map_smul' := by intro q φ; simp
+  map_smul' := by
+    intro q φ
+    ext n
+    by_cases hn : n ∈ Set.range (pureWeightAddressEmbedding : Nat → Nat)
+    · rcases hn with ⟨p, hp⟩
+      subst hp
+      show (Finsupp.embDomain pureWeightAddressEmbedding (q • φ))
+          (pureWeightAddressEmbedding p) =
+        q * (Finsupp.embDomain pureWeightAddressEmbedding φ)
+          (pureWeightAddressEmbedding p)
+      simp [Finsupp.embDomain_apply_self]
+    · show (Finsupp.embDomain pureWeightAddressEmbedding (q • φ)) n =
+        q * (Finsupp.embDomain pureWeightAddressEmbedding φ) n
+      simp [Finsupp.embDomain_of_notMem_range, hn]
 
 /-- A pure weight basis becomes the universal address basis of its diagonal
 cosmic cell. -/
@@ -78,12 +91,17 @@ noncomputable def rationalizeCompactAddress :
   map_add' := by
     intro φ ψ
     classical
-    simp [Finset.sum_add_distrib]
+    exact Finsupp.sum_add_index'
+      (fun _ => by norm_num) (fun _ _ _ => by norm_num)
   map_smul' := by
     intro z φ
-    classical
-    ext n
-    simp [smul_eq_mul, mul_assoc]
+    show (z • φ).sum (fun n z => Finsupp.single n (z : ℚ)) =
+      z • φ.sum (fun n z => Finsupp.single n (z : ℚ))
+    rw [Finsupp.sum_smul_index']
+    · simp only [Finsupp.sum]
+      rw [Finset.smul_sum]
+      simp
+    · exact fun n => by norm_num
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]
@@ -103,7 +121,8 @@ theorem rationalize_compactClMono
       Finsupp.single (pureWeightAddress p) 1 := by
   ext n
   simp [rationalizeCompactAddress, compactClMono, compactClCode,
-    pureWeightAddress, compactClCode_eq_cosmicAddress]
+    pureWeightAddress, compactClCode_eq_cosmicAddress,
+    cosmicAddressEquiv, Nat.pair]
 
 /-- **NATIVE POINT = LIMITLESS TRANSFER GENERATOR.**
 Every genuine codimension-p point cycle has exactly the same rational universal

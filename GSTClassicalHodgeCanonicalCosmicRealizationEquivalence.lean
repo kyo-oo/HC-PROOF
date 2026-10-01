@@ -46,6 +46,8 @@ open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeRangeLiftedSpectralOperator
+open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeConcreteFailureDichotomy
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -56,7 +58,7 @@ pair of genuine Hodge-basis directions. -/
 noncomputable def canonicalCosmicAmbient
     (i j : ClassicalHodgeBasisIndex V H p) :
     Module.End ℚ (RationalSingularCohomology H.analytification (2 * p)) :=
-  GSTClassicalHodgeRankFreePrimitiveGeneration.extendHodgeEndomorphism
+  GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism
     (V := V) (H := H)
     (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit i j)
 
@@ -68,6 +70,7 @@ theorem canonicalCosmicAmbient_on_hodge
     canonicalCosmicAmbient i j alpha.1 =
       liftCosmicWindowOperator (pairBasisIndex i j)
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha := by
+  simp only [canonicalCosmicAmbient]
   rw [GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism_on_hodge]
   rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
 
@@ -151,19 +154,12 @@ theorem nativeRealization_of_range_stable
       ∀ alpha ∈ LinearMap.range (H.cycleClass p),
         canonicalCosmicAmbient i j alpha ∈ LinearMap.range (H.cycleClass p)) :
     Nonempty (NativeCanonicalCosmicRealization (V := V) (H := H) i j) := by
-  let A : AtomicStableOperator (V := V) (H := H) (p := p) where
-    operator := canonicalCosmicAmbient i j
-    atomic_stable := by
-      intro alpha halpha
-      rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halpha ⊢
-      exact hstable alpha halpha
-  let L := liftedCycleOperator A
   refine ⟨{
-    native := L
+    native := liftedCycleOperator (canonicalCosmicAmbient i j) hstable
     naturality := ?_
   }⟩
   intro Z
-  exact liftedCycleOperator_commutes A Z
+  exact cycleClass_liftedCycleOperator (canonicalCosmicAmbient i j) hstable Z
 
 /-- Exact realization form of the canonical fixed-weight target. -/
 theorem nativeCanonicalRealizations_imply_hodgeWeight

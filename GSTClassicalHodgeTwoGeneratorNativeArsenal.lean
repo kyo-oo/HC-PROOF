@@ -53,13 +53,13 @@ variable {p : Nat}
 def twoSlotCode : Module.End ℚ (RationalPureWindow 2) where
   toFun a := fun r => (r.1 : ℚ) * a r
   map_add' := by intro a b; funext r; simp [mul_add]
-  map_smul' := by intro q a; funext r; simp [mul_assoc]
+  map_smul' := by intro q a; funext r; simp [mul_left_comm]
 
 @[simp]
 theorem twoSlotCode_source
     (a : RationalPureWindow 2) :
     twoSlotCode a sourceSlot = 0 := by
-  rfl
+  simp [twoSlotCode, sourceSlot]
 
 @[simp]
 theorem twoSlotCode_target
@@ -103,23 +103,37 @@ theorem ambientTargetProjector_on_hodge_eq_code
     (alpha : ClassicalHodgeFiber V H p) :
     ambientTargetProjector i j alpha.1 =
       ambientTwoSlotCode i j alpha.1 := by
+  unfold ambientTargetProjector ambientTwoSlotCode
   rw [extendHodgeEndomorphism_on_hodge,
     extendHodgeEndomorphism_on_hodge]
   unfold twoSlotHodgeOperator twoSlotCodeHodge
   rw [sheetProjectorQ_target_eq_code]
+  rfl
 
 /-- The source projector ambient action agrees on the Hodge fiber with
 identity minus the code observable. -/
-theorem ambientSourceProjector_on_hodge_eq_id_sub_code
+theorem ambientSourceProjector_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
     (alpha : ClassicalHodgeFiber V H p) :
     ambientSourceProjector i j alpha.1 =
-      alpha.1 - ambientTwoSlotCode i j alpha.1 := by
-  rw [extendHodgeEndomorphism_on_hodge,
-    extendHodgeEndomorphism_on_hodge]
-  unfold twoSlotHodgeOperator twoSlotCodeHodge
-  rw [sheetProjectorQ_source_eq_id_sub_code]
-  rfl
+      (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate i) alpha •
+        ↑(classicalHodgeBasis V H p i) := by
+  unfold ambientSourceProjector
+  rw [extendHodgeEndomorphism_on_hodge]
+  have hW : ∀ (k : ℚ) (r : Fin 2),
+      finiteHodgeWrite (pairBasisIndex i j) (k • rationalPureBasis r) =
+        k • classicalHodgeBasis V H p (pairBasisIndex i j r) := by
+    intro k r
+    simp only [finiteHodgeWrite, map_smul, Fin.sum_univ_two]
+    fin_cases r <;> simp [rationalPureBasis]
+  have hsrc : (sheetProjectorQ sourceSlot)
+      ((finiteHodgeRead (pairBasisIndex i j)) alpha)
+      = ((GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate i) alpha) •
+        rationalPureBasis sourceSlot := by
+    rfl
+  simp only [twoSlotHodgeOperator, liftFiniteHodgeOperator,
+    LinearMap.comp_apply, hsrc, hW, pairBasisIndex_source]
+  simp [Submodule.coe_smul]
 
 /-- Native point-lift realization of the two minimal noncommuting primitives. -/
 structure TwoGeneratorNative
@@ -139,7 +153,7 @@ theorem idSubCode_nativePointLifts
       (LinearMap.id - ambientTwoSlotCode i j) := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    ((smoothProjective_atomicStable_iff_nativePointLifts).2 R.code)
+    ((smoothProjective_atomicStable_iff_nativePointLifts _).2 R.code)
 
 /-- The code observable itself gives the target projector naturality. -/
 theorem targetProjector_nativePointLifts_on_hodge
@@ -161,6 +175,20 @@ theorem codeLefschetzCodeWord_nativePointLifts
   exact nativePointLifts_comp R.code
     (nativePointLifts_comp R.lefschetz R.idSubCode_nativePointLifts)
 
+/-- Rational rescaling preserves native point lifts. -/
+theorem hasNativePointLifts_smul
+    (c : ℚ)
+    {T : GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * p) →ₗ[ℚ]
+      GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * p)}
+    (h : HasNativePointLifts (p := p) (cl := H.cycleClass p) T) :
+    HasNativePointLifts (p := p) (cl := H.cycleClass p) (c • T) := by
+  intro x
+  obtain ⟨Z, hZ⟩ := h x
+  refine ⟨c • Z, ?_⟩
+  rw [map_smul, LinearMap.smul_apply, hZ]
+
 /-- Rational normalization preserves native point lifts, giving the complete
 normalized universal transfer word. -/
 theorem normalizedWord_nativePointLifts
@@ -171,7 +199,7 @@ theorem normalizedWord_nativePointLifts
         ((ambientTwoSlotCode i j).comp
           ((ambientTwoStepLefschetz i j).comp
             (LinearMap.id - ambientTwoSlotCode i j)))) := by
-  exact GSTClassicalHodgeNativeGeneratorNaturality.HasNativePointLifts.smul
+  exact hasNativePointLifts_smul _
     R.codeLefschetzCodeWord_nativePointLifts
 
 end TwoGeneratorNative

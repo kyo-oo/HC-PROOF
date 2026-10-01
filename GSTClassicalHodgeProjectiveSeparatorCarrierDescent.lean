@@ -45,7 +45,7 @@ theorem separatorSuccessorPoint_mem_source_closure
     (hlive : ProjectivelyLiveSource n x) :
     separatorSuccessorPoint n x hlive ∈ closure ({x} : Set (projectiveSpace n)) := by
   exact (ProjectiveSpectrum.le_iff_mem_closure
-    (x : ProjectiveSpectrum (ProjectiveGrading n))
+    (ProjectiveGrading n) x
     (separatorSuccessorPoint n x hlive)).mp
       (source_le_separatorSuccessorPoint n x hlive)
 
