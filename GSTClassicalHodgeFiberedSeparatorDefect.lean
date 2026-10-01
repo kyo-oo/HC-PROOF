@@ -39,6 +39,8 @@ open GSTClassicalHodgeFiberedCycleClassDefect
 open GSTClassicalHodgeNormalizedFiberedSpectralAtom
 open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeSingleSheetCrown
+open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiberedNativeRecoordination
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -127,7 +129,7 @@ structure FiberedDefectEvent
   separator : BasisAtomicSeparator V H p i
   point : CodimensionPoint V.X p
   state : FiberedNativeAddress V H p := atom V H p i point
-  state_eq_atom : state = atom V H p i point := by rfl
+  state_eq_atom : state = atom V H p i point
   detector_nonzero :
     separator.detector
       (fiberedCycleClassDefect (V := V) (H := H) (p := p) state) ≠ 0

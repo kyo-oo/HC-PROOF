@@ -41,6 +41,8 @@ open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeGeometryFirstNativeWord
 open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeConcreteFailureDichotomy
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

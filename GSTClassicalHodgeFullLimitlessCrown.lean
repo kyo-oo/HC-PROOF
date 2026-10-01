@@ -54,6 +54,8 @@ open GSTClassicalHodgeFullLimitlessExternalization
 open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
+open GSTClassicalHodgeConcreteFailureDichotomy
+open GSTGeometricRealizationStage2F
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

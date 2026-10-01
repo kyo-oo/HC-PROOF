@@ -429,7 +429,7 @@ theorem classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
     ClassicalHodgeTarget V H := by
   simpa [ClassicalHodgeTarget] using
     (GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+      GSTClassicalHodgeProjectiveTwoGeneratorExternalization.bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
         G D R)
 
 /-- Elementwise cycle witness for the geometry-first brute-force landing. -/
@@ -495,7 +495,7 @@ theorem canonical_basis_algebraization_of_conserved_spine_and_projective_two_gen
       V H F).2
   exact
     GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+      GSTClassicalHodgeProjectiveTwoGeneratorExternalization.bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
         G D R
 
 /-- The same geometric/cosmic crown therefore generates the minimal Wave-II

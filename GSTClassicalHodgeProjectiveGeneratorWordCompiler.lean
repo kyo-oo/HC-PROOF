@@ -42,6 +42,7 @@ open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 open GSTClassicalHodgeProjectiveWordOrbit
+open GSTClassicalHodgeRankFreePrimitiveGeneration
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

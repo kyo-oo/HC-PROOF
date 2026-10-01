@@ -44,6 +44,7 @@ open GSTClassicalHodgeFiberedNativeOperatorLift
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeFiberedTransferCompletion
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -56,8 +57,14 @@ noncomputable def multiplicityMatrixUnit
     Module.End ℚ (FiberedNativeAddress V H p) where
   toFun Φ := Φ.sum fun kx q =>
     if kx.1 = i then q • atom V H p j kx.2 else 0
-  map_add' := by intro Φ Ψ; classical; simp
-  map_smul' := by intro q Φ; classical; simp [smul_smul]
+  map_add' := by
+    intro Φ Ψ
+    classical
+    simp
+  map_smul' := by
+    intro q Φ
+    classical
+    simp [smul_smul]
 
 @[simp]
 theorem multiplicityMatrixUnit_atom_source
@@ -83,8 +90,14 @@ noncomputable def multiplicityAddressMatrixUnit
     (i j : ClassicalHodgeBasisIndex V H p) :
     Module.End ℚ (ClassicalHodgeBasisIndex V H p →₀ ℚ) where
   toFun a := Finsupp.single j (a i)
-  map_add' := by intro a b; ext k; simp
-  map_smul' := by intro q a; ext k; simp
+  map_add' := by
+    intro a b
+    ext k
+    simp
+  map_smul' := by
+    intro q a
+    ext k
+    simp
 
 /-- Forgetting the native point intertwines the pullback matrix unit with the
 ordinary matrix unit on Hodge multiplicity coordinates. -/

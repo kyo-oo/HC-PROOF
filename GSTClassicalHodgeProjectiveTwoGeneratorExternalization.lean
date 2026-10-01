@@ -57,6 +57,7 @@ open GSTClassicalHodgeLimitlessTowerOrbitCrown
 open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
+open GSTClassicalHodgeFullArsenalIrreducibility
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -116,7 +117,7 @@ structure ProjectiveTwoGenerator
     (V := V) (H := H) (twoSlotCodeHodge i j)
   lefschetz : ProjectivePrimitiveRealization
     (V := V) (H := H)
-    (twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
+    (twoSlotHodgeOperator i j (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2))
 
 namespace ProjectiveTwoGenerator
 
