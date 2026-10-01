@@ -175,7 +175,7 @@ externalization. -/
 theorem hodgeWeight_of_fullLimitlessExternalization
     (G : GeometricCycleClassSpine V H)
     (hseed :
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+      GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) ≠ ⊥)
     (K : ∀ i j : ClassicalHodgeBasisIndex V H p,
       ProjectiveNativeKernel V p)

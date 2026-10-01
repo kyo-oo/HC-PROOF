@@ -96,7 +96,7 @@ theorem preserves_algebraicFiber
     (R : ProjectiveCosmicRealization G i j)
     (alpha : ClassicalHodgeFiber V H p)
     (halg : alpha ∈
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+      GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p)) :
     GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.liftCosmicWindowOperator
         (GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.pairBasisIndex i j)
@@ -104,7 +104,7 @@ theorem preserves_algebraicFiber
           GSTClassicalHodgeFullArsenalIrreducibility.sourceSlot.1
           GSTClassicalHodgeFullArsenalIrreducibility.targetSlot.1)
         alpha ∈
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+      GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) :=
   R.toNativeCanonical.preserves_algebraicFiber alpha halg
 
@@ -126,11 +126,11 @@ limitless read/write operation saturates the entire Hodge fiber. -/
 theorem algebraicFiber_eq_top_of_projectiveCosmicRealizations
     (G : GeometricCycleClassSpine V H)
     (hseed :
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+      GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       ProjectiveCosmicRealization G i j) :
-    GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+    GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) = ⊤ := by
   exact algebraicFiber_eq_top hseed
     (canonicalCosmicNaturality_of_projectiveCorrespondences G R)
@@ -140,7 +140,7 @@ correspondence algebra. -/
 theorem hodge_weight_of_projectiveCosmicRealizations
     (G : GeometricCycleClassSpine V H)
     (hseed :
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+      GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       ProjectiveCosmicRealization G i j) :
