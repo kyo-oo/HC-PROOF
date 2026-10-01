@@ -75,6 +75,20 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeUniversalFirstGhostTransposeClosure.lean 2>&1 | tee -a universal-limitless-cycle-geometry.log
 
+      - name: Build pure-transpose dependency closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTClassicalHodgeFirstFailureBiFiniteTransposePureTransversality 2>&1 | tee -a universal-limitless-cycle-geometry.log
+
+      - name: Compile universal first-failure pure-transpose closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeUniversalFirstFailurePureTransposeClosure.lean 2>&1 | tee -a universal-limitless-cycle-geometry.log
+
       - name: Trust audit
         shell: bash
         run: |
