@@ -45,6 +45,10 @@ theorem projective_le_iff_prime_reverse_le
     {n : Nat} {a b : projectiveSpace n} :
     a ≤ b ↔ b.asHomogeneousIdeal.toIdeal ≤ a.asHomogeneousIdeal.toIdeal := by
   rw [specializationOrder_iff_specializes]
+  show (a : ProjectiveSpectrum (ProjectiveGrading n)) ∈
+      closure ({b} : Set (ProjectiveSpectrum (ProjectiveGrading n))) ↔
+    (b : ProjectiveSpectrum (ProjectiveGrading n)).asHomogeneousIdeal.toIdeal ≤
+      (a : ProjectiveSpectrum (ProjectiveGrading n)).asHomogeneousIdeal.toIdeal
   rw [← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
     ProjectiveSpectrum.vanishingIdeal_singleton]
   exact ProjectiveSpectrum.mem_zeroLocus _ _ _

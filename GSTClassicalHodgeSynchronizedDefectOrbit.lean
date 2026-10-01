@@ -1,7 +1,6 @@
 import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeConcreteRankFreeGeneration
 import GSTClassicalHodgeCycleOperatorNaturality
-import GSTClassicalHodgeRankFreeLimitlessAssembly
 
 /-!
 # GST CLASSICAL HODGE — SYNCHRONIZED DEFECT ORBITS
@@ -49,7 +48,6 @@ open GSTClassicalHodgeConcreteRankFreeGeneration
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgeGeometryFirstTwoGenerator
-open GSTClassicalHodgeRankFreeLimitlessAssembly
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
