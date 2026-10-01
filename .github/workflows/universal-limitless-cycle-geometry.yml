@@ -61,6 +61,20 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake build GSTClassicalHodgeUniversalLimitlessCycleGeometryFinale 2>&1 | tee -a universal-limitless-cycle-geometry.log
 
+      - name: Build first-ghost transpose dependency closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTClassicalHodgeFirstGhostTransposeModAtomicClosure GSTClassicalHodgeFirstGhostCorrespondenceFrontier 2>&1 | tee -a universal-limitless-cycle-geometry.log
+
+      - name: Compile universal first-ghost transpose closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeUniversalFirstGhostTransposeClosure.lean 2>&1 | tee -a universal-limitless-cycle-geometry.log
+
       - name: Trust audit
         shell: bash
         run: |
