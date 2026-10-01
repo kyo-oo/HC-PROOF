@@ -81,7 +81,7 @@ theorem atom_defect_ne_zero_of_separator
     fiberedCycleClassDefect (V := V) (H := H) (p := p)
       (atom V H p i x) ≠ 0 := by
   intro hz
-  exact S.separator_detects_atom_defect x (by rw [hz]; simp)
+  exact separator_detects_atom_defect S x (by rw [hz]; simp)
 
 /-- The same detector identity holds for a normalized GST spectral atom as
 soon as that live state is the obstructed basis sheet. -/
