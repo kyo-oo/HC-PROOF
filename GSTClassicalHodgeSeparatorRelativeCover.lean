@@ -1,5 +1,6 @@
 import GSTClassicalHodgeSeparatorRelativeCutLanding
 import GSTClassicalHodgeSeparatorAmbientPrimeInterval
+import GSTClassicalHodgeRelativeSuccessorLowerBound
 
 /-!
 # GST CLASSICAL HODGE — RELATIVE COVER OF THE SEPARATOR SUCCESSOR
@@ -36,6 +37,7 @@ open GSTClassicalHodgeSeparatorAmbientPrimeInterval
 namespace GSTClassicalHodgeSeparatorRelativeCover
 
 attribute [local instance] specializationOrder
+attribute [local instance] MvPolynomial.gradedAlgebra
 
 /-- Projective specialization is exactly reverse inclusion of the underlying
 homogeneous prime ideals. -/
@@ -97,6 +99,8 @@ theorem strictAbove_separatorSuccessor_eq_generic
     (z : pointClosureScheme V x)
     (hz : pointClosureSeparatorSuccessor V x hlive < z) :
     z = closureGenericPoint V x := by
+  letI : IsClosedImmersion V.projective.immersion :=
+    V.projective.closedImmersion
   let R : Ideal (ProjectiveCoordinateRing V.projective.n) :=
     (V.projective.immersion (pointClosureι V x z)).asHomogeneousIdeal.toIdeal
   have hRPrime : R.IsPrime :=
