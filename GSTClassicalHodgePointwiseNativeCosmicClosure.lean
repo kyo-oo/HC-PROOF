@@ -84,9 +84,10 @@ unit to preserve the complete actual atomic cycle-class span. -/
 theorem cosmic_atomicSpanStable
     (i j : ClassicalHodgeBasisIndex V H p)
     (hij : CosmicNativePointLifts (V := V) (H := H) i j) :
-    AtomicSpanStable
-      (p := p) (cl := H.cycleClass p)
-      (canonicalCosmicAmbient i j) := by
+    ∀ y : AmbientCoh H p,
+      y ∈ pointCycleClassSpan p (H.cycleClass p) →
+        (canonicalCosmicAmbient i j) y ∈
+          pointCycleClassSpan p (H.cycleClass p) := by
   exact (smoothProjective_atomicStable_iff_nativePointLifts
     (V := V) (H := H) (p := p)
     (canonicalCosmicAmbient i j)).2 hij
@@ -115,7 +116,8 @@ theorem every_basis_algebraic_of_liveSource_pointLifts
         pointCycleClassSpan p (H.cycleClass p) := by
   intro j
   have hseedAlg : S.hodge ∈ AlgebraicHodgeSubspace V H p := by
-    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
+    rw [mem_AlgebraicHodgeSubspace_iff,
+      ← smoothProjective_cycleClass_range_eq_atomic_span V H p]
     exact ⟨S.cycle, S.class_eq⟩
   have hmove :=
     hodgeMatrixUnit_mem_algebraic_of_pointLifts
@@ -149,7 +151,7 @@ theorem hodge_weight_of_liveSource_pointLifts
     every_basis_algebraic_of_liveSource_pointLifts S hLift
   have halg : alpha ∈ pointCycleClassSpan p (H.cycleClass p) := by
     rw [show alphaH =
-      ∑ j in ((classicalHodgeBasis V H p).repr alphaH).support,
+      ∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
         ((classicalHodgeBasis V H p).repr alphaH j) •
           classicalHodgeBasis V H p j by
       exact (classicalHodgeBasis V H p).sum_repr alphaH]
