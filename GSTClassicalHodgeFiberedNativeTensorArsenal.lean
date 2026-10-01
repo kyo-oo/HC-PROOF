@@ -61,15 +61,17 @@ noncomputable def multiplicityMatrixUnit
     intro Φ Ψ
     classical
     exact Finsupp.sum_add_index'
-      (fun kx => by by_cases h : kx.1 = i <;> simp [h])
-      (fun kx a b => by by_cases h : kx.1 = i <;> simp [h])
+      (fun kx => by by_cases h : kx.1 = i <;> simp [h, add_smul])
+      (fun kx a b => by by_cases h : kx.1 = i <;> simp [h, add_smul])
   map_smul' := by
     intro q Φ
     classical
     have h0 : ∀ kx : FiberedNativeAtom V H p,
         (fun ix (c : ℚ) => if ix.1 = i then c • atom V H p j ix.2 else 0) kx 0 = 0 :=
       fun kx => by by_cases h : kx.1 = i <;> simp [h]
-    rw [Finsupp.sum_smul_index' h0]
+    rw [Finsupp.sum_smul_index'
+      (h := fun ix (c : ℚ) =>
+        if ix.1 = i then c • atom V H p j ix.2 else 0) h0]
     simp only [Finsupp.sum, Finset.smul_sum]
     refine Finset.sum_congr rfl (fun kx _ => ?_)
     by_cases h : kx.1 = i <;> simp [h, smul_smul]
