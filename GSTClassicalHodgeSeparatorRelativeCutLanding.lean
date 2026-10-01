@@ -47,9 +47,11 @@ theorem carrierSeparatorSuccessor_mem_principalSectionRange
   have hrange : Set.range (principalSectionAtι V x) =
       (principalSectionIdeal V
         (positiveHomogeneousSeparator V.projective.n
-          (V.projective.immersion x)).equation).support := by
-    simp only [principalSectionAtι, principalSectionι,
-      Scheme.IdealSheafData.range_subschemeι]
+          (V.projective.immersion x)).equation).support :=
+    Scheme.IdealSheafData.range_subschemeι
+      (principalSectionIdeal V
+        (positiveHomogeneousSeparator V.projective.n
+          (V.projective.immersion x)).equation)
   rw [hrange]
   exact carrierSeparatorSuccessor_mem_principalSection V x hlive
 
@@ -62,9 +64,8 @@ theorem pointClosureSeparatorSuccessor_mem_relativeCut
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
     pointClosureSeparatorSuccessor V x hlive ∈ relativeCutSet V x := by
   have hrange : relativeCutSet V x =
-      (pointClosureι V x) ⁻¹' Set.range (principalSectionAtι V x) := by
-    simp only [relativeCutSet, closurePrincipalCutToClosure,
-      Scheme.Pullback.range_fst]
+      (pointClosureι V x) ⁻¹' Set.range (principalSectionAtι V x) :=
+    Scheme.Pullback.range_fst (pointClosureι V x) (principalSectionAtι V x)
   rw [hrange, Set.mem_preimage, pointClosureSeparatorSuccessor_maps]
   exact carrierSeparatorSuccessor_mem_principalSectionRange V x hlive
 
