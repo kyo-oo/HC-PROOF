@@ -91,7 +91,6 @@ noncomputable def toNativeHodgePrimitive
   restricts_to_hodge := by
     intro alpha
     exact (R.ambient_agrees alpha.1).trans (R.restricts_to_hodge alpha)
-    exact R.restricts_to_hodge alpha
 
 /-- The canonical ambient action generated from the native pushforward agrees
 with the supplied geometric cohomology action on the whole ambient space. -/
@@ -274,8 +273,9 @@ theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
-    G D R q alpha halpha
+  rcases bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+    G D R q halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 /-- Elementwise native-cycle form of the strongest native-mass/live-source
 route. -/
@@ -291,8 +291,9 @@ theorem every_hodge_class_has_native_cycle_of_native_mass_source_projective_gene
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_native_mass_source_projective_generators
-    G M R q alpha halpha
+  rcases bigradedBettiHodge_of_native_mass_source_projective_generators
+    G M R q halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 #check ProjectivePrimitiveRealization
 #check ProjectivePrimitiveRealization.toNativeHodgePrimitive

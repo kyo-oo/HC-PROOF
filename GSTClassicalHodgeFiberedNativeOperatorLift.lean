@@ -213,7 +213,7 @@ theorem toNativeCycle_liftProjectiveKernel
     (K : ProjectiveNativeKernel V p)
     (Φ : FiberedNativeAddress V H p) :
     toNativeCycle V H p (liftProjectiveKernel K Φ) =
-      ProjectiveNativeKernel.operator K (toNativeCycle V H p Φ) :=
+      K.operator (toNativeCycle V H p Φ) :=
   toNativeCycle_liftNativeOperator K.operator Φ
 
 /-- The limitless base face of a lifted native operator is exactly the cosmic
