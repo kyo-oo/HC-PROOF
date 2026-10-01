@@ -128,7 +128,7 @@ theorem trace_successor_positive_of_one_exact
           (codimensionPointCycle V.X p x))) := by
   rw [trace_successorNativeOperator_point D]
   classical
-  apply Finset.sum_pos
+  apply Finset.sum_pos'
   · intro y hy
     by_cases hExact : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1
     · simp [hExact, le_of_lt (D.pointDegree_pos (p + 1)
