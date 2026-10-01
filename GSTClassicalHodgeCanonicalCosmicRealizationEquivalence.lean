@@ -1,5 +1,6 @@
 import GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 import GSTClassicalHodgeRangeLiftedSpectralOperator
+import GSTClassicalHodgeUniversalTwoSlotNativeClosure
 import GSTClassicalHodgeCycleOperatorNaturality
 import GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 
@@ -67,7 +68,7 @@ theorem canonicalCosmicAmbient_on_hodge
     canonicalCosmicAmbient i j alpha.1 =
       liftCosmicWindowOperator (pairBasisIndex i j)
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha := by
-  rw [GSTClassicalHodgeRankFreePrimitiveGeneration.extendHodgeEndomorphism_on_hodge]
+  rw [GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism_on_hodge]
   rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
 
 /-- A genuine native realization of the canonical cosmic read/write action.

@@ -103,7 +103,16 @@ theorem trace_successorNativeOperator_point
   rw [trace_realize_presentation D]
   classical
   unfold successorPresentation
-  rw [Finsupp.sum_finset_sum]
+  have hsum :
+      ((relativeCodimensionOneFinset V x.1).sum (successorAtomPresentation V p x)).sum
+        (fun y a => a * D.pointDegree (p + 1) y) =
+      ∑ y in relativeCodimensionOneFinset V x.1,
+        (successorAtomPresentation V p x y).sum
+          (fun z a => a * D.pointDegree (p + 1) z) :=
+    (Finsupp.sum_finsetSum_index
+      (fun y => zero_mul _)
+      (fun y b₁ b₂ => add_mul b₁ b₂ (D.pointDegree (p + 1) y))).symm
+  rw [hsum]
   apply Finset.sum_congr rfl
   intro y hyMem
   by_cases hy : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1

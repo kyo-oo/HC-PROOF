@@ -218,7 +218,7 @@ theorem ambientWord_on_hodge
         pureMatrixUnit sourceSlot targetSlot := by
     rw [← sheetProjectorQ_target_eq_code,
       ← sheetProjectorQ_source_eq_id_sub_code]
-    exact forwardArsenalWord_eq_matrixUnit
+    exact GSTClassicalHodgeExplicitArsenalGeneration.forwardArsenalWord_eq_matrixUnit
       sourceSlot targetSlot (by omega)
   have hlift :
       liftFiniteHodgeOperator (pairBasisIndex i j)
