@@ -27,6 +27,7 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open AlgebraicGeometry
+open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeThreeUniverseSeedIdentification
 
@@ -39,7 +40,6 @@ open GSTClassicalHodgeTransferSeedUniverse
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTTransferBridgeV2
-open GSTNativeCodimensionCyclePresentation
 
 /-- **THREE-UNIVERSE BASIS-SEED IDENTITY.**
 For every genuine Hodge basis sheet and every genuine native codimension-p
@@ -103,11 +103,19 @@ noncomputable def classicalHodgeMass
   map_add' := by
     intro a b
     classical
-    simp
+    simp only [map_add]
+    exact Finsupp.sum_add_index'
+      (fun _ => rfl) (fun _ _ _ => rfl)
   map_smul' := by
     intro q a
     classical
-    simp [smul_eq_mul]
+    simp only [map_smul, Finsupp.coe_smul, Pi.smul_apply]
+    have h0 : ∀ i : ClassicalHodgeBasisIndex V H p,
+        (fun _ (c : ℚ) => c) i 0 = 0 :=
+      fun _ => rfl
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp
 
 /-- Forgetting multiplicity from an arbitrary genuine Hodge class gives its
 finite total basis mass times the common limitless transfer direction. -/
@@ -122,7 +130,7 @@ theorem classicalHodge_forgetMultiplicity_eq_mass_transfer
   rw [forgetMultiplicity_fiberedWeightCoordinates]
   rw [rationalize_compactClMono]
   ext n
-  simp [classicalHodgeMass, smul_eq_mul]
+  simp [classicalHodgeMass, smul_eq_mul, pureWeightAddress]
 
 /-- If a native cycle and a classical Hodge class have the same total rational
 mass, then their multiplicity-forgotten limitless cosmic addresses coincide

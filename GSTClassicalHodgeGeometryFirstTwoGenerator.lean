@@ -45,6 +45,8 @@ open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeNativeGeneratorNaturality
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
@@ -71,10 +73,10 @@ theorem kernelStable_ambient_hasNativePointLifts
     HasNativePointLifts (p := p) (cl := H.cycleClass p)
       (ambientOperator (H := H) A hA) := by
   intro x
-  refine ⟨A (codimensionPointCycle V.X p x), ?_⟩
+  refine ⟨A (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x), ?_⟩
   symm
   exact cycleClass_ambientOperator (H := H) A hA
-    (codimensionPointCycle V.X p x)
+    (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x)
 
 /-- Geometry-first realization of one Hodge-fiber primitive.
 
@@ -166,7 +168,7 @@ theorem source_hasNativePointLifts
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientSource := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    ((smoothProjective_atomicStable_iff_nativePointLifts).2
+    ((smoothProjective_atomicStable_iff_nativePointLifts _).2
       R.code.hasNativePointLifts)
 
 /-- The universal geometry-first word is native-natural by pure operator
@@ -175,7 +177,7 @@ theorem ambientWord_hasNativePointLifts
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientWord := by
   unfold ambientWord
-  apply GSTClassicalHodgeNativeGeneratorNaturality.HasNativePointLifts.smul
+  apply TwoGeneratorNative.hasNativePointLifts_smul
   exact nativePointLifts_comp R.code.hasNativePointLifts
     (nativePointLifts_comp R.lefschetz.hasNativePointLifts
       R.source_hasNativePointLifts)
@@ -237,7 +239,7 @@ theorem matrixUnit_mem_algebraic
     hodgeMatrixUnit i j alpha ∈ AlgebraicHodgeSubspace V H p := by
   have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
       R.ambientWord :=
-    (smoothProjective_atomicStable_iff_nativePointLifts).2
+    (smoothProjective_atomicStable_iff_nativePointLifts _).2
       R.ambientWord_hasNativePointLifts
   have himage := hstable alpha.1 halpha
   rw [R.ambientWord_on_hodge alpha] at himage

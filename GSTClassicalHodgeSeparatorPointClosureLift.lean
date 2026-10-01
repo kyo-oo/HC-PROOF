@@ -43,6 +43,7 @@ theorem carrierSeparatorSuccessor_mem_sourceClosure
     carrierSeparatorSuccessor V x hlive ∈ closure ({x} : Set V.X) := by
   let f := V.projective.immersion
   let y := carrierSeparatorSuccessor V x hlive
+  letI : IsClosedImmersion f := V.projective.closedImmersion
   have hyImage : f y ∈ closure ({f x} : Set (projectiveSpace V.projective.n)) := by
     rw [carrierSeparatorSuccessor_image V x hlive]
     exact separatorSuccessorPoint_mem_source_closure
