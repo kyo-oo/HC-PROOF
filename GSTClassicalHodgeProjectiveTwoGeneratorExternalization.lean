@@ -3,6 +3,9 @@ import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeLimitlessTowerOrbitCrown
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeProjectiveSelfCorrespondences
+import GSTClassicalHodgeTwoGeneratorNativeArsenal
+import GSTClassicalHodgeUniversalTwoSlotNativeClosure
+import GSTClassicalHodgeExplicitArsenalGeneration
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE TWO-GENERATOR EXTERNALIZATION
@@ -49,6 +52,9 @@ open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgePrimitivePushforwardNaturality
 open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeGeometryFirstTwoGenerator
+open GSTClassicalHodgeTwoGeneratorNativeArsenal
+open GSTClassicalHodgeUniversalTwoSlotNativeClosure
+open GSTClassicalHodgeExplicitArsenalGeneration
 open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
 open GSTClassicalHodgeLimitlessSpinePropagation
@@ -87,7 +93,6 @@ noncomputable def toNativeHodgePrimitive
   restricts_to_hodge := by
     intro alpha
     exact (R.ambient_agrees alpha.1).trans (R.restricts_to_hodge alpha)
-    exact R.restricts_to_hodge alpha
 
 /-- The canonical ambient action generated from the native pushforward agrees
 with the supplied geometric cohomology action on the whole ambient space. -/
