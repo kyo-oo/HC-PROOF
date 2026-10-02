@@ -100,7 +100,9 @@ theorem rawTargetCycle_spec
       (V := V) (H := H) S.sourceIndex j) :
     H.cycleClass p (S.rawTargetCycle j R) =
       S.sourceCoefficient • (classicalHodgeBasis V H p j).1 := by
+  unfold rawTargetCycle
   rw [cycleClass_nativeWord R S.cycle]
+  rw [show H.cycleClass p S.cycle = S.hodgeClass.1 from rfl]
   have hword := R.ambientWord_on_hodge S.hodgeClass
   rw [hword]
   change (hodgeMatrixUnit S.sourceIndex j S.hodgeClass).1 = _

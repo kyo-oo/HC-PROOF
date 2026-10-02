@@ -69,9 +69,9 @@ theorem limitlessCosmic_preserves_cycleClass_range_on_hodge
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
     (alpha : ClassicalHodgeFiber V H p)
     (halg : alpha.1 ∈ LinearMap.range (H.cycleClass p)) :
-    liftCosmicWindowOperator (pairBasisIndex i j)
+    (liftCosmicWindowOperator (pairBasisIndex i j)
         (GSTClassicalHodgeLimitlessCosmicMatrixUnits.rationalCosmicMatrixUnit
-          sourceSlot.1 targetSlot.1) alpha ∈
+          sourceSlot.1 targetSlot.1) alpha).1 ∈
       LinearMap.range (H.cycleClass p) := by
   rcases halg with ⟨Z, hZ⟩
   refine ⟨nativeWord R Z, ?_⟩
