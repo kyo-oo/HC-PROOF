@@ -5,6 +5,7 @@ on:
     branches:
       - sol/hodge-conjecture-final-integration
       - sol/hodge-single-separator-successor
+      - sol/hodge-math-frontier-closure-20261002
   workflow_dispatch:
 
 permissions:

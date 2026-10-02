@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - sol/hodge-single-separator-successor
+      - sol/hodge-math-frontier-closure-20261002
   workflow_dispatch:
 
 permissions:
@@ -88,6 +89,13 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeUniversalFirstFailurePureTransposeClosure.lean 2>&1 | tee -a universal-limitless-cycle-geometry.log
+
+      - name: Compile frontier-closure correspondence orbit algebra
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTClassicalHodgeCorrespondenceSemanticFirewall GSTClassicalHodgeCosmicEscapeKernelExactness GSTClassicalHodgeFirstGhostTransposeFrontier GSTClassicalHodgePersistentVerticalDefect GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra GSTClassicalHodgePersistentDefectCorrespondenceOrbit 2>&1 | tee -a universal-limitless-cycle-geometry.log
 
       - name: Trust audit
         shell: bash
