@@ -326,7 +326,7 @@ noncomputable def normalizedSpineProgram
     (q : Nat) → GradedGeometricProgram V 0 q
   | 0 => .id 0
   | q + 1 =>
-      .smul (successorScalar q)⁻¹
+      .smul (GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar q)⁻¹
         (.comp (normalizedSpineProgram V q) (.cut q))
 
 /-- Native execution of the compiled program is exactly the earlier normalized
@@ -342,7 +342,7 @@ theorem normalizedSpineProgram_cycleEval
   | zero => rfl
   | succ q ih =>
       change
-        (successorScalar q)⁻¹ •
+        (GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar q)⁻¹ •
           successorNativeOperator V q
             ((normalizedSpineProgram V q).cycleEval G
               (codimensionZeroFundamentalCycle V)) =
