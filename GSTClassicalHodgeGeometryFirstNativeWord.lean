@@ -93,7 +93,6 @@ theorem cycleClass_nativeWord
     (H := H) R.lefschetz.cycleOperator R.lefschetz.kernelStable]
   rw [cycleClass_ambientOperator
     (H := H) R.code.cycleOperator R.code.kernelStable]
-  rfl
 
 /-- Applying the native word to a source-basis representative produces a
 literal native representative of the target basis vector. -/
