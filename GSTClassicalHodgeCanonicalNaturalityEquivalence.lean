@@ -2,6 +2,8 @@ import GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 import GSTClassicalHodgeArsenalNonCircularity
 import GSTClassicalHodgeFiberedTransferCompletion
 import GSTClassicalHodgeNativeCycleCosmicShadow
+import GSTClassicalHodgeConcreteFailureDichotomy
+import GSTGeometricRealizationStage2D
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL NATURALITY / SATURATION EQUIVALENCE

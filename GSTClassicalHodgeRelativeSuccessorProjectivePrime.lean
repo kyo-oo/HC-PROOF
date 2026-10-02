@@ -1,5 +1,6 @@
 import GSTClassicalHodgeProjectiveSeparatorHeightOne
 import GSTClassicalHodgeRelativeSuccessorLowerBound
+import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE PRIME DATA OF RELATIVE SUCCESSORS

@@ -34,6 +34,13 @@ jobs:
           lake update
           lake exe cache get
 
+      - name: Pre-build stale-ilean import-edge dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTClassicalHodgeLocalSeedBareLefschetzExtinction GSTClassicalHodgeRelativeSuccessorExactStratum GSTClassicalHodgeConcreteFailureDichotomy GSTGeometricRealizationStage2D 2>&1 | tee -a hodge-final.log
+
       - name: Compile complete classical Hodge mathematics lane
         shell: bash
         run: |
