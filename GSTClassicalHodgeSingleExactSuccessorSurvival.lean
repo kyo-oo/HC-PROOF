@@ -1,5 +1,6 @@
 import GSTClassicalHodgeRelativeSuccessorNonempty
 import GSTClassicalHodgeNativeCycleCosmicShadow
+import GSTClassicalHodgePointClosurePrincipalCut
 
 /-!
 # GST CLASSICAL HODGE — SINGLE EXACT SUCCESSOR SURVIVAL
@@ -31,6 +32,7 @@ open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgePointClosureRelativeCut
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeNativeCycleCosmicShadow
+open GSTClassicalHodgePointClosurePrincipalCut
 open GSTClassicalHodgeRelativeSuccessorNonempty
 
 namespace GSTClassicalHodgeSingleExactSuccessorSurvival

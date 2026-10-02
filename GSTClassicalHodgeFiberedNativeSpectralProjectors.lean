@@ -76,7 +76,8 @@ theorem transportFiberedNative_codeProj
       worldCode S ((worldRecoordinate S T).symm y) = worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
     exact worldRecoordinate_code T S y
-  simp [transportFiberedNative, fiberedNativeCodeProj, hcode]
+  simp only [transportFiberedNative, fiberedNativeCodeProj]
+  rw [hcode]
 
 /-- A code projector keyed by one shaped state isolates exactly that state,
 because `shapeCodeEquiv` is injective. -/
@@ -93,14 +94,15 @@ theorem codeProj_shapedField_isolates
       else 0 := by
   by_cases hzy : z = y
   · subst z
-    simp [fiberedNativeCodeProj, shapedFiberedNativeField]
+    simp only [fiberedNativeCodeProj, shapedFiberedNativeField]
   · have hcode : worldCode S z ≠ worldCode S y := by
       intro h
       apply hzy
       apply (shapeCodeEquiv S).injective
       apply Fin.ext
       exact h
-    simp [fiberedNativeCodeProj, shapedFiberedNativeField, hzy, hcode]
+    simp only [fiberedNativeCodeProj]
+    rw [if_neg hcode, if_neg hzy]
 
 /-- Sum a pullback-valued shaped field over its finite GST observation chart. -/
 noncomputable def sumShapedField
@@ -124,7 +126,8 @@ theorem sum_codeProj_shapedField
   classical
   unfold sumShapedField
   rw [Finset.sum_eq_single y]
-  · simp [codeProj_shapedField_isolates]
+  · rw [codeProj_shapedField_isolates]
+    simp
   · intro z hz hzy
     rw [codeProj_shapedField_isolates]
     simp [hzy]
@@ -146,6 +149,7 @@ theorem projected_hodgeFace_exact
           ⟨p, shapedLiveBasisIndex alpha S y⟩ := by
   rw [sum_codeProj_shapedField]
   rw [map_smul]
+  rw [shapedLiveNativeAtom]
   rw [toGlobalHodgeAddress_atom]
 
 /-- Genuine native projective-cycle face of the same isolated live sheet. -/
@@ -162,6 +166,7 @@ theorem projected_nativeFace_exact
         codimensionPointCycle V.X p x := by
   rw [sum_codeProj_shapedField]
   rw [map_smul]
+  rw [shapedLiveNativeAtom]
   rw [toNativeCycle_atom]
 
 /-- Limitless universal-address face of the isolated native atom. -/

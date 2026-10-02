@@ -148,7 +148,7 @@ theorem targetAtomPresentation_eq_single
   simp only [targetAtomPresentation]
   split
   · rfl
-  · next hz' => exact absurd hz' hz
+  · next hz' => exact absurd hz' (not_not.mpr hz)
 
 /-- Wrong target codimension contributes zero and therefore cannot contaminate
 the native codimension-p cycle space. -/
@@ -171,7 +171,7 @@ theorem transition_eq_fiber_sum
     (p : Nat)
     (x : CodimensionPoint V.X p) :
     K.transition p x =
-      ∑ z in K.leftFiberFinset x.1, K.targetAtomPresentation p z :=
+      ∑ z ∈ K.leftFiberFinset x.1, K.targetAtomPresentation p z :=
   rfl
 
 /-- The pointwise Betti realization equation identifying a genuine finite
