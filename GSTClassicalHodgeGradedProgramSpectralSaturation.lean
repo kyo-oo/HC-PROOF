@@ -40,6 +40,7 @@ open AlgebraicGeometry
 namespace GSTClassicalHodgeGradedProgramSpectralSaturation
 
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
