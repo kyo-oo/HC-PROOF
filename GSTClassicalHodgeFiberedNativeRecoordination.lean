@@ -1,5 +1,6 @@
 import GSTClassicalHodgeFiberedNativePullback
 import GSTClassicalHodgeRecoordinationArsenalCrown
+import GSTClassicalHodgeSupportCardinalityBridge
 import GSTWorldRecoordinationGroupoid
 
 /-!
@@ -170,8 +171,7 @@ theorem transport_shapedFiberedNativeField
   rw [hcode]
   have hatom := shapedLiveNativeAtom_recoordinate
     alpha T S y x
-  rw [worldRecoordinate_inverse] at hatom
-  rw [hatom]
+  exact hatom
 
 /-- The native-cycle-valued shaped field is therefore also chart independent. -/
 theorem transport_nativeFace_field

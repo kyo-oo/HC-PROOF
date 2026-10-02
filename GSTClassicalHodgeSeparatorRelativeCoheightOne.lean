@@ -74,10 +74,10 @@ theorem coheight_le_one_of_unique_strictAbove
   exact (ne_of_lt h12) (h1top.trans h2top.symm)
 
 local instance (V : SmoothProjectiveComplexScheme) : PartialOrder V.X :=
-  specializationOrder
+  specializationOrder V.X
 
 local instance (V : SmoothProjectiveComplexScheme) (x : V.X) :
-    PartialOrder (pointClosureScheme V x) := specializationOrder
+    PartialOrder (pointClosureScheme V x) := specializationOrder (pointClosureScheme V x)
 
 /-- The separator successor is strictly below the canonical generic source
 inside the reduced point-closure specialization order. -/

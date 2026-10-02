@@ -162,7 +162,7 @@ theorem hodge_weight_of_liveSource_pointLifts
         (pointCycleClassSpan p (H.cycleClass p)).comap
           ((rationalHodgeSubspace (H.hodgeBigrading p)).subtype) := by
       rw [htop]
-      exact Submodule.mem_top _
+      exact Submodule.mem_top
     exact Submodule.mem_comap.mp hmem
   rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halg
   exact halg
