@@ -488,6 +488,14 @@ roots = [
   "GSTClassicalHodgePrincipalCutFlagHomologicalDescent",
   "GSTClassicalHodgePrincipalCutFlagCohomologicalDescent",
   "HodgeConjecture",
+  "GSTClassicalHodgeLocalSeedBareLefschetzExtinction",
+  "GSTClassicalHodgeRelativeSuccessorExactStratum",
+  "GSTClassicalHodgeCorrespondenceSemanticFirewall",
+  "GSTClassicalHodgeCosmicEscapeKernelExactness",
+  "GSTClassicalHodgeFirstGhostTransposeFrontier",
+  "GSTClassicalHodgePersistentVerticalDefect",
+  "GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra",
+  "GSTClassicalHodgePersistentDefectCorrespondenceOrbit",
 ]
 
 # ---------------------------------------------------------------------------
