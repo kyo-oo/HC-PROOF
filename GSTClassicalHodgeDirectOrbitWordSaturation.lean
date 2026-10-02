@@ -96,7 +96,7 @@ theorem directTargetProgram_cohomologyEval
     c⁻¹ • (R.word.operatorPair G).cohomologyOperator S.hodge.1 =
       (classicalHodgeBasis V H q j).1
   rw [R.source_action]
-  simp [c, hc]
+  exact inv_smul_smul₀ hc _
 
 /-- Every live-source projective target word therefore puts its requested
 basis sheet in the one-program orbit set itself. -/
