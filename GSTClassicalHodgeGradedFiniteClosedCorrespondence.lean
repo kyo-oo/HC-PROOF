@@ -60,7 +60,20 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p q : Nat}
 
+end GSTClassicalHodgeGradedFiniteClosedCorrespondence
+
 namespace GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
+
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
+open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
+open GSTClassicalHodgePointKernelOperatorLift
+open GSTClassicalHodgeFiniteClosedCorrespondence
+open GSTClassicalHodgeCrossWeightNativePropagation
 
 /-- Finite target-q presentation over one source point of codimension p.
 Unlike the older `transition`, source and target codimensions are independent. -/
@@ -162,6 +175,18 @@ theorem gradedNativeCycleOperator_has_finite_target
 
 end GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
 
+namespace GSTClassicalHodgeGradedFiniteClosedCorrespondence
+
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
+open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
+open GSTClassicalHodgePointKernelOperatorLift
+open GSTClassicalHodgeFiniteClosedCorrespondence
+open GSTClassicalHodgeCrossWeightNativePropagation
 open GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
 
 /-- Point-generator cycle-class naturality for a genuine graded finite closed
