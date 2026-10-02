@@ -3,9 +3,6 @@ import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeLimitlessTowerOrbitCrown
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeProjectiveSelfCorrespondences
-import GSTClassicalHodgeTwoGeneratorNativeArsenal
-import GSTClassicalHodgeUniversalTwoSlotNativeClosure
-import GSTClassicalHodgeExplicitArsenalGeneration
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE TWO-GENERATOR EXTERNALIZATION
@@ -51,15 +48,16 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgePrimitivePushforwardNaturality
 open GSTClassicalHodgeProjectivePointTransport
-open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
-open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
 open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
+open GSTClassicalHodgeFullArsenalIrreducibility
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -107,14 +105,18 @@ theorem ambient_eq_geometric
 
 end ProjectivePrimitiveRealization
 
-/-- Exactly two genuine projective primitives for one ordered Hodge-basis pair. -/
+/-- The source-sheet projector and the two genuine projective primitives for
+one ordered Hodge-basis pair. -/
 structure ProjectiveTwoGenerator
     (i j : ClassicalHodgeBasisIndex V H p) where
+  source : ProjectivePrimitiveRealization
+    (V := V) (H := H)
+    (twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot))
   code : ProjectivePrimitiveRealization
     (V := V) (H := H) (twoSlotCodeHodge i j)
   lefschetz : ProjectivePrimitiveRealization
     (V := V) (H := H)
-    (twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
+    (twoSlotHodgeOperator i j (GSTClassicalHodgeExplicitArsenalGeneration.diagonalLefschetzQ 2 2))
 
 namespace ProjectiveTwoGenerator
 
@@ -124,6 +126,7 @@ noncomputable def toGeometryFirst
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : ProjectiveTwoGenerator (V := V) (H := H) i j) :
     GeometryFirstTwoGenerator (V := V) (H := H) i j where
+  source := R.source.toNativeHodgePrimitive
   code := R.code.toNativeHodgePrimitive
   lefschetz := R.lefschetz.toNativeHodgePrimitive
 
@@ -270,8 +273,9 @@ theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
-    G D R q alpha halpha
+  rcases bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+    G D R q halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 /-- Elementwise native-cycle form of the strongest native-mass/live-source
 route. -/
@@ -287,8 +291,9 @@ theorem every_hodge_class_has_native_cycle_of_native_mass_source_projective_gene
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_native_mass_source_projective_generators
-    G M R q alpha halpha
+  rcases bigradedBettiHodge_of_native_mass_source_projective_generators
+    G M R q halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 #check ProjectivePrimitiveRealization
 #check ProjectivePrimitiveRealization.toNativeHodgePrimitive

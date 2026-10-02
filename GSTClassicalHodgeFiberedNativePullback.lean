@@ -78,10 +78,16 @@ noncomputable def forgetPoint :
   map_add' := by
     intro φ ψ
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp)
   map_smul' := by
     intro q φ
     classical
+    have h0 : ∀ i : FiberedNativeAtom V H p,
+        (fun ix (c : ℚ) => Finsupp.single ix.1 c) i 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
     simp [smul_smul]
 
 /-- Forget only the multiplicity sheet and retain the genuine native point
@@ -93,10 +99,16 @@ noncomputable def forgetMultiplicity :
   map_add' := by
     intro φ ψ
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp)
   map_smul' := by
     intro q φ
     classical
+    have h0 : ∀ i : FiberedNativeAtom V H p,
+        (fun ix (c : ℚ) => Finsupp.single ix.2 c) i 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
     simp [smul_smul]
 
 /-- Embed the fixed-weight multiplicity address into the global fibered Hodge
@@ -104,18 +116,31 @@ universe. -/
 noncomputable def toGlobalHodgeAddress :
     FiberedNativeAddress V H p →ₗ[ℚ] FiberedHodgeAddress V H where
   toFun φ := Finsupp.embDomain (weightFiberEmbedding V H p) (forgetPoint V H p φ)
-  map_add' := by
-    intro φ ψ
-    simp
+  map_add' := by intro φ ψ; simp
   map_smul' := by
     intro q φ
-    simp
+    rw [(forgetPoint V H p).map_smul]
+    ext n
+    by_cases hn : n ∈ Set.range
+        (weightFiberEmbedding V H p : ClassicalHodgeBasisIndex V H p → FiberedHodgeIndex V H)
+    · rcases hn with ⟨m, hm⟩
+      subst hm
+      show (Finsupp.embDomain (weightFiberEmbedding V H p)
+            (q • (forgetPoint V H p) φ))
+            ((weightFiberEmbedding V H p) m) =
+          q * (Finsupp.embDomain (weightFiberEmbedding V H p)
+            ((forgetPoint V H p) φ)) ((weightFiberEmbedding V H p) m)
+      simp [Finsupp.embDomain_apply_self]
+    · show (Finsupp.embDomain (weightFiberEmbedding V H p)
+            (q • (forgetPoint V H p) φ)) n =
+          q * (Finsupp.embDomain (weightFiberEmbedding V H p)
+            ((forgetPoint V H p) φ)) n
+      simp [Finsupp.embDomain_of_notMem_range, hn]
 
 /-- Realize the native projection as an actual codimension-p algebraic cycle. -/
 noncomputable def toNativeCycle :
     FiberedNativeAddress V H p →ₗ[ℚ] codimensionCycles V.X p :=
-  (Finsupp.linearCombination ℚ (codimensionPointCycle V.X p) :
-    FiniteCodimensionPresentation V.X p →ₗ[ℚ] codimensionCycles V.X p).comp
+  (realizePresentationLinear V.X p).comp
     (forgetMultiplicity V H p)
 
 /-- Total rational mass of a common-refinement state. -/
@@ -124,11 +149,16 @@ noncomputable def totalMass : FiberedNativeAddress V H p →ₗ[ℚ] ℚ where
   map_add' := by
     intro φ ψ
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun _ => rfl) (fun _ _ _ => rfl)
   map_smul' := by
     intro q φ
     classical
-    simp [smul_eq_mul]
+    have h0 : ∀ i : FiberedNativeAtom V H p, (fun _ (c : ℚ) => c) i 0 = 0 :=
+      fun _ => rfl
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp
 
 @[simp]
 theorem forgetPoint_atom
@@ -152,8 +182,8 @@ theorem toGlobalHodgeAddress_atom
     (x : CodimensionPoint V.X p) :
     toGlobalHodgeAddress V H p (atom V H p i x) =
       fiberedSheetGenerator V H ⟨p,i⟩ := by
-  rw [toGlobalHodgeAddress, forgetPoint_atom]
-  simp [fiberedSheetGenerator, weightFiberEmbedding]
+  simp [toGlobalHodgeAddress, forgetPoint_atom,
+    fiberedSheetGenerator, weightFiberEmbedding]
 
 @[simp]
 theorem toNativeCycle_atom
@@ -161,7 +191,7 @@ theorem toNativeCycle_atom
     (x : CodimensionPoint V.X p) :
     toNativeCycle V H p (atom V H p i x) =
       codimensionPointCycle V.X p x := by
-  simp [toNativeCycle, forgetMultiplicity_atom,
+  simp [toNativeCycle, realizePresentationLinear_apply,
     realizeFiniteCodimensionPresentation_single]
 
 @[simp]
@@ -185,7 +215,17 @@ theorem presentationOfNativeCycle_realize
   intro x
   rw [presentationOfNativeCycle_apply]
   classical
-  simp [realizeFiniteCodimensionPresentation, codimensionPointCycle]
+  rw [realizeFiniteCodimensionPresentation_apply V.X p φ x.1]
+  simp only [Finsupp.sum, smul_eq_mul]
+  refine (Finset.sum_eq_single x ?_ ?_).trans ?_
+  · intro b _ hb
+    have hne : x.1 ≠ b.1 := by
+      intro heq
+      exact hb (Subtype.ext heq.symm)
+    simp [hne]
+  · intro hout
+    simp [Finsupp.notMem_support_iff.mp hout]
+  · simp
 
 /-- Hence the finite point presentation and the native codimension-cycle space
 are an exact linear normal form on the smooth projective carrier. -/
@@ -205,8 +245,12 @@ theorem presentationMass_forgetMultiplicity
         (forgetMultiplicity V H p φ) =
       totalMass V H p φ := by
   classical
-  simp [GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass,
-    forgetMultiplicity, totalMass]
+  induction φ using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single ix q =>
+    simp [forgetMultiplicity, totalMass,
+      GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass]
 
 /-- Forgetting the point and then forgetting the classical multiplicity fiber
 lands at total mass times the established limitless transfer generator. -/
@@ -216,11 +260,41 @@ theorem classicalProjection_to_limitless
       totalMass V H p φ •
         rationalizeCompactAddress (compactClMono p) := by
   classical
-  unfold toGlobalHodgeAddress forgetPoint totalMass
-  rw [rationalize_compactClMono]
-  ext n
-  simp [forgetMultiplicityToGST, weightFiberEmbedding,
-    pureWeightAddress, smul_eq_mul]
+  have hzero : forgetMultiplicityToGST (0 : FiberedHodgeAddress V H) = 0 := by
+    simp [forgetMultiplicityToGST]
+  have hadd : ∀ (a b : FiberedHodgeAddress V H),
+      forgetMultiplicityToGST (a + b) =
+        forgetMultiplicityToGST a + forgetMultiplicityToGST b := by
+    intro a b
+    classical
+    simp only [forgetMultiplicityToGST]
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp)
+  have hsmul : ∀ (q : ℚ) (ψ : FiberedHodgeAddress V H),
+      forgetMultiplicityToGST (q • ψ) = q • forgetMultiplicityToGST ψ := by
+    intro q ψ
+    classical
+    have h0 : ∀ s : FiberedHodgeIndex V H,
+        (fun s (c : ℚ) => Finsupp.single (GSTTransferBridgeV2.compactClCode s.1) c) s 0 = 0 :=
+      fun _ => by simp
+    simp only [forgetMultiplicityToGST]
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp
+  induction φ using Finsupp.induction_linear with
+  | zero => simp [hzero]
+  | add a b ha hb =>
+    simp only [LinearMap.map_add, hadd, ha, hb, add_smul]
+  | single ix q =>
+    have hφ : Finsupp.single ix q = q • atom V H p ix.1 ix.2 := by
+      classical
+      ext j
+      by_cases hj : j = ix
+      · simp [hj, atom]
+      · simp [hj, atom]
+    rw [hφ]
+    simp [LinearMap.map_smul, toGlobalHodgeAddress_atom, hsmul,
+      classicalSheet_eq_rationalized_transfer, totalMass_atom]
 
 /-- Forgetting multiplicity to an actual native cycle and then taking its
 limitless cosmic shadow lands on the exact same transfer ray with the exact
@@ -234,6 +308,7 @@ theorem nativeProjection_to_limitless
   rw [nativeCycle_shadow_eq_mass_transfer]
   congr 1
   rw [toNativeCycle]
+  simp only [LinearMap.comp_apply, realizePresentationLinear_apply]
   rw [nativeCycleMass_realize]
   exact presentationMass_forgetMultiplicity V H p φ
 
@@ -313,11 +388,17 @@ noncomputable def multiplicityMass :
   map_add' := by
     intro a b
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun _ => rfl) (fun _ _ _ => rfl)
   map_smul' := by
     intro q a
     classical
-    simp [smul_eq_mul]
+    have h0 : ∀ i : ClassicalHodgeBasisIndex V H p,
+        (fun _ (c : ℚ) => c) i 0 = 0 :=
+      fun _ => rfl
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
+    simp
 
 @[simp] theorem multiplicityMass_single
     (i : ClassicalHodgeBasisIndex V H p) (q : ℚ) :
@@ -332,10 +413,16 @@ noncomputable def attachPoint (x : CodimensionPoint V.X p) :
   map_add' := by
     intro a b
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _)
   map_smul' := by
     intro q a
     classical
+    have h0 : ∀ i : ClassicalHodgeBasisIndex V H p,
+        (fun i (c : ℚ) => c • atom V H p i x) i 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
     simp [smul_smul]
 
 /-- Attach one multiplicity label to a genuine finite native presentation. -/
@@ -345,10 +432,16 @@ noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
   map_add' := by
     intro a b
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun _ => zero_smul _ _) (fun _ _ _ => add_smul _ _ _)
   map_smul' := by
     intro q a
     classical
+    have h0 : ∀ j : CodimensionPoint V.X p,
+        (fun _ (c : ℚ) => c • atom V H p i j) j 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
     simp [smul_smul]
 
 @[simp] theorem forgetPoint_attachPoint (x : CodimensionPoint V.X p)
