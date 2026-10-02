@@ -1,6 +1,7 @@
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
 import GSTClassicalHodgeSynchronizedDefectOrbit
+import HodgeConjecture
 
 /-!
 # GST CLASSICAL HODGE — FINITE SPINE MOMENT / PROJECTIVE ORBIT CROWN
