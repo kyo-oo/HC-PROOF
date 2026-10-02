@@ -155,15 +155,13 @@ theorem tensorWord_not_nativeDescends_of_nonzero
         A (codimensionPointCycle V.X p x) :=
     tensorWord_nativeFace_atom_source i j A x
   have hk : tensorWord i j A (atom V H p k x) = 0 := by
-    unfold tensorWord
-    rw [LinearMap.comp_apply]
+    simp only [tensorWord, LinearMap.comp_apply]
     rw [liftNativeOperator_atom]
-    classical
-    simp [multiplicityMatrixUnit, labelPresentation, atom, hki]
+    exact multiplicityMatrixUnit_labelPresentation_of_ne (i := i) (j := j) (k := k) hki _
   have himage :
       toNativeCycle V H p (tensorWord i j A Φ) =
         A (codimensionPointCycle V.X p x) := by
-    simp only [Φ, map_sub, hi, hk, map_zero, sub_zero]
+    simp only [Φ, map_sub, hi, hk, sub_zero]
   rw [himage] at himageZero
   exact hAx himageZero
 

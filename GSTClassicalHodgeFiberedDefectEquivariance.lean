@@ -172,11 +172,11 @@ every defect-zero source atom in sheet `i` to a defect-zero target state. -/
 def UniformTensorIntertwiner
     (T : CycleClassOperatorPair V H p)
     (i j : ClassicalHodgeBasisIndex V H p) : Prop :=
-  ∃ λ : ℚ,
+  ∃ c : ℚ,
     (∀ x : CodimensionPoint V.X p,
-      pointTransitionMass T.cycleOperator x = λ) ∧
+      pointTransitionMass T.cycleOperator x = c) ∧
     T.cohomologyOperator (classicalHodgeBasis V H p i).1 =
-      λ • (classicalHodgeBasis V H p j).1
+      c • (classicalHodgeBasis V H p j).1
 
 /-- A uniform intertwiner supplies the pointwise intertwining law at every
 native point atom automatically. -/
@@ -186,7 +186,7 @@ theorem UniformTensorIntertwiner.at
     (h : UniformTensorIntertwiner T i j)
     (x : CodimensionPoint V.X p) :
     TensorIntertwinesAt T i j x := by
-  rcases h with ⟨λ, hmass, hbasis⟩
+  rcases h with ⟨c, hmass, hbasis⟩
   rw [hmass x]
   exact hbasis
 

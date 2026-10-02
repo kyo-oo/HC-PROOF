@@ -175,7 +175,7 @@ externalization. -/
 theorem hodgeWeight_of_fullLimitlessExternalization
     (G : GeometricCycleClassSpine V H)
     (hseed :
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+      GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) ≠ ⊥)
     (K : ∀ i j : ClassicalHodgeBasisIndex V H p,
       ProjectiveNativeKernel V p)
@@ -192,7 +192,7 @@ the multiplicity-labelled native atom on which externalization is tested. -/
 theorem externalization_atom_recoordination_invariant
     (alpha : ClassicalHodgeFiber V H p)
     (S T : GSTWorldRecoordinationGroupoid.GSTWorldShape
-      (GSTClassicalHodgeSupportCardinalityBridge.liveRank alpha))
+      (GSTClassicalHodgeFiniteSupportArsenalConjugation.liveRank alpha))
     (y : GSTWorldRecoordinationGroupoid.ShapeState S)
     (x : CodimensionPoint V.X p) :
     shapedLiveNativeAtom alpha T
@@ -210,7 +210,8 @@ theorem full_limitless_externalization_crown
     (hK : ∀ i j : ClassicalHodgeBasisIndex V H p,
       AtomCosmicExternalization G i j (K i j)) :
     CanonicalCosmicNaturality (V := V) (H := H) p
-    ∧ (∀ i j A,
+    ∧ (∀ i j : ClassicalHodgeBasisIndex V H p,
+      ∀ A : Module.End ℚ (codimensionCycles V.X p),
       (multiplicityMatrixUnit i j).comp (liftNativeOperator A) =
         (liftNativeOperator A).comp (multiplicityMatrixUnit i j)) := by
   exact ⟨canonicalCosmicNaturality_of_fullLimitlessExternalization G K hK,
