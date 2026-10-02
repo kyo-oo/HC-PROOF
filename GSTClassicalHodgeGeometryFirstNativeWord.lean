@@ -81,13 +81,18 @@ theorem cycleClass_nativeWord
     H.cycleClass p (nativeWord R Z) =
       R.ambientWord (H.cycleClass p Z) := by
   unfold nativeWord GeometryFirstTwoGenerator.ambientWord
+    GeometryFirstTwoGenerator.ambientCode
+    GeometryFirstTwoGenerator.ambientLefschetz
+    GeometryFirstTwoGenerator.ambientSource
+    NativeHodgePrimitive.ambient nativeSource
   simp only [LinearMap.smul_apply, LinearMap.comp_apply]
   rw [LinearMap.map_smul]
   rw [cycleClass_ambientOperator
-    (H := H) R.code.cycleOperator R.code.kernelStable]
+    (H := H) R.source.cycleOperator R.source.kernelStable]
   rw [cycleClass_ambientOperator
     (H := H) R.lefschetz.cycleOperator R.lefschetz.kernelStable]
-  rw [cycleClass_nativeSource R Z]
+  rw [cycleClass_ambientOperator
+    (H := H) R.code.cycleOperator R.code.kernelStable]
   rfl
 
 /-- Applying the native word to a source-basis representative produces a
