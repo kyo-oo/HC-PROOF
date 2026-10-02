@@ -39,6 +39,7 @@ noncomputable section
 
 open CategoryTheory
 open AlgebraicGeometry
+open scoped BigOperators
 
 namespace GSTClassicalHodgeFiniteClosedCorrespondence
 
@@ -82,7 +83,7 @@ def leftFiber
   {z | K.left z = x}
 
 /-- The left fiber is finite by the correspondence hypothesis. -/
-theorem leftFiber_finite
+theorem leftFiber_finite'
     (K : FiniteClosedCorrespondence V) (x : V.X) :
     (K.leftFiber x).Finite := by
   simpa [leftFiber, left] using K.leftFiber_finite x
@@ -144,7 +145,10 @@ theorem targetAtomPresentation_eq_single
         (⟨K.right z, hz⟩ : CodimensionPoint V.X p)
         (pointResidueWeight K.left z) := by
   classical
-  simp [targetAtomPresentation, hz]
+  simp only [targetAtomPresentation]
+  split
+  · rfl
+  · next hz' => exact absurd hz' hz
 
 /-- Wrong target codimension contributes zero and therefore cannot contaminate
 the native codimension-p cycle space. -/
@@ -155,7 +159,10 @@ theorem targetAtomPresentation_eq_zero
     (hz : Order.coheight (K.right z) ≠ p) :
     K.targetAtomPresentation p z = 0 := by
   classical
-  simp [targetAtomPresentation, hz]
+  simp only [targetAtomPresentation]
+  split
+  · next hz' => exact absurd hz' hz
+  · rfl
 
 /-- Every correspondence point over x with correct target codimension appears
 as an explicit summand in the point transition. -/

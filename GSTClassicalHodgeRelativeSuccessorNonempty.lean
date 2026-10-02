@@ -1,4 +1,6 @@
 import GSTClassicalHodgeSeparatorRelativeCoheightOne
+import GSTClassicalHodgePointClosurePrincipalCut
+import GSTClassicalHodgeSeparatorPointClosureLift
 
 /-!
 # GST CLASSICAL HODGE — NONEMPTY RELATIVE SUCCESSOR LOCUS
@@ -25,6 +27,8 @@ open GSTClassicalHodgePointClosureRelativeCut
 open GSTClassicalHodgeHeightOneProjectiveRelevance
 open GSTClassicalHodgeSeparatorRelativeCutLanding
 open GSTClassicalHodgeSeparatorRelativeCoheightOne
+open GSTClassicalHodgePointClosurePrincipalCut
+open GSTClassicalHodgeSeparatorPointClosureLift
 
 namespace GSTClassicalHodgeRelativeSuccessorNonempty
 
