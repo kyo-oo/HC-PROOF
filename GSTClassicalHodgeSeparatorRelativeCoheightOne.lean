@@ -50,7 +50,12 @@ theorem coheight_le_one_of_unique_strictAbove
   have hlen : 2 ≤ s.length := by
     by_contra hle
     have h1 : s.length ≤ 1 := by omega
-    exact hnot (by omega)
+    exact hnot (by
+      first
+        | exact_mod_cast h1
+        | simpa using h1
+        | exact h1
+        | omega)
   let i0 : Fin (s.length + 1) := ⟨0, by omega⟩
   let i1 : Fin (s.length + 1) := ⟨1, by omega⟩
   let i2 : Fin (s.length + 1) := ⟨2, by omega⟩
@@ -68,7 +73,11 @@ theorem coheight_le_one_of_unique_strictAbove
   have h2top := huniq (s i2) ha2
   exact (ne_of_lt h12) (h1top.trans h2top.symm)
 
-attribute [local instance] specializationOrder
+local instance (V : SmoothProjectiveComplexScheme) : PartialOrder V.X :=
+  specializationOrder
+
+local instance (V : SmoothProjectiveComplexScheme) (x : V.X) :
+    PartialOrder (pointClosureScheme V x) := specializationOrder
 
 /-- The separator successor is strictly below the canonical generic source
 inside the reduced point-closure specialization order. -/
@@ -130,7 +139,9 @@ theorem pointClosureSeparatorSuccessor_coheight_one
   have hupper : Order.coheight y ≤ 1 :=
     coheight_le_one_of_unique_strictAbove y η
       (no_intermediate_above_separatorSuccessor V x hlive)
-  exact @le_antisymm ℕ∞ _ _ _ hupper hlower
+  first
+    | exact le_antisymm hupper hlower
+    | exact hupper.antisymm hlower
 
 /-- The constructed successor therefore determines an actual member of the
 relative coheight-one subtype used by the recursive cut operator. -/

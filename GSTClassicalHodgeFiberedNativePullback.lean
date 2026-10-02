@@ -75,8 +75,14 @@ noncomputable def forgetPoint :
     FiberedNativeAddress V H p →ₗ[ℚ]
       (ClassicalHodgeBasisIndex V H p →₀ ℚ) where
   toFun φ := φ.sum fun ix q => Finsupp.single ix.1 q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp
+  map_smul' := by
+    intro q φ
+    classical
+    simp [smul_smul]
 
 /-- Forget only the multiplicity sheet and retain the genuine native point
 presentation. -/
@@ -84,28 +90,45 @@ noncomputable def forgetMultiplicity :
     FiberedNativeAddress V H p →ₗ[ℚ]
       FiniteCodimensionPresentation V.X p where
   toFun φ := φ.sum fun ix q => Finsupp.single ix.2 q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp
+  map_smul' := by
+    intro q φ
+    classical
+    simp [smul_smul]
 
 /-- Embed the fixed-weight multiplicity address into the global fibered Hodge
 universe. -/
 noncomputable def toGlobalHodgeAddress :
     FiberedNativeAddress V H p →ₗ[ℚ] FiberedHodgeAddress V H where
   toFun φ := Finsupp.embDomain (weightFiberEmbedding V H p) (forgetPoint V H p φ)
-  map_add' := by intro φ ψ; simp
-  map_smul' := by intro q φ; simp
+  map_add' := by
+    intro φ ψ
+    simp
+  map_smul' := by
+    intro q φ
+    simp
 
 /-- Realize the native projection as an actual codimension-p algebraic cycle. -/
 noncomputable def toNativeCycle :
     FiberedNativeAddress V H p →ₗ[ℚ] codimensionCycles V.X p :=
-  (linearMap_realizeFiniteCodimensionPresentation V.X p).comp
+  (Finsupp.linearCombination ℚ (codimensionPointCycle V.X p) :
+    FiniteCodimensionPresentation V.X p →ₗ[ℚ] codimensionCycles V.X p).comp
     (forgetMultiplicity V H p)
 
 /-- Total rational mass of a common-refinement state. -/
 noncomputable def totalMass : FiberedNativeAddress V H p →ₗ[ℚ] ℚ where
   toFun φ := φ.sum fun _ q => q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp
+  map_smul' := by
+    intro q φ
+    classical
+    simp [smul_eq_mul]
 
 @[simp]
 theorem forgetPoint_atom
@@ -139,7 +162,6 @@ theorem toNativeCycle_atom
     toNativeCycle V H p (atom V H p i x) =
       codimensionPointCycle V.X p x := by
   simp [toNativeCycle, forgetMultiplicity_atom,
-    linearMap_realizeFiniteCodimensionPresentation,
     realizeFiniteCodimensionPresentation_single]
 
 @[simp]
@@ -288,8 +310,14 @@ theorem fibered_native_pullback_crown :
 noncomputable def multiplicityMass :
     (ClassicalHodgeBasisIndex V H p →₀ ℚ) →ₗ[ℚ] ℚ where
   toFun a := a.sum fun _ q => q
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro a b
+    classical
+    simp
+  map_smul' := by
+    intro q a
+    classical
+    simp [smul_eq_mul]
 
 @[simp] theorem multiplicityMass_single
     (i : ClassicalHodgeBasisIndex V H p) (q : ℚ) :
@@ -301,15 +329,27 @@ noncomputable def multiplicityMass :
 noncomputable def attachPoint (x : CodimensionPoint V.X p) :
     (ClassicalHodgeBasisIndex V H p →₀ ℚ) →ₗ[ℚ] FiberedNativeAddress V H p where
   toFun a := a.sum fun i q => q • atom V H p i x
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_smul]
+  map_add' := by
+    intro a b
+    classical
+    simp
+  map_smul' := by
+    intro q a
+    classical
+    simp [smul_smul]
 
 /-- Attach one multiplicity label to a genuine finite native presentation. -/
 noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
     FiniteCodimensionPresentation V.X p →ₗ[ℚ] FiberedNativeAddress V H p where
   toFun b := b.sum fun x q => q • atom V H p i x
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_smul]
+  map_add' := by
+    intro a b
+    classical
+    simp
+  map_smul' := by
+    intro q a
+    classical
+    simp [smul_smul]
 
 @[simp] theorem forgetPoint_attachPoint (x : CodimensionPoint V.X p)
     (a : ClassicalHodgeBasisIndex V H p →₀ ℚ) :

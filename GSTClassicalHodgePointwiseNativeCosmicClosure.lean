@@ -154,7 +154,7 @@ theorem hodge_weight_of_liveSource_pointLifts
   have halg : alpha ∈ pointCycleClassSpan p (H.cycleClass p) := by
     have htop : (pointCycleClassSpan p (H.cycleClass p)).comap
         ((rationalHodgeSubspace (H.hodgeBigrading p)).subtype) = ⊤ := by
-      eq_top_iff.mpr (by
+      exact eq_top_iff.mpr (by
         rw [← (classicalHodgeBasis V H p).span_eq, Submodule.span_le]
         rintro v ⟨j, rfl⟩
         exact hbasis j)
