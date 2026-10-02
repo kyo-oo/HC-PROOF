@@ -429,7 +429,7 @@ theorem classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
     ClassicalHodgeTarget V H := by
   simpa [ClassicalHodgeTarget] using
     (GSTClassicalHodgeProjectiveTwoGeneratorExternalization.bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
-        G D R))
+        G D R)
 
 /-- Elementwise cycle witness for the geometry-first brute-force landing. -/
 theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
