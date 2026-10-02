@@ -353,6 +353,9 @@ roots = [
   "GSTClassicalHodgeGradedGeometricOrbitAlgebra",
   "GSTClassicalHodgeGradedProgramSpectralSaturation",
   "GSTClassicalHodgeDirectOrbitWordSaturation",
+  "GSTClassicalHodgeJointProgramInterpolation",
+  "GSTClassicalHodgeJointProgramCycleExtraction",
+  "GSTClassicalHodgeJointSpectrumFiniteLanding",
 ]
 
 # ---------------------------------------------------------------------------
