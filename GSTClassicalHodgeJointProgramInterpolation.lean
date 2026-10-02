@@ -176,7 +176,7 @@ theorem projector_comp_on_sum (S : JointProgramSpectrum G p ι)
   rw [S.projector_on_sum, map_smul]
   by_cases hji : j = i
   · subst j
-    simp only [S.projector_self, if_pos rfl]
+    rw [S.projector_self, if_pos (rfl : i = i)]
   · rw [S.projector_other i j hji, smul_zero, if_neg hji]
 
 /-- Every interpolating projector preserves the genuine geometric orbit. -/
