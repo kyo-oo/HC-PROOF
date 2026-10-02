@@ -222,7 +222,7 @@ theorem bigradedBettiHodge
         simpa [hH] using halpha
       simpa using this
     subst alpha
-    exact LinearMap.zero_mem _
+    exact Submodule.zero_mem _
   · exact hodge_weight
       (algebraicFiber_ne_bot_of_spineTower G hNV p hH)
       (canonicalCosmicNaturality_of_fullProjectiveExternalization G R p)
@@ -282,7 +282,8 @@ theorem every_hodge_class_has_native_cycle
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
-  exact bigradedBettiHodge G hNV R p alpha halpha
+  rcases bigradedBettiHodge G hNV R p halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 /-- Elementwise conserved-charge landing. -/
 theorem every_hodge_class_has_native_cycle_of_conservedCharge
@@ -294,7 +295,8 @@ theorem every_hodge_class_has_native_cycle_of_conservedCharge
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
-  exact bigradedBettiHodge_of_conservedCharge G D R p alpha halpha
+  rcases bigradedBettiHodge_of_conservedCharge G D R p halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 /-- Elementwise live-mass landing. -/
 theorem every_hodge_class_has_native_cycle_of_liveMassSurvival
@@ -306,7 +308,8 @@ theorem every_hodge_class_has_native_cycle_of_liveMassSurvival
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
-  exact bigradedBettiHodge_of_liveMassSurvival G S R p alpha halpha
+  rcases bigradedBettiHodge_of_liveMassSurvival G S R p halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 /-- There is no remaining finite-rank/countability restriction in the final
 crown. -/

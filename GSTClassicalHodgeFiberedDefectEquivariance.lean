@@ -187,6 +187,7 @@ theorem UniformTensorIntertwiner.at
     (x : CodimensionPoint V.X p) :
     TensorIntertwinesAt T i j x := by
   rcases h with ⟨c, hmass, hbasis⟩
+  unfold TensorIntertwinesAt
   rw [hmass x]
   exact hbasis
 

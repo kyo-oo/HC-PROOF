@@ -168,7 +168,8 @@ theorem every_hodge_class_has_native_cycle_of_direct_orbit_projective_words
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_direct_orbit_projective_words G D R q alpha halpha
+  rcases bigradedBettiHodge_of_direct_orbit_projective_words G D R q halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 /-- Native-mass form: the conserved spine charge is manufactured internally
 from the native mass bridge before direct orbit saturation. -/
