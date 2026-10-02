@@ -62,8 +62,14 @@ noncomputable def fiberedNativePushforward
     (f : V.X ⟶ V.X) :
     FiberedNativeAddress V H p →ₗ[ℚ] FiberedNativeAddress V H p where
   toFun φ := φ.sum fun ix q => q • transportAtom f ix.1 ix.2
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp
+  map_smul' := by
+    intro q φ
+    classical
+    simp [smul_smul]
 
 @[simp]
 theorem fiberedNativePushforward_atom
@@ -164,7 +170,7 @@ classical coefficient. -/
 theorem project_then_projectiveTransport_nativeFace
     (alpha : ClassicalHodgeFiber V H p)
     (S : GSTWorldRecoordinationGroupoid.GSTWorldShape
-      (GSTClassicalHodgeSupportCardinalityBridge.liveRank alpha))
+      (GSTClassicalHodgeFiniteSupportArsenalConjugation.liveRank alpha))
     (y : GSTWorldRecoordinationGroupoid.ShapeState S)
     (x : CodimensionPoint V.X p)
     (f : V.X ⟶ V.X) :
@@ -175,7 +181,7 @@ theorem project_then_projectiveTransport_nativeFace
             (GSTWorldRecoordinationGroupoid.worldCode S y)
             (GSTClassicalHodgeFiberedNativeRecoordination.shapedFiberedNativeField
               alpha S x)))) =
-      GSTClassicalHodgeSupportCardinalityBridge.liveCoordinateVector alpha
+      GSTClassicalHodgeFiniteSupportArsenalConjugation.liveCoordinateVector alpha
         (GSTWorldRecoordinationGroupoid.shapeCodeEquiv S y) •
         nativePointPushforward f p x := by
   rw [sum_codeProj_shapedField]
