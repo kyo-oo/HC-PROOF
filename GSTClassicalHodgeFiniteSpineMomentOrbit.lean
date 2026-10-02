@@ -1,6 +1,7 @@
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
 import GSTClassicalHodgeSynchronizedDefectOrbit
+import HodgeConjecture
 
 /-!
 # GST CLASSICAL HODGE — FINITE SPINE MOMENT / PROJECTIVE ORBIT CROWN
@@ -87,7 +88,7 @@ structure FiniteSpineMomentChain
       read (q + 1)
           ((G.principalCutPair q).cohomologyOperator
             (spineHodgeSeed G q).1) =
-        successorScalar q * read q (spineHodgeSeed G q).1
+        GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar q * read q (spineHodgeSeed G q).1
 
 namespace FiniteSpineMomentChain
 
@@ -108,14 +109,14 @@ theorem read_spineHodgeSeed_eq_base
       have hqle : q ≤ top := by omega
       change
         D.read (q + 1)
-            ((successorScalar q)⁻¹ •
+            ((GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar q)⁻¹ •
               (G.principalCutPair q).cohomologyOperator
                 (spineHodgeSeed G q).1) =
           D.read 0 (spineHodgeSeed G 0).1
       rw [LinearMap.map_smul]
       rw [D.successor_read q hlt]
       rw [ih hqle]
-      simp [successorScalar_ne_zero]
+      simp [GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar]
 
 /-- The requested top-weight spine seed is nonzero.  This is the exact amount
 of nonvanishing needed by the synchronized orbit argument. -/
@@ -127,7 +128,7 @@ theorem top_spineHodgeSeed_ne_zero
   intro hz
   have hconst := D.read_spineHodgeSeed_eq_base top (le_refl top)
   rw [hz] at hconst
-  simp only [map_zero] at hconst
+  simp only [ZeroMemClass.coe_zero, map_zero] at hconst
   exact D.base_ne_zero hconst.symm
 
 /-- The geometry-built native spine and its now-proved nonzero Hodge class give

@@ -152,17 +152,18 @@ theorem hodge_weight_of_liveSource_pointLifts
         pointCycleClassSpan p (H.cycleClass p) :=
     every_basis_algebraic_of_liveSource_pointLifts S hLift
   have halg : alpha ∈ pointCycleClassSpan p (H.cycleClass p) := by
-    show alphaH.1 ∈ pointCycleClassSpan p (H.cycleClass p)
-    rw [show alphaH =
-      ∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
-        ((classicalHodgeBasis V H p).repr alphaH j) •
-          classicalHodgeBasis V H p j by
-      exact (classicalHodgeBasis V H p).sum_repr alphaH]
-    simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower]
-    apply Submodule.sum_mem
-    intro j hj
-    exact (pointCycleClassSpan p (H.cycleClass p)).smul_mem
-      ((classicalHodgeBasis V H p).repr alphaH j) (hbasis j)
+    have htop : (pointCycleClassSpan p (H.cycleClass p)).comap
+        ((rationalHodgeSubspace (H.hodgeBigrading p)).subtype) = ⊤ := by
+      eq_top_iff.mpr (by
+        rw [← (classicalHodgeBasis V H p).span_eq, Submodule.span_le]
+        rintro v ⟨j, rfl⟩
+        exact hbasis j)
+    have hmem : alphaH ∈
+        (pointCycleClassSpan p (H.cycleClass p)).comap
+          ((rationalHodgeSubspace (H.hodgeBigrading p)).subtype) := by
+      rw [htop]
+      exact Submodule.mem_top _
+    exact Submodule.mem_comap.mp hmem
   rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halg
   exact halg
 

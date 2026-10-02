@@ -48,7 +48,9 @@ theorem coheight_le_one_of_unique_strictAbove
   intro s hs
   by_contra hnot
   have hlen : 2 ≤ s.length := by
-    omega
+    by_contra hle
+    have h1 : s.length ≤ 1 := by omega
+    exact hnot (by omega)
   let i0 : Fin (s.length + 1) := ⟨0, by omega⟩
   let i1 : Fin (s.length + 1) := ⟨1, by omega⟩
   let i2 : Fin (s.length + 1) := ⟨2, by omega⟩
@@ -118,15 +120,17 @@ theorem pointClosureSeparatorSuccessor_coheight_one
         simpa [η, closureGenericPoint_maps_to_source] using hmap
       have hback : pointClosureι V x z ≤ x :=
         pointClosure_image_le_source V x z
+      apply le_of_eq
       apply (pointClosureι V x).isEmbedding.injective
+      show pointClosureι V x z = pointClosureι V x (closureGenericPoint V x)
       rw [closureGenericPoint_maps_to_source]
-      exact le_antisymm hback himage
+      exact @le_antisymm V.X _ _ _ hback himage
     rw [hη0] at h
     simpa using h
   have hupper : Order.coheight y ≤ 1 :=
     coheight_le_one_of_unique_strictAbove y η
       (no_intermediate_above_separatorSuccessor V x hlive)
-  exact le_antisymm hupper hlower
+  exact @le_antisymm ℕ∞ _ _ _ hupper hlower
 
 /-- The constructed successor therefore determines an actual member of the
 relative coheight-one subtype used by the recursive cut operator. -/
