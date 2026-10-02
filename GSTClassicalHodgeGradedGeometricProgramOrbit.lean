@@ -343,11 +343,12 @@ theorem normalizedSpineProgram_cycleEval
   | succ q ih =>
       change
         (GSTClassicalHodgePrincipalCutSuccessorOperator.successorScalar q)⁻¹ •
-          successorNativeOperator V q
+          (G.principalCutPair q).cycleOperator
             ((normalizedSpineProgram V q).cycleEval G
               (codimensionZeroFundamentalCycle V)) =
           spineNativeTower G (q + 1)
       rw [ih]
+      rw [G.principalCutPair_native q]
       exact (spineNativeTower_succ G q).symm
 
 /-- Cohomological execution of the same program is exactly the earlier
