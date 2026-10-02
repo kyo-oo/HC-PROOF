@@ -63,7 +63,7 @@ noncomputable def NativeMassKernelEscape.toPositiveCosmicHomologyEscape
   mass_ne_zero := E.mass_ne_zero
   shadow_ne_zero :=
     nativeCycleCosmicShadow_self_ne_zero_of_mass
-      (V := V) (H := H) q E.cycle E.mass_ne_zero
+      (V := V) q E.cycle E.mass_ne_zero
   class_zero := E.class_zero
 
 /-- Forgetting the redundant shadow witness recovers the bare mass-kernel
@@ -112,7 +112,7 @@ theorem nativeMassKernelExactAt_iff_noPositiveCosmicHomologyEscape
       mass_ne_zero := hmass
       shadow_ne_zero :=
         nativeCycleCosmicShadow_self_ne_zero_of_mass
-          (V := V) (H := H) q Z hmass
+          (V := V) q Z hmass
       class_zero := hclass
     }⟩
 
