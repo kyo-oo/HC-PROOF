@@ -428,9 +428,8 @@ theorem classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
           (V := V) (H := H) i j) :
     ClassicalHodgeTarget V H := by
   simpa [ClassicalHodgeTarget] using
-    (GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
-        G D R)
+    (GSTClassicalHodgeProjectiveTwoGeneratorExternalization.bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+        G D R))
 
 /-- Elementwise cycle witness for the geometry-first brute-force landing. -/
 theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
@@ -450,8 +449,7 @@ theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
   exact
-    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
+    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
         G D R p alpha halpha
 
 /-- Once ordinary Hodge-fiber finite-dimensionality is supplied, the full
@@ -494,8 +492,7 @@ theorem canonical_basis_algebraization_of_conserved_spine_and_projective_two_gen
     (GSTHodgeChannelFinale.canonical_basis_algebraization_iff_hodge
       V H F).2
   exact
-    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
         G D R
 
 /-- The same geometric/cosmic crown therefore generates the minimal Wave-II
