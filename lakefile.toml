@@ -385,6 +385,7 @@ roots = [
   "GSTClassicalHodgeOmniversalClosure",
   "GSTClassicalHodgeOmniversalConstructorGraph",
   "GSTGraphV2ArithmeticOmniversalRealization",
+  "GSTGraphV2SelfExpandingCosmology",
   "GSTClassicalHodgeAmbientBettiSelfProduct",
   "GSTClassicalHodgeAmbientCorrespondenceIncidenceNaturality",
   "GSTClassicalHodgeAmbientCorrespondenceKernelAction",
