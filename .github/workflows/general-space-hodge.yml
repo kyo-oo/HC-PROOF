@@ -36,7 +36,6 @@ jobs:
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
-          lake update
           lake exe cache get
 
       - name: Reject proof escapes
@@ -70,7 +69,25 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           exec > >(tee general-space-hodge.log) 2>&1
 
-          # Build the already-registered dependency roots used by the new lane.
+          out=.lake/build/lib/lean
+          mkdir -p "$out"
+
+          compile () {
+            local mod="$1"
+            echo "=== COMPILE $mod ==="
+            lake env lean -o "$out/$mod.olean" "$mod.lean"
+          }
+
+          # Fail fast on the carrier-independent ontology before building the
+          # heavier historical GST/Hodge closure.
+          compile GSTGeneralSpace
+          compile GSTGeneralSpaceTransport
+          compile GSTGeneralSpaceRecoordination
+          compile GSTGeneralSpaceRealization
+          compile GSTGeneralSpaceDuality
+          compile GSTGeneralSpaceCohomology
+
+          # Build already-registered roots used by the realization adapters.
           lake build \
             GSTClassicalHodgePointNormalForm \
             GSTCompactNativeCyclePresentation \
@@ -83,29 +100,12 @@ jobs:
             GSTGraphV2ScaleEquivariance \
             GSTWorldCosmology
 
-          out=.lake/build/lib/lean
-          mkdir -p "$out"
-
-          compile () {
-            local mod="$1"
-            echo "=== COMPILE $mod ==="
-            lake env lean -o "$out/$mod.olean" "$mod.lean"
-          }
-
           # Recent Hodge bridge modules predate this registry pass.
           compile GSTClassicalHodgeFiniteSpineMomentOrbit
           compile GSTClassicalHodgeProjectiveWordOrbit
           compile GSTClassicalHodgeGradedGeometricProgramOrbit
           compile GSTClassicalHodgeGeometricCycleClassPointRigidity
           compile GSTClassicalHodgeExactClayStatement
-
-          # Carrier-independent General Space ontology.
-          compile GSTGeneralSpace
-          compile GSTGeneralSpaceTransport
-          compile GSTGeneralSpaceRecoordination
-          compile GSTGeneralSpaceRealization
-          compile GSTGeneralSpaceDuality
-          compile GSTGeneralSpaceCohomology
 
           # Existing GST universes as General Space realizations.
           compile GSTGraphV2GeneralSpaceRealization
