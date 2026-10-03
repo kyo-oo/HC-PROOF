@@ -58,6 +58,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeHeightOneProjectiveRelevance
 open GSTClassicalHodgeSeparatorRelativeCoheightOne
 open GSTClassicalHodgePointClosurePrincipalCut
+open GSTClassicalHodgeRelativeSuccessorNonempty
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -114,7 +115,7 @@ theorem trace_successorNativeOperator_point
         (successorAtomPresentation V p x y).sum
           (fun z a => a * D.pointDegree (p + 1) z) :=
     (Finsupp.sum_finsetSum_index
-      (fun y => zero_mul _)
+      (fun y => zero_mul (D.pointDegree (p + 1) y))
       (fun y b₁ b₂ => add_mul b₁ b₂ (D.pointDegree (p + 1) y))).symm
   rw [hsum]
   apply Finset.sum_congr rfl
@@ -181,7 +182,7 @@ theorem separator_successor_cycleClass_ne_zero
 /-- Projective degree upgrades the separator successor directly to the
 nonzero algebraic Hodge seed consumed by the synchronized limitless orbit
 machine. -/
-theorem separator_successor_nativeHodgeSeed
+noncomputable def separator_successor_nativeHodgeSeed
     (G : GeometricCycleClassSpine V H)
     (D : ProjectiveDegreeTraceSemantics V H)
     (p : Nat)
