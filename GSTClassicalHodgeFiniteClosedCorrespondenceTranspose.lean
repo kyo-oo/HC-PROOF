@@ -161,14 +161,7 @@ theorem transpose_rightFiber_finite
     (K : BiFiniteClosedCorrespondence V) (x : V.X) :
     ({z : K.transpose.carrier | K.transpose.right z = x} :
       Set K.transpose.carrier).Finite := by
-  have hset :
-      ({z : K.transpose.carrier | K.transpose.right z = x} :
-        Set K.transpose.carrier) =
-        {z : K.carrier | K.toFiniteClosedCorrespondence.left z = x} := by
-    ext z
-    rw [transpose_right]
-    simp
-  rw [hset]
+  rw [transpose_right]
   exact K.toFiniteClosedCorrespondence.leftFiber_finite x
 
 /-- The transpose is itself canonically bi-finite. -/

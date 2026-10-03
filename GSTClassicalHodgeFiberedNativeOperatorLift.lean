@@ -56,7 +56,11 @@ noncomputable def labelPresentation
     FiniteCodimensionPresentation V.X p →ₗ[ℚ]
       FiberedNativeAddress V H p where
   toFun φ := φ.sum fun x q => q • atom V H p i x
-  map_add' := by intro φ ψ; classical; simp
+  map_add' := by
+    intro φ ψ
+    classical
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp [add_smul])
   map_smul' := by intro q φ; classical; simp [smul_smul]
 
 @[simp]
@@ -78,7 +82,10 @@ theorem toNativeCycle_labelPresentation
   classical
   induction φ using Finsupp.induction_linear with
   | zero => simp [labelPresentation, toNativeCycle]
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg =>
+      rw [realizeFiniteCodimensionPresentation]
+      exact (Finsupp.sum_add_index'
+        (fun _ => by simp) (fun _ _ _ => by simp [add_smul])).symm
   | single x q =>
       simp [labelPresentation_single, toNativeCycle_atom,
         realizeFiniteCodimensionPresentation_single]
@@ -92,7 +99,11 @@ noncomputable def liftNativeOperator
     q • labelPresentation ix.1
       (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
         V p A ix.2)
-  map_add' := by intro Φ Ψ; classical; simp
+  map_add' := by
+    intro Φ Ψ
+    classical
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp [add_smul])
   map_smul' := by intro q Φ; classical; simp [smul_smul]
 
 /-- Exact action of the lifted operator on a common-refinement atom. -/
@@ -129,6 +140,7 @@ theorem toNativeCycle_liftNativeOperator
       rw [toNativeCycle_labelPresentation]
       rw [GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation_realize]
       rw [toNativeCycle_atom]
+      rw [LinearMap.map_smul]
 
 /-- Operator equality form of the strict commuting square. -/
 theorem toNativeCycle_comp_liftNativeOperator
@@ -184,8 +196,10 @@ theorem toNativeCycle_liftProjectiveKernel
     (K : ProjectiveNativeKernel V p)
     (Φ : FiberedNativeAddress V H p) :
     toNativeCycle V H p (liftProjectiveKernel K Φ) =
-      K.operator (toNativeCycle V H p Φ) :=
-  toNativeCycle_liftNativeOperator K.operator Φ
+      (ProjectiveNativeKernel.operator K :
+        Module.End ℚ (codimensionCycles V.X p))
+        (toNativeCycle V H p Φ) :=
+  toNativeCycle_liftNativeOperator (ProjectiveNativeKernel.operator K) Φ
 
 /-- The limitless base face of a lifted native operator is exactly the cosmic
 shadow of the genuine native operator output. -/

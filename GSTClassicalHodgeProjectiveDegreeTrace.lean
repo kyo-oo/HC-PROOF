@@ -1,6 +1,7 @@
 import GSTClassicalHodgeProjectiveDegreeSemantics
 import GSTClassicalHodgeSuccessorSeedEscapeDichotomy
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgePointClosurePrincipalCut
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE DEGREE / BETTI TRACE ARTERY
@@ -54,6 +55,9 @@ open GSTClassicalHodgeSingleExactSuccessorSurvival
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeHeightOneProjectiveRelevance
+open GSTClassicalHodgeSeparatorRelativeCoheightOne
+open GSTClassicalHodgePointClosurePrincipalCut
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -93,7 +97,7 @@ theorem trace_successorNativeOperator_point
       (H.cycleClass (p + 1)
         (successorNativeOperator V p
           (codimensionPointCycle V.X p x))) =
-      ∑ y in relativeCodimensionOneFinset V x.1,
+      ∑ y ∈ relativeCodimensionOneFinset V x.1,
         if hy : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1 then
           D.pointDegree (p + 1)
             (⟨ambientSuccessorPoint V x.1 y, hy⟩ :
@@ -106,7 +110,7 @@ theorem trace_successorNativeOperator_point
   have hsum :
       ((relativeCodimensionOneFinset V x.1).sum (successorAtomPresentation V p x)).sum
         (fun y a => a * D.pointDegree (p + 1) y) =
-      ∑ y in relativeCodimensionOneFinset V x.1,
+      ∑ y ∈ relativeCodimensionOneFinset V x.1,
         (successorAtomPresentation V p x y).sum
           (fun z a => a * D.pointDegree (p + 1) z) :=
     (Finsupp.sum_finsetSum_index
