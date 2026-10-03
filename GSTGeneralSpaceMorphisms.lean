@@ -137,12 +137,12 @@ def pairHom
   map_comp := by
     intro x y z α β
     show (⟨f.mapPath (G.compPath α β), g.mapPath (G.compPath α β)⟩ :
-      @PSigma _ _ (H.Path (f.mapPoint x) (f.mapPoint z))
-             (fun _ => K.Path (g.mapPoint x) (g.mapPoint z))) =
+      Σ' a : H.Path (f.mapPoint x) (f.mapPoint z),
+             K.Path (g.mapPoint x) (g.mapPoint z))) =
       (⟨H.compPath (f.mapPath α) (f.mapPath β),
         K.compPath (g.mapPath α) (g.mapPath β)⟩ :
-      @PSigma _ _ (H.Path (f.mapPoint x) (f.mapPoint z))
-             (fun _ => K.Path (g.mapPoint x) (g.mapPoint z)))
+      Σ' a : H.Path (f.mapPoint x) (f.mapPoint z),
+             K.Path (g.mapPoint x) (g.mapPoint z)))
     rw [f.map_comp, g.map_comp]
 
 /-- Every arbitrary function is a General-Space morphism between discrete
