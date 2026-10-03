@@ -39,7 +39,7 @@ end RealizationMap
 commutes with every admissible General Space path. -/
 structure TransportedRealization (G : GeneralSpace.{u, v}) where
   realization : Realization.{u, v, w} G
-  transport : TransportGeometry.{u, v, w₁} G
+  transport : TransportGeometry G
   encode : realization.State → transport.State
   path_naturality : ∀ {x y : G.Point} (γ : G.Path x y),
     encode (realization.realize y) =

@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.CosetCover
+import GSTGeometricRealizationStage2D
 import GSTClassicalHodgeWeightedCyclicCriterion
 
 /-!
@@ -32,6 +33,7 @@ noncomputable section
 open scoped BigOperators
 open AlgebraicGeometry
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
@@ -194,36 +196,66 @@ cyclic seed touching every live sheet. -/
 noncomputable def toWeightedLocalCyclicRealization
     (R : CoordinatewiseVisibleLocalRealization V H p alpha) :
     WeightedLocalCyclicRealization V H p alpha := by
-  let F := R.spectral.toFiniteSpectralFamily
-  let W := pointCycleClassSpan p (H.cycleClass p)
-  have hvisible : ∀ i, F.CoordinateVisible W i := by
+  have hvec : ∀ i : HodgeSupportIndex alpha,
+      R.spectral.toFiniteSpectralFamily.vector i =
+        (classicalHodgeBasis V H p i.1).1 := by
+    intro i
+    simp only [toFiniteSpectralFamily, R.spectral_basisIndex,
+      HodgeSupportIndex.include]
+  have hvisible : ∀ i : HodgeSupportIndex alpha,
+      R.spectral.toFiniteSpectralFamily.CoordinateVisible
+        (pointCycleClassSpan p (H.cycleClass p)) i := by
     intro i
     rcases R.visible i with ⟨a, haW, hai⟩
-    let aa : F.admissibleCoefficientSpace W := ⟨a, ?_⟩
-    · exact ⟨aa, hai⟩
-    · simpa [F, W, FiniteSpectralFamily.admissibleCoefficientSpace,
-        FiniteSpectralFamily.spectralCombinationLinear,
-        FiniteSpectralFamily.spectralCombination, R.spectral_basisIndex]
-        using haW
-  obtain ⟨a, haNZ, haW⟩ :=
-    F.exists_cyclic_seed_of_coordinatewise_visible W hvisible
+    refine ⟨⟨a, ?_⟩, hai⟩
+    show R.spectral.toFiniteSpectralFamily.spectralCombination a ∈
+        pointCycleClassSpan p (H.cycleClass p)
+    rw [show R.spectral.toFiniteSpectralFamily.spectralCombination a =
+      ∑ j : HodgeSupportIndex alpha,
+        a j • (classicalHodgeBasis V H p j.1).1 from by
+      simp only [FiniteSpectralFamily.spectralCombination, hvec]]
+    exact haW
+  have hseed :=
+    R.spectral.toFiniteSpectralFamily.exists_cyclic_seed_of_coordinatewise_visible
+      (pointCycleClassSpan p (H.cycleClass p)) hvisible
   refine {
     spectral := R.spectral
     spectral_basisIndex := R.spectral_basisIndex
-    coefficient := a
-    coefficient_ne_zero := haNZ
+    coefficient := hseed.choose
+    coefficient_ne_zero := hseed.choose_spec.1
     seed_mem_atomic := ?_
   }
-  simpa [F, W, FiniteSpectralFamily.spectralCombination,
-    R.spectral_basisIndex] using haW
+  rw [show R.spectral.toFiniteSpectralFamily.spectralCombination hseed.choose =
+    ∑ j : HodgeSupportIndex alpha,
+      hseed.choose j • (classicalHodgeBasis V H p j.1).1 from by
+    simp only [FiniteSpectralFamily.spectralCombination, hvec]]
+  exact hseed.choose_spec.2
 
 /-- Coordinatewise visibility therefore constructs an exact native cycle for
 the original genuine Hodge class. -/
 theorem exists_native_cycle
     (R : CoordinatewiseVisibleLocalRealization V H p alpha) :
     ∃ Z : codimensionCycles V.X p,
-      H.cycleClass p Z = alpha.1 :=
-  R.toWeightedLocalCyclicRealization.exists_native_cycle
+      H.cycleClass p Z = alpha.1 := by
+  have hlive : ∀ i : HodgeSupportIndex alpha,
+      (classicalHodgeBasis V H p i.1).1 ∈
+        pointCycleClassSpan p (H.cycleClass p) :=
+    WeightedLocalCyclicRealization.live_basis_mem_atomic
+      (toWeightedLocalCyclicRealization R)
+  have halg : alpha.1 ∈ pointCycleClassSpan p (H.cycleClass p) := by
+    rw [show alpha =
+      ∑ j ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+        ((classicalHodgeBasis V H p).repr alpha j) •
+          classicalHodgeBasis V H p j by
+      exact (classicalHodgeBasis V H p).sum_repr alpha]
+    simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower]
+    apply Submodule.sum_mem
+    intro j hj
+    exact (pointCycleClassSpan p (H.cycleClass p)).smul_mem
+      ((classicalHodgeBasis V H p).repr alpha j)
+      (hlive ⟨j, hj⟩)
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halg
+  exact halg
 
 end CoordinatewiseVisibleLocalRealization
 

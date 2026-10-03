@@ -69,11 +69,11 @@ def comp {x y z : G.Node} : Path G x y → Path G y z → Path G x z
 
 @[simp]
 theorem nil_comp {x y : G.Node} (p : Path G x y) :
-    comp (.nil x) p = p := rfl
+    comp G (.nil x) p = p := rfl
 
 @[simp]
 theorem comp_nil {x y : G.Node} (p : Path G x y) :
-    comp p (.nil y) = p := by
+    comp G p (.nil y) = p := by
   induction p with
   | nil => rfl
   | cons e tail ih =>
@@ -83,7 +83,7 @@ theorem comp_nil {x y : G.Node} (p : Path G x y) :
 theorem comp_assoc
     {w x y z : G.Node}
     (p : Path G w x) (q : Path G x y) (r : Path G y z) :
-    comp (comp p q) r = comp p (comp q r) := by
+    comp G (comp G p q) r = comp G p (comp G q r) := by
   induction p with
   | nil => rfl
   | cons e tail ih =>
