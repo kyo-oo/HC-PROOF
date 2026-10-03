@@ -414,6 +414,7 @@ roots = [
   "GSTClassicalHodgeAtomicDefectOperatorDescent",
   "GSTClassicalHodgeAtomicDefectEquivariantIrreducibility",
   "GSTClassicalHodgeAtomicNaturalLefschetzNonCircularity",
+  "GSTClassicalHodgeTwoSlotLefschetzCollapse",
   "GSTClassicalHodgeAtomicNaturalLefschetzPoincareClosure",
   "GSTClassicalHodgeLefschetzPoincarePrimitiveNonCircularity",
   "GSTClassicalHodgeCrossWeightAtomicDefectDescent",
