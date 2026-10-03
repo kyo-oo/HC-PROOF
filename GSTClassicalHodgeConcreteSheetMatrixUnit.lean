@@ -121,9 +121,10 @@ theorem forwardSheetMatrixUnit_target
   unfold forwardSheetMatrixUnit
   rw [forwardSheetWord_target r s hrs f hf]
   push_cast
+  have hne : (((2 * (s.1 - r.1)).choose (s.1 - r.1) : ℕ) : ℚ) ≠ 0 := by
+    exact_mod_cast (Nat.choose_pos (by omega) : _ ≠ 0)
   rw [forwardNormalizeScalar, mul_comm ((f (r,r) : ℤ) : ℚ) _, ← mul_assoc,
-    inv_mul_cancel₀ (by exact_mod_cast (Nat.choose_pos (by omega) : _ ≠ 0)),
-    one_mul]
+    inv_mul_cancel₀ hne, one_mul]
 
 /-- The target projector kills every state other than the target diagonal
 sheet. -/

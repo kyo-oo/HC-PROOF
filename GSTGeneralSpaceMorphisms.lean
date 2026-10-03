@@ -75,28 +75,28 @@ def prod
     (H : GeneralSpace.{u',v'}) :
     GeneralSpace.{max u u', max v v'} where
   Point := G.Point × H.Point
-  Path x y := PSigma (G.Path x.1 y.1) (fun _ => H.Path x.2 y.2)
+  Path x y := @PSigma (G.Path x.1 y.1) (fun _ => H.Path x.2 y.2)
   idPath := fun x => ⟨G.idPath x.1, H.idPath x.2⟩
   compPath := fun α β =>
     ⟨G.compPath α.1 β.1, H.compPath α.2 β.2⟩
   comp_id_left := by
     intro x y γ
     show (⟨G.compPath (G.idPath x.1) γ.1, H.compPath (H.idPath x.2) γ.2⟩ :
-      PSigma (G.Path x.1 y.1) (fun _ => H.Path x.2 y.2)) = γ
+      @PSigma (G.Path x.1 y.1) (fun _ => H.Path x.2 y.2)) = γ
     rw [G.comp_id_left, H.comp_id_left]
   comp_id_right := by
     intro x y γ
     show (⟨G.compPath γ.1 (G.idPath y.1), H.compPath γ.2 (H.idPath y.2)⟩ :
-      PSigma (G.Path x.1 y.1) (fun _ => H.Path x.2 y.2)) = γ
+      @PSigma (G.Path x.1 y.1) (fun _ => H.Path x.2 y.2)) = γ
     rw [G.comp_id_right, H.comp_id_right]
   comp_assoc := by
     intro w x y z α β γ
     show (⟨G.compPath (G.compPath α.1 β.1) γ.1,
       H.compPath (H.compPath α.2 β.2) γ.2⟩ :
-      PSigma (G.Path w.1 z.1) (fun _ => H.Path w.2 z.2)) =
+      @PSigma (G.Path w.1 z.1) (fun _ => H.Path w.2 z.2)) =
       (⟨G.compPath α.1 (G.compPath β.1 γ.1),
         H.compPath α.2 (H.compPath β.2 γ.2)⟩ :
-      PSigma (G.Path w.1 z.1) (fun _ => H.Path w.2 z.2))
+      @PSigma (G.Path w.1 z.1) (fun _ => H.Path w.2 z.2))
     rw [G.comp_assoc, H.comp_assoc]
 
 /-- First projection is a General-Space morphism. -/
@@ -128,20 +128,20 @@ def pairHom
   map_id := by
     intro x
     show (⟨f.mapPath (G.idPath x), g.mapPath (G.idPath x)⟩ :
-      PSigma (H.Path (f.mapPoint x) (f.mapPoint x))
+      @PSigma (H.Path (f.mapPoint x) (f.mapPoint x))
              (fun _ => K.Path (g.mapPoint x) (g.mapPoint x))) =
       (⟨H.idPath (f.mapPoint x), K.idPath (g.mapPoint x)⟩ :
-      PSigma (H.Path (f.mapPoint x) (f.mapPoint x))
+      @PSigma (H.Path (f.mapPoint x) (f.mapPoint x))
              (fun _ => K.Path (g.mapPoint x) (g.mapPoint x)))
     rw [f.map_id, g.map_id]
   map_comp := by
     intro x y z α β
     show (⟨f.mapPath (G.compPath α β), g.mapPath (G.compPath α β)⟩ :
-      PSigma (H.Path (f.mapPoint x) (f.mapPoint z))
+      @PSigma (H.Path (f.mapPoint x) (f.mapPoint z))
              (fun _ => K.Path (g.mapPoint x) (g.mapPoint z))) =
       (⟨H.compPath (f.mapPath α) (f.mapPath β),
         K.compPath (g.mapPath α) (g.mapPath β)⟩ :
-      PSigma (H.Path (f.mapPoint x) (f.mapPoint z))
+      @PSigma (H.Path (f.mapPoint x) (f.mapPoint z))
              (fun _ => K.Path (g.mapPoint x) (g.mapPoint z)))
     rw [f.map_comp, g.map_comp]
 

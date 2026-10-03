@@ -1,4 +1,6 @@
 import GSTClassicalHodgeExactClayStatement
+import GSTGeometricRealizationStage2D
+import GSTGeometricRealizationStage2F
 import GSTGraphV2OmniversalCore
 import GSTGraphV2OmniversalHyperEvents
 
@@ -40,6 +42,7 @@ namespace GSTClassicalHodgeOmniversalClosure
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeExactClayStatement
 open GSTGraphV2OmniversalCore

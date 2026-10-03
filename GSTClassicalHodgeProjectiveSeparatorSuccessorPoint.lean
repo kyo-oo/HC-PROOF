@@ -96,9 +96,8 @@ theorem sourcePrime_le_separatorAmbientPrime
   intro a ha
   change Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal a ∈
     separatorMinimalPrime n x
-  have h0 : Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal a = 0 := by
-    rw [Submodule.Quotient.mk_eq_zero]
-    exact ha
+  have h0 : Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal a = 0 :=
+    (Submodule.Quotient.mk_eq_zero x.asHomogeneousIdeal.toIdeal).mpr ha
   rw [h0]
   exact zero_mem _
 
@@ -152,7 +151,7 @@ theorem separatorAmbientPrime_mem_minimalPrimes
     exact Ideal.map_comap_of_surjective _ Ideal.Quotient.mk_surjective _
   have hmapJ : J.map (Ideal.Quotient.mk P) = separatorQuotientIdeal n x := by
     rw [separatorQuotientIdeal, separatorClass]
-    simp [J]
+    simp [J, Ideal.map_span, Set.image_singleton]
   rw [hmapQ, hmapJ]
   exact separatorMinimalPrime_mem n x
 

@@ -70,11 +70,7 @@ theorem principalCutCycle_eq_sum
     | empty => simp
     | insert y s hy ih =>
         rw [Finset.sum_insert hy, Finset.sum_insert hy]
-        show (Finsupp.single y 1 +
-            s.sum fun z => Finsupp.single z 1).sum
-            (fun a q => q • codimensionPointCycle V.X 1 a) =
-            codimensionPointCycle V.X 1 y +
-            s.sum (fun z => codimensionPointCycle V.X 1 z)
+        unfold realizeFiniteCodimensionPresentation
         rw [Finsupp.sum_add_index']
         have h1 : (Finsupp.single y 1).sum
             (fun a q => q • codimensionPointCycle V.X 1 a) =

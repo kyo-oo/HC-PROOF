@@ -75,57 +75,64 @@ theorem pureForwardShift_basis
     let s : Fin N := ⟨p.1 + 1, hsucc⟩
     by_cases hq : q = s
     · subst q
-      show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ s.1 then
-          if htime : 2 = 2 * pureWeightGap p s then
-            ((Nat.choose 2 (pureWeightGap p s) : ℕ) : ℤ)
-          else (0 : ℤ)
-        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ s
-      have hpq : p.1 ≤ s.1 := Nat.le_succ p.1
+      have hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+          ↑(Fin.castLE (show N ≤ min N N by omega) s) := Nat.le_succ p.1
       rw [dif_pos hpq]
-      have htime : 2 = 2 * pureWeightGap p s := by
-        simp [pureWeightGap, s]
+      have htime : 2 = 2 * pureWeightGap
+          (Fin.castLE (show N ≤ min N N by omega) p)
+          (Fin.castLE (show N ≤ min N N by omega) s) := by
+        show 2 = 2 * (s.1 - p.1)
+        omega
       rw [dif_pos htime]
-      simp [pureWeightGap, s, rationalPureBasis]
+      have hgap : pureWeightGap
+          (Fin.castLE (show N ≤ min N N by omega) p)
+          (Fin.castLE (show N ≤ min N N by omega) s) = 1 := by
+        show s.1 - p.1 = 1
+        omega
+      rw [hgap]
+      simp [rationalPureBasis, s]
     · by_cases hpq : p.1 ≤ q.1
-      · show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ q.1 then
-          if htime : 2 = 2 * pureWeightGap p q then
-            ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
-          else (0 : ℤ)
-        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
-        rw [dif_pos hpq]
-        have htime : 2 ≠ 2 * pureWeightGap p q := by
+      · have hpq' : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+            ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq
+        rw [dif_pos hpq']
+        have hgap : pureWeightGap
+            (Fin.castLE (show N ≤ min N N by omega) p)
+            (Fin.castLE (show N ≤ min N N by omega) q) = q.1 - p.1 := rfl
+        have htime : 2 ≠ 2 * pureWeightGap
+            (Fin.castLE (show N ≤ min N N by omega) p)
+            (Fin.castLE (show N ≤ min N N by omega) q) := by
+          rw [hgap]
           intro ht
-          have : q.1 = p.1 + 1 := by
-            unfold pureWeightGap at ht
-            omega
+          have : q.1 = p.1 + 1 := by omega
           exact hq (Fin.ext this)
         rw [dif_neg htime]
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
-      · show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ q.1 then
-          if htime : 2 = 2 * pureWeightGap p q then
-            ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
-          else (0 : ℤ)
-        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
-        rw [dif_neg hpq]
+      · have hpq' : ¬ ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+            ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq
+        rw [dif_neg hpq']
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
   · rw [dif_neg hsucc]
-    show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ q.1 then
-        if htime : 2 = 2 * pureWeightGap p q then
-          ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
-        else (0 : ℤ)
-      else (0 : ℤ)) = (0 : ℚ)
     by_cases hpq : p.1 ≤ q.1
-    · rw [dif_pos hpq]
-      have htime : 2 ≠ 2 * pureWeightGap p q := by
+    · have hpq' : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+          ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq
+      rw [dif_pos hpq']
+      have hgap : pureWeightGap
+          (Fin.castLE (show N ≤ min N N by omega) p)
+          (Fin.castLE (show N ≤ min N N by omega) q) = q.1 - p.1 := rfl
+      have htime : 2 ≠ 2 * pureWeightGap
+          (Fin.castLE (show N ≤ min N N by omega) p)
+          (Fin.castLE (show N ≤ min N N by omega) q) := by
+        rw [hgap]
         intro ht
-        unfold pureWeightGap at ht
         have : p.1 + 1 ≤ q.1 := by omega
         exact hsucc (lt_of_le_of_lt this q.2)
       rw [dif_neg htime]
       simp
-    · rw [dif_neg hpq]
+    · have hpq' : ¬ ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+          ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq
+      rw [dif_neg hpq']
       simp
 
 /-- Poincare conjugation turns the forward shift into the exact one-step

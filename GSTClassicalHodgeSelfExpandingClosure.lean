@@ -1,4 +1,6 @@
 import GSTGraphV2RecursiveStateCausality
+import GSTGeometricRealizationStage2D
+import GSTGeometricRealizationStage2F
 import GSTClassicalHodgeExactClayStatement
 
 /-!
@@ -38,6 +40,7 @@ namespace GSTClassicalHodgeSelfExpandingClosure
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTGraphV2SelfExpandingCosmology
 open GSTGraphV2RecursiveStateCausality
