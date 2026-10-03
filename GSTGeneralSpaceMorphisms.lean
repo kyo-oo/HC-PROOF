@@ -33,8 +33,8 @@ namespace Hom
 
 /-- Identity map of a General Space. -/
 def id (G : GeneralSpace.{u,v}) : Hom G G where
-  mapPoint := id
-  mapPath := id
+  mapPoint := fun x => x
+  mapPath := fun γ => γ
   map_id := by intro x; rfl
   map_comp := by intro x y z α β; rfl
 

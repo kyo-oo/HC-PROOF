@@ -5,12 +5,12 @@ universe u v w w₁ w₂
 namespace GSTGeneralSpace
 
 /-- A concrete face/observation of one General Space. -/
-structure Realization (G : GeneralSpace) where
+structure Realization.{u, v, w} (G : GeneralSpace.{u, v}) where
   State : Type w
   realize : G.Point → State
 
 /-- A map between two realizations of the same General Space. -/
-structure RealizationMap {G : GeneralSpace}
+structure RealizationMap.{u, v, w₁, w₂} {G : GeneralSpace.{u, v}}
     (R₁ : Realization.{u,v,w₁} G) (R₂ : Realization.{u,v,w₂} G) where
   map : R₁.State → R₂.State
   commute : ∀ x : G.Point, map (R₁.realize x) = R₂.realize x
@@ -37,9 +37,9 @@ end RealizationMap
 
 /-- Two transported realization faces are synchronized when realization
 commutes with every admissible General Space path. -/
-structure TransportedRealization (G : GeneralSpace) where
-  realization : Realization G
-  transport : TransportGeometry G
+structure TransportedRealization.{u, v, w, w₁} (G : GeneralSpace.{u, v}) where
+  realization : Realization.{u, v, w} G
+  transport : TransportGeometry.{u, v, w₁} G
   encode : realization.State → transport.State
   path_naturality : ∀ {x y : G.Point} (γ : G.Path x y),
     encode (realization.realize y) =

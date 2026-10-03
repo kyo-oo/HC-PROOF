@@ -50,7 +50,7 @@ theorem ringKrullDim_quotient_nonzero_nonunit_succ
     {f : R} (hf0 : f ≠ 0) (hfunit : ¬ IsUnit f) :
     ringKrullDim (R ⧸ Ideal.span {f}) + 1 = ringKrullDim R := by
   have hfmax : f ∈ maximalIdeal R :=
-    (IsLocalRing.mem_maximalIdeal f).2 ((mem_nonunits_iff f).2 hfunit)
+    (IsLocalRing.mem_maximalIdeal f).2 (mem_nonunits_iff.mpr hfunit)
   exact ringKrullDim_quotient_regular_succ
     (regular_of_nonzero_domain hf0) hfmax
 

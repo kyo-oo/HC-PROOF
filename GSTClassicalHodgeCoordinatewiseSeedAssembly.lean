@@ -48,7 +48,14 @@ universe u
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
-namespace FiniteSpectralFamily
+end GSTClassicalHodgeCoordinatewiseSeedAssembly
+
+universe u
+
+variable {M : Type u} [AddCommGroup M] [Module ℚ M]
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+namespace GSTClassicalHodgeCyclicSpectralGeneration.FiniteSpectralFamily
 
 /-- Linearization of the finite spectral-combination operation in its
 coefficient vector. -/
@@ -151,7 +158,14 @@ theorem exists_cyclic_seed_of_coordinatewise_visible
     exact hai
   · exact a.2
 
-end FiniteSpectralFamily
+end GSTClassicalHodgeCyclicSpectralGeneration.FiniteSpectralFamily
+
+namespace GSTClassicalHodgeCoordinatewiseSeedAssembly
+
+universe u
+
+variable {M : Type u} [AddCommGroup M] [Module ℚ M]
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Classical-Hodge specialization: every live sheet is separately visible in
 some atomic spectral combination.  Different sheets may use different
