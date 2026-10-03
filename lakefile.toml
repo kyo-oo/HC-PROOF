@@ -389,6 +389,7 @@ roots = [
   "GSTGraphV2RecursiveStateCausality",
   "GSTGraphV2UnboundedHigherCausality",
   "GSTClassicalHodgeSelfExpandingClosure",
+  "GSTClassicalHodgePrincipalCutNonzeroForcesExactSuccessor",
   "GSTClassicalHodgeAmbientBettiSelfProduct",
   "GSTClassicalHodgeAmbientCorrespondenceIncidenceNaturality",
   "GSTClassicalHodgeAmbientCorrespondenceKernelAction",
