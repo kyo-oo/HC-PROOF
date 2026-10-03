@@ -60,7 +60,7 @@ def Coheres {n : Nat} (a b : H.Cell n) : Prop :=
 
 /-- Identity higher cells give reflexive coherence at every dimension. -/
 theorem coheres_refl {n : Nat} (a : H.Cell n) :
-    Coheres H a a := by
+    Coheres C H a a := by
   refine ⟨H.identity a, ?_, ?_⟩
   · exact H.source_identity a
   · exact H.target_identity a

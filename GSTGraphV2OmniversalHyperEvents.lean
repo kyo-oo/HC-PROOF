@@ -125,11 +125,9 @@ original seeds. -/
 theorem generated_of_generated_seed
     (Seed : G.Node → Prop) :
     ∀ {x : G.Node},
-      Generated H (Generated H Seed) x → Generated H Seed x := by
-  apply generated_sound H
-  · intro x hx
-    exact hx
-  · exact generated_semanticallyStable H Seed
+      Generated H (Generated H Seed) x → Generated H Seed x :=
+  generated_sound H (fun _ hx => hx)
+    (generated_semanticallyStable H Seed)
 
 /-- Higher-arity closure crown. -/
 theorem hyper_event_closure_crown

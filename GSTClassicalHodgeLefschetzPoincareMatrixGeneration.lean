@@ -75,7 +75,7 @@ theorem pureForwardShift_basis
     let s : Fin N := ⟨p.1 + 1, hsucc⟩
     by_cases hq : q = s
     · subst q
-      show 2⁻¹ • ↑(if hpq : p.1 ≤ s.1 then
+      show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ s.1 then
           if htime : 2 = 2 * pureWeightGap p s then
             ((Nat.choose 2 (pureWeightGap p s) : ℕ) : ℤ)
           else (0 : ℤ)
@@ -87,7 +87,7 @@ theorem pureForwardShift_basis
       rw [dif_pos htime]
       simp [pureWeightGap, s, rationalPureBasis]
     · by_cases hpq : p.1 ≤ q.1
-      · show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
+      · show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ q.1 then
           if htime : 2 = 2 * pureWeightGap p q then
             ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
           else (0 : ℤ)
@@ -102,7 +102,7 @@ theorem pureForwardShift_basis
         rw [dif_neg htime]
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
-      · show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
+      · show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ q.1 then
           if htime : 2 = 2 * pureWeightGap p q then
             ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
           else (0 : ℤ)
@@ -111,7 +111,7 @@ theorem pureForwardShift_basis
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
   · rw [dif_neg hsucc]
-    show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
+    show (2⁻¹ : ℚ) • ↑(if hpq : p.1 ≤ q.1 then
         if htime : 2 = 2 * pureWeightGap p q then
           ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
         else (0 : ℤ)
@@ -289,22 +289,29 @@ theorem lefschetzPoincareMatrixWord_eq
           omega
         · exact pureBackwardShift_pow_basis r p.1 hpr
       · left
-        have : r.1 < p.1 := by omega
-        -- after r+1 backward steps the vector vanishes; all further powers stay zero
-        induction p.1 generalizing r with
-        | zero => exfalso; omega
-        | succ k ih =>
-            rw [pow_succ, Module.End.mul_apply]
-            by_cases hr0 : 0 < r.1
-            · rw [pureBackwardShift_basis, dif_pos hr0]
-              -- remaining arithmetic is discharged by the induction hypothesis
-              simp_all
-            · rw [pureBackwardShift_basis, dif_neg hr0]
-              simp
+        have hlt : r.1 < p.1 := by omega
+        have vanishing : ∀ (k : Nat) (r : Fin N), r.1 < k →
+            ((pureBackwardShift N)^k) (rationalPureBasis r) = 0 := by
+          intro k
+          induction k with
+          | zero =>
+              intro r hr
+              exact absurd hr (by omega)
+          | succ k ih =>
+              intro r hr
+              rw [pow_succ, Module.End.mul_apply]
+              by_cases hr0 : 0 < r.1
+              · rw [pureBackwardShift_basis, dif_pos hr0]
+                exact ih ⟨r.1 - 1, by omega⟩ (by omega)
+              · rw [pureBackwardShift_basis, dif_neg hr0]
+                simp
+        exact vanishing p.1 r hlt
     rcases hdown with hzero | ⟨s, hs0, hs⟩
     · simp [lefschetzPoincareMatrixWord, hzero,
         pureMatrixUnit_basis_other p q r hrp]
-    · rw [lefschetzPoincareMatrixWord, hs]
+    · rw [lefschetzPoincareMatrixWord]
+      simp only [LinearMap.comp_apply]
+      rw [hs]
       rw [bottomProjectorLP_other s hs0]
       simp [pureMatrixUnit_basis_other p q r hrp]
 

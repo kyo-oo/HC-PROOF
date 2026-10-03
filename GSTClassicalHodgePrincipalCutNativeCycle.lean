@@ -60,7 +60,8 @@ theorem principalCutCycle_eq_sum
       (principalCutCodimensionOneFinset V x).sum
         (fun y => codimensionPointCycle V.X 1 y) := by
   classical
-  have key : ∀ (s : Finset V.X),
+  have key : ∀
+      (s : Finset (GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X 1)),
       realizeFiniteCodimensionPresentation V.X 1
         (s.sum fun y => Finsupp.single y 1) =
       s.sum (fun y => codimensionPointCycle V.X 1 y) := by

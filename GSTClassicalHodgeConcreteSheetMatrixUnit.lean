@@ -121,10 +121,9 @@ theorem forwardSheetMatrixUnit_target
   unfold forwardSheetMatrixUnit
   rw [forwardSheetWord_target r s hrs f hf]
   push_cast
-  rw [forwardNormalizeScalar]
-  rw [div_eq_mul_inv, ← mul_assoc,
-    mul_inv_cancel (by exact_mod_cast (Nat.choose_pos (by omega) : _ ≠ 0)),
-    mul_one]
+  rw [forwardNormalizeScalar, mul_comm ((f (r,r) : ℤ) : ℚ) _, ← mul_assoc,
+    inv_mul_cancel₀ (by exact_mod_cast (Nat.choose_pos (by omega) : _ ≠ 0)),
+    one_mul]
 
 /-- The target projector kills every state other than the target diagonal
 sheet. -/

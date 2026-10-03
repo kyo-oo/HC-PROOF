@@ -145,7 +145,11 @@ theorem sheetProbe_fiberedWeightCoordinates
         (fiberedWeightCoordinates V H p alpha) =
       hodgeCoordinate i alpha := by
   simp [sheetProbe, fiberedWeightCoordinates, weightFiberEmbedding,
-    hodgeCoordinate, Finsupp.embDomain_apply_self]
+    hodgeCoordinate]
+  show (Finsupp.embDomain (Function.Embedding.sigmaMk p)
+      ((classicalHodgeBasis V H p).repr alpha)) ((Function.Embedding.sigmaMk p) i) =
+    ((classicalHodgeBasis V H p).repr alpha) i
+  rw [Finsupp.embDomain_apply_self]
 
 /-- Exact coordinate embedding of a scalar multiple of one genuine Hodge
 basis sheet. -/

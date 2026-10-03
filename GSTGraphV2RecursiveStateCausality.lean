@@ -31,7 +31,7 @@ abbrev PackedState := Sigma C.State
 
 /-- One primitive object-level causal step. -/
 inductive StateStep : PackedState C → PackedState C → Type (max (max u v) z)
-  | local
+  | stepLocal
       {W : C.World} {x y : C.State W}
       (e : C.LocalEvent x y) :
       StateStep ⟨W,x⟩ ⟨W,y⟩
@@ -146,7 +146,7 @@ theorem stateStep_preserves_generatedWorld
     StateStable C (InGeneratedWorld C) := by
   intro x y e hx
   cases e with
-  | local e =>
+  | stepLocal e =>
       exact hx
   | transport e =>
       exact hTransport e hx
