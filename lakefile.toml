@@ -489,6 +489,7 @@ roots = [
   "GSTClassicalHodgePrincipalCutFlagHomologicalDescent",
   "GSTClassicalHodgePrincipalCutFlagCohomologicalDescent",
   "HodgeConjecture",
+  "GSTClassicalHodgeMinimalPrimitiveSeparatorGhost",
   "GSTClassicalHodgeLocalSeedBareLefschetzExtinction",
   "GSTClassicalHodgeRelativeSuccessorExactStratum",
   "GSTClassicalHodgeCorrespondenceSemanticFirewall",
