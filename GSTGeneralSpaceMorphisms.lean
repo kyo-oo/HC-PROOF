@@ -49,6 +49,7 @@ def comp
   map_id := by
     intro x
     rw [f.map_id, g.map_id]
+    rfl
   map_comp := by
     intro x y z α β
     rw [f.map_comp, g.map_comp]

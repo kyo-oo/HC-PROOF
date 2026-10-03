@@ -50,8 +50,6 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 end GSTClassicalHodgeCoordinatewiseSeedAssembly
 
-universe u
-
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
@@ -161,8 +159,6 @@ theorem exists_cyclic_seed_of_coordinatewise_visible
 end GSTClassicalHodgeCyclicSpectralGeneration.FiniteSpectralFamily
 
 namespace GSTClassicalHodgeCoordinatewiseSeedAssembly
-
-universe u
 
 variable {M : Type u} [AddCommGroup M] [Module ℚ M]
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
