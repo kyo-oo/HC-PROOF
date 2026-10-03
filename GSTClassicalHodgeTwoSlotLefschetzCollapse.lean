@@ -69,7 +69,9 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
             (hfuture := by
               simp [GSTUniversalLefschetzKernel.worldForward])
             (htime := by
-              simp [GSTUniversalLefschetzKernel.worldCausalDistance])).symm
+              simp [GSTUniversalLefschetzKernel.worldCausalDistance,
+                GSTUniversalLefschetzKernel.carryDistance,
+                GSTUniversalLefschetzKernel.digitDistance])).symm
     change a sourceSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis sourceSlot) = _
     have hraw :
@@ -103,7 +105,9 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
           (hfuture := by
             simp [GSTUniversalLefschetzKernel.worldForward])
           (htime := by
-            simp [GSTUniversalLefschetzKernel.worldCausalDistance])
+            simp [GSTUniversalLefschetzKernel.worldCausalDistance,
+              GSTUniversalLefschetzKernel.carryDistance,
+              GSTUniversalLefschetzKernel.digitDistance])
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
     rw [hzero]
