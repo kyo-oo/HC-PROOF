@@ -43,7 +43,7 @@ namespace Chart
 
 /-- A chart is globally faithful when its coordinate observation is injective.
 Faithfulness is optional; most GST charts are deliberately partial/coarse. -/
-def Faithful {G : GeneralSpace.{u,v}} (C : Chart.{w} G) : Prop :=
+def Faithful {G : GeneralSpace.{u,v}} (C : Chart G) : Prop :=
   Function.Injective C.observe
 
 end Chart
