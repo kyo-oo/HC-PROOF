@@ -75,7 +75,7 @@ theorem pureForwardShift_basis
     let s : Fin N := ⟨p.1 + 1, hsucc⟩
     by_cases hq : q = s
     · subst q
-      show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+      show (2⁻¹ : ℚ) • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
               ↑(Fin.castLE (show N ≤ min N N by omega) s) then
           if htime : 2 = 2 * pureWeightGap
               (Fin.castLE (show N ≤ min N N by omega) p)
@@ -102,7 +102,7 @@ theorem pureForwardShift_basis
       rw [hgap]
       simp [rationalPureBasis, s]
     · by_cases hpq : p.1 ≤ q.1
-      · show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+      · show (2⁻¹ : ℚ) • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
               ↑(Fin.castLE (show N ≤ min N N by omega) q) then
           if htime : 2 = 2 * pureWeightGap
               (Fin.castLE (show N ≤ min N N by omega) p)
@@ -128,7 +128,7 @@ theorem pureForwardShift_basis
         rw [dif_neg htime]
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
-      · show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+      · show (2⁻¹ : ℚ) • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
               ↑(Fin.castLE (show N ≤ min N N by omega) q) then
           if htime : 2 = 2 * pureWeightGap
               (Fin.castLE (show N ≤ min N N by omega) p)
@@ -144,7 +144,7 @@ theorem pureForwardShift_basis
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
   · rw [dif_neg hsucc]
-    show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+    show (2⁻¹ : ℚ) • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
           ↑(Fin.castLE (show N ≤ min N N by omega) q) then
         if htime : 2 = 2 * pureWeightGap
             (Fin.castLE (show N ≤ min N N by omega) p)
