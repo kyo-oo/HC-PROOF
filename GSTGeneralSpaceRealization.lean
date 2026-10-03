@@ -41,8 +41,7 @@ structure TransportMorphism {G : GeneralSpace.{u,v}}
     (A : TransportSystem.{w} G) (B : TransportSystem.{z} G) where
   map : (x : G.Point) → A.Fiber x → B.Fiber x
   naturality : ∀ {x y : G.Point} (γ : G.Path x y) (a : A.Fiber x),
-    map y (B := B) (A.transport γ a) =
-      B.transport γ (map x a)
+    map y (A.transport γ a) = B.transport γ (map x a)
 
 namespace TransportMorphism
 
