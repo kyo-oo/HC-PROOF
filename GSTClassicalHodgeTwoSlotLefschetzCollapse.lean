@@ -59,6 +59,7 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
       funext q
       fin_cases q <;>
         simp [sheetProjectorQ, diagonalLefschetzQ, rationalPureBasis,
+          sourceSlot, targetSlot,
           GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
     change a sourceSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis sourceSlot) = _
@@ -66,7 +67,7 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
         diagonalLefschetzQ 2 2 (rationalPureBasis sourceSlot) =
           (forwardScalar sourceSlot targetSlot : ℚ) •
             rationalPureBasis targetSlot := by
-      simpa [rawForwardWord, hsourceProj, htargetProj, sourceSlot, targetSlot,
+      simpa [rawForwardWord, hsourceProj, ← htargetProj, sourceSlot, targetSlot,
         GSTPureHodgeLefschetzKernel.pureWeightGap] using hsrc
     rw [hraw]
     simp [pureMatrixUnit_basis_source, smul_smul]
@@ -75,11 +76,12 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
       funext q
       fin_cases q <;>
         simp [diagonalLefschetzQ, rationalPureBasis,
+          sourceSlot, targetSlot,
           GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
     rw [hzero]
-    simp [pureMatrixUnit_basis_other]
+    simp [pureMatrixUnit_basis_other, sourceSlot, targetSlot]
 
 /-- The forward scalar in the universal two-slot window is nonzero. -/
 theorem twoSlot_forwardScalar_ne_zero :
@@ -107,7 +109,7 @@ theorem lifted_twoSlotLefschetz_eq_scaled_hodgeMatrixUnit
     simp [liftFiniteHodgeOperator]
   rw [hsmul]
   rw [liftFiniteHodgeOperator_matrixUnit]
-  simp [pairBasisIndex]
+  simp [pairBasisIndex, sourceSlot, targetSlot]
 
 #check diagonalLefschetzQ_two_two_eq_scaled_matrixUnit
 #check twoSlot_forwardScalar_ne_zero
