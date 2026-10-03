@@ -16,8 +16,8 @@ Hodge-compatible realized-correspondence expression.
 
 This is the correct target for the GST irreducibility artillery.  To kill the
 failure it is enough to prove that the actual geometric correspondence algebra
-acts irreducibly on the genuine Hodge fiber.  No basis representative or
-matrix-unit realization is assumed here.
+acts irreducibly on every nonzero genuine Hodge fiber.  Zero Hodge fibers are
+handled directly and require no artificial nonvanishing seed.
 -/
 
 set_option maxHeartbeats 100000000
@@ -120,24 +120,48 @@ theorem algebraicHodgeSubspace_eq_top_of_actualCorrespondenceIrreducible
   hirr (AlgebraicHodgeSubspace V H p)
     algebraicHodgeSubspace_correspondenceInvariant hne
 
-/-- Weightwise actual-correspondence irreducibility plus nonzero algebraic
-seeds proves the exact rational Hodge statement. -/
+/-- The source condition required in one weight: either the whole Hodge fiber
+is zero, or there is at least one nonzero genuine algebraic Hodge class. -/
+def ZeroFiberOrAlgebraicSeed : Prop :=
+  (∀ alpha : ClassicalHodgeFiber V H p, alpha = 0) ∨
+    AlgebraicHodgeSubspace V H p ≠ ⊥
+
+/-- **EXACT HODGE FROM ACTUAL-CORRESPONDENCE IRREDUCIBILITY.**
+Zero Hodge weights are discharged by the zero cycle; every nonzero weight only
+needs one nonzero algebraic seed plus irreducibility of the genuine
+correspondence action. -/
 theorem exactHodge_of_actualCorrespondenceIrreducible
     (hirr : ∀ q : Nat,
       ActualCorrespondenceIrreducible (V := V) (H := H) (p := q))
-    (hne : ∀ q : Nat,
-      AlgebraicHodgeSubspace V H q ≠ ⊥) :
+    (hseed : ∀ q : Nat,
+      ZeroFiberOrAlgebraicSeed (V := V) (H := H) (p := q)) :
     EveryHodgeClassIsRationalAlgebraic H := by
   rw [everyHodgeClassIsRationalAlgebraic_iff_stage2G]
   intro q alpha halpha
-  have htop := algebraicHodgeSubspace_eq_top_of_actualCorrespondenceIrreducible
-    (hirr q) (hne q)
   let a : ClassicalHodgeFiber V H q := ⟨alpha, halpha⟩
-  have ha : a ∈ AlgebraicHodgeSubspace V H q := by
-    rw [htop]
-    trivial
-  rcases ha with ⟨Z,hZ⟩
-  exact ⟨Z,hZ⟩
+  rcases hseed q with hzero | hne
+  · have ha0 : a = 0 := hzero a
+    refine ⟨0, ?_⟩
+    have hval : alpha = 0 := congrArg Subtype.val ha0
+    simpa [hval]
+  · have htop :=
+      algebraicHodgeSubspace_eq_top_of_actualCorrespondenceIrreducible
+        (hirr q) hne
+    have ha : a ∈ AlgebraicHodgeSubspace V H q := by
+      rw [htop]
+      trivial
+    rcases ha with ⟨Z,hZ⟩
+    exact ⟨Z,hZ⟩
+
+/-- Literal finite rational-combination form under the same sharp criterion. -/
+theorem finiteCombination_of_actualCorrespondenceIrreducible
+    (hirr : ∀ q : Nat,
+      ActualCorrespondenceIrreducible (V := V) (H := H) (p := q))
+    (hseed : ∀ q : Nat,
+      ZeroFiberOrAlgebraicSeed (V := V) (H := H) (p := q)) :
+    EveryHodgeClassIsFiniteRationalCombination H := by
+  rw [← rationalAlgebraic_iff_finiteRationalCombination]
+  exact exactHodge_of_actualCorrespondenceIrreducible hirr hseed
 
 #check HodgeCompatible
 #check hodgeOperator
@@ -146,12 +170,15 @@ theorem exactHodge_of_actualCorrespondenceIrreducible
 #check algebraicHodgeSubspace_correspondenceInvariant
 #check failure_gives_proper_invariant_ghost
 #check ActualCorrespondenceIrreducible
+#check ZeroFiberOrAlgebraicSeed
 #check algebraicHodgeSubspace_eq_top_of_actualCorrespondenceIrreducible
 #check exactHodge_of_actualCorrespondenceIrreducible
+#check finiteCombination_of_actualCorrespondenceIrreducible
 
 #print axioms maps_algebraicHodgeSubspace
 #print axioms algebraicHodgeSubspace_correspondenceInvariant
 #print axioms failure_gives_proper_invariant_ghost
 #print axioms exactHodge_of_actualCorrespondenceIrreducible
+#print axioms finiteCombination_of_actualCorrespondenceIrreducible
 
 end GSTClassicalHodgeCorrespondenceInvariantGhost
