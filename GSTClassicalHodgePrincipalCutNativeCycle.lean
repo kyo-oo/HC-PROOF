@@ -1,5 +1,6 @@
 import GSTClassicalHodgeProperCutCodimensionOne
 import GSTNativeCodimensionCyclePresentation
+import GSTGeometricRealizationStage2D
 
 /-!
 # GST CLASSICAL HODGE — NATIVE CYCLE OF A PRINCIPAL PROJECTIVE CUT
@@ -23,6 +24,7 @@ noncomputable section
 
 open AlgebraicGeometry
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgePrincipalSectionDescent
 open GSTClassicalHodgeProperCutCodimensionOne

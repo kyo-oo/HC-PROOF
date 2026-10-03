@@ -90,7 +90,8 @@ theorem sheetMatrixUnit_generator_source
     (s t : FiberedHodgeIndex V H) :
     sheetMatrixUnit s t (fiberedSheetGenerator V H s) =
       fiberedSheetGenerator V H t := by
-  simp [sheetMatrixUnit_apply]
+  simp [sheetMatrixUnit_apply, fiberedSheetGenerator,
+    Finsupp.single_apply, one_smul]
 
 @[simp]
 theorem sheetMatrixUnit_generator_other
@@ -106,7 +107,8 @@ theorem sheetMatrixUnit_comp
       sheetMatrixUnit s u := by
   apply LinearMap.ext
   intro phi
-  simp [sheetMatrixUnit_apply]
+  simp [sheetMatrixUnit_apply, fiberedSheetGenerator,
+    Finsupp.single_apply, one_smul, smul_assoc]
 
 /-- Mismatched global sheet matrix units annihilate. -/
 theorem sheetMatrixUnit_comp_zero

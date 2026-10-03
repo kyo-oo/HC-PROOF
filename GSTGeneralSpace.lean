@@ -15,7 +15,7 @@ namespace GSTGeneralSpace
 /-- A carrier-independent space with typed composable paths. -/
 structure GeneralSpace where
   Point : Type u
-  Path : Point → Point → Type v
+  Path : Point → Point → Sort v
   idPath : (x : Point) → Path x x
   compPath : {x y z : Point} → Path x y → Path y z → Path x z
   comp_id_left : ∀ {x y} (γ : Path x y), compPath (idPath x) γ = γ

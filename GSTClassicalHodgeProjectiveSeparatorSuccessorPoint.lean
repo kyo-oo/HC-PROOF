@@ -55,18 +55,25 @@ theorem separatorQuotientIdeal_ne_top
     (Ideal.span_singleton_ne_top (separatorClass_not_isUnit n x))
 
 /-- Choose one minimal prime over the surviving separator. -/
+noncomputable def separatorMinimalPrimeWitness
+    (n : Nat) (x : projectiveSpace n) :
+    {I : Ideal (pointQuotient n x) //
+      I ∈ (separatorQuotientIdeal n x).minimalPrimes} :=
+  Classical.choice
+    (Nonempty.elim (Ideal.nonempty_minimalPrimes
+      (separatorQuotientIdeal_ne_top n x))
+      (fun p => ⟨⟨p.1, p.2⟩⟩))
+
 noncomputable def separatorMinimalPrime
     (n : Nat) (x : projectiveSpace n) : Ideal (pointQuotient n x) :=
-  Classical.choice (Ideal.nonempty_minimalPrimes
-    (separatorQuotientIdeal_ne_top n x))
+  (separatorMinimalPrimeWitness n x).1
 
 /-- Receipt that the chosen quotient prime is genuinely minimal over the
 separator ideal. -/
 theorem separatorMinimalPrime_mem
     (n : Nat) (x : projectiveSpace n) :
     separatorMinimalPrime n x ∈ (separatorQuotientIdeal n x).minimalPrimes :=
-  Classical.choose_spec (Ideal.nonempty_minimalPrimes
-    (separatorQuotientIdeal_ne_top n x))
+  (separatorMinimalPrimeWitness n x).2
 
 /-- The chosen quotient prime has exact height one. -/
 theorem separatorMinimalPrime_height_one
@@ -89,7 +96,10 @@ theorem sourcePrime_le_separatorAmbientPrime
   intro a ha
   change Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal a ∈
     separatorMinimalPrime n x
-  simp [ha]
+  have h0 : Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal a = 0 := by
+    simpa using ha
+  rw [h0]
+  exact zero_mem _
 
 /-- The pulled-back successor prime is prime. -/
 theorem separatorAmbientPrime_isPrime
@@ -114,7 +124,9 @@ theorem sourcePrime_lt_separatorAmbientPrime
   intro hEq
   have hmem :
       (positiveHomogeneousSeparator n x).equation ∈ x.asHomogeneousIdeal := by
-    rw [show x.asHomogeneousIdeal.toIdeal = separatorAmbientPrime n x from hEq]
+    show (positiveHomogeneousSeparator n x).equation ∈
+      x.asHomogeneousIdeal.toIdeal
+    rw [hEq]
     exact separator_mem_separatorAmbientPrime n x
   exact (positiveHomogeneousSeparator n x).not_mem_prime hmem
 

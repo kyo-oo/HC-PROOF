@@ -1,4 +1,5 @@
 import GSTClassicalHodgeExplicitArsenalGeneration
+import GSTClassicalHodgePrimitiveArsenalRationalization
 import GSTPureHodgeLefschetzKernel
 import GSTSquarePureHodgeDuality
 
@@ -43,6 +44,7 @@ open GSTPureHodgeLefschetzKernel
 open GSTSquarePureHodgeDuality
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgePrimitiveArsenalRationalization
 
 namespace GSTClassicalHodgeLefschetzPoincareMatrixGeneration
 
@@ -113,6 +115,7 @@ theorem pureBackwardShift_basis
         rationalPureBasis (⟨p.1 - 1, by omega⟩ : Fin N)
       else 0 := by
   unfold pureBackwardShift poincareConjugate
+  simp only [LinearMap.comp_apply]
   rw [poincareReverseQ_basis]
   rw [pureForwardShift_basis]
   by_cases hp : 0 < p.1
@@ -153,6 +156,8 @@ theorem bottomProjectorLP_other
     bottomProjectorLP N (rationalPureBasis p) = 0 := by
   rw [bottomProjectorLP]
   simp only [LinearMap.sub_apply, LinearMap.id_apply]
+  show rationalPureBasis p -
+      pureForwardShift N (pureBackwardShift N (rationalPureBasis p)) = 0
   rw [pureBackwardShift_basis, dif_pos hp]
   rw [pureForwardShift_basis]
   have hsucc : p.1 - 1 + 1 < N := by omega
@@ -170,10 +175,20 @@ theorem pureForwardShift_pow_basis
     (hk : p.1 + k < N) :
     (pureForwardShift N)^k (rationalPureBasis p) =
       rationalPureBasis (⟨p.1 + k, hk⟩ : Fin N) := by
+  revert hk
+  revert p
   induction k with
-  | zero => simp
+  | zero =>
+      intro p hk
+      rfl
   | succ k ih =>
-      rw [pow_succ, LinearMap.mul_apply, ih (by omega)]
+      intro p hk
+      rw [pow_succ, LinearMap.mul_apply]
+      rw [pureForwardShift_basis, dif_pos (show p.1 + 1 < N by omega)]
+      rw [ih ⟨p.1 + 1, by omega⟩ (show p.1 + 1 + k < N by omega)]
+      apply congrArg rationalPureBasis
+      apply Fin.ext
+      omega
       rw [pureForwardShift_basis]
       have hs : p.1 + k + 1 < N := by omega
       rw [dif_pos hs]
@@ -187,13 +202,17 @@ theorem pureBackwardShift_pow_basis
     (hk : k ≤ p.1) :
     (pureBackwardShift N)^k (rationalPureBasis p) =
       rationalPureBasis (⟨p.1 - k, by omega⟩ : Fin N) := by
+  revert hk
+  revert p
   induction k with
-  | zero => simp
+  | zero =>
+      intro p hk
+      rfl
   | succ k ih =>
-      rw [pow_succ, LinearMap.mul_apply, ih (by omega)]
-      rw [pureBackwardShift_basis]
-      have hs : 0 < p.1 - k := by omega
-      rw [dif_pos hs]
+      intro p hk
+      rw [pow_succ, LinearMap.mul_apply]
+      rw [pureBackwardShift_basis, dif_pos (show 0 < p.1 by omega)]
+      rw [ih ⟨p.1 - 1, by omega⟩ (show k ≤ p.1 - 1 by omega)]
       congr 1
       apply Fin.ext
       omega

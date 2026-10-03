@@ -1,5 +1,6 @@
 import GSTClassicalHodgePointNormalForm
 import GSTCompactNativeCyclePresentation
+import GSTClassicalHodgePointKernelOperatorLift
 
 /-!
 # GST CLASSICAL HODGE — GEOMETRIC CYCLE-CLASS POINT RIGIDITY
@@ -24,6 +25,7 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open AlgebraicGeometry
+open GSTClassicalHodgePointKernelOperatorLift
 
 namespace GSTClassicalHodgeGeometricCycleClassPointRigidity
 

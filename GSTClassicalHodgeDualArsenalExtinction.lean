@@ -121,7 +121,9 @@ theorem bigradedBettiHodge_of_dualArsenalExtinction
   intro p ell hell alpha halpha
   let alphaH : ClassicalHodgeFiber V H p := ⟨alpha, halpha⟩
   by_cases hzero : alphaH = 0
-  · simpa [alphaH] using congrArg Subtype.val hzero
+  · have ha0 : alpha = 0 := congrArg Subtype.val hzero
+    subst ha0
+    exact map_zero ell
   · obtain ⟨seed, hseed0, horbit⟩ := hseed p alphaH hzero
     exact atomicSeparator_vanishes_of_algebraic_orbit
       seed hseed0 horbit ell hell alphaH

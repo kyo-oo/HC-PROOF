@@ -37,6 +37,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeCyclicSpectralGeneration
+open GSTClassicalHodgeCyclicSpectralGeneration.FiniteSpectralFamily
 open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeWeightedCyclicCriterion
 
