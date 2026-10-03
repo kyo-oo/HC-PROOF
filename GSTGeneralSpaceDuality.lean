@@ -18,14 +18,14 @@ open GSTGeneralSpaceTransport
 /-- A transported state system with a distinguished zero state in every
 fiber. -/
 structure PointedTransportSystem (G : GeneralSpace.{u,v})
-    extends TransportSystem.{w} G where
+    extends TransportSystem G where
   zero : (x : G.Point) → Fiber x
   transport_zero : ∀ {x y : G.Point} (γ : G.Path x y),
     transport γ (zero x) = zero y
 
 /-- Dimension-free nondegenerate pairing/probe system. -/
 structure NondegenerateDuality {G : GeneralSpace.{u,v}}
-    (T : PointedTransportSystem.{w} G) where
+    (T : PointedTransportSystem G) where
   Scalar : Type z
   zeroScalar : Scalar
   pair : (x : G.Point) → T.Fiber x → T.Fiber x → Scalar
@@ -38,8 +38,8 @@ structure NondegenerateDuality {G : GeneralSpace.{u,v}}
 /-- A nonzero state must be detected by at least one dual probe. -/
 theorem exists_detecting_probe
     {G : GeneralSpace.{u,v}}
-    {T : PointedTransportSystem.{w} G}
-    (D : NondegenerateDuality.{z} T)
+    {T : PointedTransportSystem G}
+    (D : NondegenerateDuality T)
     (x : G.Point) (a : T.Fiber x)
     (ha : a ≠ T.zero x) :
     ∃ b : T.Fiber x, D.pair x a b ≠ D.zeroScalar := by
@@ -50,8 +50,8 @@ theorem exists_detecting_probe
 /-- Pairing values are intrinsic under any transported path. -/
 theorem pair_transport_exact
     {G : GeneralSpace.{u,v}}
-    {T : PointedTransportSystem.{w} G}
-    (D : NondegenerateDuality.{z} T)
+    {T : PointedTransportSystem G}
+    (D : NondegenerateDuality T)
     {x y : G.Point} (γ : G.Path x y) (a b : T.Fiber x) :
     D.pair y (T.transport γ a) (T.transport γ b) = D.pair x a b :=
   D.transport_invariant γ a b
