@@ -137,18 +137,29 @@ theorem ofWord_operatorPair
       E.cycleOperator (F.cycleOperator Z) :=
   rfl
 
-/-- Powers of one genuine correspondence expression. -/
-noncomputable def pow
+/-- Positive nonempty iteration of one genuine expression.  There is
+intentionally no zero-th power until an independently geometric identity
+correspondence has been constructed. -/
+noncomputable def positiveIter
     (E : RealizedCorrespondenceExpr V H p) : Nat →
       RealizedCorrespondenceExpr V H p
-  | 0 => .smul 1 .zero + .zero
-  | n + 1 => .comp E (pow E n)
+  | 0 => E
+  | n + 1 => .comp E (positiveIter E n)
 
-/-- A proper identity expression is supplied by any realized expression using
-`0*E + E` only when needed by later polynomial compilers.  We keep identity
-out of the primitive syntax until it has an independently geometric
-realization, rather than silently inserting an arbitrary ambient identity
-correspondence. -/
+@[simp] theorem positiveIter_zero
+    (E : RealizedCorrespondenceExpr V H p) :
+    positiveIter E 0 = E := rfl
+
+@[simp] theorem positiveIter_succ_cohomology
+    (E : RealizedCorrespondenceExpr V H p)
+    (n : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p)) :
+    (positiveIter E (n + 1)).cohomologyOperator alpha =
+      E.cohomologyOperator ((positiveIter E n).cohomologyOperator alpha) :=
+  rfl
+
+/-- Identity is deliberately an explicit geometric capability rather than a
+silent primitive. -/
 def HasGeometricIdentity : Prop :=
   ∃ I : RealizedCorrespondenceExpr V H p,
     I.operatorPair.cohomologyOperator = LinearMap.id ∧
@@ -161,6 +172,7 @@ def HasGeometricIdentity : Prop :=
 #check RealizedCorrespondenceExpr.atomic_stable
 #check RealizedCorrespondenceExpr.ofWord
 #check RealizedCorrespondenceExpr.ofWord_operatorPair
+#check RealizedCorrespondenceExpr.positiveIter
 #check RealizedCorrespondenceExpr.HasGeometricIdentity
 
 #print axioms RealizedCorrespondenceExpr.cycleClass_natural
