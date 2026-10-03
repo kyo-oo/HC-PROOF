@@ -24,7 +24,7 @@ structure Recoordination (G : GeneralSpace.{u,v}) (x y : G.Point) where
 
 /-- An intrinsic observable of a transported state system. -/
 structure InvariantObservable {G : GeneralSpace.{u,v}}
-    (T : TransportSystem.{w} G) where
+    (T : TransportSystem G) where
   Value : Type z
   eval : (x : G.Point) → T.Fiber x → Value
   invariant : ∀ {x y : G.Point} (γ : G.Path x y) (a : T.Fiber x),
@@ -32,7 +32,7 @@ structure InvariantObservable {G : GeneralSpace.{u,v}}
 
 /-- An intrinsic predicate of a transported state system. -/
 structure InvariantPredicate {G : GeneralSpace.{u,v}}
-    (T : TransportSystem.{w} G) where
+    (T : TransportSystem G) where
   holds : (x : G.Point) → T.Fiber x → Prop
   invariant : ∀ {x y : G.Point} (γ : G.Path x y) (a : T.Fiber x),
     holds y (T.transport γ a) ↔ holds x a
@@ -40,7 +40,7 @@ structure InvariantPredicate {G : GeneralSpace.{u,v}}
 /-- Forward transport followed by backward transport is the identity on every
 state, by semantic functoriality and the recoordination witness. -/
 theorem transport_forward_backward
-    {G : GeneralSpace.{u,v}} (T : TransportSystem.{w} G)
+    {G : GeneralSpace.{u,v}} (T : TransportSystem G)
     {x y : G.Point} (R : Recoordination G x y) (a : T.Fiber x) :
     T.transport R.backward (T.transport R.forward a) = a := by
   calc
@@ -53,7 +53,7 @@ theorem transport_forward_backward
 
 /-- Backward then forward is likewise the identity. -/
 theorem transport_backward_forward
-    {G : GeneralSpace.{u,v}} (T : TransportSystem.{w} G)
+    {G : GeneralSpace.{u,v}} (T : TransportSystem G)
     {x y : G.Point} (R : Recoordination G x y) (b : T.Fiber y) :
     T.transport R.forward (T.transport R.backward b) = b := by
   calc
@@ -67,15 +67,15 @@ theorem transport_backward_forward
 /-- Every invariant observable has identical value before and after an exact
 recoordination. -/
 theorem observable_recoordination
-    {G : GeneralSpace.{u,v}} (T : TransportSystem.{w} G)
-    (F : InvariantObservable.{z} T)
+    {G : GeneralSpace.{u,v}} (T : TransportSystem G)
+    (F : InvariantObservable T)
     {x y : G.Point} (R : Recoordination G x y) (a : T.Fiber x) :
     F.eval y (T.transport R.forward a) = F.eval x a :=
   F.invariant R.forward a
 
 /-- Every intrinsic proposition is preserved by exact recoordination. -/
 theorem predicate_recoordination
-    {G : GeneralSpace.{u,v}} (T : TransportSystem.{w} G)
+    {G : GeneralSpace.{u,v}} (T : TransportSystem G)
     (P : InvariantPredicate T)
     {x y : G.Point} (R : Recoordination G x y) (a : T.Fiber x) :
     P.holds y (T.transport R.forward a) ↔ P.holds x a :=
