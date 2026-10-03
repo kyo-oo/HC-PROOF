@@ -44,10 +44,6 @@ theorem closurePrincipalCut_kernel_eq_relativePrincipalCutIdeal
     (V : SmoothProjectiveComplexScheme) (x : V.X) :
     (closurePrincipalCutToClosure V x).ker =
       relativePrincipalCutIdeal V x := by
-  unfold closurePrincipalCutToClosure relativePrincipalCutIdeal
-  rw [Scheme.IdealSheafData.ker_fst_of_isClosedImmersion]
-  change
-    (principalSectionAtι V x).ker.comap (pointClosureι V x) = _
   have hker :
       (principalSectionAtι V x).ker =
         principalSectionIdeal V
@@ -56,7 +52,11 @@ theorem closurePrincipalCut_kernel_eq_relativePrincipalCutIdeal
     dsimp [principalSectionAtι, principalSectionAt,
       principalSectionι, principalSection]
     exact Scheme.IdealSheafData.ker_subschemeι _
-  rw [hker]
+  unfold closurePrincipalCutToClosure relativePrincipalCutIdeal
+  exact
+    (Scheme.IdealSheafData.ker_fst_of_isClosedImmersion
+      (principalSectionAtι V x) (pointClosureι V x)).trans
+      (congrArg (fun J => J.comap (pointClosureι V x)) hker)
 
 /-- The relative cut itself is therefore the closed geometry associated to a
 completely explicit pulled-back ideal sheaf, up to the canonical pullback

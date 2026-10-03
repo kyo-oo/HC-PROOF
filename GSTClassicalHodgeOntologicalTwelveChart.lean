@@ -2,6 +2,7 @@ import GSTClassicalHodgeIntegralWorldEmbedding
 import GSTClassicalHodgeRecoordinationArsenalCrown
 import GSTGraphV2Ontological
 import GSTWorldRecoordinationGroupoid
+import GSTU2DEventTransport
 
 /-!
 # GST CLASSICAL HODGE — ONTOLOGICAL TWELVE-SHEET CHART
@@ -44,6 +45,7 @@ open GSTClassicalHodgeRecoordinationArsenalCrown
 open GSTWorldRecoordinationGroupoid
 open GSTGraphV2Ontological
 open GST2DMixedEmergence
+open GSTU2DEventTransport
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

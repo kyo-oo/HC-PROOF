@@ -149,7 +149,7 @@ theorem hodge_weight_of_liveSource_pointLifts
     every_basis_algebraic_of_liveSource_pointLifts S hLift
   have halg : alpha ∈ pointCycleClassSpan p (H.cycleClass p) := by
     rw [show alphaH =
-      ∑ j in ((classicalHodgeBasis V H p).repr alphaH).support,
+      ∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
         ((classicalHodgeBasis V H p).repr alphaH j) •
           classicalHodgeBasis V H p j by
       exact (classicalHodgeBasis V H p).sum_repr alphaH]

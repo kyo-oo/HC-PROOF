@@ -63,6 +63,25 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
+end GSTClassicalHodgeFiniteClosedCorrespondenceOperator
+
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
+open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
+open GSTClassicalHodgeProjectivePointTransport
+open GSTClassicalHodgeFiniteClosedCorrespondence
+open GSTClassicalHodgePointKernelOperatorLift
+open GSTClassicalHodgeGeneratorwiseAtomicStability
+open GSTClassicalHodgeCycleOperatorNaturality
+
+variable {V : SmoothProjectiveComplexScheme}
+variable {H : HodgeBigradedBettiData V}
+variable {p : Nat}
+
 namespace GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
 
 /-- Free linear extension of the finite-correspondence transition from point
@@ -304,4 +323,3 @@ theorem graphCorrespondenceCycle_nativeOperator
 #print axioms graphCorrespondenceCycle_nativeOperator
 
 end GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
-end GSTClassicalHodgeFiniteClosedCorrespondenceOperator

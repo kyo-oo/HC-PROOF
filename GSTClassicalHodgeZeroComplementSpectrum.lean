@@ -45,6 +45,14 @@ variable {p : Nat}
 abbrev AmbientCohomology :=
   RationalSingularCohomology H.analytification (2 * p)
 
+end GSTClassicalHodgeZeroComplementSpectrum
+
+open GSTClassicalHodgeZeroComplementSpectrum
+
+variable {V : SmoothProjectiveComplexScheme}
+variable {H : HodgeBigradedBettiData V}
+variable {p : Nat}
+
 namespace GSTClassicalHodgeCanonicalSpectralObservable.FiniteHodgeBasisWindow
 
 /-- The genuine Hodge subspace in ambient rational singular cohomology. -/
@@ -229,4 +237,3 @@ theorem augmentedIsolator_kills_complement
 
 end GSTClassicalHodgeCanonicalSpectralObservable.FiniteHodgeBasisWindow
 
-end GSTClassicalHodgeZeroComplementSpectrum

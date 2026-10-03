@@ -124,7 +124,7 @@ theorem trace_successorNativeOperator_point
       (H.cycleClass (p + 1)
         (successorNativeOperator V p
           (codimensionPointCycle V.X p x))) =
-      ∑ y in relativeCodimensionOneFinset V x.1,
+      ∑ y ∈ relativeCodimensionOneFinset V x.1,
         if hy : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1 then
           D.pointDegree (p + 1)
             (⟨ambientSuccessorPoint V x.1 y, hy⟩ :

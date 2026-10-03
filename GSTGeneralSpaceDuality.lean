@@ -1,5 +1,5 @@
 import GSTGeneralSpaceRealization
-import Mathlib.LinearAlgebra.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
 
 universe u v w
 

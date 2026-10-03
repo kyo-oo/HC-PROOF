@@ -1,6 +1,8 @@
 import GSTClassicalHodgeIntegralLefschetzTransport
 import GSTClassicalHodgeSheetSpectralExtraction
 import GSTClassicalHodgeIntegralWorldEmbedding
+import GSTGlobalPureHodgeCosmology
+import GSTWorldRecoordinationGroupoid
 
 /-!
 # GST CLASSICAL HODGE — CONCRETE SHEET MATRIX UNITS
@@ -32,6 +34,8 @@ open GSTTruncatedWorldCohomologyRing
 open GSTUniversalLefschetzCosmology
 open GSTClassicalHodgeSheetSpectralExtraction
 open GSTClassicalHodgeIntegralLefschetzTransport
+open GSTGlobalPureHodgeCosmology
+open GSTWorldRecoordinationGroupoid
 
 namespace GSTClassicalHodgeConcreteSheetMatrixUnit
 

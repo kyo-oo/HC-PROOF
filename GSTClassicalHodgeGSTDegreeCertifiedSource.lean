@@ -196,7 +196,7 @@ theorem hodge_weight_of_degreeCertifiedPrograms
     intro j
     exact (R j).target_mem_cycleClass_range
   rw [show alphaH =
-      ∑ j in ((classicalHodgeBasis V H (p + 1)).repr alphaH).support,
+      ∑ j ∈ ((classicalHodgeBasis V H (p + 1)).repr alphaH).support,
         ((classicalHodgeBasis V H (p + 1)).repr alphaH j) •
           classicalHodgeBasis V H (p + 1) j by
     exact (classicalHodgeBasis V H (p + 1)).sum_repr alphaH]

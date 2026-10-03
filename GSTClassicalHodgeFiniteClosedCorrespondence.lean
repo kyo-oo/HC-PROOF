@@ -92,7 +92,7 @@ def leftFiber
   {z | K.left z = x}
 
 /-- The left fiber is finite by the correspondence hypothesis. -/
-theorem leftFiber_finite
+theorem leftFiber_finite'
     (K : FiniteClosedCorrespondence V) (x : V.X) :
     (K.leftFiber x).Finite := by
   simpa [leftFiber, left] using K.leftFiber_finite x
@@ -178,7 +178,7 @@ theorem transition_eq_fiber_sum
     (p : Nat)
     (x : CodimensionPoint V.X p) :
     K.transition p x =
-      ∑ z in K.leftFiberFinset x.1, K.targetAtomPresentation p z :=
+      ∑ z ∈ K.leftFiberFinset x.1, K.targetAtomPresentation p z :=
   rfl
 
 /-- The pointwise Betti realization equation identifying a genuine finite

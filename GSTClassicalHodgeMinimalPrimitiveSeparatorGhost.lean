@@ -137,7 +137,7 @@ theorem minimalSeparator_pullback_zero_on_hodge
     pullbackDetector G P (minimalSeparator hnot).detector alpha.1 = 0 := by
   classical
   rw [show alpha =
-      ∑ i in ((classicalHodgeBasis V H q).repr alpha).support,
+      ∑ i ∈ ((classicalHodgeBasis V H q).repr alpha).support,
         ((classicalHodgeBasis V H q).repr alpha i) •
           classicalHodgeBasis V H q i by
     exact (classicalHodgeBasis V H q).sum_repr alpha]

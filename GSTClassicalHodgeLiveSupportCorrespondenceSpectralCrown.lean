@@ -123,7 +123,7 @@ theorem reconstructedCycle_spec
           classicalHodgeBasis V H p (liveBasisIndex alpha r) by
     classical
     rw [show alpha =
-        ∑ i in ((classicalHodgeBasis V H p).repr alpha).support,
+        ∑ i ∈ ((classicalHodgeBasis V H p).repr alpha).support,
           ((classicalHodgeBasis V H p).repr alpha i) •
             classicalHodgeBasis V H p i by
       exact (classicalHodgeBasis V H p).sum_repr alpha]

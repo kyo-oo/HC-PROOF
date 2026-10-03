@@ -1,6 +1,7 @@
 import GSTClassicalHodgeArsenalOrbitSaturation
 import GSTClassicalHodgeAtomicAnnihilator
 import GSTClassicalHodgeAtomicDefectDuality
+import GSTClassicalHodgeRankFreeArsenalIrreducibility
 
 /-!
 # GST CLASSICAL HODGE — DUAL ARSENAL EXTINCTION
@@ -30,6 +31,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeArsenalOrbitSaturation
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 
 namespace GSTClassicalHodgeDualArsenalExtinction
 

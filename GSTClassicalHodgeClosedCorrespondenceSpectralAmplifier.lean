@@ -62,6 +62,26 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
+end GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier
+
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeCyclicSpectralGeneration
+open GSTClassicalHodgeCycleOperatorNaturality
+open GSTClassicalHodgeCanonicalSpectralObservable
+open GSTClassicalHodgeZeroComplementSpectrum
+open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
+
+variable {V : SmoothProjectiveComplexScheme}
+variable {H : HodgeBigradedBettiData V}
+variable {p : Nat}
+
 namespace GSTClassicalHodgeCanonicalSpectralObservable.FiniteHodgeBasisWindow
 
 /-- A selected-window augmented projector, restricted to the genuine Hodge
@@ -163,6 +183,27 @@ theorem augmentedProjectorOnHodge_apply
     mul_assoc] using happly
 
 end GSTClassicalHodgeCanonicalSpectralObservable.FiniteHodgeBasisWindow
+
+namespace GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier
+
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeCyclicSpectralGeneration
+open GSTClassicalHodgeCycleOperatorNaturality
+open GSTClassicalHodgeCanonicalSpectralObservable
+open GSTClassicalHodgeZeroComplementSpectrum
+open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
+
+variable {V : SmoothProjectiveComplexScheme}
+variable {H : HodgeBigradedBettiData V}
+variable {p : Nat}
+
 
 /-- One genuine realized closed-correspondence word implements the canonical
 finite-window code observable on the genuine Hodge fiber.  Equality outside
