@@ -1,0 +1,31 @@
+import GSTGeneralSpace
+import GSTGeneralSpaceTransport
+import GSTGeneralSpaceRecoordination
+import GSTGeneralSpaceRealization
+import GSTGeneralSpaceDuality
+import GSTGeneralSpaceCohomology
+import GSTGraphV2GeneralSpaceRealization
+import GSTWorldCosmologyGeneralSpaceRealization
+import GSTClassicalHodgeGeneralSpaceRealization
+import GSTClassicalHodgeGeneralSpaceSynchronization
+import GSTClassicalHodgeGeneralSpaceDefectExtinction
+
+/-!
+# General Space integration smoke
+
+This file is intentionally tiny.  Its job is to force the entire approved
+General Space ontology -> Graph/World adapters -> Hodge synchronization stack
+through one Lean import and axiom-audit boundary.
+-/
+
+#check GSTGeneralSpace.GeneralSpace
+#check GSTGeneralSpaceTransport.TransportSystem
+#check GSTGeneralSpaceRecoordination.Recoordination
+#check GSTGeneralSpaceRealization.Realization
+#check GSTGeneralSpaceDuality.NondegenerateDuality
+#check GSTGeneralSpaceCohomology.CohomologyGeometry
+#check GSTGraphV2GeneralSpaceRealization.graphPositionSpace
+#check GSTWorldCosmologyGeneralSpaceRealization.cosmicCellSpace
+#check GSTClassicalHodgeGeneralSpaceRealization.gradedProgramSpace
+#check GSTClassicalHodgeGeneralSpaceSynchronization.programDefect_transport
+#check GSTClassicalHodgeGeneralSpaceDefectExtinction.target_algebraic_of_program_hit
