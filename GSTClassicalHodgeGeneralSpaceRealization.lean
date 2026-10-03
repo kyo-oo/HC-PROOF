@@ -25,8 +25,11 @@ open GSTGeneralSpace
 open GSTGeneralSpaceTransport
 open GSTGeneralSpaceRealization
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGeometricCycleClassPointRigidity
 open GSTClassicalHodgeGradedGeometricProgramOrbit
 
