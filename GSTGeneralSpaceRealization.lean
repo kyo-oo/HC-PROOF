@@ -8,7 +8,7 @@ cohomology states, native cycles, and Hodge data are all realizations; none of
 them is identified with the ontology itself.
 -/
 
-universe u v w z
+universe u v w z t
 
 namespace GSTGeneralSpaceRealization
 
@@ -23,13 +23,13 @@ structure Realization (G : GeneralSpace.{u,v}) where
 namespace Realization
 
 /-- A chart is a realization whose state type is its coordinate type. -/
-def ofChart {G : GeneralSpace.{u,v}} (C : Chart.{w} G) : Realization.{w} G where
+def ofChart {G : GeneralSpace.{u,v}} (C : Chart G) : Realization G where
   State := C.Coord
   realize := C.observe
 
 /-- Faithfulness of a realization means no two General Space points collapse
 under this face.  It is never required globally. -/
-def Faithful {G : GeneralSpace.{u,v}} (R : Realization.{w} G) : Prop :=
+def Faithful {G : GeneralSpace.{u,v}} (R : Realization G) : Prop :=
   Function.Injective R.realize
 
 end Realization
@@ -38,7 +38,7 @@ end Realization
 Space.  This is the abstract synchronization square used later by native and
 Betti faces. -/
 structure TransportMorphism {G : GeneralSpace.{u,v}}
-    (A : TransportSystem.{w} G) (B : TransportSystem.{z} G) where
+    (A : TransportSystem G) (B : TransportSystem G) where
   map : (x : G.Point) → A.Fiber x → B.Fiber x
   naturality : ∀ {x y : G.Point} (γ : G.Path x y) (a : A.Fiber x),
     map y (A.transport γ a) = B.transport γ (map x a)
@@ -46,16 +46,16 @@ structure TransportMorphism {G : GeneralSpace.{u,v}}
 namespace TransportMorphism
 
 /-- Identity transport morphism. -/
-def id {G : GeneralSpace.{u,v}} (A : TransportSystem.{w} G) :
+def id {G : GeneralSpace.{u,v}} (A : TransportSystem G) :
     TransportMorphism A A where
   map := fun _ a => a
   naturality := by intros; rfl
 
 /-- Natural transport maps compose. -/
 def comp {G : GeneralSpace.{u,v}}
-    {A : TransportSystem.{w} G}
-    {B : TransportSystem.{z} G}
-    {C : TransportSystem.{u} G}
+    {A : TransportSystem G}
+    {B : TransportSystem G}
+    {C : TransportSystem G}
     (f : TransportMorphism A B) (g : TransportMorphism B C) :
     TransportMorphism A C where
   map := fun x a => g.map x (f.map x a)
