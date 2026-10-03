@@ -388,6 +388,7 @@ roots = [
   "GSTGraphV2SelfExpandingCosmology",
   "GSTGraphV2RecursiveStateCausality",
   "GSTGraphV2UnboundedHigherCausality",
+  "GSTClassicalHodgeSelfExpandingClosure",
   "GSTClassicalHodgeAmbientBettiSelfProduct",
   "GSTClassicalHodgeAmbientCorrespondenceIncidenceNaturality",
   "GSTClassicalHodgeAmbientCorrespondenceKernelAction",
