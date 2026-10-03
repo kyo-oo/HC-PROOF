@@ -42,9 +42,11 @@ noncomputable def singularChainMap
 linear-Yoneda duality used definitionally in Stage 2F. -/
 noncomputable def singularCochainPullback
     (f : AnalyticEndomorphism A) :
-    rationalSingularCochains A ⟶ rationalSingularCochains A :=
-  ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-      |>.mapHomologicalComplex _).map (singularChainMap A f)).unop
+    rationalSingularCochains A ⟶ rationalSingularCochains A := by
+  let F :=
+    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+      |>.mapHomologicalComplex (ComplexShape.down ℕ)
+  exact (F.map (singularChainMap A f)).unop
 
 /-- Induced map on the genuine rational singular cohomology object. -/
 noncomputable def rationalCohomologyPullbackObj
@@ -66,12 +68,12 @@ noncomputable def rationalCohomologyPullback
 theorem singularChainMap_id :
     singularChainMap A (AnalyticEndomorphism.id (A := A)) =
       𝟙 (rationalSingularChains A) := by
-  simp [singularChainMap]
+  simp [singularChainMap, rationalSingularChains]
 
 /-- Chain maps respect composition. -/
 theorem singularChainMap_comp
     (f g : AnalyticEndomorphism A) :
-    singularChainMap A (AnalyticEndomorphism.comp f g) =
+    singularChainMap A (AnalyticEndomorphism.comp (A := A) f g) =
       singularChainMap A f ≫ singularChainMap A g := by
   simp [singularChainMap]
 
@@ -79,7 +81,7 @@ theorem singularChainMap_comp
 theorem rationalCohomologyPullback_comp
     (f g : AnalyticEndomorphism A)
     (n : Nat) :
-    rationalCohomologyPullback A (AnalyticEndomorphism.comp f g) n =
+    rationalCohomologyPullback A (AnalyticEndomorphism.comp (A := A) f g) n =
       (rationalCohomologyPullback A f n).comp
         (rationalCohomologyPullback A g n) := by
   ext x

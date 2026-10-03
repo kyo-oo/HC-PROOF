@@ -107,8 +107,8 @@ theorem forwardSheetWord_target
       worldAct N N ((L N N) ^ (2 * (s.1-r.1)))
           (sheetDiagonalAtom r (f (r,r))) (s,s) := by
     simp [sheetSpectralProj, codeSectorProj, sheetCode]
-  rw [hcode]
-  exact hmove
+    rfl
+  exact hcode.trans hmove
 
 /-- After normalization, the target coordinate is exactly the original source
 coordinate. -/
@@ -121,7 +121,10 @@ theorem forwardSheetMatrixUnit_target
   unfold forwardSheetMatrixUnit
   rw [forwardSheetWord_target r s hrs f hf]
   push_cast
-  field_simp [forwardNormalizeScalar, forwardNormalizeScalar_ne_zero r s]
+  rw [forwardNormalizeScalar]
+  rw [div_eq_mul_inv, ← mul_assoc,
+    mul_inv_cancel (by exact_mod_cast (Nat.choose_pos (by omega) : _ ≠ 0)),
+    mul_one]
 
 /-- The target projector kills every state other than the target diagonal
 sheet. -/
@@ -167,7 +170,7 @@ theorem forwardSheetMatrixUnit_nonzero
   intro hz
   have hs := congrFun hz ((s,s) : WorldCell N N)
   rw [forwardSheetMatrixUnit_target r s hrs f hf] at hs
-  exact hr (by exact_mod_cast hs)
+  exact hr (by exact_mod_cast (show (f (r,r) : ℚ) = 0 from hs))
 
 #check RationalSquareCoef
 #check rationalizeWorld

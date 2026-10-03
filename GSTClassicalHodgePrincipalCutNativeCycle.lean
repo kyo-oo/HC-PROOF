@@ -61,7 +61,8 @@ theorem principalCutCycle_eq_sum
         (fun y => codimensionPointCycle V.X 1 y) := by
   classical
   unfold principalCutCycle principalCutPresentation
-  simp [realizeFiniteCodimensionPresentation, Finset.sum_finsuppSum]
+  simp [realizeFiniteCodimensionPresentation, Finsupp.sum_finset_sum,
+    Finsupp.sum_single_index]
 
 /-- Native codimension receipt. -/
 theorem principalCutCycle_is_codimension_one

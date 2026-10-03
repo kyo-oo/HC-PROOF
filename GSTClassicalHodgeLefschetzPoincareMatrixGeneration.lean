@@ -75,6 +75,11 @@ theorem pureForwardShift_basis
     let s : Fin N := ⟨p.1 + 1, hsucc⟩
     by_cases hq : q = s
     · subst q
+      show 2⁻¹ • ↑(if hpq : p.1 ≤ s.1 then
+          if htime : 2 = 2 * pureWeightGap p s then
+            ↑(Nat.choose 2 (pureWeightGap p s))
+          else 0
+        else 0) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ s
       have hpq : p.1 ≤ s.1 := Nat.le_succ p.1
       rw [dif_pos hpq]
       have htime : 2 = 2 * pureWeightGap p s := by
@@ -82,7 +87,12 @@ theorem pureForwardShift_basis
       rw [dif_pos htime]
       simp [pureWeightGap, s, rationalPureBasis]
     · by_cases hpq : p.1 ≤ q.1
-      · rw [dif_pos hpq]
+      · show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
+          if htime : 2 = 2 * pureWeightGap p q then
+            ↑(Nat.choose 2 (pureWeightGap p q))
+          else 0
+        else 0) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
+        rw [dif_pos hpq]
         have htime : 2 ≠ 2 * pureWeightGap p q := by
           intro ht
           have : q.1 = p.1 + 1 := by
@@ -90,10 +100,22 @@ theorem pureForwardShift_basis
             omega
           exact hq (Fin.ext this)
         rw [dif_neg htime]
-        simp [rationalPureBasis, hq]
-      · rw [dif_neg hpq]
-        simp [rationalPureBasis, hq]
+        have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
+        simp [rationalPureBasis, hq']
+      · show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
+          if htime : 2 = 2 * pureWeightGap p q then
+            ↑(Nat.choose 2 (pureWeightGap p q))
+          else 0
+        else 0) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
+        rw [dif_neg hpq]
+        have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
+        simp [rationalPureBasis, hq']
   · rw [dif_neg hsucc]
+    show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
+        if htime : 2 = 2 * pureWeightGap p q then
+          ↑(Nat.choose 2 (pureWeightGap p q))
+        else 0
+      else 0) = (0 : ℚ)
     by_cases hpq : p.1 ≤ q.1
     · rw [dif_pos hpq]
       have htime : 2 ≠ 2 * pureWeightGap p q := by
@@ -114,27 +136,36 @@ theorem pureBackwardShift_basis
       if h : 0 < p.1 then
         rationalPureBasis (⟨p.1 - 1, by omega⟩ : Fin N)
       else 0 := by
-  unfold pureBackwardShift poincareConjugate
-  simp only [LinearMap.comp_apply]
+  rw [show pureBackwardShift N (rationalPureBasis p) =
+      poincareReverseQ N ((pureForwardShift N) (poincareReverseQ N (rationalPureBasis p))) from
+    poincareConjugate_apply (pureForwardShift N) (rationalPureBasis p)]
   rw [poincareReverseQ_basis]
   rw [pureForwardShift_basis]
   by_cases hp : 0 < p.1
   · rw [dif_pos hp]
-    have hsucc : (pureMirror p).1 + 1 < N := by
-      unfold pureMirror
+    by_cases hsucc : (windowMirror p).1 + 1 < N
+    · rw [dif_pos hsucc]
+      rw [poincareReverseQ_basis]
+      apply congrArg rationalPureBasis
+      apply Fin.ext
+      unfold windowMirror
+      simp only
+      have := p.2
       omega
-    rw [dif_pos hsucc]
-    rw [poincareReverseQ_basis]
-    apply congrArg rationalPureBasis
-    apply Fin.ext
-    unfold pureMirror
-    omega
+    · exfalso
+      have hwm : (windowMirror p).1 = N - 1 - p.1 := by
+        unfold windowMirror
+        simp only
+      omega
   · rw [dif_neg hp]
-    have htop : ¬((pureMirror p).1 + 1 < N) := by
-      unfold pureMirror
+    by_cases hsucc : (windowMirror p).1 + 1 < N
+    · exfalso
+      have hwm : (windowMirror p).1 = N - 1 - p.1 := by
+        unfold windowMirror
+        simp only
       omega
-    rw [dif_neg htop]
-    simp
+    · rw [dif_neg hsucc]
+      simp
 
 /-- Bottom-sheet projector constructed only from the two Lefschetz/Poincare
 shifts. -/
@@ -162,9 +193,6 @@ theorem bottomProjectorLP_other
   rw [pureForwardShift_basis]
   have hsucc : p.1 - 1 + 1 < N := by omega
   rw [dif_pos hsucc]
-  have heq : (⟨p.1 - 1 + 1, hsucc⟩ : Fin N) = p := by
-    apply Fin.ext
-    omega
   rw [heq]
   simp
 
@@ -173,7 +201,7 @@ it remains in the finite window. -/
 theorem pureForwardShift_pow_basis
     {N : Nat} (p : Fin N) (k : Nat)
     (hk : p.1 + k < N) :
-    (pureForwardShift N)^k (rationalPureBasis p) =
+    ((pureForwardShift N)^k) (rationalPureBasis p) =
       rationalPureBasis (⟨p.1 + k, hk⟩ : Fin N) := by
   revert hk
   revert p
@@ -188,19 +216,14 @@ theorem pureForwardShift_pow_basis
       rw [ih ⟨p.1 + 1, by omega⟩ (show p.1 + 1 + k < N by omega)]
       apply congrArg rationalPureBasis
       apply Fin.ext
-      omega
-      rw [pureForwardShift_basis]
-      have hs : p.1 + k + 1 < N := by omega
-      rw [dif_pos hs]
-      congr 1
-      apply Fin.ext
+      show p.1 + 1 + k = p.1 + (k + 1)
       omega
 
 /-- Repeated backward shift moves a basis sheet down by exactly k positions. -/
 theorem pureBackwardShift_pow_basis
     {N : Nat} (p : Fin N) (k : Nat)
     (hk : k ≤ p.1) :
-    (pureBackwardShift N)^k (rationalPureBasis p) =
+    ((pureBackwardShift N)^k) (rationalPureBasis p) =
       rationalPureBasis (⟨p.1 - k, by omega⟩ : Fin N) := by
   revert hk
   revert p
@@ -213,8 +236,9 @@ theorem pureBackwardShift_pow_basis
       rw [pow_succ, LinearMap.mul_apply]
       rw [pureBackwardShift_basis, dif_pos (show 0 < p.1 by omega)]
       rw [ih ⟨p.1 - 1, by omega⟩ (show k ≤ p.1 - 1 by omega)]
-      congr 1
+      apply congrArg rationalPureBasis
       apply Fin.ext
+      show p.1 - 1 - k = p.1 - (k + 1)
       omega
 
 /-- Matrix-unit word using Lefschetz and Poincare only. -/
@@ -237,6 +261,7 @@ theorem lefschetzPoincareMatrixWord_eq
   by_cases hrp : r = p
   · subst r
     rw [pureBackwardShift_pow_basis p p.1 (by omega)]
+    simp only [Nat.sub_self]
     have hN : 0 < N := Nat.pos_of_ne_zero (by
       intro hN0
       subst N
@@ -246,9 +271,9 @@ theorem lefschetzPoincareMatrixWord_eq
       (⟨0, hN⟩ : Fin N) q.1 (by simpa using q.2)]
     simp [pureMatrixUnit_basis_source]
   · have hdown :
-      (pureBackwardShift N)^p.1 (rationalPureBasis r) = 0 ∨
+      ((pureBackwardShift N)^p.1) (rationalPureBasis r) = 0 ∨
       ∃ s : Fin N, s.1 ≠ 0 ∧
-        (pureBackwardShift N)^p.1 (rationalPureBasis r) =
+        ((pureBackwardShift N)^p.1) (rationalPureBasis r) =
           rationalPureBasis s := by
       by_cases hpr : p.1 ≤ r.1
       · right

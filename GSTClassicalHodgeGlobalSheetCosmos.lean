@@ -145,7 +145,7 @@ theorem sheetProbe_fiberedWeightCoordinates
         (fiberedWeightCoordinates V H p alpha) =
       hodgeCoordinate i alpha := by
   simp [sheetProbe, fiberedWeightCoordinates, weightFiberEmbedding,
-    hodgeCoordinate]
+    hodgeCoordinate, Finsupp.embDomain_apply_self]
 
 /-- Exact coordinate embedding of a scalar multiple of one genuine Hodge
 basis sheet. -/
@@ -174,6 +174,10 @@ theorem sheetMatrixUnit_intertwines_hodgeMatrixUnit
         (fiberedWeightCoordinates V H p alpha) =
       fiberedWeightCoordinates V H p (hodgeMatrixUnit i j alpha) := by
   rw [sheetMatrixUnit_apply]
+  show (sheetProbe (⟨p,i⟩ : FiberedHodgeIndex V H)
+      (fiberedWeightCoordinates V H p alpha)) •
+      fiberedSheetGenerator V H (⟨p,j⟩ : FiberedHodgeIndex V H) =
+    fiberedWeightCoordinates V H p (hodgeMatrixUnit i j alpha)
   rw [sheetProbe_fiberedWeightCoordinates]
   rw [hodgeMatrixUnit_apply]
   rw [fiberedWeightCoordinates_smul_basis]
