@@ -53,7 +53,7 @@ structure CohomologyGeometry (G : GeneralSpace.{u,v}) (R : Type r) where
 /-- Cup products are intrinsic under every admissible General Space path. -/
 theorem cup_transport_exact
     {G : GeneralSpace.{u,v}} {R : Type r}
-    (C : CohomologyGeometry.{w} G R)
+    (C : CohomologyGeometry G R)
     {x y : G.Point} (γ : G.Path x y)
     (p q : Nat) (a : C.Coh x p) (b : C.Coh x q) :
     C.transport γ (p + q) (C.cup x p q a b) =
