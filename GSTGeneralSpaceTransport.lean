@@ -32,18 +32,18 @@ namespace TransportSystem
 
 /-- One state reaches another when an actual General Space path transports it
 there. -/
-def Reachable {G : GeneralSpace.{u,v}} (T : TransportSystem.{w} G)
+def Reachable {G : GeneralSpace.{u,v}} (T : TransportSystem G)
     {x y : G.Point} (a : T.Fiber x) (b : T.Fiber y) : Prop :=
   ∃ γ : G.Path x y, T.transport γ a = b
 
 /-- Every state reaches itself along the identity path. -/
-theorem reachable_refl {G : GeneralSpace.{u,v}} (T : TransportSystem.{w} G)
+theorem reachable_refl {G : GeneralSpace.{u,v}} (T : TransportSystem G)
     {x : G.Point} (a : T.Fiber x) : T.Reachable a a := by
   refine ⟨G.idPath x, ?_⟩
   exact T.transport_id x a
 
 /-- Reachability composes through actual path composition. -/
-theorem reachable_trans {G : GeneralSpace.{u,v}} (T : TransportSystem.{w} G)
+theorem reachable_trans {G : GeneralSpace.{u,v}} (T : TransportSystem G)
     {x y z : G.Point}
     {a : T.Fiber x} {b : T.Fiber y} {c : T.Fiber z}
     (hab : T.Reachable a b) (hbc : T.Reachable b c) :
