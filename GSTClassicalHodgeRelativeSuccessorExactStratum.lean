@@ -1,5 +1,6 @@
 import GSTClassicalHodgeRelativeSuccessorLowerBound
 import GSTClassicalHodgeNativeCycleCosmicShadow
+import GSTClassicalHodgePointClosurePrincipalCut
 
 /-!
 # GST CLASSICAL HODGE — RELATIVE SUCCESSOR EXACT STRATUM
@@ -35,6 +36,7 @@ open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgePointClosureRelativeCut
+open GSTClassicalHodgePointClosurePrincipalCut
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeNativeCycleCosmicShadow
 

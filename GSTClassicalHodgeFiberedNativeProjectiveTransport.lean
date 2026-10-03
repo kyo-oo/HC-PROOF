@@ -65,10 +65,16 @@ noncomputable def fiberedNativePushforward
   map_add' := by
     intro φ ψ
     classical
-    simp
+    exact Finsupp.sum_add_index'
+      (fun _ => by simp) (fun _ _ _ => by simp [add_smul])
   map_smul' := by
     intro q φ
     classical
+    have h0 : ∀ i : FiberedNativeAtom V H p,
+        (fun ix (c : ℚ) => c • transportAtom f ix.1 ix.2) i 0 = 0 :=
+      fun _ => by simp
+    rw [Finsupp.sum_smul_index' h0]
+    simp only [Finsupp.sum, Finset.smul_sum]
     simp [smul_smul]
 
 @[simp]
@@ -186,6 +192,7 @@ theorem project_then_projectiveTransport_nativeFace
         nativePointPushforward f p x := by
   rw [sum_codeProj_shapedField]
   rw [map_smul]
+  rw [GSTClassicalHodgeFiberedNativeRecoordination.shapedLiveNativeAtom]
   rw [fiberedNativePushforward_atom]
   rw [map_smul]
   rw [nativeFace_transportAtom]

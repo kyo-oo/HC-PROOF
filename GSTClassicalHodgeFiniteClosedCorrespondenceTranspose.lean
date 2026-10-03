@@ -97,7 +97,7 @@ def rightFiber
   {z | K.toFiniteClosedCorrespondence.right z = x}
 
 /-- The right fiber is finite by the bi-finite hypothesis. -/
-theorem rightFiber_finite
+theorem rightFiber_finite'
     (K : BiFiniteClosedCorrespondence V) (x : V.X) :
     (K.rightFiber x).Finite := by
   simpa [rightFiber] using K.rightFiber_finite x
@@ -152,7 +152,7 @@ theorem transpose_intoProduct_swap
     K.transpose.intoProduct ≫ selfProductSwap V = K.intoProduct := by
   change (K.intoProduct ≫ selfProductSwap V) ≫ selfProductSwap V =
     K.intoProduct
-  rw [← Category.assoc, selfProductSwap_involutive]
+  rw [Category.assoc, selfProductSwap_involutive]
   simp
 
 /-- The original finite left fibers make the transpose finite over its right
@@ -166,7 +166,8 @@ theorem transpose_rightFiber_finite
         Set K.transpose.carrier) =
         {z : K.carrier | K.toFiniteClosedCorrespondence.left z = x} := by
     ext z
-    simpa [transpose_right]
+    rw [transpose_right]
+    simp
   rw [hset]
   exact K.toFiniteClosedCorrespondence.leftFiber_finite x
 
@@ -182,14 +183,16 @@ theorem transpose_transpose_left
     (K : BiFiniteClosedCorrespondence V) :
     K.transposeBiFinite.transpose.left =
       K.toFiniteClosedCorrespondence.left := by
-  rw [transpose_left, transpose_right]
+  rw [transpose_left]
+  exact transpose_right K
 
 /-- Double transpose recovers the original right projection as well. -/
 theorem transpose_transpose_right
     (K : BiFiniteClosedCorrespondence V) :
     K.transposeBiFinite.transpose.right =
       K.toFiniteClosedCorrespondence.right := by
-  rw [transpose_right, transpose_left]
+  rw [transpose_right]
+  exact transpose_left K
 
 end BiFiniteClosedCorrespondence
 
