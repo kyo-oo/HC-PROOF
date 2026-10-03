@@ -75,7 +75,7 @@ theorem pureForwardShift_basis
     let s : Fin N := ⟨p.1 + 1, hsucc⟩
     by_cases hq : q = s
     · subst q
-      have hpq : p.1 ≤ s.1 := by omega
+      have hpq : p.1 ≤ s.1 := Nat.le_succ p.1
       rw [dif_pos hpq]
       have htime : 2 = 2 * pureWeightGap p s := by
         simp [pureWeightGap, s]
