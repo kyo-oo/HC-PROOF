@@ -58,12 +58,13 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
         diagonalLefschetzQ 2 2 (rationalPureBasis sourceSlot) := by
       funext q
       fin_cases q <;>
-        simp [sheetProjectorQ, diagonalLefschetzQ, rationalPureBasis,
+        simp only [sheetProjectorQ, diagonalLefschetzQ, rationalPureBasis,
           sourceSlot, targetSlot,
           GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTUniversalLefschetzKernel.worldForward,
-          GSTUniversalLefschetzKernel.worldCausalDistance,
-          GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+          GSTDimensionFreeHodgeDiagonal.diagonalState]
+      all_goals
+        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+        simp
     change a sourceSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis sourceSlot) = _
     have hraw :
@@ -82,12 +83,13 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
         diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
       funext q
       fin_cases q <;>
-        simp [diagonalLefschetzQ, rationalPureBasis,
+        simp only [diagonalLefschetzQ, rationalPureBasis,
           sourceSlot, targetSlot,
           GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTUniversalLefschetzKernel.worldForward,
-          GSTUniversalLefschetzKernel.worldCausalDistance,
-          GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+          GSTDimensionFreeHodgeDiagonal.diagonalState]
+      all_goals
+        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+        simp
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
     rw [hzero]
