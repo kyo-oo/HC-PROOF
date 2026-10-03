@@ -77,9 +77,9 @@ theorem pureForwardShift_basis
     · subst q
       show 2⁻¹ • ↑(if hpq : p.1 ≤ s.1 then
           if htime : 2 = 2 * pureWeightGap p s then
-            ↑(Nat.choose 2 (pureWeightGap p s))
-          else 0
-        else 0) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ s
+            ((Nat.choose 2 (pureWeightGap p s) : ℕ) : ℤ)
+          else (0 : ℤ)
+        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ s
       have hpq : p.1 ≤ s.1 := Nat.le_succ p.1
       rw [dif_pos hpq]
       have htime : 2 = 2 * pureWeightGap p s := by
@@ -89,9 +89,9 @@ theorem pureForwardShift_basis
     · by_cases hpq : p.1 ≤ q.1
       · show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
           if htime : 2 = 2 * pureWeightGap p q then
-            ↑(Nat.choose 2 (pureWeightGap p q))
-          else 0
-        else 0) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
+            ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
+          else (0 : ℤ)
+        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
         rw [dif_pos hpq]
         have htime : 2 ≠ 2 * pureWeightGap p q := by
           intro ht
@@ -104,18 +104,18 @@ theorem pureForwardShift_basis
         simp [rationalPureBasis, hq']
       · show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
           if htime : 2 = 2 * pureWeightGap p q then
-            ↑(Nat.choose 2 (pureWeightGap p q))
-          else 0
-        else 0) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
+            ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
+          else (0 : ℤ)
+        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
         rw [dif_neg hpq]
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
   · rw [dif_neg hsucc]
     show 2⁻¹ • ↑(if hpq : p.1 ≤ q.1 then
         if htime : 2 = 2 * pureWeightGap p q then
-          ↑(Nat.choose 2 (pureWeightGap p q))
-        else 0
-      else 0) = (0 : ℚ)
+          ((Nat.choose 2 (pureWeightGap p q) : ℕ) : ℤ)
+        else (0 : ℤ)
+      else (0 : ℤ)) = (0 : ℚ)
     by_cases hpq : p.1 ≤ q.1
     · rw [dif_pos hpq]
       have htime : 2 ≠ 2 * pureWeightGap p q := by
@@ -193,6 +193,10 @@ theorem bottomProjectorLP_other
   rw [pureForwardShift_basis]
   have hsucc : p.1 - 1 + 1 < N := by omega
   rw [dif_pos hsucc]
+  have heq : (⟨p.1 - 1 + 1, hsucc⟩ : Fin N) = p := by
+    apply Fin.ext
+    show p.1 - 1 + 1 = p.1
+    omega
   rw [heq]
   simp
 
@@ -211,7 +215,7 @@ theorem pureForwardShift_pow_basis
       rfl
   | succ k ih =>
       intro p hk
-      rw [pow_succ, LinearMap.mul_apply]
+      rw [pow_succ, Module.End.mul_apply]
       rw [pureForwardShift_basis, dif_pos (show p.1 + 1 < N by omega)]
       rw [ih ⟨p.1 + 1, by omega⟩ (show p.1 + 1 + k < N by omega)]
       apply congrArg rationalPureBasis
@@ -233,7 +237,7 @@ theorem pureBackwardShift_pow_basis
       rfl
   | succ k ih =>
       intro p hk
-      rw [pow_succ, LinearMap.mul_apply]
+      rw [pow_succ, Module.End.mul_apply]
       rw [pureBackwardShift_basis, dif_pos (show 0 < p.1 by omega)]
       rw [ih ⟨p.1 - 1, by omega⟩ (show k ≤ p.1 - 1 by omega)]
       apply congrArg rationalPureBasis
@@ -260,6 +264,8 @@ theorem lefschetzPoincareMatrixWord_eq
   intro r _
   by_cases hrp : r = p
   · subst r
+    rw [lefschetzPoincareMatrixWord]
+    simp only [LinearMap.comp_apply]
     rw [pureBackwardShift_pow_basis p p.1 (by omega)]
     simp only [Nat.sub_self]
     have hN : 0 < N := Nat.pos_of_ne_zero (by
@@ -278,15 +284,17 @@ theorem lefschetzPoincareMatrixWord_eq
       by_cases hpr : p.1 ≤ r.1
       · right
         refine ⟨⟨r.1 - p.1, by omega⟩, ?_, ?_⟩
-        · omega
+        · show r.1 - p.1 ≠ 0
+          have hrne : r.1 ≠ p.1 := fun h => hrp (Fin.ext h)
+          omega
         · exact pureBackwardShift_pow_basis r p.1 hpr
       · left
         have : r.1 < p.1 := by omega
         -- after r+1 backward steps the vector vanishes; all further powers stay zero
         induction p.1 generalizing r with
-        | zero => omega
+        | zero => exfalso; omega
         | succ k ih =>
-            rw [pow_succ, LinearMap.mul_apply]
+            rw [pow_succ, Module.End.mul_apply]
             by_cases hr0 : 0 < r.1
             · rw [pureBackwardShift_basis, dif_pos hr0]
               -- remaining arithmetic is discharged by the induction hypothesis

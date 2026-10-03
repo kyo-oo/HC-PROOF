@@ -60,9 +60,30 @@ theorem principalCutCycle_eq_sum
       (principalCutCodimensionOneFinset V x).sum
         (fun y => codimensionPointCycle V.X 1 y) := by
   classical
+  have key : ∀ (s : Finset V.X),
+      realizeFiniteCodimensionPresentation V.X 1
+        (s.sum fun y => Finsupp.single y 1) =
+      s.sum (fun y => codimensionPointCycle V.X 1 y) := by
+    intro s
+    induction s using Finset.induction_on with
+    | empty => simp
+    | insert y s hy ih =>
+        rw [Finset.sum_insert hy, Finset.sum_insert hy]
+        show (Finsupp.single y 1 +
+            s.sum fun z => Finsupp.single z 1).sum
+            (fun a q => q • codimensionPointCycle V.X 1 a) =
+            codimensionPointCycle V.X 1 y +
+            s.sum (fun z => codimensionPointCycle V.X 1 z)
+        rw [Finsupp.sum_add_index']
+        have h1 : (Finsupp.single y 1).sum
+            (fun a q => q • codimensionPointCycle V.X 1 a) =
+            1 • codimensionPointCycle V.X 1 y :=
+          Finsupp.sum_single_index (a := y) (b := 1)
+            (h := fun a q => q • codimensionPointCycle V.X 1 a) (by simp)
+        rw [h1, one_smul]
+        exact congrArg _ ih
   unfold principalCutCycle principalCutPresentation
-  simp [realizeFiniteCodimensionPresentation, Finsupp.sum_finset_sum,
-    Finsupp.sum_single_index]
+  exact key (principalCutCodimensionOneFinset V x)
 
 /-- Native codimension receipt. -/
 theorem principalCutCycle_is_codimension_one

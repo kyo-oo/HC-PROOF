@@ -200,8 +200,8 @@ noncomputable def toWeightedLocalCyclicRealization
       R.spectral.toFiniteSpectralFamily.vector i =
         (classicalHodgeBasis V H p i.1).1 := by
     intro i
-    simp only [toFiniteSpectralFamily, R.spectral_basisIndex,
-      HodgeSupportIndex.include]
+    simp only [ClassicalHodgeSpectralOperator.toFiniteSpectralFamily,
+      R.spectral_basisIndex, HodgeSupportIndex.include]
   have hvisible : ∀ i : HodgeSupportIndex alpha,
       R.spectral.toFiniteSpectralFamily.CoordinateVisible
         (pointCycleClassSpan p (H.cycleClass p)) i := by
@@ -218,18 +218,22 @@ noncomputable def toWeightedLocalCyclicRealization
   have hseed :=
     R.spectral.toFiniteSpectralFamily.exists_cyclic_seed_of_coordinatewise_visible
       (pointCycleClassSpan p (H.cycleClass p)) hvisible
+  have hseedW : ∑ i : HodgeSupportIndex alpha,
+      hseed.choose i • (classicalHodgeBasis V H p i.1).1 ∈
+      pointCycleClassSpan p (H.cycleClass p) := by
+    have h := hseed.choose_spec.2
+    rw [show R.spectral.toFiniteSpectralFamily.spectralCombination hseed.choose =
+      ∑ i : HodgeSupportIndex alpha,
+        hseed.choose i • (classicalHodgeBasis V H p i.1).1 from by
+      simp only [FiniteSpectralFamily.spectralCombination, hvec]] at h
+    exact h
   refine {
     spectral := R.spectral
     spectral_basisIndex := R.spectral_basisIndex
     coefficient := hseed.choose
     coefficient_ne_zero := hseed.choose_spec.1
-    seed_mem_atomic := ?_
+    seed_mem_atomic := hseedW
   }
-  rw [show R.spectral.toFiniteSpectralFamily.spectralCombination hseed.choose =
-    ∑ j : HodgeSupportIndex alpha,
-      hseed.choose j • (classicalHodgeBasis V H p j.1).1 from by
-    simp only [FiniteSpectralFamily.spectralCombination, hvec]]
-  exact hseed.choose_spec.2
 
 /-- Coordinatewise visibility therefore constructs an exact native cycle for
 the original genuine Hodge class. -/

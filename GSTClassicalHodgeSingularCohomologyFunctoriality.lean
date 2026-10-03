@@ -46,7 +46,8 @@ noncomputable def singularCochainPullback
   let F :=
     ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map (singularChainMap A f)).unop
+  exact ((F.map (singularChainMap A f)).unop :
+    rationalSingularCochains A ⟶ rationalSingularCochains A)
 
 /-- Induced map on the genuine rational singular cohomology object. -/
 noncomputable def rationalCohomologyPullbackObj

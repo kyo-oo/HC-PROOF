@@ -97,7 +97,7 @@ theorem sourcePrime_le_separatorAmbientPrime
   change Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal a ∈
     separatorMinimalPrime n x
   have h0 : Ideal.Quotient.mk x.asHomogeneousIdeal.toIdeal a = 0 := by
-    rw [Ideal.Quotient.mk_eq_zero]
+    rw [Submodule.Quotient.mk_eq_zero]
     exact ha
   rw [h0]
   exact zero_mem _
@@ -151,8 +151,8 @@ theorem separatorAmbientPrime_mem_minimalPrimes
     unfold Q separatorAmbientPrime P
     exact Ideal.map_comap_of_surjective _ Ideal.Quotient.mk_surjective _
   have hmapJ : J.map (Ideal.Quotient.mk P) = separatorQuotientIdeal n x := by
-    unfold separatorQuotientIdeal separatorClass
-    simp
+    rw [separatorQuotientIdeal, separatorClass]
+    simp [J]
   rw [hmapQ, hmapJ]
   exact separatorMinimalPrime_mem n x
 
@@ -234,7 +234,8 @@ theorem separatorSuccessorPoint_mem_principalSet
     (hlive : ProjectivelyLiveSource n x) :
     separatorSuccessorPoint n x hlive ∈
       projectivePrincipalSet n (positiveHomogeneousSeparator n x).equation := by
-  show separatorSuccessorPoint n x hlive ∈
+  show (separatorSuccessorPoint n x hlive :
+      ProjectiveSpectrum (ProjectiveGrading n)) ∈
     ProjectiveSpectrum.zeroLocus (ProjectiveGrading n)
       ({(positiveHomogeneousSeparator n x).equation} :
         Set (ProjectiveCoordinateRing n))

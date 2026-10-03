@@ -1,5 +1,6 @@
 import GSTGraphV2OmniversalCore
 import GSTGraphV2InfiniteControl
+import GST2DMixedEmergence
 
 /-!
 # GST GRAPH V2 — ARITHMETIC REALIZATION OF THE OMNIVERSAL EVENT CORE
@@ -18,6 +19,7 @@ namespace GSTGraphV2ArithmeticOmniversalRealization
 
 open GSTGraphV2OmniversalCore
 open GSTCanonicalSevenAxisBridge
+open GST2DMixedEmergence
 
 /-- Exact translation of the historical three physical spaces into the new
 carrier-independent three-sector ontology. -/
