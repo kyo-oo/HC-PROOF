@@ -61,9 +61,15 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
         simp [sheetProjectorQ, diagonalLefschetzQ, rationalPureBasis,
           sourceSlot, targetSlot,
           GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTDimensionFreeHodgeDiagonal.diagonalState,
-          GSTUniversalLefschetzKernel.worldAct_L_pow_basis_wrong_time_zero,
-          GSTUniversalLefschetzKernel.worldAct_L_pow_basis_outside_future_zero]
+          GSTDimensionFreeHodgeDiagonal.diagonalState]
+      · exact_mod_cast
+          (GSTUniversalLefschetzKernel.worldAct_L_pow_basis_wrong_time_zero
+            (s := (⟨0, by omega⟩, ⟨0, by omega⟩))
+            (t := (⟨0, by omega⟩, ⟨0, by omega⟩))
+            (hfuture := by
+              simp [GSTUniversalLefschetzKernel.worldForward])
+            (htime := by
+              simp [GSTUniversalLefschetzKernel.worldCausalDistance])).symm
     change a sourceSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis sourceSlot) = _
     have hraw :
@@ -85,9 +91,19 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
         simp [diagonalLefschetzQ, rationalPureBasis,
           sourceSlot, targetSlot,
           GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTDimensionFreeHodgeDiagonal.diagonalState,
-          GSTUniversalLefschetzKernel.worldAct_L_pow_basis_wrong_time_zero,
-          GSTUniversalLefschetzKernel.worldAct_L_pow_basis_outside_future_zero]
+          GSTDimensionFreeHodgeDiagonal.diagonalState]
+      · exact GSTUniversalLefschetzKernel.worldAct_L_pow_basis_outside_future_zero
+          (s := (⟨1, by omega⟩, ⟨1, by omega⟩))
+          (t := (⟨0, by omega⟩, ⟨0, by omega⟩))
+          (hfuture := by
+            simp [GSTUniversalLefschetzKernel.worldForward])
+      · exact GSTUniversalLefschetzKernel.worldAct_L_pow_basis_wrong_time_zero
+          (s := (⟨1, by omega⟩, ⟨1, by omega⟩))
+          (t := (⟨1, by omega⟩, ⟨1, by omega⟩))
+          (hfuture := by
+            simp [GSTUniversalLefschetzKernel.worldForward])
+          (htime := by
+            simp [GSTUniversalLefschetzKernel.worldCausalDistance])
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
     rw [hzero]
