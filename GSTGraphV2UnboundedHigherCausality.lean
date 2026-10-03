@@ -104,7 +104,7 @@ def IdentityStable (P : ∀ n, H.Cell n → Prop) : Prop :=
 its entire unbounded coherence tower. -/
 theorem identityTower_preserves
     (P : ∀ n, H.Cell n → Prop)
-    (hStable : IdentityStable H P)
+    (hStable : IdentityStable C H P)
     (W : C.World)
     (h0 : P 0 (H.worldCell W)) :
     ∀ n : Nat, P n (identityTower C H W n) := by

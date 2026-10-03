@@ -75,6 +75,16 @@ theorem pureForwardShift_basis
     let s : Fin N := ⟨p.1 + 1, hsucc⟩
     by_cases hq : q = s
     · subst q
+      show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+              ↑(Fin.castLE (show N ≤ min N N by omega) s) then
+          if htime : 2 = 2 * pureWeightGap
+              (Fin.castLE (show N ≤ min N N by omega) p)
+              (Fin.castLE (show N ≤ min N N by omega) s) then
+            ((Nat.choose 2 (pureWeightGap
+              (Fin.castLE (show N ≤ min N N by omega) p)
+              (Fin.castLE (show N ≤ min N N by omega) s)) : ℕ) : ℤ)
+          else (0 : ℤ)
+        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ s
       have hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
           ↑(Fin.castLE (show N ≤ min N N by omega) s) := Nat.le_succ p.1
       rw [dif_pos hpq]
@@ -92,7 +102,17 @@ theorem pureForwardShift_basis
       rw [hgap]
       simp [rationalPureBasis, s]
     · by_cases hpq : p.1 ≤ q.1
-      · have hpq' : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+      · show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+              ↑(Fin.castLE (show N ≤ min N N by omega) q) then
+          if htime : 2 = 2 * pureWeightGap
+              (Fin.castLE (show N ≤ min N N by omega) p)
+              (Fin.castLE (show N ≤ min N N by omega) q) then
+            ((Nat.choose 2 (pureWeightGap
+              (Fin.castLE (show N ≤ min N N by omega) p)
+              (Fin.castLE (show N ≤ min N N by omega) q)) : ℕ) : ℤ)
+          else (0 : ℤ)
+        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
+        have hpq' : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
             ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq
         rw [dif_pos hpq']
         have hgap : pureWeightGap
@@ -108,12 +128,32 @@ theorem pureForwardShift_basis
         rw [dif_neg htime]
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
-      · have hpq' : ¬ ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+      · show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+              ↑(Fin.castLE (show N ≤ min N N by omega) q) then
+          if htime : 2 = 2 * pureWeightGap
+              (Fin.castLE (show N ≤ min N N by omega) p)
+              (Fin.castLE (show N ≤ min N N by omega) q) then
+            ((Nat.choose 2 (pureWeightGap
+              (Fin.castLE (show N ≤ min N N by omega) p)
+              (Fin.castLE (show N ≤ min N N by omega) q)) : ℕ) : ℤ)
+          else (0 : ℤ)
+        else (0 : ℤ)) = rationalPureBasis ⟨p.1 + 1, hsucc⟩ q
+        have hpq' : ¬ ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
             ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq
         rw [dif_neg hpq']
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
         simp [rationalPureBasis, hq']
   · rw [dif_neg hsucc]
+    show 2⁻¹ • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
+          ↑(Fin.castLE (show N ≤ min N N by omega) q) then
+        if htime : 2 = 2 * pureWeightGap
+            (Fin.castLE (show N ≤ min N N by omega) p)
+            (Fin.castLE (show N ≤ min N N by omega) q) then
+          ((Nat.choose 2 (pureWeightGap
+            (Fin.castLE (show N ≤ min N N by omega) p)
+            (Fin.castLE (show N ≤ min N N by omega) q)) : ℕ) : ℤ)
+        else (0 : ℤ)
+      else (0 : ℤ)) = (0 : ℚ)
     by_cases hpq : p.1 ≤ q.1
     · have hpq' : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
           ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq

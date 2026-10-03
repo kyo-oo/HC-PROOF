@@ -72,13 +72,16 @@ theorem principalCutCycle_eq_sum
         rw [Finset.sum_insert hy, Finset.sum_insert hy]
         unfold realizeFiniteCodimensionPresentation
         rw [Finsupp.sum_add_index']
+        have h2 : Finsupp.sum (∑ x ∈ s, fun₀ | x => 1)
+            (fun x q => q • codimensionPointCycle V.X 1 x) =
+            s.sum (fun z => codimensionPointCycle V.X 1 z) := ih
         have h1 : (Finsupp.single y 1).sum
-            (fun a q => q • codimensionPointCycle V.X 1 a) =
-            1 • codimensionPointCycle V.X 1 y :=
-          Finsupp.sum_single_index (a := y) (b := 1)
-            (h := fun a q => q • codimensionPointCycle V.X 1 a) (by simp)
-        rw [h1, one_smul]
-        exact congrArg _ ih
+            (fun x q => q • codimensionPointCycle V.X 1 x) =
+            codimensionPointCycle V.X 1 y := by
+          have hsingle := Finsupp.sum_single_index (a := y) (b := 1)
+            (h := fun x q => q • codimensionPointCycle V.X 1 x) (by simp)
+          simpa using hsingle
+        rw [h1, h2]
   unfold principalCutCycle principalCutPresentation
   exact key (principalCutCodimensionOneFinset V x)
 

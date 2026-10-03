@@ -2,6 +2,7 @@ import GSTGraphV2RecursiveStateCausality
 import GSTGeometricRealizationStage2D
 import GSTGeometricRealizationStage2F
 import GSTClassicalHodgeExactClayStatement
+import GSTClassicalHodgeFiberedCosmology
 
 /-!
 # GST CLASSICAL HODGE — SELF-EXPANDING COSMIC CLOSURE
@@ -42,6 +43,7 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeFiberedCosmology
 open GSTGraphV2SelfExpandingCosmology
 open GSTGraphV2RecursiveStateCausality
 

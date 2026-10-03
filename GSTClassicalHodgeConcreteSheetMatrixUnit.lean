@@ -122,7 +122,12 @@ theorem forwardSheetMatrixUnit_target
   rw [forwardSheetWord_target r s hrs f hf]
   push_cast
   have hne : (((2 * (s.1 - r.1)).choose (s.1 - r.1) : ℕ) : ℚ) ≠ 0 := by
-    exact_mod_cast (Nat.choose_pos (by omega) : _ ≠ 0)
+    have hpos : 0 < ((2 * (s.1 - r.1)).choose (s.1 - r.1) : ℕ) :=
+      Nat.choose_pos (by omega)
+    intro hzero
+    have hnat : ((2 * (s.1 - r.1)).choose (s.1 - r.1) : ℕ) = 0 := by
+      simpa using hzero
+    omega
   rw [forwardNormalizeScalar, mul_comm ((f (r,r) : ℤ) : ℚ) _, ← mul_assoc,
     inv_mul_cancel₀ hne, one_mul]
 
