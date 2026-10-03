@@ -1,0 +1,231 @@
+import GSTGeometricRealizationStage2F
+import GSTClassicalHodgeSingularCohomologyFunctoriality
+import Mathlib.Algebra.Homology.ShortComplex.HomologicalComplex
+
+/-!
+# GST CLASSICAL HODGE — NATIVE BETTI SELF-PRODUCT
+
+This is the ambient topological carrier needed for a genuine algebraic
+correspondence action.  It is constructed directly from the supplied
+analytification `A.space`:
+
+  X_an × X_an
+
+with the product topology.  No correspondence operator, cycle selector,
+Hodge algebraicity statement, or extension off the algebraic range is supplied.
+
+The two coordinate projections and the factor-swap homeomorphism are actual
+continuous maps.  Mathlib's singular-chain functor, linear Yoneda duality, and
+homology therefore construct their actions on the complete rational singular
+cohomology carrier.  In particular the transpose geometry already acts on
+all Betti classes before any cycle class is mentioned.
+-/
+
+set_option maxHeartbeats 100000000
+set_option maxRecDepth 1000000
+
+noncomputable section
+
+open CategoryTheory
+open AlgebraicTopology
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2F
+
+namespace GSTClassicalHodgeAmbientBettiSelfProduct
+
+variable {V : SmoothProjectiveComplexScheme}
+variable (A : AnalytificationData V)
+
+/-- The actual topological self-product of the analytification. -/
+noncomputable def bettiSelfProductSpace : TopCat :=
+  TopCat.of (A.space × A.space)
+
+/-- First continuous projection from the Betti self-product. -/
+noncomputable def bettiFst : bettiSelfProductSpace A ⟶ A.space :=
+  ConcreteCategory.ofHom (C := TopCat)
+    ⟨Prod.fst, continuous_fst⟩
+
+/-- Second continuous projection from the Betti self-product. -/
+noncomputable def bettiSnd : bettiSelfProductSpace A ⟶ A.space :=
+  ConcreteCategory.ofHom (C := TopCat)
+    ⟨Prod.snd, continuous_snd⟩
+
+/-- Coordinate swap on the actual Betti self-product. -/
+noncomputable def bettiSwap :
+    bettiSelfProductSpace A ⟶ bettiSelfProductSpace A :=
+  ConcreteCategory.ofHom (C := TopCat)
+    ⟨(fun q => (q.2, q.1)), continuous_snd.prod_mk continuous_fst⟩
+
+/-- Factor swap is its own inverse as a genuine TopCat isomorphism. -/
+noncomputable def bettiSwapIso :
+    bettiSelfProductSpace A ≅ bettiSelfProductSpace A where
+  hom := bettiSwap A
+  inv := bettiSwap A
+  hom_inv_id := by
+    ext q <;> rfl
+  inv_hom_id := by
+    ext q <;> rfl
+
+@[simp]
+theorem bettiSwap_fst :
+    bettiSwap A ≫ bettiFst A = bettiSnd A := by
+  ext q
+  rfl
+
+@[simp]
+theorem bettiSwap_snd :
+    bettiSwap A ≫ bettiSnd A = bettiFst A := by
+  ext q
+  rfl
+
+@[simp]
+theorem bettiSwap_swap :
+    bettiSwap A ≫ bettiSwap A = 𝟙 (bettiSelfProductSpace A) := by
+  ext q
+  rfl
+
+/-- Genuine rational singular chains of `X_an × X_an`. -/
+noncomputable def productSingularChains :
+    ChainComplex (ModuleCat ℚ) ℕ :=
+  ((singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient).obj
+    (bettiSelfProductSpace A)
+
+/-- Rational singular cochains of `X_an × X_an`. -/
+noncomputable def productSingularCochains :
+    CochainComplex (ModuleCat ℚ) ℕ :=
+  (productSingularChains A).linearYonedaObj ℚ rationalCoefficient
+
+/-- Rational singular cohomology object of the actual Betti self-product. -/
+noncomputable def productCohomologyObj (n : Nat) : ModuleCat ℚ :=
+  (productSingularCochains A).homology n
+
+abbrev ProductCohomology (n : Nat) : Type :=
+  productCohomologyObj A n
+
+/-- Chain map induced by the first projection. -/
+noncomputable def fstChainMap :
+    productSingularChains A ⟶ rationalSingularChains A :=
+  ((singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient).map
+    (bettiFst A)
+
+/-- Chain map induced by the second projection. -/
+noncomputable def sndChainMap :
+    productSingularChains A ⟶ rationalSingularChains A :=
+  ((singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient).map
+    (bettiSnd A)
+
+/-- Chain automorphism induced by factor swap. -/
+noncomputable def swapChainMap :
+    productSingularChains A ⟶ productSingularChains A :=
+  ((singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient).map
+    (bettiSwap A)
+
+/-- Contravariant cochain pullback along the first projection. -/
+noncomputable def fstCochainPullback :
+    rationalSingularCochains A ⟶ productSingularCochains A := by
+  let F :=
+    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+      |>.mapHomologicalComplex (ComplexShape.down ℕ)
+  exact (F.map (fstChainMap A)).unop
+
+/-- Contravariant cochain pullback along the second projection. -/
+noncomputable def sndCochainPullback :
+    rationalSingularCochains A ⟶ productSingularCochains A := by
+  let F :=
+    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+      |>.mapHomologicalComplex (ComplexShape.down ℕ)
+  exact (F.map (sndChainMap A)).unop
+
+/-- Contravariant cochain pullback along the factor swap. -/
+noncomputable def swapCochainPullback :
+    productSingularCochains A ⟶ productSingularCochains A := by
+  let F :=
+    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+      |>.mapHomologicalComplex (ComplexShape.down ℕ)
+  exact (F.map (swapChainMap A)).unop
+
+/-- Complete rational Betti pullback through the first projection. -/
+noncomputable def fstCohomologyPullback (n : Nat) :
+    RationalSingularCohomology A n →ₗ[ℚ] ProductCohomology A n :=
+  (HomologicalComplex.homologyMap (fstCochainPullback A) n).hom
+
+/-- Complete rational Betti pullback through the second projection. -/
+noncomputable def sndCohomologyPullback (n : Nat) :
+    RationalSingularCohomology A n →ₗ[ℚ] ProductCohomology A n :=
+  (HomologicalComplex.homologyMap (sndCochainPullback A) n).hom
+
+/-- Complete rational Betti pullback through factor swap. -/
+noncomputable def swapCohomologyPullback (n : Nat) :
+    ProductCohomology A n →ₗ[ℚ] ProductCohomology A n :=
+  (HomologicalComplex.homologyMap (swapCochainPullback A) n).hom
+
+/-- On singular chains the genuine factor swap exchanges the two projections. -/
+theorem swapChain_fst :
+    swapChainMap A ≫ fstChainMap A = sndChainMap A := by
+  let F := (singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient
+  change F.map (bettiSwap A) ≫ F.map (bettiFst A) = F.map (bettiSnd A)
+  rw [← F.map_comp, bettiSwap_fst]
+
+/-- Dual chain identity for the second projection. -/
+theorem swapChain_snd :
+    swapChainMap A ≫ sndChainMap A = fstChainMap A := by
+  let F := (singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient
+  change F.map (bettiSwap A) ≫ F.map (bettiSnd A) = F.map (bettiFst A)
+  rw [← F.map_comp, bettiSwap_snd]
+
+/-- The singular-chain factor swap is involutive. -/
+theorem swapChain_involutive :
+    swapChainMap A ≫ swapChainMap A = 𝟙 (productSingularChains A) := by
+  let F := (singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient
+  change F.map (bettiSwap A) ≫ F.map (bettiSwap A) = 𝟙 _
+  rw [← F.map_comp, bettiSwap_swap, F.map_id]
+
+/-- **FULL-BETTI TRANSPOSE OF THE FIRST PROJECTION.**
+Pulling a class through the original second projection is the same as first
+pulling through the first projection and then through factor swap. -/
+theorem sndPullback_eq_swap_fstPullback
+    (n : Nat) :
+    sndCohomologyPullback A n =
+      (swapCohomologyPullback A n).comp (fstCohomologyPullback A n) := by
+  ext alpha
+  simp [sndCohomologyPullback, swapCohomologyPullback,
+    fstCohomologyPullback, swapCochainPullback,
+    fstCochainPullback, sndCochainPullback, swapChain_fst]
+
+/-- Symmetric full-Betti projection law. -/
+theorem fstPullback_eq_swap_sndPullback
+    (n : Nat) :
+    fstCohomologyPullback A n =
+      (swapCohomologyPullback A n).comp (sndCohomologyPullback A n) := by
+  ext alpha
+  simp [sndCohomologyPullback, swapCohomologyPullback,
+    fstCohomologyPullback, swapCochainPullback,
+    fstCochainPullback, sndCochainPullback, swapChain_snd]
+
+/-- **FULL-BETTI FACTOR-SWAP INVOLUTION.** -/
+theorem swapCohomology_involutive
+    (n : Nat) :
+    (swapCohomologyPullback A n).comp (swapCohomologyPullback A n) =
+      LinearMap.id := by
+  ext alpha
+  simp [swapCohomologyPullback, swapCochainPullback,
+    swapChain_involutive]
+
+#check bettiSelfProductSpace
+#check bettiFst
+#check bettiSnd
+#check bettiSwapIso
+#check ProductCohomology
+#check fstCohomologyPullback
+#check sndCohomologyPullback
+#check swapCohomologyPullback
+#check sndPullback_eq_swap_fstPullback
+#check fstPullback_eq_swap_sndPullback
+#check swapCohomology_involutive
+
+#print axioms bettiSwap_fst
+#print axioms swapChain_fst
+#print axioms sndPullback_eq_swap_fstPullback
+#print axioms swapCohomology_involutive
+
+end GSTClassicalHodgeAmbientBettiSelfProduct
