@@ -44,7 +44,7 @@ namespace GSTClassicalHodgeProjectivePointTransport
 
 universe u v
 
-variable {X : Scheme.{u}} {Y : Scheme.{v}}
+variable {X : Scheme.{u}} {Y : Scheme.{u}}
 
 /-- Residue-degree coefficient carried by one point under a scheme morphism. -/
 noncomputable def pointResidueWeight

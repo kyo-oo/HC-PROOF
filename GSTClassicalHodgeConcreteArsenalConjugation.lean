@@ -67,10 +67,11 @@ theorem squareSheetOfLiveSlot_injective
       congrArg (fun x => x.1) haddr
     show ((liveEquivFin alpha).symm r : HodgeSupportIndex alpha).1 =
       ((liveEquivFin alpha).symm s : HodgeSupportIndex alpha).1
-    rw [show ((liveEquivFin alpha).symm r : HodgeSupportIndex alpha).1 =
-        (liveFiberedAddress alpha ((liveEquivFin alpha).symm r)).1.2 from rfl,
-      show ((liveEquivFin alpha).symm s : HodgeSupportIndex alpha).1 =
-        (liveFiberedAddress alpha ((liveEquivFin alpha).symm s)).1.2 from rfl]
+    have hr1 : ((liveEquivFin alpha).symm r : HodgeSupportIndex alpha).1 =
+        (liveFiberedAddress alpha ((liveEquivFin alpha).symm r)).1.2 := rfl
+    have hs1 : ((liveEquivFin alpha).symm s : HodgeSupportIndex alpha).1 =
+        (liveFiberedAddress alpha ((liveEquivFin alpha).symm s)).1.2 := rfl
+    rw [hr1, hs1]
     rw [hpair]
     rfl
   exact (liveEquivFin alpha).symm.injective hsupp

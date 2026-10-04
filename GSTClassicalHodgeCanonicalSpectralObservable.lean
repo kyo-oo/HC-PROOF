@@ -67,8 +67,10 @@ theorem eigenvalue_injective
     Function.Injective W.eigenvalue := by
   intro i j hij
   apply Fin.ext
-  exact_mod_cast Nat.add_left_cancel
-    (show i.1 + 1 = j.1 + 1 by exact_mod_cast hij)
+  have h2 : (i.1 + 1 : Nat) = (j.1 + 1 : Nat) := by
+    have h3 : ((i.1 + 1 : Nat) : ℚ) = ((j.1 + 1 : Nat) : ℚ) := hij
+    exact_mod_cast h3
+  omega
 
 /-- Weight attached to an arbitrary genuine Hodge-basis direction.  A live
 window direction receives its canonical eigenvalue; every nonselected basis
@@ -154,7 +156,8 @@ theorem ambientObservable_selected
         (classicalHodgeBasis V H p (W.basisIndex i)).1 := by
   have h := LinearMap.congr_fun W.ambientObservable_comp_subtype
     (classicalHodgeBasis V H p (W.basisIndex i))
-  simpa [hodgeDiagonalIntoAmbient, hodgeDiagonal_selected] using h
+  simpa [hodgeDiagonalIntoAmbient, hodgeDiagonal_selected,
+    basisWeight_selected] using h
 
 /-- **CANONICAL RAW SPECTRAL OBSERVABLE.**  No spectral datum is supplied:
 it is manufactured from the finite Hodge-basis window. -/

@@ -46,9 +46,9 @@ theorem separatorSuccessorPoint_mem_source_closure
     separatorSuccessorPoint n x hlive ∈ closure ({x} : Set (projectiveSpace n)) :=
   (ProjectiveSpectrum.le_iff_mem_closure (ProjectiveGrading n) x
     (separatorSuccessorPoint n x hlive)).mp
-    (ProjectiveSpectrum.as_ideal_le_as_ideal (ProjectiveGrading n) x
+    ((ProjectiveSpectrum.as_ideal_le_as_ideal (ProjectiveGrading n) x
       (separatorSuccessorPoint n x hlive)).mp
-    (source_le_separatorSuccessorPoint n x hlive)
+      (source_le_separatorSuccessorPoint n x hlive))
 
 /-- For a source point of the embedded carrier, its projective successor lies
 in the closed image of the carrier. -/

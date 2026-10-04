@@ -18,7 +18,7 @@ This is the direction of abstraction required by General Space Theory:
   the GST abstraction.
 -/
 
-universe u u' v v' w w'
+universe u u' v v' w w' h h'
 
 namespace GSTGeneralSpace
 
@@ -75,8 +75,8 @@ def contMDiffHom
     {𝕜 : Type v} [NontriviallyNormedField 𝕜]
     {E : Type w} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     {E' : Type w'} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
-    {H : Type u} [TopologicalSpace H]
-    {H' : Type u'} [TopologicalSpace H']
+    {H : Type h} [TopologicalSpace H]
+    {H' : Type h'} [TopologicalSpace H']
     {I : ModelWithCorners 𝕜 E H}
     {I' : ModelWithCorners 𝕜 E' H'}
     {M : Type u} [TopologicalSpace M] [ChartedSpace H M]
@@ -93,8 +93,8 @@ theorem contMDiff_preserves_generalSpace_reachability
     {𝕜 : Type v} [NontriviallyNormedField 𝕜]
     {E : Type w} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     {E' : Type w'} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']
-    {H : Type u} [TopologicalSpace H]
-    {H' : Type u'} [TopologicalSpace H']
+    {H : Type h} [TopologicalSpace H]
+    {H' : Type h'} [TopologicalSpace H']
     {I : ModelWithCorners 𝕜 E H}
     {I' : ModelWithCorners 𝕜 E' H'}
     {M : Type u} [TopologicalSpace M] [ChartedSpace H M]
