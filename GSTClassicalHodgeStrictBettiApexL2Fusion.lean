@@ -1,30 +1,28 @@
 import GSTClassicalHodgeVerticalRayProjectiveApexFinale
-import GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull
-import GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra
+import GSTClassicalHodgeOmniverseStrictRelationRayCompiler
 
 /-!
 # GST CLASSICAL HODGE — STRICT BETTI / APEX L² FUSION
 
-The omniverse apex finale asks only for a realized correspondence expression
-whose action on one genuine algebraic apex agrees with the localized two-slot
-`L²` firing toward a requested Hodge basis sheet.
+The branch already has the correct geometry-first primitive:
+`StrictRelationEdgePacket`.  Such a packet contains one genuine scheme-bi-finite
+correspondence, a nonzero finite right Betti trace, point-cycle compatibility,
+and only the intrinsic analytic relation
 
-For a strict scheme-bi-finite correspondence there is a more intrinsic way to
-state that source action.  Its analytification gives the pullback relation
+  l^*(source) = r^*(target).
 
-  l^*(alpha) = r^*(beta).
+The strict-relation compiler proves from those data that the trace push-pull is
+the unique related target and then compiles the correspondence into the genuine
+realized-expression algebra.  This file therefore does NOT introduce a second
+copy of that machinery.
 
-A nonzero finite right trace makes `r^*` injective and constructs the total
-whole-Betti push-pull operator `Tr_r ∘ l^*`.  Therefore, whenever the strict
-Betti relation holds between the apex `alpha` and the localized `L²` target
-`beta`, uniqueness forces the independently constructed push-pull operator to
-send the apex to exactly that target.
-
-Together with point-cycle compatibility, the same strict correspondence is an
-actual realized finite closed correspondence.  Hence the historical
-`source_action` equation is no longer an arbitrary cohomology-operator field:
-it is derived from the intrinsic analytic-span relation of a genuine
-bi-finite correspondence.
+Instead it identifies the exact apex-localized `L²` target used by the upgraded
+omniverse with the target node of one canonical `StrictRelationEdgePacket`.
+A family of these packets immediately manufactures the
+`ApexLocalizedL2Realization` consumed by the vertical-ray omniverse finale.
+Thus the horizontal input is literally raw strict correspondence geometry; no
+ambient `source_action` equation and no duplicate correspondence interface
+remain.
 -/
 
 set_option maxHeartbeats 180000000
@@ -37,23 +35,16 @@ open AlgebraicGeometry
 namespace GSTClassicalHodgeStrictBettiApexL2Fusion
 
 open GSTProjectiveOverC
-open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgePrimitiveArsenalRationalization
 open GSTClassicalHodgeTwoSlotLefschetzCollapse
+open GSTClassicalHodgeOmniverseCausalBranchPacket
+open GSTClassicalHodgePiOmniverseBranchSynthesis
 open GSTClassicalHodgeOmniverseLefschetzRayCompiler
-open GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall
-open GSTClassicalHodgeStrictCorrespondenceAnalyticSpan
-open GSTClassicalHodgeStrictCorrespondenceBettiObstruction
-open GSTClassicalHodgeStrictCorrespondenceMaximalBettiTransfer
-open GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull
-open GSTClassicalHodgeFiniteClosedCorrespondence
-open GSTClassicalHodgeGradedFiniteClosedCorrespondence
-open GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
-open GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra
+open GSTClassicalHodgeOmniverseStrictRelationRayCompiler
 open GSTClassicalHodgeVerticalRayProjectiveApexFinale
 open GSTClassicalHodgeLiveApexSpineFanFinale
 open GSTClassicalHodgeExactVerticalCutRay
@@ -65,32 +56,35 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-/-- The localized two-slot `L²` target emitted by the omniverse from one apex. -/
-noncomputable def apexL2Target
+/-- Apex node of the upgraded omniverse. -/
+def apexNode
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p)) :
+    HodgeBranchNode (V := V) (H := H) (p := p) :=
+  ⟨Sector.gstPlus, S.hodge⟩
+
+/-- The genuine Hodge-fiber state produced by the bare localized two-slot `L²`
+firing from the apex's canonical live source coordinate to target `j`. -/
+noncomputable def apexL2TargetState
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (j : ClassicalHodgeBasisIndex V H p) :
-    RationalSingularCohomology H.analytification (2 * p) :=
-  (liftFiniteHodgeOperator (pairBasisIndex S.sourceIndex j)
-    (diagonalLefschetzQ 2 2) S.hodge).1
+    ClassicalHodgeFiber V H p :=
+  liftFiniteHodgeOperator (pairBasisIndex S.sourceIndex j)
+    (diagonalLefschetzQ 2 2) S.hodge
+
+/-- Target node carrying the unnormalized localized `L²` firing. -/
+noncomputable def apexL2TargetNode
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
+    (j : ClassicalHodgeBasisIndex V H p) :
+    HodgeBranchNode (V := V) (H := H) (p := p) :=
+  ⟨Sector.gstPlus, apexL2TargetState S j⟩
 
 /-- **ONE STRICT-BETTI APEX L² SPOKE.**
-
-The geometry is a genuine scheme-bi-finite correspondence.  `trace` is the
-finite right Betti trace which constructs a total whole-Betti push-pull.
-`pointCompatibility` identifies that independently constructed push-pull with
-the native finite-incidence action on genuine point cycles.  The only
-source/target equation is the intrinsic strict analytic relation
-`l^* S = r^*(L² S)`; no arbitrary ambient action equation is supplied. -/
-structure StrictBettiApexL2Spoke
+This is exactly the branch's canonical raw strict-relation packet, specialized
+to the algebraic apex and its localized `L²` target. -/
+abbrev StrictBettiApexL2Spoke
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
-    (j : ClassicalHodgeBasisIndex V H p) where
-  correspondence : SchemeBiFiniteClosedCorrespondence V
-  trace : RightFiniteBettiTrace H.analytification correspondence (2 * p)
-  pointCompatibility :
-    PointCycleCompatibility (n := p) correspondence trace
-  related :
-    BettiRelated H.analytification correspondence (2 * p)
-      S.hodge.1 (apexL2Target S j)
+    (j : ClassicalHodgeBasisIndex V H p) :=
+  StrictRelationEdgePacket (apexNode S) (apexL2TargetNode S j)
 
 namespace StrictBettiApexL2Spoke
 
@@ -98,70 +92,34 @@ variable
   {S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p)}
   {j : ClassicalHodgeBasisIndex V H p}
 
-/-- The intrinsic relation itself proves that the apex lies in the maximal
-transferable subspace, i.e. its strict transfer obstruction vanishes. -/
-theorem transferObstruction_apex_eq_zero
-    (R : StrictBettiApexL2Spoke S j) :
-    transferObstruction H.analytification R.correspondence (2 * p) S.hodge.1 = 0 := by
-  exact
-    (transferObstruction_apply_eq_zero_iff_exists_related
-      H.analytification R.correspondence (2 * p) S.hodge.1).2
-      ⟨apexL2Target S j, R.related⟩
-
-/-- **STRICT RELATION FORCES THE WHOLE-BETTI SOURCE ACTION.**
-
-The finite trace makes the right pullback injective.  Its push-pull is already
-related to every transferable source, while `related` supplies the requested
-localized-`L²` target.  Uniqueness of strict-relation targets therefore forces
-the two targets to coincide. -/
-theorem pushPull_on_apex
-    (R : StrictBettiApexL2Spoke S j) :
-    R.trace.pushPull S.hodge.1 = apexL2Target S j := by
-  let alphaT : transferableSubspace H.analytification R.correspondence (2 * p) :=
-    ⟨S.hodge.1, R.transferObstruction_apex_eq_zero⟩
-  have hpush :
-      BettiRelated H.analytification R.correspondence (2 * p)
-        S.hodge.1 (R.trace.pushPull S.hodge.1) := by
-    simpa [alphaT] using R.trace.pushPull_related_of_transferable alphaT
-  exact related_target_unique
-    H.analytification R.correspondence (2 * p)
-    R.trace.rightPullback_injective hpush R.related
-
-/-- The strict correspondence and its independently constructed trace push-pull
-form one genuine realized finite closed correspondence. -/
-noncomputable def toRealizedFiniteClosedCorrespondence
-    (R : StrictBettiApexL2Spoke S j) :
-    RealizedFiniteClosedCorrespondence V H p where
-  geometry :=
-    R.correspondence.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
-  cohomologyOperator := R.trace.pushPull
-  realizes_on_points := by
-    intro x
-    have hx := R.pointCompatibility.point_natural x
-    simpa only [GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence.gradedNativePointImage_self]
-      using hx
-
-/-- Regard the strict correspondence as an atom of the full realized
-noncommutative correspondence-expression algebra. -/
-noncomputable def expression
-    (R : StrictBettiApexL2Spoke S j) :
-    RealizedCorrespondenceExpr V H p :=
-  .atom R.toRealizedFiniteClosedCorrespondence
-
-/-- The realized atom acts on the apex by exactly the omniverse localized
-`L²` firing, now as a theorem derived from the strict Betti relation. -/
+/-- The canonical strict-relation compiler turns the raw pullback relation into
+the exact realized-expression action required by the apex-localized omniverse.
+No separate operator-action field is used here. -/
 theorem expression_on_apex
     (R : StrictBettiApexL2Spoke S j) :
     R.expression.cohomologyOperator S.hodge.1 =
       (liftFiniteHodgeOperator (pairBasisIndex S.sourceIndex j)
         (diagonalLefschetzQ 2 2) S.hodge).1 := by
-  change R.trace.pushPull S.hodge.1 = apexL2Target S j
-  exact R.pushPull_on_apex
+  have h := R.expression_materializes
+  unfold ExprMaterializesBranch at h
+  simpa [apexNode, apexL2TargetNode, apexL2TargetState] using h.symm
+
+/-- In obstruction language, every strict apex spoke automatically certifies
+that the apex lies in the transferable subspace of its genuine correspondence. -/
+theorem transferObstruction_apex_eq_zero
+    (R : StrictBettiApexL2Spoke S j) :
+    GSTClassicalHodgeStrictCorrespondenceBettiObstruction.transferObstruction
+      H.analytification R.correspondence (2 * p) S.hodge.1 = 0 := by
+  exact
+    (GSTClassicalHodgeStrictCorrespondenceBettiObstruction.
+      transferObstruction_apply_eq_zero_iff_exists_related
+        H.analytification R.correspondence (2 * p) S.hodge.1).2
+      ⟨(apexL2TargetState S j).1, by
+        simpa [apexNode, apexL2TargetNode, apexL2TargetState] using R.related⟩
 
 end StrictBettiApexL2Spoke
 
-/-- One strict-Betti spoke to every target sheet leaving the same synchronized
-algebraic apex. -/
+/-- One canonical strict-relation packet to every localized `L²` target sheet. -/
 structure StrictBettiApexL2Fan
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p)) where
   spoke : ∀ j : ClassicalHodgeBasisIndex V H p,
@@ -169,24 +127,23 @@ structure StrictBettiApexL2Fan
 
 namespace StrictBettiApexL2Fan
 
-/-- A strict-Betti fan manufactures the exact apex-localized realized `L²`
+/-- Raw strict relations manufacture exactly the apex-localized realized `L²`
 receipt consumed by the upgraded omniverse finale. -/
 noncomputable def toApexLocalizedL2Realization
-    (F : StrictBettiApexL2Fan
-      (V := V) (H := H) (p := p) S) :
+    {S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p)}
+    (F : StrictBettiApexL2Fan S) :
     ApexLocalizedL2Realization S := by
   intro j
   exact ⟨(F.spoke j).expression, (F.spoke j).expression_on_apex⟩
 
 end StrictBettiApexL2Fan
 
-/-- **VERTICAL-RAY + STRICT-BETTI OMNIVERSE FINALE.**
+/-- **VERTICAL-RAY + RAW STRICT-BETTI OMNIVERSE FINALE.**
 
 At every live Hodge weight, one exact vertical ray supplies the genuine
-algebraic apex.  A family of actual bi-finite correspondences whose intrinsic
-Betti relations realize the localized `L²` targets then discharges the entire
-horizontal omniverse.  The arbitrary cohomology `source_action` interface is
-absent. -/
+algebraic apex.  A family of actual bi-finite strict-relation packets from that
+apex to the localized `L²` targets discharges the entire horizontal omniverse.
+The historical arbitrary cohomology `source_action` interface is absent. -/
 theorem exactHodge_of_verticalRays_and_strictBettiApexL2Fans
     (G : GeometricCycleClassSpine V H)
     (D : ProjectiveDegreeTraceSemantics V H)
@@ -202,19 +159,18 @@ theorem exactHodge_of_verticalRays_and_strictBettiApexL2Fans
   intro q hlive
   exact (fan q hlive).toApexLocalizedL2Realization
 
-#check apexL2Target
+#check apexNode
+#check apexL2TargetState
+#check apexL2TargetNode
 #check StrictBettiApexL2Spoke
-#check StrictBettiApexL2Spoke.transferObstruction_apex_eq_zero
-#check StrictBettiApexL2Spoke.pushPull_on_apex
-#check StrictBettiApexL2Spoke.toRealizedFiniteClosedCorrespondence
 #check StrictBettiApexL2Spoke.expression_on_apex
+#check StrictBettiApexL2Spoke.transferObstruction_apex_eq_zero
 #check StrictBettiApexL2Fan
 #check StrictBettiApexL2Fan.toApexLocalizedL2Realization
 #check exactHodge_of_verticalRays_and_strictBettiApexL2Fans
 
-#print axioms StrictBettiApexL2Spoke.transferObstruction_apex_eq_zero
-#print axioms StrictBettiApexL2Spoke.pushPull_on_apex
 #print axioms StrictBettiApexL2Spoke.expression_on_apex
+#print axioms StrictBettiApexL2Spoke.transferObstruction_apex_eq_zero
 #print axioms exactHodge_of_verticalRays_and_strictBettiApexL2Fans
 
 end GSTClassicalHodgeStrictBettiApexL2Fusion
