@@ -513,6 +513,7 @@ roots = [
   "GSTClassicalHodgeGradedAmbientCorrespondenceKernelAction",
   "GSTClassicalHodgeOntologicalWindowReverseExistence",
   "GSTClassicalHodgeStrictKernelRangeStability",
+  "GSTClassicalHodgeOmniverseCausalBranchPacket",
 ]
 
 # ---------------------------------------------------------------------------
