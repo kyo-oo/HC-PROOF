@@ -28,7 +28,8 @@ noncomputable local instance {X : Scheme.{u}} {x : X} :
 noncomputable def schemeKrullDimensionChart
     (X : Scheme.{u}) : GeneralSpace.Chart (schemeGeneralSpace X) where
   Coord := ℕ∞
-  observe x := ringKrullDim ((schemeStalkFamily X).Fiber x)
+  observe x := @ringKrullDim _ (inferInstanceAs (CommSemiring (X.presheaf.stalk x)))
+    ((schemeStalkFamily X).Fiber x)
 
 /-- The chart reads exactly the intrinsic scheme coheight. -/
 theorem schemeKrullDimensionChart_observe
