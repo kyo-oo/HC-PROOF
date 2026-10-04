@@ -26,7 +26,7 @@ structure LocalMorphism
 
 /-- The differential of a C¹ manifold map as a covariant GST local-family
 morphism between the genuine tangent families. -/
-def tangentLocalMorphism
+noncomputable def tangentLocalMorphism
     {𝕜 : Type v} [NontriviallyNormedField 𝕜]
     {E : Type w} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     {E' : Type w'} [NormedAddCommGroup E'] [NormedSpace 𝕜 E']

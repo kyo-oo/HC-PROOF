@@ -34,8 +34,9 @@ noncomputable def schemeKrullDimensionChart
 theorem schemeKrullDimensionChart_observe
     (X : Scheme.{u}) (x : X) :
     (schemeKrullDimensionChart X).observe x = Order.coheight x := by
-  show ringKrullDim ((schemeStalkFamily X).Fiber x) = Order.coheight x
-  exact schemeStalk_dimension_eq_coheight X x
+  have h := schemeStalk_dimension_eq_coheight X x
+  unfold schemeKrullDimensionChart at h ⊢
+  exact h
 
 /-- A native codimension-p point is precisely seen at value p by the local
 General-Space dimension observation. -/
