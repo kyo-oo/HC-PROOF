@@ -40,6 +40,20 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake build HodgePureMath 2>&1 | tee hodge-final.log
 
+      - name: Compile GST exact projective-word finale
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeGSTProjectiveWordExactFinale.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile GST exact rational-correspondence finale
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile direct orbit-word saturation
         shell: bash
         run: |
