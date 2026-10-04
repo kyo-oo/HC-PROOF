@@ -1,10 +1,11 @@
 import GSTClassicalHodgeGSTExactFinale
 import GSTClassicalHodgeProjectiveWordOrbit
+import GSTClassicalHodgeProjectiveGeneratorWordCompiler
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL-SPINE PROJECTIVE-WORD EXACT FINALE
 
-This file removes the last packaging gap between the genuine projective-word
+This file removes the packaging gap between the genuine projective-word
 operator algebra and the exact GST finale.
 
 The canonical projective spine already supplies, in every weight, one actual
@@ -15,10 +16,9 @@ cycle-class naturality.
 
 Accordingly, to compile a source-to-target GST program we do not assume a
 basis-cycle witness, a native matrix-unit lift, or target algebraicity.  We
-supply only an actual projective word and prove its action on the single
-canonical spine source.  `GSTSourceTargetProgram.ofProjectiveWord` then turns
-that geometric word into the source-local GST program, and `GSTExactFinale`
-returns the literal rational Hodge statement.
+supply only actual projective geometry.  The two-generator compiler proves the
+required source action from the rank-free GST word theorem, and
+`GSTExactFinale` returns the literal rational Hodge statement.
 -/
 
 set_option maxHeartbeats 100000000
@@ -38,6 +38,8 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeGSTSpineGlobalSource
 open GSTClassicalHodgeProjectiveWordOrbit
+open GSTClassicalHodgeProjectiveTwoGeneratorExternalization
+open GSTClassicalHodgeProjectiveGeneratorWordCompiler
 open GSTClassicalHodgeGSTSourceProgramCompiler
 open GSTClassicalHodgeGSTDefectExtinction
 open GSTClassicalHodgeGSTExactFinale
@@ -69,8 +71,8 @@ noncomputable def canonicalSpineProgramOfProjectiveWord
     { word := W
       source_action := hW }
 
-/-- The same genuine projective word already constructs an explicit native
-cycle whose class is the requested Hodge basis sheet. -/
+/-- The same genuine projective word constructs an explicit native cycle whose
+class is the requested Hodge basis sheet. -/
 noncomputable def canonicalSpineTargetCycleOfProjectiveWord
     (G : GeometricCycleClassSpine V H)
     (M : NativeMassCycleClassBridge V H)
@@ -107,10 +109,7 @@ theorem canonicalSpineTargetCycleOfProjectiveWord_spec
       (classicalHodgeBasis V H p j).1 := by
   exact (canonicalSpineProgramOfProjectiveWord G M p j W hW).targetCycle_spec
 
-/-- **PROJECTIVE-WORD GST EXACT FINALE — ALGEBRAIC-CYCLE FORM.**
-If, for every weight and target sheet, an actual finite projective word has the
-GST-predicted action on the single canonical spine source, every rational
-Hodge class is the class of a genuine rational algebraic cycle. -/
+/-- **PROJECTIVE-WORD GST EXACT FINALE — ALGEBRAIC-CYCLE FORM.** -/
 theorem everyHodgeClassIsRationalAlgebraic_of_canonicalSpine_projectiveWords
     (G : GeometricCycleClassSpine V H)
     (M : NativeMassCycleClassBridge V H)
@@ -130,10 +129,7 @@ theorem everyHodgeClassIsRationalAlgebraic_of_canonicalSpine_projectiveWords
     fun p j => canonicalSpineProgramOfProjectiveWord G M p j (W p j) (hW p j)
   exact gst_everyHodgeClassIsRationalAlgebraic G M R
 
-/-- **LITERAL WORDING OF THE RATIONAL HODGE CONJECTURE.**
-Under the same genuine projective-word source-action theorem, every rational
-`(p,p)` Hodge class is a finite rational linear combination of genuine
-codimension-p irreducible algebraic cycle classes. -/
+/-- **LITERAL WORDING OF THE RATIONAL HODGE CONJECTURE.** -/
 theorem everyHodgeClassIsFiniteRationalCombination_of_canonicalSpine_projectiveWords
     (G : GeometricCycleClassSpine V H)
     (M : NativeMassCycleClassBridge V H)
@@ -153,14 +149,66 @@ theorem everyHodgeClassIsFiniteRationalCombination_of_canonicalSpine_projectiveW
     fun p j => canonicalSpineProgramOfProjectiveWord G M p j (W p j) (hW p j)
   exact gst_everyHodgeClassIsFiniteRationalCombination G M R
 
+/-- Compile the two genuine projective GST primitives automatically.  The
+source-action equation is no longer an input: it is the theorem
+`compileProjectiveTwoGenerator_source_action`. -/
+noncomputable def canonicalSpineProgramOfProjectiveTwoGenerator
+    (G : GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat)
+    (j : ClassicalHodgeBasisIndex V H p)
+    (R : ProjectiveTwoGenerator (V := V) (H := H)
+      (globalSpineOrbitSeed G M p).sourceIndex j) :
+    CanonicalSpineGSTProgram G M p j :=
+  canonicalSpineProgramOfProjectiveWord G M p j
+    (compileProjectiveTwoGenerator R)
+    (compileProjectiveTwoGenerator_source_action
+      G (globalSpineOrbitSeed G M p) j R)
+
+/-- One pair of genuine projective primitives from the canonical live source
+to each target sheet closes the exact algebraic-cycle form of rational Hodge. -/
+theorem everyHodgeClassIsRationalAlgebraic_of_projectiveTwoGenerators
+    (G : GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge V H)
+    (R : ∀ p : Nat,
+      ∀ j : ClassicalHodgeBasisIndex V H p,
+        ProjectiveTwoGenerator (V := V) (H := H)
+          (globalSpineOrbitSeed G M p).sourceIndex j) :
+    EveryHodgeClassIsRationalAlgebraic H := by
+  let P : CanonicalSpineGSTProgramFamily G M :=
+    fun p j => canonicalSpineProgramOfProjectiveTwoGenerator G M p j (R p j)
+  exact gst_everyHodgeClassIsRationalAlgebraic G M P
+
+/-- **TWO-GENERATOR EXACT CLAY LANDING.**
+The same two genuine projective primitives close the literal finite-rational-
+combination wording of the conjecture.  The GST rank-free matrix-unit word,
+source normalization, target-cycle extraction and arbitrary-class finite
+reconstruction are all derived internally. -/
+theorem everyHodgeClassIsFiniteRationalCombination_of_projectiveTwoGenerators
+    (G : GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge V H)
+    (R : ∀ p : Nat,
+      ∀ j : ClassicalHodgeBasisIndex V H p,
+        ProjectiveTwoGenerator (V := V) (H := H)
+          (globalSpineOrbitSeed G M p).sourceIndex j) :
+    EveryHodgeClassIsFiniteRationalCombination H := by
+  let P : CanonicalSpineGSTProgramFamily G M :=
+    fun p j => canonicalSpineProgramOfProjectiveTwoGenerator G M p j (R p j)
+  exact gst_everyHodgeClassIsFiniteRationalCombination G M P
+
 #check canonicalSpineProgramOfProjectiveWord
 #check canonicalSpineTargetCycleOfProjectiveWord
 #check canonicalSpineTargetCycleOfProjectiveWord_spec
 #check everyHodgeClassIsRationalAlgebraic_of_canonicalSpine_projectiveWords
 #check everyHodgeClassIsFiniteRationalCombination_of_canonicalSpine_projectiveWords
+#check canonicalSpineProgramOfProjectiveTwoGenerator
+#check everyHodgeClassIsRationalAlgebraic_of_projectiveTwoGenerators
+#check everyHodgeClassIsFiniteRationalCombination_of_projectiveTwoGenerators
 
 #print axioms canonicalSpineTargetCycleOfProjectiveWord_spec
 #print axioms everyHodgeClassIsRationalAlgebraic_of_canonicalSpine_projectiveWords
 #print axioms everyHodgeClassIsFiniteRationalCombination_of_canonicalSpine_projectiveWords
+#print axioms everyHodgeClassIsRationalAlgebraic_of_projectiveTwoGenerators
+#print axioms everyHodgeClassIsFiniteRationalCombination_of_projectiveTwoGenerators
 
 end GSTClassicalHodgeGSTProjectiveWordExactFinale
