@@ -6,23 +6,21 @@ import GSTClassicalHodgeThreeUniverseSeedIdentification
 /-!
 # GST CLASSICAL HODGE — PI ONE-WORD / ONE-CYCLIC-SEED OMNIVERSE FINALE
 
-The preceding Pi/projective-spectral crown still exposed coordinatewise
-visibility as a family of geometric witnesses. The handwritten Pi/GST route
-is intrinsically one-source: a finite live observation is born from one
-algebraic state, the GST arsenal separates its active branches, and the finite
-rational collapse returns to the same projective carrier.
+The preceding Pi/projective-spectral crown exposes coordinatewise visibility as
+a family of geometric witnesses. The handwritten Pi/GST route is intrinsically
+one-source: a finite live observation is born from one algebraic state, the GST
+spectral arsenal separates its active branches, and the finite rational collapse
+returns to the same projective carrier.
 
-For one nonzero Hodge state `alpha`, the geometric input is compressed to:
+This file performs a genuine non-strengthening compression of that interface.
+For one nonzero Hodge state `alpha` we retain exactly the same single genuine
+projective spectral word on the canonical live support, but replace the family
+of visibility witnesses by ONE genuine native codimension-p cycle whose class
+is a cyclic vector with every live coefficient nonzero.
 
-* ONE genuine finite projective operator word whose canonical cohomological
-  action is the canonical zero-complement GST observable on `supp(alpha)`;
-* ONE genuine native codimension-p cycle whose class is a cyclic vector on
-  exactly those live basis directions, with every live coefficient nonzero.
-
-There is no coordinatewise family of visible algebraic witnesses. The single
-native cyclic vector feeds the one-word spectral calculus, and the canonical
-Lagrange projectors recover every live Hodge basis sheet. The finite support
-sum then reconstructs `alpha` as one genuine native cycle.
+No equality with a canonical ambient operator outside the selected live sheets
+is required.  Only the exact live eigenvector equations already present in
+`ProjectiveWordSpectralFamily` are used.
 
 The same finite packet is simultaneously tied to the canonical live-support
 GST chart and all recoordination charts, the exact N-cohomology packet, all
@@ -67,16 +65,19 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-/-- One projective word and one actual native cyclic source on the exact live
-support. No coordinatewise family of algebraic witnesses is stored. -/
+/-- **ONE PROJECTIVE WORD / ONE ACTUAL NATIVE CYCLIC SOURCE.**
+
+The spectral word is exactly the existing projective spectral family on the
+canonical live support.  Instead of a separate algebraic visibility witness in
+every slot, one actual native cycle is required whose class is a cyclic vector
+on all selected sheets. -/
 structure CanonicalOneWordCyclicSeedPacket
     (G : GeometricCycleClassSpine V H)
     (alpha : ClassicalHodgeFiber V H p) where
-  word : ProjectiveOperatorWord V p
-  word_on_hodge :
-    ∀ beta : ClassicalHodgeFiber V H p,
-      (word.operatorPair G).cohomologyOperator beta.1 =
-        (canonicalLiveWindow alpha).ambientObservable beta.1
+  spectral :
+    ProjectiveWordSpectralFamily
+      (V := V) (H := H) (p := p) G (Fin (liveRank alpha))
+  basisIndex_eq : spectral.basisIndex = liveBasisIndex alpha
   coefficient : Fin (liveRank alpha) → ℚ
   coefficient_ne_zero : ∀ i, coefficient i ≠ 0
   seedCycle : codimensionCycles V.X p
@@ -91,49 +92,44 @@ namespace CanonicalOneWordCyclicSeedPacket
 variable {G : GeometricCycleClassSpine V H}
 variable {alpha : ClassicalHodgeFiber V H p}
 
-/-- The one word automatically carries the canonical distinct spectral labels
-on the exact live support. -/
-noncomputable def spectral
+/-- Re-express the native cyclic source using the exact basis indexing carried
+by the projective spectral family. -/
+theorem seed_class_spectral_index
     (P : CanonicalOneWordCyclicSeedPacket G alpha) :
-    ProjectiveWordSpectralFamily
-      (V := V) (H := H) (p := p) G (Fin (liveRank alpha)) where
-  word := P.word
-  basisIndex := liveBasisIndex alpha
-  basisIndex_injective := by
-    exact (canonicalLiveWindow alpha).basisIndex_injective
-  eigenvalue := (canonicalLiveWindow alpha).eigenvalue
-  eigenvalue_injective := (canonicalLiveWindow alpha).eigenvalue_injective
-  eigenvector := by
-    intro i
-    rw [P.word_on_hodge (classicalHodgeBasis V H p (liveBasisIndex alpha i))]
-    exact (canonicalLiveWindow alpha).ambientObservable_selected i
+    H.cycleClass p P.seedCycle =
+      ∑ i : Fin (liveRank alpha),
+        P.coefficient i •
+          (classicalHodgeBasis V H p (P.spectral.basisIndex i)).1 := by
+  rw [P.basisIndex_eq]
+  exact P.seed_class
 
-/-- The single native source is already one cyclic algebraic vector for the
-canonical spectral family. -/
+/-- The one native source is one cyclic algebraic vector for the projective
+spectral family. -/
 theorem cyclic_seed_atomic
     (P : CanonicalOneWordCyclicSeedPacket G alpha) :
     (∑ i : Fin (liveRank alpha),
       P.coefficient i •
-        (classicalHodgeBasis V H p (liveBasisIndex alpha i)).1) ∈
+        (classicalHodgeBasis V H p (P.spectral.basisIndex i)).1) ∈
       pointCycleClassSpan p (H.cycleClass p) := by
   have hrange :
       (∑ i : Fin (liveRank alpha),
         P.coefficient i •
-          (classicalHodgeBasis V H p (liveBasisIndex alpha i)).1) ∈
+          (classicalHodgeBasis V H p (P.spectral.basisIndex i)).1) ∈
         LinearMap.range (H.cycleClass p) := by
-    exact ⟨P.seedCycle, P.seed_class⟩
+    exact ⟨P.seedCycle, P.seed_class_spectral_index⟩
   rwa [smoothProjective_cycleClass_range_eq_atomic_span V H p] at hrange
 
-/-- One cyclic native source plus one projective spectral word extracts every
-live basis sheet. -/
+/-- **ONE CYCLIC SOURCE EXTRACTS EVERY LIVE SHEET.** -/
 theorem live_basis_algebraic
     (P : CanonicalOneWordCyclicSeedPacket G alpha)
     (i : Fin (liveRank alpha)) :
     (classicalHodgeBasis V H p (liveBasisIndex alpha i)).1 ∈
       pointCycleClassSpan p (H.cycleClass p) := by
-  exact P.spectral.toClassicalHodgeSpectralOperator
+  have h := P.spectral.toClassicalHodgeSpectralOperator
     |>.selected_basis_algebraic_of_cyclic_seed
       P.coefficient P.coefficient_ne_zero P.cyclic_seed_atomic i
+  rw [P.basisIndex_eq] at h
+  exact h
 
 /-- Every actual support index of `alpha` is therefore an algebraic basis
 sheet. -/
@@ -144,25 +140,27 @@ theorem support_basis_algebraic
       pointCycleClassSpan p (H.cycleClass p) := by
   obtain ⟨r, hr⟩ := supportIndex_has_canonicalSlot alpha i
   have h := P.live_basis_algebraic r
-  rw [show liveBasisIndex alpha r = i.1 by exact hr]
-  exact h
+  have hr' : liveBasisIndex alpha r = i.1 := by
+    exact hr
+  simpa [hr'] using h
 
-/-- Finite support collapses back to one genuine native cycle on the original
-projective carrier. -/
+/-- **ONE-WORD / ONE-SEED TARGET COLLAPSE.**  Finite support collapses back to
+one genuine native cycle on the original projective carrier. -/
 theorem target_cycle
     (P : CanonicalOneWordCyclicSeedPacket G alpha) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha.1 := by
-  have hmem :
-      alpha.1 ∈ pointCycleClassSpan p (H.cycleClass p) := by
-    rw [hodgeClass_eq_support_sum alpha]
-    apply Submodule.sum_mem
-    intro i hi
-    exact (pointCycleClassSpan p (H.cycleClass p)).smul_mem
-      ((classicalHodgeBasis V H p).repr alpha i.1)
-      (P.support_basis_algebraic i)
-  exact pointCycleClassSpan_le_cycleClass_range
-    p (H.cycleClass p) hmem
+  apply target_cycle_of_canonical_projective_spectral_packet
+  let Q : CanonicalProjectiveSpectralPacket G alpha := {
+    spectral := P.spectral
+    basisIndex_eq := P.basisIndex_eq
+    visible := by
+      intro i
+      let a : Fin (liveRank alpha) → ℚ := P.coefficient
+      refine ⟨a, P.coefficient_ne_zero, ?_⟩
+      exact P.cyclic_seed_atomic
+  }
+  exact Q
 
 /-- The cyclic native source is tethered to the original limitless transfer
 universe by its exact native mass. -/
@@ -175,6 +173,33 @@ theorem seed_limitless_address
   exact nativeCycle_shadow_eq_mass_transfer V p P.seedCycle
 
 end CanonicalOneWordCyclicSeedPacket
+
+/-- **THE CURRENT HEAD COMPILES TO THE ONE-SOURCE FORM.**
+Coordinatewise visibility on a finite live packet admits one simultaneous
+cyclic vector by the already-proved infinite-field hyperplane-avoidance theorem.
+Because atomic span equals the genuine cycle-class range, that cyclic vector is
+represented by one actual native cycle.  Hence this packet is not a stronger
+geometric assumption than `CanonicalProjectiveSpectralPacket`. -/
+theorem oneWordCyclicSeedPacket_of_canonicalProjectiveSpectralPacket
+    (G : GeometricCycleClassSpine V H)
+    (alpha : ClassicalHodgeFiber V H p)
+    (Q : CanonicalProjectiveSpectralPacket G alpha) :
+    Nonempty (CanonicalOneWordCyclicSeedPacket G alpha) := by
+  obtain ⟨a, ha, hcyclic⟩ := Q.exists_cyclic_atomic_seed
+  have hrange :
+      (∑ i : Fin (liveRank alpha),
+        a i • (classicalHodgeBasis V H p (liveBasisIndex alpha i)).1) ∈
+        LinearMap.range (H.cycleClass p) := by
+    rwa [smoothProjective_cycleClass_range_eq_atomic_span V H p]
+  rcases hrange with ⟨Z, hZ⟩
+  exact ⟨{
+    spectral := Q.spectral
+    basisIndex_eq := Q.basisIndex_eq
+    coefficient := a
+    coefficient_ne_zero := ha
+    seedCycle := Z
+    seed_class := hZ
+  }⟩
 
 /-- Full Pi/GST crown: target cycle, exact N-cohomology packet, all-sector
 branching with unbounded higher causality, arbitrary finite recoordination,
@@ -226,8 +251,8 @@ theorem oneWordCyclicSeed_pi_fullOmniverse_crown
   · intro T r
     exact live_projector_recoordination_natural alpha T r
 
-/-- Pi-wide exact rational Hodge landing from one projective word and one
-native cyclic source for every nonzero concrete Hodge state. -/
+/-- Pi-wide exact rational Hodge landing from one projective spectral word and
+one native cyclic source for every nonzero concrete Hodge state. -/
 theorem bigradedBettiHodge_of_oneWordCyclicSeedPackets
     (G : GeometricCycleClassSpine V H)
     (packet :
@@ -246,16 +271,18 @@ theorem bigradedBettiHodge_of_oneWordCyclicSeedPackets
   · exact (Classical.choice (packet q alpha halpha)).target_cycle
 
 #check CanonicalOneWordCyclicSeedPacket
-#check CanonicalOneWordCyclicSeedPacket.spectral
+#check CanonicalOneWordCyclicSeedPacket.seed_class_spectral_index
 #check CanonicalOneWordCyclicSeedPacket.cyclic_seed_atomic
 #check CanonicalOneWordCyclicSeedPacket.live_basis_algebraic
 #check CanonicalOneWordCyclicSeedPacket.target_cycle
 #check CanonicalOneWordCyclicSeedPacket.seed_limitless_address
+#check oneWordCyclicSeedPacket_of_canonicalProjectiveSpectralPacket
 #check oneWordCyclicSeed_pi_fullOmniverse_crown
 #check bigradedBettiHodge_of_oneWordCyclicSeedPackets
 
 #print axioms CanonicalOneWordCyclicSeedPacket.live_basis_algebraic
 #print axioms CanonicalOneWordCyclicSeedPacket.target_cycle
+#print axioms oneWordCyclicSeedPacket_of_canonicalProjectiveSpectralPacket
 #print axioms oneWordCyclicSeed_pi_fullOmniverse_crown
 #print axioms bigradedBettiHodge_of_oneWordCyclicSeedPackets
 
