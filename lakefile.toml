@@ -520,6 +520,10 @@ roots = [
   "GSTClassicalHodgeDegreeCertifiedOmniverseLiveCollapse",
   "GSTClassicalHodgeDegreeCertifiedOmniverseCausalCompiler",
   "GSTClassicalHodgePiStrictOmniverseCompiler",
+  "GSTClassicalHodgeOmniverseStrictRelationRayCompiler",
+  "GSTClassicalHodgeRootedStrictRelationFan",
+  "GSTClassicalHodgeRootedStrictRelationTree",
+  "GSTClassicalHodgeCodimensionZeroDegreeApex",
 ]
 
 # ---------------------------------------------------------------------------

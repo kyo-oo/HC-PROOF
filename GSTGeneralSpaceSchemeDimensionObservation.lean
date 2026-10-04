@@ -27,9 +27,8 @@ noncomputable local instance {X : Scheme.{u}} {x : X} :
 /-- Local Krull-dimension observation chart of an arbitrary scheme. -/
 noncomputable def schemeKrullDimensionChart
     (X : Scheme.{u}) : GeneralSpace.Chart (schemeGeneralSpace X) where
-  Coord := ℕ∞
-  observe x := @ringKrullDim _ (inferInstanceAs (CommSemiring (X.presheaf.stalk x)))
-    ((schemeStalkFamily X).Fiber x)
+  Coord := WithBot ℕ∞
+  observe x := ringKrullDim ((schemeStalkFamily X).Fiber x)
 
 /-- The chart reads exactly the intrinsic scheme coheight. -/
 theorem schemeKrullDimensionChart_observe
@@ -44,7 +43,7 @@ General-Space dimension observation. -/
 theorem codimensionPoint_observed_exactly
     (X : Scheme.{u}) (p : Nat)
     (x : CodimensionPoint X p) :
-    (schemeKrullDimensionChart X).observe x.1 = ((p : ℕ∞)) := by
+    (schemeKrullDimensionChart X).observe x.1 = ((p : WithBot ℕ∞)) := by
   rw [schemeKrullDimensionChart_observe X x.1, x.2]
 
 /-- Observation-only crown: the codimension label is completely recovered
@@ -56,7 +55,7 @@ theorem codimension_observation_crown
       ∧ Order.coheight x.1 = p := by
   exact ⟨by
       rw [schemeStalk_dimension_eq_coheight X x.1, x.2]
-      norm_num,
+      try norm_num,
     x.2⟩
 
 #check schemeKrullDimensionChart

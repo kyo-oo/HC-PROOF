@@ -1,4 +1,5 @@
 import GSTClassicalHodgePolynomialTransitionClosure
+import GSTClassicalHodgePointNormalForm
 
 /-!
 # GST CLASSICAL HODGE — NATIVE GENERATOR NATURALITY

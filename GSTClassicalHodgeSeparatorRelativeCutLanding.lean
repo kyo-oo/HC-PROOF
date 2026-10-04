@@ -30,6 +30,7 @@ open GSTProjectiveOverC
 open GSTClassicalHodgeProjectivePrincipalSection
 open GSTClassicalHodgePointClosurePrincipalCut
 open GSTClassicalHodgePointClosureRelativeCut
+open GSTClassicalHodgePointClosureIrreducible
 open GSTClassicalHodgeHeightOneProjectiveRelevance
 open GSTClassicalHodgeProjectiveSeparatorCarrierDescent
 open GSTClassicalHodgeSeparatorPointClosureLift
@@ -42,13 +43,12 @@ theorem carrierSeparatorSuccessor_mem_principalSectionRange
     (V : SmoothProjectiveComplexScheme)
     (x : V.X)
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
-    carrierSeparatorSuccessor V x hlive ∈ Set.range (principalSectionAtι V x) := by
-  have h := carrierSeparatorSuccessor_mem_principalSection V x hlive
-  rw [show Set.range (principalSectionAtι V x) =
-      (principalSectionIdeal V (positiveHomogeneousSeparator V.projective.n
-        (V.projective.immersion x)).equation).support from
-    Scheme.IdealSheafData.range_subschemeι]
-  exact h
+    carrierSeparatorSuccessor V x hlive ∈ Set.range (principalSectionAtι V x) :=
+  (Scheme.IdealSheafData.range_subschemeι
+    (principalSectionIdeal V
+      (positiveHomogeneousSeparator V.projective.n
+        (V.projective.immersion x)).equation)).symm.subset
+    (carrierSeparatorSuccessor_mem_principalSection V x hlive)
 
 /-- **GENUINE RELATIVE-CUT LANDING.**
 The point-closure lift of the separator successor lies in the actual
@@ -58,11 +58,9 @@ theorem pointClosureSeparatorSuccessor_mem_relativeCut
     (x : V.X)
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
     pointClosureSeparatorSuccessor V x hlive ∈ relativeCutSet V x := by
-  unfold relativeCutSet closurePrincipalCutToClosure
-  simp only [Scheme.Pullback.range_fst]
-  change pointClosureι V x (pointClosureSeparatorSuccessor V x hlive) ∈
-    Set.range (principalSectionAtι V x)
-  rw [pointClosureSeparatorSuccessor_maps]
+  rw [relativeCutSet, closurePrincipalCutToClosure,
+    Scheme.Pullback.range_fst, Set.mem_preimage,
+    pointClosureSeparatorSuccessor_maps]
   exact carrierSeparatorSuccessor_mem_principalSectionRange V x hlive
 
 /-- The landed relative-cut point is non-generic. -/

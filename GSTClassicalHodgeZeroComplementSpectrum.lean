@@ -154,16 +154,14 @@ noncomputable def augmentedIsolatorPolynomial
     (W : FiniteHodgeBasisWindow V H p)
     (i : Fin W.N) : Polynomial ℚ :=
   Polynomial.X *
-    (W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily
-      .isolatorPolynomial i)
+    (W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily).isolatorPolynomial i
 
 /-- Scalar by which the augmented isolator acts on the selected Hodge sheet. -/
 noncomputable def augmentedIsolatorScale
     (W : FiniteHodgeBasisWindow V H p)
     (i : Fin W.N) : ℚ :=
   W.eigenvalue i *
-    (W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily
-      .isolatorScale i)
+    (W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily).isolatorScale i
 
 /-- The augmented normalization scalar is nonzero. -/
 theorem augmentedIsolatorScale_ne_zero
@@ -172,10 +170,9 @@ theorem augmentedIsolatorScale_ne_zero
     W.augmentedIsolatorScale i ≠ 0 := by
   apply mul_ne_zero
   · unfold eigenvalue
-    norm_num
+    exact ne_of_gt (by positivity)
   · exact
-      (W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily
-        .isolatorScale_ne_zero i)
+      (W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily).isolatorScale_ne_zero i
 
 /-- The augmented projector selects its Hodge sheet with the exact nonzero
 normalization. -/
@@ -188,6 +185,8 @@ theorem augmentedIsolator_selects_self
       W.augmentedIsolatorScale i •
         (classicalHodgeBasis V H p (W.basisIndex i)).1 := by
   let F := W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily
+  rw [show W.zeroComplementObservable = F.observable from rfl]
+  rw [show (classicalHodgeBasis V H p (W.basisIndex i)).1 = F.vector i from rfl]
   rw [F.linearPolyEval_eigenvector]
   simp [augmentedIsolatorPolynomial, augmentedIsolatorScale,
     F.isolatorScale]
@@ -201,6 +200,8 @@ theorem augmentedIsolator_kills_other
         (W.augmentedIsolatorPolynomial i)
         (classicalHodgeBasis V H p (W.basisIndex j)).1 = 0 := by
   let F := W.toZeroComplementRawSpectralObservable.toFiniteSpectralFamily
+  rw [show W.zeroComplementObservable = F.observable from rfl]
+  rw [show (classicalHodgeBasis V H p (W.basisIndex j)).1 = F.vector j from rfl]
   rw [F.linearPolyEval_eigenvector]
   have hz := F.isolatorPolynomial_eval_other i j hji
   simp [augmentedIsolatorPolynomial, hz]

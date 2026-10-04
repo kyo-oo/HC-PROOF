@@ -43,12 +43,10 @@ linear-Yoneda duality used definitionally in Stage 2F. -/
 noncomputable def singularCochainPullback
     (f : AnalyticEndomorphism A) :
     rationalSingularCochains A ⟶ rationalSingularCochains A := by
-  unfold rationalSingularCochains
-  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
-    (Quiver.Hom.op
-      ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
-        (singularChainMap A f)))
+  let F :=
+    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+      |>.mapHomologicalComplex (ComplexShape.down ℕ)
+  exact (F.map (singularChainMap A f)).unop
 
 /-- Induced map on the genuine rational singular cohomology object. -/
 noncomputable def rationalCohomologyPullbackObj
@@ -88,9 +86,8 @@ theorem rationalCohomologyPullback_comp
       (rationalCohomologyPullback A f n).comp
         (rationalCohomologyPullback A g n) := by
   ext x
-  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
-    singularCochainPullback, singularChainMap_comp,
-    HomologicalComplex.homologyMap_comp]
+  simp [rationalCohomologyPullback, rationalCohomologyPullbackObj,
+    singularCochainPullback, singularChainMap_comp]
 
 /-- Identity acts identically on rational Betti cohomology. -/
 theorem rationalCohomologyPullback_id
@@ -98,9 +95,8 @@ theorem rationalCohomologyPullback_id
     rationalCohomologyPullback A (AnalyticEndomorphism.id (A := A)) n =
       LinearMap.id := by
   ext x
-  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
-    singularCochainPullback, singularChainMap_id,
-    HomologicalComplex.homologyMap_id]
+  simp [rationalCohomologyPullback, rationalCohomologyPullbackObj,
+    singularCochainPullback, singularChainMap_id]
 
 /-- A morphism-level analytification package therefore yields a genuine
 contravariant Betti representation of every algebraic C-scheme endomorphism. -/

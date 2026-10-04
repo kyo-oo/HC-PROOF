@@ -61,7 +61,7 @@ theorem prime_between_source_separator_eq_endpoint
       exact Ideal.comap_map_quotientMk P R
     have hbotComap : (⊥ : Ideal (pointQuotient n x)).comap π = P := by
       ext a
-      simp [π, P, Ideal.Quotient.eq]
+      simp [π, P, Ideal.Quotient.eq_zero_iff_mem]
     rw [hRP, hbotComap] at hcomap
     exact (sup_eq_right.mpr hsource).symm.trans hcomap
   · right
