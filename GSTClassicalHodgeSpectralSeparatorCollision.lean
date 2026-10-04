@@ -163,7 +163,7 @@ theorem basisSeparator_forces_not_atomicStable
         LinearMap.ker Sep.detector :=
     (annihilatesPointCycles_iff_atomicSpan_le_ker
       p (H.cycleClass p) Sep.detector).mp Sep.annihilates_atoms
-  apply F.separator_forces_observable_instability
+  apply separator_forces_observable_instability F
     (pointCycleClassSpan p (H.cycleClass p))
     Sep.detector hann i
   · simpa [F] using Sep.detects_basis

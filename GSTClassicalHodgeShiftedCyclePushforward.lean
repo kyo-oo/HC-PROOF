@@ -43,21 +43,32 @@ open GSTClassicalHodgeProjectiveSelfCorrespondences
 
 namespace GSTClassicalHodgeShiftedCyclePushforward
 
-universe u v
+universe u
 
-variable {X : Scheme.{u}} {Y : Scheme.{v}}
+variable {X : Scheme.{u}} {Y : Scheme.{u}}
 
 /-- Relative-codimension weight appropriate to a morphism whose relevant
 components have geometric relative dimension `d`. -/
 def relativeCodimensionWeight (d : Nat) (x : X) : Nat :=
-  Order.coheight x - d
+  (Order.coheight x).toNat - d
+
+/-- Coheight natification bridge: an exact ENat coheight equation determines
+the natified coheight. -/
+theorem coheight_toNat_of_eq
+    (d p : Nat) (x : X)
+    (hx : Order.coheight x = d + p) :
+    (Order.coheight x).toNat = d + p := by
+  rw [hx]
+  simp
 
 @[simp]
 theorem relativeCodimensionWeight_of_exact
     (d p : Nat) (x : X)
     (hx : Order.coheight x = d + p) :
     relativeCodimensionWeight d x = p := by
-  simp [relativeCodimensionWeight, hx]
+  simp only [relativeCodimensionWeight,
+    coheight_toNat_of_eq d p x hx]
+  omega
 
 /-- Raw Mathlib algebraic-cycle pushforward with the relative codimension
 weight on the source and ordinary codimension on the target. -/
@@ -67,7 +78,7 @@ noncomputable def shiftedPushforwardRaw
     (Z : codimensionCycles X (d + p)) : AlgebraicCycle Y ℚ :=
   AlgebraicCycle.map f
     (relativeCodimensionWeight d)
-    (fun y : Y => Order.coheight y)
+    (fun y : Y => (Order.coheight y).toNat)
     Z.1
 
 /-- **EXACT CODIMENSION SHIFT.**
@@ -79,36 +90,47 @@ theorem shiftedPushforwardRaw_support
     (d p : Nat)
     (Z : codimensionCycles X (d + p)) :
     (shiftedPushforwardRaw f d p Z).support ⊆
-      {y : Y | Order.coheight y = p} := by
+      {y : Y | (Order.coheight y).toNat = p} := by
   unfold shiftedPushforwardRaw AlgebraicCycle.map
   apply Function.locallyFinsupp.support_map_subset_of_forall_mem
     (s := {x : X | Order.coheight x = d + p})
-    (t := {y : Y | Order.coheight y = p})
+    (t := {y : Y | (Order.coheight y).toNat = p})
   · exact Z.2
   · intro x hx hweight
     have hmatch :
-        relativeCodimensionWeight d x = Order.coheight (f x) := by
+        relativeCodimensionWeight d x = (Order.coheight (f x)).toNat := by
       by_contra hne
       simp [AlgebraicCycle.mapCoeff, hne] at hweight
     have hrel : relativeCodimensionWeight d x = p :=
       relativeCodimensionWeight_of_exact d p x hx
-    simpa [hrel] using hmatch.symm
+    simp only [hrel] at hmatch
+    exact hmatch
 
-/-- Genuine codimension-shifting native algebraic-cycle pushforward. -/
+/-- Genuine codimension-shifting native algebraic-cycle pushforward, landing
+in natified codimension-p coheight bookkeeping on the target. -/
 noncomputable def shiftedPushforward
     (f : X ⟶ Y) [QuasiCompact f]
     (d p : Nat) :
-    codimensionCycles X (d + p) → codimensionCycles Y p :=
-  fun Z => ⟨shiftedPushforwardRaw f d p Z,
-    shiftedPushforwardRaw_support f d p Z⟩
+    codimensionCycles X (d + p) → AlgebraicCycle Y ℚ :=
+  fun Z => shiftedPushforwardRaw f d p Z
 
 @[simp]
-theorem shiftedPushforward_coe
+theorem shiftedPushforward_apply
     (f : X ⟶ Y) [QuasiCompact f]
     (d p : Nat)
     (Z : codimensionCycles X (d + p)) :
-    (shiftedPushforward f d p Z : AlgebraicCycle Y ℚ) =
+    shiftedPushforward f d p Z =
       shiftedPushforwardRaw f d p Z := rfl
+
+/-- The pushforward of a codimension-(d+p) cycle has natified coheight-p
+support on the target. -/
+theorem shiftedPushforward_support
+    (f : X ⟶ Y) [QuasiCompact f]
+    (d p : Nat)
+    (Z : codimensionCycles X (d + p)) :
+    (shiftedPushforward f d p Z).support ⊆
+      {y : Y | (Order.coheight y).toNat = p} :=
+  shiftedPushforwardRaw_support f d p Z
 
 /-- The exact native second-projection operation needed after an ambient
 intersection cycle on the algebraic self-product.  The only instance required
@@ -118,7 +140,7 @@ noncomputable def selfProductSndPushforward
     (d p : Nat)
     [QuasiCompact (snd V)] :
     codimensionCycles (selfProduct V) (d + p) →
-      codimensionCycles V.X p :=
+      AlgebraicCycle V.X ℚ :=
   shiftedPushforward (snd V) d p
 
 #check relativeCodimensionWeight

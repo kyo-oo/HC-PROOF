@@ -245,8 +245,9 @@ theorem separatorSuccessorPoint_mem_principalSet
       ({(positiveHomogeneousSeparator n x).equation} :
         Set (ProjectiveCoordinateRing n))).trans
     Set.singleton_subset_iff).mpr ?_
-  simpa [separatorSuccessorPoint, separatorAmbientHomogeneousPrime] using
-    separator_mem_separatorAmbientPrime n x
+  exact HomogeneousIdeal.mem_iff.mp
+    (by simpa [separatorSuccessorPoint, separatorAmbientHomogeneousPrime] using
+      separator_mem_separatorAmbientPrime n x)
 
 /-- Projective successor crown. -/
 theorem projective_separator_successor_crown

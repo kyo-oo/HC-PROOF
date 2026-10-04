@@ -501,6 +501,9 @@ roots = [
   "GSTClassicalHodgeRealizedCorrespondenceKrylovFinale",
   "GSTClassicalHodgeShiftedCyclePushforward",
   "GSTClassicalHodgeTwoGeneratorLefschetzPoincareGeneration",
+  "GSTClassicalHodgeGSTProjectiveWordExactFinale",
+  "GSTClassicalHodgeGSTRationalCorrespondenceExactFinale",
+  "GSTClassicalHodgeLimitlessExactClayFinale",
 ]
 
 # ---------------------------------------------------------------------------
