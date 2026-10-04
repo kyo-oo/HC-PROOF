@@ -93,6 +93,7 @@ theorem rationalCohomologyPullback_comp
     singularCochainPullback A (AnalyticEndomorphism.comp (A := A) f g) =
       (singularCochainPullback A f) ≫ (singularCochainPullback A g) := by
     simp [singularCochainPullback, singularChainMap_comp]
+    rfl
   have hcomp :
     HomologicalComplex.homologyMap
         (singularCochainPullback A (AnalyticEndomorphism.comp (A := A) f g)) n =
@@ -120,6 +121,7 @@ theorem rationalCohomologyPullback_id
     singularCochainPullback A (AnalyticEndomorphism.id (A := A)) =
       𝟙 (rationalSingularCochains A) := by
     simp [singularCochainPullback, singularChainMap_id]
+    rfl
   show (ModuleCat.Hom.hom
       (HomologicalComplex.homologyMap
         (singularCochainPullback A (AnalyticEndomorphism.id (A := A))) n)) x =

@@ -18,6 +18,8 @@ step loses no coefficient information, so positivity/support arguments may be
 carried through the recursive cut tower rather than restarted after every cut.
 -/
 
+open GSTClassicalHodgePointNormalForm
+
 set_option maxHeartbeats 80000000
 set_option maxRecDepth 1000000
 

@@ -49,6 +49,7 @@ open GSTClassicalHodgeConcreteArsenalConjugation
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeLiveSheetIntertwining
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
+open GSTClassicalHodgeFiniteSupportChart
 
 /-- Embed one finite integral pure square into the genuine compact cosmos by
 placing every diagonal coefficient at the identically numbered cosmic weight. -/
@@ -63,8 +64,7 @@ theorem squareDiagonalToCosmos_diagonal
     squareDiagonalToCosmos f (r.1,r.1) = f (r,r) := by
   classical
   unfold squareDiagonalToCosmos
-  rw [Finsupp.coe_finset_sum]
-  rw [Finset.sum_eq_single r]
+  rw [Finsupp.coe_finset_sum, Finset.sum_apply, Finset.sum_eq_single r]
   · simp
   · intro s hs hsr
     have hval : s.1 ≠ r.1 := by
@@ -80,7 +80,7 @@ theorem squareDiagonalToCosmos_off_diagonal
     squareDiagonalToCosmos f c = 0 := by
   classical
   unfold squareDiagonalToCosmos
-  rw [Finsupp.coe_finset_sum]
+  rw [Finsupp.coe_finset_sum, Finset.sum_apply]
   apply Finset.sum_eq_zero
   intro r hr
   simp [hc]
@@ -103,7 +103,7 @@ theorem observe_squareDiagonalToCosmos
   funext c
   by_cases hdiag : c.1.1 = c.2.1
   · have heq : c.1 = c.2 := Fin.ext hdiag
-    rw [heq]
+    rw [show c = (c.2, c.2) from Prod.ext heq rfl]
     simpa using squareDiagonalToCosmos_diagonal f c.2
   · have hc : (c.1.1,c.2.1).1 ≠ (c.1.1,c.2.1).2 := hdiag
     rw [hf c hdiag]
@@ -194,9 +194,8 @@ theorem liveCosmicMatrixUnit_exact
         ((integralHodgeSquare alpha).world
           (squareSheetOfLiveSlot alpha r,
            squareSheetOfLiveSlot alpha r)) := by
-  unfold liveCosmicMatrixUnit integralHodgeCosmos
-  rw [cosmicDiagonalMatrixUnit_apply]
-  rw [squareDiagonalToCosmos_diagonal]
+  simp only [liveCosmicMatrixUnit, integralHodgeCosmos,
+    cosmicDiagonalMatrixUnit_apply, squareDiagonalToCosmos_diagonal]
 
 /-- The historical finite total-sheet operator is therefore precisely the
 finite rational observation of `liveCosmicMatrixUnit`. -/
