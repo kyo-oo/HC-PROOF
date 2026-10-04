@@ -156,14 +156,22 @@ end PointClassTransitionKernel
 
 /-! ## Stage-2G specialization and separator collision -/
 
-open GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable
+end GSTClassicalHodgeGeneratorwiseAtomicStability
+
+namespace GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable
+
+open scoped BigOperators
+open GSTClassicalHodgeGeneratorwiseAtomicStability
+open GSTProjectiveOverC
+open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeAtomicSpan
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 
 /-- Point-transition kernel specialized to a raw classical Hodge spectral
 observable. -/
-abbrev GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.PointTransitionKernel
+abbrev PointTransitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι) :=
   PointClassTransitionKernel
@@ -171,7 +179,7 @@ abbrev GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObse
 
 /-- Generatorwise finite point transitions automatically supply the exact
 atomic-stability field needed by the spectral Hodge engine. -/
-theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKernel
+theorem atomicStable_of_pointTransitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι)
     (K : S.PointTransitionKernel) :
@@ -181,7 +189,7 @@ theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObs
 /-- **TRANSITION-KERNEL SEPARATOR COLLISION.**
 A raw spectral observable with an explicit point-class transition kernel and
 one cyclic atomic seed admits no separator on any selected Hodge sheet. -/
-theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_transitionKernel
+theorem isEmpty_basisAtomicSeparator_of_transitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι)
     (K : S.PointTransitionKernel)
@@ -198,7 +206,7 @@ theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObs
 
 /-- Family form: a point-transition kernel plus cyclic seed makes every
 selected sheet atomic-algebraic. -/
-theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.selected_basis_mem_atomic_of_transitionKernel
+theorem selected_basis_mem_atomic_of_transitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι)
     (K : S.PointTransitionKernel)
@@ -216,6 +224,12 @@ theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObs
   have h := Sop.selected_basis_algebraic_of_cyclic_seed a ha
   simpa [Sop] using h hseed
 
+end GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable
+
+namespace GSTClassicalHodgeGeneratorwiseAtomicStability
+
+open GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable
+
 #check AtomicSpanStable
 #check PointGeneratorStable
 #check atomicSpanStable_iff_pointGeneratorStable
@@ -224,16 +238,16 @@ theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObs
 #check atomicSpanStable_iff_finitePointTransitions
 #check PointClassTransitionKernel
 #check PointClassTransitionKernel.atomicSpanStable
-#check RawClassicalHodgeSpectralObservable.PointTransitionKernel
-#check RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKernel
-#check RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_transitionKernel
-#check RawClassicalHodgeSpectralObservable.selected_basis_mem_atomic_of_transitionKernel
+#check GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.PointTransitionKernel
+#check GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKernel
+#check GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_transitionKernel
+#check GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.selected_basis_mem_atomic_of_transitionKernel
 
 #print axioms atomicSpanStable_iff_pointGeneratorStable
 #print axioms atomicSpanStable_iff_finitePointTransitions
 #print axioms PointClassTransitionKernel.atomicSpanStable
-#print axioms RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKernel
-#print axioms RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_transitionKernel
-#print axioms RawClassicalHodgeSpectralObservable.selected_basis_mem_atomic_of_transitionKernel
+#print axioms GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKernel
+#print axioms GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_transitionKernel
+#print axioms GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.selected_basis_mem_atomic_of_transitionKernel
 
 end GSTClassicalHodgeGeneratorwiseAtomicStability

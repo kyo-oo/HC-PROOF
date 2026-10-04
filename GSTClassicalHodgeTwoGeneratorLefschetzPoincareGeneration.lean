@@ -118,6 +118,10 @@ theorem raiseQ_basis_coeff
     · rw [dif_pos]
       · have hgap : q.1 = p.1 + 1 := by omega
         rw [if_pos hgap]
+        have hgap' : pureWeightGap
+            (Fin.castLE (show N ≤ min N N by omega) p)
+            (Fin.castLE (show N ≤ min N N by omega) q) = q.1 - p.1 := rfl
+        rw [hgap']
         have hchoose : Nat.choose 2 (q.1 - p.1) = 2 := by
           have : q.1 - p.1 = 1 := by omega
           simp [this]
@@ -156,7 +160,7 @@ theorem raiseQ_basis
     · have hqne : ¬ q = (⟨p.1 + 1, h⟩ : Fin N) := by
         intro hqeq
         exact hq (congrArg Fin.val hqeq)
-      simp [rationalPureBasis, hqne]
+      simp [rationalPureBasis, hq, hqne]
   · rw [dif_neg h]
     have hnosucc : q.1 ≠ p.1 + 1 := by
       intro hq
@@ -284,10 +288,7 @@ theorem lower_iter_to_bottom
           · show j.1 - 1 = i'.1 - (n + 1)
             omega
           · rw [iterEnd_succ_apply, hj]
-            have hlow : lowerQ N (rationalPureBasis j) =
-                rationalPureBasis (⟨j.1 - 1, hpos⟩ : Fin N) := by
-              rw [lowerQ_basis, dif_pos hpos]
-            rw [hlow]
+            rw [lowerQ_basis, dif_pos hpos]
             exact congrArg rationalPureBasis (Fin.ext rfl)
         · exact absurd (by omega : 0 < j.1) hpos
   obtain ⟨j, hjval, hj⟩ := key i.1 i (Nat.le_refl i.1)
@@ -330,10 +331,7 @@ theorem bottom_after_lower_iter_basis
             · show j.1 - 1 = r'.1 - (n + 1)
               omega
             · rw [iterEnd_succ_apply, hj]
-              have hlow : lowerQ N (rationalPureBasis j) =
-                  rationalPureBasis (⟨j.1 - 1, hpos⟩ : Fin N) := by
-                rw [lowerQ_basis, dif_pos hpos]
-              rw [hlow]
+              rw [lowerQ_basis, dif_pos hpos]
               exact congrArg rationalPureBasis (Fin.ext rfl)
           · exact absurd (by omega : 0 < j.1) hpos
     have kill : ∀ (k : Nat), ∀ (r' : Fin N), r'.1 < k →
@@ -352,9 +350,7 @@ theorem bottom_after_lower_iter_basis
             obtain ⟨j, hjval, hj⟩ := key n r' (by omega)
             have hj0 : j.1 = 0 := by omega
             rw [iterEnd_succ_apply, hj]
-            have hlow : lowerQ N (rationalPureBasis j) = 0 := by
-              rw [lowerQ_basis, dif_neg (by omega : ¬ 0 < j.1)]
-            rw [hlow]
+            rw [lowerQ_basis, dif_neg (by omega : ¬ 0 < j.1)]
     rcases Nat.lt_or_ge r.1 i.1 with hlt | hge
     · rw [kill i.1 r hlt]
       simp

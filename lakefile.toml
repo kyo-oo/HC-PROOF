@@ -514,6 +514,11 @@ roots = [
   "GSTClassicalHodgeOntologicalWindowReverseExistence",
   "GSTClassicalHodgeStrictKernelRangeStability",
   "GSTClassicalHodgeOmniverseCausalBranchPacket",
+  "GSTClassicalHodgeOmniverseStrictEventStability",
+  "GSTClassicalHodgePiOmniverseBranchSynthesis",
+  "GSTClassicalHodgePiOmniverseCanonicalSupportSpectral",
+  "GSTClassicalHodgeDegreeCertifiedOmniverseLiveCollapse",
+  "GSTClassicalHodgeDegreeCertifiedOmniverseCausalCompiler",
 ]
 
 # ---------------------------------------------------------------------------

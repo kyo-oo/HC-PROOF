@@ -35,7 +35,7 @@ theorem schemeStalkFamily_fiber
 
 /-- The stalk fiber carries the genuine commutative-ring structure of the
 scheme stalk; the instance bridge is definitional (the fiber IS the stalk). -/
-instance (X : Scheme.{u}) (x : X) :
+noncomputable instance (X : Scheme.{u}) (x : X) :
     CommSemiring ((schemeStalkFamily X).Fiber x) :=
   inferInstanceAs (CommSemiring (X.presheaf.stalk x))
 

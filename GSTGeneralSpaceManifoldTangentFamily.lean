@@ -19,10 +19,14 @@ universe u v w u'
 
 namespace GSTGeneralSpace
 
-open scoped Manifold
+open scoped Manifold ContDiff
 
 /-- The genuine pointwise tangent-space family of an arbitrary charted
 manifold. -/
+instance {M : Type u} [TopologicalSpace M] :
+    TopologicalSpace (manifoldGeneralSpace M).Point :=
+  inferInstanceAs (TopologicalSpace M)
+
 def manifoldTangentFamily
     {𝕜 : Type v} [NontriviallyNormedField 𝕜]
     {E : Type w} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
