@@ -192,15 +192,91 @@ theorem degreeCertifiedTargetCycle_ofStrictRelation
   exact targetCycle_ofStrictRelation
     G (degreeCertifiedSuccessorSeed G D q x hlive hExact) j K T C hrel
 
+/-- **WEIGHT CROWN FROM RAW STRICT RELATIONS.**
+For one degree-certified GST source, it is enough to provide, for each target
+basis sheet, an actual scheme-bi-finite correspondence carrying a finite Betti
+trace, point-cycle compatibility, and the intrinsic pullback relation from the
+source to the scaled target.  These are raw geometric data.  No cyclicity,
+saturation, matrix-unit package, native-mass bridge, or ambient-operator action
+is an input. -/
+theorem hodge_weight_of_degreeCertifiedStrictRelations
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat)
+    (x : CodimensionPoint V.X q)
+    (hlive : ProjectivelyLiveSource V.projective.n
+      (V.projective.immersion x.1))
+    (hExact :
+      Order.coheight
+        (ambientSuccessorPoint V x.1
+          (relativeHeightOneSeparatorSuccessor V x.1 hlive)) = q + 1)
+    (K : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      SchemeBiFiniteClosedCorrespondence V)
+    (T : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      RightFiniteBettiTrace H.analytification (K j) (2 * (q + 1)))
+    (C : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      PointCycleCompatibility (n := q + 1) (K j) (T j))
+    (hrel : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      BettiRelated H.analytification (K j) (2 * (q + 1))
+        (degreeCertifiedSuccessorSeed G D q x hlive hExact).hodge.1
+        ((classicalHodgeBasis V H (q + 1)).repr
+            (degreeCertifiedSuccessorSeed G D q x hlive hExact).hodge
+            (degreeCertifiedSuccessorSeed G D q x hlive hExact).sourceIndex •
+          (classicalHodgeBasis V H (q + 1) j).1)) :
+    rationalHodgeSubspace (H.hodgeBigrading (q + 1)) ≤
+      LinearMap.range (H.cycleClass (q + 1)) := by
+  apply hodge_weight_of_degreeCertifiedFullCorrespondencePrograms
+    G D q x hlive hExact
+  intro j
+  exact sourceTargetProgramOfStrictRelation
+    G (degreeCertifiedSuccessorSeed G D q x hlive hExact) j
+    (K j) (T j) (C j) (hrel j)
+
+/-- Elementwise constructive form of the strict-relation weight crown. -/
+theorem everyHodgeClass_weightSucc_of_degreeCertifiedStrictRelations
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat)
+    (x : CodimensionPoint V.X q)
+    (hlive : ProjectivelyLiveSource V.projective.n
+      (V.projective.immersion x.1))
+    (hExact :
+      Order.coheight
+        (ambientSuccessorPoint V x.1
+          (relativeHeightOneSeparatorSuccessor V x.1 hlive)) = q + 1)
+    (K : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      SchemeBiFiniteClosedCorrespondence V)
+    (T : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      RightFiniteBettiTrace H.analytification (K j) (2 * (q + 1)))
+    (C : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      PointCycleCompatibility (n := q + 1) (K j) (T j))
+    (hrel : ∀ j : ClassicalHodgeBasisIndex V H (q + 1),
+      BettiRelated H.analytification (K j) (2 * (q + 1))
+        (degreeCertifiedSuccessorSeed G D q x hlive hExact).hodge.1
+        ((classicalHodgeBasis V H (q + 1)).repr
+            (degreeCertifiedSuccessorSeed G D q x hlive hExact).hodge
+            (degreeCertifiedSuccessorSeed G D q x hlive hExact).sourceIndex •
+          (classicalHodgeBasis V H (q + 1) j).1))
+    (alpha : RationalSingularCohomology H.analytification (2 * (q + 1)))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading (q + 1))) :
+    ∃ Z : codimensionCycles V.X (q + 1),
+      H.cycleClass (q + 1) Z = alpha := by
+  exact hodge_weight_of_degreeCertifiedStrictRelations
+    G D q x hlive hExact K T C hrel halpha
+
 #check realizedFiniteCorrespondenceOfTrace
 #check traceExpr
 #check pushPull_source_action_of_related
 #check sourceTargetProgramOfStrictRelation
 #check targetCycle_ofStrictRelation
 #check degreeCertifiedTargetCycle_ofStrictRelation
+#check hodge_weight_of_degreeCertifiedStrictRelations
+#check everyHodgeClass_weightSucc_of_degreeCertifiedStrictRelations
 
 #print axioms pushPull_source_action_of_related
 #print axioms targetCycle_ofStrictRelation
 #print axioms degreeCertifiedTargetCycle_ofStrictRelation
+#print axioms hodge_weight_of_degreeCertifiedStrictRelations
+#print axioms everyHodgeClass_weightSucc_of_degreeCertifiedStrictRelations
 
 end GSTClassicalHodgeDegreeCertifiedStrictRelationFinale
