@@ -531,6 +531,9 @@ roots = [
   "GSTClassicalHodgeLiveApexSpineFanFinale",
   "GSTClassicalHodgeCompactPresentationRoundtrip",
   "GSTClassicalHodgeExactVerticalCutRay",
+  "GSTClassicalHodgeOmniverseLefschetzRayCompiler",
+  "GSTClassicalHodgeOmniverseProjectiveApexSpokes",
+  "GSTClassicalHodgeVerticalRayProjectiveApexFinale",
 ]
 
 # ---------------------------------------------------------------------------
