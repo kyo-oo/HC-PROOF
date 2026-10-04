@@ -1,5 +1,6 @@
 import GSTClassicalHodgePrincipalCutNativeCycle
 import GSTCompactNativeCyclePresentation
+import GSTClassicalHodgePointKernelOperatorLift
 
 /-!
 # GST CLASSICAL HODGE — PRINCIPAL-CUT GRADED NATIVE OPERATOR
@@ -53,7 +54,7 @@ noncomputable def zeroToOnePresentationOperator :
   map_smul' := by
     intro q φ
     classical
-    simp [smul_smul]
+    simp [Finsupp.sum_smul_index', smul_smul]
 
 @[simp]
 theorem zeroToOnePresentationOperator_single

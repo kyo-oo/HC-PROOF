@@ -170,7 +170,8 @@ theorem basisSeparator_forces_not_atomicStable
       Sep.detects_basis)
     a
     ha
-    (by simpa [F, FiniteSpectralFamily.spectralCombination] using hseed)
+    (by simpa [F, FiniteSpectralFamily.spectralCombination,
+      RawClassicalHodgeSpectralObservable.toFiniteSpectralFamily] using hseed)
 
 /-- Positive contradiction form: atomic stability and one cyclic seed eliminate
 any basis separator on every selected sheet. -/
