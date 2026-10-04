@@ -107,7 +107,7 @@ theorem raiseQ_basis_coeff
     raiseQ N (rationalPureBasis p) q =
       if q.1 = p.1 + 1 then 1 else 0 := by
   classical
-  simp only [raiseQ, LinearMap.smul_apply, smul_eq_mul]
+  simp only [raiseQ, LinearMap.smul_apply, Pi.smul_apply, smul_eq_mul]
   rw [diagonalLefschetzQ_basis]
   rw [GSTPureHodgeLefschetzKernel.pure_diagonal_lefschetz_kernel]
   simp only [Fin.val_castLE]
@@ -153,7 +153,10 @@ theorem raiseQ_basis
     · have heq : q = (⟨p.1 + 1, h⟩ : Fin N) := Fin.ext hq
       subst q
       simp [rationalPureBasis]
-    · simp [rationalPureBasis, hq]
+    · have hqne : ¬ q = (⟨p.1 + 1, h⟩ : Fin N) := by
+        intro hqeq
+        exact hq (congrArg Fin.val hqeq)
+      simp [rationalPureBasis, hqne]
   · rw [dif_neg h]
     have hnosucc : q.1 ≠ p.1 + 1 := by
       intro hq
@@ -221,10 +224,13 @@ theorem bottomProjectorFromLP_eq
     rw [raiseQ_basis, dif_pos hpPredLt]
     have hback : (⟨p.1 - 1 + 1, hpPredLt⟩ : Fin N) = p := by
       apply Fin.ext
+      show p.1 - 1 + 1 = p.1
       omega
     rw [hback]
     simp [sheetProjectorQ_basis_other (⟨0, hN⟩ : Fin N) p
-      (by intro h; have := congrArg Fin.val h; omega)]
+      (by intro h
+          have hval : p.1 = 0 := congrArg Fin.val h
+          omega)]
 
 /-- Iterated raising sends the bottom sheet to the requested sheet. -/
 theorem raise_iter_bottom
@@ -233,26 +239,27 @@ theorem raise_iter_bottom
         (rationalPureBasis (⟨0, hN⟩ : Fin N)) =
       rationalPureBasis j := by
   classical
-  induction j.1 using Nat.rec with
-  | zero =>
-      have hj : j = (⟨0, hN⟩ : Fin N) := by
+  have key : ∀ (k : Nat), ∀ (hk : k < N) (j : Fin N), j.1 = k →
+      iterEnd (raiseQ N) k (rationalPureBasis (⟨0, hN⟩ : Fin N)) =
+        rationalPureBasis j := by
+    intro k
+    induction k with
+    | zero =>
+        intro _ j hj
+        have hj0 : j = (⟨0, hN⟩ : Fin N) := Fin.ext hj
+        subst hj0
+        rfl
+    | succ n ih =>
+        intro hk j hj
+        have hn : n < N := by omega
+        rw [iterEnd_succ_apply]
+        rw [ih hn (⟨n, hn⟩ : Fin N) rfl]
+        rw [raiseQ_basis, dif_pos (by omega : n + 1 < N)]
+        apply congrArg rationalPureBasis
         apply Fin.ext
+        show n + 1 = j.1
         omega
-      subst j
-      rfl
-  | succ n ih =>
-      have hn : n < N := by omega
-      have hn1 : n + 1 < N := by omega
-      have hprev : (⟨n, hn⟩ : Fin N).1 = n := rfl
-      have ih' := raise_iter_bottom hN (⟨n, hn⟩ : Fin N)
-      rw [iterEnd_succ_apply]
-      rw [show iterEnd (raiseQ N) n
-          (rationalPureBasis (⟨0, hN⟩ : Fin N)) =
-        rationalPureBasis (⟨n, hn⟩ : Fin N) by exact ih']
-      rw [raiseQ_basis, dif_pos hn1]
-      apply congrArg rationalPureBasis
-      apply Fin.ext
-      omega
+  exact key j.1 j.2 j rfl
 
 /-- Iterated lowering takes a basis sheet back to the bottom sheet. -/
 theorem lower_iter_to_bottom
@@ -260,24 +267,35 @@ theorem lower_iter_to_bottom
     iterEnd (lowerQ N) i.1 (rationalPureBasis i) =
       rationalPureBasis (⟨0, hN⟩ : Fin N) := by
   classical
-  induction i.1 using Nat.rec with
-  | zero =>
-      have hi : i = (⟨0, hN⟩ : Fin N) := by
-        apply Fin.ext
-        omega
-      subst i
-      rfl
-  | succ n ih =>
-      have hn : n < N := by omega
-      rw [iterEnd_succ_apply]
-      rw [lowerQ_basis]
-      have hpos : 0 < n + 1 := by omega
-      rw [dif_pos hpos]
-      have hpred : (⟨n + 1 - 1, by omega⟩ : Fin N) = (⟨n, hn⟩ : Fin N) := by
-        apply Fin.ext
-        omega
-      rw [hpred]
-      exact lower_iter_to_bottom hN (⟨n, hn⟩ : Fin N)
+  have key : ∀ (k : Nat), ∀ (i' : Fin N), k ≤ i'.1 →
+      ∃ j : Fin N, j.1 = i'.1 - k ∧
+        iterEnd (lowerQ N) k (rationalPureBasis i') = rationalPureBasis j := by
+    intro k
+    induction k with
+    | zero =>
+        intro i' _
+        refine ⟨i', by omega, rfl⟩
+    | succ n ih =>
+        intro i' hk
+        obtain ⟨j, hjval, hj⟩ := ih i' (by omega)
+        by_cases hpos : 0 < j.1
+        · have hjlt : j.1 - 1 < N := by omega
+          refine ⟨⟨j.1 - 1, hjlt⟩, ?_, ?_⟩
+          · show j.1 - 1 = i'.1 - (n + 1)
+            omega
+          · rw [iterEnd_succ_apply, hj]
+            have hlow : lowerQ N (rationalPureBasis j) =
+                rationalPureBasis (⟨j.1 - 1, hpos⟩ : Fin N) := by
+              rw [lowerQ_basis, dif_pos hpos]
+            rw [hlow]
+            exact congrArg rationalPureBasis (Fin.ext rfl)
+        · exact absurd (by omega : 0 < j.1) hpos
+  obtain ⟨j, hjval, hj⟩ := key i.1 i (Nat.le_refl i.1)
+  have hj0 : j = (⟨0, hN⟩ : Fin N) := by
+    refine Fin.ext ?_
+    show j.1 = 0
+    omega
+  rw [hj, hj0]
 
 /-- Too much lowering kills a different source before the boundary projector
 can pass it. -/
@@ -295,25 +313,61 @@ theorem bottom_after_lower_iter_basis
   · rw [if_neg hri]
     -- Iterated lowering either remains above zero, or has already vanished;
     -- in either case its bottom coordinate is zero unless the source index was i.
-    induction i.1 generalizing r with
-    | zero =>
-        simp at hri
-        have hr0 : r ≠ (⟨0, hN⟩ : Fin N) := hri
-        simp [sheetProjectorQ_basis_other (⟨0, hN⟩ : Fin N) r hr0]
-    | succ n ih =>
-        rw [iterEnd_succ_apply]
-        rw [lowerQ_basis]
-        by_cases hrpos : 0 < r.1
-        · rw [dif_pos hrpos]
-          have hrpredLt : r.1 - 1 < N := by omega
-          apply ih
-          intro heq
-          apply hri
-          apply Fin.ext
-          have := congrArg Fin.val heq
-          omega
-        · rw [dif_neg hrpos]
-          simp
+    have key : ∀ (k : Nat), ∀ (r' : Fin N), k ≤ r'.1 →
+        ∃ j : Fin N, j.1 = r'.1 - k ∧
+          iterEnd (lowerQ N) k (rationalPureBasis r') = rationalPureBasis j := by
+      intro k
+      induction k with
+      | zero =>
+          intro r' _
+          refine ⟨r', by omega, rfl⟩
+      | succ n ih =>
+          intro r' hk
+          obtain ⟨j, hjval, hj⟩ := ih r' (by omega)
+          by_cases hpos : 0 < j.1
+          · have hjlt : j.1 - 1 < N := by omega
+            refine ⟨⟨j.1 - 1, hjlt⟩, ?_, ?_⟩
+            · show j.1 - 1 = r'.1 - (n + 1)
+              omega
+            · rw [iterEnd_succ_apply, hj]
+              have hlow : lowerQ N (rationalPureBasis j) =
+                  rationalPureBasis (⟨j.1 - 1, hpos⟩ : Fin N) := by
+                rw [lowerQ_basis, dif_pos hpos]
+              rw [hlow]
+              exact congrArg rationalPureBasis (Fin.ext rfl)
+          · exact absurd (by omega : 0 < j.1) hpos
+    have kill : ∀ (k : Nat), ∀ (r' : Fin N), r'.1 < k →
+        iterEnd (lowerQ N) k (rationalPureBasis r') = 0 := by
+      intro k
+      induction k with
+      | zero =>
+          intro r' hr
+          exact absurd hr (by omega)
+      | succ n ih =>
+          intro r' hr
+          by_cases hrn : r'.1 < n
+          · rw [iterEnd_succ_apply, ih r' hrn]
+            simp
+          · have hrn' : r'.1 = n := by omega
+            obtain ⟨j, hjval, hj⟩ := key n r' (by omega)
+            have hj0 : j.1 = 0 := by omega
+            rw [iterEnd_succ_apply, hj]
+            have hlow : lowerQ N (rationalPureBasis j) = 0 := by
+              rw [lowerQ_basis, dif_neg (by omega : ¬ 0 < j.1)]
+            rw [hlow]
+    rcases Nat.lt_or_ge r.1 i.1 with hlt | hge
+    · rw [kill i.1 r hlt]
+      simp
+    · obtain ⟨j, hjval, hj⟩ := key i.1 r hge
+      rw [hj]
+      have hne : j ≠ (⟨0, hN⟩ : Fin N) := by
+        intro heq
+        apply hri
+        refine Fin.ext ?_
+        show r.1 = i.1
+        have hj0 : j.1 = 0 := congrArg Fin.val heq
+        omega
+      exact sheetProjectorQ_basis_other (⟨0, hN⟩ : Fin N) j hne
 
 /-- **TWO-GENERATOR MATRIX-UNIT FORMULA.**
 Every matrix unit is a word in normalized `L^2` and Poincare reversal only. -/

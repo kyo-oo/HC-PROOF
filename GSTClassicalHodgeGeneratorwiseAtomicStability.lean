@@ -163,7 +163,7 @@ variable {H : HodgeBigradedBettiData V}
 
 /-- Point-transition kernel specialized to a raw classical Hodge spectral
 observable. -/
-abbrev RawClassicalHodgeSpectralObservable.PointTransitionKernel
+abbrev GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.PointTransitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι) :=
   PointClassTransitionKernel
@@ -171,7 +171,7 @@ abbrev RawClassicalHodgeSpectralObservable.PointTransitionKernel
 
 /-- Generatorwise finite point transitions automatically supply the exact
 atomic-stability field needed by the spectral Hodge engine. -/
-theorem RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKernel
+theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι)
     (K : S.PointTransitionKernel) :
@@ -181,7 +181,7 @@ theorem RawClassicalHodgeSpectralObservable.atomicStable_of_pointTransitionKerne
 /-- **TRANSITION-KERNEL SEPARATOR COLLISION.**
 A raw spectral observable with an explicit point-class transition kernel and
 one cyclic atomic seed admits no separator on any selected Hodge sheet. -/
-theorem RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_transitionKernel
+theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_transitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι)
     (K : S.PointTransitionKernel)
@@ -198,7 +198,7 @@ theorem RawClassicalHodgeSpectralObservable.isEmpty_basisAtomicSeparator_of_tran
 
 /-- Family form: a point-transition kernel plus cyclic seed makes every
 selected sheet atomic-algebraic. -/
-theorem RawClassicalHodgeSpectralObservable.selected_basis_mem_atomic_of_transitionKernel
+theorem GSTClassicalHodgeSpectralSeparatorCollision.RawClassicalHodgeSpectralObservable.selected_basis_mem_atomic_of_transitionKernel
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (S : RawClassicalHodgeSpectralObservable V H p ι)
     (K : S.PointTransitionKernel)

@@ -68,8 +68,8 @@ theorem prime_le_separator_eq_bot_or_self
       haveI : (separatorMinimalPrime n x).FiniteHeight := by infer_instance
       exact Ideal.height_strict_mono_of_isPrime_of_isPrime hlt
     rw [separatorMinimalPrime_height_one n x] at hheight
-    have hr0 : r.height = 0 := by
-      omega
+    have hr0 : r.height = 0 :=
+      (Order.lt_one_iff).mp hheight
     have hmin : r ∈ minimalPrimes (pointQuotient n x) :=
       (Ideal.height_eq_zero_iff).1 hr0
     letI : IsDomain (pointQuotient n x) := pointQuotientIsDomain n x

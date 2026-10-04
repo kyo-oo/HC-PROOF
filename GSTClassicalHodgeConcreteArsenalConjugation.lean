@@ -34,6 +34,7 @@ open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeFiniteSupportChart
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeIntegralSquareLocalization
 open GSTClassicalHodgeSupportCardinalityBridge
@@ -86,20 +87,26 @@ theorem readLiveSquare_single_target
         then q else 0) =
       q • liveBasisVector alpha s := by
   classical
+  have key : ∀ r : Fin (liveRank alpha),
+      (if (squareSheetOfLiveSlot alpha r, squareSheetOfLiveSlot alpha r) =
+          (squareSheetOfLiveSlot alpha s, squareSheetOfLiveSlot alpha s)
+        then q else 0) • liveBasisVector alpha r =
+      (if r = s then q else 0) • liveBasisVector alpha r := by
+    intro r
+    by_cases h : r = s
+    · subst h
+      simp
+    · have hsheet : squareSheetOfLiveSlot alpha r ≠
+        squareSheetOfLiveSlot alpha s := by
+        intro hsheeteq
+        exact h (squareSheetOfLiveSlot_injective alpha hsheeteq)
+      simp [hsheet, h]
   unfold readLiveSquare
+  simp only [key]
   rw [Finset.sum_eq_single s]
   · simp
-  · intro t ht hts
-    have hsheet : squareSheetOfLiveSlot alpha t ≠
-        squareSheetOfLiveSlot alpha s := by
-      intro h
-      exact hts (squareSheetOfLiveSlot_injective alpha h)
-    have hpair :
-        (squareSheetOfLiveSlot alpha t, squareSheetOfLiveSlot alpha t) ≠
-          (squareSheetOfLiveSlot alpha s, squareSheetOfLiveSlot alpha s) := by
-      intro h
-      exact hsheet (congrArg Prod.fst h)
-    simp [hpair]
+  · intro t _ hts
+    simp [hts]
   · simp
 
 /-- Concrete GST matrix-unit output read back through the genuine basis. -/

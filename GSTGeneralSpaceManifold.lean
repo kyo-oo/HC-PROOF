@@ -65,7 +65,7 @@ theorem every_manifold_admits_generalSpace
     (I : ModelWithCorners 𝕜 E H)
     (M : Type u) [TopologicalSpace M] [ChartedSpace H M]
     (n : ℕ∞ω) [IsManifold I n M] :
-    Nonempty GeneralSpace :=
+    Nonempty (@GeneralSpace.{u, 0}) :=
   ⟨manifoldGeneralSpace M⟩
 
 /-- A C^n map between arbitrary manifolds automatically becomes a

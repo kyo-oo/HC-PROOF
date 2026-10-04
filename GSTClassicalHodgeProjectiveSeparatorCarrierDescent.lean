@@ -44,10 +44,12 @@ theorem separatorSuccessorPoint_mem_source_closure
     (n : Nat) (x : projectiveSpace n)
     (hlive : ProjectivelyLiveSource n x) :
     separatorSuccessorPoint n x hlive ∈ closure ({x} : Set (projectiveSpace n)) := by
-  rw [← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
-    ProjectiveSpectrum.vanishingIdeal_singleton]
-  exact (ProjectiveSpectrum.mem_zeroLocus _ _ _).2
-    (source_le_separatorSuccessorPoint n x hlive)
+  have hle : x ≤ separatorSuccessorPoint n x hlive :=
+    (ProjectiveSpectrum.as_ideal_le_as_ideal (ProjectiveGrading n) x
+      (separatorSuccessorPoint n x hlive)).mpr
+      (source_le_separatorSuccessorPoint n x hlive)
+  exact (ProjectiveSpectrum.le_iff_mem_closure (ProjectiveGrading n) x
+    (separatorSuccessorPoint n x hlive)).mpr hle
 
 /-- For a source point of the embedded carrier, its projective successor lies
 in the closed image of the carrier. -/
@@ -66,7 +68,8 @@ theorem separatorSuccessorPoint_mem_carrierRange
   have hsrange : ({s} : Set (projectiveSpace V.projective.n)) ⊆
       Set.range V.projective.immersion := by
     intro z hz
-    simpa [s] using hz
+    have hzx : z = V.projective.immersion x := by simpa [s] using hz
+    exact ⟨x, hzx.symm⟩
   exact (closure_minimal hsrange hclosed) hycl
 
 /-- Genuine carrier point underlying the projective separator successor. -/

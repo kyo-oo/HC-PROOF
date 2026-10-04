@@ -92,12 +92,14 @@ theorem pureForwardShift_basis
           (Fin.castLE (show N ≤ min N N by omega) p)
           (Fin.castLE (show N ≤ min N N by omega) s) := by
         show 2 = 2 * (s.1 - p.1)
+        have hs : s.1 = p.1 + 1 := rfl
         omega
       rw [dif_pos htime]
       have hgap : pureWeightGap
           (Fin.castLE (show N ≤ min N N by omega) p)
           (Fin.castLE (show N ≤ min N N by omega) s) = 1 := by
         show s.1 - p.1 = 1
+        have hs : s.1 = p.1 + 1 := rfl
         omega
       rw [hgap]
       simp [rationalPureBasis, s]
@@ -127,7 +129,10 @@ theorem pureForwardShift_basis
           exact hq (Fin.ext this)
         rw [dif_neg htime]
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
-        simp [rationalPureBasis, hq']
+        have hqne : ¬ q = ⟨p.1 + 1, hsucc⟩ := by
+          intro hqeq
+          exact hq' (congrArg Fin.val hqeq)
+        simp [rationalPureBasis, hqne]
       · show (2⁻¹ : ℚ) • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
               ↑(Fin.castLE (show N ≤ min N N by omega) q) then
           if htime : 2 = 2 * pureWeightGap
@@ -142,7 +147,10 @@ theorem pureForwardShift_basis
             ↑(Fin.castLE (show N ≤ min N N by omega) q) := hpq
         rw [dif_neg hpq']
         have hq' : q.1 ≠ p.1 + 1 := fun hval => hq (Fin.ext hval)
-        simp [rationalPureBasis, hq']
+        have hqne : ¬ q = ⟨p.1 + 1, hsucc⟩ := by
+          intro hqeq
+          exact hq' (congrArg Fin.val hqeq)
+        simp [rationalPureBasis, hqne]
   · rw [dif_neg hsucc]
     show (2⁻¹ : ℚ) • ↑(if hpq : ↑(Fin.castLE (show N ≤ min N N by omega) p) ≤
           ↑(Fin.castLE (show N ≤ min N N by omega) q) then
@@ -349,7 +357,8 @@ theorem lefschetzPoincareMatrixWord_eq
               rw [pow_succ, Module.End.mul_apply]
               by_cases hr0 : 0 < r.1
               · rw [pureBackwardShift_basis, dif_pos hr0]
-                exact ih ⟨r.1 - 1, by omega⟩ (by omega)
+                have hrlt : r.1 - 1 < k := by omega
+                exact ih ⟨r.1 - 1, by omega⟩ hrlt
               · rw [pureBackwardShift_basis, dif_neg hr0]
                 simp
         exact vanishing p.1 r hlt
@@ -359,7 +368,7 @@ theorem lefschetzPoincareMatrixWord_eq
     · rw [lefschetzPoincareMatrixWord]
       simp only [LinearMap.comp_apply]
       rw [hs]
-      rw [bottomProjectorLP_other s hs0]
+      rw [bottomProjectorLP_other s (Nat.pos_of_ne_zero hs0)]
       simp [pureMatrixUnit_basis_other p q r hrp]
 
 /-- Full finite matrix algebra generation using only the two native global GST

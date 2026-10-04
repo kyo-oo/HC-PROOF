@@ -504,6 +504,15 @@ roots = [
   "GSTClassicalHodgeGSTProjectiveWordExactFinale",
   "GSTClassicalHodgeGSTRationalCorrespondenceExactFinale",
   "GSTClassicalHodgeLimitlessExactClayFinale",
+  "GSTClassicalHodgeDegreeCertifiedFullCorrespondenceCompiler",
+  "GSTClassicalHodgeDegreeCertifiedStrictPrimitiveFinale",
+  "GSTClassicalHodgeDegreeCertifiedStrictRelationFinale",
+  "GSTClassicalHodgePrincipalCutSpectralFusion",
+  "GSTClassicalHodgeRaiseLowerIrreducibility",
+  "GSTClassicalHodgeAugmentedTargetMatrixUnit",
+  "GSTClassicalHodgeGradedAmbientCorrespondenceKernelAction",
+  "GSTClassicalHodgeOntologicalWindowReverseExistence",
+  "GSTClassicalHodgeStrictKernelRangeStability",
 ]
 
 # ---------------------------------------------------------------------------

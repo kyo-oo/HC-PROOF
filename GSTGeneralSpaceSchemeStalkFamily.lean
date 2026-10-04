@@ -33,6 +33,12 @@ theorem schemeStalkFamily_fiber
     (X : Scheme.{u}) (x : X) :
     (schemeStalkFamily X).Fiber x = X.presheaf.stalk x := rfl
 
+/-- The stalk fiber carries the genuine commutative-ring structure of the
+scheme stalk; the instance bridge is definitional (the fiber IS the stalk). -/
+instance (X : Scheme.{u}) (x : X) :
+    CommSemiring ((schemeStalkFamily X).Fiber x) :=
+  inferInstanceAs (CommSemiring (X.presheaf.stalk x))
+
 /-- Krull dimension of the local GST fiber is exactly the scheme-theoretic
 coheight of the point.  Thus the native codimension observable is intrinsic to
 the stalk realization, not an external coordinate label. -/
@@ -44,7 +50,7 @@ theorem schemeStalk_dimension_eq_coheight
 /-- The local algebraic family exists for every scheme, independent of
 projectivity, smoothness, finiteness, dimension, or coordinates. -/
 theorem every_scheme_has_stalk_family (X : Scheme.{u}) :
-    Nonempty (LocalFamily (schemeGeneralSpace X)) :=
+    Nonempty (@LocalFamily.{u, 0, u} (schemeGeneralSpace X)) :=
   ⟨schemeStalkFamily X⟩
 
 #check schemeGeneralSpace
