@@ -54,7 +54,7 @@ variable {cl : codimensionCycles X p →ₗ[ℚ] Coh}
 noncomputable def realizePresentationLinear
     (X : Scheme.{u}) (p : Nat) :
     FiniteCodimensionPresentation X p →ₗ[ℚ] codimensionCycles X p :=
-  Finsupp.total (CodimensionPoint X p) (codimensionCycles X p) ℚ
+  Finsupp.linearCombination ℚ
     (fun x => codimensionPointCycle X p x)
 
 @[simp]
@@ -135,8 +135,7 @@ noncomputable def PointClassTransitionKernel.presentationOperator
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
     FiniteCodimensionPresentation X p →ₗ[ℚ]
       FiniteCodimensionPresentation X p :=
-  Finsupp.total (CodimensionPoint X p)
-    (FiniteCodimensionPresentation X p) ℚ K.transition
+  Finsupp.linearCombination ℚ K.transition
 
 @[simp]
 theorem PointClassTransitionKernel.presentationOperator_single

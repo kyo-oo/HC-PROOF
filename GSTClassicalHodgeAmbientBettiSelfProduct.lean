@@ -54,7 +54,7 @@ noncomputable def bettiSnd : bettiSelfProductSpace A ⟶ A.space :=
 noncomputable def bettiSwap :
     bettiSelfProductSpace A ⟶ bettiSelfProductSpace A :=
   ConcreteCategory.ofHom (C := TopCat)
-    ⟨(fun q => (q.2, q.1)), continuous_prod_swap⟩
+    ⟨(fun q => (q.2, q.1)), continuous_snd.prodMk continuous_fst⟩
 
 /-- Factor swap is its own inverse as a genuine TopCat isomorphism. -/
 noncomputable def bettiSwapIso :
@@ -198,8 +198,9 @@ theorem sndPullback_eq_swap_fstPullback
   have hcochain :
     sndCochainPullback A =
       (fstCochainPullback A) ≫ (swapCochainPullback A) := by
-    simp [sndCochainPullback, fstCochainPullback, swapCochainPullback,
-      swapChain_fst]
+    unfold sndCochainPullback fstCochainPullback swapCochainPullback
+    rw [← swapChain_fst]
+    simp
     rfl
   have hcomp :
     HomologicalComplex.homologyMap (sndCochainPullback A) n =
@@ -225,8 +226,9 @@ theorem fstPullback_eq_swap_sndPullback
   have hcochain :
     fstCochainPullback A =
       (sndCochainPullback A) ≫ (swapCochainPullback A) := by
-    simp [fstCochainPullback, sndCochainPullback, swapCochainPullback,
-      swapChain_snd]
+    unfold fstCochainPullback sndCochainPullback swapCochainPullback
+    rw [← swapChain_snd]
+    simp
     rfl
   have hcomp :
     HomologicalComplex.homologyMap (fstCochainPullback A) n =
@@ -250,7 +252,9 @@ theorem swapCohomology_involutive
   ext alpha
   unfold swapCohomologyPullback
   have hinner : (swapCochainPullback A) ≫ (swapCochainPullback A) = 𝟙 _ := by
-    simp [swapCochainPullback, swapChain_involutive]
+    unfold swapCochainPullback
+    rw [swapChain_involutive]
+    simp
     rfl
   have hcomp :
     (HomologicalComplex.homologyMap (swapCochainPullback A) n) ≫
