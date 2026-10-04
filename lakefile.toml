@@ -528,6 +528,7 @@ roots = [
   "GSTClassicalHodgeApexSpineFanProgramNormalForm",
   "GSTClassicalHodgeGradedOntologicalFanFinale",
   "GSTClassicalHodgeGradedOrbitSingleProgramCollapse",
+  "GSTClassicalHodgeLiveApexSpineFanFinale",
 ]
 
 # ---------------------------------------------------------------------------
