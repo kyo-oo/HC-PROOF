@@ -91,14 +91,14 @@ theorem rationalCohomologyPullback_comp
   unfold rationalCohomologyPullback rationalCohomologyPullbackObj
   have hcochain :
     singularCochainPullback A (AnalyticEndomorphism.comp (A := A) f g) =
-      (singularCochainPullback A f) ≫ (singularCochainPullback A g) := by
+      (singularCochainPullback A g) ≫ (singularCochainPullback A f) := by
     simp [singularCochainPullback, singularChainMap_comp]
     rfl
   have hcomp :
     HomologicalComplex.homologyMap
         (singularCochainPullback A (AnalyticEndomorphism.comp (A := A) f g)) n =
-      (HomologicalComplex.homologyMap (singularCochainPullback A f) n) ≫
-        (HomologicalComplex.homologyMap (singularCochainPullback A g) n) := by
+      (HomologicalComplex.homologyMap (singularCochainPullback A g) n) ≫
+        (HomologicalComplex.homologyMap (singularCochainPullback A f) n) := by
     rw [hcochain, HomologicalComplex.homologyMap_comp]
   show (ModuleCat.Hom.hom
       (HomologicalComplex.homologyMap
@@ -128,6 +128,7 @@ theorem rationalCohomologyPullback_id
     LinearMap.id x
   rw [hcochain, HomologicalComplex.homologyMap_id]
   simp
+  rfl
 
 /-- A morphism-level analytification package therefore yields a genuine
 contravariant Betti representation of every algebraic C-scheme endomorphism. -/

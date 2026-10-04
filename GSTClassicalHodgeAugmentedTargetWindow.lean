@@ -35,6 +35,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeIntegralSquareLocalization
 open GSTClassicalHodgeTotalSheetMatrixUnit
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeLocalCyclicCriterion
 
 namespace GSTClassicalHodgeAugmentedTargetWindow
 

@@ -50,6 +50,7 @@ open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeLiveSheetIntertwining
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeFiniteSupportChart
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 
 /-- Embed one finite integral pure square into the genuine compact cosmos by
 placing every diagonal coefficient at the identically numbered cosmic weight. -/
@@ -83,7 +84,7 @@ theorem squareDiagonalToCosmos_off_diagonal
   rw [Finsupp.coe_finset_sum, Finset.sum_apply]
   apply Finset.sum_eq_zero
   intro r hr
-  simp [hc]
+  simp [hc, Prod.ext_iff]
 
 /-- Every finite square embeds into the compact pure-Hodge cosmos after its
 off-diagonal part has been discarded.  If the source is already pure, nothing
@@ -104,6 +105,7 @@ theorem observe_squareDiagonalToCosmos
   by_cases hdiag : c.1.1 = c.2.1
   · have heq : c.1 = c.2 := Fin.ext hdiag
     rw [show c = (c.2, c.2) from Prod.ext heq rfl]
+    simp only [observe]
     simpa using squareDiagonalToCosmos_diagonal f c.2
   · have hc : (c.1.1,c.2.1).1 ≠ (c.1.1,c.2.1).2 := hdiag
     rw [hf c hdiag]
@@ -194,8 +196,9 @@ theorem liveCosmicMatrixUnit_exact
         ((integralHodgeSquare alpha).world
           (squareSheetOfLiveSlot alpha r,
            squareSheetOfLiveSlot alpha r)) := by
-  simp only [liveCosmicMatrixUnit, integralHodgeCosmos,
-    cosmicDiagonalMatrixUnit_apply, squareDiagonalToCosmos_diagonal]
+  congr 1
+  exact squareDiagonalToCosmos_diagonal (integralHodgeSquare alpha).world
+    (squareSheetOfLiveSlot alpha r)
 
 /-- The historical finite total-sheet operator is therefore precisely the
 finite rational observation of `liveCosmicMatrixUnit`. -/
