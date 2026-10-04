@@ -73,7 +73,7 @@ both factors. -/
 def prod
     (G : GeneralSpace.{u,v})
     (H : GeneralSpace.{u',v'}) :
-    GeneralSpace.{max u u', max v v'} where
+    GeneralSpace.{max u u', max (max 1 v) v'} where
   Point := G.Point × H.Point
   Path x y := @PSigma.{v, v'} (G.Path x.1 y.1) (fun _ => H.Path x.2 y.2)
   idPath := fun x => ⟨G.idPath x.1, H.idPath x.2⟩

@@ -77,6 +77,8 @@ theorem principalCutCycle_eq_sum
               (∑ x ∈ s, fun₀ | x => 1) := by
           unfold realizeFiniteCodimensionPresentation
           rw [Finsupp.sum_add_index']
+          · intro a; simp
+          · intro a b c; simp [add_smul]
         rw [hsplit, realizeFiniteCodimensionPresentation_single, ih]
         simp
   unfold principalCutCycle principalCutPresentation

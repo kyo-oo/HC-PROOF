@@ -58,8 +58,8 @@ theorem coheight_toNat_of_eq
     (d p : Nat) (x : X)
     (hx : Order.coheight x = d + p) :
     (Order.coheight x).toNat = d + p := by
-  rw [hx]
-  simp
+  rw [hx, ← Nat.cast_add]
+  exact_mod_cast rfl
 
 @[simp]
 theorem relativeCodimensionWeight_of_exact
@@ -104,7 +104,8 @@ theorem shiftedPushforwardRaw_support
     have hrel : relativeCodimensionWeight d x = p :=
       relativeCodimensionWeight_of_exact d p x hx
     simp only [hrel] at hmatch
-    exact hmatch
+    show (Order.coheight (f x)).toNat = p
+    exact hmatch.symm
 
 /-- Genuine codimension-shifting native algebraic-cycle pushforward, landing
 in natified codimension-p coheight bookkeeping on the target. -/
