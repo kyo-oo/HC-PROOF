@@ -88,7 +88,7 @@ theorem rationalCohomologyPullback_comp
       (rationalCohomologyPullback A f n).comp
         (rationalCohomologyPullback A g n) := by
   ext x
-  simp [rationalCohomologyPullback, rationalCohomologyPullbackObj,
+  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
     singularCochainPullback, singularChainMap_comp,
     HomologicalComplex.homologyMap_comp]
 
@@ -98,7 +98,7 @@ theorem rationalCohomologyPullback_id
     rationalCohomologyPullback A (AnalyticEndomorphism.id (A := A)) n =
       LinearMap.id := by
   ext x
-  simp [rationalCohomologyPullback, rationalCohomologyPullbackObj,
+  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
     singularCochainPullback, singularChainMap_id,
     HomologicalComplex.homologyMap_id]
 

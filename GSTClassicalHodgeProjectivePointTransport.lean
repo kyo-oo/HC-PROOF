@@ -1,3 +1,4 @@
+import GSTClassicalHodgePointKernelOperatorLift
 import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 import GSTCompactNativeCyclePresentation
 import GSTClassicalHodgeGeneratorwiseAtomicStability
@@ -36,6 +37,7 @@ open CategoryTheory
 open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTClassicalHodgePointKernelOperatorLift
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgeGeneratorwiseAtomicStability

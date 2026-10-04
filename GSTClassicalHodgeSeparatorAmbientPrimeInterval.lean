@@ -58,7 +58,7 @@ theorem prime_between_source_separator_eq_endpoint
   · left
     have hcomap := congrArg (Ideal.comap π) hbot
     have hRP : (R.map π).comap π = P ⊔ R := by
-      simpa [π, P] using Ideal.comap_map_quotientMk P R
+      exact Ideal.comap_map_quotientMk P R
     have hbotComap : (⊥ : Ideal (pointQuotient n x)).comap π = P := by
       ext a
       simp [π, P, Ideal.Quotient.eq]
@@ -67,7 +67,7 @@ theorem prime_between_source_separator_eq_endpoint
   · right
     have hcomap := congrArg (Ideal.comap π) hself
     have hRP : (R.map π).comap π = P ⊔ R := by
-      simpa [π, P] using Ideal.comap_map_quotientMk P R
+      exact Ideal.comap_map_quotientMk P R
     have hQP : (separatorMinimalPrime n x).comap π =
         separatorAmbientPrime n x := rfl
     rw [hRP, hQP] at hcomap

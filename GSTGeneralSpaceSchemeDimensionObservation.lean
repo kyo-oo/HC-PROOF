@@ -20,7 +20,7 @@ namespace GSTGeneralSpace
 open AlgebraicGeometry
 open GSTNativeCodimensionCyclePresentation
 
-noncomputable local instance (X : Scheme.{u}) (x : X) :
+noncomputable local instance {X : Scheme.{u}} {x : X} :
     CommSemiring ((schemeStalkFamily X).Fiber x) :=
   inferInstanceAs (CommSemiring (X.presheaf.stalk x))
 

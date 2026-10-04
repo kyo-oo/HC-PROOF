@@ -43,8 +43,8 @@ theorem carrierSeparatorSuccessor_mem_principalSectionRange
     (x : V.X)
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
     carrierSeparatorSuccessor V x hlive ∈ Set.range (principalSectionAtι V x) := by
-  rw [Scheme.IdealSheafData.range_subschemeι]
-  exact carrierSeparatorSuccessor_mem_principalSection V x hlive
+  simpa [Scheme.IdealSheafData.range_subschemeι] using
+    carrierSeparatorSuccessor_mem_principalSection V x hlive
 
 /-- **GENUINE RELATIVE-CUT LANDING.**
 The point-closure lift of the separator successor lies in the actual
@@ -55,7 +55,7 @@ theorem pointClosureSeparatorSuccessor_mem_relativeCut
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
     pointClosureSeparatorSuccessor V x hlive ∈ relativeCutSet V x := by
   unfold relativeCutSet closurePrincipalCutToClosure
-  rw [Scheme.Pullback.range_fst]
+  simp only [Scheme.Pullback.range_fst]
   change pointClosureι V x (pointClosureSeparatorSuccessor V x hlive) ∈
     Set.range (principalSectionAtι V x)
   rw [pointClosureSeparatorSuccessor_maps]
