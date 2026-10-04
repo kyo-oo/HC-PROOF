@@ -289,7 +289,6 @@ theorem lower_iter_to_bottom
             omega
           · rw [iterEnd_succ_apply, hj]
             rw [lowerQ_basis, dif_pos hpos]
-            exact congrArg rationalPureBasis (Fin.ext rfl)
         · exact absurd (by omega : 0 < j.1) hpos
   obtain ⟨j, hjval, hj⟩ := key i.1 i (Nat.le_refl i.1)
   have hj0 : j = (⟨0, hN⟩ : Fin N) := by
@@ -332,7 +331,6 @@ theorem bottom_after_lower_iter_basis
               omega
             · rw [iterEnd_succ_apply, hj]
               rw [lowerQ_basis, dif_pos hpos]
-              exact congrArg rationalPureBasis (Fin.ext rfl)
           · exact absurd (by omega : 0 < j.1) hpos
     have kill : ∀ (k : Nat), ∀ (r' : Fin N), r'.1 < k →
         iterEnd (lowerQ N) k (rationalPureBasis r') = 0 := by

@@ -35,7 +35,7 @@ def schemeHomGeneralSpace
   continuousHom f f.continuous
 
 /-- The genuine scheme stalk map as a General-Space local-family comorphism. -/
-def schemeStalkComorphism
+noncomputable def schemeStalkComorphism
     {X Y : Scheme.{u}} (f : X ⟶ Y) :
     LocalComorphism (schemeHomGeneralSpace f)
       (schemeStalkFamily X) (schemeStalkFamily Y) where

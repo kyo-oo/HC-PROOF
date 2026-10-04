@@ -20,10 +20,14 @@ namespace GSTGeneralSpace
 open AlgebraicGeometry
 open GSTNativeCodimensionCyclePresentation
 
+local instance (X : Scheme.{u}) (x : X) :
+    CommSemiring ((schemeStalkFamily X).Fiber x) :=
+  inferInstanceAs (CommSemiring (X.presheaf.stalk x))
+
 /-- Local Krull-dimension observation chart of an arbitrary scheme. -/
 noncomputable def schemeKrullDimensionChart
     (X : Scheme.{u}) : GeneralSpace.Chart (schemeGeneralSpace X) where
-  Coord := WithBot ℕ∞
+  Coord := ℕ∞
   observe x := ringKrullDim ((schemeStalkFamily X).Fiber x)
 
 /-- The chart reads exactly the intrinsic scheme coheight. -/
@@ -37,9 +41,9 @@ General-Space dimension observation. -/
 theorem codimensionPoint_observed_exactly
     (X : Scheme.{u}) (p : Nat)
     (x : CodimensionPoint X p) :
-    (schemeKrullDimensionChart X).observe x.1 = p := by
+    (schemeKrullDimensionChart X).observe x.1 = ((p : ℕ∞)) := by
   rw [schemeKrullDimensionChart_observe X x.1, x.2]
-  norm_num
+  rfl
 
 /-- Observation-only crown: the codimension label is completely recovered
 from local geometry and is absent from the ontological core. -/

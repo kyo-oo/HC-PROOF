@@ -519,6 +519,7 @@ roots = [
   "GSTClassicalHodgePiOmniverseCanonicalSupportSpectral",
   "GSTClassicalHodgeDegreeCertifiedOmniverseLiveCollapse",
   "GSTClassicalHodgeDegreeCertifiedOmniverseCausalCompiler",
+  "GSTClassicalHodgePiStrictOmniverseCompiler",
 ]
 
 # ---------------------------------------------------------------------------

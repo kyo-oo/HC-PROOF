@@ -27,6 +27,11 @@ instance {M : Type u} [TopologicalSpace M] :
     TopologicalSpace (manifoldGeneralSpace M).Point :=
   inferInstanceAs (TopologicalSpace M)
 
+instance {M : Type u} [TopologicalSpace M] {H : Type u'} [TopologicalSpace H]
+    [ChartedSpace H M] :
+    ChartedSpace H (manifoldGeneralSpace M).Point :=
+  inferInstanceAs (ChartedSpace H M)
+
 def manifoldTangentFamily
     {𝕜 : Type v} [NontriviallyNormedField 𝕜]
     {E : Type w} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
@@ -57,7 +62,7 @@ theorem every_manifold_has_native_tangent_family
     (I : ModelWithCorners 𝕜 E H)
     (M : Type u) [TopologicalSpace M] [ChartedSpace H M]
     (n : ℕ∞ω) [IsManifold I n M] :
-    Nonempty (LocalFamily (manifoldGeneralSpace M)) :=
+    Nonempty (@LocalFamily.{u, 0, w} (manifoldGeneralSpace M)) :=
   ⟨manifoldTangentFamily I M⟩
 
 #check manifoldTangentFamily
