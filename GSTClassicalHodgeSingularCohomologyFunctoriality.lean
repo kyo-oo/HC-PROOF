@@ -46,8 +46,7 @@ noncomputable def singularCochainPullback
   let F :=
     ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact ((F.map (singularChainMap A f)).unop :
-    rationalSingularCochains A ⟶ rationalSingularCochains A)
+  exact (F.map (singularChainMap A f)).unop
 
 /-- Induced map on the genuine rational singular cohomology object. -/
 noncomputable def rationalCohomologyPullbackObj
@@ -77,6 +76,7 @@ theorem singularChainMap_comp
     singularChainMap A (AnalyticEndomorphism.comp (A := A) f g) =
       singularChainMap A f ≫ singularChainMap A g := by
   simp [singularChainMap]
+  rfl
 
 /-- Cohomology pullback is contravariantly functorial. -/
 theorem rationalCohomologyPullback_comp

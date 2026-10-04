@@ -70,18 +70,15 @@ theorem principalCutCycle_eq_sum
     | empty => simp
     | insert y s hy ih =>
         rw [Finset.sum_insert hy, Finset.sum_insert hy]
-        unfold realizeFiniteCodimensionPresentation
-        rw [Finsupp.sum_add_index']
-        have h2 : Finsupp.sum (∑ x ∈ s, fun₀ | x => 1)
-            (fun x q => q • codimensionPointCycle V.X 1 x) =
-            s.sum (fun z => codimensionPointCycle V.X 1 z) := ih
-        have h1 : (Finsupp.single y 1).sum
-            (fun x q => q • codimensionPointCycle V.X 1 x) =
-            codimensionPointCycle V.X 1 y := by
-          have hsingle := Finsupp.sum_single_index (a := y) (b := 1)
-            (h := fun x q => q • codimensionPointCycle V.X 1 x) (by simp)
-          simpa using hsingle
-        rw [h1, h2]
+        have hsplit : realizeFiniteCodimensionPresentation V.X 1
+            (Finsupp.single y 1 + ∑ x ∈ s, fun₀ | x => 1) =
+            realizeFiniteCodimensionPresentation V.X 1 (Finsupp.single y 1) +
+            realizeFiniteCodimensionPresentation V.X 1
+              (∑ x ∈ s, fun₀ | x => 1) := by
+          unfold realizeFiniteCodimensionPresentation
+          rw [Finsupp.sum_add_index']
+        rw [hsplit, realizeFiniteCodimensionPresentation_single, ih]
+        simp
   unfold principalCutCycle principalCutPresentation
   exact key (principalCutCodimensionOneFinset V x)
 

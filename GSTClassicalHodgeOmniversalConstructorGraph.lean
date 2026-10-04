@@ -1,5 +1,6 @@
 import GSTClassicalHodgeOmniversalClosure
 import GSTClassicalHodgePointNormalForm
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — CONCRETE OMNIVERSAL CONSTRUCTOR GRAPH
@@ -41,7 +42,10 @@ namespace GSTClassicalHodgeOmniversalConstructorGraph
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgePointNormalForm
 open GSTClassicalHodgeOmniversalClosure
 open GSTGraphV2OmniversalCore

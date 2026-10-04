@@ -183,7 +183,7 @@ theorem finiteCombination_of_completeCosmicClosure
     GSTClassicalHodgeExactClayStatement.EveryHodgeClassIsFiniteRationalCombination D := by
   exact
     (GSTClassicalHodgeExactClayStatement.rationalAlgebraic_iff_finiteRationalCombination
-      (D := D)).1
+      (V := V) (H := D)).1
       (R.exactHodge_of_completeCosmicClosure h)
 
 #check HodgeRecursiveRealization

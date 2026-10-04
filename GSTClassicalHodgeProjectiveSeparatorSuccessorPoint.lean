@@ -152,6 +152,7 @@ theorem separatorAmbientPrime_mem_minimalPrimes
   have hmapJ : J.map (Ideal.Quotient.mk P) = separatorQuotientIdeal n x := by
     rw [separatorQuotientIdeal, separatorClass]
     simp [J, Ideal.map_span, Set.image_singleton]
+    rfl
   rw [hmapQ, hmapJ]
   exact separatorMinimalPrime_mem n x
 
@@ -238,7 +239,12 @@ theorem separatorSuccessorPoint_mem_principalSet
     ProjectiveSpectrum.zeroLocus (ProjectiveGrading n)
       ({(positiveHomogeneousSeparator n x).equation} :
         Set (ProjectiveCoordinateRing n))
-  rw [ProjectiveSpectrum.mem_zeroLocus]
+  refine ((ProjectiveSpectrum.mem_zeroLocus
+      (ProjectiveGrading n)
+      (separatorSuccessorPoint n x hlive)
+      ({(positiveHomogeneousSeparator n x).equation} :
+        Set (ProjectiveCoordinateRing n))).trans
+    Set.singleton_subset_iff).mpr ?_
   simpa [separatorSuccessorPoint, separatorAmbientHomogeneousPrime] using
     separator_mem_separatorAmbientPrime n x
 

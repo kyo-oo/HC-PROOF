@@ -487,6 +487,20 @@ roots = [
   "GSTGeneralSpaceSchemeStalkFamily",
   "GSTGeneralSpaceTopology",
   "GSTGeneralSpaceTransport",
+  "GSTClassicalHodgeClosedCorrespondenceIrreducibilityBridge",
+  "GSTClassicalHodgeCompositionalCorrespondenceCyclicAttack",
+  "GSTClassicalHodgeCorrespondenceInvariantGhost",
+  "GSTClassicalHodgeCyclicRealizedCorrespondenceAttack",
+  "GSTClassicalHodgeDiagonalIdentityCorrespondence",
+  "GSTClassicalHodgeGeometricCorrespondencePolynomialCalculus",
+  "GSTClassicalHodgeGradedCorrespondenceProgramOrbit",
+  "GSTClassicalHodgeOneSidedFiniteCorrespondenceKrylovFinale",
+  "GSTClassicalHodgeRationalCorrespondenceOperatorSynthesis",
+  "GSTClassicalHodgeRealizedCorrespondenceCyclicSpectralFinale",
+  "GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra",
+  "GSTClassicalHodgeRealizedCorrespondenceKrylovFinale",
+  "GSTClassicalHodgeShiftedCyclePushforward",
+  "GSTClassicalHodgeTwoGeneratorLefschetzPoincareGeneration",
 ]
 
 # ---------------------------------------------------------------------------

@@ -240,26 +240,8 @@ the original genuine Hodge class. -/
 theorem exists_native_cycle
     (R : CoordinatewiseVisibleLocalRealization V H p alpha) :
     ∃ Z : codimensionCycles V.X p,
-      H.cycleClass p Z = alpha.1 := by
-  have hlive : ∀ i : HodgeSupportIndex alpha,
-      (classicalHodgeBasis V H p i.1).1 ∈
-        pointCycleClassSpan p (H.cycleClass p) :=
-    WeightedLocalCyclicRealization.live_basis_mem_atomic
-      (toWeightedLocalCyclicRealization R)
-  have halg : alpha.1 ∈ pointCycleClassSpan p (H.cycleClass p) := by
-    rw [show alpha =
-      ∑ j ∈ ((classicalHodgeBasis V H p).repr alpha).support,
-        ((classicalHodgeBasis V H p).repr alpha j) •
-          classicalHodgeBasis V H p j by
-      exact (classicalHodgeBasis V H p).sum_repr alpha]
-    simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower]
-    apply Submodule.sum_mem
-    intro j hj
-    exact (pointCycleClassSpan p (H.cycleClass p)).smul_mem
-      ((classicalHodgeBasis V H p).repr alpha j)
-      (hlive ⟨j, hj⟩)
-  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halg
-  exact halg
+      H.cycleClass p Z = alpha.1 :=
+  (toWeightedLocalCyclicRealization R).exists_native_cycle
 
 end CoordinatewiseVisibleLocalRealization
 

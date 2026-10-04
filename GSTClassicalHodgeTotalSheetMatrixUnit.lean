@@ -27,6 +27,9 @@ open GSTWorldPoincareDuality
 open GSTSquarePureHodgeDuality
 open GSTClassicalHodgeConcreteSheetMatrixUnit
 open GSTClassicalHodgeSheetSpectralExtraction
+open GSTGlobalPureHodgeCosmology
+open GSTDimensionFreeHodgeDiagonal
+open GSTClassicalHodgeIntegralLefschetzTransport
 
 namespace GSTClassicalHodgeTotalSheetMatrixUnit
 
@@ -75,22 +78,20 @@ theorem integerSquareDual_isPure
 /-- Poincare dual reads the mirrored diagonal coefficient. -/
 theorem integerSquareDual_diagonal
     {N : Nat} (f : WorldCoef N N) (r : Fin N) :
-    integerSquareDual f
-      ((show Fin N from pureMirror (show Fin (min N N) from r)),
-       (show Fin N from pureMirror (show Fin (min N N) from r))) =
+    integerSquareDual f (sheetMirror r, sheetMirror r) =
       f (r,r) := by
   unfold integerSquareDual
-  simp [worldDual_pureDiagonalState, pureDiagonalState, diagonalState]
+  have hinv : sheetMirror (sheetMirror r) = r :=
+    complementFin_involutive r
+  rw [worldDual_sheetDiagonal, hinv]
 
 /-- Backward matrix unit via Poincare reflection, forward transport, and dual
 return. -/
 def backwardSheetMatrixUnit
     {N : Nat} (r s : Fin N)
     (f : WorldCoef N N) : RationalSquareCoef N :=
-  let mr : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from r)
-  let ms : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from s)
+  let mr : Fin N := sheetMirror r
+  let ms : Fin N := sheetMirror s
   rationalSquareDual
     (forwardSheetMatrixUnit mr ms (integerSquareDual f))
 
@@ -102,10 +103,8 @@ theorem backwardSheetMatrixUnit_exact
     (hf : isWorldPureHodge f) :
     backwardSheetMatrixUnit r s f =
       fun x => if x = (s,s) then (f (r,r) : ℚ) else 0 := by
-  let mr : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from r)
-  let ms : Fin N :=
-    show Fin N from pureMirror (show Fin (min N N) from s)
+  let mr : Fin N := sheetMirror r
+  let ms : Fin N := sheetMirror s
   have hmrs : mr.1 ≤ ms.1 := by
     exact backward_request_reflects_forward r s hsr
   have hforward := forwardSheetMatrixUnit_exact
@@ -118,17 +117,18 @@ theorem backwardSheetMatrixUnit_exact
   unfold rationalSquareDual
   by_cases hx : x = (s,s)
   · subst x
-    have hdual : worldDual ((s,s) : WorldCell N N) = (ms,ms) := by
-      simpa [ms, pureDiagonalState, diagonalState] using
-        (worldDual_pureDiagonalState
-          (show Fin (min N N) from s))
+    have hdual : worldDual ((s,s) : WorldCell N N) = (ms,ms) :=
+      worldDual_sheetDiagonal s
     rw [hdual]
     simp [integerSquareDual_diagonal, mr]
   · have hdualne : worldDual x ≠ (ms,ms) := by
       intro h
       apply hx
-      have := congrArg worldDual h
-      simpa [ms, pureDiagonalState, diagonalState] using this
+      have h2 := congrArg worldDual h
+      rw [worldDual_involutive, worldDual_sheetDiagonal] at h2
+      have hinv : sheetMirror ms = s := complementFin_involutive s
+      rw [hinv] at h2
+      exact h2
     simp [hdualne, hx]
 
 /-- Total concrete GST matrix unit between arbitrary sheets. -/
