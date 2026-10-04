@@ -54,7 +54,7 @@ noncomputable def bettiSnd : bettiSelfProductSpace A ⟶ A.space :=
 noncomputable def bettiSwap :
     bettiSelfProductSpace A ⟶ bettiSelfProductSpace A :=
   ConcreteCategory.ofHom (C := TopCat)
-    ⟨(fun q => (q.2, q.1)), continuous_snd.prod_mk continuous_fst⟩
+    ⟨(fun q => (q.2, q.1)), by continuity⟩
 
 /-- Factor swap is its own inverse as a genuine TopCat isomorphism. -/
 noncomputable def bettiSwapIso :
@@ -123,26 +123,32 @@ noncomputable def swapChainMap :
 /-- Contravariant cochain pullback along the first projection. -/
 noncomputable def fstCochainPullback :
     rationalSingularCochains A ⟶ productSingularCochains A := by
-  let F :=
-    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-      |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map (fstChainMap A)).unop
+  unfold rationalSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op
+      ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (fstChainMap A)))
 
 /-- Contravariant cochain pullback along the second projection. -/
 noncomputable def sndCochainPullback :
     rationalSingularCochains A ⟶ productSingularCochains A := by
-  let F :=
-    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-      |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map (sndChainMap A)).unop
+  unfold rationalSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op
+      ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (sndChainMap A)))
 
 /-- Contravariant cochain pullback along the factor swap. -/
 noncomputable def swapCochainPullback :
     productSingularCochains A ⟶ productSingularCochains A := by
-  let F :=
-    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-      |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map (swapChainMap A)).unop
+  unfold productSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op
+      ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (swapChainMap A)))
 
 /-- Complete rational Betti pullback through the first projection. -/
 noncomputable def fstCohomologyPullback (n : Nat) :

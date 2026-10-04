@@ -82,9 +82,10 @@ theorem squareDiagonalToCosmos_off_diagonal
   classical
   unfold squareDiagonalToCosmos
   rw [Finsupp.coe_finset_sum, Finset.sum_apply]
-  apply Finset.sum_eq_zero
-  intro r hr
-  simp [hc, Prod.ext_iff]
+  refine Finset.sum_eq_zero fun r _ => ?_
+  rw [Finsupp.single_apply]
+  exact if_neg (fun hcon =>
+    hc ((congrArg Prod.fst hcon).symm.trans (congrArg Prod.snd hcon)))
 
 /-- Every finite square embeds into the compact pure-Hodge cosmos after its
 off-diagonal part has been discarded.  If the source is already pure, nothing
@@ -196,6 +197,8 @@ theorem liveCosmicMatrixUnit_exact
         ((integralHodgeSquare alpha).world
           (squareSheetOfLiveSlot alpha r,
            squareSheetOfLiveSlot alpha r)) := by
+  simp only [liveCosmicMatrixUnit, integralHodgeCosmos,
+    cosmicDiagonalMatrixUnit_apply]
   congr 1
   exact squareDiagonalToCosmos_diagonal (integralHodgeSquare alpha).world
     (squareSheetOfLiveSlot alpha r)
