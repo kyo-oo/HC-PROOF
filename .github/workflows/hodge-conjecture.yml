@@ -40,6 +40,13 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake build HodgePureMath 2>&1 | tee hodge-final.log
 
+      - name: Compile vertical-ray projective-apex finale
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeVerticalRayProjectiveApexFinale.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile GST exact projective-word finale
         shell: bash
         run: |
