@@ -43,20 +43,41 @@ theorem realize_presentationOfNativeCycle
     (Z : codimensionCycles V.X p) :
     realizeFiniteCodimensionPresentation V.X p
         (presentationOfNativeCycle V.X p Z) = Z := by
-  classical
   apply Subtype.ext
   ext y
   by_cases hy : Order.coheight y = p
-  · let yp : CodimensionPoint V.X p := ⟨y, hy⟩
-    simp [realizeFiniteCodimensionPresentation,
-      presentationOfNativeCycle_apply, codimensionPointCycle, yp,
-      Function.locallyFinsuppWithin.single_apply]
+  · show (realizeFiniteCodimensionPresentation V.X p
+        (presentationOfNativeCycle V.X p Z) : AlgebraicCycle V.X ℚ) y
+      = (Z.1 : AlgebraicCycle V.X ℚ) y
+    rw [realizeFiniteCodimensionPresentation_apply V.X p
+      (presentationOfNativeCycle V.X p Z) y]
+    simp only [Finsupp.sum, smul_eq_mul]
+    refine (Finset.sum_eq_single (⟨y, hy⟩ : CodimensionPoint V.X p) ?_ ?_).trans ?_
+    · intro b _ hb
+      have hne : y ≠ b.1 := by
+        intro heq
+        exact hb (Subtype.ext heq.symm)
+      simp [hne]
+    · intro hout
+      simp [Finsupp.notMem_support_iff.mp hout]
+    · simp [presentationOfNativeCycle_apply]
   · have hZy : (Z.1 : AlgebraicCycle V.X ℚ) y = 0 := by
       by_contra hne
-      have hsupp : y ∈ (Z.1 : AlgebraicCycle V.X ℚ).support := hne
-      exact hy (Z.2 hsupp)
-    simp [realizeFiniteCodimensionPresentation, codimensionPointCycle,
-      Function.locallyFinsuppWithin.single_apply, hy, hZy]
+      have hySupport : y ∈ (Z.1 : AlgebraicCycle V.X ℚ).support := hne
+      exact hy (Z.2 hySupport)
+    show (realizeFiniteCodimensionPresentation V.X p
+      (presentationOfNativeCycle V.X p Z) : AlgebraicCycle V.X ℚ) y
+      = (Z.1 : AlgebraicCycle V.X ℚ) y
+    rw [realizeFiniteCodimensionPresentation_apply V.X p
+      (presentationOfNativeCycle V.X p Z) y, hZy]
+    simp only [Finsupp.sum, smul_eq_mul]
+    refine Finset.sum_eq_zero fun x _ => ?_
+    have hne : y ≠ x.1 := by
+      intro heq
+      apply hy
+      rw [heq]
+      exact x.2
+    simp [hne]
 
 /-- The extracted presentation is injective: two native cycles with the same
 finite coefficient table are literally the same cycle. -/

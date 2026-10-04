@@ -88,8 +88,11 @@ theorem rationalCohomologyPullback_comp
       (rationalCohomologyPullback A f n).comp
         (rationalCohomologyPullback A g n) := by
   ext x
-  simp [rationalCohomologyPullback, rationalCohomologyPullbackObj,
-    singularCochainPullback, singularChainMap_comp]
+  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
+    singularCochainPullback, singularChainMap_comp,
+    CategoryTheory.Functor.map_comp, Quiver.Hom.op_comp, id_eq,
+    HomologicalComplex.homologyMap_comp, ModuleCat.comp_hom]
+  simp
 
 /-- Identity acts identically on rational Betti cohomology. -/
 theorem rationalCohomologyPullback_id
@@ -97,8 +100,11 @@ theorem rationalCohomologyPullback_id
     rationalCohomologyPullback A (AnalyticEndomorphism.id (A := A)) n =
       LinearMap.id := by
   ext x
-  simp [rationalCohomologyPullback, rationalCohomologyPullbackObj,
-    singularCochainPullback, singularChainMap_id]
+  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
+    singularCochainPullback, singularChainMap_id,
+    CategoryTheory.Functor.map_id, Quiver.Hom.op_id, id_eq,
+    HomologicalComplex.homologyMap_id, ModuleCat.id_hom]
+  simp
 
 /-- A morphism-level analytification package therefore yields a genuine
 contravariant Betti representation of every algebraic C-scheme endomorphism. -/

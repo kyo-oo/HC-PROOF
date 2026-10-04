@@ -1,5 +1,6 @@
 import GSTClassicalHodgeSeparatorRelativeCutLanding
 import GSTClassicalHodgeSeparatorAmbientPrimeInterval
+import GSTClassicalHodgeRelativeSuccessorLowerBound
 
 /-!
 # GST CLASSICAL HODGE — RELATIVE COVER OF THE SEPARATOR SUCCESSOR

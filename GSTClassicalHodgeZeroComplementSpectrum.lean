@@ -190,6 +190,7 @@ theorem augmentedIsolator_selects_self
   rw [F.linearPolyEval_eigenvector]
   simp [augmentedIsolatorPolynomial, augmentedIsolatorScale,
     FiniteSpectralFamily.isolatorScale]
+  rfl
 
 /-- The augmented projector kills every other selected Hodge sheet. -/
 theorem augmentedIsolator_kills_other
@@ -205,6 +206,7 @@ theorem augmentedIsolator_kills_other
   rw [F.linearPolyEval_eigenvector]
   have hz := F.isolatorPolynomial_eval_other i j hji
   simp [augmentedIsolatorPolynomial, hz]
+  exact Or.inl (Or.inr hz)
 
 /-- Every positive-degree polynomial in the zero-complement observable kills
 all vectors in the chosen complement.  In particular every augmented sheet

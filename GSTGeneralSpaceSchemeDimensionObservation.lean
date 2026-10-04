@@ -34,7 +34,7 @@ noncomputable def schemeKrullDimensionChart
 /-- The chart reads exactly the intrinsic scheme coheight. -/
 theorem schemeKrullDimensionChart_observe
     (X : Scheme.{u}) (x : X) :
-    (schemeKrullDimensionChart X).observe x = Order.coheight x :=
+    (schemeKrullDimensionChart X).observe x = ((Order.coheight x : WithBot ℕ∞)) :=
   AlgebraicGeometry.ringKrullDim_stalk_eq_coheight x
 
 /-- A native codimension-p point is precisely seen at value p by the local
