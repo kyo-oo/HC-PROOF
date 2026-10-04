@@ -524,6 +524,10 @@ roots = [
   "GSTClassicalHodgeRootedStrictRelationFan",
   "GSTClassicalHodgeRootedStrictRelationTree",
   "GSTClassicalHodgeCodimensionZeroDegreeApex",
+  "GSTClassicalHodgeCanonicalCutProgramSpine",
+  "GSTClassicalHodgeApexSpineFanProgramNormalForm",
+  "GSTClassicalHodgeGradedOntologicalFanFinale",
+  "GSTClassicalHodgeGradedOrbitSingleProgramCollapse",
 ]
 
 # ---------------------------------------------------------------------------
