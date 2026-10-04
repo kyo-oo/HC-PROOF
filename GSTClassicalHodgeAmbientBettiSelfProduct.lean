@@ -54,7 +54,7 @@ noncomputable def bettiSnd : bettiSelfProductSpace A ⟶ A.space :=
 noncomputable def bettiSwap :
     bettiSelfProductSpace A ⟶ bettiSelfProductSpace A :=
   ConcreteCategory.ofHom (C := TopCat)
-    ⟨(fun q => (q.2, q.1)), by continuity⟩
+    ⟨(fun q => (q.2, q.1)), continuous_prod_swap⟩
 
 /-- Factor swap is its own inverse as a genuine TopCat isomorphism. -/
 noncomputable def bettiSwapIso :
@@ -194,9 +194,26 @@ theorem sndPullback_eq_swap_fstPullback
     sndCohomologyPullback A n =
       (swapCohomologyPullback A n).comp (fstCohomologyPullback A n) := by
   ext alpha
-  simp [sndCohomologyPullback, swapCohomologyPullback,
-    fstCohomologyPullback, swapCochainPullback,
-    fstCochainPullback, sndCochainPullback, swapChain_fst]
+  unfold sndCohomologyPullback swapCohomologyPullback fstCohomologyPullback
+  have hcochain :
+    sndCochainPullback A =
+      (fstCochainPullback A) ≫ (swapCochainPullback A) := by
+    simp [sndCochainPullback, fstCochainPullback, swapCochainPullback,
+      swapChain_fst]
+    rfl
+  have hcomp :
+    HomologicalComplex.homologyMap (sndCochainPullback A) n =
+      (HomologicalComplex.homologyMap (fstCochainPullback A) n) ≫
+        (HomologicalComplex.homologyMap (swapCochainPullback A) n) := by
+    rw [hcochain, HomologicalComplex.homologyMap_comp]
+  show (ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap (sndCochainPullback A) n)) alpha =
+    ((ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap (swapCochainPullback A) n)).comp
+      (ModuleCat.Hom.hom
+        (HomologicalComplex.homologyMap (fstCochainPullback A) n))) alpha
+  rw [hcomp]
+  simp
 
 /-- Symmetric full-Betti projection law. -/
 theorem fstPullback_eq_swap_sndPullback
@@ -204,9 +221,26 @@ theorem fstPullback_eq_swap_sndPullback
     fstCohomologyPullback A n =
       (swapCohomologyPullback A n).comp (sndCohomologyPullback A n) := by
   ext alpha
-  simp [sndCohomologyPullback, swapCohomologyPullback,
-    fstCohomologyPullback, swapCochainPullback,
-    fstCochainPullback, sndCochainPullback, swapChain_snd]
+  unfold fstCohomologyPullback swapCohomologyPullback sndCohomologyPullback
+  have hcochain :
+    fstCochainPullback A =
+      (sndCochainPullback A) ≫ (swapCochainPullback A) := by
+    simp [fstCochainPullback, sndCochainPullback, swapCochainPullback,
+      swapChain_snd]
+    rfl
+  have hcomp :
+    HomologicalComplex.homologyMap (fstCochainPullback A) n =
+      (HomologicalComplex.homologyMap (sndCochainPullback A) n) ≫
+        (HomologicalComplex.homologyMap (swapCochainPullback A) n) := by
+    rw [hcochain, HomologicalComplex.homologyMap_comp]
+  show (ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap (fstCochainPullback A) n)) alpha =
+    ((ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap (swapCochainPullback A) n)).comp
+      (ModuleCat.Hom.hom
+        (HomologicalComplex.homologyMap (sndCochainPullback A) n))) alpha
+  rw [hcomp]
+  simp
 
 /-- **FULL-BETTI FACTOR-SWAP INVOLUTION.** -/
 theorem swapCohomology_involutive
@@ -214,8 +248,30 @@ theorem swapCohomology_involutive
     (swapCohomologyPullback A n).comp (swapCohomologyPullback A n) =
       LinearMap.id := by
   ext alpha
-  simp [swapCohomologyPullback, swapCochainPullback,
-    swapChain_involutive]
+  unfold swapCohomologyPullback
+  have hinner : (swapCochainPullback A) ≫ (swapCochainPullback A) = 𝟙 _ := by
+    simp [swapCochainPullback, swapChain_involutive]
+    rfl
+  have hcomp :
+    (HomologicalComplex.homologyMap (swapCochainPullback A) n) ≫
+      (HomologicalComplex.homologyMap (swapCochainPullback A) n) = 𝟙 _ := by
+    rw [← HomologicalComplex.homologyMap_comp, hinner,
+      HomologicalComplex.homologyMap_id]
+  show (ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap (swapCochainPullback A) n))
+      ((ModuleCat.Hom.hom
+        (HomologicalComplex.homologyMap (swapCochainPullback A) n)) alpha) =
+    alpha
+  rw [show (ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap (swapCochainPullback A) n))
+      ((ModuleCat.Hom.hom
+        (HomologicalComplex.homologyMap (swapCochainPullback A) n)) alpha) =
+    (ModuleCat.Hom.hom
+      ((HomologicalComplex.homologyMap (swapCochainPullback A) n) ≫
+      (HomologicalComplex.homologyMap (swapCochainPullback A) n))) alpha from by
+    simp]
+  rw [hcomp]
+  simp
 
 #check bettiSelfProductSpace
 #check bettiFst
