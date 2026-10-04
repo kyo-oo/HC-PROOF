@@ -534,6 +534,9 @@ roots = [
   "GSTClassicalHodgeOmniverseLefschetzRayCompiler",
   "GSTClassicalHodgeOmniverseProjectiveApexSpokes",
   "GSTClassicalHodgeVerticalRayProjectiveApexFinale",
+  "GSTClassicalHodgeOmniverseTwoSlotLefschetzBranch",
+  "GSTClassicalHodgePiOneSourceCompositionalCorrespondenceFinale",
+  "GSTClassicalHodgePiUnboundedOmniverseCrown",
 ]
 
 # ---------------------------------------------------------------------------
