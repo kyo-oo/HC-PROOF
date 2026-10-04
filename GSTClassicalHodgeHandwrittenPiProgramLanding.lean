@@ -76,14 +76,16 @@ DERIVED from the origin program; it is not an independent premise. -/
 noncomputable def orbitSeedOfProgram
     (G : GeometricCycleClassSpine V H)
     (P0 : GradedGeometricProgram V 0 p)
-    (hne : P0.cohomologyEval G (geometricOriginClass V H) != 0) :
+    (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0) :
     NativeHodgeOrbitSeed (V := V) (H := H) (p := p) := by
   let Z0 : codimensionCycles V.X p :=
     P0.cycleEval G (codimensionZeroFundamentalCycle V)
   let a0 : RationalSingularCohomology H.analytification (2 * p) :=
     P0.cohomologyEval G (geometricOriginClass V H)
   let a : ClassicalHodgeFiber V H p :=
-    <|a0, P0.cohomologyEval_mem_hodge G (codimensionZeroFundamentalCycle V)|>
+    ⟨a0, by
+      simpa [a0, geometricOriginClass] using
+        P0.cohomologyEval_mem_hodge G (codimensionZeroFundamentalCycle V)⟩
   refine {
     cycle := Z0
     hodge := a
@@ -93,16 +95,18 @@ noncomputable def orbitSeedOfProgram
   · intro ha
     apply hne
     exact congrArg Subtype.val ha
-  · exact P0.cycleClass_cycleEval G (codimensionZeroFundamentalCycle V)
+  · simpa [Z0, a, a0, geometricOriginClass] using
+      P0.cycleClass_cycleEval G (codimensionZeroFundamentalCycle V)
 
 /-- The derived source state is itself literally in the intrinsic graded
 geometric orbit. -/
 theorem orbitSeedOfProgram_mem_orbit
     (G : GeometricCycleClassSpine V H)
     (P0 : GradedGeometricProgram V 0 p)
-    (hne : P0.cohomologyEval G (geometricOriginClass V H) != 0) :
-    (orbitSeedOfProgram G P0 hne).hodge.1 in geometricProgramOrbitModule G p := by
-  refine <|P0, ?_>
+    (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0) :
+    (orbitSeedOfProgram G P0 hne).hodge.1 ∈
+      geometricProgramOrbitModule G p := by
+  refine ⟨P0, ?_⟩
   rfl
 
 /-- **PROGRAM ORIGIN -> EVERY BASIS SHEET.**
@@ -112,30 +116,30 @@ actual projective two-generator GST word from its chosen live coordinate to
 theorem basis_mem_orbit_of_program_projective_word
     (G : GeometricCycleClassSpine V H)
     (P0 : GradedGeometricProgram V 0 p)
-    (hne : P0.cohomologyEval G (geometricOriginClass V H) != 0)
+    (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0)
     (j : ClassicalHodgeBasisIndex V H p)
     (R : ProjectiveTwoGenerator (V := V) (H := H)
       (orbitSeedOfProgram G P0 hne).sourceIndex j) :
-    (classicalHodgeBasis V H p j).1 in geometricProgramOrbitModule G p := by
+    (classicalHodgeBasis V H p j).1 ∈ geometricProgramOrbitModule G p := by
   let S := orbitSeedOfProgram G P0 hne
   let W := compileProjectiveTwoGenerator R
-  have hsource : S.hodge.1 in geometricProgramOrbitModule G p := by
+  have hsource : S.hodge.1 ∈ geometricProgramOrbitModule G p := by
     simpa [S] using orbitSeedOfProgram_mem_orbit G P0 hne
   have hword :
-      (GradedGeometricProgram.word W).cohomologyEval G S.hodge.1 in
+      (GradedGeometricProgram.word W).cohomologyEval G S.hodge.1 ∈
         geometricProgramOrbitModule G p :=
     program_maps_geometricProgramOrbitModule G
       (GradedGeometricProgram.word W) hsource
   have haction :
       (GradedGeometricProgram.word W).cohomologyEval G S.hodge.1 =
-        (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex *
+        (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex •
           (classicalHodgeBasis V H p j).1 := by
     simpa [W, GradedGeometricProgram.cohomologyEval,
       GradedGeometricProgram.toPair] using
       compileProjectiveTwoGenerator_source_action G S j R
   rw [haction] at hword
   have hc :
-      (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex != 0 :=
+      (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex ≠ 0 :=
     S.sourceCoefficient_ne_zero
   have hscaled :=
     (geometricProgramOrbitModule G p).smul_mem
@@ -147,12 +151,12 @@ EVERY unrestricted Hodge basis direction in the geometric orbit. -/
 theorem every_basis_mem_orbit_of_program_projective_words
     (G : GeometricCycleClassSpine V H)
     (P0 : GradedGeometricProgram V 0 p)
-    (hne : P0.cohomologyEval G (geometricOriginClass V H) != 0)
-    (R : forall j : ClassicalHodgeBasisIndex V H p,
+    (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0)
+    (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       ProjectiveTwoGenerator (V := V) (H := H)
         (orbitSeedOfProgram G P0 hne).sourceIndex j) :
-    forall j : ClassicalHodgeBasisIndex V H p,
-      (classicalHodgeBasis V H p j).1 in geometricProgramOrbitModule G p := by
+    ∀ j : ClassicalHodgeBasisIndex V H p,
+      (classicalHodgeBasis V H p j).1 ∈ geometricProgramOrbitModule G p := by
   intro j
   exact basis_mem_orbit_of_program_projective_word G P0 hne j (R j)
 
@@ -163,20 +167,22 @@ theorem already put `e_j` in the actual program orbit. -/
 theorem liveLocalizedL2BranchesLandInOrbit_of_program_projective_words
     (G : GeometricCycleClassSpine V H)
     (P0 : GradedGeometricProgram V 0 p)
-    (hne : P0.cohomologyEval G (geometricOriginClass V H) != 0)
-    (R : forall j : ClassicalHodgeBasisIndex V H p,
+    (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0)
+    (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       ProjectiveTwoGenerator (V := V) (H := H)
         (orbitSeedOfProgram G P0 hne).sourceIndex j)
     (alpha : ClassicalHodgeFiber V H p)
-    (halpha : alpha != 0) :
+    (halpha : alpha ≠ 0) :
     LiveLocalizedL2BranchesLandInOrbit G alpha := by
-  obtain <|i, hi, _> := branch_collapse_localizedL2 alpha halpha
-  refine <|i, hi, ?_>
+  obtain ⟨i, hi, _⟩ := branch_collapse_localizedL2 alpha halpha
+  refine ⟨i, hi, ?_⟩
   intro j hj
-  rw [localizedNormalizedL2_apply, hodgeMatrixUnit_apply]
-  exact (geometricProgramOrbitModule G p).smul_mem
-    (hodgeCoordinate i.1 alpha)
-    (every_basis_mem_orbit_of_program_projective_words G P0 hne R j)
+  have hbasis :=
+    every_basis_mem_orbit_of_program_projective_words G P0 hne R j
+  have hscaled :=
+    (geometricProgramOrbitModule G p).smul_mem
+      (hodgeCoordinate i.1 alpha) hbasis
+  simpa [localizedNormalizedL2_apply, hodgeMatrixUnit_apply] using hscaled
 
 /-- The exact native cycle for the requested Hodge state, obtained in the same
 order as the handwritten derivation: origin program -> projective GST words ->
@@ -184,16 +190,16 @@ live localized-L2 branches -> finite rational collapse -> native cycle. -/
 theorem native_cycle_of_program_projective_words
     (G : GeometricCycleClassSpine V H)
     (P0 : GradedGeometricProgram V 0 p)
-    (hne : P0.cohomologyEval G (geometricOriginClass V H) != 0)
-    (R : forall j : ClassicalHodgeBasisIndex V H p,
+    (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0)
+    (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       ProjectiveTwoGenerator (V := V) (H := H)
         (orbitSeedOfProgram G P0 hne).sourceIndex j)
     (alpha : ClassicalHodgeFiber V H p) :
-    exists Z : codimensionCycles V.X p,
+    ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha.1 := by
   by_cases halpha : alpha = 0
   · subst alpha
-    exact <|0, by simp>
+    exact ⟨0, by simp⟩
   · exact native_cycle_of_liveLocalizedL2Branches G alpha
       (liveLocalizedL2BranchesLandInOrbit_of_program_projective_words
         G P0 hne R alpha halpha)
@@ -207,16 +213,16 @@ Compared with `HandwrittenPiGeometricLanding`, the geometric landing is no
 longer a premise: it is the conclusion of the explicit GST equations above. -/
 theorem bigradedBettiHodge_of_handwritten_program_words
     (G : GeometricCycleClassSpine V H)
-    (P0 : forall q : Nat, GradedGeometricProgram V 0 q)
-    (hne : forall q : Nat,
-      (P0 q).cohomologyEval G (geometricOriginClass V H) != 0)
-    (R : forall q : Nat,
-      forall j : ClassicalHodgeBasisIndex V H q,
+    (P0 : ∀ q : Nat, GradedGeometricProgram V 0 q)
+    (hne : ∀ q : Nat,
+      (P0 q).cohomologyEval G (geometricOriginClass V H) ≠ 0)
+    (R : ∀ q : Nat,
+      ∀ j : ClassicalHodgeBasisIndex V H q,
         ProjectiveTwoGenerator (V := V) (H := H)
           (orbitSeedOfProgram G (P0 q) (hne q)).sourceIndex j) :
     BigradedBettiHodgeStatement V H := by
   intro q alpha halpha
-  let alphaH : ClassicalHodgeFiber V H q := <|alpha, halpha>
+  let alphaH : ClassicalHodgeFiber V H q := ⟨alpha, halpha⟩
   exact native_cycle_of_program_projective_words
     G (P0 q) (hne q) (R q) alphaH
 
