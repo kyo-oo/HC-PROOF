@@ -47,6 +47,8 @@ open GSTClassicalHodgeSupportCardinalityBridge
 open GSTClassicalHodgeTotalSheetMatrixUnit
 open GSTClassicalHodgeConcreteArsenalConjugation
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTClassicalHodgeLiveSheetIntertwining
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
 
 /-- Embed one finite integral pure square into the genuine compact cosmos by
 placing every diagonal coefficient at the identically numbered cosmic weight. -/
@@ -61,7 +63,7 @@ theorem squareDiagonalToCosmos_diagonal
     squareDiagonalToCosmos f (r.1,r.1) = f (r,r) := by
   classical
   unfold squareDiagonalToCosmos
-  rw [Finset.sum_apply]
+  rw [Finsupp.coe_finset_sum]
   rw [Finset.sum_eq_single r]
   · simp
   · intro s hs hsr
@@ -78,7 +80,7 @@ theorem squareDiagonalToCosmos_off_diagonal
     squareDiagonalToCosmos f c = 0 := by
   classical
   unfold squareDiagonalToCosmos
-  rw [Finset.sum_apply]
+  rw [Finsupp.coe_finset_sum]
   apply Finset.sum_eq_zero
   intro r hr
   simp [hc]
@@ -101,8 +103,8 @@ theorem observe_squareDiagonalToCosmos
   funext c
   by_cases hdiag : c.1.1 = c.2.1
   · have heq : c.1 = c.2 := Fin.ext hdiag
-    subst c.2
-    simpa using squareDiagonalToCosmos_diagonal f c.1
+    rw [heq]
+    simpa using squareDiagonalToCosmos_diagonal f c.2
   · have hc : (c.1.1,c.2.1).1 ≠ (c.1.1,c.2.1).2 := hdiag
     rw [hf c hdiag]
     exact squareDiagonalToCosmos_off_diagonal f (c.1.1,c.2.1) hc

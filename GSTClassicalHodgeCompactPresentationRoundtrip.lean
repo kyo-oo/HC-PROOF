@@ -1,4 +1,5 @@
 import GSTCompactNativeCyclePresentation
+import GSTClassicalHodgePointNormalForm
 
 /-!
 # GST CLASSICAL HODGE — COMPACT NATIVE PRESENTATION ROUNDTRIP

@@ -88,10 +88,25 @@ theorem rationalCohomologyPullback_comp
       (rationalCohomologyPullback A f n).comp
         (rationalCohomologyPullback A g n) := by
   ext x
-  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
-    singularCochainPullback, singularChainMap_comp,
-    CategoryTheory.Functor.map_comp, Quiver.Hom.op_comp, id_eq,
-    HomologicalComplex.homologyMap_comp, ModuleCat.comp_hom]
+  unfold rationalCohomologyPullback rationalCohomologyPullbackObj
+  have hcochain :
+    singularCochainPullback A (AnalyticEndomorphism.comp (A := A) f g) =
+      (singularCochainPullback A f) ≫ (singularCochainPullback A g) := by
+    simp [singularCochainPullback, singularChainMap_comp]
+  have hcomp :
+    HomologicalComplex.homologyMap
+        (singularCochainPullback A (AnalyticEndomorphism.comp (A := A) f g)) n =
+      (HomologicalComplex.homologyMap (singularCochainPullback A f) n) ≫
+        (HomologicalComplex.homologyMap (singularCochainPullback A g) n) := by
+    rw [hcochain, HomologicalComplex.homologyMap_comp]
+  show (ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap
+        (singularCochainPullback A (AnalyticEndomorphism.comp (A := A) f g)) n)) x =
+    ((ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap (singularCochainPullback A f) n)).comp
+      (ModuleCat.Hom.hom
+        (HomologicalComplex.homologyMap (singularCochainPullback A g) n))) x
+  rw [hcomp]
   simp
 
 /-- Identity acts identically on rational Betti cohomology. -/
@@ -100,10 +115,16 @@ theorem rationalCohomologyPullback_id
     rationalCohomologyPullback A (AnalyticEndomorphism.id (A := A)) n =
       LinearMap.id := by
   ext x
-  simp only [rationalCohomologyPullback, rationalCohomologyPullbackObj,
-    singularCochainPullback, singularChainMap_id,
-    CategoryTheory.Functor.map_id, Quiver.Hom.op_id, id_eq,
-    HomologicalComplex.homologyMap_id, ModuleCat.id_hom]
+  unfold rationalCohomologyPullback rationalCohomologyPullbackObj
+  have hcochain :
+    singularCochainPullback A (AnalyticEndomorphism.id (A := A)) =
+      𝟙 (rationalSingularCochains A) := by
+    simp [singularCochainPullback, singularChainMap_id]
+  show (ModuleCat.Hom.hom
+      (HomologicalComplex.homologyMap
+        (singularCochainPullback A (AnalyticEndomorphism.id (A := A))) n)) x =
+    LinearMap.id x
+  rw [hcochain, HomologicalComplex.homologyMap_id]
   simp
 
 /-- A morphism-level analytification package therefore yields a genuine
