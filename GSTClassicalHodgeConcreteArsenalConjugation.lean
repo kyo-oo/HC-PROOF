@@ -72,7 +72,8 @@ theorem squareSheetOfLiveSlot_injective
     have hs1 : ((liveEquivFin alpha).symm s : HodgeSupportIndex alpha).1 =
         (liveFiberedAddress alpha ((liveEquivFin alpha).symm s)).1.2 := rfl
     rw [hr1, hs1]
-    exact congrArg (fun x => x.2) hpair
+    congr 1
+    exact hpair
   exact (liveEquivFin alpha).symm.injective hsupp
 
 /-- Read a rational square state back into the genuine live Hodge-basis

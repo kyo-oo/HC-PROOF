@@ -189,7 +189,7 @@ theorem augmentedIsolator_selects_self
   rw [show (classicalHodgeBasis V H p (W.basisIndex i)).1 = F.vector i from rfl]
   rw [F.linearPolyEval_eigenvector]
   simp [augmentedIsolatorPolynomial, augmentedIsolatorScale,
-    F.isolatorScale]
+    FiniteSpectralFamily.isolatorScale]
 
 /-- The augmented projector kills every other selected Hodge sheet. -/
 theorem augmentedIsolator_kills_other

@@ -28,15 +28,14 @@ noncomputable local instance {X : Scheme.{u}} {x : X} :
 noncomputable def schemeKrullDimensionChart
     (X : Scheme.{u}) : GeneralSpace.Chart (schemeGeneralSpace X) where
   Coord := WithBot ℕ∞
-  observe x := ringKrullDim ((schemeStalkFamily X).Fiber x)
+  observe x := @ringKrullDim ((schemeStalkFamily X).Fiber x)
+    (inferInstanceAs (CommSemiring (X.presheaf.stalk x)))
 
 /-- The chart reads exactly the intrinsic scheme coheight. -/
 theorem schemeKrullDimensionChart_observe
     (X : Scheme.{u}) (x : X) :
-    (schemeKrullDimensionChart X).observe x = Order.coheight x := by
-  have h := schemeStalk_dimension_eq_coheight X x
-  unfold schemeKrullDimensionChart at h ⊢
-  exact h
+    (schemeKrullDimensionChart X).observe x = Order.coheight x :=
+  AlgebraicGeometry.ringKrullDim_stalk_eq_coheight x
 
 /-- A native codimension-p point is precisely seen at value p by the local
 General-Space dimension observation. -/
@@ -44,7 +43,8 @@ theorem codimensionPoint_observed_exactly
     (X : Scheme.{u}) (p : Nat)
     (x : CodimensionPoint X p) :
     (schemeKrullDimensionChart X).observe x.1 = ((p : WithBot ℕ∞)) := by
-  rw [schemeKrullDimensionChart_observe X x.1, x.2]
+  rw [schemeKrullDimensionChart_observe X x.1]
+  exact WithBot.coe_eq_coe.mpr x.2
 
 /-- Observation-only crown: the codimension label is completely recovered
 from local geometry and is absent from the ontological core. -/
@@ -54,8 +54,8 @@ theorem codimension_observation_crown
     ringKrullDim ((schemeStalkFamily X).Fiber x.1) = p
       ∧ Order.coheight x.1 = p := by
   exact ⟨by
-      rw [schemeStalk_dimension_eq_coheight X x.1, x.2]
-      try norm_num,
+      rw [schemeStalk_dimension_eq_coheight X x.1]
+      exact WithBot.coe_eq_coe.mpr x.2,
     x.2⟩
 
 #check schemeKrullDimensionChart

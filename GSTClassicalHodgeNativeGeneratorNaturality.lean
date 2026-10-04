@@ -39,6 +39,7 @@ open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeGeneratorwiseAtomicStability
+open GSTClassicalHodgePointNormalForm
 
 namespace GSTClassicalHodgeNativeGeneratorNaturality
 

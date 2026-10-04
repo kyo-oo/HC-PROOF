@@ -58,9 +58,11 @@ theorem pointClosureSeparatorSuccessor_mem_relativeCut
     (x : V.X)
     (hlive : ProjectivelyLiveSource V.projective.n (V.projective.immersion x)) :
     pointClosureSeparatorSuccessor V x hlive ∈ relativeCutSet V x := by
-  rw [relativeCutSet, closurePrincipalCutToClosure,
-    Scheme.Pullback.range_fst, Set.mem_preimage,
-    pointClosureSeparatorSuccessor_maps]
+  rw [relativeCutSet]
+  rw [show Set.range (closurePrincipalCutToClosure V x) =
+      (pointClosureι V x) ⁻¹' Set.range (principalSectionAtι V x) from
+    Scheme.Pullback.range_fst (pointClosureι V x) (principalSectionAtι V x)]
+  rw [Set.mem_preimage, pointClosureSeparatorSuccessor_maps]
   exact carrierSeparatorSuccessor_mem_principalSectionRange V x hlive
 
 /-- The landed relative-cut point is non-generic. -/

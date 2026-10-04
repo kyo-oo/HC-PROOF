@@ -31,6 +31,9 @@ open GSTGeometricRealizationStage2D
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 
+local instance (V : SmoothProjectiveComplexScheme) : CompactSpace V.X :=
+  smoothProjectiveCompactSpace V
+
 /-- **EXACT COMPACT PRESENTATION ROUNDTRIP.**
 Extract the genuine finite coefficient presentation of a native codimension-p
 cycle on a smooth projective scheme and realize it again: the cycle is unchanged. -/

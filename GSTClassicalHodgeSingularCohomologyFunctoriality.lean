@@ -43,10 +43,12 @@ linear-Yoneda duality used definitionally in Stage 2F. -/
 noncomputable def singularCochainPullback
     (f : AnalyticEndomorphism A) :
     rationalSingularCochains A ⟶ rationalSingularCochains A := by
-  let F :=
-    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-      |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map (singularChainMap A f)).unop
+  unfold rationalSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op
+      ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (singularChainMap A f)))
 
 /-- Induced map on the genuine rational singular cohomology object. -/
 noncomputable def rationalCohomologyPullbackObj
