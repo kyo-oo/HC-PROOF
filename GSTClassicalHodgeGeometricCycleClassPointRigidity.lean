@@ -37,6 +37,9 @@ open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgePointNormalForm
 
+local instance (V : SmoothProjectiveComplexScheme) : CompactSpace V.X :=
+  smoothProjectiveCompactSpace V
+
 variable {V : SmoothProjectiveComplexScheme}
 variable (p : Nat)
 
@@ -74,8 +77,8 @@ theorem cycleClassFromPointGeometry_point
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   show (Finsupp.linearCombination ℚ pt)
       (presentationOfNativeCycle V.X p (codimensionPointCycle V.X p x)) = pt x
-  classical
-  simp [presentationOfNativeCycle, codimensionPointCycle]
+  rw [presentationOfNativeCycle_point]
+  simp [Finsupp.linearCombination]
 
 /-- Two rational cycle-class maps agreeing on genuine codimension-p point
 fundamental classes agree on EVERY native cycle. -/

@@ -95,11 +95,14 @@ noncomputable def pushforwardPresentation
   map_add' := by
     intro φ ψ
     classical
-    simp [Finsupp.sum_add_index' zero_smul add_smul]
+    rw [Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
     classical
-    simp [Finsupp.sum_smul_index' smul_zero, smul_smul, mul_smul]
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 @[simp]
 theorem pushforwardPresentation_single
@@ -141,14 +144,21 @@ noncomputable def realizePushforwardPresentation
       (pushforwardPresentation f p φ)
   map_add' := by
     intro φ ψ
-    simp [pushforwardPresentation,
-      realizeFiniteCodimensionPresentation,
-      Finsupp.sum_add_index' zero_smul add_smul]
+    simp only [pushforwardPresentation,
+      realizeFiniteCodimensionPresentation]
+    classical
+    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
-    simp [pushforwardPresentation,
-      realizeFiniteCodimensionPresentation,
-      Finsupp.sum_smul_index' smul_zero, smul_smul, mul_smul]
+    simp only [pushforwardPresentation,
+      realizeFiniteCodimensionPresentation]
+    classical
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 @[simp]
 theorem realizePushforwardPresentation_single
@@ -179,9 +189,9 @@ theorem smoothProjectiveNativePushforward_point
         (codimensionPointCycle V.X p x) =
       nativePointPushforward f p x := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [smoothProjectiveNativePushforward,
-    presentationOfNativeCycleLinear,
-    realizePushforwardPresentation]
+  simp only [smoothProjectiveNativePushforward, LinearMap.comp_apply,
+    presentationOfNativeCycleLinear_apply, presentationOfNativeCycle_point]
+  exact realizePushforwardPresentation_single f p x
 
 /-- The native transport construction itself supplies a point-lift family for
 its own point-generator action. -/

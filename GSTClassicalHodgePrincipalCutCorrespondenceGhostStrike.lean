@@ -7,8 +7,8 @@ import GSTClassicalHodgeNativeCycleCorrespondenceGhostAttack
 This file fuses the two strongest geometry-first arteries now available:
 
 1. nonzero genuine principal-cut action on one point atom produces an explicit
-   nonzero native algebraic Hodge seed in the next codimension, certified by
-   projective degree;
+   nonzero native algebraic Hodge seed in the next codimension, directly
+   from the spine commuting square, with no degree-semantics premise;
 2. a single genuine realized correspondence word carrying ANY native source
    cycle to a nonzero multiple of a target Hodge basis sheet destroys the
    separator at that sheet.
@@ -49,25 +49,23 @@ open GSTClassicalHodgeSingleSheetCrown
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 
-/-- The explicit degree-certified principal-cut source used by the final ghost
+/-- The explicit naturality-certified principal-cut source used by the final ghost
 attack. -/
 noncomputable def principalCutGhostSource
     (G : GeometricCycleClassSpine V H)
-    (D : ProjectiveDegreeTraceSemantics V H)
     (p : Nat)
     (x : CodimensionPoint V.X p)
     (hCoh :
       (G.principalCutPair p).cohomologyOperator
           (H.cycleClass p (codimensionPointCycle V.X p x)) ≠ 0) :
     NativeHodgeOrbitSeed (V := V) (H := H) (p := p + 1) :=
-  nativeHodgeSeed_of_principalCut_point_nonzero G D p x hCoh
+  nativeHodgeSeed_of_principalCut_point_nonzero G p x hCoh
 
 /-- **ONE SOURCE-SPECIFIC CORRESPONDENCE WORD KILLS THE TARGET GHOST.**
-The source is not supplied abstractly: it is the actual degree-certified
+The source is not supplied abstractly: it is the actual
 principal-cut cycle manufactured by the geometry. -/
 theorem nativeCycleHit_of_principalCut_word
     (G : GeometricCycleClassSpine V H)
-    (D : ProjectiveDegreeTraceSemantics V H)
     (p : Nat)
     (x : CodimensionPoint V.X p)
     (hCoh :
@@ -79,10 +77,10 @@ theorem nativeCycleHit_of_principalCut_word
     (hc : c ≠ 0)
     (hWord :
       (realizedWordPair W).cohomologyOperator
-          (principalCutGhostSource G D p x hCoh).hodge.1 =
+          (principalCutGhostSource G p x hCoh).hodge.1 =
         c • (classicalHodgeBasis V H (p + 1) j).1) :
     NativeCycleCorrespondenceHitsSheet (V := V) (H := H) j := by
-  let S := principalCutGhostSource G D p x hCoh
+  let S := principalCutGhostSource G p x hCoh
   refine ⟨S.cycle, W, c, hc, ?_⟩
   rw [S.class_eq]
   exact hWord
@@ -91,7 +89,6 @@ theorem nativeCycleHit_of_principalCut_word
 word realizes the required source action. -/
 theorem isEmpty_separator_of_principalCut_word
     (G : GeometricCycleClassSpine V H)
-    (D : ProjectiveDegreeTraceSemantics V H)
     (p : Nat)
     (x : CodimensionPoint V.X p)
     (hCoh :
@@ -103,18 +100,17 @@ theorem isEmpty_separator_of_principalCut_word
     (hc : c ≠ 0)
     (hWord :
       (realizedWordPair W).cohomologyOperator
-          (principalCutGhostSource G D p x hCoh).hodge.1 =
+          (principalCutGhostSource G p x hCoh).hodge.1 =
         c • (classicalHodgeBasis V H (p + 1) j).1) :
     IsEmpty (BasisAtomicSeparator V H (p + 1) j) := by
   exact isEmpty_basisAtomicSeparator_of_nativeCycleCorrespondenceHit j
-    (nativeCycleHit_of_principalCut_word G D p x hCoh j W c hc hWord)
+    (nativeCycleHit_of_principalCut_word G p x hCoh j W c hc hWord)
 
 /-- Contrapositive form used while attacking a surviving ghost: if a separator
 exists at j, then NO realized correspondence word can carry the explicit
 principal-cut source to a nonzero multiple of j. -/
 theorem separator_forbids_principalCut_word
     (G : GeometricCycleClassSpine V H)
-    (D : ProjectiveDegreeTraceSemantics V H)
     (p : Nat)
     (x : CodimensionPoint V.X p)
     (hCoh :
@@ -126,11 +122,11 @@ theorem separator_forbids_principalCut_word
     (c : ℚ)
     (hc : c ≠ 0) :
     (realizedWordPair W).cohomologyOperator
-          (principalCutGhostSource G D p x hCoh).hodge.1 ≠
+          (principalCutGhostSource G p x hCoh).hodge.1 ≠
         c • (classicalHodgeBasis V H (p + 1) j).1 := by
   intro hWord
   have hEmpty :=
-    isEmpty_separator_of_principalCut_word G D p x hCoh j W c hc hWord
+    isEmpty_separator_of_principalCut_word G p x hCoh j W c hc hWord
   exact hEmpty.false S
 
 #check principalCutGhostSource

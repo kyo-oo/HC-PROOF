@@ -156,7 +156,16 @@ theorem concreteBasisGenerator_eq_basis
       classicalHodgeBasis V H p j := by
   unfold concreteBasisGenerator
   rw [read_arbitraryTargetGSTOutput]
-  rw [smul_smul, inv_mul_cancel, one_smul]
+  rw [smul_smul]
+  have h1 :
+      (((↑(augmentedIntegralSquare alpha j).scale *
+      ((classicalHodgeBasis V H p).repr alpha) ↑(chosenLiveSource alpha halpha))⁻¹ *
+      (↑(augmentedIntegralSquare alpha j).scale *
+      ((classicalHodgeBasis V H p).repr alpha) ↑(chosenLiveSource alpha halpha))) •
+      (classicalHodgeBasis V H p) j) =
+      (classicalHodgeBasis V H p) j := by
+    rw [inv_mul_self, one_smul]
+  exact h1
 
 /-- Every Hodge class is therefore a finite rational linear combination of
 concrete GST-generated basis vectors from one fixed nonzero source state. -/

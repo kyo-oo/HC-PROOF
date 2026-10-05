@@ -55,6 +55,27 @@ theorem presentationOfNativeCycle_apply
     presentationOfNativeCycle X p Z x = (Z.1 : AlgebraicCycle X ℚ) x.1 := by
   rfl
 
+/-- The presentation of a single point cycle is the single-term unit
+presentation.  This is the canonical bridge consumed by every point-generator
+formula in the successor, graded, transport and rigidity layers. -/
+theorem presentationOfNativeCycle_point
+    (X : Scheme.{u}) [CompactSpace X] (p : Nat)
+    (x : CodimensionPoint X p) :
+    presentationOfNativeCycle X p (codimensionPointCycle X p x) =
+      Finsupp.single x 1 := by
+  classical
+  ext y
+  by_cases hy : y = x
+  · subst y
+    simp [presentationOfNativeCycle_apply, codimensionPointCycle,
+      Function.locallyFinsuppWithin.single_apply]
+  · have hne : y.1 ≠ x.1 := fun h => hy (Subtype.ext h)
+    have hs : Finsupp.single x 1 y = 0 := by
+      rw [Finsupp.single_apply, if_neg hy]
+    rw [hs]
+    simp [presentationOfNativeCycle_apply, codimensionPointCycle,
+      Function.locallyFinsuppWithin.single_apply, hne]
+
 /-- Standard projective space over C is compact in its Zariski topology. -/
 theorem projectiveSpace_isCompact_univ (n : Nat) :
     IsCompact (Set.univ : Set (projectiveSpace n)) := by

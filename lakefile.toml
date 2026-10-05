@@ -358,6 +358,11 @@ roots = [
   "GSTClassicalHodgeExactClayCorrespondenceRoute",
   "GSTClassicalHodgeStrictCorrespondenceChainTransfer",
   "GSTClassicalHodgeStrictGraphCorrespondence",
+  "GSTClassicalHodgeOmniversalNativeOrbitClosure",
+  "GSTClassicalHodgeOmniversalGhostPlaneStrike",
+  "GSTClassicalHodgeOmniversalGhostBranchClosure",
+  "GSTClassicalHodgeCommonClassPlaneRealization",
+  "GSTClassicalHodgeCommonClassPlaneEquivalence",
   "GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale",
   "GSTClassicalHodgeGSTExactFinale",
   "GSTClassicalHodgeTwoSlotLefschetzPoincareGeneration",
@@ -540,6 +545,9 @@ roots = [
   "GSTClassicalHodgeOmniverseTwoSlotLefschetzBranch",
   "GSTClassicalHodgePiOneSourceCompositionalCorrespondenceFinale",
   "GSTClassicalHodgePiUnboundedOmniverseCrown",
+  "GSTClassicalHodgeCodimensionPointTower",
+  "GSTClassicalHodgeNativePointSeedDegreeUpgrade",
+  "GSTClassicalHodgeCommonClassPlaneReduction",
 ]
 
 # ---------------------------------------------------------------------------

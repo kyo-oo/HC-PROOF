@@ -113,13 +113,14 @@ noncomputable def successorPresentationOperator
   map_add' := by
     intro φ ψ
     classical
-    simp [Finsupp.sum_add_index' zero_smul add_smul]
+    rw [Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
-    apply Finsupp.ext
-    intro x
-    simp [Finsupp.sum_apply, Finsupp.sum_smul_index' smul_zero, smul_smul,
-      Pi.smul_apply, smul_eq_mul, mul_smul]
+    classical
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 @[simp]
 theorem successorPresentationOperator_single
@@ -143,14 +144,21 @@ noncomputable def successorFiniteNativeOperator
       (successorPresentationOperator V p φ)
   map_add' := by
     intro φ ψ
-    simp [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation,
-      Finsupp.sum_add_index' zero_smul add_smul]
+    simp only [successorPresentationOperator,
+      realizeFiniteCodimensionPresentation]
+    classical
+    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
-    simp [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation,
-      Finsupp.sum_smul_index' smul_zero, smul_smul, mul_smul]
+    simp only [successorPresentationOperator,
+      realizeFiniteCodimensionPresentation]
+    classical
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator
@@ -171,8 +179,10 @@ theorem successorNativeOperator_point
       realizeFiniteCodimensionPresentation V.X (p + 1)
         (successorPresentation V p x) := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [successorNativeOperator, successorFiniteNativeOperator,
-    successorPresentationOperator]
+  simp [successorNativeOperator, LinearMap.comp_apply,
+    successorFiniteNativeOperator, successorPresentationOperator,
+    presentationOfNativeCycleLinear_apply, presentationOfNativeCycle_point,
+    successorPresentationOperator_single]
 
 /-- Every generator image is explicitly represented by finitely many exact
 ambient codimension-p+1 point atoms. -/

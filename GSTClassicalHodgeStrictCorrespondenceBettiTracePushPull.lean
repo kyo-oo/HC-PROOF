@@ -78,6 +78,146 @@ theorem pushPull_apply
     T.pushPull alpha =
       T.normalizedTrace (leftCohomologyPullback A K n alpha) := rfl
 
+/-- Pointwise form of the trace's proved left-inverse law. -/
+@[simp]
+theorem normalizedTrace_rightPullback_apply
+    (T : RightFiniteBettiTrace A K n) (alpha : XCoh A n) :
+    T.normalizedTrace (rightCohomologyPullback A K n alpha) = alpha := by
+  have h := LinearMap.congr_fun T.normalizedTrace_rightPullback alpha
+  simpa only [LinearMap.comp_apply, LinearMap.id_apply] using h
+
+/-- Direct elimination of a strict relation, using only the left-inverse law.
+No totality of the relation or choice of a second related target is needed. -/
+theorem pushPull_eq_of_bettiRelated
+    (T : RightFiniteBettiTrace A K n)
+    {alpha beta : XCoh A n} (h : BettiRelated A K n alpha beta) :
+    T.pushPull alpha = beta := by
+  rw [pushPull_apply, show leftCohomologyPullback A K n alpha =
+    rightCohomologyPullback A K n beta from h]
+  exact T.normalizedTrace_rightPullback_apply beta
+
+/-- The carrier's right-pullback projection supplied by the trace. -/
+noncomputable def carrierProjection
+    (T : RightFiniteBettiTrace A K n) : CCoh A K n →ₗ[ℚ] CCoh A K n :=
+  (rightCohomologyPullback A K n).comp T.normalizedTrace
+
+/-- The carrier component discarded by normalized trace push-pull. -/
+noncomputable def carrierResidual
+    (T : RightFiniteBettiTrace A K n) : CCoh A K n →ₗ[ℚ] CCoh A K n :=
+  LinearMap.id - T.carrierProjection
+
+/-- Exact reconstruction of any intrinsic carrier class. -/
+theorem carrier_decomposition
+    (T : RightFiniteBettiTrace A K n) (omega : CCoh A K n) :
+    omega = rightCohomologyPullback A K n (T.normalizedTrace omega) +
+      T.carrierResidual omega := by
+  change omega = rightCohomologyPullback A K n (T.normalizedTrace omega) +
+    (omega - rightCohomologyPullback A K n (T.normalizedTrace omega))
+  abel
+
+/-- The residual is invisible to the trace, by a proved cancellation. -/
+@[simp]
+theorem normalizedTrace_carrierResidual
+    (T : RightFiniteBettiTrace A K n) (omega : CCoh A K n) :
+    T.normalizedTrace (T.carrierResidual omega) = 0 := by
+  change T.normalizedTrace
+    (omega - rightCohomologyPullback A K n (T.normalizedTrace omega)) = 0
+  rw [map_sub, T.normalizedTrace_rightPullback_apply, sub_self]
+
+/-- Projection onto the actual right-pullback range is idempotent. -/
+theorem carrierProjection_idempotent
+    (T : RightFiniteBettiTrace A K n) :
+    T.carrierProjection.comp T.carrierProjection = T.carrierProjection := by
+  ext omega
+  change rightCohomologyPullback A K n
+    (T.normalizedTrace (rightCohomologyPullback A K n
+      (T.normalizedTrace omega))) =
+    rightCohomologyPullback A K n (T.normalizedTrace omega)
+  rw [T.normalizedTrace_rightPullback_apply]
+
+/-- The residual vanishes exactly on the genuine right-pullback range. -/
+theorem carrierResidual_eq_zero_iff
+    (T : RightFiniteBettiTrace A K n) (omega : CCoh A K n) :
+    T.carrierResidual omega = 0 ↔
+      omega ∈ LinearMap.range (rightCohomologyPullback A K n) := by
+  change omega - rightCohomologyPullback A K n (T.normalizedTrace omega) = 0 ↔ _
+  rw [sub_eq_zero]
+  constructor
+  · intro h
+    exact ⟨T.normalizedTrace omega, h.symm⟩
+  · rintro ⟨beta, rfl⟩
+    rw [T.normalizedTrace_rightPullback_apply]
+
+/-- Uniqueness for the decomposition associated with this fixed trace:
+right-pulled target plus a trace-zero carrier residual. -/
+theorem carrier_decomposition_unique
+    (T : RightFiniteBettiTrace A K n)
+    (omega : CCoh A K n) (beta : XCoh A n) (eta : CCoh A K n)
+    (heq : omega = rightCohomologyPullback A K n beta + eta)
+    (hzero : T.normalizedTrace eta = 0) :
+    beta = T.normalizedTrace omega ∧ eta = T.carrierResidual omega := by
+  have hb : T.normalizedTrace omega = beta := by
+    rw [heq, map_add, T.normalizedTrace_rightPullback_apply, hzero, add_zero]
+  refine ⟨hb.symm, ?_⟩
+  change eta = omega - rightCohomologyPullback A K n (T.normalizedTrace omega)
+  rw [hb, heq]
+  abel
+
+/-- Intrinsic source defect retained on the correspondence carrier. -/
+noncomputable def sourceResidual
+    (T : RightFiniteBettiTrace A K n) : XCoh A n →ₗ[ℚ] CCoh A K n :=
+  T.carrierResidual.comp (leftCohomologyPullback A K n)
+
+/-- A strict common plane needs BOTH a zero carrier defect and the prescribed
+target.  Merely defining a total push-pull map does not prove either condition. -/
+theorem bettiRelated_iff_residual_and_target
+    (T : RightFiniteBettiTrace A K n) (alpha beta : XCoh A n) :
+    BettiRelated A K n alpha beta ↔
+      T.sourceResidual alpha = 0 ∧ T.pushPull alpha = beta := by
+  have hres : T.sourceResidual alpha = 0 ↔
+      leftCohomologyPullback A K n alpha =
+        rightCohomologyPullback A K n (T.pushPull alpha) := by
+    change leftCohomologyPullback A K n alpha -
+      rightCohomologyPullback A K n (T.pushPull alpha) = 0 ↔ _
+    exact sub_eq_zero
+  constructor
+  · intro h
+    have ht := T.pushPull_eq_of_bettiRelated h
+    refine ⟨hres.2 ?_, ht⟩
+    rw [ht]
+    exact h
+  · rintro ⟨hr, ht⟩
+    have h := hres.1 hr
+    rw [ht] at h
+    exact h
+
+/-- The carrier defect is an explicit representative of the existing quotient
+obstruction: its zero locus is the exact transferable subspace. -/
+theorem sourceResidual_eq_zero_iff_transferObstruction
+    (T : RightFiniteBettiTrace A K n) (alpha : XCoh A n) :
+    T.sourceResidual alpha = 0 ↔ transferObstruction A K n alpha = 0 := by
+  change T.carrierResidual (leftCohomologyPullback A K n alpha) = 0 ↔ _
+  rw [T.carrierResidual_eq_zero_iff]
+  exact (transferObstruction_apply_eq_zero_iff A K n alpha).symm
+
+/-- Different valid finite traces agree on every intrinsically transferable
+source, even if their extensions away from that locus differ. -/
+theorem pushPull_independent_on_transferable
+    (T U : RightFiniteBettiTrace A K n) (alpha : XCoh A n)
+    (h : transferObstruction A K n alpha = 0) :
+    T.pushPull alpha = U.pushPull alpha := by
+  obtain ⟨beta, hb⟩ :=
+    (transferObstruction_apply_eq_zero_iff_exists_related A K n alpha).1 h
+  exact (T.pushPull_eq_of_bettiRelated hb).trans
+    (U.pushPull_eq_of_bettiRelated hb).symm
+
+#print axioms carrier_decomposition
+#print axioms carrier_decomposition_unique
+#print axioms carrierProjection_idempotent
+#print axioms bettiRelated_iff_residual_and_target
+#print axioms sourceResidual_eq_zero_iff_transferObstruction
+#print axioms pushPull_independent_on_transferable
+
 /-- Finite trace removes the target ambiguity in GLM's maximal transfer. -/
 theorem targetAmbiguity_eq_bot
     (T : RightFiniteBettiTrace A K n) :
