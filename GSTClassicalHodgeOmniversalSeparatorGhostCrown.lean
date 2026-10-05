@@ -34,6 +34,7 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeAtomicAnnihilator
+open GSTClassicalHodgeAtomicDefectDuality
 open GSTClassicalHodgeSingleSheetCrown
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGradedGeometricProgramOrbit
@@ -139,14 +140,138 @@ theorem omniversalGhost_kills_origin_orbit
   exact E.kills_all_native_programs 0 P
     (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)
 
+/-! ## Limitless native-orbit pairing totality
+
+This is the exact no-ghost target of the unbounded/fibered proof.  It is stated
+on the unrestricted sigma-indexed Hodge address universe; no finite rank,
+`4 x 3` chart, or twelve-sheet specialization occurs here.
+
+A verified graded geometric program starts at the genuine codimension-zero
+fundamental cycle and therefore produces a genuine Hodge state.  We embed that
+state into its exact fibered address.  Pairing-totality says that a completed
+probe supported on one weight and invisible to every such verified native
+program address must vanish globally.
+
+The theorem below proves that this pure GST totality statement is exactly strong
+enough to eliminate every omniversal separator ghost.  No Hodge conclusion is
+used in its proof. -/
+
+/-- The Hodge state produced by one verified mixed native/projective/cut
+program from the canonical geometric origin. -/
+noncomputable def nativeProgramHodgeState
+    (G : GeometricCycleClassSpine V H)
+    {q : Nat}
+    (P : GradedGeometricProgram V 0 q) :
+    ClassicalHodgeFiber V H q :=
+  ⟨P.cohomologyEval G (geometricOriginClass V H), by
+    unfold geometricOriginClass
+    exact P.cohomologyEval_mem_hodge G
+      (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)⟩
+
+/-- Exact unrestricted fibered address of one verified native program state. -/
+noncomputable def nativeProgramFiberedAddress
+    (G : GeometricCycleClassSpine V H)
+    {q : Nat}
+    (P : GradedGeometricProgram V 0 q) :
+    FiberedHodgeAddress V H :=
+  fiberedWeightCoordinates V H q (nativeProgramHodgeState G P)
+
+/-- **OMNIVERSAL NATIVE-ORBIT PAIRING TOTALITY.**
+At every Hodge weight, the verified native-program states form a determining
+family for completed limitless probes supported on that weight. -/
+def OmniversalNativeOrbitPairingTotal
+    (G : GeometricCycleClassSpine V H) : Prop :=
+  ∀ q : Nat,
+  ∀ g : FiberedCompletedAddress V H,
+    (∀ s : FiberedHodgeIndex V H, s.1 ≠ q → g s = 0) →
+    (∀ P : GradedGeometricProgram V 0 q,
+      fiberedPairing (nativeProgramFiberedAddress G P) g = 0) →
+    g = 0
+
+/-- The canonical probe attached to an omniversal separator is genuinely
+supported on the separator's single Hodge weight. -/
+theorem omniversalSeparatorProbe_supported_on_weight
+    {G : GeometricCycleClassSpine V H}
+    (E : OmniversalSeparatorGhost G) :
+    ∀ s : FiberedHodgeIndex V H,
+      s.1 ≠ E.weight →
+        separatorFiberedProbe
+          (V := V) (H := H) E.weight E.separator.detector s = 0 := by
+  intro s hs
+  rcases s with ⟨q, j⟩
+  exact separatorFiberedProbe_at_other_weight
+    (V := V) (H := H) E.weight q hs E.separator.detector j
+
+/-- Every verified native-program address is invisible to the canonical
+completed probe of an omniversal separator. -/
+theorem omniversalSeparatorProbe_kills_nativeProgramAddress
+    {G : GeometricCycleClassSpine V H}
+    (E : OmniversalSeparatorGhost G)
+    (P : GradedGeometricProgram V 0 E.weight) :
+    fiberedPairing
+        (nativeProgramFiberedAddress G P)
+        (separatorFiberedProbe
+          (V := V) (H := H) E.weight E.separator.detector) = 0 := by
+  rw [fiberedPairing_separatorProbe]
+  simpa [nativeProgramFiberedAddress, nativeProgramHodgeState] using
+    omniversalGhost_kills_origin_orbit E P
+
+/-- **PAIRING TOTALITY KILLS EVERY OMNIVERSAL GHOST.**
+This is the exact contradiction step requested by the no-ghost route: the
+separator supplies a nonzero completed probe; verified geometry makes that
+probe invisible to the entire native program orbit; limitless pairing totality
+therefore forces the same probe to be zero. -/
+theorem no_omniversalSeparatorGhost_of_nativeOrbitPairingTotal
+    (G : GeometricCycleClassSpine V H)
+    (htotal : OmniversalNativeOrbitPairingTotal G) :
+    IsEmpty (OmniversalSeparatorGhost G) := by
+  refine ⟨?_⟩
+  intro E
+  let g : FiberedCompletedAddress V H :=
+    separatorFiberedProbe
+      (V := V) (H := H) E.weight E.separator.detector
+  have hsupp :
+      ∀ s : FiberedHodgeIndex V H, s.1 ≠ E.weight → g s = 0 := by
+    simpa [g] using omniversalSeparatorProbe_supported_on_weight E
+  have hkill :
+      ∀ P : GradedGeometricProgram V 0 E.weight,
+        fiberedPairing (nativeProgramFiberedAddress G P) g = 0 := by
+    intro P
+    simpa [g] using omniversalSeparatorProbe_kills_nativeProgramAddress E P
+  have hg0 : g = 0 := htotal E.weight g hsupp hkill
+  have hgne : g ≠ 0 := by
+    simpa [g] using basisSeparator_ghost_ne_zero E.separator
+  exact hgne hg0
+
+/-- **LIMITLESS NATIVE-ORBIT NO-GHOST FINALE.**
+Once the verified native orbit is pairing-total in the unrestricted fibered
+universe, the exact Stage-2G Hodge statement follows through the already-proved
+ghost equivalence. -/
+theorem hodge_of_nativeOrbitPairingTotal
+    (G : GeometricCycleClassSpine V H)
+    (htotal : OmniversalNativeOrbitPairingTotal G) :
+    BigradedBettiHodgeStatement V H :=
+  (hodge_iff_no_omniversalSeparatorGhost G).2
+    (no_omniversalSeparatorGhost_of_nativeOrbitPairingTotal G htotal)
+
 #check OmniversalSeparatorGhost
 #check BasisAtomicSeparator.toOmniversalGhost
 #check not_hodge_iff_nonempty_omniversalSeparatorGhost
 #check hodge_iff_no_omniversalSeparatorGhost
 #check omniversalGhost_kills_origin_orbit
+#check nativeProgramHodgeState
+#check nativeProgramFiberedAddress
+#check OmniversalNativeOrbitPairingTotal
+#check omniversalSeparatorProbe_supported_on_weight
+#check omniversalSeparatorProbe_kills_nativeProgramAddress
+#check no_omniversalSeparatorGhost_of_nativeOrbitPairingTotal
+#check hodge_of_nativeOrbitPairingTotal
 
 #print axioms not_hodge_iff_nonempty_omniversalSeparatorGhost
 #print axioms hodge_iff_no_omniversalSeparatorGhost
 #print axioms omniversalGhost_kills_origin_orbit
+#print axioms omniversalSeparatorProbe_kills_nativeProgramAddress
+#print axioms no_omniversalSeparatorGhost_of_nativeOrbitPairingTotal
+#print axioms hodge_of_nativeOrbitPairingTotal
 
 end GSTClassicalHodgeOmniversalSeparatorGhostCrown
