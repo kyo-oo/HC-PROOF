@@ -113,13 +113,13 @@ noncomputable def successorPresentationOperator
   map_add' := by
     intro φ ψ
     classical
-    simp
+    simp [Finsupp.sum_add_index' zero_smul add_smul]
   map_smul' := by
     intro q φ
     apply Finsupp.ext
     intro x
-    simp [Finsupp.sum_apply, Finsupp.sum_smul_index', smul_smul,
-      Pi.smul_apply, smul_eq_mul]
+    simp [Finsupp.sum_apply, Finsupp.sum_smul_index' smul_zero, smul_smul,
+      Pi.smul_apply, smul_eq_mul, mul_smul]
 
 @[simp]
 theorem successorPresentationOperator_single
@@ -144,11 +144,13 @@ noncomputable def successorFiniteNativeOperator
   map_add' := by
     intro φ ψ
     simp [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation]
+      realizeFiniteCodimensionPresentation,
+      Finsupp.sum_add_index' zero_smul add_smul]
   map_smul' := by
     intro q φ
     simp [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation, smul_smul]
+      realizeFiniteCodimensionPresentation,
+      Finsupp.sum_smul_index' smul_zero, smul_smul, mul_smul]
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator

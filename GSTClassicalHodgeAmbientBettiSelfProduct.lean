@@ -265,7 +265,6 @@ theorem swapCohomology_involutive
       show (𝟙 (G.obj (productSingularChains A))).op
           = 𝟙 (Opposite.op (G.obj (productSingularChains A))) from rfl,
       F.map_id]
-    rfl
   have hcomp :
     (HomologicalComplex.homologyMap (swapCochainPullback A) n) ≫
       (HomologicalComplex.homologyMap (swapCochainPullback A) n) = 𝟙 _ := by

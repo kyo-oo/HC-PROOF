@@ -72,11 +72,10 @@ theorem cycleClassFromPointGeometry_point
     cycleClassFromPointGeometry (V := V) p A pt
         (codimensionPointCycle V.X p x) = pt x := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [cycleClassFromPointGeometry,
-    compactCyclePresentationLinearEquiv,
-    presentationOfNativeCycleLinear,
-    presentationOfNativeCycle,
-    codimensionPointCycle]
+  show (Finsupp.linearCombination ℚ pt)
+      (presentationOfNativeCycle V.X p (codimensionPointCycle V.X p x)) = pt x
+  classical
+  simp [presentationOfNativeCycle, codimensionPointCycle]
 
 /-- Two rational cycle-class maps agreeing on genuine codimension-p point
 fundamental classes agree on EVERY native cycle. -/
@@ -132,6 +131,7 @@ theorem suppliedCycleClass_eq_finite_geometric_sum
     H.cycleClass p Z =
       (presentationOfNativeCycle V.X p Z).sum
         (fun x q => q • pt x) := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   rw [suppliedCycleClass_eq_geometric (V := V) p H pt hpoint]
   exact cycleClassFromPointGeometry_eq_finite_sum
     (V := V) p H.analytification pt Z

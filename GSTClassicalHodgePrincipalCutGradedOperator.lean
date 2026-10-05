@@ -52,11 +52,11 @@ noncomputable def zeroToOnePresentationOperator :
   map_add' := by
     intro φ ψ
     classical
-    simp
+    simp [Finsupp.sum_add_index' zero_smul add_smul]
   map_smul' := by
     intro q φ
     classical
-    simp [Finsupp.sum_smul_index', smul_smul]
+    simp [Finsupp.sum_smul_index' smul_zero, smul_smul, mul_smul]
 
 @[simp]
 theorem zeroToOnePresentationOperator_single
@@ -77,11 +77,13 @@ noncomputable def zeroToOneFiniteNative :
   map_add' := by
     intro φ ψ
     simp [zeroToOnePresentationOperator,
-      realizeFiniteCodimensionPresentation]
+      realizeFiniteCodimensionPresentation,
+      Finsupp.sum_add_index' zero_smul add_smul]
   map_smul' := by
     intro q φ
     simp [zeroToOnePresentationOperator,
-      realizeFiniteCodimensionPresentation, smul_smul]
+      realizeFiniteCodimensionPresentation,
+      Finsupp.sum_smul_index' smul_zero, smul_smul, mul_smul]
 
 /-- **NATIVE PRINCIPAL-CUT GRADED OPERATOR.**
 Every native codimension-zero cycle has a finite point normal form; apply the

@@ -140,7 +140,10 @@ theorem exists_point_presentation
   let R := C.toLocalCycleSpectralRealization
   refine ⟨R.reconstructedPresentation, ?_⟩
   rw [finitePointCycleClassMap_eq_cycleClass_realize]
-  rw [realize_presentationOfNativeCycle]
+  have hR : realizeFiniteCodimensionPresentation V.X p
+      R.reconstructedPresentation = R.reconstructedCycle :=
+    realize_presentationOfNativeCycle V.X p R.reconstructedCycle
+  rw [hR]
   exact R.reconstructedCycle_spec
 
 end PointKernelCyclicCertificate

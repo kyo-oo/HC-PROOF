@@ -92,8 +92,10 @@ theorem finitePointClass_natural
       T.comp (finitePointCycleClassMap p clP) := by
   apply Finsupp.lhom_ext
   intro x c
-  simp [presentationOperator, finitePointCycleClassMap,
-    K.transition_spec x]
+  have hspec : (Finsupp.linearCombination ℚ
+      (fun y => clQ (codimensionPointCycle X q y))) (K.transition x)
+      = T (clP (codimensionPointCycle X p x)) := K.transition_spec x
+  simp [presentationOperator, finitePointCycleClassMap, hspec]
 
 /-- On a compact carrier, conjugate the graded presentation operator through
 the exact cycle/presentation normal forms. -/
@@ -116,6 +118,9 @@ theorem nativeCycleOperator_point
     (x : CodimensionPoint X p) :
     K.nativeCycleOperator (codimensionPointCycle X p x) =
       realizeFiniteCodimensionPresentation X q (K.transition x) := by
+  show realizeFiniteCodimensionPresentation X q
+      (K.presentationOperator (Finsupp.single x (1 : ℚ))) =
+    realizeFiniteCodimensionPresentation X q (K.transition x)
   simp [nativeCycleOperator, realizePresentationLinear_apply,
     presentationOfNativeCycleLinear,
     presentationOfNativeCycle, codimensionPointCycle]
@@ -136,7 +141,8 @@ theorem nativeCycleOperator_natural
   rw [← hZ]
   simpa [nativeCycleOperator, phi,
     finitePointCycleClassMap_eq_cycleClass_realize,
-    realizePresentationLinear_apply]
+    realizePresentationLinear_apply,
+    presentation_realizeFiniteCodimensionPresentation]
     using hfree
 
 /-- The derived graded native operator is automatically kernel-stable. -/
@@ -148,6 +154,7 @@ theorem nativeCycleOperator_kernelStable
       clP Z = 0 → clQ (K.nativeCycleOperator Z) = 0 := by
   intro Z hZ
   have hnat := LinearMap.congr_fun K.nativeCycleOperator_natural Z
+  simp only [LinearMap.comp_apply] at hnat
   rw [hZ] at hnat
   simpa using hnat
 

@@ -54,6 +54,7 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeFiniteSupportChart
 open GSTClassicalHodgeLiveSheetIntertwining
@@ -104,7 +105,7 @@ theorem nonzero_state_has_exact_transfer_seed
       ∧ fiberedWeightCoordinates V H p (classicalHodgeBasis V H p i) =
           GSTClassicalHodgeFiberedTransferCompletion.fiberedSheetGenerator
             V H ⟨p, i⟩
-      ∧ GSTClassicalHodgeFiberedTransferCompletion.forgetMultiplicityToGST
+      ∧ forgetMultiplicityToGST
           (GSTClassicalHodgeFiberedTransferCompletion.fiberedSheetGenerator
             V H ⟨p, i⟩) = cosmicTransferSeed p :=
   nonzero_hodge_has_exact_fibered_transfer_sheet alpha halpha
