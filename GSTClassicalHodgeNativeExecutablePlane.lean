@@ -126,6 +126,67 @@ theorem targetCycle_spec
   apply Subtype.ext
   simp [basisCycle_spec hplane q j]
 
+/-- Basiswise algebraicity with no program requirement.  This is the exact
+basis normal form of the Stage-2G Hodge target. -/
+def HodgeBasisCycleSupply : Prop :=
+  ∀ q : Nat, ∀ j : ClassicalHodgeBasisIndex V H q,
+    ∃ Z : codimensionCycles V.X q,
+      H.cycleClass q Z = (classicalHodgeBasis V H q j).1
+
+/-- Native executable plane completeness supplies the exact basis-cycle normal
+form simply by taking the native output of each verified program. -/
+theorem basisCycleSupply_of_nativeExecutablePlane
+    (hplane : NativeExecutableGSTPlaneCompleteness (V := V) (H := H)) :
+    HodgeBasisCycleSupply (V := V) (H := H) := by
+  intro q j
+  obtain ⟨P,hP⟩ := hplane q j
+  exact ⟨nativeOutput P, hP⟩
+
+/-- Basis-cycle supply reconstructs every rational Hodge class by finite basis
+support.  No finite-dimensionality assumption is needed: each individual basis
+representation is a Finsupp. -/
+theorem hodge_of_basisCycleSupply
+    (hB : HodgeBasisCycleSupply (V := V) (H := H)) :
+    BigradedBettiHodgeStatement V H := by
+  intro q alpha halpha
+  let alphaH : ClassicalHodgeFiber V H q := ⟨alpha,halpha⟩
+  choose Z hZ using hB q
+  let W : codimensionCycles V.X q :=
+    ∑ j ∈ ((classicalHodgeBasis V H q).repr alphaH).support,
+      ((classicalHodgeBasis V H q).repr alphaH j) • Z j
+  refine ⟨W, ?_⟩
+  unfold W
+  rw [map_sum]
+  simp only [LinearMap.map_smul]
+  rw [show alphaH =
+      ∑ j ∈ ((classicalHodgeBasis V H q).repr alphaH).support,
+        ((classicalHodgeBasis V H q).repr alphaH j) •
+          classicalHodgeBasis V H q j by
+    exact (classicalHodgeBasis V H q).sum_repr alphaH]
+  apply congrArg Subtype.val
+  apply Finset.sum_congr rfl
+  intro j hj
+  apply Subtype.ext
+  simp [hZ j]
+
+/-- Conversely the exact Hodge target supplies a native cycle for every chosen
+Hodge basis sheet. -/
+theorem basisCycleSupply_of_hodge
+    (hHodge : BigradedBettiHodgeStatement V H) :
+    HodgeBasisCycleSupply (V := V) (H := H) := by
+  intro q j
+  exact hHodge q (classicalHodgeBasis V H q j).2
+
+/-- **EXACT BASIS NORMAL FORM.**
+Basis-cycle supply is neither a weaker hypothesis nor a new completion axiom:
+it is exactly the Stage-2G Hodge statement. -/
+theorem basisCycleSupply_iff_hodge :
+    HodgeBasisCycleSupply (V := V) (H := H) ↔
+      BigradedBettiHodgeStatement V H := by
+  constructor
+  · exact hodge_of_basisCycleSupply
+  · exact basisCycleSupply_of_hodge
+
 /-- **NATIVE EXECUTABLE GST PLANE ⇒ EXACT STAGE-2G HODGE.** -/
 theorem hodge_of_nativeExecutableGSTPlane
     (hplane : NativeExecutableGSTPlaneCompleteness (V := V) (H := H)) :
@@ -154,12 +215,16 @@ theorem finiteRationalCombination_of_nativeExecutableGSTPlane
 #check basisCycle_spec
 #check targetCycle
 #check targetCycle_spec
+#check HodgeBasisCycleSupply
+#check basisCycleSupply_of_nativeExecutablePlane
+#check basisCycleSupply_iff_hodge
 #check hodge_of_nativeExecutableGSTPlane
 #check rationalHodge_of_nativeExecutableGSTPlane
 #check finiteRationalCombination_of_nativeExecutableGSTPlane
 
 #print axioms basisCycle_spec
 #print axioms targetCycle_spec
+#print axioms basisCycleSupply_iff_hodge
 #print axioms hodge_of_nativeExecutableGSTPlane
 #print axioms finiteRationalCombination_of_nativeExecutableGSTPlane
 
