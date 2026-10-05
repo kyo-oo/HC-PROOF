@@ -564,6 +564,7 @@ roots = [
   "GSTClassicalHodgePlanePrimitiveCircularity",
   "GSTClassicalHodgePlaneCompletenessTheorem",
   "GSTClassicalHodgePlaneGroundPoint",
+  "GSTClassicalHodgePointReducedGeometricSpine",
 ]
 
 # ---------------------------------------------------------------------------
