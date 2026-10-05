@@ -16,6 +16,7 @@ import GSTGradedWorldAlgebra
 import GSTHodgeChannelFinale
 import GSTClassicalHodgeFullLimitlessCrown
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
+import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -537,6 +538,46 @@ theorem channel_quotient_of_conserved_spine_and_projective_two_generators
       (canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
         F G D R)
 
+/-- **PUBLIC EXECUTABLE GST-PLANE LANDING.**
+
+Here "plane completeness" has the geometric meaning required by the proof:
+every basis sheet is reached by one actual graded correspondence/cut program
+from the canonical geometric origin.  Under that theorem-level plane, the
+public classical Hodge target follows directly. -/
+theorem classicalHodgeTarget_of_fullCorrespondenceGSTPlane
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hplane :
+      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+        .FullCorrespondenceGSTPlaneCompleteness G) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+    .hodge_of_fullCorrespondenceGSTPlane G hplane
+
+/-- Constructive public form of the executable GST-plane landing. -/
+theorem every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hplane :
+      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+        .FullCorrespondenceGSTPlaneCompleteness G)
+    (p : Nat)
+    (alpha :
+      GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * p))
+    (halpha :
+      alpha ∈
+        GSTGeometricRealizationStage2G.rationalHodgeSubspace
+          (H.hodgeBigrading p)) :
+    ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
+      H.cycleClass p Z = alpha :=
+  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+    .nativeCycle_of_fullCorrespondenceGSTPlane G hplane p alpha halpha
+
 /-- Same-weight multiplicity is unrestricted in the final public landing. -/
 theorem no_same_weight_hodge_rank_ceiling :
     ∀ N p : Nat,
@@ -647,6 +688,8 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
 #check channel_quotient_of_full_limitless_geometry
 #check channel_quotient_of_conserved_spine_and_projective_two_generators
+#check classicalHodgeTarget_of_fullCorrespondenceGSTPlane
+#check every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
 #check no_same_weight_hodge_rank_ceiling
 #check unified_hodge_finale
 #check unified_hodge_finale_conserved_spine_projective_two_generators
@@ -671,6 +714,8 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
 #print axioms channel_quotient_of_full_limitless_geometry
 #print axioms channel_quotient_of_conserved_spine_and_projective_two_generators
+#print axioms classicalHodgeTarget_of_fullCorrespondenceGSTPlane
+#print axioms every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
 #print axioms unified_hodge_finale
 #print axioms unified_hodge_finale_conserved_spine_projective_two_generators
 
