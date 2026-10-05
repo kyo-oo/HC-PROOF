@@ -563,6 +563,7 @@ roots = [
   "GSTClassicalHodgePlaneCompletenessLefschetzCrown",
   "GSTClassicalHodgePlanePrimitiveCircularity",
   "GSTClassicalHodgePlaneCompletenessTheorem",
+  "GSTClassicalHodgePlaneGroundPoint",
 ]
 
 # ---------------------------------------------------------------------------
