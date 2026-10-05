@@ -319,7 +319,31 @@ theorem gstPlane_complete_but_bareStage2G_not_geometrically_complete
 #check fixedSource_event_to_every_target
 #check fixedSource_reachable_every_target
 #check fixedSource_branch_collapse
+/-- Explicitly named alias for the theorem above.  New callers should use this
+name when they mean coordinate/causal plane completeness rather than native
+algebraic plane completeness. -/
+theorem intrinsic_gst_plane_completeness
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    ∃ i : ClassicalHodgeBasisIndex V H p,
+      hodgeCoordinate i alpha ≠ 0 ∧
+      (∀ sigma : Sector,
+       ∀ j : ClassicalHodgeBasisIndex V H p,
+         HodgeBranchEvent
+           (⟨gstPlus, alpha.1⟩ : HodgeBranchNode V H p)
+           (⟨sigma, augmentedConcreteHodgeMatrixUnit alpha j i⟩ :
+             HodgeBranchNode V H p)
+         ∧ OmniversalGraph.Reachable (hodgeBranchGraph V H p)
+           (⟨gstPlus, alpha.1⟩ : HodgeBranchNode V H p)
+           (⟨sigma, augmentedConcreteHodgeMatrixUnit alpha j i⟩ :
+             HodgeBranchNode V H p)) ∧
+      (∑ j ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+          hodgeCoordinate j alpha •
+            augmentedConcreteHodgeMatrixUnit alpha j i) = alpha.1 :=
+  gst_plane_completeness alpha halpha
+
 #check gst_plane_completeness
+#check intrinsic_gst_plane_completeness
 #check ghostAdaptiveCommonClassPlanes_iff_noGhost
 #check ghostAdaptiveCommonClassPlanes_iff_hodge
 #check ghostWeightNativeSeedSurvival_of_hodge
@@ -334,6 +358,7 @@ theorem gstPlane_complete_but_bareStage2G_not_geometrically_complete
 #print axioms fixedSource_event_to_every_target
 #print axioms fixedSource_branch_collapse
 #print axioms gst_plane_completeness
+#print axioms intrinsic_gst_plane_completeness
 #print axioms ghostAdaptiveCommonClassPlanes_iff_hodge
 #print axioms survival_and_strictClosure_iff_hodge
 #print axioms survival_and_commonClassClosure_iff_hodge
