@@ -70,6 +70,9 @@ theorem presentationOfNativeCycle_point
     simp [presentationOfNativeCycle_apply, codimensionPointCycle,
       Function.locallyFinsuppWithin.single_apply]
   · have hne : y.1 ≠ x.1 := fun h => hy (Subtype.ext h)
+    have hs : Finsupp.single x 1 y = 0 := by
+      rw [Finsupp.single_apply, if_neg hy]
+    rw [hs]
     simp [presentationOfNativeCycle_apply, codimensionPointCycle,
       Function.locallyFinsuppWithin.single_apply, hne]
 
