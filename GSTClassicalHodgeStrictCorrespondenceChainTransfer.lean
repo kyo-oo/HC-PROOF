@@ -34,6 +34,29 @@ structure RightFiniteChainTransfer where
 
 namespace RightFiniteChainTransfer
 
+/-- A continuous section of the intrinsic analytic right projection produces
+an honest degree-one finite chain transfer.  This removes any need to supply a
+Betti trace independently whenever the right leg is analytically split.
+
+The proof is pure singular-chain functoriality: map the section covariantly and
+use `section ≫ right = id`. -/
+noncomputable def ofRightSection
+    (s : A.space ⟶ analyticCarrier A K)
+    (hs : s ≫ analyticRight A K = 𝟙 A.space) :
+    RightFiniteChainTransfer A K := by
+  let F :=
+    (singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient
+  refine {
+    transfer := F.map s
+    degree := 1
+    degree_ne_zero := one_ne_zero
+    transfer_right := ?_
+  }
+  change F.map s ≫ F.map (analyticRight A K) =
+    (1 : ℚ) • 𝟙 (rationalSingularChains A)
+  rw [← F.map_comp, hs, F.map_id]
+  simp
+
 /-- Dualizing the chain transfer reverses its arrow and produces the covariant
 cochain trace required for push-pull. -/
 noncomputable def cochainTrace
@@ -113,6 +136,7 @@ noncomputable def toBiFiniteBettiTrace
 end BiFiniteChainTransfer
 
 #check RightFiniteChainTransfer
+#check RightFiniteChainTransfer.ofRightSection
 #check RightFiniteChainTransfer.cochainTrace
 #check RightFiniteChainTransfer.cohomologyTrace
 #check RightFiniteChainTransfer.cohomologyTrace_rightPullback
@@ -121,6 +145,7 @@ end BiFiniteChainTransfer
 #check BiFiniteChainTransfer
 #check BiFiniteChainTransfer.toBiFiniteBettiTrace
 
+#print axioms RightFiniteChainTransfer.ofRightSection
 #print axioms RightFiniteChainTransfer.cohomologyTrace_rightPullback
 #print axioms RightFiniteChainTransfer.toRightFiniteBettiTrace
 #print axioms RightFiniteChainTransfer.pushPull
