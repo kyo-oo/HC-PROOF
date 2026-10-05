@@ -3,6 +3,8 @@ import GSTClassicalHodgeStage2GSemanticRigidity
 import GSTClassicalHodgeLocalizedL2NativeCircularity
 import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
 import GSTClassicalHodgeOmniversalNativeOrbitSeparation
+import GSTClassicalHodgeMinimalNativeGeometricCore
+import GSTClassicalHodgeNativeExecutablePlane
 
 /-!
 # GST CLASSICAL HODGE — PLANE / GEOMETRIC SEMANTIC INDEPENDENCE
@@ -344,6 +346,85 @@ theorem zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
           apply Subtype.ext
           exact hzero)) hHodge
 
+/-- The zero-cycle semantic copy already satisfies the entire reduced native
+background core.  Point classes are zero and hence Hodge; principal-cut kernel
+stability is automatic because every target cycle class is zero.  Thus these
+background laws do not contain the Hodge conclusion. -/
+noncomputable def zeroCycleClassMinimalNativeCore
+    (H : HodgeBigradedBettiData V) :
+    GSTClassicalHodgeMinimalNativeGeometricCore.MinimalNativeGeometricCore
+      (V := V) (H := zeroCycleClassData H) where
+  pointClass_is_hodge := by
+    intro p x
+    change (0 :
+      GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * p)) ∈
+      rationalHodgeSubspace (H.hodgeBigrading p)
+    exact Submodule.zero_mem _
+  principalCut_kernelStable := by
+    intro p Z hZ
+    change (0 :
+      GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * (p + 1))) = 0
+    rfl
+
+/-- A nonzero Hodge state therefore gives a model satisfying the reduced native
+geometry core and the full intrinsic GST plane while the native executable
+plane is false.  The executable plane, not the reduced background semantics,
+is the conclusion-strength step. -/
+theorem zeroCycleClass_reducedCore_intrinsicPlane_but_not_nativeExecutablePlane
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    Nonempty
+      (GSTClassicalHodgeMinimalNativeGeometricCore.MinimalNativeGeometricCore
+        (V := V) (H := zeroCycleClassData H))
+    ∧
+    (Nonempty
+      { i : HodgeSupportIndex (zeroCycleClassHodgeState H alpha) //
+        hodgeCoordinate i.1 (zeroCycleClassHodgeState H alpha) ≠ 0 })
+    ∧
+    ¬ GSTClassicalHodgeNativeExecutablePlane
+        .NativeExecutableGSTPlaneCompleteness
+          (V := V) (H := zeroCycleClassData H) := by
+  refine ⟨⟨zeroCycleClassMinimalNativeCore H⟩,
+    (zeroCycleClass_plane_complete_and_hodge_false H p alpha halpha).1, ?_⟩
+  intro hplane
+  have hHodge :
+      BigradedBettiHodgeStatement V (zeroCycleClassData H) :=
+    GSTClassicalHodgeNativeExecutablePlane
+      .hodge_of_nativeExecutableGSTPlane hplane
+  exact
+    (not_bigradedBettiHodge_zeroCycleClass
+      H p alpha.1 alpha.2 (by
+        intro hzero
+        apply halpha
+        apply Subtype.ext
+        exact hzero)) hHodge
+
+/-- The reduced minimal native core by itself cannot uniformly manufacture the
+native executable plane over Stage-2G data. -/
+theorem no_reducedCore_to_nativeExecutablePlane_over_bareStage2G
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    ¬ (∀ H' : HodgeBigradedBettiData V,
+      GSTClassicalHodgeMinimalNativeGeometricCore.MinimalNativeGeometricCore
+        (V := V) (H := H') →
+      GSTClassicalHodgeNativeExecutablePlane
+        .NativeExecutableGSTPlaneCompleteness (V := V) (H := H')) := by
+  intro h
+  let H0 := zeroCycleClassData H
+  let C :=
+    zeroCycleClassMinimalNativeCore H
+  have hplane := h H0 C
+  exact
+    (zeroCycleClass_reducedCore_intrinsicPlane_but_not_nativeExecutablePlane
+      H p alpha halpha).2.2 hplane
+
+
 #check zeroCycleClassHodgeState
 #check zeroCycleClassHodgeState_ne_zero
 #check zeroCycleClass_full_GST_plane
@@ -353,6 +434,9 @@ theorem zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
 #check no_bareStage2G_plane_to_hodge_implication
 #check zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
 #check no_bareStage2G_intrinsic_to_fullCorrespondencePlane
+#check zeroCycleClassMinimalNativeCore
+#check zeroCycleClass_reducedCore_intrinsicPlane_but_not_nativeExecutablePlane
+#check no_reducedCore_to_nativeExecutablePlane_over_bareStage2G
 #check zeroCycleClass_intrinsicPlane_but_not_nativeOrbitPairingTotal
 #check zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
 
@@ -364,6 +448,8 @@ theorem zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
 #print axioms no_bareStage2G_plane_to_hodge_implication
 #print axioms zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
 #print axioms no_bareStage2G_intrinsic_to_fullCorrespondencePlane
+#print axioms zeroCycleClass_reducedCore_intrinsicPlane_but_not_nativeExecutablePlane
+#print axioms no_reducedCore_to_nativeExecutablePlane_over_bareStage2G
 #print axioms zeroCycleClass_intrinsicPlane_but_not_nativeOrbitPairingTotal
 #print axioms zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
 
