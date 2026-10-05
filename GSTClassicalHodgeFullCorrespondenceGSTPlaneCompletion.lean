@@ -34,6 +34,10 @@ open GSTClassicalHodgeGradedCorrespondenceProgramOrbit
 open GSTClassicalHodgeGradedCorrespondenceProgramOrbit.GradedCorrespondenceProgram
 open GSTClassicalHodgeGradedOrbitSingleProgramCollapse
 open GSTClassicalHodgeExactClayStatement
+open GSTClassicalHodgeAtomicAnnihilator
+open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeLimitlessSeparatorGhost
+open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -161,12 +165,23 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
 #check fullCorrespondencePlane_iff_singleProgramGeneration
 #check basisCycle
 #check basisCycle_spec
+#check fullProgramHodgeState
+#check fullProgramFiberedAddress
+#check FullCorrespondenceNativeOrbitPairingTotal
+#check fullCorrespondencePlane_iff_fullPairingTotal
+#check separatorProbe_kills_fullProgramAddress
+#check noGhost_of_fullCorrespondencePairingTotal
+#check hodge_of_fullCorrespondencePairingTotal
 #check hodge_of_fullCorrespondenceGSTPlane
 #check nativeCycle_of_fullCorrespondenceGSTPlane
 
 #print axioms fullCorrespondencePlane_iff_orbitCyclic
 #print axioms fullCorrespondencePlane_iff_singleProgramGeneration
 #print axioms basisCycle_spec
+#print axioms fullCorrespondencePlane_iff_fullPairingTotal
+#print axioms separatorProbe_kills_fullProgramAddress
+#print axioms noGhost_of_fullCorrespondencePairingTotal
+#print axioms hodge_of_fullCorrespondencePairingTotal
 #print axioms hodge_of_fullCorrespondenceGSTPlane
 
 end GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
