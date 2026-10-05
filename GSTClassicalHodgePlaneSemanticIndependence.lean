@@ -1,6 +1,7 @@
 import GSTClassicalHodgePlaneCompletenessUnboundedCrown
 import GSTClassicalHodgeStage2GSemanticRigidity
 import GSTClassicalHodgeLocalizedL2NativeCircularity
+import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
 
 /-!
 # GST CLASSICAL HODGE — PLANE / GEOMETRIC SEMANTIC INDEPENDENCE
@@ -208,6 +209,74 @@ theorem no_bareStage2G_plane_to_hodge_implication
       apply Subtype.ext
       exact hzero)) hHodge
 
+/-- **INTRINSIC / EXECUTABLE-PLANE SEPARATION.**
+The zero-cycle semantic copy still satisfies the complete intrinsic GST plane,
+but the executable full-correspondence plane is impossible as soon as the
+Hodge fiber contains a nonzero state.  Hence the latter is genuine geometric
+content and cannot be silently identified with the intrinsic plane theorem. -/
+theorem zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    (Nonempty
+      { i : HodgeSupportIndex (zeroCycleClassHodgeState H alpha) //
+        hodgeCoordinate i.1 (zeroCycleClassHodgeState H alpha) ≠ 0 })
+      ∧
+    ¬ GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+        .FullCorrespondenceGSTPlaneCompleteness
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H) := by
+  constructor
+  · exact (zeroCycleClass_plane_complete_and_hodge_false H p alpha halpha).1
+  · intro hplane
+    have hHodge :
+        BigradedBettiHodgeStatement V (zeroCycleClassData H) :=
+      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+        .hodge_of_fullCorrespondenceGSTPlane
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H)
+          hplane
+    exact
+      (not_bigradedBettiHodge_zeroCycleClass
+        H p alpha.1 alpha.2 (by
+          intro hzero
+          apply halpha
+          apply Subtype.ext
+          exact hzero)) hHodge
+
+/-- There is therefore no uniform theorem over the current Stage-2G semantic
+record that upgrades intrinsic GST plane support to executable
+full-correspondence plane completeness.  Such an upgrade must use genuinely
+stronger geometric semantics than the bare record exposes. -/
+theorem no_bareStage2G_intrinsic_to_fullCorrespondencePlane
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    ¬ (∀ H' : HodgeBigradedBettiData V,
+      (∀ q : Nat, ∀ a : ClassicalHodgeFiber V H' q,
+        a ≠ 0 →
+        Nonempty { i : HodgeSupportIndex a //
+          hodgeCoordinate i.1 a ≠ 0 }) →
+      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+        .FullCorrespondenceGSTPlaneCompleteness
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H')) := by
+  intro h
+  let H0 := zeroCycleClassData H
+  have hsupport :
+      ∀ q : Nat, ∀ a : ClassicalHodgeFiber V H0 q,
+        a ≠ 0 →
+        Nonempty { i : HodgeSupportIndex a //
+          hodgeCoordinate i.1 a ≠ 0 } := by
+    intro q a ha
+    obtain ⟨i, hi, _hevent, _hreach, _htower, _hL2, _hcollapse⟩ :=
+      gst_plane_completeness_unbounded_via_universal_L2
+        (V := V) (H := H0) (p := q) a ha
+    exact ⟨⟨i, hi⟩⟩
+  have hfull := h H0 hsupport
+  exact
+    (zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
+      H p alpha halpha).2 hfull
+
 #check zeroCycleClassHodgeState
 #check zeroCycleClassHodgeState_ne_zero
 #check zeroCycleClass_full_GST_plane
@@ -215,6 +284,8 @@ theorem no_bareStage2G_plane_to_hodge_implication
 #check zeroCycleClass_plane_complete_and_nativeCompletion_false
 #check no_bareStage2G_plane_to_nativeCompletion_implication
 #check no_bareStage2G_plane_to_hodge_implication
+#check zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
+#check no_bareStage2G_intrinsic_to_fullCorrespondencePlane
 
 #print axioms zeroCycleClassHodgeState_ne_zero
 #print axioms zeroCycleClass_full_GST_plane
@@ -222,5 +293,7 @@ theorem no_bareStage2G_plane_to_hodge_implication
 #print axioms zeroCycleClass_plane_complete_and_nativeCompletion_false
 #print axioms no_bareStage2G_plane_to_nativeCompletion_implication
 #print axioms no_bareStage2G_plane_to_hodge_implication
+#print axioms zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
+#print axioms no_bareStage2G_intrinsic_to_fullCorrespondencePlane
 
 end GSTClassicalHodgePlaneSemanticIndependence
