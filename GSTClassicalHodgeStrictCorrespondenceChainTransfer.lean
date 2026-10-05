@@ -1,4 +1,5 @@
 import GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull
+import GSTClassicalHodgeStrictGraphCorrespondence
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 1000000
