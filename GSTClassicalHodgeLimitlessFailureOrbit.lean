@@ -102,8 +102,8 @@ theorem nonzero_pure_square_reaches_every_cosmic_weight
       ∧ cosmicDiagonalMatrixUnit r.1 p (squareDiagonalToCosmos A) ≠ 0 := by
   intro p
   constructor
-  · rw [cosmicDiagonalMatrixUnit_read_write]
-    rw [squareDiagonalToCosmos_diagonal]
+  · rw [cosmicDiagonalMatrixUnit_read_write, cosmicPairing_probe,
+      squareDiagonalToCosmos_diagonal]
   · intro hz
     have hread := congrArg (fun f : CompactCosmos => f (p,p)) hz
     simp [cosmicDiagonalMatrixUnit_apply,
@@ -117,10 +117,11 @@ theorem failure_orbit_address_is_transfer_generator
     compactAddressEquiv
         (cosmicDiagonalMatrixUnit r.1 p (squareDiagonalToCosmos A)) =
       A (r,r) • compactClMono p := by
-  rw [cosmicDiagonalMatrixUnit_read_write]
-  rw [squareDiagonalToCosmos_diagonal]
-  rw [map_smul]
-  rw [← compactClMono_eq_cosmicDiagonalAddress]
+  rw [cosmicDiagonalMatrixUnit_read_write, cosmicPairing_probe,
+    squareDiagonalToCosmos_diagonal]
+  ext i
+  simp [compactClMono, compactClCode,
+    compactAddressEquiv, cosmicAddressEquiv, cosmicDiagonalClass]
 
 /-- **LIMITLESS FAILURE ORBIT THEOREM.**
 Every genuine Stage-2G failure produces one finite integral pure witness whose

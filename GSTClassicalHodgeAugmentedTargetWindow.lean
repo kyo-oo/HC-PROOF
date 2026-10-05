@@ -193,7 +193,7 @@ theorem augmentedIntegralSquare_diagonal
       ((augmentedIntegralSquare alpha j).scale : ℚ) *
         augmentedCoordinateVector alpha j r := by
   have h := (augmentedIntegralSquare alpha j).scaled_eq (r,r)
-  rw [← h]
+  refine h.symm.trans ?_
   simp [augmentedRationalSquare]
 
 /-- A genuinely live source remains nonzero in the augmented integral square. -/

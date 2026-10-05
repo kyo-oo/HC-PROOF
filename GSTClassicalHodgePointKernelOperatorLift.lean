@@ -105,17 +105,26 @@ theorem presentation_realizeFiniteCodimensionPresentation
   rw [realizeFiniteCodimensionPresentation_apply X p φ x.1]
   simp only [Finsupp.sum, smul_eq_mul]
   by_cases hx : x ∈ φ.support
-  · have hsingle := Finset.sum_eq_single (a := x)
+  · have hsingle : ∑ b ∈ φ.support, φ b * (if x.1 = b.1 then (1 : ℚ) else 0)
+        = φ x * (if x.1 = x.1 then (1 : ℚ) else 0) :=
+      Finset.sum_eq_single (a := x)
       (fun b _ hb => by
-        have hne : x.1 ≠ b.1 := fun heq => hb (Subtype.ext heq.symm)
+        have hne : x.1 ≠ b.1 := by
+          intro heq
+          exact hb (Subtype.ext heq.symm)
         simp [hne])
-      (fun hcon => absurd hcon hx)
+      (fun hcon => absurd hx hcon)
     rw [hsingle]
     simp
   · have hxφ : φ x = 0 := Finsupp.notMem_support_iff.mp hx
     rw [hxφ]
-    refine Finset.sum_eq_zero fun y _ => ?_
-    have hne : x.1 ≠ y.1 := fun heq => hx (Subtype.ext heq.symm)
+    refine Finset.sum_eq_zero fun y hy => ?_
+    have hne : x.1 ≠ y.1 := by
+      intro heq
+      apply hx
+      have hxy : x = y := Subtype.ext heq
+      rw [hxy]
+      exact hy
     simp [hne]
 
 /-- **COMPACT CYCLE/PRESENTATION LINEAR EQUIVALENCE.** -/
@@ -172,8 +181,10 @@ theorem
       T.comp (finitePointCycleClassMap p cl) := by
   apply Finsupp.lhom_ext
   intro x q
-  simp [PointClassTransitionKernel.presentationOperator,
-    finitePointCycleClassMap, K.transition_spec x]
+  have hspec : (Finsupp.linearCombination ℚ
+      (fun y => cl (codimensionPointCycle X p y))) (K.transition x)
+      = T (cl (codimensionPointCycle X p x)) := K.transition_spec x
+  simp [PointClassTransitionKernel.presentationOperator, hspec]
 
 /-- Conjugate the free presentation operator through the compact cycle/
 presentation equivalence to obtain an operator on all native cycles. -/
@@ -205,7 +216,8 @@ theorem
   change cl (K.nativeCycleOperator Z) = T (cl Z)
   rw [← hZ]
   simpa [PointClassTransitionKernel.nativeCycleOperator, φ,
-    finitePointCycleClassMap_eq_cycleClass_realize]
+    finitePointCycleClassMap_eq_cycleClass_realize,
+    presentation_realizeFiniteCodimensionPresentation]
     using hfree
 
 /-- Package the derived native operator and the original cohomological

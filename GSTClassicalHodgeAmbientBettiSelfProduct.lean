@@ -261,6 +261,7 @@ theorem swapCohomology_involutive
         Quiver.Hom.op (𝟙 X) = 𝟙 (Opposite.op X) := by
       intro C _ X
       rfl
+    simp only [id_eq]
     rw [← Functor.map_comp, hop, ← Functor.map_comp, swapChain_involutive,
       Functor.map_id, hpid, Functor.map_id]
     rfl
