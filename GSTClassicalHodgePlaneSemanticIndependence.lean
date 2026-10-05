@@ -2,6 +2,7 @@ import GSTClassicalHodgePlaneCompletenessUnboundedCrown
 import GSTClassicalHodgeStage2GSemanticRigidity
 import GSTClassicalHodgeLocalizedL2NativeCircularity
 import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+import GSTClassicalHodgeOmniversalNativeOrbitSeparation
 
 /-!
 # GST CLASSICAL HODGE — PLANE / GEOMETRIC SEMANTIC INDEPENDENCE
@@ -277,6 +278,72 @@ theorem no_bareStage2G_intrinsic_to_fullCorrespondencePlane
     (zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
       H p alpha halpha).2 hfull
 
+/-- **INTRINSIC PLANE / NO-GHOST-TOTALITY SEPARATION.**
+Even the complete intrinsic unbounded GST plane does not force the old
+native-orbit pairing-totality law.  On the zero-cycle semantic copy, pairing
+totality would imply executable orbit cyclicity and therefore Hodge, contradicting
+the explicit nonzero Hodge state. -/
+theorem zeroCycleClass_intrinsicPlane_but_not_nativeOrbitPairingTotal
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    (Nonempty
+      { i : HodgeSupportIndex (zeroCycleClassHodgeState H alpha) //
+        hodgeCoordinate i.1 (zeroCycleClassHodgeState H alpha) ≠ 0 })
+      ∧
+    ¬ GSTClassicalHodgeOmniversalSeparatorGhostCrown
+        .OmniversalNativeOrbitPairingTotal
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H) := by
+  constructor
+  · exact (zeroCycleClass_plane_complete_and_hodge_false H p alpha halpha).1
+  · intro htotal
+    have hHodge :
+        BigradedBettiHodgeStatement V (zeroCycleClassData H) :=
+      GSTClassicalHodgeOmniversalSeparatorGhostCrown
+        .hodge_of_nativeOrbitPairingTotal
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H)
+          htotal
+    exact
+      (not_bigradedBettiHodge_zeroCycleClass
+        H p alpha.1 alpha.2 (by
+          intro hzero
+          apply halpha
+          apply Subtype.ext
+          exact hzero)) hHodge
+
+/-- Likewise the executable geometric-program plane of the no-ghost route is
+not a consequence of intrinsic plane completeness over the bare semantic
+record. -/
+theorem zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    (Nonempty
+      { i : HodgeSupportIndex (zeroCycleClassHodgeState H alpha) //
+        hodgeCoordinate i.1 (zeroCycleClassHodgeState H alpha) ≠ 0 })
+      ∧
+    ¬ GSTClassicalHodgeOmniversalNativeOrbitSeparation
+        .GeometricGSTPlaneCompleteness
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H) := by
+  constructor
+  · exact (zeroCycleClass_plane_complete_and_hodge_false H p alpha halpha).1
+  · intro hplane
+    have hHodge :
+        BigradedBettiHodgeStatement V (zeroCycleClassData H) :=
+      GSTClassicalHodgeOmniversalNativeOrbitSeparation
+        .hodge_of_geometricGSTPlaneCompleteness
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H)
+          hplane
+    exact
+      (not_bigradedBettiHodge_zeroCycleClass
+        H p alpha.1 alpha.2 (by
+          intro hzero
+          apply halpha
+          apply Subtype.ext
+          exact hzero)) hHodge
+
 #check zeroCycleClassHodgeState
 #check zeroCycleClassHodgeState_ne_zero
 #check zeroCycleClass_full_GST_plane
@@ -286,6 +353,8 @@ theorem no_bareStage2G_intrinsic_to_fullCorrespondencePlane
 #check no_bareStage2G_plane_to_hodge_implication
 #check zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
 #check no_bareStage2G_intrinsic_to_fullCorrespondencePlane
+#check zeroCycleClass_intrinsicPlane_but_not_nativeOrbitPairingTotal
+#check zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
 
 #print axioms zeroCycleClassHodgeState_ne_zero
 #print axioms zeroCycleClass_full_GST_plane
@@ -295,5 +364,7 @@ theorem no_bareStage2G_intrinsic_to_fullCorrespondencePlane
 #print axioms no_bareStage2G_plane_to_hodge_implication
 #print axioms zeroCycleClass_intrinsicPlane_but_not_fullCorrespondencePlane
 #print axioms no_bareStage2G_intrinsic_to_fullCorrespondencePlane
+#print axioms zeroCycleClass_intrinsicPlane_but_not_nativeOrbitPairingTotal
+#print axioms zeroCycleClass_intrinsicPlane_but_not_geometricProgramPlane
 
 end GSTClassicalHodgePlaneSemanticIndependence
