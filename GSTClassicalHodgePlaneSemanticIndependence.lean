@@ -1,5 +1,6 @@
 import GSTClassicalHodgePlaneCompletenessUnboundedCrown
 import GSTClassicalHodgeStage2GSemanticRigidity
+import GSTClassicalHodgeLocalizedL2NativeCircularity
 
 /-!
 # GST CLASSICAL HODGE — PLANE / GEOMETRIC SEMANTIC INDEPENDENCE
@@ -110,6 +111,72 @@ theorem zeroCycleClass_plane_complete_and_hodge_false
         apply Subtype.ext
         exact hzero)
 
+/-- **FULL PLANE / NATIVE-COMPLETION SEPARATION.**
+
+The zero-cycle-class copy still has the complete intrinsic GST plane but fails
+the exact native-plane completion predicate.  Because native completion was
+proved equivalent to Stage-2G Hodge, this is the definitive obstruction: no
+future strengthening of the intrinsic plane alone can manufacture the missing
+native semantics. -/
+theorem zeroCycleClass_plane_complete_and_nativeCompletion_false
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    (Nonempty
+      { i : HodgeSupportIndex (zeroCycleClassHodgeState H alpha) //
+        hodgeCoordinate i.1 (zeroCycleClassHodgeState H alpha) ≠ 0 })
+      ∧
+    ¬ GSTClassicalHodgeLocalizedL2NativeCircularity.NativePlaneCompletion
+        V (zeroCycleClassData H) := by
+  constructor
+  · exact (zeroCycleClass_plane_complete_and_hodge_false H p alpha halpha).1
+  · intro hcomplete
+    have hHodge :
+        BigradedBettiHodgeStatement V (zeroCycleClassData H) := by
+      exact
+        (GSTClassicalHodgeLocalizedL2NativeCircularity
+          .nativePlaneCompletion_iff_bigradedBettiHodge
+            (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H)).1
+          hcomplete
+    exact
+      (not_bigradedBettiHodge_zeroCycleClass
+        H p alpha.1 alpha.2 (by
+          intro hzero
+          apply halpha
+          apply Subtype.ext
+          exact hzero)) hHodge
+
+/-- Consequently there is no universal implication from bare intrinsic plane
+completeness to exact native-plane completion over the unconstrained Stage-2G
+semantic record. -/
+theorem no_bareStage2G_plane_to_nativeCompletion_implication
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : ClassicalHodgeFiber V H p)
+    (halpha : alpha ≠ 0) :
+    ¬ (∀ H' : HodgeBigradedBettiData V,
+      (∀ q : Nat, ∀ a : ClassicalHodgeFiber V H' q,
+        a ≠ 0 →
+        Nonempty { i : HodgeSupportIndex a // hodgeCoordinate i.1 a ≠ 0 }) →
+      GSTClassicalHodgeLocalizedL2NativeCircularity.NativePlaneCompletion
+        V H') := by
+  intro h
+  let H0 := zeroCycleClassData H
+  have hplane :
+      ∀ q : Nat, ∀ a : ClassicalHodgeFiber V H0 q,
+        a ≠ 0 →
+        Nonempty { i : HodgeSupportIndex a // hodgeCoordinate i.1 a ≠ 0 } := by
+    intro q a ha
+    obtain ⟨i, hi, _hevent, _hreach, _htower, _hL2, _hcollapse⟩ :=
+      gst_plane_completeness_unbounded_via_universal_L2
+        (V := V) (H := H0) (p := q) a ha
+    exact ⟨⟨i, hi⟩⟩
+  have hcomplete := h H0 hplane
+  exact
+    (zeroCycleClass_plane_complete_and_nativeCompletion_false
+      H p alpha halpha).2 hcomplete
+
 /-- No universally quantified implication from intrinsic unbounded GST plane
 completeness to Stage-2G Hodge can exist over the current unconstrained semantic
 record.  The zero-cycle-class copy is the explicit witness. -/
@@ -146,11 +213,15 @@ theorem no_bareStage2G_plane_to_hodge_implication
 #check zeroCycleClassHodgeState_ne_zero
 #check zeroCycleClass_full_GST_plane
 #check zeroCycleClass_plane_complete_and_hodge_false
+#check zeroCycleClass_plane_complete_and_nativeCompletion_false
+#check no_bareStage2G_plane_to_nativeCompletion_implication
 #check no_bareStage2G_plane_to_hodge_implication
 
 #print axioms zeroCycleClassHodgeState_ne_zero
 #print axioms zeroCycleClass_full_GST_plane
 #print axioms zeroCycleClass_plane_complete_and_hodge_false
+#print axioms zeroCycleClass_plane_complete_and_nativeCompletion_false
+#print axioms no_bareStage2G_plane_to_nativeCompletion_implication
 #print axioms no_bareStage2G_plane_to_hodge_implication
 
 end GSTClassicalHodgePlaneSemanticIndependence
