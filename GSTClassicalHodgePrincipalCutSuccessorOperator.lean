@@ -119,8 +119,21 @@ noncomputable def successorPresentationOperator
   map_smul' := by
     intro q φ
     classical
-    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
-      RingHom.id_apply, mul_comm]
+    simp only [successorPresentationOperator, RingHom.id_apply]
+    first
+    | rw [Finsupp.sum_smul_index]
+      intro i
+      simp
+    | by_cases hq : q = 0
+      · subst q
+        simp
+      · have hsup : (q • φ).support = φ.support := by
+          ext a
+          simp [Finsupp.mem_support_iff, mul_ne_zero_iff, hq]
+        simp only [Finsupp.sum, Finsupp.smul_apply, smul_eq_mul]
+        rw [hsup]
+    | simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, mul_ne_zero]
 
 @[simp]
 theorem successorPresentationOperator_single
@@ -154,11 +167,26 @@ noncomputable def successorFiniteNativeOperator
     · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
-    simp only [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation]
     classical
-    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
-      RingHom.id_apply, mul_comm]
+    simp only [successorFiniteNativeOperator, successorPresentationOperator,
+      realizeFiniteCodimensionPresentation, RingHom.id_apply]
+    first
+    | rw [Finsupp.sum_smul_index, Finsupp.sum_smul_index]
+      · intro i
+        simp
+      · intro i
+        simp
+    | by_cases hq : q = 0
+      · subst q
+        simp
+      · have hop : successorPresentationOperator V p (q • φ) =
+            q • successorPresentationOperator V p φ :=
+          (successorPresentationOperator V p).map_smul q φ
+        rw [hop]
+        simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+          RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, hq]
+    | simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, mul_ne_zero]
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator

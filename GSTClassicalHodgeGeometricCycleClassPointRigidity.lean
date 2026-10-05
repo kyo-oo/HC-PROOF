@@ -110,6 +110,36 @@ theorem suppliedCycleClass_eq_geometric
   intro x
   rw [hpoint x, cycleClassFromPointGeometry_point]
 
+/-- General presentation-realization roundtrip: every finite presentation is
+recovered exactly from the native cycle it realizes. -/
+theorem presentationOfNativeCycle_realize
+    (X : Scheme.{u}) [CompactSpace X] (p : Nat)
+    (φ : FiniteCodimensionPresentation X p) :
+    presentationOfNativeCycle X p
+      (realizeFiniteCodimensionPresentation X p φ) = φ := by
+  classical
+  ext y
+  rw [presentationOfNativeCycle_apply,
+    realizeFiniteCodimensionPresentation_apply X p φ y.1]
+  simp only [Finsupp.sum]
+  by_cases hy : y ∈ φ.support
+  · refine (Finset.sum_eq_single y ?_ ?_).trans ?_
+    · intro b _ hb
+      have hne : y.1 ≠ b.1 := fun heq => hb (Subtype.ext heq.symm)
+      simp [hne]
+    · intro hout
+      exact absurd hy hout
+    · simp [hy]
+  · rw [Finsupp.notMem_support_iff.mp hy]
+    refine Finset.sum_eq_zero ?_
+    intro x hx
+    have hne : y.1 ≠ x.1 := by
+      intro heq
+      apply hy
+      rw [Subtype.ext heq]
+      exact hx
+    simp [hne]
+
 /-- Expanded finite-sum formula for the geometrically generated cycle class. -/
 theorem cycleClassFromPointGeometry_eq_finite_sum
     (A : AnalytificationData V)
@@ -121,6 +151,8 @@ theorem cycleClassFromPointGeometry_eq_finite_sum
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   rw [← realize_presentationOfNativeCycle V.X p Z]
   rw [linearMap_realizeFiniteCodimensionPresentation]
+  rw [presentationOfNativeCycle_realize V.X p
+    (presentationOfNativeCycle V.X p Z)]
   simp [cycleClassFromPointGeometry_point]
 
 /-- Hence the supplied Stage-2G map itself has the same finite geometric point

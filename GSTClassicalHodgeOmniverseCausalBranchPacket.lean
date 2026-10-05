@@ -186,7 +186,7 @@ theorem branch_collapse_identity
   intro j hj
   rw [hodgeMatrixUnit_apply]
   simp only [smul_smul]
-  simp [hi, mul_assoc, hodgeCoordinate]
+  rw [mul_assoc, inv_mul_cancel₀ hi, mul_one]
 
 /-- Finite active branch packet underlying one Hodge state.  The ambient
 omniverse remains unbounded; `holes` counts only the live coordinates of the

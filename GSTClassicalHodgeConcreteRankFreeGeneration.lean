@@ -164,7 +164,12 @@ theorem concreteBasisGenerator_eq_basis
       ((classicalHodgeBasis V H p).repr alpha) ↑(chosenLiveSource alpha halpha))) •
       (classicalHodgeBasis V H p) j) =
       (classicalHodgeBasis V H p) j := by
-    rw [inv_mul_self, one_smul]
+    have hscale : ((augmentedIntegralSquare alpha j).scale : ℚ) ≠ 0 := by
+      exact_mod_cast Nat.ne_of_gt (augmentedIntegralSquare alpha j).scale_pos
+    have hlive : ((classicalHodgeBasis V H p).repr alpha)
+        (chosenLiveSource alpha halpha).1 ≠ 0 :=
+      chosenLiveSource_coefficient_ne_zero alpha halpha
+    rw [inv_mul_cancel₀ (mul_ne_zero hscale hlive), one_smul]
   exact h1
 
 /-- Every Hodge class is therefore a finite rational linear combination of
