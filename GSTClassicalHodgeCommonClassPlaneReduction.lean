@@ -1,5 +1,6 @@
 import GSTClassicalHodgeCommonClassPlaneRealization
 import GSTClassicalHodgeNativePointSeedDegreeUpgrade
+import GSTClassicalHodgeCodimensionPointTower
 
 /-!
 # GST CLASSICAL HODGE — COMMON-CLASS PLANE REDUCTION
@@ -18,19 +19,13 @@ relation geometry.  A nonzero synchronized seed already contains a canonical
 live source coordinate.  We therefore do not need a compiler for every causal
 event: one strict relation from that canonical source to the single ghost
 sheet is sufficient.  Projective degree removes the Hodge/nonzero fields from
-the seed packet as well: once an actual codimension point exists at the ghost
-weight, the genuine cycle-class spine makes its class Hodge and positive
-projective degree makes that class nonzero.
+the seed packet as well.
 
-Thus the strongest reduction proved here leaves exactly two genuinely
-independent geometric existence laws:
-
-1. an actual codimension point at each ghost-selected weight;
-2. one strict source-to-ghost relation packet for the resulting canonical
-   nonzero seed.
-
-Everything else in the old plane packet, event fan, target normalization, and
-ghost contradiction is derived.
+The ghost-indexed codimension-point burden is now strengthened further: the
+canonical codimension-zero apex plus one uniform native principal-cut survival
+law recursively generates an actual codimension-p point at every finite
+weight.  Thus no point-existence hypothesis indexed by a ghost remains in the
+strongest interface below.
 -/
 
 set_option maxHeartbeats 180000000
@@ -60,6 +55,7 @@ open GSTClassicalHodgeOmniversalGhostBranchClosure
 open GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall
 open GSTClassicalHodgeStrictCorrespondenceAnalyticSpan
 open GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull
+open GSTClassicalHodgeCodimensionPointTower
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -196,19 +192,11 @@ theorem commonClassPlaneCompleteness_of_survival_and_strictClosure
   let S := Classical.choice (hsurvive E)
   exact ⟨ghostCommonClassPlaneStrike_of_seed_strictClosure G E S (hclose E)⟩
 
-/-- **EXACT TWO-LAW REDUCTION OF GST PLANE COMPLETENESS.**
+/-- **TWO-LAW REDUCTION WITH GHOST-INDEXED POINT EXISTENCE.**
 
 Projective degree removes Hodge type and nonvanishing from the seed burden.
-The universal primitive-event compiler is also removed.  The two remaining
-independent geometric laws are now visible literally in the theorem
-signature:
-
-* existence of one actual codimension point at every ghost-selected weight;
-* existence of the one canonical source-to-ghost strict relation packet.
-
-No target cycle, target algebraicity, Hodge surjectivity, common plane class,
-all-event fan, trace normalization equation, or supplied source-action equation
-is assumed. -/
+The universal primitive-event compiler is also removed.  This compatibility
+form keeps the older point-existence interface. -/
 theorem commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
     (G : GeometricCycleClassSpine V H)
     (D : ProjectiveDegreeTraceSemantics V H)
@@ -220,6 +208,33 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosur
   exact commonClassPlaneCompleteness_of_survival_and_targetStrictClosure G
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
+
+/-- **STRONGEST CURRENT PLANE-COMPLETENESS REDUCTION.**
+
+The arbitrary ghost-indexed codimension-point law is eliminated.  The canonical
+codimension-zero apex and a single uniform native principal-cut survival law
+construct actual codimension points at every finite weight.  Plane
+Completeness therefore needs only:
+
+* projective-degree trace semantics, used solely to certify nonvanishing of the
+  genuine point-cycle seed;
+* the uniform native principal-cut successor nonvanishing law;
+* the one canonical source-to-ghost strict relation packet.
+
+No ghost-indexed point-existence axiom, target cycle, target algebraicity,
+all-event fan, common plane class, source-action equation, or Hodge conclusion
+is supplied. -/
+theorem commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    [Nonempty V.X]
+    (hstep : NativePointSuccessorNonvanishing V)
+    (hclose : GhostSeedTargetStrictClosure G) :
+    GhostAdaptiveCommonClassPlaneCompleteness G := by
+  apply commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
+    G D
+  · exact ghostCodimensionPoints_of_nativePointSuccessorNonvanishing G hstep
+  · exact hclose
 
 /-- Older stronger closure retained as a corollary. -/
 theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
@@ -240,10 +255,12 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check ghostCommonClassPlaneStrike_of_seed_targetStrictClosure
 #check commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
+#check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
 #print axioms CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
 #print axioms ghostCommonClassPlaneStrike_of_seed_targetStrictClosure
 #print axioms commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
 #print axioms commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
+#print axioms commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
 end GSTClassicalHodgeCommonClassPlaneRealization
