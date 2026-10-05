@@ -318,6 +318,45 @@ theorem hodge_of_fullCorrespondencePairingTotal
   (hodge_iff_no_omniversalSeparatorGhost G).2
     (noGhost_of_fullCorrespondencePairingTotal G htotal)
 
+/-- The cycle-side execution of the cohomologically interpreted full program is
+exactly the native-only execution.  The geometric spine changes only the
+cohomological interpretation, never the native program itself. -/
+theorem cycleEval_eq_nativeEval
+    (G : GeometricCycleClassSpine V H)
+    {p q : Nat}
+    (P : GradedCorrespondenceProgram V H p q) :
+    P.cycleEval G =
+      GSTClassicalHodgeNativeExecutablePlane.nativeEval P := by
+  induction P <;>
+    simp [GradedCorrespondenceProgram.cycleEval,
+      GradedCorrespondenceProgram.toPair,
+      GSTClassicalHodgeNativeExecutablePlane.nativeEval, *]
+
+/-- Every cohomological full-correspondence plane therefore compiles to the
+native-only executable plane.  No new realization law is introduced here. -/
+theorem nativeExecutablePlane_of_fullCorrespondencePlane
+    (G : GeometricCycleClassSpine V H)
+    (hplane : FullCorrespondenceGSTPlaneCompleteness G) :
+    GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+      (V := V) (H := H) := by
+  intro q j
+  obtain ⟨P,hP⟩ := hplane q j
+  refine ⟨P, ?_⟩
+  have hnat :=
+    P.cycleClass_cycleEval G
+      (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+        .codimensionZeroFundamentalCycle V)
+  have hcycle := congrArg
+    (fun A : codimensionCycles V.X 0 →ₗ[ℚ] codimensionCycles V.X q =>
+      A (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+        .codimensionZeroFundamentalCycle V))
+    (cycleEval_eq_nativeEval G P)
+  change H.cycleClass q
+      (GSTClassicalHodgeNativeExecutablePlane.nativeOutput P) =
+        (classicalHodgeBasis V H q j).1
+  rw [← hcycle]
+  exact hnat.trans hP
+
 noncomputable def basisCycle
     (G : GeometricCycleClassSpine V H)
     (hplane : FullCorrespondenceGSTPlaneCompleteness G)
