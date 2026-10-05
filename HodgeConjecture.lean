@@ -17,6 +17,7 @@ import GSTHodgeChannelFinale
 import GSTClassicalHodgeFullLimitlessCrown
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
+import GSTClassicalHodgeNativeExecutablePlane
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -538,6 +539,45 @@ theorem channel_quotient_of_conserved_spine_and_projective_two_generators
       (canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
         F G D R)
 
+/-- **PUBLIC NATIVE-ONLY GST PLANE FINALE.**
+
+This is the semantic endpoint required by the plane-completeness strategy:
+every Hodge basis sheet is the cycle class of an ACTUAL native output of one
+verified correspondence/cut program.  No geometric-spine compatibility
+structure is an input to the implication.
+
+The theorem therefore states directly that completed native GST-plane
+completeness proves the public classical Hodge target. -/
+theorem classicalHodgeTarget_of_nativeExecutableGSTPlane
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (hplane :
+      GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H)) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeNativeExecutablePlane.hodge_of_nativeExecutableGSTPlane
+    hplane
+
+/-- Explicit cycle produced by the native-only completed GST plane. -/
+theorem every_hodge_class_has_native_cycle_of_nativeExecutableGSTPlane
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (hplane :
+      GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H))
+    (p : Nat)
+    (alpha :
+      GSTGeometricRealizationStage2F.RationalSingularCohomology
+        H.analytification (2 * p))
+    (halpha :
+      alpha ∈
+        GSTGeometricRealizationStage2G.rationalHodgeSubspace
+          (H.hodgeBigrading p)) :
+    ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
+      H.cycleClass p Z = alpha :=
+  GSTClassicalHodgeNativeExecutablePlane.hodge_of_nativeExecutableGSTPlane
+    hplane p alpha halpha
+
 /-- **PUBLIC EXECUTABLE GST-PLANE LANDING.**
 
 Here "plane completeness" has the geometric meaning required by the proof:
@@ -688,6 +728,8 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
 #check channel_quotient_of_full_limitless_geometry
 #check channel_quotient_of_conserved_spine_and_projective_two_generators
+#check classicalHodgeTarget_of_nativeExecutableGSTPlane
+#check every_hodge_class_has_native_cycle_of_nativeExecutableGSTPlane
 #check classicalHodgeTarget_of_fullCorrespondenceGSTPlane
 #check every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
 #check no_same_weight_hodge_rank_ceiling
@@ -714,6 +756,8 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms canonical_basis_algebraization_of_conserved_spine_and_projective_two_generators
 #print axioms channel_quotient_of_full_limitless_geometry
 #print axioms channel_quotient_of_conserved_spine_and_projective_two_generators
+#print axioms classicalHodgeTarget_of_nativeExecutableGSTPlane
+#print axioms every_hodge_class_has_native_cycle_of_nativeExecutableGSTPlane
 #print axioms classicalHodgeTarget_of_fullCorrespondenceGSTPlane
 #print axioms every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
 #print axioms unified_hodge_finale
