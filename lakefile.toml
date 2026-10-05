@@ -548,6 +548,21 @@ roots = [
   "GSTClassicalHodgeCodimensionPointTower",
   "GSTClassicalHodgeNativePointSeedDegreeUpgrade",
   "GSTClassicalHodgeCommonClassPlaneReduction",
+  "GSTClassicalHodgeStrictGraphBettiTrace",
+  "GSTClassicalHodgeIncidenceRealizationEquivalence",
+  "GSTClassicalHodgeCanonicalPointIncidenceTransfer",
+  "GSTClassicalHodgeCanonicalIncidenceKernelReduction",
+  "GSTClassicalHodgeLocalizedL2NativeCircularity",
+  "GSTClassicalHodgeHorizontalGhostClosureCircularity",
+  "GSTClassicalHodgeVerticalRayMassFactorization",
+  "GSTClassicalHodgePlaneSemanticIndependence",
+  "GSTClassicalHodgePlaneCompletenessUnboundedCrown",
+  "GSTClassicalHodgeStrictPlaneCircularityAudit",
+  "GSTClassicalHodgeGeometricSpineKernelReduction",
+  "GSTClassicalHodgeNativeMassBridgeAudit",
+  "GSTClassicalHodgePlaneCompletenessLefschetzCrown",
+  "GSTClassicalHodgePlanePrimitiveCircularity",
+  "GSTClassicalHodgePlaneCompletenessTheorem",
 ]
 
 # ---------------------------------------------------------------------------
