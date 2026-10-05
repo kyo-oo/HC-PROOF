@@ -3,6 +3,7 @@ import GSTClassicalHodgeGradedNativeCohomologyRealization
 import GSTClassicalHodgePrincipalCutSuccessorOperator
 import GSTClassicalHodgeAtomicSpan
 import GSTClassicalHodgeExactClayStatement
+import GSTClassicalHodgeNativeExecutablePlane
 
 /-!
 # GST CLASSICAL HODGE — MINIMAL NATIVE GEOMETRIC CORE
@@ -211,6 +212,42 @@ theorem basisCycle_spec
   rw [hP] at hnat
   simpa [basisCycle, P, originClass] using hnat
 
+/-- Native execution is definitionally the cycle-side interpretation of the
+minimal-core program pair. -/
+theorem cycleEval_eq_nativeEval
+    (C : MinimalNativeGeometricCore (V := V) (H := H))
+    {p q : Nat}
+    (P : GradedCorrespondenceProgram V H p q) :
+    cycleEval C P =
+      GSTClassicalHodgeNativeExecutablePlane.nativeEval P := by
+  induction P <;>
+    simp [cycleEval, programPair,
+      GSTClassicalHodgeNativeExecutablePlane.nativeEval, *]
+
+/-- Minimal-core cohomological plane completeness therefore compiles to the
+unique native-only terminal plane. -/
+theorem nativeExecutablePlane_of_fullGSTPlane
+    (C : MinimalNativeGeometricCore (V := V) (H := H))
+    (hplane : FullGSTPlaneCompleteness C) :
+    GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+      (V := V) (H := H) := by
+  intro q j
+  obtain ⟨P,hP⟩ := hplane q j
+  refine ⟨P, ?_⟩
+  have hnat := cycleClass_cycleEval C P
+    (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+      .codimensionZeroFundamentalCycle V)
+  have hcycle := congrArg
+    (fun A : codimensionCycles V.X 0 →ₗ[ℚ] codimensionCycles V.X q =>
+      A (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+        .codimensionZeroFundamentalCycle V))
+    (cycleEval_eq_nativeEval C P)
+  change H.cycleClass q
+      (GSTClassicalHodgeNativeExecutablePlane.nativeOutput P) =
+        (classicalHodgeBasis V H q j).1
+  rw [← hcycle]
+  exact hnat.trans hP
+
 /-- MINIMAL-CORE FULL GST PLANE ⇒ EXACT HODGE.
 No GeometricCycleClassSpine, no cut-Hodge preservation field, no native-mass
 bridge, no ghost closure, and no Hodge-surjectivity premise occurs here. -/
@@ -248,6 +285,8 @@ theorem nativeCycle_of_fullGSTPlane
 #check MinimalNativeGeometricCore.cycleClass_cycleEval
 #check MinimalNativeGeometricCore.program_output_is_hodge
 #check MinimalNativeGeometricCore.FullGSTPlaneCompleteness
+#check MinimalNativeGeometricCore.cycleEval_eq_nativeEval
+#check MinimalNativeGeometricCore.nativeExecutablePlane_of_fullGSTPlane
 #check MinimalNativeGeometricCore.basisCycle_spec
 #check MinimalNativeGeometricCore.hodge_of_fullGSTPlane
 #check MinimalNativeGeometricCore.nativeCycle_of_fullGSTPlane
@@ -255,6 +294,8 @@ theorem nativeCycle_of_fullGSTPlane
 #print axioms MinimalNativeGeometricCore.algebraic_is_hodge
 #print axioms MinimalNativeGeometricCore.cycleClass_cycleEval
 #print axioms MinimalNativeGeometricCore.program_output_is_hodge
+#print axioms MinimalNativeGeometricCore.cycleEval_eq_nativeEval
+#print axioms MinimalNativeGeometricCore.nativeExecutablePlane_of_fullGSTPlane
 #print axioms MinimalNativeGeometricCore.basisCycle_spec
 #print axioms MinimalNativeGeometricCore.hodge_of_fullGSTPlane
 
