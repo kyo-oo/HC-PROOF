@@ -116,6 +116,207 @@ theorem fullCorrespondencePlane_iff_singleProgramGeneration
   (fullCorrespondencePlane_iff_orbitCyclic G).trans
     (fullCorrespondenceOrbitCyclic_iff_singleProgramGeneration G)
 
+/-- Hodge state produced by one executable full correspondence/cut program
+from the canonical geometric origin.  Hodge type is derived from the native
+cycle-class range, not stored in the program. -/
+noncomputable def fullProgramHodgeState
+    (G : GeometricCycleClassSpine V H)
+    {q : Nat}
+    (P : GradedCorrespondenceProgram V H 0 q) :
+    ClassicalHodgeFiber V H q :=
+  ⟨P.cohomologyEval G (correspondenceGeometricOriginClass V H), by
+    have hrange :=
+      P.cohomologyEval_mem_cycleClass_range G
+        (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+          .codimensionZeroFundamentalCycle V)
+    rcases hrange with ⟨Z, hZ⟩
+    rw [← hZ]
+    exact G.algebraic_is_hodge q Z⟩
+
+/-- Exact unrestricted fibered address of one executable full program state. -/
+noncomputable def fullProgramFiberedAddress
+    (G : GeometricCycleClassSpine V H)
+    {q : Nat}
+    (P : GradedCorrespondenceProgram V H 0 q) :
+    FiberedHodgeAddress V H :=
+  fiberedWeightCoordinates V H q (fullProgramHodgeState G P)
+
+/-- Full-correspondence version of the old no-ghost pairing-totality law. -/
+def FullCorrespondenceNativeOrbitPairingTotal
+    (G : GeometricCycleClassSpine V H) : Prop :=
+  ∀ q : Nat,
+  ∀ g : FiberedCompletedAddress V H,
+    (∀ s : FiberedHodgeIndex V H, s.1 ≠ q → g s = 0) →
+    (∀ P : GradedCorrespondenceProgram V H 0 q,
+      fiberedPairing (fullProgramFiberedAddress G P) g = 0) →
+    g = 0
+
+/-- A full program that hits one basis sheet has exactly the corresponding
+Kronecker fibered address. -/
+theorem fullProgramFiberedAddress_eq_basis
+    (G : GeometricCycleClassSpine V H)
+    {q : Nat}
+    {j : ClassicalHodgeBasisIndex V H q}
+    (P : GradedCorrespondenceProgram V H 0 q)
+    (hP :
+      P.cohomologyEval G (correspondenceGeometricOriginClass V H) =
+        (classicalHodgeBasis V H q j).1) :
+    fullProgramFiberedAddress G P =
+      Finsupp.single (⟨q,j⟩ : FiberedHodgeIndex V H) 1 := by
+  unfold fullProgramFiberedAddress fullProgramHodgeState
+  rw [show
+      (⟨P.cohomologyEval G (correspondenceGeometricOriginClass V H), by
+          have hrange :=
+            P.cohomologyEval_mem_cycleClass_range G
+              (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+                .codimensionZeroFundamentalCycle V)
+          rcases hrange with ⟨Z, hZ⟩
+          rw [← hZ]
+          exact G.algebraic_is_hodge q Z⟩ :
+        ClassicalHodgeFiber V H q) =
+      classicalHodgeBasis V H q j by
+    apply Subtype.ext
+    exact hP]
+  exact fiberedWeightCoordinates_basis V H q j
+
+/-- Full geometric plane completeness makes the executable full-program orbit
+pairing-total coordinate by coordinate. -/
+theorem fullPairingTotal_of_fullCorrespondencePlane
+    (G : GeometricCycleClassSpine V H)
+    (hplane : FullCorrespondenceGSTPlaneCompleteness G) :
+    FullCorrespondenceNativeOrbitPairingTotal G := by
+  intro q g hsupp hkill
+  funext s
+  rcases s with ⟨r,j⟩
+  by_cases hr : r = q
+  · subst r
+    obtain ⟨P, hP⟩ := hplane q j
+    have hk := hkill P
+    rw [fullProgramFiberedAddress_eq_basis G P hP] at hk
+    simpa [fiberedPairing_single_left] using hk
+  · exact hsupp ⟨r,j⟩ hr
+
+/-- Pairing-totality forces the full executable orbit to contain the entire
+Hodge fiber.  If a Hodge state were missing, a separating functional would
+yield a nonzero completed probe invisible to every full program. -/
+theorem fullOrbitCyclic_of_fullPairingTotal
+    (G : GeometricCycleClassSpine V H)
+    (htotal : FullCorrespondenceNativeOrbitPairingTotal G) :
+    FullCorrespondenceOrbitCyclic G := by
+  intro q alpha halpha
+  rw [fullCorrespondenceOrbitSubspace_eq_module G q]
+  by_contra hnot
+  obtain ⟨ell, hell, hdetect⟩ :=
+    exists_linearFunctional_separating_submodule
+      (fullCorrespondenceOrbitModule G q) alpha hnot
+  let g : FiberedCompletedAddress V H :=
+    separatorFiberedProbe (V := V) (H := H) q ell
+  have hsupp :
+      ∀ s : FiberedHodgeIndex V H, s.1 ≠ q → g s = 0 := by
+    intro s hs
+    rcases s with ⟨r,j⟩
+    exact separatorFiberedProbe_at_other_weight
+      (V := V) (H := H) q r hs ell j
+  have hkill :
+      ∀ P : GradedCorrespondenceProgram V H 0 q,
+        fiberedPairing (fullProgramFiberedAddress G P) g = 0 := by
+    intro P
+    have horbit :
+        P.cohomologyEval G (correspondenceGeometricOriginClass V H) ∈
+          fullCorrespondenceOrbitModule G q := by
+      change
+        P.cohomologyEval G (correspondenceGeometricOriginClass V H) ∈
+          fullCorrespondenceOrbitSet G q
+      exact ⟨P, rfl⟩
+    have hzero :
+        ell (P.cohomologyEval G (correspondenceGeometricOriginClass V H)) = 0 :=
+      hell _ horbit
+    let a : ClassicalHodgeFiber V H q := fullProgramHodgeState G P
+    have hp :=
+      fiberedPairing_separatorProbe
+        (V := V) (H := H) q ell a
+    simpa [g, a, fullProgramFiberedAddress, fullProgramHodgeState]
+      using hp.trans hzero
+  have hg : g = 0 := htotal q g hsupp hkill
+  let alphaH : ClassicalHodgeFiber V H q := ⟨alpha, halpha⟩
+  have hp :=
+    fiberedPairing_separatorProbe
+      (V := V) (H := H) q ell alphaH
+  have hz : ell alpha = 0 := by
+    rw [hg] at hp
+    simpa [g, alphaH, fiberedPairing] using hp
+  exact hdetect hz
+
+/-- **EXACT FULL-PROGRAM IDENTIFICATION.**
+Executable full-correspondence GST plane completeness is exactly completed-probe
+pairing totality for the same executable program orbit. -/
+theorem fullCorrespondencePlane_iff_fullPairingTotal
+    (G : GeometricCycleClassSpine V H) :
+    FullCorrespondenceGSTPlaneCompleteness G ↔
+      FullCorrespondenceNativeOrbitPairingTotal G := by
+  constructor
+  · exact fullPairingTotal_of_fullCorrespondencePlane G
+  · intro htotal
+    exact plane_of_fullOrbitCyclic G
+      (fullOrbitCyclic_of_fullPairingTotal G htotal)
+
+/-- A basis separator kills every executable full-program address because every
+such state lies in the actual cycle-class range, hence in the atomic point-cycle
+span annihilated by the separator. -/
+theorem separatorProbe_kills_fullProgramAddress
+    {G : GeometricCycleClassSpine V H}
+    (E : OmniversalSeparatorGhost G)
+    (P : GradedCorrespondenceProgram V H 0 E.weight) :
+    fiberedPairing
+      (fullProgramFiberedAddress G P)
+      (separatorFiberedProbe
+        (V := V) (H := H) E.weight E.separator.detector) = 0 := by
+  rw [fiberedPairing_separatorProbe]
+  have hrange :=
+    P.cohomologyEval_mem_cycleClass_range G
+      (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+        .codimensionZeroFundamentalCycle V)
+  rw [smoothProjective_cycleClass_range_eq_atomic_span V H E.weight] at hrange
+  have hker :
+      pointCycleClassSpan E.weight (H.cycleClass E.weight) ≤
+        LinearMap.ker E.separator.detector :=
+    (annihilatesPointCycles_iff_atomicSpan_le_ker
+      E.weight (H.cycleClass E.weight) E.separator.detector).mp
+        E.separator.annihilates_atoms
+  exact hker hrange
+
+/-- Full-program pairing totality kills every omniversal separator ghost. -/
+theorem noGhost_of_fullCorrespondencePairingTotal
+    (G : GeometricCycleClassSpine V H)
+    (htotal : FullCorrespondenceNativeOrbitPairingTotal G) :
+    IsEmpty (OmniversalSeparatorGhost G) := by
+  refine ⟨?_⟩
+  intro E
+  let g : FiberedCompletedAddress V H :=
+    separatorFiberedProbe
+      (V := V) (H := H) E.weight E.separator.detector
+  have hsupp :
+      ∀ s : FiberedHodgeIndex V H, s.1 ≠ E.weight → g s = 0 := by
+    simpa [g] using omniversalSeparatorProbe_supported_on_weight E
+  have hkill :
+      ∀ P : GradedCorrespondenceProgram V H 0 E.weight,
+        fiberedPairing (fullProgramFiberedAddress G P) g = 0 := by
+    intro P
+    simpa [g] using separatorProbe_kills_fullProgramAddress E P
+  have hg0 : g = 0 := htotal E.weight g hsupp hkill
+  have hgne : g ≠ 0 := by
+    simpa [g] using basisSeparator_ghost_ne_zero E.separator
+  exact hgne hg0
+
+/-- Full-program pairing totality therefore lands in the exact Stage-2G Hodge
+statement without any additional ghost closure package. -/
+theorem hodge_of_fullCorrespondencePairingTotal
+    (G : GeometricCycleClassSpine V H)
+    (htotal : FullCorrespondenceNativeOrbitPairingTotal G) :
+    BigradedBettiHodgeStatement V H :=
+  (hodge_iff_no_omniversalSeparatorGhost G).2
+    (noGhost_of_fullCorrespondencePairingTotal G htotal)
+
 noncomputable def basisCycle
     (G : GeometricCycleClassSpine V H)
     (hplane : FullCorrespondenceGSTPlaneCompleteness G)
