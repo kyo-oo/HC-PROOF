@@ -95,11 +95,13 @@ noncomputable def pushforwardPresentation
   map_add' := by
     intro φ ψ
     classical
-    simp [Finsupp.sum_add_index', smul_smul, mul_comm]
+    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
+      smul_smul, mul_comm, Finsupp.sum_add_index']
   map_smul' := by
     intro q φ
     classical
-    simp [Finsupp.sum_smul_index', smul_smul, mul_comm]
+    simp [Finsupp.sum, Finset.smul_sum, smul_smul, mul_comm,
+      Finsupp.sum_smul_index']
 
 @[simp]
 theorem pushforwardPresentation_single
@@ -143,14 +145,14 @@ noncomputable def realizePushforwardPresentation
     intro φ ψ
     simp only [pushforwardPresentation,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum_add_index', Finsupp.sum_smul_index',
-      smul_smul, mul_comm]
+    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
+      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
   map_smul' := by
     intro q φ
     simp only [pushforwardPresentation,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum_add_index', Finsupp.sum_smul_index',
-      smul_smul, mul_comm]
+    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
+      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
 
 @[simp]
 theorem realizePushforwardPresentation_single
