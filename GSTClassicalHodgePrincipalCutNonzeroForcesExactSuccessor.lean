@@ -81,6 +81,22 @@ theorem exists_exact_relative_successor_of_native_point_nonzero
   rw [hpres]
   simp
 
+/-- **NATIVE NONVANISHING PRODUCES AN ACTUAL NEXT-CODIMENSION POINT.**
+
+The exact successor extracted above already carries precisely the equality
+needed to inhabit `CodimensionPoint V.X (p+1)`.  Export that geometry directly
+instead of forcing downstream files to unpack the relative-cut witness again. -/
+theorem exists_codimensionPoint_succ_of_native_point_nonzero
+    (p : Nat)
+    (x : CodimensionPoint V.X p)
+    (hNative :
+      successorNativeOperator V p (codimensionPointCycle V.X p x) ≠ 0) :
+    Nonempty (CodimensionPoint V.X (p + 1)) := by
+  obtain ⟨y, _hyMem, hyExact⟩ :=
+    exists_exact_relative_successor_of_native_point_nonzero
+      (V := V) p x hNative
+  exact ⟨⟨ambientSuccessorPoint V x.1 y, hyExact⟩⟩
+
 /-- **COHOMOLOGICAL NONVANISHING RECOVERS AN EXACT GEOMETRIC SUCCESSOR.**
 
 Because the geometric cycle-class spine gives an exact commuting square for
@@ -105,6 +121,22 @@ theorem exists_exact_relative_successor_of_principalCut_point_nonzero
       (codimensionPointCycle V.X p x)
   rw [G.principalCutPair_native p, hNative, LinearMap.map_zero] at hnat
   exact hCoh hnat.symm
+
+/-- **COHOMOLOGICAL NONVANISHING PRODUCES AN ACTUAL NEXT-CODIMENSION POINT.**
+
+This is the Hodge-spine-facing form of the strengthened successor theorem. -/
+theorem exists_codimensionPoint_succ_of_principalCut_point_nonzero
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    (x : CodimensionPoint V.X p)
+    (hCoh :
+      (G.principalCutPair p).cohomologyOperator
+          (H.cycleClass p (codimensionPointCycle V.X p x)) ≠ 0) :
+    Nonempty (CodimensionPoint V.X (p + 1)) := by
+  obtain ⟨y, _hyMem, hyExact⟩ :=
+    exists_exact_relative_successor_of_principalCut_point_nonzero
+      (V := V) (H := H) G p x hCoh
+  exact ⟨⟨ambientSuccessorPoint V x.1 y, hyExact⟩⟩
 
 /-- **NONZERO PRINCIPAL-CUT ACTION PRODUCES A GENUINE ALGEBRAIC HODGE SEED.**
 
@@ -160,12 +192,16 @@ theorem principalCut_point_nonzero_gives_nativeHodgeSeed
   ⟨nativeHodgeSeed_of_principalCut_point_nonzero G D p x hCoh⟩
 
 #check exists_exact_relative_successor_of_native_point_nonzero
+#check exists_codimensionPoint_succ_of_native_point_nonzero
 #check exists_exact_relative_successor_of_principalCut_point_nonzero
+#check exists_codimensionPoint_succ_of_principalCut_point_nonzero
 #check nativeHodgeSeed_of_principalCut_point_nonzero
 #check principalCut_point_nonzero_gives_nativeHodgeSeed
 
 #print axioms exists_exact_relative_successor_of_native_point_nonzero
+#print axioms exists_codimensionPoint_succ_of_native_point_nonzero
 #print axioms exists_exact_relative_successor_of_principalCut_point_nonzero
+#print axioms exists_codimensionPoint_succ_of_principalCut_point_nonzero
 #print axioms principalCut_point_nonzero_gives_nativeHodgeSeed
 
 end GSTClassicalHodgePrincipalCutNonzeroForcesExactSuccessor
