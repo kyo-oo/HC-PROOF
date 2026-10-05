@@ -193,7 +193,8 @@ theorem augmentedIntegralSquare_diagonal
       ((augmentedIntegralSquare alpha j).scale : ℚ) *
         augmentedCoordinateVector alpha j r := by
   have h := (augmentedIntegralSquare alpha j).scaled_eq (r,r)
-  simpa [augmentedRationalSquare] using h.symm
+  rw [← h]
+  simp [augmentedRationalSquare]
 
 /-- A genuinely live source remains nonzero in the augmented integral square. -/
 theorem augmentedIntegralSquare_liveSource_ne_zero
@@ -207,10 +208,10 @@ theorem augmentedIntegralSquare_liveSource_ne_zero
     (liveSourceSlot alpha j i)
   rw [hz] at hdiag
   simp at hdiag
-  have hscale : ((augmentedIntegralSquare alpha j).scale : ℚ) ≠ 0 := by
-    exact_mod_cast Nat.ne_of_gt (augmentedIntegralSquare alpha j).scale_pos
+  have hscale : (augmentedIntegralSquare alpha j).scale ≠ 0 :=
+    Nat.ne_of_gt (augmentedIntegralSquare alpha j).scale_pos
   exact (augmentedCoordinate_liveSource_ne_zero alpha j i)
-    ((mul_eq_zero.mp hdiag).resolve_left hscale)
+    (hdiag.resolve_left hscale)
 
 /-- Read a rational augmented square back into the corresponding genuine Hodge
 basis directions. -/

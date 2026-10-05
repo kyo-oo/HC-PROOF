@@ -100,8 +100,23 @@ theorem presentation_realizeFiniteCodimensionPresentation
   classical
   apply Finsupp.ext
   intro x
-  simp [presentationOfNativeCycle_apply,
-    realizeFiniteCodimensionPresentation, codimensionPointCycle]
+  show (realizeFiniteCodimensionPresentation X p φ : AlgebraicCycle X ℚ) x.1
+      = φ x
+  rw [realizeFiniteCodimensionPresentation_apply X p φ x.1]
+  simp only [Finsupp.sum, smul_eq_mul]
+  by_cases hx : x ∈ φ.support
+  · have hsingle := Finset.sum_eq_single (a := x)
+      (fun b _ hb => by
+        have hne : x.1 ≠ b.1 := fun heq => hb (Subtype.ext heq.symm)
+        simp [hne])
+      (fun hcon => absurd hcon hx)
+    rw [hsingle]
+    simp
+  · have hxφ : φ x = 0 := Finsupp.notMem_support_iff.mp hx
+    rw [hxφ]
+    refine Finset.sum_eq_zero fun y _ => ?_
+    have hne : x.1 ≠ y.1 := fun heq => hx (Subtype.ext heq.symm)
+    simp [hne]
 
 /-- **COMPACT CYCLE/PRESENTATION LINEAR EQUIVALENCE.** -/
 noncomputable def compactCyclePresentationLinearEquiv
@@ -130,7 +145,8 @@ theorem compactCyclePresentationLinearEquiv_symm_apply
 
 /-- Free linear extension of a point-transition kernel to arbitrary finite
 point presentations. -/
-noncomputable def PointClassTransitionKernel.presentationOperator
+noncomputable def
+    _root_.GSTClassicalHodgeGeneratorwiseAtomicStability.PointClassTransitionKernel.presentationOperator
     {T : Coh →ₗ[ℚ] Coh}
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
     FiniteCodimensionPresentation X p →ₗ[ℚ]
@@ -138,7 +154,8 @@ noncomputable def PointClassTransitionKernel.presentationOperator
   Finsupp.linearCombination ℚ K.transition
 
 @[simp]
-theorem PointClassTransitionKernel.presentationOperator_single
+theorem
+    _root_.GSTClassicalHodgeGeneratorwiseAtomicStability.PointClassTransitionKernel.presentationOperator_single
     {T : Coh →ₗ[ℚ] Coh}
     (K : PointClassTransitionKernel (p := p) (cl := cl) T)
     (x : CodimensionPoint X p) :
@@ -147,7 +164,8 @@ theorem PointClassTransitionKernel.presentationOperator_single
 
 /-- The freely extended presentation operator intertwines the free point-class
 map with the cohomological observable on every finite presentation. -/
-theorem PointClassTransitionKernel.finitePointClass_natural
+theorem
+    _root_.GSTClassicalHodgeGeneratorwiseAtomicStability.PointClassTransitionKernel.finitePointClass_natural
     {T : Coh →ₗ[ℚ] Coh}
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
     (finitePointCycleClassMap p cl).comp K.presentationOperator =
@@ -159,7 +177,8 @@ theorem PointClassTransitionKernel.finitePointClass_natural
 
 /-- Conjugate the free presentation operator through the compact cycle/
 presentation equivalence to obtain an operator on all native cycles. -/
-noncomputable def PointClassTransitionKernel.nativeCycleOperator
+noncomputable def
+    _root_.GSTClassicalHodgeGeneratorwiseAtomicStability.PointClassTransitionKernel.nativeCycleOperator
     [CompactSpace X]
     {T : Coh →ₗ[ℚ] Coh}
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
@@ -171,7 +190,8 @@ noncomputable def PointClassTransitionKernel.nativeCycleOperator
 /-- **POINT KERNEL → FULL CYCLE-CLASS NATURALITY.**
 The native cycle operator induced from the point-transition kernel commutes
 exactly with the supplied cycle-class map on every native cycle. -/
-theorem PointClassTransitionKernel.nativeCycleOperator_natural
+theorem
+    _root_.GSTClassicalHodgeGeneratorwiseAtomicStability.PointClassTransitionKernel.nativeCycleOperator_natural
     [CompactSpace X]
     {T : Coh →ₗ[ℚ] Coh}
     (K : PointClassTransitionKernel (p := p) (cl := cl) T) :
@@ -191,7 +211,8 @@ theorem PointClassTransitionKernel.nativeCycleOperator_natural
 /-- Package the derived native operator and the original cohomological
 observable into the exact commuting-square interface used by the constructive
 spectral landing. -/
-noncomputable def PointClassTransitionKernel.toCycleClassOperatorPair
+noncomputable def
+    _root_.GSTClassicalHodgeGeneratorwiseAtomicStability.PointClassTransitionKernel.toCycleClassOperatorPair
     {V : SmoothProjectiveComplexScheme}
     {H : HodgeBigradedBettiData V}
     {p : Nat}

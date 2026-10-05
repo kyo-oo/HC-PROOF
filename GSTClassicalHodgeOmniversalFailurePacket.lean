@@ -53,6 +53,7 @@ open GSTClassicalHodgeLefschetzTomography
 open GSTClassicalHodgeIntegralSquareLocalization
 open GSTClassicalHodgeTotalSheetMatrixUnit
 open GSTClassicalHodgeLimitlessArsenalConjugation
+open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -61,7 +62,8 @@ variable {H : HodgeBigradedBettiData V}
 pure square. -/
 def pureCoordinateVectorQ
     {N : Nat} (A : PureWorldHodge N N) : Fin N → ℚ :=
-  fun i => (pureCoordinates A.1 i : ℚ)
+  fun i => (pureCoordinates A.1
+    (Fin.castLE (show N ≤ min N N by omega) i) : ℚ)
 
 /-- A nonzero integral pure square has a nonzero rationalized diagonal vector.
 No information is lost when passing from the integral world to the exact
@@ -71,17 +73,16 @@ theorem pureCoordinateVectorQ_ne_zero
     (hA : A.1 ≠ 0) :
     pureCoordinateVectorQ A ≠ 0 := by
   intro hzero
-  have hcoordZ : pureCoordinates A.1 = (0 : Fin N → ℤ) := by
-    funext i
-    have hi := congrFun hzero i
-    exact_mod_cast hi
+  apply hA
   have hreassemble := pureReassemble_pureCoordinates A.1 A.2
-  rw [hcoordZ] at hreassemble
-  have hz : pureReassemble (0 : Fin N → ℤ) = (0 : ShapeCoef (outputShape N N)) := by
-    funext c
-    simp [pureReassemble]
-  rw [hz] at hreassemble
-  exact hA hreassemble.symm
+  rw [← hreassemble]
+  funext x
+  by_cases hdiag : x.1.1 = x.2.1
+  · have h := congrFun hzero (⟨x.1.1, x.1.2⟩ : Fin N)
+    rw [Pi.zero_apply] at h
+    simp only [pureReassemble, dif_pos hdiag, Pi.zero_apply]
+    exact Int.cast_eq_zero.mp h
+  · simp [pureReassemble, dif_neg hdiag]
 
 /-- Nonzero pure coordinates have a nonzero exact central-binomial Lefschetz
 moment. -/
@@ -106,8 +107,7 @@ theorem squareDiagonalToCosmos_ne_zero_of_pure
   have hzobs : observe N N (0 : CompactCosmos) =
       (0 : ShapeCoef (outputShape N N)) := by
     rfl
-  rw [hzobs] at hobs
-  exact hA hobs.symm
+  exact hA (hobs.symm.trans hzobs)
 
 /-- A nonzero pure square contains a genuinely live diagonal sheet. -/
 theorem exists_live_diagonal
@@ -118,11 +118,12 @@ theorem exists_live_diagonal
   push_neg at h
   apply hA
   funext c
-  by_cases hdiag : c.1.1 = c.2.1
-  · have heq : c.1 = c.2 := Fin.ext hdiag
-    subst c.2
-    exact h c.1
-  · exact A.2 c hdiag
+  obtain ⟨i, j⟩ := c
+  by_cases hdiag : i.1 = j.1
+  · have hij : i = j := Fin.ext hdiag
+    subst hij
+    exact h i
+  · exact A.2 (i, j) hdiag
 
 /-- One live source sheet generates a nonzero explicit GST orbit to every
 other sheet by projector/Lefschetz/Poincare transport. -/
@@ -218,12 +219,14 @@ theorem not_hodge_yields_omniversal_failure_packet
   have hAne : A.1 ≠ 0 := by
     intro hzero
     apply hpair
-    rw [hzero]
+    have hA0 : A0 = 0 := hzero
+    rw [hA0]
     simp [worldTopPairing]
   have hBne : B.1 ≠ 0 := by
     intro hzero
     apply hpair
-    rw [hzero]
+    have hB0 : B0 = 0 := hzero
+    rw [hB0]
     simp [worldTopPairing]
   have hAcoord := pureCoordinateVectorQ_ne_zero A hAne
   have hBcoord := pureCoordinateVectorQ_ne_zero B hBne

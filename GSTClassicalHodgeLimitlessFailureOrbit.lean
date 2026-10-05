@@ -1,6 +1,8 @@
 import GSTClassicalHodgeLimitlessArsenalConjugation
 import GSTClassicalHodgeIntegralSquareLocalization
 import GSTClassicalHodgeLimitlessCosmicLefschetzPropagation
+import GSTDimensionFreeHodgeDiagonal
+import GSTUniversalAddressBridge
 import GSTTransferBridgeV2
 
 /-!
@@ -40,6 +42,8 @@ open GSTGlobalPureHodgeCosmology
 open GSTClassicalHodgeIntegralSquareLocalization
 open GSTClassicalHodgeLimitlessArsenalConjugation
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTDimensionFreeHodgeDiagonal
+open GSTUniversalAddressBridge
 open GSTTransferBridgeV2
 
 /-- A nonzero finite Poincare pairing has at least one genuinely nonzero
@@ -64,15 +68,16 @@ theorem pure_pairing_ne_zero_exists_diagonal
     (hpair : worldTopPairing A B ≠ 0) :
     ∃ r : Fin N, A (r,r) * B (worldDual (r,r)) ≠ 0 := by
   obtain ⟨c, hc⟩ := worldTopPairing_ne_zero_exists_term A B hpair
-  have hAc : A c ≠ 0 := by
+  obtain ⟨i, j⟩ := c
+  have hAc : A (i, j) ≠ 0 := by
     intro hzero
     exact hc (by simp [hzero])
-  have hdiag : c.1.1 = c.2.1 := by
+  have hdiag : i.1 = j.1 := by
     by_contra h
-    exact hAc (hA c h)
-  have hfin : c.1 = c.2 := Fin.ext hdiag
-  subst c.2
-  exact ⟨c.1, hc⟩
+    exact hAc (hA (i, j) h)
+  have hfin : i = j := Fin.ext hdiag
+  subst hfin
+  exact ⟨i, hc⟩
 
 /-- The selected diagonal coefficient is nonzero by itself. -/
 theorem pure_pairing_source_ne_zero
