@@ -362,6 +362,7 @@ roots = [
   "GSTClassicalHodgeOmniversalGhostPlaneStrike",
   "GSTClassicalHodgeOmniversalGhostBranchClosure",
   "GSTClassicalHodgeCommonClassPlaneRealization",
+  "GSTClassicalHodgeCommonClassPlaneEquivalence",
   "GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale",
   "GSTClassicalHodgeGSTExactFinale",
   "GSTClassicalHodgeTwoSlotLefschetzPoincareGeneration",
