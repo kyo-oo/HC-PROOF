@@ -138,6 +138,7 @@ theorem exists_point_presentation
     ∃ φ : FiniteCodimensionPresentation V.X p,
       finitePointCycleClassMap p (H.cycleClass p) φ = alpha.1 := by
   let R := C.toLocalCycleSpectralRealization
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   refine ⟨R.reconstructedPresentation, ?_⟩
   rw [finitePointCycleClassMap_eq_cycleClass_realize]
   have hR : realizeFiniteCodimensionPresentation V.X p
