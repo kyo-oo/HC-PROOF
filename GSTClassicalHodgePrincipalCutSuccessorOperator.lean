@@ -118,8 +118,9 @@ noncomputable def successorPresentationOperator
     · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
-    rw [Finsupp.sum_smul_index']
-    · intro i; simp
+    classical
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 @[simp]
 theorem successorPresentationOperator_single
@@ -145,14 +146,19 @@ noncomputable def successorFiniteNativeOperator
     intro φ ψ
     simp only [successorPresentationOperator,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
+    classical
+    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
     simp only [successorPresentationOperator,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
+    classical
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator
@@ -173,8 +179,10 @@ theorem successorNativeOperator_point
       realizeFiniteCodimensionPresentation V.X (p + 1)
         (successorPresentation V p x) := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [successorNativeOperator, successorFiniteNativeOperator,
-    successorPresentationOperator]
+  simp [successorNativeOperator, LinearMap.comp_apply,
+    successorFiniteNativeOperator, successorPresentationOperator,
+    presentationOfNativeCycleLinear_apply, presentationOfNativeCycle_point,
+    successorPresentationOperator_single]
 
 /-- Every generator image is explicitly represented by finitely many exact
 ambient codimension-p+1 point atoms. -/

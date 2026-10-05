@@ -63,8 +63,8 @@ theorem swap_cupLeft
     {a b : Nat}
     (u : X2Coh A a)
     (v : X2Coh A b) :
-    swapCohomologyPullback A (a + b) (C.cupLeft u v) =
-      C.cupLeft (swapCohomologyPullback A a u)
+    swapCohomologyPullback A (a + b) (cupLeft A C u v) =
+      cupLeft A C (swapCohomologyPullback A a u)
         (swapCohomologyPullback A b v) :=
   C.swap_natural a b u v
 
@@ -121,8 +121,8 @@ theorem swap_cup
     {d : Nat}
     (P : RationalBettiIntersectionPrimitives A d)
     (a b : Nat) (u : X2Coh A a) (v : X2Coh A b) :
-    swapCohomologyPullback A (a + b) (P.cup a b u v) =
-      P.cup a b
+    swapCohomologyPullback A (a + b) (cup A P a b u v) =
+      cup A P a b
         (swapCohomologyPullback A a u)
         (swapCohomologyPullback A b v) :=
   P.cupTheory.swap_natural a b u v
@@ -133,8 +133,8 @@ theorem sndGysin_swap
     {d : Nat}
     (P : RationalBettiIntersectionPrimitives A d)
     (n : Nat) (z : X2Coh A (2 * d + n)) :
-    P.sndGysin n (swapCohomologyPullback A (2 * d + n) z) =
-      P.fstGysin n z :=
+    sndGysin A P n (swapCohomologyPullback A (2 * d + n) z) =
+      fstGysin A P n z :=
   P.gysinTheory.snd_swap n z
 
 /-- Symmetric projection-swap law. -/
@@ -142,8 +142,8 @@ theorem fstGysin_swap
     {d : Nat}
     (P : RationalBettiIntersectionPrimitives A d)
     (n : Nat) (z : X2Coh A (2 * d + n)) :
-    P.fstGysin n (swapCohomologyPullback A (2 * d + n) z) =
-      P.sndGysin n z :=
+    fstGysin A P n (swapCohomologyPullback A (2 * d + n) z) =
+      sndGysin A P n z :=
   P.gysinTheory.fst_swap n z
 
 end RationalBettiIntersectionPrimitives

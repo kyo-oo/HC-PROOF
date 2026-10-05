@@ -95,13 +95,14 @@ noncomputable def pushforwardPresentation
   map_add' := by
     intro φ ψ
     classical
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index']
+    rw [Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
     classical
-    simp [Finsupp.sum, Finset.smul_sum, smul_smul, mul_comm,
-      Finsupp.sum_smul_index']
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 @[simp]
 theorem pushforwardPresentation_single
@@ -145,14 +146,19 @@ noncomputable def realizePushforwardPresentation
     intro φ ψ
     simp only [pushforwardPresentation,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
+    classical
+    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
     simp only [pushforwardPresentation,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
+    classical
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 @[simp]
 theorem realizePushforwardPresentation_single
@@ -183,9 +189,9 @@ theorem smoothProjectiveNativePushforward_point
         (codimensionPointCycle V.X p x) =
       nativePointPushforward f p x := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [smoothProjectiveNativePushforward,
-    presentationOfNativeCycleLinear,
-    realizePushforwardPresentation]
+  simp only [smoothProjectiveNativePushforward, LinearMap.comp_apply,
+    presentationOfNativeCycleLinear_apply, presentationOfNativeCycle_point]
+  exact realizePushforwardPresentation_single f p x
 
 /-- The native transport construction itself supplies a point-lift family for
 its own point-generator action. -/

@@ -118,12 +118,9 @@ theorem nativeCycleOperator_point
     (x : CodimensionPoint X p) :
     K.nativeCycleOperator (codimensionPointCycle X p x) =
       realizeFiniteCodimensionPresentation X q (K.transition x) := by
-  show realizeFiniteCodimensionPresentation X q
-      (K.presentationOperator (Finsupp.single x (1 : ℚ))) =
-    realizeFiniteCodimensionPresentation X q (K.transition x)
-  simp [nativeCycleOperator, realizePresentationLinear_apply,
-    presentationOfNativeCycleLinear,
-    presentationOfNativeCycle, codimensionPointCycle]
+  simp [nativeCycleOperator, LinearMap.comp_apply,
+    realizePresentationLinear_apply, presentationOfNativeCycleLinear_apply,
+    presentationOfNativeCycle_point, presentationOperator_single]
 
 /-- **GRADED POINT KERNEL -> FULL CYCLE-CLASS NATURALITY.** -/
 theorem nativeCycleOperator_natural

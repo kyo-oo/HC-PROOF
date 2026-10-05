@@ -177,9 +177,11 @@ theorem branch_collapse_identity
       alpha =
         ∑ j ∈ ((classicalHodgeBasis V H p).repr alpha).support,
           ((classicalHodgeBasis V H p).repr alpha j) •
-            classicalHodgeBasis V H p j :=
-    (classicalHodgeBasis V H p).sum_repr alpha
-  rw [hsum]
+            classicalHodgeBasis V H p j := by
+    have h0 := (classicalHodgeBasis V H p).linearCombination_repr alpha
+    rw [Finsupp.linearCombination_apply] at h0
+    exact h0.symm
+  conv_lhs => rw [hsum]
   apply Finset.sum_congr rfl
   intro j hj
   rw [hodgeMatrixUnit_apply]

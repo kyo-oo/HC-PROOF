@@ -52,13 +52,14 @@ noncomputable def zeroToOnePresentationOperator :
   map_add' := by
     intro φ ψ
     classical
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index']
+    rw [Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
     classical
-    simp [Finsupp.sum, Finset.smul_sum, smul_smul, mul_comm,
-      Finsupp.sum_smul_index']
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 @[simp]
 theorem zeroToOnePresentationOperator_single
@@ -80,14 +81,19 @@ noncomputable def zeroToOneFiniteNative :
     intro φ ψ
     simp only [zeroToOnePresentationOperator,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
+    classical
+    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
+    · intro i; simp
+    · intro i b₁ b₂; simp [add_smul]
   map_smul' := by
     intro q φ
     simp only [zeroToOnePresentationOperator,
       realizeFiniteCodimensionPresentation]
-    simp [Finsupp.sum, Finset.sum_add_distrib, Finset.smul_sum,
-      smul_smul, mul_comm, Finsupp.sum_add_index', Finsupp.sum_smul_index']
+    classical
+    simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
+      RingHom.id_apply, mul_comm]
 
 /-- **NATIVE PRINCIPAL-CUT GRADED OPERATOR.**
 Every native codimension-zero cycle has a finite point normal form; apply the
@@ -104,8 +110,10 @@ theorem zeroToOneNativeOperator_point
     zeroToOneNativeOperator V (codimensionPointCycle V.X 0 x) =
       principalCutCycle V x.1 := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [zeroToOneNativeOperator, zeroToOneFiniteNative,
-    zeroToOnePresentationOperator, zeroToOnePointKernel,
+  simp [zeroToOneNativeOperator, LinearMap.comp_apply,
+    zeroToOneFiniteNative, zeroToOnePresentationOperator,
+    zeroToOnePointKernel, presentationOfNativeCycleLinear_apply,
+    presentationOfNativeCycle_point, zeroToOnePresentationOperator_single,
     principalCutCycle]
 
 /-- The operator is geometrically generated on every codimension-zero atom by

@@ -40,6 +40,7 @@ open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTNativeCodimensionCyclePresentation
+open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeLocalCyclicCriterion

@@ -545,6 +545,9 @@ roots = [
   "GSTClassicalHodgeOmniverseTwoSlotLefschetzBranch",
   "GSTClassicalHodgePiOneSourceCompositionalCorrespondenceFinale",
   "GSTClassicalHodgePiUnboundedOmniverseCrown",
+  "GSTClassicalHodgeCodimensionPointTower",
+  "GSTClassicalHodgeNativePointSeedDegreeUpgrade",
+  "GSTClassicalHodgeCommonClassPlaneReduction",
 ]
 
 # ---------------------------------------------------------------------------
