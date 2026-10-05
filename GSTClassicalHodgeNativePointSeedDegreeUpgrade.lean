@@ -92,6 +92,26 @@ theorem ghostWeightNativeSeedSurvival_of_codimensionPoints
   let x := Classical.choice (hpoint E)
   exact ⟨nativeHodgeOrbitSeed_of_codimensionPoint G D x⟩
 
+/-- Positive degree semantics really excludes the zero-cycle-class spine at
+every inhabited codimension.  This check identifies precisely why the zero
+spine counterinstance cannot be used against a theorem that also supplies D. -/
+theorem no_degreeTrace_for_zeroCycleClass_at_point
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) (x : CodimensionPoint V.X p) :
+    IsEmpty (ProjectiveDegreeTraceSemantics V
+      (GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H)) := by
+  refine ⟨?_⟩
+  intro D
+  have ht := D.trace_point_cycleClass p x
+  have hz : D.pointDegree p x = 0 := by
+    simpa only [GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData_cycleClass,
+      LinearMap.zero_apply, map_zero] using ht.symm
+  have hp := D.pointDegree_pos p x
+  rw [hz] at hp
+  exact (lt_irrefl 0) hp
+
+#print axioms no_degreeTrace_for_zeroCycleClass_at_point
+
 #check NativePointHodgeSeed.ofCodimensionPoint
 #check NativePointHodgeSeed.toNativeHodgeOrbitSeed
 #check nativeHodgeOrbitSeed_of_codimensionPoint

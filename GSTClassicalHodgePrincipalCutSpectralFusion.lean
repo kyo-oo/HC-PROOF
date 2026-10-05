@@ -217,10 +217,10 @@ theorem target_cycle_of_seed_spectral_coverage
 A nonzero genuine principal-cut cohomology action produces the synchronized
 algebraic seed.  One genuine closed-correspondence spectral observable then
 extracts any selected Hodge sheet on which that seed has nonzero coordinate.
-The old projectively-live/exact-successor witness is completely absent. -/
+The projectively-live/exact-successor witness and the redundant projective
+degree premise are absent; the source follows directly from naturality. -/
 theorem principalCut_nonzero_spectral_basis_cycle
     (G : GeometricCycleClassSpine V H)
-    (D : ProjectiveDegreeTraceSemantics V H)
     (q : Nat)
     (x : CodimensionPoint V.X q)
     (hCoh :
@@ -230,11 +230,11 @@ theorem principalCut_nonzero_spectral_basis_cycle
     (R : ClosedCorrespondenceWindowRealization G W)
     (i : Fin W.N)
     (hvis : SeedVisible R
-      (nativeHodgeSeed_of_principalCut_point_nonzero G D q x hCoh) i) :
+      (nativeHodgeSeed_of_principalCut_point_nonzero G q x hCoh) i) :
     ∃ Z : codimensionCycles V.X (q + 1),
       H.cycleClass (q + 1) Z =
         (classicalHodgeBasis V H (q + 1) (W.basisIndex i)).1 := by
-  let S := nativeHodgeSeed_of_principalCut_point_nonzero G D q x hCoh
+  let S := nativeHodgeSeed_of_principalCut_point_nonzero G q x hCoh
   exact ⟨extractedBasisCycleFromSeed R S i hvis,
     extractedBasisCycleFromSeed_spec R S i hvis⟩
 
@@ -245,7 +245,6 @@ Hodge class as soon as it covers that target's finite live support with
 nonzero coordinates of the same source. -/
 theorem principalCut_nonzero_spectral_target_cycle
     (G : GeometricCycleClassSpine V H)
-    (D : ProjectiveDegreeTraceSemantics V H)
     (q : Nat)
     (x : CodimensionPoint V.X q)
     (hCoh :
@@ -260,10 +259,10 @@ theorem principalCut_nonzero_spectral_target_cycle
           ∃ i : Fin W.N,
             W.basisIndex i = j ∧
               SeedVisible R
-                (nativeHodgeSeed_of_principalCut_point_nonzero G D q x hCoh) i) :
+                (nativeHodgeSeed_of_principalCut_point_nonzero G q x hCoh) i) :
     ∃ Z : codimensionCycles V.X (q + 1),
       H.cycleClass (q + 1) Z = alpha.1 := by
-  let S := nativeHodgeSeed_of_principalCut_point_nonzero G D q x hCoh
+  let S := nativeHodgeSeed_of_principalCut_point_nonzero G q x hCoh
   exact target_cycle_of_seed_spectral_coverage R S alpha hcover
 
 #check SeedVisible

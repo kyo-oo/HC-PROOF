@@ -21,11 +21,12 @@ event: one strict relation from that canonical source to the single ghost
 sheet is sufficient.  Projective degree removes the Hodge/nonzero fields from
 the seed packet as well.
 
-The ghost-indexed codimension-point burden is now strengthened further: the
-canonical codimension-zero apex plus one uniform native principal-cut survival
-law recursively generates an actual codimension-p point at every finite
-weight.  Thus no point-existence hypothesis indexed by a ghost remains in the
-strongest interface below.
+The canonical codimension-zero apex plus a uniform native principal-cut
+survival HYPOTHESIS recursively generates an actual codimension-p point at
+every finite weight.  The tower does not prove that survival hypothesis.
+`nativeCutSearch` now constructs a finite path or a certified stopped cut
+without it.  The strict target packet and positive-degree semantics below
+also remain explicit premises, not established existence theorems.
 -/
 
 set_option maxHeartbeats 180000000
@@ -209,12 +210,12 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosur
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
-/-- **STRONGEST CURRENT PLANE-COMPLETENESS REDUCTION.**
+/-- **CONDITIONAL UNIFORM-TOWER PLANE-COMPLETENESS REDUCTION.**
 
-The arbitrary ghost-indexed codimension-point law is eliminated.  The canonical
-codimension-zero apex and a single uniform native principal-cut survival law
-construct actual codimension points at every finite weight.  Plane
-Completeness therefore needs only:
+The ghost-indexed point-existence premise is replaced by a uniform survival
+premise; it is not proved or eliminated.  The canonical codimension-zero apex
+and this premise construct points at every finite weight.  This interface
+requires:
 
 * projective-degree trace semantics, used solely to certify nonvanishing of the
   genuine point-cycle seed;

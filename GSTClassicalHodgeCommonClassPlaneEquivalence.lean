@@ -89,6 +89,64 @@ theorem survival_commonClassClosure_iff_hodge
     exact hodge_of_survival_and_commonClassPlaneClosure G hsurvive hclose
   · exact survival_and_commonClassClosure_of_hodge G
 
+/-! ## Nonvacuous audit of the current semantic interface
+
+The equivalence above alone identifies a reformulation.  The following
+counterinstance is stronger: it supplies all fields of the current geometric
+spine, retains the same GST Hodge fiber, and still refutes plane completeness
+when that fiber contains a nonzero state.  An unconditional closure theorem
+therefore cannot be universally quantified over this interface as it stands.
+-/
+
+/-- All current spine compatibility laws can hold while common-class plane
+completeness fails.  The native principal-cut operator is kept unchanged. -/
+theorem not_commonClassPlanes_zeroCycleClassSpine
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : GSTGeometricRealizationStage2F.RationalSingularCohomology
+      H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p))
+    (halpha0 : alpha ≠ 0) :
+    ¬ GhostAdaptiveCommonClassPlaneCompleteness (zeroCycleClassSpine H) := by
+  intro hplane
+  exact (spine_laws_do_not_force_hodge H p alpha halpha halpha0).2
+    (hodge_of_commonClassPlanes (zeroCycleClassSpine H) hplane)
+
+/-- The counterinstance actually has an omniversal ghost: it is not merely
+an inability to find a proof of the universal interface. -/
+theorem zeroCycleClassSpine_has_omniversalGhost
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : GSTGeometricRealizationStage2F.RationalSingularCohomology
+      H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p))
+    (halpha0 : alpha ≠ 0) :
+    Nonempty (OmniversalSeparatorGhost (zeroCycleClassSpine H)) :=
+  (not_hodge_iff_nonempty_omniversalSeparatorGhost
+    (zeroCycleClassSpine H)).1
+      (spine_laws_do_not_force_hodge H p alpha halpha halpha0).2
+
+/-- No proof from just the fields of the current Hodge datum and spine can
+establish plane completeness universally in the presence of a nonzero Hodge
+state.  Additional genuinely constructed semantics are necessary. -/
+theorem not_universal_planeCompleteness_from_spine_laws
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : GSTGeometricRealizationStage2F.RationalSingularCohomology
+      H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p))
+    (halpha0 : alpha ≠ 0) :
+    ¬ (∀ (H' : HodgeBigradedBettiData V)
+      (G' : GeometricCycleClassSpine V H'),
+      GhostAdaptiveCommonClassPlaneCompleteness G') := by
+  intro hall
+  exact not_commonClassPlanes_zeroCycleClassSpine H p alpha halpha halpha0
+    (hall _ (zeroCycleClassSpine H))
+
+#print axioms not_commonClassPlanes_zeroCycleClassSpine
+#print axioms zeroCycleClassSpine_has_omniversalGhost
+#print axioms not_universal_planeCompleteness_from_spine_laws
+
 #check commonClassPlanes_of_hodge
 #check commonClassPlaneCompleteness_iff_hodge
 #check survival_and_commonClassClosure_of_hodge

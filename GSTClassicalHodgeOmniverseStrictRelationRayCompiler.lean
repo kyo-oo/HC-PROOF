@@ -74,19 +74,8 @@ theorem pushPull_eq_of_related
     (T : RightFiniteBettiTrace H.analytification K (2 * p))
     {alpha beta : RationalSingularCohomology H.analytification (2 * p)}
     (hrel : BettiRelated H.analytification K (2 * p) alpha beta) :
-    T.pushPull alpha = beta := by
-  have hzero :
-      transferObstruction H.analytification K (2 * p) alpha = 0 :=
-    (transferObstruction_apply_eq_zero_iff_exists_related
-      H.analytification K (2 * p) alpha).2 ⟨beta, hrel⟩
-  let a : transferableSubspace H.analytification K (2 * p) :=
-    ⟨alpha, hzero⟩
-  have hpush :
-      BettiRelated H.analytification K (2 * p)
-        alpha (T.pushPull alpha) := by
-    simpa [a] using T.pushPull_related_of_transferable a
-  exact related_target_unique
-    H.analytification K (2 * p) T.rightPullback_injective hpush hrel
+    T.pushPull alpha = beta :=
+  T.pushPull_eq_of_bettiRelated hrel
 
 /-- The genuine geometric packet required for ONE primitive GST causal edge.
 

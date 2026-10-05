@@ -148,6 +148,57 @@ theorem codimensionZeroFundamentalClass_is_hodge
 
 end GeometricCycleClassSpine
 
+/-! ## Semantic separation of the spine itself
+
+The spine laws are compatibility laws.  Compatibility with an unspecified
+cohomological action does not by itself fix the cycle-class map: zero still
+satisfies every field.  The following construction keeps the native principal
+cut exactly as defined; it does not replace native geometry by a zero operator.
+-/
+
+/-- The existing zero-cycle-class datum satisfies every current spine law.
+Thus a spine is not, by itself, a construction of the geometric cycle class. -/
+noncomputable def zeroCycleClassSpine
+    (H : HodgeBigradedBettiData V) :
+    GeometricCycleClassSpine V
+      (GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H) where
+  algebraic_is_hodge := by
+    intro p Z
+    exact Submodule.zero_mem _
+  pushforward_naturality := fun p f => {
+    cohomologyPushforward := 0
+    naturality := by intro Z; rfl
+  }
+  principalCutPair := fun p => {
+    cycleOperator := successorNativeOperator V p
+    cohomologyOperator := 0
+    cycleClass_natural := by intro Z; rfl
+  }
+  principalCutPair_native := by intro p; rfl
+  principalCut_hodge := by
+    intro p alpha halpha
+    exact Submodule.zero_mem _
+
+/-- A nonzero Hodge fiber gives a counterexample even after supplying all
+current spine laws.  This is about the formal interface, not about the actual
+geometrically defined cycle-class map. -/
+theorem spine_laws_do_not_force_hodge
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p))
+    (halpha0 : alpha ≠ 0) :
+    Nonempty (GeometricCycleClassSpine V
+      (GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H)) ∧
+      ¬ BigradedBettiHodgeStatement V
+        (GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H) := by
+  exact ⟨⟨zeroCycleClassSpine H⟩,
+    GSTClassicalHodgeStage2GSemanticRigidity.not_bigradedBettiHodge_zeroCycleClass
+      H p alpha halpha halpha0⟩
+
+#print axioms zeroCycleClassSpine
+#print axioms spine_laws_do_not_force_hodge
+
 #check GeometricCycleClassSpine
 #check GeometricCycleClassSpine.pointClass_is_hodge
 #check GeometricCycleClassSpine.projectiveOperatorPair
