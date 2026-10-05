@@ -184,7 +184,8 @@ theorem
   have hspec : (Finsupp.linearCombination ℚ
       (fun y => cl (codimensionPointCycle X p y))) (K.transition x)
       = T (cl (codimensionPointCycle X p x)) := K.transition_spec x
-  simp [PointClassTransitionKernel.presentationOperator, hspec]
+  simp [PointClassTransitionKernel.presentationOperator,
+    finitePointCycleClassMap, hspec]
 
 /-- Conjugate the free presentation operator through the compact cycle/
 presentation equivalence to obtain an operator on all native cycles. -/

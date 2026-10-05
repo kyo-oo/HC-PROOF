@@ -253,6 +253,11 @@ theorem swapCohomology_involutive
   unfold swapCohomologyPullback
   have hinner : (swapCochainPullback A) ≫ (swapCochainPullback A) = 𝟙 _ := by
     unfold swapCochainPullback
+    let F := (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ))
+    let G := (((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+      |>.mapHomologicalComplex (ComplexShape.down ℕ))
+    change F.map (Quiver.Hom.op (G.map (swapChainMap A))) ≫
+      F.map (Quiver.Hom.op (G.map (swapChainMap A))) = 𝟙 _
     have hop : ∀ {C : Type*} [Category C] {X : C} (Y : X ⟶ X),
         Quiver.Hom.op Y ≫ Quiver.Hom.op Y = Quiver.Hom.op (Y ≫ Y) := by
       intro C _ X Y
@@ -261,9 +266,8 @@ theorem swapCohomology_involutive
         Quiver.Hom.op (𝟙 X) = 𝟙 (Opposite.op X) := by
       intro C _ X
       rfl
-    simp only [id_eq]
-    rw [← Functor.map_comp, hop, ← Functor.map_comp, swapChain_involutive,
-      Functor.map_id, hpid, Functor.map_id]
+    rw [← F.map_comp, hop, ← G.map_comp, swapChain_involutive,
+      G.map_id, hpid, F.map_id]
     rfl
   have hcomp :
     (HomologicalComplex.homologyMap (swapCochainPullback A) n) ≫

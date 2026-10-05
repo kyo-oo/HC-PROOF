@@ -21,6 +21,9 @@ noncomputable section
 
 open AlgebraicGeometry
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeAugmentedTargetWindow

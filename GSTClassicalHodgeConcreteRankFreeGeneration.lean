@@ -34,6 +34,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeAugmentedTargetWindow
 open GSTClassicalHodgeTotalSheetMatrixUnit
+open GSTClassicalHodgeLocalCyclicCriterion
 
 namespace GSTClassicalHodgeConcreteRankFreeGeneration
 
@@ -49,7 +50,7 @@ noncomputable def chosenLiveSource
     rw [Finsupp.support_nonempty_iff]
     intro hzero
     apply halpha
-    exact (classicalHodgeBasis V H p).repr.injective hzero
+    exact (classicalHodgeBasis V H p).repr.injective (by simpa using hzero)
   exact ⟨hsupp.choose, hsupp.choose_spec⟩
 
 /-- The chosen live source coefficient is nonzero. -/
@@ -166,7 +167,7 @@ theorem hodgeClass_eq_sum_concreteGenerators
   calc beta
       = Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
           ((classicalHodgeBasis V H p).repr beta) :=
-        (classicalHodgeBasis V H p).linearCombination_repr beta
+        ((classicalHodgeBasis V H p).linearCombination_repr beta).symm
     _ = ((classicalHodgeBasis V H p).repr beta).sum
         (fun j q => q • concreteBasisGenerator alpha halpha j) := by
         rw [Finsupp.linearCombination_apply]
