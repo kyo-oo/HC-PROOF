@@ -145,18 +145,14 @@ noncomputable def successorFiniteNativeOperator
     intro φ ψ
     simp only [successorPresentationOperator,
       realizeFiniteCodimensionPresentation]
-    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
+    simp [Finsupp.sum_add_index', Finsupp.sum_smul_index',
+      smul_smul, mul_comm]
   map_smul' := by
     intro q φ
     simp only [successorPresentationOperator,
       realizeFiniteCodimensionPresentation]
-    rw [Finsupp.sum_smul_index', Finsupp.sum_smul_index']
-    · intro i; simp
-    · intro i; simp
+    simp [Finsupp.sum_add_index', Finsupp.sum_smul_index',
+      smul_smul, mul_comm]
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator
