@@ -26,8 +26,10 @@ noncomputable section
 open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTClassicalHodgeAtomicSpan
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointKernelOperatorLift
 open GSTClassicalHodgePrincipalCutNativeCycle
 
 namespace GSTClassicalHodgePrincipalCutGradedOperator

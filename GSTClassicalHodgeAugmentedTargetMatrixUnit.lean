@@ -87,7 +87,6 @@ theorem augmentedConcreteHodgeMatrixUnit_eq
     exact_mod_cast Nat.ne_of_gt (augmentedIntegralSquare alpha j).scale_pos
   rw [smul_smul]
   simp [hscale]
-  rw [hodgeMatrixUnit_apply]
   unfold hodgeCoordinate
   rfl
 

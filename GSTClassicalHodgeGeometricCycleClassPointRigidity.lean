@@ -58,8 +58,7 @@ noncomputable def cycleClassFromPointGeometry
   let evalPresentation :
       FiniteCodimensionPresentation V.X p →ₗ[ℚ]
         RationalSingularCohomology A (2 * p) :=
-    Finsupp.total (CodimensionPoint V.X p)
-      (RationalSingularCohomology A (2 * p)) ℚ pt
+    Finsupp.linearCombination ℚ pt
   exact evalPresentation.comp
     (compactCyclePresentationLinearEquiv V.X p).symm.toLinearMap
 

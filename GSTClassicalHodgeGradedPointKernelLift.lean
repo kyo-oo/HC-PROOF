@@ -33,6 +33,7 @@ open GSTGeometricRealizationStage2G
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgePointNormalForm
+open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgePointKernelOperatorLift
 open GSTClassicalHodgeCrossWeightNativePropagation
 open GSTClassicalHodgeGradedNativeCohomologyRealization
@@ -72,8 +73,7 @@ noncomputable def presentationOperator
       (X := X) (p := p) (q := q) (clP := clP) (clQ := clQ) T) :
     FiniteCodimensionPresentation X p →ₗ[ℚ]
       FiniteCodimensionPresentation X q :=
-  Finsupp.total (CodimensionPoint X p)
-    (FiniteCodimensionPresentation X q) ℚ K.transition
+  Finsupp.linearCombination ℚ K.transition
 
 @[simp]
 theorem presentationOperator_single

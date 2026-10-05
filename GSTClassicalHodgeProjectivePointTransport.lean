@@ -38,6 +38,7 @@ open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTClassicalHodgePointKernelOperatorLift
+open GSTClassicalHodgeAtomicSpan
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgeGeneratorwiseAtomicStability

@@ -96,8 +96,12 @@ theorem arbitraryTargetGSTOutput_exact
   by_cases hx : x = (targetSlot alpha j, targetSlot alpha j)
   · subst x
     simp
-    rw [augmentedIntegralSquare_diagonal]
-    rw [augmentedCoordinate_liveSource]
+    have hdiag := (augmentedIntegralSquare alpha j).scaled_eq
+      (liveSourceSlot alpha j (chosenLiveSource alpha halpha),
+       liveSourceSlot alpha j (chosenLiveSource alpha halpha))
+    refine hdiag.symm.trans ?_
+    simp [augmentedRationalSquare, augmentedCoordinateVector,
+      augmentedCoordinate_liveSource]
   · simp [hx]
 
 /-- Reading the concrete GST output back into the genuine Hodge fiber gives
@@ -152,8 +156,14 @@ theorem concreteBasisGenerator_eq_basis
       classicalHodgeBasis V H p j := by
   unfold concreteBasisGenerator
   rw [read_arbitraryTargetGSTOutput]
-  have hc := arbitraryTarget_normalization_ne_zero alpha halpha j
-  simp [hc]
+  have hone :
+      (((classicalHodgeBasis V H p).repr alpha) ↑(chosenLiveSource alpha halpha))⁻¹ *
+        (↑(augmentedIntegralSquare alpha j).scale)⁻¹ *
+        (↑(augmentedIntegralSquare alpha j).scale *
+          ((classicalHodgeBasis V H p).repr alpha) ↑(chosenLiveSource alpha halpha)) =
+      1 := by
+    field_simp
+  rw [smul_smul, hone, one_smul]
 
 /-- Every Hodge class is therefore a finite rational linear combination of
 concrete GST-generated basis vectors from one fixed nonzero source state. -/

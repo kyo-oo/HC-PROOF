@@ -258,16 +258,13 @@ theorem swapCohomology_involutive
       |>.mapHomologicalComplex (ComplexShape.down ℕ))
     change F.map (Quiver.Hom.op (G.map (swapChainMap A))) ≫
       F.map (Quiver.Hom.op (G.map (swapChainMap A))) = 𝟙 _
-    have hop : ∀ {C : Type*} [Category C] {X : C} (Y : X ⟶ X),
-        Quiver.Hom.op Y ≫ Quiver.Hom.op Y = Quiver.Hom.op (Y ≫ Y) := by
-      intro C _ X Y
-      rfl
-    have hpid : ∀ {C : Type*} [Category C] {X : C},
-        Quiver.Hom.op (𝟙 X) = 𝟙 (Opposite.op X) := by
-      intro C _ X
-      rfl
-    rw [← F.map_comp, hop, ← G.map_comp, swapChain_involutive,
-      G.map_id, hpid, F.map_id]
+    rw [← F.map_comp,
+      show (G.map (swapChainMap A)).op ≫ (G.map (swapChainMap A)).op
+          = (G.map (swapChainMap A) ≫ G.map (swapChainMap A)).op from rfl,
+      ← G.map_comp, swapChain_involutive, G.map_id,
+      show (𝟙 (G.obj (productSingularChains A))).op
+          = 𝟙 (Opposite.op (G.obj (productSingularChains A))) from rfl,
+      F.map_id]
     rfl
   have hcomp :
     (HomologicalComplex.homologyMap (swapCochainPullback A) n) ≫
