@@ -1,5 +1,6 @@
 import GSTClassicalHodgeGradedOrbitSingleProgramCollapse
 import GSTClassicalHodgeOmniversalSeparatorGhostCrown
+import GSTClassicalHodgeNativeExecutablePlane
 
 /-!
 # GST CLASSICAL HODGE — FULL CORRESPONDENCE GST PLANE COMPLETION
@@ -373,6 +374,7 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
 #check separatorProbe_kills_fullProgramAddress
 #check noGhost_of_fullCorrespondencePairingTotal
 #check hodge_of_fullCorrespondencePairingTotal
+#check nativeExecutablePlane_of_fullCorrespondencePlane
 #check hodge_of_fullCorrespondenceGSTPlane
 #check nativeCycle_of_fullCorrespondenceGSTPlane
 
@@ -383,6 +385,7 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
 #print axioms separatorProbe_kills_fullProgramAddress
 #print axioms noGhost_of_fullCorrespondencePairingTotal
 #print axioms hodge_of_fullCorrespondencePairingTotal
+#print axioms nativeExecutablePlane_of_fullCorrespondencePlane
 #print axioms hodge_of_fullCorrespondenceGSTPlane
 
 end GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
