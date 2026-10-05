@@ -184,16 +184,142 @@ theorem allTarget_localizedL2_native_iff_hodge_weight
     exact localizedL2_nativePointLifts_of_hodge_weight
       G hHodge S.sourceIndex j
 
+/-! ## Global native-plane completion: exact closure, no hidden premise -/
+
+/-- A weight is genuinely dead when its rational Hodge sector contains only
+zero.  This is stated elementwise so the completion theorem does not require
+any auxiliary nontriviality instance or basis choice. -/
+def HodgeWeightTrivial
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) : Prop :=
+  ∀ alpha : RationalSingularCohomology H.analytification (2 * p),
+    alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
+      alpha = 0
+
+/-- **EXACT NATIVE PLANE COMPLETION AT ONE WEIGHT.**
+
+There are exactly two legitimate terminal cases.
+
+* The rational Hodge sector is zero, so there is nothing to algebraize.
+* Otherwise one synchronized nonzero native seed exists and every GST
+  localized-L² target firing from its canonical live coordinate has a genuine
+  native point lift.
+
+No ghost package, plane-completeness hypothesis, target-cycle family, or
+surjectivity premise occurs in this definition. -/
+def NativePlaneCompletionAt
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) : Prop :=
+  HodgeWeightTrivial H p ∨
+    ∃ S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p),
+      ∀ j : ClassicalHodgeBasisIndex V H p,
+        HasNativePointLifts
+          (p := p) (cl := H.cycleClass p)
+          (ambientLocalizedL2 S.sourceIndex j)
+
+/-- **FIXED-WEIGHT COMPLETION EXACTNESS.**
+
+The terminal native-plane completion predicate is not a new assumption.  It is
+exactly equivalent to the fixed-weight Hodge conclusion.
+
+The forward direction uses the already-proved localized-L² saturation theorem.
+For the reverse direction, a nontrivial Hodge sector plus Hodge surjectivity
+itself supplies a synchronized nonzero native seed; localized-L² native lifts
+then follow theoremically.  Hence there is no third hidden completion law below
+this equivalence. -/
+theorem nativePlaneCompletionAt_iff_hodge_weight
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H) :
+    NativePlaneCompletionAt V H p ↔
+      rationalHodgeSubspace (H.hodgeBigrading p) ≤
+        LinearMap.range (H.cycleClass p) := by
+  constructor
+  · rintro (hzero | ⟨S, hL⟩)
+    · intro alpha halpha
+      have hz : alpha = 0 := hzero alpha halpha
+      rw [hz]
+      exact (LinearMap.range (H.cycleClass p)).zero_mem
+    · exact
+        (allTarget_localizedL2_native_iff_hodge_weight G S).1 hL
+  · intro hHodge
+    by_cases hzero : HodgeWeightTrivial H p
+    · exact Or.inl hzero
+    · have hex :
+          ∃ alpha : RationalSingularCohomology H.analytification (2 * p),
+            alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) ∧
+              alpha ≠ 0 := by
+        by_contra hno
+        apply hzero
+        intro alpha halpha
+        by_contra hne
+        exact hno ⟨alpha, halpha, hne⟩
+      obtain ⟨alpha, halpha, halpha0⟩ := hex
+      obtain ⟨Z, hZ⟩ := hHodge halpha
+      let a : ClassicalHodgeFiber V H p := ⟨alpha, halpha⟩
+      have ha : a ≠ 0 := by
+        intro ha0
+        apply halpha0
+        have hv :=
+          congrArg (fun z : ClassicalHodgeFiber V H p => z.1) ha0
+        simpa [a] using hv
+      let S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p) := {
+        cycle := Z
+        hodge := a
+        hodge_ne_zero := ha
+        class_eq := by
+          simpa [a] using hZ
+      }
+      refine Or.inr ⟨S, ?_⟩
+      intro j
+      exact localizedL2_nativePointLifts_of_hodge_weight
+        G hHodge S.sourceIndex j
+
+/-- Pi-wide terminal native-plane completion. -/
+def NativePlaneCompletion
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) : Prop :=
+  ∀ p : Nat, NativePlaneCompletionAt V H p
+
+/-- **GLOBAL COMPLETION THEOREM.**
+
+For the geometric cycle-class spine, the complete pi-wide native GST-plane
+closure is equivalent to the exact Stage-2G Hodge statement.  Thus any future
+"plane completion", "native L² closure", or all-target realization premise
+strong enough to supply this predicate is conclusion-strength, not a lower
+axiom. -/
+theorem nativePlaneCompletion_iff_bigradedBettiHodge
+    (G :
+      GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H) :
+    NativePlaneCompletion V H ↔
+      BigradedBettiHodgeStatement V H := by
+  constructor
+  · intro h p
+    exact
+      (nativePlaneCompletionAt_iff_hodge_weight
+        (V := V) (H := H) (p := p) G).1 (h p)
+  · intro h p
+    exact
+      (nativePlaneCompletionAt_iff_hodge_weight
+        (V := V) (H := H) (p := p) G).2 (h p)
+
 #check ambientLocalizedL2
 #check ambientLocalizedL2_on_hodge
 #check localizedL2_nativePointLifts_of_hodge_weight
 #check localizedL2_rangeStable_of_nativePointLifts
 #check hodge_weight_of_fixedSource_localizedL2_native
 #check allTarget_localizedL2_native_iff_hodge_weight
+#check HodgeWeightTrivial
+#check NativePlaneCompletionAt
+#check nativePlaneCompletionAt_iff_hodge_weight
+#check NativePlaneCompletion
+#check nativePlaneCompletion_iff_bigradedBettiHodge
 
 #print axioms ambientLocalizedL2_on_hodge
 #print axioms localizedL2_nativePointLifts_of_hodge_weight
 #print axioms hodge_weight_of_fixedSource_localizedL2_native
 #print axioms allTarget_localizedL2_native_iff_hodge_weight
+#print axioms nativePlaneCompletionAt_iff_hodge_weight
+#print axioms nativePlaneCompletion_iff_bigradedBettiHodge
 
 end GSTClassicalHodgeLocalizedL2NativeCircularity
