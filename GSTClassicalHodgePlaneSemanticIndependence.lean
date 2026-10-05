@@ -135,9 +135,8 @@ theorem zeroCycleClass_plane_complete_and_nativeCompletion_false
     have hHodge :
         BigradedBettiHodgeStatement V (zeroCycleClassData H) := by
       exact
-        (GSTClassicalHodgeLocalizedL2NativeCircularity
-          .nativePlaneCompletion_iff_bigradedBettiHodge
-            (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H)).1
+        (GSTClassicalHodgeLocalizedL2NativeCircularity.nativePlaneCompletion_iff_bigradedBettiHodge
+          (GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H)).1
           hcomplete
     exact
       (not_bigradedBettiHodge_zeroCycleClass
