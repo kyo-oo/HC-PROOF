@@ -54,6 +54,13 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeStrictBettiApexL2Fusion.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile common-class plane reduction
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeCommonClassPlaneReduction.lean 2>&1 | tee -a hodge-final.log
+
       - name: Compile GST exact projective-word finale
         shell: bash
         run: |
