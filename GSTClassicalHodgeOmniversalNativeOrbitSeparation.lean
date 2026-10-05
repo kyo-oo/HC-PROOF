@@ -40,6 +40,8 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeAtomicDefectDuality
+open GSTClassicalHodgeAtomicAnnihilator
+open GSTClassicalHodgeLimitlessSeparatorGhost
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeGradedGeometricProgramOrbit
@@ -175,6 +177,86 @@ theorem nativeOrbitPairingTotal_of_gradedOrbitCyclic
   nativeOrbitPairingTotal_of_geometricPlane G
     (geometricPlane_of_orbitCyclic G hcyclic)
 
+/-- **PAIRING TOTALITY ⇒ ACTUAL ORBIT CYCLICITY.**
+
+This is the converse hidden in the old no-ghost proposal.  If the genuine
+program orbit missed even one Hodge vector, quotient separation would produce
+a nonzero rational functional annihilating the entire orbit.  Its canonical
+completed fibered probe is supported at that one weight and pairs to zero with
+every native program address, contradicting pairing totality.
+
+Thus pairing totality is not a mysterious additional infinity principle: it is
+exactly the dual form of executable geometric orbit completeness. -/
+theorem gradedOrbitCyclic_of_nativeOrbitPairingTotal
+    (G : GeometricCycleClassSpine V H)
+    (htotal : OmniversalNativeOrbitPairingTotal G) :
+    GradedGeometricOrbitModuleCyclic G := by
+  intro q alpha halpha
+  by_contra hnot
+  obtain ⟨ell, hell, hdetect⟩ :=
+    exists_linearFunctional_separating_submodule
+      (geometricProgramOrbitModule G q) alpha hnot
+  let g : FiberedCompletedAddress V H :=
+    separatorFiberedProbe (V := V) (H := H) q ell
+  have hsupp :
+      ∀ s : FiberedHodgeIndex V H, s.1 ≠ q → g s = 0 := by
+    intro s hs
+    rcases s with ⟨r,j⟩
+    exact separatorFiberedProbe_at_other_weight
+      (V := V) (H := H) q r hs ell j
+  have hkill :
+      ∀ P : GradedGeometricProgram V 0 q,
+        fiberedPairing (nativeProgramFiberedAddress G P) g = 0 := by
+    intro P
+    have horbit :
+        P.cohomologyEval G (geometricOriginClass V H) ∈
+          geometricProgramOrbitModule G q := by
+      change
+        P.cohomologyEval G (geometricOriginClass V H) ∈
+          geometricProgramOrbitSet G q
+      exact ⟨P, rfl⟩
+    have hzero :
+        ell (P.cohomologyEval G (geometricOriginClass V H)) = 0 :=
+      hell _ horbit
+    let a : ClassicalHodgeFiber V H q :=
+      nativeProgramHodgeState G P
+    have hp :=
+      fiberedPairing_separatorProbe
+        (V := V) (H := H) q ell a
+    simpa [g, a, nativeProgramFiberedAddress, nativeProgramHodgeState]
+      using hp.trans hzero
+  have hg : g = 0 := htotal q g hsupp hkill
+  let alphaH : ClassicalHodgeFiber V H q := ⟨alpha, halpha⟩
+  have hp :=
+    fiberedPairing_separatorProbe
+      (V := V) (H := H) q ell alphaH
+  have hz : ell alpha = 0 := by
+    rw [hg] at hp
+    simpa [g, alphaH, fiberedPairing] using hp
+  exact hdetect hz
+
+/-- **SECOND EXACT IDENTIFICATION.**
+The old handwritten "native orbit is pairing-determining" law is exactly the
+dual statement that the executable geometric orbit fills every Hodge fiber. -/
+theorem nativeOrbitPairingTotal_iff_gradedOrbitCyclic
+    (G : GeometricCycleClassSpine V H) :
+    OmniversalNativeOrbitPairingTotal G ↔
+      GradedGeometricOrbitModuleCyclic G := by
+  constructor
+  · exact gradedOrbitCyclic_of_nativeOrbitPairingTotal G
+  · exact nativeOrbitPairingTotal_of_gradedOrbitCyclic G
+
+/-- **FULL THREE-WAY IDENTIFICATION.**
+Executable geometric plane completeness, graded native-orbit cyclicity, and
+completed-probe pairing totality are three presentations of the same GST
+geometric completeness law. -/
+theorem geometricPlane_iff_nativeOrbitPairingTotal
+    (G : GeometricCycleClassSpine V H) :
+    GeometricGSTPlaneCompleteness G ↔
+      OmniversalNativeOrbitPairingTotal G :=
+  (geometricPlane_iff_gradedOrbitCyclic G).trans
+    (nativeOrbitPairingTotal_iff_gradedOrbitCyclic G).symm
+
 /-- **NO-GHOST LANDING FROM GEOMETRIC PLANE COMPLETENESS.** -/
 theorem no_omniversalGhost_of_geometricPlane
     (G : GeometricCycleClassSpine V H)
@@ -213,12 +295,18 @@ theorem nativeCycle_of_geometricGSTPlaneCompleteness
 #check nativeProgramFiberedAddress_eq_basis
 #check nativeOrbitPairingTotal_of_geometricPlane
 #check nativeOrbitPairingTotal_of_gradedOrbitCyclic
+#check gradedOrbitCyclic_of_nativeOrbitPairingTotal
+#check nativeOrbitPairingTotal_iff_gradedOrbitCyclic
+#check geometricPlane_iff_nativeOrbitPairingTotal
 #check no_omniversalGhost_of_geometricPlane
 #check hodge_of_geometricGSTPlaneCompleteness
 #check nativeCycle_of_geometricGSTPlaneCompleteness
 
 #print axioms geometricPlane_iff_gradedOrbitCyclic
 #print axioms nativeOrbitPairingTotal_of_geometricPlane
+#print axioms gradedOrbitCyclic_of_nativeOrbitPairingTotal
+#print axioms nativeOrbitPairingTotal_iff_gradedOrbitCyclic
+#print axioms geometricPlane_iff_nativeOrbitPairingTotal
 #print axioms hodge_of_geometricGSTPlaneCompleteness
 
 end GSTClassicalHodgeOmniversalNativeOrbitSeparation
