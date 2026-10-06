@@ -57,8 +57,9 @@ noncomputable def presentationMass
   map_smul' := by
     intro q φ
     classical
-    simp only [Finsupp.sum_smul_index', smul_eq_mul]
-    simp [Finsupp.sum, Finset.mul_sum, mul_comm]
+    rw [Finsupp.sum_smul_index' (fun _ => rfl), smul_eq_mul,
+      Finsupp.sum, Finsupp.sum, Finset.mul_sum]
+    exact Finset.sum_congr rfl fun i _ => by simp
 
 @[simp]
 theorem presentationMass_single
