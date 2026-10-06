@@ -148,7 +148,8 @@ theorem ambientUniversalTwoSlotWord_on_hodge
       ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha))
   change _ = _
   rw [ambientUniversalTwoSlotWord]
-  simp only [LinearMap.smul_apply, LinearMap.comp_apply]
+  simp only [LinearMap.smul_apply, LinearMap.comp_apply,
+    ambientSourceProjector, ambientTwoStepLefschetz, ambientTargetProjector]
   rw [hsrc, hL, htgt]
   change
     ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •

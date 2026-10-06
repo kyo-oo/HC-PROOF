@@ -57,7 +57,7 @@ noncomputable def presentationMass
   map_smul' := by
     intro q φ
     classical
-    simp [smul_eq_mul]
+    simp [Finsupp.sum_smul_index', smul_eq_mul]
 
 @[simp]
 theorem presentationMass_single
@@ -82,7 +82,7 @@ theorem nativeCycleMass_point
     (p : Nat) (x : CodimensionPoint V.X p) :
     nativeCycleMass V p (codimensionPointCycle V.X p x) = 1 := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [nativeCycleMass, presentationMass]
+  simp [nativeCycleMass, presentationMass, presentationOfNativeCycle_point]
 
 /-- Canonical limitless rational cosmic shadow of a native codimension-p
 cycle. -/
@@ -142,7 +142,8 @@ theorem nativeCycleMass_successor_point
       successorMass V p x := by
   rw [successorNativeOperator_point]
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [nativeCycleMass, successorMass, presentationMass]
+  simp [nativeCycleMass, successorMass, presentationMass,
+    presentation_realizeFiniteCodimensionPresentation]
 
 /-- The cosmic shadow of one geometry-built successor cycle is exactly its
 finite successor mass on the next limitless weight. -/
@@ -156,7 +157,8 @@ theorem successorNativeOperator_cosmicShadow_point
   rw [nativeCycleCosmicShadow_eq_mass_smul]
   congr 1
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  simp [nativeCycleMass, successorMass, presentationMass]
+  simp [nativeCycleMass, successorMass, presentationMass,
+    presentation_realizeFiniteCodimensionPresentation]
 
 /-- **POINT-TO-GLOBAL MASS PROPAGATION.**
 If every genuine codimension-p point acquires the same limitless successor

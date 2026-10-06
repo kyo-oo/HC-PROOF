@@ -74,8 +74,8 @@ theorem sub_kernelStable
     (hA : KernelStable (H := H) A)
     (hB : KernelStable (H := H) B) :
     KernelStable (H := H) (A - B) := by
-  rw [sub_eq_add_neg]
-  exact add_kernelStable hA (neg_kernelStable hB)
+  intro Z hZ
+  rw [LinearMap.sub_apply, map_sub, hA Z hZ, hB Z hZ, sub_zero]
 
 /-- Kernel stability is preserved by rational scaling. -/
 theorem smul_kernelStable

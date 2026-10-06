@@ -2,6 +2,7 @@ import GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 import GSTClassicalHodgeRangeLiftedSpectralOperator
 import GSTClassicalHodgeCycleOperatorNaturality
 import GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
+import GSTClassicalHodgeUniversalTwoSlotNativeClosure
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL COSMIC REALIZATION EQUIVALENCE
@@ -45,6 +46,8 @@ open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeRangeLiftedSpectralOperator
+open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -55,7 +58,7 @@ pair of genuine Hodge-basis directions. -/
 noncomputable def canonicalCosmicAmbient
     (i j : ClassicalHodgeBasisIndex V H p) :
     Module.End ℚ (RationalSingularCohomology H.analytification (2 * p)) :=
-  GSTClassicalHodgeRankFreePrimitiveGeneration.extendHodgeEndomorphism
+  GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism
     (V := V) (H := H)
     (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit i j)
 
@@ -67,7 +70,7 @@ theorem canonicalCosmicAmbient_on_hodge
     canonicalCosmicAmbient i j alpha.1 =
       liftCosmicWindowOperator (pairBasisIndex i j)
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha := by
-  rw [GSTClassicalHodgeRankFreePrimitiveGeneration.extendHodgeEndomorphism_on_hodge]
+  rw [GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism_on_hodge]
   rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
 
 /-- A genuine native realization of the canonical cosmic read/write action.

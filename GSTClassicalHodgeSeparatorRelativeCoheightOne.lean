@@ -48,6 +48,7 @@ theorem coheight_le_one_of_unique_strictAbove
   intro s hs
   by_contra hnot
   have hlen : 2 ≤ s.length := by
+    push_neg at hnot
     omega
   let i0 : Fin (s.length + 1) := ⟨0, by omega⟩
   let i1 : Fin (s.length + 1) := ⟨1, by omega⟩
@@ -112,21 +113,29 @@ theorem pointClosureSeparatorSuccessor_coheight_one
     have hη0 : Order.coheight η = 0 := by
       apply Order.coheight_eq_zero.mpr
       intro z hz
-      have hz' : η ≤ z := hz
-      have himage : x ≤ pointClosureι V x z := by
-        have hmap := (pointClosureι V x).continuous.specialization_monotone hz'
-        simpa [η, closureGenericPoint_maps_to_source] using hmap
-      have hback : pointClosureι V x z ≤ x :=
-        pointClosure_image_le_source V x z
-      apply (pointClosureι V x).isEmbedding.injective
-      rw [closureGenericPoint_maps_to_source]
-      exact le_antisymm hback himage
+      rw [specializationOrder_iff_specializes]
+      have himageMem : pointClosureι V x z ∈ closure ({x} : Set V.X) := by
+        rw [← range_pointClosureι V x]
+        exact ⟨z, rfl⟩
+      have hclosure :=
+        (pointClosureι V x).isEmbedding.closure_eq_preimage_closure_image
+          ({η} : Set (pointClosureScheme V x))
+      have himageSingleton :
+          pointClosureι V x '' ({η} : Set (pointClosureScheme V x)) =
+            ({x} : Set V.X) := by
+        ext w
+        simp [η, closureGenericPoint_maps_to_source]
+      rw [himageSingleton] at hclosure
+      have hmem : z ∈ (pointClosureι V x) ⁻¹' closure ({x} : Set V.X) :=
+        himageMem
+      rwa [← hclosure] at hmem
     rw [hη0] at h
     simpa using h
   have hupper : Order.coheight y ≤ 1 :=
     coheight_le_one_of_unique_strictAbove y η
       (no_intermediate_above_separatorSuccessor V x hlive)
-  exact le_antisymm hupper hlower
+  have hupper' : Order.coheight y ≤ (1 : ℕ∞) := hupper
+  exact le_antisymm hupper' hlower
 
 /-- The constructed successor therefore determines an actual member of the
 relative coheight-one subtype used by the recursive cut operator. -/
