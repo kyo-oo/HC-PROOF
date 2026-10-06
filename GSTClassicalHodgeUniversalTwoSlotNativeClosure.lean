@@ -177,17 +177,21 @@ theorem ambientUniversalTwoSlotWord_on_hodge
             (sheetProjectorQ sourceSlot)))) =
       forwardArsenalWord sourceSlot targetSlot := by
     rfl
+  have hLval : (GSTTruncatedWorldCohomologyRing.worldAct 2 2
+      ((GSTTruncatedWorldCohomologyRing.L 2 2) ^ 2)
+      (GSTWorldPoincareDuality.worldBasis
+        (GSTGlobalPureHodgeCosmology.pureDiagonalState
+          (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)))
+      (GSTGlobalPureHodgeCosmology.pureDiagonalState
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot))) =
+      (forwardScalar sourceSlot targetSlot : ℤ) :=
+    gst_forward_scalar_receipt (N := 2) (p := sourceSlot) (q := targetSlot) (by decide)
   simp [twoSlotHodgeOperator, liftFiniteHodgeOperator, finiteHodgeRead,
     finiteHodgeWrite, hfinite, hlift, pureMatrixUnit, rationalPureBasis,
     diagonalLefschetzQ, sheetProjectorQ, hodgeMatrixUnit_apply,
     sourceSlot, targetSlot, hrw, pairBasisIndex, h01, h10,
-    hodgeCoordinate_basis_self,
-    GSTTruncatedWorldCohomologyRing.worldAct,
-    GSTWorldPoincareDuality.worldBasis,
-    GSTGlobalPureHodgeCosmology.pureDiagonalState,
-    GSTTruncatedWorldCohomologyRing.L,
-    LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply,
-    gst_forward_scalar_receipt (N := 2) (p := sourceSlot) (q := targetSlot) (by decide)]
+    hodgeCoordinate_basis_self, hLval,
+    LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
   norm_num
 
 /-- Primitive native-natural data for the universal two-slot machine. -/

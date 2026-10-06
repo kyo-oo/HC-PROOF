@@ -1,6 +1,7 @@
 import GSTClassicalHodgeFiberedTransferCompletion
 import GSTClassicalHodgeNativeTransferAddressIdentification
 import GSTClassicalHodgeTransferSeedUniverse
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — THREE-UNIVERSE SEED IDENTIFICATION
@@ -38,6 +39,7 @@ open GSTClassicalHodgeFiberedTransferCompletion
 open GSTClassicalHodgeTransferSeedUniverse
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
+open GSTNativeCodimensionCyclePresentation
 open GSTTransferBridgeV2
 
 /-- **THREE-UNIVERSE BASIS-SEED IDENTITY.**
