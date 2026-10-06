@@ -360,6 +360,73 @@ The intrinsic multiplicity index $j\in I_p$ lives in the unrestricted fibered
 address universe.  Equal-cardinality finite charts only re-present the active
 packet, and recoordination preserves its intrinsic sheet.
 
+\section{A carrier constructed before choosing the target}
+
+Let $f:X\to X$ be an actual finite native endomorphism whose transported
+point map is continuous for the specified analytification.  Its transposed
+graph is a strict carrier
+\[
+  K_f=\{(f(x),x):x\in X\},\qquad \ell=f,\quad r=\operatorname{id}.
+\]
+This carrier uses neither a target sheet nor an algebraic representative of
+that sheet.  The analytic map $s(x)=(f(x),x)$ is inverse to the right carrier
+projection in \emph{both} directions.  For the second direction, a carrier
+point comes from a genuine scheme point of the transposed graph; its first
+coordinate is therefore $f$ of its second coordinate.  This is an actual
+carrier-coherence proof, rather than a stored coherence premise.
+
+\begin{theorem}[Exact native graph carrier]
+The section induces a degree-one right Betti trace $T=s^*$.  At every degree,
+\[
+  T r^*=\operatorname{id},\qquad r^*T=\operatorname{id},
+  \qquad \operatorname{id}-r^*T=0,
+  \qquad T\ell^*=f^*.
+\]
+Consequently the carrier transfer obstruction is identically zero and
+\[
+  \ell^*(a)=r^*(\beta)\quad\Longleftrightarrow\quad f^*(a)=\beta.
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the singular-chain functor, its cochain dual and cohomology to the two
+inverse identities for $r$ and $s$.  They give the two inverse identities for
+$r^*$ and $s^*$.  The carrier residual therefore vanishes.  Moreover
+$\ell\circ s=f$, so cohomological functoriality gives $s^*\ell^*=f^*$.
+Applying $s^*$ to a proposed face equality proves its forward implication;
+the inverse identity $r^*s^*=\operatorname{id}$ proves the converse.
+\end{proof}
+
+This construction proves geometric carrier coherence for the native graph
+family.  To realize the specified GST branch by this family, one must still
+construct a finite native $f$ and compute $f^*(a)=c e_j$, and prove its native
+point-incidence compatibility.  Neither statement follows from the graph
+inverse identities, and neither is assumed as a new completeness law here.
+
+\begin{theorem}[Detected mismatch for every compatible carrier]
+For a hypothetical basis separator $S$, every strict carrier $K$ with finite
+trace and native point-cycle compatibility satisfies
+\[
+  S\bigl(K_*a-c e_j\bigr)=-c\,S(e_j)\ne0.
+\]
+This conclusion requires no common-plane packet or target-cycle construction.
+\end{theorem}
+
+\begin{proof}
+Native point compatibility extends by the compact point normal form to
+$K_*\cl(Z_a)=\cl(K_{\mathrm{cyc}}Z_a)$.  The separator kills the right side,
+so $S(K_*a)=0$.  The GST branch computation gives $E_{ij}(a)=c e_j$.
+Subtract and apply linearity.  The product is nonzero because the selected
+source coordinate is live and the separator detects the selected sheet.
+\end{proof}
+
+Thus zero carrier residual does not establish the prescribed target action.
+The strengthened Lean packet-emptiness proof now uses this exact mismatch
+directly, without passing through the Hodge conclusion or the normalized
+target-cycle construction.  The unconditional Branch-Packet Plane Realization
+Law remains a construction to be proved; the graph-carrier theorem above is
+not a proof of that universal law.
+
 \section{Noncircularity audit}
 
 The following facts are explicitly \emph{not} assumed in the Plane Realization

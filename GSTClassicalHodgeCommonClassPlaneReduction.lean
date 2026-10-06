@@ -57,6 +57,8 @@ open GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall
 open GSTClassicalHodgeStrictCorrespondenceAnalyticSpan
 open GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull
 open GSTClassicalHodgeCodimensionPointTower
+open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeAtomicAnnihilator
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -183,6 +185,92 @@ theorem commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
   let S := Classical.choice (hsurvive E)
   exact ⟨ghostCommonClassPlaneStrike_of_seed_targetStrictClosure G E S hclose⟩
 
+/-- A ghost detector kills the trace image of any native cycle whenever the
+trace is compatible with the actual point-incidence operator.  This proof is
+local to the native cycle-class range: it needs no common plane, Hodge finale,
+normalized target cycle, or assumed strict relation. -/
+theorem ghost_tracePushPull_nativeCycle_eq_zero
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (K : SchemeBiFiniteClosedCorrespondence V)
+    (T : RightFiniteBettiTrace H.analytification K (2 * E.weight))
+    (C : PointCycleCompatibility (n := E.weight) K T)
+    (Z : codimensionCycles V.X E.weight) :
+    E.separator.detector (T.pushPull (H.cycleClass E.weight Z)) = 0 := by
+  have hker :
+      pointCycleClassSpan E.weight (H.cycleClass E.weight) ≤
+        LinearMap.ker E.separator.detector :=
+    (annihilatesPointCycles_iff_atomicSpan_le_ker E.weight
+      (H.cycleClass E.weight) E.separator.detector).1 E.separator.annihilates_atoms
+  rw [← C.cycleClass_natural Z]
+  apply hker
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H E.weight]
+  exact ⟨_, rfl⟩
+
+/-- **EXPLICIT GST BRANCH MISMATCH ON EVERY COMPATIBLE STRICT CARRIER.**
+
+For every actual carrier and compatible finite trace, the detected component
+of the discrepancy with the requested branch is exactly minus the live source
+coefficient times the separator's target reading.  The equation is proved
+without assuming a relation packet or constructing a target representative.
+It is stronger than the previous packet-emptiness statement: the obstruction
+already appears at the prescribed trace action, even if carrier defects have
+been eliminated by a geometric construction. -/
+theorem ghostSeedTarget_traceMismatch_formula
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (K : SchemeBiFiniteClosedCorrespondence V)
+    (T : RightFiniteBettiTrace H.analytification K (2 * E.weight))
+    (C : PointCycleCompatibility (n := E.weight) K T) :
+    E.separator.detector
+        (T.pushPull S.hodge.1 -
+          (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1) =
+      -(hodgeCoordinate S.sourceIndex S.hodge *
+        E.separator.detector (classicalHodgeBasis V H E.weight E.sheet).1) := by
+  have hkill : E.separator.detector (T.pushPull S.hodge.1) = 0 := by
+    rw [← S.class_eq]
+    exact ghost_tracePushPull_nativeCycle_eq_zero G E K T C S.cycle
+  have hbranch := congrArg Subtype.val
+    (hodgeMatrixUnit_apply S.sourceIndex E.sheet S.hodge)
+  rw [map_sub, hkill, hbranch, map_smul]
+  simp only [zero_sub, smul_eq_mul]
+
+/-- A hypothetical ghost forces a nonzero discrepancy for EVERY compatible
+carrier, not only failure of a chosen plane packet. -/
+theorem ghostSeedTarget_traceMismatch_ne_zero
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (K : SchemeBiFiniteClosedCorrespondence V)
+    (T : RightFiniteBettiTrace H.analytification K (2 * E.weight))
+    (C : PointCycleCompatibility (n := E.weight) K T) :
+    E.separator.detector
+      (T.pushPull S.hodge.1 -
+        (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1) ≠ 0 := by
+  rw [ghostSeedTarget_traceMismatch_formula G E S K T C]
+  apply neg_ne_zero.mpr
+  apply mul_ne_zero
+  · exact S.sourceCoefficient_ne_zero
+  · exact E.separator.detects_basis
+
+/-- The prescribed target cannot equal any compatible carrier's trace image
+while the hypothetical separator survives.  No common-plane wrapper or
+Hodge-equivalent closure assumption is used. -/
+theorem ghostSeedTarget_pushPull_ne_target
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (K : SchemeBiFiniteClosedCorrespondence V)
+    (T : RightFiniteBettiTrace H.analytification K (2 * E.weight))
+    (C : PointCycleCompatibility (n := E.weight) K T) :
+    T.pushPull S.hodge.1 ≠
+      (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1 := by
+  intro heq
+  have hnonzero := ghostSeedTarget_traceMismatch_ne_zero G E S K T C
+  rw [heq, sub_self, map_zero] at hnonzero
+  exact hnonzero rfl
+
 /-- **A SURVIVING GHOST FORBIDS THE REQUESTED STRICT BRANCH PACKET.**
 
 This is the exact negative face of the branch-packet plane realization law.
@@ -194,7 +282,9 @@ normalized native target cycle is the detected basis sheet, contradicting the
 ghost detector.
 
 Thus the missing realization theorem is located at precisely the contradiction
-point, with no intermediate Hodge-shaped wrapper. -/
+point, with no intermediate Hodge-shaped wrapper.  The proof below now uses
+the explicit trace mismatch directly; it no longer creates a common-plane
+strike or a normalized target cycle to establish emptiness. -/
 theorem ghostSeedTargetStrictPacket_isEmpty
     (G : GeometricCycleClassSpine V H)
     (E : OmniversalSeparatorGhost G)
@@ -208,22 +298,51 @@ theorem ghostSeedTargetStrictPacket_isEmpty
           HodgeBranchNode (V := V) (H := H) (p := E.weight))) := by
   refine ⟨?_⟩
   intro R
-  let i : HodgeSupportIndex S.hodge :=
-    chosenLiveSource S.hodge S.hodge_ne_zero
-  have hRi :
-      StrictRelationEdgePacket
+  exact ghostSeedTarget_pushPull_ne_target G E S
+    R.correspondence R.trace R.pointCompatibility R.pushPull_source_eq_target
+
+/-- **ABSTRACT GST BRANCH EXISTS WHILE STRICT GEOMETRIC REALIZATION IS FORBIDDEN BY A GHOST.**
+
+This pins down the exact logical gap in the branch-packet derivation.
+For a hypothetical omniversal ghost and an already synchronized nonzero native
+seed at its weight, the intrinsic GST causal branch from the seed's canonical
+live source coordinate to the ghost-detected matrix-unit target exists
+unconditionally.  Nevertheless the corresponding strict geometric relation
+packet is empty: if such a packet existed, the common-carrier/finite-trace
+machinery would construct the detected basis cycle and contradict the ghost.
+
+Hence branch existence, sector choice, reachability and recoordination cannot
+by themselves manufacture the required strict scheme correspondence.  Any
+proof of the branch-packet plane realization law must add genuinely geometric
+content that rules out the ghost, rather than merely repackage the intrinsic
+GST event. -/
+theorem ghostBranchEvent_exists_but_strictPacket_empty
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight)) :
+    HodgeBranchEvent
         (⟨Sector.gstPlus, S.hodge⟩ :
           HodgeBranchNode (V := V) (H := H) (p := E.weight))
         (⟨Sector.gstPlus,
-          hodgeMatrixUnit i.1 E.sheet S.hodge⟩ :
-          HodgeBranchNode (V := V) (H := H) (p := E.weight)) := by
-    simpa [i, NativeHodgeOrbitSeed.sourceIndex] using R
-  let P : GhostCommonClassPlaneStrike G E := {
-    seed := S
-    source := i
-    plane := CommonClassPlanePacket.ofStrictRelationEdgePacket hRi
-  }
-  exact P.contradiction
+          hodgeMatrixUnit S.sourceIndex E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+      ∧
+    IsEmpty
+      (StrictRelationEdgePacket
+        (⟨Sector.gstPlus, S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+        (⟨Sector.gstPlus,
+          hodgeMatrixUnit S.sourceIndex E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))) := by
+  constructor
+  · let i : HodgeSupportIndex S.hodge :=
+      chosenLiveSource S.hodge S.hodge_ne_zero
+    refine ⟨E.sheet, i, ?_⟩
+    simpa [i, NativeHodgeOrbitSeed.sourceIndex] using
+      (GSTClassicalHodgeAugmentedTargetMatrixUnit
+        .augmentedConcreteHodgeMatrixUnit_eq
+          S.hodge E.sheet i).symm
+  · exact ghostSeedTargetStrictPacket_isEmpty G E S
 
 /-- **BRANCH-PACKET REALIZATION = NO-GHOST, ONCE THE NATIVE SOURCE EXISTS.**
 
@@ -353,6 +472,10 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
+#check ghostBranchEvent_exists_but_strictPacket_empty
+#check ghostSeedTarget_traceMismatch_formula
+#check ghostSeedTarget_traceMismatch_ne_zero
+#check ghostSeedTarget_pushPull_ne_target
 #check targetStrictClosure_iff_noGhost_of_survival
 #check ghostSeedTargetStrictPacket_isEmpty
 #check survival_and_targetStrictClosure_iff_hodge
@@ -364,6 +487,11 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
+#print axioms ghostBranchEvent_exists_but_strictPacket_empty
+#print axioms ghost_tracePushPull_nativeCycle_eq_zero
+#print axioms ghostSeedTarget_traceMismatch_formula
+#print axioms ghostSeedTarget_traceMismatch_ne_zero
+#print axioms ghostSeedTarget_pushPull_ne_target
 #print axioms targetStrictClosure_iff_noGhost_of_survival
 #print axioms ghostSeedTargetStrictPacket_isEmpty
 #print axioms survival_and_targetStrictClosure_iff_hodge
