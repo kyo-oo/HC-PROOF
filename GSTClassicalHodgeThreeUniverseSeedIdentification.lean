@@ -108,6 +108,7 @@ noncomputable def classicalHodgeMass
   map_smul' := by
     intro q a
     classical
+    simp only [LinearMap.map_smul]
     rw [Finsupp.sum_smul_index' (fun _ => rfl)]
     simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
