@@ -183,6 +183,40 @@ theorem commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
   let S := Classical.choice (hsurvive E)
   exact ⟨ghostCommonClassPlaneStrike_of_seed_targetStrictClosure G E S hclose⟩
 
+/-- **EXACT STATUS OF THE MINIMAL BRANCH-PACKET REALIZATION LAW.**
+
+Once the source side is the already-existing ghost-weight native-seed survival
+law, the genuinely minimal target-side statement is exactly
+`GhostSeedTargetStrictClosure`: for the one canonical live source and the one
+sheet detected by a hypothetical ghost, construct the strict correspondence
+packet whose carrier pullbacks identify the GST branch faces.
+
+This theorem proves that this two-piece package is not merely another compiler
+waiting to be wired.  It is equivalent to the Stage-2G Hodge conclusion.
+The forward implication is the branch-packet derivation:
+strict packet -> common carrier plane -> exact target cycle -> no ghost -> Hodge.
+The reverse implication is vacuous because Hodge leaves no ghost to quantify
+over.  Thus any unconditional proof of the requested branch-packet plane
+realization law is precisely the new mathematical content that closes Hodge;
+it cannot be recovered by rearranging the already-green downstream wrappers. -/
+theorem survival_and_targetStrictClosure_iff_hodge
+    (G : GeometricCycleClassSpine V H) :
+    (GhostWeightNativeSeedSurvival G ∧ GhostSeedTargetStrictClosure G) ↔
+      BigradedBettiHodgeStatement V H := by
+  constructor
+  · rintro ⟨hsurvive, hclose⟩
+    exact hodge_of_commonClassPlanes G
+      (commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
+        G hsurvive hclose)
+  · intro hHodge
+    have hnone : IsEmpty (OmniversalSeparatorGhost G) :=
+      (hodge_iff_no_omniversalSeparatorGhost G).1 hHodge
+    constructor
+    · intro E
+      exact False.elim (isEmpty_iff.mp hnone E)
+    · intro E S
+      exact False.elim (isEmpty_iff.mp hnone E)
+
 /-- Compatibility with the older, stronger all-event closure theorem. -/
 theorem commonClassPlaneCompleteness_of_survival_and_strictClosure
     (G : GeometricCycleClassSpine V H)
@@ -250,6 +284,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
+#check survival_and_targetStrictClosure_iff_hodge
 #check CommonClassPlanePacket.ofStrictRelationEdgePacket
 #check CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
 #check GhostSeedTargetStrictClosure
@@ -258,6 +293,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
+#print axioms survival_and_targetStrictClosure_iff_hodge
 #print axioms CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
 #print axioms ghostCommonClassPlaneStrike_of_seed_targetStrictClosure
 #print axioms commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
