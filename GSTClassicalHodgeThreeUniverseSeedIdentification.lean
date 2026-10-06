@@ -108,7 +108,8 @@ noncomputable def classicalHodgeMass
   map_smul' := by
     intro q a
     classical
-    simp [smul_eq_mul]
+    rw [Finsupp.sum_smul_index' (fun _ => rfl)]
+    simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 /-- Forgetting multiplicity from an arbitrary genuine Hodge class gives its
 finite total basis mass times the common limitless transfer direction. -/
