@@ -142,9 +142,10 @@ theorem pointClosureSeparatorSuccessor_coheight_one
     exact absurd hupper (by simp)
   obtain ⟨n, hn⟩ := ENat.ne_top_iff_exists.mp hne
   rw [← hn] at hupper hlower ⊢
-  have hn1 : n ≤ 1 := by exact_mod_cast hupper
-  have hn2 : 1 ≤ n := by exact_mod_cast hlower
-  exact congrArg (fun k => (k : ℕ∞)) (le_antisymm (α := ℕ) hn1 hn2)
+  have hn1 : n ≤ 1 := ENat.coe_le_coe.mp hupper
+  have hn2 : 1 ≤ n := ENat.coe_le_coe.mp hlower
+  rw [← ENat.coe_one]
+  exact congrArg ((↑) : ℕ → ℕ∞) (le_antisymm (α := ℕ) hn1 hn2)
 
 /-- The constructed successor therefore determines an actual member of the
 relative coheight-one subtype used by the recursive cut operator. -/
