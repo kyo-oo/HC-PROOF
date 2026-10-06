@@ -86,9 +86,7 @@ noncomputable def rationalizeCompactAddress :
     intro z φ
     classical
     ext n
-    rw [Finsupp.sum_smul_index' (fun i => by simp), Finsupp.sum,
-      Finsupp.sum, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun i _ => by simp
+    simp [Finset.sum_apply, Finsupp.smul_apply, RingHom.id_apply, smul_eq_mul]
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]
@@ -108,7 +106,7 @@ theorem rationalize_compactClMono
       Finsupp.single (pureWeightAddress p) 1 := by
   ext n
   simp [rationalizeCompactAddress, compactClMono, compactClCode,
-    pureWeightAddress, compactClCode_eq_cosmicAddress]
+    pureWeightAddress, cosmicAddressEquiv]
 
 /-- **NATIVE POINT = LIMITLESS TRANSFER GENERATOR.**
 Every genuine codimension-p point cycle has exactly the same rational universal

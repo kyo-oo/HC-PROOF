@@ -136,9 +136,15 @@ theorem pointClosureSeparatorSuccessor_coheight_one
   have hupper : Order.coheight y ≤ 1 :=
     coheight_le_one_of_unique_strictAbove y η
       (no_intermediate_above_separatorSuccessor V x hlive)
-  have hupper2 : Order.coheight y ≤ (1 : ℕ∞) := by simpa using hupper
-  have hlower2 : (1 : ℕ∞) ≤ Order.coheight y := by simpa using hlower
-  exact le_antisymm hupper2 hlower2
+  have hne : Order.coheight y ≠ ⊤ := by
+    intro htop
+    rw [htop] at hupper
+    exact absurd hupper (by simp)
+  obtain ⟨n, hn⟩ := ENat.ne_top_iff_exists.mp hne
+  rw [← hn] at hupper hlower ⊢
+  have hn1 : n ≤ 1 := by omega
+  have hn2 : 1 ≤ n := by omega
+  exact congrArg (fun k => (k : ℕ∞)) (le_antisymm hn1 hn2)
 
 /-- The constructed successor therefore determines an actual member of the
 relative coheight-one subtype used by the recursive cut operator. -/
