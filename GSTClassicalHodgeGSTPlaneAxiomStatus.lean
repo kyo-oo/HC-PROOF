@@ -2,6 +2,7 @@ import GSTClassicalHodgePlaneCompletenessTheorem
 import GSTClassicalHodgeCommonClassPlaneReduction
 import GSTClassicalHodgePlaneSemanticIndependence
 import GSTClassicalHodgeCoherentNativeGhostObstruction
+import GSTClassicalHodgeLimitlessSpinePropagation
 
 /-!
 # GST CLASSICAL HODGE — GST PLANE AXIOM STATUS AND NONCIRCULARITY
@@ -284,6 +285,47 @@ theorem coherentNativeLayer_misses_ghost_target
   exact
     ghostSeedTarget_coherentNativeAction_mismatch_ne_zero
       G E S i0 U hcolumns hkernel
+
+/-- **SOURCE SURVIVAL FROM A CONSERVED NATIVE CHARGE.**
+
+The ghost-weight native seed is not an independent axiom once the branch's
+conserved geometric charge has been independently constructed.  The canonical
+spine tower supplies both the native cycle and its Hodge state; charge
+conservation proves the Hodge state is nonzero, while the spine naturality
+theorem identifies its cycle class with the state.
+
+Thus source survival reduces to one explicit native conserved-charge law.
+-/
+theorem ghostWeightNativeSeedSurvival_of_conservedCharge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge (V := V) (H := H) G) :
+    GhostWeightNativeSeedSurvival G := by
+  intro E
+  let Z : codimensionCycles V.X E.weight :=
+    spineNativeTower G E.weight
+  let a : ClassicalHodgeFiber V H E.weight :=
+    spineHodgeSeed G E.weight
+  have ha : a ≠ 0 := D.spineHodgeSeed_ne_zero E.weight
+  have hclass :
+      H.cycleClass E.weight Z = a.1 :=
+    spineNativeTower_cycleClass G E.weight
+  exact ⟨{
+    cycle := Z
+    hodge := a
+    hodge_ne_zero := ha
+    class_eq := hclass
+  }⟩
+
+/-- A native-mass bridge is enough to manufacture the same source survival:
+its three mass laws build a conserved charge, and the conserved charge builds
+the seed at every ghost weight.
+-/
+theorem ghostWeightNativeSeedSurvival_of_nativeMassBridge
+    (G : GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge (V := V) (H := H)) :
+    GhostWeightNativeSeedSurvival G :=
+  ghostWeightNativeSeedSurvival_of_conservedCharge G
+    (NativeMassCycleClassBridge.toConservedCharge M G)
 
 /-- **MASTER GST PLANE AXIOM-STATUS CROWN.**
 
