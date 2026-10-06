@@ -86,7 +86,8 @@ noncomputable def rationalizeCompactAddress :
     intro z φ
     classical
     ext n
-    simp [Finset.sum_apply, Finsupp.smul_apply, RingHom.id_apply, smul_eq_mul]
+    rw [Finsupp.sum_smul_index' (fun i => by simp)]
+    simp [smul_eq_mul, mul_assoc]
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]

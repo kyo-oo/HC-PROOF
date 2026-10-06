@@ -161,7 +161,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
         (finiteHodgeWrite (pairBasisIndex i j) w) = w := by
     intro w
     funext r
-    simp [finiteHodgeRead, finiteHodgeWrite]
+    fin_cases r <;> simp [finiteHodgeRead, finiteHodgeWrite]
   have hfinite :
       ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
         ((sheetProjectorQ targetSlot).comp
@@ -172,8 +172,11 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   simp [twoSlotHodgeOperator, liftFiniteHodgeOperator, finiteHodgeRead,
     finiteHodgeWrite, hfinite, hlift, pureMatrixUnit, rationalPureBasis,
     diagonalLefschetzQ, sheetProjectorQ, hodgeMatrixUnit_apply,
-    sourceSlot, targetSlot, hrw, worldAct, worldBasis,
-    pureDiagonalState,
+    sourceSlot, targetSlot, hrw,
+    GSTTruncatedWorldCohomologyRing.worldAct,
+    GSTWorldPoincareDuality.worldBasis,
+    GSTGlobalPureHodgeCosmology.pureDiagonalState,
+    GSTTruncatedWorldCohomologyRing.L,
     LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
