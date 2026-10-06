@@ -1,5 +1,6 @@
 import GSTClassicalHodgeOmniversalSeparatorGhostCrown
 import GSTClassicalHodgeGradedGeometricOrbitAlgebra
+import GSTClassicalHodgeExactClayStatement
 
 /-!
 # GST CLASSICAL HODGE — OMNIVERSAL NATIVE-ORBIT SEPARATION
@@ -300,7 +301,28 @@ theorem nativeCycle_of_geometricGSTPlaneCompleteness
 #check geometricPlane_iff_nativeOrbitPairingTotal
 #check no_omniversalGhost_of_geometricPlane
 #check hodge_of_geometricGSTPlaneCompleteness
+
+/-- Exact Clay-style rational-algebraic landing from executable geometric GST
+plane completeness. -/
+theorem everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness
+    (G : GeometricCycleClassSpine V H)
+    (hplane : GeometricGSTPlaneCompleteness G) :
+    GSTClassicalHodgeExactClayStatement.EveryHodgeClassIsRationalAlgebraic H :=
+  (GSTClassicalHodgeExactClayStatement.everyHodgeClassIsRationalAlgebraic_iff_stage2G H).2
+    (hodge_of_geometricGSTPlaneCompleteness G hplane)
+
+/-- Exact finite-rational-combination wording of the same geometric-plane
+landing. -/
+theorem everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
+    (G : GeometricCycleClassSpine V H)
+    (hplane : GeometricGSTPlaneCompleteness G) :
+    GSTClassicalHodgeExactClayStatement.EveryHodgeClassIsFiniteRationalCombination H :=
+  (GSTClassicalHodgeExactClayStatement.rationalAlgebraic_iff_finiteRationalCombination H).1
+    (everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness G hplane)
+
 #check nativeCycle_of_geometricGSTPlaneCompleteness
+#check everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness
+#check everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
 
 #print axioms geometricPlane_iff_gradedOrbitCyclic
 #print axioms nativeOrbitPairingTotal_of_geometricPlane
@@ -308,5 +330,7 @@ theorem nativeCycle_of_geometricGSTPlaneCompleteness
 #print axioms nativeOrbitPairingTotal_iff_gradedOrbitCyclic
 #print axioms geometricPlane_iff_nativeOrbitPairingTotal
 #print axioms hodge_of_geometricGSTPlaneCompleteness
+#print axioms everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness
+#print axioms everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
 
 end GSTClassicalHodgeOmniversalNativeOrbitSeparation
