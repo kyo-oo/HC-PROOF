@@ -121,7 +121,7 @@ noncomputable def ambientUniversalTwoSlotWord
 /-- On the genuine Hodge fiber, the ambient universal word is exactly the
 rank-free matrix unit. -/
 theorem ambientUniversalTwoSlotWord_on_hodge
-    (i j : ClassicalHodgeBasisIndex V H p)
+    (i j : ClassicalHodgeBasisIndex V H p) (hij : i ≠ j)
     (alpha : HFiber V H p) :
     ambientUniversalTwoSlotWord i j alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
@@ -156,12 +156,22 @@ theorem ambientUniversalTwoSlotWord_on_hodge
       (twoSlotHodgeOperator i j (sheetProjectorQ targetSlot))
         ((twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
           ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha))).1 = _
+  have h01 : hodgeCoordinate (pairBasisIndex i j sourceSlot)
+      (classicalHodgeBasis V H p (pairBasisIndex i j targetSlot)) = 0 :=
+    hodgeCoordinate_basis_other hij
+  have h10 : hodgeCoordinate (pairBasisIndex i j targetSlot)
+      (classicalHodgeBasis V H p (pairBasisIndex i j sourceSlot)) = 0 :=
+    hodgeCoordinate_basis_other (Ne.symm hij)
   have hrw : ∀ w : RationalPureWindow 2,
       finiteHodgeRead (pairBasisIndex i j)
         (finiteHodgeWrite (pairBasisIndex i j) w) = w := by
     intro w
     funext r
-    fin_cases r <;> simp [finiteHodgeRead, finiteHodgeWrite]
+    fin_cases r
+    · simp [finiteHodgeRead, finiteHodgeWrite, sourceSlot, targetSlot,
+        pairBasisIndex, h01]
+    · simp [finiteHodgeRead, finiteHodgeWrite, sourceSlot, targetSlot,
+        pairBasisIndex, h10]
   have hfinite :
       ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
         ((sheetProjectorQ targetSlot).comp
@@ -172,12 +182,15 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   simp [twoSlotHodgeOperator, liftFiniteHodgeOperator, finiteHodgeRead,
     finiteHodgeWrite, hfinite, hlift, pureMatrixUnit, rationalPureBasis,
     diagonalLefschetzQ, sheetProjectorQ, hodgeMatrixUnit_apply,
-    sourceSlot, targetSlot, hrw,
+    sourceSlot, targetSlot, hrw, pairBasisIndex, h01, h10,
+    hodgeCoordinate_basis_self,
     GSTTruncatedWorldCohomologyRing.worldAct,
     GSTWorldPoincareDuality.worldBasis,
     GSTGlobalPureHodgeCosmology.pureDiagonalState,
     GSTTruncatedWorldCohomologyRing.L,
-    LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
+    LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply,
+    gst_forward_scalar_receipt (N := 2) (p := sourceSlot) (q := targetSlot) (by decide)]
+  norm_num
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot

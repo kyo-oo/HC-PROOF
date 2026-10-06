@@ -21,10 +21,12 @@ noncomputable section
 
 open AlgebraicGeometry
 open GSTProjectiveOverC
+open GSTClassicalHodgePointClosurePrincipalCut
 open GSTClassicalHodgePointClosureRelativeCut
 open GSTClassicalHodgeHeightOneProjectiveRelevance
 open GSTClassicalHodgeSeparatorRelativeCutLanding
 open GSTClassicalHodgeSeparatorRelativeCoheightOne
+open GSTClassicalHodgeSeparatorPointClosureLift
 
 namespace GSTClassicalHodgeRelativeSuccessorNonempty
 

@@ -87,7 +87,10 @@ noncomputable def rationalizeCompactAddress :
     classical
     ext n
     rw [Finsupp.sum_smul_index' (fun i => by simp)]
-    simp [smul_eq_mul, mul_assoc, Finsupp.sum, Finset.mul_sum]
+    simp [Finsupp.sum, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    simp only [Finsupp.single_apply]
+    by_cases h : n = i <;> simp [h]
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]
