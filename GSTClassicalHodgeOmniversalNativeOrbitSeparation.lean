@@ -1,6 +1,7 @@
 import GSTClassicalHodgeOmniversalSeparatorGhostCrown
 import GSTClassicalHodgeGradedGeometricOrbitAlgebra
 import GSTClassicalHodgeExactClayStatement
+import GSTClassicalHodgeNativeExecutablePlane
 
 /-!
 # GST CLASSICAL HODGE — OMNIVERSAL NATIVE-ORBIT SEPARATION
@@ -320,7 +321,45 @@ theorem everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleten
   (GSTClassicalHodgeExactClayStatement.rationalAlgebraic_iff_finiteRationalCombination H).1
     (everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness G hplane)
 
+
+/-- Geometric executable plane completeness supplies the exact basis-cycle
+normal form, so there is no separate basis-algebraicity premise below it. -/
+theorem basisCycleSupply_of_geometricGSTPlaneCompleteness
+    (G : GeometricCycleClassSpine V H)
+    (hplane : GeometricGSTPlaneCompleteness G) :
+    GSTClassicalHodgeNativeExecutablePlane.HodgeBasisCycleSupply
+      (V := V) (H := H) := by
+  intro q j
+  obtain ⟨P, hP⟩ := hplane q j
+  let Z : codimensionCycles V.X q := P.cycleEval G
+    GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V
+  refine ⟨Z, ?_⟩
+  have hnat :=
+    P.cycleClass_cycleEval G
+      GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V
+  simpa [Z, geometricOriginClass] using hnat.trans hP
+
+/-- **COMPLETION HIERARCHY RECEIPT.**
+The executable geometric GST plane lands simultaneously in the basis-cycle
+normal form, Stage-2G Hodge, and the exact finite-rational Clay formulation.
+The middle basis-cycle statement is already proved elsewhere to be equivalent
+to Hodge, so it cannot be reused as a lower completeness axiom. -/
+theorem geometricGSTPlane_completion_hierarchy
+    (G : GeometricCycleClassSpine V H)
+    (hplane : GeometricGSTPlaneCompleteness G) :
+    GSTClassicalHodgeNativeExecutablePlane.HodgeBasisCycleSupply
+        (V := V) (H := H)
+    ∧ BigradedBettiHodgeStatement V H
+    ∧ GSTClassicalHodgeExactClayStatement.EveryHodgeClassIsFiniteRationalCombination H := by
+  refine ⟨basisCycleSupply_of_geometricGSTPlaneCompleteness G hplane,
+    hodge_of_geometricGSTPlaneCompleteness G hplane, ?_⟩
+  exact
+    everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
+      G hplane
+
 #check nativeCycle_of_geometricGSTPlaneCompleteness
+#check basisCycleSupply_of_geometricGSTPlaneCompleteness
+#check geometricGSTPlane_completion_hierarchy
 #check everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness
 #check everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
 
@@ -330,6 +369,8 @@ theorem everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleten
 #print axioms nativeOrbitPairingTotal_iff_gradedOrbitCyclic
 #print axioms geometricPlane_iff_nativeOrbitPairingTotal
 #print axioms hodge_of_geometricGSTPlaneCompleteness
+#print axioms basisCycleSupply_of_geometricGSTPlaneCompleteness
+#print axioms geometricGSTPlane_completion_hierarchy
 #print axioms everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness
 #print axioms everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
 
