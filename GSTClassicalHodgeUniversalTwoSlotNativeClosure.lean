@@ -194,7 +194,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
     LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
   rw [hfs]
   norm_num
-  rw [one_div, mul_comm, mul_smul,
+  try rw [one_div, mul_comm, mul_smul,
     inv_smul_smul₀ (by norm_num : ((2:ℚ) ≠ 0))]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/

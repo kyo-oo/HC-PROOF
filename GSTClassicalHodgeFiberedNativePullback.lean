@@ -82,7 +82,7 @@ noncomputable def forgetPoint :
   map_smul' := by
     intro q φ
     classical
-    rw [Finsupp.sum_smul_index' (fun _ => rfl)]
+    rw [Finsupp.sum_smul_index' (fun _ => by simp)]
     simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 /-- Forget only the multiplicity sheet and retain the genuine native point
@@ -98,7 +98,7 @@ noncomputable def forgetMultiplicity :
   map_smul' := by
     intro q φ
     classical
-    rw [Finsupp.sum_smul_index' (fun _ => rfl)]
+    rw [Finsupp.sum_smul_index' (fun _ => by simp)]
     simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 /-- Embed the fixed-weight multiplicity address into the global fibered Hodge
@@ -122,8 +122,15 @@ noncomputable def toNativeCycle :
 /-- Total rational mass of a common-refinement state. -/
 noncomputable def totalMass : FiberedNativeAddress V H p →ₗ[ℚ] ℚ where
   toFun φ := φ.sum fun _ q => q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp [Finsupp.sum_add_index']
+  map_smul' := by
+    intro q φ
+    classical
+    rw [Finsupp.sum_smul_index' (fun _ => by simp)]
+    simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 @[simp]
 theorem forgetPoint_atom
@@ -306,8 +313,15 @@ theorem fibered_native_pullback_crown :
 noncomputable def multiplicityMass :
     (ClassicalHodgeBasisIndex V H p →₀ ℚ) →ₗ[ℚ] ℚ where
   toFun a := a.sum fun _ q => q
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro a b
+    classical
+    simp [Finsupp.sum_add_index']
+  map_smul' := by
+    intro q a
+    classical
+    rw [Finsupp.sum_smul_index' (fun _ => by simp)]
+    simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 @[simp] theorem multiplicityMass_single
     (i : ClassicalHodgeBasisIndex V H p) (q : ℚ) :
@@ -319,15 +333,29 @@ noncomputable def multiplicityMass :
 noncomputable def attachPoint (x : CodimensionPoint V.X p) :
     (ClassicalHodgeBasisIndex V H p →₀ ℚ) →ₗ[ℚ] FiberedNativeAddress V H p where
   toFun a := a.sum fun i q => q • atom V H p i x
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_smul]
+  map_add' := by
+    intro a b
+    classical
+    simp [Finsupp.sum_add_index']
+  map_smul' := by
+    intro q a
+    classical
+    rw [Finsupp.sum_smul_index' (fun _ => by simp)]
+    simp [smul_eq_mul, smul_smul, Finsupp.sum, Finset.mul_sum]
 
 /-- Attach one multiplicity label to a genuine finite native presentation. -/
 noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
     FiniteCodimensionPresentation V.X p →ₗ[ℚ] FiberedNativeAddress V H p where
   toFun b := b.sum fun x q => q • atom V H p i x
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_smul]
+  map_add' := by
+    intro a b
+    classical
+    simp [Finsupp.sum_add_index']
+  map_smul' := by
+    intro q a
+    classical
+    rw [Finsupp.sum_smul_index' (fun _ => by simp)]
+    simp [smul_eq_mul, smul_smul, Finsupp.sum, Finset.mul_sum]
 
 @[simp] theorem forgetPoint_attachPoint (x : CodimensionPoint V.X p)
     (a : ClassicalHodgeBasisIndex V H p →₀ ℚ) :
