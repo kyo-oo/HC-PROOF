@@ -119,11 +119,11 @@ same base cosmic shadow.  Thus native projective support and Hodge
 multiplicity both require the richer fibered/native refinement before the
 final no-escape theorem can distinguish them. -/
 theorem all_native_point_cycles_have_same_base_shadow
-    (x y : GSTGeometricRealizationStage2D.CodimensionPoint V.X p) :
+    (x y : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p) :
     nativeCycleCosmicShadow V p
-        (GSTGeometricRealizationStage2D.codimensionPointCycle V.X p x) =
+        (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x) =
       nativeCycleCosmicShadow V p
-        (GSTGeometricRealizationStage2D.codimensionPointCycle V.X p y) := by
+        (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p y) := by
   rw [nativeCycleCosmicShadow_point]
   rw [nativeCycleCosmicShadow_point]
 

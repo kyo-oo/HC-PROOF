@@ -34,6 +34,7 @@ open GSTUniversalAddressBridge
 open GSTTransferBridgeV2
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeNativeCycleCosmicShadow
+open GSTNativeCodimensionCyclePresentation
 
 /-- Universal cosmic address of the diagonal cell at Hodge weight `p`. -/
 def pureWeightAddress (p : Nat) : Nat :=
@@ -60,7 +61,7 @@ noncomputable def pureWeightToUniversalAddress :
   map_smul' := by
     intro q φ
     ext n
-    simp
+    simp [Finsupp.embDomain_apply]
 
 /-- A pure weight basis becomes the universal address basis of its diagonal
 cosmic cell. -/
@@ -80,12 +81,12 @@ noncomputable def rationalizeCompactAddress :
   map_add' := by
     intro φ ψ
     classical
-    simp [Finset.sum_add_distrib]
+    simp [Finsupp.sum_add_index']
   map_smul' := by
     intro z φ
     classical
     ext n
-    rw [Finsupp.sum_smul_index' (fun _ => rfl), Finsupp.sum,
+    rw [Finsupp.sum_smul_index' (fun i => by simp), Finsupp.sum,
       Finsupp.sum, Finset.mul_sum]
     exact Finset.sum_congr rfl fun i _ => by simp
 

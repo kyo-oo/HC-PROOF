@@ -166,6 +166,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   simp [twoSlotHodgeOperator, liftFiniteHodgeOperator, finiteHodgeRead,
     finiteHodgeWrite, hfinite, hlift, pureMatrixUnit, rationalPureBasis,
     diagonalLefschetzQ, sheetProjectorQ, hodgeMatrixUnit_apply,
+    sourceSlot, targetSlot,
     LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
