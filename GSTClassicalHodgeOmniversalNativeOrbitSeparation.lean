@@ -357,12 +357,41 @@ theorem geometricGSTPlane_completion_hierarchy
     everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
       G hplane
 
+/-- **WEAK-SPINE TOTALITY NO-GO.**
+Native-orbit pairing totality cannot be derived uniformly from the fields of
+`GeometricCycleClassSpine` alone.  The repository's zero-cycle-class spine
+satisfies those fields while failing Stage-2G whenever a nonzero Hodge class
+exists.  If every such spine were pairing-total, the existing no-ghost landing
+would force Hodge in that countermodel. -/
+theorem weakSpine_cannot_force_nativeOrbitPairingTotal
+    (H0 : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H0.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H0.hodgeBigrading p))
+    (halpha0 : alpha ≠ 0) :
+    ¬ (∀ G0 : GeometricCycleClassSpine V
+          (GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H0),
+        OmniversalNativeOrbitPairingTotal G0) := by
+  intro htotal
+  let G0 : GeometricCycleClassSpine V
+      (GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H0) :=
+    zeroCycleClassSpine H0
+  have hhodge :
+      BigradedBettiHodgeStatement V
+        (GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H0) :=
+    hodge_of_nativeOrbitPairingTotal G0 (htotal G0)
+  exact
+    (GSTClassicalHodgeStage2GSemanticRigidity.not_bigradedBettiHodge_zeroCycleClass
+      H0 p alpha halpha halpha0) hhodge
+
+#check weakSpine_cannot_force_nativeOrbitPairingTotal
 #check nativeCycle_of_geometricGSTPlaneCompleteness
 #check basisCycleSupply_of_geometricGSTPlaneCompleteness
 #check geometricGSTPlane_completion_hierarchy
 #check everyHodgeClassIsRationalAlgebraic_of_geometricGSTPlaneCompleteness
 #check everyHodgeClassIsFiniteRationalCombination_of_geometricGSTPlaneCompleteness
 
+#print axioms weakSpine_cannot_force_nativeOrbitPairingTotal
 #print axioms geometricPlane_iff_gradedOrbitCyclic
 #print axioms nativeOrbitPairingTotal_of_geometricPlane
 #print axioms gradedOrbitCyclic_of_nativeOrbitPairingTotal
