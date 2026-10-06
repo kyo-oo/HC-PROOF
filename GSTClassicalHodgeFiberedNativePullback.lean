@@ -75,8 +75,15 @@ noncomputable def forgetPoint :
     FiberedNativeAddress V H p →ₗ[ℚ]
       (ClassicalHodgeBasisIndex V H p →₀ ℚ) where
   toFun φ := φ.sum fun ix q => Finsupp.single ix.1 q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp [Finsupp.sum_add_index']
+  map_smul' := by
+    intro q φ
+    classical
+    rw [Finsupp.sum_smul_index' (fun _ => rfl)]
+    simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 /-- Forget only the multiplicity sheet and retain the genuine native point
 presentation. -/
@@ -84,16 +91,27 @@ noncomputable def forgetMultiplicity :
     FiberedNativeAddress V H p →ₗ[ℚ]
       FiniteCodimensionPresentation V.X p where
   toFun φ := φ.sum fun ix q => Finsupp.single ix.2 q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp [Finsupp.sum_add_index']
+  map_smul' := by
+    intro q φ
+    classical
+    rw [Finsupp.sum_smul_index' (fun _ => rfl)]
+    simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 /-- Embed the fixed-weight multiplicity address into the global fibered Hodge
 universe. -/
 noncomputable def toGlobalHodgeAddress :
     FiberedNativeAddress V H p →ₗ[ℚ] FiberedHodgeAddress V H where
   toFun φ := Finsupp.embDomain (weightFiberEmbedding V H p) (forgetPoint V H p φ)
-  map_add' := by intro φ ψ; simp
-  map_smul' := by intro q φ; simp
+  map_add' := by
+    intro φ ψ
+    simp
+  map_smul' := by
+    intro q φ
+    simp
 
 /-- Realize the native projection as an actual codimension-p algebraic cycle. -/
 noncomputable def toNativeCycle :
