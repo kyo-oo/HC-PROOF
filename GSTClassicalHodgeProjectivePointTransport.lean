@@ -112,7 +112,8 @@ noncomputable def pushforwardPresentation
       · have hsup : (q • φ).support = φ.support := by
           ext a
           simp [Finsupp.mem_support_iff, mul_ne_zero_iff, hq]
-        simp only [Finsupp.sum, Finsupp.smul_apply, smul_eq_mul]
+        simp only [Finsupp.sum, Finsupp.smul_apply, smul_eq_mul,
+          Finset.smul_sum, smul_smul]
         rw [hsup]
     | simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
       RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, mul_ne_zero]

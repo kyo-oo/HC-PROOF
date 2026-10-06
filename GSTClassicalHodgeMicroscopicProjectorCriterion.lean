@@ -123,14 +123,14 @@ theorem extractedBasisCycle_spec
   rw [LinearMap.map_smul]
   rw [S.cycleClass_cyclePolyEval]
   rw [C.seedCycle_class]
-  have hpoly :
-      linearPolyEval S.operatorPair.cohomologyOperator
-          (F.isolatorPolynomial C.slot)
-          (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) =
-        c • (classicalHodgeBasis V H p i).1 := by
-    simpa [S, F, c, C.nativeSpectral, C.targets_basis] using hproj
-  rw [hpoly]
-  simp [c, hc, mul_smul]
+  change c⁻¹ •
+      linearPolyEval C.spectral.observable
+        (F.isolatorPolynomial C.slot)
+        (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) = _
+  rw [hproj, smul_smul]
+  have hone : c⁻¹ * (C.isolatedCoefficient * F.isolatorScale C.slot) = (1 : ℚ) :=
+    inv_mul_cancel₀ hc
+  rw [hone, one_smul]
 
 /-- Every microscopic certificate places the selected basis sheet in the
 actual atomic point-cycle span. -/
