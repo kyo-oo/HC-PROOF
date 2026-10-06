@@ -58,10 +58,7 @@ noncomputable def zeroToOnePresentationOperator :
   map_smul' := by
     intro q φ
     classical
-    rw [show zeroToOnePresentationOperator V (q • φ) =
-          (q • φ).sum (fun x c => c • zeroToOnePointKernel V x) from rfl,
-        show q • zeroToOnePresentationOperator V φ =
-          q • φ.sum (fun x c => c • zeroToOnePointKernel V x) from rfl]
+    rw [RingHom.id_apply]
     first
     | rw [Finsupp.sum_smul_index]
       intro i
@@ -106,29 +103,11 @@ noncomputable def zeroToOneFiniteNative :
   map_smul' := by
     intro q φ
     classical
-    rw [show zeroToOneFiniteNative V (q • φ) =
-          (((q • φ).sum (fun x c => c • zeroToOnePointKernel V x)).sum
-            (fun y d => d • codimensionPointCycle V.X 1 y)) from rfl,
-        show q • zeroToOneFiniteNative V φ =
-          q • ((φ.sum (fun x c => c • zeroToOnePointKernel V x)).sum
-            (fun y d => d • codimensionPointCycle V.X 1 y)) from rfl]
-    first
-    | rw [Finsupp.sum_smul_index, Finsupp.sum_smul_index]
-      · intro i
-        simp
-      · intro i
-        simp
-    | by_cases hq : q = 0
-      · subst q
-        simp
-      · have hop : zeroToOnePresentationOperator V (q • φ) =
-            q • zeroToOnePresentationOperator V φ :=
-          (zeroToOnePresentationOperator V).map_smul q φ
-        rw [hop]
-        simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
-          RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, hq]
-    | simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
-      RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, mul_ne_zero]
+    rw [RingHom.id_apply]
+    have hop : zeroToOnePresentationOperator V (q • φ) =
+        q • zeroToOnePresentationOperator V φ :=
+      (zeroToOnePresentationOperator V).map_smul q φ
+    rw [hop, realizeFiniteCodimensionPresentation_smul]
 
 /-- **NATIVE PRINCIPAL-CUT GRADED OPERATOR.**
 Every native codimension-zero cycle has a finite point normal form; apply the

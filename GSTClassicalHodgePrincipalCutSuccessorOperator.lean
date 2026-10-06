@@ -119,10 +119,7 @@ noncomputable def successorPresentationOperator
   map_smul' := by
     intro q φ
     classical
-    rw [show successorPresentationOperator V p (q • φ) =
-          (q • φ).sum (fun x c => c • successorPresentation V p x) from rfl,
-        show q • successorPresentationOperator V p φ =
-          q • φ.sum (fun x c => c • successorPresentation V p x) from rfl]
+    rw [RingHom.id_apply]
     first
     | rw [Finsupp.sum_smul_index]
       intro i
@@ -171,29 +168,11 @@ noncomputable def successorFiniteNativeOperator
   map_smul' := by
     intro q φ
     classical
-    rw [show successorFiniteNativeOperator V p (q • φ) =
-          (((q • φ).sum (fun x c => c • successorPresentation V p x)).sum
-            (fun y d => d • codimensionPointCycle V.X (p + 1) y)) from rfl,
-        show q • successorFiniteNativeOperator V p φ =
-          q • ((φ.sum (fun x c => c • successorPresentation V p x)).sum
-            (fun y d => d • codimensionPointCycle V.X (p + 1) y)) from rfl]
-    first
-    | rw [Finsupp.sum_smul_index, Finsupp.sum_smul_index]
-      · intro i
-        simp
-      · intro i
-        simp
-    | by_cases hq : q = 0
-      · subst q
-        simp
-      · have hop : successorPresentationOperator V p (q • φ) =
-            q • successorPresentationOperator V p φ :=
-          (successorPresentationOperator V p).map_smul q φ
-        rw [hop]
-        simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
-          RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, hq]
-    | simp [Finsupp.sum, Finset.smul_sum, smul_eq_mul, smul_smul,
-      RingHom.id_apply, mul_comm, mul_assoc, mul_left_comm, mul_ne_zero]
+    rw [RingHom.id_apply]
+    have hop : successorPresentationOperator V p (q • φ) =
+        q • successorPresentationOperator V p φ :=
+      (successorPresentationOperator V p).map_smul q φ
+    rw [hop, realizeFiniteCodimensionPresentation_smul]
 
 /-- **UNCONDITIONAL GEOMETRY-BUILT GRADED SUCCESSOR OPERATOR.** -/
 noncomputable def successorNativeOperator

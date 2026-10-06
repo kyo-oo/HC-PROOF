@@ -66,6 +66,18 @@ theorem realizeFiniteCodimensionPresentation_zero
     realizeFiniteCodimensionPresentation X p 0 = 0 := by
   simp [realizeFiniteCodimensionPresentation]
 
+/-- Scalar homogeneity of the realization map, at the presentation level. -/
+theorem realizeFiniteCodimensionPresentation_smul
+    (X : Scheme.{u}) (p : Nat)
+    (q : ℚ) (φ : FiniteCodimensionPresentation X p) :
+    realizeFiniteCodimensionPresentation X p (q • φ) =
+      q • realizeFiniteCodimensionPresentation X p φ := by
+  classical
+  simp only [realizeFiniteCodimensionPresentation]
+  rw [Finsupp.sum_smul_index]
+  intro i
+  simp
+
 @[simp]
 theorem realizeFiniteCodimensionPresentation_single
     (X : Scheme.{u}) (p : Nat)
