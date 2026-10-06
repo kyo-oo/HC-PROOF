@@ -94,7 +94,10 @@ theorem projectiveCutTower_succ
     (p : Nat) :
     projectiveCutTower V (p+1) =
       successorNativeOperator V p (projectiveCutTower V p) := by
-  simp [projectiveCutTower, nativeCutIterate_succ, Nat.zero_add, cast_eq]
+  simp only [projectiveCutTower, nativeCutIterate_succ]
+  first
+  | rfl
+  | simp [Nat.zero_add, cast_eq]
 
 /-- Every level of the projective tower is an actual native codimension-p
 algebraic cycle. -/
