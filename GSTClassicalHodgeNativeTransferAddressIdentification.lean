@@ -90,7 +90,11 @@ noncomputable def rationalizeCompactAddress :
     simp [Finsupp.sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [Finsupp.single_apply]
-    by_cases h : n = i <;> simp [h]
+    by_cases h : n = i
+    · simp [h]
+    · simp [h]
+      intro h1 h2
+      exact absurd h2 h1
 
 /-- Rationalization of one integral address basis vector. -/
 @[simp]

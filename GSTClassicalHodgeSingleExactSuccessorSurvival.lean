@@ -1,5 +1,6 @@
 import GSTClassicalHodgeRelativeSuccessorNonempty
 import GSTClassicalHodgeNativeCycleCosmicShadow
+import GSTClassicalHodgePointClosurePrincipalCut
 
 /-!
 # GST CLASSICAL HODGE — SINGLE EXACT SUCCESSOR SURVIVAL
@@ -31,6 +32,9 @@ open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgePointClosureRelativeCut
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeNativeCycleCosmicShadow
+open GSTClassicalHodgePointClosurePrincipalCut
+open GSTClassicalHodgeHeightOneProjectiveRelevance
+open GSTClassicalHodgeSeparatorRelativeCoheightOne
 open GSTClassicalHodgeRelativeSuccessorNonempty
 
 namespace GSTClassicalHodgeSingleExactSuccessorSurvival
@@ -86,8 +90,8 @@ theorem successorMass_eq_exactRelativeCard
   unfold successorMass successorPresentation
   rw [map_sum]
   simp only [presentationMass_successorAtom]
-  rw [Finset.card_filter]
-  simp [exactRelativeSuccessorFinset]
+  rw [exactRelativeSuccessorFinset, Finset.card_filter]
+  simp
 
 /-- One exact relative successor is sufficient for nonzero successor mass. -/
 theorem successorMass_ne_zero_of_one_exact

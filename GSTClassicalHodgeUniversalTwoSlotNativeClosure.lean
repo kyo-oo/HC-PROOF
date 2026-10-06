@@ -156,12 +156,10 @@ theorem ambientUniversalTwoSlotWord_on_hodge
       (twoSlotHodgeOperator i j (sheetProjectorQ targetSlot))
         ((twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2))
           ((twoSlotHodgeOperator i j (sheetProjectorQ sourceSlot)) alpha))).1 = _
-  have h01 : hodgeCoordinate (pairBasisIndex i j sourceSlot)
-      (classicalHodgeBasis V H p (pairBasisIndex i j targetSlot)) = 0 :=
-    hodgeCoordinate_basis_other hij
-  have h10 : hodgeCoordinate (pairBasisIndex i j targetSlot)
-      (classicalHodgeBasis V H p (pairBasisIndex i j sourceSlot)) = 0 :=
-    hodgeCoordinate_basis_other (Ne.symm hij)
+  have h01 : hodgeCoordinate i (classicalHodgeBasis V H p j) = 0 :=
+    hodgeCoordinate_basis_other i j hij
+  have h10 : hodgeCoordinate j (classicalHodgeBasis V H p i) = 0 :=
+    hodgeCoordinate_basis_other j i (Ne.symm hij)
   have hrw : ∀ w : RationalPureWindow 2,
       finiteHodgeRead (pairBasisIndex i j)
         (finiteHodgeWrite (pairBasisIndex i j) w) = w := by
