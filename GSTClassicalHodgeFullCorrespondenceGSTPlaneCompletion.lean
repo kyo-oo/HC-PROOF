@@ -486,6 +486,55 @@ theorem completedGSTPlane_noGhost_hodge_crown
   exact ⟨hfull, htotal, hghost, hhodge,
     (exact_rational_hodge_conjecture_finite_sum H).1 hhodge⟩
 
+/-- **OLD NO-GHOST TARGET = COMPLETED NATIVE GST PLANE.**
+
+This is the exact bridge to the original omniversal proof design.  The native
+executable plane is equivalent to completed-probe pairing totality of the full
+verified correspondence/cut orbit: neither side is a separate extra law.
+
+So the phrase "GST plane completeness" in the final route can be read
+geometrically (native execution) or dually (no nonzero completed probe is
+invisible to every executable native branch). -/
+theorem nativeExecutablePlane_iff_fullPairingTotal
+    (G : GeometricCycleClassSpine V H) :
+    GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H) ↔
+      FullCorrespondenceNativeOrbitPairingTotal G :=
+  (nativeExecutablePlane_iff_fullCorrespondencePlane G).trans
+    (fullCorrespondencePlane_iff_fullPairingTotal G)
+
+/-- Equivalent orbit-cyclicity form of completed native GST plane
+completeness. -/
+theorem nativeExecutablePlane_iff_fullOrbitCyclic
+    (G : GeometricCycleClassSpine V H) :
+    GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H) ↔
+      FullCorrespondenceOrbitCyclic G :=
+  (nativeExecutablePlane_iff_fullCorrespondencePlane G).trans
+    (fullCorrespondencePlane_iff_orbitCyclic G)
+
+/-- **COMPLETED GST PLANE / OMNIVERSAL DUALITY CROWN.**
+All three noncircular formulations of the missing geometric plane law coincide:
+native execution, verified-program orbit cyclicity, and completed-probe pairing
+totality.  Any one of them kills the omniversal ghost and yields the exact
+Hodge landing by the theorems below. -/
+theorem completedGSTPlane_equivalence_crown
+    (G : GeometricCycleClassSpine V H) :
+    (GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H) ↔
+      FullCorrespondenceGSTPlaneCompleteness G)
+    ∧
+    (GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H) ↔
+      FullCorrespondenceOrbitCyclic G)
+    ∧
+    (GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H) ↔
+      FullCorrespondenceNativeOrbitPairingTotal G) := by
+  exact ⟨nativeExecutablePlane_iff_fullCorrespondencePlane G,
+    nativeExecutablePlane_iff_fullOrbitCyclic G,
+    nativeExecutablePlane_iff_fullPairingTotal G⟩
+
 noncomputable def basisCycle
     (G : GeometricCycleClassSpine V H)
     (hplane : FullCorrespondenceGSTPlaneCompleteness G)
@@ -545,6 +594,9 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
 #check nativeExecutablePlane_of_fullCorrespondencePlane
 #check fullCorrespondencePlane_of_nativeExecutablePlane
 #check nativeExecutablePlane_iff_fullCorrespondencePlane
+#check nativeExecutablePlane_iff_fullPairingTotal
+#check nativeExecutablePlane_iff_fullOrbitCyclic
+#check completedGSTPlane_equivalence_crown
 #check noGhost_of_nativeExecutablePlane
 #check hodge_of_nativeExecutablePlane_noGhost
 #check finiteRationalCombination_of_nativeExecutablePlane
@@ -562,6 +614,9 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
 #print axioms nativeExecutablePlane_of_fullCorrespondencePlane
 #print axioms fullCorrespondencePlane_of_nativeExecutablePlane
 #print axioms nativeExecutablePlane_iff_fullCorrespondencePlane
+#print axioms nativeExecutablePlane_iff_fullPairingTotal
+#print axioms nativeExecutablePlane_iff_fullOrbitCyclic
+#print axioms completedGSTPlane_equivalence_crown
 #print axioms noGhost_of_nativeExecutablePlane
 #print axioms hodge_of_nativeExecutablePlane_noGhost
 #print axioms completedGSTPlane_noGhost_hodge_crown
