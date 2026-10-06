@@ -78,9 +78,8 @@ theorem nativeCutIterate_succ
 component fundamental cycle by p recursive principal cuts. -/
 noncomputable def projectiveCutTower
     (V : SmoothProjectiveComplexScheme)
-    (p : Nat) : codimensionCycles V.X p := by
-  simpa using
-    nativeCutIterate V 0 p (codimensionZeroFundamentalCycle V)
+    (p : Nat) : codimensionCycles V.X p :=
+  nativeCutIterate V 0 p (codimensionZeroFundamentalCycle V)
 
 @[simp]
 theorem projectiveCutTower_zero
@@ -95,9 +94,7 @@ theorem projectiveCutTower_succ
     projectiveCutTower V (p+1) =
       successorNativeOperator V p (projectiveCutTower V p) := by
   simp only [projectiveCutTower, nativeCutIterate_succ]
-  first
-  | rfl
-  | simp [Nat.zero_add, cast_eq]
+  rfl
 
 /-- Every level of the projective tower is an actual native codimension-p
 algebraic cycle. -/

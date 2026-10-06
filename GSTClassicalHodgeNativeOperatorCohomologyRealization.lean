@@ -59,7 +59,8 @@ theorem class_congr_of_kernelStable
   have hker : H.cycleClass p (Z - W) = 0 := by
     simp [hZW]
   have himage := hA (Z - W) hker
-  simpa using himage
+  rw [map_sub, map_sub] at himage
+  exact eq_of_sub_eq_zero himage
 
 /-- Canonical chosen representative of a class in the actual cycle-class
 range. -/
@@ -88,8 +89,12 @@ noncomputable def rangeOperator
         H.cycleClass p (rangeRepresentative (x + y)) =
           H.cycleClass p (rangeRepresentative x + rangeRepresentative y) := by
       simp [rangeRepresentative_spec]
-    rw [class_congr_of_kernelStable A hA hrep]
-    simp
+    have key : H.cycleClass p (A (rangeRepresentative (x + y))) =
+        H.cycleClass p (A (rangeRepresentative x)) +
+          H.cycleClass p (A (rangeRepresentative y)) := by
+      rw [class_congr_of_kernelStable A hA hrep, map_add A, map_add]
+    simp only [Submodule.coe_add]
+    exact key
   map_smul' := by
     intro q x
     apply Subtype.ext
@@ -97,8 +102,11 @@ noncomputable def rangeOperator
         H.cycleClass p (rangeRepresentative (q • x)) =
           H.cycleClass p (q • rangeRepresentative x) := by
       simp [rangeRepresentative_spec]
-    rw [class_congr_of_kernelStable A hA hrep]
-    simp
+    have key : H.cycleClass p (A (rangeRepresentative (q • x))) =
+        q • H.cycleClass p (A (rangeRepresentative x)) := by
+      rw [class_congr_of_kernelStable A hA hrep, map_smul A, map_smul]
+    simp only [SetLike.val_smul, RingHom.id_apply]
+    exact key
 
 /-- The descended range operator has the expected action on every actual
 cycle class. -/

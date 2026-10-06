@@ -92,7 +92,8 @@ theorem ambientHodgeMatrixUnit_basis_other
     ambientHodgeMatrixUnit (V:=V) (H:=H) i j
         (classicalHodgeBasis V H p k).1 = 0 := by
   rw [ambientHodgeMatrixUnit_on_hodge]
-  simp [hki]
+  have hik : i ≠ k := Ne.symm hki
+  simp [hik]
 
 /-- Point-transition kernel required only for the canonical ambient matrix
 unit.  There is no separately supplied cohomological observable anymore. -/
@@ -120,7 +121,8 @@ theorem nativeMatrixUnitOperatorPair_hodge_action
     (hZ : H.cycleClass p Z = alpha.1) :
     H.cycleClass p ((nativeMatrixUnitOperatorPair i j K).cycleOperator Z) =
       (hodgeMatrixUnit i j alpha).1 := by
-  rw [(nativeMatrixUnitOperatorPair i j K).cycleClass_natural, hZ]
+  rw [GSTClassicalHodgeCycleOperatorNaturality.CycleClassOperatorPair
+    .cycleClass_cycleOperator, hZ]
   exact ambientHodgeMatrixUnit_on_hodge i j alpha
 
 /-- Canonical matrix-unit point kernels at every pair produce the full native
