@@ -112,6 +112,22 @@ The general theorem any_hodge_sufficient_premise_fails_zeroCycleWorld says that 
 | ghost-indexed D + source survival | equivalent to no ghost | hence equivalent to Hodge |
 | intrinsic GST -> geometric Hodge | refuted | zero-cycle semantic countermodel |
 
+## 9. Source survival is itself reducible
+
+The source-side survival condition is not intrinsically sacred. The branch now proves that a conserved native charge constructs the required nonzero seed at every ghost weight.
+
+Lean theorem: ghostWeightNativeSeedSurvival_of_conservedCharge.
+
+A NativeMassCycleClassBridge is enough to construct that conserved charge, so source survival can be derived from one explicit native-mass package:
+
+Lean theorem: ghostWeightNativeSeedSurvival_of_nativeMassBridge.
+
+After this reduction, the GST route has exactly two independent geometric bridges: a conserved native charge for source survival, and the ghost-selected strict target packet D.
+
+Lean theorem: hodge_of_nativeMassBridge_and_D.
+
+The direct obstruction theorem ghost_forces_source_or_D_failure states that in the presence of a separator ghost, source survival and D cannot both hold.
+
 ## 9. What an unconditional D proof must contain
 
 The next successful theorem must construct the strict carrier from GST incidence/coherence data itself.
