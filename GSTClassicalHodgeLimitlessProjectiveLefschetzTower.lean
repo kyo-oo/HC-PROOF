@@ -54,7 +54,9 @@ noncomputable def nativeCutIterate
   | p, d + 1 => by
       have hprev := nativeCutIterate V p d
       have hnext := successorNativeOperator V (p + d)
-      simpa [Nat.add_assoc] using hnext.comp hprev
+      have hcomp := hnext.comp hprev
+      rw [show p + d + 1 = p + (d + 1) from Nat.add_assoc p d 1] at hcomp
+      exact hcomp
 
 @[simp]
 theorem nativeCutIterate_zero

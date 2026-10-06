@@ -93,11 +93,11 @@ noncomputable def certificateAt
     BasisProjectorCertificate V H p (A.basisIndex n) :=
   Classical.choice (hcert (A.basisIndex n))
 
+open Classical in
 /-- Total native basis-cycle function required by `CompactHodgeRealization`.
 Live Hodge addresses receive the cycle extracted by their microscopic
 projector certificate; addresses outside the Hodge support may be sent to
 zero because Stage 2 never uses them in the witness reconstruction. -/
-open Classical in
 noncomputable def basisCycleFromProjectors
     (A : NatHodgeCoordinateChart V H p)
     (hcert :

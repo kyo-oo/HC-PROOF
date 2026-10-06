@@ -98,9 +98,7 @@ theorem finset_sum_mem
     (A : ι → NativeCycleEnd V p)
     (hA : ∀ i ∈ s, A i ∈ projectiveCorrespondenceSpan V p) :
     ∑ i ∈ s, A i ∈ projectiveCorrespondenceSpan V p := by
-  exact Submodule.sum_mem (projectiveCorrespondenceSpan V p)
-    (fun i hi => Submodule.sum_mem (projectiveCorrespondenceSpan V p)
-      (fun _ _ => hA i hi))
+  exact Submodule.sum_mem (projectiveCorrespondenceSpan V p) hA
 
 /-- Point-presentation kernel of one actual scheme endomorphism. -/
 noncomputable def geometricPresentationKernel
@@ -176,8 +174,10 @@ operator applied to the point atom. -/
 theorem transition_realize
     (K : ProjectiveNativeKernel V p)
     (x : CodimensionPoint V.X p) :
-    realizeFiniteCodimensionPresentation V.X p (K.transition x) =
-      K.operator (codimensionPointCycle V.X p x) := by
+    realizeFiniteCodimensionPresentation V.X p
+      (ProjectiveNativeKernel.transition K x) =
+      ProjectiveNativeKernel.operator K
+        (codimensionPointCycle V.X p x) := by
   exact operatorPointPresentation_realize V p K.1 x
 
 end ProjectiveNativeKernel

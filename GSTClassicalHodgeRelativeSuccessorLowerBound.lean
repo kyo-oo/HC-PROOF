@@ -69,9 +69,8 @@ theorem relativeCut_image_lt_source
     (y : pointClosureScheme V x)
     (hy : y ∈ relativeCutSet V x) :
     pointClosureι V x y < x := by
-  exact lt_of_le_of_ne
-    (pointClosure_image_le_source V x y)
-    (relativeCut_image_ne_source V x y hy)
+  exact ⟨pointClosure_image_le_source V x y,
+    relativeCut_image_ne_source V x y hy⟩
 
 /-- **AMBIENT CODIMENSION LOWER BOUND.**
 If `x` has ambient codimension `p`, every point in its proper relative
