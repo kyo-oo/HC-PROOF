@@ -357,6 +357,135 @@ theorem nativeExecutablePlane_of_fullCorrespondencePlane
   rw [← hcycle]
   exact hnat.trans hP
 
+/-- **NATIVE EXECUTABLE PLANE -> FULL COHOMOLOGICAL PLANE.**
+
+The converse compiler is forced by the existing master cycle-class naturality
+law.  The native-only plane already supplies, for each sheet, an actual full
+correspondence/cut program whose native output has that sheet as cycle class.
+Executing the SAME program through the geometric spine and evaluating the
+naturality square on the canonical origin shows that its cohomological output
+is exactly the requested basis sheet.
+
+Thus the native and full-correspondence notions of completed GST plane cannot
+drift apart. -/
+theorem fullCorrespondencePlane_of_nativeExecutablePlane
+    (G : GeometricCycleClassSpine V H)
+    (hplane :
+      GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H)) :
+    FullCorrespondenceGSTPlaneCompleteness G := by
+  intro q j
+  obtain ⟨P, hnative⟩ := hplane q j
+  refine ⟨P, ?_⟩
+  have hnat :=
+    P.cycleClass_cycleEval G
+      (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+        .codimensionZeroFundamentalCycle V)
+  have hcycle := congrArg
+    (fun A : codimensionCycles V.X 0 →ₗ[ℚ] codimensionCycles V.X q =>
+      A (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+        .codimensionZeroFundamentalCycle V))
+    (cycleEval_eq_nativeEval G P)
+  have hout :
+      H.cycleClass q
+        (P.cycleEval G
+          (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+            .codimensionZeroFundamentalCycle V)) =
+        (classicalHodgeBasis V H q j).1 := by
+    rw [hcycle]
+    exact hnative
+  exact hnat.symm.trans hout
+
+/-- **EXACT EXECUTABLE-PLANE IDENTIFICATION.**
+Once the geometric spine supplies the cohomological interpretation of the
+already-native program syntax, native executable plane completeness and full
+correspondence GST plane completeness are literally equivalent. -/
+theorem nativeExecutablePlane_iff_fullCorrespondencePlane
+    (G : GeometricCycleClassSpine V H) :
+    GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H) ↔
+      FullCorrespondenceGSTPlaneCompleteness G := by
+  constructor
+  · exact fullCorrespondencePlane_of_nativeExecutablePlane G
+  · exact nativeExecutablePlane_of_fullCorrespondencePlane G
+
+/-- **NATIVE EXECUTABLE PLANE KILLS EVERY OMNIVERSAL GHOST DIRECTLY.**
+
+No pairing-totality hypothesis is needed once the plane already executes
+natively.  A hypothetical separator detects one basis sheet, while native
+plane completeness constructs an actual native cycle with exactly that class.
+The separator's verified identity-program annihilation then evaluates the same
+sheet to zero, contradicting detection. -/
+theorem noGhost_of_nativeExecutablePlane
+    (G : GeometricCycleClassSpine V H)
+    (hplane :
+      GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H)) :
+    IsEmpty (OmniversalSeparatorGhost G) := by
+  refine ⟨?_⟩
+  intro E
+  obtain ⟨P, hP⟩ := hplane E.weight E.sheet
+  let Z : codimensionCycles V.X E.weight :=
+    GSTClassicalHodgeNativeExecutablePlane.nativeOutput P
+  have hkill :=
+    E.kills_all_native_programs E.weight
+      (GSTClassicalHodgeGradedGeometricProgramOrbit.GradedGeometricProgram.id
+        E.weight) Z
+  have hzero :
+      E.separator.detector (H.cycleClass E.weight Z) = 0 := by
+    simpa [GSTClassicalHodgeGradedGeometricProgramOrbit
+      .GradedGeometricProgram.cohomologyEval,
+      GSTClassicalHodgeGradedGeometricProgramOrbit
+      .GradedGeometricProgram.toPair,
+      GSTClassicalHodgeCrossWeightNativePropagation
+      .GradedCycleClassOperatorPair.idPair] using hkill
+  rw [show H.cycleClass E.weight Z =
+      (classicalHodgeBasis V H E.weight E.sheet).1 by
+        exact hP] at hzero
+  exact E.separator.detects_basis hzero
+
+/-- **THE COMPLETED GST PLANE IS THE NO-GHOST FINALE.**
+Native executable plane completeness therefore lands directly in the exact
+Stage-2G Hodge statement through the original omniversal contradiction route. -/
+theorem hodge_of_nativeExecutablePlane_noGhost
+    (G : GeometricCycleClassSpine V H)
+    (hplane :
+      GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H)) :
+    BigradedBettiHodgeStatement V H :=
+  (hodge_iff_no_omniversalSeparatorGhost G).2
+    (noGhost_of_nativeExecutablePlane G hplane)
+
+/-- Exact finite-rational Clay wording of the same native-plane theorem. -/
+theorem finiteRationalCombination_of_nativeExecutablePlane
+    (G : GeometricCycleClassSpine V H)
+    (hplane :
+      GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H)) :
+    EveryHodgeClassIsFiniteRationalCombination H :=
+  (exact_rational_hodge_conjecture_finite_sum H).1
+    (hodge_of_nativeExecutablePlane_noGhost G hplane)
+
+/-- One crown recording the now-single completed GST-plane notion:
+native execution, full correspondence execution, pairing totality, no ghost,
+Stage-2G Hodge, and the exact finite rational algebraic-cycle statement. -/
+theorem completedGSTPlane_noGhost_hodge_crown
+    (G : GeometricCycleClassSpine V H)
+    (hplane :
+      GSTClassicalHodgeNativeExecutablePlane.NativeExecutableGSTPlaneCompleteness
+        (V := V) (H := H)) :
+    FullCorrespondenceGSTPlaneCompleteness G
+      ∧ FullCorrespondenceNativeOrbitPairingTotal G
+      ∧ IsEmpty (OmniversalSeparatorGhost G)
+      ∧ BigradedBettiHodgeStatement V H
+      ∧ EveryHodgeClassIsFiniteRationalCombination H := by
+  have hfull := fullCorrespondencePlane_of_nativeExecutablePlane G hplane
+  have htotal := fullPairingTotal_of_fullCorrespondencePlane G hfull
+  have hghost := noGhost_of_nativeExecutablePlane G hplane
+  have hhodge := (hodge_iff_no_omniversalSeparatorGhost G).2 hghost
+  exact ⟨hfull, htotal, hghost, hhodge,
+    (exact_rational_hodge_conjecture_finite_sum H).1 hhodge⟩
+
 noncomputable def basisCycle
     (G : GeometricCycleClassSpine V H)
     (hplane : FullCorrespondenceGSTPlaneCompleteness G)
@@ -414,6 +543,12 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
 #check noGhost_of_fullCorrespondencePairingTotal
 #check hodge_of_fullCorrespondencePairingTotal
 #check nativeExecutablePlane_of_fullCorrespondencePlane
+#check fullCorrespondencePlane_of_nativeExecutablePlane
+#check nativeExecutablePlane_iff_fullCorrespondencePlane
+#check noGhost_of_nativeExecutablePlane
+#check hodge_of_nativeExecutablePlane_noGhost
+#check finiteRationalCombination_of_nativeExecutablePlane
+#check completedGSTPlane_noGhost_hodge_crown
 #check hodge_of_fullCorrespondenceGSTPlane
 #check nativeCycle_of_fullCorrespondenceGSTPlane
 
@@ -425,6 +560,11 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
 #print axioms noGhost_of_fullCorrespondencePairingTotal
 #print axioms hodge_of_fullCorrespondencePairingTotal
 #print axioms nativeExecutablePlane_of_fullCorrespondencePlane
+#print axioms fullCorrespondencePlane_of_nativeExecutablePlane
+#print axioms nativeExecutablePlane_iff_fullCorrespondencePlane
+#print axioms noGhost_of_nativeExecutablePlane
+#print axioms hodge_of_nativeExecutablePlane_noGhost
+#print axioms completedGSTPlane_noGhost_hodge_crown
 #print axioms hodge_of_fullCorrespondenceGSTPlane
 
 end GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
