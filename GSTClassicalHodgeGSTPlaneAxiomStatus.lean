@@ -327,6 +327,35 @@ theorem ghostWeightNativeSeedSurvival_of_nativeMassBridge
   ghostWeightNativeSeedSurvival_of_conservedCharge G
     (NativeMassCycleClassBridge.toConservedCharge M G)
 
+/-- A hypothetical ghost rules out simultaneous source survival and the
+ghost-target strict closure.  This is the direct two-obstruction form of the
+plane proof: in a ghost world, at least one of the two genuinely geometric
+bridges must fail.
+-/
+theorem ghost_forces_source_or_D_failure
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G) :
+    ¬ (GhostWeightNativeSeedSurvival G ∧
+      GhostSeedTargetStrictClosure G) := by
+  intro h
+  have hnone :
+      IsEmpty (OmniversalSeparatorGhost G) :=
+    (targetStrictClosure_iff_noGhost G h.1).1 h.2
+  exact isEmpty_iff.mp hnone E
+
+/-- With the native conserved-charge bridge in hand, source survival is no
+longer an independent premise, so the GST route reduces exactly to the target
+strict closure D.
+-/
+theorem hodge_of_nativeMassBridge_and_D
+    (G : GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge (V := V) (H := H))
+    (hD : GhostSeedTargetStrictClosure G) :
+    BigradedBettiHodgeStatement V H :=
+  hodge_of_independent_D G
+    (ghostWeightNativeSeedSurvival_of_nativeMassBridge G M)
+    hD
+
 /-- **MASTER GST PLANE AXIOM-STATUS CROWN.**
 
 The branch's requested axioms therefore have the following exact status:
@@ -381,6 +410,12 @@ theorem hodge_of_independent_D
 #check branch_exists_but_D_packet_empty
 #check coherentNativeLayer_misses_ghost_target
 #check gstPlane_axiom_status_crown
+
+#check ghostWeightNativeSeedSurvival_of_conservedCharge
+#check ghostWeightNativeSeedSurvival_of_nativeMassBridge
+#check ghost_forces_source_or_D_failure
+#check hodge_of_nativeMassBridge_and_D
+
 #check hodge_of_independent_D
 
 #print axioms intrinsicGSTPlaneCompleteness
@@ -393,6 +428,12 @@ theorem hodge_of_independent_D
 #print axioms branch_exists_but_D_packet_empty
 #print axioms coherentNativeLayer_misses_ghost_target
 #print axioms gstPlane_axiom_status_crown
+
+#print axioms ghostWeightNativeSeedSurvival_of_conservedCharge
+#print axioms ghostWeightNativeSeedSurvival_of_nativeMassBridge
+#print axioms ghost_forces_source_or_D_failure
+#print axioms hodge_of_nativeMassBridge_and_D
+
 #print axioms hodge_of_independent_D
 
 end GSTClassicalHodgeGSTPlaneAxiomStatus
