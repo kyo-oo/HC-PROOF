@@ -566,6 +566,8 @@ roots = [
   "GSTClassicalHodgePlaneGroundPoint",
   "GSTClassicalHodgePointReducedGeometricSpine",
   "GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion",
+  "GSTClassicalHodgeMinimalNativeGeometricCore",
+  "GSTClassicalHodgeNativeExecutablePlane",
 ]
 
 # ---------------------------------------------------------------------------
