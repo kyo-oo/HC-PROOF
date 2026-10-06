@@ -3,6 +3,8 @@ import GSTClassicalHodgePrincipalCutSuccessorOperator
 import GSTClassicalHodgeLimitlessCosmicMatrixUnits
 import GSTClassicalHodgeLimitlessProjectiveLefschetzTower
 import GSTClassicalHodgeTransferSeedUniverse
+import GSTClassicalHodgePointKernelOperatorLift
+import GSTClassicalHodgeLimitlessTowerOrbitCrown
 
 /-!
 # GST CLASSICAL HODGE — NATIVE CYCLE / LIMITLESS COSMIC SHADOW
@@ -41,14 +43,22 @@ open GSTClassicalHodgePointNormalForm
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeLimitlessProjectiveLefschetzTower
+open GSTClassicalHodgePointKernelOperatorLift
+open GSTClassicalHodgeLimitlessTowerOrbitCrown
 
 /-- Rational augmentation of one finite point presentation. -/
 noncomputable def presentationMass
     {X : Scheme} {p : Nat} :
     FiniteCodimensionPresentation X p →ₗ[ℚ] ℚ where
   toFun φ := φ.sum fun _ q => q
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp
+  map_smul' := by
+    intro q φ
+    classical
+    simp [smul_eq_mul]
 
 @[simp]
 theorem presentationMass_single

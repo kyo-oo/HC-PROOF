@@ -46,6 +46,8 @@ open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeCrossWeightNativePropagation
+open GSTClassicalHodgeConcreteFailureDichotomy
+open GSTClassicalHodgeRankFreePrimitiveGeneration
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
