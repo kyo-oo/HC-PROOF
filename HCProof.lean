@@ -59,6 +59,9 @@ import GSTProjectiveOverC
 import GSTGeometricRealizationStage2E
 import GSTGeometricRealizationStage2F
 import GSTGeometricRealizationStage2G
+import GSTClassicalHodgeNativePointRelationDescent
+import GSTClassicalHodgeNativeInteractionNormalForm
+import GSTClassicalHodgeCoherentNativeDescent
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology

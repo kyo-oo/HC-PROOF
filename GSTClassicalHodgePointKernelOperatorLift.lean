@@ -22,6 +22,12 @@ older native-operator interface:
 Therefore a point-transition kernel automatically manufactures the complete
 `CycleClassOperatorPair` needed by native polynomial spectral extraction.
 No independent operator on arbitrary cycles has to be supplied.
+
+The companion `GSTClassicalHodgeNativePointRelationDescent` upgrades this
+direction further. It starts with a raw native point transition, constructs
+the cohomological action from preservation of finite point-class relations,
+and derives this file's `PointClassTransitionKernel` and its point action
+equation. Thus the ambient operator need not precede the native construction.
 -/
 
 set_option maxHeartbeats 10000000
