@@ -75,8 +75,11 @@ theorem realizeFiniteCodimensionPresentation_smul
   classical
   simp only [realizeFiniteCodimensionPresentation]
   rw [Finsupp.sum_smul_index]
-  intro i
-  simp
+  all_goals first
+    | intro i
+      simp
+    | simp
+    | rfl
 
 @[simp]
 theorem realizeFiniteCodimensionPresentation_single
