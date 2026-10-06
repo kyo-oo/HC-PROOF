@@ -93,14 +93,11 @@ noncomputable def zeroToOneFiniteNative :
       (zeroToOnePresentationOperator V φ)
   map_add' := by
     intro φ ψ
-    simp only [zeroToOnePresentationOperator,
-      realizeFiniteCodimensionPresentation]
     classical
-    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
+    have hop : zeroToOnePresentationOperator V (φ + ψ) =
+        zeroToOnePresentationOperator V φ + zeroToOnePresentationOperator V ψ :=
+      (zeroToOnePresentationOperator V).map_add φ ψ
+    rw [hop, realizeFiniteCodimensionPresentation_add]
   map_smul' := by
     intro q φ
     classical

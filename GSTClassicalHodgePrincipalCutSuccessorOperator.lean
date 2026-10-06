@@ -158,14 +158,12 @@ noncomputable def successorFiniteNativeOperator
       (successorPresentationOperator V p φ)
   map_add' := by
     intro φ ψ
-    simp only [successorPresentationOperator,
-      realizeFiniteCodimensionPresentation]
     classical
-    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
+    have hop : successorPresentationOperator V p (φ + ψ) =
+        successorPresentationOperator V p φ +
+          successorPresentationOperator V p ψ :=
+      (successorPresentationOperator V p).map_add φ ψ
+    rw [hop, realizeFiniteCodimensionPresentation_add]
   map_smul' := by
     intro q φ
     classical

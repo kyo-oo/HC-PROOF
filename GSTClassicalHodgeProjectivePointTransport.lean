@@ -158,14 +158,12 @@ noncomputable def realizePushforwardPresentation
       (pushforwardPresentation f p φ)
   map_add' := by
     intro φ ψ
-    simp only [pushforwardPresentation,
-      realizeFiniteCodimensionPresentation]
     classical
-    rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
-    · intro i; simp
-    · intro i b₁ b₂; simp [add_smul]
+    have hop : pushforwardPresentation f p (φ + ψ) =
+        pushforwardPresentation f p φ +
+          pushforwardPresentation f p ψ :=
+      (pushforwardPresentation f p).map_add φ ψ
+    rw [hop, realizeFiniteCodimensionPresentation_add]
   map_smul' := by
     intro q φ
     classical
