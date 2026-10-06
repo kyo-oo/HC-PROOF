@@ -44,6 +44,7 @@ open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 open GSTClassicalHodgeFiberedTransferCompletion
 open GSTClassicalHodgeNativeCycleCosmicShadow
+open GSTClassicalHodgeConcreteFailureDichotomy
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

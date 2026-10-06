@@ -34,6 +34,7 @@ noncomputable section
 open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgePointClosurePrincipalCut
 open GSTClassicalHodgePointClosureRelativeCut
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeNativeCycleCosmicShadow
