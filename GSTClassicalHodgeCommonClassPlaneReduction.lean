@@ -183,6 +183,109 @@ theorem commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
   let S := Classical.choice (hsurvive E)
   exact ⟨ghostCommonClassPlaneStrike_of_seed_targetStrictClosure G E S hclose⟩
 
+/-- **A SURVIVING GHOST FORBIDS THE REQUESTED STRICT BRANCH PACKET.**
+
+This is the exact negative face of the branch-packet plane realization law.
+Fix a hypothetical omniversal ghost and an already genuine synchronized native
+seed in the ghost's weight.  There cannot exist the strict relation packet from
+the seed's canonical live GST source to the matrix-unit target detected by the
+ghost: such a packet canonically gives a common-class plane strike, whose
+normalized native target cycle is the detected basis sheet, contradicting the
+ghost detector.
+
+Thus the missing realization theorem is located at precisely the contradiction
+point, with no intermediate Hodge-shaped wrapper. -/
+theorem ghostSeedTargetStrictPacket_isEmpty
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight)) :
+    IsEmpty
+      (StrictRelationEdgePacket
+        (⟨Sector.gstPlus, S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+        (⟨Sector.gstPlus,
+          hodgeMatrixUnit S.sourceIndex E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))) := by
+  refine ⟨?_⟩
+  intro R
+  let i : HodgeSupportIndex S.hodge :=
+    chosenLiveSource S.hodge S.hodge_ne_zero
+  have hRi :
+      StrictRelationEdgePacket
+        (⟨Sector.gstPlus, S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+        (⟨Sector.gstPlus,
+          hodgeMatrixUnit i.1 E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight)) := by
+    simpa [i, NativeHodgeOrbitSeed.sourceIndex] using R
+  let P : GhostCommonClassPlaneStrike G E := {
+    seed := S
+    source := i
+    plane := CommonClassPlanePacket.ofStrictRelationEdgePacket hRi
+  }
+  exact P.contradiction
+
+/-- **BRANCH-PACKET REALIZATION = NO-GHOST, ONCE THE NATIVE SOURCE EXISTS.**
+
+This is the exact logical form of the handwritten GST plane derivation.
+With ghost-weight native seed survival fixed, the sole remaining statement
+`GhostSeedTargetStrictClosure` is equivalent to extinction of every
+omniversal separator ghost.
+
+Forward: choose the genuine seed at a hypothetical ghost weight, realize the
+single source-to-detected-sheet strict packet, convert it to a common-carrier
+plane, and invoke the already-proved one-plane contradiction.
+Backward: when no ghost exists, the ghost-indexed strict-closure statement is
+vacuous.
+
+No Hodge statement occurs in this equivalence. -/
+theorem targetStrictClosure_iff_noGhost_of_survival
+    (G : GeometricCycleClassSpine V H)
+    (hsurvive : GhostWeightNativeSeedSurvival G) :
+    GhostSeedTargetStrictClosure G ↔
+      IsEmpty (OmniversalSeparatorGhost G) := by
+  constructor
+  · intro hclose
+    exact no_omniversalSeparatorGhost_of_commonClassPlanes G
+      (commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
+        G hsurvive hclose)
+  · intro hnone E S
+    exact False.elim (isEmpty_iff.mp hnone E)
+
+/-- **EXACT STATUS OF THE MINIMAL BRANCH-PACKET REALIZATION LAW.**
+
+Once the source side is the already-existing ghost-weight native-seed survival
+law, the genuinely minimal target-side statement is exactly
+`GhostSeedTargetStrictClosure`: for the one canonical live source and the one
+sheet detected by a hypothetical ghost, construct the strict correspondence
+packet whose carrier pullbacks identify the GST branch faces.
+
+This theorem proves that this two-piece package is not merely another compiler
+waiting to be wired.  It is equivalent to the Stage-2G Hodge conclusion.
+The forward implication is the branch-packet derivation:
+strict packet -> common carrier plane -> exact target cycle -> no ghost -> Hodge.
+The reverse implication is vacuous because Hodge leaves no ghost to quantify
+over.  Thus any unconditional proof of the requested branch-packet plane
+realization law is precisely the new mathematical content that closes Hodge;
+it cannot be recovered by rearranging the already-green downstream wrappers. -/
+theorem survival_and_targetStrictClosure_iff_hodge
+    (G : GeometricCycleClassSpine V H) :
+    (GhostWeightNativeSeedSurvival G ∧ GhostSeedTargetStrictClosure G) ↔
+      BigradedBettiHodgeStatement V H := by
+  constructor
+  · rintro ⟨hsurvive, hclose⟩
+    exact hodge_of_commonClassPlanes G
+      (commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
+        G hsurvive hclose)
+  · intro hHodge
+    have hnone : IsEmpty (OmniversalSeparatorGhost G) :=
+      (hodge_iff_no_omniversalSeparatorGhost G).1 hHodge
+    constructor
+    · intro E
+      exact False.elim (isEmpty_iff.mp hnone E)
+    · intro E S
+      exact False.elim (isEmpty_iff.mp hnone E)
+
 /-- Compatibility with the older, stronger all-event closure theorem. -/
 theorem commonClassPlaneCompleteness_of_survival_and_strictClosure
     (G : GeometricCycleClassSpine V H)
@@ -250,6 +353,9 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
+#check targetStrictClosure_iff_noGhost_of_survival
+#check ghostSeedTargetStrictPacket_isEmpty
+#check survival_and_targetStrictClosure_iff_hodge
 #check CommonClassPlanePacket.ofStrictRelationEdgePacket
 #check CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
 #check GhostSeedTargetStrictClosure
@@ -258,6 +364,9 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
+#print axioms targetStrictClosure_iff_noGhost_of_survival
+#print axioms ghostSeedTargetStrictPacket_isEmpty
+#print axioms survival_and_targetStrictClosure_iff_hodge
 #print axioms CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
 #print axioms ghostCommonClassPlaneStrike_of_seed_targetStrictClosure
 #print axioms commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
