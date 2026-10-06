@@ -34,6 +34,7 @@ open GSTClassicalHodgeAnalytificationFunctoriality
 open GSTClassicalHodgeSingularCohomologyFunctoriality
 open GSTClassicalHodgeStrictGraphCorrespondence
 open GSTClassicalHodgeStrictCorrespondenceAnalyticSpan
+open GSTClassicalHodgeStrictCorrespondenceBettiObstruction
 open GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull
 
 variable {V : SmoothProjectiveComplexScheme}
@@ -173,7 +174,9 @@ theorem transposeGraphSectionCohomologyPullback_right
     rightCohomologyPullbackObj
   have hcochain := rightCochainPullback_transposeGraphSection A F hf
   have hhom := congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain
-  simpa [HomologicalComplex.homologyMap_comp] using congrArg ModuleCat.Hom.hom hhom
+  have hlinear := congrArg ModuleCat.Hom.hom hhom
+  have happ := LinearMap.congr_fun hlinear alpha
+  simpa [HomologicalComplex.homologyMap_comp] using happ
 
 /-- **DEGREE-ONE TRACE FROM STRICT GRAPH GEOMETRY.**
 The finite right trace of a transposed graph is no longer an input. -/
@@ -210,6 +213,233 @@ theorem transposedStrictGraph_rightPullback_injective
       (rightCohomologyPullback A ((strictGraph F.algebraic hf).transpose) n) :=
   (transposedStrictGraphRightTrace A F hf n).rightPullback_injective
 
+/-! ## The graph section is an inverse, not merely a retraction
+
+These constructions depend only on the actual finite native map and its
+analytification.  No target Hodge sheet or algebraic representative is used.
+They remove the carrier-defect premise for this geometric family.  They do
+not assert that a prescribed matrix-unit branch is the action of such a map.
+-/
+
+/-- Every carrier point of the transposed native graph lies on the graph of
+the transported point map.  This direction uses the actual carrier witness;
+it is stronger than merely constructing a section into that carrier. -/
+theorem transposeGraphCarrierPoint_on_graph
+    (f : ComplexSchemeEndomorphism V)
+    (hf : IsFinite f.hom)
+    (z : CarrierComplexPoint ((strictGraph f hf).transpose)) :
+    (carrierPointPair A ((strictGraph f hf).transpose) z).1 =
+      transportedPointMap A f
+        (carrierPointPair A ((strictGraph f hf).transpose) z).2 := by
+  change A.pointsEquiv (leftComplexPoint ((strictGraph f hf).transpose) z) = _
+  simp only [transportedPointMap, carrierPointPair, Equiv.symm_apply_apply]
+  apply A.pointsEquiv.injective
+  apply Subtype.ext
+  simp [leftComplexPoint, rightComplexPoint,
+    ComplexSchemeEndomorphism.complexPointMap,
+    strictGraph_transpose_left, strictGraph_transpose_right]
+
+/-- The previously constructed graph section is also a right inverse.
+Both inverse laws are now geometric theorems, with no carrier-coherence axiom. -/
+@[simp]
+theorem transposeGraphAnalyticRight_section
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom) :
+    analyticRight A ((strictGraph F.algebraic hf).transpose) ≫
+      transposeGraphAnalyticSection A F hf =
+        𝟙 (analyticCarrier A ((strictGraph F.algebraic hf).transpose)) := by
+  apply TopCat.ext
+  intro x
+  apply Subtype.ext
+  change (transportedPointMap A F.algebraic x.1.2, x.1.2) = x.1
+  rcases x.2 with ⟨z, hz⟩
+  rw [← hz]
+  apply Prod.ext
+  · exact (transposeGraphCarrierPoint_on_graph A F.algebraic hf z).symm
+  · rfl
+
+/-- The intrinsic carrier of a transposed finite graph is canonically
+isomorphic to the source analytification.  The finite map supplies the other
+face of this same observation carrier. -/
+noncomputable def transposeGraphCarrierIso
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom) :
+    analyticCarrier A ((strictGraph F.algebraic hf).transpose) ≅ A.space where
+  hom := analyticRight A ((strictGraph F.algebraic hf).transpose)
+  inv := transposeGraphAnalyticSection A F hf
+  hom_inv_id := transposeGraphAnalyticRight_section A F hf
+  inv_hom_id := transposeGraphAnalyticSection_right A F hf
+
+/-- The second inverse identity survives the native singular-chain functor. -/
+theorem transposeGraphRightChainMap_section
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom) :
+    rightChainMap A ((strictGraph F.algebraic hf).transpose) ≫
+      transposeGraphSectionChainMap A F hf =
+        𝟙 (carrierSingularChains A ((strictGraph F.algebraic hf).transpose)) := by
+  let C := (singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient
+  change C.map (analyticRight A ((strictGraph F.algebraic hf).transpose)) ≫
+    C.map (transposeGraphAnalyticSection A F hf) = 𝟙 _
+  rw [← C.map_comp, transposeGraphAnalyticRight_section, C.map_id]
+
+/-- Dual inverse identity on the actual carrier cochains. -/
+theorem transposeGraphSectionCochainPullback_right
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom) :
+    transposeGraphSectionCochainPullback A F hf ≫
+      rightCochainPullback A ((strictGraph F.algebraic hf).transpose) =
+        𝟙 (carrierSingularCochains A ((strictGraph F.algebraic hf).transpose)) := by
+  simp [transposeGraphSectionCochainPullback, rightCochainPullback,
+    transposeGraphRightChainMap_section]
+
+/-- Right pullback and section pullback are inverse on the WHOLE carrier
+cohomology, not just on algebraic source classes. -/
+theorem transposeGraphRightCohomologyPullback_section
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom)
+    (n : Nat) :
+    (rightCohomologyPullback A ((strictGraph F.algebraic hf).transpose) n).comp
+      (transposeGraphSectionCohomologyPullback A F hf n) = LinearMap.id := by
+  ext omega
+  unfold rightCohomologyPullback rightCohomologyPullbackObj
+    transposeGraphSectionCohomologyPullback
+  have hcochain := transposeGraphSectionCochainPullback_right A F hf
+  have hhom := congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain
+  have hlinear := congrArg ModuleCat.Hom.hom hhom
+  have happ := LinearMap.congr_fun hlinear omega
+  simpa [HomologicalComplex.homologyMap_comp] using happ
+
+/-- **GEOMETRY PROVES ZERO CARRIER DEFECT.**
+There is no supplied residual-vanishing or transfer-totality hypothesis. -/
+theorem transposedStrictGraph_carrierResidual_eq_zero
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom)
+    (n : Nat) :
+    (transposedStrictGraphRightTrace A F hf n).carrierResidual = 0 := by
+  ext omega
+  change omega -
+    rightCohomologyPullback A ((strictGraph F.algebraic hf).transpose) n
+      ((transposedStrictGraphRightTrace A F hf n).normalizedTrace omega) = 0
+  rw [transposedStrictGraph_normalizedTrace_eq_section]
+  have h := LinearMap.congr_fun
+    (transposeGraphRightCohomologyPullback_section A F hf n) omega
+  simp only [LinearMap.comp_apply, LinearMap.id_apply] at h
+  rw [h, sub_self]
+
+/-- Source defects vanish for all Betti classes on this constructed carrier. -/
+theorem transposedStrictGraph_sourceResidual_eq_zero
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom)
+    (n : Nat) :
+    (transposedStrictGraphRightTrace A F hf n).sourceResidual = 0 := by
+  ext alpha
+  change (transposedStrictGraphRightTrace A F hf n).carrierResidual
+    (leftCohomologyPullback A ((strictGraph F.algebraic hf).transpose) n alpha) = 0
+  rw [transposedStrictGraph_carrierResidual_eq_zero]
+  rfl
+
+/-- The quotient obstruction vanishes as a consequence of the native graph
+geometry.  Totality is proved for this carrier, not postulated globally. -/
+theorem transposedStrictGraph_transferObstruction_eq_zero
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom)
+    (n : Nat) :
+    transferObstruction A ((strictGraph F.algebraic hf).transpose) n = 0 := by
+  ext alpha
+  apply ((transposedStrictGraphRightTrace A F hf n)
+    .sourceResidual_eq_zero_iff_transferObstruction alpha).1
+  rw [transposedStrictGraph_sourceResidual_eq_zero]
+  rfl
+
+/-- The left face of the carrier is the actual analytified native map. -/
+@[simp]
+theorem transposeGraphAnalyticSection_left
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom) :
+    transposeGraphAnalyticSection A F hf ≫
+      analyticLeft A ((strictGraph F.algebraic hf).transpose) = F.toTopCatHom := by
+  apply TopCat.ext
+  intro x
+  rfl
+
+/-- The source-to-left-face chain map is exactly native functoriality. -/
+theorem transposeGraphSectionChainMap_left
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom) :
+    transposeGraphSectionChainMap A F hf ≫
+      leftChainMap A ((strictGraph F.algebraic hf).transpose) =
+        singularChainMap A F := by
+  let C := (singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient
+  change C.map (transposeGraphAnalyticSection A F hf) ≫
+    C.map (analyticLeft A ((strictGraph F.algebraic hf).transpose)) =
+      C.map F.toTopCatHom
+  rw [← C.map_comp, transposeGraphAnalyticSection_left]
+
+/-- The cochain action is derived from the native left face. -/
+theorem leftCochainPullback_transposeGraphSection
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom) :
+    leftCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
+      transposeGraphSectionCochainPullback A F hf = singularCochainPullback A F := by
+  simp [leftCochainPullback, transposeGraphSectionCochainPullback,
+    singularCochainPullback, transposeGraphSectionChainMap_left]
+
+/-- **EXACT NATIVE GRAPH ACTION.**
+The carrier and its trace determine the actual map's Betti pullback.  No
+source-action equation or target representative is an input. -/
+theorem transposedStrictGraph_pushPull_eq_nativePullback
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom)
+    (n : Nat) :
+    (transposedStrictGraphRightTrace A F hf n).pushPull =
+      rationalCohomologyPullback A F n := by
+  rw [RightFiniteBettiTrace.pushPull,
+    transposedStrictGraph_normalizedTrace_eq_section]
+  ext alpha
+  unfold transposeGraphSectionCohomologyPullback
+    leftCohomologyPullback leftCohomologyPullbackObj
+    rationalCohomologyPullback rationalCohomologyPullbackObj
+  have hcochain := leftCochainPullback_transposeGraphSection A F hf
+  have hhom := congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain
+  have hlinear := congrArg ModuleCat.Hom.hom hhom
+  have happ := LinearMap.congr_fun hlinear alpha
+  simpa [HomologicalComplex.homologyMap_comp] using happ
+
+/-- Every source has its exact, geometrically determined common-carrier
+target.  This statement does not identify that target with an arbitrary GST
+matrix-unit sheet. -/
+theorem transposedStrictGraph_related_nativePullback
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom)
+    (n : Nat)
+    (alpha : RationalSingularCohomology A n) :
+    BettiRelated A ((strictGraph F.algebraic hf).transpose) n alpha
+      (rationalCohomologyPullback A F n alpha) := by
+  apply ((transposedStrictGraphRightTrace A F hf n)
+    .bettiRelated_iff_residual_and_target alpha _).2
+  constructor
+  · rw [transposedStrictGraph_sourceResidual_eq_zero]
+    rfl
+  · rw [transposedStrictGraph_pushPull_eq_nativePullback]
+
+/-- Exact target test for this source-independent geometric construction.
+The carrier-defect condition has been eliminated by proof; matching the
+prescribed target remains a concrete native-map computation. -/
+theorem transposedStrictGraph_related_iff_nativePullback
+    (F : AnalyticEndomorphism A)
+    (hf : IsFinite F.algebraic.hom)
+    (n : Nat)
+    (alpha beta : RationalSingularCohomology A n) :
+    BettiRelated A ((strictGraph F.algebraic hf).transpose) n alpha beta ↔
+      rationalCohomologyPullback A F n alpha = beta := by
+  constructor
+  · intro h
+    have ht := (transposedStrictGraphRightTrace A F hf n).pushPull_eq_of_bettiRelated h
+    simpa only [transposedStrictGraph_pushPull_eq_nativePullback] using ht
+  · intro h
+    rw [← h]
+    exact transposedStrictGraph_related_nativePullback A F hf n alpha
+
 #check transposeGraphAnalyticSection
 #check transposeGraphAnalyticSection_right
 #check transposeGraphSectionCohomologyPullback_right
@@ -220,5 +450,15 @@ theorem transposedStrictGraph_rightPullback_injective
 #print axioms transposeGraphSectionCohomologyPullback_right
 #print axioms transposedStrictGraphRightTrace
 #print axioms transposedStrictGraph_rightPullback_injective
+
+#check transposeGraphCarrierIso
+#check transposedStrictGraph_related_iff_nativePullback
+#print axioms transposeGraphCarrierIso
+#print axioms transposedStrictGraph_carrierResidual_eq_zero
+#print axioms transposedStrictGraph_sourceResidual_eq_zero
+#print axioms transposedStrictGraph_transferObstruction_eq_zero
+#print axioms transposedStrictGraph_pushPull_eq_nativePullback
+#print axioms transposedStrictGraph_related_nativePullback
+#print axioms transposedStrictGraph_related_iff_nativePullback
 
 end GSTClassicalHodgeStrictGraphBettiTrace
