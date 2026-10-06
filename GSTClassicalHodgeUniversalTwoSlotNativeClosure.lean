@@ -43,6 +43,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeExplicitArsenalGeneration
 open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeNativeGeneratorNaturality
@@ -127,7 +128,7 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   have hword :
       forwardArsenalWord sourceSlot targetSlot =
         pureMatrixUnit sourceSlot targetSlot :=
-    forwardArsenalWord_eq_matrixUnit sourceSlot targetSlot (by omega)
+    forwardArsenalWord_eq_matrixUnit sourceSlot targetSlot (by decide)
   have hlift :
       liftFiniteHodgeOperator (pairBasisIndex i j)
           (forwardArsenalWord sourceSlot targetSlot) =

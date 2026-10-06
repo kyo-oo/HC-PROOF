@@ -57,6 +57,16 @@ def HasNativePointLifts (T : Coh →ₗ[ℚ] Coh) : Prop :=
     ∃ Z : codimensionCycles X p,
       cl Z = T (cl (codimensionPointCycle X p x))
 
+/-- Native point lifts are closed under rational scaling. -/
+theorem HasNativePointLifts.smul
+    (q : ℚ)
+    (hT : HasNativePointLifts (p := p) (cl := cl) T) :
+    HasNativePointLifts (p := p) (cl := cl) (q • T) := by
+  intro x
+  obtain ⟨Z, hZ⟩ := hT x
+  refine ⟨q • Z, ?_⟩
+  rw [map_smul, hZ, smul_apply]
+
 /-- Atomic stability always yields native point lifts; compactness is not
 needed in this direction because the atomic span is already contained in the
 full cycle-class range. -/

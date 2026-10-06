@@ -4,7 +4,6 @@ import GSTClassicalHodgeLimitlessCosmicMatrixUnits
 import GSTClassicalHodgeLimitlessProjectiveLefschetzTower
 import GSTClassicalHodgeTransferSeedUniverse
 import GSTClassicalHodgePointKernelOperatorLift
-import GSTClassicalHodgeLimitlessTowerOrbitCrown
 
 /-!
 # GST CLASSICAL HODGE — NATIVE CYCLE / LIMITLESS COSMIC SHADOW
@@ -44,7 +43,7 @@ open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeLimitlessProjectiveLefschetzTower
 open GSTClassicalHodgePointKernelOperatorLift
-open GSTClassicalHodgeLimitlessTowerOrbitCrown
+open GSTClassicalHodgeCrossWeightNativePropagation
 
 /-- Rational augmentation of one finite point presentation. -/
 noncomputable def presentationMass
@@ -168,19 +167,19 @@ theorem nativeCycleMass_successor_of_pointMass
     (V : SmoothProjectiveComplexScheme)
     (p : Nat)
     (hpoint : ∀ x : CodimensionPoint V.X p,
-      successorMass V p x = successorScalar p)
+      successorMass V p x = limitlessLefschetzScalar p (p + 1))
     (Z : codimensionCycles V.X p) :
     nativeCycleMass V (p + 1) (successorNativeOperator V p Z) =
-      successorScalar p * nativeCycleMass V p Z := by
+      limitlessLefschetzScalar p (p + 1) * nativeCycleMass V p Z := by
   have hzero :
       (nativeCycleMass V (p + 1)).comp (successorNativeOperator V p) -
-          (successorScalar p) • nativeCycleMass V p = 0 := by
+          (limitlessLefschetzScalar p (p + 1)) • nativeCycleMass V p = 0 := by
     apply nativeLinearMap_eq_zero_of_points V p
     intro x
     simp [nativeCycleMass_successor_point, hpoint x, smul_eq_mul]
   have heq :
       (nativeCycleMass V (p + 1)).comp (successorNativeOperator V p) =
-          (successorScalar p) • nativeCycleMass V p :=
+          (limitlessLefschetzScalar p (p + 1)) • nativeCycleMass V p :=
     sub_eq_zero.mp hzero
   have hZ := LinearMap.congr_fun heq Z
   simpa [smul_eq_mul] using hZ
