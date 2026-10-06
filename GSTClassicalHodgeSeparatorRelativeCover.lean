@@ -34,6 +34,8 @@ open GSTClassicalHodgeProjectiveSeparatorCarrierDescent
 open GSTClassicalHodgeSeparatorPointClosureLift
 open GSTClassicalHodgeSeparatorAmbientPrimeInterval
 
+attribute [local instance] MvPolynomial.gradedAlgebra
+
 namespace GSTClassicalHodgeSeparatorRelativeCover
 
 attribute [local instance] specializationOrder
@@ -116,8 +118,10 @@ theorem strictAbove_separatorSuccessor_eq_generic
           V.projective.immersion x := by
       apply ProjectiveSpectrum.ext
       exact HomogeneousIdeal.ext hRsource
-    have hCarrier : pointClosureι V x z = x :=
-      V.projective.immersion.isEmbedding.injective hProjEq
+    have hCarrier : pointClosureι V x z = x := by
+      letI : IsClosedImmersion V.projective.immersion :=
+        V.projective.closedImmersion
+      exact V.projective.immersion.isEmbedding.injective hProjEq
     apply (pointClosureι V x).isEmbedding.injective
     rw [hCarrier, closureGenericPoint_maps_to_source]
   · have hProjEq :
@@ -127,6 +131,8 @@ theorem strictAbove_separatorSuccessor_eq_generic
       exact HomogeneousIdeal.ext hRsucc
     have hCarrier :
         pointClosureι V x z = carrierSeparatorSuccessor V x hlive := by
+      letI : IsClosedImmersion V.projective.immersion :=
+        V.projective.closedImmersion
       apply V.projective.immersion.isEmbedding.injective
       rw [hProjEq, carrierSeparatorSuccessor_image]
     have hzEq : z = pointClosureSeparatorSuccessor V x hlive := by

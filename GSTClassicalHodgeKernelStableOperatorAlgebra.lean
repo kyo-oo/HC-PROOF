@@ -33,7 +33,8 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev NativeEnd :=
+abbrev NativeEnd
+    (V : SmoothProjectiveComplexScheme) (p : Nat) : Type _ :=
   codimensionCycles V.X p →ₗ[ℚ] codimensionCycles V.X p
 
 /-- The zero native operator is kernel-stable. -/

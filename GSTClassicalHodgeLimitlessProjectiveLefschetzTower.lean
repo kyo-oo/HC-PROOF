@@ -77,24 +77,22 @@ theorem nativeCutIterate_succ
 /-- Canonical projective native tower: the p-th state is obtained from the
 component fundamental cycle by p recursive principal cuts. -/
 noncomputable def projectiveCutTower
-    (V : SmoothProjectiveComplexScheme)
-    (p : Nat) : codimensionCycles V.X p :=
-  nativeCutIterate V 0 p (codimensionZeroFundamentalCycle V)
+    (V : SmoothProjectiveComplexScheme) :
+    (p : Nat) → codimensionCycles V.X p
+  | 0 => codimensionZeroFundamentalCycle V
+  | p+1 => successorNativeOperator V p (projectiveCutTower V p)
 
 @[simp]
 theorem projectiveCutTower_zero
     (V : SmoothProjectiveComplexScheme) :
-    projectiveCutTower V 0 = codimensionZeroFundamentalCycle V := by
-  simp [projectiveCutTower]
+    projectiveCutTower V 0 = codimensionZeroFundamentalCycle V := rfl
 
 /-- Exact recursive projective tower law. -/
 theorem projectiveCutTower_succ
     (V : SmoothProjectiveComplexScheme)
     (p : Nat) :
     projectiveCutTower V (p+1) =
-      successorNativeOperator V p (projectiveCutTower V p) := by
-  simp only [projectiveCutTower, nativeCutIterate_succ]
-  rfl
+      successorNativeOperator V p (projectiveCutTower V p) := rfl
 
 /-- Every level of the projective tower is an actual native codimension-p
 algebraic cycle. -/

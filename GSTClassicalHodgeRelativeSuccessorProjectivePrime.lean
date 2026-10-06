@@ -51,10 +51,12 @@ theorem mem_relativeCodimensionOneFinset_cut
   classical
   unfold relativeCodimensionOneFinset at hy
   rcases Finset.mem_map.mp hy with ⟨a, ha, hya⟩
-  have hacut : a.1 ∈ relativeCutSet V x := a.2.1
-  have hval : a.1 = y.1 := by
-    simpa using congrArg Subtype.val hya
-  simpa [← hval] using hacut
+  have hval : a.1 = y.1 := congrArg Subtype.val hya
+  rw [← hval]
+  have hmem : a.1 ∈ {y : pointClosureScheme V x |
+      y ∈ relativeCutSet V x ∧ Order.coheight y = 1} := by
+    simpa using a.2
+  exact hmem.1
 
 /-- The actual projective image of every point in the reduced closure of `x`
 lies in the projective closure of the image of `x`. -/
@@ -120,14 +122,17 @@ theorem separator_mem_successorPrime_of_mem_cut
       pointClosureι V x y ∈ Set.range (principalSectionAtι V x) := by
     refine ⟨closurePrincipalCutToSection V x z, ?_⟩
     have hcond := congrArg (fun f => f z) (closurePrincipalCut_condition V x)
-    rw [hz] at hcond
+    rw [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, hz] at hcond
     exact hcond.symm
   have hsupport :
       pointClosureι V x y ∈
         (principalSectionIdeal V
           (positiveHomogeneousSeparator V.projective.n
             (V.projective.immersion x)).equation).support := by
-    simpa [principalSectionAtι, principalSectionAt] using hrange
+    exact (Scheme.IdealSheafData.range_subschemeι
+      (principalSectionIdeal V
+        (positiveHomogeneousSeparator V.projective.n
+          (V.projective.immersion x)).equation)).subset hrange
   exact (mem_principalSection_support_iff V _ _).mp hsupport
 
 /-- The source prime is strictly contained in every cut-successor prime. -/
@@ -141,7 +146,8 @@ theorem sourcePrime_lt_successorPrime_of_mem_cut
   intro heq
   have hmem := separator_mem_successorPrime_of_mem_cut V x y hy
   have hnot := separator_not_mem_sourcePrime V x
-  exact hnot (by rwa [heq] at hmem)
+  rw [← heq] at hmem
+  exact hnot hmem
 
 /-- Finset-selected relative successors carry the full projective-prime
 incidence package. -/
