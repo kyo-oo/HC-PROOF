@@ -108,7 +108,10 @@ noncomputable def classicalHodgeMass
   map_smul' := by
     intro q a
     classical
-    rw [LinearMap.map_smul, Finsupp.sum_smul_index' (fun _ => rfl)]
+    have hrepr : ((classicalHodgeBasis V H p).repr (q • a))
+        = q • ((classicalHodgeBasis V H p).repr a) :=
+      LinearMap.map_smul _ _ _
+    rw [hrepr, Finsupp.sum_smul_index' (fun _ => rfl)]
     simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
 
 /-- Forgetting multiplicity from an arbitrary genuine Hodge class gives its

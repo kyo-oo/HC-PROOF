@@ -184,12 +184,15 @@ theorem ambientUniversalTwoSlotWord_on_hodge
       (GSTGlobalPureHodgeCosmology.pureDiagonalState (1 : Fin 2))) =
       (2 : ℤ) :=
     gst_forward_scalar_receipt (N := 2) (p := sourceSlot) (q := targetSlot) (by decide)
+  have hfs : (forwardScalar (N := 2) (0 : Fin 2) (1 : Fin 2) : ℚ) = 2 := by
+    exact_mod_cast (show forwardScalar (N := 2) (0 : Fin 2) (1 : Fin 2) = 2 from by decide)
   simp [twoSlotHodgeOperator, liftFiniteHodgeOperator, finiteHodgeRead,
     finiteHodgeWrite, hfinite, hlift, pureMatrixUnit, rationalPureBasis,
     diagonalLefschetzQ, sheetProjectorQ, hodgeMatrixUnit_apply,
     sourceSlot, targetSlot, hrw, pairBasisIndex, h01, h10,
     hodgeCoordinate_basis_self, hLval,
     LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
+  rw [hfs]
   norm_num
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
