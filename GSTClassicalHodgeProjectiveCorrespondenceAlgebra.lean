@@ -175,9 +175,8 @@ theorem transition_realize
     (K : ProjectiveNativeKernel V p)
     (x : CodimensionPoint V.X p) :
     realizeFiniteCodimensionPresentation V.X p
-      (ProjectiveNativeKernel.transition K x) =
-      ProjectiveNativeKernel.operator K
-        (codimensionPointCycle V.X p x) := by
+      (operatorPointPresentation V p K.1 x) =
+      K.1 (codimensionPointCycle V.X p x) := by
   exact operatorPointPresentation_realize V p K.1 x
 
 end ProjectiveNativeKernel
