@@ -101,7 +101,10 @@ noncomputable def pushforwardPresentation
   map_smul' := by
     intro q φ
     classical
-    simp only [pushforwardPresentation, RingHom.id_apply]
+    rw [show pushforwardPresentation f p (q • φ) =
+          (q • φ).sum (fun x c => c • pointPushforwardPresentation f p x) from rfl,
+        show q • pushforwardPresentation f p φ =
+          q • φ.sum (fun x c => c • pointPushforwardPresentation f p x) from rfl]
     first
     | rw [Finsupp.sum_smul_index]
       intro i
@@ -168,8 +171,12 @@ noncomputable def realizePushforwardPresentation
   map_smul' := by
     intro q φ
     classical
-    simp only [realizePushforwardPresentation, pushforwardPresentation,
-      realizeFiniteCodimensionPresentation, RingHom.id_apply]
+    rw [show realizePushforwardPresentation f p (q • φ) =
+          (((q • φ).sum (fun x c => c • pointPushforwardPresentation f p x)).sum
+            (fun y d => d • codimensionPointCycle Y p y)) from rfl,
+        show q • realizePushforwardPresentation f p φ =
+          q • ((φ.sum (fun x c => c • pointPushforwardPresentation f p x)).sum
+            (fun y d => d • codimensionPointCycle Y p y)) from rfl]
     first
     | rw [Finsupp.sum_smul_index, Finsupp.sum_smul_index]
       · intro i

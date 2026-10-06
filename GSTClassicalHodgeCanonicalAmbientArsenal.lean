@@ -2,6 +2,7 @@ import Mathlib.Algebra.Module.Projective
 import GSTClassicalHodgeConcreteRankFreeGeneration
 import GSTClassicalHodgePointKernelOperatorLift
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
+import GSTClassicalHodgeNativeArsenalRepresentation
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL AMBIENT ARSENAL
@@ -42,8 +43,13 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev Coh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HFiber := ClassicalHodgeFiber V H p
+abbrev Coh (H : HodgeBigradedBettiData V) (p : Nat) :
+    Type _ :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev HFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) :
+    Type _ :=
+  ClassicalHodgeFiber V H p
 
 /-- Hodge-fiber matrix unit followed by the inclusion into ambient cohomology. -/
 noncomputable def hodgeMatrixUnitIntoAmbient

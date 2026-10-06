@@ -136,8 +136,10 @@ theorem extractedLiveBasisCycle_spec
       linearPolyEval C.spectral.observable
         (F.isolatorPolynomial i)
         (finitePointCycleClassMap p (H.cycleClass p) C.seedPresentation) = _
-  rw [hproj]
-  simp [hc]
+  rw [hproj, smul_smul]
+  have hone : c⁻¹ * (C.isolatedCoefficient i * F.isolatorScale i) = (1 : ℚ) :=
+    inv_mul_cancel₀ hc
+  rw [hone, one_smul]
 
 /-- Reassemble the original Hodge class from the projector-extracted native
 basis cycles on its finite live support. -/

@@ -58,7 +58,10 @@ noncomputable def zeroToOnePresentationOperator :
   map_smul' := by
     intro q φ
     classical
-    simp only [zeroToOnePresentationOperator, RingHom.id_apply]
+    rw [show zeroToOnePresentationOperator V (q • φ) =
+          (q • φ).sum (fun x c => c • zeroToOnePointKernel V x) from rfl,
+        show q • zeroToOnePresentationOperator V φ =
+          q • φ.sum (fun x c => c • zeroToOnePointKernel V x) from rfl]
     first
     | rw [Finsupp.sum_smul_index]
       intro i
@@ -103,8 +106,12 @@ noncomputable def zeroToOneFiniteNative :
   map_smul' := by
     intro q φ
     classical
-    simp only [zeroToOneFiniteNative, zeroToOnePresentationOperator,
-      realizeFiniteCodimensionPresentation, RingHom.id_apply]
+    rw [show zeroToOneFiniteNative V (q • φ) =
+          (((q • φ).sum (fun x c => c • zeroToOnePointKernel V x)).sum
+            (fun y d => d • codimensionPointCycle V.X 1 y)) from rfl,
+        show q • zeroToOneFiniteNative V φ =
+          q • ((φ.sum (fun x c => c • zeroToOnePointKernel V x)).sum
+            (fun y d => d • codimensionPointCycle V.X 1 y)) from rfl]
     first
     | rw [Finsupp.sum_smul_index, Finsupp.sum_smul_index]
       · intro i

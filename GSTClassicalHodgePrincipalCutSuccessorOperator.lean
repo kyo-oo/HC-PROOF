@@ -119,7 +119,10 @@ noncomputable def successorPresentationOperator
   map_smul' := by
     intro q φ
     classical
-    simp only [successorPresentationOperator, RingHom.id_apply]
+    rw [show successorPresentationOperator V p (q • φ) =
+          (q • φ).sum (fun x c => c • successorPresentation V p x) from rfl,
+        show q • successorPresentationOperator V p φ =
+          q • φ.sum (fun x c => c • successorPresentation V p x) from rfl]
     first
     | rw [Finsupp.sum_smul_index]
       intro i
@@ -168,8 +171,12 @@ noncomputable def successorFiniteNativeOperator
   map_smul' := by
     intro q φ
     classical
-    simp only [successorFiniteNativeOperator, successorPresentationOperator,
-      realizeFiniteCodimensionPresentation, RingHom.id_apply]
+    rw [show successorFiniteNativeOperator V p (q • φ) =
+          (((q • φ).sum (fun x c => c • successorPresentation V p x)).sum
+            (fun y d => d • codimensionPointCycle V.X (p + 1) y)) from rfl,
+        show q • successorFiniteNativeOperator V p φ =
+          q • ((φ.sum (fun x c => c • successorPresentation V p x)).sum
+            (fun y d => d • codimensionPointCycle V.X (p + 1) y)) from rfl]
     first
     | rw [Finsupp.sum_smul_index, Finsupp.sum_smul_index]
       · intro i
