@@ -49,6 +49,8 @@ theorem coheight_le_one_of_unique_strictAbove
   by_contra hnot
   have hlen : 2 ≤ s.length := by
     push_neg at hnot
+    have h2 : (1 : ℕ∞) < ↑s.length := hnot
+    have h1 : (1 : ℕ) < s.length := by exact_mod_cast h2
     omega
   let i0 : Fin (s.length + 1) := ⟨0, by omega⟩
   let i1 : Fin (s.length + 1) := ⟨1, by omega⟩
@@ -134,8 +136,7 @@ theorem pointClosureSeparatorSuccessor_coheight_one
   have hupper : Order.coheight y ≤ 1 :=
     coheight_le_one_of_unique_strictAbove y η
       (no_intermediate_above_separatorSuccessor V x hlive)
-  have hupper' : Order.coheight y ≤ (1 : ℕ∞) := hupper
-  exact le_antisymm hupper' hlower
+  omega
 
 /-- The constructed successor therefore determines an actual member of the
 relative coheight-one subtype used by the recursive cut operator. -/

@@ -53,11 +53,12 @@ noncomputable def presentationMass
   map_add' := by
     intro φ ψ
     classical
-    simp
+    simp [Finsupp.sum_add_index']
   map_smul' := by
     intro q φ
     classical
-    simp [Finsupp.sum_smul_index', smul_eq_mul]
+    simp only [Finsupp.sum_smul_index', smul_eq_mul]
+    simp [Finsupp.sum, Finset.mul_sum, mul_comm]
 
 @[simp]
 theorem presentationMass_single

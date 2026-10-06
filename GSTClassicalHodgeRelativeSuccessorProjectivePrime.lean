@@ -53,8 +53,11 @@ theorem mem_relativeCodimensionOneFinset_cut
   rcases Finset.mem_map.mp hy with ⟨a, ha, hya⟩
   have hval : a.1 = y.1 := congrArg Subtype.val hya
   rw [← hval]
-  have hmem : a.1 ∈ relativeCutSet V x :=
-    (Set.Finite.mem_toFinset.mp a.2).1
+  have hmem : a.1 ∈ relativeCutSet V x := by
+    have h2 : a.1 ∈ {y : pointClosureScheme V x |
+        y ∈ relativeCutSet V x ∧ Order.coheight y = 1} := by
+      simpa only [Set.Finite.mem_toFinset] using a.2
+    exact h2.1
   exact hmem
 
 /-- The actual projective image of every point in the reduced closure of `x`

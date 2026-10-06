@@ -163,7 +163,8 @@ theorem ambientUniversalTwoSlotWord_on_hodge
             (sheetProjectorQ sourceSlot)))) =
       forwardArsenalWord sourceSlot targetSlot := by
     rfl
-  simpa [twoSlotHodgeOperator, hfinite, hlift]
+  simpa [twoSlotHodgeOperator, hfinite, hlift, LinearMap.comp_apply,
+    LinearMap.smul_apply]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot
