@@ -35,6 +35,7 @@ open AlgebraicGeometry
 
 namespace GSTClassicalHodgeCoherentNativeGhostObstruction
 
+open GSTNativeCodimensionCyclePresentation
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
@@ -191,16 +192,202 @@ theorem no_descendingAction_realizes_ghostSeedTarget
   exact (ghostSeedTarget_descendingAction_ne_target
     G E S i₀ U T hT) htarget
 
+/-! ## The ambient action is now constructed from coherent native data -/
+
+/-- **CONSTRUCTED COHERENT DESCENT SQUARE.**
+
+Post-cycle-class agreement of every labelled native column and preservation of
+the native class kernel by one anchor column construct the exact ambient
+commuting square.  The ambient action is an output, not an input. -/
+theorem coherentNativeAmbientAction_descends
+    {p : Nat}
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (U : Module.End ℚ (FiberedNativeAddress V H p))
+    (hcolumns : ∀ i : ClassicalHodgeBasisIndex V H p,
+      (H.cycleClass p).comp (nativeColumn i U) =
+        (H.cycleClass p).comp (nativeColumn i₀ U))
+    (hkernel : NativeClassKernelStable
+      (H.cycleClass p) (nativeColumn i₀ U)) :
+    (((H.cycleClass p).comp (toNativeCycle V H p)).comp U) =
+      (nativeAmbientAction (H.cycleClass p)
+        (nativeColumn i₀ U) hkernel).comp
+          ((H.cycleClass p).comp (toNativeCycle V H p)) := by
+  apply labelledLinearMap_ext
+  intro i x
+  have hcol := LinearMap.congr_fun (hcolumns i)
+    (codimensionPointCycle V.X p x)
+  have hext := nativeAmbientAction_natural
+    (H.cycleClass p) (nativeColumn i₀ U) hkernel
+    (codimensionPointCycle V.X p x)
+  simpa only [LinearMap.comp_apply, nativeColumn_point, toNativeCycle_atom]
+    using hcol.trans hext.symm
+
+/-- **COHERENCE-DERIVED EXACT GHOST DEFECT.**
+
+This is the main premise-free native theorem.  Its only hypotheses are the two
+proved coherence tests; the action appearing in the conclusion is the action
+constructed from those tests. -/
+theorem ghostSeedTarget_coherentNativeAction_mismatch_formula
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (i₀ : ClassicalHodgeBasisIndex V H E.weight)
+    (U : Module.End ℚ (FiberedNativeAddress V H E.weight))
+    (hcolumns : ∀ i : ClassicalHodgeBasisIndex V H E.weight,
+      (H.cycleClass E.weight).comp (nativeColumn i U) =
+        (H.cycleClass E.weight).comp (nativeColumn i₀ U))
+    (hkernel : NativeClassKernelStable
+      (H.cycleClass E.weight) (nativeColumn i₀ U)) :
+    E.separator.detector
+        (nativeAmbientAction (H.cycleClass E.weight)
+            (nativeColumn i₀ U) hkernel S.hodge.1 -
+          (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1) =
+      -(hodgeCoordinate S.sourceIndex S.hodge *
+        E.separator.detector
+          (classicalHodgeBasis V H E.weight E.sheet).1) := by
+  exact ghostSeedTarget_descendingAction_mismatch_formula
+    G E S i₀ U
+      (nativeAmbientAction (H.cycleClass E.weight)
+        (nativeColumn i₀ U) hkernel)
+      (coherentNativeAmbientAction_descends i₀ U hcolumns hkernel)
+
+/-- The exact coherence-derived discrepancy is nonzero. -/
+theorem ghostSeedTarget_coherentNativeAction_mismatch_ne_zero
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (i₀ : ClassicalHodgeBasisIndex V H E.weight)
+    (U : Module.End ℚ (FiberedNativeAddress V H E.weight))
+    (hcolumns : ∀ i : ClassicalHodgeBasisIndex V H E.weight,
+      (H.cycleClass E.weight).comp (nativeColumn i U) =
+        (H.cycleClass E.weight).comp (nativeColumn i₀ U))
+    (hkernel : NativeClassKernelStable
+      (H.cycleClass E.weight) (nativeColumn i₀ U)) :
+    E.separator.detector
+      (nativeAmbientAction (H.cycleClass E.weight)
+          (nativeColumn i₀ U) hkernel S.hodge.1 -
+        (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1) ≠ 0 := by
+  exact ghostSeedTarget_descendingAction_mismatch_ne_zero
+    G E S i₀ U
+      (nativeAmbientAction (H.cycleClass E.weight)
+        (nativeColumn i₀ U) hkernel)
+      (coherentNativeAmbientAction_descends i₀ U hcolumns hkernel)
+
+/-- Column coherence plus native class-kernel preservation cannot make the
+constructed ambient action hit the ghost-selected GST target. -/
+theorem ghostSeedTarget_coherentNativeAction_ne_target
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (i₀ : ClassicalHodgeBasisIndex V H E.weight)
+    (U : Module.End ℚ (FiberedNativeAddress V H E.weight))
+    (hcolumns : ∀ i : ClassicalHodgeBasisIndex V H E.weight,
+      (H.cycleClass E.weight).comp (nativeColumn i U) =
+        (H.cycleClass E.weight).comp (nativeColumn i₀ U))
+    (hkernel : NativeClassKernelStable
+      (H.cycleClass E.weight) (nativeColumn i₀ U)) :
+    nativeAmbientAction (H.cycleClass E.weight)
+        (nativeColumn i₀ U) hkernel S.hodge.1 ≠
+      (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1 := by
+  exact ghostSeedTarget_descendingAction_ne_target
+    G E S i₀ U
+      (nativeAmbientAction (H.cycleClass E.weight)
+        (nativeColumn i₀ U) hkernel)
+      (coherentNativeAmbientAction_descends i₀ U hcolumns hkernel)
+
+/-! ## Exhaustion of routed lifts and complete finite tensor blocks -/
+
+/-- Arbitrary total label routing cannot evade the ghost obstruction.  No
+injectivity, surjectivity, or finiteness property of the routing is used. -/
+theorem ghostSeedTarget_routedNativeAction_ne_target
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (i₀ : ClassicalHodgeBasisIndex V H E.weight)
+    (ρ : ClassicalHodgeBasisIndex V H E.weight →
+      ClassicalHodgeBasisIndex V H E.weight)
+    (A : Module.End ℚ (codimensionCycles V.X E.weight))
+    (hkernel : NativeClassKernelStable (H.cycleClass E.weight) A) :
+    nativeAmbientAction (H.cycleClass E.weight) A hkernel S.hodge.1 ≠
+      (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1 := by
+  have hnative := routedNativeOperator_descends
+    (V := V) (H := H) (p := E.weight) ρ A
+  have hT :
+      (((H.cycleClass E.weight).comp
+          (toNativeCycle V H E.weight)).comp
+            (routedNativeOperator ρ A)) =
+        (nativeAmbientAction (H.cycleClass E.weight) A hkernel).comp
+          ((H.cycleClass E.weight).comp
+            (toNativeCycle V H E.weight)) := by
+    ext Φ
+    have hn := LinearMap.congr_fun hnative Φ
+    simp only [LinearMap.comp_apply] at hn ⊢
+    rw [hn]
+    exact (nativeAmbientAction_natural
+      (H.cycleClass E.weight) A hkernel
+        (toNativeCycle V H E.weight Φ)).symm
+  exact ghostSeedTarget_descendingAction_ne_target G E S i₀
+    (routedNativeOperator ρ A)
+    (nativeAmbientAction (H.cycleClass E.weight) A hkernel) hT
+
+section FiniteTensorBlock
+
+/-- Even cancellation across a complete finite tensor block cannot hit the
+ghost target once the block genuinely descends through actual cycle class. -/
+theorem ghostSeedTarget_finiteTensorBlockAction_ne_target
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    [Fintype (ClassicalHodgeBasisIndex V H E.weight)]
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (i₀ : ClassicalHodgeBasisIndex V H E.weight)
+    (A : ClassicalHodgeBasisIndex V H E.weight →
+      ClassicalHodgeBasisIndex V H E.weight →
+        Module.End ℚ (codimensionCycles V.X E.weight))
+    (hcolumns : ∀ i : ClassicalHodgeBasisIndex V H E.weight,
+      (H.cycleClass E.weight).comp (tensorColumnSum A i) =
+        (H.cycleClass E.weight).comp (tensorColumnSum A i₀))
+    (hkernel : NativeClassKernelStable
+      (H.cycleClass E.weight) (tensorColumnSum A i₀)) :
+    nativeAmbientAction (H.cycleClass E.weight)
+        (tensorColumnSum A i₀) hkernel S.hodge.1 ≠
+      (hodgeMatrixUnit S.sourceIndex E.sheet S.hodge).1 := by
+  have hcolumns' : ∀ i : ClassicalHodgeBasisIndex V H E.weight,
+      (H.cycleClass E.weight).comp
+          (nativeColumn i (finiteTensorBlock A)) =
+        (H.cycleClass E.weight).comp
+          (nativeColumn i₀ (finiteTensorBlock A)) := by
+    intro i
+    simpa only [finiteTensorBlock_nativeColumn] using hcolumns i
+  have hkernel' : NativeClassKernelStable
+      (H.cycleClass E.weight)
+      (nativeColumn i₀ (finiteTensorBlock A)) := by
+    simpa only [finiteTensorBlock_nativeColumn] using hkernel
+  simpa only [finiteTensorBlock_nativeColumn] using
+    (ghostSeedTarget_coherentNativeAction_ne_target G E S i₀
+      (finiteTensorBlock A) hcolumns' hkernel')
+
+end FiniteTensorBlock
+
 #check ghost_kills_nativeCycleClass
 #check ghost_kills_descendingAction_on_seed
 #check ghostSeedTarget_descendingAction_mismatch_formula
 #check ghostSeedTarget_descendingAction_mismatch_ne_zero
 #check ghostSeedTarget_descendingAction_ne_target
 #check no_descendingAction_realizes_ghostSeedTarget
+#check coherentNativeAmbientAction_descends
+#check ghostSeedTarget_coherentNativeAction_mismatch_formula
+#check ghostSeedTarget_coherentNativeAction_mismatch_ne_zero
+#check ghostSeedTarget_coherentNativeAction_ne_target
+#check ghostSeedTarget_routedNativeAction_ne_target
+#check ghostSeedTarget_finiteTensorBlockAction_ne_target
 
 #print axioms ghost_kills_nativeCycleClass
 #print axioms ghostSeedTarget_descendingAction_mismatch_formula
 #print axioms ghostSeedTarget_descendingAction_mismatch_ne_zero
 #print axioms no_descendingAction_realizes_ghostSeedTarget
+#print axioms coherentNativeAmbientAction_descends
+#print axioms ghostSeedTarget_coherentNativeAction_mismatch_formula
+#print axioms ghostSeedTarget_routedNativeAction_ne_target
+#print axioms ghostSeedTarget_finiteTensorBlockAction_ne_target
 
 end GSTClassicalHodgeCoherentNativeGhostObstruction
