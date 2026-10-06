@@ -233,6 +233,7 @@ roots = [
   "GSTClassicalHodgeFiberedNativePullback",
   "GSTClassicalHodgeNativeInteractionNormalForm",
   "GSTClassicalHodgeCoherentNativeDescent",
+  "GSTClassicalHodgeCoherentNativeGhostObstruction",
   "GSTClassicalHodgeFiberedNativeTensorArsenal",
   "GSTClassicalHodgeFiberedNativeOperatorLift",
   "GSTClassicalHodgeFiberedNativeProjectiveTransport",

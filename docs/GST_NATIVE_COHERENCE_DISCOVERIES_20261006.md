@@ -310,6 +310,83 @@ Lean: `cycleClass_descent_iff`,
 `finiteTensorBlock_cycleClass_descent_iff`,
 `cycleClass_descent_range_unique`.
 
+## 7. Coherent-native ghost obstruction
+
+The two-obstruction law constructs an ambient action, but it cannot by itself
+produce the ghost-selected branch target.  Let `E` be an omniversal separator
+ghost, let `S` be a genuine nonzero native/Hodge seed at `E.weight`, and put
+
+\[
+ a=\operatorname{cl}(S.\mathrm{cycle}),\qquad
+ \beta=E_{S.\mathrm{sourceIndex},E.\mathrm{sheet}}(a)=c e_j,
+ \qquad c\ne0.
+\]
+
+For an arbitrary labelled native operator `U`, assume only the two exact
+coherence tests from the preceding section:
+
+\[
+ \operatorname{cl}\circ C_i(U)=\operatorname{cl}\circ C_{i_0}(U)
+ \quad\text{for every }i,
+\]
+
+and
+
+\[
+ C_{i_0}(U)(\ker\operatorname{cl})
+ \subseteq\ker\operatorname{cl}.
+\]
+
+The second law constructs
+
+\[
+ T_U:=\texttt{nativeAmbientAction}
+   (\operatorname{cl},C_{i_0}(U)),
+\]
+
+while the first law proves the whole labelled commuting square
+
+\[
+ (\operatorname{cl}\circ N)U=T_U(\operatorname{cl}\circ N).
+\]
+
+Evaluate this square on the exact native section of `S.cycle`.  The output is
+again the class of a genuine native cycle:
+
+\[
+ T_U(a)=\operatorname{cl}
+   \bigl(N(U(\operatorname{section}_{i_0}(S.\mathrm{cycle})))\bigr).
+\]
+
+The ghost detector kills that class.  The GST matrix-unit identity and the
+ghost's nonzero reading on `e_j` therefore give the unconditional formula
+
+\[
+ \boxed{
+ E.\mathrm{detector}\bigl(T_U(a)-\beta\bigr)
+ =-c\,E.\mathrm{detector}(e_j)\ne0.}
+\]
+
+Hence `T_U(a) != beta`.  The ambient action is a derived output of finite
+relation preservation and column coherence; no ambient action equation,
+target cycle, strict packet, or common-class plane is assumed.
+
+This obstruction exhausts both complete coherent constructions proved above.
+For every total routing `rho` and every native action preserving the actual
+cycle-class kernel, the routed lift misses the detected branch target.  When
+the label type is finite, a complete tensor block may contain cancellations
+between individually non-descending tensor words, but post-cycle-class
+agreement of its column sums and kernel stability still produce an action
+with the same nonzero defect.  Thus cancellation and recoordination do not
+hide D.
+
+Lean:
+`coherentNativeAmbientAction_descends`,
+`ghostSeedTarget_coherentNativeAction_mismatch_formula`,
+`ghostSeedTarget_coherentNativeAction_mismatch_ne_zero`,
+`ghostSeedTarget_routedNativeAction_ne_target`,
+`ghostSeedTarget_finiteTensorBlockAction_ne_target`.
+
 ## What this contributes toward D
 
 The green point-kernel theorem's pre-existing action equation is now
@@ -320,16 +397,21 @@ single-word obstruction. Routing and recoordination preserve the derived
 native action by proved identities.
 
 These are usable construction laws for the native semantic part of a
-branch-packet carrier. They do not manufacture a scheme-bi-finite closed
-carrier from a GST branch. In particular, a routed lift is an operator on
-labelled native cycles; no theorem here identifies it with an actual strict
-geometric correspondence.
+branch-packet carrier.  The new obstruction proves that this entire native
+operator layer, including coherent routing and tensor cancellation, cannot
+manufacture the ghost-selected action required by D.  It does not manufacture
+a scheme-bi-finite closed carrier from a GST branch.  In particular, a routed
+lift is an operator on labelled native cycles; no theorem here identifies it
+with an actual strict geometric correspondence.
 
 D still requires construction of the actual carrier and its intrinsic
-pullback equality for the detected branch target. Neither the finite-relation
-criterion nor any ambient extension is asserted to prove that existence.
-The new results therefore strengthen the available native construction
-machinery without assuming D or renaming it as a hypothesis.
+pullback equality for the detected branch target.  Such a positive
+construction must add genuinely strict geometric content which does not
+factor solely through an operator on native cycles.  Neither the
+finite-relation criterion nor any ambient extension is asserted to prove that
+existence.  The new results therefore strengthen the available native
+construction machinery, and close a circular escape route, without assuming D
+or renaming it as a hypothesis.
 
 ## GLM compile entry points
 
@@ -337,6 +419,7 @@ machinery without assuming D or renaming it as a hypothesis.
 lake build GSTClassicalHodgeNativePointRelationDescent
 lake build GSTClassicalHodgeNativeInteractionNormalForm
 lake build GSTClassicalHodgeCoherentNativeDescent
+lake build GSTClassicalHodgeCoherentNativeGhostObstruction
 ```
 
 The generic native-first module imports the confirmed green point-kernel
