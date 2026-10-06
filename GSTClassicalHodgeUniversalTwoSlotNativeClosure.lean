@@ -194,8 +194,12 @@ theorem ambientUniversalTwoSlotWord_on_hodge
     LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
   rw [hfs]
   norm_num
-  try rw [one_div, mul_comm, mul_smul,
-    inv_smul_smul₀ (by norm_num : ((2:ℚ) ≠ 0))]
+  have hfin : ∀ c : ℚ, (1 / 2 : ℚ) • ((c * 2) •
+      ↑((classicalHodgeBasis V H p) j)) =
+      c • ↑((classicalHodgeBasis V H p) j) := by
+    intro c
+    rw [one_div, smul_smul, mul_inv_cancel_left₀ (by norm_num : ((2:ℚ) ≠ 0))]
+  rw [hfin]
 
 /-- Primitive native-natural data for the universal two-slot machine. -/
 structure PrimitiveNativeTwoSlot
