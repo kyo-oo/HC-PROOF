@@ -101,8 +101,14 @@ noncomputable def classicalHodgeMass
     (p : Nat) : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ where
   toFun alpha :=
     ((classicalHodgeBasis V H p).repr alpha).sum fun _ q => q
-  map_add' := by intro a b; classical; simp
-  map_smul' := by intro q a; classical; simp [smul_eq_mul]
+  map_add' := by
+    intro a b
+    classical
+    simp [LinearMap.map_add, Finsupp.sum_add_index']
+  map_smul' := by
+    intro q a
+    classical
+    simp [smul_eq_mul]
 
 /-- Forgetting multiplicity from an arbitrary genuine Hodge class gives its
 finite total basis mass times the common limitless transfer direction. -/
@@ -117,7 +123,7 @@ theorem classicalHodge_forgetMultiplicity_eq_mass_transfer
   rw [forgetMultiplicity_fiberedWeightCoordinates]
   rw [rationalize_compactClMono]
   ext n
-  simp [classicalHodgeMass, smul_eq_mul]
+  simp [classicalHodgeMass, smul_eq_mul, pureWeightAddress]
 
 /-- If a native cycle and a classical Hodge class have the same total rational
 mass, then their multiplicity-forgotten limitless cosmic addresses coincide

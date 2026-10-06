@@ -180,11 +180,9 @@ theorem ambientUniversalTwoSlotWord_on_hodge
   have hLval : (GSTTruncatedWorldCohomologyRing.worldAct 2 2
       ((GSTTruncatedWorldCohomologyRing.L 2 2) ^ 2)
       (GSTWorldPoincareDuality.worldBasis
-        (GSTGlobalPureHodgeCosmology.pureDiagonalState
-          (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)))
-      (GSTGlobalPureHodgeCosmology.pureDiagonalState
-        (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot))) =
-      (forwardScalar sourceSlot targetSlot : ℤ) :=
+        (GSTGlobalPureHodgeCosmology.pureDiagonalState 0))
+      (GSTGlobalPureHodgeCosmology.pureDiagonalState 1)) =
+      (2 : ℤ) :=
     gst_forward_scalar_receipt (N := 2) (p := sourceSlot) (q := targetSlot) (by decide)
   simp [twoSlotHodgeOperator, liftFiniteHodgeOperator, finiteHodgeRead,
     finiteHodgeWrite, hfinite, hlift, pureMatrixUnit, rationalPureBasis,
