@@ -183,6 +183,48 @@ theorem commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
   let S := Classical.choice (hsurvive E)
   exact ⟨ghostCommonClassPlaneStrike_of_seed_targetStrictClosure G E S hclose⟩
 
+/-- **A SURVIVING GHOST FORBIDS THE REQUESTED STRICT BRANCH PACKET.**
+
+This is the exact negative face of the branch-packet plane realization law.
+Fix a hypothetical omniversal ghost and an already genuine synchronized native
+seed in the ghost's weight.  There cannot exist the strict relation packet from
+the seed's canonical live GST source to the matrix-unit target detected by the
+ghost: such a packet canonically gives a common-class plane strike, whose
+normalized native target cycle is the detected basis sheet, contradicting the
+ghost detector.
+
+Thus the missing realization theorem is located at precisely the contradiction
+point, with no intermediate Hodge-shaped wrapper. -/
+theorem ghostSeedTargetStrictPacket_isEmpty
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight)) :
+    IsEmpty
+      (StrictRelationEdgePacket
+        (⟨Sector.gstPlus, S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+        (⟨Sector.gstPlus,
+          hodgeMatrixUnit S.sourceIndex E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))) := by
+  refine ⟨?_⟩
+  intro R
+  let i : HodgeSupportIndex S.hodge :=
+    chosenLiveSource S.hodge S.hodge_ne_zero
+  have hRi :
+      StrictRelationEdgePacket
+        (⟨Sector.gstPlus, S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+        (⟨Sector.gstPlus,
+          hodgeMatrixUnit i.1 E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight)) := by
+    simpa [i, NativeHodgeOrbitSeed.sourceIndex] using R
+  let P : GhostCommonClassPlaneStrike G E := {
+    seed := S
+    source := i
+    plane := CommonClassPlanePacket.ofStrictRelationEdgePacket hRi
+  }
+  exact P.contradiction
+
 /-- **EXACT STATUS OF THE MINIMAL BRANCH-PACKET REALIZATION LAW.**
 
 Once the source side is the already-existing ghost-weight native-seed survival
@@ -284,6 +326,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
+#check ghostSeedTargetStrictPacket_isEmpty
 #check survival_and_targetStrictClosure_iff_hodge
 #check CommonClassPlanePacket.ofStrictRelationEdgePacket
 #check CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
@@ -293,6 +336,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
+#print axioms ghostSeedTargetStrictPacket_isEmpty
 #print axioms survival_and_targetStrictClosure_iff_hodge
 #print axioms CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
 #print axioms ghostCommonClassPlaneStrike_of_seed_targetStrictClosure
