@@ -225,6 +225,33 @@ theorem ghostSeedTargetStrictPacket_isEmpty
   }
   exact P.contradiction
 
+/-- **BRANCH-PACKET REALIZATION = NO-GHOST, ONCE THE NATIVE SOURCE EXISTS.**
+
+This is the exact logical form of the handwritten GST plane derivation.
+With ghost-weight native seed survival fixed, the sole remaining statement
+`GhostSeedTargetStrictClosure` is equivalent to extinction of every
+omniversal separator ghost.
+
+Forward: choose the genuine seed at a hypothetical ghost weight, realize the
+single source-to-detected-sheet strict packet, convert it to a common-carrier
+plane, and invoke the already-proved one-plane contradiction.
+Backward: when no ghost exists, the ghost-indexed strict-closure statement is
+vacuous.
+
+No Hodge statement occurs in this equivalence. -/
+theorem targetStrictClosure_iff_noGhost_of_survival
+    (G : GeometricCycleClassSpine V H)
+    (hsurvive : GhostWeightNativeSeedSurvival G) :
+    GhostSeedTargetStrictClosure G ↔
+      IsEmpty (OmniversalSeparatorGhost G) := by
+  constructor
+  · intro hclose
+    exact no_omniversalSeparatorGhost_of_commonClassPlanes G
+      (commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
+        G hsurvive hclose)
+  · intro hnone E S
+    exact False.elim (isEmpty_iff.mp hnone E)
+
 /-- **EXACT STATUS OF THE MINIMAL BRANCH-PACKET REALIZATION LAW.**
 
 Once the source side is the already-existing ghost-weight native-seed survival
@@ -326,6 +353,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
+#check targetStrictClosure_iff_noGhost_of_survival
 #check ghostSeedTargetStrictPacket_isEmpty
 #check survival_and_targetStrictClosure_iff_hodge
 #check CommonClassPlanePacket.ofStrictRelationEdgePacket
@@ -336,6 +364,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
+#print axioms targetStrictClosure_iff_noGhost_of_survival
 #print axioms ghostSeedTargetStrictPacket_isEmpty
 #print axioms survival_and_targetStrictClosure_iff_hodge
 #print axioms CommonClassPlanePacket.nonempty_iff_strictRelationEdgePacket
