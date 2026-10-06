@@ -225,6 +225,49 @@ theorem ghostSeedTargetStrictPacket_isEmpty
   }
   exact P.contradiction
 
+/-- **ABSTRACT GST BRANCH EXISTS WHILE STRICT GEOMETRIC REALIZATION IS FORBIDDEN BY A GHOST.**
+
+This pins down the exact logical gap in the branch-packet derivation.
+For a hypothetical omniversal ghost and an already synchronized nonzero native
+seed at its weight, the intrinsic GST causal branch from the seed's canonical
+live source coordinate to the ghost-detected matrix-unit target exists
+unconditionally.  Nevertheless the corresponding strict geometric relation
+packet is empty: if such a packet existed, the common-carrier/finite-trace
+machinery would construct the detected basis cycle and contradict the ghost.
+
+Hence branch existence, sector choice, reachability and recoordination cannot
+by themselves manufacture the required strict scheme correspondence.  Any
+proof of the branch-packet plane realization law must add genuinely geometric
+content that rules out the ghost, rather than merely repackage the intrinsic
+GST event. -/
+theorem ghostBranchEvent_exists_but_strictPacket_empty
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight)) :
+    HodgeBranchEvent
+        (⟨Sector.gstPlus, S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+        (⟨Sector.gstPlus,
+          hodgeMatrixUnit S.sourceIndex E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+      ∧
+    IsEmpty
+      (StrictRelationEdgePacket
+        (⟨Sector.gstPlus, S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))
+        (⟨Sector.gstPlus,
+          hodgeMatrixUnit S.sourceIndex E.sheet S.hodge⟩ :
+          HodgeBranchNode (V := V) (H := H) (p := E.weight))) := by
+  constructor
+  · let i : HodgeSupportIndex S.hodge :=
+      chosenLiveSource S.hodge S.hodge_ne_zero
+    refine ⟨E.sheet, i, ?_⟩
+    simpa [i, NativeHodgeOrbitSeed.sourceIndex] using
+      (GSTClassicalHodgeAugmentedTargetMatrixUnit
+        .augmentedConcreteHodgeMatrixUnit_eq
+          S.hodge E.sheet i).symm
+  · exact ghostSeedTargetStrictPacket_isEmpty G E S
+
 /-- **BRANCH-PACKET REALIZATION = NO-GHOST, ONCE THE NATIVE SOURCE EXISTS.**
 
 This is the exact logical form of the handwritten GST plane derivation.
@@ -353,6 +396,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
+#check ghostBranchEvent_exists_but_strictPacket_empty
 #check targetStrictClosure_iff_noGhost_of_survival
 #check ghostSeedTargetStrictPacket_isEmpty
 #check survival_and_targetStrictClosure_iff_hodge
@@ -364,6 +408,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 
+#print axioms ghostBranchEvent_exists_but_strictPacket_empty
 #print axioms targetStrictClosure_iff_noGhost_of_survival
 #print axioms ghostSeedTargetStrictPacket_isEmpty
 #print axioms survival_and_targetStrictClosure_iff_hodge
