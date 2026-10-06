@@ -73,13 +73,24 @@ theorem realizeFiniteCodimensionPresentation_smul
     realizeFiniteCodimensionPresentation X p (q • φ) =
       q • realizeFiniteCodimensionPresentation X p φ := by
   classical
-  simp only [realizeFiniteCodimensionPresentation]
-  rw [Finsupp.sum_smul_index]
-  all_goals first
-    | intro i
+  first
+  | simp only [realizeFiniteCodimensionPresentation]
+    rw [Finsupp.sum_smul_index]
+    all_goals first
+      | intro i
+        simp
+      | rfl
+      | simp [Finset.smul_sum, smul_smul]
+  | by_cases hq : q = 0
+    · subst q
       simp
-    | simp
-    | rfl
+    · have hsup : (q • φ).support = φ.support := by
+        ext a
+        simp [Finsupp.mem_support_iff, mul_ne_zero_iff, hq]
+      simp only [realizeFiniteCodimensionPresentation, Finsupp.sum,
+        Finsupp.smul_apply, smul_eq_mul]
+      rw [hsup]
+      simp [Finset.smul_sum, smul_smul]
 
 @[simp]
 theorem realizeFiniteCodimensionPresentation_single
