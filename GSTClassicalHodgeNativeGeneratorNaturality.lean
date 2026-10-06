@@ -65,7 +65,7 @@ theorem HasNativePointLifts.smul
   intro x
   obtain ⟨Z, hZ⟩ := hT x
   refine ⟨q • Z, ?_⟩
-  rw [map_smul, hZ, smul_apply]
+  rw [map_smul, hZ, LinearMap.smul_apply]
 
 /-- Atomic stability always yields native point lifts; compactness is not
 needed in this direction because the atomic span is already contained in the
