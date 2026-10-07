@@ -132,9 +132,9 @@ theorem seedJointState_hodgeFace
     (Φ : FiberedNativeAddress V H p)
     (hHodge : forgetPoint V H p Φ = seedHodgeMarginal S) :
     fiberedHodgeClass (V := V) (H := H) (p := p) Φ = S.hodge := by
-  unfold fiberedHodgeClass seedHodgeMarginal
+  simp only [fiberedHodgeClass, LinearMap.comp_apply]
   rw [hHodge]
-  simp
+  simp [seedHodgeMarginal]
 
 /-- **SYNCHRONIZATION DESCENDS TO ZERO FIBERED DEFECT.**
 
