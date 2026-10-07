@@ -35,6 +35,7 @@ open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgePrimitiveArsenalRationalization
 open GSTClassicalHodgeOmniverseCausalBranchPacket
 open GSTClassicalHodgeTwoSlotLefschetzCollapse
+open GSTClassicalHodgeExplicitArsenalGeneration
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -65,9 +66,8 @@ theorem matrixUnit_eq_normalized_localized_L2
     hodgeMatrixUnit i j =
       (twoSlotScalar)⁻¹ •
         liftFiniteHodgeOperator (pairBasisIndex i j) (diagonalLefschetzQ 2 2) := by
-  rw [localized_L2_eq_scaled_matrixUnit]
-  ext alpha
-  simp [twoSlotScalar_ne_zero, smul_smul]
+  rw [localized_L2_eq_scaled_matrixUnit, smul_smul,
+    inv_mul_cancel₀ twoSlotScalar_ne_zero, one_smul]
 
 /-- Elementwise form used directly by the handwritten branch-collapse sum. -/
 theorem matrixUnit_apply_eq_normalized_localized_L2

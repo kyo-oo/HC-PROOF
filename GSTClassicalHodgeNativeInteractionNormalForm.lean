@@ -101,9 +101,10 @@ def interactionProjection
     interactionProjection i₀ x₀ (atom V H p i x) =
       interactionRectangle i₀ i x₀ x := by
   simp only [interactionProjection, LinearMap.sub_apply, LinearMap.id_apply,
-    marginalReconstruction, glueMarginals, atom]
-  simp [forgetPoint_atom, forgetMultiplicity_atom, multiplicityMass_single,
-    Finsupp.sum]
+    marginalReconstruction, glueMarginals]
+  rw [forgetPoint_atom, forgetMultiplicity_atom]
+  simp [multiplicityMass_single, interactionRectangle, atom,
+    attachPoint, attachSheet, Finsupp.sum]
   abel
 
 /-- **FINITE INTERACTION LAW.** Every interaction is a finite combination

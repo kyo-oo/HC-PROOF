@@ -1,6 +1,7 @@
 import GSTClassicalHodgeTwoGeneratorNativeArsenal
 import GSTClassicalHodgeAlgebraicArsenalSaturation
 import GSTClassicalHodgeNativeGeneratorNaturality
+import GSTClassicalHodgeGeneratorwiseAtomicStability
 
 /-!
 # GST CLASSICAL HODGE — TWO PRIMITIVE POINT KERNELS SATURATE ONE HODGE WEIGHT
@@ -54,6 +55,7 @@ open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeNativeGeneratorNaturality
 open GSTClassicalHodgeAlgebraicArsenalSaturation
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 
 namespace GSTClassicalHodgeTwoGeneratorPointKernelSaturation
 
@@ -61,7 +63,9 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev HFiber := ClassicalHodgeFiber V H p
+abbrev HFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) :=
+  ClassicalHodgeFiber V H p
 
 /-- The exact normalized two-generator ambient word. -/
 noncomputable def twoGeneratorAmbientWord
@@ -123,7 +127,7 @@ theorem twoGeneratorAmbientWord_on_hodge
 
 /-- Native two-generator point lifts force the corresponding matrix-unit image
 of every already-algebraic Hodge vector to remain algebraic. -/
-theorem TwoGeneratorNative.matrixUnit_mem_algebraic
+theorem twoGeneratorNative_matrixUnit_mem_algebraic
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : TwoGeneratorNative (V := V) (H := H) i j)
     (alpha : HFiber V H p)
@@ -144,7 +148,7 @@ theorem rankFreeArsenalInvariant_of_twoGeneratorNative
       TwoGeneratorNative (V := V) (H := H) i j) :
     RankFreeArsenalInvariant (AlgebraicHodgeSubspace V H p) := by
   intro i j alpha halpha
-  exact (R i j).matrixUnit_mem_algebraic alpha halpha
+  exact twoGeneratorNative_matrixUnit_mem_algebraic (R i j) alpha halpha
 
 /-- One nonzero algebraic seed plus the two primitive native point-lift laws
 saturates the whole genuine Hodge fiber. -/
@@ -211,7 +215,7 @@ theorem hodge_weight_of_two_primitive_point_transitions
 
 #check twoGeneratorAmbientWord
 #check twoGeneratorAmbientWord_on_hodge
-#check TwoGeneratorNative.matrixUnit_mem_algebraic
+#check twoGeneratorNative_matrixUnit_mem_algebraic
 #check rankFreeArsenalInvariant_of_twoGeneratorNative
 #check algebraicHodgeSubspace_eq_top_of_twoGeneratorNative
 #check hodge_weight_of_twoGeneratorNative
@@ -219,7 +223,7 @@ theorem hodge_weight_of_two_primitive_point_transitions
 #check hodge_weight_of_two_primitive_point_transitions
 
 #print axioms twoGeneratorAmbientWord_on_hodge
-#print axioms TwoGeneratorNative.matrixUnit_mem_algebraic
+#print axioms twoGeneratorNative_matrixUnit_mem_algebraic
 #print axioms hodge_weight_of_twoGeneratorNative
 #print axioms hodge_weight_of_two_primitive_point_transitions
 

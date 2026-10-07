@@ -2,6 +2,8 @@ import GSTClassicalHodgeTwoGeneratorNativeArsenal
 import GSTClassicalHodgeNativeOperatorCohomologyRealization
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
 import GSTClassicalHodgeAtomicOperatorAlgebra
+import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeGeneratorwiseAtomicStability
 
 /-!
 # GST CLASSICAL HODGE — GEOMETRY-FIRST TWO-GENERATOR EXTERNALIZATION
@@ -49,6 +51,9 @@ open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 
 namespace GSTClassicalHodgeGeometryFirstTwoGenerator
 
@@ -56,9 +61,14 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev NativeCycles := codimensionCycles V.X p
-abbrev AmbientCoh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HodgeFiber := ClassicalHodgeFiber V H p
+abbrev NativeCycles (V : SmoothProjectiveComplexScheme) (p : Nat) :=
+  codimensionCycles V.X p
+abbrev AmbientCoh {V : SmoothProjectiveComplexScheme}
+    (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev HodgeFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) :=
+  ClassicalHodgeFiber V H p
 
 /-- A kernel-stable native algebraic-cycle operator automatically gives native
 point lifts for the ambient cohomology operator manufactured from it. -/
@@ -163,8 +173,8 @@ theorem source_hasNativePointLifts
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientSource := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    ((smoothProjective_atomicStable_iff_nativePointLifts).2
-      R.code.hasNativePointLifts)
+    ((smoothProjective_atomicStable_iff_nativePointLifts
+      (R.ambientCode)).2 R.code.hasNativePointLifts)
 
 /-- The universal geometry-first word is native-natural by pure operator
 closure; no basis cycle is chosen. -/
@@ -234,8 +244,8 @@ theorem matrixUnit_mem_algebraic
     hodgeMatrixUnit i j alpha ∈ AlgebraicHodgeSubspace V H p := by
   have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
       R.ambientWord :=
-    (smoothProjective_atomicStable_iff_nativePointLifts).2
-      R.ambientWord_hasNativePointLifts
+    (smoothProjective_atomicStable_iff_nativePointLifts
+      (R.ambientWord)).2 R.ambientWord_hasNativePointLifts
   have himage := hstable alpha.1 halpha
   rw [R.ambientWord_on_hodge alpha] at himage
   exact himage
