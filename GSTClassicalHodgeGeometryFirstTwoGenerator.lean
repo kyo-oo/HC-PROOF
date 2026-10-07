@@ -253,8 +253,8 @@ theorem ambientWord_on_hodge
     LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
   rw [hfs]
   norm_num
-  rw [one_div, smul_smul, mul_comm _ 2,
-    inv_mul_cancel_left₀ (by norm_num : ((2:ℚ) ≠ 0))]
+  rw [one_div, smul_smul, ← mul_assoc,
+    inv_mul_cancel₀ (by norm_num : (2:ℚ) ≠ 0), one_mul]
 
 /-- Every geometry-first two-generator realization forces the corresponding
 rank-free matrix unit to preserve the actual algebraic Hodge subspace.
@@ -272,7 +272,8 @@ theorem matrixUnit_mem_algebraic
       (smoothProjective_atomicStable_iff_nativePointLifts
         (R.ambientCode)).2 R.code.hasNativePointLifts
     have himage := hstable alpha.1 halpha
-    rw [R.code.ambient_on_hodge alpha] at himage
+    rw [show R.ambientCode alpha.1 = (twoSlotCodeHodge i i alpha).1 from
+      R.code.ambient_on_hodge alpha] at himage
     have hdiag : (twoSlotCodeHodge i i alpha).1 =
         (hodgeMatrixUnit i i alpha).1 := by
       simp [twoSlotCodeHodge, twoSlotHodgeOperator,
