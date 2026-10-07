@@ -397,6 +397,206 @@ theorem ambientOperator_core_decomposition
   ambientNatural_core_decomposition A hA (ambientOperator A hA)
     (cycleClass_ambientOperator A hA)
 
+/-! ## The intrinsic cohomological defect sector
+
+The native class/kernel splitting does not yet separate what Hodge can see
+from what native geometry can actually realize.  The following strengthens
+the ambient laws into one **exact class/defect splitting**, using the SAME
+fixed retraction for every native operator.
+
+Unlike a new matrix-unit postulate, this sector exists before any Hodge
+surjectivity assertion and before selecting a separator ghost.
+-/
+
+/-- The off-range part vanishes precisely for genuine algebraic classes.
+This is the exact, unassumed boundary between native geometry and the
+unreached ambient cohomology directions. -/
+theorem offRangeProjection_eq_zero_iff_range (alpha : Coh H p) :
+    offRangeProjection (H := H) alpha = 0 ↔
+      alpha ∈ LinearMap.range (H.cycleClass p) := by
+  change alpha - classRangeProjection (H := H) alpha = 0 ↔ _
+  rw [sub_eq_zero, eq_comm]
+  exact classRangeProjection_eq_self_iff alpha
+
+/-- The algebraic component of every defect is identically zero. -/
+theorem classRangeProjection_offRange_zero (alpha : Coh H p) :
+    classRangeProjection (H := H)
+      (offRangeProjection (H := H) alpha) = 0 := by
+  change classRangeProjection (H := H)
+    (alpha - classRangeProjection (H := H) alpha) = 0
+  rw [map_sub]
+  have h := LinearMap.congr_fun
+    (classRangeProjection_idempotent (V := V) (H := H) (p := p)) alpha
+  rw [h, sub_self]
+
+/-- The defect component is an honest idempotent geometric projection,
+not an arbitrary coordinate reassignment. -/
+theorem offRangeProjection_idempotent :
+    (offRangeProjection (V := V) (H := H) (p := p)).comp
+      (offRangeProjection (H := H)) = offRangeProjection (H := H) := by
+  apply LinearMap.ext
+  intro alpha
+  change offRangeProjection (H := H)
+    (alpha - classRangeProjection (H := H) alpha) =
+      offRangeProjection (H := H) alpha
+  rw [map_sub]
+  have hr :
+      offRangeProjection (H := H)
+        (classRangeProjection (H := H) alpha) = 0 :=
+    offRangeProjection_range
+      (⟨classRangeProjection (H := H) alpha,
+        classRangeProjection_mem_range alpha⟩ :
+        LinearMap.range (H.cycleClass p))
+  rw [hr, sub_zero]
+
+/-- A class whose algebraic projection vanishes is already a pure defect. -/
+theorem offRangeProjection_eq_self_of_classProjection_zero
+    (alpha : Coh H p)
+    (h : classRangeProjection (H := H) alpha = 0) :
+    offRangeProjection (H := H) alpha = alpha := by
+  simp [offRangeProjection, h]
+
+/-- Genuine ambient defect space: kernel of the *algebraic-range*
+projection, not an independently invented Hodge coordinate type. -/
+abbrev NativeCohomologicalDefect :=
+  LinearMap.ker (classRangeProjection (V := V) (H := H) (p := p))
+
+/-- The complete missing-class component, taking values in its intrinsic
+subspace. -/
+noncomputable def cohomologicalDefectCoordinate :
+    Coh H p →ₗ[ℚ] NativeCohomologicalDefect (V := V) (H := H) (p := p) where
+  toFun alpha :=
+    ⟨offRangeProjection (H := H) alpha,
+      classRangeProjection_offRange_zero alpha⟩
+  map_add' := by
+    intro alpha beta
+    apply Subtype.ext
+    exact map_add (offRangeProjection (H := H)) alpha beta
+  map_smul' := by
+    intro q alpha
+    apply Subtype.ext
+    exact map_smul (offRangeProjection (H := H)) q alpha
+
+@[simp]
+theorem cohomologicalDefectCoordinate_range
+    (a : LinearMap.range (H.cycleClass p)) :
+    cohomologicalDefectCoordinate (H := H) a.1 = 0 := by
+  apply Subtype.ext
+  exact offRangeProjection_range a
+
+@[simp]
+theorem cohomologicalDefectCoordinate_pureDefect
+    (a : NativeCohomologicalDefect (V := V) (H := H) (p := p)) :
+    cohomologicalDefectCoordinate (H := H) a.1 = a := by
+  apply Subtype.ext
+  exact offRangeProjection_eq_self_of_classProjection_zero a.1 a.2
+
+/-- **UNCONDITIONAL AMBIENT CLASS/DEFECT SPLIT.**
+All rational cohomology is uniquely a class of genuine native cycles plus
+an exact defect component.  Neither side is replaced by a hypothetical
+source/target Hodge representative.  This is the missing geometric
+normal form dual to the native class/kernel splitting. -/
+noncomputable def ambientClassDefectEquiv :
+    Coh H p ≃ₗ[ℚ]
+      (LinearMap.range (H.cycleClass p) ×
+        NativeCohomologicalDefect (V := V) (H := H) (p := p)) where
+  toLinearMap := {
+    toFun := fun alpha =>
+      (classRangeRetraction (H := H) alpha,
+        cohomologicalDefectCoordinate (H := H) alpha)
+    map_add' := by intro alpha beta; apply Prod.ext <;> simp
+    map_smul' := by intro q alpha; apply Prod.ext <;> simp
+  }
+  invFun a := a.1.1 + a.2.1
+  left_inv := by
+    intro alpha
+    exact ambient_range_decomposition alpha
+  right_inv := by
+    intro a
+    apply Prod.ext
+    · change classRangeRetraction (H := H) (a.1.1 + a.2.1) = a.1
+      rw [map_add, classRangeRetraction_range]
+      have hz : classRangeRetraction (H := H) a.2.1 = 0 := by
+        apply Subtype.ext
+        exact a.2.2
+      rw [hz, add_zero]
+    · change cohomologicalDefectCoordinate (H := H)
+        (a.1.1 + a.2.1) = a.2
+      rw [map_add, cohomologicalDefectCoordinate_range,
+        cohomologicalDefectCoordinate_pureDefect, zero_add]
+
+/-- **NO-GENERATION LAW FOR ALL NATIVE OPERATORS.**
+This is deliberately stronger than the kernel-stability assumption:
+EVEN an arbitrary native operator cannot manufacture a nonzero
+cohomological defect by applying cycle class to its output.  Compositions,
+rational words, projective correspondences and arbitrary native kernels are
+therefore all confined to the same actual algebraic range. -/
+theorem everyNativeOperator_has_zero_defect
+    (A : Module.End ℚ (Cycles V p)) (Z : Cycles V p) :
+    cohomologicalDefectCoordinate (H := H) (H.cycleClass p (A Z)) = 0 := by
+  exact cohomologicalDefectCoordinate_range
+    ((H.cycleClass p).rangeRestrict (A Z))
+
+/-- Any ambient class with a detected defect cannot be the image of any
+native operator evaluated on any native cycle.  No input family of larger
+native operators removes this boundary without changing the cycle-class
+geometry itself. -/
+theorem nonzero_defect_blocks_every_native_operator
+    (alpha : Coh H p)
+    (hbad : cohomologicalDefectCoordinate (H := H) alpha ≠ 0)
+    (A : Module.End ℚ (Cycles V p)) (Z : Cycles V p) :
+    H.cycleClass p (A Z) ≠ alpha := by
+  intro h
+  apply hbad
+  rw [← h]
+  exact everyNativeOperator_has_zero_defect A Z
+
+/-- The coherent ambient action generated by ANY kernel-stable native
+operator has zero defect on every ambient input.  This explains why merely
+extending the native algebra to all cohomology cannot add a missing class. -/
+theorem supportedAmbientOperator_defect_zero
+    (A : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A)
+    (alpha : Coh H p) :
+    cohomologicalDefectCoordinate (H := H)
+      (supportedAmbientOperator A hA alpha) = 0 := by
+  apply Subtype.ext
+  change offRangeProjection (H := H)
+    (supportedAmbientOperator A hA alpha) = 0
+  exact (offRangeProjection_eq_zero_iff_range _).2
+    (supportedAmbientOperator_mem_range A hA alpha)
+
+/-- **EXACT HODGE FRONTIER, BEFORE CHOOSING A GHOST.**
+The Hodge-weight conclusion holds iff the ACTUAL intrinsic defect coordinate
+vanishes on its whole Hodge fiber.  This is an exact test, not a premise being
+relabelled as a theorem. -/
+theorem hodgeWeight_iff_intrinsicDefect_zero :
+    rationalHodgeSubspace (H.hodgeBigrading p) ≤
+      LinearMap.range (H.cycleClass p) ↔
+    ∀ alpha : Coh H p,
+      alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
+        cohomologicalDefectCoordinate (H := H) alpha = 0 := by
+  constructor
+  · intro h alpha halpha
+    apply Subtype.ext
+    change offRangeProjection (H := H) alpha = 0
+    exact (offRangeProjection_eq_zero_iff_range alpha).2 (h halpha)
+  · intro h alpha halpha
+    have hz := h alpha halpha
+    have hz' : offRangeProjection (H := H) alpha = 0 :=
+      congrArg Subtype.val hz
+    exact (offRangeProjection_eq_zero_iff_range alpha).1 hz'
+
+#check ambientClassDefectEquiv
+#check everyNativeOperator_has_zero_defect
+#check nonzero_defect_blocks_every_native_operator
+#check supportedAmbientOperator_defect_zero
+#check hodgeWeight_iff_intrinsicDefect_zero
+
+#print axioms ambientClassDefectEquiv
+#print axioms everyNativeOperator_has_zero_defect
+#print axioms hodgeWeight_iff_intrinsicDefect_zero
+
 #print axioms classRangeRetraction
 #print axioms supportedAmbientOperator_comp
 #print axioms ambientNatural_core_decomposition
