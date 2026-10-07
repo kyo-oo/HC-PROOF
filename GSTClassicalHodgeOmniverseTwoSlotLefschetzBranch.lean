@@ -33,9 +33,10 @@ open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgePrimitiveArsenalRationalization
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeOmniverseCausalBranchPacket
 open GSTClassicalHodgeTwoSlotLefschetzCollapse
-open GSTClassicalHodgeExplicitArsenalGeneration
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -117,7 +118,7 @@ theorem branch_collapse_via_localized_L2
   obtain ⟨i, hi, hcollapse⟩ :=
     branch_collapse_identity (V := V) (H := H) alpha halpha
   refine ⟨i, hi, ?_⟩
-  rw [hcollapse]
+  conv_lhs => rw [hcollapse]
   apply Finset.sum_congr rfl
   intro j hj
   rw [matrixUnit_apply_eq_normalized_localized_L2
