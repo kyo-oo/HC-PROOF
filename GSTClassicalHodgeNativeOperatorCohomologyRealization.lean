@@ -127,23 +127,55 @@ noncomputable def rangeOperatorIntoAmbient
     LinearMap.range (H.cycleClass p) →ₗ[ℚ] Coh H p :=
   (LinearMap.range (H.cycleClass p)).subtype.comp (rangeOperator A hA)
 
-/-- Extend the descended native action from the actual cycle-class range to
-all ambient rational singular cohomology. -/
+/-- **ONE FIXED CLASS-RANGE RETRACTION FOR THE ENTIRE NATIVE ALGEBRA.**
+
+This is chosen ONCE, not once per native word.  Its existence is the
+linear splitting of the actual cycle-class image.  The Hodge statement,
+basis-cycle representatives, and spectral completeness are not inputs. -/
+noncomputable def classRangeRetraction :
+    Coh H p →ₗ[ℚ] LinearMap.range (H.cycleClass p) :=
+  Classical.choose (LinearMap.exists_extend
+    (LinearMap.id : Module.End ℚ (LinearMap.range (H.cycleClass p))))
+
+theorem classRangeRetraction_spec :
+    (classRangeRetraction (V := V) (H := H) (p := p)).comp
+      (LinearMap.range (H.cycleClass p)).subtype = LinearMap.id :=
+  Classical.choose_spec (LinearMap.exists_extend
+    (LinearMap.id : Module.End ℚ (LinearMap.range (H.cycleClass p))))
+
+@[simp]
+theorem classRangeRetraction_range
+    (a : LinearMap.range (H.cycleClass p)) :
+    classRangeRetraction (H := H) a.1 = a :=
+  LinearMap.congr_fun classRangeRetraction_spec a
+
+/-- **REBUILT CORE AMBIENT OPERATOR.**
+
+Unlike the historical independently selected extension, this is the unique
+extension prescribed by one fixed class-range retraction with ZERO action on
+its complementary sector.  Its composition law is therefore coherent across
+the full native operator algebra, not only on classes already in the image. -/
 noncomputable def ambientOperator
     (A : Cycles V p →ₗ[ℚ] Cycles V p)
     (hA : KernelStable (H := H) A) :
     Coh H p →ₗ[ℚ] Coh H p :=
-  Classical.choose (LinearMap.exists_extend (rangeOperatorIntoAmbient A hA))
+  (rangeOperatorIntoAmbient A hA).comp
+    (classRangeRetraction (H := H))
 
-/-- The ambient extension agrees with the descended operator on the actual
-cycle-class range. -/
+/-- The rebuilt ambient operator has exact naturality on genuine native
+cycle classes, with no independent output extension selection. -/
 theorem ambientOperator_comp_rangeSubtype
     (A : Cycles V p →ₗ[ℚ] Cycles V p)
     (hA : KernelStable (H := H) A) :
     (ambientOperator A hA).comp
         (LinearMap.range (H.cycleClass p)).subtype =
-      rangeOperatorIntoAmbient A hA :=
-  Classical.choose_spec (LinearMap.exists_extend (rangeOperatorIntoAmbient A hA))
+      rangeOperatorIntoAmbient A hA := by
+  apply LinearMap.ext
+  intro a
+  change rangeOperatorIntoAmbient A hA
+      (classRangeRetraction (H := H) a.1) =
+    rangeOperatorIntoAmbient A hA a
+  rw [classRangeRetraction_range]
 
 /-- **AUTOMATIC CYCLE-CLASS NATURALITY.**  The ambient operator manufactured
 from a kernel-stable native operator has the exact commuting square. -/
@@ -233,25 +265,6 @@ theorem rangeOperator_comp
   have ha : (H.cycleClass p).rangeRestrict Z = a := Subtype.ext hZ
   rw [← ha]
   simp only [LinearMap.comp_apply, rangeOperator_rangeRestrict]
-
-/-- One fixed linear retraction onto the actual class range, used by every
-native operator.  It contains no Hodge-surjectivity premise. -/
-noncomputable def classRangeRetraction :
-    Coh H p →ₗ[ℚ] LinearMap.range (H.cycleClass p) :=
-  Classical.choose (LinearMap.exists_extend
-    (LinearMap.id : Module.End ℚ (LinearMap.range (H.cycleClass p))))
-
-theorem classRangeRetraction_spec :
-    (classRangeRetraction (V := V) (H := H) (p := p)).comp
-      (LinearMap.range (H.cycleClass p)).subtype = LinearMap.id :=
-  Classical.choose_spec (LinearMap.exists_extend
-    (LinearMap.id : Module.End ℚ (LinearMap.range (H.cycleClass p))))
-
-@[simp]
-theorem classRangeRetraction_range
-    (a : LinearMap.range (H.cycleClass p)) :
-    classRangeRetraction (H := H) a.1 = a :=
-  LinearMap.congr_fun classRangeRetraction_spec a
 
 /-- Ambient projection onto classes of actual native cycles. -/
 noncomputable def classRangeProjection : Module.End ℚ (Coh H p) :=
@@ -396,6 +409,56 @@ theorem ambientOperator_core_decomposition
       (ambientOperator A hA).comp (offRangeProjection (H := H)) :=
   ambientNatural_core_decomposition A hA (ambientOperator A hA)
     (cycleClass_ambientOperator A hA)
+
+/-! ## Intrinsic repair of the original operator law
+
+The historically independent ambient extension has now been replaced at its
+DEFINITION SITE by the unique coherent extension that kills the fixed
+off-range complement.  The already-derived supported operator is thus
+extensionally the original one, and the original API inherits the full
+composition law.
+-/
+
+/-- The original operator is now exactly the shared-retraction action,
+rather than an unrelated independently chosen extension at each word. -/
+theorem ambientOperator_eq_supported
+    (A : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A) :
+    ambientOperator A hA = supportedAmbientOperator A hA := by
+  apply LinearMap.ext
+  intro alpha
+  rfl
+
+/-- **FULL AMBIENT COMPOSITION COHERENCE FOR THE ORIGINAL API.**
+The once-uncontrolled cohomology extension now respects native operator
+composition on ALL cohomology states, including off-range ones. -/
+theorem ambientOperator_comp_coherent
+    (A B : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A)
+    (hB : KernelStable (H := H) B) :
+    ambientOperator (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
+      (ambientOperator A hA).comp (ambientOperator B hB) := by
+  rw [ambientOperator_eq_supported]
+  rw [ambientOperator_eq_supported]
+  rw [ambientOperator_eq_supported]
+  exact supportedAmbientOperator_comp A B hA hB
+
+/-- Every rebuilt native ambient motion annihilates the off-range complement
+at the definition level.  No uncontrolled arbitrary extension survives. -/
+theorem ambientOperator_offRange_zero
+    (A : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A)
+    (alpha : Coh H p) :
+    ambientOperator A hA (offRangeProjection (H := H) alpha) = 0 := by
+  have hz :
+      classRangeRetraction (H := H)
+        (offRangeProjection (H := H) alpha) = 0 := by
+    apply Subtype.ext
+    exact classRangeProjection_offRange_zero alpha
+  simp [ambientOperator, hz]
+
+#check ambientOperator_comp_coherent
+#print axioms ambientOperator_comp_coherent
 
 /-! ## The intrinsic cohomological defect sector
 
