@@ -194,7 +194,8 @@ theorem toGlobalHodgeAddress_atom
     (x : CodimensionPoint V.X p) :
     toGlobalHodgeAddress V H p (atom V H p i x) =
       fiberedSheetGenerator V H ⟨p,i⟩ := by
-  rw [toGlobalHodgeAddress, forgetPoint_atom]
+  simp only [toGlobalHodgeAddress]
+  rw [forgetPoint_atom]
   simp [fiberedSheetGenerator, weightFiberEmbedding]
 
 @[simp]
@@ -296,7 +297,7 @@ theorem classicalProjection_to_limitless
         weightFiberEmbedding]
     rw [hto, forgetMultiplicityToGST_single, rationalize_compactClMono]
     simp [totalMass, atom, smul_eq_mul, pureWeightAddress, compactClCode,
-      cosmicAddressEquiv]
+      GSTUniversalAddressBridge.cosmicAddressEquiv]
 
 /-- Forgetting multiplicity to an actual native cycle and then taking its
 limitless cosmic shadow lands on the exact same transfer ray with the exact
@@ -309,7 +310,7 @@ theorem nativeProjection_to_limitless
         rationalizeCompactAddress (compactClMono p) := by
   rw [nativeCycle_shadow_eq_mass_transfer]
   congr 1
-  rw [toNativeCycle]
+  simp only [toNativeCycle]
   rw [nativeCycleMass_realize]
   exact presentationMass_forgetMultiplicity V H p φ
 
@@ -415,7 +416,10 @@ noncomputable def attachPoint (x : CodimensionPoint V.X p) :
     classical
     rw [Finsupp.sum_smul_index' (fun _ => by simp)]
     simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
-    rw [Finset.smul_sum, smul_smul]
+    first
+    | rw [Finset.smul_sum, ← smul_smul]
+    | rw [Finset.smul_sum, smul_smul]
+    | simp [smul_smul]
 
 /-- Attach one multiplicity label to a genuine finite native presentation. -/
 noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
@@ -430,7 +434,10 @@ noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
     classical
     rw [Finsupp.sum_smul_index' (fun _ => by simp)]
     simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
-    rw [Finset.smul_sum, smul_smul]
+    first
+    | rw [Finset.smul_sum, ← smul_smul]
+    | rw [Finset.smul_sum, smul_smul]
+    | simp [smul_smul]
 
 @[simp] theorem forgetPoint_attachPoint (x : CodimensionPoint V.X p)
     (a : ClassicalHodgeBasisIndex V H p →₀ ℚ) :

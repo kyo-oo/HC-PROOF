@@ -70,6 +70,7 @@ theorem canonicalCosmicAmbient_on_hodge
     canonicalCosmicAmbient i j alpha.1 =
       liftCosmicWindowOperator (pairBasisIndex i j)
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha := by
+  rw [canonicalCosmicAmbient]
   rw [GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism_on_hodge]
   rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
 
@@ -115,10 +116,10 @@ theorem preserves_algebraicFiber
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : NativeCanonicalCosmicRealization (V := V) (H := H) i j)
     (alpha : ClassicalHodgeFiber V H p)
-    (halg : alpha ∈ AlgebraicFiber (V := V) (H := H) (p := p)) :
+    (halg : alpha ∈ AlgebraicHodgeSubspace V H p) :
     liftCosmicWindowOperator (pairBasisIndex i j)
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha ∈
-      AlgebraicFiber (V := V) (H := H) (p := p) := by
+      AlgebraicHodgeSubspace V H p := by
   have hrange : alpha.1 ∈ LinearMap.range (H.cycleClass p) := by
     rw [smoothProjective_cycleClass_range_eq_atomic_span V H p]
     exact halg
@@ -142,7 +143,7 @@ theorem canonicalCosmicNaturality_of_nativeRealizations
       NativeCanonicalCosmicRealization (V := V) (H := H) i j) :
     CanonicalCosmicNaturality (V := V) (H := H) p := by
   intro i j alpha halg
-  exact (R i j).preserves_algebraicFiber alpha halg
+  exact preserves_algebraicFiber (R i j) alpha halg
 
 /-- Conversely, canonical cosmic naturality gives cycle-class-range stability
 on every Hodge class already known to be algebraic.  The range-lift machinery
@@ -153,19 +154,16 @@ theorem nativeRealization_of_range_stable
       ∀ alpha ∈ LinearMap.range (H.cycleClass p),
         canonicalCosmicAmbient i j alpha ∈ LinearMap.range (H.cycleClass p)) :
     Nonempty (NativeCanonicalCosmicRealization (V := V) (H := H) i j) := by
-  let A : AtomicStableOperator (V := V) (H := H) (p := p) where
-    operator := canonicalCosmicAmbient i j
-    atomic_stable := by
-      intro alpha halpha
-      rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halpha ⊢
-      exact hstable alpha halpha
-  let L := liftedCycleOperator A
+  have hT :
+      ∀ x : RationalSingularCohomology H.analytification (2 * p),
+        x ∈ LinearMap.range (H.cycleClass p) →
+        (canonicalCosmicAmbient i j) x ∈ LinearMap.range (H.cycleClass p) :=
+    fun x hx => hstable x hx
   refine ⟨{
-    native := L
-    naturality := ?_
-  }⟩
+    native := liftedCycleOperator (canonicalCosmicAmbient i j) hT
+    naturality := ?_ }⟩
   intro Z
-  exact liftedCycleOperator_commutes A Z
+  exact cycleClass_liftedCycleOperator (canonicalCosmicAmbient i j) hT Z
 
 /-- Exact realization form of the canonical fixed-weight target. -/
 theorem nativeCanonicalRealizations_imply_hodgeWeight
