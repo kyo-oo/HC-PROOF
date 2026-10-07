@@ -45,6 +45,12 @@ open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTPureHodgeLefschetzKernel
+open GSTWorldCosmology
+open GSTWorldPoincareDuality
+open GSTDimensionFreeHodgeDiagonal
+open GSTGlobalPureHodgeCosmology
+open GSTTruncatedWorldCohomologyRing
+open GSTUniversalLefschetzKernel
 
 namespace GSTClassicalHodgeTwoSlotLefschetzPoincareGeneration
 
