@@ -300,6 +300,8 @@ noncomputable def basisCycleBridge
           twoSlotCode, sourceSlot, targetSlot, pairBasisIndex,
           hodgeMatrixUnit_apply, hodgeCoordinate_basis_self, hodgeCoordinate]
       rw [hdiag] at hpair
+      rw [show (R j).code.cycleOperator S.cycle =
+          (primitivePair (R j).code).cycleOperator S.cycle from rfl]
       rw [hpair, smul_smul, inv_mul_cancel₀ hc, one_smul]
       rfl
     · rw [if_neg hij]
