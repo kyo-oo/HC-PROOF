@@ -139,17 +139,12 @@ theorem ambientSourceProjector_on_hodge_eq_id_sub_code
   have hkey : twoSlotHodgeOperator i j (LinearMap.id - twoSlotCode) alpha
       + twoSlotHodgeOperator i j twoSlotCode alpha = alpha := by
     show (finiteHodgeWrite (pairBasisIndex i j))
-        ((LinearMap.id - twoSlotCode)
-          (finiteHodgeRead (pairBasisIndex i j) alpha))
+        (finiteHodgeRead (pairBasisIndex i j) alpha
+          - twoSlotCode (finiteHodgeRead (pairBasisIndex i j) alpha))
       + (finiteHodgeWrite (pairBasisIndex i j))
         (twoSlotCode (finiteHodgeRead (pairBasisIndex i j) alpha)) = alpha
-    rw [← LinearMap.map_add (finiteHodgeWrite (pairBasisIndex i j))]
-    rw [show (LinearMap.id - twoSlotCode)
-        (finiteHodgeRead (pairBasisIndex i j) alpha)
-        + twoSlotCode (finiteHodgeRead (pairBasisIndex i j) alpha)
-        = finiteHodgeRead (pairBasisIndex i j) alpha from by
-      rw [LinearMap.sub_apply, LinearMap.id_apply]
-      simp]
+    rw [← LinearMap.map_add (finiteHodgeWrite (pairBasisIndex i j)),
+      sub_add_cancel]
     exact hround
   have hval : (twoSlotHodgeOperator i j (LinearMap.id - twoSlotCode) alpha).1
       + (twoSlotHodgeOperator i j twoSlotCode alpha).1 = alpha.1 :=

@@ -53,8 +53,9 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
       funext q
       fin_cases q
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
-        exact_mod_cast GSTUniversalLefschetzKernel.positive_time_no_return
-          (GSTGlobalPureHodgeCosmology.pureDiagonalState 0) (by norm_num)
+        exact_mod_cast GSTUniversalLefschetzCausalGeometry.positive_time_no_return
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot)) (by norm_num)
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
         exact_mod_cast gst_forward_scalar_receipt sourceSlot targetSlot
           (by simp [sourceSlot, targetSlot])
@@ -69,14 +70,18 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
       fin_cases q
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
         exact_mod_cast GSTUniversalLefschetzKernel.worldAct_L_pow_basis_outside_future_zero
-          (GSTGlobalPureHodgeCosmology.pureDiagonalState 1)
-          (GSTGlobalPureHodgeCosmology.pureDiagonalState 0)
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot))
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) sourceSlot))
           (by simp [GSTUniversalLefschetzKernel.worldForward,
             GSTGlobalPureHodgeCosmology.pureDiagonalState,
-            GSTDimensionFreeHodgeDiagonal.diagonalState])
+            GSTDimensionFreeHodgeDiagonal.diagonalState,
+            sourceSlot, targetSlot])
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
-        exact_mod_cast GSTUniversalLefschetzKernel.positive_time_no_return
-          (GSTGlobalPureHodgeCosmology.pureDiagonalState 1) (by norm_num)
+        exact_mod_cast GSTUniversalLefschetzCausalGeometry.positive_time_no_return
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState
+            (Fin.castLE (show 2 ≤ min 2 2 by omega) targetSlot)) (by norm_num)
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
     rw [hzero, smul_zero]
