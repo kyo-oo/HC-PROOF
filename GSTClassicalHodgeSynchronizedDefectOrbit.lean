@@ -298,10 +298,11 @@ noncomputable def basisCycleBridge
         simp [twoSlotCodeHodge, twoSlotHodgeOperator,
           liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
           twoSlotCode, sourceSlot, targetSlot, pairBasisIndex,
-          hodgeMatrixUnit_apply, hodgeCoordinate_basis_self]
+          hodgeMatrixUnit_apply, hodgeCoordinate_basis_self, hodgeCoordinate]
       rw [hdiag] at hpair
-      rw [LinearMap.map_smul, LinearMap.map_smul, hpair]
-      simp [hc]
+      rw [LinearMap.map_smul, hpair, smul_smul,
+        inv_mul_cancel₀ hc, one_smul]
+      rfl
     · rw [if_neg hij]
       exact S.targetCycle_spec j hij (R j)
 

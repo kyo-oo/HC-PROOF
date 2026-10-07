@@ -1,6 +1,8 @@
 import GSTClassicalHodgeFiberedCycleClassDefect
 import GSTClassicalHodgeSingleSheetCrown
 import GSTClassicalHodgeNormalizedFiberedSpectralAtom
+import GSTWorldRecoordinationGroupoid
+import GSTClassicalHodgeFiniteSupportArsenalConjugation
 
 /-!
 # GST CLASSICAL HODGE — SINGLE-SHEET SEPARATORS AS FIBERED DEFECT DETECTORS
@@ -37,6 +39,8 @@ open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeFiberedCycleClassDefect
 open GSTClassicalHodgeNormalizedFiberedSpectralAtom
 open GSTClassicalHodgeAtomicAnnihilator
+open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeSingleSheetCrown
 
 variable {V : SmoothProjectiveComplexScheme}

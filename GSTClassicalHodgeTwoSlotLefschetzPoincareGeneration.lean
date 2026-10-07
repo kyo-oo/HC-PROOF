@@ -56,6 +56,7 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
         ((diagonalLefschetzQ 2 2).comp
           (poincareReverseQ 2).toLinearMap)) := by
   rw [← sheetProjectorQ_target_eq_code]
+  rfl
 
 /-- Equivalent projector formulation. -/
 theorem sheetProjectorQ_target_eq_half_lefschetz_comp_poincare :
