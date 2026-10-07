@@ -1,5 +1,6 @@
 import GSTClassicalHodgeTwoGeneratorPointKernelSaturation
 import GSTClassicalHodgePrimitiveArsenalRationalization
+import GSTClassicalHodgeRepairToolkit
 
 /-!
 # GST CLASSICAL HODGE — TWO-SLOT CODE IS LEFSCHETZ–POINCARE GENERATED
@@ -54,19 +55,26 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
       ((2 : ℚ)⁻¹ •
         ((diagonalLefschetzQ 2 2).comp
           (poincareReverseQ 2).toLinearMap)) := by
-  apply LinearMap.ext
-  intro a
-  funext r
-  fin_cases r <;>
-    simp [twoSlotCode, diagonalLefschetzQ, poincareReverseQ,
-      windowMirror, rationalPureBasis, GSTUniversalAddressBridge.worldBasis,
-      GSTTruncatedWorldCohomologyRing.worldAct,
-      GSTTruncatedWorldCohomologyRing.L,
-      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel,
-      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_wrong_time_zero,
-      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_outside_future_zero,
-      GSTUniversalLefschetzCosmology.digitEndo_apply,
-      GSTUniversalLefschetzCosmology.carryEndo_apply]
+  have hmatrixP :
+      (pureMatrixUnit sourceSlot targetSlot).comp
+          (poincareReverseQ 2).toLinearMap =
+        sheetProjectorQ targetSlot := by
+    apply LinearMap.ext
+    intro a
+    rw [LinearMap.comp_apply, pureMatrixUnit_apply, sheetProjectorQ_apply]
+    congr 1
+    simp [poincareReverseQ_apply, windowMirror, sourceSlot, targetSlot]
+  have hfs : (forwardScalar sourceSlot targetSlot : ℚ) = 2 := by
+    exact_mod_cast
+      (show forwardScalar sourceSlot targetSlot = 2 from by decide)
+  rw [← sheetProjectorQ_target_eq_code]
+  rw [GSTClassicalHodgeTwoSlotLefschetzCollapse.
+    diagonalLefschetzQ_two_two_eq_scaled_matrixUnit]
+  rw [hfs]
+  rw [GSTClassicalHodgeRepairToolkit.smul_comp_middle]
+  rw [GSTClassicalHodgeRepairToolkit.inv_smul_smul_End
+    (by norm_num : (2 : ℚ) ≠ 0)]
+  exact hmatrixP.symm
 
 /-- Equivalent projector formulation. -/
 theorem sheetProjectorQ_target_eq_half_lefschetz_comp_poincare :
