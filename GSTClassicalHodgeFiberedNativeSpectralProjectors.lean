@@ -3,6 +3,7 @@ import GSTWorldRecoordinationGroupoid
 import GSTClassicalHodgeRecoordinationArsenalCrown
 import GSTClassicalHodgeFiniteSupportArsenalConjugation
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeFiberedTransferCompletion
 
 /-!
 # GST CLASSICAL HODGE — FIBERED NATIVE SPECTRAL PROJECTORS
@@ -49,6 +50,7 @@ open GSTWorldRecoordinationGroupoid
 open GSTTransferBridgeV2
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedTransferCompletion
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -102,7 +104,8 @@ theorem codeProj_shapedField_isolates
       apply (shapeCodeEquiv S).injective
       apply Fin.ext
       exact h
-    simp [fiberedNativeCodeProj, shapedFiberedNativeField, hzy, hcode]
+    simp only [fiberedNativeCodeProj, shapedFiberedNativeField]
+    rw [if_neg hzy, if_neg hcode]
 
 /-- Sum a pullback-valued shaped field over its finite GST observation chart. -/
 noncomputable def sumShapedField
@@ -126,7 +129,7 @@ theorem sum_codeProj_shapedField
   classical
   unfold sumShapedField
   rw [Finset.sum_eq_single y]
-  · simp [codeProj_shapedField_isolates]
+  · rw [codeProj_shapedField_isolates, if_pos rfl]
   · intro z hz hzy
     rw [codeProj_shapedField_isolates]
     simp [hzy]
@@ -146,9 +149,8 @@ theorem projected_hodgeFace_exact
       liveCoordinateVector alpha (shapeCodeEquiv S y) •
         fiberedSheetGenerator V H
           ⟨p, shapedLiveBasisIndex alpha S y⟩ := by
-  rw [sum_codeProj_shapedField]
-  rw [map_smul]
-  rw [toGlobalHodgeAddress_atom]
+  rw [sum_codeProj_shapedField, map_smul, shapedLiveNativeAtom,
+    toGlobalHodgeAddress_atom]
 
 /-- Genuine native projective-cycle face of the same isolated live sheet. -/
 theorem projected_nativeFace_exact
@@ -162,9 +164,8 @@ theorem projected_nativeFace_exact
           (shapedFiberedNativeField alpha S x))) =
       liveCoordinateVector alpha (shapeCodeEquiv S y) •
         codimensionPointCycle V.X p x := by
-  rw [sum_codeProj_shapedField]
-  rw [map_smul]
-  rw [toNativeCycle_atom]
+  rw [sum_codeProj_shapedField, map_smul, shapedLiveNativeAtom,
+    toNativeCycle_atom]
 
 /-- Limitless universal-address face of the isolated native atom. -/
 theorem projected_limitlessFace_exact
