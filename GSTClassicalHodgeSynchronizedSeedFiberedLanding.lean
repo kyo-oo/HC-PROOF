@@ -53,6 +53,7 @@ open GSTClassicalHodgeThreeUniverseSeedIdentification
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTCompactNativeCyclePresentation
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
