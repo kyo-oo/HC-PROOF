@@ -170,9 +170,13 @@ theorem transport_shapedFiberedNativeField
     exact worldRecoordinate_code T S y
   unfold transportFiberedNative shapedFiberedNativeField
   rw [hcode]
-  have hatom := shapedLiveNativeAtom_recoordinate
-    alpha T S y x
-  rw [worldRecoordinate_inverse] at hatom
+  have hatom :
+      shapedLiveNativeAtom alpha S ((worldRecoordinate S T).symm y) x =
+        shapedLiveNativeAtom alpha T y x := by
+    symm
+    simpa using
+      (shapedLiveNativeAtom_recoordinate
+        alpha S T ((worldRecoordinate S T).symm y) x)
   rw [hatom]
 
 /-- The native-cycle-valued shaped field is therefore also chart independent. -/
