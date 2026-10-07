@@ -169,8 +169,8 @@ theorem pointClosureι_strictMono
     StrictMono (pointClosureι V x) := by
   intro z w hzw
   refine ⟨(pointClosureι_le_iff V x z w).1 hzw.1, ?_⟩
-  intro hcon
-  exact hzw.2 (pointClosureι_injective V x hcon)
+  intro hback
+  exact hzw.2 ((pointClosureι_le_iff V x w z).2 hback)
 
 /-- **THE CLOSURE INCLUSION REFLECTS STRICT ORDER.**
 
@@ -179,9 +179,9 @@ theorem pointClosureι_reflects_lt
     (x : V.X) {z w : pointClosureScheme V x}
     (h : pointClosureι V x z < pointClosureι V x w) :
     z < w := by
-  refine ⟨(pointClosureι_le_iff V x z w).1 h.le, ?_⟩
-  intro hcon
-  exact h.ne (by rw [hcon])
+  refine ⟨(pointClosureι_le_iff V x z w).2 h.1, ?_⟩
+  intro hback
+  exact h.2 ((pointClosureι_le_iff V x w z).1 hback)
 
 /-! ## §3. Coheight transport at a ground point -/
 
