@@ -104,13 +104,13 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)
       (by decide) (by decide)
   fin_cases r
-  · simp only [twoSlotCode, LinearMap.smul_apply, LinearMap.coe_comp,
+  · simp [twoSlotCode, LinearMap.smul_apply, LinearMap.coe_comp,
       LinearMap.comp_apply, diagonalLefschetzQ, poincareReverseQ,
       windowMirror, Fin.isValue, Fin.sum_univ_two]
     rw [e00, e10]
     simp
     norm_num
-  · simp only [twoSlotCode, LinearMap.smul_apply, LinearMap.coe_comp,
+  · simp [twoSlotCode, LinearMap.smul_apply, LinearMap.coe_comp,
       LinearMap.comp_apply, diagonalLefschetzQ, poincareReverseQ,
       windowMirror, Fin.isValue, Fin.sum_univ_two]
     rw [e01, e11]

@@ -68,3 +68,60 @@ end GSTClassicalHodgeRepairToolkit
 #check GSTClassicalHodgeRepairToolkit.smul_End_apply
 #check GSTClassicalHodgeRepairToolkit.smul_comp_middle
 #check GSTClassicalHodgeRepairToolkit.smul_comp_smul
+
+section V2
+
+/-! ## V2 — the SB-121/122 weapon distillation
+
+The second distillation wave: the map-zero contrapositive that the
+separator-defect detector bridges need, and the Finsupp single-sum scalar
+transport battery that every `φ.sum (fun ix s => s • T ix)`-shaped linear
+lift needs for its `map_smul'`/`map_add'` fields. -/
+
+/-- **MAP-ZERO CONTRAPOSITIVE.**  A linear map that does not vanish on `x`
+certifies `x ≠ 0` — the detector-bridge closing the `atom_defect_ne_zero`
+family: nonvanishing of `f x` is cheaper to establish than nonvanishing of
+`x` itself. -/
+theorem ne_zero_of_map_ne_zero {N : Type*} [AddCommGroup N] [Module ℚ N]
+    (f : M →ₗ[ℚ] N) (x : M) (h : f x ≠ 0) : x ≠ 0 :=
+  fun hzero => h (by rw [hzero, map_zero])
+
+/-- **FINSUPP SINGLE-SUM SCALAR TRANSPORT.**  The sum of a scalar-weighted
+point family over a single-index finsupp is the weight times the point —
+the `map_smul'` single-case in one application.  The side condition of
+`Finsupp.sum_single_index` is discharged by `zero_smul`. -/
+theorem sum_single_smul_transport {α : Type*} {β : Type*} [AddCommGroup β]
+    [Module ℚ β] (i : α) (t : ℚ) (T : α → β) :
+    (Finsupp.single i t).sum (fun ix s => s • T ix) = t • T i :=
+  Finsupp.sum_single_index (a := i) (b := t)
+    (h := fun ix s => s • T ix) (by simp)
+
+/-- **FINSUPP SINGLE SMUL.**  Scaling a single-index finsupp is the single
+with the scaled weight — the pointwise-ℚ instance form. -/
+theorem smul_single_eq {α : Type*} (q c : ℚ) (i : α) :
+    q • Finsupp.single i c = Finsupp.single i (q * c) := by
+  ext j
+  by_cases hj : j = i
+  · subst hj
+    simp
+  · simp [hj]
+
+/-- **SCALAR LINEARITY OF A FINSUPP-SUM LIFT.**  The `map_smul'` field of
+any `φ.sum (fun ix s => s • T ix)`-shaped linear lift closes in one
+rewrite. -/
+theorem sum_lift_map_smul {α β : Type*} [AddCommGroup β] [Module ℚ β]
+    (T : α → β) (q : ℚ) (φ : α →₀ ℚ) :
+    (q • φ).sum (fun ix s => s • T ix) = q • φ.sum (fun ix s => s • T ix) := by
+  classical
+  induction φ using Finsupp.induction_linear with
+  | zero =>
+      rw [smul_zero]
+      simp only [Finsupp.sum, Finsupp.support_zero, Finset.sum_empty,
+        smul_zero]
+  | add a b ha hb =>
+      simp [ha, hb, add_smul, Finsupp.sum_add_index']
+  | single i c =>
+      rw [smul_single_eq, sum_single_smul_transport,
+        sum_single_smul_transport, smul_smul]
+
+end V2
