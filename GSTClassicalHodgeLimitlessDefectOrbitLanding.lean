@@ -1,6 +1,7 @@
 import GSTClassicalHodgeFiberedDefectEquivariance
 import GSTClassicalHodgeFiberedCycleClassDefect
 import GSTClassicalHodgeConcreteRankFreeGeneration
+import GSTClassicalHodgeBasisCycleBridge
 
 /-!
 # GST CLASSICAL HODGE — LIMITLESS ZERO-DEFECT ORBIT LANDING

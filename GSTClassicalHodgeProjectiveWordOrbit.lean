@@ -1,6 +1,7 @@
 import GSTClassicalHodgeFiniteSpineMomentOrbit
 import GSTClassicalHodgeKernelStableOperatorAlgebra
 import GSTClassicalHodgePrimitivePushforwardNaturality
+import GSTClassicalHodgeBasisCycleBridge
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE WORD ORBIT
