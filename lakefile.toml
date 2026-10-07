@@ -580,6 +580,7 @@ roots = [
   "GSTClassicalHodgeGroundFloorSiegePropagation",
   "GSTClassicalHodgeBareLefschetzSpineFinale",
   "GSTClassicalHodgeFiberedDefectProjectiveCocycle",
+  "GSTClassicalHodgeProjectiveApexSpokeCircularity",
 ]
 
 # ---------------------------------------------------------------------------
