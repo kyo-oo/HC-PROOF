@@ -2,6 +2,8 @@ import GSTClassicalHodgeTwoGeneratorNativeArsenal
 import GSTClassicalHodgeNativeOperatorCohomologyRealization
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
 import GSTClassicalHodgeAtomicOperatorAlgebra
+import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeGeneratorwiseAtomicStability
 
 /-!
 # GST CLASSICAL HODGE — GEOMETRY-FIRST TWO-GENERATOR EXTERNALIZATION
@@ -41,7 +43,6 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeAtomicSpan
-open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeRankFreePrimitiveGeneration
@@ -50,6 +51,9 @@ open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 
 namespace GSTClassicalHodgeGeometryFirstTwoGenerator
 
@@ -57,14 +61,19 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev NativeCycles := codimensionCycles V.X p
-abbrev AmbientCoh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HodgeFiber := ClassicalHodgeFiber V H p
+abbrev NativeCycles (V : SmoothProjectiveComplexScheme) (p : Nat) :=
+  codimensionCycles V.X p
+abbrev AmbientCoh {V : SmoothProjectiveComplexScheme}
+    (H : HodgeBigradedBettiData V) (p : Nat) :=
+  RationalSingularCohomology H.analytification (2 * p)
+abbrev HodgeFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) :=
+  ClassicalHodgeFiber V H p
 
 /-- A kernel-stable native algebraic-cycle operator automatically gives native
 point lifts for the ambient cohomology operator manufactured from it. -/
 theorem kernelStable_ambient_hasNativePointLifts
-    (A : NativeCycles →ₗ[ℚ] NativeCycles)
+    (A : NativeCycles V p →ₗ[ℚ] NativeCycles V p)
     (hA : KernelStable (H := H) A) :
     HasNativePointLifts (p := p) (cl := H.cycleClass p)
       (ambientOperator (H := H) A hA) := by
@@ -80,22 +89,22 @@ The native cycle operator and kernel-stability proof determine the ambient
 cohomology operator.  The only comparison theorem required is its restriction
 to the genuine Hodge fiber. -/
 structure NativeHodgePrimitive
-    (T : Module.End ℚ (HodgeFiber)) where
-  cycleOperator : NativeCycles →ₗ[ℚ] NativeCycles
+    (T : Module.End ℚ (HodgeFiber V H p)) where
+  cycleOperator : NativeCycles V p →ₗ[ℚ] NativeCycles V p
   kernelStable : KernelStable (H := H) cycleOperator
   restricts_to_hodge :
-    ∀ alpha : HodgeFiber,
+    ∀ alpha : HodgeFiber V H p,
       ambientOperator (H := H) cycleOperator kernelStable alpha.1 =
         (T alpha).1
 
 namespace NativeHodgePrimitive
 
-variable {T : Module.End ℚ (HodgeFiber)}
+variable {T : Module.End ℚ (HodgeFiber V H p)}
 
 /-- Ambient operator forced by the native geometry. -/
 noncomputable def ambient
     (R : NativeHodgePrimitive (V := V) (H := H) T) :
-    AmbientCoh →ₗ[ℚ] AmbientCoh :=
+    AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
   ambientOperator (H := H) R.cycleOperator R.kernelStable
 
 /-- Native point-lift naturality is automatic from the native operator. -/
@@ -109,7 +118,7 @@ theorem hasNativePointLifts
 @[simp]
 theorem ambient_on_hodge
     (R : NativeHodgePrimitive (V := V) (H := H) T)
-    (alpha : HodgeFiber) :
+    (alpha : HodgeFiber V H p) :
     R.ambient alpha.1 = (T alpha).1 :=
   R.restricts_to_hodge alpha
 
@@ -134,27 +143,27 @@ variable {i j : ClassicalHodgeBasisIndex V H p}
 /-- Geometry-generated code action on ambient rational cohomology. -/
 noncomputable def ambientCode
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
-    AmbientCoh →ₗ[ℚ] AmbientCoh :=
+    AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
   R.code.ambient
 
 /-- Geometry-generated two-step Lefschetz action on ambient cohomology. -/
 noncomputable def ambientLefschetz
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
-    AmbientCoh →ₗ[ℚ] AmbientCoh :=
+    AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
   R.lefschetz.ambient
 
 /-- Source projector generated polynomially from the geometry-first code
 observable. -/
 noncomputable def ambientSource
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
-    AmbientCoh →ₗ[ℚ] AmbientCoh :=
+    AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
   LinearMap.id - R.ambientCode
 
 /-- Universal normalized two-slot transfer word generated entirely from the
 two native geometric primitives. -/
 noncomputable def ambientWord
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j) :
-    AmbientCoh →ₗ[ℚ] AmbientCoh :=
+    AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
   (forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
     (R.ambientCode.comp (R.ambientLefschetz.comp R.ambientSource))
 
@@ -164,8 +173,8 @@ theorem source_hasNativePointLifts
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambientSource := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    ((smoothProjective_atomicStable_iff_nativePointLifts).2
-      R.code.hasNativePointLifts)
+    ((smoothProjective_atomicStable_iff_nativePointLifts
+      (R.ambientCode)).2 R.code.hasNativePointLifts)
 
 /-- The universal geometry-first word is native-natural by pure operator
 closure; no basis cycle is chosen. -/
@@ -182,7 +191,7 @@ theorem ambientWord_hasNativePointLifts
 the source sheet projector. -/
 theorem ambientSource_on_hodge
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
-    (alpha : HodgeFiber) :
+    (alpha : HodgeFiber V H p) :
     R.ambientSource alpha.1 =
       ((LinearMap.id - twoSlotCodeHodge i j) alpha).1 := by
   simp [ambientSource, ambientCode, NativeHodgePrimitive.ambient_on_hodge]
@@ -193,11 +202,11 @@ matrix unit `E_{i,j}` generated by the full GST projector/Lefschetz/Poincare
 arsenal. -/
 theorem ambientWord_on_hodge
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
-    (alpha : HodgeFiber) :
+    (alpha : HodgeFiber V H p) :
     R.ambientWord alpha.1 = (hodgeMatrixUnit i j alpha).1 := by
-  let src : HodgeFiber :=
+  let src : HodgeFiber V H p :=
     (LinearMap.id - twoSlotCodeHodge i j) alpha
-  let mid : HodgeFiber :=
+  let mid : HodgeFiber V H p :=
     twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) src
   have hsrc : R.ambientSource alpha.1 = src.1 := by
     simpa [src] using R.ambientSource_on_hodge alpha
@@ -230,13 +239,13 @@ theorem ambientWord_on_hodge
 rank-free matrix unit to preserve the actual algebraic Hodge subspace. -/
 theorem matrixUnit_mem_algebraic
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
-    (alpha : HodgeFiber)
+    (alpha : HodgeFiber V H p)
     (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
     hodgeMatrixUnit i j alpha ∈ AlgebraicHodgeSubspace V H p := by
   have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
       R.ambientWord :=
-    (smoothProjective_atomicStable_iff_nativePointLifts).2
-      R.ambientWord_hasNativePointLifts
+    (smoothProjective_atomicStable_iff_nativePointLifts
+      (R.ambientWord)).2 R.ambientWord_hasNativePointLifts
   have himage := hstable alpha.1 halpha
   rw [R.ambientWord_on_hodge alpha] at himage
   exact himage

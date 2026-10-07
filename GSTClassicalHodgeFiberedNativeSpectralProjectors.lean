@@ -1,6 +1,8 @@
 import GSTClassicalHodgeFiberedNativeRecoordination
 import GSTWorldRecoordinationGroupoid
 import GSTClassicalHodgeRecoordinationArsenalCrown
+import GSTClassicalHodgeFiniteSupportArsenalConjugation
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — FIBERED NATIVE SPECTRAL PROJECTORS
@@ -45,6 +47,8 @@ open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTWorldRecoordinationGroupoid
 open GSTTransferBridgeV2
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -73,7 +77,8 @@ theorem transportFiberedNative_codeProj
       worldCode S ((worldRecoordinate S T).symm y) = worldCode T y := by
     rw [worldRecoordinate_inverse S T y]
     exact worldRecoordinate_code T S y
-  simp [transportFiberedNative, fiberedNativeCodeProj, hcode]
+  simp only [transportFiberedNative, fiberedNativeCodeProj]
+  rw [hcode]
 
 /-- A code projector keyed by one shaped state isolates exactly that state,
 because `shapeCodeEquiv` is injective. -/

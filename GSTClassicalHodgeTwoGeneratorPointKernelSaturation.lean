@@ -1,6 +1,7 @@
 import GSTClassicalHodgeTwoGeneratorNativeArsenal
 import GSTClassicalHodgeAlgebraicArsenalSaturation
 import GSTClassicalHodgeNativeGeneratorNaturality
+import GSTClassicalHodgeGeneratorwiseAtomicStability
 
 /-!
 # GST CLASSICAL HODGE — TWO PRIMITIVE POINT KERNELS SATURATE ONE HODGE WEIGHT
@@ -45,7 +46,6 @@ open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
-open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
@@ -55,6 +55,7 @@ open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeNativeGeneratorNaturality
 open GSTClassicalHodgeAlgebraicArsenalSaturation
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 
 namespace GSTClassicalHodgeTwoGeneratorPointKernelSaturation
 
@@ -62,7 +63,9 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-abbrev HFiber := ClassicalHodgeFiber V H p
+abbrev HFiber (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) :=
+  ClassicalHodgeFiber V H p
 
 /-- The exact normalized two-generator ambient word. -/
 noncomputable def twoGeneratorAmbientWord
@@ -80,12 +83,12 @@ This is a pure GST/Hodge calculation; no algebraicity or native-cycle witness
 is used. -/
 theorem twoGeneratorAmbientWord_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
-    (alpha : HFiber) :
+    (alpha : HFiber V H p) :
     twoGeneratorAmbientWord i j alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
-  let src : HFiber :=
+  let src : HFiber V H p :=
     (LinearMap.id - twoSlotCodeHodge i j) alpha
-  let mid : HFiber :=
+  let mid : HFiber V H p :=
     twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) src
   have hcode0 := extendHodgeEndomorphism_on_hodge
     (V := V) (H := H) (twoSlotCodeHodge i j) alpha
@@ -124,10 +127,10 @@ theorem twoGeneratorAmbientWord_on_hodge
 
 /-- Native two-generator point lifts force the corresponding matrix-unit image
 of every already-algebraic Hodge vector to remain algebraic. -/
-theorem TwoGeneratorNative.matrixUnit_mem_algebraic
+theorem twoGeneratorNative_matrixUnit_mem_algebraic
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : TwoGeneratorNative (V := V) (H := H) i j)
-    (alpha : HFiber)
+    (alpha : HFiber V H p)
     (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
     hodgeMatrixUnit i j alpha ∈ AlgebraicHodgeSubspace V H p := by
   have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
@@ -145,7 +148,7 @@ theorem rankFreeArsenalInvariant_of_twoGeneratorNative
       TwoGeneratorNative (V := V) (H := H) i j) :
     RankFreeArsenalInvariant (AlgebraicHodgeSubspace V H p) := by
   intro i j alpha halpha
-  exact (R i j).matrixUnit_mem_algebraic alpha halpha
+  exact twoGeneratorNative_matrixUnit_mem_algebraic (R i j) alpha halpha
 
 /-- One nonzero algebraic seed plus the two primitive native point-lift laws
 saturates the whole genuine Hodge fiber. -/
@@ -168,7 +171,7 @@ theorem hodge_weight_of_twoGeneratorNative
       LinearMap.range (H.cycleClass p) := by
   have htop := algebraicHodgeSubspace_eq_top_of_twoGeneratorNative hseed R
   intro alpha halpha
-  let a : HFiber := ⟨alpha, halpha⟩
+  let a : HFiber V H p := ⟨alpha, halpha⟩
   have ha : a ∈ AlgebraicHodgeSubspace V H p := by
     rw [htop]
     trivial
@@ -212,7 +215,7 @@ theorem hodge_weight_of_two_primitive_point_transitions
 
 #check twoGeneratorAmbientWord
 #check twoGeneratorAmbientWord_on_hodge
-#check TwoGeneratorNative.matrixUnit_mem_algebraic
+#check twoGeneratorNative_matrixUnit_mem_algebraic
 #check rankFreeArsenalInvariant_of_twoGeneratorNative
 #check algebraicHodgeSubspace_eq_top_of_twoGeneratorNative
 #check hodge_weight_of_twoGeneratorNative
@@ -220,7 +223,7 @@ theorem hodge_weight_of_two_primitive_point_transitions
 #check hodge_weight_of_two_primitive_point_transitions
 
 #print axioms twoGeneratorAmbientWord_on_hodge
-#print axioms TwoGeneratorNative.matrixUnit_mem_algebraic
+#print axioms twoGeneratorNative_matrixUnit_mem_algebraic
 #print axioms hodge_weight_of_twoGeneratorNative
 #print axioms hodge_weight_of_two_primitive_point_transitions
 
