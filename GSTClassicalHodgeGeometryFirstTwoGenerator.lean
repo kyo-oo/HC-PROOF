@@ -193,7 +193,8 @@ theorem ambientSource_on_hodge
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
     (alpha : HodgeFiber V H p) :
     R.ambientSource alpha.1 =
-      ((LinearMap.id - twoSlotCodeHodge i j) alpha).1 := by
+      ((LinearMap.id - twoSlotCodeHodge i j :
+        ClassicalHodgeFiber V H p →ₗ[ℚ] ClassicalHodgeFiber V H p) alpha).1 := by
   simp [ambientSource, ambientCode, NativeHodgePrimitive.ambient_on_hodge]
 
 /-- **GEOMETRY-FIRST UNIVERSAL WORD.**
@@ -205,7 +206,8 @@ theorem ambientWord_on_hodge
     (alpha : HodgeFiber V H p) :
     R.ambientWord alpha.1 = (hodgeMatrixUnit i j alpha).1 := by
   let src : HodgeFiber V H p :=
-    (LinearMap.id - twoSlotCodeHodge i j) alpha
+    ((LinearMap.id - twoSlotCodeHodge i j :
+      ClassicalHodgeFiber V H p →ₗ[ℚ] ClassicalHodgeFiber V H p) alpha)
   let mid : HodgeFiber V H p :=
     twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) src
   have hsrc : R.ambientSource alpha.1 = src.1 := by
@@ -223,15 +225,15 @@ theorem ambientWord_on_hodge
           ((diagonalLefschetzQ 2 2).comp
             (LinearMap.id - twoSlotCode)))) =
         pureMatrixUnit sourceSlot targetSlot := by
-    rw [← sheetProjectorQ_target_eq_code,
-      ← sheetProjectorQ_source_eq_id_sub_code]
+    rw [← sheetProjectorQ_source_eq_id_sub_code,
+      ← sheetProjectorQ_target_eq_code]
     exact forwardArsenalWord_eq_matrixUnit
       sourceSlot targetSlot (by omega)
   have hlift :
       liftFiniteHodgeOperator (pairBasisIndex i j)
           (pureMatrixUnit sourceSlot targetSlot) =
         hodgeMatrixUnit i j :=
-    exact rankFreeMatrixUnit_eq_lifted_GST_word i j |>.symm
+    rankFreeMatrixUnit_eq_lifted_GST_word i j |>.symm
   simpa [src, mid, twoSlotCodeHodge, twoSlotHodgeOperator,
     hfinite, hlift]
 
