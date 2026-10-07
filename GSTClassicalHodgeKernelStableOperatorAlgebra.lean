@@ -624,14 +624,15 @@ theorem classToDefectBlock_zero_of_nativeRealization
   rw [← hZ, ← hA Z]
   exact ⟨A Z, rfl⟩
 
-/-- **FULL NATIVE-REALIZABILITY CLASSIFICATION.**
-A rational cohomological endomorphism admits a genuine linear native-cycle
+/-- **FULL LINEAR NATIVE-REALIZABILITY CLASSIFICATION.**
+A rational cohomological endomorphism admits a linear native-cycle
 realization, commuting with the cycle class on ALL native cycles, if and only
 if its class-to-defect block is zero.
 
-The reverse direction is explicitly constructive using the same exact
-native class-range section.  This is the algebraic escape frontier hidden by
-the old input/output operator-pair packages. -/
+The reverse direction is explicitly constructed using the same exact
+native class-range section.  This is an algebraic *linear lifting* result,
+not evidence that the lifted operator is induced by an algebraic
+correspondence.  It exposes the gap left by the old input/output packages. -/
 theorem cohomologyNativeRealizable_iff_classToDefectBlock_zero
     (T : Module.End ℚ (Coh H p)) :
     (∃ A : NativeEnd V p,
@@ -703,6 +704,125 @@ theorem pureClassToDefectOperator_nonGeometric
   apply no_nativeRealization_of_nonzero_classToDefect
   rw [pureClassToDefectOperator_block]
   exact hF
+
+/-! ## The autonomous defect action and its precise limits
+
+When an ambient cohomological motion preserves genuine algebraic classes,
+its complete action on the unreached sector can be computed with NO
+new native-cycle representative and NO Hodge-input assumption.
+
+The defect sector is a genuine invariant quotient coordinate.  If its
+induced action is injective, the motion cannot make a missing Hodge
+direction become algebraic.  Thus iterating more invertible GST motions
+cannot erase a real obstruction; a proof needs an actual geometric
+reason that the obstruction was zero in the first place.
+-/
+
+/-- The full defect-to-defect block of an arbitrary ambient cohomology
+endomorphism.  In the class-stable case this is precisely its induced
+action on cohomology modulo the actual algebraic range. -/
+noncomputable def cohomologyDefectAction
+    (T : Module.End ℚ (Coh H p)) :
+    Module.End ℚ
+      (NativeCohomologicalDefect (V := V) (H := H) (p := p)) :=
+  (cohomologicalDefectCoordinate (H := H)).comp
+    (T.comp (LinearMap.ker
+      (classRangeProjection (H := H))).subtype)
+
+/-- **AUTONOMOUS QUOTIENT DYNAMICS.**
+When an ambient motion preserves the true native cycle-class range, its
+effect on any cohomological defect is entirely controlled by the defect
+itself.  The algebraic component of the input contributes exactly zero. -/
+theorem cohomologicalDefect_after_rangeStable
+    (T : Module.End ℚ (Coh H p))
+    (hT : cohomologyClassToDefectBlock (H := H) T = 0)
+    (alpha : Coh H p) :
+    cohomologicalDefectCoordinate (H := H) (T alpha) =
+      cohomologyDefectAction T
+        (cohomologicalDefectCoordinate (H := H) alpha) := by
+  have hstable := (classToDefectBlock_eq_zero_iff_rangeStable T).1 hT
+  have hz :
+      cohomologicalDefectCoordinate (H := H)
+        (T (classRangeProjection (H := H) alpha)) = 0 := by
+    apply Subtype.ext
+    change offRangeProjection (H := H)
+      (T (classRangeProjection (H := H) alpha)) = 0
+    exact (offRangeProjection_eq_zero_iff_range _).2
+      (hstable _ (classRangeProjection_mem_range alpha))
+  calc
+    cohomologicalDefectCoordinate (H := H) (T alpha) =
+      cohomologicalDefectCoordinate (H := H)
+        (T (classRangeProjection (H := H) alpha +
+          offRangeProjection (H := H) alpha)) := by
+            rw [ambient_range_decomposition]
+    _ =
+      cohomologicalDefectCoordinate (H := H)
+        (T (classRangeProjection (H := H) alpha)) +
+      cohomologicalDefectCoordinate (H := H)
+        (T (offRangeProjection (H := H) alpha)) := by
+          simp only [map_add]
+    _ = cohomologyDefectAction T
+          (cohomologicalDefectCoordinate (H := H) alpha) := by
+          rw [hz, zero_add]
+          rfl
+
+/-- **DEFECT-DYNAMICS COMPOSITION LAW.**
+The quotient sector carries a genuine representation of the monoid of
+class-stable cohomological motions.  Composition does not need a separately
+supplied Hodge-basis operator or a projective-spoke input. -/
+theorem cohomologyDefectAction_comp_of_rangeStable
+    (T U : Module.End ℚ (Coh H p))
+    (hT : cohomologyClassToDefectBlock (H := H) T = 0)
+    (hU : cohomologyClassToDefectBlock (H := H) U = 0) :
+    cohomologyDefectAction (T.comp U) =
+      (cohomologyDefectAction T).comp (cohomologyDefectAction U) := by
+  apply LinearMap.ext
+  intro k
+  change cohomologicalDefectCoordinate (H := H) (T (U k.1)) =
+    cohomologyDefectAction T (cohomologyDefectAction U k)
+  rw [cohomologicalDefect_after_rangeStable T hT (U k.1)]
+  rw [cohomologicalDefect_after_rangeStable U hU k.1]
+  rw [cohomologicalDefectCoordinate_pureDefect]
+
+/-- The entire native-generated coherent ambient algebra acts trivially
+on the quotient sector, not merely on one hand-selected ghost detector. -/
+theorem nativeCore_defectAction_zero
+    (A : NativeEnd V p) (hA : KernelStable (H := H) A) :
+    cohomologyDefectAction (supportedAmbientOperator A hA) = 0 := by
+  apply LinearMap.ext
+  intro k
+  exact supportedAmbientOperator_defect_zero A hA k.1
+
+/-- **NON-COLLAPSE UNDER INJECTIVE DEFECT DYNAMICS.**
+A range-stable GST motion whose induced defect action is injective cannot
+send a class with a genuine nonzero defect into the native algebraic range.
+This remains true independently of how large the native operator algebra is. -/
+theorem nonzero_defect_survives_injective_dynamics
+    (T : Module.End ℚ (Coh H p))
+    (hT : cohomologyClassToDefectBlock (H := H) T = 0)
+    (hinj : Function.Injective (cohomologyDefectAction T))
+    (alpha : Coh H p)
+    (hbad : cohomologicalDefectCoordinate (H := H) alpha ≠ 0) :
+    cohomologicalDefectCoordinate (H := H) (T alpha) ≠ 0 := by
+  intro hz
+  have heq :
+      cohomologyDefectAction T
+        (cohomologicalDefectCoordinate (H := H) alpha) = 0 := by
+    rw [← cohomologicalDefect_after_rangeStable T hT alpha]
+    exact hz
+  apply hbad
+  apply hinj
+  simpa using heq
+
+#check cohomologyDefectAction
+#check cohomologicalDefect_after_rangeStable
+#check cohomologyDefectAction_comp_of_rangeStable
+#check nativeCore_defectAction_zero
+#check nonzero_defect_survives_injective_dynamics
+
+#print axioms cohomologyDefectAction_comp_of_rangeStable
+#print axioms nativeCore_defectAction_zero
+#print axioms nonzero_defect_survives_injective_dynamics
 
 #check cohomologyClassToDefectBlock
 #check classToDefectBlock_eq_zero_iff_rangeStable
