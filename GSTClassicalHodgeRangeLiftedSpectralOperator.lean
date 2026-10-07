@@ -370,9 +370,11 @@ theorem nativeLift_iff_kernelPerturbation
       congr 1
       apply Subtype.ext
       exact hA Z
-    simpa only [LinearMap.add_apply, LinearMap.comp_apply] using
-      ((native_projection_decomposition (A Z)).symm.trans
-        (congrArg (fun W => W + nativeKernelProjection (H := H) (A Z)) hp))
+    have hker : (H.cycleClass p).ker.subtype (nativeKernelCoordinate (H := H) (A Z)) =
+        nativeKernelProjection (H := H) (A Z) := rfl
+    simp only [LinearMap.add_apply, LinearMap.comp_apply, hker]
+    exact (native_projection_decomposition (A Z)).symm.trans
+      (congrArg (fun W => W + nativeKernelProjection (H := H) (A Z)) hp)
   · rintro ⟨K, rfl⟩ Z
     change H.cycleClass p (liftedCycleOperator T hT Z + (K Z).1) = _
     have hk : H.cycleClass p (K Z).1 = 0 := (K Z).2
