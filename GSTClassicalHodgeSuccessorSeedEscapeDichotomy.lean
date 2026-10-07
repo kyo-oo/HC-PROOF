@@ -54,6 +54,9 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
+open GSTClassicalHodgeHeightOneProjectiveRelevance
+open GSTClassicalHodgeRelativeSuccessorNonempty
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -107,10 +110,14 @@ theorem separator_successor_shadow_ne_zero_of_ambient_exact
         (codimensionPointCycle V.X p x)) ≠ 0 := by
   have hsurvive := separator_successor_survives_of_ambient_exact
     V p x hlive hExact
+  have hmass : (nativeCycleMass V (p + 1))
+      (successorNativeOperator V p (codimensionPointCycle V.X p x)) ≠ 0 := by
+    rw [nativeCycleMass_successor_point]
+    exact hsurvive.1
   exact nativeCycleCosmicShadow_self_ne_zero_of_mass
     (V := V) (p + 1)
     (successorNativeOperator V p (codimensionPointCycle V.X p x))
-    hsurvive.1
+    hmass
 
 /-- **SUCCESSOR SEED / HOMOLOGY-ESCAPE DICHOTOMY.**
 Once the single canonical separator successor is known to occupy the exact
@@ -134,7 +141,10 @@ theorem separator_successor_seed_or_escape
   have hsurvive := separator_successor_survives_of_ambient_exact
     V p x hlive hExact
   have hmass : nativeCycleMass V (p + 1) Z ≠ 0 := by
-    simpa [Z] using hsurvive.1
+    show nativeCycleMass V (p + 1)
+        (successorNativeOperator V p (codimensionPointCycle V.X p x)) ≠ 0
+    rw [nativeCycleMass_successor_point]
+    exact hsurvive.1
   have hshadow : nativeCycleCosmicShadow V (p + 1) Z ≠ 0 :=
     nativeCycleCosmicShadow_self_ne_zero_of_mass
       (V := V) (p + 1) Z hmass
