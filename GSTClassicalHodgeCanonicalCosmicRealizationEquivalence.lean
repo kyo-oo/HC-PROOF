@@ -121,11 +121,9 @@ theorem preserves_algebraicFiber
     liftCosmicWindowOperator (pairBasisIndex i j)
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha ∈
       AlgebraicHodgeSubspace V H p := by
-  have halg' : alpha.1 ∈ (AlgebraicHodgeSubspace V H p : Set _) :=
-    Submodule.mem_coe.mp halg
   have hrange : alpha.1 ∈ LinearMap.range (H.cycleClass p) := by
     rw [smoothProjective_cycleClass_range_eq_atomic_span V H p]
-    exact halg'
+    exact (mem_AlgebraicHodgeSubspace_iff alpha).mp halg
   rcases hrange with ⟨Z, hZ⟩
   have hnat := R.naturality Z
   rw [hZ, canonicalCosmicAmbient_on_hodge i j alpha] at hnat
@@ -135,7 +133,7 @@ theorem preserves_algebraicFiber
         LinearMap.range (H.cycleClass p) :=
     ⟨R.native Z, hnat⟩
   rw [smoothProjective_cycleClass_range_eq_atomic_span V H p] at hout
-  exact hout
+  exact (mem_AlgebraicHodgeSubspace_iff _).mpr hout
 
 end NativeCanonicalCosmicRealization
 

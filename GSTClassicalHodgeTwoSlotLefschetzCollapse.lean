@@ -46,44 +46,66 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
   apply Finset.sum_congr rfl
   intro r _
   fin_cases r
-  · have hsrc := rawForwardWord_basis_source
-      sourceSlot targetSlot (by simp [sourceSlot, targetSlot])
-    have hsourceProj :
-        sheetProjectorQ sourceSlot (rationalPureBasis sourceSlot) =
-          rationalPureBasis sourceSlot := by
-      simp [sheetProjectorQ, rationalPureBasis]
-    have htargetProj :
-        sheetProjectorQ targetSlot
-          (diagonalLefschetzQ 2 2 (rationalPureBasis sourceSlot)) =
-        diagonalLefschetzQ 2 2 (rationalPureBasis sourceSlot) := by
-      funext q
-      fin_cases q <;>
-        simp [sheetProjectorQ, diagonalLefschetzQ, rationalPureBasis,
-          sourceSlot, targetSlot, mul_comm, mul_left_comm, mul_assoc,
-          smul_mul_assoc]
-    change a sourceSlot • diagonalLefschetzQ 2 2
-      (rationalPureBasis sourceSlot) = _
-    have hraw :
+  · have hraw :
         diagonalLefschetzQ 2 2 (rationalPureBasis sourceSlot) =
           (forwardScalar sourceSlot targetSlot : ℚ) •
             rationalPureBasis targetSlot := by
-      simpa [rawForwardWord, hsourceProj, htargetProj,
-        sourceSlot, targetSlot,
-        GSTPureHodgeLefschetzKernel.pureWeightGap] using hsrc
+      funext q
+      fin_cases q
+      · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
+        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+        simp [GSTUniversalLefschetzKernel.worldForward,
+          GSTUniversalLefschetzKernel.worldCausalDistance,
+          GSTUniversalLefschetzKernel.carryDistance,
+          GSTUniversalLefschetzKernel.digitDistance,
+          GSTGlobalPureHodgeCosmology.pureDiagonalState,
+          GSTDimensionFreeHodgeDiagonal.diagonalState,
+          forwardScalar]
+        norm_num
+      · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
+        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+        simp [GSTUniversalLefschetzKernel.worldForward,
+          GSTUniversalLefschetzKernel.worldCausalDistance,
+          GSTUniversalLefschetzKernel.carryDistance,
+          GSTUniversalLefschetzKernel.digitDistance,
+          GSTGlobalPureHodgeCosmology.pureDiagonalState,
+          GSTDimensionFreeHodgeDiagonal.diagonalState,
+          forwardScalar]
+        norm_num
+    change a sourceSlot • diagonalLefschetzQ 2 2
+      (rationalPureBasis sourceSlot) = _
     rw [hraw]
-    simp [pureMatrixUnit_basis_source, smul_smul, smul_mul_assoc,
-      mul_comm, mul_left_comm, mul_assoc]
+    simp [pureMatrixUnit_basis_source, smul_smul, mul_comm,
+      rationalPureBasis, sourceSlot, targetSlot]
   · have hzero :
         diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
       funext q
-      fin_cases q <;>
-        simp [diagonalLefschetzQ, rationalPureBasis,
-          ← GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel,
-          sourceSlot, targetSlot]
+      fin_cases q
+      · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
+        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+        simp [GSTUniversalLefschetzKernel.worldForward,
+          GSTUniversalLefschetzKernel.worldCausalDistance,
+          GSTUniversalLefschetzKernel.carryDistance,
+          GSTUniversalLefschetzKernel.digitDistance,
+          GSTGlobalPureHodgeCosmology.pureDiagonalState,
+          GSTDimensionFreeHodgeDiagonal.diagonalState,
+          forwardScalar]
+        norm_num
+      · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
+        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
+        simp [GSTUniversalLefschetzKernel.worldForward,
+          GSTUniversalLefschetzKernel.worldCausalDistance,
+          GSTUniversalLefschetzKernel.carryDistance,
+          GSTUniversalLefschetzKernel.digitDistance,
+          GSTGlobalPureHodgeCosmology.pureDiagonalState,
+          GSTDimensionFreeHodgeDiagonal.diagonalState,
+          forwardScalar]
+        norm_num
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
-    rw [hzero]
-    simp [pureMatrixUnit_basis_other]
+    rw [hzero, smul_zero]
+    simp [pureMatrixUnit_basis_other sourceSlot targetSlot targetSlot
+      (by simp [sourceSlot, targetSlot])]
 
 /-- The forward scalar in the universal two-slot window is nonzero. -/
 theorem twoSlot_forwardScalar_ne_zero :
@@ -109,22 +131,18 @@ theorem lifted_twoSlotLefschetz_eq_scaled_hodgeMatrixUnit
     (forwardScalar sourceSlot targetSlot : ℚ) •
       liftFiniteHodgeOperator (pairBasisIndex i j)
         (pureMatrixUnit sourceSlot targetSlot) from by
-      have h1 : liftFiniteHodgeOperator (pairBasisIndex i j)
-          ((forwardScalar sourceSlot targetSlot : ℚ) •
-            pureMatrixUnit sourceSlot targetSlot) =
-        liftFiniteHodgeOperator (pairBasisIndex i j)
-          (fun a => (forwardScalar sourceSlot targetSlot : ℚ) •
-            pureMatrixUnit sourceSlot targetSlot a) := by
-        simp [liftFiniteHodgeOperator, Module.End.coe_smul, mul_comm, mul_assoc,
-          mul_left_comm, smul_mul_assoc]
-      have h2 : liftFiniteHodgeOperator (pairBasisIndex i j)
-          (fun a => (forwardScalar sourceSlot targetSlot : ℚ) •
-            pureMatrixUnit sourceSlot targetSlot a) =
+      show (finiteHodgeWrite (pairBasisIndex i j)).comp
+          (((forwardScalar sourceSlot targetSlot : ℚ) •
+            pureMatrixUnit sourceSlot targetSlot).comp
+            (finiteHodgeRead (pairBasisIndex i j))) =
         (forwardScalar sourceSlot targetSlot : ℚ) •
-          liftFiniteHodgeOperator (pairBasisIndex i j)
-            (pureMatrixUnit sourceSlot targetSlot) := by
-        simp [liftFiniteHodgeOperator, Function.funext_comp]
-      rw [h1, h2]]
+          (finiteHodgeWrite (pairBasisIndex i j)).comp
+            (pureMatrixUnit sourceSlot targetSlot).comp
+              (finiteHodgeRead (pairBasisIndex i j))
+      apply LinearMap.ext
+      intro x
+      simp [LinearMap.smul_apply, LinearMap.map_smul, LinearMap.comp_apply,
+        LinearMap.coe_comp, Function.comp_apply]
   rw [liftFiniteHodgeOperator_matrixUnit]
   simp only [pairBasisIndex_source, pairBasisIndex_target]
 

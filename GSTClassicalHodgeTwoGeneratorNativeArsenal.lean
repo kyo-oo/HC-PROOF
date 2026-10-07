@@ -103,20 +103,54 @@ theorem ambientTargetProjector_on_hodge_eq_code
     (alpha : ClassicalHodgeFiber V H p) :
     ambientTargetProjector i j alpha.1 =
       ambientTwoSlotCode i j alpha.1 := by
-  unfold ambientTargetProjector twoSlotHodgeOperator twoSlotCodeHodge
+  unfold ambientTargetProjector ambientTwoSlotCode twoSlotCodeHodge
   rw [sheetProjectorQ_target_eq_code]
-  simp [twoSlotCode, sourceSlot, targetSlot]
 
-/-- The source projector ambient action agrees on the Hodge fiber with
-identity minus the code observable. -/
+/-- The source projector ambient action agrees with identity minus the code
+observable on Hodge classes supported in the two selected basis sheets. -/
 theorem ambientSourceProjector_on_hodge_eq_id_sub_code
     (i j : ClassicalHodgeBasisIndex V H p)
-    (alpha : ClassicalHodgeFiber V H p) :
+    (alpha : ClassicalHodgeFiber V H p)
+    (hspan : alpha = (hodgeCoordinate i alpha) • classicalHodgeBasis V H p i
+      + (hodgeCoordinate j alpha) • classicalHodgeBasis V H p j) :
     ambientSourceProjector i j alpha.1 =
       alpha.1 - ambientTwoSlotCode i j alpha.1 := by
-  unfold ambientSourceProjector twoSlotHodgeOperator twoSlotCodeHodge
-  rw [sheetProjectorQ_source_eq_id_sub_code]
-  simp [twoSlotCode, sourceSlot, targetSlot, sub_eq_zero]
+  have hround : finiteHodgeWrite (pairBasisIndex i j)
+      (finiteHodgeRead (pairBasisIndex i j) alpha) = alpha := by
+    have h1 : finiteHodgeWrite (pairBasisIndex i j)
+        (finiteHodgeRead (pairBasisIndex i j) alpha) =
+        (hodgeCoordinate i alpha) • classicalHodgeBasis V H p i
+          + (hodgeCoordinate j alpha) • classicalHodgeBasis V H p j := by
+      simp [finiteHodgeWrite, finiteHodgeRead, pairBasisIndex,
+        sourceSlot, targetSlot]
+    rw [h1]
+    exact hspan.symm
+  unfold ambientSourceProjector ambientTwoSlotCode twoSlotCodeHodge
+  rw [extendHodgeEndomorphism_on_hodge (twoSlotHodgeOperator i j
+      (sheetProjectorQ sourceSlot)) alpha,
+    extendHodgeEndomorphism_on_hodge (twoSlotHodgeOperator i j twoSlotCode)
+      alpha,
+    sheetProjectorQ_source_eq_id_sub_code]
+  have hkey : twoSlotHodgeOperator i j (LinearMap.id - twoSlotCode) alpha
+      + twoSlotHodgeOperator i j twoSlotCode alpha = alpha := by
+    show (finiteHodgeWrite (pairBasisIndex i j))
+        ((LinearMap.id - twoSlotCode)
+          (finiteHodgeRead (pairBasisIndex i j) alpha))
+      + (finiteHodgeWrite (pairBasisIndex i j))
+        (twoSlotCode (finiteHodgeRead (pairBasisIndex i j) alpha)) = alpha
+    rw [← LinearMap.map_add (finiteHodgeWrite (pairBasisIndex i j))]
+    rw [show (LinearMap.id - twoSlotCode)
+        (finiteHodgeRead (pairBasisIndex i j) alpha)
+        + twoSlotCode (finiteHodgeRead (pairBasisIndex i j) alpha)
+        = finiteHodgeRead (pairBasisIndex i j) alpha from by
+      rw [LinearMap.sub_apply, LinearMap.id_apply]
+      simp]
+    exact hround
+  have hval : (twoSlotHodgeOperator i j (LinearMap.id - twoSlotCode) alpha).1
+      + (twoSlotHodgeOperator i j twoSlotCode alpha).1 = alpha.1 :=
+    congrArg Subtype.val hkey
+  rw [← hval]
+  simp
 
 /-- Native point-lift realization of the two minimal noncommuting primitives. -/
 structure TwoGeneratorNative
@@ -136,7 +170,8 @@ theorem idSubCode_nativePointLifts
       (LinearMap.id - ambientTwoSlotCode i j) := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    (smoothProjective_atomicStable_iff_nativePointLifts R.code).2
+    (smoothProjective_atomicStable_iff_nativePointLifts
+      (ambientTwoSlotCode i j)).2 R.code
 
 /-- The code observable itself gives the target projector naturality. -/
 theorem targetProjector_nativePointLifts_on_hodge
@@ -169,6 +204,7 @@ theorem normalizedWord_nativePointLifts
           ((ambientTwoStepLefschetz i j).comp
             (LinearMap.id - ambientTwoSlotCode i j)))) := by
   exact GSTClassicalHodgeNativeGeneratorNaturality.HasNativePointLifts.smul
+    ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹)
     R.codeLefschetzCodeWord_nativePointLifts
 
 end TwoGeneratorNative

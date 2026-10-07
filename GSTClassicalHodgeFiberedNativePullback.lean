@@ -194,9 +194,12 @@ theorem toGlobalHodgeAddress_atom
     (x : CodimensionPoint V.X p) :
     toGlobalHodgeAddress V H p (atom V H p i x) =
       fiberedSheetGenerator V H ⟨p,i⟩ := by
-  simp only [toGlobalHodgeAddress]
-  simp only [forgetPoint_atom]
-  simp [fiberedSheetGenerator, weightFiberEmbedding]
+  show Finsupp.embDomain (weightFiberEmbedding V H p)
+      (forgetPoint V H p (atom V H p i x)) =
+    fiberedSheetGenerator V H ⟨p, i⟩
+  rw [forgetPoint_atom]
+  simp [fiberedSheetGenerator, weightFiberEmbedding,
+    Finsupp.embDomain_single]
 
 @[simp]
 theorem toNativeCycle_atom
@@ -310,8 +313,9 @@ theorem nativeProjection_to_limitless
         rationalizeCompactAddress (compactClMono p) := by
   rw [nativeCycle_shadow_eq_mass_transfer]
   congr 1
-  simp only [toNativeCycle]
-  simp only [nativeCycleMass_realize]
+  show nativeCycleMass V p (realizeFiniteCodimensionPresentation V.X p
+      (forgetMultiplicity V H p φ)) = totalMass V H p φ
+  rw [nativeCycleMass_realize]
   exact presentationMass_forgetMultiplicity V H p φ
 
 /-- **THE FIBERED NATIVE PULLBACK SQUARE COMMUTES.**
@@ -410,16 +414,13 @@ noncomputable def attachPoint (x : CodimensionPoint V.X p) :
   map_add' := by
     intro a b
     classical
-    simp [Finsupp.sum_add_index']
+    simp [Finsupp.sum_add_index', atom, smul_add, add_smul]
   map_smul' := by
     intro q a
     classical
     rw [Finsupp.sum_smul_index' (fun _ => by simp)]
-    simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
-    first
-    | rw [Finset.smul_sum, ← smul_smul]
-    | rw [Finset.smul_sum, smul_smul]
-    | simp [smul_smul]
+    simp [Finsupp.sum, Finset.smul_sum, smul_smul, atom,
+      smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
 
 /-- Attach one multiplicity label to a genuine finite native presentation. -/
 noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
@@ -428,16 +429,13 @@ noncomputable def attachSheet (i : ClassicalHodgeBasisIndex V H p) :
   map_add' := by
     intro a b
     classical
-    simp [Finsupp.sum_add_index']
+    simp [Finsupp.sum_add_index', atom, smul_add, add_smul]
   map_smul' := by
     intro q a
     classical
     rw [Finsupp.sum_smul_index' (fun _ => by simp)]
-    simp [smul_eq_mul, Finsupp.sum, Finset.mul_sum]
-    first
-    | rw [Finset.smul_sum, ← smul_smul]
-    | rw [Finset.smul_sum, smul_smul]
-    | simp [smul_smul]
+    simp [Finsupp.sum, Finset.smul_sum, smul_smul, atom,
+      smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
 
 @[simp] theorem forgetPoint_attachPoint (x : CodimensionPoint V.X p)
     (a : ClassicalHodgeBasisIndex V H p →₀ ℚ) :
