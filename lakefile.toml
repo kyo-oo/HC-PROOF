@@ -582,6 +582,7 @@ roots = [
   "GSTClassicalHodgeFiberedDefectProjectiveCocycle",
   "GSTClassicalHodgeProjectiveApexSpokeCircularity",
   "GSTClassicalHodgeSynchronizedSeedFiberedLanding",
+  "GSTClassicalHodgeFiberedDefectProjectiveGlobalCocycle",
 ]
 
 # ---------------------------------------------------------------------------
