@@ -71,9 +71,10 @@ noncomputable def fiberedNativePushforward
   map_smul' := by
     intro q φ
     classical
-    rw [Finsupp.sum_smul_index' (fun _ => by simp)]
-    simp [Finsupp.sum, Finset.smul_sum, smul_smul, smul_eq_mul,
-      mul_comm, mul_left_comm, mul_assoc]
+    induction φ using Finsupp.induction_linear with
+    | zero => simp
+    | add a b ha hb => simp [ha, hb, add_smul, Finsupp.sum_add_index']
+    | single i c => simp [smul_smul, mul_comm, mul_left_comm, mul_assoc]
 
 @[simp]
 theorem fiberedNativePushforward_atom

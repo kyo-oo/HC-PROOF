@@ -136,7 +136,7 @@ theorem geometryFirstWordPair_on_hodge
     (geometryFirstWordPair R).cohomologyOperator alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
   simpa [geometryFirstWordPair, pairSmul, pairComp, pairSub, pairId,
-    primitivePair, NativeHodgePrimitive.ambient,
+    primitivePair, toCycleClassOperatorPair, NativeHodgePrimitive.ambient,
     GeometryFirstTwoGenerator.ambientWord,
     GeometryFirstTwoGenerator.ambientCode,
     GeometryFirstTwoGenerator.ambientLefschetz,
@@ -244,13 +244,14 @@ basis vector. -/
 theorem targetCycle_spec
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (j : ClassicalHodgeBasisIndex V H p)
+    (hij : S.sourceIndex ≠ j)
     (R : GeometryFirstTwoGenerator (V := V) (H := H) S.sourceIndex j) :
     H.cycleClass p (S.targetCycle j R) =
       (classicalHodgeBasis V H p j).1 := by
   let c := (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex
   have hc : c ≠ 0 := S.sourceCoefficient_ne_zero
   have hpair := (geometryFirstWordPair R).cycleClass_cycleOperator S.cycle
-  rw [S.class_eq, geometryFirstWordPair_on_hodge R S.hodge] at hpair
+  rw [S.class_eq, geometryFirstWordPair_on_hodge hij R S.hodge] at hpair
   have hmatrix :
       (hodgeMatrixUnit S.sourceIndex j S.hodge).1 =
         c • (classicalHodgeBasis V H p j).1 := by

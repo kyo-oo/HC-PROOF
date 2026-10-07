@@ -35,6 +35,7 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiberedNativeRecoordination
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
