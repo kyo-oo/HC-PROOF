@@ -262,14 +262,46 @@ theorem targetCycle_spec
   simp [c, hc]
 
 /-- One nonzero algebraic Hodge state plus geometry-first realizations of the
-limitless two-generator word produces a genuine basis-cycle bridge. -/
+limitless two-generator word produces a genuine basis-cycle bridge.
+The diagonal sheet is the code observable itself (normalized by the nonzero
+live source coefficient); the off-diagonal sheets are the geometry-first
+universal word. -/
 noncomputable def basisCycleBridge
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       GeometryFirstTwoGenerator (V := V) (H := H) S.sourceIndex j) :
     HodgeConjecture.HodgeBasisCycleBridge V H p where
-  basisCycle j := S.targetCycle j (R j)
-  basisCycle_spec j := S.targetCycle_spec j (R j)
+  basisCycle j :=
+    if S.sourceIndex = j then
+      ((classicalHodgeBasis V H p).repr S.hodge S.sourceIndex)⁻¹ •
+        (R j).code.cycleOperator S.cycle
+    else S.targetCycle j (R j)
+  basisCycle_spec j := by
+    by_cases hij : S.sourceIndex = j
+    · rw [if_pos hij]
+      have hc : (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex ≠ 0 :=
+        S.sourceCoefficient_ne_zero
+      have hpair := (primitivePair (R j).code).cycleClass_cycleOperator S.cycle
+      rw [S.class_eq] at hpair
+      have hcoh : (primitivePair (R j).code).cohomologyOperator S.hodge.1 =
+          (twoSlotCodeHodge S.sourceIndex j S.hodge).1 := by
+        simpa [primitivePair, toCycleClassOperatorPair,
+          NativeHodgePrimitive.ambient] using
+          (R j).code.ambient_on_hodge S.hodge
+      rw [hcoh] at hpair
+      have hdiag : (twoSlotCodeHodge S.sourceIndex j S.hodge).1 =
+          ((classicalHodgeBasis V H p).repr S.hodge S.sourceIndex) •
+            (classicalHodgeBasis V H p j).1 := by
+        subst j
+        simp [twoSlotCodeHodge, twoSlotHodgeOperator,
+          liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
+          twoSlotCode, sourceSlot, targetSlot, pairBasisIndex,
+          hodgeMatrixUnit_apply, hodgeCoordinate_basis_self]
+      rw [hdiag] at hpair
+      rw [LinearMap.map_smul, LinearMap.map_smul, hpair]
+      simp [hc]
+    · rw [if_neg hij]
+      exact S.targetCycle_spec j hij (R j)
 
 /-- Weight-p classical landing from one arbitrary nonzero algebraic Hodge
 state and the genuine limitless GST two-generator externalization. -/

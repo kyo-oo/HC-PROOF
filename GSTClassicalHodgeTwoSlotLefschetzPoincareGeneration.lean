@@ -67,14 +67,13 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
   have hfs : (forwardScalar sourceSlot targetSlot : ℚ) = 2 := by
     exact_mod_cast
       (show forwardScalar sourceSlot targetSlot = 2 from by decide)
-  rw [← sheetProjectorQ_target_eq_code]
-  rw [GSTClassicalHodgeTwoSlotLefschetzCollapse.
-    diagonalLefschetzQ_two_two_eq_scaled_matrixUnit]
-  rw [hfs]
-  rw [GSTClassicalHodgeRepairToolkit.smul_comp_middle]
-  rw [GSTClassicalHodgeRepairToolkit.inv_smul_smul_End
-    (by norm_num : (2 : ℚ) ≠ 0)]
-  exact hmatrixP.symm
+  rw [← sheetProjectorQ_target_eq_code,
+    GSTClassicalHodgeTwoSlotLefschetzCollapse.
+      diagonalLefschetzQ_two_two_eq_scaled_matrixUnit,
+    hfs,
+    GSTClassicalHodgeRepairToolkit.smul_comp_middle,
+    smul_smul, inv_mul_cancel₀ (by norm_num : (2 : ℚ) ≠ 0), one_smul,
+    hmatrixP.symm]
 
 /-- Equivalent projector formulation. -/
 theorem sheetProjectorQ_target_eq_half_lefschetz_comp_poincare :
