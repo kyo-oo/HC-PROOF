@@ -734,6 +734,77 @@ as LEDGER ENTRY 046 (architecture-transparency).
 (Task 3-a) are logged in \texttt{/home/z/my-project/worklog.md}.
 \end{itemize}
 
+\section{V2 addendum: the lemma attack (what got banked, what remains)}
+
+Research Tasks 5-a/5-b/5-c (three parallel subagents, verbatim audits) attacked
+L1/L2/L3 directly. The module
+\texttt{GSTClassicalHodgeSheetSiegeRoute.lean} is now at V2: 21 theorems and
+6 defs. The provable halves are banked as theorems; each lemma is compressed
+to its exact irreducible residue.
+
+\subsection*{L1 --- coheight additivity: half a theorem, residue named}
+
+The lower bound ($p+1 \le$ ambient coheight of every selected successor) was
+already provable: \texttt{ambient\_coheight\_ge\_succ}
+(\texttt{RelativeSuccessorLowerBound.lean:80--90}) plus the finset membership
+bridge. V2 banks it as the theorem \texttt{sheetSiege\_successor\_coheight\_ge}
+and proves the compression iff
+\texttt{sheetSiegeCoheightAdditivity\_iff\_upperBound}:
+L1 is \emph{equivalent} to its upper-bound half alone. The residue is the
+catenarity/height-additivity theorem for the homogeneous coordinate ring
+domain: the repo owns Krull's principal ideal theorem, the ambient
+prime-interval collapse, and the stalk bridge, but no catenarity theorem (the
+sole \texttt{catenar} hit in 564 files is a disclaimer). Whether the pinned
+Mathlib ships it is a one-line import probe for the compile pass. The
+single-successor form (L1-min), which discharges every downstream
+\texttt{hExact} premise in $\sim$15 files, is stated and derived from L1.
+
+\subsection*{L2 --- live weight seeds: firewall, guard, two reductions}
+
+The unguarded statement is \emph{refutable} inside the omniverse: on the
+zero-cycle-class world, \texttt{class\_eq} forces \texttt{hodge = 0}. V2
+proves this as the firewall theorem
+\texttt{sheetSiegeLiveWeightSeeds\_false\_of\_zeroCycleClassData}. The
+canonical demand is the guarded form (populated weight $\Rightarrow$ seed),
+and V2 reduces it to spine $+$ degree trace $+$ point supply in one line via
+\texttt{nativeHodgeOrbitSeed\_of\_codimensionPoint}. On tower worlds (uniform
+survival law), the unguarded form follows outright --- and the escape
+dichotomy, priced in \S\ref{sec:lemmas} as L2's burden, is bypassed entirely:
+with the degree trace present, the separator successor's cycle class is
+nonzero, so the escape branch never opens. The study's L2 price drops from
+``discharge the escape'' to ``supply the degree trace and points.''
+
+\subsection*{L3-a --- degree trace: an iff compression}
+
+Two of the four structure fields are packaging: setting
+\texttt{pointDegree := trace $\circ$ (cycle class of the point cycle)} makes
+the compatibility law definitional. V2 proves the iff
+\texttt{sheetSiegeDegreeTrace\_iff\_pointDegreeFunctional}:
+the degree trace exists \emph{if and only if} a rational linear functional
+family exists, strictly positive on the cycle class of every codimension
+point. The remaining construction debt, in the classical recipe's order:
+graded cup product on rational singular cohomology (repo has only
+premise-shaped \texttt{RationalProductCupTheory}), integration over the
+fundamental class ($H^{2d} \to \mathbb{Q}$; nothing exists), the hyperplane
+cohomology class (the hyperplane \emph{scheme} exists, its class never
+formed), and point-degree positivity --- the one classical theorem the
+kill-switch flags as content beyond bare ``duality $+$ ampleness.'' The only
+in-repo constructor (\texttt{unitDegreeTraceOfNativeMassFactorization}) rests
+on the mass-kernel law, false for genuine cycle-class maps (conic minus twice
+a line); it is cited, never assumed.
+
+\subsection*{Net position after V2}
+
+\begin{itemize}[leftmargin=2em]
+\item L1 $=$ theorem $+$ catenarity residue (upper bound).
+\item L2 $=$ guard surgery $+$ reduction to L3 and point supply; the escape
+branch is dead weight.
+\item L3 $=$ one positivity statement $+$ four construction layers (cup,
+integration, hyperplane class, positivity).
+\item No sorry, no ghost-quantified premise, no assumed law. Every remaining
+premise is flagged in the module's AUTHORITY 005 audit table.
+\end{itemize}
+
 \begin{remark}
 The one-sentence version of this study: \emph{the omniverse was never going
 to hand over Hodge through one internal law --- its own firewalls forbid it;
