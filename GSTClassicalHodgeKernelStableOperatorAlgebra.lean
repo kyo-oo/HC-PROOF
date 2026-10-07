@@ -560,6 +560,160 @@ theorem nativeTriangularEquiv_inverse_kernelStable
   rw [nativeTriangularEquiv_inverse_toLinearMap]
   exact nativeBlockOperator_kernelStable _ _ _
 
+/-! ## The cohomological escape block: the new exact geometry gate
+
+Four-block native endomorphisms are complete, but all of their classes stay
+inside the algebraic image.  The ambient class/defect splitting proves a
+substantially sharper criterion: the class-to-defect block of a rational
+cohomology operator is ZERO exactly when a genuine native operator can
+realize its action on all cycle classes.
+
+This identifies which GST ambient motions are geometric, without supplying
+a requested missing Hodge class, ghost-targeted spoke, or Hodge conclusion as
+an axiom.  A nonzero class-to-defect block is an exact obstruction to native
+realizability, not simply a shortage of more elaborate words.
+-/
+
+/-- The intrinsic class -> missing-cohomology block of an ambient motion.
+It is defined from the actual cycle-class image and the intrinsic defect
+projection, never from an assumed Hodge-basis representative. -/
+noncomputable def cohomologyClassToDefectBlock
+    (T : Module.End ℚ (Coh H p)) :
+    NativeClass H p →ₗ[ℚ]
+      NativeCohomologicalDefect (V := V) (H := H) (p := p) :=
+  (cohomologicalDefectCoordinate (H := H)).comp
+    (T.comp (LinearMap.range (H.cycleClass p)).subtype)
+
+/-- **EXACT AMBIENT RANGE-STABILITY LAW.**
+An arbitrary cohomological motion preserves the actual algebraic-class range
+if and only if its class-to-defect block vanishes.  This is a directly proved
+matrix-block criterion, not a geometric hypothesis. -/
+theorem classToDefectBlock_eq_zero_iff_rangeStable
+    (T : Module.End ℚ (Coh H p)) :
+    cohomologyClassToDefectBlock (H := H) T = 0 ↔
+      ∀ alpha : Coh H p,
+        alpha ∈ LinearMap.range (H.cycleClass p) →
+          T alpha ∈ LinearMap.range (H.cycleClass p) := by
+  constructor
+  · intro hT alpha halpha
+    have h := LinearMap.congr_fun hT
+      (⟨alpha, halpha⟩ : NativeClass H p)
+    have hz : offRangeProjection (H := H) (T alpha) = 0 :=
+      congrArg Subtype.val h
+    exact (offRangeProjection_eq_zero_iff_range _).1 hz
+  · intro hT
+    apply LinearMap.ext
+    intro a
+    apply Subtype.ext
+    change offRangeProjection (H := H) (T a.1) = 0
+    exact (offRangeProjection_eq_zero_iff_range _).2 (hT a.1 a.2)
+
+/-- Any cohomological action that is genuinely implemented by a native
+cycle operator necessarily has ZERO class-to-defect block.  No kernel-stable
+assumption is needed on the supplied operator: the naturality equation itself
+already enforces the geometry. -/
+theorem classToDefectBlock_zero_of_nativeRealization
+    (T : Module.End ℚ (Coh H p))
+    (A : NativeEnd V p)
+    (hA : ∀ Z : Cycles V p,
+      H.cycleClass p (A Z) = T (H.cycleClass p Z)) :
+    cohomologyClassToDefectBlock (H := H) T = 0 := by
+  apply (classToDefectBlock_eq_zero_iff_rangeStable T).2
+  intro alpha halpha
+  obtain ⟨Z, hZ⟩ := halpha
+  rw [← hZ, ← hA Z]
+  exact ⟨A Z, rfl⟩
+
+/-- **FULL NATIVE-REALIZABILITY CLASSIFICATION.**
+A rational cohomological endomorphism admits a genuine linear native-cycle
+realization, commuting with the cycle class on ALL native cycles, if and only
+if its class-to-defect block is zero.
+
+The reverse direction is explicitly constructive using the same exact
+native class-range section.  This is the algebraic escape frontier hidden by
+the old input/output operator-pair packages. -/
+theorem cohomologyNativeRealizable_iff_classToDefectBlock_zero
+    (T : Module.End ℚ (Coh H p)) :
+    (∃ A : NativeEnd V p,
+      ∀ Z : Cycles V p,
+        H.cycleClass p (A Z) = T (H.cycleClass p Z)) ↔
+      cohomologyClassToDefectBlock (H := H) T = 0 := by
+  constructor
+  · rintro ⟨A, hA⟩
+    exact classToDefectBlock_zero_of_nativeRealization T A hA
+  · intro hT
+    have hstable :
+        ∀ alpha : Coh H p,
+          alpha ∈ LinearMap.range (H.cycleClass p) →
+            T alpha ∈ LinearMap.range (H.cycleClass p) :=
+      (classToDefectBlock_eq_zero_iff_rangeStable T).1 hT
+    exact ⟨liftedCycleOperator T hstable,
+      fun Z => cycleClass_liftedCycleOperator T hstable Z⟩
+
+/-- A nonzero algebraic-class -> defect block is a definitive proof that the
+operator has NO native cycle-class natural realization.  This is much
+stronger than a failure to find a particular projective correspondence. -/
+theorem no_nativeRealization_of_nonzero_classToDefect
+    (T : Module.End ℚ (Coh H p))
+    (hne : cohomologyClassToDefectBlock (H := H) T ≠ 0) :
+    ¬ ∃ A : NativeEnd V p,
+      ∀ Z : Cycles V p,
+        H.cycleClass p (A Z) = T (H.cycleClass p Z) := by
+  intro hex
+  exact hne
+    ((cohomologyNativeRealizable_iff_classToDefectBlock_zero T).1 hex)
+
+/-- Every abstract linear map from actual algebraic classes into the exact
+unreached defect sector DOES extend to an ambient cohomology endomorphism.
+Such a formal operator is easy to construct; geometric realization is the
+genuinely restrictive part. -/
+noncomputable def pureClassToDefectOperator
+    (F : NativeClass H p →ₗ[ℚ]
+      NativeCohomologicalDefect (V := V) (H := H) (p := p)) :
+    Module.End ℚ (Coh H p) :=
+  (LinearMap.ker (classRangeProjection (H := H))).subtype.comp
+    (F.comp (classRangeRetraction (H := H)))
+
+/-- **EXACT SYNTHESIS OF THE ESCAPE BLOCK.**
+The previous abstract operator has precisely the requested class-to-defect
+block, showing that ambient freedom alone does not confer geometric origin. -/
+theorem pureClassToDefectOperator_block
+    (F : NativeClass H p →ₗ[ℚ]
+      NativeCohomologicalDefect (V := V) (H := H) (p := p)) :
+    cohomologyClassToDefectBlock (H := H)
+      (pureClassToDefectOperator F) = F := by
+  apply LinearMap.ext
+  intro a
+  change cohomologicalDefectCoordinate (H := H)
+    ((F (classRangeRetraction (H := H) a.1)).1) = F a
+  rw [classRangeRetraction_range]
+  exact cohomologicalDefectCoordinate_pureDefect (F a)
+
+/-- An ambient 'escape' operator with a nonzero requested block can never
+be implemented by a native cycle operator.  This is the exact non-geometric
+sector of the enlarged GST motion algebra. -/
+theorem pureClassToDefectOperator_nonGeometric
+    (F : NativeClass H p →ₗ[ℚ]
+      NativeCohomologicalDefect (V := V) (H := H) (p := p))
+    (hF : F ≠ 0) :
+    ¬ ∃ A : NativeEnd V p,
+      ∀ Z : Cycles V p,
+        H.cycleClass p (A Z) =
+          pureClassToDefectOperator F (H.cycleClass p Z) := by
+  apply no_nativeRealization_of_nonzero_classToDefect
+  rw [pureClassToDefectOperator_block]
+  exact hF
+
+#check cohomologyClassToDefectBlock
+#check classToDefectBlock_eq_zero_iff_rangeStable
+#check cohomologyNativeRealizable_iff_classToDefectBlock_zero
+#check pureClassToDefectOperator
+#check pureClassToDefectOperator_block
+#check pureClassToDefectOperator_nonGeometric
+
+#print axioms cohomologyNativeRealizable_iff_classToDefectBlock_zero
+#print axioms pureClassToDefectOperator_block
+
 #print axioms nativeBlockOperator_reconstruct
 #print axioms nativeBlockOperator_comp
 #print axioms nativeBlockOperator_kernelStable_iff
