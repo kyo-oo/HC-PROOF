@@ -59,7 +59,7 @@ variable {p : Nat}
 
 abbrev NativeCycles := codimensionCycles V.X p
 abbrev AmbientCoh := RationalSingularCohomology H.analytification (2 * p)
-abbrev HodgeFiber := ClassicalHodgeFiber
+abbrev HodgeFiber := ClassicalHodgeFiber V H p
 
 /-- A kernel-stable native algebraic-cycle operator automatically gives native
 point lifts for the ambient cohomology operator manufactured from it. -/
