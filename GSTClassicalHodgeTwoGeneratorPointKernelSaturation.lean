@@ -99,7 +99,7 @@ theorem twoGeneratorAmbientWord_on_hodge
           H.analytification (2 * p) →ₗ[ℚ]
         GSTGeometricRealizationStage2F.RationalSingularCohomology
           H.analytification (2 * p)) alpha.1) = src.1 := by
-    simp only [LinearMap.sub_apply, LinearMap.id_apply]
+    simp only [LinearMap.sub_apply, LinearMap.id_apply, ambientTwoSlotCode]
     rw [hcode0]
     rfl
   have hL := extendHodgeEndomorphism_on_hodge
@@ -109,22 +109,25 @@ theorem twoGeneratorAmbientWord_on_hodge
     (V := V) (H := H) (twoSlotCodeHodge i j) mid
   unfold twoGeneratorAmbientWord
   simp only [LinearMap.smul_apply, LinearMap.comp_apply]
-  rw [hsrc, hL, htgt]
+  rw [hsrc]
+  rw [show (ambientTwoStepLefschetz i j) src.1 = mid.1 from hL]
+  rw [show (ambientTwoSlotCode i j) mid.1 = (twoSlotCodeHodge i j mid).1
+    from htgt]
   have hfinite :
       ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
         (twoSlotCode.comp
           ((diagonalLefschetzQ 2 2).comp
             (LinearMap.id - twoSlotCode)))) =
         pureMatrixUnit sourceSlot targetSlot := by
-    rw [← sheetProjectorQ_target_eq_code,
-      ← sheetProjectorQ_source_eq_id_sub_code]
+    rw [← sheetProjectorQ_source_eq_id_sub_code,
+      ← sheetProjectorQ_target_eq_code]
     exact forwardArsenalWord_eq_matrixUnit
-      sourceSlot targetSlot (by omega)
+      sourceSlot targetSlot (by decide)
   have hlift :
       liftFiniteHodgeOperator (pairBasisIndex i j)
           (pureMatrixUnit sourceSlot targetSlot) =
         hodgeMatrixUnit i j :=
-    exact liftFiniteHodgeOperator_matrixUnit
+    liftFiniteHodgeOperator_matrixUnit
       (pairBasisIndex i j) sourceSlot targetSlot
   simpa [src, mid, twoSlotCodeHodge, twoSlotHodgeOperator,
     hfinite, pairBasisIndex_source, pairBasisIndex_target] using
