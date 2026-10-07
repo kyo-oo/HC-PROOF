@@ -41,6 +41,7 @@ open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeAtomicOperatorAlgebra
 open GSTClassicalHodgeNativeGeneratorNaturality
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
+open GSTClassicalHodgeFiberedCosmology
 
 namespace GSTClassicalHodgeTwoGeneratorNativeArsenal
 
@@ -52,13 +53,13 @@ variable {p : Nat}
 def twoSlotCode : Module.End ℚ (RationalPureWindow 2) where
   toFun a := fun r => (r.1 : ℚ) * a r
   map_add' := by intro a b; funext r; simp [mul_add]
-  map_smul' := by intro q a; funext r; simp [mul_assoc]
+  map_smul' := by intro q a; funext r; simp [mul_left_comm]
 
 @[simp]
 theorem twoSlotCode_source
     (a : RationalPureWindow 2) :
     twoSlotCode a sourceSlot = 0 := by
-  rfl
+  simp [twoSlotCode, sourceSlot]
 
 @[simp]
 theorem twoSlotCode_target
