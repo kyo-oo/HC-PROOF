@@ -179,6 +179,228 @@ noncomputable def projectiveKernelToOperatorPair
     CycleClassOperatorPair V H p :=
   toCycleClassOperatorPair K.operator hK
 
+/-! ## Coherent descent on the actual range
+
+Choosing an unrelated ambient extension for each operator does not establish
+composition on the ambient space.  First descend on the actual range, then
+use one fixed range retraction for every operator.  This constructs the exact
+composition algebra and identifies all remaining ambient freedom.
+-/
+
+theorem rangeOperator_id :
+    rangeOperator (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) = LinearMap.id := by
+  apply LinearMap.ext
+  intro a
+  apply Subtype.ext
+  exact rangeRepresentative_spec a
+
+theorem rangeOperator_zero :
+    rangeOperator (0 : Module.End ℚ (Cycles V p)) (by intro Z hZ; simp) = 0 := by
+  apply LinearMap.ext
+  intro a
+  apply Subtype.ext
+  simp [rangeOperator]
+
+theorem rangeOperator_add
+    (A B : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
+    rangeOperator (A + B) (by intro Z hZ; simp [hA Z hZ, hB Z hZ]) =
+      rangeOperator A hA + rangeOperator B hB := by
+  apply LinearMap.ext
+  intro a
+  apply Subtype.ext
+  simp [rangeOperator, map_add]
+
+theorem rangeOperator_smul
+    (q : ℚ) (A : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A) :
+    rangeOperator (q • A) (by intro Z hZ; simp [hA Z hZ]) =
+      q • rangeOperator A hA := by
+  apply LinearMap.ext
+  intro a
+  apply Subtype.ext
+  simp [rangeOperator, map_smul]
+
+theorem rangeOperator_comp
+    (A B : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
+    rangeOperator (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
+      (rangeOperator A hA).comp (rangeOperator B hB) := by
+  apply LinearMap.ext
+  intro a
+  obtain ⟨Z, hZ⟩ := a.2
+  have ha : (H.cycleClass p).rangeRestrict Z = a := Subtype.ext hZ
+  rw [← ha]
+  simp only [LinearMap.comp_apply, rangeOperator_rangeRestrict]
+
+/-- One fixed linear retraction onto the actual class range, used by every
+native operator.  It contains no Hodge-surjectivity premise. -/
+noncomputable def classRangeRetraction :
+    Coh H p →ₗ[ℚ] LinearMap.range (H.cycleClass p) :=
+  Classical.choose (LinearMap.exists_extend
+    (LinearMap.id : Module.End ℚ (LinearMap.range (H.cycleClass p))))
+
+theorem classRangeRetraction_spec :
+    (classRangeRetraction (V := V) (H := H) (p := p)).comp
+      (LinearMap.range (H.cycleClass p)).subtype = LinearMap.id :=
+  Classical.choose_spec (LinearMap.exists_extend
+    (LinearMap.id : Module.End ℚ (LinearMap.range (H.cycleClass p))))
+
+@[simp]
+theorem classRangeRetraction_range
+    (a : LinearMap.range (H.cycleClass p)) :
+    classRangeRetraction (H := H) a.1 = a :=
+  LinearMap.congr_fun classRangeRetraction_spec a
+
+/-- Ambient projection onto classes of actual native cycles. -/
+noncomputable def classRangeProjection : Module.End ℚ (Coh H p) :=
+  (LinearMap.range (H.cycleClass p)).subtype.comp
+    (classRangeRetraction (H := H))
+
+@[simp]
+theorem classRangeProjection_range
+    (a : LinearMap.range (H.cycleClass p)) :
+    classRangeProjection (H := H) a.1 = a.1 := by
+  simp [classRangeProjection]
+
+theorem classRangeProjection_mem_range (alpha : Coh H p) :
+    classRangeProjection (H := H) alpha ∈ LinearMap.range (H.cycleClass p) :=
+  (classRangeRetraction (H := H) alpha).2
+
+theorem classRangeProjection_idempotent :
+    (classRangeProjection (V := V) (H := H) (p := p)).comp
+      (classRangeProjection (H := H)) = classRangeProjection (H := H) := by
+  apply LinearMap.ext
+  intro alpha
+  exact classRangeProjection_range (classRangeRetraction (H := H) alpha)
+
+theorem classRangeProjection_eq_self_iff (alpha : Coh H p) :
+    classRangeProjection (H := H) alpha = alpha ↔
+      alpha ∈ LinearMap.range (H.cycleClass p) := by
+  constructor
+  · intro h
+    rw [← h]
+    exact classRangeProjection_mem_range alpha
+  · intro h
+    exact classRangeProjection_range ⟨alpha, h⟩
+
+/-- The complement records the ambient extension freedom. -/
+noncomputable def offRangeProjection : Module.End ℚ (Coh H p) :=
+  LinearMap.id - classRangeProjection (H := H)
+
+@[simp]
+theorem offRangeProjection_range
+    (a : LinearMap.range (H.cycleClass p)) :
+    offRangeProjection (H := H) a.1 = 0 := by
+  simp [offRangeProjection]
+
+theorem ambient_range_decomposition (alpha : Coh H p) :
+    classRangeProjection (H := H) alpha + offRangeProjection (H := H) alpha =
+      alpha := by
+  simp only [offRangeProjection, LinearMap.sub_apply, LinearMap.id_apply]
+  abel
+
+/-- Composition-coherent ambient action manufactured from native descent.
+It is supported on the actual range and kills the chosen complement. -/
+noncomputable def supportedAmbientOperator
+    (A : Module.End ℚ (Cycles V p)) (hA : KernelStable (H := H) A) :
+    Module.End ℚ (Coh H p) :=
+  (LinearMap.range (H.cycleClass p)).subtype.comp
+    ((rangeOperator A hA).comp (classRangeRetraction (H := H)))
+
+theorem supportedAmbientOperator_mem_range
+    (A : Module.End ℚ (Cycles V p)) (hA : KernelStable (H := H) A)
+    (alpha : Coh H p) :
+    supportedAmbientOperator A hA alpha ∈ LinearMap.range (H.cycleClass p) :=
+  (rangeOperator A hA (classRangeRetraction (H := H) alpha)).2
+
+theorem supportedAmbientOperator_cycleClass
+    (A : Module.End ℚ (Cycles V p)) (hA : KernelStable (H := H) A)
+    (Z : Cycles V p) :
+    supportedAmbientOperator A hA (H.cycleClass p Z) =
+      H.cycleClass p (A Z) := by
+  have hret : classRangeRetraction (H := H) (H.cycleClass p Z) =
+      (H.cycleClass p).rangeRestrict Z :=
+    classRangeRetraction_range ((H.cycleClass p).rangeRestrict Z)
+  simp only [supportedAmbientOperator, LinearMap.comp_apply, hret,
+    rangeOperator_rangeRestrict] <;> rfl
+
+theorem supportedAmbientOperator_id :
+    supportedAmbientOperator (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) = classRangeProjection (H := H) := by
+  simp [supportedAmbientOperator, rangeOperator_id, classRangeProjection]
+
+theorem supportedAmbientOperator_zero :
+    supportedAmbientOperator (0 : Module.End ℚ (Cycles V p))
+      (by intro Z hZ; simp) = 0 := by
+  apply LinearMap.ext
+  intro alpha
+  simp [supportedAmbientOperator, rangeOperator_zero]
+
+theorem supportedAmbientOperator_comp
+    (A B : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
+    supportedAmbientOperator (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
+      (supportedAmbientOperator A hA).comp (supportedAmbientOperator B hB) := by
+  apply LinearMap.ext
+  intro alpha
+  simp only [supportedAmbientOperator, LinearMap.comp_apply,
+    classRangeRetraction_range, rangeOperator_comp]
+
+theorem supportedAmbientOperator_add
+    (A B : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
+    supportedAmbientOperator (A + B) (by intro Z hZ; simp [hA Z hZ, hB Z hZ]) =
+      supportedAmbientOperator A hA + supportedAmbientOperator B hB := by
+  apply LinearMap.ext
+  intro alpha
+  simp [supportedAmbientOperator, rangeOperator_add, map_add]
+
+theorem supportedAmbientOperator_smul
+    (q : ℚ) (A : Module.End ℚ (Cycles V p))
+    (hA : KernelStable (H := H) A) :
+    supportedAmbientOperator (q • A) (by intro Z hZ; simp [hA Z hZ]) =
+      q • supportedAmbientOperator A hA := by
+  apply LinearMap.ext
+  intro alpha
+  simp [supportedAmbientOperator, rangeOperator_smul, map_smul]
+
+/-- **ALL AMBIENT EXTENSIONS, EXACTLY.** The coherent native core is fixed;
+every remaining term factors through the chosen off-range projection.  This
+also applies to the original independently chosen `ambientOperator`. -/
+theorem ambientNatural_core_decomposition
+    (A : Module.End ℚ (Cycles V p)) (hA : KernelStable (H := H) A)
+    (T : Module.End ℚ (Coh H p))
+    (hT : ∀ Z, T (H.cycleClass p Z) = H.cycleClass p (A Z)) :
+    T = supportedAmbientOperator A hA + T.comp (offRangeProjection (H := H)) := by
+  apply LinearMap.ext
+  intro alpha
+  have hcore : T (classRangeProjection (H := H) alpha) =
+      supportedAmbientOperator A hA alpha := by
+    change T (classRangeRetraction (H := H) alpha).1 =
+      H.cycleClass p (A (rangeRepresentative (classRangeRetraction (H := H) alpha)))
+    rw [← rangeRepresentative_spec (classRangeRetraction (H := H) alpha)]
+    exact hT _
+  calc
+    T alpha = T (classRangeProjection (H := H) alpha +
+        offRangeProjection (H := H) alpha) :=
+      congrArg T (ambient_range_decomposition alpha).symm
+    _ = supportedAmbientOperator A hA alpha +
+        T (offRangeProjection (H := H) alpha) := by rw [map_add, hcore]
+    _ = _ := rfl
+
+theorem ambientOperator_core_decomposition
+    (A : Module.End ℚ (Cycles V p)) (hA : KernelStable (H := H) A) :
+    ambientOperator A hA = supportedAmbientOperator A hA +
+      (ambientOperator A hA).comp (offRangeProjection (H := H)) :=
+  ambientNatural_core_decomposition A hA (ambientOperator A hA)
+    (cycleClass_ambientOperator A hA)
+
+#print axioms classRangeRetraction
+#print axioms supportedAmbientOperator_comp
+#print axioms ambientNatural_core_decomposition
+
 #check KernelStable
 #check class_congr_of_kernelStable
 #check rangeOperator

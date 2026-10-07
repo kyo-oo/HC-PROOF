@@ -1,5 +1,6 @@
 import GSTClassicalHodgeNativeOperatorCohomologyRealization
 import GSTClassicalHodgeProjectiveCorrespondenceAlgebra
+import GSTClassicalHodgeRangeLiftedSpectralOperator
 
 /-!
 # GST CLASSICAL HODGE — KERNEL-STABLE NATIVE OPERATOR ALGEBRA
@@ -26,6 +27,7 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeProjectiveCorrespondenceAlgebra
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
+open GSTClassicalHodgeRangeLiftedSpectralOperator
 
 namespace GSTClassicalHodgeKernelStableOperatorAlgebra
 
@@ -163,5 +165,405 @@ noncomputable def projectiveCorrespondenceOperatorPair
 
 #print axioms projectiveCorrespondence_kernelStable
 #print axioms projectiveCorrespondenceOperatorPair
+
+/-! ## Full native block geometry
+
+These blocks act on the actual class range and the actual native kernel.
+They do not replace either space by a Hodge coordinate carrier.  In particular,
+the class-from-kernel block measures precisely the failure of native descent.
+-/
+
+abbrev NativeClass (H : HodgeBigradedBettiData V) (p : Nat) :=
+  LinearMap.range (H.cycleClass p)
+
+abbrev NativeKernel (H : HodgeBigradedBettiData V) (p : Nat) :=
+  LinearMap.ker (H.cycleClass p)
+
+/-- Synthesize an actual native operator from its four class/kernel blocks.
+`F` is the class produced from a null-class input; `C` is the kernel-valued
+response to an actual class.  No native cycle is left unspecified. -/
+noncomputable def nativeBlockOperator
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) : NativeEnd V p where
+  toFun Z := cycleClassRangeSection V H p
+      (B ((H.cycleClass p).rangeRestrict Z) +
+        F (nativeKernelCoordinate (H := H) Z)) +
+    (C ((H.cycleClass p).rangeRestrict Z) +
+      D (nativeKernelCoordinate (H := H) Z)).1
+  map_add' := by
+    intro Z W
+    simp [map_add, add_assoc, add_left_comm, add_comm]
+  map_smul' := by
+    intro q Z
+    simp [map_smul, smul_add]
+
+/-- The constructed operator has exactly the requested four blocks. -/
+theorem nativeBlockOperator_coordinates
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) (Z : codimensionCycles V.X p) :
+    nativeClassKernelEquiv (H := H) (nativeBlockOperator B F C D Z) =
+      (B ((H.cycleClass p).rangeRestrict Z) +
+          F (nativeKernelCoordinate (H := H) Z),
+        C ((H.cycleClass p).rangeRestrict Z) +
+          D (nativeKernelCoordinate (H := H) Z)) :=
+  (nativeClassKernelEquiv (H := H)).apply_symm_apply _
+
+theorem nativeBlockOperator_rangeCoordinate
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) (Z : codimensionCycles V.X p) :
+    (H.cycleClass p).rangeRestrict (nativeBlockOperator B F C D Z) =
+      B ((H.cycleClass p).rangeRestrict Z) +
+        F (nativeKernelCoordinate (H := H) Z) :=
+  congrArg Prod.fst (nativeBlockOperator_coordinates B F C D Z)
+
+theorem nativeBlockOperator_kernelCoordinate
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) (Z : codimensionCycles V.X p) :
+    nativeKernelCoordinate (H := H) (nativeBlockOperator B F C D Z) =
+      C ((H.cycleClass p).rangeRestrict Z) +
+        D (nativeKernelCoordinate (H := H) Z) :=
+  congrArg Prod.snd (nativeBlockOperator_coordinates B F C D Z)
+
+/-- Class-to-class block of an arbitrary actual native operator. -/
+noncomputable def classClassBlock (A : NativeEnd V p) :
+    Module.End ℚ (NativeClass H p) :=
+  (H.cycleClass p).rangeRestrict.comp (A.comp (cycleClassRangeSection V H p))
+
+/-- Class response to the complete null-class native coordinate. -/
+noncomputable def kernelClassBlock (A : NativeEnd V p) :
+    NativeKernel H p →ₗ[ℚ] NativeClass H p :=
+  (H.cycleClass p).rangeRestrict.comp
+    (A.comp (LinearMap.ker (H.cycleClass p)).subtype)
+
+/-- Kernel-valued response to the class coordinate. -/
+noncomputable def classKernelBlock (A : NativeEnd V p) :
+    NativeClass H p →ₗ[ℚ] NativeKernel H p :=
+  (nativeKernelCoordinate (H := H)).comp (A.comp (cycleClassRangeSection V H p))
+
+/-- Kernel-to-kernel block, without presupposing kernel stability. -/
+noncomputable def kernelKernelBlock (A : NativeEnd V p) :
+    Module.End ℚ (NativeKernel H p) :=
+  (nativeKernelCoordinate (H := H)).comp
+    (A.comp (LinearMap.ker (H.cycleClass p)).subtype)
+
+/-- **UNCONDITIONAL FOUR-BLOCK NORMAL FORM.** Every actual native operator
+is reconstructed exactly from these four blocks, even when it does not
+descend through cycle class. -/
+theorem nativeBlockOperator_reconstruct (A : NativeEnd V p) :
+    nativeBlockOperator (classClassBlock (H := H) A)
+      (kernelClassBlock (H := H) A) (classKernelBlock (H := H) A)
+      (kernelKernelBlock (H := H) A) = A := by
+  apply LinearMap.ext
+  intro Z
+  apply (nativeClassKernelEquiv (H := H)).injective
+  rw [nativeBlockOperator_coordinates]
+  calc
+    _ = nativeClassKernelEquiv (H := H)
+        (A (cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z) +
+          (nativeKernelCoordinate (H := H) Z).1)) := by
+      simp [classClassBlock, kernelClassBlock, classKernelBlock,
+        kernelKernelBlock, map_add]
+    _ = nativeClassKernelEquiv (H := H) (A Z) :=
+      congrArg (fun W => nativeClassKernelEquiv (H := H) (A W))
+        (native_projection_decomposition Z)
+
+@[simp]
+theorem nativeBlockOperator_zero :
+    nativeBlockOperator (H := H) (p := p) 0 0 0 0 = (0 : NativeEnd V p) := by
+  apply LinearMap.ext
+  intro Z
+  simp [nativeBlockOperator]
+
+theorem nativeBlockOperator_id :
+    nativeBlockOperator (H := H) (p := p) LinearMap.id 0 0 LinearMap.id =
+      (LinearMap.id : NativeEnd V p) := by
+  apply LinearMap.ext
+  intro Z
+  simpa [nativeBlockOperator] using native_projection_decomposition (H := H) Z
+
+/-- The complete noncommutative block composition law.  The two feedback
+terms are retained, including for operators that fail native descent. -/
+theorem nativeBlockOperator_comp
+    (B B' : Module.End ℚ (NativeClass H p))
+    (F F' : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C C' : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D D' : Module.End ℚ (NativeKernel H p)) :
+    (nativeBlockOperator B F C D).comp (nativeBlockOperator B' F' C' D') =
+      nativeBlockOperator
+        (B.comp B' + F.comp C') (B.comp F' + F.comp D')
+        (C.comp B' + D.comp C') (C.comp F' + D.comp D') := by
+  apply LinearMap.ext
+  intro Z
+  apply (nativeClassKernelEquiv (H := H)).injective
+  simp [nativeBlockOperator_coordinates, nativeBlockOperator_rangeCoordinate,
+    nativeBlockOperator_kernelCoordinate, map_add, add_assoc,
+    add_left_comm, add_comm]
+
+theorem nativeBlockOperator_add
+    (B B' : Module.End ℚ (NativeClass H p))
+    (F F' : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C C' : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D D' : Module.End ℚ (NativeKernel H p)) :
+    nativeBlockOperator (B + B') (F + F') (C + C') (D + D') =
+      nativeBlockOperator B F C D + nativeBlockOperator B' F' C' D' := by
+  apply LinearMap.ext
+  intro Z
+  apply (nativeClassKernelEquiv (H := H)).injective
+  simp [nativeBlockOperator_coordinates, map_add, add_assoc,
+    add_left_comm, add_comm]
+
+theorem nativeBlockOperator_smul
+    (q : ℚ) (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) :
+    nativeBlockOperator (q • B) (q • F) (q • C) (q • D) =
+      q • nativeBlockOperator B F C D := by
+  apply LinearMap.ext
+  intro Z
+  apply (nativeClassKernelEquiv (H := H)).injective
+  simp [nativeBlockOperator_coordinates, map_smul, smul_add]
+
+theorem nativeBlockOperator_kernelClassBlock
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) :
+    kernelClassBlock (H := H) (nativeBlockOperator B F C D) = F := by
+  apply LinearMap.ext
+  intro k
+  have hr : (H.cycleClass p).rangeRestrict k.1 = 0 := Subtype.ext k.2
+  simp [kernelClassBlock, nativeBlockOperator_rangeCoordinate, hr]
+
+theorem nativeBlockOperator_classClassBlock
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) :
+    classClassBlock (H := H) (nativeBlockOperator B F C D) = B := by
+  apply LinearMap.ext
+  intro a
+  simpa [classClassBlock] using
+    nativeBlockOperator_rangeCoordinate B F C D (cycleClassRangeSection V H p a)
+
+theorem nativeBlockOperator_classKernelBlock
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) :
+    classKernelBlock (H := H) (nativeBlockOperator B F C D) = C := by
+  apply LinearMap.ext
+  intro a
+  simpa [classKernelBlock] using
+    nativeBlockOperator_kernelCoordinate B F C D (cycleClassRangeSection V H p a)
+
+theorem nativeBlockOperator_kernelKernelBlock
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) :
+    kernelKernelBlock (H := H) (nativeBlockOperator B F C D) = D := by
+  apply LinearMap.ext
+  intro k
+  have hr : (H.cycleClass p).rangeRestrict k.1 = 0 := Subtype.ext k.2
+  simpa [kernelKernelBlock, hr] using
+    nativeBlockOperator_kernelCoordinate B F C D k.1
+
+/-- The four-block normal form is unique, as well as exhaustive. -/
+theorem nativeBlockOperator_eq_iff
+    (B B' : Module.End ℚ (NativeClass H p))
+    (F F' : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C C' : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D D' : Module.End ℚ (NativeKernel H p)) :
+    nativeBlockOperator B F C D = nativeBlockOperator B' F' C' D' ↔
+      B = B' ∧ F = F' ∧ C = C' ∧ D = D' := by
+  constructor
+  · intro h
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · simpa only [nativeBlockOperator_classClassBlock] using
+        congrArg (classClassBlock (H := H)) h
+    · simpa only [nativeBlockOperator_kernelClassBlock] using
+        congrArg (kernelClassBlock (H := H)) h
+    · simpa only [nativeBlockOperator_classKernelBlock] using
+        congrArg (classKernelBlock (H := H)) h
+    · simpa only [nativeBlockOperator_kernelKernelBlock] using
+        congrArg (kernelKernelBlock (H := H)) h
+  · rintro ⟨rfl, rfl, rfl, rfl⟩
+    rfl
+
+/-- **EXACT DESCENT TEST.** Native descent fails precisely when a null-class
+input creates a nonzero class coordinate.  The other three blocks are free. -/
+theorem kernelStable_iff_kernelClassBlock_eq_zero (A : NativeEnd V p) :
+    KernelStable (H := H) A ↔ kernelClassBlock (H := H) A = 0 := by
+  constructor
+  · intro hA
+    apply LinearMap.ext
+    intro k
+    apply Subtype.ext
+    exact hA k.1 k.2
+  · intro hA Z hZ
+    have h := LinearMap.congr_fun hA (⟨Z, hZ⟩ : NativeKernel H p)
+    exact congrArg Subtype.val h
+
+theorem nativeBlockOperator_kernelStable_iff
+    (B : Module.End ℚ (NativeClass H p))
+    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) :
+    KernelStable (H := H) (nativeBlockOperator B F C D) ↔ F = 0 := by
+  rw [kernelStable_iff_kernelClassBlock_eq_zero,
+    nativeBlockOperator_kernelClassBlock]
+
+theorem nativeBlockOperator_kernelStable
+    (B : Module.End ℚ (NativeClass H p))
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : Module.End ℚ (NativeKernel H p)) :
+    KernelStable (H := H) (nativeBlockOperator B 0 C D) :=
+  (nativeBlockOperator_kernelStable_iff B 0 C D).2 rfl
+
+theorem kernelStable_nativeBlock_reconstruct
+    (A : NativeEnd V p) (hA : KernelStable (H := H) A) :
+    nativeBlockOperator (classClassBlock (H := H) A) 0
+      (classKernelBlock (H := H) A) (kernelKernelBlock (H := H) A) = A := by
+  have h := nativeBlockOperator_reconstruct (H := H) A
+  rw [(kernelStable_iff_kernelClassBlock_eq_zero A).1 hA] at h
+  exact h
+
+/-- Kernel feedback has a precise semidirect composition law; it cannot be
+silently folded into the descended class operator. -/
+theorem nativeTriangularOperator_comp
+    (B B' : Module.End ℚ (NativeClass H p))
+    (C C' : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D D' : Module.End ℚ (NativeKernel H p)) :
+    (nativeBlockOperator B 0 C D).comp (nativeBlockOperator B' 0 C' D') =
+      nativeBlockOperator (B.comp B') 0
+        (C.comp B' + D.comp C') (D.comp D') := by
+  simpa using nativeBlockOperator_comp B B' 0 0 C C' D D'
+
+/-- The full native family preserving every actual cycle class. -/
+theorem classPreserving_iff_blocks (A : NativeEnd V p) :
+    (∀ Z, H.cycleClass p (A Z) = H.cycleClass p Z) ↔
+      classClassBlock (H := H) A = LinearMap.id ∧
+        kernelClassBlock (H := H) A = 0 := by
+  constructor
+  · intro hA
+    constructor
+    · apply LinearMap.ext
+      intro a
+      apply Subtype.ext
+      exact (hA (cycleClassRangeSection V H p a)).trans
+        (cycleClassRangeSection_class a)
+    · apply (kernelStable_iff_kernelClassBlock_eq_zero A).1
+      intro Z hZ
+      exact (hA Z).trans hZ
+  · rintro ⟨hB, hF⟩ Z
+    have h := nativeBlockOperator_rangeCoordinate
+      (classClassBlock (H := H) A) (kernelClassBlock (H := H) A)
+      (classKernelBlock (H := H) A) (kernelKernelBlock (H := H) A) Z
+    rw [nativeBlockOperator_reconstruct, hB, hF] at h
+    simpa using congrArg Subtype.val h
+
+/-- A native descent's class block is exactly the actual descended action,
+despite the arbitrary choice of a range section. -/
+theorem classClassBlock_eq_rangeOperator
+    (A : NativeEnd V p) (hA : KernelStable (H := H) A) :
+    classClassBlock (H := H) A = rangeOperator A hA := by
+  apply LinearMap.ext
+  intro a
+  apply Subtype.ext
+  apply class_congr_of_kernelStable A hA
+  exact (cycleClassRangeSection_class a).trans (rangeRepresentative_spec a).symm
+
+/-! ## Invertible native kernel feedback -/
+
+/-- A triangular change of native coordinates is invertible when its two
+diagonal actions are invertible.  The inverse removes the full feedback. -/
+noncomputable def triangularCoordinateEquiv
+    (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p) :
+    (NativeClass H p × NativeKernel H p) ≃ₗ[ℚ]
+      (NativeClass H p × NativeKernel H p) where
+  toLinearMap := {
+    toFun := fun a => (B a.1, C a.1 + D a.2)
+    map_add' := by intro a b; simp [map_add, add_assoc, add_left_comm, add_comm]
+    map_smul' := by intro q a; simp [map_smul, smul_add]
+  }
+  invFun a := (B.symm a.1, D.symm (a.2 - C (B.symm a.1)))
+  left_inv := by
+    intro a
+    apply Prod.ext
+    · simp
+    · simp
+  right_inv := by
+    intro a
+    apply Prod.ext
+    · simp
+    · simp only [Prod.snd, map_sub, LinearEquiv.apply_symm_apply] <;> abel
+
+/-- Construct the corresponding invertible operator on actual native cycles. -/
+noncomputable def nativeTriangularEquiv
+    (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p) :
+    codimensionCycles V.X p ≃ₗ[ℚ] codimensionCycles V.X p :=
+  ((nativeClassKernelEquiv (H := H)).trans (triangularCoordinateEquiv B C D)).trans
+    (nativeClassKernelEquiv (H := H)).symm
+
+theorem nativeTriangularEquiv_toLinearMap
+    (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p) :
+    (nativeTriangularEquiv B C D).toLinearMap =
+      nativeBlockOperator B.toLinearMap 0 C D.toLinearMap := by
+  apply LinearMap.ext
+  intro Z
+  simp [nativeTriangularEquiv, triangularCoordinateEquiv,
+    nativeBlockOperator, nativeClassKernelEquiv_symm_apply]
+
+/-- The actual inverse is another constructed native operator, with the
+negative conjugated feedback in its lower-left block. -/
+theorem nativeTriangularEquiv_inverse_toLinearMap
+    (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p) :
+    (nativeTriangularEquiv B C D).symm.toLinearMap =
+      nativeBlockOperator B.symm.toLinearMap 0
+        (-(D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
+        D.symm.toLinearMap := by
+  apply LinearMap.ext
+  intro Z
+  simp [nativeTriangularEquiv, triangularCoordinateEquiv,
+    nativeBlockOperator, map_sub, sub_eq_add_neg, add_comm]
+
+theorem nativeTriangularEquiv_kernelStable
+    (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p) :
+    KernelStable (H := H) (nativeTriangularEquiv B C D).toLinearMap := by
+  rw [nativeTriangularEquiv_toLinearMap]
+  exact nativeBlockOperator_kernelStable _ _ _
+
+theorem nativeTriangularEquiv_inverse_kernelStable
+    (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p) :
+    KernelStable (H := H) (nativeTriangularEquiv B C D).symm.toLinearMap := by
+  rw [nativeTriangularEquiv_inverse_toLinearMap]
+  exact nativeBlockOperator_kernelStable _ _ _
+
+#print axioms nativeBlockOperator_reconstruct
+#print axioms nativeBlockOperator_comp
+#print axioms nativeBlockOperator_kernelStable_iff
+#print axioms nativeTriangularEquiv
+#print axioms nativeTriangularEquiv_inverse_toLinearMap
 
 end GSTClassicalHodgeKernelStableOperatorAlgebra
