@@ -59,7 +59,8 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
       funext q
       fin_cases q <;>
         simp [sheetProjectorQ, diagonalLefschetzQ, rationalPureBasis,
-          sourceSlot, targetSlot]
+          sourceSlot, targetSlot, mul_comm, mul_left_comm, mul_assoc,
+          smul_mul_assoc]
     change a sourceSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis sourceSlot) = _
     have hraw :
@@ -70,12 +71,14 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
         sourceSlot, targetSlot,
         GSTPureHodgeLefschetzKernel.pureWeightGap] using hsrc
     rw [hraw]
-    simp [pureMatrixUnit_basis_source, smul_smul]
+    simp [pureMatrixUnit_basis_source, smul_smul, smul_mul_assoc,
+      mul_comm, mul_left_comm, mul_assoc]
   · have hzero :
         diagonalLefschetzQ 2 2 (rationalPureBasis targetSlot) = 0 := by
       funext q
       fin_cases q <;>
         simp [diagonalLefschetzQ, rationalPureBasis,
+          ← GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel,
           sourceSlot, targetSlot]
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
@@ -105,8 +108,9 @@ theorem lifted_twoSlotLefschetz_eq_scaled_hodgeMatrixUnit
         pureMatrixUnit sourceSlot targetSlot) =
     (forwardScalar sourceSlot targetSlot : ℚ) •
       liftFiniteHodgeOperator (pairBasisIndex i j)
-        (pureMatrixUnit sourceSlot targetSlot) from
-    LinearMap.map_smul _ _ _]
+        (pureMatrixUnit sourceSlot targetSlot) from by
+      exact congrArg (liftFiniteHodgeOperator (pairBasisIndex i j))
+        (Module.End.smul_one pureMatrixUnit sourceSlot targetSlot).symm]
   rw [liftFiniteHodgeOperator_matrixUnit]
 
 #check diagonalLefschetzQ_two_two_eq_scaled_matrixUnit
