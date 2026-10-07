@@ -53,25 +53,11 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
       funext q
       fin_cases q
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
-        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
-        simp [GSTUniversalLefschetzKernel.worldForward,
-          GSTUniversalLefschetzKernel.worldCausalDistance,
-          GSTUniversalLefschetzKernel.carryDistance,
-          GSTUniversalLefschetzKernel.digitDistance,
-          GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTDimensionFreeHodgeDiagonal.diagonalState,
-          forwardScalar]
-        norm_num
+        exact_mod_cast GSTUniversalLefschetzKernel.positive_time_no_return
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState 0) (by norm_num)
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
-        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
-        simp [GSTUniversalLefschetzKernel.worldForward,
-          GSTUniversalLefschetzKernel.worldCausalDistance,
-          GSTUniversalLefschetzKernel.carryDistance,
-          GSTUniversalLefschetzKernel.digitDistance,
-          GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTDimensionFreeHodgeDiagonal.diagonalState,
-          forwardScalar]
-        norm_num
+        exact_mod_cast gst_forward_scalar_receipt sourceSlot targetSlot
+          (by simp [sourceSlot, targetSlot])
     change a sourceSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis sourceSlot) = _
     rw [hraw]
@@ -82,30 +68,19 @@ theorem diagonalLefschetzQ_two_two_eq_scaled_matrixUnit :
       funext q
       fin_cases q
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
-        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
-        simp [GSTUniversalLefschetzKernel.worldForward,
-          GSTUniversalLefschetzKernel.worldCausalDistance,
-          GSTUniversalLefschetzKernel.carryDistance,
-          GSTUniversalLefschetzKernel.digitDistance,
-          GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTDimensionFreeHodgeDiagonal.diagonalState,
-          forwardScalar]
-        norm_num
+        exact_mod_cast GSTUniversalLefschetzKernel.worldAct_L_pow_basis_outside_future_zero
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState 1)
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState 0)
+          (by simp [GSTUniversalLefschetzKernel.worldForward,
+            GSTGlobalPureHodgeCosmology.pureDiagonalState,
+            GSTDimensionFreeHodgeDiagonal.diagonalState])
       · simp [diagonalLefschetzQ, rationalPureBasis, sourceSlot, targetSlot]
-        rw [GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel]
-        simp [GSTUniversalLefschetzKernel.worldForward,
-          GSTUniversalLefschetzKernel.worldCausalDistance,
-          GSTUniversalLefschetzKernel.carryDistance,
-          GSTUniversalLefschetzKernel.digitDistance,
-          GSTGlobalPureHodgeCosmology.pureDiagonalState,
-          GSTDimensionFreeHodgeDiagonal.diagonalState,
-          forwardScalar]
-        norm_num
+        exact_mod_cast GSTUniversalLefschetzKernel.positive_time_no_return
+          (GSTGlobalPureHodgeCosmology.pureDiagonalState 1) (by norm_num)
     change a targetSlot • diagonalLefschetzQ 2 2
       (rationalPureBasis targetSlot) = _
     rw [hzero, smul_zero]
-    simp [pureMatrixUnit_basis_other sourceSlot targetSlot targetSlot
-      (by simp [sourceSlot, targetSlot])]
+    simp [rationalPureBasis, sourceSlot, targetSlot]
 
 /-- The forward scalar in the universal two-slot window is nonzero. -/
 theorem twoSlot_forwardScalar_ne_zero :
@@ -125,25 +100,24 @@ theorem lifted_twoSlotLefschetz_eq_scaled_hodgeMatrixUnit
       (forwardScalar sourceSlot targetSlot : ℚ) •
         GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit i j := by
   rw [diagonalLefschetzQ_two_two_eq_scaled_matrixUnit]
-  rw [show liftFiniteHodgeOperator (pairBasisIndex i j)
+  have hsmul : liftFiniteHodgeOperator (pairBasisIndex i j)
       ((forwardScalar sourceSlot targetSlot : ℚ) •
         pureMatrixUnit sourceSlot targetSlot) =
     (forwardScalar sourceSlot targetSlot : ℚ) •
       liftFiniteHodgeOperator (pairBasisIndex i j)
-        (pureMatrixUnit sourceSlot targetSlot) from by
-      show (finiteHodgeWrite (pairBasisIndex i j)).comp
-          (((forwardScalar sourceSlot targetSlot : ℚ) •
-            pureMatrixUnit sourceSlot targetSlot).comp
-            (finiteHodgeRead (pairBasisIndex i j))) =
-        (forwardScalar sourceSlot targetSlot : ℚ) •
-          (finiteHodgeWrite (pairBasisIndex i j)).comp
-            (pureMatrixUnit sourceSlot targetSlot).comp
-              (finiteHodgeRead (pairBasisIndex i j))
-      apply LinearMap.ext
-      intro x
-      simp [LinearMap.smul_apply, LinearMap.map_smul, LinearMap.comp_apply,
-        LinearMap.coe_comp, Function.comp_apply]
-  rw [liftFiniteHodgeOperator_matrixUnit]
+        (pureMatrixUnit sourceSlot targetSlot) := by
+    apply LinearMap.ext
+    intro x
+    show (finiteHodgeWrite (pairBasisIndex i j))
+        (((forwardScalar sourceSlot targetSlot : ℚ) •
+          pureMatrixUnit sourceSlot targetSlot)
+        (finiteHodgeRead (pairBasisIndex i j) x)) =
+      (forwardScalar sourceSlot targetSlot : ℚ) •
+        (finiteHodgeWrite (pairBasisIndex i j))
+        (pureMatrixUnit sourceSlot targetSlot
+          (finiteHodgeRead (pairBasisIndex i j) x))
+    simp [LinearMap.smul_apply, LinearMap.map_smul]
+  rw [hsmul, liftFiniteHodgeOperator_matrixUnit]
   simp only [pairBasisIndex_source, pairBasisIndex_target]
 
 #check diagonalLefschetzQ_two_two_eq_scaled_matrixUnit

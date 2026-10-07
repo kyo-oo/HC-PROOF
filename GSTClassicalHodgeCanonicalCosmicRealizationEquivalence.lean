@@ -128,12 +128,14 @@ theorem preserves_algebraicFiber
   have hnat := R.naturality Z
   rw [hZ, canonicalCosmicAmbient_on_hodge i j alpha] at hnat
   have hout :
-      liftCosmicWindowOperator (pairBasisIndex i j)
-          (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha ∈
+      (liftCosmicWindowOperator (pairBasisIndex i j)
+          (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha).1 ∈
         LinearMap.range (H.cycleClass p) :=
     ⟨R.native Z, hnat⟩
   rw [smoothProjective_cycleClass_range_eq_atomic_span V H p] at hout
-  exact (mem_AlgebraicHodgeSubspace_iff _).mpr hout
+  exact (mem_AlgebraicHodgeSubspace_iff
+    (liftCosmicWindowOperator (pairBasisIndex i j)
+      (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha)).mpr hout
 
 end NativeCanonicalCosmicRealization
 

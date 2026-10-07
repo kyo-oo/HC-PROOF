@@ -1,5 +1,7 @@
 import GSTClassicalHodgeFiberedNativePullback
 import GSTClassicalHodgeRecoordinationArsenalCrown
+import GSTClassicalHodgeFiniteSupportArsenalConjugation
+import GSTClassicalHodgeSupportCardinalityBridge
 import GSTWorldRecoordinationGroupoid
 
 /-!
@@ -38,6 +40,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeSupportCardinalityBridge
 open GSTClassicalHodgeRecoordinationArsenalCrown
 open GSTClassicalHodgeFiberedNativePullback
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTWorldRecoordinationGroupoid

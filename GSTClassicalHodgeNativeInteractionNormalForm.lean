@@ -101,9 +101,9 @@ def interactionProjection
     interactionProjection i₀ x₀ (atom V H p i x) =
       interactionRectangle i₀ i x₀ x := by
   simp only [interactionProjection, LinearMap.sub_apply, LinearMap.id_apply,
-    marginalReconstruction, glueMarginals, forgetPoint_atom,
-    forgetMultiplicity_atom, multiplicityMass_single]
-  simp [attachPoint, attachSheet, atom, interactionRectangle]
+    marginalReconstruction, glueMarginals, atom]
+  simp [forgetPoint_atom, forgetMultiplicity_atom, multiplicityMass_single,
+    Finsupp.sum]
   abel
 
 /-- **FINITE INTERACTION LAW.** Every interaction is a finite combination
@@ -144,10 +144,15 @@ theorem interactionProjection_idempotent
     (x₀ : CodimensionPoint V.X p) :
     (interactionProjection i₀ x₀).comp (interactionProjection i₀ x₀) =
       interactionProjection i₀ x₀ := by
-  ext Φ
-  apply (interactionProjection_eq_self_iff i₀ x₀ _).mpr
-  exact ⟨interactionProjection_forgetPoint i₀ x₀ Φ,
-    interactionProjection_forgetMultiplicity i₀ x₀ Φ⟩
+  apply LinearMap.ext
+  intro Φ
+  have h := (interactionProjection_eq_self_iff i₀ x₀
+    (interactionProjection i₀ x₀ Φ)).mpr
+    ⟨interactionProjection_forgetPoint i₀ x₀ Φ,
+      interactionProjection_forgetMultiplicity i₀ x₀ Φ⟩
+  show (interactionProjection i₀ x₀) ((interactionProjection i₀ x₀) Φ) =
+    (interactionProjection i₀ x₀) Φ
+  exact h
 
 /-- **EXACT JOINT-KERNEL GENERATION.** No other type of marginal-invisible
 finite state is needed: four-corner interactions generate the entire kernel. -/

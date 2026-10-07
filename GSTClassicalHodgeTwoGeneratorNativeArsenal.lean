@@ -111,16 +111,21 @@ observable on Hodge classes supported in the two selected basis sheets. -/
 theorem ambientSourceProjector_on_hodge_eq_id_sub_code
     (i j : ClassicalHodgeBasisIndex V H p)
     (alpha : ClassicalHodgeFiber V H p)
-    (hspan : alpha = (hodgeCoordinate i alpha) • classicalHodgeBasis V H p i
-      + (hodgeCoordinate j alpha) • classicalHodgeBasis V H p j) :
+    (hspan : alpha =
+        (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate i alpha) •
+          classicalHodgeBasis V H p i
+      + (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate j alpha) •
+          classicalHodgeBasis V H p j) :
     ambientSourceProjector i j alpha.1 =
       alpha.1 - ambientTwoSlotCode i j alpha.1 := by
   have hround : finiteHodgeWrite (pairBasisIndex i j)
       (finiteHodgeRead (pairBasisIndex i j) alpha) = alpha := by
     have h1 : finiteHodgeWrite (pairBasisIndex i j)
         (finiteHodgeRead (pairBasisIndex i j) alpha) =
-        (hodgeCoordinate i alpha) • classicalHodgeBasis V H p i
-          + (hodgeCoordinate j alpha) • classicalHodgeBasis V H p j := by
+        (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate i alpha) •
+          classicalHodgeBasis V H p i
+      + (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate j alpha) •
+          classicalHodgeBasis V H p j := by
       simp [finiteHodgeWrite, finiteHodgeRead, pairBasisIndex,
         sourceSlot, targetSlot]
     rw [h1]
@@ -170,8 +175,8 @@ theorem idSubCode_nativePointLifts
       (LinearMap.id - ambientTwoSlotCode i j) := by
   rw [← smoothProjective_atomicStable_iff_nativePointLifts]
   exact atomicSpanStable_sub atomicSpanStable_id
-    (smoothProjective_atomicStable_iff_nativePointLifts
-      (ambientTwoSlotCode i j)).2 R.code
+    ((smoothProjective_atomicStable_iff_nativePointLifts
+      (ambientTwoSlotCode i j)).2 R.code)
 
 /-- The code observable itself gives the target projector naturality. -/
 theorem targetProjector_nativePointLifts_on_hodge
