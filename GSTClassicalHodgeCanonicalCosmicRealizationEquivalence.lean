@@ -47,6 +47,7 @@ open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeRangeLiftedSpectralOperator
 open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 
 variable {V : SmoothProjectiveComplexScheme}
@@ -167,7 +168,7 @@ theorem nativeRealization_of_range_stable
 
 /-- Exact realization form of the canonical fixed-weight target. -/
 theorem nativeCanonicalRealizations_imply_hodgeWeight
-    (hseed : AlgebraicFiber (V := V) (H := H) (p := p) ≠ ⊥)
+    (hseed : AlgebraicHodgeSubspace V H p ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       NativeCanonicalCosmicRealization (V := V) (H := H) i j) :
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
@@ -178,10 +179,10 @@ theorem nativeCanonicalRealizations_imply_hodgeWeight
 of the canonical limitless cosmic matrix units is sufficient for complete
 fixed-weight Hodge saturation. -/
 theorem algebraicFiber_eq_top_of_nativeCanonicalRealizations
-    (hseed : AlgebraicFiber (V := V) (H := H) (p := p) ≠ ⊥)
+    (hseed : AlgebraicHodgeSubspace V H p ≠ ⊥)
     (R : ∀ i j : ClassicalHodgeBasisIndex V H p,
       NativeCanonicalCosmicRealization (V := V) (H := H) i j) :
-    AlgebraicFiber (V := V) (H := H) (p := p) = ⊤ := by
+    AlgebraicHodgeSubspace V H p = ⊤ := by
   exact algebraicFiber_eq_top hseed
     (canonicalCosmicNaturality_of_nativeRealizations R)
 

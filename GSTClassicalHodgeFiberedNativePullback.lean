@@ -195,7 +195,7 @@ theorem toGlobalHodgeAddress_atom
     toGlobalHodgeAddress V H p (atom V H p i x) =
       fiberedSheetGenerator V H ⟨p,i⟩ := by
   simp only [toGlobalHodgeAddress]
-  rw [forgetPoint_atom]
+  simp only [forgetPoint_atom]
   simp [fiberedSheetGenerator, weightFiberEmbedding]
 
 @[simp]
@@ -311,7 +311,7 @@ theorem nativeProjection_to_limitless
   rw [nativeCycle_shadow_eq_mass_transfer]
   congr 1
   simp only [toNativeCycle]
-  rw [nativeCycleMass_realize]
+  simp only [nativeCycleMass_realize]
   exact presentationMass_forgetMultiplicity V H p φ
 
 /-- **THE FIBERED NATIVE PULLBACK SQUARE COMMUTES.**
