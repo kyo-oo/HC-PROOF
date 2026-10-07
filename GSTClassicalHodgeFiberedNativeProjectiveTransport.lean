@@ -1,5 +1,6 @@
 import GSTClassicalHodgeFiberedNativeSpectralProjectors
 import GSTClassicalHodgeProjectivePointTransport
+import GSTNativeCodimensionCyclePresentation
 import GSTClassicalHodgeProjectiveCorrespondenceAlgebra
 
 /-!
@@ -36,6 +37,7 @@ open GSTClassicalHodgeFiberedNativeSpectralProjectors
 open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -60,8 +62,14 @@ noncomputable def fiberedNativePushforward
     (f : V.X ⟶ V.X) :
     FiberedNativeAddress V H p →ₗ[ℚ] FiberedNativeAddress V H p where
   toFun φ := φ.sum fun ix q => q • transportAtom f ix.1 ix.2
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+  map_add' := by
+    intro φ ψ
+    classical
+    simp
+  map_smul' := by
+    intro q φ
+    classical
+    simp [smul_smul]
 
 @[simp]
 theorem fiberedNativePushforward_atom

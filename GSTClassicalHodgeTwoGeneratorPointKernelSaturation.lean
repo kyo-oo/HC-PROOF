@@ -147,8 +147,8 @@ theorem twoGeneratorAmbientWord_on_hodge
     LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
   rw [hfs]
   norm_num
-  rw [one_div, smul_smul, mul_comm _ 2,
-    inv_mul_cancel_left₀ (by norm_num : ((2:ℚ) ≠ 0))]
+  rw [one_div, smul_smul, ← mul_assoc,
+    inv_mul_cancel₀ (by norm_num : (2:ℚ) ≠ 0), one_mul]
 
 /-- Native two-generator point lifts force the corresponding matrix-unit image
 of every already-algebraic Hodge vector to remain algebraic.
