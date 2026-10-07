@@ -121,6 +121,55 @@ theorem bigradedBettiHodge_of_conservedCharge_and_bareLefschetz
   exact minimalGhost_false_of_spine_bareLefschetz
     G D M (hL M)
 
+/-! ## Exact circularity audit of the ghost-indexed closure
+
+The preceding implication is a useful reduction, but its ghost-indexed
+hypothesis must not be mistaken for an independent geometric axiom.  Under
+Hodge there are no minimal primitive ghosts at all, because every such object
+stores a basis separator.  Hence the hypothesis is vacuous in the Hodge world.
+Combined with the extinction theorem above, it is exactly equivalent to the
+Hodge conclusion.
+-/
+
+/-- Hodge makes the type of minimal primitive ghosts empty. -/
+theorem isEmpty_minimalPrimitiveGhost_of_hodge
+    (G : GeometricCycleClassSpine V H)
+    (hHodge : BigradedBettiHodgeStatement V H) :
+    IsEmpty (MinimalPrimitiveGhost G) := by
+  refine ⟨?_⟩
+  intro M
+  have hnone :=
+    (bigradedBettiHodgeStatement_iff_no_basis_separator V H).mp
+      hHodge M.weight M.sheet
+  exact isEmpty_iff.mp hnone M.separator
+
+/-- The exact ghost-indexed bare-L² closure consumed by the spine finale. -/
+def MinimalGhostBareL2Closure
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge (V := V) (H := H) G) : Prop :=
+  ∀ M : MinimalPrimitiveGhost G,
+    HasNativePointLifts
+      (p := M.weight) (cl := H.cycleClass M.weight)
+      (ambientTwoStepLefschetz
+        (spineMinimalGhostLocalSeed G D M).sourceIndex M.sheet)
+
+/-- **CIRCULARITY RECEIPT.**
+With the conserved spine source fixed, ghost-indexed bare-L² closure is
+equivalent to the complete Stage-2G Hodge statement.  It is therefore a
+conclusion-normal-form reduction target, not a foundational construction law. -/
+theorem minimalGhostBareL2Closure_iff_hodge
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge (V := V) (H := H) G) :
+    MinimalGhostBareL2Closure G D ↔
+      BigradedBettiHodgeStatement V H := by
+  constructor
+  · intro hL
+    exact bigradedBettiHodge_of_conservedCharge_and_bareLefschetz
+      G D hL
+  · intro hHodge M
+    exact (isEmpty_iff.mp
+      (isEmpty_minimalPrimitiveGhost_of_hodge G hHodge) M).elim
+
 /-- Uniform operator form: it is enough to know that every ordered two-sheet
 bare `L^2` ambient operator has native point lifts.  The minimal-ghost theorem
 then selects only the one pair it actually needs. -/
@@ -176,6 +225,13 @@ theorem bigradedBettiHodge_of_nativeMassBridge_and_uniformBareLefschetz
     BigradedBettiHodgeStatement V H :=
   bigradedBettiHodge_of_conservedCharge_and_uniformBareLefschetz
     G (N.toConservedCharge G) hL
+
+#check isEmpty_minimalPrimitiveGhost_of_hodge
+#check MinimalGhostBareL2Closure
+#check minimalGhostBareL2Closure_iff_hodge
+
+#print axioms isEmpty_minimalPrimitiveGhost_of_hodge
+#print axioms minimalGhostBareL2Closure_iff_hodge
 
 #check spineMinimalGhostLocalSeed
 #check spineMinimalGhostLocalSeed_source_ne_zero
