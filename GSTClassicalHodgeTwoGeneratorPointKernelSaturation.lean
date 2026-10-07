@@ -83,6 +83,7 @@ This is a pure GST/Hodge calculation; no algebraicity or native-cycle witness
 is used. -/
 theorem twoGeneratorAmbientWord_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
+    (hij : i ≠ j)
     (alpha : HFiber V H p) :
     twoGeneratorAmbientWord i j alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
@@ -113,41 +114,79 @@ theorem twoGeneratorAmbientWord_on_hodge
   rw [show (ambientTwoStepLefschetz i j) src.1 = mid.1 from hL]
   rw [show (ambientTwoSlotCode i j) mid.1 = (twoSlotCodeHodge i j mid).1
     from htgt]
-  have hfinite :
-      ((forwardScalar sourceSlot targetSlot : ℚ)⁻¹ •
-        (twoSlotCode.comp
-          ((diagonalLefschetzQ 2 2).comp
-            (LinearMap.id - twoSlotCode)))) =
-        pureMatrixUnit sourceSlot targetSlot := by
-    rw [← sheetProjectorQ_source_eq_id_sub_code,
-      ← sheetProjectorQ_target_eq_code]
-    exact forwardArsenalWord_eq_matrixUnit
-      sourceSlot targetSlot (by decide)
-  have hlift :
-      liftFiniteHodgeOperator (pairBasisIndex i j)
-          (pureMatrixUnit sourceSlot targetSlot) =
-        hodgeMatrixUnit i j :=
-    liftFiniteHodgeOperator_matrixUnit
-      (pairBasisIndex i j) sourceSlot targetSlot
-  simpa [src, mid, twoSlotCodeHodge, twoSlotHodgeOperator,
-    hfinite, pairBasisIndex_source, pairBasisIndex_target] using
-      LinearMap.congr_fun hlift alpha
+  have h01 : hodgeCoordinate i (classicalHodgeBasis V H p j) = 0 :=
+    hodgeCoordinate_basis_other i j hij
+  have h10 : hodgeCoordinate j (classicalHodgeBasis V H p i) = 0 :=
+    hodgeCoordinate_basis_other j i (Ne.symm hij)
+  have hrw : ∀ w : RationalPureWindow 2,
+      finiteHodgeRead (pairBasisIndex i j)
+        (finiteHodgeWrite (pairBasisIndex i j) w) = w := by
+    intro w
+    funext r
+    fin_cases r
+    · simp [finiteHodgeRead, finiteHodgeWrite, sourceSlot, targetSlot,
+        pairBasisIndex, h01]
+    · simp [finiteHodgeRead, finiteHodgeWrite, sourceSlot, targetSlot,
+        pairBasisIndex, h10]
+  have hLval : (GSTTruncatedWorldCohomologyRing.worldAct 2 2
+      ((GSTTruncatedWorldCohomologyRing.L 2 2) ^ 2)
+      (GSTWorldPoincareDuality.worldBasis
+        (GSTGlobalPureHodgeCosmology.pureDiagonalState (0 : Fin 2)))
+      (GSTGlobalPureHodgeCosmology.pureDiagonalState (1 : Fin 2))) =
+      (2 : ℤ) :=
+    gst_forward_scalar_receipt (N := 2) (p := sourceSlot) (q := targetSlot)
+      (by decide)
+  have hfs : (forwardScalar (N := 2) (0 : Fin 2) (1 : Fin 2) : ℚ) = 2 := by
+    exact_mod_cast
+      (show forwardScalar (N := 2) (0 : Fin 2) (1 : Fin 2) = 2 from by decide)
+  simp [src, mid, twoSlotCodeHodge, twoSlotHodgeOperator,
+    liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
+    pureMatrixUnit, rationalPureBasis, diagonalLefschetzQ, sheetProjectorQ,
+    twoSlotCode, hodgeMatrixUnit_apply, sourceSlot, targetSlot, hrw,
+    pairBasisIndex, h01, h10, hodgeCoordinate_basis_self, hLval,
+    LinearMap.coe_comp, Function.comp_apply, LinearMap.smul_apply]
+  rw [hfs]
+  norm_num
+  rw [one_div, smul_smul, mul_comm _ 2,
+    inv_mul_cancel_left₀ (by norm_num : ((2:ℚ) ≠ 0))]
 
 /-- Native two-generator point lifts force the corresponding matrix-unit image
-of every already-algebraic Hodge vector to remain algebraic. -/
+of every already-algebraic Hodge vector to remain algebraic.
+The diagonal case is the code observable itself; the off-diagonal case is
+the two-generator ambient word. -/
 theorem twoGeneratorNative_matrixUnit_mem_algebraic
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : TwoGeneratorNative (V := V) (H := H) i j)
     (alpha : HFiber V H p)
     (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
     hodgeMatrixUnit i j alpha ∈ AlgebraicHodgeSubspace V H p := by
-  have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
-      (twoGeneratorAmbientWord i j) := by
-    rw [smoothProjective_atomicStable_iff_nativePointLifts]
-    simpa [twoGeneratorAmbientWord] using R.normalizedWord_nativePointLifts
-  have himage := hstable alpha.1 halpha
-  rw [twoGeneratorAmbientWord_on_hodge i j alpha] at himage
-  exact himage
+  by_cases hij : i = j
+  · subst j
+    have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
+        (ambientTwoSlotCode i i) := by
+      rw [smoothProjective_atomicStable_iff_nativePointLifts]
+      exact R.code
+    have himage := hstable alpha.1 halpha
+    rw [show (ambientTwoSlotCode i i) alpha.1 =
+        (twoSlotCodeHodge i i alpha).1 from
+      extendHodgeEndomorphism_on_hodge (V := V) (H := H)
+        (twoSlotCodeHodge i i) alpha] at himage
+    have hdiag : (twoSlotCodeHodge i i alpha).1 =
+        (hodgeMatrixUnit i i alpha).1 := by
+      simp [twoSlotCodeHodge, twoSlotHodgeOperator,
+        liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
+        pureMatrixUnit, rationalPureBasis, twoSlotCode, sourceSlot,
+        targetSlot, pairBasisIndex, hodgeMatrixUnit_apply,
+        hodgeCoordinate_basis_self]
+    rw [hdiag] at himage
+    exact himage
+  · have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
+        (twoGeneratorAmbientWord i j) := by
+      rw [smoothProjective_atomicStable_iff_nativePointLifts]
+      simpa [twoGeneratorAmbientWord] using R.normalizedWord_nativePointLifts
+    have himage := hstable alpha.1 halpha
+    rw [twoGeneratorAmbientWord_on_hodge i j hij alpha] at himage
+    exact himage
 
 /-- A family of two-generator native point-lift packages makes the actual
 algebraic Hodge subspace invariant under every rank-free matrix unit. -/
