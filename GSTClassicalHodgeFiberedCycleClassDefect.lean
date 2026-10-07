@@ -152,7 +152,7 @@ theorem normalizedSpectralAtom_defect
     apply (classicalHodgeBasis V H p).repr.injective
     apply Finsupp.embDomain_injective (weightFiberEmbedding V H p)
     simpa [fiberedHodgeClass, toGlobalHodgeAddress,
-      weightFiberEmbedding] using
+      weightFiberEmbedding, fiberedSheetGenerator] using
       normalized_hodgeFace_exact alpha S y x
   rw [hhodge]
   rfl
