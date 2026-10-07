@@ -104,7 +104,7 @@ def interactionProjection
     marginalReconstruction, glueMarginals, atom]
   simp [forgetPoint_atom, forgetMultiplicity_atom, multiplicityMass_single,
     Finsupp.sum]
-  abel
+  abel_nf
 
 /-- **FINITE INTERACTION LAW.** Every interaction is a finite combination
 of explicit four-atom rectangles, with the original state's coefficients. -/
