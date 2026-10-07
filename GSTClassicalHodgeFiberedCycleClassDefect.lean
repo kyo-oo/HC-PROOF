@@ -1,5 +1,6 @@
 import GSTClassicalHodgeNormalizedFiberedSpectralAtom
 import GSTClassicalHodgeAtomicDefectDuality
+import GSTWorldRecoordinationGroupoid
 
 /-!
 # GST CLASSICAL HODGE — FIBERED CYCLE-CLASS DEFECT
@@ -33,6 +34,8 @@ namespace GSTClassicalHodgeFiberedCycleClassDefect
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
+open GSTWorldRecoordinationGroupoid
+open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedNativePullback
@@ -161,7 +164,7 @@ theorem defect_eq_zero_iff_faces_agree
   change
     fiberedNativeCycleClass (V := V) (H := H) (p := p) Φ -
         fiberedHodgeAmbient (V := V) (H := H) (p := p) Φ = 0 ↔ _
-  simp [fiberedNativeCycleClass, fiberedHodgeAmbient]
+  simp [fiberedNativeCycleClass, fiberedHodgeAmbient, sub_eq_zero]
 
 /-- If one defect-zero fibered state realizes every Hodge basis sheet, then the
 exact Stage-2G statement follows by unrestricted finite-support reconstruction.
