@@ -87,13 +87,18 @@ theorem twoGeneratorAmbientWord_on_hodge
     twoGeneratorAmbientWord i j alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
   let src : HFiber V H p :=
-    (LinearMap.id - twoSlotCodeHodge i j) alpha
+    ((LinearMap.id - twoSlotCodeHodge i j :
+      ClassicalHodgeFiber V H p →ₗ[ℚ] ClassicalHodgeFiber V H p) alpha)
   let mid : HFiber V H p :=
     twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) src
   have hcode0 := extendHodgeEndomorphism_on_hodge
     (V := V) (H := H) (twoSlotCodeHodge i j) alpha
   have hsrc :
-      (LinearMap.id - ambientTwoSlotCode i j) alpha.1 = src.1 := by
+      ((LinearMap.id - ambientTwoSlotCode i j :
+        GSTGeometricRealizationStage2F.RationalSingularCohomology
+          H.analytification (2 * p) →ₗ[ℚ]
+        GSTGeometricRealizationStage2F.RationalSingularCohomology
+          H.analytification (2 * p)) alpha.1) = src.1 := by
     simp only [LinearMap.sub_apply, LinearMap.id_apply]
     rw [hcode0]
     rfl

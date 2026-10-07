@@ -100,8 +100,13 @@ def interactionProjection
     (x₀ x : CodimensionPoint V.X p) :
     interactionProjection i₀ x₀ (atom V H p i x) =
       interactionRectangle i₀ i x₀ x := by
-  simp only [interactionProjection, LinearMap.sub_apply, LinearMap.id_apply,
-    marginalReconstruction, glueMarginals]
+  simp only [interactionProjection, LinearMap.sub_apply, LinearMap.id_apply]
+  show atom V H p i x -
+      (attachPoint V H p x₀ (forgetPoint V H p (atom V H p i x)) +
+        attachSheet V H p i₀ (forgetMultiplicity V H p (atom V H p i x)) -
+        multiplicityMass V H p (forgetPoint V H p (atom V H p i x)) •
+          atom V H p i₀ x₀) =
+    interactionRectangle i₀ i x₀ x
   rw [forgetPoint_atom, forgetMultiplicity_atom]
   simp [multiplicityMass_single, interactionRectangle, atom,
     attachPoint, attachSheet, Finsupp.sum]
