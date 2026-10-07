@@ -45,6 +45,7 @@ open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
@@ -79,12 +80,12 @@ This is a pure GST/Hodge calculation; no algebraicity or native-cycle witness
 is used. -/
 theorem twoGeneratorAmbientWord_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
-    (alpha : HFiber V H p) :
+    (alpha : HFiber) :
     twoGeneratorAmbientWord i j alpha.1 =
       (hodgeMatrixUnit i j alpha).1 := by
-  let src : HFiber V H p :=
+  let src : HFiber :=
     (LinearMap.id - twoSlotCodeHodge i j) alpha
-  let mid : HFiber V H p :=
+  let mid : HFiber :=
     twoSlotHodgeOperator i j (diagonalLefschetzQ 2 2) src
   have hcode0 := extendHodgeEndomorphism_on_hodge
     (V := V) (H := H) (twoSlotCodeHodge i j) alpha
@@ -126,7 +127,7 @@ of every already-algebraic Hodge vector to remain algebraic. -/
 theorem TwoGeneratorNative.matrixUnit_mem_algebraic
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : TwoGeneratorNative (V := V) (H := H) i j)
-    (alpha : HFiber V H p)
+    (alpha : HFiber)
     (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
     hodgeMatrixUnit i j alpha ∈ AlgebraicHodgeSubspace V H p := by
   have hstable : AtomicSpanStable (p := p) (cl := H.cycleClass p)
@@ -167,7 +168,7 @@ theorem hodge_weight_of_twoGeneratorNative
       LinearMap.range (H.cycleClass p) := by
   have htop := algebraicHodgeSubspace_eq_top_of_twoGeneratorNative hseed R
   intro alpha halpha
-  let a : HFiber V H p := ⟨alpha, halpha⟩
+  let a : HFiber := ⟨alpha, halpha⟩
   have ha : a ∈ AlgebraicHodgeSubspace V H p := by
     rw [htop]
     trivial
