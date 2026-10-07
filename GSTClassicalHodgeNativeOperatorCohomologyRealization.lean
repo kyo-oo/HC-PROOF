@@ -443,6 +443,48 @@ theorem ambientOperator_comp_coherent
   rw [ambientOperator_eq_supported]
   exact supportedAmbientOperator_comp A B hA hB
 
+/-- **THE CORNER-UNIT OBSTRUCTION.**
+
+The coherent ambient image of the native identity is the projection onto
+actual algebraic classes, not necessarily the identity on ALL cohomology.
+Those become equal if and only if the genuine native cycle-class range
+already fills all ambient cohomology.
+
+This is an unconditional mathematical reason a faithful native algebra
+extension must not be mistaken for a unital representation of the full
+ambient correspondence geometry.  A class outside the genuine native
+range is *not* manufactured by rewriting the operator API. -/
+theorem ambientOperator_id_eq_fullIdentity_iff_fullRange :
+    ambientOperator
+      (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) =
+        (LinearMap.id : Module.End ℚ (Coh H p)) ↔
+      ∀ alpha : Coh H p,
+        alpha ∈ LinearMap.range (H.cycleClass p) := by
+  rw [ambientOperator_eq_supported, supportedAmbientOperator_id]
+  constructor
+  · intro h alpha
+    have hh := LinearMap.congr_fun h alpha
+    exact (classRangeProjection_eq_self_iff alpha).1 hh
+  · intro h
+    apply LinearMap.ext
+    intro alpha
+    exact (classRangeProjection_eq_self_iff alpha).2 (h alpha)
+
+/-- The native identity is ALWAYS mapped to its real cohomological corner
+unit.  It can be promoted to the full ambient identity only under the
+precise range-surjectivity condition proved above. -/
+theorem ambientOperator_nativeIdentity_is_cornerUnit :
+    ambientOperator
+      (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) =
+        classRangeProjection (H := H) := by
+  rw [ambientOperator_eq_supported]
+  exact supportedAmbientOperator_id
+
+#check ambientOperator_id_eq_fullIdentity_iff_fullRange
+#print axioms ambientOperator_id_eq_fullIdentity_iff_fullRange
+
 /-- Every rebuilt native ambient motion annihilates the off-range complement
 at the definition level.  No uncontrolled arbitrary extension survives. -/
 theorem ambientOperator_offRange_zero
