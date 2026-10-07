@@ -103,10 +103,9 @@ theorem ambientTargetProjector_on_hodge_eq_code
     (alpha : ClassicalHodgeFiber V H p) :
     ambientTargetProjector i j alpha.1 =
       ambientTwoSlotCode i j alpha.1 := by
-  rw [ambientTargetProjector, extendHodgeEndomorphism_on_hodge,
-    extendHodgeEndomorphism_on_hodge]
-  unfold twoSlotHodgeOperator twoSlotCodeHodge
+  unfold ambientTargetProjector twoSlotHodgeOperator twoSlotCodeHodge
   rw [sheetProjectorQ_target_eq_code]
+  simp [twoSlotCode, sourceSlot, targetSlot]
 
 /-- The source projector ambient action agrees on the Hodge fiber with
 identity minus the code observable. -/
@@ -115,11 +114,9 @@ theorem ambientSourceProjector_on_hodge_eq_id_sub_code
     (alpha : ClassicalHodgeFiber V H p) :
     ambientSourceProjector i j alpha.1 =
       alpha.1 - ambientTwoSlotCode i j alpha.1 := by
-  rw [ambientSourceProjector, extendHodgeEndomorphism_on_hodge,
-    extendHodgeEndomorphism_on_hodge]
-  unfold twoSlotHodgeOperator twoSlotCodeHodge
+  unfold ambientSourceProjector twoSlotHodgeOperator twoSlotCodeHodge
   rw [sheetProjectorQ_source_eq_id_sub_code]
-  rfl
+  simp [twoSlotCode, sourceSlot, targetSlot, sub_eq_zero]
 
 /-- Native point-lift realization of the two minimal noncommuting primitives. -/
 structure TwoGeneratorNative

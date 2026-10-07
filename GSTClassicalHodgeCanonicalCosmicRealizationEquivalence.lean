@@ -121,9 +121,11 @@ theorem preserves_algebraicFiber
     liftCosmicWindowOperator (pairBasisIndex i j)
         (rationalCosmicMatrixUnit sourceSlot.1 targetSlot.1) alpha ∈
       AlgebraicHodgeSubspace V H p := by
+  have halg' : alpha.1 ∈ (AlgebraicHodgeSubspace V H p : Set _) :=
+    Submodule.mem_coe.mp halg
   have hrange : alpha.1 ∈ LinearMap.range (H.cycleClass p) := by
     rw [smoothProjective_cycleClass_range_eq_atomic_span V H p]
-    exact halg
+    exact halg'
   rcases hrange with ⟨Z, hZ⟩
   have hnat := R.naturality Z
   rw [hZ, canonicalCosmicAmbient_on_hodge i j alpha] at hnat
@@ -144,7 +146,8 @@ theorem canonicalCosmicNaturality_of_nativeRealizations
       NativeCanonicalCosmicRealization (V := V) (H := H) i j) :
     CanonicalCosmicNaturality (V := V) (H := H) p := by
   intro i j alpha halg
-  exact preserves_algebraicFiber (R i j) alpha halg
+  exact NativeCanonicalCosmicRealization.preserves_algebraicFiber (R i j)
+    alpha halg
 
 /-- Conversely, canonical cosmic naturality gives cycle-class-range stability
 on every Hodge class already known to be algebraic.  The range-lift machinery

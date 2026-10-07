@@ -109,9 +109,24 @@ theorem lifted_twoSlotLefschetz_eq_scaled_hodgeMatrixUnit
     (forwardScalar sourceSlot targetSlot : ℚ) •
       liftFiniteHodgeOperator (pairBasisIndex i j)
         (pureMatrixUnit sourceSlot targetSlot) from by
-      exact congrArg (liftFiniteHodgeOperator (pairBasisIndex i j))
-        (Module.End.smul_one pureMatrixUnit sourceSlot targetSlot).symm]
+      have h1 : liftFiniteHodgeOperator (pairBasisIndex i j)
+          ((forwardScalar sourceSlot targetSlot : ℚ) •
+            pureMatrixUnit sourceSlot targetSlot) =
+        liftFiniteHodgeOperator (pairBasisIndex i j)
+          (fun a => (forwardScalar sourceSlot targetSlot : ℚ) •
+            pureMatrixUnit sourceSlot targetSlot a) := by
+        simp [liftFiniteHodgeOperator, Module.End.coe_smul, mul_comm, mul_assoc,
+          mul_left_comm, smul_mul_assoc]
+      have h2 : liftFiniteHodgeOperator (pairBasisIndex i j)
+          (fun a => (forwardScalar sourceSlot targetSlot : ℚ) •
+            pureMatrixUnit sourceSlot targetSlot a) =
+        (forwardScalar sourceSlot targetSlot : ℚ) •
+          liftFiniteHodgeOperator (pairBasisIndex i j)
+            (pureMatrixUnit sourceSlot targetSlot) := by
+        simp [liftFiniteHodgeOperator, Function.funext_comp]
+      rw [h1, h2]]
   rw [liftFiniteHodgeOperator_matrixUnit]
+  simp only [pairBasisIndex_source, pairBasisIndex_target]
 
 #check diagonalLefschetzQ_two_two_eq_scaled_matrixUnit
 #check twoSlot_forwardScalar_ne_zero
