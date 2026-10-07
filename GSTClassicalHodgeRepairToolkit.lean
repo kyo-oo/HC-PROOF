@@ -61,14 +61,6 @@ theorem smul_comp_smul (c : ℚ) (F G : M →ₗ[ℚ] M) :
   ext x
   simp [smul_End_apply, smul_smul]
 
-end GSTClassicalHodgeRepairToolkit
-
-#check GSTClassicalHodgeRepairToolkit.inv_smul_smul_End
-#check GSTClassicalHodgeRepairToolkit.smul_inv_smul_End
-#check GSTClassicalHodgeRepairToolkit.smul_End_apply
-#check GSTClassicalHodgeRepairToolkit.smul_comp_middle
-#check GSTClassicalHodgeRepairToolkit.smul_comp_smul
-
 section V2
 
 /-! ## V2 — the SB-121/122 weapon distillation
@@ -125,3 +117,20 @@ theorem sum_lift_map_smul {α β : Type*} [AddCommGroup β] [Module ℚ β]
         sum_single_smul_transport, smul_smul]
 
 end V2
+
+end GSTClassicalHodgeRepairToolkit
+
+#check GSTClassicalHodgeRepairToolkit.inv_smul_smul_End
+#check GSTClassicalHodgeRepairToolkit.smul_inv_smul_End
+#check GSTClassicalHodgeRepairToolkit.smul_End_apply
+#check GSTClassicalHodgeRepairToolkit.smul_comp_middle
+#check GSTClassicalHodgeRepairToolkit.smul_comp_smul
+#check GSTClassicalHodgeRepairToolkit.ne_zero_of_map_ne_zero
+#check GSTClassicalHodgeRepairToolkit.sum_single_smul_transport
+#check GSTClassicalHodgeRepairToolkit.smul_single_eq
+#check GSTClassicalHodgeRepairToolkit.sum_lift_map_smul
+
+#print axioms GSTClassicalHodgeRepairToolkit.ne_zero_of_map_ne_zero
+#print axioms GSTClassicalHodgeRepairToolkit.sum_single_smul_transport
+#print axioms GSTClassicalHodgeRepairToolkit.smul_single_eq
+#print axioms GSTClassicalHodgeRepairToolkit.sum_lift_map_smul

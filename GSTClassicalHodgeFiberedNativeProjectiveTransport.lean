@@ -66,8 +66,11 @@ noncomputable def fiberedNativePushforward
   toFun φ := φ.sum fun ix q => q • transportAtom f ix.1 ix.2
   map_add' := by
     intro φ ψ
-    classical
-    simp [fiberedNativePushforward, Finsupp.sum_add_index']
+    show (φ + ψ).sum
+        (fun ix q => q • transportAtom f ix.1 ix.2) =
+      (φ.sum fun ix q => q • transportAtom f ix.1 ix.2)
+        + (ψ.sum fun ix q => q • transportAtom f ix.1 ix.2)
+    simp [Finsupp.sum_add_index']
   map_smul' := by
     intro q φ
     classical
