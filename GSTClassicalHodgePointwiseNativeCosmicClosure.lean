@@ -52,6 +52,7 @@ open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeNativeGeneratorNaturality
 open GSTClassicalHodgeCanonicalCosmicRealizationEquivalence
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeSynchronizedDefectOrbit
 
@@ -115,6 +116,7 @@ theorem every_basis_algebraic_of_liveSource_pointLifts
         pointCycleClassSpan p (H.cycleClass p) := by
   intro j
   have hseedAlg : S.hodge ∈ AlgebraicHodgeSubspace V H p := by
+    rw [mem_AlgebraicHodgeSubspace_iff]
     rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
     exact ⟨S.cycle, S.class_eq⟩
   have hmove :=

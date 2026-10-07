@@ -56,6 +56,7 @@ open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeHeightOneProjectiveRelevance
 open GSTClassicalHodgeRelativeSuccessorNonempty
+open GSTClassicalHodgeSeparatorRelativeCoheightOne
 open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
