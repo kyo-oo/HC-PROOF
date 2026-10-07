@@ -3,6 +3,7 @@ import GSTClassicalHodgeThreeUniverseSeedIdentification
 import GSTClassicalHodgeFiniteSupportArsenalConjugation
 import GSTWorldRecoordinationGroupoid
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeFiberedTransferCompletion
 
 /-!
 # GST CLASSICAL HODGE — NORMALIZED FIBERED SPECTRAL ATOMS
@@ -32,6 +33,7 @@ open GSTGeometricRealizationStage2D
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTWorldRecoordinationGroupoid
 open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedTransferCompletion
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedNativePullback

@@ -1,5 +1,6 @@
 import GSTClassicalHodgeGeometryFirstTwoGenerator
 import HodgeConjecture
+import GSTClassicalHodgeBasisCycleBridge
 
 /-!
 # GST CLASSICAL HODGE — THE FULL GST WORD AS AN ACTUAL NATIVE CYCLE OPERATOR

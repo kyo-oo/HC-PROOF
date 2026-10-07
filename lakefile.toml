@@ -210,6 +210,7 @@ roots = [
 [[lean_lib]]
 name = "HodgePureMath"
 roots = [
+  "GSTClassicalHodgeBasisCycleBridge",
   "GSTClassicalHodgeRepairToolkit",
   "GSTCompactNativeCyclePresentation",
   "GSTSmoothProjectiveNoetherian",

@@ -1,5 +1,6 @@
 import GSTClassicalHodgeGeometryFirstNativeWord
 import GSTClassicalHodgeConcreteRankFreeGeneration
+import GSTClassicalHodgeBasisCycleBridge
 
 /-!
 # GST CLASSICAL HODGE — EVERY BASIS CYCLE FROM ONE ARBITRARY ALGEBRAIC HODGE SEED

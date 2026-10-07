@@ -1,6 +1,7 @@
 import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeAtomicSpan
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — NATIVE POINT-SEED SATURATION
@@ -34,6 +35,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeGeometryFirstTwoGenerator
+open GSTNativeCodimensionCyclePresentation
 
 namespace GSTClassicalHodgeNativePointSeedSaturation
 

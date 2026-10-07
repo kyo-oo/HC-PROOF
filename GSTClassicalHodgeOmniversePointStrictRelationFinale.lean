@@ -1,6 +1,7 @@
 import GSTClassicalHodgeProjectivePointOmniverseSource
 import GSTClassicalHodgeDegreeCertifiedStrictRelationFinale
 import GSTClassicalHodgeSynchronizedDefectOrbit
+import GSTClassicalHodgeBasisCycleBridge
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE-POINT / STRICT-RELATION FINALE

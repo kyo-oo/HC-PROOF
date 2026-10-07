@@ -1,6 +1,7 @@
 import GSTClassicalHodgeOmniverseLefschetzRayCompiler
 import GSTClassicalHodgePrimitivePushforwardNaturality
 import GSTClassicalHodgeProjectiveSelfCorrespondences
+import GSTClassicalHodgeBasisCycleBridge
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE APEX SPOKES
