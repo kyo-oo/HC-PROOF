@@ -72,7 +72,8 @@ noncomputable def fiberedNativePushforward
     intro q φ
     classical
     rw [Finsupp.sum_smul_index' (fun _ => by simp)]
-    simp [Finset.smul_sum, smul_smul, mul_comm, mul_left_comm, mul_assoc]
+    simp [Finsupp.sum, Finset.smul_sum, smul_smul, smul_eq_mul,
+      mul_comm, mul_left_comm, mul_assoc]
 
 @[simp]
 theorem fiberedNativePushforward_atom
@@ -187,11 +188,9 @@ theorem project_then_projectiveTransport_nativeFace
       GSTClassicalHodgeFiniteSupportArsenalConjugation.liveCoordinateVector alpha
         (GSTWorldRecoordinationGroupoid.shapeCodeEquiv S y) •
         nativePointPushforward f p x := by
-  rw [sum_codeProj_shapedField]
-  rw [map_smul]
-  rw [fiberedNativePushforward_atom]
-  rw [map_smul]
-  rw [nativeFace_transportAtom]
+  rw [sum_codeProj_shapedField, map_smul,
+    GSTClassicalHodgeFiberedNativeRecoordination.shapedLiveNativeAtom,
+    fiberedNativePushforward_atom, map_smul, nativeFace_transportAtom]
 
 /-- **PROJECTIVE TRANSPORT CROWN.** Genuine scheme endomorphisms act directly
 on the multiplicity-preserving native pullback, and the native face is exactly

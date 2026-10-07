@@ -61,7 +61,12 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
     simp [twoSlotCode, diagonalLefschetzQ, poincareReverseQ,
       windowMirror, rationalPureBasis, GSTUniversalAddressBridge.worldBasis,
       GSTTruncatedWorldCohomologyRing.worldAct,
-      GSTTruncatedWorldCohomologyRing.L]
+      GSTTruncatedWorldCohomologyRing.L,
+      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_kernel,
+      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_wrong_time_zero,
+      GSTUniversalLefschetzKernel.worldAct_L_pow_basis_outside_future_zero,
+      GSTUniversalLefschetzCosmology.digitEndo_apply,
+      GSTUniversalLefschetzCosmology.carryEndo_apply]
 
 /-- Equivalent projector formulation. -/
 theorem sheetProjectorQ_target_eq_half_lefschetz_comp_poincare :
