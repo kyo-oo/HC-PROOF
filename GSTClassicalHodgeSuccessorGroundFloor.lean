@@ -98,7 +98,11 @@ theorem closure_eq_univ_of_coheight_zero
     QuasiSober.sober (IrreducibleSpace.isIrreducible_univ V.X) isClosed_univ
   have hxη : x ≤ η := hη.specializes (Set.mem_univ x)
   have hηx : η ≤ x := hmax hxη
-  have hxeq : x = η := le_antisymm hxη hηx
+  have hxeq : x = η := by
+    refine (inseparable_iff_eq).mp ?_
+    exact le_antisymm
+      (show nhds x ≤ nhds η from hηx)
+      (show nhds η ≤ nhds x from hxη)
   rw [hxeq]
   exact hη.def
 
