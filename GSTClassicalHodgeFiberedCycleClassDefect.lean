@@ -1,6 +1,7 @@
 import GSTClassicalHodgeNormalizedFiberedSpectralAtom
 import GSTClassicalHodgeAtomicDefectDuality
 import GSTWorldRecoordinationGroupoid
+import GSTClassicalHodgeNativeInteractionNormalForm
 
 /-!
 # GST CLASSICAL HODGE — FIBERED CYCLE-CLASS DEFECT
@@ -41,6 +42,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeNormalizedFiberedSpectralAtom
+open GSTClassicalHodgeNativeInteractionNormalForm
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -167,6 +169,99 @@ theorem defect_eq_zero_iff_faces_agree
         fiberedHodgeAmbient (V := V) (H := H) (p := p) Φ = 0 ↔ _
   simp [fiberedNativeCycleClass, fiberedHodgeAmbient, sub_eq_zero]
 
+/-! ## Interaction invisibility
+
+The joint interaction sector cannot change the classical landing defect.
+This is stronger than saying the two marginals determine the limitless base
+address: the *actual* cycle-class defect itself is constant on every coset of
+the joint-kernel interaction space.
+-/
+
+/-- Any fibered state with both marginals zero has zero classical defect. -/
+theorem fiberedCycleClassDefect_eq_zero_of_zero_marginals
+    (Φ : FiberedNativeAddress V H p)
+    (hPoint : forgetPoint V H p Φ = 0)
+    (hNative : forgetMultiplicity V H p Φ = 0) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ = 0 := by
+  unfold fiberedCycleClassDefect fiberedNativeCycleClass
+    fiberedHodgeAmbient fiberedHodgeClass toNativeCycle
+  simp [hPoint, hNative]
+
+/-- Every explicit four-corner interaction rectangle is invisible to the
+cycle-class defect. -/
+@[simp]
+theorem fiberedCycleClassDefect_interactionRectangle
+    (i₀ i : ClassicalHodgeBasisIndex V H p)
+    (x₀ x : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p)
+      (interactionRectangle i₀ i x₀ x) = 0 := by
+  apply fiberedCycleClassDefect_eq_zero_of_zero_marginals
+  · exact interactionRectangle_forgetPoint i₀ i x₀ x
+  · exact interactionRectangle_forgetMultiplicity i₀ i x₀ x
+
+/-- The whole interaction projection lands in the defect kernel. -/
+@[simp]
+theorem fiberedCycleClassDefect_interactionProjection
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p)
+      (interactionProjection i₀ x₀ Φ) = 0 := by
+  apply fiberedCycleClassDefect_eq_zero_of_zero_marginals
+  · exact interactionProjection_forgetPoint i₀ x₀ Φ
+  · exact interactionProjection_forgetMultiplicity i₀ x₀ Φ
+
+/-- Equal classical and native marginals force equal defects.  Thus no motion
+inside the joint interaction fiber can alter the genuine classical
+cycle-class obstruction. -/
+theorem fiberedCycleClassDefect_eq_of_equal_marginals
+    (Φ Ψ : FiberedNativeAddress V H p)
+    (hPoint : forgetPoint V H p Φ = forgetPoint V H p Ψ)
+    (hNative :
+      forgetMultiplicity V H p Φ = forgetMultiplicity V H p Ψ) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ =
+      fiberedCycleClassDefect (V := V) (H := H) (p := p) Ψ := by
+  unfold fiberedCycleClassDefect fiberedNativeCycleClass
+    fiberedHodgeAmbient fiberedHodgeClass toNativeCycle
+  rw [hPoint, hNative]
+
+/-- Reconstructing only the two marginals preserves the defect exactly.  The
+discarded interaction component contributes zero. -/
+theorem fiberedCycleClassDefect_marginalReconstruction
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p)
+        (marginalReconstruction i₀ x₀ Φ) =
+      fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ := by
+  apply fiberedCycleClassDefect_eq_of_equal_marginals
+  · exact marginalReconstruction_forgetPoint i₀ x₀ Φ
+  · exact marginalReconstruction_forgetMultiplicity i₀ x₀ Φ
+
+/-- The complete joint kernel sits inside the kernel of the classical defect
+map.  This formally rules out interaction-only corrections of a nonzero
+landing defect. -/
+theorem jointKernel_le_cycleClassDefectKernel
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) :
+    (forgetPoint V H p).ker ⊓ (forgetMultiplicity V H p).ker ≤
+      (fiberedCycleClassDefect (V := V) (H := H) (p := p)).ker := by
+  intro Φ hΦ
+  exact fiberedCycleClassDefect_eq_zero_of_zero_marginals Φ hΦ.1 hΦ.2
+
+/-- Equivalently, the explicit four-corner rectangle span is annihilated by
+the classical defect. -/
+theorem rectangleSpan_le_cycleClassDefectKernel
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p) :
+    Submodule.span ℚ
+        (Set.range (fun ix : FiberedNativeAtom V H p =>
+          interactionRectangle i₀ ix.1 x₀ ix.2)) ≤
+      (fiberedCycleClassDefect (V := V) (H := H) (p := p)).ker := by
+  rw [← jointKernel_eq_rectangleSpan i₀ x₀]
+  exact jointKernel_le_cycleClassDefectKernel V H p
+
 /-- If one defect-zero fibered state realizes every Hodge basis sheet, then the
 exact Stage-2G statement follows by unrestricted finite-support reconstruction.
 This is a linear-algebra landing theorem; the states themselves are to be
@@ -203,6 +298,19 @@ theorem bigradedBettiHodge_of_defectZero_basisStates
   change ((H.cycleClass p).comp lift) alphaH = alpha
   rw [hmaps]
   rfl
+
+#check fiberedCycleClassDefect_eq_zero_of_zero_marginals
+#check fiberedCycleClassDefect_interactionRectangle
+#check fiberedCycleClassDefect_interactionProjection
+#check fiberedCycleClassDefect_eq_of_equal_marginals
+#check fiberedCycleClassDefect_marginalReconstruction
+#check jointKernel_le_cycleClassDefectKernel
+#check rectangleSpan_le_cycleClassDefectKernel
+
+#print axioms fiberedCycleClassDefect_interactionRectangle
+#print axioms fiberedCycleClassDefect_interactionProjection
+#print axioms fiberedCycleClassDefect_eq_of_equal_marginals
+#print axioms rectangleSpan_le_cycleClassDefectKernel
 
 #check fiberedHodgeClass
 #check fiberedNativeCycleClass
