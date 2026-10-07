@@ -575,6 +575,7 @@ roots = [
   "GSTClassicalHodgeGSTPlaneAxiomStatus",
   "GSTClassicalHodgeBranchPacketPlaneRealization",
   "GSTClassicalHodgeGroundFloorSiegePropagation",
+  "GSTClassicalHodgeBareLefschetzSpineFinale",
 ]
 
 # ---------------------------------------------------------------------------
