@@ -67,6 +67,7 @@ import GSTClassicalHodgeGSTPlaneAxiomStatus
 import GSTClassicalHodgeBranchPacketPlaneRealization
 import GSTClassicalHodgeSuccessorGroundFloor
 import GSTClassicalHodgeGroundFloorSiegePropagation
+import GSTClassicalHodgeBareLefschetzSpineFinale
 import waves.GSTWaveCohomology
 import waves.GSTWaveCohomologyV2
 import waves.GSTNCohomology
