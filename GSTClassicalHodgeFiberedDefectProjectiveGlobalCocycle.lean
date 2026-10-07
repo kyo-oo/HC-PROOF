@@ -70,12 +70,10 @@ theorem nativeFace_fiberedPushforward
           Finsupp.single (i, x) q =
             q • atom V H p i x := by
         simp [atom]
-      rw [hsingle, map_smul, map_smul]
-      rw [fiberedNativePushforward_smul_atom]
-      rw [map_smul, nativeFace_transportAtom]
-      rw [map_smul, toNativeCycle_atom]
-      exact congrArg (fun Z => q • Z)
-        (smoothProjectiveNativePushforward_point V f p x).symm
+      rw [hsingle]
+      simp only [map_smul, fiberedNativePushforward_atom,
+        nativeFace_transportAtom, toNativeCycle_atom,
+        smoothProjectiveNativePushforward_point]
 
 /-- The actual native cohomology face of the fibered transport is exactly the
 geometric cohomological pushforward of the original native face. -/
