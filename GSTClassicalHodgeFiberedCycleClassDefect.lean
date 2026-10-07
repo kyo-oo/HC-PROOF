@@ -1,6 +1,7 @@
 import GSTClassicalHodgeNormalizedFiberedSpectralAtom
 import GSTClassicalHodgeAtomicDefectDuality
 import GSTWorldRecoordinationGroupoid
+import GSTClassicalHodgeFiberedTransferCompletion
 
 /-!
 # GST CLASSICAL HODGE — FIBERED CYCLE-CLASS DEFECT
@@ -36,6 +37,7 @@ open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTWorldRecoordinationGroupoid
 open GSTClassicalHodgeFiberedNativeRecoordination
+open GSTClassicalHodgeFiberedTransferCompletion
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology

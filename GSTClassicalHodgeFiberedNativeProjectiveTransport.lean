@@ -73,12 +73,12 @@ noncomputable def fiberedNativePushforward
     classical
     induction φ using Finsupp.induction_linear with
     | zero =>
-        simp [Finsupp.sum, Finsupp.support_zero, Finset.sum_empty,
-          smul_zero]
+        simp [fiberedNativePushforward, smul_zero, Finsupp.sum_zero_index]
     | add a b ha hb =>
         simp [ha, hb, add_smul, Finsupp.sum_add_index']
     | single i c =>
-        simp [Finsupp.smul_single, Finsupp.sum_single_index,
+        simp [fiberedNativePushforward, Finsupp.single_mul,
+          Finsupp.single_apply, Finsupp.sum_single_index,
           smul_smul, mul_comm]
 
 @[simp]
