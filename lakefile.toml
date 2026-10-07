@@ -572,6 +572,8 @@ roots = [
   "GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion",
   "GSTClassicalHodgeMinimalNativeGeometricCore",
   "GSTClassicalHodgeNativeExecutablePlane",
+  "GSTClassicalHodgeGSTPlaneAxiomStatus",
+  "GSTClassicalHodgeBranchPacketPlaneRealization",
 ]
 
 # ---------------------------------------------------------------------------
