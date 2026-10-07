@@ -162,7 +162,7 @@ classical coefficient. -/
 theorem project_then_projectiveTransport_nativeFace
     (alpha : ClassicalHodgeFiber V H p)
     (S : GSTWorldRecoordinationGroupoid.GSTWorldShape
-      (GSTClassicalHodgeSupportCardinalityBridge.liveRank alpha))
+      (GSTClassicalHodgeFiniteSupportArsenalConjugation.liveRank alpha))
     (y : GSTWorldRecoordinationGroupoid.ShapeState S)
     (x : CodimensionPoint V.X p)
     (f : V.X ⟶ V.X) :
@@ -173,7 +173,7 @@ theorem project_then_projectiveTransport_nativeFace
             (GSTWorldRecoordinationGroupoid.worldCode S y)
             (GSTClassicalHodgeFiberedNativeRecoordination.shapedFiberedNativeField
               alpha S x)))) =
-      GSTClassicalHodgeSupportCardinalityBridge.liveCoordinateVector alpha
+      GSTClassicalHodgeFiniteSupportArsenalConjugation.liveCoordinateVector alpha
         (GSTWorldRecoordinationGroupoid.shapeCodeEquiv S y) •
         nativePointPushforward f p x := by
   rw [sum_codeProj_shapedField]
