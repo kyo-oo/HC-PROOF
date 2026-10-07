@@ -77,12 +77,27 @@ noncomputable def fiberedNativePushforward
             (fun ix q => q • transportAtom f ix.1 ix.2) =
           q • (0 : FiberedNativeAddress V H p).sum
             (fun ix q => q • transportAtom f ix.1 ix.2)
-        simp [smul_zero, Finsupp.sum_zero_index]
+        rw [smul_zero]
+        simp only [Finsupp.sum, Finsupp.support_zero, Finset.sum_empty,
+          smul_zero]
     | add a b ha hb =>
         simp [ha, hb, add_smul, Finsupp.sum_add_index']
     | single i c =>
-        simp [Finsupp.smul_single, Finsupp.sum_single_index,
-          smul_smul, mul_comm]
+        have h1 : ∀ (t : ℚ), (Finsupp.single i t).sum
+            (fun ix s => s • transportAtom f ix.1 ix.2)
+            = t • transportAtom f i.1 i.2 := fun t =>
+          Finsupp.sum_single_index (a := i) (b := t)
+            (h := fun ix s => s • transportAtom f ix.1 ix.2) (by simp)
+        have h2 : q • Finsupp.single i c = Finsupp.single i (q * c) := by
+          rw [show Finsupp.single i c = c • atom V H p i.1 i.2 by simp [atom],
+            smul_smul,
+            show (q * c) • atom V H p i.1 i.2 = Finsupp.single i (q * c) by
+              simp [atom]]
+        show (q • Finsupp.single i c).sum
+            (fun ix t => t • transportAtom f ix.1 ix.2) =
+          q • (Finsupp.single i c).sum
+            (fun ix t => t • transportAtom f ix.1 ix.2)
+        rw [h2, h1 (q * c), h1 c, smul_smul]
 
 @[simp]
 theorem fiberedNativePushforward_atom

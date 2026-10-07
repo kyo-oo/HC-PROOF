@@ -3,6 +3,7 @@ import GSTClassicalHodgeSingleSheetCrown
 import GSTClassicalHodgeNormalizedFiberedSpectralAtom
 import GSTWorldRecoordinationGroupoid
 import GSTClassicalHodgeFiniteSupportArsenalConjugation
+import GSTClassicalHodgeFiberedNativeRecoordination
 
 /-!
 # GST CLASSICAL HODGE — SINGLE-SHEET SEPARATORS AS FIBERED DEFECT DETECTORS
@@ -42,6 +43,7 @@ open GSTClassicalHodgeAtomicAnnihilator
 open GSTWorldRecoordinationGroupoid
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
 open GSTClassicalHodgeSingleSheetCrown
+open GSTClassicalHodgeFiberedNativeRecoordination
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -82,7 +84,10 @@ theorem atom_defect_ne_zero_of_separator
     fiberedCycleClassDefect (V := V) (H := H) (p := p)
       (atom V H p i x) ≠ 0 := by
   intro hz
-  exact S.separator_detects_atom_defect x (by rw [hz]; simp)
+  exact absurd
+    (show S.detector (fiberedCycleClassDefect (V := V) (H := H) (p := p)
+        (atom V H p i x)) = 0 by rw [hz]; simp)
+    (separator_detects_atom_defect S x)
 
 /-- The same detector identity holds for a normalized GST spectral atom as
 soon as that live state is the obstructed basis sheet. -/

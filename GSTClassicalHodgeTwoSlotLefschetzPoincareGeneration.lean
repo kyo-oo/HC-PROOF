@@ -44,6 +44,7 @@ open GSTClassicalHodgePrimitiveArsenalRationalization
 open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
+open GSTPureHodgeLefschetzKernel
 
 namespace GSTClassicalHodgeTwoSlotLefschetzPoincareGeneration
 
@@ -55,8 +56,60 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
       ((2 : ℚ)⁻¹ •
         ((diagonalLefschetzQ 2 2).comp
           (poincareReverseQ 2).toLinearMap)) := by
-  rw [← sheetProjectorQ_target_eq_code]
-  rfl
+  apply LinearMap.ext
+  intro a
+  funext r
+  have e01 : worldAct 2 2 ((L 2 2)^(2 : Nat))
+      (worldBasis (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)))
+      (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩))
+      = (2 : ℤ) := by
+    have h := pure_diagonal_lefschetz_forward_exact (A := 2) (B := 2)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩) (by decide)
+    have hgap : pureWeightGap
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
+        (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩) = 1 := by
+      decide
+    rw [hgap] at h
+    norm_num at h ⊢
+    exact h
+  have e00 : worldAct 2 2 ((L 2 2)^(2 : Nat))
+      (worldBasis (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)))
+      (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩))
+      = (0 : ℤ) :=
+    pure_diagonal_lefschetz_wrong_time_zero (A := 2) (B := 2) (n := 2)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
+      (by decide) (by decide)
+  have e10 : worldAct 2 2 ((L 2 2)^(2 : Nat))
+      (worldBasis (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)))
+      (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩))
+      = (0 : ℤ) :=
+    pure_diagonal_lefschetz_backward_zero (A := 2) (B := 2) (n := 2)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
+      (by decide)
+  have e11 : worldAct 2 2 ((L 2 2)^(2 : Nat))
+      (worldBasis (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)))
+      (pureDiagonalState (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩))
+      = (0 : ℤ) :=
+    pure_diagonal_lefschetz_wrong_time_zero (A := 2) (B := 2) (n := 2)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)
+      (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)
+      (by decide) (by decide)
+  fin_cases r
+  · simp only [twoSlotCode, LinearMap.smul_apply, LinearMap.coe_comp,
+      LinearMap.comp_apply, diagonalLefschetzQ, poincareReverseQ,
+      windowMirror, Fin.isValue, Fin.sum_univ_two]
+    rw [e00, e10]
+    simp
+    norm_num
+  · simp only [twoSlotCode, LinearMap.smul_apply, LinearMap.coe_comp,
+      LinearMap.comp_apply, diagonalLefschetzQ, poincareReverseQ,
+      windowMirror, Fin.isValue, Fin.sum_univ_two]
+    rw [e01, e11]
+    simp
+    norm_num
 
 /-- Equivalent projector formulation. -/
 theorem sheetProjectorQ_target_eq_half_lefschetz_comp_poincare :
