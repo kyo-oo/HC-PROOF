@@ -287,6 +287,174 @@ theorem omniversal_semantic_reflection_crown (Seed : G.Node → Prop) :
     exact closure_sound G hSeed hP x hx
   · exact closure_iff_every_stable_semantics G Seed
 
+/-!
+## Higher-order GST semantic geometry: unrestricted generated joins
+
+The binary closure law is the finite shadow of an arbitrary-indexed exact
+supremum law.  No finiteness or decidability is needed: a reachable state
+comes from one real seed and hence one actual source family.
+-/
+
+universe w
+
+/-- **ARBITRARY-INDEXED JOIN CONTINUITY OF THE EVENT CLOSURE.**
+The full reachability envelope preserves existential unions across every
+index type, without a terminal stage or any cardinality hypothesis. -/
+theorem closure_indexed_union_exact
+    {ι : Type w} (Seed : ι → G.Node → Prop) (y : G.Node) :
+    Closure G (fun x => ∃ i : ι, Seed i x) y ↔
+      ∃ i : ι, Closure G (Seed i) y := by
+  constructor
+  · rintro ⟨x, ⟨i, hi⟩, hxy⟩
+    exact ⟨i, x, hi, hxy⟩
+  · rintro ⟨i, x, hx, hxy⟩
+    exact ⟨x, ⟨i, hx⟩, hxy⟩
+
+/-- Event-stable semantic worlds admit arbitrary intersections: every
+individual certified causal transition preserves all component laws. -/
+theorem eventStable_indexed_intersection
+    {ι : Type w} (P : ι → G.Node → Prop)
+    (h : ∀ i, EventStable G (P i)) :
+    EventStable G (fun x => ∀ i, P i x) := by
+  intro x y e hx i
+  exact h i e (hx i)
+
+/-- Generated closure is the common semantic content of all stable worlds
+containing the generators, with no choice of preferred target geometry. -/
+theorem closure_stable_envelope_exact
+    (Seed : G.Node → Prop) (y : G.Node) :
+    Closure G Seed y ↔
+      ∀ P : G.Node → Prop,
+        (EventStable G P ∧ (∀ x, Seed x → P x)) → P y := by
+  constructor
+  · intro hy P hP
+    exact closure_sound G hP.2 hP.1 y hy
+  · intro h
+    exact h (Closure G Seed)
+      ⟨closure_eventStable G Seed, fun x hx => seed_mem_closure G Seed hx⟩
+
+/-!
+## Event-preserving geometry maps and exact path-fibration semantics
+
+A general-space realization becomes mathematically useful when it preserves
+not just names of points, but certified events, all finite composed paths,
+and the event-closure semantics.  The reverse equality of closures is a
+separate path-lifting property (a causal fibration), NOT assumed for all maps.
+This distinction prevents false geometric-surjectivity conclusions.
+-/
+
+/-- **GST CAUSAL MORPHISM:** a sector-faithful interpretation of one genuine
+event cosmos in another, preserving each primitive certified transition. -/
+structure EventHom (G H : OmniversalGraph.{u,v}) where
+  toFun : G.Node → H.Node
+  sector_eq : ∀ x, H.sector (toFun x) = G.sector x
+  mapEvent : ∀ {x y : G.Node}, G.Event x y → H.Event (toFun x) (toFun y)
+
+namespace EventHom
+
+variable {H : OmniversalGraph.{u,v}}
+
+/-- Composition of GST causal morphisms preserves certified transitions. -/
+def comp {K : OmniversalGraph.{u,v}}
+    (F : EventHom G H) (J : EventHom H K) : EventHom G K where
+  toFun := J.toFun ∘ F.toFun
+  sector_eq := by
+    intro x
+    exact (J.sector_eq (F.toFun x)).trans (F.sector_eq x)
+  mapEvent := by
+    intro x y e
+    exact J.mapEvent (F.mapEvent e)
+
+/-- Identity interpretation of an arbitrary GST event cosmos. -/
+def id : EventHom G G where
+  toFun := _root_.id
+  sector_eq := by intro x; rfl
+  mapEvent := by intro x y e; exact e
+
+/-- Event maps are functorial on EVERY finite causal history. -/
+def pathMap (F : EventHom G H) :
+    {x y : G.Node} → Path G x y → Path H (F.toFun x) (F.toFun y)
+  | _, _, .nil _ => .nil _
+  | _, _, .cons e tail => .cons (F.mapEvent e) (pathMap F tail)
+
+/-- Every physically realizable causal path remains realizable under a
+structure-preserving change of GST carrier. -/
+theorem reachable_map (F : EventHom G H)
+    {x y : G.Node} (h : Reachable G x y) :
+    Reachable H (F.toFun x) (F.toFun y) := by
+  rcases h with ⟨p⟩
+  exact ⟨F.pathMap p⟩
+
+/-- Forward transport of the ENTIRE causal reachability closure, not only
+one primitive event.  Source index is carried explicitly. -/
+theorem closure_image
+    (F : EventHom G H) (Seed : G.Node → Prop)
+    {y : G.Node} (hy : Closure G Seed y) :
+    Closure H (fun z => ∃ x, Seed x ∧ F.toFun x = z)
+      (F.toFun y) := by
+  rcases hy with ⟨x, hx, hxy⟩
+  exact ⟨F.toFun x, ⟨x, hx, rfl⟩, F.reachable_map hxy⟩
+
+/-- Contravariant transport of stable semantic laws.  A geometric meaning
+proved event-stable in the target pulls back to a stable GST meaning on
+every source sector. -/
+theorem stable_preimage
+    (F : EventHom G H)
+    (P : H.Node → Prop) (hP : EventStable H P) :
+    EventStable G (fun x => P (F.toFun x)) := by
+  intro x y e hx
+  exact hP (F.mapEvent e) hx
+
+/-- Complete semantic soundness of a structure-preserving realization
+for every path and arbitrary collection of seed states. -/
+theorem closure_semantic_transport
+    (F : EventHom G H)
+    (Seed : G.Node → Prop)
+    (P : H.Node → Prop) (hP : EventStable H P)
+    (hSeed : ∀ x, Seed x → P (F.toFun x))
+    {y : G.Node} (hy : Closure G Seed y) :
+    P (F.toFun y) := by
+  exact closure_sound G hSeed (F.stable_preimage P hP) y hy
+
+/-- A CAUSAL FIBRATION is an event morphism that lifts every target history
+starting at an interpreted source state.  No existence of such lifts is
+postulated by the universal ontology. -/
+structure PathLifting (F : EventHom G H) : Prop where
+  lift : ∀ {x : G.Node} {z : H.Node},
+    Path H (F.toFun x) z →
+      ∃ y : G.Node, Reachable G x y ∧ F.toFun y = z
+
+/-- **EXACT CAUSAL IMAGE THEOREM UNDER PATH LIFTING.**
+Unlike the always-true forward transport, a fibrational realization
+identifies the closure of the image EXACTLY with the image of the closure.
+It cannot silently manufacture inaccessible geometric states. -/
+theorem closure_image_iff_of_pathLifting
+    (F : EventHom G H) (hLift : PathLifting F)
+    (Seed : G.Node → Prop) (z : H.Node) :
+    Closure H (fun v => ∃ x, Seed x ∧ F.toFun x = v) z ↔
+      ∃ y : G.Node, Closure G Seed y ∧ F.toFun y = z := by
+  constructor
+  · rintro ⟨v, ⟨x, hx, rfl⟩, ⟨p⟩⟩
+    obtain ⟨y, hxy, hy⟩ := hLift.lift p
+    exact ⟨y, ⟨x, hx, hxy⟩, hy⟩
+  · rintro ⟨y, hy, rfl⟩
+    exact F.closure_image Seed hy
+
+end EventHom
+
+#check closure_indexed_union_exact
+#check eventStable_indexed_intersection
+#check closure_stable_envelope_exact
+#check EventHom.pathMap
+#check EventHom.reachable_map
+#check EventHom.closure_image
+#check EventHom.stable_preimage
+#check EventHom.closure_semantic_transport
+#check EventHom.closure_image_iff_of_pathLifting
+#print axioms closure_indexed_union_exact
+#print axioms closure_stable_envelope_exact
+#print axioms EventHom.closure_image_iff_of_pathLifting
+
 /-- Optional acyclicity capability for genuinely causal realizations.  It is
 not forced on the universal ontology because reversible geometries and
 symmetries are also legitimate realizations. -/
