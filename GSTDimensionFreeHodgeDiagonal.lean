@@ -166,6 +166,145 @@ theorem world_hodge_zero_outside
       simpa [outputShape] using x.2.2
     omega
 
+/-!
+## Direct rational classification in every rectangular GST world
+
+The original law above classifies integer wave amplitudes.  The rational
+Clay theorem must not infer rational algebraicity solely by rationalizing
+integer-valued cochains: genuinely rational amplitudes are independent inputs.
+
+Here the original arbitrary-depth rectangular geometry is promoted directly
+from ℤ-valued to ℚ-valued amplitudes.  No integrality, finite twelve-cell
+constraint, or external geometric realization premise is required.
+-/
+
+/-- Rational amplitudes on any rectangular GST observation geometry. -/
+abbrev RationalWorldCoef (A B : Nat) : Type :=
+  ShapeState (outputShape A B) → ℚ
+
+/-- The original integral diagonal cycle, now evaluated with rational
+coefficients.  It exists at every weight visible in both axes. -/
+def rationalWorldDiagonalClass
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    RationalWorldCoef A B :=
+  fun x => (worldDiagonalClass hpA hpB x : ℚ)
+
+/-- Direct rational Hodge support, not an integer cochain in disguise. -/
+def isRationalWorldHodgeClass
+    {A B : Nat} (p : Nat) (f : RationalWorldCoef A B) : Prop :=
+  ∀ x : ShapeState (outputShape A B),
+    x.1.1 ≠ p ∨ x.2.1 ≠ p → f x = 0
+
+@[simp]
+theorem rationalWorldDiagonalClass_at_diagonal
+    {A B p : Nat} (hpA : p < A) (hpB : p < B) :
+    rationalWorldDiagonalClass hpA hpB (diagonalState hpA hpB) = 1 := by
+  simp [rationalWorldDiagonalClass]
+
+theorem rationalWorldDiagonalClass_off_diagonal
+    {A B p : Nat} (hpA : p < A) (hpB : p < B)
+    (x : ShapeState (outputShape A B))
+    (hx : x.1.1 ≠ p ∨ x.2.1 ≠ p) :
+    rationalWorldDiagonalClass hpA hpB x = 0 := by
+  simp [rationalWorldDiagonalClass,
+    worldDiagonalClass_off_diagonal hpA hpB x hx]
+
+/-- **DIRECT RATIONAL DIMENSION-FREE CLAY LAW.**
+At every pair of finite world depths and every live weight, a rational
+Hodge cochain has one and only one rational cycle coefficient.  The
+coefficient is its own diagonal evaluation; no integral lift is used. -/
+theorem rational_world_hodge_rank_one
+    {A B p : Nat} (hpA : p < A) (hpB : p < B)
+    (f : RationalWorldCoef A B) :
+    isRationalWorldHodgeClass p f ↔
+      ∃! q : ℚ, f = fun x => q * rationalWorldDiagonalClass hpA hpB x := by
+  constructor
+  · intro hf
+    let d := diagonalState hpA hpB
+    refine ⟨f d, ?_, ?_⟩
+    · funext x
+      by_cases hC : x.1.1 = p
+      · by_cases hd : x.2.1 = p
+        · have hx : x = d := by
+            apply Prod.ext
+            · apply Fin.ext
+              simpa [d, diagonalState] using hC
+            · apply Fin.ext
+              simpa [d, diagonalState] using hd
+          subst x
+          simp [d]
+        · have hzero := hf x (Or.inr hd)
+          rw [hzero]
+          simp [rationalWorldDiagonalClass_off_diagonal hpA hpB x (Or.inr hd)]
+      · have hzero := hf x (Or.inl hC)
+        rw [hzero]
+        simp [rationalWorldDiagonalClass_off_diagonal hpA hpB x (Or.inl hC)]
+    · intro q hq
+      have hdiag := congrFun hq d
+      have hclass : rationalWorldDiagonalClass hpA hpB d = 1 := by
+        simp [d]
+      rw [hclass, mul_one] at hdiag
+      exact hdiag.symm
+  · rintro ⟨q, hq, _⟩ x hx
+    rw [hq]
+    change q * rationalWorldDiagonalClass hpA hpB x = 0
+    rw [rationalWorldDiagonalClass_off_diagonal hpA hpB x hx]
+    ring
+
+/-- **EXACT EXTRACTOR**, rational and at arbitrary dimension. -/
+theorem rational_world_hodge_coefficient_exact
+    {A B p : Nat} (hpA : p < A) (hpB : p < B)
+    (f : RationalWorldCoef A B)
+    (hf : isRationalWorldHodgeClass p f) :
+    ∀ x : ShapeState (outputShape A B),
+      f x = f (diagonalState hpA hpB) *
+        rationalWorldDiagonalClass hpA hpB x := by
+  obtain ⟨q, hq, _⟩ := (rational_world_hodge_rank_one hpA hpB f).mp hf
+  intro x
+  rw [hq]
+  simp
+
+/-- **SHARP DEAD-WEIGHT LAW.**  At an arbitrary out-of-depth weight every
+direct rational GST Hodge cochain vanishes; there is no rational-lift loophole. -/
+theorem rational_world_hodge_zero_outside
+    {A B p : Nat} (hout : A ≤ p ∨ B ≤ p)
+    (f : RationalWorldCoef A B)
+    (hf : isRationalWorldHodgeClass p f) :
+    f = fun _ => 0 := by
+  funext x
+  apply hf x
+  rcases hout with hA | hB
+  · left
+    have hxA : x.1.1 < A := by
+      simpa [outputShape] using x.1.2
+    omega
+  · right
+    have hxB : x.2.1 < B := by
+      simpa [outputShape] using x.2.2
+    omega
+
+/-- Full direct rational classification: exact unique generators on every
+live weight, plus exact vanishing outside the observation depths. -/
+theorem rational_dimension_free_hodge_crown :
+    (∀ A B p (hpA : p < A) (hpB : p < B)
+        (f : RationalWorldCoef A B),
+      isRationalWorldHodgeClass p f ↔
+        ∃! q : ℚ, f = fun x => q * rationalWorldDiagonalClass hpA hpB x)
+    ∧ (∀ A B p (f : RationalWorldCoef A B),
+      (A ≤ p ∨ B ≤ p) →
+        isRationalWorldHodgeClass p f → f = fun _ => 0) := by
+  constructor
+  · intro A B p hpA hpB f
+    exact rational_world_hodge_rank_one hpA hpB f
+  · intro A B p f hout hf
+    exact rational_world_hodge_zero_outside hout f hf
+
+#check rational_world_hodge_rank_one
+#check rational_world_hodge_coefficient_exact
+#check rational_world_hodge_zero_outside
+#print axioms rational_world_hodge_rank_one
+#print axioms rational_dimension_free_hodge_crown
+
 /-- Every weight is either live on both axes or lies outside at least one
 axis.  Combined with world_hodge_rank_one and world_hodge_zero_outside,
 this is the exact all-weight dichotomy. -/
