@@ -2,6 +2,7 @@ import GSTClassicalHodgeGradedNativeCohomologyRealization
 import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeNativePointSeedSaturation
 import GSTClassicalHodgeCrossWeightNativePropagation
+import GSTClassicalHodgeZeroWeightLocalSeed
 
 /-!
 # GST CLASSICAL HODGE — GEOMETRY-FIRST GLOBAL PROPAGATION
@@ -39,6 +40,9 @@ open GSTClassicalHodgeCrossWeightNativePropagation
 open GSTClassicalHodgeGradedNativeCohomologyRealization
 open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeNativePointSeedSaturation
+open GSTClassicalHodgeZeroWeightLocalSeed
+open GSTClassicalHodgeProjectiveDegreeTrace
+open GSTClassicalHodgeGeometricCycleClassSpine
 
 namespace GSTClassicalHodgeGeometryFirstGlobalPropagation
 
@@ -291,6 +295,52 @@ theorem bigradedBettiHodge
 
 end GeometryFirstLivePathCosmos
 
+
+/-- **ACTUAL DEGREE-CERTIFIED ORIGIN.**
+The native point at weight zero is not hypothesized: choose the sober generic
+point of a projective irreducible component.  Its cycle is Hodge by the
+geometric spine and its class is nonzero by the projective-degree trace.
+No class at a positive weight is postulated or manufactured here. -/
+noncomputable def canonicalDegreeZeroNativePointSeed
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H) :
+    NativePointHodgeSeed V H 0 where
+  point := someCodimensionZeroPoint V
+  class_is_hodge := G.algebraic_is_hodge 0
+    (codimensionPointCycle V.X 0 (someCodimensionZeroPoint V))
+  class_ne_zero := codimensionZeroPoint_cycleClass_ne_zero D
+
+/-- **APEX-TO-LIVE-WEIGHT GEOMETRY-FIRST REALIZATION.**
+Unlike the former consecutive-weight propagation route, the only point seed
+is a genuinely constructed codimension-zero component.  Finite paths may
+jump directly between live weights.  Every positive-weight endpoint cycle
+is built from the native operators along its path, rather than supplied
+among the hypotheses.  The remaining obligations are genuinely geometric:
+construct such paths and realize the fixed-weight two-generator actions. -/
+theorem bigradedBettiHodge_of_degreeApex_livePaths
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (paths :
+      ∀ (p : Nat),
+        (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+          ∃ beta : ClassicalHodgeFiber V H p,
+            beta ≠ 0 ∧
+              GeometryFirstNativePath V H 0
+                (canonicalDegreeZeroNativePointSeed G D).hodgeClass p beta)
+    (fixedWeight :
+      ∀ (p : Nat)
+        (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0),
+        ∀ i j : ClassicalHodgeBasisIndex V H p,
+          GeometryFirstTwoGenerator (V := V) (H := H) i j) :
+    BigradedBettiHodgeStatement V H :=
+  (GeometryFirstLivePathCosmos.bigradedBettiHodge
+    { origin := canonicalDegreeZeroNativePointSeed G D
+      livePath := paths
+      fixedWeight := fixedWeight })
+
+
 /-- A single seed family propagated from weight to weight by native graded
 Lefschetz operators whose native and Betti actions commute with cycle class. -/
 structure GeometryFirstSeedPropagation
@@ -393,6 +443,8 @@ theorem bigradedBettiHodge
 
 end GeometryFirstGlobalPropagation
 
+#check canonicalDegreeZeroNativePointSeed
+#check bigradedBettiHodge_of_degreeApex_livePaths
 #check GeometryFirstNativePath
 #check geometryFirstNativePath_constructs_target
 #check geometryFirstNativePath_preserves_algebraic
@@ -400,6 +452,8 @@ end GeometryFirstGlobalPropagation
 #check GeometryFirstLivePathCosmos.live_native_cycle
 #check GeometryFirstLivePathCosmos.bigradedBettiHodge
 
+#print axioms canonicalDegreeZeroNativePointSeed
+#print axioms bigradedBettiHodge_of_degreeApex_livePaths
 #print axioms geometryFirstNativePath_constructs_target
 #print axioms geometryFirstNativePath_preserves_algebraic
 #print axioms GeometryFirstLivePathCosmos.bigradedBettiHodge
