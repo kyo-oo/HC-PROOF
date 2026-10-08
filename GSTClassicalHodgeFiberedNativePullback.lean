@@ -746,7 +746,9 @@ theorem circulation_eq_rectangle_sum
     | add a b ha hb =>
         rw [map_add, ha, hb,
           ← Finsupp.sum_add_index'
-            (fun c => zero_smul (anchoredRectangle V H p i₀ c.1 x₀ c.2))
+            (h := fun c q =>
+              q • anchoredRectangle V H p i₀ c.1 x₀ c.2)
+            (fun c => zero_smul ℚ (anchoredRectangle V H p i₀ c.1 x₀ c.2))
             (fun c b₁ b₂ =>
               add_smul b₁ b₂ (anchoredRectangle V H p i₀ c.1 x₀ c.2))]
     | single ix q =>
@@ -774,3 +776,4 @@ theorem normalization_anchor_change_mem
 #print axioms circulation_eq_rectangle_sum
 
 end GSTClassicalHodgeFiberedNativePullback
+
