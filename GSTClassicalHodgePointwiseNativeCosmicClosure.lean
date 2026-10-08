@@ -104,6 +104,7 @@ theorem hodgeMatrixUnit_mem_algebraic_of_pointLifts
   have himage := hstable alpha.1 halpha
   rw [canonicalCosmicAmbient_on_hodge i j alpha] at himage
   rw [mem_AlgebraicHodgeSubspace_iff]
+  rw [GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.hodgeMatrixUnit_eq_lift_limitless_cosmic]
   exact himage
 
 /-- A nonzero algebraic seed determines one live source coordinate.  Native
@@ -151,11 +152,19 @@ theorem hodge_weight_of_liveSource_pointLifts
         pointCycleClassSpan p (H.cycleClass p) :=
     every_basis_algebraic_of_liveSource_pointLifts S hLift
   have halg : alpha ∈ pointCycleClassSpan p (H.cycleClass p) := by
-    rw [show alphaH =
+    have h1 : alphaH = (classicalHodgeBasis V H p).repr.symm
+        ((classicalHodgeBasis V H p).repr alphaH) := by
+      simp
+    have h2 : (classicalHodgeBasis V H p).repr.symm
+        ((classicalHodgeBasis V H p).repr alphaH) =
       ∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
         ((classicalHodgeBasis V H p).repr alphaH j) •
-          classicalHodgeBasis V H p j by
-      exact (classicalHodgeBasis V H p).sum_repr alphaH]
+          classicalHodgeBasis V H p j := by
+      simp only [Basis.repr_symm_apply, Finsupp.linearCombination_apply,
+        Finsupp.sum]
+    show (alphaH : ClassicalHodgeFiber V H p).val ∈
+      pointCycleClassSpan p (H.cycleClass p)
+    rw [h1, h2]
     simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower]
     apply Submodule.sum_mem
     intro j hj

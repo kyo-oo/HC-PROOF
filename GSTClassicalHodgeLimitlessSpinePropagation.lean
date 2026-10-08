@@ -324,7 +324,9 @@ theorem mass_congr
   have hker : H.cycleClass p (Z - W) = 0 := by
     simp [hZW]
   have hmass := M.kernel_mass_zero p (Z - W) hker
-  simpa using hmass
+  have hmass' : nativeCycleMass V p Z - nativeCycleMass V p W = 0 := by
+    simpa using hmass
+  linarith
 
 /-- Native mass descended to the actual cycle-class range. -/
 noncomputable def rangeMassRead

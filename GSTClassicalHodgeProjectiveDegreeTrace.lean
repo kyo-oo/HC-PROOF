@@ -1,5 +1,10 @@
 import GSTClassicalHodgeSuccessorSeedEscapeDichotomy
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgePointClosurePrincipalCut
+import GSTClassicalHodgeHeightOneProjectiveRelevance
+import GSTClassicalHodgeSeparatorRelativeCoheightOne
+import GSTClassicalHodgeRelativeSuccessorNonempty
+import GSTClassicalHodgeFiberedCosmology
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE DEGREE / BETTI TRACE ARTERY
@@ -52,6 +57,11 @@ open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeSingleExactSuccessorSurvival
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
+open GSTClassicalHodgePointClosurePrincipalCut
+open GSTClassicalHodgeHeightOneProjectiveRelevance
+open GSTClassicalHodgeSeparatorRelativeCoheightOne
+open GSTClassicalHodgeRelativeSuccessorNonempty
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -88,7 +98,7 @@ theorem trace_realize_presentation
   classical
   simp only [map_finsuppSum, LinearMap.map_smul, smul_eq_mul]
   apply Finsupp.sum_congr
-  intro x a ha
+  intro x a
   rw [D.trace_point_cycleClass]
 
 /-- Trace contribution of one relative successor candidate: exact survivors
@@ -134,7 +144,8 @@ theorem trace_successorNativeOperator_point
   rw [trace_realize_presentation D]
   classical
   unfold successorPresentation
-  rw [Finsupp.sum_finset_sum]
+  rw [← Finsupp.sum_finsetSum_index (fun a => zero_mul (D.pointDegree (p + 1) a))
+    (fun a b₁ b₂ => add_mul b₁ b₂ (D.pointDegree (p + 1) a))]
   apply Finset.sum_congr rfl
   intro y hyMem
   by_cases hy : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1
@@ -159,17 +170,18 @@ theorem trace_successor_positive_of_one_exact
           (codimensionPointCycle V.X p x))) := by
   rw [trace_successorNativeOperator_point D]
   classical
-  apply Finset.sum_pos
+  apply Finset.sum_pos'
   · intro y hy
     by_cases hExact : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1
-    · simp [hExact, le_of_lt (D.pointDegree_pos (p + 1)
-        (⟨ambientSuccessorPoint V x.1 y, hExact⟩ :
-          CodimensionPoint V.X (p + 1)))]
-    · simp [hExact]
+    · rw [dif_pos hExact]
+      exact le_of_lt (D.pointDegree_pos (p + 1)
+        (⟨ambientSuccessorPoint V x.1 y, hExact⟩ : CodimensionPoint V.X (p + 1)))
+    · rw [dif_neg hExact]
+      simp
   · refine ⟨y0, hy0Mem, ?_⟩
-    simp [hy0Exact, D.pointDegree_pos (p + 1)
-      (⟨ambientSuccessorPoint V x.1 y0, hy0Exact⟩ :
-        CodimensionPoint V.X (p + 1))]
+    rw [dif_pos hy0Exact]
+    exact D.pointDegree_pos (p + 1)
+      (⟨ambientSuccessorPoint V x.1 y0, hy0Exact⟩ : CodimensionPoint V.X (p + 1))
 
 /-- **PROJECTIVE DEGREE EXCLUDES SEPARATOR HOMOLOGY ESCAPE.**
 The canonical separator successor cannot have zero genuine Betti cycle class
