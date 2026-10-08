@@ -97,6 +97,13 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean HodgeConjecture.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile GST active-weight native seed extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTClassicalHodgeNativeWordFromArbitrarySeed 2>&1 | tee -a hodge-final.log
+
       - name: Final trust audit
         shell: bash
         run: |
