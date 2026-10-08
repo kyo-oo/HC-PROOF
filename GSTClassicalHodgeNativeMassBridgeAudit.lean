@@ -45,6 +45,7 @@ open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeSingleExactSuccessorSurvival
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgeLimitlessSpinePropagation
+open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
 
 variable {V : SmoothProjectiveComplexScheme}
