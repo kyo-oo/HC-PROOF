@@ -249,28 +249,36 @@ theorem codeSectorProj_rankOne
     codeSectorProj S k f =
       f x • codeSectorProj S k (fun _ => (1 : ℤ)) := by
   funext z
+  change
+    (if worldCode S z = k then f z else (0 : ℤ)) =
+      f x * (if worldCode S z = k then (1 : ℤ) else 0)
   by_cases hz : worldCode S z = k
   · have hzx : z = x := by
       apply (shapeCodeEquiv S).injective
       apply Fin.ext
       exact hz.trans hx.symm
     subst z
-    simp [codeSectorProj, hx]
-  · simp [codeSectorProj, hz]
+    rw [if_pos hx, if_pos hx, mul_one]
+  · rw [if_neg hz, if_neg hz, mul_zero]
 
 /-- **RIGIDITY OF ALL INTEGRAL CODE-SPECTRAL TRANSPORTS.**
 Any integer-linear map intertwining each exact code sector, and sending
 the all-one field to the all-one field, MUST be canonical recoordination.
 The full transport operator is recovered from its spectral observations.
 No target operator action is assumed separately. -/
-theorem transportCoef_unique_of_spectral_intertwining
+/-- **COMPLETE CLASSIFICATION OF CODE-SPECTRAL INTERTWINERS.**
+No normalization is assumed: any integer-linear map intertwining the
+rank-one code projectors is *pointwise multiplication* of canonical chart
+transport by the image of the constant-one field.  In particular such maps
+cannot mix invariant codes or generate a new off-code coefficient. -/
+theorem transportCoef_classification_of_spectral_intertwining
     {N : Nat} (S T : GSTWorldShape N)
     (M : ShapeCoef S →ₗ[ℤ] ShapeCoef T)
     (hproject : ∀ k f,
       M (codeSectorProj S k f) = codeSectorProj T k (M f))
-    (hone : M (fun _ => (1 : ℤ)) = (fun _ => (1 : ℤ)))
     (f : ShapeCoef S) :
-    M f = transportCoef S T f := by
+    M f = fun y =>
+      transportCoef S T f y * (M (fun _ => (1 : ℤ))) y := by
   funext y
   let x : ShapeState S := (worldRecoordinate S T).symm y
   let k : Nat := worldCode T y
@@ -284,21 +292,40 @@ theorem transportCoef_unique_of_spectral_intertwining
       M (codeSectorProj S k f) =
         f x • M (codeSectorProj S k (fun _ => (1 : ℤ))) := by
     rw [hlocal, map_smul]
-  have heval : (M f) y = f x := by
-    calc
-      (M f) y = (codeSectorProj T k (M f)) y := by
-        simp [codeSectorProj, hkT]
-      _ = (M (codeSectorProj S k f)) y := by
-        exact congrFun (hproject k f).symm y
-      _ = f x * (M (codeSectorProj S k (fun _ => (1 : ℤ)))) y := by
-        rw [hscaled]
-        rfl
-      _ = f x * (codeSectorProj T k (M (fun _ => (1 : ℤ)))) y := by
-        rw [hproject k (fun _ => (1 : ℤ))]
-      _ = f x := by
-        rw [hone]
-        simp [codeSectorProj, hkT]
-  simpa [transportCoef, x] using heval
+  change (M f) y = f x * (M (fun _ => (1 : ℤ))) y
+  calc
+    (M f) y = (codeSectorProj T k (M f)) y := by
+      change (M f) y =
+        (if worldCode T y = k then (M f) y else (0 : ℤ))
+      rw [if_pos hkT]
+    _ = (M (codeSectorProj S k f)) y := by
+      exact congrFun (hproject k f).symm y
+    _ = f x * (M (codeSectorProj S k (fun _ => (1 : ℤ)))) y := by
+      rw [hscaled]
+      rfl
+    _ = f x * (codeSectorProj T k (M (fun _ => (1 : ℤ)))) y := by
+      rw [hproject k (fun _ => (1 : ℤ))]
+    _ = f x * (M (fun _ => (1 : ℤ))) y := by
+      change
+        f x * (if worldCode T y = k then
+          (M (fun _ => (1 : ℤ))) y else (0 : ℤ)) =
+          f x * (M (fun _ => (1 : ℤ))) y
+      rw [if_pos hkT]
+
+/-- **NORMALIZED SPECTRAL RIGIDITY**, now derived from the complete
+unnormalized intertwiner classification rather than separately assumed
+coordinatewise uniqueness. -/
+theorem transportCoef_unique_of_spectral_intertwining
+    {N : Nat} (S T : GSTWorldShape N)
+    (M : ShapeCoef S →ₗ[ℤ] ShapeCoef T)
+    (hproject : ∀ k f,
+      M (codeSectorProj S k f) = codeSectorProj T k (M f))
+    (hone : M (fun _ => (1 : ℤ)) = (fun _ => (1 : ℤ)))
+    (f : ShapeCoef S) :
+    M f = transportCoef S T f := by
+  simpa only [hone, mul_one] using
+    (transportCoef_classification_of_spectral_intertwining
+      S T M hproject f)
 
 /-- Code-preserving state equivalences are themselves unique. There are
 no hidden chart twists invisible to every native state address. -/
@@ -453,6 +480,7 @@ theorem world_recoordination_groupoid_crown :
 #check codeSector_projector_polynomial
 #check mixedRadixTranspose_is_worldRecoordinate
 #check codeSectorProj_rankOne
+#check transportCoef_classification_of_spectral_intertwining
 #check transportCoef_unique_of_spectral_intertwining
 #check worldRecoordinate_is_unique_codePreserving
 #check worldRecoordination_full_spectral_rigidity
@@ -465,6 +493,7 @@ theorem world_recoordination_groupoid_crown :
 #print axioms transportCoef_codeSectorProj
 #print axioms codeSector_projector_polynomial
 #print axioms mixedRadixTranspose_is_worldRecoordinate
+#print axioms transportCoef_classification_of_spectral_intertwining
 #print axioms world_recoordination_groupoid_crown
 
 
