@@ -135,6 +135,106 @@ theorem same_weight_channel_crown
     channelBasis_injective S p,
     channel_reconstruct S p⟩
 
+
+/-!
+## Coupled limitless-depth and unlimited-rank rational Hodge geometry
+
+The original Wave-II theorem supplies arbitrary same-weight rank; the
+dimension-free rectangular GST world supplies arbitrary live weight.
+The direct rational diagonal classification now gives an exact simultaneous
+coefficient model: no integral lift, rank-one restriction, or fixed 4×3
+window enters the coupled result.
+-/
+
+open GSTDimensionFreeHodgeDiagonal
+
+/-- Rational rectangular wave amplitudes for every Wave-II channel at a
+fixed Hodge weight. The weight parameter is a label, not a bound. -/
+abbrev RectangularRationalChannels
+    (S : NShape) (A B : Nat) :=
+  HodgeChannel S → RationalWorldCoef A B
+
+/-- A class has rational Hodge type at a weight if every Wave-II channel is
+supported at the corresponding diagonal cell of the rectangular GST world. -/
+def IsRectangularRationalChannelHodge
+    (S : NShape) {A B : Nat} (p : Nat)
+    (f : RectangularRationalChannels S A B) : Prop :=
+  ∀ i : HodgeChannel S, isRationalWorldHodgeClass p (f i)
+
+/-- Each basis channel carries one rational diagonal cycle and nothing
+else. This is the coupled world/channel counterpart of Clay's H^p V^p. -/
+def rectangularChannelCycle
+    (S : NShape) {A B p : Nat}
+    (hpA : p < A) (hpB : p < B)
+    (i : HodgeChannel S) : RectangularRationalChannels S A B :=
+  fun j x => if j = i then rationalWorldDiagonalClass hpA hpB x else 0
+
+@[simp]
+theorem rectangularChannelCycle_self
+    (S : NShape) {A B p : Nat}
+    (hpA : p < A) (hpB : p < B)
+    (i : HodgeChannel S) (x : ShapeState (outputShape A B)) :
+    rectangularChannelCycle S hpA hpB i i x =
+      rationalWorldDiagonalClass hpA hpB x := by
+  simp [rectangularChannelCycle]
+
+/-- **EXACT SIMULTANEOUS RATIONAL CLAY CLASSIFICATION.**
+For arbitrary finite channel rank and arbitrary visible world weight, a
+rational Hodge class has a unique rational coefficient in each channel.
+Coefficients are extracted by evaluation at the GST diagonal cell.
+There is no prior integral representative and no algebraicity premise. -/
+theorem rectangular_rational_hodge_unique_coefficients
+    (S : NShape) {A B p : Nat}
+    (hpA : p < A) (hpB : p < B)
+    (f : RectangularRationalChannels S A B) :
+    IsRectangularRationalChannelHodge S p f ↔
+      ∃! q : HodgeChannel S → ℚ,
+        ∀ i : HodgeChannel S,
+          ∀ x : ShapeState (outputShape A B),
+            f i x = q i * rationalWorldDiagonalClass hpA hpB x := by
+  constructor
+  · intro hf
+    let d := diagonalState hpA hpB
+    refine ⟨fun i => f i d, ?_, ?_⟩
+    · intro i x
+      exact rational_world_hodge_coefficient_exact
+        hpA hpB (f i) (hf i) x
+    · intro r hr
+      funext i
+      have h := hr i d
+      have hclass : rationalWorldDiagonalClass hpA hpB d = 1 := by
+        simp [d]
+      rw [hclass, mul_one] at h
+      exact h.symm
+  · rintro ⟨q, hq, _⟩ i x hx
+    rw [hq i x, rationalWorldDiagonalClass_off_diagonal hpA hpB x hx]
+    ring
+
+/-- **FINITE CYCLE OUTPUT WITH EXACT RATIONAL COEFFICIENTS.**
+An arbitrary rational rectangular/channel Hodge class equals the explicit
+finite rational combination of the actual GST channel-cycle generators,
+with coefficients computed directly from the input class.  Both the weight
+and finite channel rank are unrestricted. -/
+theorem rectangular_rational_hodge_finite_cycle_expansion
+    (S : NShape) {A B p : Nat}
+    (hpA : p < A) (hpB : p < B)
+    (f : RectangularRationalChannels S A B)
+    (hf : IsRectangularRationalChannelHodge S p f) :
+    f = ∑ i : HodgeChannel S,
+      (f i (diagonalState hpA hpB)) •
+        rectangularChannelCycle S hpA hpB i := by
+  classical
+  funext j x
+  have h :=
+    rational_world_hodge_coefficient_exact hpA hpB (f j) (hf j) x
+  simpa [rectangularChannelCycle, Finset.sum_apply, Pi.smul_apply,
+    smul_eq_mul] using h
+
+#check rectangular_rational_hodge_unique_coefficients
+#check rectangular_rational_hodge_finite_cycle_expansion
+#print axioms rectangular_rational_hodge_unique_coefficients
+#print axioms rectangular_rational_hodge_finite_cycle_expansion
+
 #check HodgeChannel
 #check FixedWeightChannelCoordinates
 #check standardChannelShape
