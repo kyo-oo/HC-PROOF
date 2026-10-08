@@ -921,6 +921,213 @@ theorem finiteGraphStrictPacket_pushPull
       (finiteGraphHodgeState F hHodge u.state).1 :=
   (finiteGraphStrictPacket F hf hpoint hHodge u sector).pushPull_source_eq_target
 
+/-!
+## §7C. AUTONOMOUS FINITE-GRAPH WORD GEOMETRY
+
+A geometric word computes its next state from genuine scheme-map pullback,
+and its next cycle from the native graded correspondence operator. No
+desired Hodge output is stored in the word. The two generator-level
+requirements concern only the geometric point classes and Hodge-type
+preservation, not algebraization of an arbitrary target.
+-/
+
+/-- Certified actual finite graph, with no target Hodge class, ghost,
+basis index or output cycle witness. -/
+structure NativeFiniteGraphGenerator
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) where
+  analytic : AnalyticEndomorphism H.analytification
+  finite : IsFinite analytic.algebraic.hom
+  point_natural :
+    ∀ x : CodimensionPoint V.X p,
+      H.cycleClass p
+        ((finiteGraphStrictCarrier analytic finite).toBiFiniteClosedCorrespondence
+          .toFiniteClosedCorrespondence.gradedNativePointImage p x) =
+      rationalCohomologyPullback H.analytification analytic (2 * p)
+        (H.cycleClass p (codimensionPointCycle V.X p x))
+  hodge_stable :
+    ∀ alpha : ClassicalHodgeFiber V H p,
+      rationalCohomologyPullback H.analytification analytic (2 * p) alpha.1 ∈
+        rationalHodgeSubspace (H.hodgeBigrading p)
+
+namespace NativeFiniteGraphGenerator
+
+noncomputable def nativeOperator
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (F : NativeFiniteGraphGenerator V H p) :
+    codimensionCycles V.X p →ₗ[ℚ] codimensionCycles V.X p :=
+  (finiteGraphStrictCarrier F.analytic F.finite).toBiFiniteClosedCorrespondence
+    .toFiniteClosedCorrespondence.gradedNativeCycleOperator p p
+
+noncomputable def bettiOperator
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (F : NativeFiniteGraphGenerator V H p) :
+    RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
+      RationalSingularCohomology H.analytification (2 * p) :=
+  rationalCohomologyPullback H.analytification F.analytic (2 * p)
+
+noncomputable def hodgeOperator
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (F : NativeFiniteGraphGenerator V H p) :
+    ClassicalHodgeFiber V H p → ClassicalHodgeFiber V H p :=
+  finiteGraphHodgeState F.analytic F.hodge_stable
+
+/-- Naturality derived from point geometry and compact native presentation. -/
+theorem native_betti_natural
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (F : NativeFiniteGraphGenerator V H p)
+    (Z : codimensionCycles V.X p) :
+    H.cycleClass p (F.nativeOperator Z) =
+      F.bettiOperator (H.cycleClass p Z) :=
+  finiteGraph_allNativeCycles_natural p F.analytic F.finite F.point_natural Z
+
+@[simp]
+theorem hodgeOperator_class
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (F : NativeFiniteGraphGenerator V H p)
+    (alpha : ClassicalHodgeFiber V H p) :
+    (F.hodgeOperator alpha).1 = F.bettiOperator alpha.1 := rfl
+
+/-- Construct an actual strict packet to the geometrically computed target. -/
+noncomputable def strictPacket
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (F : NativeFiniteGraphGenerator V H p)
+    (u : HodgeBranchNode (V := V) (H := H) (p := p))
+    (targetSector : Sector) :
+    StrictRelationEdgePacket u
+      (⟨targetSector, F.hodgeOperator u.state⟩ :
+        HodgeBranchNode (V := V) (H := H) (p := p)) :=
+  finiteGraphStrictPacket F.analytic F.finite F.point_natural
+    F.hodge_stable u targetSector
+
+end NativeFiniteGraphGenerator
+
+/-- Native operators from ordered words of finite actual graphs. -/
+noncomputable def finiteGraphNativeWord
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat} :
+    List (NativeFiniteGraphGenerator V H p) →
+      (codimensionCycles V.X p →ₗ[ℚ] codimensionCycles V.X p)
+  | [] => LinearMap.id
+  | F :: rest => (finiteGraphNativeWord rest).comp F.nativeOperator
+
+/-- Same finite word, on actual rational singular cohomology. -/
+noncomputable def finiteGraphBettiWord
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat} :
+    List (NativeFiniteGraphGenerator V H p) →
+      (RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
+        RationalSingularCohomology H.analytification (2 * p))
+  | [] => LinearMap.id
+  | F :: rest => (finiteGraphBettiWord rest).comp F.bettiOperator
+
+/-- Recursive Hodge-state action of the same geometric word. -/
+noncomputable def finiteGraphHodgeWord
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat} :
+    List (NativeFiniteGraphGenerator V H p) →
+      ClassicalHodgeFiber V H p → ClassicalHodgeFiber V H p
+  | [], alpha => alpha
+  | F :: rest, alpha => finiteGraphHodgeWord rest (F.hodgeOperator alpha)
+
+/-- **COMPLETE NATIVE-GRAPH WORD NATURALITY, ALL FINITE LENGTHS.**
+No target representative or requested target relation is assumed. -/
+theorem finiteGraphWord_cycleClass_natural
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (word : List (NativeFiniteGraphGenerator V H p))
+    (Z : codimensionCycles V.X p) :
+    H.cycleClass p (finiteGraphNativeWord word Z) =
+      finiteGraphBettiWord word (H.cycleClass p Z) := by
+  induction word generalizing Z with
+  | nil =>
+      rfl
+  | cons F rest ih =>
+      change H.cycleClass p
+          (finiteGraphNativeWord rest (F.nativeOperator Z)) =
+        finiteGraphBettiWord rest
+          (F.bettiOperator (H.cycleClass p Z))
+      calc
+        _ = finiteGraphBettiWord rest
+              (H.cycleClass p (F.nativeOperator Z)) := ih _
+        _ = _ := congrArg (finiteGraphBettiWord rest)
+          (F.native_betti_natural Z)
+
+/-- The recursively computed Hodge state is the Betti word action. -/
+theorem finiteGraphHodgeWord_class
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (word : List (NativeFiniteGraphGenerator V H p))
+    (alpha : ClassicalHodgeFiber V H p) :
+    (finiteGraphHodgeWord word alpha).1 =
+      finiteGraphBettiWord word alpha.1 := by
+  induction word generalizing alpha with
+  | nil =>
+      rfl
+  | cons F rest ih =>
+      change (finiteGraphHodgeWord rest (F.hodgeOperator alpha)).1 =
+        finiteGraphBettiWord rest (F.bettiOperator alpha.1)
+      rw [ih, F.hodgeOperator_class]
+
+/-- The output native cycle is COMPUTED, never carried as a word field. -/
+theorem finiteGraphWord_constructs_native_target
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (word : List (NativeFiniteGraphGenerator V H p))
+    (alpha : ClassicalHodgeFiber V H p)
+    (Z : codimensionCycles V.X p)
+    (hsource : H.cycleClass p Z = alpha.1) :
+    H.cycleClass p (finiteGraphNativeWord word Z) =
+      (finiteGraphHodgeWord word alpha).1 := by
+  calc
+    H.cycleClass p (finiteGraphNativeWord word Z) =
+        finiteGraphBettiWord word (H.cycleClass p Z) :=
+      finiteGraphWord_cycleClass_natural word Z
+    _ = finiteGraphBettiWord word alpha.1 := by rw [hsource]
+    _ = (finiteGraphHodgeWord word alpha).1 :=
+      (finiteGraphHodgeWord_class word alpha).symm
+
+/-- An unconditional actual generator: the diagonal identity graph. -/
+noncomputable def identityNativeFiniteGraphGenerator
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : Nat) : NativeFiniteGraphGenerator V H p where
+  analytic := AnalyticEndomorphism.id (A := H.analytification)
+  finite := strictGraph_id_isFinite V
+  point_natural := by
+    intro x
+    change H.cycleClass p
+      ((diagonalStrictCarrier V).toBiFiniteClosedCorrespondence
+        .toFiniteClosedCorrespondence.gradedNativePointImage p x) =
+        rationalCohomologyPullback H.analytification
+          (AnalyticEndomorphism.id (A := H.analytification)) (2 * p)
+          (H.cycleClass p (codimensionPointCycle V.X p x))
+    rw [diagonalStrict_gradedNativePointImage V H p x,
+      rationalCohomologyPullback_id]
+    rfl
+  hodge_stable := by
+    intro alpha
+    rw [rationalCohomologyPullback_id]
+    exact alpha.2
+
+#check finiteGraphNativeWord
+#check finiteGraphBettiWord
+#check finiteGraphHodgeWord
+#check finiteGraphWord_cycleClass_natural
+#check finiteGraphHodgeWord_class
+#check finiteGraphWord_constructs_native_target
+#check identityNativeFiniteGraphGenerator
+#print axioms finiteGraphWord_cycleClass_natural
+#print axioms finiteGraphWord_constructs_native_target
+#print axioms identityNativeFiniteGraphGenerator
+
 #check sectorRecoordinationStrictPacket
 #check everySectorRecoordination_has_strictPacket
 #check everySectorRecoordination_has_commonClassPlane
