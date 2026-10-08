@@ -1094,6 +1094,65 @@ theorem finiteGraphWord_constructs_native_target
     _ = (finiteGraphHodgeWord word alpha).1 :=
       (finiteGraphHodgeWord_class word alpha).symm
 
+/-!
+## Strong integration into the EXISTING graded operator geometry
+
+The finite-graph word is not a disconnected new formalism.  Its already
+derived source-to-target commuting square now defines one of the native
+graded cycle-class operator pairs from the established cross-weight GST
+geometry.  Thus it can enter the existing add/scale/compose algebra directly,
+without re-proving any target realization or postulating a new algebraic
+Hodge seed.
+-/
+
+/-- The canonical degree-preserving graded cycle-class operator pair of a
+whole finite geometric graph word.  This is the native/cohomological pair
+already demanded by the existing GST graded transport infrastructure. -/
+noncomputable def finiteGraphWordGradedPair
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (word : List (NativeFiniteGraphGenerator V H p)) :
+    GSTClassicalHodgeCrossWeightNativePropagation.GradedCycleClassOperatorPair
+      V H p p where
+  cycleOperator := finiteGraphNativeWord word
+  cohomologyOperator := finiteGraphBettiWord word
+  cycleClass_natural := finiteGraphWord_cycleClass_natural word
+
+/-- Every generated finite-graph word therefore satisfies the full
+cross-weight module's genuine native-cycle realization law. -/
+theorem finiteGraphWordGradedPair_native_realization
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (word : List (NativeFiniteGraphGenerator V H p))
+    (Z : codimensionCycles V.X p) :
+    ∃ W : codimensionCycles V.X p,
+      H.cycleClass p W =
+        (finiteGraphWordGradedPair word).cohomologyOperator
+          (H.cycleClass p Z) := by
+  exact (finiteGraphWordGradedPair word).image_has_native_class Z
+
+/-- Geometric word concatenation is precisely ordered multiplication
+inside the already-existing native graded operator algebra. -/
+theorem finiteGraphWordGradedPair_comp_cycle
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (first second : List (NativeFiniteGraphGenerator V H p)) :
+    (finiteGraphWordGradedPair (first ++ second)).cycleOperator =
+      (finiteGraphWordGradedPair second).cycleOperator.comp
+        (finiteGraphWordGradedPair first).cycleOperator :=
+  finiteGraphNativeWord_append first second
+
+/-- The same concatenation is coherent on the complete rational Betti
+carrier, not just on the algebraic image. -/
+theorem finiteGraphWordGradedPair_comp_betti
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (first second : List (NativeFiniteGraphGenerator V H p)) :
+    (finiteGraphWordGradedPair (first ++ second)).cohomologyOperator =
+      (finiteGraphWordGradedPair second).cohomologyOperator.comp
+        (finiteGraphWordGradedPair first).cohomologyOperator :=
+  finiteGraphBettiWord_append first second
+
 /-- An unconditional actual generator: the diagonal identity graph. -/
 noncomputable def identityNativeFiniteGraphGenerator
     (V : SmoothProjectiveComplexScheme)
@@ -1328,6 +1387,10 @@ theorem nativeFiniteGraphClosure_semanticCompleteness
 #print axioms nativeFiniteGraphClosure_constructs_cycle
 #print axioms nativeFiniteGraphHistory_constructs_targetCycle
 
+#check finiteGraphWordGradedPair
+#check finiteGraphWordGradedPair_native_realization
+#check finiteGraphWordGradedPair_comp_cycle
+#check finiteGraphWordGradedPair_comp_betti
 #check finiteGraphNativeWord
 #check finiteGraphBettiWord
 #check finiteGraphHodgeWord
