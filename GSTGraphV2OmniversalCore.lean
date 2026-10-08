@@ -384,8 +384,8 @@ theorem pathMap_comp
     (F : EventHom G H)
     {x y z : G.Node}
     (p : Path G x y) (q : Path G y z) :
-    F.pathMap (Path.comp G p q) =
-      Path.comp H (F.pathMap p) (F.pathMap q) := by
+    pathMap G F (Path.comp G p q) =
+      Path.comp H (pathMap G F p) (pathMap G F q) := by
   induction p with
   | nil =>
       rfl
@@ -399,18 +399,18 @@ the source events, not supplied independently. -/
 def toGeneralSpaceHom (F : EventHom G H) :
     GSTGeneralSpace.GeneralSpace.Hom G.toGeneralSpace H.toGeneralSpace where
   mapPoint := F.toFun
-  mapPath := F.pathMap
+  mapPath := pathMap G F
   map_id := by
     intro x
     rfl
   map_comp := by
     intro x y z p q
-    exact F.pathMap_comp p q
+    exact pathMap_comp G F p q
 
 /-- Sector observation is strictly natural under every event morphism. -/
 @[simp] theorem map_sector_exact
     (F : EventHom G H) (x : G.Node) :
-    H.sector ((F.toGeneralSpaceHom).mapPoint x) = G.sector x :=
+    H.sector ((toGeneralSpaceHom G F).mapPoint x) = G.sector x :=
   F.sector_eq x
 
 /-- Point transport of two consecutive GST realizations is coherent on the
@@ -419,9 +419,9 @@ theorem comp_toGeneralSpaceHom_mapPoint
     {K : OmniversalGraph.{u,v}}
     (F : EventHom G H) (J : EventHom H K)
     (x : G.Node) :
-    ((F.comp J).toGeneralSpaceHom).mapPoint x =
-      (J.toGeneralSpaceHom).mapPoint
-        ((F.toGeneralSpaceHom).mapPoint x) :=
+    (toGeneralSpaceHom G (comp G F J)).mapPoint x =
+      (toGeneralSpaceHom H J).mapPoint
+        ((toGeneralSpaceHom G F).mapPoint x) :=
   rfl
 
 /-- Every physically realizable causal path remains realizable under a
@@ -430,7 +430,7 @@ theorem reachable_map (F : EventHom G H)
     {x y : G.Node} (h : Reachable G x y) :
     Reachable H (F.toFun x) (F.toFun y) := by
   rcases h with ⟨p⟩
-  exact ⟨F.pathMap p⟩
+  exact ⟨pathMap G F p⟩
 
 /-- Forward transport of the ENTIRE causal reachability closure, not only
 one primitive event.  Source index is carried explicitly. -/
@@ -440,7 +440,7 @@ theorem closure_image
     Closure H (fun z => ∃ x, Seed x ∧ F.toFun x = z)
       (F.toFun y) := by
   rcases hy with ⟨x, hx, hxy⟩
-  exact ⟨F.toFun x, ⟨x, hx, rfl⟩, F.reachable_map hxy⟩
+  exact ⟨F.toFun x, ⟨x, hx, rfl⟩, reachable_map G F hxy⟩
 
 /-- Contravariant transport of stable semantic laws.  A geometric meaning
 proved event-stable in the target pulls back to a stable GST meaning on
@@ -461,7 +461,7 @@ theorem closure_semantic_transport
     (hSeed : ∀ x, Seed x → P (F.toFun x))
     {y : G.Node} (hy : Closure G Seed y) :
     P (F.toFun y) := by
-  exact closure_sound G hSeed (F.stable_preimage P hP) y hy
+  exact closure_sound G hSeed (stable_preimage G F P hP) y hy
 
 /-- A CAUSAL FIBRATION is an event morphism that lifts every target history
 starting at an interpreted source state.  No existence of such lifts is
@@ -476,7 +476,7 @@ Unlike the always-true forward transport, a fibrational realization
 identifies the closure of the image EXACTLY with the image of the closure.
 It cannot silently manufacture inaccessible geometric states. -/
 theorem closure_image_iff_of_pathLifting
-    (F : EventHom G H) (hLift : PathLifting F)
+    (F : EventHom G H) (hLift : PathLifting G F)
     (Seed : G.Node → Prop) (z : H.Node) :
     Closure H (fun v => ∃ x, Seed x ∧ F.toFun x = v) z ↔
       ∃ y : G.Node, Closure G Seed y ∧ F.toFun y = z := by
@@ -485,7 +485,7 @@ theorem closure_image_iff_of_pathLifting
     obtain ⟨y, hxy, hy⟩ := hLift.lift p
     exact ⟨y, ⟨x, hx, hxy⟩, hy⟩
   · rintro ⟨y, hy, rfl⟩
-    exact F.closure_image Seed hy
+    exact closure_image G F Seed hy
 
 
 /-- **CAUSAL PATH-LIFTING IS EXACT REACHABILITY REFLECTION.**
@@ -494,7 +494,7 @@ equivalent to a concrete path-lifting property.  This isolates the precise
 additional geometric condition, rather than assuming full target coverage. -/
 theorem pathLifting_iff_reachability_exact
     (F : EventHom G H) :
-    PathLifting F ↔
+    PathLifting G F ↔
       ∀ (x : G.Node) (z : H.Node),
         Reachable H (F.toFun x) z ↔
           ∃ y : G.Node, Reachable G x y ∧ F.toFun y = z := by
@@ -504,7 +504,7 @@ theorem pathLifting_iff_reachability_exact
     · rintro ⟨p⟩
       exact h.lift p
     · rintro ⟨y, hxy, rfl⟩
-      exact F.reachable_map hxy
+      exact reachable_map G F hxy
   · intro h
     refine ⟨?_⟩
     intro x z p
@@ -518,15 +518,15 @@ Thus exact semantic transport cannot be obtained merely by an abstract
 event map without the corresponding lifting law. -/
 theorem pathLifting_iff_exact_image_closure
     (F : EventHom G H) :
-    PathLifting F ↔
+    PathLifting G F ↔
       ∀ (Seed : G.Node → Prop) (z : H.Node),
         Closure H (fun v => ∃ x, Seed x ∧ F.toFun x = v) z ↔
           ∃ y : G.Node, Closure G Seed y ∧ F.toFun y = z := by
   constructor
   · intro hLift Seed z
-    exact F.closure_image_iff_of_pathLifting hLift Seed z
+    exact closure_image_iff_of_pathLifting G F hLift Seed z
   · intro hExact
-    apply (F.pathLifting_iff_reachability_exact).2
+    apply (pathLifting_iff_reachability_exact G F).2
     intro x z
     constructor
     · intro hxz
@@ -538,7 +538,7 @@ theorem pathLifting_iff_exact_image_closure
       subst s
       exact ⟨y, hsy, hy⟩
     · rintro ⟨y, hxy, rfl⟩
-      exact F.reachable_map hxy
+      exact reachable_map G F hxy
 
 end EventHom
 
