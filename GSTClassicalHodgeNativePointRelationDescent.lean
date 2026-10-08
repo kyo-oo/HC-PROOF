@@ -174,7 +174,8 @@ theorem nativeClassRangeEnd_eq_zero_iff
       exact classRangeRepresentative_spec cl y
     rw [← hrepr]
     apply Subtype.ext
-    simpa only [nativeClassRangeEnd_natural, LinearMap.zero_apply] using h Z
+    simpa [nativeClassRangeEnd_natural, LinearMap.zero_apply,
+      show (cl.rangeRestrict (A Z)).val = cl (A Z) from rfl] using h Z
 
 /-- **ONE UNIVERSAL CLASS-IMAGE RETRACTION.** Choose a rational-linear
 projection onto the actual algebraic class image ONCE, independently of the
