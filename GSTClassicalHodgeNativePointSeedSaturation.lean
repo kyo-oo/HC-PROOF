@@ -132,6 +132,37 @@ theorem hodge_weight_le_cycleClass_range
 
 end NativePointHodgeSeed
 
+/-- **ACTIVE-FIBER GEOMETRY-FIRST POINT SATURATION.**
+A geometric native point is needed only at a weight with a nonzero rational
+Hodge fiber.  For a zero fiber, the zero native cycle realizes every member,
+without supplying a fictitious codimension point or nonzero seed.
+
+The live-weight witnesses remain literal native codimension points and genuine
+geometry-first operators; no algebraicity or surjectivity conclusion is placed
+in the hypotheses. -/
+theorem bigradedBettiHodge_of_active_nativePointSeeds
+    (seeds :
+      ∀ (p : Nat),
+        (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+          NativePointHodgeSeed V H p)
+    (R :
+      ∀ (p : Nat)
+        (hp : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0),
+      ∀ i j : ClassicalHodgeBasisIndex V H p,
+        GeometryFirstTwoGenerator (V := V) (H := H) i j) :
+    BigradedBettiHodgeStatement V H := by
+  classical
+  intro p alpha halpha
+  by_cases hp : ∃ beta : ClassicalHodgeFiber V H p, beta ≠ 0
+  · exact (seeds p hp).hodge_weight_le_cycleClass_range (R p hp) halpha
+  · have halpha_zero : alpha = 0 := by
+      by_contra hne
+      apply hp
+      refine ⟨⟨alpha, halpha⟩, ?_⟩
+      intro h
+      exact hne (by simpa using congrArg Subtype.val h)
+    exact ⟨0, by simp [halpha_zero]⟩
+
 /-- A concrete native point seed and geometry-first two-generator realization
 in every weight close the exact Stage-2G Hodge statement. -/
 theorem bigradedBettiHodge_of_nativePointSeeds
@@ -139,8 +170,8 @@ theorem bigradedBettiHodge_of_nativePointSeeds
     (R : ∀ p : Nat, ∀ i j : ClassicalHodgeBasisIndex V H p,
       GeometryFirstTwoGenerator (V := V) (H := H) i j) :
     BigradedBettiHodgeStatement V H := by
-  intro p alpha halpha
-  exact (seeds p).hodge_weight_le_cycleClass_range (R p) halpha
+  exact bigradedBettiHodge_of_active_nativePointSeeds
+    (fun p _ => seeds p) (fun p _ => R p)
 
 #check NativePointHodgeSeed
 #check NativePointHodgeSeed.hodgeClass
@@ -149,11 +180,13 @@ theorem bigradedBettiHodge_of_nativePointSeeds
 #check NativePointHodgeSeed.algebraicHodgeSubspace_eq_top
 #check NativePointHodgeSeed.every_hodge_class_has_native_cycle
 #check NativePointHodgeSeed.hodge_weight_le_cycleClass_range
+#check bigradedBettiHodge_of_active_nativePointSeeds
 #check bigradedBettiHodge_of_nativePointSeeds
 
 #print axioms NativePointHodgeSeed.hodgeClass_mem_algebraicHodgeSubspace
 #print axioms NativePointHodgeSeed.algebraicHodgeSubspace_eq_top
 #print axioms NativePointHodgeSeed.every_hodge_class_has_native_cycle
+#print axioms bigradedBettiHodge_of_active_nativePointSeeds
 #print axioms bigradedBettiHodge_of_nativePointSeeds
 
 end GSTClassicalHodgeNativePointSeedSaturation
