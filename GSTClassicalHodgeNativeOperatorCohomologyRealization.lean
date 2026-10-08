@@ -468,14 +468,12 @@ theorem ambientOperator_nativeIdentity_is_cornerUnit :
       (LinearMap.id : Module.End ℚ (Cycles V p))
       (fun _ hZ => hZ) =
         classRangeProjection (H := H) := by
-  apply LinearMap.ext
-  intro alpha
-  change
-    ↑((rangeOperator (H := H)
-      (LinearMap.id : Module.End ℚ (Cycles V p))
-      (fun _ hZ => hZ)) (classRangeRetraction (H := H) alpha)) =
-        ↑(classRangeRetraction (H := H) alpha)
-  rw [rangeOperator_id]
+  have h1 : ambientOperator (H := H) (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) = supportedAmbientOperator (H := H)
+      (LinearMap.id : Module.End ℚ (Cycles V p)) (fun _ hZ => hZ) :=
+    ambientOperator_eq_supported (LinearMap.id : Module.End ℚ (Cycles V p)) (fun _ hZ => hZ)
+  rw [h1]
+  exact supportedAmbientOperator_id
 
 /-- **THE CORNER-UNIT OBSTRUCTION.**
 

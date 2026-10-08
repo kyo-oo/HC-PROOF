@@ -2,6 +2,8 @@ import GSTClassicalHodgeThreeUniverseSeedIdentification
 import GSTClassicalHodgePointNormalForm
 import GSTClassicalHodgeNativeCycleCosmicShadow
 
+set_option maxHeartbeats 400000000
+
 /-!
 # GST CLASSICAL HODGE — FIBERED NATIVE PULLBACK UNIVERSE
 
@@ -746,6 +748,7 @@ theorem circulation_eq_rectangle_sum
     | add a b ha hb =>
         rw [map_add, ha, hb,
           ← Finsupp.sum_add_index'
+            (f := a) (g := b)
             (h := fun c q =>
               q • anchoredRectangle V H p i₀ c.1 x₀ c.2)
             (fun c => zero_smul ℚ (anchoredRectangle V H p i₀ c.1 x₀ c.2))
