@@ -136,14 +136,18 @@ theorem rational_hodge_class_all_rational_weights
       intro c
       rcases c with ⟨C, d, hC, hd⟩
       by_cases hdiag : C = p ∧ d = p
-      · rcases hdiag with ⟨rfl, rfl⟩
+      · rcases hdiag with ⟨hCp, hdp⟩
         have hcycle :
-            ratCycleClass p (⟨p, p, hC, hd⟩ : WaveCell) = 1 := by
+            ratCycleClass p (⟨C, d, hC, hd⟩ : WaveCell) = 1 := by
           unfold ratCycleClass
-          rw [cycle_at_diagonal p p p hC hd rfl rfl]
+          rw [cycle_at_diagonal p C d hC hd hCp hdp]
           norm_num
-        rw [hcycle, mul_one]
-        rfl
+        have hcell : (⟨C, d, hC, hd⟩ : WaveCell) =
+            ⟨p, p, hp4, hp⟩ := by
+          cases hCp
+          cases hdp
+          rfl
+        rw [hcycle, mul_one, hcell]
       · have hzero : f (⟨C, d, hC, hd⟩ : WaveCell) = 0 := by
           apply hf
           by_contra h
