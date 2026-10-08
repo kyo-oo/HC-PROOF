@@ -225,6 +225,117 @@ theorem transportCoef_codeSectorProj
       f ((worldRecoordinate S T).symm y) else 0)
   rw [hcode]
 
+/-!
+## Spectral reconstruction rigidity of the world recoordination groupoid
+
+The old laws proved naturality of coordinate codes and spectral projections.
+A stronger question is whether a second rational/integral linear transport
+could satisfy the very same laws but move coefficients differently.
+
+It cannot: each code sector is a rank-one free integer line, selected by
+an exact idempotent projector. A linear transport intertwining all code
+sectors and preserving the canonical constant-one field is forced to be
+the unique canonical chart recoordination. This establishes rigidity of
+the entire native observable action, not only naturality of its generators.
+-/
+
+/-- A single code projector has exactly one source coordinate. Its value
+on any field is that coordinate's amplitude times the same projector
+applied to the all-one field. -/
+theorem codeSectorProj_rankOne
+    {N : Nat} (S : GSTWorldShape N)
+    (k : Nat) (f : ShapeCoef S)
+    (x : ShapeState S) (hx : worldCode S x = k) :
+    codeSectorProj S k f =
+      f x • codeSectorProj S k (fun _ => (1 : ℤ)) := by
+  funext z
+  by_cases hz : worldCode S z = k
+  · have hzx : z = x := by
+      apply (shapeCodeEquiv S).injective
+      apply Fin.ext
+      exact hz.trans hx.symm
+    subst z
+    simp [codeSectorProj, hx]
+  · simp [codeSectorProj, hz]
+
+/-- **RIGIDITY OF ALL INTEGRAL CODE-SPECTRAL TRANSPORTS.**
+Any integer-linear map intertwining each exact code sector, and sending
+the all-one field to the all-one field, MUST be canonical recoordination.
+The full transport operator is recovered from its spectral observations.
+No target operator action is assumed separately. -/
+theorem transportCoef_unique_of_spectral_intertwining
+    {N : Nat} (S T : GSTWorldShape N)
+    (M : ShapeCoef S →ₗ[ℤ] ShapeCoef T)
+    (hproject : ∀ k f,
+      M (codeSectorProj S k f) = codeSectorProj T k (M f))
+    (hone : M (fun _ => (1 : ℤ)) = (fun _ => (1 : ℤ)))
+    (f : ShapeCoef S) :
+    M f = transportCoef S T f := by
+  funext y
+  let x : ShapeState S := (worldRecoordinate S T).symm y
+  let k : Nat := worldCode T y
+  have hkS : worldCode S x = k := by
+    dsimp [x, k]
+    rw [worldRecoordinate_inverse S T y]
+    exact worldRecoordinate_code T S y
+  have hkT : worldCode T y = k := rfl
+  have hlocal := codeSectorProj_rankOne S k f x hkS
+  have hscaled :
+      M (codeSectorProj S k f) =
+        f x • M (codeSectorProj S k (fun _ => (1 : ℤ))) := by
+    rw [hlocal, map_smul]
+  have heval : (M f) y = f x := by
+    calc
+      (M f) y = (codeSectorProj T k (M f)) y := by
+        simp [codeSectorProj, hkT]
+      _ = (M (codeSectorProj S k f)) y := by
+        exact congrFun (hproject k f).symm y
+      _ = f x * (M (codeSectorProj S k (fun _ => (1 : ℤ)))) y := by
+        rw [hscaled]
+        rfl
+      _ = f x * (codeSectorProj T k (M (fun _ => (1 : ℤ)))) y := by
+        rw [hproject k (fun _ => (1 : ℤ))]
+      _ = f x := by
+        rw [hone]
+        simp [codeSectorProj, hkT]
+  simpa [transportCoef, x] using heval
+
+/-- Code-preserving state equivalences are themselves unique. There are
+no hidden chart twists invisible to every native state address. -/
+theorem worldRecoordinate_is_unique_codePreserving
+    {N : Nat} (S T : GSTWorldShape N)
+    (e : ShapeState S ≃ ShapeState T) :
+    (∀ x, worldCode T (e x) = worldCode S x) ↔
+      e = worldRecoordinate S T := by
+  constructor
+  · intro h
+    apply Equiv.ext
+    intro x
+    exact (worldRecoordinate_unique S T x (e x) (h x)).symm
+  · intro he x
+    rw [he]
+    exact worldRecoordinate_code S T x
+
+/-- The full spectral rigidity crown identifies all available coordinates:
+there is a unique code-preserving state map, and every normalized
+code-projector-intertwining linear map is canonical coefficient transport. -/
+theorem worldRecoordination_full_spectral_rigidity
+    {N : Nat} (S T : GSTWorldShape N) :
+    (∀ e : ShapeState S ≃ ShapeState T,
+      (∀ x, worldCode T (e x) = worldCode S x) →
+      e = worldRecoordinate S T)
+    ∧ (∀ M : ShapeCoef S →ₗ[ℤ] ShapeCoef T,
+      (∀ k f, M (codeSectorProj S k f) =
+        codeSectorProj T k (M f)) →
+      M (fun _ => (1 : ℤ)) = (fun _ => (1 : ℤ)) →
+      ∀ f, M f = transportCoef S T f) := by
+  constructor
+  · intro e h
+    exact (worldRecoordinate_is_unique_codePreserving S T e).mp h
+  · intro M hproject hone f
+    exact transportCoef_unique_of_spectral_intertwining S T M
+      hproject hone f
+
 /-- Polynomial functional calculus of the invariant code observable. -/
 def codePolyOp
     {N : Nat} (S : GSTWorldShape N)
@@ -341,6 +452,10 @@ theorem world_recoordination_groupoid_crown :
 #check transportCoef_codePolyOp
 #check codeSector_projector_polynomial
 #check mixedRadixTranspose_is_worldRecoordinate
+#check codeSectorProj_rankOne
+#check transportCoef_unique_of_spectral_intertwining
+#check worldRecoordinate_is_unique_codePreserving
+#check worldRecoordination_full_spectral_rigidity
 #check world_recoordination_groupoid_crown
 
 #print axioms worldRecoordinate_code
