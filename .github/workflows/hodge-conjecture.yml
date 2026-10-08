@@ -125,6 +125,13 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake env lean GSTClassicalHodgeNativePointSeedSaturation.lean 2>&1 | tee -a hodge-final.log
 
+      - name: Compile finite-path degree-apex GST geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeGeometryFirstGlobalPropagation.lean 2>&1 | tee -a hodge-final.log
+
       - name: Final trust audit
         shell: bash
         run: |
