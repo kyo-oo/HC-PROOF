@@ -84,6 +84,68 @@ def nativeClassRangeAction
         transformedClass_congr cl A hk heq
       _ = _ := by simp
 
+/-- **CANONICAL GEOMETRIC IMAGE DYNAMICS.** A finite-relation-preserving
+native operator acts on the *actual geometric cycle-class image* itself,
+without choosing any ambient action on possibly nonalgebraic cohomology.
+The image constraint is constructed from an actual native cycle. -/
+def nativeClassRangeEnd
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A : Module.End ℚ (codimensionCycles X p))
+    (hk : NativeClassKernelStable cl A) : Module.End ℚ (LinearMap.range cl) where
+  toFun y := ⟨nativeClassRangeAction cl A hk y,
+    ⟨A (classRangeRepresentative cl y), rfl⟩⟩
+  map_add' := by
+    intro y z
+    apply Subtype.ext
+    exact (nativeClassRangeAction cl A hk).map_add y z
+  map_smul' := by
+    intro q y
+    apply Subtype.ext
+    exact (nativeClassRangeAction cl A hk).map_smul q y
+
+/-- Naturality is forced on the full geometric image, with no selected
+cohomology operator or target-cycle witness as an input. -/
+theorem nativeClassRangeEnd_natural
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A : Module.End ℚ (codimensionCycles X p))
+    (hk : NativeClassKernelStable cl A)
+    (Z : codimensionCycles X p) :
+    nativeClassRangeEnd cl A hk (cl.rangeRestrict Z) =
+      cl.rangeRestrict (A Z) := by
+  apply Subtype.ext
+  exact transformedClass_congr cl A hk
+    (classRangeRepresentative_spec cl (cl.rangeRestrict Z))
+
+/-- Relations are stable under sequential native dynamics. -/
+theorem nativeClassKernelStable_comp
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A B : Module.End ℚ (codimensionCycles X p))
+    (hA : NativeClassKernelStable cl A)
+    (hB : NativeClassKernelStable cl B) :
+    NativeClassKernelStable cl (A.comp B) := by
+  intro Z hZ
+  exact hA (B Z) (hB Z hZ)
+
+/-- **GEOMETRIC IMAGE REPRESENTATION LAW.** Descending a composite native
+operation is the composite of its canonical actions on actual cycle classes.
+This has no ambient extension or cyclic-generation assumption. -/
+theorem nativeClassRangeEnd_comp
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A B : Module.End ℚ (codimensionCycles X p))
+    (hA : NativeClassKernelStable cl A)
+    (hB : NativeClassKernelStable cl B) :
+    nativeClassRangeEnd cl (A.comp B)
+      (nativeClassKernelStable_comp cl A B hA hB) =
+      (nativeClassRangeEnd cl A hA).comp
+        (nativeClassRangeEnd cl B hB) := by
+  ext y
+  let Z : codimensionCycles X p := classRangeRepresentative cl y
+  have hrepr : cl.rangeRestrict Z = y := by
+    apply Subtype.ext
+    exact classRangeRepresentative_spec cl y
+  rw [← hrepr]
+  simp only [LinearMap.comp_apply, nativeClassRangeEnd_natural]
+
 /-- Extend the derived range action; nothing is prescribed outside native
 classes. This existing rational-linear extension device is used only after
 the native finite-relation condition has been proved. -/
@@ -204,6 +266,7 @@ def derivedPointClassTransitionKernel [CompactSpace X]
     simpa [rawNativeOperator_point, finitePointCycleClassMap_eq_cycleClass_realize]
       using h.symm
 
+#print axioms nativeClassRangeEnd_comp
 #print axioms nativeAmbientAction_natural
 #print axioms exists_nativeAmbientAction_iff
 #print axioms finiteRelations_iff_nativeKernelStable
