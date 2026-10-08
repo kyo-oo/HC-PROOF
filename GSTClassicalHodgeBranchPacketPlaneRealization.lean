@@ -106,6 +106,8 @@ open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeStage2GSemanticRigidity
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeProjectivePointTransport
+open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
 
 variable {V : SmoothProjectiveComplexScheme}
@@ -1094,6 +1096,48 @@ theorem finiteGraphWord_constructs_native_target
     _ = (finiteGraphHodgeWord word alpha).1 :=
       (finiteGraphHodgeWord_class word alpha).symm
 
+/-! ## Native finite-graph words cannot smuggle a ghost-detected sheet
+
+This is a noncircular finite-length obstruction.  Every certified native graph
+word computes an actual cycle.  The separator annihilates all such cycle
+classes but detects its chosen basis sheet.  Hence NO finite word can realize
+that target in a hypothetical ghost world.  The obstruction uses the existing
+GST geometric semantics, not a classical theorem or a target-cycle premise.
+-/
+
+/-- **FINITE-WORD GHOST-SEPARATION THEOREM.**
+Every ordered word of genuine native finite-graph generators fails to produce
+the ghost-detected Hodge basis sheet from a synchronized native seed.
+No word-length bound or arbitrary target-cycle premise is needed. -/
+theorem finiteGraphHodgeWord_ne_ghostSheet
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (word : List (NativeFiniteGraphGenerator V H E.weight)) :
+    finiteGraphHodgeWord word S.hodge ≠
+      classicalHodgeBasis V H E.weight E.sheet := by
+  intro htarget
+  have hclass :=
+    finiteGraphWord_constructs_native_target word S.hodge S.cycle S.class_eq
+  have htarget_val := congrArg Subtype.val htarget
+  rw [htarget_val] at hclass
+  have hker :
+      pointCycleClassSpan E.weight (H.cycleClass E.weight) ≤
+        LinearMap.ker E.separator.detector :=
+    (GSTClassicalHodgeAtomicAnnihilator.annihilatesPointCycles_iff_atomicSpan_le_ker
+      E.weight (H.cycleClass E.weight) E.separator.detector).1
+      E.separator.annihilates_atoms
+  have hkill :
+      E.separator.detector
+        (H.cycleClass E.weight (finiteGraphNativeWord word S.cycle)) = 0 := by
+    apply hker
+    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H E.weight]
+    exact ⟨finiteGraphNativeWord word S.cycle, rfl⟩
+  rw [hclass] at hkill
+  exact E.separator.detects_basis hkill
+
 /-! ## Exact composition laws for the computed geometric word
 
 These establish a genuine action of ordered finite graph words on native
@@ -1398,6 +1442,8 @@ theorem nativeFiniteGraphClosure_semanticCompleteness
 #check finiteGraphWord_cycleClass_natural
 #check finiteGraphHodgeWord_class
 #check finiteGraphWord_constructs_native_target
+#check finiteGraphHodgeWord_ne_ghostSheet
+#print axioms finiteGraphHodgeWord_ne_ghostSheet
 #check identityNativeFiniteGraphGenerator
 #print axioms finiteGraphWord_cycleClass_natural
 #print axioms finiteGraphWord_constructs_native_target
