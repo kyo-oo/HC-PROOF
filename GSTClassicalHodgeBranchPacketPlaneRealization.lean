@@ -1117,6 +1117,81 @@ noncomputable def identityNativeFiniteGraphGenerator
     rw [rationalCohomologyPullback_id]
     exact alpha.2
 
+/-! ## Exact composition laws for the computed geometric word
+
+These establish a genuine action of ordered finite graph words on native
+cycles, ambient Betti classes, and Hodge states.  The associativity equations
+are derived from their interpretations, rather than storing independent
+cohomology and cycle actions for each newly formed word.
+-/
+
+/-- The native interpretation of word concatenation is ordered composition
+of the actual finite-correspondence operators. -/
+theorem finiteGraphNativeWord_append
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (a b : List (NativeFiniteGraphGenerator V H p)) :
+    finiteGraphNativeWord (a ++ b) =
+      (finiteGraphNativeWord b).comp (finiteGraphNativeWord a) := by
+  induction a with
+  | nil =>
+      apply LinearMap.ext
+      intro Z
+      rfl
+  | cons F rest ih =>
+      change (finiteGraphNativeWord (rest ++ b)).comp F.nativeOperator =
+        (finiteGraphNativeWord b).comp
+          ((finiteGraphNativeWord rest).comp F.nativeOperator)
+      rw [ih]
+      apply LinearMap.ext
+      intro Z
+      rfl
+
+/-- The complete Betti action has exactly the SAME word concatenation law. -/
+theorem finiteGraphBettiWord_append
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (a b : List (NativeFiniteGraphGenerator V H p)) :
+    finiteGraphBettiWord (a ++ b) =
+      (finiteGraphBettiWord b).comp (finiteGraphBettiWord a) := by
+  induction a with
+  | nil =>
+      apply LinearMap.ext
+      intro alpha
+      rfl
+  | cons F rest ih =>
+      change (finiteGraphBettiWord (rest ++ b)).comp F.bettiOperator =
+        (finiteGraphBettiWord b).comp
+          ((finiteGraphBettiWord rest).comp F.bettiOperator)
+      rw [ih]
+      apply LinearMap.ext
+      intro alpha
+      rfl
+
+/-- The geometric target state is composition-coherent at every word split. -/
+theorem finiteGraphHodgeWord_append
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (a b : List (NativeFiniteGraphGenerator V H p))
+    (alpha : ClassicalHodgeFiber V H p) :
+    finiteGraphHodgeWord (a ++ b) alpha =
+      finiteGraphHodgeWord b (finiteGraphHodgeWord a alpha) := by
+  induction a generalizing alpha with
+  | nil =>
+      rfl
+  | cons F rest ih =>
+      change finiteGraphHodgeWord (rest ++ b) (F.hodgeOperator alpha) =
+        finiteGraphHodgeWord b
+          (finiteGraphHodgeWord rest (F.hodgeOperator alpha))
+      exact ih _
+
+#check finiteGraphNativeWord_append
+#check finiteGraphBettiWord_append
+#check finiteGraphHodgeWord_append
+#print axioms finiteGraphNativeWord_append
+#print axioms finiteGraphBettiWord_append
+#print axioms finiteGraphHodgeWord_append
+
 #check finiteGraphNativeWord
 #check finiteGraphBettiWord
 #check finiteGraphHodgeWord
