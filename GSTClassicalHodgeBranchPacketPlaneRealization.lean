@@ -694,6 +694,246 @@ theorem diagonal_commonClassPlanePacket_exists
     (diagonalStrictRelationEdgePacket u)⟩
 
 /-!
+## §7A. CONSTRUCTIVE THREE-SECTOR NATIVE PLANE
+
+The diagonal geometry is not restricted to equal GST sector labels.
+A Hodge branch node is a *pair* of a sector and a state.  The actual identity
+correspondence realizes every change of observation sector keeping the same
+rational Hodge state.  No global geometric completeness, seed, ghost, or
+target-specific realization assumption enters this theorem.
+-/
+
+/-- **UNCONDITIONAL CROSS-SECTOR STRICT PACKET.**  Every two omniversal
+nodes carrying the same genuine rational Hodge state have a constructed
+common projective carrier and trace: the transposed identity graph. -/
+noncomputable def sectorRecoordinationStrictPacket
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (u v : HodgeBranchNode (V := V) (H := H) (p := p))
+    (hstate : u.state = v.state) :
+    StrictRelationEdgePacket u v where
+  correspondence := diagonalStrictCarrier V
+  trace := diagonalStrictTrace V H p
+  pointCompatibility := diagonalPointCycleCompatibility V H p
+  related := by
+    apply (transposedStrictGraph_related_iff_nativePullback
+      H.analytification
+      (AnalyticEndomorphism.id (A := H.analytification))
+      (strictGraph_id_isFinite V) (2 * p)
+      u.state.1 v.state.1).2
+    rw [rationalCohomologyPullback_id]
+    exact congrArg Subtype.val hstate
+
+/-- All three sector observations of any Hodge state are connected by
+literal strict projective packets.  Their sectors can differ; the
+underlying cohomology class is untouched. -/
+theorem everySectorRecoordination_has_strictPacket
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (alpha : ClassicalHodgeFiber V H p)
+    (s t : Sector) :
+    Nonempty (StrictRelationEdgePacket
+      (⟨s, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))
+      (⟨t, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))) := by
+  exact ⟨sectorRecoordinationStrictPacket
+    (⟨s, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))
+    (⟨t, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))
+    rfl⟩
+
+/-- The matching common-class carrier is constructed too, not postulated. -/
+theorem everySectorRecoordination_has_commonClassPlane
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat}
+    (alpha : ClassicalHodgeFiber V H p)
+    (s t : Sector) :
+    Nonempty (CommonClassPlanePacket
+      (⟨s, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))
+      (⟨t, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))) :=
+  ⟨CommonClassPlanePacket.ofStrictRelationEdgePacket
+    (sectorRecoordinationStrictPacket
+      (⟨s, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))
+      (⟨t, alpha⟩ : HodgeBranchNode (V := V) (H := H) (p := p))
+      rfl)⟩
+
+/-!
+## §7B. FINITE-GRAPH GEOMETRIC PACKETS
+
+The actual graph-trace library already constructs, for any finite scheme map,
+the full analytic correspondence carrier, a degree-one normalized Betti trace,
+and the exact identity:
+
+  graphPushPull = analyticPullback(F).
+
+We now build the point-cycle compatibility *from the point-generator law*,
+not by supplying a raw Hodge-target relation.  The whole native naturality
+square then follows from the compact point presentation.
+
+The only independent geometric properties are the actual point-class
+naturality for this finite map and Hodge-type preservation of its pullback.
+Neither property asks for an algebraic representative of a new Hodge target.
+-/
+
+/-- Actual transposed graph carrier of a finite C-scheme endomorphism. -/
+noncomputable def finiteGraphStrictCarrier
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    (F : AnalyticEndomorphism H.analytification)
+    (hf : IsFinite F.algebraic.hom) :
+    SchemeBiFiniteClosedCorrespondence V :=
+  (strictGraph F.algebraic hf).transpose
+
+/-- Degree-one trace manufactured by the finite graph geometry. -/
+noncomputable def finiteGraphStrictTrace
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    (p : Nat)
+    (F : AnalyticEndomorphism H.analytification)
+    (hf : IsFinite F.algebraic.hom) :
+    RightFiniteBettiTrace H.analytification
+      (finiteGraphStrictCarrier F hf) (2 * p) :=
+  transposedStrictGraphRightTrace H.analytification F hf (2 * p)
+
+/-- Generatorwise cycle-class naturality gives the exact point compatibility
+needed by the already-built strict correspondence compiler.  The target
+state and the unknown Hodge conclusion do not occur in this input. -/
+noncomputable def finiteGraphPointCycleCompatibility
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    (p : Nat)
+    (F : AnalyticEndomorphism H.analytification)
+    (hf : IsFinite F.algebraic.hom)
+    (hpoint :
+      ∀ x : CodimensionPoint V.X p,
+        H.cycleClass p
+          ((finiteGraphStrictCarrier F hf).toBiFiniteClosedCorrespondence
+            .toFiniteClosedCorrespondence.gradedNativePointImage p x) =
+        rationalCohomologyPullback H.analytification F (2 * p)
+          (H.cycleClass p (codimensionPointCycle V.X p x))) :
+    PointCycleCompatibility (n := p) (finiteGraphStrictCarrier F hf)
+      (finiteGraphStrictTrace p F hf) := by
+  refine ⟨?_⟩
+  intro x
+  rw [show (finiteGraphStrictTrace p F hf).pushPull =
+        rationalCohomologyPullback H.analytification F (2 * p)
+      from transposedStrictGraph_pushPull_eq_nativePullback
+        H.analytification F hf (2 * p)]
+  exact hpoint x
+
+/-- **WHOLE-NATIVE-CYCLE NATURALITY, NOT JUST POINT GENERATORS.**
+The actual graded finite correspondence operator is a class-compatible
+realization of the Betti pullback on every native cycle. -/
+theorem finiteGraph_allNativeCycles_natural
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    (p : Nat)
+    (F : AnalyticEndomorphism H.analytification)
+    (hf : IsFinite F.algebraic.hom)
+    (hpoint :
+      ∀ x : CodimensionPoint V.X p,
+        H.cycleClass p
+          ((finiteGraphStrictCarrier F hf).toBiFiniteClosedCorrespondence
+            .toFiniteClosedCorrespondence.gradedNativePointImage p x) =
+        rationalCohomologyPullback H.analytification F (2 * p)
+          (H.cycleClass p (codimensionPointCycle V.X p x)))
+    (Z : codimensionCycles V.X p) :
+    H.cycleClass p
+      ((finiteGraphStrictCarrier F hf).toBiFiniteClosedCorrespondence
+        .toFiniteClosedCorrespondence.gradedNativeCycleOperator p p Z) =
+      rationalCohomologyPullback H.analytification F (2 * p)
+        (H.cycleClass p Z) := by
+  have h :=
+    (finiteGraphPointCycleCompatibility p F hf hpoint).cycleClass_natural Z
+  rw [show (finiteGraphStrictTrace p F hf).pushPull =
+      rationalCohomologyPullback H.analytification F (2 * p)
+    from transposedStrictGraph_pushPull_eq_nativePullback
+      H.analytification F hf (2 * p)] at h
+  exact h
+
+/-- The finite graph computes a canonical target Hodge state from the
+source state.  No desired basis target or algebraic-cycle representative
+is supplied. -/
+noncomputable def finiteGraphHodgeState
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    {p : Nat}
+    (F : AnalyticEndomorphism H.analytification)
+    (hHodge :
+      ∀ alpha : ClassicalHodgeFiber V H p,
+        rationalCohomologyPullback H.analytification F (2 * p) alpha.1 ∈
+          rationalHodgeSubspace (H.hodgeBigrading p))
+    (alpha : ClassicalHodgeFiber V H p) :
+    ClassicalHodgeFiber V H p :=
+  ⟨rationalCohomologyPullback H.analytification F (2 * p) alpha.1,
+    hHodge alpha⟩
+
+/-- **FINITE-GRAPH STRICT PACKET CONSTRUCTOR.**
+The two endpoints are the original GST source and its COMPUTED geometric
+pullback observation, at any sector.  The genuine carrier, trace, point
+compatibility and strict Betti relation are constructed.  No matrix-unit
+target-realization assumption and no universal Hodge conclusion occurs. -/
+noncomputable def finiteGraphStrictPacket
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    {p : Nat}
+    (F : AnalyticEndomorphism H.analytification)
+    (hf : IsFinite F.algebraic.hom)
+    (hpoint :
+      ∀ x : CodimensionPoint V.X p,
+        H.cycleClass p
+          ((finiteGraphStrictCarrier F hf).toBiFiniteClosedCorrespondence
+            .toFiniteClosedCorrespondence.gradedNativePointImage p x) =
+        rationalCohomologyPullback H.analytification F (2 * p)
+          (H.cycleClass p (codimensionPointCycle V.X p x)))
+    (hHodge :
+      ∀ alpha : ClassicalHodgeFiber V H p,
+        rationalCohomologyPullback H.analytification F (2 * p) alpha.1 ∈
+          rationalHodgeSubspace (H.hodgeBigrading p))
+    (u : HodgeBranchNode (V := V) (H := H) (p := p))
+    (sector : Sector) :
+    StrictRelationEdgePacket u
+      (⟨sector, finiteGraphHodgeState F hHodge u.state⟩ :
+        HodgeBranchNode (V := V) (H := H) (p := p)) where
+  correspondence := finiteGraphStrictCarrier F hf
+  trace := finiteGraphStrictTrace p F hf
+  pointCompatibility := finiteGraphPointCycleCompatibility p F hf hpoint
+  related := by
+    apply (transposedStrictGraph_related_iff_nativePullback
+      H.analytification F hf (2 * p) u.state.1
+      (finiteGraphHodgeState F hHodge u.state).1).2
+    rfl
+
+/-- The finite graph's point-generated edge has its exact cohomological
+action calculated from the geometric map, with no target equation premise. -/
+theorem finiteGraphStrictPacket_pushPull
+    {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
+    {p : Nat}
+    (F : AnalyticEndomorphism H.analytification)
+    (hf : IsFinite F.algebraic.hom)
+    (hpoint :
+      ∀ x : CodimensionPoint V.X p,
+        H.cycleClass p
+          ((finiteGraphStrictCarrier F hf).toBiFiniteClosedCorrespondence
+            .toFiniteClosedCorrespondence.gradedNativePointImage p x) =
+        rationalCohomologyPullback H.analytification F (2 * p)
+          (H.cycleClass p (codimensionPointCycle V.X p x)))
+    (hHodge :
+      ∀ alpha : ClassicalHodgeFiber V H p,
+        rationalCohomologyPullback H.analytification F (2 * p) alpha.1 ∈
+          rationalHodgeSubspace (H.hodgeBigrading p))
+    (u : HodgeBranchNode (V := V) (H := H) (p := p))
+    (sector : Sector) :
+    (finiteGraphStrictPacket F hf hpoint hHodge u sector).trace.pushPull
+      u.state.1 =
+      (finiteGraphHodgeState F hHodge u.state).1 :=
+  (finiteGraphStrictPacket F hf hpoint hHodge u sector).pushPull_source_eq_target
+
+#check sectorRecoordinationStrictPacket
+#check everySectorRecoordination_has_strictPacket
+#check everySectorRecoordination_has_commonClassPlane
+#check finiteGraphPointCycleCompatibility
+#check finiteGraph_allNativeCycles_natural
+#check finiteGraphHodgeState
+#check finiteGraphStrictPacket
+#check finiteGraphStrictPacket_pushPull
+#print axioms everySectorRecoordination_has_strictPacket
+#print axioms finiteGraph_allNativeCycles_natural
+#print axioms finiteGraphStrictPacket
+
+/-!
 ## §8. THE MONOMIAL-SHEET GHOST CONSTRAINT (V3 — NEW)
 
 A hidden discovery exposed.  The quantitative obstruction formula says the
