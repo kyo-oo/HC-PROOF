@@ -744,8 +744,11 @@ theorem circulation_eq_rectangle_sum
     induction Ψ using Finsupp.induction_linear with
     | zero => simp
     | add a b ha hb =>
-        rw [map_add, ha, hb]
-        simp [Finsupp.sum_add_index']
+        rw [map_add, ha, hb,
+          ← Finsupp.sum_add_index'
+            (fun c => zero_smul (anchoredRectangle V H p i₀ c.1 x₀ c.2))
+            (fun c b₁ b₂ =>
+              add_smul b₁ b₂ (anchoredRectangle V H p i₀ c.1 x₀ c.2))]
     | single ix q =>
       rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
       rw [map_smul, circulationProjection_atom]

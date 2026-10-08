@@ -236,8 +236,9 @@ theorem rangeOperator_zero :
 
 theorem rangeOperator_add
     (A B : Module.End ℚ (Cycles V p))
-    (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
-    rangeOperator (A + B) (by intro Z hZ; simp [hA Z hZ, hB Z hZ]) =
+    (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B)
+    (hAB : KernelStable (H := H) (A + B)) :
+    rangeOperator (H := H) (A + B) hAB =
       rangeOperator A hA + rangeOperator B hB := by
   apply LinearMap.ext
   intro a
@@ -246,8 +247,9 @@ theorem rangeOperator_add
 
 theorem rangeOperator_smul
     (q : ℚ) (A : Module.End ℚ (Cycles V p))
-    (hA : KernelStable (H := H) A) :
-    rangeOperator (q • A) (by intro Z hZ; simp [hA Z hZ]) =
+    (hA : KernelStable (H := H) A)
+    (h' : KernelStable (H := H) (q • A)) :
+    rangeOperator (H := H) (q • A) h' =
       q • rangeOperator A hA := by
   apply LinearMap.ext
   intro a
@@ -462,7 +464,7 @@ theorem ambientOperator_id_eq_fullIdentity_iff_fullRange :
         (LinearMap.id : Module.End ℚ (Coh H p)) ↔
       ∀ alpha : Coh H p,
         alpha ∈ LinearMap.range (H.cycleClass p) := by
-  rw [ambientOperator_eq_supported, supportedAmbientOperator_id]
+  simp only [ambientOperator, supportedAmbientOperator_id]
   constructor
   · intro h alpha
     have hh := LinearMap.congr_fun h alpha
@@ -480,8 +482,7 @@ theorem ambientOperator_nativeIdentity_is_cornerUnit :
       (LinearMap.id : Module.End ℚ (Cycles V p))
       (fun _ hZ => hZ) =
         classRangeProjection (H := H) := by
-  rw [ambientOperator_eq_supported]
-  exact supportedAmbientOperator_id
+  simp only [ambientOperator, supportedAmbientOperator_id]
 
 #check ambientOperator_id_eq_fullIdentity_iff_fullRange
 #print axioms ambientOperator_id_eq_fullIdentity_iff_fullRange
