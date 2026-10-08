@@ -261,11 +261,6 @@ theorem codeSectorProj_rankOne
     rw [if_pos hx, if_pos hx, mul_one]
   · rw [if_neg hz, if_neg hz, mul_zero]
 
-/-- **RIGIDITY OF ALL INTEGRAL CODE-SPECTRAL TRANSPORTS.**
-Any integer-linear map intertwining each exact code sector, and sending
-the all-one field to the all-one field, MUST be canonical recoordination.
-The full transport operator is recovered from its spectral observations.
-No target operator action is assumed separately. -/
 /-- **COMPLETE CLASSIFICATION OF CODE-SPECTRAL INTERTWINERS.**
 No normalization is assumed: any integer-linear map intertwining the
 rank-one code projectors is *pointwise multiplication* of canonical chart
