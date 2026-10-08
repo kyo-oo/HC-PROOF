@@ -192,6 +192,25 @@ noncomputable def smoothProjectiveNativePushforward
   exact (realizePushforwardPresentation f p).comp
     (presentationOfNativeCycleLinear V.X p)
 
+/-- **EXACT GEOMETRIC PRESENTATION NATURALITY.**
+On every finite rational codimension-p point presentation, the actual native
+projective transport agrees with the explicitly computed residue-weighted
+point pushforward before realization. This is a commuting square of two
+constructive geometric operations, with no Hodge-generation premise. -/
+theorem smoothProjectiveNativePushforward_realize
+    (V : SmoothProjectiveComplexScheme)
+    (f : V.X ⟶ V.X) (p : Nat)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    smoothProjectiveNativePushforward V f p
+      (realizeFiniteCodimensionPresentation V.X p φ) =
+    realizeFiniteCodimensionPresentation V.X p
+      (pushforwardPresentation f p φ) := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  simp only [smoothProjectiveNativePushforward, LinearMap.comp_apply,
+    presentationOfNativeCycleLinear_apply]
+  rw [presentationOfNativeCycle_realize]
+  rfl
+
 /-- The smooth-projective native transport is determined by its action on
 point-cycle generators. -/
 theorem smoothProjectiveNativePushforward_point
