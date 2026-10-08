@@ -191,6 +191,102 @@ theorem closure_sound
   rcases p with ⟨p⟩
   exact Path.preserves G hStable p (hSeed s hs)
 
+/-!
+## Complete semantic envelope of the event cosmos
+
+The reachable closure is not merely an idempotent collection.  It is the
+least event-stable predicate extending its generators, and hence an exact
+reflection into the full lattice of event-stable worlds.  This description
+does not mention a chosen arithmetic, geometry, dimension, or Hodge target.
+-/
+
+/-- Every reachable closure is intrinsically stable under all actual events:
+no externally supplied saturation axiom is needed. -/
+theorem closure_eventStable (Seed : G.Node → Prop) :
+    EventStable G (Closure G Seed) := by
+  intro x y e hx
+  rcases hx with ⟨s, hs, hreach⟩
+  exact ⟨s, hs, reachable_trans G hreach (reachable_of_event G e)⟩
+
+/-- **SEMANTIC REFLECTION.**  In any event-stable world P, the entire
+causal closure lies inside P if and only if the original seeds do.
+No closure-of-the-target premise is stored in the assertion. -/
+theorem closure_le_stable_iff
+    (Seed P : G.Node → Prop) (hP : EventStable G P) :
+    (∀ x, Closure G Seed x → P x) ↔ (∀ x, Seed x → P x) := by
+  constructor
+  · intro h x hx
+    exact h x (seed_mem_closure G Seed hx)
+  · intro h x hx
+    exact closure_sound G h hP x hx
+
+/-- Fixed points of omniversal event closure are EXACTLY the stable
+predicates.  Thus the closure operator has no spurious stable worlds. -/
+theorem eventStable_iff_closure_fixedPoint (P : G.Node → Prop) :
+    EventStable G P ↔ ∀ x, Closure G P x ↔ P x := by
+  constructor
+  · intro hP x
+    constructor
+    · exact closure_sound G (fun _ hp => hp) hP x
+    · exact seed_mem_closure G P
+  · intro h x y e hx
+    exact (h y).1 ⟨x, hx, reachable_of_event G e⟩
+
+/-- **IMPREDICATIVE SEMANTIC COMPLETENESS OF GST REACHABILITY.**
+A state is causally reachable from the seeds iff it satisfies EVERY
+event-stable semantic law that already holds of those seeds.
+
+The reverse implication is constructive at the level of Prop: instantiate
+the quantified semantic universe with the actual event closure itself.
+-/
+theorem closure_iff_every_stable_semantics
+    (Seed : G.Node → Prop) (y : G.Node) :
+    Closure G Seed y ↔
+      ∀ P : G.Node → Prop,
+        EventStable G P → (∀ x, Seed x → P x) → P y := by
+  constructor
+  · intro hy P hP hSeed
+    exact closure_sound G hSeed hP y hy
+  · intro h
+    exact h (Closure G Seed)
+      (closure_eventStable G Seed)
+      (fun x hx => seed_mem_closure G Seed hx)
+
+/-- Causal closure is a join-preserving reflection: independent seed
+universes combine without generating any extra cross-source states beyond
+their actual event histories. -/
+theorem closure_union_exact
+    (Seed₁ Seed₂ : G.Node → Prop) (y : G.Node) :
+    Closure G (fun x => Seed₁ x ∨ Seed₂ x) y ↔
+      Closure G Seed₁ y ∨ Closure G Seed₂ y := by
+  constructor
+  · rintro ⟨s, hs, hreach⟩
+    rcases hs with h₁ | h₂
+    · exact Or.inl ⟨s, h₁, hreach⟩
+    · exact Or.inr ⟨s, h₂, hreach⟩
+  · intro h
+    rcases h with ⟨s, hs, hreach⟩ | ⟨s, hs, hreach⟩
+    · exact ⟨s, Or.inl hs, hreach⟩
+    · exact ⟨s, Or.inr hs, hreach⟩
+
+/-- Intrinsic canonical closure is an exact stable-envelope constructor:
+it is extensive, stable, and initial among all stable semantic predicates
+containing its input universe. -/
+theorem omniversal_semantic_reflection_crown (Seed : G.Node → Prop) :
+    (∀ x, Seed x → Closure G Seed x)
+      ∧ EventStable G (Closure G Seed)
+      ∧ (∀ P : G.Node → Prop, EventStable G P →
+          (∀ x, Seed x → P x) →
+          ∀ x, Closure G Seed x → P x)
+      ∧ (∀ y, Closure G Seed y ↔
+          ∀ P : G.Node → Prop,
+            EventStable G P → (∀ x, Seed x → P x) → P y) := by
+  refine ⟨fun _ h => seed_mem_closure G Seed h,
+    closure_eventStable G Seed, ?_, ?_⟩
+  · intro P hP hSeed x hx
+    exact closure_sound G hSeed hP x hx
+  · exact closure_iff_every_stable_semantics G Seed
+
 /-- Optional acyclicity capability for genuinely causal realizations.  It is
 not forced on the universal ontology because reversible geometries and
 symmetries are also legitimate realizations. -/
@@ -204,10 +300,13 @@ theorem omniversal_closure_crown (Seed : G.Node → Prop) :
     (∀ x, Seed x → Closure G Seed x)
       ∧ (∀ x y z, Reachable G x y → Reachable G y z → Reachable G x z)
       ∧ (∀ x, Closure G (Closure G Seed) x ↔ Closure G Seed x) := by
-  exact ⟨
-    fun _ hx => seed_mem_closure G Seed hx,
-    fun _ _ _ hxy hyz => reachable_trans G hxy hyz,
-    fun x => closure_idempotent G Seed x⟩
+  have reflection := omniversal_semantic_reflection_crown G Seed
+  refine ⟨reflection.1, ?_, ?_⟩
+  · intro x y z hxy hyz
+    exact reachable_trans G hxy hyz
+  · intro x
+    exact (eventStable_iff_closure_fixedPoint G (Closure G Seed)).mp
+      (closure_eventStable G Seed) x
 
 #check Sector
 #check OmniversalGraph
@@ -217,6 +316,12 @@ theorem omniversal_closure_crown (Seed : G.Node → Prop) :
 #check OmniversalGraph.EventStable
 #check OmniversalGraph.closure_sound
 #check OmniversalGraph.CausallyAcyclic
+#check OmniversalGraph.closure_eventStable
+#check OmniversalGraph.closure_le_stable_iff
+#check OmniversalGraph.eventStable_iff_closure_fixedPoint
+#check OmniversalGraph.closure_iff_every_stable_semantics
+#check OmniversalGraph.closure_union_exact
+#check OmniversalGraph.omniversal_semantic_reflection_crown
 #check OmniversalGraph.omniversal_closure_crown
 
 end OmniversalGraph
