@@ -85,36 +85,46 @@ theorem kernelStable_ambient_hasNativePointLifts
 
 /-- Geometry-first realization of one Hodge-fiber primitive.
 
-The native cycle operator and kernel-stability proof determine the ambient
-cohomology operator.  The only comparison theorem required is its restriction
-to the genuine Hodge fiber. -/
+The native cycle operator acts on actual algebraic cycles. Its cohomological
+action is the genuinely realized ambient geometric operator, accompanied by
+the exact cycle-class commuting square. Kernel preservation follows from
+this square, but does NOT determine the action outside the algebraic range:
+the canonical image retraction would kill transcendental directions and
+must not be substituted for genuine Betti functoriality. -/
 structure NativeHodgePrimitive
     (T : Module.End ℚ (HodgeFiber V H p)) where
   cycleOperator : NativeCycles V p →ₗ[ℚ] NativeCycles V p
   kernelStable : KernelStable (H := H) cycleOperator
+  cohomologyOperator : AmbientCoh H p →ₗ[ℚ] AmbientCoh H p
+  cycleClass_natural :
+    ∀ Z : NativeCycles V p,
+      H.cycleClass p (cycleOperator Z) =
+        cohomologyOperator (H.cycleClass p Z)
   restricts_to_hodge :
     ∀ alpha : HodgeFiber V H p,
-      ambientOperator (H := H) cycleOperator kernelStable alpha.1 =
-        (T alpha).1
+      cohomologyOperator alpha.1 = (T alpha).1
 
 namespace NativeHodgePrimitive
 
 variable {T : Module.End ℚ (HodgeFiber V H p)}
 
-/-- Ambient operator forced by the native geometry. -/
+/-- The true ambient geometric action, not the projection onto algebraic
+classes. These coincide on the algebraic range, but not necessarily elsewhere. -/
 noncomputable def ambient
     (R : NativeHodgePrimitive (V := V) (H := H) T) :
     AmbientCoh H p →ₗ[ℚ] AmbientCoh H p :=
-  ambientOperator (H := H) R.cycleOperator R.kernelStable
+  R.cohomologyOperator
 
-/-- Native point-lift naturality is automatic from the native operator. -/
+/-- Native point lifts come directly from the geometric commuting square.
+No arbitrary choice of an off-range extension is used. -/
 theorem hasNativePointLifts
     (R : NativeHodgePrimitive (V := V) (H := H) T) :
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambient := by
-  exact kernelStable_ambient_hasNativePointLifts
-    (H := H) R.cycleOperator R.kernelStable
+  intro x
+  refine ⟨R.cycleOperator (codimensionPointCycle V.X p x), ?_⟩
+  exact (R.cycleClass_natural _).symm
 
-/-- The geometry-generated ambient operator has the prescribed Hodge action. -/
+/-- The actual geometric cohomology action has the prescribed Hodge action. -/
 @[simp]
 theorem ambient_on_hodge
     (R : NativeHodgePrimitive (V := V) (H := H) T)
