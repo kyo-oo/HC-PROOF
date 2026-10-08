@@ -174,6 +174,40 @@ theorem hodge_weight
 
 end NativeHodgeSeed
 
+/-- **ACTIVE-WEIGHT NATIVE GST SATURATION.**
+Only weights with a genuinely nonzero rational Hodge fiber need a nonzero
+native algebraic seed and the geometry-first two-generator transport.
+
+For a zero fiber the cycle-class target holds with the zero native cycle,
+without requiring an impossible nonzero seed or a distinguished source index.
+This removes the all-natural-weights nonvanishing requirement from the
+arbitrary-seed global theorem. The geometric native generators remain explicit
+independent construction data in every live weight. -/
+theorem bigradedBettiHodge_of_active_nativeHodgeSeeds
+    (seed :
+      ∀ (p : Nat),
+        (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+          NativeHodgeSeed (V := V) (H := H) (p := p))
+    (R :
+      ∀ (p : Nat)
+        (hp : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0),
+      ∀ j : ClassicalHodgeBasisIndex V H p,
+        GeometryFirstTwoGenerator
+          (V := V) (H := H) (seed p hp).sourceIndex j) :
+    BigradedBettiHodgeStatement V H := by
+  classical
+  intro p alpha halpha
+  by_cases hp : ∃ beta : ClassicalHodgeFiber V H p, beta ≠ 0
+  · exact (seed p hp).hodge_weight (R p hp) halpha
+  · have halpha_zero : alpha = 0 := by
+      by_contra hne
+      apply hp
+      refine ⟨⟨alpha, halpha⟩, ?_⟩
+      intro h
+      apply hne
+      simpa using congrArg Subtype.val h
+    exact ⟨0, by simp [halpha_zero]⟩
+
 /-- **ONE ALGEBRAIC HODGE SEED PER WEIGHT + FULL LIMITLESS NATIVE GST ARSENAL
 CLOSES STAGE 2G.** -/
 theorem bigradedBettiHodge_of_nativeHodgeSeeds
@@ -183,8 +217,8 @@ theorem bigradedBettiHodge_of_nativeHodgeSeeds
         GeometryFirstTwoGenerator
           (V := V) (H := H) (seed p).sourceIndex j) :
     BigradedBettiHodgeStatement V H := by
-  intro p alpha halpha
-  exact (seed p).hodge_weight (R p) halpha
+  exact bigradedBettiHodge_of_active_nativeHodgeSeeds
+    (fun p _ => seed p) (fun p _ => R p)
 
 #check NativeHodgeSeed
 #check NativeHodgeSeed.sourceIndex
@@ -192,10 +226,12 @@ theorem bigradedBettiHodge_of_nativeHodgeSeeds
 #check NativeHodgeSeed.targetCycle
 #check NativeHodgeSeed.targetCycle_spec
 #check NativeHodgeSeed.basisCycleBridge
+#check bigradedBettiHodge_of_active_nativeHodgeSeeds
 #check bigradedBettiHodge_of_nativeHodgeSeeds
 
 #print axioms NativeHodgeSeed.rawTargetCycle_spec
 #print axioms NativeHodgeSeed.targetCycle_spec
+#print axioms bigradedBettiHodge_of_active_nativeHodgeSeeds
 #print axioms bigradedBettiHodge_of_nativeHodgeSeeds
 
 end GSTClassicalHodgeNativeWordFromArbitrarySeed
