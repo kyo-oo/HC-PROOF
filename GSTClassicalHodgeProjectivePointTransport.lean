@@ -2,6 +2,7 @@ import GSTClassicalHodgePointKernelOperatorLift
 import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 import GSTCompactNativeCyclePresentation
 import GSTClassicalHodgeGeneratorwiseAtomicStability
+import GSTClassicalHodgeNativePointRelationDescent
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE POINT TRANSPORT
@@ -225,6 +226,84 @@ theorem smoothProjectiveNativePushforward_point
     presentationOfNativeCycleLinear_apply, presentationOfNativeCycle_point]
   exact realizePushforwardPresentation_single f p x
 
+/-- **PROJECTIVE TRANSPORT IS EXACTLY A RAW GEOMETRIC POINT KERNEL.**
+The genuine scheme self-map produces its native operator from the actual
+residue-degree action on finite codimension-point presentations.  There is
+no independent cohomology action, algebraic-basis input, or Hodge premise. -/
+theorem smoothProjectiveNativePushforward_eq_rawPointKernel
+    (V : SmoothProjectiveComplexScheme)
+    (f : V.X ⟶ V.X) (p : Nat) :
+    smoothProjectiveNativePushforward V f p =
+      GSTClassicalHodgeNativePointRelationDescent.rawNativeOperator
+        (fun x => pointPushforwardPresentation f p x) := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  have hzero :
+      smoothProjectiveNativePushforward V f p -
+        GSTClassicalHodgeNativePointRelationDescent.rawNativeOperator
+          (fun x => pointPushforwardPresentation f p x) = 0 := by
+    apply GSTClassicalHodgePointNormalForm.nativeLinearMap_eq_zero_of_points V p
+    intro x
+    simp only [LinearMap.sub_apply, sub_eq_zero]
+    rw [smoothProjectiveNativePushforward_point,
+      GSTClassicalHodgeNativePointRelationDescent.rawNativeOperator_point]
+    rfl
+  exact sub_eq_zero.mp hzero
+
+/-- **EXACT EXTERNALIZATION CRITERION FOR ACTUAL PROJECTIVE MAPS.**
+A genuine native projective transport admits an ambient rational-linear
+cohomological action if and only if it preserves the finite relations among
+actual point cycle classes.  The relation test is intrinsic and constructive;
+it does NOT require prior realization of arbitrary Hodge targets. -/
+theorem geometricPushforward_has_ambientAction_iff
+    (V : SmoothProjectiveComplexScheme)
+    (f : V.X ⟶ V.X) (p : Nat)
+    {Coh : Type*} [AddCommGroup Coh] [Module ℚ Coh]
+    (cl : codimensionCycles V.X p →ₗ[ℚ] Coh) :
+    (∃ T : Module.End ℚ Coh,
+      cl.comp (smoothProjectiveNativePushforward V f p) = T.comp cl) ↔
+      GSTClassicalHodgeNativePointRelationDescent.PreservesFiniteClassRelations
+        cl (fun x => pointPushforwardPresentation f p x) := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  rw [smoothProjectiveNativePushforward_eq_rawPointKernel]
+  exact GSTClassicalHodgeNativePointRelationDescent.rawTransition_has_ambientAction_iff
+    cl (fun x => pointPushforwardPresentation f p x)
+
+/-- The native construction, when it respects all actual point-class
+relations, induces its uniquely determined action on the *geometric image*
+itself. No arbitrary extension to a nonalgebraic complement is involved. -/
+noncomputable def geometricPushforwardOnClassImage
+    (V : SmoothProjectiveComplexScheme)
+    (f : V.X ⟶ V.X) (p : Nat)
+    {Coh : Type*} [AddCommGroup Coh] [Module ℚ Coh]
+    (cl : codimensionCycles V.X p →ₗ[ℚ] Coh)
+    (hrel : GSTClassicalHodgeNativePointRelationDescent.PreservesFiniteClassRelations
+      cl (fun x => pointPushforwardPresentation f p x)) :
+    Module.End ℚ (LinearMap.range cl) := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  have hk : GSTClassicalHodgeNativePointRelationDescent.NativeClassKernelStable
+      cl (smoothProjectiveNativePushforward V f p) := by
+    rw [smoothProjectiveNativePushforward_eq_rawPointKernel]
+    exact (GSTClassicalHodgeNativePointRelationDescent.finiteRelations_iff_nativeKernelStable
+      cl (fun x => pointPushforwardPresentation f p x)).mp hrel
+  exact GSTClassicalHodgeNativePointRelationDescent.nativeClassRangeEnd
+    cl (smoothProjectiveNativePushforward V f p) hk
+
+/-- Every genuine geometric class is transported by the canonical image
+operator according to its actual finite native pushforward. -/
+theorem geometricPushforwardOnClassImage_natural
+    (V : SmoothProjectiveComplexScheme)
+    (f : V.X ⟶ V.X) (p : Nat)
+    {Coh : Type*} [AddCommGroup Coh] [Module ℚ Coh]
+    (cl : codimensionCycles V.X p →ₗ[ℚ] Coh)
+    (hrel : GSTClassicalHodgeNativePointRelationDescent.PreservesFiniteClassRelations
+      cl (fun x => pointPushforwardPresentation f p x))
+    (Z : codimensionCycles V.X p) :
+    geometricPushforwardOnClassImage V f p cl hrel (cl.rangeRestrict Z) =
+      cl.rangeRestrict (smoothProjectiveNativePushforward V f p Z) := by
+  unfold geometricPushforwardOnClassImage
+  exact GSTClassicalHodgeNativePointRelationDescent.nativeClassRangeEnd_natural
+    cl (smoothProjectiveNativePushforward V f p) _ Z
+
 /-- The native transport construction itself supplies a point-lift family for
 its own point-generator action. -/
 theorem nativePointPushforward_exists
@@ -248,5 +327,8 @@ theorem nativePointPushforward_exists
 #print axioms pointPushforwardPresentation_eq_single
 #print axioms nativePointPushforward_eq
 #print axioms smoothProjectiveNativePushforward_point
+#print axioms smoothProjectiveNativePushforward_eq_rawPointKernel
+#print axioms geometricPushforward_has_ambientAction_iff
+#print axioms geometricPushforwardOnClassImage_natural
 
 end GSTClassicalHodgeProjectivePointTransport
