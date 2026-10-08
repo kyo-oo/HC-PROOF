@@ -40,6 +40,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgePointNormalForm
+open GSTClassicalHodgePointKernelOperatorLift
 open GSTClassicalHodgeFiberedNativePullback
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
@@ -224,5 +225,179 @@ theorem fibered_native_operator_lift_crown :
 #print axioms liftNativeOperator_comp_nativeFace
 #print axioms toNativeCycle_liftProjectiveKernel
 #print axioms fibered_native_operator_lift_crown
+
+/-! ## The lift is a faithful representation on the full finite state
+
+The earlier commuting square determines only the native face.  Exact point
+normal form proves the stronger identity and composition laws before either
+face is forgotten.
+-/
+
+/-- Canonical labelling of an arbitrary actual cycle. -/
+noncomputable def nativeCycleLabel
+    (i : ClassicalHodgeBasisIndex V H p) :
+    codimensionCycles V.X p →ₗ[ℚ] FiberedNativeAddress V H p := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  exact (labelPresentation i).comp (presentationOfNativeCycleLinear V.X p)
+
+@[simp] theorem nativeCycleLabel_point
+    (i : ClassicalHodgeBasisIndex V H p)
+    (x : CodimensionPoint V.X p) :
+    nativeCycleLabel i (codimensionPointCycle V.X p x) =
+      atom V H p i x := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  simp [nativeCycleLabel, presentationOfNativeCycleLinear_apply,
+    presentationOfNativeCycle_point]
+
+@[simp] theorem toNativeCycle_nativeCycleLabel
+    (i : ClassicalHodgeBasisIndex V H p)
+    (Z : codimensionCycles V.X p) :
+    toNativeCycle V H p (nativeCycleLabel i Z) = Z := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  change toNativeCycle V H p
+      (labelPresentation i (presentationOfNativeCycle V.X p Z)) = Z
+  rw [toNativeCycle_labelPresentation, realize_presentationOfNativeCycle]
+
+@[simp] theorem nativeCycleLabel_realize
+    (i : ClassicalHodgeBasisIndex V H p)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    nativeCycleLabel i (realizeFiniteCodimensionPresentation V.X p φ) =
+      labelPresentation i φ := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  change labelPresentation i
+      (presentationOfNativeCycle V.X p
+        (realizeFiniteCodimensionPresentation V.X p φ)) = _
+  rw [presentationOfNativeCycle_realize]
+
+theorem nativeCycleLabel_injective
+    (i : ClassicalHodgeBasisIndex V H p) :
+    Function.Injective (nativeCycleLabel (V := V) (H := H) (p := p) i) := by
+  intro Z W h
+  simpa using congrArg (toNativeCycle V H p) h
+
+theorem liftNativeOperator_atom_as_nativeCycleLabel
+    (A : Module.End ℚ (codimensionCycles V.X p))
+    (i : ClassicalHodgeBasisIndex V H p)
+    (x : CodimensionPoint V.X p) :
+    liftNativeOperator A (atom V H p i x) =
+      nativeCycleLabel i (A (codimensionPointCycle V.X p x)) := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  rw [liftNativeOperator_atom]
+  rfl
+
+/-- **EXACT SINGLE-SHEET INTERTWINING.** The whole labelled state is
+transported, including every coefficient of its native point presentation. -/
+theorem liftNativeOperator_nativeCycleLabel
+    (A : Module.End ℚ (codimensionCycles V.X p))
+    (i : ClassicalHodgeBasisIndex V H p)
+    (Z : codimensionCycles V.X p) :
+    liftNativeOperator A (nativeCycleLabel i Z) = nativeCycleLabel i (A Z) := by
+  have hmap :
+      (liftNativeOperator A).comp (nativeCycleLabel i) -
+        (nativeCycleLabel i).comp A = 0 := by
+    apply nativeLinearMap_eq_zero_of_points V p
+    intro x
+    simp [liftNativeOperator_atom_as_nativeCycleLabel]
+  have hZ := LinearMap.congr_fun hmap Z
+  change liftNativeOperator A (nativeCycleLabel i Z) -
+      nativeCycleLabel i (A Z) = 0 at hZ
+  exact sub_eq_zero.mp hZ
+
+theorem liftNativeOperator_labelPresentation
+    (A : Module.End ℚ (codimensionCycles V.X p))
+    (i : ClassicalHodgeBasisIndex V H p)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    liftNativeOperator A (labelPresentation i φ) =
+      nativeCycleLabel i (A (realizeFiniteCodimensionPresentation V.X p φ)) := by
+  rw [← nativeCycleLabel_realize, liftNativeOperator_nativeCycleLabel]
+
+/-- Identity holds on the full pullback, not only after native projection. -/
+theorem liftNativeOperator_id :
+    liftNativeOperator (V := V) (H := H) (p := p)
+        (LinearMap.id : Module.End ℚ (codimensionCycles V.X p)) =
+      LinearMap.id := by
+  apply LinearMap.ext
+  intro Φ
+  classical
+  induction Φ using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single ix q =>
+    rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
+    simp [liftNativeOperator_atom_as_nativeCycleLabel]
+
+/-- **FULL COMPOSITION LAW.** Native word evaluation and lifting commute
+exactly before passing to cohomology or the limitless scalar shadow. -/
+theorem liftNativeOperator_comp
+    (A B : Module.End ℚ (codimensionCycles V.X p)) :
+    liftNativeOperator (V := V) (H := H) (p := p) (A.comp B) =
+      (liftNativeOperator A).comp (liftNativeOperator B) := by
+  apply LinearMap.ext
+  intro Φ
+  classical
+  induction Φ using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single ix q =>
+    rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
+    simp [liftNativeOperator_atom_as_nativeCycleLabel,
+      liftNativeOperator_nativeCycleLabel]
+
+theorem liftNativeOperator_zero :
+    liftNativeOperator (V := V) (H := H) (p := p)
+        (0 : Module.End ℚ (codimensionCycles V.X p)) = 0 := by
+  apply LinearMap.ext
+  intro Φ
+  classical
+  induction Φ using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single ix q =>
+    rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
+    simp [liftNativeOperator_atom_as_nativeCycleLabel]
+
+theorem liftNativeOperator_add
+    (A B : Module.End ℚ (codimensionCycles V.X p)) :
+    liftNativeOperator (V := V) (H := H) (p := p) (A + B) =
+      liftNativeOperator A + liftNativeOperator B := by
+  apply LinearMap.ext
+  intro Φ
+  classical
+  induction Φ using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb]
+  | single ix q =>
+    rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
+    simp [liftNativeOperator_atom_as_nativeCycleLabel, smul_add]
+
+theorem liftNativeOperator_smul
+    (q : ℚ) (A : Module.End ℚ (codimensionCycles V.X p)) :
+    liftNativeOperator (V := V) (H := H) (p := p) (q • A) =
+      q • liftNativeOperator A := by
+  apply LinearMap.ext
+  intro Φ
+  classical
+  induction Φ using Finsupp.induction_linear with
+  | zero => simp
+  | add a b ha hb => simp [ha, hb, smul_add]
+  | single ix r =>
+    rw [show Finsupp.single ix r = r • atom V H p ix.1 ix.2 by simp [atom]]
+    simp [liftNativeOperator_atom_as_nativeCycleLabel, smul_smul, mul_comm]
+
+/-- A populated multiplicity fiber makes the native representation faithful. -/
+theorem liftNativeOperator_injective
+    (i : ClassicalHodgeBasisIndex V H p) :
+    Function.Injective
+      (liftNativeOperator (V := V) (H := H) (p := p)) := by
+  intro A B h
+  apply LinearMap.ext
+  intro Z
+  have hZ := LinearMap.congr_fun h (nativeCycleLabel i Z)
+  have hn := congrArg (toNativeCycle V H p) hZ
+  simpa only [toNativeCycle_liftNativeOperator,
+    toNativeCycle_nativeCycleLabel] using hn
+
+#print axioms liftNativeOperator_comp
+#print axioms liftNativeOperator_injective
 
 end GSTClassicalHodgeFiberedNativeOperatorLift

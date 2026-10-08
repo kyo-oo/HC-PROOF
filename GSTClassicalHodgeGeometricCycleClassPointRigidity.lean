@@ -155,6 +155,44 @@ theorem cycleClassFromPointGeometry_eq_finite_sum
     (presentationOfNativeCycle V.X p Z)]
   simp [cycleClassFromPointGeometry_point]
 
+/-- **EXACT GEOMETRIC RANGE: POINT FUNDAMENTAL-CLASS SPAN.**
+The full range of the point-generated native cycle class is exactly the
+rational span of actual codimension-p point images.  Both inclusions are
+constructive: finite cycles supply no further cohomology classes, and every
+point generator is the class of its genuine native point cycle. -/
+theorem cycleClassFromPointGeometry_range_eq_pointSpan
+    (A : AnalytificationData V)
+    (pt : PointBettiClass (V := V) p A) :
+    LinearMap.range (cycleClassFromPointGeometry (V := V) p A pt) =
+      Submodule.span ℚ (Set.range pt) := by
+  apply le_antisymm
+  · rintro alpha ⟨Z, rfl⟩
+    rw [cycleClassFromPointGeometry_eq_finite_sum (V := V) p A pt Z]
+    apply Submodule.sum_mem
+    intro x hx
+    apply Submodule.smul_mem
+    exact Submodule.subset_span (Set.mem_range_self x)
+  · apply Submodule.span_le.mpr
+    intro alpha halpha
+    rcases halpha with ⟨x, rfl⟩
+    exact ⟨codimensionPointCycle V.X p x,
+      cycleClassFromPointGeometry_point (V := V) p A pt x⟩
+
+/-- **SHARP POINT-SEMANTIC IDENTIFICATION OF THE STAGE-2G RANGE.**
+When the given Stage-2G map agrees with the geometric point data, its
+entire algebraic class image is the point-span, with no hidden cohomological
+generators.  This does not assert that the span fills every Hodge sector. -/
+theorem suppliedCycleClass_range_eq_pointSpan
+    (H : HodgeBigradedBettiData V)
+    (pt : PointBettiClass (V := V) p H.analytification)
+    (hpoint : ∀ x : CodimensionPoint V.X p,
+      H.cycleClass p (codimensionPointCycle V.X p x) = pt x) :
+    LinearMap.range (H.cycleClass p) =
+      Submodule.span ℚ (Set.range pt) := by
+  rw [suppliedCycleClass_eq_geometric (V := V) p H pt hpoint]
+  exact cycleClassFromPointGeometry_range_eq_pointSpan
+    (V := V) p H.analytification pt
+
 /-- Hence the supplied Stage-2G map itself has the same finite geometric point
 formula as soon as its point classes have been identified. -/
 theorem suppliedCycleClass_eq_finite_geometric_sum
@@ -176,10 +214,13 @@ theorem suppliedCycleClass_eq_finite_geometric_sum
 #check cycleClass_ext_points
 #check suppliedCycleClass_eq_geometric
 #check cycleClassFromPointGeometry_eq_finite_sum
+#check cycleClassFromPointGeometry_range_eq_pointSpan
+#check suppliedCycleClass_range_eq_pointSpan
 #check suppliedCycleClass_eq_finite_geometric_sum
 
 #print axioms cycleClass_ext_points
 #print axioms suppliedCycleClass_eq_geometric
 #print axioms suppliedCycleClass_eq_finite_geometric_sum
+#print axioms suppliedCycleClass_range_eq_pointSpan
 
 end GSTClassicalHodgeGeometricCycleClassPointRigidity

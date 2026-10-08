@@ -221,4 +221,91 @@ theorem bigradedBettiHodge_of_defectZero_basisStates
 #print axioms defect_eq_zero_iff_faces_agree
 #print axioms bigradedBettiHodge_of_defectZero_basisStates
 
+/-! ## Defect descends through the exact two-marginal normal form -/
+
+@[simp] theorem fiberedHodgeClass_anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    fiberedHodgeClass (V := V) (H := H) (p := p)
+        (anchoredNormalization V H p i₀ x₀ Φ) =
+      fiberedHodgeClass (V := V) (H := H) (p := p) Φ := by
+  simp [fiberedHodgeClass]
+
+@[simp] theorem fiberedHodgeAmbient_anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    fiberedHodgeAmbient (V := V) (H := H) (p := p)
+        (anchoredNormalization V H p i₀ x₀ Φ) =
+      fiberedHodgeAmbient (V := V) (H := H) (p := p) Φ := by
+  simp [fiberedHodgeAmbient]
+
+@[simp] theorem fiberedNativeCycleClass_anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    fiberedNativeCycleClass (V := V) (H := H) (p := p)
+        (anchoredNormalization V H p i₀ x₀ Φ) =
+      fiberedNativeCycleClass (V := V) (H := H) (p := p) Φ := by
+  simp [fiberedNativeCycleClass]
+
+/-- Normalizing the joint presentation changes none of the actual defect. -/
+@[simp] theorem fiberedCycleClassDefect_anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p)
+        (anchoredNormalization V H p i₀ x₀ Φ) =
+      fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ := by
+  simp [fiberedCycleClassDefect]
+
+theorem circulation_nativeFace_zero
+    (Φ : FiberedNativeAddress V H p)
+    (hΦ : Φ ∈ circulationSector V H p) :
+    toNativeCycle V H p Φ = 0 := by
+  obtain ⟨_, hn⟩ := (mem_circulationSector_iff V H p Φ).1 hΦ
+  simp [toNativeCycle, hn]
+
+theorem circulation_hodgeFace_zero
+    (Φ : FiberedNativeAddress V H p)
+    (hΦ : Φ ∈ circulationSector V H p) :
+    fiberedHodgeClass (V := V) (H := H) (p := p) Φ = 0 := by
+  obtain ⟨hh, _⟩ := (mem_circulationSector_iff V H p Φ).1 hΦ
+  simp [fiberedHodgeClass, hh]
+
+theorem circulation_defect_zero
+    (Φ : FiberedNativeAddress V H p)
+    (hΦ : Φ ∈ circulationSector V H p) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ = 0 := by
+  rw [defect_eq_zero_iff_faces_agree,
+    circulation_nativeFace_zero Φ hΦ, circulation_hodgeFace_zero Φ hΦ]
+  simp
+
+/-- Finite native/Hodge circulation corrections cannot change a genuine
+landing discrepancy. This rules out cancellation by invisible rectangles. -/
+theorem defect_add_circulation
+    (Φ Ψ : FiberedNativeAddress V H p)
+    (hΨ : Ψ ∈ circulationSector V H p) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p) (Φ + Ψ) =
+      fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ := by
+  rw [map_add, circulation_defect_zero Ψ hΨ, add_zero]
+
+theorem defect_eq_of_same_marginals
+    (Φ Ψ : FiberedNativeAddress V H p)
+    (hh : forgetPoint V H p Φ = forgetPoint V H p Ψ)
+    (hn : forgetMultiplicity V H p Φ = forgetMultiplicity V H p Ψ) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ =
+      fiberedCycleClassDefect (V := V) (H := H) (p := p) Ψ := by
+  have hc : Φ - Ψ ∈ circulationSector V H p := by
+    rw [mem_circulationSector_iff]
+    simp [hh, hn]
+  have hz := circulation_defect_zero (Φ - Ψ) hc
+  rw [map_sub] at hz
+  exact sub_eq_zero.mp hz
+
+#print axioms circulation_defect_zero
+#print axioms defect_add_circulation
+#print axioms defect_eq_of_same_marginals
+
 end GSTClassicalHodgeFiberedCycleClassDefect

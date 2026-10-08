@@ -532,4 +532,240 @@ theorem exists_joint_marginals_iff
 #print axioms glueMarginals_forgetPoint
 #print axioms glueMarginals_forgetMultiplicity
 
+/-! ## Exact anchored normal form and the invisible circulation sector
+
+The two marginals determine a canonical anchored state.  The difference from
+the original state has both marginals zero; it is the finite circulation
+sector of the common refinement.  These statements keep the full native and
+multiplicity coordinates, rather than only their scalar GST shadow.
+-/
+
+@[simp] theorem attachPoint_single
+    (x : CodimensionPoint V.X p)
+    (i : ClassicalHodgeBasisIndex V H p) (q : ℚ) :
+    attachPoint V H p x (Finsupp.single i q) = q • atom V H p i x := by
+  classical
+  simp [attachPoint]
+
+@[simp] theorem attachSheet_single
+    (i : ClassicalHodgeBasisIndex V H p)
+    (x : CodimensionPoint V.X p) (q : ℚ) :
+    attachSheet V H p i (Finsupp.single x q) = q • atom V H p i x := by
+  classical
+  simp [attachSheet]
+
+/-- A linear normalization onto the states determined by the two marginals. -/
+noncomputable def anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p) :
+    Module.End ℚ (FiberedNativeAddress V H p) where
+  toFun Φ := glueMarginals V H p i₀ x₀
+    (forgetPoint V H p Φ) (forgetMultiplicity V H p Φ)
+  map_add' := by
+    intro Φ Ψ
+    simp only [glueMarginals, map_add, add_smul]
+    abel
+  map_smul' := by
+    intro q Φ
+    simp [glueMarginals, smul_add, smul_sub, smul_smul]
+
+@[simp] theorem forgetPoint_anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    forgetPoint V H p (anchoredNormalization V H p i₀ x₀ Φ) =
+      forgetPoint V H p Φ :=
+  glueMarginals_forgetPoint V H p i₀ x₀ _ _
+    (marginal_mass_balance V H p Φ)
+
+@[simp] theorem forgetMultiplicity_anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    forgetMultiplicity V H p (anchoredNormalization V H p i₀ x₀ Φ) =
+      forgetMultiplicity V H p Φ :=
+  glueMarginals_forgetMultiplicity V H p i₀ x₀ _ _
+
+@[simp] theorem toNativeCycle_anchoredNormalization
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    toNativeCycle V H p (anchoredNormalization V H p i₀ x₀ Φ) =
+      toNativeCycle V H p Φ := by
+  change realizeFiniteCodimensionPresentation V.X p
+      (forgetMultiplicity V H p (anchoredNormalization V H p i₀ x₀ Φ)) = _
+  rw [forgetMultiplicity_anchoredNormalization]
+  rfl
+
+/-- Normalization is an actual idempotent operator on the full state. -/
+theorem anchoredNormalization_idempotent
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    anchoredNormalization V H p i₀ x₀
+        (anchoredNormalization V H p i₀ x₀ Φ) =
+      anchoredNormalization V H p i₀ x₀ Φ := by
+  change glueMarginals V H p i₀ x₀
+      (forgetPoint V H p (anchoredNormalization V H p i₀ x₀ Φ))
+      (forgetMultiplicity V H p (anchoredNormalization V H p i₀ x₀ Φ)) = _
+  rw [forgetPoint_anchoredNormalization,
+    forgetMultiplicity_anchoredNormalization]
+  rfl
+
+/-- The normalization depends exactly on the two marginals. -/
+theorem anchoredNormalization_eq_iff_marginals
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ Ψ : FiberedNativeAddress V H p) :
+    anchoredNormalization V H p i₀ x₀ Φ =
+        anchoredNormalization V H p i₀ x₀ Ψ ↔
+      forgetPoint V H p Φ = forgetPoint V H p Ψ ∧
+      forgetMultiplicity V H p Φ = forgetMultiplicity V H p Ψ := by
+  constructor
+  · intro h
+    constructor
+    · simpa using congrArg (forgetPoint V H p) h
+    · simpa using congrArg (forgetMultiplicity V H p) h
+  · rintro ⟨ha, hb⟩
+    change glueMarginals V H p i₀ x₀
+        (forgetPoint V H p Φ) (forgetMultiplicity V H p Φ) = _
+    rw [ha, hb]
+    rfl
+
+/-- States invisible to both genuine faces. -/
+def circulationSector : Submodule ℚ (FiberedNativeAddress V H p) :=
+  LinearMap.ker (forgetPoint V H p) ⊓
+    LinearMap.ker (forgetMultiplicity V H p)
+
+theorem mem_circulationSector_iff (Φ : FiberedNativeAddress V H p) :
+    Φ ∈ circulationSector V H p ↔
+      forgetPoint V H p Φ = 0 ∧ forgetMultiplicity V H p Φ = 0 := by
+  rfl
+
+/-- The complementary projector onto the invisible circulation sector. -/
+noncomputable def circulationProjection
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p) :
+    Module.End ℚ (FiberedNativeAddress V H p) :=
+  LinearMap.id - anchoredNormalization V H p i₀ x₀
+
+@[simp] theorem circulationProjection_apply
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    circulationProjection V H p i₀ x₀ Φ =
+      Φ - anchoredNormalization V H p i₀ x₀ Φ := rfl
+
+theorem circulationProjection_mem
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    circulationProjection V H p i₀ x₀ Φ ∈ circulationSector V H p := by
+  rw [mem_circulationSector_iff]
+  simp
+
+theorem anchoredNormalization_eq_zero_of_circulation
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p)
+    (hΦ : Φ ∈ circulationSector V H p) :
+    anchoredNormalization V H p i₀ x₀ Φ = 0 := by
+  obtain ⟨ha, hb⟩ := (mem_circulationSector_iff V H p Φ).1 hΦ
+  change glueMarginals V H p i₀ x₀
+      (forgetPoint V H p Φ) (forgetMultiplicity V H p Φ) = 0
+  simp [ha, hb, glueMarginals]
+
+theorem circulationProjection_eq_self
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p)
+    (hΦ : Φ ∈ circulationSector V H p) :
+    circulationProjection V H p i₀ x₀ Φ = Φ := by
+  rw [circulationProjection_apply,
+    anchoredNormalization_eq_zero_of_circulation V H p i₀ x₀ Φ hΦ, sub_zero]
+
+theorem circulationProjection_range
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p) :
+    LinearMap.range (circulationProjection V H p i₀ x₀) =
+      circulationSector V H p := by
+  apply le_antisymm
+  · rintro Φ ⟨Ψ, rfl⟩
+    exact circulationProjection_mem V H p i₀ x₀ Ψ
+  · intro Φ hΦ
+    exact ⟨Φ, circulationProjection_eq_self V H p i₀ x₀ Φ hΦ⟩
+
+theorem circulationProjection_idempotent
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    circulationProjection V H p i₀ x₀
+        (circulationProjection V H p i₀ x₀ Φ) =
+      circulationProjection V H p i₀ x₀ Φ :=
+  circulationProjection_eq_self V H p i₀ x₀ _
+    (circulationProjection_mem V H p i₀ x₀ Φ)
+
+/-- A four-atom rectangle is the elementary invisible circulation. -/
+def anchoredRectangle
+    (i₀ i : ClassicalHodgeBasisIndex V H p)
+    (x₀ x : CodimensionPoint V.X p) : FiberedNativeAddress V H p :=
+  atom V H p i x - atom V H p i x₀ - atom V H p i₀ x +
+    atom V H p i₀ x₀
+
+theorem anchoredRectangle_mem
+    (i₀ i : ClassicalHodgeBasisIndex V H p)
+    (x₀ x : CodimensionPoint V.X p) :
+    anchoredRectangle V H p i₀ i x₀ x ∈ circulationSector V H p := by
+  rw [mem_circulationSector_iff]
+  constructor <;> simp [anchoredRectangle] <;> abel
+
+theorem circulationProjection_atom
+    (i₀ i : ClassicalHodgeBasisIndex V H p)
+    (x₀ x : CodimensionPoint V.X p) :
+    circulationProjection V H p i₀ x₀ (atom V H p i x) =
+      anchoredRectangle V H p i₀ i x₀ x := by
+  simp [circulationProjection, anchoredNormalization, glueMarginals,
+    anchoredRectangle] <;> abel
+
+/-- **FINITE RECTANGLE NORMAL FORM.** Every invisible state is the finite
+sum of its own coefficients times anchored rectangles; no new support is
+chosen and no cycle-class assumption is used. -/
+theorem circulation_eq_rectangle_sum
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p)
+    (hΦ : Φ ∈ circulationSector V H p) :
+    Φ = Φ.sum fun ix q => q • anchoredRectangle V H p i₀ ix.1 x₀ ix.2 := by
+  have hsum : ∀ Ψ : FiberedNativeAddress V H p,
+      circulationProjection V H p i₀ x₀ Ψ =
+        Ψ.sum fun ix q => q • anchoredRectangle V H p i₀ ix.1 x₀ ix.2 := by
+    intro Ψ
+    classical
+    induction Ψ using Finsupp.induction_linear with
+    | zero => simp
+    | add a b ha hb => simp [ha, hb, Finsupp.sum_add_index', add_smul]
+    | single ix q =>
+      rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
+      rw [map_smul, circulationProjection_atom]
+      simp [atom, Finsupp.sum_single_index, Finsupp.smul_single]
+  calc
+    Φ = circulationProjection V H p i₀ x₀ Φ :=
+      (circulationProjection_eq_self V H p i₀ x₀ Φ hΦ).symm
+    _ = Φ.sum fun ix q =>
+        q • anchoredRectangle V H p i₀ ix.1 x₀ ix.2 := hsum Φ
+
+/-- Changing anchors changes only the circulation sector. -/
+theorem normalization_anchor_change_mem
+    (i₀ i₁ : ClassicalHodgeBasisIndex V H p)
+    (x₀ x₁ : CodimensionPoint V.X p)
+    (Φ : FiberedNativeAddress V H p) :
+    anchoredNormalization V H p i₀ x₀ Φ -
+        anchoredNormalization V H p i₁ x₁ Φ ∈ circulationSector V H p := by
+  rw [mem_circulationSector_iff]
+  simp
+
+#print axioms anchoredNormalization_idempotent
+#print axioms circulationProjection_range
+#print axioms circulation_eq_rectangle_sum
+
 end GSTClassicalHodgeFiberedNativePullback

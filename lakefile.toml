@@ -576,6 +576,14 @@ roots = [
   "GSTClassicalHodgeNativeExecutablePlane",
   "GSTClassicalHodgeGSTPlaneAxiomStatus",
   "GSTClassicalHodgeBranchPacketPlaneRealization",
+  "GSTClassicalHodgeSuccessorGroundFloor",
+  "GSTClassicalHodgeGroundFloorSiegePropagation",
+  "GSTClassicalHodgeBareLefschetzSpineFinale",
+  "GSTClassicalHodgeFiberedDefectProjectiveCocycle",
+  "GSTClassicalHodgeProjectiveApexSpokeCircularity",
+  "GSTClassicalHodgeSynchronizedSeedFiberedLanding",
+  "GSTClassicalHodgeFiberedDefectProjectiveGlobalCocycle",
+  "GSTClassicalHodgeKernelMassCalibration",
 ]
 
 # ---------------------------------------------------------------------------
