@@ -1,4 +1,4 @@
-import GSTGeneralSpace
+import GSTGeneralSpaceMorphisms
 
 /-!
 # GST GRAPH V2 — OMNIVERSAL THREE-SECTOR EVENT CORE
@@ -377,6 +377,53 @@ def pathMap (F : EventHom G H) :
   | _, _, .nil _ => .nil _
   | _, _, .cons e tail => .cons (F.mapEvent e) (pathMap F tail)
 
+/-- The transport of a composite physical event history is literally the
+composite of the transported histories.  This is stronger than mere
+preservation of the reachability relation. -/
+theorem pathMap_comp
+    (F : EventHom G H)
+    {x y z : G.Node}
+    (p : Path G x y) (q : Path G y z) :
+    F.pathMap (Path.comp G p q) =
+      Path.comp H (F.pathMap p) (F.pathMap q) := by
+  induction p with
+  | nil =>
+      rfl
+  | cons e rest ih =>
+      simp [Path.comp, pathMap, ih]
+
+/-- **ONTOLOGICAL TRANSPORT IS A GENERAL-SPACE MORPHISM.**
+Every event-preserving GST map induces a genuine law-preserving map of
+carrier-independent General Spaces.  Its path component is constructed from
+the source events, not supplied independently. -/
+def toGeneralSpaceHom (F : EventHom G H) :
+    GSTGeneralSpace.GeneralSpace.Hom G.toGeneralSpace H.toGeneralSpace where
+  mapPoint := F.toFun
+  mapPath := F.pathMap
+  map_id := by
+    intro x
+    rfl
+  map_comp := by
+    intro x y z p q
+    exact F.pathMap_comp p q
+
+/-- Sector observation is strictly natural under every event morphism. -/
+@[simp] theorem map_sector_exact
+    (F : EventHom G H) (x : G.Node) :
+    H.sector ((F.toGeneralSpaceHom).mapPoint x) = G.sector x :=
+  F.sector_eq x
+
+/-- Point transport of two consecutive GST realizations is coherent on the
+entire composite, without any coordinate-dependent coherence witness. -/
+theorem comp_toGeneralSpaceHom_mapPoint
+    {K : OmniversalGraph.{u,v}}
+    (F : EventHom G H) (J : EventHom H K)
+    (x : G.Node) :
+    ((F.comp J).toGeneralSpaceHom).mapPoint x =
+      (J.toGeneralSpaceHom).mapPoint
+        ((F.toGeneralSpaceHom).mapPoint x) :=
+  rfl
+
 /-- Every physically realizable causal path remains realizable under a
 structure-preserving change of GST carrier. -/
 theorem reachable_map (F : EventHom G H)
@@ -446,6 +493,9 @@ end EventHom
 #check eventStable_indexed_intersection
 #check closure_stable_envelope_exact
 #check EventHom.pathMap
+#check EventHom.pathMap_comp
+#check EventHom.toGeneralSpaceHom
+#check EventHom.comp_toGeneralSpaceHom_mapPoint
 #check EventHom.reachable_map
 #check EventHom.closure_image
 #check EventHom.stable_preimage
