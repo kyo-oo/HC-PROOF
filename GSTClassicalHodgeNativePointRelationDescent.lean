@@ -252,6 +252,36 @@ theorem nativeAmbientAction_comp
     (LinearMap.congr_fun (nativeClassRangeEnd_comp cl A B hA hB)
       (nativeClassRangeRetraction cl z))
 
+/-- **NO-ESCAPE INVARIANT FOR EVERY COHERENT NATIVE OPERATOR.**
+Every constructed ambient action has its ENTIRE image in the genuine
+cycle-class image.  Thus no amount of native composition, even at the
+unrestricted ambient cohomology level, can produce a class beyond the
+algebraic image without a separately constructed geometric source. -/
+theorem nativeAmbientAction_range_le_classRange
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A : Module.End ℚ (codimensionCycles X p))
+    (hk : NativeClassKernelStable cl A) :
+    LinearMap.range (nativeAmbientAction cl A hk) ≤ LinearMap.range cl := by
+  rintro y ⟨x, rfl⟩
+  change ((nativeClassRangeEnd cl A hk)
+    (nativeClassRangeRetraction cl x)).1 ∈ LinearMap.range cl
+  exact ((nativeClassRangeEnd cl A hk)
+    (nativeClassRangeRetraction cl x)).2
+
+/-- The complementary sector is invisible to the coherent extension. This
+precisely localizes what the native operator algebra cannot observe. -/
+theorem nativeAmbientAction_zero_of_retraction_zero
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A : Module.End ℚ (codimensionCycles X p))
+    (hk : NativeClassKernelStable cl A)
+    (x : Coh)
+    (hx : nativeClassRangeRetraction cl x = 0) :
+    nativeAmbientAction cl A hk x = 0 := by
+  change ((nativeClassRangeEnd cl A hk)
+    (nativeClassRangeRetraction cl x)).1 = 0
+  rw [hx, map_zero]
+  rfl
+
 /-- Native kernel preservation is also necessary. -/
 theorem exists_nativeAmbientAction_iff
     (cl : codimensionCycles X p →ₗ[ℚ] Coh)
@@ -354,6 +384,7 @@ def derivedPointClassTransitionKernel [CompactSpace X]
 #print axioms nativeClassRangeEnd_eq_zero_iff
 #print axioms nativeAmbientAction_natural
 #print axioms nativeAmbientAction_comp
+#print axioms nativeAmbientAction_range_le_classRange
 #print axioms exists_nativeAmbientAction_iff
 #print axioms finiteRelations_iff_nativeKernelStable
 #print axioms rawTransition_has_ambientAction_iff
