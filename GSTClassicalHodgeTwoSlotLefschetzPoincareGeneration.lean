@@ -66,7 +66,8 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
   intro a
   funext r
   have e01 : worldAct 2 2 ((L 2 2)^(2 : Nat))
-      (worldBasis (pureDiagonalState 0)) (pureDiagonalState 1) = (2 : ℤ) := by
+      (worldBasis (pureDiagonalState (0 : Fin 2)))
+      (pureDiagonalState (1 : Fin 2)) = (2 : ℤ) := by
     have h := pure_diagonal_lefschetz_forward_exact (A := 2) (B := 2)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩) (by decide)
@@ -78,21 +79,24 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
     norm_num at h
     exact h
   have e00 : worldAct 2 2 ((L 2 2)^(2 : Nat))
-      (worldBasis (pureDiagonalState 0)) (pureDiagonalState 0) = (0 : ℤ) := by
+      (worldBasis (pureDiagonalState (0 : Fin 2)))
+      (pureDiagonalState (0 : Fin 2)) = (0 : ℤ) := by
     have h := pure_diagonal_lefschetz_wrong_time_zero (A := 2) (B := 2) (n := 2)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
       (by decide) (by decide)
     exact h
   have e10 : worldAct 2 2 ((L 2 2)^(2 : Nat))
-      (worldBasis (pureDiagonalState 1)) (pureDiagonalState 0) = (0 : ℤ) := by
+      (worldBasis (pureDiagonalState (1 : Fin 2)))
+      (pureDiagonalState (0 : Fin 2)) = (0 : ℤ) := by
     have h := pure_diagonal_lefschetz_backward_zero (A := 2) (B := 2) (n := 2)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨0, by omega⟩)
       (by decide)
     exact h
   have e11 : worldAct 2 2 ((L 2 2)^(2 : Nat))
-      (worldBasis (pureDiagonalState 1)) (pureDiagonalState 1) = (0 : ℤ) := by
+      (worldBasis (pureDiagonalState (1 : Fin 2)))
+      (pureDiagonalState (1 : Fin 2)) = (0 : ℤ) := by
     have h := pure_diagonal_lefschetz_wrong_time_zero (A := 2) (B := 2) (n := 2)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)
       (Fin.castLE (show 2 ≤ min 2 2 by omega) ⟨1, by omega⟩)

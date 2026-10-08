@@ -103,6 +103,7 @@ theorem hodgeMatrixUnit_mem_algebraic_of_pointLifts
   have hstable := cosmic_atomicSpanStable i j hij
   have himage := hstable alpha.1 halpha
   rw [canonicalCosmicAmbient_on_hodge i j alpha] at himage
+  rw [mem_AlgebraicHodgeSubspace_iff]
   exact himage
 
 /-- A nonzero algebraic seed determines one live source coordinate.  Native
