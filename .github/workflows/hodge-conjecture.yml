@@ -104,6 +104,27 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake build GSTClassicalHodgeNativeWordFromArbitrarySeed 2>&1 | tee -a hodge-final.log
 
+      - name: Compile exact GST finite-graph ghost-separation theorems
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeBranchPacketPlaneRealization.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile GST finite-horizon native charge and terminal-cut audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeNativeMassBridgeAudit.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile active-fiber point saturation
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeNativePointSeedSaturation.lean 2>&1 | tee -a hodge-final.log
+
       - name: Final trust audit
         shell: bash
         run: |
