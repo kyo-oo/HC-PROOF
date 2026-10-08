@@ -90,7 +90,12 @@ noncomputable def rawTargetCycle
     (R : GeometryFirstTwoGenerator
       (V := V) (H := H) S.sourceIndex j) :
     codimensionCycles V.X p :=
-  nativeWord R S.cycle
+  by
+    classical
+    exact if _ : S.sourceIndex = j then
+      R.code.cycleOperator S.cycle
+    else
+      nativeWord R S.cycle
 
 /-- The raw target cycle has class equal to the nonzero live source coefficient
 times the arbitrary target Hodge basis vector. -/
@@ -101,12 +106,26 @@ theorem rawTargetCycle_spec
       (V := V) (H := H) S.sourceIndex j) :
     H.cycleClass p (S.rawTargetCycle j R) =
       S.sourceCoefficient • (classicalHodgeBasis V H p j).1 := by
-  rw [cycleClass_nativeWord R S.cycle]
-  have hword := R.ambientWord_on_hodge S.hodgeClass
-  rw [hword]
-  change (hodgeMatrixUnit S.sourceIndex j S.hodgeClass).1 = _
-  rw [hodgeMatrixUnit_apply]
-  rfl
+  classical
+  by_cases hij : S.sourceIndex = j
+  · have hcode : H.cycleClass p (S.rawTargetCycle j R) =
+        R.ambientCode S.hodgeClass.1 := by
+      simp only [rawTargetCycle, dif_pos hij]
+      change H.cycleClass p (R.code.cycleOperator S.cycle) =
+        R.code.cohomologyOperator (H.cycleClass p S.cycle)
+      exact R.code.cycleClass_natural S.cycle
+    rw [hcode, R.ambientCode_on_hodge_of_eq hij S.hodgeClass]
+    change (hodgeMatrixUnit S.sourceIndex j S.hodgeClass).1 = _
+    rw [hodgeMatrixUnit_apply]
+    rfl
+  · have hword : H.cycleClass p (S.rawTargetCycle j R) =
+        R.ambientWord S.hodgeClass.1 := by
+      simp only [rawTargetCycle, dif_neg hij]
+      exact cycleClass_nativeWord R S.cycle
+    rw [hword, R.ambientWord_on_hodge hij S.hodgeClass]
+    change (hodgeMatrixUnit S.sourceIndex j S.hodgeClass).1 = _
+    rw [hodgeMatrixUnit_apply]
+    rfl
 
 /-- Normalize the target cycle by the nonzero live coefficient. -/
 noncomputable def targetCycle
