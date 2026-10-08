@@ -108,13 +108,11 @@ theorem twoSlotCode_eq_half_lefschetz_comp_poincare :
       windowMirror, Fin.isValue, Fin.sum_univ_two]
     rw [e00, e10]
     simp
-    norm_num
   · simp [twoSlotCode, LinearMap.smul_apply, LinearMap.coe_comp,
       LinearMap.comp_apply, diagonalLefschetzQ, poincareReverseQ,
       windowMirror, Fin.isValue, Fin.sum_univ_two]
     rw [e01, e11]
     simp
-    norm_num
 
 /-- Equivalent projector formulation. -/
 theorem sheetProjectorQ_target_eq_half_lefschetz_comp_poincare :
