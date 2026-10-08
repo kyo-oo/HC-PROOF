@@ -176,27 +176,81 @@ theorem nativeClassRangeEnd_eq_zero_iff
     apply Subtype.ext
     simpa only [nativeClassRangeEnd_natural, LinearMap.zero_apply] using h Z
 
-/-- Extend the derived range action; nothing is prescribed outside native
-classes. This existing rational-linear extension device is used only after
-the native finite-relation condition has been proved. -/
+/-- **ONE UNIVERSAL CLASS-IMAGE RETRACTION.** Choose a rational-linear
+projection onto the actual algebraic class image ONCE, independently of the
+native operator.  This fixes the ambient complement action coherently. -/
+noncomputable def nativeClassRangeRetraction
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh) :
+    Coh →ₗ[ℚ] LinearMap.range cl :=
+  Classical.choose (LinearMap.exists_extend
+    (LinearMap.id : Module.End ℚ (LinearMap.range cl)))
+
+theorem nativeClassRangeRetraction_spec
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh) :
+    (nativeClassRangeRetraction cl).comp (LinearMap.range cl).subtype =
+      LinearMap.id :=
+  Classical.choose_spec (LinearMap.exists_extend
+    (LinearMap.id : Module.End ℚ (LinearMap.range cl)))
+
+@[simp] theorem nativeClassRangeRetraction_range
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (y : LinearMap.range cl) :
+    nativeClassRangeRetraction cl y.1 = y :=
+  LinearMap.congr_fun (nativeClassRangeRetraction_spec cl) y
+
+/-- **COHERENT AMBIENT DESCENT, NOT INDEPENDENT OUTPUT CHOICES.**
+Every native operator uses the SAME projection onto the geometric image,
+followed by its canonically descended geometric operator.  In particular,
+the complementary sector is annihilated and the full ambient composition law
+holds. This strengthens the original independently chosen extension. -/
 def nativeAmbientAction
     (cl : codimensionCycles X p →ₗ[ℚ] Coh)
     (A : Module.End ℚ (codimensionCycles X p))
     (hk : NativeClassKernelStable cl A) : Module.End ℚ Coh :=
-  Classical.choose (LinearMap.exists_extend (nativeClassRangeAction cl A hk))
+  ((LinearMap.range cl).subtype.comp
+    (nativeClassRangeEnd cl A hk)).comp
+      (nativeClassRangeRetraction cl)
 
+/-- Canonical ambient descent agrees with actual native operations on
+all genuine cycle classes, without manufacturing any new Hodge seed. -/
 theorem nativeAmbientAction_natural
     (cl : codimensionCycles X p →ₗ[ℚ] Coh)
     (A : Module.End ℚ (codimensionCycles X p))
     (hk : NativeClassKernelStable cl A) (Z : codimensionCycles X p) :
     nativeAmbientAction cl A hk (cl Z) = cl (A Z) := by
-  have hext : (nativeAmbientAction cl A hk).comp (LinearMap.range cl).subtype =
-      nativeClassRangeAction cl A hk :=
-    Classical.choose_spec (LinearMap.exists_extend (nativeClassRangeAction cl A hk))
-  have h := LinearMap.congr_fun hext (cl.rangeRestrict Z)
-  change nativeAmbientAction cl A hk (cl Z) =
-    cl (A (classRangeRepresentative cl (cl.rangeRestrict Z))) at h
-  exact h.trans (transformedClass_congr cl A hk (classRangeRepresentative_spec cl _))
+  have hr : nativeClassRangeRetraction cl (cl Z) = cl.rangeRestrict Z :=
+    nativeClassRangeRetraction_range cl (cl.rangeRestrict Z)
+  change ((nativeClassRangeEnd cl A hk)
+    (nativeClassRangeRetraction cl (cl Z))).1 = cl (A Z)
+  rw [hr, nativeClassRangeEnd_natural]
+  rfl
+
+/-- **UNCONDITIONAL COMPOSITION OF ALL COHERENT AMBIENT ACTIONS.**
+Kernel-preserving native operators have a full ambient composition law;
+the law uses only the one fixed retraction, without assuming the Hodge
+conjecture or any cyclicity/generation of nonalgebraic classes. -/
+theorem nativeAmbientAction_comp
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A B : Module.End ℚ (codimensionCycles X p))
+    (hA : NativeClassKernelStable cl A)
+    (hB : NativeClassKernelStable cl B) :
+    nativeAmbientAction cl (A.comp B)
+      (nativeClassKernelStable_comp cl A B hA hB) =
+      (nativeAmbientAction cl A hA).comp (nativeAmbientAction cl B hB) := by
+  apply LinearMap.ext
+  intro z
+  change
+    ((nativeClassRangeEnd cl (A.comp B)
+      (nativeClassKernelStable_comp cl A B hA hB))
+        (nativeClassRangeRetraction cl z)).1 =
+    ((nativeClassRangeEnd cl A hA)
+      (nativeClassRangeRetraction cl
+        (((nativeClassRangeEnd cl B hB)
+          (nativeClassRangeRetraction cl z)).1))).1
+  rw [nativeClassRangeRetraction_range]
+  exact congrArg Subtype.val
+    (LinearMap.congr_fun (nativeClassRangeEnd_comp cl A B hA hB)
+      (nativeClassRangeRetraction cl z))
 
 /-- Native kernel preservation is also necessary. -/
 theorem exists_nativeAmbientAction_iff
@@ -299,6 +353,7 @@ def derivedPointClassTransitionKernel [CompactSpace X]
 #print axioms nativeClassRangeEnd_comp
 #print axioms nativeClassRangeEnd_eq_zero_iff
 #print axioms nativeAmbientAction_natural
+#print axioms nativeAmbientAction_comp
 #print axioms exists_nativeAmbientAction_iff
 #print axioms finiteRelations_iff_nativeKernelStable
 #print axioms rawTransition_has_ambientAction_iff
