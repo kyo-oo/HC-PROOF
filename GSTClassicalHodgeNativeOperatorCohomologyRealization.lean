@@ -373,7 +373,14 @@ theorem supportedAmbientOperator_add
       supportedAmbientOperator A hA + supportedAmbientOperator B hB := by
   apply LinearMap.ext
   intro alpha
-  simp [supportedAmbientOperator, rangeOperator_add, map_add]
+  let hAB : KernelStable (H := H) (A + B) := by
+    intro Z hZ
+    simp [hA Z hZ, hB Z hZ]
+  have hstep := LinearMap.congr_fun
+    (rangeOperator_add (H := H) A B hA hB hAB)
+    (classRangeRetraction (H := H) alpha)
+  have hval := congrArg Subtype.val hstep
+  simpa [supportedAmbientOperator, LinearMap.comp_apply] using hval
 
 theorem supportedAmbientOperator_smul
     (q : ℚ) (A : Module.End ℚ (Cycles V p))
@@ -382,7 +389,14 @@ theorem supportedAmbientOperator_smul
       q • supportedAmbientOperator A hA := by
   apply LinearMap.ext
   intro alpha
-  simp [supportedAmbientOperator, rangeOperator_smul, map_smul]
+  let hqA : KernelStable (H := H) (q • A) := by
+    intro Z hZ
+    simp [hA Z hZ]
+  have hstep := LinearMap.congr_fun
+    (rangeOperator_smul (H := H) q A hA hqA)
+    (classRangeRetraction (H := H) alpha)
+  have hval := congrArg Subtype.val hstep
+  simpa [supportedAmbientOperator, LinearMap.comp_apply] using hval
 
 /-- **ALL AMBIENT EXTENSIONS, EXACTLY.** The coherent native core is fixed;
 every remaining term factors through the chosen off-range projection.  This
@@ -446,6 +460,23 @@ theorem ambientOperator_comp_coherent
   simp only [ambientOperator]
   exact supportedAmbientOperator_comp A B hA hB
 
+/-- The native identity is ALWAYS mapped to its real cohomological corner
+unit.  It can be promoted to the full ambient identity only under the
+precise range-surjectivity condition proved below. -/
+theorem ambientOperator_nativeIdentity_is_cornerUnit :
+    ambientOperator (H := H)
+      (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) =
+        classRangeProjection (H := H) := by
+  apply LinearMap.ext
+  intro alpha
+  change
+    ↑((rangeOperator (H := H)
+      (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ)) (classRangeRetraction (H := H) alpha)) =
+        ↑(classRangeRetraction (H := H) alpha)
+  rw [rangeOperator_id]
+
 /-- **THE CORNER-UNIT OBSTRUCTION.**
 
 The coherent ambient image of the native identity is the projection onto
@@ -464,7 +495,7 @@ theorem ambientOperator_id_eq_fullIdentity_iff_fullRange :
         (LinearMap.id : Module.End ℚ (Coh H p)) ↔
       ∀ alpha : Coh H p,
         alpha ∈ LinearMap.range (H.cycleClass p) := by
-  simp only [ambientOperator, supportedAmbientOperator_id]
+  rw [ambientOperator_nativeIdentity_is_cornerUnit]
   constructor
   · intro h alpha
     have hh := LinearMap.congr_fun h alpha
@@ -473,16 +504,6 @@ theorem ambientOperator_id_eq_fullIdentity_iff_fullRange :
     apply LinearMap.ext
     intro alpha
     exact (classRangeProjection_eq_self_iff alpha).2 (h alpha)
-
-/-- The native identity is ALWAYS mapped to its real cohomological corner
-unit.  It can be promoted to the full ambient identity only under the
-precise range-surjectivity condition proved above. -/
-theorem ambientOperator_nativeIdentity_is_cornerUnit :
-    ambientOperator (H := H)
-      (LinearMap.id : Module.End ℚ (Cycles V p))
-      (fun _ hZ => hZ) =
-        classRangeProjection (H := H) := by
-  simp only [ambientOperator, supportedAmbientOperator_id]
 
 #check ambientOperator_id_eq_fullIdentity_iff_fullRange
 #print axioms ambientOperator_id_eq_fullIdentity_iff_fullRange
@@ -724,3 +745,4 @@ theorem hodgeWeight_iff_intrinsicDefect_zero :
 #print axioms projectiveKernelToOperatorPair
 
 end GSTClassicalHodgeNativeOperatorCohomologyRealization
+
