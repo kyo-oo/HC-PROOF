@@ -4,6 +4,7 @@ import GSTClassicalHodgeNativePointSeedSaturation
 import GSTClassicalHodgeCrossWeightNativePropagation
 import GSTClassicalHodgeZeroWeightLocalSeed
 import GSTClassicalHodgeNativeWordFromArbitrarySeed
+import GSTClassicalHodgeCanonicalCutProgramSpine
 
 /-!
 # GST CLASSICAL HODGE — GEOMETRY-FIRST GLOBAL PROPAGATION
@@ -45,6 +46,9 @@ open GSTClassicalHodgeZeroWeightLocalSeed
 open GSTClassicalHodgeProjectiveDegreeTrace
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeNativeWordFromArbitrarySeed
+open GSTClassicalHodgeCanonicalCutProgramSpine
+open GSTClassicalHodgeGradedCorrespondenceProgramOrbit
+open GSTClassicalHodgeGradedCorrespondenceProgramOrbit.GradedCorrespondenceProgram
 
 namespace GSTClassicalHodgeGeometryFirstGlobalPropagation
 
@@ -398,6 +402,85 @@ theorem bigradedBettiHodge_of_degreeApex_livePaths
     (fun p hlive S j => fixedWeight p hlive S.sourceIndex j)
 
 
+
+/-!
+## Explicit geometric apex/cut source, no abstract positive-weight path
+
+The vertical finite program is now the *existing* canonical principal-cut
+program, not a proposed operator or an existentially selected path.
+It executes natively on one literal generic-point cycle and automatically
+produces a genuine algebraic Hodge class in every target weight.  Its
+nonvanishing at a live weight is the only vertical condition still required;
+the horizontal condition has already been reduced to ONE live source row.
+-/
+
+/-- The weight-p source is the concrete result of executing exactly p genuine
+principal-cut steps on the single projective degree-zero generic point.
+It is a literal native algebraic cycle, not a supplied target Hodge class. -/
+noncomputable def canonicalApexCutCycle
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat) : codimensionCycles V.X p :=
+  (canonicalCutProgram (V := V) (H := H) p).cycleEval G
+    (codimensionPointCycle V.X 0 (someCodimensionZeroPoint V))
+
+/-- Every canonical apex/cut output is Hodge by the genuine geometric
+cycle-class spine, without any target-cycle or surjectivity assumption. -/
+theorem canonicalApexCutCycle_is_hodge
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat) :
+    H.cycleClass p (canonicalApexCutCycle G p) ∈
+      rationalHodgeSubspace (H.hodgeBigrading p) :=
+  G.algebraic_is_hodge p (canonicalApexCutCycle G p)
+
+/-- A live canonical cut output gives an explicit native Hodge seed.  No
+basis-target cycle, independent vertical operator, or unspecified Hodge
+state is stored. -/
+noncomputable def canonicalApexCutNativeHodgeSeed
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    (hne : H.cycleClass p (canonicalApexCutCycle G p) ≠ 0) :
+    NativeHodgeSeed (V := V) (H := H) (p := p) where
+  cycle := canonicalApexCutCycle G p
+  class_is_hodge := canonicalApexCutCycle_is_hodge G p
+  class_ne_zero := hne
+
+/-- **EXPLICIT VERTICAL GEOMETRY + SINGLE SOURCE-ROW FINALE.**
+The vertical object is no longer a premise: it is the canonical principal-cut
+program acting on the chosen actual codimension-zero component.  At each live
+weight its observed cycle class must be nonzero; then only the two genuine
+native horizontal primitives along that *computed* source basis row are
+required. The proof constructs every desired basis cycle by normalized native
+GST words. -/
+theorem bigradedBettiHodge_of_canonicalApexCut_sourceRows
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (cut_live :
+      ∀ (p : Nat),
+        (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+          H.cycleClass p (canonicalApexCutCycle G p) ≠ 0)
+    (sourceRows :
+      ∀ (p : Nat)
+        (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0),
+        ∀ j : ClassicalHodgeBasisIndex V H p,
+          GeometryFirstTwoGenerator (V := V) (H := H)
+            (canonicalApexCutNativeHodgeSeed G p (cut_live p hlive)).sourceIndex j) :
+    BigradedBettiHodgeStatement V H := by
+  classical
+  intro p alpha halpha
+  by_cases hlive : ∃ beta : ClassicalHodgeFiber V H p, beta ≠ 0
+  · exact (canonicalApexCutNativeHodgeSeed G p (cut_live p hlive)).hodge_weight
+      (sourceRows p hlive) halpha
+  · have halpha_zero : alpha = 0 := by
+      by_contra hne
+      apply hlive
+      refine ⟨⟨alpha, halpha⟩, ?_⟩
+      intro hzero
+      exact hne (by simpa using congrArg Subtype.val hzero)
+    exact ⟨0, by simp [halpha_zero]⟩
+
 /-- A single seed family propagated from weight to weight by native graded
 Lefschetz operators whose native and Betti actions commute with cycle class. -/
 structure GeometryFirstSeedPropagation
@@ -500,6 +583,10 @@ theorem bigradedBettiHodge
 
 end GeometryFirstGlobalPropagation
 
+#check canonicalApexCutCycle
+#check canonicalApexCutCycle_is_hodge
+#check canonicalApexCutNativeHodgeSeed
+#check bigradedBettiHodge_of_canonicalApexCut_sourceRows
 #check canonicalDegreeZeroNativePointSeed
 #check bigradedBettiHodge_of_degreeApex_sourceRows
 #check bigradedBettiHodge_of_degreeApex_livePaths
@@ -510,6 +597,8 @@ end GeometryFirstGlobalPropagation
 #check GeometryFirstLivePathCosmos.live_native_cycle
 #check GeometryFirstLivePathCosmos.bigradedBettiHodge
 
+#print axioms canonicalApexCutCycle_is_hodge
+#print axioms bigradedBettiHodge_of_canonicalApexCut_sourceRows
 #print axioms canonicalDegreeZeroNativePointSeed
 #print axioms bigradedBettiHodge_of_degreeApex_sourceRows
 #print axioms bigradedBettiHodge_of_degreeApex_livePaths
