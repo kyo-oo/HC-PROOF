@@ -198,6 +198,10 @@ On every finite rational codimension-p point presentation, the actual native
 projective transport agrees with the explicitly computed residue-weighted
 point pushforward before realization. This is a commuting square of two
 constructive geometric operations, with no Hodge-generation premise. -/
+noncomputable instance smoothProjectiveCompactSpace_inst
+    (V : SmoothProjectiveComplexScheme) :
+    CompactSpace V.X := smoothProjectiveCompactSpace V
+
 theorem smoothProjectiveNativePushforward_realize
     (V : SmoothProjectiveComplexScheme)
     (f : V.X ⟶ V.X) (p : Nat)

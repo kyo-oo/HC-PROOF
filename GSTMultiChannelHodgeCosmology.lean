@@ -36,6 +36,7 @@ namespace GSTMultiChannelHodgeCosmology
 open GSTNCohomology
 open GSTNCohomologyV2
 open GSTGlobalPureHodgeCosmology
+open GSTWorldRecoordinationGroupoid
 
 /-- One independent Wave-II channel of a shape. -/
 abbrev HodgeChannel (S : NShape) : Type := Fin S.holes
