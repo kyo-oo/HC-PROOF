@@ -3,6 +3,7 @@ import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeNativePointSeedSaturation
 import GSTClassicalHodgeCrossWeightNativePropagation
 import GSTClassicalHodgeZeroWeightLocalSeed
+import GSTClassicalHodgeNativeWordFromArbitrarySeed
 
 /-!
 # GST CLASSICAL HODGE — GEOMETRY-FIRST GLOBAL PROPAGATION
@@ -43,6 +44,7 @@ open GSTClassicalHodgeNativePointSeedSaturation
 open GSTClassicalHodgeZeroWeightLocalSeed
 open GSTClassicalHodgeProjectiveDegreeTrace
 open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTClassicalHodgeNativeWordFromArbitrarySeed
 
 namespace GSTClassicalHodgeGeometryFirstGlobalPropagation
 
@@ -311,6 +313,63 @@ noncomputable def canonicalDegreeZeroNativePointSeed
     (codimensionPointCycle V.X 0 (someCodimensionZeroPoint V))
   class_ne_zero := codimensionZeroPoint_cycleClass_ne_zero D
 
+
+/-- **SOURCE-ROW STRENGTHENING OF THE FINITE-PATH ROUTE.**
+At a reachable live weight, the previous GST saturation demanded actual
+geometry-first operators for *every ordered pair* of Hodge sheets.  This
+constructs a genuine nonzero native seed from the apex path, then extracts
+one provably live basis coordinate.  Only the native two-generator words
+from that source coordinate to each target basis index are needed.
+In particular, no native operators are demanded for unused source rows.
+
+The proof constructs the arbitrary target basis cycles by the native word,
+rather than accepting any target cycles among its hypotheses. -/
+theorem bigradedBettiHodge_of_degreeApex_sourceRows
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (paths :
+      ∀ (p : Nat),
+        (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+          ∃ beta : ClassicalHodgeFiber V H p,
+            beta ≠ 0 ∧
+              GeometryFirstNativePath V H 0
+                (canonicalDegreeZeroNativePointSeed G D).hodgeClass p beta)
+    (sourceRows :
+      ∀ (p : Nat)
+        (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0)
+        (S : NativeHodgeSeed (V := V) (H := H) (p := p)),
+        ∀ j : ClassicalHodgeBasisIndex V H p,
+          GeometryFirstTwoGenerator (V := V) (H := H) S.sourceIndex j) :
+    BigradedBettiHodgeStatement V H := by
+  classical
+  intro p alpha halpha
+  by_cases hlive : ∃ beta : ClassicalHodgeFiber V H p, beta ≠ 0
+  · obtain ⟨beta, hbeta, path⟩ := paths p hlive
+    obtain ⟨Z, hZ⟩ := geometryFirstNativePath_constructs_target path
+      (codimensionPointCycle V.X 0
+        (canonicalDegreeZeroNativePointSeed G D).point) rfl
+    let S : NativeHodgeSeed (V := V) (H := H) (p := p) := {
+      cycle := Z
+      class_is_hodge := by
+        rw [hZ]
+        exact beta.2
+      class_ne_zero := by
+        intro hzero
+        apply hbeta
+        apply Subtype.ext
+        rw [← hZ]
+        exact hzero
+    }
+    exact S.hodge_weight (sourceRows p hlive S) halpha
+  · have halpha_zero : alpha = 0 := by
+      by_contra hne
+      apply hlive
+      refine ⟨⟨alpha, halpha⟩, ?_⟩
+      intro hzero
+      exact hne (by simpa using congrArg Subtype.val hzero)
+    exact ⟨0, by simp [halpha_zero]⟩
+
 /-- **APEX-TO-LIVE-WEIGHT GEOMETRY-FIRST REALIZATION.**
 Unlike the former consecutive-weight propagation route, the only point seed
 is a genuinely constructed codimension-zero component.  Finite paths may
@@ -334,11 +393,9 @@ theorem bigradedBettiHodge_of_degreeApex_livePaths
         (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0),
         ∀ i j : ClassicalHodgeBasisIndex V H p,
           GeometryFirstTwoGenerator (V := V) (H := H) i j) :
-    BigradedBettiHodgeStatement V H :=
-  (GeometryFirstLivePathCosmos.bigradedBettiHodge
-    { origin := canonicalDegreeZeroNativePointSeed G D
-      livePath := paths
-      fixedWeight := fixedWeight })
+    BigradedBettiHodgeStatement V H := by
+  exact bigradedBettiHodge_of_degreeApex_sourceRows G D paths
+    (fun p hlive S j => fixedWeight p hlive S.sourceIndex j)
 
 
 /-- A single seed family propagated from weight to weight by native graded
@@ -444,6 +501,7 @@ theorem bigradedBettiHodge
 end GeometryFirstGlobalPropagation
 
 #check canonicalDegreeZeroNativePointSeed
+#check bigradedBettiHodge_of_degreeApex_sourceRows
 #check bigradedBettiHodge_of_degreeApex_livePaths
 #check GeometryFirstNativePath
 #check geometryFirstNativePath_constructs_target
@@ -453,6 +511,7 @@ end GeometryFirstGlobalPropagation
 #check GeometryFirstLivePathCosmos.bigradedBettiHodge
 
 #print axioms canonicalDegreeZeroNativePointSeed
+#print axioms bigradedBettiHodge_of_degreeApex_sourceRows
 #print axioms bigradedBettiHodge_of_degreeApex_livePaths
 #print axioms geometryFirstNativePath_constructs_target
 #print axioms geometryFirstNativePath_preserves_algebraic
