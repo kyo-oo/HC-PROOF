@@ -744,12 +744,13 @@ theorem circulation_eq_rectangle_sum
     induction Ψ using Finsupp.induction_linear with
     | zero => simp
     | add a b ha hb =>
-        rw [map_add, ha, hb]
-        exact (Finsupp.sum_add_index'
-          (fun c : FiberedNativeAtom V H p =>
-            zero_smul (R := ℚ) (anchoredRectangle V H p i₀ c.1 x₀ c.2))
-          (fun c : FiberedNativeAtom V H p b₁ b₂ =>
-            add_smul b₁ b₂ (anchoredRectangle V H p i₀ c.1 x₀ c.2))).symm
+        rw [map_add, ha, hb,
+          ← Finsupp.sum_add_index'
+            (h := fun c q =>
+              q • anchoredRectangle V H p i₀ c.1 x₀ c.2)
+            (fun c => zero_smul ℚ (anchoredRectangle V H p i₀ c.1 x₀ c.2))
+            (fun c b₁ b₂ =>
+              add_smul b₁ b₂ (anchoredRectangle V H p i₀ c.1 x₀ c.2))]
     | single ix q =>
       rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
       rw [map_smul, circulationProjection_atom]
@@ -775,3 +776,4 @@ theorem normalization_anchor_change_mem
 #print axioms circulation_eq_rectangle_sum
 
 end GSTClassicalHodgeFiberedNativePullback
+
