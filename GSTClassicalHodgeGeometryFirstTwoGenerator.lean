@@ -94,7 +94,6 @@ must not be substituted for genuine Betti functoriality. -/
 structure NativeHodgePrimitive
     (T : Module.End ℚ (HodgeFiber V H p)) where
   cycleOperator : NativeCycles V p →ₗ[ℚ] NativeCycles V p
-  kernelStable : KernelStable (H := H) cycleOperator
   cohomologyOperator : AmbientCoh H p →ₗ[ℚ] AmbientCoh H p
   cycleClass_natural :
     ∀ Z : NativeCycles V p,
@@ -107,6 +106,15 @@ structure NativeHodgePrimitive
 namespace NativeHodgePrimitive
 
 variable {T : Module.End ℚ (HodgeFiber V H p)}
+
+/-- Kernel stability is derived from the actual geometric commuting square,
+rather than supplied as an independent hypothesis. -/
+theorem kernelStable
+    (R : NativeHodgePrimitive (V := V) (H := H) T) :
+    KernelStable (H := H) R.cycleOperator := by
+  intro Z hZ
+  rw [R.cycleClass_natural Z, hZ]
+  exact R.cohomologyOperator.map_zero
 
 /-- The true ambient geometric action, not the projection onto algebraic
 classes. These coincide on the algebraic range, but not necessarily elsewhere. -/
