@@ -130,7 +130,7 @@ theorem hasNativePointLifts
     HasNativePointLifts (p := p) (cl := H.cycleClass p) R.ambient := by
   intro x
   refine ⟨R.cycleOperator (codimensionPointCycle V.X p x), ?_⟩
-  exact (R.cycleClass_natural _).symm
+  exact R.cycleClass_natural _
 
 /-- The actual geometric cohomology action has the prescribed Hodge action. -/
 @[simp]
