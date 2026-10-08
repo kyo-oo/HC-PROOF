@@ -233,6 +233,31 @@ theorem nonzero_lefschetz_transition_forces_causality
         (A:=A) (B:=B) (n:=n) s t hfuture htime
     exact hne hz
 
+/-!
+## Exact causal support, not merely a necessary forward-cone law
+
+A native coefficient is nonzero if and only if the target is in the true
+forward causal cone AND the observation time is its exact Manhattan depth.
+The reverse direction is substantive: binomial path multiplicities never
+vanish over the integral GST world.
+-/
+
+/-- **FULL CAUSAL NONZERO CLASSIFIER, BOTH DIRECTIONS.** -/
+theorem lefschetz_transition_nonzero_iff
+    {A B n : Nat} (s t : WorldCell A B) :
+    worldAct A B ((L A B)^n) (worldBasis s) t ≠ 0 ↔
+      worldForward s t ∧ n = worldCausalDistance s t := by
+  constructor
+  · exact nonzero_lefschetz_transition_forces_causality s t
+  · rintro ⟨hfuture, htime⟩
+    rw [worldAct_L_pow_basis_exact s t hfuture htime]
+    have hle : digitDistance s t ≤ n := by
+      unfold worldCausalDistance at htime
+      omega
+    have hpositive : 0 < n.choose (digitDistance s t) :=
+      Nat.choose_pos hle
+    exact_mod_cast (Nat.ne_of_gt hpositive)
+
 /-- Origin-to-cell propagation is the universal binomial kernel.  The earlier
 bottom-to-top coefficient is just the maximal-degree specialization. -/
 theorem origin_to_cell_kernel
@@ -259,6 +284,95 @@ theorem hc_origin_to_top_kernel :
   rw [hten] at h
   simpa using h
 
+/-!
+## Exact nilpotency depth of every genuinely two-axis finite world
+
+The previous theory gave an upper extinction bound.  The native binomial
+kernel gives its sharp converse: for each time STRICTLY below the boundary
+a concrete origin-to-cell coefficient is nonzero, and every later power
+kills every finite-world coefficient field.  Thus the endomorphism has
+exactly the asserted nilpotency index, with no dimension-specific table.
+-/
+
+/-- **EVERY SUBTERMINAL LEFSCHETZ TIME HAS A LIVE MATRIX COEFFICIENT.**
+The live target is chosen canonically by carrying as far as possible and
+assigning the remaining depth to the digit axis. -/
+theorem finite_world_L_each_subterminal_power_nonzero
+    (A B n : Nat)
+    (hA : 0 < A) (hB : 0 < B)
+    (hn : n < A + B - 1) :
+    ∃ s t : WorldCell A B,
+      worldAct A B ((L A B)^n) (worldBasis s) t ≠ 0 := by
+  let C := min n (A - 1)
+  let d := n - C
+  have hC : C < A := by
+    dsimp [C]
+    omega
+  have hd : d < B := by
+    dsimp [d, C]
+    omega
+  have hsum : C + d = n := by
+    dsimp [d, C]
+    omega
+  let s : WorldCell A B :=
+    (⟨0, by omega⟩, ⟨0, by omega⟩)
+  let t : WorldCell A B := (⟨C, hC⟩, ⟨d, hd⟩)
+  refine ⟨s, t, ?_⟩
+  have hvalue := origin_to_cell_kernel A B C d hC hd
+  have hcoefficient :
+      worldAct A B ((L A B)^n) (worldBasis s) t =
+        (n.choose d : ℤ) := by
+    simpa only [hsum] using hvalue
+  rw [hcoefficient]
+  have hpos : 0 < n.choose d := Nat.choose_pos (by omega)
+  exact_mod_cast (Nat.ne_of_gt hpos)
+
+/-- Every finite-world power at or beyond the exact geometric horizon
+annihilates ALL native fields, not merely the distinguished origin state. -/
+theorem finite_world_L_extinct_at_and_after_boundary
+    (A B n : Nat)
+    (hn : A + B - 1 ≤ n)
+    (g : WorldCoef A B) :
+    worldAct A B ((L A B)^n) g = 0 := by
+  have hsplit : n = (A + B - 1) + (n - (A + B - 1)) := by
+    omega
+  rw [hsplit, pow_add, worldAct_mul]
+  exact worldAct_L_pow_boundary A B _
+
+/-- **SHARP NILPOTENCY SPECTRUM OF EVERY FINITE GST WORLD.**
+For A,B>0, the universal Lefschetz operator kills every coefficient field
+at time n if and only if n has reached the exact rectangular boundary
+A+B-1.  No weaker nilpotency exponent is possible. -/
+theorem finite_world_L_power_zero_iff_boundary
+    (A B n : Nat) (hA : 0 < A) (hB : 0 < B) :
+    (∀ g : WorldCoef A B,
+      worldAct A B ((L A B)^n) g = 0) ↔ A + B - 1 ≤ n := by
+  constructor
+  · intro hzero
+    by_contra hnot
+    have hlt : n < A + B - 1 := Nat.lt_of_not_ge hnot
+    obtain ⟨s, t, hnonzero⟩ :=
+      finite_world_L_each_subterminal_power_nonzero A B n hA hB hlt
+    have hz := congrFun (hzero (worldBasis s)) t
+    exact hnonzero hz
+  · intro hn g
+    exact finite_world_L_extinct_at_and_after_boundary A B n hn g
+
+/-- One intrinsic spectral certificate contains both the exact causal
+support law and the true nilpotency horizon for ALL positive rectangles. -/
+theorem omniversal_L_sharp_spectrum :
+    (∀ A B n (s t : WorldCell A B),
+      worldAct A B ((L A B)^n) (worldBasis s) t ≠ 0 ↔
+        worldForward s t ∧ n = worldCausalDistance s t)
+    ∧ (∀ A B n, 0 < A → 0 < B →
+      ((∀ g : WorldCoef A B, worldAct A B ((L A B)^n) g = 0) ↔
+        A + B - 1 ≤ n)) := by
+  constructor
+  · intro A B n s t
+    exact lefschetz_transition_nonzero_iff s t
+  · intro A B n hA hB
+    exact finite_world_L_power_zero_iff_boundary A B n hA hB
+
 /-- Capstone: every matrix entry is classified, every nonzero transition has
 a unique causal time, and the historical coefficient 10 is absorbed as one
 special case. -/
@@ -280,7 +394,7 @@ theorem universal_lefschetz_kernel_crown :
   exact ⟨
     worldAct_L_pow_basis_kernel,
     fun A B n s t h =>
-      nonzero_lefschetz_transition_forces_causality s t h,
+      (lefschetz_transition_nonzero_iff s t).mp h,
     hc_origin_to_top_kernel⟩
 
 #check worldForward
@@ -294,6 +408,10 @@ theorem universal_lefschetz_kernel_crown :
 #check nonzero_lefschetz_transition_forces_causality
 #check origin_to_cell_kernel
 #check hc_origin_to_top_kernel
+#check lefschetz_transition_nonzero_iff
+#check finite_world_L_each_subterminal_power_nonzero
+#check finite_world_L_power_zero_iff_boundary
+#check omniversal_L_sharp_spectrum
 #check universal_lefschetz_kernel_crown
 
 #print axioms worldAct_L_pow_basis_kernel
