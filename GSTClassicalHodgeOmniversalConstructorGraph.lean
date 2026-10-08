@@ -293,8 +293,10 @@ theorem hodge_constructorClosure_iff_genuine_native_representation
       D.cycleClass q Z = alpha.1 := by
   constructor
   · intro hreach
-    exact (constructorHodgeSemantics (V := V) (D := D))
-      |>.algebraic_of_unaryClosure hreach
+    have halg : AlgebraicNode (ConstructorNode.hodge q alpha) :=
+      (constructorHodgeSemantics (V := V) (D := D))
+        |>.algebraic_of_unaryClosure hreach
+    exact halg
   · rintro ⟨Z, hZ⟩
     have hclass : D.cycleClass q Z ∈
         rationalHodgeSubspace (D.hodgeBigrading q) := by
