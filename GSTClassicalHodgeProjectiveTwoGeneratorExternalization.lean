@@ -81,7 +81,6 @@ noncomputable def toNativeHodgePrimitive
     (R : ProjectivePrimitiveRealization (V := V) (H := H) T) :
     NativeHodgePrimitive (V := V) (H := H) T where
   cycleOperator := smoothProjectiveNativePushforward V R.map p
-  kernelStable := R.naturality.kernelStable
   cohomologyOperator := R.naturality.cohomologyPushforward
   cycleClass_natural := R.naturality.naturality
   restricts_to_hodge := R.restricts_to_hodge
