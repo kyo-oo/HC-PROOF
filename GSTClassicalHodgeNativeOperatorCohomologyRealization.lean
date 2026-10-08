@@ -373,7 +373,12 @@ theorem supportedAmbientOperator_add
       supportedAmbientOperator A hA + supportedAmbientOperator B hB := by
   apply LinearMap.ext
   intro alpha
-  simp [supportedAmbientOperator, rangeOperator_add, map_add]
+  have hval : ∀ (f : Module.End ℚ (Cycles V p)) (hf : KernelStable (H := H) f),
+      ((rangeOperator (H := H) f hf) (classRangeRetraction (H := H) alpha) : Coh H p) =
+        (H.cycleClass p) (f (rangeRepresentative (classRangeRetraction (H := H) alpha))) := by
+    intro f hf
+    rfl
+  rw [hval, hval A hA, hval B hB, LinearMap.add_apply, map_add, map_add]
 
 theorem supportedAmbientOperator_smul
     (q : ℚ) (A : Module.End ℚ (Cycles V p))
@@ -382,7 +387,12 @@ theorem supportedAmbientOperator_smul
       q • supportedAmbientOperator A hA := by
   apply LinearMap.ext
   intro alpha
-  simp [supportedAmbientOperator, rangeOperator_smul, map_smul]
+  have hval : ∀ (f : Module.End ℚ (Cycles V p)) (hf : KernelStable (H := H) f),
+      ((rangeOperator (H := H) f hf) (classRangeRetraction (H := H) alpha) : Coh H p) =
+        (H.cycleClass p) (f (rangeRepresentative (classRangeRetraction (H := H) alpha))) := by
+    intro f hf
+    rfl
+  rw [hval, hval A hA, LinearMap.smul_apply, map_smul]
 
 /-- **ALL AMBIENT EXTENSIONS, EXACTLY.** The coherent native core is fixed;
 every remaining term factors through the chosen off-range projection.  This
@@ -464,7 +474,11 @@ theorem ambientOperator_id_eq_fullIdentity_iff_fullRange :
         (LinearMap.id : Module.End ℚ (Coh H p)) ↔
       ∀ alpha : Coh H p,
         alpha ∈ LinearMap.range (H.cycleClass p) := by
-  simp only [ambientOperator, supportedAmbientOperator_id]
+  have h1 : ambientOperator (H := H) (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) = supportedAmbientOperator (H := H)
+      (LinearMap.id : Module.End ℚ (Cycles V p)) (fun _ hZ => hZ) :=
+    ambientOperator_eq_supported (LinearMap.id : Module.End ℚ (Cycles V p)) (fun _ hZ => hZ)
+  rw [h1, supportedAmbientOperator_id]
   constructor
   · intro h alpha
     have hh := LinearMap.congr_fun h alpha
@@ -482,7 +496,12 @@ theorem ambientOperator_nativeIdentity_is_cornerUnit :
       (LinearMap.id : Module.End ℚ (Cycles V p))
       (fun _ hZ => hZ) =
         classRangeProjection (H := H) := by
-  simp only [ambientOperator, supportedAmbientOperator_id]
+  have h1 : ambientOperator (H := H) (LinearMap.id : Module.End ℚ (Cycles V p))
+      (fun _ hZ => hZ) = supportedAmbientOperator (H := H)
+      (LinearMap.id : Module.End ℚ (Cycles V p)) (fun _ hZ => hZ) :=
+    ambientOperator_eq_supported (LinearMap.id : Module.End ℚ (Cycles V p)) (fun _ hZ => hZ)
+  rw [h1]
+  exact supportedAmbientOperator_id
 
 #check ambientOperator_id_eq_fullIdentity_iff_fullRange
 #print axioms ambientOperator_id_eq_fullIdentity_iff_fullRange
