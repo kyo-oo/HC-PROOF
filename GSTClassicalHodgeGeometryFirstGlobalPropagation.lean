@@ -58,8 +58,6 @@ structure GeometryFirstLefschetzStep
   hpq : p ≤ q
   cycleOperator :
     codimensionCycles V.X p →ₗ[ℚ] codimensionCycles V.X q
-  kernelStable :
-    GradedKernelStable (H := H) cycleOperator
   cohomologyOperator :
     RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
       RationalSingularCohomology H.analytification (2 * q)
@@ -78,6 +76,15 @@ structure GeometryFirstLefschetzStep
 namespace GeometryFirstLefschetzStep
 
 variable {p q : Nat}
+
+/-- Graded kernel preservation is a consequence of geometric naturality,
+not an independent input to the limitless Lefschetz step. -/
+theorem kernelStable
+    (T : GeometryFirstLefschetzStep V H p q) :
+    GradedKernelStable (H := H) T.cycleOperator := by
+  intro Z hZ
+  rw [T.cycleClass_natural Z, hZ]
+  exact T.cohomologyOperator.map_zero
 
 /-- The exact graded cycle/cohomology pair, with a geometric Betti
 operator that need not annihilate classes outside the native cycle image. -/
