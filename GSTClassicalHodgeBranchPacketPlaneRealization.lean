@@ -106,6 +106,8 @@ open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeStage2GSemanticRigidity
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeProjectivePointTransport
+open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
 
 variable {V : SmoothProjectiveComplexScheme}
@@ -1094,6 +1096,48 @@ theorem finiteGraphWord_constructs_native_target
     _ = (finiteGraphHodgeWord word alpha).1 :=
       (finiteGraphHodgeWord_class word alpha).symm
 
+/-! ## Native finite-graph words cannot smuggle a ghost-detected sheet
+
+This is a noncircular finite-length obstruction.  Every certified native graph
+word computes an actual cycle.  The separator annihilates all such cycle
+classes but detects its chosen basis sheet.  Hence NO finite word can realize
+that target in a hypothetical ghost world.  The obstruction uses the existing
+GST geometric semantics, not a classical theorem or a target-cycle premise.
+-/
+
+/-- **FINITE-WORD GHOST-SEPARATION THEOREM.**
+Every ordered word of genuine native finite-graph generators fails to produce
+the ghost-detected Hodge basis sheet from a synchronized native seed.
+No word-length bound or arbitrary target-cycle premise is needed. -/
+theorem finiteGraphHodgeWord_ne_ghostSheet
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight))
+    (word : List (NativeFiniteGraphGenerator V H E.weight)) :
+    finiteGraphHodgeWord word S.hodge ≠
+      classicalHodgeBasis V H E.weight E.sheet := by
+  intro htarget
+  have hclass :=
+    finiteGraphWord_constructs_native_target word S.hodge S.cycle S.class_eq
+  have htarget_val := congrArg Subtype.val htarget
+  rw [htarget_val] at hclass
+  have hker :
+      pointCycleClassSpan E.weight (H.cycleClass E.weight) ≤
+        LinearMap.ker E.separator.detector :=
+    (GSTClassicalHodgeAtomicAnnihilator.annihilatesPointCycles_iff_atomicSpan_le_ker
+      E.weight (H.cycleClass E.weight) E.separator.detector).1
+      E.separator.annihilates_atoms
+  have hkill :
+      E.separator.detector
+        (H.cycleClass E.weight (finiteGraphNativeWord word S.cycle)) = 0 := by
+    apply hker
+    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H E.weight]
+    exact ⟨finiteGraphNativeWord word S.cycle, rfl⟩
+  rw [hclass] at hkill
+  exact E.separator.detects_basis hkill
+
 /-! ## Exact composition laws for the computed geometric word
 
 These establish a genuine action of ordered finite graph words on native
@@ -1360,6 +1404,64 @@ theorem nativeFiniteGraphHistory_constructs_targetCycle
   exact nativeFiniteGraphClosure_constructs_cycle V H p
     (fun x => x = u) hSeed v hclosure
 
+/-- **UNBOUNDED GEOMETRIC GHOST-SEPARATION.**
+No genuine finite-graph history, regardless of length or intermediate GST
+sectors, reaches a separator-detected basis sheet from a synchronized native
+seed.  This strengthens the finite-word law to the omniversal transitive
+reachability relation itself.  In particular, abstract GST matrix-unit
+reachability and certified geometric graph reachability are not interchangeable
+in the presence of a hypothetical separator. -/
+theorem nativeFiniteGraph_not_reachable_ghostSheet
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GeometricCycleClassSpine V H)
+    (E : OmniversalSeparatorGhost G)
+    (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := E.weight)) :
+    ¬ GSTGraphV2OmniversalCore.OmniversalGraph.Reachable
+      (nativeFiniteGraphEventGraph V H E.weight)
+      (⟨Sector.gstPlus, S.hodge⟩ :
+        HodgeBranchNode (V := V) (H := H) (p := E.weight))
+      (⟨Sector.gstPlus, classicalHodgeBasis V H E.weight E.sheet⟩ :
+        HodgeBranchNode (V := V) (H := H) (p := E.weight)) := by
+  intro hreach
+  let u : HodgeBranchNode (V := V) (H := H) (p := E.weight) :=
+    ⟨Sector.gstPlus, S.hodge⟩
+  let v : HodgeBranchNode (V := V) (H := H) (p := E.weight) :=
+    ⟨Sector.gstPlus, classicalHodgeBasis V H E.weight E.sheet⟩
+  have hseed :
+      ∀ x : HodgeBranchNode (V := V) (H := H) (p := E.weight),
+        x = u → NativeFiniteGraphAlgebraicState x := by
+    intro x hx
+    subst x
+    exact ⟨S.cycle, S.class_eq⟩
+  have hclosure :
+      GSTGraphV2OmniversalCore.OmniversalGraph.Closure
+        (nativeFiniteGraphEventGraph V H E.weight)
+        (fun x => x = u) v :=
+    ⟨u, rfl, hreach⟩
+  obtain ⟨Z, hZ⟩ :=
+    nativeFiniteGraphClosure_constructs_cycle V H E.weight
+      (fun x => x = u) hseed v hclosure
+  have hker :
+      pointCycleClassSpan E.weight (H.cycleClass E.weight) ≤
+        LinearMap.ker E.separator.detector :=
+    (annihilatesPointCycles_iff_atomicSpan_le_ker
+      E.weight (H.cycleClass E.weight) E.separator.detector).1
+        E.separator.annihilates_atoms
+  have hkill :
+      E.separator.detector (H.cycleClass E.weight Z) = 0 := by
+    apply hker
+    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H E.weight]
+    exact ⟨Z, rfl⟩
+  have heq :
+      H.cycleClass E.weight Z =
+        (classicalHodgeBasis V H E.weight E.sheet).1 := by
+    change H.cycleClass E.weight Z =
+      (classicalHodgeBasis V H E.weight E.sheet).1 at hZ
+    exact hZ
+  rw [heq] at hkill
+  exact E.separator.detects_basis hkill
+
 /-- **COMPLETE SEMANTIC CHARACTERIZATION OF THE GEOMETRIC GST GRAPH.**
 Geometric reachability is equivalent to satisfying every event-stable
 law shared by the seeds, not to a chosen Hodge surjectivity axiom. -/
@@ -1384,6 +1486,8 @@ theorem nativeFiniteGraphClosure_semanticCompleteness
 #check nativeFiniteGraph_algebraicity_is_eventStable
 #check nativeFiniteGraphClosure_constructs_cycle
 #check nativeFiniteGraphHistory_constructs_targetCycle
+#check nativeFiniteGraph_not_reachable_ghostSheet
+#print axioms nativeFiniteGraph_not_reachable_ghostSheet
 #check nativeFiniteGraphClosure_semanticCompleteness
 #print axioms nativeFiniteGraphClosure_constructs_cycle
 #print axioms nativeFiniteGraphHistory_constructs_targetCycle
@@ -1398,6 +1502,8 @@ theorem nativeFiniteGraphClosure_semanticCompleteness
 #check finiteGraphWord_cycleClass_natural
 #check finiteGraphHodgeWord_class
 #check finiteGraphWord_constructs_native_target
+#check finiteGraphHodgeWord_ne_ghostSheet
+#print axioms finiteGraphHodgeWord_ne_ghostSheet
 #check identityNativeFiniteGraphGenerator
 #print axioms finiteGraphWord_cycleClass_natural
 #print axioms finiteGraphWord_constructs_native_target

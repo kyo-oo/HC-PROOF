@@ -45,6 +45,7 @@ open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeSingleExactSuccessorSurvival
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgeLimitlessSpinePropagation
+open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
 
 variable {V : SmoothProjectiveComplexScheme}
@@ -252,6 +253,121 @@ theorem nativeMassCycleClassBridge_iff_audited_frontier :
         (successorPointMassLaw_iff_exactTwoSuccessors V).2 hsucc
     }⟩
 
+/-!
+## Finite-horizon replacement of the impossible global successor requirement
+
+The native mass bridge demanded two exact successors at every native point,
+at every weight.  A terminal point with an empty exact-successor locus
+refutes that global premise.  The actual tower argument only needs the
+recursion through a specified finite horizon: laws beyond the horizon cannot
+affect any witness at or below it.
+
+The following native-first package is local in weight, does not assume
+survival at inaccessible strata, and constructs a nonzero GST Hodge seed
+through every certified level without assuming a cycle representative for
+a target Hodge basis sheet.
+-/
+
+/-- Nonzero native mass propagated only to the requested depth. -/
+structure FiniteHorizonNativeMassBridge
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (horizon : Nat) where
+  kernel_mass_zero :
+    ∀ (p : Nat), p ≤ horizon →
+      ∀ Z : codimensionCycles V.X p,
+        H.cycleClass p Z = 0 → nativeCycleMass V p Z = 0
+  base_mass_ne_zero :
+    nativeCycleMass V 0 (codimensionZeroFundamentalCycle V) ≠ 0
+  successor_point_mass :
+    ∀ (p : Nat), p < horizon →
+      ∀ x : CodimensionPoint V.X p,
+        successorMass V p x = successorScalar p
+
+namespace FiniteHorizonNativeMassBridge
+
+/-- The unrestricted global mass premise specializes to every finite horizon.
+The converse is not assumed. -/
+noncomputable def ofGlobal
+    (M : NativeMassCycleClassBridge V H)
+    (horizon : Nat) : FiniteHorizonNativeMassBridge V H horizon where
+  kernel_mass_zero := fun p _ Z hZ => M.kernel_mass_zero p Z hZ
+  base_mass_ne_zero := M.base_mass_ne_zero
+  successor_point_mass := fun p _ x => M.successor_point_mass p x
+
+/-- **HORIZON-LOCAL GST CHARGE CONSERVATION.**
+At every level up to the certified horizon, the normalized native projective
+spine has exactly the same mass as the original codimension-zero cycle. -/
+theorem spine_mass_conserved
+    {horizon : Nat}
+    (M : FiniteHorizonNativeMassBridge V H horizon)
+    (G : GeometricCycleClassSpine V H) :
+    ∀ (p : Nat), p ≤ horizon →
+      nativeCycleMass V p (spineNativeTower G p) =
+        nativeCycleMass V 0 (codimensionZeroFundamentalCycle V) := by
+  intro p
+  induction p with
+  | zero =>
+      intro _
+      rfl
+  | succ p ih =>
+      intro hp
+      have hp_lt : p < horizon := Nat.lt_of_succ_le hp
+      have hp_le : p ≤ horizon := Nat.le_of_lt hp_lt
+      have hstep := nativeCycleMass_successor_of_pointMass V p
+        (M.successor_point_mass p hp_lt) (spineNativeTower G p)
+      rw [spineNativeTower_succ, LinearMap.map_smul, hstep]
+      calc
+        (successorScalar p)⁻¹ •
+            (successorScalar p * nativeCycleMass V p (spineNativeTower G p)) =
+            nativeCycleMass V p (spineNativeTower G p) := by
+          rw [smul_eq_mul, ← mul_assoc,
+            inv_mul_cancel₀ (successorScalar_ne_zero p), one_mul]
+        _ = nativeCycleMass V 0 (codimensionZeroFundamentalCycle V) :=
+          ih hp_le
+
+/-- Nonzero native charge at each live level prevents the genuine
+cycle class of that actual native cycle from vanishing. -/
+theorem spine_cycleClass_ne_zero
+    {horizon : Nat}
+    (M : FiniteHorizonNativeMassBridge V H horizon)
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat) (hp : p ≤ horizon) :
+    H.cycleClass p (spineNativeTower G p) ≠ 0 := by
+  intro hz
+  have hm := M.kernel_mass_zero p hp (spineNativeTower G p) hz
+  rw [M.spine_mass_conserved G p hp] at hm
+  exact M.base_mass_ne_zero hm
+
+/-- The native/cohomological spine identity now produces an actual
+nonzero algebraic Hodge seed at each certified finite depth. -/
+theorem spine_hodgeSeed_ne_zero
+    {horizon : Nat}
+    (M : FiniteHorizonNativeMassBridge V H horizon)
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat) (hp : p ≤ horizon) :
+    spineHodgeSeed G p ≠ 0 :=
+  (spineHodgeSeed_ne_zero_iff_cycleClass_ne_zero G p).2
+    (M.spine_cycleClass_ne_zero G p hp)
+
+end FiniteHorizonNativeMassBridge
+
+/-- **TERMINAL-CUT NO-GO FOR GLOBAL MASS BRIDGES.**
+An empty exact successor locus is incompatible with the global native mass
+axiom (which would force precisely two successors there).  Finite-horizon
+bridges above do not demand the invalid law beyond their last level. -/
+theorem no_global_nativeMassBridge_of_terminalCut
+    (p : Nat) (x : CodimensionPoint V.X p)
+    (hstop : exactRelativeSuccessorFinset V p x = ∅) :
+    IsEmpty (NativeMassCycleClassBridge V H) := by
+  refine ⟨?_⟩
+  intro M
+  have htwo :
+      (exactRelativeSuccessorFinset V p x).card = 2 :=
+    (successorPointMassLaw_iff_exactTwoSuccessors V).1
+      M.successor_point_mass p x
+  simp [hstop] at htwo
+
 #check NativeMassKernelLaw
 #check NativeMassCohomologyFactorization
 #check nativeMassKernelLaw_iff_cohomologyFactorization
@@ -261,10 +377,19 @@ theorem nativeMassCycleClassBridge_iff_audited_frontier :
 #check successorMass_eq_successorScalar_iff_exactRelativeCard_two
 #check successorPointMassLaw_iff_exactTwoSuccessors
 #check nativeMassCycleClassBridge_iff_audited_frontier
+#check FiniteHorizonNativeMassBridge
+#check FiniteHorizonNativeMassBridge.spine_mass_conserved
+#check FiniteHorizonNativeMassBridge.spine_cycleClass_ne_zero
+#check FiniteHorizonNativeMassBridge.spine_hodgeSeed_ne_zero
+#check no_global_nativeMassBridge_of_terminalCut
 
 #print axioms nativeMassKernelLaw_iff_cohomologyFactorization
 #print axioms nativeCycleMass_codimensionZeroFundamentalCycle_eq_card
 #print axioms successorMass_eq_successorScalar_iff_exactRelativeCard_two
 #print axioms nativeMassCycleClassBridge_iff_audited_frontier
+#print axioms FiniteHorizonNativeMassBridge.spine_mass_conserved
+#print axioms FiniteHorizonNativeMassBridge.spine_cycleClass_ne_zero
+#print axioms FiniteHorizonNativeMassBridge.spine_hodgeSeed_ne_zero
+#print axioms no_global_nativeMassBridge_of_terminalCut
 
 end GSTClassicalHodgeNativeMassBridgeAudit
