@@ -274,6 +274,25 @@ theorem ambientWord_on_hodge
   rw [one_div, smul_smul, ← mul_assoc,
     inv_mul_cancel₀ (by norm_num : (2:ℚ) ≠ 0), one_mul]
 
+/-- The code primitive realizes the diagonal matrix unit on genuine Hodge
+classes. The diagonal route is distinct from the normalized off-diagonal
+Lefschetz word, whose proof explicitly requires `i ≠ j`. -/
+theorem ambientCode_on_hodge_of_eq
+    (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
+    (hij : i = j)
+    (alpha : HodgeFiber V H p) :
+    R.ambientCode alpha.1 = (hodgeMatrixUnit i j alpha).1 := by
+  subst j
+  calc
+    R.ambientCode alpha.1 = (twoSlotCodeHodge i i alpha).1 := by
+      simpa [ambientCode] using R.code.ambient_on_hodge alpha
+    _ = (hodgeMatrixUnit i i alpha).1 := by
+      simp [twoSlotCodeHodge, twoSlotHodgeOperator,
+        liftFiniteHodgeOperator, finiteHodgeRead, finiteHodgeWrite,
+        pureMatrixUnit, rationalPureBasis, twoSlotCode, sourceSlot,
+        targetSlot, pairBasisIndex, hodgeMatrixUnit_apply,
+        hodgeCoordinate_basis_self]
+
 /-- Every geometry-first two-generator realization forces the corresponding
 rank-free matrix unit to preserve the actual algebraic Hodge subspace.
 The diagonal case is the code observable itself (which picks the target
