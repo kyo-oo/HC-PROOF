@@ -487,6 +487,59 @@ theorem closure_image_iff_of_pathLifting
   · rintro ⟨y, hy, rfl⟩
     exact F.closure_image Seed hy
 
+
+/-- **CAUSAL PATH-LIFTING IS EXACT REACHABILITY REFLECTION.**
+Forward reachability follows from every event map; the converse is
+equivalent to a concrete path-lifting property.  This isolates the precise
+additional geometric condition, rather than assuming full target coverage. -/
+theorem pathLifting_iff_reachability_exact
+    (F : EventHom G H) :
+    PathLifting F ↔
+      ∀ (x : G.Node) (z : H.Node),
+        Reachable H (F.toFun x) z ↔
+          ∃ y : G.Node, Reachable G x y ∧ F.toFun y = z := by
+  constructor
+  · intro h x z
+    constructor
+    · rintro ⟨p⟩
+      exact h.lift p
+    · rintro ⟨y, hxy, rfl⟩
+      exact F.reachable_map hxy
+  · intro h
+    refine ⟨?_⟩
+    intro x z p
+    exact (h x z).mp ⟨p⟩
+
+/-- **EXACT IMAGE-CLOSURE CHARACTERIZES CAUSAL FIBRATIONS.**
+The forward implication was already known.  Conversely, demanding exact
+image-closure for all seeds forces a lift for every target path from a
+realized source node; singleton seeds suffice to recover the lift.
+Thus exact semantic transport cannot be obtained merely by an abstract
+event map without the corresponding lifting law. -/
+theorem pathLifting_iff_exact_image_closure
+    (F : EventHom G H) :
+    PathLifting F ↔
+      ∀ (Seed : G.Node → Prop) (z : H.Node),
+        Closure H (fun v => ∃ x, Seed x ∧ F.toFun x = v) z ↔
+          ∃ y : G.Node, Closure G Seed y ∧ F.toFun y = z := by
+  constructor
+  · intro hLift Seed z
+    exact F.closure_image_iff_of_pathLifting hLift Seed z
+  · intro hExact
+    apply (F.pathLifting_iff_reachability_exact).2
+    intro x z
+    constructor
+    · intro hxz
+      have hz :
+          Closure H (fun v => ∃ t : G.Node, t = x ∧ F.toFun t = v) z := by
+        exact ⟨F.toFun x, ⟨x, rfl, rfl⟩, hxz⟩
+      obtain ⟨y, ⟨s, hs, hsy⟩, hy⟩ :=
+        (hExact (fun t : G.Node => t = x) z).1 hz
+      subst s
+      exact ⟨y, hsy, hy⟩
+    · rintro ⟨y, hxy, rfl⟩
+      exact F.reachable_map hxy
+
 end EventHom
 
 #check closure_indexed_union_exact
@@ -501,9 +554,12 @@ end EventHom
 #check EventHom.stable_preimage
 #check EventHom.closure_semantic_transport
 #check EventHom.closure_image_iff_of_pathLifting
+#check EventHom.pathLifting_iff_reachability_exact
+#check EventHom.pathLifting_iff_exact_image_closure
 #print axioms closure_indexed_union_exact
 #print axioms closure_stable_envelope_exact
 #print axioms EventHom.closure_image_iff_of_pathLifting
+#print axioms EventHom.pathLifting_iff_exact_image_closure
 
 /-- Optional acyclicity capability for genuinely causal realizations.  It is
 not forced on the universal ontology because reversible geometries and
