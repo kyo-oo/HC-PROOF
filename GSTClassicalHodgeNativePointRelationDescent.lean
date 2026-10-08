@@ -146,6 +146,36 @@ theorem nativeClassRangeEnd_comp
   rw [← hrepr]
   simp only [LinearMap.comp_apply, nativeClassRangeEnd_natural]
 
+/-- **EXACT KERNEL OF THE GEOMETRIC IMAGE REPRESENTATION.**
+An operator becomes zero on the actual algebraic class image precisely when
+ALL of its native outputs are homologically invisible.  This is a sharp
+obstruction, not an extra Hodge assumption: it identifies exactly which
+native operations the geometric class observation cannot distinguish. -/
+theorem nativeClassRangeEnd_eq_zero_iff
+    (cl : codimensionCycles X p →ₗ[ℚ] Coh)
+    (A : Module.End ℚ (codimensionCycles X p))
+    (hk : NativeClassKernelStable cl A) :
+    nativeClassRangeEnd cl A hk = 0 ↔
+      ∀ Z : codimensionCycles X p, cl (A Z) = 0 := by
+  constructor
+  · intro h Z
+    have heval : cl.rangeRestrict (A Z) = 0 := by
+      have hfun := LinearMap.congr_fun h (cl.rangeRestrict Z)
+      simpa only [nativeClassRangeEnd_natural, LinearMap.zero_apply] using hfun
+    have hcoe := congrArg Subtype.val heval
+    change cl (A Z) = 0 at hcoe
+    exact hcoe
+  · intro h
+    apply LinearMap.ext
+    intro y
+    let Z : codimensionCycles X p := classRangeRepresentative cl y
+    have hrepr : cl.rangeRestrict Z = y := by
+      apply Subtype.ext
+      exact classRangeRepresentative_spec cl y
+    rw [← hrepr]
+    apply Subtype.ext
+    simpa only [nativeClassRangeEnd_natural, LinearMap.zero_apply] using h Z
+
 /-- Extend the derived range action; nothing is prescribed outside native
 classes. This existing rational-linear extension device is used only after
 the native finite-relation condition has been proved. -/
@@ -267,6 +297,7 @@ def derivedPointClassTransitionKernel [CompactSpace X]
       using h.symm
 
 #print axioms nativeClassRangeEnd_comp
+#print axioms nativeClassRangeEnd_eq_zero_iff
 #print axioms nativeAmbientAction_natural
 #print axioms exists_nativeAmbientAction_iff
 #print axioms finiteRelations_iff_nativeKernelStable
