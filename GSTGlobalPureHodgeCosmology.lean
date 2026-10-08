@@ -531,12 +531,12 @@ noncomputable def rationalCompactPureLinearEquiv :
     intro f g
     apply Finsupp.ext
     intro p
-    simp
+    simp [Finsupp.comapDomain]
   map_smul' := by
     intro q f
     apply Finsupp.ext
     intro p
-    simp
+    simp [Finsupp.comapDomain]
 
 #check rationalCompactPureLinearEquiv
 #print axioms rationalCompactPureLinearEquiv
