@@ -1,5 +1,6 @@
 import GSTClassicalHodgeSuccessorSeedEscapeDichotomy
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeSuccessorGroundFloor
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE DEGREE / BETTI TRACE ARTERY
@@ -90,6 +91,80 @@ theorem trace_realize_presentation
   apply Finsupp.sum_congr
   intro x a ha
   rw [D.trace_point_cycleClass]
+
+/-! ## Effective native cycles — exact positive Betti detection
+
+The existing projective degree semantics evaluates the class of EVERY finite
+native presentation as the weighted sum of projective point degrees.  In
+particular, a nonzero effective presentation has strictly positive trace.
+This is stronger than the positivity of one principal-cut successor and
+never asks for a target Hodge basis cycle, projective matrix unit, ghost
+closure, or assumed sheet saturation.
+-/
+
+/-- **EFFECTIVE CYCLE TRACE POSITIVITY.**
+Every nonzero finite positive combination of genuine codimension-q point
+cycles has strictly positive projective Betti trace.  The proof uses the
+existing exact native point-presentation constructor, not abstract GST
+coordinates. -/
+theorem trace_positive_of_effective_presentation
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat)
+    (φ : FiniteCodimensionPresentation V.X q)
+    (hcoeff : ∀ x : CodimensionPoint V.X q, 0 ≤ φ x)
+    (hnz : φ ≠ 0) :
+    0 < D.trace q
+      (H.cycleClass q
+        (realizeFiniteCodimensionPresentation V.X q φ)) := by
+  classical
+  rw [D.trace_realize_presentation]
+  have hex : ∃ x : CodimensionPoint V.X q, φ x ≠ 0 := by
+    by_contra h
+    push_neg at h
+    apply hnz
+    ext x
+    exact h x
+  rcases hex with ⟨x, hx⟩
+  have hxm : x ∈ φ.support := Finsupp.mem_support_iff.mpr hx
+  have hxp : 0 < φ x := lt_of_le_of_ne (hcoeff x) hx.symm
+  change 0 < ∑ y ∈ φ.support, φ y * D.pointDegree q y
+  apply Finset.sum_pos
+  · intro y hy
+    exact mul_nonneg (hcoeff y) (le_of_lt (D.pointDegree_pos q y))
+  · exact ⟨x, hxm, mul_pos hxp (D.pointDegree_pos q x)⟩
+
+/-- **NO EFFECTIVE NATIVE CYCLE CAN BE BETTI-INVISIBLE.**
+Nonzero effective codimension-q native cycles cannot be killed by the
+actual cycle-class map when its projective degree semantics is realized.
+This excludes positive-cone cancellations without imposing a false
+native-mass factorization through cohomology. -/
+theorem cycleClass_ne_zero_of_effective_presentation
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat)
+    (φ : FiniteCodimensionPresentation V.X q)
+    (hcoeff : ∀ x : CodimensionPoint V.X q, 0 ≤ φ x)
+    (hnz : φ ≠ 0) :
+    H.cycleClass q
+      (realizeFiniteCodimensionPresentation V.X q φ) ≠ 0 := by
+  intro hzero
+  have hpos := D.trace_positive_of_effective_presentation q φ hcoeff hnz
+  rw [hzero, map_zero] at hpos
+  exact lt_irrefl 0 hpos
+
+/-- The restriction of genuine cycle class to the positive cone has
+trivial zero fiber.  This is NOT an injectivity claim on arbitrary signed
+cycles: rational equivalences can cancel positive and negative classes. -/
+theorem effective_presentation_eq_zero_of_cycleClass_zero
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (q : Nat)
+    (φ : FiniteCodimensionPresentation V.X q)
+    (hcoeff : ∀ x : CodimensionPoint V.X q, 0 ≤ φ x)
+    (hzero : H.cycleClass q
+      (realizeFiniteCodimensionPresentation V.X q φ) = 0) :
+    φ = 0 := by
+  by_contra hnz
+  exact (D.cycleClass_ne_zero_of_effective_presentation
+    q φ hcoeff hnz) hzero
 
 /-- Trace contribution of one relative successor candidate: exact survivors
 contribute their strictly positive projective degree, while wrong ambient
@@ -247,6 +322,98 @@ theorem hodge_weight_of_separator_successor
     rationalHodgeSubspace (H.hodgeBigrading (p + 1)) ≤
       LinearMap.range (H.cycleClass (p + 1)) := by
   exact (separator_successor_nativeHodgeSeed G D p x hlive hExact).hodge_weight R
+
+/-! ## Ground-floor projective geometric realization
+
+The repository's native coheight transport theorem ALREADY establishes the
+exact relative-to-ambient codimension law at p=0 when the projective carrier
+is irreducible.  Integrate that theorem directly into degree detection:
+no `RelativeSuccessorAmbientExact` or bare `hExact` input survives.
+
+This removes one entire geometric-premise edge from the actual successor
+to Hodge-seed construction.  The independent degree-trace and geometric
+spine semantics remain visibly stated; neither is manufactured by a
+nongeometric GST matrix-unit declaration.
+-/
+
+/-- **UNCONDITIONAL GROUND CODIMENSION GEOMETRY + POSITIVE DEGREE.**
+The canonical projectively live separator successor of a generic ground
+point has strictly positive trace, with exact ambient codimension
+constructed by the existing ground-floor theorem. -/
+theorem trace_successor_positive_of_ground
+    [IrreducibleSpace V.X]
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (x : CodimensionPoint V.X 0)
+    (hlive : ProjectivelyLiveSource V.projective.n
+      (V.projective.immersion x.1)) :
+    0 < D.trace 1
+      (H.cycleClass 1
+        (successorNativeOperator V 0
+          (codimensionPointCycle V.X 0 x))) := by
+  let y := relativeHeightOneSeparatorSuccessor V x.1 hlive
+  have hmem : y ∈ relativeCodimensionOneFinset V x.1 :=
+    relativeHeightOneSeparatorSuccessor_mem_finset V x.1 hlive
+  have hexact :
+      Order.coheight (ambientSuccessorPoint V x.1 y) = 0 + 1 :=
+    (GSTClassicalHodgeSuccessorGroundFloor.
+      relativeSuccessorAmbientExact_of_coheight_zero V x) y hmem
+  exact D.trace_successor_positive_of_one_exact 0 x y hmem hexact
+
+/-- **GROUND-FLOOR NONVANISHING OF GENUINE BETTI CLASS.**
+For the canonical principal-cut native cycle at weight one, the former
+separate ambient-exactness hypothesis is now discharged internally. -/
+theorem separator_successor_cycleClass_ne_zero_of_ground
+    [IrreducibleSpace V.X]
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (x : CodimensionPoint V.X 0)
+    (hlive : ProjectivelyLiveSource V.projective.n
+      (V.projective.immersion x.1)) :
+    H.cycleClass 1
+      (successorNativeOperator V 0
+        (codimensionPointCycle V.X 0 x)) ≠ 0 := by
+  intro hzero
+  have hpos := D.trace_successor_positive_of_ground x hlive
+  rw [hzero, map_zero] at hpos
+  exact lt_irrefl 0 hpos
+
+/-- **GROUNDED WEIGHT-ONE HODGE SEED.**
+One actual projective ground-point cut yields an actual algebraic Hodge
+seed at weight one, with no independently supplied exact-stratum
+predicate, no guessed target representative and no Hodge-completeness
+premise.  The native cycle is the repo's pre-existing principal-cut cycle. -/
+noncomputable def separator_successor_nativeHodgeSeed_of_ground
+    [IrreducibleSpace V.X]
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (x : CodimensionPoint V.X 0)
+    (hlive : ProjectivelyLiveSource V.projective.n
+      (V.projective.immersion x.1)) :
+    NativeHodgeOrbitSeed (V := V) (H := H) (p := 1) := by
+  let Z : codimensionCycles V.X 1 :=
+    successorNativeOperator V 0 (codimensionPointCycle V.X 0 x)
+  let alpha : ClassicalHodgeFiber V H 1 :=
+    ⟨H.cycleClass 1 Z, G.algebraic_is_hodge 1 Z⟩
+  refine {
+    cycle := Z
+    hodge := alpha
+    hodge_ne_zero := ?_
+    class_eq := rfl
+  }
+  intro hzero
+  have hval : H.cycleClass 1 Z = 0 := congrArg Subtype.val hzero
+  exact D.separator_successor_cycleClass_ne_zero_of_ground x hlive
+    (by simpa [Z] using hval)
+
+#check ProjectiveDegreeTraceSemantics.trace_positive_of_effective_presentation
+#check ProjectiveDegreeTraceSemantics.cycleClass_ne_zero_of_effective_presentation
+#check ProjectiveDegreeTraceSemantics.effective_presentation_eq_zero_of_cycleClass_zero
+#check ProjectiveDegreeTraceSemantics.trace_successor_positive_of_ground
+#check ProjectiveDegreeTraceSemantics.separator_successor_cycleClass_ne_zero_of_ground
+#check ProjectiveDegreeTraceSemantics.separator_successor_nativeHodgeSeed_of_ground
+
+#print axioms ProjectiveDegreeTraceSemantics.trace_positive_of_effective_presentation
+#print axioms ProjectiveDegreeTraceSemantics.effective_presentation_eq_zero_of_cycleClass_zero
+#print axioms ProjectiveDegreeTraceSemantics.separator_successor_nativeHodgeSeed_of_ground
 
 #check ProjectiveDegreeTraceSemantics
 #check ProjectiveDegreeTraceSemantics.trace_realize_presentation
