@@ -242,6 +242,55 @@ The reverse direction is substantive: binomial path multiplicities never
 vanish over the integral GST world.
 -/
 
+/-!
+## The exact graded causal cone, length cocycle and positive spectral support
+
+The universal Lefschetz law does more than detect an admissible coordinate:
+its integral matrix kernel is strictly positive at every legitimate causal
+time.  Its support forms a graded transitive causal relation, with an
+exactly additive path length.  Thus finite GST worlds carry a graded
+enriched-causality law without any fixed cell count or chart dimension.
+-/
+
+/-- Genuine forward causal motion composes without losing either GST axis. -/
+theorem worldForward_trans
+    {A B : Nat} {s t u : WorldCell A B}
+    (hst : worldForward s t) (htu : worldForward t u) :
+    worldForward s u :=
+  ⟨le_trans hst.1 htu.1, le_trans hst.2 htu.2⟩
+
+/-- The exact causal length is a 1-cocycle on forward-composable world
+transitions, not merely a nonnegative coordinate heuristic. -/
+theorem worldCausalDistance_add_of_forward
+    {A B : Nat} {s t u : WorldCell A B}
+    (hst : worldForward s t) (htu : worldForward t u) :
+    worldCausalDistance s u =
+      worldCausalDistance s t + worldCausalDistance t u := by
+  rcases s with ⟨⟨Cs, hCs⟩, ⟨ds, hds⟩⟩
+  rcases t with ⟨⟨Ct, hCt⟩, ⟨dt, hdt⟩⟩
+  rcases u with ⟨⟨Cu, hCu⟩, ⟨du, hdu⟩⟩
+  dsimp [worldForward, worldCausalDistance, carryDistance,
+    digitDistance] at *
+  omega
+
+/-- **STRICTLY POSITIVE KERNEL CLASSIFIER.**
+The integer coefficient of a genuine causal transition cannot cancel.
+It is strictly positive precisely at its unique geometric propagation time. -/
+theorem lefschetz_transition_positive_iff
+    {A B n : Nat} (s t : WorldCell A B) :
+    0 < worldAct A B ((L A B)^n) (worldBasis s) t ↔
+      worldForward s t ∧ n = worldCausalDistance s t := by
+  constructor
+  · intro hpositive
+    exact nonzero_lefschetz_transition_forces_causality s t
+      (ne_of_gt hpositive)
+  · rintro ⟨hfuture, htime⟩
+    rw [worldAct_L_pow_basis_exact s t hfuture htime]
+    have hle : digitDistance s t ≤ n := by
+      unfold worldCausalDistance at htime
+      omega
+    exact_mod_cast Nat.choose_pos hle
+
 /-- **FULL CAUSAL NONZERO CLASSIFIER, BOTH DIRECTIONS.** -/
 theorem lefschetz_transition_nonzero_iff
     {A B n : Nat} (s t : WorldCell A B) :
@@ -249,14 +298,48 @@ theorem lefschetz_transition_nonzero_iff
       worldForward s t ∧ n = worldCausalDistance s t := by
   constructor
   · exact nonzero_lefschetz_transition_forces_causality s t
-  · rintro ⟨hfuture, htime⟩
-    rw [worldAct_L_pow_basis_exact s t hfuture htime]
-    have hle : digitDistance s t ≤ n := by
-      unfold worldCausalDistance at htime
-      omega
-    have hpositive : 0 < n.choose (digitDistance s t) :=
-      Nat.choose_pos hle
-    exact_mod_cast (Nat.ne_of_gt hpositive)
+  · intro hcausal
+    exact ne_of_gt ((lefschetz_transition_positive_iff s t).2 hcausal)
+
+/-- **CAUSAL SEMIGROUP LAW FOR ALL LEFSCHETZ POWERS.**
+Two live transitions whose causal endpoints match always compose to a live
+transition, and their exact unique propagation times add.  This is a native
+higher-order semigroup law derived from the FULL integral kernel. -/
+theorem nonzero_lefschetz_transition_comp
+    {A B n m : Nat} {s t u : WorldCell A B}
+    (hst :
+      worldAct A B ((L A B)^n) (worldBasis s) t ≠ 0)
+    (htu :
+      worldAct A B ((L A B)^m) (worldBasis t) u ≠ 0) :
+    worldAct A B ((L A B)^(n+m)) (worldBasis s) u ≠ 0 := by
+  obtain ⟨hforward₁, htime₁⟩ :=
+    (lefschetz_transition_nonzero_iff s t).mp hst
+  obtain ⟨hforward₂, htime₂⟩ :=
+    (lefschetz_transition_nonzero_iff t u).mp htu
+  apply (lefschetz_transition_nonzero_iff s u).2
+  refine ⟨worldForward_trans hforward₁ hforward₂, ?_⟩
+  calc
+    n + m = worldCausalDistance s t + worldCausalDistance t u := by
+      rw [htime₁, htime₂]
+    _ = worldCausalDistance s u :=
+      (worldCausalDistance_add_of_forward hforward₁ hforward₂).symm
+
+/-- Higher-order positive transitions also compose without cancellation.
+The depth-additivity theorem above is the strict causal time law. -/
+theorem positive_lefschetz_transition_comp
+    {A B n m : Nat} {s t u : WorldCell A B}
+    (hst : 0 < worldAct A B ((L A B)^n) (worldBasis s) t)
+    (htu : 0 < worldAct A B ((L A B)^m) (worldBasis t) u) :
+    0 < worldAct A B ((L A B)^(n+m)) (worldBasis s) u := by
+  have hs := (lefschetz_transition_positive_iff s t).mp hst
+  have ht := (lefschetz_transition_positive_iff t u).mp htu
+  apply (lefschetz_transition_positive_iff s u).2
+  refine ⟨worldForward_trans hs.1 ht.1, ?_⟩
+  calc
+    n + m = worldCausalDistance s t + worldCausalDistance t u := by
+      rw [hs.2, ht.2]
+    _ = worldCausalDistance s u :=
+      (worldCausalDistance_add_of_forward hs.1 ht.1).symm
 
 /-- Origin-to-cell propagation is the universal binomial kernel.  The earlier
 bottom-to-top coefficient is just the maximal-degree specialization. -/
