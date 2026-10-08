@@ -92,12 +92,14 @@ theorem cycleClass_nativeWord
 literal native representative of the target basis vector. -/
 theorem nativeWord_cycleClass_of_source
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
+    (hij : i ≠ j)
     (Z : codimensionCycles V.X p)
     (hZ : H.cycleClass p Z = (classicalHodgeBasis V H p i).1) :
     H.cycleClass p (nativeWord R Z) =
       (classicalHodgeBasis V H p j).1 := by
   rw [cycleClass_nativeWord R Z, hZ]
-  have hword := R.ambientWord_on_hodge (classicalHodgeBasis V H p i)
+  have hword := R.ambientWord_on_hodge hij
+    (classicalHodgeBasis V H p i)
   rw [hword]
   simp [hodgeMatrixUnit_basis_source]
 
@@ -110,8 +112,16 @@ noncomputable def basisCycleBridgeOfNativeWords
     (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       GeometryFirstTwoGenerator (V := V) (H := H) source j) :
     HodgeConjecture.HodgeBasisCycleBridge V H p where
-  basisCycle j := nativeWord (R j) Z0
-  basisCycle_spec j := nativeWord_cycleClass_of_source (R j) Z0 hZ0
+  basisCycle j := by
+    classical
+    exact if _ : source = j then Z0 else nativeWord (R j) Z0
+  basisCycle_spec j := by
+    classical
+    by_cases hj : source = j
+    · subst j
+      simpa using hZ0
+    · simpa [hj] using
+        nativeWord_cycleClass_of_source (R j) hj Z0 hZ0
 
 /-- Every rational Hodge class in one weight therefore gets an explicit native
 cycle from the same source cycle and the unrestricted GST native words. -/
