@@ -220,7 +220,7 @@ composition algebra and identifies all remaining ambient freedom.
 -/
 
 theorem rangeOperator_id :
-    rangeOperator (LinearMap.id : Module.End ℚ (Cycles V p))
+    rangeOperator (H := H) (LinearMap.id : Module.End ℚ (Cycles V p))
       (fun _ hZ => hZ) = LinearMap.id := by
   apply LinearMap.ext
   intro a
@@ -228,7 +228,7 @@ theorem rangeOperator_id :
   exact rangeRepresentative_spec a
 
 theorem rangeOperator_zero :
-    rangeOperator (0 : Module.End ℚ (Cycles V p)) (by intro Z hZ; simp) = 0 := by
+    rangeOperator (H := H) (0 : Module.End ℚ (Cycles V p)) (by intro Z hZ; simp) = 0 := by
   apply LinearMap.ext
   intro a
   apply Subtype.ext
@@ -257,13 +257,16 @@ theorem rangeOperator_smul
 theorem rangeOperator_comp
     (A B : Module.End ℚ (Cycles V p))
     (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
-    rangeOperator (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
+    rangeOperator (H := H) (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
       (rangeOperator A hA).comp (rangeOperator B hB) := by
   apply LinearMap.ext
   intro a
   obtain ⟨Z, hZ⟩ := a.2
   have ha : (H.cycleClass p).rangeRestrict Z = a := Subtype.ext hZ
   rw [← ha]
+  have hstep := rangeOperator_rangeRestrict (A.comp B)
+    (fun Z hZ => hA (B Z) (hB Z hZ)) Z
+  rw [hstep]
   simp only [LinearMap.comp_apply, rangeOperator_rangeRestrict]
 
 /-- Ambient projection onto classes of actual native cycles. -/
@@ -340,12 +343,12 @@ theorem supportedAmbientOperator_cycleClass
     rangeOperator_rangeRestrict] <;> rfl
 
 theorem supportedAmbientOperator_id :
-    supportedAmbientOperator (LinearMap.id : Module.End ℚ (Cycles V p))
+    supportedAmbientOperator (H := H) (LinearMap.id : Module.End ℚ (Cycles V p))
       (fun _ hZ => hZ) = classRangeProjection (H := H) := by
   simp [supportedAmbientOperator, rangeOperator_id, classRangeProjection]
 
 theorem supportedAmbientOperator_zero :
-    supportedAmbientOperator (0 : Module.End ℚ (Cycles V p))
+    supportedAmbientOperator (H := H) (0 : Module.End ℚ (Cycles V p))
       (by intro Z hZ; simp) = 0 := by
   apply LinearMap.ext
   intro alpha
@@ -354,17 +357,17 @@ theorem supportedAmbientOperator_zero :
 theorem supportedAmbientOperator_comp
     (A B : Module.End ℚ (Cycles V p))
     (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
-    supportedAmbientOperator (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
+    supportedAmbientOperator (H := H) (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
       (supportedAmbientOperator A hA).comp (supportedAmbientOperator B hB) := by
   apply LinearMap.ext
   intro alpha
-  simp only [supportedAmbientOperator, LinearMap.comp_apply,
+  simp [supportedAmbientOperator, LinearMap.comp_apply,
     classRangeRetraction_range, rangeOperator_comp]
 
 theorem supportedAmbientOperator_add
     (A B : Module.End ℚ (Cycles V p))
     (hA : KernelStable (H := H) A) (hB : KernelStable (H := H) B) :
-    supportedAmbientOperator (A + B) (by intro Z hZ; simp [hA Z hZ, hB Z hZ]) =
+    supportedAmbientOperator (H := H) (A + B) (by intro Z hZ; simp [hA Z hZ, hB Z hZ]) =
       supportedAmbientOperator A hA + supportedAmbientOperator B hB := by
   apply LinearMap.ext
   intro alpha
@@ -373,7 +376,7 @@ theorem supportedAmbientOperator_add
 theorem supportedAmbientOperator_smul
     (q : ℚ) (A : Module.End ℚ (Cycles V p))
     (hA : KernelStable (H := H) A) :
-    supportedAmbientOperator (q • A) (by intro Z hZ; simp [hA Z hZ]) =
+    supportedAmbientOperator (H := H) (q • A) (by intro Z hZ; simp [hA Z hZ]) =
       q • supportedAmbientOperator A hA := by
   apply LinearMap.ext
   intro alpha
@@ -436,11 +439,9 @@ theorem ambientOperator_comp_coherent
     (A B : Module.End ℚ (Cycles V p))
     (hA : KernelStable (H := H) A)
     (hB : KernelStable (H := H) B) :
-    ambientOperator (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
+    ambientOperator (H := H) (A.comp B) (fun Z hZ => hA (B Z) (hB Z hZ)) =
       (ambientOperator A hA).comp (ambientOperator B hB) := by
-  rw [ambientOperator_eq_supported]
-  rw [ambientOperator_eq_supported]
-  rw [ambientOperator_eq_supported]
+  simp only [ambientOperator]
   exact supportedAmbientOperator_comp A B hA hB
 
 /-- **THE CORNER-UNIT OBSTRUCTION.**
@@ -455,7 +456,7 @@ extension must not be mistaken for a unital representation of the full
 ambient correspondence geometry.  A class outside the genuine native
 range is *not* manufactured by rewriting the operator API. -/
 theorem ambientOperator_id_eq_fullIdentity_iff_fullRange :
-    ambientOperator
+    ambientOperator (H := H)
       (LinearMap.id : Module.End ℚ (Cycles V p))
       (fun _ hZ => hZ) =
         (LinearMap.id : Module.End ℚ (Coh H p)) ↔
@@ -475,7 +476,7 @@ theorem ambientOperator_id_eq_fullIdentity_iff_fullRange :
 unit.  It can be promoted to the full ambient identity only under the
 precise range-surjectivity condition proved above. -/
 theorem ambientOperator_nativeIdentity_is_cornerUnit :
-    ambientOperator
+    ambientOperator (H := H)
       (LinearMap.id : Module.End ℚ (Cycles V p))
       (fun _ hZ => hZ) =
         classRangeProjection (H := H) := by
@@ -484,6 +485,18 @@ theorem ambientOperator_nativeIdentity_is_cornerUnit :
 
 #check ambientOperator_id_eq_fullIdentity_iff_fullRange
 #print axioms ambientOperator_id_eq_fullIdentity_iff_fullRange
+
+/-- The algebraic component of every defect is identically zero. -/
+theorem classRangeProjection_offRange_zero (alpha : Coh H p) :
+    classRangeProjection (H := H)
+      (offRangeProjection (H := H) alpha) = 0 := by
+  change classRangeProjection (H := H)
+    (alpha - classRangeProjection (H := H) alpha) = 0
+  rw [map_sub]
+  have h := LinearMap.congr_fun
+    (classRangeProjection_idempotent (V := V) (H := H) (p := p)) alpha
+  rw [LinearMap.comp_apply] at h
+  rw [h, sub_self]
 
 /-- Every rebuilt native ambient motion annihilates the off-range complement
 at the definition level.  No uncontrolled arbitrary extension survives. -/
@@ -522,17 +535,6 @@ theorem offRangeProjection_eq_zero_iff_range (alpha : Coh H p) :
   change alpha - classRangeProjection (H := H) alpha = 0 ↔ _
   rw [sub_eq_zero, eq_comm]
   exact classRangeProjection_eq_self_iff alpha
-
-/-- The algebraic component of every defect is identically zero. -/
-theorem classRangeProjection_offRange_zero (alpha : Coh H p) :
-    classRangeProjection (H := H)
-      (offRangeProjection (H := H) alpha) = 0 := by
-  change classRangeProjection (H := H)
-    (alpha - classRangeProjection (H := H) alpha) = 0
-  rw [map_sub]
-  have h := LinearMap.congr_fun
-    (classRangeProjection_idempotent (V := V) (H := H) (p := p)) alpha
-  rw [h, sub_self]
 
 /-- The defect component is an honest idempotent geometric projection,
 not an arbitrary coordinate reassignment. -/
