@@ -208,7 +208,23 @@ theorem smoothProjectiveNativePushforward_realize
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   simp only [smoothProjectiveNativePushforward, LinearMap.comp_apply,
     presentationOfNativeCycleLinear_apply]
-  rw [presentationOfNativeCycle_realize]
+  have hround :
+      presentationOfNativeCycle V.X p
+        (realizeFiniteCodimensionPresentation V.X p φ) = φ := by
+    ext x
+    rw [presentationOfNativeCycle_apply,
+      GSTClassicalHodgePointNormalForm.realizeFiniteCodimensionPresentation_apply]
+    simp only [Finsupp.sum, smul_eq_mul]
+    refine (Finset.sum_eq_single x ?_ ?_).trans ?_
+    · intro y hy hne
+      have hxy : x.1 ≠ y.1 := by
+        intro he
+        exact hne (Subtype.ext he)
+      simp [hxy]
+    · intro hx
+      simp [Finsupp.notMem_support_iff.mp hx]
+    · simp
+  rw [hround]
   rfl
 
 /-- The smooth-projective native transport is determined by its action on
