@@ -45,8 +45,12 @@ namespace GSTClassicalHodgeGeometryFirstGlobalPropagation
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 
-/-- One geometry-first graded Lefschetz step.  The Betti action is generated
-from the native cycle operator rather than supplied separately. -/
+/-- One genuine graded geometric Lefschetz step.
+
+The algebraic cycle operator and the geometric Betti operator are distinct
+but linked by a cycle-class commuting square. The Betti action cannot be
+replaced by an arbitrary extension of the induced class-image action:
+outside the algebraic range it can carry genuine transcendental cohomology. -/
 structure GeometryFirstLefschetzStep
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
@@ -56,23 +60,33 @@ structure GeometryFirstLefschetzStep
     codimensionCycles V.X p →ₗ[ℚ] codimensionCycles V.X q
   kernelStable :
     GradedKernelStable (H := H) cycleOperator
+  cohomologyOperator :
+    RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
+      RationalSingularCohomology H.analytification (2 * q)
+  cycleClass_natural :
+    ∀ Z : codimensionCycles V.X p,
+      H.cycleClass q (cycleOperator Z) =
+        cohomologyOperator (H.cycleClass p Z)
   source : ClassicalHodgeFiber V H p
   target : ClassicalHodgeFiber V H q
   source_ne_zero : source ≠ 0
   target_ne_zero : target ≠ 0
   transport_formula :
-    gradedAmbientOperator cycleOperator kernelStable source.1 =
+    cohomologyOperator source.1 =
       limitlessLefschetzScalar p q • target.1
 
 namespace GeometryFirstLefschetzStep
 
 variable {p q : Nat}
 
-/-- The complete graded cycle/cohomology pair generated from the native step. -/
+/-- The exact graded cycle/cohomology pair, with a geometric Betti
+operator that need not annihilate classes outside the native cycle image. -/
 noncomputable def operatorPair
     (T : GeometryFirstLefschetzStep V H p q) :
-    GradedCycleClassOperatorPair V H p q :=
-  toGradedCycleClassOperatorPair T.cycleOperator T.kernelStable
+    GradedCycleClassOperatorPair V H p q where
+  cycleOperator := T.cycleOperator
+  cohomologyOperator := T.cohomologyOperator
+  cycleClass_natural := T.cycleClass_natural
 
 /-- Normalize the native transport by the exact nonzero limitless Lefschetz
 coefficient. -/
@@ -90,8 +104,7 @@ theorem targetCycle_spec
     H.cycleClass q (T.targetCycle Z) = T.target.1 := by
   unfold targetCycle
   rw [LinearMap.map_smul]
-  rw [← cycleClass_gradedAmbientOperator
-    (H := H) T.cycleOperator T.kernelStable Z]
+  rw [T.cycleClass_natural Z]
   rw [hZ, T.transport_formula]
   simp [limitlessLefschetzScalar_ne_zero]
 
@@ -112,7 +125,7 @@ theorem target_mem_algebraic_of_source
 end GeometryFirstLefschetzStep
 
 /-- A single seed family propagated from weight to weight by native graded
-Lefschetz operators whose Betti action is derived automatically. -/
+Lefschetz operators whose native and Betti actions commute with cycle class. -/
 structure GeometryFirstSeedPropagation
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V) where
@@ -145,7 +158,8 @@ end GeometryFirstSeedPropagation
 * one native graded Lefschetz transport at every successive weight;
 * two native fixed-weight primitives for every ordered Hodge-basis pair.
 
-All ambient Betti actions are derived from native cycle operators. -/
+Each native operation must be paired with its genuine Betti action and
+an independently verified cycle-class commuting square. -/
 structure GeometryFirstGlobalPropagation
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V) where
