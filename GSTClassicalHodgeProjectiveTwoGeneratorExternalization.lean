@@ -60,45 +60,40 @@ variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
 /-- An actual projective endomorphism realizing one prescribed Hodge-fiber
-operator.  The native operator is fixed to genuine cycle pushforward. -/
+operator.  Its genuine Betti action is obtained from geometric functoriality,
+not by projecting arbitrary Betti classes onto the algebraic cycle-class range.
+Only the restriction of that actual action to the Hodge fiber is compared
+with the requested GST primitive. -/
 structure ProjectivePrimitiveRealization
     (T : Module.End ℚ (ClassicalHodgeFiber V H p)) where
   map : V.X ⟶ V.X
   naturality : GeometricPushforwardNaturality V H p map
-  ambient_agrees :
-    ∀ x : RationalSingularCohomology H.analytification (2 * p),
-      ambientOperator (H := H)
-          (smoothProjectiveNativePushforward V map p)
-          naturality.kernelStable x =
-        naturality.cohomologyPushforward x
   restricts_to_hodge :
     ∀ alpha : ClassicalHodgeFiber V H p,
       naturality.cohomologyPushforward alpha.1 = (T alpha).1
 
 namespace ProjectivePrimitiveRealization
 
-/-- Genuine native-cycle primitive induced by the projective endomorphism. -/
+/-- Genuine native-cycle/cohomology primitive from a projective endomorphism.
+The commuting square follows from actual geometric naturality. -/
 noncomputable def toNativeHodgePrimitive
     {T : Module.End ℚ (ClassicalHodgeFiber V H p)}
     (R : ProjectivePrimitiveRealization (V := V) (H := H) T) :
     NativeHodgePrimitive (V := V) (H := H) T where
   cycleOperator := smoothProjectiveNativePushforward V R.map p
   kernelStable := R.naturality.kernelStable
-  restricts_to_hodge := by
-    intro alpha
-    exact (R.ambient_agrees alpha.1).trans (R.restricts_to_hodge alpha)
-    exact R.restricts_to_hodge alpha
+  cohomologyOperator := R.naturality.cohomologyPushforward
+  cycleClass_natural := R.naturality.naturality
+  restricts_to_hodge := R.restricts_to_hodge
 
-/-- The canonical ambient action generated from the native pushforward agrees
-with the supplied geometric cohomology action on the whole ambient space. -/
+/-- The geometric cohomology action is exactly the primitive's ambient action.
+No assertion that a geometric map kills transcendental cohomology is needed. -/
 theorem ambient_eq_geometric
     {T : Module.End ℚ (ClassicalHodgeFiber V H p)}
     (R : ProjectivePrimitiveRealization (V := V) (H := H) T) :
     (R.toNativeHodgePrimitive).ambient =
       R.naturality.cohomologyPushforward := by
-  apply LinearMap.ext
-  intro alpha
-  exact R.ambient_agrees alpha
+  rfl
 
 end ProjectivePrimitiveRealization
 
