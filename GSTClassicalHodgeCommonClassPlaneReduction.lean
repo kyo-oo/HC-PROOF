@@ -534,6 +534,90 @@ theorem nativeCutSeedOrStop_hodge_certificate
   | inr T =>
       exact Or.inr ⟨T, T.cohomological_cut_eq_zero G⟩
 
+/-!
+## Bounded geometric Hodge closure from actual native-cut histories
+
+The preceding cut construction no longer requires an infinite supply of
+codimension points.  At each target level it either provides an actual
+degree-certified source point or a certified stopped cut.  A live level can
+therefore use the existing geometry-first two-generator theorem immediately.
+The exact global Hodge statement follows if all fibers beyond a finite
+geometric horizon are zero, without imposing nonzero seeds beyond that bound.
+-/
+
+/-- Hodge algebraization at a certified live weight, directly from the
+constructed projective cut history and the true geometry-first GST generators.
+The input is not a Hodge class realization or a target cycle. -/
+theorem hodgeWeight_of_unstoppedNativeCut
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    [Nonempty V.X]
+    (weight : Nat)
+    (hstop : IsEmpty (NativeCutStop V weight))
+    (R : ∀ i j : ClassicalHodgeBasisIndex V H weight,
+      GSTClassicalHodgeGeometryFirstTwoGenerator.GeometryFirstTwoGenerator
+        (V := V) (H := H) i j) :
+    rationalHodgeSubspace (H.hodgeBigrading weight) ≤
+      LinearMap.range (H.cycleClass weight) := by
+  classical
+  cases nativeCutSeedOrStop G D weight with
+  | inl w =>
+      let P : NativePointHodgeSeed V H weight :=
+        NativePointHodgeSeed.ofCodimensionPoint G D w.1.point
+      exact P.hodge_weight_le_cycleClass_range R
+  | inr T =>
+      letI : IsEmpty (NativeCutStop V weight) := hstop
+      exact isEmptyElim T
+
+/-- One finite path-survival law and actual native GST generators give all
+Hodge cycle classes in every certified finite codimension. -/
+theorem hodgeThroughFiniteNativeHorizon
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    [Nonempty V.X]
+    (horizon : Nat)
+    (hnoStop : ∀ (p : Nat), p ≤ horizon → IsEmpty (NativeCutStop V p))
+    (R : ∀ (p : Nat), p ≤ horizon →
+      ∀ i j : ClassicalHodgeBasisIndex V H p,
+        GSTClassicalHodgeGeometryFirstTwoGenerator.GeometryFirstTwoGenerator
+          (V := V) (H := H) i j) :
+    ∀ (p : Nat), p ≤ horizon →
+      rationalHodgeSubspace (H.hodgeBigrading p) ≤
+        LinearMap.range (H.cycleClass p) := by
+  intro p hp
+  exact hodgeWeight_of_unstoppedNativeCut
+    G D p (hnoStop p hp) (R p hp)
+
+/-- **FINITE-GEOMETRY GST GLOBAL SATURATION.**
+A genuinely bounded native-cut tower plus geometric two-generator
+correspondences saturates all live Hodge weights.  Higher zero fibers are
+settled by the zero native cycle rather than by impossible nonzero seeds.
+No global native-mass bridge or all-weight point-survival axiom is used. -/
+theorem bigradedHodge_of_boundedNativeCuts
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    [Nonempty V.X]
+    (horizon : Nat)
+    (hnoStop : ∀ (p : Nat), p ≤ horizon → IsEmpty (NativeCutStop V p))
+    (R : ∀ (p : Nat), p ≤ horizon →
+      ∀ i j : ClassicalHodgeBasisIndex V H p,
+        GSTClassicalHodgeGeometryFirstTwoGenerator.GeometryFirstTwoGenerator
+          (V := V) (H := H) i j)
+    (hzero : ∀ (p : Nat), horizon < p →
+      ∀ alpha : ClassicalHodgeFiber V H p, alpha = 0) :
+    BigradedBettiHodgeStatement V H := by
+  classical
+  intro p alpha halpha
+  by_cases hp : p ≤ horizon
+  · exact (hodgeThroughFiniteNativeHorizon G D horizon hnoStop R p hp)
+      halpha
+  · have hz : alpha = 0 := by
+      have hval := congrArg Subtype.val
+        (hzero p (Nat.lt_of_not_ge hp)
+          (⟨alpha, halpha⟩ : ClassicalHodgeFiber V H p))
+      simpa using hval
+    exact ⟨0, by simp [hz]⟩
+
 #check ghostBranchEvent_exists_but_strictPacket_empty
 #check ghostSeedTarget_traceMismatch_formula
 #check ghostSeedTarget_traceMismatch_ne_zero
@@ -550,6 +634,9 @@ theorem nativeCutSeedOrStop_hodge_certificate
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 #check nativeCutSeedOrStop
 #check nativeCutSeedOrStop_hodge_certificate
+#check hodgeWeight_of_unstoppedNativeCut
+#check hodgeThroughFiniteNativeHorizon
+#check bigradedHodge_of_boundedNativeCuts
 
 #print axioms ghostBranchEvent_exists_but_strictPacket_empty
 #print axioms ghost_tracePushPull_nativeCycle_eq_zero
@@ -566,5 +653,8 @@ theorem nativeCutSeedOrStop_hodge_certificate
 #print axioms commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
 #print axioms nativeCutSeedOrStop
 #print axioms nativeCutSeedOrStop_hodge_certificate
+#print axioms hodgeWeight_of_unstoppedNativeCut
+#print axioms hodgeThroughFiniteNativeHorizon
+#print axioms bigradedHodge_of_boundedNativeCuts
 
 end GSTClassicalHodgeCommonClassPlaneRealization
