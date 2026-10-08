@@ -69,8 +69,7 @@ theorem cycleClass_nativeSource
       R.ambientSource (H.cycleClass p Z) := by
   unfold nativeSource GeometryFirstTwoGenerator.ambientSource
   rw [LinearMap.sub_apply, LinearMap.map_sub]
-  rw [cycleClass_ambientOperator
-    (H := H) R.code.cycleOperator R.code.kernelStable Z]
+  rw [R.code.cycleClass_natural Z]
   rfl
 
 /-- **NATIVE/AMBIENT WORD COMMUTING SQUARE.**
@@ -84,10 +83,8 @@ theorem cycleClass_nativeWord
   unfold nativeWord GeometryFirstTwoGenerator.ambientWord
   simp only [LinearMap.smul_apply, LinearMap.comp_apply]
   rw [LinearMap.map_smul]
-  rw [cycleClass_ambientOperator
-    (H := H) R.code.cycleOperator R.code.kernelStable]
-  rw [cycleClass_ambientOperator
-    (H := H) R.lefschetz.cycleOperator R.lefschetz.kernelStable]
+  rw [R.code.cycleClass_natural]
+  rw [R.lefschetz.cycleClass_natural]
   rw [cycleClass_nativeSource R Z]
   rfl
 
