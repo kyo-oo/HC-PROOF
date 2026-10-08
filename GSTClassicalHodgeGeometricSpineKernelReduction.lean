@@ -1,6 +1,7 @@
 import GSTClassicalHodgeGeometricCycleClassSpine
 import GSTClassicalHodgeGradedNativeCohomologyRealization
 import GSTClassicalHodgeNativeOperatorCohomologyRealization
+import GSTClassicalHodgePointNormalForm
 
 /-!
 # GST CLASSICAL HODGE — GEOMETRIC SPINE KERNEL REDUCTION
@@ -49,9 +50,101 @@ open GSTClassicalHodgeCrossWeightNativePropagation
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgeGradedNativeCohomologyRealization
 open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTNativeCodimensionCyclePresentation
+open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
+
+/-!
+## Geometry-first finite-relation descent
+
+The native point normal form exposes the exact obstruction to a projective
+pushforward acting on algebraic Betti classes.  Rather than *inputting* a
+cohomology endomorphism, we ask whether every finite rational relation among
+actual point classes survives the residue-weighted point transport.
+-/
+
+/-- Every transported native cycle, evaluated through any supplied cycle-class
+map, has a completely explicit finite point formula.  No cohomological
+pushforward or Hodge surjectivity is assumed. -/
+theorem nativePushforward_class_finitePointFormula
+    (p : Nat) (f : V.X ⟶ V.X)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    H.cycleClass p
+        (smoothProjectiveNativePushforward V f p
+          (realizeFiniteCodimensionPresentation V.X p φ)) =
+      φ.sum (fun x q =>
+        q • H.cycleClass p (nativePointPushforward f p x)) := by
+  let F :
+      codimensionCycles V.X p →ₗ[ℚ]
+        RationalSingularCohomology H.analytification (2 * p) :=
+    (H.cycleClass p).comp (smoothProjectiveNativePushforward V f p)
+  have h := linearMap_realizeFiniteCodimensionPresentation V.X p F φ
+  simpa only [F, LinearMap.comp_apply,
+    smoothProjectiveNativePushforward_point] using h
+
+/-- Concrete geometry-first constraint: finite relations among actual
+codimension-p point fundamental classes remain relations when the genuine
+scheme map transports those points with their residue-degree coefficients. -/
+def FinitePointClassRelationsPreserved
+    (p : Nat) (f : V.X ⟶ V.X) : Prop :=
+  ∀ φ : FiniteCodimensionPresentation V.X p,
+    (φ.sum (fun x q =>
+      q • H.cycleClass p (codimensionPointCycle V.X p x)) = 0) →
+    φ.sum (fun x q =>
+      q • H.cycleClass p (nativePointPushforward f p x)) = 0
+
+/-- **EXACT POINT-RELATION DESCENT LAW.**  A genuine scheme pushforward has a
+well-defined action on the algebraic class range exactly when it respects
+all finite linear relations among genuine point-cycle classes.  The criterion
+requires neither an arbitrary ambient cohomology map nor any target-cycle
+witness, and it makes the obstruction geometrically explicit. -/
+theorem finitePointRelationsPreserved_iff_kernelStable
+    (p : Nat) (f : V.X ⟶ V.X) :
+    FinitePointClassRelationsPreserved (H := H) p f ↔
+      KernelStable (H := H) (smoothProjectiveNativePushforward V f p) := by
+  letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+  constructor
+  · intro hrelations Z hZ
+    let φ := presentationOfNativeCycle V.X p Z
+    have hsource :
+        φ.sum (fun x q =>
+          q • H.cycleClass p (codimensionPointCycle V.X p x)) =
+          H.cycleClass p Z := by
+      calc
+        _ = H.cycleClass p
+              (realizeFiniteCodimensionPresentation V.X p φ) :=
+          (linearMap_realizeFiniteCodimensionPresentation
+            V.X p (H.cycleClass p) φ).symm
+        _ = H.cycleClass p Z := by
+          simp only [φ, realize_presentationOfNativeCycle]
+    have htarget :
+        H.cycleClass p (smoothProjectiveNativePushforward V f p Z) =
+          φ.sum (fun x q =>
+            q • H.cycleClass p (nativePointPushforward f p x)) := by
+      calc
+        _ = H.cycleClass p
+              (smoothProjectiveNativePushforward V f p
+                (realizeFiniteCodimensionPresentation V.X p φ)) := by
+          simp only [φ, realize_presentationOfNativeCycle]
+        _ = _ := nativePushforward_class_finitePointFormula
+          (H := H) p f φ
+    rw [htarget]
+    exact hrelations φ (hsource.trans hZ)
+  · intro hkernel φ hrelation
+    have hsource :
+        H.cycleClass p
+          (realizeFiniteCodimensionPresentation V.X p φ) = 0 := by
+      rw [linearMap_realizeFiniteCodimensionPresentation]
+      exact hrelation
+    have htarget := hkernel
+      (realizeFiniteCodimensionPresentation V.X p φ) hsource
+    rw [nativePushforward_class_finitePointFormula
+      (H := H) p f φ] at htarget
+    exact htarget
+
 
 /-- **PRIMITIVE PUSHFORWARD UNIVERSAL PROPERTY.**
 A genuine projective native pushforward admits a cohomological naturality square
@@ -73,6 +166,19 @@ theorem geometricPushforwardNaturality_nonempty_iff_kernelStable
     intro Z
     exact (cycleClass_ambientOperator
       (smoothProjectiveNativePushforward V f p) hK Z).symm
+
+
+/-- The existence of a cohomology action for a genuine scheme pushforward
+is equivalent to preservation of all finite geometric point relations,
+without supplying the action as an independent premise. -/
+theorem geometricPushforwardNaturality_nonempty_iff_finitePointRelations
+    (p : Nat) (f : V.X ⟶ V.X) :
+    Nonempty (GeometricPushforwardNaturality V H p f) ↔
+      FinitePointClassRelationsPreserved (H := H) p f := by
+  exact (geometricPushforwardNaturality_nonempty_iff_kernelStable
+    (H := H) p f).trans
+      (finitePointRelationsPreserved_iff_kernelStable
+        (H := H) p f).symm
 
 /-- Any graded cycle-class operator pair whose native side is the actual
 principal-cut successor necessarily forces graded kernel stability of that
