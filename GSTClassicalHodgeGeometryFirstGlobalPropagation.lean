@@ -434,6 +434,47 @@ theorem canonicalApexCutCycle_is_hodge
       rationalHodgeSubspace (H.hodgeBigrading p) :=
   G.algebraic_is_hodge p (canonicalApexCutCycle G p)
 
+
+/-- The canonical vertical program has no cut at weight zero: its action is
+the literal identity on the actual selected generic-point cycle. -/
+theorem canonicalApexCutCycle_zero
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H) :
+    canonicalApexCutCycle G 0 =
+      codimensionPointCycle V.X 0 (someCodimensionZeroPoint V) := by
+  rfl
+
+/-- The vertical root is automatically nonzero by projective degree:
+NO live-weight or cut-nonvanishing hypothesis is needed at weight zero. -/
+theorem canonicalApexCutCycle_zero_ne_zero
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H) :
+    H.cycleClass 0 (canonicalApexCutCycle G 0) ≠ 0 := by
+  rw [canonicalApexCutCycle_zero]
+  exact codimensionZeroPoint_cycleClass_ne_zero D
+
+/-- Actual degree trace discharges the first weight, reducing all canonical
+vertical nonvanishing obligations to strictly positive live codimensions. -/
+theorem canonicalApexCutCycle_live_ne_zero_of_positive
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (positive_cut :
+      ∀ (p : Nat),
+        0 < p →
+        (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+          H.cycleClass p (canonicalApexCutCycle G p) ≠ 0) :
+    ∀ (p : Nat),
+      (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+        H.cycleClass p (canonicalApexCutCycle G p) ≠ 0 := by
+  intro p hlive
+  cases p with
+  | zero =>
+      exact canonicalApexCutCycle_zero_ne_zero G D
+  | succ n =>
+      exact positive_cut (n + 1) (Nat.zero_lt_succ n) hlive
+
 /-- A live canonical cut output gives an explicit native Hodge seed.  No
 basis-target cycle, independent vertical operator, or unspecified Hodge
 state is stored. -/
@@ -480,6 +521,35 @@ theorem bigradedBettiHodge_of_canonicalApexCut_sourceRows
       intro hzero
       exact hne (by simpa using congrArg Subtype.val hzero)
     exact ⟨0, by simp [halpha_zero]⟩
+
+
+/-- **DEGREE-CERTIFIED POSITIVE-CUT FINALE.**
+The weight-zero native seed and its nonzero Betti class are unconditional
+from the projective degree trace. For strictly positive live weights, the
+canonical cut operator must survive, and only the actual source row of
+horizontal native two-generator words is needed to realize every target.
+All geometric cycles are computed, not accepted as target witnesses. -/
+theorem bigradedBettiHodge_of_positiveApexCut_sourceRows
+    [Nonempty V.X]
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (positive_cut :
+      ∀ (p : Nat),
+        0 < p →
+        (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+          H.cycleClass p (canonicalApexCutCycle G p) ≠ 0)
+    (sourceRows :
+      ∀ (p : Nat)
+        (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0),
+        ∀ j : ClassicalHodgeBasisIndex V H p,
+          GeometryFirstTwoGenerator (V := V) (H := H)
+            (canonicalApexCutNativeHodgeSeed G p
+              (canonicalApexCutCycle_live_ne_zero_of_positive
+                G D positive_cut p hlive)).sourceIndex j) :
+    BigradedBettiHodgeStatement V H := by
+  exact bigradedBettiHodge_of_canonicalApexCut_sourceRows G
+    (canonicalApexCutCycle_live_ne_zero_of_positive G D positive_cut)
+    sourceRows
 
 /-- A single seed family propagated from weight to weight by native graded
 Lefschetz operators whose native and Betti actions commute with cycle class. -/
@@ -584,6 +654,10 @@ theorem bigradedBettiHodge
 end GeometryFirstGlobalPropagation
 
 #check canonicalApexCutCycle
+#check canonicalApexCutCycle_zero
+#check canonicalApexCutCycle_zero_ne_zero
+#check canonicalApexCutCycle_live_ne_zero_of_positive
+#check bigradedBettiHodge_of_positiveApexCut_sourceRows
 #check canonicalApexCutCycle_is_hodge
 #check canonicalApexCutNativeHodgeSeed
 #check bigradedBettiHodge_of_canonicalApexCut_sourceRows
@@ -597,6 +671,8 @@ end GeometryFirstGlobalPropagation
 #check GeometryFirstLivePathCosmos.live_native_cycle
 #check GeometryFirstLivePathCosmos.bigradedBettiHodge
 
+#print axioms canonicalApexCutCycle_zero_ne_zero
+#print axioms bigradedBettiHodge_of_positiveApexCut_sourceRows
 #print axioms canonicalApexCutCycle_is_hodge
 #print axioms bigradedBettiHodge_of_canonicalApexCut_sourceRows
 #print axioms canonicalDegreeZeroNativePointSeed
