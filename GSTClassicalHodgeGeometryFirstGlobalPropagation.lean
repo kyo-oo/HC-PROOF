@@ -131,6 +131,166 @@ theorem target_mem_algebraic_of_source
 
 end GeometryFirstLefschetzStep
 
+
+/-!
+## Native graded reachability, without fictional seeds in dead weights
+
+The earlier global propagation package postulated a nonzero native seed in
+*every* natural weight and a step between every adjacent pair.  This need
+not even be inhabitable if the Hodge fiber vanishes at an intermediate
+weight.  The stronger route below constructs target cycles along finite,
+possibly nonconsecutive geometric paths.  Path steps contain only genuine
+cycle and Betti operators, their naturality, and a scalar transport law;
+the target algebraic cycle is calculated inductively.
+-/
+
+/-- Finite paths of actual native graded Lefschetz transports.  Every edge
+comes with its own cycle-class-natural native/cohomological operator pair.
+No algebraic representative of the endpoint is supplied. -/
+inductive GeometryFirstNativePath
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) :
+    (p : Nat) → ClassicalHodgeFiber V H p →
+    (q : Nat) → ClassicalHodgeFiber V H q → Prop
+  | refl (p : Nat) (alpha : ClassicalHodgeFiber V H p) :
+      GeometryFirstNativePath V H p alpha p alpha
+  | extend {p q r : Nat}
+      {alpha : ClassicalHodgeFiber V H p}
+      {beta : ClassicalHodgeFiber V H q}
+      (previous : GeometryFirstNativePath V H p alpha q beta)
+      (T : GeometryFirstLefschetzStep V H q r)
+      (source_eq : T.source = beta) :
+      GeometryFirstNativePath V H p alpha r T.target
+
+/-- **FINITE GEOMETRIC PATH CONSTRUCTION.**
+Starting with one *actual* native source cycle, build an actual native target
+cycle along any finite graded path.  It is not an existential hypothesis at
+the endpoint: each transport produces its cycle by normalization of its
+native cycle operator.  Arbitrary weight jumps are supported, including
+jumps across weights whose Hodge fiber is zero. -/
+theorem geometryFirstNativePath_constructs_target
+    {p q : Nat}
+    {alpha : ClassicalHodgeFiber V H p}
+    {beta : ClassicalHodgeFiber V H q}
+    (path : GeometryFirstNativePath V H p alpha q beta) :
+    ∀ (Z : codimensionCycles V.X p),
+      H.cycleClass p Z = alpha.1 →
+        ∃ W : codimensionCycles V.X q, H.cycleClass q W = beta.1 := by
+  induction path with
+  | refl p alpha =>
+      intro Z hZ
+      exact ⟨Z, hZ⟩
+  | extend previous T source_eq ih =>
+      intro Z hZ
+      rcases ih Z hZ with ⟨W, hW⟩
+      refine ⟨T.targetCycle W, T.targetCycle_spec W ?_⟩
+      simpa [source_eq] using hW
+
+/-- Finite geometry-first paths transport algebraicity without requiring
+native cycle witnesses at intermediate or target weights. -/
+theorem geometryFirstNativePath_preserves_algebraic
+    {p q : Nat}
+    {alpha : ClassicalHodgeFiber V H p}
+    {beta : ClassicalHodgeFiber V H q}
+    (path : GeometryFirstNativePath V H p alpha q beta)
+    (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
+    beta ∈ AlgebraicHodgeSubspace V H q := by
+  have hsource : alpha.1 ∈ LinearMap.range (H.cycleClass p) := by
+    have hatomic : alpha.1 ∈ pointCycleClassSpan p (H.cycleClass p) := halpha
+    rwa [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hatomic
+  rcases hsource with ⟨Z, hZ⟩
+  rcases geometryFirstNativePath_constructs_target path Z hZ with ⟨W, hW⟩
+  have htarget : beta.1 ∈ LinearMap.range (H.cycleClass q) := ⟨W, hW⟩
+  rw [smoothProjective_cycleClass_range_eq_atomic_span V H q] at htarget
+  exact htarget
+
+/-- Live fibers are reached by actual finite graded paths from a *single*
+codimension-zero point seed, rather than a fictitious seed and a consecutive
+Lefschetz step in each dead weight. -/
+structure GeometryFirstLivePathCosmos
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) where
+  origin : NativePointHodgeSeed V H 0
+  livePath :
+    ∀ (p : Nat),
+      (∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) →
+        ∃ beta : ClassicalHodgeFiber V H p,
+          beta ≠ 0 ∧
+            GeometryFirstNativePath V H 0 origin.hodgeClass p beta
+  fixedWeight :
+    ∀ (p : Nat)
+      (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0),
+      ∀ i j : ClassicalHodgeBasisIndex V H p,
+        GeometryFirstTwoGenerator (V := V) (H := H) i j
+
+namespace GeometryFirstLivePathCosmos
+
+/-- Derive, rather than assume, the nonzero algebraic seed in each live
+Hodge fiber, by explicitly transporting the codimension-zero native point. -/
+theorem live_native_cycle
+    (G : GeometryFirstLivePathCosmos V H)
+    (p : Nat)
+    (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) :
+    ∃ beta : ClassicalHodgeFiber V H p,
+      beta ≠ 0 ∧
+        ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = beta.1 := by
+  obtain ⟨beta, hbeta, path⟩ := G.livePath p hlive
+  obtain ⟨Z, hZ⟩ := geometryFirstNativePath_constructs_target path
+    (codimensionPointCycle V.X 0 G.origin.point) rfl
+  exact ⟨beta, hbeta, Z, hZ⟩
+
+/-- Nontriviality is proved from the constructed native endpoint cycle,
+not stored as a separate saturation hypothesis. -/
+theorem live_algebraicHodgeSubspace_ne_bot
+    (G : GeometryFirstLivePathCosmos V H)
+    (p : Nat)
+    (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) :
+    AlgebraicHodgeSubspace V H p ≠ ⊥ := by
+  rcases G.live_native_cycle p hlive with ⟨beta, hbeta, Z, hZ⟩
+  have hmem : beta ∈ AlgebraicHodgeSubspace V H p := by
+    rw [mem_AlgebraicHodgeSubspace_iff]
+    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
+    exact ⟨Z, hZ⟩
+  intro hbot
+  rw [hbot] at hmem
+  exact hbeta (by simpa using hmem)
+
+/-- Only live weights require the two actual fixed-weight primitives. -/
+theorem live_algebraicHodgeSubspace_eq_top
+    (G : GeometryFirstLivePathCosmos V H)
+    (p : Nat)
+    (hlive : ∃ alpha : ClassicalHodgeFiber V H p, alpha ≠ 0) :
+    AlgebraicHodgeSubspace V H p = ⊤ :=
+  algebraicHodgeSubspace_eq_top_of_geometryFirstTwoGenerators
+    (G.fixedWeight p hlive) (G.live_algebraicHodgeSubspace_ne_bot p hlive)
+
+/-- The exact Hodge conclusion for the genuinely reachable native cosmos.
+Dead weights need no fictitious seed; their only class is the zero cycle.
+The live-weight proof constructs a cycle by following a finite geometric path,
+then saturates by the actual fixed-weight native generator algebra. -/
+theorem bigradedBettiHodge
+    (G : GeometryFirstLivePathCosmos V H) :
+    BigradedBettiHodgeStatement V H := by
+  classical
+  intro p alpha halpha
+  by_cases hlive : ∃ beta : ClassicalHodgeFiber V H p, beta ≠ 0
+  · have htop := G.live_algebraicHodgeSubspace_eq_top p hlive
+    have hmem : (⟨alpha, halpha⟩ : ClassicalHodgeFiber V H p) ∈
+        AlgebraicHodgeSubspace V H p := by
+      rw [htop]
+      trivial
+    have hatomic : alpha ∈ pointCycleClassSpan p (H.cycleClass p) := hmem
+    rwa [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hatomic
+  · have halpha_zero : alpha = 0 := by
+      by_contra hne
+      apply hlive
+      refine ⟨⟨alpha, halpha⟩, ?_⟩
+      intro hzero
+      exact hne (by simpa using congrArg Subtype.val hzero)
+    exact ⟨0, by simp [halpha_zero]⟩
+
+end GeometryFirstLivePathCosmos
+
 /-- A single seed family propagated from weight to weight by native graded
 Lefschetz operators whose native and Betti actions commute with cycle class. -/
 structure GeometryFirstSeedPropagation
@@ -232,6 +392,17 @@ theorem bigradedBettiHodge
   exact G.every_hodge_class_has_native_cycle p alphaH
 
 end GeometryFirstGlobalPropagation
+
+#check GeometryFirstNativePath
+#check geometryFirstNativePath_constructs_target
+#check geometryFirstNativePath_preserves_algebraic
+#check GeometryFirstLivePathCosmos
+#check GeometryFirstLivePathCosmos.live_native_cycle
+#check GeometryFirstLivePathCosmos.bigradedBettiHodge
+
+#print axioms geometryFirstNativePath_constructs_target
+#print axioms geometryFirstNativePath_preserves_algebraic
+#print axioms GeometryFirstLivePathCosmos.bigradedBettiHodge
 
 #check GeometryFirstLefschetzStep
 #check GeometryFirstLefschetzStep.operatorPair
