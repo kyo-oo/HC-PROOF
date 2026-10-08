@@ -472,6 +472,68 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
     (ghostWeightNativeSeedSurvival_of_codimensionPoints G D hpoint)
     hclose
 
+/-!
+## Actual cut-to-seed extraction, without impossible all-weight survival
+
+The native cut search already returns either a reached projective point or
+the first certified stopped cut.  Combining that geometric search directly
+with the degree-certified point-seed constructor produces a genuinely native
+Hodge seed whenever the requested level is reached.  Otherwise the stopping
+certificate proves the realized cohomological cut vanishes.
+
+Unlike the old global native-mass bridge, this construction does not demand
+two successors at every point of every weight.  It uses no hypothesized
+target basis cycle, no Hodge conclusion, and no ghost-indexed packet supply.
+-/
+
+/-- **EXPLICIT PROJECTIVE NATIVE-SEED OR STOP CERTIFICATE.**
+At the target weight, return the whole actual native cut history together
+with the synchronized point-cycle seed, or a genuine stopped-cut certificate.
+The left output proves its seed is literally the point cycle at the end of
+the native cut path. -/
+noncomputable def nativeCutSeedOrStop
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    [Nonempty V.X]
+    (target : Nat) :
+    Sum
+      (Σ R : NativeCutReached V target,
+        {S : NativeHodgeOrbitSeed (V := V) (H := H) (p := target) //
+          S.cycle = codimensionPointCycle V.X target R.point})
+      (NativeCutStop V target) := by
+  classical
+  cases nativeCutSearch V target with
+  | inl R =>
+      refine .inl ⟨R, ⟨nativeHodgeOrbitSeed_of_codimensionPoint G D R.point, ?_⟩⟩
+      rfl
+  | inr S =>
+      exact .inr S
+
+/-- **NONCIRCULAR GST GEOMETRIC CUT DICHOTOMY.**
+Either the requested weight has an actual nonzero algebraic Hodge seed
+constructed along a finite native cut history, or a concrete earlier cut
+is zero already in native cohomology.  This is an actual construction,
+not an assumed universal point tower. -/
+theorem nativeCutSeedOrStop_hodge_certificate
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    [Nonempty V.X]
+    (target : Nat) :
+    (∃ (R : NativeCutReached V target)
+       (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := target)),
+       S.cycle = codimensionPointCycle V.X target R.point)
+    ∨
+    (∃ T : NativeCutStop V target,
+      (G.principalCutPair T.level).cohomologyOperator
+        (H.cycleClass T.level
+          (codimensionPointCycle V.X T.level T.reached.point)) = 0) := by
+  classical
+  cases nativeCutSeedOrStop G D target with
+  | inl h =>
+      exact Or.inl ⟨h.1, h.2.1, h.2.2⟩
+  | inr T =>
+      exact Or.inr ⟨T, T.cohomological_cut_eq_zero G⟩
+
 #check ghostBranchEvent_exists_but_strictPacket_empty
 #check ghostSeedTarget_traceMismatch_formula
 #check ghostSeedTarget_traceMismatch_ne_zero
@@ -486,6 +548,8 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #check commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #check commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
+#check nativeCutSeedOrStop
+#check nativeCutSeedOrStop_hodge_certificate
 
 #print axioms ghostBranchEvent_exists_but_strictPacket_empty
 #print axioms ghost_tracePushPull_nativeCycle_eq_zero
@@ -500,5 +564,7 @@ theorem commonClassPlaneCompleteness_of_codimensionPoints_and_strictClosure
 #print axioms commonClassPlaneCompleteness_of_survival_and_targetStrictClosure
 #print axioms commonClassPlaneCompleteness_of_codimensionPoints_and_targetStrictClosure
 #print axioms commonClassPlaneCompleteness_of_nativePointTower_and_targetStrictClosure
+#print axioms nativeCutSeedOrStop
+#print axioms nativeCutSeedOrStop_hodge_certificate
 
 end GSTClassicalHodgeCommonClassPlaneRealization
