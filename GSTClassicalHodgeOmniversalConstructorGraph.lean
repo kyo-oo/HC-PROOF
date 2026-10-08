@@ -1,6 +1,8 @@
 import GSTClassicalHodgeOmniversalClosure
 import GSTClassicalHodgePointNormalForm
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgePrincipalCutSuccessorOperator
+import GSTClassicalHodgeProjectivePointTransport
 
 /-!
 # GST CLASSICAL HODGE — CONCRETE OMNIVERSAL CONSTRUCTOR GRAPH
@@ -37,6 +39,7 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open AlgebraicGeometry
+open CategoryTheory
 
 namespace GSTClassicalHodgeOmniversalConstructorGraph
 
@@ -47,6 +50,8 @@ open GSTGeometricRealizationStage2G
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgePointNormalForm
+open GSTClassicalHodgePrincipalCutSuccessorOperator
+open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeOmniversalClosure
 open GSTGraphV2OmniversalCore
 
@@ -82,6 +87,13 @@ inductive ConstructorEvent :
   | cycleClass (q : Nat) (Z : codimensionCycles V.X q) :
       ConstructorEvent (.cycle q Z)
         (.betti q (D.cycleClass q Z))
+  | nativePrincipalCut (q : Nat) (Z : codimensionCycles V.X q) :
+      ConstructorEvent (.cycle q Z)
+        (.cycle (q + 1) (successorNativeOperator V q Z))
+  | nativeProjectivePushforward (q : Nat) (f : V.X ⟶ V.X)
+      (Z : codimensionCycles V.X q) :
+      ConstructorEvent (.cycle q Z)
+        (.cycle q (smoothProjectiveNativePushforward V f q Z))
   | cycleHodge (q : Nat) (Z : codimensionCycles V.X q)
       (hHodge : D.cycleClass q Z ∈ rationalHodgeSubspace (D.hodgeBigrading q)) :
       ConstructorEvent (.cycle q Z)
@@ -134,6 +146,10 @@ theorem constructorEvent_preserves_algebraic :
       trivial
   | cycleClass q Z =>
       exact ⟨Z, rfl⟩
+  | nativePrincipalCut q Z =>
+      trivial
+  | nativeProjectivePushforward q f Z =>
+      trivial
   | cycleHodge q Z hHodge =>
       exact ⟨Z, rfl⟩
   | hodgeUnderlying q alpha =>
@@ -186,6 +202,141 @@ theorem point_cycle_betti_reachable
       (ConstructorEvent.pointCycle q x)
   · exact OmniversalGraph.reachable_of_event (constructorGraph V D)
       (ConstructorEvent.cycleClass q (codimensionPointCycle V.X q x))
+
+/-! ## Native geometry as actual GST causal constructors
+
+The original constructor graph certified point -> cycle -> Betti arrows.
+It now contains two further REAL geometric operations:
+
+* native principal cuts, which raise codimension by exactly one in the
+  algebraic-cycle space, with their existing exact-stratum filtering;
+* actual scheme-endomorphism point pushforwards, including residue-degree
+  weighting and the codimension-p cut-off.
+
+These are not invented cohomology operators and do not assume a target Hodge
+basis representative.  Each arrow is already an independently defined
+linear map on real native algebraic cycles.
+-/
+
+/-- Every already-constructed native principal cut is an actual one-step
+reachable GST event in the enlarged three-sector constructor graph. -/
+theorem native_principalCut_reachable
+    (q : Nat) (Z : codimensionCycles V.X q) :
+    OmniversalGraph.Reachable (constructorGraph V D)
+      (.cycle q Z)
+      (.cycle (q + 1) (successorNativeOperator V q Z)) :=
+  OmniversalGraph.reachable_of_event (constructorGraph V D)
+    (ConstructorEvent.nativePrincipalCut q Z)
+
+/-- Every genuine projective endomorphism acts as a certified native-cycle
+event, respecting the existing residue-degree and codimension semantics. -/
+theorem native_projectivePushforward_reachable
+    (q : Nat) (f : V.X ⟶ V.X) (Z : codimensionCycles V.X q) :
+    OmniversalGraph.Reachable (constructorGraph V D)
+      (.cycle q Z)
+      (.cycle q (smoothProjectiveNativePushforward V f q Z)) :=
+  OmniversalGraph.reachable_of_event (constructorGraph V D)
+    (ConstructorEvent.nativeProjectivePushforward q f Z)
+
+/-- One GST path now implements a genuine projective principal cut followed
+by the exact Betti cycle-class construction.  The conclusion is a forward
+geometric construction, never a reverse Hodge-class selector. -/
+theorem native_principalCut_to_betti_reachable
+    (q : Nat) (Z : codimensionCycles V.X q) :
+    OmniversalGraph.Reachable (constructorGraph V D)
+      (.cycle q Z)
+      (.betti (q + 1)
+        (D.cycleClass (q + 1) (successorNativeOperator V q Z))) := by
+  exact OmniversalGraph.reachable_trans (constructorGraph V D)
+    (native_principalCut_reachable q Z)
+    (OmniversalGraph.reachable_of_event (constructorGraph V D)
+      (ConstructorEvent.cycleClass (q + 1) (successorNativeOperator V q Z)))
+
+/-- All genuine projective native transports also possess an explicit
+two-event native -> native -> Betti path, with no assumed naturality bridge. -/
+theorem native_projectivePushforward_to_betti_reachable
+    (q : Nat) (f : V.X ⟶ V.X) (Z : codimensionCycles V.X q) :
+    OmniversalGraph.Reachable (constructorGraph V D)
+      (.cycle q Z)
+      (.betti q
+        (D.cycleClass q (smoothProjectiveNativePushforward V f q Z))) := by
+  exact OmniversalGraph.reachable_trans (constructorGraph V D)
+    (native_projectivePushforward_reachable q f Z)
+    (OmniversalGraph.reachable_of_event (constructorGraph V D)
+      (ConstructorEvent.cycleClass q
+        (smoothProjectiveNativePushforward V f q Z)))
+
+/-! ## Exact completeness firewall — an invariant of the concrete graph
+
+The enriched constructor graph now incorporates genuine codimension-changing
+and scheme-morphism geometric machinery from elsewhere in the GST library.
+Nevertheless, its Hodge states are reached from an actual cycle seed
+precisely when they have an actual cycle representative.
+
+This is not an impossibility theorem for future NEW geometric constructions;
+it is an exact characterization of what the present certified constructor
+language achieves.  Adding arbitrary formal connectivity would break its
+semantic meaning, and adding more sound native cycle operations alone cannot
+manufacture an algebraic representative of a missing Hodge class.
+-/
+
+/-- **EXACT CONSTRUCTOR PATH CLASSIFICATION FOR EVERY HODGE STATE.**
+Reaching a rational Hodge state from a certified native cycle seed is
+equivalent to genuine rational algebraicity.  The reverse implication is
+CONSTRUCTIVE: use the given native representative and its one-step
+cycle -> Hodge event. -/
+theorem hodge_constructorClosure_iff_genuine_native_representation
+    (q : Nat) (alpha : ClassicalHodgeFiber V D q) :
+    OmniversalGraph.Closure (constructorGraph V D)
+      AlgebraicSeed (.hodge q alpha) ↔
+    ∃ Z : codimensionCycles V.X q,
+      D.cycleClass q Z = alpha.1 := by
+  constructor
+  · intro hreach
+    have halg : AlgebraicNode (ConstructorNode.hodge q alpha) :=
+      (constructorHodgeSemantics (V := V) (D := D))
+        |>.algebraic_of_unaryClosure hreach
+    exact halg
+  · rintro ⟨Z, hZ⟩
+    have hclass : D.cycleClass q Z ∈
+        rationalHodgeSubspace (D.hodgeBigrading q) := by
+      rw [hZ]
+      exact alpha.2
+    have htarget :
+        (⟨D.cycleClass q Z, hclass⟩ : ClassicalHodgeFiber V D q) =
+          alpha :=
+      Subtype.ext hZ
+    refine ⟨.cycle q Z, trivial, ?_⟩
+    have hstep :=
+      OmniversalGraph.reachable_of_event (constructorGraph V D)
+        (ConstructorEvent.cycleHodge q Z hclass)
+    simpa only [htarget] using hstep
+
+/-- **EXACT CONSTRUCTOR COMPLETENESS CLASSIFICATION.**
+For this ACTUAL geometric constructor graph, total GST event reachability
+of rational Hodge states is equivalent to the literal classical Hodge
+statement.  This theorem is NOT used as a new Hodge premise; it tells us
+exactly what remains unconstructed in any proposed GST event completion. -/
+theorem constructorCompleteClosure_iff_exactHodge :
+    ConstructorCompleteClosure (V := V) (D := D) ↔
+      GSTClassicalHodgeExactClayStatement.EveryHodgeClassIsRationalAlgebraic D := by
+  constructor
+  · exact exactHodge_of_constructorCompleteClosure
+  · intro h q alpha
+    exact (hodge_constructorClosure_iff_genuine_native_representation
+      (V := V) (D := D) q alpha).2 (h q alpha.1 alpha.2)
+
+#check native_principalCut_reachable
+#check native_projectivePushforward_reachable
+#check native_principalCut_to_betti_reachable
+#check native_projectivePushforward_to_betti_reachable
+#check hodge_constructorClosure_iff_genuine_native_representation
+#check constructorCompleteClosure_iff_exactHodge
+
+#print axioms native_principalCut_to_betti_reachable
+#print axioms native_projectivePushforward_to_betti_reachable
+#print axioms hodge_constructorClosure_iff_genuine_native_representation
+#print axioms constructorCompleteClosure_iff_exactHodge
 
 #check ConstructorNode
 #check ConstructorEvent
