@@ -124,7 +124,8 @@ theorem seedJointState_nativeFace
   change realizeFiniteCodimensionPresentation V.X p
     (forgetMultiplicity V H p Φ) = S.cycle
   rw [hNative]
-  exact realize_presentationOfNativeCycle V.X p S.cycle
+  exact GSTClassicalHodgeCompactPresentationRoundtrip.realize_presentationOfNativeCycle
+    V p S.cycle
 
 /-- A joint state with the exact Hodge marginal reconstructs the seed's genuine
 Hodge vector. -/
@@ -191,3 +192,4 @@ theorem exists_defectZero_seedJointState_iff_massBalance
 #print axioms exists_defectZero_seedJointState_iff_massBalance
 
 end GSTClassicalHodgeSynchronizedSeedFiberedLanding
+

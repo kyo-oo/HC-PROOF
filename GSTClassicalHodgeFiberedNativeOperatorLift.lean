@@ -295,8 +295,8 @@ theorem liftNativeOperator_nativeCycleLabel
         (nativeCycleLabel i).comp A = 0 := by
     apply nativeLinearMap_eq_zero_of_points V p
     intro x
-    change nativeCycleLabel i (A (codimensionPointCycle V.X p x)) -
-      nativeCycleLabel i (A (codimensionPointCycle V.X p x)) = 0
+    simp only [LinearMap.sub_apply, LinearMap.comp_apply]
+    rw [nativeCycleLabel_point, liftNativeOperator_atom_as_nativeCycleLabel]
     exact sub_self _
   have hZ := LinearMap.congr_fun hmap Z
   change liftNativeOperator A (nativeCycleLabel i Z) -
@@ -324,9 +324,8 @@ theorem liftNativeOperator_id :
   | add a b ha hb => simp [ha, hb]
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    change q • nativeCycleLabel ix.1 (codimensionPointCycle V.X p ix.2) =
-      q • atom V H p ix.1 ix.2
-    rw [nativeCycleLabel_point]
+    simp only [map_smul, LinearMap.id_apply]
+    rw [liftNativeOperator_atom_as_nativeCycleLabel, nativeCycleLabel_point]
 
 /-- **FULL COMPOSITION LAW.** Native word evaluation and lifting commute
 exactly before passing to cohomology or the limitless scalar shadow. -/
@@ -342,11 +341,10 @@ theorem liftNativeOperator_comp
   | add a b ha hb => simp [ha, hb]
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    change q • nativeCycleLabel ix.1
-        ((A.comp B) (codimensionPointCycle V.X p ix.2)) =
-      q • liftNativeOperator A
-        (nativeCycleLabel ix.1 (B (codimensionPointCycle V.X p ix.2)))
-    rw [liftNativeOperator_nativeCycleLabel]
+    simp only [map_smul, LinearMap.comp_apply]
+    rw [liftNativeOperator_atom_as_nativeCycleLabel,
+      liftNativeOperator_atom_as_nativeCycleLabel,
+      liftNativeOperator_nativeCycleLabel]
     rfl
 
 theorem liftNativeOperator_zero :
@@ -360,9 +358,8 @@ theorem liftNativeOperator_zero :
   | add a b ha hb => simp [ha, hb]
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    change q • nativeCycleLabel ix.1
-        ((0 : Module.End ℚ (codimensionCycles V.X p))
-          (codimensionPointCycle V.X p ix.2)) = 0
+    simp only [map_smul, LinearMap.zero_apply]
+    rw [liftNativeOperator_atom_as_nativeCycleLabel]
     simp
 
 theorem liftNativeOperator_add
@@ -378,11 +375,8 @@ theorem liftNativeOperator_add
     simp [ha, hb] <;> abel
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    change q • nativeCycleLabel ix.1
-        ((A + B) (codimensionPointCycle V.X p ix.2)) =
-      q • nativeCycleLabel ix.1 (A (codimensionPointCycle V.X p ix.2)) +
-        q • nativeCycleLabel ix.1 (B (codimensionPointCycle V.X p ix.2))
-    simp [map_add, smul_add]
+    simp only [map_smul, LinearMap.add_apply,
+      liftNativeOperator_atom_as_nativeCycleLabel, map_add, smul_add]
 
 theorem liftNativeOperator_smul
     (q : ℚ) (A : Module.End ℚ (codimensionCycles V.X p)) :
@@ -396,10 +390,9 @@ theorem liftNativeOperator_smul
   | add a b ha hb => simp [ha, hb, smul_add]
   | single ix r =>
     rw [show Finsupp.single ix r = r • atom V H p ix.1 ix.2 by simp [atom]]
-    change r • nativeCycleLabel ix.1
-        ((q • A) (codimensionPointCycle V.X p ix.2)) =
-      (q * r) • nativeCycleLabel ix.1 (A (codimensionPointCycle V.X p ix.2))
-    simp [map_smul, smul_smul, mul_comm]
+    simp only [map_smul, LinearMap.smul_apply,
+      liftNativeOperator_atom_as_nativeCycleLabel, smul_smul]
+    rw [mul_comm]
 
 /-- A populated multiplicity fiber makes the native representation faithful. -/
 theorem liftNativeOperator_injective
@@ -418,3 +411,4 @@ theorem liftNativeOperator_injective
 #print axioms liftNativeOperator_injective
 
 end GSTClassicalHodgeFiberedNativeOperatorLift
+
