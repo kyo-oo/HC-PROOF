@@ -7,6 +7,10 @@ on:
       - sol/hodge-strict-betti-correspondence-fusion-20261003
       - sol/gst-plane-completeness-8408fd0
       - clean/advanced-gst-hodge-20261009
+    paths:
+      - '**/*.lean'
+      - 'lakefile.toml'
+      - '.github/workflows/hodge-conjecture.yml'
   workflow_dispatch:
 
 permissions:

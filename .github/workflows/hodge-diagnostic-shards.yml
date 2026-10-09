@@ -5,6 +5,10 @@ on:
     branches:
       - sol/gst-plane-completeness-8408fd0
       - clean/advanced-gst-hodge-20261009
+    paths:
+      - '**/*.lean'
+      - 'lakefile.toml'
+      - '.github/workflows/hodge-diagnostic-shards.yml'
   workflow_dispatch:
 
 permissions:
