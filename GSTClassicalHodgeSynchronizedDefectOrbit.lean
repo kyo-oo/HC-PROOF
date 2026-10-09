@@ -110,8 +110,12 @@ cycle/cohomology operator pair. -/
 noncomputable def primitivePair
     {T : Module.End ℚ (HodgeFiber V H p)}
     (R : NativeHodgePrimitive (V := V) (H := H) T) :
-    CycleClassOperatorPair V H p :=
-  toCycleClassOperatorPair R.cycleOperator R.kernelStable
+    CycleClassOperatorPair V H p where
+  cycleOperator := R.cycleOperator
+  cohomologyOperator := R.cohomologyOperator
+  cycleClass_natural := by
+    ext Z
+    exact R.cycleClass_natural Z
 
 /-- Native counterpart of the universal two-slot GST word
 `D ∘ L² ∘ (I-D)`, with the same rational normalization. -/
@@ -364,3 +368,4 @@ theorem bigradedBettiHodge_of_synchronized_limitless_orbits
 #print axioms bigradedBettiHodge_of_synchronized_limitless_orbits
 
 end GSTClassicalHodgeSynchronizedDefectOrbit
+

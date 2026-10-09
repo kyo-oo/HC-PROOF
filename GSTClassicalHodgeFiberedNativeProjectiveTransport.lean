@@ -66,12 +66,16 @@ noncomputable def fiberedNativePushforward
   toFun φ := φ.sum fun ix q => q • transportAtom f ix.1 ix.2
   map_add' := by
     intro φ ψ
+    classical
     show (φ + ψ).sum
         (fun ix q => q • transportAtom f ix.1 ix.2) =
       (φ.sum fun ix q => q • transportAtom f ix.1 ix.2)
         + (ψ.sum fun ix q => q • transportAtom f ix.1 ix.2)
-    rw [Finsupp.sum_add_index' (fun a => zero_smul (transportAtom f a.1 a.2))
-      (fun a b₁ b₂ => add_smul b₁ b₂ (transportAtom f a.1 a.2))]
+    rw [Finsupp.sum_add_index'
+      (f := φ) (g := ψ)
+      (h := fun ix q => q • transportAtom f ix.1 ix.2)
+      (fun ix => zero_smul ℚ (transportAtom f ix.1 ix.2))
+      (fun ix b₁ b₂ => add_smul b₁ b₂ (transportAtom f ix.1 ix.2))]
   map_smul' := by
     intro q φ
     classical
@@ -251,3 +255,4 @@ theorem fibered_native_projective_transport_crown
 #print axioms fibered_native_projective_transport_crown
 
 end GSTClassicalHodgeFiberedNativeProjectiveTransport
+

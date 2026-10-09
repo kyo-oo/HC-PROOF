@@ -194,10 +194,28 @@ noncomputable def nativeBlockOperator
       D (nativeKernelCoordinate (H := H) Z)).1
   map_add' := by
     intro Z W
-    simp [map_add, add_assoc, add_left_comm, add_comm]
+    simp only [map_add]
+    abel
   map_smul' := by
     intro q Z
-    simp [map_smul, smul_add]
+    have hclass :
+        cycleClassRangeSection V H p
+            (B ((H.cycleClass p).rangeRestrict (q • Z)) +
+              F (nativeKernelCoordinate (H := H) (q • Z))) =
+          q • cycleClassRangeSection V H p
+            (B ((H.cycleClass p).rangeRestrict Z) +
+              F (nativeKernelCoordinate (H := H) Z)) := by
+      simp only [map_smul]
+      rw [← smul_add, map_smul]
+    have hkernel :
+        (C ((H.cycleClass p).rangeRestrict (q • Z)) +
+            D (nativeKernelCoordinate (H := H) (q • Z))).1 =
+          q • (C ((H.cycleClass p).rangeRestrict Z) +
+            D (nativeKernelCoordinate (H := H) Z)).1 := by
+      simp only [map_smul]
+      rw [← smul_add]
+      rfl
+    rw [hclass, hkernel, smul_add]
 
 /-- The constructed operator has exactly the requested four blocks. -/
 theorem nativeBlockOperator_coordinates
@@ -841,3 +859,4 @@ theorem nonzero_defect_survives_injective_dynamics
 #print axioms nativeTriangularEquiv_inverse_toLinearMap
 
 end GSTClassicalHodgeKernelStableOperatorAlgebra
+
