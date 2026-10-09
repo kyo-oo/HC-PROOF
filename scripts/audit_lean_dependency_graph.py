@@ -96,11 +96,14 @@ def main() -> int:
         if not reverse[m] and LEGACY.search(modules[m])
     )
     v2foundations = sorted(
-        {"foundation": modules[m], "upgrade": modules[m + "V2"],
-         "referenced_by_upgrade": m in imports[m + "V2"]}
-        for m in modules
-        if m + "V2" in modules
-    , key=lambda x: x["foundation"])
+        (
+            {"foundation": modules[m], "upgrade": modules[m + "V2"],
+             "referenced_by_upgrade": m in imports[m + "V2"]}
+            for m in modules
+            if m + "V2" in modules
+        ),
+        key=lambda x: x["foundation"],
+    )
 
     output = {
         "lean_files": len(modules),
@@ -140,9 +143,9 @@ def main() -> int:
         "are deleted or modified by this audit.",
         "",
         "## Explicit legacy candidates (review only)",
-        *[f"- \`{p}\`" for p in candidates],
+        *[f"- `{p}`" for p in candidates],
         "",
-        "See \`lean-dependency-audit.json\` for all module edges and reachability.",
+        "See `lean-dependency-audit.json` for all module edges and reachability.",
     ]
     md = ROOT / "lean-dependency-audit.md"
     md.write_text("\n".join(summary) + "\n", encoding="utf-8")
