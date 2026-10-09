@@ -153,6 +153,74 @@ theorem bidirectional_nonzero_transition_trivial
   simp only [worldCausalDistance_self] at hst' hts'
   exact ⟨rfl, hst'.2, hts'.2⟩
 
+/-!
+## The exact positive path semigroup behind the finite GST Lefschetz action
+
+The old causal laws only extracted necessary restrictions from a live entry.
+The sharp kernel now gives constructive support COMPOSITION: any two live
+sequential transitions have a live composite.  There is no cancellation,
+regardless of the binomial multiplicity of the individual trajectories.
+This is strictly stronger than additive degree bookkeeping.
+-/
+
+/-- **COMPOSITION OF NONZERO CAUSAL PROPAGATIONS IS NONZERO.**
+A pair of actual, nonzero weighted Lefschetz paths through any intermediate
+cell forces a live direct transition at the sum of their exact times.
+This is the constructive thin-category support law of GST causal dynamics. -/
+theorem nonzero_transition_comp
+    {A B m n : Nat} (r s t : WorldCell A B)
+    (hrs :
+      worldAct A B ((L A B)^m) (worldBasis r) s ≠ 0)
+    (hst :
+      worldAct A B ((L A B)^n) (worldBasis s) t ≠ 0) :
+    worldAct A B ((L A B)^(m+n)) (worldBasis r) t ≠ 0 := by
+  obtain ⟨hrsf, hrst⟩ :=
+    (lefschetz_transition_nonzero_iff r s).mp hrs
+  obtain ⟨hstf, hstt⟩ :=
+    (lefschetz_transition_nonzero_iff s t).mp hst
+  apply (lefschetz_transition_nonzero_iff r t).mpr
+  refine ⟨worldForward_trans hrsf hstf, ?_⟩
+  rw [worldCausalDistance_add hrsf hstf]
+  omega
+
+/-- **EVERY LEG OF A FORWARD CAUSAL FACTORIZATION IS LIVE.**
+A forward interval can be subdivided through ANY intermediate cell between
+its endpoints. Each sub-interval is realized at precisely its own causal
+time by a nonzero weighted Lefschetz kernel. -/
+theorem all_forward_intermediate_legs_nonzero
+    {A B : Nat} (r s t : WorldCell A B)
+    (hrs : worldForward r s)
+    (hst : worldForward s t) :
+    (worldAct A B ((L A B)^(worldCausalDistance r s))
+      (worldBasis r) s ≠ 0)
+    ∧ (worldAct A B ((L A B)^(worldCausalDistance s t))
+      (worldBasis s) t ≠ 0)
+    ∧ (worldAct A B ((L A B)^(worldCausalDistance r t))
+      (worldBasis r) t ≠ 0) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact (lefschetz_transition_nonzero_iff r s).mpr ⟨hrs, rfl⟩
+  · exact (lefschetz_transition_nonzero_iff s t).mpr ⟨hst, rfl⟩
+  · exact (lefschetz_transition_nonzero_iff r t).mpr
+      ⟨worldForward_trans hrs hst, rfl⟩
+
+/-- **INTRINSIC CAUSAL SEMIGROUP CROWN.** Positivity, temporal
+composition, and arbitrary intermediate-factorization are all genuine
+theorems of the exact universal kernel. -/
+theorem positiveCausalSemigroup_complete :
+    (∀ A B m n (r s t : WorldCell A B),
+      worldAct A B ((L A B)^m) (worldBasis r) s ≠ 0 →
+      worldAct A B ((L A B)^n) (worldBasis s) t ≠ 0 →
+      worldAct A B ((L A B)^(m+n)) (worldBasis r) t ≠ 0)
+    ∧ (∀ A B (r s t : WorldCell A B),
+      worldForward r s → worldForward s t →
+      worldAct A B ((L A B)^(worldCausalDistance r t))
+        (worldBasis r) t ≠ 0) := by
+  constructor
+  · intro A B m n r s t hrs hst
+    exact nonzero_transition_comp r s t hrs hst
+  · intro A B r s t hrs hst
+    exact (all_forward_intermediate_legs_nonzero r s t hrs hst).2.2
+
 /-- Transition times add along any composable nonzero causal chain. -/
 theorem nonzero_chain_degree_add
     {A B m n : Nat} (r s t : WorldCell A B)
@@ -161,9 +229,10 @@ theorem nonzero_chain_degree_add
     (hst :
       worldAct A B ((L A B)^n) (worldBasis s) t ≠ 0) :
     worldDegree t = worldDegree r + (m+n) := by
-  have h1 := nonzero_transition_degree_exact r s hrs
-  have h2 := nonzero_transition_degree_exact s t hst
-  omega
+  -- Unlike the old bookkeeping proof, the exact causal semigroup gives a
+  -- REAL nonzero composite and then extracts the whole-chain degree.
+  exact nonzero_transition_degree_exact r t
+    (nonzero_transition_comp r s t hrs hst)
 
 /-- Every live transition time is bounded by the remaining total depth of
 its source cell. -/
@@ -214,6 +283,9 @@ theorem universal_lefschetz_causal_crown :
 #check bidirectional_nonzero_transition_trivial
 #check nonzero_chain_degree_add
 #check nonzero_transition_time_bounded
+#check nonzero_transition_comp
+#check all_forward_intermediate_legs_nonzero
+#check positiveCausalSemigroup_complete
 #check universal_lefschetz_causal_crown
 
 #print axioms worldForward_antisymm

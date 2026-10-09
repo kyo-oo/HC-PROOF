@@ -366,4 +366,179 @@ noncomputable def compactPureEquiv : compactPureHodge ≃ (ℕ →₀ ℤ) where
     intro p
     exact Finsupp.embDomain_apply_self diagonalEmbedding a p
 
+
+/-!
+## Direct rational worldtrace pure-Hodge classification at infinite depth
+
+The original completed pure-Hodge universe was classified over ℤ.  Its
+rational version is not restricted to rationalizations of integral inputs:
+arbitrary rational coefficients at arbitrary many diagonal weights have a
+canonical construction, while compact rational classes have exactly finite
+rational cycle support.  No twelve-cell rank/weight cutoff remains.
+-/
+
+/-- Completed rational GST cochains on the entire two-axis cosmos. -/
+abbrev RationalCompletedCosmos : Type := CosmicCell → ℚ
+
+/-- Pure rational completed states have support only at diagonal weights. -/
+def RationalCosmicPure : Submodule ℚ RationalCompletedCosmos where
+  carrier := {f | ∀ c, c.1 ≠ c.2 → f c = 0}
+  zero_mem' := by simp
+  add_mem' := by
+    intro f g hf hg c hc
+    simp [hf c hc, hg c hc]
+  smul_mem' := by
+    intro q f hf c hc
+    simp [hf c hc]
+
+/-- Exact reconstruction of a completed rational pure state from all its
+diagonal coordinates, without finite support or integrality requirements. -/
+def rationalCosmicPureReassemble (a : ℕ → ℚ) : RationalCompletedCosmos :=
+  fun c => if c.1 = c.2 then a c.1 else 0
+
+/-- **UNBOUNDED RATIONAL COMPLETED CLAY CLASSIFICATION.**
+Every completed rational pure state is uniquely and linearly equivalent to
+an unrestricted rational coordinate at every natural Hodge weight. -/
+def rationalCosmicPureEquiv :
+    RationalCosmicPure ≃ₗ[ℚ] (ℕ → ℚ) where
+  toFun := fun f p => f.val (p,p)
+  invFun := fun a => ⟨rationalCosmicPureReassemble a, by
+    intro c hc
+    simp [rationalCosmicPureReassemble, hc]⟩
+  left_inv := by
+    intro f
+    apply Subtype.ext
+    funext c
+    rcases c with ⟨i,j⟩
+    by_cases h : i = j
+    · subst j
+      simp [rationalCosmicPureReassemble]
+    · simp [rationalCosmicPureReassemble, h, f.property (i,j) h]
+  right_inv := by
+    intro a
+    funext p
+    simp [rationalCosmicPureReassemble]
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+/-- Rational finite-support GST cochains in the full unbounded two-axis
+world, without any integral-origin restriction. -/
+abbrev RationalCompactCosmos : Type := CosmicCell →₀ ℚ
+
+/-- Compact rational pure-Hodge classes have finite support on the global
+diagonal, rather than arbitrary infinite completed support. -/
+def RationalCompactPureHodge :=
+  {f : RationalCompactCosmos // ∀ c, c.1 ≠ c.2 → f c = 0}
+
+/-- **UNBOUNDED FINITE RATIONAL-CYCLE CLASSIFICATION.**
+The whole compact rational pure sector is exactly the space of finitely
+supported rational diagonal coefficients: every class has a unique finite
+rational expression in the original GST diagonal cycle atoms at all
+weights, and every such expression produces a pure class. -/
+noncomputable def rationalCompactPureEquiv :
+    RationalCompactPureHodge ≃ (ℕ →₀ ℚ) where
+  toFun := fun f => Finsupp.comapDomain (fun p => (p,p)) f.val
+    (by intro a ha b hb h; exact congrArg Prod.fst h)
+  invFun := fun a => ⟨Finsupp.embDomain diagonalEmbedding a, by
+    intro c hc
+    apply Finsupp.embDomain_of_notMem_range
+    rintro ⟨p,hp⟩
+    have h1 := congrArg Prod.fst hp
+    have h2 := congrArg Prod.snd hp
+    exact hc (h1.symm.trans h2)⟩
+  left_inv := by
+    intro f
+    apply Subtype.ext
+    apply Finsupp.ext
+    intro c
+    by_cases hc : c.1 = c.2
+    · have he : diagonalEmbedding c.1 = c := by
+        apply Prod.ext
+        · rfl
+        · exact hc
+      rw [← he, Finsupp.embDomain_apply_self]
+      rfl
+    · have hout : c ∉ Set.range diagonalEmbedding := by
+        rintro ⟨p,hp⟩
+        have h1 := congrArg Prod.fst hp
+        have h2 := congrArg Prod.snd hp
+        exact hc (h1.symm.trans h2)
+      rw [Finsupp.embDomain_of_notMem_range _ _ _ hout, f.property c hc]
+  right_inv := by
+    intro a
+    apply Finsupp.ext
+    intro p
+    exact Finsupp.embDomain_apply_self diagonalEmbedding a p
+
+#check rationalCosmicPureEquiv
+#check rationalCompactPureEquiv
+#print axioms rationalCosmicPureEquiv
+#print axioms rationalCompactPureEquiv
+
+
+/-- The compact rational pure-Hodge locus is a genuine ℚ-submodule, not merely
+a set of finitely supported diagonal states. -/
+def RationalCompactPureSubmodule : Submodule ℚ RationalCompactCosmos where
+  carrier := {f | ∀ c, c.1 ≠ c.2 → f c = 0}
+  zero_mem' := by simp
+  add_mem' := by
+    intro f g hf hg c hc
+    simp [hf c hc, hg c hc]
+  smul_mem' := by
+    intro q f hf c hc
+    simp [hf c hc]
+
+/-- **UNBOUNDED LINEAR RATIONAL CLAY NORMAL FORM.**
+The exact finite diagonal rational coefficient classification is a linear
+equivalence, so sums and rational scalings are preserved on the nose.
+This strictly strengthens the earlier underlying set equivalence. -/
+noncomputable def rationalCompactPureLinearEquiv :
+    RationalCompactPureSubmodule ≃ₗ[ℚ] (ℕ →₀ ℚ) where
+  toFun := fun f =>
+    Finsupp.comapDomain (fun p => (p,p)) f.val
+      (by intro a ha b hb h; exact congrArg Prod.fst h)
+  invFun := fun a => ⟨Finsupp.embDomain diagonalEmbedding a, by
+    intro c hc
+    apply Finsupp.embDomain_of_notMem_range
+    rintro ⟨p,hp⟩
+    have h1 := congrArg Prod.fst hp
+    have h2 := congrArg Prod.snd hp
+    exact hc (h1.symm.trans h2)⟩
+  left_inv := by
+    intro f
+    apply Subtype.ext
+    apply Finsupp.ext
+    intro c
+    by_cases hc : c.1 = c.2
+    · have he : diagonalEmbedding c.1 = c := by
+        apply Prod.ext
+        · rfl
+        · exact hc
+      rw [← he, Finsupp.embDomain_apply_self]
+      rfl
+    · have hout : c ∉ Set.range diagonalEmbedding := by
+        rintro ⟨p,hp⟩
+        have h1 := congrArg Prod.fst hp
+        have h2 := congrArg Prod.snd hp
+        exact hc (h1.symm.trans h2)
+      rw [Finsupp.embDomain_of_notMem_range _ _ _ hout, f.property c hc]
+  right_inv := by
+    intro a
+    apply Finsupp.ext
+    intro p
+    exact Finsupp.embDomain_apply_self diagonalEmbedding a p
+  map_add' := by
+    intro f g
+    apply Finsupp.ext
+    intro p
+    simp [Finsupp.comapDomain]
+  map_smul' := by
+    intro q f
+    apply Finsupp.ext
+    intro p
+    simp [Finsupp.comapDomain]
+
+#check rationalCompactPureLinearEquiv
+#print axioms rationalCompactPureLinearEquiv
+
 end GSTGlobalPureHodgeCosmology
