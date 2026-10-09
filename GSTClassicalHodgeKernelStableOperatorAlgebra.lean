@@ -365,8 +365,11 @@ theorem nativeBlockOperator_kernelClassBlock
     kernelClassBlock (H := H) (nativeBlockOperator B F C D) = F := by
   apply LinearMap.ext
   intro k
+  change (H.cycleClass p).rangeRestrict (nativeBlockOperator B F C D k.1) = F k
+  rw [nativeBlockOperator_rangeCoordinate]
   have hr : (H.cycleClass p).rangeRestrict k.1 = 0 := Subtype.ext k.2
-  simp [kernelClassBlock, nativeBlockOperator_rangeCoordinate, hr]
+  rw [hr, nativeKernelCoordinate_kernel]
+  simp
 
 theorem nativeBlockOperator_classClassBlock
     (B : Module.End ℚ (NativeClass H p))
@@ -376,8 +379,10 @@ theorem nativeBlockOperator_classClassBlock
     classClassBlock (H := H) (nativeBlockOperator B F C D) = B := by
   apply LinearMap.ext
   intro a
-  simpa [classClassBlock] using
-    nativeBlockOperator_rangeCoordinate B F C D (cycleClassRangeSection V H p a)
+  change (H.cycleClass p).rangeRestrict
+    (nativeBlockOperator B F C D (cycleClassRangeSection V H p a)) = B a
+  rw [nativeBlockOperator_rangeCoordinate]
+  simp
 
 theorem nativeBlockOperator_classKernelBlock
     (B : Module.End ℚ (NativeClass H p))
@@ -387,8 +392,10 @@ theorem nativeBlockOperator_classKernelBlock
     classKernelBlock (H := H) (nativeBlockOperator B F C D) = C := by
   apply LinearMap.ext
   intro a
-  simpa [classKernelBlock] using
-    nativeBlockOperator_kernelCoordinate B F C D (cycleClassRangeSection V H p a)
+  change nativeKernelCoordinate (H := H)
+    (nativeBlockOperator B F C D (cycleClassRangeSection V H p a)) = C a
+  rw [nativeBlockOperator_kernelCoordinate]
+  simp
 
 theorem nativeBlockOperator_kernelKernelBlock
     (B : Module.End ℚ (NativeClass H p))
@@ -398,9 +405,11 @@ theorem nativeBlockOperator_kernelKernelBlock
     kernelKernelBlock (H := H) (nativeBlockOperator B F C D) = D := by
   apply LinearMap.ext
   intro k
+  change nativeKernelCoordinate (H := H) (nativeBlockOperator B F C D k.1) = D k
+  rw [nativeBlockOperator_kernelCoordinate]
   have hr : (H.cycleClass p).rangeRestrict k.1 = 0 := Subtype.ext k.2
-  simpa [kernelKernelBlock, hr] using
-    nativeBlockOperator_kernelCoordinate B F C D k.1
+  rw [hr, nativeKernelCoordinate_kernel]
+  simp
 
 /-- The four-block normal form is unique, as well as exhaustive. -/
 theorem nativeBlockOperator_eq_iff
