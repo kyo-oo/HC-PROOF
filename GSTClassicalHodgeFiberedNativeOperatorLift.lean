@@ -55,10 +55,8 @@ native point presentation. -/
 noncomputable def labelPresentation
     (i : ClassicalHodgeBasisIndex V H p) :
     FiniteCodimensionPresentation V.X p →ₗ[ℚ]
-      FiberedNativeAddress V H p where
-  toFun φ := φ.sum fun x q => q • atom V H p i x
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+      FiberedNativeAddress V H p :=
+  Finsupp.linearCombination ℚ (fun x => atom V H p i x)
 
 @[simp]
 theorem labelPresentation_single
@@ -79,7 +77,9 @@ theorem toNativeCycle_labelPresentation
   classical
   induction φ using Finsupp.induction_linear with
   | zero => simp [labelPresentation, toNativeCycle]
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg =>
+      simpa only [map_add, realizeFiniteCodimensionPresentation_add] using
+        congrArg₂ (· + ·) hf hg
   | single x q =>
       simp [labelPresentation_single, toNativeCycle_atom,
         realizeFiniteCodimensionPresentation_single]
@@ -88,13 +88,11 @@ theorem toNativeCycle_labelPresentation
 operator. -/
 noncomputable def liftNativeOperator
     (A : Module.End ℚ (codimensionCycles V.X p)) :
-    Module.End ℚ (FiberedNativeAddress V H p) where
-  toFun Φ := Φ.sum fun ix q =>
-    q • labelPresentation ix.1
+    Module.End ℚ (FiberedNativeAddress V H p) :=
+  Finsupp.linearCombination ℚ (fun ix =>
+    labelPresentation ix.1
       (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
-        V p A ix.2)
-  map_add' := by intro Φ Ψ; classical; simp
-  map_smul' := by intro q Φ; classical; simp [smul_smul]
+        V p A ix.2))
 
 /-- Exact action of the lifted operator on a common-refinement atom. -/
 @[simp]
@@ -130,6 +128,7 @@ theorem toNativeCycle_liftNativeOperator
       rw [toNativeCycle_labelPresentation]
       rw [GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation_realize]
       rw [toNativeCycle_atom]
+      rw [map_smul]
 
 /-- Operator equality form of the strict commuting square. -/
 theorem toNativeCycle_comp_liftNativeOperator
@@ -185,7 +184,7 @@ theorem toNativeCycle_liftProjectiveKernel
     (K : ProjectiveNativeKernel V p)
     (Φ : FiberedNativeAddress V H p) :
     toNativeCycle V H p (liftProjectiveKernel K Φ) =
-      K.operator (toNativeCycle V H p Φ) :=
+      (K.operator) (toNativeCycle V H p Φ) :=
   toNativeCycle_liftNativeOperator K.operator Φ
 
 /-- The limitless base face of a lifted native operator is exactly the cosmic

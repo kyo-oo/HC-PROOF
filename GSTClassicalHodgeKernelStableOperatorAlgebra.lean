@@ -205,7 +205,14 @@ theorem nativeBlockOperator_coordinates
           F (nativeKernelCoordinate (H := H) Z),
         C ((H.cycleClass p).rangeRestrict Z) +
           D (nativeKernelCoordinate (H := H) Z)) :=
-  (nativeClassKernelEquiv (H := H)).apply_symm_apply _
+  by
+    change (nativeClassKernelEquiv (H := H))
+      ((nativeClassKernelEquiv (H := H)).symm
+        (B ((H.cycleClass p).rangeRestrict Z) +
+          F (nativeKernelCoordinate (H := H) Z),
+         C ((H.cycleClass p).rangeRestrict Z) +
+          D (nativeKernelCoordinate (H := H) Z))) = _
+    exact (nativeClassKernelEquiv (H := H)).apply_symm_apply _
 
 theorem nativeBlockOperator_rangeCoordinate
     (B : Module.End ℚ (NativeClass H p))
@@ -275,14 +282,20 @@ theorem nativeBlockOperator_zero :
     nativeBlockOperator (H := H) (p := p) 0 0 0 0 = (0 : NativeEnd V p) := by
   apply LinearMap.ext
   intro Z
-  simp [nativeBlockOperator]
+  apply (nativeClassKernelEquiv (H := H)).injective
+  simp only [nativeBlockOperator_coordinates, map_zero,
+    LinearMap.zero_apply, add_zero, zero_add,
+    nativeClassKernelEquiv_apply]
 
 theorem nativeBlockOperator_id :
     nativeBlockOperator (H := H) (p := p) LinearMap.id 0 0 LinearMap.id =
       (LinearMap.id : NativeEnd V p) := by
   apply LinearMap.ext
   intro Z
-  simpa [nativeBlockOperator] using native_projection_decomposition (H := H) Z
+  apply (nativeClassKernelEquiv (H := H)).injective
+  simp only [nativeBlockOperator_coordinates, LinearMap.id_apply,
+    LinearMap.zero_apply, zero_add, add_zero,
+    nativeClassKernelEquiv_apply]
 
 /-- The complete noncommutative block composition law.  The two feedback
 terms are retained, including for operators that fail native descent. -/
