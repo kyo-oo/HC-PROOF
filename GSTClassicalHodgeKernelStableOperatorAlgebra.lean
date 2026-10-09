@@ -502,8 +502,23 @@ noncomputable def triangularCoordinateEquiv
       (NativeClass H p × NativeKernel H p) where
   toLinearMap := {
     toFun := fun a => (B a.1, C a.1 + D a.2)
-    map_add' := by intro a b; simp [map_add, add_assoc, add_left_comm, add_comm]
-    map_smul' := by intro q a; simp [map_smul, smul_add]
+    map_add' := by
+      intro a b
+      apply Prod.ext
+      · change B (a.1 + b.1) = B a.1 + B b.1
+        exact map_add B a.1 b.1
+      · change C (a.1 + b.1) + D (a.2 + b.2) =
+            (C a.1 + D a.2) + (C b.1 + D b.2)
+        rw [map_add, map_add]
+        abel
+    map_smul' := by
+      intro q a
+      apply Prod.ext
+      · change B (q • a.1) = q • B a.1
+        exact map_smul B q a.1
+      · change C (q • a.1) + D (q • a.2) =
+            q • (C a.1 + D a.2)
+        rw [map_smul, map_smul, smul_add]
   }
   invFun a := (B.symm a.1, D.symm (a.2 - C (B.symm a.1)))
   left_inv := by
