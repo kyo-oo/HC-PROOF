@@ -1,3 +1,4 @@
+import GSTClassicalHodgePointNormalForm
 import GSTClassicalHodgeFiberedCycleClassDefect
 import GSTClassicalHodgeThreeUniverseSeedIdentification
 import GSTClassicalHodgeSynchronizedDefectOrbit
@@ -53,6 +54,7 @@ open GSTClassicalHodgeThreeUniverseSeedIdentification
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
 open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
