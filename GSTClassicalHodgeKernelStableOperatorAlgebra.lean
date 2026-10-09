@@ -639,8 +639,8 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
     nativeClassKernelEquiv_apply, triangularCoordinateEquiv_symm_apply]
   apply Prod.ext
   · simp
-  · simp only [map_sub, neg_one_smul, LinearMap.smul_apply, LinearMap.comp_apply,
-      LinearEquiv.coe_coe]
+  · simp only [map_sub, map_add, map_smul, neg_one_smul, LinearMap.smul_apply,
+      LinearMap.comp_apply, LinearEquiv.coe_coe, smul_smul, one_smul]
     abel
 
 theorem nativeTriangularEquiv_kernelStable
