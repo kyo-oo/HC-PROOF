@@ -266,16 +266,33 @@ theorem nativeBlockOperator_reconstruct (A : NativeEnd V p) :
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  rw [nativeBlockOperator_coordinates]
-  calc
-    _ = nativeClassKernelEquiv (H := H)
-        (A (cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z) +
-          (nativeKernelCoordinate (H := H) Z).1)) := by
-      simp [classClassBlock, kernelClassBlock, classKernelBlock,
-        kernelKernelBlock, map_add]
-    _ = nativeClassKernelEquiv (H := H) (A Z) :=
-      congrArg (fun W => nativeClassKernelEquiv (H := H) (A W))
-        (native_projection_decomposition Z)
+  have hsplit :
+      cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z) +
+        (nativeKernelCoordinate (H := H) Z).1 = Z := by
+    have h := native_projection_decomposition (H := H) Z
+    change cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z) +
+      (nativeKernelCoordinate (H := H) Z).1 = Z at h
+    exact h
+  rw [nativeBlockOperator_coordinates, nativeClassKernelEquiv_apply]
+  apply Prod.ext
+  · apply Subtype.ext
+    change
+      H.cycleClass p (A (cycleClassRangeSection V H p
+        ((H.cycleClass p).rangeRestrict Z))) +
+      H.cycleClass p (A (nativeKernelCoordinate (H := H) Z).1) =
+      H.cycleClass p (A Z)
+    have h := congrArg (fun W : codimensionCycles V.X p =>
+      H.cycleClass p (A W)) hsplit
+    simpa only [map_add] using h
+  · change
+      nativeKernelCoordinate (H := H)
+        (A (cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z))) +
+      nativeKernelCoordinate (H := H)
+        (A (nativeKernelCoordinate (H := H) Z).1) =
+      nativeKernelCoordinate (H := H) (A Z)
+    have h := congrArg (fun W : codimensionCycles V.X p =>
+      nativeKernelCoordinate (H := H) (A W)) hsplit
+    simpa only [map_add] using h
 
 @[simp]
 theorem nativeBlockOperator_zero :
