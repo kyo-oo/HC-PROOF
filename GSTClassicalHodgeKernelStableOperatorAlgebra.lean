@@ -305,6 +305,7 @@ theorem nativeBlockOperator_zero :
     nativeClassKernelEquiv (H := H) (0 : codimensionCycles V.X p)
   rw [nativeBlockOperator_coordinates]
   simp only [LinearMap.zero_apply, zero_add, map_zero]
+  apply Prod.ext <;> rfl
 
 theorem nativeBlockOperator_id :
     nativeBlockOperator (H := H) (p := p) LinearMap.id 0 0 LinearMap.id =
