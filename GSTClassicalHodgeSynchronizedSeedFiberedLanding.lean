@@ -1,3 +1,4 @@
+import GSTClassicalHodgePointNormalForm
 import GSTClassicalHodgeFiberedCycleClassDefect
 import GSTClassicalHodgeThreeUniverseSeedIdentification
 import GSTClassicalHodgeSynchronizedDefectOrbit
@@ -53,6 +54,7 @@ open GSTClassicalHodgeThreeUniverseSeedIdentification
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
 open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
@@ -121,7 +123,8 @@ theorem seedJointState_nativeFace
     (hNative : forgetMultiplicity V H p Φ = seedNativeMarginal S) :
     toNativeCycle V H p Φ = S.cycle := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
-  unfold toNativeCycle
+  change realizeFiniteCodimensionPresentation V.X p
+    (forgetMultiplicity V H p Φ) = S.cycle
   rw [hNative]
   exact realize_presentationOfNativeCycle V.X p S.cycle
 

@@ -55,10 +55,8 @@ native point presentation. -/
 noncomputable def labelPresentation
     (i : ClassicalHodgeBasisIndex V H p) :
     FiniteCodimensionPresentation V.X p →ₗ[ℚ]
-      FiberedNativeAddress V H p where
-  toFun φ := φ.sum fun x q => q • atom V H p i x
-  map_add' := by intro φ ψ; classical; simp
-  map_smul' := by intro q φ; classical; simp [smul_smul]
+      FiberedNativeAddress V H p :=
+  Finsupp.linearCombination ℚ (fun x => atom V H p i x)
 
 @[simp]
 theorem labelPresentation_single
@@ -79,7 +77,8 @@ theorem toNativeCycle_labelPresentation
   classical
   induction φ using Finsupp.induction_linear with
   | zero => simp [labelPresentation, toNativeCycle]
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg =>
+      simp [hf, hg, realizeFiniteCodimensionPresentation_add]
   | single x q =>
       simp [labelPresentation_single, toNativeCycle_atom,
         realizeFiniteCodimensionPresentation_single]
@@ -88,13 +87,11 @@ theorem toNativeCycle_labelPresentation
 operator. -/
 noncomputable def liftNativeOperator
     (A : Module.End ℚ (codimensionCycles V.X p)) :
-    Module.End ℚ (FiberedNativeAddress V H p) where
-  toFun Φ := Φ.sum fun ix q =>
-    q • labelPresentation ix.1
+    Module.End ℚ (FiberedNativeAddress V H p) :=
+  Finsupp.linearCombination ℚ (fun ix =>
+    labelPresentation ix.1
       (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
-        V p A ix.2)
-  map_add' := by intro Φ Ψ; classical; simp
-  map_smul' := by intro q Φ; classical; simp [smul_smul]
+        V p A ix.2))
 
 /-- Exact action of the lifted operator on a common-refinement atom. -/
 @[simp]
@@ -130,6 +127,7 @@ theorem toNativeCycle_liftNativeOperator
       rw [toNativeCycle_labelPresentation]
       rw [GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation_realize]
       rw [toNativeCycle_atom]
+      simp only [map_smul]
 
 /-- Operator equality form of the strict commuting square. -/
 theorem toNativeCycle_comp_liftNativeOperator
@@ -178,15 +176,15 @@ fibered pullback. -/
 noncomputable def liftProjectiveKernel
     (K : ProjectiveNativeKernel V p) :
     Module.End ℚ (FiberedNativeAddress V H p) :=
-  liftNativeOperator K.operator
+  liftNativeOperator K.1
 
 /-- Native face of one lifted projective-correspondence kernel. -/
 theorem toNativeCycle_liftProjectiveKernel
     (K : ProjectiveNativeKernel V p)
     (Φ : FiberedNativeAddress V H p) :
     toNativeCycle V H p (liftProjectiveKernel K Φ) =
-      K.operator (toNativeCycle V H p Φ) :=
-  toNativeCycle_liftNativeOperator K.operator Φ
+      K.1 (toNativeCycle V H p Φ) :=
+  toNativeCycle_liftNativeOperator K.1 Φ
 
 /-- The limitless base face of a lifted native operator is exactly the cosmic
 shadow of the genuine native operator output. -/
@@ -297,7 +295,9 @@ theorem liftNativeOperator_nativeCycleLabel
         (nativeCycleLabel i).comp A = 0 := by
     apply nativeLinearMap_eq_zero_of_points V p
     intro x
-    simp [liftNativeOperator_atom_as_nativeCycleLabel]
+    simp only [LinearMap.sub_apply, LinearMap.comp_apply,
+      nativeCycleLabel_point, liftNativeOperator_atom_as_nativeCycleLabel,
+      sub_self]
   have hZ := LinearMap.congr_fun hmap Z
   change liftNativeOperator A (nativeCycleLabel i Z) -
       nativeCycleLabel i (A Z) = 0 at hZ
@@ -324,7 +324,8 @@ theorem liftNativeOperator_id :
   | add a b ha hb => simp [ha, hb]
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    simp [liftNativeOperator_atom_as_nativeCycleLabel]
+    simp only [map_smul, LinearMap.id_apply,
+      liftNativeOperator_atom_as_nativeCycleLabel, nativeCycleLabel_point]
 
 /-- **FULL COMPOSITION LAW.** Native word evaluation and lifting commute
 exactly before passing to cohomology or the limitless scalar shadow. -/
@@ -340,7 +341,8 @@ theorem liftNativeOperator_comp
   | add a b ha hb => simp [ha, hb]
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    simp [liftNativeOperator_atom_as_nativeCycleLabel,
+    simp only [LinearMap.comp_apply, map_smul,
+      liftNativeOperator_atom_as_nativeCycleLabel,
       liftNativeOperator_nativeCycleLabel]
 
 theorem liftNativeOperator_zero :
@@ -354,7 +356,8 @@ theorem liftNativeOperator_zero :
   | add a b ha hb => simp [ha, hb]
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    simp [liftNativeOperator_atom_as_nativeCycleLabel]
+    simp only [map_smul, LinearMap.zero_apply,
+      liftNativeOperator_atom_as_nativeCycleLabel, map_zero, smul_zero]
 
 theorem liftNativeOperator_add
     (A B : Module.End ℚ (codimensionCycles V.X p)) :
@@ -365,10 +368,12 @@ theorem liftNativeOperator_add
   classical
   induction Φ using Finsupp.induction_linear with
   | zero => simp
-  | add a b ha hb => simp [ha, hb]
+  | add a b ha hb =>
+    simp [ha, hb] <;> abel
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    simp [liftNativeOperator_atom_as_nativeCycleLabel, smul_add]
+    simp only [map_smul, LinearMap.add_apply,
+      liftNativeOperator_atom_as_nativeCycleLabel, map_add, smul_add]
 
 theorem liftNativeOperator_smul
     (q : ℚ) (A : Module.End ℚ (codimensionCycles V.X p)) :
@@ -382,7 +387,8 @@ theorem liftNativeOperator_smul
   | add a b ha hb => simp [ha, hb, smul_add]
   | single ix r =>
     rw [show Finsupp.single ix r = r • atom V H p ix.1 ix.2 by simp [atom]]
-    simp [liftNativeOperator_atom_as_nativeCycleLabel, smul_smul, mul_comm]
+    simp only [map_smul, LinearMap.smul_apply,
+      liftNativeOperator_atom_as_nativeCycleLabel]
 
 /-- A populated multiplicity fiber makes the native representation faithful. -/
 theorem liftNativeOperator_injective
