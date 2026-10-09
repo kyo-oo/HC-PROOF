@@ -60,7 +60,7 @@ noncomputable def pointClosureIsReduced
     letI : _root_.IsReduced (Γ(V.X, U) ⧸ I.ideal U) :=
       (Ideal.isRadical_iff_quotient_reduced (I.ideal U)).mp hrad
     infer_instance
-  exact IsReduced.of_openCover (I.subschemeCover.openCover)
+  exact IsReduced.of_openCover (pointClosureScheme V x) I.subschemeCover.openCover
 
 /-- A point closure is both irreducible and reduced, hence an integral scheme. -/
 noncomputable def pointClosureIsIntegral
@@ -89,7 +89,7 @@ theorem point_closure_integral_crown
       ∧ IsIrreducible (Set.univ : Set (pointClosureScheme V x)) := by
   letI : IrreducibleSpace (pointClosureScheme V x) :=
     pointClosureIrreducibleSpace V x
-  exact ⟨⟨closureGenericPoint V x⟩, isIrreducible_univ⟩
+  exact ⟨⟨closureGenericPoint V x⟩, IrreducibleSpace.isIrreducible_univ (pointClosureScheme V x)⟩
 
 #check pointClosureIdeal_affine_isRadical
 #check pointClosureIsReduced

@@ -159,6 +159,7 @@ theorem targetAtomPresentation_eq_single
         (⟨K.right z, hz⟩ : CodimensionPoint V.X p)
         (pointResidueWeight K.right z) := by
   classical
+  simp only [targetAtomPresentation]
   split
   · rfl
   · exact absurd hz (by assumption)
@@ -172,6 +173,7 @@ theorem targetAtomPresentation_eq_zero
     (hz : Order.coheight (K.right z) ≠ p) :
     K.targetAtomPresentation p z = 0 := by
   classical
+  simp only [targetAtomPresentation]
   split
   · exact absurd (by assumption) hz
   · rfl
