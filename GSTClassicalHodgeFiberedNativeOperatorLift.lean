@@ -389,7 +389,6 @@ theorem liftNativeOperator_smul
     rw [show Finsupp.single ix r = r • atom V H p ix.1 ix.2 by simp [atom]]
     simp only [map_smul, LinearMap.smul_apply,
       liftNativeOperator_atom_as_nativeCycleLabel, RingHom.id_apply]
-    simp [smul_smul, mul_comm]
 
 /-- A populated multiplicity fiber makes the native representation faithful. -/
 theorem liftNativeOperator_injective

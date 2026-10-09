@@ -300,9 +300,11 @@ theorem nativeBlockOperator_zero :
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  simp only [nativeBlockOperator_coordinates, map_zero,
-    LinearMap.zero_apply, add_zero, zero_add,
-    nativeClassKernelEquiv_apply]
+  change nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator (H := H) (p := p) 0 0 0 0 Z) =
+    nativeClassKernelEquiv (H := H) (0 : codimensionCycles V.X p)
+  rw [nativeBlockOperator_coordinates]
+  simp only [LinearMap.zero_apply, zero_add, map_zero]
 
 theorem nativeBlockOperator_id :
     nativeBlockOperator (H := H) (p := p) LinearMap.id 0 0 LinearMap.id =
@@ -310,9 +312,12 @@ theorem nativeBlockOperator_id :
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  simp only [nativeBlockOperator_coordinates, LinearMap.id_apply,
-    LinearMap.zero_apply, zero_add, add_zero,
-    nativeClassKernelEquiv_apply]
+  change nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator (H := H) (p := p) LinearMap.id 0 0 LinearMap.id Z) =
+    nativeClassKernelEquiv (H := H) Z
+  rw [nativeBlockOperator_coordinates]
+  simp only [LinearMap.id_apply, LinearMap.zero_apply,
+    zero_add, add_zero, nativeClassKernelEquiv_apply]
 
 /-- The complete noncommutative block composition law.  The two feedback
 terms are retained, including for operators that fail native descent. -/
@@ -582,7 +587,9 @@ noncomputable def triangularCoordinateEquiv
     intro a
     apply Prod.ext
     · simp
-    · simp
+    · change D.symm (C a.1 + D a.2 - C a.1) = a.2
+      have hcancel : C a.1 + D a.2 - C a.1 = D a.2 := by abel
+      rw [hcancel, LinearEquiv.symm_apply_apply]
   right_inv := by
     intro a
     apply Prod.ext
@@ -606,8 +613,14 @@ theorem nativeTriangularEquiv_toLinearMap
       nativeBlockOperator B.toLinearMap 0 C D.toLinearMap := by
   apply LinearMap.ext
   intro Z
-  simp [nativeTriangularEquiv, triangularCoordinateEquiv,
-    nativeBlockOperator, nativeClassKernelEquiv_symm_apply]
+  apply (nativeClassKernelEquiv (H := H)).injective
+  change (triangularCoordinateEquiv B C D)
+      (nativeClassKernelEquiv (H := H) Z) =
+    nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator B.toLinearMap 0 C D.toLinearMap Z)
+  rw [nativeBlockOperator_coordinates]
+  simp only [LinearMap.zero_apply, add_zero]
+  rfl
 
 /-- The actual inverse is another constructed native operator, with the
 negative conjugated feedback in its lower-left block. -/
@@ -617,12 +630,29 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
     (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p) :
     (nativeTriangularEquiv B C D).symm.toLinearMap =
       nativeBlockOperator B.symm.toLinearMap 0
-        (-(D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
+        ((-1 : ℚ) • (D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
         D.symm.toLinearMap := by
   apply LinearMap.ext
   intro Z
-  simp [nativeTriangularEquiv, triangularCoordinateEquiv,
-    nativeBlockOperator, map_sub, sub_eq_add_neg, add_comm]
+  apply (nativeClassKernelEquiv (H := H)).injective
+  change (triangularCoordinateEquiv B C D).symm
+      (nativeClassKernelEquiv (H := H) Z) =
+    nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator B.symm.toLinearMap 0
+        ((-1 : ℚ) • (D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
+        D.symm.toLinearMap Z)
+  rw [nativeBlockOperator_coordinates]
+  apply Prod.ext
+  · simp only [LinearMap.zero_apply, add_zero]
+    rfl
+  · change D.symm (nativeKernelCoordinate (H := H) Z -
+        C (B.symm ((H.cycleClass p).rangeRestrict Z))) =
+      ((-1 : ℚ) • (D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
+        ((H.cycleClass p).rangeRestrict Z) +
+        D.symm (nativeKernelCoordinate (H := H) Z)
+    simp only [LinearMap.smul_apply, LinearMap.comp_apply,
+      neg_one_smul, map_sub]
+    abel
 
 theorem nativeTriangularEquiv_kernelStable
     (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
