@@ -186,36 +186,13 @@ noncomputable def nativeBlockOperator
     (B : Module.End ℚ (NativeClass H p))
     (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
     (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
-    (D : Module.End ℚ (NativeKernel H p)) : NativeEnd V p where
-  toFun Z := cycleClassRangeSection V H p
-      (B ((H.cycleClass p).rangeRestrict Z) +
-        F (nativeKernelCoordinate (H := H) Z)) +
-    (C ((H.cycleClass p).rangeRestrict Z) +
-      D (nativeKernelCoordinate (H := H) Z)).1
-  map_add' := by
-    intro Z W
-    simp only [map_add]
-    abel
-  map_smul' := by
-    intro q Z
-    have hclass :
-        cycleClassRangeSection V H p
-            (B ((H.cycleClass p).rangeRestrict (q • Z)) +
-              F (nativeKernelCoordinate (H := H) (q • Z))) =
-          q • cycleClassRangeSection V H p
-            (B ((H.cycleClass p).rangeRestrict Z) +
-              F (nativeKernelCoordinate (H := H) Z)) := by
-      simp only [map_smul]
-      rw [← smul_add, map_smul]
-    have hkernel :
-        (C ((H.cycleClass p).rangeRestrict (q • Z)) +
-            D (nativeKernelCoordinate (H := H) (q • Z))).1 =
-          q • (C ((H.cycleClass p).rangeRestrict Z) +
-            D (nativeKernelCoordinate (H := H) Z)).1 := by
-      simp only [map_smul]
-      rw [← smul_add]
-      rfl
-    rw [hclass, hkernel, smul_add]
+    (D : Module.End ℚ (NativeKernel H p)) : NativeEnd V p :=
+  (cycleClassRangeSection V H p).comp
+      ((B.comp ((H.cycleClass p).rangeRestrict)) +
+        (F.comp (nativeKernelCoordinate (H := H)))) +
+    ((LinearMap.ker (H.cycleClass p)).subtype).comp
+      ((C.comp ((H.cycleClass p).rangeRestrict)) +
+        (D.comp (nativeKernelCoordinate (H := H))))
 
 /-- The constructed operator has exactly the requested four blocks. -/
 theorem nativeBlockOperator_coordinates
