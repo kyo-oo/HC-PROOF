@@ -35,6 +35,46 @@ variable {A B : Nat}
 
 /-! ## 1. Ring-level path expansion -/
 
+/-!
+## Two-parameter anisotropic universal Lefschetz flow
+
+The historical GST class L = H + V is just the isotropic slice of an exact
+arbitrary-coupling polynomial evolution.  The native quotient ring allows
+all two-axis couplings in its full coefficient ring, with no requirement of
+invertibility or finite weight.  Exact path multiplicities are then
+universal ring identities, rather than artifacts of a special 4 x 3 matrix.
+-/
+
+/-- The fully coupled GST evolution class with independent, possibly
+noninvertible coefficients along the native two directions. -/
+noncomputable def anisotropicL (A B : Nat)
+    (a b : WorldCohomologyRing A B) : WorldCohomologyRing A B :=
+  a * H A B + b * V A B
+
+/-- **ANISOTROPIC PATH EXPANSION IN THE FULL TRUNCATED WORLD RING.**
+Every word-length n splits exactly into m digit-axis and n-m carry-axis
+moves, weighted independently and multiplied by the binomial path count.
+The couplings may be arbitrary elements of the quotient itself. -/
+theorem anisotropicL_pow_expansion
+    (A B n : Nat) (a b : WorldCohomologyRing A B) :
+    (anisotropicL A B a b)^n =
+      ∑ m ∈ Finset.range (n+1),
+        (n.choose m : WorldCohomologyRing A B) *
+          a^m * b^(n-m) *
+          (H A B)^m * (V A B)^(n-m) := by
+  unfold anisotropicL
+  rw [(Commute.all (a * H A B) (b * V A B)).add_pow n]
+  apply Finset.sum_congr rfl
+  intro m hm
+  simp only [mul_pow]
+  ring
+
+/-- The isotropic class is literally the unit-coupling sector of the
+unrestricted anisotropic operator, not a separate ad hoc dynamical law. -/
+theorem anisotropicL_unit_eq_L (A B : Nat) :
+    anisotropicL A B 1 1 = L A B := by
+  simp [anisotropicL, L]
+
 /-- **UNIVERSAL RING BINOMIAL LAW.**
 Every power of the universal Lefschetz class expands into all mixed
 H/V paths with exact binomial multiplicity. -/
@@ -43,7 +83,20 @@ theorem L_pow_expansion (A B n : Nat) :
       ∑ m ∈ Finset.range (n+1),
         (H A B)^m * (V A B)^(n-m) *
           (n.choose m : WorldCohomologyRing A B) := by
-  exact (Commute.all (H A B) (V A B)).add_pow n
+  calc
+    (L A B)^n = (anisotropicL A B 1 1)^n := by
+      rw [anisotropicL_unit_eq_L]
+    _ = ∑ m ∈ Finset.range (n+1),
+      (n.choose m : WorldCohomologyRing A B) *
+        (1 : WorldCohomologyRing A B)^m *
+        (1 : WorldCohomologyRing A B)^(n-m) *
+        (H A B)^m * (V A B)^(n-m) :=
+          anisotropicL_pow_expansion A B n 1 1
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro m hm
+      simp only [one_pow, mul_one, one_mul]
+      ring
 
 /-- Terms which cross either rectangular wall vanish in the quotient ring
 representation. -/
@@ -217,6 +270,9 @@ theorem universal_lefschetz_path_crown :
   exact ⟨L_pow_expansion, worldAct_L_pow_paths,
     hc_bottom_to_top_coefficient⟩
 
+#check anisotropicL
+#check anisotropicL_pow_expansion
+#check anisotropicL_unit_eq_L
 #check L_pow_expansion
 #check L_path_term_acts_zero
 #check worldAct_L_pow_eq_endo

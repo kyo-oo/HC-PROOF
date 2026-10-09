@@ -1,0 +1,152 @@
+name: Hodge Conjecture Final Integration Gate
+
+on:
+  push:
+    branches:
+      - sol/hodge-conjecture-final-integration
+      - sol/hodge-strict-betti-correspondence-fusion-20261003
+      - sol/gst-plane-completeness-8408fd0
+      - clean/upgraded-advanced-only-20261009
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hodge-conjecture-final-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  final-hodge-integration:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+
+      - name: Install Lean and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+
+      - name: Compile complete classical Hodge mathematics lane
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build HodgePureMath 2>&1 | tee hodge-final.log
+
+      - name: Compile vertical-ray projective-apex finale
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeVerticalRayProjectiveApexFinale.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile strict Betti apex L2 fusion
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeStrictBettiApexL2Fusion.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile common-class plane reduction
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeCommonClassPlaneReduction.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile native point seed degree upgrade
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeNativePointSeedDegreeUpgrade.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile GST exact projective-word finale
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeGSTProjectiveWordExactFinale.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile GST exact rational-correspondence finale
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile direct orbit-word saturation
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeDirectOrbitWordSaturation.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile unified HodgeConjecture landing
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean HodgeConjecture.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile GST active-weight native seed extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTClassicalHodgeNativeWordFromArbitrarySeed 2>&1 | tee -a hodge-final.log
+
+      - name: Compile exact GST finite-graph ghost-separation theorems
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeBranchPacketPlaneRealization.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile GST finite-horizon native charge and terminal-cut audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeNativeMassBridgeAudit.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile active-fiber point saturation
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeNativePointSeedSaturation.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Compile finite-path degree-apex GST geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeGeometryFirstGlobalPropagation.lean 2>&1 | tee -a hodge-final.log
+
+      - name: Final trust audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -E "declaration uses 'sorry'|sorryAx" hodge-final.log; then
+            echo "FINAL HODGE GATE FAILED: unresolved sorry/sorryAx detected"
+            exit 1
+          fi
+          echo "FINAL HODGE GATE: no sorry/sorryAx detected in compiled receipts"
+
+      - name: Upload final diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hodge-conjecture-final-integration-diagnostics
+          path: hodge-final.log
+          if-no-files-found: error
