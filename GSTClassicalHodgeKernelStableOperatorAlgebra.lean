@@ -328,9 +328,22 @@ theorem nativeBlockOperator_comp
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  simp [nativeBlockOperator_coordinates, nativeBlockOperator_rangeCoordinate,
-    nativeBlockOperator_kernelCoordinate, map_add, add_assoc,
-    add_left_comm, add_comm]
+  change nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator B F C D (nativeBlockOperator B' F' C' D' Z)) =
+    nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator (B.comp B' + F.comp C')
+        (B.comp F' + F.comp D')
+        (C.comp B' + D.comp C') (C.comp F' + D.comp D') Z)
+  rw [nativeBlockOperator_coordinates, nativeBlockOperator_coordinates]
+  apply Prod.ext
+  · simp only [nativeBlockOperator_rangeCoordinate,
+      nativeBlockOperator_kernelCoordinate, LinearMap.add_apply,
+      LinearMap.comp_apply, map_add, Prod.fst]
+    abel
+  · simp only [nativeBlockOperator_rangeCoordinate,
+      nativeBlockOperator_kernelCoordinate, LinearMap.add_apply,
+      LinearMap.comp_apply, map_add, Prod.snd]
+    abel
 
 theorem nativeBlockOperator_add
     (B B' : Module.End ℚ (NativeClass H p))
@@ -342,8 +355,18 @@ theorem nativeBlockOperator_add
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  simp [nativeBlockOperator_coordinates, map_add, add_assoc,
-    add_left_comm, add_comm]
+  change nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator (B + B') (F + F') (C + C') (D + D') Z) =
+    nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator B F C D Z + nativeBlockOperator B' F' C' D' Z)
+  rw [nativeBlockOperator_coordinates, nativeClassKernelEquiv_apply]
+  apply Prod.ext
+  · simp only [LinearMap.add_apply, map_add, Prod.fst,
+      nativeBlockOperator_rangeCoordinate]
+    abel
+  · simp only [LinearMap.add_apply, map_add, Prod.snd,
+      nativeBlockOperator_kernelCoordinate]
+    abel
 
 theorem nativeBlockOperator_smul
     (q : ℚ) (B : Module.End ℚ (NativeClass H p))
@@ -355,7 +378,15 @@ theorem nativeBlockOperator_smul
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  simp [nativeBlockOperator_coordinates, map_smul, smul_add]
+  change nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator (q • B) (q • F) (q • C) (q • D) Z) =
+    nativeClassKernelEquiv (H := H) (q • nativeBlockOperator B F C D Z)
+  rw [nativeBlockOperator_coordinates, nativeClassKernelEquiv_apply]
+  apply Prod.ext
+  · simp only [LinearMap.smul_apply, map_smul, RingHom.id_apply,
+      Prod.fst, nativeBlockOperator_rangeCoordinate, smul_add]
+  · simp only [LinearMap.smul_apply, map_smul, RingHom.id_apply,
+      Prod.snd, nativeBlockOperator_kernelCoordinate, smul_add]
 
 theorem nativeBlockOperator_kernelClassBlock
     (B : Module.End ℚ (NativeClass H p))
