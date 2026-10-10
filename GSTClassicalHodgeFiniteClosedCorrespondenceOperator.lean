@@ -140,7 +140,8 @@ theorem graphCorrespondence_leftFiberFinset
     (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
     (x : V.X) :
     (graphCorrespondence f).leftFiberFinset x =
-      insert x (∅ : Finset (graphCorrespondence f).carrier) := by
+      insert (x : (graphCorrespondence f).carrier)
+        (∅ : Finset (graphCorrespondence f).carrier) := by
   classical
   ext z
   rw [mem_leftFiberFinset, Finset.mem_insert, Finset.not_mem_empty, or_false,
