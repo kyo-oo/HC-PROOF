@@ -139,12 +139,13 @@ containing the source point. -/
 theorem graphCorrespondence_leftFiberFinset
     (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
     (x : V.X) :
-    (graphCorrespondence f).leftFiberFinset x =
-      insert (x : (graphCorrespondence f).carrier)
-        (∅ : Finset (graphCorrespondence f).carrier) := by
+    (graphCorrespondence f).leftFiberFinset x = {x} := by
   classical
+  show (graphCorrespondence f).leftFiberFinset x =
+    @Finset.cons ↥(graphCorrespondence f).carrier x Finset.empty
+      (Finset.not_mem_empty x)
   ext z
-  rw [mem_leftFiberFinset, Finset.mem_insert, Finset.not_mem_empty, or_false,
+  rw [mem_leftFiberFinset, Finset.mem_cons, Finset.not_mem_empty, or_false,
     graphCorrespondence_left]
   simp
 
