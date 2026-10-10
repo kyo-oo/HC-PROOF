@@ -44,7 +44,8 @@ noncomputable section
 open CategoryTheory
 open AlgebraicGeometry
 
-attribute [local reducible] GSTClassicalHodgeFiniteClosedCorrespondence.graphCorrespondence
+attribute [local reducible]
+  GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence.graphCorrespondence
 
 namespace GSTClassicalHodgeFiniteClosedCorrespondenceOperator
 
