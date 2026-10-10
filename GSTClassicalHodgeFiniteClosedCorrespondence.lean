@@ -61,6 +61,7 @@ open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeProjectiveSelfCorrespondences
 open GSTClassicalHodgePointwiseNativeCosmicClosure
 open GSTClassicalHodgeCanonicalCosmicRealizationEquivalence
+open GSTClassicalHodgeFiberedCosmology
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -158,7 +159,10 @@ theorem targetAtomPresentation_eq_single
         (⟨K.right z, hz⟩ : CodimensionPoint V.X p)
         (pointResidueWeight K.right z) := by
   classical
-  simp [targetAtomPresentation, hz]
+  simp only [targetAtomPresentation]
+  split
+  · rfl
+  · exact absurd hz (by assumption)
 
 /-- Wrong target codimension contributes zero and therefore cannot contaminate
 the native codimension-p cycle space. -/
@@ -169,7 +173,10 @@ theorem targetAtomPresentation_eq_zero
     (hz : Order.coheight (K.right z) ≠ p) :
     K.targetAtomPresentation p z = 0 := by
   classical
-  simp [targetAtomPresentation, hz]
+  simp only [targetAtomPresentation]
+  split
+  · exact absurd (by assumption) hz
+  · rfl
 
 /-- Every correspondence point over x with correct target codimension appears
 as an explicit summand in the point transition. -/

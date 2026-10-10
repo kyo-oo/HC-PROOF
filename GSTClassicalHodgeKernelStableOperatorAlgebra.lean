@@ -179,35 +179,6 @@ abbrev NativeClass (H : HodgeBigradedBettiData V) (p : Nat) :=
 abbrev NativeKernel (H : HodgeBigradedBettiData V) (p : Nat) :=
   LinearMap.ker (H.cycleClass p)
 
-/-- The four requested blocks as an endomorphism of the exact class/kernel
-coordinate space.  Keeping this map separate makes linearity structural and
-prevents the subtype coercions in the native-cycle space from obscuring it. -/
-noncomputable def nativeBlockCoordinateOperator
-    (B : Module.End ℚ (NativeClass H p))
-    (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
-    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
-    (D : Module.End ℚ (NativeKernel H p)) :
-    Module.End ℚ (NativeClass H p × NativeKernel H p) where
-  toFun a := (B a.1 + F a.2, C a.1 + D a.2)
-  map_add' := by
-    intro a b
-    apply Prod.ext
-    · change B (a.1 + b.1) + F (a.2 + b.2) =
-        (B a.1 + F a.2) + (B b.1 + F b.2)
-      rw [map_add, map_add]
-      abel
-    · change C (a.1 + b.1) + D (a.2 + b.2) =
-        (C a.1 + D a.2) + (C b.1 + D b.2)
-      rw [map_add, map_add]
-      abel
-  map_smul' := by
-    intro q a
-    apply Prod.ext
-    · change B (q • a.1) + F (q • a.2) = q • (B a.1 + F a.2)
-      rw [map_smul, map_smul, smul_add]
-    · change C (q • a.1) + D (q • a.2) = q • (C a.1 + D a.2)
-      rw [map_smul, map_smul, smul_add]
-
 /-- Synthesize an actual native operator from its four class/kernel blocks.
 `F` is the class produced from a null-class input; `C` is the kernel-valued
 response to an actual class.  No native cycle is left unspecified. -/
@@ -216,9 +187,12 @@ noncomputable def nativeBlockOperator
     (F : NativeKernel H p →ₗ[ℚ] NativeClass H p)
     (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
     (D : Module.End ℚ (NativeKernel H p)) : NativeEnd V p :=
-  (nativeClassKernelEquiv (V := V) (H := H) (p := p)).symm.toLinearMap.comp
-    ((nativeBlockCoordinateOperator B F C D).comp
-      (nativeClassKernelEquiv (V := V) (H := H) (p := p)).toLinearMap)
+  (cycleClassRangeSection V H p).comp
+      ((B.comp ((H.cycleClass p).rangeRestrict)) +
+        (F.comp (nativeKernelCoordinate (H := H)))) +
+    ((LinearMap.ker (H.cycleClass p)).subtype).comp
+      ((C.comp ((H.cycleClass p).rangeRestrict)) +
+        (D.comp (nativeKernelCoordinate (H := H))))
 
 /-- The constructed operator has exactly the requested four blocks. -/
 theorem nativeBlockOperator_coordinates
@@ -230,14 +204,15 @@ theorem nativeBlockOperator_coordinates
       (B ((H.cycleClass p).rangeRestrict Z) +
           F (nativeKernelCoordinate (H := H) Z),
         C ((H.cycleClass p).rangeRestrict Z) +
-          D (nativeKernelCoordinate (H := H) Z)) := by
-  change (nativeClassKernelEquiv (V := V) (H := H) (p := p))
-      ((nativeClassKernelEquiv (V := V) (H := H) (p := p)).symm
+          D (nativeKernelCoordinate (H := H) Z)) :=
+  by
+    change (nativeClassKernelEquiv (H := H))
+      ((nativeClassKernelEquiv (H := H)).symm
         (B ((H.cycleClass p).rangeRestrict Z) +
-            F (nativeKernelCoordinate (H := H) Z),
-          C ((H.cycleClass p).rangeRestrict Z) +
-            D (nativeKernelCoordinate (H := H) Z))) = _
-  exact (nativeClassKernelEquiv (V := V) (H := H) (p := p)).apply_symm_apply _
+          F (nativeKernelCoordinate (H := H) Z),
+         C ((H.cycleClass p).rangeRestrict Z) +
+          D (nativeKernelCoordinate (H := H) Z))) = _
+    exact (nativeClassKernelEquiv (H := H)).apply_symm_apply _
 
 theorem nativeBlockOperator_rangeCoordinate
     (B : Module.End ℚ (NativeClass H p))
@@ -291,24 +266,33 @@ theorem nativeBlockOperator_reconstruct (A : NativeEnd V p) :
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  rw [nativeBlockOperator_coordinates]
   have hsplit :
       cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z) +
-          (nativeKernelCoordinate (H := H) Z).1 = Z :=
-    native_projection_decomposition (H := H) Z
+        (nativeKernelCoordinate (H := H) Z).1 = Z := by
+    have h := native_projection_decomposition (H := H) Z
+    change cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z) +
+      (nativeKernelCoordinate (H := H) Z).1 = Z at h
+    exact h
+  rw [nativeBlockOperator_coordinates, nativeClassKernelEquiv_apply]
   apply Prod.ext
-  · change (H.cycleClass p).rangeRestrict
+  · apply Subtype.ext
+    change
+      H.cycleClass p (A (cycleClassRangeSection V H p
+        ((H.cycleClass p).rangeRestrict Z))) +
+      H.cycleClass p (A (nativeKernelCoordinate (H := H) Z).1) =
+      H.cycleClass p (A Z)
+    have h := congrArg (fun W : codimensionCycles V.X p =>
+      H.cycleClass p (A W)) hsplit
+    simpa only [map_add] using h
+  · change
+      nativeKernelCoordinate (H := H)
         (A (cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z))) +
-        (H.cycleClass p).rangeRestrict
-          (A (nativeKernelCoordinate (H := H) Z).1) =
-      (H.cycleClass p).rangeRestrict (A Z)
-    rw [← map_add, ← map_add, hsplit]
-  · change nativeKernelCoordinate (H := H)
-        (A (cycleClassRangeSection V H p ((H.cycleClass p).rangeRestrict Z))) +
-        nativeKernelCoordinate (H := H)
-          (A (nativeKernelCoordinate (H := H) Z).1) =
+      nativeKernelCoordinate (H := H)
+        (A (nativeKernelCoordinate (H := H) Z).1) =
       nativeKernelCoordinate (H := H) (A Z)
-    rw [← map_add, ← map_add, hsplit]
+    have h := congrArg (fun W : codimensionCycles V.X p =>
+      nativeKernelCoordinate (H := H) (A W)) hsplit
+    simpa only [map_add] using h
 
 @[simp]
 theorem nativeBlockOperator_zero :
@@ -317,8 +301,7 @@ theorem nativeBlockOperator_zero :
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
   rw [nativeBlockOperator_coordinates]
-  simp only [LinearMap.zero_apply, map_zero, add_zero,
-    nativeClassKernelEquiv_apply]
+  simp
 
 theorem nativeBlockOperator_id :
     nativeBlockOperator (H := H) (p := p) LinearMap.id 0 0 LinearMap.id =
@@ -327,8 +310,7 @@ theorem nativeBlockOperator_id :
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
   rw [nativeBlockOperator_coordinates]
-  simp only [LinearMap.id_apply, LinearMap.zero_apply, add_zero,
-    nativeClassKernelEquiv_apply]
+  simp
 
 /-- The complete noncommutative block composition law.  The two feedback
 terms are retained, including for operators that fail native descent. -/
@@ -348,12 +330,18 @@ theorem nativeBlockOperator_comp
       (nativeBlockOperator B F C D (nativeBlockOperator B' F' C' D' Z)) =
     nativeClassKernelEquiv (H := H)
       (nativeBlockOperator (B.comp B' + F.comp C')
-        (B.comp F' + F.comp D') (C.comp B' + D.comp C')
-        (C.comp F' + D.comp D') Z)
-  rw [nativeBlockOperator_coordinates, nativeBlockOperator_coordinates,
-    nativeBlockOperator_rangeCoordinate, nativeBlockOperator_kernelCoordinate]
-  apply Prod.ext <;>
-    simp only [LinearMap.add_apply, LinearMap.comp_apply] <;> abel
+        (B.comp F' + F.comp D')
+        (C.comp B' + D.comp C') (C.comp F' + D.comp D') Z)
+  rw [nativeBlockOperator_coordinates, nativeBlockOperator_coordinates]
+  apply Prod.ext
+  · simp only [nativeBlockOperator_rangeCoordinate,
+      nativeBlockOperator_kernelCoordinate, LinearMap.add_apply,
+      LinearMap.comp_apply, map_add, Prod.fst]
+    abel
+  · simp only [nativeBlockOperator_rangeCoordinate,
+      nativeBlockOperator_kernelCoordinate, LinearMap.add_apply,
+      LinearMap.comp_apply, map_add, Prod.snd]
+    abel
 
 theorem nativeBlockOperator_add
     (B B' : Module.End ℚ (NativeClass H p))
@@ -365,9 +353,18 @@ theorem nativeBlockOperator_add
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  rw [nativeBlockOperator_coordinates, map_add,
-    nativeBlockOperator_coordinates, nativeBlockOperator_coordinates]
-  apply Prod.ext <;> simp only [LinearMap.add_apply] <;> abel
+  change nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator (B + B') (F + F') (C + C') (D + D') Z) =
+    nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator B F C D Z + nativeBlockOperator B' F' C' D' Z)
+  rw [nativeBlockOperator_coordinates, nativeClassKernelEquiv_apply]
+  apply Prod.ext
+  · simp only [LinearMap.add_apply, map_add, Prod.fst,
+      nativeBlockOperator_rangeCoordinate]
+    abel
+  · simp only [LinearMap.add_apply, map_add, Prod.snd,
+      nativeBlockOperator_kernelCoordinate]
+    abel
 
 theorem nativeBlockOperator_smul
     (q : ℚ) (B : Module.End ℚ (NativeClass H p))
@@ -379,10 +376,15 @@ theorem nativeBlockOperator_smul
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  rw [nativeBlockOperator_coordinates, map_smul,
-    nativeBlockOperator_coordinates]
-  apply Prod.ext <;>
-    simp only [LinearMap.smul_apply, smul_add]
+  change nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator (q • B) (q • F) (q • C) (q • D) Z) =
+    nativeClassKernelEquiv (H := H) (q • nativeBlockOperator B F C D Z)
+  rw [nativeBlockOperator_coordinates, nativeClassKernelEquiv_apply]
+  apply Prod.ext
+  · simp only [LinearMap.smul_apply, map_smul, RingHom.id_apply,
+      Prod.fst, nativeBlockOperator_rangeCoordinate, smul_add]
+  · simp only [LinearMap.smul_apply, map_smul, RingHom.id_apply,
+      Prod.snd, nativeBlockOperator_kernelCoordinate, smul_add]
 
 theorem nativeBlockOperator_kernelClassBlock
     (B : Module.End ℚ (NativeClass H p))
@@ -392,9 +394,11 @@ theorem nativeBlockOperator_kernelClassBlock
     kernelClassBlock (H := H) (nativeBlockOperator B F C D) = F := by
   apply LinearMap.ext
   intro k
-  have hr : (H.cycleClass p).rangeRestrict k.1 = 0 := Subtype.ext k.2
   change (H.cycleClass p).rangeRestrict (nativeBlockOperator B F C D k.1) = F k
-  rw [nativeBlockOperator_rangeCoordinate, hr, map_zero, zero_add]
+  rw [nativeBlockOperator_rangeCoordinate]
+  have hr : (H.cycleClass p).rangeRestrict k.1 = 0 := Subtype.ext k.2
+  rw [hr, nativeKernelCoordinate_kernel]
+  simp
 
 theorem nativeBlockOperator_classClassBlock
     (B : Module.End ℚ (NativeClass H p))
@@ -406,8 +410,8 @@ theorem nativeBlockOperator_classClassBlock
   intro a
   change (H.cycleClass p).rangeRestrict
     (nativeBlockOperator B F C D (cycleClassRangeSection V H p a)) = B a
-  rw [nativeBlockOperator_rangeCoordinate, cycleClassRangeSection_range,
-    nativeKernelCoordinate_section, map_zero, add_zero]
+  rw [nativeBlockOperator_rangeCoordinate]
+  simp
 
 theorem nativeBlockOperator_classKernelBlock
     (B : Module.End ℚ (NativeClass H p))
@@ -419,8 +423,8 @@ theorem nativeBlockOperator_classKernelBlock
   intro a
   change nativeKernelCoordinate (H := H)
     (nativeBlockOperator B F C D (cycleClassRangeSection V H p a)) = C a
-  rw [nativeBlockOperator_kernelCoordinate, cycleClassRangeSection_range,
-    nativeKernelCoordinate_section, map_zero, add_zero]
+  rw [nativeBlockOperator_kernelCoordinate]
+  simp
 
 theorem nativeBlockOperator_kernelKernelBlock
     (B : Module.End ℚ (NativeClass H p))
@@ -430,11 +434,11 @@ theorem nativeBlockOperator_kernelKernelBlock
     kernelKernelBlock (H := H) (nativeBlockOperator B F C D) = D := by
   apply LinearMap.ext
   intro k
+  change nativeKernelCoordinate (H := H) (nativeBlockOperator B F C D k.1) = D k
+  rw [nativeBlockOperator_kernelCoordinate]
   have hr : (H.cycleClass p).rangeRestrict k.1 = 0 := Subtype.ext k.2
-  change nativeKernelCoordinate (H := H)
-    (nativeBlockOperator B F C D k.1) = D k
-  rw [nativeBlockOperator_kernelCoordinate, hr, map_zero, zero_add,
-    nativeKernelCoordinate_kernel]
+  rw [hr, nativeKernelCoordinate_kernel]
+  simp
 
 /-- The four-block normal form is unique, as well as exhaustive. -/
 theorem nativeBlockOperator_eq_iff
@@ -559,7 +563,7 @@ noncomputable def triangularCoordinateEquiv
       · change B (a.1 + b.1) = B a.1 + B b.1
         exact map_add B a.1 b.1
       · change C (a.1 + b.1) + D (a.2 + b.2) =
-          (C a.1 + D a.2) + (C b.1 + D b.2)
+            (C a.1 + D a.2) + (C b.1 + D b.2)
         rw [map_add, map_add]
         abel
     map_smul' := by
@@ -567,27 +571,34 @@ noncomputable def triangularCoordinateEquiv
       apply Prod.ext
       · change B (q • a.1) = q • B a.1
         exact map_smul B q a.1
-      · change C (q • a.1) + D (q • a.2) = q • (C a.1 + D a.2)
+      · change C (q • a.1) + D (q • a.2) =
+            q • (C a.1 + D a.2)
         rw [map_smul, map_smul, smul_add]
   }
   invFun a := (B.symm a.1, D.symm (a.2 - C (B.symm a.1)))
   left_inv := by
     intro a
     apply Prod.ext
-    · change B.symm (B a.1) = a.1
-      exact B.symm_apply_apply a.1
-    · change D.symm ((C a.1 + D a.2) - C (B.symm (B a.1))) = a.2
-      rw [B.symm_apply_apply]
-      have h : C a.1 + D a.2 - C a.1 = D a.2 := by abel
-      rw [h, D.symm_apply_apply]
+    · simp
+    · simp only [LinearEquiv.symm_apply_apply]
+      have key : C a.1 + D a.2 - C a.1 = D a.2 := by abel
+      rw [key]
+      simp
   right_inv := by
     intro a
     apply Prod.ext
-    · change B (B.symm a.1) = a.1
-      exact B.apply_symm_apply a.1
-    · change C (B.symm a.1) + D (D.symm (a.2 - C (B.symm a.1))) = a.2
-      rw [D.apply_symm_apply]
-      abel
+    · simp
+    · simp only [Prod.snd, map_sub, LinearEquiv.apply_symm_apply] <;> abel
+
+/-- The triangular coordinate change is its own inverse-pair carrier: the
+symmetric application law used by the invertible native feedback theory. -/
+theorem triangularCoordinateEquiv_symm_apply
+    (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
+    (C : NativeClass H p →ₗ[ℚ] NativeKernel H p)
+    (D : NativeKernel H p ≃ₗ[ℚ] NativeKernel H p)
+    (a : NativeClass H p × NativeKernel H p) :
+    (triangularCoordinateEquiv B C D).symm a =
+      (B.symm a.1, D.symm (a.2 - C (B.symm a.1))) := rfl
 
 /-- Construct the corresponding invertible operator on actual native cycles. -/
 noncomputable def nativeTriangularEquiv
@@ -606,16 +617,8 @@ theorem nativeTriangularEquiv_toLinearMap
       nativeBlockOperator B.toLinearMap 0 C D.toLinearMap := by
   apply LinearMap.ext
   intro Z
-  apply (nativeClassKernelEquiv (H := H)).injective
-  change (nativeClassKernelEquiv (H := H))
-      ((nativeClassKernelEquiv (H := H)).symm
-        (B ((H.cycleClass p).rangeRestrict Z),
-          C ((H.cycleClass p).rangeRestrict Z) +
-            D (nativeKernelCoordinate (H := H) Z))) =
-    nativeClassKernelEquiv (H := H)
-      (nativeBlockOperator B.toLinearMap 0 C D.toLinearMap Z)
-  rw [LinearEquiv.apply_symm_apply, nativeBlockOperator_coordinates]
-  simp only [LinearMap.zero_apply, add_zero]
+  simp [nativeTriangularEquiv, triangularCoordinateEquiv,
+    nativeBlockOperator, nativeClassKernelEquiv_symm_apply]
 
 /-- The actual inverse is another constructed native operator, with the
 negative conjugated feedback in its lower-left block. -/
@@ -630,20 +633,30 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  change (triangularCoordinateEquiv B C D).symm
-      ((H.cycleClass p).rangeRestrict Z, nativeKernelCoordinate (H := H) Z) =
+  change (nativeClassKernelEquiv (H := H))
+      ((nativeClassKernelEquiv (H := H)).symm
+        ((triangularCoordinateEquiv B C D).symm
+          ((H.cycleClass p).rangeRestrict Z,
+            nativeKernelCoordinate (H := H) Z))) =
     nativeClassKernelEquiv (H := H)
       (nativeBlockOperator B.symm.toLinearMap 0
         ((-1 : ℚ) • (D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
         D.symm.toLinearMap Z)
-  rw [nativeBlockOperator_coordinates]
+  rw [LinearEquiv.apply_symm_apply, nativeBlockOperator_coordinates]
   apply Prod.ext
-  · simp only [LinearMap.zero_apply, add_zero]
-  · change D.symm (nativeKernelCoordinate (H := H) Z -
+  · rw [triangularCoordinateEquiv_symm_apply]
+    simp only [LinearMap.zero_apply, add_zero]
+    rfl
+  · change D.symm.toLinearMap (nativeKernelCoordinate (H := H) Z -
         C (B.symm ((H.cycleClass p).rangeRestrict Z))) =
-      (-1 : ℚ) • D.symm (C (B.symm ((H.cycleClass p).rangeRestrict Z))) +
-        D.symm (nativeKernelCoordinate (H := H) Z)
-    rw [map_sub, neg_one_smul]
+      (-1 : ℚ) • D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z))) +
+        D.symm.toLinearMap (nativeKernelCoordinate (H := H) Z)
+    rw [map_sub (D.symm.toLinearMap) (nativeKernelCoordinate (H := H) Z)
+        (C (B.symm ((H.cycleClass p).rangeRestrict Z)))]
+    rw [show (-1 : ℚ) • D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z))) =
+        -(D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z)))) from
+        _root_.neg_one_smul ℚ
+          (D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z))))]
     abel
 
 theorem nativeTriangularEquiv_kernelStable
@@ -943,5 +956,4 @@ theorem nonzero_defect_survives_injective_dynamics
 #print axioms nativeTriangularEquiv_inverse_toLinearMap
 
 end GSTClassicalHodgeKernelStableOperatorAlgebra
-
 
