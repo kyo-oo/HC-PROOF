@@ -44,6 +44,7 @@ noncomputable section
 open CategoryTheory
 open AlgebraicGeometry
 
+set_option allowUnsafeReducibility true in
 attribute [local reducible]
   GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence.graphCorrespondence
 
@@ -147,7 +148,11 @@ theorem graphCorrespondence_leftFiberFinset
         (Finset.notMem_empty x) := by
   classical
   ext z
-  simp [graphCorrespondence_left, Finset.mem_cons, CategoryTheory.id_apply]
+  have hmem : z ∈ (graphCorrespondence f).leftFiberFinset x ↔
+      (graphCorrespondence f).left z = x :=
+    mem_leftFiberFinset (graphCorrespondence f) x z
+  rw [hmem]
+  simp [graphCorrespondence_left, ConcreteCategory.id_apply, Finset.notMem_empty]
 
 /-- The corrected target atom of a graph is exactly the genuine point
 pushforward presentation of the underlying endomorphism. -/
@@ -175,7 +180,8 @@ theorem graphCorrespondence_transition_eq_pointPushforward
       @Finset.cons ↥(graphCorrespondence f).carrier (x.1 : (graphCorrespondence f).carrier)
         Finset.empty (Finset.notMem_empty (x.1 : (graphCorrespondence f).carrier)) :=
     graphCorrespondence_leftFiberFinset f (x.1 : (graphCorrespondence f).carrier)
-  rw [hc, Finset.sum_cons, Finset.sum_empty, add_zero]
+  rw [hc]
+  simp [Finset.sum_cons, Finset.sum_empty, add_zero]
   exact graphCorrespondence_targetAtom_eq_pointPushforward f p x
 
 /-- Pointwise native graph action is exactly the existing genuine native
