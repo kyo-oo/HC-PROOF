@@ -81,8 +81,9 @@ theorem globalSpineSourceProbe_eq_coefficient
       (classicalHodgeBasis V H p).repr
         (globalSpineOrbitSeed G M p).hodge
         (globalSpineOrbitSeed G M p).sourceIndex := by
-  simp [globalSpineSourceSheet, globalSpineAddress,
-    sheetProbe_fiberedWeightCoordinates, hodgeCoordinate]
+  simp only [sheetProbe_fiberedWeightCoordinates, globalSpineSourceSheet,
+    globalSpineAddress]
+  simp [hodgeCoordinate]
 
 /-- **GLOBAL GST SOURCE NONVANISHING.**  Native mass and projective spine
 conservation force the selected global GST coordinate to be nonzero in every
