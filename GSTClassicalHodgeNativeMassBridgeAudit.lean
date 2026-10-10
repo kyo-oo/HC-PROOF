@@ -1,5 +1,7 @@
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeSingleExactSuccessorSurvival
+import GSTNativeCodimensionCyclePresentation
+import GSTCompactNativeCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — NATIVE-MASS BRIDGE AUDIT
@@ -32,6 +34,8 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open AlgebraicGeometry
+open GSTNativeCodimensionCyclePresentation
+open GSTCompactNativeCyclePresentation
 
 namespace GSTClassicalHodgeNativeMassBridgeAudit
 
@@ -78,7 +82,8 @@ theorem nativeMass_congr_of_kernelLaw
   have hker : H.cycleClass p (Z - W) = 0 := by
     simp [hZW]
   have hmass := K p (Z - W) hker
-  simpa using hmass
+  simp at hmass
+  linarith
 
 /-- Descend native mass to the actual cycle-class range using only the kernel
 law. -/
