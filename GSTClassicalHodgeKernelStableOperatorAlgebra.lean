@@ -655,7 +655,7 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
         (C (B.symm ((H.cycleClass p).rangeRestrict Z)))]
     rw [show (-1 : ℚ) • D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z))) =
         -(D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z)))) from
-        _root_.neg_one_smul
+        _root_.neg_one_smul ℚ
           (D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z))))]
     abel
 
