@@ -126,7 +126,7 @@ theorem nativeOperator_point
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   simp [nativeOperator, nativePointImage,
     compactCyclePresentationLinearEquiv,
-    presentationOfNativeCycleLinear,
+    presentationOfNativeCycle_point,
     presentationOperator,
     realizePresentationLinear]
 
@@ -137,7 +137,7 @@ containing the source point. -/
 theorem graphCorrespondence_leftFiberFinset
     (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
     (x : V.X) :
-    (graphCorrespondence f).leftFiberFinset x = {x} := by
+    (graphCorrespondence f).leftFiberFinset x = {x : (graphCorrespondence f).carrier} := by
   classical
   ext z
   rw [mem_leftFiberFinset, Finset.mem_singleton,
@@ -199,7 +199,8 @@ theorem graphCorrespondence_nativeOperator_eq_pushforward
     smoothProjectiveNativePushforward,
     realizePushforwardPresentation,
     compactCyclePresentationLinearEquiv,
-    presentationOfNativeCycleLinear,
+    presentation_realizeFiniteCodimensionPresentation,
+    Finsupp.linearCombination_apply,
     realizePresentationLinear,
     graphCorrespondence_transition_eq_pointPushforward]
 
@@ -263,7 +264,9 @@ theorem cycleClass_nativeOperator
     H.cycleClass p (K.nativeOperator p Z) = T (H.cycleClass p Z) := by
   have h := LinearMap.congr_fun
     (K.toCycleClassOperatorPair T hKT).cycleClass_natural Z
-  simpa [toCycleClassOperatorPair_cycleOperator] using h
+  have hcoe : (K.toCycleClassOperatorPair T hKT).cohomologyOperator = T := rfl
+  rw [hcoe, toCycleClassOperatorPair_cycleOperator] at h
+  exact h
 
 /-! ## Rational cycles of genuine closed correspondences -/
 

@@ -151,8 +151,7 @@ theorem multiplicityMatrixUnit_comp_zero
           multiplicityMatrixUnit_atom_other k l j hjk,
           LinearMap.zero_apply, smul_zero]
       · simp only [LinearMap.comp_apply, multiplicityMatrixUnit_atom_other i j mx.1 hmi,
-          multiplicityMatrixUnit_atom_other i k mx.1 hmi,
-          LinearMap.zero_apply, smul_zero]
+          map_zero, smul_zero]
 
 /-- The diagonal matrix unit is the exact multiplicity projector. -/
 def multiplicityProjector
