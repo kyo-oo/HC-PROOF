@@ -645,13 +645,14 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
   rw [LinearEquiv.apply_symm_apply, nativeBlockOperator_coordinates]
   apply Prod.ext
   · rw [triangularCoordinateEquiv_symm_apply]
+    simp only [LinearMap.zero_apply, add_zero]
   · change D.symm.toLinearMap (nativeKernelCoordinate (H := H) Z -
         C (B.symm ((H.cycleClass p).rangeRestrict Z))) =
       (-1 : ℚ) • D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z))) +
         D.symm.toLinearMap (nativeKernelCoordinate (H := H) Z)
     rw [map_sub (D.symm.toLinearMap) (nativeKernelCoordinate (H := H) Z)
-        (C (B.symm ((H.cycleClass p).rangeRestrict Z))), neg_one_smul]
-    abel
+        (C (B.symm ((H.cycleClass p).rangeRestrict Z)))]
+    simp
 
 theorem nativeTriangularEquiv_kernelStable
     (B : NativeClass H p ≃ₗ[ℚ] NativeClass H p)
