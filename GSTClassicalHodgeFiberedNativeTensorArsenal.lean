@@ -1,6 +1,7 @@
 import GSTClassicalHodgeFiberedNativeOperatorLift
 import GSTClassicalHodgeLimitlessCosmicMatrixUnits
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
+import GSTClassicalHodgeFiberedTransferCompletion
 
 /-!
 # GST CLASSICAL HODGE — FIBERED NATIVE TENSOR ARSENAL
@@ -43,20 +44,23 @@ open GSTClassicalHodgeFiberedNativeOperatorLift
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeNativeTransferAddressIdentification
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedTransferCompletion
+open scoped Classical
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
 /-- Matrix unit on the fixed-weight multiplicity coordinate of the pullback.
-It leaves every genuine native point untouched. -/
+It leaves every genuine native point untouched.  Built by the same
+`Finsupp.linearCombination` carrier as the green `labelPresentation` lift,
+so linearity is structural and only the labelled atom behaviour is proved. -/
 noncomputable def multiplicityMatrixUnit
     (i j : ClassicalHodgeBasisIndex V H p) :
-    Module.End ℚ (FiberedNativeAddress V H p) where
-  toFun Φ := Φ.sum fun kx q =>
-    if kx.1 = i then q • atom V H p j kx.2 else 0
-  map_add' := by intro Φ Ψ; classical; simp
-  map_smul' := by intro q Φ; classical; simp [smul_smul]
+    Module.End ℚ (FiberedNativeAddress V H p) :=
+  Finsupp.linearCombination ℚ
+    (fun kx : FiberedNativeAtom V H p => if kx.1 = i then atom V H p j kx.2 else 0)
 
 @[simp]
 theorem multiplicityMatrixUnit_atom_source
@@ -95,14 +99,16 @@ theorem forgetPoint_multiplicityMatrixUnit
   classical
   induction Φ using Finsupp.induction_linear with
   | zero => simp [multiplicityMatrixUnit, multiplicityAddressMatrixUnit]
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg => simp only [map_add, hf, hg]
   | single kx q =>
+      rw [show Finsupp.single kx q = q • atom V H p kx.1 kx.2 by simp [atom]]
+      simp only [map_smul]
       by_cases hki : kx.1 = i
-      · subst kx.1
-        simp [multiplicityMatrixUnit, multiplicityAddressMatrixUnit,
-          forgetPoint, atom]
-      · simp [multiplicityMatrixUnit, multiplicityAddressMatrixUnit,
-          forgetPoint, atom, hki]
+      · rw [hki, multiplicityMatrixUnit_atom_source]
+        simp [forgetPoint_atom, multiplicityAddressMatrixUnit, smul_smul]
+      · rw [multiplicityMatrixUnit_atom_other i j kx.1 hki]
+        simp [multiplicityAddressMatrixUnit, Finsupp.single_apply,
+          if_neg hki, map_zero]
 
 /-- Pullback multiplicity matrix units satisfy the exact matrix-unit
 composition law. -/
@@ -115,12 +121,15 @@ theorem multiplicityMatrixUnit_comp
   classical
   induction Φ using Finsupp.induction_linear with
   | zero => simp
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg => simp only [map_add, hf, hg]
   | single lx q =>
+      rw [show Finsupp.single lx q = q • atom V H p lx.1 lx.2 by simp [atom]]
+      simp only [map_smul]
       by_cases hli : lx.1 = i
-      · subst lx.1
-        simp [multiplicityMatrixUnit, atom]
-      · simp [multiplicityMatrixUnit, atom, hli]
+      · rw [hli]
+        simp only [LinearMap.comp_apply, multiplicityMatrixUnit_atom_source]
+      · simp only [LinearMap.comp_apply, multiplicityMatrixUnit_atom_other i j lx.1 hli,
+          multiplicityMatrixUnit_atom_other i k lx.1 hli, map_zero, smul_zero]
 
 /-- Mismatched intermediate labels annihilate exactly. -/
 theorem multiplicityMatrixUnit_comp_zero
@@ -132,12 +141,17 @@ theorem multiplicityMatrixUnit_comp_zero
   classical
   induction Φ using Finsupp.induction_linear with
   | zero => simp
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg => simp only [map_add, hf, hg]
   | single mx q =>
+      rw [show Finsupp.single mx q = q • atom V H p mx.1 mx.2 by simp [atom]]
+      simp only [map_smul]
       by_cases hmi : mx.1 = i
-      · subst mx.1
-        simp [multiplicityMatrixUnit, atom, hjk]
-      · simp [multiplicityMatrixUnit, atom, hmi]
+      · rw [hmi]
+        simp only [LinearMap.comp_apply, multiplicityMatrixUnit_atom_source,
+          multiplicityMatrixUnit_atom_other k l j hjk,
+          LinearMap.zero_apply, smul_zero]
+      · simp only [LinearMap.comp_apply, multiplicityMatrixUnit_atom_other i j mx.1 hmi,
+          map_zero, LinearMap.zero_apply, smul_zero]
 
 /-- The diagonal matrix unit is the exact multiplicity projector. -/
 def multiplicityProjector
@@ -160,6 +174,34 @@ theorem multiplicityProjector_atom_other
     multiplicityProjector i (atom V H p k x) = 0 := by
   simp [multiplicityProjector, multiplicityMatrixUnit_atom_other, hki]
 
+/-- The matrix unit relabels an entire labelled presentation.  This is the
+naturality bridge used by the tensor-commutation law. -/
+theorem multiplicityMatrixUnit_labelPresentation
+    (i j : ClassicalHodgeBasisIndex V H p)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    multiplicityMatrixUnit i j (labelPresentation i φ) =
+      labelPresentation j φ := by
+  classical
+  induction φ using Finsupp.induction_linear with
+  | zero => simp
+  | add f g hf hg => simp only [map_add, hf, hg]
+  | single x q =>
+      simp only [labelPresentation_single, map_smul,
+        multiplicityMatrixUnit_atom_source]
+
+/-- A mismatched labelled presentation is annihilated. -/
+theorem multiplicityMatrixUnit_labelPresentation_other
+    (i j k : ClassicalHodgeBasisIndex V H p) (hki : k ≠ i)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    multiplicityMatrixUnit i j (labelPresentation k φ) = 0 := by
+  classical
+  induction φ using Finsupp.induction_linear with
+  | zero => simp
+  | add f g hf hg => simp only [map_add, hf, hg, map_zero, add_zero, zero_add]
+  | single x q =>
+      simp only [labelPresentation_single, map_smul,
+        multiplicityMatrixUnit_atom_other i j k hki, smul_zero, map_zero]
+
 /-- **TENSOR COMMUTATION LAW.**
 Multiplicity matrix units and arbitrary lifted native cycle operators commute
 exactly because they act on independent coordinates of the common pullback. -/
@@ -173,15 +215,16 @@ theorem multiplicityMatrixUnit_commutes_liftNativeOperator
   classical
   induction Φ using Finsupp.induction_linear with
   | zero => simp
-  | add f g hf hg => simp [hf, hg]
+  | add f g hf hg => simp only [map_add, hf, hg]
   | single kx q =>
       rw [show Finsupp.single kx q = q • atom V H p kx.1 kx.2 by simp [atom]]
-      rw [map_smul, map_smul, map_smul, map_smul]
+      simp only [map_smul, LinearMap.comp_apply]
       rw [liftNativeOperator_atom]
       by_cases hki : kx.1 = i
-      · subst kx.1
-        simp [labelPresentation, multiplicityMatrixUnit, atom]
-      · simp [labelPresentation, multiplicityMatrixUnit, atom, hki]
+      · rw [hki, multiplicityMatrixUnit_labelPresentation,
+          multiplicityMatrixUnit_atom_source, liftNativeOperator_atom]
+      · rw [multiplicityMatrixUnit_labelPresentation_other i j kx.1 hki,
+          multiplicityMatrixUnit_atom_other i j kx.1 hki, map_zero, smul_zero]
 
 /-- Consequently every multiplicity matrix unit commutes with every actual
 projective-correspondence kernel lifted to the pullback. -/
@@ -209,8 +252,9 @@ theorem tensorWord_atom_source
       labelPresentation j
         (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
           V p A x) := by
-  simp [tensorWord, liftNativeOperator_atom,
-    multiplicityMatrixUnit, labelPresentation, atom]
+  rw [tensorWord]
+  simp only [LinearMap.comp_apply, liftNativeOperator_atom]
+  exact multiplicityMatrixUnit_labelPresentation i j _
 
 /-- Native face of a tensor word is the native operator applied to the selected
 source multiplicity slice. -/
@@ -225,6 +269,22 @@ theorem tensorWord_nativeFace_atom_source
   exact GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation_realize
     V p A x
 
+/-- A finite native presentation placed on one multiplicity sheet becomes its
+total coefficient mass times the corresponding global sheet generator. -/
+theorem toGlobalHodgeAddress_labelPresentation
+    (j : ClassicalHodgeBasisIndex V H p)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    toGlobalHodgeAddress V H p (labelPresentation j φ) =
+      GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass φ •
+        fiberedSheetGenerator V H ⟨p, j⟩ := by
+  classical
+  induction φ using Finsupp.induction_linear with
+  | zero => simp [labelPresentation]
+  | add f g hf hg => simp [hf, hg, add_smul]
+  | single x q =>
+      simp [labelPresentation_single,
+        GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass_single]
+
 /-- Multiplicity face of the same tensor word lands entirely in the target
 classical sheet j. -/
 theorem tensorWord_hodgeFace_supported_at_target
@@ -238,12 +298,7 @@ theorem tensorWord_hodgeFace_supported_at_target
       (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
         V p A x), ?_⟩
   rw [tensorWord_atom_source]
-  classical
-  unfold labelPresentation toGlobalHodgeAddress forgetPoint
-  ext s
-  simp [fiberedSheetGenerator,
-    GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass,
-    weightFiberEmbedding, smul_eq_mul]
+  exact toGlobalHodgeAddress_labelPresentation j _
 
 /-- **FIBERED NATIVE TENSOR-ARSENAL CROWN.**
 The unrestricted classical multiplicity matrix-unit algebra and the genuine
@@ -253,7 +308,8 @@ theorem fibered_native_tensor_arsenal_crown :
     (∀ i j k : ClassicalHodgeBasisIndex V H p,
       (multiplicityMatrixUnit j k).comp (multiplicityMatrixUnit i j) =
         multiplicityMatrixUnit i k)
-    ∧ (∀ i j A,
+    ∧ (∀ (i j : ClassicalHodgeBasisIndex V H p)
+        (A : Module.End ℚ (codimensionCycles V.X p)),
       (multiplicityMatrixUnit i j).comp (liftNativeOperator A) =
         (liftNativeOperator A).comp (multiplicityMatrixUnit i j)) := by
   exact ⟨multiplicityMatrixUnit_comp,
