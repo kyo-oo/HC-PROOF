@@ -156,10 +156,8 @@ theorem tensorWord_not_nativeDescends_of_nonzero
     tensorWord_nativeFace_atom_source i j A x
   have hk : tensorWord i j A (atom V H p k x) = 0 := by
     unfold tensorWord
-    rw [LinearMap.comp_apply]
-    rw [liftNativeOperator_atom]
-    classical
-    simp [multiplicityMatrixUnit, labelPresentation, atom, hki]
+    rw [LinearMap.comp_apply, liftNativeOperator_atom,
+      multiplicityMatrixUnit_labelPresentation_other i j k hki]
   have himage :
       toNativeCycle V H p (tensorWord i j A Φ) =
         A (codimensionPointCycle V.X p x) := by
