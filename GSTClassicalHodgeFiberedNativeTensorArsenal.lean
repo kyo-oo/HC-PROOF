@@ -148,9 +148,10 @@ theorem multiplicityMatrixUnit_comp_zero
       by_cases hmi : mx.1 = i
       · rw [hmi]
         simp only [LinearMap.comp_apply, multiplicityMatrixUnit_atom_source,
-          multiplicityMatrixUnit_atom_other k l j hjk, map_zero, smul_zero]
+          multiplicityMatrixUnit_atom_other k l j hjk,
+          LinearMap.zero_apply, smul_zero]
       · simp only [LinearMap.comp_apply, multiplicityMatrixUnit_atom_other i j mx.1 hmi,
-          multiplicityMatrixUnit_atom_other i k mx.1 hmi, map_zero, smul_zero]
+          map_zero, smul_zero]
 
 /-- The diagonal matrix unit is the exact multiplicity projector. -/
 def multiplicityProjector
@@ -268,6 +269,22 @@ theorem tensorWord_nativeFace_atom_source
   exact GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation_realize
     V p A x
 
+/-- A finite native presentation placed on one multiplicity sheet becomes its
+total coefficient mass times the corresponding global sheet generator. -/
+theorem toGlobalHodgeAddress_labelPresentation
+    (j : ClassicalHodgeBasisIndex V H p)
+    (φ : FiniteCodimensionPresentation V.X p) :
+    toGlobalHodgeAddress V H p (labelPresentation j φ) =
+      GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass φ •
+        fiberedSheetGenerator V H ⟨p, j⟩ := by
+  classical
+  induction φ using Finsupp.induction_linear with
+  | zero => simp [labelPresentation]
+  | add f g hf hg => simp [hf, hg, add_smul]
+  | single x q =>
+      simp [labelPresentation_single,
+        GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass_single]
+
 /-- Multiplicity face of the same tensor word lands entirely in the target
 classical sheet j. -/
 theorem tensorWord_hodgeFace_supported_at_target
@@ -281,12 +298,7 @@ theorem tensorWord_hodgeFace_supported_at_target
       (GSTClassicalHodgeProjectiveCorrespondenceAlgebra.operatorPointPresentation
         V p A x), ?_⟩
   rw [tensorWord_atom_source]
-  classical
-  unfold labelPresentation toGlobalHodgeAddress forgetPoint
-  ext s
-  simp [fiberedSheetGenerator,
-    GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass,
-    weightFiberEmbedding, smul_eq_mul]
+  exact toGlobalHodgeAddress_labelPresentation j _
 
 /-- **FIBERED NATIVE TENSOR-ARSENAL CROWN.**
 The unrestricted classical multiplicity matrix-unit algebra and the genuine

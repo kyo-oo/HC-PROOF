@@ -633,13 +633,24 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  rw [nativeBlockOperator_coordinates]
-  simp only [nativeTriangularEquiv, LinearEquiv.coe_coe, LinearEquiv.trans_symm,
-    LinearEquiv.symm_symm, LinearEquiv.trans_apply, LinearEquiv.apply_symm_apply,
-    nativeClassKernelEquiv_apply, triangularCoordinateEquiv_symm_apply]
+  change (nativeClassKernelEquiv (H := H))
+      ((nativeClassKernelEquiv (H := H)).symm
+        ((triangularCoordinateEquiv B C D).symm
+          ((H.cycleClass p).rangeRestrict Z,
+            nativeKernelCoordinate (H := H) Z))) =
+    nativeClassKernelEquiv (H := H)
+      (nativeBlockOperator B.symm.toLinearMap 0
+        ((-1 : ℚ) • (D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
+        D.symm.toLinearMap Z)
+  rw [LinearEquiv.apply_symm_apply, nativeBlockOperator_coordinates]
   apply Prod.ext
-  · simp
-  · simp [map_add, map_smul, map_sub]
+  · rw [triangularCoordinateEquiv_symm_apply]
+  · change D.symm.toLinearMap (nativeKernelCoordinate (H := H) Z -
+        C (B.symm ((H.cycleClass p).rangeRestrict Z))) =
+      (-1 : ℚ) • D.symm.toLinearMap (C (B.symm ((H.cycleClass p).rangeRestrict Z))) +
+        D.symm.toLinearMap (nativeKernelCoordinate (H := H) Z)
+    rw [map_sub (D.symm.toLinearMap) (nativeKernelCoordinate (H := H) Z)
+        (C (B.symm ((H.cycleClass p).rangeRestrict Z))), neg_one_smul]
     abel
 
 theorem nativeTriangularEquiv_kernelStable

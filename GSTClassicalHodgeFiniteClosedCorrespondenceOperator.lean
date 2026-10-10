@@ -58,6 +58,7 @@ open GSTClassicalHodgeFiniteClosedCorrespondence
 open GSTClassicalHodgePointKernelOperatorLift
 open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeCycleOperatorNaturality
+open GSTClassicalHodgeAtomicSpan
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -77,6 +78,7 @@ open GSTClassicalHodgeFiniteClosedCorrespondence
 open GSTClassicalHodgePointKernelOperatorLift
 open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeCycleOperatorNaturality
+open GSTClassicalHodgeAtomicSpan
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -91,8 +93,7 @@ noncomputable def presentationOperator
     (p : Nat) :
     FiniteCodimensionPresentation V.X p →ₗ[ℚ]
       FiniteCodimensionPresentation V.X p :=
-  Finsupp.total (CodimensionPoint V.X p)
-    (FiniteCodimensionPresentation V.X p) ℚ (K.transition p)
+  Finsupp.linearCombination ℚ (K.transition p)
 
 @[simp]
 theorem presentationOperator_single
@@ -125,7 +126,7 @@ theorem nativeOperator_point
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   simp [nativeOperator, nativePointImage,
     compactCyclePresentationLinearEquiv,
-    presentationOfNativeCycleLinear,
+    presentationOfNativeCycle_point,
     presentationOperator,
     realizePresentationLinear]
 
@@ -136,10 +137,11 @@ containing the source point. -/
 theorem graphCorrespondence_leftFiberFinset
     (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
     (x : V.X) :
-    (graphCorrespondence f).leftFiberFinset x = {x} := by
+    (graphCorrespondence f).leftFiberFinset x = {x : (graphCorrespondence f).carrier} := by
   classical
   ext z
-  simp [leftFiberFinset, leftFiber, graphCorrespondence_left]
+  rw [mem_leftFiberFinset, Finset.mem_singleton,
+    graphCorrespondence_left] <;> simp
 
 /-- The corrected target atom of a graph is exactly the genuine point
 pushforward presentation of the underlying endomorphism. -/
@@ -151,7 +153,7 @@ theorem graphCorrespondence_targetAtom_eq_pointPushforward
       pointPushforwardPresentation f.hom p x := by
   classical
   simp [targetAtomPresentation, pointPushforwardPresentation,
-    graphCorrespondence_right]
+    graphCorrespondence_right] <;> rfl
 
 /-- Consequently the full graph transition agrees with the old point
 pushforward transition. -/
@@ -164,7 +166,8 @@ theorem graphCorrespondence_transition_eq_pointPushforward
   classical
   rw [transition_eq_fiber_sum,
     graphCorrespondence_leftFiberFinset]
-  simp [graphCorrespondence_targetAtom_eq_pointPushforward]
+  simpa only [Finset.sum_singleton] using
+    graphCorrespondence_targetAtom_eq_pointPushforward f p x
 
 /-- Pointwise native graph action is exactly the existing genuine native
 pushforward. -/
@@ -196,7 +199,8 @@ theorem graphCorrespondence_nativeOperator_eq_pushforward
     smoothProjectiveNativePushforward,
     realizePushforwardPresentation,
     compactCyclePresentationLinearEquiv,
-    presentationOfNativeCycleLinear,
+    presentation_realizeFiniteCodimensionPresentation,
+    Finsupp.linearCombination_apply,
     realizePresentationLinear,
     graphCorrespondence_transition_eq_pointPushforward]
 
@@ -258,8 +262,11 @@ theorem cycleClass_nativeOperator
     (hKT : K.RealizesAmbientOnPoints (H := H) T)
     (Z : codimensionCycles V.X p) :
     H.cycleClass p (K.nativeOperator p Z) = T (H.cycleClass p Z) := by
-  have h := (K.toCycleClassOperatorPair T hKT).cycleClass_natural Z
-  simpa [toCycleClassOperatorPair_cycleOperator] using h
+  have h := LinearMap.congr_fun
+    (K.toCycleClassOperatorPair T hKT).cycleClass_natural Z
+  have hcoe : (K.toCycleClassOperatorPair T hKT).cohomologyOperator = T := rfl
+  rw [hcoe, toCycleClassOperatorPair_cycleOperator] at h
+  exact h
 
 /-! ## Rational cycles of genuine closed correspondences -/
 
