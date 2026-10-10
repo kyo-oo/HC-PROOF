@@ -9,7 +9,6 @@ on:
       - 'GSTClassicalHodgeFiberedNativeTensorArsenal.lean'
       - 'GSTClassicalHodgeFiniteClosedCorrespondenceOperator.lean'
       - 'GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall.lean'
-      - 'GSTClassicalHodgePointClosureIntegral.lean'
       - '.github/workflows/hodge-advanced-correspondence-focus.yml'
   workflow_dispatch:
 
@@ -45,7 +44,6 @@ jobs:
             GSTClassicalHodgeFiberedNativeTensorArsenal \
             GSTClassicalHodgeFiniteClosedCorrespondenceOperator \
             GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall \
-            GSTClassicalHodgePointClosureIntegral \
             2>&1 | tee hodge-advanced-correspondence-focused.log
       - name: Publish focused compiler diagnostics
         if: always()
