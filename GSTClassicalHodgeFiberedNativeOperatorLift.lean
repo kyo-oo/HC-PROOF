@@ -324,8 +324,8 @@ theorem liftNativeOperator_id :
   | add a b ha hb => simp [ha, hb]
   | single ix q =>
     rw [show Finsupp.single ix q = q • atom V H p ix.1 ix.2 by simp [atom]]
-    simp only [map_smul, LinearMap.id_apply]
-    rw [liftNativeOperator_atom_as_nativeCycleLabel, nativeCycleLabel_point]
+    simp only [map_smul, LinearMap.id_apply,
+      liftNativeOperator_atom_as_nativeCycleLabel, nativeCycleLabel_point]
 
 /-- **FULL COMPOSITION LAW.** Native word evaluation and lifting commute
 exactly before passing to cohomology or the limitless scalar shadow. -/
@@ -391,8 +391,7 @@ theorem liftNativeOperator_smul
   | single ix r =>
     rw [show Finsupp.single ix r = r • atom V H p ix.1 ix.2 by simp [atom]]
     simp only [map_smul, LinearMap.smul_apply,
-      liftNativeOperator_atom_as_nativeCycleLabel, smul_smul]
-    rw [mul_comm]
+      liftNativeOperator_atom_as_nativeCycleLabel, RingHom.id_apply]
 
 /-- A populated multiplicity fiber makes the native representation faithful. -/
 theorem liftNativeOperator_injective

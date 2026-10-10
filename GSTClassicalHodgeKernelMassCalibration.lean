@@ -535,6 +535,7 @@ noncomputable def descendedNativeMass
         H.cycleClass p (q • rangeCycleRepresentative a) := by
       simp [rangeCycleRepresentative_spec]
     rw [nativeMass_eq_of_class_eq hker _ _ hc, map_smul]
+    simp only [RingHom.id_apply]
 
 theorem descendedNativeMass_class
     (hker : NativeMassKernelLawAtWeight (V := V) (H := H) (p := p))

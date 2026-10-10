@@ -160,7 +160,8 @@ theorem hodge_weight_of_liveSource_pointLifts
       ∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
         ((classicalHodgeBasis V H p).repr alphaH j) •
           classicalHodgeBasis V H p j := by
-      exact h1.symm.trans ((classicalHodgeBasis V H p).sum_repr alphaH)
+      rw [(classicalHodgeBasis V H p).repr_symm_apply]
+      simp only [Finsupp.linearCombination_apply, Finsupp.sum]
     show (alphaH : ClassicalHodgeFiber V H p).val ∈
       pointCycleClassSpan p (H.cycleClass p)
     rw [h1, h2]
