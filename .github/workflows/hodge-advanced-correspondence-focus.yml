@@ -1,0 +1,56 @@
+name: Focused Hodge Advanced-Correspondence Lean Gate
+
+on:
+  push:
+    branches:
+      - sol/hodge-strict-betti-correspondence-fusion-20261003
+    paths:
+      - 'GSTClassicalHodgeKernelStableOperatorAlgebra.lean'
+      - 'GSTClassicalHodgeFiberedNativeTensorArsenal.lean'
+      - 'GSTClassicalHodgeFiniteClosedCorrespondenceOperator.lean'
+      - 'GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall.lean'
+      - 'GSTClassicalHodgePointClosureIntegral.lean'
+      - '.github/workflows/hodge-advanced-correspondence-focus.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hodge-advanced-correspondence-focus-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-advanced-correspondence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install pinned Lean and fetch Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+      - name: Compile the advanced correspondence failure roots
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build \
+            GSTClassicalHodgeKernelStableOperatorAlgebra \
+            GSTClassicalHodgeFiberedNativeTensorArsenal \
+            GSTClassicalHodgeFiniteClosedCorrespondenceOperator \
+            GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall \
+            GSTClassicalHodgePointClosureIntegral \
+            2>&1 | tee hodge-advanced-correspondence-focused.log
+      - name: Publish focused compiler diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hodge-advanced-correspondence-focused-log
+          path: hodge-advanced-correspondence-focused.log
+          if-no-files-found: warn

@@ -58,7 +58,13 @@ noncomputable def toFiniteClosedCorrespondence
     intro x
     letI : IsFinite K.left := K.left_isFinite
     have h := K.left.finite_preimage_singleton x
-    simpa [left] using h
+    change ({z : K.carrier | K.left z = x} : Set K.carrier).Finite
+    have heq : ({z : K.carrier | K.left z = x} : Set K.carrier) =
+        K.left ⁻¹' ({x} : Set V.X) := by
+      ext z
+      simp
+    rw [heq]
+    exact h
 
 @[simp]
 theorem toFiniteClosedCorrespondence_left
@@ -89,7 +95,13 @@ noncomputable def toBiFiniteClosedCorrespondence
     intro x
     letI : IsFinite K.right := K.right_isFinite
     have h := K.right.finite_preimage_singleton x
-    simpa [right] using h
+    change ({z : K.carrier | K.right z = x} : Set K.carrier).Finite
+    have heq : ({z : K.carrier | K.right z = x} : Set K.carrier) =
+        K.right ⁻¹' ({x} : Set V.X) := by
+      ext z
+      simp
+    rw [heq]
+    exact h
 
 @[simp]
 theorem toBiFiniteClosedCorrespondence_left
