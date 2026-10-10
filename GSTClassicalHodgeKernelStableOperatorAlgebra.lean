@@ -664,9 +664,9 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
           C (B.symm ((H.cycleClass p).rangeRestrict Z))) =
           D.symm (nativeKernelCoordinate (H := H) Z) -
             D.symm (C (B.symm ((H.cycleClass p).rangeRestrict Z))) :=
-        D.symm.map_sub _ _
+        map_sub (D.symm.toLinearMap) _ _
       _ = _ := by
-        simp only [LinearMap.smul_apply, LinearMap.comp_apply, neg_one_smul]
+        simp [LinearMap.smul_apply, LinearMap.comp_apply]
         abel
 
 theorem nativeTriangularEquiv_kernelStable
