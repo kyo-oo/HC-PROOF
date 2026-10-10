@@ -587,10 +587,12 @@ noncomputable def triangularCoordinateEquiv
   left_inv := by
     intro a
     apply Prod.ext
-    · simp
-    · change D.symm (C a.1 + D a.2 - C a.1) = a.2
+    · change B.symm (B a.1) = a.1
+      exact B.symm_apply_apply a.1
+    · change D.symm ((C a.1 + D a.2) - C (B.symm (B a.1))) = a.2
+      rw [B.symm_apply_apply]
       have hcancel : C a.1 + D a.2 - C a.1 = D a.2 := by abel
-      rw [hcancel, LinearEquiv.symm_apply_apply]
+      rw [hcancel, D.symm_apply_apply]
   right_inv := by
     intro a
     apply Prod.ext
@@ -615,13 +617,15 @@ theorem nativeTriangularEquiv_toLinearMap
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  change (triangularCoordinateEquiv B C D)
-      (nativeClassKernelEquiv (H := H) Z) =
+  change (nativeClassKernelEquiv (H := H))
+      ((nativeClassKernelEquiv (H := H)).symm
+        (B ((H.cycleClass p).rangeRestrict Z),
+          C ((H.cycleClass p).rangeRestrict Z) +
+            D (nativeKernelCoordinate (H := H) Z))) =
     nativeClassKernelEquiv (H := H)
       (nativeBlockOperator B.toLinearMap 0 C D.toLinearMap Z)
-  rw [nativeBlockOperator_coordinates]
+  rw [LinearEquiv.apply_symm_apply, nativeBlockOperator_coordinates]
   simp only [LinearMap.zero_apply, add_zero]
-  rfl
 
 /-- The actual inverse is another constructed native operator, with the
 negative conjugated feedback in its lower-left block. -/
@@ -636,13 +640,16 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
   apply LinearMap.ext
   intro Z
   apply (nativeClassKernelEquiv (H := H)).injective
-  change (triangularCoordinateEquiv B C D).symm
-      (nativeClassKernelEquiv (H := H) Z) =
+  change (nativeClassKernelEquiv (H := H))
+      ((nativeClassKernelEquiv (H := H)).symm
+        ((triangularCoordinateEquiv B C D).symm
+          ((H.cycleClass p).rangeRestrict Z,
+            nativeKernelCoordinate (H := H) Z))) =
     nativeClassKernelEquiv (H := H)
       (nativeBlockOperator B.symm.toLinearMap 0
         ((-1 : ℚ) • (D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
         D.symm.toLinearMap Z)
-  rw [nativeBlockOperator_coordinates]
+  rw [LinearEquiv.apply_symm_apply, nativeBlockOperator_coordinates]
   apply Prod.ext
   · simp only [LinearMap.zero_apply, add_zero]
     rfl
