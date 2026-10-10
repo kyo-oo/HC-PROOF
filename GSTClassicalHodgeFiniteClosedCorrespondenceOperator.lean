@@ -44,6 +44,7 @@ noncomputable section
 open CategoryTheory
 open AlgebraicGeometry
 
+set_option allowUnsafeReducibility true in
 attribute [local reducible]
   GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence.graphCorrespondence
 
@@ -147,7 +148,7 @@ theorem graphCorrespondence_leftFiberFinset
         (Finset.notMem_empty x) := by
   classical
   ext z
-  simp [graphCorrespondence_left, Finset.mem_cons, CategoryTheory.id_apply]
+  simp [graphCorrespondence_left, Finset.mem_cons, ConcreteCategory.id_apply]
 
 /-- The corrected target atom of a graph is exactly the genuine point
 pushforward presentation of the underlying endomorphism. -/
