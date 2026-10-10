@@ -138,14 +138,13 @@ theorem nativeOperator_point
 containing the source point. -/
 theorem graphCorrespondence_leftFiberFinset
     (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
-    (x : (graphCorrespondence f).carrier) :
+    (x : V.X) :
     (graphCorrespondence f).leftFiberFinset x =
       @Finset.cons ↥(graphCorrespondence f).carrier x Finset.empty
         (Finset.notMem_empty x) := by
   classical
   ext z
-  rw [mem_leftFiberFinset, Finset.mem_cons, graphCorrespondence_left]
-  simp
+  simp [graphCorrespondence_left, Finset.mem_cons]
 
 /-- The corrected target atom of a graph is exactly the genuine point
 pushforward presentation of the underlying endomorphism. -/
@@ -170,7 +169,7 @@ theorem graphCorrespondence_transition_eq_pointPushforward
   classical
   rw [transition_eq_fiber_sum,
     graphCorrespondence_leftFiberFinset]
-  rw [Finset.sum_cons, Finset.sum_empty, add_zero]
+  simp only [Finset.sum_cons, Finset.sum_empty, add_zero]
   exact graphCorrespondence_targetAtom_eq_pointPushforward f p x
 
 /-- Pointwise native graph action is exactly the existing genuine native
