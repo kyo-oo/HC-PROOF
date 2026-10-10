@@ -626,6 +626,7 @@ theorem nativeTriangularEquiv_toLinearMap
       (nativeBlockOperator B.toLinearMap 0 C D.toLinearMap Z)
   rw [LinearEquiv.apply_symm_apply, nativeBlockOperator_coordinates]
   simp only [LinearMap.zero_apply, add_zero]
+  apply Prod.ext <;> rfl
 
 /-- The actual inverse is another constructed native operator, with the
 negative conjugated feedback in its lower-left block. -/
@@ -658,8 +659,8 @@ theorem nativeTriangularEquiv_inverse_toLinearMap
       ((-1 : ℚ) • (D.symm.toLinearMap.comp (C.comp B.symm.toLinearMap)))
         ((H.cycleClass p).rangeRestrict Z) +
         D.symm (nativeKernelCoordinate (H := H) Z)
-    simp only [LinearMap.smul_apply, LinearMap.comp_apply,
-      neg_one_smul, map_sub]
+    rw [map_sub]
+    simp only [LinearMap.smul_apply, LinearMap.comp_apply, neg_one_smul]
     abel
 
 theorem nativeTriangularEquiv_kernelStable
