@@ -6,6 +6,10 @@ import GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
 import GSTClassicalHodgeThreeUniverseSeedIdentification
 import GSTClassicalHodgeLimitlessProjectiveLefschetzTower
 import GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
+import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeFiberedTransferCompletion
+import GSTClassicalHodgeConcreteFailureDichotomy
+import GSTClassicalHodgeFiniteSupportArsenalConjugation
 
 /-!
 # GST CLASSICAL HODGE — FULL LIMITLESS EXTERNALIZATION
@@ -45,6 +49,8 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open AlgebraicGeometry
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeFiberedTransferCompletion
 open scoped BigOperators
 
 namespace GSTClassicalHodgeFullLimitlessExternalization
@@ -173,7 +179,7 @@ externalization. -/
 theorem hodgeWeight_of_fullLimitlessExternalization
     (G : GeometricCycleClassSpine V H)
     (hseed :
-      GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+      GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
         (V := V) (H := H) (p := p) ≠ ⊥)
     (K : ∀ i j : ClassicalHodgeBasisIndex V H p,
       ProjectiveNativeKernel V p)
@@ -190,7 +196,7 @@ the multiplicity-labelled native atom on which externalization is tested. -/
 theorem externalization_atom_recoordination_invariant
     (alpha : ClassicalHodgeFiber V H p)
     (S T : GSTWorldRecoordinationGroupoid.GSTWorldShape
-      (GSTClassicalHodgeSupportCardinalityBridge.liveRank alpha))
+      (GSTClassicalHodgeFiniteSupportArsenalConjugation.liveRank alpha))
     (y : GSTWorldRecoordinationGroupoid.ShapeState S)
     (x : CodimensionPoint V.X p) :
     shapedLiveNativeAtom alpha T
