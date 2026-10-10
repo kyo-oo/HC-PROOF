@@ -3,6 +3,9 @@ import GSTClassicalHodgeGeometryFirstTwoGenerator
 import GSTClassicalHodgeLimitlessTowerOrbitCrown
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeProjectiveSelfCorrespondences
+import GSTClassicalHodgeTwoGeneratorNativeArsenal
+import GSTClassicalHodgeUniversalTwoSlotNativeClosure
+import GSTClassicalHodgeRankFreeArsenalIrreducibility
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE TWO-GENERATOR EXTERNALIZATION
@@ -37,6 +40,9 @@ set_option maxRecDepth 1000000
 noncomputable section
 
 open CategoryTheory
+open GSTClassicalHodgeTwoGeneratorNativeArsenal
+open GSTClassicalHodgeUniversalTwoSlotNativeClosure
+open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open AlgebraicGeometry
 
 namespace GSTClassicalHodgeProjectiveTwoGeneratorExternalization
@@ -259,8 +265,8 @@ theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
-    G D R q alpha halpha
+  exact LinearMap.mem_range.mp
+    (bigradedBettiHodge_of_conserved_spine_and_projective_two_generators G D R q halpha)
 
 /-- Elementwise native-cycle form of the strongest native-mass/live-source
 route. -/
@@ -276,8 +282,8 @@ theorem every_hodge_class_has_native_cycle_of_native_mass_source_projective_gene
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_native_mass_source_projective_generators
-    G M R q alpha halpha
+  exact LinearMap.mem_range.mp
+    (bigradedBettiHodge_of_native_mass_source_projective_generators G M R q halpha)
 
 #check ProjectivePrimitiveRealization
 #check ProjectivePrimitiveRealization.toNativeHodgePrimitive

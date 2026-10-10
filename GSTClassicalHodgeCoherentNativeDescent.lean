@@ -133,7 +133,7 @@ theorem labelledLinearMap_ext
     {M : Type*} [AddCommGroup M] [Module ℚ M]
     {F G : FiberedNativeAddress V H p →ₗ[ℚ] M}
     (h : ∀ i x, F (atom V H p i x) = G (atom V H p i x)) : F = G := by
-  ext Φ
+  refine LinearMap.ext fun Φ => ?_
   classical
   induction Φ using Finsupp.induction_linear with
   | zero => simp
@@ -176,7 +176,8 @@ theorem native_factorization_iff_columns
   · intro h i
     ext Z
     have hz := LinearMap.congr_fun h (nativeSection i Z)
-    simpa [nativeColumn] using hz
+    simp only [nativeColumn]
+    rw [← hz]
   · intro h
     apply labelledLinearMap_ext
     intro i x
@@ -235,7 +236,7 @@ theorem native_descent_comp
     (hW : (toNativeCycle V H p).comp W = C.comp (toNativeCycle V H p)) :
     (toNativeCycle V H p).comp (W.comp U) =
       (C.comp B).comp (toNativeCycle V H p) := by
-  ext Φ
+  refine LinearMap.ext fun Φ => ?_
   have hu := LinearMap.congr_fun hU Φ
   have hw := LinearMap.congr_fun hW (U Φ)
   simpa only [LinearMap.comp_apply, hu] using hw
@@ -248,8 +249,14 @@ def routedNativeOperator
     Module.End ℚ (FiberedNativeAddress V H p) where
   toFun Φ := Φ.sum (fun ix q => q • nativeSection (ρ ix.1)
     (A (codimensionPointCycle V.X p ix.2)))
-  map_add' := by intro Φ Ψ; classical; simp [add_smul]
-  map_smul' := by intro q Φ; classical; simp [smul_smul]
+  map_add' := by
+    intro Φ Ψ
+    classical
+    simp [add_smul]
+  map_smul' := by
+    intro q Φ
+    classical
+    simp [smul_smul]
 
 @[simp] theorem routedNativeOperator_atom
     (ρ : ClassicalHodgeBasisIndex V H p → ClassicalHodgeBasisIndex V H p)
@@ -337,7 +344,7 @@ theorem native_lift_normal_form_iff
   constructor
   · intro hU
     refine ⟨U - routedNativeOperator ρ A, ?_, ?_⟩
-    · ext Φ
+    · refine LinearMap.ext fun Φ => ?_
       have hu := LinearMap.congr_fun hU Φ
       have hr := LinearMap.congr_fun (routedNativeOperator_descends ρ A) Φ
       change toNativeCycle V H p (U Φ - routedNativeOperator ρ A Φ) = 0
@@ -345,7 +352,7 @@ theorem native_lift_normal_form_iff
       simpa only [LinearMap.comp_apply] using sub_eq_zero.mpr (hu.trans hr.symm)
     · abel
   · rintro ⟨W, hW, rfl⟩
-    ext Φ
+    refine LinearMap.ext fun Φ => ?_
     have hw := LinearMap.congr_fun hW Φ
     have hr := LinearMap.congr_fun (routedNativeOperator_descends ρ A) Φ
     change toNativeCycle V H p (routedNativeOperator ρ A Φ + W Φ) =

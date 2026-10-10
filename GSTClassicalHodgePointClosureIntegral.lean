@@ -52,13 +52,14 @@ noncomputable def pointClosureIsReduced
     (x : V.X) :
     IsReduced (pointClosureScheme V x) := by
   let I : V.X.IdealSheafData := pointClosureIdeal V x
-  letI : ∀ i : I.subschemeCover.openCover.I₀,
-      IsReduced (I.subschemeCover.openCover.X i) := fun i => by
-    have hrad : (I.ideal i).IsRadical := by
-      simpa [I] using pointClosureIdeal_affine_isRadical V x i
-    have hred : _root_.IsReduced (Γ(V.X, i) ⧸ I.ideal i) :=
-      (Ideal.isRadical_iff_quotient_reduced (I.ideal i)).mp hrad
-    exact (affine_isReduced_iff (CommRingCat.of (Γ(V.X, i) ⧸ I.ideal i))).mpr hred
+  letI : ∀ U : V.X.affineOpens,
+      IsReduced ((I.subschemeCover).X U) := fun U => by
+    change IsReduced (Spec (.of (Γ(V.X, U) ⧸ I.ideal U)))
+    have hrad : (I.ideal U).IsRadical := by
+      simpa [I] using pointClosureIdeal_affine_isRadical V x U
+    letI : _root_.IsReduced (Γ(V.X, U) ⧸ I.ideal U) :=
+      (Ideal.isRadical_iff_quotient_reduced (I.ideal U)).mp hrad
+    infer_instance
   exact IsReduced.of_openCover (pointClosureScheme V x) I.subschemeCover.openCover
 
 /-- A point closure is both irreducible and reduced, hence an integral scheme. -/
