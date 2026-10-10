@@ -144,7 +144,8 @@ theorem graphCorrespondence_leftFiberFinset
     (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
     (x : V.X) :
     (graphCorrespondence f).leftFiberFinset x =
-      @Finset.cons ↥(graphCorrespondence f).carrier x Finset.empty
+      @Finset.cons ↥(graphCorrespondence f).carrier x
+        (∅ : Finset ↥(graphCorrespondence f).carrier)
         (Finset.notMem_empty x) := by
   classical
   ext z
@@ -152,7 +153,7 @@ theorem graphCorrespondence_leftFiberFinset
       (graphCorrespondence f).left z = x :=
     mem_leftFiberFinset (graphCorrespondence f) x z
   rw [hmem]
-  simp [graphCorrespondence_left, ConcreteCategory.id_apply, Finset.notMem_empty]
+  simp [graphCorrespondence_left, ConcreteCategory.id_apply]
 
 /-- The corrected target atom of a graph is exactly the genuine point
 pushforward presentation of the underlying endomorphism. -/
@@ -178,10 +179,11 @@ theorem graphCorrespondence_transition_eq_pointPushforward
   rw [transition_eq_fiber_sum]
   have hc : (graphCorrespondence f).leftFiberFinset x.1 =
       @Finset.cons ↥(graphCorrespondence f).carrier (x.1 : (graphCorrespondence f).carrier)
-        Finset.empty (Finset.notMem_empty (x.1 : (graphCorrespondence f).carrier)) :=
+        (∅ : Finset ↥(graphCorrespondence f).carrier)
+        (Finset.notMem_empty (x.1 : (graphCorrespondence f).carrier)) :=
     graphCorrespondence_leftFiberFinset f (x.1 : (graphCorrespondence f).carrier)
   rw [hc]
-  simp [Finset.sum_cons, Finset.sum_empty, add_zero]
+  simp
   exact graphCorrespondence_targetAtom_eq_pointPushforward f p x
 
 /-- Pointwise native graph action is exactly the existing genuine native
