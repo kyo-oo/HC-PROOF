@@ -144,8 +144,7 @@ theorem graphCorrespondence_leftFiberFinset
         (Finset.notMem_empty x) := by
   classical
   ext z
-  simp [graphCorrespondence_left, Finset.mem_cons, CategoryTheory.id_apply,
-    ConcreteCategory.id_apply]
+  simp [graphCorrespondence_left, Finset.mem_cons, ← CategoryTheory.id_apply]
 
 /-- The corrected target atom of a graph is exactly the genuine point
 pushforward presentation of the underlying endomorphism. -/
@@ -174,7 +173,7 @@ theorem graphCorrespondence_transition_eq_pointPushforward
         Finset.empty (Finset.notMem_empty (x.1 : (graphCorrespondence f).carrier)) :=
     graphCorrespondence_leftFiberFinset f (x.1 : (graphCorrespondence f).carrier)
   rw [hc]
-  simp [Finset.sum_cons]
+  simp
   exact graphCorrespondence_targetAtom_eq_pointPushforward f p x
 
 /-- Pointwise native graph action is exactly the existing genuine native
