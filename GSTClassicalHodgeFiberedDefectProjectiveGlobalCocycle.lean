@@ -115,6 +115,7 @@ theorem fiberedCycleClassDefect_pushforward_cocycle
         fiberedHodgeAmbient (V := V) (H := H) (p := p)
           (fiberedNativePushforward f Φ)) := by
   unfold fiberedCycleClassDefect
+  simp only [LinearMap.sub_apply]
   rw [nativeCycleClass_fiberedPushforward f N Φ]
   rw [LinearMap.map_sub]
   abel
