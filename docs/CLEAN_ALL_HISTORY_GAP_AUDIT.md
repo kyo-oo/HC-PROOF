@@ -40,9 +40,9 @@ changes:
 
 The canonical migration source is the final tip `ed02aa25`.  Compared with
 the clean branch it contains **153 absent Lean paths**, or **149** after
-excluding the four declared debris paths.  Of those 149 sources, **143**
+excluding the four declared debris paths.  Of those 149 sources, **147**
 introduce unqualified declaration names absent from the clean branch.  The
-remaining six are receipts/smokes or repeat declarations present elsewhere.
+remaining two are receipts/smokes or repeat declarations present elsewhere.
 
 The final lineage tip must be used instead of a raw union: the math-frontier
 step intentionally deleted files from its predecessor, so unioning every tip
