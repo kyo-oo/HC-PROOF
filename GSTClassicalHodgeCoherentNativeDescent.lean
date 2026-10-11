@@ -176,8 +176,9 @@ theorem native_factorization_iff_columns
   · intro h i
     ext Z
     have hz := LinearMap.congr_fun h (nativeSection i Z)
-    simp only [nativeColumn]
-    rw [← hz]
+    simp only [LinearMap.comp_apply] at hz
+    simp only [nativeColumn, LinearMap.comp_apply]
+    rw [hz, toNativeCycle_nativeSection]
   · intro h
     apply labelledLinearMap_ext
     intro i x
@@ -238,25 +239,19 @@ theorem native_descent_comp
       (C.comp B).comp (toNativeCycle V H p) := by
   refine LinearMap.ext fun Φ => ?_
   have hu := LinearMap.congr_fun hU Φ
+  simp only [LinearMap.comp_apply] at hu
   have hw := LinearMap.congr_fun hW (U Φ)
   simpa only [LinearMap.comp_apply, hu] using hw
 
 /-- A total label routing can accompany ANY native operator. Unlike a
 single selected-source matrix unit, it processes every source sheet. -/
-def routedNativeOperator
+noncomputable def routedNativeOperator
     (ρ : ClassicalHodgeBasisIndex V H p → ClassicalHodgeBasisIndex V H p)
     (A : Module.End ℚ (codimensionCycles V.X p)) :
-    Module.End ℚ (FiberedNativeAddress V H p) where
-  toFun Φ := Φ.sum (fun ix q => q • nativeSection (ρ ix.1)
-    (A (codimensionPointCycle V.X p ix.2)))
-  map_add' := by
-    intro Φ Ψ
-    classical
-    simp [add_smul]
-  map_smul' := by
-    intro q Φ
-    classical
-    simp [smul_smul]
+    Module.End ℚ (FiberedNativeAddress V H p) :=
+  Finsupp.linearCombination ℚ
+    (fun ix : FiberedNativeAtom V H p => nativeSection (ρ ix.1)
+      (A (codimensionPointCycle V.X p ix.2)))
 
 @[simp] theorem routedNativeOperator_atom
     (ρ : ClassicalHodgeBasisIndex V H p → ClassicalHodgeBasisIndex V H p)

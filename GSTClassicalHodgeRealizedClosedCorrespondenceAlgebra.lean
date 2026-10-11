@@ -107,7 +107,8 @@ theorem cycleClass_natural
     (Z : codimensionCycles V.X p) :
     H.cycleClass p (R.geometry.nativeOperator p Z) =
       R.cohomologyOperator (H.cycleClass p Z) := by
-  simpa [operatorPair] using R.operatorPair.cycleClass_cycleOperator Z
+  have h := R.operatorPair.cycleClass_cycleOperator Z
+  rwa [operatorPair_cycle, operatorPair_cohomology] at h
 
 /-- Hodge compatibility is intentionally a separate property.  It is weaker
 than realizing a prescribed matrix unit and must be proved from geometry for
@@ -142,12 +143,12 @@ theorem maps_algebraicHodgeSubspace
     (alpha : ClassicalHodgeFiber V H p)
     (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
     R.hodgeOperator hR alpha ∈ AlgebraicHodgeSubspace V H p := by
+  rw [mem_AlgebraicHodgeSubspace_iff,
+    ← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halpha ⊢
   rcases halpha with ⟨Z, hZ⟩
   refine ⟨R.geometry.nativeOperator p Z, ?_⟩
-  change H.cycleClass p (R.geometry.nativeOperator p Z) =
-    R.cohomologyOperator alpha.1
-  rw [R.cycleClass_natural]
-  simpa [hZ]
+  rw [R.cycleClass_natural, hZ]
+  rfl
 
 /-! ## Graphs are certified realized correspondences from the geometric spine. -/
 
@@ -163,6 +164,7 @@ noncomputable def graphRealized
   realizes_on_points := by
     intro x
     rw [FiniteClosedCorrespondence.graphCorrespondence_nativePointImage_eq]
+    rw [← smoothProjectiveNativePushforward_point V f.hom p x]
     exact (G.pushforward_naturality p f.hom).naturality
       (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x)
 
@@ -174,8 +176,9 @@ theorem graphRealized_cycleOperator
     (graphRealized (p := p) G f).operatorPair.cycleOperator =
       GSTClassicalHodgeProjectivePointTransport.smoothProjectiveNativePushforward
         V f.hom p := by
-  rw [operatorPair_cycle,
-    FiniteClosedCorrespondence.graphCorrespondence_nativeOperator_eq_pushforward]
+  rw [operatorPair_cycle]
+  show (FiniteClosedCorrespondence.graphCorrespondence f).nativeOperator p = _
+  rw [FiniteClosedCorrespondence.graphCorrespondence_nativeOperator_eq_pushforward]
 
 end RealizedFiniteClosedCorrespondence
 
@@ -305,8 +308,8 @@ theorem algebraicHodgeSubspace_eq_top_of_closedCorrespondenceReachability
     (hreach : ∀ i j : ClassicalHodgeBasisIndex V H p,
       MatrixUnitReachableByClosedCorrespondences (V := V) (H := H) i j) :
     AlgebraicHodgeSubspace V H p = ⊤ := by
-  exact (nativeArsenalOfClosedCorrespondenceReachability hreach).
-    algebraicHodgeSubspace_eq_top seed hseed0 hseedAlg
+  exact (nativeArsenalOfClosedCorrespondenceReachability hreach).algebraicHodgeSubspace_eq_top
+    seed hseed0 hseedAlg
 
 #check RealizedFiniteClosedCorrespondence
 #check RealizedFiniteClosedCorrespondence.operatorPair
