@@ -273,8 +273,13 @@ theorem rationalPair_cycleOperator
           (A.sum fun K q => Pair.smul q (primitivePair K (T K) (hT K)))).cycleOperator =
         (Finsupp.single K q).sum (fun K q => q • K.nativeOperator p) +
           A.sum (fun K q => q • K.nativeOperator p)
-      simp only [Pair.add_cycleOperator, Finsupp.sum_single_index (h0 K),
-        Finsupp.sum_single_index (h0' K), Pair.smul_cycleOperator,
+      simp only [Pair.add_cycleOperator,
+        Finsupp.sum_single_index (a := K) (b := q)
+          (h := fun K' q' => Pair.smul q' (primitivePair K' (T K') (hT K')))
+          (h0 K),
+        Finsupp.sum_single_index (a := K) (b := q)
+          (h := fun K' q' => q' • K'.nativeOperator p)
+          (h0' K), Pair.smul_cycleOperator,
         primitivePair, toCycleClassOperatorPair_cycleOperator, ih']
 
 /-- The cohomological action is the matching rational sum of the independently
@@ -321,8 +326,13 @@ theorem rationalPair_cohomologyOperator
           (A.sum fun K q => Pair.smul q (primitivePair K (T K) (hT K)))).cohomologyOperator =
         (Finsupp.single K q).sum (fun K q => q • T K) +
           A.sum (fun K q => q • T K)
-      simp only [Pair.add_cohomologyOperator, Finsupp.sum_single_index (h0 K),
-        Finsupp.sum_single_index (h0' K), Pair.smul_cohomologyOperator,
+      simp only [Pair.add_cohomologyOperator,
+        Finsupp.sum_single_index (a := K) (b := q)
+          (h := fun K' q' => Pair.smul q' (primitivePair K' (T K') (hT K')))
+          (h0 K),
+        Finsupp.sum_single_index (a := K) (b := q)
+          (h := fun K' q' => q' • T K')
+          (h0' K), Pair.smul_cohomologyOperator,
         primitivePair]
       rw [show (K.toCycleClassOperatorPair (T K) (hT K)).cohomologyOperator = T K from rfl,
         ih']

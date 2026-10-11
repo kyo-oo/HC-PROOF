@@ -118,6 +118,7 @@ theorem basis_mem_orbit_of_program_projective_word
     (P0 : GradedGeometricProgram V 0 p)
     (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0)
     (j : ClassicalHodgeBasisIndex V H p)
+    (hij : (orbitSeedOfProgram G P0 hne).sourceIndex ≠ j)
     (R : ProjectiveTwoGenerator (V := V) (H := H)
       (orbitSeedOfProgram G P0 hne).sourceIndex j) :
     (classicalHodgeBasis V H p j).1 ∈ geometricProgramOrbitModule G p := by
@@ -136,7 +137,7 @@ theorem basis_mem_orbit_of_program_projective_word
           (classicalHodgeBasis V H p j).1 := by
     simpa [W, GradedGeometricProgram.cohomologyEval,
       GradedGeometricProgram.toPair] using
-      compileProjectiveTwoGenerator_source_action G S j R
+      compileProjectiveTwoGenerator_source_action G S j hij R
   rw [haction] at hword
   have hc :
       (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex ≠ 0 :=
@@ -154,11 +155,16 @@ theorem every_basis_mem_orbit_of_program_projective_words
     (hne : P0.cohomologyEval G (geometricOriginClass V H) ≠ 0)
     (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       ProjectiveTwoGenerator (V := V) (H := H)
-        (orbitSeedOfProgram G P0 hne).sourceIndex j) :
+        (orbitSeedOfProgram G P0 hne).sourceIndex j)
+    (hdiag : (classicalHodgeBasis V H p
+      (orbitSeedOfProgram G P0 hne).sourceIndex).1
+      ∈ geometricProgramOrbitModule G p) :
     ∀ j : ClassicalHodgeBasisIndex V H p,
       (classicalHodgeBasis V H p j).1 ∈ geometricProgramOrbitModule G p := by
   intro j
-  exact basis_mem_orbit_of_program_projective_word G P0 hne j (R j)
+  by_cases h : (orbitSeedOfProgram G P0 hne).sourceIndex = j
+  · subst h; exact hdiag
+  · exact basis_mem_orbit_of_program_projective_word G P0 hne j h (R j)
 
 /-- **THE HANDWRITTEN LIVE BRANCHES LAND.**
 The branch landing required by the two-page derivation is now DERIVED.  The
@@ -171,6 +177,9 @@ theorem liveLocalizedL2BranchesLandInOrbit_of_program_projective_words
     (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       ProjectiveTwoGenerator (V := V) (H := H)
         (orbitSeedOfProgram G P0 hne).sourceIndex j)
+    (hdiag : (classicalHodgeBasis V H p
+      (orbitSeedOfProgram G P0 hne).sourceIndex).1
+      ∈ geometricProgramOrbitModule G p)
     (alpha : ClassicalHodgeFiber V H p)
     (halpha : alpha ≠ 0) :
     LiveLocalizedL2BranchesLandInOrbit G alpha := by
@@ -178,7 +187,7 @@ theorem liveLocalizedL2BranchesLandInOrbit_of_program_projective_words
   refine ⟨i, hi, ?_⟩
   intro j hj
   have hbasis :=
-    every_basis_mem_orbit_of_program_projective_words G P0 hne R j
+    every_basis_mem_orbit_of_program_projective_words G P0 hne R hdiag j
   have hscaled :=
     (geometricProgramOrbitModule G p).smul_mem
       (hodgeCoordinate i.1 alpha) hbasis
@@ -194,6 +203,9 @@ theorem native_cycle_of_program_projective_words
     (R : ∀ j : ClassicalHodgeBasisIndex V H p,
       ProjectiveTwoGenerator (V := V) (H := H)
         (orbitSeedOfProgram G P0 hne).sourceIndex j)
+    (hdiag : (classicalHodgeBasis V H p
+      (orbitSeedOfProgram G P0 hne).sourceIndex).1
+      ∈ geometricProgramOrbitModule G p)
     (alpha : ClassicalHodgeFiber V H p) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha.1 := by
@@ -202,7 +214,7 @@ theorem native_cycle_of_program_projective_words
     exact ⟨0, by simp⟩
   · exact native_cycle_of_liveLocalizedL2Branches G alpha
       (liveLocalizedL2BranchesLandInOrbit_of_program_projective_words
-        G P0 hne R alpha halpha)
+        G P0 hne R hdiag alpha halpha)
 
 /-- **GLOBAL HANDWRITTEN-PI PROGRAM CROWN.**
 At every weight, one nonzero genuine mixed program from the codimension-zero
@@ -219,12 +231,16 @@ theorem bigradedBettiHodge_of_handwritten_program_words
     (R : ∀ q : Nat,
       ∀ j : ClassicalHodgeBasisIndex V H q,
         ProjectiveTwoGenerator (V := V) (H := H)
-          (orbitSeedOfProgram G (P0 q) (hne q)).sourceIndex j) :
+          (orbitSeedOfProgram G (P0 q) (hne q)).sourceIndex j)
+    (hdiag : ∀ q : Nat,
+      (classicalHodgeBasis V H q
+        (orbitSeedOfProgram G (P0 q) (hne q)).sourceIndex).1
+      ∈ geometricProgramOrbitModule G q) :
     BigradedBettiHodgeStatement V H := by
   intro q alpha halpha
   let alphaH : ClassicalHodgeFiber V H q := ⟨alpha, halpha⟩
   exact native_cycle_of_program_projective_words
-    G (P0 q) (hne q) (R q) alphaH
+    G (P0 q) (hne q) (R q) (hdiag q) alphaH
 
 #check orbitSeedOfProgram
 #check basis_mem_orbit_of_program_projective_word

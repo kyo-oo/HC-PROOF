@@ -1,4 +1,5 @@
 import GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2D
 import GSTClassicalHodgeGradedProgramSpectralSaturation
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 import GSTClassicalHodgeProjectiveWordOrbit

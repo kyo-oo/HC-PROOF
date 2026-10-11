@@ -78,7 +78,6 @@ theorem separator_reads_projective_transport_defect
   rw [S.annihilates_atoms ⟨f x.1, hcod⟩]
   rw [fiberedHodgeClass_transportAtom_of_codim f i x hcod]
   simp
-  ring
 
 /-- Nonzero residue degree makes the separator reading survive projective
 transport. -/
