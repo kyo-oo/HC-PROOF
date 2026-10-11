@@ -108,10 +108,10 @@ theorem fiberedPairing_separatorProbe
       ell alpha.1 := by
   classical
   rw [show alpha =
-      ∑ i ∈ ((classicalHodgeBasis V H p).repr alpha).support,
-        ((classicalHodgeBasis V H p).repr alpha i) •
-          classicalHodgeBasis V H p i by
-    exact (classicalHodgeBasis V H p).sum_repr alpha]
+      (classicalHodgeBasis V H p).linearCombination
+        ((classicalHodgeBasis V H p).repr alpha) from
+      (classicalHodgeBasis V H p).linearCombination_repr alpha,
+    Finsupp.linearCombination_apply, Finsupp.sum]
   simp only [map_sum, LinearMap.map_smul]
   simp [fiberedPairing, fiberedWeightCoordinates, weightFiberEmbedding,
     separatorFiberedProbe, Finsupp.sum_embDomain, Finsupp.sum, smul_eq_mul]

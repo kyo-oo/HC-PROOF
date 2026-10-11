@@ -160,6 +160,7 @@ theorem exists_cyclic_atomic_seed
     let aa : F.admissibleCoefficientSpace W := ⟨a, ?_⟩
     · exact ⟨aa, hai⟩
     · simpa [F, C, W,
+        ClassicalHodgeSpectralOperator.toFiniteSpectralFamily,
         FiniteSpectralFamily.admissibleCoefficientSpace,
         FiniteSpectralFamily.spectralCombinationLinear,
         FiniteSpectralFamily.spectralCombination,
@@ -169,6 +170,7 @@ theorem exists_cyclic_atomic_seed
     F.exists_cyclic_seed_of_coordinatewise_visible W hvis
   refine ⟨a, haNZ, ?_⟩
   simpa [F, C, W,
+    ClassicalHodgeSpectralOperator.toFiniteSpectralFamily,
     FiniteSpectralFamily.spectralCombination,
     ProjectiveWordSpectralFamily.toClassicalHodgeSpectralOperator]
     using haW

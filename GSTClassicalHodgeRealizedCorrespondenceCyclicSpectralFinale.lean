@@ -58,6 +58,8 @@ structure RealizedCyclicSpectralCertificate
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
     (p : Nat) where
+  [basisIndex_fintype : Fintype (ClassicalHodgeBasisIndex V H p)]
+  [basisIndex_decidableEq : DecidableEq (ClassicalHodgeBasisIndex V H p)]
   word : RealizedCorrespondenceWord V H p
   eigenvalue : ClassicalHodgeBasisIndex V H p → ℚ
   eigenvalue_injective : Function.Injective eigenvalue
