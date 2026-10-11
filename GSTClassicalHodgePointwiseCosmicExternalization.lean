@@ -110,7 +110,7 @@ theorem pointAtom_of_finitePoint
       (ProjectiveNativeKernel.transition V p K x) := by
           symm
           exact finitePointCycleClassMap_eq_cycleClass_realize
-            p (H.cycleClass p) (K.transition x)
+            p (H.cycleClass p) (ProjectiveNativeKernel.transition V p K x)
     _ = canonicalCosmicAmbient i j
         (H.cycleClass p (codimensionPointCycle V.X p x)) := hK x
 

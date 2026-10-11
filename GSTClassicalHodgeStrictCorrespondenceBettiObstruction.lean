@@ -142,7 +142,7 @@ noncomputable def canonicalBettiOperator
       ((transferObstruction_apply_eq_zero_iff_exists_related A K n (alpha + beta)).1
         (by rw [htotal]; rfl))
     dsimp [BettiRelated] at ha hb hab ⊢
-    rw [map_add, ha, hb]
+    simp only [map_add, ha, hb]
     exact hab.symm
   map_smul' := by
     intro q alpha
@@ -160,7 +160,7 @@ noncomputable def canonicalBettiOperator
       ((transferObstruction_apply_eq_zero_iff_exists_related A K n (q • alpha)).1
         (by rw [htotal]; rfl))
     dsimp [BettiRelated] at ha hqa ⊢
-    rw [map_smul, ha]
+    simp only [map_smul, ha]
     exact hqa.symm
 
 /-- The constructed operator satisfies the defining strict correspondence

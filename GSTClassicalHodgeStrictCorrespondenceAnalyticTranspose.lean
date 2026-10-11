@@ -45,13 +45,13 @@ noncomputable def transposeCarrierPointEquiv
       (z.1 ≫ K.toSchemeFiniteClosedCorrespondence.left) ≫ V.structureMap =
           z.1 ≫
             (K.toSchemeFiniteClosedCorrespondence.left ≫ V.structureMap) := by
-              simp [Category.assoc]
+              exact Category.assoc _ _ _
       _ = z.1 ≫ (K.right ≫ V.structureMap) := by
-            rw [left_toBase_eq_right_toBase K]
+            exact congrArg (fun g => z.1 ≫ g) (left_toBase_eq_right_toBase K)
       _ = (z.1 ≫ K.transpose.toSchemeFiniteClosedCorrespondence.left) ≫
             V.structureMap := by
-              rw [K.transpose_left]
-              simp [Category.assoc]
+              exact (congrArg (fun g => z.1 ≫ g ≫ V.structureMap)
+                (K.transpose_left).symm).trans (Category.assoc _ _ _).symm
       _ = 𝟙 complexBase := z.2
   invFun z := by
     refine ⟨z.1, ?_⟩
@@ -80,6 +80,7 @@ theorem transpose_leftComplexPoint
   apply Subtype.ext
   simp [leftComplexPoint, rightComplexPoint,
     SchemeBiFiniteClosedCorrespondence.transpose_left]
+  rfl
 
 /-- Under transpose, the right analytic point is the original left point. -/
 theorem transpose_rightComplexPoint
@@ -90,6 +91,7 @@ theorem transpose_rightComplexPoint
   apply Subtype.ext
   simp [leftComplexPoint, rightComplexPoint,
     SchemeBiFiniteClosedCorrespondence.transpose_right]
+  rfl
 
 /-- **POINTWISE ANALYTIC TRANSPOSE LAW.** -/
 theorem transpose_carrierPointPair

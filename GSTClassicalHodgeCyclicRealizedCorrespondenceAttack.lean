@@ -66,6 +66,8 @@ theorem algebraic_of_realizedWordReaches
     (hreach : RealizedWordReaches seed alpha) :
     alpha ∈ AlgebraicHodgeSubspace V H p := by
   rcases hreach with ⟨W, hW⟩
+  rw [mem_AlgebraicHodgeSubspace_iff] at hseed
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hseed
   rcases hseed with ⟨Z, hZ⟩
   have hseedRange : seed.1 ∈ LinearMap.range (H.cycleClass p) :=
     ⟨Z, hZ⟩
@@ -95,6 +97,8 @@ theorem bigradedBettiHodge_of_cyclicRealizedCorrespondenceSeeds
   have ha : a ∈ AlgebraicHodgeSubspace V H q := by
     rw [htop]
     trivial
+  rw [mem_AlgebraicHodgeSubspace_iff] at ha
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H q] at ha
   rcases ha with ⟨Z, hZ⟩
   exact ⟨Z, hZ⟩
 
