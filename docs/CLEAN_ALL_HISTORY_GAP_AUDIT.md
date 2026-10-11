@@ -28,27 +28,26 @@ Declaration-name comparison is a conservative routing heuristic, not a
 semantic equivalence proof.  Renamed theorems can make the real migration
 surface larger, while repeated unqualified names can make it look smaller.
 
-## Proven canonical lineage
+## Proven ancestry and divergent separator lines
 
-The separator/first-failure line is ordered by Git ancestry and file-set
-changes:
+Git ancestry proves two lines after the single-separator branch:
 
-1. `sol/hodge-single-separator-successor`
-2. `sol/hodge-first-ghost-incidence-construction-20261002`
-3. `sol/hodge-math-frontier-closure-20261002`
-4. `sol/hodge-principal-cut-first-failure-bridge-20261004`
+- `sol/hodge-single-separator-successor` is an ancestor of
+  `sol/hodge-first-ghost-incidence-construction-20261002`.
+- `sol/hodge-math-frontier-closure-20261002` and the first-ghost branch are
+  divergent siblings with merge base `e0cbde78`; neither contains the other.
+- `sol/hodge-math-frontier-closure-20261002` is an ancestor of
+  `sol/hodge-principal-cut-first-failure-bridge-20261004`.
 
-The canonical migration source is the final tip `ed02aa25`.  Compared with
+The principal-cut tip `ed02aa25` is therefore canonical only for the
+math-frontier line.  Compared with
 the clean branch it contains **153 absent Lean paths**, or **149** after
 excluding the four declared debris paths.  Of those 149 sources, **147**
 introduce unqualified declaration names absent from the clean branch.  The
 remaining two are receipts/smokes or repeat declarations present elsewhere.
 
-The final lineage tip must be used instead of a raw union: the math-frontier
-step intentionally deleted files from its predecessor, so unioning every tip
-would restore superseded modules.
-
-The eight explicit deletions are:
+Eight files present on first-ghost but absent on math-frontier are tree
+differences between sibling branches, not deletions in a proven successor:
 
 - `GSTClassicalHodgeCorrespondenceGhostGaugeFreedom.lean`
 - `GSTClassicalHodgeCorrespondenceOrbitExactness.lean`
@@ -61,16 +60,17 @@ The eight explicit deletions are:
 
 The current tree independently contains a newer, GitHub-focused-green
 `GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall.lean`; that canonical
-upgrade stays.  The other seven deleted modules are explicit supersession
-tombstones and must not be restored by an all-history union.
+upgrade stays.  The other seven first-ghost modules contribute **45** absent
+declaration names and remain on the migration surface unless a later
+statement-level comparison proves that a canonical module subsumes them.
 
-After fixing that supersession choice, a constrained set-cover audit routes
-all **207** remaining absent source paths with missing declarations through
-18 canonical/independent heads:
+A constrained set-cover audit routes all **214** non-debris absent source
+paths with missing declarations through 19 canonical/independent heads:
 
 | Migration head | Newly covered paths |
 |---|---:|
 | principal-cut first-failure bridge | 147 |
+| first-ghost incidence construction | 7 |
 | minimal-ghost single transport | 17 |
 | strict-Betti total fusion | 7 |
 | primitive geometric quotient | 6 |
@@ -94,15 +94,15 @@ variants still need declaration-by-declaration semantic porting.
 
 ## Absent-source complexity map
 
-The 207 eligible absent source paths contain 1,754 declaration names and route
+The 214 eligible absent source paths contain 1,799 declaration names and route
 into these migration lanes:
 
 | Lane | Paths | Missing names |
 |---|---:|---:|
 | Defect/ghost | 47 | 416 |
-| Failure/separator/cut | 58 | 401 |
+| Failure/separator/cut | 62 | 429 |
 | Cohomology/spectral | 40 | 364 |
-| Correspondence/operator | 24 | 174 |
+| Correspondence/operator | 27 | 191 |
 | Cosmology/limitless | 13 | 172 |
 | Projective/native cycle | 20 | 166 |
 | GST graph/wave | 4 | 49 |
