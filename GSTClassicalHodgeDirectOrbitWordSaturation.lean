@@ -1,8 +1,8 @@
 import GSTGeometricRealizationStage2D
-open GSTGeometricRealizationStage2D
 import GSTClassicalHodgeGradedProgramSpectralSaturation
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 import GSTClassicalHodgeProjectiveWordOrbit
+open GSTGeometricRealizationStage2D
 
 /-!
 # GST CLASSICAL HODGE — DIRECT ORBIT WORD SATURATION

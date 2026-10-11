@@ -2,6 +2,7 @@ import GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra
 import GSTClassicalHodgeAtomicSpan
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
 import GSTClassicalHodgeExactClayStatement
+open GSTClassicalHodgeAtomicSpan
 
 /-!
 # GST CLASSICAL HODGE — CORRESPONDENCE-INVARIANT GHOST
