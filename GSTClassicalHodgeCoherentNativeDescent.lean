@@ -353,7 +353,12 @@ theorem native_lift_normal_form_iff
     change toNativeCycle V H p (routedNativeOperator ρ A Φ + W Φ) =
       A (toNativeCycle V H p Φ)
     rw [map_add]
-    simpa only [LinearMap.comp_apply, LinearMap.zero_apply, hw, add_zero] using hr
+    have hwz : toNativeCycle V H p (W Φ) = 0 := by
+      have h1 := hw
+      rw [LinearMap.comp_apply, LinearMap.zero_apply] at h1
+      exact h1
+    rw [hwz, add_zero]
+    exact hr
 
 /-- Label recoordination on either side preserves the exact native action.
 The statement also allows nonbijective routing: its proof never uses an

@@ -137,9 +137,12 @@ theorem selected_basis_has_native_cycle
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z =
         (classicalHodgeBasis V H p (S.basisIndex i)).1 := by
-  exact LinearMap.mem_range.mp
-    ((geometricProgramOrbitModule_le_cycleClass_range G p)
-      (S.selected_basis_mem_orbit hvisible i))
+  have hrange :
+      (classicalHodgeBasis V H p (S.basisIndex i)).1 ∈
+        LinearMap.range (H.cycleClass p) :=
+    (geometricProgramOrbitModule_le_cycleClass_range G p)
+      (S.selected_basis_mem_orbit hvisible i)
+  exact LinearMap.mem_range.mp hrange
 
 end GradedProgramSpectralFamily
 
@@ -192,9 +195,12 @@ theorem exists_native_cycle
     (C : FiniteGradedProgramSpectralCover G alpha) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha.1 := by
-  exact LinearMap.mem_range.mp
-    ((geometricProgramOrbitModule_le_cycleClass_range G p)
-      C.class_mem_orbit)
+  have hrange :
+      (alpha : ClassicalHodgeFiber V H p).1 ∈
+        LinearMap.range (H.cycleClass p) :=
+    (geometricProgramOrbitModule_le_cycleClass_range G p)
+      C.class_mem_orbit
+  exact LinearMap.mem_range.mp hrange
 
 end FiniteGradedProgramSpectralCover
 

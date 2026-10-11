@@ -12,6 +12,7 @@ namespace GSTClassicalHodgeGeneralSpaceSynchronization
 open GSTGeneralSpace
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGradedGeometricProgramOrbit
