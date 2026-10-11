@@ -1,6 +1,7 @@
 import GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra
 import GSTClassicalHodgeAtomicSpan
 import GSTClassicalHodgeExactClayStatement
+open GSTClassicalHodgeAtomicSpan
 
 /-!
 # GST CLASSICAL HODGE — COMPOSITIONAL CORRESPONDENCE CYCLIC ATTACK
