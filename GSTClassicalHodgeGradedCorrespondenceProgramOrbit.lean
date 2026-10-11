@@ -55,7 +55,7 @@ variable {H : HodgeBigradedBettiData V}
 correspondences and genuine principal cuts. -/
 inductive GradedCorrespondenceProgram
     (V : SmoothProjectiveComplexScheme)
-    (H : HodgeBigradedBettiData V) : Nat → Nat → Type 2
+    (H : HodgeBigradedBettiData V) : Nat → Nat → Type 3
   | id (p : Nat) : GradedCorrespondenceProgram V H p p
   | correspondence {p : Nat}
       (E : RealizedCorrespondenceExpr V H p) :
