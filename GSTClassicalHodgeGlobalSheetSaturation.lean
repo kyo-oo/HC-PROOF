@@ -219,7 +219,6 @@ theorem globalMatrixUnit_eq_twoSlotLefschetz_on_hodge
         (liftFiniteHodgeOperator (pairBasisIndex i j)
           (GSTClassicalHodgeLefschetzPoincareMatrixGeneration.pureForwardShift 2)
           alpha) := by
-  rw [rankFreeMatrixUnit_eq_twoSlot_Lefschetz]
   exact sheetMatrixUnit_intertwines_hodgeMatrixUnit p i j alpha
 
 #check FixedWeightSheetSubspace

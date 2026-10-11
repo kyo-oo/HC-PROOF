@@ -49,7 +49,7 @@ finite closed correspondences. -/
 inductive RealizedCorrespondenceExpr
     (V : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData V)
-    (p : Nat) : Type
+    (p : Nat) : Type 2
   | zero
   | atom (R : RealizedFiniteClosedCorrespondence V H p)
   | smul (q : ℚ) (E : RealizedCorrespondenceExpr V H p)

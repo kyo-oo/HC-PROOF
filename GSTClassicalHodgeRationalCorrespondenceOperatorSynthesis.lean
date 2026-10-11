@@ -115,19 +115,30 @@ instance instAddCommMonoidPair :
   add := Pair.add
   zero := Pair.zero
   add_assoc A B C := Pair.ext_data
-    (by rw [Pair.add_cycleOperator, Pair.add_cycleOperator,
-      Pair.add_cycleOperator, Pair.add_cycleOperator, add_assoc])
-    (by rw [Pair.add_cohomologyOperator, Pair.add_cohomologyOperator,
-      Pair.add_cohomologyOperator, Pair.add_cohomologyOperator, add_assoc])
+    (by simp [Pair.add_cycleOperator])
+    (by simp [Pair.add_cohomologyOperator])
   add_comm A B := Pair.ext_data
-    (by rw [Pair.add_cycleOperator, Pair.add_cycleOperator, add_comm])
-    (by rw [Pair.add_cohomologyOperator, Pair.add_cohomologyOperator, add_comm])
+    (by simp [Pair.add_cycleOperator])
+    (by simp [Pair.add_cohomologyOperator])
   zero_add A := Pair.ext_data
-    (by rw [Pair.add_cycleOperator, Pair.zero_cycleOperator, zero_add])
-    (by rw [Pair.add_cohomologyOperator, Pair.zero_cohomologyOperator, zero_add])
+    (by simp [Pair.zero_cycleOperator, Pair.add_cycleOperator])
+    (by simp [Pair.zero_cohomologyOperator, Pair.add_cohomologyOperator])
   add_zero A := Pair.ext_data
-    (by rw [Pair.add_cycleOperator, Pair.zero_cycleOperator, add_zero])
-    (by rw [Pair.add_cohomologyOperator, Pair.zero_cohomologyOperator, add_zero])
+    (by simp [Pair.zero_cycleOperator, Pair.add_cycleOperator])
+    (by simp [Pair.zero_cohomologyOperator, Pair.add_cohomologyOperator])
+  nsmul := fun n A => Pair.smul (n : ℚ) A
+  nsmul_zero := by
+    intro A
+    exact Pair.ext_data
+      (by simp [Pair.smul_cycleOperator, Pair.zero_cycleOperator])
+      (by simp [Pair.smul_cohomologyOperator, Pair.zero_cohomologyOperator])
+  nsmul_succ := by
+    intro n A
+    exact Pair.ext_data
+      (by simp [Pair.add_cycleOperator, Pair.smul_cycleOperator,
+        add_comm, add_smul, one_smul])
+      (by simp [Pair.add_cohomologyOperator, Pair.smul_cohomologyOperator,
+        add_comm, add_smul, one_smul])
 
 /-- Exact operator pair carried by one genuine one-sided finite closed
 correspondence and its independently verified pointwise Betti realization. -/
