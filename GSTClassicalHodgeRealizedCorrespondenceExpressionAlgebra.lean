@@ -39,6 +39,7 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
+open GSTClassicalHodgeCycleOperatorNaturality
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
