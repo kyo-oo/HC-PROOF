@@ -92,6 +92,26 @@ all **207** remaining absent source paths with missing declarations through
 This covers absent-file migration only.  The 140 retained-path historical
 variants still need declaration-by-declaration semantic porting.
 
+## Absent-source complexity map
+
+The 207 eligible absent source paths contain 1,754 declaration names and route
+into these migration lanes:
+
+| Lane | Paths | Missing names |
+|---|---:|---:|
+| Defect/ghost | 47 | 416 |
+| Failure/separator/cut | 58 | 401 |
+| Cohomology/spectral | 40 | 364 |
+| Correspondence/operator | 24 | 174 |
+| Cosmology/limitless | 13 | 172 |
+| Projective/native cycle | 20 | 166 |
+| GST graph/wave | 4 | 49 |
+| Other (`GSTUniversalCoordinateSchemeSpecialization`) | 1 | 12 |
+
+The lanes are filename-based routing categories; they are not claims of
+semantic equivalence or theorem strength.  Each source still requires a
+statement-level comparison before it is moved or represented by a corollary.
+
 Highest-priority retained-path variants by absent declaration-name count:
 
 | Retained canonical path | Missing names | Primary historical source |
