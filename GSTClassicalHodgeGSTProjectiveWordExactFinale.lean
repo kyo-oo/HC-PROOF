@@ -157,13 +157,14 @@ noncomputable def canonicalSpineProgramOfProjectiveTwoGenerator
     (M : NativeMassCycleClassBridge V H)
     (p : Nat)
     (j : ClassicalHodgeBasisIndex V H p)
+    (hij : (globalSpineOrbitSeed G M p).sourceIndex ≠ j)
     (R : ProjectiveTwoGenerator (V := V) (H := H)
       (globalSpineOrbitSeed G M p).sourceIndex j) :
     CanonicalSpineGSTProgram G M p j :=
   canonicalSpineProgramOfProjectiveWord G M p j
     (compileProjectiveTwoGenerator R)
     (compileProjectiveTwoGenerator_source_action
-      G (globalSpineOrbitSeed G M p) j R)
+      G (globalSpineOrbitSeed G M p) j hij R)
 
 /-- One pair of genuine projective primitives from the canonical live source
 to each target sheet closes the exact algebraic-cycle form of rational Hodge. -/
@@ -173,10 +174,16 @@ theorem everyHodgeClassIsRationalAlgebraic_of_projectiveTwoGenerators
     (R : ∀ p : Nat,
       ∀ j : ClassicalHodgeBasisIndex V H p,
         ProjectiveTwoGenerator (V := V) (H := H)
-          (globalSpineOrbitSeed G M p).sourceIndex j) :
+          (globalSpineOrbitSeed G M p).sourceIndex j)
+    (hdiag : ∀ p : Nat,
+      CanonicalSpineGSTProgram G M p
+        (globalSpineOrbitSeed G M p).sourceIndex) :
     EveryHodgeClassIsRationalAlgebraic H := by
-  let P : CanonicalSpineGSTProgramFamily G M :=
-    fun p j => canonicalSpineProgramOfProjectiveTwoGenerator G M p j (R p j)
+  let P : CanonicalSpineGSTProgramFamily G M := by
+    intro p j
+    by_cases h : (globalSpineOrbitSeed G M p).sourceIndex = j
+    · exact hdiag p
+    · exact canonicalSpineProgramOfProjectiveTwoGenerator G M p j h (R p j)
   exact gst_everyHodgeClassIsRationalAlgebraic G M P
 
 /-- **TWO-GENERATOR EXACT CLAY LANDING.**
@@ -190,10 +197,16 @@ theorem everyHodgeClassIsFiniteRationalCombination_of_projectiveTwoGenerators
     (R : ∀ p : Nat,
       ∀ j : ClassicalHodgeBasisIndex V H p,
         ProjectiveTwoGenerator (V := V) (H := H)
-          (globalSpineOrbitSeed G M p).sourceIndex j) :
+          (globalSpineOrbitSeed G M p).sourceIndex j)
+    (hdiag : ∀ p : Nat,
+      CanonicalSpineGSTProgram G M p
+        (globalSpineOrbitSeed G M p).sourceIndex) :
     EveryHodgeClassIsFiniteRationalCombination H := by
-  let P : CanonicalSpineGSTProgramFamily G M :=
-    fun p j => canonicalSpineProgramOfProjectiveTwoGenerator G M p j (R p j)
+  let P : CanonicalSpineGSTProgramFamily G M := by
+    intro p j
+    by_cases h : (globalSpineOrbitSeed G M p).sourceIndex = j
+    · exact hdiag p
+    · exact canonicalSpineProgramOfProjectiveTwoGenerator G M p j h (R p j)
   exact gst_everyHodgeClassIsFiniteRationalCombination G M P
 
 #check canonicalSpineProgramOfProjectiveWord

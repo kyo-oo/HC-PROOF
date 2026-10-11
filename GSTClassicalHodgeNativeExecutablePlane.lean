@@ -115,15 +115,17 @@ theorem targetCycle_spec
   unfold targetCycle
   rw [map_sum]
   simp only [LinearMap.map_smul]
-  rw [show alpha =
-      ∑ j ∈ ((classicalHodgeBasis V H q).repr alpha).support,
-        ((classicalHodgeBasis V H q).repr alpha j) •
-          classicalHodgeBasis V H q j by
-    exact (classicalHodgeBasis V H q).sum_repr alpha]
-  apply congrArg Subtype.val
+  have hexp : (alpha : RationalSingularCohomology H.analytification (2 * q)) =
+      ((classicalHodgeBasis V H q).repr alpha).sum
+        (fun j c => c • ((classicalHodgeBasis V H q j : ClassicalHodgeFiber V H q) :
+          RationalSingularCohomology H.analytification (2 * q))) := by
+    have h := ((classicalHodgeBasis V H q).linearCombination_repr alpha).symm
+    rw [Finsupp.linearCombination_apply] at h
+    rw [h]
+    simp [Finsupp.sum, Submodule.coe_sum, Submodule.coe_smul_of_tower]
+  rw [hexp, Finsupp.sum]
   apply Finset.sum_congr rfl
   intro j hj
-  apply Subtype.ext
   simp [basisCycle_spec hplane q j]
 
 /-- Basiswise algebraicity with no program requirement.  This is the exact
@@ -158,15 +160,19 @@ theorem hodge_of_basisCycleSupply
   unfold W
   rw [map_sum]
   simp only [LinearMap.map_smul]
-  rw [show alphaH =
-      ∑ j ∈ ((classicalHodgeBasis V H q).repr alphaH).support,
-        ((classicalHodgeBasis V H q).repr alphaH j) •
-          classicalHodgeBasis V H q j by
-    exact (classicalHodgeBasis V H q).sum_repr alphaH]
-  apply congrArg Subtype.val
+  have hexp : (alpha : RationalSingularCohomology H.analytification (2 * q)) =
+      ((classicalHodgeBasis V H q).repr alphaH).sum
+        (fun j c => c • ((classicalHodgeBasis V H q j : ClassicalHodgeFiber V H q) :
+          RationalSingularCohomology H.analytification (2 * q))) := by
+    show ((alphaH : ClassicalHodgeFiber V H q) :
+      RationalSingularCohomology H.analytification (2 * q)) = _
+    have h := ((classicalHodgeBasis V H q).linearCombination_repr alphaH).symm
+    rw [Finsupp.linearCombination_apply] at h
+    rw [h]
+    simp [Finsupp.sum, Submodule.coe_sum, Submodule.coe_smul_of_tower]
+  rw [hexp, Finsupp.sum]
   apply Finset.sum_congr rfl
   intro j hj
-  apply Subtype.ext
   simp [hZ j]
 
 /-- Conversely the exact Hodge target supplies a native cycle for every chosen

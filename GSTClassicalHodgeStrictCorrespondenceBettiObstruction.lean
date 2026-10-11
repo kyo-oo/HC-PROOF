@@ -143,7 +143,7 @@ noncomputable def canonicalBettiOperator
         (by rw [htotal]; rfl))
     dsimp [BettiRelated] at ha hb hab ⊢
     simp only [map_add, ha, hb]
-    exact hab.symm
+    rw [hab.symm, map_add, ← ha, ← hb]
   map_smul' := by
     intro q alpha
     apply hright
@@ -161,7 +161,7 @@ noncomputable def canonicalBettiOperator
         (by rw [htotal]; rfl))
     dsimp [BettiRelated] at ha hqa ⊢
     simp only [map_smul, ha]
-    exact hqa.symm
+    rw [hqa.symm, map_smul, ← ha]
 
 /-- The constructed operator satisfies the defining strict correspondence
 pullback square on every rational singular cohomology class. -/
