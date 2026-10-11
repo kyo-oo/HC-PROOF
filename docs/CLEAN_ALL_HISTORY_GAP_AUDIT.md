@@ -112,6 +112,9 @@ Highest-priority retained-path variants by absent declaration-name count:
 | `GSTClassicalHodgeFiniteClosedCorrespondenceOperator.lean` | 6 | principal-cut lineage |
 | `GSTGlobalPureHodgeCosmology.lean` | 6 | GST cosmology strengthening |
 
+The concrete declaration names for the first migration wave are recorded in
+[`CLEAN_RETAINED_VARIANT_MIGRATION.md`](CLEAN_RETAINED_VARIANT_MIGRATION.md).
+
 At `ed02aa25`, 108 of the absent non-debris modules are registered Lake roots,
 113 are imported by another module, and only 17 are neither.  Therefore most
 of this gap is an active historical theorem surface, not unreferenced scratch.
