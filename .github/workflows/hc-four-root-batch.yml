@@ -1,0 +1,57 @@
+name: HC Four-Root Lean Repair Batch
+on:
+  push:
+    branches:
+      - clean/upgraded-advanced-only-20261009
+    paths:
+      - '.github/workflows/hc-four-root-batch.yml'
+      - 'GSTClassicalHodgePointClosureIntegral.lean'
+      - 'GSTClassicalHodgeGradedCorrespondenceProgramOrbit.lean'
+      - 'GSTClassicalHodgeFiberedDefectEquivariance.lean'
+      - 'GSTClassicalHodgeStrictCorrespondenceAnalyticSpan.lean'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hc-four-root-batch-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-module:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 110
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        module:
+          - GSTClassicalHodgePointClosureIntegral
+          - GSTClassicalHodgeGradedCorrespondenceProgramOrbit
+          - GSTClassicalHodgeFiberedDefectEquivariance
+          - GSTClassicalHodgeStrictCorrespondenceAnalyticSpan
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Lean and pinned Mathlib (GitHub runner only)
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+          lake exe cache get
+      - name: Compile individual root
+        env:
+          TARGET: ${{ matrix.module }}
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build "$TARGET" 2>&1 | tee "${TARGET}.log"
+      - name: Upload compiler log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-${{ matrix.module }}
+          path: '*.log'
+          if-no-files-found: warn
