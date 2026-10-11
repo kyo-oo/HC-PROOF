@@ -9,8 +9,8 @@
 > declaration-level audit still finds 214 non-debris absent source paths and
 > 140 retained paths with historical declarations not represented here.  See
 > [`CLEAN_ALL_HISTORY_GAP_AUDIT.md`](CLEAN_ALL_HISTORY_GAP_AUDIT.md) for the
-> canonical lineage map, explicit supersession tombstones, and migration
-> heads.  Hosted-green compilation and completion of that migration are both
+> proven ancestry, divergent lineage map, and migration heads.  Hosted-green
+> compilation and completion of that migration are both
 > required before this branch can be called final.
 
 ## The upgrade rule (what stays, what goes)
