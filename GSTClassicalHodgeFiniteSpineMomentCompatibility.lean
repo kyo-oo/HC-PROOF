@@ -1,4 +1,6 @@
 import GSTClassicalHodgeFiniteSpineMomentOrbit
+import GSTClassicalHodgeCodimensionZeroFundamentalCycle
+import GSTClassicalHodgePrincipalCutSuccessorOperator
 
 /-!
 # GST CLASSICAL HODGE — CONSERVED CHARGE -> FINITE MOMENT COMPATIBILITY
@@ -46,7 +48,8 @@ noncomputable def SpineTowerConservedCharge.toFiniteSpineMomentChain
   read := D.cohomologyRead
   base_ne_zero := by
     rw [spineHodgeSeed_zero]
-    rw [D.cycleClass_read 0 (codimensionZeroFundamentalCycle V)]
+    rw [D.cycleClass_read 0
+      (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)]
     exact D.base_ne_zero
   successor_read := by
     intro q hq
@@ -59,11 +62,13 @@ noncomputable def SpineTowerConservedCharge.toFiniteSpineMomentChain
             (spineHodgeSeed G q).1)
           = D.cohomologyRead (q + 1)
               (H.cycleClass (q + 1)
-                (successorNativeOperator V q (spineNativeTower G q))) := by
+                (GSTClassicalHodgePrincipalCutSuccessorOperator.successorNativeOperator V q
+                  (spineNativeTower G q))) := by
               rw [← spineNativeTower_cycleClass G q]
               rw [← hnat]
       _ = D.nativeRead (q + 1)
-            (successorNativeOperator V q (spineNativeTower G q)) := by
+            (GSTClassicalHodgePrincipalCutSuccessorOperator.successorNativeOperator V q
+              (spineNativeTower G q)) := by
               exact D.cycleClass_read (q + 1) _
       _ = successorScalar q *
             D.nativeRead q (spineNativeTower G q) := by
