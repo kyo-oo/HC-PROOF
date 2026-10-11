@@ -48,6 +48,50 @@ The final lineage tip must be used instead of a raw union: the math-frontier
 step intentionally deleted files from its predecessor, so unioning every tip
 would restore superseded modules.
 
+The eight explicit deletions are:
+
+- `GSTClassicalHodgeCorrespondenceGhostGaugeFreedom.lean`
+- `GSTClassicalHodgeCorrespondenceOrbitExactness.lean`
+- `GSTClassicalHodgeCorrespondenceRangeRigidityFrontier.lean`
+- `GSTClassicalHodgeFirstFailureReturnExactness.lean`
+- `GSTClassicalHodgeFirstGhostPacketExactness.lean`
+- `GSTClassicalHodgeOneExactSuccessorFlagNormal.lean`
+- `GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall.lean`
+- `GSTClassicalHodgeSchemeFiniteFirstGhostGate.lean`
+
+The current tree independently contains a newer, GitHub-focused-green
+`GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall.lean`; that canonical
+upgrade stays.  The other seven deleted modules are explicit supersession
+tombstones and must not be restored by an all-history union.
+
+After fixing that supersession choice, a constrained set-cover audit routes
+all **207** remaining absent source paths with missing declarations through
+18 canonical/independent heads:
+
+| Migration head | Newly covered paths |
+|---|---:|
+| principal-cut first-failure bridge | 147 |
+| minimal-ghost single transport | 17 |
+| strict-Betti total fusion | 7 |
+| primitive geometric quotient | 6 |
+| limitless genuine closure | 6 |
+| GST cosmology strengthening | 5 |
+| Hodge final integration | 3 |
+| limitless phase 1 | 2 |
+| limitless cosmology | 2 |
+| cyclic omniversal closure | 2 |
+| universal Pascal-Lefschetz | 2 |
+| canonical successor non-erasure | 2 |
+| cohomology faithfulness | 1 |
+| legacy absorption | 1 |
+| sharp spectrum | 1 |
+| Lefschetz path | 1 |
+| primitive algebraic annihilator | 1 |
+| strict-Betti trace fusion | 1 |
+
+This covers absent-file migration only.  The 140 retained-path historical
+variants still need declaration-by-declaration semantic porting.
+
 At `ed02aa25`, 108 of the absent non-debris modules are registered Lake roots,
 113 are imported by another module, and only 17 are neither.  Therefore most
 of this gap is an active historical theorem surface, not unreferenced scratch.
