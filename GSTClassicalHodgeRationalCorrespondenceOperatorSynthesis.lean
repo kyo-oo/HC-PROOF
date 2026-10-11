@@ -116,13 +116,13 @@ instance instAddCommMonoidPair :
   zero := Pair.zero
   add_assoc A B C := Pair.ext_data
     (by
-      show (Pair.add A (Pair.add B C)).cycleOperator =
-        (Pair.add (Pair.add A B) C).cycleOperator
+      show (Pair.add (Pair.add A B) C).cycleOperator =
+        (Pair.add A (Pair.add B C)).cycleOperator
       rw [Pair.add_cycleOperator, Pair.add_cycleOperator,
         Pair.add_cycleOperator, Pair.add_cycleOperator, add_assoc])
     (by
-      show (Pair.add A (Pair.add B C)).cohomologyOperator =
-        (Pair.add (Pair.add A B) C).cohomologyOperator
+      show (Pair.add (Pair.add A B) C).cohomologyOperator =
+        (Pair.add A (Pair.add B C)).cohomologyOperator
       rw [Pair.add_cohomologyOperator, Pair.add_cohomologyOperator,
         Pair.add_cohomologyOperator, Pair.add_cohomologyOperator, add_assoc])
   add_comm A B := Pair.ext_data
@@ -160,15 +160,40 @@ instance instAddCommMonoidPair :
     intro n A
     exact Pair.ext_data
       (by
-        show (Pair.add A (Pair.smul (n : ℚ) A)).cycleOperator =
-          (Pair.smul ((n + 1 : ℕ) : ℚ) A).cycleOperator
+        show (Pair.smul ((n + 1 : ℕ) : ℚ) A).cycleOperator =
+          (Pair.add (Pair.smul (n : ℚ) A) A).cycleOperator
         rw [Pair.smul_cycleOperator, Pair.add_cycleOperator, Pair.smul_cycleOperator,
-          Nat.cast_succ, one_smul, add_smul])
+          Nat.cast_succ, add_smul, one_smul])
       (by
-        show (Pair.add A (Pair.smul (n : ℚ) A)).cohomologyOperator =
-          (Pair.smul ((n + 1 : ℕ) : ℚ) A).cohomologyOperator
+        show (Pair.smul ((n + 1 : ℕ) : ℚ) A).cohomologyOperator =
+          (Pair.add (Pair.smul (n : ℚ) A) A).cohomologyOperator
         rw [Pair.smul_cohomologyOperator, Pair.add_cohomologyOperator,
-          Pair.smul_cohomologyOperator, Nat.cast_succ, one_smul, add_smul])
+          Pair.smul_cohomologyOperator, Nat.cast_succ, add_smul, one_smul])
+
+theorem smul_zero_pair (A : Pair (V := V) (H := H) (p := p)) :
+    Pair.smul (0 : ℚ) A = 0 := Pair.ext_data
+  (by
+    show (Pair.smul (0 : ℚ) A).cycleOperator =
+      (Pair.zero (V := V) (H := H) (p := p)).cycleOperator
+    rw [Pair.smul_cycleOperator, Pair.zero_cycleOperator, zero_smul])
+  (by
+    show (Pair.smul (0 : ℚ) A).cohomologyOperator =
+      (Pair.zero (V := V) (H := H) (p := p)).cohomologyOperator
+    rw [Pair.smul_cohomologyOperator, Pair.zero_cohomologyOperator, zero_smul])
+
+theorem add_smul_pair (q₁ q₂ : ℚ) (A : Pair (V := V) (H := H) (p := p)) :
+    Pair.smul (q₁ + q₂) A =
+      Pair.add (Pair.smul q₁ A) (Pair.smul q₂ A) := Pair.ext_data
+  (by
+    show (Pair.smul (q₁ + q₂) A).cycleOperator =
+      (Pair.add (Pair.smul q₁ A) (Pair.smul q₂ A)).cycleOperator
+    rw [Pair.smul_cycleOperator, Pair.add_cycleOperator,
+      Pair.smul_cycleOperator, Pair.smul_cycleOperator, add_smul])
+  (by
+    show (Pair.smul (q₁ + q₂) A).cohomologyOperator =
+      (Pair.add (Pair.smul q₁ A) (Pair.smul q₂ A)).cohomologyOperator
+    rw [Pair.smul_cohomologyOperator, Pair.add_cohomologyOperator,
+      Pair.smul_cohomologyOperator, Pair.smul_cohomologyOperator, add_smul])
 
 /-- Exact operator pair carried by one genuine one-sided finite closed
 correspondence and its independently verified pointwise Betti realization. -/
@@ -207,10 +232,50 @@ theorem rationalPair_cycleOperator
       correspondenceCycleNativeOperator A p := by
   classical
   induction A using Finsupp.induction with
-  | zero => simp [rationalPair, correspondenceCycleNativeOperator, Pair.zero]
+  | zero =>
+      show (Pair.zero (V := V) (H := H) (p := p)).cycleOperator = 0
+      rw [Pair.zero_cycleOperator]
   | single_add K q A hsup hne ih =>
-      simp [rationalPair, correspondenceCycleNativeOperator,
-        primitivePair, Pair.add, Pair.smul, ih, hne, hsup]
+      have h0 : ∀ K : FiniteClosedCorrespondence V,
+          Pair.smul (0 : ℚ) (primitivePair K (T K) (hT K)) = 0 :=
+        fun K => smul_zero_pair _
+      have h1 : ∀ (K : FiniteClosedCorrespondence V) (q₁ q₂ : ℚ),
+          Pair.smul (q₁ + q₂) (primitivePair K (T K) (hT K)) =
+            Pair.add (Pair.smul q₁ (primitivePair K (T K) (hT K)))
+              (Pair.smul q₂ (primitivePair K (T K) (hT K))) :=
+        fun K q₁ q₂ => add_smul_pair q₁ q₂ _
+      have h0' : ∀ K : FiniteClosedCorrespondence V,
+          (fun K q => q • K.nativeOperator p) K (0 : ℚ) = 0 :=
+        fun K => zero_smul _ _
+      have h1' : ∀ (K : FiniteClosedCorrespondence V) (q₁ q₂ : ℚ),
+          (fun K q => q • K.nativeOperator p) K (q₁ + q₂) =
+            (fun K q => q • K.nativeOperator p) K q₁ +
+              (fun K q => q • K.nativeOperator p) K q₂ :=
+        fun K q₁ q₂ => add_smul q₁ q₂ _
+      have ih' : (A.sum fun K q =>
+          Pair.smul q (primitivePair K (T K) (hT K))).cycleOperator =
+          A.sum fun K q => q • K.nativeOperator p := ih
+      show ((Finsupp.single K q + A).sum
+          fun K q => Pair.smul q (primitivePair K (T K) (hT K))).cycleOperator =
+        correspondenceCycleNativeOperator (Finsupp.single K q + A) p
+      rw [Finsupp.sum_add_index' h0 h1]
+      have hR : correspondenceCycleNativeOperator (Finsupp.single K q + A) p =
+          (Finsupp.single K q).sum (fun K q => q • K.nativeOperator p) +
+            A.sum (fun K q => q • K.nativeOperator p) := by
+        show ((Finsupp.single K q + A).sum
+            fun K q => q • K.nativeOperator p) =
+          (Finsupp.single K q).sum (fun K q => q • K.nativeOperator p) +
+            A.sum (fun K q => q • K.nativeOperator p)
+        exact Finsupp.sum_add_index' h0' h1'
+      rw [hR]
+      show (Pair.add ((Finsupp.single K q).sum
+            fun K q => Pair.smul q (primitivePair K (T K) (hT K)))
+          (A.sum fun K q => Pair.smul q (primitivePair K (T K) (hT K)))).cycleOperator =
+        (Finsupp.single K q).sum (fun K q => q • K.nativeOperator p) +
+          A.sum (fun K q => q • K.nativeOperator p)
+      simp only [Pair.add_cycleOperator, Finsupp.sum_single_index (h0 K),
+        Finsupp.sum_single_index (h0' K), Pair.smul_cycleOperator,
+        primitivePair, toCycleClassOperatorPair_cycleOperator, ih']
 
 /-- The cohomological action is the matching rational sum of the independently
 realized primitive correspondence actions. -/
@@ -225,9 +290,42 @@ theorem rationalPair_cohomologyOperator
       A.sum (fun K q => q • T K) := by
   classical
   induction A using Finsupp.induction with
-  | zero => simp [rationalPair, Pair.zero]
+  | zero =>
+      show (Pair.zero (V := V) (H := H) (p := p)).cohomologyOperator = 0
+      rw [Pair.zero_cohomologyOperator]
   | single_add K q A hsup hne ih =>
-      simp [rationalPair, primitivePair, Pair.add, Pair.smul, ih, hne, hsup]
+      have h0 : ∀ K : FiniteClosedCorrespondence V,
+          Pair.smul (0 : ℚ) (primitivePair K (T K) (hT K)) = 0 :=
+        fun K => smul_zero_pair _
+      have h1 : ∀ (K : FiniteClosedCorrespondence V) (q₁ q₂ : ℚ),
+          Pair.smul (q₁ + q₂) (primitivePair K (T K) (hT K)) =
+            Pair.add (Pair.smul q₁ (primitivePair K (T K) (hT K)))
+              (Pair.smul q₂ (primitivePair K (T K) (hT K))) :=
+        fun K q₁ q₂ => add_smul_pair q₁ q₂ _
+      have h0' : ∀ K : FiniteClosedCorrespondence V,
+          (fun K q => q • T K) K (0 : ℚ) = 0 :=
+        fun K => zero_smul _ _
+      have h1' : ∀ (K : FiniteClosedCorrespondence V) (q₁ q₂ : ℚ),
+          (fun K q => q • T K) K (q₁ + q₂) =
+            (fun K q => q • T K) K q₁ + (fun K q => q • T K) K q₂ :=
+        fun K q₁ q₂ => add_smul q₁ q₂ _
+      have ih' : (A.sum fun K q =>
+          Pair.smul q (primitivePair K (T K) (hT K))).cohomologyOperator =
+          A.sum fun K q => q • T K := ih
+      show ((Finsupp.single K q + A).sum
+          fun K q => Pair.smul q (primitivePair K (T K) (hT K))).cohomologyOperator =
+        (Finsupp.single K q + A).sum fun K q => q • T K
+      rw [Finsupp.sum_add_index' h0 h1, Finsupp.sum_add_index' h0' h1']
+      show (Pair.add ((Finsupp.single K q).sum
+            fun K q => Pair.smul q (primitivePair K (T K) (hT K)))
+          (A.sum fun K q => Pair.smul q (primitivePair K (T K) (hT K)))).cohomologyOperator =
+        (Finsupp.single K q).sum (fun K q => q • T K) +
+          A.sum (fun K q => q • T K)
+      simp only [Pair.add_cohomologyOperator, Finsupp.sum_single_index (h0 K),
+        Finsupp.sum_single_index (h0' K), Pair.smul_cohomologyOperator,
+        primitivePair]
+      rw [show (K.toCycleClassOperatorPair (T K) (hT K)).cohomologyOperator = T K from rfl,
+        ih']
 
 /-- Direct naturality formula for the synthesized rational correspondence
 cycle. -/

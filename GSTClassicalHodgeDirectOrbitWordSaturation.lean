@@ -1,3 +1,4 @@
+import GSTGeometricRealizationStage2D
 import GSTClassicalHodgeGradedProgramSpectralSaturation
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 import GSTClassicalHodgeProjectiveWordOrbit
@@ -95,7 +96,9 @@ theorem directTargetProgram_cohomologyEval
     c⁻¹ • (R.word.operatorPair G).cohomologyOperator S.hodge.1 =
       (classicalHodgeBasis V H q j).1
   rw [R.source_action]
-  simp [c, hc]
+  show c⁻¹ • c • (classicalHodgeBasis V H q j).1 =
+    (classicalHodgeBasis V H q j).1
+  rw [smul_smul, inv_mul_cancel₀ hc, one_smul]
 
 /-- Every live-source projective target word therefore puts its requested
 basis sheet in the one-program orbit set itself. -/

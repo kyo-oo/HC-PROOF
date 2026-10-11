@@ -63,6 +63,8 @@ theorem algebraic_of_exprReaches
     (hreach : ExprReaches seed alpha) :
     alpha ∈ AlgebraicHodgeSubspace V H p := by
   rcases hreach with ⟨E, hE⟩
+  rw [mem_AlgebraicHodgeSubspace_iff] at hseed
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hseed
   rcases hseed with ⟨Z, hZ⟩
   have hseedRange : seed.1 ∈ LinearMap.range (H.cycleClass p) :=
     ⟨Z, hZ⟩
@@ -94,6 +96,8 @@ theorem exactHodge_of_compositionalCyclicSeeds
   have ha : a ∈ AlgebraicHodgeSubspace V H q := by
     rw [htop]
     trivial
+  rw [mem_AlgebraicHodgeSubspace_iff] at ha
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H q] at ha
   rcases ha with ⟨Z, hZ⟩
   exact ⟨Z, hZ⟩
 
@@ -109,11 +113,11 @@ theorem finiteCombination_of_compositionalCyclicSeeds
 theorem exprReaches_of_wordReaches
     (seed alpha : ClassicalHodgeFiber V H p)
     (h : ∃ W : GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra.RealizedCorrespondenceWord V H p,
-      (GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra.realizedWordPair W).
-        cohomologyOperator seed.1 = alpha.1) :
+      (GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra.realizedWordPair W).cohomologyOperator seed.1 = alpha.1) :
     ExprReaches seed alpha := by
   rcases h with ⟨W,hW⟩
   refine ⟨RealizedCorrespondenceExpr.ofWord W, ?_⟩
+  show (RealizedCorrespondenceExpr.ofWord W).operatorPair.cohomologyOperator ↑seed = ↑alpha
   rw [RealizedCorrespondenceExpr.ofWord_operatorPair]
   exact hW
 

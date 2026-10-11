@@ -68,6 +68,8 @@ theorem maps_algebraicHodgeSubspace
     (alpha : ClassicalHodgeFiber V H p)
     (halpha : alpha ∈ AlgebraicHodgeSubspace V H p) :
     hodgeOperator E hE alpha ∈ AlgebraicHodgeSubspace V H p := by
+  rw [mem_AlgebraicHodgeSubspace_iff] at halpha
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halpha
   rcases halpha with ⟨Z, hZ⟩
   refine ⟨E.cycleOperator Z, ?_⟩
   change H.cycleClass p (E.cycleOperator Z) = E.cohomologyOperator alpha.1
@@ -150,6 +152,8 @@ theorem exactHodge_of_actualCorrespondenceIrreducible
     have ha : a ∈ AlgebraicHodgeSubspace V H q := by
       rw [htop]
       trivial
+    rw [mem_AlgebraicHodgeSubspace_iff] at ha
+    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H q] at ha
     rcases ha with ⟨Z,hZ⟩
     exact ⟨Z,hZ⟩
 

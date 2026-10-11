@@ -112,6 +112,8 @@ theorem hodgeOrbit_algebraic
     (C : RealizedCorrespondenceKrylovCertificate V H p)
     (n : Nat) :
     C.hodgeOrbit n ∈ AlgebraicHodgeSubspace V H p := by
+  rw [mem_AlgebraicHodgeSubspace_iff,
+    ← smoothProjective_cycleClass_range_eq_atomic_span V H p]
   exact ⟨C.nativeOrbit n, C.nativeOrbit_cycleClass n⟩
 
 /-- Basis-free cyclicity condition: the linear span of the single genuine
@@ -145,7 +147,10 @@ theorem exists_cycle
   have ha : a ∈ AlgebraicHodgeSubspace V H p := by
     rw [htop]
     trivial
-  exact ha
+  rw [mem_AlgebraicHodgeSubspace_iff] at ha
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at ha
+  rcases ha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 end RealizedCorrespondenceKrylovCertificate
 

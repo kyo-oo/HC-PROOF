@@ -108,7 +108,8 @@ theorem compileProjectiveTwoGenerator_source_action
           exact geometryFirstWordPair_on_hodge T S.hodge
     _ = (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex •
         (classicalHodgeBasis V H p j).1 := by
-          simp [hodgeMatrixUnit_apply, hodgeCoordinate]
+          simp only [hodgeMatrixUnit_apply, hodgeCoordinate]
+          ring
 
 /-- Every old projective two-generator realization compiles to the new, weaker
 one-word/one-source target certificate. -/
