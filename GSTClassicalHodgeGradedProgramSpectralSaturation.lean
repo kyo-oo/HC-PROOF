@@ -41,6 +41,7 @@ namespace GSTClassicalHodgeGradedProgramSpectralSaturation
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeLocalCyclicCriterion

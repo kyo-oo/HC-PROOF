@@ -177,6 +177,7 @@ theorem transpose_action_apply
         (P.cup (2 * d) n κ.kernelClass
           (sndCohomologyPullback A n alpha)) := by
   rw [action_apply]
+  rw [show (transposeKernel A κ).kernelClass = κ.transposeClass from rfl]
   rw [κ.transposeClass_eq_swap]
   rw [sndPullback_eq_swap_fstPullback A n]
   have hcup := P.swap_cup (2 * d) n κ.kernelClass

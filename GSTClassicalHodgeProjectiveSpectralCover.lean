@@ -127,7 +127,7 @@ noncomputable def toClassicalHodgeSpectralOperator
   eigenvalue_injective := S.eigenvalue_injective
   eigenvector := S.eigenvector
   atomic_stable :=
-    (cohomologyOperator_atomicStable G S.word)
+    (ProjectiveOperatorWord.cohomologyOperator_atomicStable G S.word)
 
 /-- Weak visibility of one selected spectral coordinate.  The witnessing
 algebraic vector may mix all selected sheets; only the requested coefficient
