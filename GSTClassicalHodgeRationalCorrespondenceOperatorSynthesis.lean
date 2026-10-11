@@ -115,30 +115,60 @@ instance instAddCommMonoidPair :
   add := Pair.add
   zero := Pair.zero
   add_assoc A B C := Pair.ext_data
-    (by simp [Pair.add_cycleOperator])
-    (by simp [Pair.add_cohomologyOperator])
+    (by
+      show (Pair.add A (Pair.add B C)).cycleOperator =
+        (Pair.add (Pair.add A B) C).cycleOperator
+      rw [Pair.add_cycleOperator, Pair.add_cycleOperator,
+        Pair.add_cycleOperator, Pair.add_cycleOperator, add_assoc])
+    (by
+      show (Pair.add A (Pair.add B C)).cohomologyOperator =
+        (Pair.add (Pair.add A B) C).cohomologyOperator
+      rw [Pair.add_cohomologyOperator, Pair.add_cohomologyOperator,
+        Pair.add_cohomologyOperator, Pair.add_cohomologyOperator, add_assoc])
   add_comm A B := Pair.ext_data
-    (by simp [Pair.add_cycleOperator])
-    (by simp [Pair.add_cohomologyOperator])
+    (by
+      show (Pair.add A B).cycleOperator = (Pair.add B A).cycleOperator
+      rw [Pair.add_cycleOperator, Pair.add_cycleOperator, add_comm])
+    (by
+      show (Pair.add A B).cohomologyOperator = (Pair.add B A).cohomologyOperator
+      rw [Pair.add_cohomologyOperator, Pair.add_cohomologyOperator, add_comm])
   zero_add A := Pair.ext_data
-    (by simp [Pair.zero_cycleOperator, Pair.add_cycleOperator])
-    (by simp [Pair.zero_cohomologyOperator, Pair.add_cohomologyOperator])
+    (by
+      show (Pair.add Pair.zero A).cycleOperator = A.cycleOperator
+      rw [Pair.add_cycleOperator, Pair.zero_cycleOperator, zero_add])
+    (by
+      show (Pair.add Pair.zero A).cohomologyOperator = A.cohomologyOperator
+      rw [Pair.add_cohomologyOperator, Pair.zero_cohomologyOperator, zero_add])
   add_zero A := Pair.ext_data
-    (by simp [Pair.zero_cycleOperator, Pair.add_cycleOperator])
-    (by simp [Pair.zero_cohomologyOperator, Pair.add_cohomologyOperator])
+    (by
+      show (Pair.add A Pair.zero).cycleOperator = A.cycleOperator
+      rw [Pair.add_cycleOperator, Pair.zero_cycleOperator, add_zero])
+    (by
+      show (Pair.add A Pair.zero).cohomologyOperator = A.cohomologyOperator
+      rw [Pair.add_cohomologyOperator, Pair.zero_cohomologyOperator, add_zero])
   nsmul := fun n A => Pair.smul (n : ℚ) A
   nsmul_zero := by
     intro A
     exact Pair.ext_data
-      (by simp [Pair.smul_cycleOperator, Pair.zero_cycleOperator])
-      (by simp [Pair.smul_cohomologyOperator, Pair.zero_cohomologyOperator])
+      (by
+        show (Pair.smul (0 : ℚ) A).cycleOperator = (Pair.zero).cycleOperator
+        rw [Pair.smul_cycleOperator, Pair.zero_cycleOperator, zero_smul])
+      (by
+        show (Pair.smul (0 : ℚ) A).cohomologyOperator = (Pair.zero).cohomologyOperator
+        rw [Pair.smul_cohomologyOperator, Pair.zero_cohomologyOperator, zero_smul])
   nsmul_succ := by
     intro n A
     exact Pair.ext_data
-      (by simp [Pair.add_cycleOperator, Pair.smul_cycleOperator,
-        add_comm, add_smul, one_smul])
-      (by simp [Pair.add_cohomologyOperator, Pair.smul_cohomologyOperator,
-        add_comm, add_smul, one_smul])
+      (by
+        show (Pair.add A (Pair.smul (n : ℚ) A)).cycleOperator =
+          (Pair.smul ((n + 1 : ℕ) : ℚ) A).cycleOperator
+        rw [Pair.smul_cycleOperator, Pair.add_cycleOperator, Pair.smul_cycleOperator,
+          Nat.cast_succ, one_smul, add_smul])
+      (by
+        show (Pair.add A (Pair.smul (n : ℚ) A)).cohomologyOperator =
+          (Pair.smul ((n + 1 : ℕ) : ℚ) A).cohomologyOperator
+        rw [Pair.smul_cohomologyOperator, Pair.add_cohomologyOperator,
+          Pair.smul_cohomologyOperator, Nat.cast_succ, one_smul, add_smul])
 
 /-- Exact operator pair carried by one genuine one-sided finite closed
 correspondence and its independently verified pointwise Betti realization. -/
