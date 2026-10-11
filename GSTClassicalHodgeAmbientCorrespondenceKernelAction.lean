@@ -179,14 +179,14 @@ theorem transpose_action_apply
   rw [action_apply]
   rw [show (transposeKernel A κ).kernelClass = κ.transposeClass from rfl]
   rw [κ.transposeClass_eq_swap]
-  rw [sndPullback_eq_swap_fstPullback A n]
-  have hcup := P.swap_cup (2 * d) n κ.kernelClass
-    (fstCohomologyPullback A n alpha)
-  have hgysin := P.sndGysin_swap n
-    (P.cup (2 * d) n κ.kernelClass
-      (fstCohomologyPullback A n alpha))
-  simpa [LinearMap.comp_apply] using
-    congrArg (P.sndGysin n) hcup |>.trans hgysin
+  have hpull : fstCohomologyPullback A n alpha =
+      swapCohomologyPullback A n (sndCohomologyPullback A n alpha) := by
+    simpa only [LinearMap.comp_apply] using
+      LinearMap.congr_fun (fstPullback_eq_swap_sndPullback A n) alpha
+  rw [hpull]
+  rw [← P.swap_cup (2 * d) n κ.kernelClass
+    (sndCohomologyPullback A n alpha)]
+  exact P.sndGysin_swap n _
 
 /-- The ambient construction is total by construction, not by a range or
 surjectivity argument. -/

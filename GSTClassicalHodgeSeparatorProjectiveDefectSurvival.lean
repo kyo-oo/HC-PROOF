@@ -74,6 +74,7 @@ theorem separator_reads_projective_transport_defect
   rw [smoothProjectiveNativePushforward_point]
   rw [nativePointPushforward_eq f p x hcod]
   rw [LinearMap.map_sub, LinearMap.map_smul]
+  rw [LinearMap.map_smul]
   rw [S.annihilates_atoms ⟨f x.1, hcod⟩]
   rw [fiberedHodgeClass_transportAtom_of_codim f i x hcod]
   simp
