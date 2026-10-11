@@ -92,6 +92,26 @@ all **207** remaining absent source paths with missing declarations through
 This covers absent-file migration only.  The 140 retained-path historical
 variants still need declaration-by-declaration semantic porting.
 
+Highest-priority retained-path variants by absent declaration-name count:
+
+| Retained canonical path | Missing names | Primary historical source |
+|---|---:|---|
+| `GSTGeometricRealizationStage2G.lean` | 18 | GST cosmology strengthening |
+| `GSTTruncatedWorldCohomologyRing.lean` | 9 | GST cosmology strengthening |
+| `GSTClassicalHodgeGeneralSpaceRealization.lean` | 8 | general-space cosmology |
+| `GSTClassicalHodgeGeneratorwiseAtomicStability.lean` | 8 | Hodge branch family |
+| `GSTGeneralSpace.lean` | 8 | general-space cosmology |
+| `GSTGraphV2GeneralSpaceRealization.lean` | 8 | general-space cosmology |
+| `CardinalWorldsV2.lean` | 7 | GST cosmology strengthening |
+| `GSTClassicalHodgeRangeLiftedSpectralOperator.lean` | 7 | early Hodge engine |
+| `waves/GSTWaveCohomology.lean` | 6 | GST cosmology strengthening |
+| `waves/GSTNCohomologyV2.lean` | 6 | GST cosmology strengthening |
+| `waves/GSTNCohomology.lean` | 6 | GST cosmology strengthening |
+| `GSTClassicalHodgeGeneralSpaceSynchronization.lean` | 6 | general-space cosmology |
+| `GSTClassicalHodgePointKernelOperatorLift.lean` | 6 | Hodge branch family |
+| `GSTClassicalHodgeFiniteClosedCorrespondenceOperator.lean` | 6 | principal-cut lineage |
+| `GSTGlobalPureHodgeCosmology.lean` | 6 | GST cosmology strengthening |
+
 At `ed02aa25`, 108 of the absent non-debris modules are registered Lake roots,
 113 are imported by another module, and only 17 are neither.  Therefore most
 of this gap is an active historical theorem surface, not unreferenced scratch.
