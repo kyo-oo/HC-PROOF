@@ -50,7 +50,7 @@ noncomputable def analyticCarrierSwapHom
       (mem_analyticLocus_transpose_iff A K (q.1.2, q.1.1)).2 q.2⟩),
     by
       exact Continuous.subtype_mk
-        ((continuous_snd.comp continuous_subtype_val).prod_mk
+        ((continuous_snd.comp continuous_subtype_val).prodMk
           (continuous_fst.comp continuous_subtype_val)) _⟩
 
 /-- The same coordinate swap is the inverse map. -/
@@ -62,7 +62,7 @@ noncomputable def analyticCarrierSwapInv
       (mem_analyticLocus_transpose_iff A K q.1).1 q.2⟩),
     by
       exact Continuous.subtype_mk
-        ((continuous_snd.comp continuous_subtype_val).prod_mk
+        ((continuous_snd.comp continuous_subtype_val).prodMk
           (continuous_fst.comp continuous_subtype_val)) _⟩
 
 /-- The intrinsic analytic carriers of `K` and `K^t` are genuinely isomorphic. -/

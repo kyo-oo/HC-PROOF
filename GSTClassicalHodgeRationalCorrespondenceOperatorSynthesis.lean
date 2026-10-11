@@ -275,7 +275,8 @@ theorem rationalPair_cycleOperator
           A.sum (fun K q => q • K.nativeOperator p)
       simp only [Pair.add_cycleOperator,
         Finsupp.sum_single_index (a := K) (b := q)
-          (h := fun K' q' => Pair.smul q' (primitivePair K' (T K') (hT K')))
+          (h := fun K' q' => Pair.smul q'
+            (K'.toCycleClassOperatorPair (T K') (hT K')))
           (h0 K),
         Finsupp.sum_single_index (a := K) (b := q)
           (h := fun K' q' => q' • K'.nativeOperator p)
@@ -328,7 +329,8 @@ theorem rationalPair_cohomologyOperator
           A.sum (fun K q => q • T K)
       simp only [Pair.add_cohomologyOperator,
         Finsupp.sum_single_index (a := K) (b := q)
-          (h := fun K' q' => Pair.smul q' (primitivePair K' (T K') (hT K')))
+          (h := fun K' q' => Pair.smul q'
+            (K'.toCycleClassOperatorPair (T K') (hT K')))
           (h0 K),
         Finsupp.sum_single_index (a := K) (b := q)
           (h := fun K' q' => q' • T K')

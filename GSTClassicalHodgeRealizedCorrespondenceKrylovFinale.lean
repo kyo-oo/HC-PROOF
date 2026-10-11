@@ -1,6 +1,7 @@
 import GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
 import GSTClassicalHodgeAtomicSpan
 import GSTClassicalHodgeExactClayStatement
+open GSTClassicalHodgeAtomicSpan
 
 /-!
 # GST CLASSICAL HODGE — REALIZED-CORRESPONDENCE KRYLOV FINALE

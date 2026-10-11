@@ -97,7 +97,7 @@ theorem hornerExpr_on_eigenvector
   | nil =>
       simp [hornerExpr, hornerScalar, RealizedCorrespondenceExpr.cohomologyOperator,
         RealizedCorrespondenceExpr.operatorPair,
-        RealizedClosedCorrespondenceAlgebra.CycleClassOperatorPair.zero,
+        GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra.CycleClassOperatorPair.zero,
         LinearMap.zero_apply]
   | cons c cs ih =>
       change
@@ -105,7 +105,7 @@ theorem hornerExpr_on_eigenvector
           T.cohomologyOperator ((hornerExpr T cs).cohomologyOperator alpha) =
         (c + lambda * hornerScalar lambda cs) • alpha
       rw [ih, map_smul, hT]
-      simp [add_smul, mul_smul, smul_smul, mul_comm]
+      rw [smul_smul, smul_smul, mul_comm]
 
 /-- Every compiled polynomial expression satisfies exact native cycle-class
 naturality because it lives inside the genuine correspondence expression
