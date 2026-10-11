@@ -1,6 +1,6 @@
 import GSTClassicalHodgeFullLimitlessCrown
-open GSTNativeCodimensionCyclePresentation
 import GSTClassicalHodgeExactClayStatement
+open GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — LIMITLESS EXACT CLAY FINALE

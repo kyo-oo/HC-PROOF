@@ -68,8 +68,10 @@ noncomputable def synchronizePath
     (γ : (hodgeGeneralSpace G).Path x y)
     (hx : NativeLocus G x) :
     SynchronizedPathExecution G x y := by
-  rcases γ with ⟨P, hP⟩
-  rcases hx with ⟨Z, hZ⟩
+  let P := Classical.choose γ
+  have hP := Classical.choose_spec γ
+  let Z := Classical.choose hx
+  have hZ := Classical.choose_spec hx
   exact
     { program := P
       reaches := hP

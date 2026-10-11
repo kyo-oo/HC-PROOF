@@ -1,4 +1,5 @@
 import GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
+import GSTClassicalHodgeAtomicSpan
 import GSTClassicalHodgeExactClayStatement
 
 /-!
