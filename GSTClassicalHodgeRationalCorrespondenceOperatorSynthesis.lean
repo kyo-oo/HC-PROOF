@@ -31,6 +31,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeFiniteClosedCorrespondence
 open GSTClassicalHodgeFiniteClosedCorrespondenceOperator
+open GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

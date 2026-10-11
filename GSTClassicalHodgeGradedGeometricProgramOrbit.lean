@@ -341,12 +341,13 @@ theorem normalizedSpineProgram_cycleEval
   induction q with
   | zero => rfl
   | succ q ih =>
-      change
-        (successorScalar q)⁻¹ •
-          successorNativeOperator V q
-            ((normalizedSpineProgram V q).cycleEval G
-              (codimensionZeroFundamentalCycle V)) =
+      show (successorScalar q)⁻¹ •
+          ((G.principalCutPair q).cycleOperator.comp
+            ((normalizedSpineProgram V q).cycleEval G))
+            (codimensionZeroFundamentalCycle V) =
           spineNativeTower G (q + 1)
+      rw [G.principalCutPair_native q]
+      simp only [LinearMap.smul_apply, LinearMap.comp_apply]
       rw [ih]
       exact (spineNativeTower_succ G q).symm
 

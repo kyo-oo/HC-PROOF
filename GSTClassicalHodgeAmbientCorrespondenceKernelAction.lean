@@ -110,10 +110,10 @@ subscheme is the pullback of `[C]` under coordinate swap. -/
 structure MiddleBettiCorrespondenceKernel
     (d : Nat)
     (K : SchemeBiFiniteClosedCorrespondence V) where
-  class : X2Coh A (2 * d)
+  kernelClass : X2Coh A (2 * d)
   transposeClass : X2Coh A (2 * d)
   transposeClass_eq_swap :
-    transposeClass = swapCohomologyPullback A (2 * d) class
+    transposeClass = swapCohomologyPullback A (2 * d) kernelClass
 
 namespace MiddleBettiCorrespondenceKernel
 
@@ -134,7 +134,7 @@ noncomputable def action
     XCoh A n →ₗ[ℚ] XCoh A n := by
   let pull : XCoh A n →ₗ[ℚ] X2Coh A n := fstCohomologyPullback A n
   let multiply : X2Coh A n →ₗ[ℚ] X2Coh A (2 * d + n) :=
-    P.cupLeft κ.class
+    P.cupLeft κ.kernelClass
   exact (P.sndGysin n).comp (multiply.comp pull)
 
 @[simp]
@@ -145,7 +145,7 @@ theorem action_apply
     (alpha : XCoh A n) :
     κ.action P n alpha =
       P.sndGysin n
-        (P.cup (2 * d) n κ.class
+        (P.cup (2 * d) n κ.kernelClass
           (fstCohomologyPullback A n alpha)) :=
   rfl
 
@@ -153,12 +153,12 @@ theorem action_apply
 noncomputable def transposeKernel
     (κ : MiddleBettiCorrespondenceKernel A d K) :
     MiddleBettiCorrespondenceKernel A d K.transpose where
-  class := κ.transposeClass
-  transposeClass := κ.class
+  kernelClass := κ.transposeClass
+  transposeClass := κ.kernelClass
   transposeClass_eq_swap := by
     rw [κ.transposeClass_eq_swap]
     have hinv := swapCohomology_involutive A (2 * d)
-    have h := LinearMap.congr_fun hinv κ.class
+    have h := LinearMap.congr_fun hinv κ.kernelClass
     simpa using h.symm
 
 /-- **EXPLICIT TRANSPOSE ACTION FORMULA.**
@@ -174,15 +174,15 @@ theorem transpose_action_apply
     (alpha : XCoh A n) :
     (κ.transposeKernel).action P n alpha =
       P.fstGysin n
-        (P.cup (2 * d) n κ.class
+        (P.cup (2 * d) n κ.kernelClass
           (sndCohomologyPullback A n alpha)) := by
   rw [action_apply]
   rw [κ.transposeClass_eq_swap]
   rw [sndPullback_eq_swap_fstPullback A n]
-  have hcup := P.swap_cup (2 * d) n κ.class
+  have hcup := P.swap_cup (2 * d) n κ.kernelClass
     (fstCohomologyPullback A n alpha)
   have hgysin := P.sndGysin_swap n
-    (P.cup (2 * d) n κ.class
+    (P.cup (2 * d) n κ.kernelClass
       (fstCohomologyPullback A n alpha))
   simpa [LinearMap.comp_apply] using
     congrArg (P.sndGysin n) hcup |>.trans hgysin

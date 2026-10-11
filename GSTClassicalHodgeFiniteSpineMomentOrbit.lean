@@ -128,8 +128,10 @@ theorem top_spineHodgeSeed_ne_zero
   intro hz
   have hconst := D.read_spineHodgeSeed_eq_base top (le_refl top)
   rw [hz] at hconst
-  simp only [map_zero] at hconst
-  exact D.base_ne_zero hconst.symm
+  have hzero : D.read top
+      (0 : RationalSingularCohomology H.analytification (2 * top)) = 0 :=
+    map_zero _
+  exact D.base_ne_zero (hconst.symm.trans hzero)
 
 /-- The geometry-built native spine and its now-proved nonzero Hodge class give
 one synchronized live orbit seed at the requested weight. -/

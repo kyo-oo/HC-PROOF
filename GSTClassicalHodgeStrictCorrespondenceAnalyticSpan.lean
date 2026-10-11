@@ -160,19 +160,23 @@ noncomputable def rightChainMap
 noncomputable def leftCochainPullback
     (K : SchemeBiFiniteClosedCorrespondence V) :
     rationalSingularCochains A ⟶ carrierSingularCochains A K := by
-  let F :=
-    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-      |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map (leftChainMap A K)).unop
+  unfold rationalSingularCochains carrierSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op
+      ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (leftChainMap A K)))
 
 /-- Contravariant cochain pullback along the right projection. -/
 noncomputable def rightCochainPullback
     (K : SchemeBiFiniteClosedCorrespondence V) :
     rationalSingularCochains A ⟶ carrierSingularCochains A K := by
-  let F :=
-    ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
-      |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map (rightChainMap A K)).unop
+  unfold rationalSingularCochains carrierSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op
+      ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (rightChainMap A K)))
 
 /-- Full Betti pullback along the left leg. -/
 noncomputable def leftCohomologyPullbackObj
@@ -218,8 +222,8 @@ structure IntrinsicBettiSpan
     (K : SchemeBiFiniteClosedCorrespondence V)
     (n : Nat) where
   carrier : Type := CarrierCohomology A K n
-  addCommGroup : AddCommGroup carrier := inferInstance
-  moduleQ : Module ℚ carrier := inferInstance
+  addCommGroup : AddCommGroup carrier
+  moduleQ : Module ℚ carrier
   left : RationalSingularCohomology A n →ₗ[ℚ] carrier
   right : RationalSingularCohomology A n →ₗ[ℚ] carrier
 
@@ -228,6 +232,8 @@ noncomputable def intrinsicBettiSpan
     (K : SchemeBiFiniteClosedCorrespondence V)
     (n : Nat) : IntrinsicBettiSpan A K n where
   carrier := CarrierCohomology A K n
+  addCommGroup := inferInstance
+  moduleQ := inferInstance
   left := leftCohomologyPullback A K n
   right := rightCohomologyPullback A K n
 
