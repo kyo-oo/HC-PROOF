@@ -4,6 +4,15 @@
 **Advanced source snapshot:** `8451234` on `sol/hodge-strict-betti-correspondence-fusion-20261003` (the SB-138 cure state: astra's clean-branch cures + the 7-residual completion).
 **History policy:** the content of 800+ development commits is presented in ONE consolidation commit based on `main`; no theorem statements or proof bodies are altered by this consolidation. The original development branches retain the full detailed history.
 
+> **Current all-history status:** this branch is a dependency-clean advanced
+> snapshot, not yet the finished all-history theorem consolidation.  The
+> declaration-level audit still finds 214 non-debris absent source paths and
+> 140 retained paths with historical declarations not represented here.  See
+> [`CLEAN_ALL_HISTORY_GAP_AUDIT.md`](CLEAN_ALL_HISTORY_GAP_AUDIT.md) for the
+> canonical lineage map, explicit supersession tombstones, and migration
+> heads.  Hosted-green compilation and completion of that migration are both
+> required before this branch can be called final.
+
 ## The upgrade rule (what stays, what goes)
 
 A file **stays** exactly when it is part of the *current* advanced dependency
