@@ -2,6 +2,7 @@ import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeSingleExactSuccessorSurvival
 import GSTNativeCodimensionCyclePresentation
 import GSTCompactNativeCyclePresentation
+import GSTClassicalHodgeGeometricCycleClassPointRigidity
 
 /-!
 # GST CLASSICAL HODGE — NATIVE-MASS BRIDGE AUDIT
@@ -165,7 +166,7 @@ theorem nativeCycleMass_codimensionZeroFundamentalCycle_eq_card
       (presentationOfNativeCycle V.X 0
         (realizeFiniteCodimensionPresentation V.X 0
           (codimensionZeroPresentation V))) = _
-  rw [presentation_realizeFiniteCodimensionPresentation]
+  rw [GSTClassicalHodgeGeometricCycleClassPointRigidity.presentationOfNativeCycle_realize]
   simp [codimensionZeroPresentation, presentationMass]
 
 /-- Hence the old base-mass nonvanishing field is exactly component
@@ -205,7 +206,9 @@ theorem successorMass_eq_successorScalar_iff_exactRelativeCard_two
       (exactRelativeSuccessorFinset V p x).card = 2 := by
   rw [successorMass_eq_exactRelativeCard]
   rw [successorScalar_eq_two]
-  norm_num
+  constructor
+  · intro h; exact_mod_cast h
+  · intro h; exact_mod_cast h
 
 /-- Family form of the previous exact-status theorem. -/
 theorem successorPointMassLaw_iff_exactTwoSuccessors
