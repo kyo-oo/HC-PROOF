@@ -51,6 +51,7 @@ open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeGeneratorwiseAtomicStability
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeCyclicSpectralGeneration
@@ -89,7 +90,7 @@ theorem cohomologyOperator_atomicStable
   exact (smoothProjective_atomicStable_iff_nativePointLifts
     (V := V) (H := H) (p := p)
     (W.operatorPair G).cohomologyOperator).2
-      (W.hasNativePointLifts G)
+      (hasNativePointLifts G W)
 
 end ProjectiveOperatorWord
 

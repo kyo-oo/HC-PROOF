@@ -14,6 +14,7 @@ namespace GSTClassicalHodgeGeneralSpaceRealization
 open GSTGeneralSpace
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGradedGeometricProgramOrbit
@@ -92,7 +93,7 @@ theorem nativePartialRealization_spec
     (x : (hodgeGeneralSpace G).Point)
     (hx : NativeLocus G x) :
     H.cycleClass x.1
-        (nativePartialRealization G).realize x hx |>.2 = x.2 := by
+        ((nativePartialRealization G).realize x hx).2 = x.2 := by
   exact Classical.choose_spec hx
 
 /-- **GENERAL-SPACE NATIVE SYNCHRONIZATION.**

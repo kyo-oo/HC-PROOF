@@ -1,6 +1,7 @@
 import GSTClassicalHodgeGSTSpineGlobalSource
 import GSTClassicalHodgeRankFreeLefschetzPoincareGeneration
 import GSTClassicalHodgeRankFreePrimitiveGeneration
+import GSTClassicalHodgeLefschetzPoincareMatrixGeneration
 
 /-!
 # GST CLASSICAL HODGE — GLOBAL SHEET SATURATION
@@ -216,7 +217,7 @@ theorem globalMatrixUnit_eq_twoSlotLefschetz_on_hodge
         (fiberedWeightCoordinates V H p alpha) =
       fiberedWeightCoordinates V H p
         (liftFiniteHodgeOperator (pairBasisIndex i j)
-          (GSTClassicalHodgeFullArsenalIrreducibility.pureForwardShift 2)
+          (GSTClassicalHodgeLefschetzPoincareMatrixGeneration.pureForwardShift 2)
           alpha) := by
   rw [rankFreeMatrixUnit_eq_twoSlot_Lefschetz]
   exact sheetMatrixUnit_intertwines_hodgeMatrixUnit p i j alpha
