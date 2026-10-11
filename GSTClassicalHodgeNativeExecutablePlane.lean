@@ -116,14 +116,13 @@ theorem targetCycle_spec
   rw [map_sum]
   simp only [LinearMap.map_smul]
   have hexp : (alpha : RationalSingularCohomology H.analytification (2 * q)) =
-      ((classicalHodgeBasis V H q).repr alpha).sum
-        (fun j c => c • ((classicalHodgeBasis V H q j : ClassicalHodgeFiber V H q) :
-          RationalSingularCohomology H.analytification (2 * q))) := by
+      ∑ j ∈ ((classicalHodgeBasis V H q).repr alpha).support,
+        ((classicalHodgeBasis V H q).repr alpha j) • ↑(classicalHodgeBasis V H q j) := by
     have h := ((classicalHodgeBasis V H q).linearCombination_repr alpha).symm
     rw [Finsupp.linearCombination_apply] at h
-    rw [h]
+    conv_lhs => rw [h]
     simp [Finsupp.sum, Submodule.coe_sum, Submodule.coe_smul_of_tower]
-  rw [hexp, Finsupp.sum]
+  rw [hexp]
   apply Finset.sum_congr rfl
   intro j hj
   simp [basisCycle_spec hplane q j]
@@ -161,16 +160,15 @@ theorem hodge_of_basisCycleSupply
   rw [map_sum]
   simp only [LinearMap.map_smul]
   have hexp : (alpha : RationalSingularCohomology H.analytification (2 * q)) =
-      ((classicalHodgeBasis V H q).repr alphaH).sum
-        (fun j c => c • ((classicalHodgeBasis V H q j : ClassicalHodgeFiber V H q) :
-          RationalSingularCohomology H.analytification (2 * q))) := by
+      ∑ j ∈ ((classicalHodgeBasis V H q).repr alphaH).support,
+        ((classicalHodgeBasis V H q).repr alphaH j) • ↑(classicalHodgeBasis V H q j) := by
     show ((alphaH : ClassicalHodgeFiber V H q) :
       RationalSingularCohomology H.analytification (2 * q)) = _
     have h := ((classicalHodgeBasis V H q).linearCombination_repr alphaH).symm
     rw [Finsupp.linearCombination_apply] at h
-    rw [h]
+    conv_lhs => rw [h]
     simp [Finsupp.sum, Submodule.coe_sum, Submodule.coe_smul_of_tower]
-  rw [hexp, Finsupp.sum]
+  rw [hexp]
   apply Finset.sum_congr rfl
   intro j hj
   simp [hZ j]
