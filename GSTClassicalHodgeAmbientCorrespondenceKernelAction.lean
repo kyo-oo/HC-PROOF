@@ -143,7 +143,7 @@ theorem action_apply
     (κ : MiddleBettiCorrespondenceKernel A d K)
     (n : Nat)
     (alpha : XCoh A n) :
-    κ.action P n alpha =
+    MiddleBettiCorrespondenceKernel.action A P κ n alpha =
       P.sndGysin n
         (P.cup (2 * d) n κ.kernelClass
           (fstCohomologyPullback A n alpha)) :=
@@ -172,7 +172,7 @@ theorem transpose_action_apply
     (κ : MiddleBettiCorrespondenceKernel A d K)
     (n : Nat)
     (alpha : XCoh A n) :
-    (κ.transposeKernel).action P n alpha =
+    MiddleBettiCorrespondenceKernel.action A P (κ.transposeKernel) n alpha =
       P.fstGysin n
         (P.cup (2 * d) n κ.kernelClass
           (sndCohomologyPullback A n alpha)) := by
@@ -194,9 +194,9 @@ theorem action_total
     (κ : MiddleBettiCorrespondenceKernel A d K)
     (n : Nat) :
     ∀ alpha : XCoh A n, ∃ beta : XCoh A n,
-      beta = κ.action P n alpha := by
+      beta = MiddleBettiCorrespondenceKernel.action A P κ n alpha := by
   intro alpha
-  exact ⟨κ.action P n alpha, rfl⟩
+  exact ⟨MiddleBettiCorrespondenceKernel.action A P κ n alpha, rfl⟩
 
 #check action
 #check action_apply

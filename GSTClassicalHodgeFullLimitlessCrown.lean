@@ -283,7 +283,9 @@ theorem every_hodge_class_has_native_cycle
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
-  exact bigradedBettiHodge G hNV R p alpha halpha
+  exact ((bigradedBettiHodgeStatement_iff_explicit_witness V H).1
+      (bigradedBettiHodge G hNV R)) p alpha
+      ((mem_rationalHodgeSubspace_iff (H.hodgeBigrading p) alpha).1 halpha)
 
 /-- Elementwise conserved-charge landing. -/
 theorem every_hodge_class_has_native_cycle_of_conservedCharge
@@ -295,7 +297,9 @@ theorem every_hodge_class_has_native_cycle_of_conservedCharge
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
-  exact bigradedBettiHodge_of_conservedCharge G D R p alpha halpha
+  exact ((bigradedBettiHodgeStatement_iff_explicit_witness V H).1
+      (bigradedBettiHodge_of_conservedCharge G D R)) p alpha
+      ((mem_rationalHodgeSubspace_iff (H.hodgeBigrading p) alpha).1 halpha)
 
 /-- Elementwise live-mass landing. -/
 theorem every_hodge_class_has_native_cycle_of_liveMassSurvival
@@ -307,7 +311,9 @@ theorem every_hodge_class_has_native_cycle_of_liveMassSurvival
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
-  exact bigradedBettiHodge_of_liveMassSurvival G S R p alpha halpha
+  exact ((bigradedBettiHodgeStatement_iff_explicit_witness V H).1
+      (bigradedBettiHodge_of_liveMassSurvival G S R)) p alpha
+      ((mem_rationalHodgeSubspace_iff (H.hodgeBigrading p) alpha).1 halpha)
 
 /-- There is no remaining finite-rank/countability restriction in the final
 crown. -/
