@@ -88,7 +88,7 @@ theorem finite_chain_recovers_conserved_seed_nonvanishing
     (D : SpineTowerConservedCharge (V := V) (H := H) G)
     (top : Nat) :
     spineHodgeSeed G top ≠ 0 :=
-  (D.toFiniteSpineMomentChain top).top_spineHodgeSeed_ne_zero
+  (SpineTowerConservedCharge.toFiniteSpineMomentChain D top).top_spineHodgeSeed_ne_zero
 
 /-- The older native-mass bridge factors through the finite detector via its
 manufactured conserved charge. -/
@@ -97,7 +97,7 @@ noncomputable def NativeMassCycleClassBridge.toFiniteSpineMomentChain
     (G : GeometricCycleClassSpine V H)
     (top : Nat) :
     FiniteSpineMomentChain G top :=
-  (M.toConservedCharge G).toFiniteSpineMomentChain top
+  (SpineTowerConservedCharge.toFiniteSpineMomentChain (M.toConservedCharge G) top)
 
 /-- Native-mass nonvanishing at one requested horizon can therefore be routed
 through the finite detector rather than through an unbounded public tower. -/
@@ -106,7 +106,7 @@ theorem finite_chain_recovers_nativeMass_seed_nonvanishing
     (G : GeometricCycleClassSpine V H)
     (top : Nat) :
     spineHodgeSeed G top ≠ 0 :=
-  (M.toFiniteSpineMomentChain G top).top_spineHodgeSeed_ne_zero
+  (NativeMassCycleClassBridge.toFiniteSpineMomentChain M G top).top_spineHodgeSeed_ne_zero
 
 #check SpineTowerConservedCharge.toFiniteSpineMomentChain
 #check finite_chain_recovers_conserved_seed_nonvanishing

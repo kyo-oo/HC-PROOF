@@ -216,7 +216,7 @@ theorem not_hodge_yields_limitless_separatorGhost
     Nonempty (LimitlessSeparatorGhost (V := V) (H := H)) := by
   rw [not_bigradedBettiHodgeStatement_iff_exists_basis_separator V H] at hnot
   rcases hnot with ⟨p,i,⟨S⟩⟩
-  exact ⟨S.toLimitlessGhost⟩
+  exact ⟨BasisAtomicSeparator.toLimitlessGhost S⟩
 
 /-- A no-ghost theorem on the completed fibered dual universe is therefore
 already sufficient to close the classical Hodge target.  The premise is stated

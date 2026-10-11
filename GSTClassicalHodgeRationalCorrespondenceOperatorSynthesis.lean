@@ -90,7 +90,44 @@ noncomputable def smul
     (q : ℚ) (A : Pair (V := V) (H := H) (p := p)) :
     (smul q A).cohomologyOperator = q • A.cohomologyOperator := rfl
 
+/-- Structure equality from equality of the two operator data fields; the
+naturality proof component is proof-irrelevant. -/
+theorem ext_data
+    {f g : Pair (V := V) (H := H) (p := p)}
+    (ho : f.cycleOperator = g.cycleOperator)
+    (hh : f.cohomologyOperator = g.cohomologyOperator) :
+    f = g := by
+  rcases f with ⟨fo, fh, _⟩
+  rcases g with ⟨go, gh, _⟩
+  have ho' : fo = go := ho
+  have hh' : fh = gh := hh
+  subst ho'
+  subst hh'
+  rfl
+
 end Pair
+
+/-- Componentwise algebraic structure on exact natural operator pairs: the
+operator and cohomology components are combined like module endomorphisms,
+and the naturality proof component is closed under these operations. -/
+instance instAddCommMonoidPair :
+    AddCommMonoid (Pair (V := V) (H := H) (p := p)) where
+  add := Pair.add
+  zero := Pair.zero
+  add_assoc A B C := Pair.ext_data
+    (by rw [Pair.add_cycleOperator, Pair.add_cycleOperator,
+      Pair.add_cycleOperator, Pair.add_cycleOperator, add_assoc])
+    (by rw [Pair.add_cohomologyOperator, Pair.add_cohomologyOperator,
+      Pair.add_cohomologyOperator, Pair.add_cohomologyOperator, add_assoc])
+  add_comm A B := Pair.ext_data
+    (by rw [Pair.add_cycleOperator, Pair.add_cycleOperator, add_comm])
+    (by rw [Pair.add_cohomologyOperator, Pair.add_cohomologyOperator, add_comm])
+  zero_add A := Pair.ext_data
+    (by rw [Pair.add_cycleOperator, Pair.zero_cycleOperator, zero_add])
+    (by rw [Pair.add_cohomologyOperator, Pair.zero_cohomologyOperator, zero_add])
+  add_zero A := Pair.ext_data
+    (by rw [Pair.add_cycleOperator, Pair.zero_cycleOperator, add_zero])
+    (by rw [Pair.add_cohomologyOperator, Pair.zero_cohomologyOperator, add_zero])
 
 /-- Exact operator pair carried by one genuine one-sided finite closed
 correspondence and its independently verified pointwise Betti realization. -/
@@ -130,9 +167,9 @@ theorem rationalPair_cycleOperator
   classical
   induction A using Finsupp.induction with
   | zero => simp [rationalPair, correspondenceCycleNativeOperator, Pair.zero]
-  | add_one K q A hK ih =>
+  | single_add K q A hsup hne ih =>
       simp [rationalPair, correspondenceCycleNativeOperator,
-        primitivePair, Pair.add, Pair.smul, ih, hK]
+        primitivePair, Pair.add, Pair.smul, ih, hne, hsup]
 
 /-- The cohomological action is the matching rational sum of the independently
 realized primitive correspondence actions. -/
@@ -148,8 +185,8 @@ theorem rationalPair_cohomologyOperator
   classical
   induction A using Finsupp.induction with
   | zero => simp [rationalPair, Pair.zero]
-  | add_one K q A hK ih =>
-      simp [rationalPair, primitivePair, Pair.add, Pair.smul, ih, hK]
+  | single_add K q A hsup hne ih =>
+      simp [rationalPair, primitivePair, Pair.add, Pair.smul, ih, hne, hsup]
 
 /-- Direct naturality formula for the synthesized rational correspondence
 cycle. -/
