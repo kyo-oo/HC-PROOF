@@ -1,6 +1,8 @@
 import GSTClassicalHodgeProjectiveWordOrbit
 import GSTClassicalHodgeNativeGeneratorNaturality
 import GSTClassicalHodgeCoordinatewiseSeedAssembly
+import GSTClassicalHodgeGeneratorwiseAtomicStability
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — ONE PROJECTIVE WORD / FINITE SPECTRAL COVER
@@ -72,8 +74,8 @@ theorem hasNativePointLifts
       (p := p) (cl := H.cycleClass p)
       (W.operatorPair G).cohomologyOperator := by
   intro x
-  refine ⟨W.eval (codimensionPointCycle V.X p x), ?_⟩
-  exact W.cycleClass_eval G (codimensionPointCycle V.X p x)
+  refine ⟨W.eval (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x), ?_⟩
+  exact W.cycleClass_eval G (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x)
 
 /-- Consequently the cohomological face of every projective word preserves the
 actual atomic cycle-class span.  This is derived from geometric action on point

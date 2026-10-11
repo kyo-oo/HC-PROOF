@@ -193,4 +193,3 @@ theorem exists_defectZero_seedJointState_iff_massBalance
 #print axioms exists_defectZero_seedJointState_iff_massBalance
 
 end GSTClassicalHodgeSynchronizedSeedFiberedLanding
-

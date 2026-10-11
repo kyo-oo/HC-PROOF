@@ -1,6 +1,7 @@
 import GSTClassicalHodgeFiniteClosedCorrespondenceOperator
 import GSTClassicalHodgeRankFreeArsenalIrreducibility
 import GSTClassicalHodgeExactClayStatement
+import GSTClassicalHodgeAtomicSpan
 
 /-!
 # GST CLASSICAL HODGE — ONE-SIDED FINITE-CORRESPONDENCE KRYLOV FINALE
@@ -120,6 +121,8 @@ theorem hodgeOrbit_algebraic
     (C : OneSidedKrylovCertificate V H p)
     (n : Nat) :
     C.hodgeOrbit n ∈ AlgebraicHodgeSubspace V H p := by
+  rw [mem_AlgebraicHodgeSubspace_iff,
+    ← smoothProjective_cycleClass_range_eq_atomic_span V H p]
   exact ⟨C.nativeOrbit n, C.nativeOrbit_cycleClass n⟩
 
 /-- The only representation-theoretic finishing condition: one genuine
@@ -153,6 +156,8 @@ theorem exists_cycle
   have ha : a ∈ AlgebraicHodgeSubspace V H p := by
     rw [htop]
     trivial
+  rw [mem_AlgebraicHodgeSubspace_iff] at ha
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at ha
   exact ha
 
 end OneSidedKrylovCertificate
