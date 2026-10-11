@@ -214,7 +214,8 @@ theorem full_limitless_externalization_crown
     (hK : ∀ i j : ClassicalHodgeBasisIndex V H p,
       AtomCosmicExternalization G i j (K i j)) :
     CanonicalCosmicNaturality (V := V) (H := H) p
-    ∧ (∀ i j A,
+    ∧ (∀ i j : ClassicalHodgeBasisIndex V H p,
+      ∀ A : Module.End ℚ (codimensionCycles V.X p),
       (multiplicityMatrixUnit i j).comp (liftNativeOperator A) =
         (liftNativeOperator A).comp (multiplicityMatrixUnit i j)) := by
   exact ⟨canonicalCosmicNaturality_of_fullLimitlessExternalization G K hK,
