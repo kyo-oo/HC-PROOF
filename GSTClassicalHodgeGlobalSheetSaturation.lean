@@ -1,5 +1,6 @@
 import GSTClassicalHodgeGSTSpineGlobalSource
 import GSTClassicalHodgeRankFreeLefschetzPoincareGeneration
+import GSTClassicalHodgeRankFreePrimitiveGeneration
 
 /-!
 # GST CLASSICAL HODGE — GLOBAL SHEET SATURATION
@@ -28,6 +29,7 @@ noncomputable section
 
 open scoped BigOperators
 open AlgebraicGeometry
+open GSTClassicalHodgeRankFreePrimitiveGeneration
 
 namespace GSTClassicalHodgeGlobalSheetSaturation
 
