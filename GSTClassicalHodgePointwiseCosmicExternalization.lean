@@ -100,7 +100,12 @@ theorem pointAtom_of_finitePoint
       H.cycleClass p
         (realizeFiniteCodimensionPresentation V.X p
           (ProjectiveNativeKernel.transition V p K x)) := by
-          rw [hreal]
+          have hreal' :
+              realizeFiniteCodimensionPresentation V.X p
+                (ProjectiveNativeKernel.transition V p K x) =
+                ProjectiveNativeKernel.operator V p K
+                  (codimensionPointCycle V.X p x) := hreal
+          rw [hreal']
     _ = finitePointCycleClassMap p (H.cycleClass p)
       (ProjectiveNativeKernel.transition V p K x) := by
           symm
@@ -153,7 +158,7 @@ theorem projectivePair_agrees_on_atomicSpan
       pointCycleClassSpan p (H.cycleClass p) ≤ LinearMap.ker D := by
     rw [pointCycleClassSpan, Submodule.span_le]
     rintro y ⟨x, rfl⟩
-    rw [LinearMap.mem_ker]
+    simp only [LinearMap.mem_ker]
     change
       (projectiveCorrespondencePair G K).cohomologyOperator
           (H.cycleClass p (codimensionPointCycle V.X p x)) -
