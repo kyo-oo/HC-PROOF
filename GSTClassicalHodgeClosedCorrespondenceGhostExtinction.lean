@@ -166,7 +166,7 @@ theorem closedCorrespondenceHit_of_matrixUnitReachable_point
   refine ⟨x,W,hodgeCoordinate i alpha,hi,?_⟩
   have h := hW alpha
   rw [hodgeMatrixUnit_apply] at h
-  exact congrArg Subtype.val h
+  exact h
 
 /-- Therefore, if one genuine point Hodge class has a live source coordinate
 and E_ij is geometrically reachable, no separator can survive at j. -/

@@ -1,4 +1,5 @@
 import GSTClassicalHodgeFullLimitlessCrown
+open GSTNativeCodimensionCyclePresentation
 import GSTClassicalHodgeExactClayStatement
 
 /-!
