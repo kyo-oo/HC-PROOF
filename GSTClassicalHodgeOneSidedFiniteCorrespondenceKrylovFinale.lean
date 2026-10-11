@@ -40,6 +40,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiniteClosedCorrespondence
 open GSTClassicalHodgeFiniteClosedCorrespondenceOperator
+open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeExactClayStatement
 

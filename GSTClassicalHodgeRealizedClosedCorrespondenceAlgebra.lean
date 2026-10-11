@@ -1,6 +1,8 @@
 import GSTClassicalHodgeFiniteClosedCorrespondenceOperator
 import GSTClassicalHodgeGeometricCycleClassSpine
 import GSTClassicalHodgeNativeArsenalRepresentation
+import GSTClassicalHodgeAtomicSpan
+import GSTClassicalHodgeProjectivePointTransport
 
 /-!
 # GST CLASSICAL HODGE — REALIZED CLOSED-CORRESPONDENCE ALGEBRA
@@ -51,6 +53,8 @@ open GSTClassicalHodgeFiniteClosedCorrespondence
 open GSTClassicalHodgeFiniteClosedCorrespondenceOperator
 open GSTClassicalHodgeCycleOperatorNaturality
 open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeNativeArsenalRepresentation
 

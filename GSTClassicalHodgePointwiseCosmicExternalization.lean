@@ -2,6 +2,9 @@ import GSTClassicalHodgeFullLimitlessExternalization
 import GSTClassicalHodgeGeneratorwiseAtomicStability
 import GSTClassicalHodgePointKernelOperatorLift
 import GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
+import GSTClassicalHodgeFullLimitlessCrown
+import GSTClassicalHodgeConcreteFailureDichotomy
+import GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 
 /-!
 # GST CLASSICAL HODGE — POINTWISE LIMITLESS COSMIC EXTERNALIZATION
@@ -53,6 +56,8 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeCanonicalCosmicRealizationEquivalence
 open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeFullLimitlessExternalization
+open GSTClassicalHodgeConcreteFailureDichotomy
+open GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -64,7 +69,8 @@ def PointAtomCosmicExternalization
     (K : ProjectiveNativeKernel V p) : Prop :=
   ∀ x : CodimensionPoint V.X p,
     H.cycleClass p
-        (K.operator (codimensionPointCycle V.X p x)) =
+        (ProjectiveNativeKernel.operator V p K
+            (codimensionPointCycle V.X p x)) =
       canonicalCosmicAmbient i j
         (H.cycleClass p (codimensionPointCycle V.X p x))
 
@@ -74,7 +80,8 @@ def FinitePointCosmicExternalization
     (i j : ClassicalHodgeBasisIndex V H p)
     (K : ProjectiveNativeKernel V p) : Prop :=
   ∀ x : CodimensionPoint V.X p,
-    finitePointCycleClassMap p (H.cycleClass p) (K.transition x) =
+    finitePointCycleClassMap p (H.cycleClass p)
+      (ProjectiveNativeKernel.transition V p K x) =
       canonicalCosmicAmbient i j
         (H.cycleClass p (codimensionPointCycle V.X p x))
 
@@ -85,14 +92,17 @@ theorem pointAtom_of_finitePoint
     (hK : FinitePointCosmicExternalization (H := H) i j K) :
     PointAtomCosmicExternalization (H := H) i j K := by
   intro x
-  have hreal := K.transition_realize x
+  have hreal := ProjectiveNativeKernel.transition_realize V p K x
   calc
     H.cycleClass p
-        (K.operator (codimensionPointCycle V.X p x)) =
+        (ProjectiveNativeKernel.operator V p K
+            (codimensionPointCycle V.X p x)) =
       H.cycleClass p
-        (realizeFiniteCodimensionPresentation V.X p (K.transition x)) := by
+        (realizeFiniteCodimensionPresentation V.X p
+          (ProjectiveNativeKernel.transition V p K x)) := by
           rw [hreal]
-    _ = finitePointCycleClassMap p (H.cycleClass p) (K.transition x) := by
+    _ = finitePointCycleClassMap p (H.cycleClass p)
+      (ProjectiveNativeKernel.transition V p K x) := by
           symm
           exact finitePointCycleClassMap_eq_cycleClass_realize
             p (H.cycleClass p) (K.transition x)
@@ -118,7 +128,8 @@ theorem projectivePair_agrees_on_points
   have hnative := hK x
   change
     H.cycleClass p
-        (K.operator (codimensionPointCycle V.X p x)) =
+        (ProjectiveNativeKernel.operator V p K
+            (codimensionPointCycle V.X p x)) =
       (projectiveCorrespondencePair G K).cohomologyOperator
         (H.cycleClass p (codimensionPointCycle V.X p x)) at hnat
   exact hnat.symm.trans hnative
@@ -227,7 +238,7 @@ theorem bigradedBettiHodge_of_spine_and_finitePointExternalization
         simpa [hH] using halpha
       simpa using this
     subst alpha
-    exact LinearMap.zero_mem _
+    exact ⟨0, by simp⟩
   · have hseed : AlgebraicFiber (V := V) (H := H) (p := q) ≠ ⊥ :=
       GSTClassicalHodgeFullLimitlessCrown.algebraicFiber_ne_bot_of_spineTower
         G hNV q hH
