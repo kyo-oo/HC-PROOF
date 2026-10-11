@@ -1,5 +1,6 @@
 import GSTClassicalHodgePrimitivePushforwardNaturality
 import GSTClassicalHodgeGeometryFirstTwoGenerator
+import GSTClassicalHodgeExplicitArsenalGeneration
 import GSTClassicalHodgeLimitlessTowerOrbitCrown
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeProjectiveSelfCorrespondences
@@ -128,10 +129,11 @@ Hodge state. -/
 theorem normalized_word_on_hodge
     {i j : ClassicalHodgeBasisIndex V H p}
     (R : ProjectiveTwoGenerator (V := V) (H := H) i j)
+    (hij : i ≠ j)
     (alpha : ClassicalHodgeFiber V H p) :
     (R.toGeometryFirst).ambientWord alpha.1 =
       (GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit i j alpha).1 :=
-  (R.toGeometryFirst).ambientWord_on_hodge alpha
+  (R.toGeometryFirst).ambientWord_on_hodge hij alpha
 
 end ProjectiveTwoGenerator
 
