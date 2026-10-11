@@ -1,5 +1,6 @@
 import GSTClassicalHodgeProjectiveWordOrbit
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
+import GSTClassicalHodgeRankFreePrimitiveGeneration
 
 /-!
 # GST CLASSICAL HODGE — PROJECTIVE TWO-GENERATOR -> WORD COMPILER
@@ -36,6 +37,7 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeRankFreePrimitiveGeneration
 open GSTClassicalHodgeFullArsenalIrreducibility
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
