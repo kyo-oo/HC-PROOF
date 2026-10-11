@@ -81,7 +81,8 @@ namespace RealizedCyclicSpectralCertificate
 spectral operator.  Atomic-span stability is DERIVED from genuine
 cycle-class naturality of the realized word. -/
 noncomputable def spectralOperator
-    (C : RealizedCyclicSpectralCertificate V H p) :
+    (C : RealizedCyclicSpectralCertificate V H p)
+    [Fintype (ClassicalHodgeBasisIndex V H p)] [DecidableEq (ClassicalHodgeBasisIndex V H p)] :
     ClassicalHodgeSpectralOperator V H p
       (ClassicalHodgeBasisIndex V H p) where
   basisIndex := fun i => i
@@ -97,7 +98,8 @@ noncomputable def spectralOperator
 
 /-- The supplied native cyclic seed really lies in the algebraic atomic span. -/
 theorem cyclic_seed_mem_atomic
-    (C : RealizedCyclicSpectralCertificate V H p) :
+    (C : RealizedCyclicSpectralCertificate V H p)
+    [Fintype (ClassicalHodgeBasisIndex V H p)] :
     (∑ i : ClassicalHodgeBasisIndex V H p,
       C.coefficient i • (classicalHodgeBasis V H p i).1) ∈
         pointCycleClassSpan p (H.cycleClass p) := by
@@ -107,7 +109,8 @@ theorem cyclic_seed_mem_atomic
 
 /-- **ONE ACTUAL CORRESPONDENCE + ONE ACTUAL CYCLIC CYCLE SATURATES THE WEIGHT.** -/
 theorem weight_hodge
-    (C : RealizedCyclicSpectralCertificate V H p) :
+    (C : RealizedCyclicSpectralCertificate V H p)
+    [Fintype (ClassicalHodgeBasisIndex V H p)] [DecidableEq (ClassicalHodgeBasisIndex V H p)] :
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
       pointCycleClassSpan p (H.cycleClass p) := by
   let S := C.spectralOperator
@@ -121,6 +124,7 @@ theorem weight_hodge
 codimension-p algebraic cycle representative. -/
 theorem exists_cycle
     (C : RealizedCyclicSpectralCertificate V H p)
+    [Fintype (ClassicalHodgeBasisIndex V H p)] [DecidableEq (ClassicalHodgeBasisIndex V H p)]
     (alpha : RationalSingularCohomology H.analytification (2 * p))
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p,
@@ -138,6 +142,8 @@ theorem exactHodge_of_realizedCyclicSpectralCertificates
       Nonempty (RealizedCyclicSpectralCertificate V H q)) :
     EveryHodgeClassIsRationalAlgebraic H := by
   intro q alpha halpha
+  letI := (Classical.choice (hcert q)).basisIndex_fintype
+  letI := (Classical.choice (hcert q)).basisIndex_decidableEq
   exact (Classical.choice (hcert q)).exists_cycle alpha halpha
 
 /-- Literal finite rational-combination wording of the same theorem. -/

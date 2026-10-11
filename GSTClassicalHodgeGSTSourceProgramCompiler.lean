@@ -170,10 +170,11 @@ noncomputable def ofProjectiveTwoGenerator
     (G : GeometricCycleClassSpine V H)
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (j : ClassicalHodgeBasisIndex V H p)
+    (hij : S.sourceIndex ≠ j)
     (R : GSTClassicalHodgeProjectiveTwoGeneratorExternalization.ProjectiveTwoGenerator
       (V := V) (H := H) S.sourceIndex j) :
     GSTSourceTargetProgram G S j :=
-  ofProjectiveWord G S j (R.toWordLiveSourceTarget G S j)
+  ofProjectiveWord G S j (R.toWordLiveSourceTarget G S j hij)
 
 #check GSTSourceTargetProgram
 #check GSTSourceTargetProgram.sourceScalar

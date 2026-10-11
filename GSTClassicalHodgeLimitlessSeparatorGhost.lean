@@ -108,9 +108,9 @@ theorem fiberedPairing_separatorProbe
       ell alpha.1 := by
   classical
   rw [show alpha =
-      (classicalHodgeBasis V H p).linearCombination
+      Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
         ((classicalHodgeBasis V H p).repr alpha) from
-      (classicalHodgeBasis V H p).linearCombination_repr alpha,
+      ((classicalHodgeBasis V H p).linearCombination_repr alpha).symm,
     Finsupp.linearCombination_apply, Finsupp.sum]
   simp only [map_sum, LinearMap.map_smul]
   simp [fiberedPairing, fiberedWeightCoordinates, weightFiberEmbedding,

@@ -77,6 +77,7 @@ theorem compileProjectiveTwoGenerator_eval
     primitivePair,
     ProjectiveTwoGenerator.toGeometryFirst,
     ProjectivePrimitiveRealization.toNativeHodgePrimitive]
+  ring
 
 /-- On any synchronized live source, the compiled geometric word has the exact
 rank-one target action required by the new one-source interface. -/
@@ -84,6 +85,7 @@ theorem compileProjectiveTwoGenerator_source_action
     (G : GeometricCycleClassSpine V H)
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (j : ClassicalHodgeBasisIndex V H p)
+    (hij : S.sourceIndex ≠ j)
     (R : ProjectiveTwoGenerator (V := V) (H := H) S.sourceIndex j) :
     ((compileProjectiveTwoGenerator R).operatorPair G).cohomologyOperator
         S.hodge.1 =
@@ -105,7 +107,7 @@ theorem compileProjectiveTwoGenerator_source_action
     _ = (geometryFirstWordPair T).cohomologyOperator S.hodge.1 := by
           rw [S.class_eq]
     _ = (hodgeMatrixUnit S.sourceIndex j S.hodge).1 := by
-          exact geometryFirstWordPair_on_hodge T S.hodge
+          exact geometryFirstWordPair_on_hodge hij T S.hodge
     _ = (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex •
         (classicalHodgeBasis V H p j).1 := by
           simp only [hodgeMatrixUnit_apply, hodgeCoordinate]
@@ -117,10 +119,11 @@ noncomputable def ProjectiveTwoGenerator.toWordLiveSourceTarget
     (G : GeometricCycleClassSpine V H)
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (j : ClassicalHodgeBasisIndex V H p)
+    (hij : S.sourceIndex ≠ j)
     (R : ProjectiveTwoGenerator (V := V) (H := H) S.sourceIndex j) :
     ProjectiveWordLiveSourceTarget G S j where
   word := compileProjectiveTwoGenerator R
-  source_action := compileProjectiveTwoGenerator_source_action G S j R
+  source_action := compileProjectiveTwoGenerator_source_action G S j hij R
 
 /-- The new fixed-weight word route therefore subsumes the previous
 projective-two-generator route. -/
@@ -128,11 +131,15 @@ theorem hodge_weight_of_projective_two_generators_via_words
     (G : GeometricCycleClassSpine V H)
     (S : NativeHodgeOrbitSeed (V := V) (H := H) (p := p))
     (R : ∀ j : ClassicalHodgeBasisIndex V H p,
-      ProjectiveTwoGenerator (V := V) (H := H) S.sourceIndex j) :
+      ProjectiveTwoGenerator (V := V) (H := H) S.sourceIndex j)
+    (hdiag : ProjectiveWordLiveSourceTarget G S S.sourceIndex) :
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
       LinearMap.range (H.cycleClass p) := by
-  exact hodge_weight_of_projective_word_live_source G S
-    (fun j => (R j).toWordLiveSourceTarget G S j)
+  refine hodge_weight_of_projective_word_live_source G S ?_
+  intro j
+  by_cases h : S.sourceIndex = j
+  · subst h; exact hdiag
+  · exact (R j).toWordLiveSourceTarget G S j h
 
 #check compileProjectiveTwoGenerator
 #check compileProjectiveTwoGenerator_eval

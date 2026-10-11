@@ -115,7 +115,6 @@ theorem mem_analyticLocus_transpose_iff
   · rintro ⟨z, rfl⟩
     refine ⟨transposeCarrierPointEquiv K z, ?_⟩
     rw [transpose_carrierPointPair]
-    rfl
   · rintro ⟨z, hz⟩
     let zt : CarrierComplexPoint K.transpose :=
       (transposeCarrierPointEquiv K).symm z
