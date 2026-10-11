@@ -134,7 +134,7 @@ noncomputable def action
     XCoh A n →ₗ[ℚ] XCoh A n := by
   let pull : XCoh A n →ₗ[ℚ] X2Coh A n := fstCohomologyPullback A n
   let multiply : X2Coh A n →ₗ[ℚ] X2Coh A (2 * d + n) :=
-    P.cupLeft κ.kernelClass
+    AmbientBettiIntersectionCalculus.cupLeft A P κ.kernelClass
   exact (P.sndGysin n).comp (multiply.comp pull)
 
 @[simp]

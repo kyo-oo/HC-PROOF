@@ -44,6 +44,7 @@ open CategoryTheory
 open GSTClassicalHodgeTwoGeneratorNativeArsenal
 open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeExplicitArsenalGeneration
 open AlgebraicGeometry
 
 namespace GSTClassicalHodgeProjectiveTwoGeneratorExternalization

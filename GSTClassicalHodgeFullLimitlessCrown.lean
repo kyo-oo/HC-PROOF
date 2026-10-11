@@ -1,4 +1,5 @@
 import GSTClassicalHodgeFullLimitlessExternalization
+import GSTClassicalHodgeConcreteFailureDichotomy
 import GSTClassicalHodgeLimitlessSpinePropagation
 import GSTClassicalHodgeCanonicalLimitlessNaturalityCrown
 
@@ -44,6 +45,8 @@ namespace GSTClassicalHodgeFullLimitlessCrown
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
+open GSTClassicalHodgeConcreteFailureDichotomy
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
@@ -220,7 +223,7 @@ theorem bigradedBettiHodge
         simpa [hH] using halpha
       simpa using this
     subst alpha
-    exact LinearMap.zero_mem _
+    exact ⟨0, by simp⟩
   · exact hodge_weight
       (algebraicFiber_ne_bot_of_spineTower G hNV p hH)
       (canonicalCosmicNaturality_of_fullProjectiveExternalization G R p)
