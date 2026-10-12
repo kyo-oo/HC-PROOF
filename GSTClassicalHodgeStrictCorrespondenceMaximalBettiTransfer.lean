@@ -102,7 +102,8 @@ theorem maximalBettiTransfer_spec
     (rightCohomologyPullback A K n).quotKerEquivRange
       (maximalBettiTransfer A K n alpha) =
         transferableRangeMap A K n alpha := by
-  simp [maximalBettiTransfer]
+  exact (rightCohomologyPullback A K n).quotKerEquivRange.symm_apply_apply
+    (transferableRangeMap A K n alpha)
 
 /-- Representative form: every representative of the canonical quotient
 transfer is related to the source precisely when its quotient class is the
@@ -117,9 +118,10 @@ theorem quotient_eq_maximalTransfer_iff_related
     have hrange := congrArg
       (rightCohomologyPullback A K n).quotKerEquivRange hq
     rw [maximalBettiTransfer_spec] at hrange
-    change rightCohomologyPullback A K n beta =
-      leftCohomologyPullback A K n alpha.1 at hrange
-    exact hrange.symm
+    have hval : rightCohomologyPullback A K n beta =
+        leftCohomologyPullback A K n alpha.1 :=
+      congrArg Subtype.val hrange
+    exact hval.symm
   · intro hrel
     apply (rightCohomologyPullback A K n).quotKerEquivRange.injective
     rw [maximalBettiTransfer_spec]

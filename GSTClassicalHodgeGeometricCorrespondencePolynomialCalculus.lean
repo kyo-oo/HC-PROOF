@@ -105,7 +105,7 @@ theorem hornerExpr_on_eigenvector
           T.cohomologyOperator ((hornerExpr T cs).cohomologyOperator alpha) =
         (c + lambda * hornerScalar lambda cs) • alpha
       rw [ih, map_smul, hT]
-      rw [smul_smul, smul_smul, mul_comm]
+      rw [add_smul, mul_comm (hornerScalar lambda cs) lambda]
 
 /-- Every compiled polynomial expression satisfies exact native cycle-class
 naturality because it lives inside the genuine correspondence expression

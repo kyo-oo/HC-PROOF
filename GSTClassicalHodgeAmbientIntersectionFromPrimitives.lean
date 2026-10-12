@@ -74,7 +74,8 @@ noncomputable def kernelAction
     (n : Nat) :
     RationalSingularCohomology A n →ₗ[ℚ]
       RationalSingularCohomology A n :=
-  kappa.action (toAmbientBettiIntersectionCalculus A P) n
+  MiddleBettiCorrespondenceKernel.action A
+    (toAmbientBettiIntersectionCalculus A P) kappa n
 
 @[simp]
 theorem kernelAction_apply
@@ -86,7 +87,7 @@ theorem kernelAction_apply
     (alpha : RationalSingularCohomology A n) :
     kernelAction A P kappa n alpha =
       P.gysinTheory.sndGysin n
-        (P.cupTheory.cup (2 * d) n kappa.class
+        (P.cupTheory.cup (2 * d) n kappa.kernelClass
           (fstCohomologyPullback A n alpha)) := by
   rfl
 
@@ -101,9 +102,9 @@ theorem transpose_kernelAction_apply
     (alpha : RationalSingularCohomology A n) :
     kernelAction A P kappa.transposeKernel n alpha =
       P.gysinTheory.fstGysin n
-        (P.cupTheory.cup (2 * d) n kappa.class
+        (P.cupTheory.cup (2 * d) n kappa.kernelClass
           (sndCohomologyPullback A n alpha)) := by
-  exact kappa.transpose_action_apply
+  exact kappa.transpose_action_apply A
     (toAmbientBettiIntersectionCalculus A P) n alpha
 
 #check toAmbientBettiIntersectionCalculus

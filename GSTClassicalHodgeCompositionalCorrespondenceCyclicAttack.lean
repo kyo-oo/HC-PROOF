@@ -72,6 +72,8 @@ theorem algebraic_of_exprReaches
     ⟨Z, hZ⟩
   have hout := E.range_stable seed.1 hseedRange
   rw [hE] at hout
+  rw [mem_AlgebraicHodgeSubspace_iff]
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
   exact hout
 
 /-- A compositional cyclic algebraic seed makes the complete Hodge fiber
