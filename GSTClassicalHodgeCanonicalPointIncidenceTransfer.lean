@@ -102,7 +102,36 @@ theorem suppliedPointDirectIncidenceLaw_iff
         H.cycleClass p
           (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
             |>.nativePointImage p x)) := by
-  rfl
+  have hclass : H.cycleClass p =
+      cycleClassFromPointGeometry (V := V) p H.analytification
+        (suppliedPointBettiClass (V := V) (H := H) (p := p)) :=
+    suppliedCycleClass_eq_from_own_points
+  constructor
+  · intro h x
+    have hx := h x
+    have hpt : suppliedPointBettiClass (V := V) (H := H) (p := p) x =
+        H.cycleClass p (codimensionPointCycle V.X p x) := rfl
+    have hgeo : GeometricCycleClass (V := V) (H := H) (p := p)
+        (suppliedPointBettiClass (V := V) (H := H) (p := p))
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) =
+      H.cycleClass p
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) := by rw [hclass]
+    rw [hpt, hgeo] at hx
+    exact hx
+  · intro h x
+    have hpt : suppliedPointBettiClass (V := V) (H := H) (p := p) x =
+        H.cycleClass p (codimensionPointCycle V.X p x) := rfl
+    have hgeo : GeometricCycleClass (V := V) (H := H) (p := p)
+        (suppliedPointBettiClass (V := V) (H := H) (p := p))
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) =
+      H.cycleClass p
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) := by rw [hclass]
+    rw [hpt, hgeo]
+    exact h x
 
 /-- The canonical direct law manufactures the complete old incidence packet
 without a point-class parameter or point-identification premise. -/

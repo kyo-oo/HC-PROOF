@@ -68,13 +68,11 @@ theorem transposeGraphCarrierPoint_pair
       (A.pointsEquiv (ComplexSchemeEndomorphism.complexPointMap f x),
         A.pointsEquiv x) := by
   ext
-  · apply A.pointsEquiv.injective
-    apply Subtype.ext
+  · apply Subtype.ext
     simp [carrierPointPair, leftComplexPoint, transposeGraphCarrierPoint,
       strictGraph_transpose_left,
       ComplexSchemeEndomorphism.complexPointMap]
-  · apply A.pointsEquiv.injective
-    apply Subtype.ext
+  · apply Subtype.ext
     simp [carrierPointPair, rightComplexPoint, transposeGraphCarrierPoint,
       strictGraph_transpose_right]
 
@@ -127,7 +125,8 @@ noncomputable def transposeGraphSectionCochainPullback
   let D :=
     ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (D.map (transposeGraphSectionChainMap A F hf)).unop
+  have h := (D.map (transposeGraphSectionChainMap A F hf)).unop
+  exact h
 
 /-- The section-induced map on carrier cohomology. -/
 noncomputable def transposeGraphSectionCohomologyPullback
@@ -233,7 +232,6 @@ theorem transposeGraphCarrierPoint_on_graph
         (carrierPointPair A ((strictGraph f hf).transpose) z).2 := by
   change A.pointsEquiv (leftComplexPoint ((strictGraph f hf).transpose) z) = _
   simp only [transportedPointMap, carrierPointPair, Equiv.symm_apply_apply]
-  apply A.pointsEquiv.injective
   apply Subtype.ext
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
