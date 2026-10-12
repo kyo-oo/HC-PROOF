@@ -1,6 +1,7 @@
 import GSTClassicalHodgeLimitlessSeparatorGhost
 import GSTClassicalHodgeGradedGeometricProgramOrbit
 import GSTClassicalHodgeAtomicAnnihilator
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — GRADED SEPARATOR BACKPROPAGATION
@@ -40,6 +41,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeAtomicAnnihilator
+open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeSingleSheetCrown
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGradedGeometricProgramOrbit

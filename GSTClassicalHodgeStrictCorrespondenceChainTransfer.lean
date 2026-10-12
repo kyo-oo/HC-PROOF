@@ -69,7 +69,8 @@ noncomputable def cochainTrace
   let F :=
     ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map T.transfer).unop
+  have h := (F.map T.transfer).unop
+  exact h
 
 noncomputable def cohomologyTraceObj
     (T : RightFiniteChainTransfer A K)
