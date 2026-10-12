@@ -102,6 +102,8 @@ theorem targetCycle_spec
       (classicalHodgeBasis V H p j).1 := by
   have hnat := R.program.cycleClass_cycleEval G S.cycle
   rw [S.class_eq, R.source_action] at hnat
+  rw [show (classicalHodgeBasis V H p).repr S.hodge S.sourceIndex =
+      R.sourceScalar from rfl] at hnat
   unfold targetCycle
   rw [LinearMap.map_smul, hnat]
   rw [smul_smul, inv_mul_cancel₀ (R.sourceScalar_ne_zero), one_smul]
@@ -131,9 +133,13 @@ theorem source_action_matches_global_sheet_move
         (⟨p,S.sourceIndex⟩ : FiberedHodgeIndex V H)
         (⟨p,j⟩ : FiberedHodgeIndex V H)
         (fiberedWeightCoordinates V H p S.hodge) := by
-  rw [fiberedWeightCoordinates_smul_basis]
-  rw [sheetMatrixUnit_apply, sheetProbe_fiberedWeightCoordinates]
-  rfl
+  have hcoeff : (fiberedWeightCoordinates V H p S.hodge)
+      (⟨p, S.sourceIndex⟩ : FiberedHodgeIndex V H) = R.sourceScalar :=
+    Finsupp.embDomain_apply_self (weightFiberEmbedding V H p)
+      ((classicalHodgeBasis V H p).repr S.hodge) S.sourceIndex
+  change fiberedWeightCoordinates V H p
+      (R.sourceScalar • classicalHodgeBasis V H p j) = _
+  rw [fiberedWeightCoordinates_smul_basis, sheetMatrixUnit_apply, ← hcoeff]
 
 /-- Every previous actual projective-word live-source certificate is already a
 source-specific GST geometric program: embed the projective word as one
@@ -171,8 +177,8 @@ noncomputable def ofProjectiveTwoGenerator
       (V := V) (H := H) S.sourceIndex j) :
     GSTSourceTargetProgram G S j :=
   ofProjectiveWord G S j
-    (GSTClassicalHodgeProjectiveGeneratorWordCompiler.
-      ProjectiveTwoGenerator.toWordLiveSourceTarget G S j hij R)
+    (GSTClassicalHodgeProjectiveGeneratorWordCompiler.ProjectiveTwoGenerator.toWordLiveSourceTarget
+      G S j hij R)
 
 #check GSTSourceTargetProgram
 #check GSTSourceTargetProgram.sourceScalar

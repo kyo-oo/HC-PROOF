@@ -171,13 +171,11 @@ theorem cycleClassOperatorPair_cohomologyOperator
 theorem cycleClassOperatorPair_cycleOperator
     (I : PointFiberIntersectionLaw (H := H) (p := p) P K κ) :
     I.cycleClassOperatorPair.cycleOperator =
-      K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
-        |>.nativeOperator p := by
-  exact
-    GSTClassicalHodgeFiniteClosedCorrespondenceOperator.
-      toCycleClassOperatorPair_cycleOperator
-        K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
-        (κ.action H.analytification P (2 * p)) I.realizesAmbientOnPoints
+      GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence.nativeOperator
+        K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence p := by
+  exact GSTClassicalHodgeFiniteClosedCorrespondenceOperator.toCycleClassOperatorPair_cycleOperator
+    K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+    (κ.action H.analytification P (2 * p)) I.realizesAmbientOnPoints
 
 end PointFiberIntersectionLaw
 
