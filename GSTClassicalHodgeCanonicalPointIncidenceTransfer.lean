@@ -1,4 +1,5 @@
 import GSTClassicalHodgeCanonicalIncidenceKernelReduction
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL POINT INCIDENCE TRANSFER
@@ -39,6 +40,7 @@ open GSTClassicalHodgeGeometricCycleClassPointRigidity
 open GSTClassicalHodgeCycleClassIntersectionPrimitives
 open GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
 open GSTClassicalHodgeCanonicalIncidenceKernelReduction
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -94,7 +96,7 @@ theorem suppliedPointDirectIncidenceLaw_iff
       (V := V) (H := H) (d := d) (p := p) P K κ ↔
     (∀ x : CodimensionPoint V.X p,
       P.gysinTheory.sndGysin (2 * p)
-        (P.cupTheory.cup (2 * d) (2 * p) κ.class
+        (P.cupTheory.cup (2 * d) (2 * p) κ.kernelClass
           (fstCohomologyPullback H.analytification (2 * p)
             (H.cycleClass p (codimensionPointCycle V.X p x)))) =
         H.cycleClass p

@@ -81,14 +81,14 @@ noncomputable def cohomologyTrace
     (T : RightFiniteChainTransfer A K)
     (n : Nat) :
     CarrierCohomology A K n →ₗ[ℚ] RationalSingularCohomology A n :=
-  (T.cohomologyTraceObj A n).hom
+  (T.cohomologyTraceObj A K n).hom
 
 /-- **CHAIN TRANSFER DESCENT.** The finite-degree chain identity descends
 through linear-Yoneda duality and cohomology. -/
 theorem cohomologyTrace_rightPullback
     (T : RightFiniteChainTransfer A K)
     (n : Nat) :
-    (T.cohomologyTrace A n).comp (rightCohomologyPullback A K n) =
+    (T.cohomologyTrace A K n).comp (rightCohomologyPullback A K n) =
       T.degree • LinearMap.id := by
   ext alpha
   simp [cohomologyTrace, cohomologyTraceObj, cochainTrace,
@@ -100,10 +100,10 @@ whole-cohomology push-pull theorem. -/
 noncomputable def toRightFiniteBettiTrace
     (T : RightFiniteChainTransfer A K)
     (n : Nat) : RightFiniteBettiTrace A K n where
-  trace := T.cohomologyTrace A n
+  trace := T.cohomologyTrace A K n
   degree := T.degree
   degree_ne_zero := T.degree_ne_zero
-  trace_rightPullback := T.cohomologyTrace_rightPullback A n
+  trace_rightPullback := T.cohomologyTrace_rightPullback A K n
 
 /-- Canonical action on the entire rational singular cohomology carrier. -/
 noncomputable def pushPull
@@ -224,14 +224,14 @@ noncomputable def forwardAction
 
 noncomputable def transposeAction
     (T : BiFiniteChainTransfer A K) (n : Nat) :=
-  T.transpose.pushPull A K n
+  T.transpose.pushPull A K.transpose n
 
 /-- Forget to the cohomological finite-trace package at one degree. -/
 noncomputable def toBiFiniteBettiTrace
     (T : BiFiniteChainTransfer A K) (n : Nat) :
     BiFiniteBettiTrace A K n where
   forward := T.forward.toRightFiniteBettiTrace A K n
-  transpose := T.transpose.toRightFiniteBettiTrace A K n
+  transpose := T.transpose.toRightFiniteBettiTrace A K.transpose n
 
 end BiFiniteChainTransfer
 
