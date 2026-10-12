@@ -31,6 +31,7 @@ namespace GSTClassicalHodgeGSTExactFinale
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
@@ -112,7 +113,7 @@ theorem gst_hodgeClass_has_finite_algebraic_presentation
     ∃ phi : GSTNativeCodimensionCyclePresentation.FiniteCodimensionPresentation V.X p,
       phi.sum (fun x q =>
         q • H.cycleClass p
-          (GSTGeometricRealizationStage2D.codimensionPointCycle V.X p x)) = alpha := by
+          (GSTNativeCodimensionCyclePresentation.codimensionPointCycle V.X p x)) = alpha := by
   exact gst_everyHodgeClassIsFiniteRationalCombination G M R p alpha halpha
 
 /-- Elementwise native-cycle output of the same theorem. -/
@@ -125,7 +126,7 @@ theorem gst_hodgeClass_has_native_cycle
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
-  exact gst_bigradedBettiHodge G M R p alpha halpha
+  exact gst_bigradedBettiHodge G M R p halpha
 
 #check CanonicalSpineGSTProgramFamily
 #check all_basis_separators_empty
