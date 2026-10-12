@@ -77,24 +77,16 @@ structure RealizedCyclicSpectralCertificate
 
 namespace RealizedCyclicSpectralCertificate
 
-/-- The certificate's own basis-index instances, projected as scoped instances
-so every declaration in this namespace elaborates against exactly the data the
-certificate carries. -/
-scoped instance certBasisIndexFintype
-    (C : RealizedCyclicSpectralCertificate V H p) :
-    Fintype (ClassicalHodgeBasisIndex V H p) := C.basisIndex_fintype
-
-scoped instance certBasisIndexDecidableEq
-    (C : RealizedCyclicSpectralCertificate V H p) :
-    DecidableEq (ClassicalHodgeBasisIndex V H p) := C.basisIndex_decidableEq
-
 /-- The cohomological action of the actual correspondence is a geometric
 spectral operator.  Atomic-span stability is DERIVED from genuine
-cycle-class naturality of the realized word. -/
+cycle-class naturality of the realized word.  The certificate's own
+basis-index instances are passed explicitly so every declaration below
+elaborates against exactly the data the certificate carries. -/
 noncomputable def spectralOperator
     (C : RealizedCyclicSpectralCertificate V H p) :
-    ClassicalHodgeSpectralOperator V H p
-      (ClassicalHodgeBasisIndex V H p) where
+    @ClassicalHodgeSpectralOperator V H p
+      (ClassicalHodgeBasisIndex V H p)
+      C.basisIndex_fintype C.basisIndex_decidableEq where
   basisIndex := fun i => i
   basisIndex_injective := fun _ _ h => h
   observable := (realizedWordPair C.word).cohomologyOperator
@@ -109,8 +101,9 @@ noncomputable def spectralOperator
 /-- The supplied native cyclic seed really lies in the algebraic atomic span. -/
 theorem cyclic_seed_mem_atomic
     (C : RealizedCyclicSpectralCertificate V H p) :
-    (∑ i : ClassicalHodgeBasisIndex V H p,
-      C.coefficient i • (classicalHodgeBasis V H p i).1) ∈
+    Finset.sum
+      (@Finset.univ (ClassicalHodgeBasisIndex V H p) C.basisIndex_fintype)
+      (fun i => C.coefficient i • (classicalHodgeBasis V H p i).1) ∈
         pointCycleClassSpan p (H.cycleClass p) := by
   rw [← C.seedClass_spec]
   rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]

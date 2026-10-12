@@ -51,11 +51,11 @@ abbrev X2Coh (n : Nat) := ProductCohomology A n
 /-- A genuine graded ambient Betti kernel.  `shift` is the cohomological degree
 increase after integrating over one complex-d-dimensional projection fiber. -/
 structure GradedBettiKernel (d shift : Nat) where
-  class : X2Coh A (2 * d + shift)
+  kernelClass : X2Coh A (2 * d + shift)
   transposeClass : X2Coh A (2 * d + shift)
   transposeClass_eq_swap :
     transposeClass =
-      swapCohomologyPullback A (2 * d + shift) class
+      swapCohomologyPullback A (2 * d + shift) kernelClass
 
 namespace GradedBettiKernel
 
@@ -67,9 +67,8 @@ noncomputable def reassociateDegree
     (n : Nat) :
     X2Coh A ((2 * d + shift) + n) →ₗ[ℚ]
       X2Coh A (2 * d + (shift + n)) := by
-  simpa [Nat.add_assoc] using
-    (LinearMap.id : X2Coh A ((2 * d + shift) + n) →ₗ[ℚ]
-      X2Coh A ((2 * d + shift) + n))
+  rw [Nat.add_assoc]
+  exact LinearMap.id
 
 /-- **CANONICAL GRADED WHOLE-BETTI ACTION.**
 A degree `2d+shift` kernel acts on every rational Betti class and raises degree
@@ -82,7 +81,7 @@ noncomputable def action
   let pull : XCoh A n →ₗ[ℚ] X2Coh A n :=
     fstCohomologyPullback A n
   let multiply : X2Coh A n →ₗ[ℚ] X2Coh A ((2 * d + shift) + n) :=
-    P.cup (2 * d + shift) n κ.class
+    P.cup (2 * d + shift) n κ.kernelClass
   exact (P.sndGysin (shift + n)).comp
     ((reassociateDegree (A := A) (d := d) (shift := shift) n).comp
       (multiply.comp pull))
@@ -96,7 +95,7 @@ theorem action_apply
     κ.action P n alpha =
       P.sndGysin (shift + n)
         ((reassociateDegree (A := A) (d := d) (shift := shift) n)
-          (P.cup (2 * d + shift) n κ.class
+          (P.cup (2 * d + shift) n κ.kernelClass
             (fstCohomologyPullback A n alpha))) :=
   rfl
 
@@ -105,16 +104,17 @@ cohomological shift. -/
 noncomputable def transposeKernel
     (κ : GradedBettiKernel A d shift) :
     GradedBettiKernel A d shift where
-  class := κ.transposeClass
-  transposeClass := κ.class
+  kernelClass := κ.transposeClass
+  transposeClass := κ.kernelClass
   transposeClass_eq_swap := by
     rw [κ.transposeClass_eq_swap]
     have hinv := swapCohomology_involutive A (2 * d + shift)
-    have h := LinearMap.congr_fun hinv κ.class
+    have h := LinearMap.congr_fun hinv κ.kernelClass
     simpa using h.symm
 
 /-- The shift-zero specialization is exactly the old middle-kernel ambient
-formula, modulo the harmless `0+n=n` degree normalization. -/
+formula, modulo the harmless `0+n=n` degree normalization carried explicitly
+by `reassociateDegree`. -/
 theorem action_shift_zero_apply
     (P : AmbientBettiIntersectionCalculus A d)
     (κ : GradedBettiKernel A d 0)
@@ -122,9 +122,10 @@ theorem action_shift_zero_apply
     (alpha : XCoh A n) :
     κ.action P n alpha =
       P.sndGysin n
-        (P.cup (2 * d) n κ.class
-          (fstCohomologyPullback A n alpha)) := by
-  simp [action_apply, reassociateDegree]
+        ((reassociateDegree (A := A) (d := d) (shift := 0) n)
+          (P.cup (2 * d + 0) n κ.kernelClass
+            (fstCohomologyPullback A n alpha))) := by
+  rfl
 
 /-- A codimension-one excess kernel gives the honest degree-two action needed
 for hyperplane/principal-section transport. -/
@@ -138,8 +139,8 @@ noncomputable def degreeTwoWeightAction
     (p : Nat) :
     XCoh A (2 * p) →ₗ[ℚ] XCoh A (2 * (p + 1)) := by
   have hdeg : 2 + 2 * p = 2 * (p + 1) := by omega
-  let T := κ.action P (2 * p)
-  simpa [hdeg] using T
+  rw [← hdeg]
+  exact κ.action P (2 * p)
 
 /-- The graded construction is total on arbitrary Betti classes, including
 classes outside every algebraic cycle-class range. -/
