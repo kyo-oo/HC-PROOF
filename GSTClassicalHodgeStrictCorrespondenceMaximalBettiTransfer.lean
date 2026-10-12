@@ -102,7 +102,7 @@ theorem maximalBettiTransfer_spec
     (rightCohomologyPullback A K n).quotKerEquivRange
       (maximalBettiTransfer A K n alpha) =
         transferableRangeMap A K n alpha := by
-  exact (rightCohomologyPullback A K n).quotKerEquivRange.symm_apply_apply
+  exact (rightCohomologyPullback A K n).quotKerEquivRange.apply_symm_apply
     (transferableRangeMap A K n alpha)
 
 /-- Representative form: every representative of the canonical quotient
