@@ -254,7 +254,8 @@ theorem nativeExecutablePlane_of_fullGSTPlane
       A (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V))
     (cycleEval_eq_nativeEval C P)
   change H.cycleClass q
-      (GSTClassicalHodgeNativeExecutablePlane.nativeOutput P) =
+      (GSTClassicalHodgeNativeExecutablePlane.nativeEval P
+        (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)) =
         (classicalHodgeBasis V H q j).1
   rw [← hcycle]
   exact hnat.trans hP
@@ -278,8 +279,7 @@ theorem hodge_of_fullGSTPlane
   exact Submodule.sum_mem _ fun j _ =>
     (LinearMap.range (H.cycleClass q)).smul_mem
       ((classicalHodgeBasis V H q).repr alphaH j)
-      ((LinearMap.mem_range _).mpr
-        ⟨basisCycle C hplane q j, basisCycle_spec C hplane q j⟩)
+      ⟨basisCycle C hplane q j, basisCycle_spec C hplane q j⟩
 
 /-- Explicit native-cycle witness under the reduced geometric plane. -/
 theorem nativeCycle_of_fullGSTPlane

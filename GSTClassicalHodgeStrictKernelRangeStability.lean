@@ -1,4 +1,6 @@
 import GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
+import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeGeometricCycleClassPointRigidity
 
 /-!
 # GST CLASSICAL HODGE — STRICT KERNEL RANGE STABILITY
@@ -33,6 +35,8 @@ open GSTClassicalHodgeAmbientIntersectionFromPrimitives
 open GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall
 open GSTClassicalHodgeCycleClassIntersectionPrimitives
 open GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeGeometricCycleClassPointRigidity
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

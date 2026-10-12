@@ -146,7 +146,6 @@ theorem geometric_cycleClass_nativeOperator
     apply GSTClassicalHodgePointNormalForm.nativeLinearMap_eq_zero_of_points V p
     intro x
     dsimp [F]
-    rw [LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.comp_apply]
     rw [K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
       |>.nativeOperator_point p x]
     exact sub_eq_zero.mpr (I.geometric_cycleClass_point_natural x)
@@ -175,7 +174,7 @@ theorem supplied_cycleClass_nativeOperator
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.nativeOperator p Z) =
       κ.action H.analytification P (2 * p) (H.cycleClass p Z) := by
-  rw [I.supplied_cycleClass_eq_geometric hpoint]
+  rw [supplied_cycleClass_eq_geometric hpoint]
   exact I.geometric_cycleClass_nativeOperator Z
 
 /-- The preceding theorem immediately packages into the repository's exact
