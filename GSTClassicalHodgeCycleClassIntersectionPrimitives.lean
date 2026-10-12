@@ -47,8 +47,10 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {d p : Nat}
 
-abbrev PointClass :=
-  PointBettiClass (V := V) p H.analytification
+abbrev PointClass
+    (V : SmoothProjectiveComplexScheme) (H : HodgeBigradedBettiData V)
+    (p : Nat) :=
+  PointBettiClass (V := V) (p := p) H.analytification
 
 abbrev GeometricCycleClass
     (pt : PointClass (V := V) (H := H) p) :=
@@ -83,7 +85,7 @@ structure KernelFiberIntersectionLaw
   class_eq_kernel_cup_cylinder :
     ∀ x : CodimensionPoint V.X p,
       fiberIntersectionClass x =
-        P.cupTheory.cup (2 * d) (2 * p) kappa.class
+        P.cupTheory.cup (2 * d) (2 * p) kappa.kernelClass
           (Cyl.pointCylinderClass x)
 
 /-- Standard proper-pushforward compatibility for the finite fiber
@@ -131,7 +133,7 @@ theorem kernel_cup_pointPullback
     (I : GeometricIncidencePrimitives
       (V := V) (H := H) (d := d) (p := p) P K kappa pt)
     (x : CodimensionPoint V.X p) :
-    P.cupTheory.cup (2 * d) (2 * p) kappa.class
+    P.cupTheory.cup (2 * d) (2 * p) kappa.kernelClass
         (fstCohomologyPullback H.analytification (2 * p) (pt x)) =
       I.intersection.fiberIntersectionClass x := by
   rw [← I.cylinder.class_eq_fstPullback x]

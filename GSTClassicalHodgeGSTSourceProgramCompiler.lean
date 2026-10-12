@@ -104,7 +104,7 @@ theorem targetCycle_spec
   rw [S.class_eq, R.source_action] at hnat
   unfold targetCycle
   rw [LinearMap.map_smul, hnat]
-  simp [sourceScalar, R.sourceScalar_ne_zero, smul_smul]
+  rw [smul_smul, inv_mul_cancel₀ (R.sourceScalar_ne_zero), one_smul]
 
 /-- The target basis sheet therefore belongs to the genuine cycle-class range. -/
 theorem target_mem_cycleClass_range
@@ -124,17 +124,13 @@ theorem source_action_matches_global_sheet_move
     {j : ClassicalHodgeBasisIndex V H p}
     (R : GSTSourceTargetProgram G S j) :
     fiberedWeightCoordinates V H p
-        ⟨R.program.cohomologyEval G S.hodge.1,
-          by
-            rw [R.source_action]
-            exact (rationalHodgeSubspace (H.hodgeBigrading p)).smul_mem
-              R.sourceScalar
-              (classicalHodgeBasis V H p j).2⟩ =
+        ⟨R.sourceScalar • (classicalHodgeBasis V H p j).1,
+          (rationalHodgeSubspace (H.hodgeBigrading p)).smul_mem
+            R.sourceScalar (classicalHodgeBasis V H p j).2⟩ =
       sheetMatrixUnit
         (⟨p,S.sourceIndex⟩ : FiberedHodgeIndex V H)
         (⟨p,j⟩ : FiberedHodgeIndex V H)
         (fiberedWeightCoordinates V H p S.hodge) := by
-  rw [R.source_action]
   rw [fiberedWeightCoordinates_smul_basis]
   rw [sheetMatrixUnit_apply, sheetProbe_fiberedWeightCoordinates]
   rfl
@@ -174,7 +170,9 @@ noncomputable def ofProjectiveTwoGenerator
     (R : GSTClassicalHodgeProjectiveTwoGeneratorExternalization.ProjectiveTwoGenerator
       (V := V) (H := H) S.sourceIndex j) :
     GSTSourceTargetProgram G S j :=
-  ofProjectiveWord G S j (R.toWordLiveSourceTarget G S j hij)
+  ofProjectiveWord G S j
+    (GSTClassicalHodgeProjectiveGeneratorWordCompiler.
+      ProjectiveTwoGenerator.toWordLiveSourceTarget G S j hij R)
 
 #check GSTSourceTargetProgram
 #check GSTSourceTargetProgram.sourceScalar
