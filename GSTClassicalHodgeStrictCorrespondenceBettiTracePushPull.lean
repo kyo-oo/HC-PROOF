@@ -54,9 +54,9 @@ theorem normalizedTrace_rightPullback
     T.normalizedTrace.comp (rightCohomologyPullback A K n) = LinearMap.id := by
   ext alpha
   have h := LinearMap.congr_fun T.trace_rightPullback alpha
-  simp only [LinearMap.comp_apply, LinearMap.smul_apply, LinearMap.id_apply] at h ⊢
-  rw [h]
-  field_simp [T.degree_ne_zero]
+  simp only [LinearMap.comp_apply, LinearMap.smul_apply, LinearMap.id_apply,
+    RightFiniteBettiTrace.normalizedTrace] at h ⊢
+  rw [h, smul_smul, inv_mul_cancel₀ T.degree_ne_zero, one_smul]
 
 /-- Nonzero finite degree forces injectivity of right pullback. -/
 theorem rightPullback_injective
@@ -64,25 +64,26 @@ theorem rightPullback_injective
     Function.Injective (rightCohomologyPullback A K n) := by
   intro alpha beta h
   have h' := congrArg T.normalizedTrace h
-  simpa [LinearMap.comp_apply, T.normalizedTrace_rightPullback] using h'
+  simpa [T.normalizedTrace_rightPullback_apply] using h'
 
 /-- **TOTAL WHOLE-BETTI PUSH-PULL.** `Tr_r ∘ l^*`, defined on every rational
 singular cohomology class, including nonalgebraic Hodge classes. -/
-noncomputable def pushPull : XCoh A n →ₗ[ℚ] XCoh A n :=
+noncomputable def pushPull
+    (T : RightFiniteBettiTrace A K n) : XCoh A n →ₗ[ℚ] XCoh A n :=
   T.normalizedTrace.comp (leftCohomologyPullback A K n)
 
 @[simp]
 theorem pushPull_apply
     (T : RightFiniteBettiTrace A K n)
     (alpha : XCoh A n) :
-    T.pushPull alpha =
-      T.normalizedTrace (leftCohomologyPullback A K n alpha) := rfl
+    (pushPull A K n T) alpha =
+      (normalizedTrace A K n T) (leftCohomologyPullback A K n alpha) := rfl
 
 /-- Pointwise form of the trace's proved left-inverse law. -/
 @[simp]
 theorem normalizedTrace_rightPullback_apply
     (T : RightFiniteBettiTrace A K n) (alpha : XCoh A n) :
-    T.normalizedTrace (rightCohomologyPullback A K n alpha) = alpha := by
+    (normalizedTrace A K n T) (rightCohomologyPullback A K n alpha) = alpha := by
   have h := LinearMap.congr_fun T.normalizedTrace_rightPullback alpha
   simpa only [LinearMap.comp_apply, LinearMap.id_apply] using h
 
@@ -91,10 +92,10 @@ No totality of the relation or choice of a second related target is needed. -/
 theorem pushPull_eq_of_bettiRelated
     (T : RightFiniteBettiTrace A K n)
     {alpha beta : XCoh A n} (h : BettiRelated A K n alpha beta) :
-    T.pushPull alpha = beta := by
+    (pushPull A K n T) alpha = beta := by
   rw [pushPull_apply, show leftCohomologyPullback A K n alpha =
     rightCohomologyPullback A K n beta from h]
-  exact T.normalizedTrace_rightPullback_apply beta
+  exact normalizedTrace_rightPullback_apply A K n T beta
 
 /-- The carrier's right-pullback projection supplied by the trace. -/
 noncomputable def carrierProjection
@@ -109,20 +110,20 @@ noncomputable def carrierResidual
 /-- Exact reconstruction of any intrinsic carrier class. -/
 theorem carrier_decomposition
     (T : RightFiniteBettiTrace A K n) (omega : CCoh A K n) :
-    omega = rightCohomologyPullback A K n (T.normalizedTrace omega) +
-      T.carrierResidual omega := by
-  change omega = rightCohomologyPullback A K n (T.normalizedTrace omega) +
-    (omega - rightCohomologyPullback A K n (T.normalizedTrace omega))
+    omega = rightCohomologyPullback A K n ((normalizedTrace A K n T) omega) +
+      (carrierResidual A K n T) omega := by
+  change omega = rightCohomologyPullback A K n ((normalizedTrace A K n T) omega) +
+    (omega - rightCohomologyPullback A K n ((normalizedTrace A K n T) omega))
   abel
 
 /-- The residual is invisible to the trace, by a proved cancellation. -/
 @[simp]
 theorem normalizedTrace_carrierResidual
     (T : RightFiniteBettiTrace A K n) (omega : CCoh A K n) :
-    T.normalizedTrace (T.carrierResidual omega) = 0 := by
-  change T.normalizedTrace
-    (omega - rightCohomologyPullback A K n (T.normalizedTrace omega)) = 0
-  rw [map_sub, T.normalizedTrace_rightPullback_apply, sub_self]
+    (normalizedTrace A K n T) ((carrierResidual A K n T) omega) = 0 := by
+  change (normalizedTrace A K n T)
+    (omega - rightCohomologyPullback A K n ((normalizedTrace A K n T) omega)) = 0
+  rw [map_sub, normalizedTrace_rightPullback_apply A K n T, sub_self]
 
 /-- Projection onto the actual right-pullback range is idempotent. -/
 theorem carrierProjection_idempotent
@@ -130,21 +131,21 @@ theorem carrierProjection_idempotent
     T.carrierProjection.comp T.carrierProjection = T.carrierProjection := by
   ext omega
   change rightCohomologyPullback A K n
-    (T.normalizedTrace (rightCohomologyPullback A K n
-      (T.normalizedTrace omega))) =
-    rightCohomologyPullback A K n (T.normalizedTrace omega)
-  rw [T.normalizedTrace_rightPullback_apply]
+    ((normalizedTrace A K n T) (rightCohomologyPullback A K n
+      ((normalizedTrace A K n T) omega))) =
+    rightCohomologyPullback A K n ((normalizedTrace A K n T) omega)
+  rw [normalizedTrace_rightPullback_apply A K n T]
 
 /-- The residual vanishes exactly on the genuine right-pullback range. -/
 theorem carrierResidual_eq_zero_iff
     (T : RightFiniteBettiTrace A K n) (omega : CCoh A K n) :
-    T.carrierResidual omega = 0 ↔
+    (carrierResidual A K n T) omega = 0 ↔
       omega ∈ LinearMap.range (rightCohomologyPullback A K n) := by
-  change omega - rightCohomologyPullback A K n (T.normalizedTrace omega) = 0 ↔ _
+  change omega - rightCohomologyPullback A K n ((normalizedTrace A K n T) omega) = 0 ↔ _
   rw [sub_eq_zero]
   constructor
   · intro h
-    exact ⟨T.normalizedTrace omega, h.symm⟩
+    exact ⟨(normalizedTrace A K n T) omega, h.symm⟩
   · rintro ⟨beta, rfl⟩
     rw [T.normalizedTrace_rightPullback_apply]
 
@@ -154,12 +155,12 @@ theorem carrier_decomposition_unique
     (T : RightFiniteBettiTrace A K n)
     (omega : CCoh A K n) (beta : XCoh A n) (eta : CCoh A K n)
     (heq : omega = rightCohomologyPullback A K n beta + eta)
-    (hzero : T.normalizedTrace eta = 0) :
-    beta = T.normalizedTrace omega ∧ eta = T.carrierResidual omega := by
-  have hb : T.normalizedTrace omega = beta := by
-    rw [heq, map_add, T.normalizedTrace_rightPullback_apply, hzero, add_zero]
+    (hzero : (normalizedTrace A K n T) eta = 0) :
+    beta = (normalizedTrace A K n T) omega ∧ eta = (carrierResidual A K n T) omega := by
+  have hb : (normalizedTrace A K n T) omega = beta := by
+    rw [heq, map_add, normalizedTrace_rightPullback_apply A K n T, hzero, add_zero]
   refine ⟨hb.symm, ?_⟩
-  change eta = omega - rightCohomologyPullback A K n (T.normalizedTrace omega)
+  change eta = omega - rightCohomologyPullback A K n ((normalizedTrace A K n T) omega)
   rw [hb, heq]
   abel
 
@@ -173,16 +174,16 @@ target.  Merely defining a total push-pull map does not prove either condition. 
 theorem bettiRelated_iff_residual_and_target
     (T : RightFiniteBettiTrace A K n) (alpha beta : XCoh A n) :
     BettiRelated A K n alpha beta ↔
-      T.sourceResidual alpha = 0 ∧ T.pushPull alpha = beta := by
-  have hres : T.sourceResidual alpha = 0 ↔
+      (sourceResidual A K n T) alpha = 0 ∧ (pushPull A K n T) alpha = beta := by
+  have hres : (sourceResidual A K n T) alpha = 0 ↔
       leftCohomologyPullback A K n alpha =
-        rightCohomologyPullback A K n (T.pushPull alpha) := by
+        rightCohomologyPullback A K n ((pushPull A K n T) alpha) := by
     change leftCohomologyPullback A K n alpha -
-      rightCohomologyPullback A K n (T.pushPull alpha) = 0 ↔ _
+      rightCohomologyPullback A K n ((pushPull A K n T) alpha) = 0 ↔ _
     exact sub_eq_zero
   constructor
   · intro h
-    have ht := T.pushPull_eq_of_bettiRelated h
+    have ht := pushPull_eq_of_bettiRelated A K n T h
     refine ⟨hres.2 ?_, ht⟩
     rw [ht]
     exact h
@@ -195,8 +196,8 @@ theorem bettiRelated_iff_residual_and_target
 obstruction: its zero locus is the exact transferable subspace. -/
 theorem sourceResidual_eq_zero_iff_transferObstruction
     (T : RightFiniteBettiTrace A K n) (alpha : XCoh A n) :
-    T.sourceResidual alpha = 0 ↔ transferObstruction A K n alpha = 0 := by
-  change T.carrierResidual (leftCohomologyPullback A K n alpha) = 0 ↔ _
+    (sourceResidual A K n T) alpha = 0 ↔ transferObstruction A K n alpha = 0 := by
+  change (carrierResidual A K n T) (leftCohomologyPullback A K n alpha) = 0 ↔ _
   rw [T.carrierResidual_eq_zero_iff]
   exact (transferObstruction_apply_eq_zero_iff A K n alpha).symm
 
@@ -205,11 +206,11 @@ source, even if their extensions away from that locus differ. -/
 theorem pushPull_independent_on_transferable
     (T U : RightFiniteBettiTrace A K n) (alpha : XCoh A n)
     (h : transferObstruction A K n alpha = 0) :
-    T.pushPull alpha = U.pushPull alpha := by
+    (pushPull A K n T) alpha = (pushPull A K n U) alpha := by
   obtain ⟨beta, hb⟩ :=
     (transferObstruction_apply_eq_zero_iff_exists_related A K n alpha).1 h
-  exact (T.pushPull_eq_of_bettiRelated hb).trans
-    (U.pushPull_eq_of_bettiRelated hb).symm
+  exact (pushPull_eq_of_bettiRelated A K n T hb).trans
+    (pushPull_eq_of_bettiRelated A K n U hb).symm
 
 #print axioms carrier_decomposition
 #print axioms carrier_decomposition_unique
@@ -230,14 +231,14 @@ satisfies exactly the original strict Betti relation. -/
 theorem pushPull_related_of_transferable
     (T : RightFiniteBettiTrace A K n)
     (alpha : GSTClassicalHodgeStrictCorrespondenceMaximalBettiTransfer.transferableSubspace A K n) :
-    BettiRelated A K n alpha.1 (T.pushPull alpha.1) := by
+    BettiRelated A K n alpha.1 ((pushPull A K n T) alpha.1) := by
   have hmem := GSTClassicalHodgeStrictCorrespondenceMaximalBettiTransfer.transferable_left_mem_rightRange
     A K n alpha
   rcases hmem with ⟨beta, hbeta⟩
   have hrel : leftCohomologyPullback A K n alpha.1 =
       rightCohomologyPullback A K n beta := hbeta.symm
-  have hpush : T.pushPull alpha.1 = beta := by
-    rw [pushPull_apply, hrel]
+  have hpush : (pushPull A K n T) alpha.1 = beta := by
+    rw [pushPull_apply A K n T alpha.1, hrel]
     have hs := LinearMap.congr_fun T.normalizedTrace_rightPullback beta
     simpa [LinearMap.comp_apply] using hs
   rw [hpush]
@@ -250,11 +251,11 @@ theorem maximalBettiTransfer_eq_pushPull_mod_ambiguity
     (T : RightFiniteBettiTrace A K n)
     (alpha : GSTClassicalHodgeStrictCorrespondenceMaximalBettiTransfer.transferableSubspace A K n) :
     GSTClassicalHodgeStrictCorrespondenceMaximalBettiTransfer.maximalBettiTransfer A K n alpha =
-      Submodule.Quotient.mk (T.pushPull alpha.1) := by
+      Submodule.Quotient.mk ((pushPull A K n T) alpha.1) := by
   symm
   exact (GSTClassicalHodgeStrictCorrespondenceMaximalBettiTransfer.quotient_eq_maximalTransfer_iff_related
-    A K n alpha (T.pushPull alpha.1)).2
-      (T.pushPull_related_of_transferable alpha)
+    A K n alpha ((pushPull A K n T) alpha.1)).2
+      (pushPull_related_of_transferable A K n T alpha)
 
 end RightFiniteBettiTrace
 
@@ -287,7 +288,7 @@ structure PointCycleCompatibility
       H.cycleClass n
           (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
             |>.gradedNativePointImage n x) =
-        T.pushPull
+        (RightFiniteBettiTrace.pushPull H.analytification K (2 * n) T)
           (H.cycleClass n (codimensionPointCycle V.X n x))
 
 namespace PointCycleCompatibility
@@ -299,7 +300,8 @@ noncomputable def toGradedCorrespondencePointNaturality
     (C : PointCycleCompatibility (n := n) K T) :
     GradedCorrespondencePointNaturality
       K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence H n n where
-  cohomologyOperator := T.pushPull
+  cohomologyOperator :=
+    RightFiniteBettiTrace.pushPull H.analytification K (2 * n) T
   point_natural := C.point_natural
 
 /-- **PROJECTIVE-INCIDENCE NATURALITY CROWN.** -/
@@ -312,7 +314,8 @@ theorem cycleClass_natural
     H.cycleClass n
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.gradedNativeCycleOperator n n Z) =
-      T.pushPull (H.cycleClass n Z) := by
+      (RightFiniteBettiTrace.pushPull H.analytification K (2 * n) T)
+        (H.cycleClass n Z) := by
   exact C.toGradedCorrespondencePointNaturality.cycleClass_natural Z
 
 end PointCycleCompatibility

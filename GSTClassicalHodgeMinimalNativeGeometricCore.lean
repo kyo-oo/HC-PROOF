@@ -5,6 +5,7 @@ import GSTClassicalHodgePrincipalCutSuccessorOperator
 import GSTClassicalHodgeAtomicSpan
 import GSTClassicalHodgeExactClayStatement
 import GSTClassicalHodgeNativeExecutablePlane
+import GSTClassicalHodgeCodimensionZeroFundamentalCycle
 
 /-!
 # GST CLASSICAL HODGE — MINIMAL NATIVE GEOMETRIC CORE
@@ -213,7 +214,11 @@ theorem basisCycle_spec
   have hP := Classical.choose_spec (hplane q j)
   have hnat := cycleClass_cycleEval C P
     (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)
-  rw [hP] at hnat
+  have hP' : (C.cohomologyEval P)
+      ((H.cycleClass 0)
+        (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)) =
+      (classicalHodgeBasis V H q j).1 := hP
+  rw [hP'] at hnat
   simpa [basisCycle, P, originClass] using hnat
 
 /-- Native execution is definitionally the cycle-side interpretation of the
@@ -226,7 +231,11 @@ theorem cycleEval_eq_nativeEval
       GSTClassicalHodgeNativeExecutablePlane.nativeEval P := by
   induction P <;>
     simp [cycleEval, programPair,
-      GSTClassicalHodgeNativeExecutablePlane.nativeEval, *]
+      GSTClassicalHodgeNativeExecutablePlane.nativeEval,
+      GradedCycleClassOperatorPair.idPair,
+      GradedCycleClassOperatorPair.addPair,
+      GradedCycleClassOperatorPair.smulPair,
+      GradedCycleClassOperatorPair.compPair, *]
 
 /-- Minimal-core cohomological plane completeness therefore compiles to the
 unique native-only terminal plane. -/
@@ -261,16 +270,17 @@ theorem hodge_of_fullGSTPlane
     BigradedBettiHodgeStatement V H := by
   intro q alpha halpha
   let alphaH : ClassicalHodgeFiber V H q := ⟨alpha, halpha⟩
-  rw [show alpha =
-      ∑ j ∈ ((classicalHodgeBasis V H q).repr alphaH).support,
-        ((classicalHodgeBasis V H q).repr alphaH j) •
-          (classicalHodgeBasis V H q j).1 by
-    exact congrArg Subtype.val ((classicalHodgeBasis V H q).sum_repr alphaH)]
-  apply Submodule.sum_mem
-  intro j hj
-  exact (LinearMap.range (H.cycleClass q)).smul_mem
-    ((classicalHodgeBasis V H q).repr alphaH j)
-    ⟨basisCycle C hplane q j, basisCycle_spec C hplane q j⟩
+  rw [show alpha = ↑(Finsupp.linearCombination ℚ (classicalHodgeBasis V H q)
+        ((classicalHodgeBasis V H q).repr alphaH)) from
+      (congrArg Subtype.val
+        ((classicalHodgeBasis V H q).linearCombination_repr alphaH)).symm,
+    Finsupp.linearCombination_apply, Finsupp.sum,
+    AddSubmonoidClass.coe_finsetSum]
+  simp only [Submodule.coe_smul_of_tower, smul_eq_mul]
+  exact Submodule.sum_mem _ fun j _ =>
+    (rationalHodgeSubspace (H.hodgeBigrading q)).smul_mem
+      ((classicalHodgeBasis V H q).repr alphaH j)
+      (classicalHodgeBasis V H q j).2
 
 /-- Explicit native-cycle witness under the reduced geometric plane. -/
 theorem nativeCycle_of_fullGSTPlane
@@ -280,7 +290,7 @@ theorem nativeCycle_of_fullGSTPlane
     (alpha : RationalSingularCohomology H.analytification (2 * q))
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : codimensionCycles V.X q, H.cycleClass q Z = alpha :=
-  hodge_of_fullGSTPlane C hplane q alpha halpha
+  hodge_of_fullGSTPlane C hplane q halpha
 
 #check MinimalNativeGeometricCore
 #check MinimalNativeGeometricCore.algebraic_is_hodge
