@@ -1,0 +1,297 @@
+===== BLOCK 0 =====
+error: GSTClassicalHodgeRealizedCorrespondenceCyclicSpectralFinale.lean:122:8: synthesized type class instance is not definitionally equal to expression inferred by typing rules, synthesized
+
+===== BLOCK 1 =====
+error: Lean exited with code 1
+
+===== BLOCK 2 =====
+error: GSTClassicalHodgeLimitlessSeparatorGhost.lean:125:51: unsolved goals
+
+===== BLOCK 3 =====
+error: Lean exited with code 1
+
+===== BLOCK 4 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:73:4: Function expected at
+
+===== BLOCK 5 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:78:30: Invalid field `class`: The environment does not contain `GSTClassicalHodgeAmbientCorrespondenceKernelAction.MiddleBettiCorrespondenceKernel.class`, so it is not possible to project the field `class` from an expression
+
+===== BLOCK 6 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:77:10: Function expected at
+
+===== BLOCK 7 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:104:13: Application type mismatch: The argument
+
+===== BLOCK 8 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:102:32: Invalid argument name `H` for function
+
+===== BLOCK 9 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:103:9: Function expected at
+
+===== BLOCK 10 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:120:15: Application type mismatch: The argument
+
+===== BLOCK 11 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:115:32: Invalid argument name `H` for function
+
+===== BLOCK 12 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:116:9: Function expected at
+
+===== BLOCK 13 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:122:11: Function expected at
+
+===== BLOCK 14 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:135:15: Application type mismatch: The argument
+
+===== BLOCK 15 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:130:32: Invalid argument name `H` for function
+
+===== BLOCK 16 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:136:41: Unknown identifier `H`
+
+===== BLOCK 17 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:136:44: Unknown identifier `pt`
+
+===== BLOCK 18 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:135:64: unsolved goals
+
+===== BLOCK 19 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:157:20: Function expected at
+
+===== BLOCK 20 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:158:22: Function expected at
+
+===== BLOCK 21 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:175:15: Application type mismatch: The argument
+
+===== BLOCK 22 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:168:32: Invalid argument name `H` for function
+
+===== BLOCK 23 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:169:20: Function expected at
+
+===== BLOCK 24 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:170:22: Function expected at
+
+===== BLOCK 25 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:183:32: Invalid argument name `H` for function
+
+===== BLOCK 26 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:184:20: Function expected at
+
+===== BLOCK 27 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:185:22: Function expected at
+
+===== BLOCK 28 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:197:7: Unknown identifier `geometric_action_on_point`
+
+===== BLOCK 29 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:199:7: Unknown identifier `supplied_cycleClass_eq_geometric`
+
+===== BLOCK 30 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:200:7: Unknown identifier `supplied_cycleClass_nativeOperator`
+
+===== BLOCK 31 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:201:7: Unknown identifier `suppliedCycleClassOperatorPair`
+
+===== BLOCK 32 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:204:14: Unknown constant `supplied_cycleClass_eq_geometric`
+
+===== BLOCK 33 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:205:14: Unknown constant `supplied_cycleClass_nativeOperator`
+
+===== BLOCK 34 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:215:35: Invalid argument name `H` for function
+
+===== BLOCK 35 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:217:27: Invalid argument name `H` for function
+
+===== BLOCK 36 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:240:17: Application type mismatch: The argument
+
+===== BLOCK 37 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:246:33: Application type mismatch: The argument
+
+===== BLOCK 38 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:233:34: Invalid argument name `H` for function
+
+===== BLOCK 39 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:234:20: Function expected at
+
+===== BLOCK 40 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:235:22: Function expected at
+
+===== BLOCK 41 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:256:29: Application type mismatch: The argument
+
+===== BLOCK 42 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:258:33: Invalid field `class`: The environment does not contain `GSTClassicalHodgeAmbientCorrespondenceKernelAction.MiddleBettiCorrespondenceKernel.class`, so it is not possible to project the field `class` from an expression
+
+===== BLOCK 43 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:254:34: Invalid argument name `H` for function
+
+===== BLOCK 44 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:260:8: Unknown identifier `κ.transpose_action_apply`
+
+===== BLOCK 45 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:262:7: Unknown identifier `supplied_forward_and_transpose_transfer`
+
+===== BLOCK 46 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:265:14: Unknown constant `supplied_forward_and_transpose_transfer`
+
+===== BLOCK 47 =====
+error: Lean exited with code 1
+
+===== BLOCK 48 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:231:61: unsolved goals
+
+===== BLOCK 49 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:251:5: Unknown identifier `GSTClassicalHodgeCodimensionZeroFundamentalCycle`
+
+===== BLOCK 50 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:255:9: Unknown identifier `GSTClassicalHodgeCodimensionZeroFundamentalCycle`
+
+===== BLOCK 51 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:281:4: Type mismatch
+
+===== BLOCK 52 =====
+error: Lean exited with code 1
+
+===== BLOCK 53 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:58:20: Function expected at
+
+===== BLOCK 54 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:59:22: Function expected at
+
+===== BLOCK 55 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:89:20: Function expected at
+
+===== BLOCK 56 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:90:22: Function expected at
+
+===== BLOCK 57 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:110:20: Function expected at
+
+===== BLOCK 58 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:111:22: Function expected at
+
+===== BLOCK 59 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:128:20: Function expected at
+
+===== BLOCK 60 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:129:22: Function expected at
+
+===== BLOCK 61 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:159:7: Unknown identifier `toPointFiberIntersectionLaw`
+
+===== BLOCK 62 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:160:7: Unknown identifier `supplied_cycleClass_nativeOperator`
+
+===== BLOCK 63 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:161:7: Unknown identifier `realizesAmbientOnPoints`
+
+===== BLOCK 64 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:162:7: Unknown identifier `supplied_forward_and_transpose_transfer`
+
+===== BLOCK 65 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:164:14: Unknown constant `supplied_cycleClass_nativeOperator`
+
+===== BLOCK 66 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:165:14: Unknown constant `supplied_forward_and_transpose_transfer`
+
+===== BLOCK 67 =====
+error: Lean exited with code 1
+
+===== BLOCK 68 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:67:11: Invalid field `normalizedTrace_rightPullback_apply`: The environment does not contain `GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.RightFiniteBettiTrace.normalizedTrace_rightPullback_apply`, so it is not possible to project the field `normalizedTrace_rightPullback_apply` from an expression
+
+===== BLOCK 69 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:67:2: Type mismatch: After simplification, term
+
+===== BLOCK 70 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:313:9: Function expected at
+
+===== BLOCK 71 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:329:7: Unknown constant `GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.PointCycleCompatibility.cycleClass_natural`
+
+===== BLOCK 72 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:333:14: Unknown constant `PointCycleCompatibility.cycleClass_natural`
+
+===== BLOCK 73 =====
+error: Lean exited with code 1
+
+===== BLOCK 74 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:53:9: Function expected at
+
+===== BLOCK 75 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:75:9: Function expected at
+
+===== BLOCK 76 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:107:6: Function expected at
+
+===== BLOCK 77 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:136:6: Function expected at
+
+===== BLOCK 78 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:175:6: Function expected at
+
+===== BLOCK 79 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:195:7: Unknown identifier `canonicalSpineTargetCycleOfRationalCorrespondence_spec`
+
+===== BLOCK 80 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:196:7: Unknown identifier `every_basis_mem_cycleClassRange_of_rationalCorrespondences`
+
+===== BLOCK 81 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:197:7: Unknown identifier `bigradedBettiHodge_of_rationalCorrespondences`
+
+===== BLOCK 82 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:198:7: Unknown identifier `everyHodgeClassIsFiniteRationalCombination_of_rationalCorrespondences`
+
+===== BLOCK 83 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:200:14: Unknown constant `canonicalSpineTargetCycleOfRationalCorrespondence_spec`
+
+===== BLOCK 84 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:201:14: Unknown constant `bigradedBettiHodge_of_rationalCorrespondences`
+
+===== BLOCK 85 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:202:14: Unknown constant `everyHodgeClassIsFiniteRationalCombination_of_rationalCorrespondences`
+
+===== BLOCK 86 =====
+error: Lean exited with code 1
+
+===== BLOCK 87 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:58:30: Invalid argument name `V` for function
+
+===== BLOCK 88 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:72:30: Invalid argument name `V` for function
+
+===== BLOCK 89 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:76:20: Function expected at
+
+===== BLOCK 90 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:87:30: Invalid argument name `V` for function
+
+===== BLOCK 91 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:118:10: Unknown identifier `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+
+===== BLOCK 92 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:141:10: Unknown identifier `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+
+===== BLOCK 93 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:144:7: Unknown identifier `finiteSupportProjectiveSpanCycle`
+
+===== BLOCK 94 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:145:7: Unknown identifier `finiteSupportProjectiveSpanCycle_spec`
+
+===== BLOCK 95 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:146:7: Unknown identifier `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+
+===== BLOCK 96 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:150:14: Unknown constant `finiteSupportProjectiveSpanCycle_spec`
+
+===== BLOCK 97 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:151:14: Unknown constant `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+
+===== BLOCK 98 =====
+error: Lean exited with code 1
+

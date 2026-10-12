@@ -1,0 +1,706 @@
+===== FULL BLOCK 0 =====
+error: GSTClassicalHodgeRealizedCorrespondenceCyclicSpectralFinale.lean:122:8: synthesized type class instance is not definitionally equal to expression inferred by typing rules, synthesized
+  this✝
+inferred
+  C.basisIndex_fintype
+
+===== FULL BLOCK 1 =====
+error: GSTClassicalHodgeLimitlessSeparatorGhost.lean:125:51: unsolved goals
+V : SmoothProjectiveComplexScheme
+H : HodgeBigradedBettiData V
+p : ℕ
+ell : RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ] ℚ
+alpha : ↥(ClassicalHodgeFiber V H p)
+hlhs :
+  fiberedPairing (fiberedWeightCoordinates V H p alpha) (separatorFiberedProbe p ell) =
+    ∑ a ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+      ((classicalHodgeBasis V H p).repr alpha) a * ell ↑((classicalHodgeBasis V H p) a)
+⊢ ∑ x ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+      ((classicalHodgeBasis V H p).repr alpha) x * ell ↑((classicalHodgeBasis V H p) x) =
+    ∑
+      x ∈
+        (∑ x ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+            fun₀ | x => ((classicalHodgeBasis V H p).repr alpha) x).support,
+      (∑ c ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+          (fun₀ | c => ((classicalHodgeBasis V H p).repr alpha) c) x) *
+        ell ↑((classicalHodgeBasis V H p) x)
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:121:6: This simp argument is unused:
+  smul_eq_mul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Finsupp.sum, weightFiberEmbedding, Function.Embedding.sigmaMk_apply,
+    separatorFiberedProbe_at_same_weight]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:131:32: This simp argument is unused:
+  LinearMap.map_smul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, Finsupp.sum, Finsupp.embDomain_apply, Function.Embedding.sigmaMk_apply,
+    weightFiberEmbedding, fiberedWeightCoordinates, fiberedPairing, separatorFiberedProbe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:131:52: This simp argument is unused:
+  Finsupp.sum
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.embDomain_apply, Function.Embedding.sigmaMk_apply,
+    weightFiberEmbedding, fiberedWeightCoordinates, fiberedPairing, separatorFiberedProbe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:132:6: This simp argument is unused:
+  Finsupp.embDomain_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.sum, Function.Embedding.sigmaMk_apply,
+    weightFiberEmbedding, fiberedWeightCoordinates, fiberedPairing, separatorFiberedProbe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:132:31: This simp argument is unused:
+  Function.Embedding.sigmaMk_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.sum, Finsupp.embDomain_apply, weightFiberEmbedding,
+    fiberedWeightCoordinates, fiberedPairing, separatorFiberedProbe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:133:6: This simp argument is unused:
+  weightFiberEmbedding
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.sum, Finsupp.embDomain_apply,
+    Function.Embedding.sigmaMk_apply, fiberedWeightCoordinates, fiberedPairing, separatorFiberedProbe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:133:28: This simp argument is unused:
+  fiberedWeightCoordinates
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.sum, Finsupp.embDomain_apply,
+    Function.Embedding.sigmaMk_apply, weightFiberEmbedding, fiberedPairing, separatorFiberedProbe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:133:54: This simp argument is unused:
+  fiberedPairing
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.sum, Finsupp.embDomain_apply,
+    Function.Embedding.sigmaMk_apply, weightFiberEmbedding, fiberedWeightCoordinates, separatorFiberedProbe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: GSTClassicalHodgeLimitlessSeparatorGhost.lean:134:6: This simp argument is unused:
+  separatorFiberedProbe
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.sum, Finsupp.embDomain_apply,
+    Function.Embedding.sigmaMk_apply, weightFiberEmbedding, fiberedWeightCoordinates, fiberedPairing]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+
+===== FULL BLOCK 2 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:73:4: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 3 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:78:30: Invalid field `class`: The environment does not contain `GSTClassicalHodgeAmbientCorrespondenceKernelAction.MiddleBettiCorrespondenceKernel.class`, so it is not possible to project the field `class` from an expression
+  κ
+of type
+  MiddleBettiCorrespondenceKernel H.analytification d K
+
+===== FULL BLOCK 4 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:77:10: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.27
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 5 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:104:13: Application type mismatch: The argument
+  P
+has type
+  AmbientBettiIntersectionCalculus H.analytification d
+of sort `Type` but is expected to have type
+  AnalytificationData ?m.10
+of sort `Type 1` in the application
+  @MiddleBettiCorrespondenceKernel.action ?m.10 P
+
+===== FULL BLOCK 6 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:102:32: Invalid argument name `H` for function
+
+===== FULL BLOCK 7 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:103:9: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 8 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:120:15: Application type mismatch: The argument
+  P
+has type
+  AmbientBettiIntersectionCalculus H.analytification d
+of sort `Type` but is expected to have type
+  AnalytificationData ?m.18
+of sort `Type 1` in the application
+  @MiddleBettiCorrespondenceKernel.action ?m.18 P
+
+===== FULL BLOCK 9 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:115:32: Invalid argument name `H` for function
+
+===== FULL BLOCK 10 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:116:9: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 11 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:122:11: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.8
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 12 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:135:15: Application type mismatch: The argument
+  P
+has type
+  AmbientBettiIntersectionCalculus H.analytification d
+of sort `Type` but is expected to have type
+  AnalytificationData ?m.16
+of sort `Type 1` in the application
+  @MiddleBettiCorrespondenceKernel.action ?m.16 P
+
+===== FULL BLOCK 13 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:130:32: Invalid argument name `H` for function
+
+===== FULL BLOCK 14 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:136:41: Unknown identifier `H`
+
+===== FULL BLOCK 15 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:136:44: Unknown identifier `pt`
+
+===== FULL BLOCK 16 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:135:64: unsolved goals
+V : SmoothProjectiveComplexScheme
+p : ℕ
+x✝ : Sort u_1
+GeometricPointFiberLaw : x✝
+I : sorry
+Z : ↥(codimensionCycles V.X p)
+⊢ sorry
+
+===== FULL BLOCK 17 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:157:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 18 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:158:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 19 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:175:15: Application type mismatch: The argument
+  P
+has type
+  AmbientBettiIntersectionCalculus H.analytification d
+of sort `Type` but is expected to have type
+  AnalytificationData ?m.25
+of sort `Type 1` in the application
+  @MiddleBettiCorrespondenceKernel.action ?m.25 P
+
+===== FULL BLOCK 20 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:168:32: Invalid argument name `H` for function
+
+===== FULL BLOCK 21 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:169:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 22 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:170:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.8
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 23 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:183:32: Invalid argument name `H` for function
+
+===== FULL BLOCK 24 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:184:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 25 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:185:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.8
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 26 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:197:7: Unknown identifier `geometric_action_on_point`
+
+===== FULL BLOCK 27 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:199:7: Unknown identifier `supplied_cycleClass_eq_geometric`
+
+===== FULL BLOCK 28 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:200:7: Unknown identifier `supplied_cycleClass_nativeOperator`
+
+===== FULL BLOCK 29 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:201:7: Unknown identifier `suppliedCycleClassOperatorPair`
+
+===== FULL BLOCK 30 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:204:14: Unknown constant `supplied_cycleClass_eq_geometric`
+
+===== FULL BLOCK 31 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:205:14: Unknown constant `supplied_cycleClass_nativeOperator`
+
+===== FULL BLOCK 32 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:215:35: Invalid argument name `H` for function
+
+===== FULL BLOCK 33 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:217:27: Invalid argument name `H` for function
+
+===== FULL BLOCK 34 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:240:17: Application type mismatch: The argument
+  P
+has type
+  AmbientBettiIntersectionCalculus H.analytification d
+of sort `Type` but is expected to have type
+  AnalytificationData ?m.25
+of sort `Type 1` in the application
+  @MiddleBettiCorrespondenceKernel.action ?m.25 P
+
+===== FULL BLOCK 35 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:246:33: Application type mismatch: The argument
+  P
+has type
+  AmbientBettiIntersectionCalculus H.analytification d
+of sort `Type` but is expected to have type
+  AnalytificationData ?m.48
+of sort `Type 1` in the application
+  @MiddleBettiCorrespondenceKernel.action ?m.48 P
+
+===== FULL BLOCK 36 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:233:34: Invalid argument name `H` for function
+
+===== FULL BLOCK 37 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:234:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 38 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:235:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.8
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 39 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:256:29: Application type mismatch: The argument
+  P
+has type
+  AmbientBettiIntersectionCalculus H.analytification d
+of sort `Type` but is expected to have type
+  AnalytificationData ?m.20
+of sort `Type 1` in the application
+  @MiddleBettiCorrespondenceKernel.action ?m.20 P
+
+===== FULL BLOCK 40 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:258:33: Invalid field `class`: The environment does not contain `GSTClassicalHodgeAmbientCorrespondenceKernelAction.MiddleBettiCorrespondenceKernel.class`, so it is not possible to project the field `class` from an expression
+  κ
+of type
+  MiddleBettiCorrespondenceKernel H.analytification d K
+
+===== FULL BLOCK 41 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:254:34: Invalid argument name `H` for function
+
+===== FULL BLOCK 42 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:260:8: Unknown identifier `κ.transpose_action_apply`
+
+===== FULL BLOCK 43 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:262:7: Unknown identifier `supplied_forward_and_transpose_transfer`
+
+===== FULL BLOCK 44 =====
+error: GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale.lean:265:14: Unknown constant `supplied_forward_and_transpose_transfer`
+
+===== FULL BLOCK 45 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:231:61: unsolved goals
+case add
+V : SmoothProjectiveComplexScheme
+H : HodgeBigradedBettiData V
+C : MinimalNativeGeometricCore V H
+p q p✝ q✝ : ℕ
+A✝ B✝ : GradedCorrespondenceProgram V H p✝ q✝
+A_ih✝ : C.cycleEval A✝ = GSTClassicalHodgeNativeExecutablePlane.nativeEval A✝
+B_ih✝ : C.cycleEval B✝ = GSTClassicalHodgeNativeExecutablePlane.nativeEval B✝
+⊢ (C.programPair A✝).cycleOperator + (C.programPair B✝).cycleOperator =
+    GSTClassicalHodgeNativeExecutablePlane.nativeEval A✝ + GSTClassicalHodgeNativeExecutablePlane.nativeEval B✝
+
+case smul
+V : SmoothProjectiveComplexScheme
+H : HodgeBigradedBettiData V
+C : MinimalNativeGeometricCore V H
+p q p✝ q✝ : ℕ
+a✝ : ℚ
+A✝ : GradedCorrespondenceProgram V H p✝ q✝
+A_ih✝ : C.cycleEval A✝ = GSTClassicalHodgeNativeExecutablePlane.nativeEval A✝
+⊢ a✝ • (C.programPair A✝).cycleOperator = a✝ • GSTClassicalHodgeNativeExecutablePlane.nativeEval A✝
+
+case comp
+V : SmoothProjectiveComplexScheme
+H : HodgeBigradedBettiData V
+C : MinimalNativeGeometricCore V H
+p q p✝ q✝ r✝ : ℕ
+A✝ : GradedCorrespondenceProgram V H p✝ q✝
+B✝ : GradedCorrespondenceProgram V H q✝ r✝
+A_ih✝ : C.cycleEval A✝ = GSTClassicalHodgeNativeExecutablePlane.nativeEval A✝
+B_ih✝ : C.cycleEval B✝ = GSTClassicalHodgeNativeExecutablePlane.nativeEval B✝
+⊢ (C.programPair B✝).cycleOperator ∘ₗ (C.programPair A✝).cycleOperator =
+    GSTClassicalHodgeNativeExecutablePlane.nativeEval B✝ ∘ₗ GSTClassicalHodgeNativeExecutablePlane.nativeEval A✝
+
+===== FULL BLOCK 46 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:251:5: Unknown identifier `GSTClassicalHodgeCodimensionZeroFundamentalCycle`
+
+===== FULL BLOCK 47 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:255:9: Unknown identifier `GSTClassicalHodgeCodimensionZeroFundamentalCycle`
+
+===== FULL BLOCK 48 =====
+error: GSTClassicalHodgeMinimalNativeGeometricCore.lean:281:4: Type mismatch
+  Submodule.smul_mem (rationalHodgeSubspace (H.hodgeBigrading q)) (((classicalHodgeBasis V H q).repr alphaH) j)
+    ((classicalHodgeBasis V H q) j).property
+has type
+  ((classicalHodgeBasis V H q).repr alphaH) j • ↑((classicalHodgeBasis V H q) j) ∈
+    rationalHodgeSubspace (H.hodgeBigrading q)
+but is expected to have type
+  ((classicalHodgeBasis V H q).repr alphaH) j • ↑((classicalHodgeBasis V H q) j) ∈ (H.cycleClass q).range
+warning: GSTClassicalHodgeMinimalNativeGeometricCore.lean:279:42: This simp argument is unused:
+  smul_eq_mul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Submodule.coe_smul_of_tower]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+
+===== FULL BLOCK 49 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:58:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 50 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:59:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 51 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:89:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 52 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:90:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 53 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:110:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 54 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:111:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 55 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:128:20: Function expected at
+  CodimensionPoint
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `CodimensionPoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 56 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:129:22: Function expected at
+  codimensionPointCycle
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionPointCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 57 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:159:7: Unknown identifier `toPointFiberIntersectionLaw`
+
+===== FULL BLOCK 58 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:160:7: Unknown identifier `supplied_cycleClass_nativeOperator`
+
+===== FULL BLOCK 59 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:161:7: Unknown identifier `realizesAmbientOnPoints`
+
+===== FULL BLOCK 60 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:162:7: Unknown identifier `supplied_forward_and_transpose_transfer`
+
+===== FULL BLOCK 61 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:164:14: Unknown constant `supplied_cycleClass_nativeOperator`
+
+===== FULL BLOCK 62 =====
+error: GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives.lean:165:14: Unknown constant `supplied_forward_and_transpose_transfer`
+
+===== FULL BLOCK 63 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:67:11: Invalid field `normalizedTrace_rightPullback_apply`: The environment does not contain `GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.RightFiniteBettiTrace.normalizedTrace_rightPullback_apply`, so it is not possible to project the field `normalizedTrace_rightPullback_apply` from an expression
+  T
+of type `RightFiniteBettiTrace A K n`
+
+===== FULL BLOCK 64 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:67:2: Type mismatch: After simplification, term
+  h'
+ has type
+  (normalizedTrace A K n T) ((rightCohomologyPullback A K n) alpha) =
+    (normalizedTrace A K n T) ((rightCohomologyPullback A K n) beta)
+but is expected to have type
+  alpha = beta
+
+===== FULL BLOCK 65 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:313:9: Function expected at
+  codimensionCycles
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V.X
+
+Hint: The identifier `codimensionCycles` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 66 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:329:7: Unknown constant `GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.PointCycleCompatibility.cycleClass_natural`
+
+===== FULL BLOCK 67 =====
+error: GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull.lean:333:14: Unknown constant `PointCycleCompatibility.cycleClass_natural`
+
+===== FULL BLOCK 68 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:53:9: Function expected at
+  RationalClosedCorrespondenceCycle
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V
+
+Hint: The identifier `RationalClosedCorrespondenceCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 69 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:75:9: Function expected at
+  RationalClosedCorrespondenceCycle
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V
+
+Hint: The identifier `RationalClosedCorrespondenceCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 70 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:107:6: Function expected at
+  RationalClosedCorrespondenceCycle
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V
+
+Hint: The identifier `RationalClosedCorrespondenceCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 71 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:136:6: Function expected at
+  RationalClosedCorrespondenceCycle
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V
+
+Hint: The identifier `RationalClosedCorrespondenceCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 72 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:175:6: Function expected at
+  RationalClosedCorrespondenceCycle
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  V
+
+Hint: The identifier `RationalClosedCorrespondenceCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 73 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:195:7: Unknown identifier `canonicalSpineTargetCycleOfRationalCorrespondence_spec`
+
+===== FULL BLOCK 74 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:196:7: Unknown identifier `every_basis_mem_cycleClassRange_of_rationalCorrespondences`
+
+===== FULL BLOCK 75 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:197:7: Unknown identifier `bigradedBettiHodge_of_rationalCorrespondences`
+
+===== FULL BLOCK 76 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:198:7: Unknown identifier `everyHodgeClassIsFiniteRationalCombination_of_rationalCorrespondences`
+
+===== FULL BLOCK 77 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:200:14: Unknown constant `canonicalSpineTargetCycleOfRationalCorrespondence_spec`
+
+===== FULL BLOCK 78 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:201:14: Unknown constant `bigradedBettiHodge_of_rationalCorrespondences`
+
+===== FULL BLOCK 79 =====
+error: GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean:202:14: Unknown constant `everyHodgeClassIsFiniteRationalCombination_of_rationalCorrespondences`
+
+===== FULL BLOCK 80 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:58:30: Invalid argument name `V` for function
+
+===== FULL BLOCK 81 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:72:30: Invalid argument name `V` for function
+
+===== FULL BLOCK 82 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:76:20: Function expected at
+  finiteSupportProjectiveSpanCycle
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  G
+
+Hint: The identifier `finiteSupportProjectiveSpanCycle` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+
+===== FULL BLOCK 83 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:87:30: Invalid argument name `V` for function
+
+===== FULL BLOCK 84 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:118:10: Unknown identifier `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+
+===== FULL BLOCK 85 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:141:10: Unknown identifier `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+
+===== FULL BLOCK 86 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:144:7: Unknown identifier `finiteSupportProjectiveSpanCycle`
+
+===== FULL BLOCK 87 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:145:7: Unknown identifier `finiteSupportProjectiveSpanCycle_spec`
+
+===== FULL BLOCK 88 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:146:7: Unknown identifier `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+
+===== FULL BLOCK 89 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:150:14: Unknown constant `finiteSupportProjectiveSpanCycle_spec`
+
+===== FULL BLOCK 90 =====
+error: GSTClassicalHodgeFiniteSupportProjectiveSpanOrbit.lean:151:14: Unknown constant `hodgeClass_has_cycle_of_finite_projectiveSpan_support`
+

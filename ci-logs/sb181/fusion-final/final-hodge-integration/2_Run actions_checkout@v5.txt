@@ -1,0 +1,74 @@
+﻿2026-10-12T10:15:14.8236483Z ##[group]Run actions/checkout@v5
+2026-10-12T10:15:14.8237111Z with:
+2026-10-12T10:15:14.8237460Z   ref: refs/heads/sol/hodge-strict-betti-correspondence-fusion-20261003
+2026-10-12T10:15:14.8237873Z   fetch-depth: 1
+2026-10-12T10:15:14.8238129Z   repository: kyo-oo/HC-PROOF
+2026-10-12T10:15:14.8240242Z   token: ***
+2026-10-12T10:15:14.8240480Z   ssh-strict: true
+2026-10-12T10:15:14.8240721Z   ssh-user: git
+2026-10-12T10:15:14.8240975Z   persist-credentials: true
+2026-10-12T10:15:14.8241253Z   clean: true
+2026-10-12T10:15:14.8241506Z   sparse-checkout-cone-mode: true
+2026-10-12T10:15:14.8241796Z   fetch-tags: false
+2026-10-12T10:15:14.8242047Z   show-progress: true
+2026-10-12T10:15:14.8242296Z   lfs: false
+2026-10-12T10:15:14.8242541Z   submodules: false
+2026-10-12T10:15:14.8242796Z   set-safe-directory: true
+2026-10-12T10:15:14.8243077Z   allow-unsafe-pr-checkout: false
+2026-10-12T10:15:14.8243446Z ##[endgroup]
+2026-10-12T10:15:14.8975922Z Syncing repository: kyo-oo/HC-PROOF
+2026-10-12T10:15:14.8977860Z ##[group]Getting Git version info
+2026-10-12T10:15:14.8978608Z Working directory is '/home/runner/work/HC-PROOF/HC-PROOF'
+2026-10-12T10:15:14.8979540Z [command]/usr/bin/git version
+2026-10-12T10:15:14.9053403Z git version 2.55.0
+2026-10-12T10:15:14.9067072Z ##[endgroup]
+2026-10-12T10:15:14.9083039Z Temporarily overriding HOME='/home/runner/work/_temp/5d32db02-7816-46f3-a2dc-3e3bff3c3324' before making global git config changes
+2026-10-12T10:15:14.9083843Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-12T10:15:14.9084464Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/HC-PROOF/HC-PROOF
+2026-10-12T10:15:14.9273113Z Deleting the contents of '/home/runner/work/HC-PROOF/HC-PROOF'
+2026-10-12T10:15:14.9311186Z ##[group]Initializing the repository
+2026-10-12T10:15:14.9312026Z [command]/usr/bin/git init /home/runner/work/HC-PROOF/HC-PROOF
+2026-10-12T10:15:14.9594998Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-12T10:15:14.9596514Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-12T10:15:14.9597313Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-12T10:15:14.9597963Z hint: call:
+2026-10-12T10:15:14.9598200Z hint:
+2026-10-12T10:15:14.9598526Z hint: 	git config --global init.defaultBranch <name>
+2026-10-12T10:15:14.9598875Z hint:
+2026-10-12T10:15:14.9599199Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-12T10:15:14.9599721Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-12T10:15:14.9600125Z hint:
+2026-10-12T10:15:14.9600360Z hint: 	git branch -m <name>
+2026-10-12T10:15:14.9600631Z hint:
+2026-10-12T10:15:14.9601073Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-12T10:15:14.9601685Z Initialized empty Git repository in /home/runner/work/HC-PROOF/HC-PROOF/.git/
+2026-10-12T10:15:14.9603082Z [command]/usr/bin/git remote add origin https://github.com/kyo-oo/HC-PROOF
+2026-10-12T10:15:15.0399924Z ##[endgroup]
+2026-10-12T10:15:15.0400689Z ##[group]Disabling automatic garbage collection
+2026-10-12T10:15:15.0403527Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-12T10:15:15.0565482Z ##[endgroup]
+2026-10-12T10:15:15.0565917Z ##[group]Setting up auth
+2026-10-12T10:15:15.0570559Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-12T10:15:15.0597974Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-12T10:15:15.0921574Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-12T10:15:15.0949580Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-12T10:15:15.1132200Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-12T10:15:15.1163493Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-12T10:15:15.1349064Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-12T10:15:15.1449360Z ##[endgroup]
+2026-10-12T10:15:15.1449889Z ##[group]Fetching the repository
+2026-10-12T10:15:15.1456705Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/sol/hodge-strict-betti-correspondence-fusion-20261003:refs/remotes/origin/sol/hodge-strict-betti-correspondence-fusion-20261003
+2026-10-12T10:15:21.1055517Z From https://github.com/kyo-oo/HC-PROOF
+2026-10-12T10:15:21.1057265Z  * [new branch]      sol/hodge-strict-betti-correspondence-fusion-20261003 -> origin/sol/hodge-strict-betti-correspondence-fusion-20261003
+2026-10-12T10:15:21.1059183Z ##[endgroup]
+2026-10-12T10:15:21.1059581Z ##[group]Determining the checkout info
+2026-10-12T10:15:21.1064936Z ##[endgroup]
+2026-10-12T10:15:21.1066401Z [command]/usr/bin/git sparse-checkout disable
+2026-10-12T10:15:21.1112852Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-12T10:15:21.1179176Z ##[group]Checking out the ref
+2026-10-12T10:15:21.1182391Z [command]/usr/bin/git checkout --progress --force -B sol/hodge-strict-betti-correspondence-fusion-20261003 refs/remotes/origin/sol/hodge-strict-betti-correspondence-fusion-20261003
+2026-10-12T10:15:21.1591587Z Switched to a new branch 'sol/hodge-strict-betti-correspondence-fusion-20261003'
+2026-10-12T10:15:21.1595159Z branch 'sol/hodge-strict-betti-correspondence-fusion-20261003' set up to track 'origin/sol/hodge-strict-betti-correspondence-fusion-20261003'.
+2026-10-12T10:15:21.1601361Z ##[endgroup]
+2026-10-12T10:15:21.1640075Z [command]/usr/bin/git log -1 --format=%H
+2026-10-12T10:15:21.1662337Z eb42801830f042f5b938bfcba91b6d6dd111746a
