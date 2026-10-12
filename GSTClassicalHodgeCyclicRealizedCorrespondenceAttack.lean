@@ -75,6 +75,8 @@ theorem algebraic_of_realizedWordReaches
     ⟨Z, hZ⟩
   have hout := realizedWord_range_stable W seed.1 hseedRange
   rw [hW] at hout
+  rw [mem_AlgebraicHodgeSubspace_iff]
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
   exact hout
 
 /-- A single cyclic algebraic seed saturates the entire genuine Hodge fiber. -/

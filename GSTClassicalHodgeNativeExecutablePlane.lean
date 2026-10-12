@@ -117,7 +117,9 @@ theorem targetCycle_spec
   simp only [LinearMap.map_smul]
   have hexp : (alpha : RationalSingularCohomology H.analytification (2 * q)) =
       ∑ j ∈ ((classicalHodgeBasis V H q).repr alpha).support,
-        ((classicalHodgeBasis V H q).repr alpha j) • ↑(classicalHodgeBasis V H q j) := by
+        ((classicalHodgeBasis V H q).repr alpha j) •
+          ((classicalHodgeBasis V H q j).1 :
+            RationalSingularCohomology H.analytification (2 * q)) := by
     have h := ((classicalHodgeBasis V H q).linearCombination_repr alpha).symm
     rw [Finsupp.linearCombination_apply] at h
     conv_lhs => rw [h]
@@ -161,7 +163,9 @@ theorem hodge_of_basisCycleSupply
   simp only [LinearMap.map_smul]
   have hexp : (alpha : RationalSingularCohomology H.analytification (2 * q)) =
       ∑ j ∈ ((classicalHodgeBasis V H q).repr alphaH).support,
-        ((classicalHodgeBasis V H q).repr alphaH j) • ↑(classicalHodgeBasis V H q j) := by
+        ((classicalHodgeBasis V H q).repr alphaH j) •
+          ((classicalHodgeBasis V H q j).1 :
+            RationalSingularCohomology H.analytification (2 * q)) := by
     show ((alphaH : ClassicalHodgeFiber V H q) :
       RationalSingularCohomology H.analytification (2 * q)) = _
     have h := ((classicalHodgeBasis V H q).linearCombination_repr alphaH).symm

@@ -1,8 +1,6 @@
-import GSTGeometricRealizationStage2D
 import GSTClassicalHodgeGradedProgramSpectralSaturation
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 import GSTClassicalHodgeProjectiveWordOrbit
-open GSTGeometricRealizationStage2D
 
 /-!
 # GST CLASSICAL HODGE — DIRECT ORBIT WORD SATURATION
@@ -52,6 +50,7 @@ open GSTClassicalHodgeProjectiveWordOrbit
 open GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 open GSTClassicalHodgeGradedGeometricProgramOrbit
 open GSTClassicalHodgeGradedGeometricOrbitAlgebra
+open GSTGeometricRealizationStage2D
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -97,9 +96,7 @@ theorem directTargetProgram_cohomologyEval
     c⁻¹ • (R.word.operatorPair G).cohomologyOperator S.hodge.1 =
       (classicalHodgeBasis V H q j).1
   rw [R.source_action]
-  show c⁻¹ • c • (classicalHodgeBasis V H q j).1 =
-    (classicalHodgeBasis V H q j).1
-  rw [smul_smul, inv_mul_cancel₀ hc, one_smul]
+  exact inv_smul_smul₀ hc _
 
 /-- Every live-source projective target word therefore puts its requested
 basis sheet in the one-program orbit set itself. -/
@@ -171,7 +168,8 @@ theorem every_hodge_class_has_native_cycle_of_direct_orbit_projective_words
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_direct_orbit_projective_words G D R q alpha halpha
+  rcases bigradedBettiHodge_of_direct_orbit_projective_words G D R q halpha with ⟨Z, hZ⟩
+  exact ⟨Z, hZ⟩
 
 /-- Native-mass form: the conserved spine charge is manufactured internally
 from the native mass bridge before direct orbit saturation. -/
