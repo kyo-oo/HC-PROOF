@@ -60,6 +60,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeLimitlessSpinePropagation
+open GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 open GSTClassicalHodgeProjectiveCorrespondenceAlgebra
 open GSTClassicalHodgePrimitivePushforwardNaturality
 open GSTClassicalHodgeProjectiveCorrespondenceCosmicRealization
@@ -84,7 +85,7 @@ theorem exists_projectiveOperatorWord_of_mem_span
     (hA : A ∈ projectiveCorrespondenceSpan V p) :
     ∃ W : ProjectiveOperatorWord V p, W.eval = A := by
   classical
-  refine Submodule.span_induction hA ?_ ?_ ?_ ?_
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hA
   · intro T hT
     rcases hT with ⟨f, rfl⟩
     exact ⟨.geometric f, rfl⟩
@@ -198,7 +199,7 @@ theorem every_hodge_class_has_native_cycle_of_projectiveSpan_live_source
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : codimensionCycles V.X q,
       H.cycleClass q Z = alpha := by
-  exact bigradedBettiHodge_of_projectiveSpan_live_source G D R q alpha halpha
+  exact bigradedBettiHodge_of_projectiveSpan_live_source G D R q halpha
 
 /-- Native-mass form: the conserved live spine source is manufactured
 internally, while the target transports remain purely native projective-span
@@ -235,7 +236,7 @@ noncomputable def ProjectiveCosmicRealization.toSpanLiveSourceTarget
     rw [R.acts_as_cosmic S.hodge] at hpair
     rw [GSTClassicalHodgeCanonicalCosmicRealizationEquivalence.canonicalCosmicAmbient]
       at hpair
-    rw [GSTClassicalHodgeRankFreePrimitiveGeneration.extendHodgeEndomorphism_on_hodge]
+    rw [GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism_on_hodge]
       at hpair
     simpa [GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeMatrixUnit_apply,
       GSTClassicalHodgeRankFreeArsenalIrreducibility.hodgeCoordinate] using hpair
