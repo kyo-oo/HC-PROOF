@@ -1,0 +1,9 @@
+2026-10-11T14:50:26.4700000Z Evaluating focused-core.if
+2026-10-11T14:50:26.4700000Z Evaluating: success()
+2026-10-11T14:50:26.4700000Z Result: true
+2026-10-11T14:50:26.4720000Z All GitHub-hosted runners with label [ubuntu-24.04] are busy. For more information, see https://gh.io/job-concurrency-limits
+2026-10-11T14:50:26.4700000Z Requested labels: ubuntu-24.04
+2026-10-11T14:50:26.4700000Z Job defined at: kyo-oo/HC-PROOF/.github/workflows/hc-hodge-core-repair-focus.yml@refs/heads/clean/upgraded-advanced-only-20261009
+2026-10-11T14:50:26.4700000Z Waiting for a runner to pick up this job...
+2026-10-11T15:09:42.7630000Z Job is waiting for a hosted runner to come online.
+2026-10-11T15:09:42.7640000Z Job is about to start running on the hosted runner: GitHub Actions 1000020857

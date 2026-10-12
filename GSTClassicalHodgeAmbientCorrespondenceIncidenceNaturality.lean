@@ -173,7 +173,7 @@ theorem cycleClassOperatorPair_cycleOperator
     I.cycleClassOperatorPair.cycleOperator =
       GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence.nativeOperator
         K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence p := by
-  exact GSTClassicalHodgeFiniteClosedCorrespondenceOperator.toCycleClassOperatorPair_cycleOperator
+  exact GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence.toCycleClassOperatorPair_cycleOperator
     K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
     (κ.action H.analytification P (2 * p)) I.realizesAmbientOnPoints
 

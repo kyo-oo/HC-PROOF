@@ -1,0 +1,8 @@
+2026-10-11T17:25:24.6250000Z Evaluating compile-shard.if
+2026-10-11T17:25:24.6250000Z Evaluating: success()
+2026-10-11T17:25:24.6250000Z Result: true
+2026-10-11T19:46:34.7290000Z Job is about to start running on the hosted runner: GitHub Actions 1000020881
+2026-10-11T19:46:34.7250000Z Requested labels: ubuntu-24.04
+2026-10-11T19:46:34.7250000Z Job defined at: kyo-oo/HC-PROOF/.github/workflows/hodge-diagnostic-shards.yml@refs/heads/clean/advanced-gst-hodge-20261009
+2026-10-11T19:46:34.7250000Z Waiting for a runner to pick up this job...
+2026-10-11T19:46:34.7260000Z Job is waiting for a hosted runner to come online.

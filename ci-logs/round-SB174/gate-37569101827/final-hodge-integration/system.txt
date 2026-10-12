@@ -1,0 +1,8 @@
+2026-10-07T03:56:49.4830000Z Evaluating final-hodge-integration.if
+2026-10-07T03:56:49.4830000Z Evaluating: success()
+2026-10-07T03:56:49.4830000Z Result: true
+2026-10-07T03:56:49.4920000Z Job is about to start running on the hosted runner: GitHub Actions 1000020320
+2026-10-07T03:56:49.4920000Z Job is waiting for a hosted runner to come online.
+2026-10-07T03:56:49.4880000Z Requested labels: ubuntu-24.04
+2026-10-07T03:56:49.4880000Z Job defined at: kyo-oo/HC-PROOF/.github/workflows/hodge-conjecture.yml@refs/heads/sol/hodge-strict-betti-correspondence-fusion-20261003
+2026-10-07T03:56:49.4880000Z Waiting for a runner to pick up this job...

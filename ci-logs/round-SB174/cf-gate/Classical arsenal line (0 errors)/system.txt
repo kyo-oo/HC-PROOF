@@ -1,0 +1,8 @@
+2026-09-27T09:06:46.0410000Z Evaluating classical.if
+2026-09-27T09:06:46.0410000Z Evaluating: success()
+2026-09-27T09:06:46.0410000Z Result: true
+2026-09-27T09:06:46.4910000Z Job is about to start running on the hosted runner: GitHub Actions 1000019540
+2026-09-27T09:06:46.4910000Z Job is waiting for a hosted runner to come online.
+2026-09-27T09:06:46.4910000Z Requested labels: ubuntu-24.04
+2026-09-27T09:06:46.4910000Z Job defined at: kyo-oo/HC-PROOF/.github/workflows/classical-frontier-gate.yml@refs/heads/glm53/classical-frontier
+2026-09-27T09:06:46.4910000Z Waiting for a runner to pick up this job...
