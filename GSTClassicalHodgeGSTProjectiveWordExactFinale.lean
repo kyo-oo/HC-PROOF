@@ -182,7 +182,8 @@ theorem everyHodgeClassIsRationalAlgebraic_of_projectiveTwoGenerators
   let P : CanonicalSpineGSTProgramFamily G M := by
     intro p j
     by_cases h : (globalSpineOrbitSeed G M p).sourceIndex = j
-    · exact hdiag p
+    · subst h
+      exact hdiag p
     · exact canonicalSpineProgramOfProjectiveTwoGenerator G M p j h (R p j)
   exact gst_everyHodgeClassIsRationalAlgebraic G M P
 
@@ -205,7 +206,8 @@ theorem everyHodgeClassIsFiniteRationalCombination_of_projectiveTwoGenerators
   let P : CanonicalSpineGSTProgramFamily G M := by
     intro p j
     by_cases h : (globalSpineOrbitSeed G M p).sourceIndex = j
-    · exact hdiag p
+    · subst h
+      exact hdiag p
     · exact canonicalSpineProgramOfProjectiveTwoGenerator G M p j h (R p j)
   exact gst_everyHodgeClassIsFiniteRationalCombination G M P
 
