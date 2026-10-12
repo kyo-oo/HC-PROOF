@@ -86,17 +86,20 @@ noncomputable def spectralOperator
     (C : RealizedCyclicSpectralCertificate V H p) :
     @ClassicalHodgeSpectralOperator V H p
       (ClassicalHodgeBasisIndex V H p)
-      C.basisIndex_fintype C.basisIndex_decidableEq where
-  basisIndex := fun i => i
-  basisIndex_injective := fun _ _ h => h
-  observable := (realizedWordPair C.word).cohomologyOperator
-  eigenvalue := C.eigenvalue
-  eigenvalue_injective := C.eigenvalue_injective
-  eigenvector := C.eigenvector
-  atomic_stable := by
-    intro x hx
-    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hx ⊢
-    exact realizedWord_range_stable C.word x hx
+      C.basisIndex_fintype C.basisIndex_decidableEq :=
+  @ClassicalHodgeSpectralOperator.mk V H p
+    (ClassicalHodgeBasisIndex V H p)
+    C.basisIndex_fintype C.basisIndex_decidableEq
+    (fun i => i)
+    (fun _ _ h => h)
+    ((realizedWordPair C.word).cohomologyOperator)
+    C.eigenvalue
+    C.eigenvalue_injective
+    C.eigenvector
+    (by
+      intro x hx
+      rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hx ⊢
+      exact realizedWord_range_stable C.word x hx)
 
 /-- The supplied native cyclic seed really lies in the algebraic atomic span. -/
 theorem cyclic_seed_mem_atomic
@@ -114,8 +117,9 @@ theorem weight_hodge
     (C : RealizedCyclicSpectralCertificate V H p) :
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
       pointCycleClassSpan p (H.cycleClass p) := by
-  let S := C.spectralOperator
-  exact S.weight_hodge_of_cyclic_spectral_generation
+  haveI : Fintype (ClassicalHodgeBasisIndex V H p) := C.basisIndex_fintype
+  haveI : DecidableEq (ClassicalHodgeBasisIndex V H p) := C.basisIndex_decidableEq
+  exact C.spectralOperator.weight_hodge_of_cyclic_spectral_generation
     (fun j => ⟨j, rfl⟩)
     C.coefficient
     C.coefficient_ne_zero

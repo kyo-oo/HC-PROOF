@@ -174,8 +174,9 @@ theorem cycleClassOperatorPair_cycleOperator
       K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
         |>.nativeOperator p := by
   exact
-    K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
-      |>.toCycleClassOperatorPair_cycleOperator
+    GSTClassicalHodgeFiniteClosedCorrespondenceOperator.
+      toCycleClassOperatorPair_cycleOperator
+        K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
         (κ.action H.analytification P (2 * p)) I.realizesAmbientOnPoints
 
 end PointFiberIntersectionLaw
@@ -211,7 +212,7 @@ theorem forward_and_transpose_cycleClass_natural
       H.cycleClass p
           (K.transpose.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
             |>.nativeOperator p Z) =
-        κ.transposeKernel.action P (2 * p) (H.cycleClass p Z)) := by
+        κ.transposeKernel.action H.analytification P (2 * p) (H.cycleClass p Z)) := by
   constructor
   · exact I.forward.cycleClass_nativeOperator
   · exact I.transpose.cycleClass_nativeOperator
@@ -221,7 +222,7 @@ factor-swapped ambient incidence formula. -/
 theorem transpose_action_is_projective_incidence
     (I : BiPointFiberIntersectionLaw (H := H) (p := p) P K κ)
     (alpha : XCoh) :
-    κ.transposeKernel.action P (2 * p) alpha =
+    κ.transposeKernel.action H.analytification P (2 * p) alpha =
       P.fstGysin (2 * p)
         (P.cup (2 * d) (2 * p) κ.kernelClass
           (sndCohomologyPullback H.analytification (2 * p) alpha)) := by
