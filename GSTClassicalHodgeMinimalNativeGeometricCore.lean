@@ -58,7 +58,9 @@ variable {H : HodgeBigradedBettiData V}
 /-- The irreducible semantic core consumed by the full native GST program
 route. No whole-cycle Hodge axiom, no pushforward cohomology operator, and no
 principal-cut Hodge-preservation field is stored. -/
-structure MinimalNativeGeometricCore where
+structure MinimalNativeGeometricCore
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) where
   pointClass_is_hodge :
     ∀ p : Nat, ∀ x : CodimensionPoint V.X p,
       H.cycleClass p (codimensionPointCycle V.X p x) ∈
