@@ -253,7 +253,7 @@ theorem rationalPair_cycleOperator
               (fun K q => q • K.nativeOperator p) K q₂ :=
         fun K q₁ q₂ => add_smul q₁ q₂ _
       have ih' : (A.sum fun K q =>
-          Pair.smul q (primitivePair K (T K) (hT K))).cycleOperator =
+          Pair.smul q (K.toCycleClassOperatorPair (T K) (hT K))).cycleOperator =
           A.sum fun K q => q • K.nativeOperator p := ih
       show ((Finsupp.single K q + A).sum
           fun K q => Pair.smul q (primitivePair K (T K) (hT K))).cycleOperator =
@@ -316,7 +316,7 @@ theorem rationalPair_cohomologyOperator
             (fun K q => q • T K) K q₁ + (fun K q => q • T K) K q₂ :=
         fun K q₁ q₂ => add_smul q₁ q₂ _
       have ih' : (A.sum fun K q =>
-          Pair.smul q (primitivePair K (T K) (hT K))).cohomologyOperator =
+          Pair.smul q (K.toCycleClassOperatorPair (T K) (hT K))).cohomologyOperator =
           A.sum fun K q => q • T K := ih
       show ((Finsupp.single K q + A).sum
           fun K q => Pair.smul q (primitivePair K (T K) (hT K))).cohomologyOperator =

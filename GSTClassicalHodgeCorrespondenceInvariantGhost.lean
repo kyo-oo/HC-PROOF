@@ -73,6 +73,8 @@ theorem maps_algebraicHodgeSubspace
   rw [mem_AlgebraicHodgeSubspace_iff] at halpha
   rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at halpha
   rcases halpha with ⟨Z, hZ⟩
+  rw [mem_AlgebraicHodgeSubspace_iff]
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
   refine ⟨E.cycleOperator Z, ?_⟩
   change H.cycleClass p (E.cycleOperator Z) = E.cohomologyOperator alpha.1
   rw [E.cycleClass_natural, hZ]

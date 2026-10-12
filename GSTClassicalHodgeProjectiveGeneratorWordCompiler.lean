@@ -139,7 +139,7 @@ theorem hodge_weight_of_projective_two_generators_via_words
   intro j
   by_cases h : S.sourceIndex = j
   · subst h; exact hdiag
-  · exact (R j).toWordLiveSourceTarget G S j h
+  · exact ProjectiveTwoGenerator.toWordLiveSourceTarget G S j h (R j)
 
 #check compileProjectiveTwoGenerator
 #check compileProjectiveTwoGenerator_eval
