@@ -91,12 +91,12 @@ theorem exists_projectiveOperatorWord_of_mem_span
     exact ⟨.geometric f, rfl⟩
   · refine ⟨.smul 0 .id, ?_⟩
     simp [ProjectiveOperatorWord.eval]
-  · intro A B hAw hBw
+  · intro A B _ _ hAw hBw
     rcases hAw with ⟨WA, hWA⟩
     rcases hBw with ⟨WB, hWB⟩
     refine ⟨.add WA WB, ?_⟩
     simp [ProjectiveOperatorWord.eval, hWA, hWB]
-  · intro a A hAw
+  · intro a A _ hAw
     rcases hAw with ⟨WA, hWA⟩
     refine ⟨.smul a WA, ?_⟩
     simp [ProjectiveOperatorWord.eval, hWA]
@@ -230,6 +230,8 @@ noncomputable def ProjectiveCosmicRealization.toSpanLiveSourceTarget
     ProjectiveSpanLiveSourceTarget S j where
   kernel := R.kernel
   native_source_class := by
+    show (H.cycleClass p)
+        ((projectiveCorrespondencePair G R.kernel).cycleOperator S.cycle) = _
     have hpair :=
       (projectiveCorrespondencePair G R.kernel).cycleClass_cycleOperator S.cycle
     rw [S.class_eq] at hpair
