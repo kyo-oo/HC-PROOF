@@ -107,11 +107,23 @@ theorem fiberedPairing_separatorProbe
         (separatorFiberedProbe (V := V) (H := H) p ell) =
       ell alpha.1 := by
   classical
-  rw [show alpha =
-      Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
-        ((classicalHodgeBasis V H p).repr alpha) from
+  have hlhs : fiberedPairing (fiberedWeightCoordinates V H p alpha)
+      (separatorFiberedProbe (V := V) (H := H) p ell) =
+      ∑ a ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+        ((classicalHodgeBasis V H p).repr alpha) a *
+          ell ((classicalHodgeBasis V H p a).1) := by
+    show (Finsupp.embDomain (weightFiberEmbedding V H p)
+        ((classicalHodgeBasis V H p).repr alpha)).sum
+        (fun s q => q * separatorFiberedProbe (V := V) (H := H) p ell s) = _
+    rw [Finsupp.sum_embDomain]
+    simp only [Finsupp.sum, weightFiberEmbedding,
+      Function.Embedding.sigmaMk_apply, separatorFiberedProbe_at_same_weight,
+      smul_eq_mul]
+  rw [hlhs,
+    show alpha = Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
+      ((classicalHodgeBasis V H p).repr alpha) from
       ((classicalHodgeBasis V H p).linearCombination_repr alpha).symm,
-    Finsupp.linearCombination_apply, Finsupp.sum]
+    Finsupp.linearCombination_apply]
   simp [fiberedPairing, fiberedWeightCoordinates, weightFiberEmbedding,
     separatorFiberedProbe, Finsupp.sum_embDomain, Finsupp.sum, smul_eq_mul,
     map_sum, LinearMap.map_smul, Finsupp.embDomain_apply,
