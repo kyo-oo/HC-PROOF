@@ -39,6 +39,7 @@ namespace GSTClassicalHodgeMinimalNativeGeometricCore
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTNativeCodimensionCyclePresentation
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeAtomicSpan

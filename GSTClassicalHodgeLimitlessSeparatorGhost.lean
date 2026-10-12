@@ -119,15 +119,17 @@ theorem fiberedPairing_separatorProbe
     simp only [Finsupp.sum, weightFiberEmbedding,
       Function.Embedding.sigmaMk_apply, separatorFiberedProbe_at_same_weight,
       smul_eq_mul]
-  rw [hlhs,
-    show alpha = Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
-      ((classicalHodgeBasis V H p).repr alpha) from
-      ((classicalHodgeBasis V H p).linearCombination_repr alpha).symm,
-    Finsupp.linearCombination_apply]
-  simp [fiberedPairing, fiberedWeightCoordinates, weightFiberEmbedding,
-    separatorFiberedProbe, Finsupp.sum_embDomain, Finsupp.sum, smul_eq_mul,
-    map_sum, LinearMap.map_smul, Finsupp.embDomain_apply,
-    Function.Embedding.sigmaMk_apply]
+  have hrhs : ell alpha.1 =
+      ∑ a ∈ ((classicalHodgeBasis V H p).repr alpha).support,
+        ((classicalHodgeBasis V H p).repr alpha) a *
+          ell ((classicalHodgeBasis V H p a).1) := by
+    rw [show alpha.1 =
+        (Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
+          ((classicalHodgeBasis V H p).repr alpha)).1 from
+        by rw [(classicalHodgeBasis V H p).linearCombination_repr alpha]]
+    rw [Finsupp.linearCombination_apply]
+    simp [map_sum, LinearMap.map_smul, smul_eq_mul]
+  rw [hlhs, hrhs]
 
 /-- A genuine basis separator becomes a nonzero completed limitless probe: it
 pairs nontrivially with the exact fibered address of the basis sheet it detects. -/
