@@ -1,4 +1,5 @@
 import GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL INCIDENCE / KERNEL REDUCTION
@@ -46,6 +47,7 @@ open GSTClassicalHodgeFiniteClosedCorrespondence
 open GSTClassicalHodgeGeometricCycleClassPointRigidity
 open GSTClassicalHodgeCycleClassIntersectionPrimitives
 open GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -57,7 +59,7 @@ structure CanonicalMiddleBettiKernel
     (A : AnalytificationData V)
     (d : Nat)
     (K : SchemeBiFiniteClosedCorrespondence V) where
-  class : ProductCohomology A (2 * d)
+  kernelClass : ProductCohomology A (2 * d)
 
 namespace CanonicalMiddleBettiKernel
 
@@ -67,8 +69,8 @@ noncomputable def toMiddleBettiCorrespondenceKernel
     {K : SchemeBiFiniteClosedCorrespondence V}
     (κ : CanonicalMiddleBettiKernel A d K) :
     MiddleBettiCorrespondenceKernel A d K where
-  class := κ.class
-  transposeClass := swapCohomologyPullback A (2 * d) κ.class
+  kernelClass := κ.kernelClass
+  transposeClass := swapCohomologyPullback A (2 * d) κ.kernelClass
   transposeClass_eq_swap := rfl
 
 @[simp]
@@ -76,7 +78,7 @@ theorem toMiddle_class
     {A : AnalytificationData V}
     {K : SchemeBiFiniteClosedCorrespondence V}
     (κ : CanonicalMiddleBettiKernel A d K) :
-    κ.toMiddleBettiCorrespondenceKernel.class = κ.class := rfl
+    κ.toMiddleBettiCorrespondenceKernel.kernelClass = κ.kernelClass := rfl
 
 @[simp]
 theorem toMiddle_transposeClass
@@ -84,7 +86,7 @@ theorem toMiddle_transposeClass
     {K : SchemeBiFiniteClosedCorrespondence V}
     (κ : CanonicalMiddleBettiKernel A d K) :
     κ.toMiddleBettiCorrespondenceKernel.transposeClass =
-      swapCohomologyPullback A (2 * d) κ.class := rfl
+      swapCohomologyPullback A (2 * d) κ.kernelClass := rfl
 
 /-- Every historical kernel forgets to the reduced packet. -/
 def ofMiddle
@@ -92,7 +94,7 @@ def ofMiddle
     {K : SchemeBiFiniteClosedCorrespondence V}
     (κ : MiddleBettiCorrespondenceKernel A d K) :
     CanonicalMiddleBettiKernel A d K :=
-  ⟨κ.class⟩
+  ⟨κ.kernelClass⟩
 
 /-- Re-expansion changes no operational content: forward class is identical and
 transpose class is propositionally the historical one. -/
@@ -105,9 +107,6 @@ theorem canonicalization_preserves_transpose
   exact κ.transposeClass_eq_swap.symm
 
 end CanonicalMiddleBettiKernel
-
-abbrev PointClass :=
-  PointBettiClass (V := V) p H.analytification
 
 abbrev GeometricCycleClass
     (pt : PointClass (V := V) (H := H) p) :=
@@ -135,7 +134,7 @@ noncomputable def canonicalKernelFiberIntersection
       (V := V) (H := H) (d := d) (p := p)
       P κ (canonicalPointCylinder pt) where
   fiberIntersectionClass := fun x =>
-    P.cupTheory.cup (2 * d) (2 * p) κ.class
+    P.cupTheory.cup (2 * d) (2 * p) κ.kernelClass
       (fstCohomologyPullback H.analytification (2 * p) (pt x))
   class_eq_kernel_cup_cylinder := by
     intro x
@@ -150,7 +149,7 @@ def DirectIncidenceProjectionLaw
     (pt : PointClass (V := V) (H := H) p) : Prop :=
   ∀ x : CodimensionPoint V.X p,
     P.gysinTheory.sndGysin (2 * p)
-      (P.cupTheory.cup (2 * d) (2 * p) κ.class
+      (P.cupTheory.cup (2 * d) (2 * p) κ.kernelClass
         (fstCohomologyPullback H.analytification (2 * p) (pt x))) =
       GeometricCycleClass (V := V) (H := H) (p := p) pt
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
