@@ -114,7 +114,8 @@ theorem fiberedPairing_separatorProbe
     Finsupp.linearCombination_apply, Finsupp.sum]
   simp [fiberedPairing, fiberedWeightCoordinates, weightFiberEmbedding,
     separatorFiberedProbe, Finsupp.sum_embDomain, Finsupp.sum, smul_eq_mul,
-    map_sum, LinearMap.map_smul]
+    map_sum, LinearMap.map_smul, Finsupp.embDomain_apply,
+    Function.Embedding.sigmaMk_apply]
 
 /-- A genuine basis separator becomes a nonzero completed limitless probe: it
 pairs nontrivially with the exact fibered address of the basis sheet it detects. -/
