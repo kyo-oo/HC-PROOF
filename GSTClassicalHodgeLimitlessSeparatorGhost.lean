@@ -127,11 +127,10 @@ theorem fiberedPairing_separatorProbe
         Finsupp.linearCombination ℚ (classicalHodgeBasis V H p)
           ((classicalHodgeBasis V H p).repr alpha) from
         ((classicalHodgeBasis V H p).linearCombination_repr alpha).symm,
-      Finsupp.linearCombination_apply, Finsupp.sum]
-    simp [smul_eq_mul, map_sum, LinearMap.map_smul, Finsupp.sum,
-      Finsupp.embDomain_apply, Function.Embedding.sigmaMk_apply,
-      weightFiberEmbedding, fiberedWeightCoordinates, fiberedPairing,
-      separatorFiberedProbe]
+      Finsupp.linearCombination_apply, Finsupp.sum,
+      AddSubmonoidClass.coe_finsetSum]
+    simp only [Submodule.coe_smul_of_tower, smul_eq_mul, map_sum,
+      LinearMap.map_smul]
   rw [hlhs, hrhs]
 
 /-- A genuine basis separator becomes a nonzero completed limitless probe: it

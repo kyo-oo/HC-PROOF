@@ -1,5 +1,6 @@
 import GSTClassicalHodgeAmbientCorrespondenceIncidenceNaturality
 import GSTClassicalHodgeGeometricCycleClassPointRigidity
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — STRICT CORRESPONDENCE GEOMETRIC TRANSFER FINALE
@@ -40,6 +41,7 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeAmbientBettiSelfProduct
 open GSTClassicalHodgeAmbientCorrespondenceKernelAction
 open GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall
@@ -75,7 +77,7 @@ structure GeometricPointFiberLaw
 
   kernel_cup_pointFundamental :
     ∀ x : CodimensionPoint V.X p,
-      P.cup (2 * d) (2 * p) κ.class
+      P.cup (2 * d) (2 * p) κ.kernelClass
           (fstCohomologyPullback H.analytification (2 * p) (pt x)) =
         fiberIntersectionClass x
 
@@ -101,7 +103,7 @@ actual finite incidence image. -/
 theorem geometric_action_on_point
     (I : GeometricPointFiberLaw (H := H) (p := p) P K κ pt)
     (x : CodimensionPoint V.X p) :
-    κ.action P (2 * p) (pt x) =
+    κ.action H.analytification P (2 * p) (pt x) =
       GeometricCycleClass (H := H) pt
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.nativePointImage p x) := by
@@ -117,7 +119,7 @@ theorem geometric_cycleClass_point_natural
     GeometricCycleClass (H := H) pt
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.nativePointImage p x) =
-      κ.action P (2 * p)
+      κ.action H.analytification P (2 * p)
         (GeometricCycleClass (H := H) pt
           (codimensionPointCycle V.X p x)) := by
   rw [cycleClassFromPointGeometry_point]
@@ -132,14 +134,14 @@ theorem geometric_cycleClass_nativeOperator
     GeometricCycleClass (H := H) pt
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.nativeOperator p Z) =
-      κ.action P (2 * p) (GeometricCycleClass (H := H) pt Z) := by
+      κ.action H.analytification P (2 * p) (GeometricCycleClass (H := H) pt Z) := by
   let clGeo := GeometricCycleClass (H := H) pt
   let F : codimensionCycles V.X p →ₗ[ℚ]
       RationalSingularCohomology H.analytification (2 * p) :=
     clGeo.comp
       (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
         |>.nativeOperator p)
-      - (κ.action P (2 * p)).comp clGeo
+      - (κ.action H.analytification P (2 * p)).comp clGeo
   have hF : F = 0 := by
     apply GSTClassicalHodgePointNormalForm.nativeLinearMap_eq_zero_of_points V p
     intro x
@@ -172,7 +174,7 @@ theorem supplied_cycleClass_nativeOperator
     H.cycleClass p
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.nativeOperator p Z) =
-      κ.action P (2 * p) (H.cycleClass p Z) := by
+      κ.action H.analytification P (2 * p) (H.cycleClass p Z) := by
   rw [I.supplied_cycleClass_eq_geometric hpoint]
   exact I.geometric_cycleClass_nativeOperator Z
 
@@ -185,7 +187,7 @@ noncomputable def suppliedCycleClassOperatorPair
       H.cycleClass p (codimensionPointCycle V.X p x) = pt x) :=
   K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
     |>.toCycleClassOperatorPair
-      (κ.action P (2 * p))
+      (κ.action H.analytification P (2 * p))
       (by
         intro x
         have hx := I.supplied_cycleClass_nativeOperator hpoint
@@ -237,13 +239,13 @@ theorem supplied_forward_and_transpose_transfer
       H.cycleClass p
           (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
             |>.nativeOperator p Z) =
-        κ.action P (2 * p) (H.cycleClass p Z))
+        κ.action H.analytification P (2 * p) (H.cycleClass p Z))
     ∧
     (∀ Z : codimensionCycles V.X p,
       H.cycleClass p
           (K.transpose.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
             |>.nativeOperator p Z) =
-        κ.transposeKernel.action P (2 * p) (H.cycleClass p Z)) := by
+        κ.transposeKernel.action H.analytification P (2 * p) (H.cycleClass p Z)) := by
   constructor
   · exact I.forward.supplied_cycleClass_nativeOperator hpoint
   · exact I.transpose.supplied_cycleClass_nativeOperator hpoint
@@ -253,11 +255,11 @@ projective-incidence formula. -/
 theorem transpose_is_factor_swap_incidence
     (I : BiGeometricPointFiberLaw (H := H) (p := p) P K κ pt)
     (alpha : RationalSingularCohomology H.analytification (2 * p)) :
-    κ.transposeKernel.action P (2 * p) alpha =
+    κ.transposeKernel.action H.analytification P (2 * p) alpha =
       P.fstGysin (2 * p)
-        (P.cup (2 * d) (2 * p) κ.class
+        (P.cup (2 * d) (2 * p) κ.kernelClass
           (sndCohomologyPullback H.analytification (2 * p) alpha)) := by
-  exact κ.transpose_action_apply P (2 * p) alpha
+  exact κ.transpose_action_apply H.analytification P (2 * p) alpha
 
 #check supplied_forward_and_transpose_transfer
 #check transpose_is_factor_swap_incidence

@@ -117,8 +117,6 @@ theorem weight_hodge
     (C : RealizedCyclicSpectralCertificate V H p) :
     rationalHodgeSubspace (H.hodgeBigrading p) ≤
       pointCycleClassSpan p (H.cycleClass p) := by
-  haveI : Fintype (ClassicalHodgeBasisIndex V H p) := C.basisIndex_fintype
-  haveI : DecidableEq (ClassicalHodgeBasisIndex V H p) := C.basisIndex_decidableEq
   exact C.spectralOperator.weight_hodge_of_cyclic_spectral_generation
     (fun j => ⟨j, rfl⟩)
     C.coefficient

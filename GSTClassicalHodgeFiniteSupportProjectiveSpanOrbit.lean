@@ -1,5 +1,6 @@
 import GSTClassicalHodgeProjectiveSpanWordSaturation
 import GSTClassicalHodgeFiniteSupportProjectiveOrbit
+import GSTClassicalHodgeSynchronizedDefectOrbit
 
 /-!
 # GST CLASSICAL HODGE — FINITE-SUPPORT PROJECTIVE-SPAN ORBIT
@@ -46,6 +47,7 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeFiniteSpineMomentOrbit
 open GSTClassicalHodgeProjectiveSpanWordSaturation
 open GSTClassicalHodgeProjectiveWordOrbit
+open GSTClassicalHodgeSynchronizedDefectOrbit
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

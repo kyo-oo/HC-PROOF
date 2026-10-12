@@ -1,6 +1,7 @@
 import GSTClassicalHodgeStrictCorrespondenceMaximalBettiTransfer
 import GSTClassicalHodgeStrictCorrespondenceChainTranspose
 import GSTClassicalHodgeGradedFiniteClosedCorrespondence
+import GSTGeometricRealizationStage2D
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 1000000
@@ -15,6 +16,7 @@ namespace GSTClassicalHodgeStrictCorrespondenceBettiTracePushPull
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTGeometricRealizationStage2D
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall
 open GSTClassicalHodgeStrictCorrespondenceAnalyticSpan
@@ -58,14 +60,6 @@ theorem normalizedTrace_rightPullback
     RightFiniteBettiTrace.normalizedTrace] at h ⊢
   rw [h, smul_smul, inv_mul_cancel₀ T.degree_ne_zero, one_smul]
 
-/-- Nonzero finite degree forces injectivity of right pullback. -/
-theorem rightPullback_injective
-    (T : RightFiniteBettiTrace A K n) :
-    Function.Injective (rightCohomologyPullback A K n) := by
-  intro alpha beta h
-  have h' := congrArg T.normalizedTrace h
-  simpa [T.normalizedTrace_rightPullback_apply] using h'
-
 /-- **TOTAL WHOLE-BETTI PUSH-PULL.** `Tr_r ∘ l^*`, defined on every rational
 singular cohomology class, including nonalgebraic Hodge classes. -/
 noncomputable def pushPull
@@ -86,6 +80,15 @@ theorem normalizedTrace_rightPullback_apply
     (normalizedTrace A K n T) (rightCohomologyPullback A K n alpha) = alpha := by
   have h := LinearMap.congr_fun T.normalizedTrace_rightPullback alpha
   simpa only [LinearMap.comp_apply, LinearMap.id_apply] using h
+
+/-- Nonzero finite degree forces injectivity of right pullback. -/
+theorem rightPullback_injective
+    (T : RightFiniteBettiTrace A K n) :
+    Function.Injective (rightCohomologyPullback A K n) := by
+  intro alpha beta h
+  have h' := congrArg T.normalizedTrace h
+  simpa [T.normalizedTrace_rightPullback_apply] using h'
+
 
 /-- Direct elimination of a strict relation, using only the left-inverse law.
 No totality of the relation or choice of a second related target is needed. -/
