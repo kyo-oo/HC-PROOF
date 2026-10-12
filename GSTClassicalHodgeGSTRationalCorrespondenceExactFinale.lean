@@ -154,12 +154,13 @@ theorem bigradedBettiHodge_of_rationalCorrespondences
   let alphaH : ClassicalHodgeFiber V H p := ⟨alpha, halpha⟩
   have hbasis := every_basis_mem_cycleClassRange_of_rationalCorrespondences
     G M A T hT hA
-  rw [show alphaH =
-      ∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
+  rw [show alpha = ↑(∑ j ∈ ((classicalHodgeBasis V H p).repr alphaH).support,
         ((classicalHodgeBasis V H p).repr alphaH j) •
-          classicalHodgeBasis V H p j by
-    exact (classicalHodgeBasis V H p).sum_repr alphaH]
-  simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower]
+          classicalHodgeBasis V H p j) from
+    (congrArg Subtype.val
+      ((classicalHodgeBasis V H p).sum_repr alphaH)).symm,
+    AddSubmonoidClass.coe_finsetSum]
+  simp only [Submodule.coe_smul_of_tower]
   apply Submodule.sum_mem
   intro j hj
   exact (LinearMap.range (H.cycleClass p)).smul_mem

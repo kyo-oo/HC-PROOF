@@ -95,7 +95,7 @@ noncomputable def transposeGraphAnalyticSection
   refine ConcreteCategory.ofHom (C := TopCat)
     ⟨s, ?_⟩
   apply continuous_induced_rng.2
-  exact F.continuous_toFun.prod_mk continuous_id
+  exact F.continuous_toFun.prodMk continuous_id
 
 /-- The right projection followed after the canonical graph section is
 literally identity. -/
