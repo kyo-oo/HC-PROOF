@@ -92,7 +92,7 @@ theorem action_apply
     (κ : GradedBettiKernel A d shift)
     (n : Nat)
     (alpha : XCoh A n) :
-    κ.action P n alpha =
+    κ.action A P n alpha =
       P.sndGysin (shift + n)
         ((reassociateDegree (A := A) (d := d) (shift := shift) n)
           (P.cup (2 * d + shift) n κ.kernelClass
@@ -120,8 +120,8 @@ theorem action_shift_zero_apply
     (κ : GradedBettiKernel A d 0)
     (n : Nat)
     (alpha : XCoh A n) :
-    κ.action P n alpha =
-      P.sndGysin n
+    κ.action A P n alpha =
+      P.sndGysin (0 + n)
         ((reassociateDegree (A := A) (d := d) (shift := 0) n)
           (P.cup (2 * d + 0) n κ.kernelClass
             (fstCohomologyPullback A n alpha))) := by
@@ -140,7 +140,7 @@ noncomputable def degreeTwoWeightAction
     XCoh A (2 * p) →ₗ[ℚ] XCoh A (2 * (p + 1)) := by
   have hdeg : 2 + 2 * p = 2 * (p + 1) := by omega
   rw [← hdeg]
-  exact κ.action P (2 * p)
+  exact κ.action A P (2 * p)
 
 /-- The graded construction is total on arbitrary Betti classes, including
 classes outside every algebraic cycle-class range. -/
