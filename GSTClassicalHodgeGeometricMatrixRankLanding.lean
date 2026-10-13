@@ -71,7 +71,7 @@ vectors in an ARBITRARY FINITE basis index type (not just Fin n).
 The abstract period-detector factorization specializes to precisely
 this same index type. -/
 noncomputable def geometricCoordinateMatrix
-    (b : Basis ι ℚ W)
+    (b : Module.Basis ι ℚ W)
     (z : ι → W) : Matrix ι ι ℚ :=
   fun i j => (b.repr (z j)) i
 
@@ -81,7 +81,7 @@ The only hypothesis is numerical invertibility M * B = I.
 For every x, we build the coefficients explicitly as B * repr(x),
 and PROVE their combination of supplied geometric vectors equals x. -/
 theorem geometric_matrix_right_inverse_reconstructs
-    (b : Basis ι ℚ W)
+    (b : Module.Basis ι ℚ W)
     (z : ι → W)
     (B : Matrix ι ι ℚ)
     (hInv : geometricCoordinateMatrix b z * B = 1)
@@ -90,8 +90,7 @@ theorem geometric_matrix_right_inverse_reconstructs
       (B.mulVec (fun i => (b.repr x) i)) j • z j = x := by
   classical
   apply b.repr.injective
-  apply Finsupp.ext
-  intro i
+  ext i
   let target : ι → ℚ := fun k => (b.repr x) k
   let coeff : ι → ℚ := B.mulVec target
   let M : Matrix ι ι ℚ := geometricCoordinateMatrix b z
