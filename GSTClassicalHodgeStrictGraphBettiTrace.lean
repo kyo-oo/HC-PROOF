@@ -172,6 +172,7 @@ theorem rightCochainPullback_transposeGraphSection
     rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
       ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_right,
       CategoryTheory.Functor.map_id, CategoryTheory.op_id, CategoryTheory.Functor.map_id]
+    rfl
   exact h1
 
 /-- **GRAPH-RETRACTION COHOMOLOGY LAW.**
@@ -323,6 +324,7 @@ theorem transposeGraphSectionCochainPullback_right
     rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
       ← CategoryTheory.Functor.map_comp, transposeGraphRightChainMap_section,
       CategoryTheory.Functor.map_id, CategoryTheory.op_id, CategoryTheory.Functor.map_id]
+    rfl
   exact h1
 
 /-- Right pullback and section pullback are inverse on the WHOLE carrier
