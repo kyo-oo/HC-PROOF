@@ -121,6 +121,49 @@ theorem fixedRightCliffordAction_eval_cancel
     (fixedRightCliffordAction w v 1) * winv = v := by
   simp [fixedRightCliffordAction, mul_assoc, hwinv]
 
+/-! ## Nonisotropic Clifford vectors provide their own inverse
+
+For an exact Clifford relation w² = q(w,w)·1 and q(w,w) ≠ 0,
+the right inverse used in the preceding injectivity theorem is
+not a NEW hypothesis. It is the explicit element q(w,w)⁻¹·w.
+This upgrades the tensor injectivity statement to the genuine
+quadratic-input condition in the Kuga--Satake construction. -/
+
+/-- An algebraic element with nonzero rational quadratic square has
+the explicit right inverse prescribed by its quadratic value. -/
+theorem right_inverse_of_quadratic_relation
+    (w : A) (q : ℚ) (hq : q ≠ 0)
+    (hsquare : w * w = algebraMap ℚ A q) :
+    w * ((q⁻¹) • w) = 1 := by
+  calc
+    w * ((q⁻¹) • w) = q⁻¹ • (w * w) := by
+      rw [mul_smul_comm]
+    _ = q⁻¹ • algebraMap ℚ A q := by rw [hsquare]
+    _ = 1 := by
+      simp [Algebra.smul_def, ← map_mul, hq]
+
+/-- The mirror left inverse follows from the same Clifford relation. -/
+theorem left_inverse_of_quadratic_relation
+    (w : A) (q : ℚ) (hq : q ≠ 0)
+    (hsquare : w * w = algebraMap ℚ A q) :
+    ((q⁻¹) • w) * w = 1 := by
+  calc
+    ((q⁻¹) • w) * w = q⁻¹ • (w * w) := by
+      rw [smul_mul_assoc]
+    _ = q⁻¹ • algebraMap ℚ A q := by rw [hsquare]
+    _ = 1 := by
+      simp [Algebra.smul_def, ← map_mul, hq]
+
+/-- Exact Kuga--Satake tensor injectivity is now proved directly from
+the actual NONISOTROPIC QUADRATIC RELATION, rather than assuming
+a separately furnished inverse of the right Clifford multiplier. -/
+theorem exactKugaSatakeMap_injective_of_quadratic_relation
+    (w : A) (q : ℚ) (hq : q ≠ 0)
+    (hsquare : w * w = algebraMap ℚ A q) :
+    Function.Injective (exactKugaSatakeMap w) :=
+  exactKugaSatakeMap_injective w ((q⁻¹) • w)
+    (right_inverse_of_quadratic_relation w q hq hsquare)
+
 #check exactKugaSatakeMap
 #check exactKugaSatakeMap_injective
 #check fixedRightCliffordAction_comp_apply
