@@ -20,6 +20,7 @@ import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
 import GSTClassicalHodgeNativeExecutablePlane
 import GSTClassicalHodgeCMGSTNativeBasisCompiler
+import GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -196,6 +197,53 @@ theorem finite_hodge_class_has_native_cycle_of_CM_GST_live_packets
       H.cycleClass p Z = alpha.1 :=
   GSTClassicalHodgeCMGSTNativeBasisCompiler.native_cycle_of_finite_CM_GST_packet_support
     G p alpha hActive
+
+/-- STRONGER GEOMETRIC VERSION OF THE CLASS-LOCAL FINITE LANDING.
+
+Unlike the flexible source-packet version, this version only accepts a
+cohomological correspondence action COMPILED FROM an actual degree-checked
+cup-product kernel, source pullback and projection Gysin, together with its
+finite point-incidence equation. It then runs the existing graded GST program,
+descends algebraic coefficients, and constructs the exact rational cycle. -/
+theorem finite_hodge_class_has_native_cycle_of_CupGysin_GST_geometry
+    {K : Type*} [Field K] [Algebra ℚ K]
+    {PCoh : Nat → Type*}
+    [∀ n, AddCommGroup (PCoh n)] [∀ n, Module ℚ (PCoh n)]
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (p : Nat)
+    (alpha : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p)
+    (hActive :
+      ∀ j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H p,
+        j ∈
+          ((GSTClassicalHodgeFiberedCosmology.classicalHodgeBasis V H p).repr alpha).support →
+        Nonempty
+          (GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler.CupGysinGSTSheetProgram
+            (K := K) (PCoh := PCoh) G p j)) :
+    ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = alpha.1 :=
+  GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler.finite_target_from_cupGysin_GST_sheet_packets
+    G p alpha hActive
+
+/-- Geometric cup/Gysin source kernels, compiled into the original GST
+correspondence/cut language at every basis direction, complete the SAME
+literal rational Hodge target defined at the start of this file. -/
+theorem classicalHodgeTarget_of_CupGysin_GST_geometry
+    {K : Type*} [Field K] [Algebra ℚ K]
+    {PCoh : Nat → Type*}
+    [∀ n, AddCommGroup (PCoh n)] [∀ n, Module ℚ (PCoh n)]
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (h :
+      ∀ q : Nat,
+      ∀ j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H q,
+        Nonempty
+          (GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler.CupGysinGSTSheetProgram
+            (K := K) (PCoh := PCoh) G q j)) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler.exact_stage2G_of_cupGysin_GST_sheet_packets
+    G h
 
 /-! ## Index-polymorphic limitless realization -/
 
