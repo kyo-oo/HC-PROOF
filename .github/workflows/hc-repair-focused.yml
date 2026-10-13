@@ -13,6 +13,7 @@ on:
       - 'GSTClassicalHodgeGhostIndexedCriterionCircularity.lean'
       - 'GSTClassicalHodgeGeometryFirstNativeWord.lean'
       - 'GSTClassicalHodgeGeneralSpaceOperatorCosmos.lean'
+      - 'GSTClassicalHodgeGeneralSpaceExactOperatorFinale.lean'
       - 'GSTClassicalHodgeLimitlessCosmicNoEscape.lean'
       - 'GSTClassicalHodgeLiveSupportCorrespondenceSpectralCrown.lean'
       - '.github/workflows/hc-repair-focused.yml'
@@ -65,6 +66,7 @@ jobs:
           import GSTClassicalHodgeGhostIndexedCriterionCircularity
           import GSTClassicalHodgeGeometryFirstNativeWord
           import GSTClassicalHodgeGeneralSpaceOperatorCosmos
+          import GSTClassicalHodgeGeneralSpaceExactOperatorFinale
           import GSTClassicalHodgeLimitlessCosmicNoEscape
           import GSTClassicalHodgeLiveSupportCorrespondenceSpectralCrown
           LEAN
