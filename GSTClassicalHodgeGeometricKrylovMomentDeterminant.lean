@@ -1,5 +1,6 @@
 import GSTClassicalHodgeRealizedCorrespondenceKrylovFinale
 import GSTClassicalHodgeGeometricPeriodDeterminant
+import GSTClassicalHodgeProjectiveDegreeTrace
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
@@ -168,6 +169,70 @@ theorem full_hodge_of_universal_Krylov_Hankel_geometry
   obtain ⟨C, trace, hDet⟩ := h q
   exact native_cycle_of_nonzero_krylov_hankel_determinant
     C trace hDet ⟨alpha, halpha⟩
+
+/-! ## Genuine projective-degree specialization
+
+Use the already developed GSTProjectiveDegreeTraceSemantics, whose
+point-cycle trace is the strictly positive projective degree. The
+moments are now scalar projective degrees of actual native
+correspondence iterates, not arbitrarily chosen dual functionals. -/
+
+/-- The true projective-degree functional restricted to the rational
+Hodge fiber in weight p. No new cohomological functional is assumed. -/
+noncomputable def projectiveDegreeHodgeTrace
+    (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H) :
+    ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ :=
+  (D.trace p).comp
+    (rationalHodgeSubspace (H.hodgeBigrading p)).subtype
+
+/-- Hankel matrix of actual projective-degree moments of ONE genuinely
+realized closed correspondence acting on ONE genuine native cycle. -/
+noncomputable def projectiveDegreeKrylovHankel
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
+    (C : RealizedCorrespondenceKrylovCertificate V H p) :
+    Matrix
+      (Fin (KrylovRank (V := V) (H := H) (p := p)))
+      (Fin (KrylovRank (V := V) (H := H) (p := p))) ℚ :=
+  krylovHankelMatrix C (projectiveDegreeHodgeTrace D)
+
+/-- The determinant of the geometric projective-degree Hankel matrix
+is a sufficient NUMERICAL PROOF CERTIFICATE for every rational (p,p)
+Hodge class to possess an explicitly constructed native algebraic cycle. -/
+theorem native_cycle_of_projective_degree_krylov_det
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
+    (C : RealizedCorrespondenceKrylovCertificate V H p)
+    (hDet : (projectiveDegreeKrylovHankel D C).det ≠ 0)
+    (alpha : ClassicalHodgeFiber V H p) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha.1 :=
+  native_cycle_of_nonzero_krylov_hankel_determinant
+    C (projectiveDegreeHodgeTrace D) hDet alpha
+
+/-- Universal Hodge-level target with ONE ordinary projective-degree
+trace, rather than an arbitrarily chosen functional per weight. -/
+def UniversalProjectiveDegreeKrylovNondegeneracy
+    (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H) : Prop :=
+  ∀ q : Nat,
+    letI : FiniteDimensional ℚ (ClassicalHodgeFiber V H q) := F.finite q
+    ∃ C : RealizedCorrespondenceKrylovCertificate V H q,
+      (projectiveDegreeKrylovHankel (p := q) D C).det ≠ 0
+
+/-- Full rational Hodge from genuine scalar projective-degree
+measurements of actual closed-correspondence iterates, in every
+weight on an arbitrary smooth projective complex variety. -/
+theorem full_hodge_of_projective_degree_Krylov_nonvanishing
+    (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (h : UniversalProjectiveDegreeKrylovNondegeneracy D F) :
+    BigradedBettiHodgeStatement V H := by
+  intro q alpha halpha
+  letI : FiniteDimensional ℚ (ClassicalHodgeFiber V H q) := F.finite q
+  obtain ⟨C, hDet⟩ := h q
+  exact native_cycle_of_projective_degree_krylov_det
+    D C hDet ⟨alpha, halpha⟩
 
 #check krylovHankelMatrix
 #check native_cycle_of_nonzero_krylov_hankel_determinant
