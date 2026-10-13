@@ -230,12 +230,12 @@ theorem cycleEval_eq_nativeEval
     cycleEval C P =
       GSTClassicalHodgeNativeExecutablePlane.nativeEval P := by
   induction P <;>
-    simp [cycleEval, programPair,
+    simp_all [cycleEval, programPair,
       GSTClassicalHodgeNativeExecutablePlane.nativeEval,
       GradedCycleClassOperatorPair.idPair,
       GradedCycleClassOperatorPair.addPair,
       GradedCycleClassOperatorPair.smulPair,
-      GradedCycleClassOperatorPair.compPair, *]
+      GradedCycleClassOperatorPair.compPair]
 
 /-- Minimal-core cohomological plane completeness therefore compiles to the
 unique native-only terminal plane. -/
@@ -248,15 +248,14 @@ theorem nativeExecutablePlane_of_fullGSTPlane
   obtain ⟨P,hP⟩ := hplane q j
   refine ⟨P, ?_⟩
   have hnat := cycleClass_cycleEval C P
-    (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-      .codimensionZeroFundamentalCycle V)
+    (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)
   have hcycle := congrArg
     (fun A : codimensionCycles V.X 0 →ₗ[ℚ] codimensionCycles V.X q =>
-      A (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-        .codimensionZeroFundamentalCycle V))
+      A (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V))
     (cycleEval_eq_nativeEval C P)
   change H.cycleClass q
-      (GSTClassicalHodgeNativeExecutablePlane.nativeOutput P) =
+      (GSTClassicalHodgeNativeExecutablePlane.nativeEval P
+        (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)) =
         (classicalHodgeBasis V H q j).1
   rw [← hcycle]
   exact hnat.trans hP
@@ -278,9 +277,9 @@ theorem hodge_of_fullGSTPlane
     AddSubmonoidClass.coe_finsetSum]
   simp only [Submodule.coe_smul_of_tower, smul_eq_mul]
   exact Submodule.sum_mem _ fun j _ =>
-    (rationalHodgeSubspace (H.hodgeBigrading q)).smul_mem
+    (LinearMap.range (H.cycleClass q)).smul_mem
       ((classicalHodgeBasis V H q).repr alphaH j)
-      (classicalHodgeBasis V H q j).2
+      ⟨basisCycle C hplane q j, basisCycle_spec C hplane q j⟩
 
 /-- Explicit native-cycle witness under the reduced geometric plane. -/
 theorem nativeCycle_of_fullGSTPlane

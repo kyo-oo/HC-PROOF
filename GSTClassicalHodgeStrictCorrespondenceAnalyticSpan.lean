@@ -222,8 +222,8 @@ structure IntrinsicBettiSpan
     (K : SchemeBiFiniteClosedCorrespondence V)
     (n : Nat) where
   carrier : Type := CarrierCohomology A K n
-  addCommGroup : AddCommGroup carrier
-  moduleQ : Module ℚ carrier
+  [addCommGroup : AddCommGroup carrier]
+  [moduleQ : Module ℚ carrier]
   left : RationalSingularCohomology A n →ₗ[ℚ] carrier
   right : RationalSingularCohomology A n →ₗ[ℚ] carrier
 

@@ -1,4 +1,6 @@
 import GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
+import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeGeometricCycleClassPointRigidity
 
 /-!
 # GST CLASSICAL HODGE — STRICT KERNEL RANGE STABILITY
@@ -33,6 +35,8 @@ open GSTClassicalHodgeAmbientIntersectionFromPrimitives
 open GSTClassicalHodgeSchemeFiniteCorrespondenceFirewall
 open GSTClassicalHodgeCycleClassIntersectionPrimitives
 open GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgeGeometricCycleClassPointRigidity
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -61,7 +65,7 @@ theorem kernelAction_range_stable
   rcases halpha with ⟨Z, rfl⟩
   refine ⟨K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
       |>.nativeOperator p Z, ?_⟩
-  exact (supplied_cycleClass_nativeOperator P K kappa pt hpoint I Z).symm
+  exact supplied_cycleClass_nativeOperator P K kappa pt hpoint I Z
 
 /-- The genuine factor-swapped transpose preserves the same algebraic range. -/
 theorem transposeKernelAction_range_stable
@@ -81,8 +85,8 @@ theorem transposeKernelAction_range_stable
   rcases halpha with ⟨Z, rfl⟩
   refine ⟨K.transpose.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
       |>.nativeOperator p Z, ?_⟩
-  exact (supplied_cycleClass_nativeOperator
-    P K.transpose kappa.transposeKernel pt hpoint It Z).symm
+  exact supplied_cycleClass_nativeOperator
+    P K.transpose kappa.transposeKernel pt hpoint It Z
 
 /-- Forward and genuine transpose stability in one theorem. -/
 theorem forward_transpose_range_stable

@@ -187,9 +187,7 @@ theorem UniformTensorIntertwiner.at
     (x : CodimensionPoint V.X p) :
     TensorIntertwinesAt T i j x := by
   rcases h with ⟨lam, hmass, hbasis⟩
-  unfold TensorIntertwinesAt
-  rw [hmass x]
-  exact hbasis
+  simpa only [TensorIntertwinesAt, hmass x] using hbasis
 
 /-- **ZERO-DEFECT ORBIT STEP.**
 A uniform genuine projective/GST tensor generator propagates every zero-defect

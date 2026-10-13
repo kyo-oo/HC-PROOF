@@ -1,4 +1,5 @@
 import GSTClassicalHodgeCanonicalIncidenceKernelReduction
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — CANONICAL POINT INCIDENCE TRANSFER
@@ -39,6 +40,7 @@ open GSTClassicalHodgeGeometricCycleClassPointRigidity
 open GSTClassicalHodgeCycleClassIntersectionPrimitives
 open GSTClassicalHodgeStrictCorrespondenceTransferFromPrimitives
 open GSTClassicalHodgeCanonicalIncidenceKernelReduction
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -94,13 +96,42 @@ theorem suppliedPointDirectIncidenceLaw_iff
       (V := V) (H := H) (d := d) (p := p) P K κ ↔
     (∀ x : CodimensionPoint V.X p,
       P.gysinTheory.sndGysin (2 * p)
-        (P.cupTheory.cup (2 * d) (2 * p) κ.class
+        (P.cupTheory.cup (2 * d) (2 * p) κ.kernelClass
           (fstCohomologyPullback H.analytification (2 * p)
             (H.cycleClass p (codimensionPointCycle V.X p x)))) =
         H.cycleClass p
           (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
             |>.nativePointImage p x)) := by
-  rfl
+  have hclass : H.cycleClass p =
+      cycleClassFromPointGeometry (V := V) p H.analytification
+        (suppliedPointBettiClass (V := V) (H := H) (p := p)) :=
+    suppliedCycleClass_eq_from_own_points
+  constructor
+  · intro h x
+    have hx := h x
+    have hpt : suppliedPointBettiClass (V := V) (H := H) (p := p) x =
+        H.cycleClass p (codimensionPointCycle V.X p x) := rfl
+    have hgeo : GSTClassicalHodgeCanonicalIncidenceKernelReduction.GeometricCycleClass (V := V) (H := H) (p := p)
+        (suppliedPointBettiClass (V := V) (H := H) (p := p))
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) =
+      H.cycleClass p
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) := by rw [hclass]
+    rw [hpt, hgeo] at hx
+    exact hx
+  · intro h x
+    have hpt : suppliedPointBettiClass (V := V) (H := H) (p := p) x =
+        H.cycleClass p (codimensionPointCycle V.X p x) := rfl
+    have hgeo : GSTClassicalHodgeCanonicalIncidenceKernelReduction.GeometricCycleClass (V := V) (H := H) (p := p)
+        (suppliedPointBettiClass (V := V) (H := H) (p := p))
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) =
+      H.cycleClass p
+        (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
+          |>.nativePointImage p x) := by rw [hclass]
+    rw [hpt, hgeo]
+    exact h x
 
 /-- The canonical direct law manufactures the complete old incidence packet
 without a point-class parameter or point-identification premise. -/

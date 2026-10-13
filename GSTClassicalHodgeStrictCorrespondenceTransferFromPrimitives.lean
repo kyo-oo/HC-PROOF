@@ -1,5 +1,6 @@
 import GSTClassicalHodgeCycleClassIntersectionPrimitives
 import GSTClassicalHodgeAmbientCorrespondenceIncidenceNaturality
+import GSTNativeCodimensionCyclePresentation
 
 /-!
 # GST CLASSICAL HODGE — STRICT TRANSFER FROM LOW-LEVEL PRIMITIVES
@@ -43,6 +44,7 @@ open GSTClassicalHodgeFiniteClosedCorrespondenceOperator
 open GSTClassicalHodgeGeometricCycleClassPointRigidity
 open GSTClassicalHodgeCycleClassIntersectionPrimitives
 open GSTClassicalHodgeAmbientCorrespondenceIncidenceNaturality
+open GSTNativeCodimensionCyclePresentation
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}

@@ -67,15 +67,11 @@ theorem transposeGraphCarrierPoint_pair
         (transposeGraphCarrierPoint f hf x) =
       (A.pointsEquiv (ComplexSchemeEndomorphism.complexPointMap f x),
         A.pointsEquiv x) := by
-  ext
-  · apply A.pointsEquiv.injective
-    apply Subtype.ext
-    simp [carrierPointPair, leftComplexPoint, transposeGraphCarrierPoint,
+  apply Prod.ext
+  · simp [carrierPointPair, leftComplexPoint, transposeGraphCarrierPoint,
       strictGraph_transpose_left,
       ComplexSchemeEndomorphism.complexPointMap]
-  · apply A.pointsEquiv.injective
-    apply Subtype.ext
-    simp [carrierPointPair, rightComplexPoint, transposeGraphCarrierPoint,
+  · simp [carrierPointPair, rightComplexPoint, transposeGraphCarrierPoint,
       strictGraph_transpose_right]
 
 /-- Canonical section of the analytic right projection of a transposed finite
@@ -95,7 +91,7 @@ noncomputable def transposeGraphAnalyticSection
   refine ConcreteCategory.ofHom (C := TopCat)
     ⟨s, ?_⟩
   apply continuous_induced_rng.2
-  exact F.continuous_toFun.prod_mk continuous_id
+  exact F.continuous_toFun.prodMk continuous_id
 
 /-- The right projection followed after the canonical graph section is
 literally identity. -/
@@ -127,7 +123,9 @@ noncomputable def transposeGraphSectionCochainPullback
   let D :=
     ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (D.map (transposeGraphSectionChainMap A F hf)).unop
+  unfold carrierSingularCochains rationalSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op (D.map (transposeGraphSectionChainMap A F hf)))
 
 /-- The section-induced map on carrier cohomology. -/
 noncomputable def transposeGraphSectionCohomologyPullback
@@ -146,8 +144,10 @@ theorem transposeGraphSectionChainMap_right
     transposeGraphSectionChainMap A F hf ≫
       rightChainMap A ((strictGraph F.algebraic hf).transpose) =
         𝟙 (rationalSingularChains A) := by
-  simp [transposeGraphSectionChainMap, rightChainMap,
-    transposeGraphAnalyticSection_right]
+  let C := (singularChainComplexFunctor (ModuleCat ℚ)).obj rationalCoefficient
+  change C.map (transposeGraphAnalyticSection A F hf) ≫
+    C.map (analyticRight A ((strictGraph F.algebraic hf).transpose)) = 𝟙 _
+  rw [← C.map_comp, transposeGraphAnalyticSection_right, C.map_id]
 
 /-- Contravariance turns the preceding retraction into a cochain retraction. -/
 theorem rightCochainPullback_transposeGraphSection
@@ -234,7 +234,6 @@ theorem transposeGraphCarrierPoint_on_graph
   change A.pointsEquiv (leftComplexPoint ((strictGraph f hf).transpose) z) = _
   simp only [transportedPointMap, carrierPointPair, Equiv.symm_apply_apply]
   apply A.pointsEquiv.injective
-  apply Subtype.ext
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
     strictGraph_transpose_left, strictGraph_transpose_right]

@@ -59,6 +59,7 @@ noncomputable def ofRightSection
     (1 : ℚ) • 𝟙 (rationalSingularChains A)
   rw [← F.map_comp, hs, F.map_id]
   simp
+  rfl
 
 /-- Dualizing the chain transfer reverses its arrow and produces the covariant
 cochain trace required for push-pull. -/
@@ -68,7 +69,9 @@ noncomputable def cochainTrace
   let F :=
     ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  exact (F.map T.transfer).unop
+  unfold carrierSingularCochains rationalSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op (F.map T.transfer))
 
 noncomputable def cohomologyTraceObj
     (T : RightFiniteChainTransfer A K)
@@ -80,14 +83,14 @@ noncomputable def cohomologyTrace
     (T : RightFiniteChainTransfer A K)
     (n : Nat) :
     CarrierCohomology A K n →ₗ[ℚ] RationalSingularCohomology A n :=
-  (T.cohomologyTraceObj n).hom
+  (T.cohomologyTraceObj A K n).hom
 
 /-- **CHAIN TRANSFER DESCENT.** The finite-degree chain identity descends
 through linear-Yoneda duality and cohomology. -/
 theorem cohomologyTrace_rightPullback
     (T : RightFiniteChainTransfer A K)
     (n : Nat) :
-    (T.cohomologyTrace n).comp (rightCohomologyPullback A K n) =
+    (T.cohomologyTrace A K n).comp (rightCohomologyPullback A K n) =
       T.degree • LinearMap.id := by
   ext alpha
   simp [cohomologyTrace, cohomologyTraceObj, cochainTrace,
@@ -99,17 +102,17 @@ whole-cohomology push-pull theorem. -/
 noncomputable def toRightFiniteBettiTrace
     (T : RightFiniteChainTransfer A K)
     (n : Nat) : RightFiniteBettiTrace A K n where
-  trace := T.cohomologyTrace n
+  trace := T.cohomologyTrace A K n
   degree := T.degree
   degree_ne_zero := T.degree_ne_zero
-  trace_rightPullback := T.cohomologyTrace_rightPullback n
+  trace_rightPullback := T.cohomologyTrace_rightPullback A K n
 
 /-- Canonical action on the entire rational singular cohomology carrier. -/
 noncomputable def pushPull
     (T : RightFiniteChainTransfer A K)
     (n : Nat) :
     RationalSingularCohomology A n →ₗ[ℚ] RationalSingularCohomology A n :=
-  (T.toRightFiniteBettiTrace n).pushPull
+  (T.toRightFiniteBettiTrace A K n).pushPull
 
 end RightFiniteChainTransfer
 
@@ -123,7 +126,7 @@ noncomputable def strictGraphCarrierPoint
   let cx := A.pointsEquiv.symm x
   refine ⟨cx.1, ?_⟩
   rw [strictGraph_left]
-  simpa using cx.2
+  simpa only [Category.comp_id] using cx.2
 
 /-- The intrinsic analytic point of the strict graph is exactly `(x,f(x))`. -/
 theorem strictGraph_carrierPointPair
@@ -175,7 +178,7 @@ noncomputable def strictGraphTransposeRightSection
         strictGraphTranspose_carrierPointPair A f.algebraic hf x⟩⟩),
     by
       exact Continuous.subtype_mk
-        (f.continuous_toFun.prod_mk continuous_id) _⟩
+        (f.continuous_toFun.prodMk continuous_id) _⟩
 
 /-- The graph section is a literal right inverse. -/
 @[simp]
@@ -206,7 +209,8 @@ noncomputable def strictGraphTransposeBettiTrace
     (hf : IsFinite f.algebraic.hom)
     (n : Nat) :
     RightFiniteBettiTrace A (strictGraph f.algebraic hf).transpose n :=
-  (strictGraphTransposeChainTransfer A f hf).toRightFiniteBettiTrace n
+  (strictGraphTransposeChainTransfer A f hf).toRightFiniteBettiTrace
+    A (strictGraph f.algebraic hf).transpose n
 
 /-- Chain-transfer package for both the strict correspondence and its actual
 algebraic transpose. -/
@@ -218,18 +222,18 @@ namespace BiFiniteChainTransfer
 
 noncomputable def forwardAction
     (T : BiFiniteChainTransfer A K) (n : Nat) :=
-  T.forward.pushPull n
+  T.forward.pushPull A K n
 
 noncomputable def transposeAction
     (T : BiFiniteChainTransfer A K) (n : Nat) :=
-  T.transpose.pushPull n
+  T.transpose.pushPull A K.transpose n
 
 /-- Forget to the cohomological finite-trace package at one degree. -/
 noncomputable def toBiFiniteBettiTrace
     (T : BiFiniteChainTransfer A K) (n : Nat) :
     BiFiniteBettiTrace A K n where
-  forward := T.forward.toRightFiniteBettiTrace n
-  transpose := T.transpose.toRightFiniteBettiTrace n
+  forward := T.forward.toRightFiniteBettiTrace A K n
+  transpose := T.transpose.toRightFiniteBettiTrace A K.transpose n
 
 end BiFiniteChainTransfer
 
