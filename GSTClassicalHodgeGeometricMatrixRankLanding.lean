@@ -101,8 +101,8 @@ theorem geometric_matrix_right_inverse_reconstructs
         simp only [coeff, Matrix.mulVec_mulVec]
       _ = target := by simpa [M, hInv]
   calc
-    (b.repr (∑ j : Fin n, (B.mulVec target) j • z j)) i =
-      ∑ j : Fin n, (B.mulVec target) j * (b.repr (z j)) i := by
+    (b.repr (∑ j : ι, (B.mulVec target) j • z j)) i =
+      ∑ j : ι, (B.mulVec target) j * (b.repr (z j)) i := by
         simp [map_sum, map_smul, Finsupp.sum_apply, smul_eq_mul]
     _ = M.mulVec coeff i := by
       simp [M, coeff, geometricCoordinateMatrix, Matrix.mulVec,
