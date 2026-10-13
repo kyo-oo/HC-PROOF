@@ -14,6 +14,8 @@ on:
       - 'GSTClassicalHodgeStrictCorrespondenceChainTransfer.lean'
       - 'GSTClassicalHodgeStrictGraphBettiTrace.lean'
       - 'GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.lean'
+      - 'GSTClassicalHodgeClosedCorrespondenceCosmicRealization.lean'
+      - 'GSTClassicalHodgeIncidenceRealizationEquivalence.lean'
   workflow_dispatch:
 
 permissions:
@@ -58,7 +60,7 @@ jobs:
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
-      - name: Compile five priority roots in one shared Lake build
+      - name: Compile seven integration-critical roots in one Lake build
         shell: bash
         run: |
           set -euo pipefail
@@ -69,6 +71,8 @@ jobs:
             GSTClassicalHodgeStrictCorrespondenceChainTransfer \
             GSTClassicalHodgeStrictGraphBettiTrace \
             GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion \
+            GSTClassicalHodgeClosedCorrespondenceCosmicRealization \
+            GSTClassicalHodgeIncidenceRealizationEquivalence \
             2>&1 | tee hc-priority-five-roots.log
       # Reuse dependencies even when one of the five proof roots fails.
       - name: Save incremental priority root products
