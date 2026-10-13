@@ -44,6 +44,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeCanonicalSpectralObservable
 open GSTClassicalHodgeFiniteSupportArsenalConjugation
+open GSTClassicalHodgeLocalCyclicCriterion
 open GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier
 open GSTClassicalHodgeGeometricCycleClassSpine
 
@@ -116,27 +117,24 @@ theorem reconstructedCycle_spec
   unfold reconstructedCycle
   rw [map_sum]
   simp_rw [LinearMap.map_smul, C.liveBasisCycle_spec]
-  -- Reindex the canonical support expansion through `liveEquivFin`.
-  rw [show alpha =
-      ∑ r : Fin (liveRank alpha),
+  calc
+    (∑ r : Fin (liveRank alpha),
         (liveCoordinateVector alpha r) •
-          classicalHodgeBasis V H p (liveBasisIndex alpha r) by
-    classical
-    rw [show alpha =
-        ∑ i ∈ ((classicalHodgeBasis V H p).repr alpha).support,
-          ((classicalHodgeBasis V H p).repr alpha i) •
-            classicalHodgeBasis V H p i by
-      exact (classicalHodgeBasis V H p).sum_repr alpha]
-    exact Fintype.sum_equiv
-      (liveEquivFin alpha).symm
-      (fun r : Fin (liveRank alpha) =>
-        (liveCoordinateVector alpha r) •
-          classicalHodgeBasis V H p (liveBasisIndex alpha r))
-      (fun i : HodgeSupportIndex alpha =>
-        ((classicalHodgeBasis V H p).repr alpha i.1) •
-          classicalHodgeBasis V H p i.1)
-      (fun r => by simp [liveCoordinateVector, liveBasisIndex])]
-  rfl
+          (classicalHodgeBasis V H p (liveBasisIndex alpha r)).1)
+        = ∑ i : HodgeSupportIndex alpha,
+          ((classicalHodgeBasis V H p).repr alpha i.1) •
+            (classicalHodgeBasis V H p i.1).1 := by
+              classical
+              exact Fintype.sum_equiv
+                (liveEquivFin alpha).symm
+                (fun r : Fin (liveRank alpha) =>
+                  (liveCoordinateVector alpha r) •
+                    (classicalHodgeBasis V H p (liveBasisIndex alpha r)).1)
+                (fun i : HodgeSupportIndex alpha =>
+                  ((classicalHodgeBasis V H p).repr alpha i.1) •
+                    (classicalHodgeBasis V H p i.1).1)
+                (fun r => by simp [liveCoordinateVector, liveBasisIndex])
+    _ = alpha.1 := (hodgeClass_eq_support_sum alpha).symm
 
 /-- Constructive native-cycle witness for the requested Hodge class. -/
 theorem exists_native_cycle
