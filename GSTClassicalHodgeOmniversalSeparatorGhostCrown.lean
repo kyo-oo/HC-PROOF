@@ -104,7 +104,7 @@ theorem not_hodge_iff_nonempty_omniversalSeparatorGhost
   · intro hnot
     rw [not_bigradedBettiHodgeStatement_iff_exists_basis_separator V H] at hnot
     rcases hnot with ⟨p,i,⟨S⟩⟩
-    exact ⟨S.toOmniversalGhost G⟩
+    exact ⟨BasisAtomicSeparator.toOmniversalGhost G S⟩
   · rintro ⟨E⟩ hHodge
     have hnone :=
       (bigradedBettiHodgeStatement_iff_no_basis_separator V H).mp
@@ -215,7 +215,8 @@ theorem nativeOrbitPairingTotal_of_gradedGeometricOrbitModuleCyclic
         (classicalHodgeBasis V H q i).1 ∈
           GSTClassicalHodgeGradedGeometricOrbitAlgebra.geometricProgramOrbitModule G q := by
       exact hcyclic q (classicalHodgeBasis V H q i).2
-    change GSTClassicalHodgeGradedGeometricProgramOrbit.geometricProgramOrbitSet G q at hbasisMem
+    change (classicalHodgeBasis V H q i).1 ∈
+      GSTClassicalHodgeGradedGeometricProgramOrbit.geometricProgramOrbitSet G q at hbasisMem
     rcases hbasisMem with ⟨P, hP⟩
     have hsub :
         nativeProgramHodgeState G P =
@@ -228,28 +229,6 @@ theorem nativeOrbitPairingTotal_of_gradedGeometricOrbitModuleCyclic
       GSTClassicalHodgeAtomicDefectDuality.fiberedPairing_single_left] at hpair
     exact hpair
   · exact hsupp ⟨r, i⟩ hrq
-
-/-- Cyclicity of the actual verified geometric-program orbit therefore kills
-every omniversal separator ghost without any target-indexed correspondence
-packet. -/
-theorem no_omniversalSeparatorGhost_of_gradedGeometricOrbitModuleCyclic
-    (G : GeometricCycleClassSpine V H)
-    (hcyclic :
-      GSTClassicalHodgeGradedGeometricOrbitAlgebra.GradedGeometricOrbitModuleCyclic G) :
-    IsEmpty (OmniversalSeparatorGhost G) :=
-  no_omniversalSeparatorGhost_of_nativeOrbitPairingTotal G
-    (nativeOrbitPairingTotal_of_gradedGeometricOrbitModuleCyclic G hcyclic)
-
-/-- **DIRECT NO-GHOST LANDING FROM THE VERIFIED PROGRAM ORBIT.**
-Once the native/projective/cut program orbit is cyclic, the limitless ghost
-contradiction closes the exact Stage-2G Hodge statement. -/
-theorem hodge_of_gradedGeometricOrbitModuleCyclic_noGhost
-    (G : GeometricCycleClassSpine V H)
-    (hcyclic :
-      GSTClassicalHodgeGradedGeometricOrbitAlgebra.GradedGeometricOrbitModuleCyclic G) :
-    BigradedBettiHodgeStatement V H :=
-  (hodge_iff_no_omniversalSeparatorGhost G).2
-    (no_omniversalSeparatorGhost_of_gradedGeometricOrbitModuleCyclic G hcyclic)
 
 /-- The canonical probe attached to an omniversal separator is genuinely
 supported on the separator's single Hodge weight. -/
@@ -275,8 +254,11 @@ theorem omniversalSeparatorProbe_kills_nativeProgramAddress
         (nativeProgramFiberedAddress G P)
         (separatorFiberedProbe
           (V := V) (H := H) E.weight E.separator.detector) = 0 := by
+  change fiberedPairing
+      (fiberedWeightCoordinates V H E.weight (nativeProgramHodgeState G P))
+      (separatorFiberedProbe (V := V) (H := H) E.weight E.separator.detector) = 0
   rw [fiberedPairing_separatorProbe]
-  simpa [nativeProgramFiberedAddress, nativeProgramHodgeState] using
+  simpa [nativeProgramHodgeState] using
     omniversalGhost_kills_origin_orbit E P
 
 /-- **PAIRING TOTALITY KILLS EVERY OMNIVERSAL GHOST.**
@@ -305,6 +287,28 @@ theorem no_omniversalSeparatorGhost_of_nativeOrbitPairingTotal
   have hgne : g ≠ 0 := by
     simpa [g] using basisSeparator_ghost_ne_zero E.separator
   exact hgne hg0
+
+/-- Cyclicity of the actual verified geometric-program orbit therefore kills
+every omniversal separator ghost without any target-indexed correspondence
+packet. -/
+theorem no_omniversalSeparatorGhost_of_gradedGeometricOrbitModuleCyclic
+    (G : GeometricCycleClassSpine V H)
+    (hcyclic :
+      GSTClassicalHodgeGradedGeometricOrbitAlgebra.GradedGeometricOrbitModuleCyclic G) :
+    IsEmpty (OmniversalSeparatorGhost G) :=
+  no_omniversalSeparatorGhost_of_nativeOrbitPairingTotal G
+    (nativeOrbitPairingTotal_of_gradedGeometricOrbitModuleCyclic G hcyclic)
+
+/-- **DIRECT NO-GHOST LANDING FROM THE VERIFIED PROGRAM ORBIT.**
+Once the native/projective/cut program orbit is cyclic, the limitless ghost
+contradiction closes the exact Stage-2G Hodge statement. -/
+theorem hodge_of_gradedGeometricOrbitModuleCyclic_noGhost
+    (G : GeometricCycleClassSpine V H)
+    (hcyclic :
+      GSTClassicalHodgeGradedGeometricOrbitAlgebra.GradedGeometricOrbitModuleCyclic G) :
+    BigradedBettiHodgeStatement V H :=
+  (hodge_iff_no_omniversalSeparatorGhost G).2
+    (no_omniversalSeparatorGhost_of_gradedGeometricOrbitModuleCyclic G hcyclic)
 
 /-- **LIMITLESS NATIVE-ORBIT NO-GHOST FINALE.**
 Once the verified native orbit is pairing-total in the unrestricted fibered

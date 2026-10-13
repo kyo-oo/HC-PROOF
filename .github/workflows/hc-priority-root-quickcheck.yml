@@ -1,0 +1,69 @@
+name: HC Priority Lean Root QuickCheck
+
+on:
+  push:
+    branches:
+      - clean/upgraded-advanced-only-20261009
+      - clean/advanced-gst-hodge-20261009
+      - sol/gst-plane-completeness-8408fd0
+      - sol/hodge-strict-betti-correspondence-fusion-20261003
+    paths:
+      - '.github/workflows/hc-priority-root-quickcheck.yml'
+      - 'GSTClassicalHodgeOmniversalSeparatorGhostCrown.lean'
+      - 'GSTClassicalHodgeCanonicalPointIncidenceTransfer.lean'
+      - 'GSTClassicalHodgeStrictCorrespondenceChainTransfer.lean'
+      - 'GSTClassicalHodgeStrictGraphBettiTrace.lean'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hc-priority-quickcheck-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-root:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        target:
+          - GSTClassicalHodgeOmniversalSeparatorGhostCrown
+          - GSTClassicalHodgeCanonicalPointIncidenceTransfer
+          - GSTClassicalHodgeStrictCorrespondenceChainTransfer
+          - GSTClassicalHodgeStrictGraphBettiTrace
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install pinned Lean toolchain and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Restore project build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+          restore-keys: |
+            hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+      - name: Compile focused proof root
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build "$TARGET" 2>&1 | tee "$TARGET.log"
+      - name: Upload focused Lean diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}-lean-diagnostics
+          path: '*.log'
+          if-no-files-found: warn
