@@ -16,6 +16,7 @@ on:
       - 'GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.lean'
       - 'GSTClassicalHodgeClosedCorrespondenceCosmicRealization.lean'
       - 'GSTClassicalHodgeIncidenceRealizationEquivalence.lean'
+      - 'HodgeConjectureWitnessKernelGeometry.lean'
   workflow_dispatch:
 
 permissions:
@@ -73,6 +74,7 @@ jobs:
             GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion \
             GSTClassicalHodgeClosedCorrespondenceCosmicRealization \
             GSTClassicalHodgeIncidenceRealizationEquivalence \
+            HodgeConjectureWitnessKernelGeometry \
             2>&1 | tee hc-priority-five-roots.log
       # Reuse dependencies even when one of the five proof roots fails.
       - name: Save incremental priority root products

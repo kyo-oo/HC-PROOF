@@ -409,6 +409,7 @@ roots = [
   "GSTClassicalHodgeStage2GCompactAssembly",
   "HCProofHodgeChannels",
   "HodgeConjectureBruteforceFinale",
+  "HodgeConjectureWitnessKernelGeometry",
   "GSTGraphV2OmniversalCore",
   "GSTGraphV2OmniversalHyperEvents",
   "GSTClassicalHodgeOmniversalClosure",
