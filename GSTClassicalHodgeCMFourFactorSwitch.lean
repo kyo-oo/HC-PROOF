@@ -165,6 +165,96 @@ theorem pairCharge_comm (a b : SignType I) :
   funext i
   simp [pairCharge, add_comm]
 
+/-! ## Exact reverse normal form
+
+The four-factor identity is not merely preserved BY our splice
+construction. Conversely, any balanced quadruple of sign functions is
+obtainable from the first pair by a coordinatewise splice. This is a
+useful combinatorial completeness theorem for the CM switch move.
+It does not assert algebraicity of the resulting tensor classes. -/
+
+/-- An arbitrary balanced four-factor sign quadruple already has the
+explicit splice normal form. No case of sign redistribution is missed. -/
+theorem fourFactorBalanced_has_splice_normal_form
+    (a b u v : SignType I)
+    (h : FourFactorBalanced a b u v) :
+    ∃ mask : I → Bool,
+      u = splice a b mask ∧
+      v = complementarySplice a b mask := by
+  let mask : I → Bool := fun i => decide (u i ≠ a i)
+  refine ⟨mask, ?_, ?_⟩
+  · funext i
+    have hi := h i
+    cases ha : a i <;> cases hb : b i <;>
+      cases hu : u i <;> cases hv : v i <;>
+      simp_all [mask, splice, complementarySplice,
+        pairCharge, signed] <;> omega
+  · funext i
+    have hi := h i
+    cases ha : a i <;> cases hb : b i <;>
+      cases hu : u i <;> cases hv : v i <;>
+      simp_all [mask, splice, complementarySplice,
+        pairCharge, signed] <;> omega
+
+/-- Complete characterization of four-factor balance by explicit
+coordinatewise switches rather than a one-way construction. -/
+theorem fourFactorBalanced_iff_splice_normal_form
+    (a b u v : SignType I) :
+    FourFactorBalanced a b u v ↔
+      ∃ mask : I → Bool,
+        u = splice a b mask ∧
+        v = complementarySplice a b mask := by
+  constructor
+  · exact fourFactorBalanced_has_splice_normal_form a b u v
+  · rintro ⟨mask, rfl, rfl⟩
+    exact splice_fourFactorBalanced a b mask
+
+/-- The canonical mask measuring disagreement of two odd CM assignments
+is conjugation-invariant; this gives a compatible CM switch. -/
+theorem disagreement_mask_conjugationInvariant
+    (conj : I → I)
+    (a u : SignType I)
+    (ha : IsOddCMType conj a)
+    (hu : IsOddCMType conj u) :
+    ConjugationInvariant conj (fun i => decide (u i ≠ a i)) := by
+  intro i
+  dsimp
+  rw [hu i, ha i]
+  cases u i <;> cases a i <;> rfl
+
+/-- Strong CM four-factor switch normal form: if both initial and
+terminal assignments satisfy CM conjugation, the canonical switch
+mask also preserves conjugate embeddings. -/
+theorem odd_fourFactorBalanced_has_conjugate_switch
+    (conj : I → I)
+    (a b u v : SignType I)
+    (ha : IsOddCMType conj a)
+    (hu : IsOddCMType conj u)
+    (h : FourFactorBalanced a b u v) :
+    ∃ mask : I → Bool,
+      ConjugationInvariant conj mask ∧
+      u = splice a b mask ∧
+      v = complementarySplice a b mask := by
+  let mask : I → Bool := fun i => decide (u i ≠ a i)
+  obtain ⟨_, hleft, hright⟩ :=
+    fourFactorBalanced_has_splice_normal_form a b u v h
+  -- The normal form is witnessed by this exact canonical disagreement mask.
+  have hc : ConjugationInvariant conj mask :=
+    disagreement_mask_conjugationInvariant conj a u ha hu
+  refine ⟨mask, hc, ?_, ?_⟩
+  · funext i
+    have hi := h i
+    cases ha' : a i <;> cases hb' : b i <;>
+      cases hu' : u i <;> cases hv' : v i <;>
+      simp_all [mask, splice, complementarySplice,
+        pairCharge, signed] <;> omega
+  · funext i
+    have hi := h i
+    cases ha' : a i <;> cases hb' : b i <;>
+      cases hu' : u i <;> cases hv' : v i <;>
+      simp_all [mask, splice, complementarySplice,
+        pairCharge, signed] <;> omega
+
 #check CM_fourFactor_geometric_switch
 #check fourFactorBalanced_trans
 #print axioms CM_fourFactor_geometric_switch
