@@ -93,9 +93,26 @@ theorem cohomologyTrace_rightPullback
     (T.cohomologyTrace A K n).comp (rightCohomologyPullback A K n) =
       T.degree • LinearMap.id := by
   ext alpha
-  simp [cohomologyTrace, cohomologyTraceObj, cochainTrace,
-    rightCohomologyPullback, rightCohomologyPullbackObj,
-    rightCochainPullback, ← Functor.map_comp, T.transfer_right]
+  have hcochain : rightCochainPullback A K ≫
+      RightFiniteChainTransfer.cochainTrace A K T =
+      T.degree • 𝟙 (rationalSingularCochains A) := by
+    simp only [rightCochainPullback, RightFiniteChainTransfer.cochainTrace]
+    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+      ← CategoryTheory.Functor.map_comp, T.transfer_right]
+    simp
+  unfold RightFiniteChainTransfer.cohomologyTrace
+    RightFiniteChainTransfer.cohomologyTraceObj rightCohomologyPullback
+    rightCohomologyPullbackObj
+  have hcomp : (HomologicalComplex.homologyMap
+      (rightCochainPullback A K ≫
+        RightFiniteChainTransfer.cochainTrace A K T) n).hom =
+    (HomologicalComplex.homologyMap
+      (RightFiniteChainTransfer.cochainTrace A K T) n).hom.comp
+      (HomologicalComplex.homologyMap (rightCochainPullback A K) n).hom := by
+    rw [HomologicalComplex.homologyMap_comp]
+    rfl
+  rw [← hcomp, hcochain]
+  simp
 
 /-- Chain transfer manufactures the exact finite Betti trace consumed by the
 whole-cohomology push-pull theorem. -/
@@ -142,12 +159,14 @@ theorem strictGraph_carrierPointPair
         A.pointsEquiv.symm x := by
     apply Subtype.ext
     simp [leftComplexPoint, strictGraphCarrierPoint, strictGraph_left]
+    rw [Category.comp_id]
   have hright :
       rightComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x) =
         f.complexPointMap (A.pointsEquiv.symm x) := by
     apply Subtype.ext
     simp [rightComplexPoint, strictGraphCarrierPoint, strictGraph_right,
       ComplexSchemeEndomorphism.complexPointMap]
+    rfl
   apply Prod.ext
   · change A.pointsEquiv
       (leftComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x)) = x
