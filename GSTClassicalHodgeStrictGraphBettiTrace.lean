@@ -76,7 +76,7 @@ theorem transposeGraphCarrierPoint_pair
     apply Subtype.ext
     simp [rightComplexPoint, transposeGraphCarrierPoint,
       strictGraph_transpose_right]
-    rw [Category.comp_id]
+    exact Category.comp_id _
 
 /-- Canonical section of the analytic right projection of a transposed finite
 graph.  Continuity is exactly the morphism-level analytification law already
@@ -160,7 +160,7 @@ theorem rightCochainPullback_transposeGraphSection
     rightCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
       transposeGraphSectionCochainPullback A F hf =
         𝟙 (rationalSingularCochains A) := by
-  simp only [rightCochainPullback, transposeGraphSectionCochainPullback]
+  simp only [rightCochainPullback, transposeGraphSectionCochainPullback, id_eq]
   rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
     ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_right,
     CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
@@ -189,8 +189,8 @@ theorem transposeGraphSectionCohomologyPullback_right
         (rightCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  rw [← hcomp, hlinear, HomologicalComplex.homologyMap_id]
-  rfl
+  have happ := LinearMap.congr_fun (hcomp.symm.trans hlinear) alpha
+  simpa only [HomologicalComplex.homologyMap_id, LinearMap.id_apply] using happ
 
 /-- **DEGREE-ONE TRACE FROM STRICT GRAPH GEOMETRY.**
 The finite right trace of a transposed graph is no longer an input. -/
@@ -252,7 +252,7 @@ theorem transposeGraphCarrierPoint_on_graph
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
     strictGraph_transpose_left, strictGraph_transpose_right]
-  rw [Category.comp_id]
+  exact (congrArg (fun m => m ≫ f.hom) (Category.comp_id _)).symm
 
 /-- The previously constructed graph section is also a right inverse.
 Both inverse laws are now geometric theorems, with no carrier-coherence axiom. -/
@@ -304,7 +304,7 @@ theorem transposeGraphSectionCochainPullback_right
     transposeGraphSectionCochainPullback A F hf ≫
       rightCochainPullback A ((strictGraph F.algebraic hf).transpose) =
         𝟙 (carrierSingularCochains A ((strictGraph F.algebraic hf).transpose)) := by
-  simp only [transposeGraphSectionCochainPullback, rightCochainPullback]
+  simp only [transposeGraphSectionCochainPullback, rightCochainPullback, id_eq]
   rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
     ← CategoryTheory.Functor.map_comp, transposeGraphRightChainMap_section,
     CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
@@ -331,8 +331,8 @@ theorem transposeGraphRightCohomologyPullback_section
       (HomologicalComplex.homologyMap (transposeGraphSectionCochainPullback A F hf) n).hom := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  rw [← hcomp, hcochain, HomologicalComplex.homologyMap_id]
-  rfl
+  have happ := LinearMap.congr_fun (hcomp.symm.trans hlinear) omega
+  simpa only [HomologicalComplex.homologyMap_id, LinearMap.id_apply] using happ
 
 /-- **GEOMETRY PROVES ZERO CARRIER DEFECT.**
 There is no supplied residual-vanishing or transfer-totality hypothesis. -/
@@ -409,7 +409,7 @@ theorem leftCochainPullback_transposeGraphSection
     leftCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
       transposeGraphSectionCochainPullback A F hf = singularCochainPullback A F := by
   simp only [leftCochainPullback, transposeGraphSectionCochainPullback,
-    singularCochainPullback]
+    singularCochainPullback, id_eq]
   rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
     ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_left]
 
@@ -437,7 +437,9 @@ theorem transposedStrictGraph_pushPull_eq_nativePullback
         (leftCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  rw [← hcomp, hcochain]
+  have hlinear := congrArg ModuleCat.Hom.hom
+    (congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain)
+  exact LinearMap.congr_fun (hcomp.symm.trans hlinear) alpha
 
 /-- Every source has its exact, geometrically determined common-carrier
 target.  This statement does not identify that target with an arbitrary GST
