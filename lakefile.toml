@@ -414,6 +414,7 @@ roots = [
   "GSTClassicalHodgeClosedCorrespondenceFailurePacket",
   "GSTClassicalHodgeClosedCorrespondenceGhostExtinction",
   "GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier",
+  "GSTClassicalHodgeGhostIndexedCriterionCircularity",
   "GSTClassicalHodgeCycleClassIntersectionPrimitives",
   "GSTClassicalHodgeExactClayStatement",
   "GSTClassicalHodgeFiniteClosedCorrespondence",
