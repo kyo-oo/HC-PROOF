@@ -42,6 +42,7 @@ open GSTClassicalHodgeExactClayStatement
 open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeAtomicDefectDuality
+open GSTClassicalHodgeCodimensionZeroFundamentalCycle
 open GSTClassicalHodgeLimitlessSeparatorGhost
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 
@@ -80,7 +81,9 @@ theorem fullOrbitCyclic_of_plane
       ((classicalHodgeBasis V H q).repr alphaH).support.sum
         (fun j => ((classicalHodgeBasis V H q).repr alphaH j) •
           (classicalHodgeBasis V H q j).1) by
-    exact congrArg Subtype.val ((classicalHodgeBasis V H q).sum_repr alphaH)]
+    have hrepr := (classicalHodgeBasis V H q).linearCombination_repr alphaH
+    have hval := congrArg Subtype.val hrepr
+    simpa [Finsupp.linearCombination_apply, Finsupp.sum] using hval.symm]
   apply Submodule.sum_mem
   intro j hj
   exact (fullCorrespondenceOrbitModule G q).smul_mem
@@ -133,8 +136,7 @@ noncomputable def fullProgramHodgeState
   ⟨P.cohomologyEval G (correspondenceGeometricOriginClass V H), by
     have hrange :=
       P.cohomologyEval_mem_cycleClass_range G
-        (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-          .codimensionZeroFundamentalCycle V)
+        (codimensionZeroFundamentalCycle V)
     rcases hrange with ⟨Z, hZ⟩
     rw [← hZ]
     exact G.algebraic_is_hodge q Z⟩
@@ -174,8 +176,7 @@ theorem fullProgramFiberedAddress_eq_basis
       (⟨P.cohomologyEval G (correspondenceGeometricOriginClass V H), by
           have hrange :=
             P.cohomologyEval_mem_cycleClass_range G
-              (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-                .codimensionZeroFundamentalCycle V)
+              (codimensionZeroFundamentalCycle V)
           rcases hrange with ⟨Z, hZ⟩
           rw [← hZ]
           exact G.algebraic_is_hodge q Z⟩ :
@@ -283,11 +284,13 @@ theorem separatorProbe_kills_fullProgramAddress
       (fullProgramFiberedAddress G P)
       (separatorFiberedProbe
         (V := V) (H := H) E.weight E.separator.detector) = 0 := by
+  change fiberedPairing
+      (fiberedWeightCoordinates V H E.weight (fullProgramHodgeState G P))
+      (separatorFiberedProbe (V := V) (H := H) E.weight E.separator.detector) = 0
   rw [fiberedPairing_separatorProbe]
   have hrange :=
     P.cohomologyEval_mem_cycleClass_range G
-      (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-        .codimensionZeroFundamentalCycle V)
+      (codimensionZeroFundamentalCycle V)
   rw [smoothProjective_cycleClass_range_eq_atomic_span V H E.weight] at hrange
   have hker :
       pointCycleClassSpan E.weight (H.cycleClass E.weight) ≤
@@ -372,12 +375,10 @@ theorem nativeExecutablePlane_of_fullCorrespondencePlane
   refine ⟨P, ?_⟩
   have hnat :=
     P.cycleClass_cycleEval G
-      (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-        .codimensionZeroFundamentalCycle V)
+      (codimensionZeroFundamentalCycle V)
   have hcycle := congrArg
     (fun A : codimensionCycles V.X 0 →ₗ[ℚ] codimensionCycles V.X q =>
-      A (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-        .codimensionZeroFundamentalCycle V))
+      A (codimensionZeroFundamentalCycle V))
     (cycleEval_eq_nativeEval G P)
   change H.cycleClass q
       (GSTClassicalHodgeNativeExecutablePlane.nativeOutput P) =
@@ -407,18 +408,15 @@ theorem fullCorrespondencePlane_of_nativeExecutablePlane
   refine ⟨P, ?_⟩
   have hnat :=
     P.cycleClass_cycleEval G
-      (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-        .codimensionZeroFundamentalCycle V)
+      (codimensionZeroFundamentalCycle V)
   have hcycle := congrArg
     (fun A : codimensionCycles V.X 0 →ₗ[ℚ] codimensionCycles V.X q =>
-      A (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-        .codimensionZeroFundamentalCycle V))
+      A (codimensionZeroFundamentalCycle V))
     (cycleEval_eq_nativeEval G P)
   have hout :
       H.cycleClass q
         (P.cycleEval G
-          (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-            .codimensionZeroFundamentalCycle V)) =
+          (codimensionZeroFundamentalCycle V)) =
         (classicalHodgeBasis V H q j).1 := by
     rw [hcycle]
     exact hnative
@@ -572,7 +570,7 @@ noncomputable def basisCycle
     codimensionCycles V.X q :=
   let P := Classical.choose (hplane q j)
   P.cycleEval G
-    (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)
+    (codimensionZeroFundamentalCycle V)
 
 theorem basisCycle_spec
     (G : GeometricCycleClassSpine V H)
@@ -585,13 +583,12 @@ theorem basisCycle_spec
   have hP := Classical.choose_spec (hplane q j)
   have hnat :=
     P.cycleClass_cycleEval G
-      (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)
+      (codimensionZeroFundamentalCycle V)
   calc
     H.cycleClass q (basisCycle G hplane q j) =
         H.cycleClass q
           (P.cycleEval G
-            (GSTClassicalHodgeCodimensionZeroFundamentalCycle
-              .codimensionZeroFundamentalCycle V)) := by
+            (codimensionZeroFundamentalCycle V)) := by
           rfl
     _ = P.cohomologyEval G (correspondenceGeometricOriginClass V H) := by
           simpa [correspondenceGeometricOriginClass] using hnat
