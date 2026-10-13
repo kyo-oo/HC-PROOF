@@ -140,6 +140,66 @@ theorem one_basis_sheet_is_algebraic
 
 end CMGSTNativeSheetProgram
 
+/-! ## Finite-support, class-local constructive GST surface geometry
+
+The full Hodge conjecture quantifies over every rational Hodge state.
+For ONE fixed target state, its Hodge basis presentation has finite
+support. We need corresponding geometric source packets ONLY at those
+finitely many active basis slots, not on unrelated directions.
+This is the intended live-packet optimization in the original Pi
+and GST source-specific research lineage. -/
+
+/-- Construct ONE algebraic cycle for a Hodge class from explicit
+CM/Gale/Kuga-Satake source packets on precisely its finite live
+basis support, using the original GST full-correspondence programs.
+No global basis-packet or global Hodge-surjectivity premise is used. -/
+theorem native_cycle_of_finite_CM_GST_packet_support
+    (G : GeometricCycleClassSpine V H)
+    (q : Nat)
+    (alpha : ClassicalHodgeFiber V H q)
+    (hActive :
+      ∀ j : ClassicalHodgeBasisIndex V H q,
+        j ∈ ((classicalHodgeBasis V H q).repr alpha).support →
+        Nonempty (CMGSTNativeSheetProgram (K := K) G q j)) :
+    ∃ Z : codimensionCycles V.X q,
+      H.cycleClass q Z = alpha.1 := by
+  classical
+  let coeff := (classicalHodgeBasis V H q).repr alpha
+  let cycleFor (j : ClassicalHodgeBasisIndex V H q) :
+      codimensionCycles V.X q :=
+    if hj : j ∈ coeff.support then
+      (Classical.choice (hActive j hj)).nativeBasisCycle
+    else 0
+  have cycleFor_spec (j : ClassicalHodgeBasisIndex V H q)
+      (hj : j ∈ coeff.support) :
+      H.cycleClass q (cycleFor j) =
+        (classicalHodgeBasis V H q j).1 := by
+    simp only [cycleFor, dif_pos hj]
+    exact (Classical.choice (hActive j hj)).nativeBasisCycle_spec
+  let Z : codimensionCycles V.X q :=
+    ∑ j ∈ coeff.support, coeff j • cycleFor j
+  refine ⟨Z, ?_⟩
+  have hexp :
+      (alpha : RationalSingularCohomology H.analytification (2 * q)) =
+        ∑ j ∈ coeff.support,
+          coeff j • ((classicalHodgeBasis V H q j).1 :
+            RationalSingularCohomology H.analytification (2 * q)) := by
+    have h := ((classicalHodgeBasis V H q).linearCombination_repr alpha).symm
+    rw [Finsupp.linearCombination_apply] at h
+    conv_lhs => rw [h]
+    simp [coeff, Finsupp.sum, Submodule.coe_sum, Submodule.coe_smul_of_tower]
+  calc
+    H.cycleClass q Z =
+        ∑ j ∈ coeff.support, coeff j • H.cycleClass q (cycleFor j) := by
+          simp [Z, map_sum, map_smul]
+    _ = ∑ j ∈ coeff.support,
+          coeff j • ((classicalHodgeBasis V H q j).1 :
+            RationalSingularCohomology H.analytification (2 * q)) := by
+          apply Finset.sum_congr rfl
+          intro j hj
+          rw [cycleFor_spec j hj]
+    _ = alpha.1 := hexp.symm
+
 /-- Geometry packet supply is a statement about ACTUAL finite source
 incidence plus ACTUAL existing GST programs, not arbitrary Betti lifts. -/
 def CMGSTNativeBasisProgramSupply
