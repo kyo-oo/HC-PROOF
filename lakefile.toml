@@ -295,6 +295,8 @@ roots = [
   "GSTClassicalHodgeCrossCarrierGSTProgramFusion",
   "GSTClassicalHodgeOpenAIGeometricPeriodCertificates",
   "GSTClassicalHodgeOpenAIGeometryNoncircularityAudit",
+  "GSTClassicalHodgeCrossCarrierPointIncidence",
+  "GSTClassicalHodgeExactKugaSatakeCliffordAction",
   "GSTClassicalHodgeGeometryFirstNativeWord",
   "GSTClassicalHodgeNativeWordFromArbitrarySeed",
   "GSTClassicalHodgeStage2GSemanticRigidity",
