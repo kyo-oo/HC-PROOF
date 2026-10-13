@@ -64,7 +64,7 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake build HodgePureMath 2>&1 | tee hodge-complete-math.log
-      - name: Trust audit: reject sorry/sorryAx receipts
+      - name: 'Trust audit - reject sorry/sorryAx receipts'
         if: always()
         shell: bash
         run: |
@@ -150,7 +150,7 @@ jobs:
             GSTClassicalHodgeNativeMassBridgeAudit \
             GSTClassicalHodgeNativePointSeedSaturation \
             GSTClassicalHodgeGeometryFirstGlobalPropagation 2>&1 | tee hodge-integration-frontier.log
-      - name: Trust audit: reject sorry/sorryAx receipts
+      - name: 'Trust audit - reject sorry/sorryAx receipts'
         if: always()
         shell: bash
         run: |
