@@ -21,6 +21,7 @@ import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
 import GSTClassicalHodgeNativeExecutablePlane
 import GSTClassicalHodgeCMGSTNativeBasisCompiler
 import GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler
+import GSTClassicalHodgeGeometricMatrixRankLanding
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -244,6 +245,41 @@ theorem classicalHodgeTarget_of_CupGysin_GST_geometry
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler.exact_stage2G_of_cupGysin_GST_sheet_packets
     G h
+
+/-! ## Full conjecture via GST geometric determinant generation
+
+This is the main numerical geometric attack. Construct in every Hodge
+weight as many ACTUAL GST native correspondence programs as the rational
+Hodge dimension, and prove that the RATIONAL Hodge-coordinate matrix
+of their native cycle classes has NONZERO DETERMINANT.
+
+No exact target-basis match is requested for any individual program.
+The old GST proof engine then forms the exact rational native cycle
+of EVERY Hodge class by ordinary inverse-matrix coefficients.
+
+Unlike the intrinsic limitless matrix-unit theorem, these are genuine
+program outputs on the native algebraic-cycle carrier. The missing
+universal mathematical theorem is existence of a nonsingular family
+of geometric outputs; it must be obtained independently, for example
+from projective intersection and motivic correspondence geometry. -/
+
+/-- **EXACT FULL RATIONAL HODGE TARGET FROM ONE GEOMETRIC DETERMINANT
+PER WEIGHT** on every smooth projective complex V.
+
+This is a new stronger route through the ORIGINAL public conjecture
+definition: it needs genuine independently constructed graded programs
+and one scalar NONVANISHING condition, not target-cycle witnesses. -/
+theorem classicalHodgeTarget_of_universalGSTGeometricDeterminants
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (h :
+      GSTClassicalHodgeGeometricMatrixRankLanding.UniversalGSTGeometricDeterminantGeneration
+        G F) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeGeometricMatrixRankLanding.exact_hodge_of_universal_GST_geometric_determinants
+    G F h
 
 /-! ## Index-polymorphic limitless realization -/
 
