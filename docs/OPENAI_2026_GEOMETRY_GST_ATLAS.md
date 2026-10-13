@@ -18,6 +18,56 @@ Final objective remains `GSTClassicalHodgeNativeExecutablePlane.NativeExecutable
 
 **Do not** infer global Hodge from CM-abelian/K3/generic families; **do not** substitute a weak point-finite relation for a genuine scheme morphism or an arbitrary cycle-class range retraction for the geometric Betti action.
 
+## First exact geometric certificate to construct
+
+The CM paper's surface-switch criterion has the following concrete chain,
+which differs substantially from assuming an arbitrary Hodge-basis lift:
+
+1. Construct a smooth projective surface `S`, Hodge maps
+   `h_i : H^1(B_i,Q) -> H^1(S,Q)`, and four selected embedding-line
+   classes with nonzero period
+   `k = ∫_S h_1(a_1) cup h_2(a_2) cup h_3(a_3) cup h_4(a_4)`.
+2. Upgrade rational degree-one Hodge maps, up to positive integer
+   multipliers, to morphisms `f_i : S -> B_i`. Build the actual
+   pushforward class `Z = cl(f_*[S])` on `A = prod B_i`.
+3. Construct **four genuine divisor correspondences** on
+   `B_i × B'_i`, of classes `D_i = a_i tensor b_i`. Their
+   algebraicity is furnished by the (1,1) argument and scalar descent,
+   not by the balanced-sign equation alone.
+4. Set `K = prod_i q_i^* D_i` and prove by the geometric projection
+   formula, Kunneth bookkeeping and Gysin pushforward that
+   `(pr_A')_*(pr_A^* Z cup K) = k * (b_1 tensor b_2 tensor b_3 tensor b_4)`.
+5. The actual paper obtains `k ∈ Qbar^×` and an algebraic cycle with
+   `Qbar`-coefficients. Its final **Galois descent** is indispensable
+   for a genuine rational cycle class. The initial Lean cross-carrier
+   extraction theorem covers the restricted `k ∈ Q^×` case only.
+   The `Qbar/Q` extension and descent are therefore explicitly OPEN.
+
+For all 5 steps the present Stage-2G Hodge data remains a semantic
+carrier, not yet an unconditional geometric model of singular cohomology.
+A valid full proof must establish the supplied cycle-class comparisons
+from actual geometry, rather than obtain them by projecting an arbitrary
+cohomology operator to the algebraic range.
+
+A critical architectural distinction: the CM surface, Kuga--Satake and
+Gale constructions often use **proper correspondences between different
+varieties**, not finite self-correspondences. The legacy strict
+`SchemeBiFiniteClosedCorrespondence` interface is not a substitute
+for those general proper push/pull correspondences.
+
+### Acceptance tests
+
+- Prove one genuine cross-carrier geometric instance with native and Betti
+  maps constructed from a concrete morphism / algebraic correspondence,
+  including a nontrivial point-cycle incidence equation.
+- Prove the actual surface projection identity above, first over `Qbar`,
+  then establish the rational descent.
+- Compose such constructions into a nontrivial original carrier's Hodge
+  basis without assuming `HodgeBasisCycleSupply`,
+  `NativeExecutableGSTPlaneCompleteness`, or equivalent ghost extinction.
+- Run hosted Lean kernel checking and audit all inherited axioms; compilation
+  is necessary but not proof of the general Hodge conjecture.
+
 ## Geometry catalogue (discovery inventory)
 
 ### Algebraic and complex geometry (36 result families)
