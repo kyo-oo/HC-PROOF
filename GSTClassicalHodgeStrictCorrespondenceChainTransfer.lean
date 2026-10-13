@@ -61,6 +61,24 @@ noncomputable def ofRightSection
   simp
   rfl
 
+/-- Normalize every nonzero finite-degree chain transfer to an actual
+right section.  This uses only linearity of composition, not linearity of the
+homology functor on scalar-multiplied chain maps. -/
+noncomputable def normalizedTransfer
+    (T : RightFiniteChainTransfer A K) :
+    rationalSingularChains A ⟶ carrierSingularChains A K :=
+  T.degree⁻¹ • T.transfer
+
+@[simp]
+theorem normalizedTransfer_right
+    (T : RightFiniteChainTransfer A K) :
+    T.normalizedTransfer A K ≫ rightChainMap A K =
+      𝟙 (rationalSingularChains A) := by
+  change (T.degree⁻¹ • T.transfer) ≫ rightChainMap A K =
+    𝟙 (rationalSingularChains A)
+  rw [CategoryTheory.Linear.smul_comp, T.transfer_right, smul_smul,
+    inv_mul_cancel₀ T.degree_ne_zero, one_smul]
+
 /-- Dualizing the chain transfer reverses its arrow and produces the covariant
 cochain trace required for push-pull. -/
 noncomputable def cochainTrace
@@ -71,7 +89,7 @@ noncomputable def cochainTrace
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
   unfold carrierSingularCochains rationalSingularCochains
   exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
-    (Quiver.Hom.op (F.map T.transfer))
+    (Quiver.Hom.op (F.map (T.normalizedTransfer A K)))
 
 noncomputable def cohomologyTraceObj
     (T : RightFiniteChainTransfer A K)
@@ -83,36 +101,46 @@ noncomputable def cohomologyTrace
     (T : RightFiniteChainTransfer A K)
     (n : Nat) :
     CarrierCohomology A K n →ₗ[ℚ] RationalSingularCohomology A n :=
-  (T.cohomologyTraceObj A K n).hom
+  T.degree • (T.cohomologyTraceObj A K n).hom
 
-/-- **CHAIN TRANSFER DESCENT.** The finite-degree chain identity descends
-through linear-Yoneda duality and cohomology. -/
+/-- **CHAIN TRANSFER DESCENT.** A nonzero finite degree first produces a
+strict chain-level section; functoriality then yields a normalized cohomology
+section, which can be scaled back to the original degree.  No unprovided
+homologyMap_smul assumption is necessary. -/
 theorem cohomologyTrace_rightPullback
     (T : RightFiniteChainTransfer A K)
     (n : Nat) :
     (T.cohomologyTrace A K n).comp (rightCohomologyPullback A K n) =
       T.degree • LinearMap.id := by
-  ext alpha
   have hcochain : rightCochainPullback A K ≫
       RightFiniteChainTransfer.cochainTrace A K T =
-      T.degree • 𝟙 (rationalSingularCochains A) := by
-    simp only [rightCochainPullback, RightFiniteChainTransfer.cochainTrace, id_eq]
-    rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
-      ← CategoryTheory.Functor.map_comp, T.transfer_right]
-    simp
-  unfold RightFiniteChainTransfer.cohomologyTrace
-    RightFiniteChainTransfer.cohomologyTraceObj rightCohomologyPullback
-    rightCohomologyPullbackObj
+      𝟙 (rationalSingularCochains A) := by
+    let D :=
+      ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)
+    let U := HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)
+    have h1 : U.map (Quiver.Hom.op (D.map (rightChainMap A K))) ≫
+        U.map (Quiver.Hom.op (D.map (T.normalizedTransfer A K))) =
+        𝟙 (rationalSingularCochains A) := by
+      rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
+        ← CategoryTheory.Functor.map_comp, T.normalizedTransfer_right A K,
+        CategoryTheory.Functor.map_id, CategoryTheory.op_id,
+        CategoryTheory.Functor.map_id]
+      rfl
+    exact h1
+  ext alpha
+  change T.degree •
+      ((HomologicalComplex.homologyMap (T.cochainTrace A K) n).hom
+        ((HomologicalComplex.homologyMap (rightCochainPullback A K) n).hom alpha)) =
+      T.degree • alpha
   have hcomp : (HomologicalComplex.homologyMap
-      (rightCochainPullback A K ≫
-        RightFiniteChainTransfer.cochainTrace A K T) n).hom alpha =
-    (HomologicalComplex.homologyMap
-      (RightFiniteChainTransfer.cochainTrace A K T) n).hom
+      (rightCochainPullback A K ≫ T.cochainTrace A K) n).hom alpha =
+    (HomologicalComplex.homologyMap (T.cochainTrace A K) n).hom
       ((HomologicalComplex.homologyMap (rightCochainPullback A K) n).hom alpha) := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  rw [hcochain] at hcomp
-  exact hcomp.symm.trans (by simp)
+  rw [hcochain, HomologicalComplex.homologyMap_id] at hcomp
+  exact congrArg (fun x => T.degree • x) hcomp.symm
 
 /-- Chain transfer manufactures the exact finite Betti trace consumed by the
 whole-cohomology push-pull theorem. -/
