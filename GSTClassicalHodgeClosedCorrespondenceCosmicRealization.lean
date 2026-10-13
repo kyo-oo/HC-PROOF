@@ -78,7 +78,7 @@ noncomputable def nativeCanonicalCosmicRealization_of_closedCorrespondenceReacha
       canonicalCosmicAmbient i j alpha.1 =
         (hodgeMatrixUnit i j alpha).1 := by
     unfold canonicalCosmicAmbient
-    rw [extendHodgeEndomorphism_on_hodge]
+    rw [GSTClassicalHodgeUniversalTwoSlotNativeClosure.extendHodgeEndomorphism_on_hodge]
   calc
     H.cycleClass p ((realizedWordPair W).cycleOperator Z) =
         (realizedWordPair W).cohomologyOperator (H.cycleClass p Z) := hnat
@@ -116,7 +116,7 @@ theorem canonicalCosmicNaturality_of_closedCorrespondenceReachability
 therefore activates the complete limitless cosmic no-escape mechanism. -/
 theorem hodgeWeight_of_closedCorrespondence_cosmicRealization
     (G : GeometricCycleClassSpine V H)
-    (hseed : GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy.AlgebraicFiber
+    (hseed : GSTClassicalHodgeConcreteFailureDichotomy.AlgebraicFiber
       (V := V) (H := H) (p := p) ≠ ⊥)
     (hReach : ∀ i j : ClassicalHodgeBasisIndex V H p,
       MatrixUnitReachableByClosedCorrespondences
