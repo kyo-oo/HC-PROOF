@@ -1,0 +1,58 @@
+name: OpenAI Geometry GST Arithmetic Check
+
+on:
+  push:
+    branches:
+      - research/openai-geometry-gst-native-plane-20261013
+    paths:
+      - 'GSTClassicalHodgeCMFourFactorGeometry.lean'
+      - '.github/workflows/hc-openai-geometry-gst.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hc-openai-geometry-gst-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  independent-mathematics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore pinned toolchain
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Install Lean only in GitHub Actions and fetch Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Compile genuine independent CM-switch arithmetic (no Hodge assumption)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake env lean GSTClassicalHodgeCMFourFactorGeometry.lean 2>&1 | tee geometry-switch-check.log
+          if grep -E "declaration uses 'sorry'|sorryAx|error:" geometry-switch-check.log; then
+            exit 1
+          fi
+          if grep -En '\b(sorry|admit)\b' GSTClassicalHodgeCMFourFactorGeometry.lean; then
+            exit 1
+          fi
+      - name: Upload exact compiler evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: geometry-switch-gst-lean-check
+          path: geometry-switch-check.log
+          if-no-files-found: warn
