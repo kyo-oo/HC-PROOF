@@ -54,6 +54,14 @@ jobs:
             GSTClassicalHodgeStrictCorrespondenceChainTransfer \
             GSTClassicalHodgeStrictGraphBettiTrace \
             2>&1 | tee hc-priority-four-roots.log
+      # Reuse dependencies even when one of the four proof roots fails.
+      - name: Save incremental priority root products
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+
       - name: Upload all compiler diagnostics
         if: always()
         uses: actions/upload-artifact@v4
