@@ -59,13 +59,45 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake build HodgePureMath 2>&1 | tee hodge-complete-math.log
+      - name: Check finale Lean files in bounded parallelism
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          modules=(
+            GSTClassicalHodgeVerticalRayProjectiveApexFinale
+            GSTClassicalHodgeStrictBettiApexL2Fusion
+            GSTClassicalHodgeCommonClassPlaneReduction
+            GSTClassicalHodgeNativePointSeedDegreeUpgrade
+            GSTClassicalHodgeGSTProjectiveWordExactFinale
+            GSTClassicalHodgeGSTRationalCorrespondenceExactFinale
+            GSTClassicalHodgeDirectOrbitWordSaturation
+            HodgeConjecture
+            GSTClassicalHodgeNativeWordFromArbitrarySeed
+            GSTClassicalHodgeBranchPacketPlaneRealization
+            GSTClassicalHodgeNativeMassBridgeAudit
+            GSTClassicalHodgeNativePointSeedSaturation
+            GSTClassicalHodgeGeometryFirstGlobalPropagation
+          )
+          printf '%s\n' "${modules[@]}" | xargs -P 3 -n 1 bash -c '
+            set -euo pipefail
+            mod="$1"
+            if lake env lean "$mod.lean" > "diag-$mod.log" 2>&1; then
+              echo "PASS: $mod"
+            else
+              echo "FAIL: $mod"
+              cat "diag-$mod.log"
+              exit 1
+            fi
+          ' _ 2>&1 | tee hodge-direct-finale.log
+
       - name: 'Trust audit - reject sorry/sorryAx receipts'
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           test -f hodge-complete-math.log
-          if grep -E "declaration uses 'sorry'|sorryAx" hodge-complete-math.log; then
+          if grep -E "declaration uses 'sorry'|sorryAx" hodge-complete-math.log hodge-direct-finale.log 2>/dev/null; then
             echo "Proof trust audit failed: sorry/sorryAx in compiler receipts"
             exit 1
           fi
@@ -80,7 +112,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hodge-complete-math-diagnostics
-          path: hodge-complete-math.log
+          path: |
+            hodge-complete-math.log
+            hodge-direct-finale.log
+            diag-*.log
           if-no-files-found: warn
   integration-frontier:
     name: Integration frontier (parallel)
@@ -131,20 +166,7 @@ jobs:
             GSTClassicalHodgeStrictGraphBettiTrace \
             GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion \
             GSTClassicalHodgeClosedCorrespondenceCosmicRealization \
-            GSTClassicalHodgeIncidenceRealizationEquivalence \
-            GSTClassicalHodgeVerticalRayProjectiveApexFinale \
-            GSTClassicalHodgeStrictBettiApexL2Fusion \
-            GSTClassicalHodgeCommonClassPlaneReduction \
-            GSTClassicalHodgeNativePointSeedDegreeUpgrade \
-            GSTClassicalHodgeGSTProjectiveWordExactFinale \
-            GSTClassicalHodgeGSTRationalCorrespondenceExactFinale \
-            GSTClassicalHodgeDirectOrbitWordSaturation \
-            HodgeConjecture \
-            GSTClassicalHodgeNativeWordFromArbitrarySeed \
-            GSTClassicalHodgeBranchPacketPlaneRealization \
-            GSTClassicalHodgeNativeMassBridgeAudit \
-            GSTClassicalHodgeNativePointSeedSaturation \
-            GSTClassicalHodgeGeometryFirstGlobalPropagation 2>&1 | tee hodge-integration-frontier.log
+            GSTClassicalHodgeIncidenceRealizationEquivalence 2>&1 | tee hodge-integration-frontier.log
       - name: 'Trust audit - reject sorry/sorryAx receipts'
         if: always()
         shell: bash
