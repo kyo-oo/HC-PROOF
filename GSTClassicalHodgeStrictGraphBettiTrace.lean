@@ -71,7 +71,10 @@ theorem transposeGraphCarrierPoint_pair
   · simp [carrierPointPair, leftComplexPoint, transposeGraphCarrierPoint,
       strictGraph_transpose_left,
       ComplexSchemeEndomorphism.complexPointMap]
-  · simp [carrierPointPair, rightComplexPoint, transposeGraphCarrierPoint,
+    rfl
+  · apply congrArg A.pointsEquiv
+    apply Subtype.ext
+    simp [rightComplexPoint, transposeGraphCarrierPoint,
       strictGraph_transpose_right]
 
 /-- Canonical section of the analytic right projection of a transposed finite
@@ -157,7 +160,7 @@ theorem rightCochainPullback_transposeGraphSection
       transposeGraphSectionCochainPullback A F hf =
         𝟙 (rationalSingularCochains A) := by
   simp [rightCochainPullback, transposeGraphSectionCochainPullback,
-    transposeGraphSectionChainMap_right]
+    ← Functor.map_comp, transposeGraphSectionChainMap_right]
 
 /-- **GRAPH-RETRACTION COHOMOLOGY LAW.**
 Pullback along the canonical section is an exact left inverse of the right
@@ -176,7 +179,9 @@ theorem transposeGraphSectionCohomologyPullback_right
   have hhom := congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain
   have hlinear := congrArg ModuleCat.Hom.hom hhom
   have happ := LinearMap.congr_fun hlinear alpha
-  simpa [HomologicalComplex.homologyMap_comp] using happ
+  simpa only [HomologicalComplex.homologyMap_comp,
+    LinearMap.comp_apply, LinearMap.id_apply,
+    Function.comp_apply, id_eq] using happ
 
 /-- **DEGREE-ONE TRACE FROM STRICT GRAPH GEOMETRY.**
 The finite right trace of a transposed graph is no longer an input. -/
@@ -233,7 +238,8 @@ theorem transposeGraphCarrierPoint_on_graph
         (carrierPointPair A ((strictGraph f hf).transpose) z).2 := by
   change A.pointsEquiv (leftComplexPoint ((strictGraph f hf).transpose) z) = _
   simp only [transportedPointMap, carrierPointPair, Equiv.symm_apply_apply]
-  apply A.pointsEquiv.injective
+  apply congrArg A.pointsEquiv
+  apply Subtype.ext
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
     strictGraph_transpose_left, strictGraph_transpose_right]
@@ -289,7 +295,7 @@ theorem transposeGraphSectionCochainPullback_right
       rightCochainPullback A ((strictGraph F.algebraic hf).transpose) =
         𝟙 (carrierSingularCochains A ((strictGraph F.algebraic hf).transpose)) := by
   simp [transposeGraphSectionCochainPullback, rightCochainPullback,
-    transposeGraphRightChainMap_section]
+    ← Functor.map_comp, transposeGraphRightChainMap_section]
 
 /-- Right pullback and section pullback are inverse on the WHOLE carrier
 cohomology, not just on algebraic source classes. -/
@@ -306,7 +312,9 @@ theorem transposeGraphRightCohomologyPullback_section
   have hhom := congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain
   have hlinear := congrArg ModuleCat.Hom.hom hhom
   have happ := LinearMap.congr_fun hlinear omega
-  simpa [HomologicalComplex.homologyMap_comp] using happ
+  simpa only [HomologicalComplex.homologyMap_comp,
+    LinearMap.comp_apply, LinearMap.id_apply,
+    Function.comp_apply, id_eq] using happ
 
 /-- **GEOMETRY PROVES ZERO CARRIER DEFECT.**
 There is no supplied residual-vanishing or transfer-totality hypothesis. -/
@@ -318,7 +326,8 @@ theorem transposedStrictGraph_carrierResidual_eq_zero
   ext omega
   change omega -
     rightCohomologyPullback A ((strictGraph F.algebraic hf).transpose) n
-      ((transposedStrictGraphRightTrace A F hf n).normalizedTrace omega) = 0
+      (RightFiniteBettiTrace.normalizedTrace A _ n
+        (transposedStrictGraphRightTrace A F hf n) omega) = 0
   rw [transposedStrictGraph_normalizedTrace_eq_section]
   have h := LinearMap.congr_fun
     (transposeGraphRightCohomologyPullback_section A F hf n) omega
@@ -332,8 +341,9 @@ theorem transposedStrictGraph_sourceResidual_eq_zero
     (n : Nat) :
     (transposedStrictGraphRightTrace A F hf n).sourceResidual = 0 := by
   ext alpha
-  change (transposedStrictGraphRightTrace A F hf n).carrierResidual
-    (leftCohomologyPullback A ((strictGraph F.algebraic hf).transpose) n alpha) = 0
+  change (RightFiniteBettiTrace.carrierResidual A _ n
+    (transposedStrictGraphRightTrace A F hf n))
+      (leftCohomologyPullback A ((strictGraph F.algebraic hf).transpose) n alpha) = 0
   rw [transposedStrictGraph_carrierResidual_eq_zero]
   rfl
 
@@ -345,8 +355,8 @@ theorem transposedStrictGraph_transferObstruction_eq_zero
     (n : Nat) :
     transferObstruction A ((strictGraph F.algebraic hf).transpose) n = 0 := by
   ext alpha
-  apply ((transposedStrictGraphRightTrace A F hf n)
-    .sourceResidual_eq_zero_iff_transferObstruction alpha).1
+  apply (RightFiniteBettiTrace.sourceResidual_eq_zero_iff_transferObstruction
+    A _ n (transposedStrictGraphRightTrace A F hf n) alpha).1
   rw [transposedStrictGraph_sourceResidual_eq_zero]
   rfl
 
@@ -381,7 +391,8 @@ theorem leftCochainPullback_transposeGraphSection
     leftCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
       transposeGraphSectionCochainPullback A F hf = singularCochainPullback A F := by
   simp [leftCochainPullback, transposeGraphSectionCochainPullback,
-    singularCochainPullback, transposeGraphSectionChainMap_left]
+    singularCochainPullback, ← Functor.map_comp,
+    transposeGraphSectionChainMap_left]
 
 /-- **EXACT NATIVE GRAPH ACTION.**
 The carrier and its trace determine the actual map's Betti pullback.  No
@@ -402,7 +413,9 @@ theorem transposedStrictGraph_pushPull_eq_nativePullback
   have hhom := congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain
   have hlinear := congrArg ModuleCat.Hom.hom hhom
   have happ := LinearMap.congr_fun hlinear alpha
-  simpa [HomologicalComplex.homologyMap_comp] using happ
+  simpa only [HomologicalComplex.homologyMap_comp,
+    LinearMap.comp_apply, LinearMap.id_apply,
+    Function.comp_apply, id_eq] using happ
 
 /-- Every source has its exact, geometrically determined common-carrier
 target.  This statement does not identify that target with an arbitrary GST
@@ -414,8 +427,8 @@ theorem transposedStrictGraph_related_nativePullback
     (alpha : RationalSingularCohomology A n) :
     BettiRelated A ((strictGraph F.algebraic hf).transpose) n alpha
       (rationalCohomologyPullback A F n alpha) := by
-  apply ((transposedStrictGraphRightTrace A F hf n)
-    .bettiRelated_iff_residual_and_target alpha _).2
+  apply (RightFiniteBettiTrace.bettiRelated_iff_residual_and_target
+    A _ n (transposedStrictGraphRightTrace A F hf n) alpha _).2
   constructor
   · rw [transposedStrictGraph_sourceResidual_eq_zero]
     rfl
@@ -433,7 +446,8 @@ theorem transposedStrictGraph_related_iff_nativePullback
       rationalCohomologyPullback A F n alpha = beta := by
   constructor
   · intro h
-    have ht := (transposedStrictGraphRightTrace A F hf n).pushPull_eq_of_bettiRelated h
+    have ht := RightFiniteBettiTrace.pushPull_eq_of_bettiRelated
+      A _ n (transposedStrictGraphRightTrace A F hf n) h
     simpa only [transposedStrictGraph_pushPull_eq_nativePullback] using ht
   · intro h
     rw [← h]
