@@ -96,7 +96,7 @@ theorem cohomologyTrace_rightPullback
   have hcochain : rightCochainPullback A K ≫
       RightFiniteChainTransfer.cochainTrace A K T =
       T.degree • 𝟙 (rationalSingularCochains A) := by
-    simp only [rightCochainPullback, RightFiniteChainTransfer.cochainTrace]
+    simp only [rightCochainPullback, RightFiniteChainTransfer.cochainTrace, id_eq]
     rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
       ← CategoryTheory.Functor.map_comp, T.transfer_right]
     simp
@@ -111,8 +111,11 @@ theorem cohomologyTrace_rightPullback
       (HomologicalComplex.homologyMap (rightCochainPullback A K) n).hom := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  rw [← hcomp, hcochain]
-  simp
+  have hlinear := congrArg ModuleCat.Hom.hom
+    (congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain)
+  have happ := LinearMap.congr_fun (hcomp.symm.trans hlinear) alpha
+  simpa only [LinearMap.comp_apply, LinearMap.smul_apply,
+    LinearMap.id_apply] using happ
 
 /-- Chain transfer manufactures the exact finite Betti trace consumed by the
 whole-cohomology push-pull theorem. -/
@@ -159,7 +162,7 @@ theorem strictGraph_carrierPointPair
         A.pointsEquiv.symm x := by
     apply Subtype.ext
     simp [leftComplexPoint, strictGraphCarrierPoint, strictGraph_left]
-    rw [Category.comp_id]
+    exact Category.comp_id _
   have hright :
       rightComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x) =
         f.complexPointMap (A.pointsEquiv.symm x) := by
