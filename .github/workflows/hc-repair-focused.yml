@@ -12,6 +12,9 @@ on:
       - 'GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier.lean'
       - 'GSTClassicalHodgeGhostIndexedCriterionCircularity.lean'
       - 'GSTClassicalHodgeGeometryFirstNativeWord.lean'
+      - 'GSTClassicalHodgeGeneralSpaceOperatorCosmos.lean'
+      - 'GSTClassicalHodgeLimitlessCosmicNoEscape.lean'
+      - 'GSTClassicalHodgeLiveSupportCorrespondenceSpectralCrown.lean'
       - '.github/workflows/hc-repair-focused.yml'
   workflow_dispatch:
 
@@ -61,6 +64,9 @@ jobs:
           import GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier
           import GSTClassicalHodgeGhostIndexedCriterionCircularity
           import GSTClassicalHodgeGeometryFirstNativeWord
+          import GSTClassicalHodgeGeneralSpaceOperatorCosmos
+          import GSTClassicalHodgeLimitlessCosmicNoEscape
+          import GSTClassicalHodgeLiveSupportCorrespondenceSpectralCrown
           LEAN
           cat >> lakefile.toml <<'TOML'
 
