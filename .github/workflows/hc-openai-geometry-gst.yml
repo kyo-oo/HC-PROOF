@@ -7,6 +7,7 @@ on:
     paths:
       - 'GSTClassicalHodgeCMFourFactorGeometry.lean'
       - 'GSTClassicalHodgeSurfacePeriodCycleTransfer.lean'
+      - 'GSTClassicalHodgeGeometricPeriodNativeLanding.lean'
       - '.github/workflows/hc-openai-geometry-gst.yml'
   workflow_dispatch:
 
@@ -56,4 +57,53 @@ jobs:
         with:
           name: geometry-switch-gst-lean-check
           path: geometry-switch-check.log
+          if-no-files-found: warn
+
+  native-geometric-frontier:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore pinned toolchain
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Restore Mathlib and compiled GST dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Build the actual Stage-2G native geometric-period landing with its imports
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          cat >> lakefile.toml <<'TOML'
+
+          [[lean_lib]]
+          name = "HCSurfacePeriodNativeFocus"
+          roots = ["GSTClassicalHodgeGeometricPeriodNativeLanding"]
+          TOML
+          if lake build HCSurfacePeriodNativeFocus > geometric-native-landing.log 2>&1; then
+            tail -n 20 geometric-native-landing.log
+          else
+            grep -nE 'error:|sorryAx|✖' geometric-native-landing.log | tail -n 60 || true
+            tail -n 80 geometric-native-landing.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" geometric-native-landing.log; then
+            exit 1
+          fi
+      - name: Archive full geometric landing compiler diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-geometric-period-native-lean-log
+          path: geometric-native-landing.log
           if-no-files-found: warn
