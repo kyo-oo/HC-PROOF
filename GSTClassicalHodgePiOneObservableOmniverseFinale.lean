@@ -68,11 +68,12 @@ abbrev PointSource
     (x : CodimensionPoint V.X p) : ClassicalHodgeFiber V H p :=
   pointHodgeSource G p x
 
-/-- Visibility of one projective point source on the exact finite packet of a
-requested Hodge state.  This is class-local: no global matrix-unit family and
-no all-events externalization occurs. -/
+/-- Visibility of one genuine projective-point Hodge seed on the exact
+finite packet of a requested Hodge state. Projective-degree semantics
+PROVES the seed is nonzero; no inferred inhabitant or placeholder proof. -/
 def PointSourceVisibleOnCanonicalPacket
     (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
     (alpha : ClassicalHodgeFiber V H p)
     (x : CodimensionPoint V.X p)
     (R : ClosedCorrespondenceWindowRealization G (canonicalLiveWindow alpha)) :
@@ -81,10 +82,7 @@ def PointSourceVisibleOnCanonicalPacket
     SeedVisible R
       ({ cycle := codimensionPointCycle V.X p x
          hodge := PointSource G x
-         hodge_ne_zero := by
-           -- only the field shape is needed here; actual nonvanishing is
-           -- supplied by the degree-certified constructor below.
-           exact Classical.choice inferInstance
+         hodge_ne_zero := pointHodgeSource_ne_zero G D p x
          class_eq := rfl } :
         GSTClassicalHodgeSynchronizedDefectOrbit.NativeHodgeOrbitSeed
           (V := V) (H := H) (p := p)) r
