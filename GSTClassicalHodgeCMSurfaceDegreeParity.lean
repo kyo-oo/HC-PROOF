@@ -66,11 +66,15 @@ theorem fourDivisorKernel_gysin_target_degree
     (n : Nat) (hn : 2 ≤ n) :
     (2 * (n - 2) + 8) - 2 * n = 4 := by omega
 
-/-- The exact kernel degree balance needed by the cross-carrier
-cup/Gysin construction: e=n+2, p=0, q=2, d=n. -/
+/-- Exact source/kernel/target degree balance in the genuine CM paper:
+the old abelian carrier has dimension d=n;
+the source algebraic surface cycle has codimension p=n-2;
+the kernel is a product of FOUR divisors, so e=4;
+the output must have codimension q=2.
+Thus 2e+2p=2d+2q, with no artificial kernel degree. -/
 theorem surface_to_tensor_cup_gysin_degree_balance
-    (n : Nat) :
-    2 * (n + 2) + 2 * 0 = 2 * n + 2 * 2 := by omega
+    (n : Nat) (hn : 2 ≤ n) :
+    2 * 4 + 2 * (n - 2) = 2 * n + 2 * 2 := by omega
 
 #check fourDivisorKoszul_sign_positive
 #check fourDivisorKernel_gysin_target_degree
