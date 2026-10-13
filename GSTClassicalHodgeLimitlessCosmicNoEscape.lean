@@ -49,21 +49,23 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-/-- The genuine native GST word and the unrestricted cosmic matrix-unit lift
-have exactly the same action on every true Hodge vector. -/
+/-- The native geometry-first word agrees with the unrestricted cosmic
+matrix unit on distinct Hodge-basis slots.  The diagonal slot is realized by
+the genuine code operator instead of the off-diagonal transfer word. -/
 theorem nativeWord_ambient_eq_limitlessCosmic_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
+    (hij : i ≠ j)
     (alpha : ClassicalHodgeFiber V H p) :
     R.ambientWord alpha.1 =
       liftCosmicWindowOperator (pairBasisIndex i j)
         (GSTClassicalHodgeLimitlessCosmicMatrixUnits.rationalCosmicMatrixUnit
           sourceSlot.1 targetSlot.1) alpha := by
-  rw [R.ambientWord_on_hodge]
+  rw [R.ambientWord_on_hodge hij alpha]
+  rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
 
-/-- Consequently the unrestricted cosmic matrix-unit lift sends every
-algebraic Hodge vector to another actual cycle-class value whenever the one
-geometry-first native GST word from `i` to `j` is available. -/
+/-- Genuine native realization preserves the cycle-class range for both
+off-diagonal and diagonal matrix units. -/
 theorem limitlessCosmic_preserves_cycleClass_range_on_hodge
     (i j : ClassicalHodgeBasisIndex V H p)
     (R : GeometryFirstTwoGenerator (V := V) (H := H) i j)
@@ -74,10 +76,28 @@ theorem limitlessCosmic_preserves_cycleClass_range_on_hodge
           sourceSlot.1 targetSlot.1) alpha ∈
       LinearMap.range (H.cycleClass p) := by
   rcases halg with ⟨Z, hZ⟩
-  refine ⟨nativeWord R Z, ?_⟩
-  rw [cycleClass_nativeWord R Z]
-  rw [hZ]
-  exact nativeWord_ambient_eq_limitlessCosmic_on_hodge i j R alpha
+  by_cases hij : i = j
+  · subst j
+    refine ⟨R.code.cycleOperator Z, ?_⟩
+    calc
+      H.cycleClass p (R.code.cycleOperator Z) =
+          R.ambientCode (H.cycleClass p Z) := R.code.cycleClass_natural Z
+      _ = R.ambientCode alpha.1 := congrArg R.ambientCode hZ
+      _ = (hodgeMatrixUnit i i alpha).1 :=
+        R.ambientCode_on_hodge_of_eq rfl alpha
+      _ = (liftCosmicWindowOperator (pairBasisIndex i i)
+          (GSTClassicalHodgeLimitlessCosmicMatrixUnits.rationalCosmicMatrixUnit
+            sourceSlot.1 targetSlot.1) alpha).1 := by
+        rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
+  · refine ⟨nativeWord R Z, ?_⟩
+    calc
+      H.cycleClass p (nativeWord R Z) =
+          R.ambientWord (H.cycleClass p Z) := cycleClass_nativeWord R Z
+      _ = R.ambientWord alpha.1 := congrArg R.ambientWord hZ
+      _ = (liftCosmicWindowOperator (pairBasisIndex i j)
+          (GSTClassicalHodgeLimitlessCosmicMatrixUnits.rationalCosmicMatrixUnit
+            sourceSlot.1 targetSlot.1) alpha).1 :=
+        nativeWord_ambient_eq_limitlessCosmic_on_hodge i j R hij alpha
 
 /-- Atomic-span form of the same no-escape law. -/
 theorem limitlessCosmic_preserves_algebraicFiber
