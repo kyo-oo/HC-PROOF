@@ -17,8 +17,12 @@ concurrency:
 
 jobs:
   complete-math:
-    name: Complete Hodge mathematics
+    name: Complete Hodge mathematics (shard ${{ matrix.shard }})
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
     timeout-minutes: 300
     steps:
       - uses: actions/checkout@v5
@@ -50,15 +54,34 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-complete-math
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-complete-math-shard-${{ matrix.shard }}
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
-      - name: Compile entire classical Hodge lane
+      - name: Compile Hodge root shard and transitive imports
+        env:
+          HODGE_SHARD: ${{ matrix.shard }}
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build HodgePureMath 2>&1 | tee hodge-complete-math.log
+          # Partition the exact registered HodgePureMath roots without dropping any.
+          python3 - <<'PY'
+          import os, tomllib
+          with open("lakefile.toml", "rb") as stream:
+              config = tomllib.load(stream)
+          roots = next(lib["roots"] for lib in config["lean_lib"] if lib["name"] == "HodgePureMath")
+          shard = int(os.environ["HODGE_SHARD"])
+          selected = roots[shard::4]
+          assert selected and len(set(roots)) == len(roots), "Invalid Hodge library roots"
+          with open("HCFullHodgeVerificationShard.lean", "w") as stream:
+              for root in selected:
+                  stream.write(f"import {root}\n")
+          with open("lakefile.toml", "a") as stream:
+              stream.write('\n[[lean_lib]]\nname = "HCFullHodgeVerificationShard"\n')
+              stream.write('roots = ["HCFullHodgeVerificationShard"]\n')
+          print(f"Shard {shard}: compiling {len(selected)} / {len(roots)} registered Hodge roots", flush=True)
+          PY
+          lake build HCFullHodgeVerificationShard 2>&1 | tee hodge-complete-math.log
       - name: Check finale Lean files in bounded parallelism
         shell: bash
         run: |
@@ -106,12 +129,12 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-complete-math
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-complete-math-shard-${{ matrix.shard }}
       - name: Upload Lean diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hodge-complete-math-diagnostics
+          name: hodge-complete-math-diagnostics-${{ matrix.shard }}
           path: |
             hodge-complete-math.log
             hodge-direct-finale.log
