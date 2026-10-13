@@ -185,6 +185,26 @@ noncomputable def projectiveDegreeHodgeTrace
   (D.trace p).comp
     (rationalHodgeSubspace (H.hodgeBigrading p)).subtype
 
+/-- The already-realized Hodge operator advances exactly along the
+existing native/cohomological Krylov orbit. This is a direct computation,
+not a new orbit-cyclicity hypothesis. -/
+theorem hodgeOperator_pow_orbit
+    (C : RealizedCorrespondenceKrylovCertificate V H p)
+    (i j : Nat) :
+    (C.hodgeOperator ^ i) (C.hodgeOrbit j) =
+      C.hodgeOrbit (i + j) := by
+  induction i with
+  | zero =>
+      simp
+  | succ i ih =>
+      rw [pow_succ']
+      change
+        C.hodgeOperator
+          ((C.hodgeOperator ^ i) (C.hodgeOrbit j)) =
+            C.hodgeOrbit (Nat.succ i + j)
+      rw [ih]
+      rfl
+
 /-- Hankel matrix of actual projective-degree moments of ONE genuinely
 realized closed correspondence acting on ONE genuine native cycle. -/
 noncomputable def projectiveDegreeKrylovHankel
