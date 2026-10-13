@@ -76,7 +76,7 @@ theorem normalizedTransfer_right
       𝟙 (rationalSingularChains A) := by
   change (T.degree⁻¹ • T.transfer) ≫ rightChainMap A K =
     𝟙 (rationalSingularChains A)
-  rw [smul_comp, T.transfer_right, smul_smul,
+  rw [CategoryTheory.Linear.smul_comp, T.transfer_right, smul_smul,
     inv_mul_cancel₀ T.degree_ne_zero, one_smul]
 
 /-- Dualizing the chain transfer reverses its arrow and produces the covariant
@@ -126,6 +126,7 @@ theorem cohomologyTrace_rightPullback
         ← CategoryTheory.Functor.map_comp, T.normalizedTransfer_right A K,
         CategoryTheory.Functor.map_id, CategoryTheory.op_id,
         CategoryTheory.Functor.map_id]
+      rfl
     exact h1
   ext alpha
   change T.degree •
@@ -186,7 +187,7 @@ theorem strictGraph_carrierPointPair
         A.pointsEquiv.symm x := by
     apply Subtype.ext
     simp [leftComplexPoint, strictGraphCarrierPoint, strictGraph_left]
-    rw [Category.comp_id]
+    exact Category.comp_id _
   have hright :
       rightComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x) =
         f.complexPointMap (A.pointsEquiv.symm x) := by
