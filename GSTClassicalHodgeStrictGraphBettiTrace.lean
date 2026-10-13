@@ -179,18 +179,16 @@ theorem transposeGraphSectionCohomologyPullback_right
   unfold transposeGraphSectionCohomologyPullback rightCohomologyPullback
     rightCohomologyPullbackObj
   have hcochain := rightCochainPullback_transposeGraphSection A F hf
-  have hlinear := congrArg ModuleCat.Hom.hom
-    (congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain)
   have hcomp : (HomologicalComplex.homologyMap
       (rightCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
-        transposeGraphSectionCochainPullback A F hf) n).hom =
-    (HomologicalComplex.homologyMap (transposeGraphSectionCochainPullback A F hf) n).hom.comp
-      (HomologicalComplex.homologyMap
-        (rightCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom := by
+        transposeGraphSectionCochainPullback A F hf) n).hom alpha =
+    (HomologicalComplex.homologyMap (transposeGraphSectionCochainPullback A F hf) n).hom
+      ((HomologicalComplex.homologyMap
+        (rightCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom alpha) := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  have happ := LinearMap.congr_fun (hcomp.symm.trans hlinear) alpha
-  simpa only [HomologicalComplex.homologyMap_id, LinearMap.id_apply] using happ
+  rw [hcochain, HomologicalComplex.homologyMap_id] at hcomp
+  exact hcomp.symm
 
 /-- **DEGREE-ONE TRACE FROM STRICT GRAPH GEOMETRY.**
 The finite right trace of a transposed graph is no longer an input. -/
@@ -252,7 +250,7 @@ theorem transposeGraphCarrierPoint_on_graph
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
     strictGraph_transpose_left, strictGraph_transpose_right]
-  exact (congrArg (fun m => m ≫ f.hom) (Category.comp_id _)).symm
+  exact (congrArg (fun w => w ≫ f.hom) (Category.comp_id ↑z)).symm
 
 /-- The previously constructed graph section is also a right inverse.
 Both inverse laws are now geometric theorems, with no carrier-coherence axiom. -/
@@ -321,18 +319,16 @@ theorem transposeGraphRightCohomologyPullback_section
   unfold rightCohomologyPullback rightCohomologyPullbackObj
     transposeGraphSectionCohomologyPullback
   have hcochain := transposeGraphSectionCochainPullback_right A F hf
-  have hlinear := congrArg ModuleCat.Hom.hom
-    (congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain)
   have hcomp : (HomologicalComplex.homologyMap
       (transposeGraphSectionCochainPullback A F hf ≫
-        rightCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom =
+        rightCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom omega =
     (HomologicalComplex.homologyMap
-      (rightCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom.comp
-      (HomologicalComplex.homologyMap (transposeGraphSectionCochainPullback A F hf) n).hom := by
+      (rightCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom
+      ((HomologicalComplex.homologyMap (transposeGraphSectionCochainPullback A F hf) n).hom omega) := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  have happ := LinearMap.congr_fun (hcomp.symm.trans hlinear) omega
-  simpa only [HomologicalComplex.homologyMap_id, LinearMap.id_apply] using happ
+  rw [hcochain, HomologicalComplex.homologyMap_id] at hcomp
+  exact hcomp.symm
 
 /-- **GEOMETRY PROVES ZERO CARRIER DEFECT.**
 There is no supplied residual-vanishing or transfer-totality hypothesis. -/
@@ -431,15 +427,14 @@ theorem transposedStrictGraph_pushPull_eq_nativePullback
   have hcochain := leftCochainPullback_transposeGraphSection A F hf
   have hcomp : (HomologicalComplex.homologyMap
       (leftCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
-        transposeGraphSectionCochainPullback A F hf) n).hom =
-    (HomologicalComplex.homologyMap (transposeGraphSectionCochainPullback A F hf) n).hom.comp
-      (HomologicalComplex.homologyMap
-        (leftCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom := by
+        transposeGraphSectionCochainPullback A F hf) n).hom alpha =
+    (HomologicalComplex.homologyMap (transposeGraphSectionCochainPullback A F hf) n).hom
+      ((HomologicalComplex.homologyMap
+        (leftCochainPullback A ((strictGraph F.algebraic hf).transpose)) n).hom alpha) := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  have hlinear := congrArg ModuleCat.Hom.hom
-    (congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain)
-  exact LinearMap.congr_fun (hcomp.symm.trans hlinear) alpha
+  rw [hcochain] at hcomp
+  exact hcomp.symm
 
 /-- Every source has its exact, geometrically determined common-carrier
 target.  This statement does not identify that target with an arbitrary GST

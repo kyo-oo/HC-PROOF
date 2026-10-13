@@ -105,17 +105,14 @@ theorem cohomologyTrace_rightPullback
     rightCohomologyPullbackObj
   have hcomp : (HomologicalComplex.homologyMap
       (rightCochainPullback A K ≫
-        RightFiniteChainTransfer.cochainTrace A K T) n).hom =
+        RightFiniteChainTransfer.cochainTrace A K T) n).hom alpha =
     (HomologicalComplex.homologyMap
-      (RightFiniteChainTransfer.cochainTrace A K T) n).hom.comp
-      (HomologicalComplex.homologyMap (rightCochainPullback A K) n).hom := by
+      (RightFiniteChainTransfer.cochainTrace A K T) n).hom
+      ((HomologicalComplex.homologyMap (rightCochainPullback A K) n).hom alpha) := by
     rw [HomologicalComplex.homologyMap_comp]
     rfl
-  have hlinear := congrArg ModuleCat.Hom.hom
-    (congrArg (fun q => HomologicalComplex.homologyMap q n) hcochain)
-  have happ := LinearMap.congr_fun (hcomp.symm.trans hlinear) alpha
-  simpa only [LinearMap.comp_apply, LinearMap.smul_apply,
-    LinearMap.id_apply] using happ
+  rw [hcochain] at hcomp
+  exact hcomp.symm.trans (by simp)
 
 /-- Chain transfer manufactures the exact finite Betti trace consumed by the
 whole-cohomology push-pull theorem. -/
