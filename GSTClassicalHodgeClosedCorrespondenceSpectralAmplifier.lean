@@ -181,7 +181,9 @@ theorem augmentedProjectorOnHodge_apply
       · have hcoord :
             hodgeCoordinate (W.basisIndex i)
               (classicalHodgeBasis V H p j) = 0 :=
-          hodgeCoordinate_basis_other (W.basisIndex i) j hji.symm
+          hodgeCoordinate_basis_other (W.basisIndex i) j (by
+            intro h
+            exact hji h.symm)
         simp [augmentedProjectorOnHodge,
           W.augmentedIsolator_kills_unselected i j hsel, hcoord]
   have happly := LinearMap.congr_fun hmap alpha
