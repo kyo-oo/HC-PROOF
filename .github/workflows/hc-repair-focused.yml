@@ -11,6 +11,7 @@ on:
       - 'HodgeConjecture.lean'
       - 'GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier.lean'
       - 'GSTClassicalHodgeGhostIndexedCriterionCircularity.lean'
+      - 'GSTClassicalHodgeGeneralSpaceExactOperatorFinale.lean'
       - '.github/workflows/hc-repair-focused.yml'
   workflow_dispatch:
 
@@ -59,6 +60,7 @@ jobs:
           import HodgeConjecture
           import GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier
           import GSTClassicalHodgeGhostIndexedCriterionCircularity
+          import GSTClassicalHodgeGeneralSpaceExactOperatorFinale
           LEAN
           cat >> lakefile.toml <<'TOML'
 
