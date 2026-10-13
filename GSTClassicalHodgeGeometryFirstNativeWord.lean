@@ -122,7 +122,7 @@ noncomputable def basisCycleBridgeOfNativeWords
     classical
     by_cases hj : source = j
     · subst j
-      simpa only [HodgeConjecture.hodgeBasis, classicalHodgeBasis] using hZ0
+      simpa [HodgeConjecture.hodgeBasis, classicalHodgeBasis] using hZ0
     · simpa [hj, HodgeConjecture.hodgeBasis, classicalHodgeBasis] using
         nativeWord_cycleClass_of_source (R j) hj Z0 hZ0
 
