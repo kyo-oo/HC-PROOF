@@ -150,7 +150,6 @@ theorem augmentedProjectorOnHodge_apply
         hodgeCoordinate (W.basisIndex i) alpha) •
           (classicalHodgeBasis V H p (W.basisIndex i)).1 := by
   classical
-  apply (classicalHodgeBasis V H p).ext_iff.mp ?_
   -- Prove the corresponding linear maps agree on every genuine Hodge basis
   -- vector; the basis extensionality step is left transparent for GLM repair.
   have hmap :
@@ -250,7 +249,9 @@ theorem hodgeOperator_eq_diagonal
   apply LinearMap.ext
   intro alpha
   apply Subtype.ext
-  rw [R.on_hodge alpha, W.zeroComplementObservable_on_hodge]
+  change (realizedWordPair R.word).cohomologyOperator alpha.1 =
+    (W.hodgeDiagonal alpha).1
+  exact (R.on_hodge alpha).trans (W.zeroComplementObservable_on_hodge alpha)
 
 /-- Polynomial functional calculus of the realized word agrees with polynomial
 functional calculus of the zero-complement GST observable on every Hodge
@@ -278,7 +279,7 @@ theorem linearPolyEval_on_hodge
       (rationalHodgeSubspace (H.hodgeBigrading p)).subtype
       W.hodgeDiagonal
       W.zeroComplementObservable
-      (fun a => W.zeroComplementObservable_on_hodge a) P alpha
+      (fun a => (W.zeroComplementObservable_on_hodge a).symm) P alpha
   rw [R.hodgeOperator_eq_diagonal] at hWord
   exact hWord.symm.trans hObs
 
