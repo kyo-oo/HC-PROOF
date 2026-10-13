@@ -147,7 +147,7 @@ theorem geometricCertificate_eliminates_separator
     IsEmpty (BasisAtomicSeparator V H q j) := by
   refine ⟨?_⟩
   intro S
-  exact (separator_forbids_geometricCertificate S).false C
+  exact isEmpty_iff.mp (separator_forbids_geometricCertificate S) C
 
 #check geometricCertificate_iff_basisCycle
 #check completeCertificates_iff_exactHodge
