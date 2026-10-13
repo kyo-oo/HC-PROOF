@@ -332,6 +332,29 @@ theorem classicalHodgeTarget_of_universal_Krylov_Hankel_geometry
   GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_universal_Krylov_Hankel_geometry
     F h
 
+/-- **PROJECTIVE-DEGREE HANKEL ROUTE TO THE FULL HODGE CONJECTURE.**
+
+This is the most geometry-constrained numerical route among the new
+ones. All moments are computed using the repository's ordinary
+projective-degree trace on ACTUAL algebraic cycles produced by
+successive iterations of ONE strict realized correspondence.
+
+The mathematical target is nonzero determinant of those measured
+moment matrices, in every Hodge weight. Once established, the
+native-cycle reconstruction proves the original full rational
+Hodge statement for arbitrary smooth projective complex V. -/
+theorem classicalHodgeTarget_of_universal_projectiveDegree_Krylov
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (h :
+      GSTClassicalHodgeGeometricKrylovMomentDeterminant.UniversalProjectiveDegreeKrylovNondegeneracy
+        D F) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_projective_degree_Krylov_nonvanishing
+    D F h
+
 /-! ## Index-polymorphic limitless realization -/
 
 /-- One Stage-2G realization with an arbitrary address universe `ι`.
