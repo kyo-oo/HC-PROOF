@@ -95,7 +95,7 @@ theorem cohomologyTrace_rightPullback
   ext alpha
   simp [cohomologyTrace, cohomologyTraceObj, cochainTrace,
     rightCohomologyPullback, rightCohomologyPullbackObj,
-    rightCochainPullback, T.transfer_right]
+    rightCochainPullback, ← Functor.map_comp, T.transfer_right]
 
 /-- Chain transfer manufactures the exact finite Betti trace consumed by the
 whole-cohomology push-pull theorem. -/
@@ -126,7 +126,9 @@ noncomputable def strictGraphCarrierPoint
   let cx := A.pointsEquiv.symm x
   refine ⟨cx.1, ?_⟩
   rw [strictGraph_left]
-  simpa only [Category.comp_id] using cx.2
+  calc
+    (cx.1 ≫ 𝟙 V.X) ≫ V.structureMap = cx.1 ≫ V.structureMap := by simp
+    _ = 𝟙 complexBase := cx.2
 
 /-- The intrinsic analytic point of the strict graph is exactly `(x,f(x))`. -/
 theorem strictGraph_carrierPointPair
@@ -135,14 +137,26 @@ theorem strictGraph_carrierPointPair
     (x : A.space) :
     carrierPointPair A (strictGraph f hf) (strictGraphCarrierPoint A f hf x) =
       (x, transportedPointMap A f x) := by
-  apply Prod.ext
-  · change A.pointsEquiv _ = x
-    simp [carrierPointPair, leftComplexPoint, strictGraphCarrierPoint,
-      strictGraph_left]
-  · change A.pointsEquiv _ = transportedPointMap A f x
-    simp [carrierPointPair, rightComplexPoint, strictGraphCarrierPoint,
-      strictGraph_right, transportedPointMap,
+  have hleft :
+      leftComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x) =
+        A.pointsEquiv.symm x := by
+    apply Subtype.ext
+    simp [leftComplexPoint, strictGraphCarrierPoint, strictGraph_left]
+  have hright :
+      rightComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x) =
+        f.complexPointMap (A.pointsEquiv.symm x) := by
+    apply Subtype.ext
+    simp [rightComplexPoint, strictGraphCarrierPoint, strictGraph_right,
       ComplexSchemeEndomorphism.complexPointMap]
+  apply Prod.ext
+  · change A.pointsEquiv
+      (leftComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x)) = x
+    rw [hleft, Equiv.apply_symm_apply]
+  · change A.pointsEquiv
+      (rightComplexPoint (strictGraph f hf) (strictGraphCarrierPoint A f hf x)) =
+        transportedPointMap A f x
+    rw [hright]
+    rfl
 
 /-- The same actual carrier point, viewed in the genuine factor-swap
 transpose. -/
