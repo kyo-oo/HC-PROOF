@@ -2,6 +2,7 @@ import GSTClassicalHodgeGeometricCycleClassSpine
 import GSTClassicalHodgeGradedCorrespondenceProgramOrbit
 import GSTClassicalHodgeCodimensionZeroFundamentalCycle
 import GSTClassicalHodgeFiberedCosmology
+import GSTHodgeChannelFinale
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
@@ -245,6 +246,78 @@ theorem all_hodge_cycles_of_full_rank_GST_program_matrix
       (fun j => (programs j).cycleEval G
         (codimensionZeroFundamentalCycle V))
       inverse hMatrix a⟩
+
+/-! ## Determinant-based universal geometric target
+
+For the mathematical attack, it is stronger and more useful to demand
+a NONZERO rational determinant of the matrix of genuine GST program
+outputs, instead of furnishing an inverse matrix as extra data.
+NonsingularInverse constructs the inverse automatically, and the
+reconstruction above computes the rational algebraic cycle. -/
+
+/-- Numerical nonvanishing of the ACTUAL native Hodge-coordinate
+matrix canonically gives exact algebraic realization at this weight. -/
+theorem hodge_cycle_of_nonzero_geometric_determinant
+    (G : GeometricCycleClassSpine V H)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (cycles : Fin (Module.finrank ℚ (ClassicalHodgeFiber V H p)) →
+      codimensionCycles V.X p)
+    (hdet : (nativeHodgeMatrix G cycles).det ≠ 0)
+    (alpha : ClassicalHodgeFiber V H p) :
+    H.cycleClass p
+        (nativeCycleByMatrixInversion G cycles
+          (nativeHodgeMatrix G cycles)⁻¹ alpha) = alpha.1 := by
+  classical
+  have hunit : IsUnit (nativeHodgeMatrix G cycles).det :=
+    isUnit_iff_ne_zero.mpr hdet
+  exact geometric_full_rank_produces_all_hodge_cycles
+    G cycles (nativeHodgeMatrix G cycles)⁻¹
+    (Matrix.mul_nonsing_inv (nativeHodgeMatrix G cycles) hunit) alpha
+
+/-- UNIVERSAL geometric determinant-generation hypothesis: for each
+codimension, there are actual GST native correspondence programs from
+the canonical projective origin with linearly independent rational Hodge
+cycle classes spanning the entire Hodge fiber.
+
+Unlike assuming a target Hodge cycle already exists, the data are
+concrete program SYNTAX and ONE scalar determinant inequality.
+It remains to prove such programs exist for arbitrary V; this is the
+substantive geometric challenge to be attacked with new GST operators. -/
+def UniversalGSTGeometricDeterminantGeneration
+    (G : GeometricCycleClassSpine V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H) : Prop :=
+  ∀ q : Nat,
+    letI : FiniteDimensional ℚ (ClassicalHodgeFiber V H q) := F.finite q
+    ∃ programs :
+      Fin (Module.finrank ℚ (ClassicalHodgeFiber V H q)) →
+        GradedCorrespondenceProgram V H 0 q,
+      (nativeGSTProgramHodgeMatrix G programs).det ≠ 0
+
+/-- **FULL RATIONAL HODGE STATEMENT FROM GEOMETRIC DETERMINANTS.**
+
+Every codimension on the ORIGINAL arbitrary smooth projective complex
+carrier is handled simultaneously. The proof explicitly constructs
+a native rational codimension-q algebraic cycle for EVERY rational
+(q,q) Hodge class, using ONLY genuine GST program output cycles.
+
+One geometric nonzero determinant per Hodge weight replaces exact
+target-sheet matching for every basis vector. It is an independently
+testable, scalar, intersection-geometric target for the entire proof. -/
+theorem exact_hodge_of_universal_GST_geometric_determinants
+    (G : GeometricCycleClassSpine V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (h : UniversalGSTGeometricDeterminantGeneration G F) :
+    BigradedBettiHodgeStatement V H := by
+  intro q alpha halpha
+  letI : FiniteDimensional ℚ (ClassicalHodgeFiber V H q) := F.finite q
+  obtain ⟨programs, hdet⟩ := h q
+  let cycles : Fin (Module.finrank ℚ (ClassicalHodgeFiber V H q)) →
+      codimensionCycles V.X q :=
+    fun i => (programs i).cycleEval G (codimensionZeroFundamentalCycle V)
+  let a : ClassicalHodgeFiber V H q := ⟨alpha, halpha⟩
+  refine ⟨nativeCycleByMatrixInversion G cycles
+      (nativeHodgeMatrix G cycles)⁻¹ a, ?_⟩
+  exact hodge_cycle_of_nonzero_geometric_determinant G cycles hdet a
 
 #check geometric_matrix_right_inverse_reconstructs
 #check geometric_full_rank_produces_all_hodge_cycles
