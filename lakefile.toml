@@ -298,6 +298,7 @@ roots = [
   "GSTClassicalHodgeCrossCarrierPointIncidence",
   "GSTClassicalHodgeExactKugaSatakeCliffordAction",
   "GSTClassicalHodgeCMThetaPeriodExtraction",
+  "GSTClassicalHodgeCMSurfaceTensorContraction",
   "GSTClassicalHodgeGeometryFirstNativeWord",
   "GSTClassicalHodgeNativeWordFromArbitrarySeed",
   "GSTClassicalHodgeStage2GSemanticRigidity",
