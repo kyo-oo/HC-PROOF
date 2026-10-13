@@ -69,8 +69,9 @@ noncomputable def cochainTrace
   let F :=
     ((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
       |>.mapHomologicalComplex (ComplexShape.down ℕ)
-  have h := (F.map T.transfer).unop
-  exact h
+  unfold carrierSingularCochains rationalSingularCochains
+  exact (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+    (Quiver.Hom.op (F.map T.transfer))
 
 noncomputable def cohomologyTraceObj
     (T : RightFiniteChainTransfer A K)
@@ -125,7 +126,7 @@ noncomputable def strictGraphCarrierPoint
   let cx := A.pointsEquiv.symm x
   refine ⟨cx.1, ?_⟩
   rw [strictGraph_left]
-  simpa using cx.2
+  simpa only [Category.comp_id] using cx.2
 
 /-- The intrinsic analytic point of the strict graph is exactly `(x,f(x))`. -/
 theorem strictGraph_carrierPointPair

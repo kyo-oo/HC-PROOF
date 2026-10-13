@@ -111,7 +111,7 @@ theorem suppliedPointDirectIncidenceLaw_iff
     have hx := h x
     have hpt : suppliedPointBettiClass (V := V) (H := H) (p := p) x =
         H.cycleClass p (codimensionPointCycle V.X p x) := rfl
-    have hgeo : GeometricCycleClass (V := V) (H := H) (p := p)
+    have hgeo : GSTClassicalHodgeCanonicalIncidenceKernelReduction.GeometricCycleClass (V := V) (H := H) (p := p)
         (suppliedPointBettiClass (V := V) (H := H) (p := p))
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.nativePointImage p x) =
@@ -123,7 +123,7 @@ theorem suppliedPointDirectIncidenceLaw_iff
   · intro h x
     have hpt : suppliedPointBettiClass (V := V) (H := H) (p := p) x =
         H.cycleClass p (codimensionPointCycle V.X p x) := rfl
-    have hgeo : GeometricCycleClass (V := V) (H := H) (p := p)
+    have hgeo : GSTClassicalHodgeCanonicalIncidenceKernelReduction.GeometricCycleClass (V := V) (H := H) (p := p)
         (suppliedPointBettiClass (V := V) (H := H) (p := p))
         (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
           |>.nativePointImage p x) =
