@@ -1,6 +1,10 @@
 import GSTClassicalHodgeGradedOrbitSingleProgramCollapse
 import GSTClassicalHodgeOmniversalSeparatorGhostCrown
 import GSTClassicalHodgeNativeExecutablePlane
+import GSTClassicalHodgeAtomicDefectDuality
+import GSTClassicalHodgeCodimensionZeroFundamentalCycle
+import GSTClassicalHodgeGradedGeometricProgramOrbit
+import GSTClassicalHodgeCrossWeightNativePropagation
 
 /-!
 # GST CLASSICAL HODGE — FULL CORRESPONDENCE GST PLANE COMPLETION
@@ -37,6 +41,7 @@ open GSTClassicalHodgeGradedOrbitSingleProgramCollapse
 open GSTClassicalHodgeExactClayStatement
 open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeAtomicSpan
+open GSTClassicalHodgeAtomicDefectDuality
 open GSTClassicalHodgeLimitlessSeparatorGhost
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
 
@@ -72,9 +77,9 @@ theorem fullOrbitCyclic_of_plane
   rw [fullCorrespondenceOrbitSubspace_eq_module G q]
   let alphaH : ClassicalHodgeFiber V H q := ⟨alpha,halpha⟩
   rw [show alpha =
-      ∑ j ∈ ((classicalHodgeBasis V H q).repr alphaH).support,
-        ((classicalHodgeBasis V H q).repr alphaH j) •
-          (classicalHodgeBasis V H q j).1 by
+      ((classicalHodgeBasis V H q).repr alphaH).support.sum
+        (fun j => ((classicalHodgeBasis V H q).repr alphaH j) •
+          (classicalHodgeBasis V H q j).1) by
     exact congrArg Subtype.val ((classicalHodgeBasis V H q).sum_repr alphaH)]
   apply Submodule.sum_mem
   intro j hj
@@ -244,8 +249,14 @@ theorem fullOrbitCyclic_of_fullPairingTotal
     fiberedPairing_separatorProbe
       (V := V) (H := H) q ell alphaH
   have hz : ell alpha = 0 := by
-    rw [hg] at hp
-    simpa [g, alphaH, fiberedPairing] using hp
+    have hpairZero :
+        fiberedPairing (fiberedWeightCoordinates V H q alphaH) g = 0 := by
+      rw [hg]
+      simp [fiberedPairing]
+    have hpairExact :
+        fiberedPairing (fiberedWeightCoordinates V H q alphaH) g = ell alpha := by
+      simpa [g, alphaH] using hp
+    exact hpairExact.symm.trans hpairZero
   exact hdetect hz
 
 /-- **EXACT FULL-PROGRAM IDENTIFICATION.**
@@ -327,10 +338,27 @@ theorem cycleEval_eq_nativeEval
     (P : GradedCorrespondenceProgram V H p q) :
     P.cycleEval G =
       GSTClassicalHodgeNativeExecutablePlane.nativeEval P := by
-  induction P <;>
-    simp [GradedCorrespondenceProgram.cycleEval,
-      GradedCorrespondenceProgram.toPair,
-      GSTClassicalHodgeNativeExecutablePlane.nativeEval, *]
+  induction P with
+  | id p =>
+      rfl
+  | correspondence E =>
+      rfl
+  | cut p =>
+      exact G.principalCutPair_native p
+  | add A B ihA ihB =>
+      change A.cycleEval G + B.cycleEval G =
+        GSTClassicalHodgeNativeExecutablePlane.nativeEval A +
+          GSTClassicalHodgeNativeExecutablePlane.nativeEval B
+      rw [ihA, ihB]
+  | smul a A ih =>
+      change a • A.cycleEval G =
+        a • GSTClassicalHodgeNativeExecutablePlane.nativeEval A
+      rw [ih]
+  | comp A B ihA ihB =>
+      change (B.cycleEval G).comp (A.cycleEval G) =
+        (GSTClassicalHodgeNativeExecutablePlane.nativeEval B).comp
+          (GSTClassicalHodgeNativeExecutablePlane.nativeEval A)
+      rw [ihA, ihB]
 
 /-- Every cohomological full-correspondence plane therefore compiles to the
 native-only executable plane.  No new realization law is introduced here. -/
@@ -427,18 +455,19 @@ theorem noGhost_of_nativeExecutablePlane
   obtain ⟨P, hP⟩ := hplane E.weight E.sheet
   let Z : codimensionCycles V.X E.weight :=
     GSTClassicalHodgeNativeExecutablePlane.nativeOutput P
-  have hkill :=
-    E.kills_all_native_programs E.weight
-      (GSTClassicalHodgeGradedGeometricProgramOrbit.GradedGeometricProgram.id
-        E.weight) Z
+  have hrange :
+      H.cycleClass E.weight Z ∈
+        pointCycleClassSpan E.weight (H.cycleClass E.weight) := by
+    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H E.weight]
+    exact ⟨Z, rfl⟩
+  have hker :
+      pointCycleClassSpan E.weight (H.cycleClass E.weight) ≤
+        LinearMap.ker E.separator.detector :=
+    (annihilatesPointCycles_iff_atomicSpan_le_ker
+      E.weight (H.cycleClass E.weight) E.separator.detector).mp
+        E.separator.annihilates_atoms
   have hzero :
-      E.separator.detector (H.cycleClass E.weight Z) = 0 := by
-    simpa [GSTClassicalHodgeGradedGeometricProgramOrbit
-      .GradedGeometricProgram.cohomologyEval,
-      GSTClassicalHodgeGradedGeometricProgramOrbit
-      .GradedGeometricProgram.toPair,
-      GSTClassicalHodgeCrossWeightNativePropagation
-      .GradedCycleClassOperatorPair.idPair] using hkill
+      E.separator.detector (H.cycleClass E.weight Z) = 0 := hker hrange
   rw [show H.cycleClass E.weight Z =
       (classicalHodgeBasis V H E.weight E.sheet).1 by
         exact hP] at hzero
@@ -557,8 +586,16 @@ theorem basisCycle_spec
   have hnat :=
     P.cycleClass_cycleEval G
       (GSTClassicalHodgeCodimensionZeroFundamentalCycle.codimensionZeroFundamentalCycle V)
-  rw [hP] at hnat
-  simpa [basisCycle, P, correspondenceGeometricOriginClass] using hnat
+  calc
+    H.cycleClass q (basisCycle G hplane q j) =
+        H.cycleClass q
+          (P.cycleEval G
+            (GSTClassicalHodgeCodimensionZeroFundamentalCycle
+              .codimensionZeroFundamentalCycle V)) := by
+          rfl
+    _ = P.cohomologyEval G (correspondenceGeometricOriginClass V H) := by
+          simpa [correspondenceGeometricOriginClass] using hnat
+    _ = (classicalHodgeBasis V H q j).1 := hP
 
 theorem hodge_of_fullCorrespondenceGSTPlane
     (G : GeometricCycleClassSpine V H)
@@ -576,7 +613,7 @@ theorem nativeCycle_of_fullCorrespondenceGSTPlane
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading q)) :
     ∃ Z : codimensionCycles V.X q,
       H.cycleClass q Z = alpha :=
-  hodge_of_fullCorrespondenceGSTPlane G hplane q alpha halpha
+  (hodge_of_fullCorrespondenceGSTPlane G hplane) q halpha
 
 #check FullCorrespondenceGSTPlaneCompleteness
 #check basis_mem_fullOrbit_of_plane
