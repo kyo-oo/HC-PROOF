@@ -40,9 +40,16 @@ jobs:
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
-          lake update
           lake exe cache get
 
+      # Reuse verified .olean dependencies from earlier attempts.
+      - name: Restore incremental Lean shard cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: hc-diagnostic-shard-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+          restore-keys: |
+            hc-diagnostic-shard-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
       - name: Compile Hodge root shard
         shell: bash
         env:
@@ -71,6 +78,14 @@ jobs:
           PY
           )
           lake build "${roots[@]}" 2>&1 | tee "hodge-shard-${SHARD}.log"
+
+      # Successful dependency modules are reusable even if later roots fail.
+      - name: Save incremental Lean shard cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-diagnostic-shard-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
 
       - name: Upload shard diagnostics
         if: always()
