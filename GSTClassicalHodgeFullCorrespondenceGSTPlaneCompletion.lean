@@ -42,6 +42,8 @@ open GSTClassicalHodgeExactClayStatement
 open GSTClassicalHodgeAtomicAnnihilator
 open GSTClassicalHodgeAtomicSpan
 open GSTClassicalHodgeAtomicDefectDuality
+open GSTClassicalHodgeGradedGeometricProgramOrbit
+open GSTClassicalHodgeCrossWeightNativePropagation
 open GSTClassicalHodgeCodimensionZeroFundamentalCycle
 open GSTClassicalHodgeLimitlessSeparatorGhost
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
@@ -75,6 +77,7 @@ theorem fullOrbitCyclic_of_plane
     (hplane : FullCorrespondenceGSTPlaneCompleteness G) :
     FullCorrespondenceOrbitCyclic G := by
   intro q alpha halpha
+  classical
   rw [fullCorrespondenceOrbitSubspace_eq_module G q]
   let alphaH : ClassicalHodgeFiber V H q := ⟨alpha,halpha⟩
   rw [show alpha =
