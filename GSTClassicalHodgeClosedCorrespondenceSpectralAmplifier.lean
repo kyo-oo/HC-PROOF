@@ -170,13 +170,20 @@ theorem augmentedProjectorOnHodge_apply
           subst k
           exact hji hk.symm
         rw [← hk]
+        have hneq : W.basisIndex i ≠ W.basisIndex k :=
+          W.basisIndex_injective.ne hki.symm
+        have hcoord :
+            hodgeCoordinate (W.basisIndex i)
+              (classicalHodgeBasis V H p (W.basisIndex k)) = 0 :=
+          hodgeCoordinate_basis_other (W.basisIndex i) (W.basisIndex k) hneq
         simp [augmentedProjectorOnHodge,
-          W.augmentedIsolator_kills_other i k hki,
-          hodgeMatrixUnit_basis_other,
-          W.basisIndex_injective.ne hki]
-      · simp [augmentedProjectorOnHodge,
-          W.augmentedIsolator_kills_unselected i j hsel,
-          hodgeMatrixUnit_basis_other, hji]
+          W.augmentedIsolator_kills_other i k hki, hcoord]
+      · have hcoord :
+            hodgeCoordinate (W.basisIndex i)
+              (classicalHodgeBasis V H p j) = 0 :=
+          hodgeCoordinate_basis_other (W.basisIndex i) j hji.symm
+        simp [augmentedProjectorOnHodge,
+          W.augmentedIsolator_kills_unselected i j hsel, hcoord]
   have happly := LinearMap.congr_fun hmap alpha
   simpa [hodgeMatrixUnit_apply, smul_smul, mul_comm, mul_left_comm,
     mul_assoc] using happly
