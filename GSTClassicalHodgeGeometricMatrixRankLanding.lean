@@ -190,8 +190,16 @@ theorem geometric_full_rank_produces_all_hodge_cycles
   have hcycle :
       nativeToHodgeFiberLinear G
         (nativeCycleByMatrixInversion G cycles inverse alpha) = alpha := by
-    simpa only [nativeCycleByMatrixInversion, b,
-      map_sum, map_smul, nativeToHodgeFiberLinear, geometricHodgeClass] using hrepr
+    change nativeToHodgeFiberLinear G
+        (∑ j : Fin (Module.finrank ℚ (ClassicalHodgeFiber V H p)),
+          (inverse.mulVec (fun i => (b.repr alpha) i)) j • cycles j) = alpha
+    rw [map_sum]
+    simp only [map_smul]
+    change
+      (∑ j : Fin (Module.finrank ℚ (ClassicalHodgeFiber V H p)),
+        (inverse.mulVec (fun i => (b.repr alpha) i)) j •
+          geometricHodgeClass G (cycles j)) = alpha
+    exact hrepr
   exact congrArg Subtype.val hcycle
 
 /-! ## Direct tie-in to EXISTING graded GST geometric program outputs. -/
