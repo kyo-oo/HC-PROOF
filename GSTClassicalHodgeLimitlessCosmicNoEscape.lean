@@ -37,6 +37,9 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
+open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeConcreteFailureDichotomy
+open GSTClassicalHodgeLimitlessCosmicMatrixUnits
 open GSTClassicalHodgeLimitlessTwoSlotFailureDichotomy
 open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeGeometryFirstNativeWord
@@ -57,7 +60,6 @@ theorem nativeWord_ambient_eq_limitlessCosmic_on_hodge
         (GSTClassicalHodgeLimitlessCosmicMatrixUnits.rationalCosmicMatrixUnit
           sourceSlot.1 targetSlot.1) alpha := by
   rw [R.ambientWord_on_hodge]
-  rw [hodgeMatrixUnit_eq_lift_limitless_cosmic]
 
 /-- Consequently the unrestricted cosmic matrix-unit lift sends every
 algebraic Hodge vector to another actual cycle-class value whenever the one
