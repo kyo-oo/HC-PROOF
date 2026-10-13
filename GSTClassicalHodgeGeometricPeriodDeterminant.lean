@@ -1,5 +1,6 @@
 import GSTClassicalHodgeGeometricMatrixRankLanding
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.LinearAlgebra.Matrix.Block
 
 /-!
 # FROM GEOMETRIC INTERSECTION PERIODS TO FULL HODGE RANK
@@ -177,6 +178,45 @@ theorem native_cycle_of_nonzero_GST_period_determinant
   exact ⟨nativeCycleByMatrixInversion G cycles
     (nativeHodgeMatrix G cycles)⁻¹ alpha,
     hodge_cycle_of_nonzero_geometric_determinant G cycles hDet alpha⟩
+
+/-! ## Geometry-first triangular period certificate
+
+The existing GSTClassicalHodgeLefschetzTomography proves an intrinsic
+unit-triangular readout on abstract Hodge-support addresses. To
+complete the GEOMETRIC attack, construct the same shape using ACTUAL
+GST correspondence-output cycles and genuine period detectors.
+
+The determinant then follows from triangularity and nonzero diagonal
+intersection numbers. This replaces an opaque determinant computation
+with explicit off-diagonal vanishing and diagonal positivity claims. -/
+
+/-- Upper triangular rational geometric periods with nonzero diagonal
+have nonzero determinant, so they reconstruct EVERY Hodge class in
+the corresponding weight as an actual native algebraic cycle. -/
+theorem native_cycle_of_triangular_GST_periods
+    (G : GeometricCycleClassSpine V H)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (programs :
+      Fin (Module.finrank ℚ (ClassicalHodgeFiber V H p)) →
+        GradedCorrespondenceProgram V H 0 p)
+    (detectors :
+      Fin (Module.finrank ℚ (ClassicalHodgeFiber V H p)) →
+        ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ)
+    (hTriangular :
+      (nativeGSTPeriodMatrix G programs detectors).IsUpperTriangular)
+    (hDiagonal :
+      ∀ i : Fin (Module.finrank ℚ (ClassicalHodgeFiber V H p)),
+        nativeGSTPeriodMatrix G programs detectors i i ≠ 0)
+    (alpha : ClassicalHodgeFiber V H p) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha.1 := by
+  have hDet : (nativeGSTPeriodMatrix G programs detectors).det ≠ 0 := by
+    rw [Matrix.det_of_isUpperTriangular hTriangular]
+    apply (Finset.prod_ne_zero_iff).2
+    intro i hi
+    exact hDiagonal i
+  exact native_cycle_of_nonzero_GST_period_determinant
+    G programs detectors hDet alpha
 
 #check periodMatrix_eq_detector_mul_coordinate
 #check coordinate_det_ne_zero_of_period_det_ne_zero
