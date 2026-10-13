@@ -289,6 +289,7 @@ roots = [
   "GSTClassicalHodgeNativeTransferAddressIdentification",
   "GSTClassicalHodgeGeometricCycleClassSpine",
   "GSTClassicalHodgeGeometryFirstTwoGenerator",
+  "GSTClassicalHodgeCrossCarrierGeometricTransfer",
   "GSTClassicalHodgeGeometryFirstNativeWord",
   "GSTClassicalHodgeNativeWordFromArbitrarySeed",
   "GSTClassicalHodgeStage2GSemanticRigidity",
