@@ -326,8 +326,7 @@ theorem classicalHodgeTarget_of_conserved_spine_and_projective_two_generators
           (V := V) (H := H) i j) :
     ClassicalHodgeTarget V H := by
   simpa [ClassicalHodgeTarget] using
-    (GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+    (GSTClassicalHodgeProjectiveTwoGeneratorExternalization.bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
         G D R)
 
 /-- Elementwise cycle witness for the geometry-first brute-force landing. -/
@@ -348,8 +347,7 @@ theorem every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two
     ∃ Z : codimensionCycles V.X p,
       H.cycleClass p Z = alpha := by
   exact
-    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
+    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.every_hodge_class_has_native_cycle_of_conserved_spine_and_projective_two_generators
         G D R p alpha halpha
 
 /-- Once ordinary Hodge-fiber finite-dimensionality is supplied, the full
@@ -392,8 +390,7 @@ theorem canonical_basis_algebraization_of_conserved_spine_and_projective_two_gen
     (GSTHodgeChannelFinale.canonical_basis_algebraization_iff_hodge
       V H F).2
   exact
-    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.
-      bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
+    GSTClassicalHodgeProjectiveTwoGeneratorExternalization.bigradedBettiHodge_of_conserved_spine_and_projective_two_generators
         G D R
 
 /-- The same geometric/cosmic crown therefore generates the minimal Wave-II
@@ -472,7 +469,7 @@ theorem every_hodge_class_has_native_cycle_of_nativeExecutableGSTPlane
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
       H.cycleClass p Z = alpha :=
   GSTClassicalHodgeNativeExecutablePlane.hodge_of_nativeExecutableGSTPlane
-    hplane p alpha halpha
+    hplane p halpha
 
 /-- **PUBLIC EXECUTABLE GST-PLANE LANDING.**
 
@@ -486,11 +483,9 @@ theorem classicalHodgeTarget_of_fullCorrespondenceGSTPlane
     (G :
       GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
     (hplane :
-      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
-        .FullCorrespondenceGSTPlaneCompleteness G) :
+      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.FullCorrespondenceGSTPlaneCompleteness G) :
     ClassicalHodgeTarget V H :=
-  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
-    .hodge_of_fullCorrespondenceGSTPlane G hplane
+  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.hodge_of_fullCorrespondenceGSTPlane G hplane
 
 /-- Constructive public form of the executable GST-plane landing. -/
 theorem every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
@@ -499,8 +494,7 @@ theorem every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
     (G :
       GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
     (hplane :
-      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
-        .FullCorrespondenceGSTPlaneCompleteness G)
+      GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.FullCorrespondenceGSTPlaneCompleteness G)
     (p : Nat)
     (alpha :
       GSTGeometricRealizationStage2F.RationalSingularCohomology
@@ -511,8 +505,7 @@ theorem every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
           (H.hodgeBigrading p)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
       H.cycleClass p Z = alpha :=
-  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
-    .nativeCycle_of_fullCorrespondenceGSTPlane G hplane p alpha halpha
+  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.nativeCycle_of_fullCorrespondenceGSTPlane G hplane p alpha halpha
 
 /-- Same-weight multiplicity is unrestricted in the final public landing. -/
 theorem no_same_weight_hodge_rank_ceiling :
