@@ -16,6 +16,7 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeNativeWordFromArbitrarySeed
+open GSTClassicalHodgeGeneralSpaceRealization
 open GSTClassicalHodgeGeneralSpaceOperatorCosmos
 open GSTClassicalHodgeExactClayStatement
 
