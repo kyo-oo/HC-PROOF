@@ -88,8 +88,9 @@ theorem nativeOfFinitePointKernel_finite_sum
     (K : FiniteCrossCarrierPointKernel V W p q)
     (Z : codimensionCycles V.X p) :
     nativeOfFinitePointKernel K Z =
-      (presentationOfNativeCycle V.X p Z).sum
-        (fun x a => a • realizeFiniteCodimensionPresentation W.X q (K x)) := by
+      (letI : CompactSpace V.X := smoothProjectiveCompactSpace V
+       (presentationOfNativeCycle V.X p Z).sum
+         (fun x a => a • realizeFiniteCodimensionPresentation W.X q (K x))) := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   simp [nativeOfFinitePointKernel, realizePresentationLinear_apply,
     Finsupp.linearCombination, Finsupp.sum, map_sum]
