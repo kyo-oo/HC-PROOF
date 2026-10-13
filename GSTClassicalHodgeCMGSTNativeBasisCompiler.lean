@@ -127,7 +127,7 @@ theorem nativeBasisCycle_spec
   apply rationalCycleFromExtensionCoefficients_spec
     C.active C.nativeTerm C.coefficient
     (classicalHodgeBasis V H q j).1
-  intro i
+  intro b i
   simpa only [C.nativeTerm_cycleClass] using C.basisPeriodExpansion i
 
 /-- A concrete GST surface packet independently establishes algebraicity of
