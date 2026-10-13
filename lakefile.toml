@@ -308,6 +308,7 @@ roots = [
   "GSTClassicalHodgeCMSurfaceDegreeParity",
   "GSTClassicalHodgeCMGaloisConjugateSpan",
   "GSTClassicalHodgeCMGSTNativeBasisCompiler",
+  "GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler",
   "GSTClassicalHodgeGeometryFirstNativeWord",
   "GSTClassicalHodgeNativeWordFromArbitrarySeed",
   "GSTClassicalHodgeStage2GSemanticRigidity",
