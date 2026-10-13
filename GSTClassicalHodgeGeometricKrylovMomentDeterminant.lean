@@ -126,7 +126,7 @@ theorem native_cycle_of_nonzero_krylov_hankel_determinant
   have hMunit : IsUnit M.det := isUnit_iff_ne_zero.mpr hMdet
   let coefficients :
       Fin (KrylovRank (V := V) (H := H) (p := p)) → ℚ :=
-    M⁻¹ |>.mulVec (fun i => (b.repr alpha) i)
+    (M⁻¹).mulVec (fun i => (b.repr alpha) i)
   let Z : codimensionCycles V.X p :=
     ∑ j : Fin (KrylovRank (V := V) (H := H) (p := p)),
       coefficients j • C.nativeOrbit j.val
