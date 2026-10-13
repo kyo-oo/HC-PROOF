@@ -472,7 +472,7 @@ theorem every_hodge_class_has_native_cycle_of_nativeExecutableGSTPlane
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
       H.cycleClass p Z = alpha :=
   GSTClassicalHodgeNativeExecutablePlane.hodge_of_nativeExecutableGSTPlane
-    hplane p alpha halpha
+    hplane p halpha
 
 /-- **PUBLIC EXECUTABLE GST-PLANE LANDING.**
 
