@@ -297,6 +297,7 @@ roots = [
   "GSTClassicalHodgeOpenAIGeometryNoncircularityAudit",
   "GSTClassicalHodgeCrossCarrierPointIncidence",
   "GSTClassicalHodgeExactKugaSatakeCliffordAction",
+  "GSTClassicalHodgeCMThetaPeriodExtraction",
   "GSTClassicalHodgeGeometryFirstNativeWord",
   "GSTClassicalHodgeNativeWordFromArbitrarySeed",
   "GSTClassicalHodgeStage2GSemanticRigidity",
