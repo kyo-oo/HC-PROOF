@@ -259,9 +259,7 @@ theorem transposeGraphCarrierPoint_on_graph
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
     strictGraph_transpose_left, strictGraph_transpose_right]
-  have hz : (↑z ≫ 𝟙 ((strictGraph f hf).transpose).carrier) ≫ f.hom = ↑z ≫ f.hom := by
-    rw [Category.comp_id]
-  exact hz.symm
+  exact (congrArg (fun m => m ≫ f.hom) (Category.comp_id _)).symm
 
 /-- The previously constructed graph section is also a right inverse.
 Both inverse laws are now geometric theorems, with no carrier-coherence axiom. -/
