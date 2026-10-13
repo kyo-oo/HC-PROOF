@@ -97,7 +97,7 @@ theorem cohomologyTrace_rightPullback
       RightFiniteChainTransfer.cochainTrace A K T =
       T.degree • 𝟙 (rationalSingularCochains A) := by
     simp only [rightCochainPullback, RightFiniteChainTransfer.cochainTrace, id_eq]
-    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+    rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
       ← CategoryTheory.Functor.map_comp, T.transfer_right]
     simp
   unfold RightFiniteChainTransfer.cohomologyTrace

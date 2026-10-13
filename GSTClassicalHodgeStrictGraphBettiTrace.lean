@@ -169,9 +169,9 @@ theorem rightCochainPullback_transposeGraphSection
         |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
         (transposeGraphSectionChainMap A F hf))) =
     𝟙 (rationalSingularCochains A) := by
-    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+    rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
       ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_right,
-      CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
+      CategoryTheory.Functor.map_id, CategoryTheory.op_id, CategoryTheory.Functor.map_id]
   exact h1
 
 /-- **GRAPH-RETRACTION COHOMOLOGY LAW.**
@@ -259,7 +259,7 @@ theorem transposeGraphCarrierPoint_on_graph
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
     strictGraph_transpose_left, strictGraph_transpose_right]
-  have hz : (↑z ≫ 𝟙 V.X) ≫ f.hom = ↑z ≫ f.hom := by
+  have hz : (↑z ≫ 𝟙 ((strictGraph f hf).transpose).carrier) ≫ f.hom = ↑z ≫ f.hom := by
     rw [Category.comp_id]
   exact hz.symm
 
@@ -322,9 +322,9 @@ theorem transposeGraphSectionCochainPullback_right
         |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
         (rightChainMap A ((strictGraph F.algebraic hf).transpose)))) =
     𝟙 (carrierSingularCochains A ((strictGraph F.algebraic hf).transpose)) := by
-    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+    rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
       ← CategoryTheory.Functor.map_comp, transposeGraphRightChainMap_section,
-      CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
+      CategoryTheory.Functor.map_id, CategoryTheory.op_id, CategoryTheory.Functor.map_id]
   exact h1
 
 /-- Right pullback and section pullback are inverse on the WHOLE carrier
@@ -436,7 +436,7 @@ theorem leftCochainPullback_transposeGraphSection
       (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
         |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
         (singularChainMap A F))) := by
-    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+    rw [← CategoryTheory.Functor.map_comp, ← CategoryTheory.op_comp,
       ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_left]
   exact h1
 
