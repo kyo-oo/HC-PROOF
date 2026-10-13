@@ -138,8 +138,9 @@ noncomputable def fullProgramHodgeState
       P.cohomologyEval_mem_cycleClass_range G
         (codimensionZeroFundamentalCycle V)
     rcases hrange with ⟨Z, hZ⟩
-    rw [← hZ]
-    exact G.algebraic_is_hodge q Z⟩
+    have hmem := G.algebraic_is_hodge q Z
+    rw [hZ] at hmem
+    simpa [correspondenceGeometricOriginClass] using hmem⟩
 
 /-- Exact unrestricted fibered address of one executable full program state. -/
 noncomputable def fullProgramFiberedAddress
@@ -178,8 +179,9 @@ theorem fullProgramFiberedAddress_eq_basis
             P.cohomologyEval_mem_cycleClass_range G
               (codimensionZeroFundamentalCycle V)
           rcases hrange with ⟨Z, hZ⟩
-          rw [← hZ]
-          exact G.algebraic_is_hodge q Z⟩ :
+          have hmem := G.algebraic_is_hodge q Z
+          rw [hZ] at hmem
+          simpa [correspondenceGeometricOriginClass] using hmem⟩ :
         ClassicalHodgeFiber V H q) =
       classicalHodgeBasis V H q j by
     apply Subtype.ext
@@ -381,7 +383,8 @@ theorem nativeExecutablePlane_of_fullCorrespondencePlane
       A (codimensionZeroFundamentalCycle V))
     (cycleEval_eq_nativeEval G P)
   change H.cycleClass q
-      (GSTClassicalHodgeNativeExecutablePlane.nativeOutput P) =
+      ((GSTClassicalHodgeNativeExecutablePlane.nativeEval P)
+        (codimensionZeroFundamentalCycle V)) =
         (classicalHodgeBasis V H q j).1
   rw [← hcycle]
   exact hnat.trans hP
