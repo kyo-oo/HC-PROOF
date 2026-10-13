@@ -183,3 +183,38 @@ This inventory is a finding aid. The presence of a title does not mean the theor
 | 359 | Negative K\"ahler curvature without bounded holomorphic coordinates | [Original](https://github.com/openai/math/blob/main/preprints/A-negatively-pinched-Kahler-threefold-without-bounded-holomorphic-coordinates-September-25-2026/paper.pdf) |
 | 360 | Villani’s convexity conjecture and regular optimal transport | [Original](https://github.com/openai/math/blob/main/preprints/Global-Support-and-Convex-Injectivity-Domains-under-Weak-MTW-September-25-2026/paper.pdf) |
 | 361 | Counterexamples to Yau's harmonic dimension bound | [Original](https://github.com/openai/math/blob/main/preprints/A-counterexample-to-integer-degree-harmonic-dimension-comparison-September-25-2026/paper.pdf) |
+
+## Repository-supplied Lean formalization cross-check
+
+[OpenAI's own formalization manifest](https://github.com/openai/math/blob/main/lean/formalization.yaml) lists manuscript-level Lean main results. Comparing its named PDF IDs to the four geometry categories above yields **26 geometry-related families containing 33 listed manuscript formalizations**, out of 98 indexed geometry families. This is **not** 33 independently audited geometric Hodge proofs; the manifest's review field states `unchecked`. Most do not address cycle classes or Hodge; the source code, proof assumptions, and target statement must be inspected separately.
+
+The CM abelian Hodge manuscript from family **032 is absent from the manifest**. Its LaTeX proof is not a machine-verified theorem merely because other mathematics in the collection has Lean files.
+
+| Family | Geometric subject | Matched manuscript IDs in formalization manifest |
+|---|---|---|
+| 039 | Nagata's conjecture and maximal Seshadri constants | 2 |
+| 047 | Complex counterexamples to cancellation and affine fibrations | 1 |
+| 049 | A stable-coordinate counterexample in four variables | 2 |
+| 050 | A counterexample to Griffiths' positivity conjecture | 1 |
+| 052 | Tangent-bundle splittings and universal covers | 1 |
+| 058 | The Koll\'ar--Pardon universal-cover conjecture | 1 |
+| 066 | Bounded klt complements for Fano contractions | 1 |
+| 087 | The Mahler conjectures and symplectic width | 2 |
+| 088 | Petty's projection-volume conjecture and simplex counterexamples | 2 |
+| 089 | Bounded-distortion $L_1$ embeddings of planar and bounded-treewidth graphs | 2 |
+| 091 | The logarithmic Brunn--Minkowski conjecture | 1 |
+| 092 | The optimal order of convex-body covering density | 1 |
+| 094 | Subpolynomial dimension reduction in $L_p$ | 1 |
+| 095 | Hyperbolicity cones without semidefinite lifts | 1 |
+| 096 | The Gaussian propeller conjecture | 1 |
+| 097 | The Euclidean Steinitz--Bergstr\"om conjecture | 1 |
+| 098 | A negative answer to the Lang--Plaut problem | 1 |
+| 312 | The Grothendieck homotopy hypothesis | 1 |
+| 334 | A smooth surface metric with no local immersion in $\mathbb R^3$ | 1 |
+| 347 | Counterexamples to strong forms of Arnold's fixed-point conjecture | 1 |
+| 350 | Yau's nodal conjecture: surfaces and counterexamples | 2 |
+| 356 | Gigli's characterization of Alexandrov curvature | 1 |
+| 358 | A three-manifold with no conjugate points and no nonpositively curved metric | 1 |
+| 359 | Negative K\"ahler curvature without bounded holomorphic coordinates | 1 |
+| 360 | Villani’s convexity conjecture and regular optimal transport | 2 |
+| 361 | Counterexamples to Yau's harmonic dimension bound | 1 |
