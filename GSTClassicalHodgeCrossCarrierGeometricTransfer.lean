@@ -130,7 +130,7 @@ theorem native_range_preserved
     (R : CrossCarrierTransfer V W H J p q)
     (Z : codimensionCycles V.X p) :
     R.betti (H.cycleClass p Z) ∈ LinearMap.range (J.cycleClass q) :=
-  ⟨R.native Z, (R.naturality Z).symm⟩
+  ⟨R.native Z, R.naturality Z⟩
 
 /-- SURFACE-SWITCH EXTRACTION.
 
