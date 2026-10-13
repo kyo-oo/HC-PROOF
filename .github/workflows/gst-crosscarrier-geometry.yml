@@ -1,13 +1,7 @@
 name: GST Cross-Carrier Geometry Verification
 
+# NEEDS CI RUN LATER: manual dispatch only during the Lean-writing phase.
 on:
-  push:
-    branches:
-      - research/openai-cm-gale-gst-crosscarrier-20261013
-    paths:
-      - 'GSTClassicalHodgeCrossCarrierGeometricTransfer.lean'
-      - 'lakefile.toml'
-      - '.github/workflows/gst-crosscarrier-geometry.yml'
   workflow_dispatch:
 
 permissions:
