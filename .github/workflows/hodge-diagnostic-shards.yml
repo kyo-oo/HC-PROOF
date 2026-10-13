@@ -1,14 +1,9 @@
 name: Hodge Compile Diagnostic Shards
 
+# Full integration already builds HodgePureMath on each push.
+# Keep all eight shards for on-demand, parallel root-level fault isolation;
+# avoid duplicating the entire expensive project graph on every source edit.
 on:
-  push:
-    branches:
-      - sol/gst-plane-completeness-8408fd0
-      - clean/advanced-gst-hodge-20261009
-    paths:
-      - '**/*.lean'
-      - 'lakefile.toml'
-      - '.github/workflows/hodge-diagnostic-shards.yml'
   workflow_dispatch:
 
 permissions:
