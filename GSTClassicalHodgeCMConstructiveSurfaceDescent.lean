@@ -87,7 +87,7 @@ theorem rational_target_of_finite_surface_kernel
             coeff j * algebraMap ℚ K
               ((b.repr (H.cycleClass q
                 (nativeOfFinitePointKernel pointKernel (sourceCycles j)))) i) := by
-    intro i
+    intro b i
     simpa only [finitePointKernel_naturality
       pointKernel betti hIncidence] using hBettiExpansion i
   exact rational_native_cycle_of_extended_span

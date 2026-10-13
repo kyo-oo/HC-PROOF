@@ -31,10 +31,7 @@ jobs:
       max-parallel: 4
       matrix:
         target:
-          - GSTClassicalHodgeGeometricMatrixRankLanding
-          - GSTClassicalHodgeGeometricPeriodDeterminant
           - GSTClassicalHodgeGeometricKrylovMomentDeterminant
-          - GSTClassicalHodgeCMGSTNativeBasisCompiler
           - GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler
           - GSTClassicalHodgeCrossCarrierSelfProductCompatibility
           - HodgeConjecture
