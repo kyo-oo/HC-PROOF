@@ -87,13 +87,11 @@ theorem periodMatrix_eq_detector_mul_coordinate
   ext i j
   change detector i (z j) =
     ∑ k : ι, detector i (b k) * (b.repr (z j)) k
-  calc
-    detector i (z j) =
-        detector i
-          (∑ k : ι, (b.repr (z j)) k • b k) := by
-            rw [b.sum_repr (z j)]
-    _ = ∑ k : ι, detector i (b k) * (b.repr (z j)) k := by
-          simp [map_sum, map_smul, smul_eq_mul, mul_comm]
+  conv_lhs => rw [← b.sum_repr (z j)]
+  simp only [map_sum, map_smul, smul_eq_mul]
+  apply Finset.sum_congr rfl
+  intro k hk
+  exact mul_comm _ _
 
 /-- NONZERO PERIOD DETERMINANT -> NONZERO COORDINATE DETERMINANT.
 The proof is independent of any numerical nondegeneracy assumption on
