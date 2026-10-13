@@ -11,6 +11,7 @@ on:
       - 'HodgeConjecture.lean'
       - 'GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier.lean'
       - 'GSTClassicalHodgeGhostIndexedCriterionCircularity.lean'
+      - 'GSTClassicalHodgeGeometryFirstNativeWord.lean'
       - '.github/workflows/hc-repair-focused.yml'
   workflow_dispatch:
 
@@ -50,7 +51,7 @@ jobs:
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
-      - name: Build only the three repaired modules and their imports
+      - name: Build focused integration modules and their imports
         shell: bash
         run: |
           set -euo pipefail
@@ -59,6 +60,7 @@ jobs:
           import HodgeConjecture
           import GSTClassicalHodgeClosedCorrespondenceSpectralAmplifier
           import GSTClassicalHodgeGhostIndexedCriterionCircularity
+          import GSTClassicalHodgeGeometryFirstNativeWord
           LEAN
           cat >> lakefile.toml <<'TOML'
 
