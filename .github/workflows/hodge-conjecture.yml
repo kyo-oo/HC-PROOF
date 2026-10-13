@@ -21,22 +21,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  final-hodge-integration:
+  complete-math:
+    name: Complete Hodge mathematics
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.ref }}
           fetch-depth: 1
-
       - name: Restore cached Lean toolchain
         id: lean-toolchain-cache
         uses: actions/cache/restore@v4
         with:
           path: ~/.elan
           key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
-      - name: Install Lean and pinned Mathlib
+      - name: Install pinned Lean and Mathlib cache
         shell: bash
         run: |
           set -euo pipefail
@@ -46,7 +45,6 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
-
       - name: Save cached Lean toolchain
         if: steps.lean-toolchain-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -57,13 +55,76 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-complete-math
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
-            hc-lean-incremental-${{ runner.os }}-
-
-      # Stop early on known broken roots before the expensive complete library.
-      - name: Preflight four known-failing root modules
+      - name: Compile entire classical Hodge lane
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build HodgePureMath 2>&1 | tee hodge-complete-math.log
+      - name: 'Trust audit - reject sorry/sorryAx receipts'
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f hodge-complete-math.log
+          if grep -E "declaration uses 'sorry'|sorryAx" hodge-complete-math.log; then
+            echo "Proof trust audit failed: sorry/sorryAx in compiler receipts"
+            exit 1
+          fi
+      - name: Save successful partial Lean compilation products
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-complete-math
+      - name: Upload Lean diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hodge-complete-math-diagnostics
+          path: hodge-complete-math.log
+          if-no-files-found: warn
+  integration-frontier:
+    name: Integration frontier (parallel)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - name: Restore cached Lean toolchain
+        id: lean-toolchain-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Install pinned Lean and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Save cached Lean toolchain
+        if: steps.lean-toolchain-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Restore incremental Lean compilation cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-integration-frontier
+          restore-keys: |
+            hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+      - name: Compile all final-integration roots in one parallel Lake graph
         shell: bash
         run: |
           set -euo pipefail
@@ -73,128 +134,42 @@ jobs:
             GSTClassicalHodgeCanonicalPointIncidenceTransfer \
             GSTClassicalHodgeStrictCorrespondenceChainTransfer \
             GSTClassicalHodgeStrictGraphBettiTrace \
-            2>&1 | tee hodge-final.log
-
-      - name: Compile complete classical Hodge mathematics lane
+            GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion \
+            GSTClassicalHodgeClosedCorrespondenceCosmicRealization \
+            GSTClassicalHodgeIncidenceRealizationEquivalence \
+            GSTClassicalHodgeVerticalRayProjectiveApexFinale \
+            GSTClassicalHodgeStrictBettiApexL2Fusion \
+            GSTClassicalHodgeCommonClassPlaneReduction \
+            GSTClassicalHodgeNativePointSeedDegreeUpgrade \
+            GSTClassicalHodgeGSTProjectiveWordExactFinale \
+            GSTClassicalHodgeGSTRationalCorrespondenceExactFinale \
+            GSTClassicalHodgeDirectOrbitWordSaturation \
+            HodgeConjecture \
+            GSTClassicalHodgeNativeWordFromArbitrarySeed \
+            GSTClassicalHodgeBranchPacketPlaneRealization \
+            GSTClassicalHodgeNativeMassBridgeAudit \
+            GSTClassicalHodgeNativePointSeedSaturation \
+            GSTClassicalHodgeGeometryFirstGlobalPropagation 2>&1 | tee hodge-integration-frontier.log
+      - name: 'Trust audit - reject sorry/sorryAx receipts'
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake build HodgePureMath 2>&1 | tee -a hodge-final.log
-
-      - name: Compile vertical-ray projective-apex finale
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeVerticalRayProjectiveApexFinale.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile strict Betti apex L2 fusion
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeStrictBettiApexL2Fusion.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile common-class plane reduction
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeCommonClassPlaneReduction.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile native point seed degree upgrade
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeNativePointSeedDegreeUpgrade.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile GST exact projective-word finale
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeGSTProjectiveWordExactFinale.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile GST exact rational-correspondence finale
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeGSTRationalCorrespondenceExactFinale.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile direct orbit-word saturation
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeDirectOrbitWordSaturation.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile unified HodgeConjecture landing
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean HodgeConjecture.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile GST active-weight native seed extraction
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake build GSTClassicalHodgeNativeWordFromArbitrarySeed 2>&1 | tee -a hodge-final.log
-
-      - name: Compile exact GST finite-graph ghost-separation theorems
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeBranchPacketPlaneRealization.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile GST finite-horizon native charge and terminal-cut audit
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeNativeMassBridgeAudit.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile active-fiber point saturation
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeNativePointSeedSaturation.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Compile finite-path degree-apex GST geometry
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeGeometryFirstGlobalPropagation.lean 2>&1 | tee -a hodge-final.log
-
-      - name: Final trust audit
-        shell: bash
-        run: |
-          set -euo pipefail
-          if grep -E "declaration uses 'sorry'|sorryAx" hodge-final.log; then
-            echo "FINAL HODGE GATE FAILED: unresolved sorry/sorryAx detected"
+          test -f hodge-integration-frontier.log
+          if grep -E "declaration uses 'sorry'|sorryAx" hodge-integration-frontier.log; then
+            echo "Proof trust audit failed: sorry/sorryAx in compiler receipts"
             exit 1
           fi
-          echo "FINAL HODGE GATE: no sorry/sorryAx detected in compiled receipts"
-
-      # Cache successfully compiled modules even when a later theorem fails.
-      - name: Save partial Lean compilation products
+      - name: Save successful partial Lean compilation products
         if: always()
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
-
-      - name: Upload final diagnostics
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-integration-frontier
+      - name: Upload Lean diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hodge-conjecture-final-integration-diagnostics
-          path: hodge-final.log
-          if-no-files-found: error
+          name: hodge-integration-frontier-diagnostics
+          path: hodge-integration-frontier.log
+          if-no-files-found: warn
