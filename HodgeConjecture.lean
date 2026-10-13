@@ -23,6 +23,7 @@ import GSTClassicalHodgeCMGSTNativeBasisCompiler
 import GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler
 import GSTClassicalHodgeGeometricMatrixRankLanding
 import GSTClassicalHodgeGeometricPeriodDeterminant
+import GSTClassicalHodgeGeometricKrylovMomentDeterminant
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -307,6 +308,29 @@ theorem classicalHodgeTarget_of_universal_GST_triangular_geometry
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeGeometricPeriodDeterminant.full_rational_hodge_of_universal_GST_triangular_geometry
     G F h
+
+/-- **UNIVERSAL ONE-CORRESPONDENCE HODGE GEOMETRY ROUTE.**
+
+For each Hodge weight on an arbitrary smooth projective complex
+variety, construct ONE genuinely realized closed correspondence, ONE
+native algebraic seed, and ONE rational geometric trace. Nonzero
+determinant of their n-by-n scalar Krylov/Hankel moment matrix
+establishes cyclicity as a THEOREM and constructs every target native
+cycle explicitly from actual geometric correspondence iterates.
+
+This is stronger than assuming a cyclic orbit or one separately
+materialized matrix unit for every Hodge sheet. The mathematical
+challenge is independently proving nonzero Hankel determinants
+using projective intersection geometry, not positing cyclicity. -/
+theorem classicalHodgeTarget_of_universal_Krylov_Hankel_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (h :
+      GSTClassicalHodgeGeometricKrylovMomentDeterminant.UniversalGSTKrylovHankelNondegeneracy F) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_universal_Krylov_Hankel_geometry
+    F h
 
 /-! ## Index-polymorphic limitless realization -/
 
