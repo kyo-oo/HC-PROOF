@@ -505,7 +505,7 @@ theorem every_hodge_class_has_native_cycle_of_fullCorrespondenceGSTPlane
           (H.hodgeBigrading p)) :
     ∃ Z : GSTGeometricRealizationStage2D.codimensionCycles V.X p,
       H.cycleClass p Z = alpha :=
-  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.nativeCycle_of_fullCorrespondenceGSTPlane G hplane p halpha
+  GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion.nativeCycle_of_fullCorrespondenceGSTPlane G hplane p alpha halpha
 
 /-- Same-weight multiplicity is unrestricted in the final public landing. -/
 theorem no_same_weight_hodge_rank_ceiling :
