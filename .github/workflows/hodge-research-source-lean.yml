@@ -1,0 +1,93 @@
+name: GST Research Source Lean Verification
+
+on:
+  push:
+    branches:
+      - research/openai-cm-gale-gst-crosscarrier-20261013
+    paths:
+      - 'GSTClassicalHodgeCM*.lean'
+      - 'GSTClassicalHodgeCrossCarrier*.lean'
+      - 'GSTClassicalHodgeGeometric*.lean'
+      - 'HodgeConjecture.lean'
+      - 'GSTClassicalHodgePiOneObservableOmniverseFinale.lean'
+      - 'lakefile.toml'
+      - '.github/workflows/hodge-research-source-lean.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hodge-research-source-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile-research:
+    name: Compile ${{ matrix.target }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        target:
+          - GSTClassicalHodgeGeometricMatrixRankLanding
+          - GSTClassicalHodgeGeometricPeriodDeterminant
+          - GSTClassicalHodgeGeometricKrylovMomentDeterminant
+          - GSTClassicalHodgeCMGSTNativeBasisCompiler
+          - GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler
+          - GSTClassicalHodgeCrossCarrierSelfProductCompatibility
+          - HodgeConjecture
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore pinned Lean toolchain
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Install pinned Lean and get Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Restore compiled dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-${{ matrix.target }}
+          restore-keys: |
+            hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+      - name: Kernel compile research module
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if lake build "${{ matrix.target }}" > research-lean.log 2>&1; then
+            echo "LEAN COMPILE PASSED: ${{ matrix.target }}"
+          else
+            echo "LEAN COMPILE FAILED: ${{ matrix.target }}"
+            grep -nE "error:|sorryAx|✖" research-lean.log | tail -n 130 || true
+            tail -n 30 research-lean.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" research-lean.log; then
+            echo "Trust audit failed" && exit 1
+          fi
+      - name: Save dependency build cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-${{ matrix.target }}
+      - name: Upload compiler diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hodge-research-${{ matrix.target }}-diagnostics
+          path: research-lean.log
+          if-no-files-found: warn
