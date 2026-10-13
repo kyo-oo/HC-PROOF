@@ -216,6 +216,28 @@ noncomputable def projectiveDegreeKrylovHankel
       (Fin (KrylovRank (V := V) (H := H) (p := p))) ℚ :=
   krylovHankelMatrix C (projectiveDegreeHodgeTrace D)
 
+/-- **EXACT SCALAR MOMENT FORMULA.**
+Each i,j entry of the Hankel matrix is literally the projective-degree
+Betti trace of the genuine native algebraic cycle obtained after
+i+j iterates of ONE realized finite closed-correspondence word.
+
+This establishes the promised Hankel identity
+     H_ij = degree( T_native^(i+j) Z )
+at the repository's actual native cycle-class semantics. -/
+theorem projectiveDegreeKrylovHankel_apply
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
+    (C : RealizedCorrespondenceKrylovCertificate V H p)
+    (i j : Fin (KrylovRank (V := V) (H := H) (p := p))) :
+    projectiveDegreeKrylovHankel D C i j =
+      D.trace p (H.cycleClass p (C.nativeOrbit (i.val + j.val))) := by
+  change D.trace p
+      (((C.hodgeOperator ^ i.val) (C.hodgeOrbit j.val)).1) =
+        D.trace p (H.cycleClass p
+          (C.nativeOrbit (i.val + j.val)))
+  rw [hodgeOperator_pow_orbit C i.val j.val]
+  rw [C.nativeOrbit_cycleClass]
+
 /-- The determinant of the geometric projective-degree Hankel matrix
 is a sufficient NUMERICAL PROOF CERTIFICATE for every rational (p,p)
 Hodge class to possess an explicitly constructed native algebraic cycle. -/
