@@ -38,6 +38,9 @@ open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeGeometryFirstTwoGenerator
 open GSTClassicalHodgeNativeOperatorCohomologyRealization
 open GSTClassicalHodgeFullArsenalIrreducibility
+open GSTClassicalHodgeRankFreePrimitiveGeneration
+open GSTClassicalHodgeExplicitArsenalGeneration
+open GSTClassicalHodgeUniversalTwoSlotNativeClosure
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -119,8 +122,8 @@ noncomputable def basisCycleBridgeOfNativeWords
     classical
     by_cases hj : source = j
     · subst j
-      simpa using hZ0
-    · simpa [hj] using
+      simpa only [HodgeConjecture.hodgeBasis, classicalHodgeBasis] using hZ0
+    · simpa [hj, HodgeConjecture.hodgeBasis, classicalHodgeBasis] using
         nativeWord_cycleClass_of_source (R j) hj Z0 hZ0
 
 /-- Every rational Hodge class in one weight therefore gets an explicit native
