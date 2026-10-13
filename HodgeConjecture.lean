@@ -172,6 +172,31 @@ theorem every_hodge_class_has_native_cycle_of_integrated_CM_GST_programs
     ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = alpha := by
   exact classicalHodgeTarget_of_integrated_CM_GST_programs G h p halpha
 
+/-- **CLASS-LOCAL FINITE GST/CM GEOMETRY LANDING.**
+For ONE rational Hodge state, source correspondence programs are required
+only on its FINITE basis support. This is the targeted finite-case result,
+and needs no global geometric packet supply. The entire algebraic output
+is assembled from genuinely evaluated GST native cycles. -/
+theorem finite_hodge_class_has_native_cycle_of_CM_GST_live_packets
+    {K : Type*} [Field K] [Algebra ℚ K]
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (p : Nat)
+    (alpha :
+      GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p)
+    (hActive :
+      ∀ j : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeBasisIndex V H p,
+        j ∈
+          ((GSTClassicalHodgeFiberedCosmology.classicalHodgeBasis V H p).repr alpha).support →
+        Nonempty
+          (GSTClassicalHodgeCMGSTNativeBasisCompiler.CMGSTNativeSheetProgram
+            (K := K) G p j)) :
+    ∃ Z : codimensionCycles V.X p,
+      H.cycleClass p Z = alpha.1 :=
+  GSTClassicalHodgeCMGSTNativeBasisCompiler.native_cycle_of_finite_CM_GST_packet_support
+    G p alpha hActive
+
 /-! ## Index-polymorphic limitless realization -/
 
 /-- One Stage-2G realization with an arbitrary address universe `ι`.
