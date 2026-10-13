@@ -42,6 +42,12 @@ Existing *conditional* landing: `GSTClassicalHodgeNativeExecutablePlane.hodge_of
 
 These are genuine standalone reductions, not the missing geometric switch theorem or universal Hodge claim. They are intentionally orthogonal to the conditional Hodge finale.
 
+## Second formalized piece: surface period → explicit cycle
+
+`GSTClassicalHodgeSurfacePeriodCycleTransfer.lean` now formulates the surface/push-pull extraction core independent of any Hodge hypothesis: if a **genuine native algebraic-cycle correspondence** and a Betti operator satisfy a *proved* cycle-class incidence square, and the resulting Betti action on one actual native source cycle equals `k • beta` with `k ≠ 0`, then the **explicit** target cycle is `k⁻¹ • native Z`. A second theorem composes two genuine incidence squares before applying the same extraction.
+
+The code does **not** claim the required scheme correspondence, cohomology comparison or nonzero geometric period has been built. That precisely isolates the source of mathematical difficulty. This avoids incorrectly treating the surface criterion or an arbitrary ambient operator as a proved algebraic correspondence.
+
 ## Precise geometry sockets for further formal construction
 
 | OpenAI operation | Existing HC-PROOF landing | Required independent theorem |
