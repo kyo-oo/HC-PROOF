@@ -47,7 +47,7 @@ theorem nonzero_finite_sum_has_nonzero_term
     by_contra hfi
     exact hnone ⟨i, hi, hfi⟩
   have heq : (∑ i ∈ s, f i) = 0 := by
-    simp [Finset.sum_eq_zero hz]
+    exact Finset.sum_eq_zero hz
   exact hsum heq
 
 /-- Nonzero mixed period of TWO finite theta families forces an individual
@@ -99,8 +99,7 @@ theorem nonzero_period_under_integer_multipliers
     (h₃ : m₃ ≠ 0) (h₄ : m₄ ≠ 0) :
     m₁ * m₂ * m₃ * m₄ * k ≠ 0 := by
   exact mul_ne_zero
-    (mul_ne_zero
-      (mul_ne_zero h₁ h₂) h₃ |>.mul_ne_zero h₄) hk
+    (mul_ne_zero (mul_ne_zero (mul_ne_zero h₁ h₂) h₃) h₄) hk
 
 #check nonzero_mixed_period_has_nonzero_component
 #check nonzero_period_under_integer_multipliers
