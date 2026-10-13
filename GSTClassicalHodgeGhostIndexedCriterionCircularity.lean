@@ -18,6 +18,7 @@ open AlgebraicGeometry
 
 namespace GSTClassicalHodgeGhostIndexedCriterionCircularity
 
+open GSTProjectiveOverC
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeOmniversalSeparatorGhostCrown
