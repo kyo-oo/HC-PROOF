@@ -53,10 +53,10 @@ theorem suppliedPointDirectLaw_of_realizesOnPoints
           (H := H) (kernelAction H.analytification P κ (2 * p))) :
     SuppliedPointDirectIncidenceLaw
       (V := V) (H := H) (d := d) (p := p) P K κ := by
+  apply (suppliedPointDirectIncidenceLaw_iff P K κ).2
   intro x
   have hx := hreal x
-  rw [kernelAction_apply] at hx
-  exact hx.symm
+  simpa [kernelAction_apply] using hx.symm
 
 /-- **DIRECT INCIDENCE = GENERATORWISE REALIZATION.** -/
 theorem suppliedPointDirectLaw_iff_realizesOnPoints
@@ -65,8 +65,7 @@ theorem suppliedPointDirectLaw_iff_realizesOnPoints
     (κ : MiddleBettiCorrespondenceKernel H.analytification d K) :
     SuppliedPointDirectIncidenceLaw
       (V := V) (H := H) (d := d) (p := p) P K κ ↔
-    K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
-      |>.RealizesAmbientOnPoints
+    (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence).RealizesAmbientOnPoints
         (H := H) (kernelAction H.analytification P κ (2 * p)) := by
   constructor
   · exact suppliedPointDirectLaw_implies_realizesOnPoints P K κ
@@ -83,8 +82,7 @@ theorem geometricIncidencePrimitives_nonempty_iff_realizesOnPoints
       (V := V) (H := H) (d := d) (p := p)
       P K κ
       (suppliedPointBettiClass (V := V) (H := H) (p := p))) ↔
-    K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence
-      |>.RealizesAmbientOnPoints
+    (K.toBiFiniteClosedCorrespondence.toFiniteClosedCorrespondence).RealizesAmbientOnPoints
         (H := H) (kernelAction H.analytification P κ (2 * p)) := by
   rw [geometricIncidencePrimitives_nonempty_iff_directLaw]
   exact suppliedPointDirectLaw_iff_realizesOnPoints P K κ
