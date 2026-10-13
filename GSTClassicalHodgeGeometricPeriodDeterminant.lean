@@ -68,7 +68,7 @@ def periodMatrix (z : ι → W) (detector : ι → W →ₗ[ℚ] ℚ) :
 
 /-- The matrix of the same rational detectors on a chosen Hodge basis. -/
 def detectorBasisMatrix
-    (b : Basis ι ℚ W)
+    (b : Module.Basis ι ℚ W)
     (detector : ι → W →ₗ[ℚ] ℚ) :
     Matrix ι ι ℚ :=
   fun i j => detector i (b j)
@@ -77,7 +77,7 @@ def detectorBasisMatrix
 basis. Every geometric period factorizes through rational basis
 coordinates; this is independent of the Hodge conjecture. -/
 theorem periodMatrix_eq_detector_mul_coordinate
-    (b : Basis ι ℚ W)
+    (b : Module.Basis ι ℚ W)
     (z : ι → W)
     (detector : ι → W →ₗ[ℚ] ℚ) :
     periodMatrix z detector =
@@ -99,7 +99,7 @@ theorem periodMatrix_eq_detector_mul_coordinate
 The proof is independent of any numerical nondegeneracy assumption on
 the detector family: nonzero det(A) itself forces what is needed. -/
 theorem coordinate_det_ne_zero_of_period_det_ne_zero
-    (b : Basis ι ℚ W)
+    (b : Module.Basis ι ℚ W)
     (z : ι → W)
     (detector : ι → W →ₗ[ℚ] ℚ)
     (hPeriod :
