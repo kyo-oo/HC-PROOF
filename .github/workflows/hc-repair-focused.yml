@@ -64,7 +64,7 @@ jobs:
 
           [[lean_lib]]
           name = "HCIntegrationRepairFocus"
-          roots = ["HCIntegrationRepairFocus"]
+          roots = ["HCIntegrationRepairFocus", "GSTClassicalHodgeGhostIndexedCriterionCircularity"]
           TOML
           lake build HCIntegrationRepairFocus 2>&1 | tee hc-focused-repair.log
       - name: Reject sorryAx in compiled proof receipts
