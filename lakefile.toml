@@ -309,6 +309,7 @@ roots = [
   "GSTClassicalHodgeCMGaloisConjugateSpan",
   "GSTClassicalHodgeCMGSTNativeBasisCompiler",
   "GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler",
+  "GSTClassicalHodgeCrossCarrierSelfProductCompatibility",
   "GSTClassicalHodgeGeometryFirstNativeWord",
   "GSTClassicalHodgeNativeWordFromArbitrarySeed",
   "GSTClassicalHodgeStage2GSemanticRigidity",
