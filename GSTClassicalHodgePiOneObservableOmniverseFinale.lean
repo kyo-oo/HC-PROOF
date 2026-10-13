@@ -112,6 +112,20 @@ def DegreePointVisibleOnCanonicalPacket
   ∀ r : Fin (canonicalLiveWindow alpha).N,
     SeedVisible R (degreePointOrbitSeed G D x) r
 
+/-- The repaired source-visibility definition is EXACTLY the established
+degree-certified Pi live-packet predicate. The old source name is now
+usable without inventing nonzero evidence, and no new semantic
+hypothesis was added to the one-observable geometric finale. -/
+theorem pointSourceVisible_iff_degreePointVisible
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (alpha : ClassicalHodgeFiber V H p)
+    (x : CodimensionPoint V.X p)
+    (R : ClosedCorrespondenceWindowRealization G (canonicalLiveWindow alpha)) :
+    PointSourceVisibleOnCanonicalPacket G D alpha x R ↔
+      DegreePointVisibleOnCanonicalPacket G D alpha x R := by
+  rfl
+
 /-- **ONE OBSERVABLE PI TARGET CYCLE.**
 A single realized spectral observable on the target's own finite live packet,
 together with one degree-certified projective point source visible on those
