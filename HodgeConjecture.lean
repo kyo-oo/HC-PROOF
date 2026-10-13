@@ -19,6 +19,7 @@ import GSTClassicalHodgeFullLimitlessCrown
 import GSTClassicalHodgeProjectiveTwoGeneratorExternalization
 import GSTClassicalHodgeFullCorrespondenceGSTPlaneCompletion
 import GSTClassicalHodgeNativeExecutablePlane
+import GSTClassicalHodgeCMGSTNativeBasisCompiler
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -130,6 +131,46 @@ theorem explicit_witness_of_compact_realization
     (classicalHodgeTarget_iff_explicit_witness V H).mp
       (classicalHodgeTarget_of_compact_realization V H hR)
       p alpha halpha
+
+/-! ## Integrated CM surface / Kuga-Satake / Gale geometric programs -/
+
+/-- The EXISTING public Stage-2G Hodge goal follows from concrete finite
+CM/Gale/Kuga-Satake geometric source packets:
+  source native cycles -> finite incidence geometry -> original GST graded
+  correspondence/cut program -> algebraic coefficient descent over K/Q
+  -> actual rational target cycle -> original basis-cycle landing.
+
+Unlike a bare basis-cycle bridge, each sheet packet contains independent
+source cycles and a computational native operator built from point incidence.
+The theorem does not create those geometric packets automatically; that is
+the exact concrete geometric construction to be finished. -/
+theorem classicalHodgeTarget_of_integrated_CM_GST_programs
+    {K : Type*} [Field K] [Algebra ℚ K]
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (h :
+      GSTClassicalHodgeCMGSTNativeBasisCompiler.CMGSTNativeBasisProgramSupply
+        (K := K) G) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeCMGSTNativeBasisCompiler.bigradedBettiHodge_of_CM_GST_programs
+    G h
+
+/-- Public elementwise rational cycle witness computed by the integrated
+finite geometric GST packets, including algebraic coefficient descent. -/
+theorem every_hodge_class_has_native_cycle_of_integrated_CM_GST_programs
+    {K : Type*} [Field K] [Algebra ℚ K]
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (h :
+      GSTClassicalHodgeCMGSTNativeBasisCompiler.CMGSTNativeBasisProgramSupply
+        (K := K) G)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = alpha := by
+  exact classicalHodgeTarget_of_integrated_CM_GST_programs G h p halpha
 
 /-! ## Index-polymorphic limitless realization -/
 
