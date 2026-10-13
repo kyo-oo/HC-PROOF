@@ -160,10 +160,19 @@ theorem rightCochainPullback_transposeGraphSection
     rightCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
       transposeGraphSectionCochainPullback A F hf =
         𝟙 (rationalSingularCochains A) := by
-  simp only [rightCochainPullback, transposeGraphSectionCochainPullback, id_eq]
-  rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
-    ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_right,
-    CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
+  have h1 : (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+      (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (rightChainMap A ((strictGraph F.algebraic hf).transpose)))) ≫
+    (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+      (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (transposeGraphSectionChainMap A F hf))) =
+    𝟙 (rationalSingularCochains A) := by
+    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+      ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_right,
+      CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
+  exact h1
 
 /-- **GRAPH-RETRACTION COHOMOLOGY LAW.**
 Pullback along the canonical section is an exact left inverse of the right
@@ -250,7 +259,9 @@ theorem transposeGraphCarrierPoint_on_graph
   simp [leftComplexPoint, rightComplexPoint,
     ComplexSchemeEndomorphism.complexPointMap,
     strictGraph_transpose_left, strictGraph_transpose_right]
-  exact (congrArg (fun w => w ≫ f.hom) (Category.comp_id ↑z)).symm
+  have hz : (↑z ≫ 𝟙 V.X) ≫ f.hom = ↑z ≫ f.hom := by
+    rw [Category.comp_id]
+  exact hz.symm
 
 /-- The previously constructed graph section is also a right inverse.
 Both inverse laws are now geometric theorems, with no carrier-coherence axiom. -/
@@ -302,10 +313,19 @@ theorem transposeGraphSectionCochainPullback_right
     transposeGraphSectionCochainPullback A F hf ≫
       rightCochainPullback A ((strictGraph F.algebraic hf).transpose) =
         𝟙 (carrierSingularCochains A ((strictGraph F.algebraic hf).transpose)) := by
-  simp only [transposeGraphSectionCochainPullback, rightCochainPullback, id_eq]
-  rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
-    ← CategoryTheory.Functor.map_comp, transposeGraphRightChainMap_section,
-    CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
+  have h1 : (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+      (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (transposeGraphSectionChainMap A F hf))) ≫
+    (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+      (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (rightChainMap A ((strictGraph F.algebraic hf).transpose)))) =
+    𝟙 (carrierSingularCochains A ((strictGraph F.algebraic hf).transpose)) := by
+    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+      ← CategoryTheory.Functor.map_comp, transposeGraphRightChainMap_section,
+      CategoryTheory.Functor.map_id, Quiver.Hom.op_id, CategoryTheory.Functor.map_id]
+  exact h1
 
 /-- Right pullback and section pullback are inverse on the WHOLE carrier
 cohomology, not just on algebraic source classes. -/
@@ -404,10 +424,21 @@ theorem leftCochainPullback_transposeGraphSection
     (hf : IsFinite F.algebraic.hom) :
     leftCochainPullback A ((strictGraph F.algebraic hf).transpose) ≫
       transposeGraphSectionCochainPullback A F hf = singularCochainPullback A F := by
-  simp only [leftCochainPullback, transposeGraphSectionCochainPullback,
-    singularCochainPullback, id_eq]
-  rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
-    ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_left]
+  have h1 : (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+      (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (leftChainMap A ((strictGraph F.algebraic hf).transpose)))) ≫
+    (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+      (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (transposeGraphSectionChainMap A F hf))) =
+    (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ)).map
+      (Quiver.Hom.op ((((CategoryTheory.linearYoneda ℚ (ModuleCat ℚ)).obj rationalCoefficient).rightOp
+        |>.mapHomologicalComplex (ComplexShape.down ℕ)).map
+        (singularChainMap A F))) := by
+    rw [← CategoryTheory.Functor.map_comp, ← Quiver.Hom.op_comp,
+      ← CategoryTheory.Functor.map_comp, transposeGraphSectionChainMap_left]
+  exact h1
 
 /-- **EXACT NATIVE GRAPH ACTION.**
 The carrier and its trace determine the actual map's Betti pullback.  No
