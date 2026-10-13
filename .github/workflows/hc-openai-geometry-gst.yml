@@ -6,6 +6,7 @@ on:
       - research/openai-geometry-gst-native-plane-20261013
     paths:
       - 'GSTClassicalHodgeCMFourFactorGeometry.lean'
+      - 'GSTClassicalHodgeSurfacePeriodCycleTransfer.lean'
       - '.github/workflows/hc-openai-geometry-gst.yml'
   workflow_dispatch:
 
@@ -42,11 +43,11 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake env lean GSTClassicalHodgeCMFourFactorGeometry.lean 2>&1 | tee geometry-switch-check.log
+          (lake env lean GSTClassicalHodgeCMFourFactorGeometry.lean && lake env lean GSTClassicalHodgeSurfacePeriodCycleTransfer.lean) 2>&1 | tee geometry-switch-check.log
           if grep -E "declaration uses 'sorry'|sorryAx|error:" geometry-switch-check.log; then
             exit 1
           fi
-          if grep -En '\b(sorry|admit)\b' GSTClassicalHodgeCMFourFactorGeometry.lean; then
+          if grep -En '\b(sorry|admit)\b' GSTClassicalHodgeCMFourFactorGeometry.lean GSTClassicalHodgeSurfacePeriodCycleTransfer.lean; then
             exit 1
           fi
       - name: Upload exact compiler evidence
