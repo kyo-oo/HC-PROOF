@@ -22,6 +22,7 @@ import GSTClassicalHodgeNativeExecutablePlane
 import GSTClassicalHodgeCMGSTNativeBasisCompiler
 import GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler
 import GSTClassicalHodgeGeometricMatrixRankLanding
+import GSTClassicalHodgeGeometricPeriodDeterminant
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -279,6 +280,32 @@ theorem classicalHodgeTarget_of_universalGSTGeometricDeterminants
         G F) :
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeGeometricMatrixRankLanding.exact_hodge_of_universal_GST_geometric_determinants
+    G F h
+
+/-- **FULL UNIVERSAL GST GEOMETRIC TRIANGULATION ROUTE.**
+
+For every codimension on an arbitrary smooth projective complex variety,
+produce actual native correspondence programs and genuine rational
+period detectors with an upper triangular geometric period matrix
+whose diagonal intersection numbers are nonzero.
+
+The Lean proof builds ALL rational Hodge cycle representatives by
+matrix inversion; it neither assumes exact basis cycle witnesses nor
+mistakes the intrinsic GST matrix-unit algebra for geometric output.
+
+Proving the universal triangulation predicate from the actual GST
+scheme/cup/Gysin geometry is the remaining principal geometric
+nonvanishing construction. -/
+theorem classicalHodgeTarget_of_universal_GST_triangular_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (h :
+      GSTClassicalHodgeGeometricPeriodDeterminant.UniversalGSTTriangularPeriodGeneration
+        G F) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeGeometricPeriodDeterminant.full_rational_hodge_of_universal_GST_triangular_geometry
     G F h
 
 /-! ## Index-polymorphic limitless realization -/
