@@ -311,6 +311,8 @@ roots = [
   "GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler",
   "GSTClassicalHodgeCrossCarrierSelfProductCompatibility",
   "GSTClassicalHodgeGeometricMatrixRankLanding",
+  "GSTClassicalHodgeGeometricPeriodDeterminant",
+  "GSTClassicalHodgeGeometricKrylovMomentDeterminant",
   "GSTClassicalHodgeGeometryFirstNativeWord",
   "GSTClassicalHodgeNativeWordFromArbitrarySeed",
   "GSTClassicalHodgeStage2GSemanticRigidity",
