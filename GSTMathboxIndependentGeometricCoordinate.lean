@@ -181,6 +181,77 @@ theorem realized_correspondence_fresh_native_direction
   detected_native_cycle_outside_old_span G old
     (E.cycleOperator (spineNativeTower G p)) thirdRead hOld hFresh
 
+/-! ## Numerical third-coordinate detector wired to ACTUAL native cycles
+
+This is the direct mathematical bridge from the user's photographed
+99*x sqrt((a*x^4)_3-(b*y^4)_3) expression to the newly proved
+arbitrary-rank native-cycle extension theorem. The bridge is valid
+for genuine rational-cycle classes, and can take any number of old
+directions. The needed numerical/geometric correspondence equality
+remains an independently checkable construction obligation. -/
+
+/-- A nonzero value of the literal photographed radical proves that
+the *third-coordinate geometric numerator itself* is nonzero.
+No positivity/denominator hypothesis is silently inferred in reverse. -/
+theorem nonzero_conversion_forces_third_numerator
+    (factor a b psi xi : ℝ) (x y : Fin 3 → ℝ)
+    (h : independentThirdConversion factor a b psi xi x y ≠ 0) :
+    thirdGeometricNumerator a b x y ≠ 0 := by
+  intro hzero
+  apply h
+  simp [independentThirdConversion, hzero]
+
+/-- Concrete, rank-unrestricted GST conversion-to-geometry theorem:
+if the index-3 real expression is nonzero and its numerator is ACTUALLY
+the real image of a rational geometric coordinate applied to the
+cohomology class of a native correspondence output, that output lies
+outside the span of every old genuine native class.
+
+This proves exactly the mathematical implication missing from the
+handwritten formula. The identity hGeom is a geometric comparison
+equation that must be proved from the scheme's correspondence geometry;
+it is not a target-cycle preimage or an arbitrary assumed Hodge
+surjectivity statement. -/
+theorem photographed_third_coordinate_certifies_fresh_native_cycle
+    (G : GeometricCycleClassSpine V H)
+    (old : ι → codimensionCycles V.X p)
+    (E : RealizedCorrespondenceExpr V H p)
+    (thirdRead : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ)
+    (hOld : ∀ i : ι,
+      thirdRead (geometricHodgeClass G (old i)) = 0)
+    (factor a b psi xi : ℝ)
+    (x y : Fin 3 → ℝ)
+    (hConversion :
+      independentThirdConversion factor a b psi xi x y ≠ 0)
+    (hGeom :
+      ((thirdRead
+        (geometricHodgeClass G
+          (E.cycleOperator (spineNativeTower G p))) : ℚ) : ℝ) =
+        thirdGeometricNumerator a b x y) :
+    geometricHodgeClass G
+        (E.cycleOperator (spineNativeTower G p)) ∉
+      Submodule.span ℚ
+        (Set.range (fun i : ι => geometricHodgeClass G (old i))) := by
+  have hNumerator :
+      thirdGeometricNumerator a b x y ≠ 0 :=
+    nonzero_conversion_forces_third_numerator
+      factor a b psi xi x y hConversion
+  have hFresh :
+      thirdRead
+        (geometricHodgeClass G
+          (E.cycleOperator (spineNativeTower G p))) ≠ 0 := by
+    intro hz
+    apply hNumerator
+    calc
+      thirdGeometricNumerator a b x y =
+          ((thirdRead
+            (geometricHodgeClass G
+              (E.cycleOperator (spineNativeTower G p))) : ℚ) : ℝ) :=
+        hGeom.symm
+      _ = 0 := by simp [hz]
+  exact realized_correspondence_fresh_native_direction
+    G old E thirdRead hOld hFresh
+
 #check coordinate3
 #check thirdCoordinateRead
 #check independentThirdConversion_sq
@@ -191,9 +262,12 @@ theorem realized_correspondence_fresh_native_direction
 #check independent_geometric_third_axis
 #check detected_native_cycle_outside_old_span
 #check realized_correspondence_fresh_native_direction
+#check nonzero_conversion_forces_third_numerator
+#check photographed_third_coordinate_certifies_fresh_native_cycle
 
 #print axioms independent_geometric_third_axis
 #print axioms detected_native_cycle_outside_old_span
 #print axioms realized_correspondence_fresh_native_direction
+#print axioms photographed_third_coordinate_certifies_fresh_native_cycle
 
 end GSTMathboxIndependentGeometricCoordinate
