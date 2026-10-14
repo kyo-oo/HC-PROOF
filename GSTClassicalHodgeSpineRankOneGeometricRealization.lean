@@ -85,11 +85,76 @@ theorem every_rank_one_hodge_class_of_conserved_charge
   every_rank_one_hodge_class_is_native
     G p (D.spineHodgeSeed_ne_zero p) hrank alpha halpha
 
+/-- An EFFECTIVE charge-normalization formula, not an existentially selected
+coefficient. The native representative of any rational Hodge class in a
+rank-one fiber is obtained by evaluating the conserved GST charge and
+dividing by the nonzero charge of the *actual native projective spine*.
+This derives the coefficient using intrinsic projective-geometric data. -/
+theorem charged_normalized_spine_cycle_spec
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G)
+    (p : Nat)
+    (hrank : Module.finrank ℚ (ClassicalHodgeFiber V H p) = 1)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    H.cycleClass p
+      ((D.cohomologyRead p alpha /
+        D.nativeRead p (spineNativeTower G p)) • spineNativeTower G p) =
+      alpha := by
+  obtain ⟨c, hc⟩ :=
+    (finrank_eq_one_iff_of_nonzero'
+      (spineHodgeSeed G p) (D.spineHodgeSeed_ne_zero p)).mp
+      hrank ⟨alpha, halpha⟩
+  have hcoeffstate : c • (spineHodgeSeed G p).1 = alpha :=
+    congrArg Subtype.val hc
+  have hread :
+      D.cohomologyRead p alpha =
+        c * D.nativeRead p (spineNativeTower G p) := by
+    calc
+      D.cohomologyRead p alpha =
+          D.cohomologyRead p (c • (spineHodgeSeed G p).1) := by
+            rw [hcoeffstate]
+      _ = c * D.cohomologyRead p
+          (H.cycleClass p (spineNativeTower G p)) := by
+            rw [map_smul, spineNativeTower_cycleClass G p, smul_eq_mul]
+      _ = c * D.nativeRead p (spineNativeTower G p) := by
+            rw [D.cycleClass_read p (spineNativeTower G p)]
+  have hnormalized :
+      D.cohomologyRead p alpha /
+        D.nativeRead p (spineNativeTower G p) = c := by
+    rw [hread]
+    exact mul_div_cancel_right₀ c (D.nativeRead_spineNativeTower_ne_zero p)
+  rw [hnormalized, map_smul, spineNativeTower_cycleClass G p]
+  exact hcoeffstate
+
+/-- The resulting native cycle is an explicitly written rational multiple,
+with no target-cycle selection and no period-determinant or orbit assumption. -/
+noncomputable def chargedNormalizedSpineCycle
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p)) :
+    codimensionCycles V.X p :=
+  (D.cohomologyRead p alpha /
+    D.nativeRead p (spineNativeTower G p)) • spineNativeTower G p
+
+theorem chargedNormalizedSpineCycle_correct
+    (G : GeometricCycleClassSpine V H)
+    (D : SpineTowerConservedCharge G)
+    (p : Nat)
+    (hrank : Module.finrank ℚ (ClassicalHodgeFiber V H p) = 1)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    H.cycleClass p (chargedNormalizedSpineCycle G D p alpha) = alpha :=
+  charged_normalized_spine_cycle_spec G D p hrank alpha halpha
+
 #check explicit_spine_native_cycle_of_rank_one
 #check every_rank_one_hodge_class_is_native
 #check every_rank_one_hodge_class_of_conserved_charge
+#check chargedNormalizedSpineCycle_correct
 
 #print axioms explicit_spine_native_cycle_of_rank_one
 #print axioms every_rank_one_hodge_class_of_conserved_charge
+#print axioms chargedNormalizedSpineCycle_correct
 
 end GSTClassicalHodgeSpineRankOneGeometricRealization
