@@ -77,7 +77,8 @@ theorem hodge_from_any_nonzero_native_seed_and_actual_irreducibility
         (⊥ : Submodule ℚ (ClassicalHodgeFiber V H p)) := by
       rw [← heq]
       exact hmem
-    exact hnz (Submodule.mem_bot.mp hbot)
+    apply hnz
+    simpa using hbot
   have hstable :
       InvariantUnderActualHodgeCorrespondences
         (AlgebraicHodgeSubspace V H p) :=
