@@ -99,9 +99,13 @@ theorem finite_independent_native_point_basis
     Submodule.exists_fun_fin_finrank_span_eq ℚ
       (Set.range (actualPointHodgeClass G p))
   choose points hpoints using hmem
+  have hfun :
+      (fun i => actualPointHodgeClass G p (points i)) = b := by
+    funext i
+    exact hpoints i
   refine ⟨points, ?_, ?_⟩
-  · simpa only [hpoints] using hli
-  · simpa only [hpoints] using hspan
+  · simpa only [hfun] using hli
+  · simpa only [hfun, actualPointHodgeSpan] using hspan
 
 #check actualPointHodgeClass
 #check actualPointHodgeSpan
