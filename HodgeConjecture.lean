@@ -27,6 +27,7 @@ import GSTClassicalHodgeGeometricKrylovMomentDeterminant
 import GSTClassicalHodgeSpineRankOneGeometricRealization
 import GSTClassicalHodgeSingleCorrespondenceRankTwo
 import GSTClassicalHodgeArbitraryRankChargeFrames
+import GSTClassicalHodgeActualGeometricIrreducibility
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -357,6 +358,34 @@ theorem classicalHodgeTarget_of_universal_projectiveDegree_Krylov
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_projective_degree_Krylov_nonvanishing
     D F h
+
+/-! ## Actual-correspondence irreducibility (independent determinant-free route)
+
+This differs from abstract GST matrix-unit irreducibility: invariance is
+proved for ACTUAL realized Hodge-compatible finite-closed correspondences.
+If those geometric operators act irreducibly on an active Hodge fiber and a
+nonzero native spine class is present, the existing native algebraic Hodge
+subspace must equal the whole fiber. -/
+
+/-- **EXACT HODGE LANDING VIA ACTUAL GEOMETRIC IRREDUCIBILITY.**
+The active-weight seed requirement is local; zero Hodge fibers require no
+nonzero cycle. Actual-geometric correspondence irreducibility is a distinct
+unproved geometric existence/classification input, not substituted by the
+abstract GST matrix-unit arsenal. -/
+theorem classicalHodgeTarget_of_actual_correspondence_irreducibility
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hirred : ∀ q : Nat,
+      GSTClassicalHodgeActualGeometricIrreducibility.ActualHodgeCorrespondenceIrreducible
+        (V := V) (H := H) (p := q))
+    (hseed : ∀ q : Nat,
+      (∃ a : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H q,
+        a ≠ 0) →
+      GSTClassicalHodgeLimitlessSpinePropagation.spineHodgeSeed G q ≠ 0) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeActualGeometricIrreducibility.full_hodge_of_actual_geometric_irreducibility
+    G hirred hseed
 
 /-! ## Arbitrary-rank explicit charged geometric frames
 
@@ -935,6 +964,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check explicit_witness_of_compact_realization
 #check UniverseIndexedRealization
 #check hodge_class_has_cycle_of_universe_indexed_realization
+#check classicalHodgeTarget_of_actual_correspondence_irreducibility
 #check classicalHodgeTarget_of_universal_GST_charged_geometric_frames
 #check classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
 #check classicalHodgeTarget_of_universe_indexed_family
@@ -973,6 +1003,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms classicalHodgeTarget_of_compact_realization
 #print axioms explicit_witness_of_compact_realization
 #print axioms hodge_class_has_cycle_of_universe_indexed_realization
+#print axioms classicalHodgeTarget_of_actual_correspondence_irreducibility
 #print axioms classicalHodgeTarget_of_universal_GST_charged_geometric_frames
 #print axioms classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
 #print axioms classicalHodgeTarget_of_universe_indexed_family
