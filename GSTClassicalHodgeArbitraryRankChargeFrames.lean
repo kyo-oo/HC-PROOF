@@ -121,7 +121,7 @@ theorem every_hodge_class_of_nonzero_charged_geometric_frame
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
     ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = alpha :=
   ⟨chargedFrameInverseCycle G ell E ⟨alpha, halpha⟩,
-    chargedFrameInverseCycle_spec G ell E ⟨alpha, halpha⟩⟩
+    chargedFrameInverseCycle_spec G ell E hdet ⟨alpha, halpha⟩⟩
 
 /-- The independently necessary geometric generation condition: in every
 weight, some finite collection of genuine correspondences constructs a
