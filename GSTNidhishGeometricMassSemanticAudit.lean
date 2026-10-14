@@ -74,7 +74,8 @@ theorem zero_class_semantics_refutes_mass_bridge
   have hzero :
       (zeroCycleClassData H).cycleClass p
         (codimensionPointCycle V.X p x) = 0 := by
-    simp [zeroCycleClassData]
+    rw [zeroCycleClassData_cycleClass]
+    exact LinearMap.zero_apply _
   have hz := M.kernel_mass_zero p
     (codimensionPointCycle V.X p x) hzero
   rw [nativeCycleMass_point V p x] at hz
