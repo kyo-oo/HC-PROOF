@@ -139,3 +139,73 @@ it does not independently construct the missing native geometric inputs.
 
 Lean verification must be read from the new focused GitHub workflow run
 for the exact current source commit, not from an older green run.
+
+## Mathbox next proof routes (14 October, 2026 evening)
+
+### Route A — all finite ranks, genuine native charged frames
+
+**New Lean file:** `GSTClassicalHodgeArbitraryRankChargeFrames.lean`
+
+- `nativeChargedFrame` constructs the full n-column native geometric
+  cycle frame from the projective spine and at most n-1 nontrivial
+  charged images of genuine correspondences.
+- `chargedFrameHodgeMatrix` measures those actual cycle classes
+  against the complete finite Hodge-fiber basis.
+- `chargedFrameInverseCycle` is an explicit inverse-matrix rational
+  algebraic cycle for any requested Hodge vector.
+- `chargedFrameInverseCycle_spec` proves the exact cycle-class formula
+  from nonzero determinant.
+- `UniversalGSTChargedGeometricFrameGeneration` names, but does **not**
+  prove, the necessary new geometric existence statement.
+- `exact_hodge_of_universal_charged_geometric_frames` and
+  `HodgeConjecture.classicalHodgeTarget_of_universal_GST_charged_geometric_frames`
+  wire this higher-rank criterion to the actual Stage-2G Hodge target.
+
+The target's full rank **has not been derived unconditionally** from the
+native correspondence API. A previously compiled version had a specific
+Lean elaboration error: the determinant proof argument was omitted when
+calling `chargedFrameInverseCycle_spec`. The subsequent commit inserts
+that proof argument; verification must use the post-fix CI, not the failed run
+`38584682228`.
+
+### Route B — determinant-free actual geometric irreducibility
+
+**New Lean file:** `GSTClassicalHodgeActualGeometricIrreducibility.lean`
+
+- `InvariantUnderActualHodgeCorrespondences` quantifies over
+  **genuine realized Hodge-compatible finite closed correspondences**,
+  not the abstract GST matrix-unit endomorphism arsenal.
+- `algebraicHodgeSubspace_actual_correspondence_invariant` proves
+  that the actual algebraic Hodge subspace is stable under these
+  genuinely realized geometric actions by cycle-class naturality.
+- `ActualHodgeCorrespondenceIrreducible` expresses the independent
+  geometric irreducibility property for this action.
+- `all_hodge_classes_of_actual_geometric_irreducibility` proves
+  that irreducibility plus a nonzero native spine makes every rational
+  Hodge class at this weight algebraic.
+- `full_hodge_of_actual_geometric_irreducibility` handles all
+  weights, treating zero fibers separately, and is integrated into
+  `HodgeConjecture.lean`.
+
+This is independent of nonzero determinants, but it still requires
+proof that the **actual realized correspondence algebra** acts
+irreducibly on a live Hodge fiber. The internal abstract GST arsenal
+cannot be substituted for that proof. No field in
+`HodgeBigradedBettiData` or `GeometricCycleClassSpine` currently
+forces it.
+
+### Research checkpoint
+
+The two active geometric routes are (A) explicit independent charged
+cycles, and (B) actual correspondence irreducibility. Both have
+fully specified Lean mathematical conclusions and separate falsifiable
+hypotheses. Neither bypasses the genuine scheme-correspondence
+realization and cycle-class semantic interface.
+
+The all-varieties rational Hodge conjecture remains the unchanged
+`HodgeConjecture.ClassicalHodgeTarget`; the two new routes are
+**conditional**. This is not an unconditional Hodge solution.
+
+GitHub Actions workflow `.github/workflows/gst-single-correspondence-charge-wedge.yml`
+checks both new mathematical files and then the entire public Hodge root.
+Always associate conclusions with the exact commit SHA of that run.
