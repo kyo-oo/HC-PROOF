@@ -39,6 +39,8 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeActualPointFiniteFrame
 open GSTClassicalHodgeExactGeometricRankDefect
 open GSTClassicalHodgeActualNoncommutativeNativeFrame
+open GSTClassicalHodgeNativeGeometricPowerOrbit
+open GSTClassicalHodgeGeometricMatrixRankLanding
 open GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra
 
 namespace GSTClassicalHodgeGeometricDefectSeparator
@@ -161,16 +163,80 @@ theorem point_separator_annihilates_all_geometric_commutators
   simpa only [actualNativeHodgeClass, nativeGeometricCommutator_cycleClass]
     using h
 
+/-- A genuinely missing Hodge direction forces the coordinate matrix of
+EVERY finite actual geometric word frame to be SINGULAR.
+
+Proof: if one such frame were invertible, the existing native matrix inversion
+would construct an actual algebraic cycle for the missing Hodge vector.
+This contradicts the independently verified point-cycle-span equality.
+
+Thus full-rank determinants in the current geometric machinery are not free
+numerical conveniences: they cannot be established before the genuinely
+missing geometry has been supplied. -/
+theorem all_native_word_frame_determinants_vanish_if_missing
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (alpha : ClassicalHodgeFiber V H p)
+    (hmissing : alpha ∉ actualPointHodgeSpan G p)
+    (words :
+      Fin (Module.finrank ℚ (ClassicalHodgeFiber V H p)) →
+        RealizedCorrespondenceExpr V H p) :
+    (geometricWordFrameMatrix G words).det = 0 := by
+  by_contra hdet
+  let Z : codimensionCycles V.X p :=
+    nativeCycleByMatrixInversion G
+      (fun j => nativeWord G (words j))
+      (geometricWordFrameMatrix G words)⁻¹ alpha
+  have hcycle : H.cycleClass p Z = alpha.1 :=
+    native_cycle_of_nonzero_geometric_word_frame G words hdet alpha
+  have heq : actualNativeHodgeClass G p Z = alpha :=
+    Subtype.ext hcycle
+  have hmem : actualNativeHodgeClass G p Z ∈
+      actualPointHodgeSpan G p :=
+    actualNativeHodgeClass_mem_actualPointSpan G p Z
+  exact hmissing (heq ▸ hmem)
+
+/-- The same sharp obstruction holds for EVERY one-generator polynomial
+power-orbit matrix constructed from genuine closed correspondences. A
+nonvanishing Krylov-like determinant necessarily eliminates the entire
+algebraic Hodge defect; it cannot coexist with a missing Hodge direction. -/
+theorem all_native_power_frame_determinants_vanish_if_missing
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (alpha : ClassicalHodgeFiber V H p)
+    (hmissing : alpha ∉ actualPointHodgeSpan G p)
+    (E : RealizedCorrespondenceExpr V H p) :
+    (geometricPowerHodgeMatrix G E).det = 0 := by
+  by_contra hdet
+  let Z : codimensionCycles V.X p :=
+    nativeCycleByMatrixInversion G
+      (fun j => nativePowerOrbit G E j.val)
+      (geometricPowerHodgeMatrix G E)⁻¹ alpha
+  have hcycle : H.cycleClass p Z = alpha.1 :=
+    actual_power_matrix_native_cycle G E hdet alpha
+  have heq : actualNativeHodgeClass G p Z = alpha :=
+    Subtype.ext hcycle
+  have hmem : actualNativeHodgeClass G p Z ∈
+      actualPointHodgeSpan G p :=
+    actualNativeHodgeClass_mem_actualPointSpan G p Z
+  exact hmissing (heq ▸ hmem)
+
 #check actualNativeHodgeClass_mem_actualPointSpan
 #check missing_hodge_direction_has_point_separator
 #check point_separator_annihilates_every_native_cycle
 #check missing_hodge_direction_separated_from_all_native_cycles
 #check point_separator_annihilates_all_native_word_frames
 #check point_separator_annihilates_all_geometric_commutators
+#check all_native_word_frame_determinants_vanish_if_missing
+#check all_native_power_frame_determinants_vanish_if_missing
 
 #print axioms missing_hodge_direction_has_point_separator
 #print axioms missing_hodge_direction_separated_from_all_native_cycles
 #print axioms point_separator_annihilates_all_native_word_frames
 #print axioms point_separator_annihilates_all_geometric_commutators
+#print axioms all_native_word_frame_determinants_vanish_if_missing
+#print axioms all_native_power_frame_determinants_vanish_if_missing
 
 end GSTClassicalHodgeGeometricDefectSeparator
