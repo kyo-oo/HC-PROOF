@@ -134,3 +134,50 @@ The new file has an isolated GitHub Actions gate
 Report its exact run ID and completed result only after GitHub
 finishes. Earlier green runs for the adjacent rank-two and
 arbitrary-rank modules do not imply this new source compiles.
+
+## F. New CM source-to-target dictionary in the existing repository
+
+A second mathematically load-bearing issue is the coefficient field.
+The original Hodge statement is about rational cohomology and
+codimension-p native **Q**-cycles. Zeta and general CM periods
+typically take real/complex values and do **not** automatically define
+Q-scalar coefficients for those cycles. Wolfram's
+`Zeta[2] = Pi^2/6` makes this issue concrete.
+
+The following existing HC-PROOF modules are immediately relevant:
+
+- `GSTClassicalHodgeCMThetaPeriodExtraction.lean` proves that a
+  nonzero finite double sum of CM theta periods has a nonzero term.
+  It does **not** independently construct a nonzero geometric period.
+- `GSTClassicalHodgeCMConstructiveSurfaceDescent.lean` constructs
+  target rational native cycles from finite cross-carrier point
+  incidence and an actual extension-field coefficient expansion.
+  Its exact source and Betti expansion premises remain visible.
+- `GSTClassicalHodgeCMGSTNativeBasisCompiler.lean` consumes
+  `CMGSTNativeSheetProgram` packets. Each packet carries a
+  true source variety, explicit source cycles, a point kernel,
+  a geometric pointwise Betti law, a GST program, and a
+  coefficient expansion into the desired Hodge basis class.
+  It does not automatically generate such packets.
+
+**Bridge obligation suggested by the photograph:** build a genuine
+CM theta/incidence construction with a nonzero transverse period
+coefficient; compile its Betti action from the geometric source;
+then use `GSTClassicalHodgeCMNativeRationalDescent` to show the final
+native cycle has Q coefficients. This is a precise mathematical
+research route rather than the unjustified assumption that an
+arbitrary complex zeta scaling preserves rational Hodge classes.
+
+### Additional Lean equations checked in the next revision
+
+- `indexedCMKernel_pos`: an explicit proposed index-dependent
+  CM number kernel is positive at every finite index.
+- `indexedCMKernelPartialSum_pos`: every nonempty finite partial
+  sum is strictly positive.
+- `photographed_E2_nonzero_not_universal`: a rigorous zero-map
+  countermodel to the unconditional operator nonvanishing reading.
+
+These are independent arithmetic facts. Positivity of a finite
+analytic kernel by itself does not prove a nonzero actual geometric
+theta period. The completed new-workflow CI run must be checked
+before calling this revised file green.
