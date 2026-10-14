@@ -257,3 +257,54 @@ a geometric cycle and coordinate-functional detector that is nonzero
 on a truly missing Hodge direction. Existence of the coordinate
 axis as an abstract linear-algebra model does not construct those
 geometric objects on every smooth projective variety.
+
+## Mathbox checkpoint: coordinate-three and CM quadratic (follow-on)
+
+User clarified that subscript `3` in the original `(a*x^4)_3`
+and `(b*y^4)_3` means the **third independent geometric coordinate**,
+not ternary digits. The new source `GSTMathboxIndependentGeometricCoordinate.lean`
+uses a three-coordinate vector with its third axis numbered `2 : Fin 3`.
+It proves:
+- the third axis lies outside the rational span of the first two;
+- the 99*x radical's third-coordinate numerator has the correct
+  squaring/nonvanishing conditions;
+- a genuinely native rational cycle detected by a geometric readout
+  lies outside the span of any collection of old native cycles;
+- provided an independent geometric comparison identity maps the real
+  third-coordinate numerator to a rational Hodge coordinate of a REALIZED
+  correspondence output, nonvanishing of the user's photographed
+  radical forces that output to add a new algebraic Hodge direction.
+
+This module is Lean-kernel verified (runs
+**38599918045**, **38600314490**), with no sorryAx.
+
+Another mathematical route no longer assumes transverse motion:
+`GSTMathboxCMGeometricComplexStructure.lean`.
+It proves that any rational-linear `J` with `J^2 = -identity`
+cannot have a nonzero rational eigenvector; therefore a nonzero
+spine class `s` and genuinely realized geometric correspondence E
+with `E(s)=J(s)` automatically give two independent algebraic classes.
+A rational Hodge basis coordinate serves as the nonzero functional,
+removing another independent hypothesis from the rank-two theorem.
+This is kernel-verified at run **38600666210**, no sorryAx.
+
+An atomic GitHub update **451398561e69df9df8fe2aa6c3f4d293841e0899**
+registered both modules in `lakefile.toml` and added their explicit
+theorems to `HodgeConjecture.lean`:
+
+- `native_third_coordinate_adds_hodge_direction`
+- `classicalHodgeTarget_of_weightwise_actual_CM_geometry`
+
+Current CI for that complete public integration: **38601424902**.
+It must not be called green before that run succeeds.
+
+**Original goal contract unchanged:** The rational Hodge conjecture
+for ALL smooth projective complex varieties is not proved here.
+The new J²=-id mechanism does not act on every rank (odd-dimensional
+rational Hodge spaces cannot carry that complex structure), and the
+geometric realization of the relevant independent CM correspondence
+and true Betti cycle classes needs a separately constructed proof.
+These are substantive mathematical existence demands, not Lean
+syntax holes. The earlier zero-cycle-class semantic countermodel
+shows why the current abstract Stage-2G records alone cannot
+yield an unconditional theorem on all possible data.
