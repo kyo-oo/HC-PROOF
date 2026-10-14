@@ -132,7 +132,7 @@ and transport identities remain separately verifiable,
 unproved geometric inputs; they are not replaced by axioms.
 
 `GSTNidhishDimensionCorrectedHodgeSynthesis.lean`
-**Dedicated CI: 38626768532 — check the completed conclusion.** The earlier 38626143207 failed because it built the pre-repair dependent finite-degree module.
+**Dedicated CI: 38626768532 — SUCCESS**. The earlier 38626143207 failed because it built the pre-repair dependent finite-degree module.
 
 Wires finite-weight geometric degree and local cyclicity of actual
 Hodge-compatible closed correspondences to the original all-weight
