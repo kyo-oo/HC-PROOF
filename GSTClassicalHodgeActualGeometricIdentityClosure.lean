@@ -64,6 +64,8 @@ theorem diagonalGraph_native_eq_id
   rw [FiniteClosedCorrespondence.graphCorrespondence_nativePointImage_eq]
   have hcod : Order.coheight ((𝟙 V.X) x.1) = p := by
     simpa using x.2
+  change nativePointPushforward (𝟙 V.X) p x =
+    codimensionPointCycle V.X p x
   rw [nativePointPushforward_eq (𝟙 V.X) p x hcod]
   simp [pointResidueWeight]
 
