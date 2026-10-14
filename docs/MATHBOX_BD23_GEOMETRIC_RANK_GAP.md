@@ -224,3 +224,33 @@ stronger criterion has not been established.
 In the Lean source, any wording calling frame-generation
 "necessary" refers to the obligation of **that particular proof route**,
 not a logically necessary condition for Hodge algebraicity.
+
+## Route C — semantic nonuniqueness of cohomological correspondence action
+
+**Formal target:** `GSTClassicalHodgeCorrespondenceSemanticFirewall.lean`
+
+The current `RealizedFiniteClosedCorrespondence` pairs true finite-closed
+scheme geometry `K` with an independently supplied cohomology endomorphism
+`T`, and checks naturality on classes of codimension-p algebraic point
+cycles. This only constrains `T` on the cycle-class image, not on all Betti
+cohomology. Crucially, the ambient Betti group can contain non-Hodge classes,
+so even proving every rational Hodge class algebraic would *not* always make
+the full ambient point-class image surjective.
+
+The new file formalizes the sharp zero-cycle-class countermodel: for any
+given true finite-closed correspondence K and any rational cohomology
+endomorphism T, `K.RealizesAmbientOnPoints T` is automatically satisfied
+by `zeroCycleClassData H`. When the Betti group is nonzero, the identical
+geometry K therefore admits both the zero and identity ambient operators,
+different on nonzero Betti vectors. This exposes the independent need to
+construct the full cohomological operator canonically from geometric
+cup/intersection/Gysin correspondences. A point-class commuting square,
+even if true on every native cycle, cannot create or determine the action
+outside the native cycle-class image.
+
+**Scope:** This is a counterexample to the strength of the *formal
+realization interface*, not to the actual Hodge conjecture on honest
+smooth projective complex varieties. Its Lean proof is checked by the
+independent GitHub workflow `gst-correspondence-semantic-firewall.yml`;
+consult that workflow's completed conclusion before upgrading its evidence
+label to kernel-verified.
