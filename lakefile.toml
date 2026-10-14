@@ -339,6 +339,8 @@ roots = [
   "GSTClassicalHodgeSingleCorrespondenceRankTwo",
   "GSTClassicalHodgeArbitraryRankChargeFrames",
   "GSTClassicalHodgeActualGeometricIrreducibility",
+  "GSTMathboxIndependentGeometricCoordinate",
+  "GSTMathboxCMGeometricComplexStructure",
   "GSTClassicalHodgeLimitlessSemanticSeparation",
   "GSTClassicalHodgeLimitlessCosmicNoEscape",
   "GSTClassicalHodgeLimitlessDefectOrbitLanding",

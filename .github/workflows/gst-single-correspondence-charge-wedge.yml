@@ -8,6 +8,8 @@ on:
       - 'GSTClassicalHodgeArbitraryRankChargeFrames.lean'
       - 'GSTClassicalHodgeActualGeometricIrreducibility.lean'
       - 'HodgeConjecture.lean'
+      - 'GSTMathboxIndependentGeometricCoordinate.lean'
+      - 'GSTMathboxCMGeometricComplexStructure.lean'
       - 'lakefile.toml'
       - '.github/workflows/gst-single-correspondence-charge-wedge.yml'
   workflow_dispatch:
@@ -95,6 +97,20 @@ jobs:
             echo 'Trust audit failed: geometric irreducibility'
             exit 1
           fi
+      - name: Kernel check independent third coordinate and CM quadratic geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build GSTMathboxIndependentGeometricCoordinate GSTMathboxCMGeometricComplexStructure > new-geometric-coordinate-lean.log 2>&1 || {
+            grep -nE 'error:|sorryAx|✖' new-geometric-coordinate-lean.log | tail -n 100 || true
+            tail -n 70 new-geometric-coordinate-lean.log
+            exit 1
+          }
+          if grep -E "declaration uses 'sorry'|sorryAx" new-geometric-coordinate-lean.log; then
+            echo "Trust audit failed: independent geometry / CM quadratic"
+            exit 1
+          fi
       - name: Compile complete public HodgeConjecture root with new geometric theorem
         shell: bash
         run: |
@@ -126,5 +142,6 @@ jobs:
             charge-wedge-lean.log
             charged-frames-lean.log
             geometric-irreducibility-lean.log
+            new-geometric-coordinate-lean.log
             public-hodge-root-lean.log
           if-no-files-found: warn

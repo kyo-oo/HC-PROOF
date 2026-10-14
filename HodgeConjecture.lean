@@ -28,6 +28,8 @@ import GSTClassicalHodgeSpineRankOneGeometricRealization
 import GSTClassicalHodgeSingleCorrespondenceRankTwo
 import GSTClassicalHodgeArbitraryRankChargeFrames
 import GSTClassicalHodgeActualGeometricIrreducibility
+import GSTMathboxIndependentGeometricCoordinate
+import GSTMathboxCMGeometricComplexStructure
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -358,6 +360,88 @@ theorem classicalHodgeTarget_of_universal_projectiveDegree_Krylov
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_projective_degree_Krylov_nonvanishing
     D F h
+
+/-! ## True third geometric coordinate and CM quadratic native rank gain
+
+The third indexed coordinate in the user's GST conversion is a separate
+geometric axis (not a ternary digit). Its exact radical value can certify
+a NEW algebraic-cycle class outside the span of an arbitrary old family
+when a genuine correspondence supplies its geometric comparison equation.
+
+The alternate CM route uses a genuinely realized operator on the native
+spine and a rational complex structure J with J²=-id. This structural
+law DERIVES rather than assumes rank-two transverse nonvanishing.
+Neither numerical transversality nor existence of a universal complex
+structure is asserted on every smooth projective variety. -/
+
+/-- The user's photographed independent-third-coordinate conversion,
+when tied to genuine point-class correspondence geometry, proves a new
+NATIVE algebraic Hodge direction beyond an arbitrary old collection. -/
+theorem native_third_coordinate_adds_hodge_direction
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V} {p : Nat} {ι : Type*}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (old : ι → codimensionCycles V.X p)
+    (E : GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra.RealizedCorrespondenceExpr V H p)
+    (read : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ)
+    (hOld : ∀ i : ι, read
+      (GSTClassicalHodgeGeometricMatrixRankLanding.geometricHodgeClass G (old i)) = 0)
+    (factor a b psi xi : ℝ) (x y : Fin 3 → ℝ)
+    (hConv : GSTMathboxIndependentGeometricCoordinate.independentThirdConversion
+      factor a b psi xi x y ≠ 0)
+    (hGeom : ((read
+      (GSTClassicalHodgeGeometricMatrixRankLanding.geometricHodgeClass G
+        (E.cycleOperator
+          (GSTClassicalHodgeLimitlessSpinePropagation.spineNativeTower G p))) : ℚ) : ℝ) =
+      GSTMathboxIndependentGeometricCoordinate.thirdGeometricNumerator a b x y) :
+    GSTClassicalHodgeGeometricMatrixRankLanding.geometricHodgeClass G
+      (E.cycleOperator (GSTClassicalHodgeLimitlessSpinePropagation.spineNativeTower G p))
+       ∉ Submodule.span ℚ
+           (Set.range (fun i : ι =>
+             GSTClassicalHodgeGeometricMatrixRankLanding.geometricHodgeClass G (old i))) :=
+  GSTMathboxIndependentGeometricCoordinate.photographed_third_coordinate_certifies_fresh_native_cycle
+    G old E read hOld factor a b psi xi x y hConv hGeom
+
+/-- All-weights GST/CM result. Active rank-two fibers are solved by a
+REALIZED geometric correspondence whose action on the native spine obeys
+J²=-identity on its rational Hodge fiber. The necessary nonzero charged
+coordinate and rank-gain are then constructed as theorems. Zero and
+rank-one weights use existing actual geometric cases. -/
+theorem classicalHodgeTarget_of_weightwise_actual_CM_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (h : ∀ p : Nat,
+      (∀ a : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p,
+        a = 0) ∨
+      (Module.finrank ℚ
+          (GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p) = 1 ∧
+        GSTClassicalHodgeLimitlessSpinePropagation.spineHodgeSeed G p ≠ 0) ∨
+      (∃ (E : GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra.RealizedCorrespondenceExpr V H p)
+         (J : Module.End ℚ (GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p)),
+        (∀ z : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p,
+            J (J z) = -z) ∧
+        J (GSTClassicalHodgeLimitlessSpinePropagation.spineHodgeSeed G p) =
+          GSTClassicalHodgeSingleCorrespondenceRankTwo.movedSpine G E ∧
+        GSTClassicalHodgeLimitlessSpinePropagation.spineHodgeSeed G p ≠ 0 ∧
+        Module.finrank ℚ
+          (GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p) = 2)) :
+    ClassicalHodgeTarget V H := by
+  intro p alpha halpha
+  letI : FiniteDimensional ℚ
+      (GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p) := F.finite p
+  rcases h p with hzero | ⟨hrank, hnz⟩ | ⟨E, J, hJ2, hgeom, hnz, hrank⟩
+  · have ha0 : alpha = 0 := by
+      have hz := congrArg Subtype.val
+        (hzero (⟨alpha, halpha⟩ :
+          GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p))
+      simpa using hz
+    exact ⟨0, by simp [ha0]⟩
+  · exact GSTClassicalHodgeSpineRankOneGeometricRealization.every_rank_one_hodge_class_is_native
+      G p hnz hrank alpha halpha
+  · exact GSTMathboxCMGeometricComplexStructure.rank_two_hodge_of_actual_CM_complex_structure
+      G hnz E J hJ2 hgeom hrank alpha halpha
 
 /-! ## Actual-correspondence irreducibility (independent determinant-free route)
 
@@ -964,6 +1048,8 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check explicit_witness_of_compact_realization
 #check UniverseIndexedRealization
 #check hodge_class_has_cycle_of_universe_indexed_realization
+#check native_third_coordinate_adds_hodge_direction
+#check classicalHodgeTarget_of_weightwise_actual_CM_geometry
 #check classicalHodgeTarget_of_actual_correspondence_irreducibility
 #check classicalHodgeTarget_of_universal_GST_charged_geometric_frames
 #check classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
@@ -1003,6 +1089,8 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms classicalHodgeTarget_of_compact_realization
 #print axioms explicit_witness_of_compact_realization
 #print axioms hodge_class_has_cycle_of_universe_indexed_realization
+#print axioms native_third_coordinate_adds_hodge_direction
+#print axioms classicalHodgeTarget_of_weightwise_actual_CM_geometry
 #print axioms classicalHodgeTarget_of_actual_correspondence_irreducibility
 #print axioms classicalHodgeTarget_of_universal_GST_charged_geometric_frames
 #print axioms classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
