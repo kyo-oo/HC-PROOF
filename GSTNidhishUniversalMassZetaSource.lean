@@ -76,8 +76,9 @@ theorem fixed_corrected_zeta_source_every_weight
   have hbase :
       baseRead (spineHodgeSeed G p) = mass0 := by
     change D.cohomologyRead p
-      (H.cycleClass p (spineNativeTower G p)) =
+      (spineHodgeSeed G p).1 =
         D.nativeRead 0 (codimensionZeroFundamentalCycle V)
+    rw [← spineNativeTower_cycleClass G p]
     rw [D.cycleClass_read p (spineNativeTower G p)]
     exact D.nativeRead_spineNativeTower p
   have hhalf :
