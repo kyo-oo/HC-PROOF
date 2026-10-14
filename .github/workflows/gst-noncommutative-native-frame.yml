@@ -6,6 +6,7 @@ on:
     branches:
       - research/gpt6-gst-native-rank-one-realization-20261014
     paths:
+      - 'GSTClassicalHodgeNativeGeometricPowerOrbit.lean'
       - 'GSTClassicalHodgeActualNoncommutativeNativeFrame.lean'
       - '.github/workflows/gst-noncommutative-native-frame.yml'
   workflow_dispatch:
