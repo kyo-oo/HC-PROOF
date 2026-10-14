@@ -26,6 +26,7 @@ import GSTClassicalHodgeGeometricPeriodDeterminant
 import GSTClassicalHodgeGeometricKrylovMomentDeterminant
 import GSTClassicalHodgeSpineRankOneGeometricRealization
 import GSTClassicalHodgeSingleCorrespondenceRankTwo
+import GSTClassicalHodgeArbitraryRankChargeFrames
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -356,6 +357,34 @@ theorem classicalHodgeTarget_of_universal_projectiveDegree_Krylov
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_projective_degree_Krylov_nonvanishing
     D F h
+
+/-! ## Arbitrary-rank explicit charged geometric frames
+
+This is the all-finite-ranks successor to the rank-two one-correspondence
+charge wedge. Each native frame entry is explicitly built from the actual
+projective spine and a genuine realized correspondence expression. The
+condition is a nonzero determinant of THOSE geometric cycles, never an
+assumed preimage of a target Hodge class.
+
+As elsewhere in this file, a conditional theorem must not be advertised as
+an unconditional construction of the determinant's existence. -/
+
+/-- **PUBLIC ARBITRARY-RANK GST CHARGED GEOMETRIC FRAME LANDING.**
+A genuine fully ranked frame of projective-spine/charge-wedge algebraic cycles
+at each Hodge weight yields the ORIGINAL Stage-2G rational Hodge target,
+by explicit inversion of the matrix of those native cycles. No restriction
+to rank two and no artificial upper dimension cutoff occurs. -/
+theorem classicalHodgeTarget_of_universal_GST_charged_geometric_frames
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (h :
+      GSTClassicalHodgeArbitraryRankChargeFrames.UniversalGSTChargedGeometricFrameGeneration
+        G F) :
+    ClassicalHodgeTarget V H :=
+  GSTClassicalHodgeArbitraryRankChargeFrames.exact_hodge_of_universal_charged_geometric_frames
+    G F h
 
 /-! ## Weight-local GST geometry: zero, rank one and rank two
 
@@ -906,6 +935,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check explicit_witness_of_compact_realization
 #check UniverseIndexedRealization
 #check hodge_class_has_cycle_of_universe_indexed_realization
+#check classicalHodgeTarget_of_universal_GST_charged_geometric_frames
 #check classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
 #check classicalHodgeTarget_of_universe_indexed_family
 #check HodgeFiber
@@ -943,6 +973,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms classicalHodgeTarget_of_compact_realization
 #print axioms explicit_witness_of_compact_realization
 #print axioms hodge_class_has_cycle_of_universe_indexed_realization
+#print axioms classicalHodgeTarget_of_universal_GST_charged_geometric_frames
 #print axioms classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
 #print axioms classicalHodgeTarget_of_universe_indexed_family
 #print axioms hodgeCoordinates_basis
