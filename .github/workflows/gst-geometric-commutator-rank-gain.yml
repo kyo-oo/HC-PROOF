@@ -1,4 +1,5 @@
 name: GST Geometric Commutator Rank Gain
+# Reverify all native geometric imports against the registered Lake project roots.
 
 on:
   push:

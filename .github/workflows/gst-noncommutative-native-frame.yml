@@ -1,4 +1,5 @@
 name: GST Noncommutative Native Frame Proof
+# Reverify all native geometric imports against the registered Lake project roots.
 
 on:
   push:

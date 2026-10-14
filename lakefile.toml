@@ -332,6 +332,7 @@ roots = [
   "GSTClassicalHodgeLimitlessTowerOrbitCrown",
   "GSTClassicalHodgeLimitlessSpinePropagation",
   "GSTClassicalHodgeSpineRankOneGeometricRealization",
+  "GSTClassicalHodgeActualGeometricIdentityClosure",
   "GSTClassicalHodgeNativeGeometricPowerOrbit",
   "GSTClassicalHodgeActualNoncommutativeNativeFrame",
   "GSTClassicalHodgeActualCommutatorRankGain",
