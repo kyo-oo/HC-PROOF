@@ -8,6 +8,10 @@ on:
       - 'GSTClassicalHodgeArbitraryRankChargeFrames.lean'
       - 'GSTClassicalHodgeActualGeometricIrreducibility.lean'
       - 'HodgeConjecture.lean'
+      - 'GSTMathboxCorrectedZetaGeometry.lean'
+      - 'GSTMathboxCorrectedZetaInfinite.lean'
+      - 'GSTMathboxCorrectedZetaSafeDomain.lean'
+      - 'GSTMathboxCorrectedZetaActualHodge.lean'
       - 'GSTMathboxIndependentGeometricCoordinate.lean'
       - 'GSTMathboxCMGeometricComplexStructure.lean'
       - 'lakefile.toml'
@@ -111,6 +115,22 @@ jobs:
             echo "Trust audit failed: independent geometry / CM quadratic"
             exit 1
           fi
+      - name: Kernel check corrected zeta exact series and actual Hodge landing
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if lake build GSTMathboxCorrectedZetaGeometry GSTMathboxCorrectedZetaInfinite GSTMathboxCorrectedZetaSafeDomain GSTMathboxCorrectedZetaActualHodge > corrected-zeta-hodge-root.log 2>&1; then
+            echo "LEAN PASSED: corrected zeta infinite series / safe domain / actual Hodge"
+          else
+            grep -nE 'error:|sorryAx|✖' corrected-zeta-hodge-root.log | tail -n 110 || true
+            tail -n 80 corrected-zeta-hodge-root.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" corrected-zeta-hodge-root.log; then
+            echo "Trust audit failure: corrected zeta"
+            exit 1
+          fi
       - name: Compile complete public HodgeConjecture root with new geometric theorem
         shell: bash
         run: |
@@ -143,5 +163,6 @@ jobs:
             charged-frames-lean.log
             geometric-irreducibility-lean.log
             new-geometric-coordinate-lean.log
+            corrected-zeta-hodge-root.log
             public-hodge-root-lean.log
           if-no-files-found: warn

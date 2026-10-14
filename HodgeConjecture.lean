@@ -30,6 +30,10 @@ import GSTClassicalHodgeArbitraryRankChargeFrames
 import GSTClassicalHodgeActualGeometricIrreducibility
 import GSTMathboxIndependentGeometricCoordinate
 import GSTMathboxCMGeometricComplexStructure
+import GSTMathboxCorrectedZetaGeometry
+import GSTMathboxCorrectedZetaInfinite
+import GSTMathboxCorrectedZetaSafeDomain
+import GSTMathboxCorrectedZetaActualHodge
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -360,6 +364,50 @@ theorem classicalHodgeTarget_of_universal_projectiveDegree_Krylov
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_projective_degree_Krylov_nonvanishing
     D F h
+
+/-! ## Corrected index-dependent GST zeta geometry — infinite series
+
+The user's corrected equation (3) uses x^n-y^(n+1), NOT the original
+index-independent x-y². The new modules prove one exact infinite
+real summation and a uniform nonsingular positive domain x>y²>=1.
+They also supply a native geometric class nonvanishing certificate.
+
+This public theorem reaches the unchanged Stage-2G rational Hodge target
+under ACTUAL correspondence irreducibility and geometric measurement
+laws at every active Hodge weight. It does NOT assume a representative
+of the individual target Hodge class, and it does NOT assert these
+universal geometric laws have already been proved for all varieties.
+-/
+
+/-- **PUBLIC CORRECTED GST ZETA-TO-HODGE LANDING**.
+The numerical infinite series is kernel-proved. A measured genuine
+native algebraic cycle and actual geometric irreducibility at each
+active weight then supply rational algebraic representatives for all
+rational Hodge classes in arbitrary finite rank. Zero fibers need no
+source. These are explicit sufficient geometric hypotheses, NOT an
+unconditional proof that arbitrary smooth projective varieties
+satisfy them. -/
+theorem classicalHodgeTarget_of_corrected_zeta_actual_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (hirred : ∀ q : Nat,
+      GSTClassicalHodgeActualGeometricIrreducibility.ActualHodgeCorrespondenceIrreducible
+        (V := V) (H := H) (p := q))
+    (hZetaGeometry : ∀ q : Nat,
+      (∃ a : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H q,
+        a ≠ 0) →
+      ∃ (Z : codimensionCycles V.X q)
+        (read : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H q →ₗ[ℚ] ℚ)
+        (zetaAtS : ℝ),
+        zetaAtS ≠ 0 ∧
+        ((read
+          (GSTClassicalHodgeGeometricMatrixRankLanding.geometricHodgeClass G Z) : ℚ) : ℝ) =
+          zetaAtS * (∑' m : ℕ,
+            GSTMathboxCorrectedZetaGeometry.indexedKernel 2 2 m)) :
+    ClassicalHodgeTarget V H :=
+  GSTMathboxCorrectedZetaActualHodge.full_hodge_of_corrected_zeta_actual_geometry
+    G hirred hZetaGeometry
 
 /-! ## True third geometric coordinate and CM quadratic native rank gain
 
@@ -1049,6 +1097,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check UniverseIndexedRealization
 #check hodge_class_has_cycle_of_universe_indexed_realization
 #check native_third_coordinate_adds_hodge_direction
+#check classicalHodgeTarget_of_corrected_zeta_actual_geometry
 #check classicalHodgeTarget_of_weightwise_actual_CM_geometry
 #check classicalHodgeTarget_of_actual_correspondence_irreducibility
 #check classicalHodgeTarget_of_universal_GST_charged_geometric_frames
@@ -1090,6 +1139,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms explicit_witness_of_compact_realization
 #print axioms hodge_class_has_cycle_of_universe_indexed_realization
 #print axioms native_third_coordinate_adds_hodge_direction
+#print axioms classicalHodgeTarget_of_corrected_zeta_actual_geometry
 #print axioms classicalHodgeTarget_of_weightwise_actual_CM_geometry
 #print axioms classicalHodgeTarget_of_actual_correspondence_irreducibility
 #print axioms classicalHodgeTarget_of_universal_GST_charged_geometric_frames
