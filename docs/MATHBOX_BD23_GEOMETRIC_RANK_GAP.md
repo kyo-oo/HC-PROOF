@@ -254,3 +254,18 @@ smooth projective complex varieties. Its Lean proof is checked by the
 independent GitHub workflow `gst-correspondence-semantic-firewall.yml`;
 consult that workflow's completed conclusion before upgrading its evidence
 label to kernel-verified.
+
+### Verified semantic firewall outcome
+
+After the initial failed `simp` elaboration, the proof was repaired
+using the explicit definitional zero-cycle-class equation
+`(0 : BettiAt H p) = T (0 : BettiAt H p)`.
+GitHub Actions run **38588580899** completed with **success** for commit
+`a132378ecb4c167fead11d33d2db8dc9c7820fe5`. The test compiles the
+new Lean module with a temporary Lake root in the CI checkout, avoiding
+interruption of the separate long-running Hodge root build.
+
+Thus the interface ambiguity countermodel is **Lean-kernel verified** and
+its `#print axioms` audit has no `sorryAx`. It does not construct the
+missing canonical cup/Gysin cohomological operator, which remains a genuine
+geometric formalization task.
