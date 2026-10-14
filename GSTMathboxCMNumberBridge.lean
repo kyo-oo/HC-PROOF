@@ -129,6 +129,42 @@ theorem constantKernelPartialSum (c : ℚ) (N : ℕ) :
     simp only [Finset.sum_range_succ, ih, Nat.cast_succ]
     ring
 
+/-! ## Exact, index-dependent CM kernel alternative to the photographed E3
+
+This is explicitly a *repaired candidate*, not an interpretation smuggled
+into the user's original undefined infinite summation.
+The positive n-dependent denominator is n^2 + a^2 + b^2 (starting at n=1).
+Here we prove finite nonvanishing and positivity. Infinite summability
+requires a separate analytic comparison theorem and is NOT claimed here. -/
+
+/-- Positive CM denominator at integer index n+1. -/
+def indexedCMKernel (a b : ℚ) (n : ℕ) : ℚ :=
+  1 / (((n : ℚ) + 1) ^ 2 + a ^ 2 + b ^ 2)
+
+theorem indexedCMKernel_pos (a b : ℚ) (n : ℕ) :
+    0 < indexedCMKernel a b n := by
+  unfold indexedCMKernel
+  positivity
+
+/-- Even one genuinely indexed kernel term is positive, so every
+nonempty finite partial sum of the proposed corrected kernel is nonzero. -/
+theorem indexedCMKernelPartialSum_pos (a b : ℚ) (N : ℕ) :
+    0 < ∑ n ∈ Finset.range (N + 1), indexedCMKernel a b n := by
+  rw [Finset.sum_range_succ]
+  have hbase : 0 ≤ ∑ n ∈ Finset.range N, indexedCMKernel a b n :=
+    Finset.sum_nonneg (fun n _ => le_of_lt (indexedCMKernel_pos a b n))
+  exact add_pos_of_nonneg_of_pos hbase (indexedCMKernel_pos a b N)
+
+/-- The photographed E2 operator difference is NOT automatically nonzero
+merely because N ≠ 0. Both L and T can be zero linear maps. This does not
+rule out a useful law after independently specified geometric hypotheses. -/
+theorem photographed_E2_nonzero_not_universal :
+    ¬ (∀ (L T : ℚ →ₗ[ℚ] ℚ) (S N weight : ℚ),
+      N ≠ 0 → weight * L S - weight * T S ≠ T N) := by
+  intro h
+  have hc := h 0 0 0 1 1 (by norm_num)
+  norm_num at hc
+
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
@@ -182,12 +218,17 @@ theorem rank_two_hodge_cycle_of_verified_CM_geometry
 #check cm_norm_nonzero_without_transverse
 #check cmChargedWedge_ne_zero_of_imag_ne_zero
 #check constantKernelPartialSum
+#check indexedCMKernel_pos
+#check indexedCMKernelPartialSum_pos
+#check photographed_E2_nonzero_not_universal
 #check geometric_nonproportional_of_verified_CM_coordinate
 #check rank_two_hodge_cycle_of_verified_CM_geometry
 
 #print axioms cmActionMatrix_det
 #print axioms cm_norm_nonzero_without_transverse
 #print axioms constantKernelPartialSum
+#print axioms indexedCMKernelPartialSum_pos
+#print axioms photographed_E2_nonzero_not_universal
 #print axioms rank_two_hodge_cycle_of_verified_CM_geometry
 
 end GSTMathboxCMNumberBridge
