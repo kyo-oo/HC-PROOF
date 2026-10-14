@@ -5,6 +5,7 @@ on:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
       - 'GSTClassicalHodgeSingleCorrespondenceRankTwo.lean'
+      - 'HodgeConjecture.lean'
       - 'lakefile.toml'
       - '.github/workflows/gst-single-correspondence-charge-wedge.yml'
   workflow_dispatch:
@@ -60,6 +61,22 @@ jobs:
             echo 'Trust audit failed'
             exit 1
           fi
+      - name: Compile complete public HodgeConjecture root with new geometric theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if lake build HodgeConjecture > public-hodge-root-lean.log 2>&1; then
+            echo "LEAN PASSED: public HodgeConjecture integration"
+          else
+            grep -nE 'error:|sorryAx|✖' public-hodge-root-lean.log | tail -n 120 || true
+            tail -n 70 public-hodge-root-lean.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" public-hodge-root-lean.log; then
+            echo "Trust audit failed: public Hodge root"
+            exit 1
+          fi
       - name: Save dependency cache
         if: always()
         uses: actions/cache/save@v4
@@ -71,5 +88,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gst-single-correspondence-charge-wedge-lean
-          path: charge-wedge-lean.log
+          path: |
+            charge-wedge-lean.log
+            public-hodge-root-lean.log
           if-no-files-found: warn
