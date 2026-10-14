@@ -61,6 +61,7 @@ theorem all_native_classes_collinear_of_point_collinearity
     apply Submodule.span_le.mpr
     rintro y ⟨x, rfl⟩
     obtain ⟨c, hc⟩ := hpoints x
+    change H.cycleClass p (codimensionPointCycle V.X p x) ∈ S
     rw [hc]
     exact S.smul_mem _ (Submodule.subset_span (Set.mem_singleton _))
   have hmem : H.cycleClass p Z ∈ S := by
