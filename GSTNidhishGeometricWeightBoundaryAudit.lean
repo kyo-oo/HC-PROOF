@@ -47,7 +47,7 @@ theorem no_conserved_charge_when_one_native_weight_vanishes
     (G : GeometricCycleClassSpine V H)
     (p : Nat)
     (hempty : ∀ Z : codimensionCycles V.X p, Z = 0) :
-    ¬ SpineTowerConservedCharge G := by
+    SpineTowerConservedCharge G → False := by
   intro D
   have hspineZero : spineNativeTower G p = 0 := hempty _
   have hcoh :
@@ -62,7 +62,7 @@ theorem no_unrestricted_native_mass_bridge_at_empty_weight
     (G : GeometricCycleClassSpine V H)
     (p : Nat)
     (hempty : ∀ Z : codimensionCycles V.X p, Z = 0) :
-    ¬ NativeMassCycleClassBridge V H := by
+    NativeMassCycleClassBridge V H → False := by
   intro M
   exact (no_conserved_charge_when_one_native_weight_vanishes
     G p hempty) (M.toConservedCharge G)
