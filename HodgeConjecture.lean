@@ -537,6 +537,34 @@ theorem not_classicalHodgeTarget_of_zero_cycleClass
   apply halpha_ne
   rw [← hZ, hzeroZ]
 
+/-- **SEMANTIC GEOMETRY FIREWALL.**
+The current `GeometricCycleClassSpine` interface expresses compatible
+cycle-class/Hodge operators, but it does not pin the cycle-class map
+to the genuine construction. If a rational Hodge class is nonzero,
+the Stage-2G zero-cycle-class model admits every current spine field
+while the classical target fails.
+
+This rejects the invalid inference "geometric spine laws ⇒ full Hodge" inside
+the same main public file. A successful unconditional theorem must provide
+new genuine geometric semantics or a separate independent generation proof. -/
+theorem geometric_spine_laws_alone_cannot_establish_classicalHodgeTarget
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : Nat)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p))
+    (hne : alpha ≠ 0) :
+    ∃ H0 : HodgeBigradedBettiData V,
+      Nonempty
+        (GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H0) ∧
+      ¬ ClassicalHodgeTarget V H0 := by
+  let H0 :=
+    GSTClassicalHodgeStage2GSemanticRigidity.zeroCycleClassData H
+  refine ⟨H0, ?_, ?_⟩
+  · exact ⟨GSTClassicalHodgeGeometricCycleClassSpine.zeroCycleClassSpine H⟩
+  · exact GSTClassicalHodgeStage2GSemanticRigidity.not_bigradedBettiHodge_zeroCycleClass
+      H p alpha halpha hne
+
 /-! ## Unified finale: Astra geometry × GLM repairs × multi-channel architecture -/
 
 /-- The public target is exactly equivalent to the canonical finite-basis
@@ -893,6 +921,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check hodgeBasisCycleBridgeOfTarget
 #check classicalHodgeTarget_iff_basis_cycle_bridges
 #check not_classicalHodgeTarget_of_zero_cycleClass
+#check geometric_spine_laws_alone_cannot_establish_classicalHodgeTarget
 #check classicalHodgeTarget_iff_canonical_basis_algebraization
 #check classicalHodgeTarget_of_full_limitless_geometry
 #check every_hodge_class_has_native_cycle_of_full_limitless_geometry
@@ -922,6 +951,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms classicalHodgeTarget_of_basis_cycle_family
 #print axioms classicalHodgeTarget_iff_basis_cycle_bridges
 #print axioms not_classicalHodgeTarget_of_zero_cycleClass
+#print axioms geometric_spine_laws_alone_cannot_establish_classicalHodgeTarget
 #print axioms classicalHodgeTarget_iff_canonical_basis_algebraization
 #print axioms classicalHodgeTarget_of_full_limitless_geometry
 #print axioms every_hodge_class_has_native_cycle_of_full_limitless_geometry
