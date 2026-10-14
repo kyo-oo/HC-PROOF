@@ -6,6 +6,7 @@ on:
     paths:
       - 'GSTClassicalHodgeSingleCorrespondenceRankTwo.lean'
       - 'GSTClassicalHodgeArbitraryRankChargeFrames.lean'
+      - 'GSTClassicalHodgeActualGeometricIrreducibility.lean'
       - 'HodgeConjecture.lean'
       - 'lakefile.toml'
       - '.github/workflows/gst-single-correspondence-charge-wedge.yml'
@@ -78,6 +79,22 @@ jobs:
             echo 'Trust audit failed: charged frames'
             exit 1
           fi
+      - name: Kernel check actual correspondence irreducibility geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if lake build GSTClassicalHodgeActualGeometricIrreducibility > geometric-irreducibility-lean.log 2>&1; then
+            echo "LEAN PASSED: genuine-geometry invariant-subspace reduction"
+          else
+            grep -nE 'error:|sorryAx|✖' geometric-irreducibility-lean.log | tail -n 120 || true
+            tail -n 70 geometric-irreducibility-lean.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" geometric-irreducibility-lean.log; then
+            echo 'Trust audit failed: geometric irreducibility'
+            exit 1
+          fi
       - name: Compile complete public HodgeConjecture root with new geometric theorem
         shell: bash
         run: |
@@ -108,5 +125,6 @@ jobs:
           path: |
             charge-wedge-lean.log
             charged-frames-lean.log
+            geometric-irreducibility-lean.log
             public-hodge-root-lean.log
           if-no-files-found: warn
