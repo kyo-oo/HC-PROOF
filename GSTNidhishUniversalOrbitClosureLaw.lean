@@ -68,6 +68,8 @@ theorem native_orbit_minimal_among_actual_geometric_invariants
   | seed =>
       exact hseed
   | next R hR w ih =>
+      change geometricHodgeClass G
+        (nativeOrbitCycle Z (.next R hR w)) ∈ S
       rw [nativeOrbitCycle_next_class G Z R hR w]
       exact hstable R hR _ ih
 
