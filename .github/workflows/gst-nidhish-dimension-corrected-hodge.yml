@@ -5,6 +5,8 @@ on:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
       - 'GSTNidhishDimensionCorrectedHodgeSynthesis.lean'
+      - 'GSTNidhishFiniteWeightGeometricDegree.lean'
+      - 'GSTNidhishUniversalOrbitClosureLaw.lean'
       - '.github/workflows/gst-nidhish-dimension-corrected-hodge.yml'
   workflow_dispatch:
 permissions:
