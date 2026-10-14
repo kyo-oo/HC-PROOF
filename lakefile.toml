@@ -300,6 +300,7 @@ roots = [
   "GSTClassicalHodgeCMThetaPeriodExtraction",
   "GSTClassicalHodgeCMSurfaceTensorContraction",
   "GSTClassicalHodgeCrossCarrierExplicitPointKernel",
+  "GSTClassicalHodgeFiniteClosedKernelBridge",
   "GSTClassicalHodgeCMCoefficientDescentCore",
   "GSTClassicalHodgeCMNativeRationalDescent",
   "GSTClassicalHodgeCMExtendedRangeRigidity",
