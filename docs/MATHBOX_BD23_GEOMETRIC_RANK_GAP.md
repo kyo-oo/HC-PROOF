@@ -209,3 +209,18 @@ The all-varieties rational Hodge conjecture remains the unchanged
 GitHub Actions workflow `.github/workflows/gst-single-correspondence-charge-wedge.yml`
 checks both new mathematical files and then the entire public Hodge root.
 Always associate conclusions with the exact commit SHA of that run.
+
+### Mathbox adversarial correction: do not confuse sufficient with necessary
+
+The universal nonzero charged-frame determinant and the
+actual-correspondence irreducibility hypothesis are **sufficient** for the
+public Hodge statement, not proven necessary. The Hodge conjecture might
+hold on a carrier even if the particular chosen projective spine is zero
+or its orbit under these constrained realized correspondences does not
+generate every algebraic class. Thus the failure of either criterion
+does not disprove the Hodge conjecture, and universal truth of either
+stronger criterion has not been established.
+
+In the Lean source, any wording calling frame-generation
+"necessary" refers to the obligation of **that particular proof route**,
+not a logically necessary condition for Hodge algebraicity.
