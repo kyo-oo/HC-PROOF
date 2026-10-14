@@ -64,7 +64,7 @@ theorem actual_point_span_eq_algebraic_hodge_subspace
     actualPointHodgeSpan G p =
         Submodule.comap L (Submodule.map L (actualPointHodgeSpan G p)) := by
       symm
-      exact Submodule.comap_map_eq_of_injective L.injective
+      exact Submodule.comap_map_eq_of_injective (Submodule.subtype_injective _)
         (actualPointHodgeSpan G p)
     _ = AlgebraicHodgeSubspace V H p := by
       rw [hmap]
