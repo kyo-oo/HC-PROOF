@@ -77,7 +77,7 @@ theorem chargeOrthogonalNative_charge_zero
       spineNativeTower G p) = 0
   rw [map_sub, map_smul, smul_eq_mul]
   have hnonzero := D.nativeRead_spineNativeTower_ne_zero p
-  field_simp [hnon]
+  field_simp [hnonzero]
   ring
 
 /-- Any actual cycle outside the projective-spine line gives a genuinely
