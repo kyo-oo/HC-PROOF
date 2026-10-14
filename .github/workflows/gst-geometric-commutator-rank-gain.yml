@@ -6,6 +6,7 @@ on:
     branches:
       - research/gpt6-gst-native-rank-one-realization-20261014
     paths:
+      - 'GSTClassicalHodgeNativeGeometricPowerOrbit.lean'
       - 'GSTClassicalHodgeActualCommutatorRankGain.lean'
       - '.github/workflows/gst-geometric-commutator-rank-gain.yml'
   workflow_dispatch:
