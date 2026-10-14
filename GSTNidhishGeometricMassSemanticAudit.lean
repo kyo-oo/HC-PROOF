@@ -58,7 +58,7 @@ theorem mass_collision_forbids_nativeMassCycleClassBridge
     (Z W : codimensionCycles V.X p)
     (hclass : H.cycleClass p Z = H.cycleClass p W)
     (hmass : nativeCycleMass V p Z ≠ nativeCycleMass V p W) :
-    ¬ NativeMassCycleClassBridge V H := by
+    NativeMassCycleClassBridge V H → False := by
   intro M
   exact hmass (M.mass_congr p hclass)
 
@@ -69,7 +69,7 @@ declaring the native-mass bridge a law of arbitrary Stage2G data. -/
 theorem zero_class_semantics_refutes_mass_bridge
     (H : HodgeBigradedBettiData V)
     (x : CodimensionPoint V.X p) :
-    ¬ NativeMassCycleClassBridge V (zeroCycleClassData H) := by
+    NativeMassCycleClassBridge V (zeroCycleClassData H) → False := by
   intro M
   have hzero :
       (zeroCycleClassData H).cycleClass p
