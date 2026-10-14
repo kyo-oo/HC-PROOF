@@ -186,8 +186,8 @@ theorem global_spine_charge_impossible_of_zero_hodge_fiber
     (G : GeometricCycleClassSpine V H)
     (p : Nat)
     [Subsingleton (ClassicalHodgeFiber V H p)] :
-    ¬ SpineTowerConservedCharge G := by
-  intro D
+    ¬ Nonempty (SpineTowerConservedCharge G) := by
+  rintro ⟨D⟩
   exact D.spineHodgeSeed_ne_zero p
     (Subsingleton.elim (spineHodgeSeed G p) 0)
 
