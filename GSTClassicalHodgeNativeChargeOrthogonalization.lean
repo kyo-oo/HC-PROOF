@@ -167,13 +167,100 @@ theorem rank_two_hodge_of_any_noncollinear_native_cycle
   rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hmem
   exact hmem
 
+/-! ## The stronger rank-two theorem WITHOUT a global conserved charge
+
+The global conserved charge in older GST files forces a nonzero spine in
+EVERY weight, including those where the Hodge fiber can vanish. For genuine
+finite-dimensional varieties that cannot be the universal requirement.
+
+The right geometry requires a nonzero native spine only at the weight under
+investigation, and an INDEPENDENT second genuine native cycle. The second
+class need not arise as a commutator, preserve a charge, or satisfy a period
+identity. -/
+
+/-- In any zero Hodge fiber, the old global charge hypothesis is impossible:
+it demands a nonzero element in this fiber. This is a formal *consistency
+obstruction* to using that global hypothesis on ordinary bounded-degree
+cohomology. -/
+theorem global_spine_charge_impossible_of_zero_hodge_fiber
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    [Subsingleton (ClassicalHodgeFiber V H p)] :
+    ¬ SpineTowerConservedCharge G := by
+  intro D
+  exact D.spineHodgeSeed_ne_zero p
+    (Subsingleton.elim (spineHodgeSeed G p) 0)
+
+/-- Full rank-two realization from TWO genuinely native geometric cycles,
+with NO global conserved-charge structure and NO commutator hypothesis.
+The pre-existing native GST spine supplies the first vector. Any second
+actual native cycle with a noncollinear class completes the weight-two
+algebraic representation.
+
+This is applicable in finite-dimensional projective geometry where a
+global nonzero charge at every degree is not possible. -/
+theorem rank_two_hodge_without_global_charge
+    (G : GeometricCycleClassSpine V H)
+    (p : Nat)
+    (hspine : spineHodgeSeed G p ≠ 0)
+    (Z : codimensionCycles V.X p)
+    (houtside : ∀ c : ℚ,
+      H.cycleClass p Z ≠ c • (spineHodgeSeed G p).1)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (hrank : Module.finrank ℚ (ClassicalHodgeFiber V H p) = 2)
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ W : codimensionCycles V.X p, H.cycleClass p W = alpha := by
+  let t : ClassicalHodgeFiber V H p :=
+    ⟨H.cycleClass p Z, G.algebraic_is_hodge p Z⟩
+  have hLI : LinearIndependent ℚ
+      ![spineHodgeSeed G p, t] := by
+    apply (LinearIndependent.pair_iff' hspine).2
+    intro c hc
+    have hcol : H.cycleClass p Z =
+        c • (spineHodgeSeed G p).1 := by
+      have h := congrArg Subtype.val hc
+      simpa [t, Submodule.coe_smul_of_tower] using h.symm
+    exact houtside c hcol
+  have hspan :
+      Submodule.span ℚ
+        (Set.range (![spineHodgeSeed G p, t] :
+          Fin 2 → ClassicalHodgeFiber V H p)) = ⊤ :=
+    hLI.span_eq_top_of_card_eq_finrank' (by simpa [hrank])
+  let S := AlgebraicHodgeSubspace V H p
+  have hseed : spineHodgeSeed G p ∈ S :=
+    spineHodgeSeed_algebraic G p
+  have ht : t ∈ S := by
+    change H.cycleClass p Z ∈ pointCycleClassSpan p (H.cycleClass p)
+    rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
+    exact ⟨Z, rfl⟩
+  have hS : S = ⊤ := by
+    apply top_unique
+    rw [← hspan]
+    apply Submodule.span_le.mpr
+    rintro x ⟨i, rfl⟩
+    fin_cases i
+    · simpa using hseed
+    · simpa using ht
+  have hmem : (⟨alpha, halpha⟩ :
+      ClassicalHodgeFiber V H p) ∈ S := by
+    rw [hS]
+    trivial
+  change alpha ∈ pointCycleClassSpan p (H.cycleClass p) at hmem
+  rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p] at hmem
+  exact hmem
+
 #check chargeOrthogonalNative
 #check chargeOrthogonalNative_cycleClass
 #check chargeOrthogonalNative_charge_zero
 #check chargeOrthogonalNative_nonzero_of_not_collinear
 #check rank_two_hodge_of_any_noncollinear_native_cycle
+#check global_spine_charge_impossible_of_zero_hodge_fiber
+#check rank_two_hodge_without_global_charge
 
 #print axioms chargeOrthogonalNative_charge_zero
 #print axioms rank_two_hodge_of_any_noncollinear_native_cycle
+#print axioms global_spine_charge_impossible_of_zero_hodge_fiber
+#print axioms rank_two_hodge_without_global_charge
 
 end GSTClassicalHodgeNativeChargeOrthogonalization
