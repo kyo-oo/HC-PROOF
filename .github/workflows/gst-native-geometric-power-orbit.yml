@@ -46,6 +46,7 @@ jobs:
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-native-orbit
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+            hc-lean-incremental-${{ runner.os }}-
       - name: Kernel compile actual native polynomial orbit
         shell: bash
         run: |

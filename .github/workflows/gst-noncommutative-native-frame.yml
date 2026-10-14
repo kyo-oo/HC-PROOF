@@ -45,6 +45,7 @@ jobs:
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-noncommutative
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+            hc-lean-incremental-${{ runner.os }}-
       - name: Compile actual GST noncommutative native cycles
         shell: bash
         run: |

@@ -45,6 +45,7 @@ jobs:
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-rank-gain
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+            hc-lean-incremental-${{ runner.os }}-
       - name: Verify native commutator independence theorem
         shell: bash
         run: |
