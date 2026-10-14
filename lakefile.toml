@@ -337,6 +337,7 @@ roots = [
   "GSTClassicalHodgeActualNoncommutativeNativeFrame",
   "GSTClassicalHodgeActualCommutatorRankGain",
   "GSTClassicalHodgeNativeChargeOrthogonalization",
+  "GSTClassicalHodgeAtomicIndependentPointFrontier",
   "GSTClassicalHodgeLimitlessSemanticSeparation",
   "GSTClassicalHodgeLimitlessCosmicNoEscape",
   "GSTClassicalHodgeLimitlessDefectOrbitLanding",
