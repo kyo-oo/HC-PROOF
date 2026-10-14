@@ -181,3 +181,22 @@ These are independent arithmetic facts. Positivity of a finite
 analytic kernel by itself does not prove a nonzero actual geometric
 theta period. The completed new-workflow CI run must be checked
 before calling this revised file green.
+
+## G. Literal real 99x radical now formalized (current revision)
+
+The latest `GSTMathboxCMNumberBridge.lean` revision adds
+`photographedConversion x A B psi xi` over the reals and its
+fully quantified squared-radical identity, subject to the essential
+nonnegative radicand condition. It proves
+`photographedConversion_ne_zero` from `x != 0` and a strictly
+positive radicand, plus a counterexample
+`photographedConversion_equal_inputs` where A=B.
+
+This resolves the *algebraic interpretation* of the page's Equation (1)
+under symbolic indexed inputs. It does not define the supplied subscript
+3 (digit, coordinate, tensor grade, or something else), nor does it
+construct a geometric period, CM correspondence, or a nonzero Hodge
+direction from that expression.
+
+The fresh GitHub kernel result for this exact source revision must be
+checked before the theorem is called Lean-verified.
