@@ -1,4 +1,4 @@
-import GSTMathboxCMNumberBridge
+import GSTClassicalHodgeSingleCorrespondenceRankTwo
 import GSTClassicalHodgeGeometricMatrixRankLanding
 
 /-!
@@ -43,7 +43,6 @@ open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGeometricMatrixRankLanding
 open GSTClassicalHodgeSingleCorrespondenceRankTwo
 open GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra
-open GSTMathboxCMNumberBridge
 
 namespace GSTMathboxIndependentGeometricCoordinate
 
