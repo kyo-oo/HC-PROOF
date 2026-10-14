@@ -340,6 +340,8 @@ roots = [
   "GSTClassicalHodgeAtomicIndependentPointFrontier",
   "GSTClassicalHodgeNonCircularGeometricFrontier",
   "GSTClassicalHodgeActualPointFiniteFrame",
+  "GSTClassicalHodgeExactGeometricRankDefect",
+  "GSTClassicalHodgeGeometricDefectSeparator",
   "GSTClassicalHodgeLocalSpineNormalization",
   "GSTClassicalHodgeLimitlessSemanticSeparation",
   "GSTClassicalHodgeLimitlessCosmicNoEscape",
