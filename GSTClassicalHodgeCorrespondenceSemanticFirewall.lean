@@ -57,7 +57,8 @@ theorem every_ambient_operator_realized_on_zero_cycleClass
     K.RealizesAmbientOnPoints
       (H := zeroCycleClassData H) T := by
   intro x
-  simp [zeroCycleClassData]
+  change (0 : BettiAt H p) = T (0 : BettiAt H p)
+  simp
 
 /-- Package any ambient endomorphism over the exact same true geometric
 correspondence when the semantic cycle-class map is zero. -/
