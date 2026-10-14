@@ -55,7 +55,8 @@ noncomputable def zeroCycleClassSpine
     intro p f
     refine { cohomologyPushforward := 0, naturality := ?_ }
     intro Z
-    simp [zeroCycleClassData]
+    change (0 : RationalSingularCohomology H.analytification (2 * p)) = 0
+    rfl
   principalCutPair := by
     intro p
     refine {
@@ -63,7 +64,8 @@ noncomputable def zeroCycleClassSpine
       cohomologyOperator := 0,
       cycleClass_natural := ?_ }
     intro Z
-    simp [zeroCycleClassData]
+    change (0 : RationalSingularCohomology H.analytification (2 * (p + 1))) = 0
+    rfl
   principalCutPair_native := by
     intro p
     rfl
