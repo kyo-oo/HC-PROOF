@@ -24,6 +24,8 @@ import GSTClassicalHodgeCMSurfaceCupGysinGSTCompiler
 import GSTClassicalHodgeGeometricMatrixRankLanding
 import GSTClassicalHodgeGeometricPeriodDeterminant
 import GSTClassicalHodgeGeometricKrylovMomentDeterminant
+import GSTClassicalHodgeSpineRankOneGeometricRealization
+import GSTClassicalHodgeSingleCorrespondenceRankTwo
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
@@ -354,6 +356,64 @@ theorem classicalHodgeTarget_of_universal_projectiveDegree_Krylov
     ClassicalHodgeTarget V H :=
   GSTClassicalHodgeGeometricKrylovMomentDeterminant.full_hodge_of_projective_degree_Krylov_nonvanishing
     D F h
+
+/-! ## Weight-local GST geometry: zero, rank one and rank two
+
+This route is deliberately weight-by-weight, rather than assuming a nonzero
+conserved spine charge in every cohomological degree. At rank two, the new
+single-correspondence charge wedge constructs the second native Hodge direction.
+A genuine transverse correspondence remains the geometric existence input.
+
+In contrast to the earlier all-weights conserved-charge theorem, rank-zero
+fibers are handled without demanding an impossible nonzero source cycle. -/
+
+/-- **ACTUAL GEOMETRY LOW-RANK INTEGRATION.**
+For every rational Hodge weight, either the Hodge fiber is zero, or the
+projective native spine generates its rank-one Hodge fiber, or one genuinely
+realized geometric correspondence moves that spine transversely in rank two.
+
+The zero case needs no geometric witness. The rank-one case uses the actual
+projective native cycle. The rank-two case uses the concrete charge-wedge
+native cycle, NOT a target-class preimage or an abstract matrix unit.
+
+This theorem is a precise **conditional** completion for such low-rank
+geometries, not the unconditional all-varieties Hodge conjecture. -/
+theorem classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (F : GSTHodgeChannelFinale.Stage2GHodgeFiniteness V H)
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (h : ∀ p : Nat,
+      (∀ a : GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p,
+        a = 0) ∨
+      (Module.finrank ℚ
+          (GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p) = 1 ∧
+        GSTClassicalHodgeLimitlessSpinePropagation.spineHodgeSeed G p ≠ 0) ∨
+      (∃ (ell :
+            GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ),
+        ell (GSTClassicalHodgeLimitlessSpinePropagation.spineHodgeSeed G p) ≠ 0 ∧
+        ∃ (E : GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra.RealizedCorrespondenceExpr V H p),
+          GSTClassicalHodgeSingleCorrespondenceRankTwo.hodgeChargeWedge
+            G ell E ≠ 0 ∧
+          Module.finrank ℚ
+            (GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p) = 2)) :
+    ClassicalHodgeTarget V H := by
+  intro p alpha halpha
+  letI : FiniteDimensional ℚ
+      (GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p) := F.finite p
+  rcases h p with hzero | ⟨hrank, hnz⟩ | ⟨ell, hlive, E, htransverse, hrank⟩
+  · have ha0 : alpha = 0 := by
+      have hz := congrArg Subtype.val
+        (hzero (⟨alpha, halpha⟩ :
+          GSTClassicalHodgeFiberedCosmology.ClassicalHodgeFiber V H p))
+      simpa using hz
+    exact ⟨0, by simp [ha0]⟩
+  · exact
+      GSTClassicalHodgeSpineRankOneGeometricRealization.every_rank_one_hodge_class_is_native
+        G p hnz hrank alpha halpha
+  · exact
+      GSTClassicalHodgeSingleCorrespondenceRankTwo.every_rank_two_hodge_class_of_one_transverse_correspondence
+        G ell hlive E htransverse hrank alpha halpha
 
 /-! ## Index-polymorphic limitless realization -/
 
@@ -818,6 +878,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #check explicit_witness_of_compact_realization
 #check UniverseIndexedRealization
 #check hodge_class_has_cycle_of_universe_indexed_realization
+#check classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
 #check classicalHodgeTarget_of_universe_indexed_family
 #check HodgeFiber
 #check HodgeBasisIndex
@@ -853,6 +914,7 @@ theorem unified_hodge_finale_conserved_spine_projective_two_generators
 #print axioms classicalHodgeTarget_of_compact_realization
 #print axioms explicit_witness_of_compact_realization
 #print axioms hodge_class_has_cycle_of_universe_indexed_realization
+#print axioms classicalHodgeTarget_of_weightwise_rank_le_two_actual_geometry
 #print axioms classicalHodgeTarget_of_universe_indexed_family
 #print axioms hodgeCoordinates_basis
 #print axioms hodgeBasisCycleLift_spec
