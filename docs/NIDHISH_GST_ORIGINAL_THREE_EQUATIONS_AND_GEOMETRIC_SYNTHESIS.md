@@ -168,3 +168,23 @@ until that run succeeds.
 authorship of Equation (3), and standard names for the special
 functions inside it do not transfer authorship of the combined
 GST expression.
+
+## Named formula declarations in Lean
+
+`GSTNidhishOriginalEquationNames.lean` now publishes the concise,
+explicit author-associated identifiers directly inside the code:
+
+- `NGCCF`, `NGCCF_sq` for the independent third geometric coordinate
+  conversion formula (1);
+- `NGOSR`, `NGOSR_zero_maps_counterexample` for a typed rational
+  scalar-operator instance of relation (2);
+- `NIZHCFKernel`, `NIZHCFInfiniteSeries`,
+  `NIZHCFInfiniteSeries_two`, and `NIZHCFWeighted_two`
+  for the corrected indexed-series portion of formula (3).
+
+This naming does **not** claim that currently undefined operations in
+the handwritten equations have suddenly been assigned canonical
+geometric meanings. The full original equations retain their authorship
+and notation, while the machine-checked portions have unambiguous
+types. The newly dedicated check is GitHub Actions workflow
+`gst-nidhish-original-equation-names.yml`, run **38609614440**.
