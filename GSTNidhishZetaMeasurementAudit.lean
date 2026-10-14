@@ -72,7 +72,8 @@ series certification is equivalent to an already nonzero genuine
 native cycle class. This marks the next non-circular geometric input. -/
 theorem freely_adjusted_zeta_certificate_iff_nonzero_native_class
     (G : GeometricCycleClassSpine V H) :
-    HasFreelyAdjustedZetaCertificate G ↔ HasNonzeroNativeClass G := by
+    HasFreelyAdjustedZetaCertificate (p := p) G ↔
+      HasNonzeroNativeClass (p := p) G := by
   constructor
   · rintro ⟨Z, read, zetaAtS, hzeta, hmeas⟩
     exact ⟨Z, corrected_zeta_infinite_forces_nonzero_native_class
