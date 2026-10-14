@@ -184,3 +184,61 @@ index-dependent finite terms and their geometric detection
 mechanism. The infinite-sum comparison and Lambert exchange
 are analytically derived and Wolfram cross-checked here;
 they are not yet recorded as standalone Lean kernel theorems.
+
+## Lean proof completion checkpoint: infinite sum, safe domain, genuine Hodge route
+
+The corrected Equation (3) research now has **FOUR independently compiled**
+Lean modules, not just symbolic calculations:
+
+| Lean file | Core result | GitHub Actions passed |
+|---|---|---|
+| `GSTMathboxCorrectedZetaGeometry.lean` | Corrected x^n-y^(n+1) denominator, explicit pole, finite scalar detector and arbitrary-rank native span exclusion | `38603472321` |
+| `GSTMathboxCorrectedZetaInfinite.lean` | TRUE infinite summability at (x,y)=(2,2), exact `tsum=-1`, nonzero scalar amplification | `38604173599` |
+| `GSTMathboxCorrectedZetaSafeDomain.lean` | All denominators positive for **every n** if y>=1 and x>y^2; all positive-cutoff sums nonzero | `38605217121` |
+| `GSTMathboxCorrectedZetaActualHodge.lean` | Any nonzero native cycle is a Hodge seed under actual correspondence irreducibility; corrected infinite series proves seed nonzero from genuine geometric readout; full all-weights conditional Hodge theorem | `38605438617` |
+
+The independent verification jobs passed with the source's `#print
+axioms` audits and no `sorryAx`. Do NOT mistake these individual
+successes for the entire public `HodgeConjecture.lean` module.
+The four files, their library registration, and a new conditional
+`classicalHodgeTarget_of_corrected_zeta_actual_geometry` theorem
+were atomically integrated into the **unchanged** public Hodge
+target at commit `c69ed255b8ad5841d26ad6b2f86129b197fbdb7d`.
+The full-root CI is `38605997725` and needs independent verification.
+
+### Coefficient/rationality consistency check
+
+For the EXACT (2,2) case, `sum=-1`. Hence any proposed
+**rational** Hodge-coordinate readout satisfying
+`real(read(cycleClass(Z))) = zeta(s) * sum`
+implies `zeta(s) = -real(read(cycleClass(Z)))`, which is itself
+rational. Therefore the condition cannot hold with
+`s=2` and `zeta(2)=pi^2/6` in the rational coefficient model.
+It *could* hold at a rational special value, for example
+`zeta(0)=-1/2`, where the scalar equals `+1/2`.
+This is a real mathematical type restriction, not a formatting
+issue. If the intended object uses complex periods, a genuine
+period comparison and rational descent map must be built rather
+than inserting an arbitrary transcendental scalar into a
+Q-module.
+
+### What is still NOT an unconditional Hodge proof
+
+The numerical equation and its convergence are now established
+in genuine parameter families. The conditional native Hodge
+landing depends on:
+
+1. A **genuinely constructed** algebraic codimension-p cycle
+   with a proved canonical cohomological coordinate identified
+   with the corrected infinite zeta expression.
+2. The geometric irreducibility of the **actual realized
+   Hodge-compatible finite closed correspondence algebra**
+   on each nonzero rational Hodge fiber, or a separate
+   construction of a full native algebraic Hodge basis.
+3. The full authentic cycle-class/Hodge semantics, rather than
+   unconstrained fields that admit the zero-class countermodel.
+
+None of those universal existence inputs is proved merely by
+the analytic indexed series. The classical Hodge conjecture is
+not proved by this checkpoint. These hypotheses remain exact
+research targets, not artificial new axioms.
