@@ -1,5 +1,14 @@
 # Mathbox + Wolfram assessment of the photographed GST/CM proposal
 
+> **User clarification (2026-10-14):** the subscript `3` in
+> `(a*x^4)_3` and `(b*y^4)_3` is the **third independent geometric
+> coordinate**. The earlier "unknown subscript" audit below is historical
+> context, superseded by this definition. The authoritative formalization
+> is now `GSTMathboxIndependentGeometricCoordinate.lean`, using
+> `Fin 3` with coordinate 3 represented by zero-based index 2.
+
+
+
 **Date:** 2026-10-14
 **Base source:** User-supplied image (not added to Git).
 **Live formal artifact:** `GSTMathboxCMNumberBridge.lean` on `mathbox/bd23-single-operator-charge-wedge`.
@@ -222,3 +231,29 @@ Their claimed unconditional geometric conversion and the
 all-varieties Hodge conjecture are NOT proved: there is still no
 unconditional geometric construction of the required CM transverse
 Betti action nor a general rank-full native cycle class family.
+
+## Independent third-coordinate extension (new formal route)
+
+The clarified coordinate has a meaningful linear-algebraic consequence.
+Wolfram verified `det(e1,e2,e3) = 1`, and that the third coordinate
+vanishes on `a e1 + b e2` while reading 1 on `e3`. For the illustrated
+test values `a=2,b=1,x=2,y=1,psi=1,xi=1`, the exact radical prefactor
+is `99 sqrt(31)`, demonstrating a nonzero third-coordinate instance
+but **not** proving such a coordinate occurs on every geometric Hodge
+fiber.
+
+New Lean module: `GSTMathboxIndependentGeometricCoordinate.lean`.
+
+- Defines literal third-coordinate powers and the original 99*x
+  expression for real three-coordinate vectors.
+- Proves the third basis direction cannot be in the first two's span.
+- Proves the `detected_native_cycle_outside_old_span` theorem
+  **for any index type** of old genuine native cycles.
+- Applies it to an actual native correspondence image in
+  `realized_correspondence_fresh_native_direction`.
+
+**Still required for the universal original Hodge target:** construct
+a geometric cycle and coordinate-functional detector that is nonzero
+on a truly missing Hodge direction. Existence of the coordinate
+axis as an abstract linear-algebra model does not construct those
+geometric objects on every smooth projective variety.
