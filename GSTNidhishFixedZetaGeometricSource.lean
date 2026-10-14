@@ -89,7 +89,7 @@ theorem actual_codimension_zero_source_of_degree_normalization
           (codimensionZeroFundamentalCycle V)) = 1/2 := by
       simp [halfDegree, hdegree]
     rw [fixed_zetazero_corrected_scalar]
-    exact_mod_cast hhalf
+    simpa using congrArg (fun q : ℚ => (q : ℝ)) hhalf
   · intro hz
     have hd :
         degreeRead (geometricHodgeClass G
