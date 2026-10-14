@@ -125,3 +125,62 @@ all smooth projective varieties.
 **Corrected equation status:** numerical denominator fixed;
 finite series/rank implication formalized; full semantics and
 universal geometric cycle generation remain open.
+
+## Additional structural result: Lambert-series re-expansion
+
+Under the explicit **real** hypotheses `y >= 1` and `x > y^2`,
+the infinite indexed series has a positive, convergent Lambert-type
+re-expansion.
+
+Let `r_n=y*(y/x)^n`. Then `0<=r_n <= y^2/x < 1`
+for all `n>=1`, so the geometric expansion is valid:
+
+```text
+1/(x^n-y^(n+1))
+  = x^(-n)/(1-r_n)
+  = sum_{k=0}^infinity [ y^k*(y^k/x^(k+1))^n ].
+```
+
+All terms are nonnegative, allowing exchange of the two sums
+under these hypotheses. Summing over n>=1 first gives
+
+```text
+sum_{n=1}^infinity 1/(x^n-y^(n+1))
+  = sum_{k=0}^infinity y^(2*k)/(x^(k+1)-y^k).
+```
+
+Moreover the original series obeys the explicit comparison bound
+
+```text
+0 < S(x,y) <= 1/((x-1)*(1-y^2/x)).
+```
+
+This is an actual analytical improvement: the corrected formula
+has a controlled absolutely convergent region and an alternative
+series representation. It is **not** a cohomological cycle theorem.
+
+Wolfram cross-checked at `x=5,y=2`:
+
+```text
+original  = 1.070091446954301971953287296299712...
+repacked = 1.070091446954301971953287296299499...
+upper bound = 5/4 = 1.25.
+```
+
+The tiny difference above is numerical truncation/precision,
+not a mathematical discrepancy. The symbolic derivation is
+independent of this numerical example.
+
+For the diagonal `x=y=q>1`, the original series has the
+exact rational closed form `S(q,q)=-1/(q-1)^2`.
+At the analytic continuation value `zeta(0)=-1/2`,
+`zeta(0) S(2,2)=1/2` is rational. At `zeta(2)=pi^2/6`,
+the corresponding scalar is not rational; rationality must
+be proved or separately descended before using it as a
+scalar on rational native cycles.
+
+**A precision point:** The Lean file currently checks the
+index-dependent finite terms and their geometric detection
+mechanism. The infinite-sum comparison and Lambert exchange
+are analytically derived and Wolfram cross-checked here;
+they are not yet recorded as standalone Lean kernel theorems.
