@@ -75,7 +75,7 @@ theorem exact_pole_at_four_two :
     indexedDenominator 4 2 0 = 0 ∧ ¬ legalIndex 4 2 0 := by
   constructor
   · norm_num [indexedDenominator]
-  · simp [legalIndex, indexedDenominator]
+  · norm_num [legalIndex, indexedDenominator]
 
 /-- For x=y=2 the indexed denominator simplifies EXACTLY to -2^(m+1). -/
 theorem equal_base_two_denominator (m : ℕ) :
