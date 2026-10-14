@@ -1,56 +1,60 @@
-# Mathbox route: one-correspondence GST charge-wedge rank gain
+# Mathbox research route — HC-PROOF base bd23bac6
 
-- **Parent:** `bd23bac6ee8c81c45b71881666a898af093c9046`
-- **Working branch:** `mathbox/bd23-single-operator-charge-wedge`
-- **Target:** Independently generate a second genuine algebraic Hodge direction without postulating arbitrary matrix units or a target-cycle preimage.
-- **Outcome:** Explicit rank-two criterion obtained; universal existence of a nonzero transverse class remains unproved.
-- **Evidence:** `GSTClassicalHodgeSingleCorrespondenceRankTwo.lean`, with dedicated GitHub workflow `gst-single-correspondence-charge-wedge.yml`.
+Base commit: `bd23bac6ee8c81c45b71881666a898af093c9046`.
+Isolated research branch: `mathbox/bd23-single-operator-charge-wedge`.
+Primary Lean file: `GSTClassicalHodgeSingleCorrespondenceRankTwo.lean`.
+CI workflow: `.github/workflows/gst-single-correspondence-charge-wedge.yml`.
 
-## Construction
+## Precise original missing implication
 
-Let `G : GeometricCycleClassSpine V H`, let `D : SpineTowerConservedCharge G`, and let `E : RealizedCorrespondenceExpr V H p`.
+The source's genuinely realized finite-closed correspondence expression algebra produces native rational algebraic cycles, but it does **not** prove that the Hodge classes of its outputs span a general rational Hodge fiber. Its finite geometric power-orbit and noncommutative word-frame reconstruction theorems explicitly assume a nonzero determinant / full-rank matrix. No general theorem at the requested base supplies such a matrix on every smooth projective complex variety.
 
-Take the actual native spine cycle `Z = spineNativeTower G p`, and its Betti class `s = spineHodgeSeed G p`. Write the linear conserved-charge functional as `ell = D.cohomologyRead p`, and `d = ell(s)`. The existing theorem `actualSpine_betti_charge_nonzero` establishes `d != 0`.
+Moreover, `HodgeBigradedBettiData` stores the cycle class as an arbitrary linear map, and `GSTClassicalHodgeStage2GSemanticRigidity.lean` constructs the zero-map countermodel. Thus enlarging the GST abstract matrix-unit algebra, or asserting determinant nonvanishing as a new law, does not itself produce the genuine native geometric cycles demanded by the original Hodge claim.
 
-Define an explicit new *native algebraic cycle* by
+## Executed route: weight-local charge wedge
 
-```text
-Delta(E) = d • E.cycleOperator Z - ell(E.cohomologyOperator s) • Z
+At a fixed weight p, choose the native spine cycle `Z = spineNativeTower G p` and its Hodge class `s = spineHodgeSeed G p`. Let `T` be a genuinely realized correspondence expression, and choose one rational **weight-local** functional
+
+```lean
+ell : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ
 ```
 
-and its Betti realization as
+with `ell s != 0`. Define `t = T.cohomologyOperator s`, an algebraic Hodge class because it is the class of `T.cycleOperator Z`.
+
+The following is an actual native algebraic cycle:
 
 ```text
-delta(E) = d • E.cohomologyOperator s - ell(E.cohomologyOperator s) • s.
+DeltaNative(T) = ell(s) • T.native(Z) - ell(t) • Z.
 ```
 
-Cycle-class naturality proves `cycleClass(Delta(E)) = delta(E)`.
-Linear charge cancellation proves `ell(delta(E)) = 0` exactly, with **no charge-eigenoperator hypothesis**.
-
-If `delta(E) != 0`, the pair `s, delta(E)` is linearly independent: applying `ell` to a relation `a*s+b*delta(E)=0` forces `a=0` because `ell(s)!=0`; nonvanishing then forces `b=0`. Both vectors have actual native-cycle representatives. If the rational Hodge fiber has dimension 2, they span it, so every rational (p,p) class at that weight is algebraic.
-
-## What this changes
-
-The older `GSTClassicalHodgeActualCommutatorRankGain` route requires two realized correspondences, scalar-eigenfunctional laws for both, and a **nonzero commutator**. The charge wedge needs only one realized correspondence with a nonzero transverse output. The explicit charge cancellation requires neither a second operator nor an eigenfunctional law.
-
-The geometric challenge is now one sharply falsifiable statement:
+By exact native/cohomological naturality, its class is the Hodge-fiber vector
 
 ```text
-For a specified rank-two Hodge fiber, is there an actual realized E such
-that bettiChargeWedge G D E != 0?
+delta(T) = ell(s) • t - ell(t) • s.
 ```
 
-This is **not** proved universally. The criterion is sufficient, not known necessary, and it does not itself address rank greater than 2. No new axiom, arbitrary Hodge target preimage, or fake "universal nonvanishing" is introduced.
+The charge cancellation is exact:
 
-## Adversarial interpretation
+```text
+ell(delta(T)) = ell(s)*ell(t) - ell(t)*ell(s) = 0.
+```
 
-The source's existing `zeroCycleClassSpine` countermodel shows why compatible operator laws alone cannot force a genuine cycle-class map to hit every Hodge class. Separately, the parent branch's one-operator power-orbit theorem requires a nonzero determinant; that determinant's universal existence cannot be inferred merely from a computed polynomial expression.
+If `delta(T) != 0`, it is independent of `s`, since `ell(s) != 0`. When the rational Hodge fiber has dimension exactly 2, the two algebraic classes form a basis. The existing atomic-span/range identity then represents any rational Hodge class with an actual codimension-p rational algebraic cycle.
 
-For higher rank, the next independent GST geometric task is to construct **multiple provably independent transverse directions in the kernel of the conserved-charge functional**, or to use multiple native seeds not generated from the same orbit. Rewriting formal laws to assert nonvanishing would merely change the target instead of proving it.
+This route needs **one** genuinely realized correspondence with transverse movement, rather than the earlier two correspondences whose nonzero commutator must also satisfy global charge-eigenfunctional laws.
 
-## Verification contract
+## Corrected semantic issue in the older route
 
-- Compile: `lake build GSTClassicalHodgeSingleCorrespondenceRankTwo` using GitHub Actions and the pinned toolchain.
-- Audit: no `sorry`, `admit`, or custom assumption inserted into the proof.
-- Mathematical evidence label: **conditional rank-two theorem**, with an explicit native construction.
-- Original unconditional all-varieties rational Hodge target: **not established** by this route.
+The older `SpineTowerConservedCharge G` assumes one nonzero base charge transported across **all** natural-number weights. Its theorems imply a nonzero cycle class at **every** such weight. For a genuinely finite-dimensional smooth projective complex variety the rational cohomology eventually vanishes in high degree, so that global premise cannot be offered as a universally inhabited geometric input. The new route uses only a linear readout on the single active Hodge fiber, allowing all other weights to be zero. This correction changes the proof hypotheses rather than declaring incompatible laws universally true.
+
+## Evidence and limitations
+
+- The Lean file contains `movedSpine`, `nativeChargeWedge`, `hodgeChargeWedge`, `nativeChargeWedge_cycleClass`, `hodgeChargeWedge_charge_zero`, `spine_chargeWedge_linearIndependent`, and `every_rank_two_hodge_class_of_one_transverse_correspondence`.
+- **Mathematical claim:** an exact rank-two reduction conditional on `ell(s) != 0` and `delta(T) != 0`, not a solution of the unconditional Hodge conjecture.
+- **Unproved geometric existence input:** produce such a genuinely realized correspondence with nonzero transverse action on an arbitrary rank-two Hodge fiber, or produce sufficiently many independent genuine algebraic directions in arbitrary rank.
+- **Separate semantic input:** identify the cohomology and cycle-class map with the authentic geometric cohomological construction, not an unconstrained record field.
+- **Verification:** check the corresponding GitHub Actions kernel compilation and sorry audit. Until a completed green run is observed for the revised commit, label the Lean file *written, verification pending*.
+
+## Smallest decisive mathematical test
+
+For a concrete smooth projective complex variety X with a two-dimensional rational (p,p) Hodge fiber and an independently constructed genuine nonzero algebraic spine Z, exhibit an actual finite closed correspondence T whose action on cl(Z) is not proportional to cl(Z). If none can be produced by the presently supported correspondence algebra, the limitation is geometric (not a missing polynomial-calculus theorem). No unverified universal nonvanishing is promoted to a law.
