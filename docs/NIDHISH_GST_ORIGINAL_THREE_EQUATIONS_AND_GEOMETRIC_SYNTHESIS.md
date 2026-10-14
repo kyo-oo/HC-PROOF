@@ -119,3 +119,52 @@ Exact Lean verification belongs to the new independent GitHub workflow
 `.github/workflows/gst-nidhish-geometric-orbit-synthesis.yml`.
 Only a completed green job for that exact source commit validates
 the proposed new theorems.
+
+## Verified new native-orbit geometry (14 October 2026)
+
+The following new authored-name modules have now independently passed
+Lean kernel compilation, with no `sorryAx` in their focused gates:
+
+- `GSTNidhishGeometricOrbitSynthesis.lean`, workflow run
+  **38607823410** — defines an inductive finite word of actual
+  Hodge-compatible realized finite-closed correspondences,
+  constructs its native algebraic cycle and exact cohomological
+  action, proves the synthesized orbit span is invariant, and
+  proves the Hodge fiber is fully generated if actual correspondence
+  irreducibility and a nonzero geometric seed are established.
+- `GSTNidhishFullOrbitZetaSynthesis.lean`, workflow run
+  **38608434300** — uses the user's corrected infinite
+  indexed zeta expression to certify a nonzero actual native
+  cycle and applies the orbit construction to derive a
+  full all-weights **conditional** rational Hodge statement.
+
+Neither successful compilation asserts the universal existence
+of an irreducible actual correspondence algebra on every smooth
+projective complex variety. The genuine ambient Betti operator
+must also be constructed canonically, rather than chosen freely
+outside the native cycle-class image. This is an explicit missing
+structural theorem, not a Lean tactic problem.
+
+### Free-coefficient adversarial test
+
+The source `GSTNidhishZetaMeasurementAudit.lean` additionally tests
+whether the right side of corrected Equation (3), in its exact
+`x=y=2` infinite-sum case, genuinely **creates** a native
+geometric source. If the real value labeled `zetaAtS` may be
+chosen freely, the numerical identity is equivalent to already
+having a nonzero native cycle class: the sum is exactly `-1`
+and a free scalar can be chosen to match a nonzero rational
+coordinate. That is not a new geometric existence mechanism.
+
+The genuinely new source-to-target theorem therefore requires
+a **fixed mathematically defined zeta value** and an
+**independently defined geometric readout** (rather than
+allowing the coefficient and readout to vary to force the
+desired equality). This adversarial test has its own
+dedicated Lean CI and is not to be described as kernel-verified
+until that run succeeds.
+
+**Authorship principle:** This audit does not change the user's
+authorship of Equation (3), and standard names for the special
+functions inside it do not transfer authorship of the combined
+GST expression.
