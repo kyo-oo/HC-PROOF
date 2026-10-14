@@ -67,6 +67,47 @@ theorem conversionRadicand_equal_inputs
     conversionRadicand A A psi xi = 0 := by
   simp [conversionRadicand]
 
+/-! ## The literal real-valued radical in photographed E1
+
+Because the source's subscript-3 terms are not defined, A and B still stand
+for those unknown inputs. The real radical requires a domain hypothesis. -/
+
+/-- Exactly the photo's 99*x radical expression on REAL interpreted inputs,
+but with explicitly symbolic indexed quantities A and B. -/
+noncomputable def photographedConversion
+    (x A B psi xi : ℝ) : ℝ :=
+  99 * x * Real.sqrt ((A - B) / (psi ^ 2 * xi))
+
+/-- Squaring the photographed conversion radical is valid on its stated
+nonnegative real domain. This is an algebraic identity, NOT yet geometry. -/
+theorem photographedConversion_sq
+    (x A B psi xi : ℝ)
+    (hrad : 0 ≤ (A - B) / (psi ^ 2 * xi)) :
+    photographedConversion x A B psi xi ^ 2 =
+      ((99 : ℝ) * x) ^ 2 * ((A - B) / (psi ^ 2 * xi)) := by
+  unfold photographedConversion
+  rw [mul_pow, Real.sq_sqrt hrad]
+
+/-- Exact nonvanishing criterion for the photographed real expression.
+A nonzero geometry detector cannot follow unless ALL of these independent
+numerical hypotheses are established by the intended GST/CM objects. -/
+theorem photographedConversion_ne_zero
+    (x A B psi xi : ℝ)
+    (hx : x ≠ 0)
+    (hrad : 0 < (A - B) / (psi ^ 2 * xi)) :
+    photographedConversion x A B psi xi ≠ 0 := by
+  unfold photographedConversion
+  have hr : Real.sqrt ((A - B) / (psi ^ 2 * xi)) ≠ 0 :=
+    ne_of_gt (Real.sqrt_pos.2 hrad)
+  exact mul_ne_zero (mul_ne_zero (by norm_num : (99 : ℝ) ≠ 0) hx) hr
+
+/-- Even this exact real radical can be zero: an equal symbolic numerator
+has no forced transverse geometric information. -/
+theorem photographedConversion_equal_inputs
+    (x A psi xi : ℝ) :
+    photographedConversion x A A psi xi = 0 := by
+  simp [photographedConversion]
+
 /-- CM multiplication on a rational Gaussian-coordinate plane:
 (a + i*b) acts via the real matrix [[a,-b],[b,a]]. -/
 def cmActionMatrix (a b : ℚ) : Matrix (Fin 2) (Fin 2) ℚ :=
@@ -212,6 +253,9 @@ theorem rank_two_hodge_cycle_of_verified_CM_geometry
     hrank alpha halpha
 
 #check conversionRadicand_ne_zero
+#check photographedConversion_sq
+#check photographedConversion_ne_zero
+#check photographedConversion_equal_inputs
 #check cmActionMatrix_det
 #check cmActionMatrix_seed
 #check cmChargedWedge_eq
@@ -224,6 +268,8 @@ theorem rank_two_hodge_cycle_of_verified_CM_geometry
 #check geometric_nonproportional_of_verified_CM_coordinate
 #check rank_two_hodge_cycle_of_verified_CM_geometry
 
+#print axioms photographedConversion_sq
+#print axioms photographedConversion_ne_zero
 #print axioms cmActionMatrix_det
 #print axioms cm_norm_nonzero_without_transverse
 #print axioms constantKernelPartialSum
