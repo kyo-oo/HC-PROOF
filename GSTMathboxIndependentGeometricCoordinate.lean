@@ -40,6 +40,7 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeGeometricMatrixRankLanding
 open GSTClassicalHodgeSingleCorrespondenceRankTwo
 open GSTClassicalHodgeRealizedCorrespondenceExpressionAlgebra
@@ -119,7 +120,8 @@ theorem independent_geometric_third_axis
       b • (fun i : Fin 3 => if i = 1 then (1 : ℚ) else 0) := by
   intro h
   have hc := congrArg (fun v : Fin 3 → ℚ => v 2) h
-  norm_num at hc
+  have hfalse : (1 : ℚ) = 0 := by simpa using hc
+  norm_num at hfalse
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
