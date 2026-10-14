@@ -117,7 +117,7 @@ natural-number p are invalid without a finite-weight cutoff.
 ## Route D — repaired dimension-bounded geometric law
 
 `GSTNidhishFiniteWeightGeometricDegree.lean`
-**Independent CI: 38625865055 — check final job conclusion.**
+**Verified CI: 38626403600 — SUCCESS**, after fixing missing successor-scalar namespace. Earlier 38625865055 failed at elaboration.
 
 New bounded input `BoundedGeometricDegreeCharge G d` uses:
 a native rational-linear degree, an ambient rational Betti
@@ -132,7 +132,7 @@ and transport identities remain separately verifiable,
 unproved geometric inputs; they are not replaced by axioms.
 
 `GSTNidhishDimensionCorrectedHodgeSynthesis.lean`
-**Independent CI: 38626143207 — check final job conclusion.**
+**Dedicated CI: 38626768532 — check the completed conclusion.** The earlier 38626143207 failed because it built the pre-repair dependent finite-degree module.
 
 Wires finite-weight geometric degree and local cyclicity of actual
 Hodge-compatible closed correspondences to the original all-weight
@@ -175,3 +175,19 @@ counterexample.
 
 This record preserves useful green proofs without promoting
 conditional or structurally obstructed hypotheses into facts.
+
+## Verified audit and mass-theorem safety notice
+
+The source `GSTNidhishGeometricWeightBoundaryAudit.lean`
+passed **38625637598**. The native mass audit passed **38625663787**.
+The conditional unlimited mass/zeta theorem also compiled in
+**38625514599**, but it MUST NOT be cited as a universal existence
+result: its old unrestricted mass bridge cannot exist when any
+codimension cycle module vanishes.
+
+The bounded replacement explicitly avoids this defect and
+does not assume nonzero classes at p>dim X. It remains
+conditional on authentic cohomological degree and successor
+compatibility and on actual finite-closed correspondence
+cyclicity. Those two geometric realization tasks have NOT
+been discharged unconditionally.
