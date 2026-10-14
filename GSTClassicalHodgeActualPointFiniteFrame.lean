@@ -104,8 +104,8 @@ theorem finite_independent_native_point_basis
     funext i
     exact hpoints i
   refine ⟨points, ?_, ?_⟩
-  · simpa only [hfun] using hli
-  · simpa only [hfun, actualPointHodgeSpan] using hspan
+  · exact hfun.symm ▸ hli
+  · exact hfun.symm ▸ hspan
 
 #check actualPointHodgeClass
 #check actualPointHodgeSpan
