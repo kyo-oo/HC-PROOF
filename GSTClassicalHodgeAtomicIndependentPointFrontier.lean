@@ -25,6 +25,7 @@ noncomputable section
 
 open AlgebraicGeometry
 open GSTProjectiveOverC
+open GSTNativeCodimensionCyclePresentation
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
@@ -66,7 +67,8 @@ theorem all_native_classes_collinear_of_point_collinearity
     apply hle
     rw [← smoothProjective_cycleClass_range_eq_atomic_span V H p]
     exact ⟨Z, rfl⟩
-  exact Submodule.mem_span_singleton.mp hmem
+  obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp hmem
+  exact ⟨c, hc.symm⟩
 
 /-- An independent native class exists precisely when a SINGLE genuine
 codimension-p point cycle provides an independent Betti direction.
@@ -84,7 +86,7 @@ theorem native_outside_spine_iff_atomic_point_outside
   constructor
   · rintro ⟨Z, hZ⟩
     by_contra h
-    push_neg at h
+    push Not at h
     obtain ⟨c, hc⟩ :=
       all_native_classes_collinear_of_point_collinearity G p h Z
     exact hZ c hc
@@ -131,7 +133,7 @@ theorem rank_two_weightwise_hodge_iff_independent_point
   constructor
   · intro hweight
     by_contra h
-    push_neg at h
+    push Not at h
     have hall : ∀ w : ClassicalHodgeFiber V H p,
         ∃ c : ℚ, c • spineHodgeSeed G p = w := by
       intro w
