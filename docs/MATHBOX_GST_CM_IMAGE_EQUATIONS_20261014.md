@@ -200,3 +200,25 @@ direction from that expression.
 
 The fresh GitHub kernel result for this exact source revision must be
 checked before the theorem is called Lean-verified.
+
+## H. Exact verified status for the photographed-equation proof file
+
+The latest standalone Lean run **38597550496** completed successfully
+for source commit `ffe0dcc2ecee0caa59d8b560c8f22c649d70f885`.
+It checked the complete `GSTMathboxCMNumberBridge.lean` source,
+including the exact real 99*x radical lemma, scalar operator E2
+countermodel, finite CM kernel positivity, rational CM matrix
+determinant, and conditional rank-two Hodge-cycle bridge.
+Its `#print axioms` audit reported no `sorryAx`.
+
+The earlier revisions also passed: **38596431461** and
+**38597081569**. The full public `HodgeConjecture.lean` run
+**38585691719** is a distinct, longer check and must never be
+presented as passed until its own conclusion is observed.
+
+The user's numbered equations have now yielded real,
+kernel-verified algebraic and geometric-conditional results.
+Their claimed unconditional geometric conversion and the
+all-varieties Hodge conjecture are NOT proved: there is still no
+unconditional geometric construction of the required CM transverse
+Betti action nor a general rank-full native cycle class family.
