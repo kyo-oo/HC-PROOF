@@ -460,3 +460,51 @@ This supplies a second, independent geometric nonvanishing detector
 in addition to \(\lambda_1(Z_{\rm prim})=-m\).
 The intersection-to-Betti comparison is a geometric hypothesis,
 not a consequence of the polynomial calculation.
+
+
+## Final execution checkpoint — focused Lean gates
+
+The following are exact observed **successful** GitHub Actions results
+for this research branch, with no local Lean installation:
+
+| Gate | GitHub Actions run | Result |
+|---|---:|---|
+| Abstract three-source plus arbitrary finite blow-up transfer, and three-cycle rational reconstruction | 38733901418 | SUCCESS |
+| Symbolic rational intersection Gram and explicit inverse | 38735055904 | SUCCESS |
+| Any finite geometric rank via exact diagonal detectors | 38735896897 | SUCCESS |
+| Native polarized nonzero primitive curve-cycle constructor | 38736568005 | SUCCESS |
+| Actual Mathlib codimension-cycle / Stage-2G Hodge subtype bridge | 38736567960 | SUCCESS |
+| Stage-2G rank-to-native-cycle landing with registered local dependencies | 38736743778 | SUCCESS |
+
+All six gates compile their associated stated Lean theorems.
+Earlier failed/cancelled runs were superseded by these successful
+runs; neither a successful algebraic gate nor a full source census
+claims a machine-checked analytic blow-up formula from first principles.
+
+**Exact strongest mathematical result**: all rational Hodge classes on
+finite blow-ups of projective space along disjoint smooth curves
+have explicit algebraic representatives by the standard independently
+known geometric blow-up decomposition. The polarized middle primitive
+kernel can have any prescribed finite positive rank r, and an explicit
+basis of actual algebraic primitive cycles is derived by the exceptional
+geometry; its rank is certified by an exact intersection detector.
+
+**Precise unresolved universal implication**: produce actual geometric
+cycle representatives for *all* primitive rational Hodge classes of an
+arbitrary smooth projective complex variety X, beyond varieties with
+certified cellular, projective, CM or smooth-blow-up source geometries.
+The current approach transports independently algebraic source classes
+and proves their rank from geometry; it does not show every arbitrary X
+admits a sufficient independent geometric source system.
+
+**Next Lean integration target**: construct true blow-up morphisms,
+exceptional projective bundles, push/pull/Gysin maps and cohomological
+blow-up isomorphisms from the pinned Mathlib scheme/Betti API; instantiate
+the already verified \`ActualSchemeCurveBlowupGeometry\` and
+\`AlgebraicCycleHodgeSemantics\` with those operations. Then certify the
+exact Gram-formula from the genuine intersection product on the chosen
+blow-up instead of passing its numerical entries as hypotheses.
+
+No custom full-Hodge axiom, arbitrary native preimage, forced
+determinant nonvanishing, or target surjectivity field has been added
+to any proved target theorem.
