@@ -1,16 +1,16 @@
-name: GST Nidhish Full Orbit Zeta Synthesis
+name: GST Full Orbit Zeta Synthesis
 on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
-      - 'GSTNidhishFullOrbitZetaSynthesis.lean'
-      - '.github/workflows/gst-nidhish-full-orbit-zeta-synthesis.yml'
+      - 'GSTResearchFullOrbitZetaSynthesis.lean'
+      - '.github/workflows/gst-research-full-orbit-zeta-synthesis.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: gst-nidhish-full-orbit-${{ github.ref }}
+  group: gst-research-full-orbit-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   lean:
@@ -37,33 +37,33 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-nidhish-full-orbit
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-research-full-orbit
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-
-      - name: Check Nidhish full orbit corrected zeta Hodge synthesis
+      - name: Check Research full orbit corrected zeta Hodge synthesis
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
-          name = "NidhishFullOrbitZeta"
+          name = "ResearchFullOrbitZeta"
           roots = [
-            "GSTNidhishGeometricOrbitSynthesis",
+            "GSTResearchGeometricOrbitSynthesis",
             "GSTMathboxCorrectedZetaGeometry",
             "GSTMathboxCorrectedZetaInfinite",
             "GSTMathboxCorrectedZetaActualHodge",
-            "GSTNidhishFullOrbitZetaSynthesis"
+            "GSTResearchFullOrbitZetaSynthesis"
           ]
           EOF
-          if lake build NidhishFullOrbitZeta > nidhish-full-orbit-lean.log 2>&1; then
+          if lake build ResearchFullOrbitZeta > research-full-orbit-lean.log 2>&1; then
             echo "LEAN PASSED: full orbit and corrected infinite zeta Hodge synthesis"
           else
-            grep -nE 'error:|sorryAx|✖' nidhish-full-orbit-lean.log | tail -n 140 || true
-            tail -n 95 nidhish-full-orbit-lean.log
+            grep -nE 'error:|sorryAx|✖' research-full-orbit-lean.log | tail -n 140 || true
+            tail -n 95 research-full-orbit-lean.log
             exit 1
           fi
-          if grep -E "declaration uses 'sorry'|sorryAx" nidhish-full-orbit-lean.log; then
+          if grep -E "declaration uses 'sorry'|sorryAx" research-full-orbit-lean.log; then
             echo "Lean trust audit failure"
             exit 1
           fi
@@ -71,6 +71,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nidhish-full-orbit-lean-proof-log
-          path: nidhish-full-orbit-lean.log
+          name: research-full-orbit-lean-proof-log
+          path: research-full-orbit-lean.log
           if-no-files-found: warn

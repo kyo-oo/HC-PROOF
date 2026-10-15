@@ -1,24 +1,24 @@
-name: GST Nidhish Finite Geometric Degree
+name: GST Geometric Orbit Synthesis
 on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
-      - 'GSTNidhishFiniteWeightGeometricDegree.lean'
-      - '.github/workflows/gst-nidhish-finite-geometric-degree.yml'
+      - 'GSTResearchGeometricOrbitSynthesis.lean'
+      - '.github/workflows/gst-research-geometric-orbit-synthesis.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: gst-nidhish-finite-degree-${{ github.ref }}
+  group: gst-research-native-orbit-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   lean:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 130
     steps:
       - uses: actions/checkout@v5
-      - name: Restore Lean
+      - name: Restore pinned Lean
         uses: actions/cache/restore@v4
         with:
           path: ~/.elan
@@ -33,38 +33,38 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
-      - name: Restore dependencies
+      - name: Restore Lean incremental cache
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-finite-geometric-degree
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-research-orbit
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-
-      - name: Kernel check bounded genuine geometric degree
+      - name: Verify native geometric orbit synthesis
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
-          name = "NidhishFiniteGeometricDegree"
-          roots = ["GSTNidhishFiniteWeightGeometricDegree"]
+          name = "ResearchGeometricOrbit"
+          roots = ["GSTResearchGeometricOrbitSynthesis"]
           EOF
-          if lake build NidhishFiniteGeometricDegree > finite-degree-lean.log 2>&1; then
-            echo "LEAN PASSED: finite-weight cohomological geometric degree conservation"
+          if lake build ResearchGeometricOrbit > research-orbit-lean.log 2>&1; then
+            echo "LEAN PASSED: inductive native correspondence-word orbit and Hodge generation"
           else
-            grep -nE 'error:|sorryAx|✖' finite-degree-lean.log | tail -n 130 || true
-            tail -n 95 finite-degree-lean.log
+            grep -nE 'error:|sorryAx|✖' research-orbit-lean.log | tail -n 130 || true
+            tail -n 105 research-orbit-lean.log
             exit 1
           fi
-          if grep -E "declaration uses 'sorry'|sorryAx" finite-degree-lean.log; then
-            echo 'Trust audit failed'
+          if grep -E "declaration uses 'sorry'|sorryAx" research-orbit-lean.log; then
+            echo "Trust audit failure"
             exit 1
           fi
-      - name: Upload diagnostic
+      - name: Upload Lean compilation log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nidhish-finite-geometric-degree-kernel-log
-          path: finite-degree-lean.log
+          name: research-geometric-orbit-kernel-log
+          path: research-orbit-lean.log
           if-no-files-found: warn
