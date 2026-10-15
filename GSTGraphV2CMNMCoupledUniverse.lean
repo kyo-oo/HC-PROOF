@@ -148,7 +148,9 @@ theorem coupledClosure_sound
     GeometricallyAlgebraic (V := V) (H := H) s := by
   exact OmniversalGraph.closure_sound
     (coupledGraph (V := V) (H := H))
-    (algebraicSeed_sound (V := V) (D := H))
+    (by
+      intro s hs
+      exact algebraicSeed_sound (V := V) (D := H) s.geometry hs)
     (coupledEvent_algebraic_stable (V := V) (H := H))
     s hs
 
