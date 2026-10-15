@@ -99,7 +99,7 @@ noncomputable def genuineNativePrimitive
 independently geometric ample cup map. -/
 theorem genuineNativePrimitive_lefschetz_zero
     (G : GenuineK3ProductDiagonalPacket Y H) :
-    G.lefschetz (H.cycleClass 2 G.genuineNativePrimitive) = 0 := by
+    G.lefschetz (H.cycleClass 2 (genuineNativePrimitive G)) = 0 := by
   exact diagonalPrimitiveCycle_is_primitive (H.cycleClass 2)
     G.lefschetz G.diagonal G.pointLeft G.pointRight G.hCrossH
     G.degree G.degree_ne_zero G.leftNearTop G.rightNearTop
@@ -110,15 +110,15 @@ theorem genuineNativePrimitive_lefschetz_zero
 rather than selected as an arbitrary target representative. -/
 theorem genuineNativePrimitive_is_hodge
     (G : GenuineK3ProductDiagonalPacket Y H) :
-    H.cycleClass 2 G.genuineNativePrimitive ∈
+    H.cycleClass 2 (genuineNativePrimitive G) ∈
       rationalHodgeSubspace (H.hodgeBigrading 2) :=
-  G.cycle_is_hodge G.genuineNativePrimitive
+  G.cycle_is_hodge (genuineNativePrimitive G)
 
 /-- Nonvanishing certified by the K3 transcendental cup readout,
 not by an assumed nonzero abstract GST spine. -/
 theorem genuineNativePrimitive_nonzero
     (G : GenuineK3ProductDiagonalPacket Y H) :
-    H.cycleClass 2 G.genuineNativePrimitive ≠ 0 := by
+    H.cycleClass 2 (genuineNativePrimitive G) ≠ 0 := by
   exact diagonalPrimitiveCycle_nonzero (H.cycleClass 2)
     G.transversePairing
     G.diagonal G.pointLeft G.pointRight G.hCrossH
@@ -135,7 +135,7 @@ theorem genuineNativePrimitive_outside_divisor_span
     (D : Submodule ℚ
       (RationalSingularCohomology H.analytification 4))
     (hD : D ≤ LinearMap.ker G.transversePairing) :
-    H.cycleClass 2 G.genuineNativePrimitive ∉ D := by
+    H.cycleClass 2 (genuineNativePrimitive G) ∉ D := by
   exact diagonalPrimitiveCycle_outside_divisor_words
     (H.cycleClass 2) G.transversePairing D
     G.diagonal G.pointLeft G.pointRight G.hCrossH
