@@ -118,10 +118,9 @@ theorem cmIndexedDenominator_nonreal_every_index (m : ℕ) :
   · subst m
     have hodd : 2*(-4:ℚ)^k+1 ≠ 0 := by
       intro hz
-      have hq : (2:ℚ)*(-4)^k = -1 := by linarith
-      have hint : (-4:ℤ)^k = 0 := by
-        exact_mod_cast (show (-4:ℚ)^k = 0 by linarith)
-      exact (pow_ne_zero _ (by norm_num)) hint
+      have hzInt : 2*(-4:ℤ)^k+1 = 0 := by
+        exact_mod_cast hz
+      omega
     simpa [hblocks.2.1] using hodd
   · subst m
     exact (by simpa [hblocks.2.2.1] using mul_ne_zero (by norm_num : (2:ℚ) ≠ 0) hpower)
