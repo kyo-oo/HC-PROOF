@@ -59,7 +59,7 @@ Multiplication by \(L^{d-1}\) in the cohomology of \(X\times\mathbb P^2\) has tw
 For the constructed coefficient triple \((1,-(d-1),d(d-1)/2)\), both are exactly zero. The first coefficient is 1, so the class is nonzero. If a class in the three-dimensional hyperplane subalgebra is primitive, both equations force its coefficients to be a rational multiple of this triple.
 
 **Source:** \`GSTUniversalProjectiveProductPrimitive.lean\`.
-**Lean gate:** \`gst-universal-product-primitive.yml\`; check GitHub Actions run 38706747849 for its completion before reporting green. The file proves the rational coefficient cancellation and the unique one-dimensional primitive kernel; it does **not** formalize the scheme-theoretic Künneth or cycle-class comparison.
+**Lean gate:** \`gst-universal-product-primitive.yml\`; GitHub Actions run 38707838056 completed SUCCESSFULLY, following repair of the rational coordinate definitional reduction. Earlier runs 38706747849 and 38707188272 failed Lean elaboration (not a mathematical counterexample). The file proves the rational coefficient cancellation and the unique one-dimensional primitive kernel; it does **not** formalize the scheme-theoretic Künneth or cycle-class comparison.
 
 At d=p=2 this is exactly the previously verified P²×P² primitive class \(u^2-ut+t^2\) in \`GSTMiddlePrimitiveProjectiveProduct.lean\` (CI 38692915421 success).
 
