@@ -183,3 +183,47 @@ genuine source-to-canonical-ghost strict carrier in the original GST
 geometry. Either achievement would prove the original Hodge target;
 neither was supplied by the current branch.
 
+
+
+## Exact Hodge-theoretic identification: residual Tate factors
+
+The primitive rational Hodge classes of degree 2p are precisely the
+Hodge morphisms
+
+    Hom_HS(Q(-p), P^{2p}(X,Q)).
+
+With the explicit algebraic correspondence Pi_perp above, the
+primitive residual target is
+
+    Hom_HS(Q(-p), im(Pi_perp,* | P^{2p}(X,Q))).
+
+The zero-norm theorem requested by the user is therefore equivalent
+to proving that the **algebraic complementary cohomological motive**
+has no rational Tate Hodge subobject. This is stronger than showing
+its Betti realization is nonzero, pure, polarized, or semisimple.
+
+In particular, polarizability and semisimplicity of rational Hodge
+structures do not algebraize a Tate summand automatically: they give
+a Hodge-theoretic projector. To construct an actual rational
+algebraic cycle on X one still needs a genuine cycle or a genuine
+algebraic correspondence from a Tate motive with nonzero image.
+An abstract Hodge matrix unit or type-correct GST branch is not
+that correspondence.
+
+A candidate rank-one rational Hodge projector onto a residual r!=0 is
+
+   T_r(v) = Q_p(v,r)/Q_p(r,r) · r.
+
+It is an idempotent MORPHISM of rational Hodge structures when
+r is a rational (p,p) class, but its algebraic-correspondence
+realization is not established by its Hodge type. Converting that
+Hodge projector to a strict algebraic Tate source/target pair is
+one precise new-mathematics task with a falsifiable output:
+a codimension-p native cycle on X whose class has nonzero
+Q-pairing with the canonical residual ghost.
+
+The earlier GST ghost theorem proves NO SUCH GEOMETRIC CYCLE EXISTS
+if the residual is genuinely outside all algebraic classes.
+Therefore constructing it independently would close Hodge by
+contradiction; merely positing the correspondence would rename
+the missing implication.
