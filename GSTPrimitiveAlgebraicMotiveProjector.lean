@@ -73,7 +73,8 @@ noncomputable def complementProjector
 theorem algebraicProjector_apply
     (P : GeometricDualCyclePacket ι N V) (x : V) :
     algebraicProjector P x =
-      P.cycleClass (projectedNativeCycle P x) := rfl
+      P.cycleClass (projectedNativeCycle P x) := by
+  simp [algebraicProjector, nativeAlgebraicProjection]
 
 theorem complementProjector_apply
     (P : GeometricDualCyclePacket ι N V) (x : V) :
@@ -89,12 +90,21 @@ theorem algebraicProjector_idempotent
       algebraicProjector P := by
   apply LinearMap.ext
   intro x
-  simp only [LinearMap.comp_apply, algebraicProjector_apply]
-  congr 1
-  unfold projectedNativeCycle
-  apply Finset.sum_congr rfl
-  intro i hi
-  rw [projectedNativeCycle_all_dual_readouts P x i]
+  change algebraicProjector P (algebraicProjector P x) =
+    algebraicProjector P x
+  calc
+    algebraicProjector P (algebraicProjector P x) =
+        P.cycleClass
+          (∑ i, P.detectors i
+            (P.cycleClass (projectedNativeCycle P x)) • P.cycles i) := by
+      simp [algebraicProjector_apply, projectedNativeCycle]
+    _ = P.cycleClass (∑ i, P.detectors i x • P.cycles i) := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [projectedNativeCycle_all_dual_readouts P x i]
+    _ = algebraicProjector P x := by
+      simp [algebraicProjector_apply, projectedNativeCycle]
 
 theorem algebraicProjector_fixes_generator
     (P : GeometricDualCyclePacket ι N V) (i : ι) :
