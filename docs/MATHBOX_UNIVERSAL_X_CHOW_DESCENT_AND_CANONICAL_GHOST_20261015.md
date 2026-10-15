@@ -142,3 +142,34 @@ No formal or mathematical assertion has been made that all arbitrary X admit the
 ## Scope caution — semantic Stage-2G model
 
 The repository's Stage-2G HodgeBigradedBettiData stores cycleClass as a field. GSTClassicalHodgeStage2GSemanticRigidity.lean constructs a zero-cycleClass countermodel on a nonzero rational Hodge fiber. Therefore universal representation CANNOT be obtained by merely proving a theorem for arbitrary Stage-2G data with no geometric cycle-class constraints. All positive conclusions here explicitly require genuine independently justified Chow/cycleClass, Gysin, Hodge-theory and intersection compatibility for the actual variety. Compiling an interface does not instantiate such geometry from scratch.
+
+
+## Verified repository execution — exact CI provenance
+
+The following are the replacement successful GitHub Actions proof builds
+observed on this research branch. The cited runs verify their *typed statements*,
+which explicitly expose the independent geometry needed for arbitrary X:
+
+- Mathbox Universal Hodge Residual Projection — run **38757505573**, SUCCESS.
+- GST Actual Universal Target Chow Retract — run **38757582102**, SUCCESS.
+- Mathbox Polarized Hodge Residual Energy — run **38758164216**, SUCCESS.
+- GST Exact X and Self Product Hodge Equivalence — run **38758647720**, SUCCESS.
+- GST Canonical Polarized Hodge Ghost — run **38758997344**, SUCCESS.
+- GST Actual X Hodge Residual Projection — run **38759407970**, SUCCESS.
+- Original GST K3 Complete No Ghost bridge — run **38755625966**, SUCCESS.
+
+The separate composed K3 source -> arbitrary X module,
+GSTK3GeometricSourceToArbitraryX.lean, has its independent
+workflow GST K3 Native Source to Arbitrary X, run **38759885729**.
+Its result must be read from the workflow, and is not presumed green.
+
+Earlier failures in these newly created modules were Lean elaboration/
+reserved-word/finite-index instance problems, repaired on the branch;
+they are not evidence for or against the Hodge conjecture itself.
+
+**No unconditional proof of the full all-X all-p Hodge conjecture
+has been certified by any of these CI builds.** The remaining
+mathematical requirement is the independent construction of enough
+actual Chow correspondences or a canonical-ghost contradiction to
+force ALL residuals to vanish for arbitrary smooth projective X,
+without assuming precisely that geometric availability.
