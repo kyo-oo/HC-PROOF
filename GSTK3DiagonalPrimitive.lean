@@ -89,7 +89,8 @@ theorem diagonalPrimitiveCycle_is_primitive
     smul_smul]
   rw [inv_mul_cancel₀ hdegree, one_smul]
   rw [show (2 : ℚ) • (a + t) = (a + t) + (a + t) by
-    norm_num [two_smul]]
+    simp only [two_smul]
+    abel]
   abel
 
 /-- Intersection readout of the primitive diagonal against an
@@ -161,7 +162,7 @@ theorem diagonalPrimitiveCycle_outside_divisor_words
     diagonalPrimitiveCycle_transcendental_readout
       cl ell diagonal pointLeft pointRight hCrossH degree q
       hdiag hleft hright hcross
-  exact hq (hz.symm.trans hnonzero)
+  exact hq (hnonzero.symm.trans hz)
 
 #check diagonalPrimitiveCycle
 #check diagonalPrimitiveCycle_is_primitive
