@@ -159,6 +159,89 @@ theorem exists_actual_nonzero_algebraic_primitive_of_transverse_cycle
         G P h11 hInject Z).2 houtside
   · exact primitiveizeNativeMiddleCycle_primitive G P h11 Z
 
+/-- A certified rational period or intersection measurement that
+vanishes on EVERY hyperplane-times-divisor class is conserved by
+the actual primitive-cycle correction.
+
+This provides an exact interface for the GST CM/NM programme:
+construct ONE true geometrically defined measurement of a
+genuine codimension-two native algebraic cycle, prove it is zero
+on the Lefschetz divisor image and nonzero on that actual cycle.
+The already-built native primitive projection will then output
+a nonzero primitive algebraic class while preserving its detected
+measurement. No arbitrary primitive target preimage is inserted. -/
+theorem geometrically_measured_native_primitive_cycle
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (measure : ClassicalHodgeFiber V H 2 →ₗ[ℚ] ℚ)
+    (annihilatesLefschetz :
+      ∀ beta : ClassicalHodgeFiber V H 1,
+        measure (P.cupH beta) = 0)
+    (Z : codimensionCycles V.X 2)
+    (hnonzero : measure (nativeToHodgeFiberLinear G Z) ≠ 0) :
+    ∃ W : codimensionCycles V.X 2,
+      nativeToHodgeFiberLinear G W ≠ 0 ∧
+      P.primitiveTest (nativeToHodgeFiberLinear G W) = 0 ∧
+      measure (nativeToHodgeFiberLinear G W) =
+        measure (nativeToHodgeFiberLinear G Z) := by
+  have houtside : ∀ beta : ClassicalHodgeFiber V H 1,
+      nativeToHodgeFiberLinear G Z ≠ P.cupH beta := by
+    intro beta hEq
+    apply hnonzero
+    rw [hEq]
+    exact annihilatesLefschetz beta
+  refine ⟨primitiveizeNativeMiddleCycle G P h11 Z, ?_, ?_, ?_⟩
+  · exact (native_primitive_nonzero_iff_outside_divisor_cup
+        G P h11 hInject Z).2 houtside
+  · exact primitiveizeNativeMiddleCycle_primitive G P h11 Z
+  · rw [native_primitive_projection_cycleClass]
+    change measure
+      (nativeToHodgeFiberLinear G Z -
+        nativeToHodgeFiberLinear G
+          (algebraicLefschetzCorrection G P h11
+            (nativeToHodgeFiberLinear G Z))) =
+        measure (nativeToHodgeFiberLinear G Z)
+    rw [map_sub]
+    obtain ⟨beta, hCorr, _⟩ :=
+      correction_is_cup_of_real_divisor G P h11
+        (nativeToHodgeFiberLinear G Z)
+    rw [hCorr, annihilatesLefschetz beta]
+    exact sub_zero _
+
+/-- The resulting projection onto the primitive part is IDEMPOTENT
+once genuine Hard Lefschetz is an isomorphism, rather than merely
+surjective. Thus the correction cannot keep changing an already
+primitive class under repeated application. -/
+theorem geometric_primitive_projection_idempotent
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (alpha : ClassicalHodgeFiber V H 2) :
+    primitiveHodgeRemainder G P h11
+      (primitiveHodgeRemainder G P h11 alpha) =
+        primitiveHodgeRemainder G P h11 alpha := by
+  let a := primitiveHodgeRemainder G P h11 alpha
+  have ha : P.primitiveTest a = 0 :=
+    primitiveHodgeRemainder_primitive G P h11 alpha
+  obtain ⟨beta,hCorr,hbeta⟩ :=
+    correction_is_cup_of_real_divisor G P h11 a
+  have hzero : beta = 0 := by
+    apply hInject
+    rw [hbeta,ha]
+    exact (map_zero P.cupH2).symm
+  change a - nativeToHodgeFiberLinear G
+    (algebraicLefschetzCorrection G P h11 a) = a
+  rw [hCorr,hzero]
+  simp
+
+#check geometrically_measured_native_primitive_cycle
+#check geometric_primitive_projection_idempotent
+#print axioms geometrically_measured_native_primitive_cycle
+#print axioms geometric_primitive_projection_idempotent
+
 #check correction_is_cup_of_real_divisor
 #check primitive_remainder_vanishes_on_cupH
 #check native_primitive_projection_cycleClass
