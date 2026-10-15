@@ -47,7 +47,33 @@ M=\begin{pmatrix}
 \end{pmatrix}, \quad \det(M)=-4 \ne 0.
 \]
 
-Wolfram independently computed det(M)=-4 and rank(M)=4 in exact arithmetic. Hence the rational cohomology classes of the four **genuine algebraic divisors** are independent. The Hodge number h^(1,1)(E×E)=4. Therefore these classes span the entire complex (1,1) cohomology, and every rational (1,1) class lies in their rational span (rational linear-algebra descent). No independent Hodge-basis cycle witness or arbitrary matrix-unit existence input was assumed.
+Wolfram independently computed det(M)=-4 and rank(M)=4 in exact arithmetic.
+
+**Stronger exact symbolic theorem (not restricted to the chosen NM value).**
+For an arbitrary Gaussian integer u=a+bi, the divisor graph has
+F1.Gamma_u=N(u)=a²+b² and Delta.Gamma_u=N(u-1)=(a-1)²+b².
+The resulting geometric intersection matrix is
+
+\[
+M(a,b)=
+\begin{pmatrix}
+0&1&1&a^2+b^2\\
+1&0&1&1\\
+1&1&0&(a-1)^2+b^2\\
+a^2+b^2&1&(a-1)^2+b^2&0
+\end{pmatrix}.
+\]
+An exact determinant expansion gives
+\[
+\boxed{\det M(a,b)=-4b^2}.
+\]
+Wolfram independently reduced det(M)+4b² to **exact zero** symbolically.
+Therefore a nonzero imaginary CM component FORCES geometric rank four.
+If b=0 the same *particular* graph-divisor family is dependent;
+this does NOT imply that other algebraic classes cannot be constructed.
+This is the discriminant/rank mechanism connecting the corrected NM
+complex denominator to genuine projective divisor classes without an
+assumed transverse-determinant field. Hence the rational cohomology classes of the four **genuine algebraic divisors** are independent. The Hodge number h^(1,1)(E×E)=4. Therefore these classes span the entire complex (1,1) cohomology, and every rational (1,1) class lies in their rational span (rational linear-algebra descent). No independent Hodge-basis cycle witness or arbitrary matrix-unit existence input was assumed.
 
 ## C. Actual cycles at every codimension for arbitrary g
 
