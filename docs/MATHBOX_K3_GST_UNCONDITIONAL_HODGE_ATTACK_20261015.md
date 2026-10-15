@@ -223,3 +223,50 @@ Dedicated CI gates:
 
 Do NOT describe either as verified until its exact GitHub Action
 success is observed.
+
+
+## Fourth execution — arbitrary smooth projective X, dimension-free self-product
+
+The GST program now reaches a geometric primitive family defined using
+**EVERY** smooth projective complex X, not just K3 or projective space.
+Let dim_C X = d, let h=c_1(L) for any ample line bundle, and
+let a=pr_1^*h and b=pr_2^*h on X×X.
+
+The following rational (indeed integral) algebraic codimension-d
+cycle is completely explicit, for all natural d:
+
+    P_d(X,h) = SUM_(j=0)^d (-1)^j a^(d-j)b^j.
+
+The finite geometric-series identity is uniform in d:
+
+    (a+b) P_d = a^(d+1) - (-b)^(d+1) = 0
+
+because h^(d+1)=0 on X. Thus P_d is an honest algebraic
+MIDDLE-PRIMITIVE class for the product polarization on X×X.
+
+Nonvanishing does not require ANY transcendental information,
+specific K3 identity, CM/NM trace or arbitrary primitive rank:
+pair with b^d (an algebraic top-degree cycle) and use Künneth.
+
+    integral_(X×X) P_d b^d =
+      integral_(X×X) a^d b^d =
+      (integral_X h^d)^2 > 0.
+
+Every term other than the j=0 term vanishes by b^(d+1)=0.
+Positivity follows from the degree of an ample polarization.
+
+This is a genuine dimension-free geometric source for every X,
+but importantly it lives on Y=X×X. It does NOT construct arbitrary
+primitive Hodge representatives on X, and the projection of this
+hyperplane-word source to X alone cannot create a new unknown
+primitive target direction. A valid universal Hodge proof needs
+correspondences coupling such sources to the specific cohomological
+Hodge targets on X.
+
+Lean file GSTUniversalSelfProductPrimitive.lean proves the
+finite polynomial telescoping identity over any commutative ring
+and the middle Lefschetz-kernel cancellation under dimension
+nilpotence. The analytic/projective Künneth pairing and the
+existence of product native intersection cycles are independent
+geometric inputs; do not claim this Lean file alone constructs
+X×X as a Mathlib scheme.
