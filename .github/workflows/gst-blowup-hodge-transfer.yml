@@ -6,6 +6,7 @@ on:
     paths:
       - 'GSTBlowupHodgeTransfer.lean'
       - 'GSTBlowupHodgeAllCodimension.lean'
+      - 'GSTBlowupThreeCycleIntersectionRank.lean'
       - '.github/workflows/gst-blowup-hodge-transfer.yml'
   workflow_dispatch:
 permissions:
@@ -49,7 +50,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTBlowupTransfer"
-          roots = ["GSTBlowupHodgeTransfer", "GSTBlowupHodgeAllCodimension"]
+          roots = ["GSTBlowupHodgeTransfer", "GSTBlowupHodgeAllCodimension", "GSTBlowupThreeCycleIntersectionRank"]
           EOF
           if lake build GSTBlowupTransfer > gst-blowup-lean.log 2>&1; then
             echo "LEAN PASSED: all-codimension finite-summand and three-source Hodge blow-up transfer"
