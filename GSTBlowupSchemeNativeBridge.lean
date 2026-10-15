@@ -1,6 +1,5 @@
 import GSTBlowupHodgeTransfer
 import GSTGeometricRealizationStage2G
-import GSTClassicalHodgeFiberedCosmology
 
 /-!
 # GST actual-scheme-carrier codimension-three blow-up bridge
@@ -28,10 +27,17 @@ open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
-open GSTClassicalHodgeFiberedCosmology
 open GSTBlowupHodgeTransfer
 
 namespace GSTBlowupSchemeNativeBridge
+
+/-- Same definitional rational Hodge submodule used by the historical
+fibered cosmology module, imported here DIRECTLY from Stage-2G to avoid
+compiling the unrelated historical cosmic operator graph. -/
+abbrev ClassicalHodgeFiber
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V) (p : Nat) :=
+  rationalHodgeSubspace (H.hodgeBigrading p)
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
