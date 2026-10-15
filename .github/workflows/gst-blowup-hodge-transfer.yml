@@ -5,6 +5,7 @@ on:
       - research/gpt6-gst-blowup-transfer-20261015
     paths:
       - 'GSTBlowupHodgeTransfer.lean'
+      - 'GSTBlowupHodgeAllCodimension.lean'
       - '.github/workflows/gst-blowup-hodge-transfer.yml'
   workflow_dispatch:
 permissions:
@@ -48,10 +49,10 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTBlowupTransfer"
-          roots = ["GSTBlowupHodgeTransfer"]
+          roots = ["GSTBlowupHodgeTransfer", "GSTBlowupHodgeAllCodimension"]
           EOF
           if lake build GSTBlowupTransfer > gst-blowup-lean.log 2>&1; then
-            echo "LEAN PASSED: three-source constructive Hodge blow-up transfer"
+            echo "LEAN PASSED: all-codimension finite-summand and three-source Hodge blow-up transfer"
           else
             grep -nE 'error:|sorryAx|✖' gst-blowup-lean.log | tail -n 130 || true
             tail -n 110 gst-blowup-lean.log
