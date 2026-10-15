@@ -42,11 +42,11 @@ The existing repository script `scripts/audit_lean_dependency_graph.py`
 has been executed by GitHub Actions with no local Lean installation.
 
 **PASS: GitHub run 38677173614**
-- 640 Lean files inspected programmatically at that revision.
+- 642 Lean files inspected programmatically at the expanded CM-NM revision (earlier baseline: 640).
 - 600 active registered / entry roots; 601 root-reachable files.
 - 0 missing local imports and 0 import cycles.
-- 27 CM / zeta / NM / OpenAI / Hodge seed modules selected for graph
-  analysis, with a 323-module import dependency closure.
+- 29 CM / zeta / NM / OpenAI / Hodge seed modules selected for graph
+  analysis, with a 325-module import dependency closure.
 - Full JSON provenance and CM closure available as workflow artifact
   `gst-full-source-dependency-report`.
 
@@ -81,7 +81,7 @@ for the difference of the two sides. Concrete CM values
 `x=1+i, y=i, n=1` give denominator `2+i`, reciprocal
 `2/5-i/5` and rational conjugate trace `4/5`.
 
-**Lean CI:** 38677338320 — check final job status before claiming green.
+**Lean CI: 38677338320 — SUCCESS**.
 
 ## Route 2: two-channel NM avoids losing imaginary CM geometry
 
@@ -99,7 +99,7 @@ disjunction. This is an exact arithmetic detection statement,
 NOT yet a claim that those arithmetic channels are periods
 of independent algebraic cycles on every variety.
 
-**Lean CI:** 38677498829 — SUCCESS.
+**Lean CI: 38677498829 — SUCCESS**.
 
 ## Route 3: CM imaginary quadratic polynomial forces rank-two movement
 
@@ -130,7 +130,7 @@ CM-NM measured period may independently certify a nonzero
 native seed, provided its comparison with the actual Hodge
 readout has been proved.
 
-**Lean CI:** 38677771902 — check final status.
+**Lean CI: 38677771902 — SUCCESS**, further integrated genuine scheme-graph and dual-period version **38678461251 — SUCCESS**.
 **Wolfram:** discriminant -4b²; eigenvalues of the concrete
 CM rotation `[[3,-2],[2,3]]` are `3±2i`.
 
@@ -195,3 +195,48 @@ whether it discharges one of these geometric comparison links.
 
 ---
 All personal author names intentionally omitted from new files.
+
+## Latest proof integration and source-audit correction
+
+The final source `GSTCMQuadraticNativeRankForcing.lean`
+also contains:
+- `actualCMGraphOfEndomorphism`: obtains an actually realized
+  finite-closed correspondence from a real projective scheme
+  endomorphism graph, using the repository's naturality theorem;
+- `CM_NM_period_graph_rank_two_hodge`: fixed rational CM trace
+  readout + geometric graph + CM polynomial yields native rank-two
+  Hodge realization;
+- `CM_NM_dual_period_graph_rank_two_hodge`: both rational real and
+  imaginary channels prove source nonzero without assuming the real
+  trace itself is nonzero. The full corrected-source and CM graph
+  proof chain is verified in **38678461251 (SUCCESS)**, including
+  `#print axioms` and a no-`sorryAx` source gate.
+
+These new modules were imported into the public
+`HodgeConjecture.lean` and registered in `lakefile.toml` at
+commit `048b1476ef84876376255f407ae0b931b7ec7219`.
+The separate complete-root GitHub CI run **38678384513** is
+NOT to be described as successful until its own final status is
+observed. The focused proof gate was already successful.
+
+An additional all-source declaration scanner
+`scripts/gst_theorem_declaration_catalogue.py` reads every
+file and records declaration names, line numbers and imports.
+Its FIRST revision counted a word `axiom` inside a documentation
+comment, so it was corrected to lex nested Lean comments before
+declaration counting. The corrected comprehensive scanner passed
+in **38678305657**, yielding 642 files and **8,587 source
+declarations (6,002 actual theorem declarations)**. This
+supersedes the earlier unfiltered 8,655/6,014 totals.
+No explicit Lean `axiom` declarations were found by the corrected
+declaration scanner. This is an index, not a transitive Lean
+kernel trust proof of every theorem.
+
+**Unresolved universal geometry:** Prove that a canonical
+period comparison and adequate actual abelian CM-derived
+correspondence tensor images exist for arbitrary rational Hodge
+directions on arbitrary smooth projective varieties. The
+rank-two conditional implication is machine verified but
+does not establish those existence facts. For rank>2 and
+CM fields beyond Q(i), further genuine geometric generation
+and CM character descent are required.
