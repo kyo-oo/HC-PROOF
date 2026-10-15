@@ -227,3 +227,47 @@ if the residual is genuinely outside all algebraic classes.
 Therefore constructing it independently would close Hodge by
 contradiction; merely positing the correspondence would rename
 the missing implication.
+
+
+## Unconditional geometric zero-norm sanity check: codimension one and co-one
+
+There IS a fully independent geometric proof of zero residual norm
+for ALL smooth projective complex varieties in weights p=1 and p=d-1,
+but it does not prove arbitrary middle codimension.
+
+**Codimension one.** If alpha∈H²(X,Q) has Hodge type (1,1),
+choose m>0 with m alpha integral modulo torsion. The analytic
+exponential sequence
+
+   0 -> Z -> O_X -> O_X^× -> 1
+
+has obstruction H²(X,Z)->H²(X,O_X)=H^{0,2}(X).
+Because alpha is (1,1), its obstruction vanishes, so m alpha=c1(L)
+for a holomorphic line bundle L (modulo torsion). Projectivity/GAGA
+makes L algebraic; therefore alpha is an algebraic divisor class.
+The maximal algebraic residual is already 0, hence its Q norm is 0.
+This uses an independently known genuine geometric theorem
+(Lefschetz (1,1)), not GST ghost exclusion.
+
+**Co-one on a d-fold.** For d>=2, Hard Lefschetz gives
+L^{d-2}:H²(X,Q)->H^{2d-2}(X,Q) an isomorphism of rational
+Hodge structures of the appropriate Tate twist. Every rational
+(d-1,d-1) class comes from a rational (1,1) class, hence is
+the intersection of an algebraic divisor with d-2 hyperplanes.
+Its residual norm is again zero.
+
+For d<=3 these codimensions, together with the unit/fundamental
+classes, exhaust the Hodge target; hence the classical Hodge
+conjecture is established in these low dimensions.
+
+For d>=4, primitive codimension two is the first genuinely
+new all-varieties case. The exponential-sequence argument
+does NOT extend automatically to higher Chow/codimension
+cycles: higher Deligne-class obstructions do not supply an
+algebraic cycle from merely rational Hodge type (p,p).
+
+**Verification status:** The above is a standard mathematical
+argument using Lefschetz (1,1), GAGA and Hard Lefschetz. It is
+NOT a new all-dimensional Lean formalization of those external
+theorems; the current standalone Lean CI gates verify only their
+displayed rational-linear projector consequences.
