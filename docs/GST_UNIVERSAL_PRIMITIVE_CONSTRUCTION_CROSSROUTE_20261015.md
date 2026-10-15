@@ -148,6 +148,7 @@ the class of a concrete algebraic cycle. Nothing here assumes or
 proves that assertion.
 
 **CI:** \`gst-universal-codimension-two-primitive.yml\`,
-run 38699408237; check final conclusion before calling this
-generalization Lean-verified. Older fourfold and divisor proofs
+run 38699408237 — **SUCCESS**. The actual arbitrary-dimensional
+codimension-two algebraic correction compiled under Lean 4 without
+new custom axioms or sorry placeholders. Older fourfold and divisor proofs
 are independently green (38698778667 and 38698778620).
