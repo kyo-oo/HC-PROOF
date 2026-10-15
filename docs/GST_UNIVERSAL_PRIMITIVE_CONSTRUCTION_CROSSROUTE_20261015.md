@@ -101,3 +101,53 @@ Still missing: for an arbitrary smooth projective X and an arbitrary *unknown pr
 Any universal proposed CM/NM transfer must establish that actual projective correspondences act nontrivially and span the primitive class space of the arbitrary target, rather than merely generate a rational scalar field or a Gaussian CM orbit of one seed. A failed theorem or an unfinished CI test must not be portrayed as a result.
 
 No public internet search was performed.
+
+
+## Route 5: unbounded-dimension codimension-two primitive extraction
+
+The new \`GSTUniversalCodimensionTwoPrimitiveExtraction.lean\` file
+strengthens the fourfold correction to EVERY possible dimension
+d>=4. It uses the actual weight-dependent Lefschetz arrows
+
+\[
+L^{d-3}: H^{2,2}(X,\mathbb Q)\to
+H^{d-1,d-1}(X,\mathbb Q),\qquad
+L^{d-2}:H^{1,1}(X,\mathbb Q)\xrightarrow{\sim}
+H^{d-1,d-1}(X,\mathbb Q).
+\]
+
+For any rational (2,2) class α the standard analytic Hard Lefschetz
+theorem and rational Lefschetz (1,1) theorem construct
+
+\[
+D_\alpha\in CH^1(X)_\mathbb Q,\quad
+\mathrm{cl}(D_\alpha)
+=(L^{d-2})^{-1}L^{d-3}\alpha.
+\]
+
+The actual **native algebraic codimension-two cycle**
+\(Z_{\rm correction}=H\cdot D_\alpha\) satisfies
+\(L^{d-3}\mathrm{cl}(Z_{\rm correction})=L^{d-3}\alpha\).
+Therefore
+\[
+\alpha=\underbrace{\bigl(\alpha-\mathrm{cl}(H\cdot D_\alpha)\bigr)}
+_{\in\ker L^{d-3}}\;+\;
+\underbrace{\mathrm{cl}(H\cdot D_\alpha)}
+_{\text{explicitly algebraic}}.
+\]
+
+If the input α is the class of an actual native algebraic
+cycle Z, then subtracting the constructed correction from Z
+returns an actual algebraic **primitive** codimension-two cycle.
+This is a universal nonprimitive-component construction without
+any global upper bound on d.
+
+The original universal primitive algebraicity requirement remains
+the equality of an arbitrary UNKNOWN primitive remainder with
+the class of a concrete algebraic cycle. Nothing here assumes or
+proves that assertion.
+
+**CI:** \`gst-universal-codimension-two-primitive.yml\`,
+run 38699408237; check final conclusion before calling this
+generalization Lean-verified. Older fourfold and divisor proofs
+are independently green (38698778667 and 38698778620).
