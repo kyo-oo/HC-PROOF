@@ -270,3 +270,36 @@ nilpotence. The analytic/projective Künneth pairing and the
 existence of product native intersection cycles are independent
 geometric inputs; do not claim this Lean file alone constructs
 X×X as a Mathlib scheme.
+
+
+## Kernel verification after this execution
+
+These run IDs are actual GitHub Actions results, checked against the
+research branch (earlier failed revisions superseded by successful
+repaired revisions):
+
+| Proof module | Run | Result |
+|---|---:|---|
+| GSTK3DiagonalPrimitive.lean | 38745893192 | SUCCESS |
+| GSTK3TranscendentalProjector.lean | 38746215575 | SUCCESS |
+| GSTK3DiagonalActualStage2G.lean | 38747634802 | SUCCESS |
+| GSTK3PrimitiveOmniversalGraph.lean | 38747756777 | SUCCESS |
+| GSTK3TranscendentalHodgeCompleteness.lean | 38750621098 | SUCCESS |
+| GSTK3PrimitiveGram.lean | 38751330141 | SUCCESS |
+| GSTK3ActualPrimitiveRankTwo.lean | 38753060400 | SUCCESS |
+| GSTUniversalSelfProductPrimitive.lean | 38752960190 | SUCCESS |
+
+**Original full GST ghost-exclusion integration**:
+GSTK3ScalarEndGhostExtinction.lean, run 38751867507,
+most recently observed IN_PROGRESS. Do not mark it passed
+unless GitHub reports its successful conclusion.
+
+The former rank-two CI 38752236629 failed only on
+a missing import of the existing detector namespace and was
+repaired in commit 34c79b1967f2eb11a3da6902033fb1df0f52ab76;
+the replacement run 38753060400 is SUCCESS.
+
+This record separates mathematical results already established
+on real K3 geometry and X×X products, the exact Lean theorems
+proved under their displayed geometric identities, and the
+still-unsolved original arbitrary-X rational Hodge conjecture.
