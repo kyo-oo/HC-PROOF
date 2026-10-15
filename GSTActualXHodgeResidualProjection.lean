@@ -54,7 +54,7 @@ structure ActualXCycleProjectionData
     (X : SmoothProjectiveComplexScheme)
     (H : HodgeBigradedBettiData X)
     (p : Nat) (ι : Type*)
-    [Fintype ι] where
+    [Fintype ι] [DecidableEq ι] where
   sourceNativeCycles : ι → codimensionCycles X.X p
   cycle_is_hodge :
     ∀ Z : codimensionCycles X.X p,
