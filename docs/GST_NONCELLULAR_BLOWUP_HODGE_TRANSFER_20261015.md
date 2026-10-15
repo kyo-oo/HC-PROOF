@@ -359,3 +359,84 @@ coefficient vector
    correspondences is still the fundamental obstruction.
 
 No claim of arbitrary-variety universal Hodge algebraicity is made.
+
+
+## Phase 3: unbounded geometric primitive rank on noncellular fourfolds
+
+**Exact all-finite-rank Lean module:** \`GSTBlowupArbitraryRankDetector.lean\`.
+
+For each integer \(r\ge1\), choose \(r\) mutually disjoint smooth
+genus-positive curves \(C_1,\ldots,C_r\) embedded in \(\mathbf P^4\).
+There is no fixed upper bound on this finite \(r\): general-position
+projective translates of finitely many smooth embedded curves
+are mutually disjoint because \(1+1<4\). Form the smooth fourfold
+
+\[
+Y_r=\operatorname{Bl}_{C_1\sqcup\cdots\sqcup C_r}(\mathbf P^4).
+\]
+
+The genuine classical blow-up cohomology decomposition gives
+\[
+b_4(Y_r)=1+2r,\qquad b_6(Y_r)=1+r,
+\]
+and \(b_3(Y_r)=2\sum_i g(C_i)>0\).
+Thus these fourfolds are **not** algebraically affine-cell paved.
+For an ample class \(A=mh-\sum_ie_i\), the classical Lefschetz theorem
+makes \(L_A:H^4(Y_r)\to H^6(Y_r)\) surjective, and consequently its
+primitive kernel has rational dimension exactly \(r\).
+
+Let \(\delta_i=\deg C_i\), \(n_i=5\delta_i+2g(C_i)-2\), and define
+the *actual native algebraic* sources
+\[
+Z_0=h^2,\qquad Z_{1,i}=j_{i*}q_i^*[P_i],\qquad
+Z_{2,i}=j_{i*}\xi_i.
+\]
+They have the explicit **polarized primitive cycles**
+\[
+\boxed{
+P_i=-\delta_i Z_0-
+m(m\delta_i+n_i)Z_{1,i}+mZ_{2,i}.}
+\]
+
+The disjointness of exceptional supports makes the mixed
+intersection readouts vanish exactly. For each \(i\), define the
+genuine geometric detector
+\[
+\lambda_i(\alpha)=\int_{Y_r}
+\alpha\smile\operatorname{cl}(Z_{1,i}).
+\]
+Then
+\[
+\boxed{\lambda_i(\operatorname{cl}(P_j))=-m\,\delta_{ij}.}
+\]
+For \(m>0\), the corresponding \(r\times r\) detector matrix is
+invertible. These are \(r\) independently constructed native
+algebraic primitive directions, not iterates of one Gaussian CM
+operator. Since \(\dim_\mathbb Q\ker L_A=r\), they supply the
+**entire** primitive rational Hodge sector for this special family,
+provided the classical scheme/Betti identifications hold as stated.
+
+A four-component Wolfram stress test used a nine-dimensional rational
+middle cohomology model and a five-dimensional degree-six model.
+It verified exactly:
+* the full \(9\times9\) middle-intersection Gram determinant equals \(1\);
+* the Gram matrix has full rank \(9\);
+* each of the four independently constructed \(P_i\) lies in
+  \(\ker L_A\);
+* the primitive detector matrix is \(-mI_4\).
+
+The Lean source proves a UNIFORM all-finite-index theorem:
+if a family of actual native cycles has geometric rational
+detector evaluations \(c\delta_{ij}\) with \(c\ne0\), then
+**every rational linear relation among their cycle classes is
+trivial**. Unlike a finite Wolfram experiment, the Lean statement
+has no fixed bound on the index-set cardinality.
+
+**Semantic firewall:** neither the finite-index Lean theorem nor the
+fourfold geometric construction supplies an algebraic representative
+for arbitrary Hodge classes on unrelated varieties \(X\).
+This family demonstrates unbounded independent primitive directions
+within a specific genuine geometric construction. Extending such
+independent cycle sources to all arbitrary smooth projective \(X\)
+without assuming equivalent Hodge surjectivity remains the original
+open problem.
