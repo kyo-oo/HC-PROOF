@@ -1,16 +1,16 @@
-name: GST Nidhish Geometric Weight Boundary Audit
+name: GST Geometric Weight Boundary Audit
 on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
-      - 'GSTNidhishGeometricWeightBoundaryAudit.lean'
-      - '.github/workflows/gst-nidhish-geometric-weight-boundary-audit.yml'
+      - 'GSTResearchGeometricWeightBoundaryAudit.lean'
+      - '.github/workflows/gst-research-geometric-weight-boundary-audit.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: gst-nidhish-weight-boundary-${{ github.ref }}
+  group: gst-research-weight-boundary-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   lean:
@@ -47,10 +47,10 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
-          name = "NidhishGeometricWeightBoundary"
-          roots = ["GSTNidhishGeometricWeightBoundaryAudit"]
+          name = "ResearchGeometricWeightBoundary"
+          roots = ["GSTResearchGeometricWeightBoundaryAudit"]
           EOF
-          if lake build NidhishGeometricWeightBoundary > weight-boundary-lean.log 2>&1; then
+          if lake build ResearchGeometricWeightBoundary > weight-boundary-lean.log 2>&1; then
             echo "LEAN PASSED: all-weight native-mass restriction at empty codimension fiber"
           else
             grep -nE 'error:|sorryAx|✖' weight-boundary-lean.log | tail -n 110 || true
@@ -65,6 +65,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nidhish-weight-boundary-lean-log
+          name: research-weight-boundary-lean-log
           path: weight-boundary-lean.log
           if-no-files-found: warn

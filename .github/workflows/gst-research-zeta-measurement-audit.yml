@@ -1,16 +1,16 @@
-name: GST Nidhish Local Cyclicity All-Weight Hodge
+name: GST Zeta Measurement Audit
 on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
-      - 'GSTNidhishLocalCyclicityHodge.lean'
-      - '.github/workflows/gst-nidhish-local-cyclicity-hodge.yml'
+      - 'GSTResearchZetaMeasurementAudit.lean'
+      - '.github/workflows/gst-research-zeta-measurement-audit.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: gst-nidhish-local-cyclicity-${{ github.ref }}
+  group: gst-research-zeta-audit-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   lean:
@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v5
-      - name: Restore Lean installation
+      - name: Restore pinned Lean installation
         uses: actions/cache/restore@v4
         with:
           path: ~/.elan
@@ -33,42 +33,43 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
-      - name: Restore Lean build cache
+      - name: Restore compiled dependency cache
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-local-cyclic-hodge
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-research-zeta-audit
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-
-      - name: Kernel verify local cyclicity all-weight Hodge
+      - name: Kernel verify zeta certificate iff native seed
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
-          name = "NidhishLocalCyclicityHodge"
+          name = "ResearchZetaMeasurementAudit"
           roots = [
-            "GSTNidhishGeometricOrbitSynthesis",
-            "GSTNidhishUniversalOrbitClosureLaw",
-            "GSTNidhishLocalCyclicityHodge"
+            "GSTMathboxCorrectedZetaGeometry",
+            "GSTMathboxCorrectedZetaInfinite",
+            "GSTMathboxCorrectedZetaActualHodge",
+            "GSTResearchZetaMeasurementAudit"
           ]
           EOF
-          if lake build NidhishLocalCyclicityHodge > local-cyclic-hodge-lean.log 2>&1; then
-            echo "LEAN PASSED: all-weight Hodge under local geometric native cyclicity"
+          if lake build ResearchZetaMeasurementAudit > research-zeta-audit-lean.log 2>&1; then
+            echo "LEAN PASSED: free corrected zeta scalar equivalence audit"
           else
-            grep -nE 'error:|sorryAx|✖' local-cyclic-hodge-lean.log | tail -n 140 || true
-            tail -n 95 local-cyclic-hodge-lean.log
+            grep -nE 'error:|sorryAx|✖' research-zeta-audit-lean.log | tail -n 130 || true
+            tail -n 90 research-zeta-audit-lean.log
             exit 1
           fi
-          if grep -E "declaration uses 'sorry'|sorryAx" local-cyclic-hodge-lean.log; then
-            echo "Trust audit failed"
+          if grep -E "declaration uses 'sorry'|sorryAx" research-zeta-audit-lean.log; then
+            echo "Lean trust audit failure"
             exit 1
           fi
-      - name: Upload diagnostic
+      - name: Upload diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nidhish-local-cyclic-hodge-kernel-log
-          path: local-cyclic-hodge-lean.log
+          name: research-zeta-certification-lean-log
+          path: research-zeta-audit-lean.log
           if-no-files-found: warn

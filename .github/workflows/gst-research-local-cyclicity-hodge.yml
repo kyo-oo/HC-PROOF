@@ -1,16 +1,16 @@
-name: GST Nidhish Universal Orbit Closure Law
+name: GST Local Cyclicity All-Weight Hodge
 on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
-      - 'GSTNidhishUniversalOrbitClosureLaw.lean'
-      - '.github/workflows/gst-nidhish-universal-orbit-closure-law.yml'
+      - 'GSTResearchLocalCyclicityHodge.lean'
+      - '.github/workflows/gst-research-local-cyclicity-hodge.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: gst-nidhish-universal-orbit-${{ github.ref }}
+  group: gst-research-local-cyclicity-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   lean:
@@ -33,41 +33,42 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
-      - name: Restore dependencies
+      - name: Restore Lean build cache
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-native-minimal-orbit
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-local-cyclic-hodge
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-
-      - name: Verify universal minimal native orbit law
+      - name: Kernel verify local cyclicity all-weight Hodge
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
-          name = "NidhishUniversalOrbitLaw"
+          name = "ResearchLocalCyclicityHodge"
           roots = [
-            "GSTNidhishGeometricOrbitSynthesis",
-            "GSTNidhishUniversalOrbitClosureLaw"
+            "GSTResearchGeometricOrbitSynthesis",
+            "GSTResearchUniversalOrbitClosureLaw",
+            "GSTResearchLocalCyclicityHodge"
           ]
           EOF
-          if lake build NidhishUniversalOrbitLaw > minimal-orbit-lean.log 2>&1; then
-            echo "LEAN PASSED: unconditional minimal native geometric orbit and exact local cyclicity"
+          if lake build ResearchLocalCyclicityHodge > local-cyclic-hodge-lean.log 2>&1; then
+            echo "LEAN PASSED: all-weight Hodge under local geometric native cyclicity"
           else
-            grep -nE 'error:|sorryAx|✖' minimal-orbit-lean.log | tail -n 120 || true
-            tail -n 95 minimal-orbit-lean.log
+            grep -nE 'error:|sorryAx|✖' local-cyclic-hodge-lean.log | tail -n 140 || true
+            tail -n 95 local-cyclic-hodge-lean.log
             exit 1
           fi
-          if grep -E "declaration uses 'sorry'|sorryAx" minimal-orbit-lean.log; then
-            echo "Lean trust audit failed"
+          if grep -E "declaration uses 'sorry'|sorryAx" local-cyclic-hodge-lean.log; then
+            echo "Trust audit failed"
             exit 1
           fi
       - name: Upload diagnostic
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nidhish-universal-native-orbit-kernel-log
-          path: minimal-orbit-lean.log
+          name: research-local-cyclic-hodge-kernel-log
+          path: local-cyclic-hodge-lean.log
           if-no-files-found: warn
