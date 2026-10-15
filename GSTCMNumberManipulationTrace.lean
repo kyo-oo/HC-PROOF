@@ -54,13 +54,14 @@ theorem cmConj_mul (z w : CMQ) :
   rcases z with ⟨a,b⟩
   rcases w with ⟨c,d⟩
   simp [cmConj, cmMul]
-  constructor <;> ring
+  ring
 
 theorem cmConj_sub (z w : CMQ) :
     cmConj (cmSub z w) = cmSub (cmConj z) (cmConj w) := by
   rcases z with ⟨a,b⟩
   rcases w with ⟨c,d⟩
   simp [cmConj, cmSub]
+  ring
 
 /-- Positivity is an arithmetic fact, not an assumed "period ≠ 0". -/
 theorem cmNormSq_pos (z : CMQ) (hz : z ≠ 0) :
@@ -80,7 +81,6 @@ theorem cmNormSq_conj (z : CMQ) :
     cmNormSq (cmConj z) = cmNormSq z := by
   rcases z with ⟨a,b⟩
   simp [cmConj,cmNormSq]
-  ring
 
 /-- Exact norm-normalized rational reciprocal is the multiplicative inverse. -/
 theorem cmMul_inv (z : CMQ) (hz : z ≠ 0) :
@@ -113,7 +113,7 @@ theorem cmInv_conj (z : CMQ) :
     cmInv (cmConj z) = cmConj (cmInv z) := by
   rcases z with ⟨a,b⟩
   simp [cmInv,cmConj,cmNormSq,eq_comm]
-  constructor <;> ring
+  ring
 
 /-- CM Gaussian powers, with no implicit real-coordinate truncation. -/
 def cmPow (z : CMQ) : ℕ → CMQ
