@@ -25,6 +25,8 @@ There is a **proved forward cycle-class identity**:
 
 cl_p(Z_NM) = r_m cl_p(f_*Z) + s_m cl_p(g_*Z).
 
+**Exact non-cancellation audit:** a nonzero CM denominator need not make every geometric sum nonzero. For u=1+i, the inverse is (1-i)/2 and the two rational readouts are (r,s)=(1,-1), verified exactly by Wolfram. If f=g, then Z_NM=(r+s) f_*Z=0 even when the source Z is nonzero. Therefore geometric independence of actual correspondence images must be separately derived; arithmetic nonvanishing alone does not force all primitive directions. This prevents a false "universal rank" claim.
+
 The new graph has a genuine native-cycle event creating Z_NM; the old graph events embed identically; cycle-to-Hodge is allowed only for an actual algebraic cycle. Nothing here selects a preimage of an arbitrary Hodge target.
 
 Equation (5) proposes lim_{x→infinity} ℒ(n^x) tensor primitive cycles. The function ℒ, topology, normalization and target are not specified. Wolfram evaluated the unnormalized 3^x limit as +Infinity. Therefore the safe precise interpretation is the EXISTING indexed closure-union identity:
