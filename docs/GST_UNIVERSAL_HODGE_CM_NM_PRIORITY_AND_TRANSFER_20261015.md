@@ -15,7 +15,7 @@ This does not refute the Hodge conjecture; it rules out using these insufficient
 
 ## New constructive finite-degree route
 
-Source: GSTCMFiniteGeometricDegreeDescent.lean, independent CI 38683541455 (check final job status).
+Source: GSTCMFiniteGeometricDegreeDescent.lean, independently **kernel verified**, GitHub Actions **38683813227 SUCCESS** after correcting the Lean Stage-2G membership application. The earlier run 38683541455 failed on that API-application error, not a mathematical counterexample.
 
 Let f:A→X be a generically finite surjective morphism of **smooth projective** complex varieties of equal dimension, with degree d>0. Proper algebraic pushforward and rational cohomology pullback obey the genuine geometric degree identity f_*f^*=d·id.
 
