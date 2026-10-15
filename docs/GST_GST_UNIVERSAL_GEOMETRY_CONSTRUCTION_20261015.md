@@ -1,7 +1,7 @@
 # GST universal geometry construction — Mathbox research checkpoint
 
 **Date:** 2026-10-15
-**Author of the three original GST proposed equations:** Nidhish (user-declared)
+**Attribution:** Personal name withheld at the contributor's request.
 **Working branch:** `mathbox/bd23-single-operator-charge-wedge`
 **Mathematical target:** the unchanged classical rational Hodge conjecture
 for every smooth projective complex variety, not only conditional Stage-2G
@@ -24,7 +24,7 @@ data and not merely passing Lean compilation.
 
 ## Route A — universal minimal geometric orbit
 
-`GSTNidhishUniversalOrbitClosureLaw.lean`
+`GSTResearchUniversalOrbitClosureLaw.lean`
 **CI: 38623626850 — SUCCESS**
 
 Constructed a real native algebraic-cycle orbit from finite words of
@@ -45,7 +45,7 @@ conclusion: there is no assumption that the orbit already spans Hodge.
 By contrast the full-span conclusion still requires a cyclicity proof
 from real geometry for the selected carrier.
 
-`GSTNidhishLocalCyclicityHodge.lean`
+`GSTResearchLocalCyclicityHodge.lean`
 **CI: 38624241411 — SUCCESS**
 
 All-weights rational Hodge statement now follows under the reduced,
@@ -55,7 +55,7 @@ operator irreducibility have been removed from this criterion.
 
 ## Route B — fixed corrected zeta source (not free normalization)
 
-`GSTNidhishFixedZetaGeometricSource.lean`
+`GSTResearchFixedZetaGeometricSource.lean`
 **CI: 38623934984 — SUCCESS**
 
 At codimension zero, constructs the canonical geometric fundamental
@@ -68,7 +68,7 @@ must come from actual geometric intersection/Borel–Moore
 fundamental-class theory, not an automatic consequence of the
 arbitrary Stage-2G cycleClass linear map.
 
-`GSTNidhishUniversalMassZetaSource.lean`
+`GSTResearchUniversalMassZetaSource.lean`
 **CI: 38625514599 — SUCCESS**
 
 Mechanically extends the fixed numerical source to all weights
@@ -81,7 +81,7 @@ the final universal Hodge proof.
 
 ## Route C — prove and correct the mass-law defects
 
-`GSTNidhishGeometricMassSemanticAudit.lean`
+`GSTResearchGeometricMassSemanticAudit.lean`
 **CI: 38625663787 — SUCCESS** (earlier repaired run 38625365341 also green)
 
 The current native mass is UNWEIGHTED SUM of rational coefficients
@@ -103,7 +103,7 @@ but their raw coefficient sums are 1 versus 2.
 This makes unrestricted raw coefficient-count mass unsuited
 to the genuine projective cohomology bridge.
 
-`GSTNidhishGeometricWeightBoundaryAudit.lean`
+`GSTResearchGeometricWeightBoundaryAudit.lean`
 **CI: 38625637598 — SUCCESS**
 
 Proved: if there is ANY weight p whose native codimension-p
@@ -116,7 +116,7 @@ natural-number p are invalid without a finite-weight cutoff.
 
 ## Route D — repaired dimension-bounded geometric law
 
-`GSTNidhishFiniteWeightGeometricDegree.lean`
+`GSTResearchFiniteWeightGeometricDegree.lean`
 **Verified CI: 38626403600 — SUCCESS**, after fixing missing successor-scalar namespace. Earlier 38625865055 failed at elaboration.
 
 New bounded input `BoundedGeometricDegreeCharge G d` uses:
@@ -131,7 +131,7 @@ outside the dimension window. The geometric degree fields
 and transport identities remain separately verifiable,
 unproved geometric inputs; they are not replaced by axioms.
 
-`GSTNidhishDimensionCorrectedHodgeSynthesis.lean`
+`GSTResearchDimensionCorrectedHodgeSynthesis.lean`
 **Dedicated CI: 38626768532 — SUCCESS**. The earlier 38626143207 failed because it built the pre-repair dependent finite-degree module.
 
 Wires finite-weight geometric degree and local cyclicity of actual
@@ -178,7 +178,7 @@ conditional or structurally obstructed hypotheses into facts.
 
 ## Verified audit and mass-theorem safety notice
 
-The source `GSTNidhishGeometricWeightBoundaryAudit.lean`
+The source `GSTResearchGeometricWeightBoundaryAudit.lean`
 passed **38625637598**. The native mass audit passed **38625663787**.
 The conditional unlimited mass/zeta theorem also compiled in
 **38625514599**, but it MUST NOT be cited as a universal existence

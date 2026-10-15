@@ -1,7 +1,6 @@
 # Author's three original GST equations — naming and attribution
 
-**Author of the three proposed combined GST equations:** Nidhish
-(as identified by the user supplying the equations and asserting authorship).
+**Attribution:** Personal name withheld at the contributor's request.
 **Record created:** 2026-10-14. **Project:** HC-PROOF, General Space Theory (GST).
 **Status of attribution:** User-declared authorship of these expressions;
 not an independent priority, publication or originality determination.
@@ -14,9 +13,9 @@ The conventional Riemann zeta function `ζ(s)` and complex multiplication
 the third proposed GST relation does **not** transfer authorship of
 the newly arranged relation to the historical authors of those tools.
 
-## I. Nidhish GST Independent Geometric Coordinate Conversion Formula
+## I. GST Independent Geometric Coordinate Conversion Formula
 
-**Short name:** NGCCF. **Internal name:** `GST-NGCCF`.
+**Short name:** GSTGCCF. **Internal name:** `GST-GSTGCCF`.
 
 User-authored candidate equation (1), displayed with the clarified
 third independent geometric coordinate:
@@ -35,9 +34,9 @@ orbit synthesis work provides the next possible comparison target.
 No universal cohomological geometry is inferred from the radical
 alone.
 
-## II. Nidhish GST Native Operator-Separation Relation
+## II. GST Native Operator-Separation Relation
 
-**Short name:** NGOSR. **Internal name:** `GST-NGOSR`.
+**Short name:** GSTOSR. **Internal name:** `GST-GSTOSR`.
 
 The user's second relation as recorded from the earlier image:
 
@@ -54,9 +53,9 @@ separately verified `J²=-I` complex-structure law in
 `GSTMathboxCMGeometricComplexStructure.lean`, but the existence
 of that geometric structure is not universally established.
 
-## III. Nidhish GST Indexed Zeta–Hodge Coupling Formula
+## III. GST Indexed Zeta–Hodge Coupling Formula
 
-**Short name:** NIZHCF. **Internal name:** `GST-NIZHCF`.
+**Short name:** GSTIZHCF. **Internal name:** `GST-GSTIZHCF`.
 
 The corrected third equation (the user's revised image):
 
@@ -81,8 +80,7 @@ rewriting the user's original formula as a different theorem.
 
 ## Authorship and theorem naming conventions
 
-- **Proposer/author of all three combined GST relations:** Nidhish,
-  as declared by the user in this conversation.
+- **Proposer of the three GST relations:** Anonymous contributor; identifying name intentionally omitted.
 - **Assistant/Mathbox/Wolfram:** mathematical analysis,
   implementation, algebraic tests, and Lean proof engineering
   for the specific consequences stated by their source files;
@@ -97,7 +95,7 @@ rewriting the user's original formula as a different theorem.
 
 ## New construction inspired by the GST formulas
 
-`GSTNidhishGeometricOrbitSynthesis.lean` constructs an
+`GSTResearchGeometricOrbitSynthesis.lean` constructs an
 inductive finite-word algebra of **genuine native cycles** obtained
 by starting with a native algebraic cycle and repeatedly applying
 actual finite-closed Hodge-compatible realized correspondences.
@@ -116,23 +114,23 @@ No existing GST equation or finite computation automatically proves
 that existence statement, and naming a new axiom for it would be circular.
 
 Exact Lean verification belongs to the new independent GitHub workflow
-`.github/workflows/gst-nidhish-geometric-orbit-synthesis.yml`.
+`.github/workflows/gst-research-geometric-orbit-synthesis.yml`.
 Only a completed green job for that exact source commit validates
 the proposed new theorems.
 
 ## Verified new native-orbit geometry (14 October 2026)
 
-The following new authored-name modules have now independently passed
+The following new neutral-name modules have now independently passed
 Lean kernel compilation, with no `sorryAx` in their focused gates:
 
-- `GSTNidhishGeometricOrbitSynthesis.lean`, workflow run
+- `GSTResearchGeometricOrbitSynthesis.lean`, workflow run
   **38607823410** — defines an inductive finite word of actual
   Hodge-compatible realized finite-closed correspondences,
   constructs its native algebraic cycle and exact cohomological
   action, proves the synthesized orbit span is invariant, and
   proves the Hodge fiber is fully generated if actual correspondence
   irreducibility and a nonzero geometric seed are established.
-- `GSTNidhishFullOrbitZetaSynthesis.lean`, workflow run
+- `GSTResearchFullOrbitZetaSynthesis.lean`, workflow run
   **38608434300** — uses the user's corrected infinite
   indexed zeta expression to certify a nonzero actual native
   cycle and applies the orbit construction to derive a
@@ -147,7 +145,7 @@ structural theorem, not a Lean tactic problem.
 
 ### Free-coefficient adversarial test
 
-The source `GSTNidhishZetaMeasurementAudit.lean` additionally tests
+The source `GSTResearchZetaMeasurementAudit.lean` additionally tests
 whether the right side of corrected Equation (3), in its exact
 `x=y=2` infinite-sum case, genuinely **creates** a native
 geometric source. If the real value labeled `zetaAtS` may be
@@ -171,15 +169,15 @@ GST expression.
 
 ## Named formula declarations in Lean
 
-`GSTNidhishOriginalEquationNames.lean` now publishes the concise,
-explicit author-associated identifiers directly inside the code:
+`GSTResearchOriginalEquationNames.lean` now publishes the concise,
+explicit neutral identifiers directly inside the code:
 
-- `NGCCF`, `NGCCF_sq` for the independent third geometric coordinate
+- `GSTGCCF`, `GSTGCCF_sq` for the independent third geometric coordinate
   conversion formula (1);
-- `NGOSR`, `NGOSR_zero_maps_counterexample` for a typed rational
+- `GSTOSR`, `GSTOSR_zero_maps_counterexample` for a typed rational
   scalar-operator instance of relation (2);
-- `NIZHCFKernel`, `NIZHCFInfiniteSeries`,
-  `NIZHCFInfiniteSeries_two`, and `NIZHCFWeighted_two`
+- `GSTIZHCFKernel`, `GSTIZHCFInfiniteSeries`,
+  `GSTIZHCFInfiniteSeries_two`, and `GSTIZHCFWeighted_two`
   for the corrected indexed-series portion of formula (3).
 
 This naming does **not** claim that currently undefined operations in
@@ -187,4 +185,4 @@ the handwritten equations have suddenly been assigned canonical
 geometric meanings. The full original equations retain their authorship
 and notation, while the machine-checked portions have unambiguous
 types. The newly dedicated check is GitHub Actions workflow
-`gst-nidhish-original-equation-names.yml`, run **38609614440**.
+`gst-research-original-equation-names.yml`, run **38609614440**.
