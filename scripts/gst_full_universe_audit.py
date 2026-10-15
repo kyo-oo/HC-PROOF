@@ -30,6 +30,77 @@ imp_pat = re.compile(r"^\s*import\s+([^\r\n]+)", re.MULTILINE)
 escape_pat = re.compile(r"\b(sorry|admit|sorryAx|native_decide|unsafe)\b")
 axiom_pat = re.compile(r"^\s*(axiom|constant)\s+([a-zA-Z0-9_.']+)", re.MULTILINE)
 
+
+def strip_lean_comments_and_strings(source: str) -> str:
+    """Keep exact offsets/newlines while masking nested Lean comments and strings.
+
+    Lexical (not elaborating) pass. Lean block comments /- ... -/ are nested,
+    line comments start --, and double-quoted string literals can contain escapes.
+    The resulting code preserves line and column positions for proof-marker reports.
+    """
+    chars = list(source)
+    n = len(chars)
+    i = 0
+    block_depth = 0
+    line_comment = False
+    quoted_string = False
+    string_escape = False
+
+    def erase(start: int, length: int = 1) -> None:
+        for j in range(start, min(n, start + length)):
+            if chars[j] != "\n":
+                chars[j] = " "
+
+    while i < n:
+        pair = source[i:i + 2]
+        char = source[i]
+        if line_comment:
+            if char == "\n":
+                line_comment = False
+            else:
+                erase(i)
+            i += 1
+            continue
+        if block_depth:
+            if pair == "/-":
+                block_depth += 1
+                erase(i, 2)
+                i += 2
+            elif pair == "-/":
+                block_depth -= 1
+                erase(i, 2)
+                i += 2
+            else:
+                erase(i)
+                i += 1
+            continue
+        if quoted_string:
+            erase(i)
+            if string_escape:
+                string_escape = False
+            elif char == "\\":
+                string_escape = True
+            elif char == '"':
+                quoted_string = False
+            i += 1
+            continue
+        if pair == "--":
+            line_comment = True
+            erase(i, 2)
+            i += 2
+        elif pair == "/-":
+            block_depth = 1
+            erase(i, 2)
+            i += 2
+        elif char == '"':
+            quoted_string = True
+            erase(i)
+            i += 1
+        else:
+            i += 1
+    return "".join(chars)
+
+
 items: list[dict] = []
 errors: list[dict] = []
 all_imports: dict[str, list[str]] = {}
@@ -55,27 +126,28 @@ for path in paths:
         items.append({"path": path, "bytes": len(raw), "binary": True,
                       "sha256": hashlib.sha256(raw).hexdigest()})
         continue
-    decs = [{"kind": m.group(1), "name": m.group(2)} for m in decl_pat.finditer(source)]
+    code = strip_lean_comments_and_strings(source) if path.endswith(".lean") else source
+    decs = [{"kind": m.group(1), "name": m.group(2)} for m in decl_pat.finditer(code)]
     imp = []
     if path.endswith(".lean"):
-        imp = [token for m in imp_pat.finditer(source) for token in m.group(1).split()]
+        imp = [token for m in imp_pat.finditer(code) for token in m.group(1).split()]
         all_imports[path] = imp
     for d in decs:
         all_decls[d["kind"]] += 1
     found = [{"line": source.count("\n", 0, m.start()) + 1, "token": m.group(1)}
-             for m in escape_pat.finditer(source)] if path.endswith(".lean") else []
+             for m in escape_pat.finditer(code)] if path.endswith(".lean") else []
     if found:
         markers.append({"path": path, "occurrences": found})
     axioms = [{"line": source.count("\n", 0, m.start()) + 1,
                "kind": m.group(1), "name": m.group(2)}
-              for m in axiom_pat.finditer(source)] if path.endswith(".lean") else []
+              for m in axiom_pat.finditer(code)] if path.endswith(".lean") else []
     items.append({
         "path": path, "bytes": len(raw), "binary": False,
         "sha256": hashlib.sha256(raw).hexdigest(),
         "lines": source.count("\n") + 1,
         "imports": imp, "declarations": decs,
         "axiom_declarations": axioms,
-        "lexical_proof_markers": found,
+        "executable_proof_markers": found,
     })
 
 local_graph = {
@@ -143,7 +215,7 @@ report = {
     "import_cycles": cycles,
     "suspect_nonmathlib_external_imports": missing_nonmathlib,
     "most_imported_local_modules": heavy_roots,
-    "lexical_proof_marker_files": markers,
+    "executable_proof_marker_files": markers,
     "all_files": items,
 }
 (OUT / "census.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
@@ -155,19 +227,19 @@ summary = [
     f"Lean modules: **{len(local_nodes)}**; text files: **{report['text_files']}**.",
     f"Local Lean import edges: **{report['local_import_edges']}**.",
     f"Local import cycles: **{len(cycles)}**.",
-    f"Files with lexical 'sorry/admit/sorryAx/native_decide/unsafe' mentions: **{len(markers)}**.",
+    f"Files with executable 'sorry/admit/sorryAx/native_decide/unsafe' markers: **{len(markers)}**.",
     f"Read failures: **{len(errors)}**.",
     "",
     "## Important scope",
     "All tracked files are byte-read and all UTF-8 text files parsed for source-level metadata. "
-    "The scanner does **not** elaborate every theorem, determine whether a token is inside "
+    "The scanner does **not** elaborate every theorem, or determine if a token is semantically active inside "
     "a comment, or establish Hodge cycle-class surjectivity. Only exact Lean kernel "
     "builds establish the module-level formal validity of theorem statements.",
     "",
     "## Most imported local Lean modules",
 ]
 summary += [f"- \\x60{x['path']}\\x60: {x['imported_by']} dependents" for x in heavy_roots]
-summary += ["", "## Potential proof-escape mentions (including harmless comments)"]
+summary += ["", "## Executable proof markers (comments and strings masked)"]
 summary += [f"- \\x60{x['path']}\\x60: " +
             ", ".join(f"{z['token']}@{z['line']}" for z in x["occurrences"][:15])
             for x in markers[:90]]
