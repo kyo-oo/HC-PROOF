@@ -168,3 +168,41 @@ Proposed decisive next route:
 calculation are mathematical arguments. Lean source and CI are separate
 and must be checked at their exact commit SHA. The arbitrary-variety
 Hodge conjecture is not claimed solved.
+
+
+## Strengthened arbitrary-codimension formal transfer
+
+The three-slot module is now complemented by
+`GSTBlowupHodgeAllCodimension.lean`. Its
+`FiniteBlowupPresentation` takes an arbitrary **finite index type** of
+exceptional shifts r. The native cycle and Hodge types are dependent
+families `NE r` and `HE r`, so different degrees of the center
+do NOT get conflated into a single rational vector space.
+
+The actual constructed native cycle at target alpha is
+
+\[
+ \mathrm{nativeBase}(Z_0(\alpha))+
+ \sum_{r\in I}\mathrm{nativeExceptional}_r(Z_r(\alpha)),
+\]
+
+with each Z chosen from an independently realized source Hodge class.
+The Lean proof establishes the cycle-class identity from
+`geometricDecomposition`, `nativeBaseNaturality`, and
+`nativeExceptionalNaturality` only. The theorem
+`finite_blowup_preserves_all_rational_hodge_classes` derives
+surjectivity on the *target Hodge fiber*. It is not a hypothesis.
+`finite_blowup_primitive_realization` adds the exact primitive
+Lefschetz-kernel identity for target classes in the kernel.
+
+For geometric codimension c>=2 use the finite index
+r in {1,...,c-1}, `NE r = CH^(p-r)(Z)_Q` and
+`HE r = Hodge^(p-r,p-r)(Z)_Q`, with the appropriate Tate twist and
+Gysin map. This is the algebraic interface needed for a true all-codimension
+blow-up-stability theorem.
+
+**Still external to the Lean file:** construction of the actual
+scheme-specific `FiniteBlowupPresentation` from the Mathlib
+blow-up/Poincare duality/Hodge comparison stack. This obligation
+is separate from the now-general algebraic transfer, and is the
+next proof-assistant integration target.
