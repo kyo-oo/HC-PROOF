@@ -206,3 +206,156 @@ scheme-specific `FiniteBlowupPresentation` from the Mathlib
 blow-up/Poincare duality/Hodge comparison stack. This obligation
 is separate from the now-general algebraic transfer, and is the
 next proof-assistant integration target.
+
+
+## Phase 2: independent geometric rank and explicit polarized primitive
+
+**New Lean modules**
+
+* \`GSTBlowupThreeCycleIntersectionRank.lean\`: exact inverse to the
+  geometric three-cycle intersection readouts; produces a native algebraic
+  cycle directly from three rational measurements.
+* \`GSTBlowupSchemeNativeBridge.lean\`: specializes the three-source transfer
+  to ACTUAL \`codimensionCycles\` on smooth projective Mathlib schemes and to
+  the \`ClassicalHodgeFiber\` computed from Stage-2G rational Betti cohomology.
+  The native pullback and exceptional Gysin maps remain geometric interface
+  obligations, NOT constructed scheme morphisms in this module.
+* \`GSTBlowupNoncellularPrimitiveCurve.lean\`: a parametrized **nonzero**
+  primitive algebraic cycle for an ample class \(A=mh-e\), supported on
+  genuine base and exceptional cycle candidates.
+
+### Precise geometry and intersection pairing
+
+Let \(C\hookrightarrow\mathbf P^4\) be a smooth connected curve of genus
+\(g\) and degree \(\delta\), \(Y=\operatorname{Bl}_C(\mathbf P^4)\),
+\(\pi:Y\to\mathbf P^4\), \(j:E\to Y\), \(q:E\to C\),
+\(h=\pi^*c_1(O_{\mathbf P^4}(1))\), \(e=[E]\), and
+\(\xi=c_1(O_E(1))\). Use the convention \(j^*e=-\xi\) and
+\(q_*(\xi^2)=1\).
+
+The normal bundle \(N_{C/\mathbf P^4}\) has rank three and first
+Chern degree
+\[
+n=\int_C c_1(N)=5\delta+2g-2.
+\]
+
+Choose \(P\in C\) a closed complex point, and the three genuine
+codimension-two algebraic cycle classes
+\[
+u_0=h^2,\quad u_1=j_*q^*[P],\quad u_2=j_*\xi.
+\]
+The projective-bundle formula and projection formula give the *geometric*
+cup-intersection matrix:
+\[
+G=(\int_Yu_i\smile u_j)_{i,j}
+=\begin{pmatrix}
+1&0&0\\
+0&0&-1\\
+0&-1&-n
+\end{pmatrix},
+\qquad \det G=-1.
+\]
+This determinant does not presume any Hodge cycle-class surjectivity.
+It is forced by the genuine intersection geometry and is unchanged
+by the degree or genus of the center curve.
+
+Wolfram EXACT verification:
+\[
+G^{-1}=
+\begin{pmatrix}
+1&0&0\\
+0&n&-1\\
+0&-1&0
+\end{pmatrix},\qquad GG^{-1}=I_3.
+\]
+
+Let \(\lambda_i(\alpha)=\int_Y \alpha\smile u_i\), the *independently
+defined geometric* intersection measurements. Then
+\[
+\boxed{
+\mathcal Z_\alpha
+=\lambda_0(\alpha) Z_0+
+[n\lambda_1(\alpha)-\lambda_2(\alpha)]Z_1
+-\lambda_1(\alpha)Z_2.
+}
+\]
+The kernel proof reconstructs \(\alpha\) whenever the three geometric
+measurements jointly separate the true Hodge classes. This separation
+does **not** assume algebraic representatives: by the classical
+blow-up Betti formula \(b_4(Y)=3\), and the perfect Poincare pairing,
+three geometric classes with \(\det G\ne0\) form a basis.
+Consequently their geometric evaluations separate \(H^4(Y,\mathbb Q)\)
+and, a fortiori, its rational Hodge subspace.
+
+### Ample Lefschetz primitive class
+
+For any sufficiently large positive integer \(m\), the rational
+divisor \(A=mh-e\) is ample on \(Y\). Set
+\(w=j_*(\xi\,q^*[P])\) and use \(h^3,w\) as an actual geometric
+basis of \(H^6(Y,\mathbb Q)\). The projective bundle relation yields
+\[
+j_*\xi^2=\delta h^3+n w.
+\]
+
+Thus the geometric Lefschetz operator
+\(L_A:H^4(Y,\mathbb Q)\to H^6(Y,\mathbb Q)\) has matrix
+\[
+L_A=\begin{pmatrix}
+m&0&\delta\\
+0&1&m\delta+n
+\end{pmatrix}.
+\]
+Wolfram verified symbolically
+\[
+L_A
+\begin{pmatrix}
+-\delta\\-m(m\delta+n)\\m
+\end{pmatrix}=
+\begin{pmatrix}0\\0\end{pmatrix}
+\quad\text{identically for all }m,\delta,n.
+\]
+
+The **explicit actual rational algebraic primitive cycle** is
+\[
+\boxed{
+Z_{\rm prim}
+=-\delta\,Z_0-m(m\delta+n)Z_1+mZ_2.
+}
+\]
+
+Its class satisfies \(L_A(\mathrm{cl}Z_{\rm prim})=0\).
+Also \(\int_Y\mathrm{cl}(Z_{\rm prim})\smile u_1=-m\ne0\)
+for \(m>0\). This is a certified **nonzero** polarized middle
+primitive algebraic cycle, constructed entirely from real projective
+and exceptional algebraic loci. The all-genus argument covers
+\(g\ge1\), where \(b_3(Y)=2g>0\), so these varieties cannot have
+algebraic affine cell decompositions.
+
+For genus two, \(n=5\delta+2\), giving the fully explicit integer
+coefficient vector
+\[
+(-\delta,\,-m((m+5)\delta+2),\,m).
+\]
+
+### Verification boundaries / next executable proof obligations
+
+1. The Lean files verify **linear algebra from separately stated**
+   scheme-cycle and Hodge geometry. The projective bundle formula,
+   blow-up Hodge decomposition, Gysin/cycle-class compatibility and
+   Poincare pairing are mathematical geometric inputs, and are **not**
+   newly kernel-proved inside these files.
+2. Concretely construct the blow-up scheme carrier, exceptional
+   projective bundle and the analytic Betti/Gysin comparison maps
+   in the pinned Lean/Mathlib implementation. This is the
+   missing bridge needed for a *fully formalized* scheme-level instance.
+3. Generalize the Gram calculation to blow-ups of higher-dimensional
+   centers, where the cycle generators and primitive Hodge rank may be
+   larger. Prove new nonzero determinants from intersection data,
+   not an assumed target-surjectivity statement.
+4. The **original general Hodge conjecture** remains open for arbitrary
+   primitive rational classes on arbitrary smooth projective varieties
+   outside the demonstrated blow-up/cellular/divisor/CM geometries.
+   Proving existence of universally sufficient geometric
+   correspondences is still the fundamental obstruction.
+
+No claim of arbitrary-variety universal Hodge algebraicity is made.
