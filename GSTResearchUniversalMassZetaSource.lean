@@ -1,8 +1,8 @@
-import GSTNidhishFixedZetaGeometricSource
+import GSTResearchFixedZetaGeometricSource
 import GSTClassicalHodgeLimitlessSpinePropagation
 
 /-!
-# Nidhish GST: fixed corrected zeta source at EVERY weight from native mass
+# Research GST: fixed corrected zeta source at EVERY weight from native mass
 
 The first source construction proved a fixed corrected zeta(s=0)
 measurement in codimension zero from a normalized fundamental cycle.
@@ -44,9 +44,9 @@ open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeCodimensionZeroFundamentalCycle
 open GSTMathboxCorrectedZetaGeometry
 open GSTMathboxCorrectedZetaInfinite
-open GSTNidhishFixedZetaGeometricSource
+open GSTResearchFixedZetaGeometricSource
 
-namespace GSTNidhishUniversalMassZetaSource
+namespace GSTResearchUniversalMassZetaSource
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -92,4 +92,4 @@ theorem fixed_corrected_zeta_source_every_weight
 #check fixed_corrected_zeta_source_every_weight
 #print axioms fixed_corrected_zeta_source_every_weight
 
-end GSTNidhishUniversalMassZetaSource
+end GSTResearchUniversalMassZetaSource

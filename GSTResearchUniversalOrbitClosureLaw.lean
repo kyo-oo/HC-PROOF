@@ -1,7 +1,7 @@
-import GSTNidhishGeometricOrbitSynthesis
+import GSTResearchGeometricOrbitSynthesis
 
 /-!
-# Nidhish GST Universal Minimal Geometric Orbit Law
+# GST Universal Minimal Geometric Orbit Law
 
 Mathematical advance over the previous irreducible-orbit criterion:
 the user wants a universal law proving native geometric directions.
@@ -41,9 +41,9 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGeometricMatrixRankLanding
 open GSTClassicalHodgeActualGeometricIrreducibility
-open GSTNidhishGeometricOrbitSynthesis
+open GSTResearchGeometricOrbitSynthesis
 
-namespace GSTNidhishUniversalOrbitClosureLaw
+namespace GSTResearchUniversalOrbitClosureLaw
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -157,4 +157,4 @@ theorem local_cyclicity_of_global_geometric_irreducibility
 #print axioms native_orbit_top_iff_seed_geometrically_cyclic
 #print axioms hodge_cycles_from_one_geometrically_cyclic_native_seed
 
-end GSTNidhishUniversalOrbitClosureLaw
+end GSTResearchUniversalOrbitClosureLaw

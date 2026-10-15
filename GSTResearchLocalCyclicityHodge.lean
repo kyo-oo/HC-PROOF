@@ -1,7 +1,7 @@
-import GSTNidhishUniversalOrbitClosureLaw
+import GSTResearchUniversalOrbitClosureLaw
 
 /-!
-# Nidhish GST local geometric cyclicity — all-weight Hodge reduction
+# GST local geometric cyclicity — all-weight Hodge reduction
 
 This removes TWO previously separate demands from the sufficient
 hypotheses: no prescribed nonzero zeta measurement and no full
@@ -32,9 +32,9 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGeometricMatrixRankLanding
-open GSTNidhishUniversalOrbitClosureLaw
+open GSTResearchUniversalOrbitClosureLaw
 
-namespace GSTNidhishLocalCyclicityHodge
+namespace GSTResearchLocalCyclicityHodge
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -68,4 +68,4 @@ theorem full_hodge_of_all_active_native_geometric_cyclicities
 #check full_hodge_of_all_active_native_geometric_cyclicities
 #print axioms full_hodge_of_all_active_native_geometric_cyclicities
 
-end GSTNidhishLocalCyclicityHodge
+end GSTResearchLocalCyclicityHodge

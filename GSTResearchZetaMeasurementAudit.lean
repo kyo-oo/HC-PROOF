@@ -45,7 +45,7 @@ open GSTMathboxCorrectedZetaGeometry
 open GSTMathboxCorrectedZetaInfinite
 open GSTMathboxCorrectedZetaActualHodge
 
-namespace GSTNidhishZetaMeasurementAudit
+namespace GSTResearchZetaMeasurementAudit
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -101,4 +101,4 @@ theorem freely_adjusted_zeta_certificate_iff_nonzero_native_class
 
 #print axioms freely_adjusted_zeta_certificate_iff_nonzero_native_class
 
-end GSTNidhishZetaMeasurementAudit
+end GSTResearchZetaMeasurementAudit

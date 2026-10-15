@@ -36,7 +36,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeLimitlessSpinePropagation
 
-namespace GSTNidhishGeometricWeightBoundaryAudit
+namespace GSTResearchGeometricWeightBoundaryAudit
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -73,4 +73,4 @@ theorem no_unrestricted_native_mass_bridge_at_empty_weight
 #print axioms no_conserved_charge_when_one_native_weight_vanishes
 #print axioms no_unrestricted_native_mass_bridge_at_empty_weight
 
-end GSTNidhishGeometricWeightBoundaryAudit
+end GSTResearchGeometricWeightBoundaryAudit
