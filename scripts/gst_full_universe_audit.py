@@ -28,7 +28,7 @@ decl_pat = re.compile(r"^\s*(?:private\s+|protected\s+|noncomputable\s+|unsafe\s
                       r"([a-zA-Z0-9_.']+)", re.MULTILINE)
 imp_pat = re.compile(r"^\s*import\s+([^\r\n]+)", re.MULTILINE)
 escape_pat = re.compile(r"\b(sorry|admit|sorryAx|native_decide|unsafe)\b")
-axiom_pat = re.compile(r"^\s*(axiom|constant)\s+([a-zA-Z0-9_.']+)", re.MULTILINE)
+axiom_pat = re.compile(r"^\s*(?:private\s+|protected\s+|noncomputable\s+|unsafe\s+)?(axiom|constant)\s+([a-zA-Z0-9_.']+)", re.MULTILINE)
 
 
 def strip_lean_comments_and_strings(source: str) -> str:
