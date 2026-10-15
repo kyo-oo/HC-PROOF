@@ -12,9 +12,9 @@ the fundamental class of its algebraic plane. In H^4(X,Z):
   ∫_X [P]² = 3.
 
 The last identity follows from the normal-bundle sequence
-  0 -> N_{P/X} -> O_P(1)^4 -> O_P(3) -> 0
+  0 -> N_{P/X} -> O_P(1)^3 -> O_P(3) -> 0
 and c_2(N_{P/X}) = coefficient of t² in
-  (1+t)^4/(1+3t) = 1+t+3t².
+  (1+t)^3/(1+3t) = 1+0t+3t².
 
 These are genuine projective-geometric intersection numbers,
 not chosen matrix entries to force a desired determinant.
@@ -68,10 +68,10 @@ theorem cubic_plane_normal_self_intersection :
   norm_num [Intersection,planeClass]
 
 /-- Algebraic proof of the normal bundle Chern coefficient
-(1+3t)*(1+t+3t²) ≡ (1+t)^4 modulo t³:
+(1+3t)*(1+0t+3t²) ≡ (1+t)^3 modulo t³:
 the coefficients of t and t² agree. -/
 theorem plane_normal_chern_numbers :
-    (1:ℤ) + 3 = 4 ∧ (3:ℤ) + 3*1 = 6 := by
+    (0:ℤ) + 3 = 3 ∧ (3:ℤ) + 3*0 = 3 := by
   norm_num
 
 /-- The primitive cycle pairs trivially with ample h². -/
