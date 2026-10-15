@@ -11,7 +11,7 @@ Original target: algebraic representatives of all primitive rational Hodge class
 3. GSTGraphV2OmniversalCore.lean: sector-aware graph, finite certified paths, all-index causal closure, event morphisms.
 4. GSTClassicalHodgeOmniversalConstructorGraph.lean: actual codimension-point cycles, rational Betti/Hodge nodes and geometric cycle-class edges, with NO arbitrary Hodge-to-cycle reverse arrow.
 
-These are preserved, not replaced. The new CM-NM geometric extension is GSTGraphV2CMNMPrimitiveUpgrade.lean (focused Lean CI 38713065733 SUCCESS). The coupled arithmetic plus true geometry extension is GSTGraphV2CMNMCoupledUniverse.lean (separate CI; inspect current result before using).
+These are preserved, not replaced. The new CM-NM geometric extension is GSTGraphV2CMNMPrimitiveUpgrade.lean (focused Lean CI 38713065733 SUCCESS). The coupled arithmetic plus true geometry extension is GSTGraphV2CMNMCoupledUniverse.lean (**CI 38713197684: SUCCESS**).
 
 ## The user's Equations (4) and (5) as precise typed mathematics
 
@@ -53,4 +53,19 @@ The upgraded graph proves all its events preserve actual algebraicity. The equal
 
 To finish the original target one must construct enough independently algebraic primitive Hodge directions for arbitrary smooth projective X, using true primitive-preserving mixed correspondences and a separately proved non-circular rank/surjectivity statement.
 
-Status: Graph native CM-NM upgrade green. Coupled infinite arithmetic-Hodge graph remains subject to its focused Lean CI. No local Lean installation and no public internet search.
+## C. Primitive-preserving geometric realization added and verified
+
+The separate GSTGraphV2CMNMPrimitiveLefschetzBridge.lean (**CI run 38714580375: SUCCESS**) extends the graph with a precisely typed rational Betti Lefschetz-kernel test L. If the actual cycle classes of f_*Z and g_*Z are annihilated by L, the exact CM-NM-weighted cycle is also annihilated by L. It also proves the genuine one-step GST coupled-graph reachability of this primitive-tested native cycle at EVERY arithmetic address. This is not an unjustified claim that arbitrary pushforwards preserve primitiveness: the two geometric inputs are checked explicitly.
+
+The module imports the earlier verified universal codimension-two primitive polynomial profile for X×P² and reuses its exact coefficient cancellation, without misrepresenting that coordinate model as a fully formalized scheme-theoretic Betti comparison. Both the older product primitive module and the new graph primitive bridge have now been registered in lakefile.toml. The three certified new graph modules are imported into the public HodgeConjecture.lean root.
+
+## Verification checkpoint
+
+- 38713065733: CM-NM native geometric graph upgrade, SUCCESS.
+- 38713197684: Coupled infinite arithmetic-geometric GST universe, SUCCESS.
+- 38714580375: Primitive-kernel native CM-NM bridge, SUCCESS.
+- Full HodgeConjecture.lean root: separate long compilation, not automatically equivalent to Hodge conjecture.
+
+Original universal rational Hodge conjecture: NOT PROVED. Remaining: produce enough actual primitive class directions on arbitrary varieties and prove true primitive-surjective geometric correspondences.
+
+No local Lean installation and no public internet search.
