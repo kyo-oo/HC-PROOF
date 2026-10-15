@@ -128,6 +128,24 @@ theorem ActualXCycleProjectionData.cycle_represents_target_of_residual_zero
   rw [hresidual, add_zero] at h
   exact congrArg Subtype.val h
 
+/-- In the actual Stage-2G target, residual ZERO is equivalent to
+exact equality of the concrete constructed native cycleClass to alpha.
+This is the precise mathematical criterion that a universal GST
+geometric-generator theorem must establish independently. -/
+theorem ActualXCycleProjectionData.residual_zero_iff_constructed_cycle_exact
+    (P : ActualXCycleProjectionData X H p ι)
+    (alpha : HodgeSpace X H p) :
+    P.primitiveResidual alpha = 0 ↔
+      H.cycleClass p (P.projectNative alpha) = alpha.1 := by
+  constructor
+  · exact P.cycle_represents_target_of_residual_zero alpha
+  · intro h
+    have hh : P.trueHodgeClass (P.projectNative alpha) = alpha :=
+      Subtype.ext h
+    change alpha - P.trueHodgeClass (P.projectNative alpha) = 0
+    rw [hh]
+    exact sub_self _
+
 /-- This theorem exposes rather than hides the original Hodge gap:
 a hypothetical missing class must give a NONZERO target Hodge
 residual orthogonal to the full known algebraic detector family. -/
