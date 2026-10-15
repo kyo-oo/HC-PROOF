@@ -62,8 +62,16 @@ noncomputable def nativeAlgebraicProjection
 /-- Action of the explicit algebraic Gram correspondence on
 cohomology: all values are native algebraic cycle classes. -/
 noncomputable def algebraicProjector
-    (P : GeometricDualCyclePacket ι N V) : V →ₗ[ℚ] V :=
-  P.cycleClass.comp (nativeAlgebraicProjection P)
+    (P : GeometricDualCyclePacket ι N V) : V →ₗ[ℚ] V where
+  toFun x := P.cycleClass (projectedNativeCycle P x)
+  map_add' := by
+    intro x y
+    simp [projectedNativeCycle, map_add, add_smul,
+      Finset.sum_add_distrib]
+  map_smul' := by
+    intro c x
+    simp [projectedNativeCycle, map_smul, smul_smul,
+      Finset.smul_sum]
 
 /-- The true cohomological action of Delta_X - Pi_A. -/
 noncomputable def complementProjector
@@ -73,8 +81,7 @@ noncomputable def complementProjector
 theorem algebraicProjector_apply
     (P : GeometricDualCyclePacket ι N V) (x : V) :
     algebraicProjector P x =
-      P.cycleClass (projectedNativeCycle P x) := by
-  simp [algebraicProjector, nativeAlgebraicProjection]
+      P.cycleClass (projectedNativeCycle P x) := rfl
 
 theorem complementProjector_apply
     (P : GeometricDualCyclePacket ι N V) (x : V) :
@@ -90,21 +97,17 @@ theorem algebraicProjector_idempotent
       algebraicProjector P := by
   apply LinearMap.ext
   intro x
-  change algebraicProjector P (algebraicProjector P x) =
-    algebraicProjector P x
-  calc
-    algebraicProjector P (algebraicProjector P x) =
-        P.cycleClass
-          (∑ i, P.detectors i
-            (P.cycleClass (projectedNativeCycle P x)) • P.cycles i) := by
-      simp [algebraicProjector_apply, projectedNativeCycle]
-    _ = P.cycleClass (∑ i, P.detectors i x • P.cycles i) := by
-      congr 1
-      apply Finset.sum_congr rfl
-      intro i hi
-      rw [projectedNativeCycle_all_dual_readouts P x i]
-    _ = algebraicProjector P x := by
-      simp [algebraicProjector_apply, projectedNativeCycle]
+  have hcoeff :
+      projectedNativeCycle P (P.cycleClass (projectedNativeCycle P x)) =
+        projectedNativeCycle P x := by
+    change (∑ i, P.detectors i (P.cycleClass (projectedNativeCycle P x)) • P.cycles i) =
+      ∑ i, P.detectors i x • P.cycles i
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [projectedNativeCycle_all_dual_readouts P x i]
+  change P.cycleClass (projectedNativeCycle P (P.cycleClass (projectedNativeCycle P x))) =
+    P.cycleClass (projectedNativeCycle P x)
+  rw [hcoeff]
 
 theorem algebraicProjector_fixes_generator
     (P : GeometricDualCyclePacket ι N V) (i : ι) :
