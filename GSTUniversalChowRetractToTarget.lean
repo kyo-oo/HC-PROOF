@@ -46,16 +46,16 @@ structure NativeHodgeRetract
   betti :
     RationalSingularCohomology D.analytification (2 * q) →ₗ[ℚ]
       RationalSingularCohomology H.analytification (2 * p)
-  section :
+  hodgeSection :
     RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
       RationalSingularCohomology D.analytification (2 * q)
   section_is_hodge :
     ∀ alpha : RationalSingularCohomology H.analytification (2 * p),
       alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
-        section alpha ∈ rationalHodgeSubspace (D.hodgeBigrading q)
+        hodgeSection alpha ∈ rationalHodgeSubspace (D.hodgeBigrading q)
   betti_retract :
     ∀ alpha : RationalSingularCohomology H.analytification (2 * p),
-      betti (section alpha) = alpha
+      betti (hodgeSection alpha) = alpha
   cycleClass_natural :
     ∀ Z : codimensionCycles Y.X q,
       H.cycleClass p (native Z) = betti (D.cycleClass q Z)
@@ -73,7 +73,7 @@ theorem construct_target_cycle_from_source_hodge_lift
     (alpha : RationalSingularCohomology H.analytification (2 * p))
     (hsource :
       ∃ Z : codimensionCycles Y.X q,
-        D.cycleClass q Z = R.section alpha) :
+        D.cycleClass q Z = R.hodgeSection alpha) :
     ∃ Z : codimensionCycles X.X p,
       H.cycleClass p Z = alpha := by
   obtain ⟨Z, hZ⟩ := hsource
@@ -81,7 +81,7 @@ theorem construct_target_cycle_from_source_hodge_lift
   calc
     H.cycleClass p (R.native Z) =
         R.betti (D.cycleClass q Z) := R.cycleClass_natural Z
-    _ = R.betti (R.section alpha) := by rw [hZ]
+    _ = R.betti (R.hodgeSection alpha) := by rw [hZ]
     _ = alpha := R.betti_retract alpha
 
 /-- Full Hodge on X is DERIVED if X is a true Chow motivic
@@ -99,7 +99,7 @@ theorem every_target_hodge_class_from_solved_source
           H.cycleClass p Z = alpha := by
   intro alpha hAlpha
   exact construct_target_cycle_from_source_hodge_lift R alpha
-    (hY (R.section alpha) (R.section_is_hodge alpha hAlpha))
+    (hY (R.hodgeSection alpha) (R.section_is_hodge alpha hAlpha))
 
 /-- Direct compatibility with the original omniversal GST ghost
 separator: the actual target Hodge fiber lies in the native-cycle
