@@ -112,7 +112,8 @@ theorem constructPrimitiveRulingCycle_correct
     constructPrimitiveRulingCycle w = w := by
   rcases w with ⟨a,b⟩
   have h := (primitive_iff_ruling_antisymmetry m (a,b)).mp hw
-  simp [constructPrimitiveRulingCycle, h]
+  have hb : b = -a := by simpa only using h
+  simp [constructPrimitiveRulingCycle, hb]
 
 theorem constructPrimitiveRulingCycle_primitive
     (m : ℕ) (w : RulingCycle) :
