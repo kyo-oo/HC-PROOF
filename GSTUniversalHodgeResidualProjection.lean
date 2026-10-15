@@ -51,7 +51,7 @@ independently geometric dual intersection detectors.
 No target Hodge class representative is supplied. -/
 structure GeometricDualCyclePacket
     (ι N V : Type*)
-    [Fintype ι]
+    [Fintype ι] [DecidableEq ι]
     [AddCommGroup N] [Module ℚ N]
     [AddCommGroup V] [Module ℚ V] where
   cycleClass : N →ₗ[ℚ] V
