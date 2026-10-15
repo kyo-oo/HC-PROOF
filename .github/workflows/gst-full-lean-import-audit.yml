@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/gst-full-lean-import-audit.yml'
       - 'scripts/audit_lean_dependency_graph.py'
+      - 'scripts/gst_theorem_declaration_catalogue.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -20,6 +21,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/audit_lean_dependency_graph.py
+          python3 scripts/gst_theorem_declaration_catalogue.py
           python3 - <<'PY'
           import json
           x=json.load(open("lean-dependency-audit.json",encoding="utf8"))
@@ -59,4 +61,5 @@ jobs:
             lean-dependency-audit.json
             lean-dependency-audit.md
             cm-nm-dependency-closure.json
+            lean-declaration-catalogue.json
           if-no-files-found: warn
