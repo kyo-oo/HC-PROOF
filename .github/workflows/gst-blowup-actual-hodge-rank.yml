@@ -45,7 +45,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTBlowupHodgeRank"
-          roots = ["GSTBlowupRankActualHodgeLanding"]
+          roots = ["GSTBlowupHodgeTransfer", "GSTBlowupSchemeNativeBridge", "GSTBlowupThreeCycleIntersectionRank", "GSTBlowupRankActualHodgeLanding"]
           EOF
           if lake build GSTBlowupHodgeRank > gst-actual-hodge-rank.log 2>&1; then
             echo "LEAN PASSED: Stage-2G Hodge cycle by exact geometric rank"
