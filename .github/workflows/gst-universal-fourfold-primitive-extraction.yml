@@ -50,6 +50,8 @@ jobs:
           [[lean_lib]]
           name = "GSTUniversalFourfoldPrimitive"
           roots = [
+            "GSTUniversalLefschetzCurveCycles",
+            "GSTClassicalHodgeGeometricMatrixRankLanding",
             "GSTUniversalPrimitiveDivisorConstruction",
             "GSTUniversalFourfoldPrimitiveExtraction"
           ]
