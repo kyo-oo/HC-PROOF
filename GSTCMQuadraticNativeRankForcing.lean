@@ -153,6 +153,94 @@ theorem CM_NM_complex_readout_forces_nonzero_native_source
     exact map_zero read
   exact htrace (hPeriod.symm.trans hreadzero)
 
+/-! ## Actual scheme-endomorphism graph construction
+
+A CM endomorphism f of a smooth projective complex scheme is genuine
+geometry. The existing projective-spine graph naturality theorem
+CONSTRUCTS a verified finite-closed correspondence from f. Therefore
+a separate arbitrary RealizedFiniteClosedCorrespondence witness is
+not necessary: the graph is constructed from f, and its Hodge action
+is checked on the actual cycle-class image. -/
+
+/-- Build the *actual* algebraic closed correspondence graph of f,
+with its verified native/Betti naturality, rather than selecting
+a rational endomorphism matrix unrelated to a projective map. -/
+noncomputable def actualCMGraphOfEndomorphism
+    (G : GeometricCycleClassSpine V H)
+    (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V) :
+    RealizedFiniteClosedCorrespondence V H p :=
+  RealizedFiniteClosedCorrespondence.graphRealized G f
+
+/-- CM number theory + TRUE endomorphism-graph geometry jointly
+force the rank-two Hodge target; no independently chosen
+correspondence realization or scalar transversality witness. -/
+theorem CM_graph_endomorphism_rank_two_hodge
+    (G : GeometricCycleClassSpine V H)
+    (hnz : spineHodgeSeed G p ≠ 0)
+    (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
+    (hR : (actualCMGraphOfEndomorphism (p := p) G f).HodgeCompatible)
+    (a b : ℚ) (hb : b ≠ 0)
+    (hMin : ∀ z : ClassicalHodgeFiber V H p,
+      (actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR
+        ((actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR z) -
+      (2*a) •
+        (actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR z +
+      (a^2+b^2) • z = 0)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (hrank : Module.finrank ℚ (ClassicalHodgeFiber V H p) = 2)
+    (alpha : RationalSingularCohomology H.analytification (2*p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = alpha := by
+  exact CM_quadratic_forces_native_rank_two_hodge
+    G hnz (actualCMGraphOfEndomorphism (p := p) G f)
+    hR a b hb hMin hrank alpha halpha
+
+/-- The strongest current fixed-period CM+NM bridge:
+* the initial nonzero native source is DERIVED from the genuine
+  corrected CM number-manipulation trace measurement;
+* the algebraic graph correspondence is CONSTRUCTED from the
+  actual projective scheme endomorphism f;
+* the imaginary quadratic CM polynomial PROVES independence;
+* rational rank two finishes the native algebraic Hodge target.
+
+The unproved ingredient is a *canonical* geometric period
+comparison hPeriod plus the genuinely induced hMin/Hodge type
+of a concrete CM abelian endomorphism. These are separate,
+non-circular mathematical existence obligations. -/
+theorem CM_NM_period_graph_rank_two_hodge
+    (G : GeometricCycleClassSpine V H)
+    (x y : CMQ) (m : ℕ)
+    (hreal : (cmIndexedDenominator x y m).1 ≠ 0)
+    (read : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ)
+    (hPeriod : read (spineHodgeSeed G p) =
+      cmIndexedNMTrace x y m)
+    (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
+    (hR : (actualCMGraphOfEndomorphism (p := p) G f).HodgeCompatible)
+    (a b : ℚ) (hb : b ≠ 0)
+    (hMin : ∀ z : ClassicalHodgeFiber V H p,
+      (actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR
+        ((actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR z) -
+      (2*a) •
+        (actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR z +
+      (a^2+b^2) • z = 0)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (hrank : Module.finrank ℚ (ClassicalHodgeFiber V H p) = 2)
+    (alpha : RationalSingularCohomology H.analytification (2*p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = alpha := by
+  have hnz : spineHodgeSeed G p ≠ 0 :=
+    CM_NM_complex_readout_forces_nonzero_native_source
+      G x y m hreal read hPeriod
+  exact CM_graph_endomorphism_rank_two_hodge
+    G hnz f hR a b hb hMin hrank alpha halpha
+
+#check actualCMGraphOfEndomorphism
+#check CM_graph_endomorphism_rank_two_hodge
+#check CM_NM_period_graph_rank_two_hodge
+
+#print axioms CM_graph_endomorphism_rank_two_hodge
+#print axioms CM_NM_period_graph_rank_two_hodge
+
 #check imaginary_quadratic_CM_no_rational_eigenline
 #check CM_actual_correspondence_spine_transverse
 #check CM_quadratic_forces_native_rank_two_hodge
