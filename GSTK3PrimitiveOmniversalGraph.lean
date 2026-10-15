@@ -42,8 +42,8 @@ its geometric cycle witness exists independently and explicitly. -/
 noncomputable def nativeDiagonalHodgeNode
     (G : GenuineK3ProductDiagonalPacket Y H) :
     ClassicalHodgeFiber Y H 2 :=
-  ⟨H.cycleClass 2 G.genuineNativePrimitive,
-    G.genuineNativePrimitive_is_hodge⟩
+  ⟨H.cycleClass 2 (genuineNativePrimitive G),
+    (genuineNativePrimitive_is_hodge G)⟩
 
 /-- Exact live reachability in the FULL historical GST three-sector graph,
 from the real native diagonal cycle to the corresponding genuine Hodge state.
@@ -51,18 +51,18 @@ No reverse abstract Hodge-to-cycle event is postulated. -/
 theorem k3_primitive_graph_realized
     (G : GenuineK3ProductDiagonalPacket Y H) :
     OmniversalGraph.Reachable (constructorGraph Y H)
-      (.cycle 2 G.genuineNativePrimitive)
+      (.cycle 2 (genuineNativePrimitive G))
       (.hodge 2 (nativeDiagonalHodgeNode G)) := by
   exact OmniversalGraph.reachable_of_event (constructorGraph Y H)
-    (ConstructorEvent.cycleHodge 2 G.genuineNativePrimitive
-      G.genuineNativePrimitive_is_hodge)
+    (ConstructorEvent.cycleHodge 2 (genuineNativePrimitive G)
+      (genuineNativePrimitive_is_hodge G))
 
 /-- The resulting graph node satisfies the REAL primitive Lefschetz
 equation; primitive is not an unproved internal GST sheet label. -/
 theorem k3_primitive_graph_lefschetz_zero
     (G : GenuineK3ProductDiagonalPacket Y H) :
     G.lefschetz (nativeDiagonalHodgeNode G).1 = 0 := by
-  exact G.genuineNativePrimitive_lefschetz_zero
+  exact (genuineNativePrimitive_lefschetz_zero G)
 
 /-- The graph's actual Hodge node is NONZERO, witnessed by a
 transcendental intersection readout instead of an abstract charge. -/
@@ -70,7 +70,7 @@ theorem k3_primitive_graph_nonzero
     (G : GenuineK3ProductDiagonalPacket Y H) :
     nativeDiagonalHodgeNode G ≠ 0 := by
   intro h
-  apply G.genuineNativePrimitive_nonzero
+  apply (genuineNativePrimitive_nonzero G)
   exact congrArg Subtype.val h
 
 /-- On true K3 product geometry this event strictly escapes
@@ -81,7 +81,7 @@ theorem k3_primitive_graph_outside_divisor_algebra
       (RationalSingularCohomology H.analytification 4))
     (hD : D ≤ LinearMap.ker G.transversePairing) :
     (nativeDiagonalHodgeNode G).1 ∉ D := by
-  exact G.genuineNativePrimitive_outside_divisor_span D hD
+  exact (genuineNativePrimitive_outside_divisor_span G) D hD
 
 #check k3_primitive_graph_realized
 #check k3_primitive_graph_nonzero
