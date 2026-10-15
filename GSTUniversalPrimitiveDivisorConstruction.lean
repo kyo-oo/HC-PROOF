@@ -85,7 +85,7 @@ theorem normalizeNativeDivisor_primitive
   change l (D - (l D / l h) • h) = 0
   rw [map_sub,map_smul]
   change l D - (l D / l h) * l h = 0
-  exact sub_eq_zero.mpr (div_mul_cancel₀ _ hdegree)
+  exact sub_eq_zero.mpr (div_mul_cancel₀ _ hdegree).symm
 
 /-- Native normalization agrees exactly with the Hodge projection. -/
 theorem normalizeNativeDivisor_cycleClass
