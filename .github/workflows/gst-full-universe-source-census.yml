@@ -1,0 +1,26 @@
+name: GST Full Universe Source Census
+on:
+  push:
+    branches:
+      - research/gpt6-gst-blowup-transfer-20261015
+    paths:
+      - scripts/gst_full_universe_audit.py
+      - .github/workflows/gst-full-universe-source-census.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Read every tracked source and build dependency graph
+        run: python3 scripts/gst_full_universe_audit.py
+      - name: Display summary
+        run: head -n 120 gst_universe_census/summary.md
+      - name: Upload full source census and dependency report
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-full-universe-census
+          path: gst_universe_census/
