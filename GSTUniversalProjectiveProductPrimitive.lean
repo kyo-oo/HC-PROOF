@@ -85,12 +85,11 @@ theorem primitive_hyperplane_subspace_unique
         (-((d:ℚ)-1)*w.1,
           ((d:ℚ)*((d:ℚ)-1)/2)*w.1)) := by
   rcases w with ⟨a,⟨b,c⟩⟩
-  have h1 : (((d:ℚ)-1)*a+b)=0 := by
-    exact congrArg Prod.fst hw
-  have h2 :
-      (((d:ℚ)-1)*((d:ℚ)-2)/2)*a+
-        ((d:ℚ)-1)*b+c=0 := by
-    exact congrArg Prod.snd hw
+  have h1 := congrArg Prod.fst hw
+  change (((d:ℚ)-1)*a+b)=0 at h1
+  have h2 := congrArg Prod.snd hw
+  change (((d:ℚ)-1)*((d:ℚ)-2)/2)*a+
+        ((d:ℚ)-1)*b+c=0 at h2
   have hb : b = -((d:ℚ)-1)*a := by
     linarith
   have hc : c = ((d:ℚ)*((d:ℚ)-1)/2)*a := by
