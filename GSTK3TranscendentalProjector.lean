@@ -68,7 +68,14 @@ theorem divisorCorrespondenceProjector_on_divisor
     divisorCorrespondenceProjector divisor dualIntersection (divisor j) =
       divisor j := by
   classical
-  simp [divisorCorrespondenceProjector, hdual]
+  change (∑ i, dualIntersection i (divisor j) • divisor i) = divisor j
+  calc
+    (∑ i, dualIntersection i (divisor j) • divisor i) =
+      ∑ i, (if i = j then (1 : ℚ) else 0) • divisor i := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [hdual i j]
+    _ = divisor j := by simp
 
 /-- The algebraic divisor projector is an idempotent for ANY finite
 rank; no chosen Hodge target preimage appears anywhere. -/
