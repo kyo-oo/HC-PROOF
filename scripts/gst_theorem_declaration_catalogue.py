@@ -24,12 +24,80 @@ MARKERS = ("sorry", "sorryAx", "admit", "native_decide")
 DATA = {}
 AGG = collections.Counter()
 
+def strip_lean_comments(src: str) -> str:
+    """Remove nested /- -/ and -- comments while preserving all line offsets.
+
+    This is an indexing lexer, not Lean's parser. String contents are also
+    hidden so quoted declaration-like text cannot fabricate axioms.
+    """
+    out=[]
+    i=0
+    depth=0
+    line_comment=False
+    in_string=False
+    escaped=False
+    while i<len(src):
+        c=src[i]
+        pair=src[i:i+2]
+        if c=="\n":
+            out.append("\n")
+            line_comment=False
+            i+=1
+            continue
+        if line_comment:
+            out.append(" ")
+            i+=1
+            continue
+        if depth:
+            if pair=="/-":
+                depth+=1
+                out.extend((" "," "))
+                i+=2
+                continue
+            if pair=="-/":
+                depth-=1
+                out.extend((" "," "))
+                i+=2
+                continue
+            out.append(" ")
+            i+=1
+            continue
+        if in_string:
+            if escaped:
+                escaped=False
+            elif c=="\\":
+                escaped=True
+            elif c=='"':
+                in_string=False
+            out.append(" ")
+            i+=1
+            continue
+        if pair=="--":
+            line_comment=True
+            out.extend((" "," "))
+            i+=2
+            continue
+        if pair=="/-":
+            depth=1
+            out.extend((" "," "))
+            i+=2
+            continue
+        if c=='"':
+            in_string=True
+            out.append(" ")
+            i+=1
+            continue
+        out.append(c)
+        i+=1
+    return "".join(out)
+
 for f in sorted(ROOT.rglob("*.lean")):
     if any(x in {".lake", ".git", "build", ".elan", ".venv"} for x in f.parts):
         continue
     path = f.relative_to(ROOT).as_posix()
     text = f.read_text(encoding="utf-8")
-    rows = text.splitlines()
+    original_rows = text.splitlines()
+    rows = strip_lean_comments(text).splitlines()
     imports, decls = [], []
     for n,line in enumerate(rows,1):
         if mat := IMPORT.match(line):
@@ -45,13 +113,13 @@ for f in sorted(ROOT.rglob("*.lean")):
     DATA[path]={
        "lines":len(rows),"imports":imports,"declarations":decls,
        "marker_line_counts_unclassified":mark,
-       "headline":next((HEADING.match(line).group(1) for line in rows[:65]
+       "headline":next((HEADING.match(line).group(1) for line in original_rows[:65]
                         if HEADING.match(line)),""),
     }
 
 report={"root":"HC-PROOF","files_read":len(DATA),
         "declaration_counts":dict(AGG),
-        "marker_caution":"Markers include comments, do not assert proof dependency audit",
+        "marker_caution":"Markers exclude lexical comments and strings but are not proof-dependency audits",
         "modules":DATA}
 path=ROOT/"lean-declaration-catalogue.json"
 path.write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
