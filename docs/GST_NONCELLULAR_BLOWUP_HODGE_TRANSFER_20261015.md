@@ -440,3 +440,23 @@ within a specific genuine geometric construction. Extending such
 independent cycle sources to all arbitrary smooth projective \(X\)
 without assuming equivalent Hodge surjectivity remains the original
 open problem.
+
+
+## Independent positivity audit
+
+From the EXACT geometric intersection Gram, the polarized primitive
+cycle above has self-pairing
+\[
+\int_Y\operatorname{cl}(Z_{\rm prim})^2
+=\delta^2+2\delta m^3+n m^2.
+\]
+Wolfram verified this symbolic identity and its positivity whenever
+\(\delta>0\), \(m>0\), \(n>0\). For genus two, substitute
+\(n=5\delta+2\), yielding
+\[
+\delta^2+2\delta m^3+5\delta m^2+2m^2>0.
+\]
+This supplies a second, independent geometric nonvanishing detector
+in addition to \(\lambda_1(Z_{\rm prim})=-m\).
+The intersection-to-Betti comparison is a geometric hypothesis,
+not a consequence of the polynomial calculation.
