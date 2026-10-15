@@ -123,3 +123,22 @@ Existing GSTCommonClassPlane machinery proves an implication FROM such strict ca
 6. "GST excludes every canonical ghost for arbitrary X by explicit strict geometry" — NOT ESTABLISHED. This is the exact active mathematics target, not a proof-engineering error.
 
 The original conjecture will count as proved only after point (6) or another genuinely independent unconditional geometric argument yields point (4) for ALL smooth projective X,p and all rational Hodge alpha, with every Hodge source and scheme comparison verified. No partial theorem gets promoted to that status by compiling green.
+
+
+## Route D: use the previously solved GST K3 source to construct cycles ON a different X
+
+File GSTK3GeometricSourceToArbitraryX.lean directly composes:
+- the previously kernel-verified K3 diagonal/divisor middle-Hodge cycle construction under the scalar transcendental Hodge-End and Kunneth conditions; with
+- the genuine X-target Chow/Betti correspondence retraction of Route A.
+
+Conclusion: if a target X has an independently verified Hodge-preserving native Chow retract from such a K3-product source Y, then EVERY rational Hodge (p,p) target class on X has an ACTUAL codimension-p rational native algebraic cycle. No target algebraicity hypothesis or arbitrary Hodge-to-cycle selector is used. The geometric retract condition is restrictive and must be demonstrated before applying the theorem.
+
+**Independent rank barrier**: No single fixed K3-product source can be a rational-Hodge retract for every X and all degrees. For instance, the all-algebraic Hodge group H^{2p}((P^1)^n,Q) has dimension binomial(n,p), unbounded as n grows, whereas one fixed source H^4(Y,Q) has finite dimension. Thus GST's universal sources must grow with X or exploit additional genuinely new geometric correspondences; reusing a single fixed K3 constructor, regardless of operator complexity, cannot provide an arbitrary-X surjective Hodge map.
+
+The variable source Y=X×X automatically scales with X, but marked Hodge-section algebraicity for arbitrary X is exactly the original unsolved task, as shown in Route A.
+
+No formal or mathematical assertion has been made that all arbitrary X admit the required K3-source motive retract.
+
+## Scope caution — semantic Stage-2G model
+
+The repository's Stage-2G HodgeBigradedBettiData stores cycleClass as a field. GSTClassicalHodgeStage2GSemanticRigidity.lean constructs a zero-cycleClass countermodel on a nonzero rational Hodge fiber. Therefore universal representation CANNOT be obtained by merely proving a theorem for arbitrary Stage-2G data with no geometric cycle-class constraints. All positive conclusions here explicitly require genuine independently justified Chow/cycleClass, Gysin, Hodge-theory and intersection compatibility for the actual variety. Compiling an interface does not instantiate such geometry from scratch.
