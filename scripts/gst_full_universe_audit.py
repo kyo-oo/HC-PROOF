@@ -216,19 +216,27 @@ report = {
     "suspect_nonmathlib_external_imports": missing_nonmathlib,
     "most_imported_local_modules": heavy_roots,
     "executable_proof_marker_files": markers,
+    "executable_axiom_declarations": [
+        {"path": item["path"], "declarations": item["axiom_declarations"]}
+        for item in items if item.get("axiom_declarations")
+    ],
     "all_files": items,
 }
 (OUT / "census.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
 summary = [
     "# GST full repository source census",
     "",
-    f"Commit: \\x60{report['commit']}\\x60",
+    f"Commit: `{report['commit']}`",
     f"Tracked files read: **{len(paths)}**; total bytes: **{total_bytes}**.",
     f"Lean modules: **{len(local_nodes)}**; text files: **{report['text_files']}**.",
     f"Local Lean import edges: **{report['local_import_edges']}**.",
     f"Local import cycles: **{len(cycles)}**.",
     f"Files with executable 'sorry/admit/sorryAx/native_decide/unsafe' markers: **{len(markers)}**.",
     f"Read failures: **{len(errors)}**.",
+    "",
+    "## Executable axiom declarations",
+    *[f"- {entry['path']}: " + ', '.join(x['name'] for x in entry['declarations'])
+      for entry in report["executable_axiom_declarations"]],
     "",
     "## Important scope",
     "All tracked files are byte-read and all UTF-8 text files parsed for source-level metadata. "
@@ -238,9 +246,9 @@ summary = [
     "",
     "## Most imported local Lean modules",
 ]
-summary += [f"- \\x60{x['path']}\\x60: {x['imported_by']} dependents" for x in heavy_roots]
+summary += [f"- `{x['path']}`: {x['imported_by']} dependents" for x in heavy_roots]
 summary += ["", "## Executable proof markers (comments and strings masked)"]
-summary += [f"- \\x60{x['path']}\\x60: " +
+summary += [f"- `{x['path']}`: " +
             ", ".join(f"{z['token']}@{z['line']}" for z in x["occurrences"][:15])
             for x in markers[:90]]
 summary += ["", "## Non-Mathlib imports worth checking", ""]
@@ -251,5 +259,6 @@ print(json.dumps({k:report[k] for k in [
     "text_files", "binary_files", "declarations_by_kind", "local_import_edges",
     "import_cycles", "suspect_nonmathlib_external_imports",
 ]}, indent=2))
-print("Proof-escape lexical hit files:", len(markers))
+print("Executable proof-marker files:", len(markers))
+print("Executable axiom declarations:", json.dumps(report["executable_axiom_declarations"]))
 print("Wrote gst_universe_census/census.json and summary.md")
