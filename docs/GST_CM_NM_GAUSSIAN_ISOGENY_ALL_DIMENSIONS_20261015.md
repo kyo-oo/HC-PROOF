@@ -18,6 +18,22 @@ Since |(1+i)^n|=2^{n/2}>1=|i^{n+1}|, it is nonzero for EVERY n. Multiplication b
 [u_n]\circ[\bar u_n]=[N_n].
 \]
 
+**Stronger all-index nonreal-CM theorem:** the indexed multiplier has NONZERO IMAGINARY PART for every n>=1. Write n=4k+r with k>=0 and r in {1,2,3,4}. Since (1+i)^4=-4 and i^4=1, direct integer arithmetic gives
+
+\[
+\begin{array}{c|c}
+n&\operatorname{Im}u_n\\ \hline
+4k+1&(-4)^k\\
+4k+2&2(-4)^k+1\\
+4k+3&2(-4)^k\\
+4k+4&-1
+\end{array}
+\]
+
+Every entry is nonzero: a power of -4 is nonzero; the second is an ODD integer and cannot vanish. Hence **the complex CM geometry is transverse for EVERY index of this NM specialization**, not only n=1. Wolfram checked the four exact formulas for k=0,...,6 independently; the proof for all k is the displayed power-of-four identity, not those bounded tests.
+
+For every n, substitute a=Re(u_n) and b=Im(u_n) in the explicit graph intersection formula below: its determinant is -4*(Im u_n)^2, hence is a nonzero NEGATIVE integer for every n. Thus each indexed CM multiplier supplies four linearly independent *actual algebraic divisor classes* on E×E; no nonvanishing rank assumption was inserted.
+
 In particular n=1 gives u=2+i, N(u)=5, and u^{-1}=(2-i)/5. The rational CM trace is 4/5 and the imaginary channel is -2/5. For n=2, u_2=3i: its real CM trace is zero despite its isogeny being nonzero. This is why BOTH rational CM channels matter. The scalar was derived from the indexed denominator rather than tuned to a target Hodge vector.
 
 ## B. One actual CM abelian surface
