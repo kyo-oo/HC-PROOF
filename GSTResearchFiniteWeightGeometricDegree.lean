@@ -1,7 +1,7 @@
 import GSTClassicalHodgeLimitlessSpinePropagation
 
 /-!
-# Nidhish GST finite-weight geometric degree conservation law
+# GST finite-weight geometric degree conservation law
 
 This is a VALID replacement for an unlimited unweighted native-mass
 bridge. Actual smooth projective varieties have finite dimension.
@@ -43,7 +43,7 @@ open GSTClassicalHodgeCodimensionZeroFundamentalCycle
 open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
 
-namespace GSTNidhishFiniteWeightGeometricDegree
+namespace GSTResearchFiniteWeightGeometricDegree
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -129,4 +129,4 @@ end BoundedGeometricDegreeCharge
 #print axioms BoundedGeometricDegreeCharge.cohomological_spine_nonzero
 #print axioms BoundedGeometricDegreeCharge.hodge_spine_nonzero
 
-end GSTNidhishFiniteWeightGeometricDegree
+end GSTResearchFiniteWeightGeometricDegree

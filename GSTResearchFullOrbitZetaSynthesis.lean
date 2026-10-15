@@ -1,8 +1,8 @@
-import GSTNidhishGeometricOrbitSynthesis
+import GSTResearchGeometricOrbitSynthesis
 import GSTMathboxCorrectedZetaActualHodge
 
 /-!
-# Nidhish GST: corrected zeta-certified finite correspondence-orbit Hodge synthesis
+# Research GST: corrected zeta-certified finite correspondence-orbit Hodge synthesis
 
 The user's third original GST formula was corrected to use
 1/(x^n-y^(n+1)); the infinite sum is kernel-proved for x=y=2.
@@ -48,9 +48,9 @@ open GSTClassicalHodgeActualGeometricIrreducibility
 open GSTMathboxCorrectedZetaGeometry
 open GSTMathboxCorrectedZetaInfinite
 open GSTMathboxCorrectedZetaActualHodge
-open GSTNidhishGeometricOrbitSynthesis
+open GSTResearchGeometricOrbitSynthesis
 
-namespace GSTNidhishFullOrbitZetaSynthesis
+namespace GSTResearchFullOrbitZetaSynthesis
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -85,7 +85,7 @@ Nonzero Hodge fibers require a certified actual algebraic source
 measured by the corrected zeta series and actual correspondence
 irreducibility. Vacuous zero fibers need no source. No Hodge-basis
 cycle witnesses or full-rank determinant are assumed. -/
-theorem full_hodge_of_Nidhish_corrected_zeta_native_orbit
+theorem full_hodge_of_Research_corrected_zeta_native_orbit
     (G : GeometricCycleClassSpine V H)
     (hirred : ∀ q : Nat,
       ActualHodgeCorrespondenceIrreducible
@@ -115,9 +115,9 @@ theorem full_hodge_of_Nidhish_corrected_zeta_native_orbit
     exact ⟨0, by simp [ha0]⟩
 
 #check every_hodge_class_from_corrected_zeta_constructed_orbit
-#check full_hodge_of_Nidhish_corrected_zeta_native_orbit
+#check full_hodge_of_Research_corrected_zeta_native_orbit
 
 #print axioms every_hodge_class_from_corrected_zeta_constructed_orbit
-#print axioms full_hodge_of_Nidhish_corrected_zeta_native_orbit
+#print axioms full_hodge_of_Research_corrected_zeta_native_orbit
 
-end GSTNidhishFullOrbitZetaSynthesis
+end GSTResearchFullOrbitZetaSynthesis

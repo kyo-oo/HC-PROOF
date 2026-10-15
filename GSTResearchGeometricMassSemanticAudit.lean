@@ -45,7 +45,7 @@ open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeStage2GSemanticRigidity
 
-namespace GSTNidhishGeometricMassSemanticAudit
+namespace GSTResearchGeometricMassSemanticAudit
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -119,4 +119,4 @@ theorem homologicalDegree_vanishes_on_class_kernel
 #print axioms zero_class_semantics_refutes_mass_bridge
 #print axioms homologicalDegree_respects_cycleClass
 
-end GSTNidhishGeometricMassSemanticAudit
+end GSTResearchGeometricMassSemanticAudit

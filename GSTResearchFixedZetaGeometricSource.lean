@@ -3,7 +3,7 @@ import GSTClassicalHodgeGeometricMatrixRankLanding
 import GSTClassicalHodgeCodimensionZeroFundamentalCycle
 
 /-!
-# Nidhish GST: fixed non-free zeta measurement from actual degree-zero geometry
+# Research GST: fixed non-free zeta measurement from actual degree-zero geometry
 
 The author's corrected indexed zeta equation has exact sum -1 at
 x=y=2 (proved, not assumed). A previous audit proved that an ARBITRARY
@@ -44,7 +44,7 @@ open GSTClassicalHodgeCodimensionZeroFundamentalCycle
 open GSTMathboxCorrectedZetaGeometry
 open GSTMathboxCorrectedZetaInfinite
 
-namespace GSTNidhishFixedZetaGeometricSource
+namespace GSTResearchFixedZetaGeometricSource
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -105,4 +105,4 @@ theorem actual_codimension_zero_source_of_degree_normalization
 #print axioms fixed_zetazero_corrected_scalar
 #print axioms actual_codimension_zero_source_of_degree_normalization
 
-end GSTNidhishFixedZetaGeometricSource
+end GSTResearchFixedZetaGeometricSource

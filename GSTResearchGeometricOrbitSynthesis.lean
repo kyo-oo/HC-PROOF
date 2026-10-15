@@ -2,7 +2,7 @@ import GSTClassicalHodgeActualGeometricIrreducibility
 import GSTClassicalHodgeGeometricMatrixRankLanding
 
 /-!
-# Nidhish GST Geometric Orbit Synthesis
+# GST Geometric Orbit Synthesis
 
 Authorship: geometric synthesis scheme motivated by the user's own
 GST coordinate-conversion, operator-separation and zeta–Hodge equations.
@@ -46,7 +46,7 @@ open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeActualGeometricIrreducibility
 open GSTClassicalHodgeAtomicSpan
 
-namespace GSTNidhishGeometricOrbitSynthesis
+namespace GSTResearchGeometricOrbitSynthesis
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -218,4 +218,4 @@ theorem every_hodge_class_of_constructed_actual_orbit
 #print axioms actual_irreducibility_forces_native_orbit_total
 #print axioms every_hodge_class_of_constructed_actual_orbit
 
-end GSTNidhishGeometricOrbitSynthesis
+end GSTResearchGeometricOrbitSynthesis

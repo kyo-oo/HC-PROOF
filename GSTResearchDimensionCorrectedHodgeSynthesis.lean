@@ -1,8 +1,8 @@
-import GSTNidhishFiniteWeightGeometricDegree
-import GSTNidhishUniversalOrbitClosureLaw
+import GSTResearchFiniteWeightGeometricDegree
+import GSTResearchUniversalOrbitClosureLaw
 
 /-!
-# Nidhish GST dimension-corrected geometric Hodge synthesis
+# GST dimension-corrected geometric Hodge synthesis
 
 Final combination of two genuinely geometric laws in the right domain:
 
@@ -40,10 +40,10 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
 open GSTClassicalHodgeGeometricMatrixRankLanding
 open GSTClassicalHodgeLimitlessSpinePropagation
-open GSTNidhishFiniteWeightGeometricDegree
-open GSTNidhishUniversalOrbitClosureLaw
+open GSTResearchFiniteWeightGeometricDegree
+open GSTResearchUniversalOrbitClosureLaw
 
-namespace GSTNidhishDimensionCorrectedHodgeSynthesis
+namespace GSTResearchDimensionCorrectedHodgeSynthesis
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -101,4 +101,4 @@ theorem hodge_of_bounded_degree_and_native_geometric_cyclicity
 
 #print axioms hodge_of_bounded_degree_and_native_geometric_cyclicity
 
-end GSTNidhishDimensionCorrectedHodgeSynthesis
+end GSTResearchDimensionCorrectedHodgeSynthesis
