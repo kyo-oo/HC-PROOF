@@ -43,6 +43,7 @@ theorem cmNormSq_pow (z : CMQ) (n : ℕ) :
       norm_num [cmPow,cmNormSq]
   | succ n ih =>
       rw [cmPow,cmNormSq_mul, ih,pow_succ]
+    ring
 
 theorem cmIndexedDenominator_nonzero_every_index (m : ℕ) :
     cmIndexedDenominator ((1,1):CMQ) ((0,1):CMQ) m ≠ 0 := by
@@ -59,7 +60,8 @@ theorem cmIndexedDenominator_nonzero_every_index (m : ℕ) :
   have hnorm := congrArg cmNormSq heq
   rw [cmNormSq_pow,cmNormSq_pow] at hnorm
   have hpow : (2:ℚ)^(m+1)=1 := by
-    simpa [cmNormSq] using hnorm
+    norm_num [cmNormSq] at hnorm
+    exact hnorm
   have hbase : ∀ n:ℕ, (1:ℚ) ≤ 2^n := by
     intro n
     induction n with
