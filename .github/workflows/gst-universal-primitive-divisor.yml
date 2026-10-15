@@ -48,7 +48,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTUniversalPrimitiveDivisors"
-          roots = ["GSTUniversalPrimitiveDivisorConstruction"]
+          roots = ["GSTUniversalLefschetzCurveCycles","GSTClassicalHodgeGeometricMatrixRankLanding","GSTUniversalPrimitiveDivisorConstruction"]
           EOF
           if lake build GSTUniversalPrimitiveDivisors > primitive-divisor-lean.log 2>&1; then
             echo "LEAN PASSED: exact native primitive divisor cycle from rational Hodge(1,1) and true degree"
