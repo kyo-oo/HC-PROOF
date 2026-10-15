@@ -89,8 +89,7 @@ theorem diagonalPrimitiveCycle_is_primitive
     smul_smul]
   rw [inv_mul_cancel₀ hdegree, one_smul]
   rw [show (2 : ℚ) • (a + t) = (a + t) + (a + t) by
-    simp only [two_smul]
-    abel]
+    simp only [two_smul] <;> abel]
   abel
 
 /-- Intersection readout of the primitive diagonal against an
