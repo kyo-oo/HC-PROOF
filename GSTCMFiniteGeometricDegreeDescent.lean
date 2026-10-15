@@ -66,7 +66,7 @@ theorem hodge_at_weight_of_geometric_degree_split
     (alpha : RationalSingularCohomology HX.analytification (2*p))
     (ha : alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading p)) :
     ∃ C : codimensionCycles X.X p, HX.cycleClass p C = alpha := by
-  obtain ⟨C,hC⟩ := hSource p (pull alpha) (hPull alpha ha)
+  obtain ⟨C,hC⟩ := hSource p (hPull alpha ha)
   refine ⟨d⁻¹ • R.native C, ?_⟩
   calc
     HX.cycleClass p (d⁻¹ • R.native C) =
