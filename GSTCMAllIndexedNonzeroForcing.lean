@@ -43,7 +43,7 @@ theorem cmNormSq_pow (z : CMQ) (n : ℕ) :
       norm_num [cmPow,cmNormSq]
   | succ n ih =>
       rw [cmPow,cmNormSq_mul, ih,pow_succ]
-    ring
+      ring
 
 theorem cmIndexedDenominator_nonzero_every_index (m : ℕ) :
     cmIndexedDenominator ((1,1):CMQ) ((0,1):CMQ) m ≠ 0 := by
