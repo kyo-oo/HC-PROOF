@@ -87,7 +87,7 @@ Its self-pairing is
 
 Thus **every \(m\ge1\) and \(d\ge2\) admits an explicit nonzero rational middle-primitive algebraic class** on each smooth degree-\(d\) hypersurface containing a maximal linear plane.
 
-**LEAN:** \`GSTMaximalLinearHypersurfacePrimitive.lean\` proves the Chern-coefficient recurrence, closed-form discriminant and nonzero primitive norm as exact all-\(m\), all-\(d\ge2\) integer statements. Verify final GitHub CI conclusion before labeling that focused kernel green. This file does not yet formalize scheme-theoretic normal bundles, weak Lefschetz, or Betti cup/Gysin. Wolfram verified the general symbolic identity and cases \(m=1,\ldots,5\), \(d=2,3,4\) in exact arithmetic.
+**LEAN:** \`GSTMaximalLinearHypersurfacePrimitive.lean\` proves the Chern-coefficient recurrence, closed-form discriminant and nonzero primitive norm as exact all-\(m\), all-\(d\ge2\) integer statements. GitHub CI **38695158747: SUCCESS**. The focused kernel proof is green. This file does not yet formalize scheme-theoretic normal bundles, weak Lefschetz, or Betti cup/Gysin. Wolfram verified the general symbolic identity and cases \(m=1,\ldots,5\), \(d=2,3,4\) in exact arithmetic.
 
 ## IV. Why this is *not yet* the user's original universal Hodge theorem
 
@@ -101,4 +101,4 @@ GST's internal matrix-unit and CM/NM coefficient theorems cannot by themselves t
 
 - Projective-product module: \`GSTAllDimensionProjectivePrimitiveCycles.lean\`, **CI 38694208197 PASS**.
 - Cubic fourfold module: \`GSTCubicFourfoldPlanePrimitive.lean\`, **CI 38694969552 PASS**.
-- General hypersurface module: \`GSTMaximalLinearHypersurfacePrimitive.lean\`, **CI 38695158747 verify when complete**.
+- General hypersurface module: \`GSTMaximalLinearHypersurfacePrimitive.lean\`, **CI 38695158747 PASS**.
