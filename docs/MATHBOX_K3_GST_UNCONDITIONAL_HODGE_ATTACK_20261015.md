@@ -142,3 +142,84 @@ GSTClassicalHodgeStage2GSemanticRigidity supplies a zero-cycleClass
 countermodel to claims formulated over its arbitrary cycleClass field.
 
 No original target was weakened or claimed solved.
+
+
+## Second execution — full rank-two primitive K3 intersection form
+
+For **every** projective K3 surface and **every** ample h of degree
+d = h² > 0, define a SECOND genuine codimension-two algebraic primitive:
+
+    Q_h = B - d(U+V), where B=h×h, U=[pt]×S, V=S×[pt].
+
+The ample cup operator L_H satisfies L_H Q_h =
+d(A+T)-d(A+T)=0, so both P_h and Q_h are primitive.
+
+Their intersection identities can be computed from the ACTUAL
+geometric K3 intersection table (basis Δ,U,V,B):
+
+    Gram =
+      [ 24   1   1    d ]
+      [  1   0   1    0 ]
+      [  1   1   0    0 ]
+      [  d   0   0  d²  ].
+
+The diagonal self-intersection 24 is
+integral_S c₂(T_S) = χ_top(S) = 24.
+The remaining entries follow from diagonal restriction, dimension
+and divisor intersection on the two factors.
+
+EXACT Wolfram symbolic evaluation gives:
+
+    P_h² = 21,
+    Q_h² = 3 d²,
+    P_h Q_h = 0,
+    det(Gram restricted to span(P_h,Q_h)) = 63 d² > 0.
+
+Thus these two genuine algebraic primitive classes are linearly independent
+IN TRUE Betti cohomology, on EVERY K3 self-product, without scalar
+Hodge-endomorphism assumptions and without preselecting a missing
+primitive rational Hodge class. The previously used transcendental
+pair detector is now optional for proving P_h nonzero.
+
+New Lean file GSTK3PrimitiveGram.lean checks the exact numerical
+Gram polynomials. Geometric K3 intersection-to-Betti comparison must
+still be formally instantiated; this source itself is rational algebra.
+
+## Third execution — whole middle Hodge on scalar-endomorphism K3 products
+
+New Lean file GSTK3TranscendentalHodgeCompleteness.lean uses
+actual Mathlib native rational codimension-two cycles and the true
+Stage-2G Hodge fiber, rather than an unrelated symbolic coordinate space.
+
+Let R be a Hodge-theoretic readout of middle Hodge classes into
+End_HS(T(S)) (the true transcendental Hodge endomorphism sector).
+The TWO independent geometric statements to establish are:
+
+1. Ker(R) is contained in the span of ACTUAL algebraic divisor
+   product classes. This follows from the classical Künneth
+   decomposition plus the Lefschetz (1,1) theorem on the K3 surface.
+2. End_HS(T(S)) consists only of rational scalar multiples of
+   the identity Hodge endomorphism. This is a Hodge-structure
+   property associated with the very general K3 locus, not the
+   rational Hodge conjecture.
+
+Then the actual diagonal has R(Δ)=id, so any rational middle Hodge
+class alpha has R(alpha)=c R(Δ) for a rational scalar c. Consequently
+
+    alpha - c cl(Δ) ∈ Ker(R) ⊆ divisor-word algebraic span.
+
+Both terms are algebraic by independently constructed native cycles.
+Therefore alpha itself is algebraic.
+
+This is a mathematically meaningful complete-middle-family
+criterion: it directly proves the entire middle rational Hodge
+algebraicity once the *independent K3 Hodge structure* inputs
+have been supplied. It does not assume a target cycle representative,
+invent a surjectivity field, or solve arbitrary-variety Hodge.
+
+Dedicated CI gates:
+- gst-mathbox-k3-hodge-completeness.yml
+- gst-mathbox-k3-rank-two-gram.yml
+
+Do NOT describe either as verified until its exact GitHub Action
+success is observed.
