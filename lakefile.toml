@@ -439,6 +439,8 @@ roots = [
   "GSTClassicalHodgeOmniversalClosure",
   "GSTClassicalHodgeOmniversalConstructorGraph",
   "GSTGraphV2ArithmeticOmniversalRealization",
+  "GSTGraphV2CMNMPrimitiveUpgrade",
+  "GSTGraphV2CMNMCoupledUniverse",
   "GSTGraphV2SelfExpandingCosmology",
   "GSTGraphV2RecursiveStateCausality",
   "GSTGraphV2UnboundedHigherCausality",
