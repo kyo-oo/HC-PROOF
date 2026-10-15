@@ -1,11 +1,11 @@
-name: GST CM All Indexed Nonreal Forcing
+name: GST CM All Indexed Nonzero Isogenies
 on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
     paths:
-      - 'GSTCMAllIndexedNonrealForcing.lean'
-      - '.github/workflows/gst-cm-all-indexed-nonreal.yml'
+      - 'GSTCMAllIndexedNonzeroForcing.lean'
+      - '.github/workflows/gst-cm-all-indexed-nonzero.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -40,7 +40,7 @@ jobs:
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-cm-all-indexed
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-
-      - name: Verify all-index Gaussian CM NM nonreal theorem
+      - name: Verify all-index Gaussian CM NM nonzero theorem
         shell: bash
         run: |
           set -euo pipefail
@@ -48,7 +48,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTCMAllIndexed"
-          roots = ["GSTCMAllIndexedNonrealForcing"]
+          roots = ["GSTCMAllIndexedNonzeroForcing"]
           EOF
           if lake build GSTCMAllIndexed > cm-all-indexed-lean.log 2>&1; then
             echo "LEAN PASSED: Gaussian CM imaginary part nonzero for every corrected NM index"
