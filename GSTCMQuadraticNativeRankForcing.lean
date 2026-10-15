@@ -1,6 +1,7 @@
 import GSTMathboxCMGeometricComplexStructure
 import GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
 import GSTCMNumberManipulationTrace
+import GSTCMNumberManipulationDualDetector
 
 /-!
 # GST CM quadratic minimal polynomial forces actual native Hodge geometry
@@ -233,6 +234,88 @@ theorem CM_NM_period_graph_rank_two_hodge
       G x y m hreal read hPeriod
   exact CM_graph_endomorphism_rank_two_hodge
     G hnz f hR a b hb hMin hrank alpha halpha
+
+/-! ## Complete dual-channel CM number forcing of the geometric seed
+
+A complex CM reciprocal can have vanishing rational REAL trace
+even though it is nonzero. The prior real-only CM period detector
+therefore cannot be a universal CM detector. The independently
+verified dual-NM theorem proves that TWO rational channels capture
+every nonzero Gaussian-rational period.
+
+Assuming TWO genuinely geometric comparison laws for the
+preconstructed native algebraic spine, their arithmetic
+nonvanishing DISJUNCTION derives a nonzero native source without
+a separate nonzero-readout or real-part assumption. -/
+
+/-- Dual CM number theory forces nonvanishing of the native
+algebraic geometric spine, with NO assumption that the real CM
+trace by itself is nonzero. Neither readout may be selected
+after inspecting the target Hodge class: both fixed comparison
+equations must come from genuine period geometry. -/
+theorem CM_NM_dual_period_forces_nonzero_native_source
+    (G : GeometricCycleClassSpine V H)
+    (x y : CMQ) (m : ℕ)
+    (hlegal : cmIndexedDenominator x y m ≠ 0)
+    (realRead imagRead : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ)
+    (hReal : realRead (spineHodgeSeed G p) =
+      cmIndexedNMTrace x y m)
+    (hImag : imagRead (spineHodgeSeed G p) =
+      cmImagTrace (cmInv (cmIndexedDenominator x y m))) :
+    spineHodgeSeed G p ≠ 0 := by
+  intro hz
+  have hrealZero : realRead (spineHodgeSeed G p) = 0 := by
+    rw [hz]
+    exact map_zero realRead
+  have himagZero : imagRead (spineHodgeSeed G p) = 0 := by
+    rw [hz]
+    exact map_zero imagRead
+  rcases cmIndexedNM_dual_detector x y m hlegal with hr | hi
+  · exact hr (hReal.symm.trans hrealZero)
+  · exact hi (hImag.symm.trans himagZero)
+
+/-- Complete rank-two GST landing from the TWO CM-NM arithmetic
+channels and one actually CONSTRUCTED projective CM endomorphism
+graph. No independent nonzero native cycle, arbitrary real zeta
+scalar, assumed transverse operator or abstract matrix unit.
+
+The remaining substantive inputs are ACTUAL geometric comparisons
+of both periods and the CM minimal polynomial on the real Hodge
+action induced by the scheme endomorphism f. -/
+theorem CM_NM_dual_period_graph_rank_two_hodge
+    (G : GeometricCycleClassSpine V H)
+    (x y : CMQ) (m : ℕ)
+    (hlegal : cmIndexedDenominator x y m ≠ 0)
+    (realRead imagRead : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ)
+    (hReal : realRead (spineHodgeSeed G p) =
+      cmIndexedNMTrace x y m)
+    (hImag : imagRead (spineHodgeSeed G p) =
+      cmImagTrace (cmInv (cmIndexedDenominator x y m)))
+    (f : GSTClassicalHodgeAnalytificationFunctoriality.ComplexSchemeEndomorphism V)
+    (hR : (actualCMGraphOfEndomorphism (p := p) G f).HodgeCompatible)
+    (a b : ℚ) (hb : b ≠ 0)
+    (hMin : ∀ z : ClassicalHodgeFiber V H p,
+      (actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR
+        ((actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR z) -
+      (2*a) •
+        (actualCMGraphOfEndomorphism (p := p) G f).hodgeOperator hR z +
+      (a^2+b^2) • z = 0)
+    [FiniteDimensional ℚ (ClassicalHodgeFiber V H p)]
+    (hrank : Module.finrank ℚ (ClassicalHodgeFiber V H p) = 2)
+    (alpha : RationalSingularCohomology H.analytification (2*p))
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles V.X p, H.cycleClass p Z = alpha := by
+  have hnz : spineHodgeSeed G p ≠ 0 :=
+    CM_NM_dual_period_forces_nonzero_native_source
+      G x y m hlegal realRead imagRead hReal hImag
+  exact CM_graph_endomorphism_rank_two_hodge
+    G hnz f hR a b hb hMin hrank alpha halpha
+
+#check CM_NM_dual_period_forces_nonzero_native_source
+#check CM_NM_dual_period_graph_rank_two_hodge
+
+#print axioms CM_NM_dual_period_forces_nonzero_native_source
+#print axioms CM_NM_dual_period_graph_rank_two_hodge
 
 #check actualCMGraphOfEndomorphism
 #check CM_graph_endomorphism_rank_two_hodge
