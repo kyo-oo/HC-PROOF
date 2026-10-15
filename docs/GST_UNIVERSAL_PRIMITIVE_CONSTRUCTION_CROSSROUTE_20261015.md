@@ -11,7 +11,7 @@ A successful Lean proof must establish the geometry behind the cycle-class map a
 ## Route 1: explicit all-variety primitive divisor constructor
 
 File: \`GSTUniversalPrimitiveDivisorConstruction.lean\`.
-CI: \`gst-universal-primitive-divisor.yml\`, initial 38697994233 failed because \`GSTUniversalLefschetzCurveCycles\` was not registered as a Lake root, not because its mathematics was refuted. Updated run **38698441049** must be inspected for final status.
+CI: \`gst-universal-primitive-divisor.yml\`, initial 38697994233 failed because \`GSTUniversalLefschetzCurveCycles\` was not registered as a Lake root, not because its mathematics was refuted. Final corrected run **38698778620 — SUCCESS**. Earlier 38697994233 failed from a missing Lake root; the next attempt exposed and repaired one rational division-equality orientation.
 
 For X smooth projective of dimension d, fix ample h, and define the actual rational top-intersection functional on H¹(X,Q) (i.e. the Hodge (1,1) part of degree-two Betti cohomology):
 
@@ -31,7 +31,7 @@ The Lean input \`DivisorsRepresentHodge11\` denotes the independently establishe
 ## Route 2: algebraic fourfold Lefschetz correction and primitive native-cycle extraction
 
 File: \`GSTUniversalFourfoldPrimitiveExtraction.lean\`.
-CI: \`gst-universal-fourfold-primitive-extraction.yml\`, updated run **38698446453** must be checked.
+CI: \`gst-universal-fourfold-primitive-extraction.yml\`, final corrected run **38698778667 — SUCCESS**. Its full dependency closure and explicit cycle construction compiled under GitHub Lean.
 
 For X any smooth projective complex fourfold, let L denote cup with the ample h. Hard Lefschetz gives L²:H²(X,Q)→H⁶(X,Q) an isomorphism of rational Hodge structures. Given *any* rational (2,2) class α, define
 \[
