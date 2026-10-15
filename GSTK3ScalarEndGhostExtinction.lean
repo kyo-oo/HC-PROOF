@@ -82,10 +82,11 @@ theorem all_hodge_of_scalar_K3_geometry
   intro p alpha halpha
   by_cases hp : p = 2
   · subst p
-    simpa only [Nat.reduceMul] using
-      (all_middle_hodge_classes_from_scalar_K3_geometry
+    obtain ⟨Z, hZ⟩ :=
+      all_middle_hodge_classes_from_scalar_K3_geometry
         G divisorWords transcendentalReadout
-        hKunnethKernel hScalarEndomorphisms alpha halpha)
+        hKunnethKernel hScalarEndomorphisms alpha halpha
+    exact ⟨Z, hZ⟩
   · exact hOuter p hp alpha halpha
 
 /-- ABSOLUTE GST GHOST-EXTINCTION FOR THE COVERED K3 GEOMETRY.
