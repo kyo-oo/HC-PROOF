@@ -58,3 +58,8 @@ path.write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
 print(f"CATALOGUE: {len(DATA)} Lean files, {sum(AGG.values())} declarations")
 print("DECLARATION_COUNTS",json.dumps(dict(AGG),sort_keys=True))
 print("CM_NM_FILE_COUNT",sum("CM" in p or "NumberManipulation" in p for p in DATA))
+for path, info in DATA.items():
+    for d in info["declarations"]:
+        if d["kind"]=="axiom":
+            print("AXIOM_DECLARATION",path,d["line"],d["name"])
+
