@@ -127,7 +127,7 @@ for path in paths:
                       "sha256": hashlib.sha256(raw).hexdigest()})
         continue
     code = strip_lean_comments_and_strings(source) if path.endswith(".lean") else source
-    decs = [{"kind": m.group(1), "name": m.group(2)} for m in decl_pat.finditer(code)]
+    decs = [{"kind": m.group(1), "name": m.group(2)} for m in decl_pat.finditer(code)] if path.endswith(".lean") else []
     imp = []
     if path.endswith(".lean"):
         imp = [token for m in imp_pat.finditer(code) for token in m.group(1).split()]
