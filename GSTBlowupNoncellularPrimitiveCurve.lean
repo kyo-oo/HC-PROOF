@@ -64,7 +64,6 @@ theorem actualPrimitiveCycle_lefschetz_zero
   · simp [actualPrimitiveCycle, map_add, map_smul, h0, h1, h2]
     ring
   · simp [actualPrimitiveCycle, map_add, map_smul, h0, h1, h2]
-    ring
 
 /-- The exceptional point-intersection detector evaluates the
 primitive class to minus the ample parameter, independent of degree,
