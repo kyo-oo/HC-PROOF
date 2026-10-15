@@ -7,6 +7,7 @@ on:
       - 'GSTGraphV2CMNMPrimitiveUpgrade.lean'
       - 'GSTGraphV2CMNMCoupledUniverse.lean'
       - 'GSTGraphV2CMNMPrimitiveLefschetzBridge.lean'
+      - 'lakefile.toml'
       - '.github/workflows/gst-graph-v2-cmnm-primitive-lefschetz.yml'
   workflow_dispatch:
 permissions:
@@ -53,6 +54,7 @@ jobs:
           roots = [
             "GSTGraphV2CMNMPrimitiveUpgrade",
             "GSTGraphV2CMNMCoupledUniverse",
+            "GSTUniversalProjectiveProductPrimitive",
             "GSTGraphV2CMNMPrimitiveLefschetzBridge"
           ]
           EOF
