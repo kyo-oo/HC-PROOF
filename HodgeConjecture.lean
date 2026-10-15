@@ -35,6 +35,7 @@ import GSTCMNumberManipulationDualDetector
 import GSTCMQuadraticNativeRankForcing
 import GSTGraphV2CMNMPrimitiveUpgrade
 import GSTGraphV2CMNMCoupledUniverse
+import GSTGraphV2CMNMPrimitiveLefschetzBridge
 import GSTMathboxCorrectedZetaGeometry
 import GSTMathboxCorrectedZetaInfinite
 import GSTMathboxCorrectedZetaSafeDomain
