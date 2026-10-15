@@ -59,7 +59,6 @@ theorem normal_discriminant_closed (d : ℤ) (m : ℕ) :
   induction m with
   | zero =>
       simp [NormalTopCoeff]
-      ring
   | succ m ih =>
       change d*((1-d)*NormalTopCoeff d m+1)-1 =
         -((1-d)^(m+1+1))
@@ -109,7 +108,9 @@ theorem primitive_norm_nonzero (d : ℤ) (m : ℕ)
   rw [primitive_norm_exact]
   have hd0 : d ≠ 0 := by omega
   have h1 : (1:ℤ)-d ≠ 0 := by omega
-  exact neg_ne_zero.mpr (mul_ne_zero hd0 (pow_ne_zero _ h1))
+  have hprod : -(d * ((1-d)^(m+1))) ≠ 0 :=
+    neg_ne_zero.mpr (mul_ne_zero hd0 (pow_ne_zero _ h1))
+  simpa only [neg_mul] using hprod
 
 /-- No primitive class degeneracy in the two-plane intersection
 lattice: the determinant is a nonzero integral power. -/
