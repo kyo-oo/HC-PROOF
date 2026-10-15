@@ -138,10 +138,7 @@ for path in paths:
              for m in escape_pat.finditer(code)] if path.endswith(".lean") else []
     if found:
         markers.append({"path": path, "occurrences": found})
-    axioms = [{"line": source.count("\n", 0, m.start()) + 1,
-               "kind": m.group(1), "name": m.group(2)}
-              for m in axiom_pat.finditer(code)] if path.endswith(".lean") else []
-    items.append({
+    axioms = [{"line": code.count("\\n", 0, m.start()) + 1,\n               "kind": m.group(1), "name": m.group(2)}\n              for m in decl_pat.finditer(code)\n              if path.endswith(".lean") and m.group(1) in ("axiom", "constant")]\n    items.append({
         "path": path, "bytes": len(raw), "binary": False,
         "sha256": hashlib.sha256(raw).hexdigest(),
         "lines": source.count("\n") + 1,
