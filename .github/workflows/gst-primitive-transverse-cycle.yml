@@ -48,7 +48,13 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTPrimitiveTransverseCycle"
-          roots = ["GSTPrimitiveTransverseCycleExtraction"]
+          roots = [
+            "GSTUniversalLefschetzCurveCycles",
+            "GSTClassicalHodgeGeometricMatrixRankLanding",
+            "GSTUniversalPrimitiveDivisorConstruction",
+            "GSTUniversalCodimensionTwoPrimitiveExtraction",
+            "GSTPrimitiveTransverseCycleExtraction"
+          ]
           EOF
           if lake build GSTPrimitiveTransverseCycle > primitive-transverse-cycle.log 2>&1; then
             echo "LEAN PASSED: actual transverse native cycle produces nonzero primitive algebraic cycle"
