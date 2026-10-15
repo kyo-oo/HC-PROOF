@@ -48,8 +48,11 @@ all terms are positive. A new dedicated Lean 4 file,
 `GSTNumberManipulationExactKernel.lean`, formalizes this
 identity for all indices and exact finite partial sums, with
 `#print axioms` trust auditing. Its GitHub Actions gate is
-`gst-number-manipulation-exact-kernel.yml`. **The gate status
-must be checked before declaring these theorems kernel-verified.**
+`gst-number-manipulation-exact-kernel.yml`, and the exact-kernel
+proof **PASSED** Lean (GitHub run 38675768877, source commit
+`3a0fdd79ab2ba8fde0c12c8c175a901f8ae73312`). The separately
+described infinite dual-index resummation remains a mathematical
+derivation not yet machine-formalized.
 
 Wolfram Language exact symbolic algebra evaluated the difference
 between both sides of (NM-2) to zero.
