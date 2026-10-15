@@ -109,9 +109,7 @@ theorem integral_primitive_is_multiple_of_plane_cycle
     simpa [Intersection,hyperplaneSquared] using h
   apply Prod.ext
   · simp [primitivePlaneCycle]
-    ring
   · simp [primitivePlaneCycle]
-    dsimp
     omega
 
 #check primitive_plane_hyperplane_orthogonal
