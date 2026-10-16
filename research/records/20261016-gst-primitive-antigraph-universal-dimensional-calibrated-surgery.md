@@ -167,3 +167,40 @@ The all-n antigraph theorem IS a genuine infinite-family
 mathematical and geometric result and an executable model for
 what the universal operation would have to do, not a false
 assertion that the rational Hodge conjecture is solved.
+
+
+## Attempted all-X extension through the complex-conjugate variety
+
+For EVERY smooth projective complex X, the conjugate projective
+variety Xbar exists. The identity on the underlying real smooth
+manifold defines an ANTIHOLOMORPHIC map c:X→Xbar.
+Equip X and Xbar with paired Kähler forms omega and omegaBar
+so c*omegaBar=-omega. Then the real oriented graph
+   Gamma_c ⊂ X x Xbar
+is a genuine LAGRANGIAN MIDDLE-DIMENSIONAL integral cycle,
+since (omega+omegaBar)|Gamma_c=0.
+
+This supplies a universal primitive-geometry *input* on
+X x Xbar, even when X has no real structure. It is a real
+geometric construction, not a GST invented morphism.
+
+The crucial P^n×P^n surgery also needed a HOLomorphic diagonal
+   Delta ⊂ X×X
+and a positive algebraic basis of the middle Künneth class.
+On X×Xbar there is in general NO natural holomorphic
+diagonal: the identity X→Xbar is antiholomorphic, not
+holomorphic. An arbitrary X need not be holomorphically
+isomorphic to its complex conjugate Xbar.
+
+Consequently the graph construction on X×Xbar does NOT
+automatically produce the needed compensating holomorphic
+middle correspondence, nor a decomposition into effective
+cycles. The P^n construction relied on a special
+antiholomorphic SELF-isometry and a fully algebraic
+product-Künneth basis.
+
+This tests the first genuinely all-variety extension of
+the GST antigraph surgery. The primitive real input is
+available on every X×Xbar; the essential algebraic
+compensator/replacement is NOT universally constructed.
+No assertion about primitive Hodge completeness follows.
