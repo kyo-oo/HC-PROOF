@@ -1,5 +1,5 @@
 import waves.GSTNCohomologyV3
-import GSTClassicalHodgeKernelMassCalibration
+import GSTClassicalHodgeNativeCycleCosmicShadow
 
 /-!
 # N-cohomology V3 combined with actual GST Hodge native mass
