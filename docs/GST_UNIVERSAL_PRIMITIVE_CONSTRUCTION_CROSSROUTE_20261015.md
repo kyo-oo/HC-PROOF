@@ -612,3 +612,45 @@ constructed source cycle, as encoded in the new GST geometry law.
 This broad family is a mathematical corollary of established
 projective bundle and Chow formulas. It does NOT settle arbitrary
 nonunirational primitive Hodge geometry.
+
+### Further GST construction: unlimited noncellular blowup births from low-dimensional centers
+
+Build a base Y0 by ANY finite projective-bundle tower above ANY smooth
+projective B of complex dimension at most 3. It may have arbitrarily
+high dimension and nontrivial holomorphic forms. Repeatedly choose
+ANY smooth closed center Zi inside Yi, of ANY codimension, but with
+dim_C(Zi)<=3, and let Yi+1=Bl_Zi Yi. No common cellular structure
+or uniform global dimension bound is required.
+
+The genuine Chow and rational Hodge blowup decompositions are
+compatible term by term with algebraic exceptional Gysin maps:
+  cl(Z_new) = pullback cl(Z_old)
+    + SUM_{j=1}^{c-1} j_* (xi^(j-1)*p^* cl(Z_center,j)).
+Here c is center codimension, E=P(N_Z/Y), j:E->Bl_ZY,
+p:E->Z, and xi=c1(O_E(1)). The center Hodge classes are
+all algebraic because dim Zi<=3; the base is algebraic by
+projective-bundle decomposition and the same low-dimensional
+Hodge theorem. Thus induction through EVERY such birth
+CONSTRUCTS an actual rational Chow representative for EVERY
+rational Hodge class on Yi. Rank, number of blowups and
+dimension of total spaces are unrestricted.
+
+Then for ANY dominant generically finite morphism f:Yr->X
+to a smooth projective X, the explicit actual source cycle Zr
+representing f^*alpha descends to (deg f)^(-1)f_*Zr, whose
+cycle class is alpha. This combines the GST unbounded world-birth
+constructor and native degree-descent constructor in one
+cross-world construction chain. The family strictly includes
+projective-bundle towers and earlier pure unirational examples.
+
+This establishes full rational Hodge algebraicity in all
+codimensions for this nonunirational all-dimensional geometric
+family. It is an unconditional consequence of known genuine
+blowup/projective-bundle/pushforward formulas; this geometric
+instantiation is recorded mathematically, while the current Lean
+work verifies the GST abstract assembly and descent compatibility
+rather than full Mathlib Chow-blowup realization.
+
+The target of EVERY arbitrary smooth projective X is not covered:
+the existence of a dominating source assembled from these
+low-dimensional-center births is not established for general X.
