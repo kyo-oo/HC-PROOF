@@ -85,6 +85,7 @@ theorem corrected_boundary_necessarily_nonzero
       boundaryAmplitude (complexTypeProjection originalClosedForm) +
       boundaryAmplitude g := by
     simp [boundaryAmplitude, Prod.snd_add]
+    ring
   rw [h1, type_projector_breaks_closedness] at hclose
   linarith
 
