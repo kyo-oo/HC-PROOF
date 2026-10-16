@@ -316,6 +316,99 @@ theorem newborn_geometric_completeness
   intro alpha
   exact every_newborn_hodge_class_has_native_cycle P hA hB alpha
 
+
+/-! ## Reverse-source reconstruction: exact GST world-defect transport
+
+The first law establishes that TWO cycle-complete source worlds
+construct the new Hodge geometry. A geometric BIRTH with ACTUAL
+native and Hodge retractions also admits the reverse implication:
+if the born world's cycle-class map is surjective, both old
+sources have surjective cycle-class maps. This is a new
+SPLIT-EXACT world-birth law, not a target-cycle preimage
+assumption and not a global Hodge theorem.
+
+Such retracts occur in genuine blowup/projective-bundle geometry
+when the Chow/Hodge decomposition and exceptional Gysin maps
+are instantiated. A missing Hodge direction cannot be erased
+by a reversible algebraic birth; the defect must survive in
+one of the source worlds.
+-/
+
+/-- A two-source birth with the EXTRA INDEPENDENT geometric data
+of cycle-level and Hodge-level retractions onto both sources. -/
+structure SplitTwoSourceBirth
+    (CA HA CB HB CT HT : Type*)
+    [AddCommGroup CA] [Module ℚ CA]
+    [AddCommGroup HA] [Module ℚ HA]
+    [AddCommGroup CB] [Module ℚ CB]
+    [AddCommGroup HB] [Module ℚ HB]
+    [AddCommGroup CT] [Module ℚ CT]
+    [AddCommGroup HT] [Module ℚ HT]
+    extends TwoSourceBirth CA HA CB HB CT HT where
+  backNativeA : CT →ₗ[ℚ] CA
+  backNativeB : CT →ₗ[ℚ] CB
+  backHodgeA : HT →ₗ[ℚ] HA
+  backHodgeB : HT →ₗ[ℚ] HB
+  backCompatA :
+    ∀ Z : CT, cycleA (backNativeA Z) = backHodgeA (cycleT Z)
+  backCompatB :
+    ∀ Z : CT, cycleB (backNativeB Z) = backHodgeB (cycleT Z)
+  leftInverseA : ∀ a : HA, backHodgeA (hodgeA a) = a
+  leftInverseB : ∀ b : HB, backHodgeB (hodgeB b) = b
+
+/-- Fully faithful native cycle-class witness transport in both
+directions: the newborn world is Hodge-complete if AND ONLY IF both
+actual source worlds are Hodge-complete. -/
+theorem split_world_birth_hodge_complete_iff_sources
+    (P : SplitTwoSourceBirth CA HA CB HB CT HT) :
+    Function.Surjective P.cycleT ↔
+      Function.Surjective P.cycleA ∧ Function.Surjective P.cycleB := by
+  constructor
+  · intro hTarget
+    constructor
+    · intro a
+      obtain ⟨Z, hZ⟩ := hTarget (P.hodgeA a)
+      refine ⟨P.backNativeA Z, ?_⟩
+      calc
+        P.cycleA (P.backNativeA Z) = P.backHodgeA (P.cycleT Z) :=
+          P.backCompatA Z
+        _ = P.backHodgeA (P.hodgeA a) := by rw [hZ]
+        _ = a := P.leftInverseA a
+    · intro b
+      obtain ⟨Z, hZ⟩ := hTarget (P.hodgeB b)
+      refine ⟨P.backNativeB Z, ?_⟩
+      calc
+        P.cycleB (P.backNativeB Z) = P.backHodgeB (P.cycleT Z) :=
+          P.backCompatB Z
+        _ = P.backHodgeB (P.hodgeB b) := by rw [hZ]
+        _ = b := P.leftInverseB b
+  · rintro ⟨hA, hB⟩
+    exact newborn_geometric_completeness P.toTwoSourceBirth hA hB
+
+/-- A Hodge class MISSING from either source necessarily gives a
+missing Hodge direction in the born world. Unlike the old graph
+this theorem catches defects created or inherited by new worlds,
+including their exceptional source geometry. -/
+theorem source_missing_direction_survives_birth
+    (P : SplitTwoSourceBirth CA HA CB HB CT HT)
+    (a : HA) (hMissing : a ∉ LinearMap.range P.cycleA) :
+    P.hodgeA a ∉ LinearMap.range P.cycleT := by
+  intro hTarget
+  obtain ⟨Z, hZ⟩ := hTarget
+  apply hMissing
+  refine ⟨P.backNativeA Z, ?_⟩
+  calc
+    P.cycleA (P.backNativeA Z) = P.backHodgeA (P.cycleT Z) :=
+      P.backCompatA Z
+    _ = P.backHodgeA (P.hodgeA a) := by rw [hZ]
+    _ = a := P.leftInverseA a
+
+#check SplitTwoSourceBirth
+#check split_world_birth_hodge_complete_iff_sources
+#check source_missing_direction_survives_birth
+#print axioms split_world_birth_hodge_complete_iff_sources
+#print axioms source_missing_direction_survives_birth
+
 #check TwoSourceBirth
 #check every_newborn_hodge_class_has_native_cycle
 #check exceptional_native_birth_creates_new_hodge_direction
