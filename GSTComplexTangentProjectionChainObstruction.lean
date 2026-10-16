@@ -1,0 +1,96 @@
+import Mathlib
+
+/-!
+# GST Hodge geometric surgery: complex-tangent projection is NOT a chain map
+
+Original all-X target: an integral homology preserving chain-level operator
+that turns the primitive component of an ample-shifted Hodge cycle into a
+Kähler-calibrated holomorphic integral current.
+
+This file isolates a genuine differential-geometric obstruction to
+a tempting LOCAL route: project each current tangent plane / differential
+form to the J-invariant (1,1) component, then declare it a closed current.
+The J-type projector does NOT commute with the exterior differential,
+already on a projective square elliptic product E x E and in the ZERO
+cohomology class.
+
+Choose real global coordinates x,y,u,v on E x E, and J acting by
+J* dx = -dy, J* dy=dx, J* du=-dv, J* dv=du.
+
+Take the smooth 2-form
+  omega = cos(x) dx ∧ du
+which is EXACT since omega = d(sin(x) du), hence d omega = 0.
+The real (1,1) projector is
+  pi11 omega = (cos(x)/2)(dx ∧ du + dy ∧ dv).
+But
+  d(pi11 omega) = -(sin(x)/2) dx ∧ dy ∧ dv ≠ 0.
+
+Therefore an arbitrary chain-level Hodge projector cannot be built
+by pointwise complex-tangent projection. The missing universal GST
+surgery must simultaneously CORRECT THE BOUNDARY and preserve integer
+multiplicity and homology; no abstract N-window coordinate identity
+proves that correction exists.
+
+Lean verifies the exact rational Fourier-coefficient matrix, not the
+entire analytic complex manifold theorem. There is NO claim of Hodge
+completion or a bogus all-X geometric calibration operator.
+-/
+
+namespace GSTComplexTangentProjectionChainObstruction
+
+/-- Coefficients of cos(x) dx∧du and cos(x) dy∧dv
+in the specific exact torus Fourier block. -/
+abbrev FourierTwoBlock := ℚ × ℚ
+
+/-- Coefficient of sin(x) dx∧dy∧dv in the exterior differential,
+with the order of wedge factors fixed. -/
+def boundaryAmplitude (f : FourierTwoBlock) : ℚ := -f.2
+
+/-- J-invariant (1,1) projector on this two-dimensional Fourier block. -/
+def complexTypeProjection (f : FourierTwoBlock) : FourierTwoBlock :=
+  ((f.1 + f.2)/2, (f.1 + f.2)/2)
+
+/-- The exact smooth closed 2-form omega=cos(x) dx∧du. -/
+def originalClosedForm : FourierTwoBlock := (1,0)
+
+/-- d omega=0, reflecting the explicit exact primitive sin(x) du. -/
+theorem original_is_closed :
+    boundaryAmplitude originalClosedForm = 0 := by
+  norm_num [boundaryAmplitude, originalClosedForm]
+
+/-- J projection does not respect the exterior differential.
+A zero-homology smooth input already gives a NON-CLOSED output. -/
+theorem type_projector_breaks_closedness :
+    boundaryAmplitude (complexTypeProjection originalClosedForm) =
+      -(1/2 : ℚ) := by
+  norm_num [boundaryAmplitude, complexTypeProjection, originalClosedForm]
+
+theorem no_unconditional_chain_map_identity :
+    ¬ ∀ f : FourierTwoBlock,
+      boundaryAmplitude f = 0 →
+      boundaryAmplitude (complexTypeProjection f) = 0 := by
+  intro h
+  have h1 := h originalClosedForm original_is_closed
+  rw [type_projector_breaks_closedness] at h1
+  norm_num at h1
+
+/-- A J-projection correction must carry a nonzero boundary term;
+it cannot preserve closedness by coefficient recoordination alone. -/
+theorem corrected_boundary_necessarily_nonzero
+    (g : FourierTwoBlock)
+    (hclose : boundaryAmplitude
+        (complexTypeProjection originalClosedForm + g) = 0) :
+    boundaryAmplitude g = (1/2 : ℚ) := by
+  have h1 : boundaryAmplitude (complexTypeProjection originalClosedForm + g) =
+      boundaryAmplitude (complexTypeProjection originalClosedForm) +
+      boundaryAmplitude g := by
+    simp [boundaryAmplitude, Prod.snd_add]
+  rw [h1, type_projector_breaks_closedness] at hclose
+  linarith
+
+#check original_is_closed
+#check type_projector_breaks_closedness
+#check corrected_boundary_necessarily_nonzero
+#print axioms no_unconditional_chain_map_identity
+
+end GSTComplexTangentProjectionChainObstruction
