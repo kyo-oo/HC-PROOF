@@ -273,6 +273,19 @@ theorem currentMass_ge_homology_l1 (T : GeometricCycle) :
   change abs (-T.anti + T.diagonal) +
       abs (T.anti + T.diagonal + T.ruling) ≤
         2 * abs T.anti + 2 * abs T.diagonal + abs T.ruling
+  have triangle (x y : ℤ) : abs (x + y) ≤ abs x + abs y := by
+    apply abs_le.mpr
+    constructor
+    · have hx := neg_abs_le x
+      have hy := neg_abs_le y
+      omega
+    · have hx := le_abs_self x
+      have hy := le_abs_self y
+      omega
+  have h1 := triangle (-T.anti) T.diagonal
+  have h2 := triangle (T.anti + T.diagonal) T.ruling
+  have h3 := triangle T.anti T.diagonal
+  rw [abs_neg] at h1
   omega
 
 /-- Exact mass of the holomorphic replacement: it saturates the
