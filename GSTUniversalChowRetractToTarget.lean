@@ -237,6 +237,104 @@ theorem actual_hodge_range_of_geometric_multi_source_birth
       P hSource alpha hAlpha
   exact ⟨Z, hZ⟩
 
+
+/-! ## Full coordinate-readout interface for genuine bundle and blowup formulas
+
+The previous multivariate birth required a Hodge spanning equation.
+A TRUE geometric blowup or projective bundle instead supplies explicit
+cohomological extraction/readout operators (pullback, exceptional
+Gysin inverse and fiber integration) and an exact reconstruction.
+
+This law assembles a scheme-typed birth from those READOUT operations
+and their Hodge preservation, deriving the Hodge spanning equation.
+The underlying geometric Gysin and bundle maps are separate
+scheme-level instances to be proved; the Lean record does not
+silently instantiate them for an arbitrary X.
+-/
+
+/-- A certified actual Chow/Gysin splitting with explicit independent
+cohomological readout from target to ALL source schemes.
+Unlike a freely chosen Hodge class-to-cycle map, each readout stays in
+COHOMOLOGY and its rational Hodge type is verified. -/
+structure GeometricSplitGysinPacket
+    (X : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData X)
+    (p : ℕ) (ι : Type*) [Fintype ι] where
+  source : ι → SmoothProjectiveComplexScheme
+  data : (i : ι) → HodgeBigradedBettiData (source i)
+  codim : ι → ℕ
+  native : (i : ι) →
+    codimensionCycles (source i).X (codim i) →ₗ[ℚ]
+      codimensionCycles X.X p
+  betti : (i : ι) →
+    RationalSingularCohomology (data i).analytification (2 * codim i) →ₗ[ℚ]
+      RationalSingularCohomology H.analytification (2 * p)
+  readout : (i : ι) →
+    RationalSingularCohomology H.analytification (2 * p) →ₗ[ℚ]
+      RationalSingularCohomology (data i).analytification (2 * codim i)
+  naturality : ∀ i (Z : codimensionCycles (source i).X (codim i)),
+    H.cycleClass p (native i Z) =
+      betti i ((data i).cycleClass (codim i) Z)
+  readout_hodge : ∀ i
+      (alpha : RationalSingularCohomology H.analytification (2 * p)),
+    alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
+      readout i alpha ∈
+        rationalHodgeSubspace ((data i).hodgeBigrading (codim i))
+  reconstruct : ∀ alpha : RationalSingularCohomology
+      H.analytification (2 * p),
+    (∑ i : ι, betti i (readout i alpha)) = alpha
+
+/-- Convert the actual projective-bundle / exceptional-Gysin
+readout data into the previously verified SCHEME-TYPED birth law.
+Importantly the Hodge decomposition is now DEDUCED from actual
+cohomology readouts and the reconstruction identity. -/
+noncomputable def GeometricSplitGysinPacket.toChowBirth
+    (P : GeometricSplitGysinPacket X H p ι) :
+    GeometricMultiSourceChowBirth X H p ι where
+  source := P.source
+  data := P.data
+  codim := P.codim
+  native := P.native
+  betti := P.betti
+  naturality := P.naturality
+  hodgeSpan := by
+    intro alpha hAlpha
+    refine ⟨fun i => P.readout i alpha, ?_, P.reconstruct alpha⟩
+    intro i
+    exact P.readout_hodge i alpha hAlpha
+
+/-- Actual codimension-p Hodge surjectivity on a TARGET SCHEME,
+deduced from fully specified Chow/Gysin readouts and actual
+source-scheme Hodge surjectivity; no target-cycle witness field. -/
+theorem actual_chow_cycle_of_geometric_gysin_split
+    (P : GeometricSplitGysinPacket X H p ι)
+    (hSource : ∀ i : ι,
+      BigradedBettiHodgeStatement (P.source i) (P.data i))
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (hAlpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles X.X p,
+      H.cycleClass p Z = alpha := by
+  exact actual_target_cycle_of_geometric_multi_source_birth
+    P.toChowBirth hSource alpha hAlpha
+
+/-- One weight of the genuine Hodge conjecture on X, extracted from
+a verified geometrical decomposition of the same Betti and Chow
+sources, for any finite number of exceptional/projective-bundle terms. -/
+theorem actual_hodge_of_geometric_gysin_split
+    (P : GeometricSplitGysinPacket X H p ι)
+    (hSource : ∀ i : ι,
+      BigradedBettiHodgeStatement (P.source i) (P.data i)) :
+    rationalHodgeSubspace (H.hodgeBigrading p) ≤
+      LinearMap.range (H.cycleClass p) :=
+  actual_hodge_range_of_geometric_multi_source_birth
+    P.toChowBirth hSource
+
+#check GeometricSplitGysinPacket
+#check GeometricSplitGysinPacket.toChowBirth
+#check actual_chow_cycle_of_geometric_gysin_split
+#check actual_hodge_of_geometric_gysin_split
+#print axioms actual_hodge_of_geometric_gysin_split
+
 #check GeometricMultiSourceChowBirth
 #check actual_target_cycle_of_geometric_multi_source_birth
 #check actual_hodge_range_of_geometric_multi_source_birth
