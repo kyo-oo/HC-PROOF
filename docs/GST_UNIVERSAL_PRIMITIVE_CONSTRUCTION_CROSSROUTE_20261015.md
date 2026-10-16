@@ -828,3 +828,61 @@ CRITICAL FORMAL BOUNDARIES:
    requires independently constructed new geometric source directions.
    Compilation of any conditional constructor is not a proof of that
    missing universal existence assertion.
+
+## Mathbox 2026-10-16: norm-one CM invariant semigroup theorem, no numerical rank cutoff
+
+Goal: turn the CM Hodge representation of an ACTUAL E^n into
+actual Chow divisor products and ultimately reach arbitrary primitive
+rational Hodge directions on arbitrary projective varieties.
+
+Inside the EXISTING GSTCMFiniteGeometricDegreeDescent.lean, new
+cmCharacterWeight records integral norm-one CM torus weight as
+(number of positive characters)-(number of negative characters).
+cm_weight_zero_iff_balanced proves weight zero iff counts equal
+for every n and arbitrarily long character lists.
+cmQuadraticPairs is an explicit constructive matching algorithm;
+cm_torus_invariant_factorizes_quadratically reconstructs BOTH
+positive and negative weight lists exactly for every weight-zero
+monomial, including the zero-length boundary.
+
+CMInvariantCharacterMonomial n is the subtype of all weight-zero
+characters represented by two index lists. The actual character
+semigroup generation theorem
+cm_invariant_semigroup_generated_by_quadratics proves a SURJECTION
+from arbitrary lists of degree-two positive-negative generator
+pairs onto ALL invariant monomials, uniformly over every n.
+This proves the full Hilbert generating law for the abstract
+norm-one torus MONOMIAL semigroup, not merely a finite rank count.
+
+cmNativeCycleFromTorusWeight then uses REAL scheme-typed native
+Chow divisor multiplication to construct a cycle from the
+quadratic generator word. The theorem
+cm_zero_weight_character_has_actual_algebraic_hodge_cycle
+proves its true cycle-class equality, rational (p,p) type and
+exact reconstruction of BOTH character lists using the
+independently certified CMNativeProductRealization packet.
+
+The no-cutoff character pairing proof passed GitHub Actions
+38936622219 at 54c5296c680dbaf08f0aa17347e122b8eac5fe98.
+The integrated constructor is at commit
+2d68e3e800c8d59b90d0cbbb1376738161170825.
+The new semigroup surjectivity is at commit
+348b92cc0342d2ee248dd30a40aac5b40cba1a2c
+and its CI needs independent confirmation before marking verified.
+
+SEMANTIC BORDER: the exterior cohomology algebra uses Koszul
+anticommutation signs. Its identification with the monomial
+torus semigroup needs the exterior wedge ordering and sign
+comparison. More decisively, the ACTUAL Hodge representation
+of CM elliptic power E^n and its diagonal CM Hodge group
+have not been connected to this weight-zero character model
+by an unconditional Lean scheme/analytic comparison.
+The signed character pairing theorem DOES NOT assume the
+algebraicity of any arbitrary target Hodge class, but the
+model-to-actual-Hodge expansion is still required.
+
+ORIGINAL UNIVERSAL HODGE STATUS: not established.
+Even a complete E^n CM proof would not establish a genuine
+finite-degree cycle-complete source dominating every arbitrary
+smooth projective variety; such a dominance claim must not
+be smuggled into the GST cosmology's world-birth packet.
