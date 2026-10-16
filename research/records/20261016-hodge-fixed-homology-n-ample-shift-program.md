@@ -145,3 +145,86 @@ This is a tested route, not a geometric counterexample.
 * Missing to solve the user's ORIGINAL all-X Hodge problem: a geometric effective-cycle generation theorem spanning arbitrary rational Hodge classes of arbitrary smooth projective complex X, or an independently geometric integral current flow proving inf Defect=0 in an ample-shift class. No new GST channel identity, positivity calculation, virtual topological bundle, or compiled conditional proof supplies this by itself.
 
 **The universal fixed-homology sequence was NOT produced; no unconditional Hodge proof is claimed.**
+
+
+## Route D: exact stationary noncalibrated representative in an AMPLE rational Hodge class
+
+This is a genuine projective-complex-variety test against any claim
+that generic GST mass descent / mean-curvature flow from arbitrary
+integral representatives must converge to the Kähler calibration cone.
+
+Let E=C/(Z+i Z) be the square projective elliptic curve,
+X=E x E with global real coordinates x,y,u,v mod 1,
+complex coordinates z1=x+i y and z2=u+i v, Euclidean product
+metric and integral Kähler form
+    omega=dx wedge dy+du wedge dv.
+It is a smooth projective complex abelian surface.
+
+Take three real two-tori with the natural orientations:
+
+  T_xu = {y=v=0}, tangent (e_x,e_u), area 1,
+          int_T_xu omega=0 (Lagrangian);
+  T_yv = {x=u=0}, tangent (e_y,e_v), area 1,
+          int_T_yv omega=0 (Lagrangian);
+  G_i  = {z2=i z1}, tangent (e_x+e_v,e_y-e_u), area 2,
+          int_G_i omega=2 (holomorphic).
+
+Every component is a flat totally geodesic torus; the integral
+current
+  T_bad=[T_xu]+[T_yv]+[G_i]
+is closed and its underlying integral varifold is stationary.
+All intersections between the sheets have 2-dimensional measure
+zero, so
+  Mass(T_bad)=1+1+2=4,
+  T_bad(omega)=0+0+2=2,
+  absolute calibration defect=2.
+
+Compute integral Poincare duals, with X orientation dx dy du dv.
+Define the cross (1,1) class
+  A=dx wedge du+dy wedge dv.
+Then
+  PD(T_xu)=-dy wedge dv,
+  PD(T_yv)=-dx wedge du,
+  PD(G_i)=omega+A.
+So
+  PD(T_bad)=(-A)+(omega+A)=omega.
+In particular, T_bad lies in the SAME **AMPLE INTEGRAL HODGE
+HOMOLOGY CLASS** as the standard effective holomorphic divisor
+  T_good=[E x {0}]+[{0} x E].
+The latter is also a closed integer rectifiable 2-current:
+  Mass(T_good)=2,  T_good(omega)=2, defect=0.
+
+Thus we have TWO EXPLICIT integral representatives in EXACTLY THE
+SAME positive ample class:
+  T_bad: stationary (as integral varifold), defect 2;
+  T_good: Kähler-calibrated, defect 0.
+
+Wolfram Language verified ALL finite tensor identities exactly:
+  (a) J^T PD(G_i) J = PD(G_i) (type (1,1));
+  (b) PD(T_xu)+PD(T_yv)+PD(G_i)=omega;
+  (c) omega(e_x+e_v,e_y-e_u)=2;
+  (d) Euclidean area of G_i unit square =2;
+  (e) mass/period/defect triplet of T_bad = {4,2,2}.
+
+This defeats the PROPOSED inference that any stationary/minimal
+integral representative of a rational Hodge class must already
+be calibrated. Even in an ample class where a holomorphic cycle
+is immediately available, a distinct stationary noncalibrated
+integral representative exists. A Brakke-type mean curvature flow
+can stay stationary at this varifold, so mean curvature alone
+cannot guarantee global calibrated realization.
+
+This is NOT a counterexample to the Hodge conjecture; the
+exact SAME class explicitly has the holomorphic T_good.
+
+### The all-X implication actually needed
+
+A successful GST geometric process must include a genuinely
+global method to select/surger/replace among homologous integral
+cycles, together with an independently proved terminality
+criterion forcing defect zero for arbitrary (p,p) rational
+homology classes. Finite N-cohomology identities, stationarity,
+and the existence of positive diffuse (p,p) currents do not
+by themselves supply such a selection mechanism.
+
+Neither the all-X sequence nor a proof of Hodge has been supplied.
