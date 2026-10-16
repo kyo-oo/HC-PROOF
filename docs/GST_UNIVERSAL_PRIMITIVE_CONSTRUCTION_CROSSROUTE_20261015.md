@@ -367,8 +367,10 @@ without a dimension/rank bound or algebraic cycle assumption.
 
 The verified Lean source GSTAllDimensionProjectivePrimitiveCycles.lean
 proves the arbitrary-module signed recursion, boundary cancellation,
-and recovered source coefficient; its stronger inverse classification
-has a separate targeted CI gate. The actual projective-bundle ring,
+recovered source coefficient, inverse unique primitive classification,
+and bidirectional primitive condition. Both targeted GitHub CI runs are
+GREEN: 38916032821 (source-to-middle) and 38916436720 (both directions).
+These are Lean kernel checks of exact rational coefficient algebra. The actual projective-bundle ring,
 Hodge functoriality and Chow naturality are independent classical
 geometric inputs not constructed inside that Lean module. Do not
 mistake a coefficient theorem for complete Lean formalization of
