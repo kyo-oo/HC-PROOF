@@ -303,3 +303,110 @@ limit alone cannot discharge this. Independently investigate
 geometrically obtained cross-carrier correspondences whose native
 cycle outputs provably cover a previously unavailable primitive
 Hodge direction, without using alpha as a preexisting cycle input.
+
+
+## Mathbox 2026-10-16: exact all-X projective stabilization to primitive MIDDLE Hodge classes
+
+**Unchanged universal target.** For every smooth projective complex
+X, dimension d, rational Hodge (p,p) class alpha (primitive when 2p<=d),
+construct an ACTUAL rational algebraic cycle representing alpha.
+The target remains open: the following is an unconditional geometric
+REDUCTION, not existence of a middle primitive cycle.
+
+### An explicit construction on EVERY X, every p with 2p<=d
+
+Put m=d-2p and Y=X x P^m (complex dimension d+m=2(p+m)),
+with projections pi_X, pi_P. Choose an actual ample class h on X
+and the actual P^m hyperplane class t. If alpha is primitive,
+h^(m+1)*alpha=0.
+
+Set the RATIONAL MIDDLE-HODGE class
+  B(alpha) = sum_{j=0}^m (-1)^j pi_X^*(h^j alpha) pi_P^*(t^(m-j)).
+
+All terms have Hodge type (p+m,p+m) and cohomological degree
+2(p+m)=dim_C(Y). Multiplication by the PRODUCT ample class
+H=pi_X^*h+pi_P^*t produces:
+* interior coefficient of h^j alpha t^(m+1-j), j=1,...,m:
+  (-1)^(j-1)+(-1)^j=0;
+* P^m bottom boundary t^(m+1)=0;
+* X top boundary (-1)^m h^(m+1)alpha=0.
+Thus H*B(alpha)=0, i.e. B(alpha) is a GENUINE PRIMITIVE
+rational middle Hodge class of Y. No chosen Chow preimage is used.
+
+Fiber integration pi_{X*}:H^{2(p+m)}(Y)->H^{2p}(X)
+takes the coefficient of t^m, hence pi_{X*} B(alpha)=alpha.
+On algebraic cycles, if B(alpha)=[W] with W an actual codimension
+p+m rational Chow cycle of Y, the genuine algebraic Chow pushforward
+Z=pi_{X*} W has codimension p and [Z]=alpha by cycle-class
+naturality. Conversely if alpha=[Z] is algebraic then the explicit
+Chow packet sum (-1)^j pi_X^*(H_X^j * Z)pi_P^*(H_P^(m-j))
+represents B(alpha). Hence for EVERY individual primitive alpha:
+
+  alpha is algebraic on X  <=>  B(alpha) is algebraic on Y.
+
+This is a pointwise correspondence of ACTUAL Chow classes and Betti
+classes, not an invented 'algebraicity' marker in an abstract vector
+space, and DOES NOT assume inverse Hard Lefschetz to be algebraic.
+
+### Stronger bijective primitive-fiber theorem
+
+The rational projective-bundle/Kunneth formula uniquely writes ANY
+middle rational (q,q) Hodge class b of Y, q=p+m, as
+  b=sum_{j=0}^m pi_X^*(b_j) t^(m-j),
+where b_j has rational Hodge type (p+j,p+j) on X.
+If H*b=0 then its coefficients obey:
+  b_(j+1)=-h*b_j (j=0,...,m-1), and h*b_m=0.
+Therefore b_j=(-1)^j h^j*b_0 and h^(m+1)*b_0=0.
+The top-fiber coefficient b_0=pi_{X*} b is primitive.
+Thus B and pi_{X*} are explicit MUTUAL INVERSES
+
+  Prim^{p,p}_Q(X,h)  <==>  Prim^{p+m,p+m}_Q(X x P^m,h+t).
+
+This holds for ALL smooth projective complex X and ALL p in 2p<=d,
+without a dimension/rank bound or algebraic cycle assumption.
+
+The verified Lean source GSTAllDimensionProjectivePrimitiveCycles.lean
+proves the arbitrary-module signed recursion, boundary cancellation,
+and recovered source coefficient; its stronger inverse classification
+has a separate targeted CI gate. The actual projective-bundle ring,
+Hodge functoriality and Chow naturality are independent classical
+geometric inputs not constructed inside that Lean module. Do not
+mistake a coefficient theorem for complete Lean formalization of
+analytification or Chow cohomology.
+
+### Why this cuts down the quantifiers but DOES NOT end Hodge
+
+The usual rational Hard Lefschetz decomposition expresses each
+low-degree Hodge class as sums of ample powers of primitive rational
+Hodge classes. High-degree classes are ample powers of low-degree
+Hodge classes, by rational Hard Lefschetz. Therefore ALL rational
+Hodge classes on ALL smooth projective X would be algebraic if,
+and only if, EVERY rational primitive MIDDLE Hodge class on EVERY
+even-dimensional smooth projective Y were algebraic.
+
+This removes nonmiddle primitive geometry from the universal target
+but does NOT establish middle primitive algebraicity on arbitrary Y.
+In particular X x P^m is generally NONCELLULAR whenever X is;
+no existing GST cellular, CM/NM orbit, or calibrated-current theorem
+supplies the missing Chow representative automatically.
+
+### Independent attack: finite projections lose primitive data
+
+For a finite morphism f:X->P^d, let h=f^*H. If 2p<=d and p>=1,
+alpha is primitive with h^(d-2p+1)alpha=0, then
+f_*alpha = c H^p for rational c. By projection formula,
+ c=int_{P^d}(f_*alpha)*H^(d-p)
+  =int_X alpha*h^(d-p)
+  =int_X (h^(d-2p+1)alpha)*h^(p-1)=0.
+Hence f_*alpha=0 for EVERY primitive alpha.
+Consequently finite Noether-normalization maps to cellular P^d
+erase, rather than realize, the missing primitive Hodge directions.
+This is a structural obstruction to using projective cellular
+targets alone; it does not contradict Hodge on X.
+
+**Exact unresolved existence obligation:** For each arbitrary
+even-dimensional Y and primitive rational middle Hodge class b,
+construct an actual algebraic middle-dimensional cycle W on Y
+with [W]=b, WITHOUT assuming b already lies in the native image.
+Only this new geometric input can promote the reduction to a
+solution of the full conjecture.
