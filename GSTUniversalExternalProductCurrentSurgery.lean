@@ -1,0 +1,127 @@
+import GSTNPrimitiveGeometricSurgery
+
+/-!
+# GST universal external-product geometric surgery: exact defect transport
+
+Original target: produce, for EVERY smooth projective complex X and
+EVERY primitive rational Hodge class, an integral homology preserving
+replacement current with absolute Kähler calibration defect tending to 0.
+
+On ANY smooth projective X of any dimension, let S be a closed integral
+2q-current. On P¹xP¹ there is the genuine integral homology relation
+    [anti-holomorphic graph Γ]+[holomorphic diagonal Δ]
+      = 2 [holomorphic ruling fiber F].
+
+External product with S makes an ACTUAL closed integral boundary surgery
+on XxP¹xP¹, for every X and any integral current S:
+   S x (Γ+Δ) --> 2 (S x F).
+
+With product Kähler metric, the full geometric mass/period identities
+for integer rectifiable products are:
+   Mass(S x (Γ+Δ)) = 4 Mass(S),
+   Period(S x (Γ+Δ)) = 2 Period(S);
+   Mass(2 S x F) = 2 Mass(S),
+   Period(2 S x F) = 2 Period(S).
+The base Γ and Δ have disjoint sheets in 2-dimensional measure.
+These identities show exact lowering of mass by 2 Mass(S).
+
+CRITICAL: The OUTPUT defect is 2 * Defect(S), hence vanishes
+ONLY IF S already was calibrated. This explicitly tests and REJECTS
+a possible inference that universal product-based GST surgery
+eliminates arbitrary primitive Hodge defects on X.
+
+Lean verifies the exact universal mass/period arithmetic and the
+base integer homology identity, not the analytic external-product
+theorems of geometric measure theory. No all-X Hodge assertion occurs.
+-/
+
+namespace GSTUniversalExternalProductCurrentSurgery
+
+open GSTNPrimitiveGeometricSurgery
+
+/-- Mass and Kähler period of an arbitrary oriented closed integer current
+S on an arbitrary smooth projective X. This numerical projection
+does not assert S has an algebraic representative. -/
+structure PrimitiveCurrentNumerics where
+  mass : ℚ
+  period : ℚ
+  mass_nonnegative : 0 ≤ mass
+  calibrated_bound : period ≤ mass
+
+/-- Absolute Wirtinger calibration defect of the original primitive carrier. -/
+def primitiveDefect (S : PrimitiveCurrentNumerics) : ℚ :=
+  S.mass - S.period
+
+/-- External-product mass and period for the initial anti-graph+diagonal
+packet on XxP¹xP¹. -/
+def inputMass (S : PrimitiveCurrentNumerics) : ℚ := 4 * S.mass
+def inputPeriod (S : PrimitiveCurrentNumerics) : ℚ := 2 * S.period
+def inputDefect (S : PrimitiveCurrentNumerics) : ℚ :=
+  inputMass S - inputPeriod S
+
+/-- External-product mass and period for its homologous replacement
+by two ruling fibers. -/
+def outputMass (S : PrimitiveCurrentNumerics) : ℚ := 2 * S.mass
+def outputPeriod (S : PrimitiveCurrentNumerics) : ℚ := 2 * S.period
+def outputDefect (S : PrimitiveCurrentNumerics) : ℚ :=
+  outputMass S - outputPeriod S
+
+/-- The genuine P¹xP¹ factor surgery preserves the integer homology
+signature exactly. -/
+theorem base_homology_preserved :
+    homology calibratedReplacement = homology badPrimitiveAmple :=
+  explicit_surgery_preserves_homology
+
+theorem external_surgery_preserves_calibration_period
+    (S : PrimitiveCurrentNumerics) :
+    inputPeriod S = outputPeriod S := by
+  rfl
+
+/-- A GLOBAL all-X mass lowering operation (on the product XxP¹xP¹),
+not a primitive Hodge mass-vanishing theorem. -/
+theorem external_surgery_exact_mass_drop
+    (S : PrimitiveCurrentNumerics) :
+    inputMass S - outputMass S = 2 * S.mass := by
+  simp [inputMass, outputMass]
+  ring
+
+/-- The defect strictly improves if S has positive mass. -/
+theorem external_surgery_exact_defect_drop
+    (S : PrimitiveCurrentNumerics) :
+    inputDefect S - outputDefect S = 2 * S.mass := by
+  simp [inputDefect, outputDefect, inputMass, inputPeriod,
+        outputMass, outputPeriod]
+  ring
+
+/-- Crucial all-X quantitative obstruction: the remaining primitive
+defect is not destroyed by GST tensor surgery but exactly doubled. -/
+theorem external_surgery_retains_primitive_defect
+    (S : PrimitiveCurrentNumerics) :
+    outputDefect S = 2 * primitiveDefect S := by
+  simp [outputDefect, outputMass, outputPeriod, primitiveDefect]
+  ring
+
+theorem external_surgery_zero_defect_iff_original_calibrated
+    (S : PrimitiveCurrentNumerics) :
+    outputDefect S = 0 ↔ primitiveDefect S = 0 := by
+  rw [external_surgery_retains_primitive_defect]
+  constructor
+  · intro h
+    linarith
+  · intro h
+    rw [h]
+    ring
+
+theorem external_surgery_output_nonnegative
+    (S : PrimitiveCurrentNumerics) :
+    0 ≤ outputDefect S := by
+  rw [external_surgery_retains_primitive_defect]
+  unfold primitiveDefect
+  linarith [S.calibrated_bound]
+
+#check base_homology_preserved
+#check external_surgery_exact_defect_drop
+#check external_surgery_zero_defect_iff_original_calibrated
+#print axioms external_surgery_zero_defect_iff_original_calibrated
+
+end GSTUniversalExternalProductCurrentSurgery
