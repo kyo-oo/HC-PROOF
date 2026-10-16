@@ -134,6 +134,115 @@ theorem no_unrepresented_target_from_algebraic_source
   rw [R.cycleClass_natural]
   exact heq
 
+
+/-! ## Scheme-typed, arbitrary-codimension GST geometric world birth
+
+This upgrades the former abstract GST world-birth calculus into the actual
+native codimension-cycle types of Mathlib smooth projective complex schemes.
+
+For a chosen codimension p on a genuine target scheme, each finite source
+index carries its OWN genuine smooth projective source scheme and codimension
+q_i. The native assembly maps LAND IN codimensionCycles target.X p and the
+Betti assembly maps LAND IN genuine rational singular cohomology of that target.
+The required geometric Hodge expansion is a statement about the target's
+actual Hodge bigrading, NOT an arbitrary vector-space presentation.
+
+Projective bundles and blowups instantiate these fields through hyperplane/
+exceptional-divisor intersection and Gysin operations. Their concrete scheme
+constructions must be provided separately: do not mistake a packet containing
+their comparison laws for an unconditional construction of all such maps.
+-/
+
+open scoped BigOperators
+
+/-- Finite geometric birth with genuinely different source SCHEMES and
+codimensions, and direct compatibility with the original cycleClass maps.
+In particular the target cycle map is not chosen to make surjectivity true. -/
+structure GeometricMultiSourceChowBirth
+    (X : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData X)
+    (p : ℕ)
+    (ι : Type*) [Fintype ι] where
+  source : ι → SmoothProjectiveComplexScheme
+  data : (i : ι) → HodgeBigradedBettiData (source i)
+  codim : ι → ℕ
+  native : (i : ι) →
+    codimensionCycles (source i).X (codim i) →ₗ[ℚ]
+      codimensionCycles X.X p
+  betti : (i : ι) →
+    RationalSingularCohomology (data i).analytification (2 * codim i) →ₗ[ℚ]
+      RationalSingularCohomology H.analytification (2 * p)
+  naturality : ∀ i (Z : codimensionCycles (source i).X (codim i)),
+    H.cycleClass p (native i Z) =
+      betti i ((data i).cycleClass (codim i) Z)
+  hodgeSpan : ∀ alpha : RationalSingularCohomology
+      H.analytification (2 * p),
+    alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
+      ∃ beta : (i : ι) →
+        RationalSingularCohomology (data i).analytification (2 * codim i),
+        (∀ i, beta i ∈ rationalHodgeSubspace
+          ((data i).hodgeBigrading (codim i))) ∧
+        (∑ i : ι, betti i (beta i)) = alpha
+
+variable {ι : Type*} [Fintype ι]
+
+/-- An EXPLICIT rational algebraic cycle on the actual target scheme:
+assemble the native source cycles using the genuine Chow maps and
+certify that its rational Betti class is precisely the target class. -/
+theorem actual_target_cycle_of_geometric_multi_source_birth
+    (P : GeometricMultiSourceChowBirth X H p ι)
+    (hSource : ∀ i : ι,
+      BigradedBettiHodgeStatement (P.source i) (P.data i))
+    (alpha : RationalSingularCohomology H.analytification (2 * p))
+    (hAlpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles X.X p, H.cycleClass p Z = alpha := by
+  classical
+  obtain ⟨beta, hHodge, hReconstruct⟩ := P.hodgeSpan alpha hAlpha
+  have hWitness : ∀ i : ι,
+      ∃ Z : codimensionCycles (P.source i).X (P.codim i),
+        (P.data i).cycleClass (P.codim i) Z = beta i := by
+    intro i
+    exact hSource i (P.codim i) (hHodge i)
+  let native : (i : ι) → codimensionCycles (P.source i).X (P.codim i) :=
+    fun i => Classical.choose (hWitness i)
+  refine ⟨∑ i : ι, P.native i (native i), ?_⟩
+  calc
+    H.cycleClass p (∑ i : ι, P.native i (native i)) =
+        ∑ i : ι, H.cycleClass p (P.native i (native i)) := by
+          rw [map_sum]
+    _ = ∑ i : ι,
+        P.betti i ((P.data i).cycleClass (P.codim i) (native i)) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          exact P.naturality i (native i)
+    _ = ∑ i : ι, P.betti i (beta i) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [Classical.choose_spec (hWitness i)]
+    _ = alpha := hReconstruct
+
+/-- Scheme-typed (p,p) rational-Hodge surjectivity under a genuinely
+geometric projective-bundle/blowup source splitting, with no fixed rank
+or dimension assumption. This is directly a theorem about the ORIGINAL
+target cycleClass map, not an abstract GST surrogate. -/
+theorem actual_hodge_range_of_geometric_multi_source_birth
+    (P : GeometricMultiSourceChowBirth X H p ι)
+    (hSource : ∀ i : ι,
+      BigradedBettiHodgeStatement (P.source i) (P.data i)) :
+    rationalHodgeSubspace (H.hodgeBigrading p) ≤
+      LinearMap.range (H.cycleClass p) := by
+  intro alpha hAlpha
+  obtain ⟨Z, hZ⟩ :=
+    actual_target_cycle_of_geometric_multi_source_birth
+      P hSource alpha hAlpha
+  exact ⟨Z, hZ⟩
+
+#check GeometricMultiSourceChowBirth
+#check actual_target_cycle_of_geometric_multi_source_birth
+#check actual_hodge_range_of_geometric_multi_source_birth
+#print axioms actual_target_cycle_of_geometric_multi_source_birth
+#print axioms actual_hodge_range_of_geometric_multi_source_birth
+
 #check construct_target_cycle_from_source_hodge_lift
 #check every_target_hodge_class_from_solved_source
 #check target_hodge_subset_native_cycleClass_range

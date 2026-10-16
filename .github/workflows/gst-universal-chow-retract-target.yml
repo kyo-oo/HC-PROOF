@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - research/mathbox-k3-diagonal-primitive-20261015
+      - mathbox/residual-zero-direct-audit-20261015
     paths:
       - GSTUniversalChowRetractToTarget.lean
       - .github/workflows/gst-universal-chow-retract-target.yml
