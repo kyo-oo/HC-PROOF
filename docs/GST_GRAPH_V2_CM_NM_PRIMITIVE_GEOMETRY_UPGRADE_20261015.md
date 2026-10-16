@@ -93,3 +93,25 @@ The unresolved geometric theorem is the genuine construction of such fresh
 native cycles for EVERY remaining primitive rational Hodge direction of
 EVERY smooth projective complex variety. It cannot be inferred solely from
 graph connectivity, conserved charge, or nonzero commutators.
+
+### Genuine two-direction geometric success test on P1 x P1
+
+Take X=P1_C x P1_C. Its two native ruling divisors h1,h2 are
+algebraic and have intersection matrix J=[[0,1],[1,0]], J^2=I.
+The dual classes are d1=h2, d2=h1. On X x X, genuine algebraic
+codimension-two product correspondences
+C_ij=pr1^*(d_j) * pr2^*(h_i) implement rational matrix units
+on H^2(X,Q): C_ij(h_k)=delta_jk h_i, by the projection formula.
+
+Choose A=I+E_21=[[1,0],[1,1]], B=diag(1,2), S=h1.
+The first-coordinate charge is preserved by A and B.
+Wolfram exact result: [A,B]S=(0,-1), and the determinant of the
+columns S and [A,B]S is -1, hence both independent divisors span
+the entire two-dimensional rational Hodge fiber. All these
+correspondences come from explicitly algebraic divisor products.
+
+This demonstrates a truly geometric positive instance of the GST
+commutator-rank strategy. It does NOT extend to arbitrary X unless
+enough algebraic product-correspondence classes dual to the UNKNOWN
+primitive Hodge directions are independently constructed. Assuming
+such algebraic dual basis classes on arbitrary X would be circular.
