@@ -106,4 +106,48 @@ theorem primitive_middle_hyperplane_detection_zero
 #print axioms primitive_middle_restriction_vanishes
 #print axioms primitive_middle_has_relative_cohomology_lift
 
+
+/-! ## Exact primitive-kernel = hyperplane-invisible-kernel upgrade
+
+The original theorem established primitive ⇒ invisible to Y. The
+geometric Gysin identity i_* i^* alpha = h cup alpha makes the converse
+equally exact. This strengthens the relative-cohomology formulation
+to a *full equality of rational subspaces*, not a mere existence
+claim. The Gysin relation is a standard projection-formula input;
+its proof is NOT obtained by assuming any Hodge class algebraic.
+-/
+
+/-- Primitive middle classes are EXACTLY those whose restriction
+to the smooth hyperplane is zero. -/
+theorem primitive_iff_hyperplane_invisible
+    (gysin : YM →ₗ[ℚ] XH)
+    (hGysin : ∀ a : XM,
+      gysin (G.pullMid a) = G.lefschetzMid a)
+    (alpha : XM) :
+    G.lefschetzMid alpha = 0 ↔ G.pullMid alpha = 0 := by
+  constructor
+  · exact primitive_middle_restriction_vanishes G alpha
+  · intro hz
+    rw [← hGysin alpha, hz]
+    exact gysin.map_zero
+
+/-- Under the exact sequence of the pair (X,Y), the ENTIRE image of
+relative middle cohomology equals the middle primitive Lefschetz
+kernel. This is stronger than selecting a relative carrier one by one. -/
+theorem relative_middle_image_eq_primitive_kernel
+    (gysin : YM →ₗ[ℚ] XH)
+    (hGysin : ∀ a : XM,
+      gysin (G.pullMid a) = G.lefschetzMid a)
+    (toAbsolute : Relative →ₗ[ℚ] XM)
+    (hexact : LinearMap.range toAbsolute = LinearMap.ker G.pullMid) :
+    LinearMap.range toAbsolute = LinearMap.ker G.lefschetzMid := by
+  rw [hexact]
+  ext a
+  change G.pullMid a = 0 ↔ G.lefschetzMid a = 0
+  exact (primitive_iff_hyperplane_invisible G gysin hGysin a).symm
+
+#check primitive_iff_hyperplane_invisible
+#check relative_middle_image_eq_primitive_kernel
+#print axioms relative_middle_image_eq_primitive_kernel
+
 end GSTPrimitiveMiddleHyperplaneRelative

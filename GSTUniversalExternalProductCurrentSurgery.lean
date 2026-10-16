@@ -124,4 +124,79 @@ theorem external_surgery_output_nonnegative
 #check external_surgery_zero_defect_iff_original_calibrated
 #print axioms external_surgery_zero_defect_iff_original_calibrated
 
+
+/-! ## Sharp tensor calibration rigidity for every positive holomorphic factor
+
+The old packet was a special case with factor Kähler volume 2.
+For ANY positive calibrated product factor of volume v>0,
+the remaining primitive defect is exactly v·D(S).
+Neither tensor stabilization nor repeating factor surgeries can
+turn a noncalibrated primitive carrier into a calibrated current.
+This is a quantitative arithmetic identity; its geometric
+application assumes the standard mass/period multiplicativity
+of external products, not an unverified universal GST functor.
+-/
+
+/-- Full arbitrary auxiliary factor mass and calibration period. -/
+def generalTensorDefect
+    (S : PrimitiveCurrentNumerics) (factorMass factorPeriod : ℚ) : ℚ :=
+  S.mass * factorMass - S.period * factorPeriod
+
+/-- Exact separation into a primitive defect term and a factor defect
+term, without assuming the original primitive current is holomorphic. -/
+theorem general_tensor_defect_decomposition
+    (S : PrimitiveCurrentNumerics) (factorMass factorPeriod : ℚ) :
+    generalTensorDefect S factorMass factorPeriod =
+      factorMass * primitiveDefect S +
+      (factorMass - factorPeriod) * S.period := by
+  unfold generalTensorDefect primitiveDefect
+  ring
+
+/-- Tensoring with ANY calibrated factor of volume v transports the
+primitive defect faithfully; it does NOT destroy it. -/
+theorem calibrated_tensor_exact_residual
+    (S : PrimitiveCurrentNumerics) (v : ℚ) :
+    generalTensorDefect S v v = v * primitiveDefect S := by
+  rw [general_tensor_defect_decomposition]
+  ring
+
+theorem calibrated_tensor_zero_iff_original
+    (S : PrimitiveCurrentNumerics) (v : ℚ) (hv : 0 < v) :
+    generalTensorDefect S v v = 0 ↔ primitiveDefect S = 0 := by
+  rw [calibrated_tensor_exact_residual]
+  constructor
+  · intro h
+    rcases mul_eq_zero.mp h with h0 | h0
+    · exact False.elim ((ne_of_gt hv) h0)
+    · exact h0
+  · intro h
+    rw [h]
+    ring
+
+theorem calibrated_tensor_positive_gap
+    (S : PrimitiveCurrentNumerics) (v : ℚ)
+    (hv : 0 < v) (hD : 0 < primitiveDefect S) :
+    0 < generalTensorDefect S v v := by
+  rw [calibrated_tensor_exact_residual]
+  exact mul_pos hv hD
+
+/-- Even arbitrarily many tensor-stabilizing moves retain the
+original defect scaled by the product of positive volumes. -/
+theorem repeated_calibrated_tensor_rigidity
+    (S : PrimitiveCurrentNumerics) (v : ℚ) (hv : 0 < v) (n : ℕ) :
+    v ^ n * primitiveDefect S = 0 ↔ primitiveDefect S = 0 := by
+  constructor
+  · intro h
+    rcases mul_eq_zero.mp h with hpow | hdef
+    · exact False.elim ((ne_of_gt (pow_pos hv n)) hpow)
+    · exact hdef
+  · intro h
+    rw [h]
+    ring
+
+#check general_tensor_defect_decomposition
+#check calibrated_tensor_zero_iff_original
+#check repeated_calibrated_tensor_rigidity
+#print axioms repeated_calibrated_tensor_rigidity
+
 end GSTUniversalExternalProductCurrentSurgery

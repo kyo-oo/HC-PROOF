@@ -308,4 +308,65 @@ theorem leastAmpleShift_optimal_for_zero_defect
 #check leastAmpleShift_optimal_for_zero_defect
 #print axioms leastAmpleShift_optimal_for_zero_defect
 
+
+/-! ## Exact all-N transition: the first calibrated integer shift
+
+The earlier law constructs the optimal shift. This upgrade classifies
+EVERY integer shift on both sides of that threshold, for arbitrary
+positive weights and nonuniform integral ample directions. It is a
+complete finite-lattice effective-cone phase transition.
+-/
+
+/-- Every smaller integer shift has strictly positive absolute
+calibration defect in the N-channel integer model. -/
+theorem positive_defect_before_least_ample_shift
+    (s : NShape) (w a b : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i) (hb : ∀ i, 1 ≤ b i)
+    (k : ℕ) (hk : k < leastAmpleShift s a b hb) :
+    0 < calibrationDefect s w (fun i => a i + (k : ℤ) * b i) := by
+  have hnonneg : 0 ≤ calibrationDefect s w
+      (fun i => a i + (k : ℤ) * b i) :=
+    defect_nonnegative s w _ (fun i => by have h := hw i; omega)
+  by_contra hnot
+  have hz : calibrationDefect s w
+      (fun i => a i + (k : ℤ) * b i) = 0 := by omega
+  have hmin := leastAmpleShift_optimal_for_zero_defect
+    s w a b hw hb k hz
+  omega
+
+/-- At and above the sharp first ample shift, every coordinate
+is nonnegative, hence the EXACT integer defect is zero. -/
+theorem zero_defect_at_every_larger_ample_shift
+    (s : NShape) (w a b : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i) (hb : ∀ i, 1 ≤ b i)
+    (k : ℕ) (hk : leastAmpleShift s a b hb ≤ k) :
+    calibrationDefect s w (fun i => a i + (k : ℤ) * b i) = 0 := by
+  apply (defect_zero_iff_all_coordinates_nonnegative s w _ hw).2
+  intro i
+  have hbase : 0 ≤ a i +
+      ((leastAmpleShift s a b hb : ℕ) : ℤ) * b i :=
+    leastAmpleShift_feasible s a b hb i
+  have hki : ((leastAmpleShift s a b hb : ℕ) : ℤ) ≤ (k : ℤ) :=
+    Int.ofNat_le.mpr hk
+  have hbi : 0 ≤ b i := by have h := hb i; omega
+  have hmul : 0 ≤ ((k : ℤ) -
+      ((leastAmpleShift s a b hb : ℕ) : ℤ)) * b i :=
+    mul_nonneg (sub_nonneg.mpr hki) hbi
+  nlinarith
+
+/-- The exact sharp quantifier-free CALIBRATION THRESHOLD:
+there is no hidden interval or fractionally calibrated integer packet. -/
+theorem all_N_zero_defect_iff_integer_shift_at_least_minimal
+    (s : NShape) (w a b : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i) (hb : ∀ i, 1 ≤ b i)
+    (k : ℕ) :
+    calibrationDefect s w (fun i => a i + (k : ℤ) * b i) = 0 ↔
+      leastAmpleShift s a b hb ≤ k := by
+  constructor
+  · exact leastAmpleShift_optimal_for_zero_defect s w a b hw hb k
+  · exact zero_defect_at_every_larger_ample_shift s w a b hw hb k
+
+#check all_N_zero_defect_iff_integer_shift_at_least_minimal
+#print axioms all_N_zero_defect_iff_integer_shift_at_least_minimal
+
 end GSTNAllChannelAmpleSaturation
