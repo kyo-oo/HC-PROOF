@@ -202,3 +202,147 @@ Replacement Lean GitHub Actions run 38865745138 completed SUCCESS.
 The compiled theorem includes exact integer homology preservation,
 exact mass and defect drop, and zero-defect end state for the
 positive integer surgery family on P1×P1.
+
+
+## New all-X integral boundary regularized geometric replacement (nonlocal, no stationary traps)
+
+The earlier existence of a mass minimizer was nonconstructive and did
+not provide a mathematically explicit surgery functional. Here is a
+TRUE global all-X replacement mechanism with ACTUAL integer boundary
+currents and a penalty whose minimizers exist.
+
+Let (X,g,ω) be ANY smooth projective compact Kähler d-fold.
+Let q=d-p and let T0 be an arbitrary CLOSED INTEGRAL rectifiable
+2q-current representing a fixed INTEGRAL homology class beta.
+Let c_q=ω^q/q! be its Kähler calibration.
+
+For ANY λ>0 define on finite-mass integral (2q+1)-currents B:
+
+     E_λ(B) = Mass(T0+∂B) + λ Mass(B).
+
+Set B_λ to be a GLOBAL minimizer over the complete class of integer
+rectifiable currents B. Define the **GST nonlocal integer surgery**
+
+     R_λ(T0) = T0 + ∂B_λ.
+
+### Step 1: existence of B_λ for EVERY X and EVERY T0
+
+The competitor B=0 gives E_λ<=Mass(T0). Let B_n be a minimizing
+sequence with energies <=Mass(T0)+1. Then
+
+     Mass(B_n) <= [Mass(T0)+1]/λ;
+
+also by the triangle inequality,
+
+     Mass(∂B_n)
+        <=Mass(T0+∂B_n)+Mass(T0)
+        <=2 Mass(T0)+1.
+
+Both mass and boundary mass of the INTEGRAL fillings B_n are
+uniformly bounded. Since X is compact, Federer--Fleming integral
+current compactness produces a flat-convergent subsequence with
+integral limit B_λ. Lower semicontinuity of both terms gives a
+GLOBAL minimizer. No holomorphic-cycle premise is required.
+
+### Step 2: exact integral homology and defect nonincrease
+
+R_λ(T0)=T0+∂B_λ is integral, closed, and differs from T0 by an
+ACTUAL integer boundary. Therefore it preserves the ORIGINAL
+integral homology class beta, not an integer multiple of beta.
+The calibration period is unchanged because dc_q=0:
+
+     R_λ(T0)(c_q)=T0(c_q)=P_beta.
+
+Optimality against B=0 gives
+
+     Mass(R_λ(T0)) + λ Mass(B_λ) <= Mass(T0),
+
+hence
+
+     D(R_λ(T0))
+      <= D(T0) - λ Mass(B_λ) <=D(T0).
+
+This is a rigorous, quantitative, all-X and homology-preserving
+surgery replacement that escapes local stationarity traps because
+the minimization ranges over ALL integer fillings B, not only
+infinitesimal deformations of T0.
+
+### Step 3: λ->0 convergence to the OPTIMAL integer-current defect
+
+Write
+     m_int(beta)=inf{Mass(T): T closed integral, [T]=beta}.
+
+For every competing integral T' in beta, integral homology
+equality ensures T'-T0=∂B' for some finite-mass integral filling
+B' (using the standard equivalence between integral currents
+and singular integral homology on a smooth compact manifold).
+Minimizer optimality yields
+
+    m_int(beta) <= Mass(R_λ(T0))
+       <= Mass(T') + λ Mass(B').
+
+Taking λ->0, then the infimum over T', gives
+
+    lim_{λ->0} Mass(R_λ(T0)) = m_int(beta),
+
+and since the Kähler calibration period is fixed,
+
+    lim_{λ->0} D(R_λ(T0))
+      = gamma_X(beta)
+      := m_int(beta)-P_beta >=0.
+
+All replacements belong to ONE FIXED integral class beta,
+for every λ. The bounded output masses allow integral flat
+subsequence limits as λ->0, which are global mass minimizers.
+
+### Step 4: exact remaining Hodge-specific question
+
+For beta=m alpha+M h^p with rational Hodge alpha, the real
+relaxation contains a smooth positive calibrated (p,p) current
+of mass P_beta. However the integer optimum m_int(beta) could
+be STRICTLY LARGER than that real optimum based on existing
+arguments. This is the INTEGRAL CALIBRATION GAP gamma_X(beta).
+
+If one proves gamma_X(beta)=0 for some fixed m,M, the above
+CONSTRUCTED T_λ is the user-requested SAME-CLASS integer
+sequence with D->0. The integral compactness limit is then
+a positive holomorphic chain and the original Hodge class
+is algebraic. None of the currently inspected GST laws
+implies gamma_X(beta)=0 unconditionally in arbitrary
+intermediate codimension, and we have NOT pretended otherwise.
+
+The rigorous all-X statement ESTABLISHED by this route is:
+     A closed integer, homology-preserving replacement
+     exists for every λ>0; it strictly improves mass unless
+     B_λ=0 or improvement is balanced by filling penalty;
+     its defect converges exactly to the optimal integral
+     calibration gap gamma_X(beta).
+It does NOT establish universal vanishing of gamma_X.
+
+### Step 5: exact finite GST surgery instantiation
+
+For the P1×P1 packet T0=(1,1,0) and integer boundary
+B(k)=(-k,-k,2k), take filling penalty Mass(B_k)=|k|
+in normalized arbitrary units. The exact finite objective is
+
+     E_λ(k) = 4|1-k|+2|k|+λ|k|.
+
+k=0 gives 4, while k=1 gives 2+λ. For all 0<λ<2,
+k=1 is globally optimal among integer k, giving actual
+integral calibrated replacement (0,0,2) and D=0.
+
+For the unsaturated (2,3) N-integer model with original period
+one, NO integer k changes the positive minimum D=4 into zero.
+These two exact models distinguish a genuine geometric
+boundary surgery from a merely abstract positivity claim.
+
+### Source evidence status
+
+The analytic compactness, lower semicontinuity and current/singular
+homology comparison are standard GMT results and are used here
+in their stated forms; this execution did not retrieve and pin
+a primary-source PDF, so the external-source leaf has not been
+independently source-authenticated in the repository. The
+integer P1×P1 arithmetic is Lean kernel checked in workflow
+38865745138, and the finite exhaustive solver lives in
+research/computations/gst_integer_boundary_surgery.py.
