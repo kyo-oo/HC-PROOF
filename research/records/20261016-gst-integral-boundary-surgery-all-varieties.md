@@ -144,3 +144,61 @@ GSTNPrimitiveGeometricSurgery.lean and dedicated CI run
 status must be rechecked before labeling the new Lean theorem GREEN.
 
 **Original all-X rational Hodge fixed-class calibrated-current theorem is not yet proved.**
+
+
+## Executed finite chain-complex global optimizer
+
+Executable: research/computations/gst_integer_boundary_surgery.py.
+The exact source input is an INTEGRAL chain complex with:
+  A : C_(2q) -> C_(2q-1), B : C_(2q+1) -> C_(2q),
+  A B=0, and an integer homology-signature H with H B=0.
+Starting chain z0 has A z0=0.
+The Kähler period p obeys p B=0 and geometric face masses w_i
+satisfy w_i>=|p_i|>=(nonnegative bound).
+
+Every homologous replacement in the same chosen finite complex is
+z=z0+B u with INTEGER u, not merely rational coordinates or a
+same-H-signature approximation. The algorithm searches exactly this
+integer lattice using Hermite normal forms. Since current mass
+  mass(z)=sum_i w_i |z_i|
+is positive and the starting mass is finite, every mass-nonincreasing
+candidate has |z_i|<=mass(z0)/w_i. There are finitely many such integer
+vectors, so exhaustive search and minimizing mass finds the TRUE GLOBAL
+MINIMUM within that fixed finite cellular current model; no unproved
+continuous numerical tolerance enters its correctness.
+
+Executed finite tests in Python/SymPy:
+
+* P1×P1 geometric packet: A=0, B=(-1,-1,2)^T,
+  H=[[-1,1,0],[1,1,1]], w=(2,2,1), p=(0,2,1),
+  z0=(1,1,0). Exhaustively scanned 225 integer vectors allowed
+  by the initial mass bound; precisely 2 are homologous with
+  mass no greater than starting mass. Unique minimum
+  z=(0,0,2), original (mass,period,D)=(4,2,2),
+  replacement (2,2,0).
+* Two-channel N-lattice: A=0, B=(-3,2)^T,
+  H=(2,3), w=p=(2,3), z0=(-1,1).
+  Exhaustively scanned 15 vectors; exactly one remained in the
+  fixed integer class within the initial mass bound. It has
+  (mass,period,D)=(5,1,4), so NO zero-defect replacement
+  exists in this integer chain complex.
+
+The scripts are a full finite-algorithm proof of EXACT minimum
+once a geometric triangulation/chain complex and its integral
+boundary maps are supplied. On a compact smooth projective X,
+such finite triangulations exist. But proving that the minima
+along refinements converge to ZERO for every rational Hodge
+class is the SAME unsolved all-X geometric Hodge obligation,
+not a consequence of exhaustive finite optimization alone.
+
+## Last verified Lean CI
+
+First run 38865178608 failed only because abs normalization in
+surgery_mass_exact_drop left a proof goal.
+Repair commit 7b3a0fef87165045624e6e090d99b6cda6acafa7
+explicitly rewrote the six absolute values with established
+nonnegativity facts.
+Replacement Lean GitHub Actions run 38865745138 completed SUCCESS.
+The compiled theorem includes exact integer homology preservation,
+exact mass and defect drop, and zero-defect end state for the
+positive integer surgery family on P1×P1.
