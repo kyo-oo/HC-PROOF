@@ -231,9 +231,9 @@ theorem cm_invariant_semigroup_generated_by_quadratics {n : ℕ} :
   rcases m with ⟨⟨pos, neg⟩, hzero⟩
   refine ⟨cmQuadraticPairs pos neg, ?_⟩
   apply Subtype.ext
-  have rec := cm_torus_invariant_factorizes_quadratically
+  have hrec := cm_torus_invariant_factorizes_quadratically
     pos neg hzero
-  exact Prod.ext rec.1 rec.2
+  exact Prod.ext hrec.1 hrec.2
 
 #check cm_invariant_semigroup_generated_by_quadratics
 #print axioms cm_invariant_semigroup_generated_by_quadratics
