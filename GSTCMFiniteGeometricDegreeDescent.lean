@@ -517,6 +517,7 @@ theorem native_rational_cm_cycle_of_geometric_field_expansion
     fun i => cmNativeDivisorWord F p (P.word i).paired
   apply GSTClassicalHodgeCMNativeRationalDescent.rational_native_cycle_of_extended_span
     (K := K) (s := Finset.univ) sources coeff alpha
+  dsimp only at hK ⊢
   intro j
   have h := hK j
   simpa only [sources, cm_native_word_cycleClass] using h
