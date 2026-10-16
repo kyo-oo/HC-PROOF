@@ -69,3 +69,27 @@ The module imports the earlier verified universal codimension-two primitive poly
 Original universal rational Hodge conjecture: NOT PROVED. Remaining: produce enough actual primitive class directions on arbitrary varieties and prove true primitive-surjective geometric correspondences.
 
 No local Lean installation and no public internet search.
+## 2026-10-16 Mathbox / Wolfram: conserved-charge graph saturation
+
+Original all-X Hodge goal: not proved. An exact rational four-dimensional
+operator model distinguishes noncommutativity from universal geometric rank.
+Seed S=(1,1,0,0), swap A exchanges coordinates 2,3 and fixes coordinates
+1,4; diagonal B=diag(1,2,3,5). Both preserve first-coordinate charge.
+The commutator [A,B]S=(0,0,-1,0) is NONZERO, verified with Wolfram.
+Nevertheless all finite words and rational linear combinations applied to
+S stay in the hyperplane x4=0. The exact orbit rank is 3, not 4.
+The basis graph's seeded vertices {1,2,3} cannot reach coordinate 4.
+This is a toy graph representation, NOT a counterexample on a variety.
+
+Lean source upgraded at 5c413b8ca82a2ddbe4961709732b0213ec965e82:
+GSTClassicalHodgeActualCommutatorRankGain.lean formalizes the finite graph
+invariant and an unreachable fourth basis direction. The existing file
+GSTMathboxIndependentGeometricCoordinate.lean proves a STRICT algebraic
+Hodge-span increase when an independently constructed ACTUAL native cycle
+has a rational detector reading zero on every old cycle and nonzero on
+the fresh one, without any fixed rank bound.
+
+The unresolved geometric theorem is the genuine construction of such fresh
+native cycles for EVERY remaining primitive rational Hodge direction of
+EVERY smooth projective complex variety. It cannot be inferred solely from
+graph connectivity, conserved charge, or nonzero commutators.
