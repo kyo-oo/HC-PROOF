@@ -133,8 +133,7 @@ theorem cubic_CM_charge_invariant :
     ∀ j : Fin 2,
       cubicCMWeight 0 j + cubicCMWeight 1 j +
         cubicCMWeight 2 j = 0 := by
-  intro j
-  fin_cases j <;> norm_num [cubicCMWeight]
+  decide
 
 /-- There are NO opposite quadratic generators in this new
 two-charge universe. Thus no path using only the OLD quadratic
@@ -194,8 +193,7 @@ theorem quartic_CM_zero_charge :
     ∀ j : Fin 2,
       quarticCMWeight 0 j + quarticCMWeight 1 j +
       quarticCMWeight 2 j + quarticCMWeight 3 j = 0 := by
-  intro j
-  fin_cases j <;> norm_num [quarticCMWeight]
+  decide
 
 /-- No quadratic invariant over these four character weights,
 even when repeated source weights are allowed. -/
