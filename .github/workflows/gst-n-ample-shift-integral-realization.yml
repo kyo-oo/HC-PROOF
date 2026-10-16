@@ -40,7 +40,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTNAmpleShift"
-          roots = ["GSTNIntegralCalibrationGap", "GSTNAmpleShiftIntegralRealization"]
+          roots = ["waves.GSTNCohomologyV3", "GSTNIntegralCalibrationGap", "GSTNAmpleShiftIntegralRealization"]
           EOF
           if lake build GSTNAmpleShift > gst-n-ample-shift.log 2>&1; then
             echo "LEAN PASSED: finite N-channel shifted integral zero-defect sequence, not all-X Hodge"
