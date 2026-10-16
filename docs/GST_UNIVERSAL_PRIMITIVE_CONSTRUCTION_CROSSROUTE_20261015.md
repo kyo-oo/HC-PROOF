@@ -219,3 +219,87 @@ with proven period compatibility and rational descent; (C) fixed-class
 calibrated integer-rectifiable geometric cycles. None currently establishes
 all X, all p, all rational Hodge classes. The finite-dimensional Gram test
 cannot create a missing actual source cycle or force the ranks to saturate.
+
+## 2026-10-16 Mathbox: exact universal primitive residual detector firewall
+
+Original target (NOT proved): for every smooth projective complex X, all
+codimensions p, and each rational primitive class alpha of type (p,p),
+construct an actual rational algebraic cycle Z on X with cl(Z)=alpha.
+
+New formal theorems in EXISTING source
+`GSTResidualNormZeroExactHodgeEquivalence.lean`, commit
+`0e2f0346e7114e21cec134a6ddec7b3d846b478c`:
+
+- `residual_orthogonal_to_every_native_cycle`
+- `no_native_polarized_detector_of_residual`
+- `missing_primitive_residual_positive_but_native_undetectable`
+
+They passed the focused Lean kernel CI run **38912526573** (SUCCESS).
+The transitive axiom audit for these declarations should be read in that
+run's exact source output; the CI pass is not a classical Hodge proof.
+
+Assumptions: Q is the rational polarized intersection pairing on the
+primitive (p,p) Hodge fiber. P is a genuine native-cycle packet whose
+actual cycle classes span the ENTIRE algebraic image A (not merely a
+finite list of discovered representatives), whose detector coordinates
+are Q-pairings with native generators. Such a basis of A is legitimate
+when the rational Hodge fiber is finite-dimensional, regardless of
+whether Hodge algebraicity holds.
+
+For any rational primitive Hodge alpha set
+
+    r(alpha) = alpha - cl(projectedNativeCycle(P,alpha)).
+
+Then for EVERY native algebraic codimension-p cycle Z,
+
+    Q(r(alpha),cl(Z)) = 0.
+
+If alpha is hypothetically missing, the already verified positive
+definiteness and projection facts imply
+
+    Q(r(alpha),r(alpha)) > 0
+
+at the very same time as EVERY native-cycle readout Q(r,cl(Z)) vanishes.
+There is no contradiction. The new theorem explicitly rules out
+saturating the missing direction solely by increasing the list of
+already-native intersection detectors. In particular, a newly
+DISCOVERED cycle still belonged to the mathematical definition of A
+before it was discovered; it does not enlarge the complete image A.
+
+Executed program routes, with exact first unresolved implications:
+
+1. Full GST rank-free matrix units: these mix rational Hodge basis
+   coordinates abstractly. Constructing equivalent *geometrically
+   realized* operators on arbitrary X remains unproved; the existing
+   native-realization firewall demonstrates why abstract operator
+   identities are insufficient.
+2. CM/NM, graph words, native commutators and rational Gram growth:
+   when the operations are true algebraic correspondences, they act
+   within A, and cannot pair nontrivially with r(alpha). Special
+   geometries (P1xP1, cubic fourfold with a plane, abelian/CM and K3
+   examples) yield genuine constructions only for their stated scopes.
+3. Projective anti-graph and integral-current surgery: projective
+   cellular parity identities do not extend to arbitrary X without
+   independent algebraic basis cycles. A positive smooth closed current
+   after an ample shift is NOT an integral rectifiable calibrated
+   algebraic cycle; the latter independent geometric replacement is
+   unproved for each arbitrary rational primitive Hodge class.
+
+The only successful universal endgame would independently establish
+that no nonzero residual r(alpha) is possible for the actual geometric
+cycle map, or construct an actual algebraic representative of alpha
+without assuming an equivalent reachability, Gram-saturation, or
+period-certificate existence statement. We did NOT obtain that theorem.
+The experiment eliminates a false universal inference but does not
+rule out a fundamentally new GST geometric construction.
+
+Next direct research attack, rather than more formal rank wrappers:
+construct from alpha a genuinely closed integral (p,p)-calibrated
+rectifiable representative in the exact rational homology class after
+clearing denominators and a known algebraic ample correction. Check
+every proposed GST N-current surgery preserves the prescribed
+homology class and integral multiplicities; a smooth positive or weak
+limit alone cannot discharge this. Independently investigate
+geometrically obtained cross-carrier correspondences whose native
+cycle outputs provably cover a previously unavailable primitive
+Hodge direction, without using alpha as a preexisting cycle input.
