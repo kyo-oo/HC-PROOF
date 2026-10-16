@@ -152,3 +152,69 @@ run 38699408237 — **SUCCESS**. The actual arbitrary-dimensional
 codimension-two algebraic correction compiled under Lean 4 without
 new custom axioms or sorry placeholders. Older fourfold and divisor proofs
 are independently green (38698778667 and 38698778620).
+
+
+## 2026-10-16 Mathbox: arbitrary-fourfold primitive from an actual Gram minor
+
+The exact universal target remains construction of rational algebraic cycles
+for every primitive rational (p,p) class of every smooth projective complex X.
+This record does not assert that target has been closed.
+
+**New existing-file Lean results** in `GSTUniversalFourfoldPrimitiveExtraction.lean`:
+`algebraicLefschetzCorrection_in_divisor_image`,
+`primitiveizeNativeMiddleCycle_detector_invariant`,
+`nonzero_native_primitive_of_numerical_detector`,
+`primitive_native_direction_outside_prior_cycle_span`, and
+`native_primitive_of_nonzero_intersection_gram`.
+The first four were remote-kernel-verified by GitHub Action run 38910187554.
+The last is awaiting its separate targeted compiler verdict; do not call it
+green before that run succeeds.
+
+Here is the new independent geometric test rather than an arbitrary Hodge
+cycle-selector. On a smooth projective complex fourfold let U and Z be
+**already constructed actual codimension-two algebraic cycles** and let
+r_U, r_Z be rational linear readouts on the rational (2,2) Hodge fiber,
+obtained in a genuine application from verified Poincare intersection
+pairings. Suppose every divisor-Lefschetz class is in Q*[U]. Set
+
+    D = r_U(cl(U)),  M = r_Z(cl(U)),
+    C = r_U(cl(Z)),  N = r_Z(cl(Z)).
+
+If the actual 2x2 determinant Δ = D*N - M*C is nonzero, the explicitly
+constructed rational detector
+
+    R(x) = D*r_Z(x) - M*r_U(x)
+
+annihilates the ENTIRE divisor-Lefschetz image while
+R(cl(Z)) = Δ ≠ 0. The universal fourfold GST algebraic Lefschetz
+correction subtracts an actual native divisor product from Z, constructing
+
+    Z_prim = Z - corrected_divisor_product(Z).
+
+The proof gives primitiveTest(cl(Z_prim))=0 AND R(cl(Z_prim))=Δ≠0.
+Thus a **nonzero algebraic primitive cycle exists** in this geometric
+situation without assuming an algebraic representative of an unknown
+Hodge target. This is existence, not an equivalent Hodge hypothesis.
+The required U,Z, readouts, divisor-line property, and determinant must be
+certified by independent geometry for each application.
+
+For an actual symmetric intersection form take U=h^2 and r_U(x)=int_X x*h^2,
+r_Z(x)=int_X x*[Z]. Then D=int_X h^4, M=C=int_X h^2*[Z],
+N=int_X [Z]^2. The explicit rational cycle D*[Z]-M*h^2 is orthogonal
+to h^2, with self-intersection D*(D*N-M^2). In a fourfold with one-dimensional
+rational H^2 and H^6, orthogonality to h^2 additionally proves geometric
+primitivity under the true Lefschetz map. This is a classical mathematical
+interpretation of the exact Lean determinant certificate, not a fully
+formalized scheme-theoretic intersection pairing in Mathlib.
+
+The concrete cubic-fourfold-with-plane check gives (D,M,N)=(3,1,3),
+Δ=8, primitive cycle 3[P]-h^2, self-pairing 24. This recovers and
+extends the existing example with a reusable any-fourfold rank test.
+
+**Three active completion routes:** (A) independently construct sufficiently
+many algebraic surfaces and certify nonzero Gram minors, ultimately in every
+primitive Hodge direction; (B) CM/NM correspondences across actual varieties
+with proven period compatibility and rational descent; (C) fixed-class
+calibrated integer-rectifiable geometric cycles. None currently establishes
+all X, all p, all rational Hodge classes. The finite-dimensional Gram test
+cannot create a missing actual source cycle or force the ranks to saturate.
