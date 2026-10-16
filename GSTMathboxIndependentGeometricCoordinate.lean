@@ -154,6 +154,39 @@ theorem detected_native_cycle_outside_old_span
     exact LinearMap.mem_ker.mpr (hOld i)
   exact hFresh (LinearMap.mem_ker.mp (hker hspan))
 
+
+/-- An independently DETECTED genuine cycle causes a STRICT increase
+in the actual algebraic Hodge span, at any finite or infinite source-index
+type. No Hodge witness is chosen as a premise: the inputs are old native
+cycles, a newly constructed native cycle, and the checked rational period. -/
+theorem detected_native_cycle_strict_rank_gain
+    (G : GeometricCycleClassSpine V H)
+    (old : ι → codimensionCycles V.X p)
+    (fresh : codimensionCycles V.X p)
+    (readout : ClassicalHodgeFiber V H p →ₗ[ℚ] ℚ)
+    (hOld : ∀ i : ι,
+      readout (geometricHodgeClass G (old i)) = 0)
+    (hFresh : readout (geometricHodgeClass G fresh) ≠ 0) :
+    Submodule.span ℚ
+        (Set.range (fun i : ι => geometricHodgeClass G (old i))) <
+      Submodule.span ℚ
+        (Set.insert (geometricHodgeClass G fresh)
+          (Set.range (fun i : ι => geometricHodgeClass G (old i)))) := by
+  apply lt_of_le_of_ne
+  · exact Submodule.span_mono (Set.subset_insert _ _)
+  · intro heq
+    have hnew :
+        geometricHodgeClass G fresh ∈
+          Submodule.span ℚ
+            (Set.insert (geometricHodgeClass G fresh)
+              (Set.range (fun i : ι => geometricHodgeClass G (old i)))) :=
+      Submodule.subset_span (Set.mem_insert _ _)
+    rw [← heq] at hnew
+    exact detected_native_cycle_outside_old_span
+      G old fresh readout hOld hFresh hnew
+
+#print axioms detected_native_cycle_strict_rank_gain
+
 /-- Stronger GST interpretation of the user-created third coordinate:
 for a genuine REALIZED correspondence E, the actual native image of the
 projective spine supplies a new independent algebraic Hodge direction

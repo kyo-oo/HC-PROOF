@@ -5,8 +5,10 @@ on:
   push:
     branches:
       - research/gpt6-gst-native-rank-one-realization-20261014
+      - mathbox/residual-zero-direct-audit-20261015
     paths:
       - 'GSTClassicalHodgeActualCommutatorRankGain.lean'
+      - 'GSTMathboxIndependentGeometricCoordinate.lean'
       - '.github/workflows/gst-geometric-commutator-rank-gain.yml'
   workflow_dispatch:
 
@@ -51,7 +53,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if lake build GSTClassicalHodgeActualCommutatorRankGain > commutator-rank-lean.log 2>&1; then
+          if lake build GSTClassicalHodgeActualCommutatorRankGain GSTMathboxIndependentGeometricCoordinate > commutator-rank-lean.log 2>&1; then
             echo 'LEAN PASSED: actual geometric commutator rank gain'
           else
             echo 'LEAN FAILED: actual geometric commutator rank gain'

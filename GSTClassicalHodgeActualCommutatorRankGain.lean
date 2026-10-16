@@ -234,6 +234,100 @@ theorem rank_two_hodge_of_charge_eigen_geometric_commutator
     (geometric_commutator_charge_zero G D E F a b hE hF)
     hrank alpha halpha
 
+
+/-! ## Exact four-coordinate GST graph audit (Mathbox + Wolfram)
+
+The rank-two commutator theorem above is genuine under its hypotheses,
+but *noncommutativity plus a conserved source charge* does not force a
+full Hodge-basis orbit in arbitrary rank. We construct a four-dimensional
+RATIONAL representation with two noncommuting, charge-preserving operators.
+Every finite graph word, rational combination, and scaled path beginning
+at its native-style seed remains in the hyperplane x₃=0. The commutator
+is nonzero and creates a new direction, but the fourth direction is not
+reachable. This is a countermodel to an ABSTRACT rank-completion
+inference, NOT a counterexample on an actual projective variety. -/
+
+namespace FourCoordinateGSTGraphAudit
+
+def graphSeed : Fin 4 → ℚ :=
+  fun i => if i = 0 ∨ i = 1 then 1 else 0
+
+/-- Swap the middle two rational graph channels, preserving the first charge. -/
+def graphSwap (v : Fin 4 → ℚ) : Fin 4 → ℚ :=
+  fun i => if i = 1 then v 2 else if i = 2 then v 1 else v i
+
+/-- A genuinely distinct diagonal CM/NM-style rational graph action. -/
+def graphDiagonal (v : Fin 4 → ℚ) : Fin 4 → ℚ :=
+  fun i => if i = 1 then 2 * v i else
+    if i = 2 then 3 * v i else
+    if i = 3 then 5 * v i else v i
+
+theorem graphSwap_conserves_charge (v : Fin 4 → ℚ) :
+    graphSwap v 0 = v 0 := by
+  simp [graphSwap]
+
+theorem graphDiagonal_conserves_charge (v : Fin 4 → ℚ) :
+    graphDiagonal v 0 = v 0 := by
+  simp [graphDiagonal]
+
+theorem graphSeed_charge_nonzero : graphSeed 0 ≠ 0 := by
+  norm_num [graphSeed]
+
+/-- The two charge-preserving operators genuinely fail to commute on seed. -/
+theorem graph_commutator_nonzero :
+    graphSwap (graphDiagonal graphSeed) -
+      graphDiagonal (graphSwap graphSeed) ≠ 0 := by
+  intro h
+  have h2 := congrArg (fun v : Fin 4 → ℚ => v 2) h
+  norm_num [graphSwap, graphDiagonal, graphSeed] at h2
+
+/-- Every finite GST graph expression built from these two actions and
+rational linear combinations; arbitrary nesting and word length allowed. -/
+inductive GraphProgram where
+  | seed
+  | swap (P : GraphProgram)
+  | diagonal (P : GraphProgram)
+  | add (P Q : GraphProgram)
+  | scale (a : ℚ) (P : GraphProgram)
+
+def GraphProgram.eval : GraphProgram → (Fin 4 → ℚ)
+  | .seed => graphSeed
+  | .swap P => graphSwap P.eval
+  | .diagonal P => graphDiagonal P.eval
+  | .add P Q => P.eval + Q.eval
+  | .scale a P => a • P.eval
+
+/-- Graph closure has a genuine missing rational direction at ANY
+finite depth, notwithstanding nonzero commutators and a conserved charge. -/
+theorem every_graph_program_fourth_coordinate_zero
+    (P : GraphProgram) : P.eval 3 = 0 := by
+  induction P with
+  | seed => simp [GraphProgram.eval, graphSeed]
+  | swap P ih => simpa [GraphProgram.eval, graphSwap] using ih
+  | diagonal P ih => simpa [GraphProgram.eval, graphDiagonal] using ih
+  | add P Q hP hQ => simp [GraphProgram.eval, hP, hQ]
+  | scale a P ih => simp [GraphProgram.eval, ih]
+
+/-- The fourth basis class is NOT produced by any amount of these
+graph operators. This refutes only the abstract claim that the stated
+operators FORCE full rank, not the classical Hodge conjecture. -/
+theorem fourth_basis_direction_unreachable (P : GraphProgram) :
+    P.eval ≠ (fun i : Fin 4 => if i = 3 then (1 : ℚ) else 0) := by
+  intro h
+  have h3 := congrArg (fun v : Fin 4 → ℚ => v 3) h
+  have hz := every_graph_program_fourth_coordinate_zero P
+  simp [hz] at h3
+
+/-- Noncommutativity is witnessed by two concrete executable graph words. -/
+theorem executable_graph_words_do_not_commute :
+    (GraphProgram.swap (GraphProgram.diagonal .seed)).eval -
+      (GraphProgram.diagonal (GraphProgram.swap .seed)).eval ≠ 0 := by
+  exact graph_commutator_nonzero
+
+#print axioms graph_commutator_nonzero
+#print axioms fourth_basis_direction_unreachable
+end FourCoordinateGSTGraphAudit
+
 #check actualSpine_betti_charge_nonzero
 #check geometric_commutator_charge_zero
 #check actual_spine_and_commutator_linearIndependent
