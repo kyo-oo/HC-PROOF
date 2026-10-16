@@ -139,7 +139,7 @@ This is a tested route, not a geometric counterexample.
 * Lean V3 independent N-hole coordinates: GitHub Actions 38843813429 GREEN.
 * Original unshifted integer defect gap: 38845762815 GREEN.
 * Actual GST native cycle / N-mass bridge: 38846681250 GREEN.
-* Shifted integer zero-defect model: GSTNAmpleShiftIntegralRealization.lean; use its own CI workflow to establish green before claiming it.
+* Shifted integer zero-defect model: GSTNAmpleShiftIntegralRealization.lean; GitHub Actions 38850483241 SUCCESS, Lean kernel verified.
 * Wolfram two-channel shifts and P^2 x P^2 x P^1 coefficient calculations: exact integer arithmetic verified, inputs displayed above.
 * Actual every-product-projective calibrated construction: rigorous projective geometry using the Chow/Kunneth basis, complete intersections and the Wirtinger calibration.
 * Missing to solve the user's ORIGINAL all-X Hodge problem: a geometric effective-cycle generation theorem spanning arbitrary rational Hodge classes of arbitrary smooth projective complex X, or an independently geometric integral current flow proving inf Defect=0 in an ample-shift class. No new GST channel identity, positivity calculation, virtual topological bundle, or compiled conditional proof supplies this by itself.
@@ -228,3 +228,8 @@ and the existence of positive diffuse (p,p) currents do not
 by themselves supply such a selection mechanism.
 
 Neither the all-X sequence nor a proof of Hodge has been supplied.
+
+
+## Verification checkpoint
+
+All verification at the pinned commit named by its own GitHub Actions run. The dedicated shifted N-channel integer-sequence check 38850483241 completed SUCCESS with no reported errors. The earlier missing-olean failure in 38850122415 was a workflow root/dependency-registration error, fixed by adding waves.GSTNCohomologyV3 as a library root; it was not a mathematical counterexample. No run checks analytic currents or establishes Hodge for all X. The explicit abelian-surface matrices were computed using Wolfram exact integer arithmetic, not claimed Lean formalized.
