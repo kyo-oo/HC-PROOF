@@ -102,7 +102,7 @@ theorem no_composed_algebraic_transfer_hits_non_algebraic_target
 /-! ## Generalized GST CM/NM multi-charge geometry: first new atom
 
 The verified quadratic CM factorization handles a ONE-DIMENSIONAL
-norm-one torus: characters come in opposite +/- weights.
+norm-one torus: characters come in opposite positive and negative weights.
 Arbitrary Hodge varieties can carry HIGHER-RANK CM character
 lattices, where an invariant degree-three atom may have NO
 invariant quadratic subword.
