@@ -279,7 +279,7 @@ theorem graph_commutator_nonzero :
       graphDiagonal (graphSwap graphSeed) ≠ 0 := by
   intro h
   have h2 := congrArg (fun v : Fin 4 → ℚ => v 2) h
-  norm_num [graphSwap, graphDiagonal, graphSeed] at h2
+  simp [graphSwap, graphDiagonal, graphSeed] at h2
 
 /-- Every finite GST graph expression built from these two actions and
 rational linear combinations; arbitrary nesting and word length allowed. -/
