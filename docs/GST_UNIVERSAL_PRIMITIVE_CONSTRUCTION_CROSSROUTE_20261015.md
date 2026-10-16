@@ -866,9 +866,12 @@ The no-cutoff character pairing proof passed GitHub Actions
 38936622219 at 54c5296c680dbaf08f0aa17347e122b8eac5fe98.
 The integrated constructor is at commit
 2d68e3e800c8d59b90d0cbbb1376738161170825.
-The new semigroup surjectivity is at commit
-348b92cc0342d2ee248dd30a40aac5b40cba1a2c
-and its CI needs independent confirmation before marking verified.
+The new semigroup surjectivity was first attempted at commit
+348b92cc0342d2ee248dd30a40aac5b40cba1a2c;
+run 38937229168 failed on the reserved Lean parser identifier `rec`,
+not on the mathematical statement. The correction is commit
+0d54eedea4364e17a73e6946ad725917e565ed82.
+Full CM kernel gate 38937754946 then PASSED with no sorryAx.
 
 SEMANTIC BORDER: the exterior cohomology algebra uses Koszul
 anticommutation signs. Its identification with the monomial
@@ -886,3 +889,11 @@ Even a complete E^n CM proof would not establish a genuine
 finite-degree cycle-complete source dominating every arbitrary
 smooth projective variety; such a dominance claim must not
 be smuggled into the GST cosmology's world-birth packet.
+
+
+The integrated CM native constructor from signed zero-weight lists,
+`cm_zero_weight_character_has_actual_algebraic_hodge_cycle`, is also
+included in the successful kernel build 38937754946. It produces a
+true `codimensionCycles S.X p` using actual native divisor products,
+not a Hodge-class-to-Chow choice. The exact source product and Hodge
+comparison are separately checked fields of `CMNativeProductRealization`.
