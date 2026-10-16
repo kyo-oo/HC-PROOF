@@ -164,3 +164,122 @@ ACTUAL GEOMETRY: explicit integral cycles at fixed class with continuous,
 positive, vanishing calibration defects.
 UNRESOLVED: the universal fixed-integral-homology current construction
 for EVERY rational (p,p) Hodge class on an arbitrary X.
+
+
+## Continuation: genuine all-X realization on BOTH sides of the integral-current problem
+
+Let X be a smooth projective complex d-fold, 1<=p<=d, q=d-p,
+omega an integral Kähler form, and alpha a rational (p,p) Hodge class.
+Clear denominators, choose a smooth real d-closed (p,p) representative
+eta of m alpha, and take M so large that
+
+    F = eta + M omega^p
+
+is strictly strongly positive. Such M exists on compact X because
+omega^p lies in the interior of the strong-positivity cone pointwise
+and eta has uniformly bounded coefficients in local unitary frames.
+The cohomology class beta=[F]=m alpha + M h^p is integral modulo
+torsion after choosing integral ample omega and m.
+
+### A. All-X POSITIVE diffuse realization is unconditional
+
+Define an order-(0) current of real dimension 2q by
+
+    S_F(phi)= integral_X F wedge phi
+
+for smooth test 2q-forms phi. Since dF=0, boundary(S_F)=0.
+Strict strong positivity makes S_F a positive (q,q) current.
+Its generalized mass with respect to the standard Kähler
+calibration c_q=omega^q/q! equals
+
+    Mass(S_F)=S_F(c_q)= integral_X F wedge omega^q/q!.
+
+Thus its positive-current calibration defect is **exactly ZERO**,
+and its real homology class is PD(beta).
+
+This construction works for EVERY X,p,alpha and makes no assumption
+that alpha is already algebraic. It is a genuine analytic-geometric
+realization, not an internal N-channel formal type.
+
+But for 0<=q<d and F nonzero, the mass measure of S_F is smooth
+absolutely continuous with respect to real 2d-dimensional volume.
+A nonzero integral 2q-current instead has mass concentrated on a
+countably 2q-rectifiable set, which has zero 2d-volume.
+Consequently S_F is NOT an integral rectifiable current.
+One cannot promote this to an integral-current solution by
+renaming the diffuse mass an N-wave integer functional.
+
+### B. All-X FIXED-INTEGRAL-HOMOLOGY realization is unconditional
+
+Any class beta in H_{2q}(X,Z), modulo torsion as appropriate,
+has a finite integral singular-cycle representative after taking
+a smooth triangulation of compact X. Each oriented simplex defines
+a Lipschitz rectifiable current with integer multiplicity;
+the signed finite sum T_beta is integral, closed because the
+simplicial boundary cancels, and represents beta exactly.
+
+This DOES construct at least one integral rectifiable closed current
+for beta on EVERY X. It does not make that T_beta positive or
+complex-tangent. In particular its absolute calibration defect
+can be strictly positive.
+
+### C. Why weakly approximating the diffuse solution DOES NOT work
+
+Suppose integral cycles T_n in the same beta converge as currents
+to the NONZERO smooth diffuse S_F, with uniformly bounded masses
+and zero boundaries. Federer--Fleming compactness would produce
+a flat-convergent subsequence to an integral rectifiable T.
+Flat convergence implies weak convergence, whose limit must be S_F.
+But S_F is not integral rectifiable (part A). Contradiction.
+
+Thus uniformly-mass-bounded integer cycles cannot approximate
+THIS smooth diffuse S_F weakly, EVEN IF beta already has an
+entirely different holomorphic representative.
+A successful proof must construct integral cycles converging to
+a holomorphic chain, NOT round a diffuse smooth solution.
+
+### D. Quantized N-channel semigroup saturation test (Lean source)
+
+New file GSTNIntegralCalibrationGap.lean has a two-channel integer
+homology model
+
+    period(a,b)=2a+3b,    mass(a,b)=2|a|+3|b|.
+
+For period 1:
+* an integral signed cycle exists: (a,b)=(-1,1);
+* a rational positive calibrated cycle exists: (a,b)=(1/2,0);
+* but NO nonnegative INTEGER cycle has period 1, because
+  2a+3b is zero or >=2 for a,b nonnegative integers;
+* every integer signed cycle representing period 1 has defect
+  mass-period >=4, attained by (-1,1).
+
+The inequality is an exact all-integer arithmetic theorem,
+not a bounded search. It also excludes integer sequences with
+fixed period 1 whose defect tends to zero. This is a deliberately
+FINITE analogue of an unsaturated semigroup. It is NOT a
+counterexample to the geometric Hodge conjecture on any actual X.
+
+It proves that N-cohomology rational coordinate reconstruction,
+integer class periods, and even existence of integer signed cycles
+do not, alone, imply existence of integer CALIBRATED representatives.
+A new theorem about actual projective geometry is mandatory to
+bridge the integral saturated-effective-cone gap.
+
+### E. What remains under the ORIGINAL all-X Hodge goal
+
+We have unconditionally constructed the two genuinely geometric
+realizations A and B for every target beta but NOT a joint one.
+The original all-X claim asks for a sequence of *one and the
+same kind of object*: integral rectifiable closed T_n in a fixed
+integral class, with
+
+    Mass(T_n) - T_n(omega^q/q!) -> 0.
+
+This is equivalent to an effective analytic cycle in that fixed
+class by integral-current compactness/calibration regularity,
+not a consequence of the existence of A and B separately.
+A mass nonincrease theorem for a class-preserving integral-cycle
+flow that actually converges to the calibrated cone would finish
+the Hodge target, but no such all-X flow theorem has been derived.
+Do NOT register such a theorem as an axiom or count the existence
+of the smooth diffuse S_F as an integral-cycle solution.
