@@ -86,7 +86,9 @@ theorem surgery_mass_exact_drop
   have hd1 : 0 ≤ T.anti - k := sub_nonneg.mpr ha
   have hd2 : 0 ≤ T.diagonal - k := sub_nonneg.mpr hb
   have hd3 : 0 ≤ T.ruling + 2*k := by omega
-  simp [currentMass, surgery, abs_of_nonneg, haa, hbb, hc, hd1, hd2, hd3]
+  simp only [currentMass, surgery]
+  rw [abs_of_nonneg hd1, abs_of_nonneg hd2, abs_of_nonneg hd3,
+      abs_of_nonneg haa, abs_of_nonneg hbb, abs_of_nonneg hc]
   ring
 
 theorem surgery_defect_exact_drop
