@@ -335,6 +335,58 @@ theorem cm_native_word_is_algebraic_rational_hodge
   exact ⟨cm_native_word_cycleClass F p w,
     cm_balanced_divisor_words_are_rational_hodge F p w⟩
 
+
+/-! ## From arbitrary zero-weight GST CM input to an ACTUAL native cycle
+
+This integrates the independently proved norm-one torus character
+factorization with the genuine scheme codimension-cycle constructor.
+Neither an arbitrary Hodge class nor a chosen Chow preimage is an
+input: the source is only a zero-weight signed CM character word.
+-/
+
+/-- Compute an actual rational algebraic cycle from ANY signed
+zero-weight CM monomial, at the exact codimension prescribed by
+its explicitly constructed quadratic pair sequence. -/
+noncomputable def cmNativeCycleFromTorusWeight
+    (F : CMNativeProductRealization S H n)
+    (positive negative : List (Fin n)) :
+    codimensionCycles S.X (cmQuadraticPairs positive negative).length :=
+  cmNativeDivisorWord F (cmQuadraticPairs positive negative).length
+    (fun i => (cmQuadraticPairs positive negative).get i)
+
+/-- A genuine all-rank, all-codimension GST-CM source constructor:
+zero torus weight -> explicit quadratic factorization ->
+actual codimension-p scheme cycle -> its genuine rational Betti
+cycle class of type (p,p), while reconstructing both character
+lists exactly. There is no fixed number of elliptic factors. -/
+theorem cm_zero_weight_character_has_actual_algebraic_hodge_cycle
+    (F : CMNativeProductRealization S H n)
+    (positive negative : List (Fin n))
+    (hWeight : cmCharacterWeight positive negative = 0) :
+    let pairs := cmQuadraticPairs positive negative
+    let word : Fin pairs.length → Fin n × Fin n :=
+      fun i => pairs.get i
+    ∃ Z : codimensionCycles S.X pairs.length,
+      H.cycleClass pairs.length Z =
+        cmBettiDivisorWord F pairs.length word ∧
+      cmBettiDivisorWord F pairs.length word ∈
+        rationalHodgeSubspace (H.hodgeBigrading pairs.length) ∧
+      pairs.map Prod.fst = positive ∧
+      pairs.map Prod.snd = negative := by
+  dsimp
+  refine ⟨cmNativeCycleFromTorusWeight F positive negative, ?_, ?_, ?_, ?_⟩
+  · exact cm_native_word_cycleClass F _
+      (fun i => (cmQuadraticPairs positive negative).get i)
+  · exact cm_balanced_divisor_words_are_rational_hodge F _
+      (fun i => (cmQuadraticPairs positive negative).get i)
+  · exact (cm_torus_invariant_factorizes_quadratically
+      positive negative hWeight).1
+  · exact (cm_torus_invariant_factorizes_quadratically
+      positive negative hWeight).2
+
+#check cm_zero_weight_character_has_actual_algebraic_hodge_cycle
+#print axioms cm_zero_weight_character_has_actual_algebraic_hodge_cycle
+
 #check cm_native_word_is_algebraic_rational_hodge
 #print axioms cm_native_word_is_algebraic_rational_hodge
 
