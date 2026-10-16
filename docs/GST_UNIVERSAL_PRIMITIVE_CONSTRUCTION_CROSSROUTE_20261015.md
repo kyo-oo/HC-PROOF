@@ -167,8 +167,9 @@ This record does not assert that target has been closed.
 `primitive_native_direction_outside_prior_cycle_span`, and
 `native_primitive_of_nonzero_intersection_gram`.
 The first four were remote-kernel-verified by GitHub Action run 38910187554.
-The last is awaiting its separate targeted compiler verdict; do not call it
-green before that run succeeds.
+The Gram-minor theorem also passed its exact GitHub Lean kernel gate:
+run 38910663004, conclusion SUCCESS, head 19ea255b36b6fbb50c401c92320f66008a1511d3.
+This checks the Lean formalization, NOT the all-X existence conjecture.
 
 Here is the new independent geometric test rather than an arbitrary Hodge
 cycle-selector. On a smooth projective complex fourfold let U and Z be
