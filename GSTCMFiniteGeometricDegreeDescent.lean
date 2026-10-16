@@ -1,5 +1,6 @@
 import GSTClassicalHodgeCrossCarrierGeometricTransfer
 import GSTClassicalHodgeExactClayStatement
+import GSTClassicalHodgeCMNativeRationalDescent
 
 /-!
 # GST CM universal transfer: generically finite geometric descent
@@ -451,6 +452,90 @@ structure CMActualHodgeCharacterExpansion
           = alpha
 
 variable {ι : Type*} [Fintype ι]
+
+
+/-! ## Stronger GST bridge: algebraic CM field coefficients descend to Q
+
+The norm-one CM torus diagonalizes naturally over a coefficient field
+K containing the CM character eigenvalues. The true target Hodge
+classes and codimension cycles, however, have rational coefficients.
+
+Rather than assuming a RATIONAL balanced-word expansion, the following
+constructor starts with the cheaper geometric K-linear expansion
+and explicitly projects the coefficients back to Q through the
+already established native Chow coefficient-descent theorem.
+This bridge is exact for arbitrary algebraic or transcendental field
+extensions K/Q, for all n and p, and on the actual scheme-typed
+cohomology and native cycle carrier.
+
+No CH^p preimage of alpha appears in the geometric input: only the
+verified CM character-word coefficient expansion after scalar
+extension. On an actual power E^n, the remaining geometry challenge
+is to establish that expansion from its true CM Hodge representation.
+-/
+
+/-- Independent geometric evidence: every rational Hodge class,
+after extension to a splitting field K, has a finite expression in
+the already CONSTRUCTED quadratic CM divisor product classes.
+
+This is weaker as supplied DATA than requiring Q-linear coefficients;
+the proof below obtains the latter and produces a native cycle.
+Its geometric verification for the true E^n Hodge representation
+cannot be replaced by choosing an arbitrary Hodge basis. -/
+structure CMGeometricFieldCharacterExpansion
+    (F : CMNativeProductRealization S H n)
+    (K : Type*) [Field K] [Algebra ℚ K]
+    (p : ℕ) (ι : Type*) [Fintype ι] where
+  word : ι → CMBalancedCharacterWord n p
+  expansion : ∀ alpha : RationalSingularCohomology
+      H.analytification (2 * p),
+    alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
+      ∃ coeff : ι → K,
+        let b := Module.Free.chooseBasis ℚ
+          (RationalSingularCohomology H.analytification (2*p))
+        ∀ j : Module.Free.ChooseBasisIndex ℚ
+            (RationalSingularCohomology H.analytification (2*p)),
+          algebraMap ℚ K ((b.repr alpha) j) =
+            ∑ i : ι,
+              coeff i * algebraMap ℚ K
+                ((b.repr (cmBettiDivisorWord F p (word i).paired)) j)
+
+/-- The new native CM-to-rational theorem:
+construct an ACTUAL rational Chow codimension-p representative
+for every rational Hodge class from its independently geometric
+K-linear decomposition into existing CM divisor words. -/
+theorem native_rational_cm_cycle_of_geometric_field_expansion
+    {K : Type*} [Field K] [Algebra ℚ K]
+    (F : CMNativeProductRealization S H n)
+    (p : ℕ) (P : CMGeometricFieldCharacterExpansion F K p ι)
+    (alpha : RationalSingularCohomology H.analytification (2*p))
+    (hAlpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles S.X p, H.cycleClass p Z = alpha := by
+  classical
+  obtain ⟨coeff, hK⟩ := P.expansion alpha hAlpha
+  let sources : ι → codimensionCycles S.X p :=
+    fun i => cmNativeDivisorWord F p (P.word i).paired
+  apply GSTClassicalHodgeCMNativeRationalDescent.rational_native_cycle_of_extended_span
+    (K := K) (s := Finset.univ) sources coeff alpha
+  intro j
+  have h := hK j
+  simpa only [sources, cm_native_word_cycleClass] using h
+
+/-- No scalar-field bound or Hodge rank bound in the CM source
+algebraicity result, now with K coefficients converted back to Q
+through the actual native cycle construction. -/
+theorem hodge_of_all_geometric_CM_field_expansions
+    {K : Type*} [Field K] [Algebra ℚ K]
+    (F : CMNativeProductRealization S H n)
+    (P : ∀ p : ℕ,
+      CMGeometricFieldCharacterExpansion F K p ι) :
+    BigradedBettiHodgeStatement S H := by
+  intro p alpha hAlpha
+  exact native_rational_cm_cycle_of_geometric_field_expansion
+    F p (P p) alpha hAlpha
+
+#check native_rational_cm_cycle_of_geometric_field_expansion
+#print axioms native_rational_cm_cycle_of_geometric_field_expansion
 
 /-- If the scheme's actual CM Hodge character expansion has been
 established, construct a rational linear combination of genuine

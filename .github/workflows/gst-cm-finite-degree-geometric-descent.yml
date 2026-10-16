@@ -49,7 +49,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTCMFiniteDegreeDescent"
-          roots = ["GSTCMFiniteGeometricDegreeDescent"]
+          roots = ["GSTCMFiniteGeometricDegreeDescent", "GSTClassicalHodgeCMNativeRationalDescent"]
           EOF
           if lake build GSTCMFiniteDegreeDescent > cm-degree-descent-lean.log 2>&1; then
             echo "LEAN PASSED: native target cycle from actual source pull/push degree split"
