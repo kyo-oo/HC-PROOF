@@ -158,6 +158,84 @@ theorem cubic_CM_atom_requires_new_generator :
   ⟨cubic_CM_charge_invariant,
     no_quadratic_CM_invariant_in_three_weights⟩
 
+
+/-! ## Even-degree GST CM obstruction: primitive quartic invariant
+
+Odd-degree torus invariants alone cannot serve as rational (p,p)
+classes, which have EVEN cohomological degree 2p. This strengthens
+the previous countermodel to an explicit even-degree ZERO-SUM
+quartic with no proper zero-sum subword.
+
+The four integral rank-two CM charge weights are
+(1,0), (0,1), (-1,2), (0,-3). Their sum is (0,0).
+No quadratic or cubic expression from these weights (even allowing
+repeated characters) has weight zero. In particular the
+four-letter invariant cannot be made from invariant quadratic pairs.
+
+This is a rigorous character-lattice obstruction to UNIVERSALLY
+applying the quadratic E^n norm-one torus method to all GST CM worlds.
+It is NOT a proof that such a quartic character is a (2,2) class on
+a chosen smooth projective X, and it constructs no Chow cycle for it.
+A genuine CM/Hodge realization and an independent native quartic
+geometric cycle are still necessary.
+-/
+
+/-- Two-charge GST-NM extension with a quartic, irreducible
+weight-zero character source rather than a quadratic pair. -/
+def quarticCMWeight (i : Fin 4) (j : Fin 2) : ℤ :=
+  if i = 0 then (if j = 0 then 1 else 0)
+  else if i = 1 then (if j = 0 then 0 else 1)
+  else if i = 2 then (if j = 0 then -1 else 2)
+  else if j = 0 then 0 else -3
+
+/-- Exact rank-two total CM charge cancellation in Hodge-relevant
+even cohomological degree four. -/
+theorem quartic_CM_zero_charge :
+    ∀ j : Fin 2,
+      quarticCMWeight 0 j + quarticCMWeight 1 j +
+      quarticCMWeight 2 j + quarticCMWeight 3 j = 0 := by
+  intro j
+  fin_cases j <;> norm_num [quarticCMWeight]
+
+/-- No quadratic invariant over these four character weights,
+even when repeated source weights are allowed. -/
+theorem quartic_CM_no_quadratic_subgenerator :
+    ∀ i k : Fin 4,
+      ¬ (∀ j : Fin 2,
+        quarticCMWeight i j + quarticCMWeight k j = 0) := by
+  decide
+
+/-- No cubic invariant either. Therefore the four distinct
+weights give a primitive new invariant atom of EXACT length four. -/
+theorem quartic_CM_no_cubic_subgenerator :
+    ∀ i k l : Fin 4,
+      ¬ (∀ j : Fin 2,
+        quarticCMWeight i j + quarticCMWeight k j +
+        quarticCMWeight l j = 0) := by
+  decide
+
+/-- The multi-charge GST universe genuinely contains irreducible
+even-degree CM invariants invisible to all old quadratic-pair laws.
+A general Hodge construction therefore needs higher primitive sources
+whose actual cycle classes must be established geometrically. -/
+theorem quartic_CM_higher_generator_necessary :
+    (∀ j : Fin 2,
+      quarticCMWeight 0 j + quarticCMWeight 1 j +
+      quarticCMWeight 2 j + quarticCMWeight 3 j = 0) ∧
+    (∀ i k : Fin 4,
+      ¬ (∀ j : Fin 2,
+        quarticCMWeight i j + quarticCMWeight k j = 0)) ∧
+    (∀ i k l : Fin 4,
+      ¬ (∀ j : Fin 2,
+        quarticCMWeight i j + quarticCMWeight k j +
+        quarticCMWeight l j = 0)) :=
+  ⟨quartic_CM_zero_charge,
+    quartic_CM_no_quadratic_subgenerator,
+    quartic_CM_no_cubic_subgenerator⟩
+
+#check quartic_CM_higher_generator_necessary
+#print axioms quartic_CM_higher_generator_necessary
+
 #check cubic_CM_atom_requires_new_generator
 #print axioms cubic_CM_atom_requires_new_generator
 
