@@ -80,7 +80,7 @@ theorem projective_line_surgery
     (a b : R) :
     diagonalClass a b 1 + antiGraphClass a b 1 = 2*b := by
   rw [universal_integer_homology_surgery]
-  simp [calibratedReplacementClass]
+  simp [calibratedReplacementClass, Finset.sum_range_succ] <;> ring
 
 /-- The n=2 relation acts on genuine middle codimension TWO,
 the first nontrivial higher-Hodge codimension, yielding two kinds
@@ -90,8 +90,7 @@ theorem projective_plane_middle_surgery
     diagonalClass a b 2 + antiGraphClass a b 2 =
       2*(a^2+b^2) := by
   rw [universal_integer_homology_surgery]
-  simp [calibratedReplacementClass]
-  ring
+  simp [calibratedReplacementClass, Finset.sum_range_succ] <;> ring
 
 #check universal_integer_homology_surgery
 #check projective_plane_middle_surgery
