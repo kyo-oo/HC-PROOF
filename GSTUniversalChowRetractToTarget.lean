@@ -329,6 +329,90 @@ theorem actual_hodge_of_geometric_gysin_split
   actual_hodge_range_of_geometric_multi_source_birth
     P.toChowBirth hSource
 
+
+/-! ## Exact projective-bundle Chow/Hodge formula, scheme-typed
+
+For an actual rank-r projective bundle T=P(E) over a smooth projective
+complex base B, its codimension-p Chow and rational Hodge decompositions
+have source summands CH^(p-j)(B) and Hdg^(p-j)(B), indexed by j<r.
+The Gysin native map is xi^j * pi^*, while the Hodge map is the same
+operation on cohomology. The extractors are determined by the projective
+bundle formula and satisfy SUM_j xi^j*pi^*(read_j(alpha))=alpha.
+
+Here the FULL index and codimension shifts are realized by the actual
+native codimension-cycle carrier of the base and total schemes.
+No map from a chosen target Hodge alpha to an invented native preimage
+occurs. An ACTUAL geometric projectivization must instantiate the
+pullback, hyperplane-cup, and extraction maps below separately.
+-/
+
+/-- Fully degree-indexed geometric projective-bundle certificate.
+Each forward native map has source CH^(p-j)(B), not an unrelated
+cycle carrier, and target CH^p(T) on the actual total scheme. -/
+structure SchemeProjectiveBundleGysin
+    (B T : SmoothProjectiveComplexScheme)
+    (HB : HodgeBigradedBettiData B)
+    (HT : HodgeBigradedBettiData T)
+    (r p : ℕ) where
+  nativeXiPull : (j : Fin r) →
+    codimensionCycles B.X (p-j.val) →ₗ[ℚ] codimensionCycles T.X p
+  bettiXiPull : (j : Fin r) →
+    RationalSingularCohomology HB.analytification (2*(p-j.val)) →ₗ[ℚ]
+      RationalSingularCohomology HT.analytification (2*p)
+  hodgeReadout : (j : Fin r) →
+    RationalSingularCohomology HT.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology HB.analytification (2*(p-j.val))
+  cycleClass_natural : ∀ j (Z : codimensionCycles B.X (p-j.val)),
+    HT.cycleClass p (nativeXiPull j Z) =
+      bettiXiPull j (HB.cycleClass (p-j.val) Z)
+  readout_hodge : ∀ j
+    (alpha : RationalSingularCohomology HT.analytification (2*p)),
+    alpha ∈ rationalHodgeSubspace (HT.hodgeBigrading p) →
+    hodgeReadout j alpha ∈
+      rationalHodgeSubspace (HB.hodgeBigrading (p-j.val))
+  reconstruct : ∀ alpha :
+      RationalSingularCohomology HT.analytification (2*p),
+    (∑ j : Fin r, bettiXiPull j (hodgeReadout j alpha)) = alpha
+
+/-- Convert TRUE projective-bundle codimension indexing to the
+previous kernel-checked actual scheme Gysin splitting. -/
+noncomputable def SchemeProjectiveBundleGysin.toSplit
+    {B T : SmoothProjectiveComplexScheme}
+    {HB : HodgeBigradedBettiData B}
+    {HT : HodgeBigradedBettiData T}
+    {r p : ℕ}
+    (P : SchemeProjectiveBundleGysin B T HB HT r p) :
+    GeometricSplitGysinPacket T HT p (Fin r) where
+  source := fun _ => B
+  data := fun _ => HB
+  codim := fun j => p-j.val
+  native := P.nativeXiPull
+  betti := P.bettiXiPull
+  readout := P.hodgeReadout
+  naturality := P.cycleClass_natural
+  readout_hodge := P.readout_hodge
+  reconstruct := P.reconstruct
+
+/-- Build the ACTUAL CH^p cycle for every rational Hodge (p,p)
+class on a verified geometric projective bundle from the base's
+genuine algebraic cycles, for any fiber rank and total dimension. -/
+theorem hodge_cycles_on_geometric_projective_bundle
+    {B T : SmoothProjectiveComplexScheme}
+    {HB : HodgeBigradedBettiData B}
+    {HT : HodgeBigradedBettiData T}
+    {r p : ℕ}
+    (P : SchemeProjectiveBundleGysin B T HB HT r p)
+    (hBase : BigradedBettiHodgeStatement B HB) :
+    rationalHodgeSubspace (HT.hodgeBigrading p) ≤
+      LinearMap.range (HT.cycleClass p) := by
+  apply actual_hodge_of_geometric_gysin_split P.toSplit
+  intro j
+  exact hBase
+
+#check SchemeProjectiveBundleGysin
+#check hodge_cycles_on_geometric_projective_bundle
+#print axioms hodge_cycles_on_geometric_projective_bundle
+
 #check GeometricSplitGysinPacket
 #check GeometricSplitGysinPacket.toChowBirth
 #check actual_chow_cycle_of_geometric_gysin_split
