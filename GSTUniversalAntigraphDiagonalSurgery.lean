@@ -373,4 +373,57 @@ theorem graph_shift_effective_iff_above_least
 #check graph_shift_effective_iff_above_least
 #print axioms integer_degree_graph_ample_surgery
 
+
+/-! ## Closed exact graph corrections in two universal degree regimes
+
+The arbitrary-integer Nat.find characterization can be eliminated
+entirely for holomorphic/nonnegative pullback degree and for
+antiholomorphic conjugation degree -1. These are genuine optimal
+integer coefficients in the projective cellular basis. -/
+
+/-- No correction is needed when the graph has nonnegative degree:
+all cellular coefficients are already effective. -/
+theorem least_graph_diagonal_shift_nonnegative_degree
+    (n : ℕ) (k : ℤ) (hk : 0 ≤ k) :
+    leastGraphDiagonalShift n k = 0 := by
+  have hgood : GraphShiftFeasible n k 0 := by
+    intro j hj
+    change 0 ≤ (0 : ℤ) + k ^ (n-j)
+    have hpow : 0 ≤ k ^ (n-j) := pow_nonneg hk _
+    omega
+  have hmin := (graph_shift_effective_iff_above_least n k 0).mp hgood
+  omega
+
+/-- For conjugation on P^n with n>=1, the EXACT least integral
+diagonal correction is one, regardless of dimension. -/
+theorem least_graph_diagonal_shift_conjugation
+    (n : ℕ) (hn : 0 < n) :
+    leastGraphDiagonalShift n (-1) = 1 := by
+  have hgood : GraphShiftFeasible n (-1) 1 := by
+    intro j hj
+    have habs : |(-1 : ℤ) ^ (n-j)| = 1 := by simp
+    have hlow := neg_abs_le ((-1 : ℤ) ^ (n-j))
+    change 0 ≤ (1 : ℤ) + (-1 : ℤ) ^ (n-j)
+    omega
+  have hupper :=
+    (graph_shift_effective_iff_above_least n (-1) 1).mp hgood
+  have hzero_bad : ¬ GraphShiftFeasible n (-1) 0 := by
+    intro h
+    have hmem : n-1 ∈ Finset.range (n+1) :=
+      Finset.mem_range.mpr (by omega)
+    have hcoeff := h (n-1) hmem
+    have hexp : n - (n-1) = 1 := by omega
+    simp [hexp] at hcoeff
+  have hlower : 0 < leastGraphDiagonalShift n (-1) := by
+    by_contra hnot
+    have hz : leastGraphDiagonalShift n (-1) = 0 := by omega
+    have hf := leastGraphDiagonalShift_feasible n (-1)
+    rw [hz] at hf
+    exact hzero_bad hf
+  omega
+
+#check least_graph_diagonal_shift_nonnegative_degree
+#check least_graph_diagonal_shift_conjugation
+#print axioms least_graph_diagonal_shift_conjugation
+
 end GSTUniversalAntigraphDiagonalSurgery

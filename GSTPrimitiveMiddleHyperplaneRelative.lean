@@ -150,4 +150,43 @@ theorem relative_middle_image_eq_primitive_kernel
 #check relative_middle_image_eq_primitive_kernel
 #print axioms relative_middle_image_eq_primitive_kernel
 
+
+/-! ## Elementwise exact relative/primitive classification
+
+The subspace equality gives an explicit and fully reversible
+classification of primitive middle classes by relative lifts.
+This upgrades a one-directional lifting result to an iff; the
+relative cohomology witness is NOT automatically an algebraic cycle. -/
+
+/-- A rational middle class is primitive exactly when it lifts
+from the cohomology of the pair (X,Y), under the standard Gysin and
+long-exact-sequence conditions. -/
+theorem primitive_iff_has_relative_middle_lift
+    (gysin : YM →ₗ[ℚ] XH)
+    (hGysin : ∀ a : XM,
+      gysin (G.pullMid a) = G.lefschetzMid a)
+    (toAbsolute : Relative →ₗ[ℚ] XM)
+    (hexact : LinearMap.range toAbsolute = LinearMap.ker G.pullMid)
+    (alpha : XM) :
+    G.lefschetzMid alpha = 0 ↔
+      ∃ gamma : Relative, toAbsolute gamma = alpha := by
+  have himage :=
+    relative_middle_image_eq_primitive_kernel G gysin hGysin
+      toAbsolute hexact
+  constructor
+  · intro hprimitive
+    have hmem : alpha ∈ LinearMap.ker G.lefschetzMid := by
+      change G.lefschetzMid alpha = 0
+      exact hprimitive
+    rw [← himage] at hmem
+    exact hmem
+  · rintro ⟨gamma, hgamma⟩
+    have hmem : alpha ∈ LinearMap.range toAbsolute := ⟨gamma, hgamma⟩
+    rw [himage] at hmem
+    change G.lefschetzMid alpha = 0 at hmem
+    exact hmem
+
+#check primitive_iff_has_relative_middle_lift
+#print axioms primitive_iff_has_relative_middle_lift
+
 end GSTPrimitiveMiddleHyperplaneRelative

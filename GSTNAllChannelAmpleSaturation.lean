@@ -369,4 +369,54 @@ theorem all_N_zero_defect_iff_integer_shift_at_least_minimal
 #check all_N_zero_defect_iff_integer_shift_at_least_minimal
 #print axioms all_N_zero_defect_iff_integer_shift_at_least_minimal
 
+
+/-! ## Complete weight invariance and positivity detection
+
+Strictly positive weights alter the numerical size of defect but not
+its ZERO LOCUS or the presence of signed non-effective channels.
+This makes the GST integer effective cone intrinsic to the channels,
+not to an arbitrarily chosen positive detector. -/
+
+/-- The zero-calibration locus is independent of which strictly
+positive rational-integer channel weights are chosen. -/
+theorem all_N_zero_defect_independent_of_positive_weights
+    (s : NShape) (w v a : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i) (hv : ∀ i, 1 ≤ v i) :
+    calibrationDefect s w a = 0 ↔ calibrationDefect s v a = 0 := by
+  rw [defect_zero_iff_all_coordinates_nonnegative s w a hw,
+      defect_zero_iff_all_coordinates_nonnegative s v a hv]
+
+/-- The exact support obstruction: positive weights produce
+strict defect precisely when at least one integer channel has
+negative multiplicity. Valid in ALL finite N-shapes. -/
+theorem all_N_positive_defect_iff_negative_channel
+    (s : NShape) (w a : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i) :
+    0 < calibrationDefect s w a ↔
+      ∃ i : Fin s.holes, a i < 0 := by
+  have hnonneg : 0 ≤ calibrationDefect s w a :=
+    defect_nonnegative s w a (fun i => by have h := hw i; omega)
+  constructor
+  · intro hpositive
+    by_contra hn
+    have hall : ∀ i : Fin s.holes, 0 ≤ a i := by
+      intro i
+      by_contra hi
+      exact hn ⟨i, by omega⟩
+    have hz :=
+      (defect_zero_iff_all_coordinates_nonnegative s w a hw).2 hall
+    omega
+  · rintro ⟨i, hi⟩
+    have hnotzero : calibrationDefect s w a ≠ 0 := by
+      intro hz
+      have hall :=
+        (defect_zero_iff_all_coordinates_nonnegative s w a hw).1 hz
+      have hcoord := hall i
+      omega
+    omega
+
+#check all_N_zero_defect_independent_of_positive_weights
+#check all_N_positive_defect_iff_negative_channel
+#print axioms all_N_positive_defect_iff_negative_channel
+
 end GSTNAllChannelAmpleSaturation

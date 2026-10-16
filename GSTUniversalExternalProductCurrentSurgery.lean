@@ -199,4 +199,62 @@ theorem repeated_calibrated_tensor_rigidity
 #check repeated_calibrated_tensor_rigidity
 #print axioms repeated_calibrated_tensor_rigidity
 
+
+/-! ## Rigidity even for noncalibrated auxiliary tensor factors
+
+A calibrated tensor factor was not essential to the nonvanishing
+argument. If both Kähler periods are positive, and the factor obeys
+the calibration inequality, a zero tensor defect forces BOTH
+factors to be individually calibrated. This is an exact numerical
+obstruction to all product-only primitive-defect elimination. -/
+
+/-- Any semipositive auxiliary factor preserves nonnegativity of
+the total numerical Wirtinger defect. -/
+theorem semipositive_tensor_defect_nonnegative
+    (S : PrimitiveCurrentNumerics) (a b : ℚ)
+    (ha : 0 ≤ a) (hb : b ≤ a) (hp : 0 ≤ S.period) :
+    0 ≤ generalTensorDefect S a b := by
+  rw [general_tensor_defect_decomposition]
+  have hs : 0 ≤ primitiveDefect S := by
+    unfold primitiveDefect
+    linarith [S.calibrated_bound]
+  exact add_nonneg (mul_nonneg ha hs)
+    (mul_nonneg (sub_nonneg.mpr hb) hp)
+
+/-- Two positive-period factors have vanishing product defect if
+and only if both factors independently saturate calibration. -/
+theorem zero_tensor_defect_iff_both_factors_calibrated
+    (S : PrimitiveCurrentNumerics) (a b : ℚ)
+    (ha : 0 < a) (hb : b ≤ a) (hp : 0 < S.period) :
+    generalTensorDefect S a b = 0 ↔
+      primitiveDefect S = 0 ∧ a = b := by
+  constructor
+  · intro hz
+    have hs : 0 ≤ primitiveDefect S := by
+      unfold primitiveDefect
+      linarith [S.calibrated_bound]
+    have hfirst : 0 ≤ a * primitiveDefect S :=
+      mul_nonneg (le_of_lt ha) hs
+    have hsecond : 0 ≤ (a-b) * S.period :=
+      mul_nonneg (sub_nonneg.mpr hb) (le_of_lt hp)
+    rw [general_tensor_defect_decomposition] at hz
+    have hfirstzero : a * primitiveDefect S = 0 := by linarith
+    have hsecondzero : (a-b) * S.period = 0 := by linarith
+    have hS : primitiveDefect S = 0 := by
+      rcases mul_eq_zero.mp hfirstzero with h | h
+      · exact False.elim ((ne_of_gt ha) h)
+      · exact h
+    have hfactor : a = b := by
+      rcases mul_eq_zero.mp hsecondzero with h | h
+      · linarith
+      · exact False.elim ((ne_of_gt hp) h)
+    exact ⟨hS, hfactor⟩
+  · rintro ⟨hS, hfactor⟩
+    rw [general_tensor_defect_decomposition, hS, hfactor]
+    ring
+
+#check semipositive_tensor_defect_nonnegative
+#check zero_tensor_defect_iff_both_factors_calibrated
+#print axioms zero_tensor_defect_iff_both_factors_calibrated
+
 end GSTUniversalExternalProductCurrentSurgery
