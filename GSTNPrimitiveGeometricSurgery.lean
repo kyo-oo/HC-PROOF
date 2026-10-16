@@ -270,9 +270,9 @@ monotone surgery or with nonnegative coordinates.
 This is a genuine integer linear dual certificate. -/
 theorem currentMass_ge_homology_l1 (T : GeometricCycle) :
     |(homology T).1| + |(homology T).2| ≤ currentMass T := by
-  change | -T.anti + T.diagonal | +
-      | T.anti + T.diagonal + T.ruling | ≤
-        2 * |T.anti| + 2 * |T.diagonal| + |T.ruling|
+  change abs (-T.anti + T.diagonal) +
+      abs (T.anti + T.diagonal + T.ruling) ≤
+        2 * abs T.anti + 2 * abs T.diagonal + abs T.ruling
   omega
 
 /-- Exact mass of the holomorphic replacement: it saturates the
