@@ -276,12 +276,12 @@ theorem universalPrimitive_exact_middle_self_intersection
   have he := universalPrimitive_derivative_identity a b d
   have htop := universalPrimitive_top_pairing a b d hb
   have hfirst : P^2 = P * (P + (a+b)*D) := by
-    calc
-      P^2 = P*P + 0 := by ring
-      _ = P*P + P*((a+b)*D) := by
-        rw [mul_assoc, mul_comm P (a+b), hp]
-        ring
-      _ = P*(P+(a+b)*D) := by ring
+    have hz : P * ((a+b)*D) = 0 := by
+      calc
+        P * ((a+b)*D) = ((a+b)*P)*D := by ring
+        _ = 0 := by rw [hp]; ring
+    rw [mul_add, hz]
+    ring
   calc
     P^2 = P * (((d+1 : ℕ) : R) * (-b)^d) := by
       rw [hfirst]
