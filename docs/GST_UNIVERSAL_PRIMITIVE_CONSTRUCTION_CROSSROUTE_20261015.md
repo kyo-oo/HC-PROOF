@@ -412,3 +412,83 @@ construct an actual algebraic middle-dimensional cycle W on Y
 with [W]=b, WITHOUT assuming b already lies in the native image.
 Only this new geometric input can promote the reduction to a
 solution of the full conjecture.
+
+
+## 2026-10-16 Mathbox: source-birth GST and rational-host primitive propagation
+
+The proof goal remains construction of genuine algebraic-cycle representatives
+of every rational primitive Hodge class on arbitrary smooth projective complex
+varieties. GST graph V2 has now been strengthened within its own original
+self-expanding world cosmology, not replaced by an alternate theory.
+
+NEW INTERNAL GST THEOREMS in GSTGraphV2SelfExpandingCosmology.lean:
+* TwoSourceBirth carries rational-native cycles and genuine rational Hodge
+  cohomology for a parent world, independent source world, and a born world,
+  with actual native transport, cycle-class compatibility and a genuine
+  cohomological two-source decomposition (no native preimage of the target).
+* every_newborn_hodge_class_has_native_cycle constructs an explicit native
+  newborn cycle from source representatives.
+* exceptional_native_birth_creates_new_hodge_direction detects an independent
+  exceptional native cycle outside the whole parent Hodge image.
+* SplitTwoSourceBirth adds actual native/Hodge retracts;
+  split_world_birth_hodge_complete_iff_sources proves that completeness of
+  the born world is equivalent to completeness of both source worlds.
+* source_missing_direction_survives_birth, its exceptional counterpart,
+  and algebraic_host_complete_iff_exceptional_complete characterize
+  the inherited defect and the exceptional sector on a complete base.
+
+The first two upgrades passed GitHub CI runs 38919599650 and 38920157401.
+The specialized exceptional host theorem is separately run as 38920606718.
+CI proves the GST algebraic birth calculus, not Chow blowup compatibility
+on an arbitrary genuine scheme.
+
+GEOMETRIC ALL-X HOSTING:
+For any smooth projective X of dimension d, choose a closed embedding
+X -> P^N with codimension c>=2. Let Y be the smooth projective blowup
+Bl_X(P^N), a rational variety. The genuine blowup Chow and rational Hodge
+formulas give compatible decompositions:
+  Hdg^p(Y)=Hdg^p(P^N) (+) SUM_{j=1}^{c-1} Hdg^{p-j}(X)(-j),
+  CH^p(Y)_Q=CH^p(P^N)_Q (+) SUM_{j=1}^{c-1} CH^{p-j}(X)_Q.
+They instantiate the GST source-birth packet with source B equal to
+the exceptional direct sum. Because P^N is Hodge-complete,
+  all rational Hodge classes algebraic on Y (all p)
+    IFF all rational Hodge classes algebraic on X (all p).
+The unknown Hodge directions of an arbitrary X are thus faithfully
+hosted as exceptional geometry INSIDE rational projective blowups.
+This is not a proof that the host is automatically algebraic.
+
+UNCONDITIONAL GEOMETRY FAMILY 1 (ALL DIMENSIONS):
+Every smooth projective complex UNIRATIONAL variety X has algebraic
+rational Hodge (2,2) classes. Resolve a dominant generically finite
+rational map P^n --> X as smooth blowups of P^n followed by f:Y->X.
+In degree four, the exceptional Hodge contributions for a blowup of
+a smooth center Z are only H^2(Z)(-1) and H^0(Z)(-2).
+They are genuine divisor and component classes, algebraic on every Z,
+regardless of its dimension. Thus codimension-two Hodge algebraicity
+passes through every blowup. Given any rational Hodge (2,2) alpha on
+X, f^*alpha has an algebraic native representative on Y, and the
+projection formula f_* f^* alpha=(deg f)*alpha gives a rational
+algebraic representative on X. Hard Lefschetz gives the corresponding
+codimension n-2 classes as ample powers when n>=4.
+
+UNCONDITIONAL GEOMETRY FAMILY 2:
+All rational Hodge classes on every smooth projective UNIRATIONAL
+variety of dimension n<=5 are algebraic. In that range, blowup
+centers on the resolution of P^n have dimension <=3, and ALL
+rational Hodge classes on smooth projective centers of dimension
+<=3 are algebraic by the Lefschetz (1,1) and Hard Lefschetz theorems.
+The full Chow blowup decomposition and generically finite descent
+finish this family.
+
+The two families are rigorous arguments using genuine algebraic
+geometric blowup and pushforward theorems; those SCHEME-level theorems
+have NOT been formalized in the GST Lean module. New GST Lean theorems
+certify source-birth logic, while these genuine geometric families
+are mathematical instantiations, not machine-proved schemes.
+
+REMAINING ORIGINAL SOURCE-DISCOVERY OBLIGATION:
+Construct enough independent geometric source births for every primitive
+Hodge class of arbitrary nonunirational varieties, with genuine
+cycle-class compatibility. The actual new GST birth calculus permits
+these births without restricting to old CM/NM within-world orbits,
+but it does not postulate their universal existence.
