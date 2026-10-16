@@ -28,7 +28,10 @@ It proves CLOSED, INTEGRAL, RIGHT CLASS for every X,p,alpha.
 What it has NOT proved: D(T(k))=0 or a sequence with D-->0 for
 any ONE FIXED k on arbitrary X. Its geometry need not be holomorphic.
 
-The p=0 case is separately trivial: multiples of the fundamental\ncycle of X are already holomorphic, integral and calibrated.\n\n## Construction I: rational K-theory to true integral degeneracy cycles
+The p=0 case is separately trivial: multiples of the fundamental
+cycle of X are already holomorphic, integral and calibrated.
+
+## Construction I: rational K-theory to true integral degeneracy cycles
 
 1. X is a finite CW complex. The rational Chern character is an
    isomorphism K_top^0(X) tensor Q -> H^{even}(X,Q).
