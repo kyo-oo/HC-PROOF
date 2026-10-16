@@ -113,6 +113,89 @@ The CM Hodge-basis EXPANSION itself remains a separate geometric input.
 
 open scoped BigOperators
 
+
+/-! ### Uniform GST-CM norm-one-torus charge pairing
+
+This is an independent all-n, all-weight COMBINATORIAL proof, not an
+assumed Hodge class expansion. A torus-character monomial has
+a list of positive CM weights and a list of negative CM weights.
+It has invariant total weight zero precisely when the lists have
+equal lengths. The pairing algorithm constructs an actual word in
+the weight-zero quadratic generators, with explicit reconstruction
+of the original two lists. This eliminates arbitrary numerical
+rank cutoffs in the positive/negative weight-factorization step.
+
+It does not by itself identify the ACTUAL analytified Hodge
+cohomology of E^n with the abstract torus character model.
+-/
+
+/-- Signed CM weight difference, in the integral character lattice
+of the norm-one CM torus; no fake rational eigenvalues are used. -/
+def cmCharacterWeight {n : ℕ}
+    (positive negative : List (Fin n)) : ℤ :=
+  (positive.length : ℤ) - (negative.length : ℤ)
+
+/-- Zero CM torus weight is EXACTLY the balanced character condition,
+without a bound on the number of elliptic factors or character length. -/
+theorem cm_weight_zero_iff_balanced {n : ℕ}
+    (positive negative : List (Fin n)) :
+    cmCharacterWeight positive negative = 0 ↔
+      positive.length = negative.length := by
+  simp only [cmCharacterWeight]
+  omega
+
+/-- Recursively pair positive and negative weight-one characters
+into weight-zero degree-two CM generators. -/
+def cmQuadraticPairs {n : ℕ} :
+    List (Fin n) → List (Fin n) → List (Fin n × Fin n)
+  | a :: as, b :: bs => (a,b) :: cmQuadraticPairs as bs
+  | _, _ => []
+
+/-- An exact factorization certificate: the constructed quadratic
+CM-word recovers BOTH original character lists, not just their
+overall weight. Works in all lengths, including empty and high rank. -/
+theorem cm_quadratic_pairs_reconstruct {n : ℕ}
+    (positive negative : List (Fin n))
+    (h : positive.length = negative.length) :
+    (cmQuadraticPairs positive negative).map Prod.fst = positive ∧
+    (cmQuadraticPairs positive negative).map Prod.snd = negative := by
+  induction positive generalizing negative with
+  | nil =>
+      cases negative with
+      | nil => simp [cmQuadraticPairs]
+      | cons b bs => simp at h
+  | cons a as ih =>
+      cases negative with
+      | nil => simp at h
+      | cons b bs =>
+          have hsub : as.length = bs.length := Nat.succ.inj h
+          obtain ⟨hpos,hneg⟩ := ih bs hsub
+          constructor
+          · simp [cmQuadraticPairs, hpos]
+          · simp [cmQuadraticPairs, hneg]
+
+/-- STRONGER factorization: zero CM torus charge CONSTRUCTS
+the full positive-negative quadratic character word, without
+assuming a balancing witness beforehand. -/
+theorem cm_torus_invariant_factorizes_quadratically {n : ℕ}
+    (positive negative : List (Fin n))
+    (h : cmCharacterWeight positive negative = 0) :
+    (cmQuadraticPairs positive negative).map Prod.fst = positive ∧
+    (cmQuadraticPairs positive negative).map Prod.snd = negative :=
+  cm_quadratic_pairs_reconstruct positive negative
+    ((cm_weight_zero_iff_balanced positive negative).mp h)
+
+/-- Each paired CM quadratic has zero net integral torus weight.
+This independently verifies that the generators used by the
+factorization algorithm lie in weight zero. -/
+theorem cm_quadratic_generator_weight_zero {n : ℕ}
+    (i j : Fin n) :
+    cmCharacterWeight [i] [j] = 0 := by
+  simp [cmCharacterWeight]
+
+#check cm_torus_invariant_factorizes_quadratically
+#print axioms cm_torus_invariant_factorizes_quadratically
+
 structure CMBalancedCharacterWord (n p : ℕ) where
   positive : Fin p → Fin n
   negative : Fin p → Fin n
