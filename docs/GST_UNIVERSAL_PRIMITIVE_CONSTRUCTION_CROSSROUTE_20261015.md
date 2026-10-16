@@ -977,8 +977,12 @@ cubic_CM_atom_requires_new_generator,
 quartic_CM_higher_generator_necessary,
 CM_multicharge_zero_sum_atom_all_lengths,
 CM_unbounded_even_degree_primitive_atom.
-The latest combined CI gate is tracked separately;
-do not mark it green before completion.
+The combined cubic/quartic/unbounded-all-even-degrees Lean kernel gate
+38949836999 PASSED at repaired commit
+1f6a31528fdcc24cd5a2a5e40e6bfca860dfa23b with no sorryAx.
+Earlier gate 38949280580 failed only because the Fin 2 arithmetic
+simplifier left two small conditional-expression goals; both were
+repaired by kernel `decide`, without changing the mathematical claim.
 
 **Critical semantic firewall:** An integer torus character
 zero-sum, EVEN at degree 2p, is NOT automatically a (p,p)
