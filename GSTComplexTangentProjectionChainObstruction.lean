@@ -89,8 +89,31 @@ theorem corrected_boundary_necessarily_nonzero
   rw [h1, type_projector_breaks_closedness] at hclose
   linarith
 
+/-- The coefficient of dx∧dy∧du∧dv in the square of the bivector
+a dx∧du+b dy∧dv. A decomposable simple bivector must have zero
+exterior square. -/
+def bivectorWedgeSquare (f : FourierTwoBlock) : ℚ := -2 * f.1 * f.2
+
+theorem original_bivector_is_simple :
+    bivectorWedgeSquare originalClosedForm = 0 := by
+  norm_num [bivectorWedgeSquare, originalClosedForm]
+
+/-- Projecting a simple integer tangent bivector to J-invariant type (1,1)
+produces a NON-SIMPLE fractional bivector, not a valid oriented tangent
+2-plane of any integral rectifiable current. -/
+theorem complex_projection_of_simple_is_not_simple :
+    bivectorWedgeSquare (complexTypeProjection originalClosedForm) =
+      -(1/2 : ℚ) := by
+  norm_num [bivectorWedgeSquare, complexTypeProjection, originalClosedForm]
+
+theorem complex_projection_cannot_be_single_integral_tangent :
+    bivectorWedgeSquare (complexTypeProjection originalClosedForm) ≠ 0 := by
+  rw [complex_projection_of_simple_is_not_simple]
+  norm_num
+
 #check original_is_closed
 #check type_projector_breaks_closedness
+#check complex_projection_cannot_be_single_integral_tangent
 #check corrected_boundary_necessarily_nonzero
 #print axioms no_unconditional_chain_map_identity
 
