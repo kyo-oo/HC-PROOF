@@ -221,3 +221,76 @@ shifted class beta that cross Y and are holomorphic. On
 P¹×P¹ the holomorphic pair of ruling curves explicitly
 shows those can exist. The original universal all-X goal
 still requires finding them for arbitrary rational Hodge alpha.
+
+
+## A NEW ALL-X NONCONCENTRATION THEOREM FOR EVERY HODGE AMPLE SHIFT
+
+This is a further quantitative fact valid for every smooth
+projective X of even dimension 2p and EVERY nonzero rational
+primitive Hodge (p,p) alpha, independently of whether it is
+algebraic.
+
+By the earlier relative cohomology construction, alpha has
+a compact-support smooth CLOSED real de Rham representative
+  psi∈Ω_c^{2p}(U)
+with class [psi]=alpha in H^{2p}(X,R), U=X\Y.
+
+This is obtained by passing from H^{2p}(X,Y;Q)
+to H_c^{2p}(U;Q) and the compact-support de Rham theorem.
+Its compact support K=supp(psi) is a FIXED compact subset of U.
+
+The primitive rational Hodge--Riemann positivity theorem gives
+  (-1)^p ∫_X alpha∧alpha >0.
+In particular, c_alpha=|∫_X alpha∧alpha|>0.
+
+Choose any positive integers m,M and any closed integral
+2p-current T in the shifted class
+   PD(m alpha + M h^p).
+The pairing with psi is HOMOLOGICAL and independent of the
+representative T:
+
+  T(psi)
+   =∫_X (m alpha+M h^p)∧[psi]
+   =m∫_X alpha² + M∫_X h^p∧alpha
+   =m∫_X alpha²
+
+since h∧alpha=0.
+
+Let C_psi=sup_X comass(psi), finite and positive.
+The current's mass measure ||T|| therefore satisfies:
+
+  m c_alpha
+    = |T(psi)|
+    <= C_psi ||T||(K),
+
+so the quantitative ALL-X bound is
+
+    ** ||T||(K) >= m c_alpha / C_psi >0. **
+
+This holds for EVERY integral (or even real normal)
+representative T of ANY ample-shifted class
+m alpha+M h^p, for ALL M, with the SAME K and lower
+bound independent of M.
+
+It establishes a genuinely geometric primitive-information
+CONSERVATION law: no candidate Hodge current sequence,
+calibrated or not, may send all its mass arbitrarily close
+to the ample divisor Y or to infinity in U. A uniformly
+positive amount of mass must persist inside one compact
+region of the affine complement.
+
+In particular, a proposal that tries to make D(T_n) small
+by concentrating every T_n solely into a thin collar of Y,
+without realizing holomorphic tangent planes through the
+region K where the primitive class is detected, is impossible.
+However, this mass lower bound DOES NOT bound D(T) away
+from zero, since the mass inside K could itself be
+Kähler-calibrated. The P¹×P¹ holomorphic example realizes
+precisely that possibility.
+
+This deduction materially sharpens the actual proof task:
+construct a CALIBRATED portion crossing a FIXED compact
+subset of U and carrying the nonzero primitive pairing,
+not merely a high-degree hyperplane accumulation.
+
+No universal zero-defect conclusion has yet been derived.
