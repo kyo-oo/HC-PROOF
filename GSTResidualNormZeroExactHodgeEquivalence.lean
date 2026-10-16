@@ -159,6 +159,93 @@ theorem all_residual_norms_zero_iff_full_primitive_hodge
     exact (zero_norm_iff_actual_rational_algebraic
       P hspan Q hPositive alpha).mpr (honto alpha)
 
+
+/-! ## The direct all-primitive-direction obstruction: polarized native closure
+
+Every known complete native-cycle image has a canonical polarized residual.
+The residual's geometric intersection pairing with EVERY actual native cycle,
+not merely finitely many basis cycles, vanishes. This is a strict
+noncircularity result for the original all-X, all-primitive-Hodge-classes goal.
+Repeating genuine algebraic GST correspondences, CM/NM graph words, projectors,
+or primitive corrections on native cycles cannot directly create a detector
+of that remaining residual. A solution must produce NEW independent
+geometric evidence that actually forces the residual to vanish.
+
+This is a theorem of the existing rational algebraic-image model, NOT a
+counterexample to the classical Hodge conjecture, and DOES NOT prove that
+a nonzero residual exists on any genuine smooth projective variety.
+-/
+
+/-- The complete actual algebraic image is orthogonal to the residual of
+ANY primitive rational Hodge target, using the genuine polarized
+intersection probes. This is stronger than zero pairing with the finite
+chosen generators; the basis is of the ENTIRE native algebraic image. -/
+theorem residual_orthogonal_to_every_native_cycle
+    (P : GeometricDualCyclePacket ι N V)
+    (hspan : ExistingNativeImageSpanned P)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hGeometricPairing :
+      ∀ (i : ι) (x : V),
+        P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (alpha : V) (Z : N) :
+    (Q (residualClass P alpha)) (P.cycleClass Z) = 0 := by
+  classical
+  obtain ⟨coeff, hcoeff⟩ := hspan Z
+  rw [hcoeff, map_sum]
+  apply Finset.sum_eq_zero
+  intro i hi
+  rw [map_smul]
+  have hgen :
+      (Q (residualClass P alpha))
+        (P.cycleClass (P.cycles i)) = 0 := by
+    rw [← hGeometricPairing i (residualClass P alpha)]
+    exact residual_orthogonal_to_all_geometric_cycles P alpha i
+  rw [hgen, smul_zero]
+
+/-- No genuinely native cycle can detect a polarized missing primitive
+residual. Such a detector must come from additional geometric structure
+rather than combinations of the old native-cycle image itself. -/
+theorem no_native_polarized_detector_of_residual
+    (P : GeometricDualCyclePacket ι N V)
+    (hspan : ExistingNativeImageSpanned P)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hGeometricPairing :
+      ∀ (i : ι) (x : V),
+        P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (alpha : V) :
+    ¬ ∃ Z : N,
+      (Q (residualClass P alpha)) (P.cycleClass Z) ≠ 0 := by
+  rintro ⟨Z, hZ⟩
+  exact hZ
+    (residual_orthogonal_to_every_native_cycle
+      P hspan Q hGeometricPairing alpha Z)
+
+/-- In the event of a hypothetical missing primitive class, its rational
+polarization is STRICTLY positive, but every genuine algebraic cycle
+has ZERO intersection pairing against its residual. This identifies the
+precise independent geometric existence step still needed to solve Hodge. -/
+theorem missing_primitive_residual_positive_but_native_undetectable
+    (P : GeometricDualCyclePacket ι N V)
+    (hspan : ExistingNativeImageSpanned P)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hPositive : ∀ v : V, v ≠ 0 → 0 < (Q v) v)
+    (hGeometricPairing :
+      ∀ (i : ι) (x : V),
+        P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (alpha : V)
+    (hmissing : alpha ∉ LinearMap.range P.cycleClass) :
+    (0 < (Q (residualClass P alpha)) (residualClass P alpha)) ∧
+      (∀ Z : N,
+        (Q (residualClass P alpha)) (P.cycleClass Z) = 0) := by
+  exact ⟨nonalgebraic_primitive_forces_positive_residual_energy
+      P Q hPositive alpha hmissing,
+    fun Z => residual_orthogonal_to_every_native_cycle
+      P hspan Q hGeometricPairing alpha Z⟩
+
+#print axioms residual_orthogonal_to_every_native_cycle
+#print axioms no_native_polarized_detector_of_residual
+#print axioms missing_primitive_residual_positive_but_native_undetectable
+
 #check algebraicProjector_fixes_entire_native_image
 #check residual_zero_of_algebraic_target
 #check residual_zero_of_zero_polarized_norm
