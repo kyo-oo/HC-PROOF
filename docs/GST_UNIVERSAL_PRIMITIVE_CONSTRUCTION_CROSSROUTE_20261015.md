@@ -534,8 +534,8 @@ cl(Z)=f^*alpha and define Z_X=(1/e)*f_*Z. Its actual target class is
 cl(Z_X)=alpha. This is independent of Hodge dimension, rank, or codim.
 The Lean theorem is realize_target_via_degree_pushforward, plus the
 surjectivity corollary degree_descent_preserves_all_hodge_classes.
-The corresponding CI run is 38923116042; its status must be verified
-before claiming this new theorem kernel-checked.
+The genuine finite-degree descent theorems passed Lean kernel CI run
+38923116042 at commit 7317e8180cec31a680f9bfb790b1f719cb27da79.
 
 ### New unconditional high-dimensional NONUNIRATIONAL family
 
@@ -654,3 +654,34 @@ rather than full Mathlib Chow-blowup realization.
 The target of EVERY arbitrary smooth projective X is not covered:
 the existence of a dominating source assembled from these
 low-dimensional-center births is not established for general X.
+
+
+### Exact degree-packet composition and defect-persistence audit
+
+Additional existing-file Lean theorems were proved after a genuine
+mathematical gluing correction: DegreePacket.compose requires the
+EXACT identity P.targetCycle = Q.sourceCycle at the intermediate
+world, rather than silently treating unrelated cycle-class maps
+as the same. This necessary law was discovered by GitHub Lean CI
+run 38923661210; the corrected full laws are in commit
+46e89ccf65832e65ff8e93b7037bc8bd364de266.
+Composition preserves actual native pushforward naturality and
+multiplies geometric degrees precisely d1*d2. The two-stage theorem
+proves algebraic target representatives from the far source.
+The reverse missing-target theorem proves that an unrepresented
+Hodge direction on the target must remain unrepresented after
+pullback to the finite-degree source, so a finite cover cannot
+conceal the missing primitive Hodge defect. Both passed GitHub
+Lean kernel CI run 38924122723.
+
+Next noncellular birth discriminator: all projective-bundle and
+low-dimensional-center blowup towers above a base dim<=3 have
+H^{4,0}=0 (holomorphic forms are unchanged by bundle and smooth
+birational blowup operations). Thus no such tower can dominate
+a smooth projective target with H^{4,0} nonzero by a generically
+finite morphism: pullback of nonzero top holomorphic forms would
+contradict source vanishing. An abelian fourfold supplies such a
+target. This proves our current explicit source family cannot
+generate ALL smooth projective geometries, and points to the
+missing high-holomorphic-degree GST source worlds. It does not
+disprove the rational Hodge conjecture on abelian fourfolds.
