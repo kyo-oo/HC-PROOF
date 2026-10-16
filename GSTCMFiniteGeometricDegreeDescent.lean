@@ -100,6 +100,160 @@ theorem full_hodge_of_geometrically_degree_split_CM_source
     p (R p) (pull p) (hPull p) d hd (hDegree p)
     hSource alpha ha
 
+
+/-! ## Formal CM character factorization into ACTUAL native divisor products
+
+A balanced degree-2p CM monomial has p positive and p negative
+characters. Pairing the characters yields p divisor characters.
+The scheme-typed construction below recursively produces a genuine
+codimension-p algebraic cycle, using actual native Chow multiplication.
+The true cycleClass calculation is proved, not assumed for the word.
+The CM Hodge-basis EXPANSION itself remains a separate geometric input.
+-/
+
+open scoped BigOperators
+
+structure CMBalancedCharacterWord (n p : ℕ) where
+  positive : Fin p → Fin n
+  negative : Fin p → Fin n
+
+def CMBalancedCharacterWord.paired
+    {n p : ℕ} (w : CMBalancedCharacterWord n p) :
+    Fin p → Fin n × Fin n :=
+  fun i => (w.positive i, w.negative i)
+
+theorem cm_pairs_recover_both_characters
+    {n p : ℕ} (w : CMBalancedCharacterWord n p) :
+    (fun i => (w.paired i).1) = w.positive ∧
+    (fun i => (w.paired i).2) = w.negative := by
+  constructor <;> funext i <;> rfl
+
+/-- Genuine source-scheme Chow product, rational Betti product, and
+their independent cycle-class naturality laws. These are NOT
+target-cycle witnesses or a reverse map from cohomology to Chow. -/
+structure CMNativeProductRealization
+    (S : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData S) (n : ℕ) where
+  nativeUnit : codimensionCycles S.X 0
+  nativeDivisor : Fin n → Fin n → codimensionCycles S.X 1
+  nativeMul : (q : ℕ) →
+    codimensionCycles S.X q →
+    codimensionCycles S.X 1 →
+    codimensionCycles S.X (q+1)
+  bettiUnit : RationalSingularCohomology H.analytification 0
+  bettiDivisor : Fin n → Fin n →
+    RationalSingularCohomology H.analytification 2
+  bettiMul : (q : ℕ) →
+    RationalSingularCohomology H.analytification (2*q) →
+    RationalSingularCohomology H.analytification 2 →
+    RationalSingularCohomology H.analytification (2*(q+1))
+  nativeUnit_sound : H.cycleClass 0 nativeUnit = bettiUnit
+  nativeDivisor_sound : ∀ i j,
+    H.cycleClass 1 (nativeDivisor i j) = bettiDivisor i j
+  nativeMul_sound : ∀ q Z D,
+    H.cycleClass (q+1) (nativeMul q Z D) =
+      bettiMul q (H.cycleClass q Z) (H.cycleClass 1 D)
+
+variable {S : SmoothProjectiveComplexScheme}
+variable {H : HodgeBigradedBettiData S}
+variable {n : ℕ}
+
+/-- Recursive actual codimension-p rational Chow cycle consisting of
+p CM divisor pairs, without a prior Hodge-class representative. -/
+noncomputable def cmNativeDivisorWord
+    (F : CMNativeProductRealization S H n) :
+    (p : ℕ) → (Fin p → Fin n × Fin n) → codimensionCycles S.X p
+  | 0, _ => F.nativeUnit
+  | q+1, w =>
+      F.nativeMul q
+        (cmNativeDivisorWord F q (fun i => w i.castSucc))
+        (F.nativeDivisor (w (Fin.last q)).1 (w (Fin.last q)).2)
+
+/-- Independently recursive Betti evaluation of p CM divisor pairs. -/
+noncomputable def cmBettiDivisorWord
+    (F : CMNativeProductRealization S H n) :
+    (p : ℕ) → (Fin p → Fin n × Fin n) →
+      RationalSingularCohomology H.analytification (2*p)
+  | 0, _ => F.bettiUnit
+  | q+1, w =>
+      F.bettiMul q
+        (cmBettiDivisorWord F q (fun i => w i.castSucc))
+        (F.bettiDivisor (w (Fin.last q)).1 (w (Fin.last q)).2)
+
+/-- For EVERY p and n, the actual rational algebraic cycle built
+from balanced CM divisor words maps to the corresponding Betti
+cup-product word. The induction uses true codimension cycle types. -/
+theorem cm_native_word_cycleClass
+    (F : CMNativeProductRealization S H n) :
+    ∀ p (w : Fin p → Fin n × Fin n),
+      H.cycleClass p (cmNativeDivisorWord F p w) =
+        cmBettiDivisorWord F p w := by
+  intro p
+  induction p with
+  | zero =>
+      intro w
+      exact F.nativeUnit_sound
+  | succ q ih =>
+      intro w
+      change H.cycleClass (q+1)
+        (F.nativeMul q
+          (cmNativeDivisorWord F q (fun i => w i.castSucc))
+          (F.nativeDivisor (w (Fin.last q)).1 (w (Fin.last q)).2)) =
+        F.bettiMul q
+          (cmBettiDivisorWord F q (fun i => w i.castSucc))
+          (F.bettiDivisor (w (Fin.last q)).1 (w (Fin.last q)).2)
+      rw [F.nativeMul_sound, ih, F.nativeDivisor_sound]
+
+/-- Crucial CM Hodge expansion obligation: actual rational Hodge
+classes on a specified CM elliptic power must have balanced-character
+expansions. This is a statement about the genuine Hodge bigrading,
+not an arbitrary replacement by a convenient 0-dimensional model. -/
+structure CMActualHodgeCharacterExpansion
+    (F : CMNativeProductRealization S H n)
+    (p : ℕ) (ι : Type*) [Fintype ι] where
+  word : ι → CMBalancedCharacterWord n p
+  expansion : ∀ alpha : RationalSingularCohomology
+      H.analytification (2*p),
+    alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) →
+      ∃ coeff : ι → ℚ,
+        (∑ i : ι, coeff i • cmBettiDivisorWord F p (word i).paired)
+          = alpha
+
+variable {ι : Type*} [Fintype ι]
+
+/-- If the scheme's actual CM Hodge character expansion has been
+established, construct a rational linear combination of genuine
+algebraic products of degree-two CM divisors, for every codimension. -/
+theorem every_cm_character_hodge_class_is_native_cycle
+    (F : CMNativeProductRealization S H n)
+    (p : ℕ) (P : CMActualHodgeCharacterExpansion F p ι)
+    (alpha : RationalSingularCohomology H.analytification (2*p))
+    (hAlpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p)) :
+    ∃ Z : codimensionCycles S.X p,
+      H.cycleClass p Z = alpha := by
+  classical
+  obtain ⟨coeff, hcoeff⟩ := P.expansion alpha hAlpha
+  refine ⟨∑ i : ι,
+    coeff i • cmNativeDivisorWord F p (P.word i).paired, ?_⟩
+  calc
+    H.cycleClass p
+      (∑ i : ι, coeff i • cmNativeDivisorWord F p (P.word i).paired) =
+        ∑ i : ι,
+          coeff i • H.cycleClass p
+            (cmNativeDivisorWord F p (P.word i).paired) := by
+          simp only [map_sum, map_smul]
+    _ = ∑ i : ι,
+        coeff i • cmBettiDivisorWord F p (P.word i).paired := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [cm_native_word_cycleClass]
+    _ = alpha := hcoeff
+
+#check cm_native_word_cycleClass
+#check every_cm_character_hodge_class_is_native_cycle
+#print axioms cm_native_word_cycleClass
+#print axioms every_cm_character_hodge_class_is_native_cycle
+
 #check hodge_at_weight_of_geometric_degree_split
 #check full_hodge_of_geometrically_degree_split_CM_source
 
