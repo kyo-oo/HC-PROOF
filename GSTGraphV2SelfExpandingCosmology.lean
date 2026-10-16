@@ -403,6 +403,49 @@ theorem source_missing_direction_survives_birth
     _ = P.backHodgeA (P.hodgeA a) := by rw [hZ]
     _ = a := P.leftInverseA a
 
+
+/-- A rationally complete base world creates a perfect equivalence:
+the newborn world's Hodge algebraicity is controlled EXACTLY by the
+independent exceptional/source world. This specializes the new GST
+birth law to projective-space blowups (when their genuine split Chow
+and Hodge realization packet has been constructed), and exposes why
+exceptional worlds CANNOT be ignored even if the host is rational. -/
+theorem algebraic_host_complete_iff_exceptional_complete
+    (P : SplitTwoSourceBirth CA HA CB HB CT HT)
+    (hBase : Function.Surjective P.cycleA) :
+    Function.Surjective P.cycleT ↔
+      Function.Surjective P.cycleB := by
+  constructor
+  · intro hT
+    exact (split_world_birth_hodge_complete_iff_sources P).mp hT |>.2
+  · intro hB
+    exact (split_world_birth_hodge_complete_iff_sources P).mpr
+      ⟨hBase, hB⟩
+
+/-- Reverse missing-direction transfer for the INDEPENDENT exceptional
+source: if a geometric cycle is absent on the exceptional world, no
+native class on the born world can realize its embedded Hodge class.
+This is an exact algebraic-image detection theorem, not an invented
+cycle-class-surjectivity hypothesis. -/
+theorem exceptional_missing_direction_survives_birth
+    (P : SplitTwoSourceBirth CA HA CB HB CT HT)
+    (b : HB) (hMissing : b ∉ LinearMap.range P.cycleB) :
+    P.hodgeB b ∉ LinearMap.range P.cycleT := by
+  intro hTarget
+  obtain ⟨Z, hZ⟩ := hTarget
+  apply hMissing
+  refine ⟨P.backNativeB Z, ?_⟩
+  calc
+    P.cycleB (P.backNativeB Z) = P.backHodgeB (P.cycleT Z) :=
+      P.backCompatB Z
+    _ = P.backHodgeB (P.hodgeB b) := by rw [hZ]
+    _ = b := P.leftInverseB b
+
+#check algebraic_host_complete_iff_exceptional_complete
+#check exceptional_missing_direction_survives_birth
+#print axioms algebraic_host_complete_iff_exceptional_complete
+#print axioms exceptional_missing_direction_survives_birth
+
 #check SplitTwoSourceBirth
 #check split_world_birth_hodge_complete_iff_sources
 #check source_missing_direction_survives_birth
