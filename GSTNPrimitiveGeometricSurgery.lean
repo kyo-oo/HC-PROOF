@@ -191,8 +191,13 @@ theorem surgery_orbit_complete
           (⟨a - (a-a'), d - (a-a'), r + 2*(a-a')⟩ : GeometricCycle) =
             ⟨a',d',r'⟩
         have ha : a - (a-a') = a' := by omega
-        have hd : d - (a-a') = d' := by omega
-        have hr : r + 2*(a-a') = r' := by omega
+        have hd : d - (a-a') = d' := by
+          have hh : -a+d=-a'+d' := h₁
+          omega
+        have hr : r + 2*(a-a') = r' := by
+          have hh₁ : -a+d=-a'+d' := h₁
+          have hh₂ : a+d+r=a'+d'+r' := h₂
+          omega
         rw [ha, hd, hr]
   · rintro ⟨k, hk⟩
     rw [← hk]
