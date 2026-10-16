@@ -579,3 +579,36 @@ turn an unverified decomposition packet into a geometric theorem.
 Find a source construction beyond projective bundle/cellular/blowup
 and generically finite-dominance routes, e.g. a genuine new
 non-cellular primitive cycle birth with cycle-class comparison.
+
+### Concrete nonunirational tenfold: K3 times P8
+
+Choose any smooth projective K3 surface S over C and take
+Y=S x P^8, a smooth projective tenfold. K3 has a nonzero
+holomorphic two-form, inherited by Y, so Y is NOT unirational.
+Nevertheless EVERY rational Hodge class of Y has a fully explicit
+algebraic cycle representative, without a fixed codimension bound.
+Let h denote the algebraic P8 hyperplane cycle. The projective
+bundle formula and rational Hodge decomposition show that for each
+0<=p<=10, every rational Hodge class alpha in H^{2p}(Y,Q) has the
+unique form h^p a0 + h^(p-1) a1 + h^(p-2) a2, omitting exponents
+outside 0,...,8, where a0 in Hdg^0(S,Q)=Q[1],
+a1 in Hdg^1(S,Q)=NS(S)_Q, and a2 in Hdg^2(S,Q)=Q[point].
+All three are represented by actual codimension 0,1,2 algebraic
+cycles on S. Multiplying their pullbacks by the corresponding
+P8 algebraic hyperplane products builds an actual cycle for alpha.
+
+For Picard rank rho(S), the dimension of rational (p,p) Hodge
+classes on Y is exactly:
+  indicator(0<=p<=8) + rho(S)*indicator(1<=p<=9)
+    + indicator(2<=p<=10).
+This is a concrete arbitrarily high-dimensional nonunirational
+family once P8 is replaced by Pr for any r.
+
+More generally smooth projective generically finite images of
+projective-bundle towers over any smooth projective threefold
+have rational Hodge algebraicity in every codimension. The
+native-degree descent formula is (1/deg f) f_* of an explicitly
+constructed source cycle, as encoded in the new GST geometry law.
+This broad family is a mathematical corollary of established
+projective bundle and Chow formulas. It does NOT settle arbitrary
+nonunirational primitive Hodge geometry.
