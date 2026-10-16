@@ -492,3 +492,90 @@ Hodge class of arbitrary nonunirational varieties, with genuine
 cycle-class compatibility. The actual new GST birth calculus permits
 these births without restricting to old CM/NM within-world orbits,
 but it does not postulate their universal existence.
+
+## 2026-10-16 Mathbox: unbounded heterogeneous GST births and finite-degree geometric descent
+
+Original target remains genuine algebraic-cycle representatives for every
+primitive rational Hodge class on every smooth projective complex variety.
+Neither the present world-birth law nor the geometric application claims
+that unrestricted statement is proved.
+
+### Stronger internal GST cosmology law
+
+The existing GSTGraphV2SelfExpandingCosmology.lean now contains
+GeometricCycleBirthRealization, a genuinely dependent realization where
+native cycle/state types and rational Hodge/law types can DIFFER across
+arbitrarily many source worlds. An indexed world-birth certificate contains
+native assembly, Hodge assembly, exact cycle-class compatibility, and
+an independently supplied decomposition of the newborn Hodge fiber.
+Every_world_birth_has_native_realization constructs a native cycle for
+each newborn Hodge class from native source cycles with no fixed source
+cardinality. Generated_worlds_have_native_cycles combines this with the
+original impredicative WorldClosure/generation induction: roots with actual
+cycle representatives and geometrically complete source births imply the
+existence of native representatives in every descendant, at any depth.
+The proof has no fixed rank, dimension, or length of world-generation.
+Target Chow preimages are NOT assumed, but source geometry packets must
+be checked independently for any actual arbitrary X.
+
+GitHub Lean source commit 27d49c7464cb852b8b3df05b85058b1873ee66e7
+was checked GREEN by CI run 38922541450. This is abstract dependent
+world realization, not a Mathlib Chow blowup instantiation on all X.
+
+### Degree descent: a second independent GST geometric operator
+
+FiniteDegreeNativeDescent.DegreePacket carries two genuine native
+cycle-class maps, Hodge pullback, native pushforward, Hodge pushforward,
+compatibility cl(f_*Z)=f_*cl(Z), nonzero rational geometric degree e, and
+the projection identity f_*f^*(alpha)=e*alpha.
+If all rational Hodge classes on source Y are algebraic then for any
+rational Hodge alpha on target X choose genuine Z on Y with
+cl(Z)=f^*alpha and define Z_X=(1/e)*f_*Z. Its actual target class is
+cl(Z_X)=alpha. This is independent of Hodge dimension, rank, or codim.
+The Lean theorem is realize_target_via_degree_pushforward, plus the
+surjectivity corollary degree_descent_preserves_all_hodge_classes.
+The corresponding CI run is 38923116042; its status must be verified
+before claiming this new theorem kernel-checked.
+
+### New unconditional high-dimensional NONUNIRATIONAL family
+
+Let B be ANY smooth projective complex base with dim_C(B)<=3.
+Starting with B, form any finite tower of projectivizations of
+algebraic vector bundles, Y_r=P(E_r)->...->Y_1=P(E_1)->B.
+Each projective-bundle Chow decomposition and rational Hodge
+decomposition are compatible with Chern/hyperplane cycle classes:
+Hdg^p(P(E))=SUM_{j=0}^{rank E - 1} xi^j pi^*Hdg^{p-j}(base),
+CH^p(P(E))_Q=SUM_{j=0}^{rank E - 1} xi^j pi^*CH^{p-j}(base)_Q.
+For dim B<=3, every rational Hodge class on B is algebraic by
+Lefschetz (1,1) and rational Hard Lefschetz. The compatible projective
+bundle decompositions therefore construct genuine Chow representatives
+for EVERY rational Hodge class on every Y_r, at ANY height/dimension.
+
+Now let f:Y_r->X be ANY dominant generically finite morphism to a
+smooth projective X. Pull any rational Hodge alpha on X to Y_r,
+construct the source Chow cycle from the tower, and push back with
+1/deg(f). The cycle-class equality on X holds in every codimension.
+This new class includes genuinely NONUNIRATIONAL smooth projective
+varieties of arbitrarily large dimension: take B a projective K3
+surface or abelian threefold, and an arbitrary high-rank projective
+bundle Y=P(E) over B. Its holomorphic 2-forms prevent Y from being
+unirational, while all rational Hodge classes are explicitly
+algebraic. Smooth generically finite quotients/images of such towers
+are included by the degree law.
+
+This family is a rigorous mathematical consequence of genuine classical
+projective bundle and Chow pushforward theorems instantiated within the
+new GST birth/descent calculus; neither those geometric comparison
+theorems nor the full scheme-level Hodge statement are yet formalized
+inside the Lean module. This is not claimed as a novel independent
+solution of the unrestricted Hodge conjecture.
+
+### Unresolved geometric challenge
+
+Build a GST native-world birth realization FOR EVERY arbitrary smooth
+projective X and every primitive Hodge class, using independently
+available geometric source cycles. Arbitrary-arity closure cannot
+turn an unverified decomposition packet into a geometric theorem.
+Find a source construction beyond projective bundle/cellular/blowup
+and generically finite-dominance routes, e.g. a genuine new
+non-cellular primitive cycle birth with cycle-class comparison.
