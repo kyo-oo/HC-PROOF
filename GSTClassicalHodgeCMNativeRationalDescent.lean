@@ -1,5 +1,6 @@
 import GSTClassicalHodgeCMCoefficientDescentCore
 import GSTClassicalHodgeExactClayStatement
+import GSTUniversalChowRetractToTarget
 
 /-!
 # Rational algebraic cycle recovery from arbitrary coefficient extensions
@@ -31,6 +32,7 @@ open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeCMCoefficientDescentCore
+open GSTUniversalChowRetractToTarget
 
 namespace GSTClassicalHodgeCMNativeRationalDescent
 
@@ -174,6 +176,66 @@ theorem rationalCycleFromExtensionCoefficients_spec
             simp [rationalCycleFromExtensionCoefficients, eps,
               map_sum, map_smul, Finset.sum_apply, smul_eq_mul]
     _ = (b.repr alpha) i := (hcoeff i).symm
+
+
+/-! ## GST heterogeneous multiverse: true CM-field Chow descent
+
+This module now combines every part of the all-world native route:
+different actual smooth projective source SCHEMES, differing Hodge
+codimensions, genuine Chow/Gysin geometric transfers into an arbitrary
+target X, and unrestricted field-extension coefficients K/Q.
+
+Unlike the earlier all-source-completeness theorem, this constructor
+requires only FINITELY MANY actual source algebraic cycles whose
+extension-valued geometric Betti combination equals this particular
+rational Hodge target. It does not require full Hodge algebraicity
+on ANY source and does not assume a native target preimage.
+
+The scalar-field descent uses the exact normalized Q-linear retraction
+K -> Q; thus every such CM/cosmology/NM witness becomes a genuinely
+RATIONAL target Chow cycle with the CORRECT source codimension shifts.
+The extension-coordinate equality is an independent geometric
+period/CM eigenspace computation to be proved for each target class.
+-/
+
+/-- Actual cross-variety CM-field native construction: finite sources
+may have unrelated dimensions and codimensions, and coefficients
+may lie in ANY field extension of the rationals. -/
+theorem native_target_cycle_of_multisource_CM_field_spanning
+    {X : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData X}
+    (p : ℕ)
+    {ι : Type*} [Fintype ι]
+    {K : Type*} [Field K] [Algebra ℚ K]
+    (P : GeometricMultiSourceChowBirth X H p ι)
+    (sourceCycle : (i : ι) →
+      codimensionCycles (P.source i).X (P.codim i))
+    (coefficient : ι → K)
+    (alpha : RationalSingularCohomology H.analytification (2*p))
+    (hExtended :
+      let b := Module.Free.chooseBasis ℚ
+        (RationalSingularCohomology H.analytification (2*p))
+      ∀ j : Module.Free.ChooseBasisIndex ℚ
+        (RationalSingularCohomology H.analytification (2*p)),
+        algebraMap ℚ K ((b.repr alpha) j) =
+          ∑ i : ι, coefficient i * algebraMap ℚ K
+            ((b.repr
+              (P.betti i ((P.data i).cycleClass
+                (P.codim i) (sourceCycle i)))) j)) :
+    ∃ Z : codimensionCycles X.X p,
+      H.cycleClass p Z = alpha := by
+  classical
+  let actualNative : ι → codimensionCycles X.X p :=
+    fun i => P.native i (sourceCycle i)
+  apply rational_native_cycle_of_extended_span
+    (K := K) (s := Finset.univ) actualNative coefficient alpha
+  dsimp only at hExtended ⊢
+  intro j
+  have h := hExtended j
+  simpa only [actualNative, P.naturality] using h
+
+#check native_target_cycle_of_multisource_CM_field_spanning
+#print axioms native_target_cycle_of_multisource_CM_field_spanning
 
 #check rational_native_cycle_of_extended_span
 #print axioms rational_native_cycle_of_extended_span

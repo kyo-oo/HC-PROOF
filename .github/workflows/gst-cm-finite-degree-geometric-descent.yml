@@ -6,6 +6,7 @@ on:
       - mathbox/residual-zero-direct-audit-20261015
     paths:
       - 'GSTCMFiniteGeometricDegreeDescent.lean'
+      - 'GSTClassicalHodgeCMNativeRationalDescent.lean'
       - '.github/workflows/gst-cm-finite-degree-geometric-descent.yml'
   workflow_dispatch:
 permissions:
