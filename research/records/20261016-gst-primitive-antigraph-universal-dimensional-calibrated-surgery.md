@@ -204,3 +204,61 @@ the GST antigraph surgery. The primitive real input is
 available on every X×Xbar; the essential algebraic
 compensator/replacement is NOT universally constructed.
 No assertion about primitive Hodge completeness follows.
+
+
+## Upgrade II: all FINITE cellular/Schubert basis geometry, beyond P^n x P^n
+
+The index set {0,...,n} in projective space is incidental. Suppose X
+is a smooth complex projective variety for which:
+  (1) H*(X,Z) is torsionfree, concentrated in EVEN degrees and has
+      a finite integral homogeneous Kunneth/Poincare-dual basis;
+  (2) the diagonal PD has a decomposition
+       [Delta_X] = sum_i [A_i] x [B_i]
+      with EACH product A_i x B_i an EFFECTIVE algebraic cycle,
+      and coefficient exactly +1;
+  (3) there is an antiholomorphic isometric involution
+      c:X->X which is anti-symplectic c*omega=-omega,
+      and acts on each H^(2k)(X,Z) as (-1)^k.
+
+For each factor term let m_i be the half-degree on the SECOND
+factor. Pairing with the graph shows its integral PD equals
+   [Gamma_c] = sum_i (-1)^(m_i)[A_i] x [B_i]
+(up to convention on identifying the two Poincare-dual factors:
+the parity is always the degree of the factor pulled back by c).
+
+Therefore the **EXACT INTEGER HOMOLOGY RELATION** is
+   [Gamma_c]+[Delta_X]
+       =2 sum_{i: m_i even} [A_i] x [B_i].
+
+Each right-hand term is effective holomorphic. The graph is
+Lagrangian because omega+c*omega=0. Thus the right side is a
+genuine zero-defect replacement of the left side while preserving
+the full integral homology class. Its calibration defect drops by
+the full strictly positive mass of Gamma_c, provided dim_C X>0
+and the two graph currents do not overlap in positive area.
+(If c has a fixed locus that has full 2d-dimensional measure,
+the mass-overlap assumption must be checked separately.)
+
+These are explicit geometric hypotheses, NOT an assertion they
+hold on every projective variety. They hold on projective spaces,
+and the Schubert/opposite-Schubert dual bases provide a natural
+family of further test cases on split type-A complete flag
+varieties and closely related cellular homogeneous spaces.
+Verifying the antiholomorphic and Kunneth orientation data
+for each such example is a separate geometry obligation.
+
+New formalized theorems are appended to the EXISTING Lean module
+GSTUniversalAntigraphDiagonalSurgery.lean:
+  full_cellular_antigraph_surgery
+  full_cellular_opposite_surgery
+  full_cellular_integral_parity_resolution.
+
+Each theorem is universal in arbitrary FINTYPE index and
+any commutative coefficient ring, so the original
+n-dimensional range is no longer a limitation of the algebraic
+coefficient surgery.
+
+Importantly, even all these cellular enhancements do not
+construct calibrated primitive carriers for NONCELLULAR X
+or for Hodge classes outside algebraic span; the
+original rational Hodge conjecture remains unresolved.
