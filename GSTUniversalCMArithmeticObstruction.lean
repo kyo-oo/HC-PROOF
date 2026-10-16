@@ -98,6 +98,69 @@ theorem no_composed_algebraic_transfer_hits_non_algebraic_target
     rw [S.naturality,R.naturality]
   exact hnot ⟨S.native (R.native Z), hS.trans hZ⟩
 
+
+/-! ## Generalized GST CM/NM multi-charge geometry: first new atom
+
+The verified quadratic CM factorization handles a ONE-DIMENSIONAL
+norm-one torus: characters come in opposite +/- weights.
+Arbitrary Hodge varieties can carry HIGHER-RANK CM character
+lattices, where an invariant degree-three atom may have NO
+invariant quadratic subword.
+
+The following exact new GST countermodel is a rank-two torus
+whose three character weights are (1,0), (0,1), (-1,-1).
+Their total charge is zero, but NONE of the three possible
+quadratic pairings has charge zero (including repeated indices).
+The proposed universal step "all CM invariants arise from
+quadratic pairs" is therefore FALSE beyond the norm-one torus.
+
+This does not refute algebraicity of that cubic Hodge character.
+It isolates precisely the new type of geometry needed: genuine
+algebraic realizations of higher-degree primitive CM invariants.
+That is a construction obligation, not an assumed Chow preimage.
+-/
+
+/-- Two independent rational/integral CM-charge channels and
+three primitive weights, in the GST CM/NM charge lattice. -/
+def cubicCMWeight (i : Fin 3) (j : Fin 2) : ℤ :=
+  if i = 0 then (if j = 0 then 1 else 0)
+  else if i = 1 then (if j = 0 then 0 else 1)
+  else -1
+
+/-- Exact triadic GST CM invariant: all two charge channels cancel.
+The result is a genuine degree-three weight-zero ATOM. -/
+theorem cubic_CM_charge_invariant :
+    ∀ j : Fin 2,
+      cubicCMWeight 0 j + cubicCMWeight 1 j +
+        cubicCMWeight 2 j = 0 := by
+  intro j
+  fin_cases j <;> norm_num [cubicCMWeight]
+
+/-- There are NO opposite quadratic generators in this new
+two-charge universe. Thus no path using only the OLD quadratic
+norm-one pairing mechanism can generate the triadic invariant. -/
+theorem no_quadratic_CM_invariant_in_three_weights :
+    ∀ i k : Fin 3,
+      ¬ (∀ j : Fin 2,
+        cubicCMWeight i j + cubicCMWeight k j = 0) := by
+  decide
+
+/-- The next GST-CM primitive-generator law MUST contain cubic
+or higher charge-balancing patterns: a degree-three invariant
+cannot be assembled from zero-weight quadratic factors. -/
+theorem cubic_CM_atom_requires_new_generator :
+    (∀ j : Fin 2,
+      cubicCMWeight 0 j + cubicCMWeight 1 j +
+        cubicCMWeight 2 j = 0) ∧
+    (∀ i k : Fin 3,
+      ¬ (∀ j : Fin 2,
+        cubicCMWeight i j + cubicCMWeight k j = 0)) :=
+  ⟨cubic_CM_charge_invariant,
+    no_quadratic_CM_invariant_in_three_weights⟩
+
+#check cubic_CM_atom_requires_new_generator
+#print axioms cubic_CM_atom_requires_new_generator
+
 #check no_imaginary_quadratic_CM_on_rational_line
 #check no_algebraic_source_transfer_hits_non_algebraic_target
 #check no_composed_algebraic_transfer_hits_non_algebraic_target

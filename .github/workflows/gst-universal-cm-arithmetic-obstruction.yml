@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
+      - mathbox/residual-zero-direct-audit-20261015
     paths:
       - 'GSTUniversalCMArithmeticObstruction.lean'
       - '.github/workflows/gst-universal-cm-arithmetic-obstruction.yml'
