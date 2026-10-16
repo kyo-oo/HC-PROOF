@@ -346,16 +346,19 @@ theorem graph_shift_feasible_exists (n : ℕ) (k : ℤ) :
 
 /-- Least possible INTEGER diagonal correction of an arbitrary
 smooth self-map graph, over every effective middle cellular sector. -/
-noncomputable def leastGraphDiagonalShift (n : ℕ) (k : ℤ) : ℕ :=
-  Nat.find (graph_shift_feasible_exists n k)
+noncomputable def leastGraphDiagonalShift (n : ℕ) (k : ℤ) : ℕ := by
+  classical
+  exact Nat.find (graph_shift_feasible_exists n k)
 
 theorem leastGraphDiagonalShift_feasible (n : ℕ) (k : ℤ) :
-    GraphShiftFeasible n k (leastGraphDiagonalShift n k) :=
-  Nat.find_spec (graph_shift_feasible_exists n k)
+    GraphShiftFeasible n k (leastGraphDiagonalShift n k) := by
+  classical
+  exact Nat.find_spec (graph_shift_feasible_exists n k)
 
 theorem graph_shift_effective_iff_above_least
     (n : ℕ) (k : ℤ) (m : ℕ) :
     GraphShiftFeasible n k m ↔ leastGraphDiagonalShift n k ≤ m := by
+  classical
   constructor
   · intro h
     exact Nat.find_min' (graph_shift_feasible_exists n k) h
