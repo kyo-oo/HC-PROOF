@@ -41,7 +41,6 @@ jobs:
           [[lean_lib]]
           name = "GSTNPrimitiveGeometricSurgeryLib"
           roots = [
-            "waves.GSTNCohomologyV3",
             "GSTNPrimitiveGeometricSurgery"
           ]
           EOF

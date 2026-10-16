@@ -1,4 +1,4 @@
-import waves.GSTNCohomologyV3
+import Mathlib
 
 /-!
 # GST N-HOMOLOGY SURGERY: integer geometric replacement on P1 x P1

@@ -40,8 +40,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTUniversalExternalCurrentSurgery"
-          roots = ["waves.GSTNCohomologyV3",
-                   "GSTNPrimitiveGeometricSurgery",
+          roots = ["GSTNPrimitiveGeometricSurgery",
                    "GSTUniversalExternalProductCurrentSurgery"]
           EOF
           if lake build GSTUniversalExternalCurrentSurgery > gst-external-surgery.log 2>&1; then
