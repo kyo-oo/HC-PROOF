@@ -210,6 +210,61 @@ theorem gst_universal_projective_stabilization_certificate
     (fun j _ => gst_stabilized_primitive_interior_cancellation L alpha j),
     gst_stabilized_primitive_top_boundary L alpha m hprimitive⟩
 
+
+/-- Reverse direction: every coefficient packet with the true
+middle-primitive recursion is uniquely determined by the fiber-top
+coefficient on X. Thus the stabilization is not a one-way trick. -/
+theorem gst_middle_primitive_coefficients_unique
+    (L : V →ₗ[ℚ] V) (c : ℕ → V)
+    (hRec : ∀ j : ℕ, L (c j) + c (j + 1) = 0) :
+    ∀ j : ℕ, c j = gstStabilizedPrimitiveCoeff L (c 0) j := by
+  intro j
+  induction j with
+  | zero =>
+      simp [gstStabilizedPrimitiveCoeff, gstLefschetzIterate]
+  | succ j ih =>
+      have hp := hRec j
+      rw [ih] at hp
+      have hq :=
+        gst_stabilized_primitive_interior_cancellation L (c 0) j
+      exact add_left_cancel (hp.trans hq.symm)
+
+/-- A middle-primitive product packet has a primitive source class.
+No inversion of L, and no assumed algebraic representative, occurs. -/
+theorem gst_middle_primitive_pushforward_is_primitive
+    (L : V →ₗ[ℚ] V) (c : ℕ → V) (m : ℕ)
+    (hRec : ∀ j : ℕ, L (c j) + c (j + 1) = 0)
+    (hTop : c (m + 1) = 0) :
+    gstLefschetzIterate L (c 0) (m + 1) = 0 := by
+  have hc :=
+    gst_middle_primitive_coefficients_unique L c hRec (m + 1)
+  rw [hTop] at hc
+  have hzero :
+      (-1 : ℚ)^(m+1) •
+        gstLefschetzIterate L (c 0) (m+1) = 0 := by
+    simpa [gstStabilizedPrimitiveCoeff] using hc.symm
+  have hscalar : (-1 : ℚ)^(m+1) ≠ 0 := by
+    norm_num
+  exact (smul_eq_zero.mp hzero).resolve_left hscalar
+
+/-- EXACT equivalence of the low-degree primitive condition on X
+and the middle-degree primitive boundary condition on X×P^m.
+Together with uniqueness, this identifies the ENTIRE rational
+middle primitive coefficient system, not merely one constructed class. -/
+theorem gst_primitive_stabilization_bidirectional
+    (L : V →ₗ[ℚ] V) (c : ℕ → V) (m : ℕ)
+    (hRec : ∀ j : ℕ, L (c j) + c (j + 1) = 0) :
+    (gstLefschetzIterate L (c 0) (m+1) = 0) ↔
+      c (m+1) = 0 := by
+  constructor
+  · intro hp
+    rw [gst_middle_primitive_coefficients_unique L c hRec (m+1)]
+    exact gst_stabilized_primitive_top_boundary L (c 0) m hp
+  · exact gst_middle_primitive_pushforward_is_primitive L c m hRec
+
+#print axioms gst_middle_primitive_coefficients_unique
+#print axioms gst_primitive_stabilization_bidirectional
+
 #print axioms gst_universal_projective_stabilization_certificate
 
 end UniversalPrimitiveStabilization
