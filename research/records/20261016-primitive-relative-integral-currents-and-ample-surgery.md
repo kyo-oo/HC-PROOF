@@ -141,3 +141,83 @@ here; positing it would restate the original Hodge conjecture.
 
 Do NOT count Lean type-checking the relative cohomology calculation
 as a proof of the universal calibrated-current existence.
+
+
+## New all-X quantitative constraint: NO compact-support-calibrated primitive carrier in an affine complement
+
+The open complement U=X\Y of a very ample divisor is a smooth
+AFFINE variety; as a complex analytic space it has a proper
+algebraic closed embedding into some C^N.
+
+Claim: U has no nonempty compact positive-dimensional complex
+analytic subvariety. On any connected compact positive-dimensional
+complex analytic subvariety Z⊂U, all coordinate functions of
+U↪C^N restrict to globally holomorphic functions on Z, hence
+are constant by the maximum principle. The embedding sends Z
+to one point, a contradiction.
+
+Consequently every positive-dimensional Kähler-calibrated
+INTEGRAL current with COMPACT SUPPORT inside U is zero:
+by calibrated-current regularity the current is a positive
+holomorphic chain, whose compact components are forbidden
+by affineness.
+
+This yields a genuine geometric MASS GAP WITH SUPPORT CONTROL.
+
+Let K⊂U be a FIXED compact set, q=d-p>=1, and let beta be
+a NONZERO integral homology class representable by compactly
+supported integral closed 2q-currents with support in K.
+Then there exists epsilon(K,beta)>0 such that every such
+current T satisfies
+
+     Mass(T)-T(omega^q/q!) >= epsilon(K,beta)>0.
+
+Proof by contradiction: if T_n with supports in K, all in beta,
+have defects→0, then the common calibration period P_beta
+implies masses Mass(T_n)=P_beta+D(T_n) bounded. The compactness
+theorem for integral currents gives an integral flat-limit T,
+closed and in beta (homology class preservation under sufficiently
+small flat deformations), with support in K. Lower semicontinuity
+of mass plus calibration inequality forces D(T)=0. Thus T is
+a nonzero compactly-supported calibrated positive holomorphic
+cycle in U, impossible. If beta is nonzero, T≠0. Therefore the
+strict uniform gap exists.
+
+One need NOT invent a value for epsilon(K,beta); it follows
+by the contradiction and compactness argument. This is a
+uniform statement across ALL integer currents of this fixed
+class whose supports are inside the chosen compact K.
+
+For the PURE nonzero middle primitive class m alpha, we
+can give an EXPLICIT lower-bound scheme on all X without
+requiring supports in a common K. Pick a rational smooth
+closed real 2p-form psi with
+    c = ∫_X alpha ∧ [psi] ≠0
+by Poincaré duality on X. Let C be its finite positive comass
+supremum for the fixed Kähler metric. Any closed current S
+representing PD(m alpha) satisfies
+
+    S(omega^p/p!) = 0,
+    |S(psi)|=m|c| <= C Mass(S).
+
+Hence every integer representative of this nonzero PURE
+primitive class has
+    D(S)=Mass(S)>=m|c|/C >0.
+
+Adding a calibrated complete-intersection C_M supported in Y
+DISJOINTLY preserves this same lower bound, independently of M,
+as proved above.
+
+**Exact new proof implication:** a universal fixed-class
+integral-current construction for beta=m alpha+M h^p must
+nontrivially interact across the hyperplane. A deformation
+remaining in a fixed compact subset of U cannot approach the
+Kähler calibration cone. Merely increasing an algebraic
+component on Y while retaining a disjoint primitive current
+cannot shrink the absolute defect.
+
+This does NOT exclude other integral cycles in the exact
+shifted class beta that cross Y and are holomorphic. On
+P¹×P¹ the holomorphic pair of ruling curves explicitly
+shows those can exist. The original universal all-X goal
+still requires finding them for arbitrary rational Hodge alpha.
