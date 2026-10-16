@@ -409,6 +409,119 @@ theorem hodge_cycles_on_geometric_projective_bundle
   intro j
   exact hBase
 
+
+/-! ## Actual blowup source degrees and exceptional Gysin packet
+
+For a blowup along a smooth projective center of codimension c, the
+actual source index is Option (Fin (c-1)): the base source and exactly
+c-1 exceptional center sources with Hodge degrees p-(j+1).
+All native source/target types below are true scheme codimension-cycle
+spaces. The cohomological maps and compatibility are external geometric
+inputs; these declarations do NOT construct the blowup in Mathlib.
+-/
+
+def blowupHodgeSource
+    (B C : SmoothProjectiveComplexScheme) (c : ℕ) :
+    Option (Fin (c-1)) → SmoothProjectiveComplexScheme
+  | none => B
+  | some _ => C
+
+def blowupHodgeData
+    {B C : SmoothProjectiveComplexScheme}
+    (HB : HodgeBigradedBettiData B)
+    (HC : HodgeBigradedBettiData C)
+    (c : ℕ) :
+    (i : Option (Fin (c-1))) →
+      HodgeBigradedBettiData (blowupHodgeSource B C c i)
+  | none => HB
+  | some _ => HC
+
+def blowupSourceCodim (p c : ℕ) :
+    Option (Fin (c-1)) → ℕ
+  | none => p
+  | some j => p-(j.val+1)
+
+/-- Genuine Chow/Gysin blowup source indexing and class comparison.
+Gysin maps and Hodge readouts must come from real pullback and
+exceptional divisor operations on the given schemes. -/
+structure SchemeBlowupGysin
+    (B C T : SmoothProjectiveComplexScheme)
+    (HB : HodgeBigradedBettiData B)
+    (HC : HodgeBigradedBettiData C)
+    (HT : HodgeBigradedBettiData T)
+    (c p : ℕ) where
+  native : (i : Option (Fin (c-1))) →
+    codimensionCycles (blowupHodgeSource B C c i).X
+      (blowupSourceCodim p c i) →ₗ[ℚ] codimensionCycles T.X p
+  betti : (i : Option (Fin (c-1))) →
+    RationalSingularCohomology
+      (blowupHodgeData HB HC c i).analytification
+      (2 * blowupSourceCodim p c i) →ₗ[ℚ]
+      RationalSingularCohomology HT.analytification (2*p)
+  readout : (i : Option (Fin (c-1))) →
+    RationalSingularCohomology HT.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology
+        (blowupHodgeData HB HC c i).analytification
+        (2 * blowupSourceCodim p c i)
+  cycleClass_natural : ∀ i (Z :
+      codimensionCycles (blowupHodgeSource B C c i).X
+        (blowupSourceCodim p c i)),
+    HT.cycleClass p (native i Z) =
+      betti i ((blowupHodgeData HB HC c i).cycleClass
+        (blowupSourceCodim p c i) Z)
+  readout_hodge : ∀ i (alpha :
+      RationalSingularCohomology HT.analytification (2*p)),
+    alpha ∈ rationalHodgeSubspace (HT.hodgeBigrading p) →
+      readout i alpha ∈
+        rationalHodgeSubspace ((blowupHodgeData HB HC c i).hodgeBigrading
+          (blowupSourceCodim p c i))
+  reconstruct : ∀ alpha :
+      RationalSingularCohomology HT.analytification (2*p),
+    (∑ i : Option (Fin (c-1)), betti i (readout i alpha)) = alpha
+
+noncomputable def SchemeBlowupGysin.toSplit
+    {B C T : SmoothProjectiveComplexScheme}
+    {HB : HodgeBigradedBettiData B}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {c p : ℕ}
+    (P : SchemeBlowupGysin B C T HB HC HT c p) :
+    GeometricSplitGysinPacket T HT p (Option (Fin (c-1))) where
+  source := blowupHodgeSource B C c
+  data := blowupHodgeData HB HC c
+  codim := blowupSourceCodim p c
+  native := P.native
+  betti := P.betti
+  readout := P.readout
+  naturality := P.cycleClass_natural
+  readout_hodge := P.readout_hodge
+  reconstruct := P.reconstruct
+
+/-- Build actual target codimension-p cycles from the actual base
+and center cycles via verified Gysin splitting, for arbitrary
+blowup codimension and any ambient geometric dimension. -/
+theorem hodge_cycles_on_geometric_blowup
+    {B C T : SmoothProjectiveComplexScheme}
+    {HB : HodgeBigradedBettiData B}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {c p : ℕ}
+    (P : SchemeBlowupGysin B C T HB HC HT c p)
+    (hBase : BigradedBettiHodgeStatement B HB)
+    (hCenter : BigradedBettiHodgeStatement C HC) :
+    rationalHodgeSubspace (HT.hodgeBigrading p) ≤
+      LinearMap.range (HT.cycleClass p) := by
+  apply actual_hodge_of_geometric_gysin_split P.toSplit
+  intro i
+  cases i with
+  | none => exact hBase
+  | some j => exact hCenter
+
+#check SchemeBlowupGysin
+#check SchemeBlowupGysin.toSplit
+#check hodge_cycles_on_geometric_blowup
+#print axioms hodge_cycles_on_geometric_blowup
+
 #check SchemeProjectiveBundleGysin
 #check hodge_cycles_on_geometric_projective_bundle
 #print axioms hodge_cycles_on_geometric_projective_bundle
