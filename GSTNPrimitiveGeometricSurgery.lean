@@ -255,4 +255,73 @@ theorem effective_calibrated_replacement_iff
 #print axioms effective_calibrated_replacement_iff
 
 
+
+/-! ## A global geometric mass certificate, across the WHOLE integer orbit
+
+The earlier effective-cone theorem characterized when a positive
+calibrated packet exists. Now the calibrated replacement is proved to
+be a GLOBAL MASS MINIMIZER against EVERY signed integer packet in
+the same full H₂ class, not just those accessible by a chosen
+monotone surgery or with nonnegative coordinates.
+-/
+
+/-- Every integral P¹×P¹ geometric packet has mass at least the
+ℓ¹ norm of its full two-coordinate integral homology signature.
+This is a genuine integer linear dual certificate. -/
+theorem currentMass_ge_homology_l1 (T : GeometricCycle) :
+    |(homology T).1| + |(homology T).2| ≤ currentMass T := by
+  change | -T.anti + T.diagonal | +
+      | T.anti + T.diagonal + T.ruling | ≤
+        2 * |T.anti| + 2 * |T.diagonal| + |T.ruling|
+  omega
+
+/-- Exact mass of the holomorphic replacement: it saturates the
+integer-homology ℓ¹ lower bound with equality. -/
+theorem effective_replacement_mass_eq_homology_l1
+    (T : GeometricCycle)
+    (ha : 0 ≤ T.anti)
+    (hd : T.anti ≤ T.diagonal)
+    (hr : 0 ≤ T.ruling) :
+    currentMass (surgery T T.anti) =
+      |(homology T).1| + |(homology T).2| := by
+  have hdef := (eliminate_all_anti_graphs T ha hd hr).1
+  have hperiod := surgery_preserves_calibration_period T T.anti
+  have hx : 0 ≤ (homology T).1 := by
+    change 0 ≤ -T.anti + T.diagonal
+    omega
+  have hy : 0 ≤ (homology T).2 := by
+    change 0 ≤ T.anti + T.diagonal + T.ruling
+    omega
+  rw [abs_of_nonneg hx, abs_of_nonneg hy]
+  unfold calibrationDefect at hdef
+  unfold period at hperiod
+  change currentMass (surgery T T.anti) -
+      (2 * (surgery T T.anti).diagonal +
+          (surgery T T.anti).ruling) = 0 at hdef
+  change 2 * (surgery T T.anti).diagonal +
+      (surgery T T.anti).ruling =
+        2 * T.diagonal + T.ruling at hperiod
+  change currentMass (surgery T T.anti) =
+      (-T.anti + T.diagonal) +
+        (T.anti + T.diagonal + T.ruling)
+  omega
+
+/-- GLOBAL optimality: no SIGNED integer packet in the SAME actual
+two-dimensional integral homology class can lower the calibrated
+replacement's mass even further. -/
+theorem effective_replacement_globally_mass_minimal
+    (T U : GeometricCycle)
+    (ha : 0 ≤ T.anti)
+    (hd : T.anti ≤ T.diagonal)
+    (hr : 0 ≤ T.ruling)
+    (hclass : homology U = homology T) :
+    currentMass (surgery T T.anti) ≤ currentMass U := by
+  rw [effective_replacement_mass_eq_homology_l1 T ha hd hr]
+  have hb := currentMass_ge_homology_l1 U
+  rw [hclass] at hb
+  exact hb
+
+#check effective_replacement_globally_mass_minimal
+#print axioms effective_replacement_globally_mass_minimal
+
 end GSTNPrimitiveGeometricSurgery

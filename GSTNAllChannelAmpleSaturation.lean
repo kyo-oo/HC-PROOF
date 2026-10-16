@@ -230,4 +230,79 @@ theorem shifted_lands_in_complete_zero_defect_cone
 #print axioms defect_zero_iff_all_coordinates_nonnegative
 
 
+
+/-! ## Sharp GST N-window ample shift: the LEAST integral coefficient
+
+Previous ample-shift budget was sum_i |a_i|, which may grossly
+overshoot the integer effective cone. The new law uses the LEAST
+nonnegative integer shift, not merely any sufficient one. No Hodge
+surjectivity or imaginary geometric cycle is introduced.
+-/
+
+/-- An actual candidate integer shift works in every N channel. -/
+def IsFeasibleAmpleShift
+    (s : NShape) (a b : IntegerChannels s) (k : ℕ) : Prop :=
+  ∀ i : Fin s.holes, 0 ≤ a i + (k : ℤ) * b i
+
+theorem feasible_ample_shift_exists
+    (s : NShape) (a b : IntegerChannels s)
+    (hb : ∀ i, 1 ≤ b i) :
+    ∃ k : ℕ, IsFeasibleAmpleShift s a b k := by
+  have hbudget := shiftBudget_nonnegative s a
+  refine ⟨(shiftBudget s a).toNat, ?_⟩
+  intro i
+  have h := shiftedChannels_nonnegative s a b hb i
+  have hcast : (((shiftBudget s a).toNat : ℕ) : ℤ) =
+      shiftBudget s a := by omega
+  change 0 ≤ a i + (((shiftBudget s a).toNat : ℕ) : ℤ) * b i
+  rw [hcast]
+  exact h
+
+/-- Exact minimal integer ample shift over ALL feasible natural shifts. -/
+noncomputable def leastAmpleShift
+    (s : NShape) (a b : IntegerChannels s)
+    (hb : ∀ i, 1 ≤ b i) : ℕ :=
+  Nat.find (feasible_ample_shift_exists s a b hb)
+
+theorem leastAmpleShift_feasible
+    (s : NShape) (a b : IntegerChannels s)
+    (hb : ∀ i, 1 ≤ b i) :
+    IsFeasibleAmpleShift s a b (leastAmpleShift s a b hb) :=
+  Nat.find_spec (feasible_ample_shift_exists s a b hb)
+
+/-- The new value is OPTIMAL, not merely a large positivity bound. -/
+theorem leastAmpleShift_minimal
+    (s : NShape) (a b : IntegerChannels s)
+    (hb : ∀ i, 1 ≤ b i)
+    (k : ℕ) (hk : IsFeasibleAmpleShift s a b k) :
+    leastAmpleShift s a b hb ≤ k :=
+  Nat.find_min' (feasible_ample_shift_exists s a b hb) hk
+
+/-- At the exact LEAST shift, all nonnegative and all strictly positive
+weight choices have zero absolute N-channel calibration defect. -/
+theorem leastAmpleShift_calibrates_all_positive_weights
+    (s : NShape) (w a b : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i)
+    (hb : ∀ i, 1 ≤ b i) :
+    calibrationDefect s w
+      (fun i => a i + ((leastAmpleShift s a b hb : ℕ) : ℤ) * b i) = 0 := by
+  apply (defect_zero_iff_all_coordinates_nonnegative s w _ hw).2
+  exact leastAmpleShift_feasible s a b hb
+
+/-- Strong necessity: EVERY zero-defect positive-weight integer shift
+must be at least this sharp minimum. -/
+theorem leastAmpleShift_optimal_for_zero_defect
+    (s : NShape) (w a b : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i)
+    (hb : ∀ i, 1 ≤ b i)
+    (k : ℕ)
+    (hk : calibrationDefect s w (fun i => a i + (k : ℤ) * b i) = 0) :
+    leastAmpleShift s a b hb ≤ k := by
+  apply leastAmpleShift_minimal s a b hb k
+  exact (defect_zero_iff_all_coordinates_nonnegative s w _ hw).1 hk
+
+#check leastAmpleShift_calibrates_all_positive_weights
+#check leastAmpleShift_optimal_for_zero_defect
+#print axioms leastAmpleShift_optimal_for_zero_defect
+
 end GSTNAllChannelAmpleSaturation

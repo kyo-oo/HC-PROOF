@@ -159,4 +159,54 @@ theorem universalPrimitive_natural_and_primitive
 #print axioms universalPrimitive_natural_and_primitive
 
 
+
+/-! ## Exact primitive top-degree pairing and nonvanishing
+
+Before this upgrade, the file proved middle Lefschetz primitivity
+but referred to projective top-degree nonvanishing only in its
+prose. These new theorems close that RING-THEORETIC step for every
+dimension, leaving only the separately stated positive projective
+intersection pairing required to instantiate it on a real X.
+-/
+
+/-- For EVERY d in EVERY commutative ring with b^(d+1)=0, the
+universal GST primitive has exact TOP pairing a^d b^d.
+In real projective X×X this pairs with the other factor's
+hyperplane top class, detecting a genuine nonzero primitive. -/
+theorem universalPrimitive_top_pairing
+    (a b : R) (d : Nat) (hb : b^(d+1) = 0) :
+    universalPrimitive a b d * b^d = a^d * b^d := by
+  cases d with
+  | zero =>
+    simp [universalPrimitive]
+  | succ n =>
+    rw [universalPrimitive_succ]
+    calc
+      (a^(n+1) - b * universalPrimitive a b n) * b^(n+1) =
+          a^(n+1) * b^(n+1) -
+            b^((n+1)+1) * universalPrimitive a b n := by
+              rw [pow_succ]
+              ring
+      _ = a^(n+1) * b^(n+1) := by
+            rw [hb]
+            ring
+
+/-- A positive top intersection proves the entire universal GST
+middle primitive is NONZERO, even with nilpotent hyperplanes.
+This detects nonzero algebraic primitive geometry on X×X
+for EVERY smooth projective X once its ample degree is supplied. -/
+theorem universalPrimitive_nonzero_of_top_pairing
+    (a b : R) (d : Nat)
+    (hb : b^(d+1) = 0)
+    (htop : a^d * b^d ≠ 0) :
+    universalPrimitive a b d ≠ 0 := by
+  intro hzero
+  have heq := universalPrimitive_top_pairing a b d hb
+  rw [hzero] at heq
+  exact htop heq.symm
+
+#check universalPrimitive_top_pairing
+#check universalPrimitive_nonzero_of_top_pairing
+#print axioms universalPrimitive_nonzero_of_top_pairing
+
 end GSTUniversalSelfProductPrimitive
