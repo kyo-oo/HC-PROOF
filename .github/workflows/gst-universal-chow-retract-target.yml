@@ -41,7 +41,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTAllTargetChowRetract"
-          roots = ["GSTUniversalChowRetractToTarget"]
+          roots = ["GSTUniversalChowRetractToTarget", "GSTGeneralSpaceCohomology"]
           EOF
           if lake build GSTAllTargetChowRetract > gst-chow-target.log 2>&1; then
             echo 'LEAN PASSED: true target X Chow correspondence descent'
