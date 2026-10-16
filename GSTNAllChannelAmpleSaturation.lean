@@ -261,22 +261,25 @@ theorem feasible_ample_shift_exists
 /-- Exact minimal integer ample shift over ALL feasible natural shifts. -/
 noncomputable def leastAmpleShift
     (s : NShape) (a b : IntegerChannels s)
-    (hb : ∀ i, 1 ≤ b i) : ℕ :=
-  Nat.find (feasible_ample_shift_exists s a b hb)
+    (hb : ∀ i, 1 ≤ b i) : ℕ := by
+  classical
+  exact Nat.find (feasible_ample_shift_exists s a b hb)
 
 theorem leastAmpleShift_feasible
     (s : NShape) (a b : IntegerChannels s)
     (hb : ∀ i, 1 ≤ b i) :
-    IsFeasibleAmpleShift s a b (leastAmpleShift s a b hb) :=
-  Nat.find_spec (feasible_ample_shift_exists s a b hb)
+    IsFeasibleAmpleShift s a b (leastAmpleShift s a b hb) := by
+  classical
+  exact Nat.find_spec (feasible_ample_shift_exists s a b hb)
 
 /-- The new value is OPTIMAL, not merely a large positivity bound. -/
 theorem leastAmpleShift_minimal
     (s : NShape) (a b : IntegerChannels s)
     (hb : ∀ i, 1 ≤ b i)
     (k : ℕ) (hk : IsFeasibleAmpleShift s a b k) :
-    leastAmpleShift s a b hb ≤ k :=
-  Nat.find_min' (feasible_ample_shift_exists s a b hb) hk
+    leastAmpleShift s a b hb ≤ k := by
+  classical
+  exact Nat.find_min' (feasible_ample_shift_exists s a b hb) hk
 
 /-- At the exact LEAST shift, all nonnegative and all strictly positive
 weight choices have zero absolute N-channel calibration defect. -/
