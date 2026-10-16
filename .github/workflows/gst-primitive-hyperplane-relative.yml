@@ -18,18 +18,6 @@ jobs:
     timeout-minutes: 85
     steps:
       - uses: actions/checkout@v5
-      - name: Archive exact tracked GST and HC source tree for complete Mathbox reading
-        if: always()
-        shell: bash
-        run: |
-          git ls-files -z | tar --null -T - -czf hc-mathbox-source-revision.tgz
-      - name: Upload complete checked-out source archive
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: hc-mathbox-complete-source-tree
-          path: hc-mathbox-source-revision.tgz
-          if-no-files-found: error
       - uses: actions/cache/restore@v4
         with:
           path: ~/.elan
