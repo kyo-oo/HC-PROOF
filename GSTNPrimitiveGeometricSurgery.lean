@@ -153,4 +153,93 @@ theorem eliminate_all_anti_graphs
 #print axioms explicit_surgery_reaches_zero_absolute_defect
 #print axioms eliminate_all_anti_graphs
 
+
+/-! ## Exact classification of the integer geometric surgery orbit
+
+The original result constructed one good surgery.  The upgraded law is
+COMPLETE in this genuine P¹×P¹ three-carrier model: two integer geometric
+packets have equal full integral homology if and only if their difference
+is an integer multiple of the graph+diagonal-to-rulings boundary relation.
+
+For positive packets, the EXISTENCE of any positive calibrated packet in
+a given exact homology class is equivalent to the sharp inequality
+anti <= diagonal.  This is an actual integer-effective cone criterion
+for this geometric configuration, with no rational saturation shortcut.
+-/
+
+/-- The generator (-1,-1,2) of the integer boundary lattice spans
+the ENTIRE kernel of the full H₂ homology signature, not just
+the previously constructed one-parameter examples. -/
+theorem surgery_orbit_complete
+    (T U : GeometricCycle) :
+    homology T = homology U ↔ ∃ k : ℤ, surgery T k = U := by
+  constructor
+  · intro h
+    have h₁ :
+        -T.anti + T.diagonal = -U.anti + U.diagonal :=
+      congrArg Prod.fst h
+    have h₂ :
+        T.anti + T.diagonal + T.ruling =
+          U.anti + U.diagonal + U.ruling :=
+      congrArg Prod.snd h
+    refine ⟨T.anti - U.anti, ?_⟩
+    apply GeometricCycle.ext
+    · dsimp [surgery]; omega
+    · dsimp [surgery]; omega
+    · dsimp [surgery]; omega
+  · rintro ⟨k, hk⟩
+    rw [← hk]
+    exact (surgery_preserves_integral_homology T k).symm
+
+/-- Positive integral packets have defect *exactly* twice their
+antiholomorphic-graph multiplicity.  There are no other
+hidden positive defects in this packet model. -/
+theorem positive_packet_defect_formula
+    (T : GeometricCycle)
+    (ha : 0 ≤ T.anti)
+    (hd : 0 ≤ T.diagonal)
+    (hr : 0 ≤ T.ruling) :
+    calibrationDefect T = 2 * T.anti := by
+  unfold calibrationDefect currentMass period
+  rw [abs_of_nonneg ha, abs_of_nonneg hd, abs_of_nonneg hr]
+  ring
+
+/-- SHARP integer effective-cone criterion. Every positive integer
+packet in the same *full* homology class is accounted for by
+surgery_orbit_complete. Thus a calibrated positive representative
+exists if and ONLY IF the diagonal multiplicity is at least the
+antigraph multiplicity in the initial positive packet. -/
+theorem effective_calibrated_replacement_iff
+    (T : GeometricCycle)
+    (ha : 0 ≤ T.anti)
+    (hd : 0 ≤ T.diagonal)
+    (hr : 0 ≤ T.ruling) :
+    (∃ U : GeometricCycle,
+       0 ≤ U.anti ∧ 0 ≤ U.diagonal ∧ 0 ≤ U.ruling ∧
+       homology U = homology T ∧ calibrationDefect U = 0) ↔
+      T.anti ≤ T.diagonal := by
+  constructor
+  · rintro ⟨U, hUanti, hUdiag, hUruling, hclass, hcal⟩
+    have hformula :=
+      positive_packet_defect_formula U hUanti hUdiag hUruling
+    rw [hformula] at hcal
+    have hfirst :
+        -U.anti + U.diagonal = -T.anti + T.diagonal :=
+      congrArg Prod.fst hclass
+    omega
+  · intro hle
+    let U := surgery T T.anti
+    refine ⟨U, ?_, ?_, ?_, ?_, ?_⟩
+    · dsimp [U, surgery]; omega
+    · dsimp [U, surgery]; omega
+    · dsimp [U, surgery]; omega
+    · exact (surgery_preserves_integral_homology T T.anti).symm
+    · exact (eliminate_all_anti_graphs T ha hle hr).1
+
+#check surgery_orbit_complete
+#check effective_calibrated_replacement_iff
+#print axioms surgery_orbit_complete
+#print axioms effective_calibrated_replacement_iff
+
+
 end GSTNPrimitiveGeometricSurgery

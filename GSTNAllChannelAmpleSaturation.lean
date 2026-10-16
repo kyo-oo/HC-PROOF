@@ -140,4 +140,94 @@ theorem all_N_integral_fixed_period_calibrated_sequence
 #check all_N_integral_fixed_period_calibrated_sequence
 #print axioms all_N_integral_fixed_period_calibrated_sequence
 
+
+/-! ## Exact positivity-cone semantics for ALL N-window channels
+
+The construction above only supplied a sufficient positive ample shift.
+These results prove NECESSITY as well: whenever every channel has
+strictly positive integer mass weight, abstract zero calibration defect
+is equivalent to coordinatewise nonnegativity. This is a complete
+integer-effective cone, not a claim that X has a realized algebraic
+cycle for every coordinate direction.
+-/
+
+/-- A canonical expression of N-channel defect as a sum of weighted
+negative-part penalties, valid WITHOUT sign assumptions. -/
+theorem defect_as_weighted_negative_part
+    (s : NShape) (w a : IntegerChannels s) :
+    calibrationDefect s w a =
+      ∑ i : Fin s.holes, w i * (|a i| - a i) := by
+  unfold calibrationDefect currentMass period
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  ring
+
+/-- For arbitrary nonnegative integer weights, the N-channel
+nonlinear defect is globally nonnegative, just like actual
+Kähler calibration defect (but only inside this coordinate model). -/
+theorem defect_nonnegative
+    (s : NShape) (w a : IntegerChannels s)
+    (hw : ∀ i, 0 ≤ w i) :
+    0 ≤ calibrationDefect s w a := by
+  rw [defect_as_weighted_negative_part]
+  apply Finset.sum_nonneg
+  intro i hi
+  exact mul_nonneg (hw i) (sub_nonneg.mpr (le_abs_self (a i)))
+
+/-- Exact all-N classification of zero-defect integer packets:
+under strictly positive weights there are no hidden signed
+calibrated directions, and the earlier ample shift lands in
+precisely the entire integral nonnegative cone. -/
+theorem defect_zero_iff_all_coordinates_nonnegative
+    (s : NShape) (w a : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i) :
+    calibrationDefect s w a = 0 ↔
+      ∀ i : Fin s.holes, 0 ≤ a i := by
+  constructor
+  · intro hz i
+    by_contra hnot
+    have hneg : a i < 0 := lt_of_not_ge hnot
+    have hweights : ∀ j ∈ Finset.univ,
+        0 ≤ w j * (|a j| - a j) := by
+      intro j hj
+      exact mul_nonneg (by have h := hw j; omega)
+        (sub_nonneg.mpr (le_abs_self (a j)))
+    have hpositive : 0 < w i * (|a i| - a i) := by
+      have hwi : 0 < w i := by have h := hw i; omega
+      have hai : 0 < |a i| - a i := by
+        rw [abs_of_neg hneg]
+        omega
+      exact mul_pos hwi hai
+    have hle :
+        w i * (|a i| - a i) ≤
+          ∑ j : Fin s.holes, w j * (|a j| - a j) :=
+      Finset.single_le_sum
+        (fun j hj => hweights j (Finset.mem_univ j))
+        (Finset.mem_univ i)
+    rw [defect_as_weighted_negative_part] at hz
+    omega
+  · intro ha
+    rw [defect_as_weighted_negative_part]
+    apply Finset.sum_eq_zero
+    intro i hi
+    rw [abs_of_nonneg (ha i)]
+    ring
+
+/-- The earlier explicit GST ample-shift operation is now a
+constructive witness for the complete zero-defect cone. -/
+theorem shifted_lands_in_complete_zero_defect_cone
+    (s : NShape) (w a b : IntegerChannels s)
+    (hw : ∀ i, 1 ≤ w i)
+    (hb : ∀ i, 1 ≤ b i) :
+    calibrationDefect s w (shiftedChannels s a b) = 0 ∧
+      (∀ i : Fin s.holes, 0 ≤ shiftedChannels s a b i) := by
+  have h := shiftedChannels_nonnegative s a b hb
+  exact ⟨(defect_zero_iff_all_coordinates_nonnegative s w
+    (shiftedChannels s a b) hw).2 h, h⟩
+
+#check defect_zero_iff_all_coordinates_nonnegative
+#print axioms defect_zero_iff_all_coordinates_nonnegative
+
+
 end GSTNAllChannelAmpleSaturation

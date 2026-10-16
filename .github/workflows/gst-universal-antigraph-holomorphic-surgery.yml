@@ -3,6 +3,7 @@ on:
   push:
     branches: [mathbox/residual-zero-direct-audit-20261015]
     paths:
+      - GSTUniversalSelfProductPrimitive.lean
       - GSTUniversalAntigraphDiagonalSurgery.lean
       - .github/workflows/gst-universal-antigraph-holomorphic-surgery.yml
   workflow_dispatch:

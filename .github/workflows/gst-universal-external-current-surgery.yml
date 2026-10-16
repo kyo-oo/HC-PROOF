@@ -3,6 +3,7 @@ on:
   push:
     branches: [mathbox/residual-zero-direct-audit-20261015]
     paths:
+      - GSTNPrimitiveGeometricSurgery.lean
       - GSTUniversalExternalProductCurrentSurgery.lean
       - .github/workflows/gst-universal-external-current-surgery.yml
   workflow_dispatch:

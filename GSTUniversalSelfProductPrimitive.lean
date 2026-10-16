@@ -104,4 +104,59 @@ theorem universalPrimitive_succ_native
 #check universalPrimitive_succ_native
 #print axioms universalPrimitive_in_middle_Lefschetz_kernel
 
+
+/-! ## Functorial and homogeneous GST primitive conservation laws
+
+In actual projective intersection rings these are independent
+mathematical identities: the universal primitive respects
+all ring-functorial pullbacks (when the cup-product comparison
+is established) and rescales homogeneously under common
+ample-class rescaling. Neither law asserts arbitrary Hodge
+surjectivity.
+-/
+
+/-- Exact homogeneous degree-d law for the integer GST primitive.
+This is an all-dimensional strengthening beyond nilpotence. -/
+theorem universalPrimitive_homogeneous
+    (a b t : R) (d : Nat) :
+    universalPrimitive (t*a) (t*b) d =
+      t^d * universalPrimitive a b d := by
+  induction d with
+  | zero => simp [universalPrimitive]
+  | succ d ih =>
+      rw [universalPrimitive_succ, universalPrimitive_succ, ih, mul_pow, pow_succ]
+      ring
+
+/-- Naturality under EVERY commutative-ring homomorphism.
+The GST primitive polynomial has no representation-dependent
+or recoordination-specific correction term. -/
+theorem universalPrimitive_natural
+    {S : Type*} [CommRing S] (f : R →+* S)
+    (a b : R) (d : Nat) :
+    f (universalPrimitive a b d) =
+      universalPrimitive (f a) (f b) d := by
+  induction d with
+  | zero => simp [universalPrimitive]
+  | succ d ih =>
+      rw [universalPrimitive_succ, map_sub, map_mul, map_pow,
+          ih, universalPrimitive_succ]
+
+/-- The primitive constraint is conserved under any ring
+homomorphism preserving the two nilpotence bounds. -/
+theorem universalPrimitive_natural_and_primitive
+    {S : Type*} [CommRing S] (f : R →+* S)
+    (a b : R) (d : Nat)
+    (ha : a^(d+1)=0) (hb : b^(d+1)=0) :
+    ((f a)+(f b)) *
+      f (universalPrimitive a b d) = 0 := by
+  rw [universalPrimitive_natural]
+  apply universalPrimitive_in_middle_Lefschetz_kernel
+  · rw [← map_pow, ha, map_zero]
+  · rw [← map_pow, hb, map_zero]
+
+#check universalPrimitive_homogeneous
+#check universalPrimitive_natural_and_primitive
+#print axioms universalPrimitive_natural_and_primitive
+
+
 end GSTUniversalSelfProductPrimitive
