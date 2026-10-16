@@ -897,3 +897,108 @@ included in the successful kernel build 38937754946. It produces a
 true `codimensionCycles S.X p` using actual native divisor products,
 not a Hodge-class-to-Chow choice. The exact source product and Hodge
 comparison are separately checked fields of `CMNativeProductRealization`.
+
+
+## 16 October 2026 Mathbox: mixed-world CM field descent and unbounded multicharge frontier
+
+**Exact target unchanged.** For every smooth projective complex variety
+X and every primitive rational Hodge class alpha of degree 2p,
+construct an actual codimension-p rational algebraic cycle with
+geometric cycle class exactly alpha. Replacing alpha with a
+CM/General-Space world address or a chosen linear map does not count.
+
+**Base branch checkpoint:** 379382064524cbf7ff15887d1a7d989b14b533a2.
+**Genuine improvement:** a rational primitive Hodge target on an
+arbitrary X can now be reached from independently constructed native
+cycles on *different source varieties of different codimensions*,
+with expansion coefficients in ANY field extension K/Q. Actual
+cross-carrier transfers land in CH^p(X), while the normalized
+Q-linear coefficient projector constructs a rational native cycle.
+The built theorem is
+GSTClassicalHodgeCMNativeRationalDescent.
+native_target_cycle_of_multisource_CM_field_spanning.
+The required K-linear Betti equality is a geometric source-spanning
+input and MUST be derived from actual correspondences/eigenperiods:
+it is not automatic for every alpha. Kernel run 38948869754 SUCCESS
+at workflow repair commit 00dc1380610a57197fcf6e939fef911d02e01be6.
+Earlier run 38948520559 failed solely because the Chow source
+module had not been registered in the Lake library roots.
+
+The original CM rank-one norm-one torus law now also provides
+GSTCMFiniteGeometricDegreeDescent.
+native_rational_cm_cycle_of_geometric_field_expansion.
+The input may have coefficients in K, no longer necessarily Q,
+and the output is a true rational Chow cycle. Kernel run
+38947942065 SUCCESS at 01dc8fe16395ca10b44d2decd8b1d686b208793e.
+Remaining E^n geometric leaf: identify the actual rational
+Hodge realization with the Hodge-group character decomposition,
+verify exterior/Koszul signs, and show the geometric divisor
+word classes map to the quadratic eigencharacter generators.
+Formal semigroup generation is not a substitute for that leaf.
+
+**Cross-GST general-space computation:** In
+GSTGeneralSpaceCohomology.lean theorems
+algebraicity_iff_reversible_general_space_transport and
+missing_native_direction_persists_recoordination now derive from
+strict native-cohomological path naturality. They hold across
+arbitrary reversible paths in the original GST General Space
+geometry, so reversible CM/NM/cosmology *recoordination* cannot
+independently generate a previously absent algebraic Hodge
+direction. To advance universal existence, one needs a GENUINELY
+new native cycle from an irreversible birth/source, or independent
+geometric existence input. Kernel run 38947843787 SUCCESS.
+
+**Higher CM-charge route, substantially beyond the old
+one-dimensional norm-one Hodge torus:** Integral torus characters
+may have multi-charge vectors. Wolfram exact finite checks:
+  rank-two charges (1,0),(0,1),(-1,-1)
+form a minimal zero-sum triplet with no zero-sum pair.
+An even-degree, Hodge-relevant candidate has
+  (1,0),(0,1),(-1,2),(0,-3).
+The total weight is zero; none of the 14 nonempty proper
+subsets is weight zero, and no pair (16 ordered options) or
+triple (64 ordered options) of the four weights has zero
+weight, *even allowing repetition*. The latter checks were
+computed with Wolfram exact integer arithmetic, no sampling.
+
+**Uniform all-codimension strengthening:** For arbitrary N>=2,
+weights a=(1,0), b=(0,1), c=(-N,-1) make the word a^N b c
+zero weight. Any subword has m copies of a, u/v in {0,1}
+copies of b/c. The two character equations
+    m-N*v = 0,  u-v=0
+force either m=u=v=0 (empty) or m=N,u=v=1 (whole).
+With N=2p-2, this yields a primitive *formal* multi-charge
+torus invariant in every even degree 2p for all p>=2.
+Thus, across arbitrary character lattices, a universal
+constant bound on the degree of zero-weight generators
+cannot exist. Lean definitions/theorems in
+GSTUniversalCMArithmeticObstruction.lean:
+cubic_CM_atom_requires_new_generator,
+quartic_CM_higher_generator_necessary,
+CM_multicharge_zero_sum_atom_all_lengths,
+CM_unbounded_even_degree_primitive_atom.
+The latest combined CI gate is tracked separately;
+do not mark it green before completion.
+
+**Critical semantic firewall:** An integer torus character
+zero-sum, EVEN at degree 2p, is NOT automatically a (p,p)
+rational Hodge class in any genuine smooth projective
+complex variety; nor is there a Chow preimage of that class.
+To convert the new higher-charge GST invariant atoms into
+actual algebraic geometry, one must independently
+(1) exhibit a Hodge representation whose rational Hodge
+subspace contains the given character invariant and
+(2) construct a genuine native cycle with matching
+Betti class. This is the active genuinely new cycle-birth
+problem; the abstract zero-sum calculation does not
+fill either geometric step.
+
+**Next discriminating construction:** On actual smooth
+projective higher-rank CM abelian fourfolds, compute
+the true Mumford-Tate/Hodge-group weights, identify any
+primitive rational (2,2) invariant not generated by
+divisor pairs, and test an explicit algebraic
+surface/correspondence against its period. One
+verified such cycle would add a NEW native GST generator,
+rather than rearranging existing correspondences.
+The unrestricted target on all X is **unproved**.
