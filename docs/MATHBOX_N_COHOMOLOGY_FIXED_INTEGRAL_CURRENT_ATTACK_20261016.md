@@ -328,3 +328,56 @@ Even in a class where an integer calibrated cycle exists, the
 third property fails. The correct universal construction must
 find a discrete calibrated representative, not approximate the
 diffuse positive current itself.
+
+
+### G. Geometric ample-complement construction for every ALREADY algebraic cycle
+
+This checks that requiring *some* ample shift of a rational
+algebraic class to be effective is a legitimate geometric target,
+rather than an inadvertently stronger positivity conjecture.
+
+Fix L very ample with h=c1(L). Let Z be a genuine irreducible
+codimension-p subvariety of smooth projective X.
+For sufficiently large N, the sheaf I_Z tensor L^N is globally
+generated. Choose p general hypersurface sections vanishing on Z.
+At Z's generic point, its ideal is the maximal ideal of the
+p-dimensional regular local ring O_{X,eta_Z}; p general local
+sections have independent linear parts and cut Z with generic
+intersection multiplicity exactly one. By generic choices,
+their other codimension-p intersection components are effective.
+The Chow intersection formula then gives
+
+    N^p h^p = [Z] + [W]       with W effective codimension p.
+
+Equivalently, the *algebraic* class N^p h^p-[Z] has an explicit
+effective representative W. For a finite signed algebraic cycle
+A = A_plus - sum_i n_i [Z_i] with n_i positive integers, perform
+this hypersurface construction separately for each Z_i.
+Then
+
+    A + (sum_i n_i N_i^p) h^p
+       = A_plus + sum_i n_i W_i
+
+is effective, and it is an explicit finite algebraic cycle.
+Clear rational denominators beforehand. This proof is from
+genuine projective complete-intersection geometry, not
+N-wave rank labels or matrix-unit transport.
+
+Thus ANY class already in the algebraic Chow image has
+a sufficiently large effective integral ample shift;
+such a shift has a calibrated integral holomorphic current.
+Conversely, for a class alpha NOT YET known algebraic, an
+effective integral shift m alpha + M h^p would immediately make
+alpha algebraic after subtracting M h^p and dividing by m.
+
+This identifies the exact status of the proposed direct
+fixed-homology current attack: the existence of the shift
+together with arbitrarily small integral calibration defect
+is a **sufficient and (using the ample-complement construction)
+necessary** geometric realization condition for rational
+Hodge algebraicity. The construction of W_i assumes the source
+Z_i is ALREADY algebraic; using it on a hypothetical missing
+Hodge class would be circular.
+
+No formal Lean implementation of the full Chow moving/Bertini
+intersection machinery is claimed in this research record.
