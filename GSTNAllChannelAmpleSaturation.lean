@@ -419,4 +419,48 @@ theorem all_N_positive_defect_iff_negative_channel
 #check all_N_positive_defect_iff_negative_channel
 #print axioms all_N_positive_defect_iff_negative_channel
 
+
+/-! ## Arbitrary-rank integral scaling law for the exact GST defect
+
+Unlike a merely sufficient positivity estimate, this is an EXACT
+homogeneity identity for every N-shape and every signed integer
+channel vector. It rules out eliminating a nonzero lattice defect by
+clearing denominators or multiplying every existing channel by a
+nonzero positive integer. It does not equate formal integer channels
+with actual projective algebraic cycles.
+-/
+
+/-- Positive integer rescaling preserves the full value of the
+N-cohomology absolute calibration defect up to the same factor. -/
+theorem all_N_calibration_defect_integer_homogeneity
+    (s : NShape) (w a : IntegerChannels s) (k : ℕ) :
+    calibrationDefect s w (fun i => (k : ℤ) * a i) =
+      (k : ℤ) * calibrationDefect s w a := by
+  simp only [defect_as_weighted_negative_part, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have hk : 0 ≤ (k : ℤ) := by omega
+  rw [abs_mul, abs_of_nonneg hk]
+  ring
+
+/-- A nonzero positive integral change of multiplicity cannot
+turn an uncalibrated N-channel packet into a calibrated one. -/
+theorem all_N_calibration_zero_iff_positive_integer_scaling
+    (s : NShape) (w a : IntegerChannels s)
+    (k : ℕ) (hk : 0 < k) :
+    calibrationDefect s w (fun i => (k : ℤ) * a i) = 0 ↔
+      calibrationDefect s w a = 0 := by
+  rw [all_N_calibration_defect_integer_homogeneity]
+  have hk0 : (k : ℤ) ≠ 0 := by omega
+  constructor
+  · intro h
+    exact (mul_eq_zero.mp h).resolve_left hk0
+  · intro h
+    rw [h]
+    ring
+
+#check all_N_calibration_defect_integer_homogeneity
+#check all_N_calibration_zero_iff_positive_integer_scaling
+#print axioms all_N_calibration_zero_iff_positive_integer_scaling
+
 end GSTNAllChannelAmpleSaturation

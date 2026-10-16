@@ -189,4 +189,30 @@ theorem primitive_iff_has_relative_middle_lift
 #check primitive_iff_has_relative_middle_lift
 #print axioms primitive_iff_has_relative_middle_lift
 
+
+/-! ## No linear resurrection from a vanishing primitive restriction
+
+The geometry has an exact primitive=relative-kernel identification.
+A proposed linear reconstruction from a hyperplane's own middle
+cohomology must FAIL on each nonzero primitive middle class: that
+class restricts to zero, and any linear recovery maps zero to zero.
+This proves an obstruction to a specific universal construction,
+without ruling out independent relative algebraic geometry.
+-/
+
+/-- No rational-linear read/recover operation on hyperplane middle
+cohomology can reproduce a nonzero primitive class on X. -/
+theorem no_linear_hyperplane_recovery_of_nonzero_primitive
+    (alpha : XM)
+    (hprimitive : G.lefschetzMid alpha = 0)
+    (hnonzero : alpha ≠ 0)
+    (recover : YM →ₗ[ℚ] XM) :
+    recover (G.pullMid alpha) ≠ alpha := by
+  rw [primitive_middle_restriction_vanishes G alpha hprimitive,
+      map_zero]
+  exact Ne.symm hnonzero
+
+#check no_linear_hyperplane_recovery_of_nonzero_primitive
+#print axioms no_linear_hyperplane_recovery_of_nonzero_primitive
+
 end GSTPrimitiveMiddleHyperplaneRelative

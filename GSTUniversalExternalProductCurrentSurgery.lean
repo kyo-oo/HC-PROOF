@@ -257,4 +257,48 @@ theorem zero_tensor_defect_iff_both_factors_calibrated
 #check zero_tensor_defect_iff_both_factors_calibrated
 #print axioms zero_tensor_defect_iff_both_factors_calibrated
 
+
+/-! ## GST rigidity under arbitrary finite calibrated stabilizations
+
+The factor volumes may all DIFFER. This rules out a hidden
+calibration collapse from composing several independent positive-volume
+product surgeries. A factor of volume at least one cannot improve
+the original absolute defect. These are exact numerical implications
+of genuine geometric mass/period product laws, not a universal
+algebraic-cycle realization claim.
+-/
+
+open scoped BigOperators
+
+/-- No positive calibrated tensor factor with volume at least one
+can decrease the original absolute primitive calibration defect. -/
+theorem calibrated_tensor_defect_nondecreasing_at_integral_volume
+    (S : PrimitiveCurrentNumerics) (v : ℚ) (hv : 1 ≤ v) :
+    primitiveDefect S ≤ generalTensorDefect S v v := by
+  rw [calibrated_tensor_exact_residual]
+  have hD : 0 ≤ primitiveDefect S := by
+    unfold primitiveDefect
+    linarith [S.calibrated_bound]
+  nlinarith
+
+/-- For an arbitrary FINITE family of different positive calibrated
+factors, a tensor product has zero defect if and only if the original
+current has zero defect. No fixed-volume or equal-factor assumption. -/
+theorem arbitrary_finite_calibrated_tensor_rigidity
+    {ι : Type*} (s : Finset ι) (v : ι → ℚ)
+    (hv : ∀ i ∈ s, 0 < v i)
+    (S : PrimitiveCurrentNumerics) :
+    generalTensorDefect S (∏ i ∈ s, v i) (∏ i ∈ s, v i) = 0 ↔
+      primitiveDefect S = 0 := by
+  classical
+  have hprod : 0 < ∏ i ∈ s, v i := by
+    apply Finset.prod_pos
+    intro i hi
+    exact hv i hi
+  exact calibrated_tensor_zero_iff_original S _ hprod
+
+#check calibrated_tensor_defect_nondecreasing_at_integral_volume
+#check arbitrary_finite_calibrated_tensor_rigidity
+#print axioms arbitrary_finite_calibrated_tensor_rigidity
+
 end GSTUniversalExternalProductCurrentSurgery
