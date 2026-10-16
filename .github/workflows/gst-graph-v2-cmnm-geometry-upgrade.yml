@@ -3,8 +3,10 @@ on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
+      - mathbox/residual-zero-direct-audit-20261015
     paths:
       - 'GSTGraphV2CMNMPrimitiveUpgrade.lean'
+      - 'GSTGraphV2SelfExpandingCosmology.lean'
       - '.github/workflows/gst-graph-v2-cmnm-geometry-upgrade.yml'
   workflow_dispatch:
 permissions:
@@ -48,7 +50,7 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTGraphV2CMNMGeometry"
-          roots = ["GSTGraphV2CMNMPrimitiveUpgrade"]
+          roots = ["GSTGraphV2CMNMPrimitiveUpgrade", "GSTGraphV2SelfExpandingCosmology"]
           EOF
           if lake build GSTGraphV2CMNMGeometry > graph-v2-cmnm-lean.log 2>&1; then
             echo "LEAN PASSED: old graph embedded, CM-NM native cycle proved and indexed closure sound"
