@@ -183,10 +183,17 @@ theorem surgery_orbit_complete
           U.anti + U.diagonal + U.ruling :=
       congrArg Prod.snd h
     refine ⟨T.anti - U.anti, ?_⟩
-    apply GeometricCycle.ext
-    · dsimp [surgery]; omega
-    · dsimp [surgery]; omega
-    · dsimp [surgery]; omega
+    cases T with
+    | mk a d r =>
+      cases U with
+      | mk a' d' r' =>
+        change
+          (⟨a - (a-a'), d - (a-a'), r + 2*(a-a')⟩ : GeometricCycle) =
+            ⟨a',d',r'⟩
+        have ha : a - (a-a') = a' := by omega
+        have hd : d - (a-a') = d' := by omega
+        have hr : r + 2*(a-a') = r' := by omega
+        rw [ha, hd, hr]
   · rintro ⟨k, hk⟩
     rw [← hk]
     exact (surgery_preserves_integral_homology T k).symm
@@ -233,7 +240,8 @@ theorem effective_calibrated_replacement_iff
     · dsimp [U, surgery]; omega
     · dsimp [U, surgery]; omega
     · dsimp [U, surgery]; omega
-    · exact (surgery_preserves_integral_homology T T.anti).symm
+    · change homology (surgery T T.anti) = homology T
+      exact surgery_preserves_integral_homology T T.anti
     · exact (eliminate_all_anti_graphs T ha hle hr).1
 
 #check surgery_orbit_complete
