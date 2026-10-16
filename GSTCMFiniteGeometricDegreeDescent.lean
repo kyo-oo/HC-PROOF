@@ -249,6 +249,56 @@ theorem every_cm_character_hodge_class_is_native_cycle
           rw [cm_native_word_cycleClass]
     _ = alpha := hcoeff
 
+
+/-! ## Certified CM native source => full rational Hodge => degree descent
+
+The following is the EXACT algebraic interface between the genuine
+CM character products and the existing cross-scheme degree descent.
+It does not assert that all smooth projective X are dominated by
+a fixed CM elliptic power, and does not assume target surjectivity.
+-/
+
+/-- For every codimension p, a verified CM character expansion
+plus the actual native Chow divisor-product law establishes the
+genuine original all-weights Hodge statement on the CM source. -/
+theorem cm_source_hodge_of_all_character_expansions
+    (F : CMNativeProductRealization S H n)
+    (P : ∀ p : ℕ, CMActualHodgeCharacterExpansion F p ι) :
+    BigradedBettiHodgeStatement S H := by
+  intro p alpha hAlpha
+  exact every_cm_character_hodge_class_is_native_cycle
+    F p (P p) alpha hAlpha
+
+/-- Actual ALL-CODIMENSION geometric Hodge cycle construction:
+start with independently certified CM character expansions,
+construct the native source cycles by p-fold divisor products,
+then descend their genuine Chow classes through a finite-degree
+cross-scheme geometric morphism. -/
+theorem hodge_on_target_of_cm_character_products_and_geometric_degree
+    (F : CMNativeProductRealization A HA n)
+    (P : ∀ p : ℕ, CMActualHodgeCharacterExpansion F p ι)
+    (R : ∀ p : ℕ, CrossCarrierTransfer A X HA HX p p)
+    (pull : ∀ p : ℕ,
+      RationalSingularCohomology HX.analytification (2*p) →ₗ[ℚ]
+        RationalSingularCohomology HA.analytification (2*p))
+    (hPull : ∀ p : ℕ,
+      ∀ alpha : RationalSingularCohomology HX.analytification (2*p),
+        alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading p) →
+        pull p alpha ∈ rationalHodgeSubspace (HA.hodgeBigrading p))
+    (degree : ℚ) (hdegree : degree ≠ 0)
+    (hProjection : ∀ p : ℕ,
+      ∀ alpha : RationalSingularCohomology HX.analytification (2*p),
+        (R p).betti (pull p alpha) = degree • alpha) :
+    BigradedBettiHodgeStatement X HX := by
+  have hCM : BigradedBettiHodgeStatement A HA :=
+    cm_source_hodge_of_all_character_expansions F P
+  exact full_hodge_of_geometrically_degree_split_CM_source
+    R pull hPull degree hdegree hProjection hCM
+
+#check cm_source_hodge_of_all_character_expansions
+#check hodge_on_target_of_cm_character_products_and_geometric_degree
+#print axioms hodge_on_target_of_cm_character_products_and_geometric_degree
+
 #check cm_native_word_cycleClass
 #check every_cm_character_hodge_class_is_native_cycle
 #print axioms cm_native_word_cycleClass
