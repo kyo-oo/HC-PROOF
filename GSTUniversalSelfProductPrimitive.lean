@@ -202,7 +202,7 @@ theorem universalPrimitive_nonzero_of_top_pairing
     universalPrimitive a b d ≠ 0 := by
   intro hzero
   have heq := universalPrimitive_top_pairing a b d hb
-  rw [hzero] at heq
+  rw [hzero, zero_mul] at heq
   exact htop heq.symm
 
 #check universalPrimitive_top_pairing
