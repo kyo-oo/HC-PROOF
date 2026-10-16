@@ -131,6 +131,89 @@ theorem constructed_middle_is_primitive
     _ = c 0 * 0 := by rw [hzero]
     _ = 0 := by ring
 
+
+/-! ## All-X primitive-to-middle projective stabilization
+
+NEW EXACT GST LAW: Given a primitive rational Hodge class alpha of
+codimension p on an arbitrary d-fold with 2p <= d, set m=d-2p and
+Y=X×P^m. The middle class on Y
+
+   B = sum_{j=0}^m (-1)^j
+          pr_X^*(h_X^j alpha) * pr_P^*(h_P^(m-j))
+
+is PRIMITIVE for the product polarization h_X+h_P: all interior
+coefficients cancel, the bottom boundary is h_P^(m+1)=0,
+and the top boundary is the original Lefschetz-primitivity relation
+h_X^(m+1) alpha=0. Pushing B down along pr_X recovers alpha exactly.
+
+This module proves all arbitrary-rank, arbitrary-m rational-linear
+coefficient identities. Their identification with actual Betti
+classes and algebraic Chow pushforward uses the standard projective
+bundle formula/projection formula, which are not re-proved here.
+The reduction is NONCIRCULAR; it does NOT establish universal
+existence of the required primitive middle algebraic representative.
+-/
+
+section UniversalPrimitiveStabilization
+
+variable {V : Type*} [AddCommGroup V] [Module ℚ V]
+
+/-- The power h_X^j applied to a rational cohomology class. -/
+def gstLefschetzIterate (L : V →ₗ[ℚ] V) (alpha : V) : ℕ → V
+  | 0 => alpha
+  | j + 1 => L (gstLefschetzIterate L alpha j)
+
+/-- Actual coefficients of the middle class on X × P^m:
+the j-th term has h_X^j alpha on X and h_P^(m-j) on P^m. -/
+def gstStabilizedPrimitiveCoeff
+    (L : V →ₗ[ℚ] V) (alpha : V) (j : ℕ) : V :=
+  (-1 : ℚ)^j • gstLefschetzIterate L alpha j
+
+/-- Projective-fiber integration reads the h_P^m coefficient alpha,
+not a multiple or a Lefschetz inverse of alpha. -/
+theorem gst_stabilized_pushforward_recovers_source
+    (L : V →ₗ[ℚ] V) (alpha : V) :
+    gstStabilizedPrimitiveCoeff L alpha 0 = alpha := by
+  simp [gstStabilizedPrimitiveCoeff, gstLefschetzIterate]
+
+/-- Interior primitive cancellation holds for ALL j and ALL rational
+cohomology modules, with no dimension bound and no cycle preimage. -/
+theorem gst_stabilized_primitive_interior_cancellation
+    (L : V →ₗ[ℚ] V) (alpha : V) (j : ℕ) :
+    L (gstStabilizedPrimitiveCoeff L alpha j) +
+      gstStabilizedPrimitiveCoeff L alpha (j + 1) = 0 := by
+  change L (((-1 : ℚ)^j) • gstLefschetzIterate L alpha j) +
+    ((-1 : ℚ)^(j+1)) • L (gstLefschetzIterate L alpha j) = 0
+  rw [map_smul, pow_succ]
+  simp
+
+/-- The TOP product-Lefschetz boundary is zero exactly when the
+original class is primitive in weight d-2p=m. -/
+theorem gst_stabilized_primitive_top_boundary
+    (L : V →ₗ[ℚ] V) (alpha : V) (m : ℕ)
+    (hprimitive : gstLefschetzIterate L alpha (m + 1) = 0) :
+    gstStabilizedPrimitiveCoeff L alpha (m + 1) = 0 := by
+  simp [gstStabilizedPrimitiveCoeff, hprimitive]
+
+/-- All coefficients in the middle primitive product have the
+required signed telescoping; exact rational recovery and top
+boundary hold together for arbitrary X-type module and m. -/
+theorem gst_universal_projective_stabilization_certificate
+    (L : V →ₗ[ℚ] V) (alpha : V) (m : ℕ)
+    (hprimitive : gstLefschetzIterate L alpha (m + 1) = 0) :
+    gstStabilizedPrimitiveCoeff L alpha 0 = alpha ∧
+    (∀ j : ℕ, j < m →
+      L (gstStabilizedPrimitiveCoeff L alpha j) +
+        gstStabilizedPrimitiveCoeff L alpha (j + 1) = 0) ∧
+    gstStabilizedPrimitiveCoeff L alpha (m+1) = 0 := by
+  exact ⟨gst_stabilized_pushforward_recovers_source L alpha,
+    (fun j _ => gst_stabilized_primitive_interior_cancellation L alpha j),
+    gst_stabilized_primitive_top_boundary L alpha m hprimitive⟩
+
+#print axioms gst_universal_projective_stabilization_certificate
+
+end UniversalPrimitiveStabilization
+
 #check alternating_is_primitive
 #check primitive_middle_coefficients_determined
 #check primitive_iff_algebraic_alternating

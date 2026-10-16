@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
+      - mathbox/residual-zero-direct-audit-20261015
     paths:
       - 'GSTAllDimensionProjectivePrimitiveCycles.lean'
       - '.github/workflows/gst-all-dimension-projective-primitive.yml'
