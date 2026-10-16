@@ -283,3 +283,48 @@ flow that actually converges to the calibrated cone would finish
 the Hodge target, but no such all-X flow theorem has been derived.
 Do NOT register such a theorem as an axiom or count the existence
 of the smooth diffuse S_F as an integral-cycle solution.
+
+
+### F. Genuine projective test: diffuse Kähler current as limit of rational algebraic cycles
+
+Take X=P^2(C) with the normalized Fubini--Study form omega,
+and a projective line L. For every g in U(3) the analytic integral
+current [g L] represents the SAME integral class h, has mass one
+and Kähler calibration defect zero.
+
+Average all such lines against normalized Haar probability measure:
+
+    S(phi) = integral_{U(3)} [g L](phi) dmu(g).
+
+This S is closed, positive, has class h, and is U(3)-invariant.
+By symmetry the invariant positive (1,1) current in this class is
+exactly the smooth Fubini--Study current omega: S=omega.
+
+Finite empirical averages
+    S_n = (1/n) sum_{j=1}^n [g_{n,j} L]
+can converge weakly to S by approximating the Haar measure on the
+compact group. Each S_n is a RATIONAL-WEIGHT, CALIBRATED algebraic
+cycle with exact rational homology class h, uniform mass one,
+and defect zero. However the S_n are generally NOT integer
+rectifiable currents because the multiplicity on each distinct
+line is 1/n.
+
+There IS a perfectly valid integral calibrated representative,
+namely the fixed line [L], since the Hodge conjecture holds
+trivially in this case. Yet there cannot be a sequence of
+INTEGRAL closed currents of uniformly bounded mass converging
+weakly to the DIFFERENT smooth diffuse S=omega; integer compactness
+would force omega itself to be integral rectifiable.
+
+This explicit genuine projective example distinguishes three
+notions that cannot be merged by an N-cohomology coefficient choice:
+
+    rational effective algebraic cycles -> diffuse positive currents
+    existence of an integer calibrated cycle in the SAME class
+    approximation of a PARTICULAR diffuse positive current by
+          integer cycles in the SAME class
+
+Even in a class where an integer calibrated cycle exists, the
+third property fails. The correct universal construction must
+find a discrete calibrated representative, not approximate the
+diffuse positive current itself.
