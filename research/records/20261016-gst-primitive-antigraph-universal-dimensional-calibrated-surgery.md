@@ -220,11 +220,13 @@ is a smooth complex projective variety for which:
       c:X->X which is anti-symplectic c*omega=-omega,
       and acts on each H^(2k)(X,Z) as (-1)^k.
 
-For each factor term let m_i be the half-degree on the SECOND
-factor. Pairing with the graph shows its integral PD equals
+For each factor term let m_i be the half-degree on the FIRST
+cohomology factor A_i (equivalently d minus the half-degree on
+the second cohomology factor B_i). Pairing with the graph shows its integral PD equals
    [Gamma_c] = sum_i (-1)^(m_i)[A_i] x [B_i]
 (up to convention on identifying the two Poincare-dual factors:
-the parity is always the degree of the factor pulled back by c).
+the parity includes the ambient orientation sign (-1)^d
+and therefore equals the half-degree of the FIRST factor).
 
 Therefore the **EXACT INTEGER HOMOLOGY RELATION** is
    [Gamma_c]+[Delta_X]
