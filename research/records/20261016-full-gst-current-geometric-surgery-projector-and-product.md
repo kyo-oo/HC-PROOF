@@ -125,3 +125,85 @@ Find a nonlocal operator or explicit integer fillings B_n on the ORIGINAL X (not
   4. no use of prior Hodge algebraicity, an unproved geometric reachability field, or arbitrary target-cycle witness.
 
 Current exact verdict: **NO universal class-preserving zero-defect sequence has been constructed.** The new direct routes A and B are executed and produce checkable geometry and clear constraints; route C is the existing strongest all-X operator but still requires independent proof of gamma_X(beta)=0.
+
+
+## 2026-10-16 multi-edit: strengthen four EXISTING GST Lean laws atomically
+
+Atomic four-path tree commit cecf3a150e7489cf10f2fb3193c32398a15e6499;
+follow-up proof repair commit 610e3f8f09189fc722d6aaab3b823f1b0c67edc4.
+No new Lean module was created. The edits are:
+
+1. GSTUniversalAntigraphDiagonalSurgery.lean: universal integral graph
+   polynomial for ALL integer endomorphism degrees k and ALL n,
+   not only the conjugation k=-1 case:
+        PD(Graph f) = sum_(j=0)^n k^(n-j) A^(n-j) B^j.
+   The explicit nonnegative integer budget
+        B(n,k) = sum_(j=0)^n |k^(n-j)|
+   gives an effective projective product cycle representing
+        PD(Graph f)+B(n,k) PD(Diagonal).
+   The file also defines a mathematically EXACT LEAST nonnegative
+   integer correction m_min(n,k) as Nat.find on the finite
+   coefficientwise positivity predicate. It proves the iff:
+      ALL m+k^(n-j)>=0  <=> m>=m_min(n,k).
+   This is genuine geometry on P^n x P^n, since each coefficient
+   corresponds to an actual positive holomorphic linear-subspace
+   product. It does not universalize to arbitrary X lacking such
+   an integral effective cellular basis.
+
+2. GSTNAllChannelAmpleSaturation.lean: for every finite N shape and
+   ANY strictly positive integer weights/ample directions, the
+   exact abstract N-calibration identity becomes the sharp
+   THRESHOLD theorem
+       D_N(a+k b)=0 <=> k>=k_min(a,b).
+   In particular D_N>0 at every smaller nonnegative integer k.
+   This generalizes existence of one sufficiently ample shift
+   to a COMPLETE classification of all integer shift levels,
+   but D_N is not the mass defect of arbitrary integral currents.
+
+3. GSTUniversalExternalProductCurrentSurgery.lean: for EVERY current
+   numerical packet S with mass mu and period pi, and ANY auxiliary
+   factor with mass a and period b, derive exactly
+       D(S×F)=a D(S)+(a-b)pi.
+   For ANY positive calibrated factor of volume v>0:
+       D(S×F)=v D(S),
+       D(S×F)=0 iff D(S)=0.
+   Iterating arbitrarily many calibrated product stabilizations
+   cannot destroy a nonzero primitive defect.
+   The Lean theorem is the exact numerical identity; genuine
+   current-product geometry is the standard external interpretation.
+
+4. GSTPrimitiveMiddleHyperplaneRelative.lean: under the standard
+   rational Gysin equation i_*i*alpha = h cup alpha, prove
+       ker(i*:H^{2p}(X)->H^{2p}(Y))
+         =ker(L_h:H^{2p}(X)->H^{2p+2}(X)),
+   for a smooth hyperplane Y in smooth complex dimension 2p,
+   and, via the long exact pair sequence,
+       image(H^{2p}(X,Y)->H^{2p}(X)) = ker L_h.
+   This is an exact, unconditional geometric cohomology identity
+   once weak Lefschetz, Poincare and Gysin facts are instantiated.
+   It does not imply relative lifts have calibrated integral cycles.
+
+Wolfram exact signed-degree checks for k=-3 and n=1,...,8:
+    n       safe budget B(n,-3)      LEAST effective m
+    1              4                        3
+    2             13                        3
+    3             40                       27
+    4            121                       27
+    5            364                      243
+    6           1093                      243
+    7           3280                     2187
+    8           9841                     2187
+All corresponding shifted coefficients were nonnegative, minimum
+coefficient exactly zero in these tests.
+
+The multi-edit does not assert the all-X zero integral calibration
+gap gamma_X(m alpha+M h^p)=0. The signed graph and finite N systems
+show how a genuine effective-basis/positive-cone law works WHEN
+actual geometric basis carriers exist, but cannot supply the
+missing algebraic representation of every Hodge class on arbitrary X.
+
+CI scope at record-writing time: external tensor 38886239958 SUCCESS,
+relative primitive 38886240080 SUCCESS,
+degree-graph 38886527594 SUCCESS after classical decidability fix,
+all-N 38886239990 in progress. Check live status rather than
+inferring green from a committed theorem.
