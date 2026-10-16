@@ -664,7 +664,8 @@ variable {NM HM : Type*}
 with degree exactly d₁*d₂, no dimension or tower-length cutoff. -/
 def DegreePacket.compose
     (P : DegreePacket NS HS NM HM)
-    (Q : DegreePacket NM HM NT HT) :
+    (Q : DegreePacket NM HM NT HT)
+    (hMid : P.targetCycle = Q.sourceCycle) :
     DegreePacket NS HS NT HT where
   sourceCycle := P.sourceCycle
   targetCycle := Q.targetCycle
@@ -677,7 +678,7 @@ def DegreePacket.compose
     intro Z
     simp only [LinearMap.comp_apply]
     rw [Q.nativePush_sound (P.nativePush Z)]
-    rw [P.nativePush_sound Z]
+    rw [← hMid, P.nativePush_sound Z]
   degree_projection := by
     intro alpha
     simp only [LinearMap.comp_apply]
@@ -692,10 +693,11 @@ Repeated application handles any finite geometric descent chain. -/
 theorem two_stage_degree_descent_preserves_all_hodge
     (P : DegreePacket NS HS NM HM)
     (Q : DegreePacket NM HM NT HT)
+    (hMid : P.targetCycle = Q.sourceCycle)
     (hSource : Function.Surjective P.sourceCycle) :
     Function.Surjective Q.targetCycle := by
   exact degree_descent_preserves_all_hodge_classes
-    (P.compose Q) hSource
+    (P.compose Q hMid) hSource
 
 /-- New obstruction-transport law: a missing rational Hodge
 direction downstairs MUST pull back to a missing Hodge direction
