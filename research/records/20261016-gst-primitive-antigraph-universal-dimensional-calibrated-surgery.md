@@ -1,0 +1,169 @@
+# GST middle-primitive antigraph surgery: an actual all-dimensional complex-geometric construction
+2026-10-16 · Mathbox research · original all-X Hodge goal unchanged
+
+## A genuine integral-homology preserving calibrated replacement for every P^n x P^n
+
+Fix n>=1, the smooth projective complex 2n-fold
+X_n=P^n_C x P^n_C, and factor hyperplane classes a,b, with
+integral cohomology Z[a,b]/(a^(n+1),b^(n+1)).
+Let h=a+b, and use the normalized product Fubini--Study metric.
+
+Let c:P^n→P^n be the antiholomorphic complex-conjugation
+isometry, with c*h=-h. Let Gamma be its smoothly oriented
+graph, and Delta the holomorphic diagonal. For 0<=j<=n,
+let Y_j be a holomorphic product of linear projective subspaces,
+of dimensions j and n-j respectively, so
+    PD(Y_j)=a^(n-j)b^j.
+
+**The replacement is an exact INTEGER homology identity:**
+
+    [Gamma]+[Delta] =
+       2 sum_(0<=j<=n, n-j even) [Y_j].
+
+### 1. Proof of the integral identity and its GST primitive meaning
+
+For any j, pair the graph class with a^j b^(n-j):
+
+   integral_Gamma a^j b^(n-j)
+      = integral_Pn h^j(c*h)^(n-j) = (-1)^(n-j).
+
+Thus the full integral PD classes are
+
+  PD(Gamma)=sum_(j=0)^n (-1)^(n-j)a^(n-j)b^j,
+  PD(Delta)=sum_(j=0)^n a^(n-j)b^j.
+
+The first polynomial is exactly the preexisting GST
+universal self-product primitive polynomial with SWAPPED
+variables: GSTUniversalSelfProductPrimitive.universalPrimitive b a n.
+Its product with a+b vanishes by the existing GST telescope and
+dimension-truncation theorem. So the antigraph is a genuine
+nonzero middle primitive carrier.
+
+Add coefficients in Z, not merely Q:
+  1+(-1)^(n-j)=2 if n-j is even, 0 otherwise.
+
+The resulting class is 2sum_(n-j even) a^(n-j)b^j.
+Each monomial is the integral class of effective Y_j.
+Since the integral cohomology is torsionfree, PD equality gives
+identical INTEGRAL homology classes. Consequently the difference
+is the boundary of some INTEGRAL (2n+1)-chain B:
+  ∂B=[Gamma]+[Delta]-2sum_(n-j even)[Y_j].
+
+This is a genuine homology-preserving integer boundary surgery,
+not only a rational GST wave-coordinate operation.
+
+The universal polynomial identity, for ANY commutative ring,
+is formalized in GSTUniversalAntigraphDiagonalSurgery.lean,
+with explicit n=1 and n=2 tests. Its dedicated Actions workflow
+is gst-universal-antigraph-holomorphic-surgery.yml. The
+analytic projective-geometry interpretation is proved here,
+not claimed to be formalized in Lean.
+
+### 2. Exact geometric MASS and Kähler CALIBRATION proof
+
+Pullback of the ambient Kähler form to Gamma vanishes:
+  omega_total|Gamma = omega+c*omega=0.
+Thus Gamma is Lagrangian and has calibration period zero.
+
+Both graphs Gamma and Delta have induced Riemannian metric 2g,
+where g is Fubini--Study on P^n. Normalize
+  volume(P^n)= integral h^n/n! = 1/n!.
+Hence each graph has Riemannian volume 2^n/n!.
+
+Gamma and Delta intersect only on the real P^n fixed locus,
+a subset of real dimension n < 2n, so their overlap has
+zero 2n-dimensional area. Their sum has
+  Mass(bad)=2^(n+1)/n!,
+  Period(bad)=2^n/n!,
+  D(bad)=2^n/n! >0.
+
+Each Y_j is positive holomorphic, hence calibrated, and its
+Kähler mass is exactly 1/(j!(n-j)!).
+The parity binomial identity for n>=1 gives
+  sum_(n-j even) binom(n,j)=2^(n-1),
+so the positive integer target has
+  Mass(good)
+     = 2 sum_(n-j even)1/(j!(n-j)!)
+     = 2^n/n!,
+  Period(good)=Mass(good),
+  D(good)=0.
+
+The ENTIRE original positive absolute defect 2^n/n!
+is eliminated, without changing integral homology.
+Choose the constant sequence T_k=T_good for this fixed class.
+
+### 3. Nontrivial codimension-two middle primitive case
+
+On X=P²xP²:
+  PD(Gamma)=a²-ab+b²;
+  (a+b)PD(Gamma)=0.
+It is the middle primitive anti-holomorphic graph class.
+The diagonal is PD(Delta)=a²+ab+b².
+Hence
+  Gamma+Delta homologous to 2(P²xpoint)+2(pointxP²).
+
+The actual integer 4-current before surgery has
+  Mass=4, Period=2, defect=2.
+The holomorphic replacement has
+  Mass=2, Period=2, defect=0.
+Both represent exactly the SAME integral middle homology class.
+This is a higher-codimension geometric surgery, not a
+mere P¹-curve arithmetic example.
+
+### 4. Exact independent computation
+
+Wolfram evaluated the polynomial difference
+  diag+anti-2sum_(n-j even) a^(n-j)b^j
+for ALL n=1,...,9; results were all exactly zero.
+It separately evaluated the rational mass sum
+  2sum_(n-j even) 1/(j!(n-j)!)
+versus 2^n/n! for n=1,...,9; all equalities held exactly.
+The proof for arbitrary n is the preceding parity cancellation
+and even-binomial identity, not extrapolation from the nine tests.
+
+### 5. Transport through the rest of the GST arsenal
+
+GSTNPrimitiveGeometricSurgery gives the base n=1 integer boundary
+relation. GSTUniversalSelfProductPrimitive identifies the full
+alternating primitive polynomial on product hyperplane directions.
+GSTUniversalAntigraphDiagonalSurgery constructs its all-n
+effective homology decomposition.
+
+GSTUniversalExternalProductCurrentSurgery shows that tensoring
+the n=1 integer surgery with ANY primitive current S on arbitrary X
+gives a homology-preserving current surgery on XxP¹xP¹ but leaves
+  D(output)=2D(S).
+So this *functorial* extension DOES NOT eliminate the primitive
+defect of an arbitrary input S.
+
+GSTComplexTangentProjectionChainObstruction proves a different
+shortcut also fails: a pointwise J-invariant projection of a closed
+exact form on the projective torus E x E need not be closed; the
+projected simple integer tangent bivector is nonsimple/fractional.
+A valid all-X GST operation must use nonlocal integral fillings.
+
+Existing GST realized algebraic correspondences, finite N-waves,
+world recoordination and ghost annihilator operators act on
+rational Hodge/coefficient or already-algebraic states; none
+by itself manufactures a new integer homology relation on the
+original arbitrary X with a calibrated output.
+
+## Why the original goal remains outstanding
+
+An arbitrary smooth projective X need not have a self-map
+c:X→X that is anti-holomorphic, anti-symplectic and an isometry,
+nor an effective projective-product basis spanning every rational
+primitive (p,p) Hodge class on X. Existence of the above surgery
+on P^n x P^n does NOT furnish a holomorphic cycle for a
+hypothetically nonalgebraic primitive class on a different X.
+
+The user's EXACT target would require, for every primitive
+rational Hodge alpha on arbitrary X, a nonlocal integral filling
+B_n whose replacement S+∂B_n has fixed class
+m alpha+M h^p and absolute calibration defect tending to zero.
+That general construction is still UNPROVED.
+
+The all-n antigraph theorem IS a genuine infinite-family
+mathematical and geometric result and an executable model for
+what the universal operation would have to do, not a false
+assertion that the rational Hodge conjecture is solved.
