@@ -752,3 +752,79 @@ The unrestricted all-X target still requires a proof that
 EVERY arbitrary primitive rational Hodge class can be
 represented by a cycle generated from such independent sources.
 No such universal source dominance is asserted here.
+
+## 2026-10-16 Mathbox: direct Lean formalization of scheme-typed geometry and CM cycles
+
+The original target remains actual rational algebraic-cycle representatives
+for all primitive rational Hodge classes on every smooth projective complex
+variety. This checkpoint now has machine-checked NATIVE SCHEME CARRIER
+results rather than only rational-vector-space GST world laws.
+
+GSTUniversalChowRetractToTarget.lean was upgraded as follows:
+
+* GeometricMultiSourceChowBirth has a finite dependent family of actual
+  smooth-projective source SCHEMES, with separate source codimensions, true
+  codimensionCycles carriers, native transfers and exact Betti cycle-class
+  comparison. The proof chooses native source cycles and builds a concrete
+  finite sum in the TARGET codimensionCycles carrier. Kernel gate GREEN:
+  38932725902 at 4939864fd8d0a87486657dfd7cb9ef448ae99cae.
+* GeometricSplitGysinPacket strengthens the source expansion from an
+  arbitrary existence formula to explicit rational cohomology READOUT maps
+  preserving Hodge type, and proves decomposition from a reconstruction
+  identity. Its actual-Chow conclusion was kernel verified GREEN:
+  38933800121 at ec4394ee0ab52b7777be3924d7a4ae78e0851d9f.
+* SchemeProjectiveBundleGysin indexes native source groups by
+  CH^(p-j)(B), for each j:Fin r, and proves native Chow representatives
+  on the genuine total scheme from projective-bundle Gysin readouts.
+* SchemeBlowupGysin indexes ONE base summand plus precisely
+  c-1 exceptional center summands, at source codimension p-(j+1).
+  The source and target cycle carriers are actual schemes and the
+  target is the real native CH^p space of the born world.
+* SchemeTypedGSTGeometricTower is an unbounded inductive construction
+  over actual smooth-projective carriers, with independently solved
+  seeds and arbitrarily deep projective-bundle/blowup births. Theorem
+  every_scheme_world_in_GST_tower_has_actual_hodge_cycles proves the
+  full all-codim target on every certified descendant. The combined
+  new geometric build runs on 38934997492; check its exact verdict
+  before claiming these latest constructors are kernel verified.
+
+GSTCMFiniteGeometricDegreeDescent.lean was upgraded as follows:
+
+* CMBalancedCharacterWord records p positive and p negative CM
+  characters, with exact canonical degree-two pairing.
+* CMNativeProductRealization uses actual codimensionCycles of a
+  specified smooth projective scheme at every degree, a native unit,
+  true native divisors, genuine native products, rational Betti
+  multiplication, and true cycle-class naturality.
+* cm_native_word_cycleClass constructs an actual p-divisor product
+  and proves its exact rational Betti class by structural induction
+  on p. CI GREEN: 38933352554.
+* cm_balanced_divisor_words_are_rational_hodge proves all these
+  resulting classes have type (p,p) in the ACTUAL HodgeBigrading;
+  this uses independently supplied rational Hodge cup compatibility.
+* hodge_on_target_of_cm_character_products_and_geometric_degree
+  composes a source CM word expansion, actual native divisor products
+  and genuine finite-degree pullback/pushforward into an
+  all-codimension target Hodge statement. CM CI GREEN for both
+  full-descent integration (38934026412) and explicit Hodge
+  type of native products (38934361836).
+
+CRITICAL FORMAL BOUNDARIES:
+
+1. The actual scheme-type names and codimension cycle spaces are fixed,
+   but HodgeBigradedBettiData.cycleClass is STILL a supplied rational
+   linear map in GSTGeometricRealizationStage2G.lean. Its identification
+   with the analytically defined geometric cycle-class map is not
+   established automatically by using the same field name.
+2. The true projective bundle pullbacks, exceptional Gysin maps,
+   rational Hodge decomposition and reconstruction from an actual
+   Mathlib blowup scheme are DATA required by the geometric packets.
+   The packets do not secretly instantiate those maps for arbitrary X.
+3. CMActualHodgeCharacterExpansion is the exact remaining theorem
+   of the genuine CM Hodge torus representation; the cycle-product
+   constructor does not itself establish that every rational Hodge
+   class of E^n has a balanced character expansion.
+4. The unrestricted all-X primitive algebraic representative still
+   requires independently constructed new geometric source directions.
+   Compilation of any conditional constructor is not a proof of that
+   missing universal existence assertion.
