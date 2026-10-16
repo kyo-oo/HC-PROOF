@@ -31,6 +31,7 @@ noncomputable section
 open AlgebraicGeometry
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2G
+open GSTGeometricRealizationStage2D
 open GSTClassicalHodgeNativeCycleCosmicShadow
 open GSTNCohomologyV3
 
