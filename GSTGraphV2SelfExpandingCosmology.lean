@@ -645,6 +645,91 @@ theorem degree_descent_preserves_all_hodge_classes
   intro alpha
   exact realize_target_via_degree_pushforward D hSource alpha
 
+
+/-! ## Exact iterated GST descent: degrees multiply, witnesses compose
+
+The world-birth calculus may construct a native cycle far above X.
+This composition law replaces any TWO generically finite descent
+steps by ONE degree packet whose degree is their exact PRODUCT.
+The proof checks all actual pushforward and cycle-class equations
+at the typed source, intermediate and target worlds.
+No middle-world Hodge completeness is inserted as a hypothesis.
+-/
+
+variable {NM HM : Type*}
+    [AddCommGroup NM] [Module ℚ NM]
+    [AddCommGroup HM] [Module ℚ HM]
+
+/-- Fully executable composition of native geometric descent packets,
+with degree exactly d₁*d₂, no dimension or tower-length cutoff. -/
+def DegreePacket.compose
+    (P : DegreePacket NS HS NM HM)
+    (Q : DegreePacket NM HM NT HT) :
+    DegreePacket NS HS NT HT where
+  sourceCycle := P.sourceCycle
+  targetCycle := Q.targetCycle
+  hodgePull := P.hodgePull.comp Q.hodgePull
+  nativePush := Q.nativePush.comp P.nativePush
+  hodgePush := Q.hodgePush.comp P.hodgePush
+  degree := P.degree * Q.degree
+  degree_ne_zero := mul_ne_zero P.degree_ne_zero Q.degree_ne_zero
+  nativePush_sound := by
+    intro Z
+    simp only [LinearMap.comp_apply]
+    rw [Q.nativePush_sound (P.nativePush Z)]
+    rw [P.nativePush_sound Z]
+  degree_projection := by
+    intro alpha
+    simp only [LinearMap.comp_apply]
+    rw [P.degree_projection (Q.hodgePull alpha)]
+    rw [map_smul]
+    rw [Q.degree_projection alpha]
+    rw [smul_smul]
+
+/-- Every cycle constructed by GST in a high source world can be
+transported through TWO further generically finite world stages.
+Repeated application handles any finite geometric descent chain. -/
+theorem two_stage_degree_descent_preserves_all_hodge
+    (P : DegreePacket NS HS NM HM)
+    (Q : DegreePacket NM HM NT HT)
+    (hSource : Function.Surjective P.sourceCycle) :
+    Function.Surjective Q.targetCycle := by
+  exact degree_descent_preserves_all_hodge_classes
+    (P.compose Q) hSource
+
+/-- New obstruction-transport law: a missing rational Hodge
+direction downstairs MUST pull back to a missing Hodge direction
+upstairs for any finite nonzero-degree native geometric morphism.
+This pinpoints why projecting a nonalgebraic primitive residual
+onto a previously solved source cannot conceal it. -/
+theorem missing_target_hodge_survives_finite_pullback
+    (D : DegreePacket NS HS NT HT)
+    (alpha : HT)
+    (hMissing : alpha ∉ LinearMap.range D.targetCycle) :
+    D.hodgePull alpha ∉ LinearMap.range D.sourceCycle := by
+  intro hsource
+  obtain ⟨Z, hZ⟩ := hsource
+  apply hMissing
+  refine ⟨D.degree⁻¹ • D.nativePush Z, ?_⟩
+  calc
+    D.targetCycle (D.degree⁻¹ • D.nativePush Z) =
+        D.degree⁻¹ • D.targetCycle (D.nativePush Z) := by
+          rw [map_smul]
+    _ = D.degree⁻¹ • D.hodgePush (D.sourceCycle Z) := by
+          rw [D.nativePush_sound Z]
+    _ = D.degree⁻¹ • D.hodgePush (D.hodgePull alpha) := by
+          rw [hZ]
+    _ = D.degree⁻¹ • (D.degree • alpha) := by
+          rw [D.degree_projection alpha]
+    _ = alpha := by
+          simp [smul_smul, D.degree_ne_zero]
+
+#check DegreePacket.compose
+#check two_stage_degree_descent_preserves_all_hodge
+#check missing_target_hodge_survives_finite_pullback
+#print axioms DegreePacket.compose
+#print axioms missing_target_hodge_survives_finite_pullback
+
 #check DegreePacket
 #check realize_target_via_degree_pushforward
 #check degree_descent_preserves_all_hodge_classes
