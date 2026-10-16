@@ -346,3 +346,94 @@ independently source-authenticated in the repository. The
 integer P1×P1 arithmetic is Lean kernel checked in workflow
 38865745138, and the finite exhaustive solver lives in
 research/computations/gst_integer_boundary_surgery.py.
+
+
+## Verified multi-file GST strengthening checkpoint (2026-10-16)
+
+This section records ACTUAL changes to FOUR PREEXISTING Lean source files.
+Source baseline: 432b479a41adfd4dfb4135eb4de75c6f5fda52b8.
+Verified source revision: cbe9ecd7c6295196885127507f53f4935f8f9626.
+No new Lean theorem files created. The files and associated existing CI
+workflow definitions were edited in place.
+
+1. GSTNPrimitiveGeometricSurgery.lean
+   NEW theorem surgery_orbit_complete:
+      homology T = homology U
+        iff exists k in Z with surgery T k = U.
+   This identifies the ENTIRE integer kernel of the genuine P1xP1
+   3-carrier homology signature, not merely one successful move.
+   NEW theorem effective_calibrated_replacement_iff:
+     given initial nonnegative anti,diagonal,ruling multiplicities,
+     existence of a NONNEGATIVE calibrated integer packet in its
+     exact homology class is EQUIVALENT to anti<=diagonal.
+   An explicit witness is surgery T T.anti, and the necessity
+   follows from homology's first coordinate and the exact
+   formula defect(T)=2*T.anti for nonnegative packets.
+   CI 38881066367 SUCCESS. This is a complete classification
+   WITHIN the three actual geometric generator classes,
+   not all currents on P1xP1 and not arbitrary X.
+
+2. GSTNAllChannelAmpleSaturation.lean
+   NEW theorem defect_zero_iff_all_coordinates_nonnegative:
+      for every finite N-shape and strictly positive
+      integer channel weights w_i,
+        D_w(a)=0 iff all a_i>=0.
+   The proof uses exact weighted negative-part decomposition,
+   positivity of all terms, and integral mass semantics.
+   CI 38879578256 SUCCESS. The coordinate channel basis
+   is NOT automatically an algebraic basis on arbitrary X.
+
+3. GSTUniversalSelfProductPrimitive.lean
+   NEW theorems universalPrimitive_homogeneous,
+   universalPrimitive_natural,
+   universalPrimitive_natural_and_primitive:
+   the GST degree-n primitive respects ALL commutative-ring
+   morphisms (including genuine geometric pullbacks WHEN
+   their Chow/cohomology dictionary is supplied), scales
+   with homogeneous degree n, and retains primitive
+   annihilation after morphism and dimension nilpotence.
+   Verified by antigraph integration CI 38879578306 SUCCESS.
+
+4. GSTUniversalAntigraphDiagonalSurgery.lean
+   NEW theorems opposite_integer_homology_surgery and
+   integer_parity_surgery_resolves_twice_diagonal:
+   the entire diagonal splits into TWO integer-effective
+   complementary parity packets, for arbitrary dimension n
+   and commutative coefficient ring.
+   A SECOND extension removes the range-index restriction:
+   full_cellular_antigraph_surgery,
+   full_cellular_opposite_surgery,
+   full_cellular_integral_parity_resolution
+   are valid for ANY FINITE CELLULAR INDEX and any graded
+   basis coefficients. Applications to real split flag varieties
+   require actual effective Schubert dual cycle products,
+   a compatible antiholomorphic involution and the
+   ambient-orientation-corrected parity action.
+   CI 38880573985 SUCCESS. Lean establishes the coefficient
+   algebra; realization data are separate geometric claims.
+
+Architecture/performance change:
+   GSTNPrimitiveGeometricSurgery.lean no longer imports the
+   unrelated very large waves.GSTNCohomologyV3 transitive
+   closure. It imports Mathlib directly; the N-wave model is
+   independently proved and verified in its own module.
+   The original primitive surgery and external product surgery
+   workflow root lists were updated to match actual imports.
+   Dependency-independent CI 38881066367 and 38881066332
+   BOTH SUCCESS, avoiding thousands of unrelated build modules.
+   All new theorems were checked with #print axioms and the
+   CI log did not report sorryAx.
+
+All four verification gates GREEN at this checkpoint:
+   38879578256 N-cone
+   38880573985 cellular/antigraph
+   38881066367 integer orbit
+   38881066332 external product integration
+
+**Original all-X rational Hodge conclusion remains UNPROVED.**
+A finite generated geometric packet can be completely classified
+without the collection spanning every primitive Hodge fiber.
+None of these new laws constructs integral homology relations from
+arbitrary primitive rational (p,p) classes to positive algebraic
+cycle packets on an arbitrary smooth projective X. That exact
+realization map remains the unresolved original objective.
