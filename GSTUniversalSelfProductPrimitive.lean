@@ -209,4 +209,91 @@ theorem universalPrimitive_nonzero_of_top_pairing
 #check universalPrimitive_nonzero_of_top_pairing
 #print axioms universalPrimitive_nonzero_of_top_pairing
 
+
+/-! ## All-dimensional GST primitive self-intersection law
+
+The stronger invariant is not just the top pairing P_d b^d: its ENTIRE
+self-intersection is forced by homogeneity and the Lefschetz-annihilator
+law, with an exact integer coefficient d+1 and Hodge--Riemann sign.
+An auxiliary FORMAL derivative makes the statement provable without
+unjustified geometric intersection assumptions.
+-/
+
+/-- Formal derivative ∂P_d/∂b of the recursively defined integral
+GST universal primitive polynomial (defined in any commutative ring). -/
+def universalPrimitiveDerivativeB (a b : R) : Nat → R
+  | 0 => 0
+  | n + 1 => -(universalPrimitive a b n) -
+      b * universalPrimitiveDerivativeB a b n
+
+/-- Differentiate the GST telescoping polynomial identity formally:
+    P_d + (a+b) ∂_b P_d = (d+1)(-b)^d.
+This is a UNIFORM algebraic identity over every commutative ring. -/
+theorem universalPrimitive_derivative_identity
+    (a b : R) (d : Nat) :
+    universalPrimitive a b d +
+      (a+b) * universalPrimitiveDerivativeB a b d =
+        ((d+1 : ℕ) : R) * (-b)^d := by
+  induction d with
+  | zero =>
+    simp [universalPrimitive, universalPrimitiveDerivativeB]
+  | succ n ih =>
+    have ht := universalPrimitive_telescopes a b n
+    rw [universalPrimitive_succ, universalPrimitiveDerivativeB]
+    calc
+      (a^(n+1) - b * universalPrimitive a b n) +
+          (a+b) * (-(universalPrimitive a b n) -
+            b * universalPrimitiveDerivativeB a b n) =
+        a^(n+1) - (a+b) * universalPrimitive a b n -
+          b * (universalPrimitive a b n +
+            (a+b) * universalPrimitiveDerivativeB a b n) := by ring
+      _ = (-b)^(n+1) -
+          b * (((n+1 : ℕ) : R) * (-b)^n) := by
+        rw [ht, ih]
+        ring
+      _ = (((n+1+1 : ℕ) : R)) * (-b)^(n+1) := by
+        rw [pow_succ]
+        push_cast
+        ring
+
+/-- **EXACT ALL-DIMENSIONAL MIDDLE SELF-INTERSECTION.**
+In the geometric ring H*(X×X) with nilpotent factor hyperplanes,
+the GST universal middle primitive has self-square
+     (-1)^d (d+1) a^d b^d.
+In particular its polarization has the expected Hodge--Riemann
+sign, with a universal integer magnitude d+1 times the
+top ample product. This is a proven ring theorem, not an
+assertion that every Hodge class is constructed by P_d. -/
+theorem universalPrimitive_exact_middle_self_intersection
+    (a b : R) (d : Nat)
+    (ha : a^(d+1)=0) (hb : b^(d+1)=0) :
+    (universalPrimitive a b d)^2 =
+      (((d+1 : ℕ) : R) * (-1 : R)^d) * (a^d * b^d) := by
+  let P := universalPrimitive a b d
+  let D := universalPrimitiveDerivativeB a b d
+  have hp : (a+b) * P = 0 :=
+    universalPrimitive_in_middle_Lefschetz_kernel a b d ha hb
+  have he := universalPrimitive_derivative_identity a b d
+  have htop := universalPrimitive_top_pairing a b d hb
+  have hfirst : P^2 = P * (P + (a+b)*D) := by
+    calc
+      P^2 = P*P + 0 := by ring
+      _ = P*P + P*((a+b)*D) := by
+        rw [mul_assoc, mul_comm P (a+b), hp]
+        ring
+      _ = P*(P+(a+b)*D) := by ring
+  calc
+    P^2 = P * (((d+1 : ℕ) : R) * (-b)^d) := by
+      rw [hfirst]
+      exact congrArg (fun z : R => P*z) he
+    _ = (((d+1 : ℕ) : R) * (-1 : R)^d) * (P*b^d) := by
+      rw [neg_pow]
+      ring
+    _ = (((d+1 : ℕ) : R) * (-1 : R)^d) * (a^d*b^d) := by
+      rw [htop]
+
+#check universalPrimitive_derivative_identity
+#check universalPrimitive_exact_middle_self_intersection
+#print axioms universalPrimitive_exact_middle_self_intersection
+
 end GSTUniversalSelfProductPrimitive
