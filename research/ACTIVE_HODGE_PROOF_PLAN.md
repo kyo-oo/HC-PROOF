@@ -71,6 +71,8 @@ This closes the mathematics of primitive-to-full recovery **once primitive repre
 
 **Exact remaining boundary:** the written original-fourfold construction uses T6 and standard canonical Chow–Betti geometry. Those geometric inputs have not been constructed as Lean inhabitants here; a GST-only proof of T6 is also not supplied. Instantiate/formalize these explicit leaves to upgrade the conditional native assembly to a fully geometric Lean theorem. Even that would settle this Weil-fourfold case, not the unchanged arbitrary \(X,p,\alpha\) objective.
 
+**Latest unconditionalization attempt (base `f5b69f5`):** [Source construction and canonical realization audit](records/20261018-weil-fourfold-auxiliary-extraction.md#unconditionalization-attempt-at-checkpoint-f5b69f5) traces the external secant-sheaf proof and derives an explicit third-Chern source formula. Exact Wolfram checks verify that formula and identify why the stated polarization/Fourier/Adams operations preserve their ambient block. They supply no new geometric source. The unconditional goal remains open; the existing green Lean assembly and all its hypotheses are unchanged. The seed/deformation/canonical-realization dependencies remain explicit, and their route remains open for actual construction.
+
 **Scope controls:** GitHub green means exactly the Lean declarations and finite computations compile without a reported \`sorryAx\`; it does not by itself instantiate all classical analytic Betti/Hodge interfaces or close Gate 3. No universal claim without a genuine native source and a canonical Betti equality for the prescribed target.
 
 ## Reporting and completion

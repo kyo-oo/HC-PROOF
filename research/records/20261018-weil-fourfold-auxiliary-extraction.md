@@ -382,3 +382,133 @@ dictionary, extraction/CM comparison, the generic Hodge decomposition and
 the canonical Betti realization remain the explicit external geometric
 inputs listed above. CI does not certify that these inputs have been
 constructed in Lean, and does not establish the all-varieties Hodge theorem.
+
+
+## Unconditionalization attempt at checkpoint f5b69f5
+
+**Requested target:** discharge the displayed geometric inputs of the
+GPT-6 assembly and finish the original all-varieties canonical Hodge
+statement. **Outcome:** not proved. The green Lean theorem and its
+hypotheses are unchanged. No new geometric source or canonical Betti
+realization was constructed in this attempt.
+
+The start revision is `f5b69f58a680fe4cde22b06631af850f3b1cbd8d`.
+The following are dependencies or attempts on the same Weil-fourfold
+construction, not a switch to new families.
+
+### 1. Trace the actual source theorem
+
+The pinned external TeX was acquired again by its Git blob and its
+identity checked: blob `d154748feaa7775d2488902ca32f5615e5f4dad6`,
+SHA-256 `1ff56b1b900b70df2a8817ae90725f45ae74b267bb1568025bc4bcaa598c1c23`.
+The statement and selected construction/deformation passages were read;
+this is not a complete independent audit of the external proof.
+
+The relevant chain is `p3sw:seed` (equivariant Abel-curve orbits),
+`p3sw:invariant-injectivity` (the full invariant derived obstruction
+space), `p3sw:exceptional-character`, `p3sw:projective-germ`,
+`p3sw:spread`, and `p3sw:endpoint-all-lattices`.
+It constructs sheaves and controls their deformation; an arithmetic
+nonzero tensor alone does not implement this chain. The relevant GST
+files inspected supply extraction, incidence, coefficient descent and
+K0 purification, but do not supply those geometric constructions as
+Lean terms. This is an external proof dependency, not an established
+internal source constructor.
+
+### 2. Explicit Chern-cycle extraction from the required sheaf
+
+Let X=A×B be the padded sixfold and let E be an actual coherent perfect
+sheaf of nonzero rank r. Its normalized third Chern character is
+\[
+ \kappa_3(E)=\frac{c_3(E)}2
+ -\frac{r-2}{2r}c_1(E)c_2(E)
+ +\frac{(r-1)(r-2)}{6r^2}c_1(E)^3.                  \tag{8}
+\]
+To derive this, multiply the Chern character through degree three by
+\(\exp(-c_1(E)/r)\). The degree-three coefficient is
+\(\operatorname{ch}_3-(c_1/r)\operatorname{ch}_2+c_1^3/(3r^2)\);
+substitution of the usual Chern-character polynomials gives (8).
+For a line class b, normalization is unchanged by tensoring E with its
+line bundle, since \(\operatorname{ch}(E\otimes L)=e^b\operatorname{ch}(E)\).
+
+Thus the genuinely algebraic candidate on the original fourfold is
+\[
+ Z_E=(p_A)_*\left[
+ \left(\frac{c_3(E)}2-\frac{r-2}{2r}c_1(E)c_2(E)
+ +\frac{(r-1)(r-2)}{6r^2}c_1(E)^3\right)p_B^*D_0\right].       \tag{9}
+\]
+The degree is exactly 3+1-2=2. If E has the required normalized
+character \(a\theta_X^3+w\), the polarization term is killed by
+\(\theta_BD_0=0\), and the existing injective contraction detects w.
+Formula (9) makes the needed source concrete, but it does not construct
+E with a nonzero Weil component on the required period. Arbitrary
+Chern classes or an arbitrary sheaf cannot be substituted for that
+source. The external theorem's all-period cycle conclusion also does
+not, by itself, assert that its particular seed sheaf extends to every
+period as the same ordinary sheaf.
+
+### 3. Test whether the existing elementary operations birth that source
+
+On the generic seven-dimensional even Hodge representation, the
+polarization powers occupy five directions and the exceptional Weil
+plane occupies two. The stated Lefschetz, Fourier and Adams matrices
+preserve the five-dimensional ambient block. Their lower-left blocks
+are zero. Products and sums of such matrices have the same property,
+by block multiplication, so every word preserves this block, with no
+word-length restriction. Starting from 1, the five vectors L^k1,
+0≤k≤4, span exactly that block. A CM action confined to the Weil plane
+does not move an ambient seed into it.
+
+This rules out source creation by this particular generator family;
+it is not an exhaustion of the GST library or all algebraic operations.
+The seven-dimensional calculation is a formal representation check,
+not a newly constructed Betti realization.
+
+There is also no direct quaternionic anti-K endomorphism available in
+the generic endomorphism algebra K itself. In its rational regular
+representation, write
+\[
+ J=\begin{pmatrix}0&-d\\1&0\end{pmatrix},\qquad
+ R=\begin{pmatrix}a&-db\\b&a\end{pmatrix}.
+\]
+Then RJ=JR, while RJ+JR=0 forces a=b=0 when d≠0. This excludes copying
+the QM graph isogeny as an endomorphism of a fourfold with End^0(A)=K;
+it makes no assertion against other algebraic surfaces or correspondences.
+
+### 4. Canonical realization remains a separate obligation
+
+`AnalytificationData` stores a topological space and a bijection with
+complex scheme points. `HodgeBigradedBettiData` still stores a Hodge
+bigrading and a cycle-class map. The point-generated construction
+linearly extends the supplied point-class values; it does not construct
+their analytic fundamental classes. In particular,
+`suppliedPointBettiClass` is defined from H.cycleClass itself.
+The existing `arbitrary_cycleClass_semantics_cannot_be_final_target`
+theorem supplies the zero-map obstruction to deleting this distinction.
+That semantic obstruction concerns unconstrained data, not the actual
+canonical Hodge conjecture. An unconditional result must instantiate
+these objects by the genuine geometry.
+
+### Computation and continuation
+
+Wolfram verified (8), its line-tensor invariance, the quadratic
+centralizer calculation, and the stated block/rank checks with exact
+arithmetic. Reusable script, output and manifest:
+`research/computations/weil_source_construction_frontier.{wl,output.txt,manifest.json}`.
+Input SHA-256 `78943940eae18a2cfe7ce7523364791db690fe1d7d2c4b3e93daf6affc3b7bcb`;
+output SHA-256 `1df46c0ed236706d1d5d6413557d8233ef346339f68cad6c2f72a2ac61338e1d`.
+The version-1 evidence validator passed with its documented provenance
+limits. An initial matrix-power implementation aborted at exponent
+zero for a singular matrix; the final successful run uses direct
+successive matrix-vector multiplication.
+
+The source-construction route stays **open**. The deferred work is to
+implement the actual geometric seed and its all-period deformation/spread,
+or supply an independently proved replacement source, together with
+canonical class comparison. The first geometric construction to implement
+is the seed, not a new existential certificate containing an assumed Γ.
+No ordinary-sheaf construction, semiregularity theorem or all-period
+source was proved by this attempt. No Lean source was edited and no new
+Lean CI was triggered: the previously green assembly remains exactly as
+verified. Even a completed Weil-fourfold formalization would not by
+itself supply cycles on arbitrary smooth projective varieties.

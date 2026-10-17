@@ -24,6 +24,8 @@
 
 - [Auxiliary-sixfold extraction on the original Weil fourfold and native three-direction assembly](20261018-weil-fourfold-auxiliary-extraction.md) — transferred from the residual-audit branch to the GPT-6 branch. One nonzero split-sixfold Weil source (external T6) is intersected with the actual diagonal difference and pushed to the original fourfold. Injective contraction plus the general-d fourth-power CM orbit supplies both exceptional directions; the polarization square gives all three generic middle Hodge directions. Original extraction arithmetic is Lean green at [#39066130937](https://github.com/kyo-oo/HC-PROOF/actions/runs/39066130937); native assembly integration is **GREEN [#39068146715](https://github.com/kyo-oo/HC-PROOF/actions/runs/39068146715)** at `b38695e` (8961 jobs, no sorryAx, standard axioms only). T6 and canonical geometric comparisons remain explicit external leaves.
 
+- [Unconditionalization attempt: explicit Chern source formula and exact source/canonical-realization dependencies](20261018-weil-fourfold-auxiliary-extraction.md#unconditionalization-attempt-at-checkpoint-f5b69f5) — the source and canonical geometry were not constructed. The green conditional Lean assembly is unchanged; Wolfram verifies only the recorded Chern and representation identities.
+
 **Current execution plan:** [Four fixed proof gates and exact all-X Hodge objective](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
