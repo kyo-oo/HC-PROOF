@@ -1,57 +1,58 @@
-# GST Hodge — Active Proof Plan
+# GST Hodge — Locked Execution Contract
 
-**Checkpoint:** 2026-10-17; branch research/gpt6-native-point-primitive-span-20261017; incoming SHA 593d401cd8cc2f774439955ab71aae67008731e3.
+**Research branch:** \`research/gpt6-native-point-primitive-span-20261017\`  
+**Contract revision:** 2026-10-17; this corrects the prior plan, which incorrectly stated the primitive subcase as the final acceptance target.
 
-## ONE acceptance target
+## The ORIGINAL target — not negotiable
 
-For every smooth projective complex variety X, every codimension p and every rational primitive (p,p)-Hodge class α, **construct an actual native rational algebraic cycle Z on the ORIGINAL X** and derive
+For **every** smooth projective complex variety \(X\), **every** codimension \(p\), and **every** rational Hodge class \(\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)\), construct a rational algebraic codimension-\(p\) cycle on the **original X** and prove
+
 \[
-\operatorname{cl}^{\mathrm{canonical}}_X(Z)=\alpha.
+\boxed{\forall X,\forall p,\forall\alpha\in\operatorname{Hdg}^{p}(X)_{\mathbb Q},\ 
+  \exists Z\in CH^p(X)_{\mathbb Q}:\operatorname{cl}^{\mathrm{canonical}}_X(Z)=\alpha.}
 \]
-The final artifact is a Lean theorem whose assumptions are standard verified geometric axioms/theorems, not the desired primitive cycle, an arbitrary full-rank determinant, an assumed Hodge-surjective correspondence, or an unconstrained cycleClass field.
 
-## The three gates
+The exact target is represented by \`GSTClassicalHodgeExactClayStatement.EveryHodgeClassIsRationalAlgebraic\`, and its final verified implementation must match this same quantifier structure and the genuine canonical Betti cycle-class semantics. Do not replace it with a fourfold result, a nonzero primitive source, a finite-dimensional toy model, a hypothesis that the target is algebraic, or a determinant supplied as input.
 
-| Gate | Exact acceptance criterion | Status and next task |
+## Four accountable proof gates
+
+These four gates are the **fixed sequence of acceptance checks**, not a promised bound on the number of unknown auxiliary lemmas needed to solve an open mathematical conjecture. Every proof claim has a yes/no acceptance condition.
+
+| Gate | Precisely what must be delivered | Acceptance test |
 | --- | --- | --- |
-| **I — Canonical geometry** | The point-class mapping is realized by true analytic subvariety fundamental classes and identified with Stage2G cycleClass, with geometric cup/Gysin naturality. | Point-generated extension and rigidity verified; implement actual fundamental-class comparison. |
-| **II — Universal primitive source** | For arbitrary original X and a primitive α, construct a native Z with canonical class α. | **Primary mathematical priority.** Finite trace projection and algebraic-image normalization already implemented. Native trace-kernel spanning is the unresolved theorem. |
-| **III — Exact kernel assembly** | Complete I and II, wire into GSTClassicalHodgeExactClayStatement / HodgeConjecture.lean, pass complete imports, axiom audit, and exact target test. | Supporting Lean integration green at run 39027382555; only promote when I+II feed final theorem. |
+| **1. Canonical class semantics** | Build the true analytification/fundamental-class, Hodge decomposition, rational Betti cup/Gysin and native-cycle comparison on the **same** \(X\); connect the built map to Stage2G. | No arbitrary user-supplied \`cycleClass\` can masquerade as the canonical map in the final theorem. |
+| **2. Full-class reduction** | Prove, using geometric Hard Lefschetz and algebraic hyperplane powers, that actual algebraic representatives for all primitive rational Hodge classes imply representatives for all rational Hodge classes in every codimension. | A Lean theorem with **all** \(X,p,\alpha\) and no additional Hodge-surjectivity field. |
+| **3. Universal primitive construction — THE MATHEMATICAL TARGET** | Construct native algebraic representatives for **every** primitive rational Hodge class on **each arbitrary original \(X\)**; every subvariety used must be geometrically constructed, and signed rational combinations are allowed. | An existence/construction theorem with no premise equivalent to the required primitive algebraicity, no target-preimage selector, no assumed full rank, and a canonical Betti equality. |
+| **4. Final exact Lean proof** | Instantiate 1–3 and obtain the exact full \`EveryHodgeClassIsRationalAlgebraic\` theorem for all \(X,p,\alpha\). | Whole-dependency Lean compile green; \`#print axioms\` audited; no \`sorry\`, custom axiom, \`False\`-explosion or strengthened hidden hypotheses. |
 
-These are **proof obligations**, not a promise that the open conjecture can be solved in three routine calls. The number of auxiliary mathematical lemmas is not known.
+**Execution priority:** Gate 3 is first in research effort, with Gate 1 pursued only insofar as it supplies the canonical comparison needed by Gate 3. Gate 2 then connects primitive-to-full classes; Gate 4 integrates the finished argument. Gates are a dependency structure, not a device to postpone the main task.
 
-## Execute Gate II: fixed, narrow research sequence
+## Direct mathematical attack — three routes, one target
 
-**Target file and theorem:** GSTActualXHodgeResidualProjection.lean, around \`all_primitive_hodge_iff_native_trace_kernel_spans\` (line 1217 at checkpoint). The current theorem reduces primitive algebraicity to honest native trace-kernel spanning. The needed new result is a **construction**, not a second equivalence.
+- **A. Actual signed native cycles on arbitrary \(X\):** Work directly on the full quantifiers. Find a geometric mechanism producing a rational signed combination of actual codimension-\(p\) subvarieties with the required primitive class. In degree \(p=2\) on fourfolds, use a *discriminating test* of the mechanism, **not** a renamed final objective. All new lemmas must be exportable to arbitrary \(X,p\), or explicitly recorded as restricted results.
+- **B. A genuinely universal algebraic correspondence:** Construct a correspondence *for every original \(X,p\)* whose independently algebraic source and verified Chow/Betti retraction produce the desired primitive class. Existing finite-degree transfer cannot supply an independently algebraic source. Holomorphic form pullback rules out universal domination by the current Fano-only sources.
+- **C. Integral geometric realization with algebraicity:** Develop an analytic/integro-geometric construction proving each rational Hodge class has a rational **signed algebraic** realization, including the nontrivial regularity, integrality and algebraicity step. Positive-current minimization alone cannot represent nonzero primitive classes.
 
-1. **Direct signed source on X (priority route).** Starting from a rational primitive Hodge target α, construct a **signed rational difference of genuine codimension-p subvarieties on X**; verify its degree-zero constraint, its nonzero primitive measurement, and its canonical Betti class without assuming a target preimage. A single positive effective representative cannot have nonzero primitive class by ample-degree positivity (see the signed-cycle route audit). First difficult test: codimension two in arbitrary smooth projective complex fourfolds. Record the actual algebraic incidence, deformation, analytic-cycle or integral calibration mechanism; do not substitute a target-dependent chosen preimage.
-2. **Geometric correspondence (backup).** For an arbitrary original X, exhibit a genuine Chow/Betti correspondence to a source with independently established representatives and a split injection on the required Hodge sector. Check H^(k,0) and other source invariants FIRST. Existing finite-degree descent only transports already represented source classes.
-3. **Signed integral-geometric reconstruction (independent backup).** Work with differences of analytic/algebraic currents or separately constructed effective components. Verify rational integral homology, complex-analytic regularity and multiplicity integrality for each component. The primitive class has zero ample degree, so positivity of a single effective cycle is insufficient.
+**Route stop rule:** no new special Fermat, K3, higher-rank, graph-orbit, determinant, bounded-computation or CI side project unless its result directly proves or refutes a named implication in Gate 3 for arbitrary \(X,p,\alpha\). A green Lean build verifies its exact declaration, not the original conjecture.
 
-## Decisions from the actual proof sources
+## Existing evidence that affects the decision
 
-- \`GSTActualXHodgeResidualProjection.picardTraceZero_has_zero_primitive_projection\` proves the existing divisor-born trace-zero construction has **zero primitive output**. Deprioritize divisor-only variants.
-- \`GSTResidualZeroLogicalCountermodel\` records the exact logical reason positive quadratic energy, finite detector rank and a native projection **alone do not force** a primitive residual to vanish. No repetition of positivity-only closure.
-- Verified Fermat and K3 source families provide genuine independent classes, but their unbounded **rank over varying X** is a different assertion from complete spanning on EACH arbitrary fixed X.
-- **Wolfram source-selection filter:** Fermat cubic fourfold and its projective bundles have h^(1,0)=h^(2,0)=0. X=E×P³ has h^(1,0)=1, and X=K3×P² has h^(2,0)=1. A generically finite morphism from the former solved Fano sources to either target would inject a nonzero target holomorphic form into a zero source space, so that proposed universal Fano-source domination fails. Exact result in [the Mathbox route audit](records/2026-10-17-fano-source-selection-holomorphic-gate.md). The open conjecture itself is not tested by this obstruction.
+- \`GSTActualXHodgeResidualProjection.all_primitive_hodge_iff_native_trace_kernel_spans\` gives an exact equivalence, **not** the native trace-kernel source-construction theorem.
+- \`GSTActualXHodgeResidualProjection.picardTraceZero_has_zero_primitive_projection\`: the existing divisor-born channel supplies zero primitive output.
+- \`GSTResidualZeroLogicalCountermodel\`: positivity plus finite dual detectors does not logically force universal residual zero.
+- \`GSTFiniteDominantAllCodimensionDescent\`: finite Chow transfer is valid when source Hodge representatives and the genuine map are established; transfer is not a general-purpose class generator.
+- \`research/records/2026-10-17-fano-source-selection-holomorphic-gate.md\`: rational holomorphic-form invariants eliminate the Fano-only universal domination route.
+- \`research/records/2026-10-17-primitive-signed-cycle-necessity.md\`: nonzero primitive classes have zero ample degree and require signed native cycles.
+- The existing Fermat and K3 results are retained as proved geometry on their exact domains and are **not** used as universal premises without a verified geometric transfer.
 
-## NO-SIDE-QUEST rule
+## Next proof obligation (unmodified in scope)
 
-Do **not** spend further research cycles creating a fourth special-variety rank example, an additional equivalent Hodge statement, another Fano-source covering lemma, or another CI workflow, **unless it changes the truth of an identified all-X implication**.
+**Directly derive an all-\(X\), all-\(p\) source-generation principle from a new GST geometric operation, with actual native cycles and a canonical cycle-class equality.** Its first decisive test can be fourfold codimension two, but that test cannot replace the all-\(X\), all-\(p\) statement.
 
-A new result counts as progress on the main target only if it:
-1. Constructs an algebraic class in a genuinely new arbitrary-X Hodge direction, **or**
-2. Proves a structural all-X step with source geometry and canonical comparison that was not previously available, **or**
-3. Definitively rules out one proposed universal mechanism and changes the research route.
+An acceptable route must name the new geometric object, show how it produces a native cycle **without knowing an algebraic preimage of \(\alpha\)**, and prove the class comparison. If an attempted route fails, identify the precise false implication, not a replacement theorem to celebrate.
 
-CI GREEN reports only that the exact Lean declarations compile at their written hypotheses. It is **not** a fourth proof gate.
+## Reporting and completion
 
-## Next execution handoff
+Every update reports: **(i)** the exact original target; **(ii)** which of gates 1–4 acquired a proof; **(iii)** the one next missing mathematical implication; **(iv)** exact commit/CI evidence. No claim of final completion before all four acceptance tests pass.
 
-**Next mathematical lemma to attack:** for a primitive rational (2,2) Hodge class α on arbitrary smooth projective fourfold X, construct a **signed native algebraic codimension-two cycle** by an explicit X-intrinsic geometric process. Prove its ample degree is zero, its primitive intersection against α is detected, and its canonical class equals α. The algebraic source and full rank must come from the process, never from a target preimage premise. First open implication: algebraic source existence on X, not finite presentation of already algebraic sources.
-
-**Check before editing:** reread the original exact theorem, \`GSTActualXHodgeResidualProjection\` lines 1190–1260, \`GSTClassicalHodgeGeometricCycleClassPointRigidity\` and the holomorphic source-selection gate. Preserve the existing green branches and original proof claims. Record each attempt with its first unresolved statement rather than creating more generalized supporting modules.
-
-**Completion rule:** only label the universal target complete when all three gates are satisfied by the SAME genuine geometric cycleClass and the exact all-X theorem passes a Lean kernel proof audit.
-
-**Signed-cycle source checkpoint:** [Exact primitive degree-zero and positivity theorem](records/2026-10-17-primitive-signed-cycle-necessity.md). The cubic example Z=3[P]-h² has degree zero and primitive norm 24; all positive effective representatives have positive ample degree.
+This is a deterministic **proof-verification plan**, not a probabilistic or arbitrary numbered iteration schedule. There is no finite guaranteed lemma count until a complete valid proof exists.
