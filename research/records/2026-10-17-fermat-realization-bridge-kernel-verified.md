@@ -1,0 +1,12 @@
+# Mathbox proof-audit correction: verified Fermat Betti-measurement bridge
+
+- **Date:** 2026-10-17
+- **Kind:** evidence update and exact proof audit
+- **Corrects / updates:** [Fermat unbounded primitive rank attempt](2026-10-17-fermat-unbounded-primitive-rank.md), which recorded the Betti measurement bridge as pending at its checkpoint.
+- **Original target:** For every smooth projective complex variety X, every p, and every rational primitive Hodge α, actually construct a native rational algebraic cycle Z on the original X with **canonical** geometric cycleClass(Z)=α. Target remains OPEN.
+- **New verified result:** `GSTMaximalLinearHypersurfacePrimitive.fermatGeometricMeasuredFamily_independent` in `GSTMaximalLinearHypersurfacePrimitive.lean`: for all m≥1,d≥3, any rational cohomology module W with *independently certified* Fermat geometric intersection detector M has rational linearly independent measured primitive class family. Exact rank lemma has no assumptions of target Hodge surjectivity or a preimage of an arbitrary unknown Hodge class.
+- **Independent geometric inputs needed before application to real Betti singular cohomology:** Construct actual smooth Fermat scheme and its canonical analytification, actual codimension-m algebraic subvarieties Pζ, canonical singular-cohomology fundamental classes, and prove `hGram` from geometric cup/intersection pairing and normal-bundle Chern numbers. The supplied Stage2G `cycleClass` is NOT constructed from the canonical map here.
+- **CI evidence:** [GitHub Actions run 39022986348](https://github.com/kyo-oo/HC-PROOF/actions/runs/39022986348), commit `00c81a6920c0e9fa1d0e3843a31b9f44582a89c7`, **SUCCESS**. Job `117368343468` reported `LEAN PASSED` and its source log `sorryAx` scan found no escapes. Artifact ID `12097363368`, SHA256 `9445a7b4932da50d42df88adc291dcae31d7ba5011a91d669ce39531b4e52582`.
+- **Evidence label:** PROVED in Lean at exact abstraction level for the matrix rank and geometric measurement implication; canonical Betti realization conditional on known geometric identities and unformalized point fundamental classes; all-X Hodge target unproved.
+- **Review status:** Self-reviewed against exact GH run, no independent geometric formalization or external source verification this session.
+- **Next unresolved implication:** Construct enough native cycles in every primitive Hodge direction of arbitrary X, not merely independent cycles on Fermat X. Identifying Stage2G supplied cycleClass with its true canonical geometric map is a separately named required prerequisite.
