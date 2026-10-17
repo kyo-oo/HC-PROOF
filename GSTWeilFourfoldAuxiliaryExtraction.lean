@@ -985,6 +985,79 @@ theorem periodTransport_plane_reconstruction
           (s*(v.1^2+d*v.2^2)) := by ring
       _ = target.2 := (div_eq_iff hdet).mpr (by ring)
 
+/-! ## Uniform genuine-isogeny Weil projector for the ORIGINAL fourfold
+
+Let K=Q(u), u²=-d and d>0. Set m=d+1 and q=m²+d, and
+let T=[m+u]* on H⁴(A,Q) for any K-Weil fourfold A.
+
+On the r=0,4 exceptional Weil eigenspaces the quadratic
+minimal factor of T is
+   G_W(t)=t²-2 R t+q⁴, R=Re((m+i√d)^4).
+On the r=1,3 eigenspaces it is
+   G_M(t)=t²-2 S t+q⁴, S=q(m²-d);
+on r=2 it has the eigenvalue q².
+
+Put N(t)=(t-q²)G_M(t). Its reduction modulo G_W has
+remainder A+B t. The rational scalar inverse
+   (A+2R B - B t)/D, D=A(A+2R B)+q⁴B²,
+makes P(t)=N(t)(A+2R B-B t)/D into an EXACT spectral
+projector: identity on the Weil plane, zero on all other
+H⁴ CM eigenspaces.
+
+Wolfram factored its denominator uniformly for all d>0:
+ D=256 d³ (d+1)² ((d+1)²+d)^6 (3d²+5d+3)² > 0.
+
+Thus P(T) is a genuine algebraic correspondence: every
+power of T comes from a rational algebraic isogeny pullback
+(denominators cleared once). Unlike the old assembly's
+direct assumption that an extracted source has zero ambient
+component, P(T) removes the ambient component by a built
+algebraic operation. One must still produce a source whose
+Weil PROJECTION is nonzero; no arbitrary Hodge preimage is
+built into this polynomial construction.
+-/
+
+/-- Characteristic-free quadratic reduction for the numerator
+used in the all-d Weil-type projector. -/
+theorem weilProjectorQuadraticReduction
+    (q r s t : ℚ) :
+    (t-q^2)*(t^2-2*s*t+q^4) =
+      (t^2-2*r*t+q^4)*(t+2*r-2*s-q^2) +
+      (2*(s-r)*q^4 +
+       2*(r-s)*(2*r-q^2)*t) := by
+  ring
+
+/-- A complete inverse of the linear residue A+B t on the
+exceptional quadratic factor t²-2rt+n. -/
+theorem weilProjectorInverseOnWeilPlane
+    (a b r n t : ℚ)
+    (hWeil : t^2-2*r*t+n=0)
+    (hDet : a*(a+2*r*b)+n*b^2 ≠ 0) :
+    ((a+b*t)*(a+2*r*b-b*t)) /
+      (a*(a+2*r*b)+n*b^2) = 1 := by
+  have hProduct :
+      (a+b*t)*(a+2*r*b-b*t) =
+        a*(a+2*r*b)+n*b^2 - b^2*(t^2-2*r*t+n) := by
+    ring
+  rw [hProduct, hWeil, mul_zero, sub_zero]
+  exact div_self hDet
+
+/-- The explicit spectral denominator is positive for EVERY
+imaginary quadratic d>0, with no excluded period or parameter. -/
+theorem weilProjectorPositiveDenominator
+    (d : ℚ) (hd : 0 < d) :
+    0 < 256*d^3*(d+1)^2*((d+1)^2+d)^6*
+      (3*d^2+5*d+3)^2 := by
+  have hm : 0 < d+1 := by linarith
+  have hq : 0 < (d+1)^2+d := by positivity
+  have hk : 0 < 3*d^2+5*d+3 := by positivity
+  positivity
+
+#check weilProjectorQuadraticReduction
+#check weilProjectorInverseOnWeilPlane
+#check weilProjectorPositiveDenominator
+#print axioms weilProjectorInverseOnWeilPlane
+
 #print axioms periodTransport_full_obstruction_injection
 #print axioms periodTransport_injection_through_square
 #print axioms periodTransport_kernel_equality
