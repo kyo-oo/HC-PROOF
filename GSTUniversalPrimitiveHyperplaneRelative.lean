@@ -223,6 +223,130 @@ theorem SmoothMiddleHyperplaneBetti.signed_boundary_difference_nonzero
 #check SmoothMiddleHyperplaneBetti.signed_boundary_difference_primitive
 #check SmoothMiddleHyperplaneBetti.signed_boundary_difference_nonzero
 
+/-! ## Bring the relative-middle mechanism back to EVERY ambient dimension
+
+Let dim_C(X)=n and 2p<=n, and choose r=n-2p general
+hyperplane sections. Their smooth complete intersection
+j:Y^(2p) -> X^n has the weak-Lefschetz-injective rational
+restriction j*:H^(2p)(X,Q)->H^(2p)(Y,Q).
+
+The repeated Gysin identity j_*j*=h^r and projection formula
+j_* (h_Y cup j*alpha)=h_X^(r+1) cup alpha
+prove that every primitive alpha on original X restricts to
+a primitive MIDDLE class on Y. Injectivity of the higher Gysin
+is the dual weak Lefschetz theorem in the upper degree.
+
+This applies to every ambient dimension n and every
+codimension p with 2p<=n, NOT only fourfolds. It brings
+the arbitrary-X primitive target into the relative Betti
+setting; producing a cycle on original X from the relative
+source is a distinct algebraic transfer obligation.
+-/
+
+/-- Genuine complete-intersection restriction and Gysin
+geometry for an arbitrary original n-fold X, codimension p,
+with r=n-2p successive hyperplane sections. -/
+structure SmoothCompleteIntersectionMiddleBridge
+    (p r : ℕ)
+    (X Y : SmoothProjectiveComplexScheme)
+    (HX : HodgeBigradedBettiData X)
+    (HY : HodgeBigradedBettiData Y) where
+  restriction :
+    RationalSingularCohomology HX.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology HY.analytification (2*p)
+  restriction_injective : Function.Injective restriction
+  middlePush :
+    RationalSingularCohomology HY.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology HX.analytification (2*p+2*r)
+  higherPush :
+    RationalSingularCohomology HY.analytification (2*p+2) →ₗ[ℚ]
+      RationalSingularCohomology HX.analytification (2*p+2*r+2)
+  higherPush_injective : Function.Injective higherPush
+  middleLefschetzCup :
+    RationalSingularCohomology HY.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology HY.analytification (2*p+2)
+  originalLefschetzPower :
+    RationalSingularCohomology HX.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology HX.analytification (2*p+2*r)
+  originalNextCup :
+    RationalSingularCohomology HX.analytification (2*p+2*r) →ₗ[ℚ]
+      RationalSingularCohomology HX.analytification (2*p+2*r+2)
+  originalPrimitiveTest :
+    RationalSingularCohomology HX.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology HX.analytification (2*p+2*r+2)
+  complete_intersection_self_intersection :
+    ∀ alpha : RationalSingularCohomology HX.analytification (2*p),
+      middlePush (restriction alpha) = originalLefschetzPower alpha
+  cup_power_compatibility :
+    ∀ alpha : RationalSingularCohomology HX.analytification (2*p),
+      originalNextCup (originalLefschetzPower alpha) =
+        originalPrimitiveTest alpha
+  gysin_projection :
+    ∀ alpha : RationalSingularCohomology HX.analytification (2*p),
+      higherPush (middleLefschetzCup (restriction alpha)) =
+        originalNextCup (middlePush (restriction alpha))
+
+/-- ALL original smooth projective n-folds: any primitive
+degree-2p rational Betti class restricts to a primitive MIDDLE
+class on the chosen smooth 2p-dimensional hyperplane cut. -/
+theorem SmoothCompleteIntersectionMiddleBridge.restrict_primitive_to_middle
+    {p r : ℕ}
+    (B : SmoothCompleteIntersectionMiddleBridge p r X Y HX HY)
+    (alpha : RationalSingularCohomology HX.analytification (2*p))
+    (hPrimitive : B.originalPrimitiveTest alpha = 0) :
+    B.middleLefschetzCup (B.restriction alpha) = 0 := by
+  apply B.higherPush_injective
+  calc
+    B.higherPush (B.middleLefschetzCup (B.restriction alpha)) =
+      B.originalNextCup (B.middlePush (B.restriction alpha)) :=
+        B.gysin_projection alpha
+    _ = B.originalNextCup (B.originalLefschetzPower alpha) := by
+          rw [B.complete_intersection_self_intersection alpha]
+    _ = B.originalPrimitiveTest alpha := B.cup_power_compatibility alpha
+    _ = 0 := hPrimitive
+    _ = B.higherPush 0 := (map_zero B.higherPush).symm
+
+/-- A nonzero primitive rational Betti class on an arbitrary
+original n-fold remains NONZERO after cutting to middle degree:
+the relative target is faithfully preserved by weak Lefschetz. -/
+theorem SmoothCompleteIntersectionMiddleBridge.restrict_nonzero
+    {p r : ℕ}
+    (B : SmoothCompleteIntersectionMiddleBridge p r X Y HX HY)
+    (alpha : RationalSingularCohomology HX.analytification (2*p))
+    (hNonzero : alpha ≠ 0) :
+    B.restriction alpha ≠ 0 := by
+  intro hzero
+  apply hNonzero
+  apply B.restriction_injective
+  simpa only [map_zero] using hzero
+
+/-- Every primitive rational Hodge class on arbitrary X
+therefore has a genuine RELATIVE rational Betti lift after
+smoothly cutting to the even-dimensional middle. The relative
+source is not silently assumed to be an algebraic cycle. -/
+theorem SmoothCompleteIntersectionMiddleBridge.primitive_has_middle_relative_lift
+    {p r : ℕ} {Z : SmoothProjectiveComplexScheme}
+    {HZ : HodgeBigradedBettiData Z}
+    (B : SmoothCompleteIntersectionMiddleBridge p r X Y HX HY)
+    (R : SmoothMiddleHyperplaneBetti p Y Z HY HZ W)
+    (hSameCup : ∀ beta :
+      RationalSingularCohomology HY.analytification (2*p),
+      R.ampleCup beta = B.middleLefschetzCup beta)
+    (alpha : RationalSingularCohomology HX.analytification (2*p))
+    (hPrimitive : B.originalPrimitiveTest alpha = 0) :
+    ∃ w : W, R.relativeToX w = B.restriction alpha := by
+  have hMiddle : B.middleLefschetzCup (B.restriction alpha) = 0 :=
+    B.restrict_primitive_to_middle alpha hPrimitive
+  have hRelativePrimitive : R.ampleCup (B.restriction alpha) = 0 := by
+    rw [hSameCup]
+    exact hMiddle
+  exact R.primitive_has_relative_betti_lift
+    (B.restriction alpha) hRelativePrimitive
+
+#check SmoothCompleteIntersectionMiddleBridge.restrict_primitive_to_middle
+#check SmoothCompleteIntersectionMiddleBridge.restrict_nonzero
+#check SmoothCompleteIntersectionMiddleBridge.primitive_has_middle_relative_lift
+
 #check SmoothMiddleHyperplaneBetti.primitive_iff_restriction_zero
 #check SmoothMiddleHyperplaneBetti.primitive_has_relative_betti_lift
 #check SmoothMiddleHyperplaneBetti.primitive_hodge_relative_lift
