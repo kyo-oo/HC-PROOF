@@ -15,6 +15,7 @@ on:
       - 'GSTUniversalCMArithmeticObstruction.lean'
       - 'GSTWeilFourfoldAuxiliaryExtraction.lean'
       - 'research/computations/weil_cm_correspondence_projector.py'
+      - 'research/computations/weil_general_d_projector.py'
       - 'research/computations/split_weil_native_algebraic_sources.py'
       - 'research/computations/quaternionic_graph_weil_source.py'
       - 'research/computations/qm_fourfold_all_hodge_divisor_span.py'
@@ -81,6 +82,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/weil_cm_correspondence_projector.py | tee weil-cm-projector.log
+      - name: Uniform imaginary-quadratic original-fourfold CM spectral projector
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/weil_general_d_projector.py | tee weil-general-d-projector.log
       - name: Exact split Weil CM native algebraic source construction
         shell: bash
         run: |
@@ -148,6 +154,7 @@ jobs:
             affine-clifford-k0.log
             algebraic-adams-k0.log
             weil-cm-projector.log
+            weil-general-d-projector.log
             split-weil-native-sources.log
             quaternionic-weil-graph.log
             qm-all-hodge-span.log
