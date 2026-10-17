@@ -13,6 +13,7 @@ on:
       - 'GSTUniversalResolvedSupportHodge.lean'
       - 'GSTPrimitiveTransverseCycleExtraction.lean'
       - 'GSTUniversalCMArithmeticObstruction.lean'
+      - 'research/computations/weil_cm_correspondence_projector.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -69,6 +70,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/pure_algebraic_k0_all_codimensions.py | tee pure-k0-all-codim.log
+      - name: Exact all-codimension Weil CM algebraic correspondence projector
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/weil_cm_correspondence_projector.py | tee weil-cm-projector.log
       - name: Kernel compile primitive rank, genuine point classes, and all-X residual
         shell: bash
         run: |
@@ -110,5 +116,6 @@ jobs:
             pinned-hodge-lean.log
             affine-clifford-k0.log
             algebraic-adams-k0.log
+            weil-cm-projector.log
             pure-k0-all-codim.log
           if-no-files-found: warn
