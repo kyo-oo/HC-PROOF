@@ -499,6 +499,52 @@ theorem quadricBottProjector_idempotent
     simp [E, quadricBottProjector, hQuadric]
     ring
 
+/-! ## UNIVERSAL AFFINE REPLACEMENT projector for arbitrary X
+
+For EVERY projective embedding X⊂P^N, the explicit affine
+Jouanolou incidence complement J(X) has coordinate functions
+e_ij=x_i λ_j/(Σ x_k λ_k). These are regular on the complement
+and satisfy the rank-one equations
+
+  e_ik * e_kj = e_ij * e_kk,    Σ_k e_kk = 1.
+
+The following formal theorem proves the resulting square matrix
+is an algebraic idempotent in EVERY size and EVERY coefficient
+commutative ring. Thus its image is a genuine algebraic
+projective module over the affine incidence coordinate ring.
+
+This is an actual all-X source: no K₀ preimage or Hodge class
+was supplied to the construction. This first rank-one source
+recovers the algebraic tautological bundle; independent
+higher-rank projectors are needed for arbitrary primitive α.
+-/
+
+/-- Universal rank-one incidence relation plus trace-one gives
+an explicit algebraic projector over ANY commutative ring.
+The intended geometric inputs are actual regular functions
+on the affine Jouanolou model of any projective variety X. -/
+theorem incidenceRankOneMatrix_idempotent
+    {R : Type*} [CommRing R]
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (E : Matrix ι ι R)
+    (hMinor : ∀ i j k : ι,
+       E i k * E k j = E i j * E k k)
+    (hTrace : (∑ k : ι, E k k) = 1) :
+    E * E = E := by
+  ext i j
+  calc
+    (E * E) i j = ∑ k : ι, E i k * E k j := Matrix.mul_apply
+    _ = ∑ k : ι, E i j * E k k := by
+      apply Finset.sum_congr rfl
+      intro k _
+      exact hMinor i j k
+    _ = E i j * (∑ k : ι, E k k) := by
+      rw [Finset.mul_sum]
+    _ = E i j := by rw [hTrace, mul_one]
+
+#check incidenceRankOneMatrix_idempotent
+#print axioms incidenceRankOneMatrix_idempotent
+
 #check quadricBottProjector
 #check quadricBottProjector_idempotent
 #print axioms quadricBottProjector_idempotent
