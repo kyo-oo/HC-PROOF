@@ -37,17 +37,30 @@ def auxiliaryIntersection (d : ℚ) (v w : AuxiliaryDivisor) : ℚ :=
   (v 1 * w 3 + v 3 * w 1) +
   (v 2 * w 3 + v 3 * w 2)
 
-def graphDifference : AuxiliaryDivisor := ![0, -1, -1, 1]
-def imaginaryGraphDifference (d : ℚ) : AuxiliaryDivisor := ![1, -1, -d, 0]
-def firstFiber : AuxiliaryDivisor := ![0, 1, 0, 0]
-def secondFiber : AuxiliaryDivisor := ![0, 0, 1, 0]
+def graphDifference (i : Fin 4) : ℚ :=
+  match i.val with
+  | 0 => 0
+  | 1 => -1
+  | 2 => -1
+  | _ => 1
+
+def imaginaryGraphDifference (d : ℚ) (i : Fin 4) : ℚ :=
+  match i.val with
+  | 0 => 1
+  | 1 => -1
+  | 2 => -d
+  | _ => 0
+
+def firstFiber (i : Fin 4) : ℚ := if i.val = 1 then 1 else 0
+def secondFiber (i : Fin 4) : ℚ := if i.val = 2 then 1 else 0
 
 theorem auxiliary_graph_pairings (d : ℚ) :
     auxiliaryIntersection d graphDifference graphDifference = -2 ∧
     auxiliaryIntersection d graphDifference (imaginaryGraphDifference d) = 0 ∧
     auxiliaryIntersection d (imaginaryGraphDifference d)
       (imaginaryGraphDifference d) = -2 * d := by
-  norm_num [auxiliaryIntersection, graphDifference, imaginaryGraphDifference]
+  refine ⟨?_, ?_, ?_⟩
+  <;> norm_num [auxiliaryIntersection, graphDifference, imaginaryGraphDifference]
   <;> ring
 
 theorem graph_difference_kills_product_polarization (d a b : ℚ) :
@@ -80,7 +93,7 @@ theorem determinant_tensor_balanced (d x y : ℚ) (hd : d ≠ 0) :
   constructor
   · rfl
   · dsimp [determinantTensor]
-    field_simp [hd] <;> ring
+    field_simp [hd]
 
 theorem contraction_formula (d x y : ℚ) :
     contractGraph (determinantTensor d x y) = (-2 * x, -2 * y) := rfl
