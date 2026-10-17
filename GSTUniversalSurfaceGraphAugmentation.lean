@@ -3,20 +3,23 @@ import GSTUniversalCodimensionTwoPrimitiveExtraction
 /-!
 # GST universal finite graph augmentation: native primitive cycles
 
-Let S be ANY smooth projective complex surface with a finite family
-of algebraic automorphisms preserving an ample class h. On X=S×S,
-each automorphism gives a genuine algebraic graph Γ_g of codimension 2.
+Let S be a smooth projective complex surface and g an algebraic
+automorphism preserving a polarization h. On X=S×S its graph Γ_g is
+a genuine algebraic codimension-two cycle.
 
-The projective graph identity
+For surfaces with H¹(S,ℚ)=0 (including K3 surfaces), the class
     (pr₁*h+pr₂*h) cup cl(Γ_g)
-is independent of g because the automorphisms preserve h.
-Hence every augmentation-zero rational group-ring combination
+is independent of the polarized automorphism g. Every rational
+augmentation-zero sum Σ_g a_g Γ_g is then primitive.
 
-     Σ_g a_g Γ_g,   Σ_g a_g = 0
+For irregular surfaces with H¹(S,ℚ)≠0, the graph Lefschetz image
+also detects g's action on H¹(S,ℚ). The full geometric construction
+therefore uses the additional H¹-moment cancellation developed in
+GSTSurfaceGraphH1Obstruction.lean.
 
-is intrinsically primitive. This is an unconditional geometric
-source-construction mechanism on polarized surface self-products,
-not restricted to the Fermat quartic or any single automorphism order.
+The Lean theorem here implements exactly the verified shared-Lefschetz
+hypothesis, without treating polarization preservation alone as the
+general shared-Lefschetz theorem.
 
 The Lean theorem implements the exact native rational cycle sum and
 proves its primitive-test vanishing from the geometric shared-Lefschetz
@@ -52,9 +55,9 @@ def nativeGraphOrbitCombination
   ∑ i : ι, a i • graphs i
 
 /-- FINITE-GROUP AUGMENTATION CONSTRUCTION.
-For any finite polarized algebraic automorphism orbit on S×S,
-the shared genuine Lefschetz image makes every rational
-augmentation-zero orbit combination an ACTUAL primitive
+For a polarized algebraic automorphism orbit with a verified
+shared Lefschetz image (for example on a K3 self-product), every
+augmentation-zero orbit combination is an ACTUAL primitive
 algebraic codimension-two cycle. -/
 theorem all_augmentation_zero_graph_cycles_primitive
     {ι : Type*} [Fintype ι]
