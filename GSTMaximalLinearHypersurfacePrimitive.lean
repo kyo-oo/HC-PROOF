@@ -166,7 +166,7 @@ theorem normalTopCoeff_strict_extreme (d : ℤ) (hd : 3 ≤ d)
             NormalTopCoeff d (k+1+1) =
               (1-d)*NormalTopCoeff d (k+1)+1 := by
           rfl
-        rcases ih with hneg | hpos
+        rcases ih (by omega) with hneg | hpos
         · right
           rw [hrec]
           have hprod : 0 ≤ (d-1)*(-NormalTopCoeff d (k+1)-1) :=
