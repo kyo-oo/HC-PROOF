@@ -518,24 +518,6 @@ theorem hodge_cycles_on_geometric_blowup
   | some j => exact hCenter
 
 
-/-! ## Unbounded ACTUAL SCHEME-CARRIER GST geometric towers
-
-This law finally connects the original self-expanding GST cosmology
-to REAL smooth-projective scheme and native Chow cycle types. Each
-birth must be an explicitly Gysin-certified projective bundle or
-smooth blowup. The tower has NO fixed number of worlds, ambient
-dimension, fiber rank, blowup center, or target codimension.
-
-The roots must be independently cycle-complete source schemes.
-Every later world inherits actual Chow representatives constructed
-recursively by the typed projective-bundle and blowup Gysin laws.
-No final target cycle is a field of the tower constructor.
--/
-
-/-- Worlds built from independently verified cycle-complete smooth
-projective roots by actual scheme-typed projective bundle or
-smooth blowup operations, each with explicit Hodge/Chow Gysin data. -/
-
 /-! ## Unrestricted-center GST codimension-two birth
 
 A major geometric gain is available WITHOUT solving Hodge for the
@@ -694,6 +676,24 @@ theorem unrestricted_center_blowup_tower_hodge_two
 #check SchemeTypedGSTCodimensionTwoBlowupTower
 #check unrestricted_center_blowup_tower_hodge_two
 #print axioms unrestricted_center_blowup_tower_hodge_two
+
+/-! ## Unbounded ACTUAL SCHEME-CARRIER GST geometric towers
+
+This law finally connects the original self-expanding GST cosmology
+to REAL smooth-projective scheme and native Chow cycle types. Each
+birth must be an explicitly Gysin-certified projective bundle or
+smooth blowup. The tower has NO fixed number of worlds, ambient
+dimension, fiber rank, blowup center, or target codimension.
+
+The roots must be independently cycle-complete source schemes.
+Every later world inherits actual Chow representatives constructed
+recursively by the typed projective-bundle and blowup Gysin laws.
+No final target cycle is a field of the tower constructor.
+-/
+
+/-- Worlds built from independently verified cycle-complete smooth
+projective roots by actual scheme-typed projective bundle or
+smooth blowup operations, each with explicit Hodge/Chow Gysin data. -/
 
 inductive SchemeTypedGSTGeometricTower :
     (V : SmoothProjectiveComplexScheme) →
