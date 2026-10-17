@@ -770,4 +770,219 @@ theorem seedUniformOpenOfClosedProjection
 
 end SecantSeed
 
+/-! ## Obstruction comparison and all-period spread
+
+These are the algebraic and topological cores of transport.  The actual
+Atiyah/Hochschild comparison, Hilbert spaces, proper-image theorem and
+analytic identity principle are proved/applied in the companion record.
+They are not silently identified with arbitrary cycle-class maps here.
+-/
+
+section PeriodTransport
+
+variable {F : Type*} [Field F]
+variable {U V W D : Type*}
+variable [AddCommGroup U] [Module F U]
+variable [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+variable [AddCommGroup W] [Module F W]
+variable [AddCommGroup D] [Module F D] [FiniteDimensional F D]
+
+/-- A full obstruction-space detector with an explicit right inverse
+forces evaluation to fill the obstruction space and trace to be
+injective there.  Applied to the 6+36+6 contraction blocks, D has
+dimension 48.  This concerns obstruction maps, not cycle-class rank. -/
+theorem periodTransport_full_obstruction_injection
+    (evaluation : U →ₗ[F] V) (trace : V →ₗ[F] W)
+    (detector : W →ₗ[F] D) (lifts : D →ₗ[F] U)
+    (hdim : Module.finrank F V = Module.finrank F D)
+    (hsplit : (detector.comp (trace.comp evaluation)).comp lifts = LinearMap.id) :
+    Function.Surjective evaluation ∧ Function.Injective trace := by
+  have hsurj : Function.Surjective (detector.comp trace) := by
+    intro d
+    refine ⟨evaluation (lifts d), ?_⟩
+    have h := congrArg (fun f : D →ₗ[F] D => f d) hsplit
+    simpa only [LinearMap.comp_apply, LinearMap.id_apply] using h
+  have hinj : Function.Injective (detector.comp trace) :=
+    (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim).mpr hsurj
+  constructor
+  · intro v
+    refine ⟨lifts (detector (trace v)), ?_⟩
+    apply hinj
+    have h := congrArg (fun f : D →ₗ[F] D => f (detector (trace v))) hsplit
+    simpa only [LinearMap.comp_apply, LinearMap.id_apply] using h
+  · intro v w h
+    apply hinj
+    exact congrArg detector h
+
+/-- Perfect duality, finite descent and the ordinary projective-bundle
+conversion preserve injection through their commuting trace squares.
+The map on targets need not be surjective. -/
+theorem periodTransport_injection_through_square
+    {A B C E : Type*} (identification : A → B)
+    (sourceTrace : B → C) (targetTrace : A → E)
+    (targetPullback : E → C)
+    (hidentification : Function.Injective identification)
+    (hsource : Function.Injective sourceTrace)
+    (hsquare : ∀ a, targetPullback (targetTrace a) = sourceTrace (identification a)) :
+    Function.Injective targetTrace := by
+  intro a b h
+  apply hidentification
+  apply hsource
+  rw [← hsquare a, ← hsquare b, h]
+
+/-- The exact semiregularity identity transports the kernel, once its
+trace is injective on the full obstruction group. -/
+theorem periodTransport_kernel_equality
+    (evaluation : U →ₗ[F] V) (trace : V →ₗ[F] W)
+    (hinj : Function.Injective trace) :
+    LinearMap.ker (trace.comp evaluation) = LinearMap.ker evaluation := by
+  ext u
+  change trace (evaluation u) = 0 ↔ evaluation u = 0
+  constructor
+  · intro h
+    apply hinj
+    simpa only [map_zero] using h
+  · intro h
+    simp only [h, map_zero]
+
+/-- This is the coefficient obstruction cancellation used at each
+infinitesimal order.  Injective coefficient differentiation and the
+full semiregularity map force the actual obstruction to vanish. -/
+theorem periodTransport_obstruction_zero
+    {A B C : Type*} [Zero A] [Zero B] [Zero C]
+    (sigma : A → B) (coefficient : B → C)
+    (hsigma : Function.Injective sigma) (hcoefficient : Function.Injective coefficient)
+    (hsigma0 : sigma 0 = 0) (hcoefficient0 : coefficient 0 = 0)
+    (obstruction : A) (hhorizontal : coefficient (sigma obstruction) = 0) :
+    obstruction = 0 := by
+  apply hsigma
+  apply hcoefficient
+  rw [hsigma0, hcoefficient0]
+  exact hhorizontal
+
+/-- Baire plus the analytic identity principle upgrades a nonempty
+open covered by countably many proper parameter images to one image
+covering the entire period domain.  The analytic input is precisely
+`hidentity`; being closed alone would not suffice. -/
+theorem periodTransport_countable_closed_spread
+    {T : Type*} [TopologicalSpace T] [BaireSpace T]
+    (images : ℕ → Set T) (hclosed : ∀ i, IsClosed (images i))
+    (hidentity : ∀ i, (interior (images i)).Nonempty → images i = Set.univ)
+    (O : Set T) (hO : IsOpen O) (hne : O.Nonempty)
+    (hcover : O ⊆ ⋃ i, images i) :
+    ∃ i, images i = Set.univ := by
+  classical
+  by_contra h
+  have hproper : ∀ i, images i ≠ Set.univ := by simpa only [not_exists] using h
+  have hempty (i : ℕ) : interior (images i) = ∅ := by
+    apply Set.eq_empty_iff_forall_not_mem.mpr
+    intro t ht
+    exact hproper i (hidentity i ⟨t, ht⟩)
+  have hd : Dense (⋂ i, (images i)ᶜ) := by
+    apply dense_iInter_of_isOpen (fun i => (hclosed i).isOpen_compl)
+    intro i
+    rw [dense_iff_closure_eq, closure_compl, hempty i, Set.compl_empty]
+  obtain ⟨t, htO, htall⟩ := hd.inter_open_nonempty O hO hne
+  obtain ⟨i, hti⟩ := Set.mem_iUnion.mp (hcover htO)
+  exact (Set.mem_iInter.mp htall i) hti
+
+/-- An explicit consequence for countably parametrized geometric
+witnesses.  In the application parameters are signed rational lists
+of Hilbert points, and the witness is their actual cycle. -/
+theorem periodTransport_all_period_witnesses
+    {T : Type*} [TopologicalSpace T] [BaireSpace T]
+    (Parameter : ℕ → Type*) (projection : ∀ i, Parameter i → T)
+    (good : ∀ i, Set (Parameter i))
+    (hclosed : ∀ i, IsClosed (projection i '' good i))
+    (hidentity : ∀ i, (interior (projection i '' good i)).Nonempty →
+      projection i '' good i = Set.univ)
+    (O : Set T) (hO : IsOpen O) (hne : O.Nonempty)
+    (hlocal : ∀ t ∈ O, ∃ i p, p ∈ good i ∧ projection i p = t) :
+    ∀ t, ∃ i p, p ∈ good i ∧ projection i p = t := by
+  have hcover : O ⊆ ⋃ i, projection i '' good i := by
+    intro t ht
+    obtain ⟨i, p, hp, hpt⟩ := hlocal t ht
+    exact Set.mem_iUnion.mpr ⟨i, p, hp, hpt⟩
+  obtain ⟨i, hi⟩ := periodTransport_countable_closed_spread
+    (fun i => projection i '' good i) hclosed hidentity O hO hne hcover
+  intro t
+  have ht : t ∈ projection i '' good i := hi.symm ▸ Set.mem_univ t
+  obtain ⟨p, hp, hpt⟩ := ht
+  exact ⟨i, p, hp, hpt⟩
+
+/-- Constant lattice denominators do not require a relative extension
+of the seed sheaf: an isomorphism of cohomology and compatible cycle
+pullback carry every representative back to the original variety. -/
+theorem periodTransport_isogeny_pullback
+    {Z Z' H H' : Type*} (classes : Z → H) (classes' : Z' → H')
+    (pullCycle : Z' → Z) (pullClass : H' ≃ H)
+    (hcomparison : ∀ z, classes (pullCycle z) = pullClass (classes' z))
+    (hsource : Function.Surjective classes') : Function.Surjective classes := by
+  intro a
+  obtain ⟨z, hz⟩ := hsource (pullClass.symm a)
+  refine ⟨pullCycle z, ?_⟩
+  rw [hcomparison, hz, Equiv.apply_symm_apply]
+
+def realSixthPower (d m : ℚ) : ℚ :=
+  m^6 - 15*d*m^4 + 15*d^2*m^2 - d^3
+
+def imaginarySixthPower (d m : ℚ) : ℚ :=
+  2*m*(3*m^2-d)*(m^2-3*d)
+
+def sixthPowerAction (d m : ℚ) (v : ℚ × ℚ) : ℚ × ℚ :=
+  (realSixthPower d m*v.1 - d*imaginarySixthPower d m*v.2,
+   imaginarySixthPower d m*v.1 + realSixthPower d m*v.2)
+
+theorem sixth_power_orbit_determinant (d m : ℚ) (v : ℚ × ℚ) :
+    planeDeterminant v (sixthPowerAction d m v) =
+      imaginarySixthPower d m*(v.1^2+d*v.2^2) := by
+  dsimp [planeDeterminant, sixthPowerAction]
+  ring
+
+/-- The same explicit element d+1+u works in both dimensions four
+and six. No generic rational choice or excluded-root argument is needed. -/
+theorem imaginary_sixth_power_positive (d : ℚ) (hd : 0 < d) :
+    0 < imaginarySixthPower d (d+1) := by
+  have hm : 0 < d+1 := by linarith
+  have hfirst : 0 < 3*(d+1)^2-d := by nlinarith [sq_nonneg d]
+  have hsecond : 0 < (d+1)^2-3*d := by nlinarith [sq_nonneg (d-1/2)]
+  dsimp [imaginarySixthPower]
+  positivity
+
+theorem transported_sixth_power_orbit_has_rank_two
+    (d : ℚ) (hd : 0 < d) (v : ℚ × ℚ) (hv : v ≠ (0,0)) :
+    0 < planeDeterminant v (sixthPowerAction d (d+1) v) := by
+  rw [sixth_power_orbit_determinant]
+  exact mul_pos (imaginary_sixth_power_positive d hd)
+    (quadratic_norm_positive d hd v hv)
+
+/-- Exact reconstruction applies to both the transported sixfold
+plane and the extracted original-fourfold plane. -/
+theorem periodTransport_plane_reconstruction
+    (d r s : ℚ) (hd : 0 < d) (hs : s ≠ 0)
+    (v : ℚ × ℚ) (hv : v ≠ (0,0)) (target : ℚ × ℚ) :
+    let det := s*(v.1^2+d*v.2^2)
+    let a := (target.1*(s*v.1+r*v.2)-target.2*(r*v.1-d*s*v.2))/det
+    let b := (v.1*target.2-v.2*target.1)/det
+    a*v.1+b*(r*v.1-d*s*v.2) = target.1 ∧
+    a*v.2+b*(s*v.1+r*v.2) = target.2 := by
+  have hdet : s*(v.1^2+d*v.2^2) ≠ 0 :=
+    mul_ne_zero hs (ne_of_gt (quadratic_norm_positive d hd v hv))
+  dsimp only
+  constructor <;> field_simp [hdet] <;> ring
+
+#print axioms periodTransport_full_obstruction_injection
+#print axioms periodTransport_injection_through_square
+#print axioms periodTransport_kernel_equality
+#print axioms periodTransport_obstruction_zero
+#print axioms periodTransport_countable_closed_spread
+#print axioms periodTransport_all_period_witnesses
+#print axioms periodTransport_isogeny_pullback
+#print axioms sixth_power_orbit_determinant
+#print axioms imaginary_sixth_power_positive
+#print axioms transported_sixth_power_orbit_has_rank_two
+#print axioms periodTransport_plane_reconstruction
+
+end PeriodTransport
+
 end GSTWeilFourfoldAuxiliaryExtraction
