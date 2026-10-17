@@ -49,6 +49,34 @@ def affine_intersection_dimension(A,B):
         dim+=int(consistent)
     return dim
 
+def affine_intersection_dimension_mod7(A,B):
+    """Independent six-equation geometric intersection calculation over F7.
+
+    The finite field has primitive cube roots 2 and 4. The six linear
+    equations have the same incidence pattern as over Q(omega).
+    """
+    rows=[]
+    for pairs,powers in (A,B):
+        for (a,b),k in zip(pairs,powers):
+            row=[0]*6
+            row[a]=pow(2,k,7)
+            row[b]=1
+            rows.append(row)
+    rank=0
+    for col in range(6):
+        pivot=next((i for i in range(rank,6) if rows[i][col]%7),None)
+        if pivot is None:
+            continue
+        rows[rank],rows[pivot]=rows[pivot],rows[rank]
+        inv=pow(rows[rank][col],-1,7)
+        rows[rank][col:]=[(inv*v)%7 for v in rows[rank][col:]]
+        for i in range(rank+1,6):
+            factor=rows[i][col]
+            if factor:
+                rows[i][col:]=[(x-factor*y)%7 for x,y in zip(rows[i][col:],rows[rank][col:])]
+        rank+=1
+    return 6-rank
+
 def gram_matrix():
     match=list(matchings(tuple(range(6))))
     assert len(match)==15
@@ -60,6 +88,7 @@ def gram_matrix():
     for i in range(405):
         for j in range(i,405):
             dim=affine_intersection_dimension(planes[i],planes[j])
+            assert dim==affine_intersection_dimension_mod7(planes[i],planes[j]),(i,j,dim)
             assert 0<=dim<=3
             counts[dim]+=1
             G[i][j]=G[j][i]=(0,1,-1,3)[dim]
