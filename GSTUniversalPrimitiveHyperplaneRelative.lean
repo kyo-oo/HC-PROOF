@@ -153,6 +153,76 @@ theorem SmoothMiddleHyperplaneBetti.no_recovery_from_restriction
       _ = alpha := hReconstruct
   exact hNonzero hz.symm
 
+/-! ## The first native *algebraic* source mechanism: matched boundary cycles
+
+The preceding theorems located primitive middle cohomology in
+relative Betti classes. Here we produce actual native rational
+codimension-p algebraic cycles on the ORIGINAL X, not merely
+relative cohomology classes.
+
+Choose two independently constructed algebraic codimension-p cycles
+Z0,Z1 whose canonical Betti restrictions to Y agree. Their signed
+difference Z0-Z1 is automatically primitive. It is nonzero whenever
+their original canonical Betti classes differ.
+
+This gives a mathematically exact and computable construction
+criterion based on genuine subvarieties with matching boundary.
+The remaining original Hodge objective is to derive enough such
+pairs on arbitrary X to represent every rational primitive Hodge
+target, without assuming their existence or full rank as an input.
+-/
+
+/-- True native rational codimension-p algebraic source on original X. -/
+def signedNativeBoundaryDifference
+    (p : ℕ)
+    (Z0 Z1 : codimensionCycles X.X p) :
+    codimensionCycles X.X p := Z0 - Z1
+
+/-- Two genuine codimension-p algebraic cycles with identical
+hyperplane Betti boundary measurements yield an ACTUAL primitive
+native rational cycle on the original X in all even dimensions. -/
+theorem SmoothMiddleHyperplaneBetti.signed_boundary_difference_primitive
+    {p : ℕ}
+    (G : SmoothMiddleHyperplaneBetti p X Y HX HY W)
+    (Z0 Z1 : codimensionCycles X.X p)
+    (hEqualBoundary :
+      G.middleRestriction (HX.cycleClass p Z0) =
+        G.middleRestriction (HX.cycleClass p Z1)) :
+    G.ampleCup
+      (HX.cycleClass p (signedNativeBoundaryDifference p Z0 Z1)) = 0 := by
+  apply (G.primitive_iff_restriction_zero _).mpr
+  change G.middleRestriction (HX.cycleClass p (Z0 - Z1)) = 0
+  rw [map_sub, map_sub]
+  exact sub_eq_zero.mpr hEqualBoundary
+
+/-- If the original cycle classes are distinct, the signed
+boundary-matched construction generates a NONZERO primitive
+algebraic middle class on the ORIGINAL X. -/
+theorem SmoothMiddleHyperplaneBetti.signed_boundary_difference_nonzero
+    {p : ℕ}
+    (G : SmoothMiddleHyperplaneBetti p X Y HX HY W)
+    (Z0 Z1 : codimensionCycles X.X p)
+    (hEqualBoundary :
+      G.middleRestriction (HX.cycleClass p Z0) =
+        G.middleRestriction (HX.cycleClass p Z1))
+    (hDistinct :
+      HX.cycleClass p Z0 ≠ HX.cycleClass p Z1) :
+    G.ampleCup
+      (HX.cycleClass p (signedNativeBoundaryDifference p Z0 Z1)) = 0 ∧
+    HX.cycleClass p (signedNativeBoundaryDifference p Z0 Z1) ≠ 0 := by
+  constructor
+  · exact G.signed_boundary_difference_primitive Z0 Z1 hEqualBoundary
+  · intro hZero
+    apply hDistinct
+    apply sub_eq_zero.mp
+    have hDifference :
+      HX.cycleClass p (Z0 - Z1) = 0 := hZero
+    simpa only [map_sub] using hDifference
+
+#check signedNativeBoundaryDifference
+#check SmoothMiddleHyperplaneBetti.signed_boundary_difference_primitive
+#check SmoothMiddleHyperplaneBetti.signed_boundary_difference_nonzero
+
 #check SmoothMiddleHyperplaneBetti.primitive_iff_restriction_zero
 #check SmoothMiddleHyperplaneBetti.primitive_has_relative_betti_lift
 #check SmoothMiddleHyperplaneBetti.primitive_hodge_relative_lift
