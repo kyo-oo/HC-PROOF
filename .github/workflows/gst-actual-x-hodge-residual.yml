@@ -41,6 +41,7 @@ jobs:
           name = "GSTActualXResidual"
           roots = [
             "GSTUniversalHodgeResidualProjection",
+            "GSTPrimitiveTransverseCycleExtraction",
             "GSTActualXHodgeResidualProjection"
           ]
           EOF
