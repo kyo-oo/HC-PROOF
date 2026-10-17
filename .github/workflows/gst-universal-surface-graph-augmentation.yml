@@ -6,6 +6,7 @@ on:
     paths:
       - GSTUniversalSurfaceGraphAugmentation.lean
       - GSTSurfaceGraphH1Obstruction.lean
+      - GSTPrimitiveProductTowerStabilization.lean
       - scripts/gst_lean_dependency_roots.py
       - .github/workflows/gst-universal-surface-graph-augmentation.yml
   workflow_dispatch:
@@ -45,9 +46,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTUniversalSurfaceGraphGate GSTUniversalSurfaceGraphAugmentation GSTSurfaceGraphH1Obstruction
+          python3 scripts/gst_lean_dependency_roots.py GSTUniversalSurfaceGraphGate GSTUniversalSurfaceGraphAugmentation GSTSurfaceGraphH1Obstruction GSTPrimitiveProductTowerStabilization
           if lake build GSTUniversalSurfaceGraphGate > surface-graph-lean.log 2>&1; then
-            echo "LEAN PASSED: surface graph augmentation, H1 moment cancellation, and transcendental primitive rank"
+            echo "LEAN PASSED: surface graph H1 rank, Kunneth moment equivalence, and all-dimensional product primitive stabilization"
           else
             grep -nE 'error:|sorryAx|✖' surface-graph-lean.log | tail -n 110 || true
             tail -n 80 surface-graph-lean.log
