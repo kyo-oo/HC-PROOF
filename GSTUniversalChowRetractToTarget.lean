@@ -709,6 +709,162 @@ theorem hodge_on_arbitrary_center_of_solved_blowup
   apply (algebraic_center_iff_exceptional_blowup_class R alpha).mpr
   exact hHost (R.exceptionalPreservesHodge alpha hAlpha)
 
+
+/-! ## Arbitrary-X rational MIDDLE-DIMENSION GST bridge
+
+Given Y=Bl_X(P^N), an arbitrary p-Hodge class on X sits in the
+first exceptional degree q=p+1 of Y. If N >= 2q, choose
+r=N-2q, and stabilize via M=Y×P^r. Then
+
+     dim M = N+r = 2(q+r),
+
+so the degree 2(q+r) of the stabilized Hodge class is
+EXACTLY THE MIDDLE COHOMOLOGICAL DEGREE of M. Moreover,
+M is rational because Y is rational.
+
+The cycle constructor Z -> pr_Y^*(Z)*h^r and its true Betti
+map are algebraic and admit inverse pushforward along P^r.
+Their scheme-level Chow/projective-bundle geometry is an
+independent instantiation obligation. The following theorem
+proves the exact two-step Chow/BettI recovery law, for every
+X,p and every Hodge alpha, not just a chosen source family.
+
+An Hodge theorem for *all middle classes on these rational M*
+would imply the general Hodge conjecture. This is an EQUIVALENT
+REDUCTION, not a proof that those middle classes are algebraic.
+-/
+
+/-- All-dimensional arithmetic: adding a projective-space factor
+of dimension r=N-2q moves the qth Hodge class on Y into the
+middle Hodge degree of Y×P^r. No bound on N or q. -/
+theorem projective_stabilization_hits_middle_degree
+    (N q : ℕ) (h : 2*q ≤ N) :
+    N + (N-2*q) = 2*(q+(N-2*q)) := by
+  omega
+
+/-- Actual native Chow and rational Betti stabilization for
+Y -> Y×P^r. Native forward is pullback times top hyperplane
+power h^r; native backward is pushforward over P^r. The
+cohomological and cycle compatibility equations are explicit,
+rather than identifying source and target carriers by hand. -/
+structure SchemeProjectiveMiddleStabilization
+    (Y M : SmoothProjectiveComplexScheme)
+    (HY : HodgeBigradedBettiData Y)
+    (HM : HodgeBigradedBettiData M)
+    (q r : ℕ) where
+  nativeStabilize :
+    codimensionCycles Y.X q →ₗ[ℚ]
+      codimensionCycles M.X (q+r)
+  bettiStabilize :
+    RationalSingularCohomology HY.analytification (2*q) →ₗ[ℚ]
+      RationalSingularCohomology HM.analytification (2*(q+r))
+  nativeRecover :
+    codimensionCycles M.X (q+r) →ₗ[ℚ]
+      codimensionCycles Y.X q
+  bettiRecover :
+    RationalSingularCohomology HM.analytification (2*(q+r)) →ₗ[ℚ]
+      RationalSingularCohomology HY.analytification (2*q)
+  stabilizeNaturality :
+    ∀ Z : codimensionCycles Y.X q,
+      HM.cycleClass (q+r) (nativeStabilize Z) =
+        bettiStabilize (HY.cycleClass q Z)
+  recoverNaturality :
+    ∀ Z : codimensionCycles M.X (q+r),
+      HY.cycleClass q (nativeRecover Z) =
+        bettiRecover (HM.cycleClass (q+r) Z)
+  bettiLeftInverse :
+    ∀ alpha : RationalSingularCohomology HY.analytification (2*q),
+      bettiRecover (bettiStabilize alpha) = alpha
+  preserveHodge :
+    ∀ alpha : RationalSingularCohomology HY.analytification (2*q),
+      alpha ∈ rationalHodgeSubspace (HY.hodgeBigrading q) →
+      bettiStabilize alpha ∈
+        rationalHodgeSubspace (HM.hodgeBigrading (q+r))
+
+/-- Every rational Hodge direction is algebraic on Y EXACTLY
+when its actual projectively stabilized class is algebraic on
+M=Y×P^r. Both directions construct ACTUAL Chow cycles. -/
+theorem algebraic_iff_projectively_stabilized_class
+    {Y M : SmoothProjectiveComplexScheme}
+    {HY : HodgeBigradedBettiData Y}
+    {HM : HodgeBigradedBettiData M}
+    {q r : ℕ}
+    (S : SchemeProjectiveMiddleStabilization Y M HY HM q r)
+    (alpha : RationalSingularCohomology HY.analytification (2*q)) :
+    alpha ∈ LinearMap.range (HY.cycleClass q) ↔
+      S.bettiStabilize alpha ∈
+        LinearMap.range (HM.cycleClass (q+r)) := by
+  constructor
+  · rintro ⟨Z, hZ⟩
+    refine ⟨S.nativeStabilize Z, ?_⟩
+    calc
+      HM.cycleClass (q+r) (S.nativeStabilize Z) =
+          S.bettiStabilize (HY.cycleClass q Z) :=
+            S.stabilizeNaturality Z
+      _ = S.bettiStabilize alpha := by rw [hZ]
+  · rintro ⟨Z, hZ⟩
+    refine ⟨S.nativeRecover Z, ?_⟩
+    calc
+      HY.cycleClass q (S.nativeRecover Z) =
+          S.bettiRecover (HM.cycleClass (q+r) Z) :=
+            S.recoverNaturality Z
+      _ = S.bettiRecover (S.bettiStabilize alpha) := by
+            rw [hZ]
+      _ = alpha := S.bettiLeftInverse alpha
+
+/-- ALL-VARIETIES TO MIDDLE HODGE reduction in the genuine
+codimension-cycle carriers: first embed X as an exceptional center
+of Y, then stabilize Y to M. The complete two-step inverse
+recovers an actual Chow cycle on X from any algebraic middle
+representative on M. The two genuine geometric certificates
+are independent of the desired class alpha. -/
+theorem algebraic_iff_rational_blowup_middle_class
+    {X Y M : SmoothProjectiveComplexScheme}
+    {HX : HodgeBigradedBettiData X}
+    {HY : HodgeBigradedBettiData Y}
+    {HM : HodgeBigradedBettiData M}
+    {p r : ℕ}
+    (E : SchemeExceptionalCenterRetract X Y HX HY p)
+    (S : SchemeProjectiveMiddleStabilization Y M HY HM (p+1) r)
+    (alpha : RationalSingularCohomology HX.analytification (2*p)) :
+    alpha ∈ LinearMap.range (HX.cycleClass p) ↔
+      S.bettiStabilize (E.exceptionalBetti alpha) ∈
+        LinearMap.range (HM.cycleClass (p+1+r)) := by
+  exact
+    (algebraic_center_iff_exceptional_blowup_class E alpha).trans
+      (algebraic_iff_projectively_stabilized_class S
+        (E.exceptionalBetti alpha))
+
+/-- The genuine all-varieties Hodge target at p is implied by
+algebraicity of the corresponding middle degree on rational M,
+provided the geometric exceptional/projective stabilization
+exists. No native algebraic preimage on X is a premise. -/
+theorem arbitrary_variety_hodge_from_rational_middle_world
+    {X Y M : SmoothProjectiveComplexScheme}
+    {HX : HodgeBigradedBettiData X}
+    {HY : HodgeBigradedBettiData Y}
+    {HM : HodgeBigradedBettiData M}
+    {p r : ℕ}
+    (E : SchemeExceptionalCenterRetract X Y HX HY p)
+    (S : SchemeProjectiveMiddleStabilization Y M HY HM (p+1) r)
+    (hMiddle :
+      rationalHodgeSubspace (HM.hodgeBigrading (p+1+r)) ≤
+        LinearMap.range (HM.cycleClass (p+1+r))) :
+    rationalHodgeSubspace (HX.hodgeBigrading p) ≤
+      LinearMap.range (HX.cycleClass p) := by
+  intro alpha hAlpha
+  apply (algebraic_iff_rational_blowup_middle_class E S alpha).mpr
+  exact hMiddle (S.preserveHodge _
+    (E.exceptionalPreservesHodge alpha hAlpha))
+
+#check SchemeProjectiveMiddleStabilization
+#check projective_stabilization_hits_middle_degree
+#check algebraic_iff_projectively_stabilized_class
+#check algebraic_iff_rational_blowup_middle_class
+#check arbitrary_variety_hodge_from_rational_middle_world
+#print axioms algebraic_iff_rational_blowup_middle_class
+#print axioms arbitrary_variety_hodge_from_rational_middle_world
+
 #check SchemeExceptionalCenterRetract
 #check algebraic_center_iff_exceptional_blowup_class
 #check missing_center_direction_survives_exceptional_birth
