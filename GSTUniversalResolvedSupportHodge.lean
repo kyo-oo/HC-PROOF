@@ -440,6 +440,59 @@ theorem affine_boundary_hodge_weight_successor
 #check affine_boundary_hodge_weight_successor
 #print axioms affine_boundary_induction_constructs_original_hodge_cycle
 
+/-! ## The first EXPLICIT affine algebraic K-theory source
+
+The smooth affine quadric
+
+  Q₂ = Spec R,    xy = z(1-z)
+
+admits the concrete algebraic 2×2 idempotent
+
+       ( z      x   )
+   E = ( y     1-z ).
+
+Unlike a holomorphic bundle arising from Oka–Grauert, the image
+of E over the algebraic coordinate ring is a finitely generated
+PROJECTIVE MODULE BY CONSTRUCTION. No algebraic K₀ representative
+has been chosen or assumed in this theorem.
+
+The recursive Clifford matrix factorization documented in the
+Mathbox route record generalizes this source to split affine
+quadrics of every even dimension 2p. The immediate Lean theorem
+below is its nontrivial rank-one algebraic base case, over EVERY
+commutative coefficient ring, with no geometry-specific axioms.
+-/
+
+namespace GSTAffineCliffordAlgebraization
+
+/-- Explicit polynomial idempotent representing an actual
+algebraic line bundle over the affine split quadric xy=z(1-z). -/
+def quadricBottProjector
+    {R : Type*} [CommRing R]
+    (x y z : R) : Matrix (Fin 2) (Fin 2) R :=
+  ![![z, x], ![y, 1-z]]
+
+/-- Polynomial identity in *every commutative ring* satisfying
+the quadric equation. It constructs a genuine algebraic projective
+module by the image-of-idempotent construction, not a selected
+topological or holomorphic K₀ class. -/
+theorem quadricBottProjector_idempotent
+    {R : Type*} [CommRing R]
+    (x y z : R) (hQuadric : x*y = z*(1-z)) :
+    quadricBottProjector x y z * quadricBottProjector x y z =
+      quadricBottProjector x y z := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals
+    simp [quadricBottProjector, Matrix.mul_apply, Fin.sum_univ_two]
+    nlinarith [hQuadric]
+
+#check quadricBottProjector
+#check quadricBottProjector_idempotent
+#print axioms quadricBottProjector_idempotent
+
+end GSTAffineCliffordAlgebraization
+
 #check affine_cycle_plus_divisor_boundary_represents_hodge_two
 #check all_hodge_two_of_affine_open_cycle_sources
 #print axioms affine_cycle_plus_divisor_boundary_represents_hodge_two
