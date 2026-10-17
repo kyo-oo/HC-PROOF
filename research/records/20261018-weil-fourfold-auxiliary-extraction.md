@@ -512,3 +512,18 @@ source was proved by this attempt. No Lean source was edited and no new
 Lean CI was triggered: the previously green assembly remains exactly as
 verified. Even a completed Weil-fourfold formalization would not by
 itself supply cycles on arbitrary smooth projective varieties.
+
+
+## Source construction executed after the audit checkpoint
+
+The next checkpoint now contains actual construction work:
+[Direct smooth secant seed and its explicit exceptional character](2026-10-18-direct-smooth-secant-seed-and-character.md).
+It constructs the required orbit ideals and ordinary rank-8d sheaf at
+a smooth Jacobian seed, derives a genuine nonzero Weil Chern cycle, and
+supplies 25 new Lean source-construction lemmas plus an exact exterior
+calculation. The complete integration is green at `2a5c980`, run
+[39071168177](https://github.com/kyo-oo/HC-PROOF/actions/runs/39071168177).
+The new manuscript distinguishes the seed construction from all-period
+transport and from full geometric Lean realization. The earlier audit's
+statement that no Lean source was edited describes only its earlier
+`f5b69f5` attempt, not this later construction checkpoint.

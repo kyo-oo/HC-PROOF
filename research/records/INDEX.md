@@ -26,6 +26,8 @@
 
 - [Unconditionalization attempt: explicit Chern source formula and exact source/canonical-realization dependencies](20261018-weil-fourfold-auxiliary-extraction.md#unconditionalization-attempt-at-checkpoint-f5b69f5) — the source and canonical geometry were not constructed. The green conditional Lean assembly is unchanged; Wolfram verifies only the recorded Chern and representation identities.
 
+- [Direct smooth secant seed and explicit exceptional character](2026-10-18-direct-smooth-secant-seed-and-character.md) — genuine orbit/sheaf construction in the manuscript, with a direct good-translation degree argument replacing the seed degeneration in the required rescaled regime; explicit nonzero Weil Chern cycle at the seed period. **25 new Lean theorems**, exact oriented Fourier-character computation, and full integration **GREEN [#39071168177](https://github.com/kyo-oo/HC-PROOF/actions/runs/39071168177)**. Complete geometric Lean realization and period transport remain separate obligations.
+
 **Current execution plan:** [Four fixed proof gates and exact all-X Hodge objective](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
