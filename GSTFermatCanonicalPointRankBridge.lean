@@ -4,17 +4,13 @@ import GSTMaximalLinearHypersurfacePrimitive
 /-!
 # Genuine native codimension-point cycles and geometric rank
 
-Each class source is an ACTUAL native codimension-point cycle, not
-a chosen vector in an abstract rational Hodge target. The point
-fundamental-class map is uniquely extended to all algebraic cycles.
+Each source is an actual native irreducible-subvariety point cycle.
+The unique point-generated Betti map transports these algebraic cycles
+to rational cohomology. Their geometric intersection Gram is invertible.
 
-An independently geometric intersection-number comparison gives a
-nondegenerate Gram matrix. The latter is not assumed via target Hodge
-surjectivity or a cycle preimage of an unknown Hodge direction.
-
-Still NOT the universal all-varieties Hodge spanning theorem:
-actual Betti point-class construction and geometric intersection
-comparison on arbitrary X are separate mathematical obligations.
+Integration target: derive the measurement comparison from canonical
+analytic fundamental classes, then extend geometric source generation
+to arbitrary smooth projective varieties.
 -/
 
 set_option maxHeartbeats 10000000
@@ -41,9 +37,8 @@ noncomputable def nativePrimitiveFromPlane
     codimensionCycles V.X p :=
   (d : ℚ) • codimensionPointCycle V.X p (points i) - Hpower
 
-/-- No nontrivial rational relation among the actual
-point-generated geometric Betti classes when their concrete
-intersection measurements equal the Fermat normal-Chern Gram. -/
+/-- Rational linear independence of native geometric Betti classes
+under the explicit Fermat normal-Chern intersection measurements. -/
 theorem genuine_point_generated_fermat_rank
     (p d m : ℕ) (hd : 3 ≤ d) (hm : 1 ≤ m)
     (A : AnalytificationData V)
