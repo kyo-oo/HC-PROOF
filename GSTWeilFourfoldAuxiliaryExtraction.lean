@@ -445,6 +445,78 @@ theorem secantSeed_four_projective_marks_force_zero
     · simpa only [← hyb, ← hzab] using hs b
     · simpa only [← hxbc, ← hyac, ← hzc] using hs c
 
+/-- Evaluation at a profile with fibers of size at most two separates
+linear sections: three different indices already contain two independent
+projective values. The evaluation rank is a conclusion. -/
+theorem seedLinear_zero_of_projective_profile
+    {W : Type*} [AddCommGroup W] [Module K W] [FiniteDimensional K W]
+    (hW : Module.finrank K W = 2)
+    (profile : Fin 4 → Projectivization K W)
+    (hf : seedFiberAtMostTwo profile)
+    (L : W →ₗ[K] K) (hL : ∀ i, L (profile i).rep = 0) : L = 0 := by
+  by_cases h01 : profile 0 = profile 1
+  · have h02 : profile 0 ≠ profile 2 :=
+      seedFourMarks_opposite_ne profile hf 0 1 2
+        (by decide) (by decide) (by decide) h01
+    apply (seedProjectivePairBasis hW (profile 0) (profile 2) h02).ext
+    intro i
+    fin_cases i <;> norm_num [seedProjectivePairBasis]
+    · exact hL 0
+    · exact hL 2
+  · apply (seedProjectivePairBasis hW (profile 0) (profile 1) h01).ext
+    intro i
+    fin_cases i <;> norm_num [seedProjectivePairBasis]
+    · exact hL 0
+    · exact hL 1
+
+def seedFirstAxisRestriction
+    (T : SeedTrilinear (K := K) (V₁ := V₁) (V₂ := V₂) (V₃ := V₃))
+    (y : V₂) (z : V₃) : V₁ →ₗ[K] K where
+  toFun a := T a y z
+  map_add' := by intro a b; simp
+  map_smul' := by intro c a; simp
+
+def seedSecondAxisRestriction
+    (T : SeedTrilinear (K := K) (V₁ := V₁) (V₂ := V₂) (V₃ := V₃))
+    (x : V₁) (z : V₃) : V₂ →ₗ[K] K where
+  toFun b := T x b z
+  map_add' := by intro a b; simp
+  map_smul' := by intro c a; simp
+
+/-- The actual finite restriction equations imply vanishing, rather than
+assuming vanishing on every vector of the three section spaces. These
+equations are obtained by evaluating a section on each translated axis. -/
+theorem secantSeed_four_axis_evaluations_force_zero
+    (T : SeedTrilinear (K := K) (V₁ := V₁) (V₂ := V₂) (V₃ := V₃))
+    (h₁ : Module.finrank K V₁ = 2) (h₂ : Module.finrank K V₂ = 2)
+    (h₃ : Module.finrank K V₃ = 2)
+    (x : Fin 4 → Projectivization K V₁)
+    (y : Fin 4 → Projectivization K V₂)
+    (z : Fin 4 → Projectivization K V₃)
+    (hx : seedFiberAtMostTwo x) (hy : seedFiberAtMostTwo y)
+    (hz : seedFiberAtMostTwo z)
+    (hax : ∀ i j, T (x j).rep (y i).rep (z i).rep = 0)
+    (hay : ∀ i j, T (x i).rep (y j).rep (z i).rep = 0)
+    (haz : ∀ i j, T (x i).rep (y i).rep (z j).rep = 0) : T = 0 := by
+  apply secantSeed_four_projective_marks_force_zero T h₁ h₂ h₃ x y z hx hy hz
+  intro i
+  have hfx : seedFirstAxisRestriction T (y i).rep (z i).rep = 0 :=
+    seedLinear_zero_of_projective_profile h₁ x hx
+      (seedFirstAxisRestriction T (y i).rep (z i).rep) (hax i)
+  have hfy : seedSecondAxisRestriction T (x i).rep (z i).rep = 0 :=
+    seedLinear_zero_of_projective_profile h₂ y hy
+      (seedSecondAxisRestriction T (x i).rep (z i).rep) (hay i)
+  have hfz : T (x i).rep (y i).rep = 0 :=
+    seedLinear_zero_of_projective_profile h₃ z hz
+      (T (x i).rep (y i).rep) (haz i)
+  refine ⟨?_, ?_, ?_⟩
+  · intro a
+    exact congrArg (fun L : V₁ →ₗ[K] K => L a) hfx
+  · intro b
+    exact congrArg (fun L : V₂ →ₗ[K] K => L b) hfy
+  · intro c
+    exact congrArg (fun L : V₃ →ₗ[K] K => L c) hfz
+
 theorem seedFiberAtMostTwo_comp_injective
     {I J P : Type*} (f : J → P) (hf : seedFiberAtMostTwo f)
     (e : I → J) (he : Function.Injective e) :
@@ -480,6 +552,35 @@ theorem secantSeed_finite_orbit_force_zero
     (seedFiberAtMostTwo_comp_injective y hy e e.injective)
     (seedFiberAtMostTwo_comp_injective z hz e e.injective)
     (fun i => hs (e i))
+
+/-- Uniform section-vanishing construction for every finite orbit of
+size at least four; it is not a bounded numerical rank experiment. -/
+theorem secantSeed_finite_axis_evaluations_force_zero
+    {I : Type*} [Fintype I] (hcard : 4 ≤ Fintype.card I)
+    (T : SeedTrilinear (K := K) (V₁ := V₁) (V₂ := V₂) (V₃ := V₃))
+    (h₁ : Module.finrank K V₁ = 2) (h₂ : Module.finrank K V₂ = 2)
+    (h₃ : Module.finrank K V₃ = 2)
+    (x : I → Projectivization K V₁)
+    (y : I → Projectivization K V₂)
+    (z : I → Projectivization K V₃)
+    (hx : seedFiberAtMostTwo x) (hy : seedFiberAtMostTwo y)
+    (hz : seedFiberAtMostTwo z)
+    (hax : ∀ i j, T (x j).rep (y i).rep (z i).rep = 0)
+    (hay : ∀ i j, T (x i).rep (y j).rep (z i).rep = 0)
+    (haz : ∀ i j, T (x i).rep (y i).rep (z j).rep = 0) : T = 0 := by
+  classical
+  have he : Nonempty (Fin 4 ↪ I) := by
+    rw [Function.Embedding.nonempty_iff_card_le, Fintype.card_fin]
+    exact hcard
+  let e := Classical.choice he
+  exact secantSeed_four_axis_evaluations_force_zero T h₁ h₂ h₃
+    (x ∘ e) (y ∘ e) (z ∘ e)
+    (seedFiberAtMostTwo_comp_injective x hx e e.injective)
+    (seedFiberAtMostTwo_comp_injective y hy e e.injective)
+    (seedFiberAtMostTwo_comp_injective z hz e e.injective)
+    (fun i j => hax (e i) (e j))
+    (fun i j => hay (e i) (e j))
+    (fun i j => haz (e i) (e j))
 
 /-- The reduced three-axis star through an actual product point.
 No equation for a Hodge class or cycle-class image enters this definition. -/
@@ -551,6 +652,44 @@ theorem seedSecondTorsionOrbit_stars_disjoint (n : ℕ) :
   secantSeed_axisStars_pairwise_disjoint (seedSecondTorsionOrbit n)
     (seedSecondTorsionOrbit_projection_injective n)
 
+/-- The finite translate selection used in the direct smooth-Jacobian
+seed construction. A component has at most one group element carrying
+it to another fixed component. Thus fewer than card(G) ordered component
+pairs cannot obstruct every translation. No good translate is assumed. -/
+theorem secantSeed_good_translation_exists
+    {G D : Type*} [Fintype G]
+    (components : Finset D) (action : G → D → D)
+    (hfree : ∀ a ∈ components, Function.Injective (fun g => action g a))
+    (hcard : components.card * components.card < Fintype.card G) :
+    ∃ g : G, ∀ a ∈ components, ∀ b ∈ components, action g a ≠ b := by
+  classical
+  by_contra h
+  push_neg at h
+  choose a ha b hb hab using h
+  let witness : G → (↥components × ↥components) :=
+    fun g => (⟨a g, ha g⟩, ⟨b g, hb g⟩)
+  have hinj : Function.Injective witness := by
+    intro g g' heq
+    have heqa : a g = a g' := congrArg (fun p : ↥components × ↥components => p.1.1) heq
+    have heqb : b g = b g' := congrArg (fun p : ↥components × ↥components => p.2.1) heq
+    apply hfree (a g) (ha g)
+    calc
+      action g (a g) = b g := hab g
+      _ = b g' := heqb
+      _ = action g' (a g') := (hab g').symm
+      _ = action g' (a g) := congrArg (action g') heqa.symm
+  have hle := Fintype.card_le_of_injective witness hinj
+  have hle' : Fintype.card G ≤ components.card * components.card := by
+    simpa only [Fintype.card_prod, Fintype.card_coe] using hle
+  exact (not_le_of_gt hcard) hle'
+
+/-- For the threefold theta degree budget 24, nine distinct Abel curves
+of theta degree 3 cannot lie in a proper intersection. -/
+theorem secantSeed_abel_curve_degree_budget
+    (n : ℕ) (hn : 9 ≤ n) : ¬ (3 : ℚ) * n ≤ 24 := by
+  have hq : (9 : ℚ) ≤ n := by exact_mod_cast hn
+  linarith
+
 /-- Proper/closed projection turns vanishing for every central Picard
 twist into one common open neighborhood avoiding the entire bad locus.
 This is the topological uniformity step; relative Picard properness and
@@ -573,10 +712,15 @@ theorem seedUniformOpenOfClosedProjection
 #print axioms seedFourMarks_match_neighbors
 #print axioms secantSeed_four_projective_marks_force_zero
 #print axioms secantSeed_finite_orbit_force_zero
+#print axioms seedLinear_zero_of_projective_profile
+#print axioms secantSeed_four_axis_evaluations_force_zero
+#print axioms secantSeed_finite_axis_evaluations_force_zero
 #print axioms secantSeed_axisStars_pairwise_disjoint
 #print axioms seedTorsionOrbits_intersection_zero
 #print axioms seedFirstTorsionOrbit_stars_disjoint
 #print axioms seedSecondTorsionOrbit_stars_disjoint
+#print axioms secantSeed_good_translation_exists
+#print axioms secantSeed_abel_curve_degree_budget
 #print axioms seedUniformOpenOfClosedProjection
 
 end SecantSeed
