@@ -1906,3 +1906,116 @@ Next required research step: construct new native algebraic sources
 on the original arbitrary X with independent primitive classes beyond
 the known Lefschetz image, and prove the fundamental-class comparison.
 Their universal existence is not established at this checkpoint.
+
+## 2026-10-17: component selection as an additional source operation
+
+Base checkpoint: `158b349037d069c45bb6db794297b3d3830527f1` on
+`mathbox/residual-zero-direct-audit-20261015`. The requested universal
+construction and its canonical geometric cycle-class certification remain
+UNPROVED. This continuation does not replace that goal by generation of
+only the already algebraic subspace.
+
+### What the existing cut code actually constructs
+
+The following source files were read in this continuation:
+
+* `GSTClassicalHodgeProjectivePrincipalSection.lean` constructs a genuine
+  reduced principal subscheme and pulls it back through the projective
+  embedding. Its general `principalSection V f` accepts an equation; its
+  selected separator is chosen to avoid the source point.
+* `GSTClassicalHodgeProperCutCodimensionOne.lean` proves finiteness of the
+  coheight-one locus of a proper closed cut.
+* `GSTClassicalHodgePointClosureRelativeCut.lean` constructs the finite
+  relative coheight-one successor locus on the source closure.
+* `GSTClassicalHodgePrincipalCutSuccessorOperator.lean` sums the selected
+  successor atoms, retaining the exact ambient codimension stratum.
+* `GSTClassicalHodgeRelativeSuccessorExactStratum.lean` and
+  `GSTClassicalHodgeExactVerticalCutRay.lean` certify positive native
+  coefficients and native nonvanishing for surviving branches.
+* `GSTClassicalHodgeProjectiveSeparatorSuccessorPoint.lean` and
+  `GSTClassicalHodgeSeparatorRelativeCover.lean` construct a genuine
+  selected projective successor and its relative cover relation.
+
+Native nonvanishing here is not nonvanishing of the primitive Betti class.
+The constructors also do not establish that their selected equation or
+selected minimal prime reaches a prescribed Hodge direction.
+
+### Distinction from the trace-projector obstruction
+
+Selecting an irreducible component of a geometric cut is a different native
+source operation from applying a cohomological projector to the TOTAL cut.
+For a cut cycle C=sum_i m_i[Z_i], rational linearity gives
+
+    pi(cl(C)) = sum_i m_i pi(cl([Z_i])).
+
+Thus a zero primitive projection of the total only gives a linear relation
+among the component projections. It does not make each projection zero.
+The preceding trace theorem remains valid on every individual component;
+it does not forbid obtaining new source directions by separating components
+before applying primitive normalization.
+
+In codimension two, the existing native correction constructs, for each
+already obtained component Z_i,
+
+    W_i = [Z_i] - algebraicLefschetzCorrection(cl([Z_i])),
+    cl(W_i) = pi(cl([Z_i])).
+
+Its primitivity and exact class formula are the existing theorems
+`primitiveizeNativeMiddleCycle_primitive` and
+`native_primitive_projection_cycleClass`. The geometric comparison data
+and divisor theorem in those declarations remain explicit inputs. This
+observation neither proves a new arbitrary-codimension normalizer nor
+instantiates those data canonically for every variety.
+
+### Exact component-cancellation experiment
+
+Wolfram Language exact arithmetic was applied to the existing
+`GSTCubicFourfoldPlanePrimitive.lean` intersection model, with Gram matrix
+G=[[3,1],[1,3]], H=(1,0), P=(0,1), and R=H-P. Define
+pi(v)=v-((H.G.v)/(H.G.H))*H. The returned values were:
+
+    P+R = (1,0)
+    pi(P+R) = (0,0)
+    pi(P) = (-1/3,1)
+    pi(R) = (1/3,-1)
+    rank_Q {pi(P),pi(R)} = 1
+    3*pi(P) = (-1,3)
+    (3*pi(P)).G.(3*pi(P)) = 24
+    degrees(P,R) = (1,2).
+
+This is an exact finite lattice calculation. It establishes neither the
+scheme-theoretic realization of a residual component nor a cycle-class
+comparison for an arbitrary X. The existing Lean lattice model is not a
+formal construction of those schemes. No new Lean verification is claimed
+for this computation or for the requested universal theorem.
+
+### First unresolved step and route state
+
+The source-operation route is OPEN, with no universal spanning result.
+One possible geometric continuation is to vary the equations and selected
+minimal primes, rather than reuse the single chosen cut at each source.
+The current cut declarations do not prove the proposed target-directed
+exhaustion by such paths. Even an exhaustion of ALL native point cycles
+would still leave the following distinct assertion unproved:
+
+    span_Q { pi(cl([Z])) : Z irreducible of codimension p in X }
+      = every rational primitive (p,p) Hodge direction of X.
+
+The point-normal-form and point-rigidity results identify the left side
+with the primitive algebraic image. They do not identify it with the full
+primitive Hodge fiber. Likewise, choosing a maximal independent finite
+family in that image does not prove equality with the target fiber.
+
+No discriminant, period detector, GST operator realization, or geometric
+construction proving this equality on every original X was obtained in
+this continuation. The separate construction of canonical point
+fundamental classes and its comparison with Stage-2G also remains open.
+The previous successful Lean run `39007462036` certifies the previous
+trace lemmas, not a new universal construction in this checkpoint.
+
+Resume this route when a concrete equation/component construction has a
+proved nonzero pairing with an arbitrary missing primitive direction, or
+when an independent GST argument proves the displayed span equality.
+Testing additional ambient total classes without examining components
+would not discriminate this route. An exact finite example alone cannot
+discharge the universal quantifier.
