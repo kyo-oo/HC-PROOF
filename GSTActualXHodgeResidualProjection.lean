@@ -523,7 +523,7 @@ theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_nonzero_of_new_class
           (F.bettiPush (HX.cycleClass p Z)) := by
     have h := T.traceZeroNative_cycleClass Z
     rw [hzero] at h
-    exact (sub_eq_zero.mp h).symm
+    exact sub_eq_zero.mp h.symm
   apply houtside
   refine ⟨F.degree⁻¹ • F.bettiPush (HX.cycleClass p Z), ?_⟩
   rw [map_smul]
