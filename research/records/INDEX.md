@@ -16,6 +16,8 @@
 
 - [Rank-two syzygy bundle generates a nonambient primitive Chern class](2026-10-17-plane-syzygy-bundle-native-chern-source.md) — from actual three linear equations of a plane in any smooth degree-d fourfold, construct an honest rank-two bundle (E); exact (c_2(E)=3h^2-[P]) and primitive (d[P]-h^2=(3d-1)h^2-dc_2(E)), norm (d(d-1)^3).
 
+- [Intrinsic tangent Chern GST primitive source and exact source-channel criterion](2026-10-17-intrinsic-tangent-chern-gst-primitive-source.md) — all-X native tangent second Chern projected by actual GST laws; K3×K3 exact norm 192(a+b)²/(ab); hypersurface ambient tangent source zero and independent syzygy needed. Two green Lean audits [#39053987370](https://github.com/kyo-oo/HC-PROOF/actions/runs/39053987370) and [#39054244592](https://github.com/kyo-oo/HC-PROOF/actions/runs/39054244592).
+
 **Current execution plan:** [Four fixed proof gates and exact all-X Hodge objective](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
