@@ -734,6 +734,42 @@ theorem picardToNativePrimitiveKernelLinear_injective
   have hv := congrArg Subtype.val h
   exact hv
 
+
+/-- EXPLICIT geometric witness for EVERY vector in the Picard-rank
+primitive kernel embedding. In addition to proving that the map
+is injective, this theorem returns an ACTUAL native rational
+codimension-two Chow cycle whose cohomology class is exactly
+the embedded primitive vector. This makes its image a genuine
+algebraic primitive subspace, not only an abstract Hodge one. -/
+theorem every_picard_primitive_vector_has_native_chow_cycle
+    {D : Type*} [AddCommGroup D] [Module ℚ D]
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (B : GenuineBlowupPicardPrimitivePacket G P D)
+    (a : D) :
+    ∃ W : codimensionCycles V.X 2,
+      nativeToHodgeFiberLinear G W =
+        (picardToNativePrimitiveKernelLinear
+          G P h11 hInject B a).val ∧
+      P.primitiveTest (nativeToHodgeFiberLinear G W) = 0 := by
+  refine ⟨primitiveizeNativeMiddleCycle G P h11
+      (B.nativeFirstExceptional a), ?_, ?_⟩
+  · change nativeToHodgeFiberLinear G
+      (primitiveizeNativeMiddleCycle G P h11
+        (B.nativeFirstExceptional a)) =
+      primitiveHodgeRemainder G P h11
+        (nativeToHodgeFiberLinear G
+          (B.nativeFirstExceptional a))
+    exact native_primitive_projection_cycleClass G P h11
+      (B.nativeFirstExceptional a)
+  · exact primitiveizeNativeMiddleCycle_primitive G P h11
+      (B.nativeFirstExceptional a)
+
+#check every_picard_primitive_vector_has_native_chow_cycle
+#print axioms every_picard_primitive_vector_has_native_chow_cycle
+
 #check picardToNativePrimitiveKernelLinear
 #check picardToNativePrimitiveKernelLinear_injective
 #print axioms picardToNativePrimitiveKernelLinear_injective
