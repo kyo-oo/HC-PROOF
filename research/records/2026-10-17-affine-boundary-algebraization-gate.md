@@ -41,3 +41,20 @@ Concrete independent test: let \(U=(\mathbb C^*)^2=\operatorname{Spec}\mathbb C[
 The actual Gate 3 target is *more specific* than algebraizing an arbitrary topological bundle: \(\xi\) must be the pure-Chern-character lift of \(j^*\alpha\) for a **projective rational \((p,p)\) Hodge class**. On this torus, \(H^2(U,\mathbb Q)=\mathbb Q(-2)\) is pure weight four, whereas projective \(H^2(X)\) has pure weight two. Therefore this Picard counterexample does not disprove algebraization for those projective-origin Hodge restrictions; it only refutes the **blanket Oka \(\Rightarrow\) algebraic** step. A valid general argument needs an independent algebraic comparison for that restricted pure-weight summand, or another source-generation mechanism.
 
 **Status:** route filter passed (an incorrect strengthening was eliminated). The primary source requirement remains constructing the *affine algebraic* codimension-\(p\) representative in the precise projective-origin Hodge subspace, which is equivalent to the remaining conjectural source assertion.
+
+## Sharp affine weight target and all-codim algebraic induction
+
+For a smooth projective \(X\) and a smooth boundary divisor \(Y\), the mixed Hodge structure on \(U=X\setminus Y\) satisfies the lowest-weight image identity
+\[
+\operatorname{im}\bigl(H^{2p}(X,\mathbb Q)\xrightarrow{j^*}H^{2p}(U,\mathbb Q)\bigr)
+= W_{2p}H^{2p}(U,\mathbb Q).
+\]
+Here the equality follows from the Deligne mixed-Hodge localization sequence and strictness of its weight filtration: the first term is pure weight \(2p\), whereas the connecting image enters weight at least \(2p+1\). The subspace relevant to the Hodge conjecture is the rational \((p,p)\) part of this **lowest weight**, not the arbitrary holomorphic K-theory of \(U\). The holomorphic nonalgebraic torus example above lies in \(H^2(U)\) of weight four and is excluded automatically when \(p=1\).
+
+The new theorem \`affine_boundary_induction_constructs_original_hodge_cycle\` in \`GSTUniversalResolvedSupportHodge.lean\` proves the all-\(p\) successor formula from exact Chow/Betti localization:
+\[
+Z_X=\overline{Z_U}+i_*D_Y,\quad D_Y\in CH^{p-1}(Y)_{\mathbb Q}.
+\]
+It needs the **strictly lower weight** rational Hodge theorem in codimension \(p-1\) on \(Y\), together with a genuine algebraic cycle \(Z_U\in CH^p(U)_{\mathbb Q}\) realizing \(j^*\alpha\). Its generated cycle lives on original X. [GitHub Actions #39044347980](https://github.com/kyo-oo/HC-PROOF/actions/runs/39044347980) compiled the 247-module gate at SHA \`037e7644c69459c242717b7c3b9998952caf880a\`, with the sorryAx audit passing. Evidence artifact 12105028521, SHA256 \`6ed9913f3ba7879bbf5f6568a6208b93ca52a9c6bb04b31a040e9c714b908cda\`.
+
+**Focused next construction:** Build genuine algebraic K-theory/Chow generators for the lowest-weight \((p,p)\) classes \(W_{2p}H^{2p}(U)\) that arise by restriction from the prescribed original X; avoid the false blanket claim that Oka makes all holomorphic bundles algebraic. This is an exact source-birth problem on the affine open, with a completely verified cycle-level return to original X once solved.
