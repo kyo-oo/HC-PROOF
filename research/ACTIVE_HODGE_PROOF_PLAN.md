@@ -100,6 +100,8 @@ The [matched-boundary native source theorem](records/2026-10-17-hyperplane-match
 
 The [arbitrary-ambient-dimension bridge](records/2026-10-17-arbitrary-dimensional-primitive-middle-bridge.md) strengthens the route to every smooth projective n-fold and every low-half p: cutting by \(r=n-2p\) general hyperplanes gives a smooth 2p-fold Y, injective rational restriction \(H^{2p}(X)\to H^{2p}(Y)\), and primitive class preservation by the Gysin projection identity \(j_*(h_Yj^*\alpha)=h_X^{r+1}\alpha\). A further hyperplane on Y provides the relative Betti lift. **Do not silently lift an algebraic cycle back to X**: pushing a cycle from Y represents \(h_X^r\alpha\), and an algebraic inverse Lefschetz correspondence is an independent serious obligation.
 
+**Current verification:** [GitHub Actions #39041101064](https://github.com/kyo-oo/HC-PROOF/actions/runs/39041101064) is **GREEN** at commit `e41dbc001d2096b319c80e801fe2a1da6355028c`. It compiled all 247 required GST modules including the matched-boundary native-cycle constructor and all-dimensional complete-intersection-to-relative bridge. The `sorryAx` audit passed; [kernel evidence artifact 12103609477](https://github.com/kyo-oo/HC-PROOF/actions/runs/39041101064/artifacts/12103609477) is retained.
+
 **One indispensable remaining Gate 3 implication:** From an arbitrary rational primitive Hodge class \(\alpha\) on original X, construct matching native cycles **with prescribed canonical difference** \(\operatorname{cl}_X(Z_0-Z_1)=\alpha\), using independent algebraic geometry rather than assuming the pair or full rank. The all-n reduction and nonzero signed cycle lemma are tools for this implication, not substitutes for its proof.
 
 ## Reporting and completion
