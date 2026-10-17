@@ -425,10 +425,139 @@ theorem secantSeed_four_projective_marks_force_zero
     · simpa only [← hyb, ← hzab] using hs b
     · simpa only [← hxbc, ← hyac, ← hzc] using hs c
 
+theorem seedFiberAtMostTwo_comp_injective
+    {I J P : Type*} (f : J → P) (hf : seedFiberAtMostTwo f)
+    (e : I → J) (he : Function.Injective e) :
+    seedFiberAtMostTwo (f ∘ e) := by
+  intro a b c hab hac
+  rcases hf (e a) (e b) (e c) hab hac with h | h | h
+  · exact Or.inl (he h)
+  · exact Or.inr (Or.inl (he h))
+  · exact Or.inr (Or.inr (he h))
+
+/-- Apply the seed construction to an arbitrary finite orbit of size ≥4,
+not just a four-point sample. Only injective restriction to four indices
+is used, so the conclusion is uniform in the orbit length. -/
+theorem secantSeed_finite_orbit_force_zero
+    {I : Type*} [Fintype I] (hcard : 4 ≤ Fintype.card I)
+    (T : SeedTrilinear (K := K) (V₁ := V₁) (V₂ := V₂) (V₃ := V₃))
+    (h₁ : Module.finrank K V₁ = 2) (h₂ : Module.finrank K V₂ = 2)
+    (h₃ : Module.finrank K V₃ = 2)
+    (x : I → Projectivization K V₁)
+    (y : I → Projectivization K V₂)
+    (z : I → Projectivization K V₃)
+    (hx : seedFiberAtMostTwo x) (hy : seedFiberAtMostTwo y)
+    (hz : seedFiberAtMostTwo z)
+    (hs : ∀ i, seedSingularAt T (x i) (y i) (z i)) : T = 0 := by
+  classical
+  have he : Nonempty (Fin 4 ↪ I) := by
+    rw [Function.Embedding.nonempty_iff_card_le, Fintype.card_fin]
+    exact hcard
+  let e := Classical.choice he
+  exact secantSeed_four_projective_marks_force_zero T h₁ h₂ h₃
+    (x ∘ e) (y ∘ e) (z ∘ e)
+    (seedFiberAtMostTwo_comp_injective x hx e e.injective)
+    (seedFiberAtMostTwo_comp_injective y hy e e.injective)
+    (seedFiberAtMostTwo_comp_injective z hz e e.injective)
+    (fun i => hs (e i))
+
+/-- The reduced three-axis star through an actual product point.
+No equation for a Hodge class or cycle-class image enters this definition. -/
+def seedAxisStar {E : Type*} (g : Fin 3 → E) : Set (Fin 3 → E) :=
+  {p | ∃ i : Fin 3, ∀ j, j ≠ i → p j = g j}
+
+/-- Faithful projection of an orbit to each elliptic factor makes its
+translated stars pairwise disjoint. This is the support computation used
+before deformation to the smooth Jacobian seed. -/
+theorem secantSeed_axisStars_pairwise_disjoint
+    {I E : Type*} (center : I → Fin 3 → E)
+    (hfaithful : ∀ j, Function.Injective (fun a => center a j)) :
+    Pairwise (fun a b => Disjoint (seedAxisStar (center a))
+      (seedAxisStar (center b))) := by
+  intro a b hab
+  apply Set.disjoint_left.mpr
+  intro p hp hq
+  rcases hp with ⟨i, hi⟩
+  rcases hq with ⟨j, hj⟩
+  have hk : ∃ k : Fin 3, k ≠ i ∧ k ≠ j := by
+    fin_cases i <;> fin_cases j <;> decide
+  rcases hk with ⟨k, hki, hkj⟩
+  exact hab (hfaithful k ((hi k hki).symm.trans (hj k hkj)))
+
+/-- The first cyclic torsion orbit in the product of three elliptic
+n-torsion modules, written in a torsion basis. -/
+def seedFirstTorsionOrbit (n : ℕ) :
+    ZMod n →+ (Fin 3 → ZMod n × ZMod n) where
+  toFun a := fun _ => (a, 0)
+  map_zero' := by ext i <;> rfl
+  map_add' := by intro a b; ext i <;> simp
+
+/-- The independent second cyclic orbit, using the second torsion basis
+vector in every elliptic factor. -/
+def seedSecondTorsionOrbit (n : ℕ) :
+    ZMod n →+ (Fin 3 → ZMod n × ZMod n) where
+  toFun a := fun _ => (0, a)
+  map_zero' := by ext i <;> rfl
+  map_add' := by intro a b; ext i <;> simp
+
+theorem seedFirstTorsionOrbit_projection_injective (n : ℕ) (i : Fin 3) :
+    Function.Injective (fun a => seedFirstTorsionOrbit n a i) := by
+  intro a b h
+  exact congrArg Prod.fst h
+
+theorem seedSecondTorsionOrbit_projection_injective (n : ℕ) (i : Fin 3) :
+    Function.Injective (fun a => seedSecondTorsionOrbit n a i) := by
+  intro a b h
+  exact congrArg Prod.snd h
+
+/-- The two explicitly constructed cyclic groups have trivial intersection;
+this conclusion is proved from their coordinates, not supplied as input. -/
+theorem seedTorsionOrbits_intersection_zero (n : ℕ) (a b : ZMod n)
+    (h : seedFirstTorsionOrbit n a = seedSecondTorsionOrbit n b) :
+    a = 0 ∧ b = 0 := by
+  have h₁ := congrArg (fun f => (f 0).1) h
+  have h₂ := congrArg (fun f => (f 0).2) h
+  exact ⟨h₁, h₂.symm⟩
+
+theorem seedFirstTorsionOrbit_stars_disjoint (n : ℕ) :
+    Pairwise (fun a b => Disjoint (seedAxisStar (seedFirstTorsionOrbit n a))
+      (seedAxisStar (seedFirstTorsionOrbit n b))) :=
+  secantSeed_axisStars_pairwise_disjoint (seedFirstTorsionOrbit n)
+    (seedFirstTorsionOrbit_projection_injective n)
+
+theorem seedSecondTorsionOrbit_stars_disjoint (n : ℕ) :
+    Pairwise (fun a b => Disjoint (seedAxisStar (seedSecondTorsionOrbit n a))
+      (seedAxisStar (seedSecondTorsionOrbit n b))) :=
+  secantSeed_axisStars_pairwise_disjoint (seedSecondTorsionOrbit n)
+    (seedSecondTorsionOrbit_projection_injective n)
+
+/-- Proper/closed projection turns vanishing for every central Picard
+twist into one common open neighborhood avoiding the entire bad locus.
+This is the topological uniformity step; relative Picard properness and
+cohomology semicontinuity must be instantiated by the geometric family. -/
+theorem seedUniformOpenOfClosedProjection
+    {S P : Type*} [TopologicalSpace S] [TopologicalSpace P]
+    (projection : P → S) (hclosed : IsClosedMap projection)
+    (bad : Set P) (hbad : IsClosed bad) (s₀ : S)
+    (h₀ : ∀ p, projection p = s₀ → p ∉ bad) :
+    ∃ U : Set S, IsOpen U ∧ s₀ ∈ U ∧
+      ∀ p, projection p ∈ U → p ∉ bad := by
+  refine ⟨(projection '' bad)ᶜ, (hclosed bad hbad).isOpen_compl, ?_, ?_⟩
+  · rintro ⟨p, hp, hps⟩
+    exact h₀ p hps hp
+  · intro p hp hpb
+    exact hp ⟨p, hpb, rfl⟩
+
 #print axioms seedTrilinear_zero_of_separated_pair
 #print axioms seedTrilinear_zero_of_tetrahedron
 #print axioms seedFourMarks_match_neighbors
 #print axioms secantSeed_four_projective_marks_force_zero
+#print axioms secantSeed_finite_orbit_force_zero
+#print axioms secantSeed_axisStars_pairwise_disjoint
+#print axioms seedTorsionOrbits_intersection_zero
+#print axioms seedFirstTorsionOrbit_stars_disjoint
+#print axioms seedSecondTorsionOrbit_stars_disjoint
+#print axioms seedUniformOpenOfClosedProjection
 
 end SecantSeed
 
