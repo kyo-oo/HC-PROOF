@@ -8,6 +8,8 @@
 
 - [Arbitrary-dimension primitive classes faithfully cut to middle relative geometry](2026-10-17-arbitrary-dimensional-primitive-middle-bridge.md) — all X,n,p with 2p≤n, complete-intersection injectivity and Gysin prove primitive restriction to a 2p-fold; exact algebraic reverse-transfer requirement audited, Lean [#39041101064](https://github.com/kyo-oo/HC-PROOF/actions/runs/39041101064).
 
+- [Affine Chow source → exact native cycle on original X, in every codimension](2026-10-17-affine-boundary-algebraization-gate.md) — closure-plus-boundary Gysin correction, lower-weight induction and strict Hodge lift; Lean [#39044347980](https://github.com/kyo-oo/HC-PROOF/actions/runs/39044347980) **green**; Wolfram exact reconstruction and lowest-weight affine K-theory source selection.
+
 **Current execution plan:** [Three proof gates, fixed all-X primitive target, and no-side-quest rule](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
