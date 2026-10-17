@@ -763,7 +763,7 @@ theorem SchemeFiniteDominantTwoTransfer.constructNative_correct
   calc
     HX.cycleClass 2 (F.constructNative hY alpha hAlpha) =
         F.degree⁻¹ • (HX.cycleClass 2 (F.nativePush Z)) := by
-          simp only [SchemeFiniteDominantTwoTransfer.constructNative, map_smul]
+          simp only [SchemeFiniteDominantTwoTransfer.constructNative, map_smul, Z]
     _ = F.degree⁻¹ • F.bettiPush (HY.cycleClass 2 Z) := by
           rw [F.native_betti_natural Z]
     _ = F.degree⁻¹ • F.bettiPush (F.bettiPull alpha) := by rw [hZ]
