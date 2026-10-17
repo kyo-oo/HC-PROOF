@@ -4,6 +4,7 @@ on:
     branches: [research/mathbox-k3-diagonal-primitive-20261015, mathbox/residual-zero-direct-audit-20261015]
     paths:
       - GSTActualXHodgeResidualProjection.lean
+      - GSTClassicalHodgePointClosureRelativeCut.lean
       - .github/workflows/gst-actual-x-hodge-residual.yml
   workflow_dispatch:
 permissions:
