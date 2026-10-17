@@ -735,6 +735,8 @@ be expressed through these new sources.
 
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTUniversalLefschetzCurveCycles
+open GSTClassicalHodgeGeometricMatrixRankLanding
 open GSTUniversalCodimensionTwoPrimitiveExtraction
 open GSTPrimitiveTransverseCycleExtraction
 
@@ -771,7 +773,7 @@ theorem ActualXPrimitiveProjectiveTraceComparison.primitive_push_zero
     {d : ℕ}
     {G : GeometricCycleClassSpine X HX}
     {L : GeometricHigherLefschetzData G d}
-    (C : ActualXPrimitiveProjectiveTraceComparison G L)
+    (C : ActualXPrimitiveProjectiveTraceComparison (F := F) G L)
     (alpha : ClassicalHodgeFiber X HX 2)
     (hPrimitive : L.primitiveTest alpha = 0) :
     F.bettiPush alpha.1 = 0 := by
@@ -799,7 +801,7 @@ theorem genuine_nonzero_primitive_trace_zero_native_cycle
     (L : GeometricHigherLefschetzData G d)
     (h11 : DivisorsRepresentHodge11 HX)
     (hInject : Function.Injective L.cupH2)
-    (C : ActualXPrimitiveProjectiveTraceComparison G L)
+    (C : ActualXPrimitiveProjectiveTraceComparison (F := F) G L)
     (Z : codimensionCycles X.X 2)
     (hOutside : ∀ beta : ClassicalHodgeFiber X HX 1,
       nativeToHodgeFiberLinear G Z ≠ L.cupH beta) :
