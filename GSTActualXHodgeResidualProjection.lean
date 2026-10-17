@@ -1,6 +1,7 @@
 import GSTUniversalHodgeResidualProjection
 import GSTGeometricRealizationStage2G
 import GSTPrimitiveTransverseCycleExtraction
+import GSTCompactNativeCyclePresentation
 
 /-!
 # GST genuine arbitrary-X native Hodge-cycle projection
@@ -1248,6 +1249,64 @@ theorem all_primitive_hodge_iff_native_trace_kernel_spans
   · intro h alpha hPrim
     obtain ⟨Z, _, hZ⟩ := h alpha hPrim
     exact ⟨Z, hZ⟩
+
+/-! ## Finite geometric point-source completeness INSIDE the algebraic primitive image
+
+All actual native codimension-two cycles admit finite point presentations on a
+projective X. Primitive normalization is rational-linear once the Hard Lefschetz
+injection is specified. Consequently the primitive part of EVERY algebraic
+class is a finite linear combination of primitive-normalized genuine native
+point cycles, each of which has a directed geometric cut by the theorem above.
+
+This is a generator theorem for the ALGEBRAIC primitive image only.
+It does not assert that an arbitrary primitive rational Hodge class is
+algebraic, nor does it assume a preimage of an unknown Hodge class.
+-/
+
+open GSTCompactNativeCyclePresentation
+
+/-- Projected actual algebraic codimension-two classes have a finite pointwise
+primitive-generator presentation. The generators are genuine scheme point cycles,
+not arbitrary target Hodge basis vectors; every such point has a directed cut. -/
+theorem finite_native_point_span_of_algebraic_primitive_projection
+    {d : ℕ}
+    (G : GeometricCycleClassSpine X H)
+    (L : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective L.cupH2)
+    (Z : codimensionCycles X.X 2) :
+    ∃ φ : FiniteCodimensionPresentation X.X 2,
+      primitiveHodgeRemainder G L h11
+        (nativeToHodgeFiberLinear G Z) =
+        φ.sum (fun z q =>
+          q • nativeToHodgeFiberLinear G
+            (primitiveizeNativeMiddleCycle G L h11
+              (codimensionPointCycle X.X 2 z))) := by
+  classical
+  letI : CompactSpace X.X := smoothProjectiveCompactSpace X
+  let φ : FiniteCodimensionPresentation X.X 2 :=
+    presentationOfNativeCycle X.X 2 Z
+  have hreal :
+      realizeFiniteCodimensionPresentation X.X 2 φ = Z :=
+    realize_presentationOfNativeCycle X.X 2 Z
+  let F : codimensionCycles X.X 2 →ₗ[ℚ] ClassicalHodgeFiber X H 2 :=
+    (primitiveHodgeProjectionLinear G L h11 hInject).comp
+      (nativeToHodgeFiberLinear G)
+  have hsum :=
+    linearMap_realizeFiniteCodimensionPresentation X.X 2 F φ
+  rw [hreal] at hsum
+  change
+    primitiveHodgeRemainder G L h11
+      (nativeToHodgeFiberLinear G Z) =
+      φ.sum (fun z q =>
+        q • primitiveHodgeRemainder G L h11
+          (nativeToHodgeFiberLinear G
+            (codimensionPointCycle X.X 2 z))) at hsum
+  refine ⟨φ, ?_⟩
+  simpa only [native_primitive_projection_cycleClass] using hsum
+
+#check finite_native_point_span_of_algebraic_primitive_projection
+#print axioms finite_native_point_span_of_algebraic_primitive_projection
 
 #check ActualXAllCodimensionPrimitiveTraceComparison.primitive_push_zero
 #check primitive_algebraic_class_has_true_chow_trace_zero_cycle
