@@ -48,6 +48,28 @@ The products of the 10 actual rational divisor classes attain **every** one of t
 
 This supplies a genuine **prescribed-class algorithm** for any \(q,\alpha\): choose a rational basis \(D_1,\ldots,D_{10}\in CH^1(A)_\mathbb Q\) from the Rosati matrices, enumerate actual native products \(D_{i_1}\cdots D_{i_q}\), and compute their canonical Betti classes in \(H^{2q}(A,\mathbb Q)\). The rank theorem guarantees that an arbitrary rational Hodge \(\alpha\) has rational coordinates in that span. Solve the exact rational linear system and return the same rational combination of the **genuine algebraic divisor-product cycles** on original A. Ring compatibility gives canonical \(\mathrm{cl}_A(Z_\alpha)=\alpha\). There is no arbitrary \(\alpha\)-preimage selector, assumed rank, or abstract isogeny projector as a substitute for a cycle.
 
+## Uniform upgrade: every power of the same generic QM surface
+
+The \(\mathrm{SL}_2\) invariant argument is not fourfold-specific. For any \(r\ge1\), on **the same quaternionic abelian surface** \(B\) take the original smooth projective variety \(X_r=B^r\) of dimension \(2r\). The generic QM Hodge group acts on
+\[
+ H^1(X_r,\mathbb C)=\mathbb C^2\otimes\mathbb C^{2r}
+\]
+as \(\mathrm{SL}_2\) on the first factor. Its degree-two invariants are the \(\binom{2r+1}{2}=r(2r+1)\) determinant pairings between the \(2r\) standard copies. Every such rational Hodge (1,1) invariant is a **genuine algebraic divisor class** by Lefschetz (1,1), concretely obtainable from polarizations and Rosati-symmetric QM endomorphisms.
+
+The \(\mathrm{SL}_2\) first fundamental theorem makes every Hodge invariant of \(\bigwedge^*(H^1(X_r))\) a finite product of these degree-two pairings. Hence for **every** \(p=0,\ldots,2r\), any prescribed rational \((p,p)\) class on original \(X_r\) is a rational linear combination of actual algebraic products of \(p\) divisor classes. The exact rational Hodge-space dimension is
+\[
+ \boxed{h_{r,p}=\binom{2r}{p}^{2}
+    -\binom{2r}{p-1}\binom{2r}{p+1}.}
+\]
+Wolfram independently checked the dimension sequences for r=1,...,5:
+r=1: (1,3,1);
+r=2: (1,10,20,10,1);
+r=3: (1,21,105,175,105,21,1);
+r=4: (1,36,336,1176,1764,1176,336,36,1);
+r=5: (1,55,825,4950,13860,19404,13860,4950,825,55,1).
+
+**Result:** a constructive proof of the **entire rational Hodge conjecture on every power of a generic simple quaternionic multiplication abelian surface**, uniformly in ambient dimension and codimension, provided the standard generic QM Hodge-group calculation and the \(\mathrm{SL}_2\) invariant-generation theorem. The source construction is the same: genuine rational divisor classes, their algebraic products, exact canonical Betti coordinate matching, no requested Hodge preimage assumption. This **does not** establish the Hodge conjecture for an arbitrary smooth projective \(X\), nor for a very general simple Weil abelian fourfold outside the QM-power locus. It strengthens the *same single source family* instead of changing routes.
+
 ## Independent, reproducible all-degree check
 
 The new \`research/computations/qm_fourfold_all_hodge_divisor_span.py\` is a standard-library-only exact rational certificate. It constructs the ten invariant 2-form tensors directly, checks the two \(\mathfrak{sl}_2\) raising/lowering operations annihilate them, builds exterior products in every codimension, computes exact rational ranks by sparse Gaussian elimination, and compares with the independent theoretical invariant dimensions. Expected ranks **(1,10,20,10,1)** in q=0..4. No float operations, numerical guesses, sampling, or statistical confidence intervals occur. [Main CI integration](https://github.com/kyo-oo/HC-PROOF/actions/runs/39063843544) verifies the earlier graph and GST eigen-switch module; a separate commit will add this full-span certificate to the same CI gate. Mark this full-span script GREEN only after the exact run completes.
