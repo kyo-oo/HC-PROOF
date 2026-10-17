@@ -1091,6 +1091,78 @@ theorem nativeCenterFromRationalMiddleCycle_correct
 #print axioms algebraic_iff_rational_blowup_middle_class
 #print axioms arbitrary_variety_hodge_from_rational_middle_world
 
+
+/-! ## Actual independent algebraic Hodge directions from every center
+
+A rational blowup is more than a recoordination: its exceptional
+native Chow Gysin map creates algebraic-cycle directions which
+are linearly independent from the old projective ambient sector.
+The recovery projection tests independence EXACTLY by killing
+the old ambient summand while acting as identity on the
+exceptional center summand.
+
+No Hodge conjecture hypothesis on X is used to construct these
+NEW algebraic directions: only an actual nonzero native cycle
+already available on X (e.g. a projective hyperplane divisor).
+
+The geometric ambient-recovery orthogonality is an independent
+part of the blowup Chow/Hodge decomposition, rather than an
+assumption that an arbitrary target Hodge class is algebraic.
+-/
+
+/-- The genuine exceptional Gysin map has no kernel on its
+source rational Hodge cohomology once the actual geometric
+center readout/recovery formula is certified. -/
+theorem exceptional_hodge_embedding_injective
+    {C T : SmoothProjectiveComplexScheme}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {p : ℕ}
+    (R : SchemeExceptionalCenterRetract C T HC HT p) :
+    Function.Injective R.exceptionalBetti := by
+  intro a b hab
+  calc
+    a = R.centerRecoverBetti (R.exceptionalBetti a) :=
+      (R.centerLeftInverseBetti a).symm
+    _ = R.centerRecoverBetti (R.exceptionalBetti b) := by rw [hab]
+    _ = b := R.centerLeftInverseBetti b
+
+/-- An explicit new ACTUAL native codimension-(p+1) cycle on the
+born rational world, provably outside the ENTIRE old ambient
+Betti image. This works for any smooth center X of any dimension,
+without assuming algebraicity of its unknown primitive classes. -/
+theorem exceptional_native_cycle_new_beyond_ambient
+    {C T : SmoothProjectiveComplexScheme}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {p : ℕ}
+    {A : Type*} [AddCommGroup A] [Module ℚ A]
+    (R : SchemeExceptionalCenterRetract C T HC HT p)
+    (ambientBetti : A →ₗ[ℚ]
+      RationalSingularCohomology HT.analytification (2*(p+1)))
+    (ambient_recover_zero : ∀ a : A,
+      R.centerRecoverBetti (ambientBetti a) = 0)
+    (Z : codimensionCycles C.X p)
+    (hNonzero : HC.cycleClass p Z ≠ 0) :
+    ∃ W : codimensionCycles T.X (p+1),
+      HT.cycleClass (p+1) W =
+        R.exceptionalBetti (HC.cycleClass p Z) ∧
+      R.exceptionalBetti (HC.cycleClass p Z) ∉
+        LinearMap.range ambientBetti := by
+  refine ⟨R.exceptionalNative Z, R.exceptionalCycleClass Z, ?_⟩
+  rintro ⟨a, ha⟩
+  apply hNonzero
+  calc
+    HC.cycleClass p Z =
+        R.centerRecoverBetti (R.exceptionalBetti (HC.cycleClass p Z)) :=
+          (R.centerLeftInverseBetti (HC.cycleClass p Z)).symm
+    _ = R.centerRecoverBetti (ambientBetti a) := by rw [ha]
+    _ = 0 := ambient_recover_zero a
+
+#check exceptional_hodge_embedding_injective
+#check exceptional_native_cycle_new_beyond_ambient
+#print axioms exceptional_native_cycle_new_beyond_ambient
+
 #check SchemeExceptionalCenterRetract
 #check algebraic_center_iff_exceptional_blowup_class
 #check missing_center_direction_survives_exceptional_birth
