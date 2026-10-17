@@ -74,3 +74,55 @@ This explicitly geometrizes the previous GST-CM formal higher-degree Hodge charg
 **Crucial distinction:** An algebraic correspondence projecting onto a two-dimensional Hodge subspace is not by itself an algebraic representative of either of its Hodge classes. The projector may act as zero on all currently available algebraic source cycles while acting as the identity on the missing Weil classes. Applying the projector to a *prescribed Weil Hodge class* produces the same class cohomologically, not an algebraic cycle. There is no illicit step here claiming that the projector manufactures its own target witnesses.
 
 **Next exact actual-source obligation (Gate 3):** Construct at least two independent genuine algebraic codimension-p source cycles on the original Weil-type A whose projected classes span W_Weil,p, and then extend the source mechanism to arbitrary original X. For a first positive test, take a split Weil-type abelian fourfold built from CM elliptic curves and identify algebraic graph/divisor intersections with nonzero CM projector image; determine which geometric deformation obstruction prevents transfer to an arbitrary Weil-type fourfold. This explicitly tests **source birth**, rather than constructing another representation theorem conditional on source existence.
+
+## BREAKTHROUGH — two genuine exceptional Weil cycles constructed on split CM elliptic powers, every p
+
+**The source-production step is solved outright on the split Weil locus, not assumed.** Let E=C/(Z+iZ), A=E^(2p), and embed Q(i) into End(A) by i on the first p elliptic factors and -i on the last p. This is an actual smooth projective Weil-type 2p-fold of balanced Hodge signature (p,p). In the rational H¹ symplectic basis x_i,y_i of each elliptic factor, define the *genuine mixed algebraic divisor classes*
+\[
+ D_i=x_i\wedge y_{p+i}-y_i\wedge x_{p+i},\qquad
+ C_i=x_i\wedge x_{p+i}+y_i\wedge y_{p+i}
+\]
+for i=1,...,p. Each D_i is the mixed Poincare/diagonal graph divisor on E_i×E_(p+i), subtracting the two factor classes; C_i is likewise an algebraic graph divisor, because the actual isogeny [1+i] on the first factor and [1−i] on the opposite-K factor satisfies f^*D_i=−2C_i.
+
+Thus the two codimension-p classes
+\[
+ Z_D=\prod_{i=1}^{p}D_i,\qquad
+ Z_C=C_1\prod_{i=2}^{p}D_i
+\]
+are **honest native rational algebraic cycles on the original A**, with no specified Hodge cycle or K-theory preimage as a premise. Apply the all-p **algebraic** CM projector Π_p=P_p([2+i]^*) constructed above:
+\[
+  W_D=\Pi_p Z_D,\qquad W_C=\Pi_p Z_C.
+\]
+These are still actual algebraic cycles, since pullbacks by the actual isogenies [2+i]^k are native algebraic operations and Π_p has rational coefficients.
+
+**Uniform exact nonzero and independent certificate.** On the two genuine complex Weil eigenspaces Ωσ, Ωbarσ, write u=i/2 and -u=-i/2. The mixed divisors decompose into the two pure-eigen components:
+\[
+ \Pi_p[Z_D]=u^p\Omega_\sigma+(-u)^p\Omega_{\bar\sigma},
+ \qquad
+ \Pi_p[Z_C]=\tfrac12u^{p-1}\Omega_\sigma+
+            \tfrac12(-u)^{p-1}\Omega_{\bar\sigma}.
+\]
+The determinant of their coefficient matrix is
+\[
+  \boxed{\det=
+    \tfrac12\bigl(u^p(-u)^{p-1}-(-u)^p u^{p-1}\bigr)
+    =u^p(-u)^{p-1}
+    =\frac{i}{2^{2p-1}}\ne0.}
+\]
+Therefore **both projected cycles are nonzero and rationally linearly independent**, and since the whole Weil rational Hodge space has rank 2, **they span every exceptional rational Weil class on the split abelian 2p-fold, for every p>=1**. This is a native source construction, not a conditional Gram-rank theorem. It gives a direct geometric realization of the user's GST imaginary-quadratic native-rank forcing method on a genuine family of smooth projective varieties in every codimension.
+
+**Actual existing GST theorem invoked:** GSTCMQuadraticNativeRankForcing.imaginary_quadratic_CM_no_rational_eigenline (and its geometric realization in CM_actual_correspondence_spine_transverse): on the rank-two Weil eigenspace, the actual algebraic isogeny [2+i] has imaginary quadratic minimal polynomial G0(t) with nonreal complex roots. Any nonzero native projected source has a rationally independent algebraic CM translate. This provides a second, independent mathematical proof of rank two once the first native source W_D has been explicitly constructed. The determinant argument also exhibits two explicit sources without appealing to an abstract nonzero witness.
+
+**Independent full rational Betti test at p=2:** In H¹(E^4,Q) with ordered basis (x1,y1,x2,y2,x3,y3,x4,y4), the exact sparse exterior-algebra computation applies
+\[
+ \Pi_{2}=(I-T/4+T^2/16-T^3/64)/4,\qquad T=[1+i]^*|_{H^4}
+\]
+to the two actual codimension-two cycle classes D_1D_2 and C_1D_2. Both outputs have eight nonzero rational 4-form coordinates (coefficients ±1/2); their monomial supports are disjoint, so they are independent. The exact T action sends each to -4 times itself and T⁴ acts by 256. The full wedge calculation is auditable in research/computations/split_weil_native_algebraic_sources.py, with no external packages or floating-point approximation.
+
+**Exact machine evidence:** Wolfram independently calculated \(\det=i/2^{2p-1}\) for p=1,..,8; the general determinant identity is an elementary symbolic identity and has been added to GSTUniversalCMArithmeticObstruction.lean as cmWeilSplitSourceDeterminant and _nonzero, for every characteristic-zero field and all p. The pure Python certificate verifies all-p determinant cases p=1,..,12, plus every one of the p=2 exterior coefficients. [GitHub Actions #39059438328](https://github.com/kyo-oo/HC-PROOF/actions/runs/39059438328) is SUCCESS at SHA 20071f46b1a8ce00e5f930315c81b8c2b44254fe, with the complete pinned GST Hodge integration and sorryAx audit. The new Lean all-p determinant theorem is under separate [Actions #39059702764](https://github.com/kyo-oo/HC-PROOF/actions/runs/39059702764), to reconcile after it completes.
+
+## Exact remaining deformation-to-arbitrary-X obstacle
+
+This positive all-p construction works because the split CM variety E^(2p) has **additional mixed graph divisors** connecting the two K-signature groups. On a very general simple Weil-type abelian variety, the rational Neron–Severi space is generated by the polarization and those mixed factor-graph divisors do **not** persist as algebraic divisors. Hence their products cannot simply be spread as divisor intersections throughout the Weil-type moduli family; nevertheless the two rank-one Weil Hodge eigensectors persist as rational (p,p) classes and the CM correspondence projector remains algebraic. This isolates the exact next geometric discovery: **deform or replace the split native cycles by genuinely higher-codimension algebraic cycles on a non-split Weil-type original A**, verifying their canonical Betti classes. Do not assume that cycles on one split fiber automatically deform across moduli. From there develop an arbitrary-X incidence construction capable of targeting general primitive rational Hodge α.
+
+This is a real completed **native source-production subcase in every p** plus a testable algebro-geometric deformation obstruction; it is not a proof of the all-varieties Hodge conjecture.
