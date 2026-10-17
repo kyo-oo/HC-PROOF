@@ -2,6 +2,7 @@ import GSTUniversalHodgeResidualProjection
 import GSTGeometricRealizationStage2G
 import GSTPrimitiveTransverseCycleExtraction
 import GSTCompactNativeCyclePresentation
+import GSTClassicalHodgePointNormalForm
 
 /-!
 # GST genuine arbitrary-X native Hodge-cycle projection
@@ -1264,6 +1265,7 @@ algebraic, nor does it assume a preimage of an unknown Hodge class.
 -/
 
 open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
 
 /-- Projected actual algebraic codimension-two classes have a finite pointwise
 primitive-generator presentation. The generators are genuine scheme point cycles,
