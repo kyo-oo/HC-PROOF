@@ -1664,3 +1664,75 @@ Z outside the divisor-Lefschetz image must exist whenever the
 TRUE primitive Hodge space is nonzero. That unrestricted source
 generation is precisely the original Hodge existence challenge,
 not a conclusion from a coordinate argument.
+
+
+## 2026-10-17 Mathbox: nonambient Picard classes give exact Chow trace-zero rank
+
+Original theorem contract unchanged: every smooth projective complex X,
+every p, every rational primitive Hodge alpha, construct a rational
+codimension-p algebraic cycle with genuine canonical class alpha.
+
+**New actual-X geometric construction (not a primitive existence theorem).**
+Let X be connected smooth projective of dimension d>=3 and
+g:X->P^d a finite surjective generic linear projection of degree e>0.
+Set h=g^*c1(O(1)), an ample divisor class. Let NS(X)_Q denote
+the genuine rational algebraic divisor class space (Picard rank rho).
+For every native divisor D define the native codimension-two cycle
+  W_D = h*D - e^(-1) g^*(g_*(h*D)).
+This is REAL algebraic Chow geometry on X. The exact Chow
+push-pull formula gives g_*W_D=0 in CH^2(P^d)_Q. Its class is
+  cl(W_D) = h cup cl(D) - e^(-1)g^*g_*(h cup cl(D)).
+Because H^4(P^d,Q)=Q H^2 for d>=2, the second term is
+some rational scalar times h^2. If cl(W_D)=0,
+  h cup (cl(D)-c*h)=0.
+Hard Lefschetz for d>=3 makes cup h:H^2(X,Q)->H^4(X,Q)
+INJECTIVE: if h*x=0, then h^(d-2)*x=0 and Hard Lefschetz
+H^2 -> H^(2d-2) is an isomorphism. Hence cl(D)=c*h.
+
+Conversely cl(D)=c*h implies cl(W_D)=0 by the degree
+push-pull formula g_*g^*=e on projective cohomology.
+Therefore the induced rational linear map
+  NS(X)_Q / (Q*h)
+     -> Hdg^2(X,Q) cap ker(g_*)
+is INJECTIVE and its entire image is algebraic.
+Its image has dimension rho(X)-1, in EVERY ambient
+dimension d>=3. When rho>1, this produces genuinely
+NONZERO independent trace-zero rational algebraic cycle
+classes on non-unirational X as well. No codimension-two
+Hodge conjecture or primitive representative is assumed.
+
+The existing Lean file GSTActualXHodgeResidualProjection.lean
+now defines the native linear construction
+ActualXFiniteProjectiveNativeTrace.picardTraceZeroLinear
+and proves existence/nonvanishing for each divisor class
+outside the hyperplane line via
+nonambient_divisor_generates_nonzero_trace_zero_chow_two
+(commit 4fedf4cec9915ca91f12948db6e7e6181c6aa70e).
+The full rank rho-1 is a mathematical corollary of
+Hard Lefschetz plus the true finite-projection formula,
+NOT YET a kernel-checked FiniteDimensional rank theorem.
+
+**Critical non-circularity warning:**
+classes W_D built from h*D lie in the LEFSCHETZ
+divisor-cup image. Their primitive projections can be ZERO.
+In fact on P^2 x P^2 with h=a+b, the trace-zero
+class a^2-b^2=h*(a-b) is NOT primitive:
+h*(a^2-b^2)=a^2*b-a*b^2 != 0.
+The distinct class a^2-a*b+b^2 is primitive and
+trace-zero. Wolfram exact arithmetic verified these
+cup and trace calculations. Hence divisor-born trace-zero
+classes cannot themselves discharge arbitrary primitive
+Hodge existence. The new primitive+trace-zero Lean route
+must start with independently produced non-Lefschetz
+native algebraic cycles, not simply divisor products.
+
+**Cross-codimension formal target:**
+New ActualXAllCodimensionPrimitiveTraceComparison
+and theorems primitive_algebraic_class_has_true_chow_trace_zero_cycle
+and all_primitive_hodge_iff_native_trace_kernel_spans
+were committed at f87eaf5ee54577351515841b4a1a9943d7b5e30f.
+They explicitly require the true primitive-vs-projective
+trace projection formula and the *genuine* Chow/Betti maps;
+no target algebraicity is assumed. Check latest GitHub
+Actions before declaring kernel verification.
+The unrestricted all-varieties all-Hodge target is NOT closed.
