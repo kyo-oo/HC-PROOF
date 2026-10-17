@@ -652,6 +652,160 @@ theorem twoPlaneCubic_primitiveGramNondegenerate :
 #check twoPlaneCubic_primitiveGramNondegenerate
 #print axioms twoPlaneCubic_primitiveGramNondegenerate
 
+
+/-! ## Mathbox: Fermat degree-d fourfolds, UNBOUNDED primitive rank
+
+For each integer d≥3, the Fermat fourfold
+  X_d := { Σ_(i=0)^2 (yᵢ^d-xᵢ^d)=0 } ⊂ ℙ⁵_ℂ
+is smooth: the projective Jacobian equations force every xᵢ,yᵢ=0.
+For each d-th root of unity ζ, the linear plane
+  P_ζ = { yᵢ=ζ*xᵢ (i=0,1,2) }
+lies on X_d. Distinct roots produce DISJOINT planes, so all
+d geometric classes [P_ζ] are legitimate separate native sources.
+
+For H=h² and q_d=d²-3d+3, the geometric intersection numbers are:
+  H.H=d, H.P_ζ=1, P_ζ.P_η=(if ζ=η then q_d else 0).
+The primitive classes Z_ζ=d[P_ζ]-H then have Gram matrix
+   M = d²*q_d I_d - d J_d.
+Its eigenvalues are d²*q_d (multiplicity d-1)
+and d²*(q_d-1) (multiplicity 1), all >0 for d≥3.
+
+This is a new UNBOUNDED-RANK geometric source-family statement,
+not a full-Hodge spanning theorem. The Lean detector proves
+injectivity of the explicit matrix operator on Q^d.
+The standard geometric intersection pairing and the statement that
+there are d distinct complex d-th roots of unity are external leaves.
+-/
+
+/-- Homogeneous Fermat equation of a degree-d smooth fourfold. -/
+def fermatFourfoldEquation (d : ℕ)
+    (x y : Fin 3 → ℂ) : ℂ :=
+  ∑ i : Fin 3, ((y i)^d - (x i)^d)
+
+/-- Every root of unity provides a native geometric linear plane. -/
+theorem fermatFourfoldContainsRootPlane (d : ℕ)
+    (ζ : ℂ) (hζ : ζ^d = 1) (x : Fin 3 → ℂ) :
+    fermatFourfoldEquation d x (fun i => ζ*x i) = 0 := by
+  simp [fermatFourfoldEquation, mul_pow, hζ]
+
+/-- The Fermat Jacobian has no nonzero common zero in projective space. -/
+theorem fermatFourfoldGradientNonsingular
+    (d : ℕ) (hd : 3 ≤ d) (x y : Fin 3 → ℂ)
+    (hx : ∀ i, (d : ℂ)*(x i)^(d-1) = 0)
+    (hy : ∀ i, (d : ℂ)*(y i)^(d-1) = 0) :
+    ∀ i, x i = 0 ∧ y i = 0 := by
+  have hdC : (d : ℂ) ≠ 0 := by
+    exact_mod_cast (show d ≠ 0 by omega)
+  intro i
+  have hxp : (x i)^(d-1)=0 :=
+    (mul_eq_zero.mp (hx i)).resolve_left hdC
+  have hyp : (y i)^(d-1)=0 :=
+    (mul_eq_zero.mp (hy i)).resolve_left hdC
+  constructor
+  · by_contra hxn
+    exact (pow_ne_zero _ hxn) hxp
+  · by_contra hyn
+    exact (pow_ne_zero _ hyn) hyp
+
+/-- Coordinate planes from distinct roots of unity cannot meet in ℙ⁵. -/
+theorem fermatDifferentRootPlanesDisjoint
+    (ζ η : ℂ) (hζη : ζ ≠ η) (x y : Fin 3 → ℂ)
+    (hζ : ∀ i, y i = ζ*x i)
+    (hη : ∀ i, y i = η*x i) :
+    ∀ i, x i = 0 ∧ y i = 0 := by
+  intro i
+  have heq : (ζ-η)*x i = 0 := by
+    calc
+      (ζ-η)*x i = ζ*x i - η*x i := by ring
+      _ = 0 := sub_eq_zero.mpr ((hζ i).symm.trans (hη i))
+  have hxi : x i = 0 :=
+    (mul_eq_zero.mp heq).resolve_left (sub_ne_zero.mpr hζη)
+  exact ⟨hxi, by simpa [hxi] using hζ i⟩
+
+/-- Top normal Chern coefficient of each Fermat projective plane. -/
+def fermatPlaneNormalChern (d : ℕ) : ℚ :=
+  (d:ℚ)^2 - 3*(d:ℚ) + 3
+
+/-- For d≥3, the native plane self-intersection q_d is STRICTLY > 1. -/
+theorem fermatPlaneNormalChern_gt_one (d : ℕ) (hd : 3 ≤ d) :
+    1 < fermatPlaneNormalChern d := by
+  have hdq : (3:ℚ) ≤ (d:ℚ) := by exact_mod_cast hd
+  have h1 : 0 < (d:ℚ)-1 := by linarith
+  have h2 : 0 < (d:ℚ)-2 := by linarith
+  have hp : 0 < ((d:ℚ)-1)*((d:ℚ)-2) := mul_pos h1 h2
+  unfold fermatPlaneNormalChern
+  nlinarith
+
+/-- Exact primitive Gram pairing of a rational combination of the
+d geometrically distinct Fermat plane cycles against the jth
+primitive plane, expressed using the known integral intersections. -/
+def fermatPrimitiveGramDetector (d : ℕ)
+    (a : Fin d → ℚ) (j : Fin d) : ℚ :=
+  (d:ℚ)^2 * fermatPlaneNormalChern d * a j -
+    (d:ℚ) * (∑ i : Fin d, a i)
+
+/-- FULL RANK for EVERY d≥3: the actual geometric intersection
+Gram matrix has ZERO KERNEL. This is stronger than certifying
+one or two primitive classes and does not assume a Hodge basis.
+
+If the geometric cycle-class assignment respects the stated true
+intersection numbers, then the d concrete algebraic classes
+d[P_ζ]-h² are linearly independent in primitive Betti cohomology.
+Nothing here asserts that they SPAN ALL primitive Hodge classes. -/
+theorem fermatPrimitiveGramDetector_kernel_trivial
+    (d : ℕ) (hd : 3 ≤ d) (a : Fin d → ℚ)
+    (ha : ∀ j, fermatPrimitiveGramDetector d a j = 0) :
+    ∀ j, a j = 0 := by
+  let D : ℚ := d
+  let s : ℚ := fermatPlaneNormalChern d
+  let S : ℚ := ∑ i : Fin d, a i
+  have hD : 0 < D := by
+    change 0 < (d:ℚ)
+    exact_mod_cast (show 0 < d by omega)
+  have hs : 1 < s := fermatPlaneNormalChern_gt_one d hd
+  have hDne : D ≠ 0 := ne_of_gt hD
+  have hSne : s ≠ 0 := by linarith
+  have hDSne : D*s ≠ 0 := mul_ne_zero hDne hSne
+  have hPoint (j : Fin d) : D*s*a j = S := by
+    have hj : D^2*s*a j - D*S = 0 := ha j
+    have hmul : D * (D*s*a j - S) = 0 := by
+      calc
+        D*(D*s*a j-S) = D^2*s*a j-D*S := by ring
+        _ = 0 := hj
+    exact sub_eq_zero.mp ((mul_eq_zero.mp hmul).resolve_left hDne)
+  let j0 : Fin d := ⟨0, by omega⟩
+  have hEqual (j : Fin d) : a j = a j0 := by
+    have hdiff : D*s*(a j-a j0) = 0 := by
+      calc
+        D*s*(a j-a j0) = D*s*a j - D*s*a j0 := by ring
+        _ = 0 := sub_eq_zero.mpr ((hPoint j).trans (hPoint j0).symm)
+    exact sub_eq_zero.mp ((mul_eq_zero.mp hdiff).resolve_left hDSne)
+  have hSum : S = D*a j0 := by
+    change (∑ j : Fin d, a j) = D*a j0
+    calc
+      (∑ j : Fin d, a j) = ∑ _j : Fin d, a j0 := by
+        apply Finset.sum_congr rfl
+        intro j _
+        exact hEqual j
+      _ = D*a j0 := by simp [D, nsmul_eq_mul]
+  have hSing : D*s*a j0 = D*a j0 := by
+    rw [hPoint j0, hSum]
+  have hProduct : (D*(s-1))*(a j0) = 0 := by
+    calc
+      (D*(s-1))*(a j0) = D*s*a j0-D*a j0 := by ring
+      _ = 0 := sub_eq_zero.mpr hSing
+  have hFactor : D*(s-1) ≠ 0 := by
+    exact mul_ne_zero hDne (ne_of_gt (sub_pos.mpr hs))
+  have hZero : a j0 = 0 :=
+    (mul_eq_zero.mp hProduct).resolve_left hFactor
+  intro j
+  exact (hEqual j).trans hZero
+
+#check fermatFourfoldGradientNonsingular
+#check fermatDifferentRootPlanesDisjoint
+#check fermatPrimitiveGramDetector_kernel_trivial
+#print axioms fermatPrimitiveGramDetector_kernel_trivial
+
 #check primitive_plane_hyperplane_orthogonal
 #check primitive_plane_self_intersection
 #check primitive_plane_nonzero
