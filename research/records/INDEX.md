@@ -44,3 +44,5 @@ Integration review: [Draft PR #3](https://github.com/kyo-oo/HC-PROOF/pull/3). Ea
 - [Rational Hodge-defect injection under geometric finite pullback](2026-10-17-hodge-defect-finite-pullback-functoriality.md) — exact algebraic image equality and deficit-rank monotonicity; Wolfram Hodge-sector source tests guide arbitrary-X geometry.
 
 - [Primitive automorphism-graph cycles on quartic K3 self-products](2026-10-17-k3-graph-primitive-source.md) — actual order-four quartic K3 automorphism gives two independent primitive algebraic graph directions; Wolfram exact rank2; dedicated Lean proof workflow #39029194289.
+
+- [Complete primitive graph criterion for polarized surfaces](2026-10-17-surface-graph-h1-moment-completeness.md) — exact iff using graph coefficient augmentation and rational H¹-action moment; Wolfram irregular-surface tests; corresponding Lean equivalence and primitive rank certificate under geometric Künneth inputs.
