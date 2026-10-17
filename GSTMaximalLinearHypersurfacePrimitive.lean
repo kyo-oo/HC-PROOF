@@ -333,6 +333,46 @@ theorem fermatEvenHypersurface_root_planes_disjoint
 #check fermatEvenHypersurface_root_planes_disjoint
 #print axioms fermatEvenHypersurface_jacobian_nonzero
 
+/-! ## Betti realization bridge for the actual Fermat plane family
+
+This lemma makes the numeric geometric rank certificate useful for
+a genuinely given cohomology carrier W: whenever independently
+constructed cup/intersection measurements of the d algebraic
+plane classes compute the REAL geometric Gram matrix, no
+nontrivial rational combination of their Betti classes can vanish.
+
+The geometric comparison hGram is a concrete intersection-number
+identity, not Hodge surjectivity or a chosen unknown target preimage.
+Constructing the canonical Betti fundamental-class map that satisfies
+it is a distinct geometry implementation task in Stage2G.
+-/
+
+/-- An injective intersection detector implies rational linear
+independence of ACTUAL classes in any rational cohomology module.
+This does not presuppose that they span the entire Hodge fiber. -/
+theorem fermatGeometricMeasuredFamily_independent
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    (d m : ℕ) (hd : 3 ≤ d) (hm : 1 ≤ m)
+    (nativeBettiPlanePrimitives : Fin d → W)
+    (intersectionMeasurements : W →ₗ[ℚ] (Fin d → ℚ))
+    (hGram : ∀ a : Fin d → ℚ,
+        intersectionMeasurements
+          (∑ i : Fin d, a i • nativeBettiPlanePrimitives i) =
+            (fun j => fermatMaximalPlaneGramDetector d m a j))
+    (a : Fin d → ℚ)
+    (hZero : (∑ i : Fin d, a i • nativeBettiPlanePrimitives i) = 0) :
+    ∀ i, a i = 0 := by
+  have h := hGram a
+  rw [hZero, map_zero] at h
+  have hDetectorZero (j : Fin d) :
+      fermatMaximalPlaneGramDetector d m a j = 0 := by
+    have hj := congrFun h j
+    simpa using hj.symm
+  exact fermatMaximalPlaneGramDetector_kernel_trivial d m hd hm a hDetectorZero
+
+#check fermatGeometricMeasuredFamily_independent
+#print axioms fermatGeometricMeasuredFamily_independent
+
 #check normal_discriminant_closed
 #check primitive_ample_orthogonal
 #check primitive_norm_exact
