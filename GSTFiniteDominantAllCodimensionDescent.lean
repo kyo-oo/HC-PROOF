@@ -151,6 +151,56 @@ theorem all_hodge_on_target_of_all_finite_dominant_maps
   intro p
   exact all_target_hodge_at_weight_of_finite_dominant_map (F p) (hY p)
 
+/-! ## Exact algebraicity invariance under geometric finite pullback
+
+For a smooth generically finite morphism, the refined Chow pullback
+of cycles is geometrically natural in each codimension. The next
+theorem combines this extra concrete geometric datum with degree
+descent to identify the FULL algebraic image on X as the preimage
+of the algebraic image on Y.
+
+This is an equality for all rational Betti classes, rather than a
+one-directional Hodge inheritance statement. It supplies the exact
+arithmetic-geometric criterion needed for transfer through finite
+covers without changing either variety.
+-/
+
+/-- At every codimension, a rational Betti class on X is algebraic
+precisely when its geometric finite pullback is algebraic on Y. -/
+theorem algebraic_iff_finite_pullback_algebraic
+    {p : Nat}
+    (F : GeometricFiniteDominantMap Y X HY HX p)
+    (nativePull :
+      codimensionCycles X.X p →ₗ[ℚ] codimensionCycles Y.X p)
+    (pull_natural :
+      ∀ ZX : codimensionCycles X.X p,
+        HY.cycleClass p (nativePull ZX) =
+          F.bettiPull (HX.cycleClass p ZX))
+    (alpha : RationalSingularCohomology HX.analytification (2 * p)) :
+    (∃ ZX : codimensionCycles X.X p,
+      HX.cycleClass p ZX = alpha) ↔
+    (∃ ZY : codimensionCycles Y.X p,
+      HY.cycleClass p ZY = F.bettiPull alpha) := by
+  constructor
+  · rintro ⟨ZX, hZX⟩
+    exact ⟨nativePull ZX, by rw [pull_natural ZX, hZX]⟩
+  · rintro ⟨ZY, hZY⟩
+    refine ⟨F.degree⁻¹ • F.nativePush ZY, ?_⟩
+    calc
+      HX.cycleClass p (F.degree⁻¹ • F.nativePush ZY) =
+          F.degree⁻¹ • HX.cycleClass p (F.nativePush ZY) := by
+            rw [map_smul]
+      _ = F.degree⁻¹ • F.bettiPush (HY.cycleClass p ZY) := by
+            rw [F.native_betti_natural ZY]
+      _ = F.degree⁻¹ • F.bettiPush (F.bettiPull alpha) := by rw [hZY]
+      _ = F.degree⁻¹ • (F.degree • alpha) := by
+            rw [F.push_pull_degree]
+      _ = alpha := by
+            simp [smul_smul, F.degree_ne_zero]
+
+#check algebraic_iff_finite_pullback_algebraic
+#print axioms algebraic_iff_finite_pullback_algebraic
+
 /-! ## Fully geometric projective-bundle plus finite-degree source pipeline
 
 Let T = ℙ(E) be a projective bundle over a smooth projective B
