@@ -1,0 +1,25 @@
+# Mathbox kernel audit: exact explicit smooth hypersurface certificate
+
+- **Date:** 2026-10-17
+- **Kind:** correction and proof-audit checkpoint
+- **Corrects:** [unbounded hypersurface primitive plane](2026-10-17-unbounded-hypersurface-primitive-plane.md) (its Lean status was then pending)
+- **Target:** Original universal all-X primitive Hodge algebraicity remains unchanged and UNPROVED.
+- **Hypotheses and types:** Smooth complex projective degree-d hypersurface of even complex dimension 2m containing a maximal ℙ^m (m≥1,d≥2); native algebraic cycle Z=dP−h^m.
+- **Active conventions:** Intersection Gram [[d,1],[1,q_m]], where q_m is top normal Chern coefficient.
+- **Current dependency/evidence status:** GitHub Actions [39019438469](https://github.com/kyo-oo/HC-PROOF/actions/runs/39019438469) completed SUCCESS for source commit `60208401ac749d7fa4513a6fe078d8f34f5cec6f`. Job `117358125832` reports `LEAN PASSED` on the entire `GSTCubicFourfoldPlanePrimitive.lean` module. Workflow's `sorryAx` grep passed; artifact `gst-cubic-plane-primitive-log` id 12095189946 has SHA256 digest `b0bb4ad8d1ec24bc89f2a96f1574bdee2af314ced935f771fdc8c2f93b93b0a9`.
+- **Nearest prior attempt and first failure:** Earlier runs 39019033816 and 39019236094 failed on Lean tactics/syntax, not mathematical counterexamples. Repaired split-cut definitional equalities, exact matrix simplification, summation binder scope and nonzero-exponent handling. Rerun 39019438469 passed.
+- **Route:** Uniform explicit hypersurface polynomial and Jacobian certificate, together with primitive intersection lattice.
+- **Mechanism and distinctness from prior routes:** The normal-bundle recurrence/discriminant identity had already been proved on the parent repository in `GSTMaximalLinearHypersurfacePrimitive.lean`; this session did NOT discover that identity first. The actual enhancement is an explicit smooth plane-containing degree-d polynomial for all m,d and a Lean-checked no-nonzero-projective-Jacobian-zero certificate. This reduces a geometric existence input, but does not construct canonical Betti cycleClass or prove all-X spanning.
+- **Changed input:** Explicit F=Σ_i(y_i x_i^(d−1)+y_i^d); no generic/Bertini smoothness assumption for existence.
+- **Success criterion:** Green exact source commit with no sorryAx; matched.
+- **Failure/no-go criterion:** False claim that this source constructs every primitive class on every X; expressly avoided.
+- **Cheapest decisive check:** Lean kernel compile, grep sorryAx; independent Gröbner basis check for m=1, d=2..5.
+- **Attempt outcome:** Exact rank identity and explicit Jacobian certificate compiled and workflow passed.
+- **Route disposition and scope:** Special-family construction verified at coordinate theorem level; full universal Hodge program OPEN.
+- **Continuations:** Geometric cohomology comparison remains external. Next direct program route is the all-X threefold correction; pending separate workflow at the time of this audit.
+- **Evidence label:** Proved integer recurrence and algebraic Jacobian implication inside Lean; source-to-scheme topological comparison not Lean-certified.
+- **Review and freshness status:** Self-audited against job logs on 2026-10-17, anchored to SHA `60208401...`. Subsequent commits on this branch only added Markdown research records and separate threefold module, not changes to this certificate's file.
+- **First unresolved implication:** On arbitrary X, construct independent genuine codimension-p cycle representatives of every rational primitive Hodge direction, through the canonical geometric class map.
+- **Strongest surviving statement:** An explicit two-parameter smooth hypersurface family exists with an independently measurable nonzero primitive middle algebraic class; its uniform coordinate identities are kernel-verified.
+- **Artifacts and commands:** `GSTCubicFourfoldPlanePrimitive.lean`; GH workflow `gst-cubic-fourfold-plane-primitive.yml`; exact run id and artifact above.
+- **Next unresolved question:** A genuinely new all-X geometric source operation generating the full primitive target rank.
