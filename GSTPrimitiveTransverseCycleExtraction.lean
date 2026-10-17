@@ -683,6 +683,61 @@ theorem picardToNativePrimitiveLinear_injective
             (B.nativeFirstExceptional b)).symm
 
 #check primitiveHodgeProjectionLinear
+
+/-! ## Genuine primitive-kernel target, not merely ambient Hodge
+
+The injection above lands in the ACTUAL kernel of the geometric
+primitiveTest operator. The refined codomain is a rational
+submodule of the genuine Hodge fiber on the smooth projective
+blowup host. Every image class is represented by the already
+constructed native primitive Chow cycle; no primitive target
+preimage is assumed.
+-/
+
+/-- Inject the WHOLE rational center Picard module into the
+geometric PRIMITIVE rational Hodge subspace, not just full Hdg². -/
+noncomputable def picardToNativePrimitiveKernelLinear
+    {D : Type*} [AddCommGroup D] [Module ℚ D]
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (B : GenuineBlowupPicardPrimitivePacket G P D) :
+    D →ₗ[ℚ] LinearMap.ker P.primitiveTest :=
+  (picardToNativePrimitiveLinear G P h11 hInject B).codRestrict
+    (LinearMap.ker P.primitiveTest) (by
+      intro a
+      apply LinearMap.mem_ker.mpr
+      change P.primitiveTest
+        (primitiveHodgeRemainder G P h11
+          (nativeToHodgeFiberLinear G
+            (B.nativeFirstExceptional a))) = 0
+      exact primitiveHodgeRemainder_primitive G P h11
+        (nativeToHodgeFiberLinear G
+          (B.nativeFirstExceptional a)))
+
+/-- Native geometric primitive-cycle ranks are preserved:
+the Picard-module embedding into the primitive KERNEL is
+injective in ALL ranks and all ambient dimensions admitting
+the genuine projective blowup and Hard Lefschetz certificates. -/
+theorem picardToNativePrimitiveKernelLinear_injective
+    {D : Type*} [AddCommGroup D] [Module ℚ D]
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (B : GenuineBlowupPicardPrimitivePacket G P D) :
+    Function.Injective
+      (picardToNativePrimitiveKernelLinear G P h11 hInject B) := by
+  intro a b h
+  apply picardToNativePrimitiveLinear_injective G P h11 hInject B
+  have hv := congrArg Subtype.val h
+  exact hv
+
+#check picardToNativePrimitiveKernelLinear
+#check picardToNativePrimitiveKernelLinear_injective
+#print axioms picardToNativePrimitiveKernelLinear_injective
+
 #check picardToNativePrimitiveLinear
 #check picardToNativePrimitiveLinear_injective
 #print axioms picardToNativePrimitiveLinear_injective
