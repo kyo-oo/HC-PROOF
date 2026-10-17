@@ -458,6 +458,76 @@ theorem maximalPlanePrimitiveMiddleSelfIntersection_nonzero
 #check maximalPlanePrimitiveMiddleSelfIntersection_nonzero
 #print axioms maximalPlanePrimitiveMiddleSelfIntersection_nonzero
 
+/-! ## EXPLICIT SMOOTH geometric source in every even dimension and degree
+
+Take projective homogeneous coordinates (x₀,…,x_m,y₀,…,y_m) and
+the degree-d hypersurface equation
+
+   F_(m,d) = Σᵢ (yᵢ xᵢ^(d-1) + yᵢ^d).
+
+The coordinate plane y₀=⋯=y_m=0 lies in F=0.
+For d≥2 in characteristic zero, ∂F/∂xᵢ =
+(d-1)yᵢ xᵢ^(d-2) and ∂F/∂yᵢ = xᵢ^(d-1)+d yᵢ^(d-1).
+The equations requiring ALL partial derivatives to vanish force EVERY
+coordinate xᵢ,yᵢ to be zero. Therefore the corresponding projective
+hypersurface is SMOOTH by the Jacobian criterion.
+
+Lean proves the full algebraic Jacobian nonsingularity implication,
+for ANY m, d≥2 and ANY complex coordinate tuples. The final passage
+to projective smoothness uses the geometric Jacobian criterion,
+which is not formalized in this coordinate certificate.
+-/
+
+def explicitMaximalPlaneHypersurfaceEquation (m d : ℕ)
+    (x y : Fin (m+1) → ℂ) : ℂ :=
+  ∑ i : Fin (m+1), y i * (x i)^(d-1) + (y i)^d
+
+theorem explicitMaximalPlaneHypersurface_contains_plane
+    (m d : ℕ) (hd : 2 ≤ d) (x : Fin (m+1) → ℂ) :
+    explicitMaximalPlaneHypersurfaceEquation m d x (fun _ => 0) = 0 := by
+  have hdpos : 0 < d := by omega
+  simp [explicitMaximalPlaneHypersurfaceEquation, zero_pow hdpos]
+
+/-- Uniform Jacobian certificate: no nonzero projective coordinate tuple
+annihilates every partial derivative of the explicit hypersurface. -/
+theorem explicitMaximalPlaneHypersurface_no_singular_projective_point
+    (m d : ℕ) (hd : 2 ≤ d)
+    (x y : Fin (m+1) → ℂ)
+    (hx : ∀ i, (((d-1 : ℕ) : ℂ) * y i) * (x i)^(d-2) = 0)
+    (hy : ∀ i, (x i)^(d-1) + (d : ℂ) * (y i)^(d-1) = 0) :
+    ∀ i, x i = 0 ∧ y i = 0 := by
+  have hd1pos : 0 < d-1 := by omega
+  have hdC : (d : ℂ) ≠ 0 := by
+    exact_mod_cast (show d ≠ 0 by omega)
+  have hdminusC : ((d-1 : ℕ) : ℂ) ≠ 0 := by
+    exact_mod_cast (show d-1 ≠ 0 by omega)
+  intro i
+  have hxi : x i = 0 := by
+    by_contra hxn
+    have hxp : (x i)^(d-2) ≠ 0 := pow_ne_zero _ hxn
+    have hder : ((d-1 : ℕ) : ℂ) *
+        (y i * (x i)^(d-2)) = 0 := by
+      simpa only [mul_assoc] using hx i
+    have hyprod : y i * (x i)^(d-2) = 0 :=
+      (mul_eq_zero.mp hder).resolve_left hdminusC
+    have hyi : y i = 0 :=
+      (mul_eq_zero.mp hyprod).resolve_right hxp
+    have hpow : (x i)^(d-1) = 0 := by
+      simpa [hyi, zero_pow hd1pos] using hy i
+    exact (pow_ne_zero _ hxn) hpow
+  have hder : (d : ℂ) * (y i)^(d-1) = 0 := by
+    simpa [hxi, zero_pow hd1pos] using hy i
+  have hypow : (y i)^(d-1) = 0 :=
+    (mul_eq_zero.mp hder).resolve_left hdC
+  have hyi : y i = 0 := by
+    by_contra hyn
+    exact (pow_ne_zero _ hyn) hypow
+  exact ⟨hxi,hyi⟩
+
+#check explicitMaximalPlaneHypersurface_contains_plane
+#check explicitMaximalPlaneHypersurface_no_singular_projective_point
+#print axioms explicitMaximalPlaneHypersurface_no_singular_projective_point
+
 #check primitive_plane_hyperplane_orthogonal
 #check primitive_plane_self_intersection
 #check primitive_plane_nonzero
