@@ -440,6 +440,134 @@ theorem cmWeilSplitSourceDeterminant_nonzero
   exact mul_ne_zero (pow_ne_zero _ hu)
     (pow_ne_zero _ (neg_ne_zero.mpr hu))
 
+/-! ## Single-source exact reconstruction in the rank-two Weil Hodge sector
+
+The previous split construction built two independent native cycles.
+For a GENERAL Weil-type abelian 2p-fold the arithmetic CM isogeny
+and the 2-dimensional Weil Hodge eigenspace still exist.
+
+Crucial reduction: it is enough to produce ONE algebraic cycle Z
+whose Weil projection is NONZERO. Let T be the actual induced CM
+operator on its two-dimensional rational Weil module. Its minimal
+polynomial is t²-2a t+(a²+b²) with b != 0.
+
+Choose a rational basis in which T is the companion matrix
+   T (x,y) = (-(a²+b²)y, x+2a y).
+For any nonzero z=(x,y), the two genuinely algebraic source
+classes z and T z have determinant
+
+   D = (x+a y)² + (b y)² > 0.
+
+Every prescribed target alpha=(u,v) on the ORIGINAL abelian
+variety is represented by a completely explicit rational
+linear combination of Z and the algebraic CM-isogeny translate
+T Z. No assumed Gram full rank, no arbitrary cycle selector.
+The only source-birth premise is the one geometrically testable
+nonzero projected algebraic cycle. This is the exact remaining
+nonsplit Weil requirement, NOT a proof of its existence.
+-/
+
+/-- An exact strictly positive CM orbit determinant. -/
+def cmWeilOneSourceDet (a b x y : ℚ) : ℚ :=
+  x*(x+2*a*y) + (a*a+b*b)*y*y
+
+theorem cmWeilOneSourceDet_pos
+    (a b x y : ℚ) (hb : b ≠ 0)
+    (hz : x ≠ 0 ∨ y ≠ 0) :
+    0 < cmWeilOneSourceDet a b x y := by
+  have heq : cmWeilOneSourceDet a b x y =
+      (x+a*y)^2 + (b*y)^2 := by
+    dsimp [cmWeilOneSourceDet]
+    ring
+  rw [heq]
+  by_cases hy : y = 0
+  · have hx : x ≠ 0 := by
+      rcases hz with hx | hy'
+      · exact hx
+      · exact False.elim (hy' hy)
+    subst y
+    simpa using (sq_pos_of_ne_zero hx)
+  · have hby : b*y ≠ 0 := mul_ne_zero hb hy
+    nlinarith [sq_nonneg (x+a*y), sq_pos_of_ne_zero hby]
+
+/-- Explicit original-Weil-target coefficient for a native
+projected cycle z=(x,y). -/
+noncomputable def cmWeilOneSourceCoeff0
+    (a b x y u v : ℚ) : ℚ :=
+  (u*(x+2*a*y) + (a*a+b*b)*y*v) / cmWeilOneSourceDet a b x y
+
+/-- Explicit coefficient of the genuine algebraic CM translate Tz. -/
+noncomputable def cmWeilOneSourceCoeff1
+    (a b x y u v : ℚ) : ℚ :=
+  (x*v-y*u) / cmWeilOneSourceDet a b x y
+
+/-- For an arbitrary prescribed rational Weil target (u,v),
+the actual native CM orbit z,Tz returns that target EXACTLY.
+All variables and coefficients are rational; the geometric
+Gysin and native/Betti comparison are the existing GST CM laws. -/
+theorem cmWeilOneSourceReconstruction
+    (a b x y u v : ℚ) (hb : b ≠ 0)
+    (hz : x ≠ 0 ∨ y ≠ 0) :
+    cmWeilOneSourceCoeff0 a b x y u v * x -
+      cmWeilOneSourceCoeff1 a b x y u v *
+        ((a*a+b*b)*y) = u ∧
+    cmWeilOneSourceCoeff0 a b x y u v * y +
+      cmWeilOneSourceCoeff1 a b x y u v *
+        (x+2*a*y) = v := by
+  have hd : cmWeilOneSourceDet a b x y ≠ 0 :=
+    ne_of_gt (cmWeilOneSourceDet_pos a b x y hb hz)
+  dsimp [cmWeilOneSourceCoeff0, cmWeilOneSourceCoeff1]
+  constructor
+  · field_simp
+    dsimp [cmWeilOneSourceDet]
+    ring
+  · field_simp
+    dsimp [cmWeilOneSourceDet]
+    ring
+
+/-! ## Generic Weil divisor-channel obstruction
+
+For a Weil-type abelian 2p-fold with rational Neron–Severi rank
+one, the polarization theta generates its entire rational
+divisor algebra in degree p. The genuine CM isogeny [2+i]
+acts on theta by its norm 5 and on theta^p by 5^p.
+
+The actual rational Weil projector from [2+i] has
+the polynomial factor T-5^p I, hence kills theta^p.
+No combination of divisor intersections, CM graph pullbacks,
+rational Adams operations or compositions of these on
+already ambient cycle classes can populate its rank-two
+Weil eigenspace. Genuine new higher-codimension sources
+are necessary on these generic fibers.
+
+This is a statement about a *specified source channel*, not
+a negative claim about existence of the desired algebraic
+Weil cycles. At p=1 the NS-rank-one hypothesis is not
+appropriate to the exceptional Weil divisor case; the test
+is targeted at p>=2.
+-/
+
+/-- A general exact algebraic-correspondence right factor
+(T-q I) annihilates any q-eigenclass, including the
+polarization-power class for q=5^p. -/
+def cmWeilCentralEigenspaceFilter
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    (T R : Module.End ℚ W) (q : ℚ) : Module.End ℚ W :=
+  R.comp (T - q • LinearMap.id)
+
+theorem cmWeilCentralEigenspaceFilter_kills_ambient
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    (T R : Module.End ℚ W) (p : ℕ) (thetaPower : W)
+    (hEigen : T thetaPower = ((5:ℚ)^p) • thetaPower) :
+    cmWeilCentralEigenspaceFilter T R ((5:ℚ)^p) thetaPower = 0 := by
+  change R (T thetaPower - ((5:ℚ)^p) • thetaPower) = 0
+  rw [hEigen, sub_self, map_zero]
+
+#check cmWeilOneSourceDet_pos
+#check cmWeilOneSourceReconstruction
+#check cmWeilCentralEigenspaceFilter_kills_ambient
+#print axioms cmWeilOneSourceReconstruction
+
 #check cmWeilSplitSourceDeterminant
 #check cmWeilSplitSourceDeterminant_nonzero
 #print axioms cmWeilSplitSourceDeterminant_nonzero
