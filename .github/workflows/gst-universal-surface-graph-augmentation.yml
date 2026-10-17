@@ -5,6 +5,7 @@ on:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
       - GSTUniversalSurfaceGraphAugmentation.lean
+      - GSTSurfaceGraphH1Obstruction.lean
       - scripts/gst_lean_dependency_roots.py
       - .github/workflows/gst-universal-surface-graph-augmentation.yml
   workflow_dispatch:
@@ -44,9 +45,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTUniversalSurfaceGraphGate GSTUniversalSurfaceGraphAugmentation
+          python3 scripts/gst_lean_dependency_roots.py GSTUniversalSurfaceGraphGate GSTUniversalSurfaceGraphAugmentation GSTSurfaceGraphH1Obstruction
           if lake build GSTUniversalSurfaceGraphGate > surface-graph-lean.log 2>&1; then
-            echo "LEAN PASSED: uniform finite graph-orbit augmentation produces genuine native primitive cycles"
+            echo "LEAN PASSED: surface graph augmentation, H1 moment cancellation, and transcendental primitive rank"
           else
             grep -nE 'error:|sorryAx|✖' surface-graph-lean.log | tail -n 110 || true
             tail -n 80 surface-graph-lean.log
