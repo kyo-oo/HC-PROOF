@@ -4,6 +4,7 @@ on:
     branches:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
+      - 'GSTCanonicalPointGeometryStage2G.lean'
       - 'GSTFermatCanonicalPointRankBridge.lean'
       - 'GSTMaximalLinearHypersurfacePrimitive.lean'
       - 'GSTClassicalHodgeGeometricCycleClassPointRigidity.lean'
