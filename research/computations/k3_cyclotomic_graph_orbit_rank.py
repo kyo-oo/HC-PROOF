@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Exact rational graph-orbit coefficient rank for all cyclotomic orders 2..66.
 
-For an order-m non-symplectic automorphism of a polarized K3, its
-action on H^(2,0) has primitive eigenvalue zeta_m. The algebraic graph
+For a polarized regular surface with a primitive order-m action on its
+nonzero H^(2,0), the eigenvalue is zeta_m. The algebraic graph
 differences Gamma_(g^k)-Gamma_id act by zeta_m^k-1.
 
 The first phi(m) differences form a basis of Q(zeta_m).
+In particular S_m={sum(z_i^m)=0} in P^3 for m>=4 has H^1=0
+and a diagonal automorphism with this eigenvalue, so the products
+S_m x S_m carry phi(m) independent primitive algebraic graph cycles.
 This certificate computes that basis's determinant in Q[x]/Phi_m(x)
 as (-1)^phi(m) Phi_m(1), by exact integer polynomial arithmetic.
 It checks all m=2..66 and never uses floating point or sampling.
@@ -125,8 +128,9 @@ def run():
     assert len(cyclotomic(66)) - 1 == 20
     print(f"PASS: {checked} exact orders, maximal tested cyclotomic rank {highest_rank}")
     print("UNIFORM IDENTITY: determinant=(-1)^phi(m) * Phi_m(1) != 0")
-    print("GEOMETRIC RESULT: phi(m) independent primitive graph differences "
-          "on polarized K3 self-products with primitive order-m H20 eigenvalue.")
+    print("GEOMETRIC RESULT: phi(m) independent primitive algebraic graph "
+          "classes on degree-m Fermat surface products (m>=4), "
+          "all in complex dimension four.")
 
 
 if __name__ == "__main__":
