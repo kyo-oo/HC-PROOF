@@ -1530,8 +1530,9 @@ plus explicit constructFromTraceZero native Chow sum and its
 cycle-class correctness. It proves ALL Hodge classes are
 algebraic on X iff all trace-zero Hodge classes on X are
 algebraic, by using the already constructed ambient Chow
-cycle. The second kernel run 38998155909 should be checked
-for its final conclusion before marking this equivalence GREEN.
+cycle. The second kernel run 38998155909 PASSED. The exact all-X
+Hodge / trace-zero Hodge equivalence and the explicit Chow
+assembly from a trace-zero representative are kernel-verified.
 
 FIRST POSITIVE CONSTRUCTION on genuinely dominated targets:
 At fixed codimension 2 a proper generically finite morphism
@@ -1563,3 +1564,31 @@ sources) proving full rank on the TRUE rational Hodge trace-zero
 subspace. Prove canonical geometric cycle-class compatibility
 and test nonzero trace-zero primitive examples before claiming
 a universal proof. No claim that this leaf is already solved.
+
+
+**All-X actual trace-zero native Chow GENERATOR.**
+In existing GSTActualXHodgeResidualProjection.lean, the new
+ActualXFiniteProjectiveNativeTrace extends the finite projection
+with genuine Chow pushforward and the geometric degree formula
+g_*g^*=e id on rational Chow cycles, plus the exact Chow/Betti
+cycle-class compatibility square.
+For ANY actual native codimension-p algebraic cycle Z on X:
+  Z^0 := Z - e^{-1} g^*(g_*Z) ∈ CH^p(X)_Q.
+Theorems traceZeroNative_push_zero and
+traceZeroNative_cycleClass establish:
+  g_*Z^0 = 0  in rational native Chow, AND
+  cl(Z^0)=cl(Z)-e^{-1}g^*g_*cl(Z).
+A further theorem traceZeroNative_nonzero_of_new_class shows
+cl(Z^0) != 0 whenever cl(Z) lies OUTSIDE
+range(g^*:H^{2p}(P^d,Q)->H^{2p}(X,Q)).
+Thus this constructs genuinely new, nonzero, native
+trace-zero algebraic directions on arbitrary varieties
+from independently known nonambient algebraic cycles,
+without choosing Hodge-cycle preimages.
+Commit dcc840739a9381a8c1aa26f3dd3f4364b809390f;
+CI run 38998529171 must pass before this latest proof is
+marked Lean-certified.
+The hard universal step is to establish that these and
+additional NEW geometric native trace-zero cycles span
+every trace-zero rational primitive (p,p) class on every X.
+No such spanning law is assumed or claimed.
