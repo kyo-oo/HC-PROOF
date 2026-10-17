@@ -1592,3 +1592,75 @@ The hard universal step is to establish that these and
 additional NEW geometric native trace-zero cycles span
 every trace-zero rational primitive (p,p) class on every X.
 No such spanning law is assumed or claimed.
+
+
+## 2026-10-17 Mathbox: exact Chow trace kernel and fused primitive cycle birth
+
+**Authoritative universal target remains unchanged:** For EVERY smooth
+projective complex variety X and EVERY rational primitive (p,p) Hodge
+class alpha, construct an ACTUAL rational codimension-p algebraic
+cycle with its CANONICAL Betti class exactly alpha. All current
+formalizations operate relative to HodgeBigradedBettiData, whose
+cycleClass field is still supplied; identifying this with the
+canonical geometric cycle class is another required foundation step.
+
+The finite-projective trace operation is now formalized as an
+ACTUAL rational-linear native algebraic cycle projector on X:
+  Pi_native = id - (degree g)^(-1) g^* g_*
+It satisfies:
+  Pi_native^2 = Pi_native;
+  im(Pi_native) = ker(g_*:codimensionCycles X p -> codimensionCycles P p);
+  (g_* Z=0) => Pi_native Z=Z;
+  g_* Pi_native Z=0;
+  cl(Pi_native Z) = cl(Z) - (degree g)^(-1)g^*g_*cl(Z).
+For ANY trace-zero rational Hodge alpha already represented
+by some genuine native Z, the specific class Pi_native Z gives
+a genuine representative with ZERO Chow pushforward.
+Thus there are no hidden problems lifting a KNOWN algebraic
+cohomological trace-zero class to a trace-zero native cycle.
+
+Existing file: GSTActualXHodgeResidualProjection.lean; new theorems
+range_projector_eq_kernel_push, traceZeroNative_idempotent,
+exact_native_trace_zero_witness, and
+hodge_trace_zero_iff_native_kernel.
+GitHub Lean kernel run 38999124663 PASSED at commit
+677ceb14bd03f676fca0f2e31626d1aaf989c20d.
+
+**Next fused all-X primitive native construction**, committed
+at 145a94111928f2af453b30c611cc5f02999c9d4f:
+1. GeometricHigherLefschetzData on the ORIGINAL X defines true
+   p=2 primitiveTest on the rational Hodge fiber. Hard Lefschetz
+   and Lefschetz (1,1) give a NATIVE algebraic primitive correction
+   for any already known non-Lefschetz codimension-two cycle Z.
+2. For a genuine finite projective projection g:X->P^d with
+   dim(X)=d>=4, projection formula gives
+     integral_X alpha cup h^(d-2) =
+     integral_P (g_*alpha) cup H^(d-2).
+   The primitive condition is h^(d-3)alpha=0; multiplying by h
+   makes the left side ZERO. H^4(P^d,Q) is rank-one, detected by
+   the projective period. Thus EVERY (2,2) primitive alpha on X
+   has g_*alpha=0.
+3. ActualXPrimitiveProjectiveTraceComparison encodes the true
+   projection formula, true primitive integration and rank-one
+   projective period map; its derived theorem primitive_push_zero
+   proves the trace vanishing from these geometric certificates.
+4. Start with any genuine algebraic Z with class outside the
+   Lefschetz Hdg^1(X) cup image. The established GST primitive
+   correction builds a genuine algebraic W0 with
+   primitiveTest(cl(W0))=0 and cl(W0)!=0. Project W0 using the
+   native Chow trace projector. Since g_*cl(W0)=0, its Betti
+   class is UNCHANGED while the true Chow pushforward vanishes.
+   Output W therefore satisfies SIMULTANEOUSLY:
+     g_*W=0 in native algebraic cycles;
+     cl(W)!=0;
+     primitiveTest(cl(W))=0.
+   This is an actual geometric-cycle creation mechanism on the
+   ORIGINAL X, including non-unirational X, when the known
+   non-Lefschetz source and true geometric certificates are supplied.
+
+Run 38999466852 must report SUCCESS before this fused theorem
+is considered kernel-verified. It does NOT assert that a source
+Z outside the divisor-Lefschetz image must exist whenever the
+TRUE primitive Hodge space is nonzero. That unrestricted source
+generation is precisely the original Hodge existence challenge,
+not a conclusion from a coordinate argument.
