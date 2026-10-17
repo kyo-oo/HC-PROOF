@@ -11,6 +11,7 @@ on:
       - 'GSTClassicalHodgeGeometricCycleClassPointRigidity.lean'
       - 'GSTActualXHodgeResidualProjection.lean'
       - 'GSTUniversalResolvedSupportHodge.lean'
+      - 'GSTPrimitiveTransverseCycleExtraction.lean'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
