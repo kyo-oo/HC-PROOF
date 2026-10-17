@@ -606,6 +606,44 @@ derived and canonical geometric objects. The arbitrary smooth-projective
 all-varieties Hodge theorem is not a consequence of this Weil-family
 construction alone and is not claimed here.
 
+## Uniform CM projector that purifies an original-fourfold algebraic source
+
+The same original-A Weil fourfold proof has a new rational algebraic correspondence that extracts the exceptional Weil component of ANY raw codimension-two algebraic cycle. This is an advance within the *same* source construction: the extracted cycle need not arrive without ambient contamination.
+
+Let K=Q(u), u²=-d, d>0 rational, and set m=d+1, q=m²+d. The actual K-endomorphism m+u is algebraic after one denominator is cleared. On H⁴(A,Q), let T be its pullback and set
+\[
+ r=m^4-6dm^2+d^2,\qquad s=q(m^2-d),\qquad n=q^4.
+\]
+The exceptional Weil, mixed and central eigenfactors are
+\[
+ G_W(t)=t^2-2rt+n,\quad G_M(t)=t^2-2st+n,\quad t-q^2.
+\]
+With N(t)=(t-q²)G_M(t), exact polynomial division yields
+\[
+ N(t)=G_W(t)(t+2r-2s-q^2)+a+bt,\quad
+ a=2(s-r)q^4,\quad b=2(r-s)(2r-q^2).
+\]
+The determinant of the residue's rational inverse factors uniformly:
+\[
+ D=a(a+2rb)+q^4b^2
+  =256d^3(d+1)^2(d^2+3d+1)^6(3d^2+5d+3)^2>0.
+\]
+Define the **explicit rational CM projector**
+\[
+ \boxed{P_d(t)=\frac{(t-q^2)(t^2-2st+q^4)(a+2rb-bt)}D.}
+\]
+Then P_d≡1 modulo G_W, P_d≡0 modulo G_M, and P_d(q²)=0. Thus P_d(T) fixes exactly the rational two-dimensional Weil plane and kills the entire remaining degree-four CM spectral decomposition. The expression is a genuine rational **algebraic correspondence**, since every power T^j is a pullback by an actual isogeny.
+
+For the algebraic cycle obtained from the already constructed auxiliary sixfold source,
+\[
+ Z_{\rm raw}=(p_A)_*(\Gamma\cdot p_B^*(D_0))\in CH^2(A)_Q,
+\]
+the new cycle Z_W=P_d(T)Z_raw is an ACTUAL rational algebraic codimension-two cycle on ORIGINAL A. Its canonical Betti class is exactly the Weil projection of cl_A(Z_raw). The geometric detector from (14) proves this source nonzero, and the existing CM fourth-power orbit and Cramer coefficients then realize any prescribed rational Weil target from Z_W. The ambient-purity comparison is achieved by the explicit algebraic projector rather than being assumed about a raw source.
+
+**Evidence.** The exact polynomial reduction, inverse on the exceptional quadratic, other-sector annihilation and gap positivity are Lean theorems in GSTWeilFourfoldAuxiliaryExtraction.lean. Dedicated [Weil CI #39077204383](https://github.com/kyo-oo/HC-PROOF/actions/runs/39077204383) and [full Hodge integration #39077204423](https://github.com/kyo-oo/HC-PROOF/actions/runs/39077204423) are GREEN at e7bb94aeb1b726a7ea6d6a211f1373a20cadcb42, with no sorryAx reported. The standard-library rational certificate research/computations/weil_general_d_projector.py passed 69 rational values and checked polynomial idempotence in the complete degree-four spectral quotient. The uniform CRT derivation and positivity factor are symbolic identities, checked in Wolfram, independent of the finite sweep.
+
+**Scope.** This improves source purification for all imaginary-quadratic fourfold parameters. Instantiating the complex analytic Hilbert-spread, sheaf deformation and canonical Betti comparisons remains a separate part of the original manuscript proof, and the all-varieties Hodge conjecture remains its unchanged global target.
+
 ## Verification receipts
 
 Final mathematical source: `46b126eb1a40cf5406efd28a68b027b662ef4945`.
