@@ -151,6 +151,44 @@ theorem all_hodge_on_target_of_all_finite_dominant_maps
   intro p
   exact all_target_hodge_at_weight_of_finite_dominant_map (F p) (hY p)
 
+/-! ## Fully geometric projective-bundle plus finite-degree source pipeline
+
+Let T = ℙ(E) be a projective bundle over a smooth projective B
+carrying all rational Hodge cycle representatives (e.g. a Fermat cubic
+via the explicit maximal-plane/Fourier construction). An arbitrary
+smooth projective X with a genuine finite-dominant morphism T → X
+inherits algebraic representatives in EVERY codimension.
+
+This combines two independent, already geometric construction routes:
+the projective-bundle Gysin expansion on T and the finite-degree
+push-pull descent from T to X. The actual witness is computed by
+first building algebraic projective-bundle coefficients, then pushing
+them to X and dividing by the genuine finite mapping degree.
+-/
+
+/-- Build a native rational cycle on X from the full Gysin
+decomposition of a projective bundle over a solved base. -/
+theorem finite_image_of_projective_bundle_has_all_hodge_cycles
+    {B T X : SmoothProjectiveComplexScheme}
+    {HB : HodgeBigradedBettiData B}
+    {HT : HodgeBigradedBettiData T}
+    {HX : HodgeBigradedBettiData X}
+    (r : Nat)
+    (P : ∀ p : Nat, SchemeProjectiveBundleGysin B T HB HT r p)
+    (F : ∀ p : Nat, GeometricFiniteDominantMap T X HT HX p)
+    (hB : BigradedBettiHodgeStatement B HB) :
+    BigradedBettiHodgeStatement X HX := by
+  intro p alpha hAlpha
+  have hT : HodgeAtWeight T HT p := by
+    intro beta hBeta
+    exact (hodge_cycles_on_geometric_projective_bundle (P p) hB) hBeta
+  have hX : HodgeAtWeight X HX p :=
+    all_target_hodge_at_weight_of_finite_dominant_map (F p) hT
+  exact hX alpha hAlpha
+
+#check finite_image_of_projective_bundle_has_all_hodge_cycles
+#print axioms finite_image_of_projective_bundle_has_all_hodge_cycles
+
 #check GeometricFiniteDominantMap.constructNative
 #check GeometricFiniteDominantMap.constructNative_correct
 #check unrepresented_target_pulls_to_unrepresented_source
