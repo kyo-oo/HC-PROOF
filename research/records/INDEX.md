@@ -36,3 +36,5 @@ Research branch: [`research/gpt6-native-point-primitive-span-20261017`](https://
 Integration review: [Draft PR #3](https://github.com/kyo-oo/HC-PROOF/pull/3). Each theorem is tracked by its source file, precise hypotheses, and corresponding GitHub kernel build.
 
 - [Complete 21-direction Hodge basis of the Fermat cubic fourfold](2026-10-17-fermat-cubic-405-full-hodge-span.md) — 405 explicit planes, 21 independent classes, determinant 27, exact CI [#39026408866](https://github.com/kyo-oo/HC-PROOF/actions/runs/39026408866). Next: arbitrary-X primitive source construction.
+
+- [Fermat cubics in every dimension: complete rational Hodge-cycle construction](2026-10-17-all-even-dimensional-fermat-cubic-hodge-cycles.md) — uniform diagonal-character Fourier proof in even middle degree, hyperplane powers elsewhere; exact checks [#39027053023](https://github.com/kyo-oo/HC-PROOF/actions/runs/39027053023), Lean excess Chern identity [#39027382546](https://github.com/kyo-oo/HC-PROOF/actions/runs/39027382546). Next: arbitrary-X cycle construction.
