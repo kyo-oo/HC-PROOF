@@ -38,3 +38,5 @@ Integration review: [Draft PR #3](https://github.com/kyo-oo/HC-PROOF/pull/3). Ea
 - [Complete 21-direction Hodge basis of the Fermat cubic fourfold](2026-10-17-fermat-cubic-405-full-hodge-span.md) — 405 explicit planes, 21 independent classes, determinant 27, exact CI [#39026408866](https://github.com/kyo-oo/HC-PROOF/actions/runs/39026408866). Next: arbitrary-X primitive source construction.
 
 - [Fermat cubics in every dimension: complete rational Hodge-cycle construction](2026-10-17-all-even-dimensional-fermat-cubic-hodge-cycles.md) — uniform diagonal-character Fourier proof in even middle degree, hyperplane powers elsewhere; exact checks [#39027053023](https://github.com/kyo-oo/HC-PROOF/actions/runs/39027053023), Lean excess Chern identity [#39027382546](https://github.com/kyo-oo/HC-PROOF/actions/runs/39027382546). Next: arbitrary-X cycle construction.
+
+- [All-codimension finite-degree Chow transfer and projective-bundle composition](2026-10-17-finite-dominant-all-codim-geometry.md) — construct explicit target cycles by normalized geometric pushforward; native defect transport identifies required source geometry. Dedicated GitHub Lean run #39028268013.
