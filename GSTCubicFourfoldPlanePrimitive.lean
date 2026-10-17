@@ -309,7 +309,7 @@ theorem degreeDSplitCutPrimitiveCancellation (d : ℤ) :
   constructor
   · simp [degreeDResidualCutComponent]
   constructor
-  · rfl
+  · simp [degreeDPrimitiveNumerator, degreeDPrimitivePlaneCycle, planeClass]
   constructor
   · apply Prod.ext
     · norm_num [degreeDPrimitiveNumerator,
@@ -321,7 +321,7 @@ theorem degreeDSplitCutPrimitiveCancellation (d : ℤ) :
   · rw [show planeClass + degreeDResidualCutComponent =
           hyperplaneSquared by
             simp [degreeDResidualCutComponent]]
-    rfl
+    simp [degreeDPrimitiveNumerator, hyperplaneSquared]
 
 #check degreeDPlaneGramDiscriminant
 #check degreeDPrimitivePlaneOrthogonal
@@ -402,8 +402,8 @@ theorem maximalPlaneMiddleGramDiscriminant
       maximalPlaneMiddleIntersection d m hyperplaneSquared planeClass *
         maximalPlaneMiddleIntersection d m planeClass hyperplaneSquared =
       -(1-d)^(m+1) := by
-  dsimp [maximalPlaneMiddleIntersection, hyperplaneSquared, planeClass]
-  exact maximalPlaneNormalChern_discriminant_identity d m
+  simpa [maximalPlaneMiddleIntersection, hyperplaneSquared, planeClass]
+    using (maximalPlaneNormalChern_discriminant_identity d m)
 
 theorem maximalPlaneMiddleGramNonzero
     (d : ℤ) (m : ℕ) (hd : 2 ≤ d) :
