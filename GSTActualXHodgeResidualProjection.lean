@@ -1112,7 +1112,9 @@ theorem every_native_two_point_has_directed_primitive_cycle
           L.primitiveTest (nativeToHodgeFiberLinear G W) = 0 := by
   obtain ⟨x, hx, hzx, hy, _hy1, _hmem, hcomp⟩ :=
     every_ambient_successor_point_has_directed_cut_component X 1 z.1
-      (by simpa using z.2)
+      (by
+        have htwo : (1 : ℕ∞) + 1 = 2 := by norm_num
+        simpa only [htwo] using z.2)
   let Z : codimensionCycles X.X 2 := codimensionPointCycle X.X 2 z
   refine ⟨x, by simpa using hx, hzx, hy, hcomp,
     primitiveizeNativeMiddleCycle G L h11 Z, ?_, ?_⟩
