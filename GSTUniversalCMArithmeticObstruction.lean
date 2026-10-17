@@ -777,9 +777,9 @@ theorem auxiliaryWeilNativeCycle_class
     ring
   · apply Prod.ext
     · change (coordinates alpha).1 * 0 + _ + _ = (coordinates alpha).2.1
-      simpa only [mul_zero, zero_add] using hReconstruction.1
+      simpa [smul_eq_mul] using hReconstruction.1
     · change (coordinates alpha).1 * 0 + _ + _ = (coordinates alpha).2.2
-      simpa only [mul_zero, zero_add] using hReconstruction.2
+      simpa [smul_eq_mul] using hReconstruction.2
 
 /-- The same assembly lands in the supplied actual Betti cycle-class map,
 not merely in a separate coordinate carrier. Canonicality still requires
