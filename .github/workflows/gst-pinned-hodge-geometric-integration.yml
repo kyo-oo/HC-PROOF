@@ -11,6 +11,7 @@ on:
       - 'GSTClassicalHodgeGeometricCycleClassPointRigidity.lean'
       - 'GSTActualXHodgeResidualProjection.lean'
       - 'GSTUniversalResolvedSupportHodge.lean'
+      - 'research/computations/affine_clifford_k0_source.py'
       - 'GSTUniversalPrimitiveHyperplaneRelative.lean'
       - 'GSTUniversalCodimensionTwoPrimitiveExtraction.lean'
       - 'GSTClassicalHodgeExactClayStatement.lean'
@@ -49,6 +50,11 @@ jobs:
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-pinned-hodge-integration
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-
+      - name: Verify polynomial Clifford algebraic K0 source at p=1..4
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/affine_clifford_k0_source.py | tee affine-clifford-k0.log
       - name: Kernel compile primitive rank, genuine point classes, and all-X residual
         shell: bash
         run: |
@@ -85,5 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gst-pinned-hodge-integration-lean-log
-          path: pinned-hodge-lean.log
+          path: |
+            pinned-hodge-lean.log
+            affine-clifford-k0.log
           if-no-files-found: warn
