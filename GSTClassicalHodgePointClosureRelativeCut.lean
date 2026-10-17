@@ -364,43 +364,36 @@ theorem targetedRelativeCutTarget_is_component_generic
         Set (pointClosureScheme V x)) := by
   let C : Set (pointClosureScheme V x) :=
     (targetedRelativeCutIdeal V x y hy).support
-  letI : PartialOrder C := specializationOrder
   let u : C := targetedRelativeCutTarget V x y hy
   letI : QuasiSober C := Topology.IsClosedEmbedding.quasiSober
     (Topology.IsClosedEmbedding.subtypeVal
       (targetedRelativeCutIdeal V x y hy).support.isClosed)
-  have hmax : IsMax u := by
-    intro z huz
-    have hcont : Continuous (Subtype.val : C → pointClosureScheme V x) :=
-      continuous_subtype_val
-    have hyz : y ≤ (z : pointClosureScheme V x) := by
-      have h : (u : pointClosureScheme V x) ≤ (z : pointClosureScheme V x) :=
-        hcont.specialization_monotone huz
-      change y ≤ (z : pointClosureScheme V x) at h
-      exact h
-    by_cases heq : y = (z : pointClosureScheme V x)
-    · have hzu : z = u := Subtype.ext heq.symm
-      simpa only [hzu] using (le_refl u)
-    · have hlt : y < (z : pointClosureScheme V x) :=
-        lt_of_le_of_ne hyz heq
-      have hbound : Order.coheight (z : pointClosureScheme V x) ≤
+  have hmax : ∀ z : pointClosureScheme V x, z ∈ C → y ≤ z → z = y := by
+    intro z hzC hyz
+    by_cases heq : z = y
+    · exact heq
+    · have hlt : y < z := by
+        refine ⟨hyz, fun hzy => ?_⟩
+        exact heq (inseparable_iff_eq.mp
+          (inseparable_iff_specializes_and.mpr ⟨hyz, hzy⟩))
+      have hbound : Order.coheight z ≤
           Order.coheight y := Order.coheight_anti hyz
-      have hfinite : Order.coheight (z : pointClosureScheme V x) < ⊤ := by
+      have hfinite : Order.coheight z < ⊤ := by
         apply hbound.trans_lt
         rw [hy1]
         exact WithTop.natCast_lt_top 1
       have hstrict := Order.coheight_strictAnti hlt hfinite
       rw [hy1] at hstrict
-      have hz0 : Order.coheight (z : pointClosureScheme V x) = 0 :=
+      have hz0 : Order.coheight z = 0 :=
         Order.lt_one_iff.mp hstrict
-      have hzmax : IsMax (z : pointClosureScheme V x) :=
+      have hzmax : IsMax z :=
         Order.coheight_eq_zero.mp hz0
-      have hzg : (z : pointClosureScheme V x) = closureGenericPoint V x :=
-        le_antisymm (pointClosure_le_generic V x z)
-          (hzmax (pointClosure_le_generic V x z))
+      have hzg : z = closureGenericPoint V x :=
+        inseparable_iff_eq.mp (inseparable_iff_specializes_and.mpr
+          ⟨hzmax (pointClosure_le_generic V x z), pointClosure_le_generic V x z⟩)
       have hgeneric : closureGenericPoint V x ∈ C := by
         rw [← hzg]
-        exact z.2
+        exact hzC
       exact (generic_not_mem_targetedRelativeCut V x y hy hgeneric).elim
   change closure ({u} : Set C) ∈ irreducibleComponents C
   refine ⟨isIrreducible_singleton.closure, ?_⟩
@@ -409,11 +402,18 @@ theorem targetedRelativeCutTarget_is_component_generic
     QuasiSober.sober hWirr.closure isClosed_closure
   have huW : u ∈ closure (W : Set C) :=
     subset_closure (hleW (subset_closure (Set.mem_singleton u)))
-  have hug : u ≤ g := hg.specializes huW
-  have hgu : g ≤ u := hmax hug
-  have hueq : u = g := le_antisymm hug hgu
+  have hug : y ≤ (g : pointClosureScheme V x) := by
+    have hC : @LE.le C (specializationPreorder C).toLE u g := hg.specializes huW
+    have hcont : Continuous (Subtype.val : C → pointClosureScheme V x) :=
+      continuous_subtype_val
+    have h := hcont.specialization_monotone hC
+    change y ≤ (g : pointClosureScheme V x) at h
+    exact h
+  have hgeq : g = u := by
+    apply Subtype.ext
+    exact hmax g g.2 hug
   have hclos : closure (W : Set C) = closure ({u} : Set C) := by
-    rw [hueq]
+    rw [← hgeq]
     exact hg.def.symm
   calc W ⊆ closure (W : Set C) := subset_closure
     _ = closure ({u} : Set C) := hclos
@@ -448,8 +448,10 @@ theorem specializationLift_coheight_one
     intro heq
     apply hzx.ne
     rw [← himage, heq, closureGenericPoint_maps_to_source]
-  have hylt : y < closureGenericPoint V x :=
-    lt_of_le_of_ne (pointClosure_le_generic V x y) hyne
+  have hylt : y < closureGenericPoint V x := by
+    refine ⟨pointClosure_le_generic V x y, fun hback => ?_⟩
+    exact hyne (inseparable_iff_eq.mp (inseparable_iff_specializes_and.mpr
+      ⟨hback, pointClosure_le_generic V x y⟩))
   have huniq : ∀ w : pointClosureScheme V x, y < w →
       w = closureGenericPoint V x := by
     intro w hyw
@@ -460,7 +462,10 @@ theorem specializationLift_coheight_one
       intro heq
       apply hyw.ne
       exact (pointClosureι V x).isEmbedding.injective (himage.trans heq)
-    have hywlt : z < pointClosureι V x w := lt_of_le_of_ne hywle hywne
+    have hywlt : z < pointClosureι V x w := by
+      refine ⟨hywle, fun hback => ?_⟩
+      exact hywne (inseparable_iff_eq.mp
+        (inseparable_iff_specializes_and.mpr ⟨hback, hywle⟩))
     have hwle : pointClosureι V x w ≤ x := by
       have h := (pointClosureι V x).continuous.specialization_monotone
         (pointClosure_le_generic V x w)
@@ -481,7 +486,11 @@ theorem specializationLift_coheight_one
     have hnp : n = p := by omega
     have hweq : pointClosureι V x w = x := by
       by_contra hne
-      have hstrict := Order.coheight_strictAnti (lt_of_le_of_ne hwle hne)
+      have hwlt : pointClosureι V x w < x := by
+        refine ⟨hwle, fun hback => ?_⟩
+        exact hne (inseparable_iff_eq.mp
+          (inseparable_iff_specializes_and.mpr ⟨hback, hwle⟩))
+      have hstrict := Order.coheight_strictAnti hwlt
         (show Order.coheight x < ⊤ by rw [hx]; exact ENat.natCast_lt_top p)
       rw [hx, ← hn, hnp] at hstrict
       exact (lt_irrefl _ hstrict)
