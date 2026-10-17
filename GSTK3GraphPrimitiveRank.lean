@@ -32,6 +32,7 @@ open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTClassicalHodgeGeometricMatrixRankLanding
 open GSTUniversalLefschetzCurveCycles
 open GSTUniversalCodimensionTwoPrimitiveExtraction
 
