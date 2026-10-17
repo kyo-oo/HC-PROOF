@@ -1791,3 +1791,118 @@ by rho=2. For m=n=2,p=2 the image columns are
 (-1/2,0,1/2) and (1/2,0,-1/2) in basis (a²,ab,b²).
 No floating point or sample-based universal inference is used.
 The full arbitrary-X proof is Hard Lefschetz, not this finite sweep.
+
+## 2026-10-17: primitive rank of the finite-projective trace construction
+
+**Original goal remains unproved:** for every smooth projective complex
+variety X and every rational primitive Hodge direction, construct enough
+independent non-Lefschetz algebraic cycles to span the primitive Hodge
+space, and identify their classes through the canonical geometric
+cycle-class map. No conditional landing theorem counts as this result.
+
+Base checkpoint: branch `mathbox/residual-zero-direct-audit-20261015`,
+commit `5b76211e394944deba22bab22bccf60e2b2dcff2`.
+The branch was identified using all remote branch-head commit dates and
+the recent commit/workflow history; the default branch was older.
+The complete 865-file tree was indexed (690 Lean files). The central
+proof paths were read in detail; this is not a claim that every proof
+body in the repository was fully reviewed.
+
+### New exact GST result, in the existing Lean module
+
+Let Q_native(Z)=Z-e^(-1)g^*g_*Z be the existing trace projector,
+and let pi be the existing codimension-two primitive Hodge projector.
+Under the existing geometric comparison data:
+
+    pi(cl(Q_native(Z))) = pi(cl(Z))       for EVERY native cycle Z.
+
+Proof: the projective degree-four pullback image consists of multiples
+of h^2. Thus cl(Q_native(Z))=cl(Z)-e^(-1)c(h cup h) for some c in Q.
+The existing GST primitive projector is rational-linear and kills
+the entire h-cup-divisor image. Applying it proves the equality.
+No representative of an unknown primitive Hodge class is assumed.
+
+For any indexed source family, its primitive classes are therefore
+pointwise unchanged by Q_native. Their span and independence relations
+are unchanged as well; taking more trace-normalized sources cannot
+increase their primitive rank.
+
+Apply this to Z=h*D. Since pi(cl(h*D))=0 for EVERY divisor D:
+
+    pi(cl(picardTraceZeroLinear(D))) = 0.
+
+This sharpens the earlier wording "can vanish": under these
+comparison data, the primitive projection of every cycle in this
+specific Picard trace construction ALWAYS vanishes. Its nonzero
+trace-zero rank rho-1 therefore contributes primitive rank ZERO.
+This does not concern arbitrary products of divisor classes;
+it concerns the specific h*D constructor already defined here.
+
+Existing file `GSTActualXHodgeResidualProjection.lean` was extended with:
+
+* `traceZeroNative_preserves_primitive_projection`;
+* `picardTraceZero_has_zero_primitive_projection`.
+
+Proof commit: `549bfb0c82ff9932e0281bca5b7d11ff31401379`.
+GitHub Actions run: `39007462036`, SUCCESS on the exact proof commit
+above (completed 2026-10-17 06:08 UTC). The kernel compilation and
+the workflow's `sorryAx` scan passed. Both new axiom receipts are
+exactly `[propext, Classical.choice, Quot.sound]`; the build log has
+zero `sorryAx` occurrences. The downloaded artifact ZIP matches
+SHA256 `e4a7ad5c926e7b3b94d8f588cbd8d990fbf2212a44f6096f97c5ed873d9fc6dd`.
+The changed declarations contain no proof escape.
+These are route-discrimination theorems, not the requested universal
+geometric cycle construction.
+
+### Current route checks against the code and prior research records
+
+The trace-projector proof is new in this checkpoint. The other route
+entries reconstruct existing arguments and their first unresolved
+implications; their historical proof campaigns were not rerun here.
+
+| Route | Established information | Remaining geometric input |
+|---|---|---|
+| Finite-projective trace and Picard sources | Trace correction preserves primitive projection; the h*D source family has primitive rank zero. | Independently construct source cycles outside the full Lefschetz divisor image, with enough independent primitive classes. |
+| GST correspondence / CM-NM operators | The existing native naturality laws preserve the actual algebraic class image; nonzero commutators can give a rank gain, but the recorded four-coordinate model prevents inferring arbitrary full rank. | A genuinely realized geometric operator or source family with proved spanning on every original X. |
+| Exceptional blowup sources and product stabilization | The existing three-sector readouts give transverse algebraic classes on the auxiliary host. The true center-recovery theorem also preserves any hypothetical missing-center defect. | Geometric representatives in the marked arbitrary-X sector; auxiliary-host rank does not itself supply them. |
+| Fixed integral homology and calibrated currents | The recorded GST surgery examples preserve integer homology in their stated product models; pointwise complex-tangent projection fails closedness. | A fixed-class, integral, boundary-preserving geometric replacement with absolute calibration defect tending to zero for every X. |
+
+The final three routes remain open at their stated geometric inputs;
+this checkpoint does not assert that the full mechanisms are exhausted.
+The first route cannot create primitive rank from its h*D source family.
+Any continuation must change that source family, not repeat its trace
+normalization or increase the number of Picard directions.
+
+### Canonical geometric class certification
+
+`HodgeBigradedBettiData.cycleClass` is still a supplied linear-map field.
+The analytification topology and Hodge bigrading are also supplied data;
+they must be instantiated for the actual variety in a complete landing.
+`GeometricCycleClassSpine` alone does not identify it canonically: the
+existing `zeroCycleClassSpine` theorem supplies a formal countermodel
+to that inference. This is not a geometric Hodge counterexample.
+
+`GSTClassicalHodgeGeometricCycleClassPointRigidity.lean` constructs
+the unique extension of point fundamental-class data and proves
+`suppliedCycleClass_eq_geometric`. It still requires an independently
+constructed fundamental-class assignment and its pointwise comparison.
+Those requirements must be discharged for the canonical map in any
+eventual all-varieties solution; naming a supplied field "true" or
+"actual" does not discharge them.
+
+### Exact computations and their scope
+
+Wolfram exact arithmetic reproduced the P^2 x P^2 multiplication
+matrix L=[[1,1,0],[0,1,1]] in basis (a^2,ab,b^2). The primitive
+kernel is spanned by (1,-1,1). The two Picard trace columns
+(-1/2,0,1/2) and (1/2,0,-1/2) have rank one but nonzero
+L-images, in agreement with the new universal relative theorem.
+An independent exact three-sector quotient check gives determinant t
+for columns (1,-t,0), (0,1,-t), (0,1,0), confirming transversality
+when t is nonzero. Neither finite calculation constructs the missing
+arbitrary-X geometry or authenticates an unspecified comparison map.
+
+Next required research step: construct new native algebraic sources
+on the original arbitrary X with independent primitive classes beyond
+the known Lefschetz image, and prove the fundamental-class comparison.
+Their universal existence is not established at this checkpoint.
