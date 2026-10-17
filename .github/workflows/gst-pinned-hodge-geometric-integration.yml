@@ -15,6 +15,7 @@ on:
       - 'GSTUniversalCMArithmeticObstruction.lean'
       - 'research/computations/weil_cm_correspondence_projector.py'
       - 'research/computations/split_weil_native_algebraic_sources.py'
+      - 'research/computations/quaternionic_graph_weil_source.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -81,6 +82,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/split_weil_native_algebraic_sources.py | tee split-weil-native-sources.log
+      - name: Exact quaternionic nonsplit-Weil algebraic graph source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/quaternionic_graph_weil_source.py | tee quaternionic-weil-graph.log
       - name: Kernel compile primitive rank, genuine point classes, and all-X residual
         shell: bash
         run: |
@@ -124,5 +130,6 @@ jobs:
             algebraic-adams-k0.log
             weil-cm-projector.log
             split-weil-native-sources.log
+            quaternionic-weil-graph.log
             pure-k0-all-codim.log
           if-no-files-found: warn
