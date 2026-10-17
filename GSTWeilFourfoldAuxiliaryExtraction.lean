@@ -263,7 +263,7 @@ theorem seedTrilinear_zero_of_separated_pair
     (seedProjectivePairBasis h₃ z₀ z₁ hz)
   intro i j k
   fin_cases i <;> fin_cases j <;> fin_cases k
-  all_goals simp only [seedProjectivePairBasis_zero, seedProjectivePairBasis_one]
+  all_goals norm_num [seedProjectivePairBasis]
   all_goals first
     | exact hs₀.1 _
     | exact hs₀.2.1 _
@@ -289,7 +289,7 @@ theorem seedTrilinear_zero_of_tetrahedron
     (seedProjectivePairBasis h₃ z₀ z₁ hz)
   intro i j k
   fin_cases i <;> fin_cases j <;> fin_cases k
-  all_goals simp only [seedProjectivePairBasis_zero, seedProjectivePairBasis_one]
+  all_goals norm_num [seedProjectivePairBasis]
   all_goals first
     | exact hs₀.1 _
     | exact hs₀.2.1 _
@@ -316,46 +316,62 @@ theorem seedFourMarks_match_neighbors
       a ≠ b ∧ a ≠ c ∧ b ≠ c ∧
       x 0 = x a ∧ y 0 = y b ∧ z 0 = z c := by
   have hx12 : ¬ (x 0 = x 1 ∧ x 0 = x 2) := by
-    rintro ⟨h, h'⟩; have := hx 0 1 2 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hx 0 1 2 h h'; norm_num [Fin.ext_iff] at this
   have hx13 : ¬ (x 0 = x 1 ∧ x 0 = x 3) := by
-    rintro ⟨h, h'⟩; have := hx 0 1 3 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hx 0 1 3 h h'; norm_num [Fin.ext_iff] at this
   have hx23 : ¬ (x 0 = x 2 ∧ x 0 = x 3) := by
-    rintro ⟨h, h'⟩; have := hx 0 2 3 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hx 0 2 3 h h'; norm_num [Fin.ext_iff] at this
   have hy12 : ¬ (y 0 = y 1 ∧ y 0 = y 2) := by
-    rintro ⟨h, h'⟩; have := hy 0 1 2 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hy 0 1 2 h h'; norm_num [Fin.ext_iff] at this
   have hy13 : ¬ (y 0 = y 1 ∧ y 0 = y 3) := by
-    rintro ⟨h, h'⟩; have := hy 0 1 3 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hy 0 1 3 h h'; norm_num [Fin.ext_iff] at this
   have hy23 : ¬ (y 0 = y 2 ∧ y 0 = y 3) := by
-    rintro ⟨h, h'⟩; have := hy 0 2 3 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hy 0 2 3 h h'; norm_num [Fin.ext_iff] at this
   have hz12 : ¬ (z 0 = z 1 ∧ z 0 = z 2) := by
-    rintro ⟨h, h'⟩; have := hz 0 1 2 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hz 0 1 2 h h'; norm_num [Fin.ext_iff] at this
   have hz13 : ¬ (z 0 = z 1 ∧ z 0 = z 3) := by
-    rintro ⟨h, h'⟩; have := hz 0 1 3 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hz 0 1 3 h h'; norm_num [Fin.ext_iff] at this
   have hz23 : ¬ (z 0 = z 2 ∧ z 0 = z 3) := by
-    rintro ⟨h, h'⟩; have := hz 0 2 3 h h'; norm_num at this
+    rintro ⟨h, h'⟩; have := hz 0 2 3 h h'; norm_num [Fin.ext_iff] at this
   have h01 := hAgree 0 1
   have h02 := hAgree 0 2
   have h03 := hAgree 0 3
-  have hmatch :
-      (x 0 = x 1 ∧ y 0 = y 2 ∧ z 0 = z 3) ∨
-      (x 0 = x 1 ∧ y 0 = y 3 ∧ z 0 = z 2) ∨
-      (x 0 = x 2 ∧ y 0 = y 1 ∧ z 0 = z 3) ∨
-      (x 0 = x 2 ∧ y 0 = y 3 ∧ z 0 = z 1) ∨
-      (x 0 = x 3 ∧ y 0 = y 1 ∧ z 0 = z 2) ∨
-      (x 0 = x 3 ∧ y 0 = y 2 ∧ z 0 = z 1) := by tauto
-  rcases hmatch with h | h | h | h | h | h
+  rcases h01 with h1 | h1 | h1 <;>
+    rcases h02 with h2 | h2 | h2 <;>
+    rcases h03 with h3 | h3 | h3
+  · exact (hx12 ⟨h1, h2⟩).elim
+  · exact (hx12 ⟨h1, h2⟩).elim
+  · exact (hx12 ⟨h1, h2⟩).elim
+  · exact (hx13 ⟨h1, h3⟩).elim
+  · exact (hy23 ⟨h2, h3⟩).elim
   · exact ⟨1, 2, 3, by decide, by decide, by decide,
-      by decide, by decide, by decide, h⟩
+      by decide, by decide, by decide, h1, h2, h3⟩
+  · exact (hx13 ⟨h1, h3⟩).elim
   · exact ⟨1, 3, 2, by decide, by decide, by decide,
-      by decide, by decide, by decide, h⟩
+      by decide, by decide, by decide, h1, h3, h2⟩
+  · exact (hz23 ⟨h2, h3⟩).elim
+  · exact (hx23 ⟨h2, h3⟩).elim
+  · exact (hy13 ⟨h1, h3⟩).elim
   · exact ⟨2, 1, 3, by decide, by decide, by decide,
-      by decide, by decide, by decide, h⟩
-  · exact ⟨2, 3, 1, by decide, by decide, by decide,
-      by decide, by decide, by decide, h⟩
+      by decide, by decide, by decide, h2, h1, h3⟩
+  · exact (hy12 ⟨h1, h2⟩).elim
+  · exact (hy12 ⟨h1, h2⟩).elim
+  · exact (hy12 ⟨h1, h2⟩).elim
   · exact ⟨3, 1, 2, by decide, by decide, by decide,
-      by decide, by decide, by decide, h⟩
+      by decide, by decide, by decide, h3, h1, h2⟩
+  · exact (hy13 ⟨h1, h3⟩).elim
+  · exact (hz23 ⟨h2, h3⟩).elim
+  · exact (hx23 ⟨h2, h3⟩).elim
+  · exact ⟨2, 3, 1, by decide, by decide, by decide,
+      by decide, by decide, by decide, h2, h3, h1⟩
+  · exact (hz13 ⟨h1, h3⟩).elim
   · exact ⟨3, 2, 1, by decide, by decide, by decide,
-      by decide, by decide, by decide, h⟩
+      by decide, by decide, by decide, h3, h2, h1⟩
+  · exact (hy23 ⟨h2, h3⟩).elim
+  · exact (hz13 ⟨h1, h3⟩).elim
+  · exact (hz12 ⟨h1, h2⟩).elim
+  · exact (hz12 ⟨h1, h2⟩).elim
+  · exact (hz12 ⟨h1, h2⟩).elim
 
 theorem seedFourMarks_opposite_ne
     {I P : Type*} (f : I → P) (hf : seedFiberAtMostTwo f)
@@ -387,9 +403,13 @@ theorem secantSeed_four_projective_marks_force_zero
       (x a) (x b) (y a) (y b) (z a) (z b) hxa hya hza (hs a) (hs b)
   · have hAgree : ∀ a b, x a = x b ∨ y a = y b ∨ z a = z b := by
       intro a b
-      by_contra h
-      apply hsep
-      exact ⟨a, b, by tauto⟩
+      by_cases hxa : x a = x b
+      · exact Or.inl hxa
+      by_cases hya : y a = y b
+      · exact Or.inr (Or.inl hya)
+      by_cases hza : z a = z b
+      · exact Or.inr (Or.inr hza)
+      exact (hsep ⟨a, b, hxa, hya, hza⟩).elim
     rcases seedFourMarks_match_neighbors x y z hx hy hz hAgree with
       ⟨a, b, c, ha, hb, hc, hab, hac, hbc, hxa, hyb, hzc⟩
     have hxb : x 0 ≠ x b :=
