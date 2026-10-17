@@ -234,7 +234,7 @@ theorem finite_image_of_projective_bundle_has_all_hodge_cycles
     exact (hodge_cycles_on_geometric_projective_bundle (P p) hB) hBeta
   have hX : HodgeAtWeight X HX p :=
     all_target_hodge_at_weight_of_finite_dominant_map (F p) hT
-  exact hX alpha hAlpha
+  exact hX hAlpha
 
 #check finite_image_of_projective_bundle_has_all_hodge_cycles
 #print axioms finite_image_of_projective_bundle_has_all_hodge_cycles
