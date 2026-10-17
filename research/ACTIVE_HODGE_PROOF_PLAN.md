@@ -24,9 +24,9 @@ These are **proof obligations**, not a promise that the open conjecture can be s
 
 **Target file and theorem:** GSTActualXHodgeResidualProjection.lean, around \`all_primitive_hodge_iff_native_trace_kernel_spans\` (line 1217 at checkpoint). The current theorem reduces primitive algebraicity to honest native trace-kernel spanning. The needed new result is a **construction**, not a second equivalence.
 
-1. **Direct source on X (priority route).** Starting from the nonzero rational primitive Hodge target α, produce an actual codimension-p subvariety-derived rational algebraic cycle using X's own geometry; verify the canonical Betti class and primitive independence. First difficult test: codimension two in arbitrary smooth projective complex fourfolds. Record the actual algebraic incidence, deformation, analytic-cycle or integral calibration mechanism; do not substitute a target-dependent chosen preimage.
+1. **Direct signed source on X (priority route).** Starting from a rational primitive Hodge target α, construct a **signed rational difference of genuine codimension-p subvarieties on X**; verify its degree-zero constraint, its nonzero primitive measurement, and its canonical Betti class without assuming a target preimage. A single positive effective representative cannot have nonzero primitive class by ample-degree positivity (see the signed-cycle route audit). First difficult test: codimension two in arbitrary smooth projective complex fourfolds. Record the actual algebraic incidence, deformation, analytic-cycle or integral calibration mechanism; do not substitute a target-dependent chosen preimage.
 2. **Geometric correspondence (backup).** For an arbitrary original X, exhibit a genuine Chow/Betti correspondence to a source with independently established representatives and a split injection on the required Hodge sector. Check H^(k,0) and other source invariants FIRST. Existing finite-degree descent only transports already represented source classes.
-3. **Integral-geometric reconstruction (independent backup).** Construct a genuinely algebraic calibrated representative preserving the prescribed rational integral homology and class. Verify the required regularity and multiplicity integrality, not just minimal mass, positivity or a formal current.
+3. **Signed integral-geometric reconstruction (independent backup).** Work with differences of analytic/algebraic currents or separately constructed effective components. Verify rational integral homology, complex-analytic regularity and multiplicity integrality for each component. The primitive class has zero ample degree, so positivity of a single effective cycle is insufficient.
 
 ## Decisions from the actual proof sources
 
@@ -48,8 +48,10 @@ CI GREEN reports only that the exact Lean declarations compile at their written 
 
 ## Next execution handoff
 
-**Next mathematical lemma to attack:** for a primitive rational (2,2) Hodge class α on arbitrary smooth projective fourfold X, find a target-independent, genuinely algebraic codimension-two source mechanism producing a class with nonzero primitive intersection against α, then iterate with a provably complete rank criterion *without assuming that criterion*. First open implication: algebraic source existence on X, not finite presentation of already algebraic sources.
+**Next mathematical lemma to attack:** for a primitive rational (2,2) Hodge class α on arbitrary smooth projective fourfold X, construct a **signed native algebraic codimension-two cycle** by an explicit X-intrinsic geometric process. Prove its ample degree is zero, its primitive intersection against α is detected, and its canonical class equals α. The algebraic source and full rank must come from the process, never from a target preimage premise. First open implication: algebraic source existence on X, not finite presentation of already algebraic sources.
 
 **Check before editing:** reread the original exact theorem, \`GSTActualXHodgeResidualProjection\` lines 1190–1260, \`GSTClassicalHodgeGeometricCycleClassPointRigidity\` and the holomorphic source-selection gate. Preserve the existing green branches and original proof claims. Record each attempt with its first unresolved statement rather than creating more generalized supporting modules.
 
 **Completion rule:** only label the universal target complete when all three gates are satisfied by the SAME genuine geometric cycleClass and the exact all-X theorem passes a Lean kernel proof audit.
+
+**Signed-cycle source checkpoint:** [Exact primitive degree-zero and positivity theorem](records/2026-10-17-primitive-signed-cycle-necessity.md). The cubic example Z=3[P]-h² has degree zero and primitive norm 24; all positive effective representatives have positive ample degree.
