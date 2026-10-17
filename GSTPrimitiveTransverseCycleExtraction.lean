@@ -477,6 +477,71 @@ theorem nonzero_primitive_cycle_of_any_center_divisor
     (exceptional_picard_class_in_Lefschetz_forces_zero
       G P B a beta hEq)
 
+
+/-- Distinct rational center divisor vectors construct DISTINCT
+primitive Hodge classes on the rational host. Equal primitive
+projections would force their difference into the Lefschetz cup
+image, contrary to the exact geometric three-sector readout
+unless the two divisor vectors were identical. All center ranks
+are permitted and no target primitive surjectivity is assumed. -/
+theorem primitive_center_divisor_directions_are_distinct
+    {D : Type*} [AddCommGroup D] [Module ℚ D]
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (B : GenuineBlowupPicardPrimitivePacket G P D)
+    (a b : D)
+    (hEqual :
+      nativeToHodgeFiberLinear G
+        (primitiveizeNativeMiddleCycle G P h11
+          (B.nativeFirstExceptional a)) =
+      nativeToHodgeFiberLinear G
+        (primitiveizeNativeMiddleCycle G P h11
+          (B.nativeFirstExceptional b))) :
+    a = b := by
+  let A : ClassicalHodgeFiber V H 2 :=
+    nativeToHodgeFiberLinear G (B.nativeFirstExceptional a)
+  let C : ClassicalHodgeFiber V H 2 :=
+    nativeToHodgeFiberLinear G (B.nativeFirstExceptional b)
+  obtain ⟨betaA, hCorrA, _⟩ :=
+    correction_is_cup_of_real_divisor G P h11 A
+  obtain ⟨betaC, hCorrC, _⟩ :=
+    correction_is_cup_of_real_divisor G P h11 C
+  have hProjection : A - P.cupH betaA = C - P.cupH betaC := by
+    have hh := hEqual
+    rw [native_primitive_projection_cycleClass G P h11
+          (B.nativeFirstExceptional a),
+        native_primitive_projection_cycleClass G P h11
+          (B.nativeFirstExceptional b)] at hh
+    change A - nativeToHodgeFiberLinear G
+        (algebraicLefschetzCorrection G P h11 A) =
+      C - nativeToHodgeFiberLinear G
+        (algebraicLefschetzCorrection G P h11 C) at hh
+    simpa only [hCorrA, hCorrC] using hh
+  have hDifference : A - C = P.cupH (betaA - betaC) := by
+    calc
+      A - C =
+          (A - P.cupH betaA) - (C - P.cupH betaC) +
+            (P.cupH betaA - P.cupH betaC) := by abel
+      _ = P.cupH betaA - P.cupH betaC := by
+            rw [hProjection]
+            simp
+      _ = P.cupH (betaA - betaC) := by rw [map_sub]
+  have hNativeDifference :
+      nativeToHodgeFiberLinear G
+        (B.nativeFirstExceptional (a - b)) =
+          P.cupH (betaA - betaC) := by
+    calc
+      _ = A - C := by simp [A, C, map_sub]
+      _ = P.cupH (betaA - betaC) := hDifference
+  have hZero : a - b = 0 :=
+    exceptional_picard_class_in_Lefschetz_forces_zero
+      G P B (a - b) (betaA - betaC) hNativeDifference
+  exact sub_eq_zero.mp hZero
+
+#check primitive_center_divisor_directions_are_distinct
+#print axioms primitive_center_divisor_directions_are_distinct
+
 #check GenuineBlowupPicardPrimitivePacket
 #check exceptional_picard_class_in_Lefschetz_forces_zero
 #check nonzero_primitive_cycle_of_any_center_divisor
