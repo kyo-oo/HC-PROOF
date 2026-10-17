@@ -1180,8 +1180,11 @@ LEAN EVIDENCE: codimension-two tower commit
 8d6fb63af9e68b4a2d68f7eafd5a092b01e19236; independent
 exceptional native-cycle commit
 5a02ef2304477d84eb5f0806d3f4cee6b49fcf34.
-Current combined CI run 38992433801 needs its completed result
-checked before marking these latest declarations kernel-verified.
+Combined all-center Hodge and exceptional-native geometry gate
+38992433801 COMPLETED SUCCESSFULLY after the Lean documentation
+placement repair at commit f8d1fb1adc903af19f61d12afcf198b7db492561.
+Both the unrestricted-center codim-two blowup tower and the new
+ambient-independent exceptional native cycle are KERNEL-VERIFIED.
 The older all-varieties Chow middle-recovery run 38991205384
 has a confirmed SUCCESS conclusion.
 
@@ -1246,6 +1249,7 @@ native primitive correction. This constructs nonzero
 primitive classes on the ACTUAL smooth-projective scheme
 carrier rather than mere abstract torus charge tokens.
 Dedicated Lean CI 38992782278 PASSED with no sorryAx.
+The independent whole-file Chow/Gysin CI 38992837014 also PASSED.
 
 IMPORTANT: The three-sector packet still needs genuine
 Mathlib scheme-level blowup cohomology/Gysin realization;
