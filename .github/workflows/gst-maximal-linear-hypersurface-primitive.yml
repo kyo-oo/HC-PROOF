@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
+      - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTMaximalLinearHypersurfacePrimitive.lean'
       - '.github/workflows/gst-maximal-linear-hypersurface-primitive.yml'
