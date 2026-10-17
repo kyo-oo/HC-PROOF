@@ -1163,6 +1163,94 @@ theorem exceptional_native_cycle_new_beyond_ambient
 #check exceptional_native_cycle_new_beyond_ambient
 #print axioms exceptional_native_cycle_new_beyond_ambient
 
+
+/-! ## Exact persistence of the FULL arbitrary-X Hodge defect rank
+
+A missing Hodge class on X becomes a missing exceptional class on
+the rational blowup. This stronger all-index theorem proves that
+EVERY LINEARLY INDEPENDENT FAMILY of missing classes modulo the
+actual Chow cycleClass image survives the exceptional blowup
+and further middle-degree projective stabilization, with the
+SAME rational coefficients.
+
+Thus the GST all-X obstruction is not a one-dimensional accident:
+a rational middle blowup host retains the entire independent
+defect module of the original arbitrary variety. Mere rationality
+and existing low-weight Picard exceptional classes cannot make
+those missing high-weight directions algebraic.
+
+There is no assumption that a missing class actually exists; the
+result isolates precisely what a truly new geometric birth must
+overcome without assuming the Hodge conjecture or its negation.
+-/
+
+/-- Strong independence modulo GENUINE native codimension-p Chow
+cycle classes. Linear combinations which happen to become actual
+algebraic classes must have all coefficients zero. -/
+def NativeDefectIndependent
+    {X : SmoothProjectiveComplexScheme}
+    (H : HodgeBigradedBettiData X)
+    (p : ℕ)
+    {ι : Type*} [Fintype ι]
+    (alpha : ι →
+      RationalSingularCohomology H.analytification (2*p)) : Prop :=
+  ∀ coeff : ι → ℚ,
+    (∑ i : ι, coeff i • alpha i) ∈
+      LinearMap.range (H.cycleClass p) →
+    ∀ i : ι, coeff i = 0
+
+/-- Every rational linear independent class-family defect on an
+arbitrary smooth projective CENTER persists under its true
+exceptional Chow/Betti blowup embedding. The map cannot collapse
+or algebraize any nontrivial rational combination of missing
+directions merely because the host is rational. -/
+theorem exceptional_blowup_preserves_native_defect_independence
+    {C T : SmoothProjectiveComplexScheme}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {p : ℕ} {ι : Type*} [Fintype ι]
+    (E : SchemeExceptionalCenterRetract C T HC HT p)
+    (alpha : ι →
+      RationalSingularCohomology HC.analytification (2*p))
+    (hIndependent : NativeDefectIndependent HC p alpha) :
+    NativeDefectIndependent HT (p+1)
+      (fun i => E.exceptionalBetti (alpha i)) := by
+  classical
+  intro coeff hCycle
+  apply hIndependent coeff
+  apply (algebraic_center_iff_exceptional_blowup_class E
+    (∑ i : ι, coeff i • alpha i)).mpr
+  simpa only [map_sum, map_smul] using hCycle
+
+/-- Even a middle-degree smooth RATIONAL world formed by projective
+stabilization preserves ALL mutually independent arbitrary-X
+non-algebraic directions: the obstruction module is transported
+faithfully through both genuine Chow/Gysin recovery stages. -/
+theorem middle_rational_world_preserves_native_defect_independence
+    {C T M : SmoothProjectiveComplexScheme}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {HM : HodgeBigradedBettiData M}
+    {p r : ℕ} {ι : Type*} [Fintype ι]
+    (E : SchemeExceptionalCenterRetract C T HC HT p)
+    (S : SchemeProjectiveMiddleStabilization T M HT HM (p+1) r)
+    (alpha : ι →
+      RationalSingularCohomology HC.analytification (2*p))
+    (hIndependent : NativeDefectIndependent HC p alpha) :
+    NativeDefectIndependent HM (p+1+r)
+      (fun i => S.bettiStabilize (E.exceptionalBetti (alpha i))) := by
+  classical
+  intro coeff hCycle
+  apply hIndependent coeff
+  apply (algebraic_iff_rational_blowup_middle_class E S
+    (∑ i : ι, coeff i • alpha i)).mpr
+  simpa only [map_sum, map_smul] using hCycle
+
+#check NativeDefectIndependent
+#check exceptional_blowup_preserves_native_defect_independence
+#check middle_rational_world_preserves_native_defect_independence
+#print axioms middle_rational_world_preserves_native_defect_independence
+
 #check SchemeExceptionalCenterRetract
 #check algebraic_center_iff_exceptional_blowup_class
 #check missing_center_direction_survives_exceptional_birth
