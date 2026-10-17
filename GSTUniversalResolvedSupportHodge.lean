@@ -484,8 +484,7 @@ theorem quadricBottProjector_idempotent
   ext i j
   fin_cases i <;> fin_cases j
   all_goals
-    simp [quadricBottProjector, Matrix.mul_apply, Fin.sum_univ_two]
-    nlinarith [hQuadric]
+    simp [quadricBottProjector, Matrix.mul_apply, Fin.sum_univ_two, hQuadric] <;> ring
 
 #check quadricBottProjector
 #check quadricBottProjector_idempotent
