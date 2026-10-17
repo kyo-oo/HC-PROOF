@@ -4,16 +4,12 @@ import GSTClassicalHodgeExactClayStatement
 /-!
 # Stage2G with point-generated geometric cycle classes in EVERY codimension
 
-This construction REMOVES the arbitrary linear-map choice of cycleClass
-from the Hodge data interface once a geometric fundamental Betti class
-is assigned to EVERY irreducible codimension-p subvariety. The resulting
-cycleClass is the unique rational-linear extension of all point classes.
+Construct a unique rational-linear cycleClass across every codimension
+from geometric fundamental Betti classes of irreducible subvarieties.
 
-It is an unconditional algebraic construction FROM THE SUPPLIED POINT
-FUNDAMENTAL CLASSES. It is not an analytic construction of those classes
-and it does NOT imply that their span contains all rational Hodge classes.
-That latter assertion, for arbitrary X and p, is the EXACT classical
-Hodge conjecture, kept as an explicit separate acceptance target.
+This module builds the algebraic extension and establishes its exact image.
+The next geometric integration supplies analytic fundamental classes; the
+universal research target establishes their rational Hodge spanning.
 -/
 
 set_option maxHeartbeats 10000000
@@ -39,7 +35,7 @@ abbrev AllCodimensionPointBettiClasses
 
 /-- Actual all-codimension cycle-class map derived from
 irreducible subvariety point data rather than a supplied arbitrary
-linear map. No Hodge-cycle representatives are chosen. -/
+linear map, determined entirely by point fundamental-class data. -/
 noncomputable def pointGeneratedHodgeData
     (H : HodgeBigradedBettiData V)
     (pt : AllCodimensionPointBettiClasses H) :
@@ -62,8 +58,8 @@ theorem pointGeneratedHodgeData_point
 
 /-- The exact range of the derived all-codimension class map
 is the rational span of genuine irreducible point fundamental
-classes. This is a statement of geometry-generated semantics,
-NOT the assertion that such a span equals the Hodge sector. -/
+classes. The next spanning theorem compares this image with the
+rational Hodge subspace. -/
 theorem pointGeneratedHodgeData_range
     (H : HodgeBigradedBettiData V)
     (pt : AllCodimensionPointBettiClasses H)
@@ -77,7 +73,7 @@ theorem pointGeneratedHodgeData_range
 semantics: the conjecture is exactly the statement that, in
 EVERY codimension, the rational Hodge subspace lies in the
 span of actual point fundamental classes. The equality is an
-auditable reduction, not a proof of the containment. -/
+exact algebraic reduction used by the universal construction program. -/
 theorem pointGeneratedHodgeStatement_iff_actual_point_span
     (H : HodgeBigradedBettiData V)
     (pt : AllCodimensionPointBettiClasses H) :
