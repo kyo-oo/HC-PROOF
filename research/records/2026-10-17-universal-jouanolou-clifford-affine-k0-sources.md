@@ -97,3 +97,25 @@ The pullback of this *already genuine* primitive class to the affine Jouanolou m
 **Second independent audit — smooth affine complete-intersection Jacobian projectors:** For \(U\subset\mathbb A^m\) smooth complete intersection of codimension \(c\), its coordinate Jacobian \(J:A^m\to A^c\) admits an algebraic right inverse \(B\) by the Jacobian criterion and Bézout identity among maximal minors. The polynomial projector \(P=I_m-BJ\) is idempotent with image \(\ker J=T_U\). Yet the split sequence \(0\to T_U\to A^m\to A^c\to0\) gives \(T_U\oplus A^c\simeq A^m\). Thus \([T_U]- (m-c)[A]=0\in\widetilde K_0(U)\); **the Jacobian tangent projector produces no nontrivial positive-degree rational Chern-character class on any such smooth affine complete intersection**. Explicitly on split quadrics, the Jacobian row \(J=(y_1,\ldots,y_p,x_1,\ldots,x_p,2z-1)\) has polynomial right inverse \(B=(2x_1,\ldots,2x_p,2y_1,\ldots,2y_p,2z-1)^T\), since \(JB=4\sum x_i y_i+(2z-1)^2=1\) modulo \(q_p-z(1-z)\). Wolfram confirmed the exact polynomial difference equals \(4(q_p-z(1-z))\). The new generic Lean Jacobian idempotent lemmas formalize the algebraic construction, but this K-theory check prevents it from being misused as a primitive class generator on CI affines.
 
 **Resulting Gate-3 move:** Work directly with nontrivial **higher-rank algebraic projectors over \(A=\Gamma(J(X),\mathcal O)\)** whose Chern classes have nonzero self-intersections and independently measurable primitive components. A universal rank-one projector only supplies the hyperplane line; a projector with globally split factorization through a free rank-\(r\) module is likewise K₀-trivial. A candidate must be genuinely nontrivial in \(\widetilde K_0(A)\), not just idempotent. Use explicit algebraic equations, then calculate the canonical rational \(ch_p\) and compare with the *prescribed* \(\pi^*\alpha\). No conjectural source-spanning statement is treated as proved by these tests.
+
+## 7. Constructive non-spherical source through the equations of X
+
+To escape the square-zero restriction of the affine-quadric generator, use the SAME Clifford block identities as **matrix factorizations of the actual defining equations of projective hypersurfaces**, rather than maps into affine quadrics.
+
+If a hypersurface \(X=\{F=0\}\subset\mathbb P^N\) contains a codimension-\(m\) complete-intersection subvariety cut out by \(l_1,\ldots,l_m\), then the defining polynomial lies in that ideal and can be expressed
+\[
+    F=\sum_{i=1}^m l_i q_i .
+\]
+The Clifford matrices from section 3, evaluated at \(x_i=l_i\), \(y_i=q_i\), satisfy
+\[
+    \boxed{A_mB_m=B_mA_m=F I_{2^{m-1}}.}
+\]
+This is a genuine polynomial **matrix factorization** of \(F\). Over the hypersurface coordinate ring \(R/(F)\), the 2-periodic complex has square-zero differentials. Its resulting algebraic matrix-factorization/MCM module is manufactured from the actual defining equations rather than a conjectural target cycle. On smooth hypersurfaces, the associated sheaf is locally free wherever the matrix-factorization cokernel is maximal Cohen–Macaulay; its graded projective realization and precise Chern character must be computed separately.
+
+A decisive test is the smooth Fermat cubic fourfold
+\[
+ X=\{F=\sum_{i=1}^3(y_i^3-x_i^3)=0\}\subset\mathbb P^5.
+\]
+It contains the genuine plane \(P\) given by \(l_i=y_i-x_i=0\). Put \(q_i=y_i^2+x_iy_i+x_i^2\). Then \(F=\sum l_iq_i\), and the Clifford recursion constructs **explicit 4×4 algebraic matrices \(A_3,B_3\)** with \(A_3B_3=B_3A_3=F I_4\). Wolfram independently checked both matrix identities symbolically, with all polynomial coefficients exact. The existing original-\(X\) plane \(P\) has independent primitive cycle \(3[P]-h^2\), whose square is \(24\): this is the benchmark that the higher-rank matrix-factorization channel must detect, unlike pure affine-quadric pullbacks.
+
+**Next real construction test:** prove the exact algebraic K₀/Chern character of the matrix-factorization sheaf in this benchmark and show that its primitive part hits \(3[P]-h^2\). Then generalize the geometric syzygy source beyond an already supplied plane, ultimately to arbitrary original \(X,p,\alpha\). The matrix identity is **already proved algebraically**; the nonambient K₀/Chern comparison is a new substantive implication and is not silently claimed.
