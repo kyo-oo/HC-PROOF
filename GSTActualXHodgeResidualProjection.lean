@@ -409,6 +409,132 @@ theorem ActualXFiniteProjectiveTrace.full_hodge_iff_trace_zero_hodge
     refine ⟨F.constructFromTraceZero a Ztrace, ?_⟩
     exact F.constructFromTraceZero_correct a Ztrace hZtrace
 
+
+/-! ## ALL X: actual Chow trace-zero generators from finite projection
+
+This constructs algebraic CYCLES killed already at the Chow
+pushforward level, not merely their cohomology classes.
+For an ACTUAL finite flat projective projection g:X->P^d
+of nonzero degree e, every known native rational codimension-p
+cycle Z on X gives a new explicit native cycle
+
+  Z^0 = Z - e^(-1) g^*(g_* Z),
+
+which lies in ker(g_*:CH^p(X)_Q -> CH^p(P^d)_Q).
+
+The Betti cycle-class of Z^0 lies in ker(g_*:H^{2p}(X,Q)
+-> H^{2p}(P^d,Q)), and is nonzero whenever cl(Z) does
+NOT belong to the ambient projective pullback subspace.
+
+This is genuine all-varieties trace-zero CYCLE CONSTRUCTION.
+It does NOT assert that the generated classes fill the
+entire trace-zero Hodge subspace. That is precisely the
+remaining universal existence theorem being attacked.
+-/
+
+/-- The Chow-level geometric pushforward and degree-trace law
+of an actual finite flat projective projection, in addition
+to the Betti-level comparison certified above. -/
+structure ActualXFiniteProjectiveNativeTrace
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    (F : ActualXFiniteProjectiveTrace P X HP HX p) where
+  nativePush :
+    codimensionCycles X.X p →ₗ[ℚ] codimensionCycles P.X p
+  push_cycleClass_natural :
+    ∀ Z : codimensionCycles X.X p,
+      HP.cycleClass p (nativePush Z) =
+        F.bettiPush (HX.cycleClass p Z)
+  native_push_pull_degree :
+    ∀ Z : codimensionCycles P.X p,
+      nativePush (F.nativePull Z) = F.degree • Z
+
+/-- AN ACTUAL native codimension-p cycle in the projective-trace
+kernel on arbitrary X. No Hodge target or cycle-preimage
+selector is an input. -/
+noncomputable def ActualXFiniteProjectiveNativeTrace.traceZeroNative
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Z : codimensionCycles X.X p) :
+    codimensionCycles X.X p :=
+  Z - F.degree⁻¹ • F.nativePull (T.nativePush Z)
+
+/-- Exact Chow trace-zero property: the ACTUAL proper
+pushforward of the constructed algebraic cycle is zero
+before applying any cohomological realization. -/
+theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_push_zero
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Z : codimensionCycles X.X p) :
+    T.nativePush (T.traceZeroNative Z) = 0 := by
+  dsimp only [ActualXFiniteProjectiveNativeTrace.traceZeroNative]
+  rw [map_sub, map_smul, T.native_push_pull_degree]
+  simp [smul_smul, F.degree_ne_zero]
+
+/-- Exact Betti class of the newly CONSTRUCTED native trace-zero
+cycle: the original algebraic class minus its projective
+trace component, at every codimension and on EVERY X. -/
+theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_cycleClass
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Z : codimensionCycles X.X p) :
+    HX.cycleClass p (T.traceZeroNative Z) =
+      HX.cycleClass p Z -
+        F.degree⁻¹ • F.bettiPull
+          (F.bettiPush (HX.cycleClass p Z)) := by
+  dsimp only [ActualXFiniteProjectiveNativeTrace.traceZeroNative]
+  rw [map_sub, map_smul, F.cycleClass_natural,
+    T.push_cycleClass_natural]
+
+/-- Exact geometric NONVANISHING criterion for a new algebraic
+trace-zero Hodge direction: if the known source algebraic
+cycle has a Betti class outside the projective pullback image,
+its corrected native Chow cycle represents a NONZERO class
+in the actual trace-zero geometric cohomology of X. -/
+theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_nonzero_of_new_class
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Z : codimensionCycles X.X p)
+    (houtside : HX.cycleClass p Z ∉
+      LinearMap.range F.bettiPull) :
+    HX.cycleClass p (T.traceZeroNative Z) ≠ 0 := by
+  intro hzero
+  have hClass :
+      HX.cycleClass p Z =
+        F.degree⁻¹ • F.bettiPull
+          (F.bettiPush (HX.cycleClass p Z)) := by
+    have h := T.traceZeroNative_cycleClass Z
+    rw [hzero] at h
+    exact (sub_eq_zero.mp h).symm
+  apply houtside
+  refine ⟨F.degree⁻¹ • F.bettiPush (HX.cycleClass p Z), ?_⟩
+  rw [map_smul]
+  exact hClass.symm
+
+#check ActualXFiniteProjectiveNativeTrace.traceZeroNative
+#check ActualXFiniteProjectiveNativeTrace.traceZeroNative_push_zero
+#check ActualXFiniteProjectiveNativeTrace.traceZeroNative_cycleClass
+#check ActualXFiniteProjectiveNativeTrace.traceZeroNative_nonzero_of_new_class
+#print axioms ActualXFiniteProjectiveNativeTrace.traceZeroNative_nonzero_of_new_class
+
 #check ActualXFiniteProjectiveTrace.constructFromTraceZero_correct
 #check ActualXFiniteProjectiveTrace.full_hodge_iff_trace_zero_hodge
 #print axioms ActualXFiniteProjectiveTrace.full_hodge_iff_trace_zero_hodge
