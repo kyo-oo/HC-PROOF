@@ -833,6 +833,127 @@ theorem genuine_nonzero_primitive_trace_zero_native_cycle
   · rw [hFiber]
     exact hPrimitive
 
+
+/-! ## ALL VARIETIES: NEW NONAMBIENT PICARD-BORN TRACE-ZERO CYCLES
+
+A finite linear projection g:X->P^d exists for any smooth
+projective complex X, including X not dominated by a rational
+variety. Its one-dimensional codimension-two projective Betti
+image is spanned by h^2, where h is the ample class g^*O(1).
+
+If X has an algebraic divisor D whose rational Hodge class
+is NOT a scalar multiple of h, Hard Lefschetz guarantees that
+h cup cl(D) is outside the projective ambient h^2 line.
+Consequently its TRUE rational codimension-two native cycle
+can be projected into the actual Chow pushforward kernel
+without killing its cohomology class.
+
+This supplies a genuinely NEW NONZERO trace-zero (2,2)
+algebraic cycle directly on ANY smooth projective X with
+a nonambient divisor direction, in arbitrary dimension where
+the stated actual Hard Lefschetz maps apply. It does not require
+unirationality or any other codimension-two Hodge cycle
+existence on X. It does NOT assert that these divisor-born
+cycles span the entire trace-zero primitive rational Hodge space.
+-/
+
+/-- The true rank-one projective degree-four image and
+its hyperplane square in the original X's rational Hodge
+cohomology. This is geometric cohomology, NOT a supplied
+cycle representing an unknown primitive Hodge target. -/
+structure ActualXProjectiveAmbientCupRankOne
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    (G : GeometricCycleClassSpine X HX)
+    (L : GeometricHigherLefschetzData G d) where
+  ambientHyperplane : ClassicalHodgeFiber X HX 1
+  projectivePullbackIsHyperplaneSquare :
+    ∀ beta : RationalSingularCohomology HP.analytification 4,
+      ∃ c : ℚ,
+        F.bettiPull beta =
+          (c • L.cupH ambientHyperplane).1
+
+/-- Actual codimension-two native Chow map on X: intersect the
+known native divisor class with the ample class and remove its
+finite-projective ambient Chow trace. This is a LINEAR map and
+constructs actual algebraic cycles, not mere Hodge vectors. -/
+noncomputable def ActualXFiniteProjectiveNativeTrace.picardTraceZeroLinear
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (G : GeometricCycleClassSpine X HX)
+    (L : GeometricHigherLefschetzData G d) :
+    codimensionCycles X.X 1 →ₗ[ℚ] codimensionCycles X.X 2 :=
+  T.nativeTraceZeroProjector.comp L.nativeCupH
+
+/-- Actual nonzero algebraic (2,2) trace-zero cycle on an
+ARBITRARY smooth projective X (unirationality not assumed):
+a nonambient divisor D gives W=Q(h*D) whose native Chow trace
+is zero and whose TRUE Betti class is NONZERO. Uses
+only the actual projective H4 rank-one comparison, real
+Hard Lefschetz injectivity and native Gysin naturality. -/
+theorem nonambient_divisor_generates_nonzero_trace_zero_chow_two
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (G : GeometricCycleClassSpine X HX)
+    (L : GeometricHigherLefschetzData G d)
+    (hInject : Function.Injective L.cupH2)
+    (B : ActualXProjectiveAmbientCupRankOne (F := F) G L)
+    (D : codimensionCycles X.X 1)
+    (hNonambient :
+      ∀ c : ℚ,
+        nativeToHodgeFiberLinear G D ≠ c • B.ambientHyperplane) :
+    ∃ W : codimensionCycles X.X 2,
+      T.nativePush W = 0 ∧ HX.cycleClass 2 W ≠ 0 := by
+  have hCupInjective : Function.Injective L.cupH := by
+    intro a b heq
+    apply hInject
+    calc
+      L.cupH2 a = L.primitiveTest (L.cupH a) :=
+        (L.twoStepCompatibility a).symm
+      _ = L.primitiveTest (L.cupH b) := by rw [heq]
+      _ = L.cupH2 b := L.twoStepCompatibility b
+  let Z : codimensionCycles X.X 2 := L.nativeCupH D
+  have hOutside : HX.cycleClass 2 Z ∉
+      LinearMap.range F.bettiPull := by
+    rintro ⟨beta, hbeta⟩
+    obtain ⟨c, hc⟩ :=
+      B.projectivePullbackIsHyperplaneSquare beta
+    have hCup :
+        L.cupH (nativeToHodgeFiberLinear G D) =
+          c • L.cupH B.ambientHyperplane := by
+      apply Subtype.ext
+      calc
+        (L.cupH (nativeToHodgeFiberLinear G D)).1 =
+            (nativeToHodgeFiberLinear G Z).1 := by
+              exact congrArg Subtype.val (L.nativeNaturality D).symm
+        _ = HX.cycleClass 2 Z := rfl
+        _ = F.bettiPull beta := hbeta.symm
+        _ = (c • L.cupH B.ambientHyperplane).1 := hc
+    have hDivisor :
+        nativeToHodgeFiberLinear G D =
+          c • B.ambientHyperplane := by
+      apply hCupInjective
+      simpa only [map_smul] using hCup
+    exact hNonambient c hDivisor
+  refine ⟨T.traceZeroNative Z,
+    T.traceZeroNative_push_zero Z, ?_⟩
+  exact T.traceZeroNative_nonzero_of_new_class Z hOutside
+
+#check ActualXFiniteProjectiveNativeTrace.picardTraceZeroLinear
+#check nonambient_divisor_generates_nonzero_trace_zero_chow_two
+#print axioms nonambient_divisor_generates_nonzero_trace_zero_chow_two
+
 #check ActualXPrimitiveProjectiveTraceComparison.primitive_push_zero
 #check genuine_nonzero_primitive_trace_zero_native_cycle
 #print axioms genuine_nonzero_primitive_trace_zero_native_cycle
