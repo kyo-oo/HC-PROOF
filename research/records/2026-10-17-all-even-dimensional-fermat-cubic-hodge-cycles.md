@@ -128,3 +128,15 @@ This source-to-target map is expressed entirely through explicit geometric plane
 ## Original all-X research objective
 
 The uniform Fermat construction demonstrates that the GST source-generation approach can attain complete rational primitive Hodge rank across arbitrary even dimensions on explicit original hypersurfaces. The remaining all-X geometric program must produce, for arbitrary smooth projective X, algebraic generators with equally complete canonical primitive measurements, or prove a dimension-preserving algebraic transfer that actually carries all rational primitive Hodge characters to X.
+
+## 6. Every codimension, and Fermat cubics of every dimension
+
+The primitive-middle result above upgrades to the **full rational Hodge conjecture for every smooth Fermat cubic hypersurface in every complex dimension**, by ordinary weak/Hard Lefschetz and canonical hyperplane geometry.
+
+Let \(\widetilde X=\{\sum_{i=0}^N z_i^3=0\}\subset\mathbb P^N\), of complex dimension \(D=N-1\). For any codimension p such that \(2p<D\), weak Lefschetz identifies \(H^{2p}(\widetilde X,\mathbb Q)\cong H^{2p}(\mathbb P^N,\mathbb Q)=\mathbb Q h^p\). For \(2p>D\), Hard Lefschetz and Poincaré duality yield the same rank-one algebraic line \(\mathbb Q h^p\). If D is odd, **every** even cohomological degree lies in one of those cases, so every rational Hodge class is already an algebraic hyperplane power.
+
+If \(D=2n-2\) is even, the only further codimension is \(p=n-1\): the diagonal-character Fourier plane construction of steps 1–5 supplies the **complete primitive middle Hodge sector**, and \(h^{n-1}\) supplies the remaining Lefschetz line.
+
+Therefore, for every dimension D and every admissible p, all rational (p,p) Hodge classes on the original smooth Fermat cubic \(\widetilde X\) are represented by concrete rational algebraic cycles. An explicit reconstruction uses hyperplane intersections outside middle degree and Fourier combinations of maximal planes in even middle degree.
+
+This all-dim/all-codim extension uses standard Lefschetz theorems and the uniform Fourier/Griffiths construction; the all-varieties research target extends this source-producing mechanism beyond the Fermat family.
