@@ -54,6 +54,8 @@ jobs:
           [[lean_lib]]
           name = "GSTPinnedHodgeGeometricGate"
           roots = [
+            "GSTMaximalLinearHypersurfacePrimitive",
+            "GSTCanonicalPointGeometryStage2G",
             "GSTFermatCanonicalPointRankBridge",
             "GSTClassicalHodgeGeometricCycleClassPointRigidity",
             "GSTActualXHodgeResidualProjection",
@@ -69,7 +71,7 @@ jobs:
             exit 1
           fi
           if grep -E "declaration uses 'sorry'|sorryAx" pinned-hodge-lean.log; then
-            echo "UNTRUSTED Lean assumption found"
+            echo "Lean axiom-audit check requires proof repair"
             exit 1
           fi
       - name: Upload Hodge integration evidence
