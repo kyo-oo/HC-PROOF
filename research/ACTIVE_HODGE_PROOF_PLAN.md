@@ -94,6 +94,14 @@ This follows from injective Gysin \(i_*\), self-intersection \(i_*i^*=h\cup\) an
 
 **Next genuine source obligation:** Develop such a boundary-cancellation mechanism from original-\(X\) geometry for an arbitrary primitive \(\alpha\), and prove both its actual algebraicity and its canonical Betti class. Testing on cubic-fourfold primitive \(3[P]-h^2\) distinguishes a successful boundary mechanism from mere hyperplane restriction or divisor products. This is a proof obligation on the route to the original all-\(X\), all-\(p\) theorem, not a substitution for that theorem.
 
+## Latest direct original-X source construction — boundary-matched cycles
+
+The [matched-boundary native source theorem](records/2026-10-17-hyperplane-matched-native-source.md) implements a signed rational algebraic cycle \(Z=Z_0-Z_1\) from two genuine codimension-\(p\) cycles on the **original X** whose Betti restrictions to a smooth middle hyperplane section agree. The canonical class is primitive, and is nonzero whenever the original classes differ. It recovers the cubic-fourfold primitive \(3[P]-h^2\) via actual boundary equality.
+
+The [arbitrary-ambient-dimension bridge](records/2026-10-17-arbitrary-dimensional-primitive-middle-bridge.md) strengthens the route to every smooth projective n-fold and every low-half p: cutting by \(r=n-2p\) general hyperplanes gives a smooth 2p-fold Y, injective rational restriction \(H^{2p}(X)\to H^{2p}(Y)\), and primitive class preservation by the Gysin projection identity \(j_*(h_Yj^*\alpha)=h_X^{r+1}\alpha\). A further hyperplane on Y provides the relative Betti lift. **Do not silently lift an algebraic cycle back to X**: pushing a cycle from Y represents \(h_X^r\alpha\), and an algebraic inverse Lefschetz correspondence is an independent serious obligation.
+
+**One indispensable remaining Gate 3 implication:** From an arbitrary rational primitive Hodge class \(\alpha\) on original X, construct matching native cycles **with prescribed canonical difference** \(\operatorname{cl}_X(Z_0-Z_1)=\alpha\), using independent algebraic geometry rather than assuming the pair or full rank. The all-n reduction and nonzero signed cycle lemma are tools for this implication, not substitutes for its proof.
+
 ## Reporting and completion
 
 Every update reports: **(i)** the exact original target; **(ii)** which of gates 1–4 acquired a proof; **(iii)** the one next missing mathematical implication; **(iv)** exact commit/CI evidence. No claim of final completion before all four acceptance tests pass.
