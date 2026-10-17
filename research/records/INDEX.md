@@ -46,3 +46,5 @@ Integration review: [Draft PR #3](https://github.com/kyo-oo/HC-PROOF/pull/3). Ea
 - [Primitive automorphism-graph cycles on quartic K3 self-products](2026-10-17-k3-graph-primitive-source.md) — actual order-four quartic K3 automorphism gives two independent primitive algebraic graph directions; Wolfram exact rank2; dedicated Lean proof workflow #39029194289.
 
 - [Complete primitive graph criterion for polarized surfaces](2026-10-17-surface-graph-h1-moment-completeness.md) — exact iff using graph coefficient augmentation and rational H¹-action moment; Wolfram irregular-surface tests; corresponding Lean equivalence and primitive rank certificate under geometric Künneth inputs.
+
+- [Unbounded primitive graph-cycle rank in fixed dimension four](2026-10-17-unbounded-fermat-surface-primitive-graph-rank.md) — explicit smooth Fermat surface self-products of every degree d≥4 carry φ(d) independent canonical primitive rational algebraic codimension-two cycles; cyclotomic determinant identity with exact 65-order [CI #39030979414](https://github.com/kyo-oo/HC-PROOF/actions/runs/39030979414).
