@@ -77,7 +77,7 @@ def audit(p):
     eig=[cmul(cpow(lam,r),cpow(mu,m-r)) for r in range(m+1)]
     norm=5**m
     assert eig[p]==(5**p,0)
-    assert eig[r]==(eig[m-r][0],-eig[m-r][1]) for r in range(m+1)
+    assert all(eig[r]==(eig[m-r][0],-eig[m-r][1]) for r in range(m+1))
     assert all(abs(e[0])+abs(e[1])>0 for e in eig)
     assert len(set(eig))==m+1
 
