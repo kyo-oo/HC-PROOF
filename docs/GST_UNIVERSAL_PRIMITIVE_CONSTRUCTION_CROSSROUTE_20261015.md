@@ -1777,3 +1777,17 @@ added. Do not confuse these decomposable h^(p-1)D
 classes with primitive classes: their primitive
 projections can vanish. The unrestricted primitive
 Hodge class existence target remains unproved.
+
+**Exact finite sanity audit: 125 truncated projective-product rings.** In the independent exact rational calculation
+on X=P^m x P^n, m,n∈{1,2,3,4,5}, every
+p=1,...,m+n-1 was tested (total 125 cases). The
+truncated cohomology ring Q[a,b]/(a^(m+1),b^(n+1))
+and hyperplane class h=a+b were used to form the exact
+trace-zero projector
+  h^(p-1) D - (integral_X h^(p-1)D h^(d-p) /
+                 integral_X h^d) h^p
+for D=a,b. The rank was 1 in all 125 cases as predicted
+by rho=2. For m=n=2,p=2 the image columns are
+(-1/2,0,1/2) and (1/2,0,-1/2) in basis (a²,ab,b²).
+No floating point or sample-based universal inference is used.
+The full arbitrary-X proof is Hard Lefschetz, not this finite sweep.
