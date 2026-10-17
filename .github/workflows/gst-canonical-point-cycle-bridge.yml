@@ -4,6 +4,7 @@ on:
     branches:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
+      - 'scripts/gst_lean_dependency_roots.py'
       - 'GSTCanonicalPointGeometryStage2G.lean'
       - 'GSTFermatCanonicalPointRankBridge.lean'
       - '.github/workflows/gst-canonical-point-cycle-bridge.yml'
@@ -46,15 +47,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          cat >> lakefile.toml <<'EOF'
-          [[lean_lib]]
-          name = "GSTCanonicalPointBridge"
-          roots = [
-            "GSTMaximalLinearHypersurfacePrimitive",
-            "GSTCanonicalPointGeometryStage2G",
-            "GSTFermatCanonicalPointRankBridge"
-          ]
-          EOF
+          python3 scripts/gst_lean_dependency_roots.py GSTCanonicalPointBridge \
+            GSTCanonicalPointGeometryStage2G \
+            GSTFermatCanonicalPointRankBridge
           if lake build GSTCanonicalPointBridge > point-bridge-lean.log 2>&1; then
             echo "LEAN PASSED: exact all-codimension point-generated maps and genuine native Fermat rank"
           else
@@ -65,6 +60,12 @@ jobs:
           if grep -E "declaration uses 'sorry'|sorryAx" point-bridge-lean.log; then
             exit 1
           fi
+      - name: Save compiled GST dependencies
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-canonical-points
       - name: Upload kernel log
         if: always()
         uses: actions/upload-artifact@v4
