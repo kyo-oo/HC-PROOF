@@ -951,6 +951,96 @@ theorem nonambient_divisor_generates_nonzero_trace_zero_chow_two
   exact T.traceZeroNative_nonzero_of_new_class Z hOutside
 
 
+/-! ## Primitive rank of the projective trace construction
+
+The native trace projector removes only a projective ambient class.
+In codimension two this class is a rational multiple of h squared,
+so its genuine primitive projection is zero. Consequently the
+trace correction preserves the primitive projection of EVERY source
+cycle and creates no primitive direction from divisor-cup sources.
+
+These statements are relative to the same geometric comparison data
+as the existing constructors. They neither construct those data for
+all schemes nor identify a supplied cycleClass with the canonical
+geometric map without its separate fundamental-class comparison.
+-/
+
+/-- The projective trace correction leaves the primitive class unchanged.
+It can normalize the native trace of a known primitive source, but
+cannot manufacture an independent primitive direction from its ambient
+correction. No target-cycle existence hypothesis is used. -/
+theorem traceZeroNative_preserves_primitive_projection
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (G : GeometricCycleClassSpine X HX)
+    (L : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 HX)
+    (hInject : Function.Injective L.cupH2)
+    (B : ActualXProjectiveAmbientCupRankOne (F := F) G L)
+    (Z : codimensionCycles X.X 2) :
+    primitiveHodgeRemainder G L h11
+        (nativeToHodgeFiberLinear G (T.traceZeroNative Z)) =
+      primitiveHodgeRemainder G L h11
+        (nativeToHodgeFiberLinear G Z) := by
+  obtain ⟨c, hc⟩ := B.projectivePullbackIsHyperplaneSquare
+    (F.bettiPush (HX.cycleClass 2 Z))
+  have hFiber :
+      nativeToHodgeFiberLinear G (T.traceZeroNative Z) =
+        nativeToHodgeFiberLinear G Z -
+          F.degree⁻¹ • (c • L.cupH B.ambientHyperplane) := by
+    apply Subtype.ext
+    change HX.cycleClass 2 (T.traceZeroNative Z) =
+      HX.cycleClass 2 Z -
+        F.degree⁻¹ • (c • L.cupH B.ambientHyperplane).1
+    rw [T.traceZeroNative_cycleClass Z, hc]
+  let proj := primitiveHodgeProjectionLinear G L h11 hInject
+  have hAmbient : proj (L.cupH B.ambientHyperplane) = 0 :=
+    primitive_remainder_vanishes_on_cupH
+      G L h11 hInject B.ambientHyperplane
+  change proj (nativeToHodgeFiberLinear G (T.traceZeroNative Z)) =
+    proj (nativeToHodgeFiberLinear G Z)
+  rw [hFiber, map_sub, map_smul, map_smul, hAmbient]
+  simp
+
+/-- Every divisor-born trace-zero cycle in the existing Picard
+constructor has ZERO primitive projection. This holds for every divisor,
+including nonambient ones whose trace-zero Betti class is nonzero.
+Thus the Picard trace-zero rank rho-1 cannot supply the independent
+non-Lefschetz primitive directions required by the original target. -/
+theorem picardTraceZero_has_zero_primitive_projection
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (G : GeometricCycleClassSpine X HX)
+    (L : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 HX)
+    (hInject : Function.Injective L.cupH2)
+    (B : ActualXProjectiveAmbientCupRankOne (F := F) G L)
+    (D : codimensionCycles X.X 1) :
+    primitiveHodgeRemainder G L h11
+      (nativeToHodgeFiberLinear G
+        (T.picardTraceZeroLinear G L D)) = 0 := by
+  change primitiveHodgeRemainder G L h11
+    (nativeToHodgeFiberLinear G
+      (T.nativeTraceZeroProjector (L.nativeCupH D))) = 0
+  rw [T.nativeTraceZeroProjector_apply]
+  rw [traceZeroNative_preserves_primitive_projection
+    T G L h11 hInject B, L.nativeNaturality D]
+  exact primitive_remainder_vanishes_on_cupH
+    G L h11 hInject (nativeToHodgeFiberLinear G D)
+
+#check traceZeroNative_preserves_primitive_projection
+#check picardTraceZero_has_zero_primitive_projection
+#print axioms traceZeroNative_preserves_primitive_projection
+#print axioms picardTraceZero_has_zero_primitive_projection
+
 /-! ## ALL CODIMENSIONS: exact primitive trace-kernel Chow target
 
 For any p, the genuine primitive cup-product relation against a
