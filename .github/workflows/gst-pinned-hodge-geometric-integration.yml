@@ -13,6 +13,7 @@ on:
       - 'GSTUniversalResolvedSupportHodge.lean'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
+      - 'research/computations/pure_algebraic_k0_all_codimensions.py'
       - 'GSTUniversalPrimitiveHyperplaneRelative.lean'
       - 'GSTUniversalCodimensionTwoPrimitiveExtraction.lean'
       - 'GSTClassicalHodgeExactClayStatement.lean'
@@ -61,6 +62,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/algebraic_adams_pure_hodge_k0.py | tee algebraic-adams-k0.log
+      - name: Exact pure K0 primitive sources in every codimension
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/pure_algebraic_k0_all_codimensions.py | tee pure-k0-all-codim.log
       - name: Kernel compile primitive rank, genuine point classes, and all-X residual
         shell: bash
         run: |
@@ -101,4 +107,5 @@ jobs:
             pinned-hodge-lean.log
             affine-clifford-k0.log
             algebraic-adams-k0.log
+            pure-k0-all-codim.log
           if-no-files-found: warn
