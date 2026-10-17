@@ -535,6 +535,166 @@ No final target cycle is a field of the tower constructor.
 /-- Worlds built from independently verified cycle-complete smooth
 projective roots by actual scheme-typed projective bundle or
 smooth blowup operations, each with explicit Hodge/Chow Gysin data. -/
+
+/-! ## Unrestricted-center GST codimension-two birth
+
+A major geometric gain is available WITHOUT solving Hodge for the
+blowup center. In codimension two, the only exceptional cohomology
+source weights are ZERO and ONE, irrespective of the dimension
+or other Hodge directions of the center. Thus every actual smooth
+blowup preserves rational (2,2) Hodge algebraicity using only
+the classical Hodge-(0,0) unit and divisor (1,1) cycles of the
+center, not its full unknown middle primitive Hodge geometry.
+
+The following strengthens the earlier all-weights birth theorem
+by replacing the unjustified requirement that the center is
+FULLY Hodge-complete with ONLY the relevant center weights.
+
+A projective rational starting world can then be blown up an
+ARBITRARY finite number of times along smooth centers of ANY
+dimension, obtaining actual native representatives in CH^2
+at EVERY stage; no center's higher Hodge conjecture is assumed.
+The true geometric blowup Gysin comparison maps remain a
+separate instantiation obligation.
+-/
+
+/-- Algebraicity at a SPECIFIC rational Hodge weight of the given
+actual smooth projective scheme, not at all weights. -/
+def HodgeAtWeight
+    (V : SmoothProjectiveComplexScheme)
+    (H : HodgeBigradedBettiData V)
+    (p : ℕ) : Prop :=
+  rationalHodgeSubspace (H.hodgeBigrading p) ≤
+    LinearMap.range (H.cycleClass p)
+
+/-- Construct an actual native target cycle using ONLY algebraicity
+of the exact source weights selected by the geometric splitting.
+This strictly strengthens the old theorem requiring every source
+to satisfy the WHOLE Hodge conjecture at all codimensions. -/
+theorem hodge_at_fixed_weight_of_geometric_birth
+    {X : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData X}
+    {p : ℕ} {ι : Type*} [Fintype ι]
+    (P : GeometricMultiSourceChowBirth X H p ι)
+    (hSources : ∀ i : ι,
+      HodgeAtWeight (P.source i) (P.data i) (P.codim i)) :
+    HodgeAtWeight X H p := by
+  classical
+  intro alpha hAlpha
+  obtain ⟨beta, hHodge, hReconstruct⟩ := P.hodgeSpan alpha hAlpha
+  have hw : ∀ i : ι,
+      ∃ Z : codimensionCycles (P.source i).X (P.codim i),
+        (P.data i).cycleClass (P.codim i) Z = beta i := by
+    intro i
+    exact hSources i (hHodge i)
+  let native : (i : ι) →
+      codimensionCycles (P.source i).X (P.codim i) :=
+    fun i => Classical.choose (hw i)
+  refine ⟨∑ i : ι, P.native i (native i), ?_⟩
+  calc
+    H.cycleClass p (∑ i : ι, P.native i (native i)) =
+        ∑ i : ι, H.cycleClass p (P.native i (native i)) := by
+          rw [map_sum]
+    _ = ∑ i : ι, P.betti i
+        ((P.data i).cycleClass (P.codim i) (native i)) := by
+          apply Finset.sum_congr rfl
+          intro i _
+          exact P.naturality i (native i)
+    _ = ∑ i : ι, P.betti i (beta i) := by
+          apply Finset.sum_congr rfl
+          intro i _
+          rw [Classical.choose_spec (hw i)]
+    _ = alpha := hReconstruct
+
+/-- True Gysin blowup transfer with no high-codimension algebraicity
+assumption on the center: in target weight p>0 each relevant
+exceptional source weight is strictly smaller than p. -/
+theorem geometric_blowup_from_strictly_lower_center_weights
+    {B C T : SmoothProjectiveComplexScheme}
+    {HB : HodgeBigradedBettiData B}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {c p : ℕ}
+    (P : SchemeBlowupGysin B C T HB HC HT c p)
+    (hp : 0 < p)
+    (hBase : HodgeAtWeight B HB p)
+    (hCenter : ∀ q : ℕ, q < p → HodgeAtWeight C HC q) :
+    HodgeAtWeight T HT p := by
+  apply hodge_at_fixed_weight_of_geometric_birth P.toSplit.toChowBirth
+  intro i
+  cases i with
+  | none => exact hBase
+  | some j =>
+      exact hCenter (p-(j.val+1)) (by omega)
+
+/-- ALL-DIMENSION smooth-center codimension-two theorem.
+No Hodge assumption of center codimensions 2,3,... is made:
+only genuine (0,0) and (1,1) algebraic cycle classes suffice. -/
+theorem geometric_blowup_codimension_two_from_center_divisors
+    {B C T : SmoothProjectiveComplexScheme}
+    {HB : HodgeBigradedBettiData B}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {c : ℕ}
+    (P : SchemeBlowupGysin B C T HB HC HT c 2)
+    (hBase : HodgeAtWeight B HB 2)
+    (hCenterZero : HodgeAtWeight C HC 0)
+    (hCenterDivisor : HodgeAtWeight C HC 1) :
+    HodgeAtWeight T HT 2 := by
+  apply geometric_blowup_from_strictly_lower_center_weights
+    P (by omega) hBase
+  intro q hq
+  interval_cases q
+  · exact hCenterZero
+  · exact hCenterDivisor
+
+/-- NEW unlimited GST construction in the FIRST nontrivial Hodge
+codimension, permitting each geometric blowup center to have
+arbitrarily complicated UNKNOWN higher primitive Hodge classes. -/
+inductive SchemeTypedGSTCodimensionTwoBlowupTower :
+    (V : SmoothProjectiveComplexScheme) →
+    HodgeBigradedBettiData V → Prop where
+  | seed {V : SmoothProjectiveComplexScheme}
+      {H : HodgeBigradedBettiData V}
+      (h : HodgeAtWeight V H 2) :
+      SchemeTypedGSTCodimensionTwoBlowupTower V H
+  | blowup
+      {B C T : SmoothProjectiveComplexScheme}
+      {HB : HodgeBigradedBettiData B}
+      {HC : HodgeBigradedBettiData C}
+      {HT : HodgeBigradedBettiData T}
+      (c : ℕ)
+      (hBase : SchemeTypedGSTCodimensionTwoBlowupTower B HB)
+      (hCenterZero : HodgeAtWeight C HC 0)
+      (hCenterDivisor : HodgeAtWeight C HC 1)
+      (P : SchemeBlowupGysin B C T HB HC HT c 2) :
+      SchemeTypedGSTCodimensionTwoBlowupTower T HT
+
+/-- Every codimension-two rational Hodge class on every actual
+scheme in this arbitrary-depth blowup tower has a genuine
+native codimension-two rational algebraic cycle representative.
+This holds regardless of center dimension, middle cohomology,
+CM behavior or higher Hodge algebraicity. -/
+theorem unrestricted_center_blowup_tower_hodge_two
+    {V : SmoothProjectiveComplexScheme}
+    {H : HodgeBigradedBettiData V}
+    (h : SchemeTypedGSTCodimensionTwoBlowupTower V H) :
+    HodgeAtWeight V H 2 := by
+  induction h with
+  | seed h0 =>
+      exact h0
+  | blowup c hb h0 h1 P ih =>
+      exact geometric_blowup_codimension_two_from_center_divisors
+        P ih h0 h1
+
+#check HodgeAtWeight
+#check hodge_at_fixed_weight_of_geometric_birth
+#check geometric_blowup_from_strictly_lower_center_weights
+#check geometric_blowup_codimension_two_from_center_divisors
+#check SchemeTypedGSTCodimensionTwoBlowupTower
+#check unrestricted_center_blowup_tower_hodge_two
+#print axioms unrestricted_center_blowup_tower_hodge_two
+
 inductive SchemeTypedGSTGeometricTower :
     (V : SmoothProjectiveComplexScheme) →
     HodgeBigradedBettiData V → Prop where
