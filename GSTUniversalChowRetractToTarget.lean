@@ -857,6 +857,72 @@ theorem arbitrary_variety_hodge_from_rational_middle_world
   exact hMiddle (S.preserveHodge _
     (E.exceptionalPreservesHodge alpha hAlpha))
 
+
+/-! ## Explicit arbitrary-X native cycle from a rational middle class
+
+This is not merely surjectivity: given a SPECIFIC independently
+constructed algebraic middle-degree cycle on the stabilized rational
+world M, the following actual Lean term recovers a rational
+codimension-p cycle on the ORIGINAL arbitrary X by first integrating
+over the projective factor and then extracting the exceptional center
+component. The two strict Chow/Betti projection formulas certify
+the target class without an arbitrary Hodge-to-Chow selector.
+-/
+
+/-- A concrete rational Chow-cycle CONSTRUCTOR on arbitrary X
+from a concrete middle rational Chow cycle on the stabilized
+rational blowup M, through two existing native geometric maps. -/
+noncomputable def nativeCenterFromRationalMiddleCycle
+    {X Y M : SmoothProjectiveComplexScheme}
+    {HX : HodgeBigradedBettiData X}
+    {HY : HodgeBigradedBettiData Y}
+    {HM : HodgeBigradedBettiData M}
+    {p r : ℕ}
+    (E : SchemeExceptionalCenterRetract X Y HX HY p)
+    (S : SchemeProjectiveMiddleStabilization Y M HY HM (p+1) r)
+    (Z : codimensionCycles M.X (p+1+r)) :
+    codimensionCycles X.X p :=
+  E.centerRecoverNative (S.nativeRecover Z)
+
+/-- Constructed X-cycle exactly represents the supplied Hodge
+class whenever its independently verified stabilized middle
+algebraic cycle has the corresponding Betti class. The output
+is an ACTUAL native Chow element on X, NOT a cohomology vector. -/
+theorem nativeCenterFromRationalMiddleCycle_correct
+    {X Y M : SmoothProjectiveComplexScheme}
+    {HX : HodgeBigradedBettiData X}
+    {HY : HodgeBigradedBettiData Y}
+    {HM : HodgeBigradedBettiData M}
+    {p r : ℕ}
+    (E : SchemeExceptionalCenterRetract X Y HX HY p)
+    (S : SchemeProjectiveMiddleStabilization Y M HY HM (p+1) r)
+    (alpha : RationalSingularCohomology HX.analytification (2*p))
+    (Z : codimensionCycles M.X (p+1+r))
+    (hZ : HM.cycleClass (p+1+r) Z =
+      S.bettiStabilize (E.exceptionalBetti alpha)) :
+    HX.cycleClass p (nativeCenterFromRationalMiddleCycle E S Z) =
+      alpha := by
+  calc
+    HX.cycleClass p
+        (nativeCenterFromRationalMiddleCycle E S Z) =
+      E.centerRecoverBetti
+        (HY.cycleClass (p+1) (S.nativeRecover Z)) :=
+        E.recoveryCycleClass (S.nativeRecover Z)
+    _ = E.centerRecoverBetti
+          (S.bettiRecover (HM.cycleClass (p+1+r) Z)) := by
+            rw [S.recoverNaturality Z]
+    _ = E.centerRecoverBetti
+          (S.bettiRecover
+            (S.bettiStabilize (E.exceptionalBetti alpha))) := by
+            rw [hZ]
+    _ = E.centerRecoverBetti (E.exceptionalBetti alpha) := by
+            rw [S.bettiLeftInverse]
+    _ = alpha := E.centerLeftInverseBetti alpha
+
+#check nativeCenterFromRationalMiddleCycle
+#check nativeCenterFromRationalMiddleCycle_correct
+#print axioms nativeCenterFromRationalMiddleCycle_correct
+
 #check SchemeProjectiveMiddleStabilization
 #check projective_stabilization_hits_middle_degree
 #check algebraic_iff_projectively_stabilized_class
