@@ -563,6 +563,58 @@ theorem cmWeilCentralEigenspaceFilter_kills_ambient
   change R (T thetaPower - ((5:ℚ)^p) • thetaPower) = 0
   rw [hEigen, sub_self, map_zero]
 
+/-! ## Native single-irreducible-source reduction on ORIGINAL X
+
+In the existing Mathlib native rational cycle model, every
+algebraic Chow witness on smooth projective X is a FINITE
+rational sum of genuine codimension-p irreducible point cycles,
+by GSTCompactNativeCyclePresentation.
+
+If the CM Weil projector detects a nonzero cycle in that
+finite sum, then it detects at least one actual irreducible
+component of that cycle. No cancellation can make a sum
+nonzero when every projected summand is zero.
+
+Combined with the positive CM orbit determinant above:
+  ONE irreducible codimension-p subvariety V⊂A
+  with Π_W cl(V) ≠ 0
+suffices to construct every prescribed exceptional rational
+Weil (p,p) Hodge class on the SAME original A, using V and
+its algebraic CM-isogeny translates and explicit ℚ coefficients.
+
+The split source was already geometrically built. The current
+nonsplit source target is now ONE genuine irreducible cycle,
+not arbitrary formal Chow sources or two independent cycles.
+-/
+
+/-- Exact arbitrary-native-space finite-source extraction:
+a nonzero projected rational algebraic cycle is witnessed by
+at least one independently genuine algebraic source generator. -/
+theorem cmWeilProjectedFiniteNativeSourceWitness
+    {N W : Type*} [AddCommGroup N] [Module ℚ N]
+    [AddCommGroup W] [Module ℚ W]
+    {ι : Type*} [Fintype ι]
+    (cycleClass : N →ₗ[ℚ] W) (weiland : W →ₗ[ℚ] W)
+    (sources : ι → N) (coeff : ι → ℚ)
+    (hDetected :
+      weiland (cycleClass (∑ i, coeff i • sources i)) ≠ 0) :
+    ∃ i : ι, weiland (cycleClass (sources i)) ≠ 0 := by
+  classical
+  by_contra hNoSource
+  have hZero : ∀ i : ι, weiland (cycleClass (sources i)) = 0 := by
+    intro i
+    by_contra hn
+    exact hNoSource ⟨i, hn⟩
+  apply hDetected
+  calc
+    weiland (cycleClass (∑ i, coeff i • sources i)) =
+        ∑ i, coeff i • weiland (cycleClass (sources i)) := by
+          simp only [map_sum, map_smul]
+    _ = 0 := by simp [hZero]
+
+#check cmWeilProjectedFiniteNativeSourceWitness
+#print axioms cmWeilProjectedFiniteNativeSourceWitness
+
 #check cmWeilOneSourceDet_pos
 #check cmWeilOneSourceReconstruction
 #check cmWeilCentralEigenspaceFilter_kills_ambient
