@@ -1,4 +1,4 @@
-name: GST K3 Cyclotomic Primitive Orbit Rank
+name: GST Fermat Surface Cyclotomic Primitive Orbit Rank
 on:
   push:
     branches:
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
-      - name: Exact cyclotomic graph orbit determinant, orders 2 through 66
+      - name: Exact primitive graph orbit rank on regular surfaces, orders 2 through 66
         shell: bash
         run: |
           set -euo pipefail
