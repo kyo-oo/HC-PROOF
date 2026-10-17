@@ -78,6 +78,22 @@ An acceptable route must name the new geometric object, show how it produces a n
 - **Separate failure of divisor-only source route:** The primitive plane class \(3[P]-h^2\) on a cubic fourfold with Picard rank one has norm \(24\), while all divisor products lie in the ambient \(h^2\)-line. Thus native hyperplane/divisor operations alone cannot span all primitive directions even on that concrete original variety.
 - **One next unresolved step:** Establish independently that an arbitrary primitive rational \((p,p)\) target admits a genuinely new algebraic support/source on the original \(X\). This must be proved by new geometry rather than by a restatement of the support or cycle-class-image condition.
 
+## Current mathematical Gate 3 route: relative original-X geometry
+
+**New verified universal identity:** For every smooth projective \(X\) of even complex dimension \(2p\), a smooth ample hyperplane section \(i:Y\hookrightarrow X\), and every rational primitive middle \((p,p)\) class \(\alpha\),
+
+\[
+i^*\alpha=0,\qquad
+\alpha\in \operatorname{im}\bigl(H^{2p}(X,Y;\mathbb Q)\to H^{2p}(X;\mathbb Q)\bigr)
+ \cong\operatorname{im} H_c^{2p}(X\setminus Y;\mathbb Q).
+\]
+
+This follows from injective Gysin \(i_*\), self-intersection \(i_*i^*=h\cup\) and the pair's long exact sequence. The precise rational Betti formulation (plus the no-recovery theorem from plain restriction) is **Lean verified** in [GSTUniversalPrimitiveHyperplaneRelative.lean](../GSTUniversalPrimitiveHyperplaneRelative.lean), [GitHub run #39040307814](https://github.com/kyo-oo/HC-PROOF/actions/runs/39040307814). The full mathematical derivation and cubic fourfold exact test are in [the Mathbox route record](records/2026-10-17-primitive-middle-hyperplane-relative-gate.md).
+
+**Decisive route change:** Ordinary restriction to a hyperplane erases *every* primitive middle class. Hyperplane-only cycle reconstruction cannot be the missing Gate 3 constructor. The relative Betti lift retains the information, but no algebraic-cycle witness has been constructed from that lift. Moreover \(U=X\setminus Y\) is affine; compact positive-dimensional algebraic representatives inside \(U\) are unavailable. The relevant construction must use **signed algebraic cycles on the original X with controlled behavior across Y**, not an algebraic cycle assumed from the outset.
+
+**Next genuine source obligation:** Develop such a boundary-cancellation mechanism from original-\(X\) geometry for an arbitrary primitive \(\alpha\), and prove both its actual algebraicity and its canonical Betti class. Testing on cubic-fourfold primitive \(3[P]-h^2\) distinguishes a successful boundary mechanism from mere hyperplane restriction or divisor products. This is a proof obligation on the route to the original all-\(X\), all-\(p\) theorem, not a substitution for that theorem.
+
 ## Reporting and completion
 
 Every update reports: **(i)** the exact original target; **(ii)** which of gates 1–4 acquired a proof; **(iii)** the one next missing mathematical implication; **(iv)** exact commit/CI evidence. No claim of final completion before all four acceptance tests pass.
