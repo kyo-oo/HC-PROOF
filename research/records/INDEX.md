@@ -1,5 +1,10 @@
 # GST Hodge Research — Construction Program
 
+**Current execution plan:** [Three proof gates, fixed all-X primitive target, and no-side-quest rule](../ACTIVE_HODGE_PROOF_PLAN.md).
+
+**Latest route decision:** [Wolfram-verified holomorphic-form source-selection gate](2026-10-17-fano-source-selection-holomorphic-gate.md) — finite domination from the current solved Fano source class cannot cover every original smooth projective variety.
+
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
