@@ -129,6 +129,223 @@ theorem point_closure_relative_successor_crown
     relativeCutSet_ne_univ V x,
     finite_relative_coheight_one V x⟩
 
+/-! ## Target-directed cuts
+
+The canonical relevance separator is useful for forward propagation, but its
+choice need not contain a prescribed specialization. Here the equation is
+instead derived from the strict inclusion of source and target projective
+prime ideals. The resulting ideal sheaf defines an actual closed subscheme
+inside the source closure. Every relative coheight-one point belongs to the
+finite coheight-one locus of its own directed cut.
+
+The equation below is allowed to be nonhomogeneous: `principalSectionIdeal`
+uses the reduced projective zero locus and is defined for every equation.
+No assertion that this is an effective Cartier divisor is needed or made.
+No Hodge data, cycle-class map, or Hodge-direction preimage enters the cut.
+-/
+
+section TargetDirected
+
+attribute [local instance] specializationOrder
+attribute [local instance] MvPolynomial.gradedAlgebra
+
+/-- Every point in a reduced source closure lies below its generic point. -/
+theorem pointClosure_le_generic
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (z : pointClosureScheme V x) :
+    z ≤ closureGenericPoint V x := by
+  rw [specializationOrder_iff_specializes]
+  have hclosure :=
+    (pointClosureι V x).isEmbedding.closure_eq_preimage_closure_image
+      ({closureGenericPoint V x} : Set (pointClosureScheme V x))
+  rw [Set.image_singleton, closureGenericPoint_maps_to_source] at hclosure
+  rw [hclosure]
+  change pointClosureι V x z ∈ closure ({x} : Set V.X)
+  rw [← range_pointClosureι V x]
+  exact ⟨z, rfl⟩
+
+/-- The source closure's generic point has relative coheight zero. -/
+theorem closureGenericPoint_coheight_zero
+    (V : SmoothProjectiveComplexScheme) (x : V.X) :
+    Order.coheight (closureGenericPoint V x) = 0 := by
+  apply Order.coheight_eq_zero.mpr
+  intro z _hz
+  exact pointClosure_le_generic V x z
+
+/-- A strict specialization supplies an actual projective equation vanishing
+at the target and not at the source. Unlike the fixed relevance separator,
+this equation is chosen using both geometric points. -/
+theorem exists_targetedSectionEquation
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    ∃ f : ProjectiveCoordinateRing V.projective.n,
+      f ∈ (V.projective.immersion (pointClosureι V x y)).asHomogeneousIdeal ∧
+      f ∉ (V.projective.immersion x).asHomogeneousIdeal := by
+  have prime_le_iff : ∀ a b : projectiveSpace V.projective.n,
+      a ≤ b ↔ b.asHomogeneousIdeal.toIdeal ≤ a.asHomogeneousIdeal.toIdeal := by
+    intro a b
+    rw [specializationOrder_iff_specializes,
+      ← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
+      ProjectiveSpectrum.vanishingIdeal_singleton]
+    exact ProjectiveSpectrum.mem_zeroLocus _ _ _
+  have hyle : pointClosureι V x y ≤ x := by
+    have h := (pointClosureι V x).continuous.specialization_monotone
+      (pointClosure_le_generic V x y)
+    simpa only [closureGenericPoint_maps_to_source] using h
+  have hsource : (V.projective.immersion x).asHomogeneousIdeal.toIdeal ≤
+      (V.projective.immersion (pointClosureι V x y)).asHomogeneousIdeal.toIdeal :=
+    (prime_le_iff _ _).mp
+      (V.projective.immersion.continuous.specialization_monotone hyle)
+  have hnot : ¬
+      (V.projective.immersion (pointClosureι V x y)).asHomogeneousIdeal.toIdeal ≤
+        (V.projective.immersion x).asHomogeneousIdeal.toIdeal := by
+    intro hreverse
+    have hprojective : V.projective.immersion (pointClosureι V x y) =
+        V.projective.immersion x := by
+      apply ProjectiveSpectrum.ext
+      exact HomogeneousIdeal.ext (le_antisymm hreverse hsource)
+    letI : IsClosedImmersion V.projective.immersion := V.projective.closedImmersion
+    have himage : pointClosureι V x y = x :=
+      V.projective.immersion.isEmbedding.injective hprojective
+    apply hy
+    apply (pointClosureι V x).isEmbedding.injective
+    rw [himage, closureGenericPoint_maps_to_source]
+  obtain ⟨f, hf, hfn⟩ := SetLike.not_le_iff_exists.mp hnot
+  exact ⟨f, HomogeneousIdeal.mem_iff.mp hf,
+    fun hmem => hfn (HomogeneousIdeal.mem_iff.mpr hmem)⟩
+
+/-- Equation derived from the two geometric points, with no equation input. -/
+noncomputable def targetedSectionEquation
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    ProjectiveCoordinateRing V.projective.n :=
+  Classical.choose (exists_targetedSectionEquation V x y hy)
+
+theorem targetedSectionEquation_spec
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    targetedSectionEquation V x y hy ∈
+        (V.projective.immersion (pointClosureι V x y)).asHomogeneousIdeal ∧
+      targetedSectionEquation V x y hy ∉
+        (V.projective.immersion x).asHomogeneousIdeal :=
+  Classical.choose_spec (exists_targetedSectionEquation V x y hy)
+
+/-- Ideal sheaf of the actual directed cut inside the source closure. -/
+noncomputable def targetedRelativeCutIdeal
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    (pointClosureScheme V x).IdealSheafData :=
+  (principalSectionIdeal V (targetedSectionEquation V x y hy)).comap
+    (pointClosureι V x)
+
+/-- Genuine closed subscheme cut out by the derived equation. -/
+noncomputable def targetedRelativeCutScheme
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) : Scheme :=
+  (targetedRelativeCutIdeal V x y hy).subscheme
+
+theorem mem_targetedRelativeCut_iff
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x)
+    (z : pointClosureScheme V x) :
+    z ∈ (targetedRelativeCutIdeal V x y hy).support ↔
+      targetedSectionEquation V x y hy ∈
+        (V.projective.immersion (pointClosureι V x z)).asHomogeneousIdeal := by
+  unfold targetedRelativeCutIdeal
+  rw [Scheme.IdealSheafData.support_comap]
+  exact mem_principalSection_support_iff V
+    (targetedSectionEquation V x y hy) (pointClosureι V x z)
+
+/-- The directed cut really contains the prescribed target point. -/
+theorem target_mem_targetedRelativeCut
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    y ∈ (targetedRelativeCutIdeal V x y hy).support :=
+  (mem_targetedRelativeCut_iff V x y hy y).mpr
+    (targetedSectionEquation_spec V x y hy).1
+
+/-- The same cut excludes the generic source, so it is proper. -/
+theorem generic_not_mem_targetedRelativeCut
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    closureGenericPoint V x ∉ (targetedRelativeCutIdeal V x y hy).support := by
+  intro hmem
+  have hf := (mem_targetedRelativeCut_iff V x y hy _).mp hmem
+  rw [closureGenericPoint_maps_to_source] at hf
+  exact (targetedSectionEquation_spec V x y hy).2 hf
+
+/-- The directed cut's relative codimension-one source locus is finite. -/
+theorem finite_targetedRelativeCut_coheight_one
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    {z ∈ (targetedRelativeCutIdeal V x y hy).support |
+      Order.coheight z = 1}.Finite := by
+  letI : IrreducibleSpace (pointClosureScheme V x) :=
+    pointClosureIrreducibleSpace V x
+  letI : IsNoetherian (pointClosureScheme V x) := pointClosureIsNoetherian V x
+  letI : NoetherianSpace (pointClosureScheme V x) := by infer_instance
+  apply finite_coheight_one_of_proper_closed
+    ((targetedRelativeCutIdeal V x y hy).support : Set (pointClosureScheme V x))
+    (targetedRelativeCutIdeal V x y hy).support.isClosed
+  intro hall
+  apply generic_not_mem_targetedRelativeCut V x y hy
+  rw [hall]
+  trivial
+
+/-- All relative coheight-one components of the constructed directed cut. -/
+noncomputable def targetedRelativeCodimensionOneFinset
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    Finset (pointClosureScheme V x) :=
+  (finite_targetedRelativeCut_coheight_one V x y hy).toFinset
+
+@[simp]
+theorem mem_targetedRelativeCodimensionOneFinset
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x)
+    (z : pointClosureScheme V x) :
+    z ∈ targetedRelativeCodimensionOneFinset V x y hy ↔
+      z ∈ (targetedRelativeCutIdeal V x y hy).support ∧
+        Order.coheight z = 1 := by
+  classical
+  exact Set.Finite.mem_toFinset _
+
+/-- Universal one-step source coverage: EVERY relative coheight-one point
+occurs in the finite component locus of a constructed proper cut. This is a
+geometric source theorem; it does not assert primitive Hodge spanning. -/
+theorem every_relative_codimension_one_point_has_directed_cut
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy1 : Order.coheight y = 1) :
+    ∃ hy : y ≠ closureGenericPoint V x,
+      y ∈ targetedRelativeCodimensionOneFinset V x y hy := by
+  have hy : y ≠ closureGenericPoint V x := by
+    intro heq
+    rw [heq, closureGenericPoint_coheight_zero] at hy1
+    norm_num at hy1
+  exact ⟨hy, (mem_targetedRelativeCodimensionOneFinset V x y hy y).mpr
+    ⟨target_mem_targetedRelativeCut V x y hy, hy1⟩⟩
+
+#check targetedRelativeCutScheme
+#check every_relative_codimension_one_point_has_directed_cut
+#print axioms exists_targetedSectionEquation
+#print axioms target_mem_targetedRelativeCut
+#print axioms finite_targetedRelativeCut_coheight_one
+#print axioms every_relative_codimension_one_point_has_directed_cut
+
+end TargetDirected
+
 #check relativeCutSet
 #check closureGenericPoint_not_mem_relativeCut
 #check relativeCutSet_ne_univ
