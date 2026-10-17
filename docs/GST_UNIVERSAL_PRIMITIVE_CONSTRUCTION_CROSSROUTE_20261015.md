@@ -1121,3 +1121,76 @@ its Betti cycle class equals the requested alpha under the
 concrete cohomological class equality for Z. This does NOT
 manufacture the missing middle algebraic cycle Z; it certifies
 the complete source-to-X Chow recovery without hidden selectors.
+
+## Mathbox 2026-10-17: genuine arbitrary-center Hodge (2,2) births and independent exceptional cycles
+
+Target remains EVERY rational primitive Hodge direction on EVERY
+smooth projective complex variety, not merely a transported class.
+New existing-file mathematics in GSTUniversalChowRetractToTarget.lean:
+
+1. HodgeAtWeight V H p is the exact given-weight true scheme-cycle
+   surjectivity Hdg^p(V) <= range(cycleClass_V^p).
+2. hodge_at_fixed_weight_of_geometric_birth constructs an ACTUAL
+   codimension-p target Chow cycle from native source cycles at
+   ONLY the codimensions actually used by the Gysin splitting;
+   previous construction assumed FULL all-weight Hodge algebraicity
+   for every independent source scheme, unnecessarily.
+3. geometric_blowup_from_strictly_lower_center_weights proves
+   that Hdg^p blowup classes are algebraic whenever Hdg^p base
+   classes and center Hdg^q for q<p are algebraic. This uses
+   the actual blowup source weights p-(j+1), j>=0.
+4. geometric_blowup_codimension_two_from_center_divisors proves
+   every rational (2,2) class on a genuine smooth blowup is
+   algebraic assuming only source base Hdg^2 plus CENTER Hdg^0
+   and Hdg^1. The latter follow from the fundamental class
+   and Lefschetz (1,1) on every smooth projective center.
+   There is NO assumption about Hdg^2, Hdg^3 or any higher
+   primitive class of the center.
+5. SchemeTypedGSTCodimensionTwoBlowupTower allows any finite
+   sequence of smooth blowups, with smooth centers of ARBITRARY
+   dimension and any Hodge-theoretic complexity, and theorem
+   unrestricted_center_blowup_tower_hodge_two constructs
+   genuine native rational codimension-2 representatives
+   at every born world, by induction over tower depth.
+
+On a concrete Y=Bl_X(P^N) with smooth X ANY dimension and center
+codimension c>=3, the actual Chow decomposition gives
+   CH^2(Y)_Q = CH^2(P^N)_Q (+) CH^1(X)_Q (+) CH^0(X)_Q.
+The rational Hodge cohomology splitting is identical in type.
+Every direct summand is algebraic: ambient linear planes,
+center divisors, and center components. In particular the
+first UNKNOWN primitive Hodge obstruction of X in Hdg^2(X)
+appears only in Hdg^3(Y), not in Hdg^2(Y). A rational ambient
+host does not automatically solve Hodge in higher weights.
+
+6. exceptional_hodge_embedding_injective proves the true
+   exceptional class map is injective using its geometric
+   Betti recovery left inverse.
+7. exceptional_native_cycle_new_beyond_ambient starts from a
+   specific nonzero genuine native cycle Z on arbitrary X and
+   constructs its actual exceptional Gysin cycle on Y. The
+   output is proved OUTSIDE THE ENTIRE AMBIENT Betti image
+   when the geometric recovery kills that ambient summand.
+   Thus this is a genuinely NEW algebraic source direction,
+   not a reversible recoordination of old projective cycles.
+   Projective positive-dimensional X has an ample divisor
+   with nonzero Betti class, supplying the source for p=1.
+
+LEAN EVIDENCE: codimension-two tower commit
+8d6fb63af9e68b4a2d68f7eafd5a092b01e19236; independent
+exceptional native-cycle commit
+5a02ef2304477d84eb5f0806d3f4cee6b49fcf34.
+Current combined CI run 38992433801 needs its completed result
+checked before marking these latest declarations kernel-verified.
+The older all-varieties Chow middle-recovery run 38991205384
+has a confirmed SUCCESS conclusion.
+
+IMPORTANT BOUNDARY: the Lean scheme-typed Gysin packet still
+requires independent construction of the blowup, its true
+native Chow/Betti Gysin maps, and cycle-class comparison,
+and HodgeBigradedBettiData.cycleClass is a supplied map.
+The known true geometric formulas justify a mathematical
+instantiation, but the current file does not construct
+their analytic or scheme-level Mathlib realizations.
+These upgrades DO NOT yet construct a representative for
+an arbitrary Hdg^p(X) primitive class when p>=2.
