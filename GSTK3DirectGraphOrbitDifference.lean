@@ -3,13 +3,15 @@ import GSTUniversalCodimensionTwoPrimitiveExtraction
 /-!
 # GST direct primitive cycles from an algebraic automorphism orbit
 
-Let S be a smooth projective surface with ample class h and an
-algebraic finite-order automorphism g fixing h. The four graph
+Let S be a smooth projective surface with H¹(S,ℚ)=0 (in
+particular, a K3 surface), ample class h and a finite-order
+algebraic automorphism g fixing h. The four graph
 cycles Γ_id, Γ_g, Γ_g², Γ_g³ are genuine algebraic subvarieties of
 the original smooth projective fourfold S×S.
 
 For L=pr₁*h+pr₂*h, the pushforward of h along Γ_(g^k) has
-the SAME cohomology class for each k, because g^*h=h.
+the SAME cohomology class for each k: g^*h=h and H¹(S,ℚ)=0
+eliminate the even and odd Kunneth discrepancies.
 Therefore the actual graph differences
 
   A=Γ_id-Γ_(g²),   B=Γ_g-Γ_(g³)
