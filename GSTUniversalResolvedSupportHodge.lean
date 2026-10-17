@@ -500,7 +500,8 @@ theorem quadricBottProjector_idempotent
     ring
   · change (E * E) 1 1 = E 1 1
     rw [h11]
-    simp [E, quadricBottProjector, hQuadric]
+    simp [E, quadricBottProjector]
+    rw [mul_comm y x, hQuadric]
     ring
 
 /-! ## UNIVERSAL AFFINE REPLACEMENT projector for arbitrary X
