@@ -406,6 +406,132 @@ theorem targetedRelativeCutTarget_is_component_generic
   calc W ⊆ closure (W : Set C) := subset_closure
     _ = closure ({u} : Set C) := hclos
 
+/-- Lift any ambient specialization into the actual reduced source closure. -/
+noncomputable def specializationLift
+    (V : SmoothProjectiveComplexScheme) (x z : V.X) (hzx : z ≤ x) :
+    pointClosureScheme V x :=
+  (pointClosureHomeomorph V x).symm
+    ⟨z, specializationOrder_iff_specializes.mp hzx⟩
+
+@[simp]
+theorem specializationLift_maps
+    (V : SmoothProjectiveComplexScheme) (x z : V.X) (hzx : z ≤ x) :
+    pointClosureι V x (specializationLift V x z hzx) = z := by
+  change ((pointClosureHomeomorph V x)
+    (specializationLift V x z hzx)).1 = z
+  simp [specializationLift]
+
+/-- An ambient coheight gap of one forces relative coheight one along the
+chosen specialization. This needs no global catenarity/additivity premise. -/
+theorem specializationLift_coheight_one
+    (V : SmoothProjectiveComplexScheme) (p : ℕ)
+    (x z : V.X)
+    (hx : Order.coheight x = p)
+    (hz : Order.coheight z = p + 1)
+    (hzx : z < x) :
+    Order.coheight (specializationLift V x z hzx.le) = 1 := by
+  let y := specializationLift V x z hzx.le
+  have himage : pointClosureι V x y = z := specializationLift_maps V x z hzx.le
+  have hyne : y ≠ closureGenericPoint V x := by
+    intro heq
+    apply hzx.ne
+    rw [← himage, heq, closureGenericPoint_maps_to_source]
+  have hylt : y < closureGenericPoint V x :=
+    lt_of_le_of_ne (pointClosure_le_generic V x y) hyne
+  have huniq : ∀ w : pointClosureScheme V x, y < w →
+      w = closureGenericPoint V x := by
+    intro w hyw
+    have hywle : z ≤ pointClosureι V x w := by
+      rw [← himage]
+      exact (pointClosureι V x).continuous.specialization_monotone hyw.le
+    have hywne : z ≠ pointClosureι V x w := by
+      intro heq
+      apply hyw.ne
+      exact (pointClosureι V x).isEmbedding.injective (himage.trans heq)
+    have hywlt : z < pointClosureι V x w := lt_of_le_of_ne hywle hywne
+    have hwle : pointClosureι V x w ≤ x := by
+      have h := (pointClosureι V x).continuous.specialization_monotone
+        (pointClosure_le_generic V x w)
+      simpa only [closureGenericPoint_maps_to_source] using h
+    have hwfinite : Order.coheight (pointClosureι V x w) < ⊤ := by
+      apply (Order.coheight_anti hywle).trans_lt
+      rw [hz]
+      exact ENat.natCast_lt_top (p + 1)
+    obtain ⟨n, hn⟩ := ENat.ne_top_iff_exists.mp hwfinite.ne
+    have hlow : p ≤ n := by
+      have h := Order.coheight_anti hwle
+      rw [hx, ← hn] at h
+      exact_mod_cast h
+    have hupp : n < p + 1 := by
+      have h := Order.coheight_strictAnti hywlt hwfinite
+      rw [hz, ← hn] at h
+      exact_mod_cast h
+    have hnp : n = p := by omega
+    have hweq : pointClosureι V x w = x := by
+      by_contra hne
+      have hstrict := Order.coheight_strictAnti (lt_of_le_of_ne hwle hne)
+        (show Order.coheight x < ⊤ by rw [hx]; exact ENat.natCast_lt_top p)
+      rw [hx, ← hn, hnp] at hstrict
+      exact (lt_irrefl _ hstrict)
+    apply (pointClosureι V x).isEmbedding.injective
+    rw [hweq, closureGenericPoint_maps_to_source]
+  apply le_antisymm
+  · rw [Order.coheight_eq_iSup_gt_coheight]
+    apply iSup₂_le
+    intro w hyw
+    rw [huniq w hyw, closureGenericPoint_coheight_zero]
+    simp
+  · have h := Order.coheight_add_one_le hylt
+    rw [closureGenericPoint_coheight_zero] at h
+    simpa using h
+
+/-- Every positive-codimension native point has an exact predecessor and is
+an actual irreducible component of a derived proper cut in that predecessor's
+closure. The equation and predecessor are constructed, not supplied. -/
+theorem every_ambient_successor_point_has_directed_cut_component
+    (V : SmoothProjectiveComplexScheme) (p : ℕ)
+    (z : V.X) (hz : Order.coheight z = p + 1) :
+    ∃ x : V.X, Order.coheight x = p ∧
+      ∃ hzx : z < x,
+      ∃ hy : specializationLift V x z hzx.le ≠ closureGenericPoint V x,
+        Order.coheight (specializationLift V x z hzx.le) = 1 ∧
+        specializationLift V x z hzx.le ∈
+          targetedRelativeCodimensionOneFinset V x
+            (specializationLift V x z hzx.le) hy ∧
+        targetedRelativeCutTarget V x (specializationLift V x z hzx.le) hy ∈
+          genericPoints
+            ((targetedRelativeCutIdeal V x
+              (specializationLift V x z hzx.le) hy).support :
+                Set (pointClosureScheme V x)) := by
+  have hfinite : Order.coheight z < ⊤ := by
+    rw [hz]
+    exact ENat.natCast_lt_top (p + 1)
+  have hlt : (p : ℕ∞) < Order.coheight z := by
+    rw [hz]
+    exact_mod_cast Nat.lt_succ_self p
+  obtain ⟨x, hzx, hx⟩ :=
+    (Order.coe_lt_coheight_iff (x := z) (n := p) hfinite).mp hlt
+  have hy1 := specializationLift_coheight_one V p x z hx hz hzx
+  obtain ⟨hy, hmem⟩ := every_relative_codimension_one_point_has_directed_cut
+    V x (specializationLift V x z hzx.le) hy1
+  exact ⟨x, hx, hzx, hy, hy1, hmem,
+    targetedRelativeCutTarget_is_component_generic V x
+      (specializationLift V x z hzx.le) hy hy1⟩
+
+/-- Every finite-codimension ambient point has an exact graded geometric
+flag up to a codimension-zero generic point. Each adjacent pair has coheight
+gap one, so the directed component construction applies along the flag. -/
+theorem every_ambient_point_has_exact_coheight_flag
+    (V : SmoothProjectiveComplexScheme) (p : ℕ)
+    (z : V.X) (hz : Order.coheight z = p) :
+    ∃ s : LTSeries V.X, s.head = z ∧ s.length = p ∧
+      ∀ i : Fin (s.length + 1), Order.coheight (s i) = (i.rev : ℕ) := by
+  obtain ⟨s, hs, hlength⟩ := Order.exists_series_of_coheight_eq_coe z hz
+  refine ⟨s, hs, hlength, ?_⟩
+  intro i
+  exact Order.coheight_eq_index_of_length_eq_head_coheight
+    (by rw [hs, hz, hlength]) i
+
 #check targetedRelativeCutScheme
 #check every_relative_codimension_one_point_has_directed_cut
 #check targetedRelativeCutTarget_is_component_generic
@@ -414,6 +540,11 @@ theorem targetedRelativeCutTarget_is_component_generic
 #print axioms finite_targetedRelativeCut_coheight_one
 #print axioms every_relative_codimension_one_point_has_directed_cut
 #print axioms targetedRelativeCutTarget_is_component_generic
+#check every_ambient_successor_point_has_directed_cut_component
+#print axioms specializationLift_coheight_one
+#print axioms every_ambient_successor_point_has_directed_cut_component
+#check every_ambient_point_has_exact_coheight_flag
+#print axioms every_ambient_point_has_exact_coheight_flag
 
 end TargetDirected
 
