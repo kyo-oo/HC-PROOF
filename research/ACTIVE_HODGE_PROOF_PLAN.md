@@ -97,6 +97,16 @@ with all other Chern-character degrees zero and primitive square \(d(d-1)^3\). [
 
 **Scope control:** This is one executable affine source-birth route to the SAME universal Hodge conjecture, not a change to the final theorem. The established middle-relative, matched-boundary, resolved-support, and finite Chow-descent results remain indexed in [research records](records/INDEX.md). Do not add further special-family ranks or conditional source structures unless they advance the actual algebraic affine K/Chow source construction or instantiate a missing canonical Betti comparison.
 
+## Current GST source-generation checkpoint — intrinsic plus nonambient channels
+
+The latest execution **directly reused established GST laws**, not a parallel replacement of them. The original-X intrinsic tangent bundle Chern class c₂(T_X) is a genuine algebraic source on every smooth X. Applying the existing GST native Hard-Lefschetz primitiveizer constructs its canonical primitive algebraic correction on X. On products of two polarized K3 surfaces, exact Wolfram/Künneth geometry measures the class with positive square 192(a+b)²/(ab). Lean formalizes the rational intersection certificate and the true GST native class construction.
+
+The same GST primitive-vanishing theorem gives a decisive source-selection rule: the intrinsic tangent Chern class on a smooth projective hypersurface lies in the h-generated ambient Chern algebra and has zero primitive projection. For cubic fourfolds, c₂(T_X)=6h², while the previously verified genuine rank-two **plane syzygy bundle** produces a nonzero nonambient primitive class with square 24. Therefore deploy the source families together, test their true independent primitive measurements, and retain a separate primitive Hodge residual for anything not generated.
+
+**Kernel evidence:** [intrinsic tangent GST gate #39053987370](https://github.com/kyo-oo/HC-PROOF/actions/runs/39053987370) and [hypersurface ambient-source zero gate #39054244592](https://github.com/kyo-oo/HC-PROOF/actions/runs/39054244592) both GREEN with sorryAx audits. [Full Mathbox route and Wolfram exact computations](records/2026-10-17-intrinsic-tangent-chern-gst-primitive-source.md). Existing true GST dependencies are GSTUniversalCodimensionTwoPrimitiveExtraction, GSTPrimitiveTransverseCycleExtraction, GSTActualXHodgeResidualProjection, and GSTPrimitiveAlgebraicMotiveProjector.
+
+**One exact remaining Gate-3 theorem:** Build actual nonambient algebraic incidences/syzygy source data from each specified (X,p,α), *without supplying an already algebraic class*, and prove that the combined GST primitive-plus-nonprimitive native cycle has canonical Betti class α. Constructing a nonzero source for another fixed variety is not the prescribed-source completion condition.
+
 ## Reporting and completion
 
 Every update reports: **(i)** the exact original target; **(ii)** which of gates 1–4 acquired a proof; **(iii)** the one next missing mathematical implication; **(iv)** exact commit/CI evidence. No claim of final completion before all four acceptance tests pass.
