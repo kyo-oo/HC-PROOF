@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
+      - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTCubicFourfoldPlanePrimitive.lean'
       - '.github/workflows/gst-cubic-fourfold-plane-primitive.yml'
