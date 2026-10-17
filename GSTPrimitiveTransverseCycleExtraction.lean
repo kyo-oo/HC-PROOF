@@ -539,6 +539,154 @@ theorem primitive_center_divisor_directions_are_distinct
       G P B (a - b) (betaA - betaC) hNativeDifference
   exact sub_eq_zero.mp hZero
 
+
+/-! ## GST primitive projection is a RATIONAL LINEAR MAP
+
+The previous primitive correction used a noncomputable choice of
+Hard Lefschetz inverse and a divisor lifting. Because the Hard
+Lefschetz map is injective as well as surjective, the CORRECTED
+HODGE CLASS is independent of those choices and is fully linear.
+Proving this closes the remaining rank issue: an injective
+construction of primitive classes is now an actual linear
+embedding of the entire rational center Picard space, not merely
+a set-theoretic injection or finitely many sample cycles.
+-/
+
+/-- Exact additivity of the previously defined primitive Hodge
+remainder, obtained from the uniqueness of the Hard Lefschetz
+inverse rather than a presumed linear choice of Chow lifts. -/
+theorem primitive_hodge_remainder_add
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (alpha gamma : ClassicalHodgeFiber V H 2) :
+    primitiveHodgeRemainder G P h11 (alpha + gamma) =
+      primitiveHodgeRemainder G P h11 alpha +
+        primitiveHodgeRemainder G P h11 gamma := by
+  obtain ⟨u, hu, htu⟩ :=
+    correction_is_cup_of_real_divisor G P h11 (alpha + gamma)
+  obtain ⟨v, hv, htv⟩ :=
+    correction_is_cup_of_real_divisor G P h11 alpha
+  obtain ⟨w, hw, htw⟩ :=
+    correction_is_cup_of_real_divisor G P h11 gamma
+  have hSum : u = v + w := by
+    apply hInject
+    calc
+      P.cupH2 u = P.primitiveTest (alpha + gamma) := htu
+      _ = P.primitiveTest alpha + P.primitiveTest gamma := by
+            rw [map_add]
+      _ = P.cupH2 v + P.cupH2 w := by rw [htv, htw]
+      _ = P.cupH2 (v + w) := by rw [map_add]
+  unfold primitiveHodgeRemainder
+  rw [hu, hv, hw, hSum, map_add]
+  abel
+
+/-- Exact rational scalar compatibility of the canonical Hodge
+primitive projection. No scalar-linear Chow section is required. -/
+theorem primitive_hodge_remainder_smul
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (a : ℚ) (alpha : ClassicalHodgeFiber V H 2) :
+    primitiveHodgeRemainder G P h11 (a • alpha) =
+      a • primitiveHodgeRemainder G P h11 alpha := by
+  obtain ⟨u, hu, htu⟩ :=
+    correction_is_cup_of_real_divisor G P h11 (a • alpha)
+  obtain ⟨v, hv, htv⟩ :=
+    correction_is_cup_of_real_divisor G P h11 alpha
+  have hScalar : u = a • v := by
+    apply hInject
+    calc
+      P.cupH2 u = P.primitiveTest (a • alpha) := htu
+      _ = a • P.primitiveTest alpha := by rw [map_smul]
+      _ = a • P.cupH2 v := by rw [htv]
+      _ = P.cupH2 (a • v) := by rw [map_smul]
+  unfold primitiveHodgeRemainder
+  rw [hu, hv, hScalar, map_smul]
+  simp only [smul_sub]
+
+/-- The canonical native GST primitive Hodge projection, now a
+genuine ℚ-linear operator despite its originally noncomputable
+native Chow-level choice. -/
+noncomputable def primitiveHodgeProjectionLinear
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2) :
+    ClassicalHodgeFiber V H 2 →ₗ[ℚ]
+      ClassicalHodgeFiber V H 2 where
+  toFun := primitiveHodgeRemainder G P h11
+  map_add' := by
+    intro a b
+    exact primitive_hodge_remainder_add G P h11 hInject a b
+  map_smul' := by
+    intro a x
+    exact primitive_hodge_remainder_smul G P h11 hInject a x
+
+/-- GENUINE LINEAR embedding of the rational center divisor
+directions into the rational primitive Hodge classes represented
+by native algebraic cycles on a rational blowup host. -/
+noncomputable def picardToNativePrimitiveLinear
+    {D : Type*} [AddCommGroup D] [Module ℚ D]
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (B : GenuineBlowupPicardPrimitivePacket G P D) :
+    D →ₗ[ℚ] ClassicalHodgeFiber V H 2 :=
+  (primitiveHodgeProjectionLinear G P h11 hInject).comp
+    ((nativeToHodgeFiberLinear G).comp B.nativeFirstExceptional)
+
+/-- FULL RANK: this map is a linear INJECTION, not merely a
+different primitive cycle for each individually selected divisor.
+Its image consists of actual algebraic primitive Hodge classes,
+so the center's entire Picard rank survives as genuine primitive
+algebraic directions on the rational blowup host. -/
+theorem picardToNativePrimitiveLinear_injective
+    {D : Type*} [AddCommGroup D] [Module ℚ D]
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hInject : Function.Injective P.cupH2)
+    (B : GenuineBlowupPicardPrimitivePacket G P D) :
+    Function.Injective (picardToNativePrimitiveLinear G P h11 hInject B) := by
+  intro a b hab
+  have hProj :
+      primitiveHodgeRemainder G P h11
+        (nativeToHodgeFiberLinear G (B.nativeFirstExceptional a)) =
+      primitiveHodgeRemainder G P h11
+        (nativeToHodgeFiberLinear G (B.nativeFirstExceptional b)) := by
+    change primitiveHodgeRemainder G P h11
+      (nativeToHodgeFiberLinear G (B.nativeFirstExceptional a)) =
+      primitiveHodgeRemainder G P h11
+      (nativeToHodgeFiberLinear G (B.nativeFirstExceptional b)) at hab
+    exact hab
+  apply primitive_center_divisor_directions_are_distinct G P h11 B a b
+  calc
+    nativeToHodgeFiberLinear G
+      (primitiveizeNativeMiddleCycle G P h11
+        (B.nativeFirstExceptional a)) =
+        primitiveHodgeRemainder G P h11
+          (nativeToHodgeFiberLinear G
+            (B.nativeFirstExceptional a)) :=
+          native_primitive_projection_cycleClass G P h11
+            (B.nativeFirstExceptional a)
+    _ = primitiveHodgeRemainder G P h11
+      (nativeToHodgeFiberLinear G
+        (B.nativeFirstExceptional b)) := hProj
+    _ = nativeToHodgeFiberLinear G
+      (primitiveizeNativeMiddleCycle G P h11
+        (B.nativeFirstExceptional b)) :=
+          (native_primitive_projection_cycleClass G P h11
+            (B.nativeFirstExceptional b)).symm
+
+#check primitiveHodgeProjectionLinear
+#check picardToNativePrimitiveLinear
+#check picardToNativePrimitiveLinear_injective
+#print axioms picardToNativePrimitiveLinear_injective
+
 #check primitive_center_divisor_directions_are_distinct
 #print axioms primitive_center_divisor_directions_are_distinct
 
