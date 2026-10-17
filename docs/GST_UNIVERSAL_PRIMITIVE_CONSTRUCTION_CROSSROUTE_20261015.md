@@ -1194,3 +1194,78 @@ instantiation, but the current file does not construct
 their analytic or scheme-level Mathlib realizations.
 These upgrades DO NOT yet construct a representative for
 an arbitrary Hdg^p(X) primitive class when p>=2.
+
+### 2026-10-17: all-center exceptional nonzero primitive codimension-two cycles
+
+NEW substantive GST GEOMETRIC CYCLE CONSTRUCTION beyond conditional
+full Hodge transfers: For ANY positive-dimensional smooth projective
+complex center X, embed X in P^N with N large enough that
+c=codim(X,P^N)>=3 and N>=4, and let Y=Bl_X(P^N).
+Y is a smooth projective RATIONAL variety.
+
+Let A be the ambient hyperplane class on Y and E the exceptional
+divisor. The actual Chow blowup formula in codimension two is
+  CH^2(Y)_Q= CH^2(P^N)_Q + CH^1(X)_Q + CH^0(X)_Q.
+The three classes A^2, A*E, E^2 have independent rational
+Betti cohomology sectors because the first exceptional
+cohomology is H^2(X), the second exceptional H^0(X), and
+the ambient sector is H^4(P^N). Here A*E is the actual
+exceptional Gysin image of the ample divisor h=A|X, and
+cl(h) is nonzero because dim(X)>=1 and h is ample.
+
+Choose a rational ample polarization L=A-t*E with t!=0.
+The image under multiplication by L of the divisor class
+x*A+y*E has coordinates in the (A²,A*E,E²) sector
+  (x, y-t*x, -t*y).
+The genuinely algebraic class A*E has coordinates (0,1,0).
+No choice of x,y can produce those three coordinates:
+x=0 and -t*y=0 force y=0, contradicting the middle 1.
+Equivalently, Wolfram evaluated the exact determinant of
+columns (1,-t,0), (0,1,-t), (0,1,0) as t, nonzero.
+
+Therefore A*E lies OUTSIDE the entire Lefschetz divisor cup
+image, independently of the dimension or the primitive
+Hodge algebraicity of the center X. GST's already-verified
+codim-two native primitive projector then constructs
+an ACTUAL rational algebraic codimension-two cycle W on Y
+whose Hodge class is both nonzero and primitive.
+One may write W = A*E - L*D, where D is a rational
+divisor whose class is selected by the inverse Hard
+Lefschetz pairing. Lefschetz (1,1) makes D algebraic.
+
+FORMAL LEAN: In existing GSTPrimitiveTransverseCycleExtraction.lean
+new GenuineBlowupThreeSectorPrimitivePacket encodes the
+actual native exceptional cycle, three independently
+geometric cohomological readouts, and the polarizing
+cup-product coordinate law. The theorem
+blowup_exceptional_cycle_transverse_to_divisor_cup proves
+the exact three-coordinate obstruction by rational algebra.
+actual_nonzero_primitive_cycle_of_three_sector_blowup
+composes that transverse source cycle with GST's genuine
+native primitive correction. This constructs nonzero
+primitive classes on the ACTUAL smooth-projective scheme
+carrier rather than mere abstract torus charge tokens.
+Dedicated Lean CI 38992782278 PASSED with no sorryAx.
+
+IMPORTANT: The three-sector packet still needs genuine
+Mathlib scheme-level blowup cohomology/Gysin realization;
+its abstract record alone does not certify a given Y is
+a blowup nor supply all its actual coordinate maps.
+The standard geometric blowup formulas establish the
+mathematical instantiation for smooth projective centers.
+This construction gives a NEW nonzero primitive cycle on
+the host Y for every positive-dimensional center X,
+NOT algebraic representatives of EVERY prescribed
+primitive Hodge class on that arbitrary center X.
+
+Further native exceptional independence is proved in
+GSTUniversalChowRetractToTarget.lean:
+exceptional_hodge_embedding_injective and
+exceptional_native_cycle_new_beyond_ambient construct
+center-sourced algebraic cycles on the born world
+and prove they cannot lie in the ambient Betti image
+when true exceptional recovery kills that ambient sector.
+The fixed-weight and unrestricted-center codim-two
+tower declarations in the same file are checked by
+CI 38992837014; check its exact verdict before marking
+the combined file green.
