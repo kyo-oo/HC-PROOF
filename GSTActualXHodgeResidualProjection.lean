@@ -324,6 +324,95 @@ theorem ActualXFiniteProjectiveTrace.traceZeroResidual_is_hodge
   rw [hAmbient]
   exact Submodule.sub_mem _ alpha.2 (Submodule.smul_mem _ _ hPull)
 
+
+/-! ## Pinned all-varieties final existence gate: trace-zero cycles
+
+This is the exact all-X rational Hodge target, not a new weakened
+conjecture: finite projective projection constructs the algebraic
+ambient part ON EVERY X, so algebraic representation of ALL remaining
+trace-zero Hodge classes is EQUIVALENT to the unrestricted statement
+for that X and p.
+
+The new actual native Chow output is
+  Z(alpha) = ambientNativeCycle(alpha) + Z_traceZero,
+where Z_traceZero is an independent geometric representative
+of the trace-zero Hodge residual. An arbitrary 'section from
+cohomology to Chow' is NOT an input; Z_traceZero must come from
+a genuine geometric construction. Establishing such cycles
+universally is the next target, not a theorem currently asserted.
+-/
+
+/-- Fully explicit source-to-target assembly on the ORIGINAL
+arbitrary smooth projective scheme from a geometric native
+trace-zero residual cycle and the already constructed projective
+ambient cycle. -/
+noncomputable def ActualXFiniteProjectiveTrace.constructFromTraceZero
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    (F : ActualXFiniteProjectiveTrace P X HP HX p)
+    (alpha : HodgeSpace X HX p)
+    (Ztrace : codimensionCycles X.X p) :
+    codimensionCycles X.X p :=
+  F.ambientNativeCycle alpha + Ztrace
+
+/-- Its cycle class equals the arbitrary original Hodge target
+whenever the independently constructed native trace-zero class
+is exact. No source Hodge surjectivity on X is assumed. -/
+theorem ActualXFiniteProjectiveTrace.constructFromTraceZero_correct
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    (F : ActualXFiniteProjectiveTrace P X HP HX p)
+    (alpha : HodgeSpace X HX p)
+    (Ztrace : codimensionCycles X.X p)
+    (hTrace :
+      HX.cycleClass p Ztrace = F.traceZeroResidual alpha) :
+    HX.cycleClass p (F.constructFromTraceZero alpha Ztrace) =
+      alpha.1 := by
+  unfold ActualXFiniteProjectiveTrace.constructFromTraceZero
+  rw [map_add, hTrace]
+  dsimp only [ActualXFiniteProjectiveTrace.traceZeroResidual]
+  abel
+
+/-- EXACT target equivalence at ALL weights on ANY X:
+every rational Hodge class of X is algebraic IFF every rational
+Hodge class killed by its genuine finite-projective trace
+has an actual algebraic representative. This theorem makes
+the trace-zero primitive existence the SINGLE remaining
+unproved geometric input, without inferring it from Kähler
+positivity, rational coordinate tricks, or GST formal operators.
+-/
+theorem ActualXFiniteProjectiveTrace.full_hodge_iff_trace_zero_hodge
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    (F : ActualXFiniteProjectiveTrace P X HP HX p) :
+    (rationalHodgeSubspace (HX.hodgeBigrading p) ≤
+       LinearMap.range (HX.cycleClass p)) ↔
+    (∀ alpha : HodgeSpace X HX p,
+      F.bettiPush alpha.1 = 0 →
+      alpha.1 ∈ LinearMap.range (HX.cycleClass p)) := by
+  constructor
+  · intro hAll alpha _
+    exact hAll alpha.2
+  · intro hTrace alpha hAlpha
+    let a : HodgeSpace X HX p := ⟨alpha, hAlpha⟩
+    let residual : HodgeSpace X HX p :=
+      ⟨F.traceZeroResidual a, F.traceZeroResidual_is_hodge a⟩
+    have hZero : F.bettiPush residual.1 = 0 :=
+      F.traceZeroResidual_push_zero a
+    obtain ⟨Ztrace, hZtrace⟩ := hTrace residual hZero
+    refine ⟨F.constructFromTraceZero a Ztrace, ?_⟩
+    exact F.constructFromTraceZero_correct a Ztrace hZtrace
+
+#check ActualXFiniteProjectiveTrace.constructFromTraceZero_correct
+#check ActualXFiniteProjectiveTrace.full_hodge_iff_trace_zero_hodge
+#print axioms ActualXFiniteProjectiveTrace.full_hodge_iff_trace_zero_hodge
+
 #check ActualXFiniteProjectiveTrace.ambientNativeCycle
 #check ActualXFiniteProjectiveTrace.traceZeroResidual_push_zero
 #check ActualXFiniteProjectiveTrace.traceZeroResidual_is_hodge
