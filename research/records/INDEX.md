@@ -42,3 +42,5 @@ Integration review: [Draft PR #3](https://github.com/kyo-oo/HC-PROOF/pull/3). Ea
 - [All-codimension finite-degree Chow transfer and projective-bundle composition](2026-10-17-finite-dominant-all-codim-geometry.md) — construct explicit target cycles by normalized geometric pushforward; native defect transport identifies required source geometry. Dedicated GitHub Lean run #39028268013.
 
 - [Rational Hodge-defect injection under geometric finite pullback](2026-10-17-hodge-defect-finite-pullback-functoriality.md) — exact algebraic image equality and deficit-rank monotonicity; Wolfram Hodge-sector source tests guide arbitrary-X geometry.
+
+- [Primitive automorphism-graph cycles on quartic K3 self-products](2026-10-17-k3-graph-primitive-source.md) — actual order-four quartic K3 automorphism gives two independent primitive algebraic graph directions; Wolfram exact rank2; dedicated Lean proof workflow #39029194289.
