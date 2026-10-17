@@ -950,6 +950,133 @@ theorem nonambient_divisor_generates_nonzero_trace_zero_chow_two
     T.traceZeroNative_push_zero Z, ?_⟩
   exact T.traceZeroNative_nonzero_of_new_class Z hOutside
 
+
+/-! ## ALL CODIMENSIONS: exact primitive trace-kernel Chow target
+
+For any p, the genuine primitive cup-product relation against a
+projective hyperplane forces its projective trace to vanish by the
+projection formula. Unlike p=2, different dimensions use different
+primitive-test operators. The packet below explicitly names the
+true operator instead of quietly assuming a codimension-two test
+is correct at every p.
+
+Once its geometric projection formula is verified, every ACTUAL
+primitive ALGEBRAIC cycle class admits an ACTUAL Chow representative
+killed by the finite projection already at the algebraic-cycle
+level. Moreover the original 'all primitive Hodge classes are
+algebraic' target is equivalent to surjectivity of the cycle class
+on THIS honest native Chow trace kernel.
+
+This equivalence does not construct the missing nonalgebraic
+primitive preimage; it identifies the exact single geometric
+source obligation without assuming Hodge surjectivity.
+-/
+
+/-- Genuine all-codimension projective-trace/primitive
+projection formula at arbitrary weight p. The period detector
+on actual P^d cohomology is required to be injective. -/
+structure ActualXAllCodimensionPrimitiveTraceComparison
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (W : Type*) [AddCommGroup W] [Module ℚ W]
+    (primitiveTest : HodgeSpace X HX p →ₗ[ℚ] W) where
+  projectivePeriod :
+    RationalSingularCohomology HP.analytification (2*p) →ₗ[ℚ] ℚ
+  projectivePeriod_injective : Function.Injective projectivePeriod
+  primitivePairing : W →ₗ[ℚ] ℚ
+  projectivePrimitiveFormula :
+    ∀ alpha : HodgeSpace X HX p,
+      projectivePeriod (F.bettiPush alpha.1) =
+        primitivePairing (primitiveTest alpha)
+
+/-- At every Hodge codimension, a genuine primitive class has
+ZERO finite-projective trace, from the exact projection formula
+rather than an unverified positivity heuristic. -/
+theorem ActualXAllCodimensionPrimitiveTraceComparison.primitive_push_zero
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    {test : HodgeSpace X HX p →ₗ[ℚ] W}
+    (C : ActualXAllCodimensionPrimitiveTraceComparison (F := F) W test)
+    (alpha : HodgeSpace X HX p)
+    (hPrimitive : test alpha = 0) :
+    F.bettiPush alpha.1 = 0 := by
+  apply C.projectivePeriod_injective
+  calc
+    C.projectivePeriod (F.bettiPush alpha.1) =
+        C.primitivePairing (test alpha) :=
+          C.projectivePrimitiveFormula alpha
+    _ = 0 := by rw [hPrimitive]; simp
+    _ = C.projectivePeriod 0 := by simp
+
+/-- Direct arbitrary-X ACTUAL native cycle construction from a
+known algebraic primitive class, respecting BOTH the genuine
+Chow trace-zero condition and exact canonical Betti class. -/
+theorem primitive_algebraic_class_has_true_chow_trace_zero_cycle
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    {test : HodgeSpace X HX p →ₗ[ℚ] W}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (C : ActualXAllCodimensionPrimitiveTraceComparison (F := F) W test)
+    (Z : codimensionCycles X.X p)
+    (hHodge : HX.cycleClass p Z ∈ HodgeSpace X HX p)
+    (hPrimitive : test ⟨HX.cycleClass p Z, hHodge⟩ = 0) :
+    ∃ Znew : codimensionCycles X.X p,
+      T.nativePush Znew = 0 ∧
+      HX.cycleClass p Znew = HX.cycleClass p Z := by
+  have hZero : F.bettiPush (HX.cycleClass p Z) = 0 :=
+    C.primitive_push_zero
+      ⟨HX.cycleClass p Z, hHodge⟩ hPrimitive
+  refine ⟨T.traceZeroNative Z, T.traceZeroNative_push_zero Z, ?_⟩
+  rw [T.traceZeroNative_cycleClass Z, hZero]
+  simp
+
+/-- The full ALL-PRIMITIVE HODGE existence target in every
+codimension is equivalent to ACTUAL Chow trace-kernel
+surjectivity onto that primitive space. This is not a claimed
+proof of the target: the RHS demands the new missing geometric
+cycles themselves. It is an exact scheme-native criterion. -/
+theorem all_primitive_hodge_iff_native_trace_kernel_spans
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    {test : HodgeSpace X HX p →ₗ[ℚ] W}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (C : ActualXAllCodimensionPrimitiveTraceComparison (F := F) W test) :
+    (∀ alpha : HodgeSpace X HX p,
+      test alpha = 0 →
+      alpha.1 ∈ LinearMap.range (HX.cycleClass p)) ↔
+    (∀ alpha : HodgeSpace X HX p,
+      test alpha = 0 →
+      ∃ Z : codimensionCycles X.X p,
+        T.nativePush Z = 0 ∧
+        HX.cycleClass p Z = alpha.1) := by
+  constructor
+  · intro h alpha hPrim
+    exact T.exact_native_trace_zero_witness alpha.1
+      (C.primitive_push_zero alpha hPrim) (h alpha hPrim)
+  · intro h alpha hPrim
+    obtain ⟨Z, _, hZ⟩ := h alpha hPrim
+    exact ⟨Z, hZ⟩
+
+#check ActualXAllCodimensionPrimitiveTraceComparison.primitive_push_zero
+#check primitive_algebraic_class_has_true_chow_trace_zero_cycle
+#check all_primitive_hodge_iff_native_trace_kernel_spans
+#print axioms all_primitive_hodge_iff_native_trace_kernel_spans
+
 #check ActualXFiniteProjectiveNativeTrace.picardTraceZeroLinear
 #check nonambient_divisor_generates_nonzero_trace_zero_chow_two
 #print axioms nonambient_divisor_generates_nonzero_trace_zero_chow_two
