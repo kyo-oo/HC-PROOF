@@ -16,6 +16,7 @@ on:
       - 'research/computations/weil_cm_correspondence_projector.py'
       - 'research/computations/split_weil_native_algebraic_sources.py'
       - 'research/computations/quaternionic_graph_weil_source.py'
+      - 'research/computations/qm_fourfold_all_hodge_divisor_span.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -87,6 +88,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/quaternionic_graph_weil_source.py | tee quaternionic-weil-graph.log
+      - name: Exact QM original-fourfold full Hodge divisor spanning
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/qm_fourfold_all_hodge_divisor_span.py | tee qm-all-hodge-span.log
       - name: Kernel compile primitive rank, genuine point classes, and all-X residual
         shell: bash
         run: |
@@ -131,5 +137,6 @@ jobs:
             weil-cm-projector.log
             split-weil-native-sources.log
             quaternionic-weil-graph.log
+            qm-all-hodge-span.log
             pure-k0-all-codim.log
           if-no-files-found: warn
