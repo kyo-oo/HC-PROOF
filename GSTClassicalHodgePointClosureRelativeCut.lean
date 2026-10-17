@@ -337,12 +337,83 @@ theorem every_relative_codimension_one_point_has_directed_cut
   exact ⟨hy, (mem_targetedRelativeCodimensionOneFinset V x y hy y).mpr
     ⟨target_mem_targetedRelativeCut V x y hy, hy1⟩⟩
 
+/-- The prescribed target as a point of the actual directed cut's support. -/
+noncomputable def targetedRelativeCutTarget
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x) :
+    ((targetedRelativeCutIdeal V x y hy).support :
+      Set (pointClosureScheme V x)) :=
+  ⟨y, target_mem_targetedRelativeCut V x y hy⟩
+
+/-- The selected coheight-one target is genuinely a component generic point
+of the constructed cut, not merely a point contained in its support. -/
+theorem targetedRelativeCutTarget_is_component_generic
+    (V : SmoothProjectiveComplexScheme) (x : V.X)
+    (y : pointClosureScheme V x)
+    (hy : y ≠ closureGenericPoint V x)
+    (hy1 : Order.coheight y = 1) :
+    targetedRelativeCutTarget V x y hy ∈ genericPoints
+      ((targetedRelativeCutIdeal V x y hy).support :
+        Set (pointClosureScheme V x)) := by
+  let C : Set (pointClosureScheme V x) :=
+    (targetedRelativeCutIdeal V x y hy).support
+  let u : C := targetedRelativeCutTarget V x y hy
+  letI : QuasiSober C := Topology.IsClosedEmbedding.quasiSober
+    (Topology.IsClosedEmbedding.subtypeVal
+      (targetedRelativeCutIdeal V x y hy).support.isClosed)
+  have hmax : IsMax u := by
+    intro z huz
+    have hyz : y ≤ (z : pointClosureScheme V x) :=
+      continuous_subtype_val.specialization_monotone huz
+    by_cases heq : y = (z : pointClosureScheme V x)
+    · have hzu : z = u := Subtype.ext heq.symm
+      simpa only [hzu] using (le_refl u)
+    · have hlt : y < (z : pointClosureScheme V x) :=
+        lt_of_le_of_ne hyz heq
+      have hbound : Order.coheight (z : pointClosureScheme V x) ≤
+          Order.coheight y := Order.coheight_anti hyz
+      have hfinite : Order.coheight (z : pointClosureScheme V x) < ⊤ := by
+        apply hbound.trans_lt
+        rw [hy1]
+        exact WithTop.natCast_lt_top 1
+      have hstrict := Order.coheight_strictAnti hlt hfinite
+      rw [hy1] at hstrict
+      have hz0 : Order.coheight (z : pointClosureScheme V x) = 0 :=
+        Order.lt_one_iff.mp hstrict
+      have hzmax : IsMax (z : pointClosureScheme V x) :=
+        Order.coheight_eq_zero.mp hz0
+      have hzg : (z : pointClosureScheme V x) = closureGenericPoint V x :=
+        le_antisymm (pointClosure_le_generic V x z)
+          (hzmax (pointClosure_le_generic V x z))
+      have hgeneric : closureGenericPoint V x ∈ C := by
+        rw [← hzg]
+        exact z.2
+      exact (generic_not_mem_targetedRelativeCut V x y hy hgeneric).elim
+  change closure ({u} : Set C) ∈ irreducibleComponents C
+  refine ⟨isIrreducible_singleton.closure, ?_⟩
+  intro W hWirr hleW
+  obtain ⟨g, hg⟩ : ∃ g : C, IsGenericPoint g (closure (W : Set C)) :=
+    QuasiSober.sober hWirr.closure isClosed_closure
+  have huW : u ∈ closure (W : Set C) :=
+    subset_closure (hleW (subset_closure (Set.mem_singleton u)))
+  have hug : u ≤ g := hg.specializes huW
+  have hgu : g ≤ u := hmax hug
+  have hueq : u = g := le_antisymm hug hgu
+  have hclos : closure (W : Set C) = closure ({u} : Set C) := by
+    rw [hueq]
+    exact hg.def.symm
+  calc W ⊆ closure (W : Set C) := subset_closure
+    _ = closure ({u} : Set C) := hclos
+
 #check targetedRelativeCutScheme
 #check every_relative_codimension_one_point_has_directed_cut
+#check targetedRelativeCutTarget_is_component_generic
 #print axioms exists_targetedSectionEquation
 #print axioms target_mem_targetedRelativeCut
 #print axioms finite_targetedRelativeCut_coheight_one
 #print axioms every_relative_codimension_one_point_has_directed_cut
+#print axioms targetedRelativeCutTarget_is_component_generic
 
 end TargetDirected
 
