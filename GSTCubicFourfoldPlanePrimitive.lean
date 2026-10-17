@@ -528,6 +528,130 @@ theorem explicitMaximalPlaneHypersurface_no_singular_projective_point
 #check explicitMaximalPlaneHypersurface_no_singular_projective_point
 #print axioms explicitMaximalPlaneHypersurface_no_singular_projective_point
 
+/-! ## RANK TWO: two genuinely disjoint primitive planes on ONE X
+
+The explicitly smooth cubic fourfold in ℙ⁵
+  F(x,y)=Σ_{i=0}^{2} (xᵢ² yᵢ + xᵢ yᵢ²)
+contains the two projectively disjoint coordinate planes P_x={y=0},
+P_y={x=0}. Their geometric intersection numbers are
+  h².h²=3, h².P_x=h².P_y=1,
+  P_x²=P_y²=3, P_x.P_y=0.
+Consequently Z_x=3P_x-h² and Z_y=3P_y-h² are TWO
+linearly independent primitive rational Hodge classes, since
+their primitive Gram matrix is [[24,-3],[-3,24]], determinant 567.
+
+The proofs here check both the explicit Jacobian certificate and
+the exact rank-two intersection matrix. The passage to actual
+projective smoothness, subvariety cohomology classes and canonical
+cycleClass uses standard geometry, not a declared Hodge-span premise.
+-/
+
+def explicitTwoPlaneCubicEquation (x y : Fin 3 → ℂ) : ℂ :=
+  ∑ i : Fin 3, ((x i)^2 * y i + x i * (y i)^2)
+
+theorem explicitTwoPlaneCubic_contains_both_planes
+    (x y : Fin 3 → ℂ) :
+    explicitTwoPlaneCubicEquation x (fun _ => 0) = 0 ∧
+      explicitTwoPlaneCubicEquation (fun _ => 0) y = 0 := by
+  constructor <;> simp [explicitTwoPlaneCubicEquation]
+
+theorem explicitTwoPlaneCubic_no_singular_projective_point
+    (x y : Fin 3 → ℂ)
+    (hx : ∀ i, 2 * x i * y i + (y i)^2 = 0)
+    (hy : ∀ i, (x i)^2 + 2 * x i * y i = 0) :
+    ∀ i, x i = 0 ∧ y i = 0 := by
+  intro i
+  have hf1 : y i * (2 * x i + y i) = 0 := by
+    calc
+      y i * (2*x i + y i) =
+          2*x i*y i + (y i)^2 := by ring
+      _ = 0 := hx i
+  have hf2 : x i * (x i + 2 * y i) = 0 := by
+    calc
+      x i * (x i + 2*y i) =
+          (x i)^2 + 2*x i*y i := by ring
+      _ = 0 := hy i
+  rcases mul_eq_zero.mp hf1 with hy0 | hlin1
+  · have hxx : (x i)^2 = 0 := by
+      simpa [hy0] using hy i
+    have hx0 : x i = 0 := by
+      by_contra hxn
+      exact (pow_ne_zero 2 hxn) hxx
+    exact ⟨hx0,hy0⟩
+  · rcases mul_eq_zero.mp hf2 with hx0 | hlin2
+    · have hy0 : y i = 0 := by
+        simpa [hx0] using hlin1
+      exact ⟨hx0,hy0⟩
+    · have hx3 : (3:ℂ)*x i = 0 := by
+        linear_combination 2 * hlin1 - hlin2
+      have hx0 : x i = 0 :=
+        (mul_eq_zero.mp hx3).resolve_left (by norm_num)
+      have hy0 : y i = 0 := by
+        simpa [hx0] using hlin1
+      exact ⟨hx0,hy0⟩
+
+/-- Middle cohomology intersection coordinates H=h², P_x, P_y. -/
+abbrev TwoPlaneMiddleLattice := ℤ × (ℤ × ℤ)
+
+def doublePlaneCubicIntersection
+    (u v : TwoPlaneMiddleLattice) : ℤ :=
+  3*u.1*v.1 + u.1*v.2.1 + u.1*v.2.2 +
+    u.2.1*v.1 + 3*u.2.1*v.2.1 +
+    u.2.2*v.1 + 3*u.2.2*v.2.2
+
+def firstPrimitivePlane : TwoPlaneMiddleLattice :=
+  (-1,(3,0))
+
+def secondPrimitivePlane : TwoPlaneMiddleLattice :=
+  (-1,(0,3))
+
+def ampleSquareInDoublePlaneLattice : TwoPlaneMiddleLattice :=
+  (1,(0,0))
+
+theorem twoPlaneCubic_individually_primitive :
+    doublePlaneCubicIntersection ampleSquareInDoublePlaneLattice
+        firstPrimitivePlane = 0 ∧
+      doublePlaneCubicIntersection ampleSquareInDoublePlaneLattice
+        secondPrimitivePlane = 0 := by
+  constructor <;>
+    norm_num [doublePlaneCubicIntersection,
+      ampleSquareInDoublePlaneLattice,
+      firstPrimitivePlane,secondPrimitivePlane]
+
+theorem twoPlaneCubic_primitiveGram :
+    doublePlaneCubicIntersection firstPrimitivePlane firstPrimitivePlane = 24 ∧
+    doublePlaneCubicIntersection firstPrimitivePlane secondPrimitivePlane = -3 ∧
+    doublePlaneCubicIntersection secondPrimitivePlane secondPrimitivePlane = 24 := by
+  constructor
+  · norm_num [doublePlaneCubicIntersection,firstPrimitivePlane]
+  constructor
+  · norm_num [doublePlaneCubicIntersection,
+      firstPrimitivePlane,secondPrimitivePlane]
+  · norm_num [doublePlaneCubicIntersection,secondPrimitivePlane]
+
+theorem twoPlaneCubic_primitiveGramRankTwo :
+    doublePlaneCubicIntersection firstPrimitivePlane firstPrimitivePlane *
+      doublePlaneCubicIntersection secondPrimitivePlane secondPrimitivePlane -
+      doublePlaneCubicIntersection firstPrimitivePlane secondPrimitivePlane *
+        doublePlaneCubicIntersection secondPrimitivePlane firstPrimitivePlane
+      = 567 := by
+  norm_num [doublePlaneCubicIntersection,
+    firstPrimitivePlane,secondPrimitivePlane]
+
+theorem twoPlaneCubic_primitiveGramNondegenerate :
+    doublePlaneCubicIntersection firstPrimitivePlane firstPrimitivePlane *
+      doublePlaneCubicIntersection secondPrimitivePlane secondPrimitivePlane -
+      doublePlaneCubicIntersection firstPrimitivePlane secondPrimitivePlane *
+        doublePlaneCubicIntersection secondPrimitivePlane firstPrimitivePlane
+      ≠ 0 := by
+  rw [twoPlaneCubic_primitiveGramRankTwo]
+  norm_num
+
+#check explicitTwoPlaneCubic_no_singular_projective_point
+#check twoPlaneCubic_primitiveGramRankTwo
+#check twoPlaneCubic_primitiveGramNondegenerate
+#print axioms twoPlaneCubic_primitiveGramNondegenerate
+
 #check primitive_plane_hyperplane_orthogonal
 #check primitive_plane_self_intersection
 #check primitive_plane_nonzero
