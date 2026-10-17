@@ -185,10 +185,15 @@ theorem exists_targetedSectionEquation
   have prime_le_iff : ∀ a b : projectiveSpace V.projective.n,
       a ≤ b ↔ b.asHomogeneousIdeal.toIdeal ≤ a.asHomogeneousIdeal.toIdeal := by
     intro a b
-    rw [specializationOrder_iff_specializes,
-      ← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
-      ProjectiveSpectrum.vanishingIdeal_singleton]
-    exact ProjectiveSpectrum.mem_zeroLocus _ _ _
+    rw [specializationOrder_iff_specializes]
+    have key : ∀ a b : ProjectiveSpectrum (ProjectiveGrading V.projective.n),
+        a ∈ closure ({b} : Set (ProjectiveSpectrum (ProjectiveGrading V.projective.n))) ↔
+          b.asHomogeneousIdeal.toIdeal ≤ a.asHomogeneousIdeal.toIdeal := by
+      intro a b
+      rw [← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
+        ProjectiveSpectrum.vanishingIdeal_singleton]
+      exact ProjectiveSpectrum.mem_zeroLocus _ _ _
+    exact key a b
   have hyle : pointClosureι V x y ≤ x := by
     have h := (pointClosureι V x).continuous.specialization_monotone
       (pointClosure_le_generic V x y)
@@ -298,6 +303,8 @@ theorem finite_targetedRelativeCut_coheight_one
     (targetedRelativeCutIdeal V x y hy).support.isClosed
   intro hall
   apply generic_not_mem_targetedRelativeCut V x y hy
+  change closureGenericPoint V x ∈
+    ((targetedRelativeCutIdeal V x y hy).support : Set (pointClosureScheme V x))
   rw [hall]
   trivial
 
@@ -358,14 +365,20 @@ theorem targetedRelativeCutTarget_is_component_generic
         Set (pointClosureScheme V x)) := by
   let C : Set (pointClosureScheme V x) :=
     (targetedRelativeCutIdeal V x y hy).support
+  letI : PartialOrder C := specializationOrder
   let u : C := targetedRelativeCutTarget V x y hy
   letI : QuasiSober C := Topology.IsClosedEmbedding.quasiSober
     (Topology.IsClosedEmbedding.subtypeVal
       (targetedRelativeCutIdeal V x y hy).support.isClosed)
   have hmax : IsMax u := by
     intro z huz
-    have hyz : y ≤ (z : pointClosureScheme V x) :=
-      continuous_subtype_val.specialization_monotone huz
+    have hcont : Continuous (Subtype.val : C → pointClosureScheme V x) :=
+      continuous_subtype_val
+    have hyz : y ≤ (z : pointClosureScheme V x) := by
+      have h : (u : pointClosureScheme V x) ≤ (z : pointClosureScheme V x) :=
+        hcont.specialization_monotone huz
+      change y ≤ (z : pointClosureScheme V x) at h
+      exact h
     by_cases heq : y = (z : pointClosureScheme V x)
     · have hzu : z = u := Subtype.ext heq.symm
       simpa only [hzu] using (le_refl u)
