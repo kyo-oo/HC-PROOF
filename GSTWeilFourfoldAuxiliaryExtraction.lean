@@ -1053,6 +1053,62 @@ theorem weilProjectorPositiveDenominator
   have hk : 0 < 3*d^2+5*d+3 := by positivity
   positivity
 
+/-- The isogeny polynomial acts as the identity on the two
+exceptional rational Weil eigendirections. Its numerator uses
+only the *actual* fourth-power CM spectrum, not Hodge source
+preimages or a prescribed-cycle spanning assumption. -/
+theorem weilProjectorFixesWeilSector
+    (q r s a b t : ℚ)
+    (ha : a = 2*(s-r)*q^4)
+    (hb : b = 2*(r-s)*(2*r-q^2))
+    (hWeil : t^2-2*r*t+q^4=0)
+    (hD : a*(a+2*r*b)+q^4*b^2 ≠ 0) :
+    ((t-q^2)*(t^2-2*s*t+q^4)*(a+2*r*b-b*t))/
+      (a*(a+2*r*b)+q^4*b^2) = 1 := by
+  have hN : (t-q^2)*(t^2-2*s*t+q^4) = a+b*t := by
+    rw [weilProjectorQuadraticReduction, hWeil]
+    simp only [zero_mul, zero_add]
+    rw [←ha, ←hb]
+  rw [hN]
+  exact weilProjectorInverseOnWeilPlane a b r (q^4) t hWeil hD
+
+/-- Every opposite-signature mixed middle sector is annihilated,
+so the actual algebraic CM polynomial removes such components. -/
+theorem weilProjectorKillsMixedSector
+    (q r s a b t : ℚ)
+    (hMixed : t^2-2*s*t+q^4=0) :
+    ((t-q^2)*(t^2-2*s*t+q^4)*(a+2*r*b-b*t))/
+      (a*(a+2*r*b)+q^4*b^2) = 0 := by
+  rw [hMixed]
+  ring
+
+/-- The polarization-square sector of eigenvalue q² is erased
+without assuming the raw geometric source was primitive. -/
+theorem weilProjectorKillsAmbientSector
+    (q r s a b : ℚ) :
+    ((q^2-q^2)*((q^2)^2-2*s*(q^2)+q^4)*
+      (a+2*r*b-b*q^2))/
+      (a*(a+2*r*b)+q^4*b^2) = 0 := by
+  ring
+
+/-- The mixed and exceptional conjugate quadratic CM factors are
+separated for the fixed rational endomorphism m=d+1+u, every d>0. -/
+theorem weilProjectorMixedWeilSpectralGap
+    (d : ℚ) (hd : 0 < d) :
+    0 < (((d+1)^2+d)*((d+1)^2-d) -
+      ((d+1)^4-6*d*(d+1)^2+d^2)) := by
+  have h : ((d+1)^2+d)*((d+1)^2-d) -
+      ((d+1)^4-6*d*(d+1)^2+d^2) =
+      2*d*(3*d^2+5*d+3) := by ring
+  rw [h]
+  positivity
+
+#check weilProjectorFixesWeilSector
+#check weilProjectorKillsMixedSector
+#check weilProjectorKillsAmbientSector
+#check weilProjectorMixedWeilSpectralGap
+#print axioms weilProjectorFixesWeilSector
+
 #check weilProjectorQuadraticReduction
 #check weilProjectorInverseOnWeilPlane
 #check weilProjectorPositiveDenominator
