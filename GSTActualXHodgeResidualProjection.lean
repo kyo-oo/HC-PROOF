@@ -1036,6 +1036,53 @@ theorem picardTraceZero_has_zero_primitive_projection
   exact primitive_remainder_vanishes_on_cupH
     G L h11 hInject (nativeToHodgeFiberLinear G D)
 
+/-! ## Directed cut sources on the original variety
+
+The target-directed geometric cut is derived from a strict specialization,
+rather than supplied as an equation or chosen from an unknown Hodge class.
+It covers every relative coheight-one point of every source closure. When
+such a point has ambient codimension two, its actual unit cycle can be
+normalized to a native primitive cycle with the exact projected class.
+
+The output can have zero Betti class. Neither universal primitive spanning
+nor the canonical analytification/fundamental-class comparison is asserted.
+-/
+
+open GSTNativeCodimensionCyclePresentation
+open GSTClassicalHodgePointClosurePrincipalCut
+open GSTClassicalHodgePointClosureRelativeCut
+
+/-- Construct a proper directed cut containing the prescribed geometric
+successor, and an actual primitive normalization of its native point cycle.
+The source is a scheme point, not a preimage of an arbitrary Hodge class. -/
+theorem directed_cut_supplies_native_primitive_normalization
+    {d : ℕ}
+    (G : GeometricCycleClassSpine X H)
+    (L : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (x : X.X)
+    (y : pointClosureScheme X x)
+    (hRelative : Order.coheight y = 1)
+    (hAmbient : Order.coheight (pointClosureι X x y) = 2) :
+    ∃ hy : y ≠ GSTClassicalHodgePointClosureIrreducible.closureGenericPoint X x,
+      y ∈ targetedRelativeCodimensionOneFinset X x y hy ∧
+      ∃ W : codimensionCycles X.X 2,
+        nativeToHodgeFiberLinear G W =
+          primitiveHodgeRemainder G L h11
+            (nativeToHodgeFiberLinear G
+              (codimensionPointCycle X.X 2 ⟨pointClosureι X x y, hAmbient⟩)) ∧
+        L.primitiveTest (nativeToHodgeFiberLinear G W) = 0 := by
+  obtain ⟨hy, hmem⟩ :=
+    every_relative_codimension_one_point_has_directed_cut X x y hRelative
+  let Z : codimensionCycles X.X 2 :=
+    codimensionPointCycle X.X 2 ⟨pointClosureι X x y, hAmbient⟩
+  refine ⟨hy, hmem, primitiveizeNativeMiddleCycle G L h11 Z, ?_, ?_⟩
+  · exact native_primitive_projection_cycleClass G L h11 Z
+  · exact primitiveizeNativeMiddleCycle_primitive G L h11 Z
+
+#check directed_cut_supplies_native_primitive_normalization
+#print axioms directed_cut_supplies_native_primitive_normalization
+
 #check traceZeroNative_preserves_primitive_projection
 #check picardTraceZero_has_zero_primitive_projection
 #print axioms traceZeroNative_preserves_primitive_projection
