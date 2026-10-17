@@ -147,6 +147,15 @@ def main():
     minor=[[G[i][j] for j in WITNESS] for i in WITNESS]
     det=bareiss_det(minor)
     assert det==27,det
+    # Twenty explicit primitive cycles C_i=[P_i]-[P_0], i=1,...,20.
+    # Their h^2 pairing is 1-1=0; their Gram is the difference matrix.
+    primitive_gram=[
+        [minor[i][j]-minor[i][0]-minor[0][j]+minor[0][0]
+         for j in range(1,21)]
+        for i in range(1,21)
+    ]
+    primitive_det=bareiss_det(primitive_gram)
+    assert primitive_det==81,primitive_det
     for p in PRIMES:
         rank,pivots=rank_mod_p(G,p)
         assert rank==21 and pivots==WITNESS,(p,rank,pivots)
@@ -160,6 +169,7 @@ def main():
     ).hexdigest()
     assert digest=='ba97d18902a7ecf4a6675ef0f7a664ccdd1f77895bbf3ea38efa8085c5cd1df2'
     print('21x21 principal minor determinant:',det)
+    print('20 primitive plane differences determinant:',primitive_det)
     print('Complex (2,2) dimension:',comb(6,3)+1)
     print('Selected plane indices:',','.join(map(str,WITNESS)))
     print('Full Gram SHA256:',digest)
