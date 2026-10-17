@@ -10,7 +10,9 @@
 
 - [Affine Chow source → exact native cycle on original X, in every codimension](2026-10-17-affine-boundary-algebraization-gate.md) — closure-plus-boundary Gysin correction, lower-weight induction and strict Hodge lift; Lean [#39044347980](https://github.com/kyo-oo/HC-PROOF/actions/runs/39044347980) **green**; Wolfram exact reconstruction and lowest-weight affine K-theory source selection.
 
-**Current execution plan:** [Three proof gates, fixed all-X primitive target, and no-side-quest rule](../ACTIVE_HODGE_PROOF_PLAN.md).
+- [Universal algebraic K0: Adams purification and explicit non-ambient primitive realization](2026-10-17-universal-adams-k0-pure-chern-realization.md) — all-X, all-p algebraic Adams spectral projector (L_{p,n}(\psi^2)); for all smooth degree-d hypersurface fourfolds containing a plane, constructs pure ​ch₂ (d[P]-h^2) with norm (d(d-1)^3); Wolfram polynomial identity and exact GitHub computation.
+
+**Current execution plan:** [Four fixed proof gates and exact all-X Hodge objective](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
 
