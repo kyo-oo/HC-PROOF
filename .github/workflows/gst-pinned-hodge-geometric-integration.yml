@@ -13,6 +13,7 @@ on:
       - 'GSTUniversalResolvedSupportHodge.lean'
       - 'GSTPrimitiveTransverseCycleExtraction.lean'
       - 'GSTUniversalCMArithmeticObstruction.lean'
+      - 'GSTWeilFourfoldAuxiliaryExtraction.lean'
       - 'research/computations/weil_cm_correspondence_projector.py'
       - 'research/computations/split_weil_native_algebraic_sources.py'
       - 'research/computations/quaternionic_graph_weil_source.py'

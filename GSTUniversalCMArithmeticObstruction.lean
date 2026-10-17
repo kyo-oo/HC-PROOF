@@ -1,5 +1,6 @@
 import GSTCMQuadraticNativeRankForcing
 import GSTClassicalHodgeCrossCarrierGeometricTransfer
+import GSTWeilFourfoldAuxiliaryExtraction
 
 /-!
 # Universal Hodge: CM–NM obstruction and source–target geometry audit
@@ -38,6 +39,9 @@ open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
 open GSTCMQuadraticNativeRankForcing
 open GSTClassicalHodgeCrossCarrierGeometricTransfer
+open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTClassicalHodgeGeometricMatrixRankLanding
+open GSTWeilFourfoldAuxiliaryExtraction
 
 namespace GSTUniversalCMArithmeticObstruction
 
@@ -682,6 +686,134 @@ theorem quaternionicGraphWeilTensorNormNonzero
     (144:ℚ)^qmBlocks * (4:ℚ)^cmRemainder ≠ 0 := by
   exact mul_ne_zero (pow_ne_zero _ (by norm_num))
     (pow_ne_zero _ (by norm_num))
+
+/-! ## Auxiliary-sixfold extraction assembled on the original fourfold
+
+The source Γ, its actual extraction by p_A*(- · p_B*D0), the actual
+CM pullback, and their two cycle-class comparisons are geometric inputs.
+The external split-sixfold theorem T6 supplies Γ in the linked manuscript;
+it is NOT an axiom or a theorem proved in this module. The rank-three
+Hodge coordinate equivalence is the generic Weil-fourfold decomposition,
+not a hypothesis that any cycle classes span. In particular no determinant
+or arbitrary-target preimage is requested below: both are constructed.
+
+The previous companion-matrix reconstruction used a²+b². For general
+K=Q(sqrt(-d)) the actual fourth-power action has norm r²+d*s² instead.
+The Cramer coefficients below work for every rational d>0 and avoid
+identifying these different companion bases.
+-/
+
+def weilPlaneCoeff0 (z w target : ℚ × ℚ) : ℚ :=
+  (target.1 * w.2 - target.2 * w.1) / planeDeterminant z w
+
+def weilPlaneCoeff1 (z w target : ℚ × ℚ) : ℚ :=
+  (z.1 * target.2 - z.2 * target.1) / planeDeterminant z w
+
+/-- Explicit two-vector reconstruction; source independence is proved
+from the balanced nonzero tensor in the native assembly below. -/
+theorem weilPlaneCramerReconstruction (z w target : ℚ × ℚ)
+    (hdet : planeDeterminant z w ≠ 0) :
+    weilPlaneCoeff0 z w target * z.1 +
+      weilPlaneCoeff1 z w target * w.1 = target.1 ∧
+    weilPlaneCoeff0 z w target * z.2 +
+      weilPlaneCoeff1 z w target * w.2 = target.2 := by
+  constructor
+  all_goals
+    dsimp [weilPlaneCoeff0, weilPlaneCoeff1]
+    field_simp [hdet]
+    dsimp [planeDeterminant]
+    ring
+
+/-- The actual signed rational native cycle on the original carrier.
+Only one auxiliary source Γ is used, independently of the target α. -/
+noncomputable def auxiliaryWeilNativeCycle
+    {U : SmoothProjectiveComplexScheme}
+    (Γ : codimensionCycles U.X 3)
+    (extract : codimensionCycles U.X 3 →ₗ[ℚ] codimensionCycles V.X 2)
+    (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
+    (thetaSquare : codimensionCycles V.X 2)
+    (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
+    (d : ℚ) (tensor : TensorCoefficients)
+    (alpha : ClassicalHodgeFiber V H 2) : codimensionCycles V.X 2 :=
+  let z := contractGraph tensor
+  let w := fourthPowerAction d (d + 1) z
+  (coordinates alpha).1 • thetaSquare +
+    weilPlaneCoeff0 z w (coordinates alpha).2 • extract Γ +
+    weilPlaneCoeff1 z w (coordinates alpha).2 • cmPullback (extract Γ)
+
+/-- Three-direction assembly for the original Weil fourfold, conditional
+only on the displayed geometric source, decomposition and comparisons.
+No full-rank cycle matrix or prescribed-class source is an input. -/
+theorem auxiliaryWeilNativeCycle_class
+    {U : SmoothProjectiveComplexScheme}
+    (G : GeometricCycleClassSpine V H)
+    (Γ : codimensionCycles U.X 3)
+    (extract : codimensionCycles U.X 3 →ₗ[ℚ] codimensionCycles V.X 2)
+    (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
+    (thetaSquare : codimensionCycles V.X 2)
+    (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
+    (d : ℚ) (hd : 0 < d) (tensor : TensorCoefficients)
+    (hbalanced : balanced d tensor) (hnonzero : tensor ≠ zeroCoefficients)
+    (hTheta : coordinates (nativeToHodgeFiberLinear G thetaSquare) = (1, (0, 0)))
+    (hExtract : coordinates (nativeToHodgeFiberLinear G (extract Γ)) =
+      (0, contractGraph tensor))
+    (hCM : coordinates (nativeToHodgeFiberLinear G (cmPullback (extract Γ))) =
+      (0, fourthPowerAction d (d + 1) (contractGraph tensor)))
+    (alpha : ClassicalHodgeFiber V H 2) :
+    nativeToHodgeFiberLinear G
+      (auxiliaryWeilNativeCycle Γ extract cmPullback thetaSquare coordinates
+        d tensor alpha) = alpha := by
+  have hz : contractGraph tensor ≠ (0, 0) :=
+    contraction_nonzero d (ne_of_gt hd) tensor hbalanced hnonzero
+  have hdet : planeDeterminant (contractGraph tensor)
+      (fourthPowerAction d (d + 1) (contractGraph tensor)) ≠ 0 :=
+    ne_of_gt (extracted_fourth_power_orbit_has_rank_two d hd _ hz)
+  have hReconstruction := weilPlaneCramerReconstruction (contractGraph tensor)
+    (fourthPowerAction d (d + 1) (contractGraph tensor)) (coordinates alpha).2 hdet
+  apply coordinates.injective
+  simp only [auxiliaryWeilNativeCycle, map_add, map_smul, hTheta, hExtract, hCM]
+  apply Prod.ext
+  · change (coordinates alpha).1 * 1 + _ * 0 + _ * 0 = (coordinates alpha).1
+    ring
+  · apply Prod.ext
+    · change (coordinates alpha).1 * 0 + _ + _ = (coordinates alpha).2.1
+      simpa only [mul_zero, zero_add] using hReconstruction.1
+    · change (coordinates alpha).1 * 0 + _ + _ = (coordinates alpha).2.2
+      simpa only [mul_zero, zero_add] using hReconstruction.2
+
+/-- The same assembly lands in the supplied actual Betti cycle-class map,
+not merely in a separate coordinate carrier. Canonicality still requires
+instantiating H and the comparison hypotheses by the stated geometry. -/
+theorem auxiliaryWeilEveryMiddleHodgeClass
+    {U : SmoothProjectiveComplexScheme}
+    (G : GeometricCycleClassSpine V H)
+    (Γ : codimensionCycles U.X 3)
+    (extract : codimensionCycles U.X 3 →ₗ[ℚ] codimensionCycles V.X 2)
+    (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
+    (thetaSquare : codimensionCycles V.X 2)
+    (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
+    (d : ℚ) (hd : 0 < d) (tensor : TensorCoefficients)
+    (hbalanced : balanced d tensor) (hnonzero : tensor ≠ zeroCoefficients)
+    (hTheta : coordinates (nativeToHodgeFiberLinear G thetaSquare) = (1, (0, 0)))
+    (hExtract : coordinates (nativeToHodgeFiberLinear G (extract Γ)) =
+      (0, contractGraph tensor))
+    (hCM : coordinates (nativeToHodgeFiberLinear G (cmPullback (extract Γ))) =
+      (0, fourthPowerAction d (d + 1) (contractGraph tensor)))
+    (alpha : RationalSingularCohomology H.analytification 4)
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading 2)) :
+    ∃ Z : codimensionCycles V.X 2, H.cycleClass 2 Z = alpha := by
+  let a : ClassicalHodgeFiber V H 2 := ⟨alpha, halpha⟩
+  refine ⟨auxiliaryWeilNativeCycle Γ extract cmPullback thetaSquare coordinates
+    d tensor a, ?_⟩
+  have h := auxiliaryWeilNativeCycle_class G Γ extract cmPullback thetaSquare
+    coordinates d hd tensor hbalanced hnonzero hTheta hExtract hCM a
+  exact congrArg Subtype.val h
+
+#check auxiliaryWeilNativeCycle_class
+#check auxiliaryWeilEveryMiddleHodgeClass
+#print axioms weilPlaneCramerReconstruction
+#print axioms auxiliaryWeilNativeCycle_class
+#print axioms auxiliaryWeilEveryMiddleHodgeClass
 
 #check quaternionicAntiKGraphSwitchesEigensector
 #check quaternionicAntiKGraphNonzero
