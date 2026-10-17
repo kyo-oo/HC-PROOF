@@ -41,6 +41,10 @@ jobs:
           name = "GSTActualXResidual"
           roots = [
             "GSTUniversalHodgeResidualProjection",
+            "GSTUniversalLefschetzCurveCycles",
+            "GSTClassicalHodgeGeometricMatrixRankLanding",
+            "GSTUniversalPrimitiveDivisorConstruction",
+            "GSTUniversalCodimensionTwoPrimitiveExtraction",
             "GSTPrimitiveTransverseCycleExtraction",
             "GSTActualXHodgeResidualProjection"
           ]
