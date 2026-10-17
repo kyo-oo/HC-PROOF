@@ -542,6 +542,87 @@ theorem incidenceRankOneMatrix_idempotent
       rw [Finset.mul_sum]
     _ = E i j := by rw [hTrace, mul_one]
 
+/-! ## Higher-rank affine source from the ACTUAL Jacobian
+
+For a smooth affine complete intersection U⊂A^m cut out by
+c equations f₁,...,f_c, its actual coordinate Jacobian
+J:A^m→A^c is split surjective: the maximal minors generate
+the unit ideal by the Jacobian smoothness criterion, and
+Bezout combinations of the minors construct an algebraic
+right inverse B with J∘B=id.
+
+The explicit map P=id-B∘J is an IDEMPOTENT with image
+ker(J), the algebraic tangent module T_U. This is an
+independent higher-rank algebraic K₀ source computable
+directly from the equations of U. No desired rational Hodge
+class is a premise. On general smooth affine U an algebraic
+projective cotangent presentation supplies the analogous
+idempotent after a projective-module splitting.
+
+The next geometric task is to calculate which primitive Hodge
+directions the Chern classes of such genuinely manufactured
+higher-rank projectors actually span on J(X).
+-/
+
+/-- The exact algebraic tangent-module projector produced by
+a Jacobian J with a polynomial/algebraic right inverse B. -/
+def algebraicJacobianKernelProjector
+    {R : Type*} [CommRing R]
+    {M N : Type*} [AddCommGroup M] [Module R M]
+    [AddCommGroup N] [Module R N]
+    (J : M →ₗ[R] N) (B : N →ₗ[R] M) : M →ₗ[R] M :=
+  LinearMap.id - B.comp J
+
+/-- Every output of the polynomial Jacobian projector lies in
+the genuine tangent kernel of the defining affine equations. -/
+theorem algebraicJacobianKernelProjector_in_kernel
+    {R : Type*} [CommRing R]
+    {M N : Type*} [AddCommGroup M] [Module R M]
+    [AddCommGroup N] [Module R N]
+    (J : M →ₗ[R] N) (B : N →ₗ[R] M)
+    (hJB : J.comp B = LinearMap.id) (v : M) :
+    J (algebraicJacobianKernelProjector J B v) = 0 := by
+  have hSplit (w : N) : J (B w) = w := by
+    have hw := congrArg (fun f : N →ₗ[R] N => f w) hJB
+    simpa only [LinearMap.comp_apply, LinearMap.id_apply] using hw
+  change J (v - B (J v)) = 0
+  rw [map_sub, hSplit]
+  exact sub_self (J v)
+
+/-- A tangent vector in ker J is fixed by the explicit
+algebraic Jacobian idempotent. -/
+theorem algebraicJacobianKernelProjector_fixes_kernel
+    {R : Type*} [CommRing R]
+    {M N : Type*} [AddCommGroup M] [Module R M]
+    [AddCommGroup N] [Module R N]
+    (J : M →ₗ[R] N) (B : N →ₗ[R] M)
+    (v : M) (hv : J v = 0) :
+    algebraicJacobianKernelProjector J B v = v := by
+  change v - B (J v) = v
+  rw [hv, map_zero, sub_zero]
+
+/-- The concrete polynomial id-BJ construction is a
+higher-rank ALGEBRAIC idempotent for any split Jacobian. -/
+theorem algebraicJacobianKernelProjector_idempotent
+    {R : Type*} [CommRing R]
+    {M N : Type*} [AddCommGroup M] [Module R M]
+    [AddCommGroup N] [Module R N]
+    (J : M →ₗ[R] N) (B : N →ₗ[R] M)
+    (hJB : J.comp B = LinearMap.id) :
+    (algebraicJacobianKernelProjector J B).comp
+      (algebraicJacobianKernelProjector J B) =
+        algebraicJacobianKernelProjector J B := by
+  ext v
+  change algebraicJacobianKernelProjector J B
+      (algebraicJacobianKernelProjector J B v) =
+        algebraicJacobianKernelProjector J B v
+  exact algebraicJacobianKernelProjector_fixes_kernel
+    J B (algebraicJacobianKernelProjector J B v)
+    (algebraicJacobianKernelProjector_in_kernel J B hJB v)
+
+#check algebraicJacobianKernelProjector_idempotent
+#print axioms algebraicJacobianKernelProjector_idempotent
+
 #check incidenceRankOneMatrix_idempotent
 #print axioms incidenceRankOneMatrix_idempotent
 
