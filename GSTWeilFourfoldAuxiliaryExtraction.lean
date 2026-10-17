@@ -971,8 +971,19 @@ theorem periodTransport_plane_reconstruction
     a*v.2+b*(s*v.1+r*v.2) = target.2 := by
   have hnorm : v.1^2+d*v.2^2 ≠ 0 :=
     ne_of_gt (quadratic_norm_positive d hd v hv)
+  have hdet : s*(v.1^2+d*v.2^2) ≠ 0 := mul_ne_zero hs hnorm
   dsimp only
-  constructor <;> field_simp [hs, hnorm] <;> ring
+  constructor
+  · calc
+      _ = ((target.1*(s*v.1+r*v.2)-target.2*(r*v.1-d*s*v.2))*v.1 +
+          (v.1*target.2-v.2*target.1)*(r*v.1-d*s*v.2)) /
+          (s*(v.1^2+d*v.2^2)) := by ring
+      _ = target.1 := (div_eq_iff hdet).mpr (by ring)
+  · calc
+      _ = ((target.1*(s*v.1+r*v.2)-target.2*(r*v.1-d*s*v.2))*v.2 +
+          (v.1*target.2-v.2*target.1)*(s*v.1+r*v.2)) /
+          (s*(v.1^2+d*v.2^2)) := by ring
+      _ = target.2 := (div_eq_iff hdet).mpr (by ring)
 
 #print axioms periodTransport_full_obstruction_injection
 #print axioms periodTransport_injection_through_square
