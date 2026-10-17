@@ -1,0 +1,142 @@
+name: GST Pinned Universal Hodge Geometric Integration
+on:
+  push:
+    branches:
+      - research/gpt6-native-point-primitive-span-20261017
+    paths:
+      - 'scripts/gst_lean_dependency_roots.py'
+      - 'GSTCanonicalPointGeometryStage2G.lean'
+      - 'GSTFermatCanonicalPointRankBridge.lean'
+      - 'GSTMaximalLinearHypersurfacePrimitive.lean'
+      - 'GSTClassicalHodgeGeometricCycleClassPointRigidity.lean'
+      - 'GSTActualXHodgeResidualProjection.lean'
+      - 'GSTUniversalResolvedSupportHodge.lean'
+      - 'GSTPrimitiveTransverseCycleExtraction.lean'
+      - 'GSTUniversalCMArithmeticObstruction.lean'
+      - 'research/computations/weil_cm_correspondence_projector.py'
+      - 'research/computations/split_weil_native_algebraic_sources.py'
+      - 'research/computations/quaternionic_graph_weil_source.py'
+      - 'research/computations/qm_fourfold_all_hodge_divisor_span.py'
+      - 'research/computations/affine_clifford_k0_source.py'
+      - 'research/computations/algebraic_adams_pure_hodge_k0.py'
+      - 'research/computations/pure_algebraic_k0_all_codimensions.py'
+      - 'GSTUniversalPrimitiveHyperplaneRelative.lean'
+      - 'GSTUniversalCodimensionTwoPrimitiveExtraction.lean'
+      - 'GSTClassicalHodgeExactClayStatement.lean'
+      - '.github/workflows/gst-pinned-hodge-geometric-integration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gst-pinned-hodge-integration-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  lean:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore pinned Lean
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Install pinned Lean and Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Restore incremental kernel build
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-pinned-hodge-integration
+          restore-keys: |
+            hc-lean-incremental-${{ runner.os }}-
+      - name: Verify polynomial Clifford algebraic K0 source at p=1..4
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/affine_clifford_k0_source.py | tee affine-clifford-k0.log
+      - name: Exact Adams degree purification and native K0 primitive geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/algebraic_adams_pure_hodge_k0.py | tee algebraic-adams-k0.log
+      - name: Exact pure K0 primitive sources in every codimension
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/pure_algebraic_k0_all_codimensions.py | tee pure-k0-all-codim.log
+      - name: Exact all-codimension Weil CM algebraic correspondence projector
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/weil_cm_correspondence_projector.py | tee weil-cm-projector.log
+      - name: Exact split Weil CM native algebraic source construction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/split_weil_native_algebraic_sources.py | tee split-weil-native-sources.log
+      - name: Exact quaternionic nonsplit-Weil algebraic graph source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/quaternionic_graph_weil_source.py | tee quaternionic-weil-graph.log
+      - name: Exact QM original-fourfold full Hodge divisor spanning
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/qm_fourfold_all_hodge_divisor_span.py | tee qm-all-hodge-span.log
+      - name: Kernel compile primitive rank, genuine point classes, and all-X residual
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTPinnedHodgeGeometricGate \
+            GSTFermatCanonicalPointRankBridge \
+            GSTCanonicalPointGeometryStage2G \
+            GSTClassicalHodgeGeometricCycleClassPointRigidity \
+            GSTActualXHodgeResidualProjection \
+            GSTUniversalResolvedSupportHodge \
+            GSTUniversalCMArithmeticObstruction \
+            GSTUniversalPrimitiveHyperplaneRelative \
+            GSTUniversalCodimensionTwoPrimitiveExtraction \
+            GSTClassicalHodgeExactClayStatement
+          if lake build GSTPinnedHodgeGeometricGate > pinned-hodge-lean.log 2>&1; then
+            echo "LEAN PASSED: all-X primitive relative hyperplane geometry, Gysin supports, canonical Betti spine and exact target"
+          else
+            grep -nE 'error:|sorryAx|✖' pinned-hodge-lean.log | tail -n 140 || true
+            tail -n 110 pinned-hodge-lean.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" pinned-hodge-lean.log; then
+            echo "Lean axiom-audit check requires proof repair"
+            exit 1
+          fi
+      - name: Save compiled GST dependencies
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-pinned-hodge-integration
+      - name: Upload Hodge integration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-pinned-hodge-integration-lean-log
+          path: |
+            pinned-hodge-lean.log
+            affine-clifford-k0.log
+            algebraic-adams-k0.log
+            weil-cm-projector.log
+            split-weil-native-sources.log
+            quaternionic-weil-graph.log
+            qm-all-hodge-span.log
+            pure-k0-all-codim.log
+          if-no-files-found: warn

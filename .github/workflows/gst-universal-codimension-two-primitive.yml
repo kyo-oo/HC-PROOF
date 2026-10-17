@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - mathbox/bd23-single-operator-charge-wedge
+      - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTUniversalCodimensionTwoPrimitiveExtraction.lean'
       - '.github/workflows/gst-universal-codimension-two-primitive.yml'
