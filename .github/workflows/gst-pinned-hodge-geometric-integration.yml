@@ -55,6 +55,8 @@ jobs:
           name = "GSTPinnedHodgeGeometricGate"
           roots = [
             "GSTMaximalLinearHypersurfacePrimitive",
+            "GSTUniversalHodgeResidualProjection",
+            "GSTUniversalPrimitiveDivisorConstruction",
             "GSTCanonicalPointGeometryStage2G",
             "GSTFermatCanonicalPointRankBridge",
             "GSTClassicalHodgeGeometricCycleClassPointRigidity",
