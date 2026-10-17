@@ -2019,3 +2019,169 @@ when an independent GST argument proves the displayed span equality.
 Testing additional ambient total classes without examining components
 would not discriminate this route. An exact finite example alone cannot
 discharge the universal quantifier.
+
+## 2026-10-17: constructed directed cuts and component certificates
+
+Continuation base: `3e0a39a00d8ecfb873119ceaa805b1d5a250aba7`.
+The original all-varieties primitive Hodge construction remains the target.
+This continuation writes a positive geometric construction in the existing
+Lean source, rather than only proposing component selection.
+
+### New source construction on the original variety
+
+Let x be any point of a smooth projective complex scheme V, and let Y be
+its actual reduced point-closure scheme. Let eta be Y's generic source
+point. For any y in Y with y != eta, the projective prime of the source
+is strictly contained in the projective prime of the image of y:
+
+    P_x < P_y.
+
+Choose an actual coordinate-ring equation f in P_y outside P_x. This
+choice is derived from the two scheme points. No equation, Hodge class,
+cycle-class preimage, or full-rank certificate is supplied as an input.
+
+The existing projective zero-locus/ideal-sheaf construction produces a
+closed subscheme, which is pulled back into Y. Its support C satisfies:
+
+    y in C, eta not in C, C closed, C != Y.
+
+No homogeneity or Cartier-divisor assertion is made for the chosen f.
+The reduced projective zero locus is defined even for a nonhomogeneous
+equation. Consequently the proof does not infer purity of this cut from
+an unjustified principal-ideal argument.
+
+The source closure is irreducible and Noetherian. Hence the existing
+proper-closed-cut theorem gives a finite relative coheight-one locus.
+If coheight_Y(y)=1, y belongs to the constructed finite locus. Thus EVERY
+relative codimension-one point is covered by a constructed directed cut;
+the fixed relevance separator is no longer the only possible source.
+
+Moreover y is actually a generic point of an irreducible component of C.
+Indeed, if z is a strict generalization of y inside C, coheight strictly
+decreases from one, so z has coheight zero in Y. Since eta is the greatest
+point of Y, a coheight-zero z equals eta, contradicting eta not in C.
+Thus y is maximal in C's specialization order. Quasi-sobriety of the
+closed subspace C then identifies the closure of y with an irreducible
+component. This proves the component claim, not merely containment.
+
+### Existing Lean files changed
+
+`GSTClassicalHodgePointClosureRelativeCut.lean` now contains six geometric
+constructors and fifteen geometric theorem declarations in `TargetDirected`.
+The central exported declarations are:
+
+* `exists_targetedSectionEquation`;
+* `targetedRelativeCutScheme`;
+* `finite_targetedRelativeCut_coheight_one`;
+* `every_relative_codimension_one_point_has_directed_cut`;
+* `targetedRelativeCutTarget_is_component_generic`.
+
+That entire section has no Hodge-data or cycle-class input.
+
+`GSTActualXHodgeResidualProjection.lean` adds
+`directed_cut_supplies_native_primitive_normalization`. Given a selected
+relative coheight-one component with ambient coheight two, it constructs
+an actual native rational cycle W with
+
+    cl(W) = pi(cl([image(y)])), primitiveTest(cl(W)) = 0,
+
+and returns the directed-cut membership and irreducible-component
+certificate as well. The existing geometric spine, higher Lefschetz data
+and divisor representation theorem remain explicit comparison inputs.
+This output may have zero Betti class. Nonvanishing, independent rank,
+all-codimension primitive normalization and full Hodge spanning are not
+conclusions of this declaration.
+
+Source commits: `197d8e576bc907cef999955ceb68aa378122d101` and
+`a0995dd40b8f0bf7aab5bc7b7da073f5b3c2d57f`.
+The subsequent source extension is
+`5e2e5af6a2b31ee7418f71a1b612742eaedd6ff2`; combined landing head:
+`ed396be129ec98edc3d80dca8222b61c898205aa`.
+Source elaboration repairs culminated in
+`921c9fa12ee344a24c5f7a9017dd153316622780`. The projective type alias and
+support-set coercion are explicit, and component maximality uses actual
+topological specialization rather than conflicting subtype orders.
+The workflow now checks directed geometry before the full Hodge landing
+and retains both logs. The final source and full landing BOTH PASSED in
+GitHub Lean run `39015742539`, at revision
+`aa2abbe546a6de367c2d970217627bcf0131a7bb`, with no `sorryAx`.
+The source and landing logs report standard axioms only. The artifact
+SHA-256 is
+`13bb5a37b1ff8c5a3e7e9517888124d32bcaf9179f00350bf03df61adfc29a05`.
+Earlier full-landing runs `39012249986` and `39013980746` failed on a
+numeric codimension coercion; the final API takes the native indexed
+codimension point directly and eliminates that boundary. Earlier failed
+or superseded runs are not verification receipts for the final source.
+No successful universal Hodge proof is claimed.
+
+### Removing the supplied relative-grading condition
+
+For EVERY ambient point z of coheight p+1, the finite-coheight chain
+definition gives a strict generalization x of coheight p. Lift z into
+the actual closure scheme of x. A strict generalization w of that lift
+has ambient coheight at least p (because image(w) <= x) and strictly
+less than p+1 (because z < image(w)). Its ambient coheight is therefore
+p. If image(w) were strictly below x, strict coheight antitonicity would
+give p < p, a contradiction. Thus image(w)=x and w is the generic point
+of the source closure. The lifted z has relative coheight exactly one.
+
+This proves `specializationLift_coheight_one` for the chosen ambient
+one-step interval, without asserting global coheight additivity.
+`every_ambient_successor_point_has_directed_cut_component` then constructs
+the predecessor, equation, cut, finite source locus and component generic
+certificate for EVERY positive-codimension ambient native point.
+
+`every_ambient_point_has_exact_coheight_flag` also constructs a maximal
+strict geometric flag from every coheight-p point to coheight zero; each
+point on the flag has the exact reverse-index coheight. These use the
+pinned, already imported `Mathlib/Order/KrullDimension.lean` APIs
+`exists_series_of_coheight_eq_coe`, `coe_lt_coheight_iff`, and
+`coheight_eq_index_of_length_eq_head_coheight` at dependency revision
+`51e6992efd06126df61a496bebf8f49482a4e129`. The source of those imported
+APIs was checked directly; no public literature search was used.
+
+The grading certificate is for the chosen steps. Global exactness of all
+candidates of the older fixed-separator operator is a separate statement.
+
+The new landing `every_native_two_point_has_directed_primitive_cycle`
+therefore needs only a native codimension-two point, besides the existing
+Hodge/Lefschetz comparison data. Its containing codimension-one source,
+relative grading and component certificate are derived, not supplied.
+It returns an actual native W with cl(W)=pi(cl([z])) and primitive test
+zero. It still does not prove cl(W) nonzero for every point.
+
+### Remaining implication after this construction
+
+Geometric component-source coverage and exact graded flags are now
+addressed by written proofs at every finite ambient codimension. Compact
+point normal form then reconstructs any already native algebraic cycle
+from these covered atoms. This does not establish that their primitive
+class image is the full rational primitive Hodge fiber.
+
+The still-unproved implication is that an arbitrary primitive Hodge
+direction has a nonzero pairing with a sufficiently independent family
+of these genuine geometric source classes, ultimately giving full rank.
+Canonical analytification and point fundamental-class comparison also
+remain separate required constructions. The new cut theorem does not
+discharge either obligation by renaming it as a structure field.
+
+## 2026-10-18: focused Weil-fourfold auxiliary extraction
+
+The user narrowed the active source target to a nonzero exceptional
+Weil direction on the original very general simple Weil fourfold.
+The geometric reduction, exact canonical Betti formula, source dependency
+and verification boundary are written in
+[the auxiliary-extraction record](../research/records/20261018-weil-fourfold-auxiliary-extraction.md).
+It pads A by two oppositely acted CM elliptic factors, adjusts the
+auxiliary product polarization to a split (3,3) sixfold, and contracts
+its Weil cycle with the genuine elliptic divisor Delta-F1-F2 before
+pushing to A. The contraction is injective on the rational Weil plane;
+a non-real fourth-power endomorphism supplies a second direction.
+
+This uses the named external all-period split-sixfold Weil-plane
+theorem to supply the actual source. Its statement and the relevant
+source passages were checked at a pinned revision. A GST-only proof of
+that source theorem and its full canonical geometric Lean realization
+are not supplied. The new Lean file explicitly checks arithmetic rather
+than asserting geometric source existence. The all-varieties target
+remains open.
