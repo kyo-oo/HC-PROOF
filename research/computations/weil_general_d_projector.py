@@ -62,7 +62,7 @@ def test(d):
         return acc
     assert val(P,q*q)==0
     full=mul(gw,nc)
-    assert mod_monic(add(mul(P,P),neg(P)),full)==[F(0)]*4
+    assert mod_monic(add(mul(P,P),neg(P)),full)==[F(0)]*5
     return len(P)-1,D
 def main():
     samples=[F(i) for i in range(1,65)]
