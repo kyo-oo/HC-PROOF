@@ -263,6 +263,76 @@ theorem fermatMaximalPlaneGramDetector_kernel_trivial
 #check fermatMaximalPlaneGramDetector_kernel_trivial
 #print axioms fermatMaximalPlaneGramDetector_kernel_trivial
 
+/-! ## Geometry-bearing Fermat certificates for arbitrary m
+
+The explicit smooth degree-d hypersurface equation is
+  Σ_(i=0)^m (y_i^d-x_i^d)=0.
+Every d-th root of unity ζ specifies an actual maximal linear
+plane y_i=ζ*x_i. Different roots give disjoint projective planes,
+and the gradient of the polynomial vanishes only at the forbidden
+all-zero projective coordinate tuple.
+
+These theorems verify the pure coordinate identities in Lean for
+ALL m. The standard Jacobian criterion and the actual Chern/Betti
+cycle-class interpretation are external geometric input facts.
+-/
+
+def fermatEvenHypersurfaceEquation (m d : ℕ)
+    (x y : Fin (m+1) → ℂ) : ℂ :=
+  ∑ i : Fin (m+1), ((y i)^d - (x i)^d)
+
+/-- Every chosen complex d-th root of unity gives a linear
+projective m-plane contained in the Fermat hypersurface. -/
+theorem fermatEvenHypersurface_contains_root_plane
+    (m d : ℕ) (ζ : ℂ) (hζ : ζ^d = 1)
+    (x : Fin (m+1) → ℂ) :
+    fermatEvenHypersurfaceEquation m d x (fun i => ζ*x i) = 0 := by
+  simp [fermatEvenHypersurfaceEquation, mul_pow, hζ]
+
+/-- All nonzero projective coordinates avoid a zero of the
+complete Fermat Jacobian: direct affine-coordinate certificate. -/
+theorem fermatEvenHypersurface_jacobian_nonzero
+    (m d : ℕ) (hd : 3 ≤ d)
+    (x y : Fin (m+1) → ℂ)
+    (hx : ∀ i, (d : ℂ)*(x i)^(d-1) = 0)
+    (hy : ∀ i, (d : ℂ)*(y i)^(d-1) = 0) :
+    ∀ i, x i = 0 ∧ y i = 0 := by
+  have hD : (d : ℂ) ≠ 0 := by
+    exact_mod_cast (show d ≠ 0 by omega)
+  intro i
+  have hxp : (x i)^(d-1)=0 :=
+    (mul_eq_zero.mp (hx i)).resolve_left hD
+  have hyp : (y i)^(d-1)=0 :=
+    (mul_eq_zero.mp (hy i)).resolve_left hD
+  constructor
+  · by_contra hxn
+    exact (pow_ne_zero _ hxn) hxp
+  · by_contra hyn
+    exact (pow_ne_zero _ hyn) hyp
+
+/-- Distinct complex scalar graph planes cannot have a shared
+projective point. Thus distinct d-th roots of unity give
+disjoint algebraic maximal planes on the SAME Fermat X. -/
+theorem fermatEvenHypersurface_root_planes_disjoint
+    (m : ℕ) (ζ η : ℂ) (hζη : ζ ≠ η)
+    (x y : Fin (m+1) → ℂ)
+    (hζ : ∀ i, y i = ζ*x i)
+    (hη : ∀ i, y i = η*x i) :
+    ∀ i, x i = 0 ∧ y i = 0 := by
+  intro i
+  have hprod : (ζ-η)*x i = 0 := by
+    calc
+      (ζ-η)*x i = ζ*x i - η*x i := by ring
+      _ = 0 := sub_eq_zero.mpr ((hζ i).symm.trans (hη i))
+  have hx0 : x i = 0 :=
+    (mul_eq_zero.mp hprod).resolve_left (sub_ne_zero.mpr hζη)
+  exact ⟨hx0, by simpa [hx0] using hζ i⟩
+
+#check fermatEvenHypersurface_contains_root_plane
+#check fermatEvenHypersurface_jacobian_nonzero
+#check fermatEvenHypersurface_root_planes_disjoint
+#print axioms fermatEvenHypersurface_jacobian_nonzero
+
 #check normal_discriminant_closed
 #check primitive_ample_orthogonal
 #check primitive_norm_exact
