@@ -1381,8 +1381,10 @@ File GSTPrimitiveTransverseCycleExtraction.lean now contains:
 These declarations do NOT use sorryAx or custom axioms.
 The first full-rank/linearity gate 38994779386 SUCCESS;
 the primitive-kernel gate 38994999959 SUCCESS;
-the final explicit Chow-witness gate 38995216976 should be
-checked for a completed SUCCESS result before citing it as green.
+the final explicit Chow-witness gate 38995216976 PASSED,
+verifying every_picard_primitive_vector_has_native_chow_cycle
+at commit 8e8ad2248bca4e07f2445ef9f006dba8e5d0fbac. All three
+new primitive-cycle Lean checkpoints are GREEN.
 The symbolic full-coordinate independence determinant
 for rho=1,...,5 was checked using Wolfram over Q[t] and equals
 (-1)^(rho+1)*t. The Lean argument itself has no rank cutoff.
