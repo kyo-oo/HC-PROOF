@@ -486,16 +486,20 @@ theorem quadricBottProjector_idempotent
   change E * E = E
   ext i j
   fin_cases i <;> fin_cases j
-  · rw [h00]
+  · change (E * E) 0 0 = E 0 0
+    rw [h00]
     simp [E, quadricBottProjector, hQuadric]
     ring
-  · rw [h01]
+  · change (E * E) 0 1 = E 0 1
+    rw [h01]
     simp [E, quadricBottProjector]
     ring
-  · rw [h10]
+  · change (E * E) 1 0 = E 1 0
+    rw [h10]
     simp [E, quadricBottProjector]
     ring
-  · rw [h11]
+  · change (E * E) 1 1 = E 1 1
+    rw [h11]
     simp [E, quadricBottProjector, hQuadric]
     ring
 
