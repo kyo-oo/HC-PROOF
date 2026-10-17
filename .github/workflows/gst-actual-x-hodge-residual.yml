@@ -32,6 +32,24 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
+      - name: Kernel compile directed cut geometry first
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          cat >> lakefile.toml <<'EOF'
+          [[lean_lib]]
+          name = "GSTDirectedCutGeometry"
+          roots = ["GSTClassicalHodgePointClosureRelativeCut"]
+          EOF
+          if lake build GSTDirectedCutGeometry > gst-directed-cut-geometry.log 2>&1; then
+            echo "LEAN PASSED: directed cuts, exact flags, and native component source coverage"
+          else
+            grep -nE 'error:|sorryAx|✖' gst-directed-cut-geometry.log | tail -n 155 || true
+            tail -n 125 gst-directed-cut-geometry.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-directed-cut-geometry.log; then exit 1; fi
       - name: Kernel compile arbitrary X native Hodge projection and residual
         shell: bash
         run: |
@@ -62,5 +80,7 @@ jobs:
         if: always()
         with:
           name: gst-actual-x-hodge-residual-lean
-          path: gst-actual-x-residual.log
+          path: |
+            gst-directed-cut-geometry.log
+            gst-actual-x-residual.log
           if-no-files-found: warn
