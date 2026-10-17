@@ -50,6 +50,7 @@ jobs:
           [[lean_lib]]
           name = "GSTCanonicalPointBridge"
           roots = [
+            "GSTMaximalLinearHypersurfacePrimitive",
             "GSTCanonicalPointGeometryStage2G",
             "GSTFermatCanonicalPointRankBridge"
           ]
