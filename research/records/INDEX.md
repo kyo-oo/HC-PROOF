@@ -17,3 +17,5 @@ Prove the exact rational Hodge conjecture: for **every** smooth projective compl
 - 2026-10-17 — [Fermat geometric measurement bridge: kernel-verified](2026-10-17-fermat-realization-bridge-kernel-verified.md) — **green, exact source and scope audited** — run #39022986348 verifies the full-rank cohomological measurement implication; canonical geometric instantiation and all-X spanning still missing.
 
 - 2026-10-17 — [Canonical point-class + native rank integration](2026-10-17-canonical-point-cycle-integration.md) — **point and full target module CI running** — constructs Stage2G point-generated class maps and a native codimension-point rank bridge; the missing analytic canonical class and universal primitive spanning remain open.
+
+- 2026-10-17 — [Analytic fundamental-class semantics and Fermat intersection comparison](2026-10-17-analytic-fundamental-class-math-bridge.md) — **ordinary geometry construction; formal topology missing** — canonical point classes via Poincaré duals of proper analytic fundamental cycles; verifies Fermat intersection measurements independent of target preimages.
