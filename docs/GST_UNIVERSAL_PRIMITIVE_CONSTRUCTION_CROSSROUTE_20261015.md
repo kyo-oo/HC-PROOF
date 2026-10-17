@@ -1006,3 +1006,53 @@ surface/correspondence against its period. One
 verified such cycle would add a NEW native GST generator,
 rather than rearranging existing correspondences.
 The unrestricted target on all X is **unproved**.
+
+## Mathbox 2026-10-17: exact all-X rational-blowup exceptional Hodge reduction
+
+Original universal target unchanged: for EVERY smooth projective complex X,
+each p and every rational primitive Hodge (p,p) class alpha, produce
+a genuine algebraic codimension-p rational cycle with class alpha.
+
+GEOMETRIC ALL-X CONSTRUCTION: embed arbitrary X as a smooth closed center
+of codimension c>=2 in P^N, with N enlarged as necessary. Set
+Y=Bl_X(P^N). Then Y is a smooth projective RATIONAL variety, regardless
+of the original X geometry. The genuine Chow and Hodge blowup formulas
+give the matching decompositions (Tate shifts implicit in Hdg):
+  CH^q(Y)_Q = CH^q(P^N)_Q (+) ⊕_{j=1}^{c-1} CH^(q-j)(X)_Q,
+  Hdg^q(Y) = Hdg^q(P^N) (+) ⊕_{j=1}^{c-1} Hdg^(q-j)(X)(-j).
+Thus each Hodge alpha ∈ Hdg^p(X) occurs faithfully in the first
+exceptional Hodge summand of Hdg^(p+1)(Y).
+
+NEW LEAN mathematics in existing GSTUniversalChowRetractToTarget.lean
+at commit 7bb7f6c542c4c7aa3a7b4f108f028905a2d7c696:
+SchemeExceptionalCenterRetract has the ACTUAL scheme codimensionCycle
+maps (center p to blowup p+1 and vice versa), their genuine rational
+Betti maps, both cycle-class compatibility squares, a Betti left
+inverse and Hodge type preservation. It contains NO requested
+target-cycle preimage or assumed Hodge surjectivity.
+algebraic_center_iff_exceptional_blowup_class then proves EXACTLY:
+  alpha is a native algebraic cycle-class on X
+    IFF exceptionalBetti(alpha) is a native algebraic cycle-class on Y.
+missing_center_direction_survives_exceptional_birth transports
+unrepresented arbitrary-X rational Hodge directions to Y.
+hodge_on_arbitrary_center_of_solved_blowup explicitly constructs
+the center cycle from a verified blowup source Chow cycle.
+
+KNOWN MATHEMATICAL CONSEQUENCE, not an independently solved conjecture:
+rational Hodge conjecture on ALL smooth projective varieties
+  IFF rational Hodge conjecture on ALL smooth projective RATIONAL
+varieties. The reverse direction follows because every X can be
+faithfully embedded into exceptional geometry on rational Y.
+Crucially, Y being rational DOES NOT mean its exceptional Hodge
+classes are algebraic. Any missing primitive class survives.
+
+Lean gate 38990448496 verifies the new center transfer separately;
+check its completed conclusion before declaring GREEN. The actual
+scheme blowup, Gysin Chow/Betti and canonical geometric cycle-class
+instantiations remain separate external geometry obligations.
+Next: derive the first exceptional source directly from the existing
+SchemeBlowupGysin packet and verify its native Chow recovery projection;
+this will reduce free geometry interfaces and narrow the missing leaf.
+
+FULL UNIVERSAL EXISTENCE STATUS: UNPROVED; the reduction is faithful
+but does not independently construct the missing primitive cycles.
