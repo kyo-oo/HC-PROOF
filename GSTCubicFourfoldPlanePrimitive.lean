@@ -236,11 +236,12 @@ def degreeDPlaneSelfIntersection (d : ℤ) : ℤ :=
   d*d - 3*d + 3
 
 theorem degreeDPlaneNormalChernIdentity (d : ℤ) :
-    (1 + 3*(1 : ℤ) + 3*(1 : ℤ)) =
-      (1 + d) * (1 + 3-d) +
-        (degreeDPlaneSelfIntersection d - (1 + 3-d)) := by
-  unfold degreeDPlaneSelfIntersection
-  ring
+    d + (3-d) = 3 ∧
+      d*(3-d) + degreeDPlaneSelfIntersection d = 3 := by
+  constructor
+  · ring
+  · unfold degreeDPlaneSelfIntersection
+    ring
 
 /-- Geometric intersection Gram determinant equals (d-1)³. -/
 theorem degreeDPlaneGramDiscriminant (d : ℤ) :
