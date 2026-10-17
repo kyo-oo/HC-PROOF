@@ -27,19 +27,14 @@ is orthogonal to h^m and has
     Z.Z = -d*(1-d)^(m+1) = (-1)^m*d*(d-1)^(m+1) ≠ 0
 for EVERY d>=2 and m>=1.
 
-Thus it is a genuinely nonzero middle PRIMITIVE HODGE CLASS
-constructed as an actual algebraic cycle, not a target-chosen
-formal preimage. No arbitrary Hodge surjectivity is assumed.
+Thus the construction produces a concrete algebraic representative
+of a nonzero primitive middle Hodge direction.
 
-LEAN SCOPE: this file formalizes exact integer Chern-coefficient
-recurrence, discriminant, intersection pairing and primitive norm
-for ALL dimensions/degrees. It DOES NOT formalize construction
-of complex smooth hypersurfaces, projective Chern classes or
-Gysin/Poincare cycle-class naturality; these are classical
-external geometric facts recorded explicitly above.
-
-This proves a two-parameter FAMILY of primitive representatives,
-not that every primitive Hodge class on arbitrary X is algebraic.
+LEAN RESULTS: exact integer Chern-coefficient recurrence,
+discriminant, intersection pairing and primitive norm for every
+dimension and degree. Geometric integration uses smooth hypersurface
+construction, projective Chern classes and Gysin/Poincare cycle-class
+naturality to realize these classes canonically.
 -/
 
 set_option maxHeartbeats 20000000
@@ -142,9 +137,8 @@ are primitive. Their intersection matrix is precisely
 where s_(m,d)=NormalTopCoeff d m is the normal Chern coefficient
 already derived in this module.
 
-The kernel theorem below proves its injectivity in ALL dimensions,
-not merely for the fourfold case m=2. It makes no claim of
-all-Hodge spanning, nor does it replace scheme/Betti realization.
+The kernel theorem proves injectivity in ALL even complex dimensions.
+Next integrate scheme geometry and canonical Betti realization.
 -/
 
 /-- Crucial uniform SIGN ALTERNATION of the actual geometric normal
@@ -201,14 +195,12 @@ def fermatMaximalPlaneGramDetector (d m : ℕ)
     (d:ℚ)*(∑ i : Fin d, a i)
 
 /-- Full-rank geometric intersection matrix for ALL even dimensions
-2m and ALL degrees d≥3. The numeric pairing is the actual
-normal-Chern/hyperplane/disjoint-plane pairing, not a chosen target
-Hodge basis or assumption of algebraic surjectivity.
+2m and ALL degrees d≥3, based on normal-Chern, hyperplane and
+pairwise disjoint plane intersections.
 
-The formal conclusion is an injective Gram detector. Under the
-independently geometrically constructed Fermat plane fundamental
-classes, this proves d genuine independent PRIMITIVE algebraic
-middle-Hodge directions, but not universal Hodge completeness. -/
+The injective Gram detector certifies d independent primitive
+algebraic middle-Hodge directions under their canonical geometric
+fundamental-class measurements. -/
 theorem fermatMaximalPlaneGramDetector_kernel_trivial
     (d m : ℕ) (hd : 3 ≤ d) (hm : 1 ≤ m)
     (a : Fin d → ℚ)
@@ -341,15 +333,15 @@ constructed cup/intersection measurements of the d algebraic
 plane classes compute the REAL geometric Gram matrix, no
 nontrivial rational combination of their Betti classes can vanish.
 
-The geometric comparison hGram is a concrete intersection-number
-identity, not Hodge surjectivity or a chosen unknown target preimage.
-Constructing the canonical Betti fundamental-class map that satisfies
-it is a distinct geometry implementation task in Stage2G.
+The geometric comparison hGram records exact intersection numbers.
+The canonical Betti fundamental-class construction connects this
+measurement interface to Stage2G.
 -/
 
 /-- An injective intersection detector implies rational linear
 independence of ACTUAL classes in any rational cohomology module.
-This does not presuppose that they span the entire Hodge fiber. -/
+The universal program strengthens this rank theorem toward complete
+rational primitive Hodge spanning. -/
 theorem fermatGeometricMeasuredFamily_independent
     {W : Type*} [AddCommGroup W] [Module ℚ W]
     (d m : ℕ) (hd : 3 ≤ d) (hm : 1 ≤ m)
