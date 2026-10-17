@@ -11,6 +11,7 @@ on:
       - 'GSTClassicalHodgeGeometricCycleClassPointRigidity.lean'
       - 'GSTActualXHodgeResidualProjection.lean'
       - 'GSTUniversalResolvedSupportHodge.lean'
+      - 'GSTUniversalPrimitiveHyperplaneRelative.lean'
       - 'GSTUniversalCodimensionTwoPrimitiveExtraction.lean'
       - 'GSTClassicalHodgeExactClayStatement.lean'
       - '.github/workflows/gst-pinned-hodge-geometric-integration.yml'
@@ -59,10 +60,11 @@ jobs:
             GSTClassicalHodgeGeometricCycleClassPointRigidity \
             GSTActualXHodgeResidualProjection \
             GSTUniversalResolvedSupportHodge \
+            GSTUniversalPrimitiveHyperplaneRelative \
             GSTUniversalCodimensionTwoPrimitiveExtraction \
             GSTClassicalHodgeExactClayStatement
           if lake build GSTPinnedHodgeGeometricGate > pinned-hodge-lean.log 2>&1; then
-            echo "LEAN PASSED: original-X resolved-support source cycles, canonical point map, primitive residual, exact Hodge target"
+            echo "LEAN PASSED: all-X primitive relative hyperplane geometry, Gysin supports, canonical Betti spine and exact target"
           else
             grep -nE 'error:|sorryAx|✖' pinned-hodge-lean.log | tail -n 140 || true
             tail -n 110 pinned-hodge-lean.log
