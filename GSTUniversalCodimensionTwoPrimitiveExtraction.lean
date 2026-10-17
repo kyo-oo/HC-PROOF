@@ -190,6 +190,54 @@ theorem reconstruct_from_algebraic_primitive_remainder
   rw [map_add,hprim]
   exact (Hodge_class_eq_primitive_plus_native_cycle G P h11 alpha).symm
 
+/-! ## ALL-X THREEFOLD codimension-two case
+
+For a THREEFOLD d=3, the primitive-test operator is cup by
+h^(d-3)=h^0=1, hence it is the IDENTITY on the (2,2) Hodge fiber.
+Consequently Hard Lefschetz and the independent Lefschetz (1,1)
+theorem construct a native codimension-two representative for
+EVERY rational Hodge class: the primitive remainder is zero.
+
+The equality hLZero below states the DEGREE-ZERO cup-product
+identity. It is a standard geometric operator law, NOT a Hodge
+algebraicity, spanning, or preimage hypothesis.
+Stage2G still supplies Hodge and cycle-class semantic fields;
+no complete analytic instantiation of these fields is claimed.
+-/
+
+/-- On any actual geometric threefold, cup h^0 is the identity. -/
+theorem threefold_primitive_hodge_remainder_zero
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G 3)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hLZero : P.primitiveTest = LinearMap.id)
+    (alpha : ClassicalHodgeFiber V H 2) :
+    primitiveHodgeRemainder G P h11 alpha = 0 := by
+  have hp := primitiveHodgeRemainder_primitive G P h11 alpha
+  rw [hLZero] at hp
+  simpa using hp
+
+/-- Every rational (2,2) class on the original threefold carrier
+is represented by a concrete native codimension-two cycle.
+The source comes from Hard Lefschetz plus Hodge-(1,1), not a
+primitive Hodge preimage assumption. -/
+theorem every_threefold_hodge_two_class_has_native_cycle
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G 3)
+    (h11 : DivisorsRepresentHodge11 H)
+    (hLZero : P.primitiveTest = LinearMap.id)
+    (alpha : ClassicalHodgeFiber V H 2) :
+    ∃ Z : codimensionCycles V.X 2,
+      nativeToHodgeFiberLinear G Z = alpha := by
+  refine ⟨algebraicLefschetzCorrection G P h11 alpha, ?_⟩
+  have htest := algebraicLefschetzCorrection_test G P h11 alpha
+  rw [hLZero] at htest
+  simpa using htest
+
+#check threefold_primitive_hodge_remainder_zero
+#check every_threefold_hodge_two_class_has_native_cycle
+#print axioms every_threefold_hodge_two_class_has_native_cycle
+
 #check primitiveHodgeRemainder
 #check primitiveHodgeRemainder_primitive
 #check Hodge_class_eq_primitive_plus_native_cycle
