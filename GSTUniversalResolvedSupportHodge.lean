@@ -166,6 +166,133 @@ theorem missing_hodge_class_avoids_resolved_support
   exact hMissing
     (resolved_support_hodge_class_is_algebraic G h11 alpha hHodge hSupported)
 
+/-! ## Gate 3: ORIGINAL-X reconstruction from affine algebraic data
+
+Let i:Y -> X be a genuine smooth projective divisor, U=X\Y
+its affine complement, and j:U -> X the open immersion.
+
+For p=2, any rational (2,2) Hodge alpha on the original X
+whose restriction to U has a genuine affine algebraic cycle
+representative Z_U admits an explicit NATIVE algebraic cycle on X.
+
+(1) Close Z_U in X to obtain a native codimension-two cycle C.
+(2) The difference delta=alpha-cl_X(C) restricts to zero on U.
+(3) Localization for the pair (X,U) gives
+        delta in im(i_*:H²(Y,Q)->H⁴(X,Q)).
+(4) Rational Hodge strictness + Lefschetz (1,1) produce a
+    genuine algebraic divisor D_Y on Y with cl_X(i_*D_Y)=delta.
+(5) Return C+i_*D_Y on the ORIGINAL X.
+
+This is an exact affine-to-projective algebraization operation,
+unlike the earlier supported-source theorem: the new cycle is
+supplied only on the open AFFINE U, and the algebraic divisor
+correcting the compactification is constructed by the proof.
+
+Producing Z_U for EVERY rational Hodge target remains the new,
+independent affine source-construction obligation.
+-/
+
+/-- Genuine smooth-affine-open localization and closure comparison
+for codimension-two algebraic cycles. The cohomological exactness
+input is the localization sequence for the actual open immersion,
+not an assumption that the desired target class is algebraic. -/
+structure AffineCodimensionTwoLocalization
+    (U : Scheme) (HU : Type*)
+    [AddCommGroup HU] [Module ℚ HU]
+    (G : ResolvedSupportGysin (Y := Y) (X := X)
+        (HY := HY) (HX := HX) 1) where
+  openInclusion : U ⟶ X.X
+  affineCycleClass :
+    codimensionCycles U 2 →ₗ[ℚ] HU
+  restrictBetti :
+    RationalSingularCohomology HX.analytification 4 →ₗ[ℚ] HU
+  nativeClosure :
+    codimensionCycles U 2 →ₗ[ℚ] codimensionCycles X.X 2
+  closure_restriction :
+    ∀ Zu : codimensionCycles U 2,
+      restrictBetti (HX.cycleClass 2 (nativeClosure Zu)) =
+        affineCycleClass Zu
+  localization_exact :
+    ∀ delta : RationalSingularCohomology HX.analytification 4,
+      restrictBetti delta = 0 →
+        delta ∈ LinearMap.range G.bettiGysin
+
+/-- ORIGINAL-X codimension-two Hodge reconstruction from a genuine
+affine open cycle. The returned cycle is the closure of Zu PLUS
+the algebraic divisor correction pushed forward from Y. -/
+theorem affine_cycle_plus_divisor_boundary_represents_hodge_two
+    {U : Scheme} {HU : Type*}
+    [AddCommGroup HU] [Module ℚ HU]
+    (SG : GeometricCycleClassSpine X HX)
+    (G : ResolvedSupportGysin (Y := Y) (X := X)
+        (HY := HY) (HX := HX) 1)
+    (B : AffineCodimensionTwoLocalization
+        (Y := Y) (X := X) (HY := HY) (HX := HX) U HU G)
+    (h11 : DivisorsRepresentHodge11 HY)
+    (alpha : RationalSingularCohomology HX.analytification 4)
+    (hAlpha : alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading 2))
+    (Zu : codimensionCycles U 2)
+    (hAffine :
+      B.affineCycleClass Zu = B.restrictBetti alpha) :
+    ∃ Zx : codimensionCycles X.X 2,
+      HX.cycleClass 2 Zx = alpha := by
+  let C : codimensionCycles X.X 2 := B.nativeClosure Zu
+  let delta : RationalSingularCohomology HX.analytification 4 :=
+    alpha - HX.cycleClass 2 C
+  have hBoundary : B.restrictBetti delta = 0 := by
+    calc
+      B.restrictBetti delta =
+          B.restrictBetti alpha - B.affineCycleClass Zu := by
+            simp only [delta, map_sub, C, B.closure_restriction]
+      _ = 0 := sub_eq_zero.mpr hAffine.symm
+  have hSupported : delta ∈ LinearMap.range G.bettiGysin :=
+    B.localization_exact delta hBoundary
+  have hDeltaHodge :
+      delta ∈ rationalHodgeSubspace (HX.hodgeBigrading 2) := by
+    dsimp [delta]
+    exact (rationalHodgeSubspace (HX.hodgeBigrading 2)).sub_mem
+      hAlpha (SG.algebraic_is_hodge 2 C)
+  let D : codimensionCycles X.X 2 :=
+    G.nativeCycle h11 delta hDeltaHodge hSupported
+  have hD : HX.cycleClass 2 D = delta :=
+    G.nativeCycle_correct h11 delta hDeltaHodge hSupported
+  refine ⟨C + D, ?_⟩
+  calc
+    HX.cycleClass 2 (C + D) =
+        HX.cycleClass 2 C + HX.cycleClass 2 D := map_add _ _ _
+    _ = HX.cycleClass 2 C + delta := by rw [hD]
+    _ = alpha := by dsimp [delta]; abel
+
+/-- The exact affine geometry criterion gives an all-X, codim-2
+reduction: constructing the restricted (2,2) class on the affine
+complement always suffices for an ACTUAL projective native cycle. -/
+theorem all_hodge_two_of_affine_open_cycle_sources
+    {U : Scheme} {HU : Type*}
+    [AddCommGroup HU] [Module ℚ HU]
+    (SG : GeometricCycleClassSpine X HX)
+    (G : ResolvedSupportGysin (Y := Y) (X := X)
+        (HY := HY) (HX := HX) 1)
+    (B : AffineCodimensionTwoLocalization
+        (Y := Y) (X := X) (HY := HY) (HX := HX) U HU G)
+    (h11 : DivisorsRepresentHodge11 HY)
+    (hAffineSources :
+      ∀ alpha : RationalSingularCohomology HX.analytification 4,
+        alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading 2) →
+        ∃ Zu : codimensionCycles U 2,
+          B.affineCycleClass Zu = B.restrictBetti alpha) :
+    ∀ alpha : RationalSingularCohomology HX.analytification 4,
+      alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading 2) →
+      ∃ Zx : codimensionCycles X.X 2,
+        HX.cycleClass 2 Zx = alpha := by
+  intro alpha hAlpha
+  obtain ⟨Zu, hZu⟩ := hAffineSources alpha hAlpha
+  exact affine_cycle_plus_divisor_boundary_represents_hodge_two
+    SG G B h11 alpha hAlpha Zu hZu
+
+#check affine_cycle_plus_divisor_boundary_represents_hodge_two
+#check all_hodge_two_of_affine_open_cycle_sources
+#print axioms affine_cycle_plus_divisor_boundary_represents_hodge_two
+
 #check ResolvedSupportGysin.nativeCycle_correct
 #check resolved_support_hodge_class_is_algebraic
 #check divisor_supported_hodge_two_is_algebraic
