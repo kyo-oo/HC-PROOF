@@ -1086,8 +1086,43 @@ theorem directed_cut_supplies_native_primitive_normalization
   · exact native_primitive_projection_cycleClass G L h11 Z
   · exact primitiveizeNativeMiddleCycle_primitive G L h11 Z
 
+/-- Every native codimension-two point generator is a component of a derived
+directed cut and has an actual primitive-normalized cycle. The containing
+codimension-one source, equation, and relative grading are all derived.
+This exhausts native point generators, not arbitrary Hodge directions. -/
+theorem every_native_two_point_has_directed_primitive_cycle
+    {d : ℕ}
+    (G : GeometricCycleClassSpine X H)
+    (L : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (z : CodimensionPoint X.X 2) :
+    ∃ x : X.X, Order.coheight x = 1 ∧
+      ∃ hzx : z.1 < x,
+      ∃ hy : specializationLift X x z.1 hzx.le ≠
+        GSTClassicalHodgePointClosureIrreducible.closureGenericPoint X x,
+        targetedRelativeCutTarget X x (specializationLift X x z.1 hzx.le) hy ∈
+          genericPoints
+            ((targetedRelativeCutIdeal X x
+              (specializationLift X x z.1 hzx.le) hy).support :
+                Set (pointClosureScheme X x)) ∧
+        ∃ W : codimensionCycles X.X 2,
+          nativeToHodgeFiberLinear G W =
+            primitiveHodgeRemainder G L h11
+              (nativeToHodgeFiberLinear G (codimensionPointCycle X.X 2 z)) ∧
+          L.primitiveTest (nativeToHodgeFiberLinear G W) = 0 := by
+  obtain ⟨x, hx, hzx, hy, _hy1, _hmem, hcomp⟩ :=
+    every_ambient_successor_point_has_directed_cut_component X 1 z.1
+      (by simpa using z.2)
+  let Z : codimensionCycles X.X 2 := codimensionPointCycle X.X 2 z
+  refine ⟨x, by simpa using hx, hzx, hy, hcomp,
+    primitiveizeNativeMiddleCycle G L h11 Z, ?_, ?_⟩
+  · exact native_primitive_projection_cycleClass G L h11 Z
+  · exact primitiveizeNativeMiddleCycle_primitive G L h11 Z
+
 #check directed_cut_supplies_native_primitive_normalization
 #print axioms directed_cut_supplies_native_primitive_normalization
+#check every_native_two_point_has_directed_primitive_cycle
+#print axioms every_native_two_point_has_directed_primitive_cycle
 
 #check traceZeroNative_preserves_primitive_projection
 #check picardTraceZero_has_zero_primitive_projection
