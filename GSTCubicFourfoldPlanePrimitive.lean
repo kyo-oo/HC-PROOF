@@ -112,6 +112,90 @@ theorem integral_primitive_is_multiple_of_plane_cycle
   · simp [primitivePlaneCycle]
     omega
 
+/-! ## Positive Mathbox test: splitting a geometric cut into components
+
+For a smooth cubic fourfold containing a plane P, a projective 3-space
+containing P cuts the cubic in a plane and a residual quadratic surface
+(provided the cut has its expected proper intersection). Their middle
+classes are P and h²-P. The geometric existence, cycle identity, and
+intersection numbers are external inputs; THIS Lean section checks the
+complete exact lattice consequences, without asserting arbitrary-X spanning.
+
+For any native class u=(a,b), three times its rational primitive
+projection along h² is the INTEGRAL vector (-b,3b). This proves that a
+total hyperplane cut can be nonprimitive even when its individual
+irreducible components have nonzero, opposite primitive classes.
+-/
+
+/-- Coordinate of the residual quadric surface inside a proper split cut. -/
+def residualQuadricClass : AlgebraicPlaneLattice :=
+  hyperplaneSquared - planeClass
+
+/-- Numerator of the rational primitive projection:
+3*u - <h²,u> * h², with <h²,h²> = 3. -/
+def primitiveComponentNumerator
+    (u : AlgebraicPlaneLattice) : AlgebraicPlaneLattice :=
+  (-u.2, 3*u.2)
+
+/-- The formula is FORCED by the actual 2-by-2 intersection pairing. -/
+theorem primitiveComponentNumerator_from_intersection
+    (u : AlgebraicPlaneLattice) :
+    primitiveComponentNumerator u =
+      (3*u.1 - Intersection hyperplaneSquared u, 3*u.2) := by
+  apply Prod.ext
+  · dsimp [primitiveComponentNumerator, Intersection, hyperplaneSquared]
+    ring
+  · rfl
+
+theorem primitiveComponentNumerator_is_primitive
+    (u : AlgebraicPlaneLattice) :
+    Intersection hyperplaneSquared (primitiveComponentNumerator u) = 0 := by
+  dsimp [primitiveComponentNumerator, Intersection, hyperplaneSquared]
+  ring
+
+theorem residualQuadricClass_completes_cut :
+    planeClass + residualQuadricClass = hyperplaneSquared := by
+  simp [residualQuadricClass]
+
+theorem plane_component_has_nonzero_primitive_class :
+    primitiveComponentNumerator planeClass = primitivePlaneCycle ∧
+    primitiveComponentNumerator planeClass ≠ (0,0) := by
+  constructor
+  · rfl
+  · simpa only [show primitiveComponentNumerator planeClass =
+        primitivePlaneCycle from rfl] using primitive_plane_nonzero
+
+theorem residual_quadric_has_opposite_primitive_class :
+    primitiveComponentNumerator residualQuadricClass =
+      -primitivePlaneCycle := by
+  apply Prod.ext
+  · norm_num [primitiveComponentNumerator, residualQuadricClass,
+      hyperplaneSquared, planeClass, primitivePlaneCycle]
+  · norm_num [primitiveComponentNumerator, residualQuadricClass,
+      hyperplaneSquared, planeClass, primitivePlaneCycle]
+
+theorem total_cut_has_zero_primitive_but_components_do_not :
+    primitiveComponentNumerator (planeClass + residualQuadricClass) =
+      (0,0) ∧
+    primitiveComponentNumerator planeClass ≠ (0,0) ∧
+    primitiveComponentNumerator residualQuadricClass ≠ (0,0) := by
+  constructor
+  · rw [residualQuadricClass_completes_cut]
+    rfl
+  constructor
+  · exact plane_component_has_nonzero_primitive_class.2
+  · rw [residual_quadric_has_opposite_primitive_class]
+    exact neg_ne_zero.mpr (by
+      simpa [primitivePlaneCycle] using primitive_plane_nonzero)
+
+#check primitiveComponentNumerator_from_intersection
+#check primitiveComponentNumerator_is_primitive
+#check residualQuadricClass_completes_cut
+#check plane_component_has_nonzero_primitive_class
+#check residual_quadric_has_opposite_primitive_class
+#check total_cut_has_zero_primitive_but_components_do_not
+#print axioms total_cut_has_zero_primitive_but_components_do_not
+
 #check primitive_plane_hyperplane_orthogonal
 #check primitive_plane_self_intersection
 #check primitive_plane_nonzero
