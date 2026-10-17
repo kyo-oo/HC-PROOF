@@ -124,6 +124,42 @@ theorem primitive_cycle_nonzero (d : ℤ) :
   have := congrArg Prod.fst h
   norm_num [PrimitivePlaneCycle] at this
 
+/-! ## Uniform cubic excess-intersection coefficients
+
+For two maximal planes in an even-dimensional Fermat cubic sharing
+exactly c matched coordinates, their scheme intersection is P^(c-1).
+The excess normal sequence has Chern polynomial
+  (1+t)^c/(1+3t).
+This theorem identifies its top coefficient by an integer identity
+for EVERY c, including disjoint planes c=0.
+It feeds the uniform finite-abelian Fourier proof for maximal-plane
+cycles, where the entry depends only on the agreement count c.
+-/
+
+/-- Actual cubic maximal-plane intersection number indexed by how
+many paired linear coordinates agree. -/
+def CubicMatchingIntersection (c : ℕ) : ℤ :=
+  if c = 0 then 0 else NormalTopCoeff 3 (c-1)
+
+/-- Complete cubic excess-intersection arithmetic in every
+dimension: 3 times the intersection equals 1-(-2)^c. -/
+theorem cubic_matching_intersection_closed (c : ℕ) :
+    3 * CubicMatchingIntersection c = 1 - ((-2 : ℤ)^c) := by
+  cases c with
+  | zero =>
+      norm_num [CubicMatchingIntersection]
+  | succ k =>
+      have h : 3 * NormalTopCoeff 3 k - 1 =
+          -((-2 : ℤ)^(k+1)) := by
+        simpa using (normal_discriminant_closed (3 : ℤ) k)
+      have h' : 3 * NormalTopCoeff 3 k =
+          1 - ((-2 : ℤ)^(k+1)) := by
+        omega
+      simpa [CubicMatchingIntersection] using h'
+
+#check cubic_matching_intersection_closed
+#print axioms cubic_matching_intersection_closed
+
 /-! ## Fermat maximal-plane geometry: independent primitive rank d in ALL even dimensions
 
 For every m≥1 and degree d≥3, the explicit Fermat hypersurface
