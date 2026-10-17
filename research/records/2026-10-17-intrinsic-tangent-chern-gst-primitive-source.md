@@ -80,7 +80,7 @@ Wolfram checked all symbolic Chern coefficients and both K3 cases. In Lean the c
 ## Immutable verification
 
 - [Actions #39053987370](https://github.com/kyo-oo/HC-PROOF/actions/runs/39053987370): SUCCESS, source SHA 971c428d016355c41c2db8d7913a19991b84f440, kernel-compiles the intrinsic native tangent primitiveizer, exact rational pairing, and related GST integration; sorryAx audit green. Evidence artifact 12108796606 (SHA256 e36232a919416abc4ffffc2cd9ebaaa5dabb1087d8392d02785af139d77816af).
-- [Actions #39054244592](https://github.com/kyo-oo/HC-PROOF/actions/runs/39054244592): ambient-input zero theorem run pending at record creation. Check final result separately before promoting its Lean status.
+- [Actions #39054244592](https://github.com/kyo-oo/HC-PROOF/actions/runs/39054244592): SUCCESS at SHA 3a436a98bc2a853a716a32b0a0b408445004f9c9; the GST ambient-input zero theorem and exact cubic coefficient are Lean-verified within the full pinned Hodge integration gate.
 
 **Route disposition:** Constructive intrinsic source on arbitrary X verified using existing GST primitive machinery; real nonzero geometric certification for products of polarized K3 surfaces; precise ambient-channel selection criterion on hypersurfaces. This route supplies an X-intrinsic source generator but by itself does not yet span arbitrary prescribed primitive Hodge α.
 
