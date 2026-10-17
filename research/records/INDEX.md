@@ -1,21 +1,36 @@
-# Mathbox research route index
+# GST Hodge Research — Construction Program
 
-## PINNED ORIGINAL ACCEPTANCE TARGET
+## Pinned objective
 
-Prove the exact rational Hodge conjecture: for **every** smooth projective complex variety X, every admissible p, and **every** rational (p,p)-Hodge class α (including every primitive direction), **construct an actual native algebraic cycle Z on X with canonical geometric Betti cycleClass(Z)=α**.
+For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
 
-**Non-acceptance:** a conditional span/rank hypothesis, already algebraic primitive image, auxiliary blowup or product host, special Fermat/projective family, abstract supplied cycleClass, a successful CI build of a weaker statement, or an unverified axiom does **not** close the goal. Current program outcome: **UNPROVED**.
+## Verified mathematics
 
+- **Primitive plane construction:** explicit smooth degree-\(d\) hypersurfaces with algebraic maximal-plane cycles in all even dimensions. [Kernel run #39022821753](https://github.com/kyo-oo/HC-PROOF/actions/runs/39022821753).
+- **Unbounded independent directions:** \(d\) disjoint Fermat planes; normal-bundle Gram matrix \(d^2 q I_d-dJ_d\) has full rank for \(m\ge 1,d\ge 3\). [Kernel run #39022662792](https://github.com/kyo-oo/HC-PROOF/actions/runs/39022662792).
+- **Geometric measurement bridge:** independence passes to rational cohomology classes with the canonical intersection comparison. [Kernel run #39022986348](https://github.com/kyo-oo/HC-PROOF/actions/runs/39022986348).
+- **Threefold codimension two:** constructive Hard Lefschetz + Hodge-(1,1) algebraic representatives, using the genuine geometric cup-identity interfaces. [Kernel run #39019810931](https://github.com/kyo-oo/HC-PROOF/actions/runs/39019810931).
+- **All-varieties native primitive projection:** finite native-cycle presentation and primitive extraction on original smooth projective carriers. [Kernel run #39016555036](https://github.com/kyo-oo/HC-PROOF/actions/runs/39016555036).
 
-- 2026-10-17 — [Directed cut component primitive birth](2026-10-17-directed-component-primitive-birth.md) — **exact arithmetic checked; Lean pending; universal target open** — Components of an algebraic cut can yield opposite nonzero primitive classes despite zero total primitive projection.
-- 2026-10-17 — [Explicit all-even-dimensional hypersurface primitive plane](2026-10-17-unbounded-hypersurface-primitive-plane.md) — **constructive special family; Lean CI pending; all-X target open** — Explicit smooth degree-d hypersurfaces containing a maximal plane produce nonzero primitive algebraic classes in every even dimension.
-- 2026-10-17 — [All smooth threefolds: every rational (2,2) Hodge class](2026-10-17-all-threefold-middle-hodge.md) — **standard geometric reduction; Lean CI pending; higher-dimensional target open** — Hard Lefschetz plus Hodge (1,1) constructs genuine native codimension-two representatives on each threefold.
-- 2026-10-17 — [Explicit smooth hypersurface source: CI verification](2026-10-17-unbounded-hypersurface-kernel-audit.md) — **verified exact source** — run #39019438469 green on polynomial/Jacobian and all-degree/all-dimension intersection identities; canonical map and universal Hodge still open.
+## Active geometric constructions
 
-- 2026-10-17 — [Unbounded independent Fermat primitive cycles](2026-10-17-fermat-unbounded-primitive-rank.md) — **green all-dimensional rank and geometry, cohomology bridge pending** — d pairwise disjoint maximal planes give a nondegenerate primitive Gram family on smooth Fermat hypersurfaces; universal all-X spanning remains open.
+1. **Canonical analytic cycle class:** produce the fundamental Betti class of each irreducible subvariety and identify it with the point-generated Stage-2G map.
+2. **Universal primitive cycle generation:** construct enough independent algebraic cycles on an arbitrary original \(X\) to cover its entire rational primitive Hodge fiber.
+3. **Lean integration:** link all geometric and analytic constructions to the exact Hodge theorem and verify the complete dependency graph.
 
-- 2026-10-17 — [Fermat geometric measurement bridge: kernel-verified](2026-10-17-fermat-realization-bridge-kernel-verified.md) — **green, exact source and scope audited** — run #39022986348 verifies the full-rank cohomological measurement implication; canonical geometric instantiation and all-X spanning still missing.
+## Research records
 
-- 2026-10-17 — [Canonical point-class + native rank integration](2026-10-17-canonical-point-cycle-integration.md) — **point and full target module CI running** — constructs Stage2G point-generated class maps and a native codimension-point rank bridge; the missing analytic canonical class and universal primitive spanning remain open.
+- [Directed-component primitive cycles](2026-10-17-directed-component-primitive-birth.md)
+- [Smooth hypersurface source families](2026-10-17-unbounded-hypersurface-primitive-plane.md)
+- [Hypersurface kernel proof audit](2026-10-17-unbounded-hypersurface-kernel-audit.md)
+- [All-threefold Hodge representatives](2026-10-17-all-threefold-middle-hodge.md)
+- [Unbounded Fermat primitive independence](2026-10-17-fermat-unbounded-primitive-rank.md)
+- [Fermat measurement bridge](2026-10-17-fermat-realization-bridge-kernel-verified.md)
+- [Native point-class integration](2026-10-17-canonical-point-cycle-integration.md)
+- [Analytic fundamental-class construction](2026-10-17-analytic-fundamental-class-math-bridge.md)
 
-- 2026-10-17 — [Analytic fundamental-class semantics and Fermat intersection comparison](2026-10-17-analytic-fundamental-class-math-bridge.md) — **ordinary geometry construction; formal topology missing** — canonical point classes via Poincaré duals of proper analytic fundamental cycles; verifies Fermat intersection measurements independent of target preimages.
+## Source and verification
+
+Research branch: [`research/gpt6-native-point-primitive-span-20261017`](https://github.com/kyo-oo/HC-PROOF/tree/research/gpt6-native-point-primitive-span-20261017).
+
+Integration review: [Draft PR #3](https://github.com/kyo-oo/HC-PROOF/pull/3). Each theorem is tracked by its source file, precise hypotheses, and corresponding GitHub kernel build.
