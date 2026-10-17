@@ -2,6 +2,8 @@
 
 - [Resolved Gysin supports on every original X](2026-10-17-resolved-support-hodge-source-audit.md) — **Lean green #39039315761**, actual native divisor pushforward in all codimensions for genuinely supported Hodge classes; audit isolates why establishing support for every primitive class is the remaining Gate 3 obligation.
 
+- [All-X primitive middle classes and hyperplane-relative geometry](2026-10-17-primitive-middle-hyperplane-relative-gate.md) — standard weak Lefschetz/Gysin identity ‘primitive iff hyperplane restriction zero iff relative Betti lift’, **Lean green [#39040307814](https://github.com/kyo-oo/HC-PROOF/actions/runs/39040307814)**; route now targets signed algebraic boundary data on the original X.
+
 **Current execution plan:** [Three proof gates, fixed all-X primitive target, and no-side-quest rule](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
