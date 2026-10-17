@@ -58,3 +58,23 @@ The **explicit native rational algebraic cycle** `Z(α)=Σ_i c_i [P_i]` satisfie
 ## Route disposition
 
 Constructive rational Hodge (2,2) completion for an explicit, nontrivial smooth cubic fourfold, using 21 real algebraic plane cycles and exact intersection geometry. Completion of the all-varieties generalization is the continuing program objective.
+
+## Stronger result: explicit full primitive basis of twenty cycles
+
+Take the ordered 21-plane basis \(P_0,P_1,\dots,P_{20}\) from the specified index witness. Since every plane satisfies \(h^2\cdot[P_i]=1\), the **twenty genuinely algebraic differences**
+
+\[
+C_i=[P_i]-[P_0],\qquad i=1,\ldots,20
+\]
+
+satisfy \(h^2\cdot C_i=0\), i.e. their canonical classes lie in the primitive Hodge space. The integral \(20\times20\) Gram matrix is explicitly
+
+\[
+B_{ij}=G_{ij}-G_{i0}-G_{0j}+G_{00}\quad (1\le i,j\le20),
+\]
+
+and **exact Bareiss integer elimination gives \(\det B=81\)**. Consequently the \(C_i\) are linearly independent and, because \(h^{2,2}_{\mathrm{prim}}(X)=20\), form a full basis of the rational primitive (2,2) Hodge sector.
+
+For every rational primitive Hodge class \(\alpha\), let \(b_j=\int_X \alpha\smile\operatorname{cl}(C_j)\in\mathbb Q\). Set \(c_i=(1/81)\sum_j\operatorname{adj}(B)_{ij}b_j\). Then the **constructive rational native cycle** \(Z_{\mathrm{prim}}(\alpha)=\sum_{i=1}^{20}c_i C_i\) has canonical Betti class precisely \(\alpha\).
+
+The exact Python certificate now verifies *both* determinants \(27\) (complete Hodge) and \(81\) (complete primitive Hodge), plus an independent full incidence check by finite-field Gaussian elimination over \(\mathbb F_7\).
