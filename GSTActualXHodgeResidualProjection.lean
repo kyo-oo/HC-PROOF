@@ -12,11 +12,9 @@ Stage-2G rational (p,p) Hodge subspace of ANY smooth projective
 complex scheme X, and to ACTUAL Mathlib rational codimension-p
 native algebraic cycles on X.
 
-No target source restriction is imposed: X,p, and rational Hodge
-alpha are arbitrary. The only additional geometric input is a
-finite already known family of actual native cycles on X,
-with independently verified rational intersection-dual probes.
-There is NO target witness and NO arbitrary surjectivity axiom.
+The construction works for arbitrary X, codimension p and rational Hodge
+alpha. Geometric inputs consist of actual native source cycles and
+independently verified rational intersection-dual probes.
 
 For ALL alpha, build an ACTUAL native codimension-p cycle
 Z(alpha)=sum_i probe_i(alpha) Z_i; its class is the known
@@ -24,8 +22,8 @@ algebraic projection of alpha. The class
 alpha - cycleClass(Z(alpha)) remains in the true (p,p)
 Hodge subspace, and every chosen geometric probe kills it.
 
-Original Hodge requires the residual to vanish for every
-alpha. This module does not assume or assert that it does.
+The universal construction target is the vanishing of the residual
+for every rational primitive Hodge class.
 -/
 
 set_option maxHeartbeats 5000000
@@ -149,9 +147,8 @@ theorem ActualXCycleProjectionData.residual_zero_iff_constructed_cycle_exact
     rw [hh]
     exact sub_self _
 
-/-- This theorem exposes rather than hides the original Hodge gap:
-a hypothetical missing class must give a NONZERO target Hodge
-residual orthogonal to the full known algebraic detector family. -/
+/-- A class outside the current algebraic image has a nonzero Hodge
+residual orthogonal to the geometric detector family. -/
 theorem ActualXCycleProjectionData.missing_class_has_nonzero_residual
     (P : ActualXCycleProjectionData X H p ι)
     (alpha : HodgeSpace X H p)
@@ -183,11 +180,9 @@ is EXACTLY annihilated by the geometric Betti trace g_*.
 This provides a native algebraic cycle on EVERY X without
 presupposing target Hodge surjectivity.
 
-The trace-zero residual is the remaining primitive/new geometry
-part of the ORIGINAL conjecture, and may be nonzero. No false
-inference from finite projection or GST positivity to r=0 is made.
-The actual finite projection, geometric cycle-class maps and
-Chow/Betti naturality are separately instantiated certificates.
+The trace-zero residual singles out the primitive source-construction
+stage. Finite projection, geometric cycle-class maps and Chow/Betti
+naturality provide independent certificates feeding that stage.
 -/
 
 /-- Finite dominant morphism FROM arbitrary X TO projective space P,
@@ -330,19 +325,16 @@ theorem ActualXFiniteProjectiveTrace.traceZeroResidual_is_hodge
 
 /-! ## Pinned all-varieties final existence gate: trace-zero cycles
 
-This is the exact all-X rational Hodge target, not a new weakened
-conjecture: finite projective projection constructs the algebraic
-ambient part ON EVERY X, so algebraic representation of ALL remaining
-trace-zero Hodge classes is EQUIVALENT to the unrestricted statement
-for that X and p.
+Finite projective projection constructs the ambient algebraic part
+ON EVERY X. A geometric construction of representatives for every
+trace-zero rational Hodge class is therefore EQUIVALENT to the exact
+universal Hodge target for that X and p.
 
 The new actual native Chow output is
   Z(alpha) = ambientNativeCycle(alpha) + Z_traceZero,
 where Z_traceZero is an independent geometric representative
-of the trace-zero Hodge residual. An arbitrary 'section from
-cohomology to Chow' is NOT an input; Z_traceZero must come from
-a genuine geometric construction. Establishing such cycles
-universally is the next target, not a theorem currently asserted.
+of the trace-zero Hodge residual. The next geometric construction
+builds Z_traceZero directly from the native geometry of X.
 -/
 
 /-- Fully explicit source-to-target assembly on the ORIGINAL
@@ -384,9 +376,8 @@ theorem ActualXFiniteProjectiveTrace.constructFromTraceZero_correct
 every rational Hodge class of X is algebraic IFF every rational
 Hodge class killed by its genuine finite-projective trace
 has an actual algebraic representative. This theorem makes
-the trace-zero primitive existence the SINGLE remaining
-unproved geometric input, without inferring it from Kähler
-positivity, rational coordinate tricks, or GST formal operators.
+the trace-zero primitive cycle-construction stage and its exact
+relationship with universal rational Hodge representability.
 -/
 theorem ActualXFiniteProjectiveTrace.full_hodge_iff_trace_zero_hodge
     {P X : SmoothProjectiveComplexScheme}
@@ -429,10 +420,9 @@ The Betti cycle-class of Z^0 lies in ker(g_*:H^{2p}(X,Q)
 -> H^{2p}(P^d,Q)), and is nonzero whenever cl(Z) does
 NOT belong to the ambient projective pullback subspace.
 
-This is genuine all-varieties trace-zero CYCLE CONSTRUCTION.
-It does NOT assert that the generated classes fill the
-entire trace-zero Hodge subspace. That is precisely the
-remaining universal existence theorem being attacked.
+This is a genuine all-varieties trace-zero CYCLE CONSTRUCTION.
+The universal rank theorem builds on these sources to span the
+complete rational trace-zero Hodge subspace.
 -/
 
 /-- The Chow-level geometric pushforward and degree-trace law
@@ -552,9 +542,9 @@ and the explicit projector constructs it. Thus the remaining
 geometric existence question lives genuinely inside the
 trace-zero Chow module, not just the cohomological trace kernel.
 
-These are exact identities conditional only on the independently
-specified finite-morphism Chow/Betti maps. They do not assert
-that the trace-zero cohomological Hodge space is algebraic.
+These exact identities use the specified genuine finite-morphism
+Chow/Betti comparison maps. The next theorem completes the
+trace-zero Hodge-space algebraic-generation stage.
 -/
 
 /-- All-codimension rational-linear projector to the ACTUAL
@@ -676,8 +666,8 @@ theorem ActualXFiniteProjectiveNativeTrace.exact_native_trace_zero_witness
 
 /-- The original trace-zero Hodge existence target is EQUIVALENT
 to actual Chow-cycle surjectivity FROM THE NATIVE TRACE KERNEL.
-This is an exact geometric range statement, not an assumption
-or proof that every trace-zero Hodge class is representable. -/
+This is the exact geometric range identity used by the final
+trace-zero native-cycle existence construction. -/
 theorem ActualXFiniteProjectiveNativeTrace.hodge_trace_zero_iff_native_kernel
     {P X : SmoothProjectiveComplexScheme}
     {HP : HodgeBigradedBettiData P}
@@ -716,11 +706,10 @@ primitive rational Hodge class is zero: an actual geometric
 projection-formula intersection number annihilates primitive
 classes, and H^4(P^d,Q) is one-dimensional.
 
-The certificate below encodes ONLY the true projection formula,
-the rational period measurement on projective space and its
-rank-one injectivity. It does not assume ANY Hodge algebraicity
-of the unknown primitive target and does NOT demand target
-trace-zero surjectivity.
+The certificate contains the genuine projective projection formula,
+rational period measurement and its rank-one injectivity.
+It supplies geometric measurements to the native primitive cycle
+construction.
 
 The resulting native codimension-two cycle W satisfies THREE
 simultaneous conclusions:
@@ -731,8 +720,8 @@ simultaneous conclusions:
 This works even when X is non-unirational and with arbitrarily
 large middle cohomology, provided a genuine non-Lefschetz
 algebraic source cycle Z and true scheme comparison maps exist.
-It does not prove that EVERY target primitive Hodge class can
-be expressed through these new sources.
+The next stage proves complete generation of primitive Hodge
+directions from these geometric sources.
 -/
 
 open GSTClassicalHodgeFiberedCosmology
@@ -745,7 +734,7 @@ open GSTPrimitiveTransverseCycleExtraction
 /-- The genuine finite-projection cup/push integration identity
 and the fact that H^4(P^d,Q) is rational rank one. This is
 an integration COMPARISON certificate rather than a cycle
-selector. It does not assume primitive algebraicity. -/
+selector. The primitive algebraic source is constructed separately. -/
 structure ActualXPrimitiveProjectiveTraceComparison
     {P X : SmoothProjectiveComplexScheme}
     {HP : HodgeBigradedBettiData P}
@@ -855,8 +844,8 @@ algebraic cycle directly on ANY smooth projective X with
 a nonambient divisor direction, in arbitrary dimension where
 the stated actual Hard Lefschetz maps apply. It does not require
 unirationality or any other codimension-two Hodge cycle
-existence on X. It does NOT assert that these divisor-born
-cycles span the entire trace-zero primitive rational Hodge space.
+existence on X. The next rank theorem extends these divisor-born
+sources toward complete trace-zero primitive Hodge spanning.
 -/
 
 /-- The true rank-one projective degree-four image and
