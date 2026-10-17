@@ -4,6 +4,8 @@
 
 - [All-X primitive middle classes and hyperplane-relative geometry](2026-10-17-primitive-middle-hyperplane-relative-gate.md) — standard weak Lefschetz/Gysin identity ‘primitive iff hyperplane restriction zero iff relative Betti lift’, **Lean green [#39040307814](https://github.com/kyo-oo/HC-PROOF/actions/runs/39040307814)**; route now targets signed algebraic boundary data on the original X.
 
+- [Native signed primitive sources via matched hyperplane boundaries](2026-10-17-hyperplane-matched-native-source.md) — exact all-X middle source constructor for two genuine algebraic cycles whose Betti restrictions agree, nonzero when their original classes differ; tracked CI [#39040768572](https://github.com/kyo-oo/HC-PROOF/actions/runs/39040768572).
+
 **Current execution plan:** [Three proof gates, fixed all-X primitive target, and no-side-quest rule](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
