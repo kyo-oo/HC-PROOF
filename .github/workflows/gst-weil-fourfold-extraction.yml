@@ -1,4 +1,4 @@
-name: GST Weil Fourfold Extraction Arithmetic
+name: GST Weil Extraction and Secant Seed
 on:
   push:
     branches:
@@ -32,13 +32,13 @@ jobs:
           fi
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
-      - name: Kernel check exact extraction and fourth-power arithmetic
+      - name: Kernel check extraction and secant seed construction
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           if lake env lean GSTWeilFourfoldAuxiliaryExtraction.lean > gst-weil-fourfold-extraction.log 2>&1; then
-            echo "LEAN PASSED: arithmetic only; sixfold geometry remains an external input"
+            echo "LEAN PASSED: extraction, seed vanishing, orbit geometry and dual resolution; period transport remains external"
           else
             cat gst-weil-fourfold-extraction.log
             exit 1

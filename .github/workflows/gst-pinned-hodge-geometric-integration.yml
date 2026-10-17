@@ -18,6 +18,7 @@ on:
       - 'research/computations/split_weil_native_algebraic_sources.py'
       - 'research/computations/quaternionic_graph_weil_source.py'
       - 'research/computations/qm_fourfold_all_hodge_divisor_span.py'
+      - 'research/computations/secant_seed_character.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -94,7 +95,12 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/qm_fourfold_all_hodge_divisor_span.py | tee qm-all-hodge-span.log
-      - name: Kernel compile primitive rank, genuine point classes, and all-X residual
+      - name: Exact secant seed Fourier character and nonzero Weil component
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/secant_seed_character.py | tee secant-seed-character.log
+      - name: Kernel compile secant seed, primitive rank, and native Hodge assembly
         shell: bash
         run: |
           set -euo pipefail
@@ -139,5 +145,6 @@ jobs:
             split-weil-native-sources.log
             quaternionic-weil-graph.log
             qm-all-hodge-span.log
+            secant-seed-character.log
             pure-k0-all-codim.log
           if-no-files-found: warn

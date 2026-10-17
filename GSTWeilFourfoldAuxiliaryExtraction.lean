@@ -3,7 +3,9 @@ import Mathlib
 /-!
 # Exact auxiliary-factor extraction for a Weil fourfold
 
-This file verifies the rational arithmetic in the geometric construction
+This file verifies the extraction arithmetic and proves the secant-seed
+vanishing, orbit support, translate selection and dual-resolution lemmas
+in the geometric construction
 written in `research/records/20261018-weil-fourfold-auxiliary-extraction.md`.
 It does NOT construct abelian varieties, Chow intersections, Betti cycle
 classes, or the secant-sheaf cycle on the auxiliary split sixfold.
@@ -690,6 +692,46 @@ theorem secantSeed_abel_curve_degree_budget
   have hq : (9 : ℚ) ≤ n := by exact_mod_cast hn
   linarith
 
+/-- Clearing a generic right inverse gives an injective dual map over
+the actual integral coefficient ring. This is the algebra used to turn
+the two-term Fourier kernel into an ordinary coherent cokernel sheaf;
+no reflexivity or prescribed cycle class is assumed. -/
+theorem secantSeed_dual_precomposition_injective
+    {R M N : Type*} [CommRing R] [IsDomain R]
+    [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
+    (f : M →ₗ[R] N) (g : N →ₗ[R] M) (a : R) (ha : a ≠ 0)
+    (hfg : f.comp g = a • (LinearMap.id : N →ₗ[R] N)) :
+    Function.Injective (fun phi : N →ₗ[R] R => phi.comp f) := by
+  intro phi psi heq
+  ext v
+  have hsplit : f (g v) = a • v := by
+    have h := congrArg (fun L : N →ₗ[R] N => L v) hfg
+    simpa only [LinearMap.comp_apply, LinearMap.smul_apply, LinearMap.id_apply] using h
+  have h := congrArg (fun L : M →ₗ[R] R => L (g v)) heq
+  change phi (f (g v)) = psi (f (g v)) at h
+  rw [hsplit, map_smul, map_smul] at h
+  exact mul_left_cancel₀ ha h
+
+/-- The explicit exceptional coefficient in the normalized character
+of the constructed seed sheaf never vanishes for d>0. -/
+theorem secantSeed_exceptional_coefficient_nonzero
+    (d : ℚ) (hd : 0 < d) : -(d + 1) / (4 * d) ≠ 0 := by
+  apply div_ne_zero
+  · have : 0 < d + 1 := by linarith
+    exact neg_ne_zero.mpr (ne_of_gt this)
+  · exact mul_ne_zero (by norm_num) (ne_of_gt hd)
+
+/-- Degree-three coefficient of the normalized same-sign Fourier
+characters. The opposite-sign terms supply the independent Weil part.
+All rational denominators are justified by d≠0. -/
+theorem secantSeed_ambient_third_coefficient
+    (d : ℚ) (hd : d ≠ 0) :
+    -(8*d*((d-1)/(4*d))^3 - 6*(d-1)*((d-1)/(4*d))^2 -
+       6*((d-1)/(4*d)) + (d-1)/(2*d))/6 =
+      (d-1)*(d+1)^2/(24*d^2) := by
+  field_simp [hd]
+  ring
+
 /-- Proper/closed projection turns vanishing for every central Picard
 twist into one common open neighborhood avoiding the entire bad locus.
 This is the topological uniformity step; relative Picard properness and
@@ -721,6 +763,9 @@ theorem seedUniformOpenOfClosedProjection
 #print axioms seedSecondTorsionOrbit_stars_disjoint
 #print axioms secantSeed_good_translation_exists
 #print axioms secantSeed_abel_curve_degree_budget
+#print axioms secantSeed_dual_precomposition_injective
+#print axioms secantSeed_exceptional_coefficient_nonzero
+#print axioms secantSeed_ambient_third_coefficient
 #print axioms seedUniformOpenOfClosedProjection
 
 end SecantSeed
