@@ -1102,5 +1102,22 @@ morphisms is still a separate certificate obligation.
 This is a faithful reduction, NOT a proof of algebraicity of the
 transferred middle Hodge class. The missing primitive rational
 Hodge directions survive transport without becoming algebraic.
-GitHub Lean job 38990917471 checks this new formal transfer;
-its outcome must be read before claiming compiler success.
+GitHub Lean run 38990448496 PASSED for the exact exceptional-center
+algebraicity equivalence. The subsequent middle-stabilized theorem
+was committed at 047397c6e4ef86f60a7331df0ccdb81156232ed1;
+run 38990917471 was superseded by a further Lean edit and CANCELLED.
+The latest run 38991205384 checks the final explicit native Chow
+cycle constructor; its conclusion must be verified separately.
+
+
+EXPLICIT NATIVE CONSTRUCTION added in commit
+a6c16df0f0aece3943ec3a1e84a6ef10d7611830:
+nativeCenterFromRationalMiddleCycle E S Z is exactly
+E.centerRecoverNative (S.nativeRecover Z), an actual codimension-p
+rational Chow cycle on the ORIGINAL arbitrary X whenever Z is an
+actual middle-dimensional cycle on the stabilized rational blowup.
+The theorem nativeCenterFromRationalMiddleCycle_correct proves
+its Betti cycle class equals the requested alpha under the
+concrete cohomological class equality for Z. This does NOT
+manufacture the missing middle algebraic cycle Z; it certifies
+the complete source-to-X Chow recovery without hidden selectors.
