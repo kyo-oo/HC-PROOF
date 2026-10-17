@@ -71,6 +71,13 @@ This closes the mathematics of primitive-to-full recovery **once primitive repre
 
 An acceptable route must name the new geometric object, show how it produces a native cycle **without knowing an algebraic preimage of \(\alpha\)**, and prove the class comparison. If an attempted route fails, identify the precise false implication, not a replacement theorem to celebrate.
 
+## Latest Gate 3 checkpoint — resolved-support subroutine verified
+
+- [All-\(X\), all-\(p\) resolved-support Gysin construction](records/2026-10-17-resolved-support-hodge-source-audit.md), committed in \`GSTUniversalResolvedSupportHodge.lean\`, was **Lean-kernel verified** in the existing integration gate [#39039315761](https://github.com/kyo-oo/HC-PROOF/actions/runs/39039315761). It builds \(f_*D\) from a genuine codimension-\((p-1)\) resolved algebraic support, a Hodge \((1,1)\) lift and Lefschetz \((1,1)\), with exact cycle-class equality.
+- **Adversarial scope check:** Given a rational Hodge class, assuming the existence of its resolved codimension-\((p-1)\) Gysin support is, after allowing all such supports, essentially equivalent to already assuming its algebraicity. This is a reusable *constructive support handler*, **not an independent proof that every primitive class has that support**.
+- **Separate failure of divisor-only source route:** The primitive plane class \(3[P]-h^2\) on a cubic fourfold with Picard rank one has norm \(24\), while all divisor products lie in the ambient \(h^2\)-line. Thus native hyperplane/divisor operations alone cannot span all primitive directions even on that concrete original variety.
+- **One next unresolved step:** Establish independently that an arbitrary primitive rational \((p,p)\) target admits a genuinely new algebraic support/source on the original \(X\). This must be proved by new geometry rather than by a restatement of the support or cycle-class-image condition.
+
 ## Reporting and completion
 
 Every update reports: **(i)** the exact original target; **(ii)** which of gates 1–4 acquired a proof; **(iii)** the one next missing mathematical implication; **(iv)** exact commit/CI evidence. No claim of final completion before all four acceptance tests pass.
