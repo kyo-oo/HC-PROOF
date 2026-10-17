@@ -12,6 +12,7 @@ on:
       - 'GSTActualXHodgeResidualProjection.lean'
       - 'GSTUniversalResolvedSupportHodge.lean'
       - 'research/computations/affine_clifford_k0_source.py'
+      - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'GSTUniversalPrimitiveHyperplaneRelative.lean'
       - 'GSTUniversalCodimensionTwoPrimitiveExtraction.lean'
       - 'GSTClassicalHodgeExactClayStatement.lean'
@@ -55,6 +56,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/affine_clifford_k0_source.py | tee affine-clifford-k0.log
+      - name: Exact Adams degree purification and native K0 primitive geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/algebraic_adams_pure_hodge_k0.py | tee algebraic-adams-k0.log
       - name: Kernel compile primitive rank, genuine point classes, and all-X residual
         shell: bash
         run: |
@@ -94,4 +100,5 @@ jobs:
           path: |
             pinned-hodge-lean.log
             affine-clifford-k0.log
+            algebraic-adams-k0.log
           if-no-files-found: warn
