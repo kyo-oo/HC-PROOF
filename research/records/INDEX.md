@@ -14,6 +14,8 @@
 
 - [Pure algebraic K₀ primitive cycles in every codimension](2026-10-17-pure-algebraic-k0-all-codimensions.md) — explicit smooth Fermat (2p)-fold, genuine plane and complete-intersection K₀ sheaves, Adams-purified exact (ch_p=d[P]-h^p) with norm ((-1)^p d(d-1)^{p+1}), all (pge1,dge2); 348-case exact CI [#39052449104](https://github.com/kyo-oo/HC-PROOF/actions/runs/39052449104).
 
+- [Rank-two syzygy bundle generates a nonambient primitive Chern class](2026-10-17-plane-syzygy-bundle-native-chern-source.md) — from actual three linear equations of a plane in any smooth degree-d fourfold, construct an honest rank-two bundle (E); exact (c_2(E)=3h^2-[P]) and primitive (d[P]-h^2=(3d-1)h^2-dc_2(E)), norm (d(d-1)^3).
+
 **Current execution plan:** [Four fixed proof gates and exact all-X Hodge objective](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
