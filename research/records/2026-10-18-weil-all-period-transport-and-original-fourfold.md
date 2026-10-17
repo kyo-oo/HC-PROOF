@@ -138,6 +138,25 @@ Hodge imbalances (2,0), (1,1), (0,2). These summands are disjoint.
 Hence c_I^2 has rank exactly 48, not merely a rank on a selected
 piece of the obstruction group.
 
+There is also a directly checkable universal minor. In a symplectic
+Hodge basis theta=sum u_i w_i, select the three rank-term coordinates
+and three separate -n*j(xi)*theta coordinates of c^1. Select the three
+U-wedge-U inputs and three off-diagonal eta_i tensor xi_j inputs of
+c^2, where i,j complement the requested remaining index. Both resulting
+six-by-six diagonal detectors have determinant -n^3. On the product,
+their three blocks have sizes 6,36,6; the middle is the tensor square
+of the c^1 detector. The full selected determinant is
+
+    (-n^3) * ((-n^3)^6 * (-n^3)^6) * (-n^3) = n^42.
+
+Thus the cochains divided by their nonzero diagonal monomials give
+the required explicit right inverse for all n != 0. The exact program
+`research/computations/secant_obstruction_rank.py` computes the actual
+contractions in twelve exterior generators, checks all 2304 entries of
+this minor against the independent factorwise tensor construction and
+verifies the determinant over Q[n]. It does not sample orbit lengths.
+The factorwise dimension proof above gives the matching upper bound.
+
 The exact Hochschild--Atiyah trace identity is
 
 \[
@@ -503,6 +522,24 @@ already checks this native linear assembly; the present argument
 supplies its geometric auxiliary source at the required period at
 manuscript level.
 
+The new Lean entry point
+`auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread` uses the proved
+Baire witness theorem and then this existing assembly. A fixed auxiliary
+cycle is no longer a parameter of that entry point. Its inputs expose
+the Hilbert parameter family, closed analytic images, local witnesses,
+the cycle built from a parameter on the requested fiber and its fixed
+canonical comparisons. These geometric instances are supplied in the
+manuscript argument and are not yet constructed as Lean inhabitants.
+
+For the stated very general fourfold this also gives the full rational
+Hodge conjecture in every codimension at manuscript level. Codimension
+one is Lefschetz (1,1), codimension three follows by the Hodge-compatible
+isomorphism theta_A^2:H^2 -> H^6 and intersection with the algebraic
+polarization square, and codimensions zero and four are represented by
+the variety and a point. The only exceptional middle directions were
+the two just constructed. This does not extend the conclusion to
+uncontrolled extra middle Hodge directions at special periods.
+
 Finally take a finite cycle representative of Z. If every integral
 surface in its support had zero exceptional projection, linearity
 would contradict (14). Thus at least one actual irreducible surface
@@ -560,9 +597,10 @@ claim to have discovered the all-period theorem independently.
   special fourfold periods. The Weil-plane construction itself is
   independent of that generality condition.
 
-Mathematical verdict: the displayed transport/extraction chain proves
-the three stated geometric conclusions using the named, checked source
-theorems. Formal-verification verdict: the new core Lean results and the
+Primary mathematical verdict: **proved as written using the named,
+checked source theorems**. The displayed transport/extraction chain
+gives the three stated geometric conclusions. The complete geometric
+Lean proof is **incomplete**: the new core Lean results and the
 previous native assembly do not yet instantiate all the analytic,
 derived and canonical geometric objects. The arbitrary smooth-projective
 all-varieties Hodge theorem is not a consequence of this Weil-family
@@ -570,5 +608,19 @@ construction alone and is not claimed here.
 
 ## Verification receipts
 
-Pending GitHub verification of the new Lean transport cores. No local
-Lean installation or local Lean run is used.
+Final mathematical source: `46b126eb1a40cf5406efd28a68b027b662ef4945`.
+No local Lean installation or local Lean run was used.
+
+- **[Full integration 39075550466](https://github.com/kyo-oo/HC-PROOF/actions/runs/39075550466): PASSED**, job `117521836538`. Build completed successfully with 8961 jobs. All nine exact computation steps passed, including the new symbolic obstruction detector. The downloaded Lean log has 1757 printed axiom receipts, union exactly `propext`, `Classical.choice`, `Quot.sound`, and no `sorryAx` or Lean errors. This includes the receipt for `auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread`.
+- Full artifact `12116687291`: ten logs, ZIP SHA-256 `469a9f2cf6049694ddc1a9fd8d9c21db870bab7431ed9693a56ace8f243b55d2`, checked against the GitHub digest.
+- **[Dedicated transport check 39075550336](https://github.com/kyo-oo/HC-PROOF/actions/runs/39075550336): PASSED**, job `117521835762`. Its 37 printed axiom receipts have the same standard-only union. Artifact `12117290301`, ZIP SHA-256 `34b515eb61beb7d486211eca1fd60360bfab501bd0d34dc1607264945eae1cfa`, independently checked after download.
+- This round added **eleven transport/core theorems** to the existing extraction module and **one transport-to-native-assembly theorem** to the existing CM obstruction module. The Baire proof and assembled entry point are actual kernel-checked declarations, not placeholder statements.
+- Extraction/transport Lean source SHA-256 `a3d942c7921ee6f49b949cbd4ffce6a9c970e04221ceb1cb8a669bffde3c8855`; native CM assembly source SHA-256 `59cd74582aa6c5729ca82da6c8c150b785cbcfb4f86e7a99d6cc455c6e74b7a4`.
+- Exact detector script SHA-256 `8810947aa34cb61e55d51edeb78de378a03cff6c0e60b1b3bd20e27c4dc31bb8`; local output SHA-256 `92d351eac1861039afeb1a8bdd0f13be1fc9dc7d6f1b9935626faa1745fa7f09`. Its version-1 manifest validated with its stated legacy provenance limits. GitHub Python 3.12.3 and local Python 3.12.14 give identical scientific output after the version line, for both this detector and the seed-character computation.
+
+The first source run failed on a renamed set lemma and denominator
+normalization. The set proof was replaced by direct extensionality.
+The Cramer proof now combines terms over one explicitly nonzero common
+denominator before cancellation. The final two green runs above certify
+the repaired complete source and its native integration; failed earlier
+revisions are not verification receipts for the final theorem.

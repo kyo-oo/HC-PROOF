@@ -527,3 +527,7 @@ The new manuscript distinguishes the seed construction from all-period
 transport and from full geometric Lean realization. The earlier audit's
 statement that no Lean source was edited describes only its earlier
 `f5b69f5` attempt, not this later construction checkpoint.
+
+## Seed-to-every-period continuation, 2026-10-18
+
+[The new transport and original-fourfold proof](2026-10-18-weil-all-period-transport-and-original-fourfold.md) expands the previously unexpanded T6 dependency. It reconstructs the full invariant obstruction argument, finite descent, ordinary sheaf conversion, actual local deformation, proper Hilbert/Baire spread and all-lattice isogeny step from the exact pinned source and the directly constructed smooth seed. It includes product periods, so applies to the particular padded original A in this record. Its explicit Hilbert-fiber cycle and the extraction above supply the requested source at manuscript level. The exact cochain minor is n^42 and the same explicit d+1+u generates the second Weil direction in both relevant dimensions. The new Lean period-spread entry point is connected to the native three-direction assembly. Complete actual analytic/derived geometry and canonical realization in Lean remain explicit obligations; this historical record's earlier CI receipts are not reinterpreted as that formalization.
