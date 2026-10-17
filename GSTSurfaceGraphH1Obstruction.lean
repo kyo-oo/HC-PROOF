@@ -80,6 +80,68 @@ theorem graph_orbit_primitive_of_two_moment_cancellation
           simp only [map_sum, map_smul]
     _ = 0 := by simp [hAug, hOdd]
 
+/-- Exact converse: when the canonical Kunneth decomposition separates
+the common even-degree hyperplane term from the odd H1-action term,
+the TWO group-ring moments characterize primitive graph combinations.
+
+On genuine projective surface products, this separation follows from
+the even/odd Kunneth summands, ample-square positivity and the
+nondegenerate H1 cup-h polarization pairing. -/
+theorem graph_orbit_primitive_iff_two_moment_cancellation
+    {ι W : Type*} [Fintype ι] [AddCommGroup W] [Module ℚ W]
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G 4)
+    (graphs : ι → codimensionCycles V.X 2)
+    (common : ClassicalHodgeFiber V H 3)
+    (oddAction : ι → W)
+    (oddLefschetz : W →ₗ[ℚ] ClassicalHodgeFiber V H 3)
+    (hGraph : ∀ i : ι,
+      P.primitiveTest (nativeToHodgeFiberLinear G (graphs i)) =
+        common + oddLefschetz (oddAction i))
+    (hKunnethSeparate :
+      ∀ (q : ℚ) (w : W),
+        q • common + oddLefschetz w = 0 →
+        q = 0 ∧ w = 0)
+    (a : ι → ℚ) :
+    (P.primitiveTest
+        (nativeToHodgeFiberLinear G
+          (nativeGraphOrbitCombination graphs a)) = 0) ↔
+      (∑ i : ι, a i) = 0 ∧
+      (∑ i : ι, a i • oddAction i) = 0 := by
+  constructor
+  · intro hPrimitive
+    have hFormula :
+        P.primitiveTest
+          (nativeToHodgeFiberLinear G
+            (nativeGraphOrbitCombination graphs a)) =
+        (∑ i : ι, a i) • common +
+          oddLefschetz (∑ i : ι, a i • oddAction i) := by
+      calc
+        P.primitiveTest
+            (nativeToHodgeFiberLinear G
+              (nativeGraphOrbitCombination graphs a)) =
+          ∑ i : ι, a i •
+            P.primitiveTest
+              (nativeToHodgeFiberLinear G (graphs i)) := by
+                simp [nativeGraphOrbitCombination, map_sum, map_smul]
+        _ = ∑ i : ι, a i •
+            (common + oddLefschetz (oddAction i)) := by
+              apply Finset.sum_congr rfl
+              intro i _
+              rw [hGraph i]
+        _ = (∑ i : ι, a i) • common +
+              oddLefschetz (∑ i : ι, a i • oddAction i) := by
+                simp_rw [smul_add]
+                rw [Finset.sum_add_distrib, Finset.sum_smul]
+                simp only [map_sum, map_smul]
+    exact hKunnethSeparate _ _ (hFormula.symm.trans hPrimitive)
+  · rintro ⟨hAug, hOdd⟩
+    exact graph_orbit_primitive_of_two_moment_cancellation
+      G P graphs common oddAction oddLefschetz hGraph a hAug hOdd
+
+#check graph_orbit_primitive_iff_two_moment_cancellation
+#print axioms graph_orbit_primitive_iff_two_moment_cancellation
+
 /-- The universal GST primitiveizer retains every rational
 transcendental Kunneth measurement that annihilates the
 genuine native algebraic Lefschetz-correction image. -/
