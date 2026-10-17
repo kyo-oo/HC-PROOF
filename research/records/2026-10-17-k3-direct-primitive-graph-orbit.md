@@ -6,7 +6,7 @@
 - **Corrects/strengthens:** [K3 graph primitive sources](2026-10-17-k3-graph-primitive-source.md): the original geometric construction used algebraic Lefschetz corrections; the present orbit differences are primitive **without applying any corrective cycle operator**.
 - **Hypotheses and types:** Smooth projective quartic K3 surface S={z₀⁴+z₁⁴+z₂⁴+z₃⁴=0}⊂ℙ³, its genuine order-four projective automorphism g:[z₀:z₁:z₂:z₃]↦[i z₀:z₁:z₂:z₃], and X=S×S, complex dimension four. Rational codimension-two algebraic graph cycles and canonical Betti cup product, ample class L=pr₁*h+pr₂*h.
 - **Active conventions:** Γ_{g^k} is the algebraic graph of g^k embedded as a codimension-two surface in X; k∈{0,1,2,3}. Define A=Γ_id−Γ_{g²}, B=Γ_g−Γ_{g³} in CH²(X)_ℚ.
-- **Geometric source construction:** For any projective automorphism u of a smooth projective surface preserving its polarization h, the restriction of L to Γ_u is h+u^*h=2h. Therefore L⋅Γ_u=i_{u*}(2h). In H⁶(S×S,ℚ)=H⁴(S)⊗H²(S)⊕H²(S)⊗H⁴(S), this class is determined by pairing with H²(S×S), and these pairings reduce to ∫_S 2h∧a or ∫_S 2h∧u^*b=∫_S 2h∧b. Hence **L cl(Γ_u) is independent of u**, and the two graph differences satisfy
+- **Geometric source construction:** For any polarized automorphism u of the **quartic K3 surface S**, the restriction of L to Γ_u is h+u^*h=2h. Thus L⋅Γ_u=i_{u*}(2h). Since H¹(S,ℚ)=0, Künneth gives H²(S×S,ℚ)=H²(S)⊗H⁰(S)⊕H⁰(S)⊗H²(S), so the relevant pairings reduce to ∫_S 2h∧a and ∫_S 2h∧u^*b=∫_S 2h∧b. Therefore **L cl(Γ_u) is independent of u on this K3**, and the two graph differences satisfy
   L⋅cl(A)=L⋅cl(B)=0.
   Thus A and B are directly **primitive algebraic cycles**, without choosing any unknown Hodge representative or constructing a Hard-Lefschetz inverse.
 - **Independence mechanism:** The Künneth H²(S)⊗H²(S) component of cl(Γ_u) acts on H²(S) as u^* or its adjoint. Its restriction to the cyclotomic transcendental subspace of H²(S,ℚ) has g²=−I. A acts as (I−g²)=2I, B acts as (g−g³)=2g. On the nonzero holomorphic 2-form, these actions have eigenvalues 2 and 2i. No nontrivial rational linear combination of 2 and 2i vanishes, so A,B are independent rational primitive Hodge classes.
@@ -26,3 +26,8 @@
 - **Strongest surviving statement:** On the original quartic K3 self-product, two explicit rational differences of genuine algebraic automorphism graphs are intrinsically primitive, rational and independent.
 - **Artifacts and commands:** `GSTK3DirectGraphOrbitDifference.lean`, `.github/workflows/gst-k3-direct-graph-orbit.yml`, Wolfram exact order-four operator Gram.
 - **Next unresolved question:** Construct GST native graph/correspondence generators on an arbitrary original X with enough primitive directions for its rational Hodge fiber; the new orbit-difference operator suggests an arithmetic-geometric route to source independence.
+
+
+## Extension to irregular surfaces
+
+For smooth surfaces with nonzero \(H^1(S,\mathbb Q)\), the additional Künneth summand \(H^1(S)\otimes H^1(S)\) contributes \(2\int_S h\wedge a\wedge u^*b\) to the graph's Lefschetz image. The exact polarized graph construction uses two independent moments: \(\sum_g a_g=0\) and \(\sum_g a_g g^*|_{H^1}=0\). The new `GSTSurfaceGraphH1Obstruction.lean` implements the corresponding finite-group primitive construction and its precise Künneth separation criterion.
