@@ -580,6 +580,143 @@ theorem every_scheme_world_in_GST_tower_has_actual_hodge_cycles
       intro p
       exact hodge_cycles_on_geometric_blowup (P p) ihB ihC
 
+
+/-! ## All-varieties exceptional center: bidirectional native Hodge transfer
+
+Every smooth projective X admits a closed embedding X -> P^N with
+codimension >= 2; blowing up P^N along X gives a RATIONAL smooth
+projective Y. The cohomological blowup formula embeds Hdg^p(X)
+into the exceptional Hodge summand of Hdg^(p+1)(Y).
+
+This is a NEW formal CENTER-RECOVERY law complementary to the existing
+forward SchemeBlowupGysin birth. Native exceptional Gysin maps
+transport cycles X -> Y; the Chow excess-intersection/projective-bundle
+inverse transports cycles Y -> X. These ACTUAL scheme-typed maps
+and their Betti counterparts are independent geometric obligations.
+
+We show exactly (for EVERY class alpha):
+  alpha is algebraic on X
+    IFF exceptionalGysin(alpha) is algebraic on Y.
+Thus a rational ambient blowup cannot *hide* any missing arbitrary-X
+primitive Hodge direction. It is a faithful transport/reduction of
+the classical conjecture, not an unconditional proof that Y is solved.
+The existence of the blowup and these geometric Gysin maps is still
+an external scheme-theoretic instantiation; no arbitrary native
+Hodge-to-cycle selector is included in this structure.
+-/
+
+/-- Scheme-typed native Chow/Betti retract for one exceptional
+center summand, in ALL degrees p with shift p -> p+1.
+No target native preimage or cycle-class surjectivity is a field. -/
+structure SchemeExceptionalCenterRetract
+    (C T : SmoothProjectiveComplexScheme)
+    (HC : HodgeBigradedBettiData C)
+    (HT : HodgeBigradedBettiData T)
+    (p : ℕ) where
+  exceptionalNative :
+    codimensionCycles C.X p →ₗ[ℚ] codimensionCycles T.X (p+1)
+  exceptionalBetti :
+    RationalSingularCohomology HC.analytification (2*p) →ₗ[ℚ]
+      RationalSingularCohomology HT.analytification (2*(p+1))
+  centerRecoverNative :
+    codimensionCycles T.X (p+1) →ₗ[ℚ] codimensionCycles C.X p
+  centerRecoverBetti :
+    RationalSingularCohomology HT.analytification (2*(p+1)) →ₗ[ℚ]
+      RationalSingularCohomology HC.analytification (2*p)
+  exceptionalCycleClass :
+    ∀ Z : codimensionCycles C.X p,
+      HT.cycleClass (p+1) (exceptionalNative Z) =
+        exceptionalBetti (HC.cycleClass p Z)
+  recoveryCycleClass :
+    ∀ Z : codimensionCycles T.X (p+1),
+      HC.cycleClass p (centerRecoverNative Z) =
+        centerRecoverBetti (HT.cycleClass (p+1) Z)
+  centerLeftInverseBetti :
+    ∀ alpha : RationalSingularCohomology HC.analytification (2*p),
+      centerRecoverBetti (exceptionalBetti alpha) = alpha
+  exceptionalPreservesHodge :
+    ∀ alpha : RationalSingularCohomology HC.analytification (2*p),
+      alpha ∈ rationalHodgeSubspace (HC.hodgeBigrading p) →
+        exceptionalBetti alpha ∈
+          rationalHodgeSubspace (HT.hodgeBigrading (p+1))
+
+/-- Exact per-class ALL-VARIETIES algebraicity equivalence, using
+REAL rational codimension-cycle carriers of the center and blowup.
+Forward: exceptional Gysin of a native cycle.
+Backward: recover the native exceptional component of an algebraic
+cycle, then invoke the Betti left-inverse identity. -/
+theorem algebraic_center_iff_exceptional_blowup_class
+    {C T : SmoothProjectiveComplexScheme}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {p : ℕ}
+    (R : SchemeExceptionalCenterRetract C T HC HT p)
+    (alpha : RationalSingularCohomology HC.analytification (2*p)) :
+    alpha ∈ LinearMap.range (HC.cycleClass p) ↔
+      R.exceptionalBetti alpha ∈
+        LinearMap.range (HT.cycleClass (p+1)) := by
+  constructor
+  · rintro ⟨Z, hZ⟩
+    refine ⟨R.exceptionalNative Z, ?_⟩
+    calc
+      HT.cycleClass (p+1) (R.exceptionalNative Z) =
+          R.exceptionalBetti (HC.cycleClass p Z) :=
+            R.exceptionalCycleClass Z
+      _ = R.exceptionalBetti alpha := by rw [hZ]
+  · rintro ⟨Z, hZ⟩
+    refine ⟨R.centerRecoverNative Z, ?_⟩
+    calc
+      HC.cycleClass p (R.centerRecoverNative Z) =
+          R.centerRecoverBetti (HT.cycleClass (p+1) Z) :=
+            R.recoveryCycleClass Z
+      _ = R.centerRecoverBetti (R.exceptionalBetti alpha) := by
+            rw [hZ]
+      _ = alpha := R.centerLeftInverseBetti alpha
+
+/-- Missing primitive/Hodge classes in ANY X remain unrepresented
+in the exceptional sector of a rational blowup centered at X.
+This establishes a precise barrier against confusing geometric
+rationality of the born world with Hodge algebraicity. -/
+theorem missing_center_direction_survives_exceptional_birth
+    {C T : SmoothProjectiveComplexScheme}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {p : ℕ}
+    (R : SchemeExceptionalCenterRetract C T HC HT p)
+    (alpha : RationalSingularCohomology HC.analytification (2*p))
+    (hMissing : alpha ∉ LinearMap.range (HC.cycleClass p)) :
+    R.exceptionalBetti alpha ∉
+      LinearMap.range (HT.cycleClass (p+1)) := by
+  intro h
+  exact hMissing
+    ((algebraic_center_iff_exceptional_blowup_class R alpha).mpr h)
+
+/-- Global fixed-weight descent for every Hodge direction of an
+ARBITRARY smooth projective center from its rational blowup host.
+No class of the center is assumed already algebraic. -/
+theorem hodge_on_arbitrary_center_of_solved_blowup
+    {C T : SmoothProjectiveComplexScheme}
+    {HC : HodgeBigradedBettiData C}
+    {HT : HodgeBigradedBettiData T}
+    {p : ℕ}
+    (R : SchemeExceptionalCenterRetract C T HC HT p)
+    (hHost :
+      rationalHodgeSubspace (HT.hodgeBigrading (p+1)) ≤
+        LinearMap.range (HT.cycleClass (p+1))) :
+    rationalHodgeSubspace (HC.hodgeBigrading p) ≤
+      LinearMap.range (HC.cycleClass p) := by
+  intro alpha hAlpha
+  apply (algebraic_center_iff_exceptional_blowup_class R alpha).mpr
+  exact hHost (R.exceptionalPreservesHodge alpha hAlpha)
+
+#check SchemeExceptionalCenterRetract
+#check algebraic_center_iff_exceptional_blowup_class
+#check missing_center_direction_survives_exceptional_birth
+#check hodge_on_arbitrary_center_of_solved_blowup
+#print axioms algebraic_center_iff_exceptional_blowup_class
+#print axioms missing_center_direction_survives_exceptional_birth
+#print axioms hodge_on_arbitrary_center_of_solved_blowup
+
 #check SchemeTypedGSTGeometricTower
 #check every_scheme_world_in_GST_tower_has_actual_hodge_cycles
 #print axioms every_scheme_world_in_GST_tower_has_actual_hodge_cycles
