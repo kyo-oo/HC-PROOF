@@ -27,6 +27,26 @@ These four gates are the **fixed sequence of acceptance checks**, not a promised
 
 **Execution priority:** Gate 3 is first in research effort, with Gate 1 pursued only insofar as it supplies the canonical comparison needed by Gate 3. Gate 2 then connects primitive-to-full classes; Gate 4 integrates the finished argument. Gates are a dependency structure, not a device to postpone the main task.
 
+## Mathematically explicit closure of Gate 2
+
+Let \(h\in H^2(X,\mathbb Q)\) be a genuine hyperplane class. The rational Lefschetz decomposition (with Hodge-compatible primitive summands) writes each rational Hodge class as
+\[
+\alpha=\sum_{j}h^j\smile\beta_j,\qquad
+\beta_j\in H^{2(p-j)}(X,\mathbb Q)\cap H^{p-j,p-j}(X)
+\text{ primitive}.
+\]
+If Gate 3 builds a genuine native cycle \(Z_j\) with \(\operatorname{cl}_X(Z_j)=\beta_j\) for **every** required primitive summand, then form the **actual rational algebraic cycle**
+\[
+Z=\sum_j H^j\cdot Z_j\in CH^p(X)_\mathbb Q
+\]
+with \(H\) the algebraic hyperplane divisor. Compatibility of the canonical cycle-class map with intersection products gives
+\[
+\operatorname{cl}_X(Z)
+=\sum_j h^j\smile\operatorname{cl}_X(Z_j)
+=\sum_j h^j\smile\beta_j=\alpha.
+\]
+This closes the mathematics of primitive-to-full recovery **once primitive representatives have genuinely been constructed**. This is a proof reduction, not a purported construction of those representatives. Keep the distinction explicit in the Lean theorem contract.
+
 ## Direct mathematical attack — three routes, one target
 
 - **A. Actual signed native cycles on arbitrary \(X\):** Work directly on the full quantifiers. Find a geometric mechanism producing a rational signed combination of actual codimension-\(p\) subvarieties with the required primitive class. In degree \(p=2\) on fourfolds, use a *discriminating test* of the mechanism, **not** a renamed final objective. All new lemmas must be exportable to arbitrary \(X,p\), or explicitly recorded as restricted results.
