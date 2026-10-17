@@ -2,6 +2,8 @@
 
 **Current execution plan:** [Three proof gates, fixed all-X primitive target, and no-side-quest rule](../ACTIVE_HODGE_PROOF_PLAN.md).
 
+**Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
+
 **Latest route decision:** [Wolfram-verified holomorphic-form source-selection gate](2026-10-17-fano-source-selection-holomorphic-gate.md) — finite domination from the current solved Fano source class cannot cover every original smooth projective variety.
 
 
