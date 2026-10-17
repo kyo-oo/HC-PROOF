@@ -331,6 +331,133 @@ theorem degreeDSplitCutPrimitiveCancellation (d : ℤ) :
 #print axioms degreeDPrimitiveSelfIntersectionPositive
 #print axioms degreeDSplitCutPrimitiveCancellation
 
+/-! ## ALL EVEN COMPLEX DIMENSIONS: degree-d hypersurface plus maximal plane
+
+For every m≥1 and every degree d≥2, a smooth complex hypersurface
+X_d^(2m) ⊂ ℙ^(2m+1) containing a linear ℙ^m has the normal sequence
+   0 → N_(ℙ^m/X) → O(1)^(m+1) → O(d) → 0.
+The integer c_m(N) is the t^m coefficient of
+   (1+t)^(m+1) / (1+d*t).
+The elementary binomial identity
+   d*c_m - 1 = -(1-d)^(m+1)
+is equivalent to c_m=Σ_(k=0)^m(1-d)^k. The recurrence
+c_0=1, c_(m+1)=1+(1-d)c_m below is this identity expressed
+without denominators or bounded dimension searches.
+
+Consequently, the geometric intersection Gram determinant on
+{h^m,[ℙ^m]} is
+   -(1-d)^(m+1) = (-1)^m(d-1)^(m+1),
+and d[ℙ^m]-h^m is orthogonal to h^m with nonzero self-intersection
+   -d(1-d)^(m+1).
+Thus every such *original* even-dimensional hypersurface has a
+concrete non-Lefschetz primitive algebraic middle cycle.
+
+NOTE: Lean verifies the recurrence and its algebraic conclusions.
+The top-Chern coefficient / geometric cycle-class identification
+for actual schemes remains an explicit external geometric fact;
+this is NOT a claim for arbitrary X nor a proof of Hodge.
+-/
+
+/-- Top normal Chern coefficient of a maximal linear plane in a
+smooth even-dimensional hypersurface, by its exact dimension recurrence. -/
+def hypersurfaceMaximalPlaneNormalChern (d : ℤ) : ℕ → ℤ
+  | 0 => 1
+  | m+1 => 1 + (1-d) * hypersurfaceMaximalPlaneNormalChern d m
+
+/-- The recurrence computes the prior fourfold normal-bundle number. -/
+theorem hypersurfaceMaximalPlaneNormalChern_dimFour (d : ℤ) :
+    hypersurfaceMaximalPlaneNormalChern d 2 =
+      degreeDPlaneSelfIntersection d := by
+  simp only [hypersurfaceMaximalPlaneNormalChern]
+  unfold degreeDPlaneSelfIntersection
+  ring
+
+/-- ALL DIMENSIONS: exact Gram discriminant formula without division. -/
+theorem maximalPlaneNormalChern_discriminant_identity
+    (d : ℤ) (m : ℕ) :
+    d * hypersurfaceMaximalPlaneNormalChern d m - 1 =
+      -(1-d)^(m+1) := by
+  induction m with
+  | zero =>
+      simp [hypersurfaceMaximalPlaneNormalChern]
+  | succ m ih =>
+      calc
+        d * hypersurfaceMaximalPlaneNormalChern d (m+1) - 1 =
+            (1-d) * (d * hypersurfaceMaximalPlaneNormalChern d m - 1) := by
+              rw [hypersurfaceMaximalPlaneNormalChern]
+              ring
+        _ = (1-d) * (-(1-d)^(m+1)) := by rw [ih]
+        _ = -(1-d)^((m+1)+1) := by rw [pow_succ]; ring
+
+/-- Correct even-dimensional middle intersection lattice. -/
+def maximalPlaneMiddleIntersection (d : ℤ) (m : ℕ)
+    (u v : AlgebraicPlaneLattice) : ℤ :=
+  d*u.1*v.1 + u.1*v.2 + u.2*v.1 +
+    hypersurfaceMaximalPlaneNormalChern d m*u.2*v.2
+
+theorem maximalPlaneMiddleGramDiscriminant
+    (d : ℤ) (m : ℕ) :
+    maximalPlaneMiddleIntersection d m hyperplaneSquared hyperplaneSquared *
+      maximalPlaneMiddleIntersection d m planeClass planeClass -
+      maximalPlaneMiddleIntersection d m hyperplaneSquared planeClass *
+        maximalPlaneMiddleIntersection d m planeClass hyperplaneSquared =
+      -(1-d)^(m+1) := by
+  dsimp [maximalPlaneMiddleIntersection, hyperplaneSquared, planeClass]
+  exact maximalPlaneNormalChern_discriminant_identity d m
+
+theorem maximalPlaneMiddleGramNonzero
+    (d : ℤ) (m : ℕ) (hd : 2 ≤ d) :
+    maximalPlaneMiddleIntersection d m hyperplaneSquared hyperplaneSquared *
+      maximalPlaneMiddleIntersection d m planeClass planeClass -
+      maximalPlaneMiddleIntersection d m hyperplaneSquared planeClass *
+        maximalPlaneMiddleIntersection d m planeClass hyperplaneSquared ≠ 0 := by
+  rw [maximalPlaneMiddleGramDiscriminant]
+  have hn : 1-d ≠ 0 := by omega
+  exact neg_ne_zero.mpr (pow_ne_zero (m+1) hn)
+
+theorem maximalPlanePrimitiveMiddleOrthogonal
+    (d : ℤ) (m : ℕ) :
+    maximalPlaneMiddleIntersection d m hyperplaneSquared
+      (degreeDPrimitivePlaneCycle d) = 0 := by
+  dsimp [maximalPlaneMiddleIntersection, degreeDPrimitivePlaneCycle,
+    hyperplaneSquared]
+  ring
+
+theorem maximalPlanePrimitiveMiddleSelfIntersection
+    (d : ℤ) (m : ℕ) :
+    maximalPlaneMiddleIntersection d m
+        (degreeDPrimitivePlaneCycle d)
+        (degreeDPrimitivePlaneCycle d) =
+      -d * (1-d)^(m+1) := by
+  calc
+    maximalPlaneMiddleIntersection d m
+        (degreeDPrimitivePlaneCycle d)
+        (degreeDPrimitivePlaneCycle d) =
+          d*(d*hypersurfaceMaximalPlaneNormalChern d m - 1) := by
+            dsimp [maximalPlaneMiddleIntersection,
+              degreeDPrimitivePlaneCycle]
+            ring
+    _ = -d * (1-d)^(m+1) := by
+      rw [maximalPlaneNormalChern_discriminant_identity]
+      ring
+
+theorem maximalPlanePrimitiveMiddleSelfIntersection_nonzero
+    (d : ℤ) (m : ℕ) (hd : 2 ≤ d) :
+    maximalPlaneMiddleIntersection d m
+      (degreeDPrimitivePlaneCycle d)
+      (degreeDPrimitivePlaneCycle d) ≠ 0 := by
+  rw [maximalPlanePrimitiveMiddleSelfIntersection]
+  have hd0 : d ≠ 0 := by omega
+  have hd1 : 1-d ≠ 0 := by omega
+  exact mul_ne_zero (neg_ne_zero.mpr hd0) (pow_ne_zero (m+1) hd1)
+
+#check maximalPlaneNormalChern_discriminant_identity
+#check maximalPlaneMiddleGramDiscriminant
+#check maximalPlaneMiddleGramNonzero
+#check maximalPlanePrimitiveMiddleOrthogonal
+#check maximalPlanePrimitiveMiddleSelfIntersection_nonzero
+#print axioms maximalPlanePrimitiveMiddleSelfIntersection_nonzero
+
 #check primitive_plane_hyperplane_orthogonal
 #check primitive_plane_self_intersection
 #check primitive_plane_nonzero
