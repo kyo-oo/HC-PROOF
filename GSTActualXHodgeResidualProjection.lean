@@ -1,5 +1,6 @@
 import GSTUniversalHodgeResidualProjection
 import GSTGeometricRealizationStage2G
+import GSTPrimitiveTransverseCycleExtraction
 
 /-!
 # GST genuine arbitrary-X native Hodge-cycle projection
@@ -696,6 +697,143 @@ theorem ActualXFiniteProjectiveNativeTrace.hodge_trace_zero_iff_native_kernel
   · intro h alpha hZero
     obtain ⟨Z, _, hZ⟩ := h alpha hZero
     exact ⟨Z, hZ⟩
+
+
+/-! ## GST all-X: actual trace-zero primitive native algebraic birth
+
+This fuses two INDEPENDENT GST geometric constructions on the
+ORIGINAL smooth projective X:
+
+(1) non-Lefschetz incidence cycle Z -> genuine nonzero primitive
+    native cycle via Hard Lefschetz + algebraic divisor correction;
+(2) finite projective Chow trace -> actual trace-kernel native
+    projector Z' -> Z' - degree^-1 g^*g_* Z'.
+
+For p=2 and dim X>=4, the projective pushforward of EVERY
+primitive rational Hodge class is zero: an actual geometric
+projection-formula intersection number annihilates primitive
+classes, and H^4(P^d,Q) is one-dimensional.
+
+The certificate below encodes ONLY the true projection formula,
+the rational period measurement on projective space and its
+rank-one injectivity. It does not assume ANY Hodge algebraicity
+of the unknown primitive target and does NOT demand target
+trace-zero surjectivity.
+
+The resulting native codimension-two cycle W satisfies THREE
+simultaneous conclusions:
+  actual Chow pushforward g_*W = 0;
+  the rational Hodge cycle class cl(W) is NONZERO;
+  the real Lefschetz primitive test kills cl(W).
+
+This works even when X is non-unirational and with arbitrarily
+large middle cohomology, provided a genuine non-Lefschetz
+algebraic source cycle Z and true scheme comparison maps exist.
+It does not prove that EVERY target primitive Hodge class can
+be expressed through these new sources.
+-/
+
+open GSTClassicalHodgeFiberedCosmology
+open GSTClassicalHodgeGeometricCycleClassSpine
+open GSTUniversalCodimensionTwoPrimitiveExtraction
+open GSTPrimitiveTransverseCycleExtraction
+
+/-- The genuine finite-projection cup/push integration identity
+and the fact that H^4(P^d,Q) is rational rank one. This is
+an integration COMPARISON certificate rather than a cycle
+selector. It does not assume primitive algebraicity. -/
+structure ActualXPrimitiveProjectiveTraceComparison
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    (G : GeometricCycleClassSpine X HX)
+    (L : GeometricHigherLefschetzData G d) where
+  projectivePeriod :
+    RationalSingularCohomology HP.analytification 4 →ₗ[ℚ] ℚ
+  projectivePeriod_injective : Function.Injective projectivePeriod
+  primitiveIntegral : ClassicalHodgeFiber X HX (d-1) →ₗ[ℚ] ℚ
+  trueProjectionFormula :
+    ∀ alpha : ClassicalHodgeFiber X HX 2,
+      projectivePeriod (F.bettiPush alpha.1) =
+        primitiveIntegral (L.primitiveTest alpha)
+
+/-- Crucial all-X geometry lemma: every rational (2,2) Hodge
+class annihilated by the actual middle primitive operator
+has ZERO projective Betti trace, not just zero numerical
+residual against a selected algebraic generator. -/
+theorem ActualXPrimitiveProjectiveTraceComparison.primitive_push_zero
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    {G : GeometricCycleClassSpine X HX}
+    {L : GeometricHigherLefschetzData G d}
+    (C : ActualXPrimitiveProjectiveTraceComparison G L)
+    (alpha : ClassicalHodgeFiber X HX 2)
+    (hPrimitive : L.primitiveTest alpha = 0) :
+    F.bettiPush alpha.1 = 0 := by
+  apply C.projectivePeriod_injective
+  calc
+    C.projectivePeriod (F.bettiPush alpha.1) =
+        C.primitiveIntegral (L.primitiveTest alpha) :=
+          C.trueProjectionFormula alpha
+    _ = 0 := by rw [hPrimitive]; simp
+    _ = C.projectivePeriod 0 := by simp
+
+/-- REAL all-X codimension-two native algebraic-cycle creation,
+simultaneously primitive, nonzero and killed by the actual
+projective Chow pushforward. The source is an independently
+known genuine non-Lefschetz algebraic cycle on X, not a
+chosen representative of an arbitrary primitive target. -/
+theorem genuine_nonzero_primitive_trace_zero_native_cycle
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {F : ActualXFiniteProjectiveTrace P X HP HX 2}
+    {d : ℕ}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (G : GeometricCycleClassSpine X HX)
+    (L : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 HX)
+    (hInject : Function.Injective L.cupH2)
+    (C : ActualXPrimitiveProjectiveTraceComparison G L)
+    (Z : codimensionCycles X.X 2)
+    (hOutside : ∀ beta : ClassicalHodgeFiber X HX 1,
+      nativeToHodgeFiberLinear G Z ≠ L.cupH beta) :
+    ∃ W : codimensionCycles X.X 2,
+      T.nativePush W = 0 ∧
+      nativeToHodgeFiberLinear G W ≠ 0 ∧
+      L.primitiveTest (nativeToHodgeFiberLinear G W) = 0 := by
+  let W₀ := primitiveizeNativeMiddleCycle G L h11 Z
+  have hPrimitive : L.primitiveTest
+      (nativeToHodgeFiberLinear G W₀) = 0 :=
+    primitiveizeNativeMiddleCycle_primitive G L h11 Z
+  have hNonzero : nativeToHodgeFiberLinear G W₀ ≠ 0 :=
+    (native_primitive_nonzero_iff_outside_divisor_cup
+      G L h11 hInject Z).2 hOutside
+  have hPush : F.bettiPush (HX.cycleClass 2 W₀) = 0 :=
+    C.primitive_push_zero (nativeToHodgeFiberLinear G W₀)
+      hPrimitive
+  have hClass : HX.cycleClass 2 (T.traceZeroNative W₀) =
+      HX.cycleClass 2 W₀ := by
+    rw [T.traceZeroNative_cycleClass W₀, hPush]
+    simp
+  have hFiber : nativeToHodgeFiberLinear G
+      (T.traceZeroNative W₀) =
+        nativeToHodgeFiberLinear G W₀ := Subtype.ext hClass
+  refine ⟨T.traceZeroNative W₀,
+    T.traceZeroNative_push_zero W₀, ?_, ?_⟩
+  · rw [hFiber]
+    exact hNonzero
+  · rw [hFiber]
+    exact hPrimitive
+
+#check ActualXPrimitiveProjectiveTraceComparison.primitive_push_zero
+#check genuine_nonzero_primitive_trace_zero_native_cycle
+#print axioms genuine_nonzero_primitive_trace_zero_native_cycle
 
 #check ActualXFiniteProjectiveNativeTrace.nativeTraceZeroProjector
 #check ActualXFiniteProjectiveNativeTrace.range_projector_eq_kernel_push
