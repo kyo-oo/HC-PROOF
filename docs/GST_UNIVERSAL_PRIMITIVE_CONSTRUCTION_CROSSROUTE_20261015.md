@@ -1056,3 +1056,51 @@ this will reduce free geometry interfaces and narrow the missing leaf.
 
 FULL UNIVERSAL EXISTENCE STATUS: UNPROVED; the reduction is faithful
 but does not independently construct the missing primitive cycles.
+
+### 2026-10-17: exact middle-Hodge reduction on rational stabilized blowups
+
+All-varieties, all-codimension strengthening in EXISTING Lean file
+GSTUniversalChowRetractToTarget.lean, commit
+047397c6e4ef86f60a7331df0ccdb81156232ed1.
+
+Every smooth projective X of dimension d admits a smooth closed
+embedding X->P^N of codimension at least 2, and N can be increased
+arbitrarily. Let Y=Bl_X(P^N), a smooth rational projective variety.
+An arbitrary rational Hodge class alpha in Hdg^p(X) embeds as
+the first exceptional class e(alpha) in Hdg^(p+1)(Y). The exact
+native Chow/Betti Gysin forward and backward naturality laws
+from SchemeExceptionalCenterRetract give:
+  alpha algebraic on X IFF e(alpha) algebraic on Y.
+
+Choose N>=2(p+1), set q=p+1, and r=N-2q>=0.
+Let M=Y x P^r. Then M is smooth projective rational and
+  dim(M)=N+r=2(q+r).
+The stabilized class sigma=e(alpha) x h^r is a rational Hodge
+class in the MIDDLE cohomological degree of M.
+The projective-bundle formula provides actual Chow cycle maps
+z -> pr_Y^* z . h^r, and recovery pr_Y*; their cohomology
+comparisons are encoded by SchemeProjectiveMiddleStabilization.
+Lean theorem projective_stabilization_hits_middle_degree proves
+the integer midpoint formula for EVERY N,q with 2q<=N.
+Lean theorem algebraic_iff_projectively_stabilized_class proves
+an ACTUAL native cycle class is algebraic exactly if its
+stabilized class is algebraic on M. Lean theorem
+algebraic_iff_rational_blowup_middle_class composes BOTH two-sided
+schematic Chow/Betti recovery maps and proves for EVERY alpha:
+  alpha algebraic on X IFF sigma algebraic in middle degree on M.
+arbitrary_variety_hodge_from_rational_middle_world constructs
+representatives on X using solved middle Hodge classes on M.
+
+MATHEMATICAL IMPLICATION: the rational Hodge conjecture for ALL
+smooth projective complex varieties is equivalent to that for
+middle Hodge classes on ALL smooth projective RATIONAL varieties
+(indeed a cofinal restricted family of stabilized rational blowups).
+The equivalence uses the established geometric Chow and blowup
+formulas; its scheme/analytic realization from Mathlib blowup
+morphisms is still a separate certificate obligation.
+
+This is a faithful reduction, NOT a proof of algebraicity of the
+transferred middle Hodge class. The missing primitive rational
+Hodge directions survive transport without becoming algebraic.
+GitHub Lean job 38990917471 checks this new formal transfer;
+its outcome must be read before claiming compiler success.
