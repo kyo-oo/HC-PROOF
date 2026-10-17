@@ -146,7 +146,6 @@ No Hodge data, cycle-class map, or Hodge-direction preimage enters the cut.
 
 section TargetDirected
 
-attribute [local instance] specializationOrder
 attribute [local instance] MvPolynomial.gradedAlgebra
 
 /-- Every point in a reduced source closure lies below its generic point. -/
