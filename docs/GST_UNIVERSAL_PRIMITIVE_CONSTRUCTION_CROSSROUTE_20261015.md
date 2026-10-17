@@ -1432,3 +1432,56 @@ structure currently allows a freely SUPPLIED cycleClass field;
 the proof must connect it to the canonical geometric map.
 No claim of the unrestricted universal Hodge conjecture is
 supported by the existing Lean compilers.
+
+
+## 2026-10-17 Mathbox: pinned all-varieties target and finite-degree positive construction
+
+**Fixed exact target:** for EVERY smooth projective complex X, EVERY p,
+EVERY rational primitive (p,p) Hodge class alpha in H^{2p}(X,Q),
+produce an actual rational codimension-p algebraic cycle Z whose
+CANONICAL Betti cycle class is alpha. Assumed source algebraicity,
+abstract Hodge operators, chosen target cycle, a supplied free
+cycleClass map, or a proof of a mere equivalent reduction are NOT a
+discharge of the target.
+
+**A positive non-universal route was executed.**
+Existing GSTUniversalChowRetractToTarget.lean gains
+SchemeFiniteDominantTwoTransfer, constructNative,
+constructNative_correct, and
+hodge_two_of_resolved_projective_domination. Let f:Y->X be an actual
+proper generically finite morphism of nonzero degree d, with Y
+obtained by a finite resolution tower of smooth blowups of a
+projective source. For alpha in Hdg^2(X,Q), take the REAL Chow
+cycle Z_Y with class f^*(alpha) supplied by the verified source
+blowup theorem (the exceptional centers need only their known
+Hodge degrees zero and one). Then the explicit target cycle is
+  Z_X = d^{-1} f_*(Z_Y) ∈ CH^2(X)_Q.
+Its class is d^{-1} f_*f^*(alpha)=alpha. In geometry, this
+applies to EVERY smooth projective UNIRATIONAL target X in
+EVERY dimension, after resolution of the dominant rational map
+from projective space, the standard projective-space Hodge basis,
+the trace degree identity, and Chow/Betti compatibility.
+
+**Scope firewall:** this is NOT a universal all-X result.
+For instance a positive-dimensional abelian variety is not
+unirational; there is no generically finite rational
+parametrization by P^n. The universal target therefore still
+requires independent cycle construction in arbitrary primitive
+middle Hodge directions not dominated by a known cycle-complete
+source. The canonical analytic cycleClass semantics must still
+be constructed/identified instead of relying solely on the
+free HodgeBigradedBettiData.cycleClass field.
+
+**Verification:** initial GitHub run 38996949600 failed on a local
+Lean let-binding normalization in the explicit target-cycle term,
+not a mathematical counterexample. The fix at
+1cafea733a1a779e20498ba5d0ae641a90049090 is running as
+GitHub run 38997316168; verify its terminal conclusion before
+calling the new theorem kernel-certified.
+
+**Next original-theorem attack:** independent algebraic
+representatives of trace-zero primitive rational Hodge
+directions of arbitrary non-unirational varieties, with a
+proof that their classes span the TRUE Hodge subspace.
+No existing GST matrix-unit/CM/NM/cosmology theorem establishes
+this universal geometric construction yet.
