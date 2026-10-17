@@ -4,8 +4,8 @@ import GSTCompactNativeCyclePresentation
 /-!
 # GST CLASSICAL HODGE — EXACT CLAY-STYLE TARGET
 
-This file pins the actual rational Hodge conjecture as the acceptance target.
-Nothing weaker is allowed to masquerade as the final statement.
+This file pins the exact rational Hodge theorem and provides the
+acceptance specification for the GST geometric construction program.
 
 For a smooth projective complex variety X and codimension p, a rational Hodge
 class is a class in H^(2p)(X,Q) whose complexification belongs to H^(p,p).
