@@ -811,6 +811,55 @@ theorem auxiliaryWeilEveryMiddleHodgeClass
 
 #check auxiliaryWeilNativeCycle_class
 #check auxiliaryWeilEveryMiddleHodgeClass
+
+/-- Assemble the original fourfold AFTER all-period spread, without
+taking a fixed auxiliary cycle as a theorem argument. Parameters are
+signed Hilbert lists; `cycleAt` is their genuine cycle on the requested
+auxiliary fiber. Closed analytic images, their identity principle and
+local nonemptiness supply a parameter at the requested period.
+
+The displayed geometric comparisons and canonical realization of H
+still have to be instantiated; this is not a standalone unconditional
+theorem about complex abelian varieties. All comparisons refer to one
+fixed nonzero Weil class, independently of the prescribed target alpha. -/
+theorem auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread
+    {U : SmoothProjectiveComplexScheme}
+    {T : Type*} [TopologicalSpace T] [BaireSpace T]
+    (Parameter : ℕ → Type*) (projection : ∀ i, Parameter i → T)
+    (good : ∀ i, Set (Parameter i))
+    (hclosed : ∀ i, IsClosed (projection i '' good i))
+    (hidentity : ∀ i, (interior (projection i '' good i)).Nonempty →
+      projection i '' good i = Set.univ)
+    (O : Set T) (hO : IsOpen O) (hne : O.Nonempty)
+    (hlocal : ∀ t ∈ O, ∃ i p, p ∈ good i ∧ projection i p = t)
+    (period : T)
+    (cycleAt : ∀ i (p : Parameter i), projection i p = period →
+      codimensionCycles U.X 3)
+    (G : GeometricCycleClassSpine V H)
+    (extract : codimensionCycles U.X 3 →ₗ[ℚ] codimensionCycles V.X 2)
+    (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
+    (thetaSquare : codimensionCycles V.X 2)
+    (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
+    (d : ℚ) (hd : 0 < d) (tensor : TensorCoefficients)
+    (hbalanced : balanced d tensor) (hnonzero : tensor ≠ zeroCoefficients)
+    (hTheta : coordinates (nativeToHodgeFiberLinear G thetaSquare) = (1, (0, 0)))
+    (hExtract : ∀ i p, p ∈ good i → ∀ ht : projection i p = period,
+      coordinates (nativeToHodgeFiberLinear G (extract (cycleAt i p ht))) =
+        (0, contractGraph tensor))
+    (hCM : ∀ i p, p ∈ good i → ∀ ht : projection i p = period,
+      coordinates (nativeToHodgeFiberLinear G (cmPullback (extract (cycleAt i p ht)))) =
+        (0, fourthPowerAction d (d + 1) (contractGraph tensor)))
+    (alpha : RationalSingularCohomology H.analytification 4)
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading 2)) :
+    ∃ Z : codimensionCycles V.X 2, H.cycleClass 2 Z = alpha := by
+  obtain ⟨i, p, hp, ht⟩ := periodTransport_all_period_witnesses
+    Parameter projection good hclosed hidentity O hO hne hlocal period
+  exact auxiliaryWeilEveryMiddleHodgeClass G (cycleAt i p ht) extract cmPullback
+    thetaSquare coordinates d hd tensor hbalanced hnonzero hTheta
+    (hExtract i p hp ht) (hCM i p hp ht) alpha halpha
+
+#check auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread
+#print axioms auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread
 #print axioms weilPlaneCramerReconstruction
 #print axioms auxiliaryWeilNativeCycle_class
 #print axioms auxiliaryWeilEveryMiddleHodgeClass

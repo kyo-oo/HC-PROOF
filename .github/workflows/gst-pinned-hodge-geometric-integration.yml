@@ -19,6 +19,7 @@ on:
       - 'research/computations/quaternionic_graph_weil_source.py'
       - 'research/computations/qm_fourfold_all_hodge_divisor_span.py'
       - 'research/computations/secant_seed_character.py'
+      - 'research/computations/secant_obstruction_rank.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -100,7 +101,12 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/secant_seed_character.py | tee secant-seed-character.log
-      - name: Kernel compile secant seed, primitive rank, and native Hodge assembly
+      - name: Exact full invariant obstruction contraction detector
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/secant_obstruction_rank.py | tee secant-obstruction-rank.log
+      - name: Kernel compile period spread, primitive rank, and native Hodge assembly
         shell: bash
         run: |
           set -euo pipefail
@@ -146,5 +152,6 @@ jobs:
             quaternionic-weil-graph.log
             qm-all-hodge-span.log
             secant-seed-character.log
+            secant-obstruction-rank.log
             pure-k0-all-codim.log
           if-no-files-found: warn

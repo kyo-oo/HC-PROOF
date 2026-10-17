@@ -875,9 +875,12 @@ theorem periodTransport_countable_closed_spread
   by_contra h
   have hproper : ∀ i, images i ≠ Set.univ := by simpa only [not_exists] using h
   have hempty (i : ℕ) : interior (images i) = ∅ := by
-    apply Set.eq_empty_iff_forall_not_mem.mpr
-    intro t ht
-    exact hproper i (hidentity i ⟨t, ht⟩)
+    ext t
+    constructor
+    · intro ht
+      exact (hproper i (hidentity i ⟨t, ht⟩)).elim
+    · intro ht
+      exact ht.elim
   have hd : Dense (⋂ i, (images i)ᶜ) := by
     apply dense_iInter_of_isOpen (fun i => (hclosed i).isOpen_compl)
     intro i
@@ -966,10 +969,10 @@ theorem periodTransport_plane_reconstruction
     let b := (v.1*target.2-v.2*target.1)/det
     a*v.1+b*(r*v.1-d*s*v.2) = target.1 ∧
     a*v.2+b*(s*v.1+r*v.2) = target.2 := by
-  have hdet : s*(v.1^2+d*v.2^2) ≠ 0 :=
-    mul_ne_zero hs (ne_of_gt (quadratic_norm_positive d hd v hv))
+  have hnorm : v.1^2+d*v.2^2 ≠ 0 :=
+    ne_of_gt (quadratic_norm_positive d hd v hv)
   dsimp only
-  constructor <;> field_simp [hdet] <;> ring
+  constructor <;> field_simp [hs, hnorm] <;> ring
 
 #print axioms periodTransport_full_obstruction_injection
 #print axioms periodTransport_injection_through_square
