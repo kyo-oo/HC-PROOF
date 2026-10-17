@@ -529,6 +529,181 @@ theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_nonzero_of_new_class
   rw [map_smul]
   exact hClass.symm
 
+
+/-! ## Exact GST native trace-zero projector and Chow/Hodge kernel landing
+
+For every finite flat projective projection X -> P^d, the actual
+rational algebraic-cycle module on X splits into an ambient
+projective pullback summand and an entirely native trace-kernel
+summand. This is an exact algebraic-cycle splitting, not a
+cohomology-level coordinate choice.
+
+The trace-zero projector fixes EVERY known algebraic cycle whose
+actual Chow pushforward vanishes. This is stronger than constructing
+one nonzero trace-zero example. Its exact image is the ENTIRE
+kernel of the genuine native pushforward.
+
+Finally, a trace-zero rational Hodge class with ANY algebraic
+representative automatically has one with ZERO native pushforward,
+and the explicit projector constructs it. Thus the remaining
+geometric existence question lives genuinely inside the
+trace-zero Chow module, not just the cohomological trace kernel.
+
+These are exact identities conditional only on the independently
+specified finite-morphism Chow/Betti maps. They do not assert
+that the trace-zero cohomological Hodge space is algebraic.
+-/
+
+/-- All-codimension rational-linear projector to the ACTUAL
+kernel of native geometric Chow pushforward on arbitrary X. -/
+noncomputable def ActualXFiniteProjectiveNativeTrace.nativeTraceZeroProjector
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F) :
+    codimensionCycles X.X p →ₗ[ℚ] codimensionCycles X.X p :=
+  LinearMap.id - F.degree⁻¹ • (F.nativePull.comp T.nativePush)
+
+/-- Projector evaluation is definitionally the already
+constructed Chow trace-zero correction. -/
+theorem ActualXFiniteProjectiveNativeTrace.nativeTraceZeroProjector_apply
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Z : codimensionCycles X.X p) :
+    T.nativeTraceZeroProjector Z = T.traceZeroNative Z := by
+  simp [ActualXFiniteProjectiveNativeTrace.nativeTraceZeroProjector,
+    ActualXFiniteProjectiveNativeTrace.traceZeroNative]
+
+/-- Existing native trace-zero cycles are FIXED by the
+constructed geometric projective projector. -/
+theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_fixed
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Z : codimensionCycles X.X p)
+    (hZ : T.nativePush Z = 0) :
+    T.traceZeroNative Z = Z := by
+  change Z - F.degree⁻¹ • F.nativePull (T.nativePush Z) = Z
+  rw [hZ]
+  simp
+
+/-- All-codimension native trace-zero projection is IDEMPOTENT:
+performing the geometric correction twice cannot create a
+new artifact or erase an existing trace-zero native cycle. -/
+theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_idempotent
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Z : codimensionCycles X.X p) :
+    T.traceZeroNative (T.traceZeroNative Z) =
+      T.traceZeroNative Z := by
+  exact T.traceZeroNative_fixed (T.traceZeroNative Z)
+    (T.traceZeroNative_push_zero Z)
+
+/-- EXACT full-range theorem: the image of the native geometric
+projector is EQUAL to the kernel of actual Chow pushforward.
+This is a global module equality on the actual source X. -/
+theorem ActualXFiniteProjectiveNativeTrace.range_projector_eq_kernel_push
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F) :
+    LinearMap.range T.nativeTraceZeroProjector =
+      LinearMap.ker T.nativePush := by
+  apply le_antisymm
+  · intro Z hZ
+    obtain ⟨W, hW⟩ := hZ
+    change T.nativePush Z = 0
+    calc
+      T.nativePush Z = T.nativePush (T.nativeTraceZeroProjector W) := by
+        rw [hW]
+      _ = T.nativePush (T.traceZeroNative W) := by
+        rw [T.nativeTraceZeroProjector_apply W]
+      _ = 0 := T.traceZeroNative_push_zero W
+  · intro Z hZ
+    change T.nativePush Z = 0 at hZ
+    refine ⟨Z, ?_⟩
+    calc
+      T.nativeTraceZeroProjector Z = T.traceZeroNative Z :=
+        T.nativeTraceZeroProjector_apply Z
+      _ = Z := T.traceZeroNative_fixed Z hZ
+
+/-- Any cohomological trace-zero rational Hodge class that is
+algebraic already has a representative inside the TRUE native
+Chow pushforward kernel: it is obtained constructively by
+projecting its actual source cycle, and has exactly the
+original specified Betti class, not a scalar multiple. -/
+theorem ActualXFiniteProjectiveNativeTrace.exact_native_trace_zero_witness
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (alpha : RationalSingularCohomology HX.analytification (2*p))
+    (hTrace : F.bettiPush alpha = 0)
+    (hAlg : alpha ∈ LinearMap.range (HX.cycleClass p)) :
+    ∃ W : codimensionCycles X.X p,
+      T.nativePush W = 0 ∧ HX.cycleClass p W = alpha := by
+  obtain ⟨Z, hZ⟩ := hAlg
+  refine ⟨T.traceZeroNative Z, T.traceZeroNative_push_zero Z, ?_⟩
+  calc
+    HX.cycleClass p (T.traceZeroNative Z) =
+      HX.cycleClass p Z -
+        F.degree⁻¹ • F.bettiPull
+          (F.bettiPush (HX.cycleClass p Z)) :=
+        T.traceZeroNative_cycleClass Z
+    _ = alpha := by
+      rw [hZ, hTrace]
+      simp
+
+/-- The original trace-zero Hodge existence target is EQUIVALENT
+to actual Chow-cycle surjectivity FROM THE NATIVE TRACE KERNEL.
+This is an exact geometric range statement, not an assumption
+or proof that every trace-zero Hodge class is representable. -/
+theorem ActualXFiniteProjectiveNativeTrace.hodge_trace_zero_iff_native_kernel
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F) :
+    (∀ alpha : HodgeSpace X HX p,
+      F.bettiPush alpha.1 = 0 →
+      alpha.1 ∈ LinearMap.range (HX.cycleClass p)) ↔
+    (∀ alpha : HodgeSpace X HX p,
+      F.bettiPush alpha.1 = 0 →
+      ∃ Z : codimensionCycles X.X p,
+        T.nativePush Z = 0 ∧ HX.cycleClass p Z = alpha.1) := by
+  constructor
+  · intro h alpha hZero
+    exact T.exact_native_trace_zero_witness alpha.1 hZero
+      (h alpha hZero)
+  · intro h alpha hZero
+    obtain ⟨Z, _, hZ⟩ := h alpha hZero
+    exact ⟨Z, hZ⟩
+
+#check ActualXFiniteProjectiveNativeTrace.nativeTraceZeroProjector
+#check ActualXFiniteProjectiveNativeTrace.range_projector_eq_kernel_push
+#check ActualXFiniteProjectiveNativeTrace.traceZeroNative_idempotent
+#check ActualXFiniteProjectiveNativeTrace.exact_native_trace_zero_witness
+#check ActualXFiniteProjectiveNativeTrace.hodge_trace_zero_iff_native_kernel
+#print axioms ActualXFiniteProjectiveNativeTrace.hodge_trace_zero_iff_native_kernel
+
 #check ActualXFiniteProjectiveNativeTrace.traceZeroNative
 #check ActualXFiniteProjectiveNativeTrace.traceZeroNative_push_zero
 #check ActualXFiniteProjectiveNativeTrace.traceZeroNative_cycleClass
