@@ -625,6 +625,80 @@ theorem algebraicJacobianKernelProjector_idempotent
     J B (algebraicJacobianKernelProjector J B v)
     (algebraicJacobianKernelProjector_in_kernel J B hJB v)
 
+/-! ## UNIVERSAL ADAMS SPECTRAL WEIGHT FILTER
+
+The true geometric Adams operation ψ² on algebraic K₀ satisfies
+  ch_i(ψ² ξ)=2^i ch_i(ξ).
+
+For any *finite* system of pairwise-distinct rational eigenvalues,
+the explicit Lagrange product kills every unwanted eigendirection
+and preserves the selected one. This algebraic core has no source
+existence, spanning assumption, target-preimage selector or axiom.
+The geometric λ-ring comparison supplies eigenvalues 2^i for
+i=0,...,dim X, and the same scalar construction purifies
+ch_p of ANY GENUINE algebraic K₀ class on an arbitrary X.
+
+It DOES NOT assert that the input ξ realizes a prescribed Hodge
+class: building a suitable ξ from arbitrary alpha remains Gate 3.
+-/
+
+namespace GSTAlgebraicAdamsPurification
+
+/-- Fully explicit rational spectral projector scalar. -/
+noncomputable def lagrangeWeightSelector
+    {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (eig : ι → ℚ)
+    (p i : ι) : ℚ :=
+  ∏ j ∈ s.erase p, (eig i - eig j) / (eig p - eig j)
+
+/-- The selected weight survives every factor exactly. -/
+theorem lagrangeWeightSelector_selected
+    {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (eig : ι → ℚ) (p : ι)
+    (hDistinct : ∀ j ∈ s, j ≠ p → eig p ≠ eig j) :
+    lagrangeWeightSelector s eig p p = 1 := by
+  unfold lagrangeWeightSelector
+  apply Finset.prod_eq_one
+  intro j hj
+  have hj0 : j ≠ p := (Finset.mem_erase.mp hj).1
+  have hj1 : j ∈ s := (Finset.mem_erase.mp hj).2
+  have hne : eig p - eig j ≠ 0 :=
+    sub_ne_zero.mpr (hDistinct j hj1 hj0)
+  exact div_self hne
+
+/-- EVERY other rational eigendirection is annihilated exactly. -/
+theorem lagrangeWeightSelector_other_zero
+    {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (eig : ι → ℚ)
+    (p i : ι) (hi : i ∈ s) (hne : i ≠ p) :
+    lagrangeWeightSelector s eig p i = 0 := by
+  unfold lagrangeWeightSelector
+  apply Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hne, hi⟩)
+  simp
+
+/-- Exact finite spectral delta for ALL selected and nonselected
+weights. This is the universal algebraic scalar identity behind
+the K₀ Adams operation's pure ch_p projection. -/
+theorem lagrangeWeightSelector_delta
+    {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (eig : ι → ℚ)
+    (p i : ι)
+    (hi : i ∈ s)
+    (hDistinct : ∀ j ∈ s, j ≠ p → eig p ≠ eig j) :
+    lagrangeWeightSelector s eig p i =
+      if i = p then (1 : ℚ) else 0 := by
+  by_cases h : i = p
+  · subst i
+    simp only [if_pos rfl]
+    exact lagrangeWeightSelector_selected s eig p hDistinct
+  · simp only [if_neg h]
+    exact lagrangeWeightSelector_other_zero s eig p i hi h
+
+#check lagrangeWeightSelector_delta
+#print axioms lagrangeWeightSelector_delta
+
+end GSTAlgebraicAdamsPurification
+
 #check algebraicJacobianKernelProjector_idempotent
 #print axioms algebraicJacobianKernelProjector_idempotent
 
