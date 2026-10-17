@@ -351,4 +351,34 @@ constructed Weil fourfolds or formalize their dimension, K-action,
 canonical analytification, T6 or Chow intersection. The stronger paper
 claim follows using the stated external geometry; the Lean result is
 its explicit conditional native-cycle assembly. No all-varieties Hodge
-claim is made. New GitHub integration receipt: pending.
+claim is made. The completed GitHub integration receipt follows.
+
+
+### Completed GPT-6 integration receipt
+
+- Transfer commit: `566a66e06bad3a5aa8aad1482b7fcd683090b758`.
+- Final mathematical source: `b38695e412291e9b8e271ac0ecc6a2b445257074`.
+- Full integration: **[39068146715](https://github.com/kyo-oo/HC-PROOF/actions/runs/39068146715) PASSED**, job `117499985045`.
+- Native module blob: `666c04c555be2cffee0857144188143316ae2f87`.
+- Build completed successfully: **8961 jobs**, with **264 local modules** registered by the pinned integration root generator.
+- All seven pre-existing exact certificate steps passed, preserving the GPT-6 CM/QM results.
+- Full log audit: **1719 printed axiom receipts**, union exactly `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` and no Lean errors.
+- All three new theorem receipts (`weilPlaneCramerReconstruction`, `auxiliaryWeilNativeCycle_class`, `auxiliaryWeilEveryMiddleHodgeClass`) individually show only those standard axioms.
+- Artifact: `12114465235`, eight logs; downloaded ZIP SHA-256 `a39430bd04f1283eea0a1781838a2dbc2ff96d7c261e150665d4a9498707cec0`, matching GitHub's digest.
+- Separate arithmetic verification on this branch: **[39067876686](https://github.com/kyo-oo/HC-PROOF/actions/runs/39067876686) PASSED**, source `566a66e06bad3a5aa8aad1482b7fcd683090b758`, artifact `12114042487`, ZIP SHA-256 `551d38e8b31233f26996db46f154d5f1677206c460e275019df14585c77707d8`.
+- The transferred extraction module is byte-identical to the source-branch green module: SHA-256 `fef4a92deb7c345a70a299071e5cdf0b5ea095ee7e1ab1764d5fef04b6d6addb`. The Wolfram script, output and manifest are also unchanged.
+
+The first integration attempt, `39067876668`, failed at two final
+coordinate equalities because a restricted simplifier left nested product
+scalar actions unreduced. Commit `b38695e` repairs precisely those two
+proof lines with scalar-action simplification; no theorem statements,
+source hypotheses or cycle formula changed. The universal Cramer identity
+already compiled in the first attempt. Only the successful final run is
+the verification receipt for the assembled native theorem.
+
+**Completion scope:** the transfer and conditional native-cycle proof
+assembly are finished on the GPT-6 branch. T6, the geometric source-to-tensor
+dictionary, extraction/CM comparison, the generic Hodge decomposition and
+the canonical Betti realization remain the explicit external geometric
+inputs listed above. CI does not certify that these inputs have been
+constructed in Lean, and does not establish the all-varieties Hodge theorem.
