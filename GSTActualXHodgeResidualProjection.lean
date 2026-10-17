@@ -1051,6 +1051,7 @@ nor the canonical analytification/fundamental-class comparison is asserted.
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgePointClosurePrincipalCut
 open GSTClassicalHodgePointClosureRelativeCut
+open TopologicalSpace
 
 /-- Construct a proper directed cut containing the prescribed geometric
 successor, and an actual primitive normalization of its native point cycle.
@@ -1066,6 +1067,9 @@ theorem directed_cut_supplies_native_primitive_normalization
     (hAmbient : Order.coheight (pointClosureι X x y) = 2) :
     ∃ hy : y ≠ GSTClassicalHodgePointClosureIrreducible.closureGenericPoint X x,
       y ∈ targetedRelativeCodimensionOneFinset X x y hy ∧
+      targetedRelativeCutTarget X x y hy ∈ genericPoints
+        ((targetedRelativeCutIdeal X x y hy).support :
+          Set (pointClosureScheme X x)) ∧
       ∃ W : codimensionCycles X.X 2,
         nativeToHodgeFiberLinear G W =
           primitiveHodgeRemainder G L h11
@@ -1076,7 +1080,9 @@ theorem directed_cut_supplies_native_primitive_normalization
     every_relative_codimension_one_point_has_directed_cut X x y hRelative
   let Z : codimensionCycles X.X 2 :=
     codimensionPointCycle X.X 2 ⟨pointClosureι X x y, hAmbient⟩
-  refine ⟨hy, hmem, primitiveizeNativeMiddleCycle G L h11 Z, ?_, ?_⟩
+  refine ⟨hy, hmem,
+    targetedRelativeCutTarget_is_component_generic X x y hy hRelative,
+    primitiveizeNativeMiddleCycle G L h11 Z, ?_, ?_⟩
   · exact native_primitive_projection_cycleClass G L h11 Z
   · exact primitiveizeNativeMiddleCycle_primitive G L h11 Z
 
