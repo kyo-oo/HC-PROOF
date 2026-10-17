@@ -20,6 +20,8 @@
 
 - [All-p **actual** exceptional Weil Hodge cycles via GST CM isogeny projector](2026-10-17-geometric-weil-cm-isogeny-projector-all-p.md) — genuine mixed graph-divisor products on split CM E^(2p), projected by an explicit algebraic isogeny correspondence; two independent cycles span the rank-two rational Weil (p,p) subspace for every p, uniform determinant i/2^(2p−1). Exact exterior audit [#39059438328](https://github.com/kyo-oo/HC-PROOF/actions/runs/39059438328) and Lean all-p source certificate [#39059702764](https://github.com/kyo-oo/HC-PROOF/actions/runs/39059702764) both green.
 
+- [QM graph and full rational Hodge construction on a non-elliptic Weil fourfold](2026-10-18-quaternionic-graph-weil-native-source.md) — actual algebraic graph of an anti-K quaternionic isogeny on B×B has Weil top-wedge pairing −12; nonzero GST CM source in all codimensions with QM factors. [Full all-Hodge divisor-span theorem](2026-10-18-qm-fourfold-all-hodge-divisor-span.md) constructs algebraic representatives for every rational Hodge class on a generic QM B×B, with exact ranks **1,10,20,10,1** and uniform powers B^r. Both certificate scripts and existing Lean CM source compile **GREEN [#39064321736](https://github.com/kyo-oo/HC-PROOF/actions/runs/39064321736)**. Next: a relative original-X source persisting on very general simple Weil fourfolds.
+
 **Current execution plan:** [Four fixed proof gates and exact all-X Hodge objective](../ACTIVE_HODGE_PROOF_PLAN.md).
 
 **Direct-X geometric source refinement:** [Primitive classes require signed algebraic cycles](2026-10-17-primitive-signed-cycle-necessity.md). Positive-degree obstruction verified exactly; the active constructor must produce signed, genuinely algebraic cycles on each original X.
