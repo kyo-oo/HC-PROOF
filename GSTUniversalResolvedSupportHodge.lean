@@ -481,10 +481,23 @@ theorem quadricBottProjector_idempotent
     (x y z : R) (hQuadric : x*y = z*(1-z)) :
     quadricBottProjector x y z * quadricBottProjector x y z =
       quadricBottProjector x y z := by
+  let E := quadricBottProjector x y z
+  obtain ⟨h00, h01, h10, h11⟩ := Matrix.two_mul_expl E E
+  change E * E = E
   ext i j
   fin_cases i <;> fin_cases j
-  all_goals
-    simp [quadricBottProjector, Matrix.mul_apply, Fin.sum_univ_two, hQuadric] <;> ring
+  · rw [h00]
+    simp [E, quadricBottProjector, hQuadric]
+    ring
+  · rw [h01]
+    simp [E, quadricBottProjector]
+    ring
+  · rw [h10]
+    simp [E, quadricBottProjector]
+    ring
+  · rw [h11]
+    simp [E, quadricBottProjector, hQuadric]
+    ring
 
 #check quadricBottProjector
 #check quadricBottProjector_idempotent
