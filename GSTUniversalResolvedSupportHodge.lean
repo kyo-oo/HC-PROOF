@@ -25,8 +25,14 @@ The two geometric source obligations are explicitly recorded:
 proper push-Gysin/cycleClass naturality and rational Hodge
 strictness for an actual resolved algebraic support.
 
-Gate 3's continuing target is to produce representatives for Hodge
-classes outside all such geometric support images.
+This identifies exactly the resolved-support part of the universal
+construction. The support condition is substantive geometric input:
+any already algebraic cycle also admits resolved codimension-(p-1)
+support by taking suitable algebraic containing cuts and resolutions.
+Thus imposing this support condition on ALL Hodge classes would
+restate the missing universal source-production task. The present
+native formula constructs cycles only after an actual support has
+been geometrically exhibited, and its Lean theorem audits that fact.
 -/
 
 set_option maxHeartbeats 12000000
