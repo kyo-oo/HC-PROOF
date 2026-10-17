@@ -439,7 +439,7 @@ theorem specializationLift_coheight_one
     (V : SmoothProjectiveComplexScheme) (p : ℕ)
     (x z : V.X)
     (hx : Order.coheight x = p)
-    (hz : Order.coheight z = p + 1)
+    (hz : Order.coheight z = (p + 1 : ℕ))
     (hzx : z < x) :
     Order.coheight (specializationLift V x z hzx.le) = 1 := by
   let y := specializationLift V x z hzx.le
@@ -511,33 +511,33 @@ an actual irreducible component of a derived proper cut in that predecessor's
 closure. The equation and predecessor are constructed, not supplied. -/
 theorem every_ambient_successor_point_has_directed_cut_component
     (V : SmoothProjectiveComplexScheme) (p : ℕ)
-    (z : V.X) (hz : Order.coheight z = p + 1) :
+    (z : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X (p + 1)) :
     ∃ x : V.X, Order.coheight x = p ∧
-      ∃ hzx : z < x,
-      ∃ hy : specializationLift V x z hzx.le ≠ closureGenericPoint V x,
-        Order.coheight (specializationLift V x z hzx.le) = 1 ∧
-        specializationLift V x z hzx.le ∈
+      ∃ hzx : z.1 < x,
+      ∃ hy : specializationLift V x z.1 hzx.le ≠ closureGenericPoint V x,
+        Order.coheight (specializationLift V x z.1 hzx.le) = 1 ∧
+        specializationLift V x z.1 hzx.le ∈
           targetedRelativeCodimensionOneFinset V x
-            (specializationLift V x z hzx.le) hy ∧
-        targetedRelativeCutTarget V x (specializationLift V x z hzx.le) hy ∈
+            (specializationLift V x z.1 hzx.le) hy ∧
+        targetedRelativeCutTarget V x (specializationLift V x z.1 hzx.le) hy ∈
           genericPoints
             ((targetedRelativeCutIdeal V x
-              (specializationLift V x z hzx.le) hy).support :
+              (specializationLift V x z.1 hzx.le) hy).support :
                 Set (pointClosureScheme V x)) := by
-  have hfinite : Order.coheight z < ⊤ := by
-    rw [hz]
+  have hfinite : Order.coheight z.1 < ⊤ := by
+    rw [z.2]
     exact ENat.natCast_lt_top (p + 1)
-  have hlt : (p : ℕ∞) < Order.coheight z := by
-    rw [hz]
+  have hlt : (p : ℕ∞) < Order.coheight z.1 := by
+    rw [z.2]
     exact_mod_cast Nat.lt_succ_self p
   obtain ⟨x, hzx, hx⟩ :=
-    (Order.coe_lt_coheight_iff (x := z) (n := p) hfinite).mp hlt
-  have hy1 := specializationLift_coheight_one V p x z hx hz hzx
+    (Order.coe_lt_coheight_iff (x := z.1) (n := p) hfinite).mp hlt
+  have hy1 := specializationLift_coheight_one V p x z.1 hx z.2 hzx
   obtain ⟨hy, hmem⟩ := every_relative_codimension_one_point_has_directed_cut
-    V x (specializationLift V x z hzx.le) hy1
+    V x (specializationLift V x z.1 hzx.le) hy1
   exact ⟨x, hx, hzx, hy, hy1, hmem,
     targetedRelativeCutTarget_is_component_generic V x
-      (specializationLift V x z hzx.le) hy hy1⟩
+      (specializationLift V x z.1 hzx.le) hy hy1⟩
 
 /-- Every finite-codimension ambient point has an exact graded geometric
 flag up to a codimension-zero generic point. Each adjacent pair has coheight
