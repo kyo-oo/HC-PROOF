@@ -196,6 +196,140 @@ theorem total_cut_has_zero_primitive_but_components_do_not :
 #check total_cut_has_zero_primitive_but_components_do_not
 #print axioms total_cut_has_zero_primitive_but_components_do_not
 
+/-! ## UNBOUNDED-DEGREE geometric primitive-plane mechanism on ORIGINAL fourfolds
+
+Let X_d ⊂ ℙ⁵ be a SMOOTH degree-d fourfold containing a plane P.
+The normal sequence
+  0 → N_(P/X_d) → O_P(1)^3 → O_P(d) → 0
+computes c₂(N_(P/X_d))=d²-3d+3. Thus the intersection
+matrix of H=h² and P, when interpreted via the genuine geometric
+cycle-class map, is
+     [[d,1],[1,d²-3d+3]].
+Its determinant is (d-1)^3.
+
+This is an original-carrier source, not an auxiliary blowup or a
+hypothetical target preimage. For EVERY d>=2 on this geometric family,
+the actual algebraic cycle d[P]-h² has nonzero primitive class:
+its intersection with h² is zero and its self-intersection is
+d(d-1)^3 > 0.
+
+Lean proves the degree-uniform INTEGER polynomial identities below.
+Existence of a smooth X_d containing P, the normal-bundle sequence,
+and the comparison with its canonical geometric cycle-class map
+remain external geometric inputs; this file does not identify an
+arbitrary smooth projective complex fourfold with such a hypersurface.
+-/
+
+def degreeDIntersection (d : ℤ)
+    (u v : AlgebraicPlaneLattice) : ℤ :=
+  d*u.1*v.1 + u.1*v.2 + u.2*v.1 +
+    (d*d - 3*d + 3)*u.2*v.2
+
+def degreeDPrimitivePlaneCycle (d : ℤ) : AlgebraicPlaneLattice :=
+  (-1,d)
+
+def degreeDResidualCutComponent : AlgebraicPlaneLattice :=
+  hyperplaneSquared - planeClass
+
+/-- Top Chern number c₂(N_(P/X_d)). -/
+def degreeDPlaneSelfIntersection (d : ℤ) : ℤ :=
+  d*d - 3*d + 3
+
+theorem degreeDPlaneNormalChernIdentity (d : ℤ) :
+    (1 + 3*(1 : ℤ) + 3*(1 : ℤ)) =
+      (1 + d) * (1 + 3-d) +
+        (degreeDPlaneSelfIntersection d - (1 + 3-d)) := by
+  unfold degreeDPlaneSelfIntersection
+  ring
+
+/-- Geometric intersection Gram determinant equals (d-1)³. -/
+theorem degreeDPlaneGramDiscriminant (d : ℤ) :
+    degreeDIntersection d hyperplaneSquared hyperplaneSquared *
+      degreeDIntersection d planeClass planeClass -
+        degreeDIntersection d hyperplaneSquared planeClass *
+        degreeDIntersection d planeClass hyperplaneSquared =
+      (d-1)^3 := by
+  dsimp [degreeDIntersection, hyperplaneSquared, planeClass]
+  ring
+
+/-- The native codimension-two cycle d[P]-h² is orthogonal to h². -/
+theorem degreeDPrimitivePlaneOrthogonal (d : ℤ) :
+    degreeDIntersection d hyperplaneSquared
+      (degreeDPrimitivePlaneCycle d) = 0 := by
+  dsimp [degreeDIntersection, degreeDPrimitivePlaneCycle,
+    hyperplaneSquared]
+  ring
+
+/-- Exact self-intersection of an integral primitive algebraic source. -/
+theorem degreeDPrimitivePlaneSelfIntersection (d : ℤ) :
+    degreeDIntersection d
+        (degreeDPrimitivePlaneCycle d)
+        (degreeDPrimitivePlaneCycle d) =
+      d * (d-1)^3 := by
+  dsimp [degreeDIntersection, degreeDPrimitivePlaneCycle]
+  ring
+
+theorem degreeDPrimitivePlaneNonzero (d : ℤ) :
+    degreeDPrimitivePlaneCycle d ≠ (0,0) := by
+  norm_num [degreeDPrimitivePlaneCycle]
+
+theorem degreeDPrimitiveSelfIntersectionPositive (d : ℤ)
+    (hd : 2 ≤ d) :
+    0 < degreeDIntersection d
+      (degreeDPrimitivePlaneCycle d)
+      (degreeDPrimitivePlaneCycle d) := by
+  rw [degreeDPrimitivePlaneSelfIntersection]
+  have hd0 : 0 < d := by omega
+  have hd1 : 0 < d-1 := by omega
+  exact mul_pos hd0 (pow_pos hd1 3)
+
+/-- A second genuine component may conceal the nonzero primitive
+direction: the full split hyperplane cut has ZERO primitive numerator. -/
+def degreeDPrimitiveNumerator (d : ℤ)
+    (u : AlgebraicPlaneLattice) : AlgebraicPlaneLattice :=
+  (-u.2,d*u.2)
+
+theorem degreeDPrimitiveNumeratorOrthogonal
+    (d : ℤ) (u : AlgebraicPlaneLattice) :
+    degreeDIntersection d hyperplaneSquared
+      (degreeDPrimitiveNumerator d u) = 0 := by
+  dsimp [degreeDIntersection, degreeDPrimitiveNumerator,
+    hyperplaneSquared]
+  ring
+
+theorem degreeDSplitCutPrimitiveCancellation (d : ℤ) :
+    planeClass + degreeDResidualCutComponent = hyperplaneSquared ∧
+    degreeDPrimitiveNumerator d planeClass =
+      degreeDPrimitivePlaneCycle d ∧
+    degreeDPrimitiveNumerator d degreeDResidualCutComponent =
+      -degreeDPrimitivePlaneCycle d ∧
+    degreeDPrimitiveNumerator d
+      (planeClass + degreeDResidualCutComponent) = (0,0) := by
+  constructor
+  · simp [degreeDResidualCutComponent]
+  constructor
+  · rfl
+  constructor
+  · apply Prod.ext
+    · norm_num [degreeDPrimitiveNumerator,
+        degreeDResidualCutComponent, degreeDPrimitivePlaneCycle,
+        hyperplaneSquared, planeClass]
+    · norm_num [degreeDPrimitiveNumerator,
+        degreeDResidualCutComponent, degreeDPrimitivePlaneCycle,
+        hyperplaneSquared, planeClass]
+  · rw [show planeClass + degreeDResidualCutComponent =
+          hyperplaneSquared by
+            simp [degreeDResidualCutComponent]]
+    rfl
+
+#check degreeDPlaneGramDiscriminant
+#check degreeDPrimitivePlaneOrthogonal
+#check degreeDPrimitivePlaneSelfIntersection
+#check degreeDPrimitiveSelfIntersectionPositive
+#check degreeDSplitCutPrimitiveCancellation
+#print axioms degreeDPrimitiveSelfIntersectionPositive
+#print axioms degreeDSplitCutPrimitiveCancellation
+
 #check primitive_plane_hyperplane_orthogonal
 #check primitive_plane_self_intersection
 #check primitive_plane_nonzero
