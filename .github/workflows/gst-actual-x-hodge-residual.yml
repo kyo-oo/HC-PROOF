@@ -1,7 +1,7 @@
 name: GST Actual X Hodge Residual Projection
 on:
   push:
-    branches: [research/mathbox-k3-diagonal-primitive-20261015, mathbox/residual-zero-direct-audit-20261015]
+    branches: [research/mathbox-k3-diagonal-primitive-20261015, mathbox/residual-zero-direct-audit-20261015, research/gpt6-native-point-primitive-span-20261017]
     paths:
       - GSTActualXHodgeResidualProjection.lean
       - GSTClassicalHodgePointClosureRelativeCut.lean
