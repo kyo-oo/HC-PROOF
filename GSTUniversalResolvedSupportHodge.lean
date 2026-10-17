@@ -290,6 +290,156 @@ theorem all_hodge_two_of_affine_open_cycle_sources
   exact affine_cycle_plus_divisor_boundary_represents_hodge_two
     SG G B h11 alpha hAlpha Zu hZu
 
+/-! ## Every positive codimension: affine Chow closure + lower Hodge
+
+The codimension-two reconstruction above uses Lefschetz (1,1)
+for a divisor on the boundary Y.
+
+In the general successor p=q+1, exactly the SAME localization
+mechanism needs a native codimension-q Hodge cycle on Y, i.e. a
+strictly lower-codimension representative. This is a genuine
+induction step on p for all original smooth projective X.
+
+It is not a hidden full Hodge-surjectivity input: only weight q
+on the boundary is supplied, never the target weight q+1 on X.
+The new affine source is an algebraic codimension-(q+1) cycle
+on U=X\Y with the prescribed RESTRICTED rational Betti class.
+-/
+
+/-- General affine-to-projective localization and canonical Betti
+comparison at the successor codimension p=q+1. -/
+structure AffineSuccessorHodgeLocalization
+    (q : ℕ) (U : Scheme) (HU : Type*)
+    [AddCommGroup HU] [Module ℚ HU] where
+  openInclusion : U ⟶ X.X
+  affineCycleClass :
+    codimensionCycles U (q+1) →ₗ[ℚ] HU
+  bettiRestriction :
+    RationalSingularCohomology HX.analytification (2*(q+1)) →ₗ[ℚ] HU
+  nativeClosure :
+    codimensionCycles U (q+1) →ₗ[ℚ]
+      codimensionCycles X.X (q+1)
+  boundaryNativePush :
+    codimensionCycles Y.X q →ₗ[ℚ]
+      codimensionCycles X.X (q+1)
+  boundaryBettiPush :
+    RationalSingularCohomology HY.analytification (2*q) →ₗ[ℚ]
+      RationalSingularCohomology HX.analytification (2*(q+1))
+  closure_naturality :
+    ∀ Zu : codimensionCycles U (q+1),
+      bettiRestriction (HX.cycleClass (q+1) (nativeClosure Zu)) =
+        affineCycleClass Zu
+  boundary_cycleclass_naturality :
+    ∀ D : codimensionCycles Y.X q,
+      HX.cycleClass (q+1) (boundaryNativePush D) =
+        boundaryBettiPush (HY.cycleClass q D)
+  boundary_localization_exact :
+    ∀ delta : RationalSingularCohomology HX.analytification (2*(q+1)),
+      bettiRestriction delta = 0 →
+        delta ∈ LinearMap.range boundaryBettiPush
+  boundary_rational_hodge_lift :
+    ∀ delta : RationalSingularCohomology HX.analytification (2*(q+1)),
+      delta ∈ rationalHodgeSubspace (HX.hodgeBigrading (q+1)) →
+      delta ∈ LinearMap.range boundaryBettiPush →
+      ∃ beta : ClassicalHodgeFiber Y HY q,
+        boundaryBettiPush beta.1 = delta
+
+/-- The explicit all-X successor-induction construction.
+
+For a rational (q+1,q+1)-Hodge class alpha on the original X,
+construct a genuine affine codimension-(q+1) cycle Zu representing
+its open restriction. The remaining boundary discrepancy is the
+pushforward of a rational (q,q)-Hodge class on Y, represented by
+a lower-codimension native cycle D via the given induction theorem.
+
+The returned ORIGINAL-X cycle is closure(Zu)+i_*(D). -/
+theorem affine_boundary_induction_constructs_original_hodge_cycle
+    {q : ℕ} {U : Scheme} {HU : Type*}
+    [AddCommGroup HU] [Module ℚ HU]
+    (SG : GeometricCycleClassSpine X HX)
+    (B : AffineSuccessorHodgeLocalization
+       (Y := Y) (X := X) (HY := HY) (HX := HX) q U HU)
+    (hLower :
+      ∀ beta : ClassicalHodgeFiber Y HY q,
+        ∃ D : codimensionCycles Y.X q,
+          HY.cycleClass q D = beta.1)
+    (alpha : RationalSingularCohomology HX.analytification (2*(q+1)))
+    (hAlpha : alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading (q+1)))
+    (Zu : codimensionCycles U (q+1))
+    (hAffine :
+      B.affineCycleClass Zu = B.bettiRestriction alpha) :
+    ∃ Zx : codimensionCycles X.X (q+1),
+      HX.cycleClass (q+1) Zx = alpha := by
+  let C : codimensionCycles X.X (q+1) := B.nativeClosure Zu
+  let delta : RationalSingularCohomology HX.analytification (2*(q+1)) :=
+    alpha - HX.cycleClass (q+1) C
+  have hBoundaryZero : B.bettiRestriction delta = 0 := by
+    calc
+      B.bettiRestriction delta =
+          B.bettiRestriction alpha - B.affineCycleClass Zu := by
+            simp only [delta, map_sub, C, B.closure_naturality]
+      _ = 0 := sub_eq_zero.mpr hAffine.symm
+  have hDeltaSupported : delta ∈ LinearMap.range B.boundaryBettiPush :=
+    B.boundary_localization_exact delta hBoundaryZero
+  have hDeltaHodge :
+      delta ∈ rationalHodgeSubspace (HX.hodgeBigrading (q+1)) := by
+    dsimp [delta]
+    exact (rationalHodgeSubspace (HX.hodgeBigrading (q+1))).sub_mem
+      hAlpha (SG.algebraic_is_hodge (q+1) C)
+  let beta : ClassicalHodgeFiber Y HY q :=
+    Classical.choose (B.boundary_rational_hodge_lift
+      delta hDeltaHodge hDeltaSupported)
+  have hBeta : B.boundaryBettiPush beta.1 = delta :=
+    Classical.choose_spec (B.boundary_rational_hodge_lift
+      delta hDeltaHodge hDeltaSupported)
+  let D : codimensionCycles Y.X q := Classical.choose (hLower beta)
+  have hD : HY.cycleClass q D = beta.1 :=
+    Classical.choose_spec (hLower beta)
+  refine ⟨C + B.boundaryNativePush D, ?_⟩
+  calc
+    HX.cycleClass (q+1) (C + B.boundaryNativePush D) =
+        HX.cycleClass (q+1) C +
+          HX.cycleClass (q+1) (B.boundaryNativePush D) := by
+            rw [map_add]
+    _ = HX.cycleClass (q+1) C +
+          B.boundaryBettiPush (HY.cycleClass q D) := by
+            rw [B.boundary_cycleclass_naturality]
+    _ = HX.cycleClass (q+1) C +
+          B.boundaryBettiPush beta.1 := by rw [hD]
+    _ = HX.cycleClass (q+1) C + delta := by rw [hBeta]
+    _ = alpha := by dsimp [delta]; abel
+
+/-- ALL-X successor Hodge construction when the affine source
+algorithm supplies the genuinely restricted class, and the
+lower-codimension boundary Hodge problem has been solved. -/
+theorem affine_boundary_hodge_weight_successor
+    {q : ℕ} {U : Scheme} {HU : Type*}
+    [AddCommGroup HU] [Module ℚ HU]
+    (SG : GeometricCycleClassSpine X HX)
+    (B : AffineSuccessorHodgeLocalization
+       (Y := Y) (X := X) (HY := HY) (HX := HX) q U HU)
+    (hLower :
+      ∀ beta : ClassicalHodgeFiber Y HY q,
+        ∃ D : codimensionCycles Y.X q,
+          HY.cycleClass q D = beta.1)
+    (hAffineSources :
+      ∀ alpha : RationalSingularCohomology HX.analytification (2*(q+1)),
+        alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading (q+1)) →
+        ∃ Zu : codimensionCycles U (q+1),
+          B.affineCycleClass Zu = B.bettiRestriction alpha) :
+    ∀ alpha : RationalSingularCohomology HX.analytification (2*(q+1)),
+      alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading (q+1)) →
+      ∃ Zx : codimensionCycles X.X (q+1),
+        HX.cycleClass (q+1) Zx = alpha := by
+  intro alpha hAlpha
+  obtain ⟨Zu, hZu⟩ := hAffineSources alpha hAlpha
+  exact affine_boundary_induction_constructs_original_hodge_cycle
+    SG B hLower alpha hAlpha Zu hZu
+
+#check affine_boundary_induction_constructs_original_hodge_cycle
+#check affine_boundary_hodge_weight_successor
+#print axioms affine_boundary_induction_constructs_original_hodge_cycle
+
 #check affine_cycle_plus_divisor_boundary_represents_hodge_two
 #check all_hodge_two_of_affine_open_cycle_sources
 #print axioms affine_cycle_plus_divisor_boundary_represents_hodge_two
