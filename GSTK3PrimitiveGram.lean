@@ -166,17 +166,9 @@ GST primitive diagonal already constructed in the repository. -/
 theorem k0OrthogonalizedDiagonal_eq_GST_primitive
     (d : ℚ) (hd : d ≠ 0) :
     k0OrthogonalizedDiagonal d = primitiveDiagonal d := by
-  apply Coordinates.ext
-  · norm_num [k0OrthogonalizedDiagonal, k0DiagonalSheafPrimitive,
-      k0TangentPrimitive, primitiveDiagonal]
-  · norm_num [k0OrthogonalizedDiagonal, k0DiagonalSheafPrimitive,
-      k0TangentPrimitive, primitiveDiagonal]
-  · norm_num [k0OrthogonalizedDiagonal, k0DiagonalSheafPrimitive,
-      k0TangentPrimitive, primitiveDiagonal]
-  · dsimp [k0OrthogonalizedDiagonal, k0DiagonalSheafPrimitive,
-      k0TangentPrimitive, primitiveDiagonal]
-    field_simp [hd]
-    ring
+  dsimp [k0OrthogonalizedDiagonal, k0DiagonalSheafPrimitive,
+    k0TangentPrimitive, primitiveDiagonal]
+  congr 1 <;> field_simp [hd] <;> ring
 
 /-- New perfect-complex tangent source has POSITIVE primitive energy
 768, not merely nonvanishing against an arbitrary coordinate readout. -/
