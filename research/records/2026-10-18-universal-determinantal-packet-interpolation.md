@@ -127,6 +127,25 @@ At K=2,p=2 the exact integer packet is \(6D_2-8D_3+3D_4\). At K=5,p=3 it is \(56
 
 **Mass warning:** \(|\lambda_{K,p,j}|\) grows polynomially with K, so a compactness argument for the SIGNED geometric packet does NOT follow from separate approximately holomorphic estimates for each D. Precisely because these coefficients are signed, the homological cancellation is legitimate but positivity/mass cannot be assumed to cancel as well. The extra analytic challenge is to construct algebraic *holomorphic* degeneracy sheets at at least one K-regime (or independently algebraize their whole signed packet).
 
+## 4c. Exact signed-mass growth: naive K->infinity compactness is NOT a proof
+
+An attractive but false leap would be to use the arbitrarily positive twists of §4b, let K tend to infinity, and assert the signed packet converges to an analytic/algebraic cycle. The INTEGER cancellation controls homology, NOT total variation of the current.
+
+For a primitive codimension-two alpha on a projective fourfold, take the simplest rational characteristic data f=3,e=2 with lower Chern characters zero, so the determinantal degrees are those of \(P(k)=3k^2 h^2-N\alpha\). Since alpha.h^2=0, the h²-degree of each positive sheet is \(3k^2\deg_h(X)\). The exact integer weights at twists K,K+1,K+2 are
+\[
+ a_0=(K+1)(K+2)/2,\quad a_1=-K(K+2),\quad
+ a_2=K(K+1)/2.
+\]
+The signed degree cancels identically. However the unsigned weighted degree is
+\[
+ \sum_{j=0}^2|a_j|\int_XP(K+j)h^2
+ =6K(K+1)^2(K+2)\,\deg_h(X)
+ \sim 6K^4\deg_h(X).
+\]
+Wolfram verified both the exact factorization and zero signed degree; for K=1,2,3,4, the inner unsigned quadratic sum was 24,144,480,1200 respectively (multiply by 3*deg_h(X)). No K-uniform mass bound follows. In the general p model the leading total-variation scaling is order K^(2p), due to the K^p interpolation weights multiplying individual order-K^p positive sheet degrees.
+
+Thus the new ALL-X geometric source equality is EXACT in rational homology at each finite K; turning it into algebraic geometry cannot use a bare compactness argument on the signed packets as K grows. It must be a finite-K Hodge-dependent conversion, an integrability result, or a new compensated compactness estimate that actually controls the cancellation at the current level.
+
 ## 5. Deep category obstruction: slope-polystable holomorphic bundles are TOO RESTRICTIVE
 
 A tempting repair is to run Hermitian–Yang–Mills/Donaldson–Uhlenbeck–Yau heat flow on the topological K source until all F^(0,2) vanishes, then claim algebraicity. This DOES NOT GENERALLY WORK for a primitive nonzero source with the prescribed Chern-vector normalization.
