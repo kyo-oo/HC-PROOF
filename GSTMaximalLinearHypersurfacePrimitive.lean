@@ -515,16 +515,22 @@ theorem gstK3_tangent_correspondence_extracts_primitive
       gstK3ProductTangentChernTwo -
         (4/d) • gstK3ProductHyperplaneSquare d := by
   apply Prod.ext
-  · simp [gstK3ProductTangentPrimitive,
+  · dsimp [gstK3ProductTangentPrimitive,
       gstK3ProductTangentChernTwo,
       gstK3ProductHyperplaneSquare]
+    field_simp
+    ring
   · apply Prod.ext
-    · simp [gstK3ProductTangentPrimitive,
+    · dsimp [gstK3ProductTangentPrimitive,
         gstK3ProductTangentChernTwo,
         gstK3ProductHyperplaneSquare]
-    · simp [gstK3ProductTangentPrimitive,
+      field_simp
+      ring
+    · dsimp [gstK3ProductTangentPrimitive,
         gstK3ProductTangentChernTwo,
-        gstK3ProductHyperplaneSquare, hd]
+        gstK3ProductHyperplaneSquare]
+      field_simp
+      ring
 
 /-- A strong LEFSCHETZ primitive condition: H cup Z=0
 in H^6, not merely vanishing of its degree against H². -/
