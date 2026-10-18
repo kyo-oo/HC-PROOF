@@ -920,6 +920,79 @@ theorem cubicFourfoldTangentC2_ambient :
     hypersurfaceFourfoldTangentC2Coeff 3 = 6 := by
   norm_num [hypersurfaceFourfoldTangentC2Coeff]
 
+
+/-! ## Target-born K-charge surgery: an actual obstruction to naive twisting
+
+For a complex rank-two bundle, the universal discriminant polynomial is
+4*c₂-c₁². Tensoring by a line with first Chern class h changes the
+Chern coordinates to c₁+2h and c₂+h*c₁+h², but it DOES NOT
+change that discriminant. In contrast, adding an independent c₂
+hyperplane charge m*h² DOES change it while retaining the target
+primitive direction under an explicit algebraic hyperplane correction.
+
+These are universal characteristic-class polynomial identities in an
+arbitrary commutative ring, including the rational cohomology ring of any
+original smooth projective X. They are NOT a construction of a
+holomorphic bundle for every Hodge class: that unproved analytic
+integrability step is still required for the full Hodge conjecture.
+-/
+
+/-- Rank-two Chern discriminant, in the universal characteristic ring. -/
+def rankTwoDiscriminantPoly {R : Type*} [CommRing R]
+    (c1 c2 : R) : R :=
+  4 * c2 - c1 ^ 2
+
+/-- Twisting a rank-two source by ANY line bundle leaves its Chern
+discriminant unchanged. Hence arbitrarily positive twisting cannot
+repair a zero-discriminant Hermitian-Einstein obstruction. -/
+theorem rankTwoDiscriminant_twist_invariant
+    {R : Type*} [CommRing R] (c1 c2 h : R) :
+    rankTwoDiscriminantPoly (c1 + 2*h)
+      (c2 + h*c1 + h^2) = rankTwoDiscriminantPoly c1 c2 := by
+  unfold rankTwoDiscriminantPoly
+  ring
+
+/-- Injecting a genuinely independent ambient codimension-two charge,
+rather than tensoring the same bundle, changes the discriminant. -/
+theorem rankTwoDiscriminant_ambient_charge
+    {R : Type*} [CommRing R] (c1 c2 h m : R) :
+    rankTwoDiscriminantPoly c1 (c2 + m*h^2) =
+      rankTwoDiscriminantPoly c1 c2 + 4*m*h^2 := by
+  unfold rankTwoDiscriminantPoly
+  ring
+
+/-- Exact GST target packet: a topological rank-two source whose second
+Chern coordinate is N*alpha+m*h² retains the requested alpha after
+the known algebraic polarization correction. No target cycle selected. -/
+theorem rankTwoChargePacket_original_target
+    {R : Type*} [CommRing R] (alpha N m h : R) :
+    (N*alpha + m*h^2) - m*h^2 = N*alpha := by
+  ring
+
+/-- Twisting the CHARGE-AUGMENTED source introduces only the explicit
+algebraic ambient term (m+k²)h². This subtraction is valid in the
+actual rational cohomology ring of EVERY original projective X. -/
+theorem rankTwoChargedTwist_exact_primitive_recovery
+    {R : Type*} [CommRing R] (alpha N m k h : R) :
+    (N*alpha + m*h^2 + (k*h)^2) - (m+k^2)*h^2 =
+      N*alpha := by
+  ring
+
+/-- The distinct Chern-charge operation yields a nonzero positive
+polarization degree at every positive charge on an ample variety. -/
+theorem positive_ambient_charge_discriminant_degree
+    (m degree : ℚ) (hm : 0 < m) (hd : 0 < degree) :
+    0 < 4*m*degree := by
+  positivity
+
+#check rankTwoDiscriminant_twist_invariant
+#check rankTwoDiscriminant_ambient_charge
+#check rankTwoChargePacket_original_target
+#check rankTwoChargedTwist_exact_primitive_recovery
+#check positive_ambient_charge_discriminant_degree
+#print axioms rankTwoDiscriminant_twist_invariant
+#print axioms rankTwoChargedTwist_exact_primitive_recovery
+
 #check nativeTangentSecondChernPrimitive_ambient_zero
 #check cubicFourfoldTangentC2_ambient
 #print axioms nativeTangentSecondChernPrimitive_ambient_zero
