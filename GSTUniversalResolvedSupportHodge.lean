@@ -1958,6 +1958,7 @@ theorem nativeKoszulTargetCycle_primitive (a b : ℚ) :
   norm_num [hyperplaneCup,nativeKoszulTargetCycle,
     nativeKoszulCombination]
   <;> ring
+  <;> simp
 
 /-- The target-sensitive genuine algebraic K₀ source has exact
 squared-period pairing a²/3-ab/3+b²/3, derived by native
