@@ -55,6 +55,13 @@ Fix a closed affine embedding J(X) into C^M. Write d=dim_C J(X)-p. To upgrade th
 
 This is the *sharp real-dimension exponent*, NOT an unspecified arbitrary polynomial bound. The classical Bishop-Stoll algebraicity criterion is expected to imply that a pure d-dimensional closed complex-analytic subset with this growth is algebraic (verify its exact original source and assumptions before relying on it). If we actually construct an Oka determinant satisfying this estimate, Chow's affine bundle homotopy invariance would descend an algebraic cycle to ORIGINAL X with the required canonical class alpha/N. **No Hodge-specific uniform sharp growth bound has been proved.**
 
+**Sharp-exponent adversarial computation, independent of Hodge:** the transcendental closed analytic graph w=e^z in C² has complex dimension d=1. For R large enough, the strip log(R/4)<=Re z<=log(R/2), |Im z|<=R/2 lies in its intersection with the Euclidean ball B_R. The graph has induced area form (1+|e^z|²)dxdy. Its area on that strip alone is at least
+\[
+ R\int_{\log(R/4)}^{\log(R/2)}e^{2x}\,dx
+   =\frac{3}{32}R^3.
+\]
+Wolfram evaluated this integral EXACTLY as 3R³/32. Therefore an analytic nonalgebraic graph may have polynomial area growth while still violating the algebraicity-required **sharp exponent R^(2d)=R²**. This is a genuinely discriminating mass/growth test, not numerical sampling. For the proposed infinity mass construction, an arbitrary O(R^M) bound with M>2d DOES NOT suffice.
+
 **Decisive adversarial K3:** On a projective K3 of Picard rank one, choose integral beta outside H^(1,1). An Oka holomorphic line on J(X) with c1=pi^*beta admits an analytic divisor with that cohomology class. If that divisor were algebraic, Picard/Chow affine-bundle invariance would descend an algebraic divisor to X, contradicting Lefschetz (1,1). So this analytic divisor is necessarily NONALGEBRAIC. Under the Bishop-Stoll criterion it necessarily violates sharp O(R^(2d)) minimal growth. This proves that Oka exact holomorphicity alone CANNOT force the needed infinity mass bound; rational Hodge type must be used in the new bound.
 
 **Cohomological boundary residue is too weak:** pi^*beta and pi^*alpha extend in rational cohomology across the smooth projective compactification X times dual projective space, regardless of Hodge type. Hence their *linear* cohomological infinity residue already vanishes. The K3 counterexample shows such vanishing does not force algebraic closure or the growth estimate. A new nonlinear growth-control construction, not another residue reduction, is needed.
