@@ -89,6 +89,22 @@ noncomputable def ActualXCycleProjectionData.toProjectionPacket
     exact P.independently_geometric_duality i j
 
 
+/-- Fully concrete rational Chow-cycle construction on arbitrary X
+for every rational Hodge alpha. The output is not a Betti vector
+or a possibly nonalgebraic K3 tensor. -/
+noncomputable def ActualXCycleProjectionData.projectNative
+    (P : ActualXCycleProjectionData X H p ι)
+    (alpha : HodgeSpace X H p) :
+    codimensionCycles X.X p :=
+  projectedNativeCycle P.toProjectionPacket alpha
+
+/-- Exact leftover (p,p) Hodge class on the SAME original variety X. -/
+noncomputable def ActualXCycleProjectionData.primitiveResidual
+    (P : ActualXCycleProjectionData X H p ι)
+    (alpha : HodgeSpace X H p) :
+    HodgeSpace X H p :=
+  residualClass P.toProjectionPacket alpha
+
 /-! ## GST native geometric Gram construction on the ORIGINAL target X
 
 Upgrade the real Stage-2G native algebraic-cycle fiber using the newly
@@ -131,22 +147,6 @@ theorem ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_sp
 
 #check ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_span
 #print axioms ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_span
-
-/-- Fully concrete rational Chow-cycle construction on arbitrary X
-for every rational Hodge alpha. The output is not a Betti vector
-or a possibly nonalgebraic K3 tensor. -/
-noncomputable def ActualXCycleProjectionData.projectNative
-    (P : ActualXCycleProjectionData X H p ι)
-    (alpha : HodgeSpace X H p) :
-    codimensionCycles X.X p :=
-  projectedNativeCycle P.toProjectionPacket alpha
-
-/-- Exact leftover (p,p) Hodge class on the SAME original variety X. -/
-noncomputable def ActualXCycleProjectionData.primitiveResidual
-    (P : ActualXCycleProjectionData X H p ι)
-    (alpha : HodgeSpace X H p) :
-    HodgeSpace X H p :=
-  residualClass P.toProjectionPacket alpha
 
 theorem ActualXCycleProjectionData.algebraic_part_plus_residual
     (P : ActualXCycleProjectionData X H p ι)
