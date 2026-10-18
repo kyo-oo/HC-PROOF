@@ -1976,6 +1976,38 @@ theorem nativeKoszulTargetCycle_target_pairing (alpha : Middle) :
     nativeKoszulCombination,nativeKoszulP,nativeKoszulQ]
   ring
 
+
+/-- POSITIVE prescribed-target native perfect-complex pairing
+whenever either independent original-X abelian K₀ Koszul source
+sees the target. The positivity is an actual consequence of
+G=[[4,2],[2,4]], not a supplied spectral positivity hypothesis. -/
+theorem nativeKoszulTargetCycle_positive_of_detected
+    (alpha : Middle)
+    (hDetected :
+      intersection alpha nativeKoszulP ≠ 0 ∨
+      intersection alpha nativeKoszulQ ≠ 0) :
+    0 < intersection alpha
+      (nativeKoszulTargetCycle
+        (intersection alpha nativeKoszulP)
+        (intersection alpha nativeKoszulQ)) := by
+  rw [nativeKoszulTargetCycle_target_pairing]
+  let a : ℚ := intersection alpha nativeKoszulP
+  let b : ℚ := intersection alpha nativeKoszulQ
+  change a ≠ 0 ∨ b ≠ 0 at hDetected
+  change 0 < (a^2-a*b+b^2)/3
+  rcases hDetected with ha | hb
+  · have ha2 : 0 < a^2 := sq_pos_of_ne_zero ha
+    have hs : 0 ≤ (a-b)^2 := sq_nonneg _
+    have hb2 : 0 ≤ b^2 := sq_nonneg _
+    nlinarith
+  · have hb2 : 0 < b^2 := sq_pos_of_ne_zero hb
+    have hs : 0 ≤ (a-b)^2 := sq_nonneg _
+    have ha2 : 0 ≤ a^2 := sq_nonneg _
+    nlinarith
+
+#check nativeKoszulTargetCycle_positive_of_detected
+#print axioms nativeKoszulTargetCycle_positive_of_detected
+
 #check nativeKoszul_two_source_gram_determinant
 #check nativeKoszulTargetCycle_P_period
 #check nativeKoszulTargetCycle_Q_period
