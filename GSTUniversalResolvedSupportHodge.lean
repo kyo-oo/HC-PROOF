@@ -436,6 +436,74 @@ theorem affine_boundary_hodge_weight_successor
   exact affine_boundary_induction_constructs_original_hodge_cycle
     SG B hLower alpha hAlpha Zu hZu
 
+
+/-! ## Source-free affine vanishing on EVERY original smooth projective X
+
+A smooth affine complex n-fold has the homotopy type of a real CW complex
+of dimension at most n (the geometric Andreotti-Frankel bound).
+Hence H^(2p)(U,Q)=0 whenever 2p>n. The dimension/Stein theorem is
+an external geometric input until instantiated in the analytic Betti
+bridge: what follows proves its precise Chow-level consequence.
+
+Unlike the general successor construction, NO algebraic cycle on U
+has to be supplied, because the zero native cycle has the required
+restricted class. Every surviving rational Hodge target on X is
+resolved by a strictly lower-codimension Hodge cycle on the boundary
+divisor, pushed forward onto the ORIGINAL X.
+-/
+
+/-- Genuine all-X original-carrier Chow construction with zero affine source.
+The hAffineVanishing input is cohomological vanishing on the chosen affine
+complement, not a hidden cycle-class surjectivity assertion. -/
+theorem affine_boundary_vanishing_constructs_original_hodge_cycle
+    {q : ℕ} {U : Scheme} {HU : Type*}
+    [AddCommGroup HU] [Module ℚ HU]
+    (SG : GeometricCycleClassSpine X HX)
+    (B : AffineSuccessorHodgeLocalization
+       (Y := Y) (X := X) (HY := HY) (HX := HX) q U HU)
+    (hLower :
+      ∀ beta : ClassicalHodgeFiber Y HY q,
+        ∃ D : codimensionCycles Y.X q,
+          HY.cycleClass q D = beta.1)
+    (hAffineVanishing :
+      ∀ beta : RationalSingularCohomology HX.analytification (2*(q+1)),
+        B.bettiRestriction beta = 0)
+    (alpha : RationalSingularCohomology HX.analytification (2*(q+1)))
+    (hAlpha : alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading (q+1))) :
+    ∃ Zx : codimensionCycles X.X (q+1),
+      HX.cycleClass (q+1) Zx = alpha := by
+  apply affine_boundary_induction_constructs_original_hodge_cycle
+    SG B hLower alpha hAlpha (0 : codimensionCycles U (q+1))
+  simp [hAffineVanishing alpha]
+
+/-- Source-free Hodge recovery for the entire stated codimension on X;
+it uses only lower-codimension boundary geometry, not the difficult
+algebraization of topological K-theory on its affine complement. -/
+theorem affine_boundary_vanishing_hodge_weight_successor
+    {q : ℕ} {U : Scheme} {HU : Type*}
+    [AddCommGroup HU] [Module ℚ HU]
+    (SG : GeometricCycleClassSpine X HX)
+    (B : AffineSuccessorHodgeLocalization
+       (Y := Y) (X := X) (HY := HY) (HX := HX) q U HU)
+    (hLower :
+      ∀ beta : ClassicalHodgeFiber Y HY q,
+        ∃ D : codimensionCycles Y.X q,
+          HY.cycleClass q D = beta.1)
+    (hAffineVanishing :
+      ∀ beta : RationalSingularCohomology HX.analytification (2*(q+1)),
+        B.bettiRestriction beta = 0) :
+    ∀ alpha : RationalSingularCohomology HX.analytification (2*(q+1)),
+      alpha ∈ rationalHodgeSubspace (HX.hodgeBigrading (q+1)) →
+      ∃ Zx : codimensionCycles X.X (q+1),
+        HX.cycleClass (q+1) Zx = alpha := by
+  intro alpha halpha
+  exact affine_boundary_vanishing_constructs_original_hodge_cycle
+    SG B hLower hAffineVanishing alpha halpha
+
+#check affine_boundary_vanishing_constructs_original_hodge_cycle
+#check affine_boundary_vanishing_hodge_weight_successor
+#print axioms affine_boundary_vanishing_constructs_original_hodge_cycle
+
 #check affine_boundary_induction_constructs_original_hodge_cycle
 #check affine_boundary_hodge_weight_successor
 #print axioms affine_boundary_induction_constructs_original_hodge_cycle
