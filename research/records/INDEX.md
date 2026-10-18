@@ -37,6 +37,8 @@
 **Latest route decision:** [Wolfram-verified holomorphic-form source-selection gate](2026-10-17-fano-source-selection-holomorphic-gate.md) — finite domination from the current solved Fano source class cannot cover every original smooth projective variety.
 
 
+- [All-X affine localization and lower/middle primitive survival](2026-10-18-all-varieties-affine-primitive-source-boundary.md) — source-free actual-X Gysin reconstruction in affine-vanishing degrees and rational primitive restriction injectivity in the hard range; exact cubic-fourfold sharpness check; **Lean full integration green [#39100222168](https://github.com/kyo-oo/HC-PROOF/actions/runs/39100222168)** at `ab3bbb4135051d42f5eb435d5172af5e05191af4`. This isolates the unproved original-X lowest-weight affine Chow/K0 source birth; no Gate 3 closure claimed.
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
