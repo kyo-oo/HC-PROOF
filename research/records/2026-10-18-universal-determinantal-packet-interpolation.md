@@ -232,6 +232,26 @@ Indeed, the natural projective completion is the smooth quadric \(\bar Q_2=\{XY=
 
 On the first nontrivial case Q₂, the polynomial idempotent P supplies this extra finite-growth certificate explicitly. For arbitrary primitive alpha the need is a *target-dependent finite-growth holomorphic projector* (or another actual algebraic coherent complex) without assuming such a projector as input. Proving universal existence of that certificate for exactly the rational (p,p) targets would produce the sought Chow cycle; this project has not proved it. The explicit Q₂ calculation rules out fake Hodge-filtration comparisons in a proposed proof.
 
+## 5e. GST noncommutative ghost: the Hodge trace can vanish while curvature blocks integrability
+
+There is a second all-X structural reason that merely checking scalar Hodge/Chern characters cannot convert the target-born bundle into a holomorphic bundle. In a local complex coordinate chart \(\mathbb C^2\), start on the SMOOTH trivial rank-two bundle with the (0,1)-operator
+\[
+ D_{\bar 1}=\partial_{\bar z_1}+A,\qquad
+ D_{\bar 2}=\partial_{\bar z_2}+B,\quad
+ A=\begin{pmatrix}0&1\\0&0\end{pmatrix},\
+ B=\begin{pmatrix}0&0\\1&0\end{pmatrix}.
+\]
+The actual nonabelian Maurer–Cartan curvature is
+\[
+ [D_{\bar1},D_{\bar2}]=[A,B]
+     =\operatorname{diag}(1,-1)\ne0.
+\]
+Its **scalar first trace vanishes**, \(\mathrm{tr}[A,B]=0\), but its determinant is -1, its two eigenvalues are ±1, its rank is 2, and \(\mathrm{tr}([A,B]^2)=2\). Wolfram verified all five exact assertions. Any putative locally (0,1)-parallel section must satisfy \([A,B]s=0\), hence \(s=0\). There are NO nonzero local flat sections for this fixed operator, despite underlying smooth bundle being topologically trivial and its rational Chern classes vanishing.
+
+Tensoring with the (0,1)-operator of any holomorphic algebraic line bundle changes the connection by a scalar integrable (0,1)-operator, whose extra (0,2)-curvature is zero; the nonabelian commutator remains the same. Therefore even arbitrary positive twists do NOT fix this chosen operator's integrability.
+
+This is NOT a proof that the underlying trivial bundle admits no alternate holomorphic structure: of course it does. It is a decisive obstruction to the **specific attempted solver** "trace/period equations vanish ⇒ the constructed arbitrary connection becomes holomorphic after positive twisting." Scalar Chern-Weil invariants and rational Hodge conditions cannot automatically eliminate a noncommutative End(E)-valued (0,2) curvature ghost. A valid all-X algebraization must vary the full holomorphic structure or use signed coherent/perfect-complex geometry, and must solve the actual Maurer–Cartan equation, not only its trace.
+
 ## 6. Honest remaining nonlinear construction challenge
 
 To **solve** the user-requested all-varieties Hodge theorem using the new finite packet, one must construct for each X,p,Hodge-alpha enough HONEST complex-analytic/algebraic determinants A_k on the SAME original X whose canonical classes are the P(k), or build an independent holomorphic/coherent perfect-complex avatar realizing the target-born virtual K-class. The Hodge condition is absent from Steps 1–3 and MUST enter this new map from smooth determinant geometry into complex analyticity. Ordinary smooth transversality cannot provide it, HYM polystability is impossible for nonzero normalized primitive packages, and simply applying the existing algebraic GST orbit to existing algebraic seeds cannot manufacture the missing direction.
