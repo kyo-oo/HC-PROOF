@@ -1265,6 +1265,97 @@ theorem targetCoupledVirtualSource_integer_denominator_certificate
   intro i hi
   rw [smul_smul, hWeights i]
 
+
+/-! ## GST FINITE-SOURCE DETECTION COMPLETENESS AND NULLSPACE
+
+The exact same target-sensitive K₀ source E_alpha has a stronger
+interpretation than one positive period: its true algebraic Chern
+class vanishes IF AND ONLY IF every independently geometric
+source period Q(alpha,z_i) vanishes. This is a *precise theorem about
+a fixed genuine source family*, with no assumed ability to
+construct sources for every missing Hodge direction.
+
+It gives a falsifiable source-expansion invariant: the only
+undetected rational Hodge targets form the common orthogonal
+kernel of the current actual perfect-complex source periods.
+Even in indefinite rational intersection geometry the identity
+holds because the test uses rational squares, not Q(alpha,alpha).
+-/
+
+/-- A target-selected GST algebraic K₀ frame has ZERO Hodge class
+exactly on those targets which every existing genuinely geometric
+perfect-complex source fails to detect. -/
+theorem targetCoupledVirtualSource_class_zero_iff_all_periods_zero
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H) :
+    chowBetti
+        (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha) = 0 ↔
+      ∀ i : Fin n,
+        (Q alpha) (chowBetti (primitiveK (sources i))) = 0 := by
+  constructor
+  · intro hZero i
+    by_contra hNonzero
+    have hPositive :=
+      targetCoupledVirtualSource_positive_of_detected
+        primitiveK chowBetti Q sources alpha i hNonzero
+    have hPairZero :
+        (Q alpha) (chowBetti
+          (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha)) =
+          0 := by simp [hZero]
+    exact (ne_of_gt hPositive) hPairZero
+  · intro hAll
+    have hZero :
+        targetCoupledVirtualSource primitiveK chowBetti Q sources alpha =
+          0 := by
+      simp [targetCoupledVirtualSource, hAll]
+    simp [hZero]
+
+/-- The new GST source is nonzero in RATIONAL ALGEBRAIC K₀ whenever
+one original-X primitive period detects the prescribed Hodge alpha.
+No Hodge-to-perfect-complex choice is hidden in the conclusion. -/
+theorem targetCoupledVirtualSource_nonzero_of_period
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H) (i : Fin n)
+    (hDetected :
+      (Q alpha) (chowBetti (primitiveK (sources i))) ≠ 0) :
+    targetCoupledVirtualSource primitiveK chowBetti Q sources alpha ≠ 0 := by
+  intro hZero
+  have hClass : chowBetti
+      (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha) = 0 := by
+    simp [hZero]
+  have hall :=
+    (targetCoupledVirtualSource_class_zero_iff_all_periods_zero
+      primitiveK chowBetti Q sources alpha).mp hClass
+  exact hDetected (hall i)
+
+/-- The target-sensitive GST perfect-complex frame is self-adjoint
+for the TRUE rational intersection period pairing: swapping the
+two Hodge targets does not alter the measured source pairing.
+This is a finite rational identity for arbitrary ranks and does
+not assume that Q itself is positive definite. -/
+theorem targetCoupledVirtualSource_pairing_symmetric
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha beta : H) :
+    (Q alpha) (chowBetti
+      (targetCoupledVirtualSource primitiveK chowBetti Q sources beta)) =
+    (Q beta) (chowBetti
+      (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha)) := by
+  simp [targetCoupledVirtualSource, map_sum, map_smul, mul_comm]
+
+#check targetCoupledVirtualSource_class_zero_iff_all_periods_zero
+#check targetCoupledVirtualSource_nonzero_of_period
+#check targetCoupledVirtualSource_pairing_symmetric
+#print axioms targetCoupledVirtualSource_class_zero_iff_all_periods_zero
+
 #check targetCoupledVirtualSource_integer_denominator_certificate
 #print axioms targetCoupledVirtualSource_integer_denominator_certificate
 
