@@ -668,6 +668,39 @@ theorem split_arbitrary_birth_missing_source_survives
           rw [hZ]
     _ = alpha := R.backAfterInclude e i alpha
 
+/-- **UNBOUNDED ROOT-ANCESTRY NATIVE DEFECT LAW.**
+For a GST root with a genuinely missing Hodge direction, EVERY world
+whose self-expanding causal ancestry includes that root retains a
+constructively specified missing class, provided all births come with
+actual split native/Hodge geometry. The target class is constructed by
+the successive GEOMETRIC Hodge inclusions, not postulated as missing.
+
+This is an induction on the ORIGINAL GST universe's arbitrarily deep,
+arbitrary-arity world-birth provenance, rather than a two-source model.
+It proves that split births alone cannot erase a root's native deficit:
+a genuinely novel geometric Hodge source must enter through an
+independently realized nonsplit event or a complete root world. -/
+theorem missing_root_direction_survives_all_split_descendants
+    (R : SplitGeometricCycleBirthRealization C)
+    (s : Sector)
+    (alpha : C.Law (C.root s))
+    (hMissing : ∀ Z : C.State (C.root s),
+      R.cycleClass (C.root s) Z ≠ alpha)
+    {W : C.World}
+    (hW : SelfExpandingCosmos.UsesRoot C s W) :
+    ∃ beta : C.Law W,
+      ∀ Z : C.State W, R.cycleClass W Z ≠ beta := by
+  induction hW with
+  | root =>
+      exact ⟨alpha, hMissing⟩
+  | birth e i h ih =>
+      obtain ⟨beta, hbeta⟩ := ih
+      exact ⟨R.includeHodge e i beta,
+        split_arbitrary_birth_missing_source_survives R e i beta hbeta⟩
+
+#check missing_root_direction_survives_all_split_descendants
+#print axioms missing_root_direction_survives_all_split_descendants
+
 #check SplitGeometricCycleBirthRealization
 #check split_arbitrary_birth_complete_iff_every_source
 #check split_arbitrary_birth_missing_source_survives
