@@ -894,4 +894,122 @@ end GSTAffineCliffordAlgebraization
 #check missing_hodge_class_avoids_resolved_support
 #print axioms resolved_support_hodge_class_is_algebraic
 
+
+/-! ## GST UNIVERSAL ALGEBRAIC K₀ SOURCE EXTRACTION ON ORIGINAL X
+
+Unlike the earlier source theorem starting with a GIVEN codimension-p
+algebraic cycle, this construction starts from an algebraic perfect
+complex / virtual vector bundle E on ORIGINAL X. Algebraic K₀(X)_Q
+is an independently geometric source space; choosing E never
+asserts that its Chern class equals the target rational Hodge alpha.
+
+For a genuine finite flat projective f:X→P^n let
+  u = [f_* O_X] ∈ K₀(P^n)_Q
+be the vector bundle of rank deg f. This is invertible in rational
+K₀(P^n), because the augmentation ideal is nilpotent.
+The genuine projection formula gives f_* f^*(a) = u*a.
+Define on actual rational algebraic K₀(X):
+  PK(E) = E - f^*(u^{-1} f_* E).
+Then f_* PK(E)=0, PK²=PK and its image is EXACTLY ker(f_*).
+
+GROTHENDIECK-RIEMANN-ROCH supplies an ORIGINAL-X algebraic
+codimension-p rational CHOW class, for every p:
+  Z_p(E) = [ch(PK(E)) Td(T_X-f^*T_{P^n})]_p.
+The exact GRR formula gives f_* Z_p(E)=0 for every p.
+This uses a TRUE vector bundle / coherent K-class as geometric
+source, not an arbitrary Hodge-class operator.
+
+The below Lean theorem kernel-verifies the *general algebraic
+projection/idempotent/kernel splitting* without postulating
+the desired Chow representative. Identifying its abstract
+R-linear input with the official algebraic K₀, and applying
+Chern character/Todd GRR naturality, remain separate
+geometric-realization inputs; no final Hodge surjectivity follows
+merely from the existence of PK.
+-/
+
+namespace GSTNativeFiniteFlatK0Extraction
+
+variable {R M : Type*} [CommRing R]
+  [AddCommGroup M] [Module R M]
+
+/-- Universal normalized algebraic K₀ finite-flat source
+construction; uInv is the actual inverse of [f_*O_X] in K₀(P^n)_Q. -/
+def normalizedVirtualPrimitive
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (uInv : R) (E : M) : M :=
+  E - pull (uInv * push E)
+
+/-- Native K₀ proper pushforward VANISHES on the independently
+constructed finite-projection primitive virtual source. -/
+theorem normalizedVirtualPrimitive_push_zero
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (u uInv : R)
+    (hInv : u * uInv = 1)
+    (hProjection : ∀ a : R, push (pull a) = u * a)
+    (E : M) :
+    push (normalizedVirtualPrimitive push pull uInv E) = 0 := by
+  dsimp [normalizedVirtualPrimitive]
+  rw [map_sub, hProjection]
+  calc
+    push E - u * (uInv * push E) =
+        push E - (u * uInv) * push E := by ring
+    _ = 0 := by rw [hInv]; ring
+
+/-- Every virtual bundle ALREADY in the genuine K₀ trace kernel
+is unchanged by the new normalized projection. -/
+theorem normalizedVirtualPrimitive_fixes_kernel
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (uInv : R) (E : M)
+    (hE : push E = 0) :
+    normalizedVirtualPrimitive push pull uInv E = E := by
+  simp [normalizedVirtualPrimitive, hE]
+
+/-- The corrected K₀ algebraic birth is IDEMPOTENT. -/
+theorem normalizedVirtualPrimitive_idempotent
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (u uInv : R)
+    (hInv : u * uInv = 1)
+    (hProjection : ∀ a : R, push (pull a) = u * a)
+    (E : M) :
+    normalizedVirtualPrimitive push pull uInv
+      (normalizedVirtualPrimitive push pull uInv E) =
+        normalizedVirtualPrimitive push pull uInv E := by
+  exact normalizedVirtualPrimitive_fixes_kernel push pull uInv
+    (normalizedVirtualPrimitive push pull uInv E)
+    (normalizedVirtualPrimitive_push_zero
+      push pull u uInv hInv hProjection E)
+
+/-- EXACT universal native algebraic K₀ trace-kernel SOURCE
+characterization: every trace-zero virtual source is the image
+of a geometrically constructed normalized perfect complex.
+No Hodge-target preimage is an input. -/
+theorem normalizedVirtualPrimitive_image_iff_trace_zero
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (u uInv : R)
+    (hInv : u * uInv = 1)
+    (hProjection : ∀ a : R, push (pull a) = u * a)
+    (E : M) :
+    (∃ W : M, normalizedVirtualPrimitive push pull uInv W = E) ↔
+      push E = 0 := by
+  constructor
+  · rintro ⟨W, rfl⟩
+    exact normalizedVirtualPrimitive_push_zero
+      push pull u uInv hInv hProjection W
+  · intro hE
+    exact ⟨E, normalizedVirtualPrimitive_fixes_kernel
+      push pull uInv E hE⟩
+
+#check normalizedVirtualPrimitive_push_zero
+#check normalizedVirtualPrimitive_idempotent
+#check normalizedVirtualPrimitive_image_iff_trace_zero
+#print axioms normalizedVirtualPrimitive_image_iff_trace_zero
+
+end GSTNativeFiniteFlatK0Extraction
+
 end GSTUniversalResolvedSupportHodge
