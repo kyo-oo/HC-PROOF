@@ -985,6 +985,76 @@ theorem positive_ambient_charge_discriminant_degree
     0 < 4*m*degree := by
   positivity
 
+
+/-! ## Every-rank, every-codimension charged Chern-class protection
+
+The splitting-principle identity for a rank-r vector bundle is
+  c_p(E ⊗ L^k) = Σ_{j=0}^{p} choose(r-j,p-j) (k h)^(p-j) c_j(E).
+If each lower source c_j(E)=m_j*h^j is ambient and only c_p(E)
+has an independent primitive component N*alpha, the formula below
+proves the ENTIRE lower Chern contribution is an explicitly known
+ambient multiple of h^p. Thus ANY number of independent ambient
+K-charges can be introduced to avoid unstable geometric constraints
+without changing the desired primitive target after subtraction.
+
+These are the universal cohomology-ring identities; existence of a
+HOLomorphic E with the requested Chern coordinates remains open and
+cannot be inserted as a hidden surjectivity hypothesis.
+-/
+
+/-- One graded-characteristic charge (m_j h^j) contributes only
+to the algebraic top-degree hyperplane direction after twisting. -/
+theorem allCodimensionChargeTerm_ambient
+    {R : Type*} [CommRing R]
+    (p j : Nat) (hj : j ≤ p) (m k h : R) :
+    (k*h)^(p-j) * (m*h^j) =
+      (k^(p-j)*m)*h^p := by
+  rw [mul_pow]
+  calc
+    (k^(p-j)*h^(p-j)) * (m*h^j) =
+        (k^(p-j)*m)*(h^(p-j)*h^j) := by ring
+    _ = (k^(p-j)*m)*h^p := by
+      rw [← pow_add, Nat.sub_add_cancel hj]
+
+/-- Exact universal all-rank GST multicharge formula in a commutative
+characteristic-class ring, hence applicable on every original X. -/
+theorem allCodimensionMultiCharge_ambient_formula
+    {R : Type*} [CommRing R]
+    (r p : Nat) (m : Nat → R) (N alpha k h : R) :
+    (∑ j ∈ Finset.range p,
+      ((r-j).choose (p-j) : R) *
+        (k*h)^(p-j) * (m j*h^j)) + N*alpha =
+    (∑ j ∈ Finset.range p,
+      ((r-j).choose (p-j) : R) *
+        k^(p-j) * m j) * h^p + N*alpha := by
+  congr 1
+  rw [Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro j hj
+  have hjle : j ≤ p := Nat.le_of_lt (Finset.mem_range.mp hj)
+  rw [allCodimensionChargeTerm_ambient p j hjle (m j) k h]
+  ring
+
+/-- The native primitive cohomology target is recovered exactly
+after removing the algebraic multicharge hyperplane packet.
+This statement makes NO assertion that a holomorphic source exists. -/
+theorem allCodimensionMultiCharge_exact_recovery
+    {R : Type*} [CommRing R]
+    (r p : Nat) (m : Nat → R) (N alpha k h : R) :
+    ((∑ j ∈ Finset.range p,
+      ((r-j).choose (p-j) : R) *
+        (k*h)^(p-j) * (m j*h^j)) + N*alpha) -
+      (∑ j ∈ Finset.range p,
+        ((r-j).choose (p-j) : R) *
+          k^(p-j) * m j) * h^p = N*alpha := by
+  rw [allCodimensionMultiCharge_ambient_formula]
+  ring
+
+#check allCodimensionChargeTerm_ambient
+#check allCodimensionMultiCharge_ambient_formula
+#check allCodimensionMultiCharge_exact_recovery
+#print axioms allCodimensionMultiCharge_exact_recovery
+
 #check rankTwoDiscriminant_twist_invariant
 #check rankTwoDiscriminant_ambient_charge
 #check rankTwoChargePacket_original_target
