@@ -1032,8 +1032,14 @@ theorem allCodimensionMultiCharge_ambient_formula
   apply Finset.sum_congr rfl
   intro j hj
   have hjle : j ≤ p := Nat.le_of_lt (Finset.mem_range.mp hj)
-  rw [allCodimensionChargeTerm_ambient p j hjle (m j) k h]
-  ring
+  have hterm := allCodimensionChargeTerm_ambient p j hjle (m j) k h
+  calc
+    ((r-j).choose (p-j) : R) * (k*h)^(p-j) * (m j*h^j) =
+        ((r-j).choose (p-j) : R) *
+          ((k*h)^(p-j) * (m j*h^j)) := by ring
+    _ = ((r-j).choose (p-j) : R) * k^(p-j) * m j * h^p := by
+      rw [hterm]
+      ring
 
 /-- The native primitive cohomology target is recovered exactly
 after removing the algebraic multicharge hyperplane packet.
