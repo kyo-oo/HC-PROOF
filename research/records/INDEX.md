@@ -1,5 +1,7 @@
 # GST Hodge Research — Construction Program
 
+- [GST unseeded two-polarization middle Chow/K₀ birth on nonsplit finite covers](2026-10-19-gst-unseeded-two-polarization-middle-chow-birth.md) — uniform original-X primitive algebraic class from two geometric polarizations on arbitrary smooth finite covers of m-fold products, with exact signed norm (m+1) times top intersection and explicit perfect K₀ source; all-X target residual coupling remains a separate Gate 3 requirement.
+
 - [GST cross-polarization K₀ source birth and exact first-Chern Todd cancellation](2026-10-19-gst-cross-polarization-k0-todd-birth.md) — native finite-flat projector annihilates base pulls, detects genuinely transverse independent geometric line-bundle sources, and cancels truncated Todd defects; explicit P¹×P¹ primitive class has signed norm 1/2. Higher-codimension universal target coupling remains the construction objective.
 
 - [Mathbox GST arbitrary-genus diagonal/K₀ graph births](2026-10-19-gst-all-genus-diagonal-k0-primitive-source-birth.md) — independently constructed algebraic perfect complexes on products of arbitrary positive-genus curve pairs give 2^m orthogonal original-X primitive Chow sources, with exact genus-weighted period compiler; genuine source rank at least C_m+2^m−1. [Graph tensor Lean #39169476204](https://github.com/kyo-oo/HC-PROOF/actions/runs/39169476204) passed; expanded weighted-period and Todd jobs use revision-matched later workflows.
