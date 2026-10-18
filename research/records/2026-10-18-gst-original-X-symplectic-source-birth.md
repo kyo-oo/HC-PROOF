@@ -93,6 +93,8 @@ Its two oriented real tangent vectors in (x_1,y_1,x_2,y_2) are v_x=(1,0,\epsilon
 
 This disproves the tempting inference "arbitrarily accurate approximately-holomorphic -> genuine holomorphic at some finite k." The actual route needs a new *exact* complex-integrability/surgery mechanism. It also shows why a vanishing *cohomological* Hodge defect alone cannot be identified with a vanishing *geometric tangent-plane* defect.
 
+**Hodge condition must enter at the complex-calibration gate.** This source method applies equally to *non-Hodge* rational cohomology classes. On a projective K3 surface with Picard rank one, choose an integral class beta in H^2(X,Z) outside the Néron–Severi lattice. A topological line bundle E with c1(E)=beta exists, and (under the cited approximately holomorphic existence theorem) sufficiently large k produces a symplectic divisor-type surface S_k with [S_k] class beta+k h. That class is NOT (1,1), hence S_k cannot be a holomorphic/algebraic curve despite arbitrarily large k. This is a genuine categorical firewall: the new source machinery cannot imply algebraicity without *using* the given rational Hodge hypothesis in a geometric rigidity theorem. It does not refute such a Hodge-restricted theorem.
+
 ## Verdict and next executable geometric move
 
 This is a **real source-construction attempt on EVERY original X**, replacing an ambient-quadric source world with a non-square-zero BU(p) target-born geometric source, and introducing an exact dual primitive readout. Its completed algebra is rigorous; the analytic existence/unstable bundle classification input is not independently source-certified here; and the resulting sheet is only smooth/symplectic, NOT complex algebraic.
