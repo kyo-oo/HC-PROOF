@@ -563,6 +563,117 @@ theorem generated_worlds_have_native_cycles
   intro I src target e hsrc
   exact every_world_birth_has_native_realization R e hsrc
 
+/-! ## GST exact arbitrary-source split geometric birth
+
+The original ontology permits an arbitrary dependent family of source worlds,
+each with its own State and Law. The existing constructive theorem moves
+actual native witnesses FORWARD from source worlds into a newly born world.
+
+The previous reverse-defect law covered only TWO fixed vector-space sources.
+Here the native and Hodge BACKWARD maps are made geometric data at EVERY
+dependent source of ONE birth, with a checked embedding/retraction for that
+source. The result is an exact, all-arity if-and-only-if theorem for actual
+native representability, plus an explicit certificate that a missing source
+direction CANNOT disappear in an allegedly completed newborn world.
+
+This is an upgrade of GST WORLD-BIRTH mathematics, not a claim that every
+arbitrary algebraic variety admits a split birth. In the Hodge application
+the backward maps must be real Chow/Gysin or projective-bundle maps, not
+freely selected inverses to the Hodge cycle-class map.
+-/
+
+/-- Arbitrarily many DIFFERENT geometric source worlds, with genuine
+cycle- and Hodge-level retractions for each individual source.
+
+The backward native readout is defined on ALL target native cycles and
+commutes with the actual source and target cycle-class maps. The Hodge
+embedding has an explicit left inverse; no target algebraic preimage
+or unknown native Hodge witness occurs among the additional fields. -/
+structure SplitGeometricCycleBirthRealization
+    (C : SelfExpandingCosmos.{u,v,w,z})
+    extends GeometricCycleBirthRealization C where
+  backNative :
+    ∀ {I : Type u} {src : I → C.World} {target : C.World},
+      (e : C.Birth src target) → (i : I) →
+      C.State target → C.State (src i)
+  backHodge :
+    ∀ {I : Type u} {src : I → C.World} {target : C.World},
+      (e : C.Birth src target) → (i : I) →
+      C.Law target → C.Law (src i)
+  includeHodge :
+    ∀ {I : Type u} {src : I → C.World} {target : C.World},
+      (e : C.Birth src target) → (i : I) →
+      C.Law (src i) → C.Law target
+  backSound :
+    ∀ {I : Type u} {src : I → C.World} {target : C.World},
+      (e : C.Birth src target) → (i : I) →
+      (Z : C.State target),
+      cycleClass (src i) (backNative e i Z) =
+        backHodge e i (cycleClass target Z)
+  backAfterInclude :
+    ∀ {I : Type u} {src : I → C.World} {target : C.World},
+      (e : C.Birth src target) → (i : I) →
+      (alpha : C.Law (src i)),
+      backHodge e i (includeHodge e i alpha) = alpha
+
+/-- **ARBITRARY-ARITY GST WORLD-BIRTH COMPLETENESS LAW.**
+Under independently geometric split native/Hodge birth maps, the
+newborn world has algebraic witnesses for ALL its Hodge laws exactly
+when EVERY source world does. The worlds can have unrelated cycle
+types and law types; there is no finite arity/rank/dimension bound. -/
+theorem split_arbitrary_birth_complete_iff_every_source
+    (R : SplitGeometricCycleBirthRealization C)
+    {I : Type u} {src : I → C.World} {target : C.World}
+    (e : C.Birth src target) :
+    (∀ alpha : C.Law target,
+      ∃ Z : C.State target, R.cycleClass target Z = alpha) ↔
+    (∀ i : I, ∀ alpha : C.Law (src i),
+      ∃ Z : C.State (src i),
+        R.cycleClass (src i) Z = alpha) := by
+  constructor
+  · intro hTarget i alpha
+    obtain ⟨Z, hZ⟩ := hTarget (R.includeHodge e i alpha)
+    refine ⟨R.backNative e i Z, ?_⟩
+    calc
+      R.cycleClass (src i) (R.backNative e i Z) =
+          R.backHodge e i (R.cycleClass target Z) :=
+            R.backSound e i Z
+      _ = R.backHodge e i (R.includeHodge e i alpha) := by
+            rw [hZ]
+      _ = alpha := R.backAfterInclude e i alpha
+  · intro hSources alpha
+    exact every_world_birth_has_native_realization
+      R.toGeometricCycleBirthRealization e hSources alpha
+
+/-- An ACTUAL missing algebraic direction in ANY one source of an
+arbitrary-arity GST world birth survives as a missing direction in
+the born world. A false all-varieties conclusion can no longer be
+hidden behind infinitely many source channels or nested universes. -/
+theorem split_arbitrary_birth_missing_source_survives
+    (R : SplitGeometricCycleBirthRealization C)
+    {I : Type u} {src : I → C.World} {target : C.World}
+    (e : C.Birth src target) (i : I)
+    (alpha : C.Law (src i))
+    (hMissing : ∀ Z : C.State (src i),
+      R.cycleClass (src i) Z ≠ alpha) :
+    ∀ Z : C.State target,
+      R.cycleClass target Z ≠ R.includeHodge e i alpha := by
+  intro Z hZ
+  apply hMissing (R.backNative e i Z)
+  calc
+    R.cycleClass (src i) (R.backNative e i Z) =
+        R.backHodge e i (R.cycleClass target Z) :=
+          R.backSound e i Z
+    _ = R.backHodge e i (R.includeHodge e i alpha) := by
+          rw [hZ]
+    _ = alpha := R.backAfterInclude e i alpha
+
+#check SplitGeometricCycleBirthRealization
+#check split_arbitrary_birth_complete_iff_every_source
+#check split_arbitrary_birth_missing_source_survives
+#print axioms split_arbitrary_birth_complete_iff_every_source
+#print axioms split_arbitrary_birth_missing_source_survives
+
 #check GeometricCycleBirthRealization
 #check every_world_birth_has_native_realization
 #check generated_worlds_have_native_cycles
