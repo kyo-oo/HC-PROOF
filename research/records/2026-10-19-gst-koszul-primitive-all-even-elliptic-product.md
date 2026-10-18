@@ -43,8 +43,8 @@ These sources have a stronger property than simply having a nonzero leading prim
 \[
 \mathrm{ch}(\mathcal E_M)=Z_M\quad\text{with no other Chow degrees.}
 \]
-Choose a finite flat projective projection \(f:X\to\mathbb P^{2m}\) with \(H=f^*O(1)=\sum_i x_i\). Since \(H Z_M=0\), one has
-\(f_*Z_M=0\in CH^m(\mathbb P^{2m})_\mathbb Q\): the sole coefficient of the degree-m projective class is \(\int_X Z_M H^m=0\). For an abelian variety \(T_X\) is algebraically trivial, hence \(\mathrm{Td}(T_X)=1\). Genuine GRR says
+The ample \(H=\sum_i x_i\) need NOT be globally generated because a degree-one line bundle on an elliptic curve has only one section. Choose instead a sufficiently positive integer \(k\) (for instance \(k\ge3\) on every factor) so that \(kH\) is very ample, and take a genuine finite linear projection \(f:X\to\mathbb P^{2m}\) with \(f^*O(1)=kH\). Since \(H Z_M=0\), one has \((kH)^m Z_M=0\) and hence
+\(f_*Z_M=0\in CH^m(\mathbb P^{2m})_\mathbb Q\): the sole projective Chow coefficient is \(\int_X Z_M (kH)^m=0\). For an abelian variety \(T_X\) is algebraically trivial, hence \(\mathrm{Td}(T_X)=1\). Genuine GRR says
 \[
 \mathrm{ch}(f_*\mathcal E_M)\,\mathrm{Td}(T_{\mathbb P^{2m}})
 =f_*(\mathrm{ch}(\mathcal E_M)\,\mathrm{Td}(T_X))
