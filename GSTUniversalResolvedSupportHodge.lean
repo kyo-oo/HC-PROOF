@@ -1141,6 +1141,39 @@ theorem finiteIntegralAdjugate_clears_inverse
     _ = (v*(d+eta))*finiteIntegralAdjugate d eta N := by ring
     _ = finiteIntegralAdjugate d eta N := by rw [hLeft]; ring
 
+
+/-- After multiplying by the EXPLICIT degree-power denominator,
+the native finite-flat GST K₀ projector becomes an integral
+polynomial construction using only genuine pushforward, pullback,
+tensor multiplication and differences of original-X perfect complexes.
+
+When d and eta belong to integral algebraic K₀(P^n), the RHS is
+visibly an integral virtual K₀(X) source. No Hodge-source selector
+and no unbounded completion is needed for this denominator step. -/
+theorem finiteNilpotentVirtualPrimitive_integral_numerator
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (d eta dinv : R) (N : ℕ)
+    (hd : d*dinv = 1)
+    (hNilpotent : eta^N = 0)
+    (E : M) :
+    d^N • finiteNilpotentVirtualPrimitive
+        push pull d eta dinv N E =
+      d^N • E -
+        pull (finiteIntegralAdjugate d eta N * push E) := by
+  dsimp [finiteNilpotentVirtualPrimitive, normalizedVirtualPrimitive]
+  rw [smul_sub]
+  congr 1
+  rw [← map_smul]
+  congr 1
+  change d^N * (finiteNilpotentBaseInverse d eta dinv N * push E) =
+    finiteIntegralAdjugate d eta N * push E
+  rw [← mul_assoc, finiteIntegralAdjugate_clears_inverse
+    d eta dinv N hd hNilpotent]
+
+#check finiteNilpotentVirtualPrimitive_integral_numerator
+#print axioms finiteNilpotentVirtualPrimitive_integral_numerator
+
 #check finiteIntegralAdjugate_identity
 #check finiteIntegralAdjugate_clears_inverse
 #print axioms finiteIntegralAdjugate_clears_inverse
