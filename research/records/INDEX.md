@@ -49,6 +49,8 @@
 
 - [All-X incidence compactification: explicit Chow pushforward and Hodge-source infinity-mass discriminator](2026-10-18-incidence-compactification-gst-boundary-charge.md) — exact original-X cycle formula using the nonincidence identity H|J=-π*h and projective Chow coefficients; no holomorphic Jouanolou section for positive-dimensional projective X; explicit *same algebraic (1,1) class and same algebraic holomorphic line bundle* with one algebraic divisor and one nonalgebraic infinite-projective-mass analytic divisor on the affine quadric J(P¹). Mathematica exact coefficient tests and FS mass integrals. **Finite-mass algebraic extension for arbitrary prescribed Hodge α remains UNPROVED; no Lean completion claimed.**
 
+- [GST Jouanolou infinity-horizon escape and proper finite-projection test](2026-10-18-jouanolou-worldtrace-horizon-escape.md) — explicit algebraic Hodge line source on J(P¹), plus holomorphic sections of the **same algebraic line bundle** whose extra zero divisors vanish locally as epsilon→0 while carrying infinitely many degree-2 conics and infinite projective volume at infinity; exact gauge-invariant Poincaré–Lelong obstruction. A separate genuine theorem proves proper nonvertical projections characterize polynomial entire graphs; exponential graph has infinite Lambert-W branches. **Neither local convergence nor Hodge type alone forces a bounded-growth selected source; universal source algebraization still open.**
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
