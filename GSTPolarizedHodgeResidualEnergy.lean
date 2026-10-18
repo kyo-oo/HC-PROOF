@@ -327,6 +327,135 @@ theorem gst_world_birth_gram_surplus_constructs_fresh_native_class
 #check gst_world_birth_gram_surplus_constructs_fresh_native_class
 #print axioms gst_world_birth_gram_surplus_constructs_fresh_native_class
 
+
+/-! ## GST FULL GRAM-DUAL POLARIZED BIRTH — no orthonormality shortcut
+
+The old hPair hypothesis assumed that the normalized independent
+native cycles were orthonormal for Q. On a cubic fourfold, the ACTUAL
+hyperplane-square native class has intersection self-pairing THREE,
+so that restriction would falsely reject honest native geometry.
+
+A correct rational native detector is a GRAM-DUAL coordinate.
+If old_i denote actual independent native cycle classes, the
+only required Gram law is:
+  Q(x,old_j) = Σ_i detector_i(x) Q(old_i,old_j).
+It is derived, for a nondegenerate rational intersection Gram,
+by multiplying the geometric intersection row by its inverse.
+No square-root rational orthonormalization is required.
+
+The following GST theorem constructs the missing-coordinate detector
+Q(r,-) from that law and proves strict native rank gain using only
+a POSITIVE geometric intersection Gram surplus. This handles
+arbitrary positive rational Gram forms on original X.
+-/
+
+/-- GST rational Gram-dual geometry makes its TRUE native Hodge
+residual orthogonal to EVERY old native cycle without requiring
+that the native cycle intersection Gram is the identity matrix. -/
+theorem gram_dual_residual_orthogonal_to_old_native
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hGramDual : ∀ (j : ι) (x : V),
+      (Q x) (P.cycleClass (P.cycles j)) =
+        ∑ i, (P.detectors i x) *
+          (Q (P.cycleClass (P.cycles i)))
+            (P.cycleClass (P.cycles j)))
+    (alpha : V) (j : ι) :
+    (Q (residualClass P alpha))
+      (P.cycleClass (P.cycles j)) = 0 := by
+  rw [hGramDual j (residualClass P alpha)]
+  simp [residual_orthogonal_to_all_geometric_cycles P alpha]
+
+/-- UNRESTRICTED RATIONAL GRAM GST NATIVE BIRTH.
+The geometric Gram surplus is the primitive residual energy
+and it is STRICTLY POSITIVE exactly when the new native direction
+has positive residual energy. This suffices to construct the
+actual native Hodge rank extension without any selected readout,
+orthonormal basis, abstract Hodge inverse, or target preimage. -/
+theorem arbitrary_rational_gram_surplus_constructs_native_rank_birth
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : V, (Q x) y = (Q y) x)
+    (hGramDual : ∀ (j : ι) (x : V),
+      (Q x) (P.cycleClass (P.cycles j)) =
+        ∑ i, (P.detectors i x) *
+          (Q (P.cycleClass (P.cycles i)))
+            (P.cycleClass (P.cycles j)))
+    (fresh : N)
+    (hGram :
+      (Q (P.cycleClass fresh)) (P.cycleClass fresh) >
+      (Q (P.cycleClass (projectedNativeCycle P (P.cycleClass fresh))))
+        (P.cycleClass (projectedNativeCycle P (P.cycleClass fresh)))) :
+    Submodule.span ℚ
+        (Set.range (fun i : ι => P.cycleClass (P.cycles i))) <
+      Submodule.span ℚ
+        (Set.insert (P.cycleClass fresh)
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i)))) := by
+  let v : V := P.cycleClass fresh
+  let a : V := P.cycleClass (projectedNativeCycle P v)
+  let r : V := residualClass P v
+  have hOld (i : ι) : (Q r) (P.cycleClass (P.cycles i)) = 0 :=
+    gram_dual_residual_orthogonal_to_old_native P Q hGramDual v i
+  have hcross : (Q r) a = 0 := by
+    calc
+      (Q r) a = ∑ i, (P.detectors i v) *
+          ((Q r) (P.cycleClass (P.cycles i))) := by
+            simp [a, projectedNativeCycle, map_sum, map_smul]
+      _ = 0 := by simp [hOld]
+  have hcross' : (Q a) r = 0 := by
+    rw [hSym a r]
+    exact hcross
+  have hsum : a + r = v :=
+    actual_cycle_plus_residual_equals_target P v
+  have hpyth :
+      (Q v) v = (Q a) a + (Q r) r := by
+    calc
+      (Q v) v = (Q (a+r)) (a+r) := by rw [hsum]
+      _ = (Q a) a + (Q a) r + (Q r) a + (Q r) r := by
+        simp only [map_add, LinearMap.add_apply]
+        ring
+      _ = (Q a) a + (Q r) r := by rw [hcross,hcross']; ring
+  have hEnergy : 0 < (Q r) r := by
+    have hge : (Q v) v > (Q a) a := hGram
+    linarith
+  have hRead : (Q r) v = (Q r) r := by
+    calc
+      (Q r) v = (Q r) (a+r) := by rw [hsum]
+      _ = (Q r) a + (Q r) r := by rw [map_add]
+      _ = (Q r) r := by rw [hcross]; ring
+  have hFresh : (Q r) (P.cycleClass fresh) ≠ 0 := by
+    change (Q r) v ≠ 0
+    rw [hRead]
+    exact ne_of_gt hEnergy
+  have hnot :
+      P.cycleClass fresh ∉
+        Submodule.span ℚ
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i))) := by
+    intro hspan
+    have hker :
+        Submodule.span ℚ
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i))) ≤
+        LinearMap.ker (Q r) := by
+      apply Submodule.span_le.mpr
+      rintro x ⟨i, rfl⟩
+      exact LinearMap.mem_ker.mpr (hOld i)
+    exact hFresh (LinearMap.mem_ker.mp (hker hspan))
+  apply lt_of_le_of_ne
+  · exact Submodule.span_mono (Set.subset_insert _ _)
+  · intro heq
+    have hnew :
+      P.cycleClass fresh ∈
+        Submodule.span ℚ
+          (Set.insert (P.cycleClass fresh)
+            (Set.range (fun i : ι => P.cycleClass (P.cycles i)))) :=
+      Submodule.subset_span (Set.mem_insert _ _)
+    rw [← heq] at hnew
+    exact hnot hnew
+
+#check gram_dual_residual_orthogonal_to_old_native
+#check arbitrary_rational_gram_surplus_constructs_native_rank_birth
+#print axioms arbitrary_rational_gram_surplus_constructs_native_rank_birth
+
 #check native_residual_builds_geometric_readout
 #check native_residual_readout_fresh_eq_energy
 #check positive_residual_energy_forces_strict_native_rank_birth
