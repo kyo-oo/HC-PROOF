@@ -67,6 +67,7 @@ jobs:
             "GSTPrimitiveTransverseCycleExtraction",
             "GSTGraphV2SelfExpandingCosmology",
             "GSTPolarizedHodgeResidualEnergy",
+            "GSTUniversalResolvedSupportHodge",
             "GSTActualXHodgeResidualProjection"
           ]
           EOF
