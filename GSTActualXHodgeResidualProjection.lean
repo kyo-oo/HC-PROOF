@@ -236,6 +236,55 @@ theorem ActualXCycleProjectionData.target_directed_gram_coupling_birth
 #check ActualXCycleProjectionData.target_directed_gram_coupling_birth
 #print axioms ActualXCycleProjectionData.target_directed_gram_coupling_birth
 
+
+/-! ## GST optimized ACTUAL original-X Hodge-source birth
+
+The earlier residual coupling law merely certified that a fresh native
+cycle was independent. Here the geometrically CORRECTED primitive
+source is a genuine signed rational algebraic cycle on the SAME X,
+whose old native projection is subtracted before its intersection
+coefficient is applied. The corrected source cannot accidentally
+reintroduce old Hodge directions.
+
+When the prescribed rational Hodge residual is parallel to this
+independently obtained primitive native source, the following
+CONCRETE original-X codimension-p cycle represents alpha EXACTLY.
+For primitive residual rank one this requires one actual fresh source.
+Neither the existence of that source nor a complete Hodge span is
+assumed by the construction itself.
+-/
+
+/-- Explicit rational algebraic codimension-p cycle on the ORIGINAL X
+from the old GST native source family and one independently constructed
+geometric primitive source, with an actual native Chow subtraction. -/
+noncomputable def ActualXCycleProjectionData.correctedTargetCycle
+    (P : ActualXCycleProjectionData X H p ι)
+    (alpha : HodgeSpace X H p)
+    (fresh : codimensionCycles X.X p) (t : ℚ) :
+    codimensionCycles X.X p :=
+  GSTPolarizedHodgeResidualEnergy.correctedTargetNativeBirth
+    P.toProjectionPacket alpha fresh t
+
+/-- The canonical Hodge class of the EXPLICIT corrected native cycle
+equals the requested alpha exactly if their true rational primitive
+residuals are parallel. This is stronger than a Gram rank certificate:
+the output is a specified genuine codimension-p algebraic cycle on X. -/
+theorem ActualXCycleProjectionData.correctedTargetCycle_class_eq
+    (P : ActualXCycleProjectionData X H p ι)
+    (alpha : HodgeSpace X H p)
+    (fresh : codimensionCycles X.X p) (t : ℚ)
+    (hParallel :
+      P.primitiveResidual alpha =
+        t • P.primitiveResidual (P.trueHodgeClass fresh)) :
+    H.cycleClass p (P.correctedTargetCycle alpha fresh t) = alpha.1 := by
+  have h := GSTPolarizedHodgeResidualEnergy.correctedTargetNativeBirth_exact_of_residual_parallel
+    P.toProjectionPacket alpha fresh t hParallel
+  exact congrArg Subtype.val h
+
+#check ActualXCycleProjectionData.correctedTargetCycle
+#check ActualXCycleProjectionData.correctedTargetCycle_class_eq
+#print axioms ActualXCycleProjectionData.correctedTargetCycle_class_eq
+
 theorem ActualXCycleProjectionData.algebraic_part_plus_residual
     (P : ActualXCycleProjectionData X H p ι)
     (alpha : HodgeSpace X H p) :
