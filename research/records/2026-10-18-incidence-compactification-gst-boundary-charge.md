@@ -50,7 +50,7 @@ This is a completely explicit, finite, original-X cycle assembly **provided the 
 \[
 \sum_{j=0}^p(-h)^j[H^M]\bigl(P(H)H^{M-j}\bigr)=P(-h)
 \]
-for all 20 pairs M=2,...,6 and p=0,...,M, with P(H)=sum_{i=0}^p a_i H^i. Every exact polynomial test returned True. Uniform validity follows by the projective pushforward basis, not by finite testing alone.
+for all 25 pairs M=2,...,6 and p=0,...,M, with P(H)=sum_{i=0}^p a_i H^i. Every exact polynomial test returned True. Uniform validity follows by the projective pushforward basis, not by finite testing alone.
 
 ## 3. Same rational Hodge class, same algebraic holomorphic bundle, but infinite infinity mass
 
