@@ -1,4 +1,5 @@
 import GSTUniversalHodgeResidualProjection
+import GSTPolarizedHodgeResidualEnergy
 import GSTGeometricRealizationStage2G
 import GSTPrimitiveTransverseCycleExtraction
 import GSTCompactNativeCyclePresentation
@@ -86,6 +87,50 @@ noncomputable def ActualXCycleProjectionData.toProjectionPacket
   dual := by
     intro i j
     exact P.independently_geometric_duality i j
+
+
+/-! ## GST native geometric Gram construction on the ORIGINAL target X
+
+Upgrade the real Stage-2G native algebraic-cycle fiber using the newly
+verified GST polarized residual-energy law. Every new original-X cycle
+now admits a CANONICAL computational independence test: compare its
+actual Hodge intersection self-pairing with the pairing of its
+explicit finite native projection. A strictly positive Gram surplus
+constructs a new native algebraic Hodge direction on the SAME X.
+
+This construction uses the REAL codimension-p native cycle type
+`codimensionCycles X.X p`, not an invented Hodge-to-cycle selector.
+It does not assert there is a surplus-producing cycle for every Hodge
+target: that universal geometric source existence remains unproved.
+-/
+
+/-- ACTUAL arbitrary-X rank growth using only native source cycles,
+their Hodge geometric detectors, and an independently measured
+polarized Gram surplus on the original X. -/
+theorem ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_span
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : HodgeSpace X H p, (Q x) y = (Q y) x)
+    (hPair : ∀ (i : ι) (x : HodgeSpace X H p),
+      P.geometricDetectors i x =
+        (Q x) (P.trueHodgeClass (P.sourceNativeCycles i)))
+    (fresh : codimensionCycles X.X p)
+    (hGram :
+      (Q (P.trueHodgeClass fresh)) (P.trueHodgeClass fresh) >
+      (Q (P.trueHodgeClass (P.projectNative (P.trueHodgeClass fresh))))
+        (P.trueHodgeClass (P.projectNative (P.trueHodgeClass fresh)))) :
+    Submodule.span ℚ
+        (Set.range (fun i : ι => P.trueHodgeClass (P.sourceNativeCycles i))) <
+      Submodule.span ℚ
+        (Set.insert (P.trueHodgeClass fresh)
+          (Set.range (fun i : ι =>
+            P.trueHodgeClass (P.sourceNativeCycles i)))) := by
+  exact GSTPolarizedHodgeResidualEnergy.native_geometric_gram_surplus_forces_strict_rank_birth
+    P.toProjectionPacket Q hSym
+    (by intro i x; exact hPair i x) fresh hGram
+
+#check ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_span
+#print axioms ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_span
 
 /-- Fully concrete rational Chow-cycle construction on arbitrary X
 for every rational Hodge alpha. The output is not a Betti vector
