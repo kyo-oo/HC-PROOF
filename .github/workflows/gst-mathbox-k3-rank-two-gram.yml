@@ -1,7 +1,7 @@
 name: Mathbox K3 Rank Two Primitive Intersection Gram
 on:
   push:
-    branches: [research/mathbox-k3-diagonal-primitive-20261015]
+    branches: [research/mathbox-k3-diagonal-primitive-20261015, research/gpt6-native-point-primitive-span-20261017]
     paths:
       - GSTK3PrimitiveGram.lean
       - .github/workflows/gst-mathbox-k3-rank-two-gram.yml
