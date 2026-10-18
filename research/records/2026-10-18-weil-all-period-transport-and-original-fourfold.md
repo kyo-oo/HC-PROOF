@@ -686,3 +686,30 @@ The exact Weil projector P_d from the previous section is a degree-four rational
 **Precisely remaining geometric input.** The pinned primary source openai/math revision 301488868beec11bfd897168433b0a64f5258559, label p3sw:projective-germ, was read at its exact statement. It requires a proper smooth complex analytic germ with relative ample line, an ordinary coherent central sheaf, injectivity of its FULL Ext² semiregularity trace and flat rational Chern characters of the requisite Hodge filtration; it concludes a locally flat coherent sheaf with those characters. Sections 1–5 of this record construct the seed and apply this theorem before the proper Hilbert/Baire spread. Those analytic/coherent-sheaf and canonical scheme-to-Betti maps still require concrete Lean instantiation.
 
 The source pipeline is now: geometric secant sheaf → local semiregular deformation → algebraic Chern/Chow cycle on sixfold → Hilbert spread → true Gysin extraction to original fourfold → genuine native CM projector → prescribed Weil Hodge class. The full all-varieties Hodge theorem remains the unchanged goal.
+
+
+## Pure-Chow correction and nonzero-Weil-source reconstruction (2026-10-18)
+
+**Final Lean commit:** [`e85d6eba76bc6791e669245f999a816464af8feb`](https://github.com/kyo-oo/HC-PROOF/commit/e85d6eba76bc6791e669245f999a816464af8feb).
+**Pinned full integration:** [GitHub Actions #39099028550](https://github.com/kyo-oo/HC-PROOF/actions/runs/39099028550), **success**, the complete `GSTPinnedHodgeGeometricGate` dependency build and its no-`sorryAx` check. This supersedes the preliminary failed edit `5db73ca` (Lean elaboration/type mismatch) and the intermediate green repair `990e6e3`.
+
+The exact Lean theorem **`GSTUniversalCMArithmeticObstruction.auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource`** now needs only a **single fixed nonzero rational Weil component**:
+[
+z:=(\operatorname{bettiExtract}(w)).2\ne(0,0),
+]
+where (w) is the fixed auxiliary-sixfold Betti class. The former hypotheses requiring a balanced `TensorCoefficients`, a nonzero tensor, and the equality (z=\operatorname{contractGraph}(\mathrm{tensor})) have all been **removed from this theorem's inputs**. In particular, it does **not** require the raw extracted source to be pure Weil: its ambient coefficient (c=(\operatorname{bettiExtract}(w)).1) may be arbitrary.
+
+At any target period, the existing Baire/Hilbert source assumptions select a genuine codimension-three auxiliary native cycle (Gamma) with class (w). Let (R=\operatorname{extract}(Gamma)) on the **original fourfold (A)**, and let (Theta^2) be the actual native polarization-square cycle with canonical Hodge coordinate ((1,(0,0))). Form the *native algebraic cycle*
+[
+R_0=R-c\Theta^2.
+]
+By the existing single global proper-Gysin cycle-class naturality law, its fixed Hodge coordinate is **exactly** ((0,z)), with (z\ne0). The already proved global CM cycle-class functoriality for the genuine isogeny (d+1+u) yields a second actual cycle (T R_0) of class ((0,T_W z)). The exact existing GST fourth-power orbit theorem gives
+[
+\det(z,T_Wz)=4(d+1)\big((d+1)^2-d\big)(z_1^2+d z_2^2)>0
+\quad(d>0,z\ne0).
+]
+Consequently the explicitly constructed Cramer coefficients, together with (Theta^2), give a **single signed rational Chow cycle on the original A** with any prescribed rational middle Hodge class, *under the theorem's stated geometric input hypotheses*.
+
+**Independent exact computation.** Wolfram `FullSimplify` returned `{True,True,True}` for the determinant formula, (s>0), and ((z\ne0)\Rightarrow \det>0) assuming (d>0) and real coordinates. The arbitrary rational case is already established by the kernel-verified Lean positivity theorem.
+
+**Evidence boundary.** This is a strictly stronger *conditional original-fourfold construction* than the previous pure-source/tensor-coordinate entry point. The external geometric leaves are still the true analytic/coherent semiregular deformation source, its proper Hilbert spread across all periods, canonical Chow-to-Betti Gysin/isogeny comparisons, and the actual three-direction rational Hodge-fiber identification for the fourfolds to which it applies. Passing Lean CI proves the theorem with **those explicit hypotheses**, not their existence. It does **not** prove the original all-varieties/all-codimensions Hodge conjecture. Gate 3 of `research/ACTIVE_HODGE_PROOF_PLAN.md` remains unresolved.
