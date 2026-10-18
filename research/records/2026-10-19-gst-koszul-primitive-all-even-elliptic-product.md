@@ -103,12 +103,45 @@ The signed rational intersection Gram \(G_{MN}=(-1)^m\int_X Z_M Z_N\) was also c
 \]
 with det=5184. These are exact FINITE tests, not proof that all m has full Catalan rank.
 
-**Proposed uniform proof:** identify the squarefree divisor ring as the 2m-fold tensor of the two-dimensional standard module for the Lefschetz \(\mathfrak{sl}_2\)-action, and the cycles \(x_i-x_j\) as antisymmetric two-slot singlets. Noncrossing pairings form the expected Temperley–Lieb/SL₂ invariant basis; translating that theorem into actual GST K₀-source coefficients, rather than relying on a finite sample, would yield an explicit general-rank native algebraic source frame for the ENTIRE divisor-word primitive sector. The key source correspondence is given here; a general kernel-verified basis theorem is not claimed.
+### Dimension-uniform Catalan GST native basis: explicit mathematical proof
+
+**Theorem.** Over Q, for EVERY integer m≥1 and original X=E1×...×E(2m), the integral perfect-complex classes \(\mathcal E_M=\bigotimes_{(i,j)\in M}([L_i]-[L_j])\) indexed by noncrossing perfect matchings M have algebraic leading Chern classes \(Z_M=\prod_{(i,j)\in M}(x_i-x_j)\) that form a **Q-basis of the full primitive squarefree divisor-product subspace** \(\ker[H:\mathcal A_m\to\mathcal A_{m+1}]\), where \(\mathcal A=\mathbb Q[x_1,\ldots,x_{2m}]/(x_i^2)\). Here "full" refers only to the geometric **divisor-product** subspace, NOT the complete rational primitive Hodge space of X.
+
+*Proof, step 1 (each source primitive).* Every x_i has square zero and \(H=\sum_{(i,j)\in M}(x_i+x_j)\). Since \((x_i+x_j)(x_i-x_j)=0\), each term of \(HZ_M\) is zero. This is exactly the arbitrary-length identity in the existing Lean module.
+
+*Proof, step 2 (independent through an integral triangular matrix).* Write every matching pair as i<j. Let \(L(M)\) be the m-element subset of all left endpoints. In the polynomial expansion of \(Z_M\), the coefficient of the distinguished squarefree monomial \(x_{L(M)}=\prod_{i\in L(M)}x_i\) equals **+1**, since it picks the left term from EVERY pair. All other nonzero monomials are obtained by replacing some left endpoints i by larger right endpoints j. Consequently their ordered m-element index sets are lexicographically **no smaller** than \(L(M)\). A noncrossing matching is uniquely determined by its left-endpoint set: reading the positions left-to-right, connect each right endpoint to the last as-yet unmatched left endpoint (stack algorithm); the matching is necessarily nested or disjoint, and this procedure recovers it uniquely. Order the noncrossing matchings by lexicographic left-endpoint sets and take the square submatrix of the coefficient matrix whose rows are precisely these distinguished monomials and whose columns are the matching cycles. Entries above the permitted triangular side vanish by the lex property and **every diagonal entry is +1**. This matrix has determinant +1. Thus these genuinely algebraic K₀ sources are linearly independent **integrally**, for arbitrary m, without randomization or an analytic assumption.
+
+*Proof, step 3 (compute the complete primitive dimension directly).* Let \(\mathcal A_k\) have its squarefree-monomial orthonormal basis and let \(U_k:\mathcal A_k\to\mathcal A_{k+1}\) multiply by H. Its adjoint \(D_{k+1}\) deletes one variable from a monomial. Directly count additions/removals of indices to obtain
+\[
+D_{k+1}U_k-U_{k-1}D_k=(2m-2k)\,\mathrm{id}_{\mathcal A_k}.
+\]
+For k<m this implies
+\[
+\|U_kv\|^2=\|D_kv\|^2+(2m-2k)\|v\|^2,
+\]
+so \(U_{m-1}\) is injective. Complementation of subsets identifies \(D_{m+1}\) with \(U_{m-1}\), so \(D_{m+1}\) is injective, and its adjoint \(U_m\) is surjective. Hence
+\[
+\dim_{\mathbb Q}\ker U_m
+=\binom{2m}{m}-\binom{2m}{m+1}
+=\frac1{m+1}\binom{2m}{m}=C_m.
+\]
+Meanwhile the noncrossing matchings have exactly \(C_m\) elements: the partner of index 1 divides the remainder into two smaller independent noncrossing matchings, giving the Catalan recurrence \(C_m=\sum_{k=0}^{m-1}C_k C_{m-1-k}\), \(C_0=1\). Since the \(C_m\) constructed cycles are independent and in the primitive kernel of dimension \(C_m\), they form a basis. QED.
+
+*Consequences for GST.* The signed middle primitive Hodge–Riemann intersection pairing is positive definite on the full rational primitive divisor-product sector (or equivalently the squarefree algebra carries the positive real/Kähler inner product). Therefore the Gram matrix \(G_{MN}=(-1)^m\int_X Z_M Z_N\) is positive definite and invertible over Q in every m. For EVERY prescribed rational primitive Hodge class alpha, measured periods \(a_M=(-1)^m\int_X\alpha\,Z_M\) yield an actual rational algebraic K₀ perfect-complex and Chow-cycle compiler
+\[
+\boxed{
+Z_\alpha^{\mathrm{div}}=
+\sum_{M,N} Z_M (G^{-1})_{MN} a_N.
+}
+\]
+This class matches **every** period against the full squarefree primitive divisor-product sector, and represents alpha exactly WHEN alpha belongs to that sector. This replaces any assumed nonzero determinant and any target-by-target algebraic source selection with a finite, explicit, geometrically constructed complete frame for the named sector, uniformly in dimension.
+
+**Proof scope:** The algebraic proof above is complete for the squarefree divisor-word primitive sector of products of elliptic curves, conditional only on the standard explicit Chow relations \(x_i^2=0\), degree-one intersection and algebraic line bundle Chern construction. Lean currently kernel-checks the arbitrary-m primitivity and square identity (not the full combinatorial noncrossing basis argument). The finite m=1..5 computations are independent reproducibility checks, not the justification for the general theorem. This statement does not identify the squarefree sector with all rational Hodge classes or with exotic nonsplit Weil classes.
 
 **Geometric scope:** on a nonsplit Weil-type abelian fourfold with NS_Q=Qθ, these elliptic factor line bundles are not present. Thus even a complete squarefree divisor-product span cannot be asserted to provide every exceptional Weil Hodge class. The all-X program must still obtain an independently algebraic perfect complex beyond existing divisor products, e.g. a genuinely exotic sheaf/Hilbert/CM construction on the original nonsplit X. This is the specific geometric source-growth obligation; the alpha-selected K₀ and Gram compiler then produces explicit original-X cycles.
 
 ## 5. Current work products
 
-- Lean: GSTUniversalResolvedSupportHodge.lean, existing module edited to add both source families and all-m square-zero algebraic laws; GH Actions GST Native K0 Original X Extraction and pinned full Hodge integration run on the active research branch.
+- Lean: GSTUniversalResolvedSupportHodge.lean, existing module edited to add both source families and all-m square-zero algebraic laws; both source-module GitHub Actions [#39165331470](https://github.com/kyo-oo/HC-PROOF/actions/runs/39165331470) and pinned full integration [#39165331316](https://github.com/kyo-oo/HC-PROOF/actions/runs/39165331316) **completed successfully** at Lean commit 497e751bcfb4694fb1d8cc9bf4e0aa68eb5308d7.
 - Calculation: Wolfram exact fourfold pairing and inverse Gram; deterministic finite-field rank check for m=1..5; rational exact determinants for m<=4.
 - Hodge/Chow type gate: The genuine perfect complexes and their actual Chow Chern classes are mathematical original-X constructions, while the **Lean** all-m code operates at the exact rational squarefree intersection-algebra interface. The canonical Betti realization on arbitrary schemes is still a separate geometric input, and the conjecture for all X,p,alpha is not inferred from this source subfamily.
