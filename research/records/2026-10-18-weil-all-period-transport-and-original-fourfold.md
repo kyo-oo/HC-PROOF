@@ -662,3 +662,27 @@ The Cramer proof now combines terms over one explicitly nonzero common
 denominator before cancellation. The final two green runs above certify
 the repaired complete source and its native integration; failed earlier
 revisions are not verification receipts for the final theorem.
+
+
+## Native CM functoriality and canonical Hilbert source bridge (2026-10-18)
+
+This checkpoint integrates the exact polynomial Weil projector with **native rational Chow cycles on the original fourfold**. It strengthens the same source route rather than adding another special family.
+
+Let T_Chow be pullback of rational codimension-two Chow cycles by the genuine CM isogeny k=d+1+u, and T_B the induced action on Betti H^4. The canonical naturality law cl∘T_Chow=T_B∘cl implies by Horner induction, for every polynomial P,
+
+\[
+ \boxed{\operatorname{cl}\big(P(T_{\mathrm{Chow}})Z\big)
+     =P(T_{\mathrm{B}})\operatorname{cl}(Z).}
+\]
+
+The exact Weil projector P_d from the previous section is a degree-four rational polynomial. Its five expanded coefficients agree symbolically with the factored expression; Wolfram gave difference zero identically in the symbols q,r,s,a,b,t.
+
+**Native operator proved in Lean.** In GSTWeilFourfoldAuxiliaryExtraction.lean the new theorems nativeCMHorner_natural, nativeWeilProjector_cycleClass and nativeWeilProjectorCoeffs_exact prove uniform cycle-class functoriality and the full coefficient identity. Dedicated Weil [CI #39096019777](https://github.com/kyo-oo/HC-PROOF/actions/runs/39096019777) and full Hodge [CI #39096019760](https://github.com/kyo-oo/HC-PROOF/actions/runs/39096019760) passed at commit 22bee45912c815397378127d09cb89307abdcbe6 with sorryAx audits.
+
+**Original-fourfold isogeny action.** In GSTUniversalCMArithmeticObstruction.lean, auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial replaces the old per-Hilbert-cycle CM comparison by a single global geometric action. On the Hodge coordinates Q theta^2 ⊕ W_K, the true CM isogeny acts as (c,v) ↦ (Norm(k)^2 c, fourthPowerAction(d,d+1)(v)). A fixed source class equality then implies every required pointwise CM equality. Full [CI #39096320930](https://github.com/kyo-oo/HC-PROOF/actions/runs/39096320930) passed at 17a61f4c21c1a48dbfee168ed2dcef6ddc402c9a.
+
+**Fixed Hilbert-source class.** The further theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource replaces individual extraction hypotheses by (i) one flat rational auxiliary Betti class w defining the good relative Hilbert locus, (ii) one global proper-pushforward/cup Gysin comparison, and (iii) one global isogeny compatibility law. From these laws the previously kernel-proved period spread and original-fourfold source assembly construct a native codimension-two cycle with the prescribed rational Betti class. Full [CI #39096564529](https://github.com/kyo-oo/HC-PROOF/actions/runs/39096564529) passed at e7691d08e5d927176435f8b1ed613e63ba08bc01; no sorryAx, artifact 12125455110, sha256:4f12c0949c2f22da99e22e03467b05a4919c01da6f2c1a9f06eb0a3130af1207.
+
+**Precisely remaining geometric input.** The pinned primary source openai/math revision 301488868beec11bfd897168433b0a64f5258559, label p3sw:projective-germ, was read at its exact statement. It requires a proper smooth complex analytic germ with relative ample line, an ordinary coherent central sheaf, injectivity of its FULL Ext² semiregularity trace and flat rational Chern characters of the requisite Hodge filtration; it concludes a locally flat coherent sheaf with those characters. Sections 1–5 of this record construct the seed and apply this theorem before the proper Hilbert/Baire spread. Those analytic/coherent-sheaf and canonical scheme-to-Betti maps still require concrete Lean instantiation.
+
+The source pipeline is now: geometric secant sheaf → local semiregular deformation → algebraic Chern/Chow cycle on sixfold → Hilbert spread → true Gysin extraction to original fourfold → genuine native CM projector → prescribed Weil Hodge class. The full all-varieties Hodge theorem remains the unchanged goal.
