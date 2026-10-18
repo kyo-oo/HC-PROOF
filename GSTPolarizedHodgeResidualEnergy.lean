@@ -1,4 +1,5 @@
 import GSTUniversalHodgeResidualProjection
+import GSTGraphV2SelfExpandingCosmology
 
 /-!
 # GST polarized primitive Hodge residual — exact Pythagorean identity
@@ -261,6 +262,70 @@ theorem native_geometric_gram_surplus_forces_strict_rank_birth
 
 #check native_geometric_gram_surplus_forces_strict_rank_birth
 #print axioms native_geometric_gram_surplus_forces_strict_rank_birth
+
+
+/-! ## GST geometric world birth + native residual energy: INTEGRATED upgrade
+
+Combine the user's ORIGINAL arbitrary-source self-expanding geometric birth,
+the old independently constructed native cycles, and the polarized Hodge
+intersection coordinate. The proof constructs the born native cycle using the
+actual world birth, not a function from arbitrary Hodge classes to cycles;
+then measures strict algebraic-rank growth by the COMPLETELY COMPUTED
+two-term intersection Gram surplus, with no externally chosen third readout.
+
+This is an effective bridge BETWEEN GST ontological birth and GST
+polarized energy, over arbitrary original target-world cycle carrier.
+The remaining geometric input is an independently constructed
+birth on that world whose real Gram surplus is positive.
+-/
+
+universe uWorld uState uLaw uSort
+
+/-- A genuine dependent GST geometric world-birth supplies a new
+native geometric coordinate as soon as its intersection Gram
+surplus is verified positive. The output class is the CANONICAL
+cycle class of the BORN native object, not a free Hodge inverse. -/
+theorem gst_world_birth_gram_surplus_constructs_fresh_native_class
+    (C : GSTGraphV2SelfExpandingCosmology.SelfExpandingCosmos.{uWorld,uState,uLaw,uSort})
+    (R : GSTGraphV2SelfExpandingCosmology.NativeGeometryBirth.GeometricCycleBirthRealization C)
+    {I : Type uWorld} {src : I → C.World} {target : C.World}
+    (e : C.Birth src target)
+    [AddCommGroup (C.State target)] [Module ℚ (C.State target)]
+    [AddCommGroup (C.Law target)] [Module ℚ (C.Law target)]
+    (P : GeometricDualCyclePacket ι (C.State target) (C.Law target))
+    (hCanonical :
+      ∀ Z : C.State target,
+        P.cycleClass Z = R.cycleClass target Z)
+    (Q : C.Law target →ₗ[ℚ] C.Law target →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : C.Law target, (Q x) y = (Q y) x)
+    (hPair : ∀ (i : ι) (x : C.Law target),
+      P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (sources : (i : I) → C.State (src i))
+    (hGram :
+      (Q (P.cycleClass (R.assembleNative e sources)))
+        (P.cycleClass (R.assembleNative e sources)) >
+      (Q (P.cycleClass (projectedNativeCycle P
+        (P.cycleClass (R.assembleNative e sources)))))
+        (P.cycleClass (projectedNativeCycle P
+          (P.cycleClass (R.assembleNative e sources))))) :
+    Submodule.span ℚ (Set.range
+        (fun i : ι => R.cycleClass target (P.cycles i))) <
+      Submodule.span ℚ
+        (Set.insert
+          (R.cycleClass target (R.assembleNative e sources))
+          (Set.range (fun i : ι =>
+            R.cycleClass target (P.cycles i)))) := by
+  have hBorn :
+      P.cycleClass (R.assembleNative e sources) =
+        R.assembleHodge e (fun i => R.cycleClass (src i) (sources i)) :=
+    (hCanonical _).trans (R.compatible e sources)
+  have hRank :=
+    native_geometric_gram_surplus_forces_strict_rank_birth
+      P Q hSym hPair (R.assembleNative e sources) hGram
+  simpa only [hCanonical] using hRank
+
+#check gst_world_birth_gram_surplus_constructs_fresh_native_class
+#print axioms gst_world_birth_gram_surplus_constructs_fresh_native_class
 
 #check native_residual_builds_geometric_readout
 #check native_residual_readout_fresh_eq_energy
