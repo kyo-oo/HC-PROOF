@@ -1050,8 +1050,9 @@ theorem finiteNilpotentBaseInverse_correct
     (hNilpotent : eta^N = 0) :
     (d+eta)*finiteNilpotentBaseInverse d eta dinv N = 1 := by
   have ht : (-eta*dinv)^N = 0 := by
-    rw [mul_pow]
-    simp [neg_pow, hNilpotent]
+    have hs : -eta*dinv = eta*(-dinv) := by ring
+    rw [hs, mul_pow, hNilpotent]
+    simp
   have hf : (d+eta)*dinv = 1-(-eta*dinv) := by
     calc
       (d+eta)*dinv = d*dinv + eta*dinv := by ring
