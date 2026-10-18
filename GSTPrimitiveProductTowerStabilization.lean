@@ -165,10 +165,26 @@ theorem unseeded_two_polarization_codim_two_norm
       u^3*u-2*(u^3*v)+3*u^2*v^2-2*(u*v^3)+v^3*v := by ring
     _ = 3*u^2*v^2 := by rw [hu,hv]; ring
 
+/-- The independently constructed middle Chow source is genuinely
+NONZERO whenever its actual fourfold top-degree intersection is
+nonzero. This requires no period detector selected from a Hodge target.
+Over rational Chow of a smooth polarized product this condition follows
+from positivity of the two surface ample top degrees. -/
+theorem unseeded_two_polarization_codim_two_nonzero_of_volume
+    {R : Type*} [CommRing R] (u v : R)
+    (hu : u^3=0) (hv : v^3=0)
+    (hVolume : 3*u^2*v^2 ≠ 0) :
+    unseeded_two_polarization_native_birth u v 2 ≠ 0 := by
+  intro hz
+  have hsq := unseeded_two_polarization_codim_two_norm u v hu hv
+  rw [hz] at hsq
+  exact hVolume hsq.symm
+
 #check unseeded_two_polarization_native_birth
 #check unseeded_two_polarization_factorization
 #check unseeded_two_polarization_is_primitive
 #check unseeded_two_polarization_codim_two_norm
+#check unseeded_two_polarization_codim_two_nonzero_of_volume
 #print axioms unseeded_two_polarization_is_primitive
 #print axioms unseeded_two_polarization_codim_two_norm
 
