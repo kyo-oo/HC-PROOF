@@ -138,6 +138,38 @@ This class matches **every** period against the full squarefree primitive diviso
 
 **Proof scope:** The algebraic proof above is complete for the squarefree divisor-word primitive sector of products of elliptic curves, conditional only on the standard explicit Chow relations \(x_i^2=0\), degree-one intersection and algebraic line bundle Chern construction. Lean currently kernel-checks the arbitrary-m primitivity and square identity (not the full combinatorial noncrossing basis argument). The finite m=1..5 computations are independent reproducibility checks, not the justification for the general theorem. This statement does not identify the squarefree sector with all rational Hodge classes or with exotic nonsplit Weil classes.
 
+### GST full-rank integer Gram law and ACTUAL perfect-complex realization for any target in the sector
+
+The Catalan basis proof upgrades the GST native source frame from a prescribed rank into a **finite algorithmically enumerable, invertible, integral Gram matrix in EVERY m**. There is also an exact geometric closed description of its entries, not merely an assumed detector matrix.
+
+Overlay two noncrossing perfect matchings M,N as graphs on the same 2m labeled elliptic factors. Their union consists of disjoint alternating even cycles (an edge of M then an edge of N; common edges are length-two multicycles). Call the number of connected components c(M,N). When expanding \(Z_M Z_N\), a term contributes to the top class \(\prod_i x_i\) iff every vertex is selected precisely once by one of its incident factors. On each alternating component there are exactly TWO valid alternating choices, and the two choices have the SAME sign because they exchange selections in an even number of factors. Thus there are exactly \(2^{c(M,N)}\) contributing terms, all of the same sign determined by the orientations \(i<j\) of the line-bundle differences. Therefore
+\[
+\boxed{\left|(-1)^m\int_X Z_M Z_N\right|=2^{c(M,N)}.}
+\]
+The sign is computed combinatorially by choosing either alternating coloring and counting factors selecting their larger-labeled endpoint. This formula constructs EVERY integer Gram entry from the actual perfect-complex pairing graph and defines a deterministic arbitrary-rank GST geometric readout.
+
+The dimension-uniform Catalan basis and positive-definite signed primitive intersection form imply \(G_m\) is an **invertible integer matrix** with positive integer determinant \(D_m=\det G_m\). Given an arbitrary rational primitive Hodge alpha on this original X, put \(a_M=(-1)^m\int_X\alpha Z_M\in\mathbb Q\). Define the actual rational source
+\[
+\mathcal E_\alpha^{\rm rat}
+=\sum_{M,N}(G_m^{-1})_{MN}\,a_N\,\mathcal E_M
+\in K_0(X)_\mathbb Q .
+\]
+Then \(Z_\alpha^{\rm div}=\operatorname{ch}_m(\mathcal E_\alpha^{\rm rat})\) is the true algebraic Chow cycle matching all primitive divisor-source periods.
+
+**Finite denominator → one genuine bounded perfect complex.** Choose a positive integer N so that \(N a_M\in\mathbb Z\) for every M. Since \(G_m^{-1}=\operatorname{adj}(G_m)/D_m\) and the adjugate is integral, the class
+\[
+\boxed{\widetilde{\mathcal E}_\alpha
+=N D_m\,\mathcal E_\alpha^{\rm rat}
+=\sum_{M,N}\operatorname{adj}(G_m)_{MN}
+   (N a_N)\,\mathcal E_M
+\in K_0(X)}
+\]
+has INTEGER coefficients of genuine integral tensor-of-line-bundle-difference sources. Each \(\mathcal E_M\) expands as a signed finite sum of actual line-bundle tensor products. Assemble the positive terms in even cohomological degree and negative terms in odd cohomological degree; this produces an **actual bounded perfect complex of algebraic vector bundles on the ORIGINAL X** representing \(\widetilde{\mathcal E}_\alpha\). Its true degree-m Chern character is exactly \(N D_m\,Z_\alpha^{\rm div}\). The rational Chow target is recovered by dividing by \(ND_m\), as required for rational Hodge classes.
+
+This is a uniform target-sensitive **constructive perfect-complex realization** for the ENTIRE squarefree primitive algebraic divisor-word sector in arbitrary middle dimension. The prescription uses the prescribed target's rational periods against independently produced actual line-bundle Koszul sources, an INTEGER Gram inverse, and finite direct sums/shifts; it does NOT assume a Hodge-to-K₀ preimage for alpha.
+
+**Exact finite graph audit:** enumerate all noncrossing matchings, construct the integer source-to-monomial matrix, form the signed Gram using complementary middle monomials, then count alternating cycle components for every ordered matching pair. For m=1,2,3,4,5 (respectively 1,2,5,14,42 matchings), the independently computed identity \(|G_{MN}|=2^{c(M,N)}\) had **ZERO mismatches over all** 1+4+25+196+1764=1990 matrix entries. This computation checks the general graph proof, rather than establishing it through sampling.
+
 **Geometric scope:** on a nonsplit Weil-type abelian fourfold with NS_Q=Qθ, these elliptic factor line bundles are not present. Thus even a complete squarefree divisor-product span cannot be asserted to provide every exceptional Weil Hodge class. The all-X program must still obtain an independently algebraic perfect complex beyond existing divisor products, e.g. a genuinely exotic sheaf/Hilbert/CM construction on the original nonsplit X. This is the specific geometric source-growth obligation; the alpha-selected K₀ and Gram compiler then produces explicit original-X cycles.
 
 ## 5. Current work products
