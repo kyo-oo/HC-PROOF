@@ -81,6 +81,18 @@ with canonical Betti class alpha: that WOULD solve the given target for that alp
 
 **Correct base case.** For p=1, integral (1,1) data defines a holomorphic line bundle by the exponential-sequence Lefschetz (1,1) theorem; a large ample twist has actual holomorphic sections and genuine divisors, so the above signed-sheet formula yields bona fide algebraic cycles. For p>=2, acquiring an honest holomorphic rank-p bundle E or a compact analytically calibrated current with class N alpha+k^p h^p is a new substantive construction challenge; assuming either automatically for every alpha would smuggle in a powerful form of Hodge algebraicity.
 
+## Adversarial exactness checks: why infinite twisting is not the missing law
+
+**Twist cannot create holomorphic structure.** If the underlying smooth complex vector bundle E tensor L^k admits a holomorphic vector-bundle structure for any integer k, then tensoring that holomorphic bundle by the holomorphic L^(-k) gives a holomorphic structure on the SAME underlying smooth E. Conversely, a holomorphic E gives a holomorphic E tensor L^k. Thus large positive k is helpful for approximate-holomorphic zero sets, but it does not automatically cure the original topological bundle's holomorphic integrability obstruction.
+
+**Local defect can be arbitrarily small and nonzero.** In standard C^2 consider the symplectic, generally non-complex surface parametrized by z=x+iy:
+\[
+z\longmapsto(z,\epsilon\bar z),\qquad 0<|\epsilon|<1.
+\]
+Its two oriented real tangent vectors in (x_1,y_1,x_2,y_2) are v_x=(1,0,\epsilon,0), v_y=(0,1,0,-\epsilon). The induced area is \(1+\epsilon^2\), while the Kähler calibrated area is \(1-\epsilon^2\). Hence the defect density is **exactly \(2\epsilon^2>0\)**, tending to 0 as epsilon -> 0 without ever vanishing. Wolfram verified the exact metric matrix, area, calibrated area and difference, obtaining \`{{{1+eps^2,0},{0,1+eps^2}},1+eps^2,1-eps^2,2 eps^2}\`.
+
+This disproves the tempting inference "arbitrarily accurate approximately-holomorphic -> genuine holomorphic at some finite k." The actual route needs a new *exact* complex-integrability/surgery mechanism. It also shows why a vanishing *cohomological* Hodge defect alone cannot be identified with a vanishing *geometric tangent-plane* defect.
+
 ## Verdict and next executable geometric move
 
 This is a **real source-construction attempt on EVERY original X**, replacing an ambient-quadric source world with a non-square-zero BU(p) target-born geometric source, and introducing an exact dual primitive readout. Its completed algebra is rigorous; the analytic existence/unstable bundle classification input is not independently source-certified here; and the resulting sheet is only smooth/symplectic, NOT complex algebraic.
