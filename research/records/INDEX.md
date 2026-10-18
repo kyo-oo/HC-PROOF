@@ -1,5 +1,9 @@
 # GST Hodge Research — Construction Program
 
+- [Mathbox GST arbitrary-genus diagonal/K₀ graph births](2026-10-19-gst-all-genus-diagonal-k0-primitive-source-birth.md) — independently constructed algebraic perfect complexes on products of arbitrary positive-genus curve pairs give 2^m orthogonal original-X primitive Chow sources, with exact genus-weighted period compiler; genuine source rank at least C_m+2^m−1. [Graph tensor Lean #39169476204](https://github.com/kyo-oo/HC-PROOF/actions/runs/39169476204) passed; expanded weighted-period and Todd jobs use revision-matched later workflows.
+
+- [Mathbox GST imaginary-CM graph perfect-complex 3^m source birth](2026-10-19-gst-cm-imaginary-graph-k0-tensor-birth.md) — actual Γ_id, Γ_i and Koszul Cartier divisors on CM E×E give signed native primitive Gram 2I₃; tensor words yield 3^m source classes and exact target-period compiler, rank at least C_m+3^m−1. [CM arbitrary-rank Gram CI #39169316293](https://github.com/kyo-oo/HC-PROOF/actions/runs/39169316293) passed; target compiler integrated subsequently.
+
 - [Resolved Gysin supports on every original X](2026-10-17-resolved-support-hodge-source-audit.md) — **Lean green #39039315761**, actual native divisor pushforward in all codimensions for genuinely supported Hodge classes; audit isolates why establishing support for every primitive class is the remaining Gate 3 obligation.
 
 - [All-X primitive middle classes and hyperplane-relative geometry](2026-10-17-primitive-middle-hyperplane-relative-gate.md) — standard weak Lefschetz/Gysin identity ‘primitive iff hyperplane restriction zero iff relative Betti lift’, **Lean green [#39040307814](https://github.com/kyo-oo/HC-PROOF/actions/runs/39040307814)**; route now targets signed algebraic boundary data on the original X.
