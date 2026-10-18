@@ -47,6 +47,8 @@
 
 - [Exact Stein determinantal source on every original-X-associated affine carrier](2026-10-18-stein-analytic-determinantal-hodge-source.md) — stable topological K-theory -> Oka holomorphic rank-r bundle -> analytic Thom-Porteous codimension-p cycle carrying any prescribed rational class; every-rank GST Chern multicharge recovery Lean **GREEN** [focused #39108995274](https://github.com/kyo-oo/HC-PROOF/actions/runs/39108995274) and [integration #39108995310](https://github.com/kyo-oo/HC-PROOF/actions/runs/39108995310). True algebraic descent requires a new Hodge-sensitive sharp infinity-volume bound, unproved; non-Hodge K3 demonstrates why Oka or cohomological residue alone cannot suffice.
 
+- [All-X incidence compactification: explicit Chow pushforward and Hodge-source infinity-mass discriminator](2026-10-18-incidence-compactification-gst-boundary-charge.md) — exact original-X cycle formula using the nonincidence identity H|J=-π*h and projective Chow coefficients; no holomorphic Jouanolou section for positive-dimensional projective X; explicit *same algebraic (1,1) class and same algebraic holomorphic line bundle* with one algebraic divisor and one nonalgebraic infinite-projective-mass analytic divisor on the affine quadric J(P¹). Mathematica exact coefficient tests and FS mass integrals. **Finite-mass algebraic extension for arbitrary prescribed Hodge α remains UNPROVED; no Lean completion claimed.**
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
