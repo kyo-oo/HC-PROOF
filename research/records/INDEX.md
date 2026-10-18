@@ -39,6 +39,8 @@
 
 - [All-X affine localization and lower/middle primitive survival](2026-10-18-all-varieties-affine-primitive-source-boundary.md) — source-free actual-X Gysin reconstruction in affine-vanishing degrees and rational primitive restriction injectivity in the hard range; exact cubic-fourfold sharpness check; **Lean full integration green [#39100222168](https://github.com/kyo-oo/HC-PROOF/actions/runs/39100222168)** at `ab3bbb4135051d42f5eb435d5172af5e05191af4`. This isolates the unproved original-X lowest-weight affine Chow/K0 source birth; no Gate 3 closure claimed.
 
+- [GST signed finite-graph branch construction and arbitrary-X primitive test](2026-10-18-signed-graph-native-branch-construction.md) — explicit *actual algebraic* graph-cycle matrix units for all codimensions on products of projective lines; proved that lifting the universal power-map graphs through finite X→P^n projects away primitive classes on arbitrary X, so this operator construction does not solve Gate 3. Exact Wolfram checks; no new Lean surjectivity assumptions or claim of universal closure.
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
