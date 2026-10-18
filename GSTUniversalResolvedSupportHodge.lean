@@ -500,6 +500,75 @@ theorem affine_boundary_vanishing_hodge_weight_successor
   exact affine_boundary_vanishing_constructs_original_hodge_cycle
     SG B hLower hAffineVanishing alpha halpha
 
+
+/-! ## The critical ALL-X middle primitive classes survive affine restriction
+
+For a smooth projective 2p-fold X and a smooth ample divisor Y, the
+localization kernel of j*:H^(2p)(X)->H^(2p)(X\\Y) is the Gysin image
+of H^(2p-2)(Y). Weak Lefschetz identifies this latter source with
+H^(2p-2)(X), so the kernel is the ample/Lefschetz image.
+The middle primitive space meets that image trivially by the
+Lefschetz decomposition. Thus, unlike the upper-half degrees,
+a NONZERO middle primitive class survives on the affine open.
+
+The following all-X Lean theorem isolates the precise rational
+linear geometry of that argument. Its two inputs are the standard
+Betti localization image theorem and the primitive/Lefschetz
+direct-sum separation, NEVER an algebraic-cycle preimage.
+-/
+
+/-- Exact all-varieties rational middle-primitive affine restriction theorem.
+Geometric applications instantiate ambient with the Lefschetz image,
+primitive with the genuine middle-primitive inclusion, and
+openRestriction with Betti restriction to the affine complement. -/
+theorem middle_primitive_affine_restriction_injective
+    {p : ℕ} {P A OpenCoh : Type*}
+    [AddCommGroup P] [Module ℚ P]
+    [AddCommGroup A] [Module ℚ A]
+    [AddCommGroup OpenCoh] [Module ℚ OpenCoh]
+    (primitive : P →ₗ[ℚ] ClassicalHodgeFiber X HX p)
+    (ambient : A →ₗ[ℚ] ClassicalHodgeFiber X HX p)
+    (openRestriction : ClassicalHodgeFiber X HX p →ₗ[ℚ] OpenCoh)
+    (hLocalization :
+      ∀ v, openRestriction v = 0 → v ∈ LinearMap.range ambient)
+    (hLefschetzDirect :
+      ∀ x, primitive x ∈ LinearMap.range ambient → x = 0) :
+    Function.Injective (openRestriction.comp primitive) := by
+  intro x y hxy
+  have hzero : openRestriction (primitive (x-y)) = 0 := by
+    calc
+      openRestriction (primitive (x-y)) =
+        openRestriction (primitive x) - openRestriction (primitive y) := by
+          simp only [map_sub]
+      _ = 0 := sub_eq_zero.mpr hxy
+  have hAmbient : primitive (x-y) ∈ LinearMap.range ambient :=
+    hLocalization _ hzero
+  exact sub_eq_zero.mp (hLefschetzDirect (x-y) hAmbient)
+
+/-- A nonzero arbitrary-X middle primitive Hodge class cannot be
+eliminated by choosing an ample boundary: its affine restriction is nonzero.
+Thus the difficult affine algebraic source is genuinely necessary. -/
+theorem nonzero_middle_primitive_has_nonzero_affine_restriction
+    {p : ℕ} {P A OpenCoh : Type*}
+    [AddCommGroup P] [Module ℚ P]
+    [AddCommGroup A] [Module ℚ A]
+    [AddCommGroup OpenCoh] [Module ℚ OpenCoh]
+    (primitive : P →ₗ[ℚ] ClassicalHodgeFiber X HX p)
+    (ambient : A →ₗ[ℚ] ClassicalHodgeFiber X HX p)
+    (openRestriction : ClassicalHodgeFiber X HX p →ₗ[ℚ] OpenCoh)
+    (hLocalization :
+      ∀ v, openRestriction v = 0 → v ∈ LinearMap.range ambient)
+    (hLefschetzDirect :
+      ∀ x, primitive x ∈ LinearMap.range ambient → x = 0)
+    (x : P) (hx : x ≠ 0) :
+    openRestriction (primitive x) ≠ 0 := by
+  intro hzero
+  exact hx (hLefschetzDirect x (hLocalization _ hzero))
+
+#check middle_primitive_affine_restriction_injective
+#check nonzero_middle_primitive_has_nonzero_affine_restriction
+#print axioms middle_primitive_affine_restriction_injective
+
 #check affine_boundary_vanishing_constructs_original_hodge_cycle
 #check affine_boundary_vanishing_hodge_weight_successor
 #print axioms affine_boundary_vanishing_constructs_original_hodge_cycle
