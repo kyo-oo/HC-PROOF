@@ -62,6 +62,26 @@ This **removes a bare determinant nonzero hypothesis** from the old GST geometri
 
 Wolfram caveat: evaluating 0^0 natively can produce Indeterminate. Tests explicitly used exponent-zero value 1, the algebraically correct polynomial convention, and then found exact symbolic determinants; no floating tolerance or data fitting.
 
+## Route C — exact universal GST correspondence complexity bound
+
+A single algebraic correspondence operator T with minimal polynomial
+\[
+m_T(t)=t^r+c_{r-1}t^{r-1}+\cdots+c_0
+\]
+gives, for ANY native seed v and ANY linear geometric readout ell, the scalar moments \(a_k=\ell(T^kv)\). Because \(m_T(T)=0\), they satisfy for EVERY k>=0 the exact recurrence
+\[
+a_{k+r}=-\sum_{j=0}^{r-1}c_j a_{k+j}.
+\]
+Therefore every column of the \(n\times n\) Hankel matrix \(H_{ij}=a_{i+j}\) with index j>=r is a linear combination of its first r columns, and
+\[
+\boxed{\operatorname{rank}H\le r,\qquad
+ n>r\Longrightarrow\det H=0.}
+\]
+
+This is an ALL-rank theorem for every actual original-X cycle-class operator, independent of spectra, eigenbasis, or positivity. It proves precisely why the actual arbitrary-X Chow projector Pi_f (minimal polynomial divides t(t-1), r<=2) cannot by itself build cyclic native generators when the target Hodge dimension exceeds two. The true GST upgrade cannot merely iterate an idempotent world-birth or multiply the number of internal coordinates; it must provide a genuinely higher-degree realized geometric action, several independent noncommuting actions with larger joint operator span, or directly new native sources.
+
+This rank bound was proved algebraically by the displayed recurrence (not by checking finite matrices). The Wolfram 3×3 and 4×4 idempotent tests are finite checks only. It is a structural law about *single-operator saturation*, not evidence against the Hodge conjecture.
+
 ## Program status and research move
 
 What is independently constructed on EVERY original X here: the rational primitive diagonal correspondence Pi_f and its nonzero target-sensitive pairing for every nonzero primitive rational (p,p) alpha (analytic comparison subject to standard fundamental-class naturality). What is algebraically proved for an arbitrary-rank correspondence moment: exact spectral/Vandermonde factorization and determinant positivity under actual separated spectrum and positive source components. These are substantive new *cross-law* sources and numerical invariants, not universal Hodge-cycle representatives.
