@@ -1,0 +1,132 @@
+# Mathbox: universal primitive Chow correspondence -> intrinsic Chern and normalized algebraic K₀ sources on the original X
+
+**Date:** 2026-10-18. **Program:** full rational Hodge statement for every smooth projective complex original X, all p, all rational (p,p) alpha, with true canonical Betti cycle class. **Base SHA:** 4862bada7856242af660c9af4424c1b6e131b763. **Active research branch:** research/gpt6-native-point-primitive-span-20261017. **Research route:** construct algebraic sources from ORIGINAL-X intrinsic geometric objects rather than supplying any Hodge target preimage.
+
+## A. The universal primitive *algebraic* correspondence is already constructed
+
+Fix smooth connected projective complex X of dimension n. Choose a finite flat general linear projection f:X→P^n from a sufficiently ample projective embedding; d=deg f>0. Graph and fiber product give the honest algebraic rational correspondence
+\[
+\Pi_f=[\Delta_X]-\frac1d[X\times_{\mathbb P^n}X]\in CH^n(X\times X)_{\mathbb Q}.
+\]
+The finite-flat graph composition identity gives Pi²=Pi as a Chow correspondence. For every p its native Chow action is
+\[
+\Pi_{f*}Z= Z-\frac1d f^*f_*Z,\quad f_*\Pi_{f*}Z=0.
+\]
+It acts on Betti by the same push-pull identity once graph fundamental-class/Gysin naturality is authenticated. **The codimension-n correspondence is genuinely algebraic on original X×X**, but algebraic extraction of codimension-p classes needs a second geometrically constructed algebraic input. Its two-sided pairing with a cohomological alpha is a detector, NOT such an input.
+
+## B. ALL-X intrinsic tangent-Chern extraction (a native source with no target witness)
+
+The original smooth scheme has an algebraic tangent bundle T_X and hence actual integral Chow Chern classes c_p(T_X). Apply Pi_f to the **intrinsically existing** algebraic class, giving
+\[
+\boxed{
+Z_{f,p}^{\mathrm{tan}}
+=c_p(T_X)-\frac1d f^*f_*c_p(T_X)
+=c_p(T_X)-
+ \frac{\int_X c_p(T_X)h^{n-p}}{\int_Xh^n}\,h^p
+\in CH^p(X)_{\mathbb Q},\quad h=f^*\mathcal O_{\mathbb P^n}(1).
+}
+\]
+The second equality follows because CH^p(P^n)_Q=Q H^p and projection formula; it holds for 0<=p<=n. The class is already in the genuine Chow pushforward kernel on the ORIGINAL X, without taking alpha or any presumed Chow preimage as data. A literal cycle representative can be chosen from a Chern/de\-generacy-locus representative of the intrinsic Chow class. This is an **effective all-X geometric operation**, though for particular X,p its output may equal zero; it does not itself imply all rational Hodge classes are generated.
+
+### Nontrivial middle Lefschetz-primitive source on equal-degree polarized K3×K3, for every d>0
+
+Let X=S₁×S₂ with both polarized K3 surfaces h_i²=2d, where d∈N_{>0}. Use the cohomological degree-four algebraic classes
+\(A=[\mathrm{pt}]\times S_2,\ B=S_1\times[\mathrm{pt}],\ U=h_1h_2\).
+Then
+\[
+A^2=B^2=A\cdot U=B\cdot U=0,\quad A\cdot B=1,\quad U^2=4d^2.
+\]
+Because c1(T_{S_i})=0 and c2(T_{S_i}) has degree 24, \(c_2(T_X)=24(A+B)\) in Betti; the corresponding Chow Chern class itself exists independently of this cohomology calculation. For H=h1+h2,
+\[
+H^2=2d(A+B)+2U,\quad H^4=24d^2,\quad c_2(T_X)H^2=96d.
+\]
+Thus the correspondence's actual original-X codimension-two **algebraic cycle class** is
+\[
+\boxed{
+Z_{f,2}^{\mathrm{tan}}
+=c_2(T_X)-\frac4d H^2
+=16(A+B)-\frac8d U.
+}
+\]
+This is not just projective trace-zero: multiply by H to obtain
+\[
+H Z_{f,2}^{\mathrm{tan}}=0\in H^6(X,\mathbb Q).
+\]
+Its exact canonical top-degree intersection is
+\[
+\boxed{\int_X (Z_{f,2}^{\mathrm{tan}})^2
+=2(16)^2+4d^2(8/d)^2=768>0.}
+\]
+Therefore a TRUE nonambient middle Lefschetz-primitive rational (2,2) algebraic class is independently born on the ORIGINAL X for infinitely many smooth projective X. This uses no prescribed target cohomology alpha, special plane on X, or hidden new cycle seed. The Chern class exists on every smooth projective X and is transformed by the actual algebraic correspondence.
+
+**Adversarial convention test:** if degrees d₁ and d₂ differ, the source c₂-(c₂ H²/H⁴)H² remains Chow trace-zero but generally fails H∧Z=0. The exact Wolfram residual coefficients are 12(d₂-d₁)/d₂ and 12(d₁-d₂)/d₁ in the degree-six basis. Its self-intersection may be negative, which is fully compatible with Hodge–Riemann because the class is then NOT Lefschetz primitive. One must NEVER identify projective trace-zero with Lefschetz primitivity without checking H∧Z.
+
+**Exact verification:** Wolfram symbolic rational computation returned H⁴=24d₁d₂, c₂ H²=48(d₁+d₂), coefficient 2(d₁+d₂)/(d₁d₂), equal-degree source coordinates (16,16,-8/d), exact norm 768 and vanishing HZ. GSTMaximalLinearHypersurfacePrimitive.lean was EDITED IN PLACE to give rational intersection/primitive/norm Lean lemmas for all d≠0; focused official [CI #39146825630](https://github.com/kyo-oo/HC-PROOF/actions/runs/39146825630) PASSED after the three coefficient simplifications were repaired. The kernel certifies the rational intersection dictionary. It does **not** implement a complete universal scheme tangent Chern functor or identify arbitrary Stage2G cycleClass with canonical Betti; those geometric comparison steps remain separate.
+
+The previously existing finite-flat native projector in GSTActualXHodgeResidualProjection.lean is now applied directly to \`intrinsicChernCycle\`, and Lean proves (i) Chow pushforward vanishing, (ii) actual supplied Betti cycle-class identity, and (iii) a geometric-readout certificate for nonzero primitive output. This proof requires NO alpha-dependent native witness. The geometric choice of intrinsicChernCycle from T_X remains to be formalized at the exact scheme/Chow API level.
+
+## C. New ALL-X algebraic K₀ projector: a much larger geometric source pool
+
+A fixed tangent Chern class does not provide enough primitive directions on every X; in particular, positive tangent Chern classes vanish on abelian varieties, where nontrivial Weil Hodge sectors may exist. Replace the tangent source by **ANY independently constructed coherent perfect complex** \(E\) on the ORIGINAL X. Their rational algebraic Grothendieck group K₀(X)_Q is a separate geometric source space, not a Hodge preimage or an invented vector space.
+
+Let \(u=[f_*\mathcal O_X]\in K_0(\mathbb P^n)_{\mathbb Q}\). This is a genuine algebraic bundle of rank d>0. Since the rank-zero augmentation ideal in \(K_0(\mathbb P^n)_Q\) is nilpotent of exponent n+1, write \(u=d+\eta\), \(\eta^{n+1}=0\). Then
+\[
+\boxed{u^{-1}=\frac1d\sum_{k=0}^{n}(-\eta/d)^k.}
+\]
+This is an **explicit finite rational algebraic K₀ inverse**, not an analytic completion.
+
+The finite flat push-pull projection formula in K-theory reads
+\[
+f_*f^*a=a\,u,
+\]
+which is DIFFERENT from the simpler Chow/Betti degree identity f_*f^*=dI. Using d^{-1} rather than u^{-1} in K₀ would be incorrect; the new GST law repairs precisely that possible mismatch.
+
+Now construct the **actual algebraic virtual bundle**
+\[
+\boxed{\mathcal P_f^K(E)=E-f^*\!\bigl(u^{-1}f_*E\bigr)\in K_0(X)_{\mathbb Q}.}
+\]
+Immediate exact algebra:
+\[
+f_*\mathcal P_f^K(E)
+=f_*E-u\cdot(u^{-1}f_*E)=0,\qquad
+(\mathcal P_f^K)^2=\mathcal P_f^K,
+\]
+and every E with f_*E=0 is fixed. Therefore
+\[
+\boxed{\operatorname{im}\mathcal P_f^K=\ker[f_*:K_0(X)_Q\to K_0(\mathbb P^n)_Q].}
+\]
+This gives a **universal actual-geometric algebraic K₀ source-construction law** on every original X, with no target Hodge cycle argument. In \`GSTUniversalResolvedSupportHodge.lean\`, the new \`GSTNativeFiniteFlatK0Extraction\` namespace formally proves exact push zero, fixed kernel, idempotence, and image iff trace zero for R-module push/pull operators with genuine projection-formula and invertibility inputs. The dedicated [GST Native K0 Original X Extraction](https://github.com/kyo-oo/HC-PROOF/actions/workflows/gst-native-k0-original-x-extraction.yml) CI compiles this module.
+
+### Genuine Chow extraction from the virtual bundle: Todd-normalized GRR
+
+Use the actual rational algebraic Chow-valued Chern character \(\mathrm{ch}\) and the relative virtual Todd class
+\[
+\operatorname{td}(T_f)=
+  \operatorname{td}(T_X)/f^*\operatorname{td}(T_{\mathbb P^n}).
+\]
+For every codimension p define the **genuine rational Chow source on X**
+\[
+\boxed{
+Z_{f,p}^{K}(E)=
+  \bigl[\mathrm{ch}(\mathcal P_f^K(E))\operatorname{td}(T_f)\bigr]_p
+\in CH^p(X)_{\mathbb Q}.}
+\]
+Grothendieck–Riemann–Roch in actual rational Chow rings gives
+\[
+f_*\bigl(\mathrm{ch}(E)\operatorname{td}(T_f)\bigr)
+=\mathrm{ch}(f_*E).
+\]
+Consequently \(f_*Z_{f,p}^{K}(E)=0\) for every p. **Do not omit the relative Todd factor**: the raw ch_p(P_K(E)) need not separately lie in the Chow pushforward kernel, because GRR mixes Chern degrees. This is a source-correctness constraint, not a cosmetic normalization.
+
+Moreover \(\Theta_X(E)=\mathrm{ch}(E)\operatorname{td}(T_f)\) is an additive rational group isomorphism
+\(K_0(X)_Q\simeq\bigoplus_p CH^p(X)_Q\) for smooth projective X (Riemann–Roch/Chow filtration and rational Chern character), and GRR makes it commute with f_* and ch on projective space. Thus **as E ranges ALL actual perfect complexes**, the outputs \(\sum_p Z_{f,p}^{K}(E)\) exhaust the ENTIRE algebraic Chow trace kernel \(\bigoplus_p\ker f_*|_{CH^p}\). To see this, take any Chow class S with f_*S=0, let E=Theta_X^{-1}(S), use injectivity of ch on P^n to get f_*E=0, hence P_K(E)=E and Theta_X(P_K(E))=S.
+
+This is a real all-X **geometric extraction completeness theorem at the algebraic-source level**. Its source space is algebraic K₀, not a cohomological Hodge input. To prove full Hodge, GST must construct from the prescribed alpha an independently algebraic perfect complex whose Todd-normalized Chern character matches the residual primitive alpha. Existence of the K₀ projector by itself does not supply that exact complex.
+
+### Connection and limits
+
+- GST world-birth now has three compatible concrete original-X source factories: actual Chow finite-flat primitive correspondence; intrinsic tangent/normal algebraic characteristic cycles; and arbitrary algebraic coherent/perfect-complex K₀ with Todd-corrected GRR.
+- Previously verified GST CM–NM sheaf and Hilbert constructions are geometrically richer choices of perfect-complex source E and can be passed through the normalized K₀/Chow projection, retaining exactly the new nonambient part.
+- Source presence is independently proven for the canonical K3×K3 tangent-Chern primitive of norm 768; nonvanishing for arbitrary X,p,alpha must be attacked through genuine construction of coherent E with nontrivial paired Chern character, not by simply defining an abstract source-selection operator.
+- In the current formalization, \`H.cycleClass\` is supplied as a structure field. Lean equality relative to this map requires a separate canonical singular-Betti geometric comparison before promoting to the exact official Hodge statement.
+- **Route outcome:** actual universal primitive algebraic Chow correspondence; true extracted native Chern cycle for every X; independently nonzero primitive geometric source on an infinite K3×K3 family; normalized universal algebraic K₀ projector; Todd-corrected original-X Chow output and proof its image is entire algebraic trace-kernel family. The prescribed-alpha geometric perfect-complex birth is the next direct construction task.
