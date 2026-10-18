@@ -703,7 +703,7 @@ At any target period, the existing Baire/Hilbert source assumptions select a gen
 \[
 R_0=R-c\Theta^2.
 \]
-By the existing single global proper-Gysin cycle-class naturality law, its fixed Hodge coordinate is **exactly** ((0,z)), with (z\ne0). The already proved global CM cycle-class functoriality for the genuine isogeny $d+1+u$ yields a second actual cycle $T R_0$ of class $(0,T_W z)$. The exact existing GST fourth-power orbit theorem gives
+By the existing single global proper-Gysin cycle-class naturality law, its fixed Hodge coordinate is **exactly** $(0,z)$, with $z\ne0$. The already proved global CM cycle-class functoriality for the genuine isogeny $d+1+u$ yields a second actual cycle $T R_0$ of class $(0,T_W z)$. The exact existing GST fourth-power orbit theorem gives
 \[
 \det(z,T_Wz)=4(d+1)\big((d+1)^2-d\big)(z_1^2+d z_2^2)>0
 \quad(d>0,z\ne0).
