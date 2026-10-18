@@ -631,8 +631,9 @@ theorem quantized_energy_certificate_constructs_exact_native_cycle
     by_contra hr
     exact (ne_of_gt (hPositive r hr)) hEnergyZero
   have hh := actual_cycle_plus_residual_equals_target P alpha
-  rw [← hR] at hh
-  simpa only [hR, add_zero] using hh
+  change P.cycleClass (projectedNativeCycle P alpha) + r = alpha at hh
+  rw [hR, add_zero] at hh
+  exact hh
 
 #check integer_polarization_gap_vanishes_below_one
 #check quantized_energy_certificate_constructs_exact_native_cycle
