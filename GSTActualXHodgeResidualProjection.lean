@@ -304,6 +304,48 @@ theorem ActualXCycleProjectionData.quantized_polarization_gap_constructs_exact_o
 #check ActualXCycleProjectionData.quantized_polarization_gap_constructs_exact_original_X_cycle
 #print axioms ActualXCycleProjectionData.quantized_polarization_gap_constructs_exact_original_X_cycle
 
+
+/-! ## GST ORIGINAL-X intrinsic integral Gram determinant exactness
+
+For an actual old native integral Chow-cycle Gram matrix G and cleared
+integral Hodge target alpha, the Schur complement identity supplies
+  det G * Q(residual, residual) = det augmentedGram ∈ ℕ.
+Thus the TRUE native target class is exactly represented when
+residual energy is below 1/det G. Unlike the earlier free-D lattice
+bound, g is the determinant computed by the old algebraic geometry.
+
+This theorem connects the new kernel-verified Gram quantum law to
+the actual original-X Betti cycle-class map. Its hSchur field is a
+verifiable integer intersection certificate, NOT a cycle preimage.
+The unproved step for universal Hodge is independent geometrical
+production of native sources attaining the strict energy bound.
+-/
+
+/-- Original-X rational algebraic cycle constructed directly from the
+actual GST native Gram projection and a finite integer determinant
+certificate, with exact canonical Betti class of the given Hodge alpha. -/
+theorem ActualXCycleProjectionData.gram_determinant_gap_constructs_exact_original_X_cycle
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (hPositive : ∀ v : HodgeSpace X H p,
+      v ≠ 0 → 0 < (Q v) v)
+    (alpha : HodgeSpace X H p)
+    (g : ℕ) (hg : 0 < g) (m : ℕ)
+    (hSchur :
+      (g : ℚ) * (Q (P.primitiveResidual alpha))
+        (P.primitiveResidual alpha) = (m : ℚ))
+    (hSmall :
+      (Q (P.primitiveResidual alpha))
+        (P.primitiveResidual alpha) < 1 / (g : ℚ)) :
+    H.cycleClass p (P.projectNative alpha) = alpha.1 := by
+  have h :=
+    GSTPolarizedHodgeResidualEnergy.geometric_gram_determinant_gap_constructs_exact_native
+      P.toProjectionPacket Q hPositive alpha g hg m hSchur hSmall
+  exact congrArg Subtype.val h
+
+#check ActualXCycleProjectionData.gram_determinant_gap_constructs_exact_original_X_cycle
+#print axioms ActualXCycleProjectionData.gram_determinant_gap_constructs_exact_original_X_cycle
+
 /-- In the actual Stage-2G target, residual ZERO is equivalent to
 exact equality of the concrete constructed native cycleClass to alpha.
 This is the precise mathematical criterion that a universal GST
