@@ -1013,7 +1013,7 @@ actual finite-flat direct-image bundle u=[f_* O_X]. For an actual
 projective n-space base, rational K₀ has nilpotent augmentation ideal.
 Writing u=d+eta, where d is the nonzero rational degree and
 eta^(n+1)=0, a FINITE polynomial inverse exists:
-  uInv = d⁻¹ sum_{k=0}^n (-eta*d⁻¹)^k.
+  uInv = dinv sum_{k=0}^n (-eta*dinv)^k.
 
 This is an explicit algebraic K₀ element, not an inverse chosen by a
 Hodge-class selector or a topological completion. We prove the
@@ -1039,32 +1039,32 @@ theorem finiteGeometricSeries_identity (t : R) (N : ℕ) :
 
 /-- CONSTRUCT, from a unit-rank term and nilpotent rank-zero
 augmentation, the actual rational algebraic K₀ inverse. -/
-def finiteNilpotentBaseInverse (d eta : R) (N : ℕ) : R :=
-  d⁻¹ * ∑ k ∈ Finset.range N, (-eta*d⁻¹)^k
+def finiteNilpotentBaseInverse (d eta dinv : R) (N : ℕ) : R :=
+  dinv * ∑ k ∈ Finset.range N, (-eta*dinv)^k
 
 /-- No abstract K₀ inverse supplied: genuine finite-rank degree plus
 nilpotency COMPUTES an exact ring inverse as a finite polynomial. -/
 theorem finiteNilpotentBaseInverse_correct
-    (d eta : R) (N : ℕ)
-    (hd : d*d⁻¹ = 1)
+    (d eta dinv : R) (N : ℕ)
+    (hd : d*dinv = 1)
     (hNilpotent : eta^N = 0) :
-    (d+eta)*finiteNilpotentBaseInverse d eta N = 1 := by
-  have ht : (-eta*d⁻¹)^N = 0 := by
+    (d+eta)*finiteNilpotentBaseInverse d eta dinv N = 1 := by
+  have ht : (-eta*dinv)^N = 0 := by
     rw [mul_pow]
     simp [hNilpotent]
-  have hf : (d+eta)*d⁻¹ = 1-(-eta*d⁻¹) := by
+  have hf : (d+eta)*dinv = 1-(-eta*dinv) := by
     calc
-      (d+eta)*d⁻¹ = d*d⁻¹ + eta*d⁻¹ := by ring
-      _ = 1-(-eta*d⁻¹) := by rw [hd]; ring
+      (d+eta)*dinv = d*dinv + eta*dinv := by ring
+      _ = 1-(-eta*dinv) := by rw [hd]; ring
   calc
-    (d+eta)*finiteNilpotentBaseInverse d eta N =
-        ((d+eta)*d⁻¹) *
-          (∑ k ∈ Finset.range N, (-eta*d⁻¹)^k) := by
+    (d+eta)*finiteNilpotentBaseInverse d eta dinv N =
+        ((d+eta)*dinv) *
+          (∑ k ∈ Finset.range N, (-eta*dinv)^k) := by
             simp only [finiteNilpotentBaseInverse]; ring
-    _ = (1-(-eta*d⁻¹)) *
-          (∑ k ∈ Finset.range N, (-eta*d⁻¹)^k) := by rw [hf]
-    _ = 1-(-eta*d⁻¹)^N :=
-      finiteGeometricSeries_identity (-eta*d⁻¹) N
+    _ = (1-(-eta*dinv)) *
+          (∑ k ∈ Finset.range N, (-eta*dinv)^k) := by rw [hf]
+    _ = 1-(-eta*dinv)^N :=
+      finiteGeometricSeries_identity (-eta*dinv) N
     _ = 1 := by rw [ht]; ring
 
 /-- ACTUAL explicit normalized K₀ primitive source, where the
@@ -1073,23 +1073,23 @@ rank-zero geometric augmentation eta. -/
 def finiteNilpotentVirtualPrimitive
     (push : M →ₗ[R] R)
     (pull : R →ₗ[R] M)
-    (d eta : R) (N : ℕ) (E : M) : M :=
+    (d eta dinv : R) (N : ℕ) (E : M) : M :=
   normalizedVirtualPrimitive push pull
-    (finiteNilpotentBaseInverse d eta N) E
+    (finiteNilpotentBaseInverse d eta dinv N) E
 
 /-- An original-X algebraic perfect-complex source obtained with
 the COMPUTED inverse has zero proper finite-flat K₀ pushforward. -/
 theorem finiteNilpotentVirtualPrimitive_push_zero
     (push : M →ₗ[R] R)
     (pull : R →ₗ[R] M)
-    (d eta : R) (N : ℕ)
-    (hd : d*d⁻¹ = 1)
+    (d eta dinv : R) (N : ℕ)
+    (hd : d*dinv = 1)
     (hNilpotent : eta^N = 0)
     (hProjection : ∀ a : R, push (pull a) = (d+eta)*a)
     (E : M) :
-    push (finiteNilpotentVirtualPrimitive push pull d eta N E) = 0 := by
+    push (finiteNilpotentVirtualPrimitive push pull d eta dinv N E) = 0 := by
   exact normalizedVirtualPrimitive_push_zero
-    push pull (d+eta) (finiteNilpotentBaseInverse d eta N)
+    push pull (d+eta) (finiteNilpotentBaseInverse d eta dinv N)
     (finiteNilpotentBaseInverse_correct d eta N hd hNilpotent)
     hProjection E
 
@@ -1099,16 +1099,16 @@ a separately constructed projective-bundle class inverse. -/
 theorem finiteNilpotentVirtualPrimitive_image_iff_kernel
     (push : M →ₗ[R] R)
     (pull : R →ₗ[R] M)
-    (d eta : R) (N : ℕ)
-    (hd : d*d⁻¹ = 1)
+    (d eta dinv : R) (N : ℕ)
+    (hd : d*dinv = 1)
     (hNilpotent : eta^N = 0)
     (hProjection : ∀ a : R, push (pull a) = (d+eta)*a)
     (E : M) :
     (∃ W : M,
-      finiteNilpotentVirtualPrimitive push pull d eta N W = E) ↔
+      finiteNilpotentVirtualPrimitive push pull d eta dinv N W = E) ↔
         push E = 0 := by
   exact normalizedVirtualPrimitive_image_iff_trace_zero
-    push pull (d+eta) (finiteNilpotentBaseInverse d eta N)
+    push pull (d+eta) (finiteNilpotentBaseInverse d eta dinv N)
     (finiteNilpotentBaseInverse_correct d eta N hd hNilpotent)
     hProjection E
 
