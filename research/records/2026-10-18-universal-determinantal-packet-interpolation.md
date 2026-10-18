@@ -149,6 +149,34 @@ For a hypothetical topological rank-p bundle with ch_j=0 (j<p) and ch_p=N alpha�
 
 The above uses the standard differential-geometric Hermitian–Einstein existence theorem for polystable bundles; the exact analytic external theorem and positivity normalization were NOT checked against a pinned primary-source document in this no-web checkpoint. The Chern-polynomial calculations were verified symbolically; the global differential-geometric claim is given with its mathematical hypotheses, not claimed as a Lean theorem.
 
+## 5b. Second categorical birth: actual COMPLEX-ANALYTIC determinant sheets on one universal affine model
+
+Let the original smooth projective X be embedded in a complex projective space. Its incidence-complement Jouanolou affine-space bundle \(\pi:J(X)\to X\) is a smooth affine algebraic variety, with contractible fibers \(\mathbb C^N\), so its analytification is Stein and its underlying continuous map is a homotopy equivalence. Pull back the topological bundles E,F from §1 to this ACTUAL affine replacement.
+
+**Stein Oka–Grauert step:** every topological complex vector bundle on a Stein manifold admits a compatible holomorphic vector bundle structure, unique up to holomorphic isomorphism for its fixed topological isomorphism class. Therefore the pulled-back smooth E,F acquire genuinely holomorphic structures \(E^{an},F^{an}\) on \(J(X)^{an}\), without claiming they are algebraic.
+
+For each integer k, \(E^{an}\to F^{an}\otimes\pi^*L^k\) is a holomorphic Hom bundle. Holomorphic generation and generic transversality on Stein spaces (Cartan Theorem A, supplemented by the standard holomorphic transversality theorem for sections) permit holomorphic matrix maps whose rank-drop loci \(D_k^{an}\) are closed **complex-analytic** determinantal cycles, with the proper analytic Thom–Porteous/cohomological fundamental class:
+\[
+ \mathrm{cl}^{an}(D_k^{an})
+ =\pi^*c_p(F\otimes L^k-E).
+\]
+The all-K exact *INTEGER* interpolation then produces an explicitly target-born signed finite COMPLEX-ANALYTIC cycle
+\[
+ T_{\alpha}^{an}
+  =\frac{(-1)^{p-1}}{(p-1)!N}
+    \sum_{j=0}^p\lambda_{K,p,j}[D_{K+j}^{an}],
+ \quad \mathrm{cl}^{an}(T_{\alpha}^{an})=\pi^*\alpha.
+\]
+Unlike the symplectic-only route, every sheet here is genuinely **integrable complex-analytic**. The construction is on the affine replacement J(X), not an original-X Chow cycle. The analytic existence/transversality package should be checked against exact primary sources before being formally promoted beyond this project mathematics checkpoint.
+
+**Why this is a sharper and genuinely necessary boundary:** for the ORIGINAL projective X the algebraic Chow pullback \(\pi^*:CH^p(X)\to CH^p(J(X))\) is an isomorphism. If this particular analytic packet can be replaced by a rational **algebraic** cycle on J(X), homotopy invariance descends it unambiguously to a bona fide Chow cycle on original X with canonical class alpha. No unsolved analytic-to-scheme conversion is hidden in the descent itself; the only new birth is converting the target-born holomorphic *analytic* packet to a regular algebraic cycle when alpha has rational (p,p) type.
+
+**Non-Hodge K3 firewall, ruling out automatic Stein algebraization.** Take a projective K3 surface X with Picard rank 1 and choose an integral class \(\beta\in H^2(X,\mathbb Z)\) that is NOT of Hodge type (1,1). Its pullback to the affine Stein Jouanolou J(X) is the Chern class of a topological complex line bundle, hence by Oka of an actual holomorphic line bundle. Cartan Theorem A gives a nonzero holomorphic section, whose zero set is a genuine analytic divisor (because nontrivial c1 prevents nowhere-vanishing). Its Betti class is \(\pi^*\beta\). It CANNOT be an algebraic divisor: otherwise Chow homotopy invariance would descend an algebraic divisor to original X, contradicting the Lefschetz (1,1) necessity on X. Therefore *even a projective-origin integral analytic divisor on an affine J(X) need not be algebraic*. The additional input **must exploit the rational Hodge type condition**. Without it, the proposed algebraization law is outright FALSE already in codimension one.
+
+For Hodge p=1 the correct algebraization uses the original-X exponential-sequence Lefschetz (1,1) theorem, and Stein Oka uniqueness then identifies the holomorphic line bundle with an algebraic pullback. For p>=2 the remaining issue is a new Hodge-conditioned algebraization theorem for finite signed analytic determinantal packets; no such theorem has been established here and it is at least as strong as the desired Gate 3 conclusion in this class of packets. There is no known valid unconditional lift just from projective origin.
+
+**Status:** Steps 1–4 supply actual target-born, finite signed, topological degeneracy packets on every original X. This §5b builds complex-analytic degeneracy packets on its affine Stein replacement using named standard theorems (source verification outstanding). It reaches holomorphic geometry but NOT algebraic Chow, and cannot solve Gate 3 without a genuinely new use of Hodge type.
+
 ## 6. Honest remaining nonlinear construction challenge
 
 To **solve** the user-requested all-varieties Hodge theorem using the new finite packet, one must construct for each X,p,Hodge-alpha enough HONEST complex-analytic/algebraic determinants A_k on the SAME original X whose canonical classes are the P(k), or build an independent holomorphic/coherent perfect-complex avatar realizing the target-born virtual K-class. The Hodge condition is absent from Steps 1–3 and MUST enter this new map from smooth determinant geometry into complex analyticity. Ordinary smooth transversality cannot provide it, HYM polystability is impossible for nonzero normalized primitive packages, and simply applying the existing algebraic GST orbit to existing algebraic seeds cannot manufacture the missing direction.
