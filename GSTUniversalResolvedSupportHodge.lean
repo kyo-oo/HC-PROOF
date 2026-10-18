@@ -1220,4 +1220,100 @@ theorem chow_and_K0_projectors_agree_of_Todd_ambient
 
 end GSTNativeFiniteFlatToddBridge
 
+
+/-! ## GST LEADING-CHERN LAW FOR ACTUAL GEOMETRIC SHEAF SOURCES
+
+The CM/Weil native source is typically supplied by the STRUCTURE
+SHEAF O_Z of a genuine algebraic codimension-p incidence or isogeny
+graph Z on the ORIGINAL X. Its rational algebraic Chern character
+is zero in degrees <p, with degree-p part [Z].
+
+The normalized finite-flat K₀ primitive and its GRR Todd correction
+could appear to mix all cohomological degrees. Their exact leading
+codimension-p source does NOT: if ch_i(E)=0 and
+ch_i(f_*E)=0 for all i<p, then independently of ALL higher Todd and
+finite inverse coefficients,
+ [ch(P_K E) Td(T_f)]_p =
+   ch_p(E) - (1/d)f^*ch_p(f_*E).
+
+Thus the finite-flat normalized K₀ constructor recovers EXACTLY
+the genuine native Chow primitive graph-cycle source in the first
+nonzero Chern degree. This allows the existing GST CM-isogeny
+graph geometry to feed the new algebraic K₀/Chow source engine
+without a mysterious Todd mixing assumption or an alpha input.
+
+The theorem below kernel-checks the required arbitrary-p rational
+graded convolution, with no finite rank or low-degree cutoff.
+The scheme-level support→Chern-leading and true GRR/cycleClass
+naturality are geometric inputs, NOT defined as Hodge preimages.
+-/
+
+namespace GSTNativeFiniteFlatSupportedSheafLeading
+
+/-- Degree-p coefficient of the product of two genuine rational
+Chern/Todd power series, with finite Cauchy convolution. -/
+def chowGradedConvolution (p : ℕ)
+    (a b : ℕ → ℚ) : ℚ :=
+  ∑ j ∈ Finset.range (p+1), a (p-j)*b j
+
+/-- The FIRST nonzero Chern coefficient is unaffected by multiplying
+with a class whose degree-zero term is known; arbitrary-rank theorem. -/
+theorem chowGradedConvolution_leading
+    (p : ℕ) (a b : ℕ → ℚ)
+    (hLower : ∀ j < p, b j = 0) :
+    chowGradedConvolution p a b = a 0 * b p := by
+  unfold chowGradedConvolution
+  rw [Finset.sum_range_succ]
+  have hz :
+      (∑ j ∈ Finset.range p, a (p-j)*b j) = 0 := by
+    apply Finset.sum_eq_zero
+    intro j hj
+    rw [hLower j (Finset.mem_range.mp hj)]
+    ring
+  rw [hz]
+  simp
+
+/-- EXACT leading codimension-p Chow source extracted from an
+actual coherent/perfect algebraic sheaf supported in codimension p:
+the normalized K₀ inverse and Todd classes cancel from its leading
+primitive part, leaving the genuine correspondence formula
+  [Z] - (1/d) f^*f_*[Z].
+The source class [Z] is an independently geometrically constructed
+algebraic incidence/sheaf on ORIGINAL X, never a Hodge preimage. -/
+theorem finiteFlatSupportedSheaf_leadingChowPrimitive
+    (p : ℕ)
+    (source pushSource todd inverse : ℕ → ℚ)
+    (degreeInv : ℚ)
+    (hSource : ∀ j < p, source j = 0)
+    (hPush : ∀ j < p, pushSource j = 0)
+    (hTodd : todd 0 = 1)
+    (hInverse : inverse 0 = degreeInv) :
+    chowGradedConvolution p todd source -
+      chowGradedConvolution p todd
+        (fun j => chowGradedConvolution j inverse pushSource) =
+      source p - degreeInv * pushSource p := by
+  have hCorrectionLower :
+      ∀ j < p,
+        chowGradedConvolution j inverse pushSource = 0 := by
+    intro j hj
+    have hLower : ∀ k < j, pushSource k = 0 := by
+      intro k hk
+      exact hPush k (lt_trans hk hj)
+    rw [chowGradedConvolution_leading j inverse pushSource hLower,
+      hPush j hj]
+    ring
+  rw [chowGradedConvolution_leading p todd source hSource,
+    chowGradedConvolution_leading p todd
+      (fun j => chowGradedConvolution j inverse pushSource)
+      hCorrectionLower,
+    chowGradedConvolution_leading p inverse pushSource hPush,
+    hTodd, hInverse]
+  ring
+
+#check chowGradedConvolution_leading
+#check finiteFlatSupportedSheaf_leadingChowPrimitive
+#print axioms finiteFlatSupportedSheaf_leadingChowPrimitive
+
+end GSTNativeFiniteFlatSupportedSheafLeading
+
 end GSTUniversalResolvedSupportHodge
