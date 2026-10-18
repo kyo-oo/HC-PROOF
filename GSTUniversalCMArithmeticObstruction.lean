@@ -957,7 +957,10 @@ classical-geometric inputs, not arbitrary chosen Hodge preimages.
 comparison replace all source-by-source hypotheses in the original
 fourfold Weil Hodge assembly. The source may contain ANY ambient
 polarization component; subtracting its measured multiple of the actual
-polarization-square Chow cycle removes it before the Weil orbit step. -/
+polarization-square Chow cycle removes it before the Weil orbit step.
+The resulting theorem only assumes that the extracted fixed Betti class
+has a nonzero Weil component: no pre-selected balanced tensor, tensor
+coordinate equality, or geometric purity of the source is required. -/
 theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
     {U : SmoothProjectiveComplexScheme}
     (HU : HodgeBigradedBettiData U)
@@ -977,8 +980,7 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
     (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
     (thetaSquare : codimensionCycles V.X 2)
     (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
-    (d : ℚ) (hd : 0 < d) (tensor : TensorCoefficients)
-    (hbalanced : balanced d tensor) (hnonzero : tensor ≠ zeroCoefficients)
+    (d : ℚ) (hd : 0 < d)
     (hTheta : coordinates (nativeToHodgeFiberLinear G thetaSquare) = (1, (0, 0)))
     (fixedSixfoldBetti : RationalSingularCohomology HU.analytification 6)
     (bettiExtract :
@@ -990,8 +992,8 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
       ∀ Γ : codimensionCycles U.X 3,
         coordinates (nativeToHodgeFiberLinear G (extract Γ)) =
         bettiExtract (HU.cycleClass 3 Γ))
-    (hExtractWeilComponent :
-      (bettiExtract fixedSixfoldBetti).2 = contractGraph tensor)
+    (hWeilNonzero :
+      (bettiExtract fixedSixfoldBetti).2 ≠ (0, 0))
     (hCMFunctorial :
       ∀ Z : codimensionCycles V.X 2,
         coordinates (nativeToHodgeFiberLinear G (cmPullback Z)) =
@@ -1016,30 +1018,27 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
   let purified : codimensionCycles V.X 2 :=
     extract (cycleAt i p ht) -
       (bettiExtract fixedSixfoldBetti).1 • thetaSquare
+  let z : ℚ × ℚ := (bettiExtract fixedSixfoldBetti).2
   have hPurified :
       coordinates (nativeToHodgeFiberLinear G purified) =
-        (0, contractGraph tensor) := by
-    dsimp only [purified]
+        (0, z) := by
+    dsimp only [purified, z]
     simp only [map_sub, map_smul, hRaw, hTheta]
     cases hW : bettiExtract fixedSixfoldBetti with
     | mk c v =>
-        have hv : v = contractGraph tensor := by
-          simpa [hW] using hExtractWeilComponent
-        simp [hW, hv]
+        simp [hW]
   have hCM := hCMFunctorial purified
   rw [hPurified] at hCM
   have hCMPurified :
       coordinates (nativeToHodgeFiberLinear G (cmPullback purified)) =
-        (0, fourthPowerAction d (d+1) (contractGraph tensor)) := by
+        (0, fourthPowerAction d (d+1) z) := by
     simpa only [mul_zero] using hCM
   -- Assemble directly on the original codimension-two Chow carrier:
   -- a codimension-three auxiliary source cannot be passed through
   -- an identity map on the original codimension-two Chow carrier.
   let a : ClassicalHodgeFiber V H 2 := ⟨alpha, halpha⟩
-  let z : ℚ × ℚ := contractGraph tensor
   let w : ℚ × ℚ := fourthPowerAction d (d+1) z
-  have hz : z ≠ (0, 0) :=
-    contraction_nonzero d (ne_of_gt hd) tensor hbalanced hnonzero
+  have hz : z ≠ (0, 0) := hWeilNonzero
   have hdet : planeDeterminant z w ≠ 0 :=
     ne_of_gt (extracted_fourth_power_orbit_has_rank_two d hd z hz)
   have hReconstruction := weilPlaneCramerReconstruction z w
