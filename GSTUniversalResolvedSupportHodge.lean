@@ -1464,6 +1464,72 @@ theorem targetCoupledVirtualSource_pairing_symmetric
       (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha)) := by
   simp [targetCoupledVirtualSource, map_sum, map_smul, mul_comm]
 
+
+/-! ## GST TARGET-BORN SOURCE EXPANSION — MEASURABLE NEW COMPLEX
+
+A new actual original-X algebraic perfect complex E, built by geometric
+Hilbert, CM-NM, incidence, or determinantal methods, must be tested
+against a prescribed primitive alpha by its actual Chern period q.
+The GST target-sensitive finite source frame has an EXACT growth law:
+when E is added to a catalog, its measured total alpha pairing grows
+by q², independently of any self-intersection Gram normalization.
+
+Thus one native complex with q≠0 immediately revives a target
+undetected by every previously constructed complex; q² is an
+objective, computable growth certificate. No hRank, external
+source-basis period determinant, or target Hodge preimage is assumed.
+The geometric task is to CONSTRUCT that fresh complex E.
+-/
+
+/-- Exact source-birth improvement formula for ANY algebraic
+perfect-complex candidate newly generated on ORIGINAL X. -/
+theorem targetCoupledVirtualSource_new_geometric_birth_gain
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H) (fresh : K) :
+    (Q alpha)
+      (chowBetti
+        (targetCoupledVirtualSource
+          primitiveK chowBetti Q sources alpha +
+          (Q alpha (chowBetti (primitiveK fresh))) • primitiveK fresh)) =
+    (Q alpha)
+      (chowBetti
+        (targetCoupledVirtualSource
+          primitiveK chowBetti Q sources alpha)) +
+      (Q alpha (chowBetti (primitiveK fresh)))^2 := by
+  simp only [map_add, map_smul, smul_eq_mul]
+  ring
+
+/-- Every NEW nonzero genuine primitive Chern period produces
+a STRICTLY LARGER prescribed-alpha source response, with no
+positive-definiteness or extra Gram witness assumed. -/
+theorem targetCoupledVirtualSource_new_geometric_birth_strict
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H) (fresh : K)
+    (hFresh :
+      (Q alpha) (chowBetti (primitiveK fresh)) ≠ 0) :
+    (Q alpha)
+      (chowBetti
+        (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha)) <
+    (Q alpha)
+      (chowBetti
+        (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha +
+          (Q alpha (chowBetti (primitiveK fresh))) • primitiveK fresh)) := by
+  rw [targetCoupledVirtualSource_new_geometric_birth_gain]
+  have hGain :
+      0 < (Q alpha (chowBetti (primitiveK fresh)))^2 :=
+    sq_pos_of_ne_zero hFresh
+  linarith
+
+#check targetCoupledVirtualSource_new_geometric_birth_gain
+#check targetCoupledVirtualSource_new_geometric_birth_strict
+#print axioms targetCoupledVirtualSource_new_geometric_birth_strict
+
 #check targetCoupledVirtualSource_class_zero_iff_all_periods_zero
 #check targetCoupledVirtualSource_nonzero_of_period
 #check targetCoupledVirtualSource_pairing_symmetric
