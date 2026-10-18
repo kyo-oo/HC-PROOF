@@ -8,12 +8,12 @@
 
 ## The actual all-X calculation and its scope
 
-Fix a smooth projective complex n-fold X, a smooth ample divisor Y and U=X\\Y, with j:U->X and i:Y->X. Take rational cohomology, genuine canonical geometric maps and a rational Hodge class alpha of degree 2p. The ordinary Gysin localization exact sequence includes
+Fix a smooth projective complex n-fold X, a smooth ample divisor Y and $U=X\setminus Y$, with $j:U\to X$ and $i:Y\to X$. Take rational cohomology, genuine canonical geometric maps and a rational Hodge class alpha of degree 2p. The ordinary Gysin localization exact sequence includes
 
 \[
-H^{2p-2}(Y,\\mathbb Q)(-1)\\xrightarrow{i_*}
-H^{2p}(X,\\mathbb Q)\\xrightarrow{j^*}
-H^{2p}(U,\\mathbb Q).
+H^{2p-2}(Y,\mathbb Q)(-1)\xrightarrow{i_*}
+H^{2p}(X,\mathbb Q)\xrightarrow{j^*}
+H^{2p}(U,\mathbb Q).
 \]
 
 This is geometrical topology and is **not** a surjectivity hypothesis for algebraic cycles.
@@ -23,18 +23,18 @@ This is geometrical topology and is **not** a surjectivity hypothesis for algebr
 Iterate through a Bertini-smooth ample flag X=X_0 ⊃ X_1 ⊃ ... ⊃ X_k, with
 
 \[
-k=2p-n>0,\\qquad n_i=n-i,\\qquad p_i=p-i.
+k=2p-n>0,\qquad n_i=n-i,\qquad p_i=p-i.
 \]
 
 At all prior levels i<k, 2p_i>n_i, so every step has vanishing open cohomology. At the terminal level, 2p_k=n_k. Consequently any upper-half rational Hodge class on X is the Gysin of some **middle rational Hodge class** on the smooth projective variety X_k of dimension 2(n-p). Representing that single middle class algebraically gives an explicit composite algebraic Gysin cycle on the ORIGINAL X. It is not claimed that the terminal middle class is automatically algebraic.
 
 For p=n-1 and n≥2, X_k is a smooth projective surface and p_k=1; Lefschetz (1,1) does construct its divisor, giving the familiar genuine all-X near-top cycle case. For p=n the terminal degree is zero and the fundamental zero-codimension source gives the top 0-cycle case. These are established classical geometry, and the new Lean theorem kernel-checks the precise source-free one-step native cycle assembly rather than claiming to formalize the complete analytic topology/flag.
 
-**Lower-half and middle affine survival.** When 2p≤n, weak Lefschetz makes i^*:H^(2p-2)(X)→H^(2p-2)(Y) an isomorphism (in the relevant nonnegative degree). The projection formula gives ker(j^*)=L H^(2p-2)(X), where L is cup with the ample class. The rational Lefschetz decomposition gives
+**Lower-half and middle affine survival.** When $1\le p$ and $2p\le n$, weak Lefschetz makes i^*:H^(2p-2)(X)→H^(2p-2)(Y) an isomorphism (in the relevant nonnegative degree). The projection formula gives ker(j^*)=L H^(2p-2)(X), where L is cup with the ample class. The rational Lefschetz decomposition gives
 
 \[
-H^{2p}(X,\\mathbb Q)
- = P^{2p}(X,\\mathbb Q)\\oplus L H^{2p-2}(X,\\mathbb Q),
+H^{2p}(X,\mathbb Q)
+ = P^{2p}(X,\mathbb Q)\oplus L H^{2p-2}(X,\mathbb Q),
 \]
 
 so the restriction of j^* to the rational primitive part P^(2p)(X) is **injective**. This includes the exact difficult *middle* case 2p=n. The Lean theorems `middle_primitive_affine_restriction_injective` and `nonzero_middle_primitive_has_nonzero_affine_restriction` prove this rational-linear implication for arbitrary X and p from named genuine Betti-localization and primitive-direct-sum comparison data. They do **not** yet instantiate all geometric comparison laws from native Mathlib structures.
@@ -46,7 +46,7 @@ so the restriction of j^* to the rational primitive part P^(2p)(X) is **injectiv
 The previous affine-successor GST theorem already gives an explicit original-X cycle
 
 \[
-Z_X=\\overline{Z_U}+i_*D_Y
+Z_X=\overline{Z_U}+i_*D_Y
 \]
 
 provided Z_U in CH^p(U)_Q has canonical class j^*alpha and D_Y corrects the supported boundary Hodge discrepancy. For middle primitive alpha, the new injection proves j^*alpha is generally NONZERO, and the source-free choice Z_U=0 provably cannot work.
@@ -54,7 +54,7 @@ provided Z_U in CH^p(U)_Q has canonical class j^*alpha and D_Y corrects the supp
 Thus the exact research target for all X, all 2p≤dim(X), and arbitrary primitive rational Hodge alpha is an actual **algebraic** affine source with
 
 \[
-\\mathrm{cl}^{\\mathrm{canonical}}_U(Z_U)=j^*\\alpha.
+\mathrm{cl}^{\mathrm{canonical}}_U(Z_U)=j^*\alpha.
 \]
 
 Equivalently, one may construct an algebraic K_0(U)_Q class whose degree-2p topological Chern character is the specified restriction (with lower-degree components controlled by Adams purification). Topological K^0 or a holomorphic Oka bundle is insufficient without a *new algebraization theorem*. The relevant class lies in the lowest mixed-Hodge weight W_(2p)H^(2p)(U), not in the arbitrary higher-weight topological K-theory of U. The existing torus counterexample to holomorphic-to-algebraic Picard does not decide this lowest-weight subproblem.
