@@ -1021,20 +1021,46 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
         (0, contractGraph tensor) := by
     dsimp only [purified]
     simp only [map_sub, map_smul, hRaw, hTheta]
-    apply Prod.ext
-    · simp
-    · simpa using hExtractWeilComponent
+    cases hW : bettiExtract fixedSixfoldBetti with
+    | mk c v =>
+        have hv : v = contractGraph tensor := by
+          simpa [hW] using hExtractWeilComponent
+        simp [hW, hv]
   have hCM := hCMFunctorial purified
   rw [hPurified] at hCM
   have hCMPurified :
       coordinates (nativeToHodgeFiberLinear G (cmPullback purified)) =
         (0, fourthPowerAction d (d+1) (contractGraph tensor)) := by
     simpa only [mul_zero] using hCM
-  exact auxiliaryWeilEveryMiddleHodgeClass (U := V)
-    G purified (LinearMap.id) cmPullback thetaSquare coordinates
-    d hd tensor hbalanced hnonzero hTheta
-    (by simpa using hPurified) (by simpa using hCMPurified)
-    alpha halpha
+  -- Assemble directly on the original codimension-two Chow carrier:
+  -- a codimension-three auxiliary source cannot be passed through
+  -- an identity map on the original codimension-two Chow carrier.
+  let a : ClassicalHodgeFiber V H 2 := ⟨alpha, halpha⟩
+  let z : ℚ × ℚ := contractGraph tensor
+  let w : ℚ × ℚ := fourthPowerAction d (d+1) z
+  have hz : z ≠ (0, 0) :=
+    contraction_nonzero d (ne_of_gt hd) tensor hbalanced hnonzero
+  have hdet : planeDeterminant z w ≠ 0 :=
+    ne_of_gt (extracted_fourth_power_orbit_has_rank_two d hd z hz)
+  have hReconstruction := weilPlaneCramerReconstruction z w
+    (coordinates a).2 hdet
+  let Z : codimensionCycles V.X 2 :=
+    (coordinates a).1 • thetaSquare +
+      weilPlaneCoeff0 z w (coordinates a).2 • purified +
+      weilPlaneCoeff1 z w (coordinates a).2 • cmPullback purified
+  refine ⟨Z, ?_⟩
+  have hCycle : nativeToHodgeFiberLinear G Z = a := by
+    apply coordinates.injective
+    simp only [Z, map_add, map_smul, hTheta, hPurified, hCMPurified]
+    apply Prod.ext
+    · change (coordinates a).1 * 1 + _ * 0 + _ * 0 = (coordinates a).1
+      ring
+    · apply Prod.ext
+      · change (coordinates a).1 * 0 + _ + _ = (coordinates a).2.1
+        simpa [smul_eq_mul] using hReconstruction.1
+      · change (coordinates a).1 * 0 + _ + _ = (coordinates a).2.2
+        simpa [smul_eq_mul] using hReconstruction.2
+  exact congrArg Subtype.val hCycle
 
 #check auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
 #print axioms auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
