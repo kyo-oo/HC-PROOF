@@ -177,6 +177,16 @@ For Hodge p=1 the correct algebraization uses the original-X exponential-sequenc
 
 **Status:** Steps 1–4 supply actual target-born, finite signed, topological degeneracy packets on every original X. This §5b builds complex-analytic degeneracy packets on its affine Stein replacement using named standard theorems (source verification outstanding). It reaches holomorphic geometry but NOT algebraic Chow, and cannot solve Gate 3 without a genuinely new use of Hodge type.
 
+## 5c. A necessary correction: algebraize the COHOMOLOGY CLASS, not each chosen analytic sheet
+
+The analytic packet in §5b depends on noncanonical holomorphic maps. Its specific analytic zero sets need not be algebraic **even when the corresponding Hodge class is already algebraic**. On any positive-dimensional affine complex variety U with a nonconstant algebraic regular function f:U->C whose image is cofinite, the entire holomorphic function exp(f)-1 has analytic zero divisor
+\[
+ \bigcup_{m\in\mathbb Z}\{f=2\pi i m\}.
+\]
+There are infinitely many nonempty distinct algebraic hypersurface fibers, so their whole locally finite analytic union is not a Zariski-closed algebraic divisor of finite type. Yet exp(f)-1 is a globally principal holomorphic function: this nonalgebraic analytic divisor has Chern class 0, which is certainly algebraic (represented by the zero Chow cycle).
+
+Consequently a proposed Hodge-only law demanding that EVERY explicitly chosen analytic determinant D_k be itself algebraic is false even in the easiest class-0 case. The needed geometric feat is **replacement of the target-born signed analytic packet by SOME algebraic rational cycle with the SAME canonical class**, not literal algebraization of the arbitrary holomorphic zero sets. In particular an analytic source being holomorphic is neither sufficient nor, by itself, the correct exact geometric output.
+
 ## 6. Honest remaining nonlinear construction challenge
 
 To **solve** the user-requested all-varieties Hodge theorem using the new finite packet, one must construct for each X,p,Hodge-alpha enough HONEST complex-analytic/algebraic determinants A_k on the SAME original X whose canonical classes are the P(k), or build an independent holomorphic/coherent perfect-complex avatar realizing the target-born virtual K-class. The Hodge condition is absent from Steps 1–3 and MUST enter this new map from smooth determinant geometry into complex analyticity. Ordinary smooth transversality cannot provide it, HYM polystability is impossible for nonzero normalized primitive packages, and simply applying the existing algebraic GST orbit to existing algebraic seeds cannot manufacture the missing direction.
