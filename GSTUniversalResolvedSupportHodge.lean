@@ -1051,7 +1051,7 @@ theorem finiteNilpotentBaseInverse_correct
     (d+eta)*finiteNilpotentBaseInverse d eta dinv N = 1 := by
   have ht : (-eta*dinv)^N = 0 := by
     rw [mul_pow]
-    simp [hNilpotent]
+    simp [neg_pow, hNilpotent]
   have hf : (d+eta)*dinv = 1-(-eta*dinv) := by
     calc
       (d+eta)*dinv = d*dinv + eta*dinv := by ring
@@ -1090,7 +1090,7 @@ theorem finiteNilpotentVirtualPrimitive_push_zero
     push (finiteNilpotentVirtualPrimitive push pull d eta dinv N E) = 0 := by
   exact normalizedVirtualPrimitive_push_zero
     push pull (d+eta) (finiteNilpotentBaseInverse d eta dinv N)
-    (finiteNilpotentBaseInverse_correct d eta N hd hNilpotent)
+    (finiteNilpotentBaseInverse_correct d eta dinv N hd hNilpotent)
     hProjection E
 
 /-- The image of the explicit finite-polynomial source construction
@@ -1109,7 +1109,7 @@ theorem finiteNilpotentVirtualPrimitive_image_iff_kernel
         push E = 0 := by
   exact normalizedVirtualPrimitive_image_iff_trace_zero
     push pull (d+eta) (finiteNilpotentBaseInverse d eta dinv N)
-    (finiteNilpotentBaseInverse_correct d eta N hd hNilpotent)
+    (finiteNilpotentBaseInverse_correct d eta dinv N hd hNilpotent)
     hProjection E
 
 #check finiteGeometricSeries_identity
