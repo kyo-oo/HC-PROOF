@@ -139,7 +139,7 @@ noncomputable def ActualXCycleProjectionData.targetCoupledK0ChowCycle
     (alpha : HodgeSpace X H p) :
     codimensionCycles X.X p :=
   chowGRR
-    (GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource
+    (GSTUniversalResolvedSupportHodge.GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource
       primitiveK (P.trueHodgeClass.comp chowGRR) Q sources alpha)
 
 /-- The target's pairing with the ACTUAL canonical-compatible
@@ -159,7 +159,7 @@ theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_pairing
     ∑ i : Fin n, (Q alpha
       (P.trueHodgeClass (chowGRR (primitiveK (sources i))))) ^ 2 := by
   exact
-    GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource_pairing_eq_sum_squares
+    GSTUniversalResolvedSupportHodge.GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource_pairing_eq_sum_squares
       primitiveK (P.trueHodgeClass.comp chowGRR) Q sources alpha
 
 /-- GST's target-adapted **actual original-X Chow cycle** has
@@ -181,7 +181,7 @@ theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
         (chowGRR (primitiveK (sources i)))) ≠ 0) :
     0 < (Q alpha) (P.trueHodgeClass
       (P.targetCoupledK0ChowCycle primitiveK chowGRR Q sources alpha)) := by
-  exact GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource_positive_of_detected
+  exact GSTUniversalResolvedSupportHodge.GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource_positive_of_detected
     primitiveK (P.trueHodgeClass.comp chowGRR) Q sources alpha i hDetected
 
 #check ActualXCycleProjectionData.targetCoupledK0ChowCycle
