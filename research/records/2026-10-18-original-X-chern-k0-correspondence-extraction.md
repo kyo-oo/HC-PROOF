@@ -171,6 +171,30 @@ Moreover \(\Theta_X(E)=\mathrm{ch}(E)\operatorname{td}(T_f)\) is an additive rat
 
 This is a real all-X **geometric extraction completeness theorem at the algebraic-source level**. Its source space is algebraic K₀, not a cohomological Hodge input. To prove full Hodge, GST must construct from the prescribed alpha an independently algebraic perfect complex whose Todd-normalized Chern character matches the residual primitive alpha. Existence of the K₀ projector by itself does not supply that exact complex.
 
+### October 18 mathematical source audit: reduced tangent K₀, NOT the trivial perfect complex
+
+An important distinction surfaced on checking the actual K₀ projector formula. For \(u=[f_*\mathcal O_X]\) and \(E=[\mathcal O_X]\), the normalized source satisfies
+\[
+\mathcal P_f^K([\mathcal O_X])
+=[\mathcal O_X]-f^*(u^{-1}u)=0.
+\]
+Hence **the trivial structure sheaf does not itself create a new primitive K₀ class**, even when the difference between Chow and Todd-corrected K₀ projectors produces a nonzero intrinsic relative-Todd defect. The two constructions must not be conflated.
+
+A genuinely independent perfect-complex source on \(X=S_1\times S_2\) with equally polarized K3 factors is the **reduced tangent class**
+\[
+E_{\mathrm{red}}=[T_X]-4[\mathcal O_X]\in K_0(X)_{\mathbb Q}.
+\]
+Because \(c_1(T_X)=0\), its Chern character satisfies \(\mathrm{ch}_0(E_{\mathrm{red}})=\mathrm{ch}_1(E_{\mathrm{red}})=0\), while \(\mathrm{ch}_2(E_{\mathrm{red}})=-c_2(T_X)\). The true GRR pushforward of \(E_{\mathrm{red}}\) has no terms in degrees below two, and the finite geometric-series K₀ inverse and relative Todd correction have constant terms \(1/d\) and \(1\). Consequently the **first nonzero Chow degree** of its normalized virtual extraction is
+\[
+\boxed{
+[\mathrm{ch}(\mathcal P_f^K(E_{\mathrm{red}}))\,\mathrm{Td}(T_f)]_2
+=-c_2(T_X)+\frac4dH^2=-Z_{f,2}^{\mathrm{tan}}.
+}
+\]
+The positive primitive norm is again exactly \(768\), now arising from the actual independently constructed rank-zero perfect complex. This explicitly joins GST's arbitrary-X K₀ extraction with genuine scheme geometry at the first nonzero Chern degree, rather than relying on the existence of a target Hodge preimage.
+
+The existing \`GSTUniversalResolvedSupportHodge.lean\` lemma \`supported_source_leading_degree_todd_cancellation\` supplies the formal general leading-degree convolution. New exact K3 source identities \`gstK3ReducedTangentK0Primitive\`, \`gstK3_reducedTangentK0_primitive\` and \`gstK3_reducedTangentK0_norm\` were added to the existing \`GSTMaximalLinearHypersurfacePrimitive.lean\` at commit \`ff0e95a209782caa673dfbf7f3a9ca8288286cf9\`; their GitHub Lean verdict must be read from the focused job before being called verified. This is a true source on the chosen K3-product original X, not a universal prescribed-alpha algebraic class.
+
 ### Connection and limits
 
 - GST world-birth now has three compatible concrete original-X source factories: actual Chow finite-flat primitive correspondence; intrinsic tangent/normal algebraic characteristic cycles; and arbitrary algebraic coherent/perfect-complex K₀ with Todd-corrected GRR.
