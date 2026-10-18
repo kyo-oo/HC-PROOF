@@ -356,7 +356,8 @@ theorem gst_CM_quadratic_orbit_gram_exact
     calc
       (Q (J v)) (J v) = -(Q v) (J (J v)) := hSkew v (J v)
       _ = (Q v) v := by rw [hJ2]; simp
-  simp only [map_add, map_smul, smul_eq_mul, hz, hz', hn]
+  simp only [map_add, map_smul, LinearMap.add_apply,
+    LinearMap.smul_apply, smul_eq_mul, hz, hz', hn]
   ring
 
 /-- A genuine polarized CM orbit born from ANY nonzero primitive
