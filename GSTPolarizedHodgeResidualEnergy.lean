@@ -562,6 +562,82 @@ theorem optimal_target_residual_step_energy_strict
   have hdiv : 0 < ((Q r) z)^2 / (Q z) z := div_pos hnum hz
   linarith
 
+
+/-! ## GST rational integral polarization QUANTUM-GAP exactness law
+
+A signed integral primitive Hodge intersection has positive INTEGER
+value when nonzero. For rational primitives, a fixed integer D clears
+the cohomological denominator: D² Q(r,r) lies in ℤ. Thus positive
+residual energy cannot vary continuously through zero while D stays
+fixed. Any constructed native cycle with D² Q(r,r)<1 must be EXACT.
+
+This law is stronger than infinite energy descent: ONE sufficiently
+accurate geometric native construction proves exact representability.
+Geometric authentication of its rational lattice bound hIntegral and
+its small-energy bound hSmall remains an independent source task.
+Do NOT promote those two inputs into unexplained universal axioms.
+-/
+
+/-- Exact GST arithmetic polarization gap: a nonnegative rational
+energy whose fixed-denominator normalization is an INTEGER is either
+zero or has normalized energy at least one. -/
+theorem integer_polarization_gap_vanishes_below_one
+    (energy : ℚ) (D : ℕ) (hD : 0 < D) (m : ℤ)
+    (hIntegral : (D : ℚ)^2 * energy = (m : ℚ))
+    (hNonneg : 0 ≤ energy)
+    (hSmall : (D : ℚ)^2 * energy < 1) :
+    energy = 0 := by
+  have hpositive : 0 < (D : ℚ)^2 := by
+    have hDn : (0 : ℚ) < D := by exact_mod_cast hD
+    positivity
+  have hm_nonneg : (0 : ℚ) ≤ (m : ℚ) := by
+    rw [← hIntegral]
+    positivity
+  have hm_lt : (m : ℚ) < 1 := by
+    simpa only [hIntegral] using hSmall
+  have hm_nonneg_int : 0 ≤ m := by exact_mod_cast hm_nonneg
+  have hm_lt_int : m < 1 := by exact_mod_cast hm_lt
+  have hmzero : m = 0 := by omega
+  have hscaled : (D : ℚ)^2 * energy = 0 := by
+    simpa [hmzero] using hIntegral
+  exact (mul_eq_zero.mp hscaled).resolve_left (ne_of_gt hpositive)
+
+/-- If the actually constructed rational native projection has
+polarized residual energy below its independently verified fixed
+integral-lattice gap, the projection is an EXACT Hodge representative.
+No limits, closure arguments, target Chow witness, or infinite
+continuation are assumed: one finite arithmetic gap check suffices. -/
+theorem quantized_energy_certificate_constructs_exact_native_cycle
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hPositive : ∀ v : V, v ≠ 0 → 0 < (Q v) v)
+    (alpha : V) (D : ℕ) (hD : 0 < D) (m : ℤ)
+    (hIntegral :
+      (D : ℚ)^2 * (Q (residualClass P alpha))
+        (residualClass P alpha) = (m : ℚ))
+    (hSmall :
+      (D : ℚ)^2 * (Q (residualClass P alpha))
+        (residualClass P alpha) < 1) :
+    P.cycleClass (projectedNativeCycle P alpha) = alpha := by
+  let r := residualClass P alpha
+  have hNonneg : 0 ≤ (Q r) r := by
+    by_cases hr : r = 0
+    · simp [hr]
+    · exact le_of_lt (hPositive r hr)
+  have hEnergyZero : (Q r) r = 0 :=
+    integer_polarization_gap_vanishes_below_one
+      ((Q r) r) D hD m hIntegral hNonneg hSmall
+  have hR : r = 0 := by
+    by_contra hr
+    exact (ne_of_gt (hPositive r hr)) hEnergyZero
+  have hh := actual_cycle_plus_residual_equals_target P alpha
+  rw [← hR] at hh
+  simpa only [hR, add_zero] using hh
+
+#check integer_polarization_gap_vanishes_below_one
+#check quantized_energy_certificate_constructs_exact_native_cycle
+#print axioms quantized_energy_certificate_constructs_exact_native_cycle
+
 #check target_residual_coupling_constructs_native_rank_birth
 #check optimal_target_residual_step_energy_identity
 #check optimal_target_residual_step_energy_strict
