@@ -311,6 +311,78 @@ theorem CM_NM_dual_period_graph_rank_two_hodge
   exact CM_graph_endomorphism_rank_two_hodge
     G hnz f hR a b hb hMin hrank alpha halpha
 
+
+/-! ## GST CM-NM NATIVE GRAM BIRTH WITHOUT A CHOSEN COORDINATE DETECTOR
+
+The original quadratic CM theorem proves independent directions from
+an imaginary minimal polynomial, but geometric Gram positivity should
+come from the SAME actually polarized intersection form, not a
+chosen third readout or an abstract irrational eigenvector.
+
+Let J be an actual rational Hodge endomorphism with J²=-I and
+skew-adjoint for the positive primitive intersection pairing Q.
+For the true algebraic CM action T=a I+b J, a genuine native
+source v has a real geometric 2×2 intersection Gram determinant
+  Q(v,v) Q(Tv,Tv) - Q(v,Tv)² = b² Q(v,v)².
+Hence b!=0 and v!=0 give an AUTOMATIC nonzero primitive orbit
+detector, with no non-real eigenvector positivity assumption.
+
+This theorem is a genuine Q-bilinear identity; realizing J as an
+algebraic correspondence preserving Q remains geometric work.
+-/
+
+/-- Exact two-channel GST imaginary-CM Gram determinant for ANY
+positive or indefinite symmetric rational polarization with a
+skew-adjoint complex-structure action. -/
+theorem gst_CM_quadratic_orbit_gram_exact
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    (Q : W →ₗ[ℚ] W →ₗ[ℚ] ℚ)
+    (hSym : ∀ u v : W, (Q u) v = (Q v) u)
+    (J : Module.End ℚ W)
+    (hJ2 : ∀ v : W, J (J v) = -v)
+    (hSkew : ∀ u v : W, (Q (J u)) v = -(Q u) (J v))
+    (a b : ℚ) (v : W) :
+    (Q v) v *
+        (Q (a • v + b • J v)) (a • v + b • J v) -
+      ((Q v) (a • v + b • J v)) ^ 2 =
+        b ^ 2 * ((Q v) v) ^ 2 := by
+  have hz : (Q v) (J v) = 0 := by
+    have h := hSkew v v
+    rw [hSym (J v) v] at h
+    linarith
+  have hz' : (Q (J v)) v = 0 := by
+    rw [hSym (J v) v, hz]
+  have hn : (Q (J v)) (J v) = (Q v) v := by
+    calc
+      (Q (J v)) (J v) = -(Q v) (J (J v)) := hSkew v (J v)
+      _ = (Q v) v := by rw [hJ2]; simp
+  simp only [map_add, map_smul, smul_eq_mul, hz, hz', hn]
+  ring
+
+/-- A genuine polarized CM orbit born from ANY nonzero primitive
+native source has a STRICTLY POSITIVE two-direction Gram determinant,
+derived directly from the actual rational intersection energy. -/
+theorem gst_CM_quadratic_orbit_gram_positive
+    {W : Type*} [AddCommGroup W] [Module ℚ W]
+    (Q : W →ₗ[ℚ] W →ₗ[ℚ] ℚ)
+    (hSym : ∀ u v : W, (Q u) v = (Q v) u)
+    (J : Module.End ℚ W)
+    (hJ2 : ∀ v : W, J (J v) = -v)
+    (hSkew : ∀ u v : W, (Q (J u)) v = -(Q u) (J v))
+    (a b : ℚ) (v : W)
+    (hb : b ≠ 0) (hv : 0 < (Q v) v) :
+    0 < (Q v) v *
+        (Q (a • v + b • J v)) (a • v + b • J v) -
+      ((Q v) (a • v + b • J v)) ^ 2 := by
+  rw [gst_CM_quadratic_orbit_gram_exact Q hSym J hJ2 hSkew a b v]
+  have hb2 : 0 < b^2 := sq_pos_of_ne_zero hb
+  have hv2 : 0 < ((Q v) v)^2 := sq_pos_of_pos hv
+  exact mul_pos hb2 hv2
+
+#check gst_CM_quadratic_orbit_gram_exact
+#check gst_CM_quadratic_orbit_gram_positive
+#print axioms gst_CM_quadratic_orbit_gram_positive
+
 #check CM_NM_dual_period_forces_nonzero_native_source
 #check CM_NM_dual_period_graph_rank_two_hodge
 
