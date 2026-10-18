@@ -635,6 +635,83 @@ theorem quantized_energy_certificate_constructs_exact_native_cycle
   rw [hR, add_zero] at hh
   exact hh
 
+
+/-! ## GST exact SCHUR-COMPLEMENT GRAM DETERMINANT GAP
+
+This is the sharpened, GEOMETRY-DERIVED normalization. For integral
+old primitive native cycles z_i, let G=(Q(z_i,z_j)) be their full
+integral nondegenerate Gram matrix, with determinant g>0. For an
+integral primitive Hodge target alpha, let the augmented matrix be
+  [ G   b ]
+  [ b'  c ],
+where b_i=Q(alpha,z_i) and c=Q(alpha,alpha).
+The exact Schur identity from block triangular elimination gives
+ det(G_aug)=det(G)*(c-b' G^{-1} b)
+           =det(G)*Q(residual, residual).
+Both determinants are INTEGERS and g>0. Hence any nonzero residual
+has energy >=1/g. No free denominator D is needed: geometry gives it.
+
+The Lean theorem below kernel-checks the exact lattice step once
+these determinant values are computed from the actual Gram geometry.
+The general block-determinant identity itself is proved in the
+mathematical route record and has NOT been installed as a new axiom.
+Its carrier-specific native Betti/cup naturality remains required.
+-/
+
+/-- Exact integer Gram-determinant quantum law:
+for positive integral old Gram determinant g and nonnegative
+integer augmented determinant m, a residual with
+g*energy=m and energy<1/g is necessarily EXACTLY zero. -/
+theorem gram_determinant_gap_exactness
+    (energy : ℚ) (g : ℕ) (hg : 0 < g) (m : ℕ)
+    (hSchur : (g : ℚ) * energy = (m : ℚ))
+    (hSmall : energy < 1 / (g : ℚ)) :
+    energy = 0 := by
+  have hgQ : (0 : ℚ) < g := by exact_mod_cast hg
+  have hprod : (g : ℚ) * energy < 1 := by
+    have hh := mul_lt_mul_of_pos_left hSmall hgQ
+    have hdiv : (g : ℚ) * (1 / (g : ℚ)) = 1 := by
+      field_simp
+    simpa only [hdiv] using hh
+  have hm_ltQ : (m : ℚ) < 1 := by
+    rw [hSchur] at hprod
+    exact hprod
+  have hm_lt : m < 1 := by exact_mod_cast hm_ltQ
+  have hmzero : m = 0 := by omega
+  have hscale : (g : ℚ) * energy = 0 := by
+    simpa [hmzero] using hSchur
+  exact (mul_eq_zero.mp hscale).resolve_left (ne_of_gt hgQ)
+
+/-- An integer-valued actual Gram determinant produces an EXACT native
+cycle on the original Hodge carrier as soon as one finite geometry
+construction gives energy below the CANONICAL determinant gap. -/
+theorem geometric_gram_determinant_gap_constructs_exact_native
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hPositive : ∀ v : V, v ≠ 0 → 0 < (Q v) v)
+    (alpha : V) (g : ℕ) (hg : 0 < g) (m : ℕ)
+    (hSchur :
+      (g : ℚ) * (Q (residualClass P alpha))
+        (residualClass P alpha) = (m : ℚ))
+    (hSmall :
+      (Q (residualClass P alpha))
+        (residualClass P alpha) < 1 / (g : ℚ)) :
+    P.cycleClass (projectedNativeCycle P alpha) = alpha := by
+  let r := residualClass P alpha
+  have hz : (Q r) r = 0 :=
+    gram_determinant_gap_exactness ((Q r) r) g hg m hSchur hSmall
+  have hr : r = 0 := by
+    by_contra h
+    exact (ne_of_gt (hPositive r h)) hz
+  have h := actual_cycle_plus_residual_equals_target P alpha
+  change P.cycleClass (projectedNativeCycle P alpha) + r = alpha at h
+  rw [hr, add_zero] at h
+  exact h
+
+#check gram_determinant_gap_exactness
+#check geometric_gram_determinant_gap_constructs_exact_native
+#print axioms geometric_gram_determinant_gap_constructs_exact_native
+
 #check integer_polarization_gap_vanishes_below_one
 #check quantized_energy_certificate_constructs_exact_native_cycle
 #print axioms quantized_energy_certificate_constructs_exact_native_cycle
