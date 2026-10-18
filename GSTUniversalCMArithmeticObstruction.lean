@@ -929,6 +929,95 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
     cmPullback thetaSquare coordinates d hd tensor hbalanced hnonzero
     hTheta hs hc alpha halpha
 
+/-! ## Canonical Hilbert-cycle source extraction: one fixed Betti class
+
+In the manuscript Baire spread, the relative Hilbert locus of "good"
+parameters is DEFINED by a single flat rational Betti class w of the
+auxiliary sixfold. Its geometric extraction to the original fourfold
+is the canonical cup with the elliptic graph-difference divisor
+followed by proper Gysin pushforward.
+
+Consequently extraction comparison is functorial for ALL actual
+auxiliary cycles, and the Weil coordinates of extracted good cycles
+follow from the ONE fixed source vector w. The theorem below replaces
+the old independent comparison hypothesis for every individual
+Hilbert parameter by:
+
+ (1) one fixed Hilbert Betti-class law defining the good locus;
+ (2) one genuine cup/Gysin source-to-original comparison map;
+ (3) the single global CM action law.
+
+This is a substantial *geometric-instantiation* reduction of the
+already proved Baire/CM original-Weil construction. The analytic
+Hilbert properness and semiregularity source remain distinct
+classical-geometric inputs, not arbitrary chosen Hodge preimages.
+-/
+
+/-- A fixed rational sixfold Betti class and one proper-pushforward
+comparison replace all source-by-source hypotheses in the original
+fourfold Weil Hodge assembly. -/
+theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
+    {U : SmoothProjectiveComplexScheme}
+    (HU : HodgeBigradedBettiData U)
+    {T : Type*} [TopologicalSpace T] [BaireSpace T]
+    (Parameter : ℕ → Type*) (projection : ∀ i, Parameter i → T)
+    (good : ∀ i, Set (Parameter i))
+    (hclosed : ∀ i, IsClosed (projection i '' good i))
+    (hidentity : ∀ i, (interior (projection i '' good i)).Nonempty →
+      projection i '' good i = Set.univ)
+    (O : Set T) (hO : IsOpen O) (hne : O.Nonempty)
+    (hlocal : ∀ t ∈ O, ∃ i p, p ∈ good i ∧ projection i p = t)
+    (period : T)
+    (cycleAt : ∀ i (p : Parameter i), projection i p = period →
+      codimensionCycles U.X 3)
+    (G : GeometricCycleClassSpine V H)
+    (extract : codimensionCycles U.X 3 →ₗ[ℚ] codimensionCycles V.X 2)
+    (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
+    (thetaSquare : codimensionCycles V.X 2)
+    (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
+    (d : ℚ) (hd : 0 < d) (tensor : TensorCoefficients)
+    (hbalanced : balanced d tensor) (hnonzero : tensor ≠ zeroCoefficients)
+    (hTheta : coordinates (nativeToHodgeFiberLinear G thetaSquare) = (1, (0, 0)))
+    (fixedSixfoldBetti : RationalSingularCohomology HU.analytification 6)
+    (bettiExtract :
+      RationalSingularCohomology HU.analytification 6 →ₗ[ℚ]
+        ℚ × (ℚ × ℚ))
+    (hHilbertClass : ∀ i p, p ∈ good i → ∀ ht : projection i p = period,
+      HU.cycleClass 3 (cycleAt i p ht) = fixedSixfoldBetti)
+    (hProperGysinNaturality :
+      ∀ Γ : codimensionCycles U.X 3,
+        coordinates (nativeToHodgeFiberLinear G (extract Γ)) =
+        bettiExtract (HU.cycleClass 3 Γ))
+    (hExtractWeil :
+      bettiExtract fixedSixfoldBetti = (0, contractGraph tensor))
+    (hCMFunctorial :
+      ∀ Z : codimensionCycles V.X 2,
+        coordinates (nativeToHodgeFiberLinear G (cmPullback Z)) =
+        ((((d+1)^2+d)^2) * (coordinates (nativeToHodgeFiberLinear G Z)).1,
+          fourthPowerAction d (d+1)
+            (coordinates (nativeToHodgeFiberLinear G Z)).2))
+    (alpha : RationalSingularCohomology H.analytification 4)
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading 2)) :
+    ∃ Z : codimensionCycles V.X 2, H.cycleClass 2 Z = alpha := by
+  have hEverySource :
+      ∀ i p, p ∈ good i → ∀ ht : projection i p = period,
+        coordinates (nativeToHodgeFiberLinear G (extract (cycleAt i p ht))) =
+          (0, contractGraph tensor) := by
+    intro i p hp ht
+    calc
+      coordinates (nativeToHodgeFiberLinear G (extract (cycleAt i p ht))) =
+        bettiExtract (HU.cycleClass 3 (cycleAt i p ht)) :=
+          hProperGysinNaturality (cycleAt i p ht)
+      _ = bettiExtract fixedSixfoldBetti := by rw [hHilbertClass i p hp ht]
+      _ = (0, contractGraph tensor) := hExtractWeil
+  exact auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
+    Parameter projection good hclosed hidentity O hO hne hlocal period
+    cycleAt G extract cmPullback thetaSquare coordinates d hd tensor
+    hbalanced hnonzero hTheta hEverySource hCMFunctorial alpha halpha
+
+#check auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
+#print axioms auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
+
 #check auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
 #print axioms auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
 
