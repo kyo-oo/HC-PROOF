@@ -59,11 +59,11 @@ Thus the exact research target for all X, all 2p≤dim(X), and arbitrary primiti
 
 Equivalently, one may construct an algebraic K_0(U)_Q class whose degree-2p topological Chern character is the specified restriction (with lower-degree components controlled by Adams purification). Topological K^0 or a holomorphic Oka bundle is insufficient without a *new algebraization theorem*. The relevant class lies in the lowest mixed-Hodge weight W_(2p)H^(2p)(U), not in the arbitrary higher-weight topological K-theory of U. The existing torus counterexample to holomorphic-to-algebraic Picard does not decide this lowest-weight subproblem.
 
-**Three distinct routes stress-tested:**
+**Two routes executed this checkpoint; one source route remains open:**
 
 1. **Upper-half geometric localization:** proved as a source-free Lean construction; sharply reduces high codimensions to middle on genuine projective hyperplane flags. Not a source-birth solution to middle primitive classes.
 2. **Lower/middle hyperplane restriction:** proves nonzero primitive Hodge classes survive on U, ruling out universal boundary-only reconstruction; the cubic-fourfold Gram calculation is a concrete valid discriminator.
-3. **Affine algebraic K_0 source birth:** topological and Hodge-weight input is understood, but constructing a genuine algebraic vector bundle/projective module with the prescribed *projective-origin* degree-2p Chern character remains unproved. Neither existing GST polynomial projectors nor the new relative statements produce such a bundle for arbitrary X,alpha.
+3. **Affine algebraic K_0 source birth (open; prior project evidence retained, no new construction proved in this checkpoint):** topological and Hodge-weight input is understood, but constructing a genuine algebraic vector bundle/projective module with the prescribed *projective-origin* degree-2p Chern character remains unproved. Neither existing GST polynomial projectors nor the new relative statements produce such a bundle for arbitrary X,alpha.
 
 **Adversarial verdict:** the all-varieties Hodge conjecture is **not proved**. Gate 3 is not closed. The successful kernel build is evidence for the stated conditional geometric maps and the rational-linear deduction, not for the unprovided universal affine algebraic source. The next decisive mathematical task is to build a prescribed-projective-origin algebraic K_0/Chow source on U from independently constructed affine geometry, *without assuming its Chern character equals the requested Hodge class*. A complete proof must then instantiate canonical Betti comparisons and verify the exact final all-X statement without extra surjectivity assumptions.
 
