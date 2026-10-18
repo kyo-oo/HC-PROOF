@@ -1221,6 +1221,53 @@ theorem targetCoupledVirtualSource_push_zero
     push (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha) = 0 := by
   simp [targetCoupledVirtualSource, map_sum, map_smul, hPrimitive]
 
+
+/-! ## ACTUAL PERFECT-COMPLEX DENOMINATOR-CLEARING INTERFACE
+
+Rational algebraic K₀(X)_Q is not itself the set of literal perfect
+complexes: a rational virtual class must have its denominators cleared
+to a genuine integral K₀ class before it is represented by a finite
+direct sum of complexes and parity shifts.
+
+For finitely many geometric sources, the target coupling coefficients
+are RATIONAL. Their finitely many denominators admit a common
+positive integer D. A simultaneous integral coefficient vector m_i
+then represents D times the rational source. The resulting *integral*
+virtual class is realized by an ACTUAL perfect complex using finite
+direct sums for positive coefficients and odd shifts for negatives.
+
+This Lean identity checks the final algebraic clearing formula for
+any explicit certificate (D,m). The common-denominator existence is
+the elementary finite rational arithmetic fact and its scheme-level
+perfect-complex realization is geometric, not faked as a `Type*` lemma.
+-/
+
+/-- Clearing a common finite denominator converts the rational
+target-selected K₀ source into an INTEGER virtual combination of
+the actual normalized geometric source complexes. -/
+theorem targetCoupledVirtualSource_integer_denominator_certificate
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H)
+    (D : ℕ) (hD : 0 < D)
+    (m : Fin n → ℤ)
+    (hWeights : ∀ i : Fin n,
+      (m i : ℚ) =
+        (D : ℚ) * (Q alpha (chowBetti (primitiveK (sources i))))) :
+    (D : ℚ) • targetCoupledVirtualSource
+        primitiveK chowBetti Q sources alpha =
+      ∑ i : Fin n, (m i : ℚ) • primitiveK (sources i) := by
+  unfold targetCoupledVirtualSource
+  rw [Finset.smul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [smul_smul, hWeights i]
+
+#check targetCoupledVirtualSource_integer_denominator_certificate
+#print axioms targetCoupledVirtualSource_integer_denominator_certificate
+
 #check targetCoupledVirtualSource_pairing_eq_sum_squares
 #check targetCoupledVirtualSource_positive_of_detected
 #check targetCoupledVirtualSource_push_zero
