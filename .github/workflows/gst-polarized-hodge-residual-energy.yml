@@ -1,7 +1,7 @@
 name: Mathbox Polarized Hodge Residual Energy
 on:
   push:
-    branches: [research/mathbox-k3-diagonal-primitive-20261015]
+    branches: [research/mathbox-k3-diagonal-primitive-20261015, research/gpt6-native-point-primitive-span-20261017]
     paths:
       - GSTPolarizedHodgeResidualEnergy.lean
       - .github/workflows/gst-polarized-hodge-residual-energy.yml
