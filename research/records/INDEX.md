@@ -41,6 +41,8 @@
 
 - [GST signed finite-graph branch construction and arbitrary-X primitive test](2026-10-18-signed-graph-native-branch-construction.md) — explicit *actual algebraic* graph-cycle matrix units for all codimensions on products of projective lines; proved that lifting the universal power-map graphs through finite X→P^n projects away primitive classes on arbitrary X, so this operator construction does not solve Gate 3. Exact Wolfram checks; no new Lean surjectivity assumptions or claim of universal closure.
 
+- [Target-born symplectic source packet on every original X](2026-10-18-gst-original-X-symplectic-source-birth.md) — new mathbox construction route outside the old algebraic orbit: BU(p) rank-p bundle with prescribed rational top Chern coordinate, approximately holomorphic zero sheet minus genuine algebraic complete-intersection sheet, exact primitive quadratic detector; Wolfram symbolic checks. **Only smooth/symplectic sources, NOT Chow cycles**; unstable bundle and Auroux analytic hypotheses require primary-source verification and the finite-k holomorphic/calibration replacement remains open. No Lean code or CI claim.
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
