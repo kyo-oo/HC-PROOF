@@ -1006,6 +1006,85 @@ theorem normalizedVirtualPrimitive_image_iff_trace_zero
       push pull uInv E hE⟩
 
 
+
+/-! ## GST CROSS-POLARIZATION FINITE-FLAT SOURCE BIRTH
+
+An independently geometric base polarization g can supply a perfect
+complex on the same original X. The normalized f-projector extracts an
+actual f-trace-zero K₀ source from it. The exact algebraic criterion
+for its nonvanishing is that the g-source is not f-ambient.
+
+This is not a Hodge existence axiom: no target alpha occurs here.
+The transversality of the two actual polarization sources is a
+geometric condition to verify on X, not a universal assertion.
+-/
+
+/-- Every source already pulled from the f-base is annihilated
+by the normalized algebraic finite-flat K₀ projector. -/
+theorem normalizedVirtualPrimitive_kills_base_pull
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (u uInv : R)
+    (hInv : u * uInv = 1)
+    (hProjection : ∀ a : R, push (pull a) = u * a)
+    (a : R) :
+    normalizedVirtualPrimitive push pull uInv (pull a) = 0 := by
+  have hUnit : uInv * u = 1 := by
+    simpa only [mul_comm] using hInv
+  have hScalar : uInv * (u * a) = a := by
+    calc
+      uInv * (u * a) = (uInv * u) * a := by ring
+      _ = a := by rw [hUnit]; ring
+  simp [normalizedVirtualPrimitive, hProjection, hScalar]
+
+/-- An independently constructed K₀ source generates a NONZERO
+f-primitive exactly when it does not belong to the f-ambient pullback
+image. No Hodge-class preimage, nonzero period, or Gram assumption. -/
+theorem normalizedVirtualPrimitive_zero_iff_base_ambient
+    (push : M →ₗ[R] R)
+    (pull : R →ₗ[R] M)
+    (u uInv : R)
+    (hInv : u * uInv = 1)
+    (hProjection : ∀ a : R, push (pull a) = u * a)
+    (E : M) :
+    normalizedVirtualPrimitive push pull uInv E = 0 ↔
+      E ∈ LinearMap.range pull := by
+  constructor
+  · intro hz
+    change E - pull (uInv * push E) = 0 at hz
+    exact ⟨uInv * push E, (sub_eq_zero.mp hz).symm⟩
+  · rintro ⟨a, rfl⟩
+    exact normalizedVirtualPrimitive_kills_base_pull
+      push pull u uInv hInv hProjection a
+
+/-- A second independently constructed geometric base pullback
+supplies an f-trace-zero and NONZERO new virtual primitive source,
+provided its genuine original-X K₀ class is not f-ambient. -/
+theorem normalizedVirtualPrimitive_cross_polarization_birth
+    (pushF : M →ₗ[R] R)
+    (pullF : R →ₗ[R] M)
+    (uF uFInv : R)
+    (hInvF : uF * uFInv = 1)
+    (hProjectionF : ∀ a : R, pushF (pullF a) = uF * a)
+    (pullG : R →ₗ[R] M)
+    (a : R)
+    (hTransverse : pullG a ∉ LinearMap.range pullF) :
+    pushF (normalizedVirtualPrimitive pushF pullF uFInv (pullG a)) = 0 ∧
+      normalizedVirtualPrimitive pushF pullF uFInv (pullG a) ≠ 0 := by
+  constructor
+  · exact normalizedVirtualPrimitive_push_zero
+      pushF pullF uF uFInv hInvF hProjectionF (pullG a)
+  · intro hz
+    exact hTransverse
+      ((normalizedVirtualPrimitive_zero_iff_base_ambient
+        pushF pullF uF uFInv hInvF hProjectionF (pullG a)).mp hz)
+
+#check normalizedVirtualPrimitive_kills_base_pull
+#check normalizedVirtualPrimitive_zero_iff_base_ambient
+#check normalizedVirtualPrimitive_cross_polarization_birth
+#print axioms normalizedVirtualPrimitive_cross_polarization_birth
+
+
 /-! ## GST NATIVE FINITE NILPOTENT K₀ INVERSION — CONSTRUCT THE INVERSE
 
 The previous GST projector assumed a supplied inverse uInv to the
@@ -1632,6 +1711,46 @@ theorem chow_and_K0_projectors_agree_of_Todd_ambient
     q s t u uInv degreeInv hUnit
   simpa only [relativeToddDefect,hTodd,sub_self,mul_zero,add_zero]
     using h
+
+
+
+/-! ## GST FIRST-CHERN TODD CANCELLATION FOR TRANSVERSE POLARIZATIONS
+
+In the codimension-at-most-one truncation of rational Chow/K₀ on the
+projective base, write u=d+t for the Chern character of f_* O_X
+and f_*L=d+t+q for a line bundle L on original X.
+The nilpotent positive-degree classes satisfy t²=tq=0.
+The finite inverse is dInv-dInv²*t, and its normalized product with
+f_*L is exactly 1+dInv*q. Thus relative Todd terms cancel in
+the first-Chern source: ch₁(P_f^K L)=c₁(L)-d⁻¹f* f_* c₁(L).
+The mathematical identity below is exact in ANY commutative ring
+with the stated positive-degree truncation, not merely numerically
+tested on special varieties. Actual Chow/GRR realization is separate.
+-/
+
+/-- Exact first-order Todd/GRR cancellation in the finite-flat
+base K₀ ring, including all mixed terms and their nilpotence. -/
+theorem first_chern_finite_flat_Todd_cancel
+    (d dInv t q : R)
+    (hUnit : d * dInv = 1)
+    (hToddSq : t * t = 0)
+    (hToddMix : t * q = 0) :
+    (dInv - dInv * dInv * t) * (d + t + q) =
+      1 + dInv * q := by
+  have hUnit' : dInv * d = 1 := by
+    simpa only [mul_comm] using hUnit
+  calc
+    (dInv - dInv * dInv * t) * (d + t + q) =
+        d * dInv + dInv * q +
+          (dInv - dInv * (dInv * d)) * t -
+          dInv * dInv * (t * t) -
+          dInv * dInv * (t * q) := by ring
+    _ = 1 + dInv * q := by
+      rw [hUnit, hUnit', hToddSq, hToddMix]
+      ring
+
+#check first_chern_finite_flat_Todd_cancel
+#print axioms first_chern_finite_flat_Todd_cancel
 
 #check relativeToddDefect
 #check chow_projector_eq_K0_projector_plus_Todd_defect
