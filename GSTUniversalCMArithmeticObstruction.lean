@@ -955,7 +955,9 @@ classical-geometric inputs, not arbitrary chosen Hodge preimages.
 
 /-- A fixed rational sixfold Betti class and one proper-pushforward
 comparison replace all source-by-source hypotheses in the original
-fourfold Weil Hodge assembly. -/
+fourfold Weil Hodge assembly. The source may contain ANY ambient
+polarization component; subtracting its measured multiple of the actual
+polarization-square Chow cycle removes it before the Weil orbit step. -/
 theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
     {U : SmoothProjectiveComplexScheme}
     (HU : HodgeBigradedBettiData U)
@@ -988,8 +990,8 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
       ∀ Γ : codimensionCycles U.X 3,
         coordinates (nativeToHodgeFiberLinear G (extract Γ)) =
         bettiExtract (HU.cycleClass 3 Γ))
-    (hExtractWeil :
-      bettiExtract fixedSixfoldBetti = (0, contractGraph tensor))
+    (hExtractWeilComponent :
+      (bettiExtract fixedSixfoldBetti).2 = contractGraph tensor)
     (hCMFunctorial :
       ∀ Z : codimensionCycles V.X 2,
         coordinates (nativeToHodgeFiberLinear G (cmPullback Z)) =
@@ -999,21 +1001,40 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
     (alpha : RationalSingularCohomology H.analytification 4)
     (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading 2)) :
     ∃ Z : codimensionCycles V.X 2, H.cycleClass 2 Z = alpha := by
-  have hEverySource :
-      ∀ i p, p ∈ good i → ∀ ht : projection i p = period,
-        coordinates (nativeToHodgeFiberLinear G (extract (cycleAt i p ht))) =
-          (0, contractGraph tensor) := by
-    intro i p hp ht
+  obtain ⟨i, p, hp, ht⟩ := periodTransport_all_period_witnesses
+    Parameter projection good hclosed hidentity O hO hne hlocal period
+  have hRaw :
+      coordinates (nativeToHodgeFiberLinear G (extract (cycleAt i p ht))) =
+        bettiExtract fixedSixfoldBetti := by
     calc
       coordinates (nativeToHodgeFiberLinear G (extract (cycleAt i p ht))) =
         bettiExtract (HU.cycleClass 3 (cycleAt i p ht)) :=
           hProperGysinNaturality (cycleAt i p ht)
       _ = bettiExtract fixedSixfoldBetti := by rw [hHilbertClass i p hp ht]
-      _ = (0, contractGraph tensor) := hExtractWeil
-  exact auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
-    Parameter projection good hclosed hidentity O hO hne hlocal period
-    cycleAt G extract cmPullback thetaSquare coordinates d hd tensor
-    hbalanced hnonzero hTheta hEverySource hCMFunctorial alpha halpha
+  -- Remove the ambient polarization component at the level of genuine
+  -- native cycles. No a priori purity of the geometric source is needed.
+  let purified : codimensionCycles V.X 2 :=
+    extract (cycleAt i p ht) -
+      (bettiExtract fixedSixfoldBetti).1 • thetaSquare
+  have hPurified :
+      coordinates (nativeToHodgeFiberLinear G purified) =
+        (0, contractGraph tensor) := by
+    dsimp only [purified]
+    simp only [map_sub, map_smul, hRaw, hTheta]
+    apply Prod.ext
+    · simp
+    · simpa using hExtractWeilComponent
+  have hCM := hCMFunctorial purified
+  rw [hPurified] at hCM
+  have hCMPurified :
+      coordinates (nativeToHodgeFiberLinear G (cmPullback purified)) =
+        (0, fourthPowerAction d (d+1) (contractGraph tensor)) := by
+    simpa only [mul_zero] using hCM
+  exact auxiliaryWeilEveryMiddleHodgeClass (U := V)
+    G purified (LinearMap.id) cmPullback thetaSquare coordinates
+    d hd tensor hbalanced hnonzero hTheta
+    (by simpa using hPurified) (by simpa using hCMPurified)
+    alpha halpha
 
 #check auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
 #print axioms auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
