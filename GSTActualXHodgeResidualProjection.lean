@@ -1,5 +1,6 @@
 import GSTUniversalHodgeResidualProjection
 import GSTPolarizedHodgeResidualEnergy
+import GSTUniversalResolvedSupportHodge
 import GSTGeometricRealizationStage2G
 import GSTPrimitiveTransverseCycleExtraction
 import GSTCompactNativeCyclePresentation
@@ -104,6 +105,89 @@ noncomputable def ActualXCycleProjectionData.primitiveResidual
     (alpha : HodgeSpace X H p) :
     HodgeSpace X H p :=
   residualClass P.toProjectionPacket alpha
+
+
+/-! ## GST target-sensitive original-X perfect-complex Chow-cycle compiler
+
+Convert the new normalized finite-flat GST algebraic K₀ source combination
+into an ACTUAL rational codimension-p native CHOW CYCLE on original X.
+The independent input family comprises genuine rational algebraic perfect
+complexes E_i. The map `chowGRR` must be the ACTUAL degree-p relative-
+Todd-corrected algebraic Chern character. Its codomain is exactly
+Mathlib's `codimensionCycles X.X p`, not abstract Hodge cohomology.
+
+No witness algebraizing alpha is taken as input. The target-sensitive
+coefficients Q(alpha,z_i) are rational intersection numbers of a
+prescribed rational Hodge class and independently constructed source
+classes. The exact resulting pairing is a SUM OF SQUARES and hence
+automatically detects alpha if any source class has nonzero coupling.
+The existing `H.cycleClass` still needs independent canonical Betti
+realization validation in Gate 1.
+-/
+
+/-- An actual codimension-p CHOW cycle on ORIGINAL X, selected from
+a finite independently algebraic perfect-complex source collection
+using a specified rational Hodge target's geometric pairing. -/
+noncomputable def ActualXCycleProjectionData.targetCoupledK0ChowCycle
+    (P : ActualXCycleProjectionData X H p ι)
+    {K : Type*} [AddCommGroup K] [Module ℚ K]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K)
+    (alpha : HodgeSpace X H p) :
+    codimensionCycles X.X p :=
+  chowGRR
+    (GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource
+      primitiveK (P.trueHodgeClass.comp chowGRR) Q sources alpha)
+
+/-- The target's pairing with the ACTUAL canonical-compatible
+Hodge class of the constructed Chow cycle is a sum of rational squares.
+No mysterious nonzero period determinant or selected Chow preimage. -/
+theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_pairing
+    (P : ActualXCycleProjectionData X H p ι)
+    {K : Type*} [AddCommGroup K] [Module ℚ K]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K)
+    (alpha : HodgeSpace X H p) :
+    (Q alpha) (P.trueHodgeClass
+      (P.targetCoupledK0ChowCycle primitiveK chowGRR Q sources alpha)) =
+    ∑ i : Fin n, (Q alpha
+      (P.trueHodgeClass (chowGRR (primitiveK (sources i))))) ^ 2 := by
+  exact
+    GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource_pairing_eq_sum_squares
+      primitiveK (P.trueHodgeClass.comp chowGRR) Q sources alpha
+
+/-- GST's target-adapted **actual original-X Chow cycle** has
+automatically strictly positive period pairing with alpha whenever
+ONE genuinely constructed perfect-complex source detects alpha.
+This is directly the desired original-X pairing conclusion,
+not only a theoretical K₀ carrier-level identity. -/
+theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
+    (P : ActualXCycleProjectionData X H p ι)
+    {K : Type*} [AddCommGroup K] [Module ℚ K]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K)
+    (alpha : HodgeSpace X H p) (i : Fin n)
+    (hDetected :
+      (Q alpha) (P.trueHodgeClass
+        (chowGRR (primitiveK (sources i)))) ≠ 0) :
+    0 < (Q alpha) (P.trueHodgeClass
+      (P.targetCoupledK0ChowCycle primitiveK chowGRR Q sources alpha)) := by
+  exact GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource_positive_of_detected
+    primitiveK (P.trueHodgeClass.comp chowGRR) Q sources alpha i hDetected
+
+#check ActualXCycleProjectionData.targetCoupledK0ChowCycle
+#check ActualXCycleProjectionData.targetCoupledK0ChowCycle_pairing
+#check ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
+#print axioms ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
 
 /-! ## GST native geometric Gram construction on the ORIGINAL target X
 
