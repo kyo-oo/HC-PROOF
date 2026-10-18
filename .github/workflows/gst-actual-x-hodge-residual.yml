@@ -65,6 +65,8 @@ jobs:
             "GSTUniversalPrimitiveDivisorConstruction",
             "GSTUniversalCodimensionTwoPrimitiveExtraction",
             "GSTPrimitiveTransverseCycleExtraction",
+            "GSTGraphV2SelfExpandingCosmology",
+            "GSTPolarizedHodgeResidualEnergy",
             "GSTActualXHodgeResidualProjection"
           ]
           EOF
