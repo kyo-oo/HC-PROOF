@@ -113,7 +113,6 @@ theorem unseeded_two_polarization_factorization
   induction m with
   | zero =>
       simp [unseeded_two_polarization_native_birth]
-      ring
   | succ m ih =>
       change (u+v)*
         (u*unseeded_two_polarization_native_birth u v m+
@@ -137,8 +136,11 @@ theorem unseeded_two_polarization_is_primitive
     {R : Type*} [CommRing R] (u v : R) (m : ℕ)
     (hu : u^(m+1)=0) (hv : v^(m+1)=0) :
     (u+v)*unseeded_two_polarization_native_birth u v m = 0 := by
-  rw [unseeded_two_polarization_factorization,hu]
-  simp [hv]
+  have hneg : (-v)^(m+1)=0 := by
+    rw [neg_pow, hv]
+    simp
+  rw [unseeded_two_polarization_factorization,hu,hneg]
+  ring
 
 /-- The first genuinely nondivisor birth is the quadratic
 cycle u² - uv + v² on a FOURFOLD, rather than a divisor. -/
