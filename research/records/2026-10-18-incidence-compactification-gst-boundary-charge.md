@@ -44,7 +44,7 @@ Its pullback pi^*Z_alpha equals the algebraic restriction j^*\bar D/N in CH^p(J)
 \[
 \boxed{\operatorname{cl}^{canonical}_X(Z_\alpha)=\alpha}.
 \]
-This is a completely explicit, finite, original-X cycle assembly **if and only if the stated projective algebraic source has actually been made**. Merely having Oka holomorphic D does NOT supply \(\bar D\), so this does NOT close Gate 3.
+This is a completely explicit, finite, original-X cycle assembly **provided the stated projective algebraic source has actually been made**. The existence of some different algebraic representative of alpha would not force this particular analytic D to extend. Merely having Oka holomorphic D does NOT supply \(\bar D\), so this does NOT close Gate 3.
 
 **Exact coefficient test:** Mathematica calculated the extraction identity
 \[
