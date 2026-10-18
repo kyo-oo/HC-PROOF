@@ -1850,6 +1850,120 @@ theorem finiteFlatSupportedSheaf_leadingChowPrimitive
     hTodd, hInverse]
   ring
 
+/-! ## GST MIXED INCIDENCE / KOSZUL PERFECT-COMPLEX BIRTH
+
+Let Y be an independently constructed, genuine algebraic codimension-r
+subscheme on the ORIGINAL smooth projective X. Let L_1,...,L_s be
+independently constructed algebraic line bundles on X and put
+  E(Y;L_1,...,L_s) =
+    [O_Y] tensor ([L_1]-[O_X]) tensor ... tensor ([L_s]-[O_X]).
+As a rational algebraic K₀ perfect-complex class this is constructed
+without selecting a Chow representative for any prescribed Hodge alpha.
+
+The exact character starts in codimension p=r+s, with
+  ch_p(E) = [Y] * c₁(L_1) * ... * c₁(L_s).
+The following graded proofs compute this without assuming away
+lower-degree terms or silently setting the relative Todd class to 1.
+For finite flat f:X→P^n, GRR and filtration-preserving finite
+pushforward show that the leading normalized projector class is
+  [Y] * (∏c₁(L_i)) - d⁻¹ f* f_*([Y] * ∏c₁(L_i)).
+The Lean layer proves the exact convolution and leading extraction;
+a scheme-level native K₀ / cycle-class implementation of its inputs
+is NOT manufactured by a rational coefficient sequence.
+
+This provides a genuine codimension-p *source recipe* once the actual
+Y and L_i are built, not universal Hodge residual detection.
+-/
+
+/-- Two independently filtered algebraic Chern-source factors have
+NO product component below the SUM of their support codimensions.
+Valid for all r,s including r=0 and s=0. -/
+theorem chowGradedConvolution_zero_below_sum
+    (r s : ℕ) (a b : ℕ → ℚ)
+    (ha : ∀ j < r, a j = 0)
+    (hb : ∀ j < s, b j = 0)
+    (q : ℕ) (hq : q < r+s) :
+    chowGradedConvolution q a b = 0 := by
+  unfold chowGradedConvolution
+  apply Finset.sum_eq_zero
+  intro j hj
+  have hjq : j ≤ q := by
+    have h : j < q+1 := Finset.mem_range.mp hj
+    omega
+  by_cases hjs : j < s
+  · rw [hb j hjs]
+    ring
+  · have hleft : q-j < r := by omega
+    rw [ha (q-j) hleft]
+    ring
+
+/-- The leading grade of a geometrically supported incidence
+sheaf times a Koszul line-bundle augmentation is exactly the
+product of their independently constructed leading Chow classes. -/
+theorem chowGradedConvolution_first_nonzero_product
+    (r s : ℕ) (a b : ℕ → ℚ)
+    (ha : ∀ j < r, a j = 0)
+    (hb : ∀ j < s, b j = 0) :
+    chowGradedConvolution (r+s) a b = a r*b s := by
+  unfold chowGradedConvolution
+  have hs : s ∈ Finset.range (r+s+1) := by
+    apply Finset.mem_range.mpr
+    omega
+  rw [Finset.sum_eq_single s]
+  · simp
+  · intro j hj hne
+    have hjle : j ≤ r+s := by
+      have h : j < r+s+1 := Finset.mem_range.mp hj
+      omega
+    by_cases hjs : j < s
+    · rw [hb j hjs]
+      ring
+    · have hleft : r+s-j < r := by omega
+      rw [ha (r+s-j) hleft]
+      ring
+  · intro hn
+    exact (hn hs).elim
+
+/-- Actual geometric interpretation: O_Y times s line-bundle
+augmentation factors is a degree-(r+s) source; its normalized
+finite-flat K₀ / relative-Todd leading Chow class is the exact
+trace-zero extraction of [Y]*∏c₁(L_i), with NO lower-degree leaks.
+
+The stated hpush is the independent GRR filtration property
+of actual finite direct image, not a target Hodge preimage. -/
+theorem mixed_support_koszul_firstChow_source
+    (r s : ℕ)
+    (incidence koszul pushSource todd inverse : ℕ → ℚ)
+    (degreeInv : ℚ)
+    (hIncidence : ∀ j < r, incidence j = 0)
+    (hKoszul : ∀ j < s, koszul j = 0)
+    (hPush : ∀ j < r+s, pushSource j = 0)
+    (hTodd : todd 0 = 1)
+    (hInverse : inverse 0 = degreeInv) :
+    chowGradedConvolution (r+s) todd
+      (fun j => chowGradedConvolution j incidence koszul) -
+    chowGradedConvolution (r+s) todd
+      (fun j => chowGradedConvolution j inverse pushSource) =
+    incidence r * koszul s - degreeInv * pushSource (r+s) := by
+  have hSource : ∀ j < r+s,
+      chowGradedConvolution j incidence koszul = 0 := by
+    intro j hj
+    exact chowGradedConvolution_zero_below_sum
+      r s incidence koszul hIncidence hKoszul j hj
+  have hGRR :=
+    finiteFlatSupportedSheaf_leadingChowPrimitive
+      (r+s)
+      (fun j => chowGradedConvolution j incidence koszul)
+      pushSource todd inverse degreeInv hSource hPush hTodd hInverse
+  rw [chowGradedConvolution_first_nonzero_product
+      r s incidence koszul hIncidence hKoszul] at hGRR
+  exact hGRR
+
+#check chowGradedConvolution_zero_below_sum
+#check chowGradedConvolution_first_nonzero_product
+#check mixed_support_koszul_firstChow_source
+#print axioms mixed_support_koszul_firstChow_source
+
 #check chowGradedConvolution_leading
 #check finiteFlatSupportedSheaf_leadingChowPrimitive
 #print axioms finiteFlatSupportedSheaf_leadingChowPrimitive
