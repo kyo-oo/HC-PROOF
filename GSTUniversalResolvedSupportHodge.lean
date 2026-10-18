@@ -1057,8 +1057,8 @@ theorem normalizedVirtualPrimitive_zero_iff_base_ambient
     exact normalizedVirtualPrimitive_kills_base_pull
       push pull u uInv hInv hProjection a
 
-/-- A second independently constructed geometric base pullback
-supplies an f-trace-zero and NONZERO new virtual primitive source,
+/-- A second independently constructed geometric base pullback (not
+assumed R-linear for the first base action) supplies an f-trace-zero and NONZERO new virtual primitive source,
 provided its genuine original-X K₀ class is not f-ambient. -/
 theorem normalizedVirtualPrimitive_cross_polarization_birth
     (pushF : M →ₗ[R] R)
@@ -1066,7 +1066,7 @@ theorem normalizedVirtualPrimitive_cross_polarization_birth
     (uF uFInv : R)
     (hInvF : uF * uFInv = 1)
     (hProjectionF : ∀ a : R, pushF (pullF a) = uF * a)
-    (pullG : R →ₗ[R] M)
+    (pullG : R → M)
     (a : R)
     (hTransverse : pullG a ∉ LinearMap.range pullF) :
     pushF (normalizedVirtualPrimitive pushF pullF uFInv (pullG a)) = 0 ∧
