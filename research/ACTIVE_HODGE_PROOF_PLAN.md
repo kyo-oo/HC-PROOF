@@ -97,6 +97,18 @@ This closes the mathematics of primitive-to-full recovery **once primitive repre
 
 **Scope controls:** GitHub green means exactly the Lean declarations and finite computations compile without a reported \`sorryAx\`; it does not by itself instantiate all classical analytic Betti/Hodge interfaces or close Gate 3. No universal claim without a genuine native source and a canonical Betti equality for the prescribed target.
 
+## 2026-10-19 independent original-X graph-source upgrades
+
+Using GST's existing algebraic K₀, primitive world-birth, Hodge Gram, and CM–NM source laws, the current research branch now contains:
+
+- **Every positive-genus curve-product X=∏(C_j×C_j):** actual rational virtual line bundles built from factor degree-one bundles and the diagonal bundle; pure degree-m Chern source classes, genuine primitive Chow products and **2^m** mutually orthogonal source directions with exact self-intersections ∏(2 or 2g_j). The previous Catalan coordinate-only frame and all graph-containing words are mutually independent, giving rank at least **C_m+2^m−1**. GitHub [graph external-product #39169476204](https://github.com/kyo-oo/HC-PROOF/actions/runs/39169476204) compiled the first all-m graph laws; later jobs verify the weighted compiler and Todd identities. [Research record](records/2026-10-19-gst-all-genus-diagonal-k0-primitive-source-birth.md).
+
+- **Original CM E^(2m), End(E)⊃Z[i]:** three genuine primitive algebraic source types at each E×E, namely coordinate Koszul, identity diagonal and multiplication-by-i graph. Their actual E×E signed Gram is 2I₃, and the tensor source Gram is 2^m I_(3^m). This adds **3^m−1** graph-containing directions orthogonal to the coordinate-only Catalan frame, giving rank at least **C_m+3^m−1**, including TEN independent classes at m=2. [CM CI #39169316293](https://github.com/kyo-oo/HC-PROOF/actions/runs/39169316293) verified base all-m Gram; target-source/zero-kernel CI followed in later commits. [Research record](records/2026-10-19-gst-cm-imaginary-graph-k0-tensor-birth.md).
+
+- **Explicit prescribed-target construction:** Given rational Hodge periods against these actual algebraic source families, GST builds rational perfect-complex linear combinations with canonical period readout, proving nonnegative sum-of-squares target coupling and exact reconstruction throughout the **generated primitive sector**, with no target-Chow witness supplied.
+
+- **Proper geometric boundary:** Those source families are not asserted to exhaust the primitive rational Hodge fiber for arbitrary X. The locked final acceptance remains a scheme- and canonical-Betti-realized primitive native representative for **every** prescribed class on **every** original X. Finite Gram checks, CM properties and algebraic virtual K₀ source births are constructive achievements but not substitutions for this quantifier.
+
 ## Reporting and completion
 
 Every update reports: **(i)** the exact original target; **(ii)** which of gates 1–4 acquired a proof; **(iii)** the one next missing mathematical implication; **(iv)** exact commit/CI evidence. No claim of final completion before all four acceptance tests pass.
