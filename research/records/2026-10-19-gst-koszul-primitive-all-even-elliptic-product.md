@@ -36,6 +36,29 @@ This supplies a genuinely nonzero middle Lefschetz-primitive (m,m) algebraic cla
 
 The exact general-rank Lean proof uses the list-valued \`hyperplaneOfPairs\` and \`koszulPrimitiveSource\` inside namespace \`GSTNativeAbelianKoszulAllEvenDimensions\`. It proves both equalities inductively for arbitrary list length, with square-zero divisors as the only algebraic relations. Its GH Actions status must be determined from the revision-matched run, rather than presumed.
 
+### GST finite-flat K₀ projection fixes EVERY Koszul birth without correction
+
+These sources have a stronger property than simply having a nonzero leading primitive Chern class: their Chern character is **PURE of degree m**. Indeed \(x_i^2=0\) implies
+\(\mathrm{ch}([L_i]-[L_j])=e^{x_i}-e^{x_j}=x_i-x_j\) EXACTLY (higher degree terms vanish individually), so
+\[
+\mathrm{ch}(\mathcal E_M)=Z_M\quad\text{with no other Chow degrees.}
+\]
+Choose a finite flat projective projection \(f:X\to\mathbb P^{2m}\) with \(H=f^*O(1)=\sum_i x_i\). Since \(H Z_M=0\), one has
+\(f_*Z_M=0\in CH^m(\mathbb P^{2m})_\mathbb Q\): the sole coefficient of the degree-m projective class is \(\int_X Z_M H^m=0\). For an abelian variety \(T_X\) is algebraically trivial, hence \(\mathrm{Td}(T_X)=1\). Genuine GRR says
+\[
+\mathrm{ch}(f_*\mathcal E_M)\,\mathrm{Td}(T_{\mathbb P^{2m}})
+=f_*(\mathrm{ch}(\mathcal E_M)\,\mathrm{Td}(T_X))
+=f_*Z_M=0.
+\]
+The projective Todd class is invertible and the rational Chern character is injective on \(K_0(\mathbb P^{2m})_\mathbb Q\). Therefore the **actual algebraic K₀ pushforward vanishes**
+\[
+\boxed{f_*\mathcal E_M=0\in K_0(\mathbb P^{2m})_\mathbb Q,\qquad
+\mathcal P_f^K(\mathcal E_M)=\mathcal E_M.}
+\]
+Consequently the FULL matching basis and all target-selected rational combinations already lie in the exact fixed-point subspace of GST's normalized finite-flat K₀ projector. They require neither an abstract source birth nor an extra Todd/degree correction; the source is a real independently constructed bounded perfect complex built from line bundles.
+
+This proof uses the **genuine projective GRR and rational Chern isomorphism as mathematical geometry**. The current generic Lean source module already proves \`normalizedVirtualPrimitive_fixes_kernel\`; fully instantiating scheme K₀/GRR and canonical Betti comparison remains a separate implementation obligation.
+
 ## 3. Two independently born primitive cycles on one abelian fourfold
 
 For \(m=2\), the already present P source is joined by a second algebraic virtual perfect complex:
