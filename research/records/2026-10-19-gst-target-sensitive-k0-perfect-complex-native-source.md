@@ -133,6 +133,51 @@ Wolfram exact rational symbolic check, with the genuine 4×4 K3 intersection mat
 
 The further Lean \`k0TargetSelectedPrimitive_tangent_readout\`, \`..._diagonal_readout\`, \`..._pairing_eq_weighted_squares\`, and \`..._idempotent_on_generated_sector\` were edited in the SAME K3 Gram module, with their final CI verdict to be recorded separately from the earlier successful source identity checkpoint.
 
+## 3b. GST finite source-frame completeness test and integral perfect-complex numerator
+
+**Exact frame-kernel law.** For genuine perfect-complex sources E_i on the ORIGINAL X, write z_i for the true rational Hodge class of the Todd-corrected primitive Chern source, and form the GST target-sensitive class
+\[
+\mathcal E_\alpha=\sum_i Q(\alpha,z_i)\mathcal P_f^K(E_i),
+\quad
+F(\alpha)=\operatorname{cl}_X([\operatorname{ch}(\mathcal E_\alpha)\operatorname{Td}(T_f)]_p).
+\]
+The independently proved rational sum-of-squares pairing now gives the equivalence
+\[
+\boxed{F(\alpha)=0\iff\forall i,\ Q(\alpha,z_i)=0.}
+\]
+Proof: pairing F with alpha yields a sum of rational squares; each square is nonnegative, so if it vanishes all coefficients vanish; conversely zero coefficients give the zero source. This tests exactly which primitive directions a finite GST geometric source family detects, without presuming that the family detects ALL rational Hodge classes. The all-rank Lean versions and their genuine original-X native-cycle specialization were added directly to GSTUniversalResolvedSupportHodge.lean and GSTActualXHodgeResidualProjection.lean; pinned integration [#39161495843](https://github.com/kyo-oo/HC-PROOF/actions/runs/39161495843) passed for this checkpoint.
+
+**Dimension-uniform integral normalization of K₀ projection.** For any smooth projective X of dimension n, a finite flat degree-d projective map f:X→P^n yields the genuine algebraic rank bundle \(u=[f_*\mathcal O_X]=d+\eta\) in \(K_0(P^n)\), where \(\eta^{n+1}=0\). Put \(N=n+1\) and define the integral adjugate recurrence
+\[
+A_0=0,\quad A_{k+1}=d^k-\eta A_k,\quad
+A_N=\sum_{j=0}^{N-1}(-1)^jd^{N-1-j}\eta^j.
+\]
+Direct induction gives \((d+\eta)A_N=d^N-(-\eta)^N=d^N\), hence
+\[
+\boxed{d^Nu^{-1}=A_N\in K_0(P^n)}
+\]
+and, for each actual algebraic perfect complex E on X,
+\[
+\boxed{d^N\mathcal P_f^K(E)=d^NE-f^*(A_N f_*E)\in K_0(X).}
+\]
+The right side is visibly INTEGRAL: it uses only finitely many algebraic direct sums, tensor products, push/pull operations and differences.
+
+For a prescribed rational Hodge alpha, each of the finitely many period coefficients \(q_i=Q(\alpha,z_i)\) is rational. Choose a positive finite common denominator \(D\) and integers \(m_i=Dq_i\). The explicit integral original-X class
+\[
+\boxed{[\mathscr C_\alpha]=
+\sum_i m_i(d^N[E_i]-f^*(A_Nf_*[E_i]))
+=Dd^N\,\mathcal E_\alpha\in K_0(X)}
+\]
+is realized by ONE actual bounded algebraic perfect complex: expand finite products into differences of genuine perfect complexes, use direct sums for positive coefficients, and one-step shifts for negative coefficients. Divide the Todd-corrected Chern class by \(Dd^N\) to recover the GST original-X rational Chow source \(Z_\alpha\). It obeys the exact equation
+\[
+\boxed{Q(\alpha,\operatorname{cl}_X Z_\alpha)=
+\sum_iQ(\alpha,z_i)^2.}
+\]
+
+The Lean project now contains the dimension-uniform integral adjugate and virtual-source numerator statements in the EXISTING GST resolved-support module. Their latest GitHub focused verification must be checked at the post-repair revision before kernel-verification is claimed. The statements work algebraically with the actual finite-flat perfect-complex source operations; the Lean module-level abstraction does not itself install the complete scheme GRR/analytic Betti comparison.
+
+**Mathematical outcome:** finite original-X algebraic perfect-complex construction from any fixed genuinely algebraic source catalogue, exact rational period response, finite integral denominator, and an exact source-detection test. The required all-X discovery is a geometric catalogue that detects every primitive rational Hodge direction; choosing coefficients does not invent new algebraic source directions.
+
 ## 4. Decisive geometric target and next experiment
 
 The new \(K_0\) compiler is universal **as a construction for every alpha**, but its Hodge class remains in the span of the independently existing algebraic perfect-complex catalogue. It gives an automatically positive pairing for any alpha detected by that catalogue; it does NOT create a fresh class from a target residual which is orthogonal to every available algebraic K-theory source. Such a new source requires actual sheaf/derived geometric construction outside the previous algebraic span.
