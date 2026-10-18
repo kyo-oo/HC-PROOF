@@ -66,6 +66,33 @@ Wolfram evaluated this integral EXACTLY as 3R³/32. Therefore an analytic nonalg
 
 **Cohomological boundary residue is too weak:** pi^*beta and pi^*alpha extend in rational cohomology across the smooth projective compactification X times dual projective space, regardless of Hodge type. Hence their *linear* cohomological infinity residue already vanishes. The K3 counterexample shows such vanishing does not force algebraic closure or the growth estimate. A new nonlinear growth-control construction, not another residue reduction, is needed.
 
+## 4b. GST infinite-volume worldtrace: exact degree at infinity, not finite-stage closeness
+
+For an analytic pure d-dimensional complex cycle D in C^M, define the normalized boundary mass observable
+\[
+\Theta_D(R)=\frac{d!}{\pi^d R^{2d}}\operatorname{Vol}(D\cap B_R).
+\]
+The monotonicity formula for positive complex analytic cycles says this observable is nondecreasing with R. On an algebraic cycle, its limit at infinity equals the integer algebraic projective degree (with multiplicities). In conjunction with the sharp Bishop-Stoll criterion (external exact-source verification outstanding), uniform boundedness of Theta_D is the precise algebraicity test. A finite-R approximate value does NOT certify that the infinity limit is finite.
+
+**Original exact polynomial-graph derivation.** For the genuinely algebraic holomorphic curve D_m={(z,w):w=z^m} in C², m>=1, let q=q(R)>0 solve q²+q^(2m)=R². Its induced Euclidean area is
+\[
+A_m(R)=\pi(q^2+m q^{2m}),\qquad
+\Theta_{D_m}(R)=\frac{q^2+m q^{2m}}{q^2+q^{2m}}.
+\]
+Then
+\[
+\frac{d\Theta_{D_m}}{dq}=
+\frac{2(m-1)^2q^{2m+1}}{(q^2+q^{2m})^2}\ge0,\qquad
+\lim_{R\to\infty}\Theta_{D_m}(R)=m.
+\]
+Wolfram EXACTLY verified the derivative identity (difference 0), positivity for m=2,...,5, and limits 1,2,3,4,5,6 for m=1,...,6. The general proof is one rational derivative and dominance of q^(2m) for m>1; the limit for m=1 is 1. This gives a genuine integer WORLDTRACE at infinite affine radius, not merely a cohomological label.
+
+By contrast, the transcendental graph w=e^z has an explicit ball-contained strip of analytic area at least 3R³/32 for large R; since d=1, its normalized density is at least 3R/(32*pi) and diverges. This proves why the growth exponent 2d is sharp.
+
+**Mathematical interpretation:** the Euclidean Kähler form is exact on affine C^M; by Stokes, the analytic volume of D∩B_R is determined by geometric boundary flux rather than by the ordinary Betti class of D. Thus the projective-origin Hodge class alone does not supply a bound for Theta_D without an independently constructed nonlinear infinity-growth control. This observation blocks another unsupported shortcut: zero cohomological infinity residue cannot be conflated with bounded normalized geometric mass.
+
+**The unsolved target-specific implication** is to build some Oka holomorphic determinantal D_alpha from the prescribed Hodge alpha with sup_R Theta_D_alpha(R)<infinity. No such bound is proved, and it is not inferred from the algebraic graph examples.
+
 ## 5. A geometric stability barrier and how source charges actually change it
 
 For nonzero primitive codimension-two alpha, the pure rank-two source c1=0,c2=N alpha has c2.h^(n-2)=0. Any **slope-polystable** projective holomorphic realization would have a Hermitian-Einstein connection; equality in Bogomolov-Lubke forces projectively flat curvature, and c1=0 forces flatness, contradicting nonzero rational c2. For p>=3, the pure source has c1=c2=0 but nonzero c_p, yielding the same contradiction. Tensoring by an ample line bundle does not alter the discriminant. ADDING an independent positive ambient c2 charge raises its discriminant degree and removes this *particular* obstruction, but by itself does NOT force a holomorphic bundle or an algebraic Chow source on X.
