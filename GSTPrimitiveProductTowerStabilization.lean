@@ -178,6 +178,8 @@ theorem unseeded_two_polarization_codim_two_nonzero_of_volume
   intro hz
   have hsq := unseeded_two_polarization_codim_two_norm u v hu hv
   rw [hz] at hsq
+  have hzero : (0:R)^2 = 0 := by ring
+  rw [hzero] at hsq
   exact hVolume hsq.symm
 
 #check unseeded_two_polarization_native_birth
