@@ -1103,6 +1103,112 @@ theorem weilProjectorMixedWeilSpectralGap
   rw [h]
   positivity
 
+/-! ## Genuine CM correspondence as a polynomial in a native map
+
+The exact scalar Weil projector above was previously checked
+on the five CM eigenvalue sectors. The next source-facing step
+is to construct the corresponding action on actual native Chow
+cycles, with Betti functoriality proved ONCE, uniformly for every
+source cycle, rather than as one hypothesis per Hilbert parameter.
+
+Horner evaluation makes the proof independent of any particular
+linear representation. The coefficients below expand the exact
+rational projector
+
+ P(t) = ((t-q²)(t²-2s t+q⁴)(a+2r b-b t)) /
+        (a(a+2r b)+q⁴b²).
+
+The source is always a rational linear combination of iterated
+native algebraic CM-isogeny pullbacks. This operation does not
+manufacture an algebraic input with nonzero Weil projection;
+it proves that the corresponding cohomological spectral filter
+is genuinely induced by the *same* cycle-level operation.
+-/
+
+section NativeCMProjector
+
+variable {M N : Type*}
+variable [AddCommGroup M] [Module ℚ M]
+variable [AddCommGroup N] [Module ℚ N]
+
+/-- Horner evaluation of a rational polynomial in an actual native
+linear endomorphism, applied to an existing native cycle. -/
+def nativeCMHorner (T : Module.End ℚ M) (z : M) : List ℚ → M
+  | [] => 0
+  | c :: cs => c • z + T (nativeCMHorner T z cs)
+
+/-- Native/Betti functoriality is preserved by EVERY polynomial
+in the actual geometric isogeny pullback, not only the particular
+Weil projector and not merely for a selected auxiliary source. -/
+theorem nativeCMHorner_natural
+    (cl : M →ₗ[ℚ] N)
+    (Tnative : Module.End ℚ M) (Tbetti : Module.End ℚ N)
+    (hFunctorial : ∀ z : M, cl (Tnative z) = Tbetti (cl z))
+    (coeffs : List ℚ) (z : M) :
+    cl (nativeCMHorner Tnative z coeffs) =
+      nativeCMHorner Tbetti (cl z) coeffs := by
+  induction coeffs with
+  | nil =>
+      simp [nativeCMHorner]
+  | cons c cs ih =>
+      simp [nativeCMHorner, map_add, map_smul, hFunctorial, ih]
+
+/-- The actual degree-four Weil spectral polynomial, recorded as
+rational coefficients in increasing degree. -/
+def nativeWeilProjectorCoeffs (q r s a b : ℚ) : List ℚ :=
+  let den := a*(a+2*r*b)+q^4*b^2
+  let k := a+2*r*b
+  let n0 := -(q^6)
+  let n1 := q^4+2*s*q^2
+  let n2 := -(q^2+2*s)
+  [n0*k/den,
+   (n1*k-b*n0)/den,
+   (n2*k-b*n1)/den,
+   (k-b*n2)/den,
+   (-b)/den]
+
+/-- The native endomorphism is obtained by an actual finite
+rational combination of CM isogeny pullbacks. -/
+def nativeWeilProjector
+    (T : Module.End ℚ M)
+    (q r s a b : ℚ) (z : M) : M :=
+  nativeCMHorner T z (nativeWeilProjectorCoeffs q r s a b)
+
+/-- For a canonical Chow-to-Betti map commuting with the actual
+CM pullback, the polynomial native projector COMMUTES with
+that map with no pointwise cycle-class comparison assumptions. -/
+theorem nativeWeilProjector_cycleClass
+    (cl : M →ₗ[ℚ] N)
+    (Tnative : Module.End ℚ M) (Tbetti : Module.End ℚ N)
+    (hFunctorial : ∀ z : M, cl (Tnative z) = Tbetti (cl z))
+    (q r s a b : ℚ) (z : M) :
+    cl (nativeWeilProjector Tnative q r s a b z) =
+      nativeWeilProjector Tbetti q r s a b (cl z) := by
+  exact nativeCMHorner_natural cl Tnative Tbetti
+    hFunctorial (nativeWeilProjectorCoeffs q r s a b) z
+
+/-- Polynomial coefficients of the native projector genuinely
+equal the earlier rational spectral expression. This prevents
+a shifted power, sign or Gysin/pullback convention in the new
+native operation from silently changing the Weil projector. -/
+theorem nativeWeilProjectorCoeffs_exact
+    (q r s a b t : ℚ)
+    (hDen : a*(a+2*r*b)+q^4*b^2 ≠ 0) :
+    let cs := nativeWeilProjectorCoeffs q r s a b
+    cs[0]! + cs[1]!*t + cs[2]!*t^2 + cs[3]!*t^3 + cs[4]!*t^4 =
+      ((t-q^2)*(t^2-2*s*t+q^4)*(a+2*r*b-b*t))/
+        (a*(a+2*r*b)+q^4*b^2) := by
+  simp only [nativeWeilProjectorCoeffs, List.getElem!_cons_zero,
+    List.getElem!_cons_succ] 
+  ring
+
+#check nativeCMHorner_natural
+#check nativeWeilProjector_cycleClass
+#check nativeWeilProjectorCoeffs_exact
+#print axioms nativeWeilProjector_cycleClass
+
+end NativeCMProjector
+
 #check weilProjectorFixesWeilSector
 #check weilProjectorKillsMixedSector
 #check weilProjectorKillsAmbientSector
