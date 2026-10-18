@@ -45,6 +45,8 @@
 
 - [Every-X target-born determinantal packet: exact all-p interpolation, K-positive integer weights, Stein analytic source, HYM obstruction](2026-10-18-universal-determinantal-packet-interpolation.md) — construct an integral topological K-class from each requested rational α, use genuine smooth maximal-minor rank-drop cycles on the original X and explicit integer-weighted finite differences to realize α in homology without a Chow input; move the carrier to complex-analytic determinants on the Stein Jouanolou replacement. Wolfram exact symbolic p2/p3 checks and all-p interpolation proof. Hodge-conditioned algebraization is **not proved**; non-Hodge K3 and polystable curvature tests delimit false extensions. No Lean source or CI modified.
 
+- [Exact Stein determinantal source on every original-X-associated affine carrier](2026-10-18-stein-analytic-determinantal-hodge-source.md) — stable topological K-theory -> Oka holomorphic rank-r bundle -> analytic Thom-Porteous codimension-p cycle carrying any prescribed rational class; every-rank GST Chern multicharge recovery Lean **GREEN** [focused #39108995274](https://github.com/kyo-oo/HC-PROOF/actions/runs/39108995274) and [integration #39108995310](https://github.com/kyo-oo/HC-PROOF/actions/runs/39108995310). True algebraic descent requires a new Hodge-sensitive sharp infinity-volume bound, unproved; non-Hodge K3 demonstrates why Oka or cohomological residue alone cannot suffice.
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
