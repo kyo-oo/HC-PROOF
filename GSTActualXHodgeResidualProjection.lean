@@ -262,6 +262,48 @@ theorem ActualXCycleProjectionData.cycle_represents_target_of_residual_zero
   rw [hresidual, add_zero] at h
   exact congrArg Subtype.val h
 
+
+/-! ## GST native EXACTNESS from the integer polarized energy quantum gap
+
+A true integral primitive intersection form takes INTEGER values on
+the cleared rational Hodge lattice. Its residual norm cannot lie
+strictly between zero and the appropriate integral gap. Therefore,
+once a genuinely constructed rational native cycle on the ORIGINAL X
+has a verified energy below that gap, its canonical cycle class
+is EXACTLY the specified Hodge alpha.
+
+This is an original-X output theorem, not an asserted universal
+approximation or bounded-denominator construction. The integrality
+witness and the strict gap bound are the two distinct independent
+geometric obligations, and may NOT be silently obtained by letting
+the rational correction denominators grow.
+-/
+
+/-- Actual original-X rational algebraic cycle Z=P.projectNative alpha,
+whose genuine Betti class is EXACTLY alpha whenever the independently
+certified rational-lattice scaled residual norm drops below one. -/
+theorem ActualXCycleProjectionData.quantized_polarization_gap_constructs_exact_original_X_cycle
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (hPositive : ∀ v : HodgeSpace X H p,
+      v ≠ 0 → 0 < (Q v) v)
+    (alpha : HodgeSpace X H p)
+    (D : ℕ) (hD : 0 < D) (m : ℤ)
+    (hIntegral :
+      (D : ℚ)^2 * (Q (P.primitiveResidual alpha))
+        (P.primitiveResidual alpha) = (m : ℚ))
+    (hSmall :
+      (D : ℚ)^2 * (Q (P.primitiveResidual alpha))
+        (P.primitiveResidual alpha) < 1) :
+    H.cycleClass p (P.projectNative alpha) = alpha.1 := by
+  have h :=
+    GSTPolarizedHodgeResidualEnergy.quantized_energy_certificate_constructs_exact_native_cycle
+      P.toProjectionPacket Q hPositive alpha D hD m hIntegral hSmall
+  exact congrArg Subtype.val h
+
+#check ActualXCycleProjectionData.quantized_polarization_gap_constructs_exact_original_X_cycle
+#print axioms ActualXCycleProjectionData.quantized_polarization_gap_constructs_exact_original_X_cycle
+
 /-- In the actual Stage-2G target, residual ZERO is equivalent to
 exact equality of the concrete constructed native cycleClass to alpha.
 This is the precise mathematical criterion that a universal GST
