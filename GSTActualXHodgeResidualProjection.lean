@@ -191,6 +191,51 @@ theorem ActualXCycleProjectionData.full_gram_dual_birth_strictly_grows_native_sp
 #check ActualXCycleProjectionData.full_gram_dual_birth_strictly_grows_native_span
 #print axioms ActualXCycleProjectionData.full_gram_dual_birth_strictly_grows_native_span
 
+
+/-! ## GST target-directed primitive birth on the ORIGINAL X
+
+Unlike the rank-only Gram surplus certificate, this law takes a
+SPECIFIC unresolved rational Hodge target alpha on the original
+smooth projective X. It computes the canonical old-native
+residual r_alpha and uses its actual polarized intersection functional
+to test the NEW native source. A nonzero target coupling certifies
+that the new ORIGINAL-X codimension-p algebraic cycle is truly
+outside the existing Hodge class span.
+
+The Hodge target is a scalar input to the detector, NOT a presumed
+cycle witness. Geometrically constructing a coupled native cycle
+for every nonzero residual is the still-open universal existence law.
+-/
+
+/-- Concrete ANY-X GST primitive source rank birth controlled by
+a PRESCRIBED target rational Hodge class, for the true native
+Mathlib rational codimension-p cycle type. -/
+theorem ActualXCycleProjectionData.target_directed_gram_coupling_birth
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (hGramDual : ∀ (j : ι) (x : HodgeSpace X H p),
+      (Q x) (P.trueHodgeClass (P.sourceNativeCycles j)) =
+        ∑ i, P.geometricDetectors i x *
+          (Q (P.trueHodgeClass (P.sourceNativeCycles i)))
+            (P.trueHodgeClass (P.sourceNativeCycles j)))
+    (alpha : HodgeSpace X H p)
+    (fresh : codimensionCycles X.X p)
+    (hCouple :
+      (Q (P.primitiveResidual alpha))
+        (P.trueHodgeClass fresh) ≠ 0) :
+    Submodule.span ℚ
+        (Set.range (fun i : ι => P.trueHodgeClass (P.sourceNativeCycles i))) <
+      Submodule.span ℚ
+        (Set.insert (P.trueHodgeClass fresh)
+          (Set.range (fun i : ι =>
+            P.trueHodgeClass (P.sourceNativeCycles i)))) := by
+  exact GSTPolarizedHodgeResidualEnergy.target_residual_coupling_constructs_native_rank_birth
+    P.toProjectionPacket Q (by intro j x; exact hGramDual j x)
+    alpha fresh hCouple
+
+#check ActualXCycleProjectionData.target_directed_gram_coupling_birth
+#print axioms ActualXCycleProjectionData.target_directed_gram_coupling_birth
+
 theorem ActualXCycleProjectionData.algebraic_part_plus_residual
     (P : ActualXCycleProjectionData X H p ι)
     (alpha : HodgeSpace X H p) :
