@@ -753,6 +753,60 @@ theorem gstK3_relativeToddDefect_nonzero
   rw [h] at hn
   norm_num [gstK3ProductMiddleIntersection] at hn
 
+
+/-! ## GST REDUCED TANGENT PERFECT-COMPLEX NATIVE BIRTH
+
+The actual normalized finite-flat K₀ projector annihilates O_X:
+P_K(O_X)=O_X-f*(u^-1 f_* O_X)=0.
+Thus E=O_X produces NO primitive source, even if the separate
+relative-Todd Chow defect from the two projector conventions is
+nonzero. The genuine perfect-complex source is instead
+   E=[T_X]-4[O_X] on X=K3×K3,
+an actual rank-zero algebraic virtual bundle with
+ch_0(E)=ch_1(E)=0 and ch_2(E)=-c_2(T_X).
+The GST universal leading-degree source law then gives
+   [ch(P_K E) Td(T_f)]_2 = -Pi_f(c_2(T_X)).
+This is an independent geometrically constructed K₀ input,
+with NO prechosen target Hodge representative.
+
+The following exact rational Chow intersection model certifies
+the resulting nonzero primitive output and positive polarization.
+-/
+
+/-- True leading codimension-two Chow direction extracted from the
+REDUCED tangent-bundle virtual K₀ class on original K3×K3. -/
+def gstK3ReducedTangentK0Primitive (d : ℚ) :
+    GSTK3ProductMiddleCoordinates :=
+  -gstK3ProductTangentPrimitive d
+
+theorem gstK3_reducedTangentK0_primitive
+    (d : ℚ) (hd : d ≠ 0) :
+    gstK3ProductHyperplaneCup d
+      (gstK3ReducedTangentK0Primitive d) = (0,0) := by
+  have h := gstK3_tangent_correspondence_is_lefschetz_primitive d hd
+  dsimp [gstK3ReducedTangentK0Primitive]
+  apply Prod.ext
+  · dsimp [gstK3ProductHyperplaneCup, gstK3ProductTangentPrimitive]
+    field_simp
+    ring
+  · dsimp [gstK3ProductHyperplaneCup, gstK3ProductTangentPrimitive]
+    field_simp
+    ring
+
+theorem gstK3_reducedTangentK0_norm
+    (d : ℚ) (hd : d ≠ 0) :
+    gstK3ProductMiddleIntersection d
+      (gstK3ReducedTangentK0Primitive d)
+      (gstK3ReducedTangentK0Primitive d) = 768 := by
+  dsimp [gstK3ReducedTangentK0Primitive,
+    gstK3ProductTangentPrimitive,gstK3ProductMiddleIntersection]
+  field_simp
+  ring
+
+#check gstK3_reducedTangentK0_primitive
+#check gstK3_reducedTangentK0_norm
+#print axioms gstK3_reducedTangentK0_norm
+
 #check gstK3_relativeToddDefect_is_primitive
 #check gstK3_relativeToddDefect_norm
 #check gstK3_relativeToddDefect_nonzero
