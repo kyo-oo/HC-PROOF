@@ -593,9 +593,7 @@ theorem cmEllipticNativeGram_trivial_kernel
   intro t
   have h : (∑ s : Fin m → Fin 3,
       a s * cmEllipticTensorGram m s t) = 0 := hZero t
-  simp [cmEllipticTensorGram_diagonal] at h
-  have hn : (2:ℚ)^m ≠ 0 := by positivity
-  exact (mul_eq_zero.mp h).resolve_right hn
+  simpa [cmEllipticTensorGram_diagonal] using h
 
 #check cmEllipticTargetReadout_exact
 #check cmEllipticTargetPairing_weighted_squares
