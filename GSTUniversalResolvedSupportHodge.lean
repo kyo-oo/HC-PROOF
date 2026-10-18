@@ -1124,6 +1124,110 @@ theorem finiteNilpotentVirtualPrimitive_image_iff_kernel
 #check normalizedVirtualPrimitive_image_iff_trace_zero
 #print axioms normalizedVirtualPrimitive_image_iff_trace_zero
 
+
+/-! ## GST TARGET-SENSITIVE K₀ GEOMETRIC BIRTH FROM FINITE SOURCES
+
+Use the independently algebraic perfect-complex family E_i on the ORIGINAL
+X, the normalized finite-flat K₀ projector P_K, the degree-p relative-Todd
+GRR Chern map chi_p and the true rational primitive intersection pairing Q.
+
+The ACTUAL rational virtual-bundle source selected by target alpha is
+  E_alpha = ∑_i Q(alpha, chi_p(P_K E_i)) * (P_K E_i).
+All its ingredients are rational and algebraic; no Hodge-to-Chow inverse
+or target preimage is chosen. The crucial computational certificate is
+  Q(alpha, chi_p(E_alpha))
+      = ∑_i Q(alpha,chi_p(P_K E_i))².
+Therefore the paired Chern output is automatically STRICTLY POSITIVE if
+ANY geometrically constructed source detects the prescribed alpha,
+even when Q is indefinite. No generic/nonzero determinant assumption.
+
+The abstract rational K₀ / relative Todd Chern carrier used here is the
+precise additive interface awaiting official Mathlib K₀ and GRR instances.
+The given maps MUST be the genuine normalized algebraic projector and
+Todd-corrected Chern map to instantiate on actual original-X geometry.
+This construction does not assume all primitive targets are algebraic.
+-/
+
+section GSTTargetCoupledK0Birth
+
+variable {K H : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup H] [Module ℚ H]
+
+/-- Construct a genuine rational *virtual-bundle* linear combination
+of independently existing geometric K₀ sources using only the target's
+intersection periods. There is no target Hodge preimage in this def. -/
+def targetCoupledVirtualSource
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H) : K :=
+  ∑ i : Fin n,
+    (Q alpha (chowBetti (primitiveK (sources i)))) •
+      primitiveK (sources i)
+
+/-- UNIVERSAL FINITE SOURCE PAIRING IDENTITY. Every prescribed
+alpha gives one concrete rational K₀ virtual source and the pairing
+of its geometric Hodge class with alpha is a sum of exact squares. -/
+theorem targetCoupledVirtualSource_pairing_eq_sum_squares
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H) :
+    (Q alpha)
+      (chowBetti
+        (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha)) =
+      ∑ i : Fin n,
+        (Q alpha (chowBetti (primitiveK (sources i)))) ^ 2 := by
+  simp [targetCoupledVirtualSource, map_sum, map_smul,
+    smul_eq_mul, pow_two]
+
+/-- A prescribed Hodge class that actually sees ANY independent
+geometric perfect-complex source obtains a strictly positive
+algebraic Chern pairing from the constructed target-adapted source.
+No separate hDet, hRank or guessed positivity of the polar form. -/
+theorem targetCoupledVirtualSource_positive_of_detected
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H)
+    (i : Fin n)
+    (hDetected :
+      (Q alpha) (chowBetti (primitiveK (sources i))) ≠ 0) :
+    0 < (Q alpha)
+      (chowBetti
+        (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha)) := by
+  rw [targetCoupledVirtualSource_pairing_eq_sum_squares]
+  apply Finset.sum_pos'
+  · intro j hj
+    exact sq_nonneg _
+  · exact ⟨i, Finset.mem_univ i, sq_pos_of_ne_zero hDetected⟩
+
+/-- Target-adapted algebraic source retains normalized primitive
+proper-pushforward zero because EACH source is first corrected by
+the actual GST finite-flat normalized K₀ projector. -/
+theorem targetCoupledVirtualSource_push_zero
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowBetti : K →ₗ[ℚ] H)
+    (Q : H →ₗ[ℚ] H →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : H)
+    {B : Type*} [AddCommGroup B] [Module ℚ B]
+    (push : K →ₗ[ℚ] B)
+    (hPrimitive : ∀ E : K, push (primitiveK E) = 0) :
+    push (targetCoupledVirtualSource primitiveK chowBetti Q sources alpha) = 0 := by
+  simp [targetCoupledVirtualSource, map_sum, map_smul, hPrimitive]
+
+#check targetCoupledVirtualSource_pairing_eq_sum_squares
+#check targetCoupledVirtualSource_positive_of_detected
+#check targetCoupledVirtualSource_push_zero
+#print axioms targetCoupledVirtualSource_positive_of_detected
+
+end GSTTargetCoupledK0Birth
+
 end GSTNativeFiniteFlatK0Extraction
 
 
