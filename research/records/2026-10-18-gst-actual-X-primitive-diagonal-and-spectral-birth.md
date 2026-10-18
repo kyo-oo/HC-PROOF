@@ -83,6 +83,8 @@ Thus the actual rational **Gram determinant of two native orbit classes** is
 
 This both avoids complex eigenvector positivity errors and constructs the independent second geometric direction from one real native source and one genuine non-real CM operator. Wolfram verified the exact determinant \(b^2g^2\) and its strict positivity for real g>0, b!=0. In a two-dimensional primitive rational sector this completes native generation **when the source and geometric CM action are actually realized**; in rank>2 a single quadratic action has insufficient minimal-polynomial degree, as Route C establishes.
 
+**Dimension-parity diagnostic for a truly universal GST CM law:** On a rational vector space W of odd dimension, J²=-I is IMPOSSIBLE over Q: determinants would give (det J)²=(-1)^dim(W)=-1, contrary to nonnegativity of rational squares. Hence a quadratic CM action can only govern even-dimensional rational sectors. A genuinely universal arbitrary-X construction must also treat odd-dimensional primitive sectors by other geometry or isolate an independently algebraic line and apply CM only to an even complement. This is a proved rational linear-algebra type condition, not a limitation of a specific Lean implementation.
+
 The next constructive question is whether GST can produce from the original-X universal primitive motive \((X,\Pi_f)\) either (i) a native nonzero primitive seed and a suitable CM-type noncommuting correspondence action, or (ii) an algebraic one-sided slice of its primitive diagonal. Neither is supplied by spectral arithmetic alone. These are precise geometric construction obligations, not extra axioms or formal "energy" assumptions.
 
 ## Route C — exact universal GST correspondence complexity bound
