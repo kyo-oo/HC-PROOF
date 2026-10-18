@@ -111,6 +111,124 @@ theorem nonalgebraic_primitive_forces_positive_residual_energy
   exact hPositive _ (any_unrepresented_target_has_nonzero_residual
     P alpha hmissing)
 
+
+/-! ## GST automatic independent geometric readout from POLARIZED residual energy
+
+The old arbitrary-rank native coordinate theorem required an externally chosen
+linear readout vanishing on all old classes and nonzero on a born class.
+Here we construct that readout **from the actual polarized Hodge pairing**
+and the canonical finite native residual.
+
+For an independently constructed native fresh cycle, the residual r of its
+real cycle class v after subtracting the known geometric dual basis defines
+a native, canonically computed readout Q(r, -). Geometric polarization forces
+this readout to vanish on all old cycle classes; a nonzero (positive) residual
+energy Q(r,r) forces it to detect the fresh cycle class. Thus the GST birth
+increases actual algebraic Hodge rank, with no free readout-choice premise.
+
+The input fresh remains an ACTUAL native cycle, and the geometric pairing and
+positivity must be independently verified on the original X. This theorem
+does not manufacture an arbitrary requested primitive Chow representative.
+-/
+
+/-- GST builds the independent coordinate readout DIRECTLY from its
+polarized residual. For every old genuine native generator, it is zero. -/
+theorem native_residual_builds_geometric_readout
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hPair :
+      ∀ (i : ι) (x : V),
+        P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (fresh : N) (i : ι) :
+    (Q (residualClass P (P.cycleClass fresh)))
+      (P.cycleClass (P.cycles i)) = 0 := by
+  rw [← hPair i (residualClass P (P.cycleClass fresh))]
+  exact residual_orthogonal_to_all_geometric_cycles P
+    (P.cycleClass fresh) i
+
+/-- The same CANONICAL residual readout evaluates on the fresh native
+cycle to exactly its polarized energy, no arbitrary readout parameter. -/
+theorem native_residual_readout_fresh_eq_energy
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hPair :
+      ∀ (i : ι) (x : V),
+        P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (fresh : N) :
+    (Q (residualClass P (P.cycleClass fresh)))
+      (P.cycleClass fresh) =
+    (Q (residualClass P (P.cycleClass fresh)))
+      (residualClass P (P.cycleClass fresh)) := by
+  let v := P.cycleClass fresh
+  have hsum := actual_cycle_plus_residual_equals_target P v
+  have hcross := residual_orthogonal_to_algebraic_projection P Q hPair v
+  calc
+    (Q (residualClass P v)) v =
+        (Q (residualClass P v))
+          (P.cycleClass (projectedNativeCycle P v) +
+            residualClass P v) := by rw [hsum]
+    _ = (Q (residualClass P v))
+          (P.cycleClass (projectedNativeCycle P v)) +
+        (Q (residualClass P v)) (residualClass P v) := by
+          rw [map_add]
+    _ = (Q (residualClass P v)) (residualClass P v) := by
+      rw [hcross]
+      ring
+
+/-- A new GST geometric cycle with strictly positive measured residual
+energy **automatically increases the ACTUAL native algebraic Hodge span**.
+The complete readout is Q(r,-), constructed from old native cycles
+and their canonical Hodge intersection values. No hFresh readout premise. -/
+theorem positive_residual_energy_forces_strict_native_rank_birth
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hPair :
+      ∀ (i : ι) (x : V),
+        P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (fresh : N)
+    (hEnergy :
+      0 < (Q (residualClass P (P.cycleClass fresh)))
+        (residualClass P (P.cycleClass fresh))) :
+    Submodule.span ℚ (Set.range (fun i : ι => P.cycleClass (P.cycles i))) <
+      Submodule.span ℚ
+        (Set.insert (P.cycleClass fresh)
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i)))) := by
+  let readout : V →ₗ[ℚ] ℚ :=
+    Q (residualClass P (P.cycleClass fresh))
+  have hOld : ∀ i : ι, readout (P.cycleClass (P.cycles i)) = 0 :=
+    native_residual_builds_geometric_readout P Q hPair fresh
+  have hFresh : readout (P.cycleClass fresh) ≠ 0 := by
+    rw [native_residual_readout_fresh_eq_energy P Q hPair fresh]
+    exact ne_of_gt hEnergy
+  have hnot :
+      P.cycleClass fresh ∉
+        Submodule.span ℚ (Set.range (fun i : ι => P.cycleClass (P.cycles i))) := by
+    intro hspan
+    have hker :
+        Submodule.span ℚ
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i))) ≤
+        LinearMap.ker readout := by
+      apply Submodule.span_le.mpr
+      rintro x ⟨i, rfl⟩
+      exact LinearMap.mem_ker.mpr (hOld i)
+    exact hFresh (LinearMap.mem_ker.mp (hker hspan))
+  apply lt_of_le_of_ne
+  · exact Submodule.span_mono (Set.subset_insert _ _)
+  · intro heq
+    have hnew :
+      P.cycleClass fresh ∈
+        Submodule.span ℚ
+          (Set.insert (P.cycleClass fresh)
+            (Set.range (fun i : ι => P.cycleClass (P.cycles i)))) :=
+      Submodule.subset_span (Set.mem_insert _ _)
+    rw [← heq] at hnew
+    exact hnot hnew
+
+#check native_residual_builds_geometric_readout
+#check native_residual_readout_fresh_eq_energy
+#check positive_residual_energy_forces_strict_native_rank_birth
+#print axioms positive_residual_energy_forces_strict_native_rank_birth
+
 #check residual_orthogonal_to_algebraic_projection
 #check primitive_polarization_pythagoras
 #check nonalgebraic_primitive_forces_positive_residual_energy
