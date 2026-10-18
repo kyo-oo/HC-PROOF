@@ -94,6 +94,39 @@ At p=3, take f=5,e=3 with formal Chern parameters u,v,w for F and z,a,b for E. T
   4P(1)-6P(2)+4P(3)-P(4)=P(0)
 with symbolic difference exactly 0, and computed coefficient-weight moments {1,0,0,0}. The proof for all p is the general finite-difference identity above, not extrapolation from these checks.
 
+## 4b. Arbitrarily POSITIVE twists with INTEGER source-packet coefficients
+
+The initial 1,...,p+1 twist levels are convenient algebraically but may be too small for any approximately holomorphic/positive-curvature transversality theorem. We can solve this coefficient issue EXACTLY.
+
+Fix ANY integer K>=1. At the consecutive twist levels K,K+1,...,K+p define
+\[
+\boxed{
+\lambda_{K,p,j}=(-1)^j
+  \binom{K+j-1}{j}\binom{K+p}{p-j},\qquad 0\le j\le p.
+}
+\]
+These are INTEGERS (not merely rational coefficients). Lagrange interpolation at 0 for the p+1 nodes k=K+j gives
+\[
+\lambda_{K,p,j}
+ =\prod_{m\ne j}\frac{-K-m}{j-m}
+ =(-1)^j\frac{K(K+1)\cdots(K+p)}
+            {(K+j)j!(p-j)!}.
+\]
+Consequently \(\sum_{j=0}^p\lambda_{K,p,j}(K+j)^m=\delta_{m,0}\) for EVERY 0<=m<=p. Therefore the following exact topological/geometric identity holds on EVERY original X:
+\[
+\boxed{
+\sum_{j=0}^{p}
+ \lambda_{K,p,j}\,\mathrm{PD}[D_{K+j}]
+ =c_p(F-E)
+ =(-1)^{p-1}(p-1)!\,N\alpha .
+}
+\]
+This is the all-p GST finite-channel 'twist annihilation' law: any sufficiently positive twist regime is allowed, while ALL unwanted coefficients (including every mixed Chern term) cancel and the prescribed primitive vector survives exactly. No limit or approximate equality is taken.
+
+At K=2,p=2 the exact integer packet is \(6D_2-8D_3+3D_4\). At K=5,p=3 it is \(56D_5-140D_6+120D_7-35D_8\). Wolfram evaluated exact moment vectors \(\{1,0,\ldots,0\}\) for K in {1,2,5} and p in {2,3,4}, while the displayed Lagrange identity proves ALL integers K>=1 and ALL p.
+
+**Mass warning:** \(|\lambda_{K,p,j}|\) grows polynomially with K, so a compactness argument for the SIGNED geometric packet does NOT follow from separate approximately holomorphic estimates for each D. Precisely because these coefficients are signed, the homological cancellation is legitimate but positivity/mass cannot be assumed to cancel as well. The extra analytic challenge is to construct algebraic *holomorphic* degeneracy sheets at at least one K-regime (or independently algebraize their whole signed packet).
+
 ## 5. Deep category obstruction: slope-polystable holomorphic bundles are TOO RESTRICTIVE
 
 A tempting repair is to run Hermitian–Yang–Mills/Donaldson–Uhlenbeck–Yau heat flow on the topological K source until all F^(0,2) vanishes, then claim algebraicity. This DOES NOT GENERALLY WORK for a primitive nonzero source with the prescribed Chern-vector normalization.
