@@ -858,6 +858,80 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread
     thetaSquare coordinates d hd tensor hbalanced hnonzero hTheta
     (hExtract i p hp ht) (hCM i p hp ht) alpha halpha
 
+/-! ## Native original-fourfold assembly from ONE global CM functoriality law
+
+The previous entry point assumed a CM coordinate comparison separately
+for every signed Hilbert cycle supplied by the global period spread.
+That is stronger data than actual geometry requires: the canonical
+Chow-to-Betti map is natural under a genuine algebraic isogeny ONCE,
+on every rational Chow class.
+
+Let k=d+1+u, u²=-d, and q=Norm(k)=(d+1)²+d.
+On the ambient theta² line of a Weil fourfold, k* acts by q².
+On its rational exceptional Weil plane, it acts by the already
+verified fourthPowerAction d (d+1). Thus the actual CM action
+on the full 1+2 rational Hodge sector is block diagonal.
+
+The theorem below uses precisely this one independent geometric
+equivariance law, together with the Baire/Hilbert source itself.
+No pointwise CM comparison for each Hilbert parameter is assumed.
+This is an interface strengthening, not a claim that the source
+semiregularity and Hilbert-geometry inputs have been formalized.
+-/
+
+/-- A global canonical cycle-class/isogeny equivariance theorem
+replaces infinitely many source-specific CM comparison assertions
+in the original fourfold Hodge assembly. -/
+theorem auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
+    {U : SmoothProjectiveComplexScheme}
+    {T : Type*} [TopologicalSpace T] [BaireSpace T]
+    (Parameter : ℕ → Type*) (projection : ∀ i, Parameter i → T)
+    (good : ∀ i, Set (Parameter i))
+    (hclosed : ∀ i, IsClosed (projection i '' good i))
+    (hidentity : ∀ i, (interior (projection i '' good i)).Nonempty →
+      projection i '' good i = Set.univ)
+    (O : Set T) (hO : IsOpen O) (hne : O.Nonempty)
+    (hlocal : ∀ t ∈ O, ∃ i p, p ∈ good i ∧ projection i p = t)
+    (period : T)
+    (cycleAt : ∀ i (p : Parameter i), projection i p = period →
+      codimensionCycles U.X 3)
+    (G : GeometricCycleClassSpine V H)
+    (extract : codimensionCycles U.X 3 →ₗ[ℚ] codimensionCycles V.X 2)
+    (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
+    (thetaSquare : codimensionCycles V.X 2)
+    (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
+    (d : ℚ) (hd : 0 < d) (tensor : TensorCoefficients)
+    (hbalanced : balanced d tensor) (hnonzero : tensor ≠ zeroCoefficients)
+    (hTheta : coordinates (nativeToHodgeFiberLinear G thetaSquare) = (1, (0, 0)))
+    (hExtract : ∀ i p, p ∈ good i → ∀ ht : projection i p = period,
+      coordinates (nativeToHodgeFiberLinear G (extract (cycleAt i p ht))) =
+        (0, contractGraph tensor))
+    (hCMFunctorial :
+      ∀ Z : codimensionCycles V.X 2,
+        coordinates (nativeToHodgeFiberLinear G (cmPullback Z)) =
+        ((((d+1)^2+d)^2) * (coordinates (nativeToHodgeFiberLinear G Z)).1,
+          fourthPowerAction d (d+1)
+            (coordinates (nativeToHodgeFiberLinear G Z)).2))
+    (alpha : RationalSingularCohomology H.analytification 4)
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading 2)) :
+    ∃ Z : codimensionCycles V.X 2, H.cycleClass 2 Z = alpha := by
+  obtain ⟨i, p, hp, ht⟩ := periodTransport_all_period_witnesses
+    Parameter projection good hclosed hidentity O hO hne hlocal period
+  have hs := hExtract i p hp ht
+  have hcm := hCMFunctorial (extract (cycleAt i p ht))
+  rw [hs] at hcm
+  have hc :
+      coordinates (nativeToHodgeFiberLinear G
+        (cmPullback (extract (cycleAt i p ht)))) =
+        (0, fourthPowerAction d (d+1) (contractGraph tensor)) := by
+    simpa only [mul_zero] using hcm
+  exact auxiliaryWeilEveryMiddleHodgeClass G (cycleAt i p ht) extract
+    cmPullback thetaSquare coordinates d hd tensor hbalanced hnonzero
+    hTheta hs hc alpha halpha
+
+#check auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
+#print axioms auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread_CMFunctorial
+
 #check auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread
 #print axioms auxiliaryWeilEveryMiddleHodgeClass_from_periodSpread
 #print axioms weilPlaneCramerReconstruction
