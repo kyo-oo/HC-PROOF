@@ -206,6 +206,32 @@ There are infinitely many nonempty distinct algebraic hypersurface fibers, so th
 
 Consequently a proposed Hodge-only law demanding that EVERY explicitly chosen analytic determinant D_k be itself algebraic is false even in the easiest class-0 case. The needed geometric feat is **replacement of the target-born signed analytic packet by SOME algebraic rational cycle with the SAME canonical class**, not literal algebraization of the arbitrary holomorphic zero sets. In particular an analytic source being holomorphic is neither sufficient nor, by itself, the correct exact geometric output.
 
+## 5d. Exact GST boundary-order diagnostic: a PURE (1,1) class carried by a HOLomorphic 2-form
+
+We need the correct analytic/de Rham dictionary before applying any "Hodge filter ⇒ algebraic growth" principle to §5b. The project already has an explicit rank-one algebraic idempotent on the affine Jouanolou quadric \(Q_2=J(\mathbb P^1)\):
+\[
+ Q_2=\{(x,y,z)\in\mathbb A^3_{\mathbb C}:xy=z(1-z)\},\quad
+ P=\begin{pmatrix}z&x\\y&1-z\end{pmatrix}.
+\]
+**Direct Wolfram check:** \(P^2-P=(xy-z(1-z))I_2\), hence P²=P exactly on Q₂. The line im(P) is an ACTUAL algebraic line bundle, with nonzero integral c1 from the projective base. Its Grassmann connection \(\nabla=P\,d\) has Chern curvature trace
+\[
+\boxed{
+ \operatorname{tr}\bigl(P\,dP\wedge dP\bigr)
+  =(2z-1)\,dx\wedge dy
+    +2x\,dy\wedge dz+2y\,dz\wedge dx
+  =-\frac{dx\wedge dz}{x}\quad (x\ne0).
+}
+\]
+The last equality follows by differentiating xy=z(1-z): \(dy=(1-2z)dz/x-z(1-z)dx/x^2\). Wolfram verified its exact scalar coefficient is -1, without numerical approximation. The 2-form is REGULAR on the affine quadric (the polynomial expression proves global regularity) and nowhere vanishing. It represents a nonzero algebraic line-bundle first Chern class, after the usual 1/(2πi) normalization.
+
+**Critical Hodge point:** \(H^2(Q_2,\mathbb Q)\cong H^2(\mathbb P^1,\mathbb Q)\) is a pure (1,1) rational Hodge structure: its Deligne filtration has \(F^2 H^2(Q_2)=0\). Yet the Chern character above is represented by a regular **holomorphic (2,0) differential form** on the affine Q₂. There is NO contradiction: the Hodge filtration of an OPEN algebraic variety is *not* computed by naively truncating its unrestricted regular algebraic de Rham forms. It is computed using a normal-crossing COMPACTIFICATION with logarithmic forms and controlled poles.
+
+Indeed, the natural projective completion is the smooth quadric \(\bar Q_2=\{XY=Z(T-Z)\}\subset\mathbb P^3\), and the infinity divisor D={T=0} is a smooth hyperplane conic. Adjunction gives \(K_{\bar Q_2}=-2H=-2D\). Since the displayed regular holomorphic 2-form is nowhere vanishing on Q₂ and its only divisor lies at infinity, it has a **DOUBLE POLE** along D. It is not a global logarithmic 2-form with at most simple pole. The apparently holomorphic degree-two representative therefore lies in F¹ but not F² of the intrinsic mixed Hodge structure, consistently with its original (1,1) source.
+
+**New practical constraint for Gate 3:** merely converting the arbitrary-X target-born smooth K class into a holomorphic bundle on the affine Jouanolou model, or exhibiting holomorphic Chern-curvature forms, does NOT establish the projective Hodge filtration or algebraicity. One must control boundary growth/pole order and realize the actual rational class by a REGULAR ALGEBRAIC idempotent/projective module, not by a generic Oka holomorphic idempotent with possible essential growth.
+
+On the first nontrivial case Q₂, the polynomial idempotent P supplies this extra finite-growth certificate explicitly. For arbitrary primitive alpha the need is a *target-dependent finite-growth holomorphic projector* (or another actual algebraic coherent complex) without assuming such a projector as input. Proving universal existence of that certificate for exactly the rational (p,p) targets would produce the sought Chow cycle; this project has not proved it. The explicit Q₂ calculation rules out fake Hodge-filtration comparisons in a proposed proof.
+
 ## 6. Honest remaining nonlinear construction challenge
 
 To **solve** the user-requested all-varieties Hodge theorem using the new finite packet, one must construct for each X,p,Hodge-alpha enough HONEST complex-analytic/algebraic determinants A_k on the SAME original X whose canonical classes are the P(k), or build an independent holomorphic/coherent perfect-complex avatar realizing the target-born virtual K-class. The Hodge condition is absent from Steps 1–3 and MUST enter this new map from smooth determinant geometry into complex analyticity. Ordinary smooth transversality cannot provide it, HYM polystability is impossible for nonzero normalized primitive packages, and simply applying the existing algebraic GST orbit to existing algebraic seeds cannot manufacture the missing direction.
