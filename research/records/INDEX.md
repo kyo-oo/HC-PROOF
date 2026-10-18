@@ -43,6 +43,8 @@
 
 - [Target-born symplectic source packet on every original X](2026-10-18-gst-original-X-symplectic-source-birth.md) — new mathbox construction route outside the old algebraic orbit: BU(p) rank-p bundle with prescribed rational top Chern coordinate, approximately holomorphic zero sheet minus genuine algebraic complete-intersection sheet, exact primitive quadratic detector; Wolfram symbolic checks. **Only smooth/symplectic sources, NOT Chow cycles**; unstable bundle and Auroux analytic hypotheses require primary-source verification and the finite-k holomorphic/calibration replacement remains open. No Lean code or CI claim.
 
+- [Every-X target-born determinantal packet: exact all-p interpolation, K-positive integer weights, Stein analytic source, HYM obstruction](2026-10-18-universal-determinantal-packet-interpolation.md) — construct an integral topological K-class from each requested rational α, use genuine smooth maximal-minor rank-drop cycles on the original X and explicit integer-weighted finite differences to realize α in homology without a Chow input; move the carrier to complex-analytic determinants on the Stein Jouanolou replacement. Wolfram exact symbolic p2/p3 checks and all-p interpolation proof. Hodge-conditioned algebraization is **not proved**; non-Hodge K3 and polystable curvature tests delimit false extensions. No Lean source or CI modified.
+
 ## Pinned objective
 
 For every smooth projective complex variety \(X\), every codimension \(p\), and every rational primitive Hodge class \(\alpha\), **construct an algebraic cycle \(Z\) on the original \(X\)** and verify \(\operatorname{cl}_X(Z)=\alpha\) under the canonical geometric Betti cycle-class map.
