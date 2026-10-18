@@ -536,8 +536,13 @@ theorem optimal_target_residual_step_energy_identity
       (Q r) r - ((Q r) z)^2 / (Q z) z := by
   have hzr : (Q z) r = (Q r) z := hSym z r
   simp only [map_sub, map_smul, LinearMap.sub_apply, smul_eq_mul]
+  change (Q r) r -
+      ((Q r) z / (Q z) z) * ((Q z) r) -
+      ((Q r) z / (Q z) z) *
+        ((Q r) z - ((Q r) z / (Q z) z) * ((Q z) z)) =
+    (Q r) r - ((Q r) z)^2 / (Q z) z
   rw [hzr]
-  field_simp
+  field_simp [hz]
   ring
 
 /-- Nonzero native target coupling yields a STRICT reduction in
