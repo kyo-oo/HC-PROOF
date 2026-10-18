@@ -224,6 +224,44 @@ theorem positive_residual_energy_forces_strict_native_rank_birth
     rw [← heq] at hnew
     exact hnot hnew
 
+
+/-- **GST geometric Gram-surplus rank birth.** The independent source
+coordinate is certified directly by comparing only two genuine
+intersection measurements: the fresh cycle's self-intersection and
+the self-intersection of its exact already-algebraic projection.
+No externally supplied `thirdRead` or `hFresh` hypothesis occurs;
+the strict surplus is a geometric quantity measurable on the original
+projective variety from actual algebraic source cycles. -/
+theorem native_geometric_gram_surplus_forces_strict_rank_birth
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : V, (Q x) y = (Q y) x)
+    (hPair :
+      ∀ (i : ι) (x : V),
+        P.detectors i x = (Q x) (P.cycleClass (P.cycles i)))
+    (fresh : N)
+    (hGram :
+      (Q (P.cycleClass fresh)) (P.cycleClass fresh) >
+      (Q (P.cycleClass (projectedNativeCycle P (P.cycleClass fresh))))
+        (P.cycleClass (projectedNativeCycle P (P.cycleClass fresh)))) :
+    Submodule.span ℚ
+        (Set.range (fun i : ι => P.cycleClass (P.cycles i))) <
+      Submodule.span ℚ
+        (Set.insert (P.cycleClass fresh)
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i)))) := by
+  have hPythagoras :=
+    primitive_polarization_pythagoras P Q hSym hPair
+      (P.cycleClass fresh)
+  have hEnergy :
+      0 < (Q (residualClass P (P.cycleClass fresh)))
+        (residualClass P (P.cycleClass fresh)) := by
+    linarith
+  exact positive_residual_energy_forces_strict_native_rank_birth
+    P Q hPair fresh hEnergy
+
+#check native_geometric_gram_surplus_forces_strict_rank_birth
+#print axioms native_geometric_gram_surplus_forces_strict_rank_birth
+
 #check native_residual_builds_geometric_readout
 #check native_residual_readout_fresh_eq_energy
 #check positive_residual_energy_forces_strict_native_rank_birth
