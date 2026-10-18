@@ -62,6 +62,29 @@ This **removes a bare determinant nonzero hypothesis** from the old GST geometri
 
 Wolfram caveat: evaluating 0^0 natively can produce Indeterminate. Tests explicitly used exponent-zero value 1, the algebraically correct polynomial convention, and then found exact symbolic determinants; no floating tolerance or data fitting.
 
+## Route B2 — CM–NM spectral energy beyond rational real eigenvalues
+
+The generic moment-factorization \(\det(A^\top\operatorname{diag}(w)A)=(\det A)^2\prod w_k\) is a polynomial identity over ANY characteristic-zero splitting field, not just the rational values implemented in the new Lean spectral proof. Since an actual GST correspondence has rational matrix entries, its rational Hankel determinant is nonzero if its extension to the splitting field is nonzero. However non-real CM eigenvalues are incompatible with a positive *real self-adjoint* operator, and a complex eigenvector's symmetric bilinear self-pairing may vanish. Therefore the rational-real positive-weight spectral theorem CANNOT simply be invoked for the non-real CM action; this is an important exact type distinction.
+
+For the true **quadratic CM geometry** already present in GSTCMQuadraticNativeRankForcing.lean, the correct geometric test is real and stronger. Let Q be a positive symmetric rational primitive polarization, let \(J^2=-I\) and \(Q(Ju,v)=-Q(u,Jv)\), and let the ACTUAL native correspondence act as \(T=aI+bJ\) with rational \(b\ne0\). For any genuine native v with \(g=Q(v,v)>0\),
+
+\[
+Q(v,Tv)=ag,\qquad Q(Tv,Tv)=(a^2+b^2)g.
+\]
+
+Thus the actual rational **Gram determinant of two native orbit classes** is
+
+\[
+\boxed{
+\det\begin{pmatrix}Q(v,v)&Q(v,Tv)\\Q(Tv,v)&Q(Tv,Tv)\end{pmatrix}
+=b^2g^2>0.
+}
+\]
+
+This both avoids complex eigenvector positivity errors and constructs the independent second geometric direction from one real native source and one genuine non-real CM operator. Wolfram verified the exact determinant \(b^2g^2\) and its strict positivity for real g>0, b!=0. In a two-dimensional primitive rational sector this completes native generation **when the source and geometric CM action are actually realized**; in rank>2 a single quadratic action has insufficient minimal-polynomial degree, as Route C establishes.
+
+The next constructive question is whether GST can produce from the original-X universal primitive motive \((X,\Pi_f)\) either (i) a native nonzero primitive seed and a suitable CM-type noncommuting correspondence action, or (ii) an algebraic one-sided slice of its primitive diagonal. Neither is supplied by spectral arithmetic alone. These are precise geometric construction obligations, not extra axioms or formal "energy" assumptions.
+
 ## Route C — exact universal GST correspondence complexity bound
 
 A single algebraic correspondence operator T with minimal polynomial
