@@ -1068,6 +1068,83 @@ theorem finiteNilpotentBaseInverse_correct
       finiteGeometricSeries_identity (-eta*dinv) N
     _ = 1 := by rw [ht]; ring
 
+
+/-! ## GST NATIVE K₀: DIMENSION-UNIFORM INTEGRAL NUMERATOR
+
+An algebraic rational K₀ projector uses the inverse of the finite-flat
+degree bundle u=d+eta, with nilpotent augmentation eta^N=0.
+The earlier formula constructed u^-1 rationally, but we also need
+an EXPLICIT INTEGRAL numerator to obtain one finite perfect complex
+from rational target-sensitive sources.
+
+The following recurrence is a finite integral polynomial of d and eta:
+  A_0=0,    A_(N+1)=d^N-eta*A_N.
+It satisfies (d+eta)*A_N=d^N-(-eta)^N.
+When eta^N=0, it yields
+  d^N*u^-1=A_N,
+where N=n+1 for K₀(P^n). NO infinite expansion or completion.
+
+Thus clearing the rational target pairing coefficients by D and
+the intrinsic finite-flat projector coefficients by d^N produces
+a genuine integral virtual K₀ class using only finitely many direct
+sums, tensor products, and shifts of independently algebraic bundles.
+There is no Hodge-to-K₀ preimage in this polynomial construction.
+-/
+
+/-- Fully finite INTEGER polynomial adjugate of the geometric
+degree bundle d+eta, using only additions and multiplications. -/
+def finiteIntegralAdjugate (d eta : R) : ℕ → R
+  | 0 => 0
+  | N+1 => d^N - eta * finiteIntegralAdjugate d eta N
+
+/-- Algebraic dimension-uniform polynomial cancellation, valid in
+EVERY commutative base ring and EVERY nilpotent order N. -/
+theorem finiteIntegralAdjugate_identity (d eta : R) (N : ℕ) :
+    (d+eta)*finiteIntegralAdjugate d eta N =
+      d^N-(-eta)^N := by
+  induction N with
+  | zero =>
+      simp [finiteIntegralAdjugate]
+  | succ N ih =>
+      change (d+eta) * (d^N-eta*finiteIntegralAdjugate d eta N) =
+        d^(N+1)-(-eta)^(N+1)
+      calc
+        (d+eta)*(d^N-eta*finiteIntegralAdjugate d eta N) =
+            d*d^N+eta*d^N-eta*((d+eta)*finiteIntegralAdjugate d eta N) := by ring
+        _ = d*d^N+eta*d^N-eta*(d^N-(-eta)^N) := by rw [ih]
+        _ = d^(N+1)-(-eta)^(N+1) := by
+          simp only [pow_succ]
+          ring
+
+/-- Exact integral-denominator theorem for the ACTUAL finite-flat
+normalized K₀ inverse: multiplying by d^N gives the explicitly
+computable integral polynomial adjugate. -/
+theorem finiteIntegralAdjugate_clears_inverse
+    (d eta dinv : R) (N : ℕ)
+    (hd : d*dinv = 1)
+    (hNilpotent : eta^N = 0) :
+    d^N * finiteNilpotentBaseInverse d eta dinv N =
+      finiteIntegralAdjugate d eta N := by
+  let v : R := finiteNilpotentBaseInverse d eta dinv N
+  have hRight : (d+eta)*v=1 :=
+    finiteNilpotentBaseInverse_correct
+      d eta dinv N hd hNilpotent
+  have hLeft : v*(d+eta)=1 := by
+    simpa only [mul_comm] using hRight
+  have hPoly :
+      (d+eta)*finiteIntegralAdjugate d eta N = d^N := by
+    rw [finiteIntegralAdjugate_identity]
+    simp [hNilpotent]
+  calc
+    d^N * v = v * d^N := by ring
+    _ = v * ((d+eta)*finiteIntegralAdjugate d eta N) := by rw [hPoly]
+    _ = (v*(d+eta))*finiteIntegralAdjugate d eta N := by ring
+    _ = finiteIntegralAdjugate d eta N := by rw [hLeft]; ring
+
+#check finiteIntegralAdjugate_identity
+#check finiteIntegralAdjugate_clears_inverse
+#print axioms finiteIntegralAdjugate_clears_inverse
+
 /-- ACTUAL explicit normalized K₀ primitive source, where the
 inverse correction is an ALGORITHMIC FINITE polynomial of the
 rank-zero geometric augmentation eta. -/
