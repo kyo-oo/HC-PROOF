@@ -563,6 +563,116 @@ theorem optimal_target_residual_step_energy_strict
   linarith
 
 
+
+/-! ## GST TRUE ORTHOGONAL NATIVE BIRTH: preserve the old native source
+
+The previous energy step subtracted a rational multiple of the whole fresh
+Hodge class z from the target residual r. This generally reintroduces
+components along the old native span, violating the defining orthogonality
+of r and wasting energy. Its formula was algebraically correct but NOT
+the optimal source-extension projection.
+
+The GST upgrade corrects this at the NATIVE CHOW level: first remove
+the old projected native component from the independent fresh cycle.
+The resulting genuine rational algebraic cycle z_perp has class equal
+to the old Gram-orthogonal RESIDUAL of z. Use z_perp, not z, to correct
+the prescribed target residual. This preserves ALL old detectors and
+has optimal polarized energy for the expanded native source.
+
+The effective formula outputs an actual native cycle and does not
+assume target alpha is algebraic. If residual(alpha) is in the
+one-dimensional rational span of residual(z), the output represents
+alpha EXACTLY in one step. Producing the fresh Z for each target is
+still the universal geometric birth problem.
+-/
+
+/-- Actual native cycle carrying the newly born primitive Hodge
+direction, corrected by SUBTRACTING the old algebraic projection. -/
+def orthogonalizedNativeBirth
+    (P : GeometricDualCyclePacket ι N V) (fresh : N) : N :=
+  fresh - projectedNativeCycle P (P.cycleClass fresh)
+
+/-- The new native class is EXACTLY the old GST Hodge residual
+of the independently constructed fresh native cycle. -/
+theorem orthogonalizedNativeBirth_class
+    (P : GeometricDualCyclePacket ι N V) (fresh : N) :
+    P.cycleClass (orthogonalizedNativeBirth P fresh) =
+      residualClass P (P.cycleClass fresh) := by
+  simp [orthogonalizedNativeBirth, residualClass]
+
+/-- A specific target-born rational NATIVE cycle that uses the old
+native projection and one genuinely new orthogonalized source. -/
+def correctedTargetNativeBirth
+    (P : GeometricDualCyclePacket ι N V)
+    (alpha : V) (fresh : N) (t : ℚ) : N :=
+  projectedNativeCycle P alpha + t • orthogonalizedNativeBirth P fresh
+
+/-- The complete unrepresented target is reduced by the exact native
+newcomer residual, with NO reintroduced old native Hodge components. -/
+theorem correctedTargetNativeBirth_residual
+    (P : GeometricDualCyclePacket ι N V)
+    (alpha : V) (fresh : N) (t : ℚ) :
+    alpha - P.cycleClass (correctedTargetNativeBirth P alpha fresh t) =
+      residualClass P alpha -
+        t • residualClass P (P.cycleClass fresh) := by
+  simp only [correctedTargetNativeBirth, map_add, map_smul,
+    orthogonalizedNativeBirth_class, residualClass]
+  abel
+
+/-- A genuinely new native source on the original X whose projected
+primitive direction spans the requested target residual constructs an
+EXACT native cycle in one step. Unlike the prior scalar-only step,
+the correction is applied to an actual algebraic source whose old
+native component has been subtracted explicitly. -/
+theorem correctedTargetNativeBirth_exact_of_residual_parallel
+    (P : GeometricDualCyclePacket ι N V)
+    (alpha : V) (fresh : N) (t : ℚ)
+    (hParallel :
+      residualClass P alpha =
+        t • residualClass P (P.cycleClass fresh)) :
+    P.cycleClass (correctedTargetNativeBirth P alpha fresh t) = alpha := by
+  have h :=
+    correctedTargetNativeBirth_residual P alpha fresh t
+  rw [hParallel, sub_self] at h
+  exact sub_eq_zero.mp h |>.symm
+
+/-- A POSITIVE true primitive intersection form and nonzero coupling
+give strict energy reduction for the ACTUAL corrected native source.
+This is the optimal orthogonal residual, not the earlier correction
+against an unprojected cycle. -/
+theorem correctedTargetNativeBirth_strict_energy_descent
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : V, (Q x) y = (Q y) x)
+    (alpha : V) (fresh : N)
+    (hs :
+      0 < (Q (residualClass P (P.cycleClass fresh)))
+        (residualClass P (P.cycleClass fresh)))
+    (hc :
+      (Q (residualClass P alpha))
+        (residualClass P (P.cycleClass fresh)) ≠ 0) :
+    let t :=
+      (Q (residualClass P alpha))
+        (residualClass P (P.cycleClass fresh)) /
+      (Q (residualClass P (P.cycleClass fresh)))
+        (residualClass P (P.cycleClass fresh))
+    (Q (alpha - P.cycleClass
+      (correctedTargetNativeBirth P alpha fresh t)))
+      (alpha - P.cycleClass
+        (correctedTargetNativeBirth P alpha fresh t)) <
+      (Q (residualClass P alpha)) (residualClass P alpha) := by
+  dsimp
+  rw [correctedTargetNativeBirth_residual]
+  exact optimal_target_residual_step_energy_strict Q hSym
+    (residualClass P alpha)
+    (residualClass P (P.cycleClass fresh)) hs hc
+
+#check orthogonalizedNativeBirth_class
+#check correctedTargetNativeBirth_residual
+#check correctedTargetNativeBirth_exact_of_residual_parallel
+#check correctedTargetNativeBirth_strict_energy_descent
+#print axioms correctedTargetNativeBirth_exact_of_residual_parallel
+
 /-! ## GST rational integral polarization QUANTUM-GAP exactness law
 
 A signed integral primitive Hodge intersection has positive INTEGER
