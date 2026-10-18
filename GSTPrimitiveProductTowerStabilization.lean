@@ -372,7 +372,8 @@ theorem ellipticTensorTargetCoupling_weighted_squares
       (∑ s : Fin m → Bool, (period s)^2) / (2:ℚ)^m := by
   simp only [ellipticTensorTargetCoupling,
     ellipticTensorTargetCoefficient, Finset.sum_div]
-  funext s
+  apply Finset.sum_congr rfl
+  intro s _
   ring
 
 theorem ellipticTensorTargetCoupling_nonnegative
