@@ -699,6 +699,60 @@ theorem missing_root_direction_survives_all_split_descendants
 #check missing_root_direction_survives_all_split_descendants
 #print axioms missing_root_direction_survives_all_split_descendants
 
+/-! ## GST constructive fresh geometric direction from an arbitrary world birth
+
+Unlike split-birth deficit preservation, this is an explicit FORWARD
+native constructor. The arbitrary family of actual source native cycles
+is assembled by the certified GST birth, and a rational geometric
+readout tests its newly born Hodge class against ALL old native
+classes. A nonzero independent readout proves that the native-born
+Hodge direction lies strictly outside the previous algebraic span.
+
+No `alpha -> cycle` selector or target cycle preimage is assumed.
+The independent detector value still requires verification from the
+chosen scheme/world geometry; it is NOT implied merely by ontology.
+-/
+
+/-- An arbitrary-arity native GST world birth really constructs a
+NEW algebraic Hodge direction, provided the independent geometric
+readout is nonzero on its ACTUAL assembled source and zero on the
+old native span. This extends the previous binary exceptional-cycle
+detector to every dependent GST source family and any old index type. -/
+theorem arbitrary_world_birth_constructs_fresh_native_direction
+    (R : GeometricCycleBirthRealization C)
+    {I : Type u} {src : I → C.World} {target : C.World}
+    (e : C.Birth src target)
+    [AddCommGroup (C.Law target)] [Module ℚ (C.Law target)]
+    (sourceCycles : (i : I) → C.State (src i))
+    {J : Type u} (oldNative : J → C.State target)
+    (geometricRead : C.Law target →ₗ[ℚ] ℚ)
+    (hOld : ∀ j : J,
+      geometricRead (R.cycleClass target (oldNative j)) = 0)
+    (hNew :
+      geometricRead
+        (R.assembleHodge e
+          (fun i => R.cycleClass (src i) (sourceCycles i))) ≠ 0) :
+    R.cycleClass target (R.assembleNative e sourceCycles) ∉
+      Submodule.span ℚ
+        (Set.range (fun j : J => R.cycleClass target (oldNative j))) := by
+  intro hspan
+  have hker :
+      Submodule.span ℚ
+        (Set.range (fun j : J => R.cycleClass target (oldNative j))) ≤
+      LinearMap.ker geometricRead := by
+    apply Submodule.span_le.mpr
+    rintro x ⟨j, rfl⟩
+    exact LinearMap.mem_ker.mpr (hOld j)
+  have hz :
+      geometricRead (R.cycleClass target
+        (R.assembleNative e sourceCycles)) = 0 :=
+    LinearMap.mem_ker.mp (hker hspan)
+  rw [R.compatible e sourceCycles] at hz
+  exact hNew hz
+
+#check arbitrary_world_birth_constructs_fresh_native_direction
+#print axioms arbitrary_world_birth_constructs_fresh_native_direction
+
 #check SplitGeometricCycleBirthRealization
 #check split_arbitrary_birth_complete_iff_every_source
 #check split_arbitrary_birth_missing_source_survives
