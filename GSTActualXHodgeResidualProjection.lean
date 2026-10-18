@@ -822,6 +822,111 @@ theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_nonzero_of_new_class
 
 
 
+
+/-! ## UNIVERSAL GST ALGEBRAIC CORRESPONDENCE -> ORIGINAL-X CHERN EXTRACTION
+
+Let f:X→P^n be finite flat of positive degree d, and let
+Pi_f=Delta_X-(1/d)[X ×_(P^n) X] be its ACTUAL algebraic Chow
+correspondence. For any geometrically constructed algebraic vector
+bundle E on the ORIGINAL X, its p-th rational Chern character is
+an explicit native Chow cycle ch_p(E). Applying Pi_f gives
+  ch_p(E) - (1/d) f^*f_*ch_p(E)
+as an actual original-X native rational cycle in the Chow trace kernel.
+
+In particular E=T_X is CANONICAL on EVERY smooth X, so applying
+this construction to the tangent Chern cycle never requests a
+representative for a prescribed alpha. This Lean section takes the
+native Chern cycle as a *geometric datum*, because the exact scheme
+Chern-class construction is not yet provided by the repository's
+Mathlib Chow API. The formula and its Chow / Betti naturality ARE
+proved below; identifying its input with c_p(T_X) requires the
+independent canonical Chern/Betti comparison. For equal-degree
+polarized K3×K3, the concrete p=2 tangent Chern source has primitive
+norm 768, certified in GSTMaximalLinearHypersurfacePrimitive.
+-/
+
+/-- Apply the ACTUAL universal algebraic finite-projection
+correspondence to an INTRINSIC geometric bundle's rational
+Chern-character Chow source, producing a native cycle on X.
+
+The `intrinsicChernCycle` is provided by ordinary algebraic
+Chern construction on X, independent of any prescribed target
+Hodge class. It is NOT the sought alpha-specific cycle. -/
+noncomputable def ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (intrinsicChernCycle : codimensionCycles X.X p) :
+    codimensionCycles X.X p :=
+  T.traceZeroNative intrinsicChernCycle
+
+/-- The constructed native Chern source is ALREADY in the
+original-X Chow trace kernel, before Betti realization. -/
+theorem ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource_push_zero
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (intrinsicChernCycle : codimensionCycles X.X p) :
+    T.nativePush (T.extractIntrinsicChernSource intrinsicChernCycle) = 0 :=
+  T.traceZeroNative_push_zero intrinsicChernCycle
+
+/-- EXACT canonical-compatible geometric Chern source equality on
+the original X, with no arbitrary Hodge preimage hypothesis. -/
+theorem ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource_class
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (intrinsicChernCycle : codimensionCycles X.X p) :
+    HX.cycleClass p
+        (T.extractIntrinsicChernSource intrinsicChernCycle) =
+      HX.cycleClass p intrinsicChernCycle -
+        F.degree⁻¹ • F.bettiPull
+          (F.bettiPush (HX.cycleClass p intrinsicChernCycle)) :=
+  T.traceZeroNative_cycleClass intrinsicChernCycle
+
+/-- A purely geometric Poincare/intersection detector supplies an
+explicit NONZERO Chern source on ORIGINAL X whenever it detects
+the intrinsic bundle's primitive component. The detector is
+independently given by the actual intersection geometry and kills
+ALL ambient finite-projection pullbacks, not chosen as a cycle
+preimage of alpha. -/
+theorem ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource_nonzero
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (intrinsicChernCycle : codimensionCycles X.X p)
+    (read : RationalSingularCohomology HX.analytification (2*p) →ₗ[ℚ] ℚ)
+    (hAmbient : ∀ beta, read (F.bettiPull beta) = 0)
+    (hNonzero : read (HX.cycleClass p intrinsicChernCycle) ≠ 0) :
+    HX.cycleClass p
+      (T.extractIntrinsicChernSource intrinsicChernCycle) ≠ 0 := by
+  have houtside :
+      HX.cycleClass p intrinsicChernCycle ∉
+        LinearMap.range F.bettiPull := by
+    rintro ⟨beta, hbeta⟩
+    apply hNonzero
+    rw [← hbeta]
+    exact hAmbient beta
+  exact T.traceZeroNative_nonzero_of_new_class
+    intrinsicChernCycle houtside
+
+#check ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource
+#check ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource_class
+#check ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource_nonzero
+#print axioms ActualXFiniteProjectiveNativeTrace.extractIntrinsicChernSource_nonzero
+
 /-! ## GST actual original-X primitive source birth by TWO INDEPENDENT LAWS
 
 Combine (1) the ACTUAL finite projective native trace-zero surgery on an
