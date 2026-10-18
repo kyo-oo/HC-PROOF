@@ -186,6 +186,67 @@ theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
 
 #check ActualXCycleProjectionData.targetCoupledK0ChowCycle
 #check ActualXCycleProjectionData.targetCoupledK0ChowCycle_pairing
+
+/-! ## GST EXACT ORIGINAL-X SOURCE-DETECTION KERNEL
+
+For the actual rational Chow cycle constructed on original X by
+the target-sensitive K₀ source frame, its genuine supplied Hodge
+class is ZERO precisely when *every* currently constructed
+perfect-complex source has zero intersection period with alpha.
+
+This certifies which primitive original-X sectors a concrete
+geometric source family detects, without asserting that arbitrary
+Hodge vectors have algebraic representatives. It can be used
+to direct new GST Hilbert / CM-NM perfect-complex births towards
+the exact undetected residual sector rather than an arbitrary
+matrix-unit or abstract transported vector.
+-/
+
+/-- All-X exact Hodge detection certificate for the *actual* Chow
+cycle from independently available algebraic perfect complexes. -/
+theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_class_zero_iff
+    (P : ActualXCycleProjectionData X H p ι)
+    {K : Type*} [AddCommGroup K] [Module ℚ K]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : HodgeSpace X H p) :
+    P.trueHodgeClass
+      (P.targetCoupledK0ChowCycle primitiveK chowGRR Q sources alpha) = 0 ↔
+    ∀ i : Fin n,
+      (Q alpha) (P.trueHodgeClass
+        (chowGRR (primitiveK (sources i)))) = 0 := by
+  exact
+    GSTUniversalResolvedSupportHodge.GSTNativeFiniteFlatK0Extraction.targetCoupledVirtualSource_class_zero_iff_all_periods_zero
+      primitiveK (P.trueHodgeClass.comp chowGRR) Q sources alpha
+
+/-- A geometrically constructed original-X K₀ source with
+nonzero primitive period forces its *target-selected actual Chow
+source* to have nonzero Hodge class, in ANY codimension. -/
+theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_nonzero_of_period
+    (P : ActualXCycleProjectionData X H p ι)
+    {K : Type*} [AddCommGroup K] [Module ℚ K]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K) (alpha : HodgeSpace X H p) (i : Fin n)
+    (hDetected :
+      (Q alpha) (P.trueHodgeClass
+        (chowGRR (primitiveK (sources i)))) ≠ 0) :
+    P.trueHodgeClass
+      (P.targetCoupledK0ChowCycle primitiveK chowGRR Q sources alpha) ≠ 0 := by
+  intro hZero
+  have hAll :=
+    (P.targetCoupledK0ChowCycle_class_zero_iff
+      primitiveK chowGRR Q sources alpha).mp hZero
+  exact hDetected (hAll i)
+
+#check ActualXCycleProjectionData.targetCoupledK0ChowCycle_class_zero_iff
+#check ActualXCycleProjectionData.targetCoupledK0ChowCycle_nonzero_of_period
+#print axioms ActualXCycleProjectionData.targetCoupledK0ChowCycle_class_zero_iff
+
 #check ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
 #print axioms ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
 
