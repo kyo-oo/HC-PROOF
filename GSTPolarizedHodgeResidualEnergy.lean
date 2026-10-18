@@ -452,6 +452,117 @@ theorem arbitrary_rational_gram_surplus_constructs_native_rank_birth
     rw [← heq] at hnew
     exact hnot hnew
 
+
+/-! ## GST TARGET-DRIVEN NATIVE BIRTH: residual coupling and energy descent
+
+A serious change from a "fresh class measured after birth" criterion:
+use the SPECIFIC unresolved target alpha to choose the next native birth.
+The canonical rational Hodge residual r_alpha and true intersection
+polarization Q construct a readout Q(r_alpha,-) vanishing on ALL old
+native cycles under the full rational Gram-dual law.
+
+Therefore ANY independently constructed native geometric cycle Z
+with Q(r_alpha,cl(Z)) ≠ 0 *necessarily* adds a new algebraic Hodge
+direction. No basis sheet, coordinate choice, or target preimage
+appears among the new inputs. This is a GST target-directed BIRTH
+criterion, rather than a generic independent rank certificate.
+
+The optimal rational coefficient t=Q(r,z)/Q(z,z) removes EXACTLY
+Q(r,z)^2 / Q(z,z) units of polarized residual energy when Q(z,z)>0.
+In the true primitive Hodge fiber, Hodge-Riemann gives such positivity.
+These are exact laws; existence of a coupled new native Z for every
+remaining target is still the unproved universal geometric step.
+-/
+
+/-- Every target-residual intersection coupling with a genuine new
+native cycle certifies strict algebraic source birth; the detector
+is CONSTRUCTED from the input target and old native Gram matrix. -/
+theorem target_residual_coupling_constructs_native_rank_birth
+    (P : GeometricDualCyclePacket ι N V)
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hGramDual : ∀ (j : ι) (x : V),
+      (Q x) (P.cycleClass (P.cycles j)) =
+        ∑ i, (P.detectors i x) *
+          (Q (P.cycleClass (P.cycles i)))
+            (P.cycleClass (P.cycles j)))
+    (alpha : V) (fresh : N)
+    (hCouple :
+      (Q (residualClass P alpha)) (P.cycleClass fresh) ≠ 0) :
+    Submodule.span ℚ
+        (Set.range (fun i : ι => P.cycleClass (P.cycles i))) <
+      Submodule.span ℚ
+        (Set.insert (P.cycleClass fresh)
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i)))) := by
+  let r := residualClass P alpha
+  let ell : V →ₗ[ℚ] ℚ := Q r
+  have hOld (i : ι) : ell (P.cycleClass (P.cycles i)) = 0 :=
+    gram_dual_residual_orthogonal_to_old_native P Q hGramDual alpha i
+  have hnot :
+      P.cycleClass fresh ∉
+        Submodule.span ℚ
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i))) := by
+    intro hspan
+    have hker :
+        Submodule.span ℚ
+          (Set.range (fun i : ι => P.cycleClass (P.cycles i))) ≤
+        LinearMap.ker ell := by
+      apply Submodule.span_le.mpr
+      rintro x ⟨i, rfl⟩
+      exact LinearMap.mem_ker.mpr (hOld i)
+    exact hCouple (LinearMap.mem_ker.mp (hker hspan))
+  apply lt_of_le_of_ne
+  · exact Submodule.span_mono (Set.subset_insert _ _)
+  · intro heq
+    have hnew :
+        P.cycleClass fresh ∈
+          Submodule.span ℚ
+            (Set.insert (P.cycleClass fresh)
+              (Set.range (fun i : ι => P.cycleClass (P.cycles i)))) :=
+      Submodule.subset_span (Set.mem_insert _ _)
+    rw [← heq] at hnew
+    exact hnot hnew
+
+/-- The EXACT rational energy improvement from applying a native
+geometric direction with its optimal polarized intersection coefficient.
+It uses the genuine bilinear polarized geometry, NOT a freely assigned
+"mass gradient" or a presumed algebraic target witness. -/
+theorem optimal_target_residual_step_energy_identity
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : V, (Q x) y = (Q y) x)
+    (r z : V)
+    (hz : (Q z) z ≠ 0) :
+    (Q (r - (((Q r) z / (Q z) z) • z)))
+        (r - (((Q r) z / (Q z) z) • z)) =
+      (Q r) r - ((Q r) z)^2 / (Q z) z := by
+  have hzr : (Q z) r = (Q r) z := hSym z r
+  simp only [map_sub, map_smul, LinearMap.sub_apply, smul_eq_mul]
+  rw [hzr]
+  field_simp
+  ring
+
+/-- Nonzero native target coupling yields a STRICT reduction in
+polarized residual energy. Its coefficient is a rational number
+computed from the true intersection matrix. -/
+theorem optimal_target_residual_step_energy_strict
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : V, (Q x) y = (Q y) x)
+    (r z : V)
+    (hz : 0 < (Q z) z)
+    (hc : (Q r) z ≠ 0) :
+    (Q (r - (((Q r) z / (Q z) z) • z)))
+        (r - (((Q r) z / (Q z) z) • z)) <
+      (Q r) r := by
+  rw [optimal_target_residual_step_energy_identity Q hSym r z (ne_of_gt hz)]
+  have hnum : 0 < ((Q r) z)^2 := sq_pos_of_ne_zero hc
+  have hdiv : 0 < ((Q r) z)^2 / (Q z) z := div_pos hnum hz
+  linarith
+
+#check target_residual_coupling_constructs_native_rank_birth
+#check optimal_target_residual_step_energy_identity
+#check optimal_target_residual_step_energy_strict
+#print axioms target_residual_coupling_constructs_native_rank_birth
+#print axioms optimal_target_residual_step_energy_identity
+
 #check gram_dual_residual_orthogonal_to_old_native
 #check arbitrary_rational_gram_surplus_constructs_native_rank_birth
 #print axioms arbitrary_rational_gram_surplus_constructs_native_rank_birth
