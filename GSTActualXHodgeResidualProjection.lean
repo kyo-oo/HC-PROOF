@@ -148,6 +148,49 @@ theorem ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_sp
 #check ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_span
 #print axioms ActualXCycleProjectionData.geometric_gram_birth_strictly_grows_native_span
 
+
+/-! ## TRUE arbitrary original-X Gram-dual geometric source birth
+
+The prior geometric_gram_birth result used hPair, requiring old
+native Hodge cycles to be ORTHONORMAL over Q. Genuine projective
+intersection forms (for example h².h²=3 on cubic fourfolds)
+are not generally rationally orthonormalizable.
+
+This stronger GST theorem instead accepts the ACTUAL rational
+intersection Gram matrix of the chosen old native Chow cycles,
+and the detectors constructed by its rational Gram inverse.
+This is the correct form for arbitrary original X and codimension p.
+-/
+
+/-- GST native Chow rank growth on ANY original X with the FULL rational
+intersection Gram law, no orthonormality or artificial chosen readout. -/
+theorem ActualXCycleProjectionData.full_gram_dual_birth_strictly_grows_native_span
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : HodgeSpace X H p, (Q x) y = (Q y) x)
+    (hGramDual : ∀ (j : ι) (x : HodgeSpace X H p),
+      (Q x) (P.trueHodgeClass (P.sourceNativeCycles j)) =
+        ∑ i, P.geometricDetectors i x *
+          (Q (P.trueHodgeClass (P.sourceNativeCycles i)))
+            (P.trueHodgeClass (P.sourceNativeCycles j)))
+    (fresh : codimensionCycles X.X p)
+    (hGram :
+      (Q (P.trueHodgeClass fresh)) (P.trueHodgeClass fresh) >
+      (Q (P.trueHodgeClass (P.projectNative (P.trueHodgeClass fresh))))
+        (P.trueHodgeClass (P.projectNative (P.trueHodgeClass fresh)))) :
+    Submodule.span ℚ
+        (Set.range (fun i : ι => P.trueHodgeClass (P.sourceNativeCycles i))) <
+      Submodule.span ℚ
+        (Set.insert (P.trueHodgeClass fresh)
+          (Set.range (fun i : ι =>
+            P.trueHodgeClass (P.sourceNativeCycles i)))) := by
+  exact GSTPolarizedHodgeResidualEnergy.arbitrary_rational_gram_surplus_constructs_native_rank_birth
+    P.toProjectionPacket Q hSym
+    (by intro j x; exact hGramDual j x) fresh hGram
+
+#check ActualXCycleProjectionData.full_gram_dual_birth_strictly_grows_native_span
+#print axioms ActualXCycleProjectionData.full_gram_dual_birth_strictly_grows_native_span
+
 theorem ActualXCycleProjectionData.algebraic_part_plus_residual
     (P : ActualXCycleProjectionData X H p ι)
     (alpha : HodgeSpace X H p) :
@@ -600,9 +643,11 @@ theorem ActualXFiniteProjectiveNativeTrace.gram_certified_original_X_primitive_b
     (Proj : ActualXCycleProjectionData X HX p ι)
     (Q : HodgeSpace X HX p →ₗ[ℚ] HodgeSpace X HX p →ₗ[ℚ] ℚ)
     (hSym : ∀ x y : HodgeSpace X HX p, (Q x) y = (Q y) x)
-    (hPair : ∀ (i : ι) (x : HodgeSpace X HX p),
-      Proj.geometricDetectors i x =
-        (Q x) (Proj.trueHodgeClass (Proj.sourceNativeCycles i)))
+    (hGramDual : ∀ (j : ι) (x : HodgeSpace X HX p),
+      (Q x) (Proj.trueHodgeClass (Proj.sourceNativeCycles j)) =
+        ∑ i, Proj.geometricDetectors i x *
+          (Q (Proj.trueHodgeClass (Proj.sourceNativeCycles i)))
+            (Proj.trueHodgeClass (Proj.sourceNativeCycles j)))
     (Z : codimensionCycles X.X p)
     (hGram :
       (Q (Proj.trueHodgeClass (T.traceZeroNative Z)))
@@ -620,8 +665,8 @@ theorem ActualXFiniteProjectiveNativeTrace.gram_certified_original_X_primitive_b
               Proj.trueHodgeClass (Proj.sourceNativeCycles i)))) := by
   constructor
   · exact T.traceZeroNative_push_zero Z
-  · exact Proj.geometric_gram_birth_strictly_grows_native_span
-      Q hSym hPair (T.traceZeroNative Z) hGram
+  · exact Proj.full_gram_dual_birth_strictly_grows_native_span
+      Q hSym hGramDual (T.traceZeroNative Z) hGram
 
 #check ActualXFiniteProjectiveNativeTrace.gram_certified_original_X_primitive_birth
 #print axioms ActualXFiniteProjectiveNativeTrace.gram_certified_original_X_primitive_birth
