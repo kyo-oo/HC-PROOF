@@ -59,6 +59,28 @@ The gauge-invariant object is the **divisor/current**, not the arbitrary norm of
 \]
 with the conventional normalization of dd^c. The right side is cohomologically exact but not negligible at noncompact infinity. This is an explicit *cohomologically invisible yet geometrically enormous* GST boundary ghost; the original projective Hodge class cannot detect it.
 
+## Exact analytic finite-fiber test: a different GST geometry signal
+
+Consider the closed analytic graph A_f={(z,w):w=f(z)} in C², where f is an entire function. For an arbitrary nonzero complex slope lambda, let
+\[
+P_\lambda(z,w)=z+\lambda w .
+\]
+Its restriction to the analytic source A_f is the entire function \(g_\lambda(z)=z+\lambda f(z)\).
+
+**Exact theorem on this source family:** if \(P_\lambda|_{A_f}\) is a proper holomorphic map for even ONE nonzero lambda, then g_lambda is a proper entire function, hence a polynomial (a proper entire map C->C has at most a pole at infinity, not an essential singularity). Therefore \(f(z)=(g_\lambda(z)-z)/\lambda\) is a polynomial and A_f is ACTUALLY ALGEBRAIC. This is a *constructive finite-projection algebraicity certificate for every entire graph*, not merely a ring formalization.
+
+For polynomial f(z)=z^m and lambda!=0, the tilted map g_lambda(z)=z+lambda z^m is a degree-m polynomial and therefore proper, generically finite of degree m.
+
+For the transcendental f(z)=e^z, the UNTILTED projection lambda=0 onto z is still an honest proper 1-to-1 map from the graph to C; THAT IS NOT AN ALGEBRAICITY CERTIFICATE. Every TILTED map with lambda!=0 becomes transcendental and nonproper. In fact
+\[
+z+\lambda e^z=t
+\quad\Longleftrightarrow\quad
+z=t-W_k(\lambda e^t),\qquad k\in\mathbb Z,
+\]
+giving infinitely many distinct inverse branches for generic t. Wolfram numerically confirmed seven distinct branches k=-3,...,3 at lambda=1,t=0, with residual z+e^z zero at high working precision. Infinite-sheet nonproper geometry is intrinsic to the transcendental source and is invisible to ordinary Hodge/Betti data.
+
+**Application to GST:** this puts an explicit properness requirement on actual analytic geometry BEFORE the native scheme-finite correspondence machinery can act. For arbitrary higher-dimensional analytic determinantal cycles on a fixed affine embedding of J(X), the suggested condition is proper generic finite linear projections with controlled sheet count, but a full higher-dimensional algebraicity theorem with its exact hypotheses has not been authenticated in this no-web session, and such projections have NOT been constructed from arbitrary Hodge alpha. The exact graph theorem is proved; no all-X Hodge construction is asserted. The test is an alternative to infinity mass, not a disguised assertion that all Hodge cycles exist.
+
 ## Research status and exact remaining construction
 
 The genuine all-X problem is NOT to prove that *every* Oka representative of a Hodge alpha has bounded mass: the counterexample disproves that stronger false statement even for alpha=c1(O_P¹(1)). The Hodge target requires actively SELECTING at least one holomorphic determinantal D_alpha of finite projective mass for every Hodge alpha. The prior [incidence compactification construction](2026-10-18-incidence-compactification-gst-boundary-charge.md) gives an explicit finite proper-pushforward formula on the ORIGINAL X if and when such a D_alpha algebraizes.
