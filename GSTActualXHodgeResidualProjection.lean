@@ -568,6 +568,64 @@ theorem ActualXFiniteProjectiveNativeTrace.traceZeroNative_nonzero_of_new_class
   exact hClass.symm
 
 
+
+/-! ## GST actual original-X primitive source birth by TWO INDEPENDENT LAWS
+
+Combine (1) the ACTUAL finite projective native trace-zero surgery on an
+arbitrary original smooth projective X with (2) the new GST polarized
+Gram-surplus independence certificate.
+
+Unlike a theorem whose only input is a separately chosen fresh cycle,
+this operation explicitly CONSTRUCTS an original-X rational native
+cycle from any independently available geometric native cycle Z,
+then certifies BOTH genuine Chow trace zero AND a strictly fresh
+Hodge direction when its exact intersection surplus is positive.
+
+Neither the input native algebraic Z nor the Gram surplus is obtained
+from an arbitrary unrepresented Hodge target: full Hodge completion
+requires discovering enough independent native source cycles.
+-/
+
+/-- The existing GST native finite-projective surgery produces a
+trace-zero algebraic cycle on the ORIGINAL X, and the polarization
+certifies its genuinely new Hodge direction by an independently
+measured Gram surplus. Works for EVERY smooth projective X and p. -/
+theorem ActualXFiniteProjectiveNativeTrace.gram_certified_original_X_primitive_birth
+    {P X : SmoothProjectiveComplexScheme}
+    {HP : HodgeBigradedBettiData P}
+    {HX : HodgeBigradedBettiData X}
+    {p : ℕ}
+    {F : ActualXFiniteProjectiveTrace P X HP HX p}
+    (T : ActualXFiniteProjectiveNativeTrace F)
+    (Proj : ActualXCycleProjectionData X HX p ι)
+    (Q : HodgeSpace X HX p →ₗ[ℚ] HodgeSpace X HX p →ₗ[ℚ] ℚ)
+    (hSym : ∀ x y : HodgeSpace X HX p, (Q x) y = (Q y) x)
+    (hPair : ∀ (i : ι) (x : HodgeSpace X HX p),
+      Proj.geometricDetectors i x =
+        (Q x) (Proj.trueHodgeClass (Proj.sourceNativeCycles i)))
+    (Z : codimensionCycles X.X p)
+    (hGram :
+      (Q (Proj.trueHodgeClass (T.traceZeroNative Z)))
+        (Proj.trueHodgeClass (T.traceZeroNative Z)) >
+      (Q (Proj.trueHodgeClass (Proj.projectNative
+        (Proj.trueHodgeClass (T.traceZeroNative Z)))))
+        (Proj.trueHodgeClass (Proj.projectNative
+          (Proj.trueHodgeClass (T.traceZeroNative Z))))) :
+    T.nativePush (T.traceZeroNative Z) = 0 ∧
+      Submodule.span ℚ (Set.range
+          (fun i : ι => Proj.trueHodgeClass (Proj.sourceNativeCycles i))) <
+        Submodule.span ℚ
+          (Set.insert (Proj.trueHodgeClass (T.traceZeroNative Z))
+            (Set.range (fun i : ι =>
+              Proj.trueHodgeClass (Proj.sourceNativeCycles i)))) := by
+  constructor
+  · exact T.traceZeroNative_push_zero Z
+  · exact Proj.geometric_gram_birth_strictly_grows_native_span
+      Q hSym hPair (T.traceZeroNative Z) hGram
+
+#check ActualXFiniteProjectiveNativeTrace.gram_certified_original_X_primitive_birth
+#print axioms ActualXFiniteProjectiveNativeTrace.gram_certified_original_X_primitive_birth
+
 /-! ## Exact GST native trace-zero projector and Chow/Hodge kernel landing
 
 For every finite flat projective projection X -> P^d, the actual
