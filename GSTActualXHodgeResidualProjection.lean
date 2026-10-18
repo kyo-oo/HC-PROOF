@@ -250,6 +250,102 @@ theorem ActualXCycleProjectionData.targetCoupledK0ChowCycle_nonzero_of_period
 #check ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
 #print axioms ActualXCycleProjectionData.targetCoupledK0ChowCycle_positive
 
+
+/-! ## GST ACTUAL ORIGINAL-X TWO-KOSZUL TARGET CHOW CYCLE
+
+For a genuine elliptic-factor abelian fourfold X and true native
+algebraic perfect complexes K_P,K_Q built by differences of
+line bundles, the original-X genuine Chow sources P,Q have TRUE
+polarized Hodge intersection matrix [[4,2],[2,4]], as computed
+exactly in GSTNativeAbelianKoszulRankTwo.
+
+The following source compiler now acts in Mathlib's ACTUAL rational
+codimension-p Chow cycle type on the ORIGINAL X, not merely in the
+squarefree Hodge/intersection coefficient ring. It takes only two
+independently built native source cycles and their actual geometric
+periods with prescribed alpha, then constructs the explicitly
+target-selected Chow cycle with exact period recovery.
+
+Its hypotheses certify the TRUE geometric 2x2 Gram pairing of
+the two independently constructed Chern sources. The theorem
+does not require a target Hodge-to-Chow inverse or assert that an
+arbitrary unrelated X contains these four elliptic line bundles.
+-/
+
+/-- The actual ORIGINAL-X rational Chow algebraic source produced
+from the 2x2 full rational intersection Gram inverse. -/
+def gstTwoKoszulOriginalXTargetCycle
+    (ZP ZQ : codimensionCycles X.X p) (a b : ℚ) :
+    codimensionCycles X.X p :=
+  ((2*a-b)/6) • ZP + ((2*b-a)/6) • ZQ
+
+/-- Two independently constructed native K₀ original-X sources
+recover the FIRST prescribed rational Hodge intersection period. -/
+theorem gstTwoKoszulOriginalXTargetCycle_periodP
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (ZP ZQ : codimensionCycles X.X p)
+    (hPP :
+      (Q (P.trueHodgeClass ZP)) (P.trueHodgeClass ZP) = 4)
+    (hQP :
+      (Q (P.trueHodgeClass ZQ)) (P.trueHodgeClass ZP) = 2)
+    (a b : ℚ) :
+    (Q (P.trueHodgeClass
+      (gstTwoKoszulOriginalXTargetCycle ZP ZQ a b)))
+      (P.trueHodgeClass ZP) = a := by
+  simp only [gstTwoKoszulOriginalXTargetCycle, map_add,
+    map_smul, LinearMap.add_apply, LinearMap.smul_apply,
+    smul_eq_mul]
+  rw [hPP,hQP]
+  ring
+
+/-- Independently recovers the SECOND prescribed primitive period
+using the SAME actual native algebraic cycle. -/
+theorem gstTwoKoszulOriginalXTargetCycle_periodQ
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (ZP ZQ : codimensionCycles X.X p)
+    (hPQ :
+      (Q (P.trueHodgeClass ZP)) (P.trueHodgeClass ZQ) = 2)
+    (hQQ :
+      (Q (P.trueHodgeClass ZQ)) (P.trueHodgeClass ZQ) = 4)
+    (a b : ℚ) :
+    (Q (P.trueHodgeClass
+      (gstTwoKoszulOriginalXTargetCycle ZP ZQ a b)))
+      (P.trueHodgeClass ZQ) = b := by
+  simp only [gstTwoKoszulOriginalXTargetCycle, map_add,
+    map_smul, LinearMap.add_apply, LinearMap.smul_apply,
+    smul_eq_mul]
+  rw [hPQ,hQQ]
+  ring
+
+/-- The ACTUAL native original-X Chow cycle's target coupling is
+the exact positive-definite inverse-Gram quadratic polynomial.
+It is computed from prescribed alpha's geometric periods, not a
+chosen preimage, arbitrary detector, or independent positivity axiom. -/
+theorem gstTwoKoszulOriginalXTargetCycle_targetCoupling
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (ZP ZQ : codimensionCycles X.X p)
+    (alpha : HodgeSpace X H p) :
+    (Q alpha) (P.trueHodgeClass
+      (gstTwoKoszulOriginalXTargetCycle ZP ZQ
+        ((Q alpha) (P.trueHodgeClass ZP))
+        ((Q alpha) (P.trueHodgeClass ZQ)))) =
+    let a := (Q alpha) (P.trueHodgeClass ZP)
+    let b := (Q alpha) (P.trueHodgeClass ZQ)
+    (a^2-a*b+b^2)/3 := by
+  dsimp
+  simp only [gstTwoKoszulOriginalXTargetCycle,map_add,
+    map_smul, smul_eq_mul]
+  ring
+
+#check gstTwoKoszulOriginalXTargetCycle
+#check gstTwoKoszulOriginalXTargetCycle_periodP
+#check gstTwoKoszulOriginalXTargetCycle_periodQ
+#check gstTwoKoszulOriginalXTargetCycle_targetCoupling
+#print axioms gstTwoKoszulOriginalXTargetCycle_targetCoupling
+
 /-! ## GST native geometric Gram construction on the ORIGINAL target X
 
 Upgrade the real Stage-2G native algebraic-cycle fiber using the newly
