@@ -605,15 +605,13 @@ structure SplitGeometricCycleBirthRealization
       (e : C.Birth src target) → (i : I) →
       C.Law (src i) → C.Law target
   backSound :
-    ∀ {I : Type u} {src : I → C.World} {target : C.World},
-      (e : C.Birth src target) → (i : I) →
-      (Z : C.State target),
+    ∀ {I : Type u} {src : I → C.World} {target : C.World}
+      (e : C.Birth src target) (i : I) (Z : C.State target),
       cycleClass (src i) (backNative e i Z) =
         backHodge e i (cycleClass target Z)
   backAfterInclude :
-    ∀ {I : Type u} {src : I → C.World} {target : C.World},
-      (e : C.Birth src target) → (i : I) →
-      (alpha : C.Law (src i)),
+    ∀ {I : Type u} {src : I → C.World} {target : C.World}
+      (e : C.Birth src target) (i : I) (alpha : C.Law (src i)),
       backHodge e i (includeHodge e i alpha) = alpha
 
 /-- **ARBITRARY-ARITY GST WORLD-BIRTH COMPLETENESS LAW.**
