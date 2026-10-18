@@ -1359,7 +1359,6 @@ theorem twofold_finite_diagonal_degree_cancellation
     (d : ℚ) (hd : d ≠ 0) :
     (1/(d*d) : ℚ)*d = 1/d := by
   field_simp [hd]
-  ring
 
 /-- GENUINE arbitrary-X primitive correspondence extracted from the
 actual diagonal sheaf's codimension-n algebraic Chow fundamental
