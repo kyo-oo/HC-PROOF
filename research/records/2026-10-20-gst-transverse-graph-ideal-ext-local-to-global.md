@@ -19,35 +19,35 @@ At each crossing p in P, transversality supplies regular parameters
 `I0=(x1,x2,x3)`, `I1=(y1,y2,y3)`.
 The Koszul resolution on the regular x-sequence, together with regularity of x on R/I1, gives
 
-[
+\[
 \mathcal Ext^j_A(O_{Z0},O_A) =
 \begin{cases}O_{Z0},&j=3,\\0,&j\ne3,\end{cases}
 \quad
 \mathcal Ext^j_A(O_{Z0},O_{Z1}) =
 \begin{cases}O_P,&j=3,\\0,&j\ne3.\end{cases}
-]
+\]
 
 Use `0 -> I1 -> O_A -> O_Z1 -> 0`. The j=3 portion of its Ext long exact sequence is
 
-[
+\[
 0\longrightarrow \mathcal Ext^3_A(O_{Z0},I1)
 \longrightarrow O_{Z0}\longrightarrow O_P\longrightarrow 0.
-]
+\]
 
 The middle map is restriction, so the kernel is the **actual ideal of the crossing set inside Z0**:
-[
+\[
 \mathcal Ext^3_A(O_{Z0},I1)\simeq I_{P/Z0}.
-]
+\]
 All lower local Ext sheaves vanish. Applying `0 -> I0 -> O_A -> O_Z0 -> 0` then gives
-[
+\[
 \mathcal Ext^1_A(I0,I1)=0,\qquad
 \mathcal Ext^2_A(I0,I1)\simeq I_{P/Z0}.
-]
+\]
 
 For the Hom sheaf, `Hom(I0,O_A)=O_A` (codimension three) and multiplication by a local f sends I0 into I1 precisely when f belongs to I1. At a crossing this uses that the x-ideal remains nonzero in the domain R/I1. Thus
-[
+\[
 \mathcal Hom_A(I0,I1)\simeq I1.
-]
+\]
 
 These are genuine local ring calculations, not free vector-space models.
 
@@ -56,24 +56,24 @@ These are genuine local ring calculations, not free vector-space models.
 The local-to-global spectral sequence
 `H^p(A, ExtSheaf^q(I0,I1)) => Ext_A^(p+q)(I0,I1)`
 has only q=0 and q=2 in the lowest relevant degrees. Since Z0 is connected projective and P is nonempty, the only global regular functions vanishing on P are zero:
-[
+\[
 H^0(Z0,I_{P/Z0})=0.
-]
+\]
 Consequently
-[
+\[
 Ext^1_A(I0,I1)\simeq H^1(A,I1),\qquad
 Ext^2_A(I0,I1)\simeq H^2(A,I1).
-]
+\]
 
 Because Z1 is an abelian subthreefold, the restriction `H^1(A,O_A)->H^1(Z1,O_Z1)` is surjective; exterior powers give surjectivity in every degree. The ideal sequence of Z1 therefore yields
-[
+\[
 \dim H^q(A,I1)=\binom6q-\binom3q \quad (q=1,2).
-]
+\]
 In particular the exact resulting ranks are
-[
+\[
 \boxed{\dim Ext^1_A(I0,I1)=6-3=3,\qquad
        \dim Ext^2_A(I0,I1)=15-3=12.}
-]
+\]
 They do not equal 64 or the earlier 16-dimensional **different incidence-carrier** Ext² spaces.
 
 ## What this decides
