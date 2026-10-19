@@ -1930,6 +1930,50 @@ theorem cmWeilSixfoldThreeOpBilinearAllFour_required
   rw [ha,hb,hc,hd]
   norm_num
 
+/-! ### A single separable T-by-S source packet is insufficient
+
+The exact four-word coefficient matrix of the SHORT genuine
+three-operator CM graph source has determinant 20000, not zero.
+A single tensor factor (a+b*T)(c+d*S) always has coefficient
+matrix of rank at most one; thus it cannot equal the
+required projector numerator. TWO rank-one separated algebraic
+word packets suffice algebraically:
+  (4800-32*T) + (175+3*T)*S.
+This is a sharp restricted tensor-rank statement. It does
+not prohibit a nonseparable perfect complex or prove its
+actual semiregular deformation. -/
+
+/-- Exact nonzero determinant of the graph-word
+coefficient matrix [[4800,175],[-32,3]]. -/
+theorem cmWeilSixfoldThreeOpNumerator_det :
+    (4800:ℚ)*3 - 175*(-32) = 20000 := by
+  norm_num
+
+/-- No ONE separated linear T-factor times linear S-factor
+has the correct exact pure-Weil projector coefficients. -/
+theorem cmWeilSixfoldThreeOpNumerator_not_one_separable_product
+    (a b c d : ℚ)
+    (h00 : a*c = 4800)
+    (h10 : b*c = -32)
+    (h01 : a*d = 175)
+    (h11 : b*d = 3) : False := by
+  have hdet : (a*c)*(b*d) = (a*d)*(b*c) := by ring
+  rw [h00,h11,h01,h10] at hdet
+  norm_num at hdet
+
+/-- Two genuinely separate T and S source words already
+provide a sharp algebraic upper bound for the numerator. -/
+theorem cmWeilSixfoldThreeOpNumerator_two_separable_terms
+    (t s : ℚ) :
+    4800-32*t+175*s+3*t*s =
+      (4800-32*t) + (175+3*t)*s := by
+  ring
+
+#check cmWeilSixfoldThreeOpNumerator_det
+#check cmWeilSixfoldThreeOpNumerator_not_one_separable_product
+#check cmWeilSixfoldThreeOpNumerator_two_separable_terms
+#print axioms cmWeilSixfoldThreeOpNumerator_not_one_separable_product
+
 #check cmWeilSixfoldThreeOpBilinearCoefficient_unique
 #check cmWeilSixfoldThreeOpBilinearAllFour_required
 #print axioms cmWeilSixfoldThreeOpBilinearCoefficient_unique
