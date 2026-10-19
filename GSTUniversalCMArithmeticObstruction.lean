@@ -1886,6 +1886,87 @@ theorem cmWeilSixfoldIncidenceVanishingTensor_unique
 #check cmWeilSixfoldGraphTreeVanishingTensor_parameter_count
 #print axioms cmWeilSixfoldIncidenceVanishingTensor_injective
 
+/-! ## TWO-ACTION GST WEIL SIXFOLD PROJECTOR — SMALLER SOURCE COMPLEX
+
+For the actual K=Q(i) sixfold, the algebraic CM automorphism
+J=[i] acts on H^6 as (-1) on even K-weight sectors
+j=0,2,4,6 and (+1) on odd sectors j=1,3,5.
+The idempotent E=(1-J*)/2 is an ACTUAL rational algebraic
+correspondence and kills the odd sectors.
+
+The remaining even spectrum of f=[2+i] is split between
+  pure Weil:             t²+234t+15625
+  mixed j=2,4:           t²-150t+15625.
+Its projector on E(H^6) has the CUBIC polynomial
+  Q(t)=(t+234)(t²-150t+15625)/6000000.
+Thus the same genuine pure-Weil correspondence is
+  E*Q(f*) = (1-J*)*(f*+234)*(f*²-150f*+15625)/12000000.
+
+Unlike the original seven powers and denominator 930187500000000000,
+the expression requires powers f^0,...,f^3 only and the
+denominator 12000000. It is a FINITE rational algebraic
+correspondence constructed from two genuine commuting CM maps.
+It does not by itself guarantee an ordinary deforming
+coherent sheaf with the same K0 class at nonsplit periods.
+-/
+
+/-- The degree-three even-weight spectral projector using
+the genuine non-real CM isogeny and the independently genuine
+algebraic involution J=[i] on H^6. -/
+def cmWeilSixfoldEvenCubicProjector (t : ℚ) : ℚ :=
+  ((t+234)*(t*t-150*t+15625))/6000000
+
+/-- On the pure Weil quadratic spectrum, the cubic is identity.
+The arithmetic is a literal polynomial factorization and does
+not assume any missing Hodge class is algebraic. -/
+theorem cmWeilSixfoldEvenCubicProjector_fixes_Weil
+    (t : ℚ) (hPure : t*t+234*t+15625=0) :
+    cmWeilSixfoldEvenCubicProjector t = 1 := by
+  have hfact :
+      (cmWeilSixfoldEvenCubicProjector t - 1) *
+          (6000000 : ℚ) =
+        (t*t+234*t+15625)*(t-150) := by
+    unfold cmWeilSixfoldEvenCubicProjector
+    ring
+  rw [hPure, zero_mul] at hfact
+  have hd : (6000000 : ℚ) ≠ 0 := by norm_num
+  have hh := (mul_eq_zero.mp hfact).resolve_right hd
+  linarith
+
+theorem cmWeilSixfoldEvenCubicProjector_kills_mixed
+    (t : ℚ) (hMixed : t*t-150*t+15625=0) :
+    cmWeilSixfoldEvenCubicProjector t = 0 := by
+  unfold cmWeilSixfoldEvenCubicProjector
+  rw [hMixed]
+  ring
+
+/-- The TWO-ISOGENY projector evaluated on the spectral
+scalars; j=0,6 have J=-1; j=2,4 have J=-1 but mixed
+f-spectrum; j=1,3,5 have J=+1 and are discarded. -/
+def cmWeilSixfoldTwoIsogenyProjector (t j : ℚ) : ℚ :=
+  ((1-j)/2) * cmWeilSixfoldEvenCubicProjector t
+
+theorem cmWeilSixfoldTwoIsogenyProjector_fixes_pure
+    (t : ℚ) (hPure : t*t+234*t+15625=0) :
+    cmWeilSixfoldTwoIsogenyProjector t (-1) = 1 := by
+  simp [cmWeilSixfoldTwoIsogenyProjector,
+    cmWeilSixfoldEvenCubicProjector_fixes_Weil t hPure]
+
+theorem cmWeilSixfoldTwoIsogenyProjector_kills_odd (t : ℚ) :
+    cmWeilSixfoldTwoIsogenyProjector t 1 = 0 := by
+  simp [cmWeilSixfoldTwoIsogenyProjector]
+
+theorem cmWeilSixfoldTwoIsogenyProjector_kills_evenMixed
+    (t : ℚ) (hMixed : t*t-150*t+15625=0) :
+    cmWeilSixfoldTwoIsogenyProjector t (-1) = 0 := by
+  simp [cmWeilSixfoldTwoIsogenyProjector,
+    cmWeilSixfoldEvenCubicProjector_kills_mixed t hMixed]
+
+#check cmWeilSixfoldTwoIsogenyProjector_fixes_pure
+#check cmWeilSixfoldTwoIsogenyProjector_kills_odd
+#check cmWeilSixfoldTwoIsogenyProjector_kills_evenMixed
+#print axioms cmWeilSixfoldTwoIsogenyProjector_fixes_pure
+
 /-! ## GST MINIMAL PAIRWISE INCIDENCE — SOURCE-CONSTRUCTION OPTIMIZATION
 
 The prior 7-graph incidence W simultaneously contained every
