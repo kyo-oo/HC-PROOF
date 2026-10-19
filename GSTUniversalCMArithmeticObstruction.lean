@@ -698,6 +698,112 @@ theorem cmWeilTwoPlusIProjector_idempotent_on_spectrum
     rw [cmWeilTwoPlusIProjector_kills_ambient]
     norm_num
 
+/-! ## GST UNSPLIT WEIL SIXFOLD — EXPLICIT GEOMETRIC FALSIFICATION FILTER
+
+The marked all-powers split Weil sixfold theorem requires a hyperbolic
+rational Hermitian form. The REAL polarized Weil-sixfold PEL datum
+h=diag(1,1,1,-1,-1,-3) on the K=Q(i) lattice Z[i]^6 has
+archimedean signature (3,3) and determinant -3, NOT a rational
+K-norm multiple of the split hyperbolic determinant -1.
+The elementary Q(i) inert-prime norm obstruction at 3 makes it
+nonsplit (recorded separately with the exact arithmetic argument).
+
+It gives an actual abelian sixfold at the product-CM central point,
+and a nonempty compatible polarized deformation family. The
+generic member's exceptional pure-K Weil plane is a rational Hodge
+(3,3) two-plane, outside the known split-sixfold theorem's scope.
+
+For the GENUINE algebraic CM isogeny f=[2+i], the H^6 rational
+spectrum contains FOUR distinct rational factors:
+  pure Weil j=0,6:           t²+234t+15625
+  mixed K-weight j=1,5:     t²+70t+15625
+  mixed K-weight j=2,4:     t²-150t+15625
+  balanced weight j=3:      t-125.
+Thus Chinese remaindering constructs a rational POLYNOMIAL
+of actual algebraic graphs, projecting onto the prescribed
+two-dimensional Hodge Weil sector on the SAME original sixfold.
+The operator itself is not a cycle representing that sector.
+
+This is a falsifiable candidate for rational-Hodge obstruction,
+not a proved nonalgebraic Hodge class. A counterexample requires
+showing its action on ALL actual CH^3 cycles is zero on a
+nonsplit generic member. A single nonzero projected genuine
+algebraic CH^3 source instead proves the whole Weil plane algebraic.
+-/
+
+/-- Exact genuine CM-isogeny spectral projector on the pure
+sixth-exterior rational Weil plane; rational polynomial in [2+i]*. -/
+def cmWeilSixfoldNonsplitProjectorScalar (t : ℚ) : ℚ :=
+  -((t-125)*(10391779+68381*t)*
+    (t*t-150*t+15625)*(t*t+70*t+15625)) /
+    930187500000000000
+
+/-- The CRT polynomial is identity on both conjugate SIXTH-POWER
+eigenvalues (-117±44 i), not an abstract cycle selector. -/
+theorem cmWeilSixfoldNonsplitProjector_fixes_Weil
+    (t : ℚ) (hWeil : t*t+234*t+15625=0) :
+    cmWeilSixfoldNonsplitProjectorScalar t = 1 := by
+  have hFactor :
+      (cmWeilSixfoldNonsplitProjectorScalar t - 1) *
+          (930187500000000000 : ℚ) =
+        (t*t+234*t+15625) *
+          (-39235556640625 + 454859000000*t -
+            3496778250*t*t + 19627480*t*t*t -
+            68381*t*t*t*t) := by
+    unfold cmWeilSixfoldNonsplitProjectorScalar
+    ring
+  rw [hWeil, zero_mul] at hFactor
+  have hDen : (930187500000000000 : ℚ) ≠ 0 := by norm_num
+  have h := (mul_eq_zero.mp hFactor).resolve_right hDen
+  linarith
+
+theorem cmWeilSixfoldNonsplitProjector_kills_mixedOne
+    (t : ℚ) (hMixed : t*t+70*t+15625=0) :
+    cmWeilSixfoldNonsplitProjectorScalar t = 0 := by
+  unfold cmWeilSixfoldNonsplitProjectorScalar
+  rw [hMixed]
+  ring
+
+theorem cmWeilSixfoldNonsplitProjector_kills_mixedTwo
+    (t : ℚ) (hMixed : t*t-150*t+15625=0) :
+    cmWeilSixfoldNonsplitProjectorScalar t = 0 := by
+  unfold cmWeilSixfoldNonsplitProjectorScalar
+  rw [hMixed]
+  ring
+
+theorem cmWeilSixfoldNonsplitProjector_kills_ambient :
+    cmWeilSixfoldNonsplitProjectorScalar 125 = 0 := by
+  norm_num [cmWeilSixfoldNonsplitProjectorScalar]
+
+/-- Exact idempotence on the WHOLE seven-weight H^6 CM spectrum.
+For an actual polarized abelian sixfold this translates, under
+canonical Betti functoriality, to a finite rational Chow graph
+correspondence; that specialization is not assumed below. -/
+theorem cmWeilSixfoldNonsplitProjector_idempotent_on_spectrum
+    (t : ℚ)
+    (hSpectrum :
+      t*t+234*t+15625=0 ∨
+      t*t+70*t+15625=0 ∨
+      t*t-150*t+15625=0 ∨
+      t=125) :
+    cmWeilSixfoldNonsplitProjectorScalar t ^ 2 =
+      cmWeilSixfoldNonsplitProjectorScalar t := by
+  rcases hSpectrum with hPure | hMixedOne | hMixedTwo | hAmbient
+  · rw [cmWeilSixfoldNonsplitProjector_fixes_Weil t hPure]
+    norm_num
+  · rw [cmWeilSixfoldNonsplitProjector_kills_mixedOne t hMixedOne]
+    norm_num
+  · rw [cmWeilSixfoldNonsplitProjector_kills_mixedTwo t hMixedTwo]
+    norm_num
+  · subst t
+    rw [cmWeilSixfoldNonsplitProjector_kills_ambient]
+    norm_num
+
+#check cmWeilSixfoldNonsplitProjectorScalar
+#check cmWeilSixfoldNonsplitProjector_fixes_Weil
+#check cmWeilSixfoldNonsplitProjector_idempotent_on_spectrum
+#print axioms cmWeilSixfoldNonsplitProjector_idempotent_on_spectrum
+
 #check cmWeilTwoPlusIProjectorScalar
 #check cmWeilTwoPlusIProjector_fixes_Weil
 #check cmWeilTwoPlusIProjector_kills_mixed
