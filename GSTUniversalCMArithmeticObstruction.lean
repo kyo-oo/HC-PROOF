@@ -1027,6 +1027,59 @@ theorem semiregularity_not_injective_on_duplicated_source
 #check semiregularity_not_injective_on_duplicated_source
 #print axioms semiregularity_not_injective_on_duplicated_source
 
+/-! ## EXACT CM-GRAPH INCIDENCE: DISTINCT TRANSLATES ARE TRANSVERSE
+
+At the CM product seed A=E_+^3 × E_-^3, the graph Z of a
+K-antilinear isogeny E_+^3→E_-^3 is a codimension-3
+abelian subvariety. The iterated algebraic isogenies f=[2+i]
+move this graph by slopes (2-i)^j/(2+i)^j.
+
+Two graph supports at j,k intersect transversely when the
+slope ratio is nontrivial. For the degree-six polynomial
+projector constructed above, only offsets n=1,...,6 occur.
+The exact Gaussian integer powers (2+i)^n=a_n+i b_n have
+  b_1,...,b_6 = 1,4,11,24,41,44.
+Every b_n is nonzero; each graph slope differs on these
+seven terms of the actual algebraic source projector.
+
+Geometric consequence (standard transverse regular Koszul
+intersection, not asserted as a Lean cycle theorem here):
+Ext^q_A(O_{Z_j},O_{Z_k})=0 for q<3 when j≠k.
+So a degree-one sheaf extension cannot couple DISTINCT
+translate supports, while repeated same-support summands
+have the raw semiregularity trace defect proved above.
+The projected virtual K₀ source thus calls for a genuinely
+new *incidence/derived-coupled* geometric sheaf constructor.
+-/
+
+/-- Exact powers of the algebraic CM endomorphism 2+i in
+Gaussian integer coordinates. -/
+def cmTwoPlusIGaussianPower : ℕ → ℤ × ℤ
+  | 0 => (1, 0)
+  | n + 1 =>
+      let z := cmTwoPlusIGaussianPower n
+      (2*z.1 - z.2, z.1 + 2*z.2)
+
+/-- Exhaustive EXACT integer calculation on all six offsets
+in the degree-6 CM graph projector, not random sampling. -/
+theorem cmTwoPlusIGaussianPower_imag_first_six :
+    (List.range 6).map
+      (fun n => (cmTwoPlusIGaussianPower (n+1)).2) =
+        [1,4,11,24,41,44] := by
+  decide
+
+/-- All six actual graph-isogeny offsets have NONREAL powers.
+This establishes the arithmetical noncollision input for
+transverse central-fibre graph geometry. -/
+theorem cmTwoPlusIGaussianPower_imag_nonzero_to_six
+    (n : Fin 6) :
+    (cmTwoPlusIGaussianPower (n.val+1)).2 ≠ 0 := by
+  fin_cases n <;> norm_num [cmTwoPlusIGaussianPower]
+
+#check cmTwoPlusIGaussianPower_imag_first_six
+#check cmTwoPlusIGaussianPower_imag_nonzero_to_six
+#print axioms cmTwoPlusIGaussianPower_imag_nonzero_to_six
+
 #check cmWeilSixfoldCompanionAction
 #check cmWeilSixfoldStableSourceDichotomy
 #print axioms cmWeilSixfoldStableSourceDichotomy
