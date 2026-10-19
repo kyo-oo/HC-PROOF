@@ -1240,10 +1240,13 @@ theorem cmWeilSixfoldTwoOperatorProjector_integer_formula
         (cmWeilSixfoldEvenWeightCubicIntegral 2:ℚ)*t^2 +
         (cmWeilSixfoldEvenWeightCubicIntegral 3:ℚ)*t^3)) /
         12000000 := by
+  have hc0 : cmWeilSixfoldEvenWeightCubicIntegral 0 = 3656250 := by decide
+  have hc1 : cmWeilSixfoldEvenWeightCubicIntegral 1 = -19475 := by decide
+  have hc2 : cmWeilSixfoldEvenWeightCubicIntegral 2 = 84 := by decide
+  have hc3 : cmWeilSixfoldEvenWeightCubicIntegral 3 = 1 := by decide
+  rw [hc0, hc1, hc2, hc3]
   unfold cmWeilSixfoldTwoOperatorProjector
     cmWeilSixfoldEvenWeightCubic
-    cmWeilSixfoldEvenWeightCubicIntegral
-  norm_num
   ring
 
 #check cmWeilSixfoldTwoOperatorProjector
