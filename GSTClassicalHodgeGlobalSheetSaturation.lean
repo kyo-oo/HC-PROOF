@@ -41,6 +41,7 @@ open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedTransferCompletion
 open GSTClassicalHodgeGlobalSheetCosmos
 open GSTClassicalHodgeGSTSpineGlobalSource
+open GSTClassicalHodgeSynchronizedDefectOrbit
 open GSTClassicalHodgeLimitlessSpinePropagation
 open GSTClassicalHodgeRankFreeArsenalIrreducibility
 open GSTClassicalHodgeRankFreeLefschetzPoincareGeneration
@@ -329,6 +330,93 @@ theorem missing_native_sheet_forces_unrealized_GST_move
           nativeAlgebraicWeightAddressSpan G p := by
     simpa [hc, smul_smul] using hscaled
   exact hMissing hSheet
+
+/-! ## REMOVE NATIVE-MASS PREMISE: SATURATION FROM ANY ORIGINAL-X CHOW SOURCE
+
+A full native-mass bridge is stronger than necessary for the
+GST source-to-target matrix-unit argument. We construct the actual
+synchronized orbit seed from ANY native Chow cycle with nonzero
+true cycle class on the original X, and prove saturation of its
+algebraic address image assuming actual stability under the full
+GST matrix-unit algebra. In particular the M-free statement
+does NOT choose any representative for an unknown Hodge target. -/
+
+/-- Honest original-X native Hodge orbit seed, built from one
+genuine existing Chow cycle without a NativeMassCycleClassBridge. -/
+noncomputable def nativeChowOrbitSeedOfNonzeroClass
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (p : Nat) (Z : codimensionCycles V.X p)
+    (hNonzero : H.cycleClass p Z ≠ 0) :
+    NativeHodgeOrbitSeed (V := V) (H := H) (p := p) where
+  cycle := Z
+  hodge := ⟨H.cycleClass p Z, G.algebraic_is_hodge p Z⟩
+  hodge_ne_zero := by
+    intro hz
+    apply hNonzero
+    have hval := congrArg Subtype.val hz
+    simpa using hval
+  class_eq := rfl
+
+/-- The new source's total GST address is INSIDE the original-X
+native Chow image, by construction; not merely in an abstract
+Hodge subspace. -/
+theorem nativeChowOrbitSeed_address_in_actual_source_image
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (p : Nat) (Z : codimensionCycles V.X p)
+    (hNonzero : H.cycleClass p Z ≠ 0) :
+    fiberedWeightCoordinates V H p
+      (nativeChowOrbitSeedOfNonzeroClass G p Z hNonzero).hodge ∈
+      nativeAlgebraicWeightAddressSpan G p := by
+  unfold nativeAlgebraicWeightAddressSpan
+  apply Submodule.subset_span
+  exact ⟨Z, rfl⟩
+
+/-- The unconditional native-source seed eliminates the old
+M-assumption from the all-X GST saturation bridge.
+The remaining hypothesis is the ACTUAL geometric stability of
+the Chow image under full abstract GST matrix units, not a
+Hodge-class preimage selector. -/
+theorem nativeAlgebraicWeightAddress_saturates_of_GST_stability_and_source
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (p : Nat) (Z : codimensionCycles V.X p)
+    (hNonzero : H.cycleClass p Z ≠ 0)
+    (hstable :
+      SameWeightGSTStable (V := V) (H := H) p
+        (nativeAlgebraicWeightAddressSpan G p)) :
+    FixedWeightSheetSubspace (V := V) (H := H) p ≤
+      nativeAlgebraicWeightAddressSpan G p := by
+  let S := nativeChowOrbitSeedOfNonzeroClass G p Z hNonzero
+  rw [fixedWeight_eq_generatorSpan p]
+  apply Submodule.span_le.2
+  intro phi hphi
+  rcases hphi with ⟨j, rfl⟩
+  have hsource :
+      fiberedWeightCoordinates V H p S.hodge ∈
+        nativeAlgebraicWeightAddressSpan G p :=
+    nativeChowOrbitSeed_address_in_actual_source_image G p Z hNonzero
+  have hMove := hstable S.sourceIndex j
+    (fiberedWeightCoordinates V H p S.hodge) hsource
+  let c : ℚ :=
+    sheetProbe (⟨p,S.sourceIndex⟩ : FiberedHodgeIndex V H)
+      (fiberedWeightCoordinates V H p S.hodge)
+  have hc : c ≠ 0 := by
+    rw [sheetProbe_fiberedWeightCoordinates]
+    simpa [hodgeCoordinate] using S.sourceCoefficient_ne_zero
+  have heq :
+      sheetMatrixUnit (⟨p,S.sourceIndex⟩ : FiberedHodgeIndex V H)
+        (⟨p,j⟩ : FiberedHodgeIndex V H)
+        (fiberedWeightCoordinates V H p S.hodge) =
+      c • fiberedSheetGenerator V H ⟨p,j⟩ := by
+    exact sheetMatrixUnit_apply _ _ _
+  rw [heq] at hMove
+  have hscaled :=
+    (nativeAlgebraicWeightAddressSpan G p).smul_mem c⁻¹ hMove
+  simpa [hc, smul_smul] using hscaled
+
+#check nativeChowOrbitSeedOfNonzeroClass
+#check nativeChowOrbitSeed_address_in_actual_source_image
+#check nativeAlgebraicWeightAddress_saturates_of_GST_stability_and_source
+#print axioms nativeAlgebraicWeightAddress_saturates_of_GST_stability_and_source
 
 #check nativeAlgebraicWeightAddressSpan
 #check globalSpineAddress_mem_nativeAlgebraicWeightAddressSpan
