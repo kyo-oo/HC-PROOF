@@ -1127,6 +1127,114 @@ theorem cmTwoPlusIGaussianPower_imag_nonzero_to_six
     (cmTwoPlusIGaussianPower (n.val+1)).2 ≠ 0 := by
   fin_cases n <;> norm_num [cmTwoPlusIGaussianPower]
 
+/-! ## GST INCIDENCE REPAIR: AN AUXILIARY CODIMENSION-TWO BRIDGE
+
+The explicit seven-graph K₀ projector has alternating K₀ signs,
+so transverse Ext³ between the graph supports cannot join the
+opposite shift parities. There IS a different GENUINE geometric
+incidence mechanism.
+
+At the central CM sixfold seed, two smooth graph threefolds
+Z0,Z1 are codimension three and intersect transversely.
+Choose two sufficiently high-degree projective hypersurfaces
+containing their scheme-theoretic union, with no common divisor
+component. Their scheme-theoretic complete intersection W has
+codimension TWO and contains BOTH graph supports. The needed
+coherent sheaf O_W is perfect on the original smooth sixfold,
+even if W is singular along the graph supports.
+
+At a point where Z=(x,y,z) lies in a local lci branch
+W=(x,y), the Koszul complex computing
+Ext^*(O_Z,O_W) over R=O_W has zero action for x,y
+and multiplication by the nonunit local parameter z.
+Its cochain differentials are exactly:
+  d0(r)=(0,0,z*r)
+  d1(a,b,c)=(0,-z*a,-z*b)
+  d2(A,B,C)=z*A.
+Unlike Ext³ between TRANSVERSE threefolds, this local bridge
+has nonzero Ext¹ and Ext² classes. Ext² arrows between
+odd/even shifted perfect-complex terms can change K₀ parity;
+the auxiliary incidence sheaf may therefore couple the
+previously disconnected signs.
+
+The Lean laws below certify the entire local cocycle/
+noncoboundary mechanism over ANY commutative ring R where
+z is a nonunit, not just a matrix rank at the origin.
+Global scheme-level existence of W, derived Ext sheaf gluing,
+and FULL semiregularity of a coupled global object remain
+independent geometric tasks; local Ext is not quietly promoted
+to a global deformable sheaf.
+-/
+
+section CMGraphIncidenceLocalKoszul
+
+variable {R : Type*} [CommRing R]
+
+/-- Koszul cochain degree-zero differential after quotienting
+by the codimension-two incidence equations x=y=0. -/
+def cmGraphIncidenceKoszulD0 (z r : R) : R × R × R :=
+  (0, 0, z*r)
+
+/-- Cochain degree-one differential: two vanished equations and
+one transverse normal parameter. -/
+def cmGraphIncidenceKoszulD1 (z : R)
+    (v : R × R × R) : R × R × R :=
+  (0, -(z*v.1), -(z*v.2.1))
+
+/-- Cochain degree-two differential to the top Koszul summand. -/
+def cmGraphIncidenceKoszulD2 (z : R)
+    (v : R × R × R) : R :=
+  z*v.1
+
+theorem cmGraphIncidenceKoszul_d1d0_zero (z r : R) :
+    cmGraphIncidenceKoszulD1 z (cmGraphIncidenceKoszulD0 z r) =
+      (0, 0, 0) := by
+  simp [cmGraphIncidenceKoszulD0, cmGraphIncidenceKoszulD1]
+
+theorem cmGraphIncidenceKoszul_d2d1_zero
+    (z : R) (v : R × R × R) :
+    cmGraphIncidenceKoszulD2 z
+      (cmGraphIncidenceKoszulD1 z v) = 0 := by
+  simp [cmGraphIncidenceKoszulD1, cmGraphIncidenceKoszulD2]
+
+/-- Explicit nonzero local Ext¹ residue class: a genuine cocycle
+which cannot be a coboundary when z is not a unit. -/
+theorem cmGraphIncidenceKoszul_degreeOne_nonboundary
+    (z : R) (hz : ¬ ∃ r : R, z*r = 1) :
+    cmGraphIncidenceKoszulD1 z ((0:R), (0:R), (1:R)) = 0 ∧
+      ¬ ∃ r : R,
+        cmGraphIncidenceKoszulD0 z r = ((0:R), (0:R), (1:R)) := by
+  constructor
+  · simp [cmGraphIncidenceKoszulD1]
+  · rintro ⟨r,hr⟩
+    have hthird := congrArg
+      (fun v : R × R × R => v.2.2) hr
+    exact hz ⟨r, by simpa [cmGraphIncidenceKoszulD0] using hthird⟩
+
+/-- Explicit nonzero local Ext² residue class. THIS is the
+parity-changing degree absent from transverse codimension-three
+graph-graph interactions; incidence W can supply it. -/
+theorem cmGraphIncidenceKoszul_degreeTwo_nonboundary
+    (z : R) (hz : ¬ ∃ r : R, z*r = 1) :
+    cmGraphIncidenceKoszulD2 z ((0:R), (1:R), (0:R)) = 0 ∧
+      ¬ ∃ v : R × R × R,
+        cmGraphIncidenceKoszulD1 z v =
+          ((0:R), (1:R), (0:R)) := by
+  constructor
+  · simp [cmGraphIncidenceKoszulD2]
+  · rintro ⟨v,hv⟩
+    have hsecond := congrArg
+      (fun w : R × R × R => w.2.1) hv
+    have hmul : z*(-v.1) = 1 := by
+      simpa [cmGraphIncidenceKoszulD1, mul_neg, neg_mul] using hsecond
+    exact hz ⟨-v.1, hmul⟩
+
+end CMGraphIncidenceLocalKoszul
+
+#check cmGraphIncidenceKoszul_degreeOne_nonboundary
+#check cmGraphIncidenceKoszul_degreeTwo_nonboundary
+#print axioms cmGraphIncidenceKoszul_degreeTwo_nonboundary
+
 /-! ## A REAL DERIVED INCIDENCE SOURCE — NONZERO EXT³ BETWEEN GRAPHS
 
 For two 3-dimensional graph subvarieties of the product CM
