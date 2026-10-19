@@ -128,8 +128,8 @@ theorem unseeded_two_polarization_factorization
           simp only [pow_succ]
           ring
 
-/-- An arbitrary pair of sufficiently nilpotent algebraic ample
-divisor classes produces a GENUINELY Lefschetz-primitive middle
+/-- An arbitrary pair of nilpotent algebraic divisors (e.g. semiample
+pullbacks from lower-dimensional factors) produces a Lefschetz-primitive middle
 algebraic source on the original variety. No rank or period
 assumption and no input primitive source. -/
 theorem unseeded_two_polarization_is_primitive
@@ -183,19 +183,29 @@ theorem unseeded_two_polarization_all_rank_nonzero_of_volume
     (hu : u^(m+1) = 0)
     (hVolume : u^m*v^m ≠ 0) :
     unseeded_two_polarization_native_birth u v m ≠ 0 := by
-  letI : Nontrivial R := ⟨⟨u^m*v^m, 0, hVolume⟩⟩
   intro hz
   have hpair := unseeded_two_polarization_top_pairing u v m hu
   rw [hz, mul_zero] at hpair
   have hzright : (-v)^m*u^m = 0 := by
     simpa using hpair.symm
-  have hright : (-v)^m*u^m ≠ 0 := by
-    have hfactor : (-v)^m*u^m = (-1:R)^m*(u^m*v^m) := by
-      rw [neg_pow]
-      ring
-    rw [hfactor]
-    exact mul_ne_zero (pow_ne_zero m (neg_ne_zero.mpr one_ne_zero)) hVolume
-  exact hright hzright
+  have hfactor : (-v)^m*u^m = (-1:R)^m*(u^m*v^m) := by
+    rw [neg_pow]
+    ring
+  have hzero : (-1:R)^m*(u^m*v^m) = 0 := by
+    rw [← hfactor]
+    exact hzright
+  have hunit : (-1:R)^m * (-1:R)^m = 1 := by
+    calc
+      (-1:R)^m * (-1:R)^m = ((-1:R)*(-1:R))^m := by
+        rw [mul_pow]
+      _ = 1 := by simp
+  have hvolzero : u^m*v^m = 0 := by
+    calc
+      u^m*v^m = (-1:R)^m * ((-1:R)^m * (u^m*v^m)) := by
+        rw [← mul_assoc, hunit]
+        ring
+      _ = 0 := by rw [hzero]; ring
+  exact hVolume hvolzero
 
 #check unseeded_two_polarization_top_pairing
 #check unseeded_two_polarization_all_rank_nonzero_of_volume
