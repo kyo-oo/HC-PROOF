@@ -1959,6 +1959,149 @@ theorem mixed_support_koszul_firstChow_source
       r s incidence koszul hIncidence hKoszul] at hGRR
   exact hGRR
 
+/-! ## GST ARBITRARY-ARITY NONSPLIT GEOMETRIC SHEAF BIRTH
+
+The prior mixed-incidence law treats one independently existing
+scheme-theoretic subscheme Y and one Koszul augmentation packet.
+The arbitrary-arity version below accepts ANY finite nonempty
+collection of geometrically constructed coherent/perfect sheaf
+factors on the SAME original X, including genuine non-split
+incidence/graph kernels. The first nonzero Chern degree is the
+SUM of the input support/Chern degrees, with NO lower-grade
+leakage.
+
+For actual derived tensor products on smooth X, GRR identifies
+the leading Chow class with the intersection product of
+the factors' independently constructed leading classes.
+The exact normalized finite-flat GST K0 / relative-Todd projector
+then subtracts the rational projected push/pull leading term;
+it never inserts an Hodge-class preimage into the construction.
+
+The Lean theorem proves the rational graded convolution. Instantiating
+actual coherent/perfect K0, scheme Hilbert incidence and canonical
+cycle-class semantics is separate required geometry. A new target
+residual requires a nonzero measured period of the newly born class.
+-/
+
+/-- First nonzero codimension of a list of independently constructed
+algebraic incidence/sheaf/Koszul factors. -/
+def chowManyGeometricFactorsGrade
+    (factors : List (ℕ × (ℕ → ℚ))) : ℕ :=
+  (factors.map Prod.fst).sum
+
+/-- Genuine derived-tensor Chern convolution: coefficient-level
+model of an arbitrarily long finite tensor word of actual geometric
+perfect-complex classes, not a Hodge-to-Chow selector. -/
+def chowManyGeometricFactors : List (ℕ × (ℕ → ℚ)) → ℕ → ℚ
+  | [] => fun j => if j = 0 then 1 else 0
+  | (_, source) :: tail => fun j =>
+      chowGradedConvolution j source (chowManyGeometricFactors tail)
+
+/-- Every coefficient below the SUM of the independent geometric
+codimensions vanishes. This holds in arbitrary finite arity,
+including the zero-factor unit and mixed support codimension zero. -/
+theorem chowManyGeometricFactors_zero_below_grade
+    (factors : List (ℕ × (ℕ → ℚ)))
+    (hGeom : ∀ factor ∈ factors,
+      ∀ j < factor.1, factor.2 j = 0) :
+    ∀ q < chowManyGeometricFactorsGrade factors,
+      chowManyGeometricFactors factors q = 0 := by
+  induction factors with
+  | nil =>
+      intro q hq
+      simp [chowManyGeometricFactorsGrade] at hq
+  | cons factor tail ih =>
+      rcases factor with ⟨r, source⟩
+      have hsource : ∀ j < r, source j = 0 := by
+        intro j hj
+        exact hGeom (r, source) (by simp) j hj
+      have htail : ∀ factor ∈ tail,
+          ∀ j < factor.1, factor.2 j = 0 := by
+        intro factor hmem
+        exact hGeom factor (by simp [hmem])
+      intro q hq
+      have hq' : q < r + chowManyGeometricFactorsGrade tail := by
+        simpa [chowManyGeometricFactorsGrade] using hq
+      change chowGradedConvolution q source
+        (chowManyGeometricFactors tail) = 0
+      exact chowGradedConvolution_zero_below_sum
+        r (chowManyGeometricFactorsGrade tail)
+        source (chowManyGeometricFactors tail)
+        hsource (ih htail) q hq'
+
+/-- EXACT arbitrary-arity leading CHERN multiplicativity:
+the first nonvanishing coefficient of a derived tensor word is
+the product of the independently geometric first coefficients,
+with no assumption on their higher Chern characters. -/
+theorem chowManyGeometricFactors_leading
+    (factors : List (ℕ × (ℕ → ℚ)))
+    (hGeom : ∀ factor ∈ factors,
+      ∀ j < factor.1, factor.2 j = 0) :
+    chowManyGeometricFactors factors
+        (chowManyGeometricFactorsGrade factors) =
+      (factors.map (fun factor => factor.2 factor.1)).prod := by
+  induction factors with
+  | nil =>
+      simp [chowManyGeometricFactorsGrade, chowManyGeometricFactors]
+  | cons factor tail ih =>
+      rcases factor with ⟨r, source⟩
+      have hsource : ∀ j < r, source j = 0 := by
+        intro j hj
+        exact hGeom (r, source) (by simp) j hj
+      have htail : ∀ factor ∈ tail,
+          ∀ j < factor.1, factor.2 j = 0 := by
+        intro factor hmem
+        exact hGeom factor (by simp [hmem])
+      have htailzero :=
+        chowManyGeometricFactors_zero_below_grade tail htail
+      have htaillead := ih htail
+      change chowGradedConvolution
+          (r + chowManyGeometricFactorsGrade tail)
+          source (chowManyGeometricFactors tail) =
+        source r *
+          (tail.map (fun factor => factor.2 factor.1)).prod
+      rw [chowGradedConvolution_first_nonzero_product
+        r (chowManyGeometricFactorsGrade tail)
+        source (chowManyGeometricFactors tail)
+        hsource htailzero]
+      exact congrArg (source r * ·) htaillead
+
+/-- Complete every-arity finite-flat GST first-Chow birth from TRUE
+independently geometric mixed sheaf factors: Todd degree-zero one
+and normalized inverse degree-zero d^-1 ensure the source in
+degree p = sum of all input codimensions is precisely its native
+Chow product MINUS the finite-flat ambient trace correction. -/
+theorem chowManyGeometricFactors_finiteFlatTodd_firstChow
+    (factors : List (ℕ × (ℕ → ℚ)))
+    (pushSource todd inverse : ℕ → ℚ)
+    (degreeInv : ℚ)
+    (hGeom : ∀ factor ∈ factors,
+      ∀ j < factor.1, factor.2 j = 0)
+    (hPush : ∀ j < chowManyGeometricFactorsGrade factors,
+      pushSource j = 0)
+    (hTodd : todd 0 = 1)
+    (hInverse : inverse 0 = degreeInv) :
+    chowGradedConvolution (chowManyGeometricFactorsGrade factors)
+      todd (chowManyGeometricFactors factors) -
+    chowGradedConvolution (chowManyGeometricFactorsGrade factors)
+      todd (fun j => chowGradedConvolution j inverse pushSource) =
+    (factors.map (fun factor => factor.2 factor.1)).prod -
+      degreeInv * pushSource (chowManyGeometricFactorsGrade factors) := by
+  have hsource :=
+    chowManyGeometricFactors_zero_below_grade factors hGeom
+  have hleading :=
+    finiteFlatSupportedSheaf_leadingChowPrimitive
+      (chowManyGeometricFactorsGrade factors)
+      (chowManyGeometricFactors factors) pushSource
+      todd inverse degreeInv hsource hPush hTodd hInverse
+  rw [chowManyGeometricFactors_leading factors hGeom] at hleading
+  exact hleading
+
+#check chowManyGeometricFactors
+#check chowManyGeometricFactors_leading
+#check chowManyGeometricFactors_finiteFlatTodd_firstChow
+#print axioms chowManyGeometricFactors_finiteFlatTodd_firstChow
+
 #check chowGradedConvolution_zero_below_sum
 #check chowGradedConvolution_first_nonzero_product
 #check mixed_support_koszul_firstChow_source
