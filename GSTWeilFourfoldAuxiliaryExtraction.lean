@@ -493,7 +493,7 @@ theorem projectiveBundleSecantSheaf_birthOnOriginalFourfold
     have hc := congrArg weilCoords hzero
     rw [map_zero, hSecantBetti] at hc
     exact (secantSeedCanonicalExtractedWeilComponent_nonzero d hd)
-      hc.symm
+      hc
 
 #check projectiveBundleSecantSheaf_birthOnOriginalFourfold
 #print axioms projectiveBundleSecantSheaf_birthOnOriginalFourfold
