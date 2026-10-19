@@ -310,11 +310,23 @@ def nilpotentChowTwist_unit
   inv := ∑ k ∈ Finset.range n, (-u)^k
   val_inv := by
     rw [nilpotentChowTwist_inverse_identity]
-    have hn : (-u)^n = 0 := by simpa [neg_pow, hu]
+    have hn : (-u)^n = 0 := by
+      calc
+        (-u)^n = ((-1 : ChowP) * u)^n := by
+          congr 1
+          ring
+        _ = (-1 : ChowP)^n * u^n := by rw [mul_pow]
+        _ = 0 := by rw [hu, mul_zero]
     simp [hn]
   inv_val := by
     rw [mul_comm, nilpotentChowTwist_inverse_identity]
-    have hn : (-u)^n = 0 := by simpa [neg_pow, hu]
+    have hn : (-u)^n = 0 := by
+      calc
+        (-u)^n = ((-1 : ChowP) * u)^n := by
+          congr 1
+          ring
+        _ = (-1 : ChowP)^n * u^n := by rw [mul_pow]
+        _ = 0 := by rw [hu, mul_zero]
     simp [hn]
 
 #check nilpotentChowTwist_inverse_identity
