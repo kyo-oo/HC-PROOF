@@ -2287,6 +2287,49 @@ theorem cmWeilSixfoldIncidence_rank_allocation_feasible :
     (Finset.univ.sum r) = 503 := by
   decide
 
+/-! ### Rigidity at the minimum 503-unit incidence budget
+
+The numerical capacity inequalities do more than show existence of
+one feasible allocation. Saturating the proven 503-unit lower bound
+forces all four positive-side rank budgets to be exactly minimal.
+Then the negative 4800-copy graph forces at least 295 units through
+edge 04. In particular no optimal seven-edge design can replace
+that edge with a bounded-rank-one connection. This is a NECESSARY
+integer-capacity theorem, not a claim that the associated global
+Ext² arrows are geometrically independent or unobstructed. -/
+
+/-- Every capacity-feasible incidence rank assignment with the
+minimal total 503 satisfies sharp positive-side equalities and
+an unavoidable 295-unit concentration on the 04 edge.
+The negative-side constraints further force ranks 11 and 1
+on edges 06 and 07 and cap edge 01 at 173. -/
+theorem cmWeilSixfoldIncidence_optimal_rank_forces_backbone
+    (r01 r04 r12 r34 r45 r06 r07 : ℕ)
+    (h0 : 4800 ≤ 10*(r01+r04+r06+r07))
+    (h2 : 175 ≤ 10*r12)
+    (h3 : 3 ≤ 10*r34)
+    (h5 : 32 ≤ 10*r45)
+    (hNegative4800 : 4800 ≤ 16*(r04+r34+r45))
+    (hNegative175 : 175 ≤ 16*r06)
+    (hNegative3 : 3 ≤ 16*r07)
+    (hTotal : r01+r04+r12+r34+r45+r06+r07 = 503) :
+    r01+r04+r06+r07 = 480 ∧
+    r12 = 18 ∧ r34 = 1 ∧ r45 = 4 ∧
+    295 ≤ r04 ∧ 11 ≤ r06 ∧ 1 ≤ r07 ∧ r01 ≤ 173 := by
+  omega
+
+/-- The optimal incidence budget requires 1006 signed auxiliary
+W summands in the specific K₀-neutral two-copy architecture:
+503 negative and 503 positive. This is a bookkeeping theorem,
+not a lower bound over all possible perfect complexes. -/
+theorem cmWeilSixfoldIncidence_neutral_auxiliary_copies :
+    (2 : ℕ) * 503 = 1006 := by
+  norm_num
+
+#check cmWeilSixfoldIncidence_optimal_rank_forces_backbone
+#check cmWeilSixfoldIncidence_neutral_auxiliary_copies
+#print axioms cmWeilSixfoldIncidence_optimal_rank_forces_backbone
+
 #check cmWeilSixfoldIncidence_rank_allocation_lower_bound
 #check cmWeilSixfoldIncidence_rank_allocation_feasible
 #print axioms cmWeilSixfoldIncidence_rank_allocation_lower_bound
