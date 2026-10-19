@@ -1250,6 +1250,63 @@ is 116×64 = 7424, despite the vanishing self-Euler index. -/
 theorem cmTwoPlusIGraphDerivedIdealPair_sixthChernNumber :
     (116 : ℤ) * 64 = 7424 := by norm_num
 
+/-- The third Chern class of the derived rank-one graph-ideal
+perfect complex has square -8 times the genuine transverse
+graph-intersection class, provided each graph has square zero.
+Together with degree(z₀z₁)=64 this gives c₃(F)²=-512.
+A rank-one LOCALLY FREE sheaf cannot realize these positive-degree
+Chern classes; the distinction between a perfect complex and a
+line bundle is essential. Scheme Chern identification is external. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_thirdChernSquare
+    (z0 z1 : R) (hz0 : z0*z0 = 0) (hz1 : z1*z1 = 0) :
+    (2*(z0-z1))*(2*(z0-z1)) = (-8 : R)*(z0*z1) := by
+  calc
+    (2*(z0-z1))*(2*(z0-z1)) =
+        (-8 : R)*(z0*z1) + 4*(z0*z0) + 4*(z1*z1) := by ring
+    _ = (-8 : R)*(z0*z1) := by rw [hz0, hz1]; ring
+
+/-- The exact top-degree Chern-square characteristic number.
+This is distinct from the self-Euler index χ(F,F)=0. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_thirdChernSquareNumber :
+    (-8 : ℤ)*64 = -512 := by norm_num
+
+/-- Universal degree-six Newton constraint for THIS two-graph
+derived K₀ character: 2c₆+29c₃²=0 under the normal-square-zero
+relations. This is algebraic ring arithmetic, not a deformation
+or Hodge-surjectivity statement. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_chernRelation
+    (z0 z1 : R) (hz0 : z0*z0 = 0) (hz1 : z1*z1 = 0) :
+    2*((-120 : R)*(-(z0*z1)) +
+      2*((z0-z1)*(z0-z1))) +
+      29*((2*(z0-z1))*(2*(z0-z1))) = 0 := by
+  rw [cmTwoPlusIGraphDerivedIdealPair_sixthChern z0 z1 hz0 hz1,
+      cmTwoPlusIGraphDerivedIdealPair_thirdChernSquare z0 z1 hz0 hz1]
+  ring
+
+/-- Exact first-order coefficient in the normalized exterior
+variation of THREE identical elliptic graph divisors along the
+K-compatible mixed x₁/y₂ Weil tangent. The selected (2,4)
+monomial has coefficient -(a*conj(a))³.
+The actual (2,4) Hodge-filtration calculation, unlike this
+integer certificate, is recorded in the Mathbox geometric audit. -/
+def cmTwoPlusIGraphMixedHodgeLeakCoefficient (aRe aIm : ℤ) : ℤ :=
+  -((aRe*aRe+aIm*aIm)^3)
+
+/-- The unprojected derived ideal's ch₃=Z₀-Z₁ has a NONZERO
+normalized (2,4) infinitesimal coefficient: -1-(-125)=124.
+This precisely discriminates its raw Chern class from its
+projected pure Weil component. The Lean theorem certifies
+the exact coefficients, not geometric Kodaira-Spencer descent. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_mixedHodgeLeak_exact :
+    cmTwoPlusIGraphMixedHodgeLeakCoefficient 1 0 -
+      cmTwoPlusIGraphMixedHodgeLeakCoefficient 2 (-1) = 124 := by
+  norm_num [cmTwoPlusIGraphMixedHodgeLeakCoefficient]
+
+#check cmTwoPlusIGraphDerivedIdealPair_thirdChernSquare
+#check cmTwoPlusIGraphDerivedIdealPair_chernRelation
+#check cmTwoPlusIGraphDerivedIdealPair_mixedHodgeLeak_exact
+#print axioms cmTwoPlusIGraphDerivedIdealPair_chernRelation
+
 #check cmTwoPlusIGraphDerivedIdealPair_sixthChern
 #check cmTwoPlusIGraphDerivedIdealPair_sixthChernNumber
 #print axioms cmTwoPlusIGraphDerivedIdealPair_sixthChern
