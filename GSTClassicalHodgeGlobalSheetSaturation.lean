@@ -36,6 +36,7 @@ namespace GSTClassicalHodgeGlobalSheetSaturation
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2G
+open GSTGeometricRealizationStage2D
 open GSTClassicalHodgeFiberedCosmology
 open GSTClassicalHodgeFiberedTransferCompletion
 open GSTClassicalHodgeGlobalSheetCosmos
@@ -221,6 +222,112 @@ theorem globalMatrixUnit_eq_twoSlotLefschetz_on_hodge
           alpha) := by
   rw [← rankFreeMatrixUnit_eq_twoSlot_Lefschetz]
   exact sheetMatrixUnit_intertwines_hodgeMatrixUnit p i j alpha
+
+/-! ## ORIGINAL-X NATIVE CHOW SOURCE IMAGE VS ABSTRACT GST MATRIX UNITS
+
+The complete Hodge-address algebra above is purely rational-linear.
+The source image below is instead generated ONLY by classes of ACTUAL
+algebraic cycles on the ORIGINAL smooth projective scheme. Its canonical
+spine is a member by the already verified native-cycle naturality
+law; this assertion does not choose a preimage of an unknown target.
+
+The missing unconditional all-X bridge can now be stated against a
+concrete native source image, rather than an arbitrary Hodge subspace:
+the rank-free GST read/write operations must preserve that actual
+algebraic address image. If a target sheet is still missing, the
+specific abstract source-to-sheet matrix unit cannot preserve it.
+This is an exact discriminating test of proposed geometric
+realizations, NOT a surjectivity claim or an invented Chow source. -/
+
+/-- The rational span of the genuine native Chow-cycle Hodge addresses
+on the same original X. No abstract Hodge-basis preimage is used. -/
+noncomputable def nativeAlgebraicWeightAddressSpan
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (p : Nat) :
+    Submodule ℚ (FiberedHodgeAddress V H) :=
+  Submodule.span ℚ (Set.range (fun Z : codimensionCycles V.X p =>
+    fiberedWeightCoordinates V H p
+      (⟨H.cycleClass p Z, G.algebraic_is_hodge p Z⟩ :
+        ClassicalHodgeFiber V H p)))
+
+/-- The existing canonical spine is an ACTUAL original-X native source
+inside the concrete algebraic address image. This is unconditional
+relative to the geometric cycle-class spine, not an extra seed axiom. -/
+theorem globalSpineAddress_mem_nativeAlgebraicWeightAddressSpan
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat) :
+    globalSpineAddress G M p ∈
+      nativeAlgebraicWeightAddressSpan G p := by
+  unfold nativeAlgebraicWeightAddressSpan
+  apply Submodule.subset_span
+  refine ⟨spineNativeTower G p, ?_⟩
+  change fiberedWeightCoordinates V H p
+    (⟨H.cycleClass p (spineNativeTower G p),
+      G.algebraic_is_hodge p (spineNativeTower G p)⟩ :
+      ClassicalHodgeFiber V H p) =
+    fiberedWeightCoordinates V H p (spineHodgeSeed G p)
+  congr 1
+  apply Subtype.ext
+  exact spineNativeTower_cycleClass G p
+
+/-- Exact all-X algebraic-source saturation criterion, specialized to
+ACTUAL native Chow-cycle classes rather than an arbitrary address
+subspace. It deliberately requires preservation by ALL the abstract
+matrix units: establishing this from genuine projective geometry is
+the remaining realization theorem, not silently assumed here. -/
+theorem nativeAlgebraicWeightAddress_saturates_of_GST_stability
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat)
+    (hstable :
+      SameWeightGSTStable (V := V) (H := H) p
+        (nativeAlgebraicWeightAddressSpan G p)) :
+    FixedWeightSheetSubspace (V := V) (H := H) p ≤
+      nativeAlgebraicWeightAddressSpan G p :=
+  fixedWeight_le_of_spine_and_stable G M p
+    (nativeAlgebraicWeightAddressSpan G p)
+    (globalSpineAddress_mem_nativeAlgebraicWeightAddressSpan G M p)
+    hstable
+
+/-- Concrete obstruction certificate for a missing original-X algebraic
+Hodge sheet: the explicit GST matrix unit taking the existing native
+spine source to that sheet CANNOT preserve the native algebraic image.
+Its failure is not a Lean or rank-free matrix calculation but exactly
+the missing original-X geometric realization condition. -/
+theorem missing_native_sheet_forces_unrealized_GST_move
+    (G : GSTClassicalHodgeGeometricCycleClassSpine.GeometricCycleClassSpine V H)
+    (M : NativeMassCycleClassBridge V H)
+    (p : Nat)
+    (j : ClassicalHodgeBasisIndex V H p)
+    (hMissing :
+      fiberedSheetGenerator V H
+        (⟨p,j⟩ : FiberedHodgeIndex V H) ∉
+          nativeAlgebraicWeightAddressSpan G p) :
+    sheetMatrixUnit
+      (globalSpineSourceSheet G M p)
+      (⟨p,j⟩ : FiberedHodgeIndex V H)
+      (globalSpineAddress G M p) ∉
+        nativeAlgebraicWeightAddressSpan G p := by
+  intro hMove
+  have hcoeff := globalSpineSourceProbe_ne_zero G M p
+  rw [globalSpine_matrixUnit_hits_target G M p j] at hMove
+  have hscaled :=
+    (nativeAlgebraicWeightAddressSpan G p).smul_mem
+      (sheetProbe (globalSpineSourceSheet G M p)
+        (globalSpineAddress G M p))⁻¹ hMove
+  have hSheet :
+      fiberedSheetGenerator V H
+        (⟨p,j⟩ : FiberedHodgeIndex V H) ∈
+          nativeAlgebraicWeightAddressSpan G p := by
+    simpa [hcoeff, smul_smul] using hscaled
+  exact hMissing hSheet
+
+#check nativeAlgebraicWeightAddressSpan
+#check globalSpineAddress_mem_nativeAlgebraicWeightAddressSpan
+#check nativeAlgebraicWeightAddress_saturates_of_GST_stability
+#check missing_native_sheet_forces_unrealized_GST_move
+#print axioms missing_native_sheet_forces_unrealized_GST_move
 
 #check FixedWeightSheetSubspace
 #check FixedWeightGeneratorSpan
