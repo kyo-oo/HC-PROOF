@@ -2614,7 +2614,6 @@ theorem cmWeilSixfoldLCIIncidence_channel_encode_injective
     congrArg (fun x : Fin r × Fin 35 => x.1.val) h
   have hrem : i.val % 35 = j.val % 35 :=
     congrArg (fun x : Fin r × Fin 35 => x.2.val) h
-  dsimp [cmWeilSixfoldLCIIncidence_channel_encode] at hquot hrem
   apply Fin.ext
   omega
 
