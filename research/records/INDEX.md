@@ -1,5 +1,7 @@
 # GST Hodge Research — Construction Program
 
+- [Mathbox: parity-filtered CM Weil projector has provably minimal cubic degree](2026-10-20-gst-cm-projector-cubic-minimality.md) — rational quadratic isolation is impossible, cubic verified exact on pure and mixed eigenpairs; Lean **GREEN [#39312192867](https://github.com/kyo-oo/HC-PROOF/actions/runs/39312192867)** at `27cd26d70e68b981abfd71c62c0ce280b0837567`. Restricted T/U projector optimality only; three-operator T/S/U construction remains lower-depth, geometric deformation unsupplied.
+
 - [Mathbox: actual first-order nonsplit Weil Hodge leak of the raw derived CM graph-ideal complex](2026-10-20-gst-derived-cm-graph-hodge-variation-obstruction.md) — exact normalized (2,4) variation coefficient **124 ≠ 0**, derived Chern numbers c₃²=−512 and c₆=7424; the unprojected F cannot deform with fixed Hodge Chern class along the named Weil tangent. Surgical Lean integer/Chern certificates in `GSTUniversalCMArithmeticObstruction.lean`; retain the pure Weil CM-projector route. This is a scoped source obstruction, not an all-X counterexample.
 
 - [Mathbox: 64-torsion étale split of the derived CM pair and 576-dimensional raw Ext² pressure test](2026-10-19-gst-derived-ideal-torsion-ext2-semi-regularity-audit.md) — exact anti-diagonal translation-invariant function theorem in Lean, numerical 576>495; geometric equivariant Ext/descent explains why full raw semiregularity injection for this one tensor-derived complex fails, without ruling out direct Atiyah-obstruction vanishing or another coupled source.
