@@ -183,6 +183,7 @@ theorem unseeded_two_polarization_all_rank_nonzero_of_volume
     (hu : u^(m+1) = 0)
     (hVolume : u^m*v^m ≠ 0) :
     unseeded_two_polarization_native_birth u v m ≠ 0 := by
+  letI : Nontrivial R := ⟨⟨u^m*v^m, 0, hVolume⟩⟩
   intro hz
   have hpair := unseeded_two_polarization_top_pairing u v m hu
   rw [hz, mul_zero] at hpair
