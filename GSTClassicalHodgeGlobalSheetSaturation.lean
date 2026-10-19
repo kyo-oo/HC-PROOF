@@ -310,17 +310,24 @@ theorem missing_native_sheet_forces_unrealized_GST_move
       (globalSpineAddress G M p) ∉
         nativeAlgebraicWeightAddressSpan G p := by
   intro hMove
-  have hcoeff := globalSpineSourceProbe_ne_zero G M p
-  rw [globalSpine_matrixUnit_hits_target G M p j] at hMove
+  let c : ℚ :=
+    sheetProbe (globalSpineSourceSheet G M p)
+      (globalSpineAddress G M p)
+  have hc : c ≠ 0 := globalSpineSourceProbe_ne_zero G M p
+  have heq :
+      sheetMatrixUnit (globalSpineSourceSheet G M p)
+        (⟨p,j⟩ : FiberedHodgeIndex V H)
+        (globalSpineAddress G M p) =
+      c • fiberedSheetGenerator V H ⟨p,j⟩ :=
+    globalSpine_matrixUnit_hits_target G M p j
+  rw [heq] at hMove
   have hscaled :=
-    (nativeAlgebraicWeightAddressSpan G p).smul_mem
-      (sheetProbe (globalSpineSourceSheet G M p)
-        (globalSpineAddress G M p))⁻¹ hMove
+    (nativeAlgebraicWeightAddressSpan G p).smul_mem c⁻¹ hMove
   have hSheet :
       fiberedSheetGenerator V H
         (⟨p,j⟩ : FiberedHodgeIndex V H) ∈
           nativeAlgebraicWeightAddressSpan G p := by
-    simpa [hcoeff, smul_smul] using hscaled
+    simpa [hc, smul_smul] using hscaled
   exact hMissing hSheet
 
 #check nativeAlgebraicWeightAddressSpan
