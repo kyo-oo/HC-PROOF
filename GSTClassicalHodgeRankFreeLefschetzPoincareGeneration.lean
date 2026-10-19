@@ -210,6 +210,77 @@ theorem geometricLPFiniteCombination_cannot_hit_missing_direction
   exact geometricLPFiniteCombination_mem_source_line
     L D v hL hD words
 
+/-! ## ORIGINAL-X PRIMITIVE DEGREE MOMENT BLINDNESS
+
+On genuine middle primitive cohomology the ordinary projective
+degree trace factors through cup by the ample class:
+trace(alpha) = integral(alpha * h^p) =
+integral((h*alpha) * h^(p-1)), whenever p >= 1.
+Thus trace annihilates the primitive kernel L alpha=0.
+
+More generally ANY actual algebraic correspondence preserving that
+primitive kernel has a completely zero projective-degree Hankel
+moment matrix on a primitive seed. A nonzero geometric source and
+a genuine correspondence are therefore insufficient to make the
+projective-degree moment determinant positive on such a sector.
+Primitive pairing functionals, not ordinary degree alone, are
+mathematically necessary for target-sensitive detection. -/
+
+/-- Iterated action of any degree-preserving geometric operator. -/
+def geometricPrimitiveOrbit
+    (T : Module.End ℚ A) (v : A) : ℕ → A
+  | 0 => v
+  | n + 1 => T (geometricPrimitiveOrbit T v n)
+
+/-- Native primitive stability is preserved through every iterate,
+when the underlying actual correspondence preserves ker(L). -/
+theorem geometricPrimitiveOrbit_stays_primitive
+    (L T : Module.End ℚ A)
+    (hStable : ∀ z : A, L z = 0 → L (T z) = 0)
+    (v : A) (hv : L v = 0) :
+    ∀ n : ℕ, L (geometricPrimitiveOrbit T v n) = 0 := by
+  intro n
+  induction n with
+  | zero => exact hv
+  | succ n ih =>
+      exact hStable (geometricPrimitiveOrbit T v n) ih
+
+/-- The natural degree trace factors through hyperplane cup, so
+it is zero on every iterate in the true primitive kernel. -/
+theorem geometricPrimitiveOrbit_degree_trace_zero
+    (L T : Module.End ℚ A)
+    (hStable : ∀ z : A, L z = 0 → L (T z) = 0)
+    (v : A) (hv : L v = 0)
+    (trace : A →ₗ[ℚ] ℚ) (factor : A →ₗ[ℚ] ℚ)
+    (hTrace : ∀ z : A, trace z = factor (L z)) :
+    ∀ n : ℕ, trace (geometricPrimitiveOrbit T v n) = 0 := by
+  intro n
+  rw [hTrace]
+  rw [geometricPrimitiveOrbit_stays_primitive L T hStable v hv n]
+  exact map_zero factor
+
+/-- Every entry of the corresponding degree-trace Hankel matrix
+vanishes, for ALL finite ranks; even if the actual primitive
+orbit itself contains several independent nonzero vectors. -/
+theorem geometricPrimitiveDegreeHankel_eq_zero
+    (L T : Module.End ℚ A)
+    (hStable : ∀ z : A, L z = 0 → L (T z) = 0)
+    (v : A) (hv : L v = 0)
+    (trace : A →ₗ[ℚ] ℚ) (factor : A →ₗ[ℚ] ℚ)
+    (hTrace : ∀ z : A, trace z = factor (L z))
+    (r : ℕ) :
+    (fun i j : Fin r =>
+      trace (geometricPrimitiveOrbit T v (i.val + j.val))) =
+        (0 : Matrix (Fin r) (Fin r) ℚ) := by
+  ext i j
+  exact geometricPrimitiveOrbit_degree_trace_zero
+    L T hStable v hv trace factor hTrace (i.val + j.val)
+
+#check geometricPrimitiveOrbit_stays_primitive
+#check geometricPrimitiveOrbit_degree_trace_zero
+#check geometricPrimitiveDegreeHankel_eq_zero
+#print axioms geometricPrimitiveDegreeHankel_eq_zero
+
 end GenuineGeometricLPObstruction
 
 #check geometricLPWord_nonempty_kills_joint_primitive
