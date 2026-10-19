@@ -2503,6 +2503,89 @@ theorem cmWeilSixfoldMinimalIncidence_sevenEdges_rawBound :
   norm_num [cmWeilSixfoldMinimalIncidenceExtDegree,
     Nat.choose]
 
+/-! ### An alternative TWO-SIDED lci incidence carrier and rank budget
+
+The older 503-unit estimate concerns a smooth abelian W of codimension
+two that CONTAINS one signed graph but meets the other transversely.
+Its endpoint Ext² dimensions are respectively 10 and 16.
+
+There is another genuine lci candidate, with different geometry:
+for an opposite-sign pair of graph threefolds Z+, Z-, form
+D_i = D_{+,i} + D_{-,i} for i=1,2, with D_{±,i}
+the codimension-one graph-kernel divisors on the i-th E²
+coordinate pair. The codimension-two complete intersection
+W_both = D_1 ∩ D_2 contains BOTH graph threefolds. Its
+defining divisor sections have separate coordinate support,
+so their product sections form a regular sequence in the
+smooth ambient abelian sixfold, even though W_both can be
+reducible/singular. O_W is thus perfect by Koszul.
+
+On either Z± the conormal dual line bundles have degree 4
+on their respective elliptic coordinates for a winding-one
+pair. The restricted Koszul differential vanishes. The
+global Ext² profile is therefore the 35-dimensional value
+proved above, ON BOTH ENDS, and Ext⁴ is predicted zero.
+
+The following full TREE budget uses capacity 35 on both sides.
+It obtains a connected numerical allocation of 150 units,
+versus 503 for the prior smooth, asymmetric W architecture.
+This is a substantive alternative candidate, NOT a proof of
+geometric linear independence, square-zero global coupling,
+semiregularity, deformation, or an arbitrary-X Chow source.
+The lci/Koszul identification remains a geometric input. -/
+
+/-- Necessary total rank for any allocation with symmetric
+35-dimensional positive/negative incidence capacity and a
+NONZERO connecting rank on each of the seven tree edges.
+The four listed capacities already force the bound, so no
+unknown Ext² full-rank premise occurs in the theorem itself. -/
+theorem cmWeilSixfoldLCIIncidence_connected_rank_lower_bound
+    (r01 r04 r12 r34 r45 r06 r07 : ℕ)
+    (hConnected01 : 1 ≤ r01)
+    (hPositive175 : 175 ≤ 35*r12)
+    (hNegative4800 : 4800 ≤ 35*(r04+r34+r45))
+    (hNegative175 : 175 ≤ 35*r06)
+    (hNegative3 : 3 ≤ 35*r07) :
+    150 ≤ r01+r04+r12+r34+r45+r06+r07 := by
+  omega
+
+/-- Explicit connected allocation of all seven candidate lci
+incidence edges, with their ranks in tree order
+01,04,12,34,45,06,07. Every rank is positive. -/
+def cmWeilSixfoldLCIIncidenceRankAllocation : Fin 7 → ℕ :=
+  ![1,136,5,1,1,5,1]
+
+/-- The complete eight-sided multiplicity test for the NEW
+symmetric-35 numerical capacity model. This is a minimizer
+for the stated connected tree problem, not a theorem that
+the Ext² arrows on W_both span those multiplicities. -/
+theorem cmWeilSixfoldLCIIncidence_connected_rank_feasible :
+    let r := cmWeilSixfoldLCIIncidenceRankAllocation
+    (∀ i : Fin 7, 0 < r i) ∧
+    4800 ≤ 35*(r 0+r 1+r 5+r 6) ∧
+    175 ≤ 35*r 2 ∧
+    3 ≤ 35*r 3 ∧
+    32 ≤ 35*r 4 ∧
+    32 ≤ 35*(r 0+r 2) ∧
+    4800 ≤ 35*(r 1+r 3+r 4) ∧
+    175 ≤ 35*r 5 ∧
+    3 ≤ 35*r 6 ∧
+    (Finset.univ.sum r) = 150 := by
+  decide
+
+/-- The connected two-sided-lci candidate reduces the number
+of K₀-neutral auxiliary incidence copies by 706 against the
+previous smooth one-sided capacity allocation. The comparison
+assumes the chosen two-copy packet per rank-one W. -/
+theorem cmWeilSixfoldLCIIncidence_copy_saving :
+    (2 : ℕ) * 503 - 2 * 150 = 706 := by
+  norm_num
+
+#check cmWeilSixfoldLCIIncidence_connected_rank_lower_bound
+#check cmWeilSixfoldLCIIncidence_connected_rank_feasible
+#check cmWeilSixfoldLCIIncidence_copy_saving
+#print axioms cmWeilSixfoldLCIIncidence_connected_rank_lower_bound
+
 #check cmWeilSixfoldMinimalIncidence_fullExtProfile
 #check cmWeilSixfoldMinimalIncidence_fullExtTwo_dimension
 #check cmWeilSixfoldMinimalIncidence_sevenEdges_rawBound
