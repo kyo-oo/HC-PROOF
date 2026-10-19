@@ -1907,8 +1907,7 @@ theorem cmWeilSixfoldThreeOpBilinearCoefficient_unique
   have hpIm := congrArg Prod.snd hp
   have hmRe := congrArg Prod.fst hm
   have hmIm := congrArg Prod.snd hm
-  norm_num [cmWeilSixfoldBilinearTSComplexEval] at
-    hpRe hpIm hmRe hmIm
+  norm_num [cmWeilSixfoldBilinearTSComplexEval] at hpRe hpIm hmRe hmIm
   constructor
   · linarith
   constructor
