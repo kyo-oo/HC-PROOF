@@ -1,5 +1,7 @@
 # GST Hodge Research — Construction Program
 
+- [Mathbox: all-X native Chow GST sheet-realization boundary](2026-10-19-gst-original-x-native-sheet-realization-boundary.md) — **Lean green** [#39216905387](https://github.com/kyo-oo/HC-PROOF/actions/runs/39216905387); directly constructs nonzero native orbit seed without NativeMass, pins the exact original-X image-stability condition and identifies any missing target sheet's unrealizable abstract GST move. Full all-X geometry source remains unconstructed.
+
 - [GST quaternionic four-vector Weil graph rank and target-coupling audit](2026-10-19-gst-quaternionic-basis-free-graph-source-rank.md) — basis-free anti-CM graph eigenframe independence, zero-divisor-safe all-rank native primitive nonvanishing, and an explicit fourfold orthogonality test separating nonzero source from arbitrary residual detection. Canonical graph Betti realization remains a geometric input.
 
 - [GST unseeded two-polarization middle Chow/K₀ birth on nonsplit finite covers](2026-10-19-gst-unseeded-two-polarization-middle-chow-birth.md) — uniform original-X primitive algebraic class from two geometric polarizations on arbitrary smooth finite covers of m-fold products, with exact signed norm (m+1) times top intersection and explicit perfect K₀ source; all-X target residual coupling remains a separate Gate 3 requirement.
