@@ -1858,6 +1858,83 @@ theorem cmWeilSixfoldThreeOperatorProjector_kills_even_mixed
   rw [hnum]
   ring
 
+/-! ### GST three-operator geometric source coefficients are forced
+
+The genuinely algebraic endomorphisms T=[2+i] and S=[1+i]
+have simultaneous CM spectra on the pure Weil and even mixed
+weight pairs:
+  pure:  T=-117+44i, S=-8i
+  mixed: T=75+100i, S=8i.
+
+Any rational bilinear source readout
+  a + b*T + c*S + d*T*S
+that fixes the pure Weil pair and kills the mixed pair is
+uniquely determined. This makes the existing FOUR base graph
+coefficients mandatory within this particular short K₀ word
+frame; it is not a minimality claim over arbitrary operators. -/
+
+/-- Exact rational complex evaluation of the 1,T,S,TS
+graph-word span at T=x+iy and S=z+iw. -/
+def cmWeilSixfoldBilinearTSComplexEval
+    (a b c d x y z w : ℚ) : ℚ × ℚ :=
+  (a+b*x+c*z+d*(x*z-y*w),
+   b*y+c*w+d*(x*w+y*z))
+
+/-- The previously constructed integral coefficient row
+[4800,-32,175,3]/9600 gives exactly 1 on the pure
+pair and 0 on the mixed pair. -/
+theorem cmWeilSixfoldThreeOpBilinear_exact :
+    cmWeilSixfoldBilinearTSComplexEval
+      (4800/9600) (-32/9600) (175/9600) (3/9600)
+      (-117) 44 0 (-8) = (1,0) ∧
+    cmWeilSixfoldBilinearTSComplexEval
+      (4800/9600) (-32/9600) (175/9600) (3/9600)
+      75 100 0 8 = (0,0) := by
+  norm_num [cmWeilSixfoldBilinearTSComplexEval]
+
+/-- Uniqueness, not just existence: each of the four base graph
+word coefficients is forced by the two complex eigenpair tests.
+No extra rank or period-spanning assumption is made. -/
+theorem cmWeilSixfoldThreeOpBilinearCoefficient_unique
+    (a b c d : ℚ)
+    (hp : cmWeilSixfoldBilinearTSComplexEval
+      a b c d (-117) 44 0 (-8) = (1,0))
+    (hm : cmWeilSixfoldBilinearTSComplexEval
+      a b c d 75 100 0 8 = (0,0)) :
+    a = 4800/9600 ∧ b = -32/9600 ∧
+    c = 175/9600 ∧ d = 3/9600 := by
+  have hpRe := congrArg Prod.fst hp
+  have hpIm := congrArg Prod.snd hp
+  have hmRe := congrArg Prod.fst hm
+  have hmIm := congrArg Prod.snd hm
+  norm_num [cmWeilSixfoldBilinearTSComplexEval] at
+    hpRe hpIm hmRe hmIm
+  constructor
+  · linarith
+  constructor
+  · linarith
+  constructor
+  · linarith
+  · linarith
+
+/-- As a consequence, none of 1,T,S,TS can be dropped
+from a source formula supported on this four-word frame. -/
+theorem cmWeilSixfoldThreeOpBilinearAllFour_required
+    (a b c d : ℚ)
+    (hp : cmWeilSixfoldBilinearTSComplexEval
+      a b c d (-117) 44 0 (-8) = (1,0))
+    (hm : cmWeilSixfoldBilinearTSComplexEval
+      a b c d 75 100 0 8 = (0,0)) :
+    a ≠ 0 ∧ b ≠ 0 ∧ c ≠ 0 ∧ d ≠ 0 := by
+  obtain ⟨ha,hb,hc,hd⟩ :=
+    cmWeilSixfoldThreeOpBilinearCoefficient_unique a b c d hp hm
+  rw [ha,hb,hc,hd]
+  norm_num
+
+#check cmWeilSixfoldThreeOpBilinearCoefficient_unique
+#check cmWeilSixfoldThreeOpBilinearAllFour_required
+#print axioms cmWeilSixfoldThreeOpBilinearCoefficient_unique
+
 /-- Complete exact projector idempotence on all seven actual
 sixfold CM spectral channels, with explicit dual-isogeny
 eigenrelations and no hidden algebraicity assumption. -/
