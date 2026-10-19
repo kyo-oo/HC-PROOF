@@ -205,8 +205,14 @@ theorem secantSeedCanonicalGraphContraction
     (d : ℚ) :
     contractGraph (secantSeedCanonicalTensor d) =
       ((d+1)/(2*d), (0:ℚ)) := by
-  simp [secantSeedCanonicalTensor, contraction_formula]
-  ring
+  by_cases hd : d = 0
+  · subst d
+    norm_num [secantSeedCanonicalTensor, determinantTensor, contractGraph]
+  · dsimp [secantSeedCanonicalTensor, determinantTensor, contractGraph]
+    apply Prod.ext
+    · field_simp
+      ring
+    · ring
 
 /-- The constructed source coefficient is nonzero for EVERY d>0,
 with no external nonzero-Hodge-vector or full-rank premise. -/
@@ -214,12 +220,10 @@ theorem secantSeedCanonicalExtractedWeilComponent_nonzero
     (d : ℚ) (hd : 0 < d) :
     ((d+1)/(2*d), (0:ℚ)) ≠ ((0:ℚ), (0:ℚ)) := by
   intro hz
-  have hfirst := congrArg Prod.fst hz
-  change (d+1)/(2*d) = 0 at hfirst
-  have hd0 : d ≠ 0 := ne_of_gt hd
-  have hden : (2:ℚ)*d ≠ 0 := mul_ne_zero (by norm_num) hd0
-  have hnum : d+1 = 0 := (div_eq_zero_iff).mp hfirst |>.resolve_right hden
-  linarith
+  have hfirst : (d+1)/(2*d) = 0 := congrArg Prod.fst hz
+  have hpos : 0 < (d+1)/(2*d) :=
+    div_pos (by linarith) (by positivity)
+  exact (ne_of_gt hpos) hfirst
 
 /-- The exact two-direction determinant of the genuine fourth
 power CM operation on the secant-extracted Weil source is
