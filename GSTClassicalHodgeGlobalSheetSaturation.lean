@@ -400,6 +400,9 @@ theorem nativeAlgebraicWeightAddress_saturates_of_GST_stability_and_source
     sheetProbe (⟨p,S.sourceIndex⟩ : FiberedHodgeIndex V H)
       (fiberedWeightCoordinates V H p S.hodge)
   have hc : c ≠ 0 := by
+    change sheetProbe
+      (⟨p,S.sourceIndex⟩ : FiberedHodgeIndex V H)
+      (fiberedWeightCoordinates V H p S.hodge) ≠ 0
     rw [sheetProbe_fiberedWeightCoordinates]
     simpa [hodgeCoordinate] using S.sourceCoefficient_ne_zero
   have heq :
