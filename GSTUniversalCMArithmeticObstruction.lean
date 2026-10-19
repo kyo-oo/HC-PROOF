@@ -1197,6 +1197,38 @@ theorem cmTwoPlusIGraphDerivedDualIdealPair_K0
   unfold cmTwoPlusIGraphDerivedDualIdealPair
   ring
 
+/-- Derived-dual involution of the genuine codimension-three graph
+ideal-pair Chern character. For graph classes z0,z1 in a graded
+Chow/Betti ring, duality negates their odd codimension-three parts
+but fixes the even codimension-six intersection. This identity is
+unconditional ring arithmetic, not an assertion that a family of
+sheaves deforms. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_selfEuler_factorization
+    (z0 z1 : R) :
+    cmTwoPlusIGraphDerivedDualIdealPair z0 z1 *
+        cmTwoPlusIGraphDerivedDualIdealPair (-z0) (-z1) =
+      (1-z0*z0)*(1-z1*z1) := by
+  unfold cmTwoPlusIGraphDerivedDualIdealPair
+  ring
+
+/-- Graph subgroups with trivial rank-three normal bundle have
+vanishing self-intersection z_j². Under precisely those genuine
+geometric inputs the degree-six self-Euler integrand cancels
+IDENTICALLY; the actual abelian sixfold has integral of 1 equal
+to zero in codimension six. This is a useful deformation-index
+test, NOT a semiregularity or unobstructedness theorem. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_selfEuler_unit
+    (z0 z1 : R) (hz0 : z0*z0 = 0) (hz1 : z1*z1 = 0) :
+    cmTwoPlusIGraphDerivedDualIdealPair z0 z1 *
+        cmTwoPlusIGraphDerivedDualIdealPair (-z0) (-z1) = 1 := by
+  rw [cmTwoPlusIGraphDerivedIdealPair_selfEuler_factorization]
+  rw [hz0, hz1]
+  ring
+
+#check cmTwoPlusIGraphDerivedIdealPair_selfEuler_factorization
+#check cmTwoPlusIGraphDerivedIdealPair_selfEuler_unit
+#print axioms cmTwoPlusIGraphDerivedIdealPair_selfEuler_unit
+
 end CMGraphDerivedDualIdealBirth
 
 /-- Gaussian coefficients of the ACTUAL Weil sixth exterior
