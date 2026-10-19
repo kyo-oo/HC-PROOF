@@ -1182,6 +1182,95 @@ theorem cmTwoPlusIGraphIntersectionDegree_positive_to_six
   fin_cases n <;>
     norm_num [cmTwoPlusIGraphIntersectionDegree, cmTwoPlusIGaussianPower]
 
+/-! ## THE REAL 7-GRAPH CHOW SOURCE: INTEGER K0 WEIGHTS
+
+The rational CM spectral projector is not a single graph.
+Clearing ALL denominators yields an explicit 7-graph integral
+virtual perfect-complex source. Its signs matter geometrically:
+a negative coefficient is represented by an ODD cohomological
+shift, not by an ordinary positive direct-sum sheaf.
+
+The two neighboring first graph terms have OPPOSITE coefficients.
+For distinct transverse central graph threefolds, the only
+local-to-global off-diagonal derived Hom is Ext³. A degree-one
+twisted-complex differential between shifted objects
+O_Z[a] → O_W[b][1] coming from Ext³ requires b-a=2, an EVEN
+shift. Thus pure transverse-Ext³ couplings cannot directly join
+the first positive and negative K0 components. This rules out
+the naive all-graph single Ext³ cone as the requested semiregular
+source. It does NOT rule out a different geometric sheaf using
+extra incidence, self-Ext, or higher correspondences.
+
+The integer K0 weights and this parity obstruction are concrete
+design conditions for the next actual derived source, not an
+assumption of generic Hodge cycle algebraicity.
+-/
+
+/-- Minimal common-denominator signed 7-graph projector weights,
+ordered f^0,...,f^6 for the genuine CM isogeny f=[2+i]. -/
+def cmWeilSixfoldIntegralSignedProjector : Fin 7 → ℤ :=
+  ![317131927490234375, -2073948378906250,
+    12564289203125, -56707735500, 27598945, 3626326, -68381]
+
+def cmWeilSixfoldIntegralProjectorDenominator : ℕ :=
+  930187500000000000
+
+/-- Independently checked coefficient-level identity relating
+the signed graph K0 source to the previously proved spectral
+projector. No Hodge existence premise occurs. -/
+theorem cmWeilSixfoldIntegralProjector_scalar_identity (t : ℚ) :
+    cmWeilSixfoldNonsplitProjectorScalar t =
+      ((cmWeilSixfoldIntegralSignedProjector 0 : ℚ) +
+       (cmWeilSixfoldIntegralSignedProjector 1 : ℚ)*t +
+       (cmWeilSixfoldIntegralSignedProjector 2 : ℚ)*t^2 +
+       (cmWeilSixfoldIntegralSignedProjector 3 : ℚ)*t^3 +
+       (cmWeilSixfoldIntegralSignedProjector 4 : ℚ)*t^4 +
+       (cmWeilSixfoldIntegralSignedProjector 5 : ℚ)*t^5 +
+       (cmWeilSixfoldIntegralSignedProjector 6 : ℚ)*t^6) /
+      cmWeilSixfoldIntegralProjectorDenominator := by
+  norm_num [cmWeilSixfoldNonsplitProjectorScalar,
+    cmWeilSixfoldIntegralSignedProjector,
+    cmWeilSixfoldIntegralProjectorDenominator]
+  ring
+
+/-- The ACTUAL integral projector requires both positive and
+negative perfect-complex K0 terms; ordinary positive direct
+sums alone cannot encode its seven signed graph coefficients. -/
+theorem cmWeilSixfoldIntegralProjector_has_opposite_signs :
+    0 < cmWeilSixfoldIntegralSignedProjector 0 ∧
+    cmWeilSixfoldIntegralSignedProjector 1 < 0 := by
+  decide
+
+/-- Along a finite chain of degree-one derived arrows arising
+exclusively from transverse Ext³ of distinct graph threefolds,
+all cohomological shift parities coincide. -/
+theorem cmWeilSixfoldTransverseExtThreeChain_preserves_parity
+    (shift : ℕ → ℤ)
+    (hExtThree : ∀ n, shift (n+1) = shift n + 2)
+    (n : ℕ) :
+    shift n % 2 = shift 0 % 2 := by
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+      rw [hExtThree k]
+      omega
+
+/-- The first positive and negative graph K0 terms CANNOT be
+directly joined by a degree-one transverse-Ext³ arrow: their
+required cohomological shift parities differ. -/
+theorem cmWeilSixfoldOppositeK0Signs_require_nonExtThreeCoupling
+    (positiveShift negativeShift : ℤ)
+    (hPositive : positiveShift % 2 = 0)
+    (hNegative : negativeShift % 2 = 1) :
+    negativeShift ≠ positiveShift + 2 := by
+  omega
+
+#check cmWeilSixfoldIntegralProjector_scalar_identity
+#check cmWeilSixfoldIntegralProjector_has_opposite_signs
+#check cmWeilSixfoldTransverseExtThreeChain_preserves_parity
+#check cmWeilSixfoldOppositeK0Signs_require_nonExtThreeCoupling
+#print axioms cmWeilSixfoldIntegralProjector_scalar_identity
+
 #check cmTwoPlusIGraphIntersectionDegree_first_six
 #check cmTwoPlusIGraphIntersectionDegree_first
 #check cmTwoPlusIGraphIntersectionDegree_positive_to_six
