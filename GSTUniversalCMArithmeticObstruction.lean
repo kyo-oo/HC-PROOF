@@ -1228,9 +1228,10 @@ theorem cmWeilSixfoldIntegralProjector_scalar_identity (t : ℚ) :
        (cmWeilSixfoldIntegralSignedProjector 5 : ℚ)*t^5 +
        (cmWeilSixfoldIntegralSignedProjector 6 : ℚ)*t^6) /
       cmWeilSixfoldIntegralProjectorDenominator := by
-  norm_num [cmWeilSixfoldNonsplitProjectorScalar,
+  dsimp [cmWeilSixfoldNonsplitProjectorScalar,
     cmWeilSixfoldIntegralSignedProjector,
     cmWeilSixfoldIntegralProjectorDenominator]
+  push_cast
   ring
 
 /-- The ACTUAL integral projector requires both positive and
