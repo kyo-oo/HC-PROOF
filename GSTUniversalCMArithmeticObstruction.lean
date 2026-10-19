@@ -974,6 +974,59 @@ theorem cmWeilSixfoldGraphFirstOrderDetector_surjective :
 #check cmWeilSixfoldGraphFirstOrderDetector_surjective
 #print axioms cmWeilSixfoldGraphFirstOrderDetector_surjective
 
+/-! ## NO FAKE COHERENT SOURCE FROM REPEATED VIRTUAL SHEAVES
+
+For an actual coherent sheaf F with nonzero Ext²(F,F), the
+derived obstruction carrier of F⊕F contains its 2×2 matrix
+blocks. The Atiyah character of a split direct sum is diagonal,
+so the raw Buchweitz–Flenner semiregularity map on this matrix
+carrier factors through the diagonal trace.
+
+Every off-diagonal Ext² block is therefore killed. The full raw
+semiregularity map on the naive doubled-sheaf source CANNOT
+be injective, even if its virtual K₀ class or Chern character
+has the desired Weil Hodge projection. This explains why
+the polynomial in genuine isogeny graphs does NOT by itself
+deliver the semiregular ordinary sheaf needed to deform the
+exceptional Weil source from the CM period.
+
+The next actual source must be a geometrically coupled sheaf
+or perfect complex with its own full-Ext² injection proof,
+as in the earlier GST secant-sheaf route; mere sum/shift
+K₀ stabilization does not provide that theorem. -/
+
+/-- Exact 2×2 off-diagonal obstruction against injectivity of
+ANY matrix semiregularity law factoring through the ordinary
+diagonal trace. No fake full-Hodge surjectivity enters. -/
+theorem semiregularity_not_injective_on_duplicated_source
+    {Ob Target : Type*}
+    [AddCommGroup Ob] [Module ℚ Ob]
+    [AddCommGroup Target] [Module ℚ Target]
+    (rawSemireg : Matrix (Fin 2) (Fin 2) Ob →ₗ[ℚ] Target)
+    (baseSemireg : Ob →ₗ[ℚ] Target)
+    (hBlockTrace :
+      ∀ M : Matrix (Fin 2) (Fin 2) Ob,
+        rawSemireg M = baseSemireg (M 0 0 + M 1 1))
+    (v : Ob) (hv : v ≠ 0) :
+    ¬ Function.Injective rawSemireg := by
+  let offDiagonal : Matrix (Fin 2) (Fin 2) Ob :=
+    fun i j => if i = 0 ∧ j = 1 then v else 0
+  have hNotZero : offDiagonal ≠ 0 := by
+    intro h
+    have h01 := congrArg
+      (fun M : Matrix (Fin 2) (Fin 2) Ob => M 0 1) h
+    exact hv (by simpa [offDiagonal] using h01)
+  have hTraceZero :
+      offDiagonal 0 0 + offDiagonal 1 1 = 0 := by
+    simp [offDiagonal]
+  have hSemiregZero : rawSemireg offDiagonal = 0 := by
+    rw [hBlockTrace, hTraceZero, map_zero]
+  intro hinj
+  exact hNotZero (hinj (by simpa using hSemiregZero))
+
+#check semiregularity_not_injective_on_duplicated_source
+#print axioms semiregularity_not_injective_on_duplicated_source
+
 #check cmWeilSixfoldCompanionAction
 #check cmWeilSixfoldStableSourceDichotomy
 #print axioms cmWeilSixfoldStableSourceDichotomy
