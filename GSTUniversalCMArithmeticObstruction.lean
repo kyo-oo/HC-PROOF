@@ -1127,6 +1127,132 @@ theorem cmTwoPlusIGaussianPower_imag_nonzero_to_six
     (cmTwoPlusIGaussianPower (n.val+1)).2 ≠ 0 := by
   fin_cases n <;> norm_num [cmTwoPlusIGaussianPower]
 
+/-! ## GST TWO-OPERATOR CM PROJECTOR: SEVEN GRAPHS -> SHORT CUBIC
+
+The previous sixfold exceptional-plane projector used a DEGREE-SIX
+polynomial in the genuine algebraic isogeny T=[2+i]^*, with seven
+iterated graph supports and rational denominator 930187500000000000.
+
+GST can do better by using the SECOND ACTUAL ALGEBRAIC
+endomorphism U=[i]^*. Since [i]^2=[-1] and [-1]^* acts as +1
+on H^6, U has eigenvalue -1 on EVEN K-weights j=0,2,4,6
+and +1 on ODD weights j=1,3,5. Therefore the algebraic
+correspondence (1-U)/2 kills every odd K-weight automatically.
+
+The even sector has only TWO rational spectral factors for T:
+  pure Weil:  T²+234T+15625
+  other even: T²-150T+15625.
+An exact cubic projector onto the pure Weil factor is
+  Q(T)=(T+234)(T²-150T+15625)/6000000.
+
+Thus the COMPLETE Weil spectral projector on H^6 is
+  P(T,U)=(1-U)*Q(T)/2.
+It uses eight signed actual graph correspondences U^e*T^j
+(e=0,1 and j=0,..,3), rather than seven f^0,...,f^6.
+Its integral coefficients are only
+   (+3656250,-19475,+84,+1) on the T side and the negatives
+   after multiplying by U, all over denominator 12000000.
+This shrinks the rational coefficient denominator by exactly
+77515625000 and halves the maximum isogeny power from six
+to three. It is an algebraic correspondence on the SAME
+original abelian sixfold, independent of target Hodge classes.
+
+The challenge of coupling its positive/negative K₀ graph
+supports into ONE semiregular ordinary sheaf remains; the
+projector is a source-geometry simplification, not a chosen
+algebraic preimage of a target.
+-/
+
+/-- Cubic rational isolator of the Weil eigenquadratic in the
+EVEN K-weight sector for the genuine isogeny [2+i]. -/
+def cmWeilSixfoldEvenWeightCubic (t : ℚ) : ℚ :=
+  ((t+234)*(t*t-150*t+15625))/6000000
+
+/-- Explicit joint-projector polynomial in the TWO genuine
+commuting CM endomorphisms, T=[2+i] and U=[i]. -/
+def cmWeilSixfoldTwoOperatorProjector (t u : ℚ) : ℚ :=
+  ((1-u)/2)*cmWeilSixfoldEvenWeightCubic t
+
+/-- Identity on the full exceptional rational Weil plane:
+U=-1, while T has minimal polynomial t²+234t+15625. -/
+theorem cmWeilSixfoldTwoOperatorProjector_fixes_pure
+    (t u : ℚ) (hu : u = -1)
+    (hPure : t*t+234*t+15625=0) :
+    cmWeilSixfoldTwoOperatorProjector t u = 1 := by
+  have hpoly :
+      (t+234)*(t*t-150*t+15625)-6000000 =
+        (t-150)*(t*t+234*t+15625) := by ring
+  rw [hPure, mul_zero] at hpoly
+  have hnum : (t+234)*(t*t-150*t+15625) = 6000000 := by
+    linarith [hpoly]
+  unfold cmWeilSixfoldTwoOperatorProjector
+    cmWeilSixfoldEvenWeightCubic
+  rw [hu, hnum]
+  norm_num
+
+/-- Entire ODD K-weight sector is annihilated by [i] parity,
+without requiring any polynomial relation on the isogeny T. -/
+theorem cmWeilSixfoldTwoOperatorProjector_kills_odd
+    (t u : ℚ) (hu : u = 1) :
+    cmWeilSixfoldTwoOperatorProjector t u = 0 := by
+  simp [cmWeilSixfoldTwoOperatorProjector, hu]
+
+/-- Remaining non-Weil even K-weights j=2,4 are killed by
+one quadratic factor rather than a sixth-degree polynomial. -/
+theorem cmWeilSixfoldTwoOperatorProjector_kills_even_mixed
+    (t u : ℚ) (hMixed : t*t-150*t+15625=0) :
+    cmWeilSixfoldTwoOperatorProjector t u = 0 := by
+  unfold cmWeilSixfoldTwoOperatorProjector
+    cmWeilSixfoldEvenWeightCubic
+  rw [hMixed]
+  ring
+
+/-- Idempotent on EVERY H^6 K-weight under its actual T,U
+eigenrelations. This exhaustive disjunction describes all
+seven complex K-weight sectors of the 6-fold H^6. -/
+theorem cmWeilSixfoldTwoOperatorProjector_idempotent
+    (t u : ℚ)
+    (hSpectrum : u=1 ∨
+      (u=-1 ∧ (t*t+234*t+15625=0 ∨
+        t*t-150*t+15625=0))) :
+    (cmWeilSixfoldTwoOperatorProjector t u)^2 =
+      cmWeilSixfoldTwoOperatorProjector t u := by
+  rcases hSpectrum with hu | ⟨hu, hEven⟩
+  · rw [cmWeilSixfoldTwoOperatorProjector_kills_odd t u hu]
+    norm_num
+  · rcases hEven with hp | hm
+    · rw [cmWeilSixfoldTwoOperatorProjector_fixes_pure t u hu hp]
+      norm_num
+    · rw [cmWeilSixfoldTwoOperatorProjector_kills_even_mixed t u hm]
+      norm_num
+
+/-- Exact reduced integer K₀ graph coefficients, replacing the
+seven high-degree [2+i]-graph weights by FOUR isogeny powers
+and their four translates under the algebraic automorphism [i]. -/
+def cmWeilSixfoldEvenWeightCubicIntegral : Fin 4 → ℤ :=
+  ![3656250,-19475,84,1]
+
+theorem cmWeilSixfoldTwoOperatorProjector_integer_formula
+    (t u : ℚ) :
+    cmWeilSixfoldTwoOperatorProjector t u =
+      ((1-u)*((cmWeilSixfoldEvenWeightCubicIntegral 0:ℚ) +
+        (cmWeilSixfoldEvenWeightCubicIntegral 1:ℚ)*t +
+        (cmWeilSixfoldEvenWeightCubicIntegral 2:ℚ)*t^2 +
+        (cmWeilSixfoldEvenWeightCubicIntegral 3:ℚ)*t^3)) /
+        12000000 := by
+  unfold cmWeilSixfoldTwoOperatorProjector
+    cmWeilSixfoldEvenWeightCubic
+    cmWeilSixfoldEvenWeightCubicIntegral
+  norm_num
+  ring
+
+#check cmWeilSixfoldTwoOperatorProjector
+#check cmWeilSixfoldTwoOperatorProjector_fixes_pure
+#check cmWeilSixfoldTwoOperatorProjector_kills_odd
+#check cmWeilSixfoldTwoOperatorProjector_kills_even_mixed
+#check cmWeilSixfoldTwoOperatorProjector_integer_formula
+#print axioms cmWeilSixfoldTwoOperatorProjector_idempotent
+
 /-! ## GST MINIMAL PAIRWISE INCIDENCE — SOURCE-CONSTRUCTION OPTIMIZATION
 
 The prior 7-graph incidence W simultaneously contained every
