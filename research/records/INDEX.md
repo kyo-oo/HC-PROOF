@@ -1,5 +1,7 @@
 # GST Hodge Research — Construction Program
 
+- [GST actual geometric primitive orbit and degree-Hankel detection](2026-10-19-gst-actual-geometric-primitive-orbit-detector.md) — **Lean green** [#39219585896](https://github.com/kyo-oo/HC-PROOF/actions/runs/39219585896), [#39220270089](https://github.com/kyo-oo/HC-PROOF/actions/runs/39220270089); proves that genuine L/Λ words cannot rotate independent middle primitive classes and that projective-degree moments vanish on primitive correspondence orbits; Wolfram finds a true geometric factor-swap with polarized primitive Hankel determinant 108 (degree determinant 0). General-original-X source existence is still Gate 3.
+
 - [Mathbox: all-X native Chow GST sheet-realization boundary](2026-10-19-gst-original-x-native-sheet-realization-boundary.md) — **Lean green** [#39216905387](https://github.com/kyo-oo/HC-PROOF/actions/runs/39216905387); directly constructs nonzero native orbit seed without NativeMass, pins the exact original-X image-stability condition and identifies any missing target sheet's unrealizable abstract GST move. Full all-X geometry source remains unconstructed.
 
 - [GST quaternionic four-vector Weil graph rank and target-coupling audit](2026-10-19-gst-quaternionic-basis-free-graph-source-rank.md) — basis-free anti-CM graph eigenframe independence, zero-divisor-safe all-rank native primitive nonvanishing, and an explicit fourfold orthogonality test separating nonzero source from arbitrary residual detection. Canonical graph Betti realization remains a geometric input.
