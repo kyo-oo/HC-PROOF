@@ -1225,6 +1225,35 @@ theorem cmTwoPlusIGraphDerivedIdealPair_selfEuler_unit
   rw [hz0, hz1]
   ring
 
+/-- Exact sixth-Chern Newton polynomial of the single central CM
+derived graph-ideal perfect complex. In a sixfold where
+ch₃(F)=z₀-z₁, ch₆(F)=-z₀z₁, and the other positive
+Chern-character grades vanish, the universal identity is
+c₆(F)=-120 ch₆(F)+2 ch₃(F)^2.
+Since each graph has trivial normal bundle, z₀²=z₁²=0,
+the genuine intersection contribution is 116 z₀z₁.
+This proves the coefficient identity in a commutative ring;
+the scheme-level Chern-character identification remains a
+separate geometric bridge. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_sixthChern
+    (z0 z1 : R) (hz0 : z0*z0 = 0) (hz1 : z1*z1 = 0) :
+    (-120 : R) * (-(z0*z1)) +
+        2 * ((z0-z1)*(z0-z1)) = 116*(z0*z1) := by
+  calc
+    (-120 : R) * (-(z0*z1)) + 2*((z0-z1)*(z0-z1)) =
+        116*(z0*z1) + 2*(z0*z0) + 2*(z1*z1) := by ring
+    _ = 116*(z0*z1) := by rw [hz0, hz1]; ring
+
+/-- On the actual transverse 64-point graph intersection,
+the sixth Chern number predicted by this Newton identity
+is 116×64 = 7424, despite the vanishing self-Euler index. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_sixthChernNumber :
+    (116 : ℤ) * 64 = 7424 := by norm_num
+
+#check cmTwoPlusIGraphDerivedIdealPair_sixthChern
+#check cmTwoPlusIGraphDerivedIdealPair_sixthChernNumber
+#print axioms cmTwoPlusIGraphDerivedIdealPair_sixthChern
+
 #check cmTwoPlusIGraphDerivedIdealPair_selfEuler_factorization
 #check cmTwoPlusIGraphDerivedIdealPair_selfEuler_unit
 #print axioms cmTwoPlusIGraphDerivedIdealPair_selfEuler_unit
