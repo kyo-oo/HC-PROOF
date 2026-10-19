@@ -2019,6 +2019,41 @@ def cmWeilSixfoldThreeOpGraphGaussian : Fin 8 → ℤ × ℤ :=
 def cmWeilSixfoldThreeOpGraphSign : Fin 8 → ℤ :=
   ![1,-1,1,1,-1,1,-1,-1]
 
+/-! ### Integral clearing cost of the three-operator projected source
+
+The fixed rational graph-word frame has signed coefficients
+[4800,-32,175,3,-4800,32,-175,-3]/19200.
+In this basis, integrality of only the 175 and 3 entries already
+forces the full 19200 denominator. This is a minimality statement
+about COEFFICIENTS IN THIS FRAME, not about arbitrary K₀ classes
+or hidden linear relations between actual graph cycles. -/
+
+/-- No lower positive scalar can clear both fractional coefficients
+175/19200 and 3/19200 to integers: Bezout 117*3-2*175=1. -/
+theorem cmWeilSixfoldThreeOpFrame_integrality_forces_full_denominator
+    (n : ℤ)
+    (h3 : (19200 : ℤ) ∣ n*3)
+    (h175 : (19200 : ℤ) ∣ n*175) :
+    (19200 : ℤ) ∣ n := by
+  obtain ⟨a, ha⟩ := h3
+  obtain ⟨b, hb⟩ := h175
+  refine ⟨117*a-2*b, ?_⟩
+  calc
+    n = 117*(n*3)-2*(n*175) := by ring
+    _ = 19200*(117*a-2*b) := by rw [ha, hb]; ring
+
+/-- If the source is represented by uncoupled signed graph
+summands at the primitive integral coefficient level, it
+contains exactly 10020 counted summands before any geometric
+cancellation or derived incidence identification. -/
+theorem cmWeilSixfoldThreeOpFrame_naive_split_multiplicity :
+    2*(4800+32+175+3) = (10020 : ℕ) := by
+  norm_num
+
+#check cmWeilSixfoldThreeOpFrame_integrality_forces_full_denominator
+#check cmWeilSixfoldThreeOpFrame_naive_split_multiplicity
+#print axioms cmWeilSixfoldThreeOpFrame_integrality_forces_full_denominator
+
 /-- Exact geometric intersection winding: imaginary part for
 two graph words with same U parity, real part for different
 U parity. Every number is integral for these actual K-maps. -/
@@ -2082,6 +2117,43 @@ theorem cmWeilSixfoldThreeOpGraphTree_lower_bound :
 #check cmWeilSixfoldThreeOperatorProjector_integer_formula
 #check cmWeilSixfoldThreeOpGraphTree_all_windings_one
 #check cmWeilSixfoldThreeOpGraphTree_connected
+/-! ### Eight-graph all-pairs transverse crossing / parity firewall
+
+The existing Koszul incidence record establishes that two transverse
+codimension-three graph STRUCTURE SHEAVES have crossing Ext only in
+degree 3. Opposite signed K₀ graph summands must have shifts of
+opposite parity, whereas a degree-one twisted-complex arrow obtained
+from an Ext³ crossing would require shift difference 2. The
+following theorem checks this for EVERY opposite-sign pair among
+the eight concrete CM graph words, not only edges of the chosen tree.
+
+The Lean conclusion is graph winding positivity plus integer-shift
+parity incompatibility; the geometric identification of winding with
+transversality and sheaf Ext³ remains an explicitly external leaf.
+Auxiliary incidence W, unlike bare graph sheaves, has an Ext²
+channel and is NOT ruled out by this theorem. -/
+theorem cmWeilSixfoldThreeOpGraph_all_signed_crossings_parity_obstructed
+    (shift : Fin 8 → ℤ)
+    (hParity : ∀ v w : Fin 8,
+      cmWeilSixfoldThreeOpGraphSign v ≠
+        cmWeilSixfoldThreeOpGraphSign w →
+      shift v % 2 ≠ shift w % 2)
+    (v w : Fin 8)
+    (hsign : cmWeilSixfoldThreeOpGraphSign v ≠
+      cmWeilSixfoldThreeOpGraphSign w) :
+    1 + shift w - shift v ≠ (3 : ℤ) ∧
+      0 < cmWeilSixfoldThreeOpGraphWinding v w := by
+  constructor
+  · intro hdegree
+    have hodd := hParity v w hsign
+    omega
+  · have hwind :=
+      cmWeilSixfoldThreeOpGraphTree_lower_bound v w hsign
+    omega
+
+#check cmWeilSixfoldThreeOpGraph_all_signed_crossings_parity_obstructed
+#print axioms cmWeilSixfoldThreeOpGraph_all_signed_crossings_parity_obstructed
+
 #check cmWeilSixfoldThreeOpGraphTree_all_ExtTwo_sixteen
 #check cmWeilSixfoldThreeOpGraphTree_lower_bound
 #print axioms cmWeilSixfoldThreeOpGraphTree_all_ExtTwo_sixteen
