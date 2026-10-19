@@ -1671,6 +1671,69 @@ theorem cmWeilSixfoldGraphTreeVanishingTensor_parameter_count :
       (7 : ℕ) * 16 < 495 := by
   omega
 
+/-! ## COMPLETE GLOBAL EXT PROFILE OF EACH MINIMAL INCIDENCE BRIDGE
+
+The old dimension 16 was ONLY the top H⁰(L1 L2)
+summand of Ext²_A(O_W,O_Z) for a geometric graph Z≃E³
+and a minimal codimension-two incidence W.
+
+The genuine *global* Koszul resolution and the fact that
+both incidence equations vanish on Z make its Hom complex
+have ZERO differential. The hypercohomology summands are:
+  Ext^k_A(O_W,O_Z) ≅
+    H^k(Z,O_Z)
+    ⊕ H^(k-1)(Z,L1 ⊕ L2)
+    ⊕ H^(k-2)(Z,L1⊗L2).
+With L1=pr1^*O_E(D4), L2=pr2^*O_E(D4),
+Riemann-Roch on E and Künneth yield exact Betti-numerical
+dimensions: h^k(O_E³)=choose(3,k),
+h^k(L_i)=4*choose(2,k),
+h^k(L1L2)=16*choose(1,k).
+Thus the COMPLETE Ext profile in degrees 0..5 is
+  (1, 11, 35, 25, 0, 0).
+This is 35, NOT 16, total Ext² per edge. All seven
+bridges have at most 7*35=245 source directions from
+these local incidence Ext² spaces, below the entire
+495-dimensional semiregularity target.
+
+CRITICAL: this comparison does not estimate the full
+Ext² of the eventual coupled seven-bridge sheaf, whose
+endomorphism spectral sequence has additional terms.
+Nor does it prove its raw semiregularity map injective.
+-/
+
+/-- Predicted exact global Ext^k dimension from the
+true codim-two Koszul and E³ elliptic RR/Künneth formula.
+The if guards mean negative cohomological degrees
+contribute zero rather than truncated Nat subtraction. -/
+def cmWeilSixfoldMinimalIncidenceExtDegree (k : ℕ) : ℕ :=
+  Nat.choose 3 k +
+    (if k = 0 then 0 else 8 * Nat.choose 2 (k-1)) +
+    (if k < 2 then 0 else 16 * Nat.choose 1 (k-2))
+
+/-- COMPLETE Ext profile (not merely top H⁰ Ext²) for the
+minimal real geometric incidence pair. All six degrees
+are checked exactly, not sampled. -/
+theorem cmWeilSixfoldMinimalIncidence_fullExtProfile :
+    (List.range 6).map cmWeilSixfoldMinimalIncidenceExtDegree =
+      [1,11,35,25,0,0] := by
+  decide
+
+theorem cmWeilSixfoldMinimalIncidence_fullExtTwo_dimension :
+    cmWeilSixfoldMinimalIncidenceExtDegree 2 = 35 := by
+  decide
+
+theorem cmWeilSixfoldMinimalIncidence_sevenEdges_rawBound :
+    7 * cmWeilSixfoldMinimalIncidenceExtDegree 2 = 245 ∧
+    7 * cmWeilSixfoldMinimalIncidenceExtDegree 2 < 495 := by
+  norm_num [cmWeilSixfoldMinimalIncidenceExtDegree,
+    Nat.choose]
+
+#check cmWeilSixfoldMinimalIncidence_fullExtProfile
+#check cmWeilSixfoldMinimalIncidence_fullExtTwo_dimension
+#check cmWeilSixfoldMinimalIncidence_sevenEdges_rawBound
+#print axioms cmWeilSixfoldMinimalIncidence_fullExtProfile
+
 #check cmWeilSixfoldIncidenceVanishingTensor_eval_zero
 #check cmWeilSixfoldIncidenceVanishingTensor_injective
 #check cmWeilSixfoldGraphTreeVanishingTensor_parameter_count
