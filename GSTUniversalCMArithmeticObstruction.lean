@@ -931,8 +931,7 @@ theorem cmWeilSixfoldGraphFirstOrderDetector_zero_iff
     have h12 := congrArg (fun v : Fin 6 → ℚ => v 3) h
     have h20 := congrArg (fun v : Fin 6 → ℚ => v 4) h
     have h21 := congrArg (fun v : Fin 6 → ℚ => v 5) h
-    simp [cmWeilSixfoldGraphFirstOrderDetector] at
-      h01 h02 h10 h12 h20 h21
+    simp [cmWeilSixfoldGraphFirstOrderDetector] at h01 h02 h10 h12 h20 h21
     exact ⟨h01, h02, h10, h12, h20, h21⟩
   · rintro ⟨h01,h02,h10,h12,h20,h21⟩
     funext k
