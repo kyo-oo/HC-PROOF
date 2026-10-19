@@ -335,9 +335,96 @@ theorem projectiveBundleChow_extractedBettiClass
   rw [projectiveBundleChow_extract_fixedChern_character
     pull push hProjection fiberDimension zeta hFiber expZeta kappa]
 
+/-! ## NONCIRCULAR ACTUAL-BETTI SOURCE BIRTH VIA THE ORDINARY SHEAF
+
+The previous ring extraction can be applied to a Chow-valued κ,
+but doing so would presuppose that κ is algebraic. The ACTUAL
+Hilbert/semiregularity goal begins instead with a prescribed FLAT
+RATIONAL BETTI characteristic class κ_B of the sixfold and an
+ordinary coherent sheaf F on the auxiliary projective bundle,
+which is constructed by deformation, NOT selected as a Chow lift
+of κ_B.
+
+The following theorem does not contain a ChowY representative
+for κ_B in any hypothesis. Its output IS the witness, obtained
+by an explicit native Chow expression involving the genuine
+Chow character of F, the tautological rational ζ, untwisting by
+the finite exponential and actual proper Chow pushforward.
+
+The nontrivial geometric hypotheses are exact:
+  * ch_B(F)=p_B^*κ_B · exp(ζ_B)
+      (central Chern-character preservation under sheaf deformation),
+  * projective fibre integration / projection formula on Betti,
+  * canonical Chow-to-Betti proper pushforward and Chern naturality.
+These are existing manuscript geometric theorems to instantiate,
+not presumed algebraicity of κ_B or Hodge cycle surjectivity.
+-/
+
+/-- The projective bundle's genuine geometric ordinary SHEAF
+constructs an honest algebraic Chow witness for an originally
+BETTI-ONLY rational characteristic class. No κ:ChowY occurs.
+
+The result is the exact all-rank algebraic extraction step from
+the semiregular F_s in equation (8) of the fixed GST Weil
+sixfold-to-original-fourfold research construction. -/
+theorem projectiveBundleBettiSource_constructChowWitness
+    {BettiY BettiP : Type*}
+    [CommRing BettiY] [CommRing BettiP]
+    [Algebra ℚ BettiY] [Algebra ℚ BettiP]
+    (cycleClassY : ChowY →+* BettiY)
+    (cycleClassP : ChowP →+* BettiP)
+    (chowPush : ChowP →ₗ[ℚ] ChowY)
+    (bettiPull : BettiY →+* BettiP)
+    (bettiPush : BettiP →ₗ[ℚ] BettiY)
+    (hGysin : ∀ x : ChowP,
+      cycleClassY (chowPush x) = bettiPush (cycleClassP x))
+    (hProj : ∀ (y : BettiY) (x : BettiP),
+      bettiPush (bettiPull y * x) = y * bettiPush x)
+    (fibreDimension : ℕ)
+    (zetaChow : ChowP)
+    (hFibre : bettiPush ((cycleClassP zetaChow)^fibreDimension) = 1)
+    (expZeta : ChowPˣ)
+    (sheafCharacter : ChowP)
+    (kappaBetti : BettiY)
+    (hActualSheafBettiCharacter :
+      cycleClassP sheafCharacter =
+        (cycleClassP (↑expZeta : ChowP)) * bettiPull kappaBetti) :
+    ∃ C : ChowY,
+      cycleClassY C = kappaBetti := by
+  let C : ChowY :=
+    chowPush ((zetaChow ^ fibreDimension) *
+      (↑(expZeta⁻¹) : ChowP) * sheafCharacter)
+  refine ⟨C, ?_⟩
+  dsimp [C]
+  rw [hGysin]
+  simp only [map_mul, map_pow, hActualSheafBettiCharacter]
+  have hCancel :
+      cycleClassP (↑(expZeta⁻¹) : ChowP) *
+        cycleClassP (↑expZeta : ChowP) = 1 := by
+    rw [← map_mul]
+    simp
+  have heq :
+      ((cycleClassP zetaChow)^fibreDimension) *
+        cycleClassP (↑(expZeta⁻¹) : ChowP) *
+        ((cycleClassP (↑expZeta : ChowP)) * bettiPull kappaBetti) =
+      bettiPull kappaBetti *
+        ((cycleClassP zetaChow)^fibreDimension) := by
+    calc
+      _ = ((cycleClassP zetaChow)^fibreDimension) *
+          ((cycleClassP (↑(expZeta⁻¹) : ChowP) *
+            cycleClassP (↑expZeta : ChowP)) * bettiPull kappaBetti) := by
+            ring
+      _ = ((cycleClassP zetaChow)^fibreDimension) *
+          bettiPull kappaBetti := by rw [hCancel]; ring
+      _ = bettiPull kappaBetti *
+          ((cycleClassP zetaChow)^fibreDimension) := by ring
+  rw [heq, hProj, hFibre, mul_one]
+
 end ProjectiveBundleChowCharacterExtraction
 
 #check projectiveBundleChow_extract_fixedChern_character
+#check projectiveBundleBettiSource_constructChowWitness
+#print axioms projectiveBundleBettiSource_constructChowWitness
 #check projectiveBundleChow_extractedBettiClass
 #print axioms projectiveBundleChow_extract_fixedChern_character
 
