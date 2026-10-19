@@ -1270,6 +1270,32 @@ theorem cmTwoPlusIGraphDerivedIdealPairCMOrbitDet_pos :
   rw [cmTwoPlusIGraphDerivedIdealPairCMOrbitDet]
   norm_num
 
+/-- Exact two-source PERIOD reconstruction for the genuine central
+CM-derived graph-ideal pair F and its algebraic [2+i] translate.
+The real Weil coordinates of ch₃(F) are (352,944), and the
+true CM companion transforms this vector to
+(-15625*944, 352-234*944)=(-14750000,-220544).
+The determinant is 13846368512 (proved above), so the two
+actual graph-source period vectors span the ENTIRE rational
+exceptional Weil plane at this central CM geometry.
+
+This theorem gives explicit coefficients from the target periods,
+without assuming a native Hodge preimage. Realizing the
+resulting Chow cycle and its canonical Betti class depends on
+the independently computed central graph/GRR comparisons;
+deformation to nonsplit periods remains a separate task. -/
+theorem cmTwoPlusIGraphDerivedIdealPair_exactWeilPeriodCompiler
+    (a b : ℚ) :
+    ∃ c0 c1 : ℚ,
+      c0*352 + c1*(-15625*944) = a ∧
+      c0*944 + c1*(352-234*944) = b := by
+  refine ⟨(-13784*a+921875*b)/865398032,
+    (-59*a+22*b)/865398032, ?_, ?_⟩
+  all_goals ring
+
+#check cmTwoPlusIGraphDerivedIdealPair_exactWeilPeriodCompiler
+#print axioms cmTwoPlusIGraphDerivedIdealPair_exactWeilPeriodCompiler
+
 #check cmTwoPlusIGraphDerivedDualIdealPair_K0
 #check cmTwoPlusITrueGraphWeilPair_first_two
 #check cmTwoPlusIGraphDerivedIdealPairWeil_nonzero
