@@ -1734,6 +1734,36 @@ theorem cmWeilSixfoldMinimalIncidence_sevenEdges_rawBound :
 #check cmWeilSixfoldMinimalIncidence_sevenEdges_rawBound
 #print axioms cmWeilSixfoldMinimalIncidence_fullExtProfile
 
+/-- The seven constructed directions exhaust the WHOLE
+torsion-evaluation kernel. Thus the 7-dimensional vanishing
+space is not just a lower bound from seven examples:
+EVERY tensor section whose 3×3 non-kernel block is zero
+has a UNIQUE seven-parameter expression. -/
+theorem cmWeilSixfoldIncidenceVanishingTensor_exhausts_kernel
+    (M : Matrix (Fin 4) (Fin 4) ℚ)
+    (hM : ∀ i j : Fin 4, i ≠ 0 → j ≠ 0 → M i j = 0) :
+    ∃ c : Fin 7 → ℚ,
+      cmWeilSixfoldIncidenceVanishingTensor c = M := by
+  refine ⟨![M 0 0, M 0 1, M 0 2, M 0 3,
+    M 1 0, M 2 0, M 3 0], ?_⟩
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [cmWeilSixfoldIncidenceVanishingTensor, hM]
+
+/-- Uniqueness of the seven sections follows from the
+injection established using each true adapted torsion
+basis element. This is a complete parametrization. -/
+theorem cmWeilSixfoldIncidenceVanishingTensor_unique
+    (c d : Fin 7 → ℚ)
+    (h : cmWeilSixfoldIncidenceVanishingTensor c =
+      cmWeilSixfoldIncidenceVanishingTensor d) :
+    c = d :=
+  cmWeilSixfoldIncidenceVanishingTensor_injective h
+
+#check cmWeilSixfoldIncidenceVanishingTensor_exhausts_kernel
+#check cmWeilSixfoldIncidenceVanishingTensor_unique
+#print axioms cmWeilSixfoldIncidenceVanishingTensor_exhausts_kernel
+
 #check cmWeilSixfoldIncidenceVanishingTensor_eval_zero
 #check cmWeilSixfoldIncidenceVanishingTensor_injective
 #check cmWeilSixfoldGraphTreeVanishingTensor_parameter_count
