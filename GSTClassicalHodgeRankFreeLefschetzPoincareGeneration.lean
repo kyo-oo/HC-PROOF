@@ -102,6 +102,121 @@ theorem rank_free_lefschetz_poincare_generation_crown :
           (pureForwardShift 2) :=
   rankFreeMatrixUnit_eq_twoSlot_Lefschetz
 
+/-! ## ACTUAL GEOMETRIC LEFSCHETZ VS ABSTRACT TWO-SLOT SHIFT
+
+The preceding rank-free two-slot operator is a formal coordinate
+localization. It must NOT be equated with words in actual cup-L
+and its lowering operator Lambda without a theorem realizing that
+localization by a genuine algebraic correspondence.
+
+Here is an exact all-module test. On any primitive middle vector
+annihilated by both genuine L and Lambda, every NONEMPTY word
+in those two operators annihilates the vector; an arbitrary finite
+rational combination of words only produces a scalar multiple of
+the original vector. Therefore such words alone cannot rotate one
+independent primitive direction into another.
+
+This is not a counterexample to Hodge; it discriminates the missing
+geometric-source operator needed in the unrestricted GST assembly. -/
+
+section GenuineGeometricLPObstruction
+
+variable {A : Type*} [AddCommGroup A] [Module ℚ A]
+
+/-- Evaluate a word in two actual ℚ-linear graded operators on a
+chosen vector. True means raising, false lowering; [] is identity. -/
+def geometricLPWordApply
+    (L D : Module.End ℚ A) (v : A) : List Bool → A
+  | [] => v
+  | true :: t => L (geometricLPWordApply L D v t)
+  | false :: t => D (geometricLPWordApply L D v t)
+
+/-- Every nonempty geometric Lefschetz/lowering word kills a vector
+annihilated by BOTH primitives, independently of noncommutativity. -/
+theorem geometricLPWord_nonempty_kills_joint_primitive
+    (L D : Module.End ℚ A) (v : A)
+    (hL : L v = 0) (hD : D v = 0) :
+    ∀ w : List Bool, w ≠ [] →
+      geometricLPWordApply L D v w = 0 := by
+  intro w
+  induction w with
+  | nil =>
+      intro hn
+      exact (hn rfl).elim
+  | cons b rest ih =>
+      intro _
+      cases rest with
+      | nil =>
+          cases b <;>
+            simp [geometricLPWordApply, hL, hD]
+      | cons b' rest' =>
+          have hz :
+              geometricLPWordApply L D v (b' :: rest') = 0 :=
+            ih (by simp)
+          cases b <;>
+            simp [geometricLPWordApply, hz]
+
+/-- Finite rational combinations of any finite words in geometric
+raising/lowering. No assumptions about a coordinate basis or about
+algebraicity of any unknown Hodge target. -/
+def geometricLPFiniteCombination
+    (L D : Module.End ℚ A) (v : A)
+    (words : List (ℚ × List Bool)) : A :=
+  words.foldr (fun q acc =>
+    q.1 • geometricLPWordApply L D v q.2 + acc) 0
+
+/-- FULL ALL-RANK NO-ROTATION LAW. Given L v=Lambda v=0,
+every finite polynomial in genuine L and Lambda maps v into
+the original one-dimensional rational span of v. -/
+theorem geometricLPFiniteCombination_mem_source_line
+    (L D : Module.End ℚ A) (v : A)
+    (hL : L v = 0) (hD : D v = 0)
+    (words : List (ℚ × List Bool)) :
+    geometricLPFiniteCombination L D v words ∈
+      Submodule.span ℚ ({v} : Set A) := by
+  let W : Submodule ℚ A := Submodule.span ℚ ({v} : Set A)
+  have hv : v ∈ W := Submodule.subset_span (by simp)
+  have hword : ∀ w : List Bool,
+      geometricLPWordApply L D v w ∈ W := by
+    intro w
+    by_cases he : w = []
+    · subst w
+      simpa [geometricLPWordApply] using hv
+    · have hz := geometricLPWord_nonempty_kills_joint_primitive
+        L D v hL hD w he
+      rw [hz]
+      exact W.zero_mem
+  induction words with
+  | nil =>
+      simp only [geometricLPFiniteCombination, List.foldr_nil]
+      exact W.zero_mem
+  | cons q tail ih =>
+      change q.1 • geometricLPWordApply L D v q.2 +
+          geometricLPFiniteCombination L D v tail ∈ W
+      exact W.add_mem (W.smul_mem q.1 (hword q.2)) ih
+
+/-- A missing independent primitive direction is unreachable
+by every finite expression in actual L and Lambda
+alone, even if the abstract GST two-slot matrix unit reaches it. -/
+theorem geometricLPFiniteCombination_cannot_hit_missing_direction
+    (L D : Module.End ℚ A) (v target : A)
+    (hL : L v = 0) (hD : D v = 0)
+    (hIndependent : target ∉ Submodule.span ℚ ({v} : Set A))
+    (words : List (ℚ × List Bool)) :
+    geometricLPFiniteCombination L D v words ≠ target := by
+  intro heq
+  apply hIndependent
+  rw [← heq]
+  exact geometricLPFiniteCombination_mem_source_line
+    L D v hL hD words
+
+end GenuineGeometricLPObstruction
+
+#check geometricLPWord_nonempty_kills_joint_primitive
+#check geometricLPFiniteCombination_mem_source_line
+#check geometricLPFiniteCombination_cannot_hit_missing_direction
+#print axioms geometricLPFiniteCombination_cannot_hit_missing_direction
+
 #check liftedLefschetzPoincareWord
 #check liftedLefschetzPoincareWord_eq_matrixUnit
 #check rankFreeMatrixUnit_eq_twoSlot_LP_word
