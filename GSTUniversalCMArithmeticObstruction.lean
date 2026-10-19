@@ -2201,6 +2201,39 @@ theorem cmWeilSixfoldIncidence_two_auxiliary_K0_cancel
       graphPlus - graphMinus := by
   abel
 
+/-! ### Real incidence edge multiplicity: a sharp rank-pressure certificate
+
+For the actual positive CM diagonal graph Z0=E^3 contained in
+the two-kernel incidence W=E^4, its regular codimension-two
+Koszul resolution restricts with zero differential to Z0.
+Under the genuine normal trivialization, the global Ext²
+dimension is h²(O_E³)+2*h¹(O_E³)+h⁰(O_E³)
+= C(3,2)+2*C(3,1)+C(3,0)=10.
+
+The certified eight-graph incidence tree has exactly FOUR edges
+at vertex 0, while its signed coefficient requires 4800 copies
+of the positive Z0 graph. Thus four rank-one W-source packets
+can supply at most 4*10=40 independent Ext² coefficient
+directions; in the one-way graph-sink architecture the other
+at least 4760 copies split off. This defeats the proposed
+rank-one-per-tree-edge coupling: higher-rank and/or additional
+geometric connections are necessary. The Lean theorem verifies
+the ACTUAL tree valence and exact arithmetic. Realizing the
+Ext² dimension and the direct-summand rank argument in Lean
+scheme/derived geometry is a separate obligation. -/
+theorem cmWeilSixfoldIncidence_diagonal_vertex_rank_pressure :
+    (Finset.univ.filter (fun v : Fin 8 =>
+      v ≠ 0 ∧ cmWeilSixfoldThreeOpGraphParent v = 0)).card = 4 ∧
+    Nat.choose 3 2 + 2 * Nat.choose 3 1 +
+      Nat.choose 3 0 = 10 ∧
+    4 * 10 = (40 : ℕ) ∧
+    4800 - 4 * 10 = (4760 : ℕ) ∧
+    10 * 480 = (4800 : ℕ) := by
+  decide
+
+#check cmWeilSixfoldIncidence_diagonal_vertex_rank_pressure
+#print axioms cmWeilSixfoldIncidence_diagonal_vertex_rank_pressure
+
 #check cmWeilSixfoldIncidence_two_ExtTwo_steps_preserve_parity
 #check cmWeilSixfoldIncidence_three_ExtTwo_steps_flip_parity
 #check cmWeilSixfoldIncidence_two_auxiliary_K0_cancel
