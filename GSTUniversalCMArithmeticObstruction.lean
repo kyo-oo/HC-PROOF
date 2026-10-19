@@ -2231,6 +2231,66 @@ theorem cmWeilSixfoldIncidence_diagonal_vertex_rank_pressure :
     10 * 480 = (4800 : ℕ) := by
   decide
 
+/-! ### Rank-aware seven-edge incidence arithmetic: sharp 503-unit capacity
+
+Use the fixed opposite-sign incidence-tree edges in this order:
+01, 04, 12, 34, 45, 06, 07.
+For an auxiliary W cut by two equations of its POSITIVE graph,
+the true Koszul/abelian cohomology calculation yields at most
+dim Ext²(W,Z_plus)=C(3,2)+2*C(3,1)+C(3,0)=10
+coefficient directions per rank-one incidence unit.
+At the transverse NEGATIVE graph, Ext²(W,Z_minus)
+has dimension 16 under winding-one geometric realization.
+
+The signed multiplicities are 4800,175,3,32 at the positive
+vertices 0,2,3,5, respectively; hence the necessary positive
+capacity inequalities alone imply at least 503 units.
+The explicit distribution below has exactly 503 units and
+meets ALL four negative capacity inequalities as well.
+This establishes sharp NUMERICAL feasibility, not full-rank
+geometric arrows or semiregularity. -/
+
+/-- Any rank allocation spanning every positive signed source block
+must have total incidence rank at least 503. The derivation is
+independent of unknown Yoneda compatibility and uses no assumption
+that target Hodge classes already possess Chow representatives. -/
+theorem cmWeilSixfoldIncidence_rank_allocation_lower_bound
+    (r01 r04 r12 r34 r45 r06 r07 : ℕ)
+    (h0 : 4800 ≤ 10*(r01+r04+r06+r07))
+    (h2 : 175 ≤ 10*r12)
+    (h3 : 3 ≤ 10*r34)
+    (h5 : 32 ≤ 10*r45) :
+    503 ≤ r01+r04+r12+r34+r45+r06+r07 := by
+  omega
+
+/-- A concrete integer allocation of ranks to the seven genuine
+opposite-sign tree edges, avoiding a false assumption that one
+rank-one bridge per edge can address thousands of graph copies. -/
+def cmWeilSixfoldIncidenceRankAllocation : Fin 7 → ℕ :=
+  ![173,295,18,1,4,11,1]
+
+/-- The allocation is optimal for the stated dimension-capacity
+problem: all eight multiplicity constraints hold and the total
+auxiliary source rank is exactly 503. This checks only numerical
+capacity, not independence or realization of the selected Ext²
+classes in genuine derived geometry. -/
+theorem cmWeilSixfoldIncidence_rank_allocation_feasible :
+    let r := cmWeilSixfoldIncidenceRankAllocation
+    4800 ≤ 10*(r 0+r 1+r 5+r 6) ∧
+    175 ≤ 10*(r 2) ∧
+    3 ≤ 10*(r 3) ∧
+    32 ≤ 10*(r 4) ∧
+    32 ≤ 16*(r 0+r 2) ∧
+    4800 ≤ 16*(r 1+r 3+r 4) ∧
+    175 ≤ 16*(r 5) ∧
+    3 ≤ 16*(r 6) ∧
+    (Finset.univ.sum r) = 503 := by
+  decide
+
+#check cmWeilSixfoldIncidence_rank_allocation_lower_bound
+#check cmWeilSixfoldIncidence_rank_allocation_feasible
+#print axioms cmWeilSixfoldIncidence_rank_allocation_lower_bound
+
 #check cmWeilSixfoldIncidence_diagonal_vertex_rank_pressure
 #print axioms cmWeilSixfoldIncidence_diagonal_vertex_rank_pressure
 
