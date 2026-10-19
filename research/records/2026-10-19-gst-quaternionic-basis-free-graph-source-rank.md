@@ -6,7 +6,7 @@
 - **Base checkpoint:** \`bc284f0251376372936812e53e1628e49f933bfe\` on \`research/gpt6-native-point-primitive-span-20261017\`
 - **Live mathematical files strengthened:** \`GSTPrimitiveProductTowerStabilization.lean\` and \`GSTUniversalCMArithmeticObstruction.lean\`
 - **Exact original acceptance:** given any smooth projective complex original X, any codimension p and any rational Hodge target alpha, construct actual Z in CH^p(X)_Q with canonical Betti class alpha; no target-presupposing rank or canonical-map replacement
-- **Evidence:** Lean algebraic laws; source geometry independently requires genuine divisor/bundle data, quaternionic scheme endomorphism and graph-to-Betti compatibility. The original universal target is not inferred from these results.
+- **Evidence:** Lean kernel-verified algebraic laws at revision-matched GitHub Actions: all-rank native source at `42176b063399` (runs `39182871195`, `39182871216`, both success) and full quaternionic four-vector graph rank at `58893ae1d061` (pinned integration run `39183863842`, success). Source geometry independently requires genuine divisor/bundle data, quaternionic scheme endomorphism and graph-to-Betti compatibility. The original universal target is not inferred from these results.
 
 ## 1. Previously verified all-rank primitive birth — repaired in a ring with zero divisors
 
