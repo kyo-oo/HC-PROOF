@@ -2581,6 +2581,73 @@ theorem cmWeilSixfoldLCIIncidence_copy_saving :
     (2 : ℕ) * 503 - 2 * 150 = 706 := by
   norm_num
 
+/-! ### A constructive full-coordinate allocation in the 35-channel model
+
+Dimension counts alone do not construct independent coefficients.
+For a rank-r incidence packet there are r copies of the
+35-dimensional local Ext² coefficient space. Assign each of m
+required graph-copy coordinates, m <= 35*r, a UNIQUE pair
+(rank unit, local basis index) using Euclidean quotient/remainder.
+The resulting one-hot rows have an exact Kronecker detector.
+This eliminates a purely combinatorial full-rank selection
+assumption. It DOES NOT instantiate the 35-dimensional abstract
+coefficient slots as bona fide independent global Ext² classes on
+a nonsplit geometric family; that is the remaining geometry. -/
+
+/-- Encode a graph-copy coordinate as one of 35 independent
+local coefficient slots in a rank-r auxiliary incidence packet.
+The capacity hypothesis ensures the rank index is in range. -/
+def cmWeilSixfoldLCIIncidence_channel_encode
+    {m r : ℕ} (hcap : m ≤ 35*r) (i : Fin m) :
+    Fin r × Fin 35 :=
+  (⟨i.val / 35, by
+      have hi : i.val < 35*r := lt_of_lt_of_le i.isLt hcap
+      omega⟩,
+    ⟨i.val % 35, by omega⟩)
+
+/-- The explicit encoding has NO collision between graph copies. -/
+theorem cmWeilSixfoldLCIIncidence_channel_encode_injective
+    {m r : ℕ} (hcap : m ≤ 35*r) :
+    Function.Injective (cmWeilSixfoldLCIIncidence_channel_encode hcap) := by
+  intro i j h
+  have hquot : i.val / 35 = j.val / 35 :=
+    congrArg (fun x : Fin r × Fin 35 => x.1.val) h
+  have hrem : i.val % 35 = j.val % 35 :=
+    congrArg (fun x : Fin r × Fin 35 => x.2.val) h
+  dsimp [cmWeilSixfoldLCIIncidence_channel_encode] at hquot hrem
+  apply Fin.ext
+  omega
+
+/-- The explicit one-hot coefficient packet for each graph
+copy, indexed by auxiliary rank and one of the 35 local
+Ext² directions of the numerical model. -/
+def cmWeilSixfoldLCIIncidence_channel_row
+    {m r : ℕ} (hcap : m ≤ 35*r) (i : Fin m)
+    (x : Fin r × Fin 35) : ℚ :=
+  if x = cmWeilSixfoldLCIIncidence_channel_encode hcap i then 1 else 0
+
+/-- The coordinate readout is a literal Kronecker matrix.
+Consequently the m abstract incidence rows are independent
+whenever their geometric Ext² realizations remain independent. -/
+theorem cmWeilSixfoldLCIIncidence_channel_kronecker
+    {m r : ℕ} (hcap : m ≤ 35*r) (i j : Fin m) :
+    cmWeilSixfoldLCIIncidence_channel_row hcap i
+      (cmWeilSixfoldLCIIncidence_channel_encode hcap j) =
+      if i = j then 1 else 0 := by
+  by_cases hij : i = j
+  · subst j
+    simp [cmWeilSixfoldLCIIncidence_channel_row]
+  · have hne :
+        cmWeilSixfoldLCIIncidence_channel_encode hcap i ≠
+          cmWeilSixfoldLCIIncidence_channel_encode hcap j := by
+      intro heq
+      exact hij (cmWeilSixfoldLCIIncidence_channel_encode_injective hcap heq)
+    simp [cmWeilSixfoldLCIIncidence_channel_row, hij, Ne.symm hne]
+
+#check cmWeilSixfoldLCIIncidence_channel_encode_injective
+#check cmWeilSixfoldLCIIncidence_channel_kronecker
+#print axioms cmWeilSixfoldLCIIncidence_channel_kronecker
+
 #check cmWeilSixfoldLCIIncidence_connected_rank_lower_bound
 #check cmWeilSixfoldLCIIncidence_connected_rank_feasible
 #check cmWeilSixfoldLCIIncidence_copy_saving
