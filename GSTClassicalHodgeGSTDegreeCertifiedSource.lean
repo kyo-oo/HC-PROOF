@@ -41,11 +41,56 @@ open GSTClassicalHodgeProjectiveDegreeTrace
 open GSTClassicalHodgePointClosureRelativeCut
 open GSTClassicalHodgeSingleExactSuccessorSurvival
 open GSTClassicalHodgeGSTSourceProgramCompiler
+open GSTClassicalHodgeGlobalSheetSaturation
 open GSTClassicalHodgeGSTDefectExtinction
 open GSTClassicalHodgeSingleSheetCrown
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
+
+/-! ## ALL-X DEGREE-CERTIFIED ORIGINAL-CHOW GST BRIDGE
+
+The full original-X native Chow address-span saturation no longer asks
+for an independently supplied NativeMass bridge OR an arbitrary nonzero
+Hodge seed. Any actual codimension-p irreducible projective cycle has
+nonzero cycle class because its true projective degree is positive.
+
+This constructs the only starting Chow source required by the
+GST matrix-unit saturation argument, directly from existing geometry.
+The remaining original Hodge obligation is the ACTUAL native-operator
+realization/stability of every required GST source-to-target move;
+that property is NOT inferred from a formal Hodge basis matrix unit.
+-/
+
+/-- Positive projective degree provides an independently geometric
+nonzero native source at every real codimension-p point. Using
+the freshly proved M-free original-X GST bridge, no NativeMass
+or Hodge-target preimage is an additional hypothesis.
+
+The precise remaining unproved universal condition is hstable:
+that the unrestricted abstract GST sheet units preserve the
+genuine original-X algebraic Chow address span. -/
+theorem degreeCertifiedOriginalXChowSheet_saturation
+    (G : GeometricCycleClassSpine V H)
+    (D : ProjectiveDegreeTraceSemantics V H)
+    (p : Nat)
+    (x : CodimensionPoint V.X p)
+    (hstable :
+      SameWeightGSTStable (V := V) (H := H) p
+        (nativeAlgebraicWeightAddressSpan G p)) :
+    FixedWeightSheetSubspace (V := V) (H := H) p ≤
+      nativeAlgebraicWeightAddressSpan G p := by
+  apply nativeAlgebraicWeightAddress_saturates_of_GST_stability_and_source
+    G p (codimensionPointCycle V.X p x) ?_ hstable
+  intro hz
+  have htrace := D.trace_point_cycleClass p x
+  rw [hz, LinearMap.map_zero] at htrace
+  have hpos := D.pointDegree_pos p x
+  rw [← htrace] at hpos
+  exact lt_irrefl 0 hpos
+
+#check degreeCertifiedOriginalXChowSheet_saturation
+#print axioms degreeCertifiedOriginalXChowSheet_saturation
 
 /-- The actual nonzero algebraic Hodge seed in weight `p+1` obtained from one
 exact projective principal-cut successor and certified by positive projective
