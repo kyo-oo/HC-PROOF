@@ -5,6 +5,7 @@ on:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTClassicalHodgeGlobalSheetSaturation.lean'
+      - 'GSTClassicalHodgeGSTDegreeCertifiedSource.lean'
       - '.github/workflows/gst-native-algebraic-sheet-realization.yml'
   workflow_dispatch:
 permissions:
@@ -45,9 +46,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTNativeAlgebraicSheetRealization GSTClassicalHodgeGlobalSheetSaturation
+          python3 scripts/gst_lean_dependency_roots.py GSTNativeAlgebraicSheetRealization GSTClassicalHodgeGlobalSheetSaturation GSTClassicalHodgeGSTDegreeCertifiedSource
           if lake build GSTNativeAlgebraicSheetRealization > native-algebraic-sheet.log 2>&1; then
-            echo "LEAN PASSED: actual original-X native Chow address-image bridge"
+            echo "LEAN PASSED: actual original-X native Chow address-image and degree-certified point seed bridge"
           else
             grep -nE 'error:|sorryAx|✖' native-algebraic-sheet.log | tail -n 130 || true
             tail -n 90 native-algebraic-sheet.log
