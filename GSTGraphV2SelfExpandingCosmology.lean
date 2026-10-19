@@ -936,6 +936,110 @@ theorem missing_target_hodge_survives_finite_pullback
 
 end FiniteDegreeNativeDescent
 
+/-! ## GST BLOW-UP COUNTEREXAMPLE TEST — GENUINE CYCLE CLASS
+
+For any codimension-two smooth blowup X'=Bl_Y(X), the standard
+Chow and rational Hodge blowup formulas split both cycle domain
+and (p,p) Hodge target into the base X and shifted center Y.
+The canonical cycle-class map is BLOCK DIAGONAL under those
+explicit geometric natural isomorphisms.
+
+The following abstract ℚ-linear theorem formalizes the exact
+cycle-image and missing-Hodge-direction test, without assuming
+either base/center cycle-class map surjective. It applies to
+ACTUAL blowups only AFTER the two canonical blowup isomorphisms
+and their compatibility with the true Betti cycle map are proved.
+
+Crucially the failure of exceptional pushdown NEVER creates
+a new nonalgebraic rational Hodge class: a missing blowup
+class must be missing already on the base or on the center.
+This is an honest counterexample criterion, not an arbitrary
+new Hodge-to-Chow map.
+-/
+
+namespace BlowupRationalHodgeTest
+
+variable {NB HB NY HY : Type*}
+    [AddCommGroup NB] [Module ℚ NB]
+    [AddCommGroup HB] [Module ℚ HB]
+    [AddCommGroup NY] [Module ℚ NY]
+    [AddCommGroup HY] [Module ℚ HY]
+
+/-- Exact block cycle-class map for a genuine codimension-two
+blowup after the geometric Chow/Hodge decomposition comparison:
+the base and shifted-center cycle classes are INDEPENDENT. -/
+def blowupCanonicalCycleBlock
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY) :
+    (NB × NY) →ₗ[ℚ] (HB × HY) where
+  toFun z := (base z.1, center z.2)
+  map_add' z w := by
+    apply Prod.ext <;> simp
+  map_smul' a z := by
+    apply Prod.ext <;> simp
+
+/-- Exact all-rank rational Hodge criterion in a codimension-two
+GST blowup world birth: full canonical cycle image if and only
+if BOTH the old world and the lower-degree center are complete. -/
+theorem blowupCanonicalCycleBlock_surjective_iff
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY) :
+    Function.Surjective (blowupCanonicalCycleBlock base center) ↔
+      Function.Surjective base ∧ Function.Surjective center := by
+  constructor
+  · intro h
+    constructor
+    · intro u
+      obtain ⟨⟨z,w⟩,hzw⟩ := h (u,0)
+      exact ⟨z, congrArg Prod.fst hzw⟩
+    · intro v
+      obtain ⟨⟨z,w⟩,hzw⟩ := h (0,v)
+      exact ⟨w, congrArg Prod.snd hzw⟩
+  · rintro ⟨hbase,hcenter⟩ ⟨u,v⟩
+    obtain ⟨z,hz⟩ := hbase u
+    obtain ⟨w,hw⟩ := hcenter v
+    refine ⟨(z,w), ?_⟩
+    exact Prod.ext hz hw
+
+/-- A candidate nonalgebraic rational Hodge class on the blowup
+exists EXACTLY if such a class already exists on its original
+base OR on its actual smooth center, in the corresponding grade.
+The proof does not change what counts as an algebraic cycle:
+all three maps remain their specified native cycle-class maps. -/
+theorem blowupCounterexample_iff_base_or_center
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY) :
+    (∃ uv : HB × HY,
+       uv ∉ LinearMap.range (blowupCanonicalCycleBlock base center)) ↔
+      (∃ u : HB, u ∉ LinearMap.range base) ∨
+      (∃ v : HY, v ∉ LinearMap.range center) := by
+  classical
+  constructor
+  · rintro ⟨⟨u,v⟩,hMissing⟩
+    by_cases hKnown : u ∈ LinearMap.range base
+    · right
+      refine ⟨v, ?_⟩
+      intro hv
+      rcases hKnown with ⟨z,hz⟩
+      rcases hv with ⟨w,hw⟩
+      apply hMissing
+      exact ⟨(z,w), Prod.ext hz hw⟩
+    · left
+      exact ⟨u,hKnown⟩
+  · intro h
+    rcases h with ⟨u,hu⟩ | ⟨v,hv⟩
+    · refine ⟨(u,0), ?_⟩
+      intro hmem
+      rcases hmem with ⟨⟨z,w⟩,hzw⟩
+      exact hu ⟨z, congrArg Prod.fst hzw⟩
+    · refine ⟨(0,v), ?_⟩
+      intro hmem
+      rcases hmem with ⟨⟨z,w⟩,hzw⟩
+      exact hv ⟨w, congrArg Prod.snd hzw⟩
+
+#check blowupCanonicalCycleBlock_surjective_iff
+#check blowupCounterexample_iff_base_or_center
+#print axioms blowupCounterexample_iff_base_or_center
+
+end BlowupRationalHodgeTest
+
 end NativeGeometryBirth
 
 end GSTGraphV2SelfExpandingCosmology
