@@ -1357,6 +1357,90 @@ theorem auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
         simpa [smul_eq_mul] using hReconstruction.2
   exact congrArg Subtype.val hCycle
 
+/-! ## ORIGINAL-A SECANT CHARACTER -> GENUINE FOURFOLD CHOW SOURCE
+
+The manuscript constructs an actual ordinary coherent perfect sheaf
+on a Weil sixfold from disjoint Abel-curve torsion orbits and computes
+its exceptional Hodge Chern coefficient
+  -alpha*(Omega_plus+Omega_minus), alpha=(d+1)/(4*d).
+The elliptic graph-difference divisor contracts its balanced
+determinant tensor to the SPECIFIC nonzero fourfold Weil vector
+  z=((d+1)/(2*d),0).
+
+The theorem below removes the earlier free hWeilNonzero predicate
+from the native-original-A Hilbert extraction/CM reconstruction.
+Its geometric comparison leaf is instead the specific, falsifiable
+equality of the fixed sixfold sheaf's extracted CANONICAL Betti
+character with the algebraically derived coefficient. All other
+Hilbert, proper Gysin and genuine isogeny data remain explicit:
+this is NOT a universal algebraic surface constructor just
+because its rational coefficient is nonzero. -/
+
+/-- From a genuine fixed secant perfect-complex Hilbert character
+with the explicit graph-extracted Weil coordinate, obtain an
+ACTUAL rational Chow cycle on the original fourfold representing
+any prescribed rational middle Hodge class.
+
+No arbitrary nonzero-source hypothesis remains: the positive
+sixfold secant coefficient proves it. The statement still
+requires honest geometric objects and their canonical functorial
+comparisons; the previous manuscript's analytic semiregularity
+and Hilbert period-spread must supply those instances. -/
+theorem auxiliaryWeilEveryMiddleHodgeClass_from_secantCharacter
+    {U : SmoothProjectiveComplexScheme}
+    (HU : HodgeBigradedBettiData U)
+    {T : Type*} [TopologicalSpace T] [BaireSpace T]
+    (Parameter : ℕ → Type*) (projection : ∀ i, Parameter i → T)
+    (good : ∀ i, Set (Parameter i))
+    (hclosed : ∀ i, IsClosed (projection i '' good i))
+    (hidentity : ∀ i, (interior (projection i '' good i)).Nonempty →
+      projection i '' good i = Set.univ)
+    (O : Set T) (hO : IsOpen O) (hne : O.Nonempty)
+    (hlocal : ∀ t ∈ O, ∃ i p, p ∈ good i ∧ projection i p = t)
+    (period : T)
+    (cycleAt : ∀ i (p : Parameter i), projection i p = period →
+      codimensionCycles U.X 3)
+    (G : GeometricCycleClassSpine V H)
+    (extract : codimensionCycles U.X 3 →ₗ[ℚ] codimensionCycles V.X 2)
+    (cmPullback : Module.End ℚ (codimensionCycles V.X 2))
+    (thetaSquare : codimensionCycles V.X 2)
+    (coordinates : ClassicalHodgeFiber V H 2 ≃ₗ[ℚ] ℚ × (ℚ × ℚ))
+    (d : ℚ) (hd : 0 < d)
+    (hTheta : coordinates (nativeToHodgeFiberLinear G thetaSquare) = (1, (0, 0)))
+    (fixedSixfoldBetti : RationalSingularCohomology HU.analytification 6)
+    (bettiExtract :
+      RationalSingularCohomology HU.analytification 6 →ₗ[ℚ]
+        ℚ × (ℚ × ℚ))
+    (hHilbertClass : ∀ i p, p ∈ good i → ∀ ht : projection i p = period,
+      HU.cycleClass 3 (cycleAt i p ht) = fixedSixfoldBetti)
+    (hProperGysinNaturality :
+      ∀ Γ : codimensionCycles U.X 3,
+        coordinates (nativeToHodgeFiberLinear G (extract Γ)) =
+        bettiExtract (HU.cycleClass 3 Γ))
+    (hSecantCharacter :
+      (bettiExtract fixedSixfoldBetti).2 =
+        ((d+1)/(2*d), (0:ℚ)))
+    (hCMFunctorial :
+      ∀ Z : codimensionCycles V.X 2,
+        coordinates (nativeToHodgeFiberLinear G (cmPullback Z)) =
+        ((((d+1)^2+d)^2) * (coordinates (nativeToHodgeFiberLinear G Z)).1,
+          fourthPowerAction d (d+1)
+            (coordinates (nativeToHodgeFiberLinear G Z)).2))
+    (alpha : RationalSingularCohomology H.analytification 4)
+    (halpha : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading 2)) :
+    ∃ Z : codimensionCycles V.X 2, H.cycleClass 2 Z = alpha := by
+  have hWeilNonzero : (bettiExtract fixedSixfoldBetti).2 ≠ (0, 0) := by
+    rw [hSecantCharacter]
+    exact secantSeedCanonicalExtractedWeilComponent_nonzero d hd
+  exact auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
+    HU Parameter projection good hclosed hidentity O hO hne hlocal
+    period cycleAt G extract cmPullback thetaSquare coordinates d hd
+    hTheta fixedSixfoldBetti bettiExtract hHilbertClass
+    hProperGysinNaturality hWeilNonzero hCMFunctorial alpha halpha
+
+#check auxiliaryWeilEveryMiddleHodgeClass_from_secantCharacter
+#print axioms auxiliaryWeilEveryMiddleHodgeClass_from_secantCharacter
+
 #check auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
 #print axioms auxiliaryWeilEveryMiddleHodgeClass_from_canonicalHilbertSource
 
