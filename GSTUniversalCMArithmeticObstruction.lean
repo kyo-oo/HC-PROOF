@@ -1176,8 +1176,11 @@ theorem cmTwoPlusIGaussianPower_norm_sq (j : ℕ) :
           ((cmTwoPlusIGaussianPower j).1 +
             2*(cmTwoPlusIGaussianPower j).2)^2 =
         (5 : ℤ)^(j+1)
-      rw [pow_succ]
-      nlinarith [ih]
+      calc
+        _ = 5 * ((cmTwoPlusIGaussianPower j).1 ^ 2 +
+            (cmTwoPlusIGaussianPower j).2 ^ 2) := by ring
+        _ = 5 * (5 : ℤ)^j := by rw [ih]
+        _ = (5 : ℤ)^(j+1) := by rw [pow_succ]; ring
 
 /-- The adjacent graph slope determinant is EXACTLY 5^j.
 It is never zero, so the two algebraic graph kernels are
@@ -1235,15 +1238,6 @@ theorem cmWeilSixfold_rawSemiregularity_target_dimension :
     (∑ k ∈ Finset.Icc 1 6,
       Nat.choose 6 (k-1) * Nat.choose 6 (k+1)) = 495 := by
   decide
-
-/-- Strict numerical excess of the original all-seven Ext²
-source over the entire raw semiregularity target. This
-quantifies a REAL constraint on uncoupled incidence sheaves,
-not a proof that every future coupled sheaf is obstructed. -/
-theorem cmWeilSixfold_oldIncidenceExtTwo_exceedsSemiregTarget :
-    (cmTwoPlusIGraphIncidenceLineDegree 0)^2 > 495 := by
-  norm_num [cmTwoPlusIGraphIncidenceLineDegree,
-    cmTwoPlusIGaussianPower, Finset.sum_range_succ]
 
 #check cmTwoPlusIGaussianPower_norm_sq
 #check cmTwoPlusIGaussianPower_neighbor_det
@@ -1418,6 +1412,15 @@ theorem cmTwoPlusIGraphIncidenceLineDegree_all_seven :
     (List.range 7).map cmTwoPlusIGraphIncidenceLineDegree =
       [17324,239504,1785164,8629584,26679404,41991824,73240844] := by
   decide
+
+/-- Strict numerical excess of the original all-seven Ext²
+source over the entire raw semiregularity target. This
+quantifies a REAL constraint on uncoupled incidence sheaves,
+not a proof that every future coupled sheaf is obstructed. -/
+theorem cmWeilSixfold_oldIncidenceExtTwo_exceedsSemiregTarget :
+    (cmTwoPlusIGraphIncidenceLineDegree 0)^2 > 495 := by
+  norm_num [cmTwoPlusIGraphIncidenceLineDegree,
+    cmTwoPlusIGaussianPower, Finset.sum_range_succ]
 
 /-- The first actual global degree-two Ext incidence witness
 has H⁰-dimension 17324²=300120976 by elliptic RR and
