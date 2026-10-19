@@ -764,7 +764,8 @@ theorem quaternionicAntiKGraphFourVectorWeilFrameIndependent
     simp [map_add, map_smul, hpair.1, hpair.2.1,
       smul_add, smul_smul, mul_comm]
   have hxy : x + y = 0 := by
-    exact hlin
+    dsimp [x, y]
+    simpa only [add_assoc] using hlin
   have hI : Complex.I • x + (-Complex.I) • y = 0 := by
     calc
       Complex.I • x + (-Complex.I) • y = I (x+y) := by
