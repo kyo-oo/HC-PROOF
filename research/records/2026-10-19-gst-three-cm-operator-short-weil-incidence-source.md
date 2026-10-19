@@ -119,7 +119,42 @@ The CM weight decomposition is orthogonal for the top-degree cup product because
 \]
 This is an **explicit genuine algebraic-cycle source** at the CM central fibre, not a guessed nonzero source or a false counterexample. The cup and projection computation is independently exact in Wolfram; its complete sixfold exterior algebra and geometric Betti comparison are not yet one fully instantiated Lean theorem.
 
-## 4. Immediate full-geometry research obligation
+## 4. PURE CENTRAL K0 GRAPH CHARACTER — an actual perfect-complex source
+
+The central graph components \(Z_v\subset E^6\) are abelian *threefold subgroups* of the smooth sixfold. Their tangent inclusion is a constant inclusion of Lie algebras; hence their normal bundles are trivial rank-three bundles. For each closed immersion \(i_v:Z_v\hookrightarrow E^6\), Grothendieck--Riemann--Roch gives
+\[
+\operatorname{ch}(i_{v*}\mathcal O_{Z_v})
+=\frac{i_{v*}\operatorname{Td}(T_{Z_v})}
+       {\operatorname{Td}(T_{E^6})}
+=i_{v*}(1)=[Z_v]
+\quad\text{in }H^{6}(E^6,\mathbf Q),
+\]
+with **all other rational Chern-character degrees zero**. This uses the real geometric trivial tangent bundles of the abelian subgroup and ambient abelian variety; it is not a formal assumption that all abstract cycles have such a Chern character.
+
+Therefore the **explicit integral virtual perfect class**
+\[
+\Xi=
+4800[\mathcal O_{Z_0}]
+-32[\mathcal O_{Z_T}]
++175[\mathcal O_{Z_S}]
++3[\mathcal O_{Z_{TS}}]
+-4800[\mathcal O_{U Z_0}]
++32[\mathcal O_{U Z_T}]
+-175[\mathcal O_{U Z_S}]
+-3[\mathcal O_{U Z_{TS}}]\in K_0(E^6)
+\]
+is a genuine finite signed combination of actual coherent sheaves (hence representable by a finite perfect complex using odd shifts), with
+\[
+\boxed{\operatorname{ch}_3(\Xi)=-4800\,W_I,\qquad
+\operatorname{ch}_{k\ne3}(\Xi)=0.}
+\]
+The equality follows from the verified exact projector \(\Xi=19200\,P_{\mathrm{Weil}}([\mathcal O_Z])\), the 64-term rational exterior computation \(\operatorname{cl}(P_{\mathrm{Weil}}Z)=-\tfrac14W_I\), and GRR for each genuine abelian graph subgroup. It is a **true algebraic source with pure Weil rational Chern character on the specific CM product sixfold**.
+
+This source is VIRTUAL: an ordinary coherent sheaf whose smallest-dimensional support codimension is three has effective leading support cycle and strictly positive \(\theta^3\)-degree, while the nonzero pure Weil class satisfies \(W_I\cup\theta^3=0\) for a compatible polarization. Thus a semiregular **ordinary** sheaf transporting \(\Xi\)'s exceptional middle character must use an auxiliary higher-dimensional incidence support / nonzero lower Chern terms, or a different derived semiregularity theorem; one cannot insist it remain a purely codimension-three effective sheaf. This explains the necessity of the preceding incidence/sheaf coupling route mathematically rather than through a free existence hypothesis.
+
+The GRR and exterior-geometric identifications in this subsection are written as mathematical derivations; the entire scheme-level Chern-character comparison for this specific \(E^6\) has not yet been separately instantiated in Lean's own abelian-scheme topology layer.
+
+## 5. Immediate full-geometry research obligation
 
 **Construct an ordinary semiregular coherent/perfect sheaf on the nonsplit sixfold period family** whose cohomological Chern character transports the above signed Weil source, using the EIGHT actual short CM graph supports and SEVEN minimal two-divisor incidence bridges. The critical design problem is *nontrivial coupling* between opposite \(K_0\) parities without simply replicating 4,800 uncoupled graph-sheaf summands. Large direct sums generally have off-diagonal raw Ext² trace kernels; these new low-degree incidences supply genuine connecting Ext² classes, but do not automatically solve the global derived lifting, nilpotent deformation obstruction or raw semiregularity injectivity.
 
