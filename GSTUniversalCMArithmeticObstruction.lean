@@ -726,6 +726,73 @@ theorem quaternionicAntiKGraphPreservesTwoIndependentEigendirections
 #check quaternionicAntiKGraphPreservesTwoIndependentEigendirections
 #print axioms quaternionicAntiKGraphPreservesTwoIndependentEigendirections
 
+/-- The quaternionic anti-K graph creates a FULL four-vector H¹ frame
+from TWO genuinely independent sigma eigenvectors. The four vectors
+(v,w,Jv,Jw) are independent over C, since the first two belong to
+the +i eigenspace and the last two to the -i eigenspace, while J²=3
+makes the latter two independent. This is the basis-free linear
+nonvanishing behind the exterior four-form Weil determinant on B×B.
+
+No nonzero determinant, selected Hodge preimage or rank-two output
+hypothesis is assumed. The mathematical statement is about the
+canonical cohomological action of an ACTUAL quaternionic graph only
+after its H¹ realization has been identified separately. -/
+theorem quaternionicAntiKGraphFourVectorWeilFrameIndependent
+    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (I J : Module.End ℂ V)
+    (hAnti : I.comp J = -(J.comp I))
+    (hSquare : ∀ z : V, J (J z) = (3:ℂ) • z)
+    (v w : V)
+    (hv : I v = Complex.I • v)
+    (hw : I w = Complex.I • w)
+    (hIndependent : ∀ a b : ℂ,
+      a • v + b • w = 0 → a = 0 ∧ b = 0) :
+    ∀ a b c d : ℂ,
+      a • v + b • w + c • J v + d • J w = 0 →
+        a = 0 ∧ b = 0 ∧ c = 0 ∧ d = 0 := by
+  have hpair :=
+    quaternionicAntiKGraphPreservesTwoIndependentEigendirections
+      I J hAnti hSquare v w hv hw hIndependent
+  intro a b c d hlin
+  let x : V := a • v + b • w
+  let y : V := c • J v + d • J w
+  have hx : I x = Complex.I • x := by
+    dsimp [x]
+    simp [map_add, map_smul, hv, hw, smul_add, smul_smul, mul_comm]
+  have hy : I y = (-Complex.I) • y := by
+    dsimp [y]
+    simp [map_add, map_smul, hpair.1, hpair.2.1,
+      smul_add, smul_smul, mul_comm]
+  have hxy : x + y = 0 := by
+    exact hlin
+  have hI : Complex.I • x + (-Complex.I) • y = 0 := by
+    calc
+      Complex.I • x + (-Complex.I) • y = I (x+y) := by
+        rw [map_add, hx, hy]
+      _ = 0 := by rw [hxy]; exact map_zero I
+  have hsmul : Complex.I • x + Complex.I • y = 0 := by
+    rw [← smul_add, hxy, smul_zero]
+  have hcoef : ((-2:ℂ) * Complex.I) ≠ 0 :=
+    mul_ne_zero (by norm_num) Complex.I_ne_zero
+  have hkill : ((-2:ℂ) * Complex.I) • y = 0 := by
+    calc
+      ((-2:ℂ) * Complex.I) • y =
+        ((-Complex.I) - Complex.I) • y := by congr 1; ring
+      _ = (-Complex.I) • y - Complex.I • y := by rw [sub_smul]
+      _ = (Complex.I • x + (-Complex.I) • y) -
+            (Complex.I • x + Complex.I • y) := by abel
+      _ = 0 := by rw [hI, hsmul]; simp
+  have hyzero : y = 0 :=
+    (smul_eq_zero.mp hkill).resolve_left hcoef
+  have hxzero : x = 0 := by
+    simpa [hyzero] using hxy
+  obtain ⟨ha,hb⟩ := hIndependent a b hxzero
+  obtain ⟨hc,hd⟩ := hpair.2.2 c d hyzero
+  exact ⟨ha,hb,hc,hd⟩
+
+#check quaternionicAntiKGraphFourVectorWeilFrameIndependent
+#print axioms quaternionicAntiKGraphFourVectorWeilFrameIndependent
+
 /-- Exact rational squared norm of the quaternionic graph
 pairing tensor products: each QM block contributes 144
 and each CM elliptic odd-degree remainder contributes 4. -/
