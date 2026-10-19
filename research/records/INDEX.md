@@ -1,5 +1,7 @@
 # GST Hodge Research — Construction Program
 
+- [Mathbox: actual first-order nonsplit Weil Hodge leak of the raw derived CM graph-ideal complex](2026-10-20-gst-derived-cm-graph-hodge-variation-obstruction.md) — exact normalized (2,4) variation coefficient **124 ≠ 0**, derived Chern numbers c₃²=−512 and c₆=7424; the unprojected F cannot deform with fixed Hodge Chern class along the named Weil tangent. Surgical Lean integer/Chern certificates in `GSTUniversalCMArithmeticObstruction.lean`; retain the pure Weil CM-projector route. This is a scoped source obstruction, not an all-X counterexample.
+
 - [Mathbox: 64-torsion étale split of the derived CM pair and 576-dimensional raw Ext² pressure test](2026-10-19-gst-derived-ideal-torsion-ext2-semi-regularity-audit.md) — exact anti-diagonal translation-invariant function theorem in Lean, numerical 576>495; geometric equivariant Ext/descent explains why full raw semiregularity injection for this one tensor-derived complex fails, without ruling out direct Atiyah-obstruction vanishing or another coupled source.
 
 - [Mathbox: one derived CM graph-ideal source — actual incidence cohomology, Euler cancellation and exact rational Weil periods](2026-10-19-gst-derived-ideal-incident-cohomology-self-euler-source.md) — **Lean revisions queued for GitHub verification**: actual graph-ideal cohomology sheaves H⁰=I₁ and H²=I_{64pts/Z₀}; K₀ self-Euler factorization, χ=0 and explicit central two-period compiler; nonsplit Atiyah/Ext² test still required.
