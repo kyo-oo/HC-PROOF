@@ -420,6 +420,84 @@ theorem projectiveBundleBettiSource_constructChowWitness
           ((cycleClassP zetaChow)^fibreDimension) := by ring
   rw [heq, hProj, hFibre, mul_one]
 
+/-! ## THE SAME ORDINARY SHEAF CREATES AN ACTUAL SOURCE ON ORIGINAL A
+
+The auxiliary Chow witness C constructed above is not an arbitrary
+Hilbert-point Chow selector. Take the genuine elliptic graph-difference
+divisor D0 on B and the projection A×B→A. Their composition on Chow
+is an algebraic linear map Γ↦(p_A)_*(Γ·p_B^*D0);
+canonical Betti functoriality gives the corresponding linear map
+on rational cohomology.
+
+The next theorem composes this ACTUAL graph-Gysin operation with
+the projective-bundle sheaf extraction. Its output is a new algebraic
+codimension-two source ON THE ORIGINAL A, from the ordinary sheaf
+on the P-bundle. The fixed secant Chern coefficient makes its Betti
+class nonzero. It does not assume an algebraic Weil source on A.
+-/
+
+/-- Original-fourfold source creation from an actually deformed
+ordinary sheaf over the projective bundle, full canonical Betti
+naturality, and the explicit secant character. This removes the
+arbitrary cycleAt / nonzero-source inputs at the extraction step:
+the Chow source is the displayed composite of ordinary sheaf
+character, normalized ζ untwist, projective p_*, and D0 Gysin. -/
+theorem projectiveBundleSecantSheaf_birthOnOriginalFourfold
+    {BettiY BettiP ChowA BettiA : Type*}
+    [CommRing BettiY] [CommRing BettiP]
+    [Algebra ℚ BettiY] [Algebra ℚ BettiP]
+    [AddCommGroup ChowA] [Module ℚ ChowA]
+    [AddCommGroup BettiA] [Module ℚ BettiA]
+    (cycleClassY : ChowY →+* BettiY)
+    (cycleClassP : ChowP →+* BettiP)
+    (chowPush : ChowP →ₗ[ℚ] ChowY)
+    (bettiPull : BettiY →+* BettiP)
+    (bettiPush : BettiP →ₗ[ℚ] BettiY)
+    (hGysin : ∀ x : ChowP,
+      cycleClassY (chowPush x) = bettiPush (cycleClassP x))
+    (hProj : ∀ (y : BettiY) (x : BettiP),
+      bettiPush (bettiPull y * x) = y * bettiPush x)
+    (fibreDimension : ℕ)
+    (zetaChow : ChowP)
+    (hFibre : bettiPush ((cycleClassP zetaChow)^fibreDimension) = 1)
+    (expZeta : ChowPˣ)
+    (sheafCharacter : ChowP)
+    (kappaBetti : BettiY)
+    (hActualSheafBettiCharacter :
+      cycleClassP sheafCharacter =
+        (cycleClassP (↑expZeta : ChowP)) * bettiPull kappaBetti)
+    (graphChow : ChowY →ₗ[ℚ] ChowA)
+    (graphBetti : BettiY →ₗ[ℚ] BettiA)
+    (cycleClassA : ChowA →ₗ[ℚ] BettiA)
+    (hGraphNatural : ∀ C : ChowY,
+      cycleClassA (graphChow C) = graphBetti (cycleClassY C))
+    (weilCoords : BettiA →ₗ[ℚ] (ℚ × ℚ))
+    (d : ℚ) (hd : 0 < d)
+    (hSecantBetti :
+      weilCoords (graphBetti kappaBetti) =
+        ((d+1)/(2*d), (0:ℚ))) :
+    ∃ Z : ChowA,
+      cycleClassA Z = graphBetti kappaBetti ∧
+      cycleClassA Z ≠ 0 := by
+  obtain ⟨C, hC⟩ :=
+    projectiveBundleBettiSource_constructChowWitness
+      cycleClassY cycleClassP chowPush bettiPull bettiPush
+      hGysin hProj fibreDimension zetaChow hFibre expZeta
+      sheafCharacter kappaBetti hActualSheafBettiCharacter
+  refine ⟨graphChow C, ?_, ?_⟩
+  · rw [hGraphNatural, hC]
+  · intro hz
+    have hzero : graphBetti kappaBetti = 0 := by
+      rw [hGraphNatural, hC] at hz
+      exact hz
+    have hc := congrArg weilCoords hzero
+    rw [map_zero, hSecantBetti] at hc
+    exact (secantSeedCanonicalExtractedWeilComponent_nonzero d hd)
+      hc.symm
+
+#check projectiveBundleSecantSheaf_birthOnOriginalFourfold
+#print axioms projectiveBundleSecantSheaf_birthOnOriginalFourfold
+
 end ProjectiveBundleChowCharacterExtraction
 
 #check projectiveBundleChow_extract_fixedChern_character
