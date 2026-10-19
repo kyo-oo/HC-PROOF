@@ -871,6 +871,110 @@ theorem cmWeilSixfoldStableSourceDichotomy
         (cmWeilSixfold_nonzero_algebraic_source_spans_plane
           S hInvariant z hz hz0))
 
+/-! ## EXACT DEFORMATION TEST OF THE *ACTUAL* CENTRAL CM GRAPH SOURCE
+
+Fix the CM central fibre of a Weil (3,3) sixfold. The true
+rational graph-difference divisors are the three real classes
+D_i=(p_i∧n_i - bar(p_i)∧bar(n_i))/(2i), where p_i,n_i are
+K-eigenvectors of Hodge types (1,0),(0,1), respectively.
+
+Under the nine first-order unitary deformations B=(B_{a b})
+with delta(p_b)=Σ_a B_{a b} n_a and
+delta(bar(n_a))=Σ_b B_{a b} bar(p_b), the exterior-algebra
+derivative of the ACTUAL product D_1 D_2 D_3 is a linear map
+from its nine period tangent coordinates into Λ⁶(H¹_C).
+
+An exact 924×9 wedge-expansion (Wolfram, all basis monomials)
+has six coefficient witnesses at exterior ordered index sets
+  235678, 235679, 134678, 134689, 124579, 124589.
+They extract, up to the common nonzero scalar (2i)^(-3),
+  B_12, B_13, -B_21, B_23, -B_31, -B_32.
+The remaining three tangent coordinates B_11,B_22,B_33
+do not change this Hodge component. The full differential
+rank is exactly six.
+
+The following kernel-checkable rational normal form proves
+this six-direction obstruction has a genuine rational right
+inverse, rather than merely an evaluated determinant.
+The full wedge expansion and its identification with actual
+Gauss-Manin variation are documented in research/records;
+Lean here proves the resulting explicit 6-coordinate map,
+NOT the analytic Kodaira-Spencer comparison.
+
+This is a route discriminator: the unprojected central graph
+source cannot remain Hodge for generic nine-parameter periods.
+The pure-K Weil *projection* stays of type (3,3); supplying a
+deformable sheaf for that projected source is the next target.
+-/
+
+/-- Exact six exterior-coordinate witnesses of first-order Hodge
+variation of the CM graph intersection at its product seed. -/
+def cmWeilSixfoldGraphFirstOrderDetector
+    (B : Matrix (Fin 3) (Fin 3) ℚ) : Fin 6 → ℚ :=
+  ![ B 0 1, B 0 2, -(B 1 0),
+     B 1 2, -(B 2 0), -(B 2 1) ]
+
+/-- The complete obstruction witness vanishes exactly when
+every off-diagonal infinitesimal unitary deformation vanishes.
+There are six independent blocked directions, not all nine. -/
+theorem cmWeilSixfoldGraphFirstOrderDetector_zero_iff
+    (B : Matrix (Fin 3) (Fin 3) ℚ) :
+    cmWeilSixfoldGraphFirstOrderDetector B = 0 ↔
+      B 0 1 = 0 ∧ B 0 2 = 0 ∧
+      B 1 0 = 0 ∧ B 1 2 = 0 ∧
+      B 2 0 = 0 ∧ B 2 1 = 0 := by
+  constructor
+  · intro h
+    have h01 := congrArg (fun v : Fin 6 → ℚ => v 0) h
+    have h02 := congrArg (fun v : Fin 6 → ℚ => v 1) h
+    have h10 := congrArg (fun v : Fin 6 → ℚ => v 2) h
+    have h12 := congrArg (fun v : Fin 6 → ℚ => v 3) h
+    have h20 := congrArg (fun v : Fin 6 → ℚ => v 4) h
+    have h21 := congrArg (fun v : Fin 6 → ℚ => v 5) h
+    simp [cmWeilSixfoldGraphFirstOrderDetector] at
+      h01 h02 h10 h12 h20 h21
+    exact ⟨h01, h02, h10, h12, h20, h21⟩
+  · rintro ⟨h01,h02,h10,h12,h20,h21⟩
+    funext k
+    fin_cases k <;> simp [cmWeilSixfoldGraphFirstOrderDetector,
+      h01, h02, h10, h12, h20, h21]
+
+/-- Reconstruct an honest tangent matrix with arbitrary prescribed
+six graph-deformation witness values, setting the three diagonal
+period coordinates to zero. -/
+def cmWeilSixfoldGraphFirstOrderLift
+    (v : Fin 6 → ℚ) : Matrix (Fin 3) (Fin 3) ℚ :=
+  fun i j =>
+    if i = 0 then
+      if j = 1 then v 0 else if j = 2 then v 1 else 0
+    else if i = 1 then
+      if j = 0 then -(v 2) else if j = 2 then v 3 else 0
+    else
+      if j = 0 then -(v 4) else if j = 1 then -(v 5) else 0
+
+/-- RATIONAL RIGHT INVERSE: all six detected Hodge-loss
+coordinates occur independently in actual unitary tangent data. -/
+theorem cmWeilSixfoldGraphFirstOrderLift_rightInverse
+    (v : Fin 6 → ℚ) :
+    cmWeilSixfoldGraphFirstOrderDetector
+      (cmWeilSixfoldGraphFirstOrderLift v) = v := by
+  funext k
+  fin_cases k <;>
+    simp [cmWeilSixfoldGraphFirstOrderDetector,
+      cmWeilSixfoldGraphFirstOrderLift]
+
+/-- Consequently all six witness coordinates are realized:
+the first-order graph-obstruction detector is onto. -/
+theorem cmWeilSixfoldGraphFirstOrderDetector_surjective :
+    Function.Surjective cmWeilSixfoldGraphFirstOrderDetector := by
+  intro v
+  exact ⟨cmWeilSixfoldGraphFirstOrderLift v,
+    cmWeilSixfoldGraphFirstOrderLift_rightInverse v⟩
+
+#check cmWeilSixfoldGraphFirstOrderDetector_zero_iff
+#check cmWeilSixfoldGraphFirstOrderDetector_surjective
+#print axioms cmWeilSixfoldGraphFirstOrderDetector_surjective
+
 #check cmWeilSixfoldCompanionAction
 #check cmWeilSixfoldStableSourceDichotomy
 #print axioms cmWeilSixfoldStableSourceDichotomy
