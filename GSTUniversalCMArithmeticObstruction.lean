@@ -2135,6 +2135,139 @@ theorem cmWeilSixfoldThreeOpGraph_normalized_square_neg_two :
     (-737280000 : ℚ) / (19200 : ℚ)^2 = -2 := by
   norm_num
 
+/-! ### Projected Weil source: HRR–Serre self-Ext pressure
+
+The existing eight-graph intersection calculation gives an INTEGRAL
+pure-middle Chern-character numerator Gamma with Gamma²=-737280000.
+On a complex abelian SIXFOLD the Todd class is 1. If a genuine
+perfect object E has ch(E)=Gamma (and no other Chern-character
+grades), HRR gives chi(E,E)=-Gamma²=+737280000, since duality
+changes the sign of the codimension-three Chern character.
+
+Serre duality for an abelian sixfold gives Ext^i(E,E)^* =
+Ext^(6-i)(E,E), so
+  chi(E,E) = 2 e0 - 2 e1 + 2 e2 - e3
+where ei=dim Ext^i(E,E). Because e1,e3 are nonnegative,
+  e0+e2 >= 368640000.
+In particular any SIMPLE realization (e0=1) must have
+  dim Ext²(E,E) >= 368639999.
+The entire sixfold raw semiregularity TARGET has dimension 495.
+Therefore the raw Ext² semiregularity map of a simple E with
+this exact integral pure Chern character CANNOT be injective:
+its kernel has dimension at least 368639504.
+
+These Lean statements certify the exact integer arithmetic and its
+logical consequences from an explicitly stated self-Euler equation.
+Instantiation of HRR, Serre duality, the actual object and the
+canonical Chern character in scheme-level Lean remains separate.
+This does NOT imply a nonzero Atiyah obstruction: a large Ext² kernel
+can still contain no deformation-obstruction image. It rules out the
+specific strategy of full RAW semiregularity injectivity for a
+simple perfect realization of the complete integral numerator.
+-/
+
+/-- HRR's integral self-Euler number from the already PROVED
+eight-graph top-intersection, with codimension-three dual sign. -/
+theorem cmWeilSixfoldThreeOpGraph_projectedSelfEuler :
+    -(Finset.univ.sum (fun v : Fin 8 =>
+      cmWeilSixfoldThreeOperatorIntegralK0 v *
+        cmWeilSixfoldThreeOpGraphProjectedRowPairing v)) =
+      (737280000 : ℤ) := by
+  rw [cmWeilSixfoldThreeOpGraph_integral_selfIntersection]
+  norm_num
+
+/-- The CY6 Serre-dual self-Ext dimensions of ANY perfect
+realization of this exact pure integral K0 numerator must
+satisfy the stated total Euler pressure. This is a conditional
+dimension theorem, not a constructed sheaf. -/
+theorem cmWeilSixfoldThreeOpGraph_CY6SerreExtPressure
+    (e0 e1 e2 e3 : ℕ)
+    (hEuler :
+      2*(e0 : ℤ) - 2*(e1 : ℤ) +
+        2*(e2 : ℤ) - (e3 : ℤ) =
+      -(Finset.univ.sum (fun v : Fin 8 =>
+        cmWeilSixfoldThreeOperatorIntegralK0 v *
+          cmWeilSixfoldThreeOpGraphProjectedRowPairing v))) :
+    368640000 ≤ e0+e2 := by
+  rw [cmWeilSixfoldThreeOpGraph_projectedSelfEuler] at hEuler
+  omega
+
+/-- No perfect realization with this integral pure Chern
+character can have BOTH low self-endomorphism dimension and
+the raw semiregularity target-sized Ext². -/
+theorem cmWeilSixfoldThreeOpGraph_smallExtTwo_forcesLargeEnd
+    (e0 e1 e2 e3 : ℕ)
+    (hEuler :
+      2*(e0 : ℤ) - 2*(e1 : ℤ) +
+        2*(e2 : ℤ) - (e3 : ℤ) =
+      -(Finset.univ.sum (fun v : Fin 8 =>
+        cmWeilSixfoldThreeOperatorIntegralK0 v *
+          cmWeilSixfoldThreeOpGraphProjectedRowPairing v)))
+    (hExtTwo : e2 ≤ 495) :
+    368639505 ≤ e0 := by
+  have hPressure :=
+    cmWeilSixfoldThreeOpGraph_CY6SerreExtPressure
+      e0 e1 e2 e3 hEuler
+  omega
+
+/-- For a simple perfect realization, the arithmetic
+Serre pressure lies entirely in the second self-Ext group. -/
+theorem cmWeilSixfoldThreeOpGraph_simpleExtTwoLowerBound
+    (e1 e2 e3 : ℕ)
+    (hEuler :
+      2*(1 : ℤ) - 2*(e1 : ℤ) +
+        2*(e2 : ℤ) - (e3 : ℤ) =
+      -(Finset.univ.sum (fun v : Fin 8 =>
+        cmWeilSixfoldThreeOperatorIntegralK0 v *
+          cmWeilSixfoldThreeOpGraphProjectedRowPairing v))) :
+    368639999 ≤ e2 := by
+  have hPressure :=
+    cmWeilSixfoldThreeOpGraph_CY6SerreExtPressure
+      1 e1 e2 e3 hEuler
+  omega
+
+/-- A 495-dimensional target cannot contain the entire Ext²
+of such a SIMPLE realization injectively. This excludes raw
+semiregularity injection, not the vanishing of Atiyah(kappa). -/
+theorem cmWeilSixfoldThreeOpGraph_simpleRawSemiregularity_noInjection
+    (e1 e2 e3 : ℕ)
+    (hEuler :
+      2*(1 : ℤ) - 2*(e1 : ℤ) +
+        2*(e2 : ℤ) - (e3 : ℤ) =
+      -(Finset.univ.sum (fun v : Fin 8 =>
+        cmWeilSixfoldThreeOperatorIntegralK0 v *
+          cmWeilSixfoldThreeOpGraphProjectedRowPairing v)))
+    (hInjectiveDimension : e2 ≤ 495) : False := by
+  have hLow :=
+    cmWeilSixfoldThreeOpGraph_simpleExtTwoLowerBound
+      e1 e2 e3 hEuler
+  omega
+
+/-- Lower bound on the dimension of any linear map kernel
+from such a simple self-Ext² space into the 495-dimensional
+raw sixfold semiregularity target, by rank-nullity. -/
+theorem cmWeilSixfoldThreeOpGraph_simpleSemiregKernelPressure
+    (e1 e2 e3 kernelDim : ℕ)
+    (hEuler :
+      2*(1 : ℤ) - 2*(e1 : ℤ) +
+        2*(e2 : ℤ) - (e3 : ℤ) =
+      -(Finset.univ.sum (fun v : Fin 8 =>
+        cmWeilSixfoldThreeOperatorIntegralK0 v *
+          cmWeilSixfoldThreeOpGraphProjectedRowPairing v)))
+    (hRankNullity : e2 ≤ kernelDim + 495) :
+    368639504 ≤ kernelDim := by
+  have hLow :=
+    cmWeilSixfoldThreeOpGraph_simpleExtTwoLowerBound
+      e1 e2 e3 hEuler
+  omega
+
+#check cmWeilSixfoldThreeOpGraph_projectedSelfEuler
+#check cmWeilSixfoldThreeOpGraph_CY6SerreExtPressure
+#check cmWeilSixfoldThreeOpGraph_simpleExtTwoLowerBound
+#check cmWeilSixfoldThreeOpGraph_simpleRawSemiregularity_noInjection
+#check cmWeilSixfoldThreeOpGraph_simpleSemiregKernelPressure
+#print axioms cmWeilSixfoldThreeOpGraph_simpleSemiregKernelPressure
+
 #check cmWeilSixfoldThreeOpGraph_intersection_fingerprint
 #check cmWeilSixfoldThreeOpGraph_integral_selfIntersection
 #check cmWeilSixfoldThreeOpGraph_normalized_square_neg_two
