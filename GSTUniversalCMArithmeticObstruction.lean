@@ -1532,6 +1532,72 @@ theorem cmWeilSixfoldTwoOperatorProjector_kills_even_mixed
   rw [hMixed]
   ring
 
+/-! ### Optimality of the two-operator cubic CM filter
+
+After [i]-parity separates odd from even K-weights, the two
+remaining conjugate eigenvalue pairs for T=[2+i]^* on H^6 are
+  mixed:      75 +/- 100 i,   t²-150t+15625=0
+  pure Weil: -117 +/- 44 i,   t²+234t+15625=0.
+
+The cubic Q(T) already constructed above vanishes at both
+mixed eigenvalues and equals 1 at both pure Weil eigenvalues.
+We now prove that NO RATIONAL POLYNOMIAL OF DEGREE <= 2
+can satisfy these conditions. Therefore the cubic is minimal
+among rational T-polynomials following the genuine [i] parity
+projector. This is a geometric source-complexity lower bound,
+not a claim that the resulting K₀ complex deforms. -/
+
+/-- Real and imaginary parts of a rational quadratic a+b*t+c*t²
+at the complex eigenvalue t=x+i*y. -/
+def cmWeilSixfoldQuadraticComplexEval
+    (a b c x y : ℚ) : ℚ × ℚ :=
+  (a+b*x+c*(x*x-y*y), b*y+2*c*x*y)
+
+/-- The mixed and pure eigenpairs are exact roots of the
+respective quadratic CM weight factors. -/
+theorem cmWeilSixfold_even_eigenpairs_exact :
+    ((75:ℚ)^2-100^2-150*75+15625=0) ∧
+    (2*(75:ℚ)*100-150*100=0) ∧
+    (((-117:ℚ))^2-44^2+234*(-117)+15625=0) ∧
+    (2*(-117:ℚ)*44+234*44=0) := by
+  norm_num
+
+/-- No rational quadratic, including constants and linear
+polynomials, can vanish on the even mixed pair yet act as
+the identity on the pure Weil pair. The two complex evaluation
+conditions supply four real linear equations in three unknowns.
+This establishes minimal DEGREE THREE for the current CM
+parity-filtered projector architecture. -/
+theorem cmWeilSixfoldNoQuadraticEvenWeightIsolator :
+    ¬ ∃ a b c : ℚ,
+      cmWeilSixfoldQuadraticComplexEval a b c 75 100 = (0,0) ∧
+      cmWeilSixfoldQuadraticComplexEval a b c (-117) 44 = (1,0) := by
+  rintro ⟨a,b,c,hm,hp⟩
+  have hmRe := congrArg Prod.fst hm
+  have hmIm := congrArg Prod.snd hm
+  have hpRe := congrArg Prod.fst hp
+  have hpIm := congrArg Prod.snd hp
+  norm_num [cmWeilSixfoldQuadraticComplexEval] at hmRe hmIm hpRe hpIm
+  linarith
+
+/-- The existing rational cubic is an EXACT spectral separator
+at the two nonreal CM eigenvalue pairs. We verify its real and
+imaginary evaluations without relying on a numerical tolerance. -/
+theorem cmWeilSixfoldEvenWeightCubic_exact_eigenpair_values :
+    let Qre := fun x y : ℚ =>
+      ((x+234)*(x*x-y*y-150*x+15625) -
+        y*(2*x*y-150*y))/6000000
+    let Qim := fun x y : ℚ =>
+      ((x+234)*(2*x*y-150*y) +
+        y*(x*x-y*y-150*x+15625))/6000000
+    Qre 75 100 = 0 ∧ Qim 75 100 = 0 ∧
+    Qre (-117) 44 = 1 ∧ Qim (-117) 44 = 0 := by
+  norm_num
+
+#check cmWeilSixfoldNoQuadraticEvenWeightIsolator
+#check cmWeilSixfoldEvenWeightCubic_exact_eigenpair_values
+#print axioms cmWeilSixfoldNoQuadraticEvenWeightIsolator
+
 /-- Idempotent on EVERY H^6 K-weight under its actual T,U
 eigenrelations. This exhaustive disjunction describes all
 seven complex K-weight sectors of the 6-fold H^6. -/
