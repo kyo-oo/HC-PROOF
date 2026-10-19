@@ -1,5 +1,7 @@
 # GST Hodge Research — Construction Program
 
+- [GST quaternionic four-vector Weil graph rank and target-coupling audit](2026-10-19-gst-quaternionic-basis-free-graph-source-rank.md) — basis-free anti-CM graph eigenframe independence, zero-divisor-safe all-rank native primitive nonvanishing, and an explicit fourfold orthogonality test separating nonzero source from arbitrary residual detection. Canonical graph Betti realization remains a geometric input.
+
 - [GST unseeded two-polarization middle Chow/K₀ birth on nonsplit finite covers](2026-10-19-gst-unseeded-two-polarization-middle-chow-birth.md) — uniform original-X primitive algebraic class from two geometric polarizations on arbitrary smooth finite covers of m-fold products, with exact signed norm (m+1) times top intersection and explicit perfect K₀ source; all-X target residual coupling remains a separate Gate 3 requirement.
 
 - [GST cross-polarization K₀ source birth and exact first-Chern Todd cancellation](2026-10-19-gst-cross-polarization-k0-todd-birth.md) — native finite-flat projector annihilates base pulls, detects genuinely transverse independent geometric line-bundle sources, and cancels truncated Todd defects; explicit P¹×P¹ primitive class has signed norm 1/2. Higher-codimension universal target coupling remains the construction objective.
