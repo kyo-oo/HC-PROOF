@@ -279,6 +279,48 @@ variable {ChowY ChowP : Type*}
   [CommRing ChowY] [CommRing ChowP]
   [Algebra ℚ ChowY] [Algebra ℚ ChowP]
 
+/-! ## FINITE ALGEBRAIC UNTWISTING WITHOUT A CHOSEN INVERSE
+
+The truncated exponential of any positive-codimension rational
+Chow class has the form 1+u with nilpotent u. Its inverse is the
+EXPLICIT finite geometric sum Σ_{k<n}(-u)^k, because u^n=0
+in the bounded graded Chow ring. No formal completion or
+unconstructed invertible sheaf/Chern symbol is required.
+-/
+
+/-- Universal exact geometric-series cancellation in any rational
+commutative ring, with no convergence hypothesis. -/
+theorem nilpotentChowTwist_inverse_identity
+    (u : ChowP) (n : ℕ) :
+    (1+u) * (∑ k ∈ Finset.range n, (-u)^k) = 1-(-u)^n := by
+  induction n with
+  | zero =>
+      simp
+  | succ n ih =>
+      rw [Finset.sum_range_succ, mul_add, ih, pow_succ]
+      ring
+
+/-- The explicit finite inverse for an actual truncated positive-
+codimension Chern exponential. Nilpotence follows from bounded
+Chow grading; the output is a constructed unit, not a hypothesis
+about invertibility. -/
+def nilpotentChowTwist_unit
+    (u : ChowP) (n : ℕ) (hu : u^n = 0) : ChowPˣ where
+  val := 1+u
+  inv := ∑ k ∈ Finset.range n, (-u)^k
+  val_inv := by
+    rw [nilpotentChowTwist_inverse_identity]
+    have hn : (-u)^n = 0 := by simpa [neg_pow, hu]
+    simp [hn]
+  inv_val := by
+    rw [mul_comm, nilpotentChowTwist_inverse_identity]
+    have hn : (-u)^n = 0 := by simpa [neg_pow, hu]
+    simp [hn]
+
+#check nilpotentChowTwist_inverse_identity
+#check nilpotentChowTwist_unit
+#print axioms nilpotentChowTwist_inverse_identity
+
 /-- For a PROJECTIVE BUNDLE of relative dimension f with its true
 rational Chow pullback and proper pushforward, the Chern character
 of the ordinary sheaf obtained by twisting p^*κ with an invertible
