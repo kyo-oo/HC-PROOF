@@ -2771,6 +2771,135 @@ theorem cmWeilSixfoldLCIIncidence_allSevenEdges_active :
     3 ≤ 35*r 6 := by
   decide
 
+/-! ### FULL-GAUSSIAN-KERNEL COMPONENT CORRECTION
+
+The algebraic isogeny pullbacks underlying the eight graph
+sources are FULL kernel cycles, not always single connected
+graphs. For a=1+i and a=1+3i, the coefficients (conj a,-a)
+have the Gaussian common divisor 1+i of norm two.
+Each elliptic-pair kernel then has TWO connected translates;
+its three-coordinate product has 2^3=8 components.
+For a=1 or 2+i the kernel is connected.
+
+For a winding-one opposite-sign edge, the other graph divisor
+restricts to degree 4/c on EACH connected elliptic component,
+where c=1 or 2 is the common-Gaussian-factor norm. Thus
+the two-sided lci Ext² on the FULL kernel cycle has
+  c^3 * (3 + 4*(4/c) + (4/c)^2)
+dimensions: 35 when c=1, and 120 when c=2.
+This corrects the earlier claim that 35 was an exact value
+for ALL eight full kernel supports. It remains a VALID
+uniform conservative coefficient capacity, so the earlier
+150-rank model and its green proofs are not mathematically
+false within their stated symmetric-35 constraints.
+
+Using the stronger actual component-aware candidate capacities,
+the minimum connected numerical rank improves to 144. The
+Gaussian factor / component-scheme / elliptic RR identifications
+remain geometric inputs; Lean checks the exact conditional
+integer-capacity consequences, NOT a universal Chow source. -/
+
+/-- Norm of the common Gaussian content of (conj a,-a) for
+the four CM words and their U translates. A nontrivial
+content identifies a reducible full kernel cycle rather than
+a single connected graph subgroup. -/
+def cmWeilSixfoldGraphKernelContentNorm : Fin 8 → ℕ :=
+  ![1,1,2,2,1,1,2,2]
+
+def cmWeilSixfoldGraphKernelComponentCount (v : Fin 8) : ℕ :=
+  (cmWeilSixfoldGraphKernelContentNorm v)^3
+
+/-- Derived from c³ connected components, with elliptic
+normal line degrees 4/c per component, using the complete
+two-variable Koszul global Ext² decomposition. -/
+def cmWeilSixfoldFullKernelLCIExtTwoCapacity (v : Fin 8) : ℕ :=
+  let c := cmWeilSixfoldGraphKernelContentNorm v
+  c^3 * (3 + 4*(4/c) + (4/c)^2)
+
+/-- Actual component-aware model: the four primitive graph
+labels have 35 slots; the other four full kernel cycles have
+120 slots, not 35. The source's geometry must instantiate the
+declared common Gaussian contents in a genuine finite-étale
+kernel decomposition before this becomes a scheme theorem. -/
+theorem cmWeilSixfoldFullKernelLCIExtTwoCapacity_profile :
+    cmWeilSixfoldFullKernelLCIExtTwoCapacity =
+      ![35,35,120,120,35,35,120,120] ∧
+    cmWeilSixfoldGraphKernelComponentCount =
+      ![1,1,8,8,1,1,8,8] := by
+  constructor <;> funext v <;> fin_cases v <;> decide
+
+/-- With connectedness on edge 01, the negative 4800-copy
+primitive graph and both multiplicity-175 component-aware
+endpoints force at least 144 total rank units. -/
+theorem cmWeilSixfoldFullKernelLCI_connected_rank_144
+    (r01 r04 r12 r34 r45 r06 r07 : ℕ)
+    (h01 : 1 ≤ r01)
+    (hPositive175 : 175 ≤ 120*r12)
+    (hNegative4800 : 4800 ≤ 35*(r04+r34+r45))
+    (hNegative175 : 175 ≤ 120*r06)
+    (hNegative3 : 3 ≤ 120*r07) :
+    144 ≤ r01+r04+r12+r34+r45+r06+r07 := by
+  omega
+
+/-- Connected allocation for the component-aware full kernel
+cycles in tree order 01,04,12,34,45,06,07. -/
+def cmWeilSixfoldFullKernelLCIRankAllocation : Fin 7 → ℕ :=
+  ![1,136,2,1,1,2,1]
+
+/-- All EIGHT vertex multiplicities fit the true corrected
+capacity table at total connected rank exactly 144. -/
+theorem cmWeilSixfoldFullKernelLCI_connected_rank_feasible :
+    let r := cmWeilSixfoldFullKernelLCIRankAllocation
+    let C := cmWeilSixfoldFullKernelLCIExtTwoCapacity
+    (∀ i : Fin 7, 0 < r i) ∧
+    4800 ≤ C 0*(r 0+r 1+r 5+r 6) ∧
+    175 ≤ C 2*r 2 ∧
+    3 ≤ C 3*r 3 ∧
+    32 ≤ C 5*r 4 ∧
+    32 ≤ C 1*(r 0+r 2) ∧
+    4800 ≤ C 4*(r 1+r 3+r 4) ∧
+    175 ≤ C 6*r 5 ∧
+    3 ≤ C 7*r 6 ∧
+    (Finset.univ.sum r) = 144 := by
+  decide
+
+/-- The SAME explicit nonzero occupancy pattern from the
+150-unit model already fits the improved 144-unit ranks:
+the four multi-edge vertex slot arrays stay unchanged. -/
+theorem cmWeilSixfoldFullKernelLCI_occupancy_compatible :
+    let r := cmWeilSixfoldFullKernelLCIRankAllocation
+    let C := cmWeilSixfoldFullKernelLCIExtTwoCapacity
+    let p0 := cmWeilSixfoldLCIIncidencePositiveZeroEdgeUse
+    let n1 := cmWeilSixfoldLCIIncidenceNegativeOneEdgeUse
+    let n4 := cmWeilSixfoldLCIIncidenceNegativeFourEdgeUse
+    p0 0 ≤ C 0*r 0 ∧
+    p0 1 ≤ C 0*r 1 ∧
+    p0 2 ≤ C 0*r 5 ∧
+    p0 3 ≤ C 0*r 6 ∧
+    n1 0 ≤ C 1*r 0 ∧
+    n1 1 ≤ C 1*r 2 ∧
+    n4 0 ≤ C 4*r 1 ∧
+    n4 1 ≤ C 4*r 3 ∧
+    n4 2 ≤ C 4*r 4 ∧
+    175 ≤ C 2*r 2 ∧
+    3 ≤ C 3*r 3 ∧
+    32 ≤ C 5*r 4 ∧
+    175 ≤ C 6*r 5 ∧
+    3 ≤ C 7*r 6 := by
+  decide
+
+theorem cmWeilSixfoldFullKernelLCI_auxiliary_pair_count :
+    (2 : ℕ)*144 = 288 ∧
+      2*150 - 2*144 = 12 ∧
+      2*503 - 2*144 = 718 := by
+  norm_num
+
+#check cmWeilSixfoldFullKernelLCIExtTwoCapacity_profile
+#check cmWeilSixfoldFullKernelLCI_connected_rank_144
+#check cmWeilSixfoldFullKernelLCI_connected_rank_feasible
+#check cmWeilSixfoldFullKernelLCI_occupancy_compatible
+#print axioms cmWeilSixfoldFullKernelLCI_connected_rank_144
+
 #check cmWeilSixfoldLCIIncidence_allSevenEdges_active
 #print axioms cmWeilSixfoldLCIIncidence_allSevenEdges_active
 
