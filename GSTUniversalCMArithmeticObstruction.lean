@@ -1536,8 +1536,8 @@ theorem cmWeilSixfoldTwoOperatorProjector_kills_even_mixed
 
 After [i]-parity separates odd from even K-weights, the two
 remaining conjugate eigenvalue pairs for T=[2+i]^* on H^6 are
-  mixed:      75 +/- 100 i,   t²-150t+15625=0
-  pure Weil: -117 +/- 44 i,   t²+234t+15625=0.
+  mixed:      75 plus-or-minus 100 i,   t²-150t+15625=0
+  pure Weil: -117 plus-or-minus 44 i,   t²+234t+15625=0.
 
 The cubic Q(T) already constructed above vanishes at both
 mixed eigenvalues and equals 1 at both pure Weil eigenvalues.
