@@ -1296,6 +1296,70 @@ theorem cmTwoPlusIGraphDerivedIdealPair_exactWeilPeriodCompiler
 #check cmTwoPlusIGraphDerivedIdealPair_exactWeilPeriodCompiler
 #print axioms cmTwoPlusIGraphDerivedIdealPair_exactWeilPeriodCompiler
 
+/-! ## GST FINITE-TORSION INCIDENCE: A RAW EXT² SEMIREGULARITY TEST
+
+The transverse original CM graphs Z0,Z1 meet in P=E[2]^3, a
+64-element finite ABELIAN group. The addition isogeny
+phi: Z0 × Z1 -> A has kernel {(t,-t) : t in P}.
+After finite-etale pullback the SINGLE derived ideal pair is
+an exterior tensor of the ideal of P on one threefold and the
+derived dual ideal of P on the other.
+
+The full central Ext² of that object contains, by Kunneth,
+the tensor of the two point-motion Ext¹ directions. Each
+point-motion tangent packet is three-dimensional per point;
+the kernel group acts on pairs by (p,q) -> (p+t,q-t).
+The following law computes the *entire invariant FUNCTION
+GEOMETRY*: invariants factor uniquely through p+q.
+Therefore the 64 pair orbits carry 64*3*3=576 independent
+candidate Ext² directions, more than the 495-dimensional
+sixfold raw semiregularity target.
+
+This arithmetic theorem and finite group law are kernel
+checkable. Their application to ACTUAL Ext² requires the
+geometric equivariant finite-etale descent, the fixed-
+determinant ideal-sheaf tangent injection and Kunneth.
+Do not claim that the Lean group law alone instantiates
+the Ext geometry. If those standard geometric identifications
+apply, the raw semiregularity map of THIS derived-pair F
+cannot be injective; a different source/coupling is required.
+-/
+
+/-- The anti-diagonal translation-invariant data on any
+abelian torsion group are EXACTLY data on its group sum. -/
+theorem cmWeilSixfoldTorsionPairOrbit_invariant_iff_factors
+    {G : Type*} [AddCommGroup G] {M : Type*}
+    (f : G → G → M) :
+    (∀ p q t : G, f (p+t) (q-t) = f p q) ↔
+      ∃ h : G → M, ∀ p q : G, f p q = h (p+q) := by
+  constructor
+  · intro hf
+    refine ⟨fun s => f 0 s, ?_⟩
+    intro p q
+    have h := hf p q (-p)
+    simpa [sub_neg_eq_add, add_comm] using h.symm
+  · rintro ⟨h, hh⟩ p q t
+    calc
+      f (p+t) (q-t) = h ((p+t)+(q-t)) := hh _ _
+      _ = h (p+q) := by congr 1; abel
+      _ = f p q := (hh _ _).symm
+
+/-- Exact torsion-pair-orbit count and the ACTUAL dimension
+of the abelian-sixfold raw semiregularity target. The 576
+is a candidate Ext² LOWER BOUND only after the independent
+equivariant Ext¹ geometric realization; 495 is the complete
+target dimension from sixfold Hodge cohomology. -/
+theorem cmWeilSixfoldTorsionPairExtTwo_rawSemiregSizeTest :
+    (64 : ℕ)*3*3 = 576 ∧
+    (Finset.range 5).sum
+      (fun k => Nat.choose 6 k * Nat.choose 6 (k+2)) = 495 ∧
+    (495 : ℕ) < 64*3*3 := by
+  decide
+
+#check cmWeilSixfoldTorsionPairOrbit_invariant_iff_factors
+#check cmWeilSixfoldTorsionPairExtTwo_rawSemiregSizeTest
+#print axioms cmWeilSixfoldTorsionPairOrbit_invariant_iff_factors
+
 #check cmTwoPlusIGraphDerivedDualIdealPair_K0
 #check cmTwoPlusITrueGraphWeilPair_first_two
 #check cmTwoPlusIGraphDerivedIdealPairWeil_nonzero
