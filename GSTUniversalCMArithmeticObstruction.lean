@@ -619,6 +619,91 @@ theorem cmWeilStableSourceDichotomy
         (cmWeilInvariantSource_nonzero_forces_full_plane
           S hInvariant z hz hz0))
 
+/-! ## EXPLICIT ACTUAL CM ISOGENY SOURCE FILTER — NO TARGET PREIMAGE
+
+The original Weil-type fourfold carries the genuine algebraic
+isogeny f=[2+i]. On H^4 its Hodge-compatible eigensectors have
+three rational spectral factors:
+  exceptional Weil: t²+14t+625;
+  mixed K-weight:   t²-30t+625;
+  ambient weight:   t-25.
+
+CRT over Q gives a literal rational degree-four polynomial
+ P_W(t)= -(t-25)(39t-79)(t²-30t+625)/44000000.
+Every coefficient defines an actual rational combination of
+graphs of iterates f^j on the SAME abelian fourfold. Therefore
+testing P_W(cl Z) on a genuine algebraic surface Z is an
+explicit finite correspondence calculation; it does NOT
+guarantee a nonzero output.
+
+The exact polynomial here upgrades the counterexample test:
+P_W kills the full generic divisor/ambient sector, fixes the
+entire two-dimensional rational Weil plane, and kills the other
+mixed spectral sectors. The remaining nonalgebraicity claim,
+if pursued, must establish that P_W cl(Z)=0 for EVERY actual
+algebraic surface Z, not just the divisor subalgebra.
+-/
+
+/-- Explicit rational polynomial producing the exceptional Weil
+source projector from the actual endomorphism f=[2+i]. -/
+def cmWeilTwoPlusIProjectorScalar (t : ℚ) : ℚ :=
+  -((t-25)*(39*t-79)*(t*t-30*t+625))/44000000
+
+/-- Complete exact CRT identity on the exceptional conjugate Weil
+eigenroots. Unlike an uninterpreted projector hypothesis, all
+rational denominators and coefficients are explicit. -/
+theorem cmWeilTwoPlusIProjector_fixes_Weil
+    (t : ℚ) (hWeil : t*t+14*t+625=0) :
+    cmWeilTwoPlusIProjectorScalar t = 1 := by
+  have hfactor :
+      cmWeilTwoPlusIProjectorScalar t - 1 =
+        -((t*t+14*t+625)*(39*t*t-2770*t+72375))/44000000 := by
+    unfold cmWeilTwoPlusIProjectorScalar
+    ring
+  rw [hWeil] at hfactor
+  have hz : cmWeilTwoPlusIProjectorScalar t - 1 = 0 := by
+    simpa using hfactor
+  linarith
+
+/-- All mixed CM eigensectors have zero projected Weil class. -/
+theorem cmWeilTwoPlusIProjector_kills_mixed
+    (t : ℚ) (hMixed : t*t-30*t+625=0) :
+    cmWeilTwoPlusIProjectorScalar t = 0 := by
+  unfold cmWeilTwoPlusIProjectorScalar
+  rw [hMixed]
+  ring
+
+/-- The genuine ambient polarization-square eigenvalue is 5². -/
+theorem cmWeilTwoPlusIProjector_kills_ambient :
+    cmWeilTwoPlusIProjectorScalar 25 = 0 := by
+  norm_num [cmWeilTwoPlusIProjectorScalar]
+
+/-- Idempotent on EVERY actual H^4 spectral channel of f=[2+i].
+The required spectrum census already exists elsewhere in this
+GST module; this checks the polynomial on those three factors. -/
+theorem cmWeilTwoPlusIProjector_idempotent_on_spectrum
+    (t : ℚ)
+    (hSpectrum :
+      t*t+14*t+625=0 ∨
+      t*t-30*t+625=0 ∨
+      t=25) :
+    (cmWeilTwoPlusIProjectorScalar t)^2 =
+      cmWeilTwoPlusIProjectorScalar t := by
+  rcases hSpectrum with hWeil | hMixed | hAmbient
+  · rw [cmWeilTwoPlusIProjector_fixes_Weil t hWeil]
+    norm_num
+  · rw [cmWeilTwoPlusIProjector_kills_mixed t hMixed]
+    norm_num
+  · subst t
+    rw [cmWeilTwoPlusIProjector_kills_ambient]
+    norm_num
+
+#check cmWeilTwoPlusIProjectorScalar
+#check cmWeilTwoPlusIProjector_fixes_Weil
+#check cmWeilTwoPlusIProjector_kills_mixed
+#check cmWeilTwoPlusIProjector_kills_ambient
+#print axioms cmWeilTwoPlusIProjector_idempotent_on_spectrum
+
 #check cmWeilFourfoldCompanionAction
 #check cmWeilInvariantSource_nonzero_forces_full_plane
 #check cmWeilStableSourceDichotomy
