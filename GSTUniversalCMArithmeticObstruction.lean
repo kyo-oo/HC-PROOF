@@ -2151,6 +2151,61 @@ theorem cmWeilSixfoldThreeOpGraph_all_signed_crossings_parity_obstructed
       cmWeilSixfoldThreeOpGraphTree_lower_bound v w hsign
     omega
 
+/-! ### Minimal K₀-neutral incidence chain: a parity constraint
+
+For a shifted derived object A[p] -> B[q], a degree-one arrow
+represented by an underlying Ext² class requires q-p=1.
+Two consecutive Ext² arrows therefore preserve the endpoint
+shift parity, while three reverse it. Since the bare transverse
+graph-to-graph Ext² group vanishes, a NONTRIVIAL Ext²-only
+connection between opposite-sign graph objects must pass
+through at least TWO auxiliary intermediate objects.
+
+A single effective codimension-two incidence sheaf W contributes
+a nonzero degree-two Chern character and cannot, by itself,
+preserve the pure codimension-three projected graph character.
+Two copies of the same W with opposite shifts have cancelling
+K₀ coefficients. This is a NECESSARY design pattern, not yet a
+construction of nonzero Yoneda arrows or their square-zero total
+differential. The precise geometric Ext² realizations remain
+separate hypotheses, never silently supplied by parity algebra. -/
+
+/-- A pair of degree-one arrows supported by underlying Ext²
+classes cannot reverse the K₀ shift parity between endpoints. -/
+theorem cmWeilSixfoldIncidence_two_ExtTwo_steps_preserve_parity
+    (p q r : ℤ)
+    (h01 : 1+q-p = 2)
+    (h12 : 1+r-q = 2) :
+    p % 2 = r % 2 := by
+  omega
+
+/-- Three consecutive Ext²-type degree-one arrows necessarily
+reverse the K₀ shift parity, as required for an opposite-sign
+graph-to-graph connection with TWO auxiliary incidence supports.
+No existence of actual geometric arrows is asserted here. -/
+theorem cmWeilSixfoldIncidence_three_ExtTwo_steps_flip_parity
+    (p q r s : ℤ)
+    (h01 : 1+q-p = 2)
+    (h12 : 1+r-q = 2)
+    (h23 : 1+s-r = 2) :
+    p % 2 ≠ s % 2 := by
+  omega
+
+/-- The two intermediate incidence supports can occur with
+opposite cohomological parity and the same underlying K₀
+class, cancelling their virtual contribution exactly. -/
+theorem cmWeilSixfoldIncidence_two_auxiliary_K0_cancel
+    {K : Type*} [AddCommGroup K]
+    (graphPlus graphMinus incidence : K) :
+    graphPlus - graphMinus + incidence - incidence =
+      graphPlus - graphMinus := by
+  abel
+
+#check cmWeilSixfoldIncidence_two_ExtTwo_steps_preserve_parity
+#check cmWeilSixfoldIncidence_three_ExtTwo_steps_flip_parity
+#check cmWeilSixfoldIncidence_two_auxiliary_K0_cancel
+#print axioms cmWeilSixfoldIncidence_three_ExtTwo_steps_flip_parity
+
 #check cmWeilSixfoldThreeOpGraph_all_signed_crossings_parity_obstructed
 #print axioms cmWeilSixfoldThreeOpGraph_all_signed_crossings_parity_obstructed
 
