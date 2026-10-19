@@ -529,6 +529,101 @@ theorem cmWeilOneSourceReconstruction
     dsimp [cmWeilOneSourceDet]
     ring
 
+/-! ## GST RATIONAL-HODGE COUNTEREXAMPLE TEST — ZERO OR FULL WEIL SOURCE
+
+This is a sharpened falsification test, NOT a postulated
+nonalgebraic Hodge class. In the true rank-two exceptional Weil
+Hodge sector of a genuine Weil-type abelian fourfold, the actual
+algebraic CM isogeny [2+i] acts with the irreducible rational
+quadratic t²+14t+625 (discriminant -2304).
+
+Any rational subspace of this 2-plane invariant under this
+genuinely algebraic isogeny is either zero or the entire plane.
+In particular the image of ACTUAL native Chow cycles under
+the genuine algebraic CM projector, provided the correct
+canonical-Betti commuting square, cannot have rank one.
+
+This is stronger than checking a missing divisor source:
+to disprove rational Hodge on such an original variety one must
+prove the projected image of EVERY codimension-two algebraic
+cycle vanishes. A mere failure of divisor-generation or of a
+finite source catalog is not enough.
+
+The invariant-submodule theorem below is fully proved linear
+algebra and reuses the independently verified GST
+cmWeilOneSourceReconstruction. The geometric specialization
+requires a genuine Weil Hodge plane, canonical cycle map and
+K-isogeny naturality; those are NOT manufactured as instances.
+-/
+
+/-- The exact rational two-coordinate action of the CM isogeny
+[2+i] on the exceptional Weil H^4 plane, expressed in companion
+coordinates. Its characteristic polynomial is t²+14t+625. -/
+def cmWeilFourfoldCompanionAction (z : ℚ × ℚ) : ℚ × ℚ :=
+  (-(625 : ℚ) * z.2, z.1 - 14*z.2)
+
+/-- A single nonzero genuine Weil source in an invariant native
+algebraic subspace produces EVERY rational Weil target using
+the already proved GST target reconstruction coefficients.
+No assumed full-rank or Hodge-to-Chow inverse. -/
+theorem cmWeilInvariantSource_nonzero_forces_full_plane
+    (S : Submodule ℚ (ℚ × ℚ))
+    (hInvariant : ∀ z ∈ S, cmWeilFourfoldCompanionAction z ∈ S)
+    (z : ℚ × ℚ) (hz : z ∈ S) (hzero : z ≠ 0) :
+    S = ⊤ := by
+  rcases z with ⟨x, y⟩
+  have hxy : x ≠ 0 ∨ y ≠ 0 := by
+    by_cases hx : x = 0
+    · right
+      intro hy
+      exact hzero (by simp [hx, hy])
+    · exact Or.inl hx
+  have htranslate := hInvariant (x,y) hz
+  apply le_antisymm le_top
+  intro target _
+  rcases target with ⟨u, v⟩
+  let c0 := cmWeilOneSourceCoeff0 (-7) 24 x y u v
+  let c1 := cmWeilOneSourceCoeff1 (-7) 24 x y u v
+  obtain ⟨hfirst, hsecond⟩ :=
+    cmWeilOneSourceReconstruction (-7) 24 x y u v (by norm_num) hxy
+  have htarget :
+      (u, v) = c0 • (x,y) +
+        c1 • cmWeilFourfoldCompanionAction (x,y) := by
+    apply Prod.ext
+    · change u = c0*x + c1*(-(625 : ℚ)*y)
+      change c0*x - c1*(((-7 : ℚ)*(-7)+24*24)*y) = u at hfirst
+      nlinarith [hfirst]
+    · change v = c0*y + c1*(x-14*y)
+      change c0*y + c1*(x+2*(-7 : ℚ)*y) = v at hsecond
+      nlinarith [hsecond]
+  rw [htarget]
+  exact S.add_mem (S.smul_mem c0 hz) (S.smul_mem c1 htranslate)
+
+/-- A rational CM-stable native Weil algebraic source image is
+EITHER zero (every nonzero Weil class is a potential genuinely
+nonalgebraic target) OR the full Weil plane (every Weil class
+is reached by actual algebraic cycles).
+Rank one is impossible. -/
+theorem cmWeilStableSourceDichotomy
+    (S : Submodule ℚ (ℚ × ℚ))
+    (hInvariant : ∀ z ∈ S, cmWeilFourfoldCompanionAction z ∈ S) :
+    S = ⊥ ∨ S = ⊤ := by
+  by_cases hTop : S = ⊤
+  · exact Or.inr hTop
+  · left
+    apply le_antisymm ?_ bot_le
+    intro z hz
+    by_cases hz0 : z = 0
+    · simpa [hz0]
+    · exact False.elim (hTop
+        (cmWeilInvariantSource_nonzero_forces_full_plane
+          S hInvariant z hz hz0))
+
+#check cmWeilFourfoldCompanionAction
+#check cmWeilInvariantSource_nonzero_forces_full_plane
+#check cmWeilStableSourceDichotomy
+#print axioms cmWeilStableSourceDichotomy
+
 /-! ## Generic Weil divisor-channel obstruction
 
 For a Weil-type abelian 2p-fold with rational Neron–Severi rank
