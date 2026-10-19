@@ -799,6 +799,82 @@ theorem cmWeilSixfoldNonsplitProjector_idempotent_on_spectrum
     rw [cmWeilSixfoldNonsplitProjector_kills_ambient]
     norm_num
 
+/-! ## SIXFOLD FALSIFICATION CRITERION IN THE TRUE CM-ISOGENY ORBIT
+
+On the rational pure-K Weil (3,3) two-plane, f=[2+i] has
+companion rational matrix (0,-15625;1,-234) and irreducible
+minimal polynomial t²+234t+15625 with conjugate non-real
+roots -117±44i.
+
+A genuine algebraic Chow-image projected by the explicit
+polynomial above is preserved by this genuine CM isogeny.
+It is consequently EITHER ZERO OR THE ENTIRE exceptional
+Weil plane, with no intermediate algebraic line.
+
+To DISPROVE rational Hodge for one nonsplit polarized sixfold
+one must establish vanishing of the projector on EVERY
+actual codimension-three Chow cycle; testing finite catalogs
+or divisor-generated classes alone is insufficient.
+-/
+
+/-- Rational companion normal form of [2+i]* on pure Weil H^6. -/
+def cmWeilSixfoldCompanionAction (z : ℚ × ℚ) : ℚ × ℚ :=
+  (-(15625 : ℚ) * z.2, z.1 - 234*z.2)
+
+/-- The verified GST rational one-source reconstruction, specialized
+to the sixth-power CM eigenvalue -117+44i. -/
+theorem cmWeilSixfold_nonzero_algebraic_source_spans_plane
+    (S : Submodule ℚ (ℚ × ℚ))
+    (hInvariant : ∀ z ∈ S, cmWeilSixfoldCompanionAction z ∈ S)
+    (z : ℚ × ℚ) (hz : z ∈ S) (hzero : z ≠ 0) :
+    S = ⊤ := by
+  rcases z with ⟨x, y⟩
+  have hxy : x ≠ 0 ∨ y ≠ 0 := by
+    by_cases hx : x = 0
+    · right
+      intro hy
+      exact hzero (by simp [hx, hy])
+    · exact Or.inl hx
+  have htranslate := hInvariant (x,y) hz
+  apply le_antisymm le_top
+  intro target _
+  rcases target with ⟨u, v⟩
+  let c0 := cmWeilOneSourceCoeff0 (-117) 44 x y u v
+  let c1 := cmWeilOneSourceCoeff1 (-117) 44 x y u v
+  obtain ⟨hfirst, hsecond⟩ :=
+    cmWeilOneSourceReconstruction (-117) 44 x y u v (by norm_num) hxy
+  have htarget :
+      (u, v) = c0 • (x,y) +
+        c1 • cmWeilSixfoldCompanionAction (x,y) := by
+    apply Prod.ext
+    · change u = c0*x + c1*(-(15625 : ℚ)*y)
+      change c0*x - c1*(((-117 : ℚ)*(-117)+44*44)*y) = u at hfirst
+      nlinarith [hfirst]
+    · change v = c0*y + c1*(x-234*y)
+      change c0*y + c1*(x+2*(-117 : ℚ)*y) = v at hsecond
+      nlinarith [hsecond]
+  rw [htarget]
+  exact S.add_mem (S.smul_mem c0 hz) (S.smul_mem c1 htranslate)
+
+theorem cmWeilSixfoldStableSourceDichotomy
+    (S : Submodule ℚ (ℚ × ℚ))
+    (hInvariant : ∀ z ∈ S, cmWeilSixfoldCompanionAction z ∈ S) :
+    S = ⊥ ∨ S = ⊤ := by
+  by_cases hTop : S = ⊤
+  · exact Or.inr hTop
+  · left
+    apply le_antisymm ?_ bot_le
+    intro z hz
+    by_cases hz0 : z = 0
+    · simpa [hz0]
+    · exact False.elim (hTop
+        (cmWeilSixfold_nonzero_algebraic_source_spans_plane
+          S hInvariant z hz hz0))
+
+#check cmWeilSixfoldCompanionAction
+#check cmWeilSixfoldStableSourceDichotomy
+#print axioms cmWeilSixfoldStableSourceDichotomy
+
 #check cmWeilSixfoldNonsplitProjectorScalar
 #check cmWeilSixfoldNonsplitProjector_fixes_Weil
 #check cmWeilSixfoldNonsplitProjector_idempotent_on_spectrum
