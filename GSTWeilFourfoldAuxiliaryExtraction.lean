@@ -122,6 +122,55 @@ theorem contraction_nonzero (d : ℚ) (hd : d ≠ 0)
   intro hzero
   exact hne (contraction_injective_on_balanced d hd v hv hzero)
 
+/-- Determinant after padding a (2,2) Hermitian form by (+t,-1/(delta*t)). -/
+theorem padded_determinant (delta t : ℚ) (hdelta : delta ≠ 0) (ht : t ≠ 0) :
+    delta * t * (-1 / (delta * t)) = -1 := by
+  field_simp [hdelta, ht]
+
+def realFourthPower (d m : ℚ) : ℚ := m ^ 4 - 6 * m ^ 2 * d + d ^ 2
+def imaginaryFourthPower (d m : ℚ) : ℚ := 4 * m * (m ^ 2 - d)
+
+/-- Matrix of pullback by m+u on the degree-four Weil plane, u²=-d. -/
+def fourthPowerAction (d m : ℚ) (v : ℚ × ℚ) : ℚ × ℚ :=
+  (realFourthPower d m * v.1 - d * imaginaryFourthPower d m * v.2,
+   imaginaryFourthPower d m * v.1 + realFourthPower d m * v.2)
+
+def planeDeterminant (v w : ℚ × ℚ) : ℚ := v.1 * w.2 - v.2 * w.1
+
+theorem fourth_power_orbit_determinant (d m : ℚ) (v : ℚ × ℚ) :
+    planeDeterminant v (fourthPowerAction d m v) =
+      imaginaryFourthPower d m * (v.1 ^ 2 + d * v.2 ^ 2) := by
+  dsimp [planeDeterminant, fourthPowerAction]
+  ring
+
+theorem imaginary_fourth_power_positive (d : ℚ) (hd : 0 < d) :
+    0 < imaginaryFourthPower d (d + 1) := by
+  have hm : 0 < d + 1 := by linarith
+  have hq : 0 < (d + 1) ^ 2 - d := by nlinarith [sq_nonneg d]
+  dsimp [imaginaryFourthPower]
+  positivity
+
+theorem quadratic_norm_positive (d : ℚ) (hd : 0 < d)
+    (v : ℚ × ℚ) (hv : v ≠ (0, 0)) : 0 < v.1 ^ 2 + d * v.2 ^ 2 := by
+  by_cases hx : v.1 = 0
+  · have hy : v.2 ≠ 0 := by
+      intro hy
+      exact hv (Prod.ext hx hy)
+    have hy2 : 0 < v.2 ^ 2 := sq_pos_of_ne_zero hy
+    rw [hx]
+    nlinarith
+  · have hx2 : 0 < v.1 ^ 2 := sq_pos_of_ne_zero hx
+    have hy2 : 0 ≤ d * v.2 ^ 2 := mul_nonneg hd.le (sq_nonneg _)
+    linarith
+
+/-- A nonzero extracted rational vector and its (d+1+u)-pullback are independent. -/
+theorem extracted_fourth_power_orbit_has_rank_two (d : ℚ) (hd : 0 < d)
+    (v : ℚ × ℚ) (hv : v ≠ (0, 0)) :
+    0 < planeDeterminant v (fourthPowerAction d (d + 1) v) := by
+  rw [fourth_power_orbit_determinant]
+  exact mul_pos (imaginary_fourth_power_positive d hd)
+    (quadratic_norm_positive d hd v hv)
+
 /-! ## CANONICAL SECANT-SOURCE WEIL COEFFICIENT — NO FREE RANK INPUT
 
 In the actual genus-three secant/ideal-sheaf construction, the
@@ -191,54 +240,6 @@ theorem secantSeedCanonicalCMOrbitDet_pos
 #check secantSeedCanonicalCMOrbitDet_pos
 #print axioms secantSeedCanonicalCMOrbitDet_pos
 
-/-- Determinant after padding a (2,2) Hermitian form by (+t,-1/(delta*t)). -/
-theorem padded_determinant (delta t : ℚ) (hdelta : delta ≠ 0) (ht : t ≠ 0) :
-    delta * t * (-1 / (delta * t)) = -1 := by
-  field_simp [hdelta, ht]
-
-def realFourthPower (d m : ℚ) : ℚ := m ^ 4 - 6 * m ^ 2 * d + d ^ 2
-def imaginaryFourthPower (d m : ℚ) : ℚ := 4 * m * (m ^ 2 - d)
-
-/-- Matrix of pullback by m+u on the degree-four Weil plane, u²=-d. -/
-def fourthPowerAction (d m : ℚ) (v : ℚ × ℚ) : ℚ × ℚ :=
-  (realFourthPower d m * v.1 - d * imaginaryFourthPower d m * v.2,
-   imaginaryFourthPower d m * v.1 + realFourthPower d m * v.2)
-
-def planeDeterminant (v w : ℚ × ℚ) : ℚ := v.1 * w.2 - v.2 * w.1
-
-theorem fourth_power_orbit_determinant (d m : ℚ) (v : ℚ × ℚ) :
-    planeDeterminant v (fourthPowerAction d m v) =
-      imaginaryFourthPower d m * (v.1 ^ 2 + d * v.2 ^ 2) := by
-  dsimp [planeDeterminant, fourthPowerAction]
-  ring
-
-theorem imaginary_fourth_power_positive (d : ℚ) (hd : 0 < d) :
-    0 < imaginaryFourthPower d (d + 1) := by
-  have hm : 0 < d + 1 := by linarith
-  have hq : 0 < (d + 1) ^ 2 - d := by nlinarith [sq_nonneg d]
-  dsimp [imaginaryFourthPower]
-  positivity
-
-theorem quadratic_norm_positive (d : ℚ) (hd : 0 < d)
-    (v : ℚ × ℚ) (hv : v ≠ (0, 0)) : 0 < v.1 ^ 2 + d * v.2 ^ 2 := by
-  by_cases hx : v.1 = 0
-  · have hy : v.2 ≠ 0 := by
-      intro hy
-      exact hv (Prod.ext hx hy)
-    have hy2 : 0 < v.2 ^ 2 := sq_pos_of_ne_zero hy
-    rw [hx]
-    nlinarith
-  · have hx2 : 0 < v.1 ^ 2 := sq_pos_of_ne_zero hx
-    have hy2 : 0 ≤ d * v.2 ^ 2 := mul_nonneg hd.le (sq_nonneg _)
-    linarith
-
-/-- A nonzero extracted rational vector and its (d+1+u)-pullback are independent. -/
-theorem extracted_fourth_power_orbit_has_rank_two (d : ℚ) (hd : 0 < d)
-    (v : ℚ × ℚ) (hv : v ≠ (0, 0)) :
-    0 < planeDeterminant v (fourthPowerAction d (d + 1) v) := by
-  rw [fourth_power_orbit_determinant]
-  exact mul_pos (imaginary_fourth_power_positive d hd)
-    (quadratic_norm_positive d hd v hv)
 
 #print axioms auxiliary_graph_pairings
 #print axioms graph_difference_kills_product_polarization
