@@ -2070,6 +2070,76 @@ def cmWeilSixfoldThreeOpGraphWinding (v w : Fin 8) : ℕ :=
       (cmWeilSixfoldThreeOpGraphGaussian v).2 *
         (cmWeilSixfoldThreeOpGraphGaussian w).2).natAbs
 
+/-! ### Exact eight-graph top-intersection fingerprint (complex orientation)
+
+Each pair of sixfold codimension-three CM graph supports is
+defined independently in three E²-coordinate pairs. The actual
+Gaussian determinant amplitude has winding n(v,w). The full
+kernel-cycle transverse intersection on ONE pair is 4*n², so
+its sixfold top intersection is (4*n²)^3 = 64*n^6.
+A diagonal graph has trivial normal bundle and winding zero.
+The following arithmetic verifies the complete eight-by-eight
+intersection matrix against the existing integer projector
+coefficients, not only an unexplained final scalar.
+
+The resulting signed integral graph numerator has square
+-737280000 and the rational 1/19200-normalized class has
+square EXACTLY -2 in the genuine complex intersection
+orientation. The separate exterior record used orientation
+e1...e6 f1...f6, opposite to complex e1 f1...e6 f6 for
+six factors (15 transpositions). Its recorded +32 norm of
+the Weil basis therefore corresponds to -32 geometrically.
+This identity is a CONDITIONAL interpretation of the proven
+integer matrix: scheme-level graph/K0/canonical Betti
+identifications must still be instantiated; it does not
+construct a generic nonsplit Chow class. -/
+
+/-- Exact top-intersection number for the full Gaussian
+kernel divisor cycles of two graph sources, given the true
+per-coordinate degree 4*winding². -/
+def cmWeilSixfoldThreeOpGraphIntersectionNumber
+    (v w : Fin 8) : ℤ :=
+  64 * (cmWeilSixfoldThreeOpGraphWinding v w : ℤ)^6
+
+/-- Pair every central graph basis support with the entire
+signed integral numerator of the pure-Weil source. -/
+def cmWeilSixfoldThreeOpGraphProjectedRowPairing
+    (v : Fin 8) : ℤ :=
+  Finset.univ.sum (fun w : Fin 8 =>
+    cmWeilSixfoldThreeOperatorIntegralK0 w *
+      cmWeilSixfoldThreeOpGraphIntersectionNumber v w)
+
+/-- All EIGHT pairings, an exact integer fingerprint for the
+normalized pure-Weil graph source. This independently checks
+the 8×8 intersection calculation and its sign. -/
+theorem cmWeilSixfoldThreeOpGraph_intersection_fingerprint :
+    cmWeilSixfoldThreeOpGraphProjectedRowPairing =
+      ![-38400,4492800,0,-13516800,38400,-4492800,0,13516800] := by
+  funext v
+  fin_cases v <;> decide
+
+/-- The signed eight-graph integral numerator has negative
+self-intersection for the complex intersection orientation. -/
+theorem cmWeilSixfoldThreeOpGraph_integral_selfIntersection :
+    Finset.univ.sum (fun v : Fin 8 =>
+      cmWeilSixfoldThreeOperatorIntegralK0 v *
+        cmWeilSixfoldThreeOpGraphProjectedRowPairing v) =
+      (-737280000 : ℤ) := by
+  rw [cmWeilSixfoldThreeOpGraph_intersection_fingerprint]
+  decide
+
+/-- Exact rational square of the projected central source
+at the 19200 denominator, under the matrix pairing proved
+above: a negative-two class in the numerical Weil lattice. -/
+theorem cmWeilSixfoldThreeOpGraph_normalized_square_neg_two :
+    (-737280000 : ℚ) / (19200 : ℚ)^2 = -2 := by
+  norm_num
+
+#check cmWeilSixfoldThreeOpGraph_intersection_fingerprint
+#check cmWeilSixfoldThreeOpGraph_integral_selfIntersection
+#check cmWeilSixfoldThreeOpGraph_normalized_square_neg_two
+#print axioms cmWeilSixfoldThreeOpGraph_integral_selfIntersection
+
 def cmWeilSixfoldThreeOpGraphExtTwo (v w : Fin 8) : ℕ :=
   16 * (cmWeilSixfoldThreeOpGraphWinding v w)^4
 
