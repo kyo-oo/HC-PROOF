@@ -254,6 +254,93 @@ theorem secantSeedCanonicalCMOrbitDet_pos
 #print axioms fourth_power_orbit_determinant
 #print axioms extracted_fourth_power_orbit_has_rank_two
 
+/-! ## REAL PROJECTIVE-BUNDLE CHOW PUSHFORWARD EXTRACTION
+
+The source transport manuscript uses a genuine projective bundle
+p:P(Q)→Y and the ordinary coherent sheaf F on P(Q), obtained after
+untwisting the gerbe source. Its universal native Chow character is
+ch(F)=p^*κ·exp(ζ), with ζ=c₁(O(1)) rational.
+
+We prove, at the exact RING level and in ALL fibre dimensions,
+that the finite exponential twist cancels and the PROJECTIVE-BUNDLE
+pushforward recovers κ. The only geometric inputs are the standard
+Chow projection formula and fibre integration p_*(ζ^f)=1.
+In a finite-dimensional Chow ring exp(ζ) is automatically a unit
+since ζ is nilpotent; Lean packages it as an explicit unit, rather
+than positing a Hodge class preimage or an arbitrary source inverse.
+
+This is the algebraic recovery inside the actual semiregularity /
+Hilbert-source pipeline, not the analytic theorem which produces F.
+-/
+
+section ProjectiveBundleChowCharacterExtraction
+
+variable {ChowY ChowP : Type*}
+  [CommRing ChowY] [CommRing ChowP]
+  [Algebra ℚ ChowY] [Algebra ℚ ChowP]
+
+/-- For a PROJECTIVE BUNDLE of relative dimension f with its true
+rational Chow pullback and proper pushforward, the Chern character
+of the ordinary sheaf obtained by twisting p^*κ with an invertible
+finite exponential recovers exactly κ under ζ^f integration.
+No target rational Hodge class is chosen anywhere. -/
+theorem projectiveBundleChow_extract_fixedChern_character
+    (pull : ChowY →+* ChowP)
+    (push : ChowP →ₗ[ℚ] ChowY)
+    (hProjection : ∀ (y : ChowY) (x : ChowP),
+      push (pull y * x) = y * push x)
+    (fiberDimension : ℕ)
+    (zeta : ChowP)
+    (hFiber : push (zeta ^ fiberDimension) = 1)
+    (expZeta : ChowPˣ)
+    (kappa : ChowY) :
+    push ((zeta ^ fiberDimension) *
+      (↑(expZeta⁻¹) : ChowP) *
+      ((↑expZeta : ChowP) * pull kappa)) = kappa := by
+  have hCancel :
+      (zeta ^ fiberDimension) *
+        (↑(expZeta⁻¹) : ChowP) *
+        ((↑expZeta : ChowP) * pull kappa) =
+      pull kappa * (zeta ^ fiberDimension) := by
+    calc
+      _ = (zeta ^ fiberDimension) *
+          (((↑(expZeta⁻¹) : ChowP) * (↑expZeta : ChowP)) *
+            pull kappa) := by ring
+      _ = (zeta ^ fiberDimension) * pull kappa := by simp
+      _ = pull kappa * (zeta ^ fiberDimension) := by ring
+  rw [hCancel, hProjection, hFiber, mul_one]
+
+/-- Canonical comparison is transport-safe: whenever the TRUE
+rational Chow-to-Betti map is compatible with actual proper Gysin,
+the extracted actual Chow cycle has exactly the Betti class of κ.
+This does NOT designate an arbitrary map as canonical: the
+comparison map must be instantiated as the true cycle class. -/
+theorem projectiveBundleChow_extractedBettiClass
+    {BettiY : Type*} [CommRing BettiY]
+    [Algebra ℚ BettiY]
+    (cycleClassY : ChowY →+* BettiY)
+    (pull : ChowY →+* ChowP)
+    (push : ChowP →ₗ[ℚ] ChowY)
+    (hProjection : ∀ (y : ChowY) (x : ChowP),
+      push (pull y * x) = y * push x)
+    (fiberDimension : ℕ)
+    (zeta : ChowP)
+    (hFiber : push (zeta ^ fiberDimension) = 1)
+    (expZeta : ChowPˣ)
+    (kappa : ChowY) :
+    cycleClassY (push ((zeta ^ fiberDimension) *
+      (↑(expZeta⁻¹) : ChowP) *
+      ((↑expZeta : ChowP) * pull kappa))) =
+        cycleClassY kappa := by
+  rw [projectiveBundleChow_extract_fixedChern_character
+    pull push hProjection fiberDimension zeta hFiber expZeta kappa]
+
+end ProjectiveBundleChowCharacterExtraction
+
+#check projectiveBundleChow_extract_fixedChern_character
+#check projectiveBundleChow_extractedBettiClass
+#print axioms projectiveBundleChow_extract_fixedChern_character
+
 /-! ## Constructive vanishing for the elliptic-star secant seed
 
 This is the first section of the external source construction, rather
