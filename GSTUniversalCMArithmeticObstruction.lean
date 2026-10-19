@@ -678,6 +678,54 @@ theorem quaternionicAntiKGraphNonzero
   apply hNonzero
   rw [← hSquare v, hz, map_zero]
 
+/-! ## GST basis-free QUATERNIONIC NONSPLIT GEOMETRIC RANK
+
+The actual graph of an anti-K quaternionic algebraic isogeny J has
+J²=3 and IJ=-JI on the rational/complex Betti realization. The
+two-dimensional sigma space is sent into the opposite eigenspace.
+
+Beyond the existing single-vector survival theorem, TWO independent
+sigma inputs remain linearly independent after J. This eliminates any
+new arbitrary 2x2 matrix nondegeneracy premise from the graph-switch
+stage. Algebraic realization still requires the actual scheme-isogeny
+graph and its canonical Betti functoriality; an abstract pair of linear
+operators by itself is NOT the original-X Weil Chow cycle.
+-/
+
+/-- Basis-free quaternionic graph rank preservation.  The theorem
+proves both the correct anti-CM eigen-switch and preservation of a
+two-generator geometric period frame.  The proof uses the exact
+quaternion relation J²=3 and has NO determinant or target preimage
+hypothesis, only independence of the original two eigenvectors. -/
+theorem quaternionicAntiKGraphPreservesTwoIndependentEigendirections
+    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (I J : Module.End ℂ V)
+    (hAnti : I.comp J = -(J.comp I))
+    (hSquare : ∀ z : V, J (J z) = (3:ℂ) • z)
+    (v w : V)
+    (hv : I v = Complex.I • v)
+    (hw : I w = Complex.I • w)
+    (hIndependent : ∀ a b : ℂ,
+      a • v + b • w = 0 → a = 0 ∧ b = 0) :
+    I (J v) = (-Complex.I) • (J v) ∧
+    I (J w) = (-Complex.I) • (J w) ∧
+    (∀ a b : ℂ,
+      a • J v + b • J w = 0 → a = 0 ∧ b = 0) := by
+  refine ⟨quaternionicAntiKGraphSwitchesEigensector I J hAnti v hv,
+    quaternionicAntiKGraphSwitchesEigensector I J hAnti w hw, ?_⟩
+  intro a b hab
+  have hzeroJ : J (a • v + b • w) = 0 := by
+    rw [map_add, map_smul, map_smul]
+    exact hab
+  have hdouble := congrArg J hzeroJ
+  rw [hSquare (a • v + b • w), map_zero] at hdouble
+  have hzero : a • v + b • w = 0 :=
+    (smul_eq_zero.mp hdouble).resolve_left (by norm_num)
+  exact hIndependent a b hzero
+
+#check quaternionicAntiKGraphPreservesTwoIndependentEigendirections
+#print axioms quaternionicAntiKGraphPreservesTwoIndependentEigendirections
+
 /-- Exact rational squared norm of the quaternionic graph
 pairing tensor products: each QM block contributes 144
 and each CM elliptic odd-degree remainder contributes 4. -/
