@@ -145,6 +145,53 @@ theorem plane_syzygy_bundle_second_chern_primitive
 #check plane_syzygy_bundle_second_chern_primitive
 #print axioms plane_syzygy_bundle_second_chern_primitive
 
+/-! ## ACTUAL SMOOTH ORIGINAL-X CENTER FROM THE SYZYGY BUNDLE
+
+The same equation-driven bundle E is generated in degrees 2 and d:
+the three Koszul relations have degree 2; the equation relation
+(q_0,q_1,q_2) has degree d. Thus E(d) is globally generated for
+every d>=2, with no unspecified sufficiently-large parameter.
+A general section gives a smooth surface S_d in ORIGINAL X_d,
+with c2(E(d))=(d^2-3d+3)h^2-[P]. It is disjoint from P and has
+positive ample degree (d-1)^3. Its primitive period against
+Z_d=d[P]-h^2 is -(d-1)^3. Blowing up this actual surface therefore
+gives mixed top return +(d-1)^3. These are exact all-d formulas.
+The bundle/section/Bertini construction is the geometric input;
+the following rational intersection laws have no nonzero premise.
+-/
+
+def syzygySmoothCenterIntersection (d : ℚ) (u v : ℚ × ℚ) : ℚ :=
+  d*u.1*v.1+u.1*v.2+u.2*v.1+(d^2-3*d+3)*u.2*v.2
+
+def syzygySmoothCenter (d : ℚ) : ℚ × ℚ := (d^2-3*d+3,-1)
+
+theorem syzygy_smooth_center_primitive_period (d : ℚ) :
+    syzygySmoothCenterIntersection d (-1,d) (syzygySmoothCenter d) =
+      -(d-1)^3 := by
+  dsimp [syzygySmoothCenterIntersection, syzygySmoothCenter]
+  ring
+
+theorem syzygy_smooth_center_disjoint_intersection (d : ℚ) :
+    syzygySmoothCenterIntersection d (0,1) (syzygySmoothCenter d)=0 := by
+  dsimp [syzygySmoothCenterIntersection, syzygySmoothCenter]
+  ring
+
+theorem syzygy_smooth_center_ample_degree (d : ℚ) :
+    syzygySmoothCenterIntersection d (1,0) (syzygySmoothCenter d)=(d-1)^3 := by
+  dsimp [syzygySmoothCenterIntersection, syzygySmoothCenter]
+  ring
+
+theorem syzygy_smooth_center_mixed_feedback_positive
+    (d : ℚ) (hd : 2 ≤ d) :
+    0 < -syzygySmoothCenterIntersection d (-1,d) (syzygySmoothCenter d) := by
+  rw [syzygy_smooth_center_primitive_period]
+  have h : 0 < d-1 := by linarith
+  simpa using pow_pos h 3
+
+#check syzygy_smooth_center_primitive_period
+#check syzygy_smooth_center_mixed_feedback_positive
+#print axioms syzygy_smooth_center_mixed_feedback_positive
+
 /-- No primitive class degeneracy in the two-plane intersection
 lattice: the determinant is a nonzero integral power. -/
 theorem intersection_discriminant_nonzero (d : ℤ) (m : ℕ)

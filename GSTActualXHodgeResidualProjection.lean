@@ -2102,4 +2102,39 @@ theorem ActualXCycleProjectionData.targetSmoothCenterCycle_energy_bound
 #check ActualXCycleProjectionData.targetSmoothCenterCycle_energy_bound
 #print axioms ActualXCycleProjectionData.targetSmoothCenterCycle_energy_bound
 
+/-- Select ONE of the two actual geometric center cycles, using only
+its rational target-residual period. No arbitrary cycle is chosen. -/
+noncomputable def ActualXCycleProjectionData.selectSmoothCenter
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (C1 C2 : codimensionCycles X.X p) (alpha : HodgeSpace X H p) :
+    codimensionCycles X.X p :=
+  if Q (P.primitiveResidual alpha) (P.trueHodgeClass C1) ≠ 0
+    then C1 else C2
+
+/-- The actual E/E+E center selection detects whenever their
+computed ch_2 period does. The theorem does not assert that
+an appropriate input E exists for an arbitrary residual. -/
+theorem ActualXCycleProjectionData.selectSmoothCenter_detects
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (C1 C2 : codimensionCycles X.X p) (alpha : HodgeSpace X H p)
+    (hCharacter :
+      Q (P.primitiveResidual alpha) (P.trueHodgeClass C2)/2-
+        2*Q (P.primitiveResidual alpha) (P.trueHodgeClass C1) ≠ 0) :
+    Q (P.primitiveResidual alpha)
+      (P.trueHodgeClass (P.selectSmoothCenter Q C1 C2 alpha)) ≠ 0 := by
+  unfold ActualXCycleProjectionData.selectSmoothCenter
+  split_ifs with h
+  · exact h
+  · have hzero : Q (P.primitiveResidual alpha) (P.trueHodgeClass C1)=0 := by
+      simpa using h
+    intro hsecond
+    apply hCharacter
+    rw [hzero, hsecond]
+    norm_num
+
+#check ActualXCycleProjectionData.selectSmoothCenter_detects
+#print axioms ActualXCycleProjectionData.selectSmoothCenter_detects
+
 end GSTActualXHodgeResidualProjection
