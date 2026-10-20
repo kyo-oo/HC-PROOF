@@ -2493,7 +2493,7 @@ theorem ActualXCycleProjectionData.eulerCertifiedCycle_of_det_ne_zero
       (P.eulerCertifiedCycle readout sources
         (P.eulerSourceMatrix readout sources)⁻¹ alpha) = alpha.1 := by
   apply P.eulerCertifiedCycle_correct
-  exact Matrix.mul_nonsing_inv _ hDet
+  exact Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hDet)
 
 /-- The same measured native certificate closes the entire original Hodge
 fiber, with the literal actual-cycle output rather than an abstract span. -/

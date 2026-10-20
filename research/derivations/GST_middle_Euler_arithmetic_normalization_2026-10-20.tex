@@ -655,6 +655,68 @@ Thus the earlier individual coniveau theorem holds with this
 corrected construction. The signed Gysin sum does not assert
 that the original Hodge class is algebraic.
 
+\section{Constructing the normalizer by a finite Newton word}
+The Lean continuation replaces an assumed root by an explicit
+finite algorithm in the rational Chow or even cohomology algebra.
+Let $s=c(N)^{-1}$ and write $\nu$ for a nilpotence exponent with $(1-s)^\nu=0$.
+Use a new notation $D_n$ for denominators, to distinguish these
+from the original dimension $d$:
+\[
+ D_0=1,\quad b_0=1,\qquad
+ D_{n+1}=2D_n^3,\quad
+ b_{n+1}=b_n(3D_n^2-sb_n^2).
+ \tag{9.1}
+\]
+Here $D_n\in\Q_{>0}$ is interpreted in the Chow algebra
+by its scalar algebra map. Every $b_n$ is a finite polynomial
+in the algebraic Segre class $s$.
+Put $\delta_n=D_n^2-sb_n^2$. The exact polynomial identity is
+\[
+ \boxed{\delta_{n+1}
+      =\delta_n^2(3D_n^2+\delta_n).}
+ \tag{9.2}
+\]
+For example, expansion of the two sides gives the same expression
+$4D_n^6-9D_n^4sb_n^2+6D_n^2s^2b_n^4-s^3b_n^6$.
+Induction starting from $\delta_0=1-s$ proves
+\[
+ \delta_n\in (1-s)^{2^n}A.
+\]
+Since $2^\nu\ge\nu$, the explicit rational characteristic-class word
+\[
+ \boxed{R_{\mathrm{Newton}}=D_\nu^{-1}b_\nu,\qquad
+       sR_{\mathrm{Newton}}^2=1}
+ \tag{9.3}
+\]
+is exact. No root-existence premise is used.
+If $s\,c(N)=1$, multiply (9.3) by $c(N)$ to obtain
+$R_{\mathrm{Newton}}^2=c(N)$.
+
+This Newton root equals the binomial root (4.1) in the
+nilpotent positive-degree algebra. Both have constant term $1$.
+Their difference times their sum is zero, whereas their sum is
+$2$ plus a nilpotent element and is therefore a unit.
+Consequently their difference is zero.
+
+For every native rational subalgebra $B$ containing $s$,
+the recurrence and rational scalar closure give
+$R_{\mathrm{Newton}}\in B$. Its inverse is
+$sR_{\mathrm{Newton}}\in B$. Thus
+\[
+ R_{\mathrm{Newton}}\alpha\in B
+       \quad\Longleftrightarrow\quad \alpha\in B.
+ \tag{9.4}
+\]
+The Lean implementation proves (9.2), the error factorization,
+(9.3), the square identity with $c(N)$, (9.4), and the Euler
+trace cancellation using this actually constructed root.
+The geometric KU/GRR identification and general
+Hodge--Riemann theorem are not newly implemented by these
+rational-ring proofs. The original-$X$ Lean compiler separately
+uses the actual native cycle type and supplied cycle-class map
+to verify inverse-matrix reconstruction. Its determinant premise
+concerns actual native columns, not topological source columns.
+
 \section{Exact checks and proof scope}
 The accompanying Wolfram Language file performs exact rational checks:
 \begin{enumerate}

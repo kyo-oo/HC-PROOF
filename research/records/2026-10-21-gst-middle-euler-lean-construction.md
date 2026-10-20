@@ -31,7 +31,15 @@ Wolfram independently expanded both rational and denominator-separated Newton er
 
 ## Compilation
 
-Pending remote compilation after this code commit. Expected existing workflows: GST Graph V2 CM NM Geometry Upgrade; GST Pinned Universal Hodge Geometric Integration; Mathbox K3 Rank Two Primitive Intersection Gram. Read revision-matched job logs and repair all errors before recording a green outcome.
+Initial submission: 4715410811cb32e2fd83a0d90611d3adf1fb8214.
+
+- Graph arithmetic GREEN: https://github.com/kyo-oo/HC-PROOF/actions/runs/39482156972 .
+- K3 Gram/Euler benchmark GREEN: https://github.com/kyo-oo/HC-PROOF/actions/runs/39482156988 .
+- Pinned integration run 39482156974 exposed exactly one type error at GSTActualXHodgeResidualProjection.lean:2496: Matrix.mul_nonsing_inv requires IsUnit(det), not merely det!=0. The underlying right-inverse reconstruction theorem compiled; the determinant wrapper did not.
+- Minimal repair: supply isUnit_iff_ne_zero.mpr hDet over Q. The compiler output identifies this exact conversion; no theorem statement or mathematical premise changes.
+- Remote compilation of the repaired ActualX file and full pinned gate is pending until observed below. The separate initial ActualX job may still be rebuilding dependencies; its status is not evidence for the repaired revision.
+
+The manuscript now includes the denominator-separated constructive Newton proof. Its general KU/GRR and Hodge geometry remain mathematical manuscript results, with the formal algebraic scope specified above.
 
 ## Continuation
 
