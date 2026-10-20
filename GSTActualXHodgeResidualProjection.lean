@@ -2137,4 +2137,172 @@ theorem ActualXCycleProjectionData.selectSmoothCenter_detects
 #check ActualXCycleProjectionData.selectSmoothCenter_detects
 #print axioms ActualXCycleProjectionData.selectSmoothCenter_detects
 
+
+/-! ## GST exceptional cosmology -> actual original-X perfect-complex source
+
+Combine the ambient-blowup exceptional Chow return, a genuine graded
+algebraic Chern/relative-Todd GRR source on the born world, and the
+target-sensitive sum-of-squares native Chow compiler. The distinguished
+unproved universal input is an independently constructed ambient perfect
+complex with nonzero measured primitive residual period. Nothing here
+assumes an original-X target cycle preimage.
+-/
+
+/-- A born-world perfect complex has a *concrete* native original-X
+codimension-p Chow output via the exceptional Gysin and fiber return. -/
+def ActualXCycleProjectionData.exceptionalReturnGRR
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p) :
+    K →ₗ[ℚ] codimensionCycles X.X p :=
+  (-qChow).comp (jChow.comp chowGRR)
+
+/-- Canonical Chow/Betti naturality identifies the true readout of the
+returned ORIGINAL-X cycle with an exceptional ambient-world period. -/
+theorem ActualXCycleProjectionData.exceptionalReturnGRR_class
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE HY HE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    [AddCommGroup HY] [Module ℚ HY]
+    [AddCommGroup HE] [Module ℚ HE]
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p)
+    (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jBetti : HY →ₗ[ℚ] HE)
+    (qReturn : HE →ₗ[ℚ] HodgeSpace X H p)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, P.trueHodgeClass (qChow V) = qReturn (clE V))
+    (F : K) :
+    P.trueHodgeClass
+        (P.exceptionalReturnGRR chowGRR jChow qChow F) =
+      -(qReturn (jBetti (clY (chowGRR F)))) := by
+  change P.trueHodgeClass (-(qChow (jChow (chowGRR F)))) = _
+  rw [map_neg, hQ (jChow (chowGRR F)), hJ (chowGRR F)]
+
+/-- Construct a target-sensitive original-X Chow cycle from FINITELY
+many independently geometric perfect-complex sources on the blowup. -/
+noncomputable def ActualXCycleProjectionData.exceptionalTargetSelectedNative
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K)
+    (alpha : HodgeSpace X H p) :
+    codimensionCycles X.X p :=
+  P.targetCoupledK0ChowCycle primitiveK
+    (P.exceptionalReturnGRR chowGRR jChow qChow)
+    Q sources (P.primitiveResidual alpha)
+
+/-- Exact residual period, not a selected Hodge-to-Chow preimage. -/
+theorem ActualXCycleProjectionData.exceptionalTargetSelectedNative_pairing
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K)
+    (alpha : HodgeSpace X H p) :
+    (Q (P.primitiveResidual alpha))
+        (P.trueHodgeClass
+          (P.exceptionalTargetSelectedNative primitiveK chowGRR
+            jChow qChow Q sources alpha)) =
+      ∑ i : Fin n,
+        (Q (P.primitiveResidual alpha))
+          (P.trueHodgeClass
+            (P.exceptionalReturnGRR chowGRR jChow qChow
+              (primitiveK (sources i)))) ^ 2 := by
+  exact P.targetCoupledK0ChowCycle_pairing primitiveK
+    (P.exceptionalReturnGRR chowGRR jChow qChow) Q sources
+    (P.primitiveResidual alpha)
+
+/-- The constructed original-X algebraic source adds a genuinely
+independent Hodge direction whenever one independently born algebraic
+perfect-complex source has a nonzero exceptional residual period. -/
+theorem ActualXCycleProjectionData.exceptional_target_birth_strictly_grows_originalX
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE HY HE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    [AddCommGroup HY] [Module ℚ HY]
+    [AddCommGroup HE] [Module ℚ HE]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p)
+    (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jBetti : HY →ₗ[ℚ] HE)
+    (qReturn : HE →ₗ[ℚ] HodgeSpace X H p)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, P.trueHodgeClass (qChow V) = qReturn (clE V))
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (hGramDual : ∀ (j : ι) (x : HodgeSpace X H p),
+      (Q x) (P.trueHodgeClass (P.sourceNativeCycles j)) =
+        ∑ i, P.geometricDetectors i x *
+          (Q (P.trueHodgeClass (P.sourceNativeCycles i)))
+            (P.trueHodgeClass (P.sourceNativeCycles j)))
+    (sources : Fin n → K)
+    (alpha : HodgeSpace X H p) (i : Fin n)
+    (hRead :
+      (Q (P.primitiveResidual alpha))
+        (-(qReturn (jBetti (clY (chowGRR (primitiveK (sources i))))))) ≠ 0) :
+    Submodule.span ℚ
+        (Set.range (fun j : ι => P.trueHodgeClass (P.sourceNativeCycles j))) <
+      Submodule.span ℚ
+        (Set.insert
+          (P.trueHodgeClass
+            (P.exceptionalTargetSelectedNative primitiveK chowGRR
+              jChow qChow Q sources alpha))
+          (Set.range (fun j : ι =>
+            P.trueHodgeClass (P.sourceNativeCycles j)))) := by
+  have hDetected :
+      (Q (P.primitiveResidual alpha))
+        (P.trueHodgeClass
+          (P.exceptionalReturnGRR chowGRR jChow qChow
+            (primitiveK (sources i)))) ≠ 0 := by
+    rw [P.exceptionalReturnGRR_class chowGRR jChow qChow
+      clY clE jBetti qReturn hJ hQ (primitiveK (sources i))]
+    exact hRead
+  have hPositive :
+      0 < (Q (P.primitiveResidual alpha))
+        (P.trueHodgeClass
+          (P.exceptionalTargetSelectedNative primitiveK chowGRR
+            jChow qChow Q sources alpha)) :=
+    P.targetCoupledK0ChowCycle_positive primitiveK
+      (P.exceptionalReturnGRR chowGRR jChow qChow)
+      Q sources (P.primitiveResidual alpha) i hDetected
+  exact P.target_directed_gram_coupling_birth Q hGramDual alpha
+    (P.exceptionalTargetSelectedNative primitiveK chowGRR
+      jChow qChow Q sources alpha) (ne_of_gt hPositive)
+
+#check ActualXCycleProjectionData.exceptionalReturnGRR
+#check ActualXCycleProjectionData.exceptionalReturnGRR_class
+#check ActualXCycleProjectionData.exceptionalTargetSelectedNative_pairing
+#check ActualXCycleProjectionData.exceptional_target_birth_strictly_grows_originalX
+#print axioms ActualXCycleProjectionData.exceptional_target_birth_strictly_grows_originalX
+
 end GSTActualXHodgeResidualProjection
