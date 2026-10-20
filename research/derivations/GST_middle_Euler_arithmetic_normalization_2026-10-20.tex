@@ -658,7 +658,14 @@ that the original Hodge class is algebraic.
 \section{Constructing the normalizer by a finite Newton word}
 The Lean continuation replaces an assumed root by an explicit
 finite algorithm in the rational Chow or even cohomology algebra.
-Let $s=c(N)^{-1}$ and write $\nu$ for a nilpotence exponent with $(1-s)^\nu=0$.
+Start directly with $u=c(N)-1$ and $u^\nu=0$.
+The earlier GST finite inverse constructs
+\[
+ s=\sum_{k=0}^{\nu-1}(-u)^k,\qquad s(1+u)=1,\qquad
+ 1-s=su,\qquad (1-s)^\nu=s^\nu u^\nu=0.
+\]
+Thus the Segre class and its required nilpotence are both derived
+from the original Chern data; no separate inverse or root is assumed.
 Use a new notation $D_n$ for denominators, to distinguish these
 from the original dimension $d$:
 \[

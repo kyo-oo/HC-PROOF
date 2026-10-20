@@ -31,25 +31,37 @@ Wolfram independently expanded both rational and denominator-separated Newton er
 
 ## Compilation
 
-Initial submission: 4715410811cb32e2fd83a0d90611d3adf1fb8214.
+The following revision-matched checks have completed successfully:
 
-- Graph arithmetic GREEN: https://github.com/kyo-oo/HC-PROOF/actions/runs/39482156972 .
-- K3 Gram/Euler benchmark GREEN: https://github.com/kyo-oo/HC-PROOF/actions/runs/39482156988 .
-- Pinned integration run 39482156974 exposed exactly one type error at GSTActualXHodgeResidualProjection.lean:2496: Matrix.mul_nonsing_inv requires IsUnit(det), not merely det!=0. The underlying right-inverse reconstruction theorem compiled; the determinant wrapper did not.
-- Minimal repair: supply isUnit_iff_ne_zero.mpr hDet over Q. The compiler output identifies this exact conversion; no theorem statement or mathematical premise changes.
-- Remote compilation of the repaired ActualX file and full pinned gate is pending until observed below. The separate initial ActualX job may still be rebuilding dependencies; its status is not evidence for the repaired revision.
+| Check | Verified code revision | Result |
+|---|---|---|
+| Complete Chern–Segre–Newton arithmetic | 4f2cdd7be1a5e9d10108035b501ba399ca95c8a1 | [GREEN #39483532547](https://github.com/kyo-oo/HC-PROOF/actions/runs/39483532547) |
+| Full pinned integration, including the actual-X compiler | 4f2cdd7be1a5e9d10108035b501ba399ca95c8a1 | [GREEN #39483532335](https://github.com/kyo-oo/HC-PROOF/actions/runs/39483532335) |
+| K3 native Gram and Euler index | 4715410811cb32e2fd83a0d90611d3adf1fb8214 | [GREEN #39482156988](https://github.com/kyo-oo/HC-PROOF/actions/runs/39482156988); K3 source blob unchanged at final code revision |
 
-The manuscript now includes the denominator-separated constructive Newton proof. Its general KU/GRR and Hodge geometry remain mathematical manuscript results, with the formal algebraic scope specified above.
+The duplicate standalone ActualX workflow [#39482736893](https://github.com/kyo-oo/HC-PROOF/actions/runs/39482736893), pinned at b4c7d117cd13776be1d8ada79ddadda35075f450, was last observed in progress in its native-projection build step. The same ActualX source is already kernel-verified by both [pinned #39482737165](https://github.com/kyo-oo/HC-PROOF/actions/runs/39482737165) and the final full pinned run above. Its independent workflow outcome is pending observation, rather than a pending proof verification.
+
+The initial pinned run #39482156974 at 4715410 exposed exactly one compiler API mismatch: Matrix.mul_nonsing_inv requires IsUnit(det), whereas hDet supplied det!=0. The minimal repair is isUnit_iff_ne_zero.mpr hDet over Q. The repaired and final full integration runs are GREEN; no mathematical premise or theorem statement was weakened.
+
+Commands: existing Graph and K3 workflows invoke lake build on their named libraries; the pinned gate runs scripts/gst_lean_dependency_roots.py and lake build GSTPinnedHodgeGeometricGate, plus the existing exact arithmetic/geometric computations. Their sorry/sorryAx guards passed. No local Lean installation or local compilation was used.
+
+Verified final code source blobs:
+
+- GSTGraphV2SelfExpandingCosmology.lean: 606cb553e396a27fb3918798682d6e6f3edae529.
+- GSTActualXHodgeResidualProjection.lean: 1726886a5cb5d225c299aa6605fdc1543f8f93b9.
+- GSTK3PrimitiveGram.lean: 3ea87cd8279b075f55cfc26aea52462b80ff0d74.
+
+The updated manuscript is 760 lines. LaTeX static checks have balanced braces and 58 display delimiter pairs; no PDF/LaTeX compiler result is claimed.
 
 ## Continuation
 
-Arithmetic normalization route: implementation submitted; compiler outcome pending.
-Native arithmetic-to-cycle route: explicit constructive certificate submitted; universal actual-source rank remains open.
+Arithmetic normalization route: complete constructive algebraic chain kernel-verified GREEN at 4f2cdd7.
+Native arithmetic-to-cycle route: actual-cycle inverse-matrix compiler kernel-verified GREEN in full integration; universal actual-source rank remains open.
 Universal algebraization route: open; no counterexample or universal source constructor has been proved by these index identities.
 
 ## Completed formal input chain
 
-The original nilpotent positive Chern class u=c(N)-1 now directly constructs the finite Segre word s=sum_(k<c)(-u)^k using the existing GST birth-feedback inverse. The proof derives (1-s)^c=0 from u^c=0, constructs the Newton normalizer, proves its square is 1+u, and gives the complete Chern -> Segre -> Newton -> Euler cancellation theorem. No extra Segre-nilpotence premise is needed. This final composition is submitted for revision-matched Graph and pinned verification.
+The original nilpotent positive Chern class u=c(N)-1 now directly constructs the finite Segre word s=sum_(k<c)(-u)^k using the existing GST birth-feedback inverse. The proof derives (1-s)^c=0 from u^c=0, constructs the Newton normalizer, proves its square is 1+u, and gives the complete Chern -> Segre -> Newton -> Euler cancellation theorem. No extra Segre-nilpotence premise is needed. This final composition is kernel-verified by the revision-matched Graph and full pinned GREEN runs above.
 
 ## Self-review of the proposed final inference
 
@@ -61,4 +73,4 @@ A precise algebraic discriminator is H=Q^2 with ordinary positive dot product an
 
 Thus the denominator-separated normalizer gives a new explicit finite native characteristic-class word, while its proved native_iff identity preserves the original algebraization question. The actual native index matrix theorem closes the cycle construction exactly when its actual source columns have full rank. A topological Gram matrix supplies no proof of that native-column condition.
 
-Audit provenance: self-review, manuscript and Lean submissions pinned at d34b0a2, 4715410 and b4c7d11. No independent-agent review or geometric KU/GRR formalization is claimed.
+Audit provenance: self-review, manuscript and Lean submissions pinned at d34b0a2, 4715410, b4c7d11 and final code 4f2cdd7. No independent-agent review or geometric KU/GRR formalization is claimed.
