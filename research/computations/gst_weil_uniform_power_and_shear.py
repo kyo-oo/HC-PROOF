@@ -119,6 +119,83 @@ def direct_line_bundle_variation():
             for mon, p in sorted(difference.items())}
 
 
+def direct_sum_tangent_matrix():
+    """Exact Q(i) rank of actual line-summand obstruction coordinates.
+
+    Columns are t11,t12,t13,t21,t22,t23,t31,t32,t33. For each
+    external line bundle and a<b, rows read V_a^V_b and U_a^U_b.
+    A uses (p,q)=(1,1); B uses (i,-i) in (p*u^V+q*U^v)/2.
+    """
+    z, one, ii = (Fraction(0), Fraction(0)), (Fraction(1), Fraction(0)), (Fraction(0), Fraction(1))
+    add = lambda a, b: (a[0]+b[0], a[1]+b[1])
+    neg = lambda a: (-a[0], -a[1])
+    conj = lambda a: (a[0], -a[1])
+    half = lambda a: (a[0]/2, a[1]/2)
+
+    def inverse(a):
+        norm = a[0]*a[0]+a[1]*a[1]
+        assert norm
+        return a[0]/norm, -a[1]/norm
+
+    def rref(matrix):
+        m = [row[:] for row in matrix]
+        pivot_columns, r = [], 0
+        for c in range(9):
+            k = next((k for k in range(r, len(m)) if m[k][c] != z), None)
+            if k is None:
+                continue
+            m[r], m[k] = m[k], m[r]
+            inv = inverse(m[r][c])
+            m[r] = [gaussian_mul(v, inv) for v in m[r]]
+            for k in range(len(m)):
+                if k != r and m[k][c] != z:
+                    factor = m[k][c]
+                    m[k] = [add(x, neg(gaussian_mul(factor, y)))
+                            for x, y in zip(m[k], m[r])]
+            pivot_columns.append(c)
+            r += 1
+        return m, pivot_columns
+
+    patterns = [(one, one, one), (one, ii, ii),
+                (ii, one, ii), (ii, ii, one)]
+    matrix, rank_growth = [], []
+    for p in patterns:
+        q = [conj(x) for x in p]
+        for a in range(3):
+            for b in range(a+1, 3):
+                vr, ur = [z]*9, [z]*9
+                vr[3*a+b], vr[3*b+a] = half(p[a]), neg(half(p[b]))
+                ur[3*a+b], ur[3*b+a] = half(q[b]), neg(half(q[a]))
+                matrix.extend([vr, ur])
+        rank_growth.append(len(rref(matrix)[1]))
+    reduced, pivots = rref(matrix)
+    assert rank_growth == [3, 5, 6, 6]
+    assert pivots == [1, 2, 3, 5, 6, 7]
+    assert all(row[j] == z for row in matrix for j in (0, 4, 8))
+    assert all(all(x == z for x in row) for row in reduced[6:])
+    # Orthogonal invariant: the 2x2 block formed by AAA and ABB
+    # for pair (1,2) has determinant (1-i)/4, not zero.
+    determinant = gaussian_mul(half(one), neg(half(ii)))
+    determinant = add(determinant, neg(gaussian_mul(neg(half(one)), half(one))))
+    assert determinant == (Fraction(1, 4), Fraction(-1, 4))
+    selected_rows, selected_cols = [0, 6, 2, 8, 4, 16], [1, 3, 2, 6, 5, 7]
+    minor = [[matrix[r][c] for c in selected_cols] for r in selected_rows]
+    block = [[half(one), neg(half(one))], [half(one), neg(half(ii))]]
+    assert all(minor[r][c] == (block[r % 2][c % 2] if r//2 == c//2 else z)
+               for r in range(6) for c in range(6))
+    full_minor = gaussian_mul(gaussian_mul(determinant, determinant), determinant)
+    assert full_minor == (Fraction(-1, 32), Fraction(-1, 32))
+    return {'coefficient_domain': 'Q(i), pairs of exact Fractions',
+            'shape': [24, 9], 'rank_growth_AAA_ABB_BAB_BBA': rank_growth,
+            'pivot_columns_zero_based': pivots,
+            'kernel_basis_columns_zero_based': [0, 4, 8],
+            'kernel': ['t11', 't22', 't33'],
+            'mixed_pair_minor': '(1-i)/4',
+            'six_direction_minor': '-(1+i)/32',
+            'scope': 'Necessary obstruction map of line-bundle direct summands; '
+                     'not the full Atiyah map of every representative of the K0 class'}
+
+
 def main():
     a1, a2, a3, b1, b2, b3, d1, d2, i, t = map(variable, NAMES)
     leak_r = (-(d1*a2*a3+a1*d2*a3)+d1*b2*b3
@@ -165,6 +242,7 @@ def main():
         'gaussian_exponents_visited': 512,
         'gaussian_first_twelve': rows,
         'direct_sum_line_bundle_Atiyah_coordinate': line_bundle_obstruction,
+        'direct_sum_nine_parameter_obstruction': direct_sum_tangent_matrix(),
         'non_claims': ['No construction of a nonsplit relative perfect complex',
                        'No counterexample to the rational Hodge conjecture',
                        'Finite powers alone do not prove the all-n theorem',

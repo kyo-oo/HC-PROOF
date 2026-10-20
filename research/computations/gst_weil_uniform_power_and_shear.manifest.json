@@ -2,7 +2,7 @@
   "schema_version": 2,
   "claim_id": "GST-UNIFORM-CM-FINITE-SHEAR-20261020",
   "repository": {
-    "commit": "a1f5671c71d67549a3604a4af243cca25aa12374",
+    "commit": "96c1b3da325b8685ae363a90ea23e1283aa3ff5d",
     "dirty": true
   },
   "command": [
@@ -19,7 +19,7 @@
     "hardware": "x86_64; Linux-6.18.55-x86_64-with-glibc2.39; host CPU model unrecorded"
   },
   "mathematics": {
-    "assertion_tested": "Exact polynomial finite-shear expansion and Gaussian recurrence for every integer n=1..512; exact first-order exterior variation of the specified external line bundle",
+    "assertion_tested": "Exact polynomial finite-shear expansion and Gaussian recurrence for every integer n=1..512; exact exterior variation and full 24-by-9 Q(i) line-summand obstruction matrix, rank six, diagonal kernel",
     "coefficient_domain": "Q[a1,a2,a3,b1,b2,b3,d1,d2,i,t] and Z[i]",
     "conventions": "Increasing exterior basis u1,u2,u3,v1,v2,v3,U1,U2,U3,V1,V2,V3; old u1=new u1-t V2 and old v2=new v2-t U1; exact Fraction arithmetic",
     "inputs": [
@@ -34,7 +34,17 @@
       "exponents_visited": 512,
       "shear": "symbolic polynomial in all ten named symbols",
       "exterior_basis_dimension": 12,
-      "timeout_seconds": 30
+      "timeout_seconds": 30,
+      "line_summand_obstruction_matrix": [
+        24,
+        9
+      ],
+      "line_bundle_patterns": [
+        "AAA",
+        "ABB",
+        "BAB",
+        "BBA"
+      ]
     },
     "non_claims": [
       "No construction of a nonsplit relative perfect complex",
@@ -49,8 +59,8 @@
     "seed": null
   },
   "run": {
-    "started_at": "2026-10-20T06:39:14.927737+00:00",
-    "runtime_seconds": 0.9683072280001852,
+    "started_at": "2026-10-20T06:46:52.187637+00:00",
+    "runtime_seconds": 0.06360695000012129,
     "exit_status": 0,
     "status": "completed",
     "resource_limits": {
@@ -63,7 +73,7 @@
   "outputs": [
     {
       "path": "research/computations/gst_weil_uniform_power_and_shear.output.json",
-      "sha256": "e30f7a1b1e47d0ef2dfe55b6ebefb76dde7da1ceb97776d68eda8eeade54b64e",
+      "sha256": "6bc88f834d4340382ff8967cb2ead59d05c7dba8a51ce1b2bae663beb9dcb3a0",
       "kind": "result"
     }
   ],
@@ -73,7 +83,8 @@
     "Both full symbolic shear error polynomials are zero",
     "Earlier first-order factorization checked by separate sparse polynomial code",
     "Wedge multiplication computes both nonzero Atiyah-coordinate coefficients from the specified forms",
-    "All pinned inputs unchanged during execution"
+    "All pinned inputs unchanged during execution",
+    "Complete Q(i) row reduction gives ranks 3,5,6,6 and exactly the diagonal three-coordinate kernel; explicit six-by-six block determinant is -(1+i)/32"
   ],
   "result": "Implementation and stated finite assertions verified. Unrestricted power and formal shear results are separately Lean-proved at a1f5671c. No relative perfect object or universal source is constructed.",
   "residual_risks": [
@@ -83,13 +94,13 @@
   "input_artifacts": [
     {
       "path": "research/computations/gst_weil_uniform_power_and_shear.py",
-      "sha256": "795862e78be09d155f0c951fcc0419b509537de94c581f6d984d18d3f0e0b40d",
-      "sha256_after": "795862e78be09d155f0c951fcc0419b509537de94c581f6d984d18d3f0e0b40d"
+      "sha256": "0cde52969e47ca9c9474eaeec2bd2947cbfffe24d918cf6c2cde0b11786aa008",
+      "sha256_after": "0cde52969e47ca9c9474eaeec2bd2947cbfffe24d918cf6c2cde0b11786aa008"
     },
     {
       "path": "GSTUniversalCMArithmeticObstruction.lean",
-      "sha256": "08d14bca99e6a8c449392b500d3492c543b2d64694f9b35b676c9f91f3027e6d",
-      "sha256_after": "08d14bca99e6a8c449392b500d3492c543b2d64694f9b35b676c9f91f3027e6d"
+      "sha256": "520315ba60c8191b7fcc9d7f7ac43da5c7ec4aebff2220042f5e653901ddaa8d",
+      "sha256_after": "520315ba60c8191b7fcc9d7f7ac43da5c7ec4aebff2220042f5e653901ddaa8d"
     }
   ],
   "declared_results": [

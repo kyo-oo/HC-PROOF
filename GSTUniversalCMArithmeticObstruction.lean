@@ -2801,6 +2801,62 @@ theorem cmWeilCMIntegralMixedShearInvariant
 #check cmWeilCMIntegralMixedShearInvariant
 #print axioms cmWeilCMIntegralMixedShearInvariant
 
+/-- The actual AAA and mixed A/B line-bundle obstruction rows
+separate BOTH off-diagonal tangent coefficients. The determinant
+condition is derived from i²=-1 in characteristic zero, never
+supplied as a free full-rank hypothesis. -/
+theorem cmWeilCMIntegralMixedPairConstraints_iff_zero
+    {F : Type*} [Field F] [CharZero F]
+    (i u v : F) (hi : i*i = -1) :
+    (u-v = 0 ∧ u-i*v = 0) ↔ (u = 0 ∧ v = 0) := by
+  have hiOne : i ≠ 1 := by
+    intro heq
+    rw [heq] at hi
+    norm_num at hi
+  constructor
+  · rintro ⟨hu, hv⟩
+    have huv : u = v := sub_eq_zero.mp hu
+    have hmul : (1-i)*v = 0 := by
+      calc
+        (1-i)*v = v-i*v := by ring
+        _ = u-i*v := by rw [huv]
+        _ = 0 := hv
+    have hvZero : v = 0 :=
+      (mul_eq_zero.mp hmul).resolve_left
+        (sub_ne_zero.mpr (Ne.symm hiOne))
+    exact ⟨huv.trans hvZero, hvZero⟩
+  · rintro ⟨rfl, rfl⟩
+    simp
+
+/-- Arbitrary-arity scalar form of the line-summand tangent test.
+When the genuine source geometry supplies both displayed rows
+for every unordered pair, their common kernel is EXACTLY the
+diagonal charts. On the actual three-pair CM source this is
+the six-direction constraint inside the nine-parameter tangent.
+This proves the scalar kernel theorem, not a universal statement
+about the Atiyah map of other perfect representatives. -/
+theorem cmWeilCMIntegralMixedLineConstraints_iff_diagonal
+    {F J : Type*} [Field F] [CharZero F] [LinearOrder J]
+    (i : F) (hi : i*i = -1) (t : J → J → F) :
+    (∀ a b : J, a < b →
+      t a b-t b a = 0 ∧ t a b-i*t b a = 0) ↔
+    (∀ a b : J, a ≠ b → t a b = 0) := by
+  constructor
+  · intro h a b hab
+    rcases lt_trichotomy a b with hlt | heq | hgt
+    · exact ((cmWeilCMIntegralMixedPairConstraints_iff_zero
+        i (t a b) (t b a) hi).mp (h a b hlt)).1
+    · exact False.elim (hab heq)
+    · exact ((cmWeilCMIntegralMixedPairConstraints_iff_zero
+        i (t b a) (t a b) hi).mp (h b a hgt)).2
+  · intro h a b hab
+    rw [h a b (ne_of_lt hab), h b a (Ne.symm (ne_of_lt hab))]
+    constructor <;> ring
+
+#check cmWeilCMIntegralMixedPairConstraints_iff_zero
+#check cmWeilCMIntegralMixedLineConstraints_iff_diagonal
+#print axioms cmWeilCMIntegralMixedLineConstraints_iff_diagonal
+
 #check cmWeilGaussianDivisorPairMul_orthogonal
 #check cmWeilCMIntegralSixfoldFullGram
 #check cmWeilCMIntegralFullLatticePairing

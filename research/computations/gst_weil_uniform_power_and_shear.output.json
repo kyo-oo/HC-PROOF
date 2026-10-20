@@ -100,6 +100,40 @@
     "U1^U2": "1/2",
     "V1^V2": "1/2"
   },
+  "direct_sum_nine_parameter_obstruction": {
+    "coefficient_domain": "Q(i), pairs of exact Fractions",
+    "shape": [
+      24,
+      9
+    ],
+    "rank_growth_AAA_ABB_BAB_BBA": [
+      3,
+      5,
+      6,
+      6
+    ],
+    "pivot_columns_zero_based": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      7
+    ],
+    "kernel_basis_columns_zero_based": [
+      0,
+      4,
+      8
+    ],
+    "kernel": [
+      "t11",
+      "t22",
+      "t33"
+    ],
+    "mixed_pair_minor": "(1-i)/4",
+    "six_direction_minor": "-(1+i)/32",
+    "scope": "Necessary obstruction map of line-bundle direct summands; not the full Atiyah map of every representative of the K0 class"
+  },
   "non_claims": [
     "No construction of a nonsplit relative perfect complex",
     "No counterexample to the rational Hodge conjecture",

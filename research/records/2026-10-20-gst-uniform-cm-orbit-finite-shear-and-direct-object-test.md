@@ -146,9 +146,40 @@ Hence the **unmodified split direct-sum representative** cannot deform along thi
 
 The exterior coefficients are computed from the forms by the reproducible script, rather than entered as a desired answer. The scheme-level Atiyah comparison and derived naturality in this paragraph are mathematical geometric inputs, not newly instantiated Lean structures. This is a self-audited object-specific derivation, not a Hodge counterexample.
 
+### The complete nine-parameter test: six directions are detected
+
+At the same equally polarized split CM seed, write the entire K-compatible polarized tangent chart as
+
+\[
+u_a(t)=u_a+\sum_b t_{ab}V_b,\qquad
+v_b(t)=v_b+\sum_a t_{ab}U_a,\quad 1\le a,b\le3.
+\]
+
+There are nine independent complex parameters. The real source's direct-sum expansion contains four external line-bundle summands with factor patterns `AAA`, `ABB`, `BAB`, `BBA`. For one such summand, put `(p_j,q_j)=(1,1)` for an A factor and `(i,-i)` for a B factor. Its c1 is `sum_j (p_j u_j wedge V_j + q_j U_j wedge v_j)/2`. For a<b the actual `(0,2)` coordinates of its variation are
+
+\[
+[V_a\wedge V_b]\delta c_1=(p_a t_{ab}-p_b t_{ba})/2,
+\quad
+[U_a\wedge U_b]\delta c_1=(q_b t_{ab}-q_a t_{ba})/2.
+\]
+
+The resulting line-summand obstruction matrix has shape **24 by 9** over Q(i). Its ranks after adjoining the four line summands are **3,5,6,6**. Its kernel is exactly the diagonal parameter subspace `span(t11,t22,t33)`.
+
+This rank statement has a direct all-parameter proof. For each unordered pair, the AAA row imposes `t_ab-t_ba=0`. The ABB row separates pairs (1,2) and (1,3); the BAB row separates pair (2,3). In each pair the additional equation is `t_ab-i*t_ba=0`. The coefficient block has determinant `(1-i)/4 != 0`. Taking the three independent pair blocks gives an explicit six-by-six minor
+
+\[
+((1-i)/4)^3=-(1+i)/32\ne0.
+\]
+
+All diagonal columns are zero, proving rank exactly six without parameter sampling. Python exact Gaussian-Fraction elimination and an independently constructed Wolfram matrix agree on the ranks and kernel. The Python script also checks that the selected six-by-six minor is exactly this block-diagonal matrix.
+
+The scalar argument is also formalized in the same existing Lean module as `cmWeilCMIntegralMixedPairConstraints_iff_zero` and `cmWeilCMIntegralMixedLineConstraints_iff_diagonal`. The latter works for **any linearly ordered index type**, rather than only a three-by-three chart, over every characteristic-zero field with a chosen i satisfying i squared equals -1. The pair detector derives `i != 1` from that equation; no independent determinant or rank hypothesis is supplied. The actual three-pair line-bundle geometry provides these rows for its three unordered pairs. This scalar formalization does not instantiate the scheme-level Atiyah comparison.
+
+**Geometric consequence for this actual representative:** every off-diagonal mixed tangent gives a nonzero obstruction on at least one of the displayed retract line bundles, hence on the unmodified direct-sum perfect object. The diagonal subspace is the kernel of these necessary *line-summand* constraints; no assertion is made here that every diagonal deformation is unobstructed for the full object, or that the same necessary constraints apply to genuinely coupled different representatives. In particular, reducing the pure K0 source from the old 4,800-fold graph numerator to the primitive-integral class removes the numerical Euler inflation but does not remove this explicit direct-object obstruction.
+
 ## 5. Executed evidence and next exact construction
 
-The [standard-library exact script](../computations/gst_weil_uniform_power_and_shear.py) multiplies sparse rational polynomials, verifies both full shear remainders are zero, checks the earlier leak factorization independently, compares the linear Gaussian recurrence with binary Gaussian exponentiation for **every n=1,...,512**, checks the norm 5^n and both mod-five channels, and computes the line-bundle exterior variation from the stated shear. Its [output](../computations/gst_weil_uniform_power_and_shear.output.json) and [version-2 manifest](../computations/gst_weil_uniform_power_and_shear.manifest.json) pin the inputs and bounds. The finite exponent test supports the implementation; the Lean induction proves the unrestricted statement.
+The [standard-library exact script](../computations/gst_weil_uniform_power_and_shear.py) multiplies sparse rational polynomials, verifies both full shear remainders are zero, checks the earlier leak factorization independently, compares the linear Gaussian recurrence with binary Gaussian exponentiation for **every n=1,...,512**, checks the norm 5^n and both mod-five channels, computes the line-bundle exterior variation from the stated shear, and exactly reduces the full 24-by-9 Gaussian obstruction matrix with its explicit nonzero six-by-six minor. Its [output](../computations/gst_weil_uniform_power_and_shear.output.json) and [version-2 manifest](../computations/gst_weil_uniform_power_and_shear.manifest.json) pin the inputs and bounds. The finite exponent test supports the implementation; the Lean induction proves the unrestricted statement.
 
 Wolfram independently returned the two quadratic coefficients
 `-(1+i^2)*a3*d1*d2` and `+(1+i^2)*b3*d1*d2`, zero corrected polynomial remainders, and the channel identity `a'-2b'=-5b`. An exploratory check initially tested the wrong sign for the real quadratic term; its nonzero remainder identified that mistake before the correct formula was committed. The Lean ring proof and separate Python polynomial arithmetic agree with the corrected signs.
