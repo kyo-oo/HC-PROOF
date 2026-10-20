@@ -1,76 +1,103 @@
-# GST Mathbox — integral Weil lattice Gram, CY6 Ext pressure, and the effective-source no-go
+# GST Mathbox — integral Weil lattice Gram and nonsplit source no-go
 
 - **Date:** 2026-10-20 (IST)
-- **Kind:** structural proof attempt, exact exterior audit, and a scoped geometric obstruction
-- **Program/route/claim IDs:** universal original-X rational Hodge-to-Chow, Gate 3; integral split CM Weil source
-- **Base checkpoint:** `56c32b0a5f6b90134d43e772bfbdfd8984327c07`
-- **Target:** universal construction of a genuine original-X algebraic representative of every rational Hodge class; local discrimination on the smaller integral Weil source
-- **Hypotheses and types:** (A=E^6) at split CM, with three elliptic pair factors, integral divisors (A_j,B_j\in CH^1(E^2)), and genuine integral Betti cup product. The Lean Gram law is in any `CommRing` given the surface intersection equations. The Serre pressure law is an integer consequence of its explicitly provided Euler identity.
-- **Conventions:** on each pair (S_j), (A_j^2=B_j^2=-2[p_j]), (A_jB_j=0), and ([p_1][p_2][p_3]) integrates to (+1) in complex orientation. The exterior enumerator indexes `e1..e6,f1..f6` and accounts for the sign (-1) converting to complex `e1,f1,...,e6,f6` orientation.
-- **Prior attempt:** [four-divisor integral Weil K0 source](2026-10-20-gst-four-divisor-integral-weil-k0-source.md). Its finite exterior Gram calculation was not a reusable Lean theorem across all coefficients.
-- **Distinct mechanism:** preserve the Gaussian orthogonal tensor law under three pairwise source factors; deduce the entire integral Weil Gram and CY6 Euler pressure, then test effective support and ample-polynomial deformation.
-- **Success criterion for this route:** kernel-certified general Gram and Serre pressure, plus a mathematically checked obstruction to the naive effective/line-bundle-only nonsplit realization. This does not constitute Gate 3 completion.
-- **Failure criterion:** a nonzero primitive (W) that is an ample cubic, a nonzero ((h\smile W)), or an exact pair-orthogonality identity failing over a commutative ring.
-- **Evidence label:** exact Gram and integer implications **proved in Lean** at pinned revisions listed below; geometric consequence **conditional on the canonical Betti/divisor and positivity identifications**; no universal Hodge claim.
-- **Review:** Mathbox-guided self-review, independent Python exact exterior enumeration and polynomial ideal reduction, not independent geometric referee review.
+- **Kind:** structural mathematical finding and scoped deformation obstruction
+- **Program:** original-X universal rational Hodge-to-Chow, Gate 3
+- **Base checkpoint:** \`56c32b0a5f6b90134d43e772bfbdfd8984327c07\`
+- **Exact target:** for every original smooth projective complex X and every rational (p,p) class, independently construct a genuine codimension-p rational Chow cycle with canonical Betti class equal to the target
+- **Local test:** split CM sixfold A=E^6 and its smaller integral exceptional Weil source; these results do **not** imply the universal target
+- **Nearest prior work:** [four-divisor split integral Weil source](2026-10-20-gst-four-divisor-integral-weil-k0-source.md)
+- **Mechanism:** Gaussian orthogonal tensor law, full integral Weil lattice pairing, CY6 Serre constraint, and ample-primitive obstruction to effective/line-bundle-only deformation
+- **Review:** Mathbox-guided self-audit, exact exterior enumerator and separate Groebner reduction; not an independent geometric proof audit
+- **Evidence:** Lean theorems on ring/linear/integer inputs are *proved as written* at pinned green commits; claimed geometric applications have the explicitly stated additional canonical comparison and positivity hypotheses
 
-## Reusable uniform algebra
+## 1. New kernel-checkable full integral intersection theorem
 
-Define the integral real and imaginary source classes by the already-constructed four signed triple-divisor expressions
-[
-W_R=-A_1A_2A_3+A_1B_2B_3+B_1A_2B_3+B_1B_2A_3,
-quad
-W_I=B_1A_2A_3+A_1B_2A_3+A_1A_2B_3-B_1B_2B_3.
-]
-The generic Gaussian pair law in the existing Lean file states that, when (x^2=y^2), (xy=0), (u^2=v^2), and (uv=0), the real and imaginary parts of ((x+iy)(u+iv)) have **equal square** (2x^2u^2) and **zero mixed product**. Iterate it three times over the actual surface equations to get
-[
-W_R^2=W_I^2=-32P,qquad W_RW_I=0,qquad P=[p_1][p_2][p_3].
-]
-Hence every pair of integral combinations obeys the bilinear identity
-[
+For each actual CM elliptic pair S_j=E_j × E_(j+3), the algebraic divisors are
+
+\[
+A_j=e_j\wedge e_{j+3}+f_j\wedge f_{j+3},\qquad
+B_j=e_j\wedge f_{j+3}-f_j\wedge e_{j+3}.
+\]
+
+They obey \(A_j^2=B_j^2=-2[p_j]\) and \(A_j B_j=0\) in the complex orientation on S_j. The already constructed integral Weil Chow expressions are
+
+\[
+\begin{aligned}
+W_R&=-A_1A_2A_3+A_1B_2B_3+B_1A_2B_3+B_1B_2A_3,\\
+W_I&=B_1A_2A_3+A_1B_2A_3+A_1A_2B_3-B_1B_2B_3.
+\end{aligned}
+\]
+
+The new theorem \`cmWeilGaussianDivisorPairMul_orthogonal\` proves in any commutative ring that multiplication of two orthogonal equal-square Gaussian pairs retains real/imaginary orthogonality and equal square. Iterating it gives \`cmWeilCMIntegralSixfoldFullGram\`:
+
+\[
+W_R^2=W_I^2=-32P,\qquad W_R W_I=0,\qquad
+P=[p_1][p_2][p_3].
+\]
+
+The new \`cmWeilCMIntegralFullLatticePairing\` then proves, for **every** four integer coefficients, the identity
+
+\[
 (mW_R+nW_I)(m'W_R+n'W_I)=-32(mm'+nn')P.
-]
-Over canonical rational Betti cohomology, (deg P=1). The corresponding pure-(mathrm{ch}_3) perfect (K_0) class (F_{m,n}) has, **if genuinely realized with all other Chern-character grades zero on the abelian sixfold**, the HRR invariant
-[
-chi(F_{m,n},F_{m,n})=32(m^2+n^2).
-]
-CY6 Serre duality then implies
-[
-e_0+e_2\ge 16(m^2+n^2),qquad
-e_2\ge16(m^2+n^2)-1 	ext{if }e_0=1.
-]
-For a simple basis class ((m,n)=(1,0)), this is (e_2\ge 15); for ((1,1)), (e_2\ge31). Unlike the old 4800-scaled graph-numerator obstruction, these bounds do NOT force a failure of injectivity into the 495-dimensional raw semiregularity target.
+\]
 
-## Exact exterior primitivity and effective-support obstruction
+This is now a reusable universally quantified Lean algebraic invariant, not only a finite exterior enumeration. Its interpretation as canonical Betti intersection uses the genuine scheme cohomology comparison, which is not inhabited by the pure commutative-ring theorem itself.
 
-The source forms in the fixed 12-dimensional exterior algebra are
-(A_j=e_j\wedge e_{j+3}+f_j\wedge f_{j+3}) and
-(B_j=e_j\wedge f_{j+3}-f_j\wedge e_{j+3}).
-Let (h=\sum_{k=1}^{6}e_k\wedge f_k), the standard product polarization. Directly, for every (j), the individual (A_j) and (B_j) wedge to zero with **both** (e_j\wedge f_j) and (e_{j+3}\wedge f_{j+3}). Every four-product summand of each Weil generator contains exactly one of (A_j,B_j) from **every** pair (j). Consequently
-[
-h\smile W_R=h\smile W_I=0;
-qquad h^3\smile(mW_R+nW_I)=0.
-]
-The full 12-generator exterior enumerator confirms both (hW) products vanish, the diagonal (-32I_2) intersection in complex orientation, and zero mixed intersection. There are 32 nonzero signed coefficients in each (W_R,W_I), so for a nonzero integer pair the class itself is nonzero.
+## 2. CY6 numerical pressure for every smaller integral source
 
-For any **nonzero effective** algebraic codimension-three cycle (Z) on this smooth projective sixfold, positivity of the degree against an ample class gives
-(int_A h^3[Z]>0). A nonzero integral Weil class has this intersection **zero**. Therefore **no nonzero integral Weil class can be the class of an effective codimension-three cycle**. In particular a single coherent sheaf of rank zero with (mathrm{ch}_0=mathrm{ch}_1=mathrm{ch}_2=0) cannot have precisely this nonzero (mathrm{ch}_3): its leading support cycle in codimension three would be effective. Signed Chow combinations and alternating derived complexes remain possible, as already constructed at the split CM fibre.
+If a perfect object F on A has **precisely** pure Chern character
 
-This is a no-go for **one effective/pure-support coherent source**, not an obstruction to algebraicity in the rational Chow group and not a counterexample to Hodge.
+\[
+\operatorname{ch}(F)=mW_R+nW_I
+\]
 
-## Why the naive nonsplit line-bundle recipe also fails
+with no other positive or rank Chern-character components, standard abelian HRR and complex Serre duality imply
 
-At a nonsplit polarized Weil period with (mathrm{NS}_{\mathbb Q}(A)=\mathbb Q h) (an explicit **hypothesis**, not asserted for every period), every line bundle has rational first Chern class proportional to (h). Hence any finite integral combination of line-bundle Chern characters and skyscraper sheaf characters has codimension-three component in (\mathbb Q h^3). For a nonzero primitive Weil class (W) with (hW=0) and (h^4\ne0), (W=q h^3) would imply (q h^4=0), hence (q=0) and (W=0), a contradiction. The new generic Lean lemma `cmWeilCMIntegralPrimitiveNotAmpleCubic` formalizes the required rational-linear separation.
+\[
+\chi(F,F)=32(m^2+n^2)=2e_0-2e_1+2e_2-e_3,
+\quad e_j=\dim\operatorname{Ext}^j(F,F).
+\]
 
-Therefore the central split formula built from special CM divisor line bundles and point corrections **cannot deform component-by-component as an assembly of line bundles and points** into such a rank-one Néron–Severi period. If a genuinely coupled nonsplit perfect source exists, its deformation must abandon that naive constituent presentation (or use genuinely new sheaves/perfect objects).
+The new Lean declarations \`cmWeilCMIntegralLattice_CY6SerrePressure\`, \`cmWeilCMIntegralLattice_simpleExtTwoPressure\` and \`cmWeilCMIntegralBasis_simpleExtTwo_minimum\` certify the exact integer implications
 
-## What this test does and does not establish
+\[
+e_0+e_2\ge16(m^2+n^2),\qquad
+e_0=1 \Rightarrow e_2\ge 16(m^2+n^2)-1.
+\]
 
-- **Proved as written in Lean:** Gaussian orthogonality, full Gram, all-integer bilinear formula, numerical CY6/Serre implications under the stated Euler relation, and abstract primitive-versus-ample-cubic separation. The latest CI results must be matched to their exact proof commits.
-- **Exact computational cross-check:** the ring quotient ((A_j^2+2p_j,B_j^2+2p_j,A_jB_j)) reduces the two self-squares to (-32p_1p_2p_3) and the cross product to zero. An independent 12-symbol exterior enumeration gives (hW_R=hW_I=0) and the same Gram after orientation conversion.
-- **Conditional geometric interpretation:** the divisors, Betti intersection, positive ample degree, rank-one Néron–Severi hypothesis when used, and HRR/Serre comparison are geometric inputs beyond the present ring-only Lean theorems.
-- **First unresolved implication:** construct a nontrivial, genuinely coupled perfect object on a nonsplit Weil sixfold whose class is this *small* integral Weil source, and show (mathrm{At}(F)\lrcorner\kappa=0) in actual self-(operatorname{Ext}^2), then prove the canonical Betti comparison.
-- **Original universal target:** Gate 3 remains open for **all** original (X,p,alpha); neither this split CM source nor the nonsplit locus alone covers arbitrary varieties.
-- **Route disposition:** the Gram/Ext certificate succeeded; the naive effective-sheaf and line-bundle-only extension routes are excluded in their stated scope; the derived-coupled route remains open.
-- **Artifacts:** `GSTUniversalCMArithmeticObstruction.lean` commits `efe5fd7f8befaeaa224667424142b5ffc341911e` (pinned GREEN run #39361657338), `f8bf2a0e89f4531406b8c1218a36253896ee6b52` (pinned GREEN run #39362181323), and `772f8c3107fba54705122e453268ad1f2aabe36a` (pinned CI status to verify).
-- **Next discriminating check:** explicitly calculate an Atiyah/Kodaira–Spencer obstruction for a *genuinely coupled* (not direct split-sum) low-integral Weil perfect source, with its true derived geometric model and canonical Chern character; alternatively find a counterexample to the proposed low-rank coupling, not to Hodge itself.
+Thus a simple basis-class realization must have \(e_2\ge15\), whereas a simple realization of \(W_R+W_I\) must have \(e_2\ge31\). This is **not** the previous enormous 4800-scaled Euler pressure. Both inequalities are compatible with a 495-dimensional raw semiregularity target and do not prove Atiyah-obstruction vanishing.
+
+## 3. Exact exterior primitivity and necessary signed support
+
+Let \(h=\sum_{k=1}^{6}e_k\wedge f_k\), the standard positive product-polarization class on E^6. Each term in W_R and W_I contains one cross divisor from **each** elliptic pair. The local polarization on either elliptic coordinate wedges to zero with either \(A_j\) or \(B_j\). Therefore, directly in the full 12-generator exterior algebra,
+
+\[
+h\smile W_R=h\smile W_I=0
+\quad\Longrightarrow\quad
+h^3\smile(mW_R+nW_I)=0.
+\]
+
+Independent exact checks used all 12 wedge symbols \(e_1,\ldots,e_6,f_1,\ldots,f_6\), sign from inversion count, and all 32 nonzero coefficients for each W. They verified: hW_R=0, hW_I=0, W_RW_I=0, and W_R²=W_I²=-32 in *complex* orientation (the e-first orientation differs by a minus sign). A separate exact Groebner reduction modulo the nine surface relations reproduced the full -32/-32/0 Gram.
+
+When \((m,n)\ne(0,0)\), the nonzero self-pairing proves \(mW_R+nW_I\ne0\) over rational cohomology. On a polarized projective sixfold, every nonzero **effective** codimension-three algebraic cycle Z satisfies \(\int_A h^3[Z]>0\). Every nonzero integral Weil class above has degree zero against h³. Hence **no nonzero integral Weil class equals the class of an effective codimension-three cycle**. In particular, a single coherent sheaf with ch_0=ch_1=ch_2=0 cannot have this nonzero ch_3, because its first nonzero support-cycle class in codimension three would be effective.
+
+This excludes an *effective/pure-support ordinary coherent sheaf* realizing the specified character. It does not obstruct signed rational algebraic cycles, virtual K₀ sources, or a genuinely derived complex, and it certainly does not refute the Hodge conjecture.
+
+## 4. Another necessary condition at a nonsplit Weil period
+
+Suppose the nonsplit Weil abelian sixfold has the explicit extra hypothesis \(\mathrm{NS}_{\mathbb Q}(A)=\mathbb Q h\). Then every line bundle L has \(c_1(L)=q_L h\) and hence \(\operatorname{ch}_3(L)=q_L^3 h^3/6\). A skyscraper sheaf has ch_3=0. Therefore every finite K₀ combination of line bundles and skyscraper sheaves has ch_3 in the rational **ample-cubic line** \(\mathbb Q h^3\).
+
+A nonzero primitive W satisfies hW=0, whereas h⁴≠0 for an ample h on a sixfold. Were W=q h³, we would have 0=hW=q h⁴, forcing q=0 and W=0, a contradiction. The abstract fully typed linear-algebra contradiction is now the Lean theorem \`cmWeilCMIntegralPrimitiveNotAmpleCubic\`.
+
+Consequently, a **naive component-by-component deformation** of the original split line-bundle/point recipe to such a rank-one Néron–Severi period cannot produce W. A genuine nonsplit class must be provided by geometrically new sheaves, additional correspondences, or a truly coupled derived complex. The Néron–Severi rank-one premise is not asserted for every period.
+
+## 5. Route status and exact evidence boundary
+
+- **Succeeded:** generalized Gaussian orthogonality, full integral lattice Gram, all-integer Serre pressure and abstract ample-cubic exclusion as Lean theorems
+- **Scoped no-go:** single nonzero effective codimension-three carrier, rank-zero ordinary coherent sheaf of precisely pure ch₃, and line-bundle/point-only construction under the stated Picard-rank-one hypothesis
+- **Still open:** construct a genuinely coupled perfect object on an actual **nonsplit** Weil sixfold with pure primitive character and prove \(\operatorname{At}(F)\lrcorner\kappa=0\) in genuine derived Ext²; then establish canonical Betti equality and, separately, the universal original-X primitive construction
+- **Proof file:** \`GSTUniversalCMArithmeticObstruction.lean\`
+- **Exact Lean proof commits and CI:** \`efe5fd7f8befaeaa224667424142b5ffc341911e\` GREEN [#39361657338](https://github.com/kyo-oo/HC-PROOF/actions/runs/39361657338); \`f8bf2a0e89f4531406b8c1218a36253896ee6b52\` GREEN [#39362181323](https://github.com/kyo-oo/HC-PROOF/actions/runs/39362181323); \`772f8c3107fba54705122e453268ad1f2aabe36a\` (revision-matched CI must be checked)
+- **First unresolved implication:** geometric existence, Yoneda differentials/coupling, semiregularity of the *specific* Atiyah class, and canonical original-variety cycle-class comparison cannot be inferred from symbolic Gram identities
+- **Route disposition:** arithmetic/Gram completed; no-go routes closed only for their stated carrier class; genuine derived-coupled nonsplit route retained as open
