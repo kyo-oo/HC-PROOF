@@ -195,6 +195,14 @@ theorem clifford_syzygy_native_period_exact (d : ℤ) (p : ℕ) :
     rw [← mul_pow]
     norm_num
   have hneg : (1 : ℤ)-d = -(d-1) := by ring
+  have hpow : (1-d)^(p+1) =
+      - ((-1 : ℤ)^p*(d-1)^(p+1)) := by
+    calc
+      _ = (-(d-1))^(p+1) := by rw [hneg]
+      _ = (-1 : ℤ)^(p+1)*(d-1)^(p+1) := by rw [neg_pow]
+      _ = - ((-1 : ℤ)^p*(d-1)^(p+1)) := by
+        rw [pow_succ]
+        ring
   unfold Intersection PrimitivePlaneCycle cliffordSyzygyCharacterNumerator
   calc
     _ = ((-1 : ℤ)^p*(Nat.factorial p : ℤ))*
@@ -203,7 +211,7 @@ theorem clifford_syzygy_native_period_exact (d : ℤ) (p : ℕ) :
         (-((1-d)^(p+1))) := by rw [hdisc]
     _ = ((-1 : ℤ)^p*(-1 : ℤ)^p)*
         ((Nat.factorial p : ℤ)*(d-1)^(p+1)) := by
-          rw [hneg, neg_pow, pow_succ]
+          rw [hpow]
           ring
     _ = _ := by rw [hsign, one_mul]
 
