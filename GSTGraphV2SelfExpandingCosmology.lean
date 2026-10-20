@@ -1362,6 +1362,34 @@ def exceptionalOriginalXCycle
     (W : CY) : CX :=
   -(qChow (jChow W))
 
+/-! ### Exact ambient-pull annihilation
+
+For the geometric ambient world Y=Bl_X(P^N), the exceptional restriction
+of an ambient pull pi^*U is q^*(i^*U). The projective-bundle pushforward
+q_*(xi^(c-2) q^*(i^*U)) vanishes for c>=2 because the fiber has
+dimension c-1. Thus the existing GST return cannot detect ANY purely
+ambient pullback K0/Chern/Chow source, independently of its syzygy or
+equation presentation. A genuinely exceptional/non-split source is needed.
+-/
+
+/-- All actual ambient-projective Chow pullbacks are annihilated by
+the original-X exceptional return. `hLowFiber` is exactly the geometric
+projective-bundle vanishing in fiber degree c-2 < c-1, not an
+algebraic-surjectivity assumption. -/
+theorem exceptional_native_return_kills_ambient_pull
+    {CA : Type*} [AddCommGroup CA] [Module ℚ CA]
+    (ambientPull : CA →ₗ[ℚ] CY)
+    (restriction : CA →ₗ[ℚ] CE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (hRestr : ∀ U : CA, jChow (ambientPull U) = restriction U)
+    (hLowFiber : ∀ U : CA, qChow (restriction U) = 0)
+    (U : CA) :
+    exceptionalOriginalXCycle jChow qChow (ambientPull U) = 0 := by
+  simp [exceptionalOriginalXCycle, hRestr U, hLowFiber U]
+
+#check exceptional_native_return_kills_ambient_pull
+#print axioms exceptional_native_return_kills_ambient_pull
+
 /-- A native exceptional cycle on the blown-up projective space that
 represents j_*q^*alpha yields an actual cycle on original X with
 exact canonical class alpha. No target preimage is an input on X. -/
