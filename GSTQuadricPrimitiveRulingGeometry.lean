@@ -490,4 +490,69 @@ theorem parallel_birth_contrast_square_positive
 #print axioms parallel_birth_exact_schur
 #print axioms parallel_birth_gram_has_positive_schur
 
+/-- Full old-plus-new middle cycle coordinates for r disjoint births.
+The last two functions are the actual e_i(h), e_i(xi) coefficients. -/
+abbrev ParallelBirthMiddle (r : ℕ) :=
+  ℚ × ℚ × ℚ × (Fin r → ℚ) × (Fin r → ℚ)
+
+def parallelBirthCup (r : ℕ) (u : ParallelBirthMiddle r) :
+    ℚ × ℚ × (Fin r → ℚ) :=
+  let t : ℚ := 2*(r : ℚ)+1
+  (3*t*u.1+t*u.2.1+t*u.2.2.1+∑ i, u.2.2.2.2 i,
+   -2*t*u.1+(∑ i, u.2.2.2.1 i)-3*∑ i, u.2.2.2.2 i,
+   fun i => u.2.2.1+(t+1)*u.2.2.2.1 i-3*u.2.2.2.2 i)
+
+/-- Explicit algebraic combination of the r+1 genuine primitive
+source cycles. Its only read coordinates are b and the s_i.
+There is no supplied rank or target-cycle preimage. -/
+def constructParallelBirthCycle (r : ℕ) (u : ParallelBirthMiddle r) :
+    ParallelBirthMiddle r :=
+  let t : ℚ := 2*(r : ℚ)+1
+  let S : ℚ := ∑ i, u.2.2.2.1 i
+  (-S/2-(r : ℚ)*u.2.2.1/(2*t),
+   ((7*t-2)/(6*t))*S+((7*(r : ℚ)-6*t)/(6*t))*u.2.2.1,
+   u.2.2.1,u.2.2.2.1,
+   fun i => ((t+1)*u.2.2.2.1 i+u.2.2.1)/3)
+
+/-- Every primitive rational target on every connected r-birth
+fourfold has the displayed native representative. All r, not
+bounded testing; even r=0 recovers the original blowup sector.
+The geometric coordinate comparison is the blowup input above. -/
+theorem parallel_birth_recovers_every_primitive_target
+    (r : ℕ) (u : ParallelBirthMiddle r) (hu : parallelBirthCup r u = 0) :
+    constructParallelBirthCycle r u = u := by
+  rcases u with ⟨x,a,b,s,e⟩
+  let t : ℚ := 2*(r : ℚ)+1
+  let S : ℚ := ∑ i, s i
+  let T : ℚ := ∑ i, e i
+  have htpos : 0 < t := by dsimp [t]; positivity
+  have ht : t ≠ 0 := ne_of_gt htpos
+  have h0 : 3*t*x+t*a+t*b+T=0 := by
+    simpa [parallelBirthCup, t, T] using congrArg Prod.fst hu
+  have h1 : -2*t*x+S-3*T=0 := by
+    simpa [parallelBirthCup, t, S, T] using congrArg (fun z => z.2.1) hu
+  have hi (i : Fin r) : b+(t+1)*s i-3*e i=0 := by
+    simpa [parallelBirthCup, t] using congrArg (fun z => z.2.2 i) hu
+  have hsum : (r : ℚ)*b+(t+1)*S-3*T=0 := by
+    have hh : (∑ i : Fin r, (b+(t+1)*s i-3*e i))=0 :=
+      Finset.sum_eq_zero (fun i _ => hi i)
+    simpa [Finset.sum_add_distrib, Finset.sum_sub_distrib,
+      ← Finset.mul_sum, S, T] using hh
+  have hx : 2*t*x = -t*S-(r : ℚ)*b := by
+    linear_combination -h1+hsum
+  have ha : 6*t*a = (7*t-2)*S+(7*(r : ℚ)-6*t)*b := by
+    linear_combination 6*h0-9*hx+2*hsum
+  change (-S/2-(r : ℚ)*b/(2*t),
+    ((7*t-2)/(6*t))*S+((7*(r : ℚ)-6*t)/(6*t))*b,
+    b,s,fun i => ((t+1)*s i+b)/3) = (x,a,b,s,e)
+  refine Prod.ext ?_ (Prod.ext ?_ (Prod.ext rfl (Prod.ext rfl ?_)))
+  · field_simp [ht] <;> nlinarith [hx]
+  · field_simp [ht] <;> nlinarith [ha]
+  · funext i
+    have hh := hi i
+    linarith
+
+#check parallel_birth_recovers_every_primitive_target
+#print axioms parallel_birth_recovers_every_primitive_target
+
 end GSTQuadricPrimitiveRulingGeometry
