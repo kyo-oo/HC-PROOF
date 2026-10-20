@@ -26,6 +26,7 @@ on:
       - 'research/computations/gst_mixed_blowup_birth.py'
       - 'research/computations/gst_second_blowup_primitive_plane.py'
       - 'research/computations/gst_original_x_smooth_incidence_centers.py'
+      - 'research/computations/gst_pure_k0_single_center.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -137,6 +138,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/gst_original_x_smooth_incidence_centers.py | tee original-x-smooth-incidence.log
+      - name: Pure native K0 source encoded by one smooth center in every codimension
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/gst_pure_k0_single_center.py | tee pure-k0-single-center.log
       - name: Kernel compile period spread, primitive rank, and native Hodge assembly
         shell: bash
         run: |

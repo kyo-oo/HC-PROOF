@@ -2902,6 +2902,30 @@ theorem one_center_detects_pure_native_source
   apply mul_ne_zero (pow_ne_zero n (by norm_num))
   exact_mod_cast Nat.factorial_ne_zero n
 
+/-- The genuine codimension-p exceptional push contributes a second
+(-1)^(p-1).  The feedback is therefore the POSITIVE factorial multiple
+of the native source period in EVERY codimension p=n+1. -/
+theorem one_center_exceptional_feedback
+    {A : Type*} [CommRing A] [Algebra ℚ A]
+    (ell : A →ₗ[ℚ] ℚ) (h : A)
+    (hPrimitive : ∀ z : A, ell (h*z)=0)
+    (character : ℕ → A) (rank n : ℕ) (k : ℚ)
+    (hLower : ∀ i : ℕ, 0 < i → i < n+1 → character i = 0) :
+    ell (((-1 : ℚ)^n) • twistedChernClass rank (n+1)
+      (chernFromCharacter character) h k) =
+      (Nat.factorial n : ℚ)*ell (character (n+1)) := by
+  rw [map_smul, one_center_period_from_pure_character ell h hPrimitive
+    character rank n k hLower]
+  change (-1 : ℚ)^n*((-1 : ℚ)^n*(Nat.factorial n : ℚ)*
+    ell (character (n+1))) = _
+  have hs : (-1 : ℚ)^n*(-1 : ℚ)^n = 1 := by
+    rw [← mul_pow]
+    norm_num
+  calc
+    _ = ((-1 : ℚ)^n*(-1 : ℚ)^n)*
+        ((Nat.factorial n : ℚ)*ell (character (n+1))) := by ring
+    _ = _ := by rw [hs, one_mul]
+
 #check incidence_center_projective_push_coefficient
 #check primitive_period_of_twisted_chern
 #check two_center_chern_character_identity
@@ -2913,9 +2937,11 @@ theorem one_center_detects_pure_native_source
 #check one_center_class_from_pure_character
 #check one_center_period_from_pure_character
 #check one_center_detects_pure_native_source
+#check one_center_exceptional_feedback
 #print axioms chernFromCharacter_pure_leading
 #print axioms one_center_class_from_pure_character
 #print axioms one_center_detects_pure_native_source
+#print axioms one_center_exceptional_feedback
 
 end GSTNativeSmoothIncidenceCenter
 
