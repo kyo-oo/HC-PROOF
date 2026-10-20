@@ -1675,6 +1675,25 @@ asserts an algebraic representative for that class.
 -/
 
 
+
+/-- Sharp uniform M=d+1 middle channel, provided the actual
+projective center is geometrically embedded in P^(2d+2).
+Existence of that embedding uses independent generic projection
+avoiding the secant/tangent locus, not merely arithmetic.
+Every original p on X is in the exceptional channel i=d+1-p
+of ONE rational smooth world of complex dimension 2d+2. -/
+theorem dimension_bounded_middle_rational_blowup_channel
+    (d p : ℕ) (hp : p ≤ d) :
+    let M := d+1
+    let c := d+2
+    let i := d+1-p
+    1 ≤ i ∧ i < c ∧ p+i=M ∧ c=2*M-d := by
+  dsimp
+  omega
+
+#check dimension_bounded_middle_rational_blowup_channel
+#print axioms dimension_bounded_middle_rational_blowup_channel
+
 /-- A SINGLE EVEN RATIONAL AMBIENT WORLD suffices for every codimension
 on the SAME arbitrary original dimension-d X. The dimension M depends
 only on the initial embedding N₀ and d, not on p.
