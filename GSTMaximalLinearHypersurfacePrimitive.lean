@@ -587,6 +587,7 @@ theorem fermat_clifford_period_compiler_exact
           simp only [fermatCliffordPeriodCompiler,
             Finset.sum_add_distrib, Finset.sum_div,
             Finset.sum_const, Finset.card_fin, nsmul_eq_mul]
+          rfl
       _ = (∑ i : Fin d, beta i)/(B*D*(s-1)) := by
           field_simp [hB, hD, hs, hs1] <;> ring
   change B * (D*s*(fermatCliffordPeriodCompiler d m beta j) -
