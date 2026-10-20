@@ -33,12 +33,14 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
       - name: Restore compatible verified GST dependency build
+        id: gst-build-cache
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
           key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-actual-x-residual
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+            hc-lean-incremental-${{ runner.os }}-
       - name: Kernel compile directed cut geometry first
         shell: bash
         run: |
@@ -91,7 +93,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-actual-x-residual
+          key: ${{ steps.gst-build-cache.outputs.cache-primary-key }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
