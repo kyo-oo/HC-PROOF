@@ -853,6 +853,94 @@ theorem curvePairGenusTodd_intersection_zero
 #check curvePairGenusTodd_intersection_zero
 #print axioms curvePairToddFirst_primitive_cancellation
 
+/-! ## ATOMIC GEOMETRIC SURGERY: native diagonal vs tautological closure
+
+On the GENUINE original surface X=C×C, of genus g, the universal
+polarization H=A+B and tangent first Chern class c₁(T_X)=(2-2g)H
+produce only multiples of H in codimension one. Likewise every
+diagonal-supported self-correspondence on X×X obtained by tensoring
+with these same characteristic classes maps the unit to their
+tautological span (projection formula).
+
+But the independently algebraic graph divisor
+  D=[Δ_C]-A-B
+is H-primitive and satisfies H·D=0, D²=-2g. For g>0, NO
+tautological divisor can reproduce its pairing with D. This is a
+concrete ACTUAL algebraic-variety no-go for a proposed universal
+source-building recipe, NOT a Hodge counterexample. The corrective
+non-split input is the diagonal graph divisor on X itself.
+
+The Lean model below verifies the entire arbitrary-genus
+intersection obstruction. The semantic identification with actual
+C×C Chow intersection uses the source's established genuine
+diagonal/fiber intersection table, not a freely prescribed class map.
+-/
+
+/-- Every degree-one combination of the actual polarization and
+tangent Chern source on C×C. The tangent contribution is
+c₁(T_X)=(2-2g)(A+B) because c₁(T_C)=2-2g on each curve. -/
+def curvePairTautologicalChernDivisor
+    (g a b : ℚ) : EllipticPairNativeDivisor :=
+  ⟨a + (2-2*g)*b, a + (2-2*g)*b, 0⟩
+
+/-- The complete degree-one polarization/tangent-Chern sector has
+ZERO intersection pairing with the genuine internal graph source. -/
+theorem curvePair_tautological_graph_period_zero
+    (g a b : ℚ) :
+    curvePairIntersection g
+      (curvePairTautologicalChernDivisor g a b)
+      ellipticPairGraph = 0 := by
+  simp [curvePairIntersection, curvePairTautologicalChernDivisor,
+    ellipticPairIntersection, ellipticPairGraph]
+  <;> ring
+
+/-- Exact non-split actual diagonal-graph self-intersection for all
+genera; the signed primitive energy is 2g. -/
+theorem curvePair_internalGraph_square
+    (g : ℚ) :
+    curvePairIntersection g ellipticPairGraph ellipticPairGraph =
+      -2*g := by
+  simp [curvePairIntersection, ellipticPairIntersection,
+    ellipticPairGraph]
+  <;> ring
+
+/-- No polarization/tangent-Chern source can mimic the primitive
+graph period for ANY positive genus, regardless of its rational
+coefficients. A genuinely independent algebraic graph is required. -/
+theorem curvePair_internalGraph_escapes_tautological_periods
+    (g a b : ℚ) (hg : 0 < g) :
+    curvePairIntersection g
+      (curvePairTautologicalChernDivisor g a b)
+      ellipticPairGraph ≠
+    curvePairIntersection g ellipticPairGraph ellipticPairGraph := by
+  rw [curvePair_tautological_graph_period_zero,
+    curvePair_internalGraph_square]
+  linarith
+
+/-- The concrete internal diagonal source itself has the required
+NONZERO primitive period. This source is born from the actual
+subscheme Δ_C ⊂ C×C, not from matrix inversion or a chosen target. -/
+theorem curvePair_internalGraph_native_period_nonzero
+    (g : ℚ) (hg : 0 < g) :
+    curvePairIntersection g ellipticPairGraph ellipticPairGraph ≠ 0 := by
+  rw [curvePair_internalGraph_square]
+  linarith
+
+/-- The genus-zero boundary loses this separating period, as
+expected for the diagonal on P¹×P¹. -/
+theorem curvePair_internalGraph_genus_zero_period :
+    curvePairIntersection 0 ellipticPairGraph ellipticPairGraph = 0 := by
+  rw [curvePair_internalGraph_square]
+  norm_num
+
+#check curvePair_tautological_graph_period_zero
+#check curvePair_internalGraph_square
+#check curvePair_internalGraph_escapes_tautological_periods
+#check curvePair_internalGraph_native_period_nonzero
+#check curvePair_internalGraph_genus_zero_period
+#print axioms curvePair_internalGraph_escapes_tautological_periods
+#print axioms curvePair_internalGraph_native_period_nonzero
+
 #check curvePairSignedGram_exact
 #check curveTensorPrimitiveGram_self
 #check curveTensorPrimitiveGram_self_positive
