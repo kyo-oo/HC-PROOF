@@ -10,6 +10,7 @@ on:
       - 'GSTMaximalLinearHypersurfacePrimitive.lean'
       - 'GSTClassicalHodgeGeometricCycleClassPointRigidity.lean'
       - 'GSTActualXHodgeResidualProjection.lean'
+      - 'GSTGraphV2SelfExpandingCosmology.lean'
       - 'GSTUniversalResolvedSupportHodge.lean'
       - 'GSTQuadricPrimitiveRulingGeometry.lean'
       - 'GSTPrimitiveTransverseCycleExtraction.lean'
@@ -159,6 +160,7 @@ jobs:
             GSTCanonicalPointGeometryStage2G \
             GSTClassicalHodgeGeometricCycleClassPointRigidity \
             GSTActualXHodgeResidualProjection \
+            GSTGraphV2SelfExpandingCosmology \
             GSTUniversalResolvedSupportHodge \
             GSTQuadricPrimitiveRulingGeometry \
             GSTUniversalCMArithmeticObstruction \
