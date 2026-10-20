@@ -2511,12 +2511,41 @@ theorem cmWeilCMIntegralBasis_simpleExtTwo_minimum
     1 0 e1 e2 e3 (by simpa using hEuler)
   omega
 
+
+/-- A geometric anti-shortcut for the nonsplit Weil deformation route:
+a NONZERO primitive rational class cannot be a rational multiple
+of an ample cubic if cup product by the ample class does not kill
+that cubic. This is a fully typed linear algebra consequence,
+applicable to canonical rational H^6 -> H^8 cup multiplication.
+It deliberately does NOT assume the canonical Betti realization
+of the abstract formal divisor ring. -/
+theorem cmWeilCMIntegralPrimitiveNotAmpleCubic
+    {V W : Type*} [AddCommGroup V] [Module ℚ V]
+    [AddCommGroup W] [Module ℚ W]
+    (cupAmple : V →ₗ[ℚ] W) (ampleCube primitive : V)
+    (hcube : cupAmple ampleCube ≠ 0)
+    (hprimitive : cupAmple primitive = 0)
+    (hnonzero : primitive ≠ 0) (q : ℚ) :
+    primitive ≠ q • ampleCube := by
+  intro heq
+  have hzero : q • cupAmple ampleCube = 0 := by
+    calc
+      q • cupAmple ampleCube = cupAmple (q • ampleCube) := by simp
+      _ = cupAmple primitive := by rw [← heq]
+      _ = 0 := hprimitive
+  by_cases hq : q = 0
+  · rw [hq] at heq
+    exact hnonzero (by simpa using heq)
+  · exact (smul_ne_zero hq hcube) hzero
+
 #check cmWeilGaussianDivisorPairMul_orthogonal
 #check cmWeilCMIntegralSixfoldFullGram
 #check cmWeilCMIntegralFullLatticePairing
 #check cmWeilCMIntegralLattice_CY6SerrePressure
 #check cmWeilCMIntegralLattice_simpleExtTwoPressure
 #check cmWeilCMIntegralBasis_simpleExtTwo_minimum
+#check cmWeilCMIntegralPrimitiveNotAmpleCubic
+#print axioms cmWeilCMIntegralPrimitiveNotAmpleCubic
 #print axioms cmWeilCMIntegralLattice_simpleExtTwoPressure
 #print axioms cmWeilCMIntegralFullLatticePairing
 
