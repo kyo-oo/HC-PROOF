@@ -805,6 +805,23 @@ variable {NS HS NT HT : Type*}
     [AddCommGroup NT] [Module ℚ NT]
     [AddCommGroup HT] [Module ℚ HT]
 
+/-- A nonzero finite-degree GST geometry packet has an INJECTIVE
+Hodge pullback. This is a direct consequence of its certified
+push-pull degree identity, with no Hodge algebraicity premise.
+Consequently a complete Tate world cannot be used for finite-degree
+descent onto an original target carrying Hodge channels absent above. -/
+theorem finite_degree_hodge_pull_injective
+    (D : DegreePacket NS HS NT HT) :
+    Function.Injective D.hodgePull := by
+  intro alpha beta hab
+  have hPush := congrArg D.hodgePush hab
+  rw [D.degree_projection alpha, D.degree_projection beta] at hPush
+  have hScaled := congrArg (fun z : HT => D.degree⁻¹ • z) hPush
+  simpa [smul_smul, D.degree_ne_zero] using hScaled
+
+#check finite_degree_hodge_pull_injective
+#print axioms finite_degree_hodge_pull_injective
+
 /-- Explicit actual algebraic representative downstairs: pull the
 target Hodge class, represent it using the source's genuine native
 cycles, push the cycle back and divide by nonzero geometric degree.
