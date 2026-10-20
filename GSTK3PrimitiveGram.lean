@@ -343,6 +343,60 @@ def k3AmbientHyperplaneSquare (d : ℚ) : Coordinates :=
 def k3IntrinsicTangentChernTwo : Coordinates :=
   ⟨0, 24, 24, 0⟩
 
+/-! ## Stronger GST blowup-native testing on arbitrarily tall product towers
+
+For the original K3 selfproduct S×S with polarization h²=d≠0,
+the genuine primitive diagonal D annihilates EACH independent
+tautological codimension-two product component
+  [pt]×S, S×[pt], and h×h,
+not merely the single total-H² combination.
+
+If S has Picard rank one, any degree-two Chern/hyperplane
+characteristic coefficient on S×S lies in the rational span
+of those three classes. External product with an independent
+projective factor P^r then supplies an explicit original-X
+codimension-(r+2) diagonal-sheaf class whose pairing with
+D×1 is 21 for ALL r≥0. This gives arbitrarily high codimension
+tests of putative blowup cosmology source completeness.
+The all-r projective-bundle interpretation is geometric,
+whereas the Lean result below checks the exact base Gram.
+-/
+
+def k3LeftPointSource : Coordinates :=
+  ⟨0,1,0,0⟩
+
+def k3RightPointSource : Coordinates :=
+  ⟨0,0,1,0⟩
+
+def k3PolarizedCrossSource : Coordinates :=
+  ⟨0,0,0,1⟩
+
+/-- The non-tautological diagonal source on the ORIGINAL K3 selfproduct
+is orthogonal to the WHOLE three-generator decomposable degree-two
+characteristic sector, not just one hypersurface polarization. -/
+theorem primitive_diagonal_annihilates_all_three_decomposable_sources
+    (d : ℚ) (hd : d ≠ 0) :
+    intersection d (primitiveDiagonal d) k3LeftPointSource = 0 ∧
+    intersection d (primitiveDiagonal d) k3RightPointSource = 0 ∧
+    intersection d (primitiveDiagonal d) k3PolarizedCrossSource = 0 ∧
+    intersection d (primitiveDiagonal d) (primitiveDiagonal d) = 21 := by
+  constructor
+  · dsimp [intersection, primitiveDiagonal, k3LeftPointSource]
+    field_simp [hd]
+    ring
+  constructor
+  · dsimp [intersection, primitiveDiagonal, k3RightPointSource]
+    field_simp [hd]
+    ring
+  constructor
+  · dsimp [intersection, primitiveDiagonal, k3PolarizedCrossSource]
+    field_simp [hd]
+    ring
+  · exact diagonal_primitive_square d hd
+
+#check primitive_diagonal_annihilates_all_three_decomposable_sources
+#print axioms primitive_diagonal_annihilates_all_three_decomposable_sources
+
 /-- Exact native Gram: the primitive diagonal is invisible to ALL
 degree-two universal tangent/hyperplane characteristic generators. -/
 theorem primitive_diagonal_outside_characteristic_plane
