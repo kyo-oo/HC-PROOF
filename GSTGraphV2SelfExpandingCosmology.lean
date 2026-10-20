@@ -1663,6 +1663,101 @@ theorem picardCh3_three_twists_exhaust_all_sources
 #check picardCh3_three_twists_exhaust_all_sources
 #print axioms picardCh3_three_twists_exhaust_all_sources
 
+
+/-! ### GST arbitrary-original-X reduction to a middle Hodge channel
+The real geometric model is Y=Bl_X(P^(2M)), where dim X=d,
+M=N₀+d+p+2 and the exceptional channel is i=M-p.
+The required bounds ensure i is a genuine interior exceptional
+channel and p+i=M. The geometric input X->P^N₀ can always be
+linearly included in P^(2M). The rational middle Hodge class
+is j_*(xi^(i-1) q^*(alpha)). None of the arithmetic below
+asserts an algebraic representative for that class.
+-/
+
+/-- Every original dimension/degree/embedding bound admits a uniform
+explicit even-dimensional rational ambient blowup with a valid
+MIDDLE Hodge exceptional index. The constraints are geometric
+rank/channel bookkeeping, not a surjectivity premise. -/
+theorem middle_rational_blowup_channel_bounds
+    (d p N₀ : ℕ) (hp : p ≤ d) :
+    let M := N₀ + d + p + 2
+    let c := 2*M - d
+    let i := M - p
+    N₀ ≤ 2*M ∧ 2 ≤ c ∧ 1 ≤ i ∧ i < c ∧ p+i=M := by
+  dsimp
+  omega
+
+/-! ### The exact graded source-to-middle-to-original-X bridge
+For a fixed interior exceptional channel, I_C, I_H represent
+actual exceptional Chow and rational Hodge Gysin lifts;
+R_C, R_H represent the all-channel Chern-Segre corrected
+returns. The actual geometry must instantiate all three laws:
+Gysin naturality, return naturality and R_H o I_H=id.
+No target Chow preimage is inserted in the hypotheses.
+-/
+
+/-- Exact target algebraicity equivalence for an arbitrary exceptional
+channel, once genuine compatible Chow and Betti operations are supplied. -/
+theorem middle_exceptional_channel_range_iff
+    {CX CY HX HY : Type*}
+    [AddCommGroup CX] [Module ℚ CX]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup HX] [Module ℚ HX]
+    [AddCommGroup HY] [Module ℚ HY]
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (I_C : CX →ₗ[ℚ] CY) (I_H : HX →ₗ[ℚ] HY)
+    (R_C : CY →ₗ[ℚ] CX) (R_H : HY →ₗ[ℚ] HX)
+    (hLift : ∀ z : CX, clY (I_C z) = I_H (clX z))
+    (hReturn : ∀ W : CY, clX (R_C W) = R_H (clY W))
+    (hRetract : ∀ alpha : HX, R_H (I_H alpha) = alpha)
+    (alpha : HX) :
+    I_H alpha ∈ LinearMap.range clY ↔
+      alpha ∈ LinearMap.range clX := by
+  constructor
+  · rintro ⟨W, hW⟩
+    refine ⟨R_C W, ?_⟩
+    calc
+      clX (R_C W) = R_H (clY W) := hReturn W
+      _ = R_H (I_H alpha) := by rw [hW]
+      _ = alpha := hRetract alpha
+  · rintro ⟨Z, hZ⟩
+    refine ⟨I_C Z, ?_⟩
+    calc
+      clY (I_C Z) = I_H (clX Z) := hLift Z
+      _ = I_H alpha := by rw [hZ]
+
+/-- The first nontrivial four-channel Chern/Segre inverse,
+valid for arbitrary rational characteristic coefficients and
+arbitrary source-channel coordinates. The universal geometric
+formula is C(t)S(t)=1, not a formal assumption of full rank. -/
+theorem exceptional_four_channel_chern_segre_inverse
+    (k₁ k₂ k₃ x₁ x₂ x₃ x₄ : ℚ) :
+    let s₁ := -k₁
+    let s₂ := k₁^2-k₂
+    let s₃ := -k₁^3+2*k₁*k₂-k₃
+    let t₁ := x₁+s₁*x₂+s₂*x₃+s₃*x₄
+    let t₂ := x₂+s₁*x₃+s₂*x₄
+    let t₃ := x₃+s₁*x₄
+    let t₄ := x₄
+    (t₁+k₁*t₂+k₂*t₃+k₃*t₄=x₁) ∧
+      (t₂+k₁*t₃+k₂*t₄=x₂) ∧
+      (t₃+k₁*t₄=x₃) ∧
+      t₄=x₄ := by
+  dsimp
+  constructor
+  · ring
+  constructor
+  · ring
+  constructor
+  · ring
+  · rfl
+
+#check middle_rational_blowup_channel_bounds
+#check middle_exceptional_channel_range_iff
+#check exceptional_four_channel_chern_segre_inverse
+#print axioms middle_exceptional_channel_range_iff
+#print axioms exceptional_four_channel_chern_segre_inverse
+
 /-- First nontrivial Chern-Segre triangular cancellation, three exceptional
 channels. The geometric coefficients satisfy s₁=-c₁ and s₂=c₁²-c₂;
 the normal Chern classes invert all exceptional Segre mixing exactly. -/
