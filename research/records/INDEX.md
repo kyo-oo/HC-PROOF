@@ -1,5 +1,7 @@
 # GST Hodge Research — Construction Program
 
+- [2026-10-20: GST finite multi-center canonical Hodge defect conservation](2026-10-20-gst-multicenter-hodge-defect-conservation.md) — **Lean GREEN [#39406055021](https://github.com/kyo-oo/HC-PROOF/actions/runs/39406055021)** at `985f6ff`: actual finite-block cycle-class surjectivity iff base and centers, exact counterexample-origin classification, and independent Wolfram rational Gram/discriminant checks; no arbitrary-X source-existence claim.
+
 - [2026-10-20: GST exceptional blowup-born source return to arbitrary original X](2026-10-20-gst-exceptional-ambient-original-x-return.md) — canonical exceptional class on Bl_X(P^N) admits exact one-cycle return to same X, a nonzero native residual detector, uniform upper-triangular multi-birth inverse, and a tautological-source filter. Lean Graph V2 CI [#39405037695](https://github.com/kyo-oo/HC-PROOF/actions/runs/39405037695) GREEN at first construction commit; later detector commit requires its own revision-matched check. Universal birth input remains the explicit target.
 
 - [2026-10-20: GST Tate blowup rank and descent discriminator](2026-10-20-gst-tate-blowup-descent-discriminator.md) — exact all-r Hodge polynomial and complete algebraicity of connected Tate blowup test worlds; finite-degree Hodge pullback injectivity (GST Graph V2 CI success #39405037695); counterexample cannot originate from these Tate births alone, intrinsic original-X source search remains active.
