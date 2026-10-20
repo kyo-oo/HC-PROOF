@@ -2400,6 +2400,69 @@ theorem middle_euler_discriminant
   simp only [Fintype.card_fin]
   rw [← pow_mul]
 
+
+/-- Actual finite Segre word constructed directly from c(N)=1+u. -/
+def finiteSegre (u : A) (c : ℕ) : A :=
+  (Finset.range c).sum (fun k => (-u)^k)
+
+/-- Reuse the existing GST all-arity finite birth-feedback inverse. -/
+theorem finiteSegre_chern_inverse
+    (u : A) (c : ℕ) (hNil : u^c = 0) :
+    (1+u)*finiteSegre u c = 1 ∧
+      finiteSegre u c*(1+u) = 1 := by
+  exact BlowupRationalHodgeTest.nilpotent_birth_inverse_two_sided u c hNil
+
+/-- Segre nilpotence follows from original Chern nilpotence; it is
+not an additional geometric premise of the constructive chain. -/
+theorem finiteSegre_error_nilpotent
+    (u : A) (c : ℕ) (hNil : u^c = 0) :
+    (1-finiteSegre u c)^c = 0 := by
+  have hinv := (finiteSegre_chern_inverse u c hNil).2
+  have he : 1-finiteSegre u c = finiteSegre u c*u := by
+    calc
+      _ = finiteSegre u c*(1+u)-finiteSegre u c := by rw [hinv]
+      _ = finiteSegre u c*u := by ring
+  rw [he, mul_pow, hNil, mul_zero]
+
+/-- The complete native normalizer is an explicit finite word in
+the original positive Chern class alone. -/
+def finiteChernNormalizer (u : A) (c : ℕ) : A :=
+  finiteNormalRoot (finiteSegre u c) c
+
+theorem finiteChernNormalizer_square
+    (u : A) (c : ℕ) (hNil : u^c = 0) :
+    (finiteChernNormalizer u c)^2 = 1+u := by
+  exact finiteNormalRoot_square_eq_chern (finiteSegre u c) (1+u) c
+    (finiteSegre_error_nilpotent u c hNil)
+    (finiteSegre_chern_inverse u c hNil).2
+
+theorem finiteSegre_mem
+    (B : Subalgebra ℚ A) (u : A) (hu : u ∈ B) (c : ℕ) :
+    finiteSegre u c ∈ B := by
+  exact B.sum_mem (fun k _ => B.pow_mem (B.neg_mem hu) k)
+
+theorem finiteChernNormalizer_mem
+    (B : Subalgebra ℚ A) (u : A) (hu : u ∈ B) (c : ℕ) :
+    finiteChernNormalizer u c ∈ B :=
+  finiteNormalRoot_mem B (finiteSegre u c) (finiteSegre_mem B u hu c) c
+
+/-- Entire Chern -> Segre -> Newton -> Euler cancellation chain. -/
+theorem chern_constructed_middle_euler
+    (integral : A →ₗ[ℚ] ℚ) (M : ℕ) (u : A)
+    (c : ℕ) (hNil : u^c = 0) (a b : A) :
+    middleEulerKernel integral M (finiteSegre u c)
+      (finiteChernNormalizer u c*a)
+      (finiteChernNormalizer u c*b) =
+        (-1:ℚ)^(M+1)*integral (a*b) := by
+  exact normalized_middle_euler integral M (finiteSegre u c) c
+    (finiteSegre_error_nilpotent u c hNil) a b
+
+#check finiteChernNormalizer_square
+#check finiteChernNormalizer_mem
+#check chern_constructed_middle_euler
+#print axioms finiteChernNormalizer_square
+#print axioms chern_constructed_middle_euler
+
 #check finiteNormalRoot_correct
 #check finiteNormalRoot_square_eq_chern
 #check finiteNormalRoot_native_iff

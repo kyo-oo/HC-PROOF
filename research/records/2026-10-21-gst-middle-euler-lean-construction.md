@@ -46,3 +46,19 @@ The manuscript now includes the denominator-separated constructive Newton proof.
 Arithmetic normalization route: implementation submitted; compiler outcome pending.
 Native arithmetic-to-cycle route: explicit constructive certificate submitted; universal actual-source rank remains open.
 Universal algebraization route: open; no counterexample or universal source constructor has been proved by these index identities.
+
+## Completed formal input chain
+
+The original nilpotent positive Chern class u=c(N)-1 now directly constructs the finite Segre word s=sum_(k<c)(-u)^k using the existing GST birth-feedback inverse. The proof derives (1-s)^c=0 from u^c=0, constructs the Newton normalizer, proves its square is 1+u, and gives the complete Chern -> Segre -> Newton -> Euler cancellation theorem. No extra Segre-nilpotence premise is needed. This final composition is submitted for revision-matched Graph and pinned verification.
+
+## Self-review of the proposed final inference
+
+Claim audited: do the nondegenerate normalized Euler form and positive integer detector alone imply that every prescribed original rational Hodge class has a native algebraic representative?
+
+Verdict: incomplete; algebraic realization of the detector partner/source is not supplied. This is not a failed Newton or Euler theorem.
+
+A precise algebraic discriminator is H=Q^2 with ordinary positive dot product and topological source space H itself. Take the unital native subalgebra to be the diagonal {(q,q)} in the coordinatewise Q-algebra Q^2, and take s=1. The normalized arithmetic pairing is already the positive dot product. The vector (1,0) has integer self-index 1 but has no diagonal native preimage. This is a countermodel to an inference from the abstract index/native-algebra interfaces; it is NOT a geometric variety and NOT a counterexample to the Hodge conjecture.
+
+Thus the denominator-separated normalizer gives a new explicit finite native characteristic-class word, while its proved native_iff identity preserves the original algebraization question. The actual native index matrix theorem closes the cycle construction exactly when its actual source columns have full rank. A topological Gram matrix supplies no proof of that native-column condition.
+
+Audit provenance: self-review, manuscript and Lean submissions pinned at d34b0a2, 4715410 and b4c7d11. No independent-agent review or geometric KU/GRR formalization is claimed.
