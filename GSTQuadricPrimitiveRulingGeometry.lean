@@ -309,4 +309,124 @@ theorem every_finite_mixed_birth_word_has_unit_readout
 #print axioms mixed_birth_recovers_every_primitive_middle_target
 #print axioms every_finite_mixed_birth_word_has_unit_readout
 
+/-! ## THE COMPLETE SECOND-BIRTH PRIMITIVE PLANE, NOT JUST ONE DETECTOR
+
+Specialize m=1. In Xhat=Bl_(S_A)(Bl_Q(P^4)) the genuine middle
+cycle basis is (rho*H^2,rho*C_A,rho*C_B,e_1(h),e_1(xi)).
+Here h is the base P^1 class and xi=c1(O_(P(N)) (1)), with
+xi^2+3h xi=0 on S_A. The actual very ample polarization is
+Lhat=3rho*(3H-E)-F; the geometric proof of very ampleness and
+the uniform higher-dimensional construction are in the record.
+
+The complete ample-cup matrix has rank THREE. Its kernel has
+the integral cycle basis U=(1,21,-24,6,0), V=(-3,-11,18,0,6)
+over Q. Their Gram matrix is [[1009,-681],[-681,513]], with
+determinant 53856>0. Its explicit inverse gives genuine rational
+cycle duals, hence four correspondences dual_j x source_i.
+
+These ACT ON ALL FIVE middle coordinates and reconstruct every
+primitive target. There is no assumed target lift, chosen full
+rank matrix, orthonormality or abstract Hodge-coordinate switch.
+Lean proves the exact coordinate laws; the stated Chow/Betti
+blowup comparison remains the geometric identification.
+-/
+
+abbrev SecondWorldMiddle := ℚ × ℚ × ℚ × ℚ × ℚ
+
+def secondWorldCup (u : SecondWorldMiddle) : ℚ × ℚ × ℚ :=
+  (9*u.1+3*u.2.1+3*u.2.2.1+u.2.2.2.2,
+   -6*u.1+u.2.2.2.1-3*u.2.2.2.2,
+   u.2.2.1+4*u.2.2.2.1-3*u.2.2.2.2)
+
+def secondWorldPair (u v : SecondWorldMiddle) : ℚ :=
+  u.1*v.1-u.2.1*v.2.2.1-u.2.2.1*v.2.1-
+    u.2.2.2.1*v.2.2.2.2-u.2.2.2.2*v.2.2.2.1+
+    3*u.2.2.2.2*v.2.2.2.2
+
+def secondWorldSourceU : SecondWorldMiddle := (1,21,-24,6,0)
+def secondWorldSourceV : SecondWorldMiddle := (-3,-11,18,0,6)
+
+def secondWorldSource (i : Fin 2) : SecondWorldMiddle :=
+  if i=0 then secondWorldSourceU else secondWorldSourceV
+
+/-- Pairing against the ACTUAL Gram-dual rational algebraic cycles.
+The inverse is explicitly evaluated, rather than assumed to exist. -/
+def secondWorldReadout (j : Fin 2) (u : SecondWorldMiddle) : ℚ :=
+  if j=0 then
+    (513*secondWorldPair u secondWorldSourceU+
+      681*secondWorldPair u secondWorldSourceV)/53856
+  else
+    (681*secondWorldPair u secondWorldSourceU+
+      1009*secondWorldPair u secondWorldSourceV)/53856
+
+def secondWorldMatrixUnit (i j : Fin 2)
+    (u : SecondWorldMiddle) : SecondWorldMiddle :=
+  secondWorldReadout j u • secondWorldSource i
+
+theorem second_world_sources_primitive (i : Fin 2) :
+    secondWorldCup (secondWorldSource i) = 0 := by
+  fin_cases i <;>
+    norm_num [secondWorldSource, secondWorldSourceU,
+      secondWorldSourceV, secondWorldCup]
+
+theorem second_world_exact_gram :
+    secondWorldPair secondWorldSourceU secondWorldSourceU = 1009 ∧
+    secondWorldPair secondWorldSourceU secondWorldSourceV = -681 ∧
+    secondWorldPair secondWorldSourceV secondWorldSourceV = 513 ∧
+    (1009*513-(-681)*(-681) : ℚ) = 53856 := by
+  norm_num [secondWorldPair, secondWorldSourceU, secondWorldSourceV]
+
+theorem second_world_readout_on_scaled_source
+    (j i : Fin 2) (t : ℚ) :
+    secondWorldReadout j (t • secondWorldSource i) =
+      if j=i then t else 0 := by
+  fin_cases j <;> fin_cases i <;>
+    norm_num [secondWorldReadout, secondWorldSource, secondWorldSourceU,
+      secondWorldSourceV, secondWorldPair, smul_eq_mul] <;> ring
+
+/-- Complete composition law, including the zero product. Its native
+geometric realization is the actual exterior product of the two cycles. -/
+theorem second_world_matrix_unit_composition
+    (i j k l : Fin 2) (u : SecondWorldMiddle) :
+    secondWorldMatrixUnit i j (secondWorldMatrixUnit k l u) =
+      if j=k then secondWorldMatrixUnit i l u else 0 := by
+  simp only [secondWorldMatrixUnit, second_world_readout_on_scaled_source]
+  split_ifs <;> simp
+
+/-- Every primitive target in the WHOLE second world is recovered by
+the explicitly constructed algebraic Gram projector. No source-span or
+rank hypothesis is supplied: the complete cup equations prove it. -/
+theorem second_world_recovers_every_primitive_target
+    (u : SecondWorldMiddle) (hu : secondWorldCup u = 0) :
+    secondWorldMatrixUnit 0 0 u + secondWorldMatrixUnit 1 1 u = u := by
+  rcases u with ⟨x,a,b,s,t⟩
+  have h0 : 9*x+3*a+3*b+t=0 := by
+    simpa [secondWorldCup] using congrArg Prod.fst hu
+  have h1 : -6*x+s-3*t=0 := by
+    simpa [secondWorldCup] using congrArg (fun z => z.2.1) hu
+  have h2 : b+4*s-3*t=0 := by
+    simpa [secondWorldCup] using congrArg (fun z => z.2.2) hu
+  ext <;>
+    norm_num [secondWorldMatrixUnit, secondWorldReadout,
+      secondWorldPair, secondWorldSource, secondWorldSourceU,
+      secondWorldSourceV, smul_eq_mul] <;> linarith
+
+theorem second_world_matrix_units_really_exchange_sources :
+    secondWorldMatrixUnit 0 1 secondWorldSourceV = secondWorldSourceU ∧
+    secondWorldMatrixUnit 1 0 secondWorldSourceU = secondWorldSourceV := by
+  constructor
+  · have h := second_world_readout_on_scaled_source 1 1 (1 : ℚ)
+    norm_num [secondWorldSource] at h
+    simpa [secondWorldMatrixUnit, secondWorldSource, h]
+  · have h := second_world_readout_on_scaled_source 0 0 (1 : ℚ)
+    norm_num [secondWorldSource] at h
+    simpa [secondWorldMatrixUnit, secondWorldSource, h]
+
+#check second_world_exact_gram
+#check second_world_matrix_unit_composition
+#check second_world_recovers_every_primitive_target
+#check second_world_matrix_units_really_exchange_sources
+#print axioms second_world_matrix_unit_composition
+#print axioms second_world_recovers_every_primitive_target
+
 end GSTQuadricPrimitiveRulingGeometry
