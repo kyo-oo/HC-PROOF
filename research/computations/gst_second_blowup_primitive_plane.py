@@ -191,6 +191,60 @@ def serialize(value):
     return value
 
 
+def parallel_births(r):
+    """One connected fourfold, r disjoint actual surface centers.
+
+    Includes the complete ambient cup matrix and its exact kernel,
+    so no Gram determinant or source-spanning premise is supplied.
+    """
+    assert r >= 1
+    t, size = Q(2*r+1), 3+2*r
+    cup = [[Q(0)]*size for _ in range(2+r)]
+    cup[0][:3], cup[1][:3] = [3*t,t,t], [-2*t,Q(0),Q(0)]
+    gram = [[Q(0)]*size for _ in range(size)]
+    gram[0][0], gram[1][2], gram[2][1] = Q(1), Q(-1), Q(-1)
+    for i in range(r):
+        s, e = 3+2*i, 4+2*i
+        cup[0][e], cup[1][s], cup[1][e] = Q(1), Q(1), Q(-3)
+        cup[2+i][2], cup[2+i][s], cup[2+i][e] = Q(1), t+1, Q(-3)
+        gram[s][e], gram[e][s], gram[e][e] = Q(-1), Q(-1), Q(3)
+    # Free parameters b=1,s_i=0, then b=0,s_i=delta_ij.
+    anchor = [-Q(r)/(2*t),-1+Q(7*r)/(6*t),Q(1)] + [Q(0),Q(1,3)]*r
+    sources = [anchor]
+    for j in range(r):
+        source = [-Q(1,2),(7*t-2)/(6*t),Q(0)]+[Q(0)]*(2*r)
+        source[3+2*j], source[4+2*j] = Q(1), (t+1)/3
+        sources.append(source)
+    assert mm(cup, transpose(sources)) == [[0]*(r+1) for _ in cup]
+    assert len(nullspace(cup)) == r+1
+    assert len(rref(sources)[1]) == r+1
+    primitive_gram = mm(mm(sources, gram), transpose(sources))
+    d = (t*t-1)/3
+    a = Q(r*r)/(4*t*t)+2-Q(7*r)/(3*t)+Q(r,3)
+    c = t/3-Q(7,6)+Q(3*r+4)/(12*t)
+    expected = [[a]+[c]*r]+[[c]+[d*int(i == j)+Q(1,4) for j in range(r)]
+                            for i in range(r)]
+    assert primitive_gram == expected
+    schur_factor = (d+Q(r,4))*a-r*c*c
+    polynomial = Q(r)*(105+411*r+596*r*r+384*r**3)/(36*(1+2*r)**2)
+    assert schur_factor == polynomial > 0 and d > 0
+    schur = schur_factor/(d+Q(r,4))
+    off = -c/(schur*(d+Q(r,4)))
+    common = -1/(4*d*(d+Q(r,4)))+c*c/(schur*(d+Q(r,4))**2)
+    inverse = [[1/schur]+[off]*r]+[
+        [off]+[Q(int(i == j))/d+common for j in range(r)] for i in range(r)]
+    identity = [[int(i == j) for j in range(r+1)] for i in range(r+1)]
+    assert mm(inverse, primitive_gram) == identity
+    duals = mm(mm(inverse, sources), gram)
+    assert mm(duals, transpose(sources)) == identity
+    return {'births': r, 'world_dimension': 4, 'middle_dimension': size,
+            'next_dimension': 2+r, 'primitive_dimension': r+1,
+            'polarization_multiplier': int(t), 'schur_factor': schur_factor,
+            'gram_determinant': d**(r-1)*schur_factor,
+            'native_matrix_unit_count': (r+1)**2,
+            'complete_dual_matrix_identity_checked': True}
+
+
 def main():
     cases = []
     for m in range(1, 13):
@@ -239,8 +293,9 @@ def main():
                      'gram_inverse': inverse_two(primitive_gram), 'dual_readouts': readouts,
                      'matrix_unit_products_checked': 16, 'matrix_units_noncommute': True},
         'tensor_dual_pairs_checked': tensor_pairs, 'tensor_arities': [0,6],
-        'unrestricted_mathematics': 'Geometric Chow and Betti blowup decompositions give primitive dimension two for every m>=1; external products give 2^r independent primitive native sources for every finite r',
-        'evidence_scope': 'This executable verifies m=1..12 and arities=0..6; the unrestricted conclusions require the accompanying geometric argument. Lean separately verifies the entire fourfold kernel and matrix-unit algebra.'
+        'connected_parallel_births': [parallel_births(r) for r in range(1,17)],
+        'unrestricted_mathematics': 'Geometric Chow and Betti blowup decompositions give primitive dimension two for every m>=1; external products give 2^r independent primitive native sources for every finite r. On a single connected fourfold, r disjoint surface births give a complete rank-(r+1) primitive frame with explicit rational inverse Gram.',
+        'evidence_scope': 'This executable verifies m=1..12, tensor arities=0..6 and connected parallel births r=1..16; unrestricted conclusions require the accompanying geometric argument. Lean separately verifies the entire two-birth fourfold kernel, matrix-unit algebra and all-r positive Schur factor.'
     }), indent=2))
 
 

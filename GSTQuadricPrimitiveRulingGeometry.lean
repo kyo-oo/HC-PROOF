@@ -429,4 +429,65 @@ theorem second_world_matrix_units_really_exchange_sources :
 #print axioms second_world_matrix_unit_composition
 #print axioms second_world_recovers_every_primitive_target
 
+/-! ## ARBITRARY MANY ACTUAL BIRTHS ON ONE CONNECTED FOURFOLD
+
+Choose r>=1 distinct lines A_i in ONE ruling of Q^2. They are
+pairwise disjoint, so S_i=q^(-1)(A_i) are disjoint smooth
+surfaces in X=Bl_Q(P^4). Their simultaneous blowup X_r is a
+connected smooth projective FOURFOLD, with no tensor-product
+replacement. Let t=2r+1. The actual polarization
+  L_r=t rho*(3H-E)-sum F_i
+is very ample: each I_(S_i)(2L) is globally generated, hence
+the product ideal of the disjoint union is generated after
+twisting by 2rL. The blowup embedding gives (2r+1)L-sum F_i.
+
+The COMPLETE middle ample-cup equations are, with S=sum s_i
+and T=sum t_i in the actual old-plus-exceptional cycle basis,
+  3t x+t a+t b+T=0; -2t x+S-3T=0;
+  b+(t+1)s_i-3t_i=0 (EVERY i).
+They explicitly leave r+1 free coordinates (b,s_1,...,s_r).
+The resulting actual rational primitive cycles w_0,w_i have
+Gram matrix [[A,c 1^T],[c 1,d I+(1/4)J]]. Below A,c,d are
+their computed intersections, and the uniform Schur factor
+is proved strictly positive WITHOUT an assumed determinant.
+Thus the full rational Gram dual is algebraic at every rank.
+The source formulas and all-r derivation are in the record.
+-/
+
+def parallelBirthDiagonal (r : ℚ) : ℚ := ((2*r+1)^2-1)/3
+def parallelBirthAnchor (r : ℚ) : ℚ :=
+  r^2/(4*(2*r+1)^2)+2-7*r/(3*(2*r+1))+r/3
+def parallelBirthCoupling (r : ℚ) : ℚ :=
+  (2*r+1)/3-7/6+(3*r+4)/(12*(2*r+1))
+
+/-- Positive rank-free Schur factor of the actual native-cycle Gram.
+For integer r>=1 its determinant is d^(r-1) times this number. -/
+theorem parallel_birth_exact_schur (r : ℚ) (hr : 1 ≤ r) :
+    (parallelBirthDiagonal r+r/4)*parallelBirthAnchor r-
+        r*(parallelBirthCoupling r)^2 =
+      r*(105+411*r+596*r^2+384*r^3)/(36*(1+2*r)^2) := by
+  have h0 : 2*r+1 ≠ 0 := by linarith
+  have h1 : 1+2*r ≠ 0 := by linarith
+  dsimp [parallelBirthDiagonal, parallelBirthAnchor, parallelBirthCoupling]
+  field_simp [h0, h1] <;> ring
+
+theorem parallel_birth_gram_has_positive_schur
+    (r : ℚ) (hr : 1 ≤ r) :
+    0 < (parallelBirthDiagonal r+r/4)*parallelBirthAnchor r-
+      r*(parallelBirthCoupling r)^2 := by
+  rw [parallel_birth_exact_schur r hr]
+  have hrpos : 0 < r := by linarith
+  have htpos : 0 < 1+2*r := by linarith
+  positivity
+
+theorem parallel_birth_contrast_square_positive
+    (r : ℚ) (hr : 1 ≤ r) : 0 < parallelBirthDiagonal r := by
+  dsimp [parallelBirthDiagonal]
+  nlinarith [sq_nonneg (2*r)]
+
+#check parallel_birth_exact_schur
+#check parallel_birth_gram_has_positive_schur
+#print axioms parallel_birth_exact_schur
+#print axioms parallel_birth_gram_has_positive_schur
+
 end GSTQuadricPrimitiveRulingGeometry
