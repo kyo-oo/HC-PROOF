@@ -47,7 +47,7 @@ Implemented theorem names:
 
 ## Arbitrary-arity exceptional channels have an invertible triangular return matrix
 
-For every 1≤i≤c−1 define an exceptional Hodge channel E_i(a)=j_*(ξ^(i−1)q^*a). For every 1≤i≤c−1 define R_i(b)=−q_*(ξ^(c−1−i)j^*b). Then
+Fix a total codimension q on Y. The i-th exceptional input module is B_i=Hdg^(q−i)(X)_Q (and analogously CH^(q−i)(X)_Q). For every 1≤i≤c−1 the graded exceptional Hodge channel E_i:B_i→Hdg^q(Y)_Q is E_i(a)=j_*(ξ^(i−1)q^*a), and the return R_i:Hdg^q(Y)_Q→B_i is R_i(b)=−q_*(ξ^(c−1−i)j^*b). All off-diagonal entries are degree-raising operators B_j→B_i, **not scalar maps on one incorrectly shared Hodge degree**. Then
 
   R_i E_j(a) = 0 if j<i;
   R_i E_i(a) = a;
