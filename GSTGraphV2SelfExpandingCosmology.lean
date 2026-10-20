@@ -1055,6 +1055,113 @@ theorem blowupCounterexample_iff_base_or_center
 #check blowupCounterexample_iff_base_or_center
 #print axioms blowupCounterexample_iff_base_or_center
 
+
+/-! ## GST original-X source recovery from an exceptional birth
+
+Embed an arbitrary smooth projective original X into projective space
+with normal codimension c >= 2 and blow up the ambient space along X.
+Write E=P(N), j:E -> Bl_X(P^N), q:E -> X, xi=c1(O_E(1)).
+
+The marked Hodge birth is gamma(a)=j_*(q^*a), in codimension p+1.
+Its ORIGINAL-X return is the geometric Chow operation
+  W |-> -q_*(xi^(c-2) * j^! W).
+There are TWO independent geometry equalities:
+  j^*j_* q^*a = -xi*q^*a,
+  q_*(xi^(c-1)*q^*a) = a.
+They imply return(gamma(a))=a. Both are genuine exceptional
+self-intersection / projective-bundle identities; neither asserts
+that gamma(a) has an algebraic representative.
+
+We separate the actual Chow and Betti maps. The hypotheses below are
+the stated geometric functoriality identities, NOT surjectivity or a
+Hodge-to-Chow inverse. Theorems yield a precise return of any genuinely
+constructed algebraic exceptional cycle to the SAME original X.
+-/
+
+variable {CX CY CE HX HY HE : Type*}
+    [AddCommGroup CX] [Module ℚ CX]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    [AddCommGroup HX] [Module ℚ HX]
+    [AddCommGroup HY] [Module ℚ HY]
+    [AddCommGroup HE] [Module ℚ HE]
+
+/-- Fiber integration cancels the negative exceptional self-intersection.
+In the intended geometry qReturn means q_*(xi^(c-2) * -). -/
+theorem exceptional_lift_return_identity
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (xiMul : HE →ₗ[ℚ] HE) (qPull : HX →ₗ[ℚ] HE)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hSelf : ∀ a : HX, jBetti (excGysin a) = -(xiMul (qPull a)))
+    (hFiber : ∀ a : HX, qReturn (xiMul (qPull a)) = a)
+    (a : HX) :
+    -(qReturn (jBetti (excGysin a))) = a := by
+  rw [hSelf a, map_neg, neg_neg]
+  exact hFiber a
+
+/-- The concrete algebraic Chow operation returning a cycle on the
+original center X. The inputs are actual j^! and q_*(xi^(c-2)*-)
+when this abstract typed theorem is geometrically instantiated. -/
+def exceptionalOriginalXCycle
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (W : CY) : CX :=
+  -(qChow (jChow W))
+
+/-- A native exceptional cycle on the blown-up projective space that
+represents j_*q^*alpha yields an actual cycle on original X with
+exact canonical class alpha. No target preimage is an input on X. -/
+theorem exceptional_lift_cycle_recovery
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (xiMul : HE →ₗ[ℚ] HE) (qPull : HX →ₗ[ℚ] HE)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (hSelf : ∀ a : HX, jBetti (excGysin a) = -(xiMul (qPull a)))
+    (hFiber : ∀ a : HX, qReturn (xiMul (qPull a)) = a)
+    (a : HX) (W : CY) (hW : clY W = excGysin a) :
+    clX (exceptionalOriginalXCycle jChow qChow W) = a := by
+  unfold exceptionalOriginalXCycle
+  rw [map_neg, hQ (jChow W), hJ W, hW]
+  exact exceptional_lift_return_identity jBetti qReturn xiMul qPull
+    excGysin hSelf hFiber a
+
+/-- For a marked exceptional Hodge class, native algebraicity on the
+blowup is equivalent to native algebraicity on the embedded original X.
+A concrete Chow-to-exceptional Gysin map supplies the reverse direction.
+This identifies the exact obligation for the blowup/cosmology route. -/
+theorem exceptional_lift_range_iff
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (excChow : CX →ₗ[ℚ] CY)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (xiMul : HE →ₗ[ℚ] HE) (qPull : HX →ₗ[ℚ] HE)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (hExc : ∀ Z : CX, clY (excChow Z) = excGysin (clX Z))
+    (hSelf : ∀ a : HX, jBetti (excGysin a) = -(xiMul (qPull a)))
+    (hFiber : ∀ a : HX, qReturn (xiMul (qPull a)) = a)
+    (a : HX) :
+    excGysin a ∈ LinearMap.range clY ↔ a ∈ LinearMap.range clX := by
+  constructor
+  · rintro ⟨W, hW⟩
+    exact ⟨exceptionalOriginalXCycle jChow qChow W,
+      exceptional_lift_cycle_recovery clX clY clE jChow qChow
+        jBetti qReturn xiMul qPull excGysin hJ hQ
+        hSelf hFiber a W hW⟩
+  · rintro ⟨Z, hZ⟩
+    refine ⟨excChow Z, ?_⟩
+    rw [hExc Z, hZ]
+
+#check exceptional_lift_return_identity
+#check exceptional_lift_cycle_recovery
+#check exceptional_lift_range_iff
+#print axioms exceptional_lift_range_iff
+
 end BlowupRationalHodgeTest
 
 end NativeGeometryBirth
