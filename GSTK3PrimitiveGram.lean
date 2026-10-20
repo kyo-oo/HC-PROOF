@@ -363,4 +363,65 @@ theorem primitive_diagonal_outside_characteristic_plane
 #check primitive_diagonal_outside_characteristic_plane
 #print axioms primitive_diagonal_outside_characteristic_plane
 
+
+/-! ## GST exceptional cosmology rank-one source exclusion, UNIFORM
+
+For X=S×S, h^2=d≠0, and Y=Bl_X(P^N), let H denote the ambient
+hyperplane pullback and E the exceptional divisor. Set l=N+1.
+For the line bundle O_Y(uH+vE), the codimension-three Chern character
+is (uH+vE)^3/6. The original-X exceptional return satisfies
+  R(H² E)=h², R(H E²)=-h s₁(N)=l h²,
+  R(E³)=s₂(N)=l(l+1)h²/2+c₂(T_X).
+Consequently R(ch₃) is A h²+B c₂(T_X), with
+ A=(3u²v+3lu v²+l(l+1)v³/2)/6 and B=v³/6.
+
+The authentic primitive K3 diagonal PΔ annihilates BOTH h² and
+c₂(T_X), so EVERY line-bundle Chern source on this blowup has
+zero PΔ period for ALL u,v,l and d≠0. Additivity extends this exact
+obstruction to every K₀ class built from line bundles by finite
+extensions and rational virtual sums. A genuinely non-tautological
+diagonal/graph or higher-rank perfect-complex input is required.
+-/
+
+/-- Degree-two rational cycle coordinates on the ORIGINAL K3 self-product
+returned from the degree-three Chern class of an ambient blowup line bundle.
+Here l=N+1 encodes ambient dimension. -/
+def k3AmbientBlowupLineBundleCh3Return
+    (d l u v : ℚ) : Coordinates :=
+  let A := (3*u^2*v + 3*l*u*v^2 + (l*(l+1)/2)*v^3)/6
+  let B := v^3/6
+  ⟨0, d*A+24*B, d*A+24*B, 2*A⟩
+
+/-- A theorem for ALL ambient twists and exceptional multiplicities,
+not a test of one point in a finite parameter grid. -/
+theorem k3_ambient_blowup_line_bundle_diagonal_period_zero
+    (d l u v : ℚ) (hd : d ≠ 0) :
+    intersection d (primitiveDiagonal d)
+      (k3AmbientBlowupLineBundleCh3Return d l u v) = 0 := by
+  dsimp [intersection, primitiveDiagonal,
+    k3AmbientBlowupLineBundleCh3Return]
+  field_simp [hd]
+  ring
+
+/-- Rational combinations of arbitrarily many born line bundles, including
+K₀ classes of filtered extensions, still cannot detect the K3 diagonal.
+The filtration conclusion uses additivity of the genuine Chern character. -/
+theorem k3_ambient_blowup_finite_line_bundle_packet_period_zero
+    (d l : ℚ) (hd : d ≠ 0)
+    (n : ℕ) (uv : Fin n → ℚ × ℚ) (weights : Fin n → ℚ) :
+    ∑ i : Fin n,
+      weights i *
+        intersection d (primitiveDiagonal d)
+          (k3AmbientBlowupLineBundleCh3Return d l (uv i).1 (uv i).2) = 0 := by
+  apply Finset.sum_eq_zero
+  intro i _
+  rw [k3_ambient_blowup_line_bundle_diagonal_period_zero
+    d l (uv i).1 (uv i).2 hd]
+  ring
+
+#check k3AmbientBlowupLineBundleCh3Return
+#check k3_ambient_blowup_line_bundle_diagonal_period_zero
+#check k3_ambient_blowup_finite_line_bundle_packet_period_zero
+#print axioms k3_ambient_blowup_finite_line_bundle_packet_period_zero
+
 end GSTK3PrimitiveGram
