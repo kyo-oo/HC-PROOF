@@ -534,6 +534,73 @@ theorem fermat_clifford_native_period_kernel_trivial
 #check fermat_clifford_native_period_kernel_trivial
 #print axioms fermat_clifford_native_period_kernel_trivial
 
+/-! ## Exact target-period compiler from constructed equation-defined sources
+
+This is an EXPLICIT rational coefficient formula, not an existential
+Hodge-to-Chow inverse. It reconstructs any prescribed measurement vector
+within the d-dimensional already-constructed Clifford source frame.
+
+Write D=d, s=s_(m,d), B=(-1)^m m!, T=sum_i beta_i.
+The source coefficients are
+  a_j=beta_j/(B D s)+T/(B D^2 s (s-1)).
+Their native periods are exactly beta_j because
+  sum_i a_i=T/(B D (s-1))
+and B*(D*s*a_j-sum_i a_i)=beta_j.
+All denominators are independently nonzero for d>=3, m>=1.
+-/
+
+noncomputable def fermatCliffordPeriodCompiler
+    (d m : ℕ) (beta : Fin d → ℚ) (j : Fin d) : ℚ :=
+  let B : ℚ := (-1 : ℚ)^m * (Nat.factorial m : ℚ)
+  let D : ℚ := d
+  let s : ℚ := ((NormalTopCoeff (d : ℤ) m : ℤ) : ℚ)
+  beta j / (B*D*s) +
+    (∑ i : Fin d, beta i) / (B*D^2*s*(s-1))
+
+/-- Every rational period vector on the full Fermat Clifford frame
+is realized by an explicit rational combination of the d authentic
+equation-defined K0 sources. No preimage of a Hodge class is supplied. -/
+theorem fermat_clifford_period_compiler_exact
+    (d m : ℕ) (hd : 3 ≤ d) (hm : 1 ≤ m)
+    (beta : Fin d → ℚ) (j : Fin d) :
+    fermatCliffordNativePeriodDetector d m
+      (fermatCliffordPeriodCompiler d m beta) j = beta j := by
+  let B : ℚ := (-1 : ℚ)^m * (Nat.factorial m : ℚ)
+  let D : ℚ := d
+  let s : ℚ := ((NormalTopCoeff (d : ℤ) m : ℤ) : ℚ)
+  have hD : D ≠ 0 := by
+    change (d : ℚ) ≠ 0
+    exact_mod_cast (show d ≠ 0 by omega)
+  have hf : (0 : ℚ) < (Nat.factorial m : ℚ) := by
+    exact_mod_cast Nat.factorial_pos m
+  have hB : B ≠ 0 :=
+    mul_ne_zero (pow_ne_zero _ (by norm_num)) (ne_of_gt hf)
+  have hs : s ≠ 0 := (normalTopCoeff_ne_zero_one d hd m hm).1
+  have hs1 : s - 1 ≠ 0 :=
+    sub_ne_zero.mpr (normalTopCoeff_ne_zero_one d hd m hm).2
+  have hSum :
+      (∑ i : Fin d, fermatCliffordPeriodCompiler d m beta i) =
+        (∑ i : Fin d, beta i) / (B*D*(s-1)) := by
+    change
+      (∑ i : Fin d,
+        beta i / (B*D*s) +
+          (∑ k : Fin d, beta k) / (B*D^2*s*(s-1))) =
+        (∑ i : Fin d, beta i) / (B*D*(s-1))
+    rw [Finset.sum_add_distrib]
+    simp only [Finset.sum_div, Finset.sum_const, Finset.card_fin,
+      nsmul_eq_mul]
+    field_simp [hB, hD, hs, hs1] <;> ring
+  change B * (D*s*(fermatCliffordPeriodCompiler d m beta j) -
+      (∑ i : Fin d, fermatCliffordPeriodCompiler d m beta i)) = beta j
+  rw [hSum]
+  change B * (D*s*(beta j / (B*D*s) +
+      (∑ i : Fin d, beta i) / (B*D^2*s*(s-1))) -
+      (∑ i : Fin d, beta i) / (B*D*(s-1))) = beta j
+  field_simp [hB, hD, hs, hs1] <;> ring
+
+#check fermat_clifford_period_compiler_exact
+#print axioms fermat_clifford_period_compiler_exact
+
 /-! ## Geometry-bearing Fermat certificates for arbitrary m
 
 The explicit smooth degree-d hypersurface equation is
