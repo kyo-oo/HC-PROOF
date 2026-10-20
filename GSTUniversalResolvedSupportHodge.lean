@@ -2806,7 +2806,7 @@ interpolating finitely many positive-copy Chern values. -/
 theorem chernFromCharacter_pure_leading
     {A : Type*} [CommRing A] [Algebra ℚ A]
     (character : ℕ → A) (n : ℕ)
-    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0) :
+    (hLower : ∀ i : ℕ, 0 < i → i < n+1 → character i = 0) :
     chernFromCharacter character (n+1) =
       ((-1 : ℚ)^n*(Nat.factorial n : ℚ)) • character (n+1) := by
   classical
@@ -2831,8 +2831,8 @@ theorem chernFromCharacter_pure_leading
 theorem chernFromCharacter_below_pure
     {A : Type*} [CommRing A] [Algebra ℚ A]
     (character : ℕ → A) (p : ℕ)
-    (hLower : ∀ i : ℕ, 0<i → i<p → character i=0)
-    (j : ℕ) (hj : 0<j) (hjp : j<p) :
+    (hLower : ∀ i : ℕ, 0 < i → i < p → character i = 0)
+    (j : ℕ) (hj : 0 < j) (hjp : j < p) :
     chernFromCharacter character j = 0 := by
   obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hj)
   rw [chernFromCharacter_pure_leading character n (by
@@ -2846,7 +2846,7 @@ to c_p.  This is an equality of Chow-algebra classes, not just periods. -/
 theorem one_center_class_from_pure_character
     {A : Type*} [CommRing A] [Algebra ℚ A]
     (character : ℕ → A) (rank n : ℕ) (h : A) (k : ℚ)
-    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0) :
+    (hLower : ∀ i : ℕ, 0 < i → i < n+1 → character i = 0) :
     twistedChernClass rank (n+1) (chernFromCharacter character) h k =
       ((-1 : ℚ)^n*(Nat.factorial n : ℚ)) • character (n+1) +
         ((Nat.choose rank (n+1) : ℚ)*k^(n+1)) • h^(n+1) := by
@@ -2877,7 +2877,7 @@ theorem one_center_period_from_pure_character
     (ell : A →ₗ[ℚ] ℚ) (h : A)
     (hPrimitive : ∀ z : A, ell (h*z)=0)
     (character : ℕ → A) (rank n : ℕ) (k : ℚ)
-    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0) :
+    (hLower : ∀ i : ℕ, 0 < i → i < n+1 → character i = 0) :
     ell (twistedChernClass rank (n+1)
       (chernFromCharacter character) h k) =
       ((-1 : ℚ)^n*(Nat.factorial n : ℚ))*ell (character (n+1)) := by
@@ -2892,7 +2892,7 @@ theorem one_center_detects_pure_native_source
     (ell : A →ₗ[ℚ] ℚ) (h : A)
     (hPrimitive : ∀ z : A, ell (h*z)=0)
     (character : ℕ → A) (rank n : ℕ) (k : ℚ)
-    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0)
+    (hLower : ∀ i : ℕ, 0 < i → i < n+1 → character i = 0)
     (hSource : ell (character (n+1)) ≠ 0) :
     ell (twistedChernClass rank (n+1)
       (chernFromCharacter character) h k) ≠ 0 := by
