@@ -1223,6 +1223,64 @@ theorem exceptional_lift_range_iff
     refine ⟨excChow Z, ?_⟩
     rw [hExc Z, hZ]
 
+
+/-- The ACTUAL original-X residual readout induced from an arbitrary
+algebraic perfect-complex/Chow source on the blown-up ambient world.
+Unlike exact exceptional target reconstruction, it needs no hypothesis
+that the born source already has the target cohomology class. -/
+theorem exceptional_native_residual_readout
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (ell : HX →ₗ[ℚ] ℚ) (W : CY) :
+    ell (clX (exceptionalOriginalXCycle jChow qChow W)) =
+      -(ell (qReturn (jBetti (clY W)))) := by
+  simp only [exceptionalOriginalXCycle, map_neg]
+  rw [hQ (jChow W), hJ W]
+
+/-- A genuine exceptional birth with NONZERO pulled residual period
+constructs a genuine new original-X detecting native cycle. The native
+source W is actual input geometry, not a preselected Hodge preimage. -/
+theorem exceptional_native_residual_detected_of_birth
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (ell : HX →ₗ[ℚ] ℚ) (W : CY)
+    (hDetect : ell (qReturn (jBetti (clY W))) ≠ 0) :
+    ell (clX (exceptionalOriginalXCycle jChow qChow W)) ≠ 0 := by
+  rw [exceptional_native_residual_readout clX clY clE jChow qChow
+    jBetti qReturn hJ hQ ell W]
+  exact neg_ne_zero.mpr hDetect
+
+/-- The exceptional target's native readout reproduces EXACTLY the
+prescribed original-X readout; this is a cohomological computation,
+not an assertion that the target has been algebraized. -/
+theorem exceptional_prescribed_target_readout
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (xiMul : HE →ₗ[ℚ] HE) (qPull : HX →ₗ[ℚ] HE)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hSelf : ∀ a : HX, jBetti (excGysin a) = -(xiMul (qPull a)))
+    (hFiber : ∀ a : HX, qReturn (xiMul (qPull a)) = a)
+    (ell : HX →ₗ[ℚ] ℚ) (a : HX) :
+    -(ell (qReturn (jBetti (excGysin a)))) = ell a := by
+  calc
+    -(ell (qReturn (jBetti (excGysin a)))) =
+        ell (-(qReturn (jBetti (excGysin a)))) := by simp
+    _ = ell a := congrArg ell
+      (exceptional_lift_return_identity jBetti qReturn xiMul qPull
+        excGysin hSelf hFiber a)
+
+#check exceptional_native_residual_readout
+#check exceptional_native_residual_detected_of_birth
+#check exceptional_prescribed_target_readout
+#print axioms exceptional_native_residual_detected_of_birth
+
 #check exceptional_lift_return_identity
 #check exceptional_lift_cycle_recovery
 #check exceptional_lift_range_iff
