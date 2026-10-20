@@ -7,6 +7,7 @@
 - **Final focused compiler checkpoint:** `87e43839d893846f42e368c2b1bdb0e58251a5f7`
 - **Source:** [GSTMaximalLinearHypersurfacePrimitive.lean](../../GSTMaximalLinearHypersurfacePrimitive.lean)
 - **Lean focused CI:** [#39406562118](https://github.com/kyo-oo/HC-PROOF/actions/runs/39406562118), **success** at `87e43839d893`
+- **Descendant full pinned integration:** [#39406606804](https://github.com/kyo-oo/HC-PROOF/actions/runs/39406606804), **success** at `6f4b0632c712`, which includes the exact compiler theorem; no `sorryAx` was reported by its integration audit.
 - **First coupled-source focused and pinned integration CI:** [#39404114096](https://github.com/kyo-oo/HC-PROOF/actions/runs/39404114096) and [#39404114109](https://github.com/kyo-oo/HC-PROOF/actions/runs/39404114109), **both success** at `77622eec0f12`.
 - **Review:** direct mathematical derivation, exact independent Wolfram checks, self-review. Scheme-level perfect-complex/Betti comparison remains a separate geometric instantiation, not supplied as Lean axioms.
 
