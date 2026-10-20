@@ -6,7 +6,7 @@
 - Base: `3550be348715bbbe1a1c7c7457ba771d8f5bd132`
 - Lean construction A: `GSTActualXHodgeResidualProjection.lean` at `3796be289a8be93e2c89cb5d5d80bbab664b9d89`
 - Lean construction B: `GSTGraphV2SelfExpandingCosmology.lean` at `fde0200ba3666ef7ccf4489ea60a3cbf864c2a1b`
-- Verification: native residual #39415835958, Graph V2 #39415938430, pinned integration #39415938443 started; check final states before marking green.
+- Verification: Graph V2 #39415938430 GREEN and pinned integration #39415938443 GREEN at `fde0200`; original-X focused #39415835958 started on earlier source commit `3796be2` (its final result requires separate checking).
 - Review: Mathbox proof-audit self-review, geometric scheme-level comparison not fully formalized in Lean.
 
 ## Exact question answered
