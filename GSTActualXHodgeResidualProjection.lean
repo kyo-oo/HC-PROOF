@@ -2045,4 +2045,61 @@ theorem finite_native_point_span_of_algebraic_primitive_projection
 #check ActualXCycleProjectionData.missing_class_has_nonzero_residual
 #print axioms ActualXCycleProjectionData.algebraic_part_plus_residual
 
+/-! ## ACTUAL ORIGINAL-X CYCLE FROM THE TWO SMOOTH INCIDENCE CENTERS
+
+The geometric constructor in GSTNativeSmoothIncidenceCenter produces
+actual codimension-two Chow cycles C1,C2 by proper push from smooth
+incidence centers for E and E+E. In dimension four the centers
+themselves are smooth subvarieties of ORIGINAL X.
+
+After sufficiently ample twists, the primitive residual periods are
+unchanged. The virtual character source is -2 C1+(1/2) C2. This
+section returns an ACTUAL original-X rational cycle from the two
+geometrically supplied centers. Its prescribed-residual coupling is
+a sum of squares and has the explicit lower bound (4/17)q^2.
+No existence of a nonzero q on every X is inserted as a structure
+field or asserted by these unconditional source-compiler laws.
+-/
+
+/-- Native original-X center combination, with coefficients measured
+against the prescribed target residual rather than an arbitrary frame. -/
+noncomputable def ActualXCycleProjectionData.targetSmoothCenterCycle
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (C1 C2 : codimensionCycles X.X p) (alpha : HodgeSpace X H p) :
+    codimensionCycles X.X p :=
+  (Q (P.primitiveResidual alpha) (P.trueHodgeClass C1)) • C1+
+    (Q (P.primitiveResidual alpha) (P.trueHodgeClass C2)) • C2
+
+/-- Exact residual readout of the actual native-cycle output. -/
+theorem ActualXCycleProjectionData.targetSmoothCenterCycle_pairing
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (C1 C2 : codimensionCycles X.X p) (alpha : HodgeSpace X H p) :
+    Q (P.primitiveResidual alpha)
+      (P.trueHodgeClass (P.targetSmoothCenterCycle Q C1 C2 alpha)) =
+    (Q (P.primitiveResidual alpha) (P.trueHodgeClass C1))^2+
+      (Q (P.primitiveResidual alpha) (P.trueHodgeClass C2))^2 := by
+  simp [ActualXCycleProjectionData.targetSmoothCenterCycle, map_add,
+    map_smul, pow_two]
+
+/-- Sharp center-energy bound in the REAL original-scheme cycle type.
+For actual E/E+E incidence centers the parenthesized period is ch_2(E).
+Canonical Betti comparison remains the independent geometric input. -/
+theorem ActualXCycleProjectionData.targetSmoothCenterCycle_energy_bound
+    (P : ActualXCycleProjectionData X H p ι)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (C1 C2 : codimensionCycles X.X p) (alpha : HodgeSpace X H p) :
+    (4/17 : ℚ)*
+      (Q (P.primitiveResidual alpha) (P.trueHodgeClass C2)/2-
+        2*Q (P.primitiveResidual alpha) (P.trueHodgeClass C1))^2 ≤
+    Q (P.primitiveResidual alpha)
+      (P.trueHodgeClass (P.targetSmoothCenterCycle Q C1 C2 alpha)) := by
+  rw [P.targetSmoothCenterCycle_pairing]
+  exact GSTUniversalResolvedSupportHodge.GSTNativeSmoothIncidenceCenter.two_center_energy_lower_bound _ _
+
+#check ActualXCycleProjectionData.targetSmoothCenterCycle
+#check ActualXCycleProjectionData.targetSmoothCenterCycle_energy_bound
+#print axioms ActualXCycleProjectionData.targetSmoothCenterCycle_energy_bound
+
 end GSTActualXHodgeResidualProjection
