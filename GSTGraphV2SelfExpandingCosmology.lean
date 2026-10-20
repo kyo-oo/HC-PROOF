@@ -1051,6 +1051,72 @@ theorem blowupCounterexample_iff_base_or_center
       rcases hmem with ⟨⟨z,w⟩,hzw⟩
       exact hv ⟨w, congrArg Prod.snd hzw⟩
 
+/-! ## Coupled GST blowup/cosmology defect transport
+
+A genuine codimension-two blowup has the block cycle-class map above.
+When a further finite-degree GST descent is supplied, the original
+target's missing Hodge class has a SPECIFIC missing base or exceptional
+component after pullback. Mixed native source words cannot disguise the
+missing block coordinate. The block comparison is a geometric input;
+no Hodge-algebraicity or native preimage is assumed. -/
+
+/-- A missing rational Hodge target after finite-degree descent pulls back
+to an explicitly missing component of the actual blowup cycle block.
+This is the combined exceptional-birth / cosmological-descent test. -/
+theorem finite_degree_blowup_missing_target_component
+    {NT HT : Type*}
+    [AddCommGroup NT] [Module ℚ NT]
+    [AddCommGroup HT] [Module ℚ HT]
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY)
+    (D : FiniteDegreeNativeDescent.DegreePacket
+      (NB × NY) (HB × HY) NT HT)
+    (hBlock : D.sourceCycle = blowupCanonicalCycleBlock base center)
+    (alpha : HT)
+    (hMissing : alpha ∉ LinearMap.range D.targetCycle) :
+    (D.hodgePull alpha).1 ∉ LinearMap.range base ∨
+    (D.hodgePull alpha).2 ∉ LinearMap.range center := by
+  have hMissingUp :
+      D.hodgePull alpha ∉
+        LinearMap.range (blowupCanonicalCycleBlock base center) := by
+    rw [← hBlock]
+    exact FiniteDegreeNativeDescent.missing_target_hodge_survives_finite_pullback
+      D alpha hMissing
+  by_cases hBase : (D.hodgePull alpha).1 ∈ LinearMap.range base
+  · right
+    intro hCenter
+    rcases hBase with ⟨z,wz⟩
+    rcases hCenter with ⟨w,ww⟩
+    apply hMissingUp
+    exact ⟨(z,w), Prod.ext wz ww⟩
+  · exact Or.inl hBase
+
+/-- If both the original base and its actual smooth center have complete
+canonical rational cycle images, no finite-degree descendant of this
+blowup can manufacture a counterexample. The cycles descend by the
+verified degree-normalized native pushforward. -/
+theorem finite_degree_blowup_complete_descent
+    {NT HT : Type*}
+    [AddCommGroup NT] [Module ℚ NT]
+    [AddCommGroup HT] [Module ℚ HT]
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY)
+    (D : FiniteDegreeNativeDescent.DegreePacket
+      (NB × NY) (HB × HY) NT HT)
+    (hBlock : D.sourceCycle = blowupCanonicalCycleBlock base center)
+    (hBase : Function.Surjective base)
+    (hCenter : Function.Surjective center) :
+    Function.Surjective D.targetCycle := by
+  have hSource : Function.Surjective D.sourceCycle := by
+    rw [hBlock]
+    exact (blowupCanonicalCycleBlock_surjective_iff base center).mpr
+      ⟨hBase, hCenter⟩
+  exact FiniteDegreeNativeDescent.degree_descent_preserves_all_hodge_classes
+    D hSource
+
+#check finite_degree_blowup_missing_target_component
+#check finite_degree_blowup_complete_descent
+#print axioms finite_degree_blowup_missing_target_component
+#print axioms finite_degree_blowup_complete_descent
+
 #check blowupCanonicalCycleBlock_surjective_iff
 #check blowupCounterexample_iff_base_or_center
 #print axioms blowupCounterexample_iff_base_or_center
