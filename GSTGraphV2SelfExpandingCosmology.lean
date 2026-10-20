@@ -1492,6 +1492,114 @@ theorem exceptional_three_channel_chern_segre_correction
 #print axioms exceptional_missing_original_forces_ambient_missing
 #print axioms exceptional_three_channel_chern_segre_correction
 
+
+/-! ### GST exceptional native Chow projector on the ambient birth
+
+The geometric exceptional self-intersection and projective-bundle equations
+give a Chow-level left inverse before taking Betti classes. This constructs
+an idempotent on actual ambient Chow sources, not a formal arbitrary
+cohomology projector. It makes precise the original-X native summand isolated
+by the blowup cosmology return.
+-/
+
+/-- The rational Chow return regarded as an actual linear map. -/
+def exceptionalNativeReturn
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX) :
+    CY →ₗ[ℚ] CX :=
+  (-qChow).comp jChow
+
+/-- For the intended blowup j:E→Y, q:E→X, the hypotheses are the
+genuine Chow self-intersection law j^!j_*=-ξ and fiber integration
+q_*(ξ^(c-1) q^*(-))=id.  No target Hodge preimage is assumed. -/
+theorem exceptional_native_return_left_inverse
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (xiChow : CE →ₗ[ℚ] CE) (qPullChow : CX →ₗ[ℚ] CE)
+    (excChow : CX →ₗ[ℚ] CY)
+    (hSelfChow : ∀ Z : CX,
+      jChow (excChow Z) = -(xiChow (qPullChow Z)))
+    (hFiberChow : ∀ Z : CX,
+      qChow (xiChow (qPullChow Z)) = Z)
+    (Z : CX) :
+    exceptionalNativeReturn jChow qChow (excChow Z) = Z := by
+  change -(qChow (jChow (excChow Z))) = Z
+  rw [hSelfChow Z, map_neg, neg_neg]
+  exact hFiberChow Z
+
+/-- A genuine algebraic native Chow endomorphism of the born ambient world. -/
+def exceptionalNativeAmbientProjector
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (excChow : CX →ₗ[ℚ] CY) : CY →ₗ[ℚ] CY :=
+  excChow.comp (exceptionalNativeReturn jChow qChow)
+
+/-- The exceptional native projector fixes every born cycle from original X. -/
+theorem exceptional_native_ambient_projector_fixed
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (xiChow : CE →ₗ[ℚ] CE) (qPullChow : CX →ₗ[ℚ] CE)
+    (excChow : CX →ₗ[ℚ] CY)
+    (hSelfChow : ∀ Z : CX,
+      jChow (excChow Z) = -(xiChow (qPullChow Z)))
+    (hFiberChow : ∀ Z : CX,
+      qChow (xiChow (qPullChow Z)) = Z)
+    (Z : CX) :
+    exceptionalNativeAmbientProjector jChow qChow excChow (excChow Z) =
+      excChow Z := by
+  change excChow (exceptionalNativeReturn jChow qChow (excChow Z)) =
+    excChow Z
+  rw [exceptional_native_return_left_inverse jChow qChow xiChow
+    qPullChow excChow hSelfChow hFiberChow Z]
+
+/-- Exact GST all-source idempotence, from the geometric Chow laws. -/
+theorem exceptional_native_ambient_projector_idempotent
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (xiChow : CE →ₗ[ℚ] CE) (qPullChow : CX →ₗ[ℚ] CE)
+    (excChow : CX →ₗ[ℚ] CY)
+    (hSelfChow : ∀ Z : CX,
+      jChow (excChow Z) = -(xiChow (qPullChow Z)))
+    (hFiberChow : ∀ Z : CX,
+      qChow (xiChow (qPullChow Z)) = Z)
+    (W : CY) :
+    exceptionalNativeAmbientProjector jChow qChow excChow
+      (exceptionalNativeAmbientProjector jChow qChow excChow W) =
+    exceptionalNativeAmbientProjector jChow qChow excChow W := by
+  change excChow (exceptionalNativeReturn jChow qChow
+    (excChow (exceptionalNativeReturn jChow qChow W))) =
+    excChow (exceptionalNativeReturn jChow qChow W)
+  rw [exceptional_native_return_left_inverse jChow qChow xiChow
+    qPullChow excChow hSelfChow hFiberChow
+    (exceptionalNativeReturn jChow qChow W)]
+
+/-- Chow-native projector and canonical Betti exceptional projection commute.
+The hypotheses are the explicit actual scheme-to-Betti Gysin and push squares. -/
+theorem exceptional_native_ambient_projector_betti
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (excChow : CX →ₗ[ℚ] CY)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (hExc : ∀ Z : CX, clY (excChow Z) = excGysin (clX Z))
+    (W : CY) :
+    clY (exceptionalNativeAmbientProjector jChow qChow excChow W) =
+      excGysin (-(qReturn (jBetti (clY W)))) := by
+  change clY (excChow (exceptionalNativeReturn jChow qChow W)) = _
+  calc
+    clY (excChow (exceptionalNativeReturn jChow qChow W)) =
+        excGysin (clX (exceptionalNativeReturn jChow qChow W)) := hExc _
+    _ = excGysin (-(qReturn (jBetti (clY W)))) := by
+      congr 1
+      change clX (-(qChow (jChow W))) = _
+      rw [map_neg, hQ (jChow W), hJ W]
+
+#check exceptionalNativeAmbientProjector
+#check exceptional_native_ambient_projector_fixed
+#check exceptional_native_ambient_projector_idempotent
+#check exceptional_native_ambient_projector_betti
+#print axioms exceptional_native_ambient_projector_idempotent
+#print axioms exceptional_native_ambient_projector_betti
+
+
 /-- The ACTUAL original-X residual readout induced from an arbitrary
 algebraic perfect-complex/Chow source on the blown-up ambient world.
 Unlike exact exceptional target reconstruction, it needs no hypothesis
