@@ -856,8 +856,10 @@ theorem curvePairGenusTodd_intersection_zero
 /-! ## ATOMIC GEOMETRIC SURGERY: native diagonal vs tautological closure
 
 On the GENUINE original surface X=C×C, of genus g, the universal
-polarization H=A+B and tangent first Chern class c₁(T_X)=(2-2g)H
-produce only multiples of H in codimension one. Likewise every
+polarization H=A+B and the RATIONAL BETTI tangent first Chern class
+cl(c₁(T_X))=(2-2g)cl(H) produce only multiples of cl(H)
+in Betti degree two. This is not asserted as equality of Chow divisors;
+Pic⁰(C) contributions can be invisible to Betti intersection. Likewise every
 diagonal-supported self-correspondence on X×X obtained by tensoring
 with these same characteristic classes maps the unit to their
 tautological span (projection formula).
@@ -871,14 +873,15 @@ source-building recipe, NOT a Hodge counterexample. The corrective
 non-split input is the diagonal graph divisor on X itself.
 
 The Lean model below verifies the entire arbitrary-genus
-intersection obstruction. The semantic identification with actual
-C×C Chow intersection uses the source's established genuine
-diagonal/fiber intersection table, not a freely prescribed class map.
+NUMERICAL/Betti intersection obstruction. The semantic identification
+with actual C×C geometry uses genuine diagonal/fiber intersection
+numbers, not an assertion of rational equivalence of tangent divisors.
 -/
 
-/-- Every degree-one combination of the actual polarization and
-tangent Chern source on C×C. The tangent contribution is
-c₁(T_X)=(2-2g)(A+B) because c₁(T_C)=2-2g on each curve. -/
+/-- Degree-one rational BETTI/NUMERICAL span of polarization and
+tangent Chern source on C×C. The tangent class has Betti degree
+2-2g on each curve. This is NOT Chow rational equivalence of
+c₁(T_C) with (2-2g)[point] for an arbitrary curve. -/
 def curvePairTautologicalChernDivisor
     (g a b : ℚ) : EllipticPairNativeDivisor :=
   ⟨a + (2-2*g)*b, a + (2-2*g)*b, 0⟩
