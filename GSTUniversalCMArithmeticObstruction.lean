@@ -2538,6 +2538,94 @@ theorem cmWeilCMIntegralPrimitiveNotAmpleCubic
     exact hnonzero (by simpa using heq)
   · exact (smul_ne_zero hq hcube) hzero
 
+
+/-! ### EXACT MIXED WEIL FIRST-ORDER DIVISOR LEAK FACTORIZATION
+
+At the split sixfold let (u_j,v_j) denote holomorphic one-forms
+on the two elliptic coordinates of pair j, and (U_j,V_j)
+their antiholomorphic partners. The actual CM algebraic
+divisor classes obey
+  A_j=(u_j wedge V_j + U_j wedge v_j)/2,
+  B_j=i*(u_j wedge V_j - U_j wedge v_j)/2.
+For the K-compatible mixed tangent
+  u_1(t)=u_1+t V_2,   v_2(t)=v_2+t U_1,
+their first-order changes are
+  delta A1=d1, delta B1=i*d1,
+  delta A2=d2, delta B2=-i*d2,
+  delta A3=delta B3=0,
+with d1=-V2 wedge V1/2 and d2=-U2 wedge U1/2.
+Exterior alternation implies
+  d1*(A2-i B2)=0, d2*(A1+i B1)=0.
+The identities below factor the complete first-order
+variation of BOTH four-divisor Weil classes through these
+two annihilation relations. This is exact ring algebra;
+actual differential-form interpretations are geometric input.
+-/
+
+/-- Full Leibniz first-order real Weil variation, with no
+assumed vanishing; each of the eight terms originates from
+one differentiated factor of an explicit algebraic triple. -/
+def cmWeilCMIntegralMixedRealLeak
+    (a1 a2 a3 b1 b2 b3 d1 d2 i : R) : R :=
+  -(d1*a2*a3 + a1*d2*a3) + d1*b2*b3 +
+    a1*(-i*d2)*b3 + (i*d1)*a2*b3 +
+    b1*d2*b3 + (i*d1)*b2*a3 + b1*(-i*d2)*a3
+
+/-- Full Leibniz first-order imaginary Weil variation.
+This is the companion to the real-source formula. -/
+def cmWeilCMIntegralMixedImagLeak
+    (a1 a2 a3 b1 b2 b3 d1 d2 i : R) : R :=
+  (i*d1)*a2*a3 + b1*d2*a3 + d1*b2*a3 +
+    a1*(-i*d2)*a3 + d1*a2*b3 + a1*d2*b3 -
+    (i*d1)*b2*b3 - b1*(-i*d2)*b3
+
+/-- Exact factorization of BOTH eight-term Hodge variations.
+The residual terms are explicitly proportional to i²+1,
+so nothing depends on dividing by two or on an assumed
+nonzero algebraic target. -/
+theorem cmWeilCMIntegralMixedLeakFactorization
+    (a1 a2 a3 b1 b2 b3 d1 d2 i : R) :
+    let g1 := d1*(a2-i*b2)
+    let g2 := d2*(a1+i*b1)
+    cmWeilCMIntegralMixedRealLeak
+        a1 a2 a3 b1 b2 b3 d1 d2 i =
+      -a3*(g1+g2)+i*b3*(g1-g2)+
+        (i*i+1)*b3*(b1*d2+b2*d1) ∧
+    cmWeilCMIntegralMixedImagLeak
+        a1 a2 a3 b1 b2 b3 d1 d2 i =
+      i*a3*(g1-g2)+b3*(g1+g2)+
+        (i*i+1)*a3*(b1*d2+b2*d1) := by
+  dsimp [cmWeilCMIntegralMixedRealLeak,
+    cmWeilCMIntegralMixedImagLeak]
+  constructor <;> ring
+
+/-- Uniform cancellation of ALL eight real and all eight
+imaginary first-order summands along the named mixed
+K-compatible Weil tangent. This is an exact algebraic
+cancellation under two genuine exterior-repetition inputs,
+not a theorem that a perfect object deforms. -/
+theorem cmWeilCMIntegralMixedLeakVanishes
+    (a1 a2 a3 b1 b2 b3 d1 d2 i : R)
+    (hi : i*i = -1)
+    (h1 : d1*(a2-i*b2)=0)
+    (h2 : d2*(a1+i*b1)=0) :
+    cmWeilCMIntegralMixedRealLeak
+        a1 a2 a3 b1 b2 b3 d1 d2 i = 0 ∧
+    cmWeilCMIntegralMixedImagLeak
+        a1 a2 a3 b1 b2 b3 d1 d2 i = 0 := by
+  have h := cmWeilCMIntegralMixedLeakFactorization
+    a1 a2 a3 b1 b2 b3 d1 d2 i
+  dsimp only at h
+  constructor
+  · rw [h.1, h1, h2, hi]
+    ring
+  · rw [h.2, h1, h2, hi]
+    ring
+
+#check cmWeilCMIntegralMixedLeakFactorization
+#check cmWeilCMIntegralMixedLeakVanishes
+#print axioms cmWeilCMIntegralMixedLeakVanishes
+
 #check cmWeilGaussianDivisorPairMul_orthogonal
 #check cmWeilCMIntegralSixfoldFullGram
 #check cmWeilCMIntegralFullLatticePairing
