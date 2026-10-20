@@ -2471,6 +2471,37 @@ theorem cmWeilCMIntegralFullLatticePairing
       ring
 
 
+/-- Full integral Weil-plane Gram determinant for TWO arbitrary
+algebraically constructed source directions. The signed intersection
+form is -32 times the standard rank-two dot product, so its Gram
+discriminant is exactly 1024 times the square of their oriented
+coordinate determinant. This is an all-coefficients certificate:
+the test detects genuine rational independence of two source
+directions once their canonical geometric classes have been identified.
+No source existence or deformation is assumed by the identity. -/
+theorem cmWeilCMIntegralFullLatticeGramDeterminant
+    (m n a b : ℤ) :
+    ((-32)*(m*m+n*n))*((-32)*(a*a+b*b)) -
+        ((-32)*(m*a+n*b))*((-32)*(m*a+n*b)) =
+      1024*(m*b-n*a)*(m*b-n*a) := by
+  ring
+
+/-- A nonzero oriented coefficient determinant gives a strictly
+positive numerical Gram discriminant on the full integral Weil plane.
+For geometric source candidates the hypotheses must come from
+their ACTUAL classes, not independently assigned period coordinates. -/
+theorem cmWeilCMIntegralFullLatticeGramDeterminant_pos
+    (m n a b : ℤ) (h : m*b-n*a ≠ 0) :
+    0 < ((-32)*(m*m+n*n))*((-32)*(a*a+b*b)) -
+        ((-32)*(m*a+n*b))*((-32)*(m*a+n*b)) := by
+  rw [cmWeilCMIntegralFullLatticeGramDeterminant]
+  have hs : 0 < (m*b-n*a)*(m*b-n*a) := mul_self_pos.mpr h
+  positivity
+
+#check cmWeilCMIntegralFullLatticeGramDeterminant
+#check cmWeilCMIntegralFullLatticeGramDeterminant_pos
+#print axioms cmWeilCMIntegralFullLatticeGramDeterminant_pos
+
 /-- CY6 Serre self-Ext constraint for ANY integral combination of
 the two pure primitive CM Weil sources. The geometric prerequisites
 are: Todd(A)=1, ch(F)=m W_R+n W_I with no other grades,
