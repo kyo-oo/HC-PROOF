@@ -176,6 +176,110 @@ codimension-\(p\) Hodge source on a new geometry;
 adding more exceptional hyperplane powers does
 not lower its intrinsic Hodge complexity.
 
+\section{An exact GST middle-world intersection detector}
+There is a second completely geometric invariant on the
+rational world \(Y\): the cup-product intersection matrix
+of all the transplanted exceptional Hodge channels.
+This is especially useful for GST's rational Gram-dual
+primitive and source-detection calculations.
+
+For \(\alpha\in\Hdg^p(X)_{\Q}\) and
+\(\gamma\in\Hdg^q(X)_{\Q}\), write
+\(\beta_{p,\alpha}=j_*(\xi^{M-p-1}q^*\alpha)\)
+and \(\beta_{q,\gamma}=j_*(\xi^{M-q-1}q^*\gamma)\).
+\begin{theorem}[Exact cross-channel GST intersection kernel]
+With the Segre convention of the previous GST
+all-channel return,
+\[
+ \boxed{
+ \int_Y\beta_{p,\alpha}\smile\beta_{q,\gamma}
+ =\begin{cases}
+ -\int_X\alpha\smile\gamma\smile
+       s_{d-p-q}(N_{X/\mathbb P^{2M}}),
+       &p+q\le d,\\
+ 0,&p+q>d.
+ \end{cases}}
+ \tag{3.1}
+\]
+In particular, whenever \(p+q=d\),
+\[
+ \boxed{
+ \int_Y\beta_{p,\alpha}\beta_{d-p,\gamma}
+ =-\int_X\alpha\gamma.}
+ \tag{3.2}
+\]
+If \(d=2p\), the original middle Hodge
+intersection form is transported by an exact
+\emph{anti-isometry} into the middle Hodge
+intersection form of the smooth rational world.
+\end{theorem}
+\begin{proof}
+The exceptional divisor self-intersection is
+\(j^*j_*(v)=-\xi v\). By projection formula,
+\[
+ \int_Y\beta_{p,\alpha}\beta_{q,\gamma}
+  =-\int_E
+  \xi^{(M-p-1)+(M-q-1)+1}q^*(\alpha\gamma)
+  =-\int_E\xi^{2M-p-q-1}q^*(\alpha\gamma).
+\]
+Since the projective fibers of \(q\) have
+dimension \(c-1=2M-d-1\),
+the pushforward is \(s_{d-p-q}(N)\)
+if \(p+q\le d\). If \(p+q>d\),
+\(\alpha\gamma\) has degree exceeding
+the top cohomology of \(X\), so the
+integral vanishes. In the complementary
+case \(p+q=d\), \(s_0=1\). The
+anti-isometry assertion follows immediately.
+\end{proof}
+
+\paragraph{Global rational Gram structure.}
+Order the exceptional middle summands by
+\(p=0,\ldots,d\). The cross-channel matrix
+has \emph{zero blocks} when \(p+q>d\)
+and anti-diagonal blocks given by
+the negative Poincaré cup pairings between
+\(\Hdg^p(X)_{\Q}\) and
+\(\Hdg^{d-p}(X)_{\Q}\).
+These pairings are perfect on the
+rational Hodge-class subspaces by
+polarizability and semisimplicity of
+pure rational Hodge structures.
+Consequently the exceptional middle
+intersection matrix is nondegenerate:
+its determinant, after reversing block order,
+depends only on the nondegenerate
+anti-diagonal cup-pairing blocks.
+All Segre correction terms occur
+strictly on one side of this anti-diagonal
+and cannot destroy its invertibility.
+The ambient projective-space middle
+hyperplane class is orthogonal to each
+exceptional middle summand, since the
+relative power of \(\xi\) stays below
+the projective-bundle pushforward threshold.
+
+\paragraph{Concrete K3--fourfold detector.}
+For \(X=S\times S\), \(d=4\), \(p=2\),
+take the actual primitive diagonal
+\(D=\Delta-A-B-U/h^2\) from the
+repository's GST K3 native Gram,
+with \(\int_XD^2=21\).
+Using \(M=5\) and
+\(Y=\operatorname{Bl}_X(\mathbb P^{10})\),
+the actual algebraic middle lift
+\(\beta_D=j_*(\xi^2q^*D)\) satisfies
+\[
+ \boxed{\int_Y\beta_D^2=-21.}
+ \tag{3.3}
+\]
+This is a genuine nonzero source-period
+certificate inside a rational tenfold,
+not an assumed original-\(X\) Hodge
+preimage. It does not imply that
+arbitrary middle Hodge classes of the
+rational tenfold are algebraic.
+
 \section{Unconditional topological \(K\)-theory source}
 Write \(KU^0(E)_{\Q}=KU^0(E)\otimes\Q\).
 Because \(E\) is smooth complex projective,
