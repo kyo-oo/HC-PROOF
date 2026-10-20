@@ -411,6 +411,107 @@ complex is the still-unproved geometric
 problem: it is precisely the Hodge
 conjecture in the transported component.
 
+\section{A closed GST \(K\)-theory polynomial: the only nonalgebraic input}
+The topological Chern-character construction admits a more
+explicit \emph{native bundle ring} formula, avoiding any
+unspecified inverse on the new exceptional world.
+Define the original rational topological class
+\[
+ a_\alpha=\ch_{X,\mathrm{top}}^{-1}(\alpha)
+ \in KU^0(X)_\Q,\qquad
+ \lambda=[\mathcal O_E(1)]-1
+ \in KU^0(E)_\Q.
+\]
+Here \(\ch(a_\alpha)=\alpha\) is \emph{pure}
+in degree \(2p\), by the rational topological
+Chern-character isomorphism. On a finite-dimensional
+smooth complex projective \(E\), the
+augmentation element \(\lambda\) is nilpotent
+over \(\Q\) (equivalently, its rational
+Chern character has strictly positive degree).
+Hence the logarithm
+\[
+ L=\log(1+\lambda)
+  =\lambda-\tfrac12\lambda^2+
+   \tfrac13\lambda^3-\cdots
+\]
+is a finite rational polynomial in
+\(\lambda\), and so is
+\(g(\lambda)=L/\lambda=
+1-\lambda/2+\lambda^2/3-\cdots\).
+For the exceptional exponent \(r=M-p-1\),
+define the \emph{universal algebraic line-bundle
+word}
+\[
+ \boxed{
+ \Phi_r(\lambda)
+ =\lambda^r\,g(\lambda)^{r+1}
+ =\lambda^r
+ \left(\frac{\log(1+\lambda)}{\lambda}\right)^{r+1}.}
+ \tag{5.1}
+\]
+The notation with division is a power-series
+abbreviation for a finite polynomial; it
+does not require inverting the generally
+nonunit element \(\lambda\).
+
+\begin{theorem}[Exact finite bundle-word source formula]
+The canonical unconditional topological source
+constructed in (3.3) is given by the
+\emph{explicit rational \(K\)-ring operation}
+\[
+ \boxed{
+  u_\alpha=q^*a_\alpha\cdot\Phi_{M-p-1}(\lambda)
+ \in KU^0(E)_\Q.}
+ \tag{5.2}
+\]
+In particular, \(\Phi_r(\lambda)\) belongs to the image
+of \emph{algebraic} \(K_0(E)_\Q\)
+for every \(r\), and the only possibly
+nonalgebraic input in this GST source is
+\(a_\alpha\) on the original \(X\).
+\end{theorem}
+\begin{proof}
+Applying the Chern character to the finite
+formal expression gives
+\(\ch(\lambda)=e^\xi-1\) and
+\(\ch(L)=\log(e^\xi)=\xi\).
+Thus
+\[
+ \ch(\Phi_r(\lambda))
+ =\frac{\xi^{r+1}}{e^\xi-1}
+ =\xi^r\td(\mathcal O_E(-1)).
+\]
+Consequently
+\[
+ \ch(q^*a_\alpha\Phi_r(\lambda))
+ =q^*\alpha\,\xi^r\td(\mathcal O_E(-1)),
+\]
+which characterizes the unique rational
+topological class \(u_\alpha\) from (3.3).
+All rational powers of \(\lambda\) come from
+the actual algebraic line bundle
+\(\mathcal O_E(1)\), so the finite
+rational polynomial \(\Phi_r\) is
+algebraic independently of \(\alpha\).
+\end{proof}
+
+\paragraph{No-go boundary for purely formal GST blowup \(K_0\) upgrades.}
+The actual blowup and relative-Todd machinery
+can multiply the original topological Hodge
+source by \emph{known algebraic} \(K\)-classes
+and push it to the rational world with exact
+Chern character. Formula (5.2) shows that
+this cannot independently algebraize the
+unknown original \(a_\alpha\): if it did,
+the exact return of the previous theorem
+would already imply that \(\alpha\) was
+algebraic on \(X\). Therefore a decisive
+GST universal proof must establish a truly
+new theorem algebraizing the topological
+Hodge \(K\)-source, not merely a formal
+Chern-polynomial identity for \(\Phi_r\).
+
 \section{Exact symbolic and falsification checks}
 With the formal variable \(x=\xi\), Wolfram
 verified symbolically through \(x^8\)
