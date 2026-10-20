@@ -1227,6 +1227,82 @@ theorem blowupManyCounterexample_iff_base_or_center
       refine ⟨w i₀, ?_⟩
       simpa [blowupManyCanonicalCycleBlock, i₀] using hx
 
+/-! ### Arbitrary-many exceptional births followed by finite-degree cosmology
+
+Unlike a single exceptional generator, this detects the ACTUAL coordinate
+of a missing rational Hodge class on a finite connected many-center world.
+An arbitrary mixed source still belongs to the canonical block image when
+the true geometric comparison is instantiated. -/
+
+/-- For any finite arity (including zero centers), a missing target of a
+nonzero-degree GST descent packet has an explicit missing base coordinate
+or an actual numbered missing exceptional-center coordinate upstairs. -/
+theorem finite_degree_many_blowup_missing_component
+    {NT HT : Type*}
+    [AddCommGroup NT] [Module ℚ NT]
+    [AddCommGroup HT] [Module ℚ HT]
+    (r : ℕ)
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY)
+    (D : FiniteDegreeNativeDescent.DegreePacket
+      (NB × (Fin r → NY)) (HB × (Fin r → HY)) NT HT)
+    (hBlock : D.sourceCycle = blowupManyCanonicalCycleBlock r base center)
+    (alpha : HT)
+    (hMissing : alpha ∉ LinearMap.range D.targetCycle) :
+    (D.hodgePull alpha).1 ∉ LinearMap.range base ∨
+      ∃ i : Fin r, (D.hodgePull alpha).2 i ∉ LinearMap.range center := by
+  classical
+  have hMissingUp :
+      D.hodgePull alpha ∉
+        LinearMap.range (blowupManyCanonicalCycleBlock r base center) := by
+    rw [← hBlock]
+    exact FiniteDegreeNativeDescent.missing_target_hodge_survives_finite_pullback
+      D alpha hMissing
+  by_cases hBase : (D.hodgePull alpha).1 ∈ LinearMap.range base
+  · right
+    by_contra hAll
+    have hEach : ∀ i : Fin r,
+        (D.hodgePull alpha).2 i ∈ LinearMap.range center := by
+      intro i
+      by_contra hi
+      exact hAll ⟨i, hi⟩
+    rcases hBase with ⟨z,hz⟩
+    have hExists : ∀ i : Fin r,
+        ∃ w : NY, center w = (D.hodgePull alpha).2 i := hEach
+    choose w hw using hExists
+    apply hMissingUp
+    refine ⟨(z,w), ?_⟩
+    apply Prod.ext
+    · exact hz
+    · funext i
+      exact hw i
+  · exact Or.inl hBase
+
+/-- Native completeness of the base and each geometric center survives
+an arbitrary positive finite-arity blowup and its finite-degree descent. -/
+theorem finite_degree_many_blowup_complete_descent
+    {NT HT : Type*}
+    [AddCommGroup NT] [Module ℚ NT]
+    [AddCommGroup HT] [Module ℚ HT]
+    (r : ℕ) (hr : 0 < r)
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY)
+    (D : FiniteDegreeNativeDescent.DegreePacket
+      (NB × (Fin r → NY)) (HB × (Fin r → HY)) NT HT)
+    (hBlock : D.sourceCycle = blowupManyCanonicalCycleBlock r base center)
+    (hBase : Function.Surjective base)
+    (hCenter : Function.Surjective center) :
+    Function.Surjective D.targetCycle := by
+  have hSource : Function.Surjective D.sourceCycle := by
+    rw [hBlock]
+    exact (blowupManyCanonicalCycleBlock_surjective_iff
+      r hr base center).mpr ⟨hBase, hCenter⟩
+  exact FiniteDegreeNativeDescent.degree_descent_preserves_all_hodge_classes
+    D hSource
+
+#check finite_degree_many_blowup_missing_component
+#check finite_degree_many_blowup_complete_descent
+#print axioms finite_degree_many_blowup_missing_component
+#print axioms finite_degree_many_blowup_complete_descent
+
 #check blowupManyCanonicalCycleBlock
 #check blowupManyCanonicalCycleBlock_surjective_iff
 #check blowupManyCounterexample_iff_base_or_center
