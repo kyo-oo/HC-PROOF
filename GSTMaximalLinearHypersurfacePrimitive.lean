@@ -581,11 +581,14 @@ theorem fermat_clifford_period_compiler_exact
   have hSum :
       (∑ i : Fin d, fermatCliffordPeriodCompiler d m beta i) =
         (∑ i : Fin d, beta i) / (B*D*(s-1)) := by
-    simp only [fermatCliffordPeriodCompiler]
-    rw [Finset.sum_add_distrib]
-    simp only [Finset.sum_div, Finset.sum_const, Finset.card_fin,
-      nsmul_eq_mul]
-    field_simp [hB, hD, hs, hs1] <;> ring
+    calc
+      _ = (∑ i : Fin d, beta i)/(B*D*s) +
+            D*((∑ i : Fin d, beta i)/(B*D^2*s*(s-1))) := by
+          simp only [fermatCliffordPeriodCompiler,
+            Finset.sum_add_distrib, Finset.sum_div,
+            Finset.sum_const, Finset.card_fin, nsmul_eq_mul]
+      _ = (∑ i : Fin d, beta i)/(B*D*(s-1)) := by
+          field_simp [hB, hD, hs, hs1] <;> ring
   change B * (D*s*(fermatCliffordPeriodCompiler d m beta j) -
       (∑ i : Fin d, fermatCliffordPeriodCompiler d m beta i)) = beta j
   rw [hSum]
