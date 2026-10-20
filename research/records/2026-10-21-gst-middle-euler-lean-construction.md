@@ -37,9 +37,10 @@ The following revision-matched checks have completed successfully:
 |---|---|---|
 | Complete Chern–Segre–Newton arithmetic | 4f2cdd7be1a5e9d10108035b501ba399ca95c8a1 | [GREEN #39483532547](https://github.com/kyo-oo/HC-PROOF/actions/runs/39483532547) |
 | Full pinned integration, including the actual-X compiler | 4f2cdd7be1a5e9d10108035b501ba399ca95c8a1 | [GREEN #39483532335](https://github.com/kyo-oo/HC-PROOF/actions/runs/39483532335) |
+| Standalone original-X native projection and compiler | db37a836047167112598167727833b107a6bce7a | [GREEN #39484913997](https://github.com/kyo-oo/HC-PROOF/actions/runs/39484913997) |
 | K3 native Gram and Euler index | 4715410811cb32e2fd83a0d90611d3adf1fb8214 | [GREEN #39482156988](https://github.com/kyo-oo/HC-PROOF/actions/runs/39482156988); K3 source blob unchanged at final code revision |
 
-The duplicate standalone ActualX workflow [#39482736893](https://github.com/kyo-oo/HC-PROOF/actions/runs/39482736893), pinned at b4c7d117cd13776be1d8ada79ddadda35075f450, was last observed in progress in its native-projection build step. The same ActualX source is already kernel-verified by both [pinned #39482737165](https://github.com/kyo-oo/HC-PROOF/actions/runs/39482737165) and the final full pinned run above. Its independent workflow outcome is pending observation, rather than a pending proof verification.
+The standalone ActualX workflow is also **GREEN**: [#39484913997](https://github.com/kyo-oo/HC-PROOF/actions/runs/39484913997), pinned at db37a836047167112598167727833b107a6bce7a. It verifies BOTH the directed-cut prerequisite and the native projection/certificate library, including the final Graph arithmetic. The prior cold standalone run #39482736893 was cancelled and superseded by this successful cache-enabled run. The same ActualX source also passed pinned runs #39482737165 and #39483532335.
 
 The initial pinned run #39482156974 at 4715410 exposed exactly one compiler API mismatch: Matrix.mul_nonsing_inv requires IsUnit(det), whereas hDet supplied det!=0. The minimal repair is isUnit_iff_ne_zero.mpr hDet over Q. The repaired and final full integration runs are GREEN; no mathematical premise or theorem statement was weakened.
 
@@ -50,6 +51,8 @@ Verified final code source blobs:
 - GSTGraphV2SelfExpandingCosmology.lean: 606cb553e396a27fb3918798682d6e6f3edae529.
 - GSTActualXHodgeResidualProjection.lean: 1726886a5cb5d225c299aa6605fdc1543f8f93b9.
 - GSTK3PrimitiveGram.lean: 3ea87cd8279b075f55cfc26aea52462b80ff0d74.
+
+The standalone workflow previously lacked incremental GST dependency caching. It now restores the same compatible/legacy cache family used by the pinned gate and saves using the restore action's original primary key, avoiding a key change when generated roots modify lakefile.toml. Its exact Lean commands, target list and both sorry guards are unchanged. The successful run log confirms a real cache restore, two successful Lean targets and a saved stable primary key.
 
 The updated manuscript is 760 lines. LaTeX static checks have balanced braces and 58 display delimiter pairs; no PDF/LaTeX compiler result is claimed.
 
@@ -74,3 +77,17 @@ A precise algebraic discriminator is H=Q^2 with ordinary positive dot product an
 Thus the denominator-separated normalizer gives a new explicit finite native characteristic-class word, while its proved native_iff identity preserves the original algebraization question. The actual native index matrix theorem closes the cycle construction exactly when its actual source columns have full rank. A topological Gram matrix supplies no proof of that native-column condition.
 
 Audit provenance: self-review, manuscript and Lean submissions pinned at d34b0a2, 4715410, b4c7d11 and final code 4f2cdd7. No independent-agent review or geometric KU/GRR formalization is claimed.
+
+## Verified checkpoint
+
+All four relevant compiler checks are GREEN. The complete Chern-to-Euler rational algebra and native actual-cycle certificate compiler are kernel-verified without added global axioms or proof placeholders. The all-varieties universal algebraic-source existence statement is not proved by these results; it remains the exact open geometric target. This checkpoint closes the requested Lean derivation/verification phase and preserves that original target explicitly.
+
+## Minimal continuation handoff
+
+Contemporaneous cutoff/assessment: 2026-10-21 Asia/Calcutta, code and standalone compiler checkpoint db37a836047167112598167727833b107a6bce7a; Graph/full pinned evidence at 4f2cdd7 and unchanged K3 source evidence at 4715410. The original all-X/all-rational-Hodge native cycle target remains open. The Lean derivation/compilation phase is complete.
+
+Active geometric decision: construct an ACTUAL algebraic perfect-complex source with nonzero normalized Euler readout against a prescribed nonzero original-X primitive residual. Apply the existing algebraic Adams middle filter, true exceptional Chow return and native source-gain laws; the new index matrix compiler finishes once actual native columns have full rank. Cheapest discriminator for any proposed source is its exact residual Euler period. The topological companion J_L(alpha) cannot be substituted as an algebraic source without a realization proof. Ordinary Lefschetz/lowering words alone and the Picard-only exceptional sector have the pre-existing documented obstructions; do not repeat them unchanged.
+
+A second open continuation is genuine same-Betti smooth-support descent from codimension M-p to M-1, using the already proved smooth-niveau/divisor-source criterion in the high-coniveau manuscript. For p=2 this is one actual support-codimension unit. Multiplying by hyperplanes changes the class and is not such a descent. Both geometric continuations were outside this focused Lean-arithmetic implementation; neither is declared exhausted or impossible. Resume with a proposed new actual algebraic source or genuine Gysin/support comparison, then test its canonical Betti output on the same original X.
+
+Compiler lifecycle: initial ActualX #39482157074, cold repaired ActualX #39482736893, and intermediate cache workflow #39484740442 are cancelled/superseded. Final standalone #39484913997 is completed SUCCESS; final Graph #39483532547, full pinned #39483532335 and K3 #39482156988 are completed SUCCESS. No active compiler job remains in this phase.
