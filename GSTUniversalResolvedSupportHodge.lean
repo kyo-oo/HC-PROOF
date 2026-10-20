@@ -2613,4 +2613,43 @@ theorem original_X_diagonal_sheaf_extracts_primitive_correspondence
 
 end GSTNativeFiniteFlatDiagonalSheaf
 
+/-! ## GST MIXED EXCEPTIONAL BIRTH FEEDBACK
+
+A proper blowup pushforward is ADDITIVE, not a ring map. Thus
+an old pushforward kernel need not survive multiplication by
+cycles created by a second, interacting geometric birth.
+
+For rho: Xhat=Bl_S(X)->X, codim(S)=c, exceptional F, the genuine
+Chow identities are projection formula and
+rho_*(F^c)=(-1)^(c-1)[S]. They give
+rho_*(rho*(Z) . F^c)=(-1)^(c-1) Z.[S].
+The new quadric two-birth construction evaluates its further
+pushdown as -[point] although the FIRST pushdown of Z is zero.
+
+This law works for arbitrary source rings and codimensions.
+It uses the proper birational projection formula, not the
+finite-flat inverse-degree projector from earlier sections.
+The Chow operations of a concrete blowup remain geometric
+inputs; no arbitrary target-cycle preimage is introduced.
+-/
+
+namespace GSTNativeExceptionalInteraction
+
+theorem proper_blowup_mixed_push
+    {A B : Type*} [CommRing A] [CommRing B]
+    (pull : A →+* B) (push : B →+ A)
+    (hProjection : ∀ (a : A) (b : B),
+      push (pull a * b) = a * push b)
+    (source center sign : A) (exceptional : B) (c : ℕ)
+    (hExceptional : push (exceptional^c) = sign*center) :
+    push (pull source * exceptional^c) =
+      sign * (source*center) := by
+  rw [hProjection, hExceptional]
+  ring
+
+#check proper_blowup_mixed_push
+#print axioms proper_blowup_mixed_push
+
+end GSTNativeExceptionalInteraction
+
 end GSTUniversalResolvedSupportHodge

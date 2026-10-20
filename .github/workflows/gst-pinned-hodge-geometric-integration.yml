@@ -11,6 +11,7 @@ on:
       - 'GSTClassicalHodgeGeometricCycleClassPointRigidity.lean'
       - 'GSTActualXHodgeResidualProjection.lean'
       - 'GSTUniversalResolvedSupportHodge.lean'
+      - 'GSTQuadricPrimitiveRulingGeometry.lean'
       - 'GSTPrimitiveTransverseCycleExtraction.lean'
       - 'GSTUniversalCMArithmeticObstruction.lean'
       - 'GSTWeilFourfoldAuxiliaryExtraction.lean'
@@ -22,6 +23,7 @@ on:
       - 'research/computations/secant_seed_character.py'
       - 'research/computations/secant_obstruction_rank.py'
       - 'research/computations/gst_weil_uniform_power_and_shear.py'
+      - 'research/computations/gst_mixed_blowup_birth.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -118,6 +120,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/gst_weil_uniform_power_and_shear.py | tee uniform-cm-finite-shear.log
+      - name: Exact interacting exceptional births and unit primitive readout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/gst_mixed_blowup_birth.py | tee mixed-blowup-birth.log
       - name: Kernel compile period spread, primitive rank, and native Hodge assembly
         shell: bash
         run: |
@@ -129,6 +136,7 @@ jobs:
             GSTClassicalHodgeGeometricCycleClassPointRigidity \
             GSTActualXHodgeResidualProjection \
             GSTUniversalResolvedSupportHodge \
+            GSTQuadricPrimitiveRulingGeometry \
             GSTUniversalCMArithmeticObstruction \
             GSTUniversalPrimitiveHyperplaneRelative \
             GSTUniversalCodimensionTwoPrimitiveExtraction \
@@ -167,5 +175,6 @@ jobs:
             secant-seed-character.log
             secant-obstruction-rank.log
             uniform-cm-finite-shear.log
+            mixed-blowup-birth.log
             pure-k0-all-codim.log
           if-no-files-found: warn

@@ -149,4 +149,164 @@ theorem every_middle_rational_class_from_two_rulings
 #print axioms constructPrimitiveRulingCycle_correct
 #print axioms every_middle_rational_class_from_two_rulings
 
+/-! ## TWO INTERACTING GST BLOWUP BIRTHS, EVERY EVEN DIMENSION
+
+For m>=1 let B=P^(2m+2), Y=Q^(2m) in a hyperplane, and
+X=Bl_Y B. Write C_A=j*q*[A], C_B=j*q*[B] and Z=C_A-C_B.
+The genuine middle Chow/Betti basis is (H^(m+1),C_A,C_B).
+Its intersection is the ambient product MINUS the existing
+quadric ruling intersection. The first push kills Z.
+
+Now perform a DIFFERENT genuine birth rho: Xhat=Bl_(S_A) X,
+where S_A=q^(-1)(A) is a smooth P^1-bundle over P^m, and
+let F be its exceptional divisor. The center has codimension
+c=m+1, so rho_*(F^c)=(-1)^m [S_A]. Projection formula gives
+  deg (pi rho)_*(rho* Z . F^c) = -1
+in EVERY m>=1. Thus the earlier vanishing of pi_*(E^k Z)
+does NOT extend to mixed words in two interacting births.
+
+The normalized mixed readout has value ONE on Z and yields
+an integral rank-one correspondence and exact reconstruction
+of every primitive middle class on this entire blowup family.
+The formulas below are kernel-checked rational coordinate
+laws; the genuine blowup/Chow/Betti comparison is the stated
+geometric input, not a newly constructed Mathlib blowup object.
+-/
+
+abbrev BlowupMiddleCycle := ℚ × RulingCycle
+
+def liftedPrimitiveRuling : BlowupMiddleCycle := (0, primitiveRuling)
+def liftedRulingA : BlowupMiddleCycle := (0, (1,0))
+
+def exceptionalParity (m : ℕ) : ℚ := if Even m then 1 else -1
+
+def firstBlowupIntersection (m : ℕ)
+    (u v : BlowupMiddleCycle) : ℚ :=
+  u.1*v.1 - intersection m u.2 v.2
+
+def firstBlowupBasePush (u : BlowupMiddleCycle) : ℚ := u.1
+
+/-- Actual ample-cup matrix in the geometric blowup basis. It is
+independent of m; kH-E is ample for sufficiently large k. -/
+def firstBlowupLefschetzCup (k : ℚ)
+    (u : BlowupMiddleCycle) : ℚ × ℚ :=
+  (k*u.1 + u.2.1 + u.2.2,
+   -2*u.1 + (k-3)*(u.2.1+u.2.2))
+
+/-- Scalar top pushforward of rho* u times the SECOND exceptional
+divisor to its center codimension, by the true projection formula. -/
+def secondBlowupMixedTopPush (m : ℕ)
+    (u : BlowupMiddleCycle) : ℚ :=
+  exceptionalParity m * firstBlowupIntersection m u liftedRulingA
+
+/-- Integral dual coordinate supplied by the second-birth Euler
+readout. It involves no division by the primitive self-norm 2. -/
+def secondBlowupUnitReadout (m : ℕ)
+    (u : BlowupMiddleCycle) : ℚ :=
+  if Even m then u.2.1 else -u.2.2
+
+def mixedBirthPrimitiveProjector (m : ℕ)
+    (u : BlowupMiddleCycle) : BlowupMiddleCycle :=
+  secondBlowupUnitReadout m u • liftedPrimitiveRuling
+
+theorem first_blowup_push_kills_primitive :
+    firstBlowupBasePush liftedPrimitiveRuling = 0 := rfl
+
+theorem first_blowup_cup_kills_primitive (k : ℚ) :
+    firstBlowupLefschetzCup k liftedPrimitiveRuling = 0 := by
+  simp [firstBlowupLefschetzCup, liftedPrimitiveRuling, primitiveRuling]
+
+theorem first_blowup_primitive_norm (m : ℕ) :
+    firstBlowupIntersection m liftedPrimitiveRuling liftedPrimitiveRuling =
+      -2 * exceptionalParity m := by
+  by_cases hm : Even m <;>
+    norm_num [firstBlowupIntersection, liftedPrimitiveRuling,
+      primitiveRuling, intersection, exceptionalParity, hm]
+
+/-- The first primitive class has zero OLD pushforward but its
+interaction with the new exceptional birth returns -[point].
+This is an explicit unit, with no assumed nonzero detector. -/
+theorem second_blowup_mixed_push_is_negative_one (m : ℕ) :
+    secondBlowupMixedTopPush m liftedPrimitiveRuling = -1 := by
+  by_cases hm : Even m <;>
+    norm_num [secondBlowupMixedTopPush, exceptionalParity,
+      firstBlowupIntersection, liftedPrimitiveRuling, primitiveRuling,
+      liftedRulingA, intersection, hm]
+
+theorem second_blowup_unit_readout_is_negative_push
+    (m : ℕ) (u : BlowupMiddleCycle) :
+    secondBlowupUnitReadout m u = -secondBlowupMixedTopPush m u := by
+  by_cases hm : Even m <;>
+    simp [secondBlowupUnitReadout, secondBlowupMixedTopPush,
+      exceptionalParity, firstBlowupIntersection, liftedRulingA,
+      intersection, hm]
+
+theorem second_blowup_reads_scaled_primitive (m : ℕ) (t : ℚ) :
+    secondBlowupUnitReadout m (t • liftedPrimitiveRuling) = t := by
+  by_cases hm : Even m <;>
+    simp [secondBlowupUnitReadout, liftedPrimitiveRuling,
+      primitiveRuling, smul_eq_mul, hm]
+
+theorem mixed_birth_primitive_projector_idempotent
+    (m : ℕ) (u : BlowupMiddleCycle) :
+    mixedBirthPrimitiveProjector m (mixedBirthPrimitiveProjector m u) =
+      mixedBirthPrimitiveProjector m u := by
+  change
+    secondBlowupUnitReadout m
+      (secondBlowupUnitReadout m u • liftedPrimitiveRuling) •
+        liftedPrimitiveRuling =
+    secondBlowupUnitReadout m u • liftedPrimitiveRuling
+  rw [second_blowup_reads_scaled_primitive]
+
+/-- Exact construction for EVERY primitive rational target in the
+actual three-dimensional middle fibre of this blowup family.
+The full ample-cup matrix forces the ambient coordinate to zero
+and the two exceptional coordinates to be opposites. The new
+mixed birth then returns the target without a preimage premise. -/
+theorem mixed_birth_recovers_every_primitive_middle_target
+    (m : ℕ) (k : ℚ) (hk : 3 ≤ k) (u : BlowupMiddleCycle)
+    (hu : firstBlowupLefschetzCup k u = 0) :
+    mixedBirthPrimitiveProjector m u = u := by
+  rcases u with ⟨x, a, b⟩
+  have h0 : k*x+a+b = 0 := by
+    simpa [firstBlowupLefschetzCup] using congrArg Prod.fst hu
+  have h1 : -2*x+(k-3)*(a+b) = 0 := by
+    simpa [firstBlowupLefschetzCup] using congrArg Prod.snd hu
+  have hfactor : ((k-1)*(k-2))*x = 0 := by
+    linear_combination (k-3)*h0-h1
+  have hnonzero : (k-1)*(k-2) ≠ 0 :=
+    ne_of_gt (mul_pos (by linarith) (by linarith))
+  have hx : x = 0 := (mul_eq_zero.mp hfactor).resolve_left hnonzero
+  have hb : b = -a := by rw [hx] at h0; linarith
+  subst x
+  subst b
+  by_cases hm : Even m <;>
+    simp [mixedBirthPrimitiveProjector, secondBlowupUnitReadout,
+      liftedPrimitiveRuling, primitiveRuling, smul_eq_mul, hm]
+
+/-- Arbitrary finite source arity in the GST cosmos: external
+products of the explicit mixed-birth unit detectors stay units.
+The empty product is the point-world unit; actual quadric
+factors use m>=1. No dimension or word-length bound is present. -/
+def mixedBirthWordUnitReadout (dimensions : List ℕ) : ℚ :=
+  (dimensions.map fun m =>
+    -secondBlowupMixedTopPush m liftedPrimitiveRuling).prod
+
+theorem every_finite_mixed_birth_word_has_unit_readout
+    (dimensions : List ℕ) :
+    mixedBirthWordUnitReadout dimensions = 1 := by
+  induction dimensions with
+  | nil => simp [mixedBirthWordUnitReadout]
+  | cons m tail ih =>
+      simpa [mixedBirthWordUnitReadout,
+        second_blowup_mixed_push_is_negative_one] using ih
+
+#check second_blowup_mixed_push_is_negative_one
+#check mixed_birth_primitive_projector_idempotent
+#check mixed_birth_recovers_every_primitive_middle_target
+#check every_finite_mixed_birth_word_has_unit_readout
+#print axioms second_blowup_mixed_push_is_negative_one
+#print axioms mixed_birth_recovers_every_primitive_middle_target
+#print axioms every_finite_mixed_birth_word_has_unit_readout
+
 end GSTQuadricPrimitiveRulingGeometry
