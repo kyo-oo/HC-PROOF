@@ -24,6 +24,7 @@ on:
       - 'research/computations/secant_obstruction_rank.py'
       - 'research/computations/gst_weil_uniform_power_and_shear.py'
       - 'research/computations/gst_mixed_blowup_birth.py'
+      - 'research/computations/gst_second_blowup_primitive_plane.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -125,6 +126,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/gst_mixed_blowup_birth.py | tee mixed-blowup-birth.log
+      - name: Complete second-birth primitive plane and geometric matrix units
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/gst_second_blowup_primitive_plane.py | tee second-blowup-primitive-plane.log
       - name: Kernel compile period spread, primitive rank, and native Hodge assembly
         shell: bash
         run: |
@@ -176,5 +182,6 @@ jobs:
             secant-obstruction-rank.log
             uniform-cm-finite-shear.log
             mixed-blowup-birth.log
+            second-blowup-primitive-plane.log
             pure-k0-all-codim.log
           if-no-files-found: warn
