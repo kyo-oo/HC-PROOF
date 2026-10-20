@@ -343,8 +343,9 @@ self-correspondence kernels \((\Delta_X)_*F\) built from the
 same such \(F\) and applied to objects already in the recipe.
 Every resulting one-legged \(K\)-class \(E\) satisfies
 \[
-       \ch_1(E)\in\Q H,\qquad
-       \int_X\ch_1(E)\,D=0.                           \tag{11}
+       \cl(\ch_1(E))\in\Q h,\qquad
+       \int_X\cl(\ch_1(E))\smile d=0,                \tag{11}
+       \quad h=\cl(H),\quad d=\cl(D).
 \]
 No recipe in this class produces a class with
 \(\ch_1(E)=D\), despite \(D\) being algebraic.
@@ -353,9 +354,9 @@ This holds at every finite operator-word length.
 \begin{proof}
 The initial characters have degree-one pieces
 \[
- \ch_1(\mathcal O_X)=0,\qquad
- \ch_1(\mathcal O_X(H))=H,\qquad
- \ch_1(T_X)=c_1(T_X)=(2-2g)H .
+ \cl(\ch_1(\mathcal O_X))=0,\qquad
+ \cl(\ch_1(\mathcal O_X(H)))=h,\qquad
+ \cl(\ch_1(T_X))=(2-2g)h .
 \]
 For any vector bundles (and by additivity for virtual classes),
 \[
@@ -369,7 +370,12 @@ For any vector bundles (and by additivity for virtual classes),
 \]
 for genuine rank-\(\rk(E)\) bundles where the exterior power
 is defined. Each operation preserves the one-dimensional
-\(\Q H\) first-character span.
+\(\Q h\) first-character span \emph{after canonical Betti realization}.
+For arbitrary \(C\), the equation
+\(c_1(T_C)=(2-2g)[c]\) need NOT hold in
+\(\CH^1(C)_\Q\): a degree-zero Picard-class difference can
+survive rational equivalence while vanishing in Betti cohomology.
+Only the Betti/numerical identity is used in this theorem.
 For \(\Delta_X:X\to X\times X\), the projection formula gives
 \[
  T_{(\Delta_X)_*F}(G)
@@ -381,8 +387,9 @@ The diagonal self-intersection complex involves
 \(\lambda_{-1}T_X^\vee\), and introduces no extra generator
 beyond the stated characteristic operations.
 Equation (10) proves (11).
-If \(\ch_1(E)=D\), pairing with \(D\) would give
-\(0=D^2=-2g\), contrary to \(g>0\).
+If \(\cl(\ch_1(E))=d\), pairing with \(d\) would give
+\(0=\int_X d^2=-2g\), contrary to \(g>0\).
+Thus equality \(\ch_1(E)=D\) in Chow is also impossible.
 \end{proof}
 
 \begin{theorem}[Exact independent native repair by an internal graph]
@@ -412,7 +419,7 @@ degree two:
 Their half-difference is precisely \(D\), with both rank and
 degree-two characters zero. It is a rational combination
 of actual line bundles, not a choice of target cycle.
-Its period is (10). This also correctly distinguishes
+Its numerical period is (10). This also correctly distinguishes
 the diagonal \(\Delta_X\subset X\times X\), acting as the
 identity/tensor kernel in (12), from the \emph{internal}
 graph \(\Delta_C\subset C\times C=X\) supplying new geometry.
