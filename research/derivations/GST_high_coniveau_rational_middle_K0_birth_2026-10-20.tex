@@ -634,6 +634,137 @@ divisor construction and the exact
 Chern--Segre return; it must not
 be assumed as an extra GST axiom.
 
+\section{One explicit universal \(K\)-source packet for ALL original grades}
+The preceding source was defined for one prescribed
+original codimension. Its construction is linear
+and its exceptional channels are independent,
+so we can combine \emph{all} original rational
+Hodge degrees in \emph{one} pure middle
+topological \(K\)-theory state.
+
+Fix the single \(Y,E,M\) chosen previously,
+and let \(\boldsymbol\alpha=(\alpha_0,\ldots,\alpha_d)\)
+be an arbitrary packet
+\(\alpha_p\in\Hdg^p(X)_{\Q}\).
+Define the actual topological virtual
+bundle packet
+\[
+ \boxed{
+ \mathcal U_{\boldsymbol\alpha}
+ =\sum_{p=0}^d
+  q^*\ch_{X,\mathrm{top}}^{-1}(\alpha_p)\,
+  \Phi_{M-p-1}(\lambda)\in KU^0(E)_\Q,
+ \qquad
+ \mathcal V_{\boldsymbol\alpha}
+  =j_!^{\mathrm{top}}\mathcal U_{\boldsymbol\alpha}
+  \in KU^0(Y)_\Q.}
+ \tag{6.1}
+\]
+Every term is \emph{unconditionally} defined
+using only original rational Betti Hodge
+data, the exceptional algebraic
+line bundle, rational topological \(K\)
+operations and the actual Gysin map.
+Its Chern character is \emph{pure
+middle degree}:
+\[
+ \boxed{\ch_Y(\mathcal V_{\boldsymbol\alpha})
+   =\sum_{p=0}^d
+    j_*(\xi^{M-p-1}q^*\alpha_p)
+   \in\Hdg^M(Y)_\Q.}
+ \tag{6.2}
+\]
+
+\begin{theorem}[The full GST defect as an explicit \(K\)-algebraization obstruction]
+For this single rational smooth world,
+\[
+ \boxed{
+ \mathcal V_{\boldsymbol\alpha}
+ \text{ is the rational realization of an
+ algebraic perfect-\(K\) class on }Y
+ \iff
+ \alpha_p\in\im(\cl_X^p)\ \text{for ALL }p.}
+ \tag{6.3}
+\]
+Likewise \(\mathcal U_{\boldsymbol\alpha}\)
+is algebraizable on \(E\) if and only if
+every \(\alpha_p\) is algebraic on the
+original \(X\). Consequently the
+two universal assignments induce
+\emph{injective rational linear maps}
+\[
+ \boxed{
+ \bigoplus_{p=0}^d D_p(X)
+ \hookrightarrow
+ KU^0(E)_\Q/\im K_0^{\mathrm{alg}}(E)_\Q
+ \quad\text{and}\quad
+ \bigoplus_{p=0}^d D_p(X)
+ \hookrightarrow
+ KU^0(Y)_\Q/\im K_0^{\mathrm{alg}}(Y)_\Q.}
+ \tag{6.4}
+\]
+\end{theorem}
+\begin{proof}
+The Todd-corrected topological Gysin
+formula applied term-by-term proves
+(6.2). If its right side is the
+Chern character of an algebraic
+\(K_0(Y)_\Q\) class, its degree-\(M\)
+component is a canonical algebraic
+Chow cycle class. Apply the existing
+all-exceptional-channel actual
+Chern--Segre return \(R_{M-p}^H\):
+every \(\alpha_p\) must be
+algebraic. Conversely, if all
+\(\alpha_p\) are algebraic,
+the rational algebraic
+\(K_0(E)\)-to-Chow Chern character
+isomorphism realizes every summand
+of (6.1) by an algebraic virtual
+perfect class; its regular-immersion
+Gysin push gives an algebraic
+\(K_0(Y)\) representative of
+\(\mathcal V_{\boldsymbol\alpha}\).
+
+For the \(E\)-side converse,
+look at the degree-\((M-1)\)
+Chern-character component
+\[
+ [\ch_E(\mathcal U_{\boldsymbol\alpha})]_{M-1}
+ =\sum_{p=0}^d
+  \xi^{M-p-1}q^*\alpha_p.
+\]
+The projective-bundle
+cohomology and Chow decompositions
+use distinct powers
+\(\xi^j\) over the base \(X\).
+Their compatible coefficient
+extraction therefore shows that
+each \(\alpha_p\) is algebraic
+when this component is algebraic.
+The two iff statements imply
+that the linear assignments
+vanish in the respective
+algebraization quotients
+precisely on the direct sum
+of algebraic original Hodge
+subspaces. Passing to quotients
+proves the injections (6.4).
+\end{proof}
+
+This is a fully quantified \emph{source
+construction} with no chosen
+Chow preimages. The outstanding
+universal problem is now one
+geometric algebraization theorem
+for its precisely specified
+topological \(K\)-state, not a
+separate arbitrary symbol for
+every Hodge sheet. The theorem
+does NOT provide that
+algebraization or imply that
+rationality of \(Y\) supplies it.
+
 \section{An exact relative-support algebraicity test}
 We can turn the preceding sufficient criterion
 into a \emph{necessary-and-sufficient}
