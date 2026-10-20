@@ -137,7 +137,7 @@ def plane_syzygy_benchmark():
         assert a==-(d-1)**3 and b==-2*(d-1)**3
         assert pair([0,1],center1)==0
         assert pair(center1,[1,0])==(d-1)**3>0
-        assert b/2-2*a==(d-1)**3
+        assert Q(b,2)-2*a==(d-1)**3
         assert a*a+b*b==5*(d-1)**6
         rows.append({'degree':d,'explicit_global_generation_twist':d,
                      'first_center_primitive_period':a,'second_center_primitive_period':b,
