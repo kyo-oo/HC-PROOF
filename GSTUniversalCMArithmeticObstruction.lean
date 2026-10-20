@@ -2496,7 +2496,9 @@ theorem cmWeilCMIntegralFullLatticeGramDeterminant_pos
         ((-32)*(m*a+n*b))*((-32)*(m*a+n*b)) := by
   rw [cmWeilCMIntegralFullLatticeGramDeterminant]
   have hs : 0 < (m*b-n*a)*(m*b-n*a) := mul_self_pos.mpr h
-  positivity
+  calc
+    0 < (1024 : ℤ)*((m*b-n*a)*(m*b-n*a)) := mul_pos (by norm_num) hs
+    _ = 1024*(m*b-n*a)*(m*b-n*a) := by ring
 
 #check cmWeilCMIntegralFullLatticeGramDeterminant
 #check cmWeilCMIntegralFullLatticeGramDeterminant_pos
