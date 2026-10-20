@@ -2,6 +2,8 @@
 
 Date: 2026-10-21 (IST). Branch: `research/gpt6-native-point-primitive-span-20261017`. User-directed Mathbox research and Wolfram exact checking. No generic public-web search, no subagents, no local Lean.
 
+**Correction (same-day adversarial review):** The first version conflated the tangent Chern divisor with its numerical degree as an identity in CH¹. The revised proof requires only canonical rational Betti/numerical equality. It does not assert the false Chow equality on arbitrary curves; the graph-source birth and verified rational intersection identities are unchanged.
+
 ## Target and direct result
 
 The original target is the full rational Hodge conjecture on every original smooth projective complex X with the genuine canonical cycle-class map. This specific route tested the claim that GST's diagonal projector, Newton/Euler positivity, polarization and tangent-characteristic operations can force a new one-legged actual source.
@@ -14,9 +16,9 @@ Let C be smooth projective genus g>0, A=[point×C], B=[C×point], H=A+B, delta=[
 
 - A²=B²=0, A B=1, delta A=delta B=1, delta²=2-2g.
 - H D=0, D²=-2g, signed primitive energy +2g.
-- c1(T_X)=(2-2g)H. For all rational a,b, (aH+b c1(T_X))D=0.
+- Under genuine rational Betti realization, cl(c1(T_X))=(2-2g)cl(H). For all rational a,b, the NUMERICAL intersection integral of (aH+b c1(T_X)) with D is zero. This is not rational Chow equivalence for arbitrary C: Pic0 differences may survive in CH1 while vanishing in Betti cohomology.
 
-Theorem: start from O_X, O_X(H), T_X, and use finite rational K0 combinations, tensor, dual, Adams, exterior powers (on true vector bundles), and self-diagonal kernels (Delta_X)_*F with F from this generated algebra. Every output E from the unit has ch1(E) in QH. This is proved by rank/ch1 identities for tensor, dual, Adams and exterior powers and the exact projection formula T_((Delta_X)_*F)(G)=F tensor G. Hence all such outputs pair trivially with D and cannot have ch1=D when g>0. No arbitrary graph/correspondence F is allowed as a concealed extra generator in this no-go.
+Theorem: start from O_X, O_X(H), T_X, and use finite rational K0 combinations, tensor, dual, Adams, exterior powers (on true vector bundles), and self-diagonal kernels (Delta_X)_*F with F from this generated algebra. Every output E from the unit has cl(ch1(E)) in Q cl(H) under canonical Betti realization. This is proved by rank/ch1 identities for tensor, dual, Adams and exterior powers and the exact projection formula T_((Delta_X)_*F)(G)=F tensor G. Hence all such outputs have zero numerical/Betti pairing with D and cannot have even the same Betti ch1 as D when g>0. No arbitrary graph/correspondence F is allowed as a concealed extra generator in this no-go.
 
 **Explicit repair:** The actual internal diagonal graph is independent geometry. Let L_D=O_X(D). The rational algebraic virtual perfect-complex source E_D=([L_D]-[L_D^{-1}])/2 has ch(E_D)=D in CH*(X)_Q, since X is a surface and the even-degree Chern character cancels. Thus -int_X ch1(E_D) D=2g>0. This source is not an alpha-selected Chow witness; it is built directly from a specific actual graph subscheme.
 
