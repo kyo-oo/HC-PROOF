@@ -1,0 +1,179 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CH}{\operatorname{CH}}
+\newcommand{\Hdg}{\operatorname{Hdg}}
+\newcommand{\cl}{\operatorname{cl}}
+\newcommand{\coker}{\operatorname{coker}}
+\newtheorem{theorem}{Theorem}
+\title{GST: An Arbitrary Original Variety as the Exact Middle Hodge Defect of a Rational Blowup}
+\author{Mathbox mathematics-first construction and proof audit}
+\date{20 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We construct a smooth projective rational variety of even complex dimension
+whose middle rational Hodge class faithfully carries any prescribed rational
+Hodge class on any original smooth projective complex variety. An explicit
+uniform Chern--Segre inverse returns actual algebraic middle cycles to actual
+algebraic cycles on the original variety. We prove a global equivalence:
+the rational Hodge conjecture on all smooth projective complex varieties
+is equivalent to the rational Hodge conjecture restricted to middle-degree
+classes of smooth projective rational varieties of even complex dimension.
+The latter statement is not proved here.
+\end{abstract}
+\section{GST rational world selection and the middle channel}
+Let $X$ be smooth projective complex of dimension $d$, and let
+$\alpha\in\Hdg^p(X)_{\Q}$ for $0\le p\le d$.
+Choose an embedding $X\hookrightarrow\mathbb P^{N_0}$ and an integer
+$M$ with $2M\ge N_0$, $M\ge p+1$, and $M\ge d-p+1$.
+The explicit choice $M=N_0+d+p+2$ works.
+Embed $X$ by a linear extension into $\mathbb P^{2M}$.
+Define
+\[
+ Y=\operatorname{Bl}_X(\mathbb P^{2M}),\qquad
+ c=2M-d,\qquad i=M-p.
+\]
+Then $1\le i\le c-1$, and $Y$ is a smooth projective
+rational variety of complex dimension $2M$.
+Let $j:E=\mathbb P(N_{X/\mathbb P^{2M}})\hookrightarrow Y$ and
+$q:E\to X$, with $\xi=c_1(\mathcal O_E(1))$.
+For every exceptional index $a=1,\dots,c-1$, define
+\[
+ I_a^{C}(z)=j_*(\xi^{a-1}q^*z),\qquad
+ I_a^{H}(\gamma)=j_*(\xi^{a-1}q^*\gamma).
+\]
+The first map raises codimension by $a$ and the second
+raises Hodge weight by $a$.
+Hence
+\[
+ \beta_\alpha=I_i^H(\alpha)
+   =j_*(\xi^{M-p-1}q^*\alpha)\in\Hdg^M(Y)_{\Q}.
+\]
+It has Betti degree $2M$, exactly the middle cohomological degree of $Y$.
+No claim that this class is primitive is needed or made.
+
+\section{Exact all-channel exceptional inversion}
+Let $N=N_{X/\mathbb P^{2M}}$ be the rank-$c$ normal bundle.
+Write $c_k=c_k(N)$, and fix projective-bundle Segre classes
+by $q_*(\xi^{c-1+r}q^*z)=s_r(N)z$.
+The total characteristic series satisfy
+\[
+ C(t)=\sum_{k\ge0}c_kt^k,\qquad
+ S(t)=\sum_{r\ge0}s_rt^r,\qquad C(t)S(t)=1.
+\]
+For each exceptional index $a$, define a true Chow/Gysin observable
+\[
+ T_a^C(W)=-q_*(\xi^{c-1-a}j^*W)
+       \in\CH^{M-a}(X)_{\Q}.
+\]
+Use the identical Betti operation for $T_a^H$.
+The exceptional normal line is $\mathcal O_E(-1)$, so
+$j^*j_*(v)=-\xi v$. By projective-bundle integration,
+\[
+ T_a^CI_b^C(z)=
+ \begin{cases}
+ 0&b<a,\\
+ s_{b-a}(N)z&b\ge a.
+ \end{cases}
+\]
+The same identity holds in rational Betti cohomology.
+Now define the Chern-corrected return
+\[
+ R_a^C(W)=\sum_{k=0}^{c-1-a}c_k(N)T_{a+k}^C(W),
+\qquad
+ R_a^H(\eta)=\sum_{k=0}^{c-1-a}c_k(N)T_{a+k}^H(\eta).
+\]
+The graded target of $R_a^C$ is $\CH^{M-a}(X)_{\Q}$
+because $T_{a+k}^C$ has codimension $M-a-k$.
+\begin{theorem}[Uniform Chow and Betti inverse]
+For all admissible $a,b$,
+\[
+ R_a^CI_b^C=\delta_{ab}\operatorname{id},
+ \qquad
+ R_a^HI_b^H=\delta_{ab}\operatorname{id}.
+\]
+Moreover $R_a^C$ and $R_a^H$ commute with canonical cycle
+class and they both annihilate ambient projective-space pullbacks.
+\end{theorem}
+\begin{proof}
+For $b<a$, every summand vanishes by projective-bundle dimension.
+For $b\ge a$, the coefficient of the input is
+\[
+ \sum_{k=0}^{b-a}c_ks_{b-a-k}=[t^{b-a}]C(t)S(t)
+  =\begin{cases}1&b=a,\\0&b>a.\end{cases}
+\]
+The same computation works on actual Chow groups and canonical
+rational Betti classes; it uses genuine Gysin, self-intersection,
+projection formula and pushforward operations.
+For ambient pullback, each $T_a$ has a fiber exponent strictly
+below $c-1$ and therefore vanishes.
+\end{proof}
+
+\section{Original-class algebraicity if and only if middle algebraicity}
+\begin{theorem}[Exact rational middle reduction]
+The following are equivalent for each $X,p,\alpha$:
+\[
+ \alpha\in\operatorname{im}(\cl_X^p)
+ \quad\Longleftrightarrow\quad
+ \beta_\alpha\in\operatorname{im}(\cl_Y^M).
+\]
+If $W\in\CH^M(Y)_{\Q}$ satisfies $\cl_Y^M(W)=\beta_\alpha$,
+then the explicit genuine original-variety cycle
+\[
+ Z_\alpha=R_i^C(W)\in\CH^p(X)_{\Q}
+\]
+satisfies $\cl_X^p(Z_\alpha)=\alpha$.
+\end{theorem}
+\begin{proof}
+If $\alpha=\cl_X^p(z)$, the algebraic exceptional lift $I_i^C(z)$
+represents $\beta_\alpha$. Conversely the naturality
+of the constructed Chern-corrected return gives
+\[
+ \cl_X^p(R_i^C W)=R_i^H(\cl_Y^M W)
+  =R_i^HI_i^H(\alpha)=\alpha.
+\]
+No preimage of $\alpha$ was used to construct the return.
+\end{proof}
+\begin{theorem}[Global reduction to rational middle Hodge classes]
+The full rational Hodge conjecture for all smooth projective complex
+varieties is equivalent to its restriction to rational middle
+Hodge classes on smooth projective rational varieties of even
+complex dimension.
+\end{theorem}
+\begin{proof}
+One direction is immediate. Conversely apply the explicit
+ambient construction to arbitrary original $X,p,\alpha$.
+The target $\beta_\alpha$ is in middle degree on smooth rational $Y$,
+so the restricted statement would make it algebraic.
+The preceding theorem returns a genuine representative on $X$.
+\end{proof}
+
+\section{Exact Wolfram check and limits}
+For four independent exceptional channels, set
+$s_1=-c_1$, $s_2=c_1^2-c_2$,
+$s_3=-c_1^3+2c_1c_2-c_3$.
+The exceptional-output matrix and Chern inverse are
+\[
+ S_4=\begin{pmatrix}
+ 1&s_1&s_2&s_3\\0&1&s_1&s_2\\0&0&1&s_1\\0&0&0&1
+ \end{pmatrix},\qquad
+ C_4=\begin{pmatrix}
+ 1&c_1&c_2&c_3\\0&1&c_1&c_2\\0&0&1&c_1\\0&0&0&1
+ \end{pmatrix}.
+\]
+Wolfram exact symbolic evaluation returned
+$C_4S_4=S_4C_4=I_4$ and $\det S_4=1$.
+This check is finite; the proof for all codimensions
+is the series identity $C(t)S(t)=1$.
+
+The theorem does not prove that the new middle Hodge class is
+algebraic. It does identify one concrete missing geometry:
+construct an actual $\CH^M(Y)_{\Q}$ representative of
+$j_*(\xi^{M-p-1}q^*\alpha)$ on the specified rational blowup
+without selecting an original-$X$ Hodge preimage.
+Likewise the formal rational-linear GST native operators
+must be matched with actual scheme-level Chow and Betti maps
+before treating this geometric reduction as Lean formalized.
+\end{document}
