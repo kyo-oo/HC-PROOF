@@ -1470,6 +1470,36 @@ theorem exceptional_prescribed_target_readout
 #check exceptional_prescribed_target_readout
 #print axioms exceptional_native_residual_detected_of_birth
 
+
+/-- Universal blowup criterion in native algebraic terms: surjectivity of
+the canonical class map on a single actual ambient blowup Y suffices to
+recover all classes on its arbitrary original smooth center X.
+For the intended instantiation Y=Bl_X(P^N), Y itself is rational.
+This is a reduction to an exact geometric source constructor on Y,
+not an existence claim for such a constructor. -/
+theorem exceptional_ambient_surjectivity_forces_original
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (xiMul : HE →ₗ[ℚ] HE) (qPull : HX →ₗ[ℚ] HE)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (hSelf : ∀ a : HX, jBetti (excGysin a) = -(xiMul (qPull a)))
+    (hFiber : ∀ a : HX, qReturn (xiMul (qPull a)) = a)
+    (hRationalBlowupComplete : Function.Surjective clY) :
+    Function.Surjective clX := by
+  intro a
+  obtain ⟨W, hW⟩ := hRationalBlowupComplete (excGysin a)
+  exact ⟨exceptionalOriginalXCycle jChow qChow W,
+    exceptional_lift_cycle_recovery clX clY clE jChow qChow
+      jBetti qReturn xiMul qPull excGysin hJ hQ
+      hSelf hFiber a W hW⟩
+
+#check exceptional_ambient_surjectivity_forces_original
+#print axioms exceptional_ambient_surjectivity_forces_original
+
 #check exceptional_lift_return_identity
 #check exceptional_lift_cycle_recovery
 #check exceptional_lift_range_iff
