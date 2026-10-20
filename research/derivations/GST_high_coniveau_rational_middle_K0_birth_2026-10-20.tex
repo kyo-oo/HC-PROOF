@@ -543,6 +543,97 @@ supplies support, but leaves a
 degree-\(2p\) rational Hodge source
 on that support.
 
+\section{A concrete GST one-step support-descent gate}
+High absolute coniveau alone does not solve
+the rational Hodge problem, because
+\(\beta_\alpha\in N^{M-p}\) still
+has a codimension-\(p\) source.
+The useful geometric endpoint is
+a \emph{smooth divisor-source correspondence}
+in codimension \(M-1\).
+
+\begin{theorem}[Genuine divisor-source algebraicity criterion]
+Let \(Y\) be smooth projective complex,
+and let \(\beta\in\Hdg^M(Y)_\Q\).
+Suppose there exist smooth projective
+varieties \(T_1,\ldots,T_s\), proper
+algebraic maps \(f_a:T_a\to Y\)
+that shift cohomology by codimension
+\(M-1\), and rational classes
+\(\gamma_a\in H^2(T_a,\Q)\) satisfying
+\[
+ \boxed{\beta=\sum_{a=1}^s(f_a)_*\gamma_a.}
+ \tag{7.1}
+\]
+The \(\gamma_a\) need not initially be
+declared Hodge classes. Then there are
+\emph{actual rational algebraic divisors}
+\(D_a\in\CH^1(T_a)_\Q\)
+with
+\[
+ \boxed{\beta=\cl_Y^M
+              \left(\sum_a(f_a)_*D_a\right).}
+ \tag{7.2}
+\]
+\end{theorem}
+\begin{proof}
+The direct-sum Gysin map
+\(\bigoplus_a H^2(T_a,\Q)(-(M-1))
+ \to H^{2M}(Y,\Q)\)
+is a morphism of polarizable rational
+Hodge structures. Its rational image is a
+Hodge substructure, and a surjection onto
+that image splits as a rational Hodge
+morphism by semisimplicity of the
+category of polarizable pure rational
+Hodge structures. Since \(\beta\) is
+a rational Hodge class of type
+\((M,M)\) in this image,
+it has a rational preimage of type
+\((1,1)\) in the direct sum of
+degree-two source cohomologies.
+By the divisor/Lefschetz (1,1)
+theorem, those source components
+are rational classes of actual
+divisors \(D_a\). Proper
+Gysin/nativity of canonical cycle
+class gives (7.2).
+\end{proof}
+
+\paragraph{Exact remaining work for the hard case \(p=2\).}
+For an original codimension-two Hodge
+class, the explicit rational-world lift
+\(\beta_\alpha=j_*(\xi^{M-3}q^*\alpha)\)
+already admits geometric support
+in codimension \(M-2\):
+a smooth complete intersection
+of \(M-3\) exceptional hyperplanes
+inside \(E\), followed by \(j\).
+To apply the theorem, GST must
+\emph{construct a supplementary
+genuine codimension-one
+support descent} realizing the
+\emph{same} \(\beta_\alpha\)
+as a Gysin of rational degree-two
+cohomology on supports of codimension
+\(M-1\). Such an equality is
+not supplied by generic Bertini
+hyperplane cuts: they multiply the
+class by an additional divisor
+rather than preserve its
+original Betti value.
+That is the first algebraic
+geometric nontriviality of the
+proposed support upgrade.
+Producing the new correspondence
+for every original Hodge target
+would imply all original
+codimension-two Hodge classes
+are algebraic by the displayed
+divisor construction and the exact
+Chern--Segre return; it must not
+be assumed as an extra GST axiom.
+
 \section{Next exact GST operation, with no unearned hypothesis}
 The strongest constructive state we
 now possess unconditionally is
