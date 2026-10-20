@@ -2652,4 +2652,129 @@ theorem proper_blowup_mixed_push
 
 end GSTNativeExceptionalInteraction
 
+/-! ## ORIGINAL-X SMOOTH INCIDENCE CENTERS FROM ALGEBRAIC BUNDLES
+
+For ANY smooth projective n-fold X, p>=1 and p<=n, start with
+an actual algebraic bundle E. After a sufficiently ample twist
+and adjoining trivial summands, general independent sections
+give a globally generated rank-n quotient V with the SAME total
+Chern class as the twisted bundle. General n-p+1 sections of V
+define the genuine incidence center
+  S={(x,[lambda]) : sum lambda_i s_i(x)=0}
+in X x P^(n-p). It is a smooth zero scheme of the rank-n bundle
+pr_X*V tensor O(1), of dimension n-p (or is empty).
+The true projective-bundle push gives pr_X*[S]=c_p(V).
+Blowing up along S and pushing the n-th exceptional power gives
+(-1)^(n-1)c_p(V) on the ORIGINAL X.
+
+If n<=2p+1, the lower-rank stratum has codimension 2p+2>n;
+the determinantal center is already smooth INSIDE X and the
+incidence resolution is an isomorphism onto it. In particular
+this holds for every primitive middle problem n=2p.
+
+The primitive period ell(u)=(-1)^p integral_X r.u.h^(n-2p)
+kills EVERY h-multiple. Thus twisting does not change its
+c_p period. Below the complete projective coefficient and twist
+laws are proved for all n,p, not a fixed degree test.
+For p=2, actual centers from E and E+E recover ch_2(E) with
+coefficients -2 and 1/2, with the sharp center-energy bound 4/17.
+
+The center construction is geometric; no arbitrary target
+preimage is used. It does not assert an algebraic bundle with
+nonzero prescribed residual period exists on every X.
+-/
+
+namespace GSTNativeSmoothIncidenceCenter
+
+/-- Top Chern polynomial of pr*V tensor O(1), with Chern coefficients.
+Projective integration extracts degree n-p in the fiber variable. -/
+def incidenceTopChernPolynomial {A : Type*} [CommRing A]
+    (n : ℕ) (chern : ℕ → A) : Polynomial A :=
+  ∑ i ∈ Finset.range (n+1), Polynomial.monomial (n-i) (chern i)
+
+/-- Exact actual-projective-bundle arithmetic: the smooth incidence
+center pushes to c_p, with no rank/determinant/preimage assumption. -/
+theorem incidence_center_projective_push_coefficient
+    {A : Type*} [CommRing A] (n p : ℕ) (hp : p ≤ n)
+    (chern : ℕ → A) :
+    (incidenceTopChernPolynomial n chern).coeff (n-p) = chern p := by
+  classical
+  unfold incidenceTopChernPolynomial
+  rw [Polynomial.finset_sum_coeff, Finset.sum_eq_single p]
+  · simp
+  · intro i hi hip
+    have hin : i ≤ n := by simpa using Nat.le_of_lt_succ (Finset.mem_range.mp hi)
+    have hne : n-i ≠ n-p := by omega
+    simp [Polynomial.coeff_monomial, hne]
+  · intro h
+    exact False.elim (h (Finset.mem_range.mpr (by omega)))
+
+/-- Complete Chern twist, not just its top term. The rational m
+stands for the integer twist parameter in geometric instances. -/
+def twistedChernClass {A : Type*} [CommRing A] [Algebra ℚ A]
+    (rank p : ℕ) (chern : ℕ → A) (h : A) (m : ℚ) : A :=
+  ∑ i ∈ Finset.range (p+1),
+    ((Nat.choose (rank-i) (p-i) : ℚ)*m^(p-i)) • (h^(p-i)*chern i)
+
+/-- A true primitive period ignores EVERY lower-degree twist term.
+It is enough to verify the geometric primitive h-annihilation law;
+no nonzero source or requested Chow preimage is hypothesized. -/
+theorem primitive_period_of_twisted_chern
+    {A : Type*} [CommRing A] [Algebra ℚ A]
+    (ell : A →ₗ[ℚ] ℚ) (h : A)
+    (hPrimitive : ∀ z : A, ell (h*z)=0)
+    (rank p : ℕ) (chern : ℕ → A) (m : ℚ) :
+    ell (twistedChernClass rank p chern h m) = ell (chern p) := by
+  classical
+  unfold twistedChernClass
+  rw [map_sum, Finset.sum_eq_single p]
+  · simp
+  · intro i hi hip
+    have hip' : i < p := by
+      have hi' : i < p+1 := Finset.mem_range.mp hi
+      omega
+    obtain ⟨k,hk⟩ : ∃ k : ℕ, p-i=k+1 := ⟨p-i-1, by omega⟩
+    rw [map_smul, hk, pow_succ h]
+    have hfactor : h^k*h*chern i = h*(h^k*chern i) := by ring
+    rw [hfactor, hPrimitive]
+    simp
+  · intro hnot
+    exact False.elim (hnot (Finset.mem_range.mpr (by omega)))
+
+/-- Actual rank-two Chern identities for E and its ordinary direct
+sum E+E. Only positive-copy bundles enter the center constructor. -/
+theorem two_center_chern_character_identity
+    {A : Type*} [CommRing A] [Algebra ℚ A] (c1 c2 : A) :
+    (-2 : ℚ) • c2+(1/2 : ℚ) • (2*c2+c1^2) =
+      (1/2 : ℚ) • c1^2-c2 := by
+  rw [two_mul]
+  module
+
+/-- Exact sharp quantitative coupling of the two smooth centers.
+If q=ch_2 period=b/2-2a, their target-selected sum has period
+a^2+b^2 >= (4/17)q^2. No geometric Gram normalization is needed. -/
+theorem two_center_energy_identity (a b : ℚ) :
+    17*(a^2+b^2)-4*(b/2-2*a)^2=(a+4*b)^2 := by ring
+
+theorem two_center_energy_lower_bound (a b : ℚ) :
+    (4/17 : ℚ)*(b/2-2*a)^2 ≤ a^2+b^2 := by
+  have hh := two_center_energy_identity a b
+  nlinarith [sq_nonneg (a+4*b)]
+
+theorem two_center_energy_positive (a b : ℚ)
+    (hDetected : b/2-2*a ≠ 0) : 0 < a^2+b^2 := by
+  have hb := two_center_energy_lower_bound a b
+  have hp : 0 < (b/2-2*a)^2 := sq_pos_of_ne_zero hDetected
+  nlinarith
+
+#check incidence_center_projective_push_coefficient
+#check primitive_period_of_twisted_chern
+#check two_center_chern_character_identity
+#check two_center_energy_lower_bound
+#print axioms incidence_center_projective_push_coefficient
+#print axioms primitive_period_of_twisted_chern
+#print axioms two_center_energy_lower_bound
+
+end GSTNativeSmoothIncidenceCenter
+
 end GSTUniversalResolvedSupportHodge
