@@ -1,5 +1,8 @@
 # GST Hodge Research — Construction Program
 
+- [2026-10-20: all-dimension GST Clifford/Fermat native period compiler](2026-10-20-gst-clifford-fermat-native-period-compiler.md) — **Lean GREEN [#39406562118](https://github.com/kyo-oo/HC-PROOF/actions/runs/39406562118)** at `87e4383`: genuine equation-born K₀ primitive source periods form an invertible all-dimension rational Gram, with explicit coefficients reconstructing every measured target in that source frame; Wolfram matrix and inverse checks; combines with original-X smooth-center exceptional feedback. Does not assume all-X source surjectivity.
+
+
 - [2026-10-20: GST finite multi-center canonical Hodge defect conservation](2026-10-20-gst-multicenter-hodge-defect-conservation.md) — **Lean GREEN [#39406055021](https://github.com/kyo-oo/HC-PROOF/actions/runs/39406055021)** at `985f6ff`: actual finite-block cycle-class surjectivity iff base and centers, exact counterexample-origin classification, and independent Wolfram rational Gram/discriminant checks; no arbitrary-X source-existence claim.
 
 - [2026-10-20: GST exceptional blowup-born source return to arbitrary original X](2026-10-20-gst-exceptional-ambient-original-x-return.md) — canonical exceptional class on Bl_X(P^N) admits exact one-cycle return to same X, a nonzero native residual detector, uniform upper-triangular multi-birth inverse, and a tautological-source filter. Lean Graph V2 CI [#39405037695](https://github.com/kyo-oo/HC-PROOF/actions/runs/39405037695) GREEN at first construction commit; later detector commit requires its own revision-matched check. Universal birth input remains the explicit target.
