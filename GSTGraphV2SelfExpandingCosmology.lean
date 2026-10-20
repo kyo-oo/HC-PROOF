@@ -1122,6 +1122,119 @@ theorem finite_degree_blowup_complete_descent
 #print axioms blowupCounterexample_iff_base_or_center
 
 
+/-! ## FINITE MANY-CENTER GST BLOWUP CHOW/HODGE DEFECT LAW
+
+This is the exact degree-p canonical cycle-class linear-algebra block for
+r pairwise disjoint centers whose shifted Chow and Betti summands share the
+same types. All diagonal entries are genuine base/center class maps when
+the standard *geometric* blowup decompositions are instantiated. Unlike
+a matrix-unit completeness assumption, no summand is presumed algebraic.
+
+The r=0 boundary is intentionally excluded from the two-way center test:
+no center is present and its surjectivity is logically irrelevant.
+-/
+
+/-- Actual finite many-center block after canonical geometric Chow/Betti
+comparison, with no supplied Hodge-to-Chow inverse. -/
+def blowupManyCanonicalCycleBlock (r : ℕ)
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY) :
+    (NB × (Fin r → NY)) →ₗ[ℚ] (HB × (Fin r → HY)) where
+  toFun z := (base z.1, fun i => center (z.2 i))
+  map_add' z w := by
+    apply Prod.ext
+    · simp
+    · funext i
+      simp
+  map_smul' a z := by
+    apply Prod.ext
+    · simp
+    · funext i
+      simp
+
+/-- For EVERY positive finite number of independent blowup centers,
+the native source sector spans the complete rational Hodge sector
+if and only if the original base and each actual center are complete.
+This extends the two-summand block to arbitrary finite GST birth rank. -/
+theorem blowupManyCanonicalCycleBlock_surjective_iff
+    (r : ℕ) (hr : 0 < r)
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY) :
+    Function.Surjective (blowupManyCanonicalCycleBlock r base center) ↔
+      Function.Surjective base ∧ Function.Surjective center := by
+  classical
+  constructor
+  · intro h
+    constructor
+    · intro u
+      obtain ⟨⟨z,w⟩,hzw⟩ := h (u, fun _ => 0)
+      exact ⟨z, congrArg Prod.fst hzw⟩
+    · intro v
+      let i₀ : Fin r := ⟨0, hr⟩
+      obtain ⟨⟨z,w⟩,hzw⟩ :=
+        h ((0 : HB), fun i : Fin r => if i = i₀ then v else 0)
+      refine ⟨w i₀, ?_⟩
+      have hx := congrArg (fun u : HB × (Fin r → HY) => u.2 i₀) hzw
+      simpa [blowupManyCanonicalCycleBlock, i₀] using hx
+  · rintro ⟨hb,hc⟩ ⟨u,v⟩
+    refine ⟨(Classical.choose (hb u), fun i => Classical.choose (hc (v i))), ?_⟩
+    apply Prod.ext
+    · exact Classical.choose_spec (hb u)
+    · funext i
+      exact Classical.choose_spec (hc (v i))
+
+/-- A missing rational Hodge direction in ANY finite many-center GST
+blowup is inherited from either the old world or one of the actual
+centers, and conversely either missing direction survives the birth.
+This is a counterexample CLASSIFICATION for this geometric mechanism,
+not a claim of a new universal cycle or a universal counterexample. -/
+theorem blowupManyCounterexample_iff_base_or_center
+    (r : ℕ) (hr : 0 < r)
+    (base : NB →ₗ[ℚ] HB) (center : NY →ₗ[ℚ] HY) :
+    (∃ uv : HB × (Fin r → HY),
+      uv ∉ LinearMap.range (blowupManyCanonicalCycleBlock r base center)) ↔
+    (∃ u : HB, u ∉ LinearMap.range base) ∨
+      (∃ v : HY, v ∉ LinearMap.range center) := by
+  classical
+  constructor
+  · rintro ⟨⟨u,v⟩,hMissing⟩
+    by_cases hu : u ∈ LinearMap.range base
+    · by_cases hs : ∀ i : Fin r, v i ∈ LinearMap.range center
+      · obtain ⟨z,hz⟩ := hu
+        have hExists : ∀ i : Fin r, ∃ w : NY, center w = v i := hs
+        choose w hw using hExists
+        exfalso
+        apply hMissing
+        refine ⟨(z,w), ?_⟩
+        apply Prod.ext
+        · exact hz
+        · funext i
+          exact hw i
+      · right
+        push_neg at hs
+        obtain ⟨i,hi⟩ := hs
+        exact ⟨v i, hi⟩
+    · left
+      exact ⟨u, hu⟩
+  · intro h
+    rcases h with ⟨u,hu⟩ | ⟨v,hv⟩
+    · refine ⟨(u, fun _ => 0), ?_⟩
+      rintro ⟨⟨z,w⟩,hzw⟩
+      exact hu ⟨z, congrArg Prod.fst hzw⟩
+    · let i₀ : Fin r := ⟨0, hr⟩
+      refine ⟨((0 : HB), fun i : Fin r => if i = i₀ then v else 0), ?_⟩
+      rintro ⟨⟨z,w⟩,hzw⟩
+      have hx := congrArg (fun u : HB × (Fin r → HY) => u.2 i₀) hzw
+      apply hv
+      refine ⟨w i₀, ?_⟩
+      simpa [blowupManyCanonicalCycleBlock, i₀] using hx
+
+#check blowupManyCanonicalCycleBlock
+#check blowupManyCanonicalCycleBlock_surjective_iff
+#check blowupManyCounterexample_iff_base_or_center
+#print axioms blowupManyCanonicalCycleBlock_surjective_iff
+#print axioms blowupManyCounterexample_iff_base_or_center
+
+
+
 /-! ## GST original-X source recovery from an exceptional birth
 
 Embed an arbitrary smooth projective original X into projective space
