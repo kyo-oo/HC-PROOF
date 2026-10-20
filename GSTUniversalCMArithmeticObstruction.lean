@@ -2470,9 +2470,54 @@ theorem cmWeilCMIntegralFullLatticePairing
       rw [hr,hi,hri]
       ring
 
+
+/-- CY6 Serre self-Ext constraint for ANY integral combination of
+the two pure primitive CM Weil sources. The geometric prerequisites
+are: Todd(A)=1, ch(F)=m W_R+n W_I with no other grades,
+the full -32 diagonal intersection pairing, and Serre duality
+e_k=e_(6-k). They are explicitly encoded in the Euler identity,
+not assumed to follow from bare integer arithmetic. -/
+theorem cmWeilCMIntegralLattice_CY6SerrePressure
+    (m n : ℤ) (e0 e1 e2 e3 : ℕ)
+    (hEuler :
+      2*(e0 : ℤ)-2*(e1 : ℤ)+2*(e2 : ℤ)-(e3 : ℤ) =
+        32*(m*m+n*n)) :
+    (16 : ℤ)*(m*m+n*n) ≤ (e0 : ℤ)+(e2 : ℤ) := by
+  omega
+
+/-- In the SIMPLE-object regime e0=1, the new pure integral
+Weil lattice's Euler identity gives the sharp numerical
+self-Ext² pressure at every pair of integral coefficients. -/
+theorem cmWeilCMIntegralLattice_simpleExtTwoPressure
+    (m n : ℤ) (e1 e2 e3 : ℕ)
+    (hEuler :
+      2-2*(e1 : ℤ)+2*(e2 : ℤ)-(e3 : ℤ) =
+        32*(m*m+n*n)) :
+    (16 : ℤ)*(m*m+n*n)-1 ≤ (e2 : ℤ) := by
+  have h := cmWeilCMIntegralLattice_CY6SerrePressure
+    m n 1 e1 e2 e3 (by simpa using hEuler)
+  omega
+
+/-- One primitive integral Weil basis source has e2 >= 15
+if represented by a simple CY6 perfect complex with PURE
+third Chern character. This is a necessary bound, not an
+existence or semiregularity assertion. -/
+theorem cmWeilCMIntegralBasis_simpleExtTwo_minimum
+    (e1 e2 e3 : ℕ)
+    (hEuler :
+      2-2*(e1 : ℤ)+2*(e2 : ℤ)-(e3 : ℤ) = 32) :
+    15 ≤ e2 := by
+  have h := cmWeilCMIntegralLattice_simpleExtTwoPressure
+    1 0 e1 e2 e3 (by simpa using hEuler)
+  omega
+
 #check cmWeilGaussianDivisorPairMul_orthogonal
 #check cmWeilCMIntegralSixfoldFullGram
 #check cmWeilCMIntegralFullLatticePairing
+#check cmWeilCMIntegralLattice_CY6SerrePressure
+#check cmWeilCMIntegralLattice_simpleExtTwoPressure
+#check cmWeilCMIntegralBasis_simpleExtTwo_minimum
+#print axioms cmWeilCMIntegralLattice_simpleExtTwoPressure
 #print axioms cmWeilCMIntegralFullLatticePairing
 
 end CMIntegralWeilDivisorTensor
