@@ -1664,6 +1664,66 @@ theorem picardCh3_three_twists_exhaust_all_sources
 #print axioms picardCh3_three_twists_exhaust_all_sources
 
 
+
+/-! ## GST FINITE HETEROGENEOUS GRADED SOURCE PACKET
+
+This upgrades the previous two-distinct-center block to ANY finite
+family of independent native Chow / Hodge source channels, with a
+DIFFERENT rational-module type at each grade. The authentic rational
+blowup middle decomposition has such channels:
+  C_p=CH^p(X)_Q, H_p=Hdg^p(X)_Q, for p=0,...,dim X.
+Their direct sum is a finite dependent function type.
+No universal geometric surjectivity is postulated here.
+-/
+
+/-- The total simultaneously born middle-source block after
+actual geometric blowup Chow/Hodge decomposition, typed for
+heterogeneous source degrees. -/
+def heterogeneousMiddleNativeBlock
+    {r : ℕ}
+    (C H : Fin r → Type*)
+    [∀ i, AddCommGroup (C i)] [∀ i, Module ℚ (C i)]
+    [∀ i, AddCommGroup (H i)] [∀ i, Module ℚ (H i)]
+    (cl : ∀ i, C i →ₗ[ℚ] H i) :
+    ((i : Fin r) → C i) →ₗ[ℚ] ((i : Fin r) → H i) where
+  toFun z i := cl i (z i)
+  map_add' z w := by
+    funext i
+    simp
+  map_smul' a z := by
+    funext i
+    simp
+
+/-- Surjectivity of the ENTIRE rational middle-source packet is
+equivalent to surjectivity at EVERY genuine original-X codimension,
+without requiring any two Chow/Hodge grades to be the same type. -/
+theorem heterogeneousMiddleNativeBlock_surjective_iff
+    {r : ℕ}
+    (C H : Fin r → Type*)
+    [∀ i, AddCommGroup (C i)] [∀ i, Module ℚ (C i)]
+    [∀ i, AddCommGroup (H i)] [∀ i, Module ℚ (H i)]
+    (cl : ∀ i, C i →ₗ[ℚ] H i) :
+    Function.Surjective (heterogeneousMiddleNativeBlock C H cl) ↔
+      ∀ i, Function.Surjective (cl i) := by
+  classical
+  constructor
+  · intro h i y
+    let target : (j : Fin r) → H j := Pi.single i y
+    obtain ⟨z,hz⟩ := h target
+    refine ⟨z i, ?_⟩
+    have hi := congrArg (fun v : (j : Fin r) → H j => v i) hz
+    simpa [heterogeneousMiddleNativeBlock, target] using hi
+  · intro h y
+    let z : (i : Fin r) → C i :=
+      fun i => Classical.choose (h i (y i))
+    refine ⟨z, ?_⟩
+    funext i
+    exact Classical.choose_spec (h i (y i))
+
+#check heterogeneousMiddleNativeBlock
+#check heterogeneousMiddleNativeBlock_surjective_iff
+#print axioms heterogeneousMiddleNativeBlock_surjective_iff
+
 /-! ### GST arbitrary-original-X reduction to a middle Hodge channel
 The real geometric model is Y=Bl_X(P^(2M)), where dim X=d,
 M=N₀+d+p+2 and the exceptional channel is i=M-p.
