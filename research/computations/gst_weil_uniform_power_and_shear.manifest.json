@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "claim_id": "GST-UNIFORM-CM-FINITE-SHEAR-20261020",
+  "repository": {
+    "commit": "a1f5671c71d67549a3604a4af243cca25aa12374",
+    "dirty": true
+  },
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "research/computations/gst_weil_uniform_power_and_shear.py"
+  ],
+  "environment": {
+    "software": [
+      {
+        "name": "Python",
+        "version": "3.12.14"
+      }
+    ],
+    "hardware": "x86_64; Linux-6.18.55-x86_64-with-glibc2.39; host CPU model unrecorded"
+  },
+  "mathematics": {
+    "assertion_tested": "Exact polynomial finite-shear expansion and Gaussian recurrence for every integer n=1..512; exact first-order exterior variation of the specified external line bundle",
+    "coefficient_domain": "Q[a1,a2,a3,b1,b2,b3,d1,d2,i,t] and Z[i]",
+    "conventions": "Increasing exterior basis u1,u2,u3,v1,v2,v3,U1,U2,U3,V1,V2,V3; old u1=new u1-t V2 and old v2=new v2-t U1; exact Fraction arithmetic",
+    "inputs": [
+      "research/computations/gst_weil_uniform_power_and_shear.py",
+      "GSTUniversalCMArithmeticObstruction.lean"
+    ],
+    "bounds": {
+      "gaussian_exponents_inclusive": [
+        1,
+        512
+      ],
+      "exponents_visited": 512,
+      "shear": "symbolic polynomial in all ten named symbols",
+      "exterior_basis_dimension": 12,
+      "timeout_seconds": 30
+    },
+    "non_claims": [
+      "No construction of a nonsplit relative perfect complex",
+      "No counterexample to the rational Hodge conjecture",
+      "Finite powers alone do not prove the all-n theorem",
+      "Atiyah interpretation uses the stated geometric comparison"
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "not used",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-10-20T06:39:14.927737+00:00",
+    "runtime_seconds": 0.9683072280001852,
+    "exit_status": 0,
+    "status": "completed",
+    "resource_limits": {
+      "memory_bytes": null,
+      "cpu_seconds": null,
+      "max_cores": 1,
+      "max_threads": 1
+    }
+  },
+  "outputs": [
+    {
+      "path": "research/computations/gst_weil_uniform_power_and_shear.output.json",
+      "sha256": "e30f7a1b1e47d0ef2dfe55b6ebefb76dde7da1ceb97776d68eda8eeade54b64e",
+      "kind": "result"
+    }
+  ],
+  "checks": [
+    "Independent binary exponentiation agrees with recurrence for all 512 visited exponents",
+    "Exact norm and both mod-five channels hold at every visited exponent",
+    "Both full symbolic shear error polynomials are zero",
+    "Earlier first-order factorization checked by separate sparse polynomial code",
+    "Wedge multiplication computes both nonzero Atiyah-coordinate coefficients from the specified forms",
+    "All pinned inputs unchanged during execution"
+  ],
+  "result": "Implementation and stated finite assertions verified. Unrestricted power and formal shear results are separately Lean-proved at a1f5671c. No relative perfect object or universal source is constructed.",
+  "residual_risks": [
+    "Geometric Atiyah interpretation uses the explicit line-bundle obstruction comparison and derived naturality; not instantiated in Lean",
+    "All-parameter polynomial equality does not imply a relative algebraic sheaf exists"
+  ],
+  "input_artifacts": [
+    {
+      "path": "research/computations/gst_weil_uniform_power_and_shear.py",
+      "sha256": "795862e78be09d155f0c951fcc0419b509537de94c581f6d984d18d3f0e0b40d",
+      "sha256_after": "795862e78be09d155f0c951fcc0419b509537de94c581f6d984d18d3f0e0b40d"
+    },
+    {
+      "path": "GSTUniversalCMArithmeticObstruction.lean",
+      "sha256": "08d14bca99e6a8c449392b500d3492c543b2d64694f9b35b676c9f91f3027e6d",
+      "sha256_after": "08d14bca99e6a8c449392b500d3492c543b2d64694f9b35b676c9f91f3027e6d"
+    }
+  ],
+  "declared_results": [
+    "research/computations/gst_weil_uniform_power_and_shear.output.json"
+  ]
+}

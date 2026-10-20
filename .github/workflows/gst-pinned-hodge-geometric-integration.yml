@@ -21,6 +21,7 @@ on:
       - 'research/computations/qm_fourfold_all_hodge_divisor_span.py'
       - 'research/computations/secant_seed_character.py'
       - 'research/computations/secant_obstruction_rank.py'
+      - 'research/computations/gst_weil_uniform_power_and_shear.py'
       - 'research/computations/affine_clifford_k0_source.py'
       - 'research/computations/algebraic_adams_pure_hodge_k0.py'
       - 'research/computations/pure_algebraic_k0_all_codimensions.py'
@@ -112,6 +113,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 research/computations/secant_obstruction_rank.py | tee secant-obstruction-rank.log
+      - name: Exact uniform CM channels and finite Weil shear identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/computations/gst_weil_uniform_power_and_shear.py | tee uniform-cm-finite-shear.log
       - name: Kernel compile period spread, primitive rank, and native Hodge assembly
         shell: bash
         run: |
@@ -160,5 +166,6 @@ jobs:
             qm-all-hodge-span.log
             secant-seed-character.log
             secant-obstruction-rank.log
+            uniform-cm-finite-shear.log
             pure-k0-all-codim.log
           if-no-files-found: warn
