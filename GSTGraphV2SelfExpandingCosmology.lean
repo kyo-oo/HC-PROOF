@@ -1736,6 +1736,40 @@ asserts an algebraic representative for that class.
 
 
 
+
+/-! ## GST unbounded-coniveau rational middle worlds
+For every original smooth projective X of dimension d,
+every p ≤ d and prescribed support depth k, choose
+M=N₀+d+k+2. The actual Y=Bl_X(P^(2M)) is rational
+and smooth; a middle exceptional class of original
+codimension p has r=M-p-1 actual relative hyperplane
+cuts on E=P(N), and its geometric support in Y has
+codimension r+1=M-p≥k.
+
+Existence of Bertini smooth projective supports and the
+canonical Chow/Betti Gysin compatibility are geometric
+obligations NOT supplied by this natural-number theorem.
+-/
+
+/-- Every arbitrary original X degree has a concrete middle channel
+whose geometric support may be cut to ARBITRARILY HIGH absolute
+codimension k, without supplying an algebraic representative
+of the original rational Hodge target. -/
+theorem arbitrary_high_coniveau_middle_world_indices
+    (d p N₀ k : ℕ) (hp : p ≤ d) :
+    let M := N₀+d+k+2
+    let c := 2*M-d
+    let i := M-p
+    let r := M-p-1
+    N₀ ≤ 2*M ∧ 2 ≤ c ∧
+      1 ≤ i ∧ i < c ∧
+      p+i=M ∧ r+1=i ∧ k ≤ r+1 ∧ p+r+1=M := by
+  dsimp
+  omega
+
+#check arbitrary_high_coniveau_middle_world_indices
+#print axioms arbitrary_high_coniveau_middle_world_indices
+
 /-- Sharp uniform M=d+1 middle channel, provided the actual
 projective center is geometrically embedded in P^(2d+2).
 Existence of that embedding uses independent generic projection
