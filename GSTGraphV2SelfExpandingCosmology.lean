@@ -2167,6 +2167,254 @@ theorem nilpotent_birth_inverse_two_sided
 
 end BlowupRationalHodgeTest
 
+
+/-! ## Middle-world Euler arithmetic: constructive finite normalization
+
+This is the exact rational-ring and index-arithmetic part of the
+2026-10-20 LaTeX derivation. It does not postulate a square root.
+A denominator-separated Newton iteration constructs an inverse square
+root of a unipotent Segre class in every rational commutative algebra.
+
+The geometric GRR comparison, actual KU carriers and Hodge--Riemann
+polarization remain geometric inputs of the manuscript, not axioms
+silently instantiated by this arithmetic module.
+-/
+
+namespace MiddleEulerArithmetic
+
+variable {A : Type*} [CommRing A] [Algebra ℚ A]
+
+/-- Rational denominator of the finite Newton source. -/
+def normalRootDenominator : ℕ → ℚ
+  | 0 => 1
+  | n+1 => 2 * (normalRootDenominator n)^3
+
+/-- An explicit polynomial in the actual Segre class; no root is input. -/
+def normalRootNumerator (s : A) : ℕ → A
+  | 0 => 1
+  | n+1 => normalRootNumerator s n *
+      (3 * (algebraMap ℚ A (normalRootDenominator n))^2 -
+        s * (normalRootNumerator s n)^2)
+
+/-- The denominator never vanishes, independently of the Segre class. -/
+theorem normalRootDenominator_pos (n : ℕ) :
+    0 < normalRootDenominator n := by
+  induction n with
+  | zero => norm_num [normalRootDenominator]
+  | succ n ih =>
+      simp only [normalRootDenominator]
+      positivity
+
+/-- Universal integral Newton error identity, valid before division. -/
+theorem normalRoot_newton_error (s r d : A) :
+    (2*d^3)^2 - s*(r*(3*d^2-s*r^2))^2 =
+      (d^2-s*r^2)^2 * (3*d^2+(d^2-s*r^2)) := by
+  ring
+
+/-- Every Newton step doubles the order of its unipotent error. -/
+theorem normalRoot_error_factor (s : A) (n : ℕ) :
+    ∃ k : A,
+      (algebraMap ℚ A (normalRootDenominator n))^2 -
+        s*(normalRootNumerator s n)^2 =
+          (1-s)^(2^n) * k := by
+  induction n with
+  | zero =>
+      refine ⟨1, ?_⟩
+      simp [normalRootDenominator, normalRootNumerator]
+  | succ n ih =>
+      obtain ⟨k, hk⟩ := ih
+      refine ⟨k^2 *
+        (3*(algebraMap ℚ A (normalRootDenominator n))^2 +
+          ((algebraMap ℚ A (normalRootDenominator n))^2 -
+            s*(normalRootNumerator s n)^2)), ?_⟩
+      change
+        (algebraMap ℚ A (2*(normalRootDenominator n)^3))^2 -
+          s*(normalRootNumerator s n *
+            (3*(algebraMap ℚ A (normalRootDenominator n))^2 -
+              s*(normalRootNumerator s n)^2))^2 = _
+      simp only [map_mul, map_pow, map_ofNat]
+      rw [normalRoot_newton_error, hk]
+      simp only [pow_succ, pow_mul]
+      ring
+
+/-- A simple uniform finite iteration bound, including n=0. -/
+theorem order_le_two_pow (n : ℕ) : n ≤ 2^n := by
+  induction n with
+  | zero => norm_num
+  | succ n ih =>
+      have hp : 0 < (2:ℕ)^n := by positivity
+      rw [pow_succ]
+      omega
+
+/-- The actual finite rational Chern-class normalizer. -/
+def finiteNormalRoot (s : A) (c : ℕ) : A :=
+  algebraMap ℚ A ((normalRootDenominator c)⁻¹) *
+    normalRootNumerator s c
+
+/-- CONSTRUCTED inverse square root, from nilpotence alone. -/
+theorem finiteNormalRoot_correct
+    (s : A) (c : ℕ) (hNil : (1-s)^c = 0) :
+    s*(finiteNormalRoot s c)^2 = 1 := by
+  obtain ⟨k, hk⟩ := normalRoot_error_factor s c
+  have hp : (1-s)^(2^c) = 0 := by
+    have hbound := order_le_two_pow c
+    have he : 2^c = c+(2^c-c) := by omega
+    rw [he, pow_add, hNil, zero_mul]
+  rw [hp, zero_mul] at hk
+  have heq :
+      s*(normalRootNumerator s c)^2 =
+        (algebraMap ℚ A (normalRootDenominator c))^2 :=
+    (sub_eq_zero.mp hk).symm
+  have hunit :
+      algebraMap ℚ A ((normalRootDenominator c)⁻¹) *
+        algebraMap ℚ A (normalRootDenominator c) = 1 := by
+    rw [← map_mul, inv_mul_cancel₀
+      (ne_of_gt (normalRootDenominator_pos c)), map_one]
+  unfold finiteNormalRoot
+  calc
+    _ = (algebraMap ℚ A ((normalRootDenominator c)⁻¹))^2 *
+          (s*(normalRootNumerator s c)^2) := by ring
+    _ = (algebraMap ℚ A ((normalRootDenominator c)⁻¹))^2 *
+          (algebraMap ℚ A (normalRootDenominator c))^2 := by rw [heq]
+    _ = (algebraMap ℚ A ((normalRootDenominator c)⁻¹) *
+          algebraMap ℚ A (normalRootDenominator c))^2 := by ring
+    _ = 1 := by rw [hunit]; ring
+
+/-- When s is the actual inverse Chern class, the constructed square
+is exactly c(N), without assuming an independent root witness. -/
+theorem finiteNormalRoot_square_eq_chern
+    (s chern : A) (c : ℕ)
+    (hNil : (1-s)^c = 0) (hSegre : s*chern = 1) :
+    (finiteNormalRoot s c)^2 = chern := by
+  calc
+    _ = (finiteNormalRoot s c)^2 * (s*chern) := by rw [hSegre, mul_one]
+    _ = (s*(finiteNormalRoot s c)^2)*chern := by ring
+    _ = chern := by rw [finiteNormalRoot_correct s c hNil, one_mul]
+
+/-- Every intermediate numerator stays in the original native
+rational characteristic-class algebra. -/
+theorem normalRootNumerator_mem
+    (B : Subalgebra ℚ A) (s : A) (hs : s ∈ B) (n : ℕ) :
+    normalRootNumerator s n ∈ B := by
+  induction n with
+  | zero => simpa [normalRootNumerator] using B.one_mem
+  | succ n ih =>
+      change normalRootNumerator s n *
+        (3*(algebraMap ℚ A (normalRootDenominator n))^2 -
+          s*(normalRootNumerator s n)^2) ∈ B
+      have hthree : (3:A) ∈ B := by
+        simpa using B.algebraMap_mem (3:ℚ)
+      exact B.mul_mem ih (B.sub_mem
+        (B.mul_mem hthree (B.pow_mem (B.algebraMap_mem _) 2))
+        (B.mul_mem hs (B.pow_mem ih 2)))
+
+theorem finiteNormalRoot_mem
+    (B : Subalgebra ℚ A) (s : A) (hs : s ∈ B) (c : ℕ) :
+    finiteNormalRoot s c ∈ B :=
+  B.mul_mem (B.algebraMap_mem _) (normalRootNumerator_mem B s hs c)
+
+/-- Normalization preserves, in BOTH directions, membership in the
+actual native subalgebra. It cannot manufacture algebraicity. -/
+theorem finiteNormalRoot_native_iff
+    (B : Subalgebra ℚ A) (s : A) (hs : s ∈ B)
+    (c : ℕ) (hNil : (1-s)^c = 0) (a : A) :
+    finiteNormalRoot s c * a ∈ B ↔ a ∈ B := by
+  have hr := finiteNormalRoot_mem B s hs c
+  constructor
+  · intro h
+    have hmem := B.mul_mem (B.mul_mem hs hr) h
+    have he :
+        (s*finiteNormalRoot s c)*(finiteNormalRoot s c*a) = a := by
+      calc
+        _ = (s*(finiteNormalRoot s c)^2)*a := by ring
+        _ = a := by rw [finiteNormalRoot_correct s c hNil, one_mul]
+    rwa [he] at hmem
+  · intro ha
+    exact B.mul_mem hr ha
+
+/-- Exact cohomological trace polynomial supplied by pure-middle GRR.
+This definition is not a substitute for constructing actual KU/GRR. -/
+def middleEulerKernel
+    (integral : A →ₗ[ℚ] ℚ) (M : ℕ) (s a b : A) : ℚ :=
+  (-1:ℚ)^(M+1) * integral (a*s*b)
+
+/-- All normal Segre terms cancel for the explicitly constructed root. -/
+theorem normalized_middle_euler
+    (integral : A →ₗ[ℚ] ℚ) (M : ℕ) (s : A)
+    (c : ℕ) (hNil : (1-s)^c = 0) (a b : A) :
+    middleEulerKernel integral M s
+      (finiteNormalRoot s c*a) (finiteNormalRoot s c*b) =
+        (-1:ℚ)^(M+1)*integral (a*b) := by
+  have he :
+      (finiteNormalRoot s c*a)*s*(finiteNormalRoot s c*b) = a*b := by
+    calc
+      _ = (s*(finiteNormalRoot s c)^2)*(a*b) := by ring
+      _ = a*b := by rw [finiteNormalRoot_correct s c hNil, one_mul]
+  simp only [middleEulerKernel, he]
+
+/-- The rational duality/exceptional sign is always a unit of square one. -/
+theorem middleEulerSign_square (M : ℕ) :
+    (-1:ℚ)^(M+1)*(-1:ℚ)^(M+1) = 1 := by
+  rw [← mul_pow]
+  norm_num
+
+/-- Positive polarization transfers to the exact signed Euler detector.
+The genuine Hodge--Riemann positivity is explicitly the input hPositive. -/
+theorem normalized_middle_euler_positive
+    (integral : A →ₗ[ℚ] ℚ) (M : ℕ) (s : A)
+    (c : ℕ) (hNil : (1-s)^c = 0) (a companion : A)
+    (hPositive : 0 < integral (a*companion)) :
+    0 < (-1:ℚ)^(M+1) *
+      middleEulerKernel integral M s
+        (finiteNormalRoot s c*a)
+        (finiteNormalRoot s c*companion) := by
+  rw [normalized_middle_euler integral M s c hNil,
+    ← mul_assoc, middleEulerSign_square, one_mul]
+  exact hPositive
+
+/-- The exact finite primitive-coordinate positivity used in polarization. -/
+theorem primitive_coordinate_polarization_positive
+    {n : ℕ} (weight a : Fin n → ℚ)
+    (hWeight : ∀ i, 0 < weight i) (ha : a ≠ 0) :
+    0 < ∑ i, weight i*(a i)^2 := by
+  have hex : ∃ i, a i ≠ 0 := by
+    by_contra! h
+    apply ha
+    funext i
+    exact h i
+  obtain ⟨i, hi⟩ := hex
+  apply Finset.sum_pos'
+  · intro j _
+    exact mul_nonneg (le_of_lt (hWeight j)) (sq_nonneg _)
+  · exact ⟨i, Finset.mem_univ i,
+      mul_pos (hWeight i) (sq_pos_of_ne_zero hi)⟩
+
+/-- Determinant arithmetic after the geometric unipotence det(S)=1.
+The geometric grading proof of hSegreDet is not replaced by an axiom. -/
+theorem middle_euler_discriminant
+    {n : ℕ} (P S : Matrix (Fin n) (Fin n) ℚ)
+    (hSegreDet : S.det = 1) (M : ℕ) :
+    (((-1:ℚ)^(M+1)) • (P*S)).det =
+      (-1:ℚ)^((M+1)*n)*P.det := by
+  rw [Matrix.det_smul, Matrix.det_mul, hSegreDet, mul_one]
+  simp only [Fintype.card_fin]
+  rw [← pow_mul]
+
+#check finiteNormalRoot_correct
+#check finiteNormalRoot_square_eq_chern
+#check finiteNormalRoot_native_iff
+#check normalized_middle_euler
+#check normalized_middle_euler_positive
+#check primitive_coordinate_polarization_positive
+#check middle_euler_discriminant
+#print axioms finiteNormalRoot_correct
+#print axioms finiteNormalRoot_native_iff
+#print axioms normalized_middle_euler
+#print axioms normalized_middle_euler_positive
+#print axioms middle_euler_discriminant
+
+end MiddleEulerArithmetic
+
 end NativeGeometryBirth
 
 end GSTGraphV2SelfExpandingCosmology

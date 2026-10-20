@@ -2413,4 +2413,109 @@ theorem ActualXCycleProjectionData.full_native_annihilator_kills_exceptional_pac
 #check ActualXCycleProjectionData.full_native_annihilator_kills_exceptional_packet
 #print axioms ActualXCycleProjectionData.full_native_annihilator_kills_exceptional_packet
 
+
+/-! ## Exact original-X reconstruction from a native Euler index matrix
+
+The readout equivalence is a rational coordinate/period equivalence on the
+FULL Hodge fiber, not a chosen algebraic basis. The source columns are
+ACTUAL codimension-p algebraic cycles. A checked inverse of their measured
+period matrix produces a cycle, and the theorem proves its exact original
+cycleClass. No arbitrary topological K source is silently made algebraic.
+-/
+
+/-- Measured period columns of actual native sources in a full Hodge
+readout system. The intended readouts are normalized middle Euler periods. -/
+noncomputable def ActualXCycleProjectionData.eulerSourceMatrix
+    (P : ActualXCycleProjectionData X H p ι)
+    {n : ℕ}
+    (readout : HodgeSpace X H p ≃ₗ[ℚ] (Fin n → ℚ))
+    (sources : Fin n → codimensionCycles X.X p) :
+    Matrix (Fin n) (Fin n) ℚ :=
+  fun i j => readout (P.trueHodgeClass (sources j)) i
+
+/-- Explicit arithmetic compiler returning an actual original-X cycle.
+It is defined for every inverse candidate; correctness is separately checked. -/
+noncomputable def ActualXCycleProjectionData.eulerCertifiedCycle
+    (P : ActualXCycleProjectionData X H p ι)
+    {n : ℕ}
+    (readout : HodgeSpace X H p ≃ₗ[ℚ] (Fin n → ℚ))
+    (sources : Fin n → codimensionCycles X.X p)
+    (inverse : Matrix (Fin n) (Fin n) ℚ)
+    (alpha : HodgeSpace X H p) : codimensionCycles X.X p :=
+  ∑ j, (inverse.mulVec (readout alpha)) j • sources j
+
+/-- Native arithmetic certificate: right-inverse index data give the
+prescribed canonical cycle-class value on the same original X. -/
+theorem ActualXCycleProjectionData.eulerCertifiedCycle_correct
+    (P : ActualXCycleProjectionData X H p ι)
+    {n : ℕ}
+    (readout : HodgeSpace X H p ≃ₗ[ℚ] (Fin n → ℚ))
+    (sources : Fin n → codimensionCycles X.X p)
+    (inverse : Matrix (Fin n) (Fin n) ℚ)
+    (hInverse : P.eulerSourceMatrix readout sources * inverse = 1)
+    (alpha : HodgeSpace X H p) :
+    H.cycleClass p
+      (P.eulerCertifiedCycle readout sources inverse alpha) = alpha.1 := by
+  have hRead :
+      readout (P.trueHodgeClass
+        (P.eulerCertifiedCycle readout sources inverse alpha)) =
+      (P.eulerSourceMatrix readout sources).mulVec
+        (inverse.mulVec (readout alpha)) := by
+    ext i
+    simp [eulerCertifiedCycle, eulerSourceMatrix, Matrix.mulVec,
+      dotProduct, map_sum, map_smul, Finset.sum_apply, smul_eq_mul, mul_comm]
+  have hProduct :
+      (P.eulerSourceMatrix readout sources).mulVec
+        (inverse.mulVec (readout alpha)) = readout alpha := by
+    calc
+      _ = (P.eulerSourceMatrix readout sources * inverse).mulVec
+            (readout alpha) := by
+          first
+          | exact Matrix.mulVec_mulVec _ _ _
+          | exact (Matrix.mulVec_mulVec _ _ _).symm
+      _ = readout alpha := by rw [hInverse]; simp
+  have hClass :
+      P.trueHodgeClass
+        (P.eulerCertifiedCycle readout sources inverse alpha) = alpha :=
+    readout.injective (hRead.trans hProduct)
+  exact congrArg Subtype.val hClass
+
+/-- A nonzero determinant is an entirely arithmetic sufficient
+certificate for the explicit cycle above; actual native columns are inputs. -/
+theorem ActualXCycleProjectionData.eulerCertifiedCycle_of_det_ne_zero
+    (P : ActualXCycleProjectionData X H p ι)
+    {n : ℕ}
+    (readout : HodgeSpace X H p ≃ₗ[ℚ] (Fin n → ℚ))
+    (sources : Fin n → codimensionCycles X.X p)
+    (hDet : (P.eulerSourceMatrix readout sources).det ≠ 0)
+    (alpha : HodgeSpace X H p) :
+    H.cycleClass p
+      (P.eulerCertifiedCycle readout sources
+        (P.eulerSourceMatrix readout sources)⁻¹ alpha) = alpha.1 := by
+  apply P.eulerCertifiedCycle_correct
+  exact Matrix.mul_nonsing_inv _ hDet
+
+/-- The same measured native certificate closes the entire original Hodge
+fiber, with the literal actual-cycle output rather than an abstract span. -/
+theorem ActualXCycleProjectionData.nativeEulerCertificate_all_targets
+    (P : ActualXCycleProjectionData X H p ι)
+    {n : ℕ}
+    (readout : HodgeSpace X H p ≃ₗ[ℚ] (Fin n → ℚ))
+    (sources : Fin n → codimensionCycles X.X p)
+    (hDet : (P.eulerSourceMatrix readout sources).det ≠ 0) :
+    ∀ alpha : HodgeSpace X H p,
+      ∃ Z : codimensionCycles X.X p,
+        H.cycleClass p Z = alpha.1 := by
+  intro alpha
+  exact ⟨P.eulerCertifiedCycle readout sources
+    (P.eulerSourceMatrix readout sources)⁻¹ alpha,
+    P.eulerCertifiedCycle_of_det_ne_zero readout sources hDet alpha⟩
+
+#check ActualXCycleProjectionData.eulerCertifiedCycle_correct
+#check ActualXCycleProjectionData.eulerCertifiedCycle_of_det_ne_zero
+#check ActualXCycleProjectionData.nativeEulerCertificate_all_targets
+#print axioms ActualXCycleProjectionData.eulerCertifiedCycle_correct
+#print axioms ActualXCycleProjectionData.eulerCertifiedCycle_of_det_ne_zero
+#print axioms ActualXCycleProjectionData.nativeEulerCertificate_all_targets
+
 end GSTActualXHodgeResidualProjection

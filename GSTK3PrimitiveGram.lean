@@ -478,4 +478,42 @@ theorem k3_ambient_blowup_finite_line_bundle_packet_period_zero
 #check k3_ambient_blowup_finite_line_bundle_packet_period_zero
 #print axioms k3_ambient_blowup_finite_line_bundle_packet_period_zero
 
+
+/-! ## Exact dimension-ten middle-world Euler benchmark
+
+For the actual primitive middle K3-product sources, p=2, M=5.
+Pure-middle duality contributes (-1)^5 and exceptional
+self-intersection contributes -1. Their Euler pairing is therefore
+the original positive primitive Gram. This arithmetic comparison does
+not construct a new geometric KU/GRR instance.
+-/
+
+/-- Pure-middle Euler pairing after the two dimension-ten signs. -/
+def middleWorldEuler (d : ℚ) (x y : Coordinates) : ℚ :=
+  (-1:ℚ)^5 * (-(intersection d x y))
+
+theorem middleWorldEuler_eq_original (d : ℚ) (x y : Coordinates) :
+    middleWorldEuler d x y = intersection d x y := by
+  norm_num [middleWorldEuler]
+
+theorem middleWorldEuler_native_diagonal_index
+    (d : ℚ) (hd : d ≠ 0) :
+    middleWorldEuler d (primitiveDiagonal d) (primitiveDiagonal d) = 21 := by
+  rw [middleWorldEuler_eq_original, diagonal_primitive_square d hd]
+
+theorem middleWorldEuler_native_gram_determinant
+    (d : ℚ) (hd : d ≠ 0) :
+    middleWorldEuler d (primitiveDiagonal d) (primitiveDiagonal d) *
+      middleWorldEuler d (primitiveDivisor d) (primitiveDivisor d) -
+    middleWorldEuler d (primitiveDiagonal d) (primitiveDivisor d) *
+      middleWorldEuler d (primitiveDivisor d) (primitiveDiagonal d) =
+      63*d^2 := by
+  simp only [middleWorldEuler_eq_original]
+  exact primitive_gram_determinant d hd
+
+#check middleWorldEuler_native_diagonal_index
+#check middleWorldEuler_native_gram_determinant
+#print axioms middleWorldEuler_native_diagonal_index
+#print axioms middleWorldEuler_native_gram_determinant
+
 end GSTK3PrimitiveGram
