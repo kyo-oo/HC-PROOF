@@ -2767,6 +2767,141 @@ theorem two_center_energy_positive (a b : ℚ)
   have hp : 0 < (b/2-2*a)^2 := sq_pos_of_ne_zero hDetected
   nlinarith
 
+/-! ## One center after genuine algebraic K₀ purification
+
+There is no need to keep a positive-copy packet once the existing Adams
+filter has made an ACTUAL algebraic K₀ source pure below degree p.
+Clear its rational denominator M and write M*xi=[E]-[F].  For a twist m
+with F(m) globally generated, let K be the kernel of O^N -> F(m).
+The ACTUAL bundle B=E(m) direct-sum K satisfies
+  [B]=M*xi(m)+N[O].
+Consequently ch_i(B)=0 for 0<i<p and ch_p(B)=M*ch_p(xi).
+Adjoining trivial summands, twisting by k, and taking the already described
+rank-n quotient gives ONE incidence center with native push
+  binom(rank B,p)*k^p*h^p + (-1)^(p-1)*(p-1)!*M*ch_p(xi).
+
+The following definitions prove the all-p Newton and twist arithmetic.
+`chernFromCharacter` is the standard Newton recursion, not a Hodge-to-Chow
+map.  The bundle/kernel/section and canonical comparison geometry described
+above is distinct from this formal coefficient theorem.  No arbitrary
+residual is asserted to supply the input algebraic K₀ class.
+-/
+
+/-- Newton recursion in a rational Chow algebra, with character_i=s_i/i!.
+It is defined in every degree, without a rank or truncation cutoff. -/
+def chernFromCharacter {A : Type*} [CommRing A] [Algebra ℚ A]
+    (character : ℕ → A) (p : ℕ) : A :=
+  match p with
+  | 0 => 1
+  | n+1 => ((n+1 : ℚ)⁻¹) •
+      ∑ i ∈ Finset.range (n+1),
+        ((-1 : ℚ)^i*(Nat.factorial (i+1) : ℚ)) •
+          (character (i+1)*chernFromCharacter character (n-i))
+termination_by p
+decreasing_by omega
+
+/-- The exact FIRST nonzero Chern term of a pure-below-p character.
+This proves the factorial and sign for every p=n+1, rather than
+interpolating finitely many positive-copy Chern values. -/
+theorem chernFromCharacter_pure_leading
+    {A : Type*} [CommRing A] [Algebra ℚ A]
+    (character : ℕ → A) (n : ℕ)
+    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0) :
+    chernFromCharacter character (n+1) =
+      ((-1 : ℚ)^n*(Nat.factorial n : ℚ)) • character (n+1) := by
+  classical
+  rw [chernFromCharacter, Finset.sum_range_succ]
+  have hz : (∑ i ∈ Finset.range n,
+      ((-1 : ℚ)^i*(Nat.factorial (i+1) : ℚ)) •
+        (character (i+1)*chernFromCharacter character (n-i))) = 0 := by
+    apply Finset.sum_eq_zero
+    intro i hi
+    rw [hLower (i+1) (by omega) (by
+      have hh := Finset.mem_range.mp hi
+      omega)]
+    simp
+  rw [hz, zero_add, Nat.sub_self, chernFromCharacter]
+  simp only [mul_one, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add,
+    Nat.cast_one, smul_smul]
+  congr 1
+  have hn : (n+1 : ℚ) ≠ 0 := by positivity
+  field_simp
+
+/-- All lower positive Chern terms vanish for the same pure source. -/
+theorem chernFromCharacter_below_pure
+    {A : Type*} [CommRing A] [Algebra ℚ A]
+    (character : ℕ → A) (p : ℕ)
+    (hLower : ∀ i : ℕ, 0<i → i<p → character i=0)
+    (j : ℕ) (hj : 0<j) (hjp : j<p) :
+    chernFromCharacter character j = 0 := by
+  obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hj)
+  rw [chernFromCharacter_pure_leading character n (by
+    intro i hi hin
+    exact hLower i hi (lt_trans hin hjp))]
+  rw [hLower (n+1) (by omega) hjp]
+  simp
+
+/-- Twisting a pure-below-p bundle adds ONLY an explicit ambient term
+to c_p.  This is an equality of Chow-algebra classes, not just periods. -/
+theorem one_center_class_from_pure_character
+    {A : Type*} [CommRing A] [Algebra ℚ A]
+    (character : ℕ → A) (rank n : ℕ) (h : A) (k : ℚ)
+    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0) :
+    twistedChernClass rank (n+1) (chernFromCharacter character) h k =
+      ((-1 : ℚ)^n*(Nat.factorial n : ℚ)) • character (n+1) +
+        ((Nat.choose rank (n+1) : ℚ)*k^(n+1)) • h^(n+1) := by
+  classical
+  unfold twistedChernClass
+  rw [Finset.sum_range_succ]
+  have hsum : (∑ i ∈ Finset.range (n+1),
+      ((Nat.choose (rank-i) (n+1-i) : ℚ)*k^(n+1-i)) •
+        (h^(n+1-i)*chernFromCharacter character i)) =
+      ((Nat.choose rank (n+1) : ℚ)*k^(n+1)) • h^(n+1) := by
+    rw [Finset.sum_eq_single 0]
+    · simp [chernFromCharacter]
+    · intro i hi hi0
+      rw [chernFromCharacter_below_pure character (n+1) hLower i
+        (by omega) (Finset.mem_range.mp hi)]
+      simp
+    · simp
+  rw [hsum]
+  simp only [Nat.sub_self, Nat.choose_zero_right, Nat.cast_one,
+    pow_zero, one_mul, one_smul]
+  rw [chernFromCharacter_pure_leading character n hLower]
+  exact add_comm _ _
+
+/-- A primitive readout of the ONE center is the explicit nonzero
+factorial multiple of the purified native character readout. -/
+theorem one_center_period_from_pure_character
+    {A : Type*} [CommRing A] [Algebra ℚ A]
+    (ell : A →ₗ[ℚ] ℚ) (h : A)
+    (hPrimitive : ∀ z : A, ell (h*z)=0)
+    (character : ℕ → A) (rank n : ℕ) (k : ℚ)
+    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0) :
+    ell (twistedChernClass rank (n+1)
+      (chernFromCharacter character) h k) =
+      ((-1 : ℚ)^n*(Nat.factorial n : ℚ))*ell (character (n+1)) := by
+  rw [primitive_period_of_twisted_chern ell h hPrimitive,
+    chernFromCharacter_pure_leading character n hLower, map_smul]
+  rfl
+
+/-- No packet search or independent nonzero-center premise: the
+constructed center detects every detected purified native source. -/
+theorem one_center_detects_pure_native_source
+    {A : Type*} [CommRing A] [Algebra ℚ A]
+    (ell : A →ₗ[ℚ] ℚ) (h : A)
+    (hPrimitive : ∀ z : A, ell (h*z)=0)
+    (character : ℕ → A) (rank n : ℕ) (k : ℚ)
+    (hLower : ∀ i : ℕ, 0<i → i<n+1 → character i=0)
+    (hSource : ell (character (n+1)) ≠ 0) :
+    ell (twistedChernClass rank (n+1)
+      (chernFromCharacter character) h k) ≠ 0 := by
+  rw [one_center_period_from_pure_character ell h hPrimitive
+    character rank n k hLower]
+  apply mul_ne_zero _ hSource
+  apply mul_ne_zero (pow_ne_zero n (by norm_num))
+  exact_mod_cast Nat.factorial_ne_zero n
+
 #check incidence_center_projective_push_coefficient
 #check primitive_period_of_twisted_chern
 #check two_center_chern_character_identity
@@ -2774,6 +2909,13 @@ theorem two_center_energy_positive (a b : ℚ)
 #print axioms incidence_center_projective_push_coefficient
 #print axioms primitive_period_of_twisted_chern
 #print axioms two_center_energy_lower_bound
+#check chernFromCharacter_pure_leading
+#check one_center_class_from_pure_character
+#check one_center_period_from_pure_character
+#check one_center_detects_pure_native_source
+#print axioms chernFromCharacter_pure_leading
+#print axioms one_center_class_from_pure_character
+#print axioms one_center_detects_pure_native_source
 
 end GSTNativeSmoothIncidenceCenter
 
