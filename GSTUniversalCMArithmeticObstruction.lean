@@ -1111,6 +1111,85 @@ def cmTwoPlusIGaussianPower : ℕ → ℤ × ℤ
       let z := cmTwoPlusIGaussianPower n
       (2*z.1 - z.2, z.1 + 2*z.2)
 
+/-- The nonvanishing CM channel has a uniform mod-five certificate:
+evaluation at i=2 sends (2+i)^n to 4^n, always a unit mod 5.
+This proves a genuine all-depth invariant, not a bounded census. -/
+theorem cmTwoPlusIGaussianPower_modFive_unit (n : ℕ) :
+    ((cmTwoPlusIGaussianPower n).1 +
+      2*(cmTwoPlusIGaussianPower n).2) % 5 = 1 ∨
+    ((cmTwoPlusIGaussianPower n).1 +
+      2*(cmTwoPlusIGaussianPower n).2) % 5 = 4 := by
+  induction n with
+  | zero => norm_num [cmTwoPlusIGaussianPower]
+  | succ n ih =>
+      change
+        (2*(cmTwoPlusIGaussianPower n).1 -
+          (cmTwoPlusIGaussianPower n).2 +
+          2*((cmTwoPlusIGaussianPower n).1 +
+            2*(cmTwoPlusIGaussianPower n).2)) % 5 = 1 ∨
+        (2*(cmTwoPlusIGaussianPower n).1 -
+          (cmTwoPlusIGaussianPower n).2 +
+          2*((cmTwoPlusIGaussianPower n).1 +
+            2*(cmTwoPlusIGaussianPower n).2)) % 5 = 4
+      omega
+
+/-- The conjugate mod-five evaluation i=-2 kills every positive
+power. Together with the unit channel this prevents either
+Gaussian coordinate from vanishing at ANY positive exponent. -/
+theorem cmTwoPlusIGaussianPower_modFive_zero (n : ℕ) :
+    ((cmTwoPlusIGaussianPower (n+1)).1 -
+      2*(cmTwoPlusIGaussianPower (n+1)).2) % 5 = 0 := by
+  change
+    (2*(cmTwoPlusIGaussianPower n).1 -
+      (cmTwoPlusIGaussianPower n).2 -
+      2*((cmTwoPlusIGaussianPower n).1 +
+        2*(cmTwoPlusIGaussianPower n).2)) % 5 = 0
+  omega
+
+/-- Every positive actual CM power has a nonzero imaginary part.
+This removes the previous six-offset bound and supplies the
+nonreal-isogeny input uniformly in every Weil weight. It asserts
+no existence of a Chow source on a nonsplit variety. -/
+theorem cmTwoPlusIGaussianPower_imag_nonzero (n : ℕ) :
+    (cmTwoPlusIGaussianPower (n+1)).2 ≠ 0 := by
+  have hunit := cmTwoPlusIGaussianPower_modFive_unit (n+1)
+  have hzero := cmTwoPlusIGaussianPower_modFive_zero n
+  intro hb
+  rw [hb] at hunit hzero
+  omega
+
+theorem cmTwoPlusIGaussianPower_real_nonzero (n : ℕ) :
+    (cmTwoPlusIGaussianPower (n+1)).1 ≠ 0 := by
+  have hunit := cmTwoPlusIGaussianPower_modFive_unit (n+1)
+  have hzero := cmTwoPlusIGaussianPower_modFive_zero n
+  intro ha
+  rw [ha] at hunit hzero
+  omega
+
+/-- Every positive CM exterior weight has an exact two-source
+period compiler with no separately supplied nonreal coefficient.
+The remaining geometric input is still ONE genuinely nonzero
+projected native source and the canonical isogeny comparison. -/
+theorem cmWeilAllPositiveWeightOneSourceReconstruction
+    (n : ℕ) (x y u v : ℚ) (hz : x ≠ 0 ∨ y ≠ 0) :
+    let a : ℚ := (cmTwoPlusIGaussianPower (n+1)).1
+    let b : ℚ := (cmTwoPlusIGaussianPower (n+1)).2
+    cmWeilOneSourceCoeff0 a b x y u v * x -
+      cmWeilOneSourceCoeff1 a b x y u v *
+        ((a*a+b*b)*y) = u ∧
+    cmWeilOneSourceCoeff0 a b x y u v * y +
+      cmWeilOneSourceCoeff1 a b x y u v *
+        (x+2*a*y) = v := by
+  have hb : ((cmTwoPlusIGaussianPower (n+1)).2 : ℚ) ≠ 0 := by
+    exact_mod_cast cmTwoPlusIGaussianPower_imag_nonzero n
+  exact cmWeilOneSourceReconstruction _ _ x y u v hb hz
+
+#check cmTwoPlusIGaussianPower_imag_nonzero
+#check cmTwoPlusIGaussianPower_real_nonzero
+#check cmWeilAllPositiveWeightOneSourceReconstruction
+#print axioms cmTwoPlusIGaussianPower_imag_nonzero
+#print axioms cmWeilAllPositiveWeightOneSourceReconstruction
+
 /-- Exhaustive EXACT integer calculation on all six offsets
 in the degree-6 CM graph projector, not random sampling. -/
 theorem cmTwoPlusIGaussianPower_imag_first_six :
@@ -1125,7 +1204,7 @@ transverse central-fibre graph geometry. -/
 theorem cmTwoPlusIGaussianPower_imag_nonzero_to_six
     (n : Fin 6) :
     (cmTwoPlusIGaussianPower (n.val+1)).2 ≠ 0 := by
-  fin_cases n <;> norm_num [cmTwoPlusIGaussianPower]
+  exact cmTwoPlusIGaussianPower_imag_nonzero n.val
 
 /-! ## ORIGINAL CM SIXFOLD: ONE GENUINE DERIVED-DUAL IDEAL PAIR
 
@@ -2658,6 +2737,69 @@ theorem cmWeilCMIntegralMixedLeakVanishes
 #check cmWeilCMIntegralMixedLeakFactorization
 #check cmWeilCMIntegralMixedLeakVanishes
 #print axioms cmWeilCMIntegralMixedLeakVanishes
+
+/-- Actual integral four-product Weil source polynomials. These
+are Chow expressions when the six inputs are genuine divisors;
+at a moved period the same expressions can instead be Betti forms. -/
+def cmWeilCMIntegralRealSource (a1 a2 a3 b1 b2 b3 : R) : R :=
+  -a1*a2*a3 + a1*b2*b3 + b1*a2*b3 + b1*b2*a3
+
+def cmWeilCMIntegralImagSource (a1 a2 a3 b1 b2 b3 : R) : R :=
+  b1*a2*a3 + a1*b2*a3 + a1*a2*b3 - b1*b2*b3
+
+/-- EXACT finite-parameter mixed-shear expansion, including the
+quadratic remainder omitted by a first-order calculation. The
+real remainder has a MINUS sign; the imaginary remainder has PLUS.
+There are no terms of order three or higher for this shear. -/
+theorem cmWeilCMIntegralMixedShearExpansion
+    (a1 a2 a3 b1 b2 b3 d1 d2 i t : R) :
+    cmWeilCMIntegralRealSource
+        (a1+t*d1) (a2+t*d2) a3
+        (b1+i*t*d1) (b2-i*t*d2) b3 =
+      cmWeilCMIntegralRealSource a1 a2 a3 b1 b2 b3 +
+        t*cmWeilCMIntegralMixedRealLeak a1 a2 a3 b1 b2 b3 d1 d2 i -
+        (i*i+1)*t*t*d1*d2*a3 ∧
+    cmWeilCMIntegralImagSource
+        (a1+t*d1) (a2+t*d2) a3
+        (b1+i*t*d1) (b2-i*t*d2) b3 =
+      cmWeilCMIntegralImagSource a1 a2 a3 b1 b2 b3 +
+        t*cmWeilCMIntegralMixedImagLeak a1 a2 a3 b1 b2 b3 d1 d2 i +
+        (i*i+1)*t*t*d1*d2*b3 := by
+  dsimp [cmWeilCMIntegralRealSource, cmWeilCMIntegralImagSource,
+    cmWeilCMIntegralMixedRealLeak, cmWeilCMIntegralMixedImagLeak]
+  constructor <;> ring
+
+/-- The named mixed Weil shear preserves BOTH entire source
+polynomials for EVERY parameter, not only their first derivative.
+The geometric hypotheses are the two actual exterior-repetition
+relations. This is a uniform character identity; it does NOT
+construct a relative perfect complex or kill its Atiyah obstruction. -/
+theorem cmWeilCMIntegralMixedShearInvariant
+    (a1 a2 a3 b1 b2 b3 d1 d2 i : R)
+    (hi : i*i = -1)
+    (h1 : d1*(a2-i*b2)=0)
+    (h2 : d2*(a1+i*b1)=0) (t : R) :
+    cmWeilCMIntegralRealSource
+        (a1+t*d1) (a2+t*d2) a3
+        (b1+i*t*d1) (b2-i*t*d2) b3 =
+      cmWeilCMIntegralRealSource a1 a2 a3 b1 b2 b3 ∧
+    cmWeilCMIntegralImagSource
+        (a1+t*d1) (a2+t*d2) a3
+        (b1+i*t*d1) (b2-i*t*d2) b3 =
+      cmWeilCMIntegralImagSource a1 a2 a3 b1 b2 b3 := by
+  have hleak := cmWeilCMIntegralMixedLeakVanishes
+    a1 a2 a3 b1 b2 b3 d1 d2 i hi h1 h2
+  have hfull := cmWeilCMIntegralMixedShearExpansion
+    a1 a2 a3 b1 b2 b3 d1 d2 i t
+  constructor
+  · rw [hfull.1, hleak.1, hi]
+    ring
+  · rw [hfull.2, hleak.2, hi]
+    ring
+
+#check cmWeilCMIntegralMixedShearExpansion
+#check cmWeilCMIntegralMixedShearInvariant
+#print axioms cmWeilCMIntegralMixedShearInvariant
 
 #check cmWeilGaussianDivisorPairMul_orthogonal
 #check cmWeilCMIntegralSixfoldFullGram
