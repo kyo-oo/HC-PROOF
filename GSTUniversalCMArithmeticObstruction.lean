@@ -2363,6 +2363,118 @@ theorem cmWeilCMIntegralSurfacePointCorrection
   rw [hSquare]
   ring
 
+
+/-- Gaussian-pair tensor orthogonality: for two oriented CM divisor pairs
+whose components have equal square and zero mixed intersection,
+the tensor retains zero real/imaginary cross term and has twice
+the product of the individual component squares. This is valid
+over EVERY commutative ring, without rational division or a
+chosen Weil target class. -/
+theorem cmWeilGaussianDivisorPairMul_orthogonal
+    (u v : R × R)
+    (huEq : u.1*u.1 = u.2*u.2) (huZero : u.1*u.2 = 0)
+    (hvEq : v.1*v.1 = v.2*v.2) (hvZero : v.1*v.2 = 0) :
+    let w := cmWeilGaussianDivisorPairMul u v
+    w.1*w.1 = 2*(u.1*u.1)*(v.1*v.1) ∧
+    w.2*w.2 = 2*(u.1*u.1)*(v.1*v.1) ∧
+    w.1*w.2 = 0 := by
+  change
+    (u.1*v.1-u.2*v.2)*(u.1*v.1-u.2*v.2) =
+        2*(u.1*u.1)*(v.1*v.1) ∧
+    (u.1*v.2+u.2*v.1)*(u.1*v.2+u.2*v.1) =
+        2*(u.1*u.1)*(v.1*v.1) ∧
+    (u.1*v.1-u.2*v.2)*(u.1*v.2+u.2*v.1) = 0
+  constructor
+  · calc
+      (u.1*v.1-u.2*v.2)*(u.1*v.1-u.2*v.2) =
+          (u.1*u.1)*(v.1*v.1) + (u.2*u.2)*(v.2*v.2) -
+            2*(u.1*u.2)*(v.1*v.2) := by ring
+      _ = 2*(u.1*u.1)*(v.1*v.1) := by
+        rw [← huEq, ← hvEq, huZero]
+        ring
+  constructor
+  · calc
+      (u.1*v.2+u.2*v.1)*(u.1*v.2+u.2*v.1) =
+          (u.1*u.1)*(v.2*v.2) + (u.2*u.2)*(v.1*v.1) +
+            2*(u.1*u.2)*(v.1*v.2) := by ring
+      _ = 2*(u.1*u.1)*(v.1*v.1) := by
+        rw [← huEq, ← hvEq, huZero]
+        ring
+  · calc
+      (u.1*v.1-u.2*v.2)*(u.1*v.2+u.2*v.1) =
+          (u.1*u.1-u.2*u.2)*(v.1*v.2) +
+            (u.1*u.2)*(v.1*v.1-v.2*v.2) := by ring
+      _ = 0 := by rw [huEq, huZero]; ring
+
+/-- TRUE integral split-CM sixfold intersection Gram. Each of the
+three genuine elliptic-pair surfaces has A_j²=B_j²=-2[p_j]
+and A_j B_j=0. The triple Gaussian product (with the exterior
+orientation's minus sign on its real part) then gives
+W_R²=W_I²=-32[p_1][p_2][p_3] and W_R W_I=0.
+This is an exact commutative-ring law. Its canonical Betti
+interpretation still requires the geometric divisor comparison. -/
+theorem cmWeilCMIntegralSixfoldFullGram
+    (a1 a2 a3 b1 b2 b3 p1 p2 p3 : R)
+    (ha1 : a1*a1 = -(2*p1)) (hb1 : b1*b1 = -(2*p1))
+    (ha2 : a2*a2 = -(2*p2)) (hb2 : b2*b2 = -(2*p2))
+    (ha3 : a3*a3 = -(2*p3)) (hb3 : b3*b3 = -(2*p3))
+    (hz1 : a1*b1 = 0) (hz2 : a2*b2 = 0) (hz3 : a3*b3 = 0) :
+    let c := cmWeilGaussianDivisorPairMul (a1,b1) (a2,b2)
+    let d := cmWeilGaussianDivisorPairMul c (a3,b3)
+    (-d.1)*(-d.1) = -(32*(p1*p2*p3)) ∧
+    d.2*d.2 = -(32*(p1*p2*p3)) ∧
+    (-d.1)*d.2 = 0 := by
+  let c := cmWeilGaussianDivisorPairMul (a1,b1) (a2,b2)
+  let d := cmWeilGaussianDivisorPairMul c (a3,b3)
+  have heq1 : a1*a1 = b1*b1 := ha1.trans hb1.symm
+  have heq2 : a2*a2 = b2*b2 := ha2.trans hb2.symm
+  have heq3 : a3*a3 = b3*b3 := ha3.trans hb3.symm
+  have h12 := cmWeilGaussianDivisorPairMul_orthogonal
+    (a1,b1) (a2,b2) heq1 hz1 heq2 hz2
+  have hcEq : c.1*c.1 = c.2*c.2 := h12.1.trans h12.2.1.symm
+  have hcZero : c.1*c.2 = 0 := h12.2.2
+  have h123 := cmWeilGaussianDivisorPairMul_orthogonal
+    c (a3,b3) hcEq hcZero heq3 hz3
+  have hr : (-d.1)*(-d.1) = -(32*(p1*p2*p3)) := by
+    calc
+      (-d.1)*(-d.1) = d.1*d.1 := by ring
+      _ = 2*(c.1*c.1)*(a3*a3) := h123.1
+      _ = 2*(2*(a1*a1)*(a2*a2))*(a3*a3) := by rw [h12.1]
+      _ = -(32*(p1*p2*p3)) := by rw [ha1,ha2,ha3]; ring
+  have hi : d.2*d.2 = -(32*(p1*p2*p3)) := by
+    calc
+      d.2*d.2 = 2*(c.1*c.1)*(a3*a3) := h123.2.1
+      _ = 2*(2*(a1*a1)*(a2*a2))*(a3*a3) := by rw [h12.1]
+      _ = -(32*(p1*p2*p3)) := by rw [ha1,ha2,ha3]; ring
+  have hcross : (-d.1)*d.2 = 0 := by
+    calc
+      (-d.1)*d.2 = -(d.1*d.2) := by ring
+      _ = 0 := by rw [h123.2.2]; ring
+  exact ⟨hr, hi, hcross⟩
+
+/-- The polarized Euler/intersection form on the ENTIRE integral
+CM Weil two-plane is diagonal, not just on the two generators.
+In particular every integral pair of coefficients has a
+fully explicit bilinear intersection, with no preimage selector. -/
+theorem cmWeilCMIntegralFullLatticePairing
+    (r i p : R) (hr : r*r = -(32*p)) (hi : i*i = -(32*p))
+    (hri : r*i = 0) (m n m' n' : ℤ) :
+    ((m : R)*r+(n : R)*i)*((m' : R)*r+(n' : R)*i) =
+      -(32 : R)*((m : R)*(m' : R)+(n : R)*(n' : R))*p := by
+  calc
+    ((m : R)*r+(n : R)*i)*((m' : R)*r+(n' : R)*i) =
+      (m : R)*(m' : R)*(r*r) +
+        (n : R)*(n' : R)*(i*i) +
+        ((m : R)*(n' : R)+(n : R)*(m' : R))*(r*i) := by ring
+    _ = -(32 : R)*((m : R)*(m' : R)+(n : R)*(n' : R))*p := by
+      rw [hr,hi,hri]
+      ring
+
+#check cmWeilGaussianDivisorPairMul_orthogonal
+#check cmWeilCMIntegralSixfoldFullGram
+#check cmWeilCMIntegralFullLatticePairing
+#print axioms cmWeilCMIntegralFullLatticePairing
+
 end CMIntegralWeilDivisorTensor
 
 /-- The earlier signed graph source's 4800-fold increase of
