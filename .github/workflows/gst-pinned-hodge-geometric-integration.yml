@@ -196,5 +196,6 @@ jobs:
             mixed-blowup-birth.log
             second-blowup-primitive-plane.log
             original-x-smooth-incidence.log
+            pure-k0-single-center.log
             pure-k0-all-codim.log
           if-no-files-found: warn
