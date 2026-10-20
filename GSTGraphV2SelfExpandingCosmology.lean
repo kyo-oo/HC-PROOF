@@ -1413,6 +1413,85 @@ theorem exceptional_lift_range_iff
     rw [hExc Z, hZ]
 
 
+/-! ### Rational ambient-blowup completeness and counterexample transfer
+
+These new consequences use ONLY the exceptional geometry self-intersection,
+fiber-integration and canonical Chow/Betti naturality equations already
+specified above. The forward algebraic birth is on the ambient blowup; no
+native Chow preimage of the prescribed original-X target is assumed.
+The intended geometric ambient world is Bl_X(P^N), a rational smooth
+projective variety when X is a smooth projective center.
+-/
+
+/-- Completeness for the (rational) ambient blowup forces completeness for
+its original smooth center X. This needs no reverse exceptional Chow lift:
+the forward Gysin return already constructs the original-X cycle. -/
+theorem exceptional_ambient_complete_forces_original_complete
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (xiMul : HE →ₗ[ℚ] HE) (qPull : HX →ₗ[ℚ] HE)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (hSelf : ∀ a : HX, jBetti (excGysin a) = -(xiMul (qPull a)))
+    (hFiber : ∀ a : HX, qReturn (xiMul (qPull a)) = a)
+    (hY : Function.Surjective clY) :
+    Function.Surjective clX := by
+  intro a
+  obtain ⟨W,hW⟩ := hY (excGysin a)
+  exact ⟨exceptionalOriginalXCycle jChow qChow W,
+    exceptional_lift_cycle_recovery clX clY clE jChow qChow
+      jBetti qReturn xiMul qPull excGysin hJ hQ hSelf hFiber a W hW⟩
+
+/-- A genuinely missing rational Hodge class on the original X gives a
+SPECIFIC missing exceptional Hodge class on the rational ambient blowup.
+This is an implication, not the existence of a counterexample. -/
+theorem exceptional_missing_original_forces_ambient_missing
+    (clX : CX →ₗ[ℚ] HX) (clY : CY →ₗ[ℚ] HY)
+    (clE : CE →ₗ[ℚ] HE)
+    (jChow : CY →ₗ[ℚ] CE) (qChow : CE →ₗ[ℚ] CX)
+    (jBetti : HY →ₗ[ℚ] HE) (qReturn : HE →ₗ[ℚ] HX)
+    (xiMul : HE →ₗ[ℚ] HE) (qPull : HX →ₗ[ℚ] HE)
+    (excGysin : HX →ₗ[ℚ] HY)
+    (hJ : ∀ W : CY, clE (jChow W) = jBetti (clY W))
+    (hQ : ∀ V : CE, clX (qChow V) = qReturn (clE V))
+    (hSelf : ∀ a : HX, jBetti (excGysin a) = -(xiMul (qPull a)))
+    (hFiber : ∀ a : HX, qReturn (xiMul (qPull a)) = a)
+    (a : HX) (ha : a ∉ LinearMap.range clX) :
+    excGysin a ∉ LinearMap.range clY := by
+  rintro ⟨W,hW⟩
+  apply ha
+  exact ⟨exceptionalOriginalXCycle jChow qChow W,
+    exceptional_lift_cycle_recovery clX clY clE jChow qChow
+      jBetti qReturn xiMul qPull excGysin hJ hQ hSelf hFiber a W hW⟩
+
+/-- First nontrivial Chern-Segre triangular cancellation, three exceptional
+channels. The geometric coefficients satisfy s₁=-c₁ and s₂=c₁²-c₂;
+the normal Chern classes invert all exceptional Segre mixing exactly. -/
+theorem exceptional_three_channel_chern_segre_correction
+    {R : Type*} [CommRing R]
+    (c1 c2 a0 a1 a2 : R) :
+    let r0 := a0 - c1*a1 + (c1^2-c2)*a2
+    let r1 := a1 - c1*a2
+    let r2 := a2
+    (r0 + c1*r1 + c2*r2 = a0) ∧
+      (r1 + c1*r2 = a1) ∧ (r2 = a2) := by
+  dsimp
+  constructor
+  · ring
+  constructor
+  · ring
+  · rfl
+
+#check exceptional_ambient_complete_forces_original_complete
+#check exceptional_missing_original_forces_ambient_missing
+#check exceptional_three_channel_chern_segre_correction
+#print axioms exceptional_ambient_complete_forces_original_complete
+#print axioms exceptional_missing_original_forces_ambient_missing
+#print axioms exceptional_three_channel_chern_segre_correction
+
 /-- The ACTUAL original-X residual readout induced from an arbitrary
 algebraic perfect-complex/Chow source on the blown-up ambient world.
 Unlike exact exceptional target reconstruction, it needs no hypothesis
