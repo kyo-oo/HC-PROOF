@@ -300,6 +300,139 @@ middle Hodge testing block used in the previous note. In particular
 it is not a Hodge counterexample: \(D\) itself is an actual divisor.
 The point is to distinguish two mathematically different constructors.
 
+
+\section{Atomic scheme-level surgery: a genuine non-split source}
+\noindent\textbf{Additional exact geometric test (21 October 2026).}
+The invariant-sector model above exposes an algebraic logical mistake:
+a nonzero doubled diagonal test does not generate a one-legged source.
+We can strengthen that diagnosis with an actual smooth projective
+complex variety and then exhibit the missing geometric input
+\emph{as an independently constructed perfect-complex source}.
+This test concerns a definite class of GST recipes; it neither assumes
+nor proves universal Hodge algebraicity.
+
+Let \(C\) be a smooth connected projective curve of genus
+\(g\geq1\), and put \(X=C\times C\).
+In \(\CH^1(X)_\Q\) take the actual fiber divisors
+\(A=\{c\}\times C\), \(B=C\times\{c\}\), the ample
+product polarization \(H=A+B\), and the internal graph
+\[
+  \delta=[\Delta_C],\qquad D=\delta-A-B.
+\]
+The normal bundle \(N_{\Delta_C/X}=T_C\) gives
+\(\delta^2=\deg T_C=2-2g\), and intersection with
+either fiber gives one. Consequently
+\[
+ A^2=B^2=0,\quad AB=1,\quad
+ \delta A=\delta B=1,\quad
+ H^2=2,\quad HD=0,\quad D^2=-2g.                  \tag{10}
+\]
+These are intersections of \emph{real Chow classes} on \(X\),
+not abstract Frobenius-algebra coordinates. In particular
+\(D\) is a nonzero algebraic primitive rational Hodge class,
+with positive signed primitive norm \(2g\).
+
+\begin{theorem}[Polarization--Chern--self-diagonal closure cannot birth \(D\)]
+\label{th:tautological-no-go}
+Consider the class of recipes starting with
+\(\mathcal O_X,\mathcal O_X(H)\), and \(T_X\), and closed under finite
+direct sums/differences in rational algebraic \(K_0\), tensor
+products, duals, Adams operations and exterior powers of
+honest vector-bundle expressions. Also allow algebraic
+self-correspondence kernels \((\Delta_X)_*F\) built from the
+same such \(F\) and applied to objects already in the recipe.
+Every resulting one-legged \(K\)-class \(E\) satisfies
+\[
+       \ch_1(E)\in\Q H,\qquad
+       \int_X\ch_1(E)\,D=0.                           \tag{11}
+\]
+No recipe in this class produces a class with
+\(\ch_1(E)=D\), despite \(D\) being algebraic.
+This holds at every finite operator-word length.
+\end{theorem}
+\begin{proof}
+The initial characters have degree-one pieces
+\[
+ \ch_1(\mathcal O_X)=0,\qquad
+ \ch_1(\mathcal O_X(H))=H,\qquad
+ \ch_1(T_X)=c_1(T_X)=(2-2g)H .
+\]
+For any vector bundles (and by additivity for virtual classes),
+\[
+ \ch_1(E\oplus F)=\ch_1(E)+\ch_1(F),\qquad
+ \ch_1(E\otimes F)=\rk(E)\ch_1(F)+\rk(F)\ch_1(E),
+\]
+\[
+ \ch_1(E^\vee)=-\ch_1(E),\qquad
+ \ch_1(\psi^kE)=k\ch_1(E),\qquad
+ c_1(\wedge^kE)=\binom{\rk(E)-1}{k-1}c_1(E)
+\]
+for genuine rank-\(\rk(E)\) bundles where the exterior power
+is defined. Each operation preserves the one-dimensional
+\(\Q H\) first-character span.
+For \(\Delta_X:X\to X\times X\), the projection formula gives
+\[
+ T_{(\Delta_X)_*F}(G)
+  =(p_2)_*\bigl(p_1^*G\otimes(\Delta_X)_*F\bigr)
+  =F\otimes G,                                      \tag{12}
+\]
+so the allowed self-diagonal kernels preserve it as well.
+The diagonal self-intersection complex involves
+\(\lambda_{-1}T_X^\vee\), and introduces no extra generator
+beyond the stated characteristic operations.
+Equation (10) proves (11).
+If \(\ch_1(E)=D\), pairing with \(D\) would give
+\(0=D^2=-2g\), contrary to \(g>0\).
+\end{proof}
+
+\begin{theorem}[Exact independent native repair by an internal graph]
+\label{th:graph-repair}
+Let \(L_D=\mathcal O_X(D)\) be the \emph{genuine} algebraic
+line bundle of the internal diagonal-minus-fibers divisor.
+The rational virtual perfect-complex class
+\[
+       \boxed{E_D=\tfrac12([L_D]-[L_D^{-1}])
+               \in K_0^{\rm alg}(X)_\Q}
+\]
+has complete rational Chern character
+\[
+                  \ch(E_D)=D\in\CH^1(X)_\Q,
+          \qquad -\int_X \ch_1(E_D)D=2g>0.           \tag{13}
+\]
+It therefore provides the algebraic one-leg source that
+the entire restricted characteristic/self-diagonal recipe cannot.
+\end{theorem}
+\begin{proof}
+Since \(\dim X=2\), the Chern-character expansions stop at
+degree two:
+\[
+ \ch(L_D)=1+D+\frac{D^2}{2},\qquad
+ \ch(L_D^{-1})=1-D+\frac{D^2}{2}.
+\]
+Their half-difference is precisely \(D\), with both rank and
+degree-two characters zero. It is a rational combination
+of actual line bundles, not a choice of target cycle.
+Its period is (10). This also correctly distinguishes
+the diagonal \(\Delta_X\subset X\times X\), acting as the
+identity/tensor kernel in (12), from the \emph{internal}
+graph \(\Delta_C\subset C\times C=X\) supplying new geometry.
+\end{proof}
+
+At \(g=0\) the numerical graph norm is zero and no separating
+period is obtained; for every \(g>0\) it is \(2g\).
+The exact uniform intersection identities and genus-zero boundary
+are kernel-checked in
+\texttt{GSTPrimitiveProductTowerStabilization.lean}, beginning
+with \texttt{curvePair\_tautological\_graph\_period\_zero} and
+\texttt{curvePair\_internalGraph\_native\_period\_nonzero}.
+The actual scheme-level interpretation relies on the displayed
+curve normal-bundle and projective intersection identities.
+A full arbitrary-\(X\) source-generation assertion is not
+deduced from this family: it proves the need for genuinely
+\emph{new geometry}, and provides an explicit successful non-split
+test while eliminating an entire otherwise endlessly recycled
+operator class.
+
 \section{Source pins and executed checks}
 All repository sources below were read at
 \texttt{ae27ee80ae6c3448bd856a6b75bafd5f73543192}:
