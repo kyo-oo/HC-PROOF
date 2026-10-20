@@ -581,11 +581,7 @@ theorem fermat_clifford_period_compiler_exact
   have hSum :
       (∑ i : Fin d, fermatCliffordPeriodCompiler d m beta i) =
         (∑ i : Fin d, beta i) / (B*D*(s-1)) := by
-    change
-      (∑ i : Fin d,
-        beta i / (B*D*s) +
-          (∑ k : Fin d, beta k) / (B*D^2*s*(s-1))) =
-        (∑ i : Fin d, beta i) / (B*D*(s-1))
+    simp only [fermatCliffordPeriodCompiler]
     rw [Finset.sum_add_distrib]
     simp only [Finset.sum_div, Finset.sum_const, Finset.card_fin,
       nsmul_eq_mul]
