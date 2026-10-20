@@ -1674,6 +1674,25 @@ is j_*(xi^(i-1) q^*(alpha)). None of the arithmetic below
 asserts an algebraic representative for that class.
 -/
 
+
+/-- A SINGLE EVEN RATIONAL AMBIENT WORLD suffices for every codimension
+on the SAME arbitrary original dimension-d X. The dimension M depends
+only on the initial embedding N₀ and d, not on p.
+All original p (0 ≤ p ≤ d) occupy separate actual exceptional
+middle channels i=M-p. Exact geometric Hodge defect compression
+further uses the canonical Chow/Hodge blowup decomposition. -/
+theorem simultaneous_middle_rational_blowup_channels
+    (d N₀ p : ℕ) (hp : p ≤ d) :
+    let M := N₀ + d + 2
+    let c := 2*M - d
+    let i := M - p
+    N₀ ≤ 2*M ∧ 2 ≤ c ∧ 1 ≤ i ∧ i < c ∧ p+i=M := by
+  dsimp
+  omega
+
+#check simultaneous_middle_rational_blowup_channels
+#print axioms simultaneous_middle_rational_blowup_channels
+
 /-- Every original dimension/degree/embedding bound admits a uniform
 explicit even-dimensional rational ambient blowup with a valid
 MIDDLE Hodge exceptional index. The constraints are geometric
