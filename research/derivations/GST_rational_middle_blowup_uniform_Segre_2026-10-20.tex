@@ -150,6 +150,94 @@ so the restricted statement would make it algebraic.
 The preceding theorem returns a genuine representative on $X$.
 \end{proof}
 
+\section{A single rational middle world contains ALL original Hodge defects}
+The previous construction apparently depends on $p$ through $M$.
+In fact the full range of Hodge defects of the original $X$
+can be transferred \emph{simultaneously} to one and the same
+smooth rational blowup. This gives a stronger exact invariant.
+
+Fix a projective embedding $X\hookrightarrow\mathbb P^{N_0}$
+and take any integer
+\[
+ M\ge d+1,\qquad 2M\ge N_0.
+\]
+For example, $M=N_0+d+2$ works independently of $p$.
+Let $Y=\operatorname{Bl}_X\mathbb P^{2M}$, with
+$c=2M-d$. For every original codimension $p\in\{0,\dots,d\}$,
+the channel $i_p=M-p$ obeys
+\[
+ 1\le M-d\le i_p\le M\le c-1.
+\]
+Hence every original Hodge grade occurs as a different exceptional
+summand of the \emph{same} middle Hodge group of $Y$.
+
+Set the canonical graded rational Hodge defect
+\[
+ D_p(X)=\Hdg^p(X)_{\Q}/\operatorname{im}(\cl_X^p).
+\]
+The genuine blowup decomposition at degree $M$ is
+\[
+ \Hdg^M(Y)_{\Q}\simeq
+ \Hdg^M(\mathbb P^{2M})_{\Q}
+ \oplus\bigoplus_{i=1}^{c-1}\Hdg^{M-i}(X)_{\Q},
+\]
+and the parallel Chow decomposition is
+\[
+ \CH^M(Y)_{\Q}\simeq
+ \CH^M(\mathbb P^{2M})_{\Q}
+ \oplus\bigoplus_{i=1}^{c-1}\CH^{M-i}(X)_{\Q}.
+\]
+Any Chow/Hodge group with negative codimension is understood to be zero.
+For $M-i>d$ the groups vanish by the dimension of $X$.
+For $M-i<0$ they vanish by negative grading.
+The only nontrivial exceptional summands therefore have
+$i=i_p$ for unique $p=0,\ldots,d$.
+The ambient projective-space cycle-class map is surjective.
+
+\begin{theorem}[Exact total-defect compression into one rational middle world]
+For every smooth projective complex $X$ of dimension $d$, there
+is a smooth projective rational variety $Y$ of even complex
+dimension $2M$ and a CANONICAL (relative to its selected embedding)
+rational-vector-space isomorphism
+\[
+ \boxed{
+ D_M(Y)\ \cong\ \bigoplus_{p=0}^{d}D_p(X).}
+ \tag{5.1}
+\]
+Both directions are induced by explicit honest Chow/Betti operations:
+the forward map sends $[\alpha_p]$ to the exceptional channel
+$[I_{M-p}^{H}(\alpha_p)]$, and the inverse has components
+$[R_{M-p}^{H}(\beta)]$.
+In particular, $X$ satisfies the full rational Hodge conjecture
+in \emph{every} codimension if and only if this one rational $Y$
+satisfies it in its \emph{single middle codimension} $M$.
+\end{theorem}
+\begin{proof}
+The Hodge and Chow blowup decompositions are canonically
+compatible with the genuine cycle-class maps. The center
+summands of middle degree are indexed by the integers
+$p=M-i$ in $0,\dots,d$, and the one ambient projective-space
+summand has zero cokernel. Taking rational cokernels therefore
+produces exactly the displayed direct sum.
+Alternatively the all-channel identities of the previous section
+show that $R_{M-p}I_{M-q}=\delta_{pq}$ on both Chow and Hodge.
+Their induced maps on quotient defects are mutually inverse.
+There are no additional middle Hodge channels because the
+remaining shifted center degrees are outside $[0,d]$,
+and the ambient middle class is a projective hyperplane power.
+\end{proof}
+
+\paragraph{Research significance and falsification.}
+A genuine counterexample in \emph{any} codimension on the
+original $X$ would give a middle rational Hodge counterexample
+on the same rational $Y$. Conversely, constructing all middle
+algebraic sources on this one rational $Y$ would solve all
+codimensions on the original $X$ simultaneously.
+This does not show the middle defect vanishes; it computes
+its precise content. The result is stronger than an isolated
+one-target exceptional return and supplies an exact objective
+for GST's rational-cosmology source births.
+
 \section{Exact Wolfram check and limits}
 For four independent exceptional channels, set
 $s_1=-c_1$, $s_2=c_1^2-c_2$,
