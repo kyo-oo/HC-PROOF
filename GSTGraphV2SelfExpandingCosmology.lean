@@ -1692,6 +1692,56 @@ theorem exceptional_ambient_surjectivity_forces_original
 #check exceptional_lift_range_iff
 #print axioms exceptional_lift_range_iff
 
+
+/-! ## Arbitrary-arity GST exceptional correction — no finite rank cutoff
+
+For the genuinely graded exceptional channels E_i and returns R_i,
+the composite operator T=R∘E is I+U where U is strictly upper
+triangular in the shift index. Geometric grading makes U^c=0
+for the c-channel system. The next ring identities give an
+EXPLICIT finite correcting operator C=Σ_{k<c}(-U)^k and verify
+T*C=C*T=I. They do not assume surjectivity or a Chow preimage.
+
+The statements work in NONCOMMUTATIVE rings, hence for endomorphism
+rings of rational direct sums of native Chow/Hodge modules.
+-/
+
+/-- Constructive finite inverse for any nilpotent GST birth-feedback
+operator. It applies to all arities and arbitrary graded operator rings. -/
+theorem nilpotent_birth_inverse_two_sided
+    {R : Type*} [Ring R] (u : R) (c : ℕ)
+    (hc : u^c = 0) :
+    (1 + u) * (Finset.range c).sum (fun k => (-u)^k) = 1 ∧
+    (Finset.range c).sum (fun k => (-u)^k) * (1 + u) = 1 := by
+  have geometric_left (x : R) :
+      ∀ n : ℕ, (1 - x) * (Finset.range n).sum (fun k => x^k) =
+        1 - x^n := by
+    intro n
+    induction n with
+    | zero => simp
+    | succ n ih =>
+        rw [Finset.sum_range_succ, mul_add, ih]
+        simp only [sub_mul, one_mul, pow_succ']
+        abel
+  have geometric_right (x : R) :
+      ∀ n : ℕ, (Finset.range n).sum (fun k => x^k) * (1 - x) =
+        1 - x^n := by
+    intro n
+    induction n with
+    | zero => simp
+    | succ n ih =>
+        rw [Finset.sum_range_succ, add_mul, ih]
+        simp only [mul_sub, mul_one, pow_succ]
+        abel
+  have hneg : (-u)^c = 0 := by
+    rw [neg_pow, hc, mul_zero]
+  constructor
+  · convert geometric_left (-u) c using 1 <;> simp [hneg]
+  · convert geometric_right (-u) c using 1 <;> simp [hneg]
+
+#check nilpotent_birth_inverse_two_sided
+#print axioms nilpotent_birth_inverse_two_sided
+
 end BlowupRationalHodgeTest
 
 end NativeGeometryBirth
