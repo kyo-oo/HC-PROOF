@@ -2511,6 +2511,59 @@ theorem ActualXCycleProjectionData.nativeEulerCertificate_all_targets
     (P.eulerSourceMatrix readout sources)⁻¹ alpha,
     P.eulerCertifiedCycle_of_det_ne_zero readout sources hDet alpha⟩
 
+/-! ## Exact anti-circularity certificate for universal original-X source rank
+
+The Euler readout matrix uses columns coming from ACTUAL algebraic cycles
+on the original X. Its invertibility is not an arithmetic substitute for
+the universal geometric source theorem: with a full rational Hodge readout,
+the existence of such a native full-rank matrix is equivalent to surjectivity
+of the supplied cycleClass on this very fiber.
+
+This reverse direction constructs the matrix columns only FROM an assumed
+cycle representative of every readout basis vector. In particular neither
+the diagonal Euler index nor a topological K-theory dual basis constructs
+these columns automatically. This theorem prevents treating the input
+full-rank native matrix as an independent solution to Gate 3.
+-/
+
+/-- Over the same original X, an invertible Euler matrix of ACTUAL Chow
+sources exists exactly when every Hodge class has a Chow representative.
+The forward direction is the native compiler; the reverse direction
+exhibits that its geometric rank hypothesis has conjecture-level force. -/
+theorem ActualXCycleProjectionData.nativeEulerFullRank_iff_all_targets
+    (P : ActualXCycleProjectionData X H p ι)
+    {n : ℕ}
+    (readout : HodgeSpace X H p ≃ₗ[ℚ] (Fin n → ℚ)) :
+    (∃ sources : Fin n → codimensionCycles X.X p,
+      (P.eulerSourceMatrix readout sources).det ≠ 0) ↔
+      (∀ alpha : HodgeSpace X H p,
+        ∃ Z : codimensionCycles X.X p,
+          H.cycleClass p Z = alpha.1) := by
+  classical
+  constructor
+  · rintro ⟨sources, hDet⟩
+    exact P.nativeEulerCertificate_all_targets readout sources hDet
+  · intro hall
+    let sources : Fin n → codimensionCycles X.X p :=
+      fun j => Classical.choose (hall (readout.symm (Pi.single j (1 : ℚ))))
+    have hSource (j : Fin n) :
+        P.trueHodgeClass (sources j) =
+          readout.symm (Pi.single j (1 : ℚ)) := by
+      apply Subtype.ext
+      exact Classical.choose_spec (hall (readout.symm (Pi.single j (1 : ℚ))))
+    have hmatrix : P.eulerSourceMatrix readout sources = 1 := by
+      ext i j
+      change readout (P.trueHodgeClass (sources j)) i =
+        (1 : Matrix (Fin n) (Fin n) ℚ) i j
+      rw [hSource j]
+      simp [Matrix.one_apply, Pi.single_apply, eq_comm]
+    refine ⟨sources, ?_⟩
+    rw [hmatrix]
+    norm_num
+
+#check ActualXCycleProjectionData.nativeEulerFullRank_iff_all_targets
+#print axioms ActualXCycleProjectionData.nativeEulerFullRank_iff_all_targets
+
 #check ActualXCycleProjectionData.eulerCertifiedCycle_correct
 #check ActualXCycleProjectionData.eulerCertifiedCycle_of_det_ne_zero
 #check ActualXCycleProjectionData.nativeEulerCertificate_all_targets
