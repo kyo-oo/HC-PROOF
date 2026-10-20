@@ -87,6 +87,14 @@ In contrast, `[O_Δ]` is an independently given algebraic perfect-complex source
 
 A focused new Lean check is added in `GSTK3PrimitiveGram.lean` as `primitive_diagonal_outside_characteristic_plane`, commit `73f3e7a4dd0aa2fab694cb69113015e9ab181f1e`. Its exact workflow result must be checked at this SHA before calling the addition kernel-verified.
 
+## Uniform noncommutative finite GST exceptional feedback inverse
+
+New existing-module Lean theorem `nilpotent_birth_inverse_two_sided` (commit `36d2e7f9382e296ddac0184d195657e828c5d2a8`) is verified by the revision-matched [Graph V2 Lean CI #39407994946](https://github.com/kyo-oo/HC-PROOF/actions/runs/39407994946). For any unital **not necessarily commutative** ring R, element u and integer c≥0 with u^c=0, the **explicit constructive two-sided correction law** is
+
+  (1+u)(Σ_{k=0}^{c−1}(-u)^k) = (Σ_{k=0}^{c−1}(-u)^k)(1+u) = 1.
+
+The proof uses two finite telescoping identities, checked by Lean induction without assumed inverse, commutativity of source operators, Hodge surjectivity, or a chosen cycle. For the c−1 exceptional return slots the strict upper-triangular shift U is nilpotent, so the theorem constructs the rational-native finite GST inverse to the entire feedback matrix at arbitrary rank, after instantiating the graded endomorphism algebra and its nilpotence. The current Lean theorem verifies the ring-level inverse; geometric nilpotence and exact graded Chow comparison remain separately specified scheme-level inputs. This is a uniform mathematical upgrade over any bounded Gram inversion.
+
 ## Exact acceptance condition
 
 Build **one** actual algebraic perfect complex or Chow source W on the blowup Y=Bl_X P^N from original-X equations and GST birth rules such that
