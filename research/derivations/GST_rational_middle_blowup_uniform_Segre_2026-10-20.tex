@@ -227,6 +227,63 @@ remaining shifted center degrees are outside $[0,d]$,
 and the ambient middle class is a projective hyperplane power.
 \end{proof}
 
+\begin{theorem}[Uniform dimension bound: a rational world of dimension $2d+2$]
+Every smooth projective complex variety $X$ of dimension $d$
+admits a closed embedding $X\hookrightarrow\mathbb P^{2d+2}$.
+For the single resulting rational smooth blowup
+\[
+ \boxed{Y_X=\operatorname{Bl}_X(\mathbb P^{2d+2}),}
+\]
+the complex dimension is exactly $2d+2$, the center normal
+rank is $c=d+2$, and its ONE middle Hodge defect satisfies
+\[
+ \boxed{
+ D_{d+1}(Y_X)\cong\bigoplus_{p=0}^d D_p(X).}
+ \tag{5.2}
+\]
+For each original codimension $p$ the explicit middle
+Hodge lift and its original-$X$ Chow return simplify to
+\[
+ \boxed{\beta_p=j_*(\xi^{d-p}q^*\alpha_p)
+       \in\Hdg^{d+1}(Y_X)_{\Q},}
+ \tag{5.3}
+\]
+and
+\[
+ \boxed{\mathcal R_p(W)=
+  -\sum_{k=0}^{p}c_k(N_{X/\mathbb P^{2d+2}})
+        \,q_*(\xi^{p-k}j^*W)
+       \in\CH^p(X)_{\Q}.}
+ \tag{5.4}
+\]
+These maps obey
+$\mathcal R_p^H(\beta_q)=\delta_{pq}\alpha_q$
+for distinct graded channels, with the zero interpretation
+when the degrees differ; the same holds in Chow.
+\end{theorem}
+\begin{proof}
+First choose any projective embedding $X\hookrightarrow\mathbb P^L$.
+If $L\le2d+2$, compose with a linear inclusion.
+If $L>2d+2$, the secant-and-tangent variety of $X$ has
+dimension at most $2d+1$; a general linear projection
+center of dimension $L-2d-3$ misses it, because the
+expected intersection dimension is
+$(L-2d-3)+(2d+1)-L=-2$.
+A linear projection with such a center is injective and
+immersive on $X$, hence a closed embedding since $X$
+is projective. This gives the stated embedding in
+$\mathbb P^{2d+2}$.
+Now set $M=d+1$ in the preceding all-channel theorem:
+$c=2M-d=d+2$ and $i_p=M-p=d+1-p$.
+The center channels $i=1,\ldots,d+1$ correspond
+exactly to $p=d,\ldots,0$; the ambient projective
+component is algebraic. This proves the direct-sum
+cokernel formula. The formula (5.3) is simply
+$I_{d+1-p}^H$, and substituting $c-1-i_p=p$
+in (3.5) gives (5.4). The previously proved
+Segre convolution identities supply both inverse laws.
+\end{proof}
+
 \begin{theorem}[The hard-defect concentration, with all easy endpoints removed]
 If $d\ge4$, the same one rational smooth middle world satisfies
 \[
