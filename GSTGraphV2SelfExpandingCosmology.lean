@@ -1550,7 +1550,12 @@ theorem picardCh3_three_twists_zero_iff_characteristic_zero
       picardCh3_three_twists_recover_characteristic_periods A B C
     dsimp at hr
     rw [h1,h2,h3] at hr
-    convert hr using 1 <;> norm_num
+    rcases hr with ⟨hA,hB,hC⟩
+    constructor
+    · linarith
+    constructor
+    · linarith
+    · linarith
   · rintro ⟨rfl,rfl,rfl⟩
     norm_num [picardCh3ReturnPeriod]
 
