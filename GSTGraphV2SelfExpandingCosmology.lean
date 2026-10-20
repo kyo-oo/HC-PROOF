@@ -1051,6 +1051,90 @@ theorem blowupCounterexample_iff_base_or_center
       rcases hmem with ⟨⟨z,w⟩,hzw⟩
       exact hv ⟨w, congrArg Prod.snd hzw⟩
 
+
+/-! ## GST two DIFFERENT geometric blowup centers: no new counterexample
+
+Unlike the existing r-copy same-type center theorem, this treats two
+independent centers with potentially entirely different Chow/Hodge
+module types, and hence different varieties, dimensions, and degrees.
+The canonical blowup comparison must still instantiate each block
+map with the genuine Chow/Hodge splitting on geometric schemes.
+-/
+
+variable {NC₁ HC₁ NC₂ HC₂ : Type*}
+    [AddCommGroup NC₁] [Module ℚ NC₁]
+    [AddCommGroup HC₁] [Module ℚ HC₁]
+    [AddCommGroup NC₂] [Module ℚ NC₂]
+    [AddCommGroup HC₂] [Module ℚ HC₂]
+
+/-- Two actual independently selected center-source channels, with NO
+requirement that their native Chow or rational Hodge types coincide. -/
+def blowupTwoDistinctCentersCanonicalCycleBlock
+    (base : NB →ₗ[ℚ] HB)
+    (center₁ : NC₁ →ₗ[ℚ] HC₁)
+    (center₂ : NC₂ →ₗ[ℚ] HC₂) :
+    ((NB × NC₁) × NC₂) →ₗ[ℚ] ((HB × HC₁) × HC₂) :=
+  blowupCanonicalCycleBlock
+    (blowupCanonicalCycleBlock base center₁) center₂
+
+/-- Genuine completeness at both heterogeneous smooth centers and the
+base is necessary and sufficient for completeness of this born world. -/
+theorem blowupTwoDistinctCenters_surjective_iff
+    (base : NB →ₗ[ℚ] HB)
+    (center₁ : NC₁ →ₗ[ℚ] HC₁)
+    (center₂ : NC₂ →ₗ[ℚ] HC₂) :
+    Function.Surjective
+      (blowupTwoDistinctCentersCanonicalCycleBlock base center₁ center₂) ↔
+      Function.Surjective base ∧ Function.Surjective center₁ ∧
+        Function.Surjective center₂ := by
+  unfold blowupTwoDistinctCentersCanonicalCycleBlock
+  rw [blowupCanonicalCycleBlock_surjective_iff,
+    blowupCanonicalCycleBlock_surjective_iff]
+  tauto
+
+/-- All missing rational Hodge directions after two heterogeneous
+blowup births originate in the base or ONE genuine geometric center.
+Consequently no such birth can create a rational Hodge counterexample
+when these three canonical maps are already surjective. -/
+theorem blowupTwoDistinctCenters_missing_iff_old_missing
+    (base : NB →ₗ[ℚ] HB)
+    (center₁ : NC₁ →ₗ[ℚ] HC₁)
+    (center₂ : NC₂ →ₗ[ℚ] HC₂) :
+    (∃ uv : (HB × HC₁) × HC₂,
+      uv ∉ LinearMap.range
+        (blowupTwoDistinctCentersCanonicalCycleBlock
+          base center₁ center₂)) ↔
+    (∃ a : HB, a ∉ LinearMap.range base) ∨
+      (∃ b : HC₁, b ∉ LinearMap.range center₁) ∨
+      (∃ c : HC₂, c ∉ LinearMap.range center₂) := by
+  unfold blowupTwoDistinctCentersCanonicalCycleBlock
+  rw [blowupCounterexample_iff_base_or_center,
+    blowupCounterexample_iff_base_or_center]
+  tauto
+
+/-- Actual linear witness construction for every class in the twice-born
+world, provided complete canonical original/base/center source maps. -/
+theorem blowupTwoDistinctCenters_no_counterexample_of_complete_inputs
+    (base : NB →ₗ[ℚ] HB)
+    (center₁ : NC₁ →ₗ[ℚ] HC₁)
+    (center₂ : NC₂ →ₗ[ℚ] HC₂)
+    (hBase : Function.Surjective base)
+    (h₁ : Function.Surjective center₁)
+    (h₂ : Function.Surjective center₂) :
+    ∀ a : (HB × HC₁) × HC₂,
+      ∃ z : (NB × NC₁) × NC₂,
+        blowupTwoDistinctCentersCanonicalCycleBlock
+          base center₁ center₂ z = a := by
+  exact
+    (blowupTwoDistinctCenters_surjective_iff
+      base center₁ center₂).mpr ⟨hBase, h₁, h₂⟩
+
+#check blowupTwoDistinctCentersCanonicalCycleBlock
+#check blowupTwoDistinctCenters_surjective_iff
+#check blowupTwoDistinctCenters_missing_iff_old_missing
+#check blowupTwoDistinctCenters_no_counterexample_of_complete_inputs
+#print axioms blowupTwoDistinctCenters_missing_iff_old_missing
+
 /-! ## Coupled GST blowup/cosmology defect transport
 
 A genuine codimension-two blowup has the block cycle-class map above.
