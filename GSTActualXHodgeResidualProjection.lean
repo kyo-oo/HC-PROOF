@@ -2305,4 +2305,112 @@ theorem ActualXCycleProjectionData.exceptional_target_birth_strictly_grows_origi
 #check ActualXCycleProjectionData.exceptional_target_birth_strictly_grows_originalX
 #print axioms ActualXCycleProjectionData.exceptional_target_birth_strictly_grows_originalX
 
+
+/-! ## GST full-native-image obstruction for exceptional cosmological births
+
+The previous target-sensitive theorem detects a residual *relative to the
+selected finite old native source frame*. If a rational Hodge residual
+instead annihilates the ENTIRE actual original-X Chow image, no blowup
+source returned by algebraic Gysin/push can detect it.
+
+This is an all-X and all-p theorem about TRUE native codimension-p Chow
+cycles, not a finite-source experiment. It is an adversarial noncircularity
+test for any claimed universal exceptional perfect-complex birth.
+
+IMPORTANT: It does not assert that such a nonzero full-image annihilator
+exists. Producing one would be a counterexample under suitable polarized
+nondegeneracy, and proving none exists is the unsolved universal source
+problem. The theorem separates this from independent finite-frame rank gain.
+-/
+
+/-- Every returned algebraic perfect-complex source lies in the FULL
+actual original-X native Chow image, not merely a selected finite frame. -/
+theorem ActualXCycleProjectionData.exceptionalReturnGRR_range_le_full_native_image
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p) :
+    LinearMap.range
+      (P.trueHodgeClass.comp
+        (P.exceptionalReturnGRR chowGRR jChow qChow)) ≤
+      LinearMap.range P.trueHodgeClass := by
+  rintro y ⟨F, hF⟩
+  exact ⟨P.exceptionalReturnGRR chowGRR jChow qChow F, hF⟩
+
+/-- An honest annihilator of the FULL native original-X image kills
+EVERY algebraic perfect-complex source returned from the blowup.
+No positivity hypothesis, numerical bound or Gram rank is needed. -/
+theorem ActualXCycleProjectionData.full_native_annihilator_kills_exceptionalGRR
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p)
+    (ell : HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (hAnnihilates : ∀ Z : codimensionCycles X.X p,
+      ell (P.trueHodgeClass Z) = 0)
+    (F : K) :
+    ell (P.trueHodgeClass
+      (P.exceptionalReturnGRR chowGRR jChow qChow F)) = 0 :=
+  hAnnihilates _
+
+/-- A nonzero exceptional source period can only enlarge an INCOMPLETE
+native frame, since it is necessarily a genuine member of the entire
+original-X algebraic source image. This excludes the false inference
+that ordinary blowup birth alone manufactures missing algebraicity. -/
+theorem ActualXCycleProjectionData.exceptional_coupling_refutes_full_annihilation
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p)
+    (ell : HodgeSpace X H p →ₗ[ℚ] ℚ) (F : K)
+    (hNonzero :
+      ell (P.trueHodgeClass
+        (P.exceptionalReturnGRR chowGRR jChow qChow F)) ≠ 0) :
+    ¬ ∀ Z : codimensionCycles X.X p,
+      ell (P.trueHodgeClass Z) = 0 := by
+  intro hAll
+  exact hNonzero (hAll _)
+
+/-- The GST target-selected finite source packet is likewise invisible to
+every detector annihilating the full true original-X Chow image. -/
+theorem ActualXCycleProjectionData.full_native_annihilator_kills_exceptional_packet
+    (P : ActualXCycleProjectionData X H p ι)
+    {K CY CE : Type*}
+    [AddCommGroup K] [Module ℚ K]
+    [AddCommGroup CY] [Module ℚ CY]
+    [AddCommGroup CE] [Module ℚ CE]
+    {n : ℕ}
+    (primitiveK : K →ₗ[ℚ] K)
+    (chowGRR : K →ₗ[ℚ] CY)
+    (jChow : CY →ₗ[ℚ] CE)
+    (qChow : CE →ₗ[ℚ] codimensionCycles X.X p)
+    (Q : HodgeSpace X H p →ₗ[ℚ] HodgeSpace X H p →ₗ[ℚ] ℚ)
+    (sources : Fin n → K)
+    (alpha : HodgeSpace X H p)
+    (hFullAnnihilation : ∀ Z : codimensionCycles X.X p,
+      (Q (P.primitiveResidual alpha)) (P.trueHodgeClass Z) = 0) :
+    (Q (P.primitiveResidual alpha))
+      (P.trueHodgeClass
+        (P.exceptionalTargetSelectedNative primitiveK chowGRR
+          jChow qChow Q sources alpha)) = 0 :=
+  hFullAnnihilation _
+
+#check ActualXCycleProjectionData.exceptionalReturnGRR_range_le_full_native_image
+#check ActualXCycleProjectionData.full_native_annihilator_kills_exceptionalGRR
+#check ActualXCycleProjectionData.exceptional_coupling_refutes_full_annihilation
+#check ActualXCycleProjectionData.full_native_annihilator_kills_exceptional_packet
+#print axioms ActualXCycleProjectionData.full_native_annihilator_kills_exceptional_packet
+
 end GSTActualXHodgeResidualProjection
