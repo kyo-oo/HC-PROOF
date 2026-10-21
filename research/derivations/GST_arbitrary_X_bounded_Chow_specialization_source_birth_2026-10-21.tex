@@ -1210,6 +1210,198 @@ canonical image, not merely
 a chosen finite Gram frame.
 \end{proof}
 
+
+\section{GST genuine original-\(X\) Chow-motivic geometry: exact projector and native source-birth law}
+Here we strengthen the existing original-X scheme-level geometry rather
+than introducing another special family. The current
+\texttt{GSTPrimitiveAlgebraicMotiveProjector.lean} proves a native
+projector's COHOMOLOGICAL idempotence but explicitly does not assert
+its idempotence as a CHOW CORRESPONDENCE. The following gives the
+actual intersection-theoretic construction on every original X.
+
+Let X be ANY smooth projective complex variety of dimension d,
+let \(0\le2p\le d\), and let H be an actual ample algebraic divisor
+with canonical Betti class h. Choose any finite list of actual
+rational Chow cycles \(Z_i\in CH^p(X)_\Q\), such that their genuine
+canonical Betti classes \(z_i=\cl^{can}_X(Z_i)\) are linearly
+independent and primitive: \(h^{d-2p+1}z_i=0\).
+This includes the EMPTY list, which gives the zero projector.
+The genuine rational intersection Gram is
+\[
+ G_{ij}=\deg(Z_i\cdot Z_j\cdot H^{d-2p})
+       =\int_X z_i\smile z_j\smile h^{d-2p}.
+\]
+Hodge--Riemann implies that \((-1)^pG\) is positive definite,
+hence \(G^{-1}\) is rational. Set \(W_j=Z_j H^{d-2p}\),
+an actual codimension-(d-p) Chow cycle, and define
+\[
+ \boxed{\Pi^A_{X,p}=\sum_{i,j}(G^{-1})_{ij}
+        \, Z_i\times W_j\in CH^d(X\times X)_\Q.}    \tag{14}
+\]
+Correspondences here act from the SECOND factor to the FIRST.
+
+\begin{theorem}[Actual Chow idempotence and residual motive on EVERY original X]
+For every X,d,p and actual primitive source list as above,
+\[
+ \boxed{\Pi^A\circ\Pi^A=\Pi^A,\quad
+ R=[\Delta_X]-\Pi^A,\quad
+ R^2=R,\quad R\Pi^A=\Pi^AR=0}
+                                                               \tag{15}
+\]
+are literal equalities in the genuine rational CHOW correspondence
+ring \(CH^d(X\times X)_\Q\), not merely in Betti cohomology.
+The canonical Betti action of \(\Pi^A\) on \(H^{2p}(X,\Q)\)
+is exactly the Gram-orthogonal projector onto the actual primitive
+algebraic span \(\mathrm{span}_\Q(z_i)\); it acts by zero in
+other cohomological degrees. Thus \(\Pi^A\) and R give a
+genuine rational Chow-motive splitting
+\(h(X)_\Q=(X,\Pi^A)\oplus(X,R)\).
+A prescribed primitive Hodge residual lives in the ACTUAL
+complement motive, not in a freely invented vector-space carrier.
+\end{theorem}
+\begin{proof}
+For genuine algebraic rational cycles u,u' of codimension p
+and v,v' of codimension d-p, proper Gysin/projection formula
+gives the ACTUAL Chow composition identity
+\[
+ \boxed{(u\times v)\circ(u'\times v')
+  =\deg(v\cdot u')\,u\times v'
+       \quad\text{in } CH^d(X\times X)_\Q.}         \tag{16}
+\]
+Indeed composition is the proper pushforward under \(p_{13}\)
+of the intersection of the two pullbacks to \(X^3\);
+the middle-factor product is a true zero-cycle of degree
+\(\deg(vu')\). Using \(v=W_j,u'=Z_k\) and symmetry of G,
+\[
+ (\Pi^A)^2
+ =\sum_{i,l}(G^{-1}GG^{-1})_{il}Z_i\times W_l
+ =\Pi^A
+\]
+AS CHOW CYCLES. The actual diagonal is the unit in the Chow
+correspondence ring, yielding the three other identities.
+Applying the canonical Betti cycle-class map to (14), with the
+genuine push-pull projection formula, gives
+\[
+ (\Pi^A)_*\beta=\sum_{i,j}
+   (G^{-1})_{ij}
+   \left(\int_X\beta\,z_j\,h^{d-2p}\right)z_i,
+\]
+the rational Gram projection. Degree counting gives zero
+in cohomological degrees other than 2p. The Chow idempotents
+split the rational motive by the definition of an idempotent
+completion of the rational Chow correspondence category.
+\end{proof}
+
+\section{GST fresh native geometric rank-one birth AS CHOW, not just Hodge}
+Suppose actual scheme geometry independently provides a further
+primitive original-X rational Chow cycle V, and its canonical
+Betti class v is NOT in the old algebraic span. Define
+\[
+ b_i=\deg(Z_i V H^{d-2p}),\quad s=\deg(V^2H^{d-2p}),
+\quad
+ B=V-\sum_{i,j}Z_i(G^{-1})_{ij}b_j .
+\]
+Here B is a genuine original-X rational CHOW cycle, not
+a cohomological projection presumed to preserve Chow algebraicity.
+The true Schur complement satisfies
+\[
+ \boxed{\sigma=\deg(B^2H^{d-2p})
+          =s-b^tG^{-1}b,\qquad (-1)^p\sigma>0.}    \tag{17}
+\]
+The inequality is Hodge--Riemann on the nonzero primitive
+Betti class of B, so \(\sigma\ne0\).
+
+\begin{theorem}[Exact rank-one geometric original-X Chow-birth increment]
+The new actual correspondence
+\[
+ Q_B={B\times (BH^{d-2p})\over\sigma}
+                    \in CH^d(X\times X)_\Q
+\]
+is a CHOW idempotent satisfying
+\[
+ \boxed{Q_B^2=Q_B,\quad \Pi^AQ_B=Q_B\Pi^A=0,
+ \quad(\Pi^A+Q_B)^2=\Pi^A+Q_B.}                    \tag{18}
+\]
+Its genuine Betti action adds exactly the one-dimensional
+primitive source direction of B. The algebraic residual
+complement moves from \(R\) to the genuine Chow idempotent
+\(R-Q_B\). Nothing in the premise presupposes that the
+target Hodge class alpha is algebraic: V is an independently
+constructed genuine geometric source, whose independent
+existence is the exact source-birth challenge.
+\end{theorem}
+\begin{proof}
+By the ACTUAL algebraic intersection formula,
+\(\deg(B Z_i H^{d-2p})=0\) for each old source.
+The true Chow composition formula (16) therefore kills
+both cross-products of \(\Pi^A\) and \(Q_B\).
+It also gives \(Q_B^2=\sigma Q_B/\sigma=Q_B\).
+The remaining statements are exact ring identities,
+and the Betti rank increments because \(\sigma\ne0\).
+\end{proof}
+
+\section{The cofinal arbitrary-X algebraic Chow-motivic world tower}
+For every effective degree budget D, the earlier TRUE
+Chow parameter-space inventory constructs a finite-dimensional
+rational algebraic Betti image \(A_D^p\) from actual effective
+cycle representatives. Define the primitive part by genuine
+intersection, NOT by applying an unproved algebraic Lefschetz
+inverse to each generator:
+\[
+ P_D^p=A_D^p\cap
+       \ker(h^{d-2p+1}:H^{2p}(X,\Q)
+                        \to H^{2d-2p+2}(X,\Q)).      \tag{19}
+\]
+The space has an actual Chow basis: solve the rational linear
+primitive-kernel equations in the finite list of genuine cycles,
+then take the corresponding finite rational CHOW combinations.
+
+\begin{theorem}[Original-X actual motivic source tower, all p in the primitive range]
+For EVERY smooth projective X and \(0\le2p\le d\),
+there is a nested family of genuine rational CHOW projectors
+\(\Pi_D\in CH^d(X\times X)_\Q\) whose canonical Betti
+images are exactly the primitive source spaces \(P_D^p\).
+Choose bases compatibly as D increases and use (18) for each
+new independent ACTUAL primitive algebraic source.
+Every stage is CHOW-idempotent; every rank increase is a sum of
+genuine orthogonal rank-one Chow idempotents.
+There is a finite, not generally effectively bounded, degree D*
+after which the chosen projectors can stay LITERALLY CONSTANT AS CHOW
+CYCLES and their Betti range is exactly
+\[
+ \boxed{\operatorname{im}(\cl_X^{can})\cap
+                     H_{\rm prim}^{2p}(X,\Q).}     \tag{20}
+\]
+For a particular primitive rational Hodge alpha, its stable
+residual \(r=\alpha-(\Pi_{D_*})_*\alpha\) vanishes
+IF AND ONLY IF alpha already has a genuine original-X
+rational Chow representative.
+\end{theorem}
+\begin{proof}
+Every original-X rational cycle is a finite rational signed
+combination of genuine effective cycles, so every primitive
+algebraic Betti class occurs in some \(P_D^p\).
+The finite-dimensional primitive Hodge space forces the nested
+images to stabilize. The genuine Chow basis is constructed by
+rational linear kernel elimination from actual cycle generators.
+At each new independent class, (17)--(18) produce an actual
+Chow-idempotent rank-one birth. At stages with no new Betti class,
+retain the prior actual Chow projector unchanged. Thus after
+the last independent rank increase the Chow projector stabilizes.
+The Gram action (14) fixes precisely the algebraic primitive image,
+giving both implications of the residual equality.
+\end{proof}
+
+\noindent\textbf{GST evidence boundary.}
+This constructs a new literal original-X CHOW-MOTIVIC geometry,
+strengthening the cohomology-only projector currently proved in
+\texttt{GSTPrimitiveAlgebraicMotiveProjector.lean}; it also
+lifts the GST polarized Gram-surplus law from vector-space rank
+to explicit Chow-correspondence idempotence. It does NOT infer
+that a new independent source V must exist for every nonzero
+primitive rational Hodge residual; that substantive universal
+source-birth implication must be established from additional
+geometry, rather than from the algebraic projector itself.
 \section{Exact executed route outcome and the remaining universal source-birth condition}
 The updated derivation
 constructs an ACTUAL
