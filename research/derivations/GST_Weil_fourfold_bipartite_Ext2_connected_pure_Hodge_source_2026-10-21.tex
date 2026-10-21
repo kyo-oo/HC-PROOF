@@ -5276,6 +5276,420 @@ this explicit
 CM central
 object.
 
+\section{GST COMPLETE FIRST-ORDER CUT AUDIT: the fourteen-node source requires NEW cross-support reverse geometry}
+The existence
+of reverse
+Yoneda products
+and a solution
+to the \(P_1\)
+diagonal
+curvature
+equation
+(15.12)
+does not imply
+that all
+FIRST-ORDER
+Atiyah equations
+of the new
+fourteen-node
+perfect object
+can hold.
+We now calculate
+a genuinely
+GLOBAL
+supertrace
+obstruction,
+using the
+FULL twisted
+endomorphism
+differential,
+not just the
+two original
+obstruction
+matrix entries.
+
+\begin{lemma}[Closed GST derived vertex-cut supertrace obstruction]
+Let
+\(F=(\bigoplus_i
+      E_i[s_i],\delta)\)
+be an ACTUAL
+finite twisted
+perfect complex
+on a smooth
+projective
+complex variety
+\(X\), and
+\(\kappa\)
+an ACTUAL
+first-order
+complex
+deformation.
+Let \(S\)
+be a set of
+its vertices.
+Suppose for EVERY
+central
+degree-one
+arrow \(\delta:u\to v\)
+crossing the
+boundary of \(S\),
+the OPPOSITE
+degree-one
+derived-morphism
+group vanishes:
+\[
+  \boxed{
+ \operatorname{Hom}^{1}
+           (E_v[s_v],E_u[s_u])=0.}
+                                                               \tag{16.1}
+\]
+Then the
+first-order
+curved-dg
+equation
+\(
+ D_\delta h
+     =-\mathrm{At}(F)
+                  \smile\kappa
+\)
+can have a
+solution ONLY IF
+the canonical
+Hodge-charge
+supertrace of
+the vertex subset
+vanishes:
+\[
+ \boxed{
+ \sum_{i\in S}
+   (-1)^{s_i}
+      \operatorname{tr}\!
+      \left(
+       \operatorname{At}(E_i)
+                   \smile\kappa
+      \right)=0
+               \quad\text{in }H^2(X,O_X).
+ }                                                       \tag{16.2}
+\]
+For line bundles
+\(E_i=L_i\),
+this is the
+exact first-order
+\((0,2)\)
+variation of
+the ACTUAL
+algebraic class
+\(\sum_{i\in S}
+        (-1)^{s_i}c_1(L_i)\).
+\end{lemma}
+\begin{proof}
+In a genuine
+dg enhancement,
+the first-order
+curvature on
+the underlying
+direct sum has
+diagonal vertex
+terms
+\(
+ a_i=\operatorname{At}(E_i)
+                         \smile\kappa
+\).
+Variation of
+the existing
+off-diagonal
+twisted maps
+can add
+off-diagonal
+curvature terms,
+but it does
+not change the
+vertex trace
+sum.
+
+Project the
+complete
+equation
+\(
+ d_Bh+\delta h+
+       h\delta=-a
+\)
+to the diagonal
+blocks indexed
+by \(S\),
+take the
+canonical
+derived trace,
+and sum
+with the
+shift signs
+\((-1)^{s_i}\).
+The trace of
+\(d_Bh\)
+is cohomologically
+zero.
+For all central
+arrows wholly
+inside S,
+graded cyclicity
+cancels the
+two terms
+from
+\(\delta h+h\delta\)
+in the
+SUPERTRACE.
+For each
+boundary-crossing
+arrow, the
+only possible
+noncanceling
+term would be
+a reverse
+degree-one
+cochain \(h\).
+Hypothesis
+(16.1)
+means its
+derived
+cohomology
+class is zero;
+since the
+central arrow
+is closed,
+its composition
+is a boundary
+and has zero
+derived trace.
+Therefore the
+sum of
+vertex Atiyah
+traces over S
+must vanish
+in \(H^2(O_X)\).
+For an
+actual line
+bundle the
+Atiyah trace
+is the
+first Chern
+class contracted
+with \(\kappa\),
+giving the
+last statement.
+\end{proof}
+
+\begin{theorem}[FULL total Atiyah obstruction of the ACTUAL fourteen-node Euler-eight source]
+For the
+explicit genuine
+fourteen-node
+integral pure
+Weil source
+\(F_{14}\)
+of (15.10),
+and the
+ACTUAL nonsplit
+Weil deformation
+\(\kappa\) in
+(6.1), one has
+\[
+ \boxed{
+  \operatorname{At}(F_{14})
+           \smile\kappa
+       \ne0
+ \quad\text{in }
+  \operatorname{Ext}^2_A(F_{14},F_{14}) .
+ }                                                       \tag{16.3}
+\]
+This holds for
+ALL central
+nonzero arrow
+choices satisfying
+the stated
+one-way
+fourteen-node
+architecture,
+INCLUDING choices
+that solve the
+\(P_1\)
+diagonal
+equation (15.12).
+\end{theorem}
+\begin{proof}
+Choose the
+ACTUAL set
+of five
+vertices
+\[
+ \boxed{
+ S=\{P_1[0],
+       J_x[0],J_x[1],
+       J_y[0],J_y[1]\}.
+ }                                                       \tag{16.4}
+\]
+The only
+CENTRAL
+arrows crossing
+this cut
+are the
+original
+arrows
+\(P_1[0]\to
+ N_j[1]\)
+of the
+integral
+ten-node
+source (12.4).
+For each such
+arrow, its
+reverse
+degree-one
+group is
+\[
+ \operatorname{Hom}^{1}_A
+      (N_j[1],P_1[0])
+   =\operatorname{Hom}_A(N_j,P_1)
+   =0
+\]
+by the GENUINE
+crossed coherent
+Hom computation
+(13.3).
+All newly
+added auxiliary
+arrows are
+INTERNAL to S.
+Therefore
+the preceding
+vertex-cut
+lemma applies.
+
+The canonical
+supertrace
+of all FIVE
+vertex curvature
+classes is
+\[
+ \begin{aligned}
+ &a_{P_1}
+ +a_{J_x}-a_{J_x}
+ +a_{J_y}-a_{J_y}\\
+ &\hspace{15mm}
+ =a_{P_1}
+ =-V_2\wedge V_1
+       -U_1\wedge U_2
+ \ne0
+       \quad\text{in }H^2(A,O_A).
+ \end{aligned}                                           \tag{16.5}
+\]
+Here the exact
+two neutral
+\(K_0\) pairs
+cancel their
+Atiyah traces
+as well;
+this is
+independent of
+the actual
+chosen
+Ext-two
+central arrows.
+Wolfram
+independently
+evaluated
+the cut
+supertrace
+with exact
+shift vector
+\((1,1,-1,1,-1)\),
+returning the
+symbolic
+nonzero curvature
+\(a_{P_1}\),
+and confirmed
+the original
+cut-boundary
+reverse-Hom
+groups are zero.
+This contradicts
+the necessary
+condition (16.2)
+for a total
+lift, proving
+(16.3).
+\end{proof}
+
+\noindent\textbf{Exact distinction learned from GST arithmetic and actual derived geometry.}
+The new
+line-bundle
+auxiliaries
+indeed remove
+the ORIGINAL
+\(P_1\) zero
+reverse-Hom
+obstruction
+at one
+diagonal block.
+They even
+preserve the
+TRUE minimal
+pure Weil
+Chern character
+and Euler eight.
+But this
+is NOT enough:
+their neutral
+Atiyah charges
+also cancel,
+leaving a
+nonzero
+supertrace
+across a
+derived vertex cut
+whose old
+cross-support
+reverse groups
+vanish.
+Thus the
+fourteen-node
+architecture
+is mathematically
+EXCLUDED for
+that nonsplit
+tangent.
+The next
+candidate must
+alter ACTUAL
+cross-support
+source geometry
+or the arrow
+orientation
+so that a
+nonzero reverse
+degree-one
+morphism
+CROSSES the
+obstructed cut;
+adding further
+uncoupled or
+purely locally
+attached
+\(K_0\)-neutral
+pairs cannot
+change this
+specific
+trace equation.
+This is a
+mathematical
+repair criterion
+for constructing
+a genuinely
+new global
+source, not
+an abstract
+Hodge
+surjectivity
+assumption.
+
 \section{Euler size, computation contract, and outcome}
 For a hypothetically simple holomorphic perfect
 object with this exact integral K0 class on
