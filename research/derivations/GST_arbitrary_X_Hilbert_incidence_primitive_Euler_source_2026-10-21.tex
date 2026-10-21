@@ -1087,6 +1087,82 @@ as-yet-unrepresented primitive Hodge target
 is precisely the distinct universal
 geometry claim still to be established.
 
+\section{Actual fourfold discriminator: a NONZERO primitive Hilbert Euler source}
+We validate the entire construction on a real algebraic fourfold
+with a genuinely nonzero primitive target, rather than a free
+numerical Gram test. Let
+\[
+ X=\mathbf P^2\times\mathbf P^2,\quad
+ x=c_1(\mathcal O_{\mathbf P^2}(1))\boxtimes1,\quad
+ y=1\boxtimes c_1(\mathcal O_{\mathbf P^2}(1)),
+ \qquad h=x+y.
+\]
+The genuine Chow ring is
+\(
+ \CH^*(X)_\Q=\Q[x,y]/(x^3,y^3)
+\),
+with \(\int_X x^2y^2=1\), and
+\[
+ c_1(T_X)=3(x+y),\qquad
+ c_2(T_X)=3x^2+9xy+3y^2.
+                                                               \tag{13.1}
+\]
+Consider the \emph{actual algebraic} primitive middle
+Hodge class
+\(
+ r=\cl^{\mathrm{can}}(x^2-xy+y^2)
+\).
+Because \(h(x^2-xy+y^2)=x^3+y^3=0\)
+in Chow, \(r\) is primitive without invoking a
+chosen abstract Hodge basis. Its numerical norm and
+tangent readouts are
+\[
+ \int_Xr^2=3,\qquad
+ \int_Xr\,c_1(T_X)^2=0,\qquad
+ \int_Xr\,c_2(T_X)=-3.                              \tag{13.2}
+\]
+The *actual* characteristic cycles (4.3) specialize to
+\[
+ Z_1=-x^2-y^2,\qquad
+ Z_2=-x^2+\frac{27}{2}xy-y^2,
+                                                               \tag{13.3}
+\]
+and therefore
+\[
+ \delta_1=-2,\qquad \delta_2=-\frac{31}{2}.
+\]
+The explicitly born, target-measured ORIGINAL-\(X\)
+algebraic cycle
+\[
+ \boxed{
+ Z_r=-2 Z_1-\frac{31}{2}Z_2
+    =\frac{35}{2}(x^2+y^2)-\frac{837}{4}xy
+       \in\CH^2(X)_\Q
+ }                                                      \tag{13.4}
+\]
+has the strictly positive exact Euler/Hodge readout
+\[
+ \boxed{\int_X r\,\cl(Z_r)
+             =4+\frac{961}{4}=\frac{977}{4}>0.}   \tag{13.5}
+\]
+Wolfram independently evaluated the Chow intersection
+multiplication, verified \(hr=0\), checked all
+characteristic coefficients and returned \(977/4\).
+Here the source's algebraicity is visible term by term,
+the target primitive condition is literal in the Chow ring,
+and the same original variety carries both.
+This verifies the pure-middle source mechanism on a
+nonzero primitive sector rather than merely checking
+a formal sign identity.
+
+The example does not replace the all-\(X\) quantifier:
+\(r\) itself is algebraic, and the new question concerns
+primitive rational Hodge residuals not already known to lie
+in the canonical image of Chow.
+The novel verified general mechanisms are (10.2), (10.3),
+(11.5), (11.6), and (11.7), with the genuine full all-\(X\)
+extreme-codimension theorem (12.1).
+
 \section{Adversarial audit: source birth versus universal surjectivity}
 No putative conclusion above inserts \(Z_r\) as input: it is
 explicitly given by tangent Chern classes on the original \(X\).
