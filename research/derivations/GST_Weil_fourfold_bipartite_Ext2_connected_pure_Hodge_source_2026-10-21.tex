@@ -3989,6 +3989,700 @@ change this
 precise
 obstruction.
 
+\section{GST GLOBAL-DEFORMATION SURGERY: exact local-packet obstruction and native-world permanence}
+This section imposes the
+FULL GST class/defect,
+primitive Euler,
+finite-alteration,
+Chern--Segre and
+native-image transport
+laws on the actual
+thirty-node Weil
+perfect-complex
+candidate. It
+computes an
+obstruction that the
+local ideal-Yoneda
+bridge by itself
+cannot remove, then
+proves that simply
+moving the SAME
+obstructed perfect
+object to a higher
+GST world
+cannot remove it.
+This is a derived
+geometric
+statement on
+actual varieties,
+rather than a
+numerical
+characteristic-class
+certificate.
+
+\subsection*{The true first-order Hodge charge of every graph--ideal packet}
+For an ACTUAL
+regular codimension-two
+graph \(Z\subset
+A=E^4\), use
+\(
+[I_Z]=[O_A]-[O_Z]
+\)
+in the genuine
+algebraic \(K_0(A)\).
+For an integer
+\(m\ge0\), define
+the local graded
+source packet
+\[
+  B_Z^+(m)=
+    O_Z[0]\oplus
+              (I_Z[1])^{\oplus m},
+ \qquad
+  B_Z^-(m)=
+    O_Z[-1]\oplus
+              (I_Z[0])^{\oplus m}.
+\]
+The ACTUAL
+Chern character
+is computed
+BEFORE any
+coupling choices:
+\[
+ \begin{aligned}
+ [B_Z^+(m)]&=(m+1)[O_Z]-m[O_A],\\
+ [B_Z^-(m)]&=m[O_A]-(m+1)[O_Z],\\
+ \boxed{\ch_2(B_Z^\pm(m))
+      =\pm(m+1)[Z],\qquad
+       \ch_k(B_Z^\pm(m))=0\
+          (k\notin\{0,2\}).}
+ \end{aligned}                                          \tag{14.1}
+\]
+(The rank is
+respectively \(\mp m\);
+it is not erased
+by the GST
+middle Adams projection
+unless that genuine
+projection is
+applied to a
+DIFFERENT perfect
+\(K_0\) source.)
+Write \(\mathfrak m\)
+for the canonical
+first-order
+\((1,3)\) exterior
+monomial in (6.5),
+and \(\mathsf c\ne0\)
+for its fixed
+normalization.
+For any of the
+eight unit-slope
+actual graph supports,
+the SAME
+geometric first-order
+balanced Weil
+deformation gives
+\[
+ \boxed{
+ [\mathfrak m]\,
+ \delta\ch_2(B_Z^\pm(m))^{1,3}
+        =\mp(m+1)\mathsf c
+        \ne0.}                                          \tag{14.2}
+\]
+
+\begin{theorem}[A graph plus any finite number of same-support ideal bridges cannot itself deform]
+Let \(Z\) be one
+of the eight
+unit-slope actual
+graph abelian
+surfaces and
+\(m\ge0\).
+No perfect
+complex on the
+named nonzero
+first-order
+Weil deformation
+can specialize to
+a central derived
+complex of
+\(K_0\)-class
+\([B_Z^\pm(m)]\).
+This remains true
+for any coupling
+differentials
+among its same-support
+graph and ideal
+vertices; if such
+a locally coupled
+complex exists,
+its intrinsic
+total Atiyah class
+along this tangent
+is nonzero.
+\end{theorem}
+\begin{proof}
+Couplings do not
+alter the genuine
+\(K_0\)-class,
+so (14.1) holds
+for every
+candidate local
+packet.
+A relative
+perfect complex
+has horizontal
+rational Betti
+Chern character
+whose codimension-two
+component remains
+of Hodge type
+\((2,2)\) in
+a polarized
+holomorphic
+first-order
+deformation.
+Consequently
+its first-order
+\((1,3)\)
+component must vanish.
+This contradicts
+the exact
+nonzero coefficient
+(14.2).
+The equivalence
+between vanishing
+of the total
+first-order
+Atiyah--Kodaira--Spencer
+class and existence
+of a first-order
+perfect-object
+lift then gives
+the last claim.
+\end{proof}
+
+\begin{corollary}[GST thirty-node global compensation cannot be realized by disjoint local ideal packets]
+In the ACTUAL
+thirty-node source
+\(B_{30}\) from (9.5),
+each of the four
+positive unit-slope
+supports has
+\(m=2\) and
+first-order coefficient
+\(-3\mathsf c\),
+while each of
+the four
+negative unit-slope
+supports has
+\(+3\mathsf c\).
+The two auxiliary
+zero-slope
+supports contribute
+zero in the
+selected
+monomial.
+Hence the FULL
+source has
+\[
+ \boxed{
+ [\mathfrak m]\,
+ \delta\ch_2(B_{30})^{1,3}
+  =4(-3\mathsf c)+
+                 4(3\mathsf c)=0.
+ }                                                       \tag{14.3}
+\]
+But EACH of the
+eight local unit
+packets has
+nonzero Hodge charge.
+Thus the
+exact local
+Yoneda
+factorization
+(8.6)
+is NOT a
+complete simultaneous
+total Atiyah
+solution by
+itself.
+Any relative
+lifting architecture
+must mix DIFFERENT
+graph supports
+via genuinely
+noncontractible
+cross-support
+couplings.
+\end{corollary}
+
+\noindent\textbf{Wolfram audit.}
+The exact
+integer/arithmetic
+check for \(m=0,\ldots,5\)
+returned the
+individual coefficients
+\(\mp(m+1)\mathsf c\)
+and zero total
+balanced eight-support
+coefficient
+for every \(m\).
+At \(m=2\)
+each unit packet
+has magnitude
+\(3\mathsf c\),
+the eight packets
+cancel only
+AFTER aggregation.
+This is a
+CHOW/Betti
+deformation constraint,
+not numerical
+Euler-based
+guesswork.
+
+\subsection*{GST finite alteration and blowup are obstruction-preserving for pulled-back sources}
+Let \(X\) be
+an arbitrary smooth
+complex projective
+variety, \(F\in
+\operatorname{Perf}(X)\),
+and \(\kappa\)
+an actual first-order
+Kodaira--Spencer
+class with obstruction
+\[
+ a_F(\kappa)=
+   \operatorname{At}(F)
+              \smile\kappa
+      \in\operatorname{Ext}^2_X(F,F).
+\]
+Let \(f:Y\to X\)
+be an ACTUAL
+algebraic morphism
+which belongs
+to one of these
+GST operations:
+\begin{itemize}
+ \item a finite flat
+  alteration of positive
+  degree \(d\)
+  over the complex
+  numbers;
+ \item an ACTUAL blowup
+  along a smooth
+  center;
+ \item an ACTUAL
+  projective bundle
+  over \(X\).
+\end{itemize}
+Assume the given
+first-order deformation
+of \(X\) and
+the morphism \(f\)
+lift together so
+that \(\kappa_Y\)
+is an induced
+Kodaira--Spencer
+class on \(Y\).
+This geometric
+compatibility is
+necessary to
+speak of the
+pulled-back
+Atiyah equation.
+
+\begin{theorem}[Actual GST source-transport injectivity of the full Atiyah obstruction]
+For each
+of the three
+actual geometric
+GST operations
+above, the
+natural homomorphism
+\[
+ \boxed{
+ f^*:
+ \operatorname{Ext}^2_X(F,F)
+ \longrightarrow
+ \operatorname{Ext}^2_Y(
+              Lf^*F,Lf^*F)
+ }                                                       \tag{14.4}
+\]
+is INJECTIVE.
+For an actual
+blowup or projective
+bundle it is
+an ISOMORPHISM.
+For a finite
+flat alteration
+of degree \(d\)
+it is split
+injective, with
+a normalized
+trace retract.
+Furthermore
+naturality of
+the full Atiyah
+class gives
+\[
+ \boxed{
+ a_{Lf^*F}(\kappa_Y)
+           =f^*a_F(\kappa).
+ }                                                       \tag{14.5}
+\]
+Consequently
+\[
+ \boxed{
+ a_F(\kappa)\ne0
+ \quad\Longrightarrow\quad
+ a_{Lf^*F}(\kappa_Y)\ne0.
+ }                                                       \tag{14.6}
+\]
+In particular
+no FINITE-FLAT
+alteration
+and no coherent
+GST blowup or
+projective-bundle
+birth can render
+the SAME
+previously obstructed
+derived source
+first-order deformable
+merely by applying
+its literal geometric
+pullback.
+\end{theorem}
+\begin{proof}
+For any perfect
+\(F\), derived
+adjunction and
+the derived
+projection formula
+give
+\[
+ R\operatorname{Hom}_Y(
+       Lf^*F,Lf^*F)
+ \simeq
+ R\operatorname{Hom}_X(
+       F,F\otimes^{L}
+                       Rf_*O_Y).
+                                                               \tag{14.7}
+\]
+For a smooth-center
+blowup,
+\(Rf_*O_Y\simeq O_X\);
+for a projective
+bundle the same
+identity follows
+from the
+relative projective
+cohomology of
+the structure sheaf.
+Thus (14.7)
+identifies every
+degree of
+the derived
+self-Hom groups,
+and pullback
+is an isomorphism.
+
+For finite
+flat \(f\)
+of degree \(d>0\),
+\(f_*O_Y\) is
+a locally free
+\(O_X\)-algebra
+of rank \(d\),
+and its ordinary
+algebraic trace
+obeys
+\(\operatorname{tr}(1)=d\).
+Thus
+\[
+ O_X\longrightarrow f_*O_Y
+ \xrightarrow{\frac1d\operatorname{tr}}
+ O_X
+\]
+is LITERALLY
+the identity
+in characteristic
+zero. Using
+the projection
+formula in
+(14.7), this
+retraction induces
+a split
+injection on
+all self-Ext
+degrees.
+It is a
+genuine sheaf
+trace map,
+NOT the
+GST rational
+cohomology
+degree law
+silently retyped
+as an Ext map.
+
+Finally the
+relative lift
+of \(f\)
+makes the
+Kodaira--Spencer
+classes compatible
+with the tangent
+map \(T_Y\to f^*T_X\).
+The naturality
+of the Atiyah
+class under
+derived pullback
+then proves
+(14.5).
+Combining
+naturality with
+injectivity proves
+(14.6).
+\end{proof}
+
+\begin{corollary}[Application to the actual GST source architectures]
+For the
+\(F_{\rm conn}\)
+ten-node
+Weil graph
+complex whose
+full first-order
+obstruction was
+proved nonzero in
+(7.4), or the
+smaller integral
+Euler-eight
+ten-node complex
+\(F_{\min,\mathrm{conn}}\)
+whose full
+obstruction was
+proved nonzero in
+(13.1),
+every COMPATIBLE
+finite flat,
+smooth blowup,
+or projective
+bundle transport
+of THAT SAME
+central perfect
+object preserves
+its nonzero
+first-order
+Atiyah obstruction.
+The Euler
+pairing may
+change under
+these native
+moves; in
+particular for
+a finite
+ETALÉ map
+of degree \(d\)
+its value is
+multiplied by
+\(d\), while
+the existence
+of a first-order
+deformation
+remains ruled out.
+\end{corollary}
+
+\noindent\textbf{Precise GST law usage.}
+This proof
+interfaces
+with the
+already present
+kernel-verified
+Lean results,
+without assuming
+they instantiate
+all the derived
+category geometry:
+\begin{itemize}
+ \item
+ \texttt{GSTActualXHodgeResidualProjection.}
+ \texttt{targetCoupledK0ChowCycle\_pairing}
+ assembles exact
+ target-measured
+ Chow sources
+ FROM actual
+ perfect-source
+ columns; the
+ algebraicity of
+ such columns
+ does not imply
+ their unobstructed
+ deformation.
+ \item
+ \texttt{GSTUniversalCMArithmeticObstruction.}
+ \texttt{cmWeilMinusOneProjectorPolynomial\_idempotent}
+ makes the actual
+ CM correspondence
+ projector
+ algebraically
+ idempotent
+ on its stated
+ spectrum.
+ It can
+ isolate the
+ pure Weil
+ \(K_0\)/Hodge
+ sector, but
+ cannot change
+ the derived
+ obstruction
+ of the literal
+ pulled-back object.
+ \item
+ \texttt{GSTGraphV2SelfExpandingCosmology.}
+ \texttt{DegreePacket.compose}
+ and
+ \texttt{missing\_target\_hodge\_survives\_finite\_pullback}
+ govern genuine
+ rational cycle
+ and Hodge
+ descent; the
+ new theorem
+ (14.6)
+ supplies the
+ INDEPENDENT
+ derived-Ext
+ counterpart.
+ \item
+ \texttt{GSTGraphV2SelfExpandingCosmology.}
+ \texttt{blowupCanonicalCycleBlock\_surjective\_iff}
+ controls actual
+ Chow/Hodge
+ block
+ decomposition.
+ The derived
+ identity
+ \(Rf_*O_Y=O_X\)
+ additionally
+ shows a
+ pre-existing
+ FULL Atiyah
+ obstruction
+ survives when
+ the SAME
+ perfect source
+ is pulled back.
+ \item
+ \texttt{GSTClassicalHodgeKernelStableOperatorAlgebra.}
+ \texttt{nativeCore\_defectAction\_zero}
+ formalizes
+ preservation of
+ the native
+ image/defect
+ distinction.
+ This research
+ calculation
+ concerns a
+ second,
+ genuinely
+ GEOMETRIC
+ obstruction
+ coordinate:
+ \(\operatorname{Ext}^2(F,F)\).
+ \item
+ The GST
+ Adams--Todd
+ normalizer,
+ all-degree
+ Chern--Segre
+ return, and
+ native
+ primitive
+ Euler
+ sum-of-squares
+ may purify,
+ transport and
+ measure
+ already
+ geometric
+ \(K_0\)/Chow
+ sources.
+ They do
+ not supply
+ a cochain
+ \(h\) solving
+ \(D_\delta h=-a_\kappa\)
+ without
+ a new
+ coherent
+ incidence
+ coupling.
+\end{itemize}
+
+\noindent\textbf{Correct constructive conclusion for the global
+architecture.}
+The finished
+central
+thirty-node
+Maurer--Cartan
+solution
+(10.5)--(10.7)
+is a genuine
+perfect object
+on the split
+original A.
+The actual
+ideal-Yoneda
+normal factorization
+(8.6)
+constructs
+new geometric
+reverse arrows
+that were
+absent in the
+older graph-only
+complex.
+But the local
+charges (14.2)
+force a true
+nonsplit
+construction
+to couple
+DIFFERENT
+supports and
+to cancel
+curvature
+simultaneously
+at EVERY ideal
+vertex in
+the TOTAL
+\(A_\infty\)/dg
+endomorphism
+algebra.
+The standard
+native-source
+world
+operations
+leave a
+nonzero
+pre-existing
+obstruction
+nonzero on
+literal pullback.
+No equality
+identifying
+a nonzero
+native Euler
+index with
+an actual
+relative
+perfect-family
+solution is
+used in
+this proof.
+
 \section{Euler size, computation contract, and outcome}
 For a hypothetically simple holomorphic perfect
 object with this exact integral K0 class on
