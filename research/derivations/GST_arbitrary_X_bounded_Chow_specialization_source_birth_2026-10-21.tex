@@ -175,6 +175,298 @@ not assert the existence of
 any such defective variety.
 \end{proof}
 
+\section{An actual finite geometric native source inventory on EVERY arbitrary original-X}
+No candidate Chow
+cycle representing
+the target alpha
+is used as input
+to this construction.
+Let \(X\subset\mathbf P^N\)
+be ANY genuine
+smooth projective
+\(d\)-fold, with
+its ACTUAL
+projective
+polarization,
+and fix \(p\).
+For each nonnegative
+integer \(D\)
+let
+\[
+ \mathcal C_{\le D}^{d-p}(X)
+ =\coprod_{e=0}^{D}
+    \operatorname{Chow}_{d-p,e}(X)
+\]
+be the genuine
+FINITE union
+of projective
+Chow schemes
+parameterizing
+effective algebraic
+codimension-\(p\)
+cycles of degree
+at most \(D\).
+It is of finite
+type and has
+finitely many
+connected components.
+
+\begin{theorem}[Every finite-degree GST native source stage is born from actual Chow components]
+For EVERY smooth
+projective complex
+\(X\), every \(p\),
+and every
+\(D\ge0\),
+choose one
+ACTUAL effective
+cycle \(Z_C\)
+from each nonempty
+connected component
+\(
+ C\subset
+ \mathcal C_{\le D}^{d-p}(X).
+\)
+There are finitely
+many such
+independently
+constructed
+original-\(X\)
+algebraic cycles.
+The rational
+linear map
+\[
+ \boxed{
+ \Phi_D:
+ \Q^{\pi_0(\mathcal C_{\le D})}
+  \longrightarrow
+ \Hdg^p(X)_\Q,
+ \quad
+ (a_C)\longmapsto
+      \sum_Ca_C\,
+                 \cl_X^{can}(Z_C)
+ }                                                       \tag{4a}
+\]
+has image EXACTLY
+the rational span
+of canonical
+cycle classes
+of ALL effective
+original-\(X\)
+algebraic cycles
+of degree at most
+\(D\).
+In particular
+every
+rational signed
+combination
+of such cycles
+has an ACTUAL
+representative
+expressed in
+this independently
+geometric finite
+source list.
+
+Furthermore,
+there exists
+SOME finite
+integer
+\(
+ D_*(X,p)
+\)
+such that
+\[
+ \boxed{
+ \im\Phi_{D_*}
+    =\im(\cl_X^{can}:
+              \CH^p(X)_\Q
+                    \to\Hdg^p(X)_\Q).
+ }                                                       \tag{4b}
+\]
+This produces
+a finite actual
+Chow-source
+spanning family
+for the ENTIRE
+original-\(X\)
+algebraic image
+without assuming
+the arbitrary
+Hodge target
+already has
+an algebraic
+preimage.
+It does NOT
+assert that
+this finite
+image equals
+the full rational
+Hodge space.
+\end{theorem}
+\begin{proof}
+Each fixed-degree
+Chow parameter
+space is
+projective finite
+type, so its
+finite union
+has finitely
+many connected
+components.
+The genuine
+canonical Betti
+cycle class
+is LOCALLY
+CONSTANT as
+a function of
+the corresponding
+algebraic cycles
+within a connected
+Chow component:
+it is constant
+along a continuous
+family of
+effective cycles
+under the
+cycle-current
+fundamental
+class comparison.
+A connected
+complex projective
+variety is
+topologically
+path connected,
+so all its
+points have
+the same
+cohomological
+cycle class.
+Therefore every
+effective cycle
+of degree
+\(\le D\)
+has EXACTLY
+the canonical
+class of one
+chosen representative
+\(Z_C\),
+proving (4a).
+
+For (4b), let
+\(A=\im(\cl_X^{can})\)
+inside the
+finite-dimensional
+rational Hodge
+space.
+Every Chow cycle
+is a finite
+rational linear
+combination of
+integral effective
+subvarieties,
+so the UNION of
+the nested finite
+spaces \(\im\Phi_D\)
+spans exactly A.
+Choose a finite
+rational basis
+of this
+finite-dimensional
+vector space,
+express each
+basis element
+as the cycle
+class of a
+finite signed
+rational
+combination of
+actual effective
+cycles, and take
+the maximum
+degree appearing
+in these
+finitely many
+presentations.
+Call the
+resulting finite
+maximum \(D_*\).
+Then \(\im\Phi_{D_*}=A\)
+by (4a).
+The proof does
+NOT use a basis
+of the whole
+Hodge target
+space, a prior
+algebraic
+representative of
+alpha, or a
+surjectivity
+assertion.
+\end{proof}
+
+\noindent\textbf{Direct GST compilation and limit of the theorem.}
+The actual
+\(Z_C\) may be
+fed into
+\texttt{GSTActualXHodgeResidualProjection}
+as its
+\texttt{sourceNativeCycles};
+rational
+independent
+columns can be
+selected by
+exact Gram
+elimination,
+and the
+native
+\texttt{projectNative}
+returns a
+genuine original-X
+cycle in their span.
+A full
+algebraic
+source image
+is thereby
+generated
+WITHOUT
+assuming an
+algebraic seed
+for the
+given Hodge
+alpha.
+Nevertheless
+finite dimensionality
+alone does
+not supply an
+EFFECTIVE bound
+for \(D_*\),
+nor prove
+\(\im\Phi_{D_*}
+=\Hdg^p(X)_\Q\).
+A plateau
+of finite-rank
+Chow stages
+is not a
+certificate of
+permanent Hodge
+completeness.
+The new
+bounded-family
+specialization
+theorem provides
+an independent
+cross-fiber
+mechanism for
+obtaining new
+original-X
+cycles rather
+than confusing
+growth in
+the old span
+with the
+missing universal
+algebraicity.
+
 \section{GST arbitrary-X primitive residual has a STRICT quantitative exclusion radius}
 Now suppose \(d=2p\), choose a genuine
 ample divisor \(h\) and the primitive
