@@ -217,7 +217,7 @@ The \emph{relative Todd normalization} of earlier GST finite-flat
 world formulas is not being replaced by 1: (4.2) retains the true
 Todd factor in the ORIGINAL fourfold HRR pairing.
 
-\begin{theorem}[Exact independent fourfold tangent Euler detectors]
+\begin{theorem}[Exact universal fourfold characteristic-coefficient detector law]
 For every smooth projective complex fourfold \(X\), the actual
 codimension-two rational algebraic Chow cycles
 \(Z_i=\Theta_2(W_i)\) satisfy
@@ -721,6 +721,371 @@ diagonal-index law. The theorem instead provides
 a tested, finite, actually geometric pathway for
 growing a \emph{finite existing native span}
 when the observed readout is nonzero.
+
+\section{Atomic upgrade: TWISTED universal incidence recovers EVERY algebraic \(K_0\) source}
+The preceding untwisted source has a fixed intrinsic tangent-Chern
+character. Its extension by arbitrary \emph{independently constructed
+algebraic} coefficients has a stronger universal assertion: not that
+every Hodge class becomes algebraic, but that the incidence algebra
+itself has NO missing algebraic \(K\)-theory directions.
+
+Let \(X\) be an arbitrary smooth projective complex variety,
+\(B=\operatorname{Bl}_{\Delta_X}(X\times X)\),
+\(b:B\to X\times X\), \(u=\operatorname{pr}_1b\),
+and \(D_{\mathrm{exc}}\) the Cartier exceptional divisor.
+For \(E\in K_0^{\mathrm{alg}}(X)_\Q\), define the actual
+coherent derived pushforward
+\[
+ {\mathcal F}_{m}(E)
+ =u_!\left(
+ \mathcal O_B(-mD_{\mathrm{exc}})
+ \otimes^{\mathbf L} b^*\operatorname{pr}_2^*E
+       \right)\in K_0^{\mathrm{alg}}(X)_\Q.
+                                                               \tag{10.1}
+\]
+Regularity of \(X\) means a bounded coherent output represents
+a perfect \(K\)-class on the ORIGINAL variety. Unlike the old
+\(F_m={\mathcal F}_m(\mathcal O_X)\), the coefficient \(E\)
+is a genuine geometric independent input, and may be a line bundle,
+an actual graph/ideal sheaf, a degeneracy complex or any algebraic
+perfect complex. No Hodge-to-Chow preimage is supplied.
+
+\begin{theorem}[All-original-\(X\) Hilbert-incidence full native source recovery]
+For all \(m\ge0\), every smooth projective \(X\), and every
+genuine algebraic perfect \(E\),
+\[
+ \boxed{
+ {\mathcal F}_m(E)
+  =\chi(X,E)[\mathcal O_X]
+    -\sum_{k=0}^{m-1}
+       [E\otimes\Sym^k\Omega_X^1]
+       \quad\text{in }K_0^{\mathrm{alg}}(X)_\Q .
+ }                                                       \tag{10.2}
+\]
+In particular, for every \(E\),
+\[
+ \boxed{\mathcal F_0(E)-\mathcal F_1(E)=E.}          \tag{10.3}
+\]
+Consequently \emph{every actually algebraic \(K_0(X)_\Q\)
+source} has an exact functorial representation as a DIFFERENCE
+of two genuine Hilbert-incidence pushforwards on the same
+original \(X\). It does not follow that every topological
+\(K\)-class or Hodge class is algebraic.
+\end{theorem}
+\begin{proof}
+The Rees blowup identities (2.1)--(2.3) give
+\(Rb_*\mathcal O_B(-mD_{\mathrm{exc}})=I_\Delta^m\).
+Use derived projection formula to obtain
+\[
+ \mathcal F_m(E)=
+ (R\operatorname{pr}_{1*})_!
+    (I_\Delta^m\otimes^{\mathbf L}\operatorname{pr}_2^*E).
+\]
+The diagonal graded terms
+\(\Delta_*\Sym^k\Omega_X^1\) become
+\(\Delta_*(\Sym^k\Omega_X^1\otimes E)\), whose
+first-projection pushforwards are
+\(E\otimes\Sym^k\Omega_X^1\).
+The remaining external input is
+\[
+ R\operatorname{pr}_{1*}\operatorname{pr}_2^*E
+ \simeq\mathcal O_X\otimes^{\mathbf L}_{\mathbf C}
+              R\Gamma(X,E),
+\]
+whose class is \(\chi(X,E)[\mathcal O_X]\).
+This proves (10.2); evaluate at \(m=0,1\)
+and subtract to obtain (10.3).
+\end{proof}
+
+The complete formal Chern-character generating series is
+\[
+ \boxed{
+ \sum_{m\ge0}\ch(\mathcal F_m(E))z^m
+   =\frac{\chi(X,E)}{1-z}
+   -\frac{z}{1-z}\ch(E)
+           \prod_{i=1}^{d}(1-ze^{-x_i})^{-1}.
+ }                                                       \tag{10.4}
+\]
+This identity holds in the \emph{rational algebraic Chow ring};
+it follows by swapping the finite sum in (10.2) and the
+formal \(z\)-series. It upgrades all previous tangent-tower
+formulas by the full independent algebraic Chern character
+of \(E\). No independent determinant, CM orbit or supplied
+Hodge basis is needed to prove this law.
+
+\begin{corollary}[Exact detection for every EXISTING native source]
+Let \(X\) be a smooth projective \(2p\)-fold,
+\(r\in H^{2p}(X,\Q)\cap H^{p,p}(X)\), and choose a
+rational topological \(A_r\) with \(\ch(A_r)=r\).
+For every existing algebraic \(E\),
+\[
+ \boxed{
+ \chi_X(A_r,\mathcal F_0(E)-\mathcal F_1(E))
+       =\chi_X(A_r,E).}                             \tag{10.5}
+\]
+The twisted incidence operation preserves all one-legged
+Euler periods, including those from non-characteristic
+graph or incidence sheaves. The statement assumes
+\emph{only the independent algebraicity of \(E\)},
+not algebraicity of the prescribed \(r\).
+\end{corollary}
+
+\section{Atomic upgrade: universal native Adams--Todd purification}
+Let \(X\) be any smooth projective \(d\)-fold. Under
+\(\ch:K_0^{\mathrm{alg}}(X)_\Q\cong
+\bigoplus_{j=0}^{d}\CH^j(X)_\Q\), the rational Adams
+operation \(\psi^2\) acts as multiplication by \(2^j\)
+on codimension \(j\). Therefore for every \(p\in[0,d]\)
+the \emph{explicit finite polynomial}
+\[
+ \boxed{
+ \Pi_p=\prod_{\substack{0\le j\le d\\j\ne p}}
+       \frac{\psi^2-2^j}{2^p-2^j}}
+                                                               \tag{11.1}
+\]
+acts as the genuine algebraic projection onto pure
+codimension \(p\). It has \(\Pi_p^2=\Pi_p\), and
+\[
+ \ch(\Pi_p E)=[\ch(E)]_p,\qquad
+ \Pi_p(E^\vee)=(-1)^p\Pi_p(E)
+ \quad\text{in }K_0(X)_\Q.                          \tag{11.2}
+\]
+The second identity follows from the pure degree-\(p\)
+rational Chern character and its injectivity, not from
+a claimed identity for the dual of arbitrary \(E\).
+
+Put \(T_{\td}\in K_0^{\mathrm{alg}}(X)_\Q\)
+for the actual rational Chern-character inverse of
+\(\td(T_X)\). Define the completed \emph{actual}
+algebraic perfect-complex purification
+\[
+ \boxed{\mathcal C_p(E)
+     :=\Pi_p(T_{\td}\cdot E).}                       \tag{11.3}
+\]
+It satisfies
+\[
+ \ch(\mathcal C_p(E))
+     =[\ch(E)\td(T_X)]_p
+       \in\CH^p(X)_\Q,                              \tag{11.4}
+\]
+with zero Chern characters in every other degree.
+
+\begin{theorem}[Universal actual-\(X\) Euler-preserving native purification]
+Let \(X\) be an arbitrary smooth projective
+complex \(2p\)-fold, \(r\) any rational middle Hodge
+class, \(A_r\in K^0_{\mathrm{top}}(X)_\Q\) a
+topological class with pure \(\ch(A_r)=r\),
+and \(E\in K_0^{\mathrm{alg}}(X)_\Q\)
+an \emph{independently given actual algebraic perfect complex}.
+Then
+\[
+ \boxed{
+  \chi_X(A_r,\operatorname{real}\mathcal C_p(E))
+   =\chi_X(A_r,\operatorname{real}E)
+   =(-1)^p\int_Xr\,\cl^{\mathrm{can}}
+      ([\ch(E)\td(T_X)]_p).
+ }                                                       \tag{11.5}
+\]
+In particular, every existing algebraic Euler detector
+has an explicit pure-middle, independently algebraic
+replacement with IDENTICAL measured coupling.
+\end{theorem}
+\begin{proof}
+Hirzebruch--Riemann--Roch gives
+\(
+ \chi_X(A_r,E)
+ =\int_X\ch(A_r^\vee)\ch(E)\td(T_X)
+ =(-1)^p\int_Xr[\ch(E)\td(T_X)]_p
+\).
+Only the degree \(p\) factor is visible since \(d=2p\).
+The Adams projection (11.4) preserves that factor
+and removes all the others, so it has the same
+Euler index. The native input \(E\) is genuinely
+algebraic, and every operation in (11.3) is
+an actual algebraic \(K_0\) operation.
+\end{proof}
+
+\begin{theorem}[Finite actually algebraic source family: exact native quadratic-to-linear extraction]
+For any finite list of actual perfect classes
+\(E_1,\ldots,E_s\in K_0^{\mathrm{alg}}(X)_\Q\),
+put \(C_i=\mathcal C_p(E_i)\),
+\(d_i=\chi_X(A_r,\operatorname{real}C_i)\),
+and \(C_r=\sum_i d_i C_i\). Then
+\[
+ \boxed{
+ C_r\in K_0^{\mathrm{alg}}(X)_\Q,\quad
+ \chi_X(A_r,\operatorname{real}C_r)=\sum_i d_i^2.
+ }                                                       \tag{11.6}
+\]
+Moreover the ACTUAL algebraic product kernel
+\[
+ \mathcal K_{\mathrm{sep}}=\sum_i C_i^\vee\boxtimes C_i
+             \in K_0^{\mathrm{alg}}(X\times X)_\Q
+\]
+obeys
+\[
+ \boxed{
+ \chi_{X\times X}
+   (A_r\boxtimes((-1)^pA_r),\operatorname{real}
+       \mathcal K_{\mathrm{sep}})
+       =\sum_i d_i^2 .}                             \tag{11.7}
+\]
+No Gram inverse, hidden topological-to-algebraic map,
+or assumption that the \(E_i\) are independent appears.
+\end{theorem}
+\begin{proof}
+The coefficients \(d_i\) are rational
+by HRR and rationality of \(r\).
+Equation (11.6) is immediate from bilinearity.
+By (11.2), \(C_i^\vee=(-1)^pC_i\)
+in rational algebraic \(K_0\).
+The first Euler factor against \(C_i^\vee\)
+is \((-1)^pd_i\); the second factor against
+\(C_i\) is also \((-1)^pd_i\).
+K\"unneth multiplicativity of the external Euler product
+therefore proves (11.7) termwise.
+The sign-twisted packet in (11.7) is a topological
+scalar multiple of \(A_r\); it must not be called
+the Hodge--Riemann Weil involution on arbitrary
+nonprimitive middle Hodge classes without a
+separate proof of that identification.
+\end{proof}
+
+\section{Unconditional GST native source completion of the extreme Hodge grades}
+The genuine canonical cycle map, not an abstract
+\(H.\mathrm{cycleClass}\), gives an exact constructive
+existence theorem in a wide ALL-\(X\) sector.
+We include this theorem to complete the extreme
+codimension geometry without introducing rank inputs.
+
+\begin{theorem}[Every rational Hodge class in codimension \(0,1,d-1,d\) on every original \(X\)]
+Let \(X/\mathbf C\) be a connected smooth projective
+variety of dimension \(d\ge2\), with ample algebraic
+line bundle \(L\) and \(h=c_1(L)\).
+For each
+\(p\in\{0,1,d-1,d\}\) and every genuine rational
+Hodge class \(\alpha\) of codimension \(p\),
+there exists an ACTUAL rational algebraic cycle
+\(Z_\alpha\in\CH^p(X)_\Q\) whose canonical
+rational Betti class is exactly \(\alpha\).
+In codimension \(d-1\) it is explicitly of the form
+\[
+ \boxed{
+ \alpha=h^{d-2}\beta,\qquad
+ Z_\alpha=h^{d-2}\cdot D_\beta,\qquad
+ \cl^{\rm can}(D_\beta)=\beta\in H^{1,1}(X)\cap H^2(X,\Q).
+ }                                                       \tag{12.1}
+\]
+\end{theorem}
+\begin{proof}
+For \(p=0\), on a connected smooth projective
+variety \(H^0(X,\Q)=\Q\), represented by
+\(\Q[X]\). For \(p=d\), \(H^{2d}(X,\Q)=\Q\)
+is generated by the canonical Betti class of a
+closed algebraic point, so rational coefficients
+give every target.
+For \(p=1\), Lefschetz's integral \((1,1)\)
+theorem and clearing denominators give a
+rational algebraic divisor \(D_\alpha\)
+with \(\cl^{\rm can}D_\alpha=\alpha\).
+For \(p=d-1\), the rational hard Lefschetz
+isomorphism
+\(
+ h^{d-2}:H^2(X,\Q)\xrightarrow{\sim}
+ H^{2d-2}(X,\Q)
+\)
+is a morphism of rational Hodge structures
+up to the standard Tate shift.
+Consequently
+\(\beta=(h^{d-2})^{-1}\alpha\) is a
+rational \((1,1)\) class. Construct
+\(D_\beta\) by Lefschetz \((1,1)\)
+and multiply it by the ACTUAL ample
+algebraic cycle \(h^{d-2}\).
+Cycle-class multiplicativity proves (12.1).
+\end{proof}
+
+In particular the genuine rational Hodge conjecture
+is \emph{proved for all smooth projective complex
+varieties of dimension at most three} by these
+geometric constructions. On an arbitrary fourfold,
+the remaining codimension \(p=2\) is the
+genuinely higher-codimension middle problem.
+This is a direct all-varieties source theorem in
+the stated codimensions, not an extrapolation
+from special families.
+
+\begin{proposition}[Unconditional fourfold algebraic Lefschetz projection]
+Let \(X\) be any smooth projective complex fourfold
+and \(h=c_1(L)\) ample. Choose actual algebraic
+divisor classes \(D_1,\ldots,D_\rho\) whose
+canonical Betti classes form a rational basis
+of \(H^{1,1}(X)\cap H^2(X,\Q)\).
+The genuine intersection matrix
+\[
+ G_{ij}=\int_X h^2D_iD_j                       \tag{12.2}
+\]
+is nonsingular by the Hodge index theorem.
+For every rational Hodge \(\alpha\in H^4(X,\Q)\cap H^{2,2}\),
+put \(b_i=\int_X\alpha\,h\,\cl(D_i)\) and construct
+\[
+ \boxed{
+ Z_{\alpha,\mathrm{Lef}}
+      :=h\cdot\sum_{i,j}D_i(G^{-1})_{ij}b_j
+          \in\CH^2(X)_\Q.}                         \tag{12.3}
+\]
+Then \(r=\alpha-\cl^{\rm can}
+(Z_{\alpha,\mathrm{Lef}})\) is an ACTUAL
+rational primitive middle \((2,2)\) Hodge
+class, \emph{without any algebraicity assumption on \(r\)}.
+\end{proposition}
+\begin{proof}
+The Hodge index form \(\int h^2DD'\) is
+nondegenerate on the rational divisor-Hodge
+subspace, making (12.3) legal.
+For each \(k\),
+\[
+ \int_Xr\,h\,D_k
+   =b_k-\sum_{i,j}G_{kj}(G^{-1})_{ji}b_i=0.
+\]
+The rational Hodge part of \(H^6(X,\Q)\)
+is \(h^2\) times the divisor-Hodge part of \(H^2(X,\Q)\)
+by rational hard Lefschetz; the Poincar\'e
+pairing is nondegenerate.
+Therefore a rational Hodge \(h r\in H^6\)
+pairing to zero against every rational
+divisor-Hodge class must vanish:
+\(h r=0\). This is precisely primitiveness
+of the middle class \(r\).
+All classes and operations in (12.3)
+were original-\(X\) algebraic ones.
+\end{proof}
+
+\noindent\textbf{Precise rank boundary for the former fourfold
+Hilbert claim.}
+The invertible rational coefficient matrix (4.4)
+is a statement about the universal formal
+polynomials \(c_1^2,c_2\), \emph{not a guarantee
+that their evaluations are independent in
+\(\CH^2(X)_\Q\) for every fourfold}.
+For instance, an abelian fourfold has
+\(c_1(T_X)=c_2(T_X)=0\),
+so BOTH constructed characteristic classes
+\(Z_1,Z_2\) vanish. On \(\mathbf P^4\),
+the two are nonzero but proportional multiples
+of the hyperplane square. The exact determinant
+(4.4) proves independent RECOVERY of two
+measured characteristic periods wherever
+those periods are genuinely independent;
+it does not manufacture geometric rank 2
+on all \(X\). The full twisted incidence
+construction (10.1)--(10.3) admits new
+independent algebraic inputs such as ample
+line bundles and non-tautological ideal sheaves,
+but the existence of inputs detecting any
+as-yet-unrepresented primitive Hodge target
+is precisely the distinct universal
+geometry claim still to be established.
 
 \section{Adversarial audit: source birth versus universal surjectivity}
 No putative conclusion above inserts \(Z_r\) as input: it is
