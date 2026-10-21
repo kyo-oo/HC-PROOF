@@ -120,6 +120,7 @@ source-generation problem audited in ActualXHodgeResidualProjection.
 
 open GSTActualXHodgeResidualProjection
 open GSTCompactNativeCyclePresentation
+open GSTClassicalHodgePointNormalForm
 
 /-- Every point-generated GST projection is literally an original-X
 finite rational sum of irreducible-subvariety Betti classes, plus
