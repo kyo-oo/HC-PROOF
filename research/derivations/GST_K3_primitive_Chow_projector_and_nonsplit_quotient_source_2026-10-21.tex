@@ -610,6 +610,175 @@ The general geometric proof uses (7.2),
 actual graph Chow cycles and
 Hodge--Riemann nondegeneracy.
 
+\section{Genuine derived-kernel source on products of DIFFERENT K3 surfaces}
+An algebraic Hodge correspondence need not arise
+from a graph of an automorphism of a single surface.
+We can use a genuine derived perfect kernel
+between two potentially nonisomorphic original
+K3 surfaces to birth the relevant middle
+Hodge source on their ACTUAL product.
+
+Let S_1 and S_2 be projective complex K3
+surfaces with a genuine Fourier--Mukai
+equivalence of their bounded coherent derived
+categories, represented by an actual
+perfect kernel
+\(
+ \mathcal P\in D^b_{\mathrm{coh}}(S_1\times S_2).
+\)
+Its algebraic Mukai cycle is
+\[
+ v(\mathcal P)
+   =\ch(\mathcal P)\,
+     \pr_1^*\sqrt{\operatorname{td}(T_{S_1})}\,
+     \pr_2^*\sqrt{\operatorname{td}(T_{S_2})}
+      \in\bigoplus_a CH^a(S_1\times S_2)_Q.
+                                                               \tag{8.1}
+\]
+The induced cohomological Fourier--Mukai action
+restricts to a rational polarized
+Hodge isometry
+\(
+ u:T(S_1)_Q\xrightarrow{\sim}T(S_2)_Q
+\).
+The perfect source \(\mathcal P\)
+is independently algebraic, not chosen
+by assuming a Chow preimage of a
+prescribed rational Hodge class.
+
+Construct the actual Chow idempotents
+p_{T,1},p_{T,2} on each surface's square
+using (1.1), and define the actual
+cross-surface codimension-two source
+\[
+ \boxed{
+ \Gamma_{12}
+    :=p_{T,2}\circ[v(\mathcal P)]_2
+                     \circ p_{T,1}
+       \in CH^2(S_1\times S_2)_Q.}                 \tag{8.2}
+\]
+The Chow-correspondence composition in
+(8.2) has actual source/target surfaces;
+no vector-space-only projector is substituted.
+Its canonical Betti action on T(S_1)
+is precisely the isometry u, and it
+annihilates factor H^0,H^4 and NS
+directions.
+
+\begin{theorem}[Full fourfold Hodge source from an actual derived equivalence]
+Suppose a genuine Fourier--Mukai equivalence
+between S_1 and S_2 exists as above and
+\[
+ \boxed{
+ \operatorname{End}_{\mathrm{HS},Q}(T(S_1))=Q.}      \tag{8.3}
+\]
+Then every rational (p,p) Hodge class on
+the ACTUAL smooth projective fourfold
+\(X=S_1\times S_2\), for all p=0,...,4,
+has a genuine rational Chow representative.
+In degree-four middle Hodge cohomology,
+the entire transcendental tensor sector
+has the single actual algebraic generator
+\(\Gamma_{12}\), with genuine positive
+primitive norm
+\[
+ \boxed{
+ \int_X\cl(\Gamma_{12})^2
+       =\dim_Q T(S_1)=22-\rho(S_1)>0.}             \tag{8.4}
+\]
+For an arbitrary rational (2,2)
+Hodge target beta, its transcendental
+component is obtained without an
+algebraic preimage hypothesis as
+\[
+ \boxed{
+ \beta_{\mathrm{tr}}
+   =\frac{\int_X\beta\,\cl(\Gamma_{12})}
+           {22-\rho(S_1)}\,\cl(\Gamma_{12}),}       \tag{8.5}
+\]
+and the remaining components are
+explicit products of true algebraic
+divisors and zero/fundamental classes.
+The pure-middle algebraic perfect
+K-source is the Adams-projected coherent
+cycle presentation of this Chow expression.
+\end{theorem}
+\begin{proof}
+An actual Fourier--Mukai kernel between K3
+surfaces induces a rational Hodge
+isometry on their transcendental degree-two
+Hodge structures under its algebraic
+Mukai cycle. Projecting both legs
+with the actual p_T Chow idempotents
+eliminates the factor/tate and NS
+components; the resulting actual
+codimension-two Chow correspondence
+acts on T(S_1) exactly as u.
+
+The rational Kunneth Hodge middle
+sector on S_1 times S_2 has
+algebraic factor terms, products
+NS(S_1)\otimes NS(S_2),
+and Hodge tensors
+T(S_1)\otimes T(S_2).
+Polarization identifies the latter
+with Hom_HS(T(S_1),T(S_2)).
+The given Hodge isometry u identifies
+this Hom space with End_HS(T(S_1)).
+The scalar hypothesis makes it a
+one-dimensional rational vector space
+spanned by u, hence the algebraic
+source Gamma_12 spans that sector.
+
+Let g_1,g_2 be the genuine rational
+cup-intersection forms on T(S_1),T(S_2)
+and M the rational matrix of u in
+arbitrary rational bases.
+The isometry says M^T g_2 M=g_1.
+The middle tensor representing u has
+coefficient matrix C=g_1^{-1}M^T.
+Its genuine cup-intersection norm is
+\[
+ \operatorname{Tr}(C^Tg_1Cg_2)
+ =\operatorname{Tr}(M g_1^{-1}M^T g_2)
+ =\operatorname{Tr}(I_{T(S_1)})
+ =22-\rho(S_1).
+\]
+The class is primitive with respect
+to any product polarization, because
+both legs are in the transcendental
+orthogonal complements of divisors.
+Thus (8.4) is a genuine positive
+primitive source period. Orthogonality
+to all divisor/point tensors yields
+(8.5). The canonical rational Chow
+cycle of beta is obtained by adding
+the explicitly constructed algebraic
+factor/NS cycles to the displayed
+rational multiple of Gamma_12.
+Other fourfold Hodge degrees are
+algebraic by Lefschetz (1,1),
+hard Lefschetz and point classes.
+\end{proof}
+
+Wolfram verified the pure tensor norm
+for a nontrivial rational invertible
+3 by 3 isometry matrix M
+(det M=2) between two genuine
+nondegenerate rational Gram forms
+g_1,g_2 related by M^Tg_2M=g_1.
+The exact contraction returned
+Tr(C^T g_1 C g_2)=3 as required.
+This exact finite algebra check does not
+assert an existence theorem for the
+chosen sample Gram forms as K3 lattices.
+The geometric theorem instead assumes
+an ACTUAL algebraic Fourier--Mukai
+equivalence and uses its genuine
+perfect-kernel Chern cycle, so it is
+not an abstract Hodge-isometry-to-
+algebraic-cycle selector.
+
 \section{Wolfram verification and the universal target boundary}
 The exact Wolfram computation contracted inverse
 NS intersection Gram matrices of signatures
