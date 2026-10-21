@@ -391,10 +391,11 @@ theorem gluedMassBalancedState_defect_zero_iff
   have hHodge :
       fiberedHodgeClass (V := V) (H := H) (p := p) Φ =
         (classicalHodgeBasis V H p).repr.symm a := by
-    apply (classicalHodgeBasis V H p).repr.injective
-    change GSTClassicalHodgeFiberedNativePullback.forgetPoint V H p Φ = a
-    exact GSTClassicalHodgeFiberedNativePullback.glueMarginals_forgetPoint
-       V H p i₀ x₀ a bc hmass.symm
+    change (classicalHodgeBasis V H p).repr.symm
+      (GSTClassicalHodgeFiberedNativePullback.forgetPoint V H p Φ) =
+        (classicalHodgeBasis V H p).repr.symm a
+    rw [GSTClassicalHodgeFiberedNativePullback.glueMarginals_forgetPoint
+      V H p i₀ x₀ a bc hmass.symm]
   change fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ = 0 ↔ _
   rw [defect_eq_zero_iff_faces_agree, hNative, hHodge,
     massBalancedPresentation_cycleClass (V := V) (H := H) (p := p)
