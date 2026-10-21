@@ -3,6 +3,12 @@
 **Research branch:** \`research/gpt6-native-point-primitive-span-20261017\`  
 **Contract revision:** 2026-10-17; this corrects the prior plan, which incorrectly stated the primitive subcase as the final acceptance target.
 
+## Active execution reset — 2026-10-21 (binding; do not drift back to diagnostics)
+
+The user explicitly corrected repeated scope substitution. **`AGENTS.md` has the binding reset committed at `a52c05408170b4ca95df6cdcd71d2ecf5a85cb05`.** Its target remains the unconditional original-X canonical rational cycle, not completion of another CM/K3/node-count example. The 10/14/30/46/70-node Weil experiments and special fourfold results are archived evidence only. The live priority is an **actual arbitrary-X geometric source birth** whose input does not already contain an algebraic witness. Any new GST theorem must provide its typed actual construction, canonical Betti comparison, and exact role of native projection, finite-degree descent, Chern--Segre and Euler operators; these latter operations cannot themselves create new classes outside the entire canonical algebraic image.
+
+**Current universal-X mathematics-first route:** [Bounded relative Chow specialization and full algebraic-image source inventory](derivations/GST_arbitrary_X_bounded_Chow_specialization_source_birth_2026-10-21.tex); [protocol/derivation audit](records/2026-10-21-gst-universal-source-reset-relative-chow-birth.md). It constructs an actual original-X rational Chow cycle when independently generated nearby-fiber cycles of uniformly bounded degree and denominator have the horizontally transported target class; every degree-bounded Chow stage on arbitrary X supplies a finite genuine native source inventory independent of the target. The polarized GST residual gives a strict radius excluding approximation by old original-X source-image operations. The genuine open geometric input in THIS route is producing nearby-fiber sources with justified uniform algebraic complexity for every original-X rational Hodge target. Do not elevate the route to a full Hodge proof without that construction. This addition does not change the four acceptance gates below.
+
 ## The ORIGINAL target — not negotiable
 
 For **every** smooth projective complex variety \(X\), **every** codimension \(p\), and **every** rational Hodge class \(\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)\), construct a rational algebraic codimension-\(p\) cycle on the **original X** and prove
