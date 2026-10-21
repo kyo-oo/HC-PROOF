@@ -1213,6 +1213,68 @@ All classes and operations in (12.3)
 were original-\(X\) algebraic ones.
 \end{proof}
 
+\begin{theorem}[Unconditional all-dimension original-\(X\) algebraic removal of every nonprimitive codimension-two component]
+Let \(d\ge4\) and \(X\) be \emph{any} smooth connected
+projective complex \(d\)-fold, with actual ample \(h=c_1(L)\).
+Take actual algebraic divisor classes
+\(D_1,\ldots,D_\rho\) spanning
+\(\operatorname{Hdg}^{1}(X)_\Q\)
+under the genuine canonical Betti class map.
+For any arbitrary rational Hodge class
+\(\alpha\in\operatorname{Hdg}^{2}(X)_\Q\), define
+\[
+ G_{ij}=\int_X h^{d-2}\cl(D_i)\cl(D_j),
+ \qquad b_i=\int_X\alpha\,h^{d-3}\cl(D_i).
+                                                               \tag{12.4}
+\]
+The Hodge index theorem makes \(G\) nondegenerate.
+The \emph{explicitly constructed original-\(X\)}
+rational algebraic codimension-two cycle
+\[
+ \boxed{
+ Z_{\alpha,L}^{(2)}
+   =h\cdot\sum_{i,j=1}^{\rho}
+       D_i(G^{-1})_{ij}b_j\in\CH^2(X)_\Q
+ }                                                     \tag{12.5}
+\]
+has a residual
+\[
+ \boxed{
+ r_\alpha=\alpha-\cl^{\rm can}(Z_{\alpha,L}^{(2)}),
+ \qquad h^{d-3}r_\alpha=0.
+ }                                                     \tag{12.6}
+\]
+Thus EVERY \emph{nonprimitive Lefschetz Hodge component}
+in codimension two, in EVERY dimension \(d\ge4\),
+has been constructively converted to an actual algebraic
+cycle with the exact canonical Betti class,
+without any assumption on the primitive residual.
+\end{theorem}
+\begin{proof}
+For every \(k\),
+\[
+ \int_Xr_\alpha\,h^{d-3}\cl(D_k)
+    =b_k-\sum_{i,j}G_{kj}(G^{-1})_{ji}b_i=0.
+\]
+The class \(h^{d-3}r_\alpha\) lies in the
+rational \((d-1,d-1)\) Hodge sector
+of \(H^{2d-2}(X,\Q)\).
+Hard Lefschetz furnishes a unique rational
+\((1,1)\) class \(\beta\in H^2(X,\Q)\) with
+\(h^{d-3}r_\alpha=h^{d-2}\beta\).
+By Lefschetz \((1,1)\), \(\beta\) lies in
+the rational divisor span of the \(\cl(D_i)\).
+The displayed orthogonality equations say
+that \(\beta\) is perpendicular to this span
+under the NONDEGENERATE Hodge-index form
+\(G_{ij}\); hence \(\beta=0\).
+Therefore \(h^{d-3}r_\alpha=0\) as claimed.
+All coefficients are rational and every
+object in (12.5) is algebraic on the
+original variety. In \(d=4\) the theorem
+reduces exactly to (12.3).
+\end{proof}
+
 \noindent\textbf{Precise rank boundary for the former fourfold
 Hilbert claim.}
 The invertible rational coefficient matrix (4.4)
