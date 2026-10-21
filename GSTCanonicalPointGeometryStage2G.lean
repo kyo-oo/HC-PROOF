@@ -133,29 +133,31 @@ theorem pointGeneratedNativeProjection_finite_source_and_residual
     (P : ActualXCycleProjectionData V (pointGeneratedHodgeData H pt) p ι)
     (alpha : HodgeSpace V (pointGeneratedHodgeData H pt) p) :
     ∃ phi : FiniteCodimensionPresentation V.X p,
-      phi.sum (fun x q => q • pt p x) +
-        ((P.primitiveResidual alpha).1 :
-          RationalSingularCohomology H.analytification (2 * p)) = alpha.1 := by
+      phi.sum (fun x q =>
+        q • (pointGeneratedHodgeData H pt).cycleClass p
+          (codimensionPointCycle V.X p x)) +
+        (P.primitiveResidual alpha).1 = alpha.1 := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   let Z := P.projectNative alpha
   refine ⟨presentationOfNativeCycle V.X p Z, ?_⟩
-  have hcycle :
-      (pointGeneratedHodgeData H pt).cycleClass p Z =
-        (presentationOfNativeCycle V.X p Z).sum
-          (fun x q => q • pt p x) :=
-    cycleClassFromPointGeometry_eq_finite_sum
-      (V := V) p H.analytification (pt p) Z
+  have hcycle :=
+    linearMap_realizeFiniteCodimensionPresentation V.X p
+      ((pointGeneratedHodgeData H pt).cycleClass p)
+      (presentationOfNativeCycle V.X p Z)
+  have hreal : realizeFiniteCodimensionPresentation V.X p
+      (presentationOfNativeCycle V.X p Z) = Z :=
+    realize_presentationOfNativeCycle V.X p Z
+  rw [hreal] at hcycle
   have hdecomp := P.algebraic_part_plus_residual alpha
   have hvalues := congrArg Subtype.val hdecomp
   change (pointGeneratedHodgeData H pt).cycleClass p Z +
     (P.primitiveResidual alpha).1 = alpha.1 at hvalues
   exact hcycle.symm ▸ hvalues
 
-/-- The full native Euler certificate, WHEN its actual original-X
-sources have full rank, is an explicit finite rational combination
-of the supplied irreducible-subvariety fundamental Betti classes.
-This removes the free-map semantic ambiguity at the final compiler
-output; constructing the full-rank sources is not hidden here. -/
+/-- With an INDEPENDENTLY constructed full-rank family of actual
+Chow columns, the same Euler reconstruction gives a finite
+original-X scheme-point cycle whose class is the target.
+Every point term is forced by pointGeneratedHodgeData_point. -/
 theorem pointGeneratedNativeEuler_exact_finite_source
     (H : HodgeBigradedBettiData V)
     (pt : AllCodimensionPointBettiClasses H)
@@ -169,7 +171,9 @@ theorem pointGeneratedNativeEuler_exact_finite_source
     (hDet : (P.eulerSourceMatrix readout sources).det ≠ 0)
     (alpha : HodgeSpace V (pointGeneratedHodgeData H pt) p) :
     ∃ phi : FiniteCodimensionPresentation V.X p,
-      phi.sum (fun x q => q • pt p x) = alpha.1 := by
+      phi.sum (fun x q =>
+        q • (pointGeneratedHodgeData H pt).cycleClass p
+          (codimensionPointCycle V.X p x)) = alpha.1 := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   let Z := P.eulerCertifiedCycle readout sources
     (P.eulerSourceMatrix readout sources)⁻¹ alpha
@@ -177,9 +181,15 @@ theorem pointGeneratedNativeEuler_exact_finite_source
   have hc := P.eulerCertifiedCycle_of_det_ne_zero
     readout sources hDet alpha
   change (pointGeneratedHodgeData H pt).cycleClass p Z = alpha.1 at hc
-  have hsum := cycleClassFromPointGeometry_eq_finite_sum
-    (V := V) p H.analytification (pt p) Z
-  exact hsum.symm.trans hc
+  have hcycle :=
+    linearMap_realizeFiniteCodimensionPresentation V.X p
+      ((pointGeneratedHodgeData H pt).cycleClass p)
+      (presentationOfNativeCycle V.X p Z)
+  have hreal : realizeFiniteCodimensionPresentation V.X p
+      (presentationOfNativeCycle V.X p Z) = Z :=
+    realize_presentationOfNativeCycle V.X p Z
+  rw [hreal] at hcycle
+  exact hcycle.symm.trans hc
 
 #check pointGeneratedNativeProjection_finite_source_and_residual
 #check pointGeneratedNativeEuler_exact_finite_source
