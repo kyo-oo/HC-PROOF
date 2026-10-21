@@ -6,7 +6,7 @@ triangleBoundary={{-1,0,1},{1,-1,0},{0,1,-1}};
 triangleFace={{1},{1},{1}};
 unfilledLaplacian=Transpose[triangleBoundary].triangleBoundary;
 filledLaplacian=unfilledLaplacian+triangleFace.Transpose[triangleFace];
-loopData=Table[{n,0,n},{n,0,12}];
+loopData=Table[{n,MatrixRank[ConstantArray[0,{1,n}]],n-MatrixRank[ConstantArray[0,{1,n}]]},{n,1,12}];
 result=<|
  "bouquetIndependentLoopsN0to12"->loopData,
  "triangleD1D2Zero"->(triangleBoundary.triangleFace==ConstantArray[0,{3,1}]),
