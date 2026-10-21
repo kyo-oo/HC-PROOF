@@ -133,4 +133,113 @@ theorem exact_rational_hodge_conjecture_finite_sum :
 #print axioms exact_rational_hodge_conjecture_normal_form
 #print axioms exact_rational_hodge_conjecture_finite_sum
 
+
+/-! ## GST RATIONAL CYCLE IMAGE ⇔ WHOLE-HODGE SPECTRAL KERNEL
+
+The actual rational Hodge class is a rational cohomology vector whose
+COMPLEXIFICATION lies in the full (p,p) Hodge summand. A supplied complex
+Hodge-charge generator G_p is required to satisfy the exact spectral kernel
+identity: ker G_p = H^(p,p). This condition is ONLY a condition on the
+Hodge-bigrading and does not assert any algebraic-cycle preimage.
+
+We prove the genuinely typed conversion of the user's two boxed formulas.
+The rational Chow-image equality is exactly the additional range condition,
+not a consequence of complex spectral kernel identification by itself.
+-/
+
+/-- Complexification of ACTUAL Stage2G rational Betti cohomology in degree 2p. -/
+abbrev SpectralComplexCohomology (p : Nat) :=
+  Complexification
+    (RationalSingularCohomology H.analytification (2 * p))
+
+/-- A chosen complex-linear Hodge-charge generator on one realized fiber.
+The geometric spectral identity is a separate input to the comparison. -/
+abbrev SpectralGenerator (p : Nat) :=
+  SpectralComplexCohomology H p →ₗ[ℂ]
+    SpectralComplexCohomology H p
+
+/-- Rational zero-charge locus: the PREIMAGE of the complex spectral kernel
+along the canonical rational-to-complex class embedding. No cycles assumed. -/
+noncomputable def rationalSpectralKernel
+    (p : Nat) (G : SpectralGenerator H p) :
+    Submodule ℚ (RationalSingularCohomology H.analytification (2 * p)) :=
+  ((LinearMap.ker G).restrictScalars ℚ).comap
+    (complexificationMapQ
+      (RationalSingularCohomology H.analytification (2 * p)))
+
+/-- Identifying the COMPLEX spectral kernel with the WHOLE complex (p,p)
+component automatically identifies its rational restriction with the
+existing actual Stage2G rational Hodge fiber. Not a Chow-surjectivity input. -/
+theorem rationalSpectralKernel_eq_rationalHodge
+    (p : Nat) (G : SpectralGenerator H p)
+    (hG : LinearMap.ker G = (H.hodgeBigrading p).ppComponent) :
+    rationalSpectralKernel H p G =
+      rationalHodgeSubspace (H.hodgeBigrading p) := by
+  unfold rationalSpectralKernel rationalHodgeSubspace
+  rw [hG]
+
+/-- The EXACT reduction of rational algebraicity to a cycle-class RANGE
+covering the rational spectral kernel. No surjectivity is built into G. -/
+theorem exactHodge_iff_spectralKernel_in_nativeRange
+    (G : ∀ p : Nat, SpectralGenerator H p)
+    (hG : ∀ p : Nat,
+       LinearMap.ker (G p) = (H.hodgeBigrading p).ppComponent) :
+    EveryHodgeClassIsRationalAlgebraic H ↔
+      ∀ p : Nat, rationalSpectralKernel H p (G p) ≤
+        LinearMap.range (H.cycleClass p) := by
+  constructor
+  · intro h p alpha halpha
+    have hpp : alpha ∈ rationalHodgeSubspace (H.hodgeBigrading p) := by
+      rw [← rationalSpectralKernel_eq_rationalHodge H p (G p) (hG p)]
+      exact halpha
+    obtain ⟨Z, hZ⟩ := h p alpha hpp
+    exact ⟨Z, hZ⟩
+  · intro h p alpha halpha
+    have hspectral : alpha ∈ rationalSpectralKernel H p (G p) := by
+      rw [rationalSpectralKernel_eq_rationalHodge H p (G p) (hG p)]
+      exact halpha
+    exact h p hspectral
+
+/-- The true canonical cycle class sends ACTUAL algebraic cycles to
+(p,p); Stage2G stores a linear class map without claiming this geometric
+property, so it is retained as an explicit SOURCE-SEMANTICS hypothesis. -/
+def CycleClassHodgeCompatible : Prop :=
+  ∀ p : Nat,
+    LinearMap.range (H.cycleClass p) ≤
+      rationalHodgeSubspace (H.hodgeBigrading p)
+
+/-- Under the actual Hodge-type property of the canonical algebraic cycle
+class, rational Hodge algebraicity is equivalent to literal image=kernel.
+The geometric spectral identity alone supplies NO source surjectivity. -/
+theorem exactHodge_iff_nativeRange_eq_spectralKernel
+    (G : ∀ p : Nat, SpectralGenerator H p)
+    (hG : ∀ p : Nat,
+       LinearMap.ker (G p) = (H.hodgeBigrading p).ppComponent)
+    (hcycle : CycleClassHodgeCompatible H) :
+    EveryHodgeClassIsRationalAlgebraic H ↔
+      ∀ p : Nat, LinearMap.range (H.cycleClass p) =
+        rationalSpectralKernel H p (G p) := by
+  constructor
+  · intro h p
+    apply le_antisymm
+    · rw [rationalSpectralKernel_eq_rationalHodge H p (G p) (hG p)]
+      exact hcycle p
+    · exact (exactHodge_iff_spectralKernel_in_nativeRange H G hG).mp h p
+  · intro heq
+    apply (exactHodge_iff_spectralKernel_in_nativeRange H G hG).mpr
+    intro p
+    rw [← heq p]
+
+#check SpectralComplexCohomology
+#check SpectralGenerator
+#check rationalSpectralKernel
+#check rationalSpectralKernel_eq_rationalHodge
+#check exactHodge_iff_spectralKernel_in_nativeRange
+#check CycleClassHodgeCompatible
+#check exactHodge_iff_nativeRange_eq_spectralKernel
+
+#print axioms rationalSpectralKernel_eq_rationalHodge
+#print axioms exactHodge_iff_spectralKernel_in_nativeRange
+#print axioms exactHodge_iff_nativeRange_eq_spectralKernel
+
 end GSTClassicalHodgeExactClayStatement
