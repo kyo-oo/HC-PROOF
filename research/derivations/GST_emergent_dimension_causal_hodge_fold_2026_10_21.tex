@@ -145,6 +145,82 @@ s_3=c_1^3-2c_1c_2+c_3\), the fold matrix is
 Wolfram confirmed both exact products equal \(I_4\)
 and arbitrary formal layer coefficients are recovered.
 
+\section{Irreversible world birth: blowup causal decomposition and Hodge defect conservation}
+The actual GST
+\texttt{SelfExpandingCosmology.TwoSourceBirth}
+allows two independently
+realized parent/source cycle geometries to
+contribute to a newborn world.
+Its \texttt{SplitTwoSourceBirth} records
+reverse geometric retractions, and the Lean theorem
+\texttt{split_world_birth_hodge_complete_iff_sources}
+shows that any split-exact born world is Hodge-complete
+exactly when BOTH input worlds are Hodge-complete.
+The following is a bona fide geometric instantiation
+for arbitrary original X, not an abstract assumed
+surjective map.
+
+Let \(i:Z\hookrightarrow X\) be an ACTUAL smooth
+closed subscheme of codimension \(c\ge2\).
+Let \(b:Y=\operatorname{Bl}_Z X\to X\)
+be the genuine projective blowup with exceptional
+\(j:E=\mathbf P_Z(N_{Z/X})\hookrightarrow Y\),
+\(q:E\to Z\), and
+\(\zeta=c_1(\mathcal O_E(1))\).
+The ACTUAL Chow decomposition is
+\[
+ \boxed{
+ CH^p(Y)_\Q =
+ b^*CH^p(X)_\Q
+ \oplus
+ \bigoplus_{a=1}^{c-1}
+ j_*\bigl(\zeta^{a-1}q^*CH^{p-a}(Z)_\Q\bigr).
+ }                                                        \tag{4a}
+\]
+The actual rational Betti Hodge decomposition has
+the same direct-sum form with a
+Tate shift \((-a)\) on the center classes.
+
+\begin{theorem}[GST causal exceptional-world conservation of rational Hodge defect]
+For ANY smooth projective complex X and ANY
+ACTUAL smooth center Z of codimension \(c\ge2\),
+the original-X and exceptional-center classes
+give a split rational identity
+\[
+ \boxed{
+ D^p(Y)\cong D^p(X)\oplus
+       \bigoplus_{a=1}^{c-1}D^{p-a}(Z).
+ }                                                        \tag{4b}
+\]
+The algebraic blowup world may be topologically
+different from X, and can gain new Hodge directions,
+but no defect from the base disappears.
+If one ASSUMES the Hodge conjecture for every X
+and every smooth center Z, all terms vanish and
+the new world is automatically Hodge-complete.
+An actual source-birth proof on arbitrary X,
+however, cannot simply assert these center classes
+are algebraic without independently constructing
+their cycles.
+\end{theorem}
+\begin{proof}
+The genuine Chow blowup decomposition is the
+actual blowup-Gysin formula with terms displayed
+in (4a). Rational cohomological blowup
+decomposition is induced by the SAME pull,
+exceptional Gysin, tautological classes and
+proper projections; it splits each rational
+Hodge (p,p) space as the base and
+\((p-a,p-a)\) exceptional-center classes.
+The canonical cycle-class map intertwines
+these two direct-sum decompositions, block by
+block. Passing to the cokernels of the
+componentwise maps gives (4b).
+The base defect is a direct summand; no
+equal-Hodge-degree algebraic operation on
+this world can erase it by mere recoordination.
+\end{proof}
+
 \section{Real Hodge-breaking fold on a smooth projective abelian surface}
 Take the ACTUAL \(A=E_i\times E_i\), where
 \(E_i=\mathbb C/(\mathbb Z+i\mathbb Z)\),
