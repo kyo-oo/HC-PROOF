@@ -593,6 +593,242 @@ is an additional geometric input, not something
 created by the GST Gram, Euler, Chern--Segre or
 source-inventory laws.
 
+\section{Hodge-locus acceptance and exact rejection of isotrivial pseudo-birth}
+The parameter-space
+route has TWO
+distinct
+necessary inputs:
+the horizontal
+class must retain
+its Hodge type,
+and ACTUAL
+Chow sources
+must occur
+on sufficiently
+many of those
+Hodge fibers.
+Neither input
+follows from
+the GST
+native-source
+Gram or Euler
+projector alone.
+
+\begin{theorem}[Necessary holomorphic Hodge-locus condition]
+For every
+smooth projective
+disk family
+and horizontal
+rational
+\(\alpha_t\in
+H^{2p}(\mathfrak X_t,\Q)\),
+its actual
+Hodge locus
+\[
+ \operatorname{HL}(\alpha)
+ =\{t:\alpha_t
+        \in H^{p,p}(\mathfrak X_t)\}
+\]
+is a CLOSED
+complex analytic
+subset of
+the disk,
+and hence
+is either
+discrete
+(countable)
+or the
+entire disk.
+The algebraicity
+locus of (7)
+satisfies
+\[
+ \boxed{
+ \mathscr A(\alpha)
+           \subseteq\operatorname{HL}(\alpha).}
+                                                               \tag{12}
+\]
+Thus an
+uncountable-fiber
+source construction
+necessarily
+requires
+the horizontal
+\(\alpha_t\)
+to be Hodge
+on ALL
+nearby fibers.
+\end{theorem}
+\begin{proof}
+The Hodge
+filtration
+\(F^p\)
+is a holomorphic
+subbundle
+of the
+cohomological
+flat bundle.
+The horizontal
+rational class
+defines a
+holomorphic
+section of
+the quotient
+bundle
+\(H^{2p}/F^p\).
+The zero locus
+of this
+holomorphic
+section is
+closed analytic.
+For a REAL
+rational
+cohomology class
+of total degree
+\(2p\),
+membership
+in \(F^p\)
+implies, by
+complex conjugation,
+membership
+in \(\overline F^p\),
+and the
+intersection
+is precisely
+\(H^{p,p}\).
+This proves
+analyticity.
+Any algebraic
+cycle has
+canonical
+Betti class
+of type
+\((p,p)\),
+giving (12).
+The
+classification
+of proper
+analytic
+subsets of
+a disk gives
+the dichotomy.
+\end{proof}
+
+\begin{lemma}[An isotrivial nearby-source family does not create a new source direction]
+If the
+projective
+family is
+ACTUALLY
+trivialized
+by algebraic
+isomorphisms
+\(\mathfrak X_t\simeq X\)
+that identify
+\(\alpha_t\)
+with a single
+\(\alpha\)
+under canonical
+Betti realization,
+then
+\[
+ \boxed{
+ \mathscr A(\alpha)=\Delta
+ \quad\Longleftrightarrow\quad
+ \alpha\in\im(
+     \cl_X^{can}:CH^p(X)_\Q\to H^{2p}(X,\Q)).
+ }                                                       \tag{13}
+\]
+If \(\alpha\)
+is not
+algebraic
+on \(X\),
+then
+\(\mathscr A(\alpha)=\varnothing\).
+Thus replacing
+the genuine
+nearby-birth
+question
+with the
+constant
+family
+does not
+prove any
+new
+original-\(X\)
+algebraicity.
+\end{lemma}
+\begin{proof}
+Any rational
+Chow class
+on a fiber
+pulls back
+along the
+specified
+algebraic
+trivialization
+to an
+actual rational
+Chow class
+on \(X\)
+with
+identical
+canonical
+Betti class.
+Conversely
+any algebraic
+cycle on \(X\)
+pushes
+forward
+to every
+fiber and
+preserves the
+class.
+This gives
+the exact
+equivalence
+(13).
+\end{proof}
+
+The ACTUAL
+elliptic
+product
+discriminator
+(9)--(11)
+exhibits
+a nontrivial
+family in
+which even
+the Hodge-locus
+condition
+fails.
+The
+isotrivial
+lemma shows
+that making
+the condition
+true by a
+constant
+family
+merely
+assumes
+algebraicity
+on the
+original
+\(X\).
+These two
+tests
+prevent
+the new
+uncountable-source
+transfer
+theorem
+from being
+mistaken
+for an
+input-free
+universal
+construction.
+
 \section{An actual finite geometric native source inventory on EVERY arbitrary original-X}
 No candidate Chow
 cycle representing
