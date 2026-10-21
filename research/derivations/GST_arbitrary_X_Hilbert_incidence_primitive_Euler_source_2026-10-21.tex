@@ -42,7 +42,9 @@ of the target is chosen, and the construction is never asserted to
 span all rational Hodge classes: the universal source-existence
 quantifier cannot follow solely from tangent-characteristic periods.
 We additionally prove a finite polynomial cap on the entire
-incidence-twist Euler tower in every dimension.
+incidence-twist Euler tower in every dimension and an explicit
+all-even-dimensional separated algebraic kernel and one-sided
+native Chow source for every incident-detected Hodge target.
 \end{abstract}
 
 \section{Immutable target, source types, and the attempted new input}
@@ -456,6 +458,142 @@ integers is identically zero.
 This is a full mathematical classification of the dependence
 on exceptional twist \(m\); it is not a claim that the
 tested incidence sector equals the whole Hodge fiber.
+
+\section{Arbitrary even dimension: rank-free genuine Euler source extraction}
+We now upgrade the fourfold calculation to \emph{all complex even
+dimensions} using the full GST finite rational Adams projector,
+rather than presupposing a Chern source basis or orthonormal Gram
+matrix. Let \(X\) be an arbitrary smooth connected projective
+complex \(2p\)-fold, \(p\geq1\), and let \(r\) be any rational
+middle \((p,p)\) Hodge class. Define, for
+\(0\le m\le3p\), the actual Chow source and its signed readout
+\[
+ Z_m=[\ch(F_m)\td(T_X)]_p\in\CH^p(X)_\Q,\qquad
+ d_m=(-1)^p\int_X r\,\cl^{\rm can}(Z_m).
+                                                               \tag{8.1}
+\]
+These \(3p+1\) sources are genuinely \emph{constructed from
+Hilbert incidence geometry on the original \(X\)} by (1.1)--(2.4).
+No one of them was supplied by a desired Hodge preimage.
+
+\begin{theorem}[Finite all-\(2p\)-fold GST native source and Euler law]
+For arbitrary \(X,r,p\) as above, set
+\[
+ \boxed{Z_r^{\Hilb}:=\sum_{m=0}^{3p}d_mZ_m
+            \in\CH^p(X)_\Q.}                        \tag{8.2}
+\]
+Then
+\[
+ \boxed{
+ (-1)^p\int_X r\,\cl(Z_r^{\Hilb})
+     =\sum_{m=0}^{3p}d_m^2\geq0.}                   \tag{8.3}
+\]
+The sum is \(>0\) precisely when \(r\) has nonzero
+Euler pairing with at least ONE of the actual
+\(F_m\) for \(m\ge0\); checking the finite
+\(0\le m\le3p\) suffices for the complete
+exceptional-twist family. Consequently any primitive
+Hodge residual detected by this family has an
+explicit newly detected original-\(X\) algebraic cycle.
+\end{theorem}
+\begin{proof}
+The Chow classes \(Z_m\) are actually algebraic since
+\(F_m\in K_0^{\rm alg}(X)_\Q\) and the Todd class is a
+rational algebraic characteristic word. Their coefficients
+\(d_m\in\Q\) are the genuine rational canonical Betti
+periods of the specified \(r\); no native representative
+of \(r\) enters their construction. Bilinearity gives
+(8.3). The middle case of Theorem 7.1 bounds the
+polynomial \(m\mapsto\chi_X(A_r,F_m)\) by degree \(3p\).
+Its values agree with \(d_m\) by rational topological
+HRR and \(\ch(A_r^\vee)=(-1)^p r\).
+Hence a nonzero value at any \(m\ge0\) implies some
+nonzero value among the first \(3p+1\) integers.
+The converses and the strict sum-of-squares positivity
+are immediate.
+\end{proof}
+
+The result also has a genuinely geometric
+\emph{separable two-ended} Euler kernel in every
+even dimension. Take \(T_{\td}\in K_0^{\rm alg}(X)_\Q\)
+with the explicitly known character \(\td(T_X)\).
+Using only finite Adams operations on the actual \(K_0\)
+of the ORIGINAL \(X\), construct
+\[
+ \Pi_p=\prod_{\substack{0\le j\le2p\\j\ne p}}
+                 \frac{\psi^2-2^j}{2^p-2^j},
+ \qquad
+ C_m=\Pi_p(T_{\td}\cdot F_m).
+                                                               \tag{8.4}
+\]
+These satisfy \(\ch(C_m)=Z_m\) concentrated in degree
+\(p\), and \(C_m^\vee=(-1)^p C_m\) rationally. Let
+\(Jr=(-1)^p r\), as in GST primitive Hodge--Riemann
+normalization, and choose the rational topological packet
+\(A_{Jr}=(-1)^pA_r\).
+
+\begin{theorem}[All-even-dimensional one-sided extraction from an ACTUALLY factorable algebraic kernel]
+The constructed original-\(X\) algebraic kernel
+\[
+ \boxed{\mathscr K^{(p)}_X=
+    \sum_{m=0}^{3p}C_m^\vee\boxtimes C_m
+       \in K_0^{\rm alg}(X\times X)_\Q}             \tag{8.5}
+\]
+and the \emph{genuine algebraic one-legged source}
+\[
+ \boxed{C_r=\sum_{m=0}^{3p}d_m C_m
+                 \in K_0^{\rm alg}(X)_\Q}          \tag{8.6}
+\]
+have the exact equal Euler indices
+\[
+ \boxed{\chi_{X\times X}
+   (A_r\boxtimes A_{Jr},\mathscr K^{(p)}_X)
+      =\chi_X(A_r,C_r)
+      =\sum_{m=0}^{3p}d_m^2.}                     \tag{8.7}
+\]
+No abstract native factorization, prescribed Chow target,
+or nonzero determinant is assumed.
+\end{theorem}
+\begin{proof}
+Since \(\ch(C_m)=Z_m\) is pure degree \(p\),
+topological HRR yields
+\[
+ \chi_X(A_r,C_m)=(-1)^p\int_Xr\,\cl(Z_m)=d_m.
+\]
+Dualizing the \emph{source} multiplies its pure degree-\(p\)
+character by \((-1)^p\), giving
+\(\chi_X(A_r,C_m^\vee)=(-1)^p d_m\).
+On the other hand the GST companion \(Jr=(-1)^pr\)
+gives
+\(\chi_X(A_{Jr},C_m)=(-1)^p d_m\).
+Thus each external Euler product is
+\[
+ \chi_{X\times X}
+   (A_r\boxtimes A_{Jr},C_m^\vee\boxtimes C_m)
+     =[(-1)^p d_m][(-1)^p d_m]=d_m^2.
+\]
+Sum over the finite, explicitly prescribed set of
+\emph{actual algebraic perfect complexes}.
+The one-legged formula follows by linearity.
+No sign or source factor is borrowed from the
+old nonseparable residual kernel.
+\end{proof}
+
+\noindent\textbf{Uniform scope.} Equations (8.2)--(8.7)
+work for \emph{every original even-dimensional smooth
+projective complex \(X\)} and every rational middle
+Hodge target \(r\). They positively detect exactly
+the part of the Hodge fiber reached by the algebraic
+Hilbert-incidence/Todd sources. The strictly positive
+number in the unrelated GST full residual diagonal
+identity is \emph{not} substituted for this sum; the
+two statements have different kernels and different
+one-sided source content. A full all-varieties
+Hodge proof would require showing that these
+and/or independent non-characteristic algebraic
+constructors detect every nonzero primitive
+residual---a statement not established by the
+derived identities alone.
 
 \section{Adversarial audit: source birth versus universal surjectivity}
 No putative conclusion above inserts \(Z_r\) as input: it is
