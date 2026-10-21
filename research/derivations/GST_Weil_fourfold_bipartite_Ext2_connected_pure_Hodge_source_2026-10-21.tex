@@ -368,6 +368,319 @@ nonsplit period tangent. No synthetic
 Hodge-to-Chow inverse or unearned
 deformation is asserted.
 
+\section{Actual FIRST-ORDER NORMAL AND COHOMOLOGY-SHEAF OBSTRUCTIONS}
+The preceding total-Chern Hodge cancellation was
+necessary, but not the actual derived Atiyah
+deformation equation. Here we compute two
+independent stronger tests on the SAME ten-node
+perfect object, using the previously named
+polarized K-linear deformation rather than
+changing the research target or input geometry.
+
+Write \(u_j,v_j\) for the holomorphic
+coordinate one-forms on the two pairs and
+\(U_j=\overline u_j,V_j=\overline v_j\).
+Choose the actual first-order balanced
+Weil variation already recorded above,
+\[
+ u_1(t)=u_1+tV_2+O(t^2),\qquad
+ v_2(t)=v_2+tU_1+O(t^2),
+                                                               \tag{6.1}
+\]
+together with conjugate variations for
+real parameter \(t\), with the other
+basis forms unchanged.
+The same variation preserves the
+fixed K-eigenspace and product
+polarization to first order;
+it is a genuine permitted tangent
+to the balanced Weil moduli.
+
+The graph surface
+\(Z_{\lambda_1,\lambda_2}\)
+has holomorphic conormal equations
+\[
+    v_1-\lambda_1u_1=0,\qquad
+    v_2-\lambda_2u_2=0 .
+\]
+Their infinitesimal antiholomorphic
+restrictions to the OLD graph are
+\[
+ \begin{aligned}
+ (v_1-\lambda_1u_1)(t)|_{Z_\lambda}^{0,1}
+     &=-t\lambda_1\overline{\lambda_2}
+                    \overline{u_2},\\
+ (v_2-\lambda_2u_2)(t)|_{Z_\lambda}^{0,1}
+     &=+t\overline{u_1}.
+ \end{aligned}                                            \tag{6.2}
+\]
+In the normal coordinates supplied by
+the two graph equations, the genuine
+embedded-deformation obstruction
+class in
+\(
+ H^1(Z_\lambda,N_{Z_\lambda/A})
+\)
+is represented by the nonzero matrix
+\[
+ \boxed{
+ R_\lambda(\kappa)=
+ \begin{pmatrix}
+       0&-\lambda_1\overline{\lambda_2}\\
+       1&0
+ \end{pmatrix}.
+ }                                                       \tag{6.3}
+\]
+The normal bundle of each graph is
+trivial rank two and
+\(H^1(Z_\lambda,\mathcal O_{Z_\lambda})\)
+contains the independent classes
+\(\overline{u_1},\overline{u_2}\);
+therefore a nonzero matrix really
+is a nonzero normal obstruction.
+In particular ALL eight unit-slope
+graph supports have rank two
+obstruction, and the auxiliary
+\(Z_{0,0}\) has rank one obstruction.
+
+\begin{theorem}[No graph-support-preserving nonsplit deformation]
+For the explicit nonzero tangent
+\(\kappa\) in (6.1), NONE of the nine
+distinct actual graph surfaces
+occurring in the ten-node
+construction extends to a
+first-order FLAT FAMILY OF
+EMBEDDED SUBVARIETIES inside
+the corresponding nonsplit
+first-order abelian deformation
+with that original special fiber.
+\end{theorem}
+\begin{proof}
+The first-order normal obstruction
+must vanish for an embedded
+flat deformation to exist.
+Equation (6.3) has lower-left
+entry one for EVERY chosen
+slope pair, including zero,
+and hence never vanishes.
+\end{proof}
+
+There is a stronger necessary-condition
+test, independent of preserving the
+INDIVIDUAL graph components.
+Put
+\(
+ M=\bigoplus_{a=1}^{5}\mathcal O_{Z_{P_a}},
+\quad
+ N=\bigoplus_{b=1}^{5}\mathcal O_{Z_{N_b}}.
+\)
+The chosen Ext-two twisted
+complex \(F_{\rm conn}\) has
+actual cohomology sheaves
+\[
+ \boxed{
+       \mathcal H^{0}(F_{\rm conn})=M,\qquad
+       \mathcal H^{-1}(F_{\rm conn})=N
+ }                                                       \tag{6.4}
+\]
+in the stated cohomological shift
+convention. The Ext-two
+differential is their nontrivial
+Postnikov attaching class; it
+does NOT alter these two
+cohomology sheaves.
+
+We now calculate their actual
+first-order Hodge leak instead
+of inferring it from the
+zero total K-theory leak.
+Work in the normalized exterior
+cohomology basis with the order
+\[
+ (u_1,u_2,v_1,v_2;
+              U_1,U_2,V_1,V_2).
+\]
+For the ACTUAL graph surface
+with slopes \((\lambda_1,\lambda_2)\),
+its canonical Betti class is the
+wedge product, up to a fixed
+nonzero positive normalization
+\(\mathsf c\) common to all
+graph surfaces,
+\[
+ \bigl(v_1-\lambda_1u_1\bigr)
+ \bigl(V_1-\overline{\lambda_1}U_1\bigr)
+ \bigl(v_2-\lambda_2u_2\bigr)
+ \bigl(V_2-\overline{\lambda_2}U_2\bigr).
+\]
+Use the exact inverse first-order
+basis replacements
+\[
+ \begin{array}{ll}
+ u_1=u_1(t)-tV_2(t),&
+ U_1=U_1(t)-tv_2(t),\\
+ v_2=v_2(t)-tU_1(t),&
+ V_2=V_2(t)-tu_1(t).
+ \end{array}
+\]
+The coefficient of the PARTICULAR
+ordered \((1,3)\) monomial
+\[
+        {\mathfrak m}
+             =u_2\wedge U_1\wedge U_2\wedge V_2
+\]
+in the first variation is EXACTLY
+\[
+ \boxed{
+ [\mathfrak m]\,
+ \left.\frac{d}{dt}\right|_{t=0}
+    \cl[Z_{\lambda_1,\lambda_2}]_t^{1,3}
+ =-\mathsf c\,
+             |\lambda_1|^2|\lambda_2|^2 .
+ }                                                       \tag{6.5}
+\]
+Here the coefficient follows by
+choosing the \(t\lambda_1V_2\)
+term in the first holomorphic
+factor, the
+\(-\overline{\lambda_1}U_1\)
+term in the first antiholomorphic
+factor, and the
+\(-\lambda_2u_2\),
+\(-\overline{\lambda_2}U_2\)
+terms in the two remaining
+factors; sorting the wedge gives
+the negative sign.
+No other first-order choice
+produces the same ordered
+exterior monomial.
+
+For each of the eight unit-slope
+graphs \(|\lambda_1|=|\lambda_2|=1\),
+so (6.5) is \(-\mathsf c\).
+For the auxiliary zero graph,
+it is zero. Consequently
+the two INDIVIDUAL aggregate
+cohomology-sheaf Chern characters
+have the SAME nonzero leakage:
+\[
+ \boxed{
+ [\mathfrak m]\,
+ \delta\ch_2(M)^{1,3}
+   =[\mathfrak m]\,
+      \delta\ch_2(N)^{1,3}
+   =-4\mathsf c\ne0,
+ }                                                       \tag{6.6}
+\]
+whereas their virtual
+DIFFERENCE has zero leakage,
+as it must for \(4W_{\rm R}\).
+
+\begin{theorem}[Actual impossibility of cohomology-flat lifting of the ten-node source]
+There does not exist a relative
+perfect complex over the above
+nonzero first-order Weil
+deformation with central fiber
+\(F_{\rm conn}\) and with BOTH
+relative cohomology sheaves
+\(\mathcal H^{0}\) and
+\(\mathcal H^{-1}\) FLAT OVER
+THE BASE and specializing
+to \(M,N\), respectively.
+In particular a successful
+nonsplit deformation of this
+derived object, if it exists,
+CANNOT preserve this
+cohomology-flat two-stage
+architecture.
+\end{theorem}
+\begin{proof}
+Suppose such relative coherent
+flat cohomology sheaves
+\(\mathcal M_t,\mathcal N_t\)
+existed. Their rational
+Betti Chern classes are
+horizontal under the
+Gauss--Manin comparison and,
+on every fiber, must be of
+Hodge type \((2,2)\) since
+each is the Chern character
+of a coherent algebraic
+or holomorphic sheaf on a
+smooth projective abelian
+fourfold. Their first-order
+\((1,3)\) Hodge leakage
+would therefore vanish
+separately. But their
+central classes are those
+of \(M,N\), and (6.6)
+gives the same specific
+NONZERO coefficient
+\(-4\mathsf c\) for each.
+This is a contradiction.
+\end{proof}
+
+\noindent\textbf{Actual total Atiyah distinction.}
+The last theorem closes
+THE COHOMOLOGY-FLAT
+deformation mechanism,
+not every possible
+deformation of a perfect
+complex. Coherent cohomology
+of a perfect complex can
+have base torsion and
+jump even while the entire
+derived complex deforms.
+The obstruction of the
+TOTAL complex remains the
+specific class
+\(
+ \mathrm{At}(F_{\rm conn})\smile\kappa
+ \in\Ext_A^2(F_{\rm conn},F_{\rm conn})
+\)
+from (5.2), and its
+zero total Hodge trace
+does not certify
+vanishing of that class.
+
+A useful independent
+Ext-reversal check was
+also completed: since
+distinct irreducible
+graph surfaces are not
+contained in one another,
+\(
+ \Hom_A(\mathcal O_{Z_{N_j}},
+            \mathcal O_{Z_{P_i}})=0
+\)
+unless the actual supports
+coincide. Among the ten
+chosen nodes the only
+common opposite-sign support
+is the auxiliary \(Z_{0,0}\).
+The original differential
+has no same-support
+auxiliary self-edge.
+Thus, in the naive
+two-stage Ext-algebra
+matrix model, all
+diagonal commutators
+between the 16
+positive-to-negative
+Ext-two arrows and
+the single possible
+opposite reverse
+Hom-zero arrow vanish.
+Wolfram checked
+all ten exact diagonal
+entries equal zero.
+This is a necessary
+matrix-level compatibility
+check, not a full
+hyperExt proof that the
+Atiyah obstruction class
+is nonzero.
+
 \section{Euler size, computation contract, and outcome}
 For a hypothetically simple holomorphic perfect
 object with this exact integral K0 class on
