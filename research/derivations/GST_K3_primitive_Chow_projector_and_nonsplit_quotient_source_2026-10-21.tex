@@ -1,0 +1,329 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CH}{\operatorname{CH}}
+\newcommand{\cl}{\operatorname{cl}}
+\newcommand{\ch}{\operatorname{ch}}
+\newcommand{\pr}{\operatorname{pr}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\title{GST geometric source birth on K3 square and free quotients:
+genuine Chow idempotence, primitive Euler norm, and perfect sources}
+\date{21 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+The existing GSTK3TranscendentalProjector.lean verifies rational-linear
+projector algebra. We now derive the strengthened ACTUAL rational Chow
+correspondence on the true smooth projective fourfold S times S:
+idempotence holds in the Chow ring under correspondence convolution,
+not merely on abstract Betti linear maps. Its canonical Betti class is
+primitive and has strictly positive middle self-intersection
+22-rho(S). For any fixed-point-free automorphism of S, the invariant
+cycle descends to a genuinely non-product smooth projective quotient
+fourfold with exact norm (22-rho)/|G|. Rational algebraic K0 perfect
+sources with pure middle Chern character and the same Euler norm
+are constructed from actual coherent structure sheaves and finite
+Adams projection. These results introduce independent geometric
+source inputs, without postulating universal Hodge-to-Chow
+surjectivity; the arbitrary-variety original Hodge conjecture is not
+asserted settled.
+\end{abstract}
+
+\section{Actual geometry and Chow correspondence convention}
+Let S be an arbitrary complex projective K3 surface, so
+H^1(S,Q)=H^3(S,Q)=0, b_2(S)=22,
+and int_S c_2(T_S)=24.
+Let rho be the rational Neron-Severi rank (1<=rho<=20).
+Choose algebraic rational divisor classes D_1,...,D_rho
+forming a Q-basis of NS(S)_Q, and set
+G_ij=int_S D_i D_j.
+By the Hodge index theorem G is a nonsingular symmetric
+rational matrix. Write g^{ij}=(G^{-1})_ij.
+Choose an actual rational zero-cycle o in CH^2(S)_Q
+of degree one (a closed point suffices).
+
+On X=S times S define ACTUAL codimension-two cycles
+\[
+ p_0=o\times S,\quad p_4=S\times o,\quad
+ p_{\rm NS}=\sum_{i,j=1}^{\rho}g^{ij}D_i\times D_j,
+ \quad
+ \boxed{p_T=[\Delta_S]-p_0-p_4-p_{\rm NS}.}        \tag{1.1}
+\]
+All these are cycles in CH^2(X)_Q, and Delta_S is
+the actual scheme-theoretic diagonal, not an abstract
+identity operator.
+
+For alpha,beta in CH^2(S times S)_Q define their
+correspondence convolution by
+\[
+ \alpha\circ\beta
+  =(p_{13})_*(p_{12}^*\beta\cdot p_{23}^*\alpha)
+                  \in CH^2(S\times S)_Q.          \tag{1.2}
+\]
+The genuine diagonal is the two-sided convolution identity.
+Convolution and ordinary intersection product
+are distinct operations: the subscript in
+int_X p_T^2 below ALWAYS refers to ordinary Chow
+intersection, whereas p_T circ p_T is composition.
+
+\section{Genuine scheme-level transcendental projector}
+\begin{theorem}[Chow-idempotent transcendental K3 projector]
+The actual algebraic correspondences p_0,p_4,p_NS
+are pairwise convolution-orthogonal idempotents:
+\[
+ p_a\circ p_a=p_a,\qquad
+ p_a\circ p_b=0\quad(a\ne b,\ a,b\in\{0,4,\mathrm{NS}\}).
+                                                               \tag{2.1}
+\]
+Consequently their genuine Chow-complement p_T is an
+ACTUAL CHOW IDEMPOTENT,
+\[
+ \boxed{p_T\circ p_T=p_T\quad\mathrm{in}\ CH^2(S\times S)_Q.}
+                                                               \tag{2.2}
+\]
+Its canonical Betti correspondence action is identity
+on T(S)_Q=NS(S)_Q^\perp\subset H^2(S,Q)
+and zero on H^0,H^4, and NS(S)_Q.
+\end{theorem}
+\begin{proof}
+The product o has degree one; in S cubed, the
+pushforward formula for composing o times S with
+itself integrates the middle factor o, giving p_0.
+Likewise p_4 squared is p_4. All mixed
+compositions p_0 with p_4 vanish by codimension:
+one either integrates the fundamental middle surface
+with insufficient codimension or multiplies two
+codimension-two zero-cycles on that surface.
+For p_NS, the triple-product computation uses
+\[
+ (p_{13})_*\bigl((D_i\times D_j)_{12}\,
+                    (D_k\times D_l)_{23}\bigr)
+  =\left(\int_S D_jD_k\right)(D_i\times D_l)
+  =G_{jk}(D_i\times D_l).
+\]
+Therefore the coefficient matrix for
+p_NS squared is G^{-1} G G^{-1}=G^{-1}.
+Mixed products of p_NS with p_0 or p_4
+contain a product of a divisor with a point
+in CH^3(S)=0 or a pushforward of a divisor
+without enough middle degree; all vanish.
+Thus P=p_0+p_4+p_NS satisfies P circ P=P.
+Since Delta is the convolution identity,
+(Delta-P) circ (Delta-P)=Delta-P, proving (2.2).
+
+Under the genuine Betti cycle map, p_0 and
+p_4 are respectively the H^0/H^4 projectors.
+The p_NS correspondence on H^2 has the explicit
+geometric action
+\[
+ v\longmapsto\sum_{i,j}g^{ij}
+                   \left(\int_S vD_i\right)D_j,
+\]
+which is the intersection-orthogonal projection
+onto NS(S)_Q. H^1 and H^3 vanish for K3,
+so the stated decomposition is complete.
+\end{proof}
+
+\section{Exact positive primitive middle fourfold source}
+\begin{theorem}[Geometric primitive Euler source of rank 22-rho]
+Let h be the first Chern class of ANY ample algebraic line
+bundle on S and H=pr_1^*h+pr_2^*h an ample class on X.
+The ACTUAL algebraic codimension-two Chow cycle p_T
+has a primitive canonical Hodge class
+\[
+ H\smile\cl(p_T)=0\quad\mathrm{in}\ H^6(X,Q)
+\]
+and its genuine signed middle Hodge intersection is
+\[
+ \boxed{\int_X\cl(p_T)^2=22-\rho(S)>0.}            \tag{3.1}
+\]
+This produces an actual independent primitive
+algebraic source for every projective K3 surface S,
+including transcendental cohomological directions
+not manufactured by the NS divisor projector.
+\end{theorem}
+\begin{proof}
+The Betti class of p_T lies in
+T(S)_Q\otimes T(S)_Q\subset
+H^2(S,Q)\otimes H^2(S,Q)
+and encodes the inverse rational cup pairing on T(S).
+Because h belongs to NS(S), any t in T(S) satisfies
+h cup t=0 in H^4(S,Q). Multiplying p_T by
+pr_1^*h or pr_2^*h therefore gives zero in Betti
+cohomology. The cycle itself is algebraic and of
+Hodge type (2,2), so primitiveness is genuine.
+
+For the norm, the diagonal self-intersection
+on S times S is int_S c_2(T_S)=24.
+The explicit cycle intersection degrees are
+\[
+\begin{aligned}
+ \int_X \Delta_S p_0=\int_X\Delta_S p_4&=1,\\
+ \int_X p_0p_4&=1,\quad
+ \int_Xp_0^2=\int_Xp_4^2=0,\\
+ \int_X\Delta_S p_{\rm NS}
+  =\int_Xp_{\rm NS}^2&=\rho,\\
+ \int_Xp_0p_{\rm NS}
+  =\int_Xp_4p_{\rm NS}&=0 .
+\end{aligned}
+\]
+For p_NS squared, contraction gives
+sum g^{ij}g^{kl}G_{ik}G_{jl}=rho.
+Expanding (Delta-p_0-p_4-p_NS)^2 yields
+24+2+rho-2(2+rho)=22-rho.
+Projective K3 surfaces have 1<=rho<=20,
+so this integer is strictly positive.
+\end{proof}
+
+\section{Actual pure-perfect-complex source}
+Let X=S times S; its dimension is four.
+For any actual rational codimension-two Chow cycle Z,
+choose a finite formal presentation Z=sum c_j[Z_j]
+by integral codimension-two subvarieties.
+Since X is regular, each coherent O_{Z_j} is
+a perfect K0 object. The leading-cycle formula gives
+ch_0(O_{Z_j})=ch_1(O_{Z_j})=0 and
+ch_2(O_{Z_j})=[Z_j] in rational Chow.
+Let
+\[
+ \Pi_2=\prod_{j\in\{0,1,3,4\}}
+                  \frac{\psi^2-2^j}{4-2^j}.
+                                                               \tag{4.1}
+\]
+This rational algebraic Adams polynomial is the
+eigenprojector onto Chern-character codimension two.
+The actual perfect K-class
+\[
+ \boxed{C_T=\Pi_2\left(\sum_jc_j[O_{Z_j}]\right)
+                  \in K_0^{alg}(X)_Q}              \tag{4.2}
+\]
+satisfies
+\[
+ \boxed{\ch(C_T)=\cl_{\CH}(p_T)
+       \text{ purely in codimension two},\quad
+ \chi_X(C_T,C_T)=22-\rho.}                          \tag{4.3}
+\]
+The class is independent of the chosen finite
+cycle presentation because the rational algebraic
+Chern character is injective on K0(X)_Q.
+HRR for the actual smooth fourfold proves the
+Euler formula: only the two pure degree-two
+Chern characters meet, Todd_0=1, and
+dualization has sign +1 in degree two.
+This is an ACTUAL algebraic original-X one-legged
+Euler source, not a preassigned abstract Hodge witness.
+
+\section{Descent to a NONPRODUCT smooth projective fourfold}
+Suppose a finite group G acts freely on S by algebraic
+automorphisms. It acts diagonally and freely on
+Y=S times S. Let
+\[
+ q:Y\longrightarrow X_G=Y/G
+\]
+be the finite etale quotient, of degree n=|G|.
+Average any actual degree-one rational zero-cycle
+over G to choose o invariant. The K3 diagonal is
+invariant under g times g, and the full NS inverse
+tensor p_NS is basis-independent and invariant
+under simultaneous pullback by each automorphism.
+Hence p_T is G-invariant as an ACTUAL rational Chow class.
+
+\begin{theorem}[Actual nonsplit quotient source birth]
+On the genuinely smooth projective nonproduct
+quotient fourfold X_G define
+\[
+ \boxed{\zeta_G=\frac1n q_*p_T
+                         \in CH^2(X_G)_Q.}         \tag{5.1}
+\]
+Then q^*zeta_G=p_T, and the canonical Hodge class
+cl(zeta_G) is primitive for an actual rational
+ample class H_G descended from a G-invariant ample
+class on Y. Its actual intersection norm is
+\[
+ \boxed{\int_{X_G}\cl(\zeta_G)^2
+                     =\frac{22-\rho(S)}{n}>0.}    \tag{5.2}
+\]
+The rational Adams-purified structure-sheaf source
+C_G=Pi_2(sum c_j[O_{Z_j}]) for a finite rational
+subvariety presentation of zeta_G is genuinely
+algebraic on the original quotient X_G, with
+pure ch(C_G)=zeta_G and
+\[
+ \boxed{\chi_{X_G}(C_G,C_G)
+                =\frac{22-\rho(S)}n.}             \tag{5.3}
+\]
+No algebraic representative of a target Hodge class
+on X_G is assumed to produce this source.
+\end{theorem}
+\begin{proof}
+The finite etale Galois projection satisfies
+q^*q_*p_T=\sum_{g\in G}g^*p_T=n p_T
+in rational Chow, because p_T is invariant.
+Consequently q^*zeta_G=p_T.
+Choose any algebraic ample class h on S,
+average h over G to obtain an invariant rational
+ample class, and use its sum along the two factors
+on Y. Some integral multiple linearizes and
+descends along q; denote the resulting rational
+ample class by H_G. Its pullback is this invariant
+product polarization. Since p_T is primitive,
+q^*(H_G cup cl(zeta_G))=0; injectivity of
+finite-etale rational cohomology pullback gives
+H_G cup cl(zeta_G)=0.
+
+For the intersection formula, the projection
+formula and degree n give
+\[
+ \int_{X_G}(\cl(\zeta_G))^2
+ =\frac1n\int_Y q^*(\cl(\zeta_G))^2
+ =\frac1n\int_Y\cl(p_T)^2
+ =\frac{22-\rho(S)}n .
+\]
+The pure Adams source on X_G follows from the
+same scheme-level coherent K0 argument as (4.2);
+HRR yields the rational Euler self-index.
+\end{proof}
+
+A concrete nonempty class of this construction
+occurs when S admits a fixed-point-free Enriques
+involution iota: G={1,iota} and n=2.
+Such projective K3 surfaces exist. For rho(S)=10
+the exact descended primitive Euler index is
+(22-10)/2=6. We do not assert that every Picard
+rank between 1 and 20 occurs with a free involution;
+only the actual allowed geometric cases are claimed.
+
+\section{Wolfram verification and the universal target boundary}
+The exact Wolfram computation contracted inverse
+NS intersection Gram matrices of signatures
+(1,rho-1) for all ranks rho=1,...,20.
+All 20 checked g^{-1}Gg^{-1}=g^{-1},
+all 20 trace ranks rho, and all 20
+positive self-intersections 22-rho.
+The quotient projection-formula identity
+gave (22-rho)/n for arbitrary symbolic n>0,
+and for an Enriques involution with rho=10
+gave the exact index 6.
+This verifies algebraic arithmetic; the
+general source proof is geometric, above.
+
+Unlike the prior GSTK3TranscendentalProjector.lean
+rational-linear model, (2.2) is an identity
+in the ACTUAL Chow correspondence ring.
+The quotient (5.1) furnishes a new smooth
+nonproduct ORIGINAL variety with a specific
+genuine non-tautological primitive algebraic
+cycle and pure algebraic perfect-complex source.
+No claimed all-varieties theorem follows:
+the construction does not, for arbitrary
+smooth projective X and arbitrary primitive
+rational Hodge alpha, produce an algebraic
+Z with cl(Z)=alpha. That full quantifier,
+and a nonseparable diagonal-to-one-leg
+conversion for arbitrary alpha, remain open.
+The work is mathematics-first and
+not represented as a new Lean check.
+\end{document}
