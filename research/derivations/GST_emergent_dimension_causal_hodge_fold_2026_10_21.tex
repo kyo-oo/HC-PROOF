@@ -520,6 +520,265 @@ GST fold can therefore change Hodge-weight
 constraints by changing the realization CATEGORY.
 This is not a counterexample on a smooth projective X.
 
+\section{GST causal leakage operator: an exact equation deciding whether a fold births Hodge or non-Hodge structure}
+The previous
+examples can
+be unified by
+an ACTUAL
+linear
+operator on
+a genuine
+Hodge realization,
+rather than
+only by the
+abstract
+\(a+b,a-b\)
+cosmic coordinates.
+For a fixed
+smooth projective
+complex world
+and a fixed
+cohomological
+degree m, set
+\[
+ V_{\C}=H^m(X,\C)
+   =\bigoplus_{a+b=m}H^{a,b}(X),
+\quad
+ P_q=\sum_{a-b=q}
+        P^{a,b}.
+\]
+The canonical
+Hodge decomposition
+supplies the
+ACTUAL
+charge
+projectors
+\(P_q\).
+For any
+specified
+complex-linear
+cohomology
+operator
+\(F:V_{\C}\to V_{\C}\)
+induced by a
+genuine
+geometric
+recoordination,
+define the
+off-charge
+LEAKAGE:
+\[
+ \boxed{
+ \mathcal L_q(F)
+  :=\sum_{r\ne q}P_r F P_q.
+ }                                                        \tag{7}
+\]
+For an operator
+between worlds,
+use the
+source and
+target
+charge
+projectors
+respectively,
+with the
+correct
+cohomological
+and Tate
+degree shifts.
+
+\begin{theorem}[Exact causal-fold criterion, composition, and bidirectional charge rebirth]
+A homogeneous
+cohomology
+operator F
+preserves ALL
+Hodge signed
+charges if and
+only if
+\[
+ \boxed{
+       \mathcal L_q(F)=0
+                  \text{ for EVERY }q.
+ }                                                        \tag{8}
+\]
+Any finite
+composition of
+charge-preserving
+operators
+remains
+charge-preserving,
+independently
+of the number
+of GST causal
+higher-coherence
+levels.
+For every
+typed
+algebraic/Tate
+causal edge
+from the
+first theorem,
+(8) holds.
+
+For the
+genuine
+partial-conjugation
+involution F
+on
+\(A=E_i^2\),
+\[
+ \boxed{
+ \mathcal L_0(F^*)(\eta)=\eta'\ne0,
+ \qquad
+ (F^*)^2\eta=\eta,\qquad
+ (F^*)^2\eta'=\eta'.
+ }                                                        \tag{9}
+\]
+In particular
+a FIRST
+fold sends a
+rational
+algebraic
+Hodge class
+to a rational
+NON-Hodge
+class;
+the SECOND
+fold returns
+that class to
+the original
+Hodge sector.
+Charge leakage
+along individual
+events can
+cancel along
+an entire
+causal history.
+Thus a GST
+graph edge
+must carry
+its own
+Hodge-compatibility
+certificate;
+the mere
+existence of
+a higher
+coherence
+cell is not
+such a
+certificate.
+\end{theorem}
+\begin{proof}
+The mutually
+orthogonal
+projectors
+\(P_q\)
+sum to the
+identity.
+Thus
+\(F(P_qv)\)
+has charge q
+for EVERY v
+if and only if
+all its
+projections to
+different charge
+sectors vanish,
+which is
+exactly (8).
+If F and G
+each map
+every
+charge-q
+summand into
+the corresponding
+charge-q
+summand,
+so does
+\(G\circ F\);
+induction
+handles
+all finite
+causal paths.
+An algebraic
+Tate fold
+preserves the
+difference a-b
+by direct
+Hodge type
+calculation,
+giving zero
+leakage.
+For partial
+conjugation
+the original
+eta is of
+charge 0,
+while
+\(\eta'\)
+is the nonzero
+sum of
+the exact
+charge +2
+and -2
+forms (5a).
+Therefore
+\(\mathcal L_0(F^*)(\eta)
+=\eta'\).
+The genuine
+diffeomorphism F
+is an involution,
+so its
+cohomology
+pullback squares
+to the
+identity,
+proving the
+remaining
+equations.
+\end{proof}
+
+\noindent\textbf{What this operator does and does not prove.}
+Equation (8)
+is a complete
+DECISION
+CRITERION
+for Hodge
+charge
+compatibility
+of a GIVEN
+fully realized
+cohomology
+operator.
+It does
+NOT build
+the necessary
+geometric
+cohomology
+operator
+from
+the bare
+GST graph
+alone, nor
+show that
+a non-Hodge
+rational
+class is
+a Hodge
+conjecture
+counterexample.
+It gives
+an exact
+cross-world
+and causal
+matrix
+test for
+the user's
+new
+dimensional
+folding
+program.
+
 \section{Exact GST graph-causality realization contract}
 The source-file dictionary is:
 \texttt{GSTGeneralSpace.lean} = dimensionless carrier;
