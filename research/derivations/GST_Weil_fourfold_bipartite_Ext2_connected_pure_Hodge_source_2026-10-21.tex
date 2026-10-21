@@ -61,18 +61,21 @@ coherent sheaves of explicitly defined algebraic subvarieties.
 For a single paired surface E_{x_j}\times E_{y_j} denote by
 G_{\lambda,j} the actual graph divisor y_j=\lambda x_j,
 and let e_x,f_x,e_y,f_y be the integral H^1 basis
-compatible with [i]. In the genuine rational cohomology ring set
+compatible with [i]. Define the ACTUAL rational Chow divisor classes FIRST:
 \[
- U_j=e_{x_j}e_{y_j}+f_{x_j}f_{y_j},\qquad
- V_j=e_{x_j}f_{y_j}-f_{x_j}e_{y_j}.
-\]
-These are true integral classes of algebraic mixed graph divisors,
-with actual graph-difference identities
+ U_j:=\tfrac12([G_{i,j}]-[G_{-i,j}]),\qquad
+ V_j:=-\tfrac12([G_{1,j}]-[G_{-1,j}])
+               \in\CH^1(E_{x_j}\times E_{y_j})_\Q .
+\]                                                     \tag{1.3}
+Under the GENUINE canonical Betti class map and a compatible
+integral cohomology basis, their exterior expressions are
 \[
- \boxed{
- 2U_j=[G_{i,j}]-[G_{-i,j}],\quad
- -2V_j=[G_{1,j}]-[G_{-1,j}].}                      \tag{1.3}
+ \cl(U_j)=e_{x_j}e_{y_j}+f_{x_j}f_{y_j},\qquad
+ \cl(V_j)=e_{x_j}f_{y_j}-f_{x_j}e_{y_j}.
 \]
+Thus every equality involving products of U and V
+before Betti realization is an actual CHOW equality,
+not a false identification of cohomology with rational equivalence.
 They follow by expanding the pullback of the point class
 under the actual homomorphism (x,y)\mapsto y-\lambda x.
 
