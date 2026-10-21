@@ -1,0 +1,312 @@
+\documentclass[11pt]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CH}{\mathrm{CH}}
+\newcommand{\cl}{\mathrm{cl}}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\pr}{\operatorname{pr}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\title{GST original-\(X\) geometric source birth from excess components:
+universal hypersurface incidence, native residual periods, and the ambient-source exclusion}
+\author{Mathematical derivation and self-audit}
+\date{21 October 2026}
+\begin{document}
+\maketitle
+\section{Target, provenance, and why this is not another projector}
+Let \(X\) be any smooth projective complex variety of dimension d,
+\(H\in CH^1(X)\) a fixed very ample divisor, and \(1\le p\le d/2\).
+For a prescribed rational primitive \((p,p)\)-Hodge class
+\[
+ r\in H^{2p}(X,\Q)\cap H^{p,p}(X),\quad
+ h^{d-2p+1}r=0,\quad h=\cl_X^{can}H,
+\]
+the required Gate-3 outcome is an ACTUAL algebraic cycle
+\(Z_r\in CH^p(X)_\Q\) with \(\cl_X^{can}(Z_r)=r\).
+Previous native projectors, Chern--Segre and Euler laws apply AFTER an
+algebraic source is present. Here we work on the original scheme X
+from defining algebraic sections, and explicitly separate ordinary
+complete intersections from their INDIVIDUAL excess components.
+No Chow preimage of r is used in constructing the family of sources.
+
+\section{Universal scheme-level component source, no preselected cycle}
+For every integer \(m\ge1\) let
+\[
+ P_m=\prod_{j=1}^{p}\mathbf P(H^0(X,\OO_X(mH)))
+\]
+be the genuine product of projective spaces of actual sections.
+A tuple \(t=(s_1,\ldots,s_p)\) defines an ACTUAL projective scheme
+\[
+ V(t)=V(s_1,\ldots,s_p)\subset X.
+\]
+On the open locus where all pure codimension-p components are defined,
+take the fundamental top-dimensional cycle
+\[
+ [V(t)]_{d-p}=\sum_{\nu}m_\nu(t)[Z_\nu(t)]
+       \qquad m_\nu(t)\in\mathbb Z_{>0}.
+\]
+Each \(Z_\nu(t)\) is a concrete irreducible subvariety of the
+ORIGINAL X, cut out by algebraic equations and component decomposition.
+No Hodge-to-Chow inverse is a field or an input.
+
+\begin{theorem}[Every original-X algebraic codimension-p component can be BORN by special hypersurface incidence]
+For ANY integral codimension-p closed subvariety \(Z\subset X\),
+there exists \(m\gg0\) and an actual tuple
+\(t=(s_1,\ldots,s_p)\in P_m\) such that:
+(i) \(V(t)\) is pure codimension p;
+(ii) Z is an irreducible component of \(V(t)\), with scheme-theoretic
+generic intersection multiplicity exactly ONE; and
+(iii) the genuine rational Chow equality is
+\[
+ \boxed{m^p H^p=[Z]+\sum_{\nu\ne Z}m_\nu[Z_\nu]
+          \quad\text{in }CH^p(X)_\Q.}                 \tag{1}
+\]
+Consequently the union, over all m and ALL actual parameter tuples,
+of the ACTUAL individual irreducible component cycles \(Z_\nu(t)\)
+generates the ENTIRE rational algebraic Chow group \(CH^p(X)_\Q\).
+Unlike the finite existing-cycle Gram frame, these objects are obtained
+from sections of the fixed original X without starting with a
+chosen finite Chow source catalog.
+\end{theorem}
+\begin{proof}
+The coherent ideal sheaf \(I_Z\) has \(I_Z(mH)\) globally
+generated for all sufficiently large m by Serre's theorem.
+At the generic point \(\eta_Z\), the regular local ring
+\(\OO_{X,\eta_Z}\) has dimension p and maximal ideal
+\(I_Z\OO_{X,\eta_Z}\). Its cotangent quotient has
+dimension p over the residue field \(k(\eta_Z)\).
+Global generation implies the values of actual global
+sections of \(I_Z(mH)\) surject onto this cotangent quotient.
+Choose p general global sections giving a basis at \(\eta_Z\).
+Their local equations form a regular system of parameters
+there, hence \(V(t)\) has Z as a generic reduced component
+with multiplicity one. Since the common base locus of the
+full linear system is Z, choose the same p sections generically
+outside Z to obtain the expected codimension everywhere and
+avoid components of codimension less than p (Bertini/dimension
+count for successive divisors). Thus the intersection is
+a pure codimension-p local complete intersection.
+The genuine projective intersection product of the p
+Cartier divisors is the fundamental cycle of their
+scheme-theoretic complete intersection:
+\( [V(t)]=c_1(\OO_X(mH))^p=m^pH^p\)
+in actual Chow, with generic component multiplicities
+as asserted. Every class in \(CH^p(X)_\Q\) is a finite rational
+linear combination of classes of actual integral
+codimension-p closed subvarieties. Each occurs in this
+component collection, proving the last claim.
+\end{proof}
+
+\section{GST primitive source periods: generic intersection is BLIND, special components are not}
+Let \(r\) be the prescribed primitive Hodge class. Its genuine
+polarized original-X period against any actual codimension-p
+cycle \(Z\) is
+\[
+ \ell_r(Z)=(-1)^p\int_X
+          r\smile \cl_X^{can}(Z)\smile h^{d-2p}.
+\]
+For p>=1 and \(h^{d-2p+1}r=0\), one has
+\[
+ \boxed{\ell_r(H^p)=(-1)^p\int_X r\,h^{d-p}=0.}       \tag{2}
+\]
+The genuine complete-intersection class
+\([V(t)]=m^ph^p\) therefore has ZERO native period for
+every tuple, even when the individual algebraic components do not.
+
+\begin{theorem}[Exact original-X component cancellation and geometric source detection]
+For every pure codimension-p actual intersection tuple t:
+\[
+ \boxed{\sum_{\nu}m_\nu(t)\ell_r(Z_\nu(t))=0.}       \tag{3}
+\]
+A prescribed primitive Hodge residual r is non-orthogonal to the
+full algebraic codimension-p source image IF AND ONLY IF at least
+ONE actual hypersurface-incidence component \(Z_\nu(t)\)
+has \(\ell_r(Z_\nu(t))\ne0\) for some integer m and tuple t.
+Therefore the first possible nonambient detection is a
+genuine component of a SPECIAL, possibly reducible,
+complete intersection; varying GENERIC complete
+intersections or their total classes alone never detects r.
+\end{theorem}
+\begin{proof}
+Equation (3) is the actual Chow equality (1) passed
+through the canonical Betti class and the
+genuine rational primitive intersection functional,
+using (2). For the converse, any actual algebraic
+cycle with nonzero period is a finite rational sum
+of integral subvarieties; one of those has nonzero period.
+Theorem 1 embeds it with multiplicity one as a component
+of an actual tuple's intersection. The other direction
+is immediate because each component is algebraic on X.
+\end{proof}
+
+\section{The strict GST ambient/Jacobian algebraic-source exclusion}
+Suppose the actual original X is a smooth complete intersection
+of multidegree \((d_1,\ldots,d_c)\) in \(\mathbf P^N\),
+where \(d=N-c\). Write \(L=[\OO_X(1)]\) in the
+TRUE algebraic K-theory ring \(K_0^{alg}(X)\).
+The genuine algebraic normal and Euler sequences imply
+\[
+ \boxed{[T_X]=(N+1)[L]-[\OO_X]-\sum_{a=1}^{c}[L^{d_a}]
+                \in K_0^{alg}(X),}                \tag{4}
+\]
+hence
+\[
+ \boxed{\operatorname{ch}(T_X)
+          =(N+1)e^h-1-\sum_{a=1}^{c}e^{d_a h}.}   \tag{5}
+\]
+Let \(\mathcal R_{\rm amb}\) be the smallest rational
+lambda-subring of \(K_0^{alg}(X)_\Q\) generated by the
+actual powers \(L^k\), including all virtual sums,
+differences, tensor products, duals, exterior and
+symmetric powers, Adams operations and their rational
+polynomials. Every algebraic K-class constructed by
+applying these operations to the tangent/Jacobian
+kernel or any ambient line-bundle class belongs to
+\(\mathcal R_{\rm amb}\) because of (4), and has
+\(\operatorname{ch}\) in \(\Q[h]/(h^{d+1})\).
+
+\begin{theorem}[UNIFORM inability of regular ambient/Jacobian source factories to detect any primitive Hodge residual]
+For every smooth projective complete intersection X as above,
+every \(1\le p\le d/2\), EVERY rational primitive Hodge r,
+and EVERY ACTUAL algebraic virtual \(K\)-class
+\(E\in\mathcal R_{\rm amb}\),
+the degree-p genuine Chern class
+\([\operatorname{ch}(E)]_p\) is \(a_Eh^p\)
+for some \(a_E\in\Q\), so
+\[
+ \boxed{(-1)^p\int_Xr\, [\operatorname{ch}(E)]_p
+                         h^{d-2p}=0.}            \tag{6}
+\]
+This includes every GST tangent-Jacobian algebraic
+idempotent, Adams/Todd normalization, regular-section
+complete-intersection and derived tensor/virtual combination
+formed using ONLY these ambient objects.
+This exact all-complete-intersections vanishing is independent
+of the number of such operations performed and does not
+assume any Hodge counterexample exists.
+It does NOT apply to genuinely nonambient coherent sheaves
+on special embedded components; those are the new geometric
+input of Theorem 1.
+\end{theorem}
+\begin{proof}
+Equation (4) is an actual exact sequence in algebraic K-theory.
+The Chern character of each line bundle power \(L^k\)
+is \(e^{kh}\), in \(\Q[h]\).
+The ch is a ring homomorphism and
+lambda-ring operations on virtual sums of line bundles
+are computed by splitting-principle symmetric polynomials
+in these line-bundle exponentials. Hence all indicated
+K-classes have Chern character in \(\Q[h]\).
+Equation (6) follows from (2).
+Regular complete-intersection fundamental cycle
+classes are products of actual ambient Cartier
+divisors and hence multiples of \(h^p\), confirming
+the geometric and K-theoretic calculations agree.
+\end{proof}
+
+\section{Executed geometric discriminator: split quadric fourfold, nonambient plane component}
+This is a MODEL-VALIDATION of the DIFFERENCE between
+ambient total intersection and actual nonambient
+component; it is NOT proposed as the all-X theorem.
+Consider the ACTUAL smooth quadric fourfold
+\[
+ Q^4=\{x_0y_0+x_1y_1+x_2y_2=0\}\subset\mathbf P^5.
+\]
+Cut by the actual two hyperplanes \(y_1=y_2=0\).
+The remaining defining equation is \(x_0y_0=0\),
+so the genuine scheme intersection splits into two planes
+\[
+ \boxed{[P_A]+[P_B]=h^2\text{ in }CH^2(Q^4),}     \tag{7}
+\]
+where \(P_A=\{y_0=y_1=y_2=0\}\) and
+\(P_B=\{x_0=y_1=y_2=0\}\).
+The normal sequence for \(P_A\) in the actual quadric is
+\[
+ 0\longrightarrow N_{P_A/Q^4}
+ \longrightarrow \OO_{\mathbf P^2}(1)^{\oplus3}
+ \xrightarrow{(x_0,x_1,x_2)}
+          \OO_{\mathbf P^2}(2)\longrightarrow0.
+\]
+Writing \(t=c_1(\OO_{\mathbf P^2}(1))\) gives
+\(c(N)=(1+t)^3/(1+2t)=1+t+t^2\).
+Consequently the TRUE intersection numbers are
+\[
+ h^4=2,\qquad h^2[P_A]=1,\qquad[P_A]^2=1.
+\]
+The ACTUAL algebraic primitive rational cycle
+\[
+ \boxed{Z_r=2[P_A]-h^2=[P_A]-[P_B]}               \tag{8}
+\]
+satisfies the actual primitive Lefschetz identity
+\(h\,\cl(Z_r)=0\) and the positive middle
+self-intersection
+\[
+ \boxed{\int_{Q^4}\cl(Z_r)^2
+        =4\cdot1-4\cdot1+2=2>0.}                 \tag{9}
+\]
+Thus the total regular intersection \(h^2\)
+is blind to the nonambient primitive direction,
+while a genuine reducible fiber supplies the
+ACTUAL independently geometric component
+\(P_A\) detecting it. The difference cycle (8)
+is constructed on the same actual quadric.
+
+Wolfram EXACTLY checked
+\(\operatorname{ch}(T_{Q^4})=6e^h-1-e^{2h}\)
+through degree four, giving
+\(4+4h+h^2-h^3/3-5h^4/12\);
+the normal Chern polynomial \(1+t+t^2\);
+and the exact primitive norm 2.
+The first symbolic run accidentally used Wolfram's
+protected symbol N, and the second had an incorrect
+expected ch2 coefficient; the third corrected run
+satisfied ALL stated assertions. No numerical
+approximation or hypothetical Hodge class was used.
+
+\section{GST typed application and exact universal acceptance condition}
+These scheme-level source operations are consistent with
+\texttt{GSTUniversalResolvedSupportHodge.lean}
+(actual algebraic Jacobian and idempotent bundles),
+\texttt{GSTActualXHodgeResidualProjection.lean}
+(actual sourceNativeCycles and target-directed native
+Euler readout),
+\texttt{GSTPolarizedHodgeResidualEnergy.lean}
+(genuine primitive intersection functional),
+\texttt{GSTPrimitiveAlgebraicMotiveProjector.lean}
+(native algebraic projector),
+\texttt{GSTUniversalChowRetractToTarget.lean}
+(original-X real Chow/Gysin return), and
+\texttt{GSTGraphV2SelfExpandingCosmology.lean}
+(native world operators).
+
+The input to the new operation is X's actual
+projective embedding and a tuple of sections of \(\OO_X(mH)\);
+the output is an ACTUAL closed subscheme/component
+\(Z_\nu(t)\subset X\), not merely an analytic current or
+Betti vector. The canonical Betti class follows from
+actual algebraic cycle functoriality. The exact
+GST residual period is \(\ell_r(Z_\nu(t))\).
+
+The REAL universal existence requirement is therefore
+precisely: for every arbitrary X and every nonzero
+primitive rational Hodge residual r orthogonal to known
+algebraic cycles, force SOME special section tuple
+and an irreducible component with a NONZERO r-period.
+This forcing property is EQUIVALENT to failure of
+orthogonality of r to the entire existing canonical
+algebraic image. It is NOT implied by the genuine
+section-incidence construction, its projective
+parameter spaces, Hodge positivity, GST Gram
+identities, or the observed quadric example.
+
+The present theorems do give independent, exhaustive
+SCHEME-TYPED algebraic SOURCE GEOMETRY on arbitrary X,
+and a rigorous structural reason why conventional
+normal-bundle, universal tangent/Jacobian, regular
+section and ample-only GST operations cannot solve
+the primitive case even after arbitrary iteration.
+No supposed arbitrary-X Hodge cycle is smuggled
+into the source constructor.
+\end{document}
