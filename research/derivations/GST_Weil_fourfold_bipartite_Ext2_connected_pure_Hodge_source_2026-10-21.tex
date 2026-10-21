@@ -1,0 +1,426 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CH}{\operatorname{CH}}
+\newcommand{\ch}{\operatorname{ch}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\title{GST nonsplit-Weil source surgery: an actual connected bipartite
+Ext-two perfect complex with pure rational Weil Chern character}
+\date{21 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We attack the actual source-birth gap, rather than adding another
+abstract source-completion equivalence. For the authentic split
+Weil-type abelian fourfold E^4 with E having complex multiplication
+by i, we construct a completely explicit nonzero coupled
+dg-perfect-complex object whose rational Chern character is
+four times a nonzero primitive rational exceptional Weil Hodge class,
+with no other Chern grades. The construction uses eight genuine
+abelian graph surfaces with signed K-classes, one geometrically
+neutral positive/negative auxiliary pair, and actual degree-two
+crossing Ext classes. Exact signed graph expansions, crossing
+multiplicities and connectivity are independently checked with
+Wolfram. This repairs the degree-three shift-parity failure of the
+older six-dimensional bare graph sheaf architecture in the
+four-dimensional case. The Weil character has zero first-order
+Hodge-type leakage along balanced K-linear deformations, while
+the derived Atiyah--Kodaira--Spencer class is not proved zero.
+Accordingly, this is an actual coupled central-fiber geometric
+source, NOT an unearned nonsplit deformation or an all-X proof.
+\end{abstract}
+\section{Original smooth projective variety and explicit algebraic surfaces}
+Let E=C/(Z+i Z) be the genuine CM elliptic curve and
+A=E_{x_1}\times E_{x_2}\times E_{y_1}\times E_{y_2}.
+The K=Q(i) action is i on the two x factors and -i on
+the two y factors, giving balanced Weil Hodge signature (2,2).
+For \lambda_1,\lambda_2 in Z[i] define an ACTUAL smooth
+embedded abelian surface in this original projective fourfold:
+\[
+ Z_{\lambda_1,\lambda_2}
+ =\{\,y_1=\lambda_1 x_1,\quad y_2=\lambda_2 x_2\,\}
+             \subset A.                            \tag{1.1}
+\]
+Its normal bundle is algebraically trivial of rank two
+(the quotient of translation-invariant tangent bundles).
+By scheme GRR on an abelian variety (Todd classes equal one),
+\[
+ \boxed{\ch[\mathcal O_{Z_{\lambda_1,\lambda_2}}]
+          =[Z_{\lambda_1,\lambda_2}]
+          \in\CH^2(A)_\Q,\quad
+          \ch_j=0\ (j\ne2).}                        \tag{1.2}
+\]
+No class map on A is freely specified: all sources are actual
+coherent sheaves of explicitly defined algebraic subvarieties.
+
+For a single paired surface E_{x_j}\times E_{y_j} denote by
+G_{\lambda,j} the actual graph divisor y_j=\lambda x_j,
+and let e_x,f_x,e_y,f_y be the integral H^1 basis
+compatible with [i]. In the genuine rational cohomology ring set
+\[
+ U_j=e_{x_j}e_{y_j}+f_{x_j}f_{y_j},\qquad
+ V_j=e_{x_j}f_{y_j}-f_{x_j}e_{y_j}.
+\]
+These are true integral classes of algebraic mixed graph divisors,
+with actual graph-difference identities
+\[
+ \boxed{
+ 2U_j=[G_{i,j}]-[G_{-i,j}],\quad
+ -2V_j=[G_{1,j}]-[G_{-1,j}].}                      \tag{1.3}
+\]
+They follow by expanding the pullback of the point class
+under the actual homomorphism (x,y)\mapsto y-\lambda x.
+
+\section{A PURE rational Weil Chow class: eight actual graph surfaces}
+The rational exceptional Weil Hodge plane for this balanced
+K-action has actual exterior generators
+\[
+ W_{\rm R}=-U_1U_2+V_1V_2,\qquad
+ W_{\rm I}=U_1V_2+V_1U_2.
+\]
+Under complexification these are the real and imaginary
+parts of the K-eigen determinant \Omega_\sigma
+=\bigwedge^4 H^1(A,\mathbb C)_\sigma,
+which has type (2,2) on EVERY polarized balanced
+Weil-type period with the fixed K-action.
+They are rational Betti classes and, at THIS split A,
+are explicitly algebraic. Substituting (1.3),
+\[
+ \begin{split}
+ 4W_{\rm R}
+ &= (G_{1,1}-G_{-1,1})(G_{1,2}-G_{-1,2})\\
+ &\quad -(G_{i,1}-G_{-i,1})(G_{i,2}-G_{-i,2}).
+ \end{split}                                             \tag{2.1}
+\]
+Every product on the right is the genuine smooth abelian
+surface \(Z_{\lambda_1,\lambda_2}\).
+The complete integral positive list is
+\[
+ P=((1,1),(-1,-1),(i,-i),(-i,i))
+\]
+and negative list is
+\[
+ N=((1,-1),(-1,1),(i,i),(-i,-i)).
+\]
+Thus
+\[
+ \boxed{4W_{\rm R}=\sum_{P}[Z_P]-\sum_N[Z_N]
+        \quad\text{in the actual rational Chow ring}.}  \tag{2.2}
+\]
+Wolfram independently expanded all eight products
+with exact coefficients \(+1,-1\), four of each.
+The Gaussian-form norm follows from
+\(U_j^2=V_j^2=-2[\mathrm{point}]\) and \(U_jV_j=0\):
+\[
+   W_{\rm R}^2=8,\quad
+   W_{\rm I}^2=8,\quad
+   W_{\rm R}W_{\rm I}=0,\qquad
+   (4W_{\rm R})^2=128.                              \tag{2.3}
+\]
+The form is a genuine geometric intersection pairing on the
+split original A, not a formal assigned Gram.
+
+\section{Exact codimension-two crossing Ext and parity repair}
+Take two graph surfaces \(Z_\lambda,Z_\mu\) such that
+\(\lambda_j\ne\mu_j\) for both j=1,2. They meet
+transversely in a finite reduced scheme \(P_{\lambda,\mu}\)
+whose number of points is
+\[
+ \boxed{|P_{\lambda,\mu}|=
+  N_{\Q(i)/\Q}(\lambda_1-\mu_1)\,
+  N_{\Q(i)/\Q}(\lambda_2-\mu_2).}                  \tag{3.1}
+\]
+This follows from the two independent elliptic isogenies
+\([\lambda_j-\mu_j]\) of the true CM elliptic curve.
+For the important slopes (1,1) and
+(2+i,2+i), the difference is \(-1-i\),
+of norm 2 on each factor, hence intersection length 4.
+For the pair (1,1) and (2+i,2+i) with a different
+normalization used in older sixfold records,
+degrees must be computed from the exact displayed
+graph equations, not borrowed from other dimensions.
+In particular for slopes (1,1) and (2+i,2+i)
+the intersection length is 4; for (1,1) and
+(1+2i,1+2i) the norm of -2i is 4 per factor
+and intersection length 16.
+
+At each transverse crossing, the completed local ring and
+two ideals are
+\[
+ R=\mathbb C[[x_1,x_2,y_1,y_2]],\qquad
+ I_{Z_\lambda}=(x_1,x_2),\quad
+ I_{Z_\mu}=(y_1,y_2).
+\]
+Applying the x-Koszul resolution to the ring R/(y_1,y_2)
+gives the actual sheaf Ext concentration
+\[
+ \mathcal Ext^q_A(\mathcal O_{Z_\lambda},
+                   \mathcal O_{Z_\mu})
+ \cong
+ \begin{cases}\mathcal O_{P_{\lambda,\mu}}&q=2,\\
+                 0&q\ne2.\end{cases}               \tag{3.2}
+\]
+Its support is finite, hence the local-to-global Ext spectral
+sequence degenerates and
+\[
+ \boxed{\Ext_A^2(\mathcal O_{Z_\lambda},
+                 \mathcal O_{Z_\mu})
+         \cong \mathbb C^{|P_{\lambda,\mu}|},\quad
+         \Ext_A^q=0\ (q\ne2).}                     \tag{3.3}
+\]
+These are genuine coherent Ext groups, not assumed
+abstract incidence vector spaces.
+A degree-one morphism of dg components
+\(\mathcal O_{Z_\lambda}[0]\to
+   \mathcal O_{Z_\mu}[1]\)
+has type
+\(\mathrm{Hom}^1=\Ext^2\).
+The shift difference one gives opposite K0 signs, so unlike
+the earlier codimension-three Ext^3-only graph case,
+degree-two crossing classes have exactly the
+correct parity for a nonzero signed coupling.
+
+\section{A connected ten-node coupled perfect complex}
+To avoid disconnected components in the signed graph
+formula (2.2), insert an actual zero-K0 auxiliary pair:
+add \(+[Z_{0,0}]-[Z_{0,0}]\), with identical
+underlying genuine abelian support but opposite shifts.
+This does not change any Chern character.
+There are now exactly five positive nodes
+\[
+ \begin{split}
+ P_1&=(1,1),\ P_2=(-1,-1),\
+ P_3=(i,-i),\ P_4=(-i,i),\ P_5=(0,0)
+ \end{split}
+\]
+and five negative nodes
+\[
+ N_1=(1,-1),\ N_2=(-1,1),\
+ N_3=(i,i),\ N_4=(-i,-i),\ N_5=(0,0).
+\]
+Consider the bipartite graph of all \(P_a\to N_b\)
+for which the actual surfaces intersect transversely,
+i.e. where both corresponding Gaussian slopes differ.
+Wolfram evaluated all 25 comparisons using the
+EXACT Gaussian norm and found 16 transverse edges:
+\[
+\begin{array}{c|l}
+P_1&N_3,N_4,N_5\\
+P_2&N_3,N_4,N_5\\
+P_3&N_1,N_2,N_5\\
+P_4&N_1,N_2,N_5\\
+P_5&N_1,N_2,N_3,N_4
+\end{array}
+\]
+Their Ext^2 spaces have dimensions four
+(for four central cross-pair edges in each block)
+or one (edges through an auxiliary zero node).
+The graph is CONNECTED on all ten nodes:
+Wolfram's exact connected-component calculation
+returned precisely one component.
+
+Choose a genuinely nonzero coherent Ext^2 class
+\(f_{ab}\) on each of the sixteen allowed edges.
+Form the dg enhanced perfect-object direct sum
+\[
+ B=\bigoplus_{a=1}^5\mathcal O_{Z_{P_a}}
+       \oplus
+      \bigoplus_{b=1}^5\mathcal O_{Z_{N_b}}[1],
+\]
+equipped with the closed total degree-one
+twisted differential whose only additional matrix
+entries are the \(f_{ab}\) from positive to
+negative nodes, and no entries in the reverse
+direction. Every \(f_{ab}\) is represented by a
+closed degree-one morphism in a genuine dg
+enhancement of the perfect derived category.
+Since there are no arrows out of a negative
+node, \(\delta^2=0\) STRICTLY as a matrix,
+and with closed entries the Maurer--Cartan
+equation is satisfied. The pretriangulated
+hull therefore produces an ACTUAL perfect
+derived object \(F_{\rm conn}\) on the ORIGINAL
+smooth projective fourfold A, with a nonzero
+coupling differential supported on a
+connected ten-node graph.
+
+\begin{theorem}[Actual connected graph-coupled PURE rational Weil source]
+The genuine perfect object above obeys
+\[
+ \boxed{
+ [F_{\rm conn}]
+ =\sum_{a=1}^5[\mathcal O_{Z_{P_a}}]
+  -\sum_{b=1}^5[\mathcal O_{Z_{N_b}}]
+             \in K_0^{alg}(A)
+ }
+\]
+and its COMPLETE Chern character is
+\[
+ \boxed{\ch_j(F_{\rm conn})=0\ (j\ne2),\qquad
+        \ch_2(F_{\rm conn})=4W_{\rm R}
+                   \in CH^2(A)_\Q.}                \tag{4.1}
+\]
+Its genuine self-Euler index is
+\[
+ \boxed{\chi_A(F_{\rm conn},F_{\rm conn})=128.}     \tag{4.2}
+\]
+The rational K0 class \([F_{\rm conn}]/4\)
+has pure Chern character \(W_{\rm R}\),
+with self-Euler 8.
+\end{theorem}
+\begin{proof}
+K0 of a twisted perfect complex is the alternating
+sum of its component K0 classes, independent of
+the off-diagonal differentials. The identical
+auxiliary support cancels. Formula (2.2) then
+gives the codimension-two Chern class exactly.
+Each graph surface's normal bundle is trivial,
+so (1.2) proves absence of ALL other Chern grades.
+The abelian fourfold tangent Todd class is 1,
+and degree-two duality has parity plus, so HRR
+gives \(\chi(F,F)=\int_A\ch_2(F)^2=16\cdot8=128\).
+The selected nonzero dg entries exist by (3.3)
+and square to zero by the one-way bipartite
+architecture, proving an actually coupled
+perfect complex, not just a numerical K0 class.
+\end{proof}
+
+\section{Exact first-order Hodge test and the still distinct Atiyah obstruction}
+For a balanced Weil-type K-linear deformation,
+the sigma-eigen subspace of H^1 has complex
+rank four with two holomorphic and two
+antiholomorphic directions at all points
+of the period domain. Its determinant
+\(\wedge^4H^1_\sigma\) therefore remains
+of Hodge type (2,2) under every such
+polarized deformation. Since the flat rational
+Betti class \(4W_{\rm R}\) lies in the real span
+of the two determinant eigenspaces,
+\[
+ \boxed{
+  \frac{d}{dt}\big|_{t=0}
+  [\ch_2(F_{\rm conn})]^{(1,3)}_t
+ =\frac{d}{dt}\big|_{t=0}
+  [\ch_2(F_{\rm conn})]^{(3,1)}_t=0.}         \tag{5.1}
+\]
+The difference from the previous raw two-graph
+class is essential: its Hodge leakage need not
+cancel, whereas the actual coupled SOURCE in
+(4.1) has a pure CM-projector eigencharacter.
+
+One explicit first-order local balanced variation
+is the determinant-one unipotent basis shear
+\(u_1(t)=u_1+tV_2\) in the sigma eigenspace
+and \(v_2(t)=v_2+tU_1\) in the conjugate
+eigenspace, with the other eigenbasis
+vectors unchanged. The determinant of each
+4-by-4 shear is identically one.
+Writing the actual divisor classes as
+\(U_j=(P_j+Q_j)/2\),
+\(V_j=(Q_j-P_j)/(2i)\) in the
+corresponding complex 2-form basis,
+Wolfram's exact algebra obtained
+\[
+ -U_1U_2+V_1V_2
+   =-\tfrac12(P_1P_2+Q_1Q_2)
+\]
+and checked the first-order coefficient
+\(-(-1/4)+(-1/4)=0\) where the
+individual product terms leak.
+The uniform Hodge statement above
+does not depend on this particular
+finite tangent check.
+
+However, let \(\kappa\in H^1(A,T_A)\)
+be the actual Kodaira--Spencer class of
+a nonsplit Weil-type deformation.
+The complete geometric deformation
+obstruction of the chosen PERFECT OBJECT is
+\[
+ \boxed{
+ \operatorname{ob}_{F_{\rm conn}}(\kappa)
+   =\operatorname{At}(F_{\rm conn})
+          \smile\kappa
+   \in\Ext_A^2(F_{\rm conn},F_{\rm conn}).}          \tag{5.2}
+\]
+Hodge-type flatness implies that the
+SEMIREGULARITY / traced Chern variation
+of (5.2) vanishes. It does not imply
+that the entire Ext^2 obstruction
+class is zero, nor that a compatible
+coherent complex exists on the nonsplit
+fiber. Thus (4.1) repairs the missing
+actual connected source and the
+Hodge-leak of its TOTAL K0 character
+on the split original A. The still
+unverified implication is the vanishing
+of the explicit Ext^2 class (5.2)
+for an actual chosen nonzero
+nonsplit period tangent. No synthetic
+Hodge-to-Chow inverse or unearned
+deformation is asserted.
+
+\section{Euler size, computation contract, and outcome}
+For a hypothetically simple holomorphic perfect
+object with this exact integral K0 class on
+the Calabi--Yau fourfold A, Serre duality gives
+\(\chi=2e_0-2e_1+e_2\), \(e_0=1\);
+with \(\chi=128\), it forces
+\(e_2=126+2e_1\).
+The raw semiregularity target on an
+abelian fourfold has dimension
+\(\sum_{k=0}^{2}\binom4k\binom4{k+2}
+=6+16+6=28\).
+Therefore naive FULL semiregularity injectivity
+would fail for a simple realization of
+this specific inflated integer class.
+This is not an obstruction to the existence
+of F_conn (which is explicitly constructed),
+nor to all possible lower-scale or
+non-simple constructions; it warns
+against inferring actual deformation
+from a trace-free class alone.
+
+Exact Wolfram checks (stateless evaluations):
+eight signed surface-product terms, four
+positive/four negative; after one
+K0-neutral auxiliary pair, ten nodes,
+sixteen transverse Ext^2 edges,
+one connected component; Gaussian
+intersection dimensions exactly 1 or 4;
+the unrelated slope 1 vs (1+2i) pair
+has length16; genuine primitive
+Weil Gram 8 and integral class Gram128;
+exact sheaf Ext concentration;
+Euler/Serre equations;
+sigma/conjugate determinant shears with
+determinant one; first-order real projected
+Hodge leak coefficient zero.
+The first scratch Gaussian-norm call
+used Wolfram Norm[z] (complex absolute
+value) rather than the degree norm
+Abs[z]^2. It was rejected, and the
+correct Gaussian integer norm
+a^2+b^2 gave 4 for -2i,
+16 for two factors, with exact
+integer intersection checks.
+
+**Evidence classification:** new complete
+actual algebraic split-fiber perfect-source
+construction, local complete-intersection
+Ext computation, and exact arithmetic.
+The deformation statement (5.1) is
+a necessary Hodge condition, NOT a
+proof of the full Atiyah obstruction
+vanishing (5.2), and NOT the rational
+Hodge conjecture for arbitrary nonsplit
+abelian fourfolds or arbitrary X.
+No Lean kernel check or independent
+referee review is claimed in this
+mathematics-first round.
+\end{document}
