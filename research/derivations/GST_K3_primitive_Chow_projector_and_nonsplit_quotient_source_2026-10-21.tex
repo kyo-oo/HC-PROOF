@@ -403,6 +403,72 @@ In particular scalar-End(T) is a genuine
 Hodge-structure restriction, not a harmless
 algebraic Gram normalization.
 
+\begin{corollary}[Explicit 103-source rational Chow basis on the Enriques-involution quotient]
+Suppose in addition S is a projective K3 with
+a fixed-point-free Enriques involution iota,
+rho(S)=10, and the scalar-End(T) condition
+(6.1). Then on the ACTUAL smooth quotient
+fourfold X=(S times S)/<iota times iota>,
+\[
+ \boxed{\dim_\Q\operatorname{Hdg}^2(X)_\Q=103.}     \tag{6.4}
+\]
+Moreover all 103 independent canonical Hodge
+classes have a completely explicit ACTUAL
+rational algebraic Chow basis:
+\[
+ \boxed{
+ \frac12q_*p_0,\quad
+ \frac12q_*p_4,\quad
+ \frac12q_*(D_i\times D_j)\ (1\le i,j\le10),\quad
+ \frac12q_*p_T .}                                   \tag{6.5}
+\]
+The final basis class is primitive and has
+rational self-intersection 6.
+\end{corollary}
+\begin{proof}
+An Enriques involution has invariant rational
+degree-two cohomology of rank ten.
+Since rho=10 and the ample invariant divisor
+classes span the invariant Hodge divisors,
+the whole NS(S)_Q is invariant. Its rational
+orthogonal complement T(S)_Q, of dimension 12,
+is anti-invariant. The diagonal involution
+therefore fixes each product D_i times D_j
+and the actual p_T class, as well as p_0,p_4
+using the averaged invariant rational o.
+
+The previous theorem decomposes the rational
+middle Hodge sector of S times S into
+2 factor/point directions, rho squared
+divisor-product directions, and one
+transcendental identity direction; hence
+the dimension is 2+10^2+1=103.
+All 103 basis classes are invariant under
+the diagonal involution. The rational
+cohomological transfer identifies H^4(X,Q)
+with H^4(S times S,Q)^{G}.
+Pullback of each class (6.5) is exactly
+the corresponding independent invariant
+class on S times S. Hence they remain
+linearly independent and span all
+rational middle Hodge classes on X.
+The normalized primitive class has
+self-intersection (22-10)/2=6 by (5.2).
+\end{proof}
+
+For the same K3 quotient, the full rational
+fourth Betti number is
+\(
+ 2+\dim(NS\otimes NS)+\dim(T\otimes T)
+ =2+100+144=246
+\).
+This is an invariant-cohomology count,
+not a claim that all 246 rational Betti
+classes have Hodge type (2,2). The
+actual Chow construction spans precisely
+the 103-dimensional rational Hodge sector
+under the stated scalar-End hypothesis.
+
 \section{Wolfram verification and the universal target boundary}
 The exact Wolfram computation contracted inverse
 NS intersection Gram matrices of signatures
