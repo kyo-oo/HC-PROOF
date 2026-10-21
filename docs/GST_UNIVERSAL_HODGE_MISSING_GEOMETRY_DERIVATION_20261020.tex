@@ -42,6 +42,78 @@ Neither unconditional Hodge algebraicity nor a genuine
 counterexample is claimed.
 \end{abstract}
 
+\section{Canonical geometric cycle-class construction (semantics repair)}
+
+The original-X class map in this paper is not an arbitrary
+Hodge-to-cycle selector. We construct it mathematically from the
+analytic fundamental classes of algebraic subvarieties, then identify
+precisely the separate Lean interface that still needs instantiation.
+
+Let \(X/\mathbf C\) be smooth projective of complex dimension \(d\),
+with \emph{its genuine complex analytification} \(X^{an}\). For each
+irreducible algebraic codimension-\(p\) closed subvariety \(Z\), choose
+a resolution \(\rho:\widetilde Z\to Z\) and denote the inclusion by
+\(i_Z:Z\hookrightarrow X\). The analytic fundamental cycle defines
+a rational singular-homology class
+\[
+ [Z]_{X}^{an}:=(i_Z^{an}\circ\rho^{an})_*[\widetilde Z]_
+ {2(d-p)}
+ \in H_{2(d-p)}(X^{an},\Q).
+\]
+The proper birational pushforward of fundamental cycles makes the
+class independent of the chosen resolution. Since \(X^{an}\) is a
+compact oriented real \(2d\)-manifold, Poincar\'e duality constructs
+\[
+ \boxed{\operatorname{cl}^{\mathrm{can}}_{X,p}([Z])
+   =\operatorname{PD}_{X^{an}}([Z]_{X}^{an})
+   \in H^{2p}(X^{an},\Q).}                     \tag{C1}
+\]
+Extend this map \(\Q\)-linearly to finite rational cycle sums.
+
+\begin{theorem}[Canonical comparison independent of GST semantic fields]
+Formula \textup{(C1)} descends to
+\(\operatorname{cl}^{\mathrm{can}}_{X,p}:
+\CH^p(X)_\Q\to H^{2p}(X^{an},\Q)\).
+Every image class has Hodge type \((p,p)\). The map is the unique
+rational-linear map that sends each irreducible codimension-\(p\)
+cycle to its genuine analytic fundamental-class dual.
+\end{theorem}
+\begin{proof}
+For a codimension-\((p-1)\) irreducible \(W\) and a rational
+function \(f\in\mathbf C(W)^\times\), resolve the closure of the
+graph of \(f:W\dashrightarrow\mathbf P^1\).
+The divisor \(\operatorname{div}_W(f)\) is the difference of the
+proper pushforwards of the fibers over \(0\) and \(\infty\).
+Those fibers are homologous because two points of
+\(\mathbf P^1(\mathbf C)\) are homologous. Therefore its
+fundamental-class image in \(X^{an}\) vanishes. The map is
+well-defined modulo rational equivalence. Its analytic
+integration current has bidegree \((p,p)\) and is closed;
+the K\"ahler Hodge decomposition thus places the resulting
+Betti class in \(H^{p,p}\). Finally, irreducible algebraic
+cycles generate \(\CH^p(X)_\Q\), so agreement on their classes
+forces equality everywhere.
+\end{proof}
+
+\noindent\textbf{Direct GST/Lean binding.}
+The earlier verified module
+\texttt{GSTClassicalHodgeGeometricCycleClassPointRigidity.lean}
+proves that a point-generated native class map is uniquely
+determined by its codimension-point assignments; and
+\texttt{GSTCanonicalPointGeometryStage2G.lean}
+now composes the actual original-\(X\) Euler projector with this
+point-generated map and gives an explicit finite native
+cycle-plus-residual formula. To identify that formal \texttt{pt}
+parameter with \(\operatorname{PD}_{X^{an}}[Z]^{an}\),
+one must instantiate the genuine analytification topology,
+fundamental-class construction, and its singular-cohomology
+comparison in Lean. A freely chosen \texttt{pt}, or a mere
+equivalence of underlying point sets with an arbitrary topology,
+does not suffice for the geometric identification. Nothing in
+the above geometric proof supplies algebraic representatives
+of all rational \((p,p)\) classes; it fixes the independent
+\emph{canonical semantics} of the comparison map.
+
 \section{Exact target and GST source dictionary}
 Fix a nonempty smooth projective complex variety X of dimension d,
 a very ample divisor H with class h, and 0<=p<=d.  Define
