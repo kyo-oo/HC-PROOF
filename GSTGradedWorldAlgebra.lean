@@ -310,4 +310,76 @@ theorem cosmic_carry_grading (n k : ℕ) (f : CompletedCosmos) :
   intro A B
   simpa using carryShiftN_respects_degree (A:=A) (B:=B) n k (observe A B f)
 
+
+/-! ## GST EMERGENT-DIMENSION CAUSAL TATE FOLD
+
+A dimension in GeneralSpace is NOT intrinsic to the carrier.  Once the
+unbounded CosmicCell grading is chosen, simultaneous increments on both
+coordinates have exact total-degree and signed-charge laws.  The latter
+is the algebraic prerequisite for a genuine Hodge (p,p) interpretation.
+It does NOT, on its own, supply such a geometric realization or a Chow
+cycle representing an arbitrary rational Hodge class.
+
+The actual projective-bundle/Chern--Segre realization and a topological
+non-holomorphic Hodge-breaking discriminator are derived separately in
+research/derivations/GST_emergent_dimension_causal_hodge_fold_2026_10_21.tex.
+-/
+
+/-- Simultaneous shift on the two UNBOUNDED world coordinates.
+This is a coordinate-level Tate fold, NOT an assumed algebraic map. -/
+def cosmicTateFold (j : ℕ) (c : CosmicCell) : CosmicCell :=
+  (c.1 + j, c.2 + j)
+
+/-- Both native coordinates move, so emergent total degree grows by 2j. -/
+theorem cosmicTateFold_degree (j : ℕ) (c : CosmicCell) :
+    cosmicDegree (cosmicTateFold j c) = cosmicDegree c + 2*j := by
+  rcases c with ⟨a, b⟩
+  simp only [cosmicDegree, cosmicTateFold]
+  omega
+
+/-- A symmetric dimensional fold CANNOT change signed grading charge. -/
+theorem cosmicTateFold_charge (j : ℕ) (c : CosmicCell) :
+    cosmicCharge (cosmicTateFold j c) = cosmicCharge c := by
+  rcases c with ⟨a, b⟩
+  simp only [cosmicCharge, cosmicTateFold]
+  omega
+
+/-- Folding sequentially is exactly a single fold by the sum of depths. -/
+theorem cosmicTateFold_comp (j k : ℕ) (c : CosmicCell) :
+    cosmicTateFold k (cosmicTateFold j c) =
+      cosmicTateFold (j+k) c := by
+  rcases c with ⟨a, b⟩
+  simp only [cosmicTateFold]
+  congr 1 <;> omega
+
+/-- The abstract GST charge-zero sector is stable under all Tate folds.
+Only a typed Hodge realization may interpret it as algebraic Hodge type. -/
+theorem cosmicTateFold_charge_zero_iff (j : ℕ) (c : CosmicCell) :
+    cosmicCharge (cosmicTateFold j c) = 0 ↔ cosmicCharge c = 0 := by
+  rw [cosmicTateFold_charge]
+
+/-- Finite GST causal histories of successive Tate folds. -/
+def cosmicTatePath : List ℕ → CosmicCell → CosmicCell
+  | [], c => c
+  | j :: rest, c => cosmicTatePath rest (cosmicTateFold j c)
+
+/-- Signed charge is conserved by an arbitrarily long FINITE causal fold. -/
+theorem cosmicTatePath_charge (steps : List ℕ) (c : CosmicCell) :
+    cosmicCharge (cosmicTatePath steps c) = cosmicCharge c := by
+  induction steps generalizing c with
+  | nil => rfl
+  | cons j rest ih =>
+      calc
+        cosmicCharge (cosmicTatePath (j :: rest) c) =
+            cosmicCharge (cosmicTatePath rest (cosmicTateFold j c)) := rfl
+        _ = cosmicCharge (cosmicTateFold j c) := ih _
+        _ = cosmicCharge c := cosmicTateFold_charge j c
+
+#check cosmicTateFold_degree
+#check cosmicTateFold_charge
+#check cosmicTateFold_comp
+#check cosmicTateFold_charge_zero_iff
+#check cosmicTatePath_charge
+#print axioms cosmicTatePath_charge
+
 end GSTGradedWorldAlgebra
