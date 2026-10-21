@@ -718,12 +718,24 @@ obstruction
 As an endomorphism of the
 UNDERLYING DIRECT SUM
 \(B=M\oplus N[1]\),
-the first-order curvature
-\(a_\kappa\) is block diagonal;
-the twist \(\delta\) has ONLY
-the 16 forward degree-one
-arrows from positive \(P_i\)
-to negative \(N_j[1]\).
+the first-order VERTEX
+curvature \(a_\kappa\)
+is block diagonal.
+Transporting the forward
+arrows may generate
+additional FORWARD
+off-diagonal curvature
+terms; such terms
+do not affect the
+reverse or positive
+diagonal blocks
+used below.
+The twist \(\delta\)
+has ONLY the 16
+forward degree-one
+arrows from positive
+\(P_i\) to negative
+\(N_j[1]\).
 
 \begin{lemma}[Forward-Ext-two differential cannot erase a vertex Atiyah class without reverse Hom-zero data]
 In this actual dg model,
@@ -945,6 +957,44 @@ classes are fixed by
 the underlying graph
 geometry.
 \end{proof}
+
+\noindent\textbf{Independent self-Ext dimension and curvature check.}
+The true graph embedding
+\(Z_\lambda\subset A\)
+is algebraically split
+by the unipotent
+coordinate automorphism
+\((x,y)\mapsto(x,y-\lambda x)\).
+Thus its self-Ext algebra
+has the genuine
+Kunneth--Koszul
+graded dimensions
+\[
+  \dim\operatorname{Ext}^k_A
+  (\mathcal O_{Z_\lambda},
+   \mathcal O_{Z_\lambda})
+   =\sum_{a+b=k}
+       \binom2a\binom2b
+   =\binom4k,\qquad k=0,\ldots,4.
+\]
+In particular the
+\(k=2\) group has
+dimension six, with a
+four-dimensional
+\(H^1(Z_\lambda,N_{Z_\lambda/A})\)
+subspace carrying
+the exact obstruction
+matrix (6.3).
+Wolfram independently
+verified the complete
+self-Ext profile
+\( (1,4,6,4,1)\).
+This identifies the
+geometric TARGET of
+the vertex Atiyah
+curvature independently
+of the abstract
+Euler self-index.
 
 \noindent\textbf{Comparison with the earlier partial test.}
 The Hodge-type
