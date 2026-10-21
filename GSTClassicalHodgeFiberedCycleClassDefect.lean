@@ -308,4 +308,103 @@ theorem defect_eq_of_same_marginals
 #print axioms defect_add_circulation
 #print axioms defect_eq_of_same_marginals
 
+
+/-! ## GST NATIVE MASS-CALIBRATED FULL FIBER SOURCE BIRTH
+A nonzero-mass nullhomologous native cycle calibrates the two common-refinement
+marginals without changing the actual original-X Betti cycle class.
+The independent hyperplane-source construction is derived in
+research/derivations/GST_fibered_native_mass_calibrated_cycle_birthday_2026-10-22.tex.
+-/
+
+/-- A signed rational correction by a genuine nullhomologous native source. -/
+noncomputable def massBalancedPresentation
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b ν : GSTNativeCodimensionCyclePresentation.FiniteCodimensionPresentation V.X p) :
+    GSTNativeCodimensionCyclePresentation.FiniteCodimensionPresentation V.X p :=
+  b + (GSTClassicalHodgeFiberedNativePullback.multiplicityMass V H p a -
+       GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass b) • ν
+
+/-- Actual finite presentation augmentation is precisely target Hodge mass. -/
+theorem massBalancedPresentation_mass
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b ν : GSTNativeCodimensionCyclePresentation.FiniteCodimensionPresentation V.X p)
+    (hνmass : GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass ν = 1) :
+    GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass
+      (massBalancedPresentation (V := V) (H := H) (p := p) a b ν) =
+        GSTClassicalHodgeFiberedNativePullback.multiplicityMass V H p a := by
+  simp only [massBalancedPresentation, map_add, map_smul, hνmass,
+    smul_eq_mul, mul_one]
+  ring
+
+/-- Calibration leaves canonical Betti realization of the genuine source intact. -/
+theorem massBalancedPresentation_cycleClass
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b ν : GSTNativeCodimensionCyclePresentation.FiniteCodimensionPresentation V.X p)
+    (hνclass :
+      H.cycleClass p
+        (GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation
+          V.X p ν) = 0) :
+    H.cycleClass p
+      (GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation
+        V.X p (massBalancedPresentation (V := V) (H := H) (p := p) a b ν)) =
+      H.cycleClass p
+        (GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation
+          V.X p b) := by
+  simp only [massBalancedPresentation,
+    GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation_add,
+    GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation_smul,
+    map_add, map_smul, hνclass, smul_zero, add_zero]
+
+/-- An ACTUAL independent native candidate lands on the full Hodge multiplicity
+face, without an extra mass restriction, exactly when its true Betti class
+agrees. The proof uses the EXISTING geometric marginal gluing operation. -/
+theorem gluedMassBalancedState_defect_zero_iff
+    (i₀ : ClassicalHodgeBasisIndex V H p)
+    (x₀ : GSTNativeCodimensionCyclePresentation.CodimensionPoint V.X p)
+    (a : ClassicalHodgeBasisIndex V H p →₀ ℚ)
+    (b ν : GSTNativeCodimensionCyclePresentation.FiniteCodimensionPresentation V.X p)
+    (hνmass : GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass ν = 1)
+    (hνclass :
+      H.cycleClass p
+        (GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation
+          V.X p ν) = 0) :
+    fiberedCycleClassDefect (V := V) (H := H) (p := p)
+      (GSTClassicalHodgeFiberedNativePullback.glueMarginals V H p i₀ x₀ a
+        (massBalancedPresentation (V := V) (H := H) (p := p) a b ν)) = 0 ↔
+      H.cycleClass p
+        (GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation
+          V.X p b) =
+      ((classicalHodgeBasis V H p).repr.symm a).1 := by
+  let bc := massBalancedPresentation (V := V) (H := H) (p := p) a b ν
+  let Φ := GSTClassicalHodgeFiberedNativePullback.glueMarginals V H p i₀ x₀ a bc
+  have hmass : GSTClassicalHodgeNativeCycleCosmicShadow.presentationMass bc =
+      GSTClassicalHodgeFiberedNativePullback.multiplicityMass V H p a :=
+    massBalancedPresentation_mass (V := V) (H := H) (p := p)
+      a b ν hνmass
+  have hNative :
+      GSTClassicalHodgeFiberedNativePullback.toNativeCycle V H p Φ =
+        GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation
+          V.X p bc := by
+    change GSTNativeCodimensionCyclePresentation.realizeFiniteCodimensionPresentation
+        V.X p (GSTClassicalHodgeFiberedNativePullback.forgetMultiplicity V H p Φ) = _
+    rw [GSTClassicalHodgeFiberedNativePullback.glueMarginals_forgetMultiplicity]
+  have hHodge :
+      fiberedHodgeClass (V := V) (H := H) (p := p) Φ =
+        (classicalHodgeBasis V H p).repr.symm a := by
+    apply (classicalHodgeBasis V H p).repr.injective
+    change GSTClassicalHodgeFiberedNativePullback.forgetPoint V H p Φ = a
+    exact GSTClassicalHodgeFiberedNativePullback.glueMarginals_forgetPoint
+       V H p i₀ x₀ a bc hmass.symm
+  change fiberedCycleClassDefect (V := V) (H := H) (p := p) Φ = 0 ↔ _
+  rw [defect_eq_zero_iff_faces_agree, hNative, hHodge,
+    massBalancedPresentation_cycleClass (V := V) (H := H) (p := p)
+      a b ν hνclass]
+
+#check massBalancedPresentation_mass
+#check massBalancedPresentation_cycleClass
+#check gluedMassBalancedState_defect_zero_iff
+#print axioms massBalancedPresentation_mass
+#print axioms massBalancedPresentation_cycleClass
+#print axioms gluedMassBalancedState_defect_zero_iff
+
 end GSTClassicalHodgeFiberedCycleClassDefect
