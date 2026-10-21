@@ -1204,6 +1204,255 @@ divisor is an isomorphism and adds
 no source problem.
 \end{proof}
 
+\section{Actual K3 HILBERT SCHEMES: complete Chow sources via geometric incidence}
+We now pass from ordinary powers to actual
+n-point Hilbert schemes of a smooth
+projective K3 surface. This operation
+does not merely rename a product:
+the Hilbert scheme is a new smooth
+irreducible holomorphic symplectic
+variety of complex dimension 2n.
+The source constructor uses the
+actual Hilbert--Chow incidence
+correspondences, not an assumed
+Hodge-to-Chow selector.
+
+For n>=1 let
+\(
+ X_n=S^{[n]}=\operatorname{Hilb}^n(S)
+\),
+the ACTUAL smooth projective Hilbert
+scheme of length-n zero-dimensional
+subschemes of S. Let \(\lambda\vdash n\)
+run over integer partitions and
+\(\ell(\lambda)\) denote the number
+of parts. Define the true incidence
+locus in \(S^{\ell(\lambda)}\times X_n\)
+by the Hilbert--Chow condition
+\[
+ \Gamma_\lambda=
+ \overline{\left\{((x_1,\ldots,x_{\ell}),\xi):
+    \mathrm{HC}(\xi)=
+              \sum_{i=1}^{\ell}\lambda_i[x_i]\right\}},
+                                                               \tag{11.1}
+\]
+with the standard rational
+multiplicity/symmetry normalization
+for equal parts. It is an ACTUAL
+algebraic correspondence supported
+on the genuine incidence scheme.
+
+The established incidence motive
+decomposition for Hilbert schemes
+of points on a smooth surface
+(de Cataldo--Migliorini) gives a
+rational CHOW MOTIVE isomorphism
+\[
+ \boxed{
+ h(X_n)_Q\simeq
+ \bigoplus_{\lambda\vdash n}
+       h(S^{(\lambda)})_Q
+                      (n-\ell(\lambda)),
+ }                                                       \tag{11.2}
+\]
+where \(S^{(\lambda)}\) denotes
+the finite permutation-invariant
+summand of the actual smooth
+product \(S^{\ell(\lambda)}\),
+with permutations of equal-sized
+parts. Formula (11.2) is
+implemented by actual incidence
+cycles \(\Gamma_\lambda\) and
+their transposes with explicit
+rational normalizers. The theorem
+is an external geometric motivic
+input; unlike a free native
+representation hypothesis, it
+does not assert any Hodge target
+was algebraic beforehand.
+
+\begin{theorem}[Every rational Hodge class on actual Hilbert schemes below transcendental rank is algebraic]
+Let S be any ACTUAL projective K3
+surface satisfying the orthogonal
+Hodge-group hypothesis (9.1),
+with r=dim_Q T(S). Then for
+EVERY integer
+\[
+             \boxed{1\le n<r,}
+                                                               \tag{11.3}
+\]
+and EVERY codimension
+\(0\le p\le2n\),
+EVERY rational (p,p) Hodge
+class alpha on the ACTUAL
+smooth projective hyperkahler
+Hilbert scheme \(X_n=S^{[n]}\)
+admits an EXPLICIT actual
+rational Chow cycle
+\[
+ \boxed{Z_\alpha\in CH^p(X_n)_Q,\qquad
+       \cl^{can}(Z_\alpha)=\alpha .}               \tag{11.4}
+\]
+The source is assembled by
+pulling the target through
+the exact actual Hilbert-incidence
+motive decomposition, applying
+the finite GST diagonal-matching
+Chow construction on K3 powers
+from Theorem 9, and returning
+the actual cycles by the
+incidence correspondences.
+
+For a Picard-rank-one K3
+with the stated Hodge group,
+this is a complete rational
+Hodge source-construction theorem
+for Hilbert schemes of
+lengths n=1,...,20, in genuine
+complex dimensions up to forty.
+\end{theorem}
+\begin{proof}
+For each partition lambda, the
+rational Chow-motive isomorphism
+(11.2) supplies an ACTUAL
+algebraic incidence extraction
+correspondence \(U_\lambda\)
+and an ACTUAL algebraic
+incidence return correspondence
+\(V_\lambda\), with the correct
+Tate degree shifts and
+rational normalizers, such that
+\[
+ \sum_{\lambda\vdash n}
+     (V_\lambda)_*(U_\lambda)_*
+                =\operatorname{id}
+\]
+on genuine rational Betti
+cohomology of X_n.
+This identity is exactly the
+motivic inverse identity; it
+does not rely on choosing an
+algebraic representative for alpha.
+
+Apply the true cohomological
+extraction to a rational
+Hodge alpha of codimension p.
+Its lambda component is a
+rational Hodge class beta_lambda
+of codimension
+\(p-(n-\ell(\lambda))\)
+in the appropriate invariant
+part of \(S^{\ell(\lambda)}\).
+Since \(\ell(\lambda)\le n<r\),
+Theorem 9 constructs an ACTUAL
+rational Chow source
+\(Z_{\beta_\lambda}\)
+on the true smooth product
+\(S^{\ell(\lambda)}\)
+with exactly this canonical
+Betti class. Average the source
+over the finite group permuting
+equal multiplicity parts, so it
+lies in the correct rational
+motive summand. Now apply the
+actual algebraic return
+correspondence V_lambda and
+sum over all partitions:
+\[
+ \boxed{
+ Z_\alpha=
+ \sum_{\lambda\vdash n}
+   (V_\lambda)_*
+       \left(\operatorname{Av}_\lambda
+                     Z_{\beta_\lambda}\right).
+ }                                                       \tag{11.5}
+\]
+Every term is a real Chow
+cycle on the actual X_n:
+U and V are algebraic
+incidence correspondences,
+Z_beta are actual GST
+algebraic K3-power cycles,
+and finite rational averaging
+preserves algebraicity.
+By canonical cycle-class
+naturality and the motivic
+inverse formula, its Betti
+class is exactly alpha.
+This proves every codimension
+without a preassigned Hodge
+cycle representative.
+\end{proof}
+
+\begin{corollary}[Exact length-two K3 Hilbert-scheme Betti discriminator]
+For every K3 surface S, the
+actual incidence decomposition
+for n=2 is
+\[
+ h(S^{[2]})_Q
+   \simeq h(S^{(2)})_Q
+                     \oplus h(S)_Q(1).
+\]
+The rational Poincare polynomial
+consequently satisfies
+\[
+ \boxed{
+ P_t(S^{[2]})
+    =1+23t^2+276t^4+23t^6+t^8 .}                  \tag{11.6}
+\]
+The two extra middle/two
+cohomological directions
+are accounted for by the true
+Tate twist of the S motive,
+not guessed in a formal frame.
+\end{corollary}
+\begin{proof}
+For K3,
+\(P_t(S)=1+22t^2+t^4\).
+The rational finite-permutation
+invariant symmetric-square
+Poincare polynomial is
+\[
+ P_t(S^{(2)})=
+   \frac{P_t(S)^2+P_{t^2}(S)}2
+ =1+22t^2+254t^4+22t^6+t^8 .
+\]
+Adding \(t^2P_t(S)\) from
+the actual (1)-twisted
+S motive yields (11.6).
+\end{proof}
+
+Wolfram separately confirmed
+the exact coefficients
+(1,23,276,23,1) at n=2,
+and enumerated all partitions
+for n=2,...,8. There are
+exactly one length-n and
+one length-(n-1)
+partition in each case, giving
+\(b_2(S^{[n]})=22+1=23\)
+for n>=2, consistently with
+the incidence-motive
+degree shifts. These checks
+validate the codimension
+bookkeeping, not the geometric
+incidence-motive theorem itself.
+
+The scope restriction n<r
+belongs to the actual K3-power
+Hodge invariant input,
+not to the established
+Hilbert-incidence motivic
+isomorphism (11.2).
+At n>=r the present GST
+pair-contraction source
+family need not span all
+orthogonal SO invariants.
+No general arbitrary-X
+Hodge conjecture conclusion
+is drawn from the actual
+Hilbert-scheme family.
+
 \section{Wolfram verification and the universal target boundary}
 The exact Wolfram computation contracted inverse
 NS intersection Gram matrices of signatures
