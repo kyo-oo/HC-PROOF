@@ -595,6 +595,133 @@ constructors detect every nonzero primitive
 residual---a statement not established by the
 derived identities alone.
 
+\section{Native GST Chern--Segre return on the ORIGINAL arbitrary \(X\)}
+We now connect the independent Hilbert-incidence source directly
+to the already established all-grade GST normalized blowup
+and Chern--Segre algebraic return, for any original dimension
+\(d\), not just fourfolds. This section explicitly identifies
+the source degree and the nonzero coupling; it does not claim
+that a complementary-degree detector itself represents
+the original target.
+
+Fix an arbitrary smooth connected projective \(d\)-fold \(X\),
+\(p\in\{0,\ldots,d\}\), and a rational Hodge class
+\(\alpha\in\operatorname{Hdg}^p(X)_\Q\).
+Choose \(M\ge d+1\) and the actual projective embedding
+used in the existing GST construction, and set
+\[
+ Y=\operatorname{Bl}_X\mathbf P^{2M},\quad
+ q:\mathbf P(N_{X/\mathbf P^{2M}})\to X,\quad
+ j:\mathbf P(N)\hookrightarrow Y,\quad
+ R=\sqrt{c(N)}.                                      \tag{9.1}
+\]
+The proven normalized topological packet \(A_\alpha^Y\)
+has rational Chern character in pure codimension \(M\).
+For any actual \emph{algebraic} pure-middle class
+\(D\in K_0^{\rm alg}(Y)_\Q\), the GST Chern--Segre
+inversion on the true exceptional Chow summand produces
+\(
+ a_Y(D)\in\bigoplus_b\CH^b(X)_\Q
+\),
+built from \(j^*,q_*,c_k(N)\) and \(R^{-1}\), with the
+exact indexed trace relation
+\[
+ \chi_Y(A_\alpha^Y,\operatorname{real}D)
+    =\epsilon\int_X\alpha\,
+       \cl^{\rm can}\!\left([a_Y(D)]_{d-p}\right),
+ \qquad \epsilon=(-1)^{M+1}.                        \tag{9.2}
+\]
+This is the established general-grade formula in
+\texttt{GST\_native\_residual\_Euler\_kernel\_and\_alteration.tex};
+the center's characteristic-class normalization is retained,
+including the ambient pure-middle term that pairs trivially
+with the exceptional packet. It is \emph{not} obtained by
+identifying arbitrary topological sources with algebraic ones.
+
+Apply the actual Hilbert-incidence construction
+(1.1)--(8.4) to \(Y\), which is a smooth projective
+complex \(2M\)-fold. Let \(F_m^Y\) be its genuine Hilbert
+perfect-complex sources, \(T_{\td,Y}\) the rational
+algebraic Todd representative and
+\[
+ D_m^Y=\Pi_M\left(T_{\td,Y}\cdot F_m^Y\right),
+ \quad 0\le m\le3M,\qquad
+ \delta_m^Y(\alpha)
+    :=\chi_Y(A_\alpha^Y,\operatorname{real}D_m^Y).
+                                                               \tag{9.3}
+\]
+Every \(D_m^Y\) is genuinely algebraic, constructed from
+\(T_Y\), \(\Hilb^2(Y)\), blowup incidence, proper pushforward
+and finite Adams operations, without a prescribed Chow
+preimage of \(\alpha\). The numbers \(\delta_m^Y\in\Q\)
+are honest topological/algebraic Euler periods.
+
+\begin{theorem}[Finite actual original-\(X\) Hilbert-world return]
+For every original \(X,p,\alpha\) above, the explicitly
+constructed rational algebraic perfect-complex combination
+\[
+ E_\alpha^Y
+    :=\sum_{m=0}^{3M}\delta_m^Y(\alpha)D_m^Y
+            \in K_0^{\rm alg}(Y)_\Q                    \tag{9.4}
+\]
+has a genuine original-\(X\) rational algebraic cycle
+\[
+ \boxed{
+ Z_{\alpha,\Hilb}^{\,d-p}
+      :=\left[a_Y(E_\alpha^Y)\right]_{d-p}
+           \in\CH^{d-p}(X)_\Q.}                      \tag{9.5}
+\]
+Its \emph{canonical} Betti coupling is computed EXACTLY by
+\[
+ \boxed{
+ \int_X\alpha\,
+       \cl^{\rm can}(Z_{\alpha,\Hilb}^{\,d-p})
+      =(-1)^{M+1}\sum_{m=0}^{3M}
+                        \delta_m^Y(\alpha)^2.}      \tag{9.6}
+\]
+This nonzero ORIGINAL-\(X\) detector is supplied
+whenever at least one of the explicitly born Hilbert-world
+sources measures \(\alpha\) nontrivially. The finite bound
+\(3M+1\) is complete for all exceptional twists of the
+length-two Hilbert-incidence family.
+\end{theorem}
+\begin{proof}
+The algebraicity of (9.4) follows from the actual
+Hilbert-incidence source (2.4) on \(Y\) and the algebraic
+Todd/Adams operators in (8.4). The extraction
+\(a_Y\) is a rational linear combination of actual Chow
+Gysin operations and algebraic Chern and Segre classes,
+so (9.5) is an honest Chow cycle on the prescribed
+ORIGINAL \(X\). By linearity,
+\[
+ \chi_Y(A_\alpha^Y,\operatorname{real}E_\alpha^Y)
+   =\sum_{m=0}^{3M}\delta_m^Y(\alpha)
+       \chi_Y(A_\alpha^Y,\operatorname{real}D_m^Y)
+   =\sum_{m=0}^{3M}\delta_m^Y(\alpha)^2.
+\]
+Insert \(D=E_\alpha^Y\) into (9.2) and multiply by
+\(\epsilon^{-1}=\epsilon\) to obtain (9.6).
+The polynomial source cap from Theorem 7.1 with
+\(d_Y=2M,p_Y=M\) gives degree at most \(3M\)
+for the entire exceptional Hilbert-twist index
+sequence. Hence the displayed finite set detects
+every Hodge direction reachable by this \emph{particular}
+Hilbert-incidence family.
+\end{proof}
+
+\noindent\textbf{Type check.} Equation (9.5) produces a
+\emph{complementary codimension \(d-p\) detector}
+on the original \(X\), not a codimension-\(p\)
+representative of \(\alpha\). When \(d=2p\) the
+degrees agree. If \(\alpha\) is the residual to the
+FULL original-\(X\) algebraic span, (9.6) forces
+every \(\delta_m^Y\) to vanish; one cannot replace
+that logical fact by the positive unrestricted
+diagonal-index law. The theorem instead provides
+a tested, finite, actually geometric pathway for
+growing a \emph{finite existing native span}
+when the observed readout is nonzero.
+
 \section{Adversarial audit: source birth versus universal surjectivity}
 No putative conclusion above inserts \(Z_r\) as input: it is
 explicitly given by tangent Chern classes on the original \(X\).
