@@ -24,7 +24,15 @@ If S has an Enriques involution, rho=10 and scalar End(T), the actual quotient H
 
 If an actual algebraic automorphism phi:S→S satisfies End_HS,Q(T(S))=Q[phi^*|_T], with minimal polynomial degree m, then the genuinely algebraic CH² correspondences Theta_k=p_T∘Gamma_(phi^k)∘p_T for k=0..m−1 form an algebraic basis of the entire transcendental rational (2,2) sector. Their intersection Gram is positive definite by primitiveness and Hodge–Riemann. An explicit Gram-inverse linear combination of actual Theta_k, together with true divisor/point cycles, constructs a canonical Chow representative of EVERY rational middle Hodge target on S×S; finite étale degree-normalized Chow pushforward does the same on each free quotient. This removes the scalar-End restriction when a verified geometric graph generator exists; no unconstructed Hodge endomorphism is presumed algebraic.
 
-## 5. Wolfram and audit scope
+## 5. A genuine derived-perfect-kernel source on products of different K3 surfaces
+
+Let `S1,S2` be ACTUAL projective K3 surfaces admitting an ACTUAL Fourier–Mukai derived equivalence with a genuine perfect kernel `P` on `S1×S2`. Its algebraic Mukai Chern cycle `v(P)=ch(P)sqrt(td(S1))sqrt(td(S2))` induces a rational Hodge isometry `u:T(S1)→T(S2)`. Take true Chow transcendental projectors `pT1,pT2` from section 1 and form the ACTUAL scheme-level CH² correspondence `Gamma12=pT2∘[v(P)]_2∘pT1` on `S1×S2`. It acts as `u` on the transcendental parts.
+
+If `End_HS,Q(T(S1))=Q`, the Hodge tensors `T(S1)⊗T(S2)` have rational rank one and are spanned by the actual Chow Gamma12, not a free supplied Hodge endomorphism. Every rational middle (2,2) Hodge target `beta` thus has an explicit Chow representative using factor/point and NS divisor products plus the coefficient `(int beta Gamma12)/(22-rho)` times Gamma12. All other Hodge codimensions on the fourfold are handled by Lefschetz/point/fundamental cycles. The canonical Chow and pure perfect source construction is complete on this ACTUAL derived-equivalent K3-product family under the explicit scalar-T assumption.
+
+The geometric positive primitive norm is exactly `int Gamma12²=22-rho` using isometric rational intersection forms `M^T g2 M=g1` and the genuine tensor contraction `Tr(M g1^-1 M^T g2)=dim T`. Wolfram checked a nontrivial rational isometry with det M=2 and rank3, giving exact norm3. The finite rational example is NOT claimed to be an actual K3 lattice. This new route uses an independently existing algebraic derived kernel, not merely the diagonal K3 graph.
+
+## 6. Wolfram and audit scope
 
 - True rational Gram identity G⁻¹GG⁻¹=G⁻¹, self-intersection 22−rho>0 verified for all rho=1..20 (20 exact arithmetic cases).
 - Quotient normalized self-intersection (22−rho)/n verified symbolically for n>0; for rho=10,n=2 gives 6.
