@@ -45,7 +45,15 @@ Numerical scope:
 
 The matching intersection Gram is **B_(M,N)=r^{number of alternating connected components of union(M,N)}**. For n<r it is nonsingular by invariant theory, yielding rational numerical periods and exact inverse coefficients. Wolfram independently enumerated all perfect matchings for m=2,4,6 with r=21: matchings counts 1,3,15, and all three exact rational Gram matrices full rank with positive integer determinants. For m=4 the exact Gram is [[441,21,21],[21,441,21],[21,21,441]]; the m=6 15×15 determinant has 60 decimal digits. The general theorem rests on invariant theory and actual Chow cycles, not finite computer cases.
 
-## 7. Wolfram and audit scope
+## 7. Propagation through actual projective bundles and genuine low-dimensional blowups
+
+Combines GST's earlier **actual all-codimension Chern–Segre Chow inverse** with the now-complete K3-power/quotient source constructor. For ANY actual algebraic vector bundle E of arbitrary rank on one of these complete-source varieties B, the genuine projective bundle P_B(E) has the same full rational Hodge algebraicity: every target alpha has an actual cohomological projective-bundle expansion Σ eta^j pi*beta_j; each beta_j receives the explicit original-B Chow representative, so the same sum constructs an ORIGINAL projective-bundle rational cycle with canonical Betti class alpha.
+
+For ANY genuine smooth center Z of dimension ≤3, blowup formula CH^p(Bl_Z P)=CH^p(P)⊕Σ_{a=1}^{c-1}CH^{p-a}(Z) and the matching Hodge splitting lift each target via ACTUAL Chern/Gysin pullback and pushforward. Z itself has the full rational Hodge property by the previously established codim0/1/d−1/d Lefschetz theorem for dimensions ≤3. Therefore every finite sequence of such smooth blowups preserves complete actual algebraic source generation. Projective bundle ranks are arbitrary, so the resulting geometrically controlled family has **unbounded complex dimension**; this is not a claim of arbitrary-X coverage, since these all descend from the indicated K3 powers and low-dimensional smooth centers.
+
+In particular, for an actual fourfold from the scalar-End or graph-generator K3 product, or its smooth finite quotient, **any finite sequence of nontrivial smooth blowups along arbitrary smooth centers preserves the full rational Hodge conjecture**, since a nontrivial smooth blowup center in a fourfold has dimension ≤2. Every step comes with an explicit CH formula on the actual target variety.
+
+## 8. Wolfram and audit scope
 
 - True rational Gram identity G⁻¹GG⁻¹=G⁻¹, self-intersection 22−rho>0 verified for all rho=1..20 (20 exact arithmetic cases).
 - Quotient normalized self-intersection (22−rho)/n verified symbolically for n>0; for rho=10,n=2 gives 6.
