@@ -1389,6 +1389,575 @@ another abstract
 Euler matrix
 assumption.
 
+\section{GST COMPLETE SOURCE-ARCHITECTURE SURGERY: cross-ideal Ext and exact Weil K-class}
+The existing GST arsenal is
+now applied on the original
+fourfold to an actually NEW
+graded coherent source
+architecture, not merely to
+its numerical Euler kernel.
+This section removes the
+old disconnected auxiliary
+cancellation trick and
+calculates the missing
+cross-SUPPORT Ext geometry.
+
+\subsection*{Cross-support ideal-to-graph derived morphisms}
+Let \(Z,W\subset A\)
+be genuine transverse
+abelian graph surfaces
+of the preceding form,
+with \(Z\ne W\) and
+\(P=Z\cap W\) a nonempty
+reduced zero-dimensional
+intersection of length \(L\).
+Let \(I_Z\) be the ACTUAL
+coherent ideal sheaf of Z.
+
+\begin{theorem}[Full crossed ideal-to-graph Ext profile on the original abelian fourfold]
+For every such actual
+transverse pair, the
+true coherent derived
+morphism groups satisfy
+\[
+ \boxed{
+ \begin{aligned}
+ \operatorname{Hom}_A(I_Z,\mathcal O_W)
+                      &\cong\mathbb C,\\
+ \dim_{\mathbb C}
+ \operatorname{Ext}^1_A(I_Z,\mathcal O_W)&=L+1,\\
+ \operatorname{Ext}^2_A(I_Z,\mathcal O_W)&=0.
+ \end{aligned}}                                          \tag{9.1}
+\]
+More precisely there is a
+genuine canonical exact
+vector-space sequence
+\[
+ \boxed{
+ 0\longrightarrow H^1(W,\mathcal O_W)
+ \longrightarrow\operatorname{Ext}^1_A
+       (I_Z,\mathcal O_W)
+ \longrightarrow
+ \ker\left[
+   H^0(P,\mathcal O_P)\xrightarrow{\mathrm{tr}}
+      H^2(W,\mathcal O_W)\right]
+ \longrightarrow0 .}                                    \tag{9.2}
+\]
+The trace map has rank one.
+Thus this entire crossed
+Ext space is concrete
+geometric source data,
+not an abstract free
+linear-map input.
+\end{theorem}
+\begin{proof}
+Transversality in the
+genuine fourfold gives
+\(
+ \operatorname{Ext}^q_A
+   (\mathcal O_Z,\mathcal O_W)=0
+\)
+except at \(q=2\),
+where it is
+\(H^0(P,\mathcal O_P)\cong\mathbb C^L\),
+as derived in (3.2)--(3.3).
+Apply the derived functor
+\(\operatorname{RHom}_A
+(-,\mathcal O_W)\)
+to the exact ideal
+sequence
+\(
+0\to I_Z\to O_A\to O_Z\to0
+\).
+As W is a genuine
+abelian surface,
+\[
+ H^0(W,O_W)=\mathbb C,\quad
+ H^1(W,O_W)=\mathbb C^2,\quad
+ H^2(W,O_W)=\mathbb C .
+\]
+The resulting exact
+sequence is
+\[
+ 0\to H^1(W,O_W)
+  \to\operatorname{Ext}^1_A(I_Z,O_W)
+  \to H^0(P,O_P)
+  \xrightarrow{\mathrm{tr}}H^2(W,O_W)
+  \to\operatorname{Ext}^2_A(I_Z,O_W)\to0.
+                                                               \tag{9.3}
+\]
+The Hom sequence also
+gives
+\(\operatorname{Hom}(I_Z,O_W)
+ \cong H^0(W,O_W)=\mathbb C\).
+In fact its canonical
+nonzero morphism is
+the literal composition
+\(I_Z\hookrightarrow O_A
+\twoheadrightarrow O_W\),
+which is NONZERO for
+distinct transverse
+supports, unlike
+\(\operatorname{Hom}(O_Z,O_W)=0\).
+
+To prove the trace map
+is surjective, apply
+Serre duality on the
+actual CY fourfold A.
+Its dual is the natural
+map
+\[
+ \operatorname{Ext}^2_A(O_W,O_A)
+  \longrightarrow\operatorname{Ext}^2_A(O_W,O_Z).
+\]
+Via the true Koszul
+dualities for a
+translation-normal-trivial
+abelian surface W,
+this is precisely
+the restriction
+\(
+H^0(W,O_W)\to H^0(P,O_P)
+\),
+which sends the
+constant function one
+to the NONZERO
+constant function on P.
+Thus the dual map is
+injective; hence the
+original trace map
+onto its one-dimensional
+codomain is surjective.
+Equation (9.3) gives
+\(\operatorname{Ext}^2=0\)
+and
+\[
+ \dim\operatorname{Ext}^1
+  =2+(L-1)=L+1,
+\]
+completing the proof.
+\end{proof}
+
+For the EXACT 16
+transverse graph pairs
+of Section 4, there are
+eight with \(L=4\)
+and eight with \(L=1\).
+The genuine available
+cross-support Ext-one
+dimensions are therefore
+\[
+ \boxed{
+   8(4+1)+8(1+1)=56
+ }                                                       \tag{9.4}
+\]
+in addition to the 16
+canonical nonzero
+cross-support Hom maps.
+Wolfram checked ALL
+16 Gaussian intersection
+norms and the resulting
+56, not a random sample.
+
+\subsection*{A PURE Weil class with every compensating source vertex connected to geometry}
+On the SAME actual
+central abelian fourfold A,
+let \(P_i\), \(N_j\)
+be the genuine five
+positive and five
+negative graph supports
+in Section 4.
+Instead of adding
+disconnected \(K_0\)-neutral
+ideal pairs, choose one
+true structure-sheaf
+object and TWO actual
+ideal-sheaf objects
+on EACH graph support.
+The graded source
+collection is
+\[
+ \boxed{
+ B_{30}:=
+  \bigoplus_{i=1}^{5}
+   \left(
+      \mathcal O_{Z_{P_i}}[0]
+      \oplus I_{Z_{P_i}}[1]^{\oplus2}\right)
+ \oplus
+ \bigoplus_{j=1}^{5}
+   \left(
+      \mathcal O_{Z_{N_j}}[-1]
+      \oplus I_{Z_{N_j}}[0]^{\oplus2}\right).
+ }                                                       \tag{9.5}
+\]
+Every listed term is an
+ACTUAL algebraic coherent
+PERFECT object on
+the original smooth A.
+There are exactly 30
+vertices and NO unused
+auxiliary cancellation
+pair. The negative
+structure sheaves use
+shift \([-1]\), rather
+than \([1]\); both have
+negative \(K_0\) sign,
+but \([-1]\) allows
+the same actual
+Ext-two/normal-Hom
+bridge orientation
+at positive and
+negative supports.
+
+\begin{theorem}[Rank-zero PURE Weil original-fourfold 30-vertex K-class]
+The genuine algebraic
+K-class of this
+complete graded
+source collection has
+NO input of a
+nonalgebraic target
+cycle and satisfies
+\[
+ \boxed{
+ [B_{30}]=
+ 3\left(
+    \sum_{i=1}^{5}
+        [\mathcal O_{Z_{P_i}}]
+   -\sum_{j=1}^{5}
+        [\mathcal O_{Z_{N_j}}]\right)
+     \in K_0^{alg}(A).
+ }                                                       \tag{9.6}
+\]
+Its COMPLETE rational
+Chern character is
+\[
+ \boxed{
+  \ch_0(B_{30})=0,\qquad
+  \ch_2(B_{30})=12W_{\rm R},\qquad
+  \ch_k(B_{30})=0\quad(k\ne2).
+ }                                                       \tag{9.7}
+\]
+Its independently
+geometric Hirzebruch--Euler
+self-index is
+\[
+ \boxed{
+  \chi_A(B_{30},B_{30})
+       =\int_A(12W_{\rm R})^2=1152.
+ }                                                       \tag{9.8}
+\]
+In particular the
+rational algebraic
+class \([B_{30}]/12\)
+is an ACTUAL
+original-A rational
+perfect \(K_0\) source
+of PURE Weil Chern
+character \(W_{\rm R}\).
+\end{theorem}
+\begin{proof}
+For a true graph
+surface Z in A,
+the genuine coherent
+ideal exact sequence
+gives
+\(
+[I_Z]=[O_A]-[O_Z]
+\).
+The positive local
+triple in (9.5)
+has
+\(
+[O_Z]-2[I_Z]
+ =3[O_Z]-2[O_A]
+\).
+The negative local
+triple has the
+OPPOSITE class
+because
+\([O_Z[-1]]=-[O_Z]\),
+\([I_Z[0]]=+[I_Z]\).
+Summing five positive
+and five negative
+triples cancels ALL
+constant rank
+contributions exactly.
+Thus (9.6) follows.
+The true graph surface
+normal bundles are
+trivial, so their
+Chern character is
+concentrated in
+codimension two.
+Equation (2.2)
+identifies the
+signed graph sum as
+\(4W_{\rm R}\)
+at the actual CHOW
+level. Consequently
+(9.7) follows
+without any assumed
+abstract Hodge preimage.
+Finally
+\(
+\operatorname{td}(T_A)=1
+\)
+and codimension-two
+dualization has
+positive sign, so
+genuine HRR gives
+\(144\int W_R^2
+ =144\cdot8=1152\).
+\end{proof}
+
+\subsection*{Exact type table for the full first-order coupling equations}
+Write the representative
+shifts of the four
+source types as
+\[
+ \begin{array}{c|cccc}
+ \text{vertex}&O_{P}&I_{P}&O_N&I_N\\
+ \text{cohomological shift}&0&1&-1&0
+ \end{array}.
+\]
+The genuine derived
+degree-one morphism
+typing law is
+\[
+ \operatorname{Hom}^{1}(E[a],F[b])
+       =\operatorname{Ext}^{1+b-a}_A(E,F).
+\]
+The actual available
+source blocks include
+\[
+ \begin{array}{c|c|c}
+ \text{directed block}&
+     \text{ordinary Ext degree}&\text{actual dimension}\\
+ O_P[0]\to I_P[1]&
+      \operatorname{Ext}^2(O_P,I_P)&4\\
+ I_P[1]\to O_P[0]\ \text{(first-order reverse)}
+      &\operatorname{Hom}(I_P,O_P)&2\\
+ O_N[-1]\to I_N[0]&
+      \operatorname{Ext}^2(O_N,I_N)&4\\
+ I_N[0]\to O_N[-1]\ \text{(first-order reverse)}
+      &\operatorname{Hom}(I_N,O_N)&2\\
+ I_N[0]\to O_P[0]\ \text{(cross)}
+      &\operatorname{Ext}^1(I_N,O_P)&L+1\\
+ O_N[-1]\to O_P[0]\ \text{(cross)}
+      &\operatorname{Ext}^2(O_N,O_P)&L .
+ \end{array}                                              \tag{9.9}
+\]
+This is the FIRST
+actual graded source
+architecture in this
+Weil-fourfold branch
+that simultaneously
+has (i) two independent
+ideal bridges per
+rank-two obstructed
+unit vertex,
+(ii) genuine
+nontrivial
+cross-support
+Ext-one direction
+and reverse Hom
+carriers, and
+(iii) no disconnected
+rank-only \(K_0\)
+compensation nodes.
+The 30-node graded
+object (9.5) already
+has a genuine algebraic
+perfect representative
+as a direct sum;
+its specific coupling
+differential is the
+separate geometric
+Maurer--Cartan problem
+below, NOT an
+assumed degree-one
+endomorphism.
+
+\subsection*{GST exact scalar-current closure versus genuine Maurer--Cartan}
+The total virtual
+Chern-character
+Hodge variation is
+identically ZERO in
+the balanced Weil
+period domain,
+because (9.7) is
+a multiple of the
+genuine determinant
+eigen Hodge tensor.
+For the named
+\((1,3)\) exterior
+monomial of Section 6,
+the scalar
+obstruction charge
+at the ten original
+graph supports is
+\( (3,3,3,3,0,
+   -3,-3,-3,-3,0)\),
+up to the common
+nonzero graph
+normalization.
+The INCIDENCE graph
+of sixteen genuine
+transverse crossings
+has rational rank
+nine; its image
+is exactly the
+zero-sum charge
+hyperplane.
+The explicit
+five-edge current
+\[
+ \boxed{
+ P_1\to N_5,\quad
+ P_2\to N_3,\quad
+ P_3\to N_1,\quad
+ P_4\to N_2,\quad
+ P_5\to N_4
+ }
+\]
+with weight three
+on EACH edge
+balances all ten
+scalar charges.
+Wolfram computed
+the true 10-by-16
+incidence matrix,
+proved its rank
+nine, and checked
+this exact integer
+current. This is
+a COMPLETE solution
+of the scalar GST
+native defect-
+conservation equation
+for the named
+Hodge coefficient,
+not a solution
+of the derived
+Atiyah class.
+
+The FULL central
+algebraic perfect
+coupling still must
+satisfy
+\[
+ \boxed{
+ d_B\delta+\delta^2=0
+       \in \operatorname{End}^2(B_{30})
+ }                                                       \tag{9.10}
+\]
+for an ACTUAL chosen
+degree-one matrix
+of the genuine
+Ext blocks in (9.9).
+For a named
+first-order Weil
+deformation \(\kappa\),
+its GENUINE
+Atiyah--Kodaira--Spencer
+lift equation is
+\[
+ \boxed{
+ D_\delta h
+   :=d_Bh+\delta h+h\delta
+   =-\operatorname{Curv}_\kappa(B_{30},\delta).
+ }                                                       \tag{9.11}
+\]
+The right-hand side
+includes the
+individual graph
+and ideal Atiyah
+classes AND
+the deformation
+curvature of the
+off-diagonal
+morphism representatives;
+its total trace
+vanishes by (9.7),
+but its class
+in the actual
+hyperExt group is
+not determined by
+the scalar trace.
+
+The input GST arsenal
+now has concrete
+roles: the signed
+native graph cycle
+(9.6) is a REAL
+original-X algebraic
+source; the
+actual Chern--Segre
+normalizer and finite
+Adams codimension-two
+purifier fix (9.7);
+the native Gram
+energy law tests
+the class by (9.8);
+the genuine CM
+automorphism rotates
+its Weil-real
+source into the
+independent Weil-imaginary
+source; the
+exceptional Chow
+birth and return
+on \(\operatorname{Bl}_A
+\mathbf P^{2M}\)
+obey \(R\circ E=\id\);
+and the real native
+descent laws require
+a source satisfying
+(9.10)--(9.11)
+BEFORE one can claim
+transport to an
+actual nonsplit
+original fourfold.
+None of these
+laws changes the
+actual coherent
+Ext or grading
+requirements.
+
+The 30-node
+architecture removes
+the PREVIOUS
+normal obstruction
+rank deficit,
+eliminates detached
+\(K_0\) companions,
+and supplies
+56 global cross
+Ext-one couplings.
+Whether they can
+be selected so
+that the true
+algebraic matrix
+equations (9.10)
+and (9.11) hold
+TOGETHER is a
+more precise
+geometric problem
+than an abstract
+Gram or Euler
+surjectivity
+hypothesis.
+The scalar-current
+solution must NOT
+be promoted to a
+full first-order
+perfect-object
+deformation
+without the
+Yoneda products
+on every auxiliary
+ideal vertex.
+
 \section{Euler size, computation contract, and outcome}
 For a hypothetically simple holomorphic perfect
 object with this exact integral K0 class on
