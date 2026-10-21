@@ -53,7 +53,23 @@ For ANY genuine smooth center Z of dimension ≤3, blowup formula CH^p(Bl_Z P)=C
 
 In particular, for an actual fourfold from the scalar-End or graph-generator K3 product, or its smooth finite quotient, **any finite sequence of nontrivial smooth blowups along arbitrary smooth centers preserves the full rational Hodge conjecture**, since a nontrivial smooth blowup center in a fourfold has dimension ≤2. Every step comes with an explicit CH formula on the actual target variety.
 
-## 8. Wolfram and audit scope
+## 8. Every rational Hodge class on actual K3 Hilbert schemes via genuine incidence correspondences
+
+Use the **actual de Cataldo–Migliorini Chow-motive decomposition** of the Hilbert scheme of length-n points on a smooth projective K3 surface S: `h(S^[n]) ≅ ⊕_{λ ⊢ n} h(S^(λ))(n−length(λ))` over Q. Every summand is cut from an actual product S^length(λ) by finite symmetric-group averaging, with actual algebraic Hilbert–Chow incidence correspondences and their rationally normalized transposes. For n<rank_Q T(S), the source theorem on all products S^ell supplies genuine Chow representatives for the extracted rational Hodge targets. Applying the incidence return maps produces an ACTUAL rational CH class on the original hyperkähler Hilbert scheme of EVERY rational Hodge target in EVERY codimension. This proof depends on the established motivic incidence decomposition (external standard theorem, not independently rederived in this note), and the stated orthogonal Hodge-group hypothesis. With rho(S)=1, n=1..20 covers actual Hilbert schemes through complex dimension40.
+
+Wolfram arithmetic verifies n=2: symmetric square K3 Poincaré polynomial 1+22 t²+254 t⁴+22 t⁶+t⁸, twisted K3 contribution t²+22t⁴+t⁶, total `1+23t²+276t⁴+23t⁶+t⁸`. For n=2..8 exact integer partitions give one length-n and one length-(n−1) partition, hence correct b₂=23. The computations check degrees/counts, not the geometric motivic decomposition.
+
+## 9. A fully explicit FOUR-CLASS source certificate on actual hyperkähler fourfold S^[2]
+
+For rho(S)=1 and Hg(T)=SO(T), the genuine rational (2,2) Hodge space on X=S^[2] has dimension exactly FOUR by the incidence-motive/K3 invariant decomposition (symmetric-square Hdg rank3 plus the Tate-shifted Picard class rank1).
+
+Choose true algebraic classes h (induced K3 polarisation), δ (half exceptional divisor), c₂(T_X); put a=q(h)>0, q(δ)=−2 and q(h,δ)=0. Four independently algebraic CH² source cycles `E=(h²,hδ,δ²,c₂(T_X))` have the ACTUAL intersection matrix
+`B(a)=[[3a²,0,−2a,30a],[0,−2a,0,0],[−2a,0,12,−60],[30a,0,−60,828]]`
+with exact determinant **−24192 a³ ≠0**. All entries derive from the genuine K3^[2] quartic Fujiki formula and characteristic-Chern/Riemann–Roch identities `∫c₂ u v=30q(u,v)`, `∫c₂²=828`. The latter follows from the actual e(X)=324 (Betti polynomial above), χ(O_X)=3 and Todd-degree-4 formula `(3c₂²−c₄)/720`. The characteristic Fujiki/RR identities are explicit standard geometric inputs, not asserted proved from GST axioms in this note.
+
+For ANY rational middle (2,2) Hodge alpha on the ACTUAL original X, compute its rational periods `b_i=∫alpha cl(E_i)`, then set **`Z_alpha= Σ_i,j E_i (B(a)^−1)_{ij} b_j`**. This is a genuine rational CH² source with EXACT canonical Betti image alpha, without assuming geometric full-rank columns. Wolfram evaluated symbolic `B(a)^−1`, verified `B B^−1=I4`, and confirmed det `−24192a³` (e.g. a=2 has rank4). Finite rational Adams projection of genuine codimension-two structure sheaves additionally yields an algebraic pure-middle K₀ class with Betti Chern character alpha. This is a complete exact source+Euler construction for the specified hyperkähler fourfold, not for arbitrary unknown X.
+
+## 10. Wolfram and audit scope
 
 - True rational Gram identity G⁻¹GG⁻¹=G⁻¹, self-intersection 22−rho>0 verified for all rho=1..20 (20 exact arithmetic cases).
 - Quotient normalized self-intersection (22−rho)/n verified symbolically for n>0; for rho=10,n=2 gives 6.
