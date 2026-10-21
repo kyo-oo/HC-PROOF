@@ -296,6 +296,113 @@ the exact descended primitive Euler index is
 rank between 1 and 20 occurs with a free involution;
 only the actual allowed geometric cases are claimed.
 
+\section{Entire Hodge space of the actual quotient under scalar transcendental endomorphisms}
+The primitive projector above can be promoted to an explicit
+ALL-HODGE-CLASSES source theorem for the K3-square quotient
+without assuming any algebraic lift of a Hodge target.
+
+\begin{theorem}[Full canonical rational Hodge construction on K3-square quotients with scalar T-endomorphisms]
+Let S be a smooth projective K3 surface with
+\[
+ \boxed{\operatorname{End}_{\mathrm{HS},\mathbb Q}(T(S))=\mathbb Q.}
+                                                               \tag{6.1}
+\]
+Let a finite group G act freely by algebraic automorphisms
+on S, and let X_G=(S\times S)/G for the diagonal action,
+with finite etale quotient q of degree n.
+Then EVERY rational (p,p) Hodge class alpha on the
+ACTUAL original quotient fourfold X_G, in EVERY
+codimension p=0,1,2,3,4, has an explicitly assembled
+original-X_G rational Chow cycle representative with
+genuine canonical Betti class equal to alpha.
+In codimension two one may take
+\[
+ \boxed{
+ Z_\alpha=\frac1n\,q_*
+       \bigl(Z_{q^*\alpha}^{S\times S}\bigr)
+       \in CH^2(X_G)_Q,}
+                                                               \tag{6.2}
+\]
+where Z_beta on S times S is constructed solely from
+the genuine two factor/point classes, actual divisor
+product classes D_i times D_j, and the Chow
+projector p_T defined in (1.1).
+\end{theorem}
+\begin{proof}
+On the K3 surface S, H^1=H^3=0 and
+H^2(S,Q) decomposes as the rational polarized
+Hodge structure NS(S)_Q plus T(S)_Q.
+The Kunneth decomposition gives for a rational
+Hodge degree-four class beta on S times S:
+\[
+ \beta=\beta_{0,4}+\beta_{4,0}
+                 +\beta_{\mathrm{NS}\otimes\mathrm{NS}}
+                 +\beta_{T\otimes T}.
+\]
+The two outside terms are rational multiples of
+the actual classes p_0 and p_4. The NS times NS
+term is a rational combination of genuine
+divisor products D_i times D_j.
+No rational (2,2) cross term between NS and T
+occurs: the rational Hodge (1,1) subspace of
+T(S) is zero by the definition of NS.
+Polarization identifies the rational Hodge
+endomorphisms of T with the rational
+Hodge tensors T(S)\otimes T(S) of total
+degree four. The scalar endomorphism condition
+(6.1) therefore forces
+\[
+       \beta_{T\otimes T}
+                  =c\,\cl(p_T),\qquad c\in Q.
+\]
+The coefficient is determined without an
+algebraic target witness by the actual
+intersection readout
+\[
+ \boxed{c=\frac{\int_{S\times S}\beta\,\cl(p_T)}
+                      {22-\rho(S)}.}              \tag{6.3}
+\]
+All other displayed Kunneth components are
+obtained by the canonical factor projections
+and rational NS Gram inversion. Consequently
+the complete explicit Chow cycle
+Z_beta is constructed from actual o, D_i and
+Delta_S with precisely the canonical Betti
+class beta. Thus every codimension-two rational
+Hodge class on S times S is algebraic.
+All other codimensions of a smooth projective
+fourfold are represented by the genuine
+fundamental/point cycles and the standard
+Lefschetz (1,1) plus rational hard Lefschetz
+construction already derived in GST.
+
+Now alpha is a rational Hodge class on the
+smooth projective quotient X_G. Its genuine
+pullback q^*alpha is a rational Hodge class
+on S times S, represented by the preceding
+explicit Z_{q^*alpha}. The finite etale
+degree-n projection formula gives
+\[
+ \cl_{X_G}\left(\frac1n q_* Z_{q^*\alpha}\right)
+ =\frac1n q_* q^*\alpha=\alpha.
+\]
+No unconstructed cycle on X_G, a
+universal Hodge-to-Chow selector, or
+a free semantic class map was used.
+\end{proof}
+
+The hypotheses include an ACTUAL finite free
+automorphism group and the INDEPENDENT
+scalar-Hodge-endomorphism property of
+the K3 transcendental structure.
+The theorem is unconditional for each concrete
+S satisfying those stated geometric hypotheses,
+but is not asserted for arbitrary K3 surfaces,
+all fourfolds, or the general Hodge conjecture.
+In particular scalar-End(T) is a genuine
+Hodge-structure restriction, not a harmless
+algebraic Gram normalization.
+
 \section{Wolfram verification and the universal target boundary}
 The exact Wolfram computation contracted inverse
 NS intersection Gram matrices of signatures
