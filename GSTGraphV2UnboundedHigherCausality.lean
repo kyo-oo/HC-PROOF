@@ -114,6 +114,24 @@ theorem identityTower_preserves
   | succ n ih =>
       exact hStable (identityTower C H W n) ih
 
+
+/-- GST signed two-level causal boundary, as a genuine rational free-cell relation. -/
+noncomputable def causalTwoBoundary {n : Nat} (x : H.Cell (n+2)) :
+    H.Cell n →₀ ℚ := by
+  classical
+  exact Finsupp.single (H.source (H.source x)) 1 -
+    Finsupp.single (H.target (H.source x)) 1 -
+    Finsupp.single (H.source (H.target x)) 1 +
+    Finsupp.single (H.target (H.target x)) 1
+
+/-- The two globular face laws force the signed double boundary to vanish. -/
+theorem causalTwoBoundary_zero {n : Nat} (x : H.Cell (n+2)) :
+    causalTwoBoundary C H x = 0 := by
+  classical
+  simp only [causalTwoBoundary, H.source_source x, H.target_source x]
+  abel
+
+
 #check HigherCausalCosmos
 #check HigherCausalCosmos.Parallel
 #check HigherCausalCosmos.Coheres
