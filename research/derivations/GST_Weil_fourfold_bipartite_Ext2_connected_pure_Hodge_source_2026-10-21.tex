@@ -3658,6 +3658,337 @@ from its
 small Euler
 index.
 
+\section{FIRST-ORDER stress test of the ACTUAL minimal ten-node source}
+The central dg
+Maurer--Cartan
+identity (12.3)
+is a full
+scheme-level
+existence
+construction
+on split A.
+We now compute
+its ACTUAL
+Atiyah
+deformation
+obstruction
+along the
+SAME named
+balanced nonsplit
+Weil tangent
+(6.1), instead
+of silently
+declaring
+the connected
+source simple
+or semiregular.
+
+\begin{theorem}[Sharp obstruction for the first integral ten-node line-bundle coupling]
+For ANY
+choice of
+the nonzero
+17 central
+crossed
+Ext-two
+couplings
+\(\delta_{\min}\)
+in Theorem 12,
+the ACTUAL
+first-order
+Atiyah class
+of
+\(F_{\min,\mathrm{conn}}\)
+for the genuine
+nonzero
+Weil tangent
+\(\kappa\) from
+(6.1) satisfies
+\[
+ \boxed{
+ \operatorname{At}
+  (F_{\min,\mathrm{conn}})
+       \smile\kappa
+ \ne0
+   \in\operatorname{Ext}^2_A
+      (F_{\min,\mathrm{conn}},
+       F_{\min,\mathrm{conn}}).
+ }                                                       \tag{13.1}
+\]
+Thus the
+pure integral
+Euler-eight
+class DOES
+have an
+actual coupled
+central object,
+but this
+particular
+two-layer
+architecture
+does NOT
+deform over
+the named
+nonsplit
+first-order
+period.
+\end{theorem}
+\begin{proof}
+The first
+POSITIVE
+vertex in
+Theorem 12
+is the ACTUAL
+line bundle
+\[
+ P_1=L_{V_1}\boxtimes L_{V_2}
+\]
+on A, with
+Chern class
+\(D_{V_1}+D_{V_2}\).
+Its individual
+first-order
+Atiyah
+obstruction
+is the genuine
+line-bundle
+class
+\(
+c_1(P_1)\smile\kappa
+\in H^2(A,O_A)
+\).
+
+The mixed
+complex-cohomology
+expression of
+each actual
+V divisor
+may be taken
+with nonzero
+normalization as
+\(
+ V_j=u_j V_j+v_j U_j
+\)
+in the named
+split Hodge
+basis. Under
+the exact
+inverse first-order
+substitutions
+(6.1),
+\[
+ \begin{aligned}
+ \delta V_1&=
+    -V_2\wedge V_1
+        -v_1\wedge v_2,\\
+ \delta V_2&=
+    -u_2\wedge u_1
+        -U_1\wedge U_2 .
+ \end{aligned}
+\]
+Consequently
+the genuine
+first-order
+unwanted
+\((0,2)\)
+component is
+\[
+ \boxed{
+ [\delta c_1(P_1)]^{0,2}
+   =-V_2\wedge V_1
+           -U_1\wedge U_2
+       \ne0 .}                                          \tag{13.2}
+\]
+The two
+wedges involve
+independent
+pairs of
+antiholomorphic
+one-forms, so
+there is NO
+numerical or
+normalization
+cancellation.
+Therefore
+the individual
+perfect
+line-bundle
+Atiyah
+obstruction
+\(a_{P_1}\)
+is NONZERO.
+
+For an
+opposite-sign
+negative
+vertex \(N_j[1]\),
+a first-order
+reverse
+degree-one
+correction
+towards
+\(P_1[0]\)
+would have to
+belong to
+\[
+ \operatorname{Hom}^1
+  (N_j[1],P_1[0])
+  =\operatorname{Hom}_A(N_j,P_1).
+\]
+But for
+EVERY one of
+the five ACTUAL
+negative sources
+\(N_j=UU,VO,OV,Up,pU\)
+these groups
+VANISH:
+\[
+ \boxed{
+ \operatorname{Hom}_A(N_j,P_1)=0
+               \quad(1\le j\le5).
+ }                                                       \tag{13.3}
+\]
+Indeed the
+first three
+cases contain
+a factor
+of a
+nondegenerate
+index-one
+line-bundle
+ratio with
+\(H^0=0\);
+and the
+last two
+contain
+a point-sheaf
+to locally-free
+line-bundle
+ordinary Hom,
+which is
+zero.
+The full
+reverse
+Hom matrix
+was independently
+computed by
+Wolfram; its
+P1 row is
+exactly
+\((0,0,0,0,0)\).
+
+As in the
+actual curved-dg
+diagonal lemma
+of Section 7,
+a full relative
+first-order
+perfect-object
+lift would
+require the
+positive P1
+diagonal
+Atiyah
+curvature to be
+a dg boundary
+plus products of
+closed reverse
+degree-one maps
+with the
+central
+forward
+arrows.
+All reverse
+degree-one
+cohomology
+groups into P1
+vanish by
+(13.3), so
+their contributions
+are exact
+and cannot
+cancel the
+NONZERO
+class
+\(a_{P_1}\).
+Hence the
+total perfect-object
+obstruction
+is nonzero.
+This argument
+is independent
+of the actual
+chosen 17
+nonzero
+forward
+Ext-two
+classes.
+\end{proof}
+
+\noindent\textbf{Meaning for full GST source birth.}
+The genuine
+integral
+normalizer
+(11.6)
+and complete
+central
+coupling
+(12.4)
+do NOT
+provide a
+relative perfect
+source automatically.
+The failure
+here is NOT
+large Euler
+number,
+insufficient
+graph connectivity,
+or a
+missing algebraic
+Chern character;
+all those
+inputs are
+correct.
+It is the
+concrete
+ABSENCE of
+reverse
+degree-one
+geometric
+morphisms into
+the line-bundle
+vertex whose
+Atiyah obstruction
+(13.2) is
+nonzero.
+Therefore
+a successful
+first-order
+nonsplit source
+with the
+SAME integral
+Weil character
+must genuinely
+alter the
+complex's
+reverse
+Ext architecture
+(or construct
+a different
+semiregular
+source).
+Simply taking
+more one-way
+Ext-two
+edges or
+renormalizing
+the native
+Euler form
+does not
+change this
+precise
+obstruction.
+
 \section{Euler size, computation contract, and outcome}
 For a hypothetically simple holomorphic perfect
 object with this exact integral K0 class on
