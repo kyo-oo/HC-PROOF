@@ -3170,6 +3170,494 @@ not a
 deformation
 theorem.
 
+\section{ACTUAL CONNECTED TEN-NODE INTEGRAL EULER-EIGHT PERFECT SOURCE}
+The integral
+minimal Weil
+\(K_0\) source
+(11.6) admits
+a further
+atomic reduction
+which is NOT
+obtained by
+merely multiplying
+the Euler index
+of the large
+graph network:
+its two
+external-product
+expansions have
+FOUR identical
+tautological
+\(K_0\) terms
+that cancel
+strictly, and
+the remaining
+ten genuine
+coherent source
+objects have
+many actual
+crossed Ext-two
+couplings.
+
+Let \(o_j\)
+be the true
+origin points
+on \(S_j=E^2\).
+Abbreviate
+by \(U,V,O,p\)
+the ACTUAL
+coherent sheaves
+\(\mathcal L_U,
+\mathcal L_V,
+\mathcal O_S,
+\mathcal O_o\),
+respectively,
+and write
+\(a b=a\boxtimes b\)
+for the actual
+external product
+on A.
+Expanding the
+two products
+of
+\(
+Q_D=L_D-O+p
+\)
+in (11.6)
+and canceling
+the EXACTLY
+IDENTICAL
+\(OO,Op,pO,pp\)
+terms gives
+the INTEGRAL
+ten-source formula
+\[
+ \boxed{
+ K_{\min}=
+ \begin{matrix}
+ +(VV)+(UO)+(OU)+(Vp)+(pV)\\
+ -(UU)-(VO)-(OV)-(Up)-(pU).
+ \end{matrix}}                                         \tag{12.1}
+\]
+Each of these
+ten expressions
+is a genuine
+perfect
+coherent sheaf
+on the ORIGINAL
+projective abelian
+fourfold; their
+signed K0 sum
+has \(\ch=W_R\)
+purely in degree two.
+
+\begin{theorem}[Full crossed derived Hom and connected integral ten-source central dg construction]
+Take the TRUE
+five positive
+coherent objects
+\[
+ P=(VV,UO,OU,Vp,pV)
+\]
+and five
+negative objects
+\[
+ N=(UU,VO,OV,Up,pU).
+\]
+Their ACTUAL
+\(\operatorname{Ext}^2_A(P_i,N_j)\)
+dimensions form the
+exact matrix
+\[
+ \boxed{
+ M_2=
+ \begin{pmatrix}
+ 4&2&2&0&0\\
+ 2&4&1&1&0\\
+ 2&1&4&0&1\\
+ 0&1&0&4&1\\
+ 0&0&1&1&4
+ \end{pmatrix}.}                                      \tag{12.2}
+\]
+Its 17 nonzero
+entries form a
+CONNECTED
+bipartite graph
+on ALL ten
+genuine geometric
+sources.
+For EACH nonzero
+entry, choose
+a nonzero actual
+crossed
+\(
+f_{ij}\in
+\operatorname{Ext}^2_A(P_i,N_j)
+\),
+viewed as an
+actual degree-one
+dg morphism
+\(P_i[0]\to N_j[1]\).
+Then the degree-one
+off-diagonal
+matrix
+\(\delta_{\min}\)
+satisfies the
+FULL CENTRAL
+Maurer--Cartan
+equation STRICTLY:
+\[
+ \boxed{
+ d_B\delta_{\min}
+    +\delta_{\min}^2=0.}                        \tag{12.3}
+\]
+Therefore
+\[
+ \boxed{
+ F_{\min,\mathrm{conn}}
+ =\biggl(
+   \bigoplus_{i=1}^5P_i[0]
+       \oplus
+   \bigoplus_{j=1}^5N_j[1],
+       \delta_{\min}
+       \biggr)\in\operatorname{Perf}(A)
+ }                                                      \tag{12.4}
+\]
+is an ACTUAL
+CONNECTED
+ten-node
+algebraic
+twisted PERFECT
+object on the
+ORIGINAL split
+Weil fourfold,
+not a virtual
+\(K_0\) token.
+It has
+\[
+ \boxed{
+ \ch(F_{\min,\mathrm{conn}})
+   =W_R\quad\text{PURE},
+ \qquad
+ \chi_A(F_{\min,\mathrm{conn}},
+          F_{\min,\mathrm{conn}})=8 .}             \tag{12.5}
+\]
+\end{theorem}
+\begin{proof}
+The actual
+line-bundle
+index theorem
+proved (11.9)
+provides
+\[
+ \begin{aligned}
+ &\dim\operatorname{Ext}^q_S(U,V)
+ =\dim\operatorname{Ext}^q_S(V,U)
+   =2\ \text{for }q=1,\quad0\ \text{otherwise};\\
+ &\dim\operatorname{Ext}^q_S
+ (O,U),\ \operatorname{Ext}^q_S(U,O),
+ \ \operatorname{Ext}^q_S(O,V),
+ \ \operatorname{Ext}^q_S(V,O)
+  =1\ \text{for }q=1,\quad0\ \text{otherwise}.
+ \end{aligned}
+\]
+The genuine
+coherent Ext
+between each
+line bundle
+and the
+origin skyscraper
+is concentrated
+in degree zero
+for
+\(\operatorname{Ext}(L,p)\),
+and in degree two
+for
+\(\operatorname{Ext}(p,L)\),
+both dimension one.
+The identical
+line/O/point
+self-Ext
+profiles are
+\((1,2,1)\).
+Actual derived
+Kunneth on
+\(A=S_1\times S_2\)
+gives the
+convolution
+\[
+ \dim\operatorname{Ext}^2_A
+ (a_1a_2,b_1b_2)
+ =\sum_{q=0}^{2}
+   \dim\operatorname{Ext}^q_{S_1}
+                  (a_1,b_1)
+   \dim\operatorname{Ext}^{2-q}_{S_2}
+                  (a_2,b_2).
+\]
+Expanding
+for the exact
+ten sheaf labels
+gives (12.2).
+Wolfram evaluated
+all 25 complete
+pairs using
+this formula,
+finding 17
+positive
+entries and
+a connected
+undirected
+incidence graph
+with degree sequence
+\((3,4,4,3,3;3,4,4,3,3)\).
+
+The cochain
+representatives
+of the chosen
+Ext-two classes
+are closed
+degree-one
+morphisms
+by the exact
+cohomological
+shift \(N_j[1]\).
+Since ALL arrows
+run from one
+positive layer
+to the
+negative layer,
+there are
+NO composable
+two-arrow paths:
+\(\delta_{\min}^2=0\)
+already at
+the literal
+matrix level.
+Thus (12.3)
+holds in the
+genuine dg
+enhancement,
+not merely
+after taking
+Betti cohomology.
+The nonzero
+bipartite
+incidence
+connects all
+ten nodes.
+
+The complete
+K0 class
+is the
+signed alternating
+sum
+\(\sum_i[P_i]-\sum_j[N_j]\),
+which is
+EXACTLY
+(12.1) and
+hence equals
+(11.6).
+The entire
+Chern
+comparison
+and Euler
+self-index
+then follow
+from (11.7)
+and (11.8),
+with no
+unnamed
+cycle-class
+or rank
+input.
+\end{proof}
+
+\begin{proposition}[Exact degree-zero endomorphism warning: connected is not simple]
+The ACTUAL
+degree-zero
+coherent
+crossed Ext
+matrix of
+the ten-source
+construction is
+\[
+ \boxed{
+ M_1=
+ \begin{pmatrix}
+ 0&1&1&2&2\\
+ 1&2&0&2&1\\
+ 1&0&2&1&2\\
+ 0&0&0&2&0\\
+ 0&0&0&0&2
+ \end{pmatrix},\quad
+ \sum_{i,j}(M_1)_{ij}=22 .}                  \tag{12.6}
+\]
+Every class in
+\(\operatorname{Ext}^1_A(P_i,N_j)\)
+is a degree-zero
+endomorphism
+component
+\(\operatorname{Hom}^{0}
+  (P_i[0],N_j[1])\).
+Because the
+central
+differential
+has ONLY
+positive-to-negative
+blocks, all
+these degree-zero
+cross components
+are closed under
+the twisted
+endomorphism
+differential.
+They are not
+twisted
+coboundaries
+from a reverse
+degree-minus-one
+map: the relevant
+reverse groups
+\(\operatorname{Ext}^{-2}(N,P)\)
+vanish, and
+the only
+degree-minus-one
+forward groups
+\(\operatorname{Hom}(P,N)\)
+have zero
+commutator with
+\(\delta_{\min}\).
+Thus the
+22-dimensional
+crossed subspace
+injects into
+the true
+degree-zero
+derived endomorphism
+space of
+\(F_{\min,\mathrm{conn}}\):
+\[
+ \boxed{
+ \dim_{\mathbb C}
+ \operatorname{Ext}^0_A
+ (F_{\min,\mathrm{conn}},
+  F_{\min,\mathrm{conn}})
+       \ge23,}                                      \tag{12.7}
+\]
+including the
+identity.
+In particular
+the chosen
+connected
+two-layer
+source is
+NOT simple
+for any
+choice of
+the 17
+nonzero
+crossing
+differentials.
+\end{proposition}
+\begin{proof}
+The actual
+Kunneth degree-one
+formula gives
+the exact
+matrix (12.6).
+In the two-layer
+twisted
+endomorphism
+dg algebra,
+a degree-zero
+matrix containing
+only forward
+\(P\to N[1]\)
+blocks
+commutes
+with the
+central
+strictly
+forward
+differential,
+since both
+matrix products
+vanish.
+A potential
+degree-minus-one
+matrix has only
+forward
+\(\operatorname{Ext}^0(P,N)\)
+components
+and no
+reverse or
+same-layer
+Ext-negative
+components;
+its graded
+commutator
+with the
+one-way
+differential
+also vanishes.
+The 22
+forward
+Ext-one
+classes
+therefore
+survive in
+the true
+degree-zero
+endomorphism
+cohomology.
+The identity
+is linearly
+independent
+of these
+strictly
+forward
+nilpotent
+endomorphisms.
+\end{proof}
+
+The last
+proposition
+does NOT
+invalidate
+the actual
+connected
+geometric
+source (12.4)
+or its
+Euler-eight
+Chern character.
+It prevents
+a DIFFERENT
+mistake:
+identifying
+connectedness of
+the incidence
+diagram with
+simplicity of
+a coherent
+perfect
+object in order
+to invoke the
+existing GST
+simple-semirergular
+deformation
+argument.
+The full
+Atiyah
+class on
+this actual
+source must
+still be
+tested,
+not inferred
+from its
+small Euler
+index.
+
 \section{Euler size, computation contract, and outcome}
 For a hypothetically simple holomorphic perfect
 object with this exact integral K0 class on
