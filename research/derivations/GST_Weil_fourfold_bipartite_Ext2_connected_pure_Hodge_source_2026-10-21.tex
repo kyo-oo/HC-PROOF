@@ -681,6 +681,304 @@ hyperExt proof that the
 Atiyah obstruction class
 is nonzero.
 
+\section{Full first-order ATIYAH obstruction via the curved-dg diagonal equation}
+We now carry the precise normal
+obstructions (6.3) through the
+ACTUAL ten-node twisted-complex
+endomorphism differential, rather
+than relying only on the separate
+cohomology-flat test.
+
+A standard first-order deformation
+of the complex structure of a
+smooth projective variety may be
+computed in a dg enhancement of
+perfect complexes. Choose smooth
+graded locally free resolutions
+of all ten genuine coherent
+graph sheaves and transport
+their underlying smooth bundles
+over the first-order family.
+The failure of an individual
+resolution to remain holomorphic
+is its canonical curved-dg
+Atiyah--Kodaira--Spencer
+obstruction
+\[
+    a_{P_i}=\operatorname{At}
+      (\mathcal O_{Z_{P_i}})\smile\kappa,
+ \qquad
+    a_{N_j}=\operatorname{At}
+      (\mathcal O_{Z_{N_j}})\smile\kappa .
+\]
+As an endomorphism of the
+UNDERLYING DIRECT SUM
+\(B=M\oplus N[1]\),
+the first-order curvature
+\(a_\kappa\) is block diagonal;
+the twist \(\delta\) has ONLY
+the 16 forward degree-one
+arrows from positive \(P_i\)
+to negative \(N_j[1]\).
+
+\begin{lemma}[Forward-Ext-two differential cannot erase a vertex Atiyah class without reverse Hom-zero data]
+In this actual dg model,
+a first-order deformation
+of the TOTAL object
+\(F_{\rm conn}=(B,\delta)\)
+requires a degree-one
+correction \(h\in\operatorname{End}^1(B)\)
+satisfying the actual
+curved Maurer--Cartan equation
+\[
+ \boxed{
+   d_Bh+\delta h+h\delta=-a_\kappa .
+ }                                                       \tag{7.1}
+\]
+If for a positive vertex \(P_i\)
+every reverse derived morphism
+\[
+ \boxed{
+ \operatorname{Hom}^{1}
+    (\mathcal O_{Z_{N_j}}[1],
+           \mathcal O_{Z_{P_i}})
+ =\operatorname{Hom}_A
+    (\mathcal O_{Z_{N_j}},
+           \mathcal O_{Z_{P_i}})
+ =0 \quad\text{for all }j,
+ }                                                       \tag{7.2}
+\]
+then (7.1) NECESSARILY
+forces
+\[
+ \boxed{[a_{P_i}]=0
+ \quad\text{in}\quad
+ \operatorname{Ext}^2_A
+   (\mathcal O_{Z_{P_i}},
+    \mathcal O_{Z_{P_i}}).}                         \tag{7.3}
+\]
+\end{lemma}
+\begin{proof}
+Take the reverse
+negative-to-positive block
+of (7.1). Because \(\delta\)
+has only forward
+positive-to-negative entries,
+neither \(\delta h\) nor
+\(h\delta\) has a reverse
+component. The ambient
+curvature \(a_\kappa\)
+is diagonal. Therefore
+\(d_Bh_{N_j,P_i}=0\):
+every reverse correction
+is a CLOSED degree-one
+morphism. Hypothesis (7.2)
+says its cohomology class
+vanishes; each such closed
+cochain is therefore
+\(d_B\)-exact.
+
+Now take the diagonal
+\(P_i\to P_i\) block
+of (7.1). It is
+\[
+  d_B h_{P_i,P_i}
+       +\sum_j h_{N_j,P_i}\,
+                    \delta_{P_i,N_j}
+             =-a_{P_i} ,
+\]
+with the product order
+interpreted as genuine
+graded composition.
+The first term is exact.
+Every summand in the
+second term is exact,
+because the reverse
+factor is exact and
+the forward degree-one
+arrow \(\delta\) is closed.
+Hence the right side
+must represent the zero
+class in \(\operatorname{Ext}^2(P_i,P_i)\),
+which is exactly (7.3).
+This is a cochain-level
+argument in the actual
+dg enhancement, not an
+unsupported numerical
+inference from Euler energy.
+\end{proof}
+
+\begin{theorem}[Explicit nonvanishing of the TOTAL Atiyah obstruction for the ten-node source]
+For the ACTUAL balanced
+nonsplit Weil first-order
+tangent \(\kappa\) in (6.1),
+and for ANY choices of
+the nonzero transverse
+Ext-two forward couplings
+\(f_{ab}\) in the ten-node
+construction of Section 4,
+the intrinsic total
+perfect-object deformation
+obstruction satisfies
+\[
+ \boxed{
+  \operatorname{At}(F_{\rm conn})
+        \smile\kappa
+       \ne0
+ \quad\text{in}\quad
+       \operatorname{Ext}^2_A
+        (F_{\rm conn},F_{\rm conn}).}                \tag{7.4}
+\]
+In particular the specified
+connected Ext-two architecture
+CANNOT supply a perfect
+complex on the named
+nonsplit first-order
+Weil deformation with
+this central fiber, even
+if its relative cohomology
+sheaves were allowed
+to jump.
+\end{theorem}
+\begin{proof}
+Take any one of the EIGHT
+nonzero unit-slope
+positive graph vertices
+\(P_i\), \(i=1,2,3,4\).
+For every negative
+graph support \(Z_{N_j}\)
+the two integral
+abelian surfaces are
+distinct: the only
+identical opposite-sign
+support in the whole
+construction is the
+AUXILIARY \(Z_{0,0}\),
+corresponding to
+\(P_5=N_5\).
+
+A genuine morphism
+\(
+ \mathcal O_{Z_{N_j}}
+      \to\mathcal O_{Z_{P_i}}
+\)
+with distinct integral
+supports has zero image:
+any image is supported
+inside their intersection,
+which has dimension at
+most one, whereas the
+target is torsion-free
+on its irreducible
+two-dimensional support.
+Thus the reverse
+degree-one derived Hom
+groups in (7.2) are
+ALL ZERO for each
+\(i=1,2,3,4\).
+
+The exact geometric
+normal obstruction
+matrix (6.3) of
+every such graph
+has determinant
+\(\lambda_1\overline{\lambda_2}\)
+with absolute value one,
+hence nonzero.
+This normal obstruction
+is the nonzero \(H^1(N)\)
+component of the
+true coherent-sheaf
+Atiyah class. The
+standard local complete
+intersection self-Ext
+filtration identifies
+this component with
+a nonzero class in
+\(
+\operatorname{Ext}^2_A
+  (\mathcal O_{Z_{P_i}},
+   \mathcal O_{Z_{P_i}})
+\).
+For these graph abelian
+subvarieties the
+normal bundle is
+holomorphically trivial
+and the ambient torus
+splits algebraically
+along each graph, so
+the relevant normal
+cohomology summand does
+not disappear by a
+spectral-sequence
+differential.
+
+If the total intrinsic
+Atiyah obstruction of
+\(F_{\rm conn}\) vanished,
+the standard curved-dg
+first-order lift equation
+(7.1) would have a
+solution \(h\).
+By the preceding lemma,
+its positive diagonal
+\(P_i\) block would force
+the INDIVIDUAL
+nonzero Atiyah class
+\(a_{P_i}\) to vanish,
+contradiction.
+The conclusion is
+independent of the
+actual nonzero choices
+of the sixteen forward
+edge couplings, since
+the reverse Hom groups
+and vertex obstruction
+classes are fixed by
+the underlying graph
+geometry.
+\end{proof}
+
+\noindent\textbf{Comparison with the earlier partial test.}
+The Hodge-type
+cancellation (5.1)
+remains correct for
+the total virtual
+K-class; its Atiyah
+trace vanishes.
+The sharpened result
+(7.4) is a computation
+of the FULL derived
+obstruction, not a
+flat-cohomology-only
+claim. It shows that
+the forward-only
+connected Ext-two
+coupling is not
+sufficient to deform
+the central geometric
+source, regardless
+of its Euler index.
+This closes THIS
+particular fourfold
+architecture under the
+specified real
+nonsplit Weil tangent.
+It does not assert that
+all possible
+nonseparable perfect
+complexes with the
+same rational Weil
+character are
+obstructed: a different
+architecture with
+genuine reverse
+morphisms or newly
+constructed supports
+is not modeled by
+the hypotheses of
+the lemma.
+
 \section{Euler size, computation contract, and outcome}
 For a hypothetically simple holomorphic perfect
 object with this exact integral K0 class on
