@@ -1,0 +1,344 @@
+\documentclass[11pt]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CH}{\mathrm{CH}}
+\newcommand{\Hdg}{\mathrm{Hdg}}
+\newcommand{\cl}{\mathrm{cl}}
+\newcommand{\im}{\mathrm{im}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\title{GST universal original-\(X\) source birth from bounded relative Chow geometry:
+canonical specialization and polarized native-image gap}
+\date{21 October 2026}
+\begin{document}
+\maketitle
+
+\section{Immutable original-variety target, source types, and route difference}
+Take any smooth projective complex \(d\)-fold \(X\), every
+\(0\le p\le d\), and every
+\(
+\alpha\in H^{2p}(X,\Q)\cap H^{p,p}(X).
+\)
+The required output is an ACTUAL rational algebraic
+\(Z_\alpha\in\CH^p(X)_\Q\) with the GENUINE
+analytic fundamental-class comparison
+\[
+                 \cl_X^{\mathrm{can}} Z_\alpha=\alpha.
+                                                               \tag{1}
+\]
+The earlier GST K0/Euler, finite-degree return, and
+Chern--Segre results compile already-constructed actual
+algebraic source columns, but cannot manufacture an
+output outside the full image of the canonical class map.
+This attempt therefore changes the INPUT geometry:
+algebraic cycles are first constructed on OTHER
+nearby fibers of a genuinely smooth projective
+DEFORMATION FAMILY, not selected inside the
+pre-existing original-\(X\) Chow group.
+The new mathematical question is whether such
+geometrically born cycles can be transported to
+the original target without prior Chow preimage.
+
+\section{Actual original-X source from projective Chow limits}
+Let
+\[
+ \pi:\mathfrak X\to\Delta
+\]
+be any smooth projective analytic family over
+a sufficiently small complex disk, with
+\(\mathfrak X_0=X\), equipped with an honest
+relative projective embedding
+\(\mathfrak X\subset \mathbf P^N\times\Delta\).
+Choose the genuine Ehresmann/Gauss--Manin
+identification of the rational local systems
+near \(0\). Denote by \(\alpha_t\) the
+horizontal rational continuation of the
+given original class \(\alpha_0=\alpha\);
+it is not assumed algebraic on the central fiber.
+
+\begin{theorem}[Universal bounded Chow specialization as an actual original-X source constructor]
+Fix a codimension \(p\), a positive integer
+\(N_0\) and a nonnegative integer \(D\).
+Suppose there is a sequence \(t_j\to0\)
+of noncentral smooth fibers, and on EACH
+of those genuinely different original
+fibers two INDEPENDENTLY CONSTRUCTED
+effective algebraic codimension-\(p\)
+cycles \(A_j^+,A_j^-\), each of relative
+projective degree at most \(D\), such that
+\[
+ \boxed{
+ \cl_{\mathfrak X_{t_j}}^{\mathrm{can}}
+          \left(\frac{A_j^+-A_j^-}{N_0}\right)
+                         =\alpha_{t_j}.}          \tag{2}
+\]
+No rational Chow representative of \(\alpha_0\)
+on \(X\) is assumed.
+Then a pair of ACTUAL effective
+cycles \(A_0^\pm\) is CONSTRUCTED on
+the ORIGINAL \(X\), with
+degrees at most \(D\), and
+\[
+ \boxed{
+ Z_\alpha=\frac{A_0^+-A_0^-}{N_0}
+        \in\CH^p(X)_\Q,\qquad
+ \cl_X^{\mathrm{can}}(Z_\alpha)=\alpha.}           \tag{3}
+\]
+The construction is the genuine
+relative-Chow specialization of the
+two effective cycle sequences, not
+a supplied Hodge-to-Chow selection on \(X\).
+\end{theorem}
+\begin{proof}
+Relative Chow spaces of effective
+codimension-\(p\) cycles of each FIXED
+projective degree \(e\) are proper over
+the projective-family base. Their finite
+union over \(0\le e\le D\) remains proper.
+Take the fiber product of TWO such
+degree-bounded relative Chow spaces
+over \(\Delta\); this also is proper.
+The points \((t_j,A_j^+,A_j^-)\)
+therefore have an accumulation point
+\((0,A_0^+,A_0^-)\) in the central
+Chow fiber, after passing to a
+subsequence. Both \(A_0^\pm\) are
+genuine effective projective algebraic
+cycles on \(\mathfrak X_0=X\), of the
+claimed dimension and degree.
+
+In a smooth proper family, canonical
+Betti cycle classes of a
+continuous family of algebraic cycles
+are locally constant in the
+horizontal rational cohomology local
+system. Equivalently, under an
+Ehresmann trivialization,
+integration of closed smooth
+differential forms over the
+specializing algebraic cycle currents
+converges to integration over the
+limiting effective cycle.
+Consequently, under the local system
+identification,
+\(
+ \cl(A_j^\pm)\to\cl(A_0^\pm).
+\)
+But each signed combination in (2)
+has the same constant transported
+Betti class \(\alpha\).
+The rational cohomology lattice is
+finite-dimensional and its
+cohomology pairing with the
+limiting cycle is continuous.
+Thus
+\[
+ \cl_X^{can}(A_0^+-A_0^-)
+     =N_0\alpha.
+\]
+Dividing by \(N_0\) proves (3).
+Every map used in the construction
+is the ACTUAL Chow, analytic-cycle
+or Gauss--Manin comparison map of the
+stated original family.
+\end{proof}
+
+\begin{corollary}[Necessary algebraic-degree escape for a hypothetical missing target]
+If a given rational Hodge
+\(\alpha\in\Hdg^p(X)_\Q\)
+is NOT in
+\(\im(\cl_X^{can})\),
+then for every smooth projective
+family through \(X\), every positive
+integer \(N_0\), and every finite
+effective degree bound \(D\),
+there CANNOT exist a sequence
+of noncentral fibers approaching
+the original \(X\) satisfying
+(2) with those bounds.
+Thus along any genuine family of
+nearby algebraic realizations of
+the same horizontal Hodge class,
+at least the effective degree
+bound or the denominator bound
+must eventually escape ALL
+fixed finite bounds.
+\end{corollary}
+\begin{proof}
+Contraposition of the theorem,
+quantified over \(N_0,D\).
+This is a criterion for a
+hypothetical defect and does
+not assert the existence of
+any such defective variety.
+\end{proof}
+
+\section{GST arbitrary-X primitive residual has a STRICT quantitative exclusion radius}
+Now suppose \(d=2p\), choose a genuine
+ample divisor \(h\) and the primitive
+rational \((p,p)\) Hodge sector
+\[
+ V=\Hdg_{\mathrm{prim}}^p(X)_\Q,\qquad
+ Q(r,s)=(-1)^p\int_Xr\,s.
+\]
+The genuine Hodge--Riemann pairing \(Q\)
+is positive definite on \(V_\R\).
+Let
+\(A_{\mathrm{alg}}\subset V\)
+be the rational space spanned by
+canonical primitive projections of
+ACTUAL algebraic codimension-\(p\)
+cycles on the original \(X\).
+These primitive projections are
+algebraic at the rational Chow level
+whenever they arise from the
+established rational Lefschetz
+decomposition and algebraic
+hyperplane classes; alternatively
+take the genuine rational
+primitive algebraic image as
+the definition of \(A_{\mathrm{alg}}\).
+
+For any \(r\in V\) let
+\(\pi_A r\) be its rational
+\(Q\)-orthogonal projection
+to \(A_{\mathrm{alg}}\), and
+set \(r_\perp=r-\pi_A r\).
+
+\begin{theorem}[Quantitative universal GST native-image exclusion radius]
+For every arbitrary original
+\(X\), every \(p\), every \(r\)
+and every algebraic native
+primitive class
+\(z\in A_{\mathrm{alg}}\),
+\[
+ \boxed{
+ Q(r-z,r-z)
+ =Q(r_\perp,r_\perp)
+       +Q(\pi_A r-z,\pi_A r-z)
+ \ \ge Q(r_\perp,r_\perp).}                       \tag{4}
+\]
+Thus if the full rational
+native residual \(r_\perp\ne0\),
+not even an INFINITE SEQUENCE
+of finite source combinations
+from the ORIGINAL algebraic
+Chow image can converge to
+\(r\) in polarized Hodge norm.
+Allowing infinitely many
+GST native Gram, Euler,
+Segre, Adams, kernel or
+finite-degree descent
+operations that retain
+the same original-X
+algebraic image cannot
+remove this strict
+positive exclusion radius.
+\end{theorem}
+\begin{proof}
+Orthogonality
+\(r_\perp\perp A_{\mathrm{alg}}\)
+kills the cross term in
+the expansion of
+\(r-z=r_\perp+(\pi_A r-z)\).
+Both remaining terms are
+nonnegative by positive
+definiteness. If
+\(r_\perp\ne0\), then
+\(Q(r_\perp,r_\perp)>0\),
+independently of how many
+algebraic sources are used,
+their denominators, or any
+limit of their finite rational
+linear combinations.
+This is the exact GST
+native-residual polarization
+law applied to the COMPLETE
+canonical image, not merely
+a chosen finite Gram frame.
+\end{proof}
+
+\section{What is genuinely different about this route}
+Theorem 2 constructs \(Z_\alpha\)
+on the ORIGINAL arbitrary \(X\)
+from algebraic sources on other
+ACTUAL smooth fibers with bounded
+relative algebraic complexity.
+It can therefore create an
+original-X source without
+assuming the old Chow image
+already contains \(\alpha\).
+Theorem 4 proves why
+native endomorphisms,
+positive Euler contractions
+and arbitrarily long original-X
+source-image iterations alone
+cannot substitute for this
+fresh geometric input.
+
+The two theorems leave ONE
+testable original-X source
+question, distinct from the
+old one-legged factorization:
+given arbitrary \((X,p,\alpha)\),
+can GST independently construct
+nearby-fiber algebraic
+representatives of the
+HORIZONTAL rational target
+with uniformly bounded effective
+degree and denominator?
+That existence statement is
+NOT an input-free law of
+the present GST repertoire.
+The construction above has
+no Hodge-to-Chow selector
+and it does not assert
+such a bound without proof.
+In particular density of
+special Hodge loci, arbitrary
+CM fibers or degeneration to
+a singular toric fiber does
+NOT imply this bounded
+source condition.
+
+\section{Wolfram exact consistency test}
+For a rational positive
+definite Gram
+\(G=\operatorname{diag}(2,3,5)\),
+actual source-coordinate matrix
+\(
+C=\left(\begin{smallmatrix}1&1\\0&1\\0&0
+\end{smallmatrix}\right)
+\)
+and prescribed rational target
+\(r=(3,4,2)\), the true
+native projector
+\(
+P=C(C^tGC)^{-1}C^tG
+\)
+is the diagonal projector
+\(\operatorname{diag}(1,1,0)\).
+Wolfram computed the EXACT
+residual \(r_\perp=(0,0,2)\)
+with norm \(20\).
+For EVERY rational
+two-source combination
+\(C(z_1,z_2)^t\),
+the squared distance is
+\[
+ Q(r-Cz,r-Cz)=20+
+ 66-12z_1+2z_1^2-36z_2+
+               4z_1z_2+5z_2^2
+ \ge20 .
+\]
+This is an exact arithmetic
+discriminator for the full-image
+exclusion radius, NOT a
+hypothetical smooth projective
+variety or a Hodge counterexample.
+The general geometric proof
+uses Hodge--Riemann and
+original-X rational image.
+\end{document}
