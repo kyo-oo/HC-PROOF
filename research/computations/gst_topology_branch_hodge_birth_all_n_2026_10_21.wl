@@ -13,7 +13,7 @@ sChern[p_Integer?Positive]:=
 antiSquare[p_Integer?Positive]:=Expand[4*sChern[p]-2*m^p];
 values=Table[
  {p,FullSimplify[sChern[p]-(m^p+(m-2*k)^p)/2]===0,
-    FullSimplify[antiSquare[p]-2*m^p*(m-2*k)^p]===0,
+    FullSimplify[antiSquare[p]-2*(m-2*k)^p]===0,
     2*(-4*p-1)^p},
  {p,1,8}];
 d[n_Integer?Positive]:=2*(n+1);
