@@ -424,6 +424,175 @@ by this
 contrapositive.
 \end{corollary}
 
+\section{A stronger arbitrary-X specialization theorem WITHOUT supplied numerical bounds}
+Let \(\pi:\mathfrak X\to\Delta\) be ANY smooth projective
+complex disk family and \(\alpha_t\) a fixed horizontal
+rational \(2p\)-cohomology class, not assumed Hodge or
+algebraic on any fiber. Define the genuine algebraicity locus
+\[
+ \mathscr A(\alpha)=
+ \{t\in\Delta:\exists Z_t\in CH^p(\mathfrak X_t)_\Q,
+          \ \cl_{\mathfrak X_t}^{can}(Z_t)=\alpha_t\}.
+\]
+For integers \(D\ge0,N\ge1\), let
+\(S_{D,N}(\alpha)\) be the actual proper relative-Chow
+source locus of two effective cycles with degrees at most
+\(D\) and signed difference of Betti class \(N\alpha_t\).
+
+\begin{theorem}[Uncountable neighboring source fibers force an actual original-X cycle]
+For EVERY such smooth projective family the algebraicity
+locus satisfies the genuine geometric dichotomy
+\[
+ \boxed{\mathscr A(\alpha)\text{ is countable }
+                  \quad\text{OR}\quad \mathscr A(\alpha)=\Delta.}
+                                                               \tag{7}
+\]
+If the class has algebraic representatives on UNCOUNTABLY
+many distinct fibers, then some fixed pair \(D_*,N_*\)
+is automatically realized by the ACTUAL relative Chow
+geometry on EVERY fiber, including the specified original
+\(X=\mathfrak X_0\), and the resulting genuine effective
+cycles \(A_0^\pm\) give
+\[
+ \boxed{Z_{\alpha_0}=(A_0^+-A_0^-)/N_*\in CH^p(X)_\Q,
+                 \quad\cl_X^{can}(Z_{\alpha_0})=\alpha_0.}
+                                                               \tag{8}
+\]
+Unlike the preceding bounded theorem, NO bound on
+cycle degree or denominator is assumed as INPUT.
+\end{theorem}
+\begin{proof}
+Every rational algebraic cycle is a rational finite
+signed combination of actual integral effective
+cycles. Clearing its finitely many denominators
+gives a difference of two effective cycles divided
+by an integer \(N\). Both effective cycles have finite
+projective degrees, so the following equality of
+ACTUAL source loci holds:
+\[
+ \mathscr A(\alpha)=
+ \bigcup_{N=1}^{\infty}\ \bigcup_{D=0}^{\infty}
+                  S_{D,N}(\alpha).
+\]
+By the previously proved true relative-Chow
+properness and canonical Betti local constancy,
+each \(S_{D,N}\) is closed analytic in the disk.
+Every proper analytic subset of a connected
+one-dimensional complex disk is discrete and
+hence countable. A countable union of proper
+analytic subsets is countable. Thus, if
+\(\mathscr A(\alpha)\) is uncountable, at least one
+\(S_{D_*,N_*}\) must equal the WHOLE disk.
+The central relative Chow fiber actually contains
+\(A_0^\pm\), and its canonical Betti cycle class
+is the horizontal target \(N_*\alpha_0\).
+This constructs (8) on the original X.
+\end{proof}
+
+\begin{corollary}[Positive-measure and very-general geometric source birth]
+For any connected irreducible smooth complex analytic
+deformation base \(B\), the algebraicity locus of a
+fixed flat rational cohomology class is a COUNTABLE
+UNION of closed analytic subsets of \(B\). If it
+has POSITIVE smooth volume measure (or contains
+a point outside the countable union of all proper
+relative-Chow source analytic loci), at least one
+fixed bounded-Chow source locus is all of \(B\),
+and the class is algebraic on every fiber.
+\end{corollary}
+\begin{proof}
+A proper complex analytic subset of an irreducible
+complex manifold has smooth volume zero. Countably
+many such sets have volume zero. The only possible
+positive-measure Chow locus is the full base;
+the proper relative Chow family then supplies actual
+cycles on every original fiber.
+\end{proof}
+
+\section{Exact REAL isolated-Hodge-locus test on smooth projective elliptic products}
+The new theorem really eliminates the numerical BOUNDS.
+It does NOT create algebraic neighboring fibers out of
+an arbitrary original Hodge class. The following genuine
+projective family computes that missing hypothesis sharply.
+
+Let \(E_\tau=\C/(\mathbb Z+\tau\mathbb Z)\)
+with \(\Im\tau>0\). For \(t\) in a sufficiently
+small complex disk put
+\[
+ X_t=E_i\times E_{i+t}.
+\]
+This is an ACTUAL smooth projective family with marked
+Gauss--Manin rational one-forms \(dx_1,dy_1,dx_2,dy_2\).
+Choose the fixed INTEGRAL two-class
+\[
+ \boxed{\eta=dx_1\wedge dy_2-dy_1\wedge dx_2.}    \tag{9}
+\]
+At the central original \(X_0=E_i\times E_i\),
+the actual diagonal divisor \(\Delta_E\)
+has canonical class
+\[
+ \cl^{can}[\Delta_E]
+ =dx_1dy_1+dx_2dy_2-dx_1dy_2+dy_1dx_2.
+\]
+Therefore \(\eta=\cl^{can}([\{o\}\times E_i]
+ +[E_i\times\{o\}]-[\Delta_E])\) is GENUINELY
+algebraic on the ORIGINAL \(X_0\).
+
+On the varying fiber the holomorphic one-forms are
+\(\omega_1=dx_1+i\,dy_1\) and
+\(\omega_2=dx_2+(i+t)\,dy_2\).
+\begin{theorem}[An algebraic original class may have NO other nearby Hodge fiber]
+Under the actual horizontal transport, the
+EXACT exterior calculation yields
+\[
+ \boxed{\eta\wedge\omega_1\wedge\omega_2
+    =t\;dx_1\wedge dx_2\wedge dy_1\wedge dy_2.}  \tag{10}
+\]
+For REAL integral \(\eta\), Hodge type \((1,1)\)
+on the surface is equivalent to vanishing of this
+wedge (and its complex conjugate). Hence
+\[
+ \boxed{\eta_t\in H^{1,1}(X_t)
+                       \quad\Longleftrightarrow\quad t=0.}
+                                                               \tag{11}
+\]
+In particular the original class ALREADY has an
+ACTUAL algebraic representative, yet its horizontal
+continuation admits no algebraic representative
+on ANY noncentral nearby fiber: it is not even Hodge.
+Thus an argument asserting that EVERY arbitrary-X
+Hodge class has an accumulation of neighboring
+algebraic realizations is FALSE.
+This is a counterexample to that DEFORMATION
+PRESCRIPTION, not to the Hodge conjecture.
+\end{theorem}
+\begin{proof}
+At \(t=0\), expand the actual difference map
+\((z_1,z_2)\mapsto z_2-z_1\) to compute
+the stated diagonal divisor class.
+For \(t\ne0\), wedge the explicit two-forms
+with the two actual holomorphic one-forms.
+The only two nonrepeating wedge monomials
+sum to the coefficient \(t\), giving (10).
+The class is rational REAL, so vanishing of its
+\((0,2)\) part is equivalent to being type
+\((1,1)\); the \((0,2)\) coefficient is detected
+by wedging with \(\omega_1\wedge\omega_2\).
+Therefore the Hodge locus is exactly \(\{0\}\).
+\end{proof}
+
+\noindent\textbf{Independent Wolfram check.}
+The ordered alternating four-tensor computation in
+basis \((dx_1,dx_2,dy_1,dy_2)\)
+returned coefficient \(t\) EXACTLY,
+zero only at \(t=0\).
+Unlike a made-up Gram model, this is
+a genuine family of actual projective varieties.
+It establishes that a Hodge-preserving deformation
+is an additional geometric input, not something
+created by the GST Gram, Euler, Chern--Segre or
+source-inventory laws.
+
 \section{An actual finite geometric native source inventory on EVERY arbitrary original-X}
 No candidate Chow
 cycle representing
