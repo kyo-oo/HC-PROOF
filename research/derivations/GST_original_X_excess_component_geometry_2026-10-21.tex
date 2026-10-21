@@ -179,10 +179,14 @@ for some \(a_E\in\Q\), so
  \boxed{(-1)^p\int_Xr\, [\operatorname{ch}(E)]_p
                          h^{d-2p}=0.}            \tag{6}
 \]
-This includes every GST tangent-Jacobian algebraic
-idempotent, Adams/Todd normalization, regular-section
+This includes the concrete tangent/Jacobian kernel K-class
+of the ORIGINAL smooth complete intersection X arising
+from its standard defining equations, together with its
+Adams/Todd normalization, regular-section
 complete-intersection and derived tensor/virtual combination
-formed using ONLY these ambient objects.
+formed using ONLY the specified ambient objects.
+It does NOT cover arbitrary unrelated Jacobian sources on
+other affine schemes, or nonambient incidence centers.
 This exact all-complete-intersections vanishing is independent
 of the number of such operations performed and does not
 assume any Hodge counterexample exists.
@@ -327,7 +331,7 @@ that CAN carry independent primitive algebraic
 component periods is inside the SPECIAL
 reducibility locus
 \[
- \mathscr D_{m,p}(X)=
+ \mathcal D_{m,p}(X)=
  \{t:V(t)\text{ has at least TWO distinct
                codimension-p irreducible components}\}.
 \]
@@ -394,7 +398,11 @@ The ACTUAL algebraic primitive rational cycle
  \boxed{Z_r=2[P_A]-h^2=[P_A]-[P_B]}               \tag{8}
 \]
 satisfies the actual primitive Lefschetz identity
-\(h\,\cl(Z_r)=0\) and the positive middle
+\(h\,\cl(Z_r)=0\): indeed \(H^6(Q^4,\Q)=\Q h^3\),
+\(\int_{Q^4} h^2\cl(Z_r)=2\cdot1-2=0\),
+so the rational class \(h\cl(Z_r)\in H^6\)
+vanishes because its pairing with h is zero
+and \(\int_{Q^4}h^4=2\ne0\). It has the positive middle
 self-intersection
 \[
  \boxed{\int_{Q^4}\cl(Z_r)^2
