@@ -134,7 +134,8 @@ theorem pointGeneratedNativeProjection_finite_source_and_residual
     (alpha : HodgeSpace V (pointGeneratedHodgeData H pt) p) :
     ∃ phi : FiniteCodimensionPresentation V.X p,
       phi.sum (fun x q => q • pt p x) +
-        (P.primitiveResidual alpha).1 = alpha.1 := by
+        ((P.primitiveResidual alpha).1 :
+          RationalSingularCohomology H.analytification (2 * p)) = alpha.1 := by
   letI : CompactSpace V.X := smoothProjectiveCompactSpace V
   let Z := P.projectNative alpha
   refine ⟨presentationOfNativeCycle V.X p Z, ?_⟩
