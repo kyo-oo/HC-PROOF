@@ -47,6 +47,12 @@ all have complex dimension `m dim(X)+2ell`; every original target alpha has nonz
 
 For alpha nonzero, the `Y^+` output has cohomological degree `2(p+ell)` but pure weight `2p+4ell`, so is NOT the ordinary canonical rational cycle class of any `CH^(p+ell)(Y^+)_Q` class: algebraic codimension-`p+ell` cycle classes on smooth quasi-projective worlds have pure weight `2p+2ell` and type `(p+ell,p+ell)`. MHS weight strictness excludes equality. This is a genuine non-algebraic rational diagonal cohomology class born on a smooth **nonproper** algebraic world for every X and every nonzero alpha; not an HC counterexample.
 
+### New compactification obstruction and exact Kummer residue
+
+The expanded [LaTeX](../derivations/GST_signed_causal_purity_spectrum_2026-10-22.tex) also proves `betaPlus` lies outside the image of **every** smooth-projective compactification restriction `H^(2p+2ell)(Ybar,Q) -> H^(2p+2ell)(YPlus,Q)`: a pure weight-`2p+2ell` source cannot map to the nonzero independent weight-`2p+4ell` output under a degree-preserving MHS morphism. Thus simply compactifying the born class does not convert it into a smooth-projective Hodge class.
+
+A new canonical **topological residue decoder** is explicit: for Kummer base `w=z^m`, the normalized rational generator `lambda1=(1/m)[dlog(w)/(2pi i)]` pulls back to `[dlog(z)/(2pi i)]`; with further torus generators `lambda_i`, the positive folded class is `betaPlus_a(alpha)=alphaU cup lambda1 cup ... cup lambda_a`. Pullback through the finite etale cover followed by projection to top torus Kunneth degree returns `Theta_m(alpha) tensor Q(-a)`. Removing this **explicit Tate twist** and restricting along the original-X point insertion recovers alpha (or m alpha for p=0). This is a genuine whole-alpha cohomological left inverse, **not** a Chow-cycle constructor; the weight-twist firewall is essential.
+
 ### Graded GST law in existing Lean module
 
 `CausalHodgeCell.signedCausalFold a b` sends `(k,p,q)->(k+a+b,p+a,q+a)`; its `charge` is unchanged and its `purityGap` changes by `a-b`. Includes compositional associativity, pure diagonal signature, arbitrary-target signed signature and balanced cancellation. The Lean declarations are an exact arithmetic/graded shadow, not a Lean formalization of all scheme/MHS geometry. Full mathematical source type and geometric realization are in the LaTeX artifact.
