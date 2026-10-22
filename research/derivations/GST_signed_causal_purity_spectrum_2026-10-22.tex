@@ -29,7 +29,7 @@ rational Hodge conjecture's smooth-projective domain.
 \end{abstract}
 
 \section{Immutable target, exact inputs and previous GST laws}
-Fix any nonempty connected smooth projective complex variety $X$
+Fix any nonempty smooth projective complex variety $X$
 of dimension $d$, an integer $p\geq0$, and a nonzero
 $\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)$.
 The classical all-$X$ statement seeks an actual cycle on X with
@@ -146,12 +146,29 @@ Define the cyclic Hodge lift
                  \ \in K_{2p}.
  \tag{9}
 \]
-For $p>0$ the point insertion
-$s:X\to B$, $x\mapsto(x,x_0,\ldots,x_0)$
-satisfies $s^*\Theta_m(\alpha)=\alpha$.
-For $p=0$ it returns $m\alpha$. Thus
-$\Theta_m$ is injective in ALL codimensions, and the
-recovery uses an actual algebraic map.
+Choose any closed complex point $x_0\in X(\mathbb C)$,
+and let $s:X\to B$ be the algebraic point insertion
+$s(x)=(x,x_0,\ldots,x_0)$. Let
+$e_{x_0}=c_{x_0}^*$ for the algebraic constant self-map
+$c_{x_0}:X\to X$ with value $x_0$.
+Then $e_{x_0}^2=e_{x_0}$ on rational cohomology and
+\[
+ s^*\Theta_m(\alpha)
+    =\alpha+(m-1)e_{x_0}(\alpha),\qquad
+ \left(I-\frac{m-1}{m}e_{x_0}\right)
+ s^*\Theta_m(\alpha)=\alpha.                \tag{9a}
+\]
+For every $p>0$ the constant-map pullback vanishes,
+so the formula reduces to $s^*\Theta_m(\alpha)=\alpha$.
+For connected $X$ and $p=0$, it reduces to $m\alpha$.
+For DISCONNECTED $X$, where $H^0(X,\mathbb Q)$ need not be
+one-dimensional, (9a) supplies the correct exact rational
+inverse without falsely replacing a component-dependent
+degree-zero class by one scalar. Thus the cyclic lift is
+injective in every codimension on every nonempty original $X$.
+The operator $e_{x_0}$ also acts on genuine Chow classes
+via the algebraic constant-map pullback, so the smooth
+companion's Chow return uses the same explicit inverse.
 
 \begin{theorem}[Signed GST causal Hodge spectrum]
 For EVERY nonzero rational Hodge $\alpha$ on EVERY original $X$,
@@ -252,8 +269,8 @@ forward direction uses averaged Chow transfer and
 hyperplane products; reverse applies projective
 pushforward along the chosen $\ell$ factors and
 point restriction on the remaining factors, then
-the finite-etale pullback and original-X point
-insertion of the previous cyclic-fold theorem.
+the finite-etale pullback, the original-X point
+insertion, and the idempotent correction (9a).
 
 No implicit comparison between cohomologies of the three
 different worlds is asserted: the injections are three
@@ -386,8 +403,9 @@ It obeys the exact \emph{source-address recovery law}
 \]
 Untwisting by the specified normalized torus class,
 then pulling back along the genuine point insertion
-$s:X\hookrightarrow B$, returns precisely
-$\alpha$ for $p>0$ and $m\alpha$ for $p=0$.
+$s:X\hookrightarrow B$, followed by the explicit
+idempotent correction $(I-(m-1)e_{x_0}/m)$,
+returns precisely $\alpha$ even when $X$ is disconnected.
 This is a full-$\alpha$ cohomological left inverse.
 
 The Tate twist $(-a)$ is essential: the residue lowers
