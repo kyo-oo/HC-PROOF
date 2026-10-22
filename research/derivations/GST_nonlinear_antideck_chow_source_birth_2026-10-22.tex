@@ -297,6 +297,69 @@ residual. The quadric computation provides a falsifiable
 positive primitive model for that mechanism, not a
 proof by extrapolation to all varieties.
 
+
+\section{Higher-arity GST Galois character selection: the next distinct operation}
+The preceding construction uses a single involution, hence its
+nonlinear quadratic anticharacter product is invariant. The
+higher-dimensional GST causal world family has a general
+\emph{necessary character conservation law} with real
+algebraic Chow semantics.
+
+\begin{proposition}[Uniform finite-two-group character conservation]
+Let $G=(\mathbb Z/2\mathbb Z)^k$ act algebraically on a
+smooth projective $\widetilde Y$, and let
+$f:\widetilde Y\to X$ be a proper morphism invariant
+under $G$. Suppose real algebraic rational Chow
+classes $Z_i\in CH^{p_i}(\widetilde Y)_{\mathbb Q}$
+satisfy $g^*Z_i=\chi_i(g)Z_i$ for true sign
+characters $\chi_i:G\to\{\pm1\}$.
+For their algebraic intersection,
+\[
+  \boxed{
+  \left(\prod_i\chi_i\ne1\right)\quad\Longrightarrow\quad
+  f_*\bigl(\prod_i Z_i\bigr)=0
+  \quad\text{in }CH^{\sum p_i-\mathrm{reldim}(f)}(X)_{\mathbb Q}.
+  } \tag{9}
+\]
+If $\prod_i\chi_i=1$, their product is $G$-invariant
+and gives an admissible original-$X$ algebraic
+proper-pushforward source, although nonvanishing is
+not automatic.
+\end{proposition}
+\begin{proof}
+The cycle intersection is multiplicative for automorphisms:
+$g^*\prod_iZ_i=(\prod_i\chi_i(g))\prod_iZ_i$.
+Invariance $f\circ g=f$ gives
+$f_*g^*(\prod_iZ_i)=f_*(\prod_iZ_i)$
+since $g$ is an automorphism. If the product character
+is nontrivial, some $g$ gives a minus sign, hence
+$2 f_*(\prod_iZ_i)=0$; rational Chow coefficients
+force the asserted equality. For trivial product
+the source is invariant and its pushforward is
+an actual algebraic Chow class by properness.
+\end{proof}
+
+For one $\mathbb Z/2$ involution a product of an odd
+number of anti-divisor sources always pushes to zero.
+This is a \emph{specific linear/odd-arity obstruction},
+not a universal obstruction to nonlinear GST world
+births. Already for $G=(\mathbb Z/2)^2$ there
+are three distinct nontrivial characters
+\[
+ \chi_a(u,v)=(-1)^u,\qquad
+ \chi_b(u,v)=(-1)^v,\qquad
+ \chi_{a+b}(u,v)=(-1)^{u+v},
+ \quad \chi_a\chi_b\chi_{a+b}=1 .                 \tag{10}
+\]
+Therefore a genuinely \emph{cubic} invariant output can
+be built, provided three independently algebraic
+character-eigen sources exist. This character law
+opens a different higher-codimension construction
+without falsely claiming existence of those sources
+on an arbitrary original $X$; the scheme-level
+geometric realization of all three is the explicit
+first test of the next route.
+
 \section{Proof-audit boundaries and reproducibility}
 The source construction is entirely algebraic after the
 double-cover normalization and equivariant resolution.
