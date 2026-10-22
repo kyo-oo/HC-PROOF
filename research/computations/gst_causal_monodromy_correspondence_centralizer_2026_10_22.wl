@@ -25,7 +25,29 @@ allPass=And@@(Function[row,
   row[[2]]==1 && row[[3]]==row[[1]] &&
   row[[4]]==row[[1]] && TrueQ[row[[5]]] && TrueQ[row[[6]]]
  ]/@tab);
+
+(* Full rank-m original-X rational cohomology factor tensored with
+   the rank-n causal Picard-Fuchs monodromy Jordan subsystem.
+   The monodromy operator on the tensor is I_m x J_n.
+   Invariant vectors have rank m; invariant endomorphisms have rank m^2 n. *)
+Clear[kronNil,commutantDimension,allXTensors];
+kronNil[m_Integer?Positive,n_Integer?Positive]:=
+  KroneckerProduct[IdentityMatrix[m],shift[n]];
+commutantDimension[m_Integer?Positive,n_Integer?Positive]:=
+ Module[{q,N=kronNil[m,n],v,C,d=m*n},
+  q=Array[qv,{d,d}];v=Flatten[q];
+  C=Normal[CoefficientArrays[Flatten[q.N-N.q],v][[2]]];
+  d^2-MatrixRank[C]];
+allXTensors=Flatten[Table[With[{op=kronNil[m,n]},
+ {m,n,m*n,m*n-MatrixRank[op],commutantDimension[m,n],m^2*n}
+ ],{m,1,3},{n,2,4}],1];
+allXPass=And@@(
+  (#[[4]]==#[[1]]&&#[[5]]==#[[6]])&/@allXTensors
+);
+
 {"JordanData(n,FixedDim,CentralizerDim,PowersRank,Commute,Nilpotent)"->tab,
  "AllPass"->allPass,
+ "AllXTensorTests(m,n,totalDim,fixedDim,operatorDim,expected)"->allXTensors,
+ "AllXPass"->allXPass,
  "EllipticJCommutatorWithComplexStructure"->hd,
  "EllipticJIsNotPureHodgeMorph"->TrueQ[hd!=ConstantArray[0,{2,2}]]}
