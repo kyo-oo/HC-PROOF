@@ -1,0 +1,58 @@
+# GST nonlinear anti-deck causal source birth — signed component Chow extraction
+
+- **Date:** 2026-10-22 IST
+- **Kind:** Mathbox sustained-research route + one substantive research-attempt + adversarial proof-audit self-review + computation audit
+- **Original target:** For every smooth projective complex original X, every p and every rational (p,p) Hodge alpha, construct actual Z_alpha in CH^p(X)_Q with canonical rational Betti class alpha, without an Hodge-to-Chow witness input.
+- **Base checkpoint:** `442359b0eaa3021fac40eb17fcce510838e09788` on `research/gpt6-native-point-primitive-span-20261017`.
+- **Nearest prior attempted operation:** The projective and punctured Hopf/Gysin causal folds produced true Chow returns but no independently detecting first-missing source. The old double-cover route gave anti-deck algebraic classes with linear pushforward zero. This attempt multiplies TWO anti-invariant divisor sources before the genuine original-X pushforward.
+- **Main evidence status:** Uniform algebraic geometry derivation self-reviewed; exact Wolfram arithmetic checked; an additional signed-period identity inserted in the *existing* `GSTPolarizedHodgeResidualEnergy.lean` at source commit `597d4aae439472e993aedab4258f88f9d73387ac` (GitHub Actions run 39823487928; check final revision-specific status).
+- **Proof artifact:** [Full LaTeX mathematical derivation](../derivations/GST_nonlinear_antideck_chow_source_birth_2026-10-22.tex), source created at commit `33fe2283fdbe22a9df042a4bbbc44ed32f7ae68a`, enhanced target-directed at `5f658b5d6df894b2a4266f44f74eef7c65e9d4e9`.
+- **Computation artifact:** [Fetched/actually re-executed Wolfram script](../computations/gst_antideck_signed_chow_birth_2026_10_22.wl), source blob `3be751cd949a6507562777c5d2a059c8da2ea095`.
+
+## Nonlinear all-original-X geometric source
+
+Given any smooth projective original X and two integral effective Cartier divisors W1,W2 with a proper **reduced** intersection C=union_j C_j in codimension two, choose any signs epsilon_j=±1. The conductor ideal of the normalization of C, Serre global generation and large-twist restriction surjectivity construct global algebraic sections A1,A2 of some ample L and a branch F of L^2 such that F|Wi=Ai^2 and A2=epsilon_j A1 at the generic point of C_j. Take the true degree-two algebraic cover t^2=F; normalize, then resolve equivariantly to smooth projective Y with proper f:Y→X. The two generically split divisors above each Wi define actual anti-invariant Chow divisors Δi.
+
+The **true original-X Chow intersection law** is
+
+`f_*(Δ1·Δ2)=2 Σ_j epsilon_j [C_j] ∈ CH²(X)_Q`,
+
+not just a numerical period identity. Individual f_*Δi=0, yet their product is invariant. Exceptional intersection components on the resolution cannot change the codimension-two coefficient because all components of its original-X support lie in C and the finite cover is étale over the generic points of every C_j.
+
+For one selected component C_j, choose sign + on it and - on all others:
+
+`[C_j]= (1/4) f_*(Δ1·Δ2) + (1/2) [W1]·[W2]` in **actual CH²(X)_Q**.
+
+This furnishes a real non-linear self-expanding-world source operator. Using standard high-degree CI component cofinality, signed covers produce all *already algebraic* codimension-two Chow generators on arbitrary original X, and a smooth resolved codim-(p-2) slicing world similarly returns arbitrary actual codimension-p algebraic Chow generators for p>2.
+
+## Exact positive original-X primitive example
+
+On the actual smooth quadric Q^4: Q=x0*y0+x1*y1+x2*y2=0; W1=(y1=0), W2=(y2=0); intersection C=P_A∪P_B (two actual P² components). The explicit degree-two branch is
+
+`F=(x0+y0)^2+4*x1*y1=(x0-y0)^2-4*x2*y2` modulo the quadric relation.
+
+On P_A (x0=0) the relative sign is -1; on P_B (y0=0) it is +1. Thus
+
+`f_*(Δ1·Δ2)=2([P_B]-[P_A])`.
+
+The original-X primitive `r=[P_A]-[P_B]` has true h²-pairing 0, square 2; the constructed signed-push output has square 8 and is not hyperplane-only. This is genuine new nonlinear anti-channel **original-X algebraic source geometry**, not an abstract native placeholder. Singularities of the auxiliary branch are handled by genuine equivariant projective resolution.
+
+## Target-sensitive exact sign optimization
+
+For d>=4 and any rational primitive Hodge residual r on the original X, let `a_j=∫_X r · cl(C_j) · h^(d-4)`. A single sign-controlled cover with eps_j=+1 for a_j>=0 and -1 otherwise yields a true source of coupling
+
+`Q(r,f_*(Δ1·Δ2)) = 2 Σ_j |a_j|`.
+
+It is the EXACT maximum among the 2^m signs. The sign law does not use an algebraic preimage of r; only the actual rational intersection readouts with independently constructed geometric components. The existing `GSTPolarizedHodgeResidualEnergy.lean` was surgically strengthened with `signedAntideckPeriodSource` and `signedAntideckPeriodSource_pairing`, checking the scalar form of this optimizer. This is the typed GST residual-to-source interface, not a Lean formalization of the equivariant scheme geometry.
+
+**Execution evidence:** fetched Wolfram script re-executed cleanly and returned `branchCompatibility=True`, `componentSignsCorrect=True`, signed sheet coefficients {-2,+2}, 510/510 finite sign patterns, 36/36 component extractors, 780/780 exhaustive rational target optimizers, true quadric primitive square 2, signed source square 8 and maximal quadric coupling 4. These finite assertions cross-check signs and rational normalization; the all-X statement is supported by the separately written scheme argument.
+
+## Adversarial Mathbox proof audit and limitations
+
+- **Passed (mathematics-first):** actual algebraic double cover from conductor/Serre interpolation; true anti-invariant divisors after equivariant resolution; local étale multiplicity one; actual CH² equality by proper pushforward; canonical Betti naturality; explicit Q4 branch; rational sign maximization.
+- **Not claimed as Lean-kernel proof:** scheme-theoretic conductor selection, normalization, equivariant resolution, and actual canonical Chow comparison; the signed-period Lean declaration verifies its finite rational algebraic shadow only.
+- **First unresolved implication:** show that for **each** nonzero primitive rational Hodge residual on **each arbitrary original X**, at least one real reduced incidence component C_j has a nonzero canonical period. The theorem creates all existing algebraic source directions, but does not independently establish that those directions span the rational Hodge fiber.
+- **Anti-circularity:** Full source cofinality is stated for actual existing Chow generators. It is not promoted to `EveryHodgeClassIsRationalAlgebraic`. Finite sign optimization returns zero when all genuine component periods vanish. A positive self-pairing of an unrelated born source does not imply coupling with every possible Hodge residual.
+- **Route disposition:** nonlinear anticharacter-source construction succeeded as a true all-X scheme-level Chow source birth; target-sensitive universal residual detection remains an active research continuation, not closed by this scoped route.
+
+**Exact research continuation:** test whether a genuinely non-incidence *scheme-specific* GST geometric operator (coherent-sheaf moduli / deformation algebraization / non-separable branched source) forces nonzero original-X target pairing beyond the algebraic span already enumerated. Such a forcing argument must not restate native surjectivity or merely add more finite signed words.
