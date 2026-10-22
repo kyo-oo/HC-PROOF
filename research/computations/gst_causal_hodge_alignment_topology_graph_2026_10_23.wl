@@ -32,6 +32,31 @@ graphCases=Flatten[Table[
        loops>=0}
    ],{mask,0,2^Length[allPairs]-1}]
  ],{nn,1,5}],1];
+(* Exhaustive independently evaluated every-missing-edge insertion:
+   for all labelled simple graphs 1..5 nodes. Counts 1+12+192+5120
+   = 5325 graph-edge transitions. *)
+edgeBirthChecks=Flatten[Table[
+ Module[{all=Subsets[Range[nn],{2}]},
+ Table[Module[{ed=Select[all,
+       BitGet[mask,First@FirstPosition[all,#]-1]==1&],
+       oldG,oldComponents,oldc,missing},
+   oldG=Graph[Range[nn],UndirectedEdge@@@ed];
+   oldComponents=ConnectedComponents[oldG];
+   oldc=Length[oldComponents];
+   missing=Complement[all,ed];
+   Table[Module[{newG,newc,sameComponent,
+       actual,expected},
+     newG=Graph[Range[nn],UndirectedEdge@@@Append[ed,edge]];
+     newc=Length[ConnectedComponents[newG]];
+     sameComponent=AnyTrue[oldComponents,
+         MemberQ[#,edge[[1]]]&&MemberQ[#,edge[[2]]]&];
+     actual={oldc-newc,1+newc-oldc};
+     expected=If[sameComponent,{0,1},{1,0}];
+     {nn,Length[ed],actual,expected,
+      actual===expected&&Total[actual]==1&&Times@@actual==0}
+   ],{edge,missing}]
+ ],{mask,0,2^Length[all]-1}]
+ ],{nn,1,5}],3];
 result=<|
  "exteriorPeriod"->edgePeriod,
  "periodEqualsModuliDifference"->TrueQ[edgePeriod==ss-tt],
@@ -41,6 +66,9 @@ result=<|
    #[[1]]==3&&#[[2]]==3&],
  "fiveVertexComplete"->Select[graphCases,
    #[[1]]==5&&#[[2]]==10&],
+ "edgeBirthTransitionCases"->Length[edgeBirthChecks],
+ "allEdgeBirthBifurcationsPass"->And@@edgeBirthChecks[[All,5]],
+ "failedEdgeTransitions"->Select[edgeBirthChecks,Not[#[[5]]]&],
  "failedCases"->Select[graphCases,Not[#[[6]]]&]
 |>;
 Print[result];result
