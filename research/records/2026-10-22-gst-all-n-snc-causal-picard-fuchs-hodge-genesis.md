@@ -133,3 +133,21 @@ This is a **direct restriction on native Chow source transport supplied by causa
 New Lean integration (existing Graph V2 Unbounded Higher Causality module) formalizes the rational Jordan model T=I+S, proves its fixed points are exactly coefficient vectors supported at index zero, and constructs the unique invariant vector for each scalar q in Q. This is not a claim that the Lean code already formalizes the analytic exponential or Gauss-Manin geometric comparison.
 
 Independent Wolfram exact tests on the committed all-in-one script: monodromy fixed-subspace rank n-1, nullity one and zeroth-channel fixed vector all returned TRUE for n=2 through 8. The script also reran all earlier checks successfully. The latest Graph V2 Lean job for this particular source commit must be checked before reporting kernel success.
+
+
+## Full causal monodromy weight-filtration theorem and universal original-X stabilization
+
+The maximal unipotent period operator now yields the entire monodromy weight filtration on its rank-n solution local system (n≥2, emergent smooth Calabi–Yau dimension d=n−1):
+
+\[
+\ker N^k=\mathrm{span}_{\mathbb C}\{\psi_0,\ldots,\psi_{k-1}\},\quad
+\dim\ker N^k=k,\quad 1\le k\le n.
+\]
+
+Define W_{2r}=W_{2r+1}=ker N^(r+1) for r=0..d. Then each even graded piece Gr^W_{2r} has rank one, each odd piece has rank zero, and N^h: Gr^W_{d+h} → Gr^W_{d-h} is an isomorphism for every h≥0. This algebraically constructs the monodromy weight filtration centered at d from the causal degeneration, without arbitrarily assigning Hodge-coordinate dimensions. Identification with the geometric limit mixed Hodge structure outside the certified Picard–Fuchs subsystem requires the separate degeneration comparison and is not asserted in the Lean interface.
+
+**Wolfram exact validation:** for n=2..9, the full nullity sequence of J_n^k exactly equals (1,2,...,n), all tests TRUE on the committed script. For n=2..8, monodromy-invariant rank and span statements also passed. Lean existing Graph V2 module was strengthened with the all-k theorem: the kernel of the rational lowering S^k equals vectors supported only in indices 0..k−1, and its finite coordinate type (Fin k → Q) has Q-dimension k. The latest GitHub Actions run for the specific new Lean commit needs to be pinned before claiming these declarations kernel-green.
+
+**Every original X:** for every nonempty connected smooth projective complex X and the explicit Dwork smoothing family X_t, the actual smooth product X×X_t has a nonzero Hodge (d,0) class 1_X⊗[ω_t]. Its scalar period on {x}×Γ_t is the same Φ_n and obeys the same all-n PF equation and monodromy. Thus the *emergent causal Hodge-period mechanism* is geometrically realizable for any original input X after product stabilization, without imposing dimensions or Hodge data on X. The auxiliary Hodge period does not by itself construct a cycle representing an arbitrary prescribed rational Hodge class on untouched X.
+
+**Scope and review:** all-n formal algebra plus self-reviewed actual geometric construction and exact finite symbolic checks. No public internet research; no local Lean installation; the Chow source restriction applies to globally defined relative cycles, not arbitrary fiberwise cycles.
