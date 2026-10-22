@@ -252,6 +252,72 @@ independent of $t$. The determinantally defined
 $\Sigma_t$ is a genuine independent algebraic source.
 \end{proof}
 
+
+\section{Coupled determinantal normal geometry and nodal topology}
+The original Lean module \texttt{GSTUniversalResolvedSupportHodge.lean},
+namespace \texttt{GSTNativeSmoothIncidenceCenter}, already proves
+the algebraic Chern-selector and primitive twist-invariance.
+The new assertion below couples those source laws to a
+real normal bundle, nodal singularities and Chow pushforward.
+
+\begin{theorem}[Non-split all-arity nodal complexity versus primitive source]
+Under Theorem \ref{thm:detbirth}, write
+$q=n-p+1$, $Z_t=\Sigma_t$ and restrict $\phi_t$ to $Z_t$.
+There are actual algebraic vector bundles $K_t$ of rank $1$
+and $C_t$ of rank $p$ in the exact sequence
+\[
+0\to K_t\to\mathcal O_{Z_t}^{q}
+ \xrightarrow{\phi_t|_{Z_t}}(V\otimes L^t)|_{Z_t}
+ \to C_t\to0.
+\]
+The determinantal normal bundle and nodal count are
+\[
+\boxed{N_{Z_t/X}\simeq K_t^\vee\otimes C_t,\qquad
+n_{p,m,t}=\int_{Z_t}
+ c_p(K_t\otimes C_t^\vee\otimes L^m|_{Z_t}).} \tag{20}
+\]
+For fixed sufficiently large $t$, the count is a polynomial
+in $m$ with leading term
+\[
+n_{p,m,t}=m^p\int_Xh^p c_p(V\otimes L^t)+O_t(m^{p-1}).
+\]
+Its positive coefficient is itself a degree-$p$ polynomial
+in $t$ with leading term
+\[
+\boxed{\int_Xh^p c_p(V\otimes L^t)
+ ={n\choose p}t^p\int_X h^{2p}+O(t^{p-1}).} \tag{21}
+\]
+Yet for every middle primitive rational Hodge $\alpha$
+the original-$X$ period is constant:
+\[
+\boxed{\int_X\alpha\smile [Z_t]
+       =\int_X\alpha\smile c_p(V).} \tag{22}
+\]
+Every individual nodal exceptional fiber
+$F_z\simeq\mathbb P^{p-1}$ satisfies
+\[
+\boxed{b_*[F_z]=0\ \text{in }CH_{p-1}(X),} \tag{23}
+\]
+even though the \emph{full exceptional incidence product}
+from (14) returns $[Z_t]$.
+\end{theorem}
+\begin{proof}
+The corank-one determinantal normal-space formula
+identifies $N_{Z_t/X}$ with $\operatorname{Hom}(K_t,C_t)$.
+Generic transversality and the absence of the deeper
+rank-drop stratum make $K_t,C_t$ globally locally free.
+Substitute this normal bundle into the all-arity Chern
+formula (13) to obtain (20). The leading twist term
+of $c_p(N^\vee\otimes L^m)$ is $m^p h^p$.
+Use the genuine Thom--Porteous fundamental class
+$[Z_t]=c_p(V\otimes L^t)$ and Chern-root formula
+(17) to obtain (21), with positive leading coefficient
+by ampleness. The primitive identity (22) is (16).
+For (23), a proper Chow push of an integral cycle is zero
+when the dimension of its image is smaller than its own:
+$p-1>0=\dim b(F_z)$.
+\end{proof}
+
 \section{Universal fourfold singular-incidence birth}
 Let $X$ be an arbitrary smooth projective fourfold,
 $Z\hookrightarrow X$ an arbitrary smooth projective surface
