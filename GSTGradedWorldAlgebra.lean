@@ -616,7 +616,6 @@ causal birth operation, while retaining its independently born defect. -/
 theorem causalManyLoopBirth_tate (m j : ℕ) :
     causalManyLoopBirth m j = (causalManyLoopBirth m 0).tate j := by
   simp [causalManyLoopBirth, CausalHodgeCell.tate]
-  omega
 
 /-- The two smooth Hodge branches compose into a PURE diagonal
 causal cell. Its rational algebraic realization is the independently
