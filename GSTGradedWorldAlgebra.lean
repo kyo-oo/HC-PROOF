@@ -794,7 +794,7 @@ theorem CausalHodgeCell.pureDiagonal_signature (p : ℕ) :
       cosmicCharge]
   · simp [CausalHodgeCell.pureDiagonal,
       CausalHodgeCell.purityGap, CausalHodgeCell.weight,
-      CausalHodgeCell.cosmicAddress, cosmicDegree]
+      CausalHodgeCell.cosmicAddress, cosmicDegree] <;> omega
 
 /-- Every original diagonal signature admits exact signed gap a-b while
 remaining diagonal: a causal *degree* does not pre-fix Hodge purity. -/
