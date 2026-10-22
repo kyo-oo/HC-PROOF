@@ -181,6 +181,84 @@ theorem doubleCausalHoleTensor_apply
     (i : Fin s.holes) (j : Fin t.holes) :
     doubleCausalHoleTensor s t a b (i,j) = a i * b j := rfl
 
+
+/-! ## GST MULTI-WORLD N-COHOMOLOGY: NO FINITE CAUSAL ARITY BOUND
+
+The double graph-loop system is an m=2 realization of an arbitrary
+finite family of typed N-hole sectors. The actual full multiplicity
+fiber is a DEPENDENT product of the hole indices of each world.
+Keeping all indices is essential: collapsing them to one cosmic
+diagonal would destroy the product-rank emergence law.
+-/
+
+/-- Independent index of every genuine N-hole coordinate in every
+causally participating world, with arbitrary finite arity m. -/
+abbrev ManyCausalHoleIndex (m : ℕ) (s : Fin m → NShape) :=
+  ∀ i : Fin m, Fin ((s i).holes)
+
+/-- Every independent multi-causal hole coordinate survives as its
+own rational amplitude; no source index or dimension is discarded. -/
+abbrev ManyCausalHoleCoordinates (m : ℕ) (s : Fin m → NShape) :=
+  ManyCausalHoleIndex m s → ℚ
+
+/-- One delta channel per complete causal world-address tuple. -/
+def manyCausalHoleBasis (m : ℕ) (s : Fin m → NShape)
+    (a : ManyCausalHoleIndex m s) :
+    ManyCausalHoleCoordinates m s :=
+  fun b => if a = b then 1 else 0
+
+/-- Exact ALL-ARITY source reconstruction of the emerged N-cohomology
+space: causal multiplication retains the entire Hodge multiplicity fiber. -/
+theorem manyCausalHoleBasis_reconstruct
+    (m : ℕ) (s : Fin m → NShape)
+    (coeff : ManyCausalHoleCoordinates m s)
+    (j : ManyCausalHoleIndex m s) :
+    (∑ i : ManyCausalHoleIndex m s,
+      coeff i * manyCausalHoleBasis m s i j) = coeff j := by
+  classical
+  simp [manyCausalHoleBasis]
+
+/-- Distinct multi-world causal channels remain linearly independent. -/
+theorem manyCausalHoleBasis_coefficients_unique
+    (m : ℕ) (s : Fin m → NShape)
+    (coeff : ManyCausalHoleCoordinates m s)
+    (hzero : ∀ j : ManyCausalHoleIndex m s,
+      (∑ i : ManyCausalHoleIndex m s,
+        coeff i * manyCausalHoleBasis m s i j) = 0) :
+    ∀ j : ManyCausalHoleIndex m s, coeff j = 0 := by
+  intro j
+  rw [← manyCausalHoleBasis_reconstruct m s coeff j]
+  exact hzero j
+
+/-- Exact MULTIPLICATIVE causal rank across arbitrarily many independent
+emergent N-hole dimensions, including the empty-world vacuum m=0. -/
+theorem manyCausalHoleBasis_channelCount (m : ℕ) (s : Fin m → NShape) :
+    Fintype.card (ManyCausalHoleIndex m s) =
+      ∏ i : Fin m, (s i).holes := by
+  classical
+  simp [ManyCausalHoleIndex, Fintype.card_pi]
+
+/-- The born product amplitude uses ACTUAL input amplitudes from each
+individual N-hole world, not a freely chosen Hodge coordinate. -/
+def manyCausalHoleTensor (m : ℕ) (s : Fin m → NShape)
+    (a : ∀ i : Fin m, HoleCoordinates (s i)) :
+    ManyCausalHoleCoordinates m s :=
+  fun index => ∏ i : Fin m, a i (index i)
+
+/-- The full tensor source readout is an explicit finite causal product. -/
+theorem manyCausalHoleTensor_apply
+    (m : ℕ) (s : Fin m → NShape)
+    (a : ∀ i : Fin m, HoleCoordinates (s i))
+    (index : ManyCausalHoleIndex m s) :
+    manyCausalHoleTensor m s a index =
+      ∏ i : Fin m, a i (index i) := rfl
+
+#check manyCausalHoleBasis_reconstruct
+#check manyCausalHoleBasis_channelCount
+#check manyCausalHoleBasis_coefficients_unique
+#check manyCausalHoleTensor_apply
+#print axioms manyCausalHoleBasis_channelCount
+
 #check doubleCausalHoleBasis_reconstruct
 #check doubleCausalHoleBasis_coefficients_unique
 #check doubleCausalHoleBasis_channelCount
