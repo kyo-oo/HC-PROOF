@@ -39,8 +39,8 @@ result=<|
  "firstDefectInvariantPass"->And@@cases[[All,6]],
  "rankOneBinomialCases"->Length[binomialChecks],
  "rankOneBinomialPass"->And@@binomialChecks[[All,3]],
- "symbolicFirstDefectDepthN"->Coefficient[tripleD (1+t)^n,t,1],
- "symbolicSecondDefectDepthN"->Binomial[n,1] Coefficient[tripleD,t,1],
+ "symbolicDefectAtGrades1to4"->Table[2 Binomial[n,j],{j,0,3}],
+ "asymptoticLeadingCoefficients"->Table[Limit[Binomial[n,j]/n^j,n->Infinity],{j,0,4}],
  "formalHypotheticalDefect"->tripleD,
  "failedTowers"->Select[cases,Not[And@@#[[2;;6]]]&],
  "failedBinomial"->Select[binomialChecks,Not[#[[3]]]&]
