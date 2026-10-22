@@ -88,3 +88,18 @@ This does **not** falsify the classical rational Hodge conjecture. C_Γ has node
 - GST modules read: GSTGeneralSpace, GSTGraphV2OmniversalCore, GSTGraphV2SelfExpandingCosmology, GSTGraphV2RecursiveStateCausality, GSTGraphV2UnboundedHigherCausality, GSTGradedWorldAlgebra, waves/GSTNCohomologyV2, waves/GSTNCohomologyV3, plus current October 21 causal-fold records.
 - Exact Wolfram outputs: SingleCount=84, SingleAllTrue=True, DoubleCount=324, DoubleAllTrue=True; matrix rank outputs (2,2,0,3); double even weight-two coefficient 6uv.
 - No local Lean installation, no new Lean CI run and no public internet search.
+
+
+## Reverse causal operation: smoothing births actual pure algebraic Hodge directions
+
+For the irreducible nodal rational curve with g≥1 independent self-node causal identifications, a flat projective smoothing (when specified as an actual geometric family) has smooth genus-g fibers C_t because arithmetic genus is constant and equals the dual graph cycle rank g. This is a real topology change, not a relabeling.
+
+In degree/Hodge/weight variables (t,u,v,s), let a=t²s²uv. The singular nodal polynomial is (1+g t+a)Σ_{j=0}^N a^j. The smooth pure genus-g polynomial is (1+g t s(u+v)+a)Σ_{j=0}^N a^j. Thus smoothing replaces the weight-2j, (j,j), rank-g cohomology of degree 2j+1 with genuine pure weight-(2j+1) Hodge types (j+1,j) and (j,j+1), multiplicity g each. This is the distinct *Hodge-preserving birth* outcome of the user's proposed topological experiment.
+
+On the smooth self-product C_t×C_t, the actual algebraic cycle
+Z_t = [diagonal] − [C_t×{o}] − [{o}×C_t], for any closed complex point o,
+has nonzero rational Betti class in H¹(C_t)⊗H¹(C_t), pure (1,1), because it acts as identity on H¹. External cup product with h^j on P^N gives a nonzero, actual algebraic rational (j+1,j+1) class in degree 2j+2 for all j≤N. This demonstrates real algebraic Hodge birth as a side effect of a specified geometric smoothing, independently of any assumption that the universal Hodge conjecture is true.
+
+**Additional Wolfram evidence:** 144 parameter tuples (g=1..4, N=0..7, every j≤N), each with two exact polynomial identity checks, returned both TRUE. These checks validate the formulas, not the geometric smoothing existence theorem or the diagonal correspondence proof; those use their explicit standard geometric arguments. The total newly executed source checks are 84+324+144=552 parameter tuples.
+
+**Original-X limit remains unchanged:** X×C_t×C_t×P^N acquires true new diagonal Chow cycles, but a prescribed unknown rational Hodge class on the untouched original X has not been represented. No general-Hodge solution or counterexample is asserted.
