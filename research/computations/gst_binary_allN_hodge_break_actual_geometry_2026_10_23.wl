@@ -13,8 +13,8 @@ matDifferent={{0,1,0,0,0,0},{0,0,0,0,1,0},
 factorDiv1={0,0,0,0,0,1};
 factorDiv2={1,0,0,0,0,0};
 diagonalDiv={1,0,-1,1,0,1};
-CMgraphDiv={1,1,0,0,1,1};
-allActualDivisors={factorDiv1,factorDiv2,diagonalDiv,CMgraphDiv};
+cmgraphDiv={1,1,0,0,1,1};
+allActualDivisors={factorDiv1,factorDiv2,diagonalDiv,cmgraphDiv};
 sameHodge=6-MatrixRank[matSame];
 diffHodge=6-MatrixRank[matDifferent];
 noBreakWhole=Table[Expand[(1+u)^2(1+v)^2(1+u v)^n]==
