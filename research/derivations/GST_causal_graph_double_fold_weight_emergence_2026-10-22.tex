@@ -1,0 +1,258 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\title{GST Causal-Graph Double Folds: Emergent Cohomological Dimension,
+Hodge Charge, and Weight Defect}
+\author{Research derivation (self-review; not Lean-kernel verified)}
+\date{22 October 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A dimension-free GST world can admit geometric realization maps without
+assigning a dimension to the ambient causal ontology.  We make the user's
+intuition testable using genuine projective nodal curves obtained by causal
+identification of branches.  The dual graph of the identifications controls
+a new weight-zero cohomology sector, and two independent causal loops create
+\emph{rational diagonal Hodge-charge zero classes in even cohomological degree}
+whose weight is strictly lower than their degree.  This persists under
+arbitrarily many algebraic Tate dimension folds and survives stabilization
+by every original smooth projective variety.  It is a theorem about the
+mixed Hodge theory of singular realized worlds, \emph{not} a counterexample
+to the rational Hodge conjecture for smooth projective varieties.
+\end{abstract}
+
+\section{Exact GST-to-geometry types and two diagnostic invariants}
+The ontological source is the typed \texttt{GeneralSpace} of
+\texttt{GSTGeneralSpace.lean}: points and associative paths, without
+any built-in dimension or metric. The world-birth and event source is
+\texttt{GSTGraphV2SelfExpandingCosmology.lean}; higher coherence cells in
+\texttt{GSTGraphV2UnboundedHigherCausality.lean} have globular level $n$,
+which is \emph{not} the complex dimension of a variety. The present
+causal edge is realized by a specified algebraic gluing of branches.
+
+For a graded piece of a mixed Hodge structure in cohomological degree
+$k$, weight $w=p+q$, and Hodge bidegree $(p,q)$, define the
+\emph{two-coordinate causal fold readout}
+\[
+  \chi=p-q,\qquad \delta=w-k=p+q-k.
+\]
+The signed GST/Hodge charge $\chi$ diagnoses diagonality.
+The \emph{purity gap} $\delta$ diagnoses a distinct failure:
+smooth projective complex varieties have $\delta=0$ in every
+cohomological degree. Being diagonal $\chi=0$ without the correct
+weight $\delta=0$ is insufficient even to instantiate the ordinary
+degree-$2p$ rational Hodge-class target.
+
+\begin{proposition}[Tate fold preserves both readouts]
+An algebraic Tate shift by $j\geq0$ changes
+\[
+(k,p,q,w)\longmapsto(k+2j,p+j,q+j,w+2j),
+\]
+so $\chi$ and $\delta$ are both invariant under any finite succession
+of such dimension folds.
+\end{proposition}
+\begin{proof}
+Subtract the transformed coordinates:
+$(p+j)-(q+j)=p-q$ and $(w+2j)-(k+2j)=w-k$.
+Composition adds the shift indices.
+\end{proof}
+
+\section{General causal-graph source birth, not a label change}
+Let $\Gamma$ be a finite connected undirected multigraph with
+$r\geq1$ vertices, $e$ edges (loops and parallel edges allowed), and
+\[
+                  \beta=e-r+1\geq0.
+\]
+For each vertex take an independent copy of $\mathbb P^1_{\mathbb C}$.
+For each edge choose two distinct marked smooth points, one on each
+incident component (on the same component if a loop), and identify the
+two points transversely to form an ordinary node.  The resulting
+connected reduced projective nodal curve $C_\Gamma$ has normalization
+\(\widetilde C_\Gamma=\coprod_{i=1}^r\mathbb P^1\).
+The graph is the \emph{dual incidence graph of actual geometric
+identifications}, not an arbitrary linear operator on Hodge labels.
+
+\begin{theorem}[Causal graph cycles are emergent weight-zero holes]
+For such $C_\Gamma$,
+\[
+ H^0(C_\Gamma,\mathbb Q)=\mathbb Q(0),\qquad
+ H^1(C_\Gamma,\mathbb Q)\cong H^1(\Gamma,\mathbb Q)
+       \cong\mathbb Q(0)^\beta,\qquad
+ H^2(C_\Gamma,\mathbb Q)\cong\mathbb Q(-1)^r.
+\]
+The displayed $H^1$ is a pure weight-zero mixed Hodge summand in
+cohomological degree one. It is born exactly when the causal graph has
+a nontrivial cycle, not when it is a tree.
+\end{theorem}
+\begin{proof}
+For the normalization $\nu:\widetilde C_\Gamma\to C_\Gamma$,
+the difference of the two branch values at each node gives the exact
+constant-sheaf sequence
+\[
+0\to\mathbb Q_{C_\Gamma}\to
+\nu_*\mathbb Q_{\widetilde C_\Gamma}\to
+\bigoplus_{\mathrm{node}\in E(\Gamma)}\mathbb Q_{\mathrm{node}}\to0.
+\]
+Since the normalized components are rational,
+$H^1(\widetilde C_\Gamma,\mathbb Q)=0$.  The long exact sequence
+contains
+\[
+0\to\mathbb Q\xrightarrow{\Delta}\mathbb Q^r
+\xrightarrow{B_\Gamma}\mathbb Q^e
+\to H^1(C_\Gamma,\mathbb Q)\to0,
+\]
+where $B_\Gamma$ is the oriented edge--vertex incidence matrix.
+Connectedness makes $\operatorname{rank} B_\Gamma=r-1$ (a
+spanning-tree argument, valid with loops), so the cokernel has rank
+$e-r+1=\beta$.  This is also the graph cohomology $H^1(\Gamma,\mathbb Q)$.
+The normalization sequence is compatible with mixed Hodge structures:
+its graph quotient comes from weight-zero $H^0$ of points and
+components, hence has weight zero and type $(0,0)$.
+In degree two normalization gives $\mathbb Q(-1)^r$.
+\end{proof}
+
+\section{All-dimensional causal fold laws}
+For every integer $N\geq0$ put
+\[
+       Y_{\Gamma,N}=C_\Gamma\times\mathbb P^N.
+\]
+This is an \emph{actual} projective complex realized world with complex
+dimension $N+1$; it is singular when $\Gamma$ has any nodes.
+Write $\mathcal H(t;u,v,s)$ for the degree--Hodge--weight polynomial,
+where $t$ counts ordinary cohomological degree, $u^pv^q$ a Hodge
+bidegree on $\operatorname{Gr}^W_{p+q}$, and $s$ the weight.
+With $a=t^2s^2uv$, mixed-Hodge Kunneth yields the closed all-$N$ law
+\[
+\boxed{\quad
+  \mathcal H(Y_{\Gamma,N};t,u,v,s)
+  =(1+\beta t+r\,a)\sum_{j=0}^N a^j.
+ \quad} \tag{1}
+\]
+In particular, at each $0\leq j\leq N$,
+\[
+\boxed{\ \operatorname{Gr}^{W}_{2j}
+ H^{2j+1}(Y_{\Gamma,N},\mathbb Q)
+ \cong\mathbb Q(-j)^\beta,\quad
+ (p,q)=(j,j),\quad(\chi,\delta)=(0,-1).\ }\tag{2}
+\]
+Taking $t=-1,s=1$ gives independently the compact projective
+Hodge--Deligne polynomial
+$E(Y_{\Gamma,N};u,v)=(1-\beta+r\,uv)
+\sum_{j=0}^N(uv)^j$.
+
+\begin{theorem}[Two independent causal folds produce even-degree
+charge-zero, non-pure classes]
+Let $\Gamma_1,\Gamma_2$ be two connected finite multigraphs with
+cycle ranks $\beta_1,\beta_2>0$, and with all normalization components
+$\mathbb P^1$. Define
+$Z_N=C_{\Gamma_1}\times C_{\Gamma_2}\times\mathbb P^N$.
+For every $0\leq j\leq N$,
+\[
+\boxed{\quad
+\operatorname{Gr}^{W}_{2j} H^{2j+2}(Z_N,\mathbb Q)
+\cong
+ H^1(\Gamma_1,\mathbb Q)\otimes
+ H^1(\Gamma_2,\mathbb Q)(-j)
+\cong\mathbb Q(-j)^{\beta_1\beta_2}.
+\quad}\tag{3}
+\]
+Every nonzero class in this piece has
+\[
+    k=2j+2,\quad (p,q)=(j,j),\quad
+    w=2j,\quad\chi=0,\quad\delta=-2.
+\]
+Thus the causal fold has created a genuinely rational, diagonal,
+even-degree cohomological sector which the \emph{charge-only}
+test accepts but the purity test excludes from the usual
+smooth-projective Hodge conjecture.
+\end{theorem}
+\begin{proof}
+The rational mixed-Hodge Kunneth decomposition contains
+$H^1(C_{\Gamma_1})\otimes H^1(C_{\Gamma_2})
+\otimes H^{2j}(\mathbb P^N)$ in degree $2j+2$.
+Its weight is $0+0+2j=2j$, its type is $(j,j)$, and its rank is
+$\beta_1\beta_2$. All other degree-$2j+2$ summands of
+$C_{\Gamma_1}\times C_{\Gamma_2}\times\mathbb P^N$
+have weight $2j+1$ or $2j+2$: each normalized rational-curve
+factor contributes either $H^0$ of degree/weight $(0,0)$ or
+$H^2$ of degree/weight $(2,2)$, while a graph $H^1$ contributes
+$(1,0)$. Weight deficit $-2$ therefore occurs precisely in the
+two-graph $H^1\otimes H^1$ term. This establishes the equality
+of the weight graded piece, not merely a lower bound.
+\end{proof}
+
+\begin{corollary}[The phenomenon survives every arbitrary original $X$]
+For each nonempty connected smooth projective complex variety $X$,
+$X\times Z_N$ contains, in degree $2j+2$, the nonzero rational
+weight-$2j$ direct summand of (3), embedded through
+$H^0(X,\mathbb Q)=\mathbb Q$. Thus the causal-fold diagnostic works
+with arbitrary original $X$ and arbitrarily high additional emergent
+geometric dimension \emph{in a new singular world}. It neither
+modifies nor refutes algebraicity of a prescribed class on the
+untouched $X$.
+\end{corollary}
+\begin{proof}
+Apply mixed-Hodge Kunneth, taking the $H^0(X)$ summand.
+\end{proof}
+
+\section{Independent charge leakage and exact interpretation}
+The two-channel invariant $(\chi,\delta)$ distinguishes:
+(i) holomorphic algebraic Tate folds: $(\chi,\delta)$ is preserved;
+(ii) topological nonholomorphic operators on fixed smooth
+manifolds: $\chi$ may leak while $\delta$ remains zero because
+cohomology stays pure in each fixed geometric realization;
+(iii) actual singular causal graph folds: the graph cycle creates
+$\delta=-1$, and two independent folds create
+$(\chi,\delta)=(0,-2)$ in even degree.
+The sign of $\delta$ is a genuine weight-vs-degree witness, not
+the label of an abstract GST cell.
+
+A tree has $\beta=0$ and contributes no new weight-zero graph
+cohomology, although it may still produce singular nodes.
+One causal cycle gives one new independent hole at all Tate levels.
+Two independent graph cycles multiply the rank rather than merely
+adding it: $\beta_1\beta_2$.
+This produces a dimension/causality equation testable on the
+\emph{realized space itself}, unlike redefining an abstract Hodge map.
+
+\section{Exact Wolfram finite checks; scope and unresolved bridge}
+A stateless Wolfram evaluation tested the edge--vertex incidence
+ranks of a 3-vertex tree $(e=2,\beta=0)$, a triangle
+$(e=3,\beta=1)$, a bouquet of three loops
+$(r=1,e=3,\beta=3)$ and a 4-vertex 5-edge graph
+$(e=5,\beta=2)$.  The computed matrix ranks were
+$2,2,0,3$, as the spanning-tree derivation predicts.
+
+The degree/weight/Hodge generating-function coefficients (1)--(2)
+were checked in 84 parameter pairs for $1\leq\beta\leq4$,
+$0\leq N\leq5$ and every $0\leq j\leq N$.
+For two independent rational-curve node families, equation (3)
+was checked in 324 parameter tuples
+$1\leq\beta_1,\beta_2\leq3$, $0\leq N\leq7$,
+$0\leq j\leq N$.
+All checks returned exact symbolic equality in Wolfram Language.
+These checks are consistency tests; the proofs above are uniform
+and do not rely on the finite bound. No new Lean code or GitHub
+Actions compiler run is claimed for the results of this paper.
+
+\paragraph{Critical nonclaim.}
+A singular projective world has a mixed Hodge structure, not the
+pure degree-$k$ Hodge structure assumed in the classical rational
+Hodge conjecture. A charge-zero class of weight $2j$ occurring in
+cohomological degree $2j+2$ \emph{does not become} a counterexample
+to rational algebraicity on smooth projective $X$.
+For an unconditional original-$X$ proof the independent missing
+map is a genuine cycle
+$Z_\alpha\in CH^p(X)_{\mathbb Q}$ with
+$\mathrm{cl}^{\mathrm{can}}_X(Z_\alpha)=\alpha$.
+The graph-fold weight law neither assumes nor constructs this map.
+It instead supplies a new, precise causal birth/dimensional purity
+discriminator for future GST realized operations.
+
+\end{document}
