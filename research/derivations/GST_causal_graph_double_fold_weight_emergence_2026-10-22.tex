@@ -1234,4 +1234,99 @@ transported cycles are precisely the kind of
 extra sources a topology-changing GST operation
 would have to construct and compare canonically.
 
+
+\section{Complete causal-monodromy weight filtration from all $n$ folded dimensions}
+
+The monodromy logarithm yields not merely a single surviving
+direction, but a \emph{canonical filtration whose levels are forced
+by the emergent dimension}. Let $V_n$ denote the rank-$n$
+Picard--Fuchs local solution system from (19)--(21) and set
+$d=n-1$. In the normalized logarithmic basis
+$(\psi_0,\ldots,\psi_{n-1})$, the lowering operator
+$J_n=\mathcal N/(2\pi i)$ satisfies
+$J_n\psi_0=0$, $J_n\psi_j=\psi_{j-1}$ for $j\ge1$.
+
+\begin{theorem}[Exact all-$n$ causal monodromy filtration]
+For every $1\le k\le n$,
+\[
+\boxed{\quad
+ \ker\mathcal N^k
+ =\operatorname{span}_{\mathbb C}
+   \{\psi_0,\ldots,\psi_{k-1}\},
+ \qquad \dim\ker\mathcal N^k=k.
+\quad}\tag{25}
+\]
+Define
+\[
+ W_{2r}V_n=W_{2r+1}V_n
+    :=\ker \mathcal N^{r+1}
+       \quad (0\le r\le d),
+ \qquad W_{\ell}V_n=0\ \ (\ell<0),
+\]
+and $W_\ell V_n=V_n$ for $\ell\ge2d$.
+Then
+\[
+\boxed{\quad
+ \dim\operatorname{Gr}_{2r}^{W}V_n=1
+ \ (0\le r\le d),\qquad
+ \operatorname{Gr}_{2r+1}^{W}V_n=0,
+\quad}\tag{26}
+\]
+and $\mathcal N W_\ell\subseteq W_{\ell-2}$.
+For every $h\ge0$, the induced
+\[
+\boxed{\quad
+\mathcal N^h:
+ \operatorname{Gr}_{d+h}^{W}V_n
+ \overset{\sim}{\longrightarrow}
+ \operatorname{Gr}_{d-h}^{W}V_n
+\quad}\tag{27}
+\]
+is an isomorphism (with both sides zero when their
+indices fall outside the nonzero graded parity/range).
+Thus $W_\bullet$ is exactly the \emph{monodromy
+weight filtration centered at the emergent
+Calabi--Yau middle degree $d=n-1$} on this
+period local system.
+\end{theorem}
+\begin{proof}
+Repeated lowering gives
+$\mathcal N^k\psi_j=(2\pi i)^k\psi_{j-k}$
+for $j\ge k$, and zero for $j<k$,
+so its kernel has exactly the basis
+in (25). The filtration has one new independent
+basis vector at each even index, proving (26).
+Because $\mathcal N$ decreases the logarithmic
+basis index by one, it decreases this weight
+filtration by exactly two. To verify (27),
+for any pair of nonzero graded pieces write
+$d+h=2r$, $d-h=2(d-r)$, so $h=2r-d$ and
+$r-h=d-r$. The nonzero generator represented
+by $\psi_r$ maps to
+$(2\pi i)^h\psi_{d-r}$, a nonzero generator
+of the target one-dimensional graded piece.
+This proves the asserted isomorphisms and all
+boundary cases including $h=0$.
+\end{proof}
+
+\paragraph{Intrinsic causal significance.}
+The higher-dimensional causal incidence complex
+supplied the actual top sphere of the toric boundary,
+the Picard--Fuchs recurrence supplied the entire
+logarithmic period tower, and \emph{nilpotence itself}
+now produces the complete monodromy weight filtration:
+there is no freely assigned choice of Hodge grades
+in this construction. To identify its graded factors
+with the \emph{limiting mixed Hodge structure of the
+entire geometric middle cohomology} one still needs
+the actual degeneration comparison; the theorem is
+unconditional on the explicitly constructed rank-$n$
+period differential equation and its solution system.
+
+Exact Wolfram rank-nullity checks found the full
+staircase $(1,2,\ldots,n)$ for
+$\dim\ker J_n^k$, $1\le k\le n$ and $n=2,\ldots,9$.
+The all-dimensional theorem is proved above, not
+inferred from those eight numerical dimensions.
+
 \end{document}
