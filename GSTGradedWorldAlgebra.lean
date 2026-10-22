@@ -634,6 +634,74 @@ theorem causalSmoothOpposite_tensor_pure (j : ℕ) :
     rw [hl, hr]
     norm_num
 
+
+/-! ## GEOMETRIC CAUSAL MONODROMY WEIGHT DESCENT
+
+The limiting mixed Hodge structure born from the actual Dwork toric
+causal degeneration carries an operator N lowering the weight by two.
+Its Hodge type is (-1,-1) between graded limit pieces. Unlike a
+Tate dimension fold, this operation keeps cohomological degree fixed
+while lowering BOTH realized Hodge coordinates. The coherence law
+below makes the causal monodromy filtration a part of the same GST
+Hodge genesis algebra as the earlier tensor/degree birth theorems.
+
+A partial subtraction is used only on cells with enough Hodge weight;
+the hypotheses on coordinates are explicit. This is a graded shadow
+of the geometric limit MHS monodromy, not a claim that arbitrary
+abstract GST cells or a fixed smooth fiber have a Chow monodromy map.
+-/
+
+/-- Monodromy lowers each Hodge-weight coordinate and preserves
+cohomological degree of the limiting geometric world. -/
+def CausalHodgeCell.monodromyLower (r : ℕ)
+    (x : CausalHodgeCell) : CausalHodgeCell :=
+  ⟨x.cohomologicalDegree, x.leftWeight - r, x.rightWeight - r⟩
+
+/-- Signed charge remains fixed along the monodromy weight staircase
+where the lowering operation is defined without truncation. -/
+theorem CausalHodgeCell.charge_monodromyLower
+    (r : ℕ) (x : CausalHodgeCell)
+    (hl : r ≤ x.leftWeight) (hr : r ≤ x.rightWeight) :
+    (x.monodromyLower r).charge = x.charge := by
+  cases x with
+  | mk k a b =>
+    simp [CausalHodgeCell.monodromyLower,
+      CausalHodgeCell.charge, CausalHodgeCell.cosmicAddress,
+      cosmicCharge] at *
+    omega
+
+/-- One r-level step lowers the actual mixed Hodge purity gap
+exactly by 2r, without changing the ambient cohomological degree. -/
+theorem CausalHodgeCell.purityGap_monodromyLower
+    (r : ℕ) (x : CausalHodgeCell)
+    (hl : r ≤ x.leftWeight) (hr : r ≤ x.rightWeight) :
+    (x.monodromyLower r).purityGap =
+      x.purityGap - (2 * (r : ℤ)) := by
+  cases x with
+  | mk k a b =>
+    simp [CausalHodgeCell.monodromyLower,
+      CausalHodgeCell.purityGap, CausalHodgeCell.weight,
+      CausalHodgeCell.cosmicAddress, cosmicDegree] at *
+    omega
+
+/-- Coherent successive causal weight folds agree with one combined
+monodromy fold (the nontruncating geometric range is explicit). -/
+theorem CausalHodgeCell.monodromyLower_comp
+    (r s : ℕ) (x : CausalHodgeCell)
+    (hl : r + s ≤ x.leftWeight)
+    (hr : r + s ≤ x.rightWeight) :
+    (x.monodromyLower r).monodromyLower s =
+      x.monodromyLower (r+s) := by
+  cases x with
+  | mk k a b =>
+    simp [CausalHodgeCell.monodromyLower]
+    congr 1 <;> omega
+
+#check CausalHodgeCell.charge_monodromyLower
+#check CausalHodgeCell.purityGap_monodromyLower
+#check CausalHodgeCell.monodromyLower_comp
+#print axioms CausalHodgeCell.purityGap_monodromyLower
+
 #check CausalHodgeCell.tensor_assoc
 #check CausalHodgeCell.charge_tensor
 #check CausalHodgeCell.purityGap_tensor
