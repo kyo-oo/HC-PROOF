@@ -190,6 +190,127 @@ The attached exact Wolfram script enumerates 297 (d,r,k)
 tuples at d=0..8, r=2..7, k=0..r and audits polynomial
 duality, parity, Euler characteristic and the Chern threshold.
 
+
+\section{Arbitrary-bundle GST parity law and canonical Chow-defect reflection}
+
+The preceding split-bundle occupancy test is a special case of a stronger
+all-original-$X$ law which does not require a globally chosen trivial
+summand or an actual holomorphic section.
+
+\begin{theorem}[Universal vector-bundle causal parity and exact Euler kernel]
+Let $X$ be any connected smooth projective complex variety and let
+$E$ be \emph{any} algebraic complex vector bundle of rank $r\geq2$.
+Put
+\[
+  P_E=\mathbb P(\mathcal O_X\oplus E),\qquad
+  H_E=(E\setminus0_X)/q^{\mathbb Z},\quad 0<q<1.
+\]
+Both are smooth compact complex manifolds of dimension $\dim X+r$;
+$P_E$ is projective, whereas $H_E$ has odd first Betti number. For
+every $j\geq0$ the actual rational cohomology map satisfies
+\[
+ \boxed{\ker[H^j(X,\mathbb Q)\xrightarrow{\pi_H^*}
+              H^j(H_E,\mathbb Q)]
+      = c_r(E)\cup H^{j-2r}(X,\mathbb Q).}                    \tag{10}
+\]
+In particular, \emph{the entire graded original-$X$ rational
+cohomology survives} under $\pi_H^*$ if and only if
+$c_r(E)=0$ in $H^{2r}(X,\mathbb Q)$.
+\end{theorem}
+\begin{proof}
+A smooth Hermitian metric provides a diffeomorphism
+$H_E\simeq S(E)\times S^1$ by unit direction and logarithmic radius
+modulo $\log q$. Because $r\ge2$, the sphere fiber $S^{2r-1}$
+of $S(E)\to X$ is simply connected, giving
+$b_1(H_E)=b_1(X)+1$, which is odd.
+The Gysin exact sequence of the oriented real sphere bundle
+$S(E)\to X$ has connecting multiplication by its Euler class
+$c_r(E)$. The product with $S^1$ induces an injective map from
+$H^*(S(E),\mathbb Q)$, which proves (10).
+If $c_r(E)=0$, every displayed kernel vanishes. Conversely, if all
+pullbacks are injective, take $j=2r$ and the unit class
+$1\in H^0(X,\mathbb Q)$: exactness forces $c_r(E)=0$.
+\end{proof}
+
+The zero Euler threshold is strictly broader than the old
+$k<r$ \emph{trivial-summand} sufficient condition. For example,
+$X=\mathbb P^1$, $E=\mathcal O(-1)^{\oplus2}$ has
+$c_2(E)=0$ for dimensional reasons and $H^0(X,E)=0$.
+Nevertheless $\pi_H^*$ is injective in every rational cohomological
+degree, while $b_1(H_E)=1$. This does not require any nonzero
+holomorphic vector-bundle section.
+
+\begin{theorem}[Canonical algebraicity defect under projective folds]
+Let $E$ be any algebraic rank-$r$ bundle as above and
+$P_E=\mathbb P(\mathcal O_X\oplus E)$, with projection $\pi_P$
+and $\xi=c_1(\mathcal O_{P_E}(1))$. Write
+\[
+ \mathrm{Hdg}^p_{\mathbb Q}(X)
+   =H^{2p}(X,\mathbb Q)\cap H^{p,p}(X),\quad
+ D^p(X)=
+  \frac{\mathrm{Hdg}^p_{\mathbb Q}(X)}
+       {\operatorname{im}\bigl(
+             CH^p(X)_{\mathbb Q}
+          \xrightarrow{\mathrm{cl}_X^{\mathrm{can}}}
+             H^{2p}(X,\mathbb Q)\bigr)}.
+\]
+As rational vector spaces, naturally relative to $E$,
+\[
+ \boxed{D^p(P_E)\ \cong\
+   \bigoplus_{i=0}^{r}D^{p-i}(X).}                          \tag{11}
+\]
+Consequently the full rational Hodge conjecture holds for $P_E$
+in every codimension if and only if it holds for $X$ in every
+codimension. More sharply, for every rational $(p,p)$ class
+$\alpha$ on $X$,
+\[
+  \pi_P^*\alpha\in\operatorname{im}(\mathrm{cl}^{\mathrm{can}}_{P_E})
+  \quad\Longleftrightarrow\quad
+  \alpha\in\operatorname{im}(\mathrm{cl}^{\mathrm{can}}_X).
+                                                                  \tag{12}
+\]
+\end{theorem}
+\begin{proof}
+The algebraic projective-bundle formula and its compatible
+rational Hodge realization give respective direct sums
+\[
+ \begin{aligned}
+ CH^p(P_E)_{\mathbb Q}
+   &\cong\bigoplus_{i=0}^{r}
+      \xi^i\pi_P^* CH^{p-i}(X)_{\mathbb Q},\\
+ \mathrm{Hdg}^p_{\mathbb Q}(P_E)
+   &\cong\bigoplus_{i=0}^{r}
+      \xi^i\pi_P^*\mathrm{Hdg}^{p-i}_{\mathbb Q}(X).
+ \end{aligned}
+\]
+Terms outside actual codimension range are zero. The canonical
+Betti cycle-class map acts componentwise by naturality and the
+fact that $\xi$ is algebraic. Taking quotients yields (11).
+
+For an explicit original-$X$ return, the quotient
+$\mathcal O_X\oplus E\twoheadrightarrow\mathcal O_X$ gives a
+regular algebraic section $s:X\hookrightarrow P_E$ with
+$s^*\pi_P^*=\mathrm{id}$ and $s^*\xi=0$.
+If $\mathrm{cl}^{\mathrm{can}}_{P_E}(Z)=\pi_P^*\alpha$,
+the genuine Chow pullback $s^*Z\in CH^p(X)_{\mathbb Q}$ has
+$\mathrm{cl}_X^{\mathrm{can}}(s^*Z)=\alpha$.
+Conversely any representative of $\alpha$ pulls back to one
+on $P_E$. This proves (12).
+\end{proof}
+
+\paragraph{Exact bearing on universal rational Hodge algebraicity.}
+The projective fold retains the entire original-$X$ canonical
+Chow/Hodge defect (11), whereas the Hopf fold loses pure
+weight-one Hodge structure irrespective of that defect.
+Therefore these established two-world geometric properties cannot
+alone force $D^p(X)=0$: doing so requires an actual new
+cycle-class surjectivity theorem, or an independently constructed
+algebraic cycle on $P_E$ for the prescribed pulled-back target.
+If such a cycle were produced without assuming an original-$X$
+preimage, the explicit section pullback in (12) would immediately
+deliver the requested rational Chow source on the \emph{same}
+original $X$. No universal source is presumed in this theorem.
+
 \section{Mathematical interpretation and limits}
 The requested binary alternative has a precise positive realization:
 a topology-changing causal dilation produces a smooth compact,
