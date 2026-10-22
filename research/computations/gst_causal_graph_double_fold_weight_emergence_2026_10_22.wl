@@ -55,11 +55,31 @@ smoothing=Flatten[Table[{
    g (uu^(jj+1) vv^jj+uu^jj vv^(jj+1))]
 },{g,1,4},{nn,0,7},{jj,0,nn}],2];
 
+(* GST causal Hodge genesis G1/G2, GENERAL graph vertex and loop ranks.
+   Smooth Hodge numbers are derived from the arithmetic genus of the
+   causal identification graph, not entered as an independent input. *)
+generalNodal[r_,g_,n_]:=Expand[(1+g tt+r aa) tower[n]];
+generalSmooth[g_,n_]:=Expand[(1+g tt ss (uu+vv)+aa) tower[n]];
+genesis=Flatten[Table[
+ Simplify[generalSmooth[g,nn]-generalNodal[r,g,nn] ==
+   Expand[(g tt (ss (uu+vv)-1)+(1-r) aa) tower[nn]]],
+ {r,1,4},{g,0,5},{nn,0,8}]];
+genesisCoeffs=Flatten[Table[{
+ Simplify[Coefficient[Coefficient[generalNodal[r,g,nn],tt,2 jj+1],
+   ss,2 jj]==g (uu vv)^jj],
+ Simplify[Coefficient[Coefficient[generalSmooth[g,nn],tt,2 jj+1],
+   ss,2 jj+1]==g (uu^(jj+1) vv^jj+uu^jj vv^(jj+1))]
+},{r,1,3},{g,0,4},{nn,0,7},{jj,0,nn}],3];
+
 {"SingleCount"->Length[single],
  "SingleAllTrue"->And@@Flatten[single],
  "DoubleCount"->Length[double],
  "SmoothingCount"->Length[smoothing],
  "SmoothingAllTrue"->And@@Flatten[smoothing],
+ "GenesisCount"->Length[genesis],
+ "GenesisAllTrue"->And@@genesis,
+ "GenesisCoefficientCount"->Length[genesisCoeffs],
+ "GenesisCoefficientsAllTrue"->And@@Flatten[genesisCoeffs],
  "DoubleAllTrue"->And@@double,
  "GraphRankResults"->graphResult,
  "DoubleEvenWeight2Coefficient"->Coefficient[
