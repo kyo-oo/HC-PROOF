@@ -47,6 +47,21 @@ The average of genuine algebraic graphs of cyclic automorphisms gives an idempot
 
 A second nodal fold `Z_m=Y_m x D_1` satisfies `Gr^W_k H^(k+2)(Z_m,Q) ≅ H^k(X^m,Q)^G`, a genuine weight gap `delta=-2`. For **every** positive-dimensional original `X`, the cyclic symmetrization of its rational top point class in one tensor factor gives a nonzero diagonal class of type `(d,d)` in degree `2d+2` and weight `2d`. This is a non-pure diagonal class on a new **singular** projective world, not a counterexample on smooth projective `X`. Extra projective-space folds preserve `(chi,delta)`.
 
+## Target-sensitive arbitrary-Hodge-class strengthening
+
+The LaTeX proof has now been extended beyond the special top-point class. For EVERY rational `(p,p)` Hodge class `alpha` on the original `X`, its cyclic symmetrization `Theta_m(alpha)=Sum_i pr_i^* alpha` is a rational cyclic-invariant Hodge class on `B=X^m`. In positive cohomological degree it has an exact algebraic-section left inverse `s^*Theta_m(alpha)=alpha`; degree zero uses division by `m`. Combined with the double-weight-defect summand, this gives an injection from the full arbitrary-X rational Hodge fiber into `Gr^W_(2p) H^(2p+2)(Z_m(X),Q)` with `(charge,purityGap)=(0,-2)`, **without** assuming `alpha` is algebraic.
+
+For the smooth projective companion `S_m`, finite étale transfer yields the canonically descended pure Hodge class `alphaHat` characterized by `q^*(alphaHat)=pr_B^*Theta_m(alpha)`. A proven exact equivalence is
+
+```text
+alpha lies in canonical Chow cycle image on X
+  iff alphaHat lies in canonical Chow cycle image on smooth S_m.
+```
+
+Forward direction: from a genuine `W in CH^p(X)_Q`, construct `W_B=Sum_i pr_i^*W` and `WHat=(1/m) q_* pr_B^*W_B`. Reverse direction: any genuine `WHat` on the smooth folded world pulls back via finite étale `q`, restricts to `B` along an elliptic-fiber point, and restricts along `s:X->X^m`, yielding a **literal original-X Chow cycle** with canonical class `alpha`. This supplies an exact native return correspondence conditional only on a source in the folded world, not an assumed free Hodge-to-Chow map.
+
+The result therefore provides both exact outputs envisioned by the user's intuition: a smooth pure algebraicity-faithful dimension fold and an algebraic-topology-changing singular fold that genuinely shifts the same Hodge target to a lower weight. It does not assert automatic existence of the folded source `WHat`.
+
 ## Checks, review, limitations
 
 - **Mathbox method:** bounded route, normalized domain and source/target, exact signs for graded permutations, projective quotient and rational transfer checked, explicit finite examples, separate self-audit of the theorem's interpretation.
