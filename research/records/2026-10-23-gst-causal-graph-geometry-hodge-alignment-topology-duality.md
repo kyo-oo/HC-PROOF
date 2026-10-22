@@ -36,7 +36,7 @@ It is an exact integer identity for ANY finite graph, without interpreting its c
 ## In-place formal integration
 
 - Edited existing `GSTGraphV2UnboundedHigherCausality.lean` at commit `95b127468e20c31f767b3d426ae4d975cd4fb164` to add **realized** `CausalHodgeAlignment.edgePeriodDrift`, `edgePeriodDrift_zero_iff`, `CausalReach`, `edgeAlignment_constant_on_causal_paths`, and converse, without positing any unproved Chow surjectivity.
-- CI workflow `gst-intrinsic-causal-fold-boundary.yml` automatically builds that source on the active branch; run **39838395103** is revision-specific. Check its completion before saying green. This Lean law is a typed graph-plus-complex-period identity, **not** a Lean proof of the geometric MHS theorem or the general rational Hodge conjecture.
+- CI workflow `gst-intrinsic-causal-fold-boundary.yml` automatically builds that source on the active branch; run [**39838395103**](https://github.com/kyo-oo/HC-PROOF/actions/runs/39838395103) **completed SUCCESS** at exact source SHA `95b127468e20c31f767b3d426ae4d975cd4fb164`, with the no-`sorryAx` workflow gate passing. This Lean law is a typed graph-plus-complex-period identity, **not** a Lean proof of the geometric MHS theorem or the general rational Hodge conjecture.
 
 ## Proof-audit verdict
 
