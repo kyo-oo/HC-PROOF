@@ -382,4 +382,157 @@ theorem cosmicTatePath_charge (steps : List ℕ) (c : CosmicCell) :
 #check cosmicTatePath_charge
 #print axioms cosmicTatePath_charge
 
+
+/-! ## GST CAUSAL HODGE GENESIS — grading born from a causal realization
+
+The primitive universe is not a pre-existing fixed Hodge decomposition.
+A certified causal graph realization can acquire new cohomological degrees,
+weights and Hodge coordinates.  We retain ALL of those coordinates together
+rather than collapsing them onto a rank-one cosmic diagonal.
+
+The arithmetic here is the universal grading law of the geometric causal
+incidence / smoothing computation in
+research/derivations/GST_causal_graph_double_fold_weight_emergence_2026-10-22.tex.
+
+Actual algebraic geometric realization and the canonical Chow class map remain
+separate typed tasks; no output of these degree laws asserts the existence
+of an algebraic representative of an arbitrary class on original X.
+-/
+
+/-- A single emergent cohomology cell; Hodge coordinates and degree are outputs
+of the SAME causal geometric realization, not given as an old fixed Hodge map. -/
+structure CausalHodgeCell where
+  cohomologicalDegree : ℕ
+  leftWeight : ℕ
+  rightWeight : ℕ
+  deriving DecidableEq
+
+/-- The original infinite GST cosmic address is the emergent Hodge bidegree. -/
+def CausalHodgeCell.cosmicAddress (x : CausalHodgeCell) : CosmicCell :=
+  (x.leftWeight, x.rightWeight)
+
+/-- Signed Hodge charge generated in the realized causal cell. -/
+def CausalHodgeCell.charge (x : CausalHodgeCell) : ℤ :=
+  cosmicCharge x.cosmicAddress
+
+/-- Weight is derived by the GST dimension-free degree operation. -/
+def CausalHodgeCell.weight (x : CausalHodgeCell) : ℕ :=
+  cosmicDegree x.cosmicAddress
+
+/-- A causal realization may have weight different from cohomological degree.
+This signed defect is ZERO for each pure piece of a smooth projective world. -/
+def CausalHodgeCell.purityGap (x : CausalHodgeCell) : ℤ :=
+  (x.weight : ℤ) - (x.cohomologicalDegree : ℤ)
+
+/-- Symmetric Tate-dimensional extension of one already born cohomology cell. -/
+def CausalHodgeCell.tate (j : ℕ) (x : CausalHodgeCell) : CausalHodgeCell :=
+  ⟨x.cohomologicalDegree + 2*j, x.leftWeight+j, x.rightWeight+j⟩
+
+/-- The infinite cosmic address commutes EXACTLY with the causal Tate fold. -/
+theorem CausalHodgeCell.cosmicAddress_tate (j : ℕ) (x : CausalHodgeCell) :
+    (x.tate j).cosmicAddress = cosmicTateFold j x.cosmicAddress := by
+  cases x
+  rfl
+
+/-- The full graded causal fold preserves signed Hodge charge. -/
+theorem CausalHodgeCell.charge_tate (j : ℕ) (x : CausalHodgeCell) :
+    (x.tate j).charge = x.charge := by
+  unfold CausalHodgeCell.charge
+  rw [CausalHodgeCell.cosmicAddress_tate, cosmicTateFold_charge]
+
+/-- The full graded causal fold preserves the purity gap as well.
+This is stronger than signed-charge conservation by itself. -/
+theorem CausalHodgeCell.purityGap_tate (j : ℕ) (x : CausalHodgeCell) :
+    (x.tate j).purityGap = x.purityGap := by
+  cases x with
+  | mk k a b =>
+    simp only [CausalHodgeCell.tate, CausalHodgeCell.purityGap,
+      CausalHodgeCell.weight, CausalHodgeCell.cosmicAddress,
+      cosmicDegree]
+    push_cast
+    ring
+
+/-- Causal gluing of a nodal rational graph LOOP creates a cohomology class
+in degree one with Hodge type (0,0), transported to every Tate depth. -/
+def causalNodalLoopBirth (j : ℕ) : CausalHodgeCell :=
+  ⟨2*j+1, j, j⟩
+
+/-- Two independent causal graph loops create an EVEN-degree diagonal cell
+whose realized weight is two BELOW its cohomological degree. -/
+def causalDoubleLoopBirth (j : ℕ) : CausalHodgeCell :=
+  ⟨2*j+2, j, j⟩
+
+/-- Genuine smoothing of a genus-g causal graph realization creates a
+holomorphic H^(1,0) direction, followed by any Tate dimension depth. -/
+def causalSmoothLeftBirth (j : ℕ) : CausalHodgeCell :=
+  ⟨2*j+1, j+1, j⟩
+
+/-- Genuine smoothing simultaneously births its conjugate H^(0,1) sector. -/
+def causalSmoothRightBirth (j : ℕ) : CausalHodgeCell :=
+  ⟨2*j+1, j, j+1⟩
+
+/-- Nodal loop incidence gives a diagonal charge but IMPURE degree-one class. -/
+theorem causalNodalLoopBirth_signature (j : ℕ) :
+    (causalNodalLoopBirth j).charge = 0 ∧
+    (causalNodalLoopBirth j).purityGap = -1 := by
+  constructor <;>
+    simp [causalNodalLoopBirth, CausalHodgeCell.charge,
+      CausalHodgeCell.purityGap, CausalHodgeCell.cosmicAddress,
+      CausalHodgeCell.weight, cosmicCharge, cosmicDegree] <;>
+    omega
+
+/-- Multiplication of two independent loop directions creates a diagonal
+even-degree cohomological cell with PURITY GAP -2 at every depth. -/
+theorem causalDoubleLoopBirth_signature (j : ℕ) :
+    (causalDoubleLoopBirth j).charge = 0 ∧
+    (causalDoubleLoopBirth j).purityGap = -2 := by
+  constructor <;>
+    simp [causalDoubleLoopBirth, CausalHodgeCell.charge,
+      CausalHodgeCell.purityGap, CausalHodgeCell.cosmicAddress,
+      CausalHodgeCell.weight, cosmicCharge, cosmicDegree] <;>
+    omega
+
+/-- The two genuinely born smoothing sectors are PURE with opposite charge.
+The new Hodge bidegrees follow from the genus of the smooth realization. -/
+theorem causalSmoothBirth_signatures (j : ℕ) :
+    (causalSmoothLeftBirth j).charge = 1 ∧
+    (causalSmoothRightBirth j).charge = -1 ∧
+    (causalSmoothLeftBirth j).purityGap = 0 ∧
+    (causalSmoothRightBirth j).purityGap = 0 := by
+  simp [causalSmoothLeftBirth, causalSmoothRightBirth, CausalHodgeCell.charge,
+    CausalHodgeCell.purityGap, CausalHodgeCell.weight,
+    CausalHodgeCell.cosmicAddress, cosmicDegree, cosmicCharge]
+  omega
+
+/-- The smooth Hodge left sector is exactly the Tate orbit of its geometric
+genus-one basic bidegree. -/
+theorem causalSmoothLeftBirth_tate (j : ℕ) :
+    causalSmoothLeftBirth j = (causalSmoothLeftBirth 0).tate j := by
+  cases j <;>
+    simp [causalSmoothLeftBirth, CausalHodgeCell.tate,
+      Nat.succ_eq_add_one, Nat.mul_add, Nat.add_assoc, Nat.add_comm,
+      Nat.add_left_comm]
+
+/-- Nodal Hodge birth and smooth Hodge birth arise from DIFFERENT causal
+geometries at the same Tate depth and therefore have different signatures. -/
+theorem nodal_smooth_causal_genesis_is_nontrivial (j : ℕ) :
+    (causalNodalLoopBirth j).purityGap ≠
+      (causalSmoothLeftBirth j).purityGap := by
+  have hn := (causalNodalLoopBirth_signature j).2
+  have hs := (causalSmoothBirth_signatures j).2.2.1
+  rw [hn, hs]
+  decide
+
+#check CausalHodgeCell.cosmicAddress_tate
+#check CausalHodgeCell.charge_tate
+#check CausalHodgeCell.purityGap_tate
+#check causalNodalLoopBirth_signature
+#check causalDoubleLoopBirth_signature
+#check causalSmoothBirth_signatures
+#check nodal_smooth_causal_genesis_is_nontrivial
+
+#print axioms causalDoubleLoopBirth_signature
+#print axioms causalSmoothBirth_signatures
+
+
 end GSTGradedWorldAlgebra
