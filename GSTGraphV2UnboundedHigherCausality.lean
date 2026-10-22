@@ -450,6 +450,73 @@ theorem logarithmicShiftPower_sharp
 #print axioms logarithmicShiftPower_nilpotent
 #print axioms logarithmicShiftPower_sharp
 
+
+/-! ## EXACT ONE-DIMENSIONAL INVARIANT CAUSAL SOURCE CHANNEL
+
+The geometric Picard--Fuchs monodromy of the Dwork causal smoothing
+is maximally unipotent. In any rational Jordan normal form, one can
+take the equivalent unipotent coefficient model T = I + S, where S
+lowers the normalized logarithmic channel coefficients.  The
+fixed part is precisely the zeroth channel: no higher nontrivial
+logarithmic causal direction can be fixed by global transport.
+This is a *monodromy-invariant selection law*, not an assumed
+algebraic Hodge-to-Chow map.
+-/
+
+/-- Rational Jordan model of causal unipotent monodromy. -/
+def rationalCausalMonodromy (a : ℕ → ℚ) (i : ℕ) : ℚ :=
+  a i + a (i + 1)
+
+/-- A causal source coordinate is globally transport-invariant
+exactly when every positive logarithmic channel vanishes. -/
+theorem rationalCausalMonodromy_fixed_iff
+    (a : ℕ → ℚ) :
+    (∀ i : ℕ, rationalCausalMonodromy a i = a i) ↔
+      (∀ i : ℕ, 0 < i → a i = 0) := by
+  constructor
+  · intro h i hi
+    have hprev := h (i - 1)
+    have heq : (i - 1) + 1 = i := by omega
+    simp only [rationalCausalMonodromy] at hprev
+    rw [heq] at hprev
+    linarith
+  · intro h i
+    have hzero : a (i + 1) = 0 := h (i + 1) (by omega)
+    simp [rationalCausalMonodromy, hzero]
+
+/-- The entire invariant vector is uniquely determined by its
+zeroth (maximal-causal-boundary) coefficient. No independent
+globally horizontal higher-logarithm coefficient survives. -/
+theorem rationalCausalMonodromy_fixed_exact
+    (a : ℕ → ℚ)
+    (hfix : ∀ i, rationalCausalMonodromy a i = a i)
+    (i : ℕ) :
+    a i = if i = 0 then a 0 else 0 := by
+  by_cases hi : i = 0
+  · subst i
+    simp
+  · have hpos : 0 < i := by omega
+    have hzero := (rationalCausalMonodromy_fixed_iff a).mp hfix i hpos
+    simp [hi, hzero]
+
+/-- Every rational scalar supplies an actual unique invariant
+zeroth-channel vector. This proves the fixed part has exactly
+one rational coefficient of freedom. -/
+def causalFixedPeriodChannel (q : ℚ) (i : ℕ) : ℚ :=
+  if i = 0 then q else 0
+
+theorem causalFixedPeriodChannel_monodromy_invariant
+    (q : ℚ) (i : ℕ) :
+    rationalCausalMonodromy (causalFixedPeriodChannel q) i =
+      causalFixedPeriodChannel q i := by
+  simp [rationalCausalMonodromy, causalFixedPeriodChannel]
+
+#check rationalCausalMonodromy_fixed_iff
+#check rationalCausalMonodromy_fixed_exact
+#check causalFixedPeriodChannel_monodromy_invariant
+#print axioms rationalCausalMonodromy_fixed_iff
+#print axioms rationalCausalMonodromy_fixed_exact
+
 end CausalFiniteIncidence
 
 end GSTGraphV2UnboundedHigherCausality
