@@ -149,6 +149,117 @@ theorem missing_native_direction_persists_recoordination
     ((algebraicity_iff_reversible_general_space_transport
       P ρ alpha).mpr h)
 
+
+/-! ## WHOLE REALIZATION: IRREVERSIBLE BUT SPLIT CAUSAL FOLDS
+
+A dimension/topology birth need NOT be a reversible General Space
+recoordination. The geometric projective folds have genuine Hodge
+and algebraic-cycle RETURNS (e.g. a distinguished section).
+The next law works for an arbitrary forward causal path, rather than
+assuming a reverse causal path exists. Its native-cycle commutative
+square is indispensable: Hodge-charge preservation alone cannot
+produce a canonical Chow representative.
+
+This is the exact dimension-free algebraicity-defect transport
+under compatible causal folding. It can be instantiated at every
+emergent geometric dimension without identifying causal cell index
+with the scheme's Krull dimension.
+-/
+
+/-- A genuinely possibly irreversible GST causal fold reflects
+algebraicity of EVERY rational Hodge-fiber class once there is a
+canonical native-cycle return compatible with a Hodge left inverse.
+No Chow source for the input class is assumed. -/
+theorem algebraicity_iff_split_causal_fold
+    (P : CyclePathRealization G N H)
+    {x y : G.Point} (γ : G.Path x y)
+    (nativeReturn : N →ₗ[ℚ] N)
+    (hodgeReturn : H →ₗ[ℚ] H)
+    (hReturnCompatible : ∀ Z : N,
+      P.cycleClass (nativeReturn Z) =
+        hodgeReturn (P.cycleClass Z))
+    (hHodgeRetract : ∀ alpha : H,
+      hodgeReturn (P.hodgeTransport γ alpha) = alpha)
+    (alpha : H) :
+    alpha ∈ LinearMap.range P.cycleClass ↔
+      P.hodgeTransport γ alpha ∈ LinearMap.range P.cycleClass := by
+  constructor
+  · exact transported_native_cycle_stays_algebraic P γ alpha
+  · intro h
+    obtain ⟨Z, hZ⟩ := h
+    refine ⟨nativeReturn Z, ?_⟩
+    calc
+      P.cycleClass (nativeReturn Z) =
+          hodgeReturn (P.cycleClass Z) :=
+            hReturnCompatible Z
+      _ = hodgeReturn (P.hodgeTransport γ alpha) := by rw [hZ]
+      _ = alpha := hHodgeRetract alpha
+
+/-- Every actual rational Hodge direction missing from the original
+canonical algebraic image survives an irreversible dimensional fold
+having a genuine Chow-compatible left return. In particular, shape
+purity of the new world does not erase the missing original source. -/
+theorem missing_native_direction_persists_split_causal_fold
+    (P : CyclePathRealization G N H)
+    {x y : G.Point} (γ : G.Path x y)
+    (nativeReturn : N →ₗ[ℚ] N)
+    (hodgeReturn : H →ₗ[ℚ] H)
+    (hReturnCompatible : ∀ Z : N,
+      P.cycleClass (nativeReturn Z) =
+        hodgeReturn (P.cycleClass Z))
+    (hHodgeRetract : ∀ alpha : H,
+      hodgeReturn (P.hodgeTransport γ alpha) = alpha)
+    (alpha : H)
+    (hMissing : alpha ∉ LinearMap.range P.cycleClass) :
+    P.hodgeTransport γ alpha ∉ LinearMap.range P.cycleClass := by
+  intro hFolded
+  exact hMissing ((algebraicity_iff_split_causal_fold
+    P γ nativeReturn hodgeReturn hReturnCompatible hHodgeRetract alpha).mpr
+      hFolded)
+
+/-- Compatibility of this genuinely one-sided fold law with two
+consecutive causal births. The complex dimension of the intermediate
+world is not an input; its actual native/Hodge retractions are. -/
+theorem algebraicity_iff_two_split_causal_folds
+    (P : CyclePathRealization G N H)
+    {x y z : G.Point}
+    (γ : G.Path x y) (δ : G.Path y z)
+    (nativeReturn₁ nativeReturn₂ : N →ₗ[ℚ] N)
+    (hodgeReturn₁ hodgeReturn₂ : H →ₗ[ℚ] H)
+    (hCompat₁ : ∀ Z : N,
+      P.cycleClass (nativeReturn₁ Z) =
+        hodgeReturn₁ (P.cycleClass Z))
+    (hCompat₂ : ∀ Z : N,
+      P.cycleClass (nativeReturn₂ Z) =
+        hodgeReturn₂ (P.cycleClass Z))
+    (hRetract₁ : ∀ alpha : H,
+      hodgeReturn₁ (P.hodgeTransport γ alpha) = alpha)
+    (hRetract₂ : ∀ beta : H,
+      hodgeReturn₂ (P.hodgeTransport δ beta) = beta)
+    (alpha : H) :
+    alpha ∈ LinearMap.range P.cycleClass ↔
+      P.hodgeTransport (G.compPath γ δ) alpha ∈
+        LinearMap.range P.cycleClass := by
+  calc
+    alpha ∈ LinearMap.range P.cycleClass ↔
+        P.hodgeTransport γ alpha ∈ LinearMap.range P.cycleClass :=
+          algebraicity_iff_split_causal_fold
+            P γ nativeReturn₁ hodgeReturn₁ hCompat₁ hRetract₁ alpha
+    _ ↔ P.hodgeTransport δ (P.hodgeTransport γ alpha) ∈
+          LinearMap.range P.cycleClass :=
+          algebraicity_iff_split_causal_fold
+            P δ nativeReturn₂ hodgeReturn₂ hCompat₂ hRetract₂
+              (P.hodgeTransport γ alpha)
+    _ ↔ P.hodgeTransport (G.compPath γ δ) alpha ∈
+          LinearMap.range P.cycleClass := by
+            rw [P.hodge_comp]
+
+#check algebraicity_iff_split_causal_fold
+#check missing_native_direction_persists_split_causal_fold
+#check algebraicity_iff_two_split_causal_folds
+#print axioms algebraicity_iff_split_causal_fold
+#print axioms algebraicity_iff_two_split_causal_folds
+
 #check CyclePathRealization
 #check algebraicity_iff_reversible_general_space_transport
 #check missing_native_direction_persists_recoordination
