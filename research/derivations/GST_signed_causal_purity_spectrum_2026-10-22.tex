@@ -304,6 +304,73 @@ purity obstruction, directly born from the causal
 topological operation rather than fabricated by
 changing the definition of Hodge structure.
 
+\section{A cohomological causal-residue decoder for EVERY target}
+The positive open birth is not merely an injection: its complete
+original-X Hodge data can be recovered \emph{cohomologically} by an
+explicit residual operation. This sharpens the source/target
+interpretation of GST N-cohomology independent hole readouts.
+
+Write $a\ge1$ and initially $b=0$.
+The degree-$m$ Kummer map on the first torus coordinate
+is $w=z^m$, and the invariant rational cohomology class
+\[
+ \lambda_1={1\over m}\left[{1\over2\pi i}{dw\over w}\right]
+ \in H^1(U_m,\mathbb Q)
+\]
+pulls back to the normalized rational class
+$[(2\pi i)^{-1}dz/z]$ on the covering product.
+For $i=2,\ldots,a$, take the usual normalized
+$\lambda_i=[(2\pi i)^{-1}dz_i/z_i]$ on the other
+torus coordinates. Their exterior product
+$\Lambda_a=\lambda_1\wedge\cdots\wedge\lambda_a$
+is nonzero, of cohomological degree $a$, weight $2a$
+and type $(a,a)$.
+
+The invariant class $\Theta_m(\alpha)$ descends uniquely
+to a rational class $\alpha_U$ along the finite etale
+$B\times\mathbb G_m\to U_m$, by rational transfer.
+Thus the \emph{actual} born topological class can be
+written without a noncanonical basis as
+\[
+ \boxed{\qquad
+ \beta^+_a(\alpha)=\alpha_U\smile\Lambda_a
+    \ \in H^{2p+a}\bigl(U_m\times(\mathbb G_m)^{a-1},
+                   \mathbb Q\bigr).
+ \qquad}                                                \tag{18}
+\]
+Let $\pi_a:B\times(\mathbb G_m)^a\to
+U_m\times(\mathbb G_m)^{a-1}$ be the finite cover.
+Projection to the last $H^a((\mathbb G_m)^a)$ Kunneth
+coefficient defines a rational weight-graded map
+\[
+ \operatorname{Res}_a:
+ H^{2p+a}\bigl(U_m\times(\mathbb G_m)^{a-1}\bigr)
+ \xrightarrow{\pi_a^*}
+ H^{2p+a}\bigl(B\times(\mathbb G_m)^a\bigr)
+ \longrightarrow H^{2p}(B)(-a).
+\]
+It obeys the exact \emph{source-address recovery law}
+\[
+ \boxed{\quad
+ \operatorname{Res}_a\beta^+_a(\alpha)
+         =\Theta_m(\alpha)\otimes\mathbf1(-a).
+ \quad}                                                \tag{19}
+\]
+Untwisting by the specified normalized torus class,
+then pulling back along the genuine point insertion
+$s:X\hookrightarrow B$, returns precisely
+$\alpha$ for $p>0$ and $m\alpha$ for $p=0$.
+This is a full-$\alpha$ cohomological left inverse.
+
+The Tate twist $(-a)$ is essential: the residue lowers
+ordinary cohomological degree by $a$ and MHS weight by
+$2a$.  Erasing it would create a spurious contradiction
+with purity. Even though the recovered cohomology equals
+$\alpha$, the residue of a \emph{non-Chow} positive-gap
+class cannot by itself provide a cycle of $CH^p(X)$.
+The theorem supplies a verified cohomological decoder,
+not an unproved motivic or Chow realization map.
+
 \section{The strict weight/causality firewall}
 For a pure weight-$w$ rational MHS summand and a
 smooth projective target with pure cohomological
