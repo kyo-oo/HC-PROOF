@@ -276,6 +276,94 @@ $\mathbb Q^E$ proves (12), with matching
 integer ranks over $\mathbb Q$ and $\mathbb C$.
 \end{proof}
 
+
+\section{Exclusive GST causal birth-or-break law for each new edge}
+\begin{theorem}[One-edge causal dimension/topology bifurcation]
+Let $\Gamma$ be \emph{any} finite causal graph
+with a fixed vertex set $V$, and insert an edge $e$
+between vertices $v,w$ which is not yet present
+as that edge (parallel edges are allowed).
+Let $a_\Gamma=|V|-c(\Gamma)$ denote the codimension
+of the simultaneous whole-edge Hodge-alignment
+locus of the \emph{smooth} realization, and
+let $b_\Gamma=|E|-|V|+c(\Gamma)$ denote the
+weight-zero $H^1$ rank in the \emph{nodal topology fold}.
+Then the new geometric world satisfies the sharp
+mutually exclusive law
+\[
+ \boxed{
+ (\Delta a,\Delta b)=
+ \begin{cases}
+ (1,0), & v,w\text{ were in different causal components},\\
+ (0,1), & v,w\text{ were already causally connected}.
+ \end{cases}
+ }                                                              \tag{13}
+\]
+In particular,
+\[
+ \boxed{\Delta a+\Delta b=1,\qquad
+       (\Delta a)(\Delta b)=0.}                                 \tag{14}
+\]
+This is a precise algebraic-geometric versus
+topology-born mixed-Hodge \emph{bifurcation}:
+\begin{itemize}
+\item A connecting edge adds one independent
+  holomorphic modulus-alignment equation
+  $\tau_v=\tau_w$, but does not add a new
+  graph-loop weight-zero mode.
+\item A cycle-closing edge adds no independent
+  smooth-world Hodge-alignment equation, but
+  creates exactly one additional
+  weight-zero $H^1$ direction in the nodal world.
+\end{itemize}
+Both statements work for arbitrary finite causality
+depth, arbitrary number of components, arbitrary
+original smooth projective $X$, and arbitrary
+dimension of $X$.
+\end{theorem}
+\begin{proof}
+If $v,w$ lie in different connected components,
+the edge merges exactly two components, so
+$c(\Gamma+e)=c(\Gamma)-1$.
+Therefore
+$a_{\Gamma+e}-a_\Gamma=
+ (|V|-(c-1))-(|V|-c)=1$
+and
+$b_{\Gamma+e}-b_\Gamma=
+ ((|E|+1)-|V|+(c-1))-(|E|-|V|+c)=0$.
+If they were already connected, the new edge
+does not change $c$. The new equality
+$\tau_v=\tau_w$ follows from equalities along
+an existing path and is redundant, so
+$\Delta a=0$.
+The new edge independently closes one
+causal loop, and the normalized nodal curve's
+weight-zero first-cohomology rank rises by one:
+$\Delta b=1$. This proves (13)--(14)
+without invoking any rational Hodge conjecture
+assumption or constructing arbitrary Chow preimages.
+\end{proof}
+
+\begin{corollary}[Topology graph path-independent net causal law]
+For any finite edge insertion sequence from the
+edgeless graph on a fixed vertex set, at \emph{every}
+intermediate world the total number of
+connecting-edge alignment births is exactly
+$|V|-c(\Gamma)$, while the number of
+cycle-closing topology weight births is
+$|E|-|V|+c(\Gamma)$, independent of the
+chosen edge order. Reordering causal births
+may change \emph{which} edge produces a given
+kind of birth, but not either net count.
+\end{corollary}
+\begin{proof}
+Sum the two cases of (13) along the path;
+the initial counts both vanish.
+The terminal graph determines the two counts,
+so reordering the same graph's edge insertions
+leaves the net values unchanged.
+\end{proof}
+
 \section{Concrete causal tests and acceptance of the spatial experiment}
 For a connected $3$-vertex path, $(|V|,|E|,c)=(3,2,1)$:
 the two smooth edge classes are simultaneously Hodge
