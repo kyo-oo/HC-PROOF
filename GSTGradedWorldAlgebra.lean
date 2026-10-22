@@ -829,6 +829,8 @@ theorem CausalHodgeCell.signedCausalFold_monodromy_commute
       (x.monodromyLower r).signedCausalFold a b := by
   cases x with
   | mk k p q =>
+    change r ≤ p at hl
+    change r ≤ q at hr
     simp only [CausalHodgeCell.signedCausalFold,
       CausalHodgeCell.monodromyLower]
     congr 1 <;> omega
