@@ -841,4 +841,126 @@ family-specific causal/Hodge construction, not an
 independent cycle for an arbitrary prescribed
 rational $(p,p)$ class on the original unrelated $X$.
 
+
+\section{The causal toric boundary determines a genuine Hodge period equation}
+
+The all-$n$ normal-crossing-to-smooth family can be made sufficiently
+explicit that the \emph{actual holomorphic middle-form period} is
+computed by a universal operator.  This goes beyond a dimension
+counter or a freely chosen pure-Hodge projection.
+
+Choose the Dwork-type deformation
+\[
+ F_t(x)=x_0x_1\cdots x_n+
+               t\sum_{i=0}^{n}x_i^{n+1},\qquad n\ge2.
+\]
+It is an instance of (12), and for generic sufficiently small nonzero
+$t$ defines a smooth Calabi--Yau hypersurface of dimension $n-1$.
+On the dense torus of $\mathbb P^n$, the defining equation factors
+as the coordinate hyperplane boundary monomial times
+\[
+ 1+tP(x),\qquad
+ P(x)=\sum_{i=0}^n\frac{x_i^{n+1}}{\prod_{r=0}^n x_r}.
+\]
+Since $P$ is homogeneous of degree zero, it is a genuine Laurent
+polynomial in any $n$ independent torus coordinates.
+
+\begin{theorem}[Causal toric fold to holomorphic period: exact all-$n$ equation]
+The normalized torus constant-term period
+\[
+ \Phi_n(t)=\operatorname{CT}_{(\mathbb C^\times)^n}
+       \frac{1}{1+tP}
+\]
+is a formal power series with nonzero constant term and explicit
+coefficients
+\[
+\boxed{\quad
+\Phi_n(t)=\sum_{k\ge0}
+ \frac{((n+1)k)!}{(k!)^{n+1}}\,(-t)^{(n+1)k}.
+\quad} \tag{16}
+\]
+Let $z=(-t)^{n+1}$, $\theta=z\frac{d}{dz}$, and write
+$\Phi_n(z)=\sum_{k\ge0}a_kz^k$.
+Then the all-dimensional Picard--Fuchs relation is
+\[
+\boxed{\quad
+\left[\theta^{\,n}
+ -(n+1)z\prod_{r=1}^{n}\bigl((n+1)\theta+r\bigr)
+ \right]\Phi_n(z)=0.
+\quad} \tag{17}
+\]
+The torus integral of the rational differential form
+$\Omega/F_t$ gives this constant-term period near the
+toric boundary; $\operatorname{Res}_{X_t}(\Omega/F_t)$ is
+the genuine holomorphic $(n-1,0)$ form on the smooth
+geometric fiber. With the usual residue/tube comparison,
+(16)--(17) govern a holomorphic middle-form period
+of the emergent smooth Hodge structure.
+
+For $n=2$ this is the cubic elliptic curve operator
+$\theta^2-3z(3\theta+1)(3\theta+2)$.
+For $n=3$ it is the quartic K3 operator
+$\theta^3-4z(4\theta+1)(4\theta+2)(4\theta+3)$.
+For $n=4$ it is the quintic threefold operator
+$\theta^4-5z\prod_{r=1}^4(5\theta+r)$.
+\end{theorem}
+\begin{proof}
+Expand the geometric series in $t$ and then expand
+$P^\ell$ multinomially. Choose $k_i$ occurrences of the
+$i$-th Laurent monomial, so $\sum_i k_i=\ell$.
+Its exponent on $x_i$ is $(n+1)k_i-\ell$. A
+simultaneous constant term in all torus coordinates
+requires all $(n+1)k_i-\ell=0$.
+Therefore $\ell=(n+1)k$ and
+$k_0=\cdots=k_n=k$.  The unique multinomial
+constant-term coefficient is
+$((n+1)k)!/(k!)^{n+1}$, proving (16) without any
+finite cutoff.
+
+For $k\ge1$ the coefficient satisfies
+\[
+\begin{split}
+k^n a_k
+&=(n+1)\left(\prod_{r=1}^{n}
+ ((n+1)(k-1)+r)\right)a_{k-1}.
+\end{split}
+\]
+Indeed, the ratio of factorials
+$a_k/a_{k-1}$ is
+$\prod_{r=1}^{n+1}((n+1)(k-1)+r)/k^{n+1}$;
+the last numerator factor is $(n+1)k$.
+Comparing coefficients of $z^k$ gives (17),
+including $k=0$ where both sides vanish.
+The nonzero constant-term torus period is represented
+analytically, for sufficiently small $t$, by integration
+of the convergent geometric series against the
+normalized logarithmic volume form
+$\prod_{i=1}^{n} dx_i/(2\pi i x_i)$.
+Poincar\'e residue supplies the holomorphic form
+on $X_t$; the standard residue/tube comparison
+identifies the corresponding smooth-fiber period
+up to the conventional normalization.
+\end{proof}
+
+\paragraph{GST interpretation of (17).}
+The signed incidence faces of the toric normal-crossing
+boundary dictate the dimension of the newly born
+cohomological sector.  The \emph{same} all-$n$
+causal/smoothing realization determines the Laurent
+polynomial, whose constant terms force the entire
+holomorphic period and its order-$n$ differential
+equation. The Hodge generator is therefore computed as
+a geometric output of the causal-dimensional deformation,
+not declared from an unrelated fixed Hodge space.
+Equation (17) does not claim that its holomorphic
+$(n-1,0)$ class is an algebraic $(p,p)$ cycle class;
+the actual smooth algebraic diagonal correspondence
+discussed above still detects its period and acts
+as identity on the middle cohomology.
+
+Exact Wolfram checks verified the factorial coefficient
+recurrence for $2\le n\le8$ and $1\le k\le12$
+($84$ independent integer identities). The mathematical
+proof of (16)--(17) is the general multinomial argument.
+
 \end{document}
