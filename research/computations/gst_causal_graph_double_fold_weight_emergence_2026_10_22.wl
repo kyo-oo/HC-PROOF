@@ -134,7 +134,21 @@ logChecks=Table[{n,
    ConstantArray[0,{n,n}]]]},
  {n,2,7}];
 
-{"FrobeniusCoefficientCount"->Length[frobCoeffTests],
+
+(* Global relative algebraic cycle classes are flat under Gauss-Manin
+   monodromy; rank-one fixed direction for a single maximal Jordan chain.
+   This verifies the source-selection linear algebra, not the assertion
+   that every analytic period vector is represented by a global cycle. *)
+Clear[fixedPeriodChecks];
+fixedPeriodChecks=Table[{n,
+ MatrixRank[logMonodromy[n]-IdentityMatrix[n]]==n-1,
+ Length[NullSpace[logMonodromy[n]-IdentityMatrix[n]]]==1,
+ TrueQ[Simplify[(logMonodromy[n]-IdentityMatrix[n]).
+   UnitVector[n,1]==ConstantArray[0,n]]]},
+ {n,2,8}];
+
+{"FixedSourceRankChecks"->fixedPeriodChecks,
+ "FrobeniusCoefficientCount"->Length[frobCoeffTests],
  "FrobeniusCoefficientAllTrue"->And@@frobCoeffTests,
  "FrobeniusRecurrenceCount"->Length[frobRecTests],
  "FrobeniusRecurrenceAllTrue"->And@@frobRecTests,
