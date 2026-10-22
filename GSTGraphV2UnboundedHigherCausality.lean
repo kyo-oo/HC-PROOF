@@ -688,4 +688,93 @@ theorem reciprocalCausalFold_section_not_boundary {n : ℕ}
 
 end CausalFiniteIncidence
 
+/-! ## GST ACTUAL CAUSAL GEOMETRY: WHOLE HODGE ALIGNMENT AS A REALIZED OBSERVABLE
+
+A General Space graph does not own an intrinsic complex dimension.
+Only an actual geometric realization supplies complex period coordinates.
+The associated mathematics-first source
+research/derivations/GST_causal_graph_emergent_hodge_alignment_topology_duality_2026-10-23.tex
+constructs marked products of elliptic curves with holomorphic
+edge-period obstruction τ(target)-τ(source).
+This section kernel-checks the exact ALL-GRAPH causal alignment law
+without manufacturing an algebraic cycle or declaring any abstract
+causal cell automatically to be a smooth projective variety.
+-/
+
+namespace CausalHodgeAlignment
+
+variable {Node Edge : Type*}
+
+/-- An emergent holomorphic period mismatch along one oriented GST edge.
+Orientation reverses the sign, not its vanishing locus. -/
+def edgePeriodDrift (source target : Edge → Node)
+    (τ : Node → ℂ) (e : Edge) : ℂ :=
+  τ (target e) - τ (source e)
+
+/-- The actual geometric edge Hodge-alignment equation is
+exactly equality of the two marked complex period parameters. -/
+theorem edgePeriodDrift_zero_iff
+    (source target : Edge → Node)
+    (τ : Node → ℂ) (e : Edge) :
+    edgePeriodDrift source target τ e = 0 ↔
+      τ (target e) = τ (source e) := by
+  exact sub_eq_zero
+
+/-- Causal graph connectivity is emergent from finite paths, not from
+Euclidean coordinate distance or an intrinsic dimension count. -/
+inductive CausalReach (source target : Edge → Node) :
+    Node → Node → Prop where
+  | refl (v : Node) : CausalReach source target v v
+  | forward (e : Edge) :
+      CausalReach source target (source e) (target e)
+  | backward (e : Edge) :
+      CausalReach source target (target e) (source e)
+  | trans {u v w : Node} :
+      CausalReach source target u v →
+      CausalReach source target v w →
+      CausalReach source target u w
+
+/-- Fundamental GST edge-to-world rigidity:
+if every genuine edge Hodge period has zero geometric drift,
+all moduli on each connected causal component agree, for paths
+of ANY finite length and without a prior dimension bound. -/
+theorem edgeAlignment_constant_on_causal_paths
+    (source target : Edge → Node)
+    (τ : Node → ℂ)
+    (hAlign : ∀ e : Edge,
+      edgePeriodDrift source target τ e = 0)
+    {u v : Node}
+    (p : CausalReach source target u v) :
+    τ u = τ v := by
+  induction p with
+  | refl v => rfl
+  | forward e =>
+      exact ((edgePeriodDrift_zero_iff source target τ e).mp
+        (hAlign e)).symm
+  | backward e =>
+      exact (edgePeriodDrift_zero_iff source target τ e).mp (hAlign e)
+  | trans p q ihp ihq =>
+      exact ihp.trans ihq
+
+/-- Conversely, any assignment constant along the endpoints of every
+edge has vanishing realized Hodge drift on all edges. -/
+theorem edgeAlignment_of_endpoint_agreement
+    (source target : Edge → Node)
+    (τ : Node → ℂ)
+    (hAgree : ∀ e : Edge, τ (source e) = τ (target e)) :
+    ∀ e : Edge, edgePeriodDrift source target τ e = 0 := by
+  intro e
+  apply (edgePeriodDrift_zero_iff source target τ e).mpr
+  exact (hAgree e).symm
+
+#check edgePeriodDrift
+#check edgePeriodDrift_zero_iff
+#check CausalReach
+#check edgeAlignment_constant_on_causal_paths
+#check edgeAlignment_of_endpoint_agreement
+#print axioms edgeAlignment_constant_on_causal_paths
+#print axioms edgeAlignment_of_endpoint_agreement
+
+end CausalHodgeAlignment
+
 end GSTGraphV2UnboundedHigherCausality
