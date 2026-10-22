@@ -865,15 +865,13 @@ genuine deck-sign coefficient so that its contribution is positive.
 The factor two is the ACTUAL degree-two signed-cover return. -/
 private theorem signed_antideck_atom (a : ℚ) :
     (if 0 ≤ a then (2 : ℚ) else -2) * a = 2 * |a| := by
-  split_ifs with h
-  · rw [abs_of_nonneg h]
-    ring
+  by_cases h : 0 ≤ a
+  · simp [h, abs_of_nonneg h] <;> ring
   · have hn : a < 0 := lt_of_not_ge h
-    rw [abs_of_neg hn]
-    ring
+    simp [h, abs_of_neg hn] <;> ring
 
 /-- A target-sensitive finite signed source combination; the
-geometric branch theorem realizes precisely these +/-2 coefficients
+geometric branch theorem realizes precisely these signed degree-two coefficients
 when the indices enumerate components of a reduced 2-divisor
 intersection and the sign-compatible cover has been constructed. -/
 noncomputable def signedAntideckPeriodSource
