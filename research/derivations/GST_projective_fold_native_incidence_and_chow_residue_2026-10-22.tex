@@ -265,6 +265,69 @@ in the stated codimension ranges, but it is a recovery of
 established Hodge-theoretic cases, not a new proof of
 middle-codimension rational Hodge algebraicity.
 
+\section{Topological K-theory versus actual algebraic perfect-complex birth}
+The original GST K\(_0\) constructor is a promising way of packaging
+genuine native sources, but the algebraic-versus-topological distinction
+must be tested at its exact coefficient type.
+\begin{theorem}[Perfect-complex algebraization is exactly the missing Chow source]
+For any rational class \(\alpha\in H^{2p}(X,\mathbb Q)\),
+the rational topological Chern character isomorphism gives
+\[
+ u_\alpha^{\mathrm{top}}\in KU^0(X)_{\mathbb Q},
+ \qquad \mathrm{ch}(u_\alpha^{\mathrm{top}})=\alpha
+ \ \text{(concentrated in degree \(2p\)).} \tag{15}
+\]
+Its pullback \(\pi^*u_\alpha^{\mathrm{top}}\) always exists
+as a topological virtual vector bundle on \(P\).
+Nevertheless the following are equivalent:
+\[
+ \begin{array}{ll}
+ \mathrm{(i)}&
+   \alpha\in \mathrm{im}(\mathrm{cl}^{\mathrm{can}}_X:
+                     CH^p(X)_{\mathbb Q}\to H^{2p}(X,\mathbb Q)),\\
+ \mathrm{(ii)}&
+   \exists\,v\in K_0^{\mathrm{alg}}(P)_{\mathbb Q}:
+     [\mathrm{ch}_{\mathrm{Betti}}(v)]_{2p}=\pi^*\alpha .
+ \end{array} \tag{16}
+\]
+Thus an arbitrarily prescribed rational Hodge class always
+has a rational \emph{topological} perfect-complex candidate,
+but the existence of a genuine \emph{algebraic} candidate
+in (ii) is the original Chow-source problem, not an automatic
+consequence of projectivity or purity.
+\end{theorem}
+\begin{proof}
+The rational topological Chern character is an isomorphism
+\(KU^0(X)\otimes\mathbb Q\simeq
+ \bigoplus_j H^{2j}(X,\mathbb Q)\)
+for finite CW complexes; a smooth projective complex variety
+has finite CW homotopy type. This gives (15).
+
+For (i)\(\Rightarrow\)(ii), let a bona fide Chow cycle
+\(Z\in CH^p(X)_{\mathbb Q}\) have canonical class \(\alpha\).
+For smooth \(X\), the rational algebraic Chern character
+\(K_0^{\mathrm{alg}}(X)_{\mathbb Q}
+ \xrightarrow{\mathrm{ch}} CH^*(X)_{\mathbb Q}\)
+is an isomorphism. Choose an algebraic virtual perfect-complex
+\(w\) with \(p\)-th Chow Chern-character component \(Z\);
+then \(v=\pi^*w\) satisfies (ii).
+
+For (ii)\(\Rightarrow\)(i), the actual algebraic section
+has a pullback \(s^*v\in K_0^{\mathrm{alg}}(X)_{\mathbb Q}\).
+Its codimension-\(p\) Chow Chern character
+\(Z=\mathrm{ch}^{\mathrm{Chow}}_p(s^*v)\)
+is an algebraic cycle class. Naturality of the canonical Betti
+Chern character, followed by \(s^*\pi^*=\mathrm{id}\),
+gives \(\mathrm{cl}^{\mathrm{can}}_X(Z)=\alpha\).
+\end{proof}
+One must not silently replace the topological representative
+\(u_\alpha^{\mathrm{top}}\) by an algebraic vector bundle:
+GAGA identifies existing holomorphic coherent sheaves on
+projective varieties with algebraic sheaves; it does not
+produce a holomorphic structure on every topological bundle.
+The avenue remains open only if a new GST geometric
+algebraization mechanism can be independently proved.
+
 \section{Sharp limitation of vertical-only births and exact next input}
 The projective-bundle formula at actual Chow level is
 \[
