@@ -214,6 +214,95 @@ theorem AnchoredCausalLoops.loopBasis_coefficients_unique
   intro i
   simpa [AnchoredCausalLoops.loopBasis_reconstruct C H L c i] using hzero i
 
+
+/-! ## HIGHER CAUSAL 2-FACE DEATH / SURVIVAL LAW
+
+A nonidentity closed causal 1-cell is NOT automatically an independent
+cohomology direction. A genuine 2-cell can identify that loop with the
+identity world path, making all homotopy-invariant additive readouts
+vanish on it. This upgrades first-skeleton loop counting to an honest
+two-dimensional causal relation before any Hodge realization.
+
+The geometric all-N counterpart is H_1 = ker boundary1 / image boundary2;
+the exact finite incidence/weight law is derived in
+research/derivations/GST_causal_graph_double_fold_weight_emergence_2026-10-22.tex.
+-/
+
+/-- An actual finite family of higher-causal 2-cells filling specified
+closed 1-cells from a previously certified loop family. None of the
+fillers are asserted to exist without supplying the Cell 2 witness. -/
+structure AnchoredCausalTwoFillings
+    {W : C.World} {g : ℕ}
+    (L : AnchoredCausalLoops C H W g) (f : ℕ) where
+  face : Fin f → H.Cell 2
+  edgeIndex : Fin f → Fin g
+  source_face : ∀ i : Fin f, H.source (face i) = L.edge (edgeIndex i)
+  target_face : ∀ i : Fin f,
+    H.target (face i) = H.identity (H.worldCell W)
+
+/-- A true 2-homotopy-invariant causal readout annihilates every
+filled graph loop. This is a source-to-target implication FROM
+ACTUAL higher cells, not a declared dimension or chosen Hodge basis. -/
+theorem AnchoredCausalTwoFillings.filled_loop_readout_zero
+    {W : C.World} {g f : ℕ}
+    {L : AnchoredCausalLoops C H W g}
+    (F : AnchoredCausalTwoFillings C H L f)
+    (readout : H.Cell 1 → ℚ)
+    (hhomotopy : ∀ x : H.Cell 2,
+      readout (H.source x) = readout (H.target x))
+    (hidentity : readout (H.identity (H.worldCell W)) = 0)
+    (i : Fin f) :
+    readout (L.edge (F.edgeIndex i)) = 0 := by
+  calc
+    readout (L.edge (F.edgeIndex i)) =
+        readout (H.source (F.face i)) := by rw [F.source_face i]
+    _ = readout (H.target (F.face i)) := hhomotopy _
+    _ = readout (H.identity (H.worldCell W)) := by rw [F.target_face i]
+    _ = 0 := hidentity
+
+/-- Kill precisely those finite loop-coordinate channels proven
+homotopic to the identity by a SUPPLIED higher-causal 2-cell.
+This is the incidence-level realization of the 2-face quotient. -/
+def AnchoredCausalTwoFillings.survivor
+    {W : C.World} {g f : ℕ}
+    {L : AnchoredCausalLoops C H W g}
+    (F : AnchoredCausalTwoFillings C H L f)
+    (c : L.loopReadouts) : L.loopReadouts :=
+  fun i => if ∃ j : Fin f, F.edgeIndex j = i then 0 else c i
+
+/-- Each genuinely filled higher-causal loop has ZERO residual
+N-cohomology coordinate after projection. -/
+theorem AnchoredCausalTwoFillings.survivor_filled_zero
+    {W : C.World} {g f : ℕ}
+    {L : AnchoredCausalLoops C H W g}
+    (F : AnchoredCausalTwoFillings C H L f)
+    (c : L.loopReadouts) (j : Fin f) :
+    F.survivor c (F.edgeIndex j) = 0 := by
+  classical
+  simp [AnchoredCausalTwoFillings.survivor,
+    show ∃ k : Fin f, F.edgeIndex k = F.edgeIndex j from ⟨j, rfl⟩]
+
+/-- Actual causal 2-face elimination is an IDEMPOTENT operation:
+the same certified geometric filling cannot keep creating or
+destroying further Hodge channels by being replayed. -/
+theorem AnchoredCausalTwoFillings.survivor_idempotent
+    {W : C.World} {g f : ℕ}
+    {L : AnchoredCausalLoops C H W g}
+    (F : AnchoredCausalTwoFillings C H L f)
+    (c : L.loopReadouts) :
+    F.survivor (F.survivor c) = F.survivor c := by
+  classical
+  funext i
+  by_cases h : ∃ j : Fin f, F.edgeIndex j = i
+  · simp [AnchoredCausalTwoFillings.survivor, h]
+  · simp [AnchoredCausalTwoFillings.survivor, h]
+
+#check AnchoredCausalTwoFillings.filled_loop_readout_zero
+#check AnchoredCausalTwoFillings.survivor_filled_zero
+#check AnchoredCausalTwoFillings.survivor_idempotent
+#print axioms AnchoredCausalTwoFillings.filled_loop_readout_zero
+#print axioms AnchoredCausalTwoFillings.survivor_idempotent
+
 #check AnchoredCausalLoops.incidenceGradient_zero
 #check AnchoredCausalLoops.loopBasis_reconstruct
 #check AnchoredCausalLoops.loopBasis_coefficients_unique
