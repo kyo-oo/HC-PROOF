@@ -582,8 +582,8 @@ theorem rationalCausalMonodromy_commutes_logarithmicPower
     rationalCausalMonodromy (logarithmicShiftPower k a) i =
       logarithmicShiftPower k (rationalCausalMonodromy a) i := by
   simp only [rationalCausalMonodromy, logarithmicShiftPower_apply]
-  congr 1
-  omega
+  have heq : i + 1 + k = i + k + 1 := by omega
+  rw [heq]
 
 /-- Sharp ALL-N operator independence: if a rational polynomial
 combination of the first n logarithmic causal operators annihilates
@@ -597,7 +597,7 @@ theorem logarithmicPowerCoefficients_unique
     ∀ j : Fin n, c j = 0 := by
   intro j
   have hj := hzero (fun i => if i = (j : ℕ) then (1 : ℚ) else 0)
-  simpa [logarithmicShiftPower_apply] using hj
+  simpa [logarithmicShiftPower_apply, Fin.val_inj] using hj
 
 #check logarithmicShiftPower_comp
 #check rationalCausalMonodromy_commutes_logarithmicPower
