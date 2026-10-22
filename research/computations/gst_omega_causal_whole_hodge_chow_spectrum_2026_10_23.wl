@@ -40,7 +40,7 @@ result=<|
  "rankOneBinomialCases"->Length[binomialChecks],
  "rankOneBinomialPass"->And@@binomialChecks[[All,3]],
  "symbolicDefectAtGrades1to4"->Table[2 Binomial[n,j],{j,0,3}],
- "asymptoticLeadingCoefficients"->Table[Limit[Binomial[n,j]/n^j,n->Infinity],{j,0,4}],
+ "asymptoticLeadingCoefficients"->Table[Coefficient[Expand[Product[n-k,{k,0,j-1}]/Factorial[j]],n,j],{j,0,4}],
  "formalHypotheticalDefect"->tripleD,
  "failedTowers"->Select[cases,Not[And@@#[[2;;6]]]&],
  "failedBinomial"->Select[binomialChecks,Not[#[[3]]]&]
