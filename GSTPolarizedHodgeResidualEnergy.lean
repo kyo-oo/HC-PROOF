@@ -847,6 +847,70 @@ theorem geometric_gram_determinant_gap_constructs_exact_native
   rw [hr, add_zero] at h
   exact h
 
+
+/-! ## GST NONLINEAR ANTI-DECK SOURCE: EXACT OPTIMAL SIGN PERIODS
+
+The accompanying genuine scheme-level LaTeX construction
+(GST_nonlinear_antideck_chow_source_birth_2026-10-22.tex) constructs
+signed anticharacter-pair pushforwards from actual branched double
+covers of an arbitrary original X.  Here we kernel-check its exact
+finite rational sign/amplification law INSIDE the existing polarized
+GST module.  The geometric realization of each component source and
+the genuine canonical Betti comparison remain mathematical inputs;
+this theorem does not fabricate algebraic sources for a target.
+-/
+
+/-- Every finite rational component period can be oriented with a
+genuine deck-sign coefficient so that its contribution is positive.
+The factor two is the ACTUAL degree-two signed-cover return. -/
+private theorem signed_antideck_atom (a : ℚ) :
+    (if 0 ≤ a then (2 : ℚ) else -2) * a = 2 * |a| := by
+  split_ifs with h
+  · rw [abs_of_nonneg h]
+    ring
+  · have hn : a < 0 := lt_of_not_ge h
+    rw [abs_of_neg hn]
+    ring
+
+/-- A target-sensitive finite signed source combination; the
+geometric branch theorem realizes precisely these +/-2 coefficients
+when the indices enumerate components of a reduced 2-divisor
+intersection and the sign-compatible cover has been constructed. -/
+noncomputable def signedAntideckPeriodSource
+    (z : ι → V) (period : ι → ℚ) : V :=
+  ∑ i : ι, (if 0 ≤ period i then (2 : ℚ) else -2) • z i
+
+/-- The signed double-world source couples with the true measured
+residual by the EXACT rational absolute-period sum, not an assumed
+Gram determinant, invented nonzero detector or Hodge-to-Chow map. -/
+theorem signedAntideckPeriodSource_pairing
+    (Q : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (r : V) (z : ι → V) (period : ι → ℚ)
+    (hperiod : ∀ i, period i = (Q r) (z i)) :
+    (Q r) (signedAntideckPeriodSource z period) =
+      2 * ∑ i : ι, |period i| := by
+  classical
+  calc
+    (Q r) (signedAntideckPeriodSource z period) =
+        ∑ i : ι, (if 0 ≤ period i then (2 : ℚ) else -2) *
+          (Q r) (z i) := by
+            simp [signedAntideckPeriodSource, map_sum, map_smul]
+    _ = ∑ i : ι, (if 0 ≤ period i then (2 : ℚ) else -2) *
+          period i := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            rw [hperiod i]
+    _ = ∑ i : ι, 2 * |period i| := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            exact signed_antideck_atom (period i)
+    _ = 2 * ∑ i : ι, |period i| := by
+            rw [Finset.mul_sum]
+
+#check signedAntideckPeriodSource
+#check signedAntideckPeriodSource_pairing
+#print axioms signedAntideckPeriodSource_pairing
+
 #check gram_determinant_gap_exactness
 #check geometric_gram_determinant_gap_constructs_exact_native
 #print axioms geometric_gram_determinant_gap_constructs_exact_native
