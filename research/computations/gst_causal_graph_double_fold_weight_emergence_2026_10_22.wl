@@ -147,7 +147,18 @@ fixedPeriodChecks=Table[{n,
    UnitVector[n,1]==ConstantArray[0,n]]]},
  {n,2,8}];
 
-{"FixedSourceRankChecks"->fixedPeriodChecks,
+
+(* Entire maximal unipotent causal weight filtration:
+   ker N^k has dimension k, one new cohomological direction at every
+   even monodromy weight from 0 through 2(n-1). *)
+Clear[kernelStaircaseChecks];
+kernelStaircaseChecks=Table[{n,
+  Table[n-MatrixRank[MatrixPower[logJordan[n],k]],{k,1,n}],
+  Table[n-MatrixRank[MatrixPower[logJordan[n],k]],{k,1,n}]===Range[n]},
+ {n,2,9}];
+
+{"KernelStaircaseChecks"->kernelStaircaseChecks,
+ "FixedSourceRankChecks"->fixedPeriodChecks,
  "FrobeniusCoefficientCount"->Length[frobCoeffTests],
  "FrobeniusCoefficientAllTrue"->And@@frobCoeffTests,
  "FrobeniusRecurrenceCount"->Length[frobRecTests],
