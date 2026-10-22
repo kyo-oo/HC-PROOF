@@ -179,7 +179,7 @@ source/target structure, not from an invented Hodge-class map. -/
 theorem AnchoredCausalLoops.incidenceGradient_zero
     {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
     (potential : H.Cell 0 → ℚ) :
-    L.incidenceGradient potential = 0 := by
+    AnchoredCausalLoops.incidenceGradient C H L potential = 0 := by
   funext i
   simp [AnchoredCausalLoops.incidenceGradient, L.target_root i,
     L.source_root i]
@@ -200,7 +200,7 @@ This is the finite constructive rank input for causal N-cohomology. -/
 theorem AnchoredCausalLoops.loopBasis_reconstruct
     {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
     (c : L.loopReadouts) (j : Fin g) :
-    (∑ i : Fin g, c i * L.loopBasis i j) = c j := by
+    (∑ i : Fin g, c i * AnchoredCausalLoops.loopBasis C H L i j) = c j := by
   classical
   simp [AnchoredCausalLoops.loopBasis]
 
@@ -209,10 +209,10 @@ theorem AnchoredCausalLoops.loopBasis_coefficients_unique
     {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
     (c : L.loopReadouts)
     (hzero : ∀ j : Fin g, (∑ i : Fin g,
-      c i * L.loopBasis i j) = 0) :
+      c i * AnchoredCausalLoops.loopBasis C H L i j) = 0) :
     ∀ i : Fin g, c i = 0 := by
   intro i
-  simpa [L.loopBasis_reconstruct c i] using hzero i
+  simpa [AnchoredCausalLoops.loopBasis_reconstruct C H L c i] using hzero i
 
 #check AnchoredCausalLoops.incidenceGradient_zero
 #check AnchoredCausalLoops.loopBasis_reconstruct
