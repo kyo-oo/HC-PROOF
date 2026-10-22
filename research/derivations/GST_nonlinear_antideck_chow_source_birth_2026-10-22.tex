@@ -252,6 +252,45 @@ also $h^2=P_A+P_B$, so $r$ is perpendicular to $h^2$
 and has square $2$. Equation (7) follows.
 \end{proof}
 
+
+\begin{corollary}[Complete exact middle-Hodge cycle compiler on $Q^4$]
+Keep the entirely constructed original-$Q^4$ algebraic
+source $S=f_*(\Delta_1\Delta_2)=2(P_B-P_A)$ and
+$h=c_1(\mathcal O_{Q^4}(1))$. For \emph{every}
+rational $(2,2)$ Hodge class
+$\alpha\in H^4(Q^4,\mathbb Q)$, define the genuine rational
+algebraic Chow cycle
+\[
+ \boxed{
+ Z_\alpha=
+ \frac{\int_{Q^4}\alpha\cup h^2}{2}\,h^2+
+ \frac{\int_{Q^4}\alpha\cup\operatorname{cl}^{\rm can}(S)}{8}\,S
+ \in CH^2(Q^4)_{\mathbb Q}.
+ }                                                          \tag{11}
+\]
+Then $\operatorname{cl}^{\rm can}_{Q^4}(Z_\alpha)=\alpha$
+exactly, with \emph{no} assumed Hodge-to-Chow representative.
+\end{corollary}
+\begin{proof}
+The rational middle cohomology of the smooth even quadric
+$Q^4$ is two-dimensional with basis the hyperplane square
+and the difference of the two rulings. The explicit
+nonlinear double-world source $S$ is twice the negative
+ruling difference, hence an independent basis vector.
+Their true intersection Gram matrix is
+$\operatorname{diag}(2,8)$: $\int h^4=2$,
+$\int h^2\operatorname{cl}(S)=0$, and $\int S^2=8$.
+The coefficients in (11) are the rational Gram-dual
+coordinates of $\alpha$ in this \emph{actual} geometric
+basis. Both basis classes are independently algebraic,
+so (11) is a bona fide Chow cycle and its canonical Betti
+class is precisely $\alpha$.
+\end{proof}
+This is a complete end-to-end middle-codimension
+source-to-target construction for the stated genuine
+fourfold test, not a substitution for the same required
+construction on an arbitrary original $X$.
+
 \section{Full original-$X$ Chow-generation consequence and exact boundary}
 Let $X$ be any smooth projective complex $d$-fold and
 let $Z\subset X$ be a genuine integral codimension-two
