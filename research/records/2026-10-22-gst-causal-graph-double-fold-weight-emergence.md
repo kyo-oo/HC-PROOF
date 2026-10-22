@@ -73,7 +73,7 @@ An algebraic Tate dimension fold (k,p,q,w)→(k+2j,p+j,q+j,w+2j) conserves both 
 - Four vertices and five edges: (4,5,3,2)
 - Single-fold coefficient identities: 84 exact parameter pairs; all TRUE for β=1..4, N=0..5, all j≤N
 - Double-fold identities: 324 exact cases; all TRUE for β₁,β₂=1..3, N=0..7, all j≤N
-- Degree-four, weight-two example for two and three loops: 6uv, i.e. six rational (1,1) pieces of **wrong degree-two-below weight**
+- Degree-four, weight-two example for two and three loops: 6uv, i.e. six rational (1,1) pieces of **weight two below its cohomological degree**
 
 The uniform proofs follow from incidence-rank/normalization plus mixed-Hodge Künneth. The finite checks are not substituted for those proofs.
 
