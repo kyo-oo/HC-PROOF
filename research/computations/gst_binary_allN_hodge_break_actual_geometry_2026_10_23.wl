@@ -17,8 +17,13 @@ cmgraphDiv={1,1,0,0,1,1};
 allActualDivisors={factorDiv1,factorDiv2,diagonalDiv,cmgraphDiv};
 sameHodge=6-MatrixRank[matSame];
 diffHodge=6-MatrixRank[matDifferent];
-noBreakWhole=Table[Expand[(1+u)^2(1+v)^2(1+u v)^n]==
-    Expand[(1+u)^2(1+v)^2(1+u v)^n],{n,0,16}];
+(* Independently enumerate the four cohomological Hodge bidegrees
+   of each elliptic factor and the two of each projective factor. *)
+ellipticBasisPolynomial=Total[Flatten[Table[u^a v^b,{a,0,1},{b,0,1}]]];
+projectiveBasisPolynomial=Total[Table[(u v)^k,{k,0,1}]];
+noBreakWhole=Table[
+ TrueQ[Expand[ellipticBasisPolynomial^2 projectiveBasisPolynomial^n] ===
+   Expand[(1+u)^2 (1+v)^2 (1+u v)^n]],{n,0,16}];
 sameMarked=Simplify[atSame.diagonalDiv];
 diffMarked=Simplify[atDifferent.diagonalDiv];
 allNMarked=Flatten[Table[
