@@ -91,8 +91,9 @@ allOrderChecks=Flatten[Table[
 Clear[faceBoundary,rankFaceChecks];
 faceBoundary[g_,f_] := Table[If[i==j,1,0],{i,1,g},{j,1,f}];
 rankFaceChecks=Flatten[Table[
+ If[f==0,True,
  TrueQ[MatrixRank[faceBoundary[g,f]]==f] &&
- TrueQ[g-MatrixRank[faceBoundary[g,f]]==g-f],
+ TrueQ[g-MatrixRank[faceBoundary[g,f]]==g-f]],
  {g,0,6},{f,0,g}]];
 triD1=Transpose[graphInc[3,{{1,2},{2,3},{3,1}}]];
 triD2={{1},{1},{1}};
