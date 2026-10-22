@@ -19,10 +19,10 @@ graphCases=Flatten[Table[
   Table[
    Module[{ed=Select[allPairs,
        BitGet[mask,First@FirstPosition[allPairs,#]-1]==1&],
-          B,graph,rank,components,loops,expectedLoops},
-    B=Table[Table[If[j==e[[2]],1,
+          incidenceMat,graph,rank,components,loops,expectedLoops},
+    incidenceMat=Table[Table[If[j==e[[2]],1,
       If[j==e[[1]],-1,0]],{j,1,nn}],{e,ed}];
-    rank=If[Length[ed]==0,0,MatrixRank[B]];
+    rank=If[Length[ed]==0,0,MatrixRank[incidenceMat]];
     graph=Graph[Range[nn],UndirectedEdge@@@ed];
     components=Length[ConnectedComponents[graph]];
     loops=Length[ed]-rank;
