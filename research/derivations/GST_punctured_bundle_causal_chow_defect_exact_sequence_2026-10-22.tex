@@ -267,6 +267,29 @@ scheme-level incidence, Hilbert, moduli or specialization
 geometry would have to furnish its canonical Betti class
 without selecting an original algebraic preimage.
 
+\section{Removal of connectedness and componentwise universal quantifiers}
+For any \emph{nonempty}, not necessarily connected, smooth projective
+complex $X$, its finitely many connected components
+$X=\coprod_{a=1}^N X_a$ are smooth projective, and the vector
+bundle and punctured realization decompose as
+$E=\coprod_a E|_{X_a}$, $U=\coprod_a U_a$.
+For each codimension $p$, both $CH^p$ and rational singular
+cohomology are finite direct sums across components.
+The rational Hodge subspaces, canonical algebraic images and
+defect groups therefore decompose componentwise:
+\[
+  D_X^p\simeq\bigoplus_{a=1}^N D_{X_a}^p,\qquad
+  D_{\mathrm{inh}}^p(U)\simeq
+    \bigoplus_{a=1}^N D_{\mathrm{inh}}^p(U_a).
+\]
+Applying Theorems \ref{thm:defect} and \ref{thm:return}
+componentwise proves the same exact defect sequence and
+corrected cycle construction for arbitrary nonempty smooth
+projective $X$, without imposing connectedness.
+In rank $r=p$, the scalar correction may have a separate
+$\lambda_a\in\mathbb Q$ on each connected component;
+a single global scalar must not be imposed artificially.
+
 \section{Finite exact verification and evidence boundary}
 The accompanying stateless Wolfram script checks $1485$
 finite projective-space degree/rank instances, $d=0,\ldots,8$,
