@@ -892,7 +892,7 @@ theorem signedAntideckPeriodSource_pairing
     (Q r) (signedAntideckPeriodSource z period) =
         ∑ i : ι, (if 0 ≤ period i then (2 : ℚ) else -2) *
           (Q r) (z i) := by
-            simp [signedAntideckPeriodSource, map_sum, map_smul]
+            simp only [signedAntideckPeriodSource, map_sum, map_smul]
     _ = ∑ i : ι, (if 0 ≤ period i then (2 : ℚ) else -2) *
           period i := by
             apply Finset.sum_congr rfl
