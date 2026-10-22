@@ -277,7 +277,7 @@ theorem AnchoredCausalTwoFillings.survivor_filled_zero
     {L : AnchoredCausalLoops C H W g}
     (F : AnchoredCausalTwoFillings C H L f)
     (c : L.loopReadouts) (j : Fin f) :
-    F.survivor c (F.edgeIndex j) = 0 := by
+    AnchoredCausalTwoFillings.survivor C H F c (F.edgeIndex j) = 0 := by
   classical
   simp [AnchoredCausalTwoFillings.survivor,
     show ∃ k : Fin f, F.edgeIndex k = F.edgeIndex j from ⟨j, rfl⟩]
@@ -290,7 +290,9 @@ theorem AnchoredCausalTwoFillings.survivor_idempotent
     {L : AnchoredCausalLoops C H W g}
     (F : AnchoredCausalTwoFillings C H L f)
     (c : L.loopReadouts) :
-    F.survivor (F.survivor c) = F.survivor c := by
+    AnchoredCausalTwoFillings.survivor C H F
+      (AnchoredCausalTwoFillings.survivor C H F c) =
+        AnchoredCausalTwoFillings.survivor C H F c := by
   classical
   funext i
   by_cases h : ∃ j : Fin f, F.edgeIndex j = i
