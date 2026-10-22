@@ -42,9 +42,24 @@ graphResult=Table[With[{ed=graphCases[[k]],vtx=graphVerts[[k]]},
   Length[ed]-MatrixRank[graphInc[vtx,ed]],Length[ed]-vtx+1}
 ],{k,1,4}];
 
+
+(* Smooth genus-g reverse-fold Hodge polynomial and exact comparison
+   with the irreducible nodal rational curve with g self-nodes. *)
+smooth[x_]:=1+x tt ss (uu+vv)+aa;
+smoothing=Flatten[Table[{
+ Simplify[Coefficient[Expand[(smooth[g]-node[g,1]) tower[nn]],
+   tt,2 jj+1] ==
+   g ss^(2 jj) (uu vv)^jj (ss (uu+vv)-1)],
+ Simplify[Coefficient[Coefficient[
+   Expand[smooth[g] tower[nn]],tt,2 jj+1],ss,2 jj+1] ==
+   g (uu^(jj+1) vv^jj+uu^jj vv^(jj+1))]
+},{g,1,4},{nn,0,7},{jj,0,nn}],2];
+
 {"SingleCount"->Length[single],
  "SingleAllTrue"->And@@Flatten[single],
  "DoubleCount"->Length[double],
+ "SmoothingCount"->Length[smoothing],
+ "SmoothingAllTrue"->And@@Flatten[smoothing],
  "DoubleAllTrue"->And@@double,
  "GraphRankResults"->graphResult,
  "DoubleEvenWeight2Coefficient"->Coefficient[
