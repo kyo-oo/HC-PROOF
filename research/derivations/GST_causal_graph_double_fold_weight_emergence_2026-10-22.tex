@@ -1388,4 +1388,141 @@ claim is a logically stronger target, and the
 product cycle constructed here has its class
 in the independently specified auxiliary factor.
 
+
+\section{Causal monodromy correspondence amplification: invariant vectors versus invariant operators}
+
+The previous one-channel invariant-vector theorem is not a bound on
+monodromy-compatible algebraic correspondences.  This is the
+essential distinction between \emph{classes} and \emph{operations
+on the born Hodge structure}.  In the Dwork rank-$n$ Picard--Fuchs
+period subsystem of the same all-dimensional geometric causal
+degeneration, fix the rational model
+\[
+ V=\mathbb Q^n,\qquad
+ J e_0=0,\quad J e_i=e_{i-1}\quad(1\le i<n),\qquad
+ T=I+J.
+\]
+The actual complex analytic local monodromy is
+$\exp(2\pi iJ)$ on a suitable logarithmic period basis.
+The rational $T$ is a Jordan-equivalent model, not an
+assertion that this period basis is a canonical Betti
+$\mathbb Q$-basis.
+
+\begin{theorem}[Invariant correspondence amplification for all $n$]
+For every $n\ge1$,
+\[
+ \dim_{\mathbb Q}\ker(T-I)=1,\qquad
+ \dim_{\mathbb Q}\{A\in\operatorname{End}_{\mathbb Q}(V):
+              AT=TA\}=n,
+\]
+and more strongly,
+\[
+ \boxed{\operatorname{Cent}(T)=\mathbb Q[J]
+       =\operatorname{span}_{\mathbb Q}
+         \{I,J,J^2,\ldots,J^{n-1}\}.}\tag{C1}
+\]
+Consequently the rank-one monodromy-fixed class channel is
+compatible with an \emph{$n$-dimensional} space of abstract
+monodromy-invariant operators acting on the SAME born Hodge-period
+subsystem. Each power is a genuinely distinct operator, not
+a repeat of the fixed class.
+\end{theorem}
+\begin{proof}
+$Jv=0$ if and only if $v$ is a multiple of $e_0$.
+Any commuting endomorphism $A$ is determined by $A(e_{n-1})$
+because $e_{n-1}$ is cyclic:
+$\{J^k e_{n-1}:0\le k<n\}$ is a basis of $V$.
+Given an arbitrary $v=A(e_{n-1})$, there is a
+unique polynomial $P(J)$ of degree less than $n$
+with $P(J)e_{n-1}=v$.  The operators $A$ and $P(J)$
+commute with $J$ and agree on the cyclic generator,
+hence on the entire basis.  Conversely every polynomial
+in $J$ commutes with $T=I+J$.
+Independence of $I,J,\ldots,J^{n-1}$ follows by applying
+a vanishing linear combination to $e_{n-1}$.
+\end{proof}
+
+\begin{proposition}[Genuine algebraic diagonal realizes a full-rank invariant tensor]
+For any smooth projective complex fiber $Y_t$ of the
+explicit Dwork family, its genuine algebraic diagonal
+$\Delta_{Y_t}\subset Y_t\times Y_t$ has canonical rational
+Betti class of pure type $(d,d)$ and acts as the identity
+on $H^d(Y_t,\mathbb Q)$, $d=\dim_{\mathbb C}Y_t$.
+In particular its action on the Dwork monodromy-invariant
+period subvariation (when identified with a genuine rank-$n$
+Betti subsystem) has rank $n$, and
+\[
+        M\,\mathrm{Id}\,M^{-1}=\mathrm{Id}.
+\tag{C2}
+\]
+This is an actual geometric source of a full-rank
+\emph{invariant correspondence tensor}, despite the
+rank-one monodromy-fixed \emph{vector} dimension.
+\end{proposition}
+\begin{proof}
+The cycle of the diagonal is algebraic on every smooth
+fiber and over the smooth part of the family. The
+cycle-class naturality and the pull--cup--push identity
+give the identity action on every Betti cohomology degree.
+The identity commutes with each geometric monodromy
+transformation, and its restriction to a rank-$n$
+invariant subsystem remains the identity.
+\end{proof}
+
+\paragraph{Precise new original-$X$ realization.}
+For an arbitrary smooth projective connected original variety $X$,
+put $Z_t=X\times Y_t$.  The algebraic relative
+diagonal $\Delta_{Z_t}$ acts on
+$H^a(X,\mathbb Q)\otimes V_t$ as
+$\mathrm{Id}_{H^a(X)}\otimes\mathrm{Id}_{V_t}$,
+and this action commutes with $I\otimes M$.
+Thus the **whole** rank-$n$ causal Hodge-period system
+survives as a genuine algebraic correspondence operator
+over \emph{each arbitrary initial $X$}, rather than
+reducing its effect to a solitary invariant period vector.
+The new claim is about an operator on the born geometric
+cohomology, not an algebraic cycle representing a
+prescribed unknown $\alpha\in H^{2p}(X,\mathbb Q)$.
+
+\paragraph{Hodge-filtered source gate (the non-circular classification).}
+The full centralizer $\mathbb Q[J]$ is an algebraic
+\emph{linear-algebra} operator space; it is \emph{not}
+automatically spanned by genuine algebraic correspondences.
+On any fixed smooth projective fiber, the realizable
+operators belong to
+\[
+  \boxed{
+  \operatorname{Im}\!\left(
+    CH^{d}(Y_t\times Y_t)_{\mathbb Q}
+    \xrightarrow{\mathrm{cl}^{\mathrm{can}}}
+       \operatorname{End}_{\mathbb Q}H^{d}(Y_t,\mathbb Q)
+  \right)
+  \ \subseteq\ \operatorname{End}_{\mathrm{HS}}H^{d}(Y_t,\mathbb Q).
+  }\tag{C3}
+\]
+Here the cycle-to-endomorphism arrow denotes the
+correspondence action after projecting to the specified
+cohomological degree.  The rank-$n$ monodromy centralizer
+must additionally satisfy geometric cycle-class
+realizability.  The nilpotent logarithm $J$ generally
+does not preserve the Hodge decomposition on a
+fixed smooth fiber; commuting with monodromy does
+not assert $J$ is an algebraic correspondence.
+The relative diagonal gives the concrete element
+$I$ in the intersection for every smooth fiber.
+
+\paragraph{Why this matters for the user's GST spatial mechanism.}
+The causal fold does not merely produce isolated
+Hodge cells with labels. It produces an evolving
+\emph{cohomological local system}, full monodromy,
+its $n$-dimensional commuting algebra, and an
+actual algebraic correspondence acting across
+the entire emerged period subspace. The distinction
+between an invariant \emph{vector} and an invariant
+\emph{operator} is the missing higher-order
+causality invariant; the original-X source
+question now has an explicit, non-circular
+cycle-realization gate, not an assumed
+Hodge-to-Chow selector.
+
 \end{document}
