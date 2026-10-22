@@ -441,6 +441,35 @@ its true geometric meaning and specify which versions
 are smooth/projective/open/singular; equation (17)
 alone does NOT assert algebraic Hodge existence.
 
+\section{GST causal monodromy integration: a graded commutation theorem}
+The latest existing \texttt{GSTGradedWorldAlgebra.lean} also encodes
+the limiting mixed-Hodge monodromy weight-lowering operation
+$N_r(k,p,q)=(k,p-r,q-r)$, defined without truncation for
+$0\le r\le\min(p,q)$. Unlike the Tate-stabilization fold,
+it fixes cohomological degree while reducing weight by $2r$.
+The two new causal topology operators commute with its
+\emph{graded signature}:
+\[
+ \boxed{\quad
+ N_r F_{a,b}(k,p,q)=F_{a,b}N_r(k,p,q),\quad
+ \delta(N_r F_{a,b})=\delta+a-b-2r,\quad
+ \chi(N_r F_{a,b})=\chi.
+ \quad}                                                \tag{20}
+\]
+Proof: both sides have coordinates
+$(k+a+b,p+a-r,q+a-r)$, and subtracting the three
+coordinates gives the invariants. This identity is
+uniform for all arities and all admissible $r$, and
+was checked independently with exact Wolfram symbolic
+integer polynomial algebra. In Lean it can be added
+using the existing actual \texttt{monodromyLower} definition
+and the new \texttt{signedCausalFold} definition, not
+by inventing another carrier or an axiom.
+\emph{This is a theorem on causal/Hodge signatures:}
+the existence of a geometric degeneration whose genuine
+monodromy commutes with a particular torus/node fold
+would require a separate compatible family construction.
+
 \section{Exact computation and evidence}
 The companion Wolfram script tests the full
 equations (14) by exact finite cyclic character sums
