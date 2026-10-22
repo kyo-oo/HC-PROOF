@@ -5,19 +5,19 @@
    Mathematical projective variety and rational Hodge-conjecture
    statements are proved in companion TeX, not inferred from tests.
 *)
-Clear[ss,tt,u,v,N,k,domega,eqPeriod,breakPeriod,hSurface,hPoly,rows];
+Clear[ss,tt,u,v,k,domega,eqPeriod,breakPeriod,hSurface,hPoly,rows];
 domega=Factor[Det[{{1,0,-1,0},{0,1,0,-1},{1,tt,0,0},{0,0,1,ss}}]];
 eqPeriod=domega/.{tt->I,ss->I};
 breakPeriod=domega/.{tt->I,ss->2 I};
 hSurface=Expand[(1+u)^2 (1+v)^2];
 rows=Table[Module[{h,diag,misalignedSector,topCoefficient},
- h=Expand[hSurface Sum[(u v)^j,{j,0,N-2}]];
- diag=Coefficient[Coefficient[h,u,N-1],v,N-1];
- misalignedSector=Coefficient[Coefficient[h,u,N],v,N-2];
+ h=Expand[hSurface Sum[(u v)^j,{j,0,dim-2}]];
+ diag=Coefficient[Coefficient[h,u,dim-1],v,N-1];
+ misalignedSector=Coefficient[Coefficient[h,u,dim],v,N-2];
  topCoefficient=Coefficient[Coefficient[h,u,N],v,N];
- {N,diag,misalignedSector,topCoefficient,
+ {dim,diag,misalignedSector,topCoefficient,
   TrueQ[diag>=1 && misalignedSector==1 && topCoefficient==1 &&
-    eqPeriod==0 && breakPeriod==I]}],{N,2,40}];
+    eqPeriod==0 && breakPeriod==I]}],{dim,2,40}];
 result=<|
  "exactHolomorphicVolumeCoefficient"->domega,
  "equalMarkedModuliPeriod"->eqPeriod,
