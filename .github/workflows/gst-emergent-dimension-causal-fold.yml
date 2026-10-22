@@ -5,6 +5,7 @@ on:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTGradedWorldAlgebra.lean'
+      - 'GSTGeneralSpaceCohomology.lean'
       - '.github/workflows/gst-emergent-dimension-causal-fold.yml'
   workflow_dispatch:
 permissions:
@@ -41,10 +42,10 @@ jobs:
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTEmergentDimensionalCausalFold"
-          roots = ["GSTGradedWorldAlgebra"]
+          roots = ["GSTGradedWorldAlgebra", "GSTGeneralSpaceCohomology"]
           EOF
           if lake build GSTEmergentDimensionalCausalFold > gst-emergent-dimensional-fold.log 2>&1; then
-            echo "LEAN PASSED: native cosmic Tate dimension-fold and finite causal charge conservation"
+            echo "LEAN PASSED: native cosmic Tate dimension-fold and all-finite-depth GST Hodge/Chow causal transport"
           else
             grep -nE 'error:|sorryAx|✖' gst-emergent-dimensional-fold.log | tail -n 130 || true
             tail -n 120 gst-emergent-dimensional-fold.log
