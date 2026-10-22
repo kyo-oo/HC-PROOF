@@ -293,6 +293,120 @@ A separate check with $X=\mathbb P^1$ gives $uv$ in this
 degree-four weight-two component. Thus the signature
 is not an artifact of elliptic odd cohomology.
 
+\section{Target-sensitive lift of EVERY original-$X$ Hodge class}
+The preceding fold is not limited to a selected point or top
+cohomology class. Fix \emph{any} rational Hodge class
+$\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)$.
+The $G$-invariant cyclic symmetrization
+\[
+ \Theta_m(\alpha)=\sum_{i=1}^m\operatorname{pr}_i^*\alpha
+ \in H^{2p}(B,\mathbb Q)^G\cap H^{p,p}(B)
+ \tag{13}
+\]
+is a rational Hodge class without selecting any source cycle.
+For $p>0$, fixing a complex point $x_0\in X(\mathbb C)$
+gives an algebraic insertion
+$s:X\hookrightarrow B$, $x\mapsto(x,x_0,\ldots,x_0)$, and
+\[
+ \boxed{s^*\Theta_m(\alpha)=\alpha.}                     \tag{14}
+\]
+Indeed for $i\ne1$ the composition $\operatorname{pr}_i s$
+is constant and pulls every positive-degree class to zero.
+For $p=0$, the map sends $\alpha$ to $m\alpha$ and is
+injective over $\mathbb Q$. Therefore $\Theta_m$ is injective
+for every codimension, with an explicit left inverse.
+
+Combining (13) with the weight-$2p$ K\"unneth summand
+in (10) constructs a \emph{linear injection}
+\[
+ \boxed{\quad
+ \mathfrak B_{m,p}:
+ H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)
+ \hookrightarrow
+ \operatorname{Gr}_{2p}^W H^{2p+2}(Z_m(X),\mathbb Q).
+ \quad}                                                \tag{15}
+\]
+Every nonzero target is sent to a nonzero rational diagonal
+class in degree $2p+2$, of weight $2p$ and therefore
+of purity gap $-2$.  This is a \emph{target-sensitive
+nonpure Hodge-sector construction for every original $X$}
+that does not assume $\alpha$ is algebraic.  The target
+class is not thereby made into a nonalgebraic class of
+a smooth projective variety: the receiving world is singular.
+
+\begin{theorem}[Algebraicity-faithful smooth causal fold]
+Let $q:B\times E\to S_m(X)$ be the finite \'etale quotient.
+There is a unique rational Hodge class $\widehat\alpha$
+on the \emph{smooth} $S_m(X)$ such that
+\[
+ q^*\widehat\alpha=\operatorname{pr}_B^*\Theta_m(\alpha).
+ \tag{16}
+\]
+For every $X,m,p,\alpha$ as above,
+\[
+ \boxed{\quad
+ \alpha\in\operatorname{im}\mathrm{cl}^{\mathrm{can}}_X
+ \ \Longleftrightarrow\
+ \widehat\alpha\in\operatorname{im}\mathrm{cl}^{\mathrm{can}}_{S_m(X)}.
+ \quad}                                                \tag{17}
+\]
+Both implications are induced by genuine algebraic
+pushforward/pullback operations, not a freely chosen
+Hodge-to-Chow inverse.
+\end{theorem}
+\begin{proof}
+Finite-group rational transfer identifies $H^*(S_m,\mathbb Q)$
+with the invariants in $H^*(B\times E,\mathbb Q)$.
+The right side of (16) is invariant under cyclic permutation
+of $B$ and torsion translation on $E$; hence it descends
+uniquely to $\widehat\alpha$.  All these maps preserve
+Hodge type, so $\widehat\alpha$ is rational of type $(p,p)$.
+
+Suppose $\alpha=\mathrm{cl}^{\mathrm{can}}_X(W)$ for
+$W\in CH^p(X)_{\mathbb Q}$. Set
+$W_B=\sum_i\operatorname{pr}_i^*W\in CH^p(B)_{\mathbb Q}$.
+It is invariant as a Chow class. Then the honest rational
+algebraic cycle
+\[
+       \widehat W={1\over m}q_*
+            (\operatorname{pr}_B^*W_B)
+       \in CH^p(S_m)_{\mathbb Q}
+                                                               \tag{18}
+\]
+has canonical Betti class $\widehat\alpha$:
+the finite-degree transfer identity and invariance give
+$q^*\mathrm{cl}_{S_m}^{\mathrm{can}}(\widehat W)
+=\mathrm{cl}_{B\times E}^{\mathrm{can}}
+ (\operatorname{pr}_B^*W_B)$, and $q^*$ is injective.
+
+Conversely suppose $\widehat\alpha
+=\mathrm{cl}_{S_m}^{\mathrm{can}}(\widehat W)$ for a
+genuine codimension-$p$ cycle $\widehat W$.
+Pull it back by the finite \'etale map $q$, then by the
+regular embedding $i_e:B\to B\times E$ at any
+point $e\in E(\mathbb C)$, obtaining
+$W_B=i_e^*q^*\widehat W\in CH^p(B)_{\mathbb Q}$.
+Naturality of the canonical cycle class and (16) give
+$\mathrm{cl}_B(W_B)=\Theta_m(\alpha)$.
+For $p>0$ set $W=s^*W_B$ using the algebraic
+insertion $s:X\to B$; then (14) proves
+$\mathrm{cl}_X(W)=\alpha$.
+For $p=0$, pullback returns $m\alpha$ and
+$W=m^{-1}s^*W_B$ gives $\alpha$.
+All these operations lie in actual rational Chow groups.
+\end{proof}
+
+Equation (17) is a sharp \emph{algebraicity-preservation
+equivalence}, not a proof of universal source existence:
+an arbitrary preimage $\widehat W$ on $S_m$ is not
+constructed from $\alpha$ by (16).  Its value is that
+the smooth causal fold \emph{faithfully transports any
+unknown original-X Hodge target} and has an explicit
+native cycle return whenever a folded native source
+is independently available. The singular double fold
+(15) instead exposes a nonpure topology-dependent
+version of the same unknown class.
+
 \section{Evidence and precise limits}
 Uniform arguments: finite-group transfer; rational K\"unneth;
 node-normalization mixed Hodge structure; character projection
