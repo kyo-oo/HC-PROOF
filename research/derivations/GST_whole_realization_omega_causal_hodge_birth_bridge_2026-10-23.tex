@@ -187,6 +187,84 @@ If \(p_0\) is least, then only the terms
 each other term has degree at most \(j-1\).
 \end{proof}
 
+
+\section{New exact classical landing: GST causal saturation and a growth criterion}
+The previous theorem gives a direct way to express the
+classical Hodge conjecture \emph{entirely in terms of the
+emergent-dimensional fold spectra} without hiding it
+inside an assumed algebraicity statement.
+
+\begin{theorem}[Causal spectrum rigidity is equivalent to rational Hodge algebraicity]
+For every smooth projective complex original \(X\),
+let \(X^{[n]}=X\times(\mathbb P^1)^n\), a genuine
+smooth projective \(n\)-fold Tate birth in the GST
+realization category. The following assertions are equivalent:
+\[
+\begin{array}{ll}
+\mathrm{(I)}&
+\text{Every rational Hodge class on every smooth
+projective }X\text{ is algebraic};\\
+\mathrm{(II)}&
+\dim D_{X\times\mathbb P^1,p+1}
+  =\dim D_{X,p+1}
+\quad \text{for every }X,p\ge0;\\
+\mathrm{(III)}&
+\displaystyle\lim_{n\to\infty}
+ \frac{\dim D_{X^{[n]},p+1}}{n}=0
+\quad\text{for every }X,p\ge0;\\
+\mathrm{(IV)}&
+\dim D_{X^{[n]},p+1}\text{ remains bounded in }n
+\quad\text{for every }X,p\ge0.
+\end{array}                                                     \tag{9}
+\]
+In fact the exact \emph{causal source-capacity gradient} is
+\[
+ \boxed{
+  \dim D_{X\times\mathbb P^1,p+1}
+    -\dim D_{X,p+1}=\dim D_{X,p},}                              \tag{10}
+\]
+and the arbitrary-depth causal lower bound is
+\[
+ \boxed{
+  \dim D_{X^{[n]},p+1}\ \ge\
+         n\cdot\dim D_{X,p}\quad(n\ge0).}                       \tag{11}
+\]
+\end{theorem}
+\begin{proof}
+Apply the actual projective-bundle defect formula at relative
+dimension one:
+\(D_{X\times\mathbb P^1,p+1}
+ \cong D_{X,p+1}\oplus D_{X,p}\).
+Taking rational dimensions gives (10). If (II)
+holds for all \(X,p\), then (10) forces
+\(D_{X,p}=0\) for all \(X,p\), which is (I).
+Conversely (I) trivially implies (II), (III) and
+(IV). The coefficient of \(t^{p+1}\) in
+\(\mathcal D_X(t)(1+t)^n\) is
+\[
+ d_{p+1}(0)+n d_p(0)+
+      \sum_{k=2}^{p+1}{n\choose k}d_{p+1-k}(0).
+\]
+Every summand is nonnegative for \(n\in\mathbb N\);
+hence (11). Either (III) or (IV) then implies
+\(d_p(0)=0\) for all original \(X,p\), establishing
+(I) without any algebraic class chosen in the argument.
+\end{proof}
+
+\paragraph{Meaning of the criterion.}
+This gives an \emph{exact native landing equation} for the
+owner's dimensionless/cosmological intuition: an
+independently proved GST law of \emph{sublinear growth
+of the genuine algebraicity defect under arbitrary
+emergent \(\mathbb P^1\)-births} would imply the
+full rational Hodge conjecture for all original \(X\).
+Such a bound is \emph{not} proved by the existing
+GST causality or dimensionless ontology axioms:
+unbounded higher-cell availability and Hodge purity
+do not imply bounded defect. Equation (9) is a rigorous
+equivalent research target, not an assertion that
+causal saturation has already been established.
+
 \section{Assumed-true experiment, emerging Hodge structures, and final native bridge}
 Under the owner's \emph{temporary all-\(X\) true assumption},
 \(\mathcal D_X=0\), (3)--(8) imply that every projective
