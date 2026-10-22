@@ -724,4 +724,107 @@ theorem CausalHodgeCell.monodromyLower_comp
 #print axioms causalSmoothBirth_signatures
 
 
+
+/-! ## GST SIGNED CAUSAL DIMENSION BIRTH: OPEN/NODAL ARITY LAW
+
+The mathematical geometric realization is established separately in
+research/derivations/GST_signed_causal_purity_spectrum_2026-10-22.tex.
+
+An OPEN algebraic torus loop contributes degree 1 and weight 2,
+whereas a NODAL projective graph loop contributes degree 1 and weight 0.
+These are independent causal births. Their joint operation therefore shifts
+the purity gap by open arity minus nodal arity. It preserves Hodge charge and
+commutes with symmetric Tate stabilization.
+
+This is the exact *graded* shadow of actual smooth-open and singular-projective
+worlds; it is not a new theorem constructing an arbitrary original-X
+Chow representative, nor a formalization of the scheme/MHS comparison.
+-/
+
+/-- Independent a open and b nodal loops, without imposing a finite
+dimension bound on either causal birth count. -/
+def CausalHodgeCell.signedCausalFold (a b : ℕ)
+    (x : CausalHodgeCell) : CausalHodgeCell :=
+  ⟨x.cohomologicalDegree + a + b, x.leftWeight + a, x.rightWeight + a⟩
+
+/-- Original rational (p,p) Hodge class signature before spatial folds. -/
+def CausalHodgeCell.pureDiagonal (p : ℕ) : CausalHodgeCell :=
+  ⟨2 * p, p, p⟩
+
+/-- The GST signed Hodge charge is invariant under every pair of causal
+birth counts, including mixed positive/negative topology operations. -/
+theorem CausalHodgeCell.charge_signedCausalFold
+    (a b : ℕ) (x : CausalHodgeCell) :
+    (x.signedCausalFold a b).charge = x.charge := by
+  cases x with
+  | mk k p q =>
+    simp [CausalHodgeCell.signedCausalFold,
+      CausalHodgeCell.charge, CausalHodgeCell.cosmicAddress,
+      cosmicCharge] <;> omega
+
+/-- The signed purity gap is literally (open births - nodal births).
+This is stronger than preserving the diagonal charge. -/
+theorem CausalHodgeCell.purityGap_signedCausalFold
+    (a b : ℕ) (x : CausalHodgeCell) :
+    (x.signedCausalFold a b).purityGap =
+      x.purityGap + (a : ℤ) - (b : ℤ) := by
+  cases x with
+  | mk k p q =>
+    simp [CausalHodgeCell.signedCausalFold,
+      CausalHodgeCell.purityGap, CausalHodgeCell.weight,
+      CausalHodgeCell.cosmicAddress, cosmicDegree] <;> omega
+
+/-- Causal birth composition combines both arities without truncation. -/
+theorem CausalHodgeCell.signedCausalFold_comp
+    (a b c d : ℕ) (x : CausalHodgeCell) :
+    (x.signedCausalFold a b).signedCausalFold c d =
+      x.signedCausalFold (a + c) (b + d) := by
+  cases x with
+  | mk k p q =>
+    simp only [CausalHodgeCell.signedCausalFold]
+    congr 1 <;> omega
+
+/-- Pure original Hodge signatures have charge and purity gap zero. -/
+theorem CausalHodgeCell.pureDiagonal_signature (p : ℕ) :
+    (CausalHodgeCell.pureDiagonal p).charge = 0 ∧
+    (CausalHodgeCell.pureDiagonal p).purityGap = 0 := by
+  constructor
+  · simp [CausalHodgeCell.pureDiagonal,
+      CausalHodgeCell.charge, CausalHodgeCell.cosmicAddress,
+      cosmicCharge]
+  · simp [CausalHodgeCell.pureDiagonal,
+      CausalHodgeCell.purityGap, CausalHodgeCell.weight,
+      CausalHodgeCell.cosmicAddress, cosmicDegree]
+
+/-- Every original diagonal signature admits exact signed gap a-b while
+remaining diagonal: a causal *degree* does not pre-fix Hodge purity. -/
+theorem CausalHodgeCell.pureDiagonal_signedFold_signature
+    (p a b : ℕ) :
+    ((CausalHodgeCell.pureDiagonal p).signedCausalFold a b).charge = 0 ∧
+    ((CausalHodgeCell.pureDiagonal p).signedCausalFold a b).purityGap =
+       (a : ℤ) - (b : ℤ) := by
+  constructor
+  · rw [CausalHodgeCell.charge_signedCausalFold]
+    exact (CausalHodgeCell.pureDiagonal_signature p).1
+  · rw [CausalHodgeCell.purityGap_signedCausalFold]
+    rw [(CausalHodgeCell.pureDiagonal_signature p).2]
+    ring
+
+/-- Open and nodal births cancel the purity gap at equal multiplicity.
+This is a signature equality, NOT a smooth-projective realization theorem. -/
+theorem CausalHodgeCell.balancedCausalFold_purity
+    (a : ℕ) (x : CausalHodgeCell) :
+    (x.signedCausalFold a a).purityGap = x.purityGap := by
+  rw [CausalHodgeCell.purityGap_signedCausalFold]
+  ring
+
+#check CausalHodgeCell.charge_signedCausalFold
+#check CausalHodgeCell.purityGap_signedCausalFold
+#check CausalHodgeCell.signedCausalFold_comp
+#check CausalHodgeCell.pureDiagonal_signedFold_signature
+#check CausalHodgeCell.balancedCausalFold_purity
+#print axioms CausalHodgeCell.purityGap_signedCausalFold
+#print axioms CausalHodgeCell.pureDiagonal_signedFold_signature
+
+
 end GSTGradedWorldAlgebra
