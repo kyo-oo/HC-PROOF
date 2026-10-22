@@ -1,0 +1,274 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\title{GST nonlinear causal source birth: double-world anticharacter products,
+signed incidence components, and original-variety rational Chow extraction}
+\date{22 October 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We continue the exact arbitrary-original-$X$ source-construction objective
+past linear Hopf/projective/Gysin fold limitations by testing a genuinely
+different operation: multiplying two independently born anti-invariant
+algebraic divisors on a double-world cover before returning them to $X$.
+Although each anti-divisor has zero pushforward individually, their
+product is invariant and can carry a nonzero primitive original-$X$
+cycle. An explicit sign-controlled finite-cover construction realizes
+arbitrary signed decompositions of a reduced intersection of two
+Cartier divisors; a full calculation on the smooth quadric fourfold
+produces its nonambient primitive codimension-two class directly as
+a transferred product of two anticharacter sources. This constructs
+genuine algebraic source geometry and provides a cofinal cycle
+factory under enumerated incidence inputs. It does not show that
+every rational Hodge residual pairs nontrivially with that factory;
+that separate assertion is the actual conjectural universal step.
+\end{abstract}
+
+\section{Original contract and why a nonlinear source is different}
+For every smooth projective complex $X$, $p\ge0$ and
+$\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)$, the fixed goal is
+an actual $Z_\alpha\in CH^p(X)_{\mathbb Q}$ with
+$\operatorname{cl}^{\rm can}_X(Z_\alpha)=\alpha$.
+Let $f:\widetilde Y\to X$ be an actual degree-two generically
+finite projective morphism from a smooth projective double-world
+resolution, with involution $\tau$.
+A $\tau$-anti-invariant algebraic class $\Delta$ satisfies
+$f_*\Delta=0$ in rational Chow, as
+$f_*\Delta=f_*\tau^*\Delta=-f_*\Delta$.
+But for two anti-invariant classes $\Delta_1,\Delta_2$,
+\[
+ \tau^*(\Delta_1\cdot\Delta_2)
+ =\Delta_1\cdot\Delta_2,\qquad
+ f_*(\Delta_1\cdot\Delta_2)\in CH^2(X)_{\mathbb Q}. \tag{1}
+\]
+This quadratic source channel is not a linear deck-invariant
+projection and does not presuppose a chosen Chow preimage of a
+rational Hodge target. We now construct its source from real
+scheme equations.
+
+\section{Exact signed-incidence source theorem}
+\begin{theorem}[Arbitrary original-$X$ double-world sign extraction]
+Let $X$ be a smooth projective complex variety of dimension
+$d\ge2$. Let $W_1,W_2\subset X$ be distinct integral effective
+Cartier divisors with a proper, \emph{reduced} scheme intersection
+\[
+ C=W_1\cap W_2=C_1\cup\cdots\cup C_m,
+ \qquad \operatorname{codim}_X C_j=2 .
+\]
+Fix \emph{any} signs $\varepsilon_j\in\{+1,-1\}$.
+There exist an algebraic line bundle $L=\mathcal O_X(kH)$,
+$k\gg0$, global sections $A_1,A_2\in H^0(X,L)$ and
+$F\in H^0(X,L^{\otimes2})$ for which
+\[
+ F|_{W_i}=A_i^2|_{W_i},\quad
+ A_2|_{\eta_{C_j}}=\varepsilon_j A_1|_{\eta_{C_j}}\ne0. \tag{2}
+\]
+Let $Y_0\to X$ be the actual algebraic double cover $t^2=F$,
+and let $\widetilde Y$ be an equivariant smooth projective
+resolution of its normalization. Above $W_i$ there are two
+proper-transform divisors $W_{i,+},W_{i,-}$ mapping birationally
+to $W_i$, exchanged by $\tau$. Put
+$\Delta_i=[W_{i,+}]-[W_{i,-}]\in CH^1(\widetilde Y)_{\mathbb Q}$.
+Then the actual \emph{original-$X$} Chow cycle
+\[
+ \boxed{
+  f_*(\Delta_1\cdot\Delta_2)
+  =2\sum_{j=1}^m\varepsilon_j[C_j]
+  \quad\text{in }CH^2(X)_{\mathbb Q}.
+ } \tag{3}
+\]
+Its canonical rational Betti class is exactly the cycle class
+of the right-hand side. A cover whose branch is singular
+is allowed: the resolution and original-$X$ proper Chow return
+are genuine algebraic operations.
+\end{theorem}
+\begin{proof}
+Write $\nu:\coprod_j\widetilde C_j\to C$ for the finite
+normalization. Since $C$ is reduced, its conductor
+$\mathfrak c\subset\mathcal O_C$ is a coherent ideal whose
+generic localization on every $C_j$ is the unit ideal.
+Choose $k$ large enough that $\mathfrak c\otimes L|_C$
+is globally generated and that the Serre restriction maps
+$H^0(X,L)\to H^0(C,L|_C)$ and
+$H^0(X,L^2)\to H^0(W_1\cup W_2,L^2)$ are surjective.
+Choose $a\in H^0(C,\mathfrak c\otimes L)$ nonzero at the
+generic point of every $C_j$. Multiplication on the
+normalization by the locally constant sign function
+$\varepsilon|_{\widetilde C_j}=\varepsilon_j$ preserves
+the conductor; hence $b=\varepsilon a$ is a genuine global
+section of $L|_C$ with $b^2=a^2$ \emph{scheme-theoretically}
+on $C$ and the prescribed generic sign ratios.
+Lift $a,b$ to global sections $A_1,A_2$ on $X$.
+The squares $A_1^2|_{W_1}$ and $A_2^2|_{W_2}$ agree on
+the full scheme intersection $C$. The exact gluing
+sequence for $W_1\cup W_2$ and Serre surjectivity produce
+a global $F$ with (2). This is a true algebraic
+double-cover datum independent of any prescribed $\alpha$.
+
+At each generic point $\eta_{C_j}$, $A_1$ is invertible
+and the finite double cover is etale. The two lifts of
+each $W_i$ are locally disjoint sheets. Because $C$ is
+reduced and its divisors meet properly, the local
+intersection multiplicity of the \emph{matching} sheets
+is one and that of the mismatched sheets is zero.
+For $\varepsilon_j=+1$, the pair intersections
+$(W_{1,+},W_{2,+})$ and $(W_{1,-},W_{2,-})$
+each contribute $+[C_j]$ to the pushforward of the
+signed product. For $\varepsilon_j=-1$, the pairs
+$(W_{1,+},W_{2,-})$ and $(W_{1,-},W_{2,+})$
+each contribute $-[C_j]$. There are no additional
+codimension-two components in the pushforward: the
+intersection maps into the scheme support $W_1\cap W_2$,
+and exceptional cycles over proper closed subsets of its
+components map into codimension at least three on $X$.
+Therefore the actual Chow intersection and proper
+pushforward yield (3). Natural compatibility of genuine
+rational Betti cycle classes with intersection and proper
+pushforward gives the final assertion.
+\end{proof}
+\begin{corollary}[One-component signed nonlinear extractor]
+Under the theorem's hypotheses, choose $\varepsilon_j=+1$
+for one selected component $C_j$ and $-1$ for every
+other component. Then the exact original-$X$ cycle identity
+\[
+ \boxed{
+ [C_j]=\frac14 f_*(\Delta_1\cdot\Delta_2)
+             +\frac12[W_1]\cdot[W_2]
+ \quad\text{in } CH^2(X)_{\mathbb Q}
+ } \tag{4}
+\]
+recovers that component from a quadratic double-world
+anticharacter product and a known ambient intersection.
+Enumerating all divisor pairs and all finite sign patterns
+requires no prior choice of an $\alpha$-preimage.
+\end{corollary}
+\begin{proof}
+The reduced complete intersection has
+$[W_1][W_2]=\sum_i[C_i]$.
+For the chosen signs (3) equals
+$2([C_j]-\sum_{i\ne j}[C_i])
+=4[C_j]-2[W_1][W_2]$. Rearrange.
+\end{proof}
+
+\section{An explicit nonambient source: the smooth quadric fourfold}
+\begin{theorem}[Actual anti-times-anti birth of the quadric primitive]
+Let
+\[
+ X=Q^4=\{x_0y_0+x_1y_1+x_2y_2=0\}\subset\mathbb P^5,
+ \quad W_1=\{y_1=0\}|_X,\quad W_2=\{y_2=0\}|_X.
+\]
+Their true reduced codimension-two intersection is
+$C=P_A\cup P_B$, with
+$P_A=\{y_1=y_2=x_0=0\}\cap X$ and
+$P_B=\{y_1=y_2=y_0=0\}\cap X$.
+Set $L=\mathcal O_X(1)$ and use the actual quadratic branch
+\[
+ \boxed{
+ F=(x_0+y_0)^2+4x_1y_1
+   =(x_0-y_0)^2-4x_2y_2\quad\text{on }X.
+ } \tag{5}
+\]
+The corresponding algebraic double cover $t^2=F$ is
+generically degree two (it can be singular); take a
+projective equivariant smooth resolution $\widetilde Y$.
+Above $W_1,W_2$, choose sheet sections
+$A_1=x_0+y_0$ and $A_2=x_0-y_0$, respectively.
+They have relative sign $-1$ generically on $P_A$ and
+$+1$ generically on $P_B$. The actual anti-divisors satisfy
+\[
+ \boxed{
+  f_*(\Delta_1\cdot\Delta_2)
+       =2([P_B]-[P_A])\in CH^2(Q^4)_{\mathbb Q}.
+ } \tag{6}
+\]
+This is a nonzero algebraic primitive class on the
+\emph{original} smooth fourfold. Setting
+$r=[P_A]-[P_B]$, the true intersection identities give
+\[
+ \boxed{h^2\cdot r=0,\qquad r^2=2,\qquad
+ (f_*(\Delta_1\Delta_2))^2=8.}                 \tag{7}
+\]
+\end{theorem}
+\begin{proof}
+Modulo $y_1$ the branch becomes $A_1^2$.
+Modulo $y_2$ the quadric equation gives
+$x_1y_1=-x_0y_0$, hence $F=A_2^2$.
+On $P_A$ one has $x_0=0$ and $A_2=-A_1$;
+on $P_B$ one has $y_0=0$ and $A_2=A_1$.
+Both are nonzero at generic points. Equation (3)
+therefore yields (6), regardless of exceptional divisors
+over singular points of the branch double cover.
+The intersection matrix of the two ruling-plane classes
+has $P_A^2=P_B^2=1$ and $P_A\cdot P_B=0$;
+also $h^2=P_A+P_B$, so $r$ is perpendicular to $h^2$
+and has square $2$. Equation (7) follows.
+\end{proof}
+
+\section{Full original-$X$ Chow-generation consequence and exact boundary}
+Let $X$ be any smooth projective complex $d$-fold and
+let $Z\subset X$ be a genuine integral codimension-two
+subvariety. For large sufficiently ample twists, two
+integral hypersurfaces containing $Z$ can be chosen whose
+scheme-theoretic intersection is pure codimension two
+and generically reduced on every component (standard
+Serre generation, regular local parameters and generic
+Bertini). A complete intersection in smooth $X$ is
+Cohen--Macaulay, hence satisfies $S_1$; generic reducedness
+therefore makes the entire intersection reduced. Our
+one-component theorem then realizes $[Z]$ as a
+double-world anti-product transfer plus a divisor product.
+By linear extension, the family of all such signed-cover
+sources spans the \emph{entire actual rational codimension-two
+Chow cycle group} in every original $X$.
+
+For $p>2$, one may first choose $(p-2)$ sufficiently ample
+divisors through an actual codimension-$p$ subvariety $Z$,
+take an integral resulting component $V$ smooth at the
+generic point of $Z$, and resolve $V$ to a smooth projective
+$\widetilde V$. The strict transform of $Z$ is a genuine
+codimension-two integral subvariety of $\widetilde V$ mapping
+birationally to $Z$. Apply the preceding codimension-two
+signed-cover construction to $\widetilde V$ and push its
+Chow output to $X$. This constructs \emph{all genuine}
+codimension-$p$ algebraic source generators from a
+finite tower of actual geometric operations, with
+codimension zero and one supplied by fundamental classes
+and divisors.
+
+The assertion is cofinality for already \emph{algebraic}
+Chow generators, NOT an algebraization theorem for arbitrary
+rational $(p,p)$ Betti classes. Its input can be produced
+without any target-Hodge-to-Chow selector by enumerating
+hypersurface tuples, resolved components and all sign
+patterns. It advances GST from linear anti-deck
+pushforward zero to a true nonlinear primitive birth,
+but an independent universal geometric forcing theorem
+must still prove that the resulting original-$X$
+classes detect every arbitrary primitive rational Hodge
+residual. The quadric computation provides a falsifiable
+positive primitive model for that mechanism, not a
+proof by extrapolation to all varieties.
+
+\section{Proof-audit boundaries and reproducibility}
+The source construction is entirely algebraic after the
+double-cover normalization and equivariant resolution.
+All sign selection and component recovery are Chow
+equalities, not merely equalities of numerical periods.
+The finite conductor, large-twist restriction surjectivity,
+generic etale local sheets, and proper Chow pushforward
+are the load-bearing geometric inputs. A singular
+double cover is not falsely declared smooth; the
+resolved cover is genuinely smooth projective.
+
+The companion exact Wolfram file checks the two
+quadratic branch identities modulo the original
+quadric relation, both sign-sector recovery coefficients,
+all patterns of up to eight intersection components,
+and the quadric primitive square. It does not formalize
+equivariant resolution, Hilbert incidence, or the
+universal rational Hodge theorem in Lean.
+\end{document}
