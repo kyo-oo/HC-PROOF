@@ -37,8 +37,8 @@ hessianCheck=Table[
 gram={{0,1,0,1},{1,0,0,1},{0,0,4dd^2,2dd},{1,1,2dd,24}};
 prim={0,0,-1/dd,1};
 diagonal={0,0,0,1};
-rankChecks=Table[{dd,mi,24+8dd mi^2>0,
-                   (mi-1)^2>=0},{dd,1,12},{mi,1,20}];
+rankChecks=Flatten[Table[{dd,mi,24+8dd mi^2>0,
+                   (mi-1)^2>=0},{dd,1,12},{mi,1,20}],1];
 exactResult=<|
  "allArityRootChecks"->signedRootCheck,
  "allArityRootPassed"->And@@signedRootCheck[[All,2]],
