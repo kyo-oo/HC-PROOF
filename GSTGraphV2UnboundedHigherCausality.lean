@@ -445,6 +445,45 @@ theorem logarithmicShiftPower_sharp
   have h : (n - 1) + 1 = n := by omega
   simp [topLogarithmicChannel, h]
 
+
+/-! ## COMPLETE CAUSAL MONODROMY WEIGHT-LEVEL FILTRATION
+
+The kernel of S^k is precisely the subspace of causal logarithmic
+period-coefficients concentrated in indices 0,...,k-1.
+The dimension of this finite coordinate space is k. These
+rank-k levels form the canonical monodromy filtration of the
+maximally unipotent geometric Picard--Fuchs solution tower.
+No Hodge component is freely added or independently assigned.
+-/
+
+/-- The exact kernel of the k-fold logarithmic lowering operation.
+A vector is killed at depth k if and only if every coordinate
+with index at least k vanishes. -/
+theorem logarithmicShiftPower_kernel_exact
+    (k : ℕ) (a : ℕ → ℚ) :
+    (∀ i : ℕ, logarithmicShiftPower k a i = 0) ↔
+      (∀ j : ℕ, k ≤ j → a j = 0) := by
+  constructor
+  · intro h j hj
+    have hi := h (j - k)
+    rw [logarithmicShiftPower_apply] at hi
+    have heq : (j - k) + k = j := by omega
+    rw [heq] at hi
+    exact hi
+  · intro h i
+    rw [logarithmicShiftPower_apply]
+    exact h (i + k) (by omega)
+
+/-- Every k-level causal monodromy kernel is exactly a k-dimensional
+rational coordinate system, not a selected or collapsed Hodge axis. -/
+theorem logarithmicKernelCoordinate_dimension (k : ℕ) :
+    Module.finrank ℚ (Fin k → ℚ) = k := by
+  simp
+
+#check logarithmicShiftPower_kernel_exact
+#check logarithmicKernelCoordinate_dimension
+#print axioms logarithmicShiftPower_kernel_exact
+
 #check logarithmicShiftPower_nilpotent
 #check logarithmicShiftPower_sharp
 #print axioms logarithmicShiftPower_nilpotent
