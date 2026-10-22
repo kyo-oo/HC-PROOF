@@ -963,4 +963,172 @@ recurrence for $2\le n\le8$ and $1\le k\le12$
 ($84$ independent integer identities). The mathematical
 proof of (16)--(17) is the general multinomial argument.
 
+
+\section{GST causal boundary to maximally unipotent Hodge-period monodromy:
+an exact all-dimensional logarithmic tower}
+
+The previous causal toric family already furnishes the exact
+Picard--Fuchs differential operator
+\[
+ L_n=\theta^n-(n+1)z\prod_{r=1}^{n}((n+1)\theta+r),
+ \qquad \theta=z\,d/dz,\qquad n\ge2.
+\]
+Here $d=n-1$ is the dimension of the smooth Calabi--Yau
+hypersurface, whereas the central $n$-simplex boundary
+$\partial\Delta^n$ is the actual causal dual complex of the
+simple-normal-crossing world. We now extract \emph{the entire
+logarithmic solution tower} rather than only its holomorphic period.
+
+For $\rho$ near $0$ define the rational functions
+\[
+ a_0(\rho)=1,\qquad
+ a_k(\rho)=\prod_{h=1}^{k}
+ \frac{(n+1)\prod_{r=1}^{n}((n+1)(h-1+\rho)+r)}
+ {(h+\rho)^n},
+ \quad k\ge1,
+\]
+and a convergent local Frobenius family (with chosen branch of
+$\log z$)
+\[
+ \mathcal F_n(z,\rho)=z^\rho
+ \sum_{k=0}^{\infty}a_k(\rho)z^k.
+\]
+The coefficient ratio tends in modulus to $(n+1)^{n+1}$ as
+$k\to\infty$, so these series converge locally for
+$|z|<(n+1)^{-(n+1)}$, uniformly in $\rho$ on compact neighborhoods
+of zero avoiding the negative integral poles.
+
+\begin{theorem}[Causal genesis forces a maximal Picard--Fuchs
+logarithmic tower in every dimension]
+For the specific operator $L_n$ and the series above,
+\[
+ \boxed{\quad L_n\mathcal F_n(z,\rho)=\rho^n z^\rho.\quad}
+ \tag{18}
+\]
+For each $0\le j<n$ the functions
+\[
+ \boxed{\quad
+ \psi_j(z)=\frac1{j!}
+  \left.\frac{\partial^j}{\partial\rho^j}
+  \mathcal F_n(z,\rho)\right|_{\rho=0}
+ \quad}\tag{19}
+\]
+are \emph{linearly independent actual solutions} of
+$L_n\psi_j=0$. Their leading logarithmic parts are
+$\psi_j(z)=(\log z)^j\Phi_n(z)/j!$ plus terms of lower
+logarithmic degree; in particular $\psi_0=\Phi_n$.
+
+Analytic continuation once anticlockwise around $z=0$
+acts on this $n$-dimensional Picard--Fuchs solution local
+system by
+\[
+\boxed{\quad
+ M\psi_j=\sum_{h=0}^{j}
+ \frac{(2\pi i)^{j-h}}{(j-h)!}\psi_h.
+\quad}\tag{20}
+\]
+Consequently $M$ is unipotent with exactly one Jordan block
+of size $n$, and for its logarithm
+$\mathcal N=\log M$,
+\[
+\boxed{\quad
+ \mathcal N^n=0,\qquad
+ \mathcal N^{n-1}\ne0,\qquad
+ \operatorname{rank}(\mathcal N^{n-1})=1.
+\quad}\tag{21}
+\]
+Thus the length $n$ of the analytic Hodge-period degeneration
+is governed by the \emph{emergent dimension} $d=n-1$.
+\end{theorem}
+\begin{proof}
+Applying $\theta$ to $z^{k+\rho}$ multiplies it by
+$k+\rho$. At exponent $z^{k+\rho}$ for $k\ge1$ the
+coefficient in $L_n\mathcal F_n$ is
+\[
+(k+\rho)^n a_k(\rho)-
+(n+1)\prod_{r=1}^{n}((n+1)(k-1+\rho)+r)
+a_{k-1}(\rho),
+\]
+which vanishes \emph{identically} by the defining product
+formula. The only remaining term is that for $k=0$,
+namely $\rho^n z^\rho$, proving (18).
+Differentiating this identity $j<n$ times at $\rho=0$
+gives zero, proving all the differential equations.
+At $\rho=0$, the product formula reduces to
+$a_k(0)=((n+1)k)!/(k!)^{n+1}$ and so $\psi_0$
+is the actual period series from equation (16).
+Since $\mathcal F_n$ contains $z^\rho=e^{\rho\log z}$
+and its analytic coefficient series has nonzero
+constant term, $\psi_j$ contains a new leading
+term $(\log z)^j/j!$; triangularity in powers
+of $\log z$ proves independence.
+A loop around zero changes $\log z$ to
+$\log z+2\pi i$, and therefore multiplies
+$\mathcal F_n$ by $e^{2\pi i\rho}$ while leaving
+each coefficient $a_k(\rho)$ unchanged.
+The Leibniz rule for the $\rho$ derivatives
+gives (20) exactly. Its matrix is
+$\exp(2\pi i J_n)$, where $J_n$ is the
+strict one-superdiagonal Jordan nilpotent.
+As $J_n^n=0$ but
+$J_n^{n-1}$ has a single nonzero entry,
+its logarithm
+$\mathcal N=2\pi i J_n$ obeys (21).
+\end{proof}
+
+\begin{corollary}[Exact topological and analytic causal extremal rank match]
+The actual normal-crossing central world $Y_n$
+has dual complex $\partial\Delta^n$. Therefore
+the two independently derived invariants satisfy
+\[
+\boxed{\quad
+ \dim_{\mathbb Q}\widetilde H^{n-1}
+    (\partial\Delta^n,\mathbb Q)
+ = \operatorname{rank}_{\mathbb C}\mathcal N^{n-1}
+ =1,\qquad n\ge2.
+\quad}\tag{22}
+\]
+\end{corollary}
+\begin{proof}
+The left side is one by the explicit signed-simplex
+boundary computation (10). The right side is one
+by the independent Frobenius and monodromy
+calculation (21). Both computations originate
+from the \emph{same concrete toric causal family}.
+\end{proof}
+
+\paragraph{Crucial geometric comparison and parameter convention.}
+Equation (22) is an exact numerical rank match, not yet
+a canonical isomorphism between integral vanishing cycles,
+the limiting mixed Hodge structure, and the top
+dual-complex class. Establishing such an identification
+requires an explicit degeneration/specialization theorem
+with its semistability and comparison hypotheses.
+Moreover $z=(-t)^{n+1}$ is a ramified period parameter
+on the chosen toric invariant family. A full loop of
+the original deformation parameter $t$ induces
+$n+1$ loops of $z$, so the corresponding period
+monodromy is $M_t=M_z^{n+1}$; its logarithm has
+the same maximal nilpotency index $n$, with
+$\log M_t=(n+1)\log M_z$.
+The full cohomology of a smooth fiber may be
+larger than the $n$-dimensional period subsystem:
+the theorem proves the operator's local-system
+monodromy, and does not silently assert it acts
+as one block on \emph{all} of primitive Betti cohomology.
+
+\paragraph{Exact independent computational tests.}
+The zero-parameter coefficients and Frobenius recurrence
+were checked with rational symbolic Wolfram arithmetic for
+$n=2,\dots,7$ (36 coefficient cases), and
+$n=2,\dots,6$ (25 parameter-dependent recurrence cases),
+respectively. The single Jordan block monodromy
+nilpotency was checked over the exact field
+$\mathbb Q(\pi i)$ for $n=2,\dots,7$:
+$(M-I)^n=0$ and $(M-I)^{n-1}\ne0$.
+All tests passed with corrected treatment of the
+identity-matrix term. The proof itself is the
+unbounded algebraic recurrence and logarithmic
+independence argument above, not a finite extrapolation.
+
 \end{document}
