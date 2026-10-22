@@ -2709,6 +2709,51 @@ theorem incidence_center_projective_push_coefficient
   · intro h
     exact False.elim (h (Finset.mem_range.mpr (by omega)))
 
+/-! ## GST ALL-ARITY NORMAL-CHERN NODAL COEFFICIENT
+
+For a smooth codimension-p center Z in a smooth 2p-fold X,
+the normal-first-jet bundle N^dual tensor L^m on Z has
+top Chern polynomial in m:
+  sum_{j=0}^p (-1)^j m^(p-j) h^(p-j) c_j(N).
+This is the exact symbolic arithmetic underlying the genuine
+smooth blowup and nodal-incidence geometry derived in
+research/derivations/GST_non_split_singular_incidence_normal_chern_source_birth_2026-10-22.tex.
+The theorem checks the leading coefficient for EVERY p, not
+just fourfolds. The scheme-level Bertini, transverse-normal-jet,
+and canonical Chow comparison remain geometric inputs and
+are not silently formalized by a polynomial identity.
+-/
+
+/-- Universal all-rank normal-Chern nodal polynomial.
+The degree-zero Chern coefficient is 1 for an actual normal bundle. -/
+def normalNodalTopChernPolynomial {A : Type*} [CommRing A]
+    (p : ℕ) (chern : ℕ → A) (h : A) : Polynomial A :=
+  ∑ j ∈ Finset.range (p+1),
+    Polynomial.monomial (p-j) ((-1 : A)^j * h^(p-j) * chern j)
+
+/-- Its top m-coefficient equals the ample degree class h^p,
+independently of the normal bundle's positive-degree Chern data. -/
+theorem normalNodalTopChernPolynomial_leading
+    {A : Type*} [CommRing A]
+    (p : ℕ) (chern : ℕ → A) (h : A) (hc0 : chern 0 = 1) :
+    (normalNodalTopChernPolynomial p chern h).coeff p = h^p := by
+  classical
+  unfold normalNodalTopChernPolynomial
+  rw [Polynomial.finset_sum_coeff, Finset.sum_eq_single 0]
+  · simp [Polynomial.coeff_monomial, hc0]
+  · intro j hj hj0
+    have hjp : j ≤ p := by
+      have := Finset.mem_range.mp hj
+      omega
+    have hn : p-j ≠ p := by omega
+    simp [Polynomial.coeff_monomial, hn]
+  · intro hnot
+    exact False.elim (hnot (Finset.mem_range.mpr (by omega)))
+
+#check normalNodalTopChernPolynomial
+#check normalNodalTopChernPolynomial_leading
+#print axioms normalNodalTopChernPolynomial_leading
+
 /-- Complete Chern twist, not just its top term. The rational m
 stands for the integer twist parameter in geometric instances. -/
 def twistedChernClass {A : Type*} [CommRing A] [Algebra ℚ A]
