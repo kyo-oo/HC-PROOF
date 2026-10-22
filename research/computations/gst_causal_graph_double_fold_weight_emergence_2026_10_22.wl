@@ -101,7 +101,45 @@ triangleFaceResult={
   triD1.triD2==ConstantArray[0,{3,1}],
   MatrixRank[triD1],MatrixRank[triD2],
   3-MatrixRank[triD1]-MatrixRank[triD2]};
-{"AllOrderCount"->Length[allOrderChecks],
+
+(* Frobenius perturbation of the actual Dwork-type Calabi-Yau period.
+   The parameter rho has a repeated indicial root of multiplicity n.
+   The family L_n F(z,rho) = rho^n z^rho produces the entire
+   n-element logarithmic local solution basis, not just its first period. *)
+Clear[frobCoefficient,frobCoeffTests,frobRecTests,logJordan,logMonodromy,logChecks];
+frobCoefficient[n_Integer?Positive,k_Integer?NonNegative,r_]:=
+ Product[(n+1) Product[(n+1)(h-1+r)+q,{q,1,n}]/(h+r)^n,{h,1,k}];
+frobCoeffTests=Flatten[Table[
+ TrueQ[FullSimplify[frobCoefficient[n,k,0] ==
+   Factorial[(n+1)k]/Factorial[k]^(n+1)]],
+ {n,2,7},{k,0,5}]];
+frobRecTests=Flatten[Table[
+ TrueQ[FullSimplify[(k+rho)^n frobCoefficient[n,k,rho] -
+  (n+1) Product[(n+1)(k-1+rho)+q,{q,1,n}]
+  frobCoefficient[n,k-1,rho] == 0]],
+ {n,2,6},{k,1,5}]];
+logJordan[n_Integer?Positive]:=Table[If[j==i+1,1,0],
+ {i,1,n},{j,1,n}];
+(* Deliberately split off the exponent-zero term to avoid Wolfram
+   MatrixPower on a singular Jordan matrix at power 0. *)
+logMonodromy[n_Integer?Positive]:=IdentityMatrix[n]+
+ Sum[(2 Pi I)^k MatrixPower[logJordan[n],k]/Factorial[k],
+ {k,1,n-1}];
+logChecks=Table[{n,
+ TrueQ[FullSimplify[
+   MatrixPower[logMonodromy[n]-IdentityMatrix[n],n] ==
+   ConstantArray[0,{n,n}]]],
+ TrueQ[FullSimplify[
+   MatrixPower[logMonodromy[n]-IdentityMatrix[n],n-1] !=
+   ConstantArray[0,{n,n}]]]},
+ {n,2,7}];
+
+{"FrobeniusCoefficientCount"->Length[frobCoeffTests],
+ "FrobeniusCoefficientAllTrue"->And@@frobCoeffTests,
+ "FrobeniusRecurrenceCount"->Length[frobRecTests],
+ "FrobeniusRecurrenceAllTrue"->And@@frobRecTests,
+ "MonodromyNilpotencyChecks"->logChecks,
+ {"AllOrderCount"->Length[allOrderChecks],
  "AllOrderAllTrue"->And@@allOrderChecks,
  "FaceRankCount"->Length[rankFaceChecks],
  "FaceRankAllTrue"->And@@rankFaceChecks,
