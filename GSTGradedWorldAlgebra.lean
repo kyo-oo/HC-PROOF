@@ -818,6 +818,48 @@ theorem CausalHodgeCell.balancedCausalFold_purity
   rw [CausalHodgeCell.purityGap_signedCausalFold]
   ring
 
+/-- Existing genuine causal monodromy signature lowering and the new signed
+dimension birth commute whenever the original weight coordinates permit r
+untruncated lowering steps. This is an arithmetic compatibility law, not a
+claim that any geometric degeneration commutes with any algebraic Kummer map. -/
+theorem CausalHodgeCell.signedCausalFold_monodromy_commute
+    (a b r : ℕ) (x : CausalHodgeCell)
+    (hl : r ≤ x.leftWeight) (hr : r ≤ x.rightWeight) :
+    (x.signedCausalFold a b).monodromyLower r =
+      (x.monodromyLower r).signedCausalFold a b := by
+  cases x with
+  | mk k p q =>
+    simp only [CausalHodgeCell.signedCausalFold,
+      CausalHodgeCell.monodromyLower]
+    congr 1 <;> omega
+
+/-- Signed fold followed by monodromy exactly shifts the purity gap by
+open arity minus nodal arity minus twice the monodromy depth. -/
+theorem CausalHodgeCell.signedCausalFold_monodromy_purityGap
+    (a b r : ℕ) (x : CausalHodgeCell)
+    (hl : r ≤ x.leftWeight) (hr : r ≤ x.rightWeight) :
+    ((x.signedCausalFold a b).monodromyLower r).purityGap =
+      x.purityGap + (a : ℤ) - (b : ℤ) - 2 * (r : ℤ) := by
+  rw [CausalHodgeCell.signedCausalFold_monodromy_commute a b r x hl hr]
+  rw [CausalHodgeCell.purityGap_signedCausalFold]
+  rw [CausalHodgeCell.purityGap_monodromyLower r x hl hr]
+  ring
+
+/-- Geometric monodromy's graded shadow preserves the same original
+Hodge charge after any number of signed causal births. -/
+theorem CausalHodgeCell.signedCausalFold_monodromy_charge
+    (a b r : ℕ) (x : CausalHodgeCell)
+    (hl : r ≤ x.leftWeight) (hr : r ≤ x.rightWeight) :
+    ((x.signedCausalFold a b).monodromyLower r).charge = x.charge := by
+  rw [CausalHodgeCell.signedCausalFold_monodromy_commute a b r x hl hr]
+  rw [CausalHodgeCell.charge_signedCausalFold]
+  exact CausalHodgeCell.charge_monodromyLower r x hl hr
+
+#check CausalHodgeCell.signedCausalFold_monodromy_commute
+#check CausalHodgeCell.signedCausalFold_monodromy_purityGap
+#check CausalHodgeCell.signedCausalFold_monodromy_charge
+#print axioms CausalHodgeCell.signedCausalFold_monodromy_purityGap
+
 #check CausalHodgeCell.charge_signedCausalFold
 #check CausalHodgeCell.purityGap_signedCausalFold
 #check CausalHodgeCell.signedCausalFold_comp
