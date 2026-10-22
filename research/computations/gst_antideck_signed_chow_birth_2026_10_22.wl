@@ -23,7 +23,7 @@ signRows = Flatten[Table[
   Table[Module[{signed,total,expected,signs,vars},
     signs = code;
     vars = Table[z[j],{j,1,mm}];
-    signed = 2 Sum[signs[[j]] vars[[j]],{j,1,mm}];
+    signed = Sum[sheetPush[signs[[j]]] vars[[j]],{j,1,mm}];
     total = Total[vars];
     expected = 2 Sum[signs[[j]] vars[[j]],{j,1,mm}];
     {mm,code,TrueQ[Expand[signed-expected]==0]}],
@@ -33,7 +33,7 @@ extractRows = Flatten[Table[
   Module[{ss,vars,total,signed,component},
     ss=Table[If[j==index,1,-1],{j,1,mm}];
     vars=Table[z[j],{j,1,mm}];
-    total=Total[vars];signed=2 ss.vars;
+    total=Total[vars];signed=Sum[sheetPush[ss[[j]]] vars[[j]],{j,1,mm}];
     component=Expand[signed/4+total/2];
     {mm,index,TrueQ[Expand[component-vars[[index]]]==0]}],
   {mm,1,8},{index,1,mm}],1];
