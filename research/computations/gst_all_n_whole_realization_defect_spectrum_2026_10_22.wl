@@ -12,7 +12,7 @@ basePoly=Sum[z[p] t^p,{p,0,8}];
 (* Independent enumeration, without expanding a product of fold polys. *)
 directFold[n_Integer?NonNegative] :=
  Expand[Sum[basePoly t^Total[indices],
-  {indices,Tuples[Sequence@@(Range[0,#]& /@ Take[rankList,n])]}]];
+  {indices,Tuples[Range[0,#]& /@ Take[rankList,n]]}]];
 factorFold[n_Integer?NonNegative] :=
  Expand[basePoly Times@@(Sum[t^i,{i,0,#}]& /@ Take[rankList,n])];
 allDepth=Table[{n,
