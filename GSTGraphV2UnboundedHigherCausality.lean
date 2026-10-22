@@ -313,4 +313,70 @@ theorem AnchoredCausalTwoFillings.survivor_idempotent
 
 
 end HigherCausalCosmos
+
+/-! ## FULL FINITE CAUSAL 2-SKELETON: RELATIONS, NOT ONLY EDGE DELETION
+
+The higher-causal face argument extends to arbitrary linear combinations
+of genuine cellular 2-face boundaries, not only an index of isolated filled
+loops. This is the exact source-to-cohomology object of the geometric
+dual-complex calculation (simplicial normal-crossing realizations).
+The vectors are incidence chains with a certified d1 ∘ d2 = 0 law.
+-/
+
+namespace CausalFiniteIncidence
+
+/-- Finite realization of a higher-causal 2-skeleton.  The chain condition
+is a check on the independently specified genuine incidence operators;
+it does not assume any Hodge representative or a fixed cosmic dimension. -/
+structure TwoSkeleton (vertices edges faces : ℕ) where
+  boundaryOne :
+    (Fin edges → ℚ) →ₗ[ℚ] (Fin vertices → ℚ)
+  boundaryTwo :
+    (Fin faces → ℚ) →ₗ[ℚ] (Fin edges → ℚ)
+  boundary_squared : ∀ z : Fin faces → ℚ,
+    boundaryOne (boundaryTwo z) = 0
+
+/-- Every genuine higher face boundary is a degree-one cycle. -/
+theorem TwoSkeleton.face_range_le_cycle_kernel
+    {vertices edges faces : ℕ}
+    (K : TwoSkeleton vertices edges faces) :
+    LinearMap.range K.boundaryTwo ≤ LinearMap.ker K.boundaryOne := by
+  intro x hx
+  rcases hx with ⟨z, rfl⟩
+  exact K.boundary_squared z
+
+/-- The cohomologically surviving cycles are the KERNEL of incidence
+modulo the subspace of genuinely attached higher-causal 2-face relations. -/
+def TwoSkeleton.faceRelations
+    {vertices edges faces : ℕ}
+    (K : TwoSkeleton vertices edges faces) :
+    Submodule ℚ (LinearMap.ker K.boundaryOne) :=
+  (LinearMap.range K.boundaryTwo).comap
+    (Submodule.subtype (LinearMap.ker K.boundaryOne))
+
+/-- Actual causal first-homology quotient: loops can survive, cancel,
+or become homologous through higher-dimensional causal faces. -/
+def TwoSkeleton.firstHomology
+    {vertices edges faces : ℕ}
+    (K : TwoSkeleton vertices edges faces) :=
+  (LinearMap.ker K.boundaryOne) ⧸ K.faceRelations
+
+/-- Genuine higher-causal 2-face boundaries vanish already in the
+relations used to form the first-homology quotient. -/
+theorem TwoSkeleton.face_boundary_is_relation
+    {vertices edges faces : ℕ}
+    (K : TwoSkeleton vertices edges faces)
+    (z : Fin faces → ℚ) :
+    (⟨K.boundaryTwo z, K.boundary_squared z⟩ :
+      LinearMap.ker K.boundaryOne) ∈ K.faceRelations := by
+  change K.boundaryTwo z ∈ LinearMap.range K.boundaryTwo
+  exact ⟨z, rfl⟩
+
+#check TwoSkeleton.face_range_le_cycle_kernel
+#check TwoSkeleton.firstHomology
+#check TwoSkeleton.face_boundary_is_relation
+#print axioms TwoSkeleton.face_boundary_is_relation
+
+end CausalFiniteIncidence
+
 end GSTGraphV2UnboundedHigherCausality
