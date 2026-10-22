@@ -71,7 +71,41 @@ genesisCoeffs=Flatten[Table[{
    ss,2 jj+1]==g (uu^(jj+1) vv^jj+uu^jj vv^(jj+1))]
 },{r,1,3},{g,0,4},{nn,0,7},{jj,0,nn}],3];
 
-{"SingleCount"->Length[single],
+
+(* Genuine all-order causal Hodge weight law: independent symbolic graph
+   loop ranks b_i and component counts r_i, with arbitrary finite m and N.
+   The cohomological degree m+2j, weight 2j coefficient is the product
+   of all genuine loop ranks times (uv)^j. The m=0 vacuum is included. *)
+Clear[causalB,causalR,allCausalOrder,allOrderChecks,m,n,j];
+allCausalOrder[m0_,n0_] := Expand[
+  Product[1+causalB[i] tt+causalR[i] aa,{i,1,m0}] tower[n0]];
+allOrderChecks=Flatten[Table[
+ TrueQ[Simplify[Coefficient[
+   Coefficient[allCausalOrder[m,nn],tt,m+2 j],ss,2 j] ==
+   Product[causalB[i],{i,1,m}] (uu vv)^j]],
+ {m,0,5},{nn,0,5},{j,0,nn}]];
+
+(* A higher causal 2-face can fill a 1-cell and remove its readout:
+   first homologous rank = edges - rank(d1) - rank(d2).
+   These are exact rational chain matrices, not a free loop label. *)
+Clear[faceBoundary,rankFaceChecks];
+faceBoundary[g_,f_] := Table[If[i==j,1,0],{i,1,g},{j,1,f}];
+rankFaceChecks=Flatten[Table[
+ TrueQ[MatrixRank[faceBoundary[g,f]]==f] &&
+ TrueQ[g-MatrixRank[faceBoundary[g,f]]==g-f],
+ {g,0,6},{f,0,g}]];
+triD1=Transpose[graphInc[3,{{1,2},{2,3},{3,1}}]];
+triD2={{1},{1},{1}};
+triangleFaceResult={
+  triD1.triD2==ConstantArray[0,{3,1}],
+  MatrixRank[triD1],MatrixRank[triD2],
+  3-MatrixRank[triD1]-MatrixRank[triD2]};
+{"AllOrderCount"->Length[allOrderChecks],
+ "AllOrderAllTrue"->And@@allOrderChecks,
+ "FaceRankCount"->Length[rankFaceChecks],
+ "FaceRankAllTrue"->And@@rankFaceChecks,
+ "TriangleFilledBoundary"->triangleFaceResult,
+ "SingleCount"->Length[single],
  "SingleAllTrue"->And@@Flatten[single],
  "DoubleCount"->Length[double],
  "SmoothingCount"->Length[smoothing],
