@@ -55,6 +55,12 @@ higherCharacterRows=Flatten[Table[
  {uu,0,1},{vv,0,1}],1];
 singleDeckOdd=Table[{nn,(-1)^nn,OddQ[nn]&&(-1)^nn==-1},
  {nn,1,13,2}];
+(* Full rational Hodge target -> actual nonambient Q4 Chow-source coordinates.
+   Basis B={h^2, transferred anti-deck S} has exact Gram diag(2,8). *)
+basisGram={{2,0},{0,8}};
+hodgeTarget={alphaH,alphaS};
+hodgeCompilerQ4=Simplify[Inverse[basisGram].hodgeTarget];
+hodgeCompilerReturn=Simplify[basisGram.hodgeCompilerQ4-hodgeTarget];
 result=<|
  "branchCompatibility"->branchCompatible,
  "componentSignsCorrect"->componentASign&&componentBSign,
@@ -73,6 +79,8 @@ result=<|
  "cubicCharacterPass"->And@@higherCharacterRows[[All,7]],
  "oddSingleDeckCases"->Length[singleDeckOdd],
  "oddSingleDeckPass"->And@@singleDeckOdd[[All,3]],
+ "hodgeCompilerQ4"->hodgeCompilerQ4,
+ "hodgeCompilerExact"->hodgeCompilerReturn=={0,0},
  "quadricTransferredSource"->newVec
 |>;
 Print[result];result
