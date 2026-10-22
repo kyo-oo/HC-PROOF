@@ -201,6 +201,101 @@ untouched $X$.
 Apply mixed-Hodge Kunneth, taking the $H^0(X)$ summand.
 \end{proof}
 
+\section{Reverse fold: smoothing restores pure Hodge geometry and births a native diagonal}
+There is also a genuinely \emph{Hodge-preserving} outcome of
+changing the same realized topology.  Let $\Gamma$ be connected and
+all its normalization components rational, with cycle rank
+$g=\beta\geq1$. Choose a flat projective one-parameter smoothing
+$\mathscr C\to\Delta$ of the nodal curve $C_\Gamma$ whose general
+fiber $C_t$ is a smooth projective connected curve.
+The arithmetic genus formula for nodal curves gives
+$p_a(C_\Gamma)=\sum_v g(\widetilde C_v)+\beta=g$; constancy
+of arithmetic genus in the family gives $g(C_t)=g$.
+(The theorem below quantifies over such an actual smoothing, rather
+than declaring an abstract GST graph edge to be a smooth family.)
+
+\begin{theorem}[Actual smoothing and the pure causal Hodge birth]
+For every $N\geq0$, the smooth projective
+$S_{t,N}=C_t\times\mathbb P^N$ has
+\[
+\boxed{\quad
+\mathcal H(S_{t,N};t_0,u,v,s)=
+\bigl(1+g\,t_0s(u+v)+t_0^2s^2uv\bigr)
+\sum_{j=0}^{N}(t_0^2s^2uv)^j.
+\quad}\tag{4}
+\]
+The nodal central fiber instead has
+\[
+\mathcal H(C_\Gamma\times\mathbb P^N)
+=\bigl(1+g\,t_0+t_0^2s^2uv\bigr)
+\sum_{j=0}^{N}(t_0^2s^2uv)^j
+\]
+when $\Gamma$ has one irreducible normalization component;
+for general $r$ rational components its top-degree coefficient
+is $r\,t_0^2s^2uv$ as in (1).
+Consequently the smoothing creates a pure weight-$(2j+1)$
+$H^{2j+1}$ sector of dimension $2g$ and types
+$(j+1,j)$ and $(j,j+1)$, each multiplicity $g$.
+It does \emph{not} turn the former weight-$2j$ classes into
+degree-$(2j+1)$ Hodge classes by relabeling:
+the geometric topology and cohomology change.
+\end{theorem}
+\begin{proof}
+The smooth genus-$g$ curve has $H^0=\mathbb Q(0)$,
+$H^1$ pure of weight one and Hodge numbers
+$h^{1,0}=h^{0,1}=g$, and $H^2=\mathbb Q(-1)$.
+Apply Kunneth and the projective-space Tate decomposition;
+these prove (4) for all $N$ and all $j$.
+The central-fiber formula is (1), with the correct number of
+components $r$. For a nodal \emph{irreducible} rational curve
+$r=1$ and $g$ self-nodes, the displayed contrast is literal.
+\end{proof}
+
+\begin{theorem}[Native algebraic middle diagonal born in the smooth world]
+For each nonzero genus $g$ general fiber $C_t$, choose
+a rational point $o\in C_t(\mathbb C)$ and set
+\[
+ Z_t=[\Delta_{C_t}]-[C_t\times\{o\}]
+                   -[\{o\}\times C_t]
+ \in CH^1(C_t\times C_t)_{\mathbb Q}.
+\]
+Its genuine canonical Betti class is nonzero, rational and
+of pure type $(1,1)$, and lies in the
+$H^1(C_t)\otimes H^1(C_t)$ Kunneth summand.
+For every $0\leq j\leq N$ the actual algebraic cycle
+$Z_t\times h^j$ on
+$C_t\times C_t\times\mathbb P^N$
+has nonzero rational pure class of type $(j+1,j+1)$,
+weight and degree $2j+2$, hence $(\chi,\delta)=(0,0)$.
+\end{theorem}
+\begin{proof}
+The class of the diagonal acts as the identity on $H^1(C_t)$
+via the standard pull--cup--push correspondence.  The two
+fiber correction terms act trivially on $H^1$, so the
+$H^1\otimes H^1$ Kunneth component of $Z_t$ is the
+nonzero identity correspondence.  The remaining $H^0\otimes H^2$
+and $H^2\otimes H^0$ components are exactly removed by the
+two fiber cycles. Every term is a genuine algebraic divisor
+class on the smooth projective surface $C_t\times C_t$,
+so its canonical Betti class is rational and $(1,1)$.
+External cup product with the hyperplane cycle $h^j$
+proves the higher-dimensional statement.
+\end{proof}
+
+This supplies \emph{both directions} of the user's visual
+intuition on actual algebraic realizations:
+(a) irreversible nodal identification gives a nonpure
+charge-zero sector, while (b) smoothing and algebraic diagonal
+geometry gives a true rational algebraic diagonal sector.
+Neither operation produces a class representing an unknown
+rational Hodge target on the original unrelated variety $X$.
+
+A stateless exact Wolfram check of (4), its nodal comparison,
+and the pure Hodge-bidegree coefficients passed 144 parameter
+tuples ($g=1,\dots,4$, $N=0,\dots,7$, all $j\leq N$).
+This checks the stated polynomial identities, not
+the geometry of smoothing or the diagonal correspondence.
+
 \section{Independent charge leakage and exact interpretation}
 The two-channel invariant $(\chi,\delta)$ distinguishes:
 (i) holomorphic algebraic Tate folds: $(\chi,\delta)$ is preserved;
