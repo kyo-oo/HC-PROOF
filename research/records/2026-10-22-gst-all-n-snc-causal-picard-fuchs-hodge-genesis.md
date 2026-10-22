@@ -85,3 +85,36 @@ Exact Wolfram checks (all rerun from committed scripts) include:
 ## Evidence boundaries
 
 The **explicit projective geometry** and all-n mixed-Hodge/Picard–Fuchs arguments are written mathematical derivations with exact finite verification, not claims of Lean formalization of Deligne's mixed-Hodge spectral sequence or actual scheme-level deformation. The current Lean kernel proves its stated abstract GST tensor, incidence, dependent-multiplicity and quotient theorems under their exact types. The new original-X canonical algebraic cycle for a completely arbitrary prescribed rational Hodge class was **not** constructed by this route; this is not silently inferred from the diagonal on the special smoothing family.
+
+
+## Frobenius monodromy tower extension — all-dimensional causal Hodge genesis
+
+Base checkpoint: efcff75224085aa5a6356169cea0cfcb815b2ee8 on branch research/gpt6-native-point-primitive-span-20261017. The source is the actual Dwork-family order-n Picard-Fuchs differential equation, not a freely assigned arbitrary-X period operator.
+
+For every n≥2, define
+\[
+L_n=\theta^n-(n+1)z\prod_{r=1}^{n}((n+1)\theta+r),\qquad \theta=z\,d/dz,
+\]
+and \(a_0(\rho)=1\),
+\[
+a_k(\rho)=\prod_{h=1}^{k}
+\frac{(n+1)\prod_{r=1}^{n}((n+1)(h-1+\rho)+r)}
+{(h+\rho)^n}.
+\]
+Then \(F(z,\rho)=z^\rho\sum_{k\ge0}a_k(\rho)z^k\) obeys \(L_nF=\rho^n z^\rho\) by exact termwise cancellation. The functions \(\psi_j=\frac1{j!}\partial_\rho^jF|_{\rho=0}\), 0≤j<n, are linearly independent solutions of \(L_n\psi_j=0\) with independent logarithmic leading terms.
+
+**Monodromy theorem:** \(M\psi_j=\sum_{h=0}^j(2\pi i)^{j-h}\psi_h/(j-h)!\). Hence \(M=\exp(2\pi iJ_n)\), with one Jordan block of length n, and \(N=\log M\) satisfies \(N^n=0\), \(N^{n-1}\ne0\), \(\mathrm{rank}\,N^{n-1}=1\). This independently produces the numerical identity
+\[
+\dim_\mathbb Q\widetilde H^{n-1}(\partial\Delta^n,\mathbb Q)
+=\mathrm{rank}_\mathbb C N^{n-1}=1
+\]
+for the same concrete toric causal degeneration. This is a matching extremal rank theorem, not an unproved canonical isomorphism between limit mixed-Hodge data and top dual-complex cohomology. The differential equation governs its rank-n period subsystem, not automatically the entire primitive Betti cohomology.
+
+**Parameter:** the period uses z=(-t)^(n+1). One full loop in original deformation t induces n+1 z loops, so M_t=M_z^(n+1); nilpotence index and top rank persist.
+
+**Lean mathematics edited in place:** Graph V2 Unbounded Higher Causality now defines the all-n logarithmic lowering operation S and proves S^k a(i)=a(i+k), S^n=0 on n-supported rational coefficient vectors, and S^(n-1) nonzero on the top basis channel for n>0. This is the finite rational Jordan-chain model. The analytic identification with the actual Picard-Fuchs geometric period is established mathematically in the LaTeX, not Lean-formalized as an actual scheme-level analytic comparison. GitHub Actions run status must be checked for the exact new SHA before calling this code kernel-verified.
+
+**Executed exact Wolfram checks:** 36 factorial/hypergeometric coefficient checks (n=2..7,k=0..5), 25 symbolic Frobenius recurrence checks (n=2..6,k=1..5), 6 full nilpotent Jordan-matrix checks (n=2..7) all passed in the committed source. Previous all-order cohomological and 2-face coefficient checks also passed. Initial source execution encountered an association-brace syntax error; it was explicitly corrected and the full committed script then reran successfully.
+
+**Evidence label:** written complete mathematics for the specific Picard-Fuchs operator (self-reviewed) and finite exact Wolfram validation, plus formal Lean declarations whose kernel-verification status is separately tracked. No claim of arbitrary-original-X canonical Chow source existence.
+
