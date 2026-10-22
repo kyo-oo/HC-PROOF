@@ -103,3 +103,25 @@ has nonzero rational Betti class in H¹(C_t)⊗H¹(C_t), pure (1,1), because it 
 **Additional Wolfram evidence:** 144 parameter tuples (g=1..4, N=0..7, every j≤N), each with two exact polynomial identity checks, returned both TRUE. These checks validate the formulas, not the geometric smoothing existence theorem or the diagonal correspondence proof; those use their explicit standard geometric arguments. The total newly executed source checks are 84+324+144=552 parameter tuples.
 
 **Original-X limit remains unchanged:** X×C_t×C_t×P^N acquires true new diagonal Chow cycles, but a prescribed unknown rational Hodge class on the untouched original X has not been represented. No general-Hodge solution or counterexample is asserted.
+
+
+## 2026-10-22 in-place Lean upgrades: causal and Hodge genesis integration
+
+The owner's correction makes the research object one **causal fold which births both topology and Hodge data**, not a preexisting Hodge structure receiving a separate coordinate transformation.
+
+- **Higher causality:** Updated [GSTGraphV2UnboundedHigherCausality.lean](../../GSTGraphV2UnboundedHigherCausality.lean) in place. Certified distinct, nonidentity higher-causal 1-cell loop families obey zero signed incidence gradient and exact independent finite cochain reconstruction. These are 1-skeleton channels; higher 2-cell relations could remove some surviving H¹ and must not be ignored in a geometric realization.
+- **N-cohomology:** Updated [waves/GSTNCohomologyV3.lean](../../waves/GSTNCohomologyV3.lean) in place. The independent double-fold rational coordinates are indexed by pairs of N-hole channels with exact multiplicity (g,h) → gh and reconstruction/uniqueness.
+- **Graded Hodge:** Updated [GSTGradedWorldAlgebra.lean](../../GSTGradedWorldAlgebra.lean) in place. CausalHodgeCell derives weight and signed charge from its unlimited cosmic address while independently retaining actual born cohomological degree. The geometric nodal, doubled and smooth birth grading signatures and their arbitrary-depth Tate laws are kernel-checked.
+
+**Generative mathematical equation (G1/G2).** For a connected nodal graph with r rational normalization components and g=e-r+1 independent graph loops, set A=t²s²uv. Then the actual singular-projective and specified smooth-projective realizations have graded polynomials
+
+    G_fold = (1 + g t + r A) Sum_{j=0}^N A^j
+    G_smooth = (1 + g t s(u+v) + A) Sum_{j=0}^N A^j
+    G_smooth - G_fold =
+       [g t (s(u+v)-1) + (1-r) A] Sum_{j=0}^N A^j.
+
+The graph loop rank g is computed by the causal incidence. Smooth Hodge ranks follow from the genus of the *actual* smooth geometric realization. The updated [LaTeX derivation](../derivations/GST_causal_graph_double_fold_weight_emergence_2026-10-22.tex) includes the proof and precise scope.
+
+**GitHub Actions Lean verification:** [graded world run 39733509021](https://github.com/kyo-oo/HC-PROOF/actions/runs/39733509021) SUCCESS (commit 579e40b3d0e7ec250ba72b562da563899874ba41). [Higher causal repair run 39733964568](https://github.com/kyo-oo/HC-PROOF/actions/runs/39733964568) SUCCESS (commit eb9dcc463c82004db6af5d731fdc1747c9e557ad); the first compile caught omitted explicit cosmos arguments, which were repaired. [N-cohomology run 39733826306](https://github.com/kyo-oo/HC-PROOF/actions/runs/39733826306) SUCCESS (commit 4e1563f4b49135cf5ea713c1641eedd2c9fe08f6).
+
+**Wolfram:** Re-executed the updated [exact source](../computations/gst_causal_graph_double_fold_weight_emergence_2026_10_22.wl) from GitHub. All 1308 tested parameter tuples passed: 84 single-fold, 324 double-fold, 144 smoothing, 216 general equation identities, 540 general coefficient pairs, together with four graph incidence-rank fixtures. These are exact bounded checks. No new Mathlib theorem identifies this abstract causal loop type with an arbitrary smooth-projective original-X Chow class; that remains the independent universal theorem goal and must not be claimed from graded algebra alone.
