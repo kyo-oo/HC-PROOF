@@ -610,6 +610,82 @@ theorem logarithmicPowerCoefficients_unique
 #print axioms rationalCausalMonodromy_fixed_iff
 #print axioms rationalCausalMonodromy_fixed_exact
 
+
+/-! ## GST RECIPROCAL HIGHER-CAUSAL HOLOMONY: ORIGINAL-SECTOR RETURN
+
+A pair of independently present causal loops may carry inverse rational
+linear holonomies. Their twisted incidence boundaries cannot absorb a
+nonzero one-sided cohomology signal, even if their COMMON fixed subspace
+is trivial. This is a genuine all-finite-rank theorem in the causal
+linear-algebra model. Its geometric original-X interpretation is proved
+separately in the all-graph GST LaTeX derivation, using actual algebraic
+automorphisms and normalization MHS.
+-/
+
+/-- Boundary of two causal loops with reciprocal rational holonomies.
+The codomain consists of genuinely independent loop readout coordinates. -/
+def reciprocalCausalFoldBoundary {n : ℕ}
+    (T U : (Fin n → ℚ) →ₗ[ℚ] (Fin n → ℚ))
+    (v : Fin n → ℚ) :
+    (Fin n → ℚ) × (Fin n → ℚ) :=
+  (T v - v, U v - v)
+
+/-- The two-loop causal return reads the first channel, corrected by
+the first holonomy applied to the second channel. -/
+def reciprocalCausalFoldReturn {n : ℕ}
+    (T : (Fin n → ℚ) →ₗ[ℚ] (Fin n → ℚ))
+    (w : (Fin n → ℚ) × (Fin n → ℚ)) : Fin n → ℚ :=
+  w.1 + T w.2
+
+/-- Inject the full original rational signal into only the first loop. -/
+def reciprocalCausalFoldSection {n : ℕ}
+    (v : Fin n → ℚ) : (Fin n → ℚ) × (Fin n → ℚ) :=
+  (v, 0)
+
+/-- Reciprocal holonomies make every true incidence boundary
+invisible to the returned original source sector. -/
+theorem reciprocalCausalFold_return_boundary_zero {n : ℕ}
+    (T U : (Fin n → ℚ) →ₗ[ℚ] (Fin n → ℚ))
+    (hTU : ∀ v, T (U v) = v)
+    (v : Fin n → ℚ) :
+    reciprocalCausalFoldReturn T (reciprocalCausalFoldBoundary T U v) = 0 := by
+  change (T v - v) + T (U v - v) = 0
+  calc
+    (T v - v) + T (U v - v) =
+        (T v - v) + (T (U v) - T v) := by rw [map_sub]
+    _ = (T v - v) + (v - T v) := by rw [hTU v]
+    _ = 0 := by abel
+
+/-- Every original signal is reconstructed exactly by reciprocal
+causal return, without any invariant-vector assumption. -/
+theorem reciprocalCausalFold_return_section {n : ℕ}
+    (T : (Fin n → ℚ) →ₗ[ℚ] (Fin n → ℚ))
+    (v : Fin n → ℚ) :
+    reciprocalCausalFoldReturn T (reciprocalCausalFoldSection v) = v := by
+  simp [reciprocalCausalFoldReturn, reciprocalCausalFoldSection]
+
+/-- A nonzero original signal cannot lie in the twisted incidence
+boundary image. This certifies genuinely NEW higher-causal cokernel
+directions before any geometric Hodge/Chow realization is claimed. -/
+theorem reciprocalCausalFold_section_not_boundary {n : ℕ}
+    (T U : (Fin n → ℚ) →ₗ[ℚ] (Fin n → ℚ))
+    (hTU : ∀ v, T (U v) = v)
+    (v w : Fin n → ℚ)
+    (h : reciprocalCausalFoldSection v =
+      reciprocalCausalFoldBoundary T U w) : v = 0 := by
+  calc
+    v = reciprocalCausalFoldReturn T (reciprocalCausalFoldSection v) :=
+      (reciprocalCausalFold_return_section T v).symm
+    _ = reciprocalCausalFoldReturn T (reciprocalCausalFoldBoundary T U w) := by
+      rw [h]
+    _ = 0 := reciprocalCausalFold_return_boundary_zero T U hTU w
+
+#check reciprocalCausalFold_return_boundary_zero
+#check reciprocalCausalFold_return_section
+#check reciprocalCausalFold_section_not_boundary
+#print axioms reciprocalCausalFold_section_not_boundary
+
+
 end CausalFiniteIncidence
 
 end GSTGraphV2UnboundedHigherCausality
