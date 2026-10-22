@@ -39,11 +39,31 @@ prim={0,0,-1/dd,1};
 diagonal={0,0,0,1};
 rankChecks=Flatten[Table[{dd,mi,24+8dd mi^2>0,
                    (mi-1)^2>=0},{dd,1,12},{mi,1,20}],1];
+
+(* Thom-Porteous source: for rank n bundle V, c_p(V(tH)) is the
+   displayed binomial Chern formula. Check independent elementary-
+   symmetric definition before using the primitive-pairing identity. *)
+twistChernChecks=Flatten[Table[
+ Module[{lhs,rhs,vars},
+  vars=Table[roots[i],{i,1,rank}];
+  lhs=Expand[SymmetricPolynomial[degree,vars+ConstantArray[ti hh,rank]]];
+  rhs=Expand[Sum[Binomial[rank-j,degree-j](ti hh)^(degree-j)
+                       SymmetricPolynomial[j,vars],{j,0,degree}]];
+  {rank,degree,lhs===rhs}],
+ {rank,2,8},{degree,2,Min[rank,5]}],1];
+primitiveH2=FullSimplify[prim.gram.{2dd,2dd,2,0},dd>0];
+primitiveTangentSource=FullSimplify[
+ prim.gram.(24{1,1,0,0}+6ti^2{2dd,2dd,2,0}),dd>0];
+
 exactResult=<|
  "allArityRootChecks"->signedRootCheck,
  "allArityRootPassed"->And@@signedRootCheck[[All,2]],
  "HessianBlockChecks"->hessianCheck,
  "HessianPassed"->And@@hessianCheck[[All,2]],
+ "twistChernCases"->Length[twistChernChecks],
+ "twistChernPass"->And@@twistChernChecks[[All,3]],
+ "K3PrimitiveHyperplaneSquare"->primitiveH2,
+ "K3PrimitiveTangentSource"->primitiveTangentSource,
  "K3PrimitiveSquare"->FullSimplify[prim.gram.prim,dd>0],
  "K3PrimitiveDiagonalPeriod"->FullSimplify[prim.gram.diagonal,dd>0],
  "K3DiagonalSquare"->diagonal.gram.diagonal,
