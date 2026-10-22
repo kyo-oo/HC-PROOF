@@ -118,3 +118,18 @@ for the same concrete toric causal degeneration. This is a matching extremal ran
 
 **Evidence label:** written complete mathematics for the specific Picard-Fuchs operator (self-reviewed) and finite exact Wolfram validation, plus formal Lean declarations whose kernel-verification status is separately tracked. No claim of arbitrary-original-X canonical Chow source existence.
 
+
+
+## Causal monodromy selects global native sources — original cycle-class compatibility
+
+The latest derivation adds a source-geometry theorem beyond graded-Hodge diagnostics.
+
+For any smooth proper algebraic family f: X_total → S with a globally defined codimension-p relative Chow cycle Z, the canonical rational Betti classes cl_can(Z_s) constitute a single-valued horizontal Gauss-Manin local-system section. Hence they are fixed by geometric monodromy around each causal deformation loop. This requires a **genuine globally defined relative cycle** and uses actual cycle-class naturality; no abstract Hodge-to-Chow selector is assumed.
+
+For the rank-n Dwork Picard-Fuchs monodromy computed from the same toric causal boundary, M=exp(2πi J_n) is one Jordan block. The operator identity (M-I)=N U(N), U(0)=1, implies ker(M-I)=ker N, which has dimension exactly one. In the analytic Frobenius solution basis its fixed line is C ψ_0. For a geometric rational Betti subsystem *actually identified* with this rank-n period system or its dual, the complex span of images of global relative algebraic cycles inside that subsystem has dimension at most one.
+
+This is a **direct restriction on native Chow source transport supplied by causal-dimensional topology**. It does not prohibit algebraic cycles on a special fiber which fail to extend globally; nor does it prove a source for a prescribed arbitrary original-X rational Hodge class. In even middle degree only (n odd), this invariant monodromy subsystem is in degree 2p and can be compared with codimension-p Hodge classes.
+
+New Lean integration (existing Graph V2 Unbounded Higher Causality module) formalizes the rational Jordan model T=I+S, proves its fixed points are exactly coefficient vectors supported at index zero, and constructs the unique invariant vector for each scalar q in Q. This is not a claim that the Lean code already formalizes the analytic exponential or Gauss-Manin geometric comparison.
+
+Independent Wolfram exact tests on the committed all-in-one script: monodromy fixed-subspace rank n-1, nullity one and zeroth-channel fixed vector all returned TRUE for n=2 through 8. The script also reran all earlier checks successfully. The latest Graph V2 Lean job for this particular source commit must be checked before reporting kernel success.
