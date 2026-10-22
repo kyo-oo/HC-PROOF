@@ -12,9 +12,9 @@ breakPeriod=domega/.{tt->I,ss->2 I};
 hSurface=Expand[(1+u)^2 (1+v)^2];
 rows=Table[Module[{h,diag,misalignedSector,topCoefficient},
  h=Expand[hSurface Sum[(u v)^j,{j,0,dim-2}]];
- diag=Coefficient[Coefficient[h,u,dim-1],v,N-1];
- misalignedSector=Coefficient[Coefficient[h,u,dim],v,N-2];
- topCoefficient=Coefficient[Coefficient[h,u,N],v,N];
+ diag=Coefficient[Coefficient[h,u,dim-1],v,dim-1];
+ misalignedSector=Coefficient[Coefficient[h,u,dim],v,dim-2];
+ topCoefficient=Coefficient[Coefficient[h,u,dim],v,dim];
  {dim,diag,misalignedSector,topCoefficient,
   TrueQ[diag>=1 && misalignedSector==1 && topCoefficient==1 &&
     eqPeriod==0 && breakPeriod==I]}],{dim,2,40}];
