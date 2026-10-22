@@ -30,6 +30,15 @@ binomialChecks=Flatten[Table[
  {nn,pp,TrueQ[Coefficient[Expand[tripleD (1+t)^nn],t,pp] ==
    Sum[Binomial[nn,j] Coefficient[tripleD,t,pp-j],{j,0,Min[nn,pp]}]]},
  {nn,0,12},{pp,0,13}],1];
+(* Exact one-birth causal gradient and finite quantitative lower bound,
+   tested for every allowed p on the formal base defect 2t. *)
+gradientChecks=Table[{pp,
+ TrueQ[Coefficient[Expand[tripleD (1+t)],t,pp+1] -
+       Coefficient[tripleD,t,pp+1] == Coefficient[tripleD,t,pp]]},
+ {pp,0,6}];
+linearLowerBound=Table[{nn,
+ TrueQ[Coefficient[Expand[tripleD (1+t)^nn],t,2] >=
+   nn Coefficient[tripleD,t,1]]},{nn,0,12}];
 result=<|
  "towerCount"->Length[cases],
  "tupleEnumerationPass"->And@@cases[[All,2]],
@@ -39,6 +48,10 @@ result=<|
  "firstDefectInvariantPass"->And@@cases[[All,6]],
  "rankOneBinomialCases"->Length[binomialChecks],
  "rankOneBinomialPass"->And@@binomialChecks[[All,3]],
+ "gradientCases"->Length[gradientChecks],
+ "gradientPass"->And@@gradientChecks[[All,2]],
+ "lowerBoundCases"->Length[linearLowerBound],
+ "lowerBoundPass"->And@@linearLowerBound[[All,2]],
  "symbolicDefectAtGrades1to4"->Table[2 Binomial[n,j],{j,0,3}],
  "asymptoticLeadingCoefficients"->Table[Coefficient[Expand[Product[n-k,{k,0,j-1}]/Factorial[j]],n,j],{j,0,4}],
  "formalHypotheticalDefect"->tripleD,
