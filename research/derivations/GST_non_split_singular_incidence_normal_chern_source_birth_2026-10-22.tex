@@ -220,7 +220,9 @@ $T_X\otimes\mathcal O_X(tH)$ define a smooth
 codimension-two degeneracy surface $\Sigma_t$ with
 \[
  \boxed{[\Sigma_t]=c_2(T_X)+6t^2H^2
- =24(A+B)+6t^2H^2\quad\text{in }CH^2(X)_{\mathbb Q},}
+ \quad\text{in }CH^2(X)_{\mathbb Q},\qquad
+ \operatorname{cl}_X^{\mathrm{can}}([\Sigma_t])
+ =24(A+B)+6t^2H^2\quad\text{in }H^4(X,\mathbb Q).}
                                                             \tag{18}
 \]
 and exact original-$X$ primitive target coupling
@@ -235,11 +237,13 @@ This detector is constructed from $T_X$ and the polarization,
 \end{corollary}
 \begin{proof}
 $T_X=\mathrm{pr}_1^*T_S\oplus\mathrm{pr}_2^*T_S$,
-with $c_1(T_X)=0$ and $c_2(T_X)=24(A+B)$,
-using $c_2(T_S)=24[pt]$ in $CH^2(S)$ for a K3 surface
-(the latter Chow-level identity follows from the canonical
-degree-one Beauville--Voisin class; for our detection
-argument its true canonical Betti identity already suffices).
+with $c_1(T_X)=0$ and
+$\mathrm{cl}^{\mathrm{can}}_X(c_2(T_X))=24(A+B)$
+in rational Betti cohomology, since
+$\int_Sc_2(T_S)=24$ for a K3 surface.
+No equality of $c_2(T_S)$ with $24$ times an
+\emph{arbitrary} point is asserted in the Chow group:
+only canonical Betti classes are compared.
 Formula (17) at $n=4,p=2$ gives (18).
 The explicit primitive class $P_\Delta=\Delta-d^{-1}U$
 satisfies $P_\Delta H=0$, $P_\Delta A=P_\Delta B=1$.
