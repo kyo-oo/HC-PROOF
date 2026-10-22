@@ -1131,4 +1131,107 @@ identity-matrix term. The proof itself is the
 unbounded algebraic recurrence and logarithmic
 independence argument above, not a finite extrapolation.
 
+
+\section{Causal monodromy selects globally transported native algebraic Hodge sources}
+
+The emergent Hodge period is not the end of the causal story:
+global \emph{algebraic cycles} have a geometric constraint that
+can be read off from the same higher-causal monodromy.
+
+\begin{theorem}[Relative native cycle classes are causally invariant]
+Let $f:\mathscr X^\circ\to S^\circ$ be a smooth proper family
+of complex projective varieties over a connected complex base,
+and let $\mathscr Z\in CH^p(\mathscr X^\circ)_{\mathbb Q}$
+be a globally defined relative codimension-$p$ Chow cycle.
+For any basepoint $s$ its canonical rational Betti class
+\[
+ \alpha_s=\operatorname{cl}_{X_s}^{\rm can}
+   (\mathscr Z|_{X_s})\in H^{2p}(X_s,\mathbb Q)
+\]
+is invariant under the geometric Gauss--Manin monodromy:
+\[
+ \boxed{\quad T_\gamma(\alpha_s)=\alpha_s
+   \quad\text{for every }\gamma\in\pi_1(S^\circ,s).\quad}
+ \tag{23}
+\]
+\end{theorem}
+\begin{proof}
+The global cycle class $\operatorname{cl}_{\mathscr X^\circ}
+(\mathscr Z)\in H^{2p}(\mathscr X^\circ,\mathbb Q)$
+restricts to each smooth fiber's canonical cycle
+class, by naturality of algebraic cycle classes.
+Its restrictions define a locally constant section
+of the locally constant sheaf $R^{2p}f_*\mathbb Q$:
+locally trivialize the smooth proper family and
+observe that restricting the fixed global class
+is independent of the fiber point in a contractible
+base neighborhood. The local system section is
+single-valued globally, hence is invariant under
+analytic continuation along every loop.
+\end{proof}
+
+\begin{theorem}[Maximal causal Picard--Fuchs monodromy has precisely one
+invariant direction]
+For the rank-$n$ logarithmic Picard--Fuchs solution system
+of (18)--(21), the subspace invariant under a loop around
+the toric causal boundary is
+\[
+ \boxed{\quad\ker(M-I)=\ker\mathcal N
+   =\mathbb C\psi_0,\qquad\dim\ker(M-I)=1.\quad}
+ \tag{24}
+\]
+\end{theorem}
+\begin{proof}
+Write $\mathcal N=2\pi iJ_n$ in the Frobenius
+basis. Since
+\[
+ M-I=\exp(\mathcal N)-I
+   =\mathcal N\left(I+\frac{\mathcal N}{2!}
+         +\cdots+\frac{\mathcal N^{n-1}}{n!}\right),
+\]
+the second factor is invertible (a unipotent
+polynomial in nilpotent $\mathcal N$) and
+commutes with $\mathcal N$. Thus $\ker(M-I)
+=\ker\mathcal N$. By (20), $\mathcal N$ lowers
+$\psi_j$ to $2\pi i\psi_{j-1}$ for $j\ge1$,
+and kills $\psi_0$, so the kernel is
+exactly $\mathbb C\psi_0$.
+\end{proof}
+
+\begin{corollary}[Source selection in a certified geometric period factor]
+Suppose a monodromy-stable geometric rational Betti subsystem of a
+smooth family is \emph{identified by a supplied geometric comparison}
+with the rank-$n$ period local system above (or its dual).
+Then the complex span inside that subsystem of canonical
+classes of \emph{globally defined relative Chow cycles}
+has dimension at most one.
+This applies directly to degree $2p$ only when the subsystem
+is in that degree; in the Calabi--Yau middle degree $d=n-1$
+this requires $d=2p$.
+\end{corollary}
+\begin{proof}
+By (23), each global relative Chow class has fixed monodromy
+and hence belongs to $\ker(T-I)$.
+Under the supplied local-system identification,
+the fixed subspace has dimension one by (24).
+For the dual local system of a single unipotent
+Jordan block the same dimension statement holds.
+\end{proof}
+
+This is a \emph{native algebraic source restriction
+derived from actual causality}.
+It is neither a freely imposed Hodge label nor a
+proof that a fiberwise rational Hodge class not fixed by
+monodromy can never be algebraic: special-fiber Chow
+cycles need not extend as cycles over the entire
+punctured family. In particular, one must not
+replace \emph{global relative source} with
+\emph{arbitrary original-$X$ source}.
+The theorem isolates a concrete, falsifiable
+geometric source-birth mechanism: fiberwise
+algebraic classes not obtained by globally
+transported cycles are precisely the kind of
+extra sources a topology-changing GST operation
+would have to construct and compare canonically.
+
 \end{document}
