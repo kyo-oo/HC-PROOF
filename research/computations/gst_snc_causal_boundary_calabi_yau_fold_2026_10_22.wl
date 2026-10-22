@@ -47,7 +47,7 @@ deligneChecks=Table[
 
 {"HomologyBoundaryRanksAndSquaredZero"->homologyTable,
  "ChainTestsPassed"->And@@Flatten[homologyTable[[All,{4,5,7}]]],
- "AllTopH1"->And@@(homologyTable[[All,6]]==1),
+ "AllTopH1"->AllTrue[homologyTable[[All,6]],(#===1)&],
  "EulerSmoothCentralJump"->chiTable,
  "DeligneChecks"->deligneChecks,
  "DeligneChecksPassed"->And@@Flatten[deligneChecks[[All,{2,3}]]]}
