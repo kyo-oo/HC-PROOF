@@ -853,9 +853,8 @@ theorem ellipticAlignedDivisorCompiler_exact
   rcases h with ⟨hbe, hcd⟩
   subst e
   subst c
-  apply RationalEllipticFoldForm.ext <;>
-    simp [ellipticAlignedDivisorCompiler, ellipticDivisorBettiForm] <;>
-    ring
+  dsimp [ellipticAlignedDivisorCompiler, ellipticDivisorBettiForm]
+  congr 1 <;> ring
 
 /-- The genuine diagonal class of equal-marked elliptic factors. -/
 def ellipticDiagonalForm : RationalEllipticFoldForm where
