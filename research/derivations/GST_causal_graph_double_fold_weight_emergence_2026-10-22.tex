@@ -63,6 +63,110 @@ $(p+j)-(q+j)=p-q$ and $(w+2j)-(k+2j)=w-k$.
 Composition adds the shift indices.
 \end{proof}
 
+\section{GST CAUSAL HODGE GENESIS: topology and Hodge data are one fold output}
+The \emph{generative} construction is the datum
+\[
+\mathfrak F=(\Gamma,\mathcal R_\Gamma,\mathrm{mode},N).
+\]
+Here $\Gamma$ is a finite connected graph of certified causal
+identifications; $\mathcal R_\Gamma$ is its \emph{actual algebraic
+realization} as a projective nodal curve with rational normalization;
+$\mathrm{mode}$ selects the nodal fold itself or a specified smooth
+projective deformation of that realized world; and $N$ is any
+nonnegative Tate extension depth. None of $k,p,q,w$ is given as
+primitive data in this input. They are read off from the cohomology
+of the constructed world.
+
+Write $r=|V(\Gamma)|\ge1$, $e=|E(\Gamma)|$,
+$g=e-r+1$ and $A=t^2s^2uv$.
+The \textbf{GST causal Hodge genesis law} consists of the two outputs
+\[
+\boxed{\begin{aligned}
+\mathfrak G_N^{\rm fold}(\Gamma)&=
+ (1+g\,t+rA)\sum_{j=0}^N A^j,\\
+\mathfrak G_N^{\rm smooth}(\Gamma)&=
+ (1+g\,ts(u+v)+A)\sum_{j=0}^N A^j.
+\end{aligned}} \tag{G1}
+\]
+The second equation requires an \emph{actual} smoothing of the
+projective curve, not a formal substitution of Hodge labels.
+The full causal realization change is determined exactly by
+\[
+\boxed{
+\mathfrak G_N^{\rm smooth}-\mathfrak G_N^{\rm fold}
+  =[g\,t(s(u+v)-1)+(1-r)A]\sum_{j=0}^N A^j.
+} \tag{G2}
+\]
+For a one-component $g$-loop nodal curve ($r=1$), only the
+$g\,t(s(u+v)-1)$ term remains. This \emph{whole-world}
+transformation is not an endomorphism of a fixed smooth Hodge
+space: the causal node identifications and the deformation
+change the underlying topological realization, and the cohomology
+is computed anew.
+
+\begin{theorem}[Causal loop number forces Hodge genesis in all dimensions]
+Under the stated geometric realization and smoothing conditions, the
+same causal graph invariant $g=\dim_{\mathbb Q}\operatorname{coker}
+B_\Gamma$ has two different but causally related manifestations:
+\[
+\begin{aligned}
+&\operatorname{Gr}^W_{2j}H^{2j+1}
+ (C_\Gamma\times\mathbb P^N,\mathbb Q)
+ \cong\mathbb Q(-j)^g,\\
+&h^{j+1,j}(C_t\times\mathbb P^N)
+ =h^{j,j+1}(C_t\times\mathbb P^N)=g
+ \quad\text{in degree }2j+1
+\end{aligned}
+\]
+for every $0\le j\le N$. The first sector is mixed-Hodge
+weight $2j$; the second is the \emph{pure}, truly
+geometrically born Hodge sector at weight $2j+1$.
+The Hodge dimensions of the smooth world are thus
+\emph{outputs of the causal-graph topology and smoothing}
+rather than separately prescribed vector spaces.
+\end{theorem}
+\begin{proof}
+Graph incidence gives $\dim\operatorname{coker}B_\Gamma=g$;
+the normalization sequence identifies this with
+$H^1(C_\Gamma,\mathbb Q)$ of weight zero.
+The arithmetic genus of the nodal curve is $g$ by the
+dual-graph genus formula because its normalizations have genus zero.
+A projective flat smoothing therefore has smooth genus $g$,
+and consequently genuine $H^{1,0}$ and $H^{0,1}$ dimensions $g$.
+The projective bundle/Tate formula translates either conclusion
+through $j$ by degree $2j$ and bidegree $(j,j)$.
+Expanding the resulting cohomological generating functions gives
+(G1)--(G2).
+\end{proof}
+
+\paragraph{Why the older GST grading is insufficient by itself.}
+The cosmic diagonal $(j,j)$ and signed charge $\chi=0$
+describe the \emph{address} of a class, but the cohomology born
+from an actual causal fold has a second, independently emergent
+degree $k$. The derived pair
+\((\chi,\delta)=(p-q,p+q-k)\)
+can distinguish two fold histories of the same cosmic address.
+Crucially this extra index is \emph{calculated from a geometry},
+not imposed to keep Hodge theory artificially separate from GST.
+The companion Lean laws explicitly construct the nodal birth
+cells, the smooth left/right birth cells, and their unbounded
+Tate histories. The N-hole double tensor law models independent
+causal births without collapsing their multiplicities.
+
+\paragraph{Original-X integration criterion.}
+The immutable universal original-$X$ target is still:
+for each smooth projective complex $X$, $p$ and
+$\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)$,
+construct independently
+\(Z_\alpha\in CH^p(X)_{\mathbb Q}\)
+with \(\mathrm{cl}^{\rm can}_X(Z_\alpha)=\alpha\).
+The generative causal Hodge law supplies a \emph{new world and
+new geometric Hodge classes}. A further compatible Chow-return
+on the original $X$ must be \emph{constructed}, not postulated.
+The new theorem is an upstream fold law usable to analyze that
+possibility; it neither changes the universal target nor assumes it.
+\medskip
+
 \section{General causal-graph source birth, not a label change}
 Let $\Gamma$ be a finite connected undirected multigraph with
 $r\geq1$ vertices, $e$ edges (loops and parallel edges allowed), and
