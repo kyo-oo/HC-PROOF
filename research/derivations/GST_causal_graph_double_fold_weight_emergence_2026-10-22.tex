@@ -1525,4 +1525,118 @@ question now has an explicit, non-circular
 cycle-realization gate, not an assumed
 Hodge-to-Chow selector.
 
+
+\subsection{All-original-$X$ causal operator multiplication law}
+
+The preceding operator theorem admits an exact \emph{uniform
+original-$X$} extension, without assuming any algebraic
+representative of a Hodge class on $X$.
+Let $X$ be any smooth projective complex variety and
+fix a cohomological degree $a$ with finite rational Betti
+dimension
+$m=\dim_{\mathbb Q}H^a(X,\mathbb Q)$.
+For the independent auxiliary rank-$n$ Dwork
+local system $V_n$, write
+\[
+U_{X,n} = H^a(X,\mathbb Q)\otimes_{\mathbb Q}V_n,\qquad
+J_{X,n} = I_m\otimes J_n.
+\]
+If $m=0$ the statement reduces to the zero space.
+For every $m,n\ge 1$, the geometry of the product
+family with the fixed original $X$ gives the following exact
+cohomological causal amplification.
+
+\begin{theorem}[Original-$X$ causal monodromy commutant law]
+\[
+\boxed{
+\begin{aligned}
+\dim_{\mathbb Q}\ker J_{X,n} &=m,\\
+\operatorname{Cent}(J_{X,n})
+   &\cong M_m(\mathbb Q[J_n]),\\
+\dim_{\mathbb Q}\operatorname{Cent}(J_{X,n})
+   &=m^2n.
+\end{aligned}
+}\tag{C4}
+\]
+The genuine canonical algebraic diagonal
+$\Delta_{X\times Y_t}$ supplies an invariant
+correspondence acting as identity on the \emph{entire}
+rank-$mn$ tensor subsystem. This is a nonzero,
+full-rank original-$X$-uniform \emph{operator}
+realization of the causal dimension fold.
+\end{theorem}
+\begin{proof}
+Choose any rational basis of $H^a(X,\mathbb Q)$
+and write an endomorphism of $U_{X,n}$
+as an $m\times m$ block matrix with blocks
+$A_{ij}\in\operatorname{End}_{\mathbb Q}(V_n)$.
+The commutation equation with
+$I_m\otimes J_n$ is exactly
+$A_{ij}J_n=J_nA_{ij}$ for each pair $(i,j)$.
+The single-block centralizer theorem (C1) gives
+$A_{ij}\in\mathbb Q[J_n]$, with independent
+$n$ scalar parameters per block. Hence the
+centralizer has $m^2n$ rational dimensions.
+Since $\ker J_n$ has dimension one,
+$\ker (I_m\otimes J_n)$ has dimension $m$.
+For the geometric assertion, the relative
+diagonal is an actual cycle of codimension
+$\dim X+\dim Y_t$ on
+$(X\times Y_t)\times(X\times Y_t)$,
+and its canonical class acts by the identity
+under pull--cup--push, so it preserves
+every invariant Betti subsystem and has rank $mn$
+on the indicated tensor summand.
+\end{proof}
+
+\paragraph{Weight-filtration compatibilities inside the same causal birth.}
+On the limit mixed Hodge system the nilpotent
+logarithm has type $(-1,-1)$ after passing to the
+correct weight-graded pieces and satisfies
+\[
+N:\operatorname{Gr}^{W}_{w}V
+ \longrightarrow\operatorname{Gr}^{W}_{w-2}V(-1).
+\tag{C5}
+\]
+At the level of a born GST graded cell
+$(k,p,q)$ this is the exact compatible operation
+\[
+(k,p,q)\stackrel{N^r}{\longmapsto}(k,p-r,q-r),
+\qquad 0\le r\le\min(p,q).
+\tag{C6}
+\]
+Thus $k$ stays fixed, Hodge charge $p-q$ stays
+fixed, and the purity gap
+$(p+q)-k$ drops by precisely $2r$.
+By contrast, the previously verified Tate
+emergence fold sends $(k,p,q)$ to
+$(k+2j,p+j,q+j)$ and preserves the purity gap.
+These are two operators \emph{within one
+causally generated Hodge structure}, not an
+artificial dichotomy between GST and Hodge.
+The accompanying existing
+\texttt{GSTGradedWorldAlgebra.lean} is updated
+in place with \texttt{monodromyLower},
+\texttt{charge\_monodromyLower},
+\texttt{purityGap\_monodromyLower}, and
+\texttt{monodromyLower\_comp}.
+The abstract model does not assert a canonical
+limit-MHS type for an arbitrary un-realized GST world:
+that type comes from the actual proper degeneration.
+
+\paragraph{Algebraic-source precision.}
+The all-original-$X$ operator identity says
+that a \emph{single actual diagonal Chow source}
+has rank-$mn$ action; it does not say
+there are $m^2n$ independent algebraic
+correspondences. Algebraic correspondences form
+the subset satisfying genuine canonical Betti
+cycle-class and Hodge-morphism conditions
+(C3). In particular, an arbitrary prescribed
+$\alpha\in H^{p,p}(X,\mathbb Q)$ cannot be
+created from the identity operator without
+an actual one-legged Chow representative.
+This sharp separation follows \emph{inside}
+the causal-to-Hodge-to-cycle realization chain.
+
 \end{document}
