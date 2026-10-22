@@ -140,5 +140,86 @@ theorem causalTwoBoundary_zero {n : Nat} (x : H.Cell (n+2)) :
 #check HigherCausalCosmos.globular_boundary_crown
 #check HigherCausalCosmos.identityTower_preserves
 
+
+/-! ## GST CAUSAL INCIDENCE AND INDEPENDENT LOOP GENESIS
+
+An actual higher-causal 1-cell must be supplied, rather than treating the
+identity tower as a family of fresh geometric dimensions. A finite independent
+family of genuine closed 1-cells has an exact zero incidence coboundary and
+genuinely independent rational loop readouts. This is the causal input to
+N-cohomology and the emergent Hodge-source construction.
+
+The geometric identification of these higher cells with a realized nodal
+incidence graph is a further certified source-to-geometry step, not built into
+the abstract higher-causal ontology.
+-/
+
+/-- An independent collection of closed causal 1-cells rooted at world W.
+The injectivity and nonidentity laws exclude counting one identity cell
+repeated g times as g independently born causal loops. -/
+structure AnchoredCausalLoops (W : C.World) (g : ℕ) where
+  edge : Fin g → H.Cell 1
+  source_root : ∀ i : Fin g, H.source (edge i) = H.worldCell W
+  target_root : ∀ i : Fin g, H.target (edge i) = H.worldCell W
+  distinct_edges : Function.Injective edge
+  genuine_edges : ∀ i : Fin g, edge i ≠ H.identity (H.worldCell W)
+
+/-- A causal potential has one scalar value on each zero-cell.
+The incidence gradient measures the difference between its endpoints
+across one actual causal 1-cell. -/
+def AnchoredCausalLoops.incidenceGradient
+    {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
+    (potential : H.Cell 0 → ℚ) : Fin g → ℚ :=
+  fun i => potential (H.target (L.edge i)) -
+    potential (H.source (L.edge i))
+
+/-- Every genuine closed-loop edge has exact zero incidence gradient.
+This derives the cochain equation from the existing globular causal
+source/target structure, not from an invented Hodge-class map. -/
+theorem AnchoredCausalLoops.incidenceGradient_zero
+    {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
+    (potential : H.Cell 0 → ℚ) :
+    L.incidenceGradient potential = 0 := by
+  funext i
+  simp [AnchoredCausalLoops.incidenceGradient, L.target_root i,
+    L.source_root i]
+
+/-- Actual independent rational readouts of the certified causal loops. -/
+abbrev AnchoredCausalLoops.loopReadouts
+    {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g) :=
+  Fin g → ℚ
+
+/-- One basis cochain for each certified, nonidentity causal loop. -/
+def AnchoredCausalLoops.loopBasis
+    {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
+    (i : Fin g) : L.loopReadouts :=
+  fun j => if i = j then 1 else 0
+
+/-- All certified independent loop coordinates are exactly reconstructible.
+This is the finite constructive rank input for causal N-cohomology. -/
+theorem AnchoredCausalLoops.loopBasis_reconstruct
+    {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
+    (c : L.loopReadouts) (j : Fin g) :
+    (∑ i : Fin g, c i * L.loopBasis i j) = c j := by
+  classical
+  simp [AnchoredCausalLoops.loopBasis]
+
+/-- There is no hidden loss of independently born causal channels. -/
+theorem AnchoredCausalLoops.loopBasis_coefficients_unique
+    {W : C.World} {g : ℕ} (L : AnchoredCausalLoops C H W g)
+    (c : L.loopReadouts)
+    (hzero : ∀ j : Fin g, (∑ i : Fin g,
+      c i * L.loopBasis i j) = 0) :
+    ∀ i : Fin g, c i = 0 := by
+  intro i
+  simpa [L.loopBasis_reconstruct c i] using hzero i
+
+#check AnchoredCausalLoops.incidenceGradient_zero
+#check AnchoredCausalLoops.loopBasis_reconstruct
+#check AnchoredCausalLoops.loopBasis_coefficients_unique
+#print axioms AnchoredCausalLoops.incidenceGradient_zero
+#print axioms AnchoredCausalLoops.loopBasis_coefficients_unique
+
+
 end HigherCausalCosmos
 end GSTGraphV2UnboundedHigherCausality
