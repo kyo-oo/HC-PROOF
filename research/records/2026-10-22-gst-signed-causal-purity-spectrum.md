@@ -53,6 +53,12 @@ The expanded [LaTeX](../derivations/GST_signed_causal_purity_spectrum_2026-10-22
 
 A new canonical **topological residue decoder** is explicit: for Kummer base `w=z^m`, the normalized rational generator `lambda1=(1/m)[dlog(w)/(2pi i)]` pulls back to `[dlog(z)/(2pi i)]`; with further torus generators `lambda_i`, the positive folded class is `betaPlus_a(alpha)=alphaU cup lambda1 cup ... cup lambda_a`. Pullback through the finite etale cover followed by projection to top torus Kunneth degree returns `Theta_m(alpha) tensor Q(-a)`. Removing this **explicit Tate twist** and restricting along the original-X point insertion recovers alpha (or m alpha for p=0). This is a genuine whole-alpha cohomological left inverse, **not** a Chow-cycle constructor; the weight-twist firewall is essential.
 
+### Monodromy integration upgraded inside the existing GST law
+
+Beyond the initial green signature fold, the source was strengthened again. The existing `CausalHodgeCell.monodromyLower r` for `r<=min(leftWeight,rightWeight)` and the new `signedCausalFold a b` **commute on the actual current Lean types**, and their combined exact signature is `charge'=charge`, `purityGap'=purityGap+a-b-2r`. Exact symbolic Wolfram returned `commutator={0,0,0}`, charge difference `0`, and gap difference `a-b-2r`. This is a grade-level theorem, not an unverified claim of geometric family monodromy commutation. Added three existing-file declarations and `#print axioms` at source commit `49217682940d6179a71e14a3183d04d0c2e9a8bb`; workflow `39779744770` is revision-matched and needs actual result check.
+
+The earlier kernel compilation for `charge_signedCausalFold`, `purityGap_signedCausalFold`, `signedCausalFold_comp`, pure diagonal and balanced birth passed [GitHub Actions run 39778959643](https://github.com/kyo-oo/HC-PROOF/actions/runs/39778959643) at exact Lean source revision `611418a4ef5267248915b827d09967ab4afd4aa8`. An earlier run failed on an unsolved integer-cast normalization and was explicitly repaired, not misreported as green.
+
 ### Graded GST law in existing Lean module
 
 `CausalHodgeCell.signedCausalFold a b` sends `(k,p,q)->(k+a+b,p+a,q+a)`; its `charge` is unchanged and its `purityGap` changes by `a-b`. Includes compositional associativity, pure diagonal signature, arbitrary-target signed signature and balanced cancellation. The Lean declarations are an exact arithmetic/graded shadow, not a Lean formalization of all scheme/MHS geometry. Full mathematical source type and geometric realization are in the LaTeX artifact.
