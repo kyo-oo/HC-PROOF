@@ -524,4 +524,136 @@ case contains two exact comparisons. Finite computational
 verification remains distinct from the uniform mathematical
 proofs and kernel verification of the Lean declarations.
 
+
+\section{All-order GST causal emergence: dimensions and Hodge multiplicity born simultaneously}
+
+The user's spatial intuition has no privileged dimension two. A higher-order
+GST world birth can contain any finite number $m$ of independently
+realized causal-identification channels. Crucially, the \emph{actual
+cohomology and its Hodge/weight filtration} must be computed \emph{from}
+the resulting geometry, not chosen by an arbitrary Hodge-to-Chow map.
+
+Choose connected nodal curves $C_{\Gamma_i}$, $i=1,\ldots,m$,
+whose normalization consists of $r_i$ copies of $\mathbb P^1$,
+whose dual graph has incidence cycle rank
+$\beta_i=e_i-r_i+1$. Put
+\[
+ W_{m,N}=\prod_{i=1}^{m} C_{\Gamma_i}\times\mathbb P^N,
+ \qquad m,N\geq0.
+\]
+The empty product for $m=0$ is a point. This is a projective
+complex scheme of dimension $m+N$; for $m>0$ and actual nodes it
+is generally singular. Its entire rational graded mixed-Hodge
+polynomial is computed, not postulated:
+\[
+\boxed{\quad
+ \mathcal H_{m,N}(t,u,v,s)=
+   \left(\prod_{i=1}^{m}(1+\beta_i t+r_i t^2s^2uv)\right)
+   \sum_{j=0}^{N}(t^2s^2uv)^j.
+\quad} \tag{5}
+\]
+This is an \emph{all-order causal law}: it does not impose a
+maximum on the number of folded worlds or their emerged geometric
+dimension. The induced Hodge data come from the realization functor,
+the normalization exact sequence and K\"unneth.
+
+\begin{theorem}[Maximum causal purity deficit: Hodge genesis for every $m$]
+For each $m\geq0$, $N\geq0$ and $0\leq j\leq N$,
+\[
+\boxed{\quad
+\operatorname{Gr}^{W}_{2j}H^{m+2j}(W_{m,N},\mathbb Q)
+  \cong\mathbb Q(-j)^{\,\prod_{i=1}^{m}\beta_i}.
+\quad} \tag{6}
+\]
+In this summand the exact causal genesis signature is
+\[
+(k,p,q,w)=(m+2j,j,j,2j), \qquad
+\boxed{\chi=p-q=0,\quad \delta=w-k=-m.}  \tag{7}
+\]
+For $m>0$, the born classes are diagonal and rational but not
+pure of their cohomological degree. For $m=0$ this reduces to
+the genuine pure Tate class of $\mathbb P^N$.
+If any $\beta_i=0$, the maximal-deficit sector vanishes, as
+predicted by its \emph{actual} causal topology.
+\end{theorem}
+\begin{proof}
+For each nodal factor, the only nonzero rational cohomology
+groups are $H^0$ of degree/weight $(0,0)$,
+graph $H^1$ of degree/weight $(1,0)$ and
+$H^2$ of degree/weight $(2,2)$.
+Thus every nodal factor contributes a nonnegative purity
+deficit $k-w$ of at most one; the projective factor has
+deficit zero. Degree $m+2j$ with weight $2j$ requires
+total deficit exactly $m$, so \emph{every} one of the $m$
+nodal factors must contribute its graph $H^1$. The
+projective factor is then necessarily its degree-$2j$
+Tate class. Applying mixed-Hodge K\"unneth, the unique
+maximal-deficit piece is the product
+\[
+ \bigotimes_{i=1}^{m}H^1(\Gamma_i,\mathbb Q)
+    \otimes H^{2j}(\mathbb P^N,\mathbb Q),
+\]
+which is $\mathbb Q(-j)^{\prod_i\beta_i}$.
+For $m=0$, the empty tensor product is $\mathbb Q(0)$,
+and the same formula gives the standard Tate class.
+The weight/degree/charge signature follows directly.
+\end{proof}
+
+\paragraph{The higher-causal $2$-cell correction: not every edge loop survives.}
+The existing Lean \texttt{AnchoredCausalLoops} recognizes a family of
+distinct nonidentity closed causal $1$-cells. This is the
+correct \emph{candidate edge basis}, but its cardinality is not
+automatically the true first-cohomology rank when genuine
+higher-dimensional causal fillings are present.
+For a \emph{finite geometric cellular realization}
+with chain groups $C_2\xrightarrow{\partial_2} C_1
+\xrightarrow{\partial_1} C_0$, the globular/higher-causal
+coherence must yield $\partial_1\partial_2=0$, and
+the actual loop-space rank is
+\[
+\boxed{\quad
+ \dim_{\mathbb Q}H_1
+ =\dim C_1-\operatorname{rank}\partial_1
+           -\operatorname{rank}\partial_2.
+\quad} \tag{8}
+\]
+This formula holds because
+$H_1=\ker\partial_1/\operatorname{im}\partial_2$.
+When the cellular realization is an ordinary graph,
+$C_2=0$, giving the earlier incidence $\beta$.
+Adding genuine $2$-cell attachments can kill previously
+counted graph cycles; it must not be interpreted as
+new nodal-curve cohomology without a valid \emph{algebraic
+geometric} realization of that attachment. This is the
+higher-causal law needed to distinguish birth from
+homotopical cancellation at all dimensions.
+
+\paragraph{The rational algebraic geometry channel.}
+An actual smoothing of the nodal curve changes the
+weight-zero graph $H^1$ into a pure weight-one Hodge
+structure of a smooth genus-$g$ curve. On the
+smooth self-product, the explicitly constructed
+diagonal correspondence supplies a \emph{canonical}
+rational $(1,1)$ Chow class, rather than using an
+arbitrary linear Hodge projection. Thus the
+causal operation controls whether the geometry born
+at a fixed emerging cohomological degree is
+(i) pure with a genuine algebraic cycle,
+(ii) mixed with a nonzero purity gap, or
+(iii) annihilated by independently realized
+higher-dimensional causal relations.
+The law does not identify arbitrary GST higher cells
+with projective schemes: the realization is the
+critical typed source of the genuine Hodge structure.
+
+\paragraph{New Wolfram uniform discriminator.}
+The coefficient of
+$t^{m+2j}s^{2j}$ in (5) is
+$(\prod_i\beta_i)(uv)^j$.
+Exact symbolic checks passed all $126$ tuples
+$0\le m\le5$, $0\le N\le5$, $0\le j\le N$,
+with independent symbolic $\beta_i,r_i$.
+The argument above, rather than bounded testing,
+proves the equation for arbitrary finite $m,N$.
+
 \end{document}
