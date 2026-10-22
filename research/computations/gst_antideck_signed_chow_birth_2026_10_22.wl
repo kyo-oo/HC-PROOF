@@ -39,6 +39,14 @@ extractRows = Flatten[Table[
   {mm,1,8},{index,1,mm}],1];
 gram={{1,0},{0,1}};
 rVec={1,-1};newVec=-2 rVec;hVec={1,1};
+(* Exhaustive rational target-sensitive signed coupling: 780 period vectors
+   with entries -2,-1,0,1,2, length 1..4; every sign choice assessed. *)
+targetRows = Flatten[Table[
+ Table[Module[{optimal = Max[Table[2 ss.vv,
+       {ss, Tuples[{-1,1},mm]}]]},
+   {mm,vv,optimal===2 Total[Abs[vv]]}],
+  {vv,Tuples[{-2,-1,0,1,2},mm]}],
+ {mm,1,4}],1];
 result=<|
  "branchCompatibility"->branchCompatible,
  "componentSignsCorrect"->componentASign&&componentBSign,
@@ -50,6 +58,9 @@ result=<|
  "quadricPrimitiveHyperplanePair"->hVec.gram.rVec,
  "quadricPrimitiveSquare"->rVec.gram.rVec,
  "quadricTransferredSourceSquare"->newVec.gram.newVec,
+ "targetOptimizedCases"->Length[targetRows],
+ "targetOptimizedPass"->And@@targetRows[[All,3]],
+ "quadricTargetCouplingMax"->2 {1,-1}.{1,-1},
  "quadricTransferredSource"->newVec
 |>;
 Print[result];result
