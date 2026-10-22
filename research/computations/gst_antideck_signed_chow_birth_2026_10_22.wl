@@ -47,6 +47,14 @@ targetRows = Flatten[Table[
    {mm,vv,optimal===2 Total[Abs[vv]]}],
   {vv,Tuples[{-2,-1,0,1,2},mm]}],
  {mm,1,4}],1];
+(* All Z2xZ2 characters, including the first parity-valid cubic triple. *)
+higherCharacterRows=Flatten[Table[
+ Module[{c1=(-1)^uu,c2=(-1)^vv,c3=(-1)^(uu+vv)},
+  {uu,vv,c1,c2,c3,c1*c2*c3,
+   c1*c2*c3==1}],
+ {uu,0,1},{vv,0,1}],1];
+singleDeckOdd=Table[{nn,(-1)^nn,OddQ[nn]&&(-1)^nn==-1},
+ {nn,1,13,2}];
 result=<|
  "branchCompatibility"->branchCompatible,
  "componentSignsCorrect"->componentASign&&componentBSign,
@@ -61,6 +69,10 @@ result=<|
  "targetOptimizedCases"->Length[targetRows],
  "targetOptimizedPass"->And@@targetRows[[All,3]],
  "quadricTargetCouplingMax"->2 {1,-1}.{1,-1},
+ "cubicCharacterCases"->Length[higherCharacterRows],
+ "cubicCharacterPass"->And@@higherCharacterRows[[All,7]],
+ "oddSingleDeckCases"->Length[singleDeckOdd],
+ "oddSingleDeckPass"->And@@singleDeckOdd[[All,3]],
  "quadricTransferredSource"->newVec
 |>;
 Print[result];result
