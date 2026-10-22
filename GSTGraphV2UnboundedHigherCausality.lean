@@ -550,6 +550,60 @@ theorem causalFixedPeriodChannel_monodromy_invariant
       causalFixedPeriodChannel q i := by
   simp [rationalCausalMonodromy, causalFixedPeriodChannel]
 
+
+/-! ## CAUSAL MONODROMY INVARIANT CORRESPONDENCE OPERATORS
+
+The geometric Dwork period subsystem is a full n-dimensional Jordan tower.
+Its invariant VECTORS form one rational coefficient channel, but causal
+operators commuting with the monodromy are much richer. Each independent
+polynomial in the logarithmic lowering operation supplies a distinct
+monodromy-invariant endomorphism in the ABSTRACT rational Jordan model.
+The actual algebraic-diagonal cycle supplies the identity operator as
+a genuine Chow-correspondence realization; other powers do not
+automatically preserve the Hodge structure or arise from Chow cycles.
+-/
+
+/-- Two arbitrary causal logarithmic fold depths commute and compose as
+the sum of their depths, simultaneously for ALL input amplitudes. -/
+theorem logarithmicShiftPower_comp
+    (k l : ℕ) (a : ℕ → ℚ) (i : ℕ) :
+    logarithmicShiftPower k (logarithmicShiftPower l a) i =
+      logarithmicShiftPower (k + l) a i := by
+  rw [logarithmicShiftPower_apply, logarithmicShiftPower_apply,
+    logarithmicShiftPower_apply]
+  congr 1
+  omega
+
+/-- Every causal logarithmic shift is a genuine monodromy-equivariant
+operator. This follows from the existing, certified causal operator;
+no independent Hodge-to-Chow realization is inserted. -/
+theorem rationalCausalMonodromy_commutes_logarithmicPower
+    (k : ℕ) (a : ℕ → ℚ) (i : ℕ) :
+    rationalCausalMonodromy (logarithmicShiftPower k a) i =
+      logarithmicShiftPower k (rationalCausalMonodromy a) i := by
+  simp only [rationalCausalMonodromy, logarithmicShiftPower_apply]
+  congr 1
+  omega
+
+/-- Sharp ALL-N operator independence: if a rational polynomial
+combination of the first n logarithmic causal operators annihilates
+EVERY input at zero, every one of its n coefficients is zero.
+The test inputs are actual Kronecker causal channels, not a selected
+Hodge-to-Chow map. -/
+theorem logarithmicPowerCoefficients_unique
+    (n : ℕ) (c : Fin n → ℚ)
+    (hzero : ∀ a : ℕ → ℚ,
+      (∑ k : Fin n, c k * logarithmicShiftPower (k : ℕ) a 0) = 0) :
+    ∀ j : Fin n, c j = 0 := by
+  intro j
+  have hj := hzero (fun i => if i = (j : ℕ) then (1 : ℚ) else 0)
+  simpa [logarithmicShiftPower_apply] using hj
+
+#check logarithmicShiftPower_comp
+#check rationalCausalMonodromy_commutes_logarithmicPower
+#check logarithmicPowerCoefficients_unique
+#print axioms logarithmicPowerCoefficients_unique
+
 #check rationalCausalMonodromy_fixed_iff
 #check rationalCausalMonodromy_fixed_exact
 #check causalFixedPeriodChannel_monodromy_invariant
