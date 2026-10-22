@@ -56,7 +56,7 @@ edgeBirthChecks=Flatten[Table[
       actual===expected&&Total[actual]==1&&Times@@actual==0}
    ],{edge,missing}]
  ],{mask,0,2^Length[all]-1}]
- ],{nn,1,5}],3];
+ ],{nn,1,5}],2];
 result=<|
  "exteriorPeriod"->edgePeriod,
  "periodEqualsModuliDifference"->TrueQ[edgePeriod==ss-tt],
