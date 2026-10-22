@@ -59,6 +59,10 @@ Beyond the initial green signature fold, the source was strengthened again. The 
 
 The earlier kernel compilation for `charge_signedCausalFold`, `purityGap_signedCausalFold`, `signedCausalFold_comp`, pure diagonal and balanced birth passed [GitHub Actions run 39778959643](https://github.com/kyo-oo/HC-PROOF/actions/runs/39778959643) at exact Lean source revision `611418a4ef5267248915b827d09967ab4afd4aa8`. An earlier run failed on an unsolved integer-cast normalization and was explicitly repaired, not misreported as green.
 
+### Full arbitrary-X connectedness audit
+
+The mathematical proof has been strengthened to any **nonempty smooth projective original X, including disconnected X**. For a chosen point x0, let `e=c_x0^*` act on rational H0(X), the idempotent constant-self-map pullback. Cyclic symmetrization satisfies `s^*Theta_m(alpha)=(Id+(m-1)e)alpha`, for all codimensions, and exactly inverts via `J=Id-((m-1)/m)e`; on higher cohomology e vanishes. This corrects the scalar m shortcut when H0 has multiple components. The same J is induced by rational combinations of actual algebraic pullbacks on CH0 so the smooth-projective Chow return remains genuine. Stateless exact Wolfram verified 30/30 small rational idempotent and inverse matrices (component counts 1..5, fold arities 2..7), with no failures.
+
 ### Graded GST law in existing Lean module
 
 `CausalHodgeCell.signedCausalFold a b` sends `(k,p,q)->(k+a+b,p+a,q+a)`; its `charge` is unchanged and its `purityGap` changes by `a-b`. Includes compositional associativity, pure diagonal signature, arbitrary-target signed signature and balanced cancellation. The Lean declarations are an exact arithmetic/graded shadow, not a Lean formalization of all scheme/MHS geometry. Full mathematical source type and geometric realization are in the LaTeX artifact.
