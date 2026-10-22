@@ -254,6 +254,93 @@ theorem algebraicity_iff_two_split_causal_folds
           LinearMap.range P.cycleClass := by
             rw [P.hodge_comp]
 
+
+/-! ## DIMENSIONLESS GST: ARBITRARY FINITE-DEPTH CAUSAL FOLD TOWER
+
+These laws use each actual GeneralSpace path, not a sequence of chosen
+coordinate dimensions.  The source and target of each path are typed
+by a world trajectory.  Native and Hodge returns must be compatible
+with the same underlying cycle class map; the theorem neither assigns
+a complex dimension to a causal cell nor manufactures an algebraic
+representative from pure Hodge charge.
+-/
+
+/-- Entire Hodge state after n consecutive (possibly irreversible)
+dimensionless GST causal paths. It has no intrinsic dimension bound. -/
+def causalTowerHodgeState
+    (P : CyclePathRealization G N H)
+    (world : ℕ → G.Point)
+    (step : ∀ n : ℕ, G.Path (world n) (world (n + 1))) :
+    ℕ → H → H
+  | 0, alpha => alpha
+  | n + 1, alpha =>
+      P.hodgeTransport (step n) (causalTowerHodgeState P world step n alpha)
+
+/-- At every finite emergent causal depth, native algebraicity is
+reflected EXACTLY if each geometrically certified causal step has
+a genuine native/Betti left return. The source class is never chosen
+from an assumed Hodge-to-Chow inverse. -/
+theorem algebraicity_iff_any_finite_causal_tower
+    (P : CyclePathRealization G N H)
+    (world : ℕ → G.Point)
+    (step : ∀ n : ℕ, G.Path (world n) (world (n + 1)))
+    (nativeReturn : ∀ n : ℕ, N →ₗ[ℚ] N)
+    (hodgeReturn : ∀ n : ℕ, H →ₗ[ℚ] H)
+    (hReturnCompatible : ∀ (n : ℕ) (Z : N),
+      P.cycleClass (nativeReturn n Z) =
+        hodgeReturn n (P.cycleClass Z))
+    (hHodgeRetract : ∀ (n : ℕ) (alpha : H),
+      hodgeReturn n (P.hodgeTransport (step n) alpha) = alpha)
+    (alpha : H) (n : ℕ) :
+    alpha ∈ LinearMap.range P.cycleClass ↔
+      causalTowerHodgeState P world step n alpha ∈
+        LinearMap.range P.cycleClass := by
+  induction n with
+  | zero =>
+      simp only [causalTowerHodgeState]
+  | succ n ih =>
+      change alpha ∈ LinearMap.range P.cycleClass ↔
+        P.hodgeTransport (step n)
+          (causalTowerHodgeState P world step n alpha) ∈
+            LinearMap.range P.cycleClass
+      exact ih.trans
+        (algebraicity_iff_split_causal_fold P (step n)
+          (nativeReturn n) (hodgeReturn n)
+          (hReturnCompatible n) (hHodgeRetract n)
+          (causalTowerHodgeState P world step n alpha))
+
+/-- A rational Hodge direction missing from the native image
+cannot disappear at ANY FINITE causal depth, without imposing
+a geometric dimension cap or asserting that each arbitrary
+GST higher cell is itself a smooth projective variety. -/
+theorem missing_native_direction_persists_any_finite_causal_tower
+    (P : CyclePathRealization G N H)
+    (world : ℕ → G.Point)
+    (step : ∀ n : ℕ, G.Path (world n) (world (n + 1)))
+    (nativeReturn : ∀ n : ℕ, N →ₗ[ℚ] N)
+    (hodgeReturn : ∀ n : ℕ, H →ₗ[ℚ] H)
+    (hReturnCompatible : ∀ (n : ℕ) (Z : N),
+      P.cycleClass (nativeReturn n Z) =
+        hodgeReturn n (P.cycleClass Z))
+    (hHodgeRetract : ∀ (n : ℕ) (alpha : H),
+      hodgeReturn n (P.hodgeTransport (step n) alpha) = alpha)
+    (alpha : H)
+    (hMissing : alpha ∉ LinearMap.range P.cycleClass) :
+    ∀ n : ℕ,
+      causalTowerHodgeState P world step n alpha ∉
+        LinearMap.range P.cycleClass := by
+  intro n hFold
+  exact hMissing
+    ((algebraicity_iff_any_finite_causal_tower P world step
+        nativeReturn hodgeReturn hReturnCompatible hHodgeRetract
+        alpha n).mpr hFold)
+
+#check causalTowerHodgeState
+#check algebraicity_iff_any_finite_causal_tower
+#check missing_native_direction_persists_any_finite_causal_tower
+#print axioms algebraicity_iff_any_finite_causal_tower
+#print axioms missing_native_direction_persists_any_finite_causal_tower
+
 #check algebraicity_iff_split_causal_fold
 #check missing_native_direction_persists_split_causal_fold
 #check algebraicity_iff_two_split_causal_folds
