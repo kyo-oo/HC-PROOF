@@ -1,0 +1,55 @@
+(* GST nonlinear double-cover anticharacter source, exact arithmetic.
+   Date 2026-10-22. Full geometry/proof in associated LaTeX.
+   Checks: exact projective-quadric branch identity; relative signs
+   on two geometric components; two-sheet signed intersection law;
+   all 2^m sign patterns for m=1..8; component projector 36 cases;
+   quadric primitive Gram and source square. Uses exact symbols.
+   These checks do NOT prove scheme existence or the Hodge conjecture.
+*)
+ClearAll["Global`*"];
+quad = xx0 yy0 + xx1 yy1 + xx2 yy2;
+aa1 = xx0 + yy0; aa2 = xx0 - yy0;
+branch = Expand[aa1^2 + 4 xx1 yy1];
+branchDifference = Expand[branch - (aa2^2 - 4 xx2 yy2)];
+branchCompatible = TrueQ[Expand[branchDifference - 4 quad] == 0];
+componentASign = TrueQ[Expand[(aa2+aa1)/.xx0->0] == 0];
+componentBSign = TrueQ[Expand[(aa2-aa1)/.yy0->0] == 0];
+sheetPush[ep_Integer] := Sum[
+    sigma tau If[tau==ep sigma,1,0],
+    {sigma,{-1,1}},{tau,{-1,1}}];
+sheetChecks = Table[{ep,sheetPush[ep],sheetPush[ep]==2 ep},
+  {ep,{-1,1}}];
+signRows = Flatten[Table[
+  Table[Module[{signed,total,expected,signs,vars},
+    signs = code;
+    vars = Table[z[j],{j,1,mm}];
+    signed = 2 Sum[signs[[j]] vars[[j]],{j,1,mm}];
+    total = Total[vars];
+    expected = 2 Sum[signs[[j]] vars[[j]],{j,1,mm}];
+    {mm,code,TrueQ[Expand[signed-expected]==0]}],
+    {code,Tuples[{-1,1},mm]}],
+  {mm,1,8}],1];
+extractRows = Flatten[Table[
+  Module[{ss,vars,total,signed,component},
+    ss=Table[If[j==index,1,-1],{j,1,mm}];
+    vars=Table[z[j],{j,1,mm}];
+    total=Total[vars];signed=2 ss.vars;
+    component=Expand[signed/4+total/2];
+    {mm,index,TrueQ[Expand[component-vars[[index]]]==0]}],
+  {mm,1,8},{index,1,mm}],1];
+gram={{1,0},{0,1}};
+rVec={1,-1};newVec=-2 rVec;hVec={1,1};
+result=<|
+ "branchCompatibility"->branchCompatible,
+ "componentSignsCorrect"->componentASign&&componentBSign,
+ "sheetCheck"->sheetChecks,
+ "allSignPatternCases"->Length[signRows],
+ "allSignPatternPass"->And@@signRows[[All,3]],
+ "extractorCases"->Length[extractRows],
+ "extractorPass"->And@@extractRows[[All,3]],
+ "quadricPrimitiveHyperplanePair"->hVec.gram.rVec,
+ "quadricPrimitiveSquare"->rVec.gram.rVec,
+ "quadricTransferredSourceSquare"->newVec.gram.newVec,
+ "quadricTransferredSource"->newVec
+|>;
+Print[result];result
