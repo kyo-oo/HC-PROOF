@@ -198,6 +198,268 @@ nonzero residual. If all $\ell_j$ vanish for every tuple,
 Hodge algebraicity question is exactly whether this
 possible residual annihilator must vanish.
 
+
+\section{Higher codimension nonlinear anti-deck source with target-directed optimization}
+The original degree-two signed source is a codimension-two
+CHOW class. Multiplying it with genuinely algebraic
+Cartier divisors gives an ACTUAL arbitrary-codimension
+nonlinear construction that is still computed in original
+$X$ and is sensitive to a prescribed higher primitive
+target.
+
+\begin{theorem}[ALL original $X$, ALL codimensions $2\le p\le d$: true nonlinear geometric anti-character source return]
+Let $X$ be ANY smooth projective complex $d$-fold,
+let $2\le p\le d$, and choose two effective integral
+Cartier divisors $W_1,W_2$ whose intersection is
+proper, pure codimension two and reduced:
+\[
+ C=W_1\cap W_2=\bigcup_{j=1}^{m}C_j.
+\]
+Choose the finite algebraic double cover $f:\widetilde
+Y\to X$ and its two true signed algebraic
+divisor classes $\Delta_1,\Delta_2\in
+CH^1(\widetilde Y)_{\mathbb Q}$ by the original
+signed-incidence theorem, for ANY signs
+$\varepsilon_j\in\{\pm1\}$.
+For arbitrary actual algebraic Cartier divisors
+$H_3,\ldots,H_p$ on $X$, assume the relevant
+intersections are proper. Define
+\[
+ \boxed{
+ \mathcal S_{\varepsilon;H_3,\ldots,H_p}
+ =f_*\!\left(
+    \Delta_1\cdot\Delta_2
+    \cdot\prod_{i=3}^{p}f^*[H_i]
+       \right)\in CH^p(X)_{\mathbb Q}.}       \tag{12}
+\]
+Then the equality in genuine original-$X$ Chow is
+\[
+ \boxed{
+ \mathcal S_{\varepsilon;H_3,\ldots,H_p}
+ =2\sum_{j=1}^{m}\varepsilon_j
+       [C_j]\cdot\prod_{i=3}^{p}[H_i].
+ }                                           \tag{13}
+\]
+For an arbitrary prescribed rational $(p,p)$
+class $r_\alpha\in H^{2p}(X,\mathbb Q)$
+with $d\ge2p$, put
+\[
+ \lambda_j=(-1)^p
+  \int_X r_\alpha\cup\operatorname{cl}^{can}[C_j]
+       \cup\bigcup_{i=3}^{p}
+         \operatorname{cl}^{can}[H_i]
+       \cup h^{d-2p}\in\mathbb Q .
+\]
+Then an ACTUAL algebraic cover chosen FROM
+$r_\alpha$ by $\varepsilon_j=\operatorname{sgn}
+\lambda_j$ (choose $+1$ if zero) realizes
+\[
+ \boxed{
+ \max_\varepsilon (-1)^p
+  \int_X r_\alpha\cup
+       \operatorname{cl}^{can}
+         (\mathcal S_{\varepsilon;H_3,\ldots,H_p})
+       \cup h^{d-2p}
+       =2\sum_j|\lambda_j|.}                 \tag{14}
+\]
+All objects in (12)--(14) are constructed
+independently of a chosen original-$X$
+Chow preimage of $r_\alpha$. The maximum may
+be zero; nonzero coupling follows exactly
+when one independently constructed incidence
+component has nonzero period.
+\end{theorem}
+\begin{proof}
+The cover, signed divisors and original
+codimension-two CHOW identity are produced
+by the original theorem with arbitrary
+component signs. The proper-projection formula
+for actual rational Chow groups gives
+\[
+ f_*\left(\Delta_1\Delta_2
+              \prod_{i=3}^{p} f^*H_i\right)
+ =f_*(\Delta_1\Delta_2)
+                   \prod_{i=3}^{p} H_i.
+\]
+Substitute the signed source theorem
+$f_*(\Delta_1\Delta_2)=
+  2\sum_j\varepsilon_j[C_j]$.
+This proves (13) in actual Chow,
+and applying canonical Betti comparison proves
+the stated period formula. Each
+$\varepsilon_j$ may be set independently by
+the algebraic conductor sign interpolation
+of the first source theorem. Maximization
+termwise proves (14), and its chosen cover
+is an actual alpha-sensitive algebraic
+construction rather than a hypothetical
+source basis.
+\end{proof}
+
+\section{Multi-world character conservation and the obstruction to naive all-component interpolation}
+The original double-world can only push
+products with TRIVIAL total deck character
+to the original variety. This has an exact
+higher-codimension generalization and shows
+when simply adding more folded worlds cannot
+force arbitrary component coefficients.
+
+\begin{theorem}[Finite abelian GST world-charge conservation in original Chow]
+Let $X$ be any smooth projective complex variety,
+$f:Y\to X$ a projective finite-Galois generically
+finite map admitting a smooth equivariant
+resolution, with finite abelian deck group $G$.
+Let $\chi_i:G\to\mathbb C^\times$ be characters
+and let $\Delta_i\in CH^{q_i}(Y)_{\mathbb C}$
+be genuine algebraic eigenclasses:
+\[
+ g^*\Delta_i=\chi_i(g)\Delta_i
+       \quad\text{for every }g\in G.
+\]
+Set $p=\sum_i q_i$. Then
+\[
+ \boxed{
+  \left(\prod_i\chi_i\ne1\right)
+  \Longrightarrow
+  f_*\!\left(\prod_i\Delta_i\right)=0
+       \quad\text{in }CH^p(X)_{\mathbb C}.}  \tag{15}
+\]
+For a double-world $G=\mathbb Z/2$,
+an odd product of anti-deck eigenclasses
+has identically zero pushforward.
+For the biquadratic $(\mathbb Z/2)^2$
+with independent nontrivial characters
+$a,b$ and $ab$, a TRIPLE eigenproduct of
+types $(a,b,ab)$ is character-neutral,
+so (15) does not kill its original-$X$
+algebraic Chow output.
+\end{theorem}
+\begin{proof}
+Let $W=f_*\prod_i\Delta_i$.
+Because $f\circ g=f$, the proper Chow
+pushforward gives
+$W=f_*g^*(\prod_i\Delta_i)$
+for an equivariant finite cover of
+degree one on its automorphisms.
+The right side is
+$(\prod_i\chi_i(g))W$.
+If the total character is nontrivial,
+choose $g$ on which it is not $1$;
+over $\mathbb C$ this forces $W=0$.
+For the double group the nontrivial
+character has sign $-1$.
+For $(\mathbb Z/2)^2$, $a\cdot b\cdot ab=1$;
+the assertion of allowed parity does NOT
+by itself assert a nonzero Chow period.
+\end{proof}
+
+\begin{theorem}[All-original-$X$ obstruction to arbitrary higher-component signs when pairwise incidence is integral]
+Fix $p\ge3$ and actual effective integral
+Cartier divisors $W_1,\ldots,W_p$ on a smooth
+projective original $X$. Assume every
+pairwise scheme intersection $W_i\cap W_k$
+is reduced and INTEGRAL, and their full
+scheme intersection $C$ is reduced and
+pure codimension $p$ with irreducible
+components $C_j$. Let
+\[
+ t_a^2=F_a\qquad(a=1,\ldots,r)
+\]
+define a simultaneous $(\mathbb Z/2)^r$
+algebraic cover whose restriction to
+every $W_i$ is GENERICALLY split via
+chosen globally algebraic roots
+$A_{i,a}\in H^0(W_i,L_a|_{W_i})$,
+so $A_{i,a}^2=F_a|_{W_i}$ and every
+$A_{i,a}$ is nonzero at the generic point
+of every $C_j$.
+
+For ANY characters $\chi_1,\ldots,\chi_p$
+with $\prod_i\chi_i=1$,
+and their actual corresponding
+eigen-divisor classes
+$\Delta_{i,\chi_i}$ on the resolved cover,
+the pushforward's coefficient at
+EVERY generic $C_j$ is THE SAME
+character-dependent scalar $\kappa$:
+\[
+ \boxed{
+  f_*\Bigl(\prod_{i=1}^{p}
+                  \Delta_{i,\chi_i}\Bigr)
+     =\kappa\sum_j[C_j]
+     =\kappa[W_1]\cdots[W_p]
+        \quad\text{in } CH^p(X)_{\mathbb C}.} \tag{16}
+\]
+In particular, in the stated integral-pairwise
+class of covers, increasing the number of
+split unramified sign-worlds cannot isolate
+one higher-codimension component with
+independently chosen signs; the total
+original-$X$ class remains the FULL ambient
+Cartier intersection.
+This obstruction is specific to the
+split-root, generically unramified,
+pairwise-integral construction, not to
+all nonlinear GST source births.
+\end{theorem}
+\begin{proof}
+For each a and pair i,k, the two roots
+on the actual integral scheme $W_i\cap W_k$
+obey
+\[
+ (A_{i,a}-A_{k,a})(A_{i,a}+A_{k,a})=0
+\]
+as sections of $L_a^{\otimes2}$.
+Because the coordinate ring of any
+nonempty affine trivialization of an
+integral scheme has no zero divisors,
+and two distinct nonzero global
+sections cannot have zero product
+on an integral scheme, one entire
+factor vanishes: $A_{i,a}=
+s_{ik,a}A_{k,a}$ with
+$s_{ik,a}\in\{+1,-1\}$ CONSTANT
+across this WHOLE pairwise intersection.
+Choose $W_1$ as reference and use
+$s_{i1,a}$ for each $i,a$.
+These fixed relative root phases
+hold along EVERY full component $C_j$,
+since $C_j\subset W_i\cap W_1$.
+At a generic point of each $C_j$
+the cover is etale and completely split.
+The chosen eigen-divisor has the local
+orbit sum
+$\Delta_{i,\chi_i}=
+  \sum_{g\in G}\chi_i(g)^{-1}[D_{i,g}]$,
+and the components of the geometric
+intersection are indexed by
+a common lift $g\in G$. The local
+multiplicity is one because the
+scheme intersection is reduced.
+The root-phase of the $i$th chosen
+sheet relative to $W_1$ is the
+SAME fixed group element $s_i\in G$
+on each $C_j$. Therefore its coefficient
+at every C_j is
+\[
+ \left(\prod_i\chi_i(s_i)^{-1}\right)
+     \sum_{g\in G}
+           \left(\prod_i\chi_i(g)^{-1}\right)
+ =|G|\prod_i\chi_i(s_i)^{-1},
+\]
+which is independent of $j$ when
+$\prod_i\chi_i=1$.
+All other contributions push to
+codimension greater than p or vanish
+in $CH^p(X)$, since every generic
+$C_j$ is etale and regular in the
+resolved world.
+Finally the original reduced proper
+complete intersection has fundamental
+cycle $\sum_j[C_j]=[W_1]\cdots[W_p]$
+in genuine Chow, proving (16).
+\end{proof}
+
 \section{An explicit nonambient source: the smooth quadric fourfold}
 \begin{theorem}[Actual anti-times-anti birth of the quadric primitive]
 Let
