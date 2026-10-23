@@ -8,14 +8,15 @@ ClearAll["Global`*"];
    represent the same Betti/de Rham class iff their difference
    is an actual coboundary. This explicitly constructs u
    rather than inventing a Chow source. *)
-d0={{1,0},{0,1},{0,0}};
+d0={{1},{0},{0}};
 d1={{0,0,1},{0,0,0}};
 betti={2,3,0};
-u={7,-4};
+u={7};
 omega=betti+d0.u;
 deligneFinite=<|
- "cochainComplex"->TrueQ[d1.d0==ConstantArray[0,{2,2}]],
+ "cochainComplex"->TrueQ[d1.d0==ConstantArray[0,{2,1}]],
  "bothClosed"->TrueQ[d1.betti=={0,0}&&d1.omega=={0,0}],
+ "nonzeroRationalCohomologyClass"->TrueQ[betti[[2]]!=0],
  "exactComparison"->TrueQ[omega-betti==d0.u],
  "recoveredPrimitive"->TrueQ[LinearSolve[d0,omega-betti]==u]
 |>;
