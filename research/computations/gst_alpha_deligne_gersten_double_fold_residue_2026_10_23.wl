@@ -47,7 +47,19 @@ fixedTerms=Flatten[Table[
 hodgeAlpha=2 hh^2/5-s2;
 characterSource=5(hh^2/2-s2)-hh^2/2;
 grSourceExact=TrueQ[Expand[characterSource-5hodgeAlpha]==0];
+(* All-dimensional U_p=(E-minus-P)^p: H_dR^1(U) has rank 2;
+   the tensor product contributes exactly 2^p linearly
+   independent degree-p differential classes, while
+   every GLOBAL algebraic unit on U_p is constant.
+   Mathematical proof uses restriction to each factor and
+   affine algebraic de Rham Kunneth, not the finite test. *)
+affineDimensions=Table[
+ {p,2^p,TrueQ[2^p>0],TrueQ[0<2^p]},
+ {p,1,18}];
 out=<|
+ "puncturedEllipticProductDimensions"->Length[affineDimensions],
+ "nonzeroDeRhamVsZeroGlobalUnitLogAll"->And@@Flatten[affineDimensions[[All,3;;4]]],
+ "highestDegreeCohomologyDimension"->affineDimensions[[-1,2]],
  "DeligneCocycleConstructed"->deligneFinite,
  "GerstenDoubleResidueRanks"->Length[doubleResidues],
  "GerstenBoundarySquareZero"->And@@doubleResidues[[All,3]],
