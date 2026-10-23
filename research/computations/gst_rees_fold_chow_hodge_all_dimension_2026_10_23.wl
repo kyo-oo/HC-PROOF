@@ -58,7 +58,29 @@ sourceChecks=<|
  "HodgePrimitiveOrthogonality"->TrueQ[schubert[[4]]==0],
  "NonzeroPrimitivePairing"->TrueQ[schubert[[5]]==1/5]
 |>;
+(* Full CODIMENSION-TWO original-X/born-center Chow projectors.
+   In coordinates (a,z) of actual blowup Chow,
+   PiX and PiBorn are the geometric push-pull operators
+   b^* b_* and -j_* q^* q_* j^*, respectively. *)
+projOriginal={{1,0},{0,0}};
+projBorn={{0,0},{0,1}};
+fullChowProjectors=<|
+ "originalIdempotent"->TrueQ[projOriginal.projOriginal===projOriginal],
+ "bornIdempotent"->TrueQ[projBorn.projBorn===projBorn],
+ "mutualOrthogonality"->TrueQ[projOriginal.projBorn===ConstantArray[0,{2,2}]
+   &&projBorn.projOriginal===ConstantArray[0,{2,2}]],
+ "sumIsFullIdentity"->TrueQ[projOriginal+projBorn===IdentityMatrix[2]]
+|>;
+(* Exceptional-square relation on the actual exceptional
+   P(N) where zeta^2+c1(N) zeta+c2(N)=0.
+   Restrict both sides of E^2=-b^*[Z]+j_*q^*c1(N). *)
+lhsExceptionalRestrict=-cOne zz-cTwo;
+rhsExceptionalRestrict=-cTwo-zz cOne;
+exceptionalSquareRestrictionExact=TrueQ[
+ Expand[lhsExceptionalRestrict-rhsExceptionalRestrict]===0];
 result=<|
+ "fullCodimensionTwoChowProjectorPair"->fullChowProjectors,
+ "exceptionalSquareRestrictionExact"->exceptionalSquareRestrictionExact,
  "projectiveChowRelationCases"->Length[projectiveCases],
  "allProjectiveRelations"->And@@projectiveCases[[All,3]],
  "projectiveFailures"->Select[projectiveCases,Not[#[[3]]]&],
