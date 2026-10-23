@@ -296,6 +296,203 @@ construction rather than a hypothetical
 source basis.
 \end{proof}
 
+
+\section{All-codimension nonlinear flag-fold component birth by a final two-divisor cover}
+The previous codimension-$p$ projection formula (13)
+retains a class of the form $[C_j]\cdot H_3\cdots H_p$.
+There is a STRONGER strictly geometric operation:
+first pass into an actual smooth codimension-$(p-2)$
+algebraic FLAG, then perform the nonlinear signed
+two-divisor birth INSIDE that flag. The final components
+then have codimension $p$ in the ORIGINAL $X$ and
+receive INDEPENDENT character signs, rather than
+remaining trapped under a fixed ambient divisor product.
+
+\begin{theorem}[Any original $X$, any $2\le p\le\dim X$:
+a genuine algebraic flag-fold independently signs all components]
+Let $X$ be ANY smooth projective complex
+$d$-fold, $2\le p\le d$, and choose an
+ACTUAL smooth projective complete intersection
+\[
+  i:Y=V(s_3,\ldots,s_p)\hookrightarrow X,
+  \qquad \operatorname{codim}_X Y=p-2
+\]
+of actual algebraic hypersurfaces, with
+$Y$ connected and smooth.
+For $p=2$, take $Y=X$.
+Let $D_1,D_2$ be integral effective Cartier
+divisors on $Y$ with a proper REDUCED
+codimension-two scheme-theoretic intersection
+\[
+ C=D_1\cap D_2=\bigcup_{j=1}^{m}C_j,
+ \qquad C_j\subset X,\quad
+ \operatorname{codim}_X C_j=p .
+\]
+For ANY prescribed sign vector
+$\varepsilon\in\{+1,-1\}^{m}$, construct the
+ACTUAL branched double-world
+$f_\varepsilon:\widetilde Y_\varepsilon\to Y$
+and its two true anti-invariant divisors
+$\Delta_{1,\varepsilon}$ and
+$\Delta_{2,\varepsilon}$ by the genuine
+signed-incidence construction on the
+SMOOTH PROJECTIVE world $Y$.
+The resulting algebraic cycle on the SAME
+original X is
+\[
+ \boxed{
+ \mathcal F_\varepsilon=
+ i_* f_{\varepsilon*}
+       (\Delta_{1,\varepsilon}\cdot
+        \Delta_{2,\varepsilon})
+       =2\sum_{j=1}^{m}
+          \varepsilon_j[i(C_j)]
+       \in CH^p(X)_{\mathbb Q}.
+ }                                                     \tag{17}
+\]
+For any distinguished component $C_k$ the
+independently selectable sign with $\varepsilon_k=1$
+and $\varepsilon_j=-1$ for $j\ne k$ gives
+the ACTUAL original-X Chow identity
+\[
+ \boxed{
+ [C_k]=\tfrac14\mathcal F_{\varepsilon}
+              +\tfrac12\,i_*([D_1]\cdot[D_2])
+       \quad\text{in }CH^p(X)_{\mathbb Q}.
+ }                                                     \tag{18}
+\]
+No original-$X$ algebraic cycle is provided as a
+Hodge-target preimage in this construction;
+all source objects are cut out geometrically
+from actual divisor sections on the flag.
+
+For any prescribed rational $(p,p)$ class
+$r\in H^{2p}(X,\mathbb Q)$ with $2p\le d$
+and fixed ample $h$, define
+\[
+ \lambda_j=(-1)^p
+  \int_X r\,\mathrm{cl}^{can}_X[C_j]\,
+                    h^{d-2p}\in\mathbb Q .
+\]
+One ACTUAL sign-selected branched fold then
+attains the exact optimized pairing
+\[
+ \boxed{
+ \max_{\varepsilon}\,
+ (-1)^p\int_X r\,
+     \mathrm{cl}^{can}_X(\mathcal F_\varepsilon)
+               h^{d-2p}
+       =2\sum_{j=1}^{m}|\lambda_j|.
+ }                                                     \tag{19}
+\]
+The sign selection uses the prescribed $r$,
+but the period is strictly positive precisely
+if a component's canonical class is
+already detectable by $r$.
+\end{theorem}
+
+\begin{proof}
+The flag $Y$ is an actual smooth projective
+variety of dimension $d-p+2\ge2$.
+Its two integral divisors $D_1,D_2$ and
+their reduced proper intersection satisfy
+every hypothesis of the OCTOBER 22 original
+double-cover signed source theorem,
+including conductor-based independent
+interpolation of the generic sheet signs.
+Apply that theorem on $Y$ itself:
+\[
+  f_{\varepsilon*}
+   (\Delta_{1,\varepsilon}\Delta_{2,\varepsilon})
+     =2\sum_j\varepsilon_j[C_j]\in CH^2(Y)_{\mathbb Q}.
+\]
+The regular immersion $i$ has codimension
+$p-2$. Its ACTUAL proper Chow pushforward
+takes codimension-two cycles on Y to
+codimension-p cycles on X and commutes
+with the canonical Betti Gysin comparison.
+Pushing the preceding literal equality
+therefore gives (17), not merely a
+cohomological or numerical identity.
+
+Since $D_1$ and $D_2$ meet properly and
+their intersection is reduced, the
+scheme fundamental cycle is
+$[D_1]\cdot[D_2]=\sum_j[C_j]$
+in CH$^2(Y)$.
+For one component selected positively,
+(17) becomes
+$\mathcal F_\varepsilon=
+ 4[C_k]-2i_*([D_1][D_2])$.
+Rearrangement yields (18) in genuine
+original-X Chow. The target-directed
+optimization follows by canonical
+Betti naturality and maximizing each
+independently selectable $\varepsilon_j$.
+
+This precisely avoids the preceding
+pairwise-integral NO-GO for a simultaneous
+cover of ALL $W_i$ on X: the cover is
+constructed on a newly born, LOWER
+DIMENSIONAL flag Y, where the final
+pairwise intersection D1∩D2 is
+REDUCIBLE even if pairwise intersections
+of the corresponding original-X
+hypersurfaces were integral.
+It is NOT necessary to split the roots
+on all p original divisors at once.
+\end{proof}
+
+\begin{corollary}[Exact original-X component spectral involution on a lower-dimensional GST world]
+Keep the hypotheses of the flag-fold theorem.
+For every sign choice, the actual
+normalization of the reduced final
+incidence $\nu:\coprod_j\widetilde C_j\to Y$
+has a finite deck-sign character
+idempotent which pushes to an
+original-X coherent-sheaf K0 class
+$\Xi_\varepsilon$ with
+\[
+ \boxed{
+ \operatorname{ch}_p^{CH}(\Xi_\varepsilon)
+ =\sum_j\varepsilon_j[C_j]
+ =\tfrac12\mathcal F_\varepsilon
+ \quad\text{in }CH^p(X)_{\mathbb Q}.
+ }                                                     \tag{20}
+\]
+Thus TWO DIFFERENT authentic algebro-geometric
+operations produce precisely the SAME
+signed original-$X$ codimension-p
+Chow source: (a) the nonlinear branched
+two-divisor fold over the lower-dimensional
+flag followed by proper Chow pushforward,
+and (b) normalization-spectrum finite
+idempotent and coherent algebraic K0
+Chern source over X.
+
+The equality is a genuine class identity
+for EVERY realizable final incidence,
+not a claim that the union of such classes
+already contains arbitrary higher-primitive
+rational Hodge targets.
+\end{corollary}
+\begin{proof}
+Apply the exact all-codimension normalization
+spectral source theorem of the previously
+verified \texttt{GST\_original\_X\_excess\_component\_geometry\_2026-10-21.tex}
+to the pure reduced codimension-p incidence
+$C=\bigcup C_j$ on X.
+Its signed finite normalization K0 class
+has actual pth rational Chow Chern character
+$\sum_j\varepsilon_j[C_j]$.
+Equation (17) identifies this with
+$\mathcal F_\varepsilon/2$.
+Both use actual algebraic coherent
+sheaves/projective resolutions; no
+abstract Hodge-to-Chow map is supplied.
+\end{proof}
+
+
 \section{Multi-world character conservation and the obstruction to naive all-component interpolation}
 The original double-world can only push
 products with TRIVIAL total deck character
