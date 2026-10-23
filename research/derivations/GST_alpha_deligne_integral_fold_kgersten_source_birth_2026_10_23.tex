@@ -2661,6 +2661,227 @@ does not automatically create
 a valid algebraic Chow source.
 \end{proof}
 
+
+\begin{theorem}[Nonlinear spectral square source from an actual resolved double-world: TRUE original-$X$ codimension-two Chow construction]
+Let $X$ be ANY smooth projective
+complex original variety with
+$\dim X\ge2$, let $q:J\to X$
+be its smooth affine GST fold,
+and let $Q\in\operatorname{Mat}_2
+\Gamma(J,\mathcal O_J)$ be ANY
+regular algebraic matrix whose
+discriminant
+\[
+ D=(\operatorname{Tr}Q)^2-4\det Q
+\]
+is nonzero and nonsquare in the
+function field $\mathbb C(J)$.
+It may be chosen from a prescribed
+Hodge target by taking a genuinely
+algebraic polynomial matrix made
+from that target's previously
+constructed regular differential
+or its approximate holomorphic
+spectral matrices, without ever
+supplying a target Chow cycle.
+
+Let $T\to J$ be the actual
+finite degree-two spectral cover
+obtained by adjoining $t$ with
+$t^2=D$. Take the normalization
+followed by an ACTUAL
+equivariant smooth algebraic
+resolution $\rho:\widetilde T\to T$
+and denote by
+$\pi:\widetilde T\to J$
+the proper composite map.
+Over the true finite etale locus
+$U=\{D\ne0\}\subset J$, let
+$L_\pm$ be the ACTUAL algebraic
+rank-one spectral eigensheaves
+from
+\[
+ E_\pm=\tfrac12
+  \left(I\pm
+       \frac{2Q-(\operatorname{Tr}Q)I}{t}\right).
+\]
+Choose an algebraic extension
+$\bar L_+$ of $L_+$ to an ACTUAL
+line bundle on smooth $\widetilde T$,
+choose its deck transform
+$\bar L_-=\sigma^*\bar L_+$,
+and form the genuine algebraic
+virtual $K_0$ source
+\[
+ \Delta_Q=[\bar L_+]-[\bar L_-]
+            \in K_0(\widetilde T).
+\]
+Then the LINEAR source return
+vanishes in genuine $G_0(J)$:
+\[
+ \boxed{\pi_*(\Delta_Q)=0.}                \tag{65}
+\]
+But the nonlinear square
+$\Delta_Q^{\otimes2}$ is invariant
+under the deck involution and
+defines an ACTUAL original-$X$
+codimension-two rational
+Chow candidate
+\[
+ \boxed{
+ Z_Q=(q^*)^{-1}
+    \operatorname{ch}^{CH}_2
+       \bigl(\pi_*(\Delta_Q^{\otimes2})\bigr)
+      \in CH^2(X)_{\mathbb Q}.}           \tag{66}
+\]
+Its exact actual Chow formula is
+\[
+ \boxed{
+ q^*Z_Q=
+   \pi_*\bigl(
+      c_1^{CH}(\bar L_+)
+        -c_1^{CH}(\bar L_-)
+        \bigr)^2
+        \quad\text{in }CH^2(J)_{\mathbb Q}.
+ }                                       \tag{67}
+\]
+This is the precise all-original-$X$
+nonlinear spectral analogue of
+the October 22 double-world
+anti-times-anti construction:
+an actual algebraic cover,
+its genuine eigensheaves,
+and its actual original-X
+CHOW return are built from
+REGULAR polynomial geometry.
+A target equality
+$\operatorname{cl}^{can}_X(Z_Q)
+=\alpha$ is not asserted
+without a separate exact
+canonical period computation.
+In particular the linear
+invariance obstruction (65)
+does not prevent a nonzero
+quadratic source in general.
+
+On the original quadric
+$J=Q=\{xy+z^2=1\}$ itself,
+$CH^2(Q)_{\mathbb Q}=0$,
+so ALL such quadratic
+spectral returns to THAT base
+must vanish in codimension two.
+This is a genuine source-type
+countertest, not a universal
+vanishing claim on arbitrary X.
+\end{theorem}
+\begin{proof}
+Since D is nonzero and nonsquare
+over the function field, the
+actual quadratic algebra defines
+a degree-two integral cover of J.
+On the étale locus U, t is
+invertible and
+\[
+ (2Q-(\operatorname{Tr}Q)I)^2
+   = D I
+\]
+by Cayley--Hamilton for a
+two-by-two matrix. Thus the E_pm
+are actual regular algebraic
+idempotents on the double cover
+over U, of rank one; their images
+are true algebraic line bundles
+exchanged by the deck map.
+Equivariant resolution in
+characteristic zero gives smooth
+$\widetilde T$ with an algebraic
+involution. As the missing
+locus has divisor support,
+any algebraic line bundle on
+the regular étale open extends
+to an algebraic line bundle on
+smooth $\widetilde T$: take the
+closure of a Weil divisor
+representative, which is
+Cartier on the smooth resolution.
+Take the conjugate extension
+by the involution.
+
+Proper functoriality of
+pushforward in coherent G-theory
+and $\pi\circ\sigma=\pi$ gives
+$\pi_*[\bar L_-]=
+  \pi_*[\bar L_+]$;
+hence the linear K/G source
+difference vanishes INTEGRALLY,
+establishing (65). The algebraic
+K-class $\Delta_Q$ has VIRTUAL
+RANK ZERO, and its square is
+invariant under sigma. Its
+proper coherent pushforward
+lies in $G_0(J)=K_0(J)$ because
+J is smooth, so the
+degree-two rational Chow
+Chern character and original-X
+Jouanolou inverse are ACTUAL
+well-typed operations.
+This constructs (66).
+
+Write $a=c_1^{CH}(\bar L_+)$
+and $b=c_1^{CH}(\bar L_-)$.
+The total rational Chow
+Chern character is
+\[
+ \operatorname{ch}^{CH}(\Delta_Q)
+   =e^a-e^b=(a-b)+O(CH^2),
+\]
+hence
+$\operatorname{ch}(\Delta_Q^{\otimes2})
+=(e^a-e^b)^2$ has CH degrees
+ZERO and ONE identically zero,
+and degree TWO equal to
+$(a-b)^2$.
+Apply actual Grothendieck--
+Riemann--Roch for proper
+$\pi:\widetilde T\to J$
+between smooth algebraic schemes:
+\[
+ \operatorname{ch}(\pi_*D^2)
+       \operatorname{td}(T_J)
+  =\pi_*\bigl(
+       \operatorname{ch}(D^2)
+       \operatorname{td}(T_{\widetilde T})
+          \bigr).
+\]
+Since $\pi$ has relative
+dimension zero and the
+degree zero and one parts of
+$\operatorname{ch}(D^2)$ vanish,
+the TODD correction contributes
+nothing in codimension two.
+Therefore the degree-two
+identity is EXACTLY
+$\operatorname{ch}^{CH}_2
+        (\pi_*D^2)=\pi_*(a-b)^2$.
+This proves (67) in
+genuine rational CHOW, not
+just a de Rham or numerical
+equality.
+
+On Q the actual affine-line
+torsor $Q\to\mathbb P^1$
+gives
+$CH^2(Q)\cong CH^2(\mathbb P^1)=0$.
+Thus no codimension-two
+original-Q Chow class arises
+from (66), regardless of how
+nontrivial the resolved
+spectral cover geometry is.
+The general original-X
+construction is not asserted
+to vanish.
+\end{proof}
+
 \begin{theorem}[An actual two-sheet polynomial spectral fold with MONODROMY, no algebraic sheet selector, and vanishing linear anti-deck return]
 Return to the SAME TRUE affine GST quadric
 $J=Q=\operatorname{Spec}
