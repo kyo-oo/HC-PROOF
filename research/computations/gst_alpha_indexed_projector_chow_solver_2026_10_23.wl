@@ -21,7 +21,7 @@ rationalSourceSolve[cols_List,target_List]:=Module[
    witness=witness/(witness.target);
    <|"status"->"MISSING_SOURCE",
      "dualWitness"->witness,
-     "annihilatesExistingSources"->TrueQ[And@@(PossibleZeroQ/@(mat//Transpose).witness)],
+     "annihilatesExistingSources"->And@@(PossibleZeroQ /@ (Transpose[mat].witness)),
      "pairsWithTarget"->witness.target,
      "rank"->rank|>
  ]
@@ -44,11 +44,11 @@ dualPgl=dual.pgl;
    incidence section s=sum_j ell_j x_j. In every n,
    A^2=s A and tr(A)=s. Seven exact independent checks. *)
 polyChecks=Table[
- Module[{xv=Array[x,n],hv=Array[ell,n],A,s,z},
-   A=Outer[Times,xv,hv];s=hv.xv;
-   z=Map[Together,A.A-s A,{2}];
+ Module[{xv=Array[x,n],hv=Array[ell,n],numerator,s,z},
+   numerator=Outer[Times,xv,hv];s=hv.xv;
+   z=Map[Together,numerator.numerator-s numerator,{2}];
    {n,And@@(PossibleZeroQ/@Flatten[z]),
-        PossibleZeroQ[Together[Tr[A]-s]]}],
+        PossibleZeroQ[Together[Tr[numerator]-s]]}],
  {n,2,8}];
 (* An original curve X=P1:
    A/s defines algebraic q*O(-1) with ch1=-h.
