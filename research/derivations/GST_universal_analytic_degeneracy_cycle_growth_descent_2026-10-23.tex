@@ -964,6 +964,124 @@ projector growth or finite
 cycle-volume growth), not infer
 regularity from cohomology alone.
 
+\section{A second SPATIAL causal mechanism: full affine-fiber translation symmetry}
+
+The Jouanolou fold is more than a
+cohomology equivalence: it is a
+genuine affine-space TORSOR
+$q:J\to X$ under an algebraic rank-N
+vector bundle $V\to X$.
+The total vector bundle acts by
+the actual algebraic translation map
+\[
+ a:V\times_X J\longrightarrow J,
+ \qquad (v,z)\longmapsto z+v.                    \tag{10.1}
+\]
+Translation acts transitively on every
+emergent affine fiber but leaves
+every original-X point x fixed.
+
+\begin{theorem}[Exact universal symmetry-to-original-cycle descent]
+For ANY original smooth projective
+complex X, ANY p, ANY rational
+class alpha in H^{2p}(X,Q),
+and ANY affine fold J_N(X),
+the following are equivalent:
+
+(i) alpha has an ACTUAL rational
+algebraic codimension-p cycle on
+the original X.
+
+(ii) There exists a
+closed PURE codimension-p
+rational complex-analytic cycle
+W on the actual folded J^{an}
+whose analytic Betti class equals
+$q^*\alpha$ and whose entire
+cycle (including rational
+multiplicities) is invariant under
+ALL fiber translations by V:
+\[
+ \boxed{
+  a^{-1}(W)=
+  \operatorname{pr}_J^{-1}(W)
+       \quad\text{as analytic cycles
+                  on }V\times_X J.
+ }                                                        \tag{10.2}
+\]
+No limit in N, rank, or topology
+of original X appears.
+\end{theorem}
+\begin{proof}
+(ii)->(i): local analytic sections
+of the affine-space torsor exist
+because q is algebraically locally
+trivial. On a trivializing open
+$U\subset X$, write $q^{-1}(U)
+=U\times\mathbb C^N$.
+Translation invariance (10.2)
+forces every analytic-cycle
+component of W over U to be
+a pullback of a unique analytic
+codimension-p cycle $Z_U$ on U:
+membership and multiplicity at
+$(x,z)$ are independent of z,
+and the slice $z=0$ recovers
+$Z_U$ analytically. The
+$Z_U$ agree on overlaps by
+translation coherence, hence
+glue to a rational analytic
+cycle Z on compact X.
+By projective Chow/GAGA,
+every closed analytic subvariety
+of projective X is algebraic;
+thus $Z\in CH^p(X)_Q$.
+Its pullback is W, so canonical
+cycle naturality gives
+$q^*cl_X^{can}(Z)=q^*\alpha$.
+Injectivity of q^* on rational
+cohomology proves
+$cl_X^{can}(Z)=\alpha$.
+
+(i)->(ii): choose an actual
+algebraic rational cycle Z on
+X with canonical class alpha.
+The flat preimage $W=q^{-1}Z$
+is a genuine codimension-p
+rational algebraic, hence
+analytic, cycle on J.
+Since every translation preserves
+its base point, it satisfies
+(10.2) and has Betti class
+$q^*cl_X^{can}(Z)=q^*\alpha$.
+\end{proof}
+
+\begin{remark}[Full causal coherence is strictly stronger than cohomological invariance]
+For every alpha the class
+$q^*\alpha$ is automatically
+invariant under translations
+because $q\circ a=q\circ
+\mathrm{pr}_J$. This
+COHOMOLOGICAL symmetry is not
+the ACTUAL analytic-cycle
+symmetry (10.2). Generic
+analytic degeneracy cycles from
+section 3 need not satisfy
+(10.2), even though their
+Betti class does. The exact
+new law that would finish the
+universal conjecture by this
+route must transform the
+constructed \emph{actual analytic
+cycle} into a new
+translation-equivariant analytic
+cycle with the same original
+Betti class, WITHOUT replacing
+the analytic cycle by a smooth
+harmonic form or assuming an
+original-X Chow source.
+\end{remark}
+
 \section{Final geometry-to-algebraicity proof contract}
 The full chain constructed WITHOUT
 an original-X algebraic witness is
