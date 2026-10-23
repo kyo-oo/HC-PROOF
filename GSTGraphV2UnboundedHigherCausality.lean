@@ -886,4 +886,63 @@ theorem ellipticDiagonalForm_irrational_break :
 
 end CausalHodgeAlignment
 
+/-! ## GST ALL-DIMENSION FINITE-POLE SPATIAL INCIDENCE EQUATION
+
+This is the exact rational homogeneous scalar matrix identity underlying
+the actual algebraic Jouanolou realization J_N(X)={(x,H): H(x) != 0}.
+The full scheme-level construction and its analytic determinantal
+geometry are in
+research/derivations/GST_universal_analytic_degeneracy_cycle_growth_descent_2026-10-23.tex.
+This kernel certificate checks A^2 = s A and trace A = s
+for EVERY finite dimension n, where A_ij=x_i ell_j and s=ell.x.
+It does NOT postulate a Hodge-to-Chow selector.
+-/
+
+namespace CausalFinitePoleIncidence
+
+variable {n : ℕ}
+
+/-- The actual incidence boundary section in homogeneous coordinates. -/
+def incidenceScalar (x ell : Fin n → ℚ) : ℚ :=
+  ∑ k : Fin n, ell k * x k
+
+/-- Its rank-one bihomogeneous algebraic matrix numerator. -/
+def incidenceNumerator (x ell : Fin n → ℚ) (i j : Fin n) : ℚ :=
+  x i * ell j
+
+/-- For every number of realized coordinates, the exact
+scheme identity A²=s A holds BEFORE inverting the boundary. -/
+theorem incidenceNumerator_square
+    (x ell : Fin n → ℚ) (i j : Fin n) :
+    (∑ k : Fin n,
+       incidenceNumerator x ell i k *
+       incidenceNumerator x ell k j) =
+      incidenceScalar x ell * incidenceNumerator x ell i j := by
+  simp only [incidenceNumerator, incidenceScalar]
+  calc
+    (∑ k : Fin n, (x i * ell k) * (x k * ell j)) =
+        ∑ k : Fin n, (ell k * x k) * (x i * ell j) := by
+          apply Finset.sum_congr rfl
+          intro k hk
+          ring
+    _ = (∑ k : Fin n, ell k * x k) * (x i * ell j) := by
+          rw [Finset.sum_mul]
+
+/-- The incidence numerator has exactly the boundary scalar as
+its trace. After normalizing by this nonzero scalar its trace is one. -/
+theorem incidenceNumerator_trace (x ell : Fin n → ℚ) :
+    (∑ k : Fin n, incidenceNumerator x ell k k) =
+      incidenceScalar x ell := by
+  simp only [incidenceNumerator, incidenceScalar]
+  apply Finset.sum_congr rfl
+  intro k hk
+  ring
+
+#check incidenceNumerator_square
+#check incidenceNumerator_trace
+#print axioms incidenceNumerator_square
+#print axioms incidenceNumerator_trace
+
+end CausalFinitePoleIncidence
+
 end GSTGraphV2UnboundedHigherCausality
