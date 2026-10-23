@@ -54,6 +54,16 @@ polyChecks=Table[
    A/s defines algebraic q*O(-1) with ch1=-h.
    Solve arbitrary alpha=(3/2)h as (-3/2)[O(-1)]_ch1. *)
 curveStage=rationalSourceSolve[{{-1}},{3/2}];
+(* Native rank-one projective algebraic curvature:
+   local image generator (1,u), dual normal (1,v),
+   Grassmann connection omega=(v/(1+u v)) du.
+   Curvature coefficient in du^dv orientation is
+   -D[v/(1+u v),v] = -1/(1+u v)^2. *)
+grassmannOmegaCoefficient=v/(1+u v);
+grassmannCurvatureCoefficient=-D[grassmannOmegaCoefficient,v];
+grassmannCurvatureCheck=TrueQ[
+ FullSimplify[grassmannCurvatureCoefficient+
+                             1/(1+u v)^2]==0];
 output=<|
  "firstStage"->firstStage,
  "dualWitnessPairsWithNewPGL"->dualPgl,
@@ -62,6 +72,8 @@ output=<|
  "PGLRankJump"->TrueQ[secondStage["rank"]==2],
  "exactSolution"->TrueQ[secondStage["coefficients"]=={59/60,1}],
  "actualCurveSolution"->curveStage,
+ "algebraicGrassmannCurvatureCoefficient"->grassmannCurvatureCoefficient,
+ "algebraicGrassmannCurvatureExact"->grassmannCurvatureCheck,
  "incidencePolynomialCases"->Length[polyChecks],
  "allIncidenceSchemesPass"->And@@Flatten[polyChecks[[All,2;;3]]],
  "incidenceFailures"->Select[polyChecks,Not[And@@#[[2;;3]]]&]
