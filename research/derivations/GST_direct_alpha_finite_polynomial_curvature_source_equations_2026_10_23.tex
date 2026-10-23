@@ -92,6 +92,123 @@ The true affine-bundle Chow homotopy inverse (q^*)^{-1}
 then yields the actual class (3) on the SAME original X.
 \end{proof}
 
+\section{Complete Chern-to-FITTING conversion with NO purity hypothesis}
+The curvature-source equation (2) determines
+the difference of degree-p Chern CHARACTERS,
+but does NOT make the LOWER Chern characters
+of E_+ and E_- equal.
+Therefore a naive formula using only
+$c_p(E_+)-c_p(E_-)$ would be incorrect.
+We now construct the direct Chow output
+using actual lower-degree Fitting schemes
+and exact Newton polynomials.
+
+Let E be any rank-r honest algebraic
+bundle defined by a finite regular
+GST idempotent P on the smooth affine J.
+After adding a common trivial summand
+we may suppose r>=p without altering ch_p.
+For EVERY 1<=j<=p choose
+$s_j=r-j+1$ generic ACTUAL ambient
+constant sections of E.
+Use the companion Plucker--Fitting
+scheme-theoretic construction
+\[
+ \Sigma_j(P)=
+ V\left(I_{M-j+1}
+ ([I_M-P\mid Pv_1^{(j)}\mid\cdots
+                         \mid Pv_{s_j}^{(j)}])\right).
+ \tag{8}
+\]
+By global generation of E and generic
+determinantal transversality, each
+degeneracy locus has expected codimension j
+or is empty, and Thom--Porteous gives
+\[
+ \boxed{[\Sigma_j(P)]_{CH}=c_j^{CH}(E)
+      \in CH^j(J).}                                   \tag{9}
+\]
+Write $C_j=[\Sigma_j(P)]$ and define
+the universal Newton polynomials
+\[
+ \begin{aligned}
+ N_1&=C_1,\\
+ N_n&=\sum_{j=1}^{n-1}(-1)^{j-1}
+                 C_jN_{n-j}
+             +(-1)^{n-1}n C_n
+                       \quad(2\le n\le p).
+ \end{aligned}                                          \tag{10}
+\]
+They are genuine integer-coefficient
+polynomials in Chow products.
+The splitting principle (or Newton's
+identities) gives
+\[
+ \boxed{N_p(C_1,\ldots,C_p)=
+             p!\operatorname{ch}_p^{CH}(E).}          \tag{11}
+\]
+
+\begin{theorem}[FULL original-X FINITE MINOR CYCLE for ANY alpha-equation solution]
+Let P_+,P_-,mu,B solve the genuine
+target-dependent algebraic source equation (2).
+For each sign and every 1<=j<=p
+construct the ACTUAL determinantal
+scheme $\Sigma_{\pm,j}$ by (8).
+Then the explicit element
+\[
+ \boxed{
+ Z_\alpha={1\over\mu p!}(q^*)^{-1}
+ \left[
+ N_p([\Sigma_{+,1}],\ldots,[\Sigma_{+,p}])
+ -N_p([\Sigma_{-,1}],\ldots,[\Sigma_{-,p}])
+ \right]
+ \in CH^p(X)_\mathbb Q
+ }                                                       \tag{12}
+\]
+is an ACTUAL ORIGINAL-X algebraic rational
+cycle class represented by a finite
+signed rational combination of intersections
+of the determinantal algebraic subschemes.
+It satisfies
+$\mathrm{cl}^{can}_X(Z_\alpha)=\alpha$
+without assuming equality of any lower
+Chern characters of E_+ and E_-.
+\end{theorem}
+\begin{proof}
+Apply genuine Thom--Porteous to all
+actual Fitting schemes, giving (9).
+Newton's identities in the true Chow
+ring prove (11) for E_+ and E_-
+independently. Thus the bracket in
+(12) equals
+$p!(\operatorname{ch}^{CH}_p(E_+)
+-\operatorname{ch}^{CH}_p(E_-))$.
+Divide by the genuine integer mu and
+apply the true affine-bundle Chow
+inverse. The already proved exact
+algebraic de Rham curvature comparison
+of equation (2) then verifies the
+canonical Betti class alpha.
+
+For instance the ENTIRE codimension-two
+formula, with no hidden lower-degree
+purity, is
+\[
+ \boxed{
+ Z_\alpha={1\over2\mu}(q^*)^{-1}
+ \left(
+ ([\Sigma_{+,1}]^2-2[\Sigma_{+,2}])
+ -
+ ([\Sigma_{-,1}]^2-2[\Sigma_{-,2}])
+ \right).
+ }                                                       \tag{13}
+\]
+All products are ACTUAL intersection
+products in the Chow ring of smooth J,
+not numerical or cohomology-only
+multiplications.
+\end{proof}
+
 \section{The polynomial scheme is FINITE at every controlled stage}
 Let J=D(s) inside the actual smooth projective
 incidence compactification barJ, with ample boundary divisor
