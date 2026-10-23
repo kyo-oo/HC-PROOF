@@ -78,7 +78,27 @@ lhsExceptionalRestrict=-cOne zz-cTwo;
 rhsExceptionalRestrict=-cTwo-zz cOne;
 exceptionalSquareRestrictionExact=TrueQ[
  Expand[lhsExceptionalRestrict-rhsExceptionalRestrict]===0];
+(* New all-original-X alpha-selected divisor-to-polynomial-center theorem:
+   choose line bundle M with c1(M)=denom*beta.
+   two regular polynomial complete intersections have Chow classes
+   (denom*beta+twist*h)*h^(p-1) and twist*h^p.
+   Their signed Rees blowup exceptional powers return the
+   difference, exactly beta*h^(p-1), with no codim-p
+   pre-existing Chow witness as input. *)
+targetFoldTests=Table[
+ Module[{plus,minus,blowupPlus,blowupMinus,target},
+ plus=(denom*beta+twist*hh)*hh^(p-1);
+ minus=twist*hh^p;
+ blowupPlus=(-1)^(p-1)*plus;
+ blowupMinus=(-1)^(p-1)*minus;
+ target=Expand[(-1)^(p-1)*
+            (blowupPlus-blowupMinus)/denom];
+ {p,TrueQ[FullSimplify[target==beta*hh^(p-1)]]}
+ ],{p,2,12}];
 result=<|
+ "universalHodgeDivisorInputFoldRanks"->Length[targetFoldTests],
+ "alphaSelectedFoldSourceAllPass"->And@@targetFoldTests[[All,2]],
+ "alphaSelectedFoldFailures"->Select[targetFoldTests,Not[#[[2]]]&],
  "fullCodimensionTwoChowProjectorPair"->fullChowProjectors,
  "exceptionalSquareRestrictionExact"->exceptionalSquareRestrictionExact,
  "projectiveChowRelationCases"->Length[projectiveCases],
