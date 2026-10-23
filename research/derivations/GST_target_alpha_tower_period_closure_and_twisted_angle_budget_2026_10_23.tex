@@ -211,6 +211,50 @@ H^{2p}(X,R).
 Then apply the theorem.
 \end{proof}
 
+\section{Finite CERTIFIED experiment implies exact original-X rational equality}
+Choose an integral basis $e_1,\ldots,e_b$ of the torsion-free
+lattice $H^{2p}(X,\mathbb Z)/\mathrm{torsion}$.
+Express the prescribed rational alpha as
+$\alpha=\sum_i(a_i/Q)e_i$ with positive integer Q and integer a_i.
+Let W be a GENUINE rational ALGEBRAIC codimension-p Chow
+cycle on an actual GST affine fold $q_N:J_N\to X$.
+Suppose mW is an INTEGRAL algebraic cycle for some m>0.
+By integral Betti naturality, the transported class
+\[
+ \beta=(q_N^*)^{-1}\mathrm{cl}^{can}_{J_N}(W)
+       =\sum_i (b_i/m)e_i,\quad b_i\in\mathbb Z .
+\]
+
+\begin{theorem}[One mathematically CERTIFIED finite experiment returns actual Chow]
+If exact arithmetic or certified interval computations prove
+\[
+ \boxed{\max_i |b_i/m-a_i/Q|<1/(Qm),}                 \tag{18}
+\]
+then $\beta=\alpha$ EXACTLY and
+\[
+ \boxed{Z_\alpha=(q_N^*)^{-1}W\in CH^p(X)_\mathbb Q,
+        \quad\mathrm{cl}^{can}_X(Z_\alpha)=\alpha.}  \tag{19}
+\]
+No convergence, degree, analytic mass or stable N condition is needed.
+\end{theorem}
+\begin{proof}
+Each coordinate difference equals $(Qb_i-ma_i)/(Qm)$.
+If nonzero its absolute value is at least 1/(Qm).
+The strict certified inequality makes every difference zero.
+Apply actual rational Chow homotopy invariance and canonical
+Betti naturality to the ACTUAL algebraic W.
+\end{proof}
+
+\begin{remark}
+This gives a precise way a FINITE mathematically certified GST
+experiment can establish the exact target at a specified X,p,alpha.
+It requires an actual algebraic spatial Chow output and rigorous
+integral Betti coordinate error enclosures. A smooth real
+degeneracy locus or a holomorphic nonalgebraic cycle does not
+meet that typed input. Universal resolution additionally
+requires such an output for every original X,p,alpha.
+\end{remark}
+
 \section{The exact flat-period no-approximation barrier}
 \begin{theorem}[A missing algebraic image yields a UNIFORM quantitative gap on every GST fold]
 Suppose a rational alpha
