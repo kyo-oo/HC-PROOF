@@ -111,7 +111,28 @@ targetSourcePass=TrueQ[newSource.selectedCoeffs==targetVec];
 sourceRankPass=TrueQ[MatrixRank[baseSource]==1&&MatrixRank[newSource]==2
     &&sourceDual.baseSource[[All,1]]==0
     &&sourceDual.newSource[[All,2]]==-1];
+(* INDEPENDENT symbolic 3-dimensional rank-two exterior contraction:
+   A is an arbitrary skew matrix, u and v arbitrary symbolic
+   independent vectors, Delta=u.A.v.  Test polynomial numerators
+   without dividing by Delta (a nonzero incidence unit). *)
+skew={{0,coefA,coefB},{-coefA,0,coefC},{-coefB,-coefC,0}};
+symU={u1,u2,u3};symV={v1,v2,v3};
+symDelta=symU.skew.symV;
+symNumerator=Outer[Times,symU,skew.symV]-
+             Outer[Times,symV,skew.symU];
+symProjectorIdentity=And@@(PossibleZeroQ/@Flatten[
+ Map[Together,symNumerator.symNumerator-
+                   symDelta symNumerator,{2}]]);
+symTraceIdentity=PossibleZeroQ[
+ Together[Tr[symNumerator]-2 symDelta]];
+symFrameIdentity=And@@(PossibleZeroQ/@Flatten[
+ Map[Together,{symNumerator.symU-symDelta symU,
+               symNumerator.symV-symDelta symV}, {2}]] /. 
+  {False->False,True->True});
 out=<|
+ "unrestrictedSymbolicRank2Dimension3NumeratorIdempotence"->symProjectorIdentity,
+ "unrestrictedSymbolicRank2Trace"->symTraceIdentity,
+ "unrestrictedSymbolicRank2ImageOnFrame"->symFrameIdentity,
  "projectorCases"->Length[projectorTests],
  "allProjectorTests"->And@@Flatten[projectorTests[[All,4;;7]]],
  "projectorFailures"->Select[projectorTests,Not[And@@#[[4;;7]]]&],
