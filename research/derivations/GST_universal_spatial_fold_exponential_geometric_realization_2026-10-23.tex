@@ -427,9 +427,51 @@ take an actual Jouanolou affine-space torsor
   \text{fibers } \mathbb A_{\mathbb C}^N,\quad
   J(X)\text{ smooth affine algebraic.}              \tag{13}
 \]
-There are such torsors over any quasi-projective X,
-and N can be increased arbitrarily by multiplying
-the torsor total space with affine space.
+This fold has a concrete all-X scheme equation:
+choose any projective embedding $X\hookrightarrow\mathbb P^N$,
+and write $D=(\mathbb P^N)^\vee$ for its dual hyperplane space.
+Then
+\[
+ \boxed{
+ J_N(X)=\{(x,H)\in X\times D:\ x\notin H\}.
+ }                                                        \tag{13a}
+\]
+The incidence hypersurface $\{x\in H\}$ is the zero locus
+of a section of the ample product line
+$O_X(1)\boxtimes O_D(1)$; its complement $J_N(X)$ is
+therefore a genuine AFFINE algebraic scheme.
+For each $x$, the fiber is the complement of one hyperplane
+in $D=\mathbb P^N$, hence is $\mathbb A^N$.
+Consequently $J_N(X)$ is a Zariski locally trivial
+affine-space torsor over X, smooth of complex
+dimension $d+N$. By replacing the projective
+embedding with a higher-dimensional embedding,
+N can be arbitrarily large. This is an explicit
+all-dimensional scheme constructor, not merely
+an abstract existence invocation.
+
+There are two complementary exact Hodge signatures.
+Because q is an algebraic affine-space bundle,
+$q^*$ is a full isomorphism of ordinary cohomology MHS.
+If $\mathcal H_{ord}$ records the $(a,b)$ Hodge
+multiplicities of ordinary cohomology,
+while $E_c$ is the compactly supported
+Hodge--Deligne polynomial, then
+\[
+ \boxed{
+  \mathcal H_{ord}(J_N(X);u,v)=\mathcal H_{ord}(X;u,v),
+  \qquad
+  E_c(J_N(X);u,v)=(uv)^N E_c(X;u,v).
+ }                                                        \tag{13b}
+\]
+The compact-support formula follows by Zariski local
+triviality and $E_c(\mathbb A^N;u,v)=(uv)^N$;
+ordinary-cohomology preservation is the
+cohomological $\mathbb A^1$-homotopy invariance.
+Thus unlimited new realized complex dimensions
+preserve the WHOLE ordinary rational Hodge
+structure but shift the compact-support
+Hodge spectrum by exactly N Tate units.
 
 \begin{theorem}[All-original-X unlimited-depth STEIN--OKA causal realization]
 For every original X, every p and every rational alpha,
