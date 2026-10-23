@@ -1009,7 +1009,176 @@ not a rank-p
 bundle for an
 arbitrary integral
 (p,p) class.
-\section{Exact correction: source complexity versus target complexity}
+\section{Exact source complexity versus target complexity: the algebraic classifying-map obstruction}
+For EVERY original X,
+rational topological K
+theory supplies a UNIQUE
+rational virtual class
+$\kappa_\alpha\in
+K^0_{\mathrm{top}}(X)
+\otimes\mathbb Q$
+whose ENTIRE
+topological Chern
+character equals the
+prescribed rational
+degree-2p input
+alpha and zero in all
+other degrees.
+
+Define the ACTUAL
+algebraic-to-topological
+forgetful homomorphism
+\[
+ \rho_X:
+ K^{alg}_0(X)_\mathbb Q
+ \longrightarrow
+ K^0_{\mathrm{top}}(X)_\mathbb Q
+\]
+and the quotient
+\[
+ \boxed{
+ \mathfrak Q_X=
+ K^0_{\mathrm{top}}(X)_\mathbb Q/
+               \rho_X(K^{alg}_0(X)_\mathbb Q).
+ }                                                     \tag{19}
+\]
+The Chern character
+gives a literal
+isomorphism
+\[
+ \boxed{
+ \mathfrak Q_X\cong
+ \left(\bigoplus_j
+     H^{2j}(X,\mathbb Q)\right)
+ \Big/
+ \left(\bigoplus_j
+     \operatorname{im}
+          \mathrm{cl}^{can}_X|_{CH^j(X)_\mathbb Q}\right).
+ }                                                     \tag{20}
+\]
+This follows from the
+rational topological
+Chern character
+isomorphism and
+the rational algebraic
+K0-to-Chow Chern
+character isomorphism,
+with naturality of the
+cycle comparison.
+
+\begin{theorem}[Exact source CLASSIFYING-MAP obstruction for the new GST algebra]
+For any original
+X,p and rational
+Hodge alpha, the
+following are
+EQUIVALENT:
+(1) $\kappa_\alpha$
+maps to zero in
+the actual quotient
+$\mathfrak Q_X$;
+(2) some rational
+difference of ACTUAL
+algebraic vector bundles
+on X has FULL
+topological Chern
+character alpha;
+(3) some finite
+rational difference
+of real GST
+Pl\"ucker--Fitting
+projector-minor
+scheme cycles
+has the exact
+original-X Betti
+class alpha;
+(4) alpha has a
+genuine original-X
+rational Chow
+representative.
+This equivalence
+is an audit of
+the exact algebra's
+types, not an
+independent proof
+of condition (1)
+from Hodge type.
+\end{theorem}
+\begin{proof}
+(1)<->(2) is
+the definition
+of the K0 quotient
+and rational Chern
+character.
+(2)->(3) uses
+the explicit all-X
+algebraic Grassmann
+classifying-map
+presentation and
+the universal true
+Chow Fitting-minor
+difference theorem
+(14); a common
+integer denominator
+and trivial-rank
+stabilization clear
+all rational K0
+signs.
+(3)->(4) follows
+from the actual
+Chow affine-bundle
+inverse, finite
+rational linearity
+and exact canonical
+Betti naturality.
+(4)->(1) uses the
+rational algebraic
+K0-to-Chow Chern
+character inverse
+to lift its ACTUAL
+Chow class to
+the algebraic
+K0 quotient.
+\end{proof}
+
+This identifies
+WHY a genuine
+TOPological bundle
+classifying map
+from the arbitrary
+Hodge alpha,
+or an Oka holomorphic
+Grassmannian map
+on affine J,
+cannot silently be
+substituted into
+the Pl\"ucker
+projector formula:
+the explicit
+matrix is algebraic
+ONLY WHEN the
+classifying subbundle
+it represents is
+constructed through
+an ACTUAL algebraic
+map/quotient.
+The missing
+universal implication
+for a prescribed
+(p,p) class is
+the exact vanishing
+of $[\kappa_\alpha]$
+in (19), or an
+independent geometric
+law that constructs
+a polynomial
+projector defeating
+this obstruction.
+Increasing M,
+k, or the ambient
+spatial dimensions
+does not by itself
+prove that vanishing.
+
 \section{Research verdict: actual constructed algebra, exact open inference}
 The original-X GST target was
 NOT replaced by a constructed
