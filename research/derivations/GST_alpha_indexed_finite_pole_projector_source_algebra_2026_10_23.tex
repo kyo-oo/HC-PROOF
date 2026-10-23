@@ -593,6 +593,134 @@ current alpha-target fails; no such operation
 is silently assumed in this theorem.
 \end{proof}
 
+\begin{theorem}[STRONGER alpha-directed witness: the dual obstruction has rational HODGE type]
+In the preceding dual
+construction one can, for
+EVERY smooth projective
+original X,p and rational
+Hodge input alpha, choose
+the test cohomology class
+\[
+ \boxed{
+ \psi_D\in
+ H^{2d-2p}(X,\mathbb Q)
+          \cap H^{d-p,d-p}(X),
+ \quad
+ \int_Xv_i\psi_D=0,\quad
+ \int_X\alpha\psi_D=1.
+ }                                                     \tag{16}
+\]
+Thus the missing-direction
+detector itself respects the
+ENTIRE original Hodge
+structure; it is not
+merely an arbitrary
+untyped real functional.
+\end{theorem}
+\begin{proof}
+The rational source vectors
+$v_i=\operatorname{cl}(z_i)$
+and the prescribed alpha
+are all rational Hodge
+classes of type(p,p).
+Their rational span
+$W\subset H^{2p}(X,\mathbb Q)$
+is therefore a rational
+Hodge substructure of pure
+Tate type. A rational
+linear functional on W
+annihilating the source
+subspace and taking value
+one on alpha exists by
+the preceding rational
+Gaussian argument, and it
+is a morphism of rational
+Hodge structures after
+the appropriate Tate twist,
+since W consists entirely
+of (p,p) classes.
+Pure rational polarizable
+Hodge structures are
+semisimple, so W has a
+rational Hodge-compatible
+complement in $H^{2p}(X,Q)$.
+Extend the functional
+to zero on that complement:
+it is a rational Hodge
+morphism on the entire
+$H^{2p}(X,Q)$.
+Rational Poincare duality
+identifies this functional
+with a rational
+complementary degree
+class psi of Hodge type
+$(d-p,d-p)$, with exactly
+the desired pairings.
+No algebraic cycle is
+assumed to represent psi;
+it is a genuine rational
+HODGE test class, which
+may itself be nonalgebraic.
+\end{proof}
+
+\begin{corollary}[Exact positive primitive Hodge witness on the existing higher-rank GST source]
+In $X=\mathrm{Gr}(2,5)$,
+let $h,s_2$ and
+$\theta=\tfrac25h^2-s_2$
+be as in section 6.
+The ACTUAL rational
+Hodge class
+\[
+ \boxed{
+ \psi=5\theta h^2
+      =2h^4-5s_2h^2
+       \in H^{8}(X,\mathbb Q)
+                \cap H^{4,4}(X)
+ }                                                     \tag{17}
+\]
+is a rational
+ORIGINAL-X geometric
+dual detector for the
+divisor-only stage:
+\[
+ \boxed{
+ \int_Xh^2\psi=0,\qquad
+ \int_X\theta\psi=1,\qquad
+ \int_X\operatorname{pch}_2(T_X)\psi=1.
+ }                                                     \tag{18}
+\]
+Therefore the finite
+rational row witness
+$(0,-1)$ in the chosen
+basis is the actual
+Hodge-theoretic
+period pairing against
+the geometrically
+explicit psi, not
+a disconnected
+coordinate convention.
+\end{corollary}
+\begin{proof}
+The exact Schubert
+intersection identities
+$\int_Xh^6=5$,
+$\int_Xs_2h^4=2$,
+and $\int_Xs_2^2h^2=1$
+give
+$\int_X\theta h^4=0$
+and
+$\int_X\theta^2h^2=1/5$.
+Multiplying by five gives
+the first two pairings.
+Since
+$\operatorname{pch}_2(T_X)
+=-7h^2/12-s_2$,
+it differs from theta
+by a rational multiple
+of h², so has the SAME
+pairing against psi.
+\end{proof}
+
 \begin{remark}[A candidate rank plateau is NOT a negative certificate]
 A bounded-degree or bounded-projector-rank search
 may show \(M_D c=a\) insoluble for ALL sources
