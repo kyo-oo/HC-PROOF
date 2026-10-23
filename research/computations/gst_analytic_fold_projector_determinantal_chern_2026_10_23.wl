@@ -7,8 +7,8 @@ rootChecks=Table[
  Module[{xv=Array[x,n],hv=Array[h,n],lam,proj,defect},
    lam=hv.xv;
    proj=Outer[Times,xv,hv]/lam;
-   defect=Together[proj.proj-proj];
-   {n,TrueQ[And@@Flatten[(defect==0)]],
+   defect=Map[Together,proj.proj-proj,{2}];
+   {n,And@@(PossibleZeroQ/@Flatten[defect]),
       TrueQ[FullSimplify[Tr[proj]==1]]}
  ],{n,2,8}];
 chernTests=Flatten[Table[
