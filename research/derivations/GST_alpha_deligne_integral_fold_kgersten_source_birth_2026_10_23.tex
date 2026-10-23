@@ -1157,6 +1157,121 @@ Chern character gives (2).
 \end{proof}
 
 
+
+\section{Unconditional exact differential-curvature equation from a prescribed original-world class}
+The previous construction produces a finite HOLOMORPHIC involution for
+every prescribed rational even-degree original-X cohomology class.
+We strengthen it from equality of COHOMOLOGY CLASSES
+to a literal solved GLOBAL DIFFERENTIAL EQUATION on the SAME
+actual algebraic fold; this is an explicit source-type test of the
+GST simultaneous geometry/algebra ambition.
+
+\begin{theorem}[ALL $X,p,\alpha$: genuine algebraic target form and a SOLVED holomorphic nonlinear spectral system]
+Let $X$ be ANY smooth projective complex algebraic variety,
+let $p\ge1$ and let $\alpha\in H^{2p}(X,\mathbb Q)$ be
+ANY prescribed rational even-degree class. In particular,
+$\alpha$ may be rational Hodge $(p,p)$ or primitive.
+Let $q:J\to X$ be a genuine smooth affine algebraic
+Jouanolou torsor and write $J^{an}$ for its Stein analytification.
+There exist the following simultaneously, with NO supplied
+original-$X$ algebraic cycle:
+\begin{enumerate}
+\item a GLOBAL REGULAR ALGEBRAIC closed differential form
+      $\eta_\alpha\in\Gamma(J,\Omega^{2p}_{J/\mathbb C})$
+      with $[\eta_\alpha]_{dR}=q^*\alpha_{\mathbb C}$
+      under genuine algebraic de Rham comparison;
+\item a positive integer $m$ and two finite GLOBAL
+      HOLOMORPHIC matrix involutions
+      $A_\pm\in\operatorname{Mat}_{N_\pm}
+                    \mathcal O_{\mathrm{hol}}(J^{an})$,
+      with $A_\pm^2=I$;
+\item a GLOBAL HOLOMORPHIC $(2p-1)$-form
+      $B_\alpha\in\Gamma(J^{an},\Omega^{2p-1}_{hol})$
+      such that the LITERAL DIFFERENTIAL identity
+\[
+\boxed{\displaystyle
+ \frac{1}{(2\pi i)^p\,2^{2p+1}p!}
+ \left\{\operatorname{Tr}(A_+(dA_+)^{2p})
+       -\operatorname{Tr}(A_-(dA_-)^{2p})\right\}
+       -m\,\eta_\alpha =dB_\alpha.}                       \tag{34}
+\]
+\end{enumerate}
+Here (34) holds in the complex of GLOBAL HOLOMORPHIC forms,
+not merely after passing to singular cohomology.
+The algebraic target differential $\eta_\alpha$ and the
+holomorphic source matrices share the SAME original
+alpha and the SAME actual affine fold J.
+\end{theorem}
+
+\begin{proof}
+Because $J$ is smooth AFFINE of finite type over $\mathbb C$,
+Grothendieck's algebraic de Rham theorem and affineness identify
+the cohomology of the GLOBAL algebraic de Rham complex
+$\Gamma(J,\Omega^\bullet_{J/\mathbb C})$ with singular cohomology
+of $J^{an}$ with complex coefficients. Pull back the fixed
+class $\alpha$ and choose its closed GLOBAL ALGEBRAIC
+degree-$2p$ cocycle $\eta_\alpha$. This is an actual algebraic
+differential form, but by itself not a Chow cycle.
+
+The rational topological Chern character is an
+isomorphism $K^0_{\mathrm{top}}(X)\otimes\mathbb Q
+ \cong H^{even}(X,\mathbb Q)$.
+Choose a virtual class whose total Chern character
+is exactly the degree-$2p$ class $\alpha$.
+Multiply by some $m>0$ to obtain a difference
+$[E_+]-[E_-]$ of genuine finite-rank topological bundles.
+Pull to J. As $J^{an}$ is Stein, Oka--Grauert
+realizes them by holomorphic vector bundles and
+Cartan--Forster finite global generation together with
+Cartan B splits finite free holomorphic presentations.
+Thus actual finite holomorphic idempotents $P_\pm$
+exist, with actual involutions $A_\pm=2P_\pm-I$.
+By the all-rank spectral Chern--Weil identity (20),
+their normalized curvature forms yield exactly the
+displayed trace difference in (34).
+Naturality of the rational topological Chern character
+and analytic de Rham comparison show that its
+cohomology class is $m q^*\alpha_{\mathbb C}$,
+precisely the class of $m\eta_\alpha$.
+
+The complex of GLOBAL holomorphic differential forms on
+the STEIN space $J^{an}$ computes singular complex
+cohomology by the analytic de Rham theorem and
+Cartan B: the sheaf holomorphic de Rham complex resolves
+the constant sheaf, and all terms are acyclic for
+higher sheaf cohomology. Therefore any closed global
+holomorphic $(2p)$-form of cohomology class zero is
+the holomorphic differential of a GLOBAL
+holomorphic $(2p-1)$-form.
+Apply this to the difference of the two sides of (34).
+It produces $B_\alpha$ and proves the literal equality.
+The zero-source case $2p>\dim_\mathbb C J$ is included:
+the global degree-$2p$ differential-form complex
+vanishes there and the pulled-back class is zero.
+\end{proof}
+
+\begin{corollary}[First exact all-original-$X$ barrier of the same-fold nonlinear curvature system]
+The same-fold equations (34) admit an ACTUAL finite
+holomorphic solution for EVERY rational degree-$2p$
+original-$X$ class, whether of Hodge type or not.
+Consequently neither a solved HOLOMORPHIC
+idempotent curvature equation nor an ALGEBRAIC
+closed target form by itself forces an
+original-$X$ Chow representative.
+Requiring $A_\pm$ and $B_\alpha$ to be REGULAR
+ALGEBRAIC, rather than holomorphic, is a
+strictly stronger SOURCE-TYPE assertion;
+the polynomial idempotents are algebraic K-theory objects.
+In the special divisor-generated Hodge sector
+the preceding finite-difference theorem constructs
+the needed regular algebraic $A_S$ explicitly.
+For arbitrary higher primitive Hodge classes,
+equation (34) is a solved genuine differential
+source stage, not a claimed all-class algebraic
+$K_0$ source.
+\end{corollary}
+
+
 \section{Outcome of the exact higher-primitive proof attempt}
 We CONSTRUCTED, from arbitrary rational Hodge alpha
 and no supplied algebraic cycle, the genuine rational
