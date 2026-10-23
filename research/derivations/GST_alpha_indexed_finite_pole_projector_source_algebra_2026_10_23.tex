@@ -267,6 +267,221 @@ There is no uniform computable cutoff produced
 by this compactness-of-dimension argument.
 \end{proof}
 
+\section{NEW native polynomial-to-period map: algebraic Grassmann curvature}
+The previous source scheme does NOT
+need to regard the canonical Betti
+columns as mysterious external labels.
+Every actual finite-pole idempotent
+has a DIRECT algebraic curvature
+built from its polynomial entries.
+
+On the smooth affine spatial world J,
+write d for the honest algebraic
+Kähler differential and
+$P=A/s^k$ for a solution of
+the scheme equations (5).
+The actual projective module
+$E=\operatorname{im}P$ carries
+the algebraic Grassmann connection
+\[
+ \boxed{
+ \nabla_P=P\circ d,\qquad
+ F_P=\nabla_P^2
+       =P(dP)\wedge(dP)P.
+ }                                                     \tag{20}
+\]
+Since $P(dP)P=0$, its normalized
+closed algebraic Chern--Weil
+form of total differential degree
+2p is
+\[
+ \boxed{
+ \Omega_p(P)=\frac1{p!}
+     \left(\frac{i}{2\pi}\right)^p
+       \operatorname{Tr}
+        \big(P(dP)^{\wedge 2p}\big).
+ }                                                     \tag{21}
+\]
+Here $F_P$ is a genuine
+algebraic endomorphism-valued
+two-form, and the trace
+expression represents the
+de Rham / complex Betti image
+of the algebraic rational Chow
+Chern character $\operatorname{ch}_p^{CH}(E)$.
+The factors of $2\pi i$
+in (21) belong to the
+ordinary analytic de Rham
+comparison convention;
+without them the algebraic
+de Rham form has the usual
+Tate-period normalization.
+
+\begin{theorem}[ALL-X, all-M,k polynomial projector curvature and EXACT original-X period formula]
+Every complex point
+$A\in\mathcal P_{M,k,r}(X)$
+gives the ACTUAL rational
+Chern character Betti class
+$v_{A,p}$ from (6)
+via the completely
+explicit algebraic differential
+expression (21).
+In particular,
+\[
+ \boxed{
+ dP=\frac{dA}{s^k}
+       -\frac{k A\,ds}{s^{k+1}},
+ \qquad
+ \Omega_p(P)=
+ \frac1{p!}\left(\frac{i}{2\pi}\right)^p
+ \operatorname{Tr}\!
+ \left[
+ \frac{A}{s^k}
+ \left(
+   \frac{dA}{s^k}
+    -\frac{kA\,ds}{s^{k+1}}
+ \right)^{\wedge2p}
+ \right].
+ }                                                     \tag{22}
+\]
+For ANY smooth global section
+$\sigma:X^{an}\to J^{an}$
+of the true affine torsor,
+and ANY closed smooth
+complementary-degree rational
+Betti test form
+$\eta_\psi$ representing
+$\psi\in H^{2d-2p}(X,\mathbb Q)$,
+the ACTUAL native
+original-X rational pairing
+is
+\[
+ \boxed{
+ \int_Xv_{A,p}\smile\psi
+  =\int_{X^{an}}
+          \sigma^*\Omega_p(P)
+                       \wedge\eta_\psi.
+ }                                                     \tag{23}
+\]
+This is the EXACT
+polynomial-projector-to-period
+connection needed for the
+alpha-indexed source matrix
+and its dual witness.
+The right side is necessarily
+rational under the chosen
+Betti normalizations,
+although an arbitrary
+decimal numerical
+approximation to it need
+not certify its exact value.
+\end{theorem}
+\begin{proof}
+Every algebraic idempotent
+over the affine smooth ring
+defines an honest
+locally free algebraic
+module E and an algebraic
+connection by projection
+of the trivial algebraic
+differential. Its curvature
+is $P(dP)^2P$ by direct
+Leibniz and the identity
+$P(dP)P=0$. The algebraic
+Chern--Weil theorem
+identifies the de Rham
+class of (21) with the
+usual rational Chern
+character, after the stated
+comparison normalization;
+it is independent of the
+chosen connection in
+de Rham cohomology.
+Differentiating the rational
+matrix $A/s^k$ on D(s)
+gives (22). All displayed
+matrix entries are regular
+algebraic differential
+forms on J because s
+is invertible on J.
+A Zariski locally trivial
+affine-space torsor admits
+a smooth global section:
+combine local smooth affine
+origin sections using a
+partition of unity; the
+affine transition functions
+preserve affine barycentric
+combinations. It obeys
+$q\circ\sigma=\mathrm{id}$.
+Thus on rational Betti
+cohomology $\sigma^*$
+is the true inverse to
+$q^*$, and the Chern--Weil
+representative has exactly
+the pulled-back class
+in equation (6).
+Integrating its pullback
+with a closed rational
+complementary test form
+is Poincare duality
+on the ORIGINAL compact
+X, proving (23).
+\end{proof}
+
+\begin{lemma}[EXPLICIT nontrivial algebraic curvature in the genuine incidence world]
+For X=P1, the actual
+rank-one incidence matrix
+$P=x\ell^\top/(\ell x)$,
+in the affine chart
+$x=(1,u)$,
+$\ell=(1,v)$,
+has its local algebraic
+image-line connection
+\[
+  \boxed{\nabla=d+\omega,\qquad
+         \omega=\frac{v\,du}{1+uv},\qquad
+         F=d\omega=
+               -\frac{du\wedge dv}{(1+uv)^2}.}
+                                                               \tag{24}
+\]
+It represents the pullback
+of $c_1(O_{\mathbb P^1}(-1))$
+under the correct
+analytic de Rham comparison.
+The curvature is NOT
+a fictional formal
+2-form: it follows from
+the genuine algebraic
+matrix numerator and
+the actual incidence
+denominator.
+\end{lemma}
+\begin{proof}
+The local algebraic
+generator of the
+image-line bundle is
+the column $x$.
+Projection of its
+ordinary differential is
+$P(dx)=x\,(\ell^\top dx)/(\ell x)$.
+Here $\ell^\top dx=v\,du$
+and $\ell x=1+uv$,
+giving the displayed
+connection 1-form.
+Its exterior derivative is
+$d(v/(1+uv))\wedge du
+=(1+uv)^{-2}dv\wedge du$,
+which equals (24).
+The resulting true
+projective module is
+$q^*O(-1)$, so its
+Chern class is the
+original hyperplane
+class with the expected
+negative sign.
+\end{proof}
+
 \section{The prescribed-alpha rational period SOLVER and its DUAL obstruction}
 Choose an actual rational basis
 \(e_1,\ldots,e_b\) of \(H^{2p}(X,\mathbb Q)\),
