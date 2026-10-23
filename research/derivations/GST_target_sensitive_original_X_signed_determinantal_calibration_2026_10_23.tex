@@ -232,6 +232,150 @@ The signed balanced construction (1)--(5)
 is necessary to avoid this obstruction.
 It is NOT an automatic proof of (7).
 
+\section{A genuinely HODGE-SENSITIVE quantitative causal geometry law}
+The preceding bounded-mass/zero-defect
+criterion can be tested for classes
+of non-Hodge type, rather than simply
+assumed from arbitrary topology.
+
+Let k=d-p. On the compact Kähler X
+consider any smooth complex-valued
+degree-2k differential form psi
+of pure Hodge bidegree (a,b), a+b=2k,
+a not equal to k (hence b not equal to k).
+On every positively oriented COMPLEX
+k-plane, psi evaluates to zero, because
+either a>k or b>k.
+Let xi be any oriented unit simple
+real 2k-vector in a tangent space.
+Then there is a positive dimensional
+constant C_k, independent of x,
+such that
+\[
+ \boxed{
+ |\psi_x(\xi)|\le
+ C_k\|\psi_x\|_{\rm comass}
+  \sqrt{1-\varphi_k(\xi)},
+ \qquad \varphi_k=\omega^k/k!.
+ }                                                       \tag{10}
+\]
+Indeed the oriented real Grassmannian
+is compact, the calibrated submanifold
+of complex k-planes is the zero set
+of the nonnegative Wirtinger defect,
+and the defect grows quadratically
+in its normal Kähler-angle directions.
+The evaluation of an off-bidegree
+form vanishes on this submanifold
+and is locally Lipschitz in the
+normal angle. The ratio in (10)
+is therefore bounded near the
+zero set, and bounded away from
+it by compactness. This is a
+finite-dimensional Kähler
+geometry estimate, not a
+cohomological conjecture.
+
+\begin{theorem}[Quantitative non-Hodge obstruction to approximate geometric algebraization]
+For every closed oriented integral
+2k-current T on compact Kähler X
+and every smooth off-diagonal
+bidegree-(a,b) form psi above,
+\[
+ \boxed{
+ |T(\psi)|^2\le
+ C_k^2\|\psi\|_\infty^2\,
+     {\bf M}(T)\Delta_\omega(T).
+ }                                                       \tag{11}
+\]
+If the cohomology class gamma=PD[T]
+has a nonzero non-(p,p) component,
+there exists a SMOOTH CLOSED
+complementary off-diagonal Hodge
+form psi with T(psi) nonzero.
+Consequently ANY family T_j
+in homology class gamma
+with a uniformly bounded mass
+has its calibration defects
+uniformly bounded away from zero.
+For a rational pure (p,p)
+Hodge class alpha, EVERY such
+off-diagonal period vanishes;
+the preceding specific
+obstruction to (7) is absent.
+\end{theorem}
+\begin{proof}
+Apply (10) at almost every
+rectifiable approximate tangent
+plane of T with multiplicity.
+Write $\delta(\xi)=
+1-\varphi_k(\xi)$, so
+$\Delta_\omega(T)=
+\int\delta\,d\|T\|$.
+The pointwise bound and
+Cauchy--Schwarz give
+\[
+ |T(\psi)|
+ \le C_k\|\psi\|_\infty
+      \int\sqrt{\delta}\,d\|T\|
+ \le C_k\|\psi\|_\infty
+        \sqrt{{\bf M}(T)\Delta_\omega(T)} .
+\]
+For a closed T, the evaluation
+on a closed psi depends only
+on the Betti class of gamma.
+If gamma has a nonzero
+non-(p,p) Hodge component,
+Poincare duality and pure
+Hodge decomposition supply
+a closed smooth complementary
+off-diagonal harmonic form psi
+with nonzero evaluation.
+Square and rearrange (11);
+bounded mass gives a positive
+lower bound on the defect.
+Conversely for alpha of
+type (p,p) its pairing with
+every complementary
+off-diagonal class vanishes
+by Hodge bidegree reasons.
+This last vanishing is
+NECESSARY for the desired
+calibrated sequence but
+is not claimed sufficient:
+a genuine geometric
+construction must still
+control the nonnegative
+defect inside the Hodge
+sector.
+\end{proof}
+
+The mathematical experiment
+now has a sharply defined
+meaning: an observed
+sequence of increasingly
+complex-tangent alpha-specific
+geometric strata, together
+with an all-index theorem
+proving UNIFORM masses and
+vanishing Wirtinger defect,
+would invoke the fully
+proved compactness return
+to build original-X Chow.
+For non-Hodge inputs
+the inequality (11)
+supplies an analytic
+certificate excluding
+such a sequence.
+This distinguishes
+cohomological
+Hodge compatibility from
+the stronger geometric
+realization equation,
+without dismissing the
+exact computations as
+nonmathematical.
+
 \section{GST continuation anchored to actual original-X source}
 This theorem constructs ACTUAL alpha-dependent
 original-X GEOMETRY and proves nonzero
