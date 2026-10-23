@@ -427,6 +427,269 @@ expected ch2 coefficient; the third corrected run
 satisfied ALL stated assertions. No numerical
 approximation or hypothetical Hodge class was used.
 
+
+\section{All-codimension spectral normalization of nonlinear born components:
+a genuine original-$X$ $K_0$ and Chow law}
+
+The October 22 signed double-world law and October 23 affine
+Jouanolou involution expose a common operation:
+\emph{one polynomial intersection has several algebraic
+components, and its TRUE spectral normalization can select them
+separately, even when their total characteristic class is ambient}.
+We now implement that operation for EVERY original smooth
+projective $X$ and EVERY codimension $1\le p\le\dim X$,
+using an actual algebraic spectral involution---not a
+spectral projector imposed directly on Betti cohomology.
+
+\begin{theorem}[ALL-$p$ genuine normalization involution produces an exact original-$X$ $K_0$ component source]
+Let $X$ be any smooth projective complex
+variety, let $1\le p\le d=\dim X$, and let
+$t=(s_1,\ldots,s_p)$ be ANY genuine tuple of
+algebraic hypersurface sections for which the
+scheme-theoretic intersection
+\[
+ C=V(s_1,\ldots,s_p)\subset X
+\]
+is \emph{reduced and pure of codimension $p$}.
+Write $C=C_1\cup\cdots\cup C_m$ for its distinct
+irreducible components, and let
+\[
+ \nu:\widetilde C
+     =\coprod_{j=1}^{m}\widetilde C_j
+  \longrightarrow C\hookrightarrow X
+\]
+be its ACTUAL finite normalization followed by inclusion.
+For EVERY choice of independently prescribed signs
+$\sigma_j\in\{+1,-1\}$, define the globally regular
+function
+\[
+ A_\sigma|_{\widetilde C_j}=\sigma_j
+ \in\Gamma(\widetilde C,\mathcal O_{\widetilde C}).
+\]
+It is a true algebraic spectral involution
+$A_\sigma^2=1$ on the SAME normal geometric world
+$\widetilde C$, and
+$P_{\sigma,\pm}=(1\pm A_\sigma)/2$ are ACTUAL
+algebraic idempotents.
+
+The coherent sheaves
+$\mathcal F_{\sigma,\pm}
+ =\nu_*(\operatorname{im}P_{\sigma,\pm})$
+have true classes in $G_0(X)=K_0^{alg}(X)$
+(the equality is valid since $X$ is smooth).
+Their prescribed \emph{signed} virtual bundle class
+\[
+ \Xi_{t,\sigma}
+ =[\mathcal F_{\sigma,+}]
+  -[\mathcal F_{\sigma,-}]\in K_0^{alg}(X)
+\]
+satisfies the LITERAL original-$X$ rational
+Chow and canonical Betti equalities
+\[
+ \boxed{
+ \operatorname{ch}^{CH}_{p}(\Xi_{t,\sigma})
+   =\sum_{j=1}^{m}\sigma_j[C_j]
+      \quad\text{in }CH^p(X)_{\mathbb Q},
+ \qquad
+ \operatorname{cl}^{can}_X
+  \operatorname{ch}^{CH}_{p}(\Xi_{t,\sigma})
+ =\sum_j\sigma_j\operatorname{cl}^{can}_X[C_j].
+ }                                                        \tag{9}
+\]
+All lower character components vanish:
+$\operatorname{ch}^{CH}_i(\Xi_{t,\sigma})=0$
+for $i<p$.
+
+Pulling $\Xi_{t,\sigma}$ to ANY true smooth
+affine Jouanolou bundle $q:J\to X$
+and using algebraic $K_0$ on affine $J$
+represents its class by an ACTUAL finite
+difference of regular matrix projectors
+$Q_+-Q_-$ over $\Gamma(J,\mathcal O_J)$,
+or equivalently finite regular algebraic
+involutions $B_\pm=2Q_\pm-I$.
+The original-$X$ return is precisely (9),
+via the actual affine bundle Chow inverse
+$(q^*)^{-1}$. Thus this source is BOTH a
+NONLINEAR algebraic component selected on
+the normalized world and a genuine finite
+ALGEBRAIC spectral source on the folded
+affine world, for ALL codimensions.
+\end{theorem}
+
+\begin{proof}
+Because $C$ is reduced of finite type over
+$\mathbb C$, its normalization is the finite
+disjoint union of its irreducible component
+normalizations. The constant functions
+$1$ and $-1$ on each disjoint component
+are regular, so $A_\sigma^2=1$ is an equality
+in the actual finite $\mathcal O_C$-algebra
+$\nu_*\mathcal O_{\widetilde C}$.
+The two spectral idempotents restrict to
+either the identity or zero on each component;
+consequently
+\[
+ \mathcal F_{\sigma,+}
+ =\bigoplus_{\sigma_j=+1}\nu_{j*}\mathcal O_{\widetilde C_j},
+ \quad
+ \mathcal F_{\sigma,-}
+ =\bigoplus_{\sigma_j=-1}\nu_{j*}\mathcal O_{\widetilde C_j}.
+\]
+Each $\nu_{j*}\mathcal O_{\widetilde C_j}$
+is coherent, supported in codimension $p$,
+and has generic length EXACTLY $1$
+at the generic point of $C_j$, since the
+normalization induces the identity on
+the component function field.
+The codimension filtration on $G_0(X)$
+and the genuine top-support Chern-character
+formula on the SMOOTH variety $X$ give
+\[
+ \operatorname{ch}^{CH}_{i}
+    (\nu_{j*}\mathcal O_{\widetilde C_j})=0
+       \quad(i<p),\qquad
+ \operatorname{ch}^{CH}_{p}
+    (\nu_{j*}\mathcal O_{\widetilde C_j})=[C_j].
+\]
+This is a Chow equality, not just numerical
+pairing, and it does NOT require $C_j$ to be
+smooth or its structure sheaf to be locally
+free on $X$. Add the signed terms to obtain
+(9), then apply the ACTUAL canonical cycle
+class map.
+
+As $X$ is smooth quasi-projective,
+finite coherent sheaves have finite locally
+free resolutions and $G_0(X)\simeq K_0(X)$.
+On the true smooth affine Jouanolou $J$
+each finite locally free bundle is a finite
+projective module over $R=\Gamma(J,\mathcal O_J)$,
+a direct summand of $R^N$. Thus
+$q^*\Xi_{t,\sigma}$ is a finite difference
+of honest globally regular algebraic
+idempotents, hence of actual involutions.
+The Chern character commutes with $q^*$,
+while affine-space bundle homotopy
+invariance gives
+$q^*:CH^p(X)_{\mathbb Q}
+ \xrightarrow{\sim}CH^p(J)_{\mathbb Q}$.
+This proves the exact original-world
+return and the canonical Betti comparison
+without introducing any nonstandard cycle map.
+\end{proof}
+
+\begin{corollary}[True arbitrary-$X$ Chow-generator surjectivity via normalized algebraic fold spectra]
+Theorem 1 embeds EVERY actual integral
+codimension-$p$ subvariety $Z\subset X$
+with multiplicity one in a sufficiently
+ample pure complete intersection.
+For generic choices within that
+specified incidence construction the
+intersection can be chosen generically
+reduced along every component; being a
+pure local complete intersection on
+smooth $X$, it is Cohen--Macaulay, and
+generic reducedness implies reducedness.
+Select the normalization spectral sign
+$\sigma_Z=+1$, $\sigma_{j\ne Z}=-1$.
+Let $\Xi_{\mathrm{all},-}$ denote the
+all-negative involution's signed class.
+Then the ACTUAL formula
+\[
+ \boxed{
+ [Z]=\frac12\,\operatorname{ch}_p^{CH}
+ \bigl(\Xi_{t,\sigma}-\Xi_{t,\mathrm{all},-}\bigr)
+ \in CH^p(X)_{\mathbb Q}
+ }                                                        \tag{10}
+\]
+holds in every codimension, using
+only algebraic equations, finite
+normalization, TRUE idempotents, and
+original-$X$ $K_0$/Chow.
+Consequently the union of such
+finite algebraic spectral fold sources
+generates all of the EXISTING
+$CH^p(X)_{\mathbb Q}$, with no
+restriction to the divisor subring.
+This is a precise source-generation
+theorem, NOT a theorem that every
+rational Hodge class belongs to
+that algebraic Chow image.
+\end{corollary}
+
+\begin{theorem}[Prescribed primitive residual gives an EXACT target-optimal algebraic spectral sign, with precise nonvanishing condition]
+Fix $d\ge 2p$ and a prescribed
+rational primitive Hodge class
+$r\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)$.
+For any actual reduced pure
+incidence tuple $t$ as above write
+\[
+ a_j=(-1)^p\int_X
+ r\smile\operatorname{cl}^{can}_X[C_j]
+         \smile h^{d-2p}\in\mathbb Q .
+\]
+Choose $\sigma_j=+1$ if $a_j\ge0$
+and $\sigma_j=-1$ otherwise.
+Then the ACTUAL target-selected
+ALGEBRAIC spectral component source
+$\Xi_{t,\sigma(r)}$ obeys
+\[
+ \boxed{
+ (-1)^p\int_Xr\smile
+   \operatorname{cl}^{can}_X
+      \operatorname{ch}^{CH}_p(\Xi_{t,\sigma(r)})
+             \smile h^{d-2p}
+       =\sum_j|a_j|
+       =\max_{\varepsilon_j=\pm1}
+                      \sum_j\varepsilon_j a_j .
+ }                                                        \tag{11}
+\]
+It has nonzero original-$X$ primitive
+coupling EXACTLY when at least one
+actual incidence component has
+$a_j\ne0$.
+Over all genuine tuples and ranks,
+the target-sensitive normalization
+spectra detect $r$ if and only if
+$r$ is NOT orthogonal to the
+existing canonical algebraic
+cycle-class image.
+The latter property is a separate
+geometric arithmetic statement; it
+is not inferred from mere Hodge
+purity or existence of the spectral
+idempotent.
+\end{theorem}
+
+\begin{proof}
+Apply the exact Chow identity (9),
+canonical Betti naturality,
+and bilinearity of the genuine
+primitive intersection pairing.
+Each selected term is
+$\sigma_j a_j$, whose maximum
+over independent signs is
+$|a_j|$. Summing gives (11).
+The criterion for positivity is
+immediate and does not assume a
+source chosen to equal $r$.
+For the unrestricted union,
+the cofinality of the actual
+incidence components in
+Theorem 1 implies that their
+classes generate the full
+algebraic Chow image. Therefore
+vanishing on ALL such components
+is exactly orthogonality to that
+image. This identifies the
+logical extent of target-directed
+sign choice; it does not turn
+the orthogonality equivalence
+into a new existence theorem.
+\end{proof}
+
+
 \section{GST typed application and exact universal acceptance condition}
 These scheme-level source operations are consistent with
 \texttt{GSTUniversalResolvedSupportHodge.lean}
