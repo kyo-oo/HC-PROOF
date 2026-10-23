@@ -223,6 +223,153 @@ This applies to the actual graph
 and to its normal-cone Rees fold.
 \end{proof}
 
+\section{ALL-X geometric source-visibility theorem for higher primitive Hodge inputs}
+The same algebraic fold construction admits a
+quantitative ORIGINAL-X test of whether a born
+center can detect the prescribed primitive
+Hodge class. This is a typed calculation about
+the actual center and its normal geometry,
+not a new hypothesis added to alpha.
+
+Let $i:Z\hookrightarrow X$ be ANY smooth
+codimension-c algebraic fold center.
+Write $N=N_{Z/X}$, with algebraic normal
+projection $\pi:N\to Z$. The total
+normal-cone Rees family maps naturally
+to the ORIGINAL X.
+
+\begin{theorem}[True special-fiber alpha restriction and native source pairing]
+For EVERY original X,p,alpha and every
+actual smooth regular center Z, the
+true algebraic de Rham pullback of the
+alpha-selected cocycle to the t=0
+normal world is
+\[
+ \boxed{
+ \alpha|_N=\pi^*(i^*\alpha).
+ }                                                     \tag{10}
+\]
+This holds at the cohomology level under
+the canonical algebraic de Rham/Betti
+comparison and already at the level of
+the ordinary functorial pullback of
+Cech differential cocycles.
+If $\dim_{\mathbb C}Z<p$, then
+\[
+ \boxed{\alpha|_N=0\quad
+                \text{for EVERY }\alpha\in H^{2p}(X).}
+                                                               \tag{11}
+\]
+In particular additional projective
+normal directions of ANY dimension
+do not alter the NATURAL pullback
+$\pi_m^*i^*\alpha$ to
+$Y_m=P_Z(N\oplus O^{m+1})$;
+if $i^*\alpha=0$, this
+particular transported target is zero
+for EVERY m>=0.
+
+If $p\le d/2$ and
+$\beta\in CH^{p-c}(Z)_{\mathbb Q}$
+is any genuine algebraic source on Z,
+then its true original-X pushforward
+$i_*\beta\in CH^p(X)_{\mathbb Q}$
+has the exact polarized target coupling
+\[
+ \boxed{
+ \int_X\alpha\,
+          \mathrm{cl}^{can}_X(i_*\beta)\,
+          h^{d-2p}
+ =\int_Z i^*\alpha\,
+          \mathrm{cl}^{can}_Z(\beta)\,
+          (i^*h)^{d-2p}.
+ }                                                     \tag{12}
+\]
+Thus centers with $i^*\alpha=0$
+give identically ZERO such source
+couplings, even though the fold itself
+has arbitrarily many algebraic
+exceptional and projective classes.
+\end{theorem}
+\begin{proof}
+The actual inclusion of the normal
+fiber N in the Rees deformation,
+followed by the structure morphism
+to X, factors as $N\xrightarrow{\pi}
+Z\xrightarrow{i}X$. Functorial
+pullback of algebraic differential
+cocycles and the algebraic
+de Rham-to-Betti comparison give
+(10) identically. The vector bundle
+N is homotopy equivalent to Z,
+so its rational Betti cohomology
+is $\pi^*H^*(Z)$; dimension
+forces $H^{2p}(Z)=0$ when
+$\dim Z<p$, proving (11).
+The projective normal projection
+likewise factors through Z.
+
+For (12), use the ACTUAL proper
+algebraic pushforward cycle-class
+comparison and the Gysin
+projection formula:
+$\alpha\smile i_*\mathrm{cl}(\beta)
+=i_*(i^*\alpha\smile\mathrm{cl}(\beta))$.
+Multiply by the ample class power
+and integrate over X and Z,
+respectively. All degrees match
+because $\dim Z=d-c$ and
+$\deg_{\rm codim}
+(i^*\alpha\,\beta\,h_Z^{d-2p})
+=p+(p-c)+(d-2p)=d-c$.
+This is an exact all-X calculation.
+\end{proof}
+
+\begin{corollary}[Primitive Hodge sources cannot be born from ONLY ample-power centers]
+Suppose $p\le d/2$ and alpha is
+a prescribed NONZERO rational primitive
+Hodge $(p,p)$ class,
+$h^{d-2p+1}\smile\alpha=0$.
+For ANY algebraic source of the pure
+ample-complete-intersection
+form $z=c\,h^p$,
+its actual polarized pairing is
+\[
+ \boxed{
+ \int_X \alpha\,\mathrm{cl}^{can}(z)\,
+         h^{d-2p}
+     =c\int_X\alpha\,h^{d-p}=0.
+ }                                                     \tag{13}
+\]
+A nonzero primitive alpha itself has
+strictly nonzero primitive self-pairing
+by the true Hodge--Riemann relations,
+so a system of fold centers whose
+native original-X Chow outputs
+remain within $\mathbb Q h^p$
+cannot generate its source direction,
+regardless of the number or size
+of the additional fold dimensions.
+The obstruction is SPECIFIC to those
+ample-power source classes, not to
+all nonabelian algebraic centers.
+\end{corollary}
+\begin{proof}
+Since $p\ge1$,
+$h^{d-p}=h^{p-1}h^{d-2p+1}$.
+The primitive relation therefore
+annihilates the integral in (13).
+The strict primitive Hodge--Riemann
+pairing for alpha rules out
+alpha itself being a rational
+multiple of $h^p$.
+The statement concerns the TRUE
+canonical Chow image of the
+specified fold sources, and does
+not require any postulated
+target cycle.
+\end{proof}
+
 \section{Exact outcome of this arbitrary-X route}
 We have produced an ACTUAL finite algebraic
 differential source from EVERY rational
