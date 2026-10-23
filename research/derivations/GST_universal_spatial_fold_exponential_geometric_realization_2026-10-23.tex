@@ -285,6 +285,134 @@ smooth projective Hodge alpha for which NO such
 algebraic realization pair is possible.
 \end{corollary}
 
+\section{The geometric FOLD INTEGRABILITY equation: a precise all-X local-to-global target}
+
+It is possible to state the exact geometric realization
+criterion as a differential equation on the ORIGINAL X,
+not as an unspecified Chow-source existence postulate.
+For a smooth complex topological bundle E over original X
+let $\bar\partial_E$ be a smooth $(0,1)$ connection:
+\[
+ \bar\partial_E:
+ \mathcal A^{0,q}(X,E)\longrightarrow
+ \mathcal A^{0,q+1}(X,E),\qquad
+ \bar\partial_E(f\,s)=\bar\partial f\otimes s+
+             f\,\bar\partial_Es.
+\]
+Its integrability obstruction is the actual curvature
+component $F_{\bar\partial_E}^{0,2}
+ =\bar\partial_E^2$.
+
+\begin{theorem}[One-fold pure-class integrability implies explicit original-X algebraicity]
+Given the honest topological E_alpha constructed in (1),
+suppose that this SAME smooth bundle admits a
+$(0,1)$-operator satisfying the exact equation
+\[
+ \boxed{\bar\partial_{E_\alpha}^{\,2}=0.}          \tag{8}
+\]
+Then it acquires a holomorphic bundle structure,
+which is algebraic on projective X by GAGA.
+The prescribed original rational Hodge class is
+the canonical Betti image of the actual
+algebraic Chern cycle
+\[
+ \boxed{
+ Z_\alpha=\frac{(-1)^{p-1}}{m(p-1)!}\,
+             c_p^{CH}(E_\alpha)
+       \in CH^p(X)_{\mathbb Q}.
+ }                                                        \tag{9}
+\]
+\end{theorem}
+\begin{proof}
+Koszul--Malgrange integrability identifies an operator
+$\bar\partial_E$ with $\bar\partial_E^2=0$ as a
+holomorphic vector-bundle structure. By GAGA
+it comes from a genuine algebraic vector bundle
+on projective X.
+For any complex bundle the identity
+\[
+ \log c(E,t)=\sum_{j\ge1}(-1)^{j-1}
+                    (j-1)!\operatorname{ch}_j(E)t^j
+                                                               \tag{10}
+\]
+holds rationally by the splitting principle.
+By (1), all positive Chern-character components
+except degree p vanish, hence
+$c_p(E)=(-1)^{p-1}(p-1)!m\alpha$.
+The algebraic $c_p^{CH}(E)$ has precisely
+this canonical Betti class. Equation (9)
+therefore returns alpha on the ORIGINAL X.
+\end{proof}
+
+\begin{theorem}[TWO-FOLD integrability iff, for all original X]
+For any arbitrary original smooth projective X,
+any p and any rational Hodge alpha, the
+following are equivalent:
+
+(1) alpha has a genuine original-X rational Chow
+cycle representative.
+
+(2) There exist m>0, two honest smooth complex
+topological bundles E_+,E_- over X, and
+two genuine $(0,1)$-operators $\bar\partial_+$,
+$\bar\partial_-$ such that
+\[
+ \boxed{
+ \operatorname{ch}_{top}(E_+)
+  -\operatorname{ch}_{top}(E_-)=m\alpha
+ \quad\text{in ALL even cohomological grades},
+ \qquad
+ \bar\partial_+^2=\bar\partial_-^2=0.
+ }                                                        \tag{11}
+\]
+The zero-degree rank difference is zero in (11);
+the ranks may be equalized by adding trivial
+summands and increased arbitrarily, realizing
+the same equation at arbitrarily high spatial
+projective-fiber dimension.
+The explicit reconstructed original-X Chow
+cycle is
+\[
+ \boxed{
+ Z_\alpha=\frac{
+ \operatorname{ch}^{CH}_p(E_+)
+ -\operatorname{ch}^{CH}_p(E_-)}{m}.}              \tag{12}
+\]
+\end{theorem}
+\begin{proof}
+(2) implies (1) by Koszul--Malgrange, GAGA,
+algebraic Chern-character operations and their
+Betti comparison; equation (12) is exact.
+For (1) implies (2), the rational algebraic
+Chern-character isomorphism supplies a genuine
+rational K0 class with only pth Chow component
+equal to the given original-X cycle Z.
+Multiply by m to express it as a difference
+of two honest algebraic vector bundles.
+Their algebraic holomorphic structures have
+square-zero $(0,1)$ connections and the
+full rational Chern character difference is
+$m\,\operatorname{cl}_X^{can}(Z)=m\alpha$.
+Add the same trivial summands to each to
+equalize ranks and allow any further
+finite projective-fiber dimension.
+\end{proof}
+
+Equation (11) is the exact requested
+\emph{two-outcome spatial geometry test}:
+a proof direction is a construction of
+integrable $(0,1)$ realizations for the
+topologically existing pure-class folds
+for ALL (X,p,alpha);
+a disproof direction is a theorem showing
+that at least one actual rational Hodge
+class on some smooth projective original X
+admits NO compatible integrable pair
+satisfying (11). Neither direction
+confuses a harmless change of marked Hodge
+type with the fundamental obstruction
+to geometric algebraic realization.
+
 \section{Relation to current GST repository laws and distinct novelty}
 The prior 2026-10-20 \emph{all-grade topological K-source
 packet} derived a pure-middle virtual class on a
