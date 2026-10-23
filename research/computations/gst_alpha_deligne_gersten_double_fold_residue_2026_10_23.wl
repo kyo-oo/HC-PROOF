@@ -77,7 +77,7 @@ spectralChecks=<|
  "actualProjector"->TrueQ[
   FullSimplify[(spectralP.spectralP-spectralP)/.x*y->1-z^2]
        ==ConstantArray[0,{2,2}]],
- "projectorTraceOne"->TrueQ[Tr[spectralP]==1],
+ "projectorTraceOne"->TrueQ[FullSimplify[Tr[spectralP]==1]],
  "chernCurvatureCoefficient"->spectralCurvature,
  "curvatureEqualsHalfResidue"->TrueQ[
   FullSimplify[spectralCurvature-1/(4z)]==0],
