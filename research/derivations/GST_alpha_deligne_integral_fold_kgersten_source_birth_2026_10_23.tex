@@ -2241,6 +2241,467 @@ visible special-fiber support vanishes.
 \end{proof}
 
 
+
+\section{All-original-world polynomial spectral approximation and its genuine finite cover}
+The October 22--24 component-birth operations require algebraic
+polynomial data on the true fold. The October 23 all-target spectral
+theorem already supplies a finite \emph{holomorphic} idempotent for any
+prescribed rational Hodge class. We now ACTUALLY build, from that
+same prescribed input, finite REGULAR POLYNOMIAL matrices and
+corresponding FINITE ALGEBRAIC spectral-cover schemes.
+This construction produces real algebraic fold geometry for every
+input, even those whose original Chow existence is unknown.
+We then calculate the precise gap between polynomial and
+idempotent algebraic sources, rather than silently treating
+their near-equality as Chow equality.
+
+\begin{theorem}[All original $X,p,\alpha$: actual polynomial matrices and finite algebraic spectral worlds detect the prescribed topological class on a finite core]
+Let $X$ be ANY connected smooth projective complex variety,
+$1\le p\le\dim X$,
+and let $\alpha\in H^{2p}(X,\mathbb Q)$ be prescribed;
+in particular $\alpha$ may be rational Hodge and
+primitive. Let $q:J\to X$ be the ACTUAL smooth AFFINE
+Jouanolou torsor.
+Choose the genuine finite global HOLOMORPHIC idempotents
+$P_+,P_-$ and positive integer $m$ from the earlier
+all-target construction, so that
+\[
+ [\,\operatorname{ch}^{an}_p(P_+)
+ -\operatorname{ch}^{an}_p(P_-)\,]
+       =m\,q^*\alpha .
+\]
+There exists a compact subset $K\subset J^{an}$
+with rational restriction map
+\[
+ \boxed{H^{2p}(J,\mathbb Q)\longrightarrow
+                H^{2p}(K,\mathbb Q)
+                \text{ injective}.}                  \tag{54}
+\]
+For EVERY real $\epsilon>0$ there exist finite
+REGULAR ALGEBRAIC matrices
+\[
+ Q_{\pm,\epsilon}\in
+  \operatorname{Mat}_{N_\pm}\Gamma(J,\mathcal O_J)
+\]
+such that
+\[
+ \boxed{
+ \sup_K\|Q_{\pm,\epsilon}-P_\pm\|<\epsilon,
+ \quad
+ \sup_K\|Q_{\pm,\epsilon}^2
+              -Q_{\pm,\epsilon}\|\xrightarrow[\epsilon\to0]{}0.
+ }                                                   \tag{55}
+\]
+After choosing epsilon sufficiently small,
+the holomorphic Riesz spectral projectors
+\[
+ \widetilde P_{\pm,\epsilon}(x)=
+   \frac{1}{2\pi i}\oint_{|\lambda-1|=1/2}
+       (\lambda I-Q_{\pm,\epsilon}(x))^{-1}\,d\lambda
+                                                              \tag{56}
+\]
+exist on an actual analytic OPEN NEIGHBORHOOD
+of K, and on K they are homotopic as
+topological idempotents to $P_\pm$.
+Consequently
+\[
+ \boxed{
+ \left[
+   \operatorname{ch}_p(\widetilde P_{+,\epsilon})
+  -\operatorname{ch}_p(\widetilde P_{-,\epsilon})
+ \right]\Big|_K
+        =m(q^*\alpha)|_K.}                           \tag{57}
+\]
+At the SAME TIME, each $Q_{\pm,\epsilon}$ determines
+an ACTUAL finite algebraic spectral world
+\[
+ \boxed{
+ T_{\pm,\epsilon}
+ =\operatorname{Spec}_J
+  \frac{\mathcal O_J[\lambda]}
+       {\det(\lambda I-Q_{\pm,\epsilon})}
+       \longrightarrow J ,}                         \tag{58}
+\]
+finite flat of degree $N_\pm$, with concrete
+characteristic-polynomial and discriminant
+equations chosen from the prescribed
+$\alpha$ through the holomorphic projectors.
+Neither (56) nor the topological sheet class
+(57) is asserted to extend to a REGULAR
+ALGEBRAIC idempotent on J.
+\end{theorem}
+\begin{proof}
+The affine-space torsor $q$ is a complex
+homotopy equivalence, and X has finite
+dimensional rational singular homology.
+Represent a finite basis of
+$H_{2p}(J,\mathbb Q)$ by finite singular
+cycles and take K to contain their
+compact images. The inclusion
+$H_{2p}(K,\mathbb Q)\to H_{2p}(J,\mathbb Q)$
+is surjective. Duality over Q and the
+universal coefficient theorem yield
+the injection (54). Enlarging K
+preserves this property.
+
+Choose a closed algebraic embedding
+$J\hookrightarrow\mathbb A_{\mathbb C}^M$.
+By the ideal-sheaf exact sequence and
+Cartan Theorem B on the Stein manifold
+$\mathbb C^M$, EVERY holomorphic entry
+of $P_\pm$ extends to an ENTIRE function
+on $\mathbb C^M$. Its Taylor polynomials
+converge uniformly on every compact
+subset. Restrict sufficiently many of
+these polynomials to J to obtain actual
+global REGULAR ALGEBRAIC functions
+approximating ALL finitely many entries
+of $P_\pm$ uniformly on K.
+This gives the first assertion (55).
+The algebraic polynomial defect obeys
+\[
+ Q^2-Q=(Q-P)^2+(Q-P)P+P(Q-P)-(Q-P),
+\]
+so the second assertion (55) follows
+uniformly from $P^2=P$ and boundedness
+of P on compact K.
+This construction actually creates
+regular polynomial matrices from the
+specified target class, without
+algebraic K0 or CH witnesses.
+
+For an idempotent P and
+$|\lambda-1|=1/2$ one has the
+EXACT resolvent
+\[
+ (\lambda I-P)^{-1}=
+ \lambda^{-1}(I-P)+(\lambda-1)^{-1}P .
+\]
+The norms of these resolvents are
+bounded uniformly over K and the
+chosen contour. If Q is sufficiently
+close to P on K, the Neumann series
+shows the same contour avoids the
+spectrum of every $P+s(Q-P)$,
+$s\in[0,1]$, uniformly on K.
+Continuity gives an analytic
+neighborhood on which (56) is
+well-defined and holomorphic.
+The Riesz projectors along the
+straight homotopy are a continuous
+homotopy of idempotents on K.
+Their actual topological Chern
+characters therefore agree.
+Naturality of the holomorphic
+Chern character and the original
+choice of $P_\pm$ give (57).
+
+Finally
+$\det(\lambda I-Q)$ is a monic
+polynomial of degree $N_\pm$
+over the genuine affine algebraic
+coordinate ring of J. Its quotient
+is a finite FREE module of rank
+$N_\pm$, giving the actual
+finite flat algebraic spectral
+cover (58), whether or not
+its discriminant vanishes.
+The selected 0/1 eigenvalue
+clusters are holomorphic on K
+but need not be invariant under
+the global algebraic monodromy
+of this genuine spectral cover.
+\end{proof}
+
+\begin{theorem}[Universal quantitative source-type gap and forced spectral-gap closure]
+Use the exact input and compact core K
+of the previous theorem. Define
+\[
+ M=\max_{\pm}\sup_{x\in K}
+       \|2P_\pm(x)-I\|,\qquad
+ \delta=\frac{1}{2\max(1,M)}>0 .
+\]
+If ACTUAL REGULAR ALGEBRAIC idempotents
+$R_\pm\in\operatorname{Mat}_{N_\pm}
+\Gamma(J,\mathcal O_J)$ satisfy
+\[
+ \boxed{\max_\pm\sup_K\|R_\pm-P_\pm\|<\delta,} \tag{59}
+\]
+then an actual original-$X$
+$Z_\alpha\in CH^p(X)_{\mathbb Q}$
+exists with
+$\operatorname{cl}^{can}_X(Z_\alpha)=\alpha$.
+
+The contrapositive is a UNIFORM POSITIVE
+norm gap for a nonalgebraic rational
+cohomology class: when
+$\alpha\notin\operatorname{im}
+\mathrm{cl}^{can}_X$,
+no exact regular algebraic pair
+$R_\pm$ of the same sizes can
+satisfy (59), although the
+approximate polynomial matrices (55)
+exist with arbitrarily small
+idempotency defect for that
+same alpha.
+
+More generally let $Q_{s,\pm}$,
+$s\in[0,1]$, be a CONTINUOUS family
+of regular polynomial or holomorphic
+matrices on J. If for every
+$(s,x)\in[0,1]\times K$ their spectra
+avoid the fixed separation circle
+$|\lambda-1|=1/2$, then the associated
+Riesz $1$-cluster projectors on K have
+CONSTANT rational degree-$2p$
+Chern-character difference.
+Hence interpolating between two
+different rational cohomology classes
+detected on K NECESSARILY forces
+some actual $(s,x)$ at which an
+eigenvalue crosses that circle.
+A geometric discriminant located
+entirely AWAY from the cohomological
+core is not such a change.
+\end{theorem}
+\begin{proof}
+For arbitrary idempotents P and R
+in the SAME finite matrix algebra, put
+\[
+ U=RP+(I-R)(I-P)
+   =I+(R-P)(2P-I).
+\]
+The hypothesis (59) implies
+$\|U-I\|<1/2$ on K, so
+U is invertible there by the
+Neumann series. Moreover
+$UP=RP=RU$, hence
+$R=UPU^{-1}$ on K.
+Thus the true complex topological
+vector bundles defined by R and P
+are isomorphic over K, and their
+Chern characters agree there.
+Since restriction of $H^{2p}(J,\mathbb Q)$
+to K is injective, the genuine
+algebraic projectors R have
+Chern-character difference
+$m q^*\alpha$ in FULL rational
+cohomology of J.
+The affine-bundle Chow isomorphism
+$q^*:CH^p(X)_{\mathbb Q}
+ \overset\sim\longrightarrow
+ CH^p(J)_{\mathbb Q}$
+therefore returns
+\[
+ Z_\alpha=(q^*)^{-1}
+ \frac{\operatorname{ch}^{CH}_p(\operatorname{im}R_+)
+       -\operatorname{ch}^{CH}_p(\operatorname{im}R_-)}m
+\]
+with EXACT canonical rational Betti class alpha.
+The quantitative contrapositive follows.
+This does NOT construct the regular R for
+unknown higher-primitive alpha.
+
+For the path $Q_{s,\pm}$,
+the fixed spectral gap allows
+the Riesz contour integral to vary
+continuously in $(s,x)$ over
+$[0,1]\times K$.
+It yields a genuine homotopy
+of finite-rank topological bundle
+projectors, so the rational
+Chern-character difference on K
+is constant. Injectivity (54)
+then distinguishes any different
+original-$X$ endpoint classes.
+The required gap crossing is
+a NECESSARY topology-changing
+event; existence of that event
+does not automatically create
+a valid algebraic Chow source.
+\end{proof}
+
+\begin{theorem}[An actual two-sheet polynomial spectral fold with MONODROMY, no algebraic sheet selector, and vanishing linear anti-deck return]
+Return to the SAME TRUE affine GST quadric
+$J=Q=\operatorname{Spec}
+ \mathbb C[x,y,z]/(xy+z^2-1)$.
+For any sufficiently small
+real $\varepsilon>0$, the
+REGULAR ALGEBRAIC near-projector
+\[
+ \boxed{
+ Q_\varepsilon=
+ \begin{pmatrix}
+   1&\varepsilon x\\
+   \varepsilon y&0
+ \end{pmatrix},
+ \quad
+ Q_\varepsilon^2-Q_\varepsilon
+       =\varepsilon^2xy I_2}                  \tag{60}
+\]
+converges on every fixed compact
+K to the EXACT regular idempotent
+$\operatorname{diag}(1,0)$.
+Its genuine degree-two spectral cover
+is the smooth finite double-world
+\[
+ \boxed{
+ \pi:T_\varepsilon\to Q,\qquad
+ t^2=D_\varepsilon(z)
+ =1+4\varepsilon^2(1-z^2).}                  \tag{61}
+\]
+The function-field extension
+$\mathbb C(Q)(\sqrt{D_\varepsilon})/
+ \mathbb C(Q)$ is quadratic
+for every positive epsilon.
+There is NO nontrivial
+rational algebraic idempotent
+commuting with the matrix
+$Q_\varepsilon$ on Q,
+even though the nearby
+regular rank-one idempotent
+$\operatorname{diag}(1,0)$
+certainly exists.
+
+Over the nonbranch open locus
+$Q^\circ=\{D_\varepsilon\ne0\}$,
+the ACTUAL algebraic involution
+on the cover
+\[
+ B_\varepsilon
+ =\frac{2Q_\varepsilon-I}{t},
+ \qquad B_\varepsilon^2=I,\qquad
+ E_\pm=\frac{I\pm B_\varepsilon}{2}
+\]
+produces two genuine regular
+algebraic rank-one eigenmodules
+$L_\pm=\operatorname{im}E_\pm$ on
+$T_\varepsilon^\circ$.
+The deck transformation
+$\sigma(t)=-t$ EXCHANGES them.
+Consequently the genuine
+algebraic $K_0$ anti-source
+obeys
+\[
+ \boxed{
+ \pi_*([L_+]-[L_-])=0
+        \quad\text{in }
+          K_0^{alg}(Q^\circ).}                \tag{62}
+\]
+The two true branch fibers on
+the ORIGINAL Q are at
+$z=\pm\sqrt{1+(4\varepsilon^2)^{-1}}$.
+Each is an irreducible
+principal Cartier divisor of Q,
+hence its individual original
+CH$^1(Q)$ class is ZERO.
+As $\varepsilon\to0$, the branch
+fibers escape every fixed compact
+core, although the two-world
+algebraic monodromy is genuinely
+nontrivial for every epsilon.
+\end{theorem}
+\begin{proof}
+Direct matrix multiplication gives
+(60) and
+\[
+ \det(\lambda I-Q_\varepsilon)
+  =\lambda^2-\lambda-\varepsilon^2xy,\qquad
+ (2Q_\varepsilon-I)^2
+   =(1+4\varepsilon^2xy)I .
+\]
+On the actual Q, $xy=1-z^2$, giving
+the discriminant equation (61).
+The rational function field is
+$\mathbb C(Q)=\mathbb C(x,z)$.
+For every positive epsilon,
+$D_\varepsilon(z)$ has two
+DISTINCT SIMPLE zeros in z.
+Its order at each corresponding
+divisorial valuation of
+$\mathbb C(x,z)$ is one, hence
+it cannot be a square in that
+field. Therefore the
+characteristic polynomial is
+irreducible over $\mathbb C(Q)$.
+The centralizer of
+$Q_\varepsilon$ in
+$\operatorname{Mat}_2(\mathbb C(Q))$
+is the FIELD
+$\mathbb C(Q)[Q_\varepsilon]$,
+which has no idempotents other
+than 0 and 1. Thus its local
+0/1 cluster cannot be made
+a rational algebraic commuting
+idempotent on the original Q.
+This statement concerns the
+chosen polynomial Q, not every
+possible algebraic projector.
+
+The branch components
+$z=\pm\sqrt{1+(4\varepsilon^2)^{-1}}$
+are smooth irreducible
+$\mathbb G_m$ fibers, since their
+$xy=1-z^2$ constant is
+nonzero; they are cut by the
+single regular functions
+$z-\text{constant}$, so each
+is principal and has Chow
+class zero on Q.
+The double cover T itself
+is smooth because the branch
+divisor is smooth and the
+defining equations have
+linearly independent gradients
+along the ramification.
+Away from branch t is invertible,
+and the displayed E_+,E_-
+are honest regular algebraic
+idempotents satisfying
+$E_++E_-=I$.
+The deck involution exchanges
+them, so for finite etale
+$\pi:T_\varepsilon^\circ\to Q^\circ$
+proper pushforward on vector
+bundles satisfies
+\[
+ \pi_*[L_-]
+  =\pi_*[\sigma^*L_+]
+  =\pi_*[L_+] .
+\]
+Subtract to obtain (62).
+Finally $|\sqrt{1+(4\epsilon^2)^{-1}}|
+\to\infty$ as epsilon tends
+to zero, establishing the
+geometric escape of the true
+branch locus from compact K.
+\end{proof}
+
+\paragraph{The mathematical consequence for higher-primitive GST source birth.}
+For EVERY original-$X$ rational Hodge alpha we now have
+an ACTUAL prescribed-alpha finite polynomial
+spectral-cover family with local holomorphic
+eigenbundle carrying the correct alpha class
+on a finite cohomology-detecting compact core.
+This is genuine algebraic geometry with
+the correct initial topological class,
+not a supplied CHOW witness.
+However, the explicit Q calculation
+shows that polynomial world-birth,
+arbitrarily small idempotent defect
+and nontrivial double-world monodromy
+do not FORCE a nonzero ORIGINAL-BASE
+algebraic eigenmodule or period.
+Global REGULAR algebraic
+source birth requires additional
+geometric information beyond the
+finite cover and its local analytic
+sheet labeling. The missing implication
+is demonstrated on an actual affine
+GST world, not assumed away by
+a formal source-surjectivity hypothesis.
+
+
 \section{Outcome of the exact higher-primitive proof attempt}
 We CONSTRUCTED, from arbitrary rational Hodge alpha
 and no supplied algebraic cycle, the genuine rational
