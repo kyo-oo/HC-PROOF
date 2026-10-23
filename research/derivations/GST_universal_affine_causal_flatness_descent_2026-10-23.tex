@@ -328,6 +328,175 @@ Chern-character naturality to obtain
 (12)--(13).
 \end{proof}
 
+\section{Sharp GST projective higher-causal law: remove the entire scalar curvature}
+
+The pure topological bundle E_alpha over
+original X from the predecessor spatial
+fold satisfies
+$\mathrm{ch}(E_\alpha)=r+m\alpha$.
+Let H_alpha be ANY holomorphic Oka
+realization of q^*E_alpha on Stein J.
+The Hodge type of the target alpha
+has ONE precise geometric consequence:
+the determinant line bundle
+$\det H_\alpha$ comes from an actual
+holomorphic line bundle on original X,
+even before higher-rank H_alpha descends.
+
+\begin{lemma}[The original Hodge condition ALGEBRAIZES the determinant]
+For a rational Hodge
+$\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)$
+and an honest topological
+$E_\alpha$ with pure
+$\mathrm{ch}(E_\alpha)=r+m\alpha$,
+there exists a holomorphic algebraic
+line bundle L on the ORIGINAL X
+such that its topological c1 is
+$c_1(E_\alpha)$. Consequently
+\[
+ \boxed{\det H_\alpha\cong q^*L}
+ \tag{19}
+\]
+holomorphically, and its determinant
+line has a canonical flat relative
+connection along all affine-fiber
+directions.
+\end{lemma}
+\begin{proof}
+If p>=2, $\mathrm{ch}_1(E_\alpha)=0$
+rationally, so the integral first
+Chern class is torsion and its
+image in $H^2(X,\mathcal O_X)$
+is zero. If p=1,
+$c_1(E_\alpha)=m\alpha$ rationally
+is of Hodge type (1,1), hence its
+image in $H^{0,2}(X)$ is zero.
+By Hodge--Dolbeault comparison
+this is the image under the
+connecting map of the holomorphic
+exponential sequence
+$H^1(X,\mathcal O_X^*)
+ \xrightarrow{c_1}H^2(X,\mathbb Z)
+ \to H^2(X,\mathcal O_X)$.
+Therefore there exists a genuine
+holomorphic line bundle L on
+compact projective X with
+$c_1(L)=c_1(E_\alpha)$,
+and GAGA makes L algebraic.
+The two holomorphic lines
+$\det H_\alpha$ and q^*L over
+Stein J have the same integral
+topological first Chern class,
+because H_alpha is the
+Oka realization of q^*E_alpha.
+By Oka--Grauert for line bundles
+on Stein spaces, they are
+holomorphically isomorphic.
+Give the latter its canonical
+translation-flat relative connection.
+\end{proof}
+
+\begin{theorem}[TRACeless higher-causal 2-cell vanishing SUFFICES, all X,p,N]
+For the fixed topological pure-class
+fold E_alpha and ANY holomorphic
+Oka realization H_alpha on J,
+suppose a holomorphic vertical
+connection $\nabla$ has
+vanishing TRACELESS curvature
+\[
+ \boxed{
+  F_\nabla^{vert}
+    -\frac1r\mathrm{tr}(F_\nabla^{vert})
+                  \,\mathrm{Id}_{H_\alpha}
+       =0.
+ }                                                       \tag{20}
+\]
+Then one can CONSTRUCT, without
+further cohomological assumptions,
+an EXACTLY FLAT holomorphic
+vertical connection $\nabla'$ on
+the SAME H_alpha. Consequently
+the actual original-X algebraic
+cycle
+\[
+ \boxed{
+ Z_\alpha=
+ \frac{(-1)^{p-1}}{m(p-1)!}
+          c_p^{CH}(E_\alpha^{alg}),
+ \qquad
+ \mathrm{cl}^{can}_X(Z_\alpha)=\alpha
+ }                                                       \tag{21}
+\]
+is obtained by holomorphic
+descent of H_alpha to
+$E_\alpha^{hol}$, and GAGA
+algebraization to $E_\alpha^{alg}$.
+\end{theorem}
+\begin{proof}
+Equation (20) says that
+$F_\nabla^{vert}=\eta\mathrm{Id}$
+for a holomorphic relative
+two-form $\eta$ on J.
+The connection induced on
+$\det H_\alpha$ has curvature
+$r\eta$. By the determinant
+lemma choose a flat relative
+holomorphic connection
+$\nabla_{\det}^0$ on
+the SAME determinant line.
+The difference of the induced
+connection and $\nabla_{\det}^0$
+is a globally defined HOLomorphic
+relative one-form $\theta$ on J:
+\[
+ \nabla_{\det}-\nabla_{\det}^0
+      =\theta,\qquad
+ d_{\mathrm{vert}}\theta=r\eta.
+\]
+Set
+$\nabla'=\nabla-\frac1r\theta\,\mathrm{Id}$.
+The scalar correction changes
+curvature by
+$-\frac1r d_{\mathrm{vert}}\theta$
+while commuting with all
+original connection coefficients.
+Therefore
+$F_{\nabla'}^{vert}
+ =\eta\mathrm{Id}-
+ \frac1r(r\eta)\mathrm{Id}=0$.
+The relative flatness descent
+theorem gives an honest
+holomorphic bundle on original
+X with the SAME topological
+Chern character r+m alpha.
+GAGA makes it algebraic.
+The Newton relation for an
+entirely pure pth rational
+Chern character gives
+$c_p=(-1)^{p-1}(p-1)!m\alpha$.
+Thus (21) has the required
+exact canonical Betti class.
+\end{proof}
+
+This result identifies the
+genuinely NONABELIAN part
+of the spatial higher-causal
+obstruction: the scalar/trace
+part is removable directly
+from the Hodge structure and
+the determinant line geometry.
+The remaining projective
+curvature is not a hidden
+rank-one issue or a failure
+of original-world Hodge purity.
+For this fixed Oka realization,
+proving equation (20)
+uniformly would complete the
+source construction by (21);
+we do not claim equation
+(20) follows without further
+geometry.
+
 \section{FIRST causal arrows always exist; the genuine two-cell may not}
 Write again $G_1=V\times_XJ$,
 and let $a,\pi_J:G_1\to J$ be respectively
