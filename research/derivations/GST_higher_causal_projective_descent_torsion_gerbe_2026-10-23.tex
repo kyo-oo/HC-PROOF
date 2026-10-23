@@ -429,6 +429,79 @@ also proves that no unverified
 Brauer lift is being assumed.
 \end{proof}
 
+\begin{corollary}[Complete rational characteristic spectrum of the projective fold]
+For rank $r\ge2$ the algebra
+of symmetric rational
+polynomials in the centered
+Chern roots
+$y_i=x_i-\frac1r\sum_jx_j$
+is freely generated over
+$\mathbb Q$ by the
+$r-1$ intrinsic projective
+Chern classes
+\[
+ \boxed{
+   \operatorname{pch}_2,\dots,
+   \operatorname{pch}_r.
+ }                                                       \tag{17a}
+\]
+Here the first centered power
+vanishes identically,
+$\sum_i y_i=0$.
+Explicitly
+\[
+ \boxed{
+ \begin{aligned}
+  \operatorname{pch}_2
+    &=\operatorname{ch}_2
+      -\frac{c_1^2}{2r},\\
+  \operatorname{pch}_3
+    &=\operatorname{ch}_3
+      -\frac{c_1}{r}\operatorname{ch}_2
+      +\frac{c_1^3}{3r^2}.
+ \end{aligned}
+ }                                                       \tag{17b}
+\]
+Thus the intrinsic projective
+Segre logarithm retains ODD
+higher codimension information,
+including the entire cubic
+projective class, without
+an unlifted vector-bundle
+choice.
+\end{corollary}
+\begin{proof}
+The fundamental theorem of
+symmetric polynomials says
+$\mathbb Q[y_1,\dots,y_r]^{S_r}
+=\mathbb Q[e_1,\dots,e_r]$,
+where $e_j$ are the elementary
+symmetric polynomials. The
+centered relation imposes
+$e_1=\sum_i y_i=0$.
+The invariant ring therefore
+becomes the polynomial ring
+$\mathbb Q[e_2,\dots,e_r]$.
+Newton identities over
+characteristic-zero $\mathbb Q$
+provide a triangular invertible
+polynomial change of
+generators between
+$e_2,\dots,e_r$ and
+the power sums
+$\sum_i y_i^p$ for
+$2\le p\le r$.
+Dividing each by $p!$
+gives precisely the
+projective Chern characters
+in (14)--(15), proving
+freedom and generation.
+Expand $(x_i-\mu)^2$
+and $(x_i-\mu)^3$,
+using $\mu=c_1/r$,
+to obtain (17b).
+\end{proof}
+
 \begin{theorem}[DIRECT original-X Chow return from a descended GST projective world]
 Let alpha be ANY rational Hodge class
 of codimension p>=2 on arbitrary
