@@ -22,7 +22,21 @@ chernTests=Flatten[Table[
 gauge={{1,Exp[z]},{0,1}};
 pzero={{1,0},{0,0}};
 conjugate=Simplify[gauge.pzero.Inverse[gauge]];
+(* Independent finite bihomogeneous scheme equation A^2=s A
+   for the universal all-X ambient incidence operator A=x h^T.
+   The algebraic identity holds for all N symbolically by rank one;
+   these 7 matrices are only a regression check. *)
+incidenceChecks=Table[
+ Module[{xx=Array[x,n],hh=Array[h,n],aa,inc,err},
+   aa=Outer[Times,xx,hh];inc=hh.xx;
+   err=Map[Together,aa.aa-inc aa,{2}];
+   {n,And@@(PossibleZeroQ/@Flatten[err]),
+     TrueQ[FullSimplify[Tr[aa]==inc]]}
+ ],{n,2,8}];
 result=<|
+ "incidenceFinitePoleSchemeChecks"->Length[incidenceChecks],
+ "finitePoleSchemeIdempotenceAllPass"->And@@Flatten[incidenceChecks[[All,2;;3]]],
+ "finitePoleSchemeFailures"->Select[incidenceChecks,Not[And@@#[[2;;3]]]&],
  "projectorMatrixDimensionCases"->Length[rootChecks],
  "allIdempotenceAndRankOnePass"->And@@Flatten[rootChecks[[All,2;;3]]],
  "projectorFailures"->Select[rootChecks,Not[And@@#[[2;;3]]]&],
