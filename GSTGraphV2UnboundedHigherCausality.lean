@@ -976,13 +976,17 @@ theorem centeredRoot_shift_invariant
   have hr0 : (r : ℚ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt hr)
   have hs :
-      (∑ k : Fin r, x k + c) =
+      (∑ k : Fin r, (x k + c)) =
       (∑ k : Fin r, x k) + (r : ℚ) * c := by
-    simp [Finset.sum_add_distrib, nsmul_eq_mul]
-  change (x i + c) - (∑ k : Fin r, x k + c) / (r : ℚ) =
-    x i - (∑ k : Fin r, x k) / (r : ℚ)
+    calc
+      (∑ k : Fin r, (x k + c)) =
+          (∑ k : Fin r, x k) + (∑ _k : Fin r, c) := by
+            rw [Finset.sum_add_distrib]
+      _ = (∑ k : Fin r, x k) + (r : ℚ) * c := by
+            simp [nsmul_eq_mul]
+  dsimp [centeredRoot, shiftedRoots]
   rw [hs]
-  field_simp
+  field_simp [hr0]
   ring
 
 /-- Intrinsic pth projective Chern character numerator
