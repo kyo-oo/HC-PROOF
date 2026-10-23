@@ -369,6 +369,131 @@ and $q_*(\zeta^{c-1})=1$ gives the two cases,
 including (16).
 \end{proof}
 
+\section{The FULL NONLINEAR fold has two explicit algebraic projectors (codimension-two center)}
+The previous original-world projector
+$\Pi_X=b^*b_*$ does not itself display
+the born exceptional algebraic coefficient.
+For every genuine smooth center Z of codimension TWO,
+the entire second projector and BOTH inverse
+coefficient extraction operators are actually
+expressible by the SAME fold geometry.
+
+\begin{theorem}[Exact FULL 2-channel GST fold correspondence, in CHOW and Hodge]
+Let $i:Z\hookrightarrow X$ be ANY smooth
+codimension-two regular algebraic center.
+Let $b:\widetilde X\to X$ be its true Rees
+blowup, $j:E\hookrightarrow\widetilde X$
+the exceptional divisor and $q:E=P_Z(N)\to Z$.
+For any codimension-p ACTUAL rational Chow class
+$W\in CH^p(\widetilde X)_\mathbb Q$, define
+TWO actual algebraic coefficients without any
+hidden cycle-class selector:
+\[
+ \boxed{
+  A_X(W)=b_*W\in CH^p(X)_\mathbb Q,\qquad
+  A_Z(W)=-q_*j^*W\in CH^{p-1}(Z)_\mathbb Q.
+ }                                                     \tag{22}
+\]
+Then the FULL algebraic fold reconstructs W EXACTLY:
+\[
+ \boxed{
+ W=b^*A_X(W)+j_*q^*A_Z(W)
+ \qquad\text{in }CH^p(\widetilde X)_\mathbb Q.
+ }                                                     \tag{23}
+\]
+In particular TWO actual algebraic idempotents on
+the WHOLE folded world are
+\[
+ \boxed{
+ \Pi_X=b^*b_*,
+ \qquad
+ \Pi_{\rm born}=-j_*q^*q_*j^*,
+ \quad
+ \Pi_X^2=\Pi_X,\quad
+ \Pi_{\rm born}^2=\Pi_{\rm born},\quad
+ \Pi_X\Pi_{\rm born}=0,\quad
+ \Pi_X+\Pi_{\rm born}=1.
+ }                                                     \tag{24}
+\]
+Both operators are true algebraic push--pull
+correspondences, not merely linear maps on Hodge vectors.
+The SAME equations (22)--(24) hold for rational
+Betti cohomology, preserve the full Hodge bidegrees
+(with the normal Tate grading in the exceptional term),
+and commute EXACTLY with the canonical rational
+Chow-to-Betti cycle-class map.
+The entire original-X plus born-Z Hodge
+structure has therefore been algebraically
+constructed and split by a single nonlinear fold.
+\end{theorem}
+\begin{proof}
+The true codimension-two blowup Chow formula
+(13) gives a UNIQUE expression
+$W=b^*a+j_*q^*z$, with
+$a\in CH^p(X)$ and $z\in CH^{p-1}(Z)$.
+Using $b_*b^*=1$ and
+$b_*j_*q^*=i_*q_*q^*=0$,
+the first coefficient is $a=b_*W$.
+For the second, use the
+ACTUAL normal self-intersection formula
+\[
+ j^*j_*(q^*z)=
+ c_1(N_{E/\widetilde X})q^*z
+ =-\zeta q^*z.
+\]
+Apply $-q_*j^*$ to W:
+\[
+ -q_*j^*W
+ =-q_*q^*i^*a+q_*(\zeta q^*z)
+ =z,
+\]
+because $q_*1=0$ and $q_*\zeta=1$
+for the actual projective-line bundle q.
+This proves (22)--(23) as ACTUAL CHOW equalities.
+The reconstruction establishes $\Pi_X+\Pi_{\rm born}=1$;
+their complementary images and the coefficient
+formulas prove idempotence and orthogonality.
+Every arrow is an honest algebraic proper
+pushforward or smooth/refined pullback.
+Their Betti realization satisfies the same
+intersection and projective fiber identities,
+so the complete Hodge structure and
+canonical Chow comparison obey exactly
+the same two algebraic projectors.
+\end{proof}
+
+\begin{corollary}[Exact algebraic fold relation for its OWN exceptional square]
+For EVERY original X and smooth codimension-two Z,
+the born exceptional divisor satisfies the
+EXPLICIT Chow identity
+\[
+ \boxed{
+ [E]^2=-b^*[Z]+
+ j_*q^*c_1^{CH}(N_{Z/X})
+     \in CH^2(\widetilde X).
+ }                                                     \tag{25}
+\]
+It is therefore NOT merely a formal cohomology
+statement that the normal fold creates algebraic
+data. Its genuine exceptional self-intersection
+contains the ACTUAL original-X algebraic class
+$-[Z]$, and $b_*[E]^2=-[Z]$.
+\end{corollary}
+\begin{proof}
+Apply (22) to W=E². The
+original coefficient is $b_*E²=-[Z]$,
+as proved in (16).
+The exceptional coefficient is
+$-q_*j^*E²=-q_*\zeta²$.
+The lines-convention rank-two projective
+relation $\zeta^2+c_1(N)\zeta+c_2(N)=0$
+implies $q_*\zeta²=-c_1(N)$ since
+$q_*\zeta=1$ and $q_*1=0$.
+Hence $A_Z(E²)=c_1(N)$.
+Substitute both actual Chow coefficients
+into the reconstruction (23).
+\end{proof}
+
 \section{An explicit FOLD-BORN nondivisor algebraic source from a polynomial section}
 The preceding all-X equations are not restricted
 to divisor-products: a genuine codimension-c
