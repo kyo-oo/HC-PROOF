@@ -351,6 +351,122 @@ single positive pure-ch bundle might
 not exist on projective X.
 \end{proof}
 
+\section{Exact finite ALGEBRAIC equations of the realized whole spatial fold}
+For the specific GST incidence world the
+polynomial-growth criterion can be written
+without ANY analytic asymptotic notation,
+using finite sections on the ORIGINAL
+projective ambient product.
+
+Let $\bar J=X\times(\mathbb P^N)^\vee$.
+Let L=$O_X(1)\boxtimes O_{(\mathbb P^N)^\vee}(1)$.
+Write $s(x,\ell)=\sum_{i=0}^N x_i\ell_i$
+for the canonical incidence section
+$s\in H^0(\bar J,L)$.
+Its zero locus is the genuine smooth
+incidence boundary divisor B, and
+$J=\bar J\setminus B$.
+
+\begin{theorem}[Finite-pole matrix equation, arbitrary X and N]
+For every prescribed rational Hodge alpha
+and every N from an actual projective embedding,
+the original-X canonical algebraicity
+condition is EQUIVALENT to existence of
+positive integers k,m,M,r and a matrix
+\[
+ \boxed{
+ A=(A_{ij})\in
+ \operatorname{Mat}_M H^0(\bar J,L^{\otimes k})
+ }                                                        \tag{4.5}
+\]
+with the EXACT scheme equations
+\[
+ \boxed{
+ A^2=s^k A,\qquad
+ \operatorname{tr} A=r s^k,
+ }                                                        \tag{4.6}
+\]
+and with the full rational Betti
+Chern-character condition
+\[
+ \boxed{
+ \operatorname{ch}_{top}
+   \bigl(\operatorname{im}(A/s^k)\bigr)
+      =r+m q^*\alpha.
+ }                                                        \tag{4.7}
+\]
+The quotient $A/s^k$ is an ACTUAL
+algebraic idempotent on the entire
+affine realization J. Equations
+(4.5)--(4.6) are finite polynomial
+identities in the homogeneous
+coordinates of (x,ell), modulo the
+homogeneous scheme equations of X.
+Conversely EVERY regular finite-rank
+idempotent on J admits a representation
+(4.5)--(4.6) for SOME finite k.
+\end{theorem}
+\begin{proof}
+Because $\bar J$ is smooth projective
+and B is an effective Cartier divisor,
+the ring of regular functions on the
+complement is the filtered union
+\[
+ \boxed{
+ \Gamma(J,\mathcal O_J)
+   =\varinjlim_{k\ge0}
+     H^0(\bar J,L^{\otimes k}),
+ \qquad f\ \leftrightarrow\ s^{-k}a.
+ }                                                        \tag{4.8}
+\]
+Any regular function on J has finitely
+many poles along the single Cartier
+boundary B and therefore becomes a
+global regular section of O(kB)=L^k
+after multiplication by a suitable
+power s^k. The converse is clear.
+For a finite idempotent P, choose one
+common pole order k for all its
+entries, and set A=s^kP. Its algebraic
+idempotence P^2=P gives A^2=s^kA;
+constant rank gives tr P=r,
+hence tr A=r s^k.
+Both identities extend across B as
+global-section identities because
+they hold on dense open J.
+The inverse construction P=A/s^k
+on J is immediate, and its Chern
+class is the stated (4.7).
+The theorem is therefore equivalent
+to the original-X Chow source via
+the already proved finite-pole
+projector theorem, with the SAME
+explicit original-X cycle formula
+(4.4).
+\end{proof}
+
+\begin{remark}[Truly finite geometric complexity at every level]
+For each fixed k,M,N the section
+space $H^0(\bar J,L^k)$ is FINITE
+dimensional. Therefore the equations
+$A^2=s^kA$ and tr A=r s^k
+are finite sets of polynomial
+relations in finitely many complex
+section coefficients, computable
+modulo the actual equations of X.
+The rational period condition (4.7)
+selects a discrete rational Betti
+class among such idempotents; it
+is NOT automatic from the matrix
+polynomial equations alone.
+A theorem solving these equations
+uniformly for each rational Hodge
+alpha, without inserting a
+target-representing Chow source,
+would finish the original-X target
+by the explicit output (4.4).
+\end{remark}
+
 \section{One finite pole order for every class in a fixed Hodge fiber}
 For each (X,p) the rational space
 $\mathrm{Hdg}^p(X)_{\mathbb Q}$ is finite
