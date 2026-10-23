@@ -690,6 +690,164 @@ into a new existence theorem.
 \end{proof}
 
 
+
+\section{Discriminant rigidity and primitive charge conservation:
+why genuine GST source birth requires COMPONENT separation}
+
+A full geometric--algebraic dimensional fold changes the algebraic
+source ONLY when its born components can contribute
+new nonambient Chow directions.
+Here are exact general laws separating smooth continuous
+motion from a source-changing component event.
+
+\begin{theorem}[Every flat original-$X$ component family has a CONSTANT canonical Betti source class]
+Let $X$ be ANY fixed smooth projective complex
+$d$-fold, $0\le p\le d$, and let
+$T$ be a connected complex algebraic variety.
+Suppose $\mathcal Z\subseteq X\times T$
+is a genuine proper algebraic family
+that is FLAT over $T$ and whose
+fibers $Z_t$ are pure of dimension $d-p$.
+Then for ALL complex points $t_0,t_1\in T$
+\[
+\boxed{
+  \operatorname{cl}^{can}_X[Z_{t_0}]
+   =\operatorname{cl}^{can}_X[Z_{t_1}]
+   \qquad\text{in }H^{2p}(X,\mathbb Q).
+}                                                        \tag{12}
+\]
+For $T$ not smooth, the same conclusion follows
+by passing to connected curves in the parameter
+scheme and algebraic equivalence; singular fibers
+do not invalidate equality of the fundamental
+canonical Betti classes under flatness.
+Accordingly every finite target-dependent
+signed sum of finitely many such fixed flat
+component families with coefficients independent
+of $t$ has constant canonical rational Hodge
+source class on the connected parameter
+stratum.
+
+The total complete intersection family
+$V(s_1,\ldots,s_p)$ of fixed divisor degrees
+always has fixed TOTAL class $m^p h^p$
+when it is a proper lci family.
+To obtain different nonambient primitive
+source directions, the spectral projector
+must select independently a constituent
+component: its labelled component family
+must cease to extend flatly with fixed
+class through a discriminant where
+components split, merge, or exchange.
+The theorem does NOT assert that every
+discriminant produces a useful new class.
+\end{theorem}
+\begin{proof}
+The fibers of a proper flat family of
+equidimensional cycles over a connected
+algebraic parameter space are algebraically
+equivalent as cycles on the FIXED
+projective $X$. Concretely one may
+connect points by a chain of integral
+algebraic curves in a connected algebraic
+parameter, pull back the family along
+their normalizations and compare the
+endpoint fibers as algebraic cycles.
+Algebraic equivalence implies equality
+of their rational singular cohomology
+classes by the functorial cycle-class
+map; equivalently the common total
+cycle on $X\times T$ defines a locally
+constant topological fundamental class
+under flat deformation. This proves
+(12) even if the actual CH classes
+change in algebraically trivial
+directions, e.g. in $\mathrm{Pic}^0$.
+The rest is rational linearity and
+the literal fixed complete-intersection
+Chow equality from Theorem 1.
+\end{proof}
+
+\begin{theorem}[ALL-$p$ primitive charge conservation and exact spectral component rank bound]
+Let $X$ be ANY original smooth projective
+$d$-fold and $1\le p\le d/2$.
+Let $h$ be a very ample polarization.
+For a genuine REDUCED pure complete intersection
+$C=C_1\cup\cdots\cup C_m$ of
+$p$ hypersurfaces in the same linear
+system $|\mathcal O_X(kH)|$,
+let
+\[
+  v_j=\pi_{\rm prim}\bigl(
+         \operatorname{cl}^{can}_X[C_j]\bigr)
+        \in H^{2p}(X,\mathbb Q)_{\rm prim},
+\]
+where $\pi_{\rm prim}$ is the ACTUAL rational
+Hard Lefschetz primitive projector in degree $2p$.
+Then
+\[
+ \boxed{\sum_{j=1}^m v_j=0,\qquad
+ \dim_{\mathbb Q}\operatorname{span}
+        \{v_1,\ldots,v_m\}\le m-1.}                  \tag{13}
+\]
+For the actual finite normalization spectral
+sign involutions of (9),
+\[
+ \boxed{
+ \pi_{\rm prim}\operatorname{cl}^{can}_X
+       \operatorname{ch}^{CH}_p(\Xi_{t,\sigma})
+  =\sum_j\sigma_j v_j
+  =2\sum_{\sigma_j=+1}v_j .
+ }                                                        \tag{14}
+\]
+Every possible binary spectral output from
+THIS one incidence fiber therefore has primitive
+rank at most $m-1$.
+This bound is SHARP: on the genuine
+smooth quadric fourfold the split
+two-plane intersection gives
+$m=2$ and a nonzero primitive difference,
+hence primitive rank exactly $1$.
+
+The theorem is true for every actual
+irreducible variety $X$ in the specified
+range, with no assumption that the
+rational Hodge conjecture is true;
+it constrains how independent born
+sources can appear without equating
+that independence to universal
+prescribed-target algebraicity.
+\end{theorem}
+\begin{proof}
+The full ACTUAL Chow identity for a
+reduced pure complete intersection is
+$\sum_j[C_j]=k^pH^p$.
+The canonical Betti class of $k^pH^p$
+has ZERO primitive projection.
+Indeed $h^p$ lies in the Tate/Lefschetz
+component, and the primitive projector
+annihilates it for the stated $p$.
+Applying the $\mathbb Q$-linear
+Hard Lefschetz primitive projection
+gives $\sum_jv_j=0$.
+This is a nontrivial linear relation
+among the $m$ vectors, hence their
+span has dimension at most $m-1$.
+The signed original-$X$ Chow
+identity (9), followed by linearity,
+gives the first equality (14);
+the second uses $\sum_jv_j=0$.
+For $m=1$ the single component is
+necessarily primitive-blind,
+while the split quadric with two
+plane-ruling components has nonzero
+primitive difference and attains
+the $m-1$ bound. These are exact
+scheme and rational-cohomology
+identities, not rank extrapolations.
+\end{proof}
+
+
 \section{GST typed application and exact universal acceptance condition}
 These scheme-level source operations are consistent with
 \texttt{GSTUniversalResolvedSupportHodge.lean}
