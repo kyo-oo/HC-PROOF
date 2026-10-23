@@ -823,6 +823,147 @@ Naturality and the line-bundle
 Chern character give the last claim.
 \end{proof}
 
+\section{Exact higher-causal PROJECTIVE INTEGRABILITY obstruction}
+
+The same universal fold gives a second
+geometry-first avenue independent of
+analytic volume growth. For the honest
+smooth complex topological E_alpha over
+the COMPACT original X with
+$\mathrm{ch}(E_\alpha)=r+m\alpha$,
+choose a smooth $(0,1)$-connection D.
+Its curvature obstruction
+$F_D^{0,2}=D^2$ is a smooth
+$(0,2)$-form with values in
+$\mathrm{End}(E_\alpha)$.
+Define the honest projective/center-free
+causal obstruction
+\[
+ \boxed{
+ \mathfrak N_{\mathrm{proj}}(D)=
+ F_D^{0,2}
+ -\frac1r\operatorname{tr}(F_D^{0,2})\,\mathrm{Id}_{E_\alpha}.
+ }                                                        \tag{9.1}
+\]
+
+\begin{theorem}[Traceless projective fold integrability upgrades to true algebraic geometry]
+Assume the original class alpha is of rational
+Hodge type (p,p). If there is a smooth
+$(0,1)$-connection D on E_alpha for which
+\[
+ \boxed{\mathfrak N_{\mathrm{proj}}(D)=0,}       \tag{9.2}
+\]
+then E_alpha admits a \emph{fully integrable}
+holomorphic $(0,1)$-connection. The resulting
+holomorphic bundle is algebraic by GAGA,
+and the ORIGINAL X receives the TRUE
+cycle
+\[
+ \boxed{
+ Z_\alpha=
+   \frac{(-1)^{p-1}}{m(p-1)!}\,
+         c_p^{CH}(E_\alpha),\qquad
+ \mathrm{cl}^{can}_X(Z_\alpha)=\alpha .
+ }                                                        \tag{9.3}
+\]
+Conversely any holomorphic structure
+on this fixed topological E_alpha has
+a $(0,1)$-operator for which
+$\mathfrak N_{\mathrm{proj}}=0$.
+Thus, in the pure-Chern-character Hodge
+setting, the projectivized
+curvature obstruction is not a
+new hidden category that could evade
+true holomorphic-bundle integrability:
+the projective and vector-bundle
+integrability existence criteria coincide.
+\end{theorem}
+\begin{proof}
+If (9.2) holds, write
+$F_D^{0,2}=\eta\mathrm{Id}$ with
+$\eta=\frac1r\operatorname{tr}F_D^{0,2}$.
+The $(0,3)$ Bianchi identity for D
+reduces to $\bar\partial\eta=0$
+because the scalar curvature is central.
+The Dolbeault cohomology class
+$[\eta]\in H^{0,2}_{\bar\partial}(X)$
+is $\frac{2\pi i}{r}c_1(E_\alpha)^{0,2}$,
+which vanishes: for p>=2,
+$\operatorname{ch}_1(E_\alpha)=0$;
+for p=1, $\operatorname{ch}_1(E_\alpha)
+=m\alpha$ is of type (1,1).
+Since X is compact K\"ahler,
+there is a global smooth $(0,1)$
+scalar form beta with
+$\bar\partial\beta=\eta$.
+The corrected operator
+$D'=D-\beta\mathrm{Id}$ obeys
+\[
+ (D')^2=(\eta-\bar\partial\beta)
+           \mathrm{Id}=0.
+\]
+Koszul--Malgrange gives a genuine
+holomorphic bundle; projective GAGA
+gives a genuine algebraic bundle.
+The pure ch Chern-polynomial formula
+from section 3 gives (9.3).
+The converse is immediate: the Dolbeault
+operator of a holomorphic bundle has
+zero entire $(0,2)$ curvature.
+\end{proof}
+\begin{remark}
+This identifies an exact tensorial
+GEOMETRIC equation for the final
+constructor, not a freely chosen
+Hodge-to-Chow map. The vanishing of
+the scalar/trace $(0,2)$ obstruction
+follows from the Hodge type of alpha,
+whereas vanishing of the
+\emph{traceless} projective Nijenhuis
+obstruction (9.1) is the genuinely
+independent geometry that has to
+be derived by a new universal GST law.
+\end{remark}
+
+\section{Concrete failure of the false ANALYTIC = ALGEBRAIC shortcut}
+For ANY positive-dimensional affine
+GST spatial world J, choose a
+nonconstant regular function
+$f:J\to\mathbb A^1$. Its image
+contains all but finitely many
+complex numbers because the
+Chevalley image of a nonconstant
+morphism from an irreducible
+affine variety to A1 is infinite
+constructible. Then
+\[
+ \boxed{\Delta_f=\{z\in J^{an}:
+                     e^{f(z)}-1=0\}}              \tag{9.4}
+\]
+is an ACTUAL closed analytic
+principal divisor. Its topological
+first Chern/divisor class is ZERO,
+yet it is generally not algebraic:
+its f-image is
+$2\pi i\mathbb Z\cap f(J)$,
+an infinite discrete subset of C.
+If the divisor were an algebraic
+subvariety of J, Chevalley's theorem
+would make its f-image a constructible
+subset of A1, and every infinite
+constructible subset of A1 contains
+a nonempty Zariski-open set.
+This contradicts discreteness.
+Thus even a zero topological Hodge
+class admits analytic geometric
+representatives that are not
+algebraic; one must select
+a CONTROLLED geometric
+representative (polynomial
+projector growth or finite
+cycle-volume growth), not infer
+regularity from cohomology alone.
+
 \section{Final geometry-to-algebraicity proof contract}
 The full chain constructed WITHOUT
 an original-X algebraic witness is
