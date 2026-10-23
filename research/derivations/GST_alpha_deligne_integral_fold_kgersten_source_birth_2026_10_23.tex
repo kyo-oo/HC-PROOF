@@ -1415,6 +1415,74 @@ pullback on rational Betti cohomology would force them
 to be equal. This proves the final assertion.
 \end{proof}
 
+
+\begin{theorem}[Connected-parameter rigidity of canonical Hodge-Betti source: beyond polynomial homotopy]
+Let $X$ be ANY smooth projective complex original variety,
+$q:J\to X$ its genuine smooth affine GST fold, and
+$T$ ANY connected complex algebraic parameter variety.
+Let $P$ be an ACTUAL globally regular algebraic
+finite idempotent matrix on $J\times T$.
+For each closed point $t\in T(\mathbb C)$
+denote the true algebraic bundle
+$E_t=\operatorname{im}P|_{J\times\{t\}}$.
+Then for all $t_0,t_1\in T(\mathbb C)$
+and every $p$,
+\[
+\boxed{\operatorname{cl}^{can}_J\operatorname{ch}^{CH}_p(E_{t_0})
+       =\operatorname{cl}^{can}_J\operatorname{ch}^{CH}_p(E_{t_1})
+       \quad\text{in }H^{2p}(J,\mathbb Q).}                  \tag{39}
+\]
+Their original-$X$ rational Betti returns through
+$(q^*)^{-1}$ are consequently EQUAL.
+Thus no continuous algebraic family of regular
+GST spectral source matrices parametrized by any
+CONNECTED algebraic $T$ can interpolate between
+DISTINCT rational cohomological Hodge targets
+on the SAME original X.
+Unlike (37), the actual $CH^p(J)_{\mathbb Q}$
+classes need NOT be equal for a general connected
+$T$: algebraically inequivalent Chow classes
+can share one canonical Betti class.
+\end{theorem}
+\begin{proof}
+The regular idempotent constructs an ACTUAL
+algebraic vector bundle $\mathcal E$ on
+$J\times T$; take its genuine rational
+Betti Chern character
+$\operatorname{ch}^{Betti}(\mathcal E)$.
+The analytification of a connected complex
+algebraic variety is path connected,
+and the maps
+$i_t:J^{an}\to J^{an}\times T^{an}$,
+$x\mapsto(x,t)$, are homotopic as $t$ varies.
+Therefore their pullbacks of every
+topological Betti cohomology class are EQUAL.
+The algebraic-to-Betti Chern character
+commutes with the fiber inclusions, so its
+degree-$2p$ component gives exactly (39).
+Since $q:J\to X$ is an affine-space bundle,
+$q^*$ on rational Betti cohomology is an
+isomorphism and the original-X classes agree.
+
+To see why one cannot strengthen this to an
+arbitrary connected-$T$ CHOW equality,
+take a genuine elliptic curve $E$ with its
+Poincare line bundle on $E\times E^\vee$.
+As $t\in E^\vee$ varies, its restriction
+$L_t\in\operatorname{Pic}^0(E)=CH^1(E)$
+varies nontrivially as an algebraic Chow
+class, but every $c_1^{Betti}(L_t)$ is ZERO.
+Pullback to the affine Jouanolou J of E
+and represent the pulled-back line by
+finite REGULAR matrices: the example retains
+different actual algebraic K0/CH classes,
+yet IDENTICAL rational Betti Hodge classes.
+This verifies the sharpness of the
+Betti-only assertion for connected parameter
+spaces beyond $\mathbb A^1$.
+\end{proof}
+
+
 \begin{proposition}[A real singular source birth and its mandatory derived cancellation]
 Let $Z\subset J$ be any nonempty actual algebraic
 closed subscheme. On $J\times\mathbb A^1$ put
