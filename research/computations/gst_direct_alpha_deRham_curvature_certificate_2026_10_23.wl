@@ -38,8 +38,38 @@ testTangent[m_,r_]:=Module[{p,q,lin,g,comm},
       comm==ConstantArray[0,{m,m}]}
 ];
 tangentTests=Flatten[Table[testTangent[m,r],{m,1,9},{r,0,m}],1];
+(* Genuine Chow-graded Newton source, not assuming equal lower Chern:
+   for EVERY rank r and codimension p<=r, compare the
+   integer Newton polynomial in c_j with the power sum
+   of independently symbolic Chern roots. *)
+newtonTest[rr_,pp_]:=Module[{roots,cs,ns},
+ roots=Array[cc,rr];
+ cs=Table[Total[Times@@@Subsets[roots,{j}]],{j,1,pp}];
+ ns=ConstantArray[0,pp];ns[[1]]=cs[[1]];
+ Do[ns[[n]]=Expand[Sum[(-1)^(j-1)cs[[j]] ns[[n-j]],
+                       {j,1,n-1}]+(-1)^(n-1)n cs[[n]]],
+                 {n,2,pp}];
+ {rr,pp,TrueQ[Expand[ns[[pp]]-Total[roots^pp]]===0]}
+];
+newtonTests=Flatten[Table[newtonTest[rr,pp],
+                      {rr,1,7},{pp,1,rr}],1];
+(* A sharp p=2 counterexample to replacing ch2-differences
+   with c2-differences when LOWER ch are not equal:
+   E+ roots {1,1}, E- roots {0,1}. *)
+rootsPlus={1,1};rootsMinus={0,1};
+ch2Diff=Total[rootsPlus^2]/2-Total[rootsMinus^2]/2;
+c2Diff=Times@@rootsPlus-Times@@rootsMinus;
+newtonP2Diff=((Total[rootsPlus])^2-2 Times@@rootsPlus -
+    ((Total[rootsMinus])^2-2 Times@@rootsMinus))/2;
 out=<|
  "rankOne"->rankOne,
+ "allNewtonRankCodimPairs"->Length[newtonTests],
+ "NewtonAllPass"->And@@newtonTests[[All,3]],
+ "NewtonFailures"->Select[newtonTests,Not[#[[3]]]&],
+ "ExampleCh2Difference"->ch2Diff,
+ "ExampleC2Difference"->c2Diff,
+ "NaiveTopChernDifferenceWrong"->TrueQ[ch2Diff!=c2Diff],
+ "FullMinorPolynomialCorrect"->TrueQ[ch2Diff==newtonP2Diff],
  "Gr25"->grassmann,
  "allTangentPairs"->Length[tangentTests],
  "allTangentEquationsHold"->And@@Flatten[tangentTests[[All,3;;4]]],
