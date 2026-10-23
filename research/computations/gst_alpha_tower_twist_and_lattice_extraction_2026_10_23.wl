@@ -27,6 +27,15 @@ latticeTests=Flatten[Table[
    the product mass*(angle)^2 is O(k^(p-1)).
    Its exponent is nonnegative for every p>=1. *)
 angleExponents=Table[{p,p-1},{p,1,8}];
+(* Actual codimension-two Grassmannian Hodge-period SOURCE-TYPE test.
+   For Gr(2,5), roots xx,yy of S-dual and
+   integral(f) = coefficient xx^4 yy^3 of (xx-yy) f. *)
+hg=xx+yy; sg=xx yy;
+grInt[f_]:=Coefficient[Coefficient[Expand[(xx-yy) f],xx,4],yy,3];
+thetaG=2 hg^2/5-sg;
+grVals={grInt[hg^6],grInt[sg hg^4],
+        grInt[sg^2 hg^2],grInt[thetaG hg^4],
+        grInt[thetaG^2 hg^2]};
 out=<|
  "ChernRootRankCodimPairs"->Length[rootTests],
  "ChernRootAllPass"->And@@rootTests[[All,3]],
@@ -34,6 +43,8 @@ out=<|
  "LatticeDenominatorTests"->Length[latticeTests],
  "LatticeGapAllPass"->And@@latticeTests[[All,5]],
  "LatticeFailures"->Select[latticeTests,Not[#[[5]]]&],
+ "GrassmannianSchubertPairings"->grVals,
+ "AllExactSchubertChecks"->TrueQ[grVals==={5,2,1,0,1/5}],
  "AngleDefectExponents"->angleExponents
 |>;
 Print[out];out
