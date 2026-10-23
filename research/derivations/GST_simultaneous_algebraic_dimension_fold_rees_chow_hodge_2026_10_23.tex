@@ -131,12 +131,14 @@ of emergent projective directions in a single formula.
 Set
 \[
  \boxed{
- Y_m=\mathbb P_Z(N\oplus\mathcal O_Z^{m+1}),
+ Y_m=\mathbb P_Z^{\mathrm{lines}}(N\oplus\mathcal O_Z^{m+1}),
  \qquad \dim_\mathbb C Y_m=(d-c)+(c+m)=d+m,
  }                                                       \tag{4}
 \]
-with true hyperplane quotient class
-$\xi=c_1^{CH}(\mathcal O_{Y_m}(1))$.
+with true hyperplane class
+$\xi=c_1^{CH}(\mathcal O_{Y_m}(1))$ in the
+LINES convention, so $\mathcal O(-1)$ is the universal
+line subbundle and $\mathcal O(1)$ its dual.
 The algebraic Chow ring, rational Hodge cohomology and
 actual canonical cycle comparison are ALL defined from
 this same algebraic vector bundle:
@@ -144,7 +146,7 @@ this same algebraic vector bundle:
  \boxed{
  CH^*(Y_m)=
  CH^*(Z)[\xi]\big/
-    \left(\sum_{j=0}^c(-1)^j
+    \left(\sum_{j=0}^c
                c_j(N)\xi^{c+m+1-j}\right),
  }                                                       \tag{5}
 \]
@@ -224,8 +226,9 @@ world. Form
        \to\mathbb A^1.
  }                                                       \tag{9}
 \]
-This is the actual projective closure of the
-Rees family. Its special fiber is the reduced
+This is the full algebraic deformation-to-normal-cone
+blowup (the affine normal-cone family is its OPEN
+complement of the strict transformed central X). Its special fiber is the reduced
 simple-normal-crossings union
 \[
  \boxed{
