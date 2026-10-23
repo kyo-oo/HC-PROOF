@@ -2413,6 +2413,146 @@ the global algebraic monodromy
 of this genuine spectral cover.
 \end{proof}
 
+
+\begin{theorem}[Genuine full spectral eigenmodule pushes to a FREE original-world bundle for EVERY finite polynomial GST fold]
+Let $J$ be ANY smooth complex AFFINE
+algebraic fold with coordinate ring R,
+and let $Q\in\operatorname{Mat}_N(R)$
+be ANY actual globally regular
+algebraic matrix, including EVERY
+target-dependent approximation
+$Q_{\alpha,\epsilon}$ of (55).
+Let
+\[
+ \chi_Q(\lambda)=\det(\lambda I-Q),
+ \quad
+ A=R[\lambda]/(\chi_Q),
+ \quad
+ \pi:T=\operatorname{Spec}A\to J
+\]
+be its genuine finite algebraic spectral
+world. Define the ACTUAL algebraic
+coherent spectral eigensheaf
+\[
+ \mathcal M_Q=
+ \operatorname{coker}\left(
+   \lambda I-Q:\mathcal O_T^{\,N}
+                         \to\mathcal O_T^{\,N}
+                         \right).
+\]
+Then the source-to-target return is
+\[
+ \boxed{\pi_*\mathcal M_Q
+                  \cong\mathcal O_J^{\,N}
+             \quad\text{as ACTUAL algebraic
+                         vector bundles}.}            \tag{63}
+\]
+Consequently for every $p\ge1$,
+\[
+ \boxed{
+ \operatorname{ch}^{CH}_p
+        ([\pi_*\mathcal M_Q])=0
+       \quad\text{in }CH^p(J)_{\mathbb Q},
+ \qquad
+ \operatorname{cl}^{can}_J
+        \operatorname{ch}^{CH}_p
+             ([\pi_*\mathcal M_Q])=0.}           \tag{64}
+\]
+This is NOT merely a vanishing
+period or a numerical linearization:
+the entire canonical coherent
+spectral-module pushforward is
+LITERALLY algebraically trivial.
+
+In particular, the global original-$X$
+CHOW return of the canonical full
+spectral eigensheaf is ZERO in all
+positive degrees on the genuine
+Jouanolou fold, even when the
+polynomial Q was chosen from a
+prescribed NONZERO primitive Hodge
+target alpha and its LOCAL analytic
+$1$-eigencluster correctly encodes
+that target on the compact core.
+To create a nonzero original-$X$
+positive-degree Chow source, the
+GST fold must include an operation
+NOT equal to this unsplit full
+spectral-module return: for
+example a genuinely ALGEBRAIC
+selected summand, nonlinear
+component product, or independently
+constructed twisting/sheaf source.
+No such extra source is assumed
+to exist universally here.
+\end{theorem}
+\begin{proof}
+View the actual free R-module
+$M=R^N$ as an $R[\lambda]$-module
+by letting lambda act via the
+given algebraic matrix Q.
+The Cayley--Hamilton identity
+$\chi_Q(Q)=0$ shows that this
+action factors through the
+finite algebra A.
+Define the genuine R[lambda]-linear
+surjection
+\[
+ \Phi:R[\lambda]^N\longrightarrow M,
+ \qquad
+ \sum_{k=0}^{r}\lambda^k v_k
+                 \longmapsto
+             \sum_{k=0}^{r}Q^k v_k.
+\]
+For each $v\in R^N$, the identity
+\[
+ \lambda^k v-Q^k v
+   =(\lambda I-Q)
+      \sum_{j=0}^{k-1}
+         \lambda^{k-1-j}Q^j v
+\]
+holds in $R[\lambda]^N$.
+It shows that EVERY polynomial
+vector is congruent, modulo
+$\operatorname{im}(\lambda I-Q)$,
+to the constant vector obtained
+by replacing lambda with Q.
+Constant vectors killed in the
+quotient are zero after applying
+Phi, so the exact kernel is
+$\operatorname{im}(\lambda I-Q)$.
+This gives an ACTUAL isomorphism
+\[
+ \operatorname{coker}_{R[\lambda]}
+       (\lambda I-Q)\cong R^N
+\]
+as R[lambda]-modules, with lambda
+acting as Q on the right.
+Since Cayley--Hamilton makes
+chi_Q act as zero, the same
+cokernel computed over A is
+precisely the A-module
+$\mathcal M_Q$ on T.
+Restriction of scalars along
+$R\to A$ is the actual finite
+pushforward $\pi_*$.
+Thus $\pi_*\mathcal M_Q
+\cong R^N$ without a homotopy,
+an analytic approximation, a
+Hodge assumption, or a sign choice.
+
+The rational algebraic Chern character
+of a free rank-N vector bundle has
+vanishing positive Chow-degree
+components. Canonical Betti
+comparison preserves this equality,
+and the actual affine-bundle
+$q^*:CH^p(X)\overset\sim\to CH^p(J)$
+returns zero on X for $p\ge1$.
+This proves the universal typed
+source-obstruction (63)--(64).
+\end{proof}
+
 \begin{theorem}[Universal quantitative source-type gap and forced spectral-gap closure]
 Use the exact input and compact core K
 of the previous theorem. Define
