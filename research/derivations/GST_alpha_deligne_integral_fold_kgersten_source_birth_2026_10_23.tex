@@ -1,0 +1,423 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=22mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\title{GST Original-World Primitive Source Attempt:
+Rational Deligne Fold Data, Actual Quillen--Gersten Residues,
+and the Exact Algebraic \(K\)-Birth Obstruction}
+\date{23 October 2026}
+\begin{document}\maketitle
+
+\section{Exact source and target}
+Fix an arbitrary connected smooth projective complex variety X,
+an integer p with $1\le p\le d=\dim X$, and a
+PRESCRIBED rational Hodge class
+\[
+ \alpha\in H^{2p}(X,\mathbb Q(p))\cap F^pH^{2p}(X,\mathbb C).
+\]
+Here the rational Tate twist includes the usual $(2\pi i)^p$
+normalization; it does not change the underlying rational vector-space
+claim. The actual requested output is
+\[
+ \boxed{Z_\alpha\in CH^p(X)_\mathbb Q,\qquad
+  \operatorname{cl}^{can}_X(Z_\alpha)=\alpha.}
+ \tag{1}
+\]
+GST's already-proved Hodge-preserving geometric dimensional folds and
+their algebraic Rees counterparts are taken as inputs,
+not retested and not dismissed as numerical experiments.
+The present attempt pursues a DIFFERENT route from further
+projective ranks and from fixed-bundle section mutations:
+construct the integral/rational descent object selected FROM alpha
+and apply the algebraic fold residue to its TRUE algebraic K-data.
+
+\section{A new alpha-selected geometric descent object, without a supplied cycle}
+Let $C_B^\bullet(X,\mathbb Q(p))$ be a rational Betti cochain model,
+$C^\bullet_{\mathrm{dR}}(X,\mathbb C)$ a de Rham model, and
+$F^pC^\bullet_{\mathrm{dR}}$ a filtered model computing Hodge $F^p$
+(for algebraic projective X, use finite Cech algebraic differential
+forms with the stupid Hodge filtration).
+Choose comparison quasi-isomorphisms into a common complex cochain model.
+The rational Deligne homotopy-pullback complex is
+\[
+ \boxed{
+ C^\bullet_{\mathcal D}(X,\mathbb Q(p))
+ =
+ \operatorname{Cone}\!\left[
+ C_B^\bullet(X,\mathbb Q(p))
+ \oplus F^p C^\bullet_{\mathrm{dR}}(X,\mathbb C)
+ \xrightarrow{\;\iota_B-\iota_{\mathrm{dR}}\;}
+ C^\bullet_{\mathrm{dR}}(X,\mathbb C)
+ \right][-1].
+ }                                                       \tag{2}
+\]
+Use the usual mapping-cone signs. In degree 2p a cycle is
+represented by a finite triple $(b,\omega,u)$ with
+\[
+ \boxed{
+ db=0,\qquad d\omega=0,\qquad
+ du=\iota_{\mathrm{dR}}\omega-\iota_B b .
+ }                                                       \tag{3}
+\]
+All maps and signs here are ordinary genuine cohomology
+comparison maps; no user-defined 'Hodge-to-Chow' source is inserted.
+
+\begin{theorem}[Universal actual alpha-selected rational Deligne descent]
+For EVERY prescribed rational Hodge class alpha on EVERY original
+smooth projective X and EVERY p, there is a finite triple
+\[
+ \boxed{\mathfrak d_\alpha=[b,\omega,u]
+  \in H^{2p}_{\mathcal D}(X,\mathbb Q(p))}
+                                                               \tag{4}
+\]
+of type (3), with the actual rational Betti projection
+equal to alpha. The set of possible such lifts is a torsor
+under the rational intermediate-Jacobian group
+\[
+ \boxed{
+ J^{2p-1}(X)_\mathbb Q=
+ \frac{H^{2p-1}(X,\mathbb C)}
+ {F^p H^{2p-1}(X,\mathbb C)+
+                       H^{2p-1}(X,\mathbb Q(p))}.
+ }                                                       \tag{5}
+\]
+There is an exact sequence
+\[
+ \boxed{
+ 0\longrightarrow J^{2p-1}(X)_\mathbb Q
+ \longrightarrow H^{2p}_{\mathcal D}(X,\mathbb Q(p))
+ \longrightarrow\operatorname{Hdg}^p(X)_\mathbb Q
+ \longrightarrow0 .
+ }                                                       \tag{6}
+\]
+For p=1, the integral version of the same construction is
+the usual holomorphic line-bundle exponential sequence:
+$H^2_{\mathcal D}(X,\mathbb Z(1))\cong\operatorname{Pic}(X)$,
+with projective GAGA providing algebraicity.
+For p>=2, (4) is a genuine higher geometric differential
+descent object but its existence does not alone construct
+an algebraic codimension-p Chow cycle.
+\end{theorem}
+\begin{proof}
+Take a rational Betti cocycle b representing alpha.
+Hodge purity gives an algebraic filtered Cech--de Rham
+closed cocycle omega representing the SAME class in complex
+de Rham cohomology. Their comparison difference is thus
+a coboundary in the common model, so solve du=omega-iota_B b.
+This constructs the finite triple (3) FROM alpha, without
+a cycle or K0 source in the input.
+The cone long exact sequence identifies the image as
+the intersection of rational Betti classes and F^p,
+and the kernel as exactly (5), giving (6).
+For p=1 the Deligne complex
+$\mathbb Z(1)\to\mathcal O_X$ is quasi-isomorphic
+to $\mathcal O_X^\times[-1]$ by the analytic exponential
+sequence; H^2 is the holomorphic Picard group.
+Projective GAGA identifies that Picard group
+with actual algebraic line bundles.
+\end{proof}
+
+\section{The actual algebraic K-source and its source-to-cycle output}
+Write $\mathcal K_p^Q$ for the Zariski sheaf of
+QUILLEN algebraic $K_p$ on smooth X.
+The genuine codimension filtration has an actual Gersten
+complex with initial and terminal terms
+\[
+ \boxed{
+ K_p(\mathbb C(X))
+ \xrightarrow{\partial_1}
+ \bigoplus_{x\in X^{(1)}} K_{p-1}(\kappa(x))
+ \longrightarrow\cdots\longrightarrow
+ \bigoplus_{x\in X^{(p)}}K_0(\kappa(x)),
+ }                                                       \tag{7}
+\]
+with terminal $K_0(\kappa(x))\cong\mathbb Z$,
+and all successive boundary composites zero.
+For smooth quasi-projective X the Bloch/Quillen formula is
+\[
+ \boxed{H^p_{\mathrm{Zar}}(X,\mathcal K_p^Q)
+                     \cong CH^p(X).}             \tag{8}
+\]
+This is an actual statement about algebraic cycles and
+rational equivalences, not merely complex Hodge forms.
+
+\begin{theorem}[Actual K-residue source returns an original-X cycle with a certified Hodge target]
+Let $z$ be any genuine codimension-p Quillen--Gersten
+cycle class from (7)--(8) with rational coefficients.
+Its true terminal residue cycle is
+\[
+ Z(z)=\sum_{x\in X^{(p)}} n_x[\overline{\{x\}}]
+       \in CH^p(X)_\mathbb Q,
+ \qquad n_x\in\mathbb Q .
+                                                               \tag{9}
+\]
+The genuine Deligne regulator and canonical cycle class
+commute in the diagram
+\[
+ \begin{array}{ccc}
+ H^p(X,\mathcal K_p^Q)_\mathbb Q
+  &\xrightarrow{\ \operatorname{reg}_{\mathcal D}\ }&
+             H_{\mathcal D}^{2p}(X,\mathbb Q(p))\\
+ \downarrow\cong &&\downarrow\\
+ CH^p(X)_\mathbb Q
+  &\xrightarrow{\ \mathrm{cl}^{can}_X\ }&
+             \operatorname{Hdg}^p(X)_\mathbb Q .
+ \end{array}                                             \tag{10}
+\]
+Consequently a genuinely CONSTRUCTED K-source z
+whose Deligne regulator projects to the
+prescribed rational class alpha gives the ACTUAL
+original-X cycle $Z(z)$ and exact canonical Betti
+identity $\mathrm{cl}^{can}_X(Z(z))=\alpha$.
+\end{theorem}
+\begin{proof}
+The Gersten complex computes sheaf K-cohomology
+on regular schemes. The degree-p cycles are finite
+formal sums of codimension-p subvarieties modulo the
+boundaries recording rational equivalence; this
+identifies (7)--(8).
+The algebraic K-theory cycle regulator is the
+usual canonical Deligne cycle class, whose
+projection into rational Betti cohomology is
+the genuine fundamental cycle class and commutes
+with proper cycle pushforward.
+The right vertical map of (10) is the actual
+Deligne-to-Hodge projection (6).
+Apply the commuting square to the constructed z.
+No inverse 'Hodge-to-Chow' map is presumed.
+\end{proof}
+
+\section{The dimensional fold is an ACTUAL residue in both geometry and K-theory}
+Let a smooth regular algebraic fold center of codimension c
+be cut locally by a regular ordered sequence
+$z_1,\ldots,z_c$.
+The exact GST Rees fold has polynomial equations
+$t u_j=z_j$ for all j.
+For every p>=1, with $p-1$ invertible algebraic units
+$u_1,\ldots,u_{p-1}$ on its log chart,
+the true Milnor algebraic K-symbol
+$\{t,u_1,\ldots,u_{p-1}\}$ has the algebraic
+$t$-valuation residue
+\[
+ \boxed{
+ \partial_t\{t,u_1,\ldots,u_{p-1}\}
+        =\{\bar u_1,\ldots,\bar u_{p-1}\}
+        \in K^M_{p-1}(\kappa(t)).
+ }                                                       \tag{11}
+\]
+Its actual differential logarithm obeys
+\[
+ \boxed{
+ \operatorname{Res}_{t=0}
+ (d\log t\wedge d\log u_1\wedge\cdots
+             \wedge d\log u_{p-1})
+ =d\log\bar u_1\wedge\cdots\wedge
+                   d\log\bar u_{p-1}.
+ }                                                       \tag{12}
+\]
+The agreement is exact, in every p.
+It is not necessary to call a de Rham 2p-form a K_p-symbol:
+the K-symbol differential has exterior degree p, and
+a p-fold Zariski Cech--de Rham degree shift is needed
+to contribute to the total Hodge degree 2p.
+
+\begin{lemma}[Exact source degree bookkeeping prevents a false algebraicity inference]
+A generic $K_p$-symbol generates a logarithmic
+degree-p differential form, not a global
+degree-2p differential form. In the codimension-p
+Gersten/Deligne regulator its coniveau/Cech degree
+provides the additional p degrees.
+Therefore an alpha-selected GLOBAL algebraic
+closed 2p-form on the GST affine incidence
+world cannot be turned into a genuine algebraic
+K_p-symbol merely by taking its wedge or by
+naming it an 'integral residue'.
+An ACTUAL K-Gersten cocycle and its terminal
+multiplicity data are needed for (10).
+\end{lemma}
+\begin{proof}
+$\bigwedge^p d\log$ has cohomological de Rham
+degree p by definition. The filtered Cech
+de Rham complex has total degree a+b;
+a=p,b=p gives total 2p, while a=0,b=2p
+is a different cocycle degree. The Gersten
+complex (7) places its terminal cycle in
+codimension and complex degree p.
+Identifying these two different cochain
+positions is not a valid degree-preserving
+chain map without constructed transition data.
+\end{proof}
+
+\section{The EXACT higher-Hodge obstruction as a quotient of genuine geometric data}
+Let $A^p(X)_\mathbb Q$ denote the genuine rational
+canonical Chow Betti image. Let
+$R^p_{\mathcal D}(X)$ be the actual image of
+the Deligne regulator (10).
+Then the Deligne exact sequence (6) and a direct
+quotient construction give the genuine exact identity
+\[
+ \boxed{
+ \frac{H_{\mathcal D}^{2p}(X,\mathbb Q(p))}
+ {R^p_{\mathcal D}(X)+J^{2p-1}(X)_\mathbb Q}
+ \ \cong\
+ \frac{\operatorname{Hdg}^p(X)_\mathbb Q}
+ {A^p(X)_\mathbb Q}.
+ }                                                       \tag{13}
+\]
+\begin{theorem}[Sharp source-birth theorem, original-X and any fold]
+For EVERY original X,p and prescribed Hodge alpha,
+the class of EVERY constructed rational Deligne
+lift $\mathfrak d_\alpha$ in the quotient (13)
+depends only on alpha and vanishes IF AND ONLY IF
+alpha has an ACTUAL original-X rational
+algebraic cycle representative.
+This quotient is unchanged on the inherited
+original-X factor under all proper blowup/projective
+dimension folds possessing actual Chow--Hodge retracts.
+Born exceptional classes supply additional
+algebraic directions from the center, but do not
+silently cancel an inherited nonzero quotient element.
+\end{theorem}
+\begin{proof}
+Use the elementary fact that for any surjective
+homomorphism $\pi:D\twoheadrightarrow H$
+with kernel J and any subgroup R of D,
+the induced map
+$D/(R+J)\to H/\pi(R)$ is an isomorphism.
+Take D=Deligne, H=Hodge, R=Deligne Chow image;
+then $\pi(R)=A^p(X)_\mathbb Q$, proving (13)
+and the vanishing criterion.
+The true blowup and projective bundle
+formulas hold for both Chow groups and
+Deligne cohomology under the natural Hodge-compatible
+realization; their original-X pullback and proper
+pushforward constitute an explicit split retract.
+The Deligne-to-Hodge and Chow cycle maps
+commute with these true operations, so an
+original factor cannot be killed by a class
+in a complementary exceptional summand.
+\end{proof}
+
+\section{A decisive algebraic countertest to fixed-term higher-fold differential constructions}
+The filtered cocycle $\omega_\alpha$ could be used to
+vary differential operators or algebraic sections of
+a fixed graded bundle across the nonlinear GST fold.
+That CANNOT, by itself, alter the algebraic K0 class.
+
+\begin{theorem}[Any alpha-dependent perfect differential with FIXED bundle terms leaves algebraic K0 unchanged]
+Let E^a, for a in a finite interval, be ACTUAL
+algebraic vector bundles on X that are all
+INDEPENDENT of prescribed alpha. Let
+$d^a_\alpha:E^a\to E^{a+1}$
+be ANY alpha-dependent algebraic differentials
+with $d^{a+1}_\alpha d^a_\alpha=0$.
+Then every resulting actual strictly perfect complex
+has the SAME class in algebraic K0:
+\[
+ \boxed{
+ [E^\bullet_\alpha]
+    =\sum_a(-1)^a[E^a]\in K_0^{alg}(X),
+ \qquad
+ \operatorname{ch}_p^{CH}([E^\bullet_\alpha])
+    =\sum_a(-1)^a\operatorname{ch}_p^{CH}(E^a).
+ }                                                       \tag{14}
+\]
+In particular no choice of alpha-dependent
+differential or changes to only its matrix coefficients
+can make its TOTAL algebraic K0 source image vary
+with alpha while the bundle terms are held fixed.
+This includes derived graph/zero-section folds
+where the localized total Chern/K class
+is eventually pushed forward to original X.
+The theorem does not exclude truly new
+alpha-dependent bundle classes: it identifies
+the exact source-generation level that has
+to change for that route to work.
+\end{theorem}
+\begin{proof}
+The Grothendieck K0 class of a strictly perfect
+complex is the alternating sum of its constituent
+bundle classes, independent of its differential.
+Applying the additive algebraic Chern character
+in the true rational Chow ring proves (14).
+For a derived local zero-locus with fixed ambient
+bundle, proper pushforward of its virtual
+fundamental K-theory class is governed by the
+same fixed alternating class; only additional
+algebraic K0 terms could change the result.
+\end{proof}
+
+\section{Direct countercheck: algebraic de Rham need NOT be generated by logs of units}
+Even at differential degree one, the tempting
+universal primitive-to-algebraic-symbol step is false.
+
+\begin{theorem}[A smooth affine actual counterexample to dlog spanning]
+Let E be an ACTUAL smooth projective complex
+elliptic curve and P a point.
+On the smooth affine curve $U=E\setminus\{P\}$,
+\[
+ \boxed{
+ \Gamma(U,\mathcal O_U)^\times=\mathbb C^\times,
+ \qquad H^1_{\mathrm{dR}}(U,\mathbb C)
+                      \cong\mathbb C^2\ne0.
+ }                                                       \tag{15}
+\]
+Thus all logarithmic differentials
+$d\log f$ of REGULAR ALGEBRAIC UNITS on U vanish,
+while genuinely nonzero global algebraic de Rham
+classes exist. A global regular differential
+cannot be universally reconstructed from
+$d\log$ of regular units; allowing rational
+functions with poles introduces actual divisor
+boundary data that must be tracked rather than
+assumed to cancel.
+\end{theorem}
+\begin{proof}
+A nowhere-zero regular function on U can have
+zeros and poles only at P on the compact E.
+Its principal divisor has degree zero, forcing
+the coefficient of P to be zero. Hence it is
+a nowhere-zero regular function on the
+compact projective curve E and therefore
+constant. Its logarithmic differential is zero.
+The cohomology long exact sequence for removal
+of one point, or the topological first Betti
+number of a once-punctured complex torus,
+gives dimension two for H^1(U,C).
+Algebraic de Rham comparison for the smooth
+affine U identifies this group with
+$H^1_{\mathrm{dR}}(U)$.
+\end{proof}
+
+\section{Outcome of the exact higher-primitive proof attempt}
+We CONSTRUCTED, from arbitrary rational Hodge alpha
+and no supplied algebraic cycle, the genuine rational
+Deligne descent triple (b,omega,u).
+We derived the SAME polynomial fold as an actual
+algebraic K-residue and an exact degree-preserving
+Gysin/regulator interface; and established two
+nontrivial source-generation obstructions:
+fixed complex differentials cannot change
+the class of their total K0 source, and
+regular logarithmic units do not span
+the algebraic de Rham classes even on
+smooth affine elliptic curves.
+
+The unrestricted mathematical target would be
+settled if one constructed FROM that alpha-specific
+Deligne triple an actual Quillen-Gersten class z
+whose Deligne regulator has Hodge projection alpha.
+The current theorem constructs the Deligne DATA
+and all genuinely algebraic fold operations, but
+does not construct that K-class for every higher
+primitive alpha. As shown by the exact quotient
+(13), automatic existence of such a K-class is
+precisely equivalent to the universal rational
+Hodge algebraicity assertion, and cannot be used
+as an input to the present argument.
+No user's established GST Hodge-purity result is
+questioned by this precise source/type audit.
+\end{document}
