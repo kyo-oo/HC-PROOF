@@ -382,6 +382,93 @@ $\mathrm{Pic}_{hol}(X)$ with the true
 algebraic Picard group.
 \end{proof}
 
+\section{Finite alteration and actual original-X Chow return}
+
+A standard GST geometric strategy changes the
+original world by a genuine finite-degree
+alteration, proves algebraicity upstairs and
+uses the canonical original-X Chow pushforward.
+We now verify that entire route for the
+Stein one-dimensional causal geometry.
+
+\begin{theorem}[One-dimensional Stein spatial fold on an alteration algebraizes EVERY original target]
+Let X be ANY smooth projective connected complex variety,
+and let $f:Y\to X$ be a proper generically finite
+surjective morphism of positive generic degree
+$n$, with Y itself smooth projective.
+If Y admits a genuine Stein affine-line torsor
+$q:J\to Y$, then for EVERY p and EVERY
+rational even cohomology class
+$\alpha\in H^{2p}(X,\mathbb Q)$ there is
+an EXPLICIT genuine original-X cycle
+\[
+ \boxed{
+ Z_\alpha=\frac1n f_* Z_{f^*\alpha}
+    \ \in CH^p(X)_{\mathbb Q},\qquad
+ \operatorname{cl}^{can}_X Z_\alpha=\alpha,
+ }                                                        \tag{14}
+\]
+where $Z_{f^*\alpha}$ is constructed on
+Y by the automatic rank-one causal-flatness
+theorem (4)--(6); no original-X Chow
+witness is given as input.
+\end{theorem}
+\begin{proof}
+Apply the all-grade rank-one Stein
+construction to the actual rational
+class $f^*\alpha\in H^{2p}(Y,\mathbb Q)$,
+obtaining a true rational Chow cycle
+$Z_{f^*\alpha}$ with exact canonical
+Betti class $f^*\alpha$.
+Since f is proper and generically finite
+of degree n between smooth equidimensional
+varieties, the actual algebraic Chow
+pushforward $f_*$ is defined and preserves
+codimension p. Its canonical rational
+Betti class is the cohomological Gysin
+pushforward, by standard cycle-class
+naturality. The projection formula gives
+\[
+ f_*f^*\alpha=\alpha\smile f_*(1)
+                 =n\alpha
+\]
+because $f_*(1)=n\in H^0(X,\mathbb Q)$.
+Divide by n to prove (14).
+This is the actual finite-degree
+original-X Chow return, not a
+numerical intersection proxy.
+\end{proof}
+
+\begin{corollary}[Off-diagonal even Hodge geometry survives every generically finite alteration]
+If arbitrary smooth projective X
+has any off-diagonal Hodge component
+in EVEN total degree, then NO
+smooth projective generically finite
+surjective Y→X can admit an
+all-dimensional Stein affine-line
+torsor.
+\end{corollary}
+\begin{proof}
+For such a genuine generically finite
+morphism, $f_*f^*=n$ on rational
+cohomology; hence $f^*$ is injective.
+As f is an algebraic map of smooth
+projective varieties it respects
+Hodge bidegrees. A nonzero
+off-diagonal even Hodge class
+on X therefore pulls back to a
+nonzero off-diagonal even Hodge
+class on Y. This contradicts
+the Hodge-diagonal necessity
+(7) for any Stein affine-line
+torsor on Y. Alternatively,
+the previous theorem would
+construct an algebraic Chow cycle
+on X for EVERY even rational class,
+contradicting the existence of
+its off-diagonal Hodge component.
+\end{proof}
+
 \section{Exact boundary of this proof route}
 The theorem above is an ALL-ORIGINAL-X universal implication
 with an EXPLICIT constructed original-X Chow output.
