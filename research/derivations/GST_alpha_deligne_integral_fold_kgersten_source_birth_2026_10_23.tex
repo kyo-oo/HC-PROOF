@@ -882,6 +882,140 @@ universal spectral
 solution.
 \end{remark}
 
+
+\section{Spectral-fold finite-difference divisor-source theorem: explicit all-original-$X$ algebraization}
+The simultaneous geometric--algebraic principle has a further exact
+\emph{target-dependent} application, with no supplied codimension-$p$
+cycle. Unlike an arbitrary closed algebraic differential, every rational
+divisor Hodge class has a genuine line-bundle source by Lefschetz $(1,1)$.
+A finite-difference construction turns precisely this input into
+a higher-codimension algebraic source using the \emph{same} affine
+Jouanolou fold and the algebraic involution of (18)--(20).
+
+\begin{theorem}[All $X$, all $p$: finite spectral involutions representing every divisor-generated Hodge target]
+Let $X$ be any smooth projective complex variety and $p\ge1$.
+Fix rational divisor Hodge classes
+$\beta_i\in H^2(X,\mathbb Q)\cap H^{1,1}(X)$, $1\le i\le p$, and
+prescribe $\alpha=\beta_1\cup\cdots\cup\beta_p$.
+Choose genuine algebraic line bundles $M_i$ and positive integers
+$m_i$ with $\mathrm{cl}^{can}(c_1(M_i))=m_i\beta_i$,
+which exist by the integral Lefschetz $(1,1)$ theorem after clearing
+denominators. Let $q:J\to X$ be an ACTUAL affine Jouanolou
+incidence bundle and $R=\Gamma(J,\mathcal O_J)$.
+For each subset $S\subseteq\{1,\ldots,p\}$, set
+$L_S=\bigotimes_{i\in S}q^*M_i$ ($L_{\varnothing}=\mathcal O_J$).
+Its finite projective $R$-module of global sections is the image
+of an ACTUAL finite regular algebraic idempotent $P_S$; hence
+$A_S=2P_S-I$ is an ACTUAL regular algebraic involution
+$A_S^2=I$ on precisely the same geometric fold. The true
+original-$X$ rational Chow class
+\[
+ \boxed{\displaystyle
+ Z_\alpha=\frac{1}{\prod_{i=1}^p m_i}\,
+    (q^*)^{-1}
+    \left(\sum_{S\subseteq\{1,\ldots,p\}}
+      (-1)^{p-|S|}\,
+      \operatorname{ch}^{CH}_p(\operatorname{im}P_S)\right)
+     \in CH^p(X)_{\mathbb Q}}
+                                                               \tag{28}
+\]
+is well defined by affine-bundle homotopy invariance
+$q^*:CH^p(X)\xrightarrow{\sim}CH^p(J)$
+and satisfies the exact canonical Betti equality
+\[
+ \boxed{\operatorname{cl}^{can}_X(Z_\alpha)=
+                     \beta_1\cup\cdots\cup\beta_p=\alpha.}     \tag{29}
+\]
+Moreover the spectral involutions supply the same class via the
+\emph{actual closed algebraic differential} forms
+\[
+ \operatorname{ch}^{dR}_p(P_S)
+  =\frac{1}{2^{2p+1}p!}
+    \operatorname{Tr}(A_S(dA_S)^{2p}),                         \tag{30}
+\]
+using the algebraic de Rham Chern-character convention of (20).
+The construction extends by rational linearity to every prescribed
+Hodge class in the degree-$2p$ part of the rational divisor-generated
+subalgebra of $H^*(X,\mathbb Q)$.
+\end{theorem}
+\begin{proof}
+The affine Jouanolou incidence bundle is Zariski-locally an
+affine-space bundle, so its pullback is an isomorphism on the
+actual Chow groups. As $J$ is smooth affine, each algebraic line
+bundle $L_S$ corresponds to a finite projective module over $R$.
+Choose a finite free surjection $\pi_S:R^{N_S}\twoheadrightarrow L_S$
+and its projective-module splitting
+$\iota_S:L_S\hookrightarrow R^{N_S}$ with
+$\pi_S\iota_S=1$. The regular matrix
+$P_S=\iota_S\pi_S$ satisfies $P_S^2=P_S$ and has
+image exactly $L_S$. Its involution $A_S=2P_S-I$
+and the differential formula (30) follow directly from (18)--(20).
+In particular the spectral matrices are constructed from the
+line bundles determined by the prescribed $\beta_i$, not chosen
+by postulating a codimension-$p$ representative of $\alpha$.
+
+Write $x_i=c_1^{CH}(M_i)$, so
+$\operatorname{ch}^{CH}(L_S)
+ =\exp(\sum_{i\in S}q^*x_i)$ and
+\[
+ \operatorname{ch}^{CH}_p(L_S)
+   =\frac1{p!}\left(\sum_{i\in S}q^*x_i\right)^p.
+\]
+In the signed sum over subsets, every degree-$p$ monomial
+missing some index $i$ cancels under the involution toggling
+whether $i$ belongs to $S$.
+The ONLY surviving monomial uses every one of the $p$
+different indices exactly once; there are $p!$ permutations.
+Thus the exact all-rank polarization identity is
+\[
+ \boxed{\displaystyle
+ \sum_{S\subseteq\{1,\ldots,p\}}
+   (-1)^{p-|S|}
+    \frac{(\sum_{i\in S}q^*x_i)^p}{p!}
+      =q^*x_1\cdots q^*x_p.}                                \tag{31}
+\]
+Equation (28) therefore gives the true CHOW equality
+$Z_\alpha=(x_1\cdots x_p)/\prod_i m_i$, and its
+canonical Betti class is exactly (29).
+No Hodge-to-Chow input of codimension $p$ was supplied.
+The algebraic idempotent's Chern character and its closed
+Grassmann-connection differential representative agree by
+the ordinary algebraic Chern--Weil comparison, establishing (30).
+For finite rational linear combinations, apply the construction
+to each decomposable term and add their genuine Chow outputs.
+\end{proof}
+
+\begin{corollary}[Same-fold spectral sources cover every Hodge curve class on every original $X$]
+Let $X$ have dimension $d\ge2$ and choose a very ample
+$h=c_1(H)$. Every rational $(d-1,d-1)$ class
+$\alpha\in H^{2d-2}(X,\mathbb Q)$ equals
+$h^{d-2}\beta$ for a rational divisor Hodge class
+$\beta$, by rational Hard Lefschetz and preservation of Hodge
+type. Apply (28) with $p=d-1$, taking $d-2$ factors
+equal to $h$ and the remaining factor equal to $\beta$.
+The resulting \emph{actual finite algebraic spectral involutions}
+on the SAME affine GST fold return an original-$X$
+rational Chow curve cycle with canonical Betti class $\alpha$.
+Together with divisors and zero-/top-degree cycle classes,
+this specializes to the entire rational Hodge statement in
+dimensions at most three. This is an exact unconditional
+universal-$X$ source construction in the stated degrees,
+not an assumption that higher primitive classes factor into divisors.
+\end{corollary}
+
+\begin{remark}[Precise non-divisor interface with the October 22 causal source]
+The nonlinear anti-deck construction on the smooth quadric
+fourfold supplies an actual primitive codimension-two Chow source
+outside the divisor-generated middle subspace.
+Such a separately constructed genuine Chow source can also be
+represented in rational algebraic $K_0$ and by finite spectral
+involutions on its affine Jouanolou fold, since $X$ is smooth
+and $J$ is affine. This is a legitimate \emph{extension of the
+available source family}, not a claim that (28) turns arbitrary
+higher primitive rational Hodge inputs into divisor products.
+\end{remark}
+
+
 \section{Outcome of the exact higher-primitive proof attempt}
 We CONSTRUCTED, from arbitrary rational Hodge alpha
 and no supplied algebraic cycle, the genuine rational
