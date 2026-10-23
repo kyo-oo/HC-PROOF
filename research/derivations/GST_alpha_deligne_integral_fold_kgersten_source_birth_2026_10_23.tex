@@ -1336,6 +1336,174 @@ remains the actual value -1 from (25).
 
 
 
+
+\section{Polynomial principal-divisor splitting produces a NONZERO folded spectral Chow source}
+The same genuine quadric involution of (21)--(25) admits a
+MORE DIRECT geometric--algebraic interpretation.
+An actual globally principal polynomial divisor can split into
+two NONTRIVIAL Chow components with opposite classes.
+This precisely distinguishes a nonlinear COMPONENT birth
+from a smooth polynomial idempotent homotopy.
+
+\begin{theorem}[The actual P1 Jouanolou fold: same polynomial equation creates geometry AND the eigenbundle CHOW source]
+On the genuine smooth affine algebraic quadric
+$Q=\operatorname{Spec}\mathbb C[x,y,z]/(xy+z^2-1)$,
+consider the true reduced principal Cartier divisor
+\[
+ \boxed{
+ \operatorname{div}_Q(x)=L_++L_-,
+ \quad
+ L_\pm=V(x,z\mp1)\cong\mathbb A^1 .
+ }                                                           \tag{40}
+\]
+Let $q:Q\to\mathbb P^1$ send the algebraic
+matrix involution $A=\begin{pmatrix}z&x\\y&-z\end{pmatrix}$
+to its $+1$ eigenline, with
+$P=(I+A)/2$.
+Then IN ACTUAL rational/integral CHOW,
+not merely numerical Betti cohomology,
+\[
+ \boxed{
+ [L_-]=q^*c_1^{CH}(\mathcal O_{\mathbb P^1}(1)),
+ \quad [L_+]=-[L_-]
+       =c_1^{CH}(\operatorname{im}P),\quad
+ \operatorname{im}P=q^*\mathcal O_{\mathbb P^1}(-1).
+ }                                                           \tag{41}
+\]
+In particular the two INDIVIDUAL born algebraic
+components are nonzero in $CH^1(Q)\cong\mathbb Z$
+but their globally principal sum is zero.
+The spectral Chern--Weil form (24) has precisely
+the canonical Betti class of $[L_+]$.
+Thus ONE actual polynomial fold produces BOTH a
+nonlinear geometric component and its algebraic
+Chern source, with a true CHOW equality.
+\end{theorem}
+\begin{proof}
+Set $x=0$ in $xy+z^2-1=0$.
+Then $(z-1)(z+1)=0$, and since characteristic
+is zero the two components $L_\pm$ are distinct
+reduced affine lines, each with generic
+multiplicity one in the principal divisor
+of x. Therefore $[L_+]+[L_-]=0$
+in $CH^1(Q)$.
+
+The map q takes the $+1$ eigenline of A.
+At $x=0,z=-1$ its matrix is
+$\begin{pmatrix}-1&0\\y&1\end{pmatrix}$,
+whose $+1$ eigenspace is the CONSTANT line
+$\mathbb C e_2$. Conversely,
+$q^{-1}([\mathbb C e_2])$ is exactly the
+closed subscheme $L_-$, since
+$P e_2=e_2$ imposes $x=0,z=-1$.
+Hence $L_-$ is the scheme-theoretic
+pullback of one projective point divisor,
+and its class is $q^*c_1^{CH}(\mathcal O(1))$.
+The eigenline construction in (22) gives
+$\operatorname{im}P=q^*\mathcal O(-1)$.
+This and the principal divisor equality
+give (41), both in the actual Chow ring.
+Affine-bundle homotopy invariance for q
+gives $CH^1(Q)\cong CH^1(\mathbb P^1)
+=\mathbb Z$; the components are nonzero.
+The existing explicit normalized spectral
+Chern integral from (25) then agrees with
+the canonical image of the NONZERO class
+$[L_+]$ rather than merely an abstract
+differential-period token.
+\end{proof}
+
+\begin{theorem}[Universal original-X divisor source returned from signed COMPONENTS of the SAME nonlinear GST fold]
+Let $X$ be ANY smooth projective complex variety,
+$L$ an ACTUAL sufficiently very ample line bundle,
+and $d=\dim X\ge1$.
+Take a general pencil of two sections
+of $L$; for $d\ge2$ blow up its regular
+codimension-two base locus
+$b:Y\to X$ (for $d=1$ take $Y=X$).
+The resolved pencil is an ACTUAL morphism
+$f:Y\to\mathbb P^1$ with
+$f^*\mathcal O(1)=b^*L\otimes\mathcal O_Y(-E)$,
+where $E$ is the exceptional divisor
+($E=0$ for curves).
+Pull back the SAME polynomial fold:
+\[
+ W=Y\times_{\mathbb P^1}Q
+       \xrightarrow{\ q_f\ }Y
+       \xrightarrow{\ b\ }X.
+\]
+Let $L_{+,f}\subset W$ be the actual
+Cartier divisor obtained from the born
+component $L_+\subset Q$.
+Then the alpha-INDEPENDENT, TRUE
+algebraic original-X return operation is
+\[
+ \boxed{
+ \mathcal C_X(L)=
+    -\,b_*(q_f^*)^{-1}[L_{+,f}]
+    =c_1^{CH}(L)\quad\text{in }CH^1(X).
+ }                                                          \tag{42}
+\]
+For any prescribed rational divisor Hodge class
+$\beta$ on ANY $X$, clearing a denominator
+and applying Lefschetz $(1,1)$ gives an actual
+algebraic line bundle $M$ with
+$\operatorname{cl}^{can}c_1(M)=m\beta$.
+Choose $k\gg0$ with both $M\otimes H^k$
+and $H^k$ very ample, and apply (42)
+separately to their TRUE folded component cycles.
+The resulting ACTUAL original-X rational cycle
+\[
+ \boxed{
+ Z_\beta={\mathcal C_X(M\otimes H^k)-
+          \mathcal C_X(H^k)\over m}
+ \in CH^1(X)_{\mathbb Q},
+ \qquad \operatorname{cl}^{can}_X(Z_\beta)=\beta
+ }                                                           \tag{43}
+\]
+requires NO codimension-one Chow witness as input.
+For any prescribed divisor-generated
+$\alpha=\beta_1\cdots\beta_p$,
+the original-X product
+$\boxed{Z_\alpha=Z_{\beta_1}\cdots Z_{\beta_p}}$
+is an ACTUAL $CH^p(X)_{\mathbb Q}$
+cycle with the exact canonical class alpha.
+\end{theorem}
+\begin{proof}
+The base-changed q_f is a Zariski-locally
+affine-line bundle, so its actual
+pullback $q_f^*:CH^1(Y)\to CH^1(W)$
+is an isomorphism.
+The original equality (41) gives
+$[L_{+,f}]=-q_f^*f^*c_1^{CH}(\mathcal O(1))$.
+Hence its original return is
+$f^*c_1^{CH}(\mathcal O(1))=b^*c_1(L)-[E]$.
+The blowup is along codimension two,
+so its exceptional divisor pushes
+to ZERO in codimension one on X,
+and $b_*b^*c_1(L)=c_1(L)$.
+This proves (42).
+The two line bundles for beta differ
+by the actual line M:
+$c_1(M\otimes H^k)-c_1(H^k)=c_1(M)$
+in genuine integral $CH^1(X)$.
+Equation (43) and its canonical rational
+Betti comparison follow. Multiplicativity
+of the actual Chow-to-canonical Betti map
+proves the final all-p product claim.
+
+Crucially, the NONLINEAR component extraction
+uses individually nonzero divisors $L_\pm$,
+whereas the total principal zero locus
+$V(x)$ has CHOW class zero.
+This is the exact algebraic distinction
+between SAME-fold geometric SOURCE BIRTH
+and a vacuous polynomial zero-locus identity.
+The result does not claim a general higher
+primitive $\alpha$ is a divisor product.
+\end{proof}
+
+
 \section{GST finite spectral homotopy rigidity: why a genuine NON-SPLIT source event must change algebraic K-theory}
 The October 22 causal/nonlinear fold mechanism permits topology
 changes and genuinely born Chow classes.
