@@ -96,6 +96,21 @@ newtonTests=Table[
       aa[p] t^p],{t,0,p}]],t,p];
   {p,TrueQ[Expand[plus-minus-scale]===0]}
  ],{p,1,8}];
+(* Target-driven actual original-X algebraic source solver:
+   on Gr(2,5), h^2 is two Pluecker hyperplanes (vector {1,0}),
+   and s2 is the genuine regular zero of S-dual or the
+   genuine GST P(w0) Fitting scheme (vector {0,1}).
+   The prescribed alpha = (2/5)h^2 - s2.
+*)
+targetVec={2/5,-1};
+baseSource={{1},{0}};
+newSource={{1,0},{0,1}};
+sourceDual={0,-1};
+selectedCoeffs=LinearSolve[newSource,targetVec];
+targetSourcePass=TrueQ[newSource.selectedCoeffs==targetVec];
+sourceRankPass=TrueQ[MatrixRank[baseSource]==1&&MatrixRank[newSource]==2
+    &&sourceDual.baseSource[[All,1]]==0
+    &&sourceDual.newSource[[All,2]]==-1];
 out=<|
  "projectorCases"->Length[projectorTests],
  "allProjectorTests"->And@@Flatten[projectorTests[[All,4;;7]]],
@@ -107,6 +122,9 @@ out=<|
  "NewtonPureChowGrades"->Length[newtonTests],
  "NewtonPureDifferenceAllPass"->And@@newtonTests[[All,2]],
  "NewtonFailures"->Select[newtonTests,Not[#[[2]]]&],
+ "TargetAlphaSelectedActualFittingCoefficients"->selectedCoeffs,
+ "FittingRankJumpAndDual"->sourceRankPass,
+ "ActualTargetChowSourceExact"->targetSourcePass,
  "schubertPeriods"->schubertChecks,
  "schubertExact"->TrueQ[schubertChecks==={5,2,1,0,1/5}]
 |>;
