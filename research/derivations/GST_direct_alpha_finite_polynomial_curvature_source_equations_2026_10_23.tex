@@ -41,14 +41,15 @@ Chern--Weil form (with the algebraic de Rham convention) is
 It is closed, and its algebraic de Rham class is
 the algebraic Chern character ch_p^{dR}(E_P).
 
-For TWO honest algebraic idempotents P_+,P_-
-and a genuine algebraic (2p-1)-form B on J,
+For TWO honest algebraic idempotents P_+,P_-,
+a positive integer mu, and a genuine algebraic
+(2p-1)-form B on J,
 define the EXACT alpha-dependent finite source equation
 \[
  \boxed{
  P_+^2=P_+,\quad P_-^2=P_-,
  \qquad
- \Omega_p(P_+)-\Omega_p(P_-)-\eta_\alpha=dB .
+ \Omega_p(P_+)-\Omega_p(P_-)-\mu\eta_\alpha=dB .
  }                                                     \tag{2}
 \]
 No unknown Chow representative of alpha is an input.
@@ -63,7 +64,7 @@ matrices and an algebraic differential-form primitive B,
 then
 \[
  \boxed{
- Z_\alpha=(q^*)^{-1}
+ Z_\alpha={1\over\mu}(q^*)^{-1}
        \big(\operatorname{ch}^{CH}_p(E_{P_+})
            -\operatorname{ch}^{CH}_p(E_{P_-})\big)
        \in CH^p(X)_Q,
@@ -84,7 +85,7 @@ cycle-class comparison sends ch_p^{CH}(E_\pm) to
 [Omega_p(P_\pm)]. Equation (2) says their difference
 is [eta_alpha] in H^{2p}_{dR}(J).
 By the fixed Tate-normalized Betti--de Rham comparison,
-their rational canonical Betti classes differ by q^*alpha.
+their rational canonical Betti classes differ by mu times q^*alpha.
 The map H^{2p}(J,Q) to complex algebraic de Rham is injective,
 so the equality is genuinely rational.
 The true affine-bundle Chow homotopy inverse (q^*)^{-1}
@@ -104,7 +105,7 @@ has some finite pole order along D:
  H^0(\bar J,\Omega_{\bar J}^j(kD)).
  \tag{4}
 \]
-Fix any integer bounds M,k,T. Write unknown idempotents
+Fix any integer bounds M,k,T and any POSITIVE integer mu. Write unknown idempotents
 P_\pm=A_\pm/s^k with
 A_\pm in Mat_M H^0(barJ,L^k);
 write the unknown transgression B in a fixed finite
@@ -115,9 +116,9 @@ EXPLICIT POLYNOMIAL EQUATIONS in the finite complex
 coordinates of A_+,A_-,B, using algebraic addition,
 matrix multiplication and Kahler differentiation.
 The degree bounds are finite but not assumed known.
-Allow rank and pole/form bounds to increase:
+Allow the integer mu, rank, and pole/form bounds to increase:
 \[
- \boxed{\mathscr S_\alpha=\bigcup_{M,k,T}
+ \boxed{\mathscr S_\alpha=\bigcup_{\mu\ge1,M,k,T}
           \{\text{finite polynomial solutions of (2)}\}.}
  \tag{5}
 \]
@@ -143,13 +144,14 @@ Conversely suppose alpha already has an actual algebraic cycle
 on X. On smooth X, the rational Chern character of algebraic K0
 surjects onto CH^p(X)_Q. Choose a rational virtual
 algebraic bundle class whose pth Chow Chern character maps to alpha.
-Clear positive denominators, represent the rational K0 class
-as a rational combination/difference of HONEST algebraic bundles,
+Clear positive denominators mu, so the rational K0 class
+is represented by (1/mu) times the difference of TWO
+HONEST algebraic bundles,
 and pull them back to the AFFINE J. Every algebraic bundle
 on affine J is finite projective, hence represented by an
 ACTUAL regular idempotent in a finite matrix algebra.
 The difference of the two algebraic Chern--Weil 2p-forms
-and eta_alpha are both closed algebraic forms representing
+and mu times eta_alpha are both closed algebraic forms representing
 the same algebraic de Rham class on J.
 Since J is affine, algebraic de Rham cohomology is calculated
 by the GLOBAL algebraic de Rham complex:
@@ -186,9 +188,10 @@ of the companion GST finite Fitting manuscript,
 and the actual rank-one incidence projector
 for O_G(1). After block-sum/stabilization and
 clearing the factor five these give FINITE algebraic
-idempotent matrices whose Chern--Weil class is theta.
-An algebraic de Rham input form chosen as the same
-Chern--Weil combination has zero transgression B.
+idempotent matrices whose Chern--Weil class is five times theta.
+An algebraic de Rham input form chosen as one fifth of the
+corresponding Chern--Weil combination solves equation (2)
+with mu=5 and zero transgression B.
 This checks a genuine NONDIVISOR source inside the
 new alpha-dependent polynomial system.
 The result is not claimed to imply universal solvability.
