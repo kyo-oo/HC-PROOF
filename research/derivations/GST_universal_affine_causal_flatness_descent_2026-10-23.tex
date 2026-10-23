@@ -474,6 +474,241 @@ J->J×C^M preserve the original
 base map. No choice of M enters.
 \end{proof}
 
+\section{ACTUAL CONSTRUCTIVE FLATNESS: the full divisor-generated Hodge sector in EVERY codimension}
+
+This subsection SOLVES equation (13) with an
+explicit finite geometric bundle formula
+for all rational Hodge targets generated
+by divisor classes. It is a genuine
+all-original-X, all-d, all-p, all-N
+construction, not a bounded example or
+a numerical primitive Gram test.
+
+Let $L_1,\dots,L_s$ be ANY honest
+algebraic line bundles on original X,
+and let $\lambda_i=c_1(L_i)$.
+Write
+\[
+ A_{\mathrm{div}}^p(X)_\mathbb Q
+ =H^{2p}(X,\mathbb Q)\cap
+    \mathbb Q[\lambda_1,\dots,\lambda_s],
+\]
+where the right hand side means the
+homogeneous degree-p polynomial component.
+Take any desired
+\[
+ \alpha=\sum_{|\mathbf e|=p}
+   c_{\mathbf e}\,
+   \lambda_1^{e_1}\cdots\lambda_s^{e_s},
+ \qquad c_{\mathbf e}\in\mathbb Q.
+ \tag{20}
+\]
+
+\begin{lemma}[Exact rational finite-grid moments for every grade]
+For every d>=0 and 0<=e<=d
+there exist UNIQUE rational coefficients
+$w^{(d,e)}_k\in\mathbb Q$
+for $k=0,\dots,d$ satisfying
+\[
+ \boxed{
+ \sum_{k=0}^d w^{(d,e)}_k k^j
+       =e!\,\delta_{j,e}
+ \qquad(0\le j\le d),
+ }                                                       \tag{21}
+\]
+with convention $0^0=1$.
+They can be calculated explicitly
+as $e!$ times the coefficient
+of $t^e$ in the kth
+Lagrange polynomial
+\[
+ \ell_k(t)=\prod_{\substack{0\le j\le d\\j\ne k}}
+             \frac{t-j}{k-j},
+ \qquad
+ w^{(d,e)}_k=e!\,[t^e]\ell_k(t).
+ \tag{22}
+\]
+In particular, for e=1 and d>=1,
+\[
+ \boxed{
+ w_0^{(d,1)}=-\sum_{j=1}^d\frac1j,\qquad
+ w_k^{(d,1)}
+    =\frac{(-1)^{k+1}}{k}\binom dk\quad(k\ge1).
+ }                                                       \tag{23}
+\]
+\end{lemma}
+\begin{proof}
+For any polynomial f(t) of degree
+at most d, Lagrange interpolation
+$f(t)=\sum_{k=0}^d f(k)\ell_k(t)$
+gives
+$f^{(e)}(0)=\sum_{k=0}^d f(k)
+(e![t^e]\ell_k(t))$.
+Apply to f(t)=t^j for 0<=j<=d
+to prove (21). Rationality and
+uniqueness follow because the
+rational Vandermonde matrix
+on distinct integer nodes
+0,...,d is invertible.
+Differentiate each Lagrange
+polynomial at zero to derive
+(23), including the harmonic
+number for k=0.
+\end{proof}
+
+\begin{theorem}[FINITE UNIVERSAL LINE-BUNDLE COMPILER: exact all-grade flat causal descent]
+For ANY original smooth projective X
+of dimension d, ANY p<=d, ANY
+alpha in the full divisor-generated
+codimension-p subalgebra above,
+the explicit rational algebraic K0
+class
+\[
+ \boxed{
+ {\cal K}_\alpha
+ =\sum_{|\mathbf e|=p}
+ c_{\mathbf e}
+ \sum_{\mathbf k\in\{0,\dots,d\}^s}
+ \left(\prod_{i=1}^s w_{k_i}^{(d,e_i)}\right)
+ \left[
+    \bigotimes_{i=1}^s L_i^{\otimes k_i}
+ \right]
+ }                                                       \tag{24}
+\]
+has the ENTIRE, not merely pth,
+Chern character
+\[
+ \boxed{\operatorname{ch}_{Betti}({\cal K}_\alpha)
+        =\alpha,\qquad
+   \operatorname{ch}_j({\cal K}_\alpha)=0
+     \text{ for every }j\ne p,
+ }                                                       \tag{25}
+\]
+including rank zero.
+Choose any m>0 clearing
+all rational coefficients
+in (24); split the resulting
+signed integral combination
+into TWO honest algebraic
+bundles E_+,E_- consisting
+of finite direct sums of the
+displayed tensor-power line bundles,
+so $m{\cal K}_\alpha=[E_+]-[E_-]$.
+For EVERY actual spatial fold
+$q:J_N(X)\to X$, the holomorphic
+bundles $H_\pm=q^*E_\pm$
+have globally defined EXACTLY
+FLAT holomorphic relative
+causal connections along EVERY
+affine-fiber direction and
+\[
+ \operatorname{ch}_{top}(H_+)
+  -\operatorname{ch}_{top}(H_-)=m q^*\alpha.
+ \tag{26}
+\]
+The genuine original-X cycle
+\[
+ \boxed{
+ Z_\alpha=
+  \frac1m\left(
+     \operatorname{ch}_p^{CH}(E_+)
+      -\operatorname{ch}_p^{CH}(E_-)\right)
+       \in CH^p(X)_\mathbb Q
+ }                                                       \tag{27}
+\]
+has the EXACT canonical
+Betti class alpha.
+\end{theorem}
+\begin{proof}
+For each tensor-power line bundle,
+$\operatorname{ch}(\bigotimes_i L_i^{k_i})
+=\exp(\sum_i k_i\lambda_i)$.
+All terms of cohomological
+complex codimension $>d$ vanish.
+By the independent moment
+identities (21),
+\[
+\begin{aligned}
+ &\sum_{\mathbf k}
+   \prod_i w_{k_i}^{(d,e_i)}
+      \exp\left(\sum_i k_i\lambda_i\right)\\
+ &=\prod_{i=1}^s
+    \left[\sum_{k_i=0}^d
+      w_{k_i}^{(d,e_i)}
+         \sum_{j=0}^d
+           \frac{k_i^j\lambda_i^j}{j!}\right]\\
+ &=\prod_{i=1}^s\lambda_i^{e_i}
+ \quad\text{in }H^{even}(X,\mathbb Q),
+\end{aligned}                                                \tag{28}
+\]
+because every exponent j other
+than e_i has zero moment and
+$e_i!/e_i!=1$.
+This proves the ENTIRE
+pure Chern-character statement
+(25) for every monomial and
+then linearly for alpha.
+Clearing denominators and
+splitting signs gives actual
+algebraic line-bundle sums
+E_+,E_-; their pullbacks
+carry the canonical flat
+relative connections along
+every affine torsor fiber,
+with no higher causal defect.
+Their actual algebraic Chern
+characters define (27),
+and the canonical Betti comparison
+plus (25) proves the desired
+equality exactly.
+\end{proof}
+
+\begin{corollary}[Exact boundary between abelian causal geometry and genuine higher-rank complexity]
+If the original-X bundles E_+,E_-
+admit algebraic or holomorphic
+FILTRATIONS whose associated
+graded pieces are line bundles,
+then their entire rational Chern
+characters lie in the
+subalgebra of $H^{even}(X,\mathbb Q)$
+generated by rational divisor classes.
+Consequently an original rational
+Hodge alpha OUTSIDE that
+divisor-generated algebra cannot
+be realized by a pure-character
+flat causal pair which descends
+to two such line-filtered bundles.
+A genuinely NEW geometry in the
+non-divisor-generated rational
+Hodge directions necessarily
+uses non-line-filtered higher-rank
+sources or an equivalent
+nonabelian original-X construction.
+\end{corollary}
+\begin{proof}
+For a holomorphic or algebraic
+filtration of vector bundles,
+the associated graded line
+bundles have classes
+$[E]=\sum_i[L_i]$ in K0
+by exact-sequence additivity.
+The entire rational Chern
+character of E is therefore
+$\sum_i\exp(c_1(L_i))$,
+whose every graded piece lies
+in the rational divisor algebra.
+Differences of two such bundles
+have the same property.
+Thus a prescribed alpha
+outside that algebra cannot
+equal the pure Chern character
+difference of such a filtered
+pair. This argument does not
+exclude genuinely nonabelian
+algebraic bundles; it isolates
+the source type they must supply.
+\end{proof}
+
 \section{Signatures and the decisive mathematical obligation}
 The full derived all-original-X
 GST spatial causal hierarchy is now
