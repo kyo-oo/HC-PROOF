@@ -1504,6 +1504,357 @@ primitive $\alpha$ is a divisor product.
 \end{proof}
 
 
+
+\section{Exact spectral curvature to nonlinear zero-component geometry:
+the SAME fold carries its own genuine algebraic source}
+The crucial distinction in the GST dimensional-fold argument
+is not a formal equality of scalar periods. A GLOBAL CLOSED
+ALGEBRAIC representative of a fixed rational Hodge class
+can undergo a nontrivial nonlinear geometric
+zero-component bifurcation while its de Rham
+class is LITERALLY unchanged.
+On the actual affine Jouanolou fold the born
+components are the SAME algebraic eigensheaf
+Chow sources of the spectral involution.
+
+\begin{theorem}[SAME GST polynomial simultaneously gives true spectral curvature and an actual bifurcating Chow source]
+Let
+\[
+ Q=\{xy+z^2=1\},\quad
+ A=\begin{pmatrix}z&x\\y&-z\end{pmatrix},
+ \quad P=(I+A)/2.
+\]
+Its GLOBAL REGULAR ALGEBRAIC nowhere-vanishing
+two-form is
+\[
+ \boxed{
+ \Omega_P=\operatorname{Tr}(P\,dP\wedge dP)
+          =\frac{dx\wedge dy}{4z},}             \tag{44}
+\]
+where the right expression is interpreted by its
+regular extension on the smooth locus $z=0$
+(the whole $Q$ is smooth).
+For every $t\in\mathbb C$, set
+\[
+ \boxed{
+  \Omega_{P,t}=(1+tz)\Omega_P
+       =\Omega_P+d\left(\frac{t x\,dy}{4}\right).
+ }                                            \tag{45}
+\]
+These are ACTUAL closed regular algebraic two-forms
+with the SAME NONZERO algebraic de Rham
+and canonical normalized rational Betti class
+for ALL $t$.
+
+The genuine scheme of zeros of
+$\Omega_{P,t}$ is EMPTY at $t=0$.
+For $t\ne0$ it is the actual Cartier divisor
+\[
+ \boxed{
+ Z_t=V_Q(1+tz)
+ \cong \operatorname{Spec}
+          \mathbb C[x,y]/(xy-(1-t^{-2})).
+ }                                            \tag{46}
+\]
+When $t\ne0,\pm1$, this is a smooth
+IRREDUCIBLE affine hyperbola $\mathbb G_m$.
+At the TRUE discriminant parameters
+$t=\pm1$, it splits into two genuine affine
+algebraic line components.
+In particular at $t=1$,
+\[
+ \boxed{
+ Z_1=V(z+1)=D_x\cup D_y,\quad
+ D_x=V(x,z+1),\quad D_y=V(y,z+1),}
+\]
+and the CHOW class of the two born
+components is
+\[
+ \boxed{
+ [D_x]=q^*h=-c_1^{CH}(\operatorname{im}P),
+ \qquad
+ [D_y]=-q^*h=c_1^{CH}(\operatorname{im}P)\ne0,
+ \qquad [D_x]+[D_y]=0 .}                      \tag{47}
+\]
+Thus the very SAME nonzero spectral curvature
+class is maintained through the global algebraic
+differential equality (45), while a true
+irreducible-to-reducible geometric fold
+creates a pair of individually nonzero,
+oppositely charged original algebraic
+eigenbundle source components.
+\end{theorem}
+
+\begin{proof}
+The existing exact all-rank spectral matrix
+calculation establishes (44).
+On $z\ne0$ the indicated expression is
+regular, and on $x\ne0$ the quadric equation
+gives
+$\Omega_P=-dx\wedge dz/(2x)$,
+with a corresponding expression on $y\ne0$.
+At $x=y=0,z=\pm1$, the $z\ne0$
+expression applies.
+These charts cover Q, proving global
+regularity and nowhere vanishing.
+Because Q has complex dimension two,
+every global regular two-form is closed.
+Moreover
+$z\Omega_P=dx\wedge dy/4
+             =d(x\,dy/4)$,
+proving the LITERAL algebraic differential
+identity (45), hence equality of the
+actual de Rham classes at every parameter.
+Their nonzero canonical rational Betti
+period is the earlier eigenline Chern period
+of $\operatorname{im}P=q^*O_{\mathbb P^1}(-1)$,
+up to the standard $(2\pi i)^{-1}$
+Chern normalization.
+
+Because $\Omega_P$ nowhere vanishes,
+the zero scheme of $(1+tz)\Omega_P$
+is exactly the principal scheme
+defined by $1+tz$; at $t=0$ the
+factor is the unit 1 and no zero occurs.
+For $t\ne0$, substituting $z=-1/t$
+into $xy+z^2=1$ gives (46).
+The nonzero constant $1-t^{-2}$
+makes the affine curve isomorphic
+to $\mathbb G_m$. The constant vanishes
+only at $t=\pm1$, where $xy=0$
+and the two transverse reduced affine
+lines appear.
+
+At $t=1$, the line $D_x$ is the
+already constructed $+1$ eigenline
+fiber $L_-$ in (40)--(41), and has
+true Chow class $q^*h$.
+Since $Z_1$ is principal and both
+components have multiplicity one,
+$[D_y]=-[D_x]$. The true affine
+bundle Chow isomorphism
+$CH^1(Q)\cong CH^1(\mathbb P^1)=\mathbb Z$
+proves that each individual component
+is nonzero and yields (47).
+The TOTAL zero divisor has class zero
+for every t; the nonzero component
+classes appear only at the split
+discriminant. This respects flat-family
+Betti rigidity and never infers Chow
+creation from a de Rham form alone.
+\end{proof}
+
+\begin{theorem}[ALL original $X$, ALL divisor-product codimensions:
+simultaneous spectral-differential/geometric fold with exact exceptional correction]
+Let $X$ be ANY smooth projective
+complex $d$-fold and fix
+$p$ actual sufficiently very ample
+line bundles $L_1,\ldots,L_p$ with
+$1\le p\le d$.
+Choose general two-section pencils
+and resolve ALL their codimension-two
+base loci in a common sequence of
+smooth algebraic blowups
+$b:Y\to X$, giving regular morphisms
+$f_i:Y\to\mathbb P^1$.
+Let $E_i$ denote the actual divisor
+class on Y of the total vanishing base
+ideal of the i-th resolved pencil,
+so the ACTUAL line-bundle equality is
+\[
+ f_i^*O_{\mathbb P^1}(1)
+      = b^*L_i\otimes O_Y(-E_i).
+\]
+Form the SAME simultaneous polynomial
+GST geometry
+\[
+ W=Y\times_{(\mathbb P^1)^p}Q^p,
+ \qquad q_W:W\to Y,
+ \qquad g_i:W\to Q.
+\]
+Then $q_W$ is a genuine Zariski-locally
+trivial affine-space bundle and
+$q_W^*:CH^p(Y)\overset{\sim}\to CH^p(W)$
+is an isomorphism.
+For each i, pull back the ORIGINAL
+born component $D_y=V(y,z+1)$
+from Q to the Cartier divisor
+$\mathcal D_i=g_i^{-1}D_y$ on W.
+Its ACTUAL Chow class satisfies
+\[
+ [\mathcal D_i]
+  =-q_W^*f_i^*h
+  =-q_W^*\big(b^*c_1(L_i)-E_i\big).
+\]
+The independent nonzero spectral
+Chern representatives on the same
+fold are $g_i^*\Omega_P$, and their
+p-fold exterior product is
+\[
+ \Theta_0=\bigwedge_{i=1}^p g_i^*\Omega_P.
+\]
+For formal parameters $t_i\in\mathbb C$,
+set $\Theta_{\mathbf t}=
+ \bigwedge_i g_i^*((1+t_i z)\Omega_P)$.
+These are closed GLOBAL REGULAR
+algebraic $2p$-forms on W with an
+EXPLICIT GLOBAL ALGEBRAIC transgression
+\[
+ \boxed{
+ \Theta_{\mathbf t}-\Theta_0
+ =d\sum_{i=1}^p\left(
+ \bigwedge_{j<i}g_j^*\Omega_{P,t_j}\right)
+ \wedge g_i^*\left(\frac{t_i x\,dy}{4}\right)
+ \wedge\left(
+ \bigwedge_{k>i}g_k^*\Omega_P\right).
+ }                                            \tag{48}
+\]
+At the simultaneous true discriminant
+$t_1=\cdots=t_p=1$ the p
+original geometric born components
+have the exactly computed
+original-$X$ Chow return
+\[
+ \boxed{
+ (-1)^p b_*(q_W^*)^{-1}
+   \left(\prod_{i=1}^p[\mathcal D_i]\right)
+ =b_*\prod_{i=1}^p
+          \big(b^*c_1(L_i)-E_i\big).
+ }                                            \tag{49}
+\]
+In particular define the ACTUAL exceptional
+correction on original X
+\[
+ \mathcal R=
+ \sum_{\emptyset\ne S\subseteq\{1,\ldots,p\}}
+    (-1)^{|S|}
+    \left(\prod_{i\notin S}c_1(L_i)\right)
+    b_*\left(\prod_{i\in S}E_i\right)
+ \in CH^p(X)_{\mathbb Q}.
+\]
+Then the original-X Chow identity is
+\[
+ \boxed{
+ \prod_{i=1}^p c_1^{CH}(L_i)
+ =(-1)^p b_*(q_W^*)^{-1}
+          \prod_i[\mathcal D_i]
+   -\mathcal R.
+ }                                            \tag{50}
+\]
+For an arbitrary prescribed Hodge target
+$\alpha=\prod_{i=1}^p\beta_i$ with
+$\beta_i\in H^{1,1}(X)\cap H^2(X,\mathbb Q)$,
+take actual $M_i$ and $m_i>0$ with
+$c_1(M_i)=m_i\beta_i$,
+and apply (50) to each of the
+$2^p$ tuples whose ith line bundle is
+$M_i\otimes H^k$ or $H^k$.
+The finite signed alternating combination,
+divided by $\prod_i m_i$,
+is an ACTUAL rational original-$X$
+$Z_\alpha\in CH^p(X)_{\mathbb Q}$ with
+\[
+ \boxed{\mathrm{cl}^{can}_X(Z_\alpha)=\alpha.}\tag{51}
+\]
+This is a TRUE SAME-GEOMETRY
+nonlinear zero-component and
+spectral curvature construction in
+every codimension, with the necessary
+higher-blowup excess correction kept
+explicit, not suppressed.
+\end{theorem}
+\begin{proof}
+General pencils of sufficiently
+very ample line bundles have smooth
+codimension-two base loci by Bertini
+(for a curve they are basepoint-free);
+a finite common smooth resolution
+of the finite rational maps exists
+in characteristic zero. Writing the
+principalized base ideals on Y
+as O(-E_i) gives the displayed
+line-bundle equations.
+Each $Q\to\mathbb P^1$ is a genuine
+affine-line torsor, so simultaneous
+base change gives the indicated
+affine bundle over Y and the ACTUAL
+Chow homotopy isomorphism.
+
+The original component equality (47)
+pulls back by the algebraic maps g_i:
+$[\mathcal D_i]=-q_W^*f_i^*h$.
+All component intersections are
+Cartier-intersection products in
+the smooth W and carry their actual
+CHOW classes whether or not a
+particular geometric intersection
+is transverse.
+
+The two-form exactness (45) pulls
+back along each g_i.
+Every wedge factor is closed;
+the finite telescoping product
+identity for even-degree forms
+proves (48), including the signs.
+For the Chow return, multiply the p
+actual component classes and apply
+the inverse of $q_W^*$; then push
+properly along b. This proves (49).
+
+Use the genuine projection formula
+$b_*(b^*a\cdot\xi)=a\cdot b_*\xi$
+to expand the right-hand side of
+(49). The empty exceptional-index
+subset returns exactly
+$\prod_i c_1(L_i)$ because $b$
+is birational between smooth
+d-folds; all nonempty subsets
+give precisely the explicitly
+defined $\mathcal R$.
+Thus (50) is an exact equality in
+$CH^p(X)_{\mathbb Q}$.
+Importantly terms with two or more
+exceptional factors need not vanish,
+so a naive multiplication of the
+individual divisor return formulas
+WITHOUT $\mathcal R$ would be
+incorrect.
+
+Finally Lefschetz $(1,1)$ and GAGA
+construct the actual line bundles
+$M_i$ from prescribed rational
+divisor Hodge classes.
+Choose k so all $M_i\otimes H^k$
+and $H^k$ are sufficiently very
+ample. Expand the product of
+differences by the exact
+finite-difference identity
+\[
+ \prod_{i=1}^p c_1(M_i)
+ =\sum_{S\subseteq[p]}(-1)^{p-|S|}
+   \prod_{i=1}^p
+    c_1\big(H^k\otimes
+        (M_i\text{ if }i\in S
+           \text{ else }O_X)\big).
+\]
+Each product is given by the
+actual spectral/geometric fold
+and exceptional-corrected formula
+(50), so the finite signed sum
+defines an actual original-X
+Chow class. The canonical Betti
+map is multiplicative and
+$c_1(M_i)/m_i=\beta_i$ in rational
+cohomology; hence its class is
+EXACTLY the prescribed alpha.
+This uses NO supplied higher-p
+original-X cycle in its input,
+and makes no assertion that an
+arbitrary non-divisor primitive
+Hodge class factors into divisors.
+\end{proof}
+
+
 \section{GST finite spectral homotopy rigidity: why a genuine NON-SPLIT source event must change algebraic K-theory}
 The October 22 causal/nonlinear fold mechanism permits topology
 changes and genuinely born Chow classes.
