@@ -304,6 +304,245 @@ in (9), whose canonical Betti
 image is alpha by comparison.
 \end{proof}
 
+\section{STRONGER DIRECT GEOMETRY: the rational projective Segre fold generates the ORIGINAL-X Chow cycle with no vector lift}
+
+The finite-central lift in the previous
+section is conceptually useful, but it
+is not needed to return an actual
+original-X algebraic class. The actual
+projective-space fold has an intrinsically
+defined relative anti-canonical line
+bundle, even if its PGL_r structure does
+not initially come from any
+honest vector bundle.
+
+Let $\rho:Y\to X$ be a genuine
+holomorphic PGL_r projective-space
+bundle over an arbitrary original
+smooth projective complex X, with
+fiber $\mathbb P^{r-1}$ and
+relative holomorphic tangent
+bundle $T_{Y/X}$. By GAGA for
+holomorphic principal bundles
+under the complex affine algebraic
+group PGL_r, Y is a genuine
+algebraic projective-space bundle.
+Set the canonical rational Chow
+class
+\[
+ \boxed{
+ \zeta_Y=\frac1r c_1^{CH}
+              (T_{Y/X})\in CH^1(Y)_\mathbb Q.
+ }                                                       \tag{12}
+\]
+The relative tangent bundle exists
+independently of any O(1) on Y.
+The resulting full intrinsic
+projective-fold Segre series is
+\[
+ \boxed{
+ S_Y(t)=\sum_{k=0}^{d}
+       \rho_*\left(\zeta_Y^{\,r-1+k}\right)t^k
+       \in CH^*(X)_\mathbb Q[t]/(t^{d+1}),
+ \quad S_Y(0)=1 .
+ }                                                       \tag{13}
+\]
+The truncated logarithm $\log S_Y(t)$
+is well-defined because its
+constant term is one.
+
+\begin{theorem}[Intrinsic projective GST-Chern source, all original-X and every higher grade]
+For ANY original smooth projective X,
+any p with $2\le p\le d$, and
+any holomorphic PGL_r projective-space
+bundle $\rho:Y\to X$, the class
+\[
+ \boxed{
+ \operatorname{pch}^{CH}_p(Y)=
+  \frac{1}{(p-1)!}
+    [t^p]\log S_Y(t)\in CH^p(X)_\mathbb Q
+ }                                                       \tag{14}
+\]
+is an ACTUAL CANONICAL rational Chow
+cycle class constructed directly from
+the projective fold geometry, even
+without choosing a vector-bundle
+lifting of Y.
+
+If locally $Y\cong\mathbb P(E)$ for
+an algebraic rank-r bundle E
+with formal Chern roots $x_1,\dots,x_r$,
+put $\mu=r^{-1}\sum_i x_i$.
+Then
+\[
+ \boxed{
+ \operatorname{pch}^{CH}_p(Y)
+   =\frac1{p!}\sum_{i=1}^r
+                   (x_i-\mu)^p .
+ }                                                       \tag{15}
+\]
+In particular the class is invariant
+under ALL changes of local GL_r
+lifts by tensoring with line bundles,
+so it descends genuinely in rational
+Chow cohomology.
+\end{theorem}
+\begin{proof}
+Work locally under a GL_r splitting
+of the PGL_r bundle, with quotient
+projective bundle $\rho:\mathbb P(E)\to X$
+and tautological first Chern
+class $\xi=c_1(O_{\mathbb P(E)}(1))$.
+The relative Euler sequence gives
+$c_1(T_{Y/X})=r\xi-\rho^*c_1(E)$,
+hence $\zeta_Y=\xi-\rho^*\mu$.
+The quotient projective-bundle
+Chow relation is
+$\prod_{i=1}^r(\xi-x_i)=0$.
+Therefore
+$\prod_i(\zeta_Y-(x_i-\mu))=0$,
+and fiber integration gives
+\[
+ S_Y(t)=\prod_{i=1}^r
+          \frac1{1-(x_i-\mu)t}.
+                                                             \tag{16}
+\]
+Taking the logarithm yields
+\[
+ \log S_Y(t)=\sum_{p\ge1}
+     \frac{t^p}{p}\sum_i(x_i-\mu)^p
+  =\sum_{p\ge1}(p-1)!\,
+     \left(\frac1{p!}\sum_i
+                    (x_i-\mu)^p\right)t^p.
+                                                             \tag{17}
+\]
+Under a line twist $E\mapsto E\otimes M$,
+all roots shift $x_i\mapsto x_i+c_1(M)$,
+and their mean $\mu$ shifts by the
+same amount. Hence every centered
+root $x_i-\mu$ and its symmetric
+power polynomial remain unchanged.
+This is the intrinsic PGL characteristic
+class, with global representative
+(14) in the actual Chow ring, which
+also proves that no unverified
+Brauer lift is being assumed.
+\end{proof}
+
+\begin{theorem}[DIRECT original-X Chow return from a descended GST projective world]
+Let alpha be ANY rational Hodge class
+of codimension p>=2 on arbitrary
+original smooth projective X.
+Take an ACTUAL pure-class topological
+bundle $E_\alpha^{top}$ and its
+holomorphic Oka realization H_alpha
+on the affine GST fold J, with
+$\operatorname{ch}(H_\alpha)=r+m q^*\alpha$,
+as established in (2).
+
+Suppose ONLY its ACTUAL projective-space
+bundle $\mathbb P(H_\alpha)$ has
+holomorphically coherent PGL_r
+transport along every affine causal
+fiber, so it descends to a genuine
+holomorphic projective-space bundle
+$\rho:Y_\alpha\to X$.
+
+Then the EXACT original-X rational
+algebraic cycle class
+\[
+ \boxed{
+ Z_\alpha=
+   \frac1{m(p-1)!}
+    [t^p]\log\!\left(
+       \sum_{k=0}^d
+         \rho_*\left[
+           \left(\frac{c_1^{CH}(T_{Y_\alpha/X})}{r}
+           \right)^{r-1+k}
+         \right]t^k
+       \right)
+  \in CH^p(X)_\mathbb Q
+ }                                                       \tag{18}
+\]
+satisfies
+\[
+ \boxed{\operatorname{cl}^{can}_X(Z_\alpha)=\alpha.}
+                                                             \tag{19}
+\]
+No original-X bundle E, choice of
+O(1), lifted PGL gerbe, or existing
+original-X Chow preimage is
+required as an input.
+\end{theorem}
+\begin{proof}
+The actual descended holomorphic
+PGL projective bundle is algebraic
+by GAGA. Its intrinsic relative
+anticanonical first Chern class and
+its powers are therefore true
+algebraic Chow classes. Their
+proper projective pushforwards,
+finite logarithm and rational
+coefficient extraction construct
+the ACTUAL original-X Chow class
+in (18).
+
+At the Betti cohomology level,
+q^*Y_alpha is the projective
+bundle of H_alpha. Apply the
+intrinsic Segre formula (16)
+to the (global) GL_r
+lift H_alpha on J. Since
+the entire positive Chern
+character of H_alpha is
+concentrated in grade p>=2,
+$c_1(H_\alpha)=0$ rationally
+and $\mu=0$ in rational Betti
+cohomology. Consequently
+\[
+ \begin{aligned}
+ [t^p]\log S_{q^*Y_\alpha}(t)
+    &=(p-1)!\operatorname{ch}_p(H_\alpha)\\
+    &=(p-1)!\,m q^*\alpha.
+ \end{aligned}
+\]
+The canonical cycle-class map
+commutes with projective
+Gysin pushforward and Chern
+classes, and the affine-torsor
+q^*:H^{2p}(X,\mathbb Q)
+   \overset{\sim}{\to}H^{2p}(J,\mathbb Q)
+is an isomorphism.
+Thus the cycle (18) has Betti
+class exactly alpha.
+\end{proof}
+
+\begin{remark}[Exact improvement over the finite-central lift]
+Theorem (18) is stronger
+as a SOURCE CONSTRUCTION:
+it extracts the original-X
+canonical Chow class DIRECTLY
+from the unlifted algebraic
+PGL projective geometry.
+It applies uniformly to even
+and odd higher codimensions,
+since the centered symmetric
+power $p_p=\sum_i(x_i-\mu)^p$
+is defined for every p>=2;
+using merely the adjoint
+End-bundle would unnecessarily
+erase the odd power data.
+The sole independent
+still-required geometric
+condition is that the true
+projective Oka fold has a
+coherent PGL translation
+descent. This statement is
+not identified with ordinary
+Hodge purity or with a
+cohomological 2-cell condition.
+\end{remark}
+
 \section{All-dimensional geometry: spatial stabilization preserves the true obstruction}
 \begin{theorem}[No automatic projective coherence from unbounded trivial affine dimensions]
 For the SAME fixed holomorphic
