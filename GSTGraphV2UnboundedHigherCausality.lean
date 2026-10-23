@@ -945,4 +945,64 @@ theorem incidenceNumerator_trace (x ell : Fin n → ℚ) :
 
 end CausalFinitePoleIncidence
 
+/-! ## HIGHER-CAUSAL PROJECTIVE SOURCE: INTRINSIC CENTERED CHERN ROOTS
+
+For an ACTUAL geometric projective PGL_r-fold, the quotient
+line coordinate is only defined up to a base line twist.
+The REALIZED relative anti-canonical class
+c₁(T_{P(E)/X})/r = ξ - c₁(E)/r
+removes that ambiguity. Its centered splitting roots are
+xᵢ - (Σⱼ xⱼ)/r. The following exact ALL-RANK rational
+theorems show their invariance under any common line twist.
+The full true Chow theorem appears in
+research/derivations/GST_higher_causal_projective_descent_torsion_gerbe_2026-10-23.tex.
+No source-surjectivity axiom or fake algebraic class is introduced.
+-/
+namespace CausalProjectiveChern
+
+/-- The rational splitting root after removing the scalar line-twist part. -/
+def centeredRoot (r : ℕ) (x : Fin r → ℚ) (i : Fin r) : ℚ :=
+  x i - (∑ j : Fin r, x j) / (r : ℚ)
+
+/-- A common line-bundle Chern-root translation in every channel. -/
+def shiftedRoots (r : ℕ) (x : Fin r → ℚ) (c : ℚ) : Fin r → ℚ :=
+  fun j => x j + c
+
+/-- For every positive projective fiber rank, the centered root
+is unchanged by an arbitrary global scalar line twist. -/
+theorem centeredRoot_shift_invariant
+    (r : ℕ) (hr : 0 < r) (x : Fin r → ℚ) (c : ℚ) (i : Fin r) :
+    centeredRoot r (shiftedRoots r x c) i = centeredRoot r x i := by
+  have hr0 : (r : ℚ) ≠ 0 := by
+    exact_mod_cast (Nat.ne_of_gt hr)
+  have hs :
+      (∑ k : Fin r, x k + c) =
+      (∑ k : Fin r, x k) + (r : ℚ) * c := by
+    simp [Finset.sum_add_distrib, nsmul_eq_mul]
+  change (x i + c) - (∑ k : Fin r, x k + c) / (r : ℚ) =
+    x i - (∑ k : Fin r, x k) / (r : ℚ)
+  rw [hs]
+  field_simp
+  ring
+
+/-- Intrinsic pth projective Chern character numerator
+for the true PGL bundle (division by p! occurs in Chow geometry). -/
+def centeredPower (r p : ℕ) (x : Fin r → ℚ) : ℚ :=
+  ∑ i : Fin r, (centeredRoot r x i) ^ p
+
+/-- Every centered higher-degree Chern power is invariant
+under arbitrary scalar twisting, with no upper bound on p. -/
+theorem centeredPower_shift_invariant
+    (r p : ℕ) (hr : 0 < r) (x : Fin r → ℚ) (c : ℚ) :
+    centeredPower r p (shiftedRoots r x c) = centeredPower r p x := by
+  unfold centeredPower
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [centeredRoot_shift_invariant r hr x c i]
+
+#print axioms centeredRoot_shift_invariant
+#print axioms centeredPower_shift_invariant
+
+end CausalProjectiveChern
+
 end GSTGraphV2UnboundedHigherCausality
