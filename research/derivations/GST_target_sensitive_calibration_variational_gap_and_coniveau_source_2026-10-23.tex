@@ -500,6 +500,123 @@ original-X native projection or
 Chow-return compiler.
 \end{corollary}
 
+\section{The actual all-codimension maximal-support GST source theorem}
+The preceding divisor-support mechanism is
+not confined to codimension two.
+An actual smooth projective
+support variety of codimension
+p-1 carries degree-two
+Hodge geometry, and a
+divisor upstairs pushes to
+codimension p downstairs.
+
+\begin{theorem}[EXACT target-sensitive Chow birth from maximal geometric coniveau, arbitrary X,p]
+Let X be ANY smooth projective
+complex d-fold and 1<=p<=d.
+Fix a prescribed rational
+(p,p) Hodge class alpha.
+Suppose finitely many true
+smooth projective
+(d-p+1)-dimensional Y_i
+and proper morphisms
+$f_i:Y_i\to X$,
+whose image lies in a closed
+algebraic support of codimension
+at least p-1, satisfy
+\[
+ \boxed{
+ \alpha\in\sum_i(f_i)_*
+    H^2(Y_i,\mathbb Q)
+        \subset H^{2p}(X,\mathbb Q).
+ }                                                       \tag{11}
+\]
+Then alpha admits a genuine
+rational original-X Chow
+representative produced
+WITHOUT supplying an
+original-X Chow preimage:
+\[
+ \boxed{
+ \exists\,D_i\in CH^1(Y_i)_{\mathbb Q}:
+ \quad Z_\alpha=\sum_i(f_i)_*D_i
+       \in CH^p(X)_{\mathbb Q},\qquad
+ \mathrm{cl}^{can}_X Z_\alpha=\alpha.
+ }                                                       \tag{12}
+\]
+The construction uses the
+type-(p,p) projection of the
+ACTUAL Gysin preimages of
+the prescribed alpha, not
+an arbitrarily chosen
+algebraic basis of X.
+\end{theorem}
+\begin{proof}
+Shift each rational source
+Hodge structure H^2(Y_i)
+by the Tate twist
+(-(p-1)) so its weight
+becomes 2p. The proper
+Gysin map
+F=Σ_i(f_i)_* is an actual
+rational Hodge morphism
+from their direct sum
+V to the pure
+H^{2p}(X,Q). The image
+W=im F is a rational
+Hodge substructure.
+Since pure polarizable
+rational Hodge structures
+are semisimple, the
+surjection V→W has a
+Hodge-linear rational
+section. Apply it to
+the specified rational
+(p,p) alpha∈W to
+construct actual rational
+(1,1) lifts β_i in
+H^2(Y_i,Q).
+By the genuine
+Lefschetz (1,1)
+theorem each β_i is
+the canonical Betti
+class of a rational
+algebraic divisor D_i
+on smooth projective
+Y_i. Proper algebraic
+pushforward gives an
+ACTUAL codimension-p
+Chow class on the
+ORIGINAL X, and
+naturality of the
+canonical cycle
+class proves (12).
+\end{proof}
+
+\begin{remark}
+If the prescribed Hodge
+class does NOT have a known
+Gysin representation (11),
+none is fabricated.
+The theorem resolves
+the genuine maximally
+supported sector of
+EVERY codimension;
+the novel universal
+source-birth task is to
+supply appropriate
+supports for arbitrary
+primitive classes not
+already in that sector.
+High-coniveau blowups
+that transfer an
+arbitrary class onto
+a new rational world
+do not by themselves
+provide the requisite
+codimension-(p-1)
+support on ORIGINAL X.
+\end{remark}
+
 \section{Sharp input boundary and actual new attempt}
 The geometric operation in (6) is a genuine
 target-dependent Chow SOURCE, not an
