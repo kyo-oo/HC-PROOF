@@ -185,10 +185,13 @@ is represented by an actual effective
 complete-intersection cycle
 for every p. Let alpha be ANY rational
 even-degree class of degree 2p.
-For a positive integer m with
-m alpha integral and an integer n>=0,
-write \(\gamma(m,n)=
- \operatorname{PD}_X(m\alpha+n h^p)\).
+For integers m>0 and n>=0, an INTEGRAL LIFT of
+m alpha+n h^p means an ACTUAL class
+\(\gamma\in H_{2(d-p)}(X,\mathbb Z)\)
+whose rational Poincare dual is m alpha+n h^p.
+The lift must be specified in integral homology,
+not as a canonical integral representative of
+rational cohomology modulo torsion.
 
 \begin{theorem}[ONE-GAP algebraic cycle recovery, all original varieties]
 For EVERY original X, p and rational
@@ -202,9 +205,10 @@ that alpha is Hodge:
    \quad\operatorname{cl}^{can}_X(Z_\alpha)=\alpha\\
  &\qquad\Longleftrightarrow\
  \exists\,m\in\mathbb Z_{>0},\
- n\in\mathbb Z_{\ge0}:
- \quad m\alpha+n h^p\in H^{2p}(X,\mathbb Z)_{\rm free},
- \quad \mathfrak d_\omega(\gamma(m,n))=0 .
+ n\in\mathbb Z_{\ge0},\
+ \gamma\in H_{2(d-p)}(X,\mathbb Z):
+ \quad\operatorname{PD}_{\mathbb Q}(\gamma)=m\alpha+n h^p,
+ \quad\mathfrak d_\omega(\gamma)=0.
  \end{split}
  }                                                       \tag{8}
 \]
