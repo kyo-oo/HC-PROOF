@@ -565,6 +565,96 @@ rational normalized
 cycles.
 \end{proof}
 
+\begin{corollary}[Uniform fixed-denominator spatial quantization gap]
+Keep X=P1 and the
+smooth normalized
+Fubini--Study probability
+current omega above.
+For every finite
+positive integer M,
+there is a
+STRICTLY POSITIVE
+constant epsilon_M
+such that for EVERY
+effective rational
+algebraic zero-cycle
+Z of degree one whose
+coefficient denominator
+divides SOME integer
+m with 1<=m<=M,
+its current has
+a weak probability
+metric distance
+at least epsilon_M
+from smooth omega.
+For instance this
+holds for the
+bounded-Lipschitz
+metric on probability
+measures of the
+round compact sphere:
+\[
+ \boxed{
+ \inf_{\substack{\deg Z=1,\ Z\ge0\\
+       mZ\in Z^1(X)_\mathbb Z,\
+       1\le m\le M}}
+  d_{\mathrm{BL}}([Z],\omega)
+                  =\epsilon_M>0.
+ }                                                     \tag{23}
+\]
+Thus denominators tending
+to infinity are NECESSARY
+for any such rational-cycle
+weak approximation of this
+smooth positive carrier.
+This is true EVEN THOUGH
+each rational source in
+(22) has exactly the
+correct algebraic Hodge
+cohomology class.
+\end{corollary}
+\begin{proof}
+Every positive effective
+zero-cycle Z with
+mZ integral and
+degree(Z)=1 consists
+of at most m atoms,
+since the positive
+integer multiplicities
+of mZ sum to m.
+Hence for m<=M all
+such cycles are
+probability measures
+with at most M atoms.
+The space of
+probability measures
+supported on at
+most M points is
+COMPACT in the
+weak topology:
+it is the continuous
+image of the compact
+space $X^M\times
+\Delta^{M-1}$,
+where $\Delta^{M-1}$
+is the closed
+probability simplex.
+The smooth Fubini--Study
+measure is non-atomic,
+so it lies outside
+this compact and
+therefore closed set.
+Any metric that
+metrizes weak
+convergence, including
+the bounded-Lipschitz
+metric, has a strictly
+positive distance
+from a point to a
+disjoint compact set.
+This proves (23).
+\end{proof}
+
 \begin{remark}[What this proves about the GST premise]
 The Hodge condition already
 constructs genuinely
