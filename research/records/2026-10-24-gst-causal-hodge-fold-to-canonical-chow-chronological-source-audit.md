@@ -20,50 +20,49 @@
 
 **Stage B: the SAME geometric birth generates Hodge shape.**
 Oct22 `GST_causal_graph_double_fold_weight_emergence_2026-10-22.tex` starts from a graph Γ of actual nodal identifications of rational projective curves, with e edges and r vertices. Its cycle number g=e-r+1 computes the new degree-one weight-zero graph Hodge sector; actual smoothing generates genus-g pure (1,0)/(0,1) sectors. The source-derived whole-world signatures are
-[
-\mathcal G_N^{fold}=(1+g,t+rA)\sum_{j=0}^NA^j,quad
-\mathcal G_N^{smooth}=(1+g,ts(u+v)+A)\sum_{j=0}^NA^j,quad
- A=t^2s^2uv .
-]
+\[
+\mathcal G_N^{\mathrm{fold}}=(1+g\,t+rA)\sum_{j=0}^{N}A^j,\qquad
+\mathcal G_N^{\mathrm{smooth}}=(1+g\,ts(u+v)+A)\sum_{j=0}^{N}A^j,\qquad A=t^2s^2uv.
+\]
 The correct two-coordinate diagnostics are charge χ=p−q AND purity gap δ=w−k, which distinguish diagonal but non-pure classes created by singular folds from actual pure Hodge classes on smooth projective varieties.
 Oct22 subsequent SNC/Picard–Fuchs, original-X cyclic and twisted graph holonomy, full signed gap and Hopf compact dichotomy sources expand this into all-dimensional genuine geometry. Files such as `GSTGraphV2UnboundedHigherCausality.lean`, `GSTGradedWorldAlgebra.lean`, `waves/GSTNCohomologyV3.lean` formalize specified incidence/grade/tensor consequences. They do NOT currently instantiate the whole scheme, mixed Hodge and Chow realization in Lean.
 
 **Stage C: alpha itself generates a full topological spatial fold.**
 The Oct23 `GST_universal_spatial_fold_exponential_geometric_realization_2026-10-23.tex` constructs, FROM any actual original (X,p,alpha), an honest finite complex topological E_alpha with
-[
-\operatorname{ch}_{top}(E_\alpha)=r+m\alpha .
-]
+\[
+\operatorname{ch}_{\mathrm{top}}(E_\alpha)=r+m\alpha.
+\]
 Its real projective-spatial fold has the **exact all-degree Segre law**
-[
+\[
 \sum_{k\ge0}\pi_*(\xi^{r-1+k})t^k
   =\exp(m(p-1)!\alpha t^p),\qquad
-\pi_*(\xi^{r-1+p})=m(p-1)!\alpha .
-]
+\pi_*(\xi^{r-1+p})=m(p-1)!\alpha.
+\]
 This is a genuine all-X, prescribed-alpha, all-fold-rank topological construction, not an auxiliary special-variety example. The projective X algebraic realization of the same tautological fold would yield
-[
-Z_\alpha={\pi_*^{alg}(c_1(L)^{r-1+p})\over m(p-1)!}
-\in CH^p(X)_\mathbb Q,quad cl_X^{can}(Z_\alpha)=\alpha .
-]
+\[
+Z_\alpha={\pi_*^{\mathrm{alg}}(c_1(L)^{r-1+p})\over m(p-1)!}
+\in CH^p(X)_{\mathbb Q},\qquad \mathrm{cl}^{\mathrm{can}}_X(Z_\alpha)=\alpha.
+\]
 The file proves the implication, NOT universal existence of that compatible projective-algebraic structure. A Jouanolou affine torsor over X gives the exact same ordinary pure Hodge carrier and, by Stein-Oka, genuine HOLomorphic vector-bundle realization, not automatically algebraic projector/Chow.
 
 **Stage D: geometry and algebra MUST be one fold.**
 Oct23 `GST_simultaneous_algebraic_dimension_fold_rees_chow_hodge_2026_10_23.tex` realizes the user's literal simultaneous idea. From an ACTUAL regular algebraic ideal I_Z of a center Z⊂X, the SAME algebra
-[
+\[
 \mathcal R_I=\mathcal O_X[t,I/t],\qquad
-t u_i=z_i
-]
+t u_i=z_i.
+\]
 creates the algebraic space, its new normal directions and their coordinate multiplication. The central fiber is N_{Z/X}; proper deformation to normal cone has actual blowup + projective-normal components. Chow and Hodge projective/birational correspondences give two actual complementary original/born projectors and their common Betti comparison. The first nontrivial center return is
-[
- b_*E^c=(-1)^{c-1}[Z]\quad \text{in real original-X }CH^c.
-]
+\[
+b_*E^c=(-1)^{c-1}[Z]\quad \text{in the actual original-}X\ CH^c.
+\]
 The file genuinely constructs alpha-selected centers, born cycles and exact original-X Betti equality for the divisor-Lefschetz sector, and a nondivisor example on Gr(2,5). Its general Rees construction starts with an actual ALGEBRAIC ideal I_Z, not automatically with arbitrary higher-primitive rational alpha.
 
 **Stage E: nonlinear anti-deck and spectral algebra are source operations, not a replacement for A–D.**
 Oct22 `GST_nonlinear_antideck_chow_source_birth_2026-10-22.tex` proves for an actual reducible two-divisor incidence C=⋃C_j that anti-deck divisor products can produce
-[
- f_*(\Delta_1\Delta_2)=2\sum_j\varepsilon_j[C_j]
-\quad\text{in }CH^2(X)_\mathbb Q.
-]
+\[
+f_*(\Delta_1\Delta_2)=2\sum_j\varepsilon_j[C_j]
+\quad\text{in }CH^2(X)_{\mathbb Q}.
+\]
 The subsequent higher-codim flag and normalization sources genuinely output independent algebraic CH classes with signed canonical periods. Oct23 `GST_hodge_alpha_algebraic_differential_to_rees_milnor_fold_2026_10_23.tex` derives from any prescribed Hodge alpha an actual finite filtered algebraic Čech–de Rham cocycle and separately proves that actual Rees log symbols from REGULAR algebraic centers yield true K-residue Chow cycles. These are two halves of the SAME target-origin mechanism, not automatically one proved arrow. Oct23 `GST_direct_alpha_finite_polynomial_curvature_source_equations_2026_10_23.tex` states an exact idempotent curvature+transgression finite system whose solution would genuinely output Z_alpha. Its p=1/top-degree solutions are actual; arbitrary higher-primitive solvability is not established by defining the polynomial system.
 
 **Stage F: the original scheme, true canonical Betti semantics, and strict Lean target.**
