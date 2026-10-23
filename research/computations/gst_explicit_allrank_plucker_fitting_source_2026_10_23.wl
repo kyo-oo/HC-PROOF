@@ -24,7 +24,7 @@ projector[frame_List,wt_Association]:=
  ];
 frameMake[rr_,mm_,shift_:0]:=
  Table[Table[
-  If[i==j,1,0]+If[i>rr,(i+j+shift) Mod 5+1,0],
+  If[i==j,1,0]+If[i>rr,Mod[i+j+shift,5]+1,0],
   {i,1,mm}],{j,1,rr}];
 weightMake[rr_,mm_]:=Module[{idxs=Subsets[Range[mm],{rr}]},
  AssociationThread[idxs,
@@ -51,11 +51,11 @@ projectorTests=Flatten[Table[
    Base S=span(e1,e2), incidence phi(e1,e2)=1.
    P(e5)=0 for phi=e1^e2, while adding phi(e5,e2)=1 gives P(e5)=e1.
    Fitting determinant ideal I_4([I-P | P e5]) vanishes iff section vanishes. *)
-u=UnitVector[5,1];v=UnitVector[5,2];U={u,v};
+u=UnitVector[5,1];v=UnitVector[5,2];frame2={u,v};
 idx=Subsets[Range[5],{2}];base=AssociationThread[idx,ConstantArray[0,Length[idx]]];
 wt0=Association[base];wt0[{1,2}]=1;
 wt1=Association[wt0];wt1[{2,5}]=-1;
-pZero=projector[U,wt0];pNonzero=projector[U,wt1];
+pZero=projector[frame2,wt0];pNonzero=projector[frame2,wt1];
 e5=UnitVector[5,5];
 bZero=Transpose[Append[Transpose[IdentityMatrix[5]-pZero],pZero.e5]];
 bNonzero=Transpose[Append[Transpose[IdentityMatrix[5]-pNonzero],pNonzero.e5]];
