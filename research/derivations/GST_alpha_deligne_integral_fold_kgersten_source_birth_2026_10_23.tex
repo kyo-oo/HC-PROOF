@@ -1272,6 +1272,69 @@ $K_0$ source.
 \end{corollary}
 
 
+
+\begin{proposition}[A concrete transcendental holomorphic involution and exact source-preserving transgression]
+On the SAME genuine affine GST quadric
+$Q=\{xy+z^2=1\}$ let
+\[
+ P=\frac12\begin{pmatrix}1+z&x\\y&1-z\end{pmatrix},
+ \quad
+ G=\begin{pmatrix}1&0\\e^z&1\end{pmatrix},
+ \quad P'=GPG^{-1},\quad A'=2P'-I .
+\]
+Then $P'^2=P'$, $(A')^2=I$, and $P'$ is
+HOLOMORPHIC on the entire affine Q but is NOT
+a matrix of regular ALGEBRAIC functions on Q.
+Nevertheless $\operatorname{im}P'\cong\operatorname{im}P
+\cong q^*O_{\mathbb P^1}(-1)$ as holomorphic line bundles.
+The two full exact differential Chern representatives obey
+\[
+ \boxed{\operatorname{Tr}(P'dP'\wedge dP')
+       -\operatorname{Tr}(PdP\wedge dP)
+     =d\left(\frac{x e^z}{2}\,dz\right)
+     =\frac{e^z}{2}\,dx\wedge dz .}                       \tag{35}
+\]
+Thus one and the SAME nonzero rational Hodge (1,1) class
+and actual fold geometry admit both a regular algebraic
+spectral source and a transcendental holomorphic source,
+with a computed nonalgebraic exact transgression.
+Hodge type and correct periods do NOT force an arbitrary
+holomorphic spectral matrix to be regular algebraic.
+\end{proposition}
+\begin{proof}
+$G$ and $G^{-1}$ are entire invertible matrices
+on Q, so conjugation preserves idempotence and
+gives the asserted holomorphic line-bundle isomorphism.
+The $(2,1)$ entry of $P'$ equals
+$y/2+ze^z-(x/2)e^{2z}$.
+Restrict it to the actual algebraic affine line
+$\ell\subset Q$ given by $x=1$, $y=1-z^2$:
+its value becomes
+$(1-z^2)/2+ze^z-e^{2z}/2$, which is not
+a polynomial in z; a regular algebraic function
+on Q would restrict to a polynomial on $\ell$.
+Thus $P'$ and $A'$ have genuinely nonregular entries.
+
+On the algebraic coordinate chart $x\ne0$,
+put $y=(1-z^2)/x$ and use $(x,z)$ as coordinates.
+Direct multiplication of the explicit
+matrices gives
+\[
+ \operatorname{Tr}\bigl(P[P_x,P_z]\bigr)=-\frac1{2x},
+ \quad
+ \operatorname{Tr}\bigl(P'[P'_x,P'_z]\bigr)
+       =-\frac1{2x}+\frac{e^z}{2}.
+\]
+Therefore their global holomorphic two-form difference
+is the right side of (35) on a dense chart,
+hence on the smooth irreducible Q everywhere.
+The one-form $x e^z dz/2$ is globally
+holomorphic, completing the exact transgression.
+It also verifies that the normalized Chern period
+remains the actual value -1 from (25).
+\end{proof}
+
+
 \section{Outcome of the exact higher-primitive proof attempt}
 We CONSTRUCTED, from arbitrary rational Hodge alpha
 and no supplied algebraic cycle, the genuine rational
