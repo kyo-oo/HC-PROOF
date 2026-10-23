@@ -64,6 +64,18 @@ grassmannCurvatureCoefficient=-D[grassmannOmegaCoefficient,v];
 grassmannCurvatureCheck=TrueQ[
  FullSimplify[grassmannCurvatureCoefficient+
                              1/(1+u v)^2]==0];
+(* The rational coordinate dual is an ACTUAL Hodge-type period:
+   on Gr(2,5), psi = 5 theta h^2 is of bidegree (4,4).
+   Schubert integration [xx^4 yy^3](xx-yy)F checks all pairings. *)
+hGrass=xx+yy; sGrass=xx yy; thetaGrass=2 hGrass^2/5-sGrass;
+pglGrass=-7 hGrass^2/12-sGrass;
+psiGrass=5 thetaGrass hGrass^2;
+schubertInt[f_]:=Coefficient[Coefficient[
+  Expand[(xx-yy) f],xx,4],yy,3];
+hodgeDualPairings={
+ schubertInt[hGrass^2 psiGrass],
+ schubertInt[thetaGrass psiGrass],
+ schubertInt[pglGrass psiGrass]};
 output=<|
  "firstStage"->firstStage,
  "dualWitnessPairsWithNewPGL"->dualPgl,
@@ -72,6 +84,8 @@ output=<|
  "PGLRankJump"->TrueQ[secondStage["rank"]==2],
  "exactSolution"->TrueQ[secondStage["coefficients"]=={59/60,1}],
  "actualCurveSolution"->curveStage,
+ "actualRationalHodgeDualPairings"->hodgeDualPairings,
+ "HodgeDualAllPass"->TrueQ[hodgeDualPairings==={0,1,1}],
  "algebraicGrassmannCurvatureCoefficient"->grassmannCurvatureCoefficient,
  "algebraicGrassmannCurvatureExact"->grassmannCurvatureCheck,
  "incidencePolynomialCases"->Length[polyChecks],
