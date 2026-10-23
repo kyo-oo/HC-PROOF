@@ -1016,6 +1016,144 @@ higher primitive rational Hodge inputs into divisor products.
 \end{remark}
 
 
+
+\section{Every prescribed rational Hodge target has a finite holomorphic spectral-fold lift}
+The last theorem algebraizes every divisor-generated class with actual
+REGULAR polynomial/algebraic matrix entries. A second, genuinely all-target
+result can be established without pretending that holomorphic matrices on
+the affine fold are necessarily REGULAR ALGEBRAIC matrices.
+
+\begin{theorem}[Unconditional arbitrary-$X$, arbitrary-$p$, prescribed-$\alpha$ HOLomorphic spectral involution birth]
+Let $X$ be ANY smooth projective complex variety,
+$p\ge0$, and
+$\alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)$
+be prescribed. Let $q:J\to X$ be the true
+algebraic Jouanolou affine-space bundle.
+There exist a positive integer $m$ and
+two finite matrices $A_+,A_-$ with entries in
+the ring of global \emph{holomorphic} functions
+$\mathcal O_{\mathrm{hol}}(J^{an})$ such that
+\[
+ \boxed{A_\pm^2=I,\qquad
+  \left[\frac{1}{m}\left(
+    \mathrm{ch}^{an}_p(\operatorname{im}(I+A_+)/2)
+   -\mathrm{ch}^{an}_p(\operatorname{im}(I+A_-)/2)
+  \right)\right]=q^*\alpha\in H^{2p}(J,\mathbb Q).}       \tag{32}
+\]
+In particular all original rational Hodge targets admit actual
+TARGET-DEPENDENT \emph{finite holomorphic spectral idempotents}
+on the SAME true affine algebraic fold geometry.
+Their closed holomorphic Chern--Weil forms are explicitly
+\[
+ \boxed{\displaystyle
+ \frac{1}{m(2\pi i)^p\,2^{2p+1}p!}
+ \left[
+   \operatorname{Tr}(A_+(dA_+)^{2p})
+  -\operatorname{Tr}(A_-(dA_-)^{2p})
+ \right],}                                               \tag{33}
+\]
+with the conventional analytic Betti normalization.
+This statement asserts existence of HOLOMORPHIC matrices,
+not regular algebraic ones; it makes no algebraic-Chow
+source assumption.
+\end{theorem}
+\begin{proof}
+A smooth projective complex variety has the homotopy type of a
+finite CW complex, and its rational topological Chern character
+is an isomorphism
+$K^0_{\mathrm{top}}(X)\otimes\mathbb Q
+ \cong H^{\mathrm{even}}(X,\mathbb Q)$.
+Choose a rational virtual topological bundle $\kappa_\alpha$
+whose \emph{total} Chern character is exactly $\alpha$
+(and zero in other degrees). After clearing its denominator,
+write $m\kappa_\alpha=[E_+]-[E_-]$ for genuine finite-rank
+topological complex vector bundles on $X$.
+Pull these bundles to the analytic space $J^{an}$.
+
+The true algebraic Jouanolou fold $J$ is smooth AFFINE,
+so $J^{an}$ is Stein. By the Oka--Grauert principle,
+each pulled-back topological bundle has a holomorphic
+vector-bundle representative. By finite holomorphic generation
+on finite-dimensional Stein manifolds (Cartan--Forster) and
+Cartan's vanishing for coherent sheaves,
+each such holomorphic bundle is the image of a
+finite holomorphic idempotent $P_\pm$:
+a finite free holomorphic surjection splits because
+the target bundle is locally free and its extension
+obstruction is a coherent $H^1$, which vanishes on Stein.
+Set $A_\pm=2P_\pm-I$; then $A_\pm^2=I$ as
+actual holomorphic matrix identities.
+
+Naturality of the \emph{topological} Chern character
+gives
+$\mathrm{ch}(P_+)-\mathrm{ch}(P_-)=m q^*\alpha$,
+and taking degree $2p$ proves (32).
+The holomorphic Grassmann connections of $P_\pm$
+have curvature $P_\pm(dP_\pm)^2$.
+Exactly the SAME exterior matrix calculation as (18)--(20),
+now in holomorphic functions, gives the trace forms (33)
+and their closedness. Their analytic de Rham classes,
+under the stated $(2\pi i)^{-p}$ normalization,
+are the desired topological Chern character classes.
+The construction is selected from the ORIGINAL alpha
+via rational topological K-theory and the TRUE affine fold;
+no codimension-$p$ algebraic cycle is inserted.
+\end{proof}
+
+\begin{proposition}[Exact regularity criterion for classical original-$X$ algebraicity]
+For fixed original $X,p,\alpha$ as above, the following
+two properties are equivalent:
+\begin{enumerate}
+\item There is an actual $Z_\alpha\in CH^p(X)_{\mathbb Q}$
+      with $\mathrm{cl}^{can}_X(Z_\alpha)=\alpha$.
+\item On the SAME Jouanolou affine bundle $J$, there are
+      $m>0$ and TWO finite matrices
+      $B_\pm\in\operatorname{Mat}_{N_\pm}
+                   \Gamma(J,\mathcal O_J)$ with
+      \emph{REGULAR ALGEBRAIC} entries,
+      $B_\pm^2=I$, and
+\[
+ \frac1m\left(
+   \mathrm{cl}^{can}_J
+       \mathrm{ch}^{CH}_p(\operatorname{im}(I+B_+)/2)
+ - \mathrm{cl}^{can}_J
+       \mathrm{ch}^{CH}_p(\operatorname{im}(I+B_-)/2)
+ \right)=q^*\alpha .
+\]
+\end{enumerate}
+The unconditional holomorphic matrices of (32)
+therefore provide genuine \emph{all-target} differential
+source geometry, while the additional REGULAR ALGEBRAIC
+matrix realization is the exact test needed to make it
+a classical Chow proof. Mere existence of the fold,
+or finite holomorphic projectors on its Stein
+analytification, does not establish this regularity.
+\end{proposition}
+\begin{proof}
+A regular algebraic projector has a genuine algebraic
+finite projective module image, hence its rational
+Chow Chern character lies in $CH^p(J)_{\mathbb Q}$.
+The true Jouanolou affine-space pullback is an
+isomorphism $CH^p(X)_{\mathbb Q}\to CH^p(J)_{\mathbb Q}$
+and commutes with canonical Betti classes.
+This returns an ACTUAL original-$X$ cycle
+from the two regular matrices in (2), proving (1).
+
+Conversely start from (1), use the rational
+Chern-character isomorphism from algebraic
+$K_0(X)_{\mathbb Q}$ to the rational graded Chow
+group for smooth $X$ to represent the degree-$p$
+class of $Z_\alpha$ by a rational virtual
+algebraic bundle $\xi$. Clearing a denominator,
+pull $m\xi$ to $J$; on the genuine affine
+scheme $J$ it is a difference of finite projective
+algebraic modules, each the image of a finite
+regular idempotent by projective-module splitting.
+Take $B_\pm=2P_\pm-I$. Functoriality of the
+Chern character gives (2).
+\end{proof}
+
+
 \section{Outcome of the exact higher-primitive proof attempt}
 We CONSTRUCTED, from arbitrary rational Hodge alpha
 and no supplied algebraic cycle, the genuine rational
