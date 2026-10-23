@@ -28,7 +28,7 @@ latticeTests=Flatten[Table[
    Its exponent is nonnegative for every p>=1. *)
 angleExponents=Table[{p,p-1},{p,1,8}];
 out=<|
- "ChernRootRankCodimPairs"->Length[rootTests),
+ "ChernRootRankCodimPairs"->Length[rootTests],
  "ChernRootAllPass"->And@@rootTests[[All,3]],
  "ChernRootFailures"->Select[rootTests,Not[#[[3]]]&],
  "LatticeDenominatorTests"->Length[latticeTests],
