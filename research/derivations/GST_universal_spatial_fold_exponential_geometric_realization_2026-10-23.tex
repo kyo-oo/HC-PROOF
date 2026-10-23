@@ -1,0 +1,329 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=22mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\title{GST Universal Spatial Fold: Exponential Causal-Chern Geometry and a Genuine Algebraic-Realization Dichotomy}
+\date{23 October 2026}
+\begin{document}\maketitle
+\begin{abstract}
+The mathematical object is the entire emergent-dimensional folded space,
+not a finite family of numerical examples and not the purity of its
+Hodge numbers alone. We derive, on EVERY original smooth projective
+complex X and for EVERY rational cohomological grade p, an actual
+topological complex projective-space fold whose full Segre pushforward
+spectrum is the exponential of a prescribed rational class alpha.
+This is an unconditional universal fold-existence and fold-recovery theorem.
+We then prove that a compatible algebraic realization of this
+specific spatial fold gives an actual canonical rational Chow cycle
+on the ORIGINAL X. A two-fold plus/minus variant turns this into
+an exact geometric algebraizability equivalence: the existence of
+two algebraic spatial folds with one prescribed full Chern-character
+comparison is equivalent, class-by-class, to classical rational
+Hodge algebraicity. This gives a mathematically typed proof/disproof
+criterion formulated in terms of the geometry and topology of the
+whole fold. It does not replace an algebraic-realization existence
+theorem with a purity assumption.
+\end{abstract}
+
+\section{Original-X target and spatial ontology}
+Fix ANY nonempty smooth projective complex X of dimension d,
+a grade 1<=p<=d, and an arbitrary rational Hodge class
+\[
+ \alpha\in H^{2p}(X,\mathbb Q)\cap H^{p,p}(X).
+\]
+The input consists only of actual X, p, alpha and the existing
+dimensionless GST carrier. The target of the eventual
+algebraic realization is a genuine cycle
+$Z_\alpha\in CH^p(X)_{\mathbb Q}$ with
+$\operatorname{cl}_X^{can}(Z_\alpha)=\alpha$.
+The GST space itself has no metric, intrinsic complex dimension
+or fixed topology; complex dimension, a tautological line
+and the projective geometry of each fold enter through
+an actual realization. We do NOT turn a higher causal cell
+index into a projective dimension.
+
+\section{Actual topological spatial fold exists without any algebraic witness}
+\begin{lemma}[Pure rational topological bundle creation, all X and p]
+For every finite CW complex X and every rational class
+$\alpha\in H^{2p}(X,\mathbb Q)$ there exist an integer
+$m>0$, an honest finite-rank complex \emph{topological}
+vector bundle E on X of rank r>=p+1, and a rational equality
+\[
+ \boxed{\operatorname{ch}_{top}(E)=r+m\alpha.}          \tag{1}
+\]
+All strictly positive Chern-character components other
+than grade p vanish. No integrable complex or algebraic
+bundle structure is asserted.
+\end{lemma}
+\begin{proof}
+Rational topological K-theory gives the isomorphism
+$\operatorname{ch}:K^0(X)\otimes\mathbb Q
+ \longrightarrow H^{even}(X,\mathbb Q)$.
+Choose a virtual rational class v mapping to alpha and
+multiply by a positive integer m to obtain an integral
+K-class represented by $[E_0]-[F_0]$.
+Since X is compact, F_0 admits a finite-dimensional
+complementary complex bundle F_0' satisfying
+$F_0\oplus F_0'\cong\underline{\mathbb C}^{N}$
+as topological bundles (embed F_0 into a trivial Hermitian
+bundle and take its orthogonal complement).
+Then $E=E_0\oplus F_0'$ is an honest bundle with
+$[E]-[\underline{\mathbb C}^{N}]=m v$ in K-theory.
+Consequently $\operatorname{ch}(E)=\operatorname{rk}(E)+m\alpha$.
+Add trivial summands to ensure r>=p+1 without changing
+any positive Chern-character component.
+A smooth projective X has finite CW homotopy type.
+\end{proof}
+
+Let $\pi:Y=P_X(E)\to X$ be the genuine locally trivial
+topological bundle of 1-dimensional \emph{quotients} of E,
+with fiber $\mathbb{CP}^{r-1}$, and let
+$\xi=c_1(O_Y(1))\in H^2(Y,\mathbb Z)$.
+The orientation of the projective fiber defines the
+Gysin map $\pi_*:H^{2r-2+2k}(Y,\mathbb Q)
+   \longrightarrow H^{2k}(X,\mathbb Q)$.
+The quotient convention has the projective ring equation
+$\xi^r-c_1(E)\xi^{r-1}+\cdots+(-1)^r c_r(E)=0$.
+It holds in topology without holomorphicity.
+
+\begin{theorem}[ALL-DIMENSION GST SPATIAL EXPONENTIAL FOLD LAW]
+For every arbitrary original X, prescribed p, alpha, rank r,
+and actual topological projective fold just constructed,
+in the finite cohomology ring $H^{even}(X,\mathbb Q)[[t]]$,
+\[
+ \boxed{
+ \mathcal S_E(t):=\sum_{k\ge0}
+       \pi_*(\xi^{r-1+k})t^k
+   =\frac{1}{c(E,-t)}
+   =\exp\!\bigl(m(p-1)!\,\alpha\,t^p\bigr).
+ }                                                        \tag{2}
+\]
+Here $c(E,-t)=\sum_{j\ge0}(-1)^j c_j(E)t^j$.
+The equation is valid at EVERY finite fiber rank and
+EVERY original cohomology grade; power series truncate
+automatically beyond the dimension of X.
+In particular,
+\[
+ \boxed{
+   \pi_*(\xi^{r-1+p})=m(p-1)!\alpha, \qquad
+   \pi_*(\xi^{r-1+kp})=
+       \frac{\bigl(m(p-1)!\bigr)^k}{k!}\alpha^k,
+ }                                                        \tag{3}
+\]
+for $k>=0$ with $kp<=d$, and all remaining positive-degree
+fold-pushforward components not divisible by p vanish.
+\end{theorem}
+\begin{proof}
+By the topological projective-bundle theorem for quotient
+lines, pushforward of $\xi^{r-1+k}$ is the kth complete
+symmetric polynomial in the Chern roots $x_i$ of E.
+The splitting principle gives
+\[
+ \mathcal S_E(t)=\prod_{i=1}^r (1-x_i t)^{-1}.
+\]
+Hence, in rational cohomology,
+\[
+ \log\mathcal S_E(t)=\sum_{\ell\ge1}
+     \frac{\sum_i x_i^\ell}{\ell}t^\ell
+ =\sum_{\ell\ge1}(\ell-1)!
+       \operatorname{ch}_\ell(E)t^\ell.                    \tag{4}
+\]
+Substituting (1) annihilates every positive component
+except $\ell=p$ and yields (2).
+Coefficient extraction from the exact formal exponential
+proves (3), including the $k=0$ constant fiber integral.
+There is no approximation, numerical cut-off, conjectural
+Hodge input or algebraic-source assumption in this proof.
+\end{proof}
+
+\section{The actual complex-geometric return, not a purity assertion}
+\begin{theorem}[Compatible ALGEBRAIC realization gives original-X cycle]
+Suppose the actual topological fold $Y=P_X(E)$ admits
+a compatible smooth projective algebraic realization
+$Y^{alg}$, a projective morphism $\pi^{alg}:Y^{alg}\to X$,
+an isomorphism of topological bundles over X
+$Y^{alg,an}\cong P_X(E)$ preserving fiber orientation,
+and a genuine algebraic line bundle L on $Y^{alg}$
+whose first Betti Chern class corresponds to $\xi$.
+Then the actual original-X Chow cycle
+\[
+ \boxed{
+ Z_\alpha=
+  \frac{1}{m(p-1)!}\,
+  \pi^{alg}_*\!\left(c_1(L)^{r-1+p}\cap[Y^{alg}]\right)
+   \in CH^p(X)_{\mathbb Q}
+ }                                                        \tag{5}
+\]
+has EXACT canonical rational Betti class alpha:
+\[
+ \boxed{\operatorname{cl}_X^{can}(Z_\alpha)=\alpha.}     \tag{6}
+\]
+\end{theorem}
+\begin{proof}
+L is a genuine algebraic line bundle, so its Chern
+power is a true algebraic Chow class on the smooth
+projective total space. The projective proper
+pushforward is a genuine Chow operation, producing
+an original-X cycle of codimension p.
+Naturality of the canonical Betti cycle-class map
+under proper algebraic pushforward, plus the preserved
+topological tautological class and (3), gives
+$\operatorname{cl}_X^{can}(Z_\alpha)
+=(m(p-1)!)^{-1}\pi_*\xi^{r-1+p}=\alpha$.
+Nothing was assumed about an original-X cycle
+representing alpha before constructing Z_alpha.
+\end{proof}
+The hypothesis is \emph{geometric}: the complete
+topological projective fold becomes an algebraic
+complex-geometric spatial realization WITH compatible
+tautological line and proper algebraic base return.
+Merely observing unchanged Hodge numbers does not supply
+those typed pieces. The actual existence of this
+realization for every Hodge alpha is a substantive
+mathematical claim to be proved or disproved, not a
+definition silently inserted into (5).
+
+\section{A mathematically exact universal proof/disproof dichotomy}
+An honest \emph{single} topological E in (1) always
+exists. For a full necessary-and-sufficient geometric
+test, use TWO genuine spatial folds rather than assume
+a chosen topological E admits algebraic realization.
+
+\begin{theorem}[PAIR-FOLD GST GEOMETRIC BIFURCATION, iff]
+For every original smooth projective complex X,
+each p and each rational Hodge alpha, the following
+statements are mathematically equivalent:
+
+(A) There exists a genuine original-X algebraic
+$Z\in CH^p(X)_{\mathbb Q}$ with canonical
+$\operatorname{cl}^{can}_X(Z)=\alpha$.
+
+(B) There exist an integer $m>0$ and two honest algebraic
+vector bundles $E_+,E_-$ on the original X, and their
+two actual algebraic projective-space folds
+$\pi_\pm:Y_\pm=\mathbb P_X(E_\pm)\to X$
+(with tautological algebraic classes $\xi_\pm$),
+such that the exact all-degree geometrical equation holds:
+\[
+ \boxed{
+ \frac{\displaystyle\sum_{k\ge0}
+      (\pi_+)_*(\xi_+^{r_+-1+k})t^k}
+      {\displaystyle\sum_{k\ge0}
+      (\pi_-)_*(\xi_-^{r_--1+k})t^k}
+ =\exp\!\left(m(p-1)!\,\alpha\,t^p\right)
+ \quad\text{in }H^{even}(X,\mathbb Q)[[t]].
+ }                                                        \tag{7}
+\]
+Both denominators have constant term 1, so the ratio
+is intrinsically well-defined. The ranks $r_\pm$
+may be increased by adding trivial summands.
+In (B) it is enough to require the entire ratio
+through positive cohomological degree d.
+
+Moreover if (B) holds, an explicit original-X algebraic
+representative is
+\[
+ \boxed{
+ Z=\frac1m\left[
+ \operatorname{ch}_p^{CH}(E_+)
+   -\operatorname{ch}_p^{CH}(E_-)\right],
+ }                                                        \tag{8}
+\]
+where the algebraic Chern character is a rational
+Chow class; equivalently it is the $t^p$
+coefficient of the logarithm of the algebraic
+Segre-series quotient, divided by $m(p-1)!$.
+\end{theorem}
+\begin{proof}
+(B) implies (A): apply the logarithm to both sides
+of (7). Equation (4) for each algebraic bundle,
+now equally valid in the actual Chow ring, gives
+\[
+ (\log\mathcal S_{E_+}-\log\mathcal S_{E_-})_{t^p}
+ =(p-1)!\bigl(\operatorname{ch}_p(E_+)
+                    -\operatorname{ch}_p(E_-)\bigr)
+ =m(p-1)!\alpha
+\]
+under the canonical rational cycle-class map.
+Divide by $m(p-1)!$ to obtain (8).
+
+(A) implies (B): use the rational algebraic
+Chern-character isomorphism for smooth projective X,
+\[
+ \operatorname{ch}^{CH}:K_0^{alg}(X)_{\mathbb Q}
+          \overset{\sim}{\longrightarrow}
+          \bigoplus_{j=0}^d CH^j(X)_{\mathbb Q}.
+\]
+Select an algebraic rational K0 class v whose ENTIRE
+Chow Chern character is concentrated in grade p
+and equal to Z. Clear denominators by some m>0.
+Because algebraic K0 is the group completion of
+actual algebraic vector bundles on smooth X,
+write $m v=[E_+]-[E_-]$ for honest algebraic
+bundles. The topological Betti Chern character
+of this difference is $m\alpha$ and all other
+positive components vanish. The splitting-principle
+identity (4) applied to both projective bundles
+then proves (7) for all grades simultaneously.
+\end{proof}
+
+\begin{corollary}[Exact geometric reformulation of the all-X target]
+The universal rational Hodge conjecture is
+mathematically equivalent to:
+for ALL original smooth projective X, ALL p and
+ALL rational (p,p) alpha, the paired compatible
+ALGEBRAIC spatial projective folds in (7) exist.
+The topological paired folds exist for EVERY
+rational alpha by rational topological K-theory;
+what must be established in the all-X theorem
+is their compatible projective-algebraic realization.
+A genuine counterexample would be an original
+smooth projective Hodge alpha for which NO such
+algebraic realization pair is possible.
+\end{corollary}
+
+\section{Relation to current GST repository laws and distinct novelty}
+The prior 2026-10-20 \emph{all-grade topological K-source
+packet} derived a pure-middle virtual class on a
+blowup and an algebraization obstruction injection;
+the 2026-10-22 \emph{projective Chow-residue}
+manuscript derived actual zero-section return from
+already algebraic projective folds; and the
+2026-10-17 Adams-purification record isolates the
+$p$th Chern component of an existing algebraic K0
+class. Those achievements are all honored and
+are NOT relabelled as new source existence.
+
+This theorem instead supplies a specific new
+\emph{actual topological spatial realization}
+P(E_alpha) WITH INTRINSIC ENTIRE GENERATING-SERIES
+\(\mathcal S_{E_\alpha}(t)=
+ \exp(m(p-1)!\alpha t^p)\), and a direct geometric
+pushforward of the prescribed original-X alpha.
+It then writes a fully typed, source-producing
+algebraic realization condition and an exact
+necessary-and-sufficient PAIR-FOLD theorem.
+It does not assume Hodge purity forces
+projective algebraizability, because that
+would replace the desired geometric theorem
+by the desired conclusion itself.
+
+\section{Mathematical verification contract}
+The equalities are proved for all X, all p and
+all ranks by rational K-theory, the topological
+projective-bundle theorem and the splitting
+principle. The full-degree coefficient identity
+can be independently checked using exact
+symbolic rational arithmetic, including nontrivial
+higher multiples kp and p=1 boundary behavior.
+Finite computations check the formulas, not
+the all-X algebraic-realization condition.
+The direct constructive implication is equation
+(5); the exact binary all-X geometric
+criterion is equation (7). These are mathematical
+objects and proved implications, not visual
+simulations.
+\end{document}
