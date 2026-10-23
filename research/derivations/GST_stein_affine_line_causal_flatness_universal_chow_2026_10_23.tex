@@ -191,6 +191,197 @@ full rank-N higher-causal two-form
 $\Omega^2_{J_N/X}$ remains nonzero for N>=2.
 \end{corollary}
 
+\section{The all-dimensional holomorphic-to-algebraic GST obstruction: exact calculation, no hidden cycles}
+
+Return now to the ACTUAL arbitrary-rank Stein incidence fold
+$q_N:J_N(X)\to X$, for ANY original smooth projective X
+and ANY sufficiently high projective embedding dimension N.
+Here the fold always exists, but its relative complex rank
+need not equal one. Its exact holomorphic-versus-algebraic
+vector-bundle geometry can be computed as an entire
+group, rather than merely detecting individual
+Hodge numbers.
+
+Let $K_0^{hol}(J_N)$ denote the Grothendieck
+group of ACTUAL finite-rank holomorphic vector bundles
+over the Stein space $J_N^{an}$, and
+$K_0^{alg}(J_N)$ the algebraic Grothendieck group
+of genuine algebraic vector bundles on the smooth affine
+scheme $J_N$. The forgetful analytification functor
+induces an actual homomorphism
+\[
+ \kappa_N:K_0^{alg}(J_N)_{\mathbb Q}
+                  \longrightarrow
+           K_0^{hol}(J_N)_{\mathbb Q}.
+ \tag{8}
+\]
+
+\begin{theorem}[EXACT ALL-N GST GEOMETRY DEFECT: full holomorphic algebraization quotient]
+For EVERY original smooth projective complex X,
+EVERY actual affine Jouanolou spatial fold J_N(X),
+and ALL rational even cohomology grades simultaneously,
+there is a canonical rational vector-space isomorphism
+\[
+ \boxed{
+ \frac{K_0^{hol}(J_N)_{\mathbb Q}}
+ {\operatorname{im}\kappa_N}
+ \ \cong\
+ \bigoplus_{p=0}^{d}
+ \frac{H^{2p}(X,\mathbb Q)}
+  {\operatorname{cl}^{can}_X(CH^p(X)_{\mathbb Q})}.
+ }                                                        \tag{9}
+\]
+The RHS depends only on the ORIGINAL geometry X
+and is INDEPENDENT of N, of the ambient projective
+embedding, and of the number of extra unfolded
+trivial affine spatial dimensions.
+Its Hodge-type subspace
+\[
+ \boxed{
+ \mathfrak D_{\mathrm{Hdg}}(X)=
+ \bigoplus_{p=0}^{d}
+ \frac{H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)}
+ {\operatorname{cl}^{can}_X(CH^p(X)_{\mathbb Q})}
+ }                                                        \tag{10}
+\]
+is a canonically defined subspace of the actual
+all-degree GST fold obstruction group.
+\end{theorem}
+\begin{proof}
+Since J_N^{an} is Stein, Cartan B gives
+$H^1(J_N,\mathcal Hom(H_2,H_1))=0$
+for ANY pair of holomorphic vector bundles.
+Thus every holomorphic short exact sequence
+$0\to H_1\to H\to H_2\to0$ splits
+holomorphically, and the holomorphic Grothendieck
+group is the group completion of isomorphism classes
+under direct sum. By Oka--Grauert,
+finite holomorphic vector bundles on Stein J_N
+are classified up to isomorphism by
+finite complex topological vector bundles;
+the correspondence respects direct sums.
+Therefore
+\[
+ K_0^{hol}(J_N)_{\mathbb Q}
+    \cong K^0_{top}(J_N)_{\mathbb Q}
+    \overset{\operatorname{ch}_{top}}\cong
+           H^{even}(J_N,\mathbb Q)
+    \overset{(q_N^*)^{-1}}\cong
+           H^{even}(X,\mathbb Q).
+ \tag{11}
+\]
+Each displayed map is an actual isomorphism:
+$J_N$ has finite CW homotopy type
+because it is homotopy equivalent to compact X;
+the rational Chern character is an isomorphism
+on a finite CW complex; and the
+algebraic affine-space torsor q_N is a
+topological homotopy equivalence.
+
+On the algebraic side, smoothness gives the
+entire graded rational Chern-character isomorphism
+\[
+ K_0^{alg}(J_N)_{\mathbb Q}
+ \overset{\operatorname{ch}^{CH}}\cong
+          \bigoplus_{p=0}^{d+N}CH^p(J_N)_{\mathbb Q}
+ \overset{(q_N^*)^{-1}}\cong
+          \bigoplus_{p=0}^{d}CH^p(X)_{\mathbb Q}.
+ \tag{12}
+\]
+The last map is a TRUE rational Chow
+homotopy-invariance isomorphism for
+a Zariski locally trivial affine-space bundle.
+The canonical Betti cycle-class map is
+natural under these algebraic pullbacks and
+algebraic Chern-character analytification;
+under (11)--(12), the map $\kappa_N$
+is identified EXACTLY with the direct sum
+\[
+ \bigoplus_{p=0}^{d}
+ \mathrm{cl}_X^{can}:
+ \bigoplus_pCH^p(X)_{\mathbb Q}
+   \longrightarrow
+ \bigoplus_pH^{2p}(X,\mathbb Q).
+\]
+Taking the cokernel gives (9).
+It is essential to take the COKERNEL,
+not to claim $\kappa_N$ is injective:
+homologically trivial genuine algebraic
+Chow classes may be nonzero in K0^{alg}.
+Finally actual algebraic cycle classes
+are always of Hodge type (p,p).
+This makes the quotient in (10)
+a well-defined subspace of (9),
+completing the proof.
+\end{proof}
+
+\begin{remark}[What this whole-space invariant proves]
+The GST affine spatial folding equations
+preserve the precise quotient (9)
+for EVERY emergent dimension.
+No number of affine spatial folds,
+by itself, annihilates it: the defect is
+canonically the ORIGINAL-X cycle-image
+quotient. This is a universal identity
+of actual holomorphic and algebraic
+vector bundles on genuine spaces,
+not a finite computational test.
+It provides the exact input/output
+dictionary any stronger GST law must
+modify or kill by NEW algebraic geometry.
+\end{remark}
+
+\section{A sharper degree-two result: the entire Picard causal kernel}
+
+\begin{theorem}[Full exact Picard sequence of any genuine affine spatial fold]
+For arbitrary connected smooth projective X
+and every affine Jouanolou fold q_N:J_N(X)→X,
+there is a CANONICAL exact sequence
+\[
+ \boxed{
+ 0\to\mathrm{Pic}^0(X)
+   \to\mathrm{Pic}_{hol}(X)
+   \overset{q_N^*}{\longrightarrow}
+      \mathrm{Pic}_{hol}(J_N)
+   \longrightarrow
+   \frac{H^2(X,\mathbb Z)}
+        {\mathrm{NS}_{int}(X)}
+   \to0.
+ }                                                        \tag{13}
+\]
+Here $\mathrm{NS}_{int}(X)$ means the actual
+image of $c_1:\mathrm{Pic}_{hol}(X)\to
+H^2(X,\mathbb Z)$, INCLUDING any integral torsion.
+This is true in all dimensions and on
+all projective X; no projective-normality,
+Picard-rank or vanishing-Hodge hypothesis is made.
+\end{theorem}
+\begin{proof}
+The holomorphic exponential sequence on Stein J_N
+and Cartan B give
+\[
+ \mathrm{Pic}_{hol}(J_N)
+ =H^1(J_N,\mathcal O^*_{J_N})
+ \overset{c_1}\cong H^2(J_N,\mathbb Z)
+ \overset{(q_N^*)^{-1}}\cong H^2(X,\mathbb Z).
+\]
+The original-X pullback of a holomorphic
+line bundle has first Chern class
+$q_N^*c_1(L)$ by naturality,
+so under these isomorphisms $q_N^*$
+is EXACTLY the usual original
+integral first Chern class map.
+Its kernel is
+$\mathrm{Pic}^0(X)$ by the exponential
+sequence (the group of topologically
+trivial holomorphic lines), while its
+image is precisely $\mathrm{NS}_{int}(X)$
+by definition. Take the cokernel to
+obtain (13). GAGA identifies
+$\mathrm{Pic}_{hol}(X)$ with the true
+algebraic Picard group.
+\end{proof}
+
 \section{Exact boundary of this proof route}
 The theorem above is an ALL-ORIGINAL-X universal implication
 with an EXPLICIT constructed original-X Chow output.
