@@ -430,6 +430,183 @@ class, even though dimensions/ranks
 of its finite bundle models may grow.
 \end{remark}
 
+\section{PURE SPATIAL VOLUME GROWTH: a metric-geometric proof-or-disproof criterion}
+
+The finite-pole condition on projector coordinates
+can be replaced by a condition on the
+ACTUAL SPATIAL GEOMETRY of its determinantal locus.
+This preserves the owner's topology/dimension-first
+view of the full emergent world.
+
+Choose once and for all an affine algebraic
+closed embedding $j:J\hookrightarrow\mathbb C^K$.
+Put $D=d+N=\dim_{\mathbb C}J$,
+$s=D-p$, and let $\Sigma_\alpha\subset J^{an}$
+be the ACTUAL codimension-p closed analytic
+source from (3.1), viewed as a closed complex
+analytic subset of $\mathbb C^K$.
+Let $\omega_{\mathrm{Euc}}=\frac{i}{2}
+ \sum_{a=1}^K dz_a\wedge d\bar z_a$
+be the induced realized observation K\"ahler form.
+Define its exact geometric s-volume inside radius R by
+\[
+ \boxed{
+ V_{\Sigma_\alpha}(R)=
+  \int_{\Sigma_\alpha^{reg}\cap B_R}
+   \frac{\omega_{\mathrm{Euc}}^s}{s!},
+ \qquad
+ \Theta_{\Sigma_\alpha}^{\infty}
+  =\sup_{R\ge1}\frac{V_{\Sigma_\alpha}(R)}{R^{2s}}.
+ }                                                        \tag{5.1}
+\]
+For analytic cycles with multiplicity the integral
+is weighted by the cycle multiplicities.
+The exponent $2s=2(d+N-p)$ is precisely the
+REAL dimension of the emergent analytic cycle;
+this is a theorem about genuine volume scaling
+of the folded geometry, not a dimension label
+on the un-realized GST carrier.
+
+\begin{theorem}[ALL-X GST spatial-volume algebraization criterion]
+For ANY original smooth projective complex X,
+ANY 1<=p<=d, ANY rational Hodge alpha
+(and any chosen actual affine fold J_N(X)),
+the following are EQUIVALENT:
+
+(A) alpha has a genuine original-X rational
+algebraic cycle with canonical Betti class alpha.
+
+(V) There exist an honest pure-class
+holomorphic fold projector P_alpha constructed
+as in (2.1)--(2.2), and generic holomorphic
+sections as in (3.1), whose actual
+determinantal analytic cycle satisfies
+\[
+ \boxed{
+   \Theta_{\Sigma_\alpha}^{\infty}<\infty,
+   \quad\text{i.e.}\quad
+   V_{\Sigma_\alpha}(R)
+       =O(R^{2(d+N-p)}).
+ }                                                        \tag{5.2}
+\]
+When (V) holds, the analytic set
+$\Sigma_\alpha$ is a TRUE algebraic
+subvariety of the actual affine
+algebraic world J, and an explicit
+ORIGINAL-X rational Chow representative is
+\[
+ \boxed{
+ Z_\alpha=
+ \frac{(-1)^{p-1}}{m(p-1)!}\,
+     (q^*)^{-1}[\Sigma_\alpha]_{\mathrm{Chow}}
+       \in CH^p(X)_{\mathbb Q}.
+ }                                                        \tag{5.3}
+\]
+Its canonical Betti class is EXACTLY alpha.
+\end{theorem}
+\begin{proof}
+(V)->(A): $\Sigma_\alpha$ is a closed
+pure s-dimensional analytic cycle in the
+AFFINE EMBEDDED J, hence a closed
+analytic cycle in $\mathbb C^K$.
+The classical Bishop--Stoll
+algebraicity criterion for closed
+complex analytic sets in affine space
+states that bounded normalized Euclidean
+volume $V_\Sigma(R)/R^{2s}$ implies the
+analytic set is algebraic.
+(Here the exact theorem's required
+hypotheses are: pure complex dimension s,
+closedness in affine complex space, and
+the growth exponent twice the complex
+dimension. No compactness of Sigma or
+of the affine J is assumed.)
+Thus Sigma is a genuine codimension-p
+algebraic cycle on J. Its algebraic
+canonical Betti class equals its
+analytic fundamental class (3.2).
+Chow homotopy invariance for the
+Zariski locally trivial affine-space
+bundle q gives the unique rational
+original-X Chow preimage in (5.3).
+Canonical cycle naturality, injectivity
+of q^* on rational cohomology and
+(3.2) give $\mathrm{cl}_X^{can}(Z_\alpha)=\alpha$.
+
+(A)->(V): the previous finite-pole
+projector theorem builds a genuine
+ALGEBRAIC projective-module idempotent
+P on the actual smooth affine J with
+full Chern character r+m q^*alpha.
+Its standard globally generating
+ALGEBRAIC sections have a generic
+determinantal locus of expected
+codimension p, and this locus is
+an actual algebraic subvariety of J.
+Conversely to the stated criterion,
+any pure s-dimensional algebraic
+subvariety of affine complex space
+has Euclidean volume
+$V(R)=O(R^{2s})$, with the constant
+controlled by its projective degree;
+this follows from the complex
+integral geometry (Crofton/Bishop)
+degree-volume bound.
+Therefore (5.2) holds.
+\end{proof}
+
+\begin{corollary}[Actual-geometric finite-energy formulation]
+Define the absolute all-dimensional
+GST spatial excess-growth invariant
+at the ORIGINAL target alpha by
+\[
+ \boxed{
+ \mathcal G_{X,p,N}(\alpha)
+ =\inf_{(P,\phi)}\;
+    \sup_{R\ge1}\frac{
+     V_{\Sigma(P,\phi)}(R)}{R^{2(d+N-p)}},
+ }                                                        \tag{5.4}
+\]
+where $(P,\phi)$ ranges over the actual
+finite holomorphic pure-class projectors
+(2.1)--(2.2), with positive integer m
+and expected-codimension holomorphic
+degeneracy maps (3.1).
+The existence of a PAIR with finite
+normalized spatial volume is equivalent
+to alpha's canonical algebraicity.
+Crucially the assertion
+$\mathcal G_{X,p,N}(\alpha)<\infty$
+alone does NOT always imply existence
+of a finite-volume source attaining
+the infimum, because an infimum may
+be finite without attaining a bound
+uniformly over its witnesses.
+Hence the theorem is stated with the
+EXISTENTIAL finite-volume condition
+(V), not by silently replacing it
+with an unproved compactness principle.
+\end{corollary}
+\begin{remark}[Exact proof-status dependence]
+The volume criterion uses the
+classical Bishop--Stoll algebraicity
+theorem for complex analytic
+subvarieties of affine space.
+The present repo-native proof
+checks the translation of its
+hypotheses and applies it;
+an exact external-primary-source
+version/identifier has not been
+authenticated in this session.
+Accordingly, the volume criterion
+is SOURCE-CONDITIONAL on that
+standard analytic-algebraicity
+theorem, whereas the polynomial
+projector growth criterion of
+section 4 is self-contained in
+this manuscript.
+\end{remark}
+
 \section{Exact two non-shortcuts: no holomorphic section and boundedness}
 \begin{theorem}[No global holomorphic section of the affine spatial fold]
 If X has positive complex dimension,
