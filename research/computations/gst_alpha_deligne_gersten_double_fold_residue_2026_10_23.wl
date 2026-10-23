@@ -10,7 +10,7 @@ ClearAll["Global`*"];
    rather than inventing a Chow source. *)
 d0={{1,0},{0,1},{0,0}};
 d1={{0,0,1},{0,0,0}};
-betti={2,3,5};
+betti={2,3,0};
 u={7,-4};
 omega=betti+d0.u;
 deligneFinite=<|
