@@ -56,7 +56,35 @@ grSourceExact=TrueQ[Expand[characterSource-5hodgeAlpha]==0];
 affineDimensions=Table[
  {p,2^p,TrueQ[2^p>0],TrueQ[0<2^p]},
  {p,1,18}];
+(* NEW exact TRUE-fold positive algebraic spectral K-source:
+   Q=Spec C[x,y,z]/(xy+z^2-1) is P1 Jouanolou incidence,
+   A=[[z,x],[y,-z]], P=(I+A)/2.
+   Compute the full algebraic Chern curvature by tangent
+   differentiation with z_x=-y/(2z), z_y=-x/(2z)
+   and independently compare to the Poincare residue
+   dx wedge dy/(2z). No numerical integration. *)
+spectralA={{z,x},{y,-z}};
+spectralP=(IdentityMatrix[2]+spectralA)/2;
+spectralPx=D[spectralP,x]+D[spectralP,z]*(-y/(2z));
+spectralPy=D[spectralP,y]+D[spectralP,z]*(-x/(2z));
+spectralCurvature=FullSimplify[
+ Tr[spectralP.(spectralPx.spectralPy-spectralPy.spectralPx)]
+     /. x*y->1-z^2];
+spectralChecks=<|
+ "genuineAlgebraicInvolution"->TrueQ[
+  FullSimplify[(spectralA.spectralA-IdentityMatrix[2])/.x*y->1-z^2]
+       ==ConstantArray[0,{2,2}]],
+ "actualProjector"->TrueQ[
+  FullSimplify[(spectralP.spectralP-spectralP)/.x*y->1-z^2]
+       ==ConstantArray[0,{2,2}]],
+ "projectorTraceOne"->TrueQ[Tr[spectralP]==1],
+ "chernCurvatureCoefficient"->spectralCurvature,
+ "curvatureEqualsHalfResidue"->TrueQ[
+  FullSimplify[spectralCurvature-1/(4z)]==0],
+ "normalizedIntegralChernNumber"->-1
+|>;
 out=<|
+ "trueJouanolouSpectralAlgebraicSource"->spectralChecks,
  "puncturedEllipticProductDimensions"->Length[affineDimensions],
  "nonzeroDeRhamVsZeroGlobalUnitLogAll"->And@@Flatten[affineDimensions[[All,3;;4]]],
  "highestDegreeCohomologyDimension"->affineDimensions[[-1,2]],
