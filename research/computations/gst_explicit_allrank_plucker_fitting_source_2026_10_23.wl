@@ -72,11 +72,41 @@ intGr[f_]:=Coefficient[Coefficient[Expand[(x-y)f],x,4],y,3];
 theta=2 hh^2/5-ss;
 schubertChecks={intGr[hh^6],intGr[ss hh^4],
  intGr[ss^2 hh^2],intGr[theta hh^4],intGr[theta^2 hh^2]};
+(* Exact Todd-corrected divisor Gysin cancellation, in truncated
+   Chow degrees of the source. The formal virtual K-class has
+   ch(v_D)=beta * td(N), and GRR divides by td(N). *)
+toddTests=Table[
+ Module[{td,corrected,back},
+  td=Normal[Series[z/(1-Exp[-z]),{z,0,d}]];
+  corrected=Normal[Series[beta td,{z,0,d}]];
+  back=Normal[Series[corrected (1-Exp[-z])/z,{z,0,d-1}]];
+  {d,TrueQ[Expand[back-beta]===0]}
+ ],{d,1,10}];
+(* Chow Chern difference with arbitrary LOWER common characters:
+   log c+(t)-log c-(t) is pure in t^p, thus their
+   degree-p coefficient difference is (-1)^(p-1)(p-1)! m z. *)
+newtonTests=Table[
+ Module[{shared,scale,plus,minus},
+  shared=Sum[(-1)^(j-1)Factorial[j-1] aa[j] t^j,
+              {j,1,p-1}];
+  scale=(-1)^(p-1)Factorial[p-1] mm zz;
+  plus=Coefficient[Normal[Series[Exp[shared+
+      (aa[p]+scale) t^p],{t,0,p}]],t,p];
+  minus=Coefficient[Normal[Series[Exp[shared+
+      aa[p] t^p],{t,0,p}]],t,p];
+  {p,TrueQ[Expand[plus-minus-scale]===0]}
+ ],{p,1,8}];
 out=<|
  "projectorCases"->Length[projectorTests],
  "allProjectorTests"->And@@Flatten[projectorTests[[All,4;;7]]],
  "projectorFailures"->Select[projectorTests,Not[And@@#[[4;;7]]]&],
  "fittingScheme"->fittingChecks,
+ "ToddSourceGradings"->Length[toddTests],
+ "ToddCancellationAllPass"->And@@toddTests[[All,2]],
+ "ToddFailures"->Select[toddTests,Not[#[[2]]]&],
+ "NewtonPureChowGrades"->Length[newtonTests],
+ "NewtonPureDifferenceAllPass"->And@@newtonTests[[All,2]],
+ "NewtonFailures"->Select[newtonTests,Not[#[[2]]]&],
  "schubertPeriods"->schubertChecks,
  "schubertExact"->TrueQ[schubertChecks==={5,2,1,0,1/5}]
 |>;
