@@ -17,12 +17,12 @@ checkRootIdentity[rr_Integer,pp_Integer]:=
 rootTests=Flatten[Table[{r,p,checkRootIdentity[r,p]},
                           {r,1,7},{p,1,r}],1];
 (* Exact separate sufficient rational lattice gap:
-  if a/Q and b/m differ nontrivially their gap >=1/(Qm).
+  if a/denA and b/m differ nontrivially their gap >=1/(Qm).
   Integer numerator test is independent of the Chern identity. *)
 latticeTests=Flatten[Table[
- {Q,m,a,b,TrueQ[(Abs[b/m-a/Q] < 1/(Q m)) ==
-                                       (b/m == a/Q)]},
- {Q,1,6},{m,1,6},{a,-3,3},{b,-3,3}],3];
+ {denA,m,a,b,TrueQ[(Abs[b/m-a/denA] < 1/(denA m)) ==
+                                       (b/m == a/denA)]},
+ {denA,1,6},{m,1,6},{a,-3,3},{b,-3,3}],3];
 (* For a mass O(k^p) and angular error O(k^-1/2),
    the product mass*(angle)^2 is O(k^(p-1)).
    Its exponent is nonnegative for every p>=1. *)
