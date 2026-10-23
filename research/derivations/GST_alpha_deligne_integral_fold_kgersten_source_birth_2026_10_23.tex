@@ -2989,6 +2989,351 @@ October 22 antideck
 character-selection law.
 \end{proof}
 
+
+\begin{theorem}[Rank-two spectral complementarity kills repeated anti-eigenline sources on the unramified world]
+For the true rank-two spectral
+double-world above, restrict to
+the actual finite etale locus
+$T^\circ\to J^\circ$.
+The two globally algebraic
+eigenline bundles satisfy the
+exact split vector-bundle identity
+\[
+  L_+\oplus L_-
+       \simeq\mathcal O_{T^\circ}^{\oplus2}.
+\]
+In the INTEGRAL algebraic ring
+$K_0(T^\circ)$ define
+$u=[L_+]-1$. Then
+\[
+ \boxed{
+ [L_-]=1-u,\quad
+ [L_+][L_-]=1,\quad
+ u^2=0,\quad
+ \Delta=[L_+]-[L_-]=2u,\quad
+ \Delta^{\otimes r}=0\ (r\ge2).
+ }                                               \tag{71}
+\]
+Consequently the apparently
+possible original-$X$ nonlinear
+sources (66) and (70), made
+from REPEATED powers of just
+ONE eigenline difference, are
+ZERO after restricting to
+the unramified spectral cover.
+Any global source
+$\pi_*(\Delta_Q^{\otimes r})$,
+$r\ge2$, formed after
+extending the line bundles to
+a smooth equivariant
+resolution, is therefore a
+BOUNDARY-LOCALIZED coherent
+K-theory class: it is represented
+in the image of G-theory with
+support on the ramification or
+exceptional locus.
+Its original-$X$ Chow return
+is supported over the algebraic
+spectral discriminant.
+
+This is a precise correction to
+treating the lone quadratic
+anti-eigenline square as an
+independently supported NEW
+bulk higher-primitive source.
+The genuine original-$X$
+construction and GRR identities
+remain valid, but a nontrivial
+class, if any, must come from
+actual ramification-localized
+excess geometry, not from the
+repeated bulk eigenline.
+\end{theorem}
+\begin{proof}
+The idempotents $E_+,E_-$
+are orthogonal complementary
+endomorphisms of the SAME
+actual trivial rank-two
+bundle over $T^\circ$.
+Thus $L_+\oplus L_-=
+O^{\oplus2}$, so their
+sum in integral K0 is 2.
+Taking the determinant of
+this ACTUAL bundle
+isomorphism gives
+$L_+\otimes L_-\simeq O$,
+hence their K0 product is 1.
+Writing $[L_+]=1+u$,
+the first equality forces
+$[L_-]=1-u$, and the
+determinant identity becomes
+$(1+u)(1-u)=1$.
+Therefore $u^2=0$
+IN INTEGRAL $K_0(T^\circ)$.
+Their virtual difference is
+$2u$, so ALL of its tensor
+powers $r\ge2$ vanish there.
+
+Take a smooth equivariant
+resolution of the entire
+branched spectral cover,
+and extend $L_\pm$.
+Its open etale region is
+$T^\circ$. The coherent
+G-theory localization exact
+sequence for the closed
+complement $E$ is
+\[
+ G_0(E)\longrightarrow
+ G_0(\widetilde T)
+ \longrightarrow G_0(T^\circ)
+ \longrightarrow0 .
+\]
+Because the whole nonlinear
+power restricts to zero, it
+lies in the image of the
+boundary-supported G0 term.
+Proper pushforward to
+the smooth affine J carries
+this class to a coherent
+K0 class supported on the
+spectral discriminant.
+Its rational Chern character
+therefore has no bulk source
+outside that branch support,
+proving the asserted precise
+source locality.
+\end{proof}
+
+\begin{theorem}[All-$X$ MIXED independent anti-eigenline source:
+a genuine codimension-$r$ Chow channel with exact charge law]
+Let $X$ be ANY smooth projective
+original variety, $q:J\to X$
+its smooth affine fold,
+and let $\pi:\widetilde T\to J$
+be a genuine smooth equivariantly
+resolved algebraic double-world
+obtained from a COMMON quadratic
+characteristic extension.
+Suppose the same unramified
+double cover carries $r$
+INDEPENDENT rank-two algebraic
+spectral splitting pairs
+$L_{i,+}\oplus L_{i,-}\simeq
+  \mathcal O^{\oplus2}$,
+$i=1,\ldots,r$, swapped by
+the same deck involution.
+Extend equivariantly to
+genuine algebraic line bundles
+$\bar L_{i,\pm}$ on
+$\widetilde T$, and put
+\[
+ \Delta_i=[\bar L_{i,+}]
+                 -[\bar L_{i,-}]
+       \in K_0(\widetilde T).
+\]
+Then on the true etale open,
+\[
+ \boxed{
+ \Delta_i=2u_i,\quad u_i^2=0,\qquad
+ \Delta_1\cdots\Delta_r
+          =2^r u_1\cdots u_r .}             \tag{72}
+\]
+The MIXED product may be nonzero
+even though every repeated
+$\Delta_i^2$ vanishes there.
+The actual ORIGINAL-$X$
+codimension-r CHOW return is
+\[
+ \boxed{
+ Z_{Q_1,\ldots,Q_r}
+  =(q^*)^{-1}\operatorname{ch}_r^{CH}
+       \bigl(\pi_*(\Delta_1\cdots\Delta_r)\bigr)
+  =(q^*)^{-1}\pi_*
+       \prod_{i=1}^{r}
+       (c_1(\bar L_{i,+})
+                -c_1(\bar L_{i,-}))
+       \in CH^r(X)_{\mathbb Q}.}             \tag{73}
+\]
+For odd r it vanishes by the
+same deck-character law.
+For even r, the mixed product
+is deck-neutral and can be
+NONZERO in actual original-X
+Chow. As always, exact equality
+with a prescribed arbitrary
+higher-primitive rational
+Hodge alpha requires a genuine
+canonical Betti computation
+of the particular constructed
+mixed product; character
+neutrality alone does not
+establish that equality.
+\end{theorem}
+\begin{proof}
+For each i, the same exact
+K0 complementarity argument
+as (71) gives $\Delta_i=2u_i$
+and $u_i^2=0$ on the etale
+open. It imposes NO relation
+forcing $u_iu_j=0$ for
+different i,j.
+On the entire equivariant
+smooth resolution, the
+source is the actual K0
+tensor product
+$\prod_i\Delta_i$.
+Its rational Chow Chern
+character is
+\[
+ \prod_i
+  \big(e^{a_i}-e^{b_i}\big),
+ \quad a_i=c_1(\bar L_{i,+}),
+ \quad b_i=c_1(\bar L_{i,-}),
+\]
+whose terms of degrees below r
+vanish, and whose degree-r
+term is $\prod_i(a_i-b_i)$.
+Proper GRR and the relative
+dimension zero of the finite
+spectral world plus resolution
+give exactly (73); no Todd
+corrections can enter degree r.
+If r is odd, the equivariant
+deck involution changes the
+sign of the source while
+proper return is invariant,
+so the integral G0 class
+cancels. For even r it is
+invariant. Actual
+nonvanishing is proved
+in the following explicit
+source example.
+\end{proof}
+
+\begin{theorem}[TRUE simultaneous GST affine quadric worlds:
+independent anti-sources give nonzero original Chow in EVERY even codimension]
+Let $r\ge2$ be EVEN and
+let the original smooth
+projective variety be
+$X=(\mathbb P^1)^r$.
+Let $Q_i=\{x_iy_i+z_i^2=1\}$
+be the ACTUAL Jouanolou
+affine-line world of the i-th
+$\mathbb P^1$ and put
+\[
+ J=\prod_{i=1}^{r}Q_i
+    \xrightarrow{q}
+    X,\qquad
+ h_i=c_1^{CH}
+   (\operatorname{pr}_i^*
+     O_{\mathbb P^1}(1)).
+\]
+On J, let $P_i$ be the
+regular algebraic spectral
+idempotent of the ith Q
+factor, with
+$L_i=\operatorname{im}P_i
+ =q^*\operatorname{pr}_i^*
+      O_{\mathbb P^1}(-1)$
+and algebraic complementary
+line bundle $L_i^{-1}$.
+The r rank-two matrices
+$P_i$ all have the SAME
+split characteristic
+polynomial
+$\lambda(\lambda-1)$,
+so they determine the
+one COMMON ACTUAL double-world
+\[
+ T=J\times\operatorname{Spec}
+       \bigl(\mathbb C[t]/(t^2-1)\bigr)
+   =J\sqcup J
+\]
+with its sheet-switching
+deck involution.
+Let the r actual
+anti-eigenline classes
+$\Delta_i$ be defined by
+$E_{i,\pm}=(I\pm(2P_i-I)/t)/2$.
+Then each
+$\Delta_i^2=0$ in actual
+$K_0(T)$, but the mixed
+product has NONZERO
+original-$X$ Chow return
+\[
+ \boxed{
+ Z_{P_1,\ldots,P_r}
+   =2^{r+1}
+        h_1h_2\cdots h_r
+   \ne0\in CH^r(X)_{\mathbb Q}.
+ }                                             \tag{74}
+\]
+Its canonical rational
+Betti class is exactly
+$2^{r+1}\prod_i cl^{can}(h_i)$.
+Thus genuinely INDEPENDENT
+same-world algebraic spectral
+anti-sources, unlike repeated
+powers of a single one,
+DO produce a nonzero
+original-$X$ codimension-r
+Chow class for EVERY even r.
+This is a controlled
+divisor-generated positive
+construction, NOT evidence
+that arbitrary higher-primitive
+rational Hodge classes are
+products of divisor classes.
+\end{theorem}
+\begin{proof}
+On the actual affine product,
+put $u_i=[L_i]-1\in K_0(J)$.
+Each $P_i$ is an actual rank-one
+algebraic idempotent with
+complementary algebraic line,
+so $u_i^2=0$ as in (71).
+Their CHERN characters
+satisfy
+$\operatorname{ch}(u_i)=
+  e^{-h_i}-1=-h_i$
+because $h_i^2=0$ in
+the actual Chow ring
+of $(\mathbb P^1)^r$.
+On the two components of T,
+the signs of each Delta_i
+are simultaneously reversed
+by the deck switch.
+Hence the mixed product on
+each sheet is
+$2^r\prod_i u_i$ since r is
+even. Proper finite pushforward
+from the DISJOINT TWO SHEETS
+returns
+$2^{r+1}\prod_i u_i$
+in ACTUAL $K_0(J)$.
+Its degree-r Chern character is
+$2^{r+1}\prod_i(-h_i)
+=2^{r+1}\prod_i h_i$.
+The true Jouanolou
+homotopy isomorphism
+$CH^r(X)\overset\sim\to CH^r(J)$
+returns precisely (74).
+The product $\prod_i h_i$
+is the rational Chow class
+of a point on
+$(\mathbb P^1)^r$ and is
+NONZERO with canonical
+Betti degree one.
+This is a direct exact
+class calculation in genuine
+algebraic CHOW; no numerical
+Gram, assumed rational
+Hodge basis, or topological
+virtual-source substitution
+is used.
+\end{proof}
+
 \begin{theorem}[An actual two-sheet polynomial spectral fold with MONODROMY, no algebraic sheet selector, and vanishing linear anti-deck return]
 Return to the SAME TRUE affine GST quadric
 $J=Q=\operatorname{Spec}
