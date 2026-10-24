@@ -413,8 +413,10 @@ gives \eqref{eq:output}, which exhibits $\alpha$ as the canonical
 Betti class of the explicit rational algebraic cycle $W$.
 For \eqref{eq:single}: a single pure carrier has
 $\ch_j(E)=0$ for $j\notin\{0,p\}$, hence (Newton, as above)
-$c_j(E)=0$ for all $j\ge1$ except $j=p$, and
-$c_p(E)=(-1)^{p-1}(p-1)!\,m\alpha$. In the twist expansion only
+$c_j(E)=0$ for all $1\le j<p$, and
+$c_p(E)=(-1)^{p-1}(p-1)!\,m\alpha$. (Newton's identities constrain
+only the classes $c_t$ with $t\le p$; no assertion is made --- or
+needed --- about $c_j(E)$ for $j>p$.) In the twist expansion only
 $t=0$ and $t=p$ survive:
 $c_p(E\tensor\Oo(k))=c_p(E)+\binom{r}{p}(k\,c_1(\Oo(1)))^{p}$, and
 Thom--Porteous gives $[D_E]=c_p(E\tensor\Oo(k))$.
@@ -424,9 +426,11 @@ Thom--Porteous gives $[D_E]=c_p(E\tensor\Oo(k))$.
 \label{cor:forcing}
 On arbitrary original $(X,p,\alpha)$, the single typed input of
 Theorem B2(iii) --- an integrable holomorphic structure
-$(\ddbar_{E_\alpha})^2=0$ on the exact carrier, equivalently a pure
-pair \eqref{eq:pair} of exact holomorphic bundles at some scale
-$m\ne0$ --- IMPLIES that $\alpha$ is algebraic, through the explicit
+$(\ddbar_{E_\alpha})^2=0$ on the exact carrier, which in particular
+yields a pure pair \eqref{eq:pair} of exact holomorphic bundles at
+some scale $m\ne0$ (take $E_+=E_\alpha$, $E_-=\Oo^{\oplus r}$; no
+converse on the SAME carrier is claimed, by the K-torsion gap) ---
+IMPLIES that $\alpha$ is algebraic, through the explicit
 conduit \eqref{eq:output}. The conduit is now completely explicit:
 given the pair, the algebraic cycle $W$ is constructed by
 determinantal centers of general sections and its canonical Betti
@@ -555,10 +559,18 @@ branch and is the CI-green target.
 named where it enters: splitting principle and the Chern roots of
 tensor products (Lemmas \ref{lem:newton}, \ref{lem:twist}); Newton's
 identities (Lemma \ref{lem:newton}); Thom--Porteous degeneracy
-formula at maximal degeneracy (Theorem \ref{th:law});
-$\ch$ of Schur bundles via the splitting principle; the Schur-bundle
+formula at maximal degeneracy (Theorem \ref{th:law}); genericity of
+the chosen sections, so the determinantal centers have the expected
+codimension (Theorem \ref{th:law}); $\ch$ of Schur bundles via the
+splitting principle; the Schur-bundle
 $\mathbb Z$-basis of $K^0$ of a Grassmannian and $K_{\mathrm{alg}}=
-K_{\mathrm{top}}$ there (Theorem \ref{th:pure}); Atiyah--Hirzebruch
+K_{\mathrm{top}}$ there (Theorem \ref{th:pure}); the algebraic cell
+decomposition of $\operatorname{Gr}(2,5)$ (Schubert cells), which
+makes $\cl\colon\operatorname{CH}^*(\operatorname{Gr}(2,5))\to
+H^*(\operatorname{Gr}(2,5))$ an isomorphism and licenses the
+component-by-component match of Section 4; GAGA on the projective
+Grassmannian, identifying the analytic two-center run with the
+algebraic Chow groups; Atiyah--Hirzebruch
 rational $K$-theory (uniqueness of $\xi_1$).
 \item No universal constructor is claimed; no Hodge-surjectivity,
 cycle-class, or preimage hypothesis enters the law. Theorem

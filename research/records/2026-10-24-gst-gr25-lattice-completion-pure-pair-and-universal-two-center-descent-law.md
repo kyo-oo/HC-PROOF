@@ -19,7 +19,7 @@ is INTEGRAL with ch(xi_360) = 360*alpha = 144 h^2 - 360 s_2 and ALL grades >= 3 
 
 E_+ := 351 S^v + 5 Sym^3 S^v + 736 S^v(1) + 36 O(2) + O(3); E_- := 17 O + 51 Sym^2 S^v + 1620 O(1) + 141 Sym^2 S^v(1) + 9 S^v(2). Exact algebraic bundles, EQUAL ranks 2231 = 2231, equal ch_1 = 2664 h, and ch(E_+) - ch(E_-) = 360*alpha EXACTLY, with identical higher components on both sides: ch_3 = (1245, -2709/2), ch_4 = (3043/4, -459), ch_5 = 1947/8, ch_6 = 1999/48. A c_1-zero normalization (add O(-2664) to both sides) is available (Remark 3). This is the "input pure pair E_+/-" the dossier's Law-4 protocol demanded --- the protocol's input now EXISTS explicitly on the calibration world.
 
-## 3. The universal two-center descent law (Theorem 4 of the derivation; all p, arbitrary X)
+## 3. The universal two-center descent law (the `Universal two-center descent law' theorem of the derivation; all p, arbitrary X)
 
 Two lemmas with full proofs: Lemma N (Newton conductor: ch_j(V) = 0 for j < p, ch_p(V) = m*alpha => c_j(V) = 0 for j < p and c_p(V) = (-1)^(p-1) (p-1)! m alpha, by Newton's identities and induction), Lemma T (twist cancellation: c_j(E_+) = c_j(E_-) for j < p => c_p(E_+ (x) L) - c_p(E_- (x) L) = c_p(E_+) - c_p(E_-) for every line bundle L, by the binomial twist expansion c_p(E (x) L) = sum_t binom(r-t, p-t) c_t(E) ell^(p-t)).
 
@@ -32,7 +32,7 @@ Corollary (typed forcing implication): the single input of B2(iii) --- an integr
 
 ## 4. The calibration run (Section 3 of the derivation)
 
-Run at p=2, m=360, r=2231, any Plucker twist O(k): [D_+] - [D_-] = -360 alpha for every k; W = (-1/360)([D_+] - [D_-]). Schubert-component identity: W = (2/5) sigma_2 - (3/5) sigma_{1,1}. The proven Rees witness Z_alpha = (2/5)[H_1 cap H_2] + b_*E^2 with b_*E^2 = -s_2 = -sigma_{1,1} and [H_1 cap H_2] = h^2 = sigma_2 + sigma_{1,1} expands to (2/5) sigma_2 - (3/5) sigma_{1,1} = W. COMPONENT-BY-COMPONENT AGREEMENT in CH^2_Q: the disagreement branch of the dossier's protocol is CLOSED on the calibration world; the law's bookkeeping (sign, factorial, scale, single-center correction, pair-form cancellation) is CALIBRATED. The extracted law (Theorem 4 verbatim with pinned constants) is the universal candidate for arbitrary (X, p, alpha), to be forced by the single input (dbar_{E_alpha})^2 = 0.
+Run at p=2, m=360, r=2231, any Plucker twist O(k): [D_+] - [D_-] = -360 alpha for every k; W = (-1/360)([D_+] - [D_-]). Schubert-component identity: W = (2/5) sigma_2 - (3/5) sigma_{1,1}. The proven Rees witness Z_alpha = (2/5)[H_1 cap H_2] + b_*E^2 with b_*E^2 = -s_2 = -sigma_{1,1} and [H_1 cap H_2] = h^2 = sigma_2 + sigma_{1,1} expands to (2/5) sigma_2 - (3/5) sigma_{1,1} = W. COMPONENT-BY-COMPONENT AGREEMENT in CH^2_Q: the disagreement branch of the dossier's protocol is CLOSED on the calibration world; the law's bookkeeping (sign, factorial, scale, single-center correction, pair-form cancellation) is CALIBRATED. The extracted law (the `Universal two-center descent law' theorem verbatim with pinned constants) is the universal candidate for arbitrary (X, p, alpha), to be forced by the single input (dbar_{E_alpha})^2 = 0.
 
 ## 5. Evidence and provenance
 

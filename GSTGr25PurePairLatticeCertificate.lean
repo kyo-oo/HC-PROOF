@@ -41,16 +41,25 @@ polynomials (k! * ch_k, so all coefficients are integers and every proof is
    120 ch5: equal in the quotient (difference = -17280 h r1 + 8640 r2);
    720 ch6: equal in the quotient (difference = (15120 s2 - 68832 h^2) r1
    + 57024 h r2).  This is the completed pure pair demanded by the Law-4
-   two-center protocol, and the two-center descent law then outputs the
-   algebraic cycle with class alpha:
-   [D+] - [D-] = -360 alpha,  W = (-1/360)([D+] - [D-]), cl(W) = alpha,
-   matching the proven Rees witness component-by-component
-   (W = (2/5) sigma_2 - (3/5) sigma_{1,1} = Z_alpha).
+   two-center protocol.
+
+## Context (commentary; NOT certified in this file)
 
 Every generator Chern-character grade below is the integer-cleared raw
 power-sum closed form k! * ch_k(Sym^j S^vee (x) O(i)) of the Schur bundle,
-verified against the exact rational certificate computation; the theorems
+supplied as DATA (its derivation is Chern-root calculus done in the
+derivation .tex and cross-checked by exact rational scripts); the theorems
 verify all multiplicity arithmetic and all quotient identities by `ring`.
+
+The following statements live OUTSIDE this file's certified scope
+(scheme-level mathematics, NOT formalized here): the minimality of the
+scale m0 = 360 (a K-lattice Z-basis argument), the rank/ch_1 values as
+statements about actual bundles, the two-center descent law output
+[D+] - [D-] = -360 alpha with W = (-1/360)([D+] - [D-]) and cl(W) = alpha,
+and the component-by-component match with the proven Rees witness
+(W = (2/5) sigma_2 - (3/5) sigma_{1,1} = Z_alpha).  These are proved in
+the derivation .tex (LaTeX, external leaves named there) and are NOT
+Lean theorems of this file.
 -/
 
 set_option maxHeartbeats 20000000
