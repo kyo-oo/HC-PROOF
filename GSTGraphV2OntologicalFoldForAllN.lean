@@ -58,8 +58,9 @@ namespace GSTGraphV2OntologicalFoldForAllN
 
 /-! ## PART A: the P2 seed witness and the parity obstruction -/
 
-/-- Truncated exponential of a line bundle of degree `a` on P2: ch through grade 2. -/
-def expTr (a : ℚ) (h : ℚ) : ℚ := 1 + a * h + (a / 2) * h ^ 2
+/-- Truncated exponential of a line bundle of degree `a` on P2: ch through grade 2
+(the grade-2 term is `a^2/2`, the square of the degree). -/
+def expTr (a : ℚ) (h : ℚ) : ℚ := 1 + a * h + (a * a / 2) * h ^ 2
 
 /-- **The P2 witness purity identity.** With `h` the hyperplane class, the character
 difference of the pair (O(1)+O(1), O(1)+O(-1)) is exactly `2*h`: grade 0 cancels
@@ -73,9 +74,9 @@ theorem p2_pair_purity_identity (h : ℚ) :
 /-- Squares are themselves modulo two: the parity engine. -/
 theorem int_sq_mod_two (x : ℤ) : x * x % 2 = x % 2 := by
   rcases Int.emod_two_eq_zero_or_one x with hx | hx
-  · rw [Int.mul_emod, hx, hx]
+  · rw [Int.mul_emod, hx]
     norm_num
-  · rw [Int.mul_emod, hx, hx]
+  · rw [Int.mul_emod, hx]
     norm_num
 
 /-- List form: the sum of squares is the sum, modulo two. -/
@@ -84,7 +85,7 @@ theorem list_sq_sum_mod_two (L : List ℤ) :
   induction L with
   | nil => simp
   | cons x xs ih =>
-      rw [List.map_cons, List.sum_cons, List.map_cons, List.sum_cons,
+      rw [List.map_cons, List.sum_cons, List.sum_cons,
         Int.add_emod, Int.add_emod, int_sq_mod_two, ih]
 
 /-- A line-sum pair on P2: multisets of line degrees on the two sides. -/
@@ -107,7 +108,7 @@ def p2grades (v : P2Pair) : ℕ → ℚ
   | 0 => ((p2rank v : ℤ) : ℚ)
   | 1 => ((p2scale v : ℤ) : ℚ)
   | 2 => p2grade2 v
-  | (k + 3) => 0
+  | (_ + 3) => 0
 
 /-- The landing (purity) condition for a P2 line-sum pair: equal ranks and
 vanishing grade-2 difference. Line bundles are holomorphic, so integrability is
@@ -258,51 +259,64 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
     ∃ mstar : ℤ, 0 < mstar ∧ mstar ∈ ScaleSet C ∧ ∀ m ∈ ScaleSet C, mstar ∣ m := by
   obtain ⟨m₀, hm₀mem, hm₀pos⟩ := hpos
   classical
-  set theSet : Finset ℕ :=
-    (Finset.range (m₀.natAbs + 1)).filter
-      (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) with htheSet
-  have hmem₀ : m₀.natAbs ∈ theSet := by
-    rw [htheSet, Finset.mem_filter, Finset.mem_range]
+  have hnonempty : ∃ n₀ : ℕ, n₀ ∈ (Finset.range (m₀.natAbs + 1)).filter
+      (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
+    refine ⟨m₀.natAbs, ?_⟩
+    rw [Finset.mem_filter, Finset.mem_range]
     refine ⟨by omega, by omega, ?_⟩
     have h1 : 0 ≤ m₀ := by omega
     have hc : ((m₀.natAbs : ℕ) : ℤ) = m₀ := Int.natAbs_of_nonneg h1
     rw [hc]
     exact hm₀mem
-  have hne : theSet.Nonempty := ⟨_, hmem₀⟩
-  have hnmem : theSet.min' hne ∈ theSet := theSet.min'_mem hne
-  have hnmin : ∀ a ∈ theSet, theSet.min' hne ≤ a := fun a ha => Finset.le_min' ha
-  rw [htheSet, Finset.mem_filter] at hnmem
+  have hne : ((Finset.range (m₀.natAbs + 1)).filter
+      (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) : Finset ℕ).Nonempty := hnonempty
+  obtain ⟨n, hnmem, hnmin⟩ : ∃ n ∈ (Finset.range (m₀.natAbs + 1)).filter
+      (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)),
+      ∀ a ∈ (Finset.range (m₀.natAbs + 1)).filter
+        (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)), n ≤ a := by
+    refine ⟨_, Finset.min'_mem _ hne, fun a ha => ?_⟩
+    first
+      | exact Finset.le_min' _ hne ha
+      | exact Finset.le_min' _ ha
+      | exact Finset.le_min' hne ha
+      | exact Finset.le_min' ha
+  rw [Finset.mem_filter] at hnmem
   obtain ⟨-, hnpos, hnmemZ⟩ := hnmem
-  have hnle : theSet.min' hne ≤ m₀.natAbs := hnmin _ hmem₀
-  refine ⟨((theSet.min' hne : ℕ) : ℤ), hnpos, hnmemZ, ?_⟩
-  have key : ∀ p : ℤ, 0 < p → p ∈ ScaleSet C →
-      ((theSet.min' hne : ℕ) : ℤ) ∣ p := by
+  have hnle : n ≤ m₀.natAbs := hnmin _ (by
+    rw [Finset.mem_filter]
+    exact ⟨by omega, by omega, by
+      have h1 : 0 ≤ m₀ := by omega
+      have hc : ((m₀.natAbs : ℕ) : ℤ) = m₀ := Int.natAbs_of_nonneg h1
+      rw [hc]
+      exact hm₀mem⟩)
+  refine ⟨((n : ℕ) : ℤ), by omega, hnmemZ, ?_⟩
+  have key : ∀ p : ℤ, 0 < p → p ∈ ScaleSet C → ((n : ℕ) : ℤ) ∣ p := by
     intro p hpp hpm
     obtain ⟨q, r, hqr, hrnonneg, hrlt⟩ :
-        ∃ q r, p = q * ((theSet.min' hne : ℕ) : ℤ) + r ∧ 0 ≤ r ∧
-          r < ((theSet.min' hne : ℕ) : ℤ) := by
-      refine ⟨p / ((theSet.min' hne : ℕ) : ℤ), p % ((theSet.min' hne : ℕ) : ℤ), ?_,
+        ∃ q r, p = q * ((n : ℕ) : ℤ) + r ∧ 0 ≤ r ∧ r < ((n : ℕ) : ℤ) := by
+      refine ⟨p / ((n : ℕ) : ℤ), p % ((n : ℕ) : ℤ), ?_,
         Int.emod_nonneg _ (by omega), ?_⟩
       · rw [mul_comm]
-        exact (Int.div_add_mod p ((theSet.min' hne : ℕ) : ℤ)).symm
-      · have habs := Int.emod_lt p (by omega : ((theSet.min' hne : ℕ) : ℤ) ≠ 0)
+        exact (Int.div_add_mod p ((n : ℕ) : ℤ)).symm
+      · have habs := Int.emod_lt p (by omega : ((n : ℕ) : ℤ) ≠ 0)
         simp at habs
         omega
-    have hqm : q * ((theSet.min' hne : ℕ) : ℤ) ∈ ScaleSet C := mem_zmul C hnmemZ q
+    have hqm : q * ((n : ℕ) : ℤ) ∈ ScaleSet C := mem_zmul C hnmemZ q
     have hrS : r ∈ ScaleSet C := by
-      have hrw : r = p + -(q * ((theSet.min' hne : ℕ) : ℤ)) := by omega
+      have hrw : r = p + -(q * ((n : ℕ) : ℤ)) := by omega
       rw [hrw]
       exact mem_add C hpm (mem_neg C hqm)
     by_cases hrpos : 0 < r
     · exfalso
       have h1 : 0 ≤ r := by omega
       have hc : ((r.natAbs : ℕ) : ℤ) = r := Int.natAbs_of_nonneg h1
-      have hrc : r.natAbs ∈ theSet := by
-        rw [htheSet, Finset.mem_filter, Finset.mem_range]
+      have hrc : r.natAbs ∈ (Finset.range (m₀.natAbs + 1)).filter
+          (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
+        rw [Finset.mem_filter, Finset.mem_range]
         refine ⟨by omega, by omega, ?_⟩
         rw [hc]
         exact hrS
-      have hcontr : theSet.min' hne ≤ r.natAbs := hnmin _ hrc
+      have hcontr : n ≤ r.natAbs := hnmin _ hrc
       omega
     · have hrzero : r = 0 := by omega
       rw [hrzero] at hqr
@@ -343,8 +357,8 @@ def P2PairCal : FoldPairCalculus P2Pair where
     · show ((v.A ++ w.A).length : ℤ) - ((v.B ++ w.B).length : ℤ) = 0
       rw [List.length_append, List.length_append]
       push_cast
-      have h1 := hv.1
-      have h2 := hw.1
+      have h1 : ((v.A.length : ℤ)) - ((v.B.length : ℤ)) = 0 := hv.1
+      have h2 : ((w.A.length : ℤ)) - ((w.B.length : ℤ)) = 0 := hw.1
       omega
     · show p2grade2 ⟨v.A ++ w.A, v.B ++ w.B⟩ = 0
       simp only [p2grade2, List.map_append, List.sum_append]
@@ -357,7 +371,7 @@ def P2PairCal : FoldPairCalculus P2Pair where
   witness_neg v hv := by
     constructor
     · show ((v.B.length : ℤ)) - ((v.A.length : ℤ)) = 0
-      have h1 := hv.1
+      have h1 : ((v.A.length : ℤ)) - ((v.B.length : ℤ)) = 0 := hv.1
       omega
     · show p2grade2 ⟨v.B, v.A⟩ = 0
       simp only [p2grade2]
@@ -373,10 +387,34 @@ def P2PairCal : FoldPairCalculus P2Pair where
     · show p2grade2 ⟨[], []⟩ = 0
       simp [p2grade2]
 
+/-- **The witness pair data**: (O(1)+O(1), O(1)+O(-1)) as line-degree multisets.
+The Int-valued components are decided; the single rational division is closed by
+`norm_num` (the raw `decide` cannot reduce the rational-normalization instance). -/
+theorem p2witness_rank : (([1, 1] : List ℤ).length : ℤ) - (([1, -1] : List ℤ).length : ℤ) = 0 := by
+  decide
+
+theorem p2witness_sqdiff : (([1, 1] : List ℤ).map (fun x => x * x)).sum -
+    (([1, -1] : List ℤ).map (fun x => x * x)).sum = 0 := by
+  decide
+
+theorem p2witness_landing : p2Landing ⟨([1, 1] : List ℤ), [1, -1]⟩ := by
+  constructor
+  · exact p2witness_rank
+  · show ((((([1, 1] : List ℤ).map (fun x => x * x)).sum -
+          (([1, -1] : List ℤ).map (fun x => x * x)).sum : ℤ) : ℚ) / 2 = 0
+    rw [p2witness_sqdiff]
+    norm_num
+
+theorem p2witness_scale : p2scale ⟨([1, 1] : List ℤ), [1, -1]⟩ = 2 := by
+  show ([1, 1] : List ℤ).sum - ([1, -1] : List ℤ).sum = 2
+  decide
+
 /-- **The bit fires on P2**: the witness pair (O(1)+O(1), O(1)+O(-1)) is a landing
 witness at scale 2. -/
 theorem p2_bit_fires : ∃ v : P2Pair, p2Landing v ∧ p2scale v ≠ 0 := by
-  refine ⟨⟨[1, 1], [1, -1]⟩, ⟨by decide, by decide⟩, by decide⟩
+  refine ⟨⟨[1, 1], [1, -1]⟩, p2witness_landing, ?_⟩
+  show ([1, 1] : List ℤ).sum - ([1, -1] : List ℤ).sum ≠ 0
+  decide
 
 /-- **The full determination m*(P2, 1, [line]) = 2** (Theorem P of the derivation):
 principality gives a least positive scale dividing all scales; the witness puts it
@@ -384,10 +422,7 @@ at most 2; the parity obstruction forces it even; hence exactly 2. -/
 theorem p2_mstar_eq_two :
     ∃ mstar : ℤ, 0 < mstar ∧ mstar ∈ ScaleSet P2PairCal ∧
       (∀ m ∈ ScaleSet P2PairCal, mstar ∣ m) ∧ mstar = 2 := by
-  have h2mem : (2 : ℤ) ∈ ScaleSet P2PairCal :=
-    ⟨⟨[1, 1], [1, -1]⟩, ⟨by decide, by decide⟩, by
-      show p2scale ⟨[1, 1], [1, -1]⟩ = 2
-      decide⟩
+  have h2mem : (2 : ℤ) ∈ ScaleSet P2PairCal := ⟨⟨[1, 1], [1, -1]⟩, p2witness_landing, p2witness_scale⟩
   obtain ⟨mstar, hstarpos, hstarmem, hstardiv⟩ :=
     scaleSet_principal P2PairCal ⟨2, h2mem, by norm_num⟩
   obtain ⟨v, hv, hvm⟩ := hstarmem
@@ -467,8 +502,8 @@ theorem capstone_B :
     (∀ (Idx : Type) (W : Idx → HodgeWorld) (P : ∀ i, FoldProcessOn (W i)) (i : Idx),
       (¬∃ Z : (W i).Cyc, (W i).cl Z = (W i).alpha) →
         ¬∀ i, ∃ v : (P i).PairWit, (P i).landing v ∧ (P i).scale v ≠ 0) :=
-  ⟨fun idx w p h => forAllN_landing w p h,
-    fun idx w p i hno => bit_exact_of_no_landing w p i hno⟩
+  ⟨fun _ w p h => forAllN_landing w p h,
+    fun _ w p i hno => bit_exact_of_no_landing w p i hno⟩
 
 /-- Capstone C: the scale-group laws (closure under 0, +, negation, integer
 multiples; principality when a positive scale exists). -/
@@ -481,8 +516,8 @@ theorem capstone_C :
       ((∃ m, m ∈ ScaleSet C ∧ 0 < m) →
         ∃ mstar : ℤ, 0 < mstar ∧ mstar ∈ ScaleSet C ∧
           ∀ m ∈ ScaleSet C, mstar ∣ m) :=
-  fun W C => ⟨mem_zero C, fun m m' hm hm' => mem_add C hm hm',
-    fun m hm => mem_neg C hm, fun m hm k => mem_zmul C hm k,
+  fun _ C => ⟨mem_zero C, fun _ _ hm hm' => mem_add C hm hm',
+    fun _ hm => mem_neg C hm, fun _ hm k => mem_zmul C hm k,
     fun h => scaleSet_principal C h⟩
 
 #print axioms p2_pair_purity_identity
