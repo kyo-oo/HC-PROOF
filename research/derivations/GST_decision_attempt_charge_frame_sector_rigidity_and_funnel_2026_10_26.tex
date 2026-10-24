@@ -45,8 +45,10 @@ product worlds, isogeny scaling, End-mass twisting, lattice/parity obstructions)
 each die at a named committed wall, and the deaths are structural: every
 additive invariant of a pure pair factors through the $(r,k,m,q)$-profile of
 W4--W6, and that profile is consistent at every point of the certified
-$(m,q)$-grid --- so NO additive wall can separate the charge strata
-(Theorem~\ref{thm:completeness}, the corridor symmetry).
+$(m,q)$-grid --- so no additive wall WITHIN the profile theory can
+separate the charge strata (Theorem~\ref{thm:completeness}, the corridor
+symmetry; the profile theory is the certified factorization of every
+additive invariant through the $(r,k,m,q)$-data of W4--W6).
 On the YES route the strike proves a new wall, \textbf{Lemma W7} (sector
 rigidity of the cohomological Fourier--Mukai transform: the complement
 structure preserves the NS/W/T sector decomposition; $\FMc(\theta^2)$ stays in
@@ -200,10 +202,18 @@ charge split $-8m$, mixed-End table), and the profile is consistent at every
 point of the certified grid $m\in\{1,2,3,4\}$, $q/8\in\{0,1,2,3\}$,
 $c_1\in\{0,\theta,2\theta\}$, $\gamma\in\{0,\vol\}$ (96 instances, zero
 failures);
-\item[(iii)] consequently no additive wall (any necessary condition expressed
-through twisted Euler characteristics) can separate the charge strata or
-exclude the pair; any future deciding wall must be non-additive, and by W5 it
-must in addition be FM-closed.
+\item[(iii)] consequently no additive wall \emph{within the profile theory}
+--- no necessary condition expressed through the twisted Euler
+characteristics that the profile computes --- can separate the charge
+strata or exclude the pair: separation would require a profile value to be
+unrealizable, and the profile is internally consistent (the universal laws
+admit the table, and the grid certificate realizes it throughout the
+certified range $m\in\{1..4\}$, $q/8\in\{0..3\}$). Any future deciding
+wall must therefore operate OUTSIDE the profile theory (be non-additive,
+i.e.\ constrain data the profile does not compute), and by W5 it must in
+addition be FM-closed. This is a statement about the certified profile
+theory, not an exhaustiveness claim about all conceivable additive
+constraints (scope box).
 \end{enumerate}
 \end{theorem}
 
@@ -213,17 +223,24 @@ of the table are the hypothesis-form theorems of the Lean layer
 (charge split from $\int W_R^2=8$; the mixed-End lines from the split and the
 annihilated $c_1^2$-pairing; the third line as the telescoped sum of the first
 two), and the grid certificate realizes every profile point explicitly with
-grade-by-grade purity. (iii): an additive wall is a statement about the values
-$\chi(x\otimes G)$; by (i)--(ii) these values are determined by $(r,k,m,q)$ and
-the determined values are exactly the table values, which are consistent at
-every grid point; separating the strata would require a table value to be
-unrealizable, and no unrealizable value exists within the certified range.
+grade-by-grade purity. (iii): a wall within the profile theory is a statement about
+the values $\chi(x\otimes G)$; by (i)--(ii) these values are determined by
+$(r,k,m,q)$ through the table relations (universally, as hypothesis-form
+laws); the determined values are internally consistent -- the universal laws
+admit the table by construction, and the grid certificate realizes every
+profile point in the certified range with grade-by-grade purity; hence no
+constraint expressible within the profile can exclude the pair. A constraint
+that excludes the pair must therefore constrain data OUTSIDE the profile
+(non-additive data), which is the stated conclusion. No claim is made about
+the nonexistence of non-profile additive-flavored constraints (that would be
+an exhaustiveness claim; the scope box excludes it).
 \end{proof}
 
 \begin{remark}
 Theorem~\ref{thm:completeness} is the precise form of the statement ``the NO
-route is unreachable by additive means'': it does not say rigidity is false ---
-it says the committed additive arsenal cannot express it.
+route is unreachable within the certified profile theory'': it does not say
+rigidity is false --- it says no constraint the profile theory can express
+can establish it.
 \end{remark}
 
 \section{Lemma W7: sector rigidity of the Fourier--Mukai transform}\label{sec:w7}
@@ -366,9 +383,10 @@ system.
 \begin{itemize}
 \item The decision attempt EXECUTED in the charge frame with both polarities
 at full force and duality armed (W5).
-\item The NO route: structurally unreachable within the committed additive
-$+$ transport $+$ lattice arsenal (Theorem~\ref{thm:completeness}); registry
-status \textbf{BLOCKED}, reopen condition as above.
+\item The NO route: unreachable within the certified profile theory
+(additive $+$ transport $+$ lattice arsenal;
+Theorem~\ref{thm:completeness}, with its scope statement); registry status
+\textbf{BLOCKED}, reopen condition as above.
 \item The YES route: funneled to the vertex (Theorem~\ref{thm:funnel}); registry
 status \textbf{BLOCKED-funnel}, reopen condition as above.
 \item The campaign's certified state is therefore the \textbf{reduction
