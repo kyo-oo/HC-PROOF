@@ -94,7 +94,7 @@ theorem pwN_key_identity (t : ℚ) :
 /-- P_W restricts to the identity on the Weil primary factor. -/
 theorem pw_fixes_weil {t : ℚ} (h : t^2+14*t+625 = 0) : pw t = 1 := by
   have hkey := pwN_key_identity t
-  rw [h, mul_zero, add_zero] at hkey
+  rw [h, zero_mul, add_zero] at hkey
   unfold pw cdenom
   rw [hkey]
   norm_num
@@ -102,7 +102,7 @@ theorem pw_fixes_weil {t : ℚ} (h : t^2+14*t+625 = 0) : pw t = 1 := by
 /-- P_W kills the mixed primary factor. -/
 theorem pw_kills_mixed {t : ℚ} (h : t^2-30*t+625 = 0) : pw t = 0 := by
   unfold pw cdenom pwN
-  rw [h, mul_zero, neg_zero, zero_div]
+  rw [h, mul_zero, zero_div]
 
 /-- P_W kills the ambient (t-25) factor. -/
 theorem pw_kills_ambient : pw 25 = 0 := by
@@ -146,7 +146,13 @@ theorem weil_WR_square_top_certificate :
     is strictly negative at every nonzero scale. -/
 theorem end_signature_negative (m : ℚ) (hm : m ≠ 0) :
     (-(m*m)) * 8 < 0 := by
-  have hpos : 0 < m * m := mul_self_pos hm
+  have hpos : (0:ℚ) < m * m := by
+    rcases lt_or_gt_of_ne hm with h | h
+    · have hm' : (0:ℚ) < -m := by linarith
+      have h2 : (-m)*(-m) = m*m := by ring
+      rw [← h2]
+      exact neg_mul_neg hm' hm'
+    · exact mul_pos h h
   linarith
 
 /-- The deformation signature: from the RR signature and Serre duality (declared as
@@ -158,13 +164,9 @@ theorem h1_deformation_signature (m h0 h1 h2 h3 h4 chi : ℚ)
     (hdual4 : h4 = h0)
     (hRR : chi = -(m*m) * 8) :
     h1 = h0 + h2/2 + (m*m)*8/2 := by
-  subst hdual3
-  subst hdual4
-  subst heuler
-  have key : 2*h1 = 2*h0 + h2 + (m*m)*8 := by linarith
   have hdiv : (m*m)*8/2 = (m*m)*4 := by ring
   rw [hdiv]
-  linarith [key]
+  linarith [heuler, hdual3, hdual4, hRR]
 
 /-- Rigidity arithmetic at the minimal scale: h0 >= 1 (identity endomorphism),
     h2 >= 0, m >= 1  ⟹  h1 >= 5. -/
