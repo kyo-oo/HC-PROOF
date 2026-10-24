@@ -83,3 +83,7 @@ normalization with both directions attributed.
   independent adversarial audit loop (Mode B Phase 4) on this strike; (3) the decision attempt
   within the sharpened frame — charge-rigidity (NO) vs charge-split construction (YES), both
   duality-armed.
+
+## Lean certificate receipt (appended at green)
+
+`GSTPairChannelWallsCertificate.lean` — **CI GREEN: run 40139821467 @ c6a2778** (third round of the arc: 40138713492 failed [kernel-stuck decides from non-proven primitives + the t3 telescoping sign slip caught by the kernel + a capstone projection]; 40139191820 failed [the rational-arithmetic root cause isolated: zero committed decide had ever kernel-evaluated Rat; repaired to the all-integer model — integer coefficients, conductor numerators, the 24-scaled chi24 pairing, the c4 shift via the integral identity Delta(c2^2)/2 = -m*(c2M ^ W_R) + m^2*(W_R^2/2)]). Axiom line: capstone_A [propext], capstone_B [propext, Classical.choice, Quot.sound], capstone_C [propext]; sorryAx-clean. Certified: W0 class annihilation (six), periods re-confirmed in the second encoding, W4 corridor arithmetic (universal), W5 FM normalization + round trips exact, W6 table (I1-I4 + carrier + detector, integer restatement pre-verified by the committed mirror). The scope box holds: DETERMINES NO BIT. The pre-verification mirror `research/experiments/task14a_lean_data_mirror.py` (both the fraction model and the final Z-model block) is committed and all-green.

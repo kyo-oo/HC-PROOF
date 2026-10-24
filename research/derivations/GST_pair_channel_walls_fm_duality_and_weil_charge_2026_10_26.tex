@@ -560,16 +560,27 @@ statement-level inputs of this dossier (the exact W1(v) scope, the W2 pair
 definition, the V1/V2 proof structures, the E14 statement, and ten
 pitfall flags, all absorbed above).
 
-\paragraph{Lean certificate (next phase, labeled plan).}
-The arithmetic layers of Lemma W0, W4, W6 (the monomial-support checks, the
-expansion bookkeeping, the charge-split arithmetic, the synthetic-pair
-identities) are decide-able in the committed certificate style
-(``GST Pair Channel Walls Certificate''): the same exterior-model DATA
-tables as the green certificates, with the FM normalization constants of
-Lemma~\ref{lem:norm} as finitely-listed monomial identities. Status at
-commit time of this dossier: DRAFT PLAN, not yet kernel-checked; the
-CI-green receipt will be appended when the certificate lands (no local
-Lean; GitHub Actions only).
+\paragraph{Lean certificate (DELIVERED; kernel-green).}
+\texttt{GSTPairChannelWallsCertificate.lean} kernel-verifies the arithmetic
+layers of Lemma W0, W4, W5, W6 in a second encoding of the exterior model
+(the bitmask model: classes as normalized integer-coefficient mask lists;
+all kernel-evaluated statements are integer class equalities, integer period
+values, or integer conductor-numerator identities). Receipt: CI run
+40139821467 @ c6a2778 SUCCESS (third round; the arc 40138713492 and
+40139191820 failed with three diagnosed causes recorded in the certificate's
+commit messages -- non-proven kernel primitives, a kernel-caught sign slip in
+the hypothesis-form third mixed-End line, and rational arithmetic in the
+kernel, repaired to the all-integer model). Axiom line: capstone\_A
+[propext], capstone\_B [propext, Classical.choice, Quot.sound], capstone\_C
+[propext]; sorryAx-audited clean. Certified content: the six W0 class
+annihilations; the period constants re-confirmed (theta\^4 = 24, W\_R\^2 =
+W\_I\^2 = 8, W\_R W\_I = 0, Omega OmegaBar = 16); the W4 corridor
+arithmetic (universal laws); the W5 FM normalization + both round trips
+EXACT; the W6 table (four synthetic instances pure grade-by-grade with the
+charge split and the mixed-End identities in the 24-scaled integer form; the
+carrier instance recovering the committed End-mass law at the q = 0 slice;
+the detector instance). The scope box holds at the Lean layer: the
+certificate DETERMINES NO BIT.
 
 \section{Provenance}
 
