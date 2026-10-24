@@ -45,7 +45,7 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
    equivalence -- contradicting rank >= 1); a fortiori not IT_j; (iii) every twist F tensor P is either
    acyclic or has nonzero cohomology in at least two degrees. **Corollary (conditional on E14, Mukai's
    semi-homogeneous band theorem): no semi-homogeneous vector bundle is an exact carrier with p < d.**
-   The Fourier-band birth family (IT/WIT spectral constructions, transform-pure sources, semi-homogeneous
+   The Fourier-band birth family (IT-type spectral constructions with locally free transforms, transform-pure sources, semi-homogeneous
    component births) dies on abelian worlds in one stroke.
 4. **The scale-monoid structure (Proposition V3).** The set Sigma of realized carrier scales is an
    additive submonoid of Z_{>=1} (direct sums add scales and ranks; F^(⊕k) multiplies scales): the
@@ -57,9 +57,10 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
    k != 0 since Serre pairs +k with -k).
 6. **The exact-remainder synthesis (Theorem V4, M3-labeled).** On the discriminator: input realizable
    IFF [dichotomy bit S = W_Q] AND [monoid bit M(A,W) nonempty]. Every carrier automatically satisfies
-   the three walls (Euler-zero; no cohomological band; End-mass >= 4 m^2, simple h^2 >= 8 m^2 - 2) plus
-   the corpus no-gos (Q[theta]-trapping of all line-bundle K0 words; the twelve killed routes of the
-   2026-10-25 armament dossiers). The equivalence is input normalization (taxonomy M3), recorded as
+   the three walls (Euler-zero; no cohomological band; End-mass >= 4 m^2, simple h^2 >= 8 m^2 - 2); the
+   corpus no-gos enter as channel constraints on any construction (the Q[theta]-trapping of line-bundle
+   K0 words constrains line-bundle word channels; the twelve killed routes of the 2026-10-25 armament
+   dossiers stay dead). The equivalence is input normalization (taxonomy M3), recorded as
    such; the new content is the entry-test package. No exhaustiveness claim beyond the typed corpus.
 7. **Transform-side remark (R2).** chi(R-Phi-hat(E)) = rk(E) for every perfect E on the discriminator
    pair (the Poincare class is purely mixed by the Pic^0 lemma on both factors; only the rank grade
@@ -85,8 +86,10 @@ NO deformability assumption anywhere).
 - 2026-10-19/20/21 Weil records: the Q[theta]-trapping no-go for line-bundle words and the Hilbert/
   incidence dead channels are the fourth wall in the entry-test list; the spread no-go is NEW and
   independent of those.
-- 2026-10-24 spectral/eigenbundle records: the spectral-bundle trivial-image failure already killed the
-  specific spectral construction; V2 kills the entire IT/WIT band class on abelian worlds, unconditionally.
+- The 2026-10-20 prescribed-residual-spectral record (with the 2026-10-24 spectral/eigenbundle records):
+  the spectral-bundle trivial-image failure already killed the specific spectral construction; V2 kills
+  the entire IT band (locally free transforms) and the per-point single-band class on abelian worlds,
+  unconditionally.
 - The 2026-10-25 armament dossiers (7-a/7-b): the twelve dead routes stay dead; the two live typed
   handles (component-birth, 2-cell coherence) are NOT killed by V2 (they are not band constructions) --
   they now face the entry tests explicitly.
@@ -99,7 +102,7 @@ NO deformability assumption anywhere).
 - Lean certificate: `GSTCarrierMechanismVerdictCertificate.lean` (self-contained, import Mathlib):
   Part A the index-collision certificate (48/48 duplicated pairings; sign-irrelevant by vanishing) and
   the theta^4 surjection count (24 + 232 = 256); Part B the single-band kill arithmetic and the
-  carrier/End twist-chi arithmetic with the certified constants as hypotheses; Part C capstones and
+  carrier/End twist-chi arithmetic with the certified constants as hypotheses; three capstones and
   #print axioms. The period INT W_R^2 = 8 is companion-certified (strike-1 file) and used as a hypothesis.
 - Workflow: `.github/workflows/gst-carrier-mechanism-verdict-certificate.yml` (path-filtered on the .lean
   + itself; same audited-green pattern: elan-init hyphen URL, toolchain cache, sorryAx audit, artifact

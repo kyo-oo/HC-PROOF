@@ -45,9 +45,11 @@ index-collision certificate, $\int\theta^4=24$ by the surjection count). Consequ
 lattice invariant of the carrier in the Theorem-B2 clearing family is rank-only: \emph{the scale $m$ is
 arithmetically free}.
 (2) \emph{The cohomological-spread no-go.} For every exact carrier with $p<d$ on every abelian world and
-every $P\in\mathrm{Pic}^0(A)$: $\chi(F\otimes P)=0$; no such carrier is WIT$_j$ or IT$_j$ for any $j$;
+every $P\in\mathrm{Pic}^0(A)$: $\chi(F\otimes P)=0$; no such carrier is WIT$_j$ per point (a fortiori not
+IT$_j$) for any $j$;
 every twist $F\otimes P$ is either acyclic or has nonzero cohomology in at least two degrees. Conditional
-on Mukai's semi-homogeneous band theorem (leaf E14): \emph{no semi-homogeneous bundle is an exact carrier}
+on Mukai's semi-homogeneous band theorem (leaf E14): \emph{no semi-homogeneous bundle is an exact carrier
+with $p<d$
 --- the Fourier-band birth family dies on abelian worlds.
 (3) \emph{The scale structure.} The set of realized carrier scales on any world is an additive submonoid of
 $\mathbb{Z}_{\ge1}$ (closed under direct sums and multiples): the carrier layer is one emptiness bit plus a
@@ -69,7 +71,9 @@ The equivalence content of item (5) is recorded as input normalization (taxonomy
 
 \paragraph{The discriminator.} Throughout, $(A,\theta)$ is the fixed nonsplit Weil-type abelian fourfold
 discriminator of the campaign (complex field, $K=\mathbb{Q}(i)$ acting, not split, Hodge signature $(2,2)$),
-with the standing hypotheses verified in the cycle-2 strike-1 package:
+with the standing periods and N\'eron--Severi rank verified in the cycle-2 strike-1 package (the model
+polarization $\theta=\sum_j e_j\wedge f_j$, principal in the model, is declared here and certified by the
+surjection count of Lemma \ref{lem:collision}):
 \begin{itemize}[itemsep=1pt]
 \item[(D1)] $\Omega=\bigwedge_{j=1}^4(e_j+i f_j)$ in the standard exterior model of
 $H^\bullet(A,\mathbb{Q})$ ($e_1,f_1,\dots,e_4,f_4$ a symplectic basis of $H^1$,
@@ -90,7 +94,17 @@ definition with $\alpha\in H^{2p}$ and $p<d$.
 \paragraph{Leaf numbering.} External leaves continue the strike-1 numbering: E1--E11 are as declared in
 the strike-1 scope section (same conventions); this document adds E12--E14, declared in
 \S\ref{sec:scope}. Uses of E5 (Chern-character multiplicativity, duals, additivity), E8
-(Hirzebruch--Riemann--Roch) and E9 (Serre duality) below refer to the strike-1 statements verbatim.
+(Hirzebruch--Riemann--Roch) and E9 (Serre duality) below refer to the strike-1 statements with their
+conventions (the E8 usage scope here extends to $F$, $F\otimes L$, $\mathrm{End}F\otimes L$ and the
+GRR sketch of Remark \ref{rem:fmeuler}, as declared in \S\ref{sec:scope}).
+
+\paragraph{Companion-artifact labels.} The record, the Lean docstrings, and the campaign registry refer
+to the results of this document by the following labels: V1 $=$ the Euler-zero law and RR-invisibility
+(Theorem \ref{thm:eulerzero}, Theorem \ref{thm:invisible}, Corollary \ref{cor:mfree}); V2 $=$ the
+cohomological-spread no-go (Theorem \ref{thm:spread} and Corollary \ref{cor:semihom}); V3 $=$ the
+scale-monoid structure (Proposition \ref{prop:scale}); V4 $=$ the exact remainder
+(Theorem \ref{thm:remainder}); R1 $=$ the End-twist table (Remark \ref{rem:endtwist}); R2 $=$ the
+transform-side Euler (Remark \ref{rem:fmeuler}).
 
 \section{The Pic$^0$-class lemma and the Euler-zero law}\label{sec:pic0}
 
@@ -240,7 +254,8 @@ $R\Gamma(A,F\otimes P)$: by derived base change for the Tor-independent Cartesia
 $\{P\}\to\hat A$ along the proper projection $\pi_{\hat A}$ (leaf E13),
 $(R\widehat\Phi(F))\otimes^{\mathbf{L}}k(P)\cong R\Gamma(A,F\otimes P)=0$ for every $P$. The transform of
 a perfect complex is perfect (leaf E13), and a perfect complex all of whose derived fibers vanish is zero
-(in a minimal complex of finite free modules, all differentials become isomorphisms fiberwise; Nakayama).
+(a perfect complex is locally a minimal complex of finite free modules; there acyclicity of every
+derived fiber forces the differentials themselves to vanish, so all terms vanish by Nakayama).
 So $R\widehat\Phi(F)=0$, and the Fourier--Mukai equivalence (leaf E13) gives $F\cong0$ in
 $D^b(A)$ --- contradicting $\mathrm{rk}(F)=r\ge1$ (a locally free sheaf of positive rank is nonzero).
 
@@ -250,7 +265,8 @@ $\chi(A,F\otimes P)=(-1)^i h^i\ne0$, contradicting (i).
 
 \begin{corollary}[the Fourier-band birth family dies; conditional on leaf E14]\label{cor:semihom}
 Assume leaf E14 (Mukai's semi-homogeneous band theorem: every semi-homogeneous vector bundle on an
-abelian variety is WIT$_j$ per point for some $j$). Then no semi-homogeneous vector bundle on any
+abelian variety is WIT$_j$ per point for some $j$; the standard statements give IT$_j$, from which the
+per-point form follows via IT$_j\Rightarrow$WIT$_j$ per point). Then no semi-homogeneous vector bundle on any
 abelian $d$-fold is an exact carrier with $p<d$. In particular, on the discriminator, the forcing input
 is not semi-homogeneous at any scale, any rank.
 \end{corollary}
@@ -262,8 +278,10 @@ Combine E14 with Theorem \ref{thm:spread}(ii).
 \begin{remark}[why this wall is mechanism-relevant]
 The natural ``controllable'' bundles on abelian varieties --- the ones with homogeneous deformation
 behavior and closed Fourier--Mukai orbits --- are precisely the semi-homogeneous ones, and every birth
-law that outputs a cohomological band (IT/WIT-type spectral constructions, transform-pure sources,
-semihomogeneous component births) produces WIT$_j$-per-point objects. Theorem \ref{thm:spread} and
+law that outputs a cohomological band (IT-type spectral constructions with locally free transforms,
+transform-pure sources,
+semihomogeneous component births) produces WIT$_j$-per-point objects (IT$_j$ implies WIT$_j$ per point;
+plain WIT alone does not). Theorem \ref{thm:spread} and
 Corollary \ref{cor:semihom} kill this entire family on abelian worlds in one stroke: the forcing input
 is \emph{forced to be cohomologically spread} --- a mechanism must build an object whose every
 translation-twist has either no cohomology at all or nonzero cohomology in at least two degrees, while carrying the
@@ -310,8 +328,9 @@ $h^2\ge8m^2-2$; strike 1), and integral Chern data $c_1=0,c_2=-mW_R,c_3=0,c_4=4m
 \end{theorem}
 
 \begin{proof}
-(a)$\Rightarrow$(b): a carrier has $c_2(F)=-mW_R\ne0$, an algebraic class (Chern classes of locally free
-sheaves are algebraic, E3/E5), so $P_W\,c_2(F)=-mW_R\ne0$ and the projected Chow image $S$ is nonzero;
+(a)$\Rightarrow$(b): a carrier has $c_2(F)=-mW_R\ne0$, an algebraic class (by the audited strike-1
+W1(v) route: GAGA (E3) presents $F$ algebraically and the Thom--Porteous degeneracy construction (E4)
+exhibits $c_2^{\mathrm{CH}}(F)$ as a rational combination of fundamental classes of algebraic subschemes), so $P_W\,c_2(F)=-mW_R\ne0$ and the projected Chow image $S$ is nonzero;
 $S$ is $T$-stable and the kernel dichotomy (strike 1, W1) forces $S=W_\mathbb{Q}$; and
 $m\in\Sigma$ by definition. (b)$\Rightarrow$(a): $\Sigma\ne\varnothing$ is exactly the existence
 statement. The automatic-satisfaction list is Theorems \ref{thm:eulerzero}, \ref{thm:invisible},
@@ -382,7 +401,8 @@ $(R\widehat\Phi F)\otimes^{\mathbf{L}}k(P)\cong R\Gamma(A,F\otimes P)$ for the T
 point-square along the proper projection; preservation of perfectness; the Fourier--Mukai equivalence
 $R\widehat\Phi:D^b(A)\to D^b(\hat A)$ (Mukai).
 \item[E14] Mukai's semi-homogeneous band theorem: every semi-homogeneous vector bundle on an abelian
-variety is WIT$_j$ per point for some $j$ (used only in Corollary \ref{cor:semihom}, which is
+variety is WIT$_j$ per point for some $j$ (the standard statements give IT$_j$; the per-point form
+follows via IT$_j\Rightarrow$WIT$_j$ per point; used only in Corollary \ref{cor:semihom}, which is
 conditional on this leaf).
 \end{itemize}
 
