@@ -86,7 +86,9 @@ theorem list_sq_sum_mod_two (L : List ℤ) :
   | nil => simp
   | cons x xs ih =>
       rw [List.map_cons, List.sum_cons, List.sum_cons,
-        Int.add_emod, Int.add_emod, int_sq_mod_two, ih]
+        Int.add_emod (x * x) ((List.map (fun x => x * x) xs).sum) 2,
+        Int.add_emod x xs.sum 2,
+        int_sq_mod_two x, ih]
 
 /-- A line-sum pair on P2: multisets of line degrees on the two sides. -/
 structure P2Pair where
@@ -262,7 +264,7 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
   obtain ⟨m₀, hm₀mem, hm₀pos⟩ := hpos
   classical
   have hnonempty : ∃ n₀ : ℕ, n₀ ∈ (Finset.range (m₀.natAbs + 1)).filter
-      (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
+      (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
     refine ⟨m₀.natAbs, ?_⟩
     rw [Finset.mem_filter, Finset.mem_range]
     refine ⟨by omega, by omega, ?_⟩
@@ -271,11 +273,11 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
     rw [hc]
     exact hm₀mem
   have hne : ((Finset.range (m₀.natAbs + 1)).filter
-      (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) : Finset ℕ).Nonempty := hnonempty
+      (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) : Finset ℕ).Nonempty := hnonempty
   obtain ⟨n, hnmem, hnmin⟩ : ∃ n ∈ (Finset.range (m₀.natAbs + 1)).filter
-      (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)),
+      (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)),
       ∀ a ∈ (Finset.range (m₀.natAbs + 1)).filter
-        (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)), n ≤ a := by
+        (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)), n ≤ a := by
     refine ⟨_, Finset.min'_mem _ hne, fun a ha => ?_⟩
     first
       | exact Finset.le_min' _ hne ha
@@ -292,48 +294,54 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
       rw [hc]
       exact hm₀mem⟩)
   refine ⟨((n : ℕ) : ℤ), by omega, hnmemZ, ?_⟩
-  have key : ∀ p : ℤ, 0 < p → p ∈ ScaleSet C → ((n : ℕ) : ℤ) ∣ p := by
-    intro p hpp hpm
-    obtain ⟨q, r, hqr, hrnonneg, hrlt⟩ :
-        ∃ q r, p = q * ((n : ℕ) : ℤ) + r ∧ 0 ≤ r ∧ r < ((n : ℕ) : ℤ) := by
-      refine ⟨p / ((n : ℕ) : ℤ), p % ((n : ℕ) : ℤ), ?_,
-        Int.emod_nonneg _ (by omega), ?_⟩
-      · rw [mul_comm]
-        exact (Int.div_add_mod p ((n : ℕ) : ℤ)).symm
-      · have habs := Int.emod_lt p (by omega : ((n : ℕ) : ℤ) ≠ 0)
-        simp at habs
-        omega
-    have hqm : q * ((n : ℕ) : ℤ) ∈ ScaleSet C := mem_zmul C hnmemZ q
-    have hrS : r ∈ ScaleSet C := by
-      have hrw : r = p + -(q * ((n : ℕ) : ℤ)) := by omega
-      rw [hrw]
-      exact mem_add C hpm (mem_neg C hqm)
-    by_cases hrpos : 0 < r
+  -- the divisability core, by Nat descent (Nat.div_add_mod; the least positive member)
+  have key : ∀ P : ℕ, 0 < P → ((P : ℕ) : ℤ) ∈ ScaleSet C → ((n : ℕ)) ∣ P := by
+    intro P hP0 hPS
+    obtain ⟨Q, R, hqr, hRsmall⟩ : ∃ Q R : ℕ, P = Q * n + R ∧ R < n := by
+      have hdiv := Nat.div_add_mod P n
+      refine ⟨P / n, P % n, ?_, ?_⟩
+      · rw [Nat.mul_comm]
+        exact hdiv.symm
+      · first
+        | exact Nat.mod_lt P (by omega : 0 < n)
+        | exact Nat.mod_lt P n (by omega : 0 < n)
+    by_cases hR0 : R = 0
+    · exact ⟨Q, by rw [Nat.mul_comm]; omega⟩
     · exfalso
-      have h1 : 0 ≤ r := by omega
-      have hc : ((r.natAbs : ℕ) : ℤ) = r := Int.natAbs_of_nonneg h1
-      have hrc : r.natAbs ∈ (Finset.range (m₀.natAbs + 1)).filter
-          (fun k => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
+      have hqr' : ((P : ℕ) : ℤ) = ((Q : ℕ) : ℤ) * ((n : ℕ) : ℤ) + ((R : ℕ) : ℤ) := by
+        exact_mod_cast hqr
+      have hRS : ((R : ℕ) : ℤ) ∈ ScaleSet C := by
+        have hRcast : ((R : ℕ) : ℤ) = ((P : ℕ) : ℤ) + -(((Q : ℕ) : ℤ) * ((n : ℕ) : ℤ)) := by
+          omega
+        rw [hRcast]
+        exact mem_add C hPS (mem_neg C (mem_zmul C hnmemZ ((Q : ℕ) : ℤ)))
+      have hRin : R ∈ (Finset.range (m₀.natAbs + 1)).filter
+          (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
         rw [Finset.mem_filter, Finset.mem_range]
-        refine ⟨by omega, by omega, ?_⟩
-        rw [hc]
-        exact hrS
-      have hcontr : n ≤ r.natAbs := hnmin _ hrc
+        refine ⟨by omega, by omega, hRS⟩
+      have hcontr := hnmin R hRin
       omega
-    · have hrzero : r = 0 := by omega
-      rw [hrzero] at hqr
-      refine ⟨q, ?_⟩
-      rw [mul_comm]
-      exact hqr
   intro m hm
   rcases lt_trichotomy m 0 with hneg | hzero | hpp
-  · have hmp : 0 < -m := by omega
-    have hmS : -m ∈ ScaleSet C := mem_neg C hm
-    obtain ⟨q, hq⟩ := key (-m) hmp hmS
-    exact ⟨-q, by linarith⟩
+  · have hmS : -m ∈ ScaleSet C := mem_neg C hm
+    have hMc : (((-m).natAbs : ℕ) : ℤ) = -m := Int.natAbs_of_nonneg (by omega)
+    have hM0 : 0 < (-m).natAbs := by omega
+    have hMS : (((-m).natAbs : ℕ) : ℤ) ∈ ScaleSet C := by rw [hMc]; exact hmS
+    obtain ⟨c, hc⟩ := key (-m).natAbs hM0 hMS
+    refine ⟨-((c : ℕ) : ℤ), ?_⟩
+    have h' : (((-m).natAbs : ℕ) : ℤ) = ((n : ℕ) : ℤ) * ((c : ℕ) : ℤ) := by
+      exact_mod_cast hc
+    omega
   · rw [hzero]
     exact dvd_zero _
-  · exact key m hpp hm
+  · have hMc : ((m.natAbs : ℕ) : ℤ) = m := Int.natAbs_of_nonneg (by omega)
+    have hM0 : 0 < m.natAbs := by omega
+    have hMS : ((m.natAbs : ℕ) : ℤ) ∈ ScaleSet C := by rw [hMc]; exact hm
+    obtain ⟨c, hc⟩ := key m.natAbs hM0 hMS
+    refine ⟨((c : ℕ) : ℤ), ?_⟩
+    have h' : ((m.natAbs : ℕ) : ℤ) = ((n : ℕ) : ℤ) * ((c : ℕ) : ℤ) := by
+      exact_mod_cast hc
+    omega
 
 /-- **The P2 calculus instance**: line-sum pairs with list concatenation as the
 pair-sum and component-swap as the pair-swap. All laws are proved by real
@@ -399,12 +407,14 @@ theorem p2witness_sqdiff : (([1, 1] : List ℤ).map (fun x => x * x)).sum -
     (([1, -1] : List ℤ).map (fun x => x * x)).sum = 0 := by
   decide
 
+theorem p2grade2_eq_witness :
+    p2grade2 ⟨([1, 1] : List ℤ), [1, -1]⟩ = ((((([1, 1] : List ℤ).map (fun x => x * x)).sum - (([1, -1] : List ℤ).map (fun x => x * x)).sum : ℤ) : ℚ) / 2) := rfl
+
 theorem p2witness_landing : p2Landing ⟨([1, 1] : List ℤ), [1, -1]⟩ := by
   constructor
   · exact p2witness_rank
-  · show ((((([1, 1] : List ℤ).map (fun x => x * x)).sum -
-          (([1, -1] : List ℤ).map (fun x => x * x)).sum : ℤ) : ℚ) / 2 = 0
-    rw [p2witness_sqdiff]
+  · show p2grade2 ⟨[1, 1], [1, -1]⟩ = 0
+    rw [p2grade2_eq_witness, p2witness_sqdiff]
     norm_num
 
 theorem p2witness_scale : p2scale ⟨([1, 1] : List ℤ), [1, -1]⟩ = 2 := by
