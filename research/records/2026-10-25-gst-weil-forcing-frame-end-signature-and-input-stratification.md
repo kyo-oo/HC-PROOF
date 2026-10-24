@@ -22,8 +22,10 @@ corrected in this revision and in the derivation .tex (audit findings F1, F2).
 1. **The Weil Chow correspondence (explicit).** P_W(t) = -(t-25)(39t-79)(t^2-30t+625)/44000000 expanded to
    coefficients (a_0..a_4) = (-79/2816, 359/22000, -527/400000, 139/2750000, -39/44000000), so
    Pi_W^CH = sum_j a_j * transpose-graph(f^j) is a rational algebraic codimension-4 correspondence on AxA
-   whose cohomology action is the kernel-verified projector (identity on the Weil plane W_Q, zero on the mixed
-   and ambient primary components; CRT idempotence on the full f*-spectrum).
+   whose cohomology action is the projector with kernel-verified polynomial identities (identity on the Weil
+   plane W_Q, zero on the mixed and ambient primary components; CRT idempotence on the full f*-spectrum --
+   (a)-(c) kernel-verified in the companion Lean file, (d) in the pre-existing
+   GSTUniversalCMArithmeticObstruction.lean given the record-level spectrum census).
 2. **Theorem W1 (completed geometric zero-or-full frame).** S := Pi_W^CH cl_A CH^2(A)_Q satisfies:
    (i) S subset W_Q, stable under f*, f*; (ii) S = 0 or S = W_Q (via the module identification with
    Q[t]/(t^2+14t+625) and the kernel-verified cmWeilStableSourceDichotomy); (iii) S = 0 forces W_R, W_I
@@ -79,7 +81,7 @@ corrected in this revision and in the derivation .tex (audit findings F1, F2).
   sign count, 64 ordered products) — matches the record's Wolfram Gram exactly.
 - All proofs written in the companion derivation with declared external leaves (E1-E10: correspondence
   compatibility, Gysin maps, GAGA, Thom-Porteous through the proved descent law, ch identities,
-  Birkhoff-Grothendieck, K-theory finiteness/AH, HRR, Serre duality, Kunneth).
+  (L-1)^2 ring arithmetic, K-theory finiteness/AH, HRR, Serre duality, Kunneth).
 - Lean shadow (separate commit): GSTWeilForcingFrameCertificate.lean certifies the pure-algebra cores
   (projector polynomial identities + coefficients; the exterior sign-count certificate INT W_R^2 = 8 and
   the corrected End-mass arithmetic) with sorryAx audit and #print axioms on GitHub Actions.
@@ -91,7 +93,7 @@ corrected in this revision and in the derivation .tex (audit findings F1, F2).
 - W1 does not decide S = 0 vs S = W_Q on any actual nonsplit instance; producing S = 0 on an instance
   remains the campaign's negative certificate (PROMPT sec 2). The unauthenticated external manuscript
   claim p3sw:weil-plane would force the full-plane outcome if ever verified; it remains an external leaf.
-- The End-signature law and rigidity no-go are blind to the Hodge/non-Hodge distinction (they apply to any
+- The End-mass law and its no-go corollary are blind to the Hodge/non-Hodge distinction (they apply to any
   holomorphic bundle with the carrier's Chern data); they prune mechanism families, they do not decide the
   dichotomy.
 - No family switching, no input outside (X, p, alpha), five-question preflight respected (the new laws take
@@ -99,7 +101,8 @@ corrected in this revision and in the derivation .tex (audit findings F1, F2).
 
 ## 4. Consequences for the registry
 
-- R4: the discriminator's certificate frame is now COMPLETE and kernel-anchored: either outcome is a
+- R4: the discriminator's certificate frame is now COMPLETE as a conditional frame (with declared standard
+   leaves E1/E2 for the correspondence-action and Gysin steps; the purely algebraic core is kernel-anchored): either outcome is a
   closed statement about its consequences; the zero-test is one well-posed binary geometric question.
 - R1: the forcing input's layer structure is fixed: the pair layer = the conjecture itself; the carrier
   layer = the monoid question M(X); the specified layer = + torsion. Any cycle-2 construction mechanism must
@@ -107,7 +110,7 @@ corrected in this revision and in the derivation .tex (audit findings F1, F2).
    necessary condition to satisfy on abelian test worlds (h^0 + h^2/2 >= 4m^2 on A; h^2 >= 8m^2 - 2 for
    simple realizations).
    Next strike (R1): the (p,p)-harmonic/Deligne-cocycle input must now target the CARRIER layer through a
-  mechanism compatible with the rigidity no-go — deformable, unstable carriers; or R4: an all-surface
+  mechanism compatible with the End-mass no-go (even-End-cohomology mass >= 4m^2 at scale m; unstable carriers); or R4: an all-surface
   vanishing theorem on one nonsplit instance.
 
 ## 5. Provenance

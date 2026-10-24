@@ -146,8 +146,8 @@ theorem weil_WR_square_top_certificate :
 
 /-! ## Part C: the End-signature arithmetic -/
 
-/-- The Euler signature of End F on the discriminator: chi = -(m^2) * INT W_R^2 = -8 m^2
-    is strictly negative at every nonzero scale. -/
+/-- The Euler signature of End F on the discriminator: chi = +(m^2) * INT W_R^2 = +8 m^2
+    is strictly positive at every nonzero scale (corrected sign; audit finding F2). -/
 theorem end_mass_positive (m : ℚ) (hm : m ≠ 0) :
     (0:ℚ) < (m*m) * 8 := by
   have hpos : (0:ℚ) < m * m := by

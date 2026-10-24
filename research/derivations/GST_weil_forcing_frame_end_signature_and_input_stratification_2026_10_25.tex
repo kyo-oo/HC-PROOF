@@ -93,8 +93,9 @@ Define
 \[
 P_W(t)\;=\;-\frac{(t-25)(39t-79)(t^2-30t+625)}{44\,000\,000}.
 \]
-The following four facts are polynomial identities over $\mathbb{Q}$ (kernel-verified in the Lean file; the last three
-rest on the key identity below):
+The following four facts are polynomial identities over $\mathbb{Q}$ ((a)--(c) kernel-verified in the companion
+Lean file; (d) kernel-verified in the pre-existing \texttt{GSTUniversalCMArithmeticObstruction.lean}, given the
+record-level spectrum census; the last three rest on the key identity below):
 \begin{enumerate}[label=(\alph*)]
 \item \textbf{Key identity:}\quad $(t-25)(39t-79)(t^2-30t+625)+44\,000\,000=(t^2+14t+625)(39t^2-2770t+72375)$.
 \item $P_W\equiv 1 \pmod{G_W}$.
@@ -313,10 +314,10 @@ Fix $(X,p,\alpha)$ with $m\equiv0\pmod{m_0}$, $r\ge\max(p+1,d+1)$.
 \item Carrier form $\Rightarrow$ pair form; specified-carrier form $\Rightarrow$ carrier form. The two layers between
 the forms are well-defined:
 \begin{enumerate}[label=(\roman*)]
-\item the \textbf{monoid layer}: $\mathcal{M}(X):=$ $\{$pure characters realized by algebraic $K$-classes$\}$
-versus $\{$pure characters realized by single holomorphic bundles$\}$ --- an \emph{open} layer: it is empty on
-monoid-full worlds (Proposition \ref{prop:monoid}: the projective line is monoid-full), and no world on which it
-is nonempty is exhibited here;
+\item the \textbf{monoid layer}: write $\mathcal{M}(X)$ for the inner set $\{$pure characters realized by single
+holomorphic bundles$\}$, sitting inside $\{$pure characters realized by algebraic $K$-classes$\}$; the containment
+is an \emph{open} layer question: it is an equality on monoid-full worlds (Proposition \ref{prop:monoid}: the
+projective line is monoid-full), and no world on which it is strict is exhibited here;
 \item the \textbf{torsion gap}: two specified carriers with the same character differ by an element of
 $\ker(\mathrm{ch})=K^0(X)_{\mathrm{tors}}$ (finitely generated $K^0$, $\mathrm{ch}\otimes\mathbb{Q}$ injective;
 external leaf E7), so specified-carrier form differs from carrier form by Theorem A's torsion ambiguity
@@ -344,13 +345,13 @@ external leaf E7), so $\ker(\mathrm{ch})$ is exactly the torsion subgroup; Theor
 uniquely up to this subgroup, which measures (qualitatively, together with the monoid question) the difference
 between the specified-carrier and carrier forms. (iii): Theorem \ref{thm:W1}(v) and its proof. For the explicit
 scale under $S=W_\mathbb{Q}$: write the detected representatives as rational combinations $\sum_i q_i[Z_i]$ with
-$\mathrm{cl}$-class $m_0W$ (the one-source reconstruction; $m_0$ the lcm of its denominators). On the abelian $A$
+$\mathrm{cl}$-class $n_0W$ (the one-source reconstruction; $n_0$ the lcm of its denominators). On the abelian $A$
 with $\mathrm{td}(A)=1$, GRR (external leaf E8) gives $\mathrm{ch}([O_{Z_i}])=[Z_i]+\iota_*\mathrm{td}_1(Z_i)+\iota_*\mathrm{td}_2(Z_i)$:
 the grade-$3$ and grade-$4$ junk are pushforwards of algebraic classes, hence algebraic; correct them by
 subtracting $\sum_j s_j[O_{C_j}]$ for algebraic curves $C_j$ with the right codimension-$3$ classes and then a
-rational multiple of $[O_{\mathrm{pt}}]$ (whose character is the pure top class). The result is $x\in K^0_{\mathrm{alg}}(A)$
-with $\mathrm{ch}(x)=mW$ pure at the explicit scale $m$ = the lcm of the denominators of the $q_i$, $s_j$ and the
-point-correction --- pair form at an explicit scale, as claimed.
+rational multiple of $[O_{\mathrm{pt}}]$ (whose character is the pure top class). The result is a rational algebraic K-class $x\in K^0_{\mathrm{alg}}(A)\otimes\mathbb{Q}$ with $\mathrm{ch}(x)=W$ pure;
+after clearing denominators $m:=$ the lcm of the denominators of the $q_i$, $s_j$ and the point-correction, the
+integral class $m\cdot x\in K^0_{\mathrm{alg}}(A)$ has $\mathrm{ch}=mW$ pure --- pair form at an explicit scale, as claimed.
 \end{proof}
 
 \begin{remark}[Effect on the cycle-1 audit flag]
@@ -524,7 +525,7 @@ c_1=0,\qquad c_2=-mW_R,\qquad c_3=0,\qquad c_4=4m^2[A],\qquad r\ge\max(3,5)=5.
 \begin{remark}[Consequences for the frame]
 At scale $m=1$ the discriminator's forcing input in carrier form is the holomorphic-bundle question for the
 character $r+W_R$ with $c_2=-W_R$, and Theorem \ref{thm:W3} gives every realization the signature
-$h^1= h^0+\tfrac12h^2+4\ge5$. The two statements together are the campaign's first pair of sharp, world-specific
+the End-mass $h^0+\tfrac12h^2=h^1+4\ge4$ (with $h^2\ge6$ for simple realizations). The two statements together are the campaign's first pair of sharp, world-specific
 constraints on the forcing input on its fixed discriminating test.
 \end{remark}
 
@@ -562,6 +563,9 @@ E8: Hirzebruch--Riemann--Roch for $\mathrm{End}F$; $\int\mathrm{td}_4=\chi(O_X)$
 E9: Serre duality ($h^i(F)=h^{d-i}(F^\vee\otimes K)$); $\mathrm{End}^\vee\cong\mathrm{End}$; $K_A$ trivial.
 E10: K\"unneth formula in complex $K$-theory and multiplicativity of $\mathrm{ch}$; odd Chern character on circle
 factors.
+E11: Hodge--Riemann positivity of the primitive middle square ($\int\alpha^2>0$ for nonzero real primitive
+$(2,2)$ classes on a fourfold); used only in Theorem \ref{thm:W3}(i)'s strict positivity (the corollary takes
+$\int\alpha^2>0$ as a hypothesis).
 
 \textbf{Explicitly not claimed:} any construction of a holomorphic structure on any Weil carrier; any decision of
 $S=0$ versus $S=W_\mathbb{Q}$ on any actual nonsplit instance; any improvement of the cycle-1 conditional landing;
