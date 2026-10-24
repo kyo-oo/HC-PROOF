@@ -25,15 +25,22 @@ jobs:
           path: ~/.elan
           key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
       - name: Install pinned Lean and Mathlib
+        id: lean-install
         shell: bash
         run: |
           set -euo pipefail
           if [ ! -x "$HOME/.elan/bin/lake" ]; then
-            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan_init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
+      - name: Save cached Lean toolchain
+        if: steps.lean-install.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}-${{ github.run_id }}
       - name: Kernel verify Gr(2,5) pure pair lattice certificate
         shell: bash
         run: |
