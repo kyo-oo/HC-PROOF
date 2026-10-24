@@ -41,8 +41,11 @@ that make the decision frame arithmetic, duality-invariant, and charge-based.
   committed End-mass law chi(A, End F) = +8m^2 (W3 instance). The pair channel extends
   through all integer q — the carrier layer is the q = 0 slice.
 - **Corollary (the three faces of the bit, M3-normalized).** S = W_Q ⟺ pair at some scale
-  (committed W2) ⟺ two bundles with shared (rank, c_1, c_3) and the determined c_4-constraint
-  whose Weil charges differ by 8m (W6) ⟺ the same on the dual world (W5). NO route = charge
+  (committed W2) ⟺ two bundles with shared (rank, c_1, c_3), the c_2-difference −mW_R (W6(i)),
+  the determined c_4-constraint, and Weil charges differing by 8m (W6(iv)) ⟺ the same on the
+  dual world (W5). [Audit repair F4: the c_2-difference is a listed condition — without it,
+  face (b) admitted the Chern-data counterexample Δc_2 = −mW_R + a·theta^2 (auditor
+  14-b), which the repaired list excludes.] NO route = charge
   rigidity within the fixed-Chern strata (then S = 0: W_R nonalgebraic — the negative
   certificate); YES route = produce the charge split (the detected surface then exists by the
   committed one-source reconstruction).
@@ -54,8 +57,11 @@ monoid-bit claim; exhaustiveness; any resolution of the target. The Corollary is
 normalization with both directions attributed.
 
 ## Verification
-- Bounded exact-arithmetic certificate: hodge-campaign/experiments/task13d_pair_walls_verify.py
-  (exterior model; ≤ 2^16 monomial ops; < 1 s; committed with the dossier). Verifies: all
+- Bounded exact-arithmetic certificate: research/experiments/task13d_pair_walls_verify.py
+  (the committed repo copy; exterior model; parity-exact Weil construction — no complex numbers,
+  no floats anywhere; every comparison an exact ASSERTED equality, zero tolerance; ≤ 2^16 monomial
+  ops; < 1 s; audit-repaired per 14-b F1 — the earlier workspace-copy citation is superseded, and
+  the workspace copy has been refreshed to the repaired script). Verifies: all
   committed constants re-confirm (∫W_R theta^j = 0 j=1..4, ∫theta^4 = 24, ∫W_R^2 = ∫W_I^2 = 8,
   ∫W_R W_I = 0, Omega·Omegabar = 16 vol); Lemma W0 (zero surviving monomials); the FM
   normalization (coefficients exactly 1, both round trips); W6 synthetically on four instances
@@ -87,3 +93,7 @@ normalization with both directions attributed.
 ## Lean certificate receipt (appended at green)
 
 `GSTPairChannelWallsCertificate.lean` — **CI GREEN: run 40139821467 @ c6a2778** (third round of the arc: 40138713492 failed [kernel-stuck decides from non-proven primitives + the t3 telescoping sign slip caught by the kernel + a capstone projection]; 40139191820 failed [the rational-arithmetic root cause isolated: zero committed decide had ever kernel-evaluated Rat; repaired to the all-integer model — integer coefficients, conductor numerators, the 24-scaled chi24 pairing, the c4 shift via the integral identity Delta(c2^2)/2 = -m*(c2M ^ W_R) + m^2*(W_R^2/2)]). Axiom line: capstone_A [propext], capstone_B [propext, Classical.choice, Quot.sound], capstone_C [propext]; sorryAx-clean. Certified: W0 class annihilation (six), periods re-confirmed in the second encoding, W4 corridor arithmetic (universal), W5 FM normalization + round trips exact, W6 table (I1-I4 + carrier + detector, integer restatement pre-verified by the committed mirror). The scope box holds: DETERMINES NO BIT. The pre-verification mirror `research/experiments/task14a_lean_data_mirror.py` (both the fraction model and the final Z-model block) is committed and all-green.
+
+## Correction note (audit 14-b-2, R4)
+
+Commit 275028e's sub-claim "the strike-1 record's corollary phrasing aligned" did NOT land: the record's face-(b) list still omitted the c_2-difference at that commit (the auditor's re-check caught it; the verbatim-match check at repair time returned not-found and the site was left unfixed while the commit message claimed alignment). Both record repairs (R1: the c_2-difference condition; R2: the script-path repoint) are executed in THIS commit, and the workspace script copy is refreshed (R3). The dossier's face (b) was correctly repaired at 275028e; the defect was confined to the record file.

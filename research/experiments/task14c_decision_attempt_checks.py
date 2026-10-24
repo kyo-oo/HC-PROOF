@@ -2,8 +2,10 @@
 # Task 14-c: the decision-attempt verification layer.
 # (1) Lemma W7 sector rigidity of the cohomological FM transform (bitmask model):
 #     block-union monomials complement to block-union monomials (NS-sector rigid),
-#     Weil words complement to Weil words (W-sector rigid; parity preserved);
-#     hence the transform preserves the NS / W / T sector decomposition.
+#     Weil words complement to Weil words (W-sector rigid; parity preserved: even to
+#     even, odd to odd), T-words to T-words; the exact fm(theta^2) = theta^2-dual
+#     equality (coefficient 1); hence the transform preserves the NS / W / T sector
+#     decomposition (the five-piece dimension audit lives in the dossier).
 # (2) The (m, q)-consistency grid: the W6 additive table (purity + charge split +
 #     the three mixed-End identities) is consistent at EVERY grid point
 #     m in 1..4, c2(E-) = a*W_R (a in 0..3), c1 in {0, theta, 2theta},

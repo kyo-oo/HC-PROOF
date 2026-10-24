@@ -43,12 +43,12 @@ obstruction points. On the NO route (charge rigidity) the six attack lines
 (moduli-connectedness, corridor-invisibility kill chains, FM-closure via
 product worlds, isogeny scaling, End-mass twisting, lattice/parity obstructions)
 each die at a named committed wall, and the deaths are structural: every
-additive invariant of a pure pair factors through the $(r,k,m,q)$-profile of
+additive invariant of a pure pair's difference class factors through the $(m,q)$-data (with $r$ and $k$ inert) of
 W4--W6, and that profile is consistent at every point of the certified
 $(m,q)$-grid --- so no additive wall WITHIN the profile theory can
 separate the charge strata (Theorem~\ref{thm:completeness}, the corridor
 symmetry; the profile theory is the certified factorization of every
-additive invariant through the $(r,k,m,q)$-data of W4--W6).
+additive invariant through the $(m,q)$-data of W4--W6, with $r$ and $k$ inert in every profile-computed value).
 On the YES route the strike proves a new wall, \textbf{Lemma W7} (sector
 rigidity of the cohomological Fourier--Mukai transform: the complement
 structure preserves the NS/W/T sector decomposition; $\FMc(\theta^2)$ stays in
@@ -229,7 +229,7 @@ annihilated $c_1^2$-pairing; the third line as the telescoped sum of the first
 two), and the grid certificate realizes every profile point explicitly with
 grade-by-grade purity. (iii): a wall within the profile theory is a statement about
 the values $\chi(x\otimes G)$; by (i)--(ii) these values are determined by
-$(r,k,m,q)$ through the table relations (universally, as hypothesis-form
+$(m,q)$ (with $r$ and $k$ inert in the computed values) through the table relations (universally, as hypothesis-form
 laws); the determined values are internally consistent -- the universal laws
 admit the table by construction, and the grid certificate realizes every
 grid point in the certified range with grade-by-grade purity; hence no
@@ -294,11 +294,13 @@ census runs on the $70$ words ($6+16+48$), while the scheme decomposition
 $\Q\theta^2\oplus\WQ\oplus T$ is $1+2+67$-dimensional: the scheme-level
 $T$ additionally contains the $5$-dimensional complement of $\Q\theta^2$
 inside the block-union span and the $14$-dimensional complement of $\WQ$
-inside the Weil-word span. Both complements are $\FMc$-invariant: each
-ambient span is invariant (the closures above), the distinguished
-subspaces are invariant ($\FMc(\theta^2)=\widehat\theta^2$ exactly;
-$\FMc(\WQ)=\widehat\WQ$ by the committed normalization), and $\FMc$ is an
-involution --- so the five-piece decomposition
+inside the Weil-word span. Both complements (taken ORTHOGONAL inside their
+ambient spans --- legitimate because $\FMc$ is a Poincar\'e-pairing
+isometry up to the certified sign identities, as recorded below) are
+$\FMc$-invariant: each ambient span is invariant (the closures above), the
+distinguished subspaces are invariant ($\FMc(\theta^2)=\widehat\theta^2$
+exactly; $\FMc(\WQ)=\widehat\WQ$ by the committed normalization), and
+$\FMc$ is an involution --- so the five-piece decomposition
 \[
 \Q\theta^2\;\oplus\;(\text{5-dim})\;\oplus\;\WQ\;\oplus\;(\text{14-dim})
 \;\oplus\;(\text{48-dim})
@@ -444,12 +446,15 @@ remaining target.
 \paragraph{The decision-attempt certificate script.}
 \texttt{research/experiments/task14c\_decision\_attempt\_checks.py} (committed
 alongside this dossier). Bounds: pure Python, exact \texttt{Fraction}
-arithmetic, $\le 2^{10}$ monomial operations per instance, $96$ grid instances
-$+$ the $70$-word census $+$ the sector-closure checks $+$ $4$
-twist-preservation checks; runtime $<5$\,s, memory $<20$\,MB; no floats. It
+arithmetic, $\le 2^{10}$ monomial operations per instance, $96$ grid
+instances $+$ the $70$-word census $+$ the sector-closure checks $+$ $18$
+REAL twist configurations ($2$ scales $\times$ $9$ twist levels, the
+exponential twist computed grade by grade); runtime $<5$\,s, memory
+$<20$\,MB; no floats; every check ASSERTS. It
 verifies: (1) the W7 census ($6/16/48$) and all complement closures
 (NS-union $\to$ NS-union; even Weil $\to$ even Weil; odd Weil $\to$ odd Weil;
-$T\to T$), the class-level $\FMc(\theta^2)\in$ NS-span, and the committed
+$T\to T$), the EXACT equality $\FMc(\theta^2)=\widehat\theta^2$ (coefficient
+$1$), and the committed
 $\FMc(W_R)=W_R$, $\FMc(W_I)=W_I$; (2) the $(m,q)$-grid: purity
 grade-by-grade, the charge split $-8m$, and the three mixed-End identities at
 all $96$ points ($m\in\{1,2,3,4\}$, $c_2(E_-)=aW_R$ with $a\in\{0..3\}$,
