@@ -148,10 +148,10 @@ theorem end_signature_negative (m : ℚ) (hm : m ≠ 0) :
     (-(m*m)) * 8 < 0 := by
   have hpos : (0:ℚ) < m * m := by
     rcases lt_or_gt_of_ne hm with h | h
-    · have hm' : (0:ℚ) < -m := by linarith
-      have h2 : (-m)*(-m) = m*m := by ring
-      rw [← h2]
-      exact neg_mul_neg hm' hm'
+    · first
+      | exact neg_mul_neg h h
+      | have hm2 : (0:ℚ) < -m := by linarith
+        nlinarith [hm2]
     · exact mul_pos h h
   linarith
 
