@@ -45,7 +45,8 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
    equivalence -- contradicting rank >= 1); a fortiori not IT_j; (iii) every twist F tensor P is either
    acyclic or has nonzero cohomology in at least two degrees. **Corollary (conditional on E14, Mukai's
    semi-homogeneous band theorem): no semi-homogeneous vector bundle is an exact carrier with p < d.**
-   The Fourier-band birth family (IT-type spectral constructions with locally free transforms, transform-pure sources, semi-homogeneous
+   The Fourier-band birth family (IT-type spectral constructions and transform-pure sources, both with
+   locally free transforms, semi-homogeneous
    component births) dies on abelian worlds in one stroke.
 4. **The scale-monoid structure (Proposition V3).** The set Sigma of realized carrier scales is an
    additive submonoid of Z_{>=1} (direct sums add scales and ranks; F^(⊕k) multiplies scales): the
