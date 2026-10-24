@@ -52,6 +52,7 @@ collision certificate is sign-free by vanishing. No sorry, no custom axioms, no 
 -/
 
 set_option maxHeartbeats 400000
+set_option maxRecDepth 100000
 
 /-! ## Part A: the index-collision certificate and the theta^4 surjection count -/
 
@@ -138,7 +139,6 @@ theorem carrier_twist_chi (r m k iWRtheta2 chi : ℚ)
   rw [hRR]
   have h24 : (24:ℚ) ≠ 0 := by decide
   field_simp
-  ring
 
 /-- Euler-zero law instance: at k = 0 the carrier twist-chi vanishes (Theorem V1(i) on the
 discriminator). -/
@@ -162,7 +162,6 @@ theorem end_twist_chi (r m k iWRtheta2 iWR2 chi : ℚ)
   rw [hRR]
   have h24 : (24:ℚ) ≠ 0 := by decide
   field_simp
-  ring
 
 /-! ## Capstones -/
 
