@@ -161,12 +161,14 @@ def PureAt (p : ℕ) (g : ℕ → ℚ) : Prop := ∀ k, k ≠ p → g k = 0
 theorem pure_sum (p : ℕ) (g f : ℕ → ℚ) (hg : PureAt p g) (hf : PureAt p f) :
     PureAt p (fun k => g k + f k) := by
   intro k hk
+  show g k + f k = 0
   rw [hg k hk, hf k hk]
   ring
 
 theorem pure_neg (p : ℕ) (g : ℕ → ℚ) (hg : PureAt p g) :
     PureAt p (fun k => -g k) := by
   intro k hk
+  show -g k = 0
   rw [hg k hk]
   ring
 
