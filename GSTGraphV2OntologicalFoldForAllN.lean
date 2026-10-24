@@ -281,9 +281,7 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
       refine ⟨P / n, P % n, ?_, ?_⟩
       · rw [Nat.mul_comm]
         exact hdiv.symm
-      · first
-        | exact Nat.mod_lt P (by omega : 0 < n)
-        | exact Nat.mod_lt P n (by omega : 0 < n)
+      · exact Nat.mod_lt P (by omega : 0 < n)
     by_cases hR0 : R = 0
     · exact ⟨Q, by rw [Nat.mul_comm]; omega⟩
     · exfalso
@@ -414,7 +412,8 @@ theorem p2_mstar_eq_two :
   have h2mem : (2 : ℤ) ∈ ScaleSet P2PairCal := ⟨⟨[1, 1], [1, -1]⟩, p2witness_landing, p2witness_scale⟩
   obtain ⟨mstar, hstarpos, hstarmem, hstardiv⟩ :=
     scaleSet_principal P2PairCal ⟨2, h2mem, by norm_num⟩
-  obtain ⟨v, hv, hvm⟩ := hstarmem
+  have hstar := hstarmem
+  obtain ⟨v, hv, hvm⟩ := hstar
   have hpar : p2scale v % 2 = 0 := p2_scale_even v hv
   have hvm' : p2scale v = mstar := hvm
   obtain ⟨q, hq⟩ := hstardiv 2 h2mem
