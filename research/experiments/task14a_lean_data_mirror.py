@@ -253,3 +253,87 @@ print(f"  chi(End O^r) = {v}")
 assert v == 0
 
 print("\nALL MIRROR CHECKS GREEN — every Lean literal and decide target verified.")
+
+# ============================================================================
+# APPENDED (round 3): the ALL-INTEGER (Z-scaled) restatement of every decided
+# proposition, mirroring the final GSTPairChannelWallsCertificate.lean exactly:
+# integer coefficients; Newton conductors in numerator form; chi24 = 24*chi;
+# the c_4 shift via -m*(c2M ^ W_R) + m^2*(W_R^2/2) with W_R^2/2 = 4 vol.
+# Kernel idiom discipline: Nat/Int/List arithmetic only, no Rat evaluation.
+# ============================================================================
+
+WRz = [(1, 85), (-1, 90), (-1, 102), (-1, 105), (-1, 150), (-1, 153), (-1, 165), (1, 170)]
+WIz = [(1, 86), (1, 89), (1, 101), (-1, 106), (1, 149), (-1, 154), (-1, 166), (-1, 169)]
+THz = [(1, 3), (1, 12), (1, 48), (1, 192)]
+HALFWR2 = [(1 * 4, VOL)]
+
+def z_norm(c):
+    return norm_cl([(Fr(a), m) for a, m in c])
+
+def z_wedge(c1, c2):
+    return wedge_cl([(Fr(a), m) for a, m in c1], [(Fr(b), m) for b, m in c2])
+
+def z_mul(q, c): return z_norm([(q * a, m) for a, m in c])
+def z_add(c1, c2): return z_norm([(a, m) for a, m in c1] + [(b, m) for b, m in c2])
+def z_pow(c, k):
+    r = z_norm([(Fr(1), 0)])
+    for _ in range(k): r = z_wedge(r, c)
+    return r
+def z_int(c):
+    for a, m in c:
+        if m == VOL: return a
+    return Fr(0)
+
+print("\n== Z-model (round 3): W0 / periods / FM ==")
+ok_w0 = all(z_wedge(z_pow(THz, j), Wc) == [] for j in (1, 2, 3) for Wc in (WRz, WIz))
+ok_per = (z_int(z_pow(THz, 4)) == 24 and z_int(z_wedge(WRz, WRz)) == 8 and z_int(z_wedge(WIz, WIz)) == 8
+          and z_int(z_wedge(WRz, WIz)) == 0 and z_int(z_add(z_wedge(WRz, WRz), z_wedge(WIz, WIz))) == 16
+          and all(z_int(z_wedge(WRz, z_pow(THz, j))) == 0 for j in (1, 2, 3, 4)))
+def z_fm(x): return z_norm([(a * wsign(bitlist(m), bitlist(255 ^ m)), 255 ^ m) for a, m in x])
+ok_fm = z_fm(WRz) == WRz and z_fm(WIz) == WIz and z_fm(z_fm(WRz)) == WRz and z_fm(z_fm(WIz)) == WIz
+print(f"  W0={ok_w0} periods={ok_per} fm={ok_fm}")
+assert ok_w0 and ok_per and ok_fm
+
+def ch2n(c1, c2): return z_add(z_pow(c1, 2), z_mul(-2, c2))
+def ch3n(c1, c2, c3): return z_add(z_add(z_pow(c1, 3), z_mul(-3, z_wedge(c1, c2))), z_mul(3, c3))
+def ch4n(c1, c2, c3, c4):
+    return z_add(z_add(z_add(z_add(z_pow(c1, 4), z_mul(-4, z_wedge(z_pow(c1, 2), c2))),
+        z_mul(2, z_pow(c2, 2))), z_mul(4, z_wedge(c1, c3))), z_mul(-4, c4))
+def z_c2p(m, c2m): return z_add(c2m, z_mul(-m, WRz))
+def z_c3s(c1, m): return z_wedge(c1, z_mul(-m, WRz))
+def z_c4s(c2m, m): return z_add(z_mul(-m, z_wedge(c2m, WRz)), z_mul(m * m, HALFWR2))
+def z_Eplus(r, c1, c2m, g, m):
+    return (Fr(r), c1, ch2n(c1, z_c2p(m, c2m)), ch3n(c1, z_c2p(m, c2m), z_c3s(c1, m)),
+            ch4n(c1, z_c2p(m, c2m), z_c3s(c1, m), z_add(g, z_c4s(c2m, m))))
+def z_Eminus(r, c1, c2m, g):
+    return (Fr(r), c1, ch2n(c1, c2m), ch3n(c1, c2m, []), ch4n(c1, c2m, [], g))
+def z_dual(x): return (x[0], z_mul(-1, x[1]), x[2], z_mul(-1, x[3]), x[4])
+def chi24(x, y):
+    prod = z_add(z_mul(y[0], x[4]), z_add(z_mul(x[0], y[4]),
+        z_add(z_mul(4, z_wedge(x[1], y[3])), z_add(z_mul(6, z_wedge(x[2], y[2])), z_mul(4, z_wedge(x[3], y[1]))))))
+    return z_int(prod)
+def zq(c2): return z_int(z_wedge(WRz, c2))
+
+print("== Z-model (round 3): instances / carrier / detector (24-scaled table) ==")
+for name, r, m, c1, c2m, g in [("I1",3,1,[],WRz,[]), ("I2",5,2,[],WRz,[]), ("I3",4,1,THz,WRz,[]), ("I4",7,3,THz,WRz,[(5,VOL)])]:
+    ep, em = z_Eplus(r, c1, c2m, g, m), z_Eminus(r, c1, c2m, g)
+    vals = (
+        z_add(ep[2], z_mul(-1, em[2])) == z_mul(2 * m, WRz),
+        z_add(ep[3], z_mul(-1, em[3])) == [],
+        z_add(ep[4], z_mul(-1, em[4])) == [],
+        zq(z_c2p(m, c2m)) - zq(c2m) == -8 * m,
+        chi24(ep, z_dual(ep)) - chi24(ep, z_dual(em)) == 24 * (8 * m * m - m * zq(c2m)),
+        chi24(ep, z_dual(em)) - chi24(em, z_dual(em)) == 24 * (-m * zq(c2m)),
+        chi24(ep, z_dual(ep)) - chi24(em, z_dual(em)) == 24 * (8 * m * m - 2 * m * zq(c2m)))
+    print(f"  {name}: {all(vals)} (qM={zq(c2m)})")
+    assert all(vals)
+carF, carO = z_Eplus(5, [], [], [], 1), z_Eminus(5, [], [], [])
+cv = (zq([]) == 0, chi24(carO, z_dual(carO)) == 0, zq(z_c2p(1, [])) - zq([]) == -8,
+      chi24(carF, z_dual(carF)) - chi24(carO, z_dual(carO)) == 24 * 8)
+print(f"  carrier: {all(cv)}")
+assert all(cv)
+dep, dem = z_Eplus(6, [], WRz, [], 2), z_Eminus(6, [], WRz, [])
+dv = chi24(dep, dem) - chi24(dem, dem) == 12 * 2 * z_int(z_wedge(WRz, dem[2]))
+print(f"  detector: {dv}")
+assert dv
+print("Z-MODEL MIRROR GREEN — the final integer restatement fully verified.")

@@ -8,14 +8,21 @@ Lean shadow of the derivation
 and the record
 `research/records/2026-10-26-gst-pair-channel-walls-fm-duality-and-weil-charge.md`.
 
-## What is certified here (all statements are exact finite algebra)
+## What is certified here (all statements are exact finite algebra, INTEGER arithmetic)
 
 The bitmask exterior model of the discriminator's rational cohomology ring: the eight letters
 e1,f1,e2,f2,e3,f3,e4,f4 sit at positions 0..7 (block j = {2j, 2j+1}); a class is a normalized list of
-(coefficient, monomial-mask) pairs, sorted by ascending mask, coefficients merged, zeros dropped.
-In this model we certify, by full evaluation (`decide`):
+(INTEGER coefficient, monomial-mask) pairs, sorted by ascending mask, coefficients merged, zeros
+dropped. Every kernel-evaluated statement in this file is an equality of integer classes, integer
+period values, or integer Chern-conductor numerators - the committed decide idiom (Nat/Int/List
+arithmetic only; no Rat computation is kernel-evaluated anywhere). The Newton conductors are carried
+in numerator form (ch_2-num = c_1^2 - 2 c_2; ch_3-num = c_1^3 - 3 c_1 c_2 + 3 c_3;
+ch_4-num = c_1^4 - 4 c_1^2 c_2 + 2 c_2^2 + 4 c_1 c_3 - 4 c_4), and the Euler pairing is certified in
+the 24-scaled integer form chi24 = 24 * chi (the conductor denominators cleared:
+chi24(A,B) = INT [b_0 * g4A + a_0 * g4B + 4 * (g1A AND g3B) + 6 * (g2A AND g2B) + 4 * (g3A AND g1B)],
+where g_k are the numerator grades).
 
-Part A — LEMMA W0 (ring annihilation) AND THE PERIODS.
+Part A - LEMMA W0 (ring annihilation) AND THE PERIODS.
 theta = sum of the four pair-words e_j f_j (masks 3,12,48,192). We certify theta^j AND W = the ZERO
 CLASS for j = 1, 2, 3 and W in {W_R, W_I} (six class annihilations; every term dies by the
 repeated-generator collision - each theta^j monomial fully occupies at least one block, and every
@@ -39,25 +46,28 @@ c_1(P) = sum_p u_p (x) u_hat_p, sends a monomial u_S to wsign(l_S, l_{S^c}) * u_
 (complement mask; the fourth wedge of c_1(P) divided by 4! contributes exactly this reorder sign).
 We certify: fm(W_R) = W_R and fm(W_I) = W_I (the dual fourfold's Weil classes in the position-matched
 dual basis have the SAME DATA tables, so these equalities ARE the exact-coefficient-1 normalization
-Phi_hat(W_R) = W_R-dual, Phi_hat(W_I) = W_I-dual of Lemma 4.3 of the derivation), and both round
-trips are the identity: fm(fm(W_R)) = W_R, fm(fm(W_I)) = W_I.
+Phi_hat(W_R) = W_R-dual, Phi_hat(W_I) = W_I-dual of the derivation's Lemma), and both round trips
+are the identity: fm(fm(W_R)) = W_R, fm(fm(W_I)) = W_I.
 
-Part D - W6 SYNTHETIC PAIR INSTANCES (the pair Chern table).
-The Newton conductor identities (ch_1 = c_1; ch_2 = (c_1^2 - 2 c_2)/2; ch_3 = (c_1^3 - 3 c_1 c_2 +
-3 c_3)/6; ch_4 = (c_1^4 - 4 c_1^2 c_2 + 2 c_2^2 + 4 c_1 c_3 - 4 c_4)/24) and the pair construction
-c_2(E+) = c_2(E-) - m W_R, c_3(E+) = c_3(E-) + c_1 (-m W_R), c_4(E+) = c_4(E-) + shift are evaluated
-on four instances (r, m, c_1, gamma) = (3,1,0,0), (5,2,0,0), (4,1,theta,0), (7,3,theta,5 vol) with
-c_2(E-) = W_R, plus the carrier instance (5,1,0,0) with c_2(E-) = 0 (the O^r side), plus the
-linear-detector instance (6,2,0,0) with probe G = E-. We certify for each: grade purity
-(ch_2 difference = m W_R, ch_3 and ch_4 differences zero), the charge split
-q(E+) - q(E-) = -8 m with q(G) = INT (W_R AND c_2(G)), the three mixed-End table identities
-chi(End E+) - chi(E+ x E-^vee) = 8 m^2 - m q(E-),
-chi(E+ x E-^vee) - chi(End E-) = - m q(E-),
-chi(End E+) - chi(End E-) = 8 m^2 - 2 m q(E-),
-and the carrier consistency: q = 0 recovers the committed End-mass law chi(End F) = 8 m^2 (at m = 1)
-together with chi(End O^r) = 0 (Euler-zero).
-The universal laws behind the table are certified in hypothesis form: the charge split follows from
-INT W_R^2 = 8; the mixed-End table follows from the charge split and the W0-annihilated c_1^2-pairing.
+Part D - W6 SYNTHETIC PAIR INSTANCES (the pair Chern table, integer form).
+The Newton conductor numerators and the pair construction
+c_2(E+) = c_2(E-) - m W_R, c_3(E+) = c_3(E-) + c_1 (-m W_R),
+c_4(E+) = c_4(E-) - m * (c_2(E-) AND W_R) + m^2 * (W_R^2 / 2)     [the c_1-terms cancel; the
+half-period class W_R^2/2 = 4 vol is the certified constant INT W_R^2 = 8 halved - an integral class]
+are evaluated on four instances (r, m, c_1, gamma) = (3,1,0,0), (5,2,0,0), (4,1,theta,0),
+(7,3,theta,5 vol) with c_2(E-) = W_R, plus the carrier instance (5,1,0,0) with c_2(E-) = 0 (the O^r
+side), plus the linear-detector instance (6,2,0,0) with probe G = E-. We certify for each: grade
+purity (the ch_2-numerator difference = 2m W_R; the ch_3- and ch_4-numerator differences zero), the
+charge split q(E+) - q(E-) = -8 m with q(G) = INT (W_R AND c_2(G)), and the three mixed-End table
+identities in the 24-scaled form:
+24 * [chi(End E+) - chi(E+ x E-^vee)] = 24 * (8 m^2 - m q(E-)),
+24 * [chi(E+ x E-^vee) - chi(End E-)] = 24 * (- m q(E-)),
+24 * [chi(End E+) - chi(End E-)] = 24 * (8 m^2 - 2 m q(E-)),
+and the carrier consistency: q = 0 recovers the committed End-mass law
+24 * chi(End F) = 24 * 8 m^2 (at m = 1) together with chi24(End O^r) = 0 (Euler-zero).
+The universal laws behind the table are certified in hypothesis form (over Q, tactic-proved): the
+charge split follows from INT W_R^2 = 8; the mixed-End table follows from the charge split and the
+W0-annihilated c_1^2-pairing; the third line is the telescoped SUM of the first two.
 
 ## What is NOT certified here (scheme-level; proved in the .tex on declared leaves)
 
@@ -72,7 +82,9 @@ the integrality of Weil charges (standard integrality of W_R and c_2); the degre
 (the degree-4/6/10 cross-grades contribute no degree-8 component; the synthetic instances compute
 them exactly). The monomial DATA tables (W_R, W_I signs and masks) are DATA from the exterior
 algebra, each entry independently checkable by hand; they were additionally cross-checked against
-an independent reconstruction and against the committed index-list certificates.
+an independent reconstruction and against the committed index-list certificates, and the integer
+restatement of every decided proposition was pre-verified by the mirror script
+research/experiments/task14a_lean_data_mirror.py.
 
 ## Scope (the strike's scope box, restated at the Lean layer)
 
@@ -85,14 +97,14 @@ No sorry, no custom axioms, no native_decide.
 set_option maxHeartbeats 400000
 set_option maxRecDepth 100000
 
-/-! ## The bitmask exterior model -/
+/-! ## The bitmask exterior model (INTEGER coefficients) -/
 
 /-- The letter positions of a monomial mask (positions 0..7; the committed div/mod idiom). -/
 def bitList (m : ℕ) : List ℕ := (List.range 8).filter (fun i => ((m / 2 ^ i) % 2 = 1))
 
-/-- Disjointness of two masks: no letter position set in both (structural Bool test). -/
+/-- Disjointness of two masks: no letter position set in both (the committed countP idiom). -/
 def disjoint (m1 m2 : ℕ) : Bool :=
-  (bitList m1).all (fun a => decide (((m2 / 2 ^ a) % 2 = 0)))
+  decide ((bitList m1).countP (fun a => ((m2 / 2 ^ a) % 2 = 1)) = 0)
 
 /-- Cross inversions between two ascending words: #(a in l1, b in l2) with a > b. -/
 def invPairs : List ℕ → List ℕ → ℕ
@@ -100,15 +112,15 @@ def invPairs : List ℕ → List ℕ → ℕ
   | a :: as, l2 => l2.countP (fun b => decide (a > b)) + invPairs as l2
 
 /-- The wedge reorder sign u_{l1} AND u_{l2} = wsign * u_{sorted}: +1 if even, -1 if odd. -/
-def wsign (l1 l2 : List ℕ) : ℚ := if invPairs l1 l2 % 2 = 0 then 1 else -1
+def wsign (l1 l2 : List ℕ) : ℤ := if invPairs l1 l2 % 2 = 0 then 1 else -1
 
 /-- The coefficient of a mask in a raw class list. -/
-def coeffOf (m : ℕ) : List (ℚ × ℕ) → ℚ
+def coeffOf (m : ℕ) : List (ℤ × ℕ) → ℤ
   | [] => 0
   | p :: ps => if p.2 = m then p.1 + coeffOf m ps else coeffOf m ps
 
 /-- Insert a term into a sorted-by-mask accumulator, merging equal masks. -/
-def insertTerm (p : ℚ × ℕ) : List (ℚ × ℕ) → List (ℚ × ℕ)
+def insertTerm (p : ℤ × ℕ) : List (ℤ × ℕ) → List (ℤ × ℕ)
   | [] => [p]
   | q :: qs =>
     if p.2 < q.2 then p :: q :: qs
@@ -116,15 +128,15 @@ def insertTerm (p : ℚ × ℕ) : List (ℚ × ℕ) → List (ℚ × ℕ)
     else q :: insertTerm p qs
 
 /-- Accumulate a raw class list into sorted merged form, dropping zero coefficients at the end. -/
-def normAcc : List (ℚ × ℕ) → List (ℚ × ℕ) → List (ℚ × ℕ)
+def normAcc : List (ℤ × ℕ) → List (ℤ × ℕ) → List (ℤ × ℕ)
   | [], acc => acc.filter (fun p => p.1 ≠ 0)
   | p :: rest, acc => normAcc rest (insertTerm p acc)
 
 /-- Normal form of a class: ascending distinct masks, merged coefficients, no zeros. -/
-def normCl (c : List (ℚ × ℕ)) : List (ℚ × ℕ) := normAcc c []
+def normCl (c : List (ℤ × ℕ)) : List (ℤ × ℕ) := normAcc c []
 
 /-- The surviving product terms of one left monomial against a right class. -/
-def pairTerms (p : ℚ × ℕ) : List (ℚ × ℕ) → List (ℚ × ℕ)
+def pairTerms (p : ℤ × ℕ) : List (ℤ × ℕ) → List (ℤ × ℕ)
   | [] => []
   | q :: rest =>
     if disjoint p.2 q.2 = true then
@@ -132,49 +144,52 @@ def pairTerms (p : ℚ × ℕ) : List (ℚ × ℕ) → List (ℚ × ℕ)
     else pairTerms p rest
 
 /-- All surviving product terms of two raw classes. -/
-def wedgeTerms : List (ℚ × ℕ) → List (ℚ × ℕ) → List (ℚ × ℕ)
+def wedgeTerms : List (ℤ × ℕ) → List (ℤ × ℕ) → List (ℤ × ℕ)
   | [], _ => []
   | p :: rest, c2 => pairTerms p c2 ++ wedgeTerms rest c2
 
 /-- The wedge of two classes in the bitmask model (disjoint masks merge by SUM: union = sum). -/
-def wedgeCl (c1 c2 : List (ℚ × ℕ)) : List (ℚ × ℕ) :=
+def wedgeCl (c1 c2 : List (ℤ × ℕ)) : List (ℤ × ℕ) :=
   normCl (wedgeTerms c1 c2)
 
-/-- Scalar multiple of a class. -/
-def smulCl (q : ℚ) (c : List (ℚ × ℕ)) : List (ℚ × ℕ) := normCl (c.map (fun p => (q * p.1, p.2)))
+/-- Scalar multiple of a class (integer scalars). -/
+def smulCl (q : ℤ) (c : List (ℤ × ℕ)) : List (ℤ × ℕ) := normCl (c.map (fun p => (q * p.1, p.2)))
 
 /-- Sum of classes. -/
-def addCl (c1 c2 : List (ℚ × ℕ)) : List (ℚ × ℕ) := normCl (c1 ++ c2)
+def addCl (c1 c2 : List (ℤ × ℕ)) : List (ℤ × ℕ) := normCl (c1 ++ c2)
 
 /-- Exterior power of a class. -/
-def powCl (c : List (ℚ × ℕ)) : ℕ → List (ℚ × ℕ)
+def powCl (c : List (ℤ × ℕ)) : ℕ → List (ℤ × ℕ)
   | 0 => [(1, 0)]
   | (k+1) => wedgeCl (powCl c k) c
 
 /-- The integral: the coefficient of the volume monomial (mask 255 = all eight letters). -/
-def intCl (c : List (ℚ × ℕ)) : ℚ := coeffOf 255 c
+def intCl (c : List (ℤ × ℕ)) : ℤ := coeffOf 255 c
 
 /-- The cohomological FM transform on degree-4 classes (dual-basis convention): a monomial goes to
     its wsign-weighted complement mask (the complement of m in the 8-letter volume is 255 - m). -/
-def fmCl (x : List (ℚ × ℕ)) : List (ℚ × ℕ) :=
+def fmCl (x : List (ℤ × ℕ)) : List (ℤ × ℕ) :=
   normCl (x.map (fun p => (p.1 * wsign (bitList p.2) (bitList (255 - p.2)), 255 - p.2)))
 
-/-! ## DATA: the Weil classes and theta (from the exterior algebra; hand-checkable) -/
+/-! ## DATA: the Weil classes, theta, and the half-period class (exterior algebra; hand-checkable) -/
 
 /-- W_R = Re(Omega), Omega = wedge_{j=0..3}(e_j + i f_j): eight monomials, one letter of every block;
 sign +1 for an even number of f-letters with Re(i^2) = -1 at #f = 2, +1 at #f = 0, 4. Ascending masks. -/
-def WRcl : List (ℚ × ℕ) :=
+def WRcl : List (ℤ × ℕ) :=
   [(1, 85), (-1, 90), (-1, 102), (-1, 105), (-1, 150), (-1, 153), (-1, 165), (1, 170)]
 
 /-- W_I = Im(Omega): sign +1 at #f = 1, -1 at #f = 3. Ascending masks. -/
-def WIcl : List (ℚ × ℕ) :=
+def WIcl : List (ℤ × ℕ) :=
   [(1, 86), (1, 89), (1, 101), (-1, 106), (1, 149), (-1, 154), (-1, 166), (-1, 169)]
 
 /-- theta = c_1(O(Theta)) = the sum of the four pair-words e_j f_j. -/
-def THETAd : List (ℚ × ℕ) := [(1, 3), (1, 12), (1, 48), (1, 192)]
+def THETAd : List (ℤ × ℕ) := [(1, 3), (1, 12), (1, 48), (1, 192)]
+
+/-- The half-period class W_R^2 / 2 = 4 vol (the certified INT W_R^2 = 8, halved; integral). -/
+def HALFWR2cl : List (ℤ × ℕ) := [(4, 255)]
 
 /-- The zero class. -/
-def zeroCl : List (ℚ × ℕ) := []
+def zeroCl : List (ℤ × ℕ) := []
 
 /-! ## Part A: Lemma W0 (class annihilation) and the period constants -/
 
@@ -204,7 +219,7 @@ theorem periods_reconfirm :
     (∀ j ∈ [1, 2, 3, 4], intCl (wedgeCl WRcl (powCl THETAd j)) = 0) := by
   decide
 
-/-! ## Part B: the W4 corridor arithmetic (universal laws, hypothesis form) -/
+/-! ## Part B: the W4 corridor arithmetic (universal laws, hypothesis form; proved over Q) -/
 
 /-- W4(i) arithmetic: with the W0-annihilated periods i1 = INT W_R theta = 0 and i2 = INT W_R theta^2
     = 0, the twist difference-Euler of a pure pair vanishes at EVERY polarization level k
@@ -242,42 +257,44 @@ theorem fm_normalization_exact :
     (fmCl (fmCl WIcl) = WIcl) := by
   decide
 
-/-! ## Part D: the W6 pair Chern table -/
+/-! ## Part D: the W6 pair Chern table (integer conductor numerators) -/
 
-/-- The grade-2 character (Newton conductor): ch_2 = (c_1^2 - 2 c_2)/2. -/
-def ch2Of (c1 c2 : List (ℚ × ℕ)) : List (ℚ × ℕ) :=
-  smulCl (1/2) (addCl (powCl c1 2) (smulCl (-2) c2))
+/-- The grade-2 conductor numerator: ch_2-num = c_1^2 - 2 c_2. -/
+def ch2n (c1 c2 : List (ℤ × ℕ)) : List (ℤ × ℕ) :=
+  addCl (powCl c1 2) (smulCl (-2) c2)
 
-/-- The grade-3 character: ch_3 = (c_1^3 - 3 c_1 c_2 + 3 c_3)/6. -/
-def ch3Of (c1 c2 c3 : List (ℚ × ℕ)) : List (ℚ × ℕ) :=
-  smulCl (1/6) (addCl (addCl (powCl c1 3) (smulCl (-3) (wedgeCl c1 c2))) (smulCl 3 c3))
+/-- The grade-3 conductor numerator: ch_3-num = c_1^3 - 3 c_1 c_2 + 3 c_3. -/
+def ch3n (c1 c2 c3 : List (ℤ × ℕ)) : List (ℤ × ℕ) :=
+  addCl (addCl (powCl c1 3) (smulCl (-3) (wedgeCl c1 c2))) (smulCl 3 c3)
 
-/-- The grade-4 character: ch_4 = (c_1^4 - 4 c_1^2 c_2 + 2 c_2^2 + 4 c_1 c_3 - 4 c_4)/24. -/
-def ch4Of (c1 c2 c3 c4 : List (ℚ × ℕ)) : List (ℚ × ℕ) :=
-  smulCl (1/24) (addCl (addCl (addCl (addCl (powCl c1 4)
+/-- The grade-4 conductor numerator:
+    ch_4-num = c_1^4 - 4 c_1^2 c_2 + 2 c_2^2 + 4 c_1 c_3 - 4 c_4. -/
+def ch4n (c1 c2 c3 c4 : List (ℤ × ℕ)) : List (ℤ × ℕ) :=
+  addCl (addCl (addCl (addCl (powCl c1 4)
     (smulCl (-4) (wedgeCl (powCl c1 2) c2))) (smulCl 2 (powCl c2 2)))
-    (smulCl 4 (wedgeCl c1 c3))) (smulCl (-4) c4))
+    (smulCl 4 (wedgeCl c1 c3))) (smulCl (-4) c4)
 
 /-- The pair construction: c_2(E+) = c_2(E-) - m W_R. -/
-def pairC2P (m : ℚ) (c2M : List (ℚ × ℕ)) : List (ℚ × ℕ) := addCl c2M (smulCl (-m) WRcl)
+def pairC2P (m : ℤ) (c2M : List (ℤ × ℕ)) : List (ℤ × ℕ) := addCl c2M (smulCl (-m) WRcl)
 
 /-- The pair construction: c_3(E+) - c_3(E-) = c_1 AND (-m W_R). -/
-def pairC3Shift (c1 : List (ℚ × ℕ)) (m : ℚ) : List (ℚ × ℕ) := wedgeCl c1 (smulCl (-m) WRcl)
+def pairC3Shift (c1 : List (ℤ × ℕ)) (m : ℤ) : List (ℤ × ℕ) := wedgeCl c1 (smulCl (-m) WRcl)
 
-/-- The pair construction: the c_4 shift closing grade 4 (Delta ch_4 = 0):
-    -(c_1^2 AND (-m W_R)) + (c_2(E+)^2 - c_2(E-)^2)/2 + c_1 AND c_3shift. -/
-def pairC4Shift (c1 c2M : List (ℚ × ℕ)) (m : ℚ) : List (ℚ × ℕ) :=
-  addCl (smulCl (-1) (wedgeCl (powCl c1 2) (smulCl (-m) WRcl)))
-    (addCl (smulCl (1/2) (addCl (powCl (pairC2P m c2M) 2) (smulCl (-1) (powCl c2M 2))))
-      (wedgeCl c1 (pairC3Shift c1 m)))
+/-- The pair construction: the c_4 shift closing grade 4. The general form is
+    Delta c_4 = -(c_1^2 AND (-m W_R)) + (c_2(E+)^2 - c_2(E-)^2)/2 + c_1 AND c_3shift, whose c_1-terms
+    cancel, leaving Delta(c_2^2)/2 = -m * (c_2(E-) AND W_R) + m^2 * (W_R^2/2), integral by the
+    certified INT W_R^2 = 8. -/
+def pairC4Shift (c2M : List (ℤ × ℕ)) (m : ℤ) : List (ℤ × ℕ) :=
+  addCl (smulCl (-m) (wedgeCl c2M WRcl)) (smulCl (m * m) HALFWR2cl)
 
-/-- A Chern character with its five grades (grade 0 as a scalar). -/
+/-- A Chern character with its five grades (grade 0 as a scalar; grades 1..4 as conductor
+    numerators: g_k = 24-, 6-, 2-, 1-fold multiples of the character grades respectively). -/
 structure ChPair where
-  r : ℚ
-  g1 : List (ℚ × ℕ)
-  g2 : List (ℚ × ℕ)
-  g3 : List (ℚ × ℕ)
-  g4 : List (ℚ × ℕ)
+  r : ℤ
+  g1 : List (ℤ × ℕ)
+  g2 : List (ℤ × ℕ)
+  g3 : List (ℤ × ℕ)
+  g4 : List (ℤ × ℕ)
 
 /-- The per-grade dual character: grades 1 and 3 flip sign (ch(E^vee) = sum (-1)^j ch_j). -/
 def chDualP (x : ChPair) : ChPair where
@@ -287,31 +304,33 @@ def chDualP (x : ChPair) : ChPair where
   g3 := smulCl (-1) x.g3
   g4 := x.g4
 
-/-- The Euler pairing of two characters: the integral of the grade-4 part of the product. -/
-def chiPP (x y : ChPair) : ℚ :=
+/-- The 24-scaled Euler pairing of two characters: chi24(A,B) = 24 * chi(A,B), the conductor
+    denominators cleared (all integer arithmetic). -/
+def chiPP24 (x y : ChPair) : ℤ :=
   intCl (addCl (smulCl y.r x.g4) (addCl (smulCl x.r y.g4)
-    (addCl (wedgeCl x.g1 y.g3) (addCl (wedgeCl x.g2 y.g2) (wedgeCl x.g3 y.g1)))))
+    (addCl (smulCl 4 (wedgeCl x.g1 y.g3))
+      (addCl (smulCl 6 (wedgeCl x.g2 y.g2)) (smulCl 4 (wedgeCl x.g3 y.g1))))))
 
-/-- The pure-pair character construction: E+ from (r, c_1, c_2(E-), gamma) at scale m. -/
-def pairEplus (r : ℚ) (c1 c2M gamma : List (ℚ × ℕ)) (m : ℚ) : ChPair where
+/-- The pure-pair character construction: E+ from (r, c_1, c_2(E-), gamma) at integer scale m. -/
+def pairEplus (r : ℤ) (c1 c2M gamma : List (ℤ × ℕ)) (m : ℤ) : ChPair where
   r := r
   g1 := c1
-  g2 := ch2Of c1 (pairC2P m c2M)
-  g3 := ch3Of c1 (pairC2P m c2M) (pairC3Shift c1 m)
-  g4 := ch4Of c1 (pairC2P m c2M) (pairC3Shift c1 m) (addCl gamma (pairC4Shift c1 c2M m))
+  g2 := ch2n c1 (pairC2P m c2M)
+  g3 := ch3n c1 (pairC2P m c2M) (pairC3Shift c1 m)
+  g4 := ch4n c1 (pairC2P m c2M) (pairC3Shift c1 m) (addCl gamma (pairC4Shift c2M m))
 
 /-- The baseline character: E- from (r, c_1, c_2(E-), gamma) with c_3 = 0. -/
-def pairEminus (r : ℚ) (c1 c2M gamma : List (ℚ × ℕ)) : ChPair where
+def pairEminus (r : ℤ) (c1 c2M gamma : List (ℤ × ℕ)) : ChPair where
   r := r
   g1 := c1
-  g2 := ch2Of c1 c2M
-  g3 := ch3Of c1 c2M zeroCl
-  g4 := ch4Of c1 c2M zeroCl gamma
+  g2 := ch2n c1 c2M
+  g3 := ch3n c1 c2M zeroCl
+  g4 := ch4n c1 c2M zeroCl gamma
 
 /-- The Weil charge q(G) = INT (W_R AND c_2(G)). -/
-def weilCharge (c2 : List (ℚ × ℕ)) : ℚ := intCl (wedgeCl WRcl c2)
+def weilCharge (c2 : List (ℤ × ℕ)) : ℤ := intCl (wedgeCl WRcl c2)
 
-/-! ### The universal table laws (hypothesis form) -/
+/-! ### The universal table laws (hypothesis form; proved over Q) -/
 
 /-- W6(iv) universal: the charge split follows from the certified period INT W_R^2 = 8:
     q(E+) - q(E-) = -m * INT W_R^2 = -8 m. -/
@@ -361,109 +380,111 @@ theorem carrier_end_mass (m d : ℚ)
   rw [h]
   ring
 
-/-! ### The synthetic instances (bounded exact evaluation) -/
+/-! ### The synthetic instances (bounded exact integer evaluation) -/
 
 /-- W6 synthetic instance 1 (r, m, c_1, gamma) = (3, 1, 0, 0), c_2(E-) = W_R:
-    grade purity, the charge split -8 m, and the three mixed-End table identities. -/
+    grade purity (numerator form), the charge split -8 m, and the three 24-scaled mixed-End
+    table identities. -/
 theorem w6_instance_1 :
     (addCl (pairEplus 3 zeroCl WRcl zeroCl 1).g2 (smulCl (-1) (pairEminus 3 zeroCl WRcl zeroCl).g2)
-      = smulCl 1 WRcl) ∧
+      = smulCl 2 WRcl) ∧
     (addCl (pairEplus 3 zeroCl WRcl zeroCl 1).g3 (smulCl (-1) (pairEminus 3 zeroCl WRcl zeroCl).g3)
       = zeroCl) ∧
     (addCl (pairEplus 3 zeroCl WRcl zeroCl 1).g4 (smulCl (-1) (pairEminus 3 zeroCl WRcl zeroCl).g4)
       = zeroCl) ∧
     (weilCharge (pairC2P 1 WRcl) - weilCharge WRcl = -8 * 1) ∧
-    (chiPP (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEplus 3 zeroCl WRcl zeroCl 1))
-      - chiPP (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
-      = 8 * 1 * 1 - 1 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
-      - chiPP (pairEminus 3 zeroCl WRcl zeroCl) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
-      = -1 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEplus 3 zeroCl WRcl zeroCl 1))
-      - chiPP (pairEminus 3 zeroCl WRcl zeroCl) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
-      = 8 * 1 * 1 - 2 * 1 * (weilCharge WRcl)) := by
+    (chiPP24 (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEplus 3 zeroCl WRcl zeroCl 1))
+      - chiPP24 (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
+      = 24 * (8 * 1 * 1 - 1 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
+      - chiPP24 (pairEminus 3 zeroCl WRcl zeroCl) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
+      = 24 * (-1 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 3 zeroCl WRcl zeroCl 1) (chDualP (pairEplus 3 zeroCl WRcl zeroCl 1))
+      - chiPP24 (pairEminus 3 zeroCl WRcl zeroCl) (chDualP (pairEminus 3 zeroCl WRcl zeroCl))
+      = 24 * (8 * 1 * 1 - 2 * 1 * (weilCharge WRcl))) := by
   decide
 
 /-- W6 synthetic instance 2 (r, m, c_1, gamma) = (5, 2, 0, 0), c_2(E-) = W_R. -/
 theorem w6_instance_2 :
     (addCl (pairEplus 5 zeroCl WRcl zeroCl 2).g2 (smulCl (-1) (pairEminus 5 zeroCl WRcl zeroCl).g2)
-      = smulCl 2 WRcl) ∧
+      = smulCl 4 WRcl) ∧
     (addCl (pairEplus 5 zeroCl WRcl zeroCl 2).g3 (smulCl (-1) (pairEminus 5 zeroCl WRcl zeroCl).g3)
       = zeroCl) ∧
     (addCl (pairEplus 5 zeroCl WRcl zeroCl 2).g4 (smulCl (-1) (pairEminus 5 zeroCl WRcl zeroCl).g4)
       = zeroCl) ∧
     (weilCharge (pairC2P 2 WRcl) - weilCharge WRcl = -8 * 2) ∧
-    (chiPP (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEplus 5 zeroCl WRcl zeroCl 2))
-      - chiPP (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
-      = 8 * 2 * 2 - 2 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
-      - chiPP (pairEminus 5 zeroCl WRcl zeroCl) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
-      = -2 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEplus 5 zeroCl WRcl zeroCl 2))
-      - chiPP (pairEminus 5 zeroCl WRcl zeroCl) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
-      = 8 * 2 * 2 - 2 * 2 * (weilCharge WRcl)) := by
+    (chiPP24 (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEplus 5 zeroCl WRcl zeroCl 2))
+      - chiPP24 (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
+      = 24 * (8 * 2 * 2 - 2 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
+      - chiPP24 (pairEminus 5 zeroCl WRcl zeroCl) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
+      = 24 * (-2 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 5 zeroCl WRcl zeroCl 2) (chDualP (pairEplus 5 zeroCl WRcl zeroCl 2))
+      - chiPP24 (pairEminus 5 zeroCl WRcl zeroCl) (chDualP (pairEminus 5 zeroCl WRcl zeroCl))
+      = 24 * (8 * 2 * 2 - 2 * 2 * (weilCharge WRcl))) := by
   decide
 
 /-- W6 synthetic instance 3 (r, m, c_1, gamma) = (4, 1, theta, 0), c_2(E-) = W_R:
     the c_1 = k theta case (the c_3 shift dies by W0 exactly as in the derivation). -/
 theorem w6_instance_3 :
     (addCl (pairEplus 4 THETAd WRcl zeroCl 1).g2 (smulCl (-1) (pairEminus 4 THETAd WRcl zeroCl).g2)
-      = smulCl 1 WRcl) ∧
+      = smulCl 2 WRcl) ∧
     (addCl (pairEplus 4 THETAd WRcl zeroCl 1).g3 (smulCl (-1) (pairEminus 4 THETAd WRcl zeroCl).g3)
       = zeroCl) ∧
     (addCl (pairEplus 4 THETAd WRcl zeroCl 1).g4 (smulCl (-1) (pairEminus 4 THETAd WRcl zeroCl).g4)
       = zeroCl) ∧
     (weilCharge (pairC2P 1 WRcl) - weilCharge WRcl = -8 * 1) ∧
-    (chiPP (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEplus 4 THETAd WRcl zeroCl 1))
-      - chiPP (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
-      = 8 * 1 * 1 - 1 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
-      - chiPP (pairEminus 4 THETAd WRcl zeroCl) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
-      = -1 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEplus 4 THETAd WRcl zeroCl 1))
-      - chiPP (pairEminus 4 THETAd WRcl zeroCl) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
-      = 8 * 1 * 1 - 2 * 1 * (weilCharge WRcl)) := by
+    (chiPP24 (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEplus 4 THETAd WRcl zeroCl 1))
+      - chiPP24 (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
+      = 24 * (8 * 1 * 1 - 1 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
+      - chiPP24 (pairEminus 4 THETAd WRcl zeroCl) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
+      = 24 * (-1 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 4 THETAd WRcl zeroCl 1) (chDualP (pairEplus 4 THETAd WRcl zeroCl 1))
+      - chiPP24 (pairEminus 4 THETAd WRcl zeroCl) (chDualP (pairEminus 4 THETAd WRcl zeroCl))
+      = 24 * (8 * 1 * 1 - 2 * 1 * (weilCharge WRcl))) := by
   decide
 
 /-- W6 synthetic instance 4 (r, m, c_1, gamma) = (7, 3, theta, 5 vol), c_2(E-) = W_R:
     the non-carrier charge with a nonzero c_4 baseline. -/
 theorem w6_instance_4 :
     (addCl (pairEplus 7 THETAd WRcl [(5, 255)] 3).g2
-      (smulCl (-1) (pairEminus 7 THETAd WRcl [(5, 255)]).g2) = smulCl 3 WRcl) ∧
+      (smulCl (-1) (pairEminus 7 THETAd WRcl [(5, 255)]).g2) = smulCl 6 WRcl) ∧
     (addCl (pairEplus 7 THETAd WRcl [(5, 255)] 3).g3
       (smulCl (-1) (pairEminus 7 THETAd WRcl [(5, 255)]).g3) = zeroCl) ∧
     (addCl (pairEplus 7 THETAd WRcl [(5, 255)] 3).g4
       (smulCl (-1) (pairEminus 7 THETAd WRcl [(5, 255)]).g4) = zeroCl) ∧
     (weilCharge (pairC2P 3 WRcl) - weilCharge WRcl = -8 * 3) ∧
-    (chiPP (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEplus 7 THETAd WRcl [(5, 255)] 3))
-      - chiPP (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
-      = 8 * 3 * 3 - 3 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
-      - chiPP (pairEminus 7 THETAd WRcl [(5, 255)]) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
-      = -3 * (weilCharge WRcl)) ∧
-    (chiPP (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEplus 7 THETAd WRcl [(5, 255)] 3))
-      - chiPP (pairEminus 7 THETAd WRcl [(5, 255)]) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
-      = 8 * 3 * 3 - 2 * 3 * (weilCharge WRcl)) := by
+    (chiPP24 (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEplus 7 THETAd WRcl [(5, 255)] 3))
+      - chiPP24 (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
+      = 24 * (8 * 3 * 3 - 3 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
+      - chiPP24 (pairEminus 7 THETAd WRcl [(5, 255)]) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
+      = 24 * (-3 * (weilCharge WRcl))) ∧
+    (chiPP24 (pairEplus 7 THETAd WRcl [(5, 255)] 3) (chDualP (pairEplus 7 THETAd WRcl [(5, 255)] 3))
+      - chiPP24 (pairEminus 7 THETAd WRcl [(5, 255)]) (chDualP (pairEminus 7 THETAd WRcl [(5, 255)]))
+      = 24 * (8 * 3 * 3 - 2 * 3 * (weilCharge WRcl))) := by
   decide
 
 /-- W6(vi) carrier instance (F, O^r) at (r, m) = (5, 1), c_2(E-) = 0: q(E-) = 0,
-    chi(End O^r) = 0 (Euler-zero), q(F) = -8 m, and the committed End-mass law
-    chi(End F) = 8 m^2 recovered at the q = 0 slice. -/
+    chi24(End O^r) = 0 (Euler-zero), q(F) = -8 m, and the committed End-mass law
+    24 * chi(End F) = 24 * 8 m^2 recovered at the q = 0 slice. -/
 theorem w6_carrier_instance :
     (weilCharge zeroCl = 0) ∧
-    (chiPP (pairEminus 5 zeroCl zeroCl zeroCl) (chDualP (pairEminus 5 zeroCl zeroCl zeroCl)) = 0) ∧
+    (chiPP24 (pairEminus 5 zeroCl zeroCl zeroCl) (chDualP (pairEminus 5 zeroCl zeroCl zeroCl)) = 0) ∧
     (weilCharge (pairC2P 1 zeroCl) - weilCharge zeroCl = -8 * 1) ∧
-    (chiPP (pairEplus 5 zeroCl zeroCl zeroCl 1) (chDualP (pairEplus 5 zeroCl zeroCl zeroCl 1))
-      - chiPP (pairEminus 5 zeroCl zeroCl zeroCl) (chDualP (pairEminus 5 zeroCl zeroCl zeroCl))
-      = 8 * 1 * 1) := by
+    (chiPP24 (pairEplus 5 zeroCl zeroCl zeroCl 1) (chDualP (pairEplus 5 zeroCl zeroCl zeroCl 1))
+      - chiPP24 (pairEminus 5 zeroCl zeroCl zeroCl) (chDualP (pairEminus 5 zeroCl zeroCl zeroCl))
+      = 24 * (8 * 1 * 1)) := by
   decide
 
-/-- W4(iii) detector instance (r, m) = (6, 2), probe G = E-:
-    chi(E+ x G) - chi(E- x G) = m * <W_R, ch_2(G)> exactly (the only surviving cross-grade). -/
+/-- W4(iii) detector instance (r, m) = (6, 2), probe G = E-: the 24-scaled identity
+    chi24(E+ x G) - chi24(E- x G) = 12 * m * INT (W_R AND ch_2-num(G))
+    (the 12 = 24/2 clearing the ch_2 conductor denominator; the only surviving cross-grade). -/
 theorem w4_detector_instance :
-    chiPP (pairEplus 6 zeroCl WRcl zeroCl 2) (pairEminus 6 zeroCl WRcl zeroCl)
-      - chiPP (pairEminus 6 zeroCl WRcl zeroCl) (pairEminus 6 zeroCl WRcl zeroCl)
-      = 2 * (intCl (wedgeCl WRcl (pairEminus 6 zeroCl WRcl zeroCl).g2)) := by
+    chiPP24 (pairEplus 6 zeroCl WRcl zeroCl 2) (pairEminus 6 zeroCl WRcl zeroCl)
+      - chiPP24 (pairEminus 6 zeroCl WRcl zeroCl) (pairEminus 6 zeroCl WRcl zeroCl)
+      = 12 * 2 * (intCl (wedgeCl WRcl (pairEminus 6 zeroCl WRcl zeroCl).g2)) := by
   decide
 
 /-! ## Capstones -/
@@ -506,18 +527,18 @@ theorem pair_channel_walls_capstone_B :
 
 theorem pair_channel_walls_capstone_C :
     (addCl (pairEplus 3 zeroCl WRcl zeroCl 1).g2 (smulCl (-1) (pairEminus 3 zeroCl WRcl zeroCl).g2)
-      = smulCl 1 WRcl) ∧
+      = smulCl 2 WRcl) ∧
     (weilCharge (pairC2P 2 WRcl) - weilCharge WRcl = -8 * 2) ∧
     (addCl (pairEplus 4 THETAd WRcl zeroCl 1).g3
       (smulCl (-1) (pairEminus 4 THETAd WRcl zeroCl).g3) = zeroCl) ∧
     (addCl (pairEplus 7 THETAd WRcl [(5, 255)] 3).g4
       (smulCl (-1) (pairEminus 7 THETAd WRcl [(5, 255)]).g4) = zeroCl) ∧
-    (chiPP (pairEplus 5 zeroCl zeroCl zeroCl 1) (chDualP (pairEplus 5 zeroCl zeroCl zeroCl 1))
-      - chiPP (pairEminus 5 zeroCl zeroCl zeroCl) (chDualP (pairEminus 5 zeroCl zeroCl zeroCl))
-      = 8 * 1 * 1) ∧
-    (chiPP (pairEplus 6 zeroCl WRcl zeroCl 2) (pairEminus 6 zeroCl WRcl zeroCl)
-      - chiPP (pairEminus 6 zeroCl WRcl zeroCl) (pairEminus 6 zeroCl WRcl zeroCl)
-      = 2 * (intCl (wedgeCl WRcl (pairEminus 6 zeroCl WRcl zeroCl).g2))) :=
+    (chiPP24 (pairEplus 5 zeroCl zeroCl zeroCl 1) (chDualP (pairEplus 5 zeroCl zeroCl zeroCl 1))
+      - chiPP24 (pairEminus 5 zeroCl zeroCl zeroCl) (chDualP (pairEminus 5 zeroCl zeroCl zeroCl))
+      = 24 * (8 * 1 * 1)) ∧
+    (chiPP24 (pairEplus 6 zeroCl WRcl zeroCl 2) (pairEminus 6 zeroCl WRcl zeroCl)
+      - chiPP24 (pairEminus 6 zeroCl WRcl zeroCl) (pairEminus 6 zeroCl WRcl zeroCl)
+      = 12 * 2 * (intCl (wedgeCl WRcl (pairEminus 6 zeroCl WRcl zeroCl).g2))) :=
   ⟨w6_instance_1.1, w6_instance_2.2.2.2.1, w6_instance_3.2.1, w6_instance_4.2.2.1,
    w6_carrier_instance.2.2.2, w4_detector_instance⟩
 
