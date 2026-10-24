@@ -262,39 +262,18 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
     (hpos : ∃ m, m ∈ ScaleSet C ∧ 0 < m) :
     ∃ mstar : ℤ, 0 < mstar ∧ mstar ∈ ScaleSet C ∧ ∀ m ∈ ScaleSet C, mstar ∣ m := by
   obtain ⟨m₀, hm₀mem, hm₀pos⟩ := hpos
+  have h1 : 0 ≤ m₀ := by omega
+  have hc0 : ((m₀.natAbs : ℕ) : ℤ) = m₀ := Int.natAbs_of_nonneg h1
+  -- the least positive member, by well-ordering (Nat.find; no bounded filter needed)
   classical
-  have hnonempty : ∃ n₀ : ℕ, n₀ ∈ (Finset.range (m₀.natAbs + 1)).filter
-      (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
-    refine ⟨m₀.natAbs, ?_⟩
-    rw [Finset.mem_filter, Finset.mem_range]
-    refine ⟨by omega, by omega, ?_⟩
-    have h1 : 0 ≤ m₀ := by omega
-    have hc : ((m₀.natAbs : ℕ) : ℤ) = m₀ := Int.natAbs_of_nonneg h1
-    rw [hc]
-    exact hm₀mem
-  have hne : ((Finset.range (m₀.natAbs + 1)).filter
-      (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) : Finset ℕ).Nonempty := hnonempty
-  obtain ⟨n, hnmem, hnmin⟩ : ∃ n ∈ (Finset.range (m₀.natAbs + 1)).filter
-      (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)),
-      ∀ a ∈ (Finset.range (m₀.natAbs + 1)).filter
-        (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)), n ≤ a := by
-    refine ⟨_, Finset.min'_mem _ hne, fun a ha => ?_⟩
-    first
-      | exact Finset.le_min' _ hne ha
-      | exact Finset.le_min' _ ha
-      | exact Finset.le_min' hne ha
-      | exact Finset.le_min' ha
-  rw [Finset.mem_filter] at hnmem
-  obtain ⟨-, hnpos, hnmemZ⟩ := hnmem
-  have hnle : n ≤ m₀.natAbs := hnmin _ (by
-    rw [Finset.mem_filter]
-    exact ⟨by omega, by omega, by
-      have h1 : 0 ≤ m₀ := by omega
-      have hc : ((m₀.natAbs : ℕ) : ℤ) = m₀ := Int.natAbs_of_nonneg h1
-      rw [hc]
-      exact hm₀mem⟩)
+  have hex : ∃ k : ℕ, 0 < k ∧ ((k : ℕ) : ℤ) ∈ ScaleSet C :=
+    ⟨m₀.natAbs, by omega, by rw [← hc0]; exact hm₀mem⟩
+  obtain ⟨n, hnpos, hnmemZ, hnmin⟩ : ∃ n : ℕ, 0 < n ∧ ((n : ℕ) : ℤ) ∈ ScaleSet C ∧
+      ∀ k : ℕ, 0 < k → ((k : ℕ) : ℤ) ∈ ScaleSet C → n ≤ k :=
+    ⟨Nat.find hex, (Nat.find_spec hex).1, (Nat.find_spec hex).2,
+      fun k hk0 hkS => Nat.find_min' hex ⟨hk0, hkS⟩⟩
   refine ⟨((n : ℕ) : ℤ), by omega, hnmemZ, ?_⟩
-  -- the divisability core, by Nat descent (Nat.div_add_mod; the least positive member)
+  -- the divisability core, by Nat descent (Nat.div_add_mod; minimality of n)
   have key : ∀ P : ℕ, 0 < P → ((P : ℕ) : ℤ) ∈ ScaleSet C → ((n : ℕ)) ∣ P := by
     intro P hP0 hPS
     obtain ⟨Q, R, hqr, hRsmall⟩ : ∃ Q R : ℕ, P = Q * n + R ∧ R < n := by
@@ -315,11 +294,7 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
           omega
         rw [hRcast]
         exact mem_add C hPS (mem_neg C (mem_zmul C hnmemZ ((Q : ℕ) : ℤ)))
-      have hRin : R ∈ (Finset.range (m₀.natAbs + 1)).filter
-          (fun k : ℕ => 0 < k ∧ ((k : ℤ) ∈ ScaleSet C)) := by
-        rw [Finset.mem_filter, Finset.mem_range]
-        refine ⟨by omega, by omega, hRS⟩
-      have hcontr := hnmin R hRin
+      have hcontr := hnmin R (by omega : 0 < R) hRS
       omega
   intro m hm
   rcases lt_trichotomy m 0 with hneg | hzero | hpp
@@ -329,9 +304,11 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
     have hMS : (((-m).natAbs : ℕ) : ℤ) ∈ ScaleSet C := by rw [hMc]; exact hmS
     obtain ⟨c, hc⟩ := key (-m).natAbs hM0 hMS
     refine ⟨-((c : ℕ) : ℤ), ?_⟩
-    have h' : (((-m).natAbs : ℕ) : ℤ) = ((n : ℕ) : ℤ) * ((c : ℕ) : ℤ) := by
-      exact_mod_cast hc
-    omega
+    have hthis : m = -(((n : ℕ) : ℤ) * ((c : ℕ) : ℤ)) := by omega
+    have hcomm : ((n : ℕ) : ℤ) * -(((c : ℕ) : ℤ)) =
+        -(((n : ℕ) : ℤ) * ((c : ℕ) : ℤ)) := by ring
+    rw [hcomm]
+    exact hthis
   · rw [hzero]
     exact dvd_zero _
   · have hMc : ((m.natAbs : ℕ) : ℤ) = m := Int.natAbs_of_nonneg (by omega)
