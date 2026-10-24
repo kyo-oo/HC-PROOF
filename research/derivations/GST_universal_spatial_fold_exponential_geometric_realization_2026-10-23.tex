@@ -444,6 +444,213 @@ centers are satisfied.
 \end{proof}
 
 
+
+\begin{theorem}[Ample-global-generation removal of the extra holomorphic-map hypothesis: exact original-$X$ two-center algebraic fold]
+Fix ANY original smooth projective
+complex $d$-fold $X$, $1\le p\le d$,
+prescribed rational Hodge class
+$\alpha$, and the SAME rank-$r$
+topological bundle $E_\alpha$
+of (1), with
+$\operatorname{ch}_{top}(E_\alpha)
+=r+m\alpha$.
+Assume ONLY that this SAME
+bundle admits an integrable
+complex structure
+$\bar\partial_{E_\alpha}^2=0$;
+do not assume that any
+previously selected smooth
+determinantal map is holomorphic.
+Let $\mathcal E_\alpha$ be the
+resulting ACTUAL algebraic
+rank-$r$ bundle on original X,
+let $H$ be an actual very
+ample algebraic line bundle,
+and set $h=c_1^{CH}(H)$.
+For every sufficiently large
+integer $k$, the ACTUAL
+algebraic bundle
+\[
+ \mathcal E_{\alpha,k}
+       =\mathcal E_\alpha\otimes H^k
+\]
+is globally generated. There
+exist $s=r-p+1$ actual global
+ALGEBRAIC sections inducing
+a generic algebraic map
+\[
+ \phi_{\alpha,k}:
+   \mathcal O_X^{\oplus s}
+           \longrightarrow\mathcal E_{\alpha,k}
+\]
+whose rank-drop determinantal
+scheme $D_{\alpha,k}$
+has pure expected codimension
+$p$. Its genuine Chow
+fundamental class is
+\[
+ \boxed{
+ [D_{\alpha,k}]_{CH}
+          =c_p^{CH}(\mathcal E_{\alpha,k})
+       \in CH^p(X).
+ }                                                    \tag{23}
+\]
+Choose any actual codimension-$p$
+complete intersection of p divisors
+in $|H|$ and denote its Chow
+class $[H^p]_{CH}=h^p$.
+Then the TWO ACTUAL algebraic
+geometric centers create the
+SIGNED original-$X$ Chow class
+\[
+ \boxed{
+ Z_\alpha^{\mathrm{two\text{-}center}}
+ =\frac{(-1)^{p-1}}{m(p-1)!}
+   \left([D_{\alpha,k}]
+     -\binom rp\,k^p[H^p]_{CH}\right)
+          \in CH^p(X)_{\mathbb Q},
+ }                                                    \tag{24}
+\]
+and this has EXACT canonical
+rational Betti class
+\[
+ \boxed{
+  \operatorname{cl}^{can}_X
+       (Z_\alpha^{\mathrm{two\text{-}center}})
+          =\alpha .
+ }                                                    \tag{25}
+\]
+Every born algebraic scheme
+and correction here is given
+by explicit global section
+minors on ORIGINAL X and a
+complete-intersection
+hyperplane scheme. The SAME
+minors define a true
+algebraic deformation-to-normal-cone
+Rees fold. This is a genuine
+same-source geom\-etry-to-Chow
+constructor requiring only the
+single specified integrable
+holomorphic structure on
+$E_\alpha$; it requires NO
+independent holomorphicity
+assumption on the original
+arbitrary smooth map.
+The theorem does NOT claim
+the integrable structure on
+$E_\alpha$ exists for every
+primitive Hodge alpha.
+\end{theorem}
+\begin{proof}
+The integrable $(0,1)$-structure
+and projective GAGA construct
+the actual algebraic
+$\mathcal E_\alpha$.
+For ample H and $k\gg0$,
+Serre's global-generation theorem
+makes $\mathcal E_\alpha\otimes H^k$
+globally generated. Choose finitely
+many global generators and take
+s generic constant-linear
+combinations. The parameterized
+evaluation to the fibers of
+$\operatorname{Hom}(\mathbb C^s,
+\mathcal E_{\alpha,k,x})$ is
+surjective at every x, so
+the generic degeneracy map
+is transverse to the rank
+strata. Its first rank drop
+has expected complex codim
+$r-s+1=p$ and its deeper
+rank drop codimension at least
+$2(p+1)>p$ whenever present.
+By the standard determinantal
+expected-codimension theorem
+(and algebraic Thom--Porteous),
+its pure fundamental Chow
+cycle is the exact
+algebraic $p$th Chern class
+$c_p(\mathcal E_{\alpha,k})$.
+This proves (23), including
+if the determinantal scheme
+has singular deeper strata.
+
+In the ACTUAL Betti cohomology
+of original X, the pure
+Chern-character equation
+$\operatorname{ch}(E_\alpha)
+=r+m\alpha$ implies
+\[
+ \operatorname{cl}^{can}
+   c_j^{CH}(\mathcal E_\alpha)=0
+               \qquad(1\le j<p),
+\quad
+ \operatorname{cl}^{can}
+   c_p^{CH}(\mathcal E_\alpha)
+ =(-1)^{p-1}(p-1)!m\alpha .
+\]
+The exact splitting-principle
+Chern-root shift for a rank-r
+bundle and an algebraic line L
+with $\ell=c_1(L)$ gives
+\[
+ \boxed{
+ c_p(\mathcal E_\alpha\otimes L)
+ =\sum_{j=0}^{p}
+    \binom{r-j}{p-j}
+         c_j(\mathcal E_\alpha)
+         \ell^{p-j}
+       \quad\text{in actual Chow}.
+ }                                                    \tag{26}
+\]
+Take L=H^k, so $\ell=k h$.
+Under the CANONICAL rational
+Betti map, all terms with
+$1\le j<p$ vanish, leaving
+\[
+ \operatorname{cl}^{can}
+   [D_{\alpha,k}]
+ =(-1)^{p-1}(p-1)!m\alpha
+    +\binom rp k^p\,
+       \operatorname{cl}^{can}(h^p).
+\]
+Equation (24) subtracts the
+TRUE algebraic hyperplane
+complete intersection and
+divides by the exact nonzero
+integer normalization.
+Thus (25) holds on original X.
+
+Importantly the identities
+$c_j(\mathcal E_\alpha)=0$
+for j<p were used ONLY in
+rational Betti cohomology,
+NOT asserted in original-X
+Chow: those Chow classes
+can be homologically trivial
+but nonzero. Our correction
+eliminates their Betti
+contributions without making
+a false Chow identity.
+The determinantal ideal is
+ACTUAL algebraic and defines
+the finite Rees algebra
+$\mathcal O_X[t,I/t]$, whose
+proper normal-cone/blowup
+geometry exists whether
+or not the scheme is lci.
+We do NOT apply a
+regular-center exceptional
+power formula to a possibly
+non-lci degeneracy scheme.
+This closes the typed
+geometric and algebraic
+return under the SINGLE
+integrability input.
+\end{proof}
+
+
 \section{The actual complex-geometric return, not a purity assertion}
 \begin{theorem}[Compatible ALGEBRAIC realization gives original-X cycle]
 Suppose the actual topological fold $Y=P_X(E)$ admits
