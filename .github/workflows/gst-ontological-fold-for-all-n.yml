@@ -52,7 +52,7 @@ jobs:
           roots = ["GSTGraphV2OntologicalFoldForAllN"]
           EOF
           if lake build GSTGraphV2OntologicalFoldForAllN > ontological-fold-for-all-n.log 2>&1; then
-            echo "LEAN PASSED: P2 seed witness purity identity + scale 2, rank-2 parity obstruction, scale-group closure laws, principality m* (least positive scale divides all), the P2 full determination m* = 2, and the for-all-N packaging (universal bit implies landing for every input) kernel-verified"
+            echo "LEAN PASSED: P2 seed witness purity identity + scale 2, line-sum parity obstruction (all-rank line-sum pairs; the all-holomorphic-pairs extension is derivation-level), scale-group closure laws, principality m* (least positive scale divides all), the line-sum-instance determination m* = 2, and the for-all-N packaging (universal bit implies landing for every input) kernel-verified"
           else
             grep -nE 'error:|sorryAx|✖' ontological-fold-for-all-n.log | tail -n 140 || true
             tail -n 120 ontological-fold-for-all-n.log

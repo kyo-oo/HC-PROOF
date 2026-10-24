@@ -26,10 +26,13 @@ are the transport laws:
 * `scaleSet_principal`: IF a positive scale exists THEN there is a least positive
   scale m* that divides every scale (the principal-invariant theorem: the scale set
   is m* * Z or {0}).
-The concrete instance `P2PairCal` (line-sum pairs on P2) instantiates the record with
-real arithmetic (list sums and lengths); `p2_bit_fires` exhibits the witness
-(scale 2); and `p2_mstar_eq_two` is the FULL DETERMINATION m*(P2, 1, [line]) = 2
-(witness + parity + principality).
+The concrete instance `P2PairCal` (line-sum pairs on P2: pairs of sums of line
+bundles) instantiates the record with real arithmetic (list sums and lengths);
+`p2_bit_fires` exhibits the witness (scale 2); and `p2_mstar_eq_two` is the
+DETERMINATION m* = 2 WITHIN THE LINE-SUM CALCULUS INSTANCE (witness + line-sum
+parity + principality). SCOPE: the extension of the parity obstruction to ALL
+holomorphic pairs on P2 via Chern-lattice integrality (Theorem P(ii) of the
+derivation) is derivation-level mathematics and is NOT kernel-checked here.
 
 The graded-character purity laws at the function level: `PureAt`, `pure_sum`,
 `pure_neg`, `pure_smul` (purity is preserved under the pair operations), and
@@ -403,9 +406,11 @@ theorem p2_bit_fires : ∃ v : P2Pair, p2Landing v ∧ p2scale v ≠ 0 := by
   show ([1, 1] : List ℤ).sum - ([1, -1] : List ℤ).sum ≠ 0
   decide
 
-/-- **The full determination m*(P2, 1, [line]) = 2** (Theorem P of the derivation):
-principality gives a least positive scale dividing all scales; the witness puts it
-at most 2; the parity obstruction forces it even; hence exactly 2. -/
+/-- **The determination m* = 2 within the line-sum pair calculus instance P2PairCal**
+(the witness bounds it by 2; the line-sum parity obstruction forces evenness;
+principality gives the least positive scale): m* = 2. The derivation's Theorem P
+extends this to ALL holomorphic pairs on P2 by Chern-lattice integrality, which is
+NOT kernel-checked in this file. -/
 theorem p2_mstar_eq_two :
     ∃ mstar : ℤ, 0 < mstar ∧ mstar ∈ ScaleSet P2PairCal ∧
       (∀ m ∈ ScaleSet P2PairCal, mstar ∣ m) ∧ mstar = 2 := by

@@ -12,12 +12,16 @@ input-specific side condition, and the landing cl(W) = alpha holds iff one typed
 single-to-pair edges, for all inputs); Theorem M (the scales of integrable pure pairs form an ADDITIVE
 SUBGROUP of Z, hence the principal fold-scale invariant m*(X,p,alpha) in Z_>=0 — the complete per-type content
 of the bit is ONE integer, monotone along transport edges); Theorem N (THE FOR-ALL-N THEOREM: positive-scale
-witness implies algebraicity for every input, correction-free; the COLLAPSE: HC follows from the single
-input-free law FS_∀ "every Hodge input has m* > 0" — no per-input case structure survives inside the
-reduction); Theorem P (the first full determination: m*(P^2, 1, [line]) = 2, with the explicit witness pair
-(O(1)⊕O(1), O(1)⊕O(−1)) — the sinh-oddness purity — and the parity obstruction m even via P^2 Chern-lattice
-integrality); the Gr(2,5) seed (the committed kernel-verified completed pure pair at scale 360 ⟹ m* | 360,
-exact value = open bounded computation, leaf E16); Theorem G (the upgraded ontological type-graph Gamma
+witness implies algebraicity for every input, correction-free; the COLLAPSE, stated as an EQUIVALENCE:
+HC ⟺ FS_∀ "every Hodge input has m* > 0" — ⟸ is Theorem N(i) here, ⟹ is the committed cycle-2 W2
+pair-form equivalence (algebraic ⟹ pure pair at some positive scale, audit-closed at PASS); the
+equivalence is recorded as NORMALIZATION per the M3 rule and the strike's new content is the structure
+that makes the single law arithmetic, principal, transportable, and seed-certified; no per-input case
+structure survives inside the reduction); Theorem P (the first full determination: m*(P^2, 1, [line]) = 2,
+with the explicit witness pair (O(1)⊕O(1), O(1)⊕O(−1)) — the sinh-oddness purity — and the parity
+obstruction m even via P^2 Chern-lattice integrality); the Gr(2,5) seed DETERMINED EXACTLY:
+m*(Gr(2,5), 2, alpha) = 360 (committed witness pair at 360 + committed K-lattice necessity 360 | m +
+principality; the former leaf E16 is CLOSED); Theorem G (the upgraded ontological type-graph Gamma
 carrying the fold laws as typed total edges, on which m* is a vertex quantity and FS_∀ is a single graph law,
 verified on the certified seed vertices).
 **Base checkpoint:** `3085a0d` (branch research/gpt6-native-point-primitive-span-20261017; cycle 2 closed at
@@ -67,12 +71,16 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
    nonnegative integer.
 
 5. **Theorem N (FOR-ALL-N).** (i) For EVERY input: m* > 0 ⟹ alpha algebraic, correction-free (run S3–S5 on
-   the m*-witness pair; the scalar is rational). (ii) Contrapositive: alpha non-algebraic ⟹ m* = 0. The bit
-   is a certificate of algebraicity, stronger than algebraicity; the converse (algebraicity ⟹ m* > 0) is
-   NOT claimed — isolated as leaf E15 (descent-type: the same higher-grade junk phenomenon as the cycle-1
-   [O_Z] corrections). (iii) THE COLLAPSE: HC ⟸ FS_∀, the single input-free law
-   "every Hodge input has m* > 0"; by M(iii) and U(i) no per-input case structure survives inside the
-   reduction — the input space ("all N") is compressed into one universal law.
+   the m*-witness pair; ranks wlog >= p by trivial augmentation; the scalar is rational). (ii) The
+   EQUIVALENCE: algebraic ⟹ m* > 0 by the committed cycle-2 W2 pair-form equivalence (audit-closed at
+   PASS) + M(ii); with (i): m* > 0 ⟺ alpha algebraic. The REFINEMENT is the content: the positive side is
+   the principal scale group m*Z (one nonnegative integer per fold-type, transportable). Open leaf E15
+   (re-scoped): the m*-pinning question — no presentation-independent characterization of m* beyond the
+   seeds and the transport edges. (iii) THE COLLAPSE, as an equivalence: HC ⟺ FS_∀ (both directions
+   attributed; recorded as normalization per the M3 rule — the new content is the structure theorems and
+   the seeds, not the equivalence); by M(iii) and U(i) no per-input case structure survives inside the
+   reduction — the input space ("all N") is compressed into one universal law whose per-type content is a
+   single principal integer.
 
 6. **Theorem P (P^2 determination — the first exact m*).** (i) Witness at scale 2: the pair
    (O(1)⊕O(1), O(1)⊕O(−1)): ch-difference = e^h − e^(−h) = 2 sinh(h) = 2h on P^2 exactly (h^3 = 0); the
@@ -82,13 +90,16 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
    odd left side against an even right side. Applies to arbitrary holomorphic bundles (only Chern-lattice
    integrality enters), not just line sums. (iii) m*(P^2, 1, h) = 2 exactly (divides 2, positive, even).
 
-7. **Seeds.** Curves: m* = 1 on the point class (exp truncates at grade 1; the pair (O(1), O)). Points:
-   vacuous. Gr(2,5) p = 2: the committed completed pure pair (ranks 2231 = 2231, character difference
-   exactly 360·alpha, all grades >= 3 certified equal — CI-green kernel certificate) is an integrable pure
-   pair of Schur-bundle sums ⟹ m*(Gr(2,5), 2, alpha) > 0 and m* | 360; the exact value is a bounded lattice
-   computation (the committed Gr(2,5) method decides it) — open leaf E16, not guessed. The bit-true sector
-   and the conclusion-true sector (p in {0,1,d−1,d}, d <= 3, by committed in-repo results) are kept
-   SEPARATE: on conclusion-true worlds with d >= 2 the bit may a priori still be false (E15 direction).
+7. **Seeds.** Curves: m* = 1 on the point class (exp truncates at grade 1; the pair (L, O) for any
+   degree-1 line bundle L). Points: vacuous. Gr(2,5) p = 2: DETERMINED EXACTLY m*(Gr(2,5), 2, alpha) = 360
+   — the committed completed pure pair (ranks 2231 = 2231, difference exactly 360·alpha, all grades
+   >= 3 certified equal) is a witness at 360, the committed cycle-1 K-lattice NECESSITY (integral pure
+   character at scale m iff 360 | m) forces 360 | m for every integrable pure pair, and principality
+   (M(ii)) forces m* | 360; hence m* = 360 and the former leaf E16 is CLOSED (no further computation
+   needed). The bit-true sector and the conclusion-true sector (p in {0,1,d−1,d}, d <= 3, by committed
+   in-repo results) are related but kept distinct for bookkeeping: on conclusion-true worlds the bit is
+   TRUE (N(ii) via the committed W2 direction); the sectors carry different certificate types and neither
+   inflates the other.
 
 8. **Theorem G (the ontological upgrade).** The upgraded type-graph Gamma: vertices = Hodge types
    ([X], p, [alpha]); transport edges (T1–T5, grade-preserving, witness-carrying); the five fold laws as
@@ -102,17 +113,27 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
 
 ## 2. What is NOT claimed (statement integrity)
 
-- The law FS_∀ itself is NOT proven: it is the exact, single, universal remainder — the exactness reading of
-  the directive's "hence completing the entire proof" is that the proof-completion burden is now ONE law,
-  with every structural theorem about that law proven here.
-- The converse direction of N(i) (algebraicity ⟹ m* > 0) is leaf E15, never used.
-- The exact m*(Gr(2,5)) is leaf E16 (bounded computation, not guessed).
+- The TRUTH of the law FS_∀ on the open sector is NOT proven: it is the exact, single, universal
+  remainder. FS_∀ is an EQUIVALENCE form of the conjecture (HC ⟺ FS_∀; ⟸ = N(i) here, ⟹ = the committed
+  cycle-2 W2 pair-form equivalence): the equivalence is recorded as normalization per the M3 rule; the
+  strike's new content is the structure theorems (scale group, principality, transport, exact seed
+  determinations) and the universal pipeline — with that structure, the proof-completion burden is ONE
+  law whose per-type content is a single principal integer.
+- Leaf E15 (re-scoped): the m*-pinning question — no presentation-independent characterization of the
+  least positive scale is claimed beyond the seed worlds and the transport edges.
+- CLOSED this strike: the former leaf E16 — m*(Gr(2,5), 2, alpha) = 360 exactly (committed witness +
+  committed K-lattice necessity + principality).
 - No per-input conditional equivalence (M3): the reduction is a one-way implication from a single universal
   law; no instance decision (R4) or discriminator analysis is smuggled back in.
 - No CI claim for the .tex; the machine-checkable companion is the Lean certificate
-  GSTGraphV2OntologicalFoldForAllN.lean (kernel-checks: the P^2 seed witness purity + scale 2; the rank-2
-  parity obstruction; the abstract purity-preservation and scale-group closure laws; the abstract
-  for-all-N packaging with the classical laws as clearly-labeled record fields; capstone axiom audits).
+  GSTGraphV2OntologicalFoldForAllN.lean (kernel-checks: the P^2 seed witness purity + scale 2; the
+  line-sum parity obstruction (ALL-rank line-sum pairs: Int squares mod 2 + list induction); the scale-set
+  closure laws; the principality theorem (Nat.find well-ordering + Nat.div_add_mod descent); the
+  determination p2_mstar_eq_two = 2 WITHIN THE LINE-SUM pair calculus instance P2PairCal — the extension
+  to ALL holomorphic pairs on P^2 via Chern-lattice integrality (Theorem P(ii)) is derivation-level and
+  NOT kernel-checked; the abstract for-all-N packaging with the classical laws as clearly-labeled record
+  fields; capstone axiom audits). CI GREEN: run 40125515707 @ 86ab17d (capstone_B axiom-free; the rest
+  [propext, Classical.choice, Quot.sound]; sorryAx-audited; 8698 jobs).
 
 ## 3. Provenance
 
