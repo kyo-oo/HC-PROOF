@@ -267,7 +267,7 @@ theorem scaleSet_principal {W : Type} (C : FoldPairCalculus W)
   -- the least positive member, by well-ordering (Nat.find; no bounded filter needed)
   classical
   have hex : ∃ k : ℕ, 0 < k ∧ ((k : ℕ) : ℤ) ∈ ScaleSet C :=
-    ⟨m₀.natAbs, by omega, by rw [← hc0]; exact hm₀mem⟩
+    ⟨m₀.natAbs, by omega, by rw [hc0]; exact hm₀mem⟩
   obtain ⟨n, hnpos, hnmemZ, hnmin⟩ : ∃ n : ℕ, 0 < n ∧ ((n : ℕ) : ℤ) ∈ ScaleSet C ∧
       ∀ k : ℕ, 0 < k → ((k : ℕ) : ℤ) ∈ ScaleSet C → n ≤ k :=
     ⟨Nat.find hex, (Nat.find_spec hex).1, (Nat.find_spec hex).2,
