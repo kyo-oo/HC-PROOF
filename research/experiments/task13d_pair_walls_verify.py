@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # Task 13-d bounded certificate script: the pair-channel wall constants.
-# BOUNDS: pure Python, exact arithmetic (Fraction; integer real/imag complexes),
-# largest enumeration 2^16 combined-monomial operations, runtime < 1s, memory < 10MB.
-# No floats anywhere in class computations.
+# BOUNDS: pure Python, EXACT arithmetic throughout (Fraction coefficients; parity-exact
+# Weil-class construction -- no complex numbers, no floats anywhere, zero tolerance).
+# Largest enumeration 2^16 combined-monomial operations, runtime < 1s, memory < 10MB.
+# Every check ASSERTS: a mismatch aborts the script (no green-exit on a failed comparison).
 
 from fractions import Fraction as Fr
 
@@ -39,6 +40,7 @@ def wedge_pow(d, k):
 def scale(d, s):
     return {m: c * s for m, c in d.items() if c * s != 0}
 
+
 def add(*ds):
     out = {}
     for d in ds:
@@ -65,18 +67,29 @@ def ab_letter(j, f=False):
     return {1 << (8 + 2 * j + (1 if f else 0)): 1}
 
 # ---- model classes ----
-OMEGA = {0: 1}
-for j in range(4):
-    OMEGA = wedge(OMEGA, add(a_letter(j, False), scale(a_letter(j, True), 1j)))
-W_R = {m: c.real for m, c in OMEGA.items() if c.real != 0}
-W_I = {m: c.imag for m, c in OMEGA.items() if c.imag != 0}
-assert len(W_R) == 8 and len(W_I) == 8, (len(W_R), len(W_I))
+# PARITY-EXACT construction of the Weil classes (no complex numbers, no floats):
+# Omega = wedge_{j=0..3}(e_j + i f_j) expands over one-letter-per-block words; the coefficient
+# of a word is i^{#f-letters}: W_R = Re part (sign +1 at #f in {0,4}, -1 at #f = 2 since Re(i^2) = -1),
+# W_I = Im part (sign +1 at #f = 1, -1 at #f = 3). All coefficients exact Fractions.
+def parity_weil():
+    WR, WI = {}, {}
+    for bits in range(256):
+        bl = [i for i in range(8) if (bits >> i) & 1]
+        if len(bl) != 4:
+            continue
+        if not all(((bits >> (2*j)) & 1) + ((bits >> (2*j+1)) & 1) == 1 for j in range(4)):
+            continue  # not one-letter-per-block
+        nf = sum(1 for i in bl if i % 2 == 1)
+        if nf % 2 == 0:
+            WR[bits] = Fr(1) if nf in (0, 4) else Fr(-1)
+        else:
+            WI[bits] = Fr(1) if nf == 1 else Fr(-1)
+    return WR, WI
 
-OMEGA_AB = {0: 1}
-for j in range(4):
-    OMEGA_AB = wedge(OMEGA_AB, add(ab_letter(j, False), scale(ab_letter(j, True), 1j)))
-WR_D = {m >> 8: c.real for m, c in OMEGA_AB.items() if c.real != 0}
-WI_D = {m >> 8: c.imag for m, c in OMEGA_AB.items() if c.imag != 0}
+W_R, W_I = parity_weil()
+assert len(W_R) == 8 and len(W_I) == 8, (len(W_R), len(W_I))
+# Dual basis position-matched: the dual Weil tables are the same DATA.
+WR_D, WI_D = dict(W_R), dict(W_I)
 
 THETA = add(*[wedge(a_letter(j, False), a_letter(j, True)) for j in range(4)])
 
@@ -87,7 +100,7 @@ print("  int theta^4 =", integral(wedge_pow(THETA, 4)))
 print("  int W_R^2   =", integral(wedge(W_R, W_R)))
 print("  int W_I^2   =", integral(wedge(W_I, W_I)))
 print("  int W_R W_I =", integral(wedge(W_R, W_I)))
-print("  int Om Ombar=", integral(wedge(OMEGA, {m: c.conjugate() for m, c in OMEGA.items()})))
+print("  int Om Ombar=", integral(wedge(W_R, W_R)) + integral(wedge(W_I, W_I)), "(= W_R^2 + W_I^2, the cross term vanishes)")
 
 # Ring-annihilation lemma: W_R wedge NS-classes vanish
 print("\n== ring lemma: W_R wedge NS-sector ==")
@@ -96,9 +109,15 @@ t2w = wedge(wedge_pow(THETA, 2), W_R)
 print("  theta^2 ^ W_R = 0 (monomials:", len(t2w), ")")
 t3w = wedge(wedge_pow(THETA, 3), W_R)
 print("  theta^3 ^ W_R = 0 (monomials:", len(t3w), ")")
+assert wedge(THETA, W_R) == {} and t2w == {} and t3w == {}, "W0 class annihilation FAILED"
+for j in range(1, 5):
+    assert integral(wedge(W_R, wedge_pow(THETA, j))) == 0
+assert integral(wedge_pow(THETA, 4)) == 24 and integral(wedge(W_R, W_R)) == 8
+assert integral(wedge(W_I, W_I)) == 8 and integral(wedge(W_R, W_I)) == 0
+assert integral(wedge(W_R, W_R)) + integral(wedge(W_I, W_I)) == 16
 
 # ---- FM cohomological transform on H^4 (A -> AB) ----
-# Honest dual-basis convention: c1(P) = sum_p u_p (x) u_hat_p over ALL 8 positions.
+# Exact dual-basis convention: c1(P) = sum_p u_p (x) u_hat_p over ALL 8 positions.
 # Grade reflection: x in degree 2k pairs with c^{8-2k}/(8-2k)! ; for k=2: c^4/24.
 def c1P_dual():
     terms = []
@@ -126,6 +145,7 @@ def fm_AB_to_A_degree4(y):
     return integrate_first_factor(wedge(y, c4))
 
 def coeff_along(x, frame):
+    # EXACT: every ratio must be the same exact Fraction (zero tolerance).
     if set(x.keys()) != set(frame.keys()):
         return None
     c0 = None
@@ -133,11 +153,11 @@ def coeff_along(x, frame):
         ratio = x[m] / frame[m]
         if c0 is None:
             c0 = ratio
-        elif abs(ratio - c0) > 1e-9:
+        elif ratio != c0:
             return None
     return c0
 
-print("\n== FM transform normalization (honest dual-basis convention) ==")
+print("\n== FM transform normalization (exact dual-basis convention) ==")
 phi_WR = fm_A_degree4(W_R)
 phi_WI = fm_A_degree4(W_I)
 aR = coeff_along(phi_WR, WR_D)
@@ -147,11 +167,14 @@ bI = coeff_along(phi_WI, WI_D)
 print(f"  Phi(W_R) monomials={len(phi_WR)}; along WR_dual={aR}; along WI_dual={aI}")
 print(f"  Phi(W_I) monomials={len(phi_WI)}; along WR_dual={bR}; along WI_dual={bI}")
 rt = fm_AB_to_A_degree4(phi_WR)
-ok = set(rt.keys()) == set(W_R.keys()) and all(abs(rt[m] - W_R[m]) < 1e-9 for m in W_R)
+ok = set(rt.keys()) == set(W_R.keys()) and all(rt[m] == W_R[m] for m in W_R)
 print(f"  round trip Phi_AB(Phi_A(W_R)) == W_R : {ok}")
+assert ok, "W_R round trip FAILED"
 rtI = fm_AB_to_A_degree4(phi_WI)
-okI = set(rtI.keys()) == set(W_I.keys()) and all(abs(rtI[m] - W_I[m]) < 1e-9 for m in W_I)
+okI = set(rtI.keys()) == set(W_I.keys()) and all(rtI[m] == W_I[m] for m in W_I)
 print(f"  round trip Phi_AB(Phi_A(W_I)) == W_I : {okI}")
+assert okI, "W_I round trip FAILED"
+assert aR == 1 and aI is None and bR is None and bI == 1, (aR, aI, bR, bI)
 
 # ---- characters, Newton, the pair table ----
 def ch_from_C(r, c1, c2, c3, c4):
@@ -244,8 +267,11 @@ for (r, m, c1name, c1d, gamma) in cases:
     print(f"    chi(E+xE-v)-chi(EndE-)   = {res['t2'][0]}  expected {res['t2'][1]}  match={res['t2'][0] == res['t2'][1]}")
     print(f"    chi(EndE+)-chi(EndE-)    = {res['t3'][0]}  expected {res['t3'][1]}  match={res['t3'][0] == res['t3'][1]}")
     print(f"    charge split q(E+)-q(E-) = {res['charge_split'][0]}  expected {res['charge_split'][1]}  match={res['charge_split'][0] == res['charge_split'][1]}")
+    assert res['pure'] and res['t1'][0] == res['t1'][1] and res['t2'][0] == res['t2'][1] \
+        and res['t3'][0] == res['t3'][1] and res['charge_split'][0] == res['charge_split'][1], (r, m, c1name)
     if c1name == 'theta':
-        print(f"    c3 shift = -m*c1*W_R nonzero: {len(res['c3_shift_class'])} monomials")
+        print(f"    c3 shift class size (0 = the shift dies by W0, as the derivation states): {len(res['c3_shift_class'])}")
+        assert len(res['c3_shift_class']) == 0, "c3 shift must die by W0 on the discriminator"
 
 print("\n== linear detector probe ==")
 r, m = 6, 2
@@ -255,10 +281,12 @@ G = chM
 lhs = chi_pair(chP, G) - chi_pair(chM, G)
 wr_g = integral(wedge(W_R, G['2']))
 print(f"  chi(E+ (x) G) - chi(E- (x) G) = {lhs};  m*<W_R,ch2(G)> = {m * wr_g};  match={lhs == m * wr_g}")
+assert lhs == m * wr_g, "detector identity FAILED"
 
 print("\n== carrier instance check (F, O^r): q(E-)=0 recovers chi(EndF)=8m^2 ==")
 # E- = O^r: c2 = 0 ; E+ = "F": c2 = -m W_R => q(F) = -8m ; chi(End E+) - chi(End E-) = 8m^2
 resC = pair_check(5, 1, ZERO, ZERO, ZERO)   # c2M = 0 (O^r side), m=1 => c2P = -W_R
 print(f"  purity={resC['pure']}; q(E+)={resC['qP']} (expected -8); q(E-)={resC['qM']} (expected 0)")
 print(f"  chi(EndE+)-chi(EndE-) = {resC['t3'][0]}  expected {resC['t3'][1]}  match={resC['t3'][0] == resC['t3'][1]}")
-print("\nALL CHECKS DONE")
+assert resC['pure'] and resC['qP'] == -8 and resC['qM'] == 0 and resC['t3'][0] == resC['t3'][1]
+print("\nALL CHECKS DONE (every comparison asserted, zero tolerance, no floats)")

@@ -484,10 +484,11 @@ dual), the following are equivalent:
 \item[(a)] the dichotomy bit $S=W_\Q$ (equivalently: $W_R$ algebraic;
 equivalently: pair form at some scale --- committed W2(iii));
 \item[(b)] there exist holomorphic bundles $E_+,E_-$ on $A$ with equal rank,
-equal $c_1\in\Z\theta$, equal $c_3$, $c_4$-difference as in
+equal $c_1\in\Z\theta$, equal $c_3$, $c_2$-difference $-mW_R$
+(Theorem~\ref{thm:w6}(i)), $c_4$-difference as in
 Theorem~\ref{thm:w6}(iii), and Weil charges differing by $8m$ for some
 $m\ge 1$ (Theorem~\ref{thm:w6}(iv) and its converse, which is immediate from
-(i));
+the full table (i)--(iii));
 \item[(c)] the same existence statement on $\widehat A$ with
 $\widehat W_R$ (Theorem~\ref{thm:w5}(i)).
 \end{enumerate}
@@ -518,14 +519,13 @@ committed W2, outside the corridor by NS-rank).
 \section{Verification layer}\label{sec:cert}
 
 \paragraph{Bounded certificate (exact arithmetic).}
-Script: \texttt{hodge-campaign/experiments/task13d\_pair\_walls\_verify.py}
-(the campaign workspace copy; committed alongside this dossier).
-Bounds: pure Python, exact integer/\texttt{Fraction} arithmetic, largest
+Script: \texttt{research/experiments/task13d\_pair\_walls\_verify.py}
+(the committed copy). Bounds: pure Python, exact \texttt{Fraction}
+arithmetic throughout (the Weil classes are built by the parity-exact
+construction --- no complex numbers, no floats anywhere), largest
 enumeration $2^{16}$ monomial operations, runtime $<1$\,s, memory
-$<10$\,MB; no floats in class computations (the only float display arises
-from extracting $\mathrm{Re}$ of integer-complex products; all compared
-values are integral within $10^{-12}$ and are decided exactly by the Lean
-certificate layer next).
+$<10$\,MB; every comparison is an exact equality and every check ASSERTS
+(a mismatch aborts the script; zero tolerance).
 The script verifies:
 \begin{enumerate}
 \item the committed constants re-confirm: $\int W_R\theta^j=0$ ($j=1..4$),

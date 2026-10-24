@@ -173,9 +173,9 @@ is consistent at every level; no divisibility contradiction is producible.
 \begin{obstruction}[End-mass twisting]
 W6(v) expresses every End-Euler difference as a linear form
 $8m^2-m\,q(E_-)$, $-m\,q(E_-)$, $8m^2-2m\,q(E_-)$ in the FREE integer
-$q(E_-)\in\Z$; the synthetic instances realize the table at $q$-values $0$ and
-$\pm 8$, and the $(m,q)$-grid certificate (\S\ref{sec:verif}) realizes it at
-every grid point. No sign, parity, or positivity obstruction exists: the
+$q(E_-)\in\Z$; the synthetic instances realize the table at $q$-values $0$, $\pm 8$
+and $-16$, and the $(m,q)$-grid certificate (\S\ref{sec:verif}) realizes it
+at every grid point. No sign, parity, or positivity obstruction exists: the
 carrier layer is the $q=0$ slice and every other $q$ is a priori live.
 \emph{Dies at: W6(v) --- $q$ is free.}
 \end{obstruction}
@@ -196,12 +196,15 @@ discriminator. Then:
 \item[(i)] every additive invariant $\chi(x\otimes G)$ ($G$ perfect) equals
 $m\langle W_R,\ch_2(G)\rangle$ --- the W4(iii) detector is the COMPLETE linear
 theory;
-\item[(ii)] the full additive profile of the pair is the quadruple
-$(r,k,m,q)$ with the W6 relations (shared $(r,c_1,c_3)$, $c_2$-split $-mW_R$,
-charge split $-8m$, mixed-End table), and the profile is consistent at every
-point of the certified grid $m\in\{1,2,3,4\}$, $q/8\in\{0,1,2,3\}$,
-$c_1\in\{0,\theta,2\theta\}$, $\gamma\in\{0,\vol\}$ (96 instances, zero
-failures);
+\item[(ii)] the full additive profile of the pair's difference class
+$x=[E_+]-[E_-]$ (and of the mixed-End table of its legs) is carried by the
+data $(m,q)$ --- the difference-class values $\chi(x\otimes G)$ are
+determined by $m$ alone (W4(iii)) and the mixed-End values by $(m,q)$
+(W6(v)); $r$ and $k$ are inert in every profile-computed value --- and the
+profile is consistent at every point of the certified grid
+$m\in\{1,2,3,4\}$, $q/8\in\{0,1,2,3\}$,
+$c_1\in\{0,\theta,2\theta\}$, $\gamma\in\{0,\vol\}$, $r=5$
+(96 instances, zero failures; the grid fixes $r$);
 \item[(iii)] consequently no additive wall \emph{within the profile theory}
 --- no necessary condition expressed through the twisted Euler
 characteristics that the profile computes --- can separate the charge
@@ -209,9 +212,10 @@ strata or exclude the pair: separation would require a profile value to be
 unrealizable, and the profile is internally consistent (the universal laws
 admit the table, and the grid certificate realizes it throughout the
 certified range $m\in\{1..4\}$, $q/8\in\{0..3\}$). Any future deciding
-wall must therefore operate OUTSIDE the profile theory (be non-additive,
-i.e.\ constrain data the profile does not compute), and by W5 it must in
-addition be FM-closed. This is a statement about the certified profile
+wall must therefore operate OUTSIDE the profile theory (constrain data the
+profile does not compute --- for instance individual-bundle invariants,
+which are additive-flavored but invisible to the difference-class profile),
+and by W5 it must in addition be FM-closed. This is a statement about the certified profile
 theory, not an exhaustiveness claim about all conceivable additive
 constraints (scope box).
 \end{enumerate}
@@ -228,7 +232,7 @@ the values $\chi(x\otimes G)$; by (i)--(ii) these values are determined by
 $(r,k,m,q)$ through the table relations (universally, as hypothesis-form
 laws); the determined values are internally consistent -- the universal laws
 admit the table by construction, and the grid certificate realizes every
-profile point in the certified range with grade-by-grade purity; hence no
+grid point in the certified range with grade-by-grade purity; hence no
 constraint expressible within the profile can exclude the pair. A constraint
 that excludes the pair must therefore constrain data OUTSIDE the profile
 (non-additive data), which is the stated conclusion. No claim is made about
@@ -282,10 +286,33 @@ subspaces are closed, the set-theoretic complement of their union ($T$) is
 closed as well. Linearity gives the sector statements; the class-level
 identities $\FMc(W_R)=\widehat W_R$, $\FMc(W_I)=\widehat W_I$ are the committed
 W5 normalization (kernel-certified in the Lean layer), and
-$\FMc(\theta^2)\in\Q\widehat\theta^2$ is verified exactly in the model
-certificate (the transform of $\theta^2$ is $\widehat\theta^2$ with the
-expected coefficients). The scheme-level identification of the model sectors
-with $\Q\theta^2\oplus\WQ\oplus T$ runs through the committed leaves as always.
+$\FMc(\theta^2)=\widehat\theta^2$ EXACTLY (coefficient $1$) is verified in the
+model certificate.
+
+\emph{The scheme-level sector statement (dimension audit).} The model
+census runs on the $70$ words ($6+16+48$), while the scheme decomposition
+$\Q\theta^2\oplus\WQ\oplus T$ is $1+2+67$-dimensional: the scheme-level
+$T$ additionally contains the $5$-dimensional complement of $\Q\theta^2$
+inside the block-union span and the $14$-dimensional complement of $\WQ$
+inside the Weil-word span. Both complements are $\FMc$-invariant: each
+ambient span is invariant (the closures above), the distinguished
+subspaces are invariant ($\FMc(\theta^2)=\widehat\theta^2$ exactly;
+$\FMc(\WQ)=\widehat\WQ$ by the committed normalization), and $\FMc$ is an
+involution --- so the five-piece decomposition
+\[
+\Q\theta^2\;\oplus\;(\text{5-dim})\;\oplus\;\WQ\;\oplus\;(\text{14-dim})
+\;\oplus\;(\text{48-dim})
+\]
+is invariant piece by piece, and the scheme-level $T$ (the sum of the
+second, fourth, and fifth pieces) is invariant. Equivalently (the isometry
+argument, recorded for W7.1's use): on degree-$4$ classes $\FMc$ is a
+Poincar\'e-pairing isometry up to the certified sign identities (the
+basis words pair only with their complements), and it fixes
+$\Q\theta^2\oplus\WQ$ as a set; hence it preserves the orthogonal
+complement of $\Q\theta^2\oplus\WQ$ --- the $67$-dimensional $T$ --- and
+with it the zero-Weil-content property that W7.1 uses. The scheme-level
+identification of the model sectors with
+$\Q\theta^2\oplus\WQ\oplus T$ runs through the committed leaves as always.
 \end{proof}
 
 \begin{corollary}[Transform-transport kill]\label{cor:w71}
@@ -299,16 +326,22 @@ conceivable YES-constructions is dead.
 \begin{corollary}[Projector-birth kill]\label{cor:w72}
 Assume the committed spectrum census (the record-level hypothesis of the
 projector idempotence) and the correspondence-action compatibility (leaf E1).
-Then for every $x\in K^0_{\mathrm{alg}}(A)$:
+Then for every $x\in K^0_{\mathrm{alg}}(A)$ the degree-$4$ part of its
+transformed character satisfies
 \[
-\ch\bigl(P_W(x)\bigr)\;=\;P_W\bigl(\ch(x)\bigr)\;=\;\text{the Weil component
-of }\ch(x),
+\ch_4\bigl(P_W(x)\bigr)\;=\;P_W\bigl(\ch_4(x)\bigr)\;=\;\text{the Weil
+component of }\ch_4(x),
 \]
 because the committed kernel-green spectral facts give $P_W=1$ on the Weil
 plane, $P_W=0$ on the mixed factor, and $P_W(25)=0$ on the ambient
-(NS-generated) factor, and the census extends the vanishing to the $T$-blocks.
+(NS-generated) factor, and the census extends the vanishing to the
+$T$-blocks. (The committed projector action is $H^4$-scoped --- the
+committed Lemma makes no claim about $H^2$ or $H^6$ --- so the non-degree-$4$
+grades of $\ch(P_W(x))$ are outside the certified scope; they carry no
+Weil content in any case, Weil content being of type $(2,2)$.)
 Consequently the algebraic projector cannot \emph{birth} Weil content from
-NS/T content: $P_W(x)$ has nonzero Weil character iff $\ch(x)$ already does.
+NS/T content: $P_W(x)$ has nonzero Weil character in degree $4$ iff $\ch_4(x)$
+already does.
 The projector-correspondence family of conceivable YES-constructions is dead.
 \end{corollary}
 
@@ -343,13 +376,17 @@ twist ever creates Weil content);
 \item Fourier--Mukai transforms: Lemma W7 / Corollary~\ref{cor:w71};
 \item algebraic projector correspondences: Corollary~\ref{cor:w72};
 \item isogeny transport: the committed T-laws transport the bit within an
-isogeny class (scales multiply by the Weil-pullback factor); they cannot
+isogeny class (the minimal scale $m^*$ is transport-constant along
+pullbacks; the pair class pulls back with the world); they cannot
 transport it ACROSS non-isogenous classes, and the split worlds where
 Weil's construction produces pairs are not isogenous to the discriminator
-(committed);
+(the committed nonsplit hypothesis);
 \item Segre/pushforward constructions on NS-sector cycles: these realize
 carriers at the $q=0$ slice (the committed carrier instance), and their
-inputs (NS-sector cycle classes) carry no Weil component by W0.
+inputs (NS-sector cycle classes) carry no Weil component by W0. (This
+entry is family-level, justified by the committed instance and W0 on the
+inputs; the family is delimited by the PROMPT \S4 m-congruence discipline
+rather than enumerated exhaustively.)
 \end{itemize}
 Hence the entire remaining content of the YES route is the vertex: exhibit
 one W-charged surface (equivalently one pure pair at any scale).
@@ -417,8 +454,11 @@ $\FMc(W_R)=W_R$, $\FMc(W_I)=W_I$; (2) the $(m,q)$-grid: purity
 grade-by-grade, the charge split $-8m$, and the three mixed-End identities at
 all $96$ points ($m\in\{1,2,3,4\}$, $c_2(E_-)=aW_R$ with $a\in\{0..3\}$,
 $c_1\in\{0,\theta,2\theta\}$, $\gamma\in\{0,\vol\}$) --- zero failures;
-(3) the twist-preservation of the pair table under
-$L=\mathcal O(k\Theta)$, $k\in\{1,2\}$.
+(3) the REAL twist-preservation check: the actual exponential twist
+$\ch(E\otimes\mathcal O(k\Theta))=\ch(E)e^{k\theta}$ computed grade by grade,
+with the twisted pair's purity verified at grades $2$ and $3$ for
+$k\in\{-3,\dots,5\}$ ($2$ scales $\times$ $9$ twist levels $=18$
+configurations, the $\FMc(\theta^2)$-exact equality check included).
 
 \paragraph{The Lean layer (the wall arithmetic).}
 \texttt{GSTPairChannelWallsCertificate.lean}: the W0 class annihilations, the

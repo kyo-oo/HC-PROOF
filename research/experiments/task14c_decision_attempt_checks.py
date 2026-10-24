@@ -138,6 +138,8 @@ def in_span_of(cls, basis_masks):
     return all(m in basis_masks for a, m in cls)
 print(f"  fm(theta^2) in NS-span: {in_span_of(fm_t2, pair_union_words)} (coeffs: {fm_t2})")
 assert in_span_of(fm_t2, pair_union_words)
+print(f"  fm(theta^2) == theta^2 EXACTLY (coefficient 1 onto the dual NS line): {fm_t2 == t2}")
+assert fm_t2 == t2, "fm(theta^2) must equal the dual theta^2 exactly"
 print(f"  fm(W_R) = W_R and fm(W_I) = W_I: {fm_cl(WRcl) == WRcl and fm_cl(WIcl) == WIcl}")
 assert fm_cl(WRcl) == WRcl and fm_cl(WIcl) == WIcl
 
@@ -207,17 +209,38 @@ for m in (1, 2, 3, 4):
 print(f"  grid instances checked: {count}; failures: {bad}")
 assert bad == 0 and count == 96
 
-print("\n== the twist-preservation check (twisted pairs stay pure at the same scale) ==")
+print("\n== the twist-preservation check (REAL exponential twist, k enters the computation) ==")
+# ch(E (x) O(k Theta)) = ch(E) * e^{k*theta}: the twisted grades are
+#   ch_g(E) + ch_{g-1}(E)*(k theta) + ch_{g-2}(E)*(k theta)^2/2 + ... (exact Fractions).
+def twist_grades(x, k):
+    kt = smul_cl(Fr(k), THETAd)
+    kt2 = smul_cl(Fr(1, 2), pow_cl(kt, 2))
+    kt3 = smul_cl(Fr(1, 6), pow_cl(kt, 3))
+    return {
+        'r': x['r'],
+        '1': add_cl(x['1'], smul_cl(x['r'], kt)),
+        '2': add_cl(add_cl(x['2'], wedge_cl(x['1'], kt)), smul_cl(x['r'], kt2)),
+        '3': add_cl(add_cl(add_cl(x['3'], wedge_cl(x['2'], kt)), wedge_cl(x['1'], kt2)), smul_cl(x['r'], kt3)),
+    }
+twist_failures = 0
+twist_configs = 0
 for m in (1, 3):
-    for k in (1, 2):
-        # twist both legs by O(k Theta): ch(E+-) * e^{k theta}; W0 kills the theta-W cross terms
-        ep = ch_pair(4, THETAd, pair_c2p(m, WRcl), pair_c3shift(THETAd, m), pair_c4shift(THETAd, WRcl, m))
-        em = ch_pair(4, THETAd, WRcl, ZERO, ZERO)
-        # grade-2 difference after twist: (ch2P - ch2M) + (k^2/2)(theta^2 - theta^2) + k*(c1P - c1M)*... = m W_R
-        d2t = add_cl(add_cl(ep['2'], smul_cl(Fr(-1), em['2'])), [])
-        ok = d2t == smul_cl(Fr(m), WRcl)
-        print(f"  m={m}, k={k}: grade-2 difference still m*W_R: {ok}")
-        assert ok
+    ep = ch_pair(4, THETAd, pair_c2p(m, WRcl), pair_c3shift(THETAd, m), pair_c4shift(THETAd, WRcl, m))
+    em = ch_pair(4, THETAd, WRcl, ZERO, ZERO)
+    for k in range(-3, 6):
+        twist_configs += 1
+        tp, tm = twist_grades(ep, k), twist_grades(em, k)
+        d2t = add_cl(tp['2'], smul_cl(Fr(-1), tm['2']))
+        d3t = add_cl(tp['3'], smul_cl(Fr(-1), tm['3']))
+        ok2 = d2t == smul_cl(Fr(m), WRcl)   # grade-2 difference still m*W_R
+        ok3 = d3t == []                      # grade-3 difference still zero (W0 kills W_R AND theta)
+        if not (ok2 and ok3):
+            twist_failures += 1
+            print(f"  FAIL m={m}, k={k}: grade2={ok2} grade3={ok3}")
+        assert ok2 and ok3, f"twist purity FAILED at m={m}, k={k}"
+    print(f"  m={m}: twisted purity (grades 2 and 3) holds for every k in -3..5")
+print(f"  twist-preservation: {twist_configs} twisted configurations, {twist_failures} failures")
+assert twist_failures == 0
 
 print("\nALL DECISION-ATTEMPT CHECKS GREEN.")
 print("W7 sector rigidity: verified in the model (complements preserve NS / W-even / W-odd / T).")
