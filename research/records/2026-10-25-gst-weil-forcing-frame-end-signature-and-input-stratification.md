@@ -1,11 +1,14 @@
-# GST Weil-Forcing Frame, End-Signature Law, and Input Stratification (Cycle 2, Part I)
+# GST Weil-Forcing Frame, End-Mass Law, and Input Stratification (Cycle 2, Part I)
 
 **Date:** 2026-10-25
 **Kind:** cycle-2 foundation: completed geometric zero-or-full dichotomy frame for the Weil-fourfold
 discriminator (explicit rational algebraic correspondence), stratification of the forcing input into three
 inequivalent forms (pair / carrier / specified-carrier) with the monoid and torsion gaps identified,
-End-signature law for every holomorphic realization of the exact carrier on abelian worlds, rigidity no-go,
+End-mass law for every holomorphic realization of the exact carrier on abelian worlds (corrected sign; End-mass no-go),
 exact discriminator periods re-derived independently, and the minimal scale m0 = 1 on the discriminator.
+**Repair note (2026-10-25, post-audit):** the committed first version carried two mathematical errors caught by the
+independent adversarial audit (grade-duality parity in ch(E^vee) at even p, and a false P1 monoid witness); both are
+corrected in this revision and in the derivation .tex (audit findings F1, F2).
 **Base checkpoint:** `2ac3b2f` (branch research/gpt6-native-point-primitive-span-20261017).
 **Continuation of:** `2026-10-24-gst-forcing-site-pure-realization-congruence-closure-and-gr25-calibration`
 (Theorem A, Lemma B1, Theorem B2), `2026-10-24-gst-gr25-lattice-completion-pure-pair-and-universal-two-center-descent-law`
@@ -30,26 +33,34 @@ exact discriminator periods re-derived independently, and the minimal scale m0 =
    connection: S = 0 forbids EVERY holomorphic realization of the exact Weil carrier character r + mW_R at
    EVERY scale m >= 1, every rank r >= 5, and likewise every pure pair; a single holomorphic carrier at any
    scale forces S = W_Q and full Weil algebraicity.
-3. **Theorem W2 (input stratification).** The forcing input has three inequivalent forms: pair form
-   (x in K0_alg with ch(x) = m alpha pure) iff alpha algebraic; carrier form (a holomorphic bundle with the
-   pure character, rank r >= max(p+1,d+1)) strictly stronger, differing by the **bundle-monoid gap**
-   M(X) := {pure characters realized by algebraic K-classes} vs {realized by single bundles}; and
-   specified-carrier form, stronger still, differing by the **K-torsion gap**
-   K0_tors/(K0_tors cap K0_alg). A conditional fusion lemma is proved (one-step presentable pairs give
-   carriers via kernel + twist-back); the monoid phenomenon is certified on P^1 (the stable-range algebraic
-   class (r+1)[O]-[O(1)] is not a single bundle class, by Birkhoff-Grothendieck digit counts). On the
-   discriminator the residual layer M(A, W) is named and left open. This resolves the cycle-1 audit finding
-   F4 into its true shape: the descent law reads the character only (Theorem A torsion ambiguity harmless
-   for cycle-1 constructions); the monoid layer is the substantive new boundary.
-4. **Theorem W3 (End-signature law) + rigidity no-go.** ch(End E_alpha) = r^2 - m^2 alpha^2 (two grades
-   only); on abelian fourfolds chi(A, End F) = -m^2 * INT(alpha^2) < 0 for EVERY holomorphic realization;
-   Serre duality gives h^1 = h^0 + h^2/2 + (m^2/2) INT(alpha^2) >= 1 + (m^2/2) INT(alpha^2). On the
-   discriminator (INT W_R^2 = 8): h^1 >= 1 + 4m^2, so at the minimal scale m = 1 every realization has
-   h^1 >= 5, growing quadratically in m. Corollary: no rigid-carrier birth law (unique extension classes,
-   monodromy-pinned constructions, isolated incidence schemes) can realize the forcing input on abelian
-   fourfolds at any scale. Complementary to the 2026-10-18 polystable Chern-Weil zero-degree no-go (which
-   kills the polystable channel): whatever survives must be unstable and at least (1 + 4m^2)-dimensional in
-   deformations.
+3. **Theorem W2 (input stratification).** The forcing input has three forms: pair form at SOME positive
+   integer scale (x in K0_alg with ch(x) = m' alpha pure) iff alpha algebraic; carrier form (a holomorphic
+   bundle with the pure character at a pinned scale) implies pair form; specified-carrier form implies
+   carrier form. The layers between the forms: the **bundle-monoid layer** M(X) := {pure characters realized
+   by single holomorphic bundles} inside {realized by algebraic K-classes} -- an OPEN layer; the projective
+   line is proved MONOID-FULL in the derivation (every rank-r class r+q(L-1) is O(q)+O^{r-1}, in particular
+   every pure character is carrier-realizable there), and NO world with a nonempty layer is exhibited; and
+   the **K-torsion gap** of Theorem A's construction ambiguity (ker(ch) = K0_tors; measured qualitatively).
+   A conditional fusion lemma is proved (one-step presentable pairs give carriers via kernel + twist-back).
+   On the discriminator the residual layer M(A, W) is named and left open (emptiness not claimed). This
+   corrects the cycle-1 audit finding F4 into its true shape: the descent law reads the character only
+   (Theorem A torsion ambiguity harmless for cycle-1 constructions); the monoid layer is the substantive
+   open boundary. The first version's P1 "non-representability witness" was FALSE ((r+1)[O]-[O(1)] IS
+   [O(-1)]+O^{r-1} since [O(-1)] = 2[O]-[O(1)]) and is repaired here (audit finding F1).
+4. **Theorem W3 (End-mass law; corrected sign) + End-mass no-go.** ch(E^vee) = r + (-1)^p m alpha (the
+   per-grade duality sign; at even p the dual COINCIDES, it does not negate), hence
+   ch(End E) = r^2 + (1+(-1)^p) rm alpha + (-1)^p m^2 alpha^2; at p = 2: r^2 + 2rm alpha + m^2 alpha^2
+   (three grades). On abelian fourfolds chi(A, End F) = + m^2 * INT(alpha^2) > 0 for EVERY holomorphic
+   realization; Serre duality gives the End-mass identity h^0 + h^2/2 = h^1 + (m^2/2) INT(alpha^2)
+   >= (m^2/2) INT(alpha^2). On the discriminator (INT W_R^2 = 8): h^0 + h^2/2 >= 4m^2, and for simple
+   realizations h^2 >= 8m^2 - 2 (>= 6 at the minimal scale m = 1). Corollary (End-mass no-go): any birth
+   law producing carriers whose even-End-cohomology mass h^0 + h^2/2 is bounded independently of m cannot
+   realize the forcing input at all scales on abelian fourfolds. NO claim about rigidity/isolatedness (the
+   corrected identity permits h^1 = 0 with the mass in h^2). Complementary to the 2026-10-18 polystable
+   Chern-Weil zero-degree no-go (pairing alpha.theta^{d-2}; it kills the polystable channel): whatever
+   survives must be unstable and carry even-End-cohomology mass >= 4m^2 on the discriminator. The first
+   version stated the negative-sign End-signature and a rigidity no-go; both were wrong (grade-duality
+   parity error at even p -- audit finding F2) and are corrected here and in the derivation.
 5. **Exact periods and minimal scale.** Independent exterior-algebra recomputation: W_R^2 = 8 vol (as a
    class, no other components), W_I^2 = 8 vol, W_R W_I = 0, Omega Omega_bar = 16 vol — reproducing the
    2026-10-19 Wolfram computation by an independent method. Kunneth lemma: ch carries the topological
@@ -71,7 +82,7 @@ exact discriminator periods re-derived independently, and the minimal scale m0 =
   Birkhoff-Grothendieck, K-theory finiteness/AH, HRR, Serre duality, Kunneth).
 - Lean shadow (separate commit): GSTWeilForcingFrameCertificate.lean certifies the pure-algebra cores
   (projector polynomial identities + coefficients; the exterior sign-count certificate INT W_R^2 = 8 and
-  the derived End-signature constants) with sorryAx audit and #print axioms on GitHub Actions.
+  the corrected End-mass arithmetic) with sorryAx audit and #print axioms on GitHub Actions.
 
 ## 3. Scope and discipline
 
@@ -92,9 +103,10 @@ exact discriminator periods re-derived independently, and the minimal scale m0 =
   closed statement about its consequences; the zero-test is one well-posed binary geometric question.
 - R1: the forcing input's layer structure is fixed: the pair layer = the conjecture itself; the carrier
   layer = the monoid question M(X); the specified layer = + torsion. Any cycle-2 construction mechanism must
-  declare which layer it addresses. The End-signature gives every candidate construction a sharp
-  necessary condition to satisfy on abelian test worlds (h^1 >= 1 + 4m^2 on A).
-- Next strike (R1): the (p,p)-harmonic/Deligne-cocycle input must now target the CARRIER layer through a
+  declare which layer it addresses. The End-mass law gives every candidate construction a sharp
+   necessary condition to satisfy on abelian test worlds (h^0 + h^2/2 >= 4m^2 on A; h^2 >= 8m^2 - 2 for
+   simple realizations).
+   Next strike (R1): the (p,p)-harmonic/Deligne-cocycle input must now target the CARRIER layer through a
   mechanism compatible with the rigidity no-go — deformable, unstable carriers; or R4: an all-surface
   vanishing theorem on one nonsplit instance.
 
@@ -110,7 +122,7 @@ exact discriminator periods re-derived independently, and the minimal scale m0 =
 ## 6. Status line
 
 Cycle 2 opened at full power: R4 frame completed (Theorem W1), R1 input stratified (Theorem W2),
-End-signature law proved (Theorem W3, rigidity no-go), discriminator constants exact (INT W_R^2 = 8, m0 = 1,
+End-mass law proved (Theorem W3, corrected sign, End-mass no-go), discriminator constants exact (INT W_R^2 = 8, m0 = 1,
 carrier data integral at m = 1). Forcing input remains the open target; no conditional-equivalence claim is
 promoted as progress; the next registry movement must be a carrier-layer construction mechanism or an
 R4 decision on an actual instance.

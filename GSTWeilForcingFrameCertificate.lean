@@ -30,13 +30,17 @@ complementary pair contributes s_i * s_j * invsign(l_i ++ l_j), where invsign is
 of the concatenated index list. We certify, by full evaluation (`decide`), that the eight
 contributions sum to exactly 8:  INT W_R^2 = 8  (equivalently W_R^2 = 8 vol as a class).
 
-Part C — THE END-SIGNATURE ARITHMETIC.
-Given the declared geometric inputs as HYPOTHESES (Riemann--Roch on the abelian fourfold with
-td = 1 and the certified pairing; Serre duality h3 = h1, h4 = h0), the Euler signature
-chi(End F) = -(m^2) * 8 is strictly negative for every nonzero scale m, and the deformation
-signature h^1 = h^0 + h^2/2 + 4 m^2 holds. The rigidity arithmetic: h^0 >= 1, h^2 >= 0,
-m >= 1 force h^1 >= 5 at the minimal scale m = 1 — no rigid holomorphic realization of the
-exact Weil carrier exists at any scale.
+Part C — THE END-MASS ARITHMETIC (corrected sign; audit finding F2 of 2026-10-25).
+The duality sign on Chern characters is PER GRADE: ch(E^vee) = r + (-1)^p m alpha, so at even p the dual
+character coincides with the original; at p = 2, ch(End E) = r^2 + 2rm alpha + m^2 alpha^2 (three grades).
+Given the declared geometric inputs as HYPOTHESES (Riemann--Roch on the abelian fourfold with td = 1 and the
+certified pairing; Serre duality h3 = h1, h4 = h0), the Euler signature
+chi(End F) = +(m^2) * 8 > 0 for every scale m ≠ 0, and the End-mass identity
+h0 + h2/2 = h1 + 4 m^2 >= 4 m^2 holds. The End-mass no-go: h1 >= 0, m >= 1 force
+h0 + h2/2 >= 4, and for simple realizations (h0 = 1) this forces h2 >= 8 m^2 - 2 (>= 6 at m = 1):
+any birth law producing carriers with bounded even-End-cohomology mass cannot realize the forcing input
+at all scales on the discriminator. No claim is made about rigidity (the corrected identity permits
+h1 = 0 with the mass carried by h2).
 
 ## Context (commentary; NOT certified in this file)
 
@@ -144,8 +148,8 @@ theorem weil_WR_square_top_certificate :
 
 /-- The Euler signature of End F on the discriminator: chi = -(m^2) * INT W_R^2 = -8 m^2
     is strictly negative at every nonzero scale. -/
-theorem end_signature_negative (m : ℚ) (hm : m ≠ 0) :
-    (-(m*m)) * 8 < 0 := by
+theorem end_mass_positive (m : ℚ) (hm : m ≠ 0) :
+    (0:ℚ) < (m*m) * 8 := by
   have hpos : (0:ℚ) < m * m := by
     rcases lt_or_gt_of_ne hm with h | h
     · first
@@ -153,30 +157,38 @@ theorem end_signature_negative (m : ℚ) (hm : m ≠ 0) :
       | have hm2 : (0:ℚ) < -m := by linarith
         nlinarith [hm2]
     · exact mul_pos h h
-  linarith
+  nlinarith
 
-/-- The deformation signature: from the RR signature and Serre duality (declared as
-    hypotheses; external leaves E8, E9 of the derivation), every holomorphic realization of
-    the exact Weil carrier satisfies h^1 = h^0 + h^2/2 + 4 m^2. -/
-theorem h1_deformation_signature (m h0 h1 h2 h3 h4 chi : ℚ)
+/-- The End-mass identity: from the RR signature (corrected positive sign) and Serre duality (declared as
+    hypotheses; external leaves E8, E9 of the derivation), every holomorphic realization of the exact Weil
+    carrier satisfies h^0 + h^2/2 = h^1 + 4 m^2. -/
+theorem end_mass_identity (m h0 h1 h2 h3 h4 chi : ℚ)
     (heuler : chi = h0 - h1 + h2 - h3 + h4)
     (hdual3 : h3 = h1)
     (hdual4 : h4 = h0)
-    (hRR : chi = -(m*m) * 8) :
-    h1 = h0 + h2/2 + (m*m)*8/2 := by
-  have hdiv : (m*m)*8/2 = (m*m)*4 := by ring
-  rw [hdiv]
+    (hRR : chi = (m*m) * 8) :
+    h0 + h2/2 = h1 + (m*m)*8/2 := by
   linarith [heuler, hdual3, hdual4, hRR]
 
-/-- Rigidity arithmetic at the minimal scale: h0 >= 1 (identity endomorphism),
-    h2 >= 0, m >= 1  ⟹  h1 >= 5. -/
-theorem rigidity_no_go_minimal (m h0 h1 h2 : ℚ)
-    (hsig : h1 = h0 + h2/2 + (m*m)*8/2)
-    (hm : (1:ℚ) ≤ m) (h0ge : (1:ℚ) ≤ h0) (h2ge : (0:ℚ) ≤ h2) :
-    (5:ℚ) ≤ h1 := by
+/-- End-mass no-go at the minimal scale: h1 >= 0 and m >= 1  ⟹  h0 + h2/2 >= 4. -/
+theorem end_mass_no_go_minimal (m h0 h1 h2 : ℚ)
+    (hsig : h0 + h2/2 = h1 + (m*m)*8/2)
+    (hm : (1:ℚ) ≤ m) (h1ge : (0:ℚ) ≤ h1) :
+    (4:ℚ) ≤ h0 + h2/2 := by
   have hmm : (1:ℚ) ≤ m*m := by nlinarith
   have hdiv : (m*m)*8/2 = (m*m)*4 := by ring
   rw [hsig, hdiv]
+  nlinarith
+
+/-- Simple-realization refinement: h0 = 1 (simple carrier), h1 >= 0, m >= 1  ⟹  h2 >= 8 m^2 - 2
+    (in particular h2 >= 6 at m = 1 on the discriminator). -/
+theorem simple_end_mass_bound (m h0 h1 h2 : ℚ)
+    (hsig : h0 + h2/2 = h1 + (m*m)*8/2)
+    (h0eq : h0 = 1) (h1ge : (0:ℚ) ≤ h1) (hm : (1:ℚ) ≤ m) :
+    (8:ℚ)*m*m - 2 ≤ h2 := by
+  have hmm : (1:ℚ) ≤ m*m := by nlinarith
+  have hdiv : (m*m)*8/2 = (m*m)*4 := by ring
+  rw [h0eq] at hsig
   nlinarith
 
 /-! ## Capstones -/
@@ -204,13 +216,18 @@ theorem weil_forcing_frame_capstone_B :
 
 theorem weil_forcing_frame_capstone_C :
     (∀ m h0 h1 h2 h3 h4 chi : ℚ,
-      chi = h0 - h1 + h2 - h3 + h4 → h3 = h1 → h4 = h0 → chi = -(m*m)*8 →
-        h1 = h0 + h2/2 + (m*m)*8/2) ∧
+      chi = h0 - h1 + h2 - h3 + h4 → h3 = h1 → h4 = h0 → chi = (m*m)*8 →
+        h0 + h2/2 = h1 + (m*m)*8/2) ∧
     (∀ m h0 h1 h2 : ℚ,
-      h1 = h0 + h2/2 + (m*m)*8/2 → (1:ℚ) ≤ m → (1:ℚ) ≤ h0 → (0:ℚ) ≤ h2 → (5:ℚ) ≤ h1) := by
+      h0 + h2/2 = h1 + (m*m)*8/2 → (1:ℚ) ≤ m → (0:ℚ) ≤ h1 → (4:ℚ) ≤ h0 + h2/2) ∧
+    (∀ m h0 h1 h2 : ℚ,
+      h0 + h2/2 = h1 + (m*m)*8/2 → h0 = 1 → (0:ℚ) ≤ h1 → (1:ℚ) ≤ m →
+        (8:ℚ)*m*m - 2 ≤ h2) := by
   exact ⟨fun m h0 h1 h2 h3 h4 chi h1' h2' h3' h4' =>
-      h1_deformation_signature m h0 h1 h2 h3 h4 chi h1' h2' h3' h4',
-    fun m h0 h1 h2 hsig hm h0ge h2ge => rigidity_no_go_minimal m h0 h1 h2 hsig hm h0ge h2ge⟩
+      end_mass_identity m h0 h1 h2 h3 h4 chi h1' h2' h3' h4',
+    fun m h0 h1 h2 hsig hm h1ge => end_mass_no_go_minimal m h0 h1 h2 hsig hm h1ge,
+    fun m h0 h1 h2 hsig h0eq h1ge hm =>
+      simple_end_mass_bound m h0 h1 h2 hsig h0eq h1ge hm⟩
 
 #print axioms weil_forcing_frame_capstone_A
 #print axioms weil_forcing_frame_capstone_B
