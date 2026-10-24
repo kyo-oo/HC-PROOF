@@ -87,8 +87,12 @@ set_option maxRecDepth 100000
 
 /-! ## The bitmask exterior model -/
 
-/-- The letter positions of a monomial mask (positions 0..7). -/
-def bitList (m : ℕ) : List ℕ := (List.range 8).filter (fun i => ((m >>> i) % 2 = 1))
+/-- The letter positions of a monomial mask (positions 0..7; the committed div/mod idiom). -/
+def bitList (m : ℕ) : List ℕ := (List.range 8).filter (fun i => ((m / 2 ^ i) % 2 = 1))
+
+/-- Disjointness of two masks: no letter position set in both (structural Bool test). -/
+def disjoint (m1 m2 : ℕ) : Bool :=
+  (bitList m1).all (fun a => decide (((m2 / 2 ^ a) % 2 = 0)))
 
 /-- Cross inversions between two ascending words: #(a in l1, b in l2) with a > b. -/
 def invPairs : List ℕ → List ℕ → ℕ
@@ -119,10 +123,22 @@ def normAcc : List (ℚ × ℕ) → List (ℚ × ℕ) → List (ℚ × ℕ)
 /-- Normal form of a class: ascending distinct masks, merged coefficients, no zeros. -/
 def normCl (c : List (ℚ × ℕ)) : List (ℚ × ℕ) := normAcc c []
 
-/-- The wedge of two classes in the bitmask model. -/
+/-- The surviving product terms of one left monomial against a right class. -/
+def pairTerms (p : ℚ × ℕ) : List (ℚ × ℕ) → List (ℚ × ℕ)
+  | [] => []
+  | q :: rest =>
+    if disjoint p.2 q.2 = true then
+      (p.1 * q.1 * wsign (bitList p.2) (bitList q.2), p.2 + q.2) :: pairTerms p rest
+    else pairTerms p rest
+
+/-- All surviving product terms of two raw classes. -/
+def wedgeTerms : List (ℚ × ℕ) → List (ℚ × ℕ) → List (ℚ × ℕ)
+  | [], _ => []
+  | p :: rest, c2 => pairTerms p c2 ++ wedgeTerms rest c2
+
+/-- The wedge of two classes in the bitmask model (disjoint masks merge by SUM: union = sum). -/
 def wedgeCl (c1 c2 : List (ℚ × ℕ)) : List (ℚ × ℕ) :=
-  normCl (c1.flatMap (fun p1 => c2.flatMap (fun p2 =>
-    if p1.2 &&& p2.2 = 0 then [(p1.1 * p2.1 * wsign (bitList p1.2) (bitList p2.2), p1.2 ||| p2.2)] else [])))
+  normCl (wedgeTerms c1 c2)
 
 /-- Scalar multiple of a class. -/
 def smulCl (q : ℚ) (c : List (ℚ × ℕ)) : List (ℚ × ℕ) := normCl (c.map (fun p => (q * p.1, p.2)))
@@ -139,9 +155,9 @@ def powCl (c : List (ℚ × ℕ)) : ℕ → List (ℚ × ℕ)
 def intCl (c : List (ℚ × ℕ)) : ℚ := coeffOf 255 c
 
 /-- The cohomological FM transform on degree-4 classes (dual-basis convention): a monomial goes to
-    its wsign-weighted complement mask. -/
+    its wsign-weighted complement mask (the complement of m in the 8-letter volume is 255 - m). -/
 def fmCl (x : List (ℚ × ℕ)) : List (ℚ × ℕ) :=
-  normCl (x.map (fun p => (p.1 * wsign (bitList p.2) (bitList (255 ^^^ p.2)), 255 ^^^ p.2)))
+  normCl (x.map (fun p => (p.1 * wsign (bitList p.2) (bitList (255 - p.2)), 255 - p.2)))
 
 /-! ## DATA: the Weil classes and theta (from the exterior algebra; hand-checkable) -/
 
@@ -327,11 +343,12 @@ theorem pair_end_table_t2 (m qM p1 chi2 : ℚ)
   rw [hRR]
   ring
 
-/-- W6(v), third line, universal: the difference of the first two lines. -/
+/-- W6(v), third line, universal: the telescoped SUM of the first two lines
+    (chi(End E+) - chi(End E-) = [chi(End E+) - chi(E+ x E-^vee)] + [chi(E+ x E-^vee) - chi(End E-)]). -/
 theorem pair_end_table_t3 (m qM chi1 chi2 d : ℚ)
     (h1 : chi1 = 8 * m * m - m * qM)
     (h2 : chi2 = -m * qM)
-    (hd : d = chi1 - chi2) :
+    (hd : d = chi1 + chi2) :
     d = 8 * m * m - 2 * m * qM := by
   rw [hd, h1, h2]
   ring
@@ -476,7 +493,7 @@ theorem pair_channel_walls_capstone_B :
       chi1 = 8 * m * m - m * qM) ∧
     (∀ m qM p1 chi2 : ℚ, p1 = 0 → chi2 = m * ((p1 / 2) - qM) → chi2 = -m * qM) ∧
     (∀ m qM chi1 chi2 d : ℚ, chi1 = 8 * m * m - m * qM → chi2 = -m * qM →
-      d = chi1 - chi2 → d = 8 * m * m - 2 * m * qM) ∧
+      d = chi1 + chi2 → d = 8 * m * m - 2 * m * qM) ∧
     (∀ m d : ℚ, d = 8 * m * m - 2 * m * ((0:ℚ)) → d = 8 * m * m) :=
   ⟨fun m k i1 i2 chi h1 h2 hRR => pair_twist_difference_zero m k i1 i2 chi h1 h2 hRR,
    fun m a0 a1 a2 a3 chi h0 h1 h3 hRR =>
@@ -501,7 +518,7 @@ theorem pair_channel_walls_capstone_C :
     (chiPP (pairEplus 6 zeroCl WRcl zeroCl 2) (pairEminus 6 zeroCl WRcl zeroCl)
       - chiPP (pairEminus 6 zeroCl WRcl zeroCl) (pairEminus 6 zeroCl WRcl zeroCl)
       = 2 * (intCl (wedgeCl WRcl (pairEminus 6 zeroCl WRcl zeroCl).g2))) :=
-  ⟨w6_instance_1.1, w6_instance_2.2.2.1, w6_instance_3.2.1, w6_instance_4.2.2.1,
+  ⟨w6_instance_1.1, w6_instance_2.2.2.2.1, w6_instance_3.2.1, w6_instance_4.2.2.1,
    w6_carrier_instance.2.2.2, w4_detector_instance⟩
 
 #print axioms pair_channel_walls_capstone_A
