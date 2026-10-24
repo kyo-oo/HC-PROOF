@@ -20,8 +20,9 @@ that makes the single law arithmetic, principal, transportable, and seed-certifi
 structure survives inside the reduction); Theorem P (the first full determination: m*(P^2, 1, [line]) = 2,
 with the explicit witness pair (O(1)⊕O(1), O(1)⊕O(−1)) — the sinh-oddness purity — and the parity
 obstruction m even via P^2 Chern-lattice integrality); the Gr(2,5) seed DETERMINED EXACTLY:
-m*(Gr(2,5), 2, alpha) = 360 (committed witness pair at 360 + committed K-lattice necessity 360 | m +
-principality; the former leaf E16 is CLOSED); Theorem G (the upgraded ontological type-graph Gamma
+m*(Gr(2,5), 2, alpha) = 360 (committed witness pair at 360 + the committed cycle-1 K-lattice necessity
+"integral pure character at scale m iff 360 | m" — proved in the cycle-1 derivation, 47/47 cross-checked
+in the cycle-1 audit, explicitly NOT kernel-verified — + principality; the former leaf E16 is CLOSED); Theorem G (the upgraded ontological type-graph Gamma
 carrying the fold laws as typed total edges, on which m* is a vertex quantity and FS_∀ is a single graph law,
 verified on the certified seed vertices).
 **Base checkpoint:** `3085a0d` (branch research/gpt6-native-point-primitive-span-20261017; cycle 2 closed at
@@ -41,9 +42,12 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
    meta-law M-U1: TOTAL on its input type — for every input of the prescribed type the output is defined and
    the class-return identity holds, with no side condition beyond the type discipline (backings:
    projective-bundle theorem, Thom–Porteous, Rees algebra/deformation to the normal cone, the committed
-   Theorem C, Serre generation) — and the grade-typing declaration: pullback / line-tensor / dual / direct
-   sum are grade-preserving (carrier-typed); Gysin/pushforward with Todd correction is grade-mixing
-   (cycle-typed only). Meta-law M-U2: total typed laws compose; the composite process is input-uniform.
+   Theorem C, Serre generation; for L2/L5 the general-position conditions are folded INTO the input type —
+   totality is totality ON THAT TYPE) — and the grade-typing declaration: pullback / dual / direct sum are
+   grade-preserving (carrier-typed); tensor by a line bundle is NOT grade-preserving on pure characters
+   (excluded from the transport edges, per the twist-mixing remark); Gysin/pushforward with Todd correction
+   is grade-mixing (cycle-typed only). Meta-law M-U2: total typed laws compose; the composite process is
+   input-uniform.
    These two meta-laws are the formal content of the owner's "the next process applies [to all inputs]".
 
 2. **Theorem U (pipeline universality).** For every input (X, p, alpha): S1 the exact carrier of cycle-1
@@ -66,8 +70,11 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
 4. **Theorem M (fold-scale group; principality).** Pi_I(X,p,alpha) := scales of integrable pure pairs is an
    additive subgroup of Z (0 via the trivial pair; + via T2; − via T3). Hence principal: either {0} (define
    m* = 0) or m* Z with m* the least positive scale; every occurring scale is a multiple of m* and m* itself
-   occurs. m* is monotone along pullback edges: m*(X, p, f*beta) | m*(Y, p, beta). Pi_I ⊆ Sigma (the cycle-2
-   character scale set). m* is a GST-native world quantity — the complete per-type content of the bit is ONE
+   occurs. m* is monotone along pullback edges: m*(X, p, f*beta) | m*(Y, p, beta). Relation to the committed
+   cycle-2 CARRIER scale monoid Sigma (its least element, the committed symbol m*_c, disambiguated from the
+   pair-scale generator m*): T4 embeds Sigma into the positive part of Pi_I, so m* divides every carrier
+   scale, in particular m* | m*_c; the reverse inclusion is explicitly NOT claimed (the monoid layer stays
+   open). m* is a GST-native world quantity — the complete per-type content of the bit is ONE
    nonnegative integer.
 
 5. **Theorem N (FOR-ALL-N).** (i) For EVERY input: m* > 0 ⟹ alpha algebraic, correction-free (run S3–S5 on
@@ -94,9 +101,10 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
    degree-1 line bundle L). Points: vacuous. Gr(2,5) p = 2: DETERMINED EXACTLY m*(Gr(2,5), 2, alpha) = 360
    — the committed completed pure pair (ranks 2231 = 2231, difference exactly 360·alpha, all grades
    >= 3 certified equal) is a witness at 360, the committed cycle-1 K-lattice NECESSITY (integral pure
-   character at scale m iff 360 | m) forces 360 | m for every integrable pure pair, and principality
-   (M(ii)) forces m* | 360; hence m* = 360 and the former leaf E16 is CLOSED (no further computation
-   needed). The bit-true sector and the conclusion-true sector (p in {0,1,d−1,d}, d <= 3, by committed
+   character at scale m iff 360 | m; proved in the cycle-1 .tex, 47/47 cross-checked in the cycle-1 audit,
+   explicitly NOT kernel-verified — the certificate records it in its Context commentary) forces 360 | m
+   for every integrable pure pair, and principality (M(ii)) forces m* | 360; hence m* = 360 and the former
+   leaf E16 is CLOSED (no further computation needed). The bit-true sector and the conclusion-true sector (p in {0,1,d−1,d}, d <= 3, by committed
    in-repo results) are related but kept distinct for bookkeeping: on conclusion-true worlds the bit is
    TRUE (N(ii) via the committed W2 direction); the sectors carry different certificate types and neither
    inflates the other.
@@ -123,8 +131,9 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
   least positive scale is claimed beyond the seed worlds and the transport edges.
 - CLOSED this strike: the former leaf E16 — m*(Gr(2,5), 2, alpha) = 360 exactly (committed witness +
   committed K-lattice necessity + principality).
-- No per-input conditional equivalence (M3): the reduction is a one-way implication from a single universal
-  law; no instance decision (R4) or discriminator analysis is smuggled back in.
+- No per-input conditional equivalence smuggled as progress (M3): the equivalence HC ⟺ FS_∀ is attributed
+  (⟸ N(i) here; ⟹ the committed W2) and recorded as normalization; the new content is the structure
+  theorems and the seeds; no instance decision (R4) or discriminator analysis is smuggled back in.
 - No CI claim for the .tex; the machine-checkable companion is the Lean certificate
   GSTGraphV2OntologicalFoldForAllN.lean (kernel-checks: the P^2 seed witness purity + scale 2; the
   line-sum parity obstruction (ALL-rank line-sum pairs: Int squares mod 2 + list induction); the scale-set
@@ -132,8 +141,9 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
   determination p2_mstar_eq_two = 2 WITHIN THE LINE-SUM pair calculus instance P2PairCal — the extension
   to ALL holomorphic pairs on P^2 via Chern-lattice integrality (Theorem P(ii)) is derivation-level and
   NOT kernel-checked; the abstract for-all-N packaging with the classical laws as clearly-labeled record
-  fields; capstone axiom audits). CI GREEN: run 40125515707 @ 86ab17d (capstone_B axiom-free; the rest
-  [propext, Classical.choice, Quot.sound]; sorryAx-audited; 8698 jobs).
+  fields; capstone axiom audits). CI GREEN: run 40125515707 @ 86ab17d (first green; six-round arc) and
+  run 40128033668 @ 5d58a9e (the audited state after the docstring/echo scoping repairs; capstone_B
+  axiom-free; the rest [propext, Classical.choice, Quot.sound]; sorryAx-audited; 8698 jobs).
 
 ## 3. Provenance
 
@@ -142,7 +152,7 @@ rational (p,p) Hodge class alpha: construct Z in CH^p(X)_Q with canonical class 
   works, hence completing the entire proof. GO, ULTRA MODE."
 - GST receipts: the five typed fold laws (owner's expanded fold calculus, 2026-10-21–24 record corpus); the
   upgraded GSTGraphV2Ontological layer (this record's Gamma); world-birth witnesses (P^2, curves, Gr(2,5));
-  the native firewall discipline preserved as the M3 one-way rule.
+  the native firewall discipline preserved as the M3 attribution-and-normalization rule.
 - V6 Mode B with all five sub-skills: select-tractable-problem (the for-all-N reduction selected over the
   R4 instance decision), craft-proof-prompt (the campaign contract held: fixed target, no family
   switching), prove-open-problem (this strike), adversarial-proof-audit (the Phase-4 loop on this strike),

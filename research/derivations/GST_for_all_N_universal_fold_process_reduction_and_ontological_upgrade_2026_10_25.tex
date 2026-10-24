@@ -520,12 +520,15 @@ difference); minimality forces $r=0$.  Uniqueness of $m^\star$ is immediate.
 T1 gives $\Pi_I(Y)\subseteq\Pi_I(X)$, so the least positive element of the
 right side divides every element of the left; with (ii),
 $m^\star(X)\mid s$ for all $s\in\Pi_I(Y)$, in particular
-$s=m^\star(Y)$.  (iv) T4 constructs the pair $(E,\Oo^{r})$ from any single carrier $E$ at
-scale $m$; the character difference is unchanged and pure; membership in
-$\Sigma$ is exactly the existence of a pure character difference at scale
-$m$ (the cycle-2 strike-2 scale-monoid), so the inclusion is a relabeling of
-the definition; the $\Gr(2,5)$ clause is the committed kernel-verified pure
-pair certificate \cite{GST-gr25} at scale $360$.
+$s=m^\star(Y)$.  (iv) T4 constructs the pair $(E,\Oo^{r})$ from any single
+carrier $E$ at scale $m$; the character difference is unchanged and pure, and
+both sides remain holomorphic, so $m$ lies in $\Pi_I$: this is the embedding
+of the committed carrier-scale monoid $\Sigma$ into the positive part of the
+pair-scale group.  The reverse need not hold (a pure pair difference need not
+come from a single carrier --- the committed open monoid layer), which is why
+the inclusion is stated in this direction only.  The divisibility clause
+follows: $m^\star$ divides every element of $\Pi_I$, hence every carrier
+scale, hence $m^\star_{\mathrm c}$ whenever the carrier monoid is nonempty.
 \end{proof}
 
 \begin{remark}
@@ -703,8 +706,10 @@ $(E_+,E_-)$ of \cite{GST-gr25} --- equal ranks $2231=2231$, character
 difference exactly $360\,\alpha$, all grades $\ge3$ certified equal ---
 is an integrable pure pair at scale $360$.  Moreover the committed cycle-1
 K-lattice \emph{necessity} (an integral $K$-class with pure character
-$m\alpha$ exists iff $360\mid m$; kernel-verified in the Gr(2,5)
-certificate) applies to every integrable pure pair: the difference
+$m\alpha$ exists iff $360\mid m$; proved in the cycle-1 derivation and
+verified by the 47/47 computational cross-check of the cycle-1 audit;
+explicitly NOT kernel-verified --- the certificate lists it in its Context
+section) applies to every integrable pure pair: the difference
 $[E_+]-[E_-]$ is an integral $K$-class with character $m\alpha$, so
 $360\mid m$.  By Theorem~\ref{thm:M}(ii) ($m^\star$ divides every scale
 and occurs itself), $m^\star\mid 360$ and $m^\star$ occurs; by the
@@ -722,8 +727,10 @@ The pair is a pair of sums of actual holomorphic Schur bundles
 the purity certificates are the kernel-verified statements of the committed
 Lean certificate \cite{GST-gr25} (CI-green, axiom-audited); the necessity
 $360\mid m$ for every integral pure character at scale $m$ is the committed
-minimality statement of the same certificate.  The scale-group consequences
-are Theorem~\ref{thm:M}.
+minimality statement of the cycle-1 derivation (proved there in the .tex;
+cross-checked 47/47 in the cycle-1 audit; the certificate's kernel content is
+the purity/rank/period table, with minimality recorded in its Context
+commentary).  The scale-group consequences are Theorem~\ref{thm:M}.
 \end{proof}
 
 \begin{remark}[The resolved sector, stated with exactness]
@@ -823,7 +830,8 @@ the upgraded \texttt{GSTGraphV2Ontological} layer (Definition~\ref{def:gamma}
 language for the seed witnesses (explicit holomorphic worlds with explicit
 fold witnesses); the cycle-1/2 GST-native firewall discipline
 (NativeCycleRecoordination / CMNM closure-reaches-Hodge-iff-actual-cycle)
-preserved here as the M3 rule that the implication stays one-way.
+preserved here as the M3 rule that the equivalence is attributed and recorded
+as normalization (Theorem~\ref{thm:N}).
 \item \emph{V6 Mode B with the five sub-skills}: this strike runs the Mode B
 campaign pipeline --- problem selection (the tractable core: the for-all-$N$
 reduction rather than an instance decision), prompt contract (the campaign
