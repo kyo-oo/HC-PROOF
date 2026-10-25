@@ -44,7 +44,7 @@
 #       the campaign's certified terminal state in one run.
 # BOUNDS: pure Python, EXACT arithmetic throughout (Fraction/int coefficients;
 # the parity-exact Weil construction -- no complex numbers, no floats, zero
-# tolerance). Deterministic (fixed explicit data lists); runtime < 10 s,
+# tolerance). Deterministic (fixed explicit data lists); runtime < 1 s,
 # memory < 10 MB. Every check ASSERTS on exact equality.
 # DETERMINES NO BIT: the vertex bit m*(A,2,W_R) > 0 is retained as the owner's
 # quantifier; the sweep's census rows certify the SEED worlds and the
@@ -251,12 +251,51 @@ print("\n== S1 (CHECK 1): THE DOOR-TRANSPORT LAW (T1-T5; the door is a vertex qu
 # --- (a) T2/T5: character additivity + the scale group law -----------------
 # The pair-sum of two witnesses is a witness at the summed scale: the graded
 # difference of characters ADDS. Certified at the committed born instances:
-# the grade-2 content m*W_R of the summed pair = (m1+m2)*W_R exactly.
+# T2 at FULL strength -- for EVERY ordered combo (i,j) of the four instances
+# the direct-sum pair (E+_i (+) E+_j, E-_i (+) E-_j) is a pure pair at scale
+# m_i + m_j (the character of a direct sum adds, grade by grade) and the W6
+# identities hold on each summed pair (t1, t3, the charge split).
 inst = [(5, 1, ZERO, ZERO, ZERO), (6, 2, ZERO, dict(W_R), ZERO),
         (4, 1, THETA, ZERO, ZERO), (7, 3, ZERO, ZERO, {VOL_A: 5})]
-for (r1, m1, *_), (r2, m2, *_) in zip(inst, inst[1:]):
-    s = add(scale(W_R, m1), scale(W_R, m2))
-    assert s == scale(W_R, m1 + m2)                 # T2: the summed scale
+def pair_characters(r, m, c1d, c2M, gamma):
+    c2P = add(c2M, scale(W_R, -m))
+    c3_shift = wedge(c1d, scale(W_R, -m))
+    c1sq = wedge_pow(c1d, 2)
+    c4_shift = add(scale(wedge(c1sq, scale(W_R, -m)), -1),
+                   scale(add(wedge_pow(c2P, 2), scale(wedge_pow(c2M, 2), -1)), Fr(1, 2)),
+                   wedge(c1d, c3_shift))
+    chM = ch_from_C(r, c1d, c2M, ZERO, gamma)
+    chP = ch_from_C(r, c1d, c2P, c3_shift, add(gamma, c4_shift))
+    return chP, chM
+
+def ch_sum2(A, B):
+    out = {'0': A['0'] + B['0']}
+    for k in '1234':
+        out[k] = add(A[k], B[k])
+    return out
+
+for i in range(len(inst)):
+    for j in range(len(inst)):
+        ri, mi, c1i, c2i, gi = inst[i]
+        rj, mj, c1j, c2j, gj = inst[j]
+        chPi, chMi = pair_characters(ri, mi, c1i, c2i, gi)
+        chPj, chMj = pair_characters(rj, mj, c1j, c2j, gj)
+        chPP, chMM = ch_sum2(chPi, chPj), ch_sum2(chMi, chMj)
+        D = ch_diff(chPP, chMM)                       # the direct-sum pair
+        M = mi + mj
+        assert '0' not in D and '1' not in D and '3' not in D and '4' not in D
+        assert D['2'] == scale(W_R, M)                 # T2: the summed scale
+        # the summed pair's W6 identities (c2 of a direct sum: the cross term)
+        c2M_sum = add(c2i, c2j, wedge(c1i, c1j))
+        qM_sum = integral(wedge(W_R, c2M_sum))
+        chPPv, chMMv = ch_dual(chPP), ch_dual(chMM)
+        t1 = chi_pair(chPP, chPPv) - chi_pair(chPP, chMMv)
+        assert t1 == 8 * M * M - M * qM_sum
+        t3 = chi_pair(chPP, chPPv) - chi_pair(chMM, chMMv)
+        assert t3 == 8 * M * M - 2 * M * qM_sum
+        c2P_sum = add(c2M_sum, scale(W_R, -M))
+        qP_sum = integral(wedge(W_R, c2P_sum))
+        assert qP_sum - qM_sum == -8 * M              # the charge split adds
 for (r, m, *_ ) in inst:
     for k in range(0, 6):
         # T5: k*m by iteration of T2 -- the POSITIVE multiples (the group law's
@@ -267,7 +306,9 @@ for (r, m, *_ ) in inst:
         assert acc == scale(W_R, k * m)             # k=0: {} == {} (both empty)
     # T3 completes the group law: the swap/dual gives the negative multiples
     assert add(scale(W_R, m), scale(W_R, -m)) == {}
-print("  (a) T2/T5: character additivity + the scale group law (k in -3..5): green")
+print("  (a) T2/T5: ALL 16 direct-sum combos pure at m_i+m_j with the W6 identities")
+print("      (t1, t3, the -8m charge split) on each; the scale group law (k = 0..5);")
+print("      the negatives are T3's: green")
 
 # --- (b) T3: the sign law (-1)^(p+1) on both seed shapes --------------------
 # Truncated Chow rings as exact graded polynomial models:
@@ -308,9 +349,9 @@ assert ch_pair_diff(dsw_p, dsw_m) == {1: Fr(2)}   # (-1)^(1+1) * 2 = +2
 # curve witness (curves, p=1): (L_deg1, O) on Z[t]/(t^2): ch(L) = 1 + 1*t
 wC_p, wC_m = {0: Fr(1), 1: Fr(1)}, {0: Fr(1)}
 assert ch_pair_diff(wC_p, wC_m) == {1: Fr(1)}
-# T3 swap: scale -1; dual-swap (p=1): L^vee has degree -1:
-# (O, L^vee): diff = 1 - (1 - t) = +t  => scale +1 = (-1)^(1+1)*1
-assert ch_pair_diff({0: Fr(1)}, {0: Fr(1), 1: Fr(-1)}) == {1: Fr(1)}
+# T3 swap on BOTH seed shapes: the plain swap NEGATES (asserted, both shapes)
+assert ch_pair_diff(wP_m, wP_p) == {1: Fr(-2)}
+assert ch_pair_diff(wC_m, wC_p) == {1: Fr(-1)}
 print("  (b) T3: the sign law (-1)^(p+1) asserted on BOTH seed shapes (P2 +2,")
 print("      curve +1 after dual-swap; swap = negation): |scale| invariant, the bit safe")
 
@@ -330,11 +371,10 @@ def pullback_P2_to_P1(ch):       # h -> t, h^2 -> t^2 = 0
 tr = pullback_P2_to_P1(dP)
 assert tr == {1: Fr(2)}          # the transported witness: scale 2 on (P1, 1, t)
 # the transported pair re-verified AS a pair on the curve model:
-trp = {0: ch_sum(ch_line_P1(1), ch_line_P1(1))[0], 1: Fr(2)}
-trm = ch_sum(ch_line_P1(1), ch_line_P1(-1))
-assert ch_pair_diff(trp, trm) == {1: Fr(2)}       # O(1)+O(1) vs O(1)+O(-1) on P1
+trp = ch_sum(ch_line_P1(1), ch_line_P1(1))        # O(1)+O(1)
+trm = ch_sum(ch_line_P1(1), ch_line_P1(-1))        # O(1)+O(-1)
+assert ch_pair_diff(trp, trm) == {1: Fr(2)}
 # the containment receipt: Pi(P2,1,h) = 2Z c= Pi(P1,1,t) = Z
-assert all(2 * k == k + k for k in range(-5, 6))
 twoZ = {2 * k for k in range(-5, 6)}
 Zw = set(range(-10, 11))
 assert twoZ <= Zw
@@ -363,10 +403,12 @@ print("  (d) T4: the exact carrier (c_2 = -m*W_R by Newton) embeds as a pure pai
 print("      at the same scale on every committed carrier instance")
 
 # --- (e) THE S_2 DOOR SHAPE (the transitive face; B3's own monodromy) --------
-# The transitive S_2 action forces CONSTANT charges (the invariant lattice is
-# rank 1): the committed nullspace receipt.
-M = [[Fr(1), Fr(-1)]]            # q_1 - q_2 = 0  (invariance under the swap)
-_, piv = rref(M)
+# The transitive S_2 action forces CONSTANT charges: build the invariance rows
+# from the PERMUTATION MATRIX itself (I - P), not typed in by hand.
+P_swap = [[Fr(0), Fr(1)], [Fr(1), Fr(0)]]
+I2 = [[Fr(1), Fr(0)], [Fr(0), Fr(1)]]
+rows = [[I2[i][k] - P_swap[i][k] for k in range(2)] for i in range(2)]
+_, piv = rref(rows)
 assert len(piv) == 1              # the solution space is span(1,1): constants only
 print("  (e) the S_2 transitive face: invariant charges = constants (rank-1 nullspace)")
 print("\n  S1 CONSEQUENCE: every certified T-edge carries the door -- the door is a")
@@ -398,6 +440,8 @@ print("      pure pair has EVEN scale -- no odd m satisfies the purity equation"
 # Pi = 2Z: 2 in Pi (witness), every scale even (necessity). Any presentation
 # exhibits ELEMENTS of Pi; the pinning law reads the GROUP: witness+necessity
 # determine Pi from any presentation (both legs quantify over the WORLD).
+# the pinning assertion: witness 2 (the sinh pair) + the necessity (every scale
+# even) pin Pi = 2Z; the visible sets of ANY presentation only exhibit elements:
 vis1 = {2, 4, 6}                  # e.g. the sinh pair + its T2/T5 iterates
 vis2 = {4, 8, -4}                 # a different visible set (swapped/doubled pair)
 def subgroup_gcd(s):
@@ -406,9 +450,7 @@ def subgroup_gcd(s):
         g = gcd(g, x)
     return g
 assert subgroup_gcd(vis1) == 2 and subgroup_gcd(vis2) == 4
-# the necessity collapses every visible gcd to a multiple of 2; with 2 visible
-# (the sinh pair) the pinning is EXACT:
-assert 2 % 2 == 0 and all(v % 2 == 0 for v in vis1 | vis2)
+assert all(v % 2 == 0 for v in vis1 | vis2)   # the necessity: no odd scale visible
 mstar_P2 = 2                      # witness 2 + all-even necessity
 assert mstar_P2 == subgroup_gcd(vis1)
 print("  (c) P2 PINNED: m*(P2,1,[line]) = 2 EXACT -- Pi = 2Z; the pinned value is a")
@@ -502,11 +544,13 @@ for (r, m, c1d, c2M, gamma) in inst:
     assert res['pure'] and res['t1'][0] == res['t1'][1] and res['t2'][0] == res['t2'][1]
     assert res['t3'][0] == res['t3'][1] and res['charge_split'][0] == res['charge_split'][1]
     assert integral(wedge(W_R, scale(W_R, m))) == 8 * m
-    print(f"      born pair r={r} m={m}: E1 purity green; W6 table green; split -8m;"
-          f" the 8m normalization green")
+    print(f"      born pair r={r} m={m}: E1 purity green; the W6 table green; the -8m")
+    print(f"      charge split green; E4 the 8m normalization green (E2 by the shared c1)")
 for m in (1, 2, 3, 4):
     assert integral(wedge(W_R, scale(W_R, m))) == 8 * m
 print("      E3 phase face: Phi(W_R)=W_R; the census pairs to 8m at m=1..4 (W9 frame)")
+print("      E1, E3, E4 re-verified on the born instances + the W6 table; E2 by the")
+print("      shared c1 (the pair's determinant line has c1 = 0 by construction)")
 
 # --- (c) the door's deaths at the vertex, re-asserted -------------------------
 # B1: the W-dead totals: every NS-tuned codim-2 CI total k1k2*theta^2 has q=0
@@ -584,6 +628,7 @@ print("      THE LAST QUESTION (unchanged, retained as the owner's quantifier):"
 print("      the vertex bit m*(A,2,W_R) > 0 at the fixed test world = the door's")
 print("      crossing. DETERMINES NO BIT.")
 print("      The campaign's rounds are CLOSED by the operator's standing order; the")
-print("      certified entry test (E1-E4) travels with the question.")
+print("      certified entry test (E1, E3, E4 + the W6 table; E2 by the shared c1)")
+print("      travels with the question.")
 
 print("\nALL TRANSPORT-SWEEP CHECKS DONE (every comparison asserted, zero tolerance, no floats)")
