@@ -79,7 +79,7 @@ $K^0 \to \Pic$ and $\ch_1$ is additive.)
 \item[P2] \emph{GRR for the Poincar\'e family on an abelian variety:}
 with $\mathcal{P}$ the normalized Poincar\'e bundle on $\KA\times\KAd$ and
 $p_{\KAd}$ the projection,
-$\ch(Rp_{\KAd *}(p_\KA^*F\otimes m^*\mathcal{P}))\cdot \mathrm{td}(\KAd)
+$\ch(Rp_{\KAd *}(p_\KA^*F\otimes \mathcal{P}))\cdot \mathrm{td}(\KAd)
 = p_{\KAd *}(\ch(F)\, e^{c_1(\mathcal{P})}\,\mathrm{td}(\KA)\,
 \mathrm{td}(\KAd))$; and $\mathrm{td}(\KA) = \mathrm{td}(\KAd) = 1$
 because the tangent bundle of an abelian variety is holomorphically
@@ -106,7 +106,7 @@ $28 \to 28$, both sides $=\binom{8}{6}=\binom{8}{2}$).
 Let $(E_+,E_-)$ be a holomorphic pure pair on the discriminator $\KA$ at any
 scale $m\ge 1$ (any rank $r\ge 1$). Write
 \[
-\lambda(F) \;:=\; \det\bigl(Rp_{\KAd *}(p_\KA^*F\otimes m^*\mathcal{P})\bigr)
+\lambda(F) \;:=\; \det\bigl(Rp_{\KAd *}(p_\KA^*F\otimes \mathcal{P})\bigr)
 \;\in\; \Pic(\KAd)
 \]
 for the determinant-of-cohomology line bundle, and
@@ -153,10 +153,12 @@ certified \emph{mechanism} showing that purity at grade 3 is compatible
 with actual Chern data (the $c_3$-shift $-m\,c_1\wedge\WR$ dies by W0 in
 the ring). No NS-rank input enters the proof of W8 itself: the flatness is
 a formal consequence of pair purity $+$ abelianness $+$ the determinant
-identity, and therefore holds word-for-word on every abelian world,
+identity, and therefore holds word-for-word on every abelian fourfold,
 including the split worlds (the wall is world-uniform as a necessary
 condition --- the standard consistency-probe pattern; it kills nothing by
-itself).
+itself). The fourfold bookkeeping certified here is the $k\mapsto 4-k$
+reflection; on an $n$-dimensional abelian variety the same construction
+reads $k\mapsto n-k$ (declared, not certified here).
 \end{remark}
 
 \begin{definition}[the monodromy observable]
@@ -195,7 +197,8 @@ The entry layer passes the W5 duality requirement at the K-theoretic level:
 the dual-side difference $\widehat\Phi(\xi_{\mathrm{pair}})$ has
 $\ch = m\,\mathrm{fm}_2(\WR) = m\,\widehat\WR$-dual (the committed W5
 normalization, kernel-green, coefficient exactly 1) at grade 2 and
-vanishing grades $0,1,3$ --- the same purity shape on $\KAd$ --- so the
+vanishing grades $0,1,3,4$ (grade 4 by the equal-rank input) --- the same
+purity shape on $\KAd$ --- so the
 double-dual layer's flatness holds identically, and the mechanism is
 duality-symmetric at the level where it is defined. No WIT-per-point claim
 is made: the per-fiber FM of a pair is a complex with cancelling Euler by
@@ -245,17 +248,20 @@ the inherited-artifact gate re-run per ledger 084);
 $c_1(\mathcal{P})^{8-2k}/(8-2k)!$, with the $k=2$ case verified IDENTICAL
 to the committed W5 transform on $\WR,\WI$ (coefficient 1, round trips);
 (3) the $k=3$ census: degree-6 words map to degree-2 words
-($28 \to 28$), non-vacuity asserted ($\mathrm{fm}_3(\theta^3)\ne 0$),
+($28 \to 28$; the map asserted non-empty on all 28 basis words --- no
+silent skips), non-vacuity asserted ($\mathrm{fm}_3(\theta^3)\ne 0$),
 and the composite $\widehat{\mathrm{fm}}_1\circ \mathrm{fm}_3$ asserted
-uniform on a spanning test set with constant of modulus 1 (the
+uniform on the 28-word basis with constant of modulus 1 (the
 normalization constant of the committed convention at grade 3, recorded
 by the script, not fitted);
 (4) the pair grade-3 purity re-derived on ALL committed instances (the
-four W6 instances and the carrier instance) through the conductor
-machinery: $\ch_3(E_+) - \ch_3(E_-) = 0$ and the $c_3$-shift
+four W6 table instances, the carrier instance, and the committed
+detector-probe instance $c_2(E_-)=\WR$, $r=6$, $m=2$) through the
+conductor machinery: $\ch_3(E_+) - \ch_3(E_-) = 0$ (the difference is
+$c_2$-side independent) and the $c_3$-shift
 $-m\,c_1\wedge\WR$ dying by W0 in the ring when $c_1\in\mathbb{Z}\theta$;
 (5) the flatness composites $\mathrm{fm}_3(\ch_3\text{-difference}) = 0$
-on all instances (the W8 identity at the model layer);
+on all the same instances (the W8 identity at the model layer);
 (6) the duality face: $\mathrm{fm}_2(m\,\WR) = m\,\widehat\WR$-dual exact
 (linearity, coefficient $m$, W5-consistent) for W8.2.
 

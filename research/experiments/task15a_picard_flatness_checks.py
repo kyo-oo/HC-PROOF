@@ -169,12 +169,17 @@ print("\n== CHECK 2: the k=3 census and non-vacuity (the grade bookkeeping of le
 # degree census: every degree-6 A-word maps into degree-2 AB-words; dims 28 -> 28.
 deg6_words = [bits for bits in range(256) if bin(bits).count('1') == 6]
 assert len(deg6_words) == comb(8, 6) == 28
+nonempty_count = 0
 for w in deg6_words:
     out = fm_A({w: 1}, 3)
+    if out:
+        nonempty_count += 1
     for m in out:
         assert bin(m).count('1') == 2, "fm_3 must land in degree-2 AB-words"
         assert m < 256, "no A-letters may survive"
-print("  fm_3: 28 degree-6 words -> degree-2 AB-words (census 28 -> 28): OK")
+assert nonempty_count == 28, \
+    f"fm_3 must be non-empty on all 28 basis words (got {nonempty_count}; no silent skips)"
+print("  fm_3: 28 degree-6 words -> degree-2 AB-words, non-empty on all 28 (census 28 -> 28): OK")
 # non-vacuity: fm_3(theta^3) != 0
 th3 = wedge_pow(THETA, 3)
 f_th3 = fm_A(th3, 3)
@@ -220,11 +225,18 @@ def pair_ch3_diff(r, m, c1d, c2M, gamma):
     return chP, chM, d3, c3_shift
 
 print("\n== CHECK 3: pair grade-3 purity on ALL committed instances (the W8 input) ==")
-cases = [(3, 1, ZERO, ZERO, ZERO, 'c1=0'),
-         (5, 2, ZERO, ZERO, ZERO, 'c1=0'),
-         (4, 1, THETA, ZERO, ZERO, 'c1=theta'),
-         (7, 3, THETA, ZERO, {VOL_A: 5}, 'c1=theta,gamma=5vol'),
-         (5, 1, ZERO, ZERO, ZERO, 'carrier (F, O^r)')]
+# The committed instance set (audit 15-c F1 repair): the four W6 table instances
+# (c2M = 0; the Weil content sits on the E+ side: q(E+) = -8m != 0), the carrier
+# instance (F, O^r), AND the committed detector-probe instance (c2M = W_R,
+# r=6, m=2 — the committed task13d detector check). The grade-3 purity is
+# c2M-independent (d3 = 0 identically; independently re-derived by the auditor),
+# and the committed data is what the receipts claim.
+cases = [(3, 1, ZERO, ZERO, ZERO, 'W6-I1 c1=0'),
+         (5, 2, ZERO, ZERO, ZERO, 'W6-I2 c1=0'),
+         (4, 1, THETA, ZERO, ZERO, 'W6-I3 c1=theta'),
+         (7, 3, THETA, ZERO, {VOL_A: 5}, 'W6-I4 c1=theta,gamma=5vol'),
+         (5, 1, ZERO, ZERO, ZERO, 'carrier (F, O^r)'),
+         (6, 2, ZERO, dict(W_R), ZERO, 'detector probe c2M=W_R')]
 for (r, m, c1d, c2M, gamma, tag) in cases:
     chP, chM, d3, c3_shift = pair_ch3_diff(r, m, c1d, c2M, gamma)
     print(f"  r={r} m={m} {tag}: ch3-diff == 0: {d3 == {}}; "
