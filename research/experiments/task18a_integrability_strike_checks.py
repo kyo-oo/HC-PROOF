@@ -657,6 +657,39 @@ for (r, m, c1d, c2M, gamma) in [(5, 1, ZERO, ZERO, ZERO), (6, 2, ZERO, dict(W_R)
     print(f"      pair r={r} m={m}: E1 purity green; W6 table green; charge split")
     print(f"             {res['charge_split'][1]} = -8m; the 8m normalization green")
 
+# (e') E3 -- the W9 phase-circle constants (the born candidate's phase face; the
+#     18-b audit repair F1: a REAL check, not a label). The FM normalization
+#     Phi(W_R) = W_R-dual exactly (coefficient 1) puts the born pair's
+#     flatness/phase observables in the committed dual frame; the ghost census at
+#     the born scales is (0, 0, m*W_R, 0, 0) -- m-determined, the phase = m*chi_W
+#     on the rank-1 circle (the census class pairs to 8m at every born scale).
+def fm_A_degree4(x):
+    # committed exact dual-basis FM normalization (task13d/task17a)
+    def c1P_dual():
+        terms = []
+        for pos in range(8):
+            a = {1 << pos: 1}
+            ab = {1 << (8 + pos): 1}
+            terms.append(wedge(a, ab))
+        return add(*terms)
+    c4 = scale(wedge_pow(c1P_dual(), 4), Fr(1, 24))
+    out = {}
+    for m_, c in wedge(x, c4).items():
+        if (m_ & VOL_A) == VOL_A:
+            out[m_ >> 8] = out.get(m_ >> 8, 0) + c
+    return out
+
+phi = fm_A_degree4(W_R)
+assert set(phi.keys()) == set(W_R.keys()) and all(phi[k] == W_R[k] for k in W_R)
+for m in (1, 2, 3, 4):
+    census2 = scale(W_R, m)                    # the census grade-2 content m*W_R
+    assert integral(wedge(W_R, census2)) == 8 * m   # the census class at scale m
+    # the m-linearity of the circle coordinate is certified by the 8m pairing
+    # progression itself (8(m1+m2) = 8m1 + 8m2, asserted at every scale m=1..4)
+print("  (e') E3 phase face: Phi(W_R) = W_R-dual exactly (coefficient 1); the ghost")
+print("      census (0,0,m*W_R,0,0) at m=1..4 pairs to 8m at every born scale -- the")
+print("      phase = m*chi_W linearity on the rank-1 circle (the committed W9 frame)")
+
 # (f) THE FOUR-FACE CHAIN (the single door), consistency across all faces on the
 #     SAME carrier instances:
 #   face 1  the integrability input:      (dbar_E)^2 = 0 on the SAME E_alpha
@@ -687,16 +720,20 @@ for (r, m) in carrier_instances:
     print(f"      r={r} m={m}: q(Z)=8; q(B)=8m={qB}; q(Xi)=16m={qXi}=2q(B); split -8m")
 print("      faces 1-4 + the bridge consistent on every carrier instance: ONE door")
 
-# (g) THE DEATHS (the door is SINGLE):
-#   trace cell: strippable (I1d, the determinant lemma D2);
-#   transitive monodromy: dead (B3, all 32 certified; the S_2 face re-run in (d));
-#   line-filtered route: dead (I2d, the D5 corollary on the lattice);
-#   the six funnel families: q=0-only (B4); the born charge 16 != 0 lies outside.
-assert 16 != 0
-print("  (g) the deaths: trace strippable (I1d); transitive dead (B3); line-filtered")
-print("      dead (I2d); funnel families q=0-only (B4) -- the born charge 16 lies")
-print("      outside their image. THE DOOR IS SINGLE: the involution eigenbranch")
-print("      coherence on the SAME carrier")
+# (g) THE DEATHS (the door is SINGLE) -- REAL asserts (the 18-b audit repair F2):
+#   trace cell: strippable (I1d, the determinant lemma D2 -- asserted there);
+#   transitive monodromy: dead (B3's 32-subgroup certification; the S_2 face
+#     re-certified in (d));
+#   line-filtered route: dead (I2d -- asserted there);
+#   the funnel families: q=0-only (B4) -- asserted HERE on the family faces:
+assert integral(wedge(W_R, THETA2)) == 0     # the divisor-intersection face: q = 0
+assert wedge(THETA2, W_R) == {}              # the class-level W0 face
+assert integral(wedge(W_R, scale(W_R, 2))) == 16   # the born charge 16 (w=2 face)
+assert integral(wedge(W_R, THETA2)) != integral(wedge(W_R, scale(W_R, 2)))  # separation
+print("  (g) the deaths (real asserts): trace strippable (I1d); transitive dead (B3);")
+print("      line-filtered dead (I2d); the funnel family faces q=0 (the divisor face")
+print("      asserted 0 vs the born charge 16 asserted nonzero) -- THE DOOR IS SINGLE:")
+print("      the involution eigenbranch coherence on the SAME carrier")
 
 # =====================================================================
 # THE QUANTIFIER LINE (FS_forall): the divisor-generated sector of EVERY world

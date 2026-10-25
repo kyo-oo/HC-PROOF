@@ -219,11 +219,16 @@ system ($d=0..8$), the compiler purity on the test lattice ($5$ cases), the
 splitting-principle twist identity and both two-center output forms
 ($Z_{W_R}=W_R$ exactly on every carrier instance and $k=0..3$), the sector boundary;
 I3 (a)--(g) the centralizer, the determinant link, the born eigensheaf bookkeeping
-(all five splits), the $S_2$ door shape, E1--E4 on the born pair instances, the
-four-face chain consistency, the deaths.
+(all five splits), the $S_2$ door shape, E1--E4 on the born pair instances (E1 purity,
+the W6 table, the charge split, the $8m$ normalization; E3 the FM normalization
+$\Phi(W_R)=\hat W_R$ exactly and the ghost-census pairing $8m$ at the born scales,
+added by the 18-b audit repair), the four-face chain consistency, the deaths (real
+asserts on the family faces after the 18-b repair).
 Three local pre-commit repairs were caught by the script's own asserts (the intended
 gate behavior): an integer-division float leak in the trace projection (the no-floats
 law), a compiler test case violating the homogeneous-degree-$p$ requirement, and a
-scalar-grade-0 handling in the twist product.
+scalar-grade-0 handling in the twist product; the 18-b audit loop closed at PASS with
+two receipt-fidelity minors repaired in-round (the E3 label made real; the deaths
+asserts made real).
 
 \end{document}
