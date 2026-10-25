@@ -198,7 +198,12 @@ print("  one-source normalization certified: q(w*W_R + b*theta^2) = 8w exactly (
 print("\n== B3: the monodromy wall (transitive families birth no charge) ==")
 
 def all_subgroups_sm(m):
-    """All subgroups of S_m by closure of generating subsets (bounded enumeration)."""
+    """All NON-TRIVIAL subgroups of S_m by closure of generating subsets (bounded
+    enumeration; audited 17-b F1: every non-trivial subgroup of S_m, m <= 5, is
+    2-generated -- the 3-generator closure adds zero -- so the counts printed
+    below are the classical subgroup totals minus the trivial subgroup:
+    S_2: 2-1=1, S_3: 6-1=5, S_4: 30-1=29, S_5: 156-1=155; the trivial subgroup
+    is intransitive for m >= 2, so the TRANSITIVE counts are complete)."""
     S = list(permutations(range(m)))
     idm = tuple(range(m))
     seen = set()
@@ -283,7 +288,7 @@ for m in (2, 3, 4, 5):
         # i.e. dim of invariant space == 1 AND it contains (1,...,1)
         assert dim_invariant == 1, (m, "non-constant invariant charges possible", G)
         checked += 1
-    print(f"  S_{m}: {len(subs)} subgroups, {len(trans)} transitive -- all force constant charges (dim invariant = 1)")
+    print(f"  S_{m}: {len(subs)} non-trivial subgroups, {len(trans)} transitive -- all force constant charges (dim invariant = 1)")
 assert checked == 32  # 1 + 2 + 9 + 20: every transitive subgroup of S_2..S_5
 print(f"  {checked} transitive groups certified: q constant => sum=0 => all q_j = 0 (with B1)")
 print("  THE ONLY DOOR: the involution-typed split (m:1->2, fold involution exchanges")

@@ -32,3 +32,15 @@ NOT claimed: any decision of the vertex bit; any construction of a W-charged sur
 - The committed model re-confirmed (periods, W0, the FM normalization, the W9 ghost census at the born scales).
 - The W6 pair table re-verified on born-charge instances (including the detector face c₂M = W_R, r=6, m=2 and the c₁ = θ instance).
 - Commit: research-only (.tex + record + INDEX + script + registry/STATUS); no .lean, no .yml.
+
+## The audit loop (17-b: independent adversarial re-derivation — CLOSED AT PASS, same round, one loop per V6.1 §36)
+
+Six findings, all resolved:
+- **F1 (receipt fidelity — REPAIRED)**: the script's printed subgroup counts (1/5/29/155) are the NON-TRIVIAL counts; the classical totals are 2/6/30/156 with the trivial subgroup excluded by the generator pool. Independent 3-generator closure of S₄ adds ZERO subgroups (every non-trivial subgroup of S_m, m ≤ 5, is 2-generated), so the enumeration is complete for the certification's scope; the trivial subgroup is intransitive for m ≥ 2, so the TRANSITIVE counts 1/2/9/20 are complete. Repair: the docstring + print line now carry the qualifier (the audited run re-verified green).
+- **F2 (B1 independent)**: θ² (6 words, two-full-blocks each) and W_R (8 words, one-letter-per-block) have ZERO overlapping monomials — the class-level death confirmed by explicit support disjointness, a different route than the script's wedge-then-check.
+- **F3 (B2 algebra independent)**: the D-identity and the sign-law maximization verified on 200 random conserved charge vectors (m = 2..6, exact Fractions) — all patterns, both properties, zero failures.
+- **F4 (B3 independent)**: brute-force integer charge grids ([-3,3]⁴) against all 9 transitive subgroups of S₄ (the full 3-gen closure): zero non-constant invariant charges — the transitive kill confirmed by exhaustive search, a different route than the nullspace computation.
+- **F5 (the one-source normalization independent)**: the pairing identity on the 343-point (w, w', b) grid from the committed periods alone (8, 0, 0) — PASS.
+- **F6 (inherited-artifact hygiene, ledger 091 class)**: the committed task13d re-run under the audit — exit clean, all asserts holding (the inherited load-bearing file's checks read, not just trusted).
+
+Audit verdict: PASS (one receipt-fidelity minor, repaired in-round; zero mathematical defects; every load-bearing claim survived an independent route). Budget line: strike ≈ 70% / audit ≈ 30% (§36 respected). The PASS is followed by the construction line: Round 18 armed (the involution-typed candidate on the SAME carrier).
