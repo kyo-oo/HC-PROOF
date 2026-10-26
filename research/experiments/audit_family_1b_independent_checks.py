@@ -295,8 +295,9 @@ print("  F5 green: the parity structure verified word-by-word")
 # =====================================================================
 print("== F6: the scope lines and the literal scan ==")
 import re
-script = open("cyclic_family_checks.py").read()
-record = open("../records/2026-10-26-gst-cyclic-family-transport-theorem.md").read()
+import os
+script = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "cyclic_family_checks.py")).read()
+record = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "records", "2026-10-26-gst-cyclic-family-transport-theorem.md")).read()
 for phrase in ("NOT claimed: any transport-to-Clay claim",
                "the lattice-level rows at m >= 5",
                "the exact m* values on the S_m(A) rows",
