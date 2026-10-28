@@ -76,4 +76,35 @@ theorem scaled_target_zero_of_character_zero (alpha originalCharacter : V)
 #print axioms filtration_character
 #print axioms finite_filtered_source_character_zero
 #print axioms scaled_target_zero_of_character_zero
+
+/-! ## Localization after the sharper smooth-branch computation
+
+These are exactness consequences only. The geometric dimension argument
+identifying a zero support group is supplied in the hand derivation.
+-/
+
+theorem localized_source_has_support {A B D : Type*}
+    [AddCommGroup A] [AddCommGroup B] [AddCommGroup D]
+    (support : A →+ B) (restrict : B →+ D)
+    (hexact : ∀ b,restrict b=0 ↔ ∃ a,support a=b)
+    (b : B) (hb : restrict b=0) : ∃ a,support a=b :=
+  (hexact b).mp hb
+
+theorem localized_source_zero_if_support_zero {A B D : Type*}
+    [AddCommGroup A] [AddCommGroup B] [AddCommGroup D]
+    (support : A →+ B) (restrict : B →+ D)
+    (hexact : ∀ b,restrict b=0 ↔ ∃ a,support a=b)
+    (hzero : ∀ a,support a=0) (b : B) (hb : restrict b=0) : b=0 := by
+  obtain ⟨a,ha⟩ := localized_source_has_support support restrict hexact b hb
+  exact ha.symm.trans (hzero a)
+
+theorem original_return_zero_of_localized_source {B D : Type*}
+    [AddCommGroup B] [AddCommGroup D]
+    (restrict : B →+ D) (hinj : Function.Injective restrict)
+    (returnToOriginal : B →+ V) (b : B) (hb : restrict b=0) :
+    returnToOriginal b=0 := by
+  have hz : b=0 := hinj (hb.trans (map_zero restrict).symm)
+  rw [hz,map_zero]
+
+#print axioms localized_source_zero_if_support_zero
 end GSTFilteredK0SourceConservation

@@ -1,5 +1,15 @@
 # GST Hodge — Locked Execution Contract
 
+**Continuation after 02bba4d (2026-10-28):** [integral projection and singular-branch record](records/2026-10-28-gst-integral-projection-singular-branch-upgrade.md).
+Six new Lean modules add integral finite exactification, explicit nilpotent
+conjugacy, smooth-branch source neutralization and three-twist exceptional
+stratum extraction. The source attempt now identifies singular branching as
+the surviving support in the repeated-source route; the simple global-functions
+A2 recipe has zero Chow class. Connected whole-cover mixed sources have the
+recorded Betti obstruction; split and branched cases keep their stated scopes.
+The source-geometry theorems are hand-level, and Lean remains uncompiled at the
+owner's request. The immutable universal target and canonical semantics stand.
+
 **Deeper continuation after 417b4aa (2026-10-28):** [ordered-word and finite-holonomy record](records/2026-10-28-gst-deeper-noncommutative-discovery.md).
 The source update removes commutativity and cubic truncation via ordered ring
 coordinates, gives a concrete word identity where every scalar frame is

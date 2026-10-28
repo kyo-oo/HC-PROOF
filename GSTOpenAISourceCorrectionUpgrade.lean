@@ -11,6 +11,12 @@ import GSTFiniteGroupCocycleAveraging
 import GSTTargetWordRecovery
 import GSTClassicalHodgeWordSourceRecovery
 import GSTFilteredK0SourceConservation
+import GSTIntegralProjectionCorrection
+import GSTNilpotentProjectionConjugacy
+import GSTSpectralBoundaryDefect
+import GSTTorsionLineConservation
+import GSTConnectedSpectralHodgeRigidity
+import GSTSingularBranchExtraction
 
 /-!
 # OpenAI/GST source-correction integration entry point, 2026-10-28
@@ -48,3 +54,14 @@ Round-29 torsion theorem that previously concluded only `True`.
 #check GSTClassicalHodgeWordSourceRecovery.originalX_fourth_order_recovery
 #check GSTFiniteSourceCorrection.generalized_fixed_mode_forbids_certificate
 #check GSTFilteredK0SourceConservation.finite_filtered_source_character_zero
+
+-- Integral projection correction and the singular-branch continuation.
+#check GSTIntegralProjectionCorrection.corrected_idempotent
+#check GSTIntegralProjectionCorrection.corrected_at_nilpotence_exponent
+#check GSTNilpotentProjectionConjugacy.bridgeUnit_conjugates
+#check GSTSpectralBoundaryDefect.anti_square_exact_defect
+#check GSTSpectralBoundaryDefect.anti_square_in_boundary_ideal
+#check GSTTorsionLineConservation.torsion_line_principal_push_zero
+#check GSTConnectedSpectralHodgeRigidity.connected_anti_isotropic_zero
+#check GSTSingularBranchExtraction.extracted_stratum
+#check GSTFilteredK0SourceConservation.localized_source_zero_if_support_zero

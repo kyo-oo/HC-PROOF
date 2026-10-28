@@ -1,5 +1,17 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Integral projection and singular-branch upgrade — 2026-10-28
+
+[Research record](research/records/2026-10-28-gst-integral-projection-singular-branch-upgrade.md):
+six new Lean modules and 47 further theorem drafts. Finite integral projection
+correction and explicit all-order conjugacy replace a first-order-only view.
+A sharper smooth-ramification calculation localizes repeated spectral sources
+to singular branching. Three line-bundle twists extract an actual exceptional
+stratum cycle, with exact coefficients -1/48 or -1/32 under the stated geometry.
+Independent implementations agree on all 11,635 finite-ring matrices and
+23,664 idempotent pairs; the report separates these checks from geometric proofs.
+Lean compilation remains with the owner; universal source existence is open.
+
 ## Deeper continuation after 417b4aa — 2026-10-28
 
 [Ordered-word and finite-holonomy research update](research/records/2026-10-28-gst-deeper-noncommutative-discovery.md):
