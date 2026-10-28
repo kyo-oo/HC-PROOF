@@ -1,5 +1,17 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Deeper continuation after 417b4aa — 2026-10-28
+
+[Ordered-word and finite-holonomy research update](research/records/2026-10-28-gst-deeper-noncommutative-discovery.md):
+five new Lean modules and 38 added theorem drafts. Ordered dressing removes
+the commutativity/cubic-depth restriction. A concrete family has every scalar
+frame singular but an exact integer-coefficient word identity. Finite-group
+averaging supplies actual primitives, and a new generalized-mode theorem
+sharpens the source-recovery obstruction. Wolfram and independent rational
+elimination agree on all 67 cocycle basis vectors in 13 finite actions.
+The report records exact scope, hand proofs, the executed finite-filtered
+source attempt, and validated computation provenance. Lean remains uncompiled.
+
 ## Source-correction and cubic-dressing upgrade — 2026-10-28
 
 The [upgrade report](research/records/2026-10-28-openai-gst-source-correction-upgrade.md)

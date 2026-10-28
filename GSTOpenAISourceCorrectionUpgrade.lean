@@ -6,6 +6,11 @@ import GSTClassicalHodgeFiniteSourceCorrection
 import GSTClassicalHodgeCMNativeRationalDescent
 import GSTSplitBoundaryProjection
 import GSTComplexTangentProjectionChainObstruction
+import GSTOrderedNilpotentDressing
+import GSTFiniteGroupCocycleAveraging
+import GSTTargetWordRecovery
+import GSTClassicalHodgeWordSourceRecovery
+import GSTFilteredK0SourceConservation
 
 /-!
 # OpenAI/GST source-correction integration entry point, 2026-10-28
@@ -31,3 +36,15 @@ Round-29 torsion theorem that previously concluded only `True`.
 #check GSTClassicalHodgeCMNativeRationalDescent.nativeCycleFromCrossCarrierCoefficients_spec
 #check GSTSplitBoundaryProjection.repaired_type_iff_correction_has_type
 #check GSTComplexTangentProjectionChainObstruction.closed_and_type_fixed_iff_zero
+
+-- Further-depth continuation: arbitrary ordered nilpotent depth, finite
+-- holonomy primitives, word identities and the full generalized blind sector.
+#check GSTOrderedNilpotentDressing.unitOfNilpotent
+#check GSTOrderedNilpotentDressing.ordered_gauge_defect
+#check GSTFiniteGroupCocycleAveraging.rational_averaging
+#check GSTFiniteGroupCocycleAveraging.correct_extension_product
+#check GSTTargetWordRecovery.every_weighted_frame_singular
+#check GSTTargetWordRecovery.integral_fourth_order_identity
+#check GSTClassicalHodgeWordSourceRecovery.originalX_fourth_order_recovery
+#check GSTFiniteSourceCorrection.generalized_fixed_mode_forbids_certificate
+#check GSTFilteredK0SourceConservation.finite_filtered_source_character_zero

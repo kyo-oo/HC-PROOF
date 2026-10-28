@@ -1,5 +1,13 @@
 # GST Hodge — Locked Execution Contract
 
+**Deeper continuation after 417b4aa (2026-10-28):** [ordered-word and finite-holonomy record](records/2026-10-28-gst-deeper-noncommutative-discovery.md).
+The source update removes commutativity and cubic truncation via ordered ring
+coordinates, gives a concrete word identity where every scalar frame is
+singular, and constructs finite-group cocycle primitives. The executed
+finite-cover/trivial-graded source attempt returns zero positive character;
+that mechanism is closed for nonzero prescribed alpha. Nontrivial graded
+sources/new supports remain necessary. The universal target is unchanged.
+
 **2026-10-28 source update:** [OpenAI/GST correction and cubic-dressing record](records/2026-10-28-openai-gst-source-correction-upgrade.md).
 The owner requested source edits and will handle Lean compilation. Six new
 modules and three strengthened modules add polynomial source correction,

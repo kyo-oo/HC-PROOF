@@ -124,4 +124,52 @@ theorem noncommuting_sources_admit_finite_correction :
 #print axioms exact_of_polynomial_annihilator
 #print axioms polynomial_certificate_forbids_fixed_mode
 
+/-! ## The whole generalized fixed component, not just its eigenvectors
+
+2026-10-28 continuation, uncompiled proof drafts. These statements isolate
+the zero-Jordan component of the total source frame F=1-N. A class may be
+in the source image and still be inaccessible to fixed-N polynomials.
+-/
+
+theorem powers_preserve_frame_difference (N : Module.End ℚ V) (n : ℕ) (x : V) :
+    (N^n) (x-N x) = (N^n) x-N ((N^n) x) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [pow_succ']
+      change N ((N^n) (x-N x))=N ((N^n) x)-N (N ((N^n) x))
+      rw [ih,map_sub]
+
+theorem polynomial_kills_frame_difference (N : Module.End ℚ V)
+    (r : ℕ) (c : ℕ → ℚ) (x : V)
+    (hpoly : (∑ k ∈ Finset.range r, c k • (N^k) x)=0) :
+    (∑ k ∈ Finset.range r, c k • (N^k) (x-N x))=0 := by
+  calc
+    (∑ k ∈ Finset.range r, c k • (N^k) (x-N x)) =
+        (∑ k ∈ Finset.range r, c k • (N^k) x)-
+          N (∑ k ∈ Finset.range r, c k • (N^k) x) := by
+            simp only [powers_preserve_frame_difference,smul_sub,
+              Finset.sum_sub_distrib,map_sum,map_smul]
+    _ = 0 := by rw [hpoly,map_zero,sub_self]
+
+/-- Stronger than the earlier fixed-vector obstruction: ANY finite generalized
+1-eigenvector of N is excluded from a certificate with nonzero value at 1. -/
+theorem generalized_fixed_mode_forbids_certificate
+    (N : Module.End ℚ V) (r : ℕ) (c : ℕ → ℚ)
+    (hvalue : (∑ k ∈ Finset.range r,c k)≠0)
+    (n : ℕ) (x : V) (hgeneralized : ((1-N)^n) x=0)
+    (hpoly : (∑ k ∈ Finset.range r,c k • (N^k) x)=0) : x=0 := by
+  induction n generalizing x with
+  | zero => simpa using hgeneralized
+  | succ n ih =>
+      have hnext : ((1-N)^n) (x-N x)=0 := by
+        simpa only [pow_succ,Module.End.mul_apply,LinearMap.sub_apply,
+          Module.End.one_apply] using hgeneralized
+      have hframe : x-N x=0 := ih (x-N x) hnext
+        (polynomial_kills_frame_difference N r c x hpoly)
+      exact polynomial_certificate_forbids_fixed_mode N x
+        (sub_eq_zero.mp hframe).symm r c hpoly hvalue
+
+#print axioms generalized_fixed_mode_forbids_certificate
+
 end GSTFiniteSourceCorrection

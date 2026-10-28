@@ -651,6 +651,11 @@ name = "HodgeDeRhamBridge"
 [[lean_lib]]
 name = "GSTOpenAISourceUpgrade"
 roots = [
+  "GSTOrderedNilpotentDressing",
+  "GSTFiniteGroupCocycleAveraging",
+  "GSTTargetWordRecovery",
+  "GSTClassicalHodgeWordSourceRecovery",
+  "GSTFilteredK0SourceConservation",
   "GSTExactSequenceTorsion",
   "GSTLawStackRound29",
   "GSTCubicNilpotentDressing",
