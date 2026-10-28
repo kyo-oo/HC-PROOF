@@ -1,5 +1,14 @@
 # GST Hodge — Locked Execution Contract
 
+**2026-10-28 source update:** [OpenAI/GST correction and cubic-dressing record](records/2026-10-28-openai-gst-source-correction-upgrade.md).
+The owner requested source edits and will handle Lean compilation. Six new
+modules and three strengthened modules add polynomial source correction,
+cubic integral dressing and its noncommuting obstruction, actual exact-sequence
+torsion/concentration equations, and CM coefficient descent without an
+unnecessary universal-span input. The complete hand derivation and pinned
+source analysis are linked in the record. This does not change the universal
+original-X acceptance target or assert universal source coverage.
+
 **Research branch:** \`research/gpt6-native-point-primitive-span-20261017\`  
 **Contract revision:** 2026-10-17; this corrects the prior plan, which incorrectly stated the primitive subcase as the final acceptance target.
 

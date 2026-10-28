@@ -1,10 +1,11 @@
 import Mathlib
+import GSTExactSequenceTorsion
 
 /-!
 # GST BOUNDARY BREACH — ROUND 29 LEAN FACE (**DRAFT-NOT-COMPILED**, per SKILL §13)
 
-**STATUS: DRAFT-NOT-COMPILED.** Per the standing boss order (SKILL §13): no
-Lean toolchain is installed in this sandbox, and an unverified Lean file is
+**STATUS: DRAFT-NOT-COMPILED.** Updated 2026-10-28 at the owner's request;
+compilation is intentionally left to the owner. An unverified Lean file is
 TEXT, NOT PROOF — it is never claimed as machine-checked, and "it compiles"
 is never asserted. The verification ladder for this content is (1) the
 adversarially-audited LaTeX derivation
@@ -18,8 +19,8 @@ logical shape the natural language hides.
 
 **Toolchain steps for an equipped environment** (the repo's own):
 `lean-toolchain` is `leanprover/lean4:v4.33.0-rc2` with mathlib
-`v4.33.0-rc2`; register this module in the `lakefile.toml` `HCUniverse`
-roots, then `lake build GSTLawStackRound29` and
+`v4.33.0-rc2`; this module is now registered in `GSTOpenAISourceUpgrade`.
+Use `lake build GSTOpenAISourceUpgrade` and
 `#print axioms capstone_boundary_breach`.
 
 ## What is in this file (PART F of the law stack)
@@ -30,20 +31,18 @@ both the H¹ and the H² four-torsion structure), and the doubling witness
 `two_smul_of_norm_sq` (the R1-style 2-torsion witness on a γ² = −1 module:
 2v = −(γ−1)((1+γ)v)).
 
-PART F-2 — the uniform kill, as the hypothesis-record composition (the
-Round-28 PART E convention): the five-term's data as labeled fields, the
-16-bound as the named theorem `uniform_kill_of_five_term` (the proof's
+PART F-2 — actual exact-sequence maps and equations, with the
+16-bound as the theorem `uniform_kill_of_five_term` (the proof's
 arithmetic: 4·(mixed image) = 0 by the |C_4| law; 4c then lies in the
 inflation image, itself 4-torsion; 16c = 0), the rational denominator
-corollary. The five-term exactness itself is STANDARD STRENGTH
-(Hochschild–Serre), carried as the labeled hypothesis per the repo
-convention.
+bound. The five-term cohomology specialization remains an explicit input;
+the group-theoretic theorem now proves 16 • c = 0 instead of `True`.
 
 PART F-3 — the honest-invariant dichotomy, kernel-level conditional: the
 concentration criterion record (`ConcentrationCriterion`): the mixed-cell
 map's injectivity on the post-strip sector given
-H²(C_4; A^Γ) = 0 — the criterion that replaces Round 28's A^Γ = A
-idealization and the Stone–von Neumann sentence (boundary (b)).
+zero inflation and exactness — the criterion that replaces Round 28's
+A^Γ = A idealization (boundary (b)). No field asserts injectivity itself.
 
 PART F-4 — the 2×2 no-go, kernel-level on the explicit quaternion order:
 WR² = 1, WI² = −1, WR·WI = WK, WI·WR = −WK (all kernel-provable on the
@@ -54,10 +53,11 @@ deck — the first computed obstruction datum of the nonabelian boundary (a).
 
 PART F-5 — the equivariant envelope, as the hypothesis-record
 (`EquivariantEnvelope`): the rotation lattice's intertwinement
-(γ A' γ⁻¹ = −B', γ B' γ⁻¹ = A') and the dressed-cocycle identity as the
-labeled fields (the 64×64 exact kernel, the trace cross-check
+(γ A' γ⁻¹ = −B', γ B' γ⁻¹ = A') and square-zero span are actual equations.
+The dressing multiplication law is derived. The 64×64 exact kernel, trace
+cross-check
 tr(Φ²) = (tr γ²)² = 16, and the complete 4096-cell basis sweep live in the
-certificate as the receipts).
+certificate remain historical receipts, not verification of this revision.
 -/
 
 set_option maxHeartbeats 10000000
@@ -105,25 +105,17 @@ theorem two_smul_of_norm_sq {M : Type*} [AddCommGroup M] [Module ℤ M]
 
 /-! ## PART F-2: the uniform kill (the hypothesis-record composition) -/
 
-/-- The five-term data for a decked extension, in the repo's hypothesis-record
-convention: the classical exactness is STANDARD STRENGTH (Hochschild–Serre),
-carried as labeled fields; the uniform 16-kill's arithmetic is then a
-one-line consequence (stated in the docstring; the cohomology-group
-infrastructure is the equipped environment's instantiation target). -/
-structure FiveTermData (A : Type*) [AddCommGroup A] where
-  /-- the decked group -/
-  G : Type
-  /-- the extension's fiber -/
-  fiber : Type
-  /-- the mixed-cell map (the five-term's right-hand edge) -/
-  mix : Type
-  /-- the inflation image (the five-term's kernel) [STANDARD STRENGTH] -/
-  kernelInfl : Type
-  /-- the five-term exactness: ker(mix) = im(inflation) [labeled] -/
-  exactness : True
-  /-- the |C_4|-torsion law on the mixed layer [labeled, standard:
-  cor ∘ res = 4 with res landing in H^n(1; ·) = 0] -/
-  mixedFourTorsion : True
+/-- Actual abelian-group data for the 16-kill. A particular Hochschild--Serre
+sequence must supply these groups, homomorphisms and equations separately.
+The theorem no longer replaces this mathematical data by truth-valued labels. -/
+structure FiveTermData (A K B : Type*)
+    [AddCommGroup A] [AddCommGroup K] [AddCommGroup B] where
+  /-- Actual inflation and mixed maps; no cohomology realization is hidden. -/
+  inflation : K →+ A
+  mix : A →+ B
+  exactness : ∀ x, mix x = 0 → ∃ k, inflation k = x
+  inflationFourTorsion : ∀ k, (4 : ℕ) • k = 0
+  mixedFourTorsion : ∀ x, (4 : ℕ) • mix x = 0
 
 /-- **The uniform kill's arithmetic (Round 29's T1).** Given the five-term
 exactness and the |C_4|-torsion law (both standard, both gated instance-wise
@@ -131,36 +123,33 @@ in the certificate: exponents 2, 4, 4 on the content/glue/trivial modules),
 every post-strip two-cell class `c` dies at scale 16:
 `4 • (mix c) = 0` (the law) ⟹ `mix (4 • c) = 0` (linearity) ⟹
 `4 • c ∈ im(infl)` (exactness) ⟹ `4 • (4 • c) = 0` (the law again) ⟹
-`16 • c = 0`. The composition chain's denominator is thereby bounded by
-`16 * m * (p-1)!` across the entire input axis (boundary (d) discharged for
-the rational statement). -/
-theorem uniform_kill_of_five_term {A : Type*} [AddCommGroup A]
-    (D : FiveTermData A) : True := by
-  trivial
-  -- the mathematical content is the four-line arithmetic above; the full
-  -- statement requires the cohomology-group infrastructure. The kernel
-  -- identities are PART F-1; the certificate gates the instances.
+`16 • c = 0`. This conclusion applies to every instance of the displayed
+data. Geometric existence of such an instance on a general input, and its
+comparison with the descent chain, are separate obligations. -/
+theorem uniform_kill_of_five_term {A K B : Type*}
+    [AddCommGroup A] [AddCommGroup K] [AddCommGroup B]
+    (D : FiveTermData A K B) (c : A) : (16 : ℕ) • c = 0 := by
+  exact GSTExactSequenceTorsion.sixteen_annihilates
+    D.inflation D.mix D.exactness D.inflationFourTorsion D.mixedFourTorsion c
 
 /-! ## PART F-3: the honest-invariant dichotomy (boundary (b)) -/
 
-/-- The concentration criterion record: on the post-strip sector (the
-classes whose fiber-strip restriction vanishes — where the two-cell class
-lives by the descent setup's fiber-flatness), the mixed-cell map is
-injective whenever `H²(C_4; A^Γ) = 0`. This REPLACES Round 28's
-`A^Γ = A` idealization and the Stone–von Neumann sentence: both honest
-cases (`A^Γ = A` and `A^Γ = 0`) satisfy the criterion (the free module is
-constructed and gated in the certificate, checks 0043–0086). -/
-structure ConcentrationCriterion (A : Type*) [AddCommGroup A] where
-  /-- the honest fiber-invariants -/
-  invariants : Type
-  /-- the kernel vanishing hypothesis: H²(C_4; A^Γ) = 0 -/
-  kernelVanishing : True
-  /-- the post-strip sector -/
-  postStrip : Type
-  /-- the mixed-cell map on the sector -/
-  mix : postStrip → Type
-  /-- the injectivity [five-term exactness + the vanishing] -/
-  injective : True
+/-- Actual concentration input: exactness and zero inflation. Identifying
+the inflation term with a vanishing cohomology group in a geometric
+five-term sequence is an external specialization, not a field of type True. -/
+structure ConcentrationCriterion (A K B : Type*)
+    [AddCommGroup A] [AddCommGroup K] [AddCommGroup B] where
+  data : FiveTermData A K B
+  /-- Actual zero inflation, not a truth-valued description of vanishing. -/
+  inflation_zero : ∀ k, data.inflation k = 0
+
+/-- Concentration is derived from exactness and zero inflation. -/
+theorem ConcentrationCriterion.mixed_injective
+    {A K B : Type*} [AddCommGroup A] [AddCommGroup K] [AddCommGroup B]
+    (C : ConcentrationCriterion A K B) :
+    Function.Injective C.data.mix := by
+  exact GSTExactSequenceTorsion.injective_of_zero_inflation
+    C.data.inflation C.data.mix C.data.exactness C.inflation_zero
 
 /-! ## PART F-4: the 2×2 no-go (the first computed obstruction of (a)) -/
 
@@ -215,17 +204,29 @@ structure EquivariantEnvelope where
   B' : Matrix (Fin 8) (Fin 8) ℤ
   /-- the intertwinement: γ A' γ⁻¹ = -B' and γ B' γ⁻¹ = A'
   [the certificate's gate 0137] -/
-  intertwinement : True
-  /-- the dressed two-cell identity: M = I + X (c_ν) satisfies the full
-  nonabelian 2-cocycle identity [the complete basis sweep, gate 0144] -/
-  dressedTwoCell : True
+  deck : (Matrix (Fin 8) (Fin 8) ℤ)ˣ
+  intertwineA : (deck : Matrix (Fin 8) (Fin 8) ℤ) * A' *
+    (↑(deck⁻¹) : Matrix (Fin 8) (Fin 8) ℤ) = -B'
+  intertwineB : (deck : Matrix (Fin 8) (Fin 8) ℤ) * B' *
+    (↑(deck⁻¹) : Matrix (Fin 8) (Fin 8) ℤ) = A'
+  /-- Square zero is a real identity on the realization span.
+  It does not claim the whole ambient rotation lattice has square zero. -/
+  span_product_zero : ∀ a b c d : ℤ,
+    (a • A' + b • B') * (c • A' + d • B') = 0
+
+/-- The multiplicative law is proved from the span identity. -/
+theorem EquivariantEnvelope.dressing_add (E : EquivariantEnvelope)
+    (a b c d : ℤ) :
+    (1 + (a • E.A' + b • E.B')) * (1 + (c • E.A' + d • E.B')) =
+      1 + ((a • E.A' + b • E.B') + (c • E.A' + d • E.B')) := by
+  rw [add_mul, one_mul, mul_add, mul_one, E.span_product_zero]
+  abel
 
 /-! ## Capstone -/
 
-/-- **The Round-29 capstone**: the torsion-law identities (F-1), the
-uniform kill's hypothesis-record composition (F-2), the concentration
-criterion record (F-3), the 2×2 no-go's kernel identities (F-4), and the
-equivariant envelope's labeled record (F-5). -/
+/-- Legacy Round-29 capstone for the cyclic and quaternion identities.
+The strengthened F-2/F-3/F-5 conclusions are separately stated and receive
+their own axiom-print commands below; they are not hidden in this conjunction. -/
 theorem capstone_boundary_breach :
     (∀ {M : Type*} [AddCommGroup M] [Module ℤ M]
       {g : Module.End ℤ M}, g * g * g * g = 1 →
@@ -239,5 +240,8 @@ theorem capstone_boundary_breach :
     WR_sq, WI_sq, WR_WI, WI_WR, no_algebra_hom_witness.2.2⟩
 
 #print axioms capstone_boundary_breach
+#print axioms uniform_kill_of_five_term
+#print axioms ConcentrationCriterion.mixed_injective
+#print axioms EquivariantEnvelope.dressing_add
 
 end GSTLawStackRound29

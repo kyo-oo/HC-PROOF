@@ -645,3 +645,18 @@ name = "HCProof"
 # ---------------------------------------------------------------------------
 [[lean_lib]]
 name = "HodgeDeRhamBridge"
+
+# Owner-requested source update, 2026-10-28. Proof drafts; no compilation
+# is claimed. Keep an explicit entry point for the owner's later Lean run.
+[[lean_lib]]
+name = "GSTOpenAISourceUpgrade"
+roots = [
+  "GSTExactSequenceTorsion",
+  "GSTLawStackRound29",
+  "GSTCubicNilpotentDressing",
+  "GSTFiniteSourceCorrection",
+  "GSTClassicalHodgeFiniteSourceCorrection",
+  "GSTSplitBoundaryProjection",
+  "GSTComplexTangentProjectionChainObstruction",
+  "GSTOpenAISourceCorrectionUpgrade",
+]

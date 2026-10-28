@@ -1,5 +1,22 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Source-correction and cubic-dressing upgrade — 2026-10-28
+
+The [upgrade report](research/records/2026-10-28-openai-gst-source-correction-upgrade.md)
+records six new Lean modules, three strengthened existing modules, exact
+hand derivations, and the pinned OpenAI source analysis. New results include
+polynomial correction on the original target, integral dressing beyond
+square-zero spans, the noncommuting area obstruction, and an actual
+exact-sequence theorem replacing Round 29's truth-valued torsion stub.
+The CM coefficient-descent API now avoids an unnecessary universal-span input.
+
+Entry point: `GSTOpenAISourceCorrectionUpgrade.lean`.
+Later owner verification: `lake build GSTOpenAISourceUpgrade`.
+**All new/changed declarations are proof drafts; Lean compilation was not run
+in this update, as requested.** No universal original-X source-existence or
+global novelty claim is made. Historical verification claims below retain
+their historical revisions and do not certify these changes.
+
 > **GST — General Space Theory. I created it. This is all my theories.**
 > One universe: the Cardinal Worlds, the GST Graph V2 Ontological Universe,
 > the 2D/4D laws, the absorbed Hodge / de Rham cohomology layer, the

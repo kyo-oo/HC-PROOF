@@ -1,0 +1,33 @@
+import GSTExactSequenceTorsion
+import GSTLawStackRound29
+import GSTCubicNilpotentDressing
+import GSTFiniteSourceCorrection
+import GSTClassicalHodgeFiniteSourceCorrection
+import GSTClassicalHodgeCMNativeRationalDescent
+import GSTSplitBoundaryProjection
+import GSTComplexTangentProjectionChainObstruction
+
+/-!
+# OpenAI/GST source-correction integration entry point, 2026-10-28
+
+Proof drafts; compilation is left to the owner. No external paper theorem
+is silently installed as an axiom. The source manifest and derivation record
+the distinction between mathematical source results, method inspiration,
+and conditional canonical-geometry adapters.
+
+This module collects the actual strengthened statements, including the
+Round-29 torsion theorem that previously concluded only `True`.
+-/
+
+#check GSTExactSequenceTorsion.product_annihilates
+#check GSTLawStackRound29.uniform_kill_of_five_term
+#check GSTLawStackRound29.ConcentrationCriterion.mixed_injective
+#check GSTLawStackRound29.EquivariantEnvelope.dressing_add
+#check GSTCubicNilpotentDressing.dressing2_add
+#check GSTCubicNilpotentDressing.CubicCommutingRealization.unitLift
+#check GSTCubicNilpotentDressing.no_nonzero_scale_area_coboundary
+#check GSTFiniteSourceCorrection.exact_of_polynomial_annihilator
+#check GSTClassicalHodgeFiniteSourceCorrection.SourceSystem.exact_originalX_cycle_of_polynomial
+#check GSTClassicalHodgeCMNativeRationalDescent.nativeCycleFromCrossCarrierCoefficients_spec
+#check GSTSplitBoundaryProjection.repaired_type_iff_correction_has_type
+#check GSTComplexTangentProjectionChainObstruction.closed_and_type_fixed_iff_zero

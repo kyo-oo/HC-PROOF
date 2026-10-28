@@ -1,4 +1,5 @@
 import Mathlib
+import GSTSplitBoundaryProjection
 
 /-!
 # GST Hodge geometric surgery: complex-tangent projection is NOT a chain map
@@ -116,5 +117,55 @@ theorem complex_projection_cannot_be_single_integral_tangent :
 #check complex_projection_cannot_be_single_integral_tangent
 #check corrected_boundary_necessarily_nonzero
 #print axioms no_unconditional_chain_map_identity
+
+/-! ## Exact repair and the simultaneous type obstruction (2026-10-28)
+
+The new generic splitting theorem repairs the boundary. On THIS genuine
+Fourier coefficient block the repaired vector loses type: the intersection
+of closed vectors with the type-fixed space is zero. These statements are
+coefficient algebra; they do not formalize the analytic torus/current API.
+The new declarations are proof drafts, not compiled in this session.
+-/
+
+/-- C=1-hd for the explicit right inverse h(t)=(0,-t). -/
+def closedRepair (f : FourierTwoBlock) : FourierTwoBlock := (f.1, 0)
+
+theorem closedRepair_is_closed (f : FourierTwoBlock) :
+    boundaryAmplitude (closedRepair f) = 0 := by
+  simp [closedRepair, boundaryAmplitude]
+
+theorem closedRepair_fixes_closed (f : FourierTwoBlock)
+    (hf : boundaryAmplitude f = 0) : closedRepair f = f := by
+  rcases f with ⟨a,b⟩
+  have hb : b = 0 := by simpa [boundaryAmplitude] using hf
+  simp [closedRepair, hb]
+
+/-- A sharp obstruction: there is no nonzero vector satisfying both demands. -/
+theorem closed_and_type_fixed_iff_zero (f : FourierTwoBlock) :
+    (boundaryAmplitude f = 0 ∧ complexTypeProjection f = f) ↔ f = 0 := by
+  constructor
+  · rintro ⟨hc, ht⟩
+    rcases f with ⟨a,b⟩
+    have hb : b = 0 := by simpa [boundaryAmplitude] using hc
+    have hsecond := congrArg Prod.snd ht
+    change (a+b)/2 = b at hsecond
+    have ha : a = 0 := by linarith
+    simp [ha, hb]
+  · rintro rfl
+    norm_num [boundaryAmplitude, complexTypeProjection]
+
+/-- Removing the boundary alone leaves a nonzero and wrongly typed vector. -/
+theorem boundary_repair_loses_type :
+    closedRepair (complexTypeProjection originalClosedForm) = (1/2,0) ∧
+      complexTypeProjection (closedRepair (complexTypeProjection originalClosedForm)) ≠
+        closedRepair (complexTypeProjection originalClosedForm) := by
+  constructor
+  · norm_num [closedRepair, complexTypeProjection, originalClosedForm]
+  · intro h
+    have hsecond := congrArg Prod.snd h
+    norm_num [closedRepair, complexTypeProjection, originalClosedForm] at hsecond
+
+#print axioms closed_and_type_fixed_iff_zero
+#print axioms boundary_repair_loses_type
 
 end GSTComplexTangentProjectionChainObstruction

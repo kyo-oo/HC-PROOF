@@ -1,6 +1,7 @@
 import GSTClassicalHodgeCMCoefficientDescentCore
 import GSTClassicalHodgeExactClayStatement
 import GSTUniversalChowRetractToTarget
+import GSTClassicalHodgeCrossCarrierGeometricTransfer
 
 /-!
 # Rational algebraic cycle recovery from arbitrary coefficient extensions
@@ -236,6 +237,68 @@ theorem native_target_cycle_of_multisource_CM_field_spanning
 
 #check native_target_cycle_of_multisource_CM_field_spanning
 #print axioms native_target_cycle_of_multisource_CM_field_spanning
+
+/-! ## Finite CM source assembly WITHOUT a universal target-span hypothesis
+
+2026-10-28 proof draft, not compiled in this session.
+The preceding multisource theorem accepts `GeometricMultiSourceChowBirth`,
+which contains a `hodgeSpan` statement for EVERY target. That field is not
+needed to descend one independently constructed finite period expansion.
+This upgrade removes that stronger input entirely, retaining actual source
+cycles, actual cross-carrier naturality, and the exact target-specific
+extension-coefficient identity. In particular Qbar periods are allowed.
+-/
+
+open GSTClassicalHodgeCrossCarrierGeometricTransfer
+
+/-- Explicit rational original-X cycle from finite heterogeneous CM images.
+No `hodgeSpan`, basis supply, or target-cycle selector is an argument. -/
+noncomputable def nativeCycleFromCrossCarrierCoefficients
+    {X : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData X}
+    (p : ℕ) {ι : Type*} [Fintype ι]
+    (source : ι → SmoothProjectiveComplexScheme)
+    (D : (i : ι) → HodgeBigradedBettiData (source i))
+    (q : ι → ℕ)
+    (T : (i : ι) → CrossCarrierTransfer (source i) X (D i) H (q i) p)
+    (sourceCycle : (i : ι) → codimensionCycles (source i).X (q i))
+    (coefficient : ι → K) : codimensionCycles X.X p :=
+  rationalCycleFromExtensionCoefficients Finset.univ
+    (fun i => (T i).native (sourceCycle i)) coefficient
+
+theorem nativeCycleFromCrossCarrierCoefficients_spec
+    {X : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData X}
+    (p : ℕ) {ι : Type*} [Fintype ι]
+    (source : ι → SmoothProjectiveComplexScheme)
+    (D : (i : ι) → HodgeBigradedBettiData (source i))
+    (q : ι → ℕ)
+    (T : (i : ι) → CrossCarrierTransfer (source i) X (D i) H (q i) p)
+    (sourceCycle : (i : ι) → codimensionCycles (source i).X (q i))
+    (coefficient : ι → K)
+    (alpha : RationalSingularCohomology H.analytification (2*p))
+    (hExtended :
+      let b := Module.Free.chooseBasis ℚ
+        (RationalSingularCohomology H.analytification (2*p))
+      ∀ j : Module.Free.ChooseBasisIndex ℚ
+        (RationalSingularCohomology H.analytification (2*p)),
+        algebraMap ℚ K ((b.repr alpha) j) =
+          ∑ i : ι, coefficient i * algebraMap ℚ K
+            ((b.repr ((T i).betti ((D i).cycleClass (q i) (sourceCycle i)))) j)) :
+    H.cycleClass p
+      (nativeCycleFromCrossCarrierCoefficients p source D q T sourceCycle coefficient) =
+        alpha := by
+  classical
+  apply rationalCycleFromExtensionCoefficients_spec
+    (K := K) (s := Finset.univ)
+    (cycles := fun i => (T i).native (sourceCycle i))
+    (coeff := coefficient) (alpha := alpha)
+  intro j
+  have hNat (i : ι) : H.cycleClass p ((T i).native (sourceCycle i)) =
+      (T i).betti ((D i).cycleClass (q i) (sourceCycle i)) :=
+    (T i).naturality (sourceCycle i)
+  simpa only [hNat] using hExtended j
+
+#check nativeCycleFromCrossCarrierCoefficients_spec
+#print axioms nativeCycleFromCrossCarrierCoefficients_spec
 
 #check rational_native_cycle_of_extended_span
 #print axioms rational_native_cycle_of_extended_span
