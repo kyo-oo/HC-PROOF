@@ -27,11 +27,14 @@ theorem bridge_intertwines (p q : R) (hp : p*p=p) (hq : q*q=q) :
     bridge p q*p=q*bridge p q := by
   have hl : bridge p q*p=q*p := by
     unfold bridge
-    rw [add_mul, mul_assoc, hp, mul_assoc, sub_mul, one_mul, hp, sub_self, mul_zero, add_zero]
+    have hw : (1-p)*p=0 := by rw [sub_mul, one_mul, hp, sub_self]
+    rw [add_mul, mul_assoc, hp, mul_assoc, sub_mul, one_mul, hw, mul_zero,
+      sub_self, add_zero]
   have hr : q*bridge p q=q*p := by
     unfold bridge
-    rw [mul_add, ← mul_assoc, hq, ← mul_assoc, mul_sub, mul_one, hq,
-      sub_self, zero_mul, add_zero]
+    have hzq : q*(1-q)=0 := by rw [mul_sub, mul_one, hq, sub_self]
+    rw [mul_add, ← mul_assoc, hq, ← mul_assoc, mul_sub, mul_one, hzq,
+      zero_mul, sub_self, add_zero]
   exact hl.trans hr.symm
 
 theorem bridge_product (p q : R) (hp : p*p=p) (hq : q*q=q) :
@@ -97,7 +100,8 @@ theorem bridgeUnit_conjugates (p q : R) (hp : p*p=p) (hq : q*q=q)
   let u := bridgeUnit p q hp hq n hd
   have hi : (u : R)*p=q*(u : R) := bridge_intertwines p q hp hq
   change (u : R)*p*(↑(u⁻¹) : R)=q
-  rw [hi,mul_assoc,u.val_inv,mul_one]
+  have hinv : ((u : R) * ((u⁻¹ : Rˣ) : R)) = 1 := u.val_inv
+  rw [hi,mul_assoc,hinv,mul_one]
 
 #print axioms bridge_product
 #print axioms bridgeUnit_conjugates

@@ -154,7 +154,9 @@ theorem noncommuting_defect_survives_every_scale (m : ℤ) (hm : m ≠ 0) :
     heisenberg m 0 0 * heisenberg 0 m 0 ≠ heisenberg m m 0 := by
   intro h
   have h13 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℤ => M 0 2) h
-  simp only [heisenberg, Matrix.mul_apply, Fin.sum_univ_three] at h13
+  simp only [heisenberg, Matrix.mul_apply, Fin.sum_univ_three, Matrix.of_apply,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_succ,
+    Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons] at h13
   norm_num at h13
   have hsq : m * m ≠ 0 := mul_ne_zero hm hm
   apply hsq

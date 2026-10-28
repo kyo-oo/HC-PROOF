@@ -101,6 +101,8 @@ theorem family_is_noncommuting : rotationA*rotationB ≠ rotationB*rotationA := 
   intro h
   have h01 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℚ => M 0 1) h
   norm_num [rotationA, rotationB, Matrix.mul_apply, Matrix.of_apply,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_succ,
+    Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons,
     Fin.sum_univ_three] at h01
 
 #print axioms exact_target_of_word_relation

@@ -25,7 +25,7 @@ theorem product_annihilates
     exact image_kill x
   obtain ⟨k, hk⟩ := exact_at (b • x) hx
   calc
-    (a * b) • x = a • (b • x) := by simp [mul_nsmul, smul_comm]
+    (a * b) • x = a • (b • x) := mul_nsmul' x a b
     _ = a • i k := by rw [hk]
     _ = i (a • k) := (map_nsmul i a k).symm
     _ = 0 := by rw [kernel_kill k, map_zero]

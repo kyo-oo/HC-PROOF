@@ -287,15 +287,16 @@ theorem nativeCycleFromCrossCarrierCoefficients_spec
       (nativeCycleFromCrossCarrierCoefficients p source D q T sourceCycle coefficient) =
         alpha := by
   classical
-  apply rationalCycleFromExtensionCoefficients_spec
-    (K := K) (s := Finset.univ)
-    (cycles := fun i => (T i).native (sourceCycle i))
+  have hspec := rationalCycleFromExtensionCoefficients_spec (K := K)
+    (s := Finset.univ) (cycles := fun i => (T i).native (sourceCycle i))
     (coeff := coefficient) (alpha := alpha)
+  refine hspec ?_
   intro j
   have hNat (i : ι) : H.cycleClass p ((T i).native (sourceCycle i)) =
       (T i).betti ((D i).cycleClass (q i) (sourceCycle i)) :=
     (T i).naturality (sourceCycle i)
-  simpa only [hNat] using hExtended j
+  rw [hNat]
+  exact hExtended j
 
 #check nativeCycleFromCrossCarrierCoefficients_spec
 #print axioms nativeCycleFromCrossCarrierCoefficients_spec
