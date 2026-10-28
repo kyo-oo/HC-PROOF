@@ -95,7 +95,9 @@ theorem oneCorrection_class (S : SourceSystem X H p ι)
             apply Finset.sum_congr rfl
             intro i hi
             exact (S.write_betti i (S.read i v)).symm
-      _ = (S.frame v).1 := rfl
+      _ = (S.frame v).1 := by
+            rw [show (S.frame v).1 = (∑ i, S.write i (S.read i v)).1 from rfl,
+              Submodule.coe_sum]
   have hsub : v - S.error v = S.frame v := by
     change v - (v - S.frame v) = S.frame v
     abel

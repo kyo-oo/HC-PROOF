@@ -160,7 +160,10 @@ theorem noncommuting_defect_survives_every_scale (m : ℤ) (hm : m ≠ 0) :
   norm_num at h13
   have hsq : m * m ≠ 0 := mul_ne_zero hm hm
   apply hsq
-  linarith
+  rcases h13 with h | h
+  · have hm0 : m = 0 := by linarith
+    simp [hm0]
+  · simp [h]
 
 def area (x y : ℤ × ℤ) : ℤ := x.1 * y.2 - y.1 * x.2
 

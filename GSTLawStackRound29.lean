@@ -85,23 +85,12 @@ dies at scale 2 in the difference image. -/
 theorem two_smul_of_norm_sq {M : Type*} [AddCommGroup M] [Module ℤ M]
     {g : Module.End ℤ M} (hg2 : g * g = -1) (v : M) :
     (2 : ℤ) • v = -((g - (1 : Module.End ℤ M))) ((1 + g) v) := by
-  have h : (g - (1 : Module.End ℤ M)) ((1 + g) v) = (g * g - 1) v := by
-    have : (g - (1 : Module.End ℤ M)) ((1 + g) v)
-        = (g * (1 + g)) v - (1 + g) v := by
-      simp [Module.End.mul_apply, Module.End.sub_apply, Module.End.one_apply,
-        Module.End.add_apply, map_add]
-    rw [this]
-    have h2 : (g * (1 + g)) v = (g + g * g) v := by
-      simp [Module.End.mul_apply, Module.End.add_apply]
-      congr 1
-      ext
-      simp [Module.End.mul_apply]
-    rw [h2, hg2]
-    simp [sub_add_eq_sub_sub, two_smul]
-    module
-  rw [h, hg2]
-  simp [two_smul, sub_neg_eq_add]
-  module
+  have h : (g - (1 : Module.End ℤ M)) ((1 + g) v) = (-2 : ℤ) • v := by
+    have e : (g - (1 : Module.End ℤ M)) * (1 + g) = g * g - 1 := by noncomm_ring
+    rw [← Module.End.mul_apply, e, hg2]
+    simp [Module.End.sub_apply, Module.End.one_apply]
+  rw [h]
+  simp
 
 /-! ## PART F-2: the uniform kill (the hypothesis-record composition) -/
 
@@ -114,7 +103,7 @@ structure FiveTermData (A K B : Type*)
   inflation : K →+ A
   mix : A →+ B
   exactness : ∀ x, mix x = 0 → ∃ k, inflation k = x
-  inflationFourTorsion : ∀ k, (4 : ℕ) • k = 0
+  inflationFourTorsion : ∀ k : K, (4 : ℕ) • k = 0
   mixedFourTorsion : ∀ x, (4 : ℕ) • mix x = 0
 
 /-- **The uniform kill's arithmetic (Round 29's T1).** Given the five-term
@@ -186,7 +175,7 @@ theorem no_algebra_hom_witness :
   ⟨WR_sq, WI_sq, by
     intro h
     rw [WR_sq] at h
-    simp at h⟩
+    norm_num at h⟩
 
 /-! ## PART F-5: the equivariant envelope (the hypothesis record) -/
 
