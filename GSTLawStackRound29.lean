@@ -89,6 +89,7 @@ theorem two_smul_of_norm_sq {M : Type*} [AddCommGroup M] [Module ℤ M]
     have e : (g - (1 : Module.End ℤ M)) * (1 + g) = g * g - 1 := by noncomm_ring
     rw [← Module.End.mul_apply, e, hg2]
     simp [LinearMap.sub_apply, Module.End.one_apply]
+    abel
   rw [h]
   simp
 
