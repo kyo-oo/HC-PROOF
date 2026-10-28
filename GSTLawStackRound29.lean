@@ -88,7 +88,7 @@ theorem two_smul_of_norm_sq {M : Type*} [AddCommGroup M] [Module ℤ M]
   have h : (g - (1 : Module.End ℤ M)) ((1 + g) v) = (-2 : ℤ) • v := by
     have e : (g - (1 : Module.End ℤ M)) * (1 + g) = g * g - 1 := by noncomm_ring
     rw [← Module.End.mul_apply, e, hg2]
-    simp [Module.End.sub_apply, Module.End.one_apply]
+    simp [LinearMap.sub_apply, Module.End.one_apply]
   rw [h]
   simp
 
@@ -175,7 +175,7 @@ theorem no_algebra_hom_witness :
   ⟨WR_sq, WI_sq, by
     intro h
     rw [WR_sq] at h
-    norm_num at h⟩
+    exact absurd h (by decide : (1 : Matrix (Fin 2) (Fin 2) ℤ) ≠ -1)⟩
 
 /-! ## PART F-5: the equivariant envelope (the hypothesis record) -/
 
