@@ -118,7 +118,8 @@ theorem noncommuting_sources_admit_finite_correction :
     norm_num [frameA, frameB, Matrix.mul_apply, Fin.sum_univ_succ] at h01
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [frameA, frameB, Matrix.mul_apply, Fin.sum_univ_succ]
+      norm_num [frameA, frameB, Matrix.mul_apply, Matrix.one_apply,
+        Fin.sum_univ_succ]
 
 #print axioms partialCycle_class
 #print axioms exact_of_polynomial_annihilator

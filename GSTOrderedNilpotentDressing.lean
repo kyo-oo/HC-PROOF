@@ -106,8 +106,12 @@ theorem traceless_does_not_imply_nilpotent :
     Matrix.trace tracelessInvolution=0 ∧
       ∀ n : ℕ,tracelessInvolution^n≠0 := by
   constructor
-  · decide
-  · exact involutive_powers_ne_zero tracelessInvolution (by decide)
+  · norm_num [tracelessInvolution, Matrix.trace, Fin.sum_univ_two, Matrix.of_apply]
+  · exact involutive_powers_ne_zero tracelessInvolution (by
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [tracelessInvolution, Matrix.mul_apply, Matrix.one_apply,
+          Matrix.of_apply])
 
 #print axioms star_assoc
 #print axioms unitOfNilpotent

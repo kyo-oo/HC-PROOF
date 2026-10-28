@@ -290,6 +290,7 @@ roots = [
   "GSTClassicalHodgeGeometricCycleClassSpine",
   "GSTClassicalHodgeGeometryFirstTwoGenerator",
   "GSTClassicalHodgeCrossCarrierGeometricTransfer",
+  "GSTUniversalChowRetractToTarget",
   "GSTClassicalHodgeCMFourFactorSwitch",
   "GSTClassicalHodgeCrossCarrierObstruction",
   "GSTClassicalHodgeCrossCarrierGSTProgramFusion",

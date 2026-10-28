@@ -70,7 +70,8 @@ theorem rational_averaging (rho : G → Module.End ℚ V) (c : G → G → V)
           (cocycleSum c g + rho g (cocycleSum c h) - cocycleSum c (g*h)) := by
             simp [averagedPrimitive, smul_add, smul_sub, map_smul]
     _ = (Fintype.card G : ℚ)⁻¹ • (Fintype.card G • c g h) := by
-          rw [integral_averaging (fun g => (rho g).toAddMonoidHom) c hc]
+          rw [← LinearMap.toAddMonoidHom_coe,
+            integral_averaging (fun g => (rho g).toAddMonoidHom) c hc]
     _ = c g h := by
           rw [← Nat.cast_smul_eq_nsmul ℚ, smul_smul]
           simp [hm]

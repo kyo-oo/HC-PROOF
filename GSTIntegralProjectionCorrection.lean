@@ -52,12 +52,12 @@ theorem corrected_idempotent (k : ℕ) (a : R)
       apply correction_halves_nilpotence
       simpa only [pow_succ', Nat.mul_comm] using h
 
-theorem power_vanishes_above {a : R} {n m : ℕ} (h : a^n=0) (hnm : n≤m) :
-    a^m=0 := by
+theorem power_vanishes_above {a : R} {n m : ℕ} (h : a ^ n = 0) (hnm : n ≤ m) :
+    a ^ m = 0 := by
   obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le hnm
   rw [pow_add, h, zero_mul]
 
-theorem self_le_two_power (n : ℕ) : n≤2^n := by
+theorem self_le_two_power (n : ℕ) : n ≤ 2 ^ n := by
   induction n with
   | zero => norm_num
   | succ n ih =>
@@ -67,7 +67,7 @@ theorem self_le_two_power (n : ℕ) : n≤2^n := by
 
 /-- An explicit finite constructor, including arbitrary nilpotence exponents. -/
 theorem corrected_at_nilpotence_exponent (a : R) (n : ℕ)
-    (h : (defect a)^n=0) : corrected a n*corrected a n=corrected a n := by
+    (h : (defect a) ^ n = 0) : corrected a n * corrected a n = corrected a n := by
   exact corrected_idempotent n a (power_vanishes_above h (self_le_two_power n))
 
 theorem correction_fixes_idempotent (a : R) (ha : a*a=a) : correctOnce a=a := by

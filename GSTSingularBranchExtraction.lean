@@ -17,14 +17,22 @@ def twistSquare (a d : R) (k : ℚ) : R := (a+(2*k) • d)^2
 
 theorem three_twist_identity (a d : R) :
     twistSquare a d 1+twistSquare a d (-1)-(2 : ℚ) • twistSquare a d 0=(8 : ℚ) • d^2 := by
-  simp only [twistSquare,Algebra.smul_def]
-  norm_num
+  have h2 : (algebraMap ℚ R) (2 : ℚ) = (2 : R) := by
+    rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from by rw [Nat.cast_ofNat], map_natCast, Nat.cast_ofNat]
+  have h8 : (algebraMap ℚ R) (8 : ℚ) = (8 : R) := by
+    rw [show (8 : ℚ) = ((8 : ℕ) : ℚ) from by rw [Nat.cast_ofNat], map_natCast, Nat.cast_ofNat]
+  simp only [twistSquare, Algebra.smul_def]
+  norm_num [h2, h8]
   ring
 
 theorem centered_twist_identity (a d : R) (t h : ℚ) :
     twistSquare a d (t+h)+twistSquare a d (t-h)-(2 : ℚ) • twistSquare a d t=
       (8*h^2) • d^2 := by
-  simp only [twistSquare,Algebra.smul_def,map_add,map_sub,map_mul,map_pow]
+  have h2 : (algebraMap ℚ R) (2 : ℚ) = (2 : R) := by
+    rw [show (2 : ℚ) = ((2 : ℕ) : ℚ) from by rw [Nat.cast_ofNat], map_natCast, Nat.cast_ofNat]
+  have h8 : (algebraMap ℚ R) (8 : ℚ) = (8 : R) := by
+    rw [show (8 : ℚ) = ((8 : ℕ) : ℚ) from by rw [Nat.cast_ofNat], map_natCast, Nat.cast_ofNat]
+  simp only [twistSquare,Algebra.smul_def,map_add,map_sub,map_mul,map_pow,h2,h8]
   norm_num
   ring
 

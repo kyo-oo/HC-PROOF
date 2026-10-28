@@ -75,20 +75,33 @@ def rotationC : Matrix (Fin 3) (Fin 3) ℚ := !![0,-1,0;1,0,0;0,0,0]
 
 theorem every_weighted_frame_singular (x y z : ℚ) :
     Matrix.det (x • rotationA+y • rotationB+z • rotationC)=0 := by
-  norm_num [rotationA,rotationB,rotationC,Matrix.det_fin_three]
-  <;> ring
+  simp [rotationA, rotationB, rotationC, Matrix.det_fin_three, Matrix.add_apply,
+    Matrix.smul_apply, Matrix.of_apply]
+  ring
 
 theorem quadratic_word_identity :
     rotationA*rotationA+rotationB*rotationB+rotationC*rotationC = -2 •
-      (1 : Matrix (Fin 3) (Fin 3) ℚ) := by decide
+      (1 : Matrix (Fin 3) (Fin 3) ℚ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [rotationA, rotationB, rotationC, Matrix.mul_apply, Matrix.one_apply,
+      Matrix.of_apply]
 
 /-- Coefficients are integers even though the displayed carrier is rational. -/
 theorem integral_fourth_order_identity :
     rotationA*rotationA*rotationB*rotationB +
       rotationA*rotationA*rotationC*rotationC +
-      rotationB*rotationB*rotationC*rotationC = 1 := by decide
+      rotationB*rotationB*rotationC*rotationC = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [rotationA, rotationB, rotationC, Matrix.mul_apply, Matrix.one_apply,
+      Matrix.of_apply]
 
-theorem family_is_noncommuting : rotationA*rotationB ≠ rotationB*rotationA := by decide
+theorem family_is_noncommuting : rotationA*rotationB ≠ rotationB*rotationA := by
+  intro h
+  have h01 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℚ => M 0 1) h
+  norm_num [rotationA, rotationB, Matrix.mul_apply, Matrix.of_apply,
+    Fin.sum_univ_three] at h01
 
 #print axioms exact_target_of_word_relation
 #print axioms fourthOrderCycle_class

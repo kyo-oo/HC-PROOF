@@ -35,10 +35,8 @@ theorem dressing2_multiplication_defect (x y : R) :
 theorem dressing2_add (x y : R) (hcomm : x * y = y * x)
     (hxxy : x * x * y = 0) (hxyy : x * y * y = 0) :
     dressing2 x * dressing2 y = dressing2 (x + y) := by
-  have hxxyy : x * x * y * y = 0 := by rw [hxxy, zero_mul]
   have hbracket : x * y - y * x = 0 := sub_eq_zero.mpr hcomm
-  rw [dressing2_multiplication_defect, hbracket,
-    hxxy, hxyy, hxxyy]
+  rw [dressing2_multiplication_defect, hbracket, hxxy, hxyy]
   simp
 
 theorem dressing2_inverse_left (x : R) (hxxx : x * x * x = 0) :
@@ -149,16 +147,18 @@ theorem heisenberg_inverse (a b c : ℤ) :
   have hc : c + -c + a * -b - -a * b = 0 := by ring
   rw [hc]
   norm_num [heisenberg]
+  decide
 
 /-- The failed additive product remains failed at every nonzero scale. -/
 theorem noncommuting_defect_survives_every_scale (m : ℤ) (hm : m ≠ 0) :
     heisenberg m 0 0 * heisenberg 0 m 0 ≠ heisenberg m m 0 := by
   intro h
   have h13 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℤ => M 0 2) h
-  norm_num [heisenberg, Matrix.mul_apply, Fin.sum_univ_succ] at h13
+  simp only [heisenberg, Matrix.mul_apply, Fin.sum_univ_three] at h13
+  norm_num at h13
   have hsq : m * m ≠ 0 := mul_ne_zero hm hm
   apply hsq
-  nlinarith [h13]
+  linarith
 
 def area (x y : ℤ × ℤ) : ℤ := x.1 * y.2 - y.1 * x.2
 

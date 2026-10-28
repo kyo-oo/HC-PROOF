@@ -34,7 +34,10 @@ theorem integral_two_power_annihilates (x : R) (hx : x^2=1) (k : ℕ)
 theorem rational_nilpotent_involution [Algebra ℚ R] (x : R)
     (hx : x^2=1) (k : ℕ) (hn : (x-1)^(k+1)=0) : x=1 := by
   have hz : ((-2 : ℚ)^k) • (x-1)=0 := by
-    simpa [Algebra.smul_def] using integral_two_power_annihilates x hx k hn
+    have hlink : (algebraMap ℚ R) ((-2 : ℚ)^k) = (-2 : R)^k := by
+      rw [map_pow, map_neg, ← Nat.cast_ofNat, map_natCast]
+    rw [Algebra.smul_def, hlink]
+    exact integral_two_power_annihilates x hx k hn
   have hnz : (-2 : ℚ)^k≠0 := pow_ne_zero _ (by norm_num)
   exact sub_eq_zero.mp ((smul_eq_zero.mp hz).resolve_left hnz)
 
