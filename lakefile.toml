@@ -672,3 +672,16 @@ roots = [
   "GSTComplexTangentProjectionChainObstruction",
   "GSTOpenAISourceCorrectionUpgrade",
 ]
+
+# Owner-requested spatial-fold research. Compilation is left to the owner.
+[[lean_lib]]
+name = "GSTSpatialFoldUpgrade"
+roots = [
+  "GSTFoldRotation",
+  "GSTFoldPolarization",
+  "GSTCausalFoldDefect",
+  "GSTVariableFoldIntegrability",
+  "GSTGraphV2GeneralSpaceRealization",
+  "GSTSpatialFoldResearch",
+  "GSTLawStackRound51",
+]

@@ -1,5 +1,18 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Spatial folds: polarization and integrability — 2026-11-02
+
+[Research record](research/records/2026-11-02-gst-fold-polarization-integrability-causal-transfer.md):
+constant integral rotation folds admit a constructive positive polarization
+and actual CM elliptic-power realization; variable positive folds have a
+separate differential integrability obstruction. Exact causal defect equations
+are integrated with Graph V2, and Round 51 now has a constructed native-cycle
+tower entry point. Five new Lean modules and 38 theorem drafts; Wolfram and
+independent Python agree on every recorded table. Compilation is left to the
+owner. The universal original-X algebraic return remains open.
+
+Owner verification entry: `lake build GSTSpatialFoldUpgrade`.
+
 ## Integral projection and singular-branch upgrade — 2026-10-28
 
 [Research record](research/records/2026-10-28-gst-integral-projection-singular-branch-upgrade.md):

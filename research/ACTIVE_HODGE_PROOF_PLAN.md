@@ -1,5 +1,15 @@
 # GST Hodge — Locked Execution Contract
 
+**Spatial-fold continuation, reconciled through `05a2758` (2026-11-02):**
+[polarization, integrability and constructed causal-cycle record](records/2026-11-02-gst-fold-polarization-integrability-causal-transfer.md).
+Constant integral folds now have an explicit chosen polarization and CM-torus
+realization; a compact variable fold shows that the square equation and
+positivity do not force integrability. Graph V2 has an exact path-defect law,
+and Round 51 gains an actual recursively constructed native-cycle transport
+entry point. Bare rotations exist on doubled arbitrary-X realizations, while
+their canonical original-X source defect is retained. The all-X source and
+canonical semantics gates are unchanged; Lean remains uncompiled by request.
+
 **Continuation after 02bba4d (2026-10-28):** [integral projection and singular-branch record](records/2026-10-28-gst-integral-projection-singular-branch-upgrade.md).
 Six new Lean modules add integral finite exactification, explicit nilpotent
 conjugacy, smooth-branch source neutralization and three-twist exceptional

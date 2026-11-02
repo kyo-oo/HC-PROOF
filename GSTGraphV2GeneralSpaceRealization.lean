@@ -1,5 +1,6 @@
 import GSTGeneralSpaceCohomology
 import GSTGraphV2NonEuclidean
+import GSTCausalFoldDefect
 
 namespace GSTGraphV2GeneralSpaceRealization
 
@@ -67,5 +68,38 @@ def physicalPointRealization (E N t p : Nat) : graphV2GeneralSpace.Point :=
 #check carryObservable
 #check witnessPredicate
 #check physicalPointRealization
+
+/-! Realized causal fold defects. Forward reachability by itself does not
+assert Hodge preservation; the operator square must actually commute. -/
+section OperatorDefect
+open GSTCausalFoldDefect
+variable {R : Type*} [Ring R]
+
+theorem forward_pair_defect
+    (P : OperatorRealization graphV2GeneralSpace R)
+    {u v w : SevenAxes} (huv : ForwardEdge u v) (hvw : ForwardEdge v w)
+    (J K L : R) :
+    defect J L (P.operator (graphV2GeneralSpace.compPath
+      (forwardEdgePath huv) (forwardEdgePath hvw))) =
+      defect K L (P.operator (forwardEdgePath hvw)) *
+        P.operator (forwardEdgePath huv) +
+      P.operator (forwardEdgePath hvw) *
+        defect J K (P.operator (forwardEdgePath huv)) := by
+  exact causal_path_defect P (forwardEdgePath huv) (forwardEdgePath hvw) J K L
+
+theorem safe_forward_pair
+    (P : OperatorRealization graphV2GeneralSpace R)
+    {u v w : SevenAxes} (huv : ForwardEdge u v) (hvw : ForwardEdge v w)
+    (J K L : R)
+    (hFirst : defect J K (P.operator (forwardEdgePath huv)) = 0)
+    (hSecond : defect K L (P.operator (forwardEdgePath hvw)) = 0) :
+    defect J L (P.operator (graphV2GeneralSpace.compPath
+      (forwardEdgePath huv) (forwardEdgePath hvw))) = 0 := by
+  rw [forward_pair_defect, hFirst, hSecond]
+  simp
+
+#print axioms forward_pair_defect
+#print axioms safe_forward_pair
+end OperatorDefect
 
 end GSTGraphV2GeneralSpaceRealization

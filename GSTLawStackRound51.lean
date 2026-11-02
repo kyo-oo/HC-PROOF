@@ -1,3 +1,5 @@
+import GSTCausalFoldDefect
+
 /-
   GSTLawStackRound51.lean — THE SEED-ORBIT LAW, THE BREAK-HUNT, THE META-LAW.
 
@@ -140,6 +142,23 @@ structure RidesHypothesis where
 theorem rides_always_gives (H : RidesHypothesis)
     (h1 : H.seed_in_range) (h2 : H.transport_stays_algebraic) :
     H.transport_stays_algebraic ∧ H.seed_in_range := ⟨h2, h1⟩
+
+-- Typed continuation: the actual transported cycle is constructed. The old
+-- shape record above is retained for provenance, not used in this proof.
+namespace GSTLawStackRound51Actual
+open GSTGeneralSpace GSTGeneralSpace.NativeCycleRecoordination GSTCausalFoldDefect
+
+theorem rides_always_gives_constructively
+    {G : GeneralSpace} {N H : Type*}
+    [AddCommGroup N] [Module ℚ N] [AddCommGroup H] [Module ℚ H]
+    (P : CyclePathRealization G N H) (world : ℕ → G.Point)
+    (step : ∀ n, G.Path (world n) (world (n+1))) (n : ℕ) (seed : N) :
+    P.cycleClass (nativeCycleTower P world step n seed) =
+      causalTowerHodgeState P world step n (P.cycleClass seed) :=
+  nativeCycleTower_class P world step n seed
+
+#print axioms rides_always_gives_constructively
+end GSTLawStackRound51Actual
 
 -- ============ PART C — the break-hunt census verdict ============
 -- [Shape record: content in the derivation §4]
