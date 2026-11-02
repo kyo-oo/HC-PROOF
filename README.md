@@ -1,5 +1,16 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Complete GST whole-space proof plan — 2026-11-03
+
+[Read the full plan](research/GST_WHOLE_SPACE_PROOF_PLAN.md): the owner's
+requested sequence from arbitrary X and the provisional Hodge assumption,
+through emergent N dimensions, spatial folds, the graph complex, causality
+and full N-cohomology, to preserving/breaking equations, an actual geometric
+source and canonical original-X return. It gives the exact dependencies,
+existing results, source-construction routes and finite closure argument.
+This is the complete execution plan; its research obligations remain
+explicit. No new Lean compilation or universal proof is claimed.
+
 ## Extension-sensitive causal folds — 2026-11-03
 
 [Research record](research/records/2026-11-03-gst-extension-sensitive-causal-folds.md):

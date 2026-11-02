@@ -1,5 +1,16 @@
 # GST Hodge — Locked Execution Contract
 
+**Owner-requested complete proof plan (2026-11-03, base `2b678dc`):**
+[Whole-space GST dependency and execution plan](GST_WHOLE_SPACE_PROOF_PLAN.md).
+Follow the requested order: arbitrary X, provisional Hodge assumption,
+emergent N dimensions, spatial folds, graph-complex/cochain comparison,
+causal defects, full N-cohomology, preserving/breaking equations, actual
+source construction and canonical original-X return. The provisional
+experiment has an explicit conditional conclusion; the independent proof
+must replace that premise by the specified geometric construction. The
+document supplies the entire route, its existing evidence and execution
+obligations. It introduces no new Lean declarations or compilation claims.
+
 **Extension-sensitive spatial-fold continuation from `6191cdc` (2026-11-03):**
 [period equations, causal pairing graphs and full N-cohomology fibers](records/2026-11-03-gst-extension-sensitive-causal-folds.md).
 The actual two-handle period equation detects an extension obstruction that
