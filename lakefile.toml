@@ -677,6 +677,8 @@ roots = [
 [[lean_lib]]
 name = "GSTSpatialFoldUpgrade"
 roots = [
+  "GSTFoldPeriodDescent",
+  "GSTCausalPairingGraphs",
   "GSTFoldRotation",
   "GSTFoldPolarization",
   "GSTCausalFoldDefect",

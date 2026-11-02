@@ -267,4 +267,51 @@ theorem manyCausalHoleTensor_apply
 #print axioms doubleCausalHoleBasis_channelCount
 
 
+/-! ## Extension-sensitive folds retain tensor rank
+
+The full product-coordinate space has product dimension, but ONE tensor of
+independent input amplitudes lies on the rank-one locus. This is a precise
+extra check required before interpreting causal products as arbitrary fiber
+coverage. Pairing-graph linear combinations in the companion fold derivation
+retain these multiplicities. No coordinate identity constructs Chow classes.
+-/
+
+def doubleCausalMinor (s t : NShape) (z : DoubleCausalHoleCoordinates s t)
+    (i k : Fin s.holes) (j l : Fin t.holes) : ℚ :=
+  z (i,j)*z (k,l)-z (i,l)*z (k,j)
+
+theorem doubleCausalHoleTensor_minor_zero (s t : NShape)
+    (a : HoleCoordinates s) (b : HoleCoordinates t)
+    (i k : Fin s.holes) (j l : Fin t.holes) :
+    doubleCausalMinor s t (doubleCausalHoleTensor s t a b) i k j l=0 := by
+  simp only [doubleCausalMinor,doubleCausalHoleTensor]
+  ring
+
+/-- Explicit finite SUM of separated amplitudes, with all indices retained. -/
+theorem separated_channel_sum_reconstruct (s t : NShape)
+    (z : DoubleCausalHoleCoordinates s t) (k : Fin s.holes) (l : Fin t.holes) :
+    (∑ i : Fin s.holes, ∑ j : Fin t.holes,
+      z (i,j)*independentHoleBasis s i k*independentHoleBasis t j l)=z (k,l) := by
+  classical
+  simp [independentHoleBasis,mul_ite]
+
+def twoChannelDiagonal : (Fin 2 × Fin 2) → ℚ :=
+  fun ij => if ij.1=ij.2 then 1 else 0
+
+theorem twoChannelDiagonal_minor :
+    twoChannelDiagonal (0,0)*twoChannelDiagonal (1,1)-
+      twoChannelDiagonal (0,1)*twoChannelDiagonal (1,0)=1 := by
+  norm_num [twoChannelDiagonal]
+
+theorem twoChannelDiagonal_not_one_tensor :
+    ¬ ∃ a b : Fin 2 → ℚ, ∀ i j,twoChannelDiagonal (i,j)=a i*b j := by
+  rintro ⟨a,b,h⟩
+  have hc := twoChannelDiagonal_minor
+  rw [h 0 0,h 1 1,h 0 1,h 1 0] at hc
+  have hz : a 0*b 0*(a 1*b 1)-a 0*b 1*(a 1*b 0)=0 := by ring
+  linarith
+
+#print axioms doubleCausalHoleTensor_minor_zero
+#print axioms separated_channel_sum_reconstruct
+#print axioms twoChannelDiagonal_not_one_tensor
 end GSTNCohomologyV3

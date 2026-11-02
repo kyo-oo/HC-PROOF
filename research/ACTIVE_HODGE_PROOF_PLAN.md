@@ -1,5 +1,16 @@
 # GST Hodge — Locked Execution Contract
 
+**Extension-sensitive spatial-fold continuation from `6191cdc` (2026-11-03):**
+[period equations, causal pairing graphs and full N-cohomology fibers](records/2026-11-03-gst-extension-sensitive-causal-folds.md).
+The actual two-handle period equation detects an extension obstruction that
+balanced grades and monodromy alone omit. Compatible periods construct actual
+isogeny-graph divisors; an all-arity three-charge criterion and pairing basis
+describe the synchronized tensor sector. The prescribed arbitrary-X product
+class has exact canonical return, retaining the original algebraicity defect;
+this auxiliary-handle recipe is closed as an independent source constructor.
+The selected/excess incidence route remains open. Lean drafts are uncompiled
+at the owner's request; the universal target is unchanged.
+
 **Selected-cluster continuation from `b403d3a` (2026-11-03):**
 [actual global incidence return and rational-fiber correction](records/2026-11-03-gst-selected-cluster-rational-fiber.md).
 The target-dependent invariant-subspace source is now constructed globally,

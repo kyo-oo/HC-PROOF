@@ -1,5 +1,17 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Extension-sensitive causal folds — 2026-11-03
+
+[Research record](research/records/2026-11-03-gst-extension-sensitive-causal-folds.md):
+actual elliptic-handle folds now have an exact period equation separating
+balanced weight, monodromy and extension compatibility. Successful folds
+construct graph divisors; three charge tests characterize every finite
+synchronized Hodge tensor block, with noncrossing pairing cycles. N-cohomology
+retains tensor-rank and full-fiber information. Two new Lean modules and an
+existing-module upgrade add 28 theorem drafts; Python/Wolfram exact checks
+agree. The canonical arbitrary-X return is computed, while the independent
+universal source constructor remains open. Compilation stays with the owner.
+
 ## Selected-cluster return and rational-fiber correction — 2026-11-03
 
 [Research record](research/records/2026-11-03-gst-selected-cluster-rational-fiber.md):

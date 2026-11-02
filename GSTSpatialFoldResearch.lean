@@ -6,6 +6,8 @@ import GSTGraphV2GeneralSpaceRealization
 import GSTLawStackRound51
 import GSTCMFiniteGeometricDegreeDescent
 import GSTSpectralBoundaryDefect
+import GSTFoldPeriodDescent
+import GSTCausalPairingGraphs
 
 /-!
 GST spatial-fold continuation, 2026-11-02. Algebraic proof drafts, with the
@@ -32,3 +34,8 @@ its geometric input is not silently manufactured for an arbitrary original X.
 #check GSTVariableFoldIntegrability.variableFold_square
 #check GSTVariableFoldIntegrability.nijenhuisCoefficient_zero_iff
 #check GSTCMFiniteGeometricDegreeDescent.native_rational_cm_cycle_of_geometric_field_expansion
+#check GSTFoldPeriodDescent.affine_period_coefficients
+#check GSTFoldPeriodDescent.fixed_balanced_period
+#check GSTFoldPeriodDescent.three_charge_kernels
+#check GSTCausalPairingGraphs.graph_special_linear_invariant
+#check GSTCausalPairingGraphs.normalize_handle_return
