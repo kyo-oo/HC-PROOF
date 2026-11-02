@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""ROUND 51 CERTIFICATE -- the seed-orbit law, the break-hunt, and the meta-law.
+"""ROUND 51 CERTIFICATE -- rational-fiber correction, 2026-11-03.
+
+Historical 73-check output is retained in round51_runA/B.txt; its 2Z-versus-Z
+"transcendental break" interpretation was wrong for rational HC. This version
+separates integral index from rational span and uses a two-direction rational
+control. The census remains an abstract receipt-coherence model, not a
+construction or search over genuine varieties. No global HC claim follows.
+
+Original layers (with the Y3 rational correction below):
 
 Layers:
   Y0  environment (float scan, stdlib only, vacuity self-scan, no clock)
@@ -13,7 +21,7 @@ Layers:
       control)
   Y3  THE BREAK-HUNT AT THE CENSUS AVATAR (seventeen committed families;
       per-family verdicts; the aggregate: every rational (p,p) input is
-      branch A by exact integer-echelon lattice membership; ZERO natural
+      branch A by exact rational-span membership; ZERO natural
       break witnesses; the wave channel-count transcription guard; the
       period and rank receipt anchors)
   Y4  THE SYNTHETIC-BREAK CONTROLS (the planted-witness detection at every
@@ -36,13 +44,11 @@ BOUNDS (declared BEFORE launch; NO-OOM protocol):
   Y2: the split model Z^6; 96 folds (6 unimodular A x 4 coupling D x 4
       unimodular C); 8 representatives; towers: ALL depth <= 3 over the
       representatives (584) plus 24 fixed depth-8 patterns (608 total).
-  Y3: the census coherence sweep + the transcendental avatar: 20 committed
+  Y3: the census coherence sweep + separate coefficient controls: 20 committed
       families (the named receipt inputs + the bounded-box sweeps of the
       rational (p,p) lattices, 3,151 inputs total -- the corpus's algebraicity
-      receipts VERIFIED, construction-guaranteed, DISCLOSED); PLUS the
-      constructed open-world avatar (the rational Hodge lattice uZ against
-      the cycle lattice 2uZ: the hunt FINDS the odd-multiple break
-      witnesses -- the detection-power receipt).
+      receipts VERIFIED, construction-guaranteed, DISCLOSED); PLUS the integral index control uZ/2uZ (no rational defect) and
+      the rational two-direction control Q^2 against Q e1.
   Y4: 5 planted witnesses; 12 synthetic defects x 8 towers.
   Y5: the P^2 parity model over (a,b,c,d) in [-6,6]^4 (28561 tuples); the
       Gr(2,5) anchors from a computed ch-table in exact Fraction
@@ -60,8 +66,9 @@ generators -- the sweep verifies the corpus's algebraicity receipts
 it does not independently discover algebraicity; the emptiness of the
 break-witness set at the committed face is inherited from the receipts.
 The hunt's DETECTION POWER is certified independently: the planted-
-witness controls (Y4) and the transcendental avatar (Y3b, where the
-hunt FINDS natural break witnesses on a constructed open world).
+witness controls (Y4) and the rational missing-direction model (Y3b).
+The former Gr25 planted control was only integrally missing and is explicitly
+accepted as rational in this corrected version.
 (2) The fold-admission, deafness, chain-link, and closed-equation checks
 mirror the block structure of the split model and cannot fail by
 construction -- they guard transcription and code integrity of
@@ -136,6 +143,16 @@ def in_lattice_E(E, v):
         for i in range(6):
             vv[i] -= x * g[i]
     return all(x == 0 for x in vv)
+
+def in_rational_span_E(E, v):
+    """Exact Q-span of the same integer-echelon rows; no divisibility test.
+    Also accepts fractional targets. A finite-index lattice is saturated here.
+    """
+    vv = list(map(Fr, v))
+    for c, g in E:
+        factor = vv[c] / g[c]
+        vv = [x-factor*y for x, y in zip(vv, g)]
+    return not any(vv)
 
 def matvec(M, v):
     return tuple(sum(M[i][k] * v[k] for k in range(len(v))) for i in range(len(M)))
@@ -488,7 +505,7 @@ for (name, L, R, named) in census:
     else:
         box = [(f"box{cs}", combo(R, cs)) for cs in BOX3]
     all_in = named + box
-    fam_breaks = [(lbl, v) for (lbl, v) in all_in if not in_lattice_E(E, v)]
+    fam_breaks = [(lbl, v) for (lbl, v) in all_in if not in_rational_span_E(E, v)]
     n_in_fam = len(all_in)
     n_inputs += n_in_fam
     ok(not fam_breaks, f"Y3 family {name}: all {n_in_fam} receipt-coherence inputs (named + box) branch A -- the corpus's algebraicity receipt verified")
@@ -497,26 +514,24 @@ ok(n_worlds == 20, f"Y3 the committed census: {n_worlds} world families (the cor
 ok(not break_witnesses,
    f"Y3 THE CENSUS COHERENCE SWEEP: all {n_inputs} inputs branch A -- the corpus's algebraicity receipts verified (construction-guaranteed, DISCLOSED); zero break witnesses at the committed face")
 
-# Y3b: THE TRANSCENDENTAL AVATAR -- the constructed open world (NOT a
-# committed world): the rational Hodge lattice R = uZ (the orbit cells)
-# against the cycle lattice L = 2uZ. The hunt FINDS the odd-multiple
-# Hodge classes as natural break witnesses -- the detection-power receipt.
+# Y3b: integral-index control AND a genuine rational missing-direction model.
+# Neither model is claimed to be a smooth-projective HC counterexample.
 u_cell = combo([e1, e2, e3], (2, 1, 1))
-R_TRA = [u_cell]
-L_TRA = [combo([u_cell], (2,))]
-E_TRA_R = lattice_echelon(R_TRA)
-E_TRA_L = lattice_echelon(L_TRA)
-tra_found = []
-tra_all = 0
-for t in range(-10, 11):
-    v = combo(R_TRA, (t,))
-    tra_all += 1
-    if not in_lattice_E(E_TRA_L, v):
-        tra_found.append(t)
-ok(sorted(tra_found) == sorted([t for t in range(-10, 11) if t % 2 != 0]),
-   f"Y3b THE TRANSCENDENTAL AVATAR: the hunt FINDS the {len([t for t in range(-10, 11) if t % 2 != 0])} odd-multiple natural break witnesses on the constructed open world (the detection-power receipt)")
-ok(all(in_lattice_E(E_TRA_L, combo(R_TRA, (t,))) for t in range(-10, 11) if t % 2 == 0),
-   "Y3b the avatar's even multiples stay branch A (the sublattice's own classes)")
+E_TRA_L = lattice_echelon([combo([u_cell], (2,))])
+tra_found = [t for t in range(-10,11)
+             if not in_lattice_E(E_TRA_L,combo([u_cell],(t,)))]
+ok(tra_found == [t for t in range(-10,11) if t % 2],
+   "Y3b integral-index control: ten odd multiples fail Z membership ONLY")
+ok(all(in_rational_span_E(E_TRA_L,combo([u_cell],(t,))) for t in range(-10,11)),
+   "Y3b rational saturation: every target is represented using coefficient t/2; zero rational breaks")
+E_Q_CONTROL = lattice_echelon([combo([e1], (2,))])
+ok(all(in_rational_span_E(E_Q_CONTROL,combo([e1,e2],(a,b))) == (b==0)
+       for a,b in itertools.product(range(-5,6),repeat=2)),
+   "Y3b rational Q^2 control: exactly the second-coordinate nonzero targets are missing")
+ok(all(not in_rational_span_E(E_Q_CONTROL,combo([e1,e2],(m*a,m*b)))
+       for a,b in itertools.product(range(-5,6),repeat=2) if b
+       for m in (Fr(-5),Fr(-1,3),Fr(1,2),Fr(2),Fr(7,3))),
+   "Y3b genuine rational missing directions survive all five nonzero test scales")
 
 # the wave channel-count transcription guard (integrity guard, disclosed)
 chan_ok = True
@@ -533,9 +548,16 @@ ok(8 * 9 == 72 and 8 * 3 == 24, "Y3 the Weil d=3 periods 8d^2=72, 8d=24 (transcr
 ok(4462 == 2 * 2231, "Y3 the Gr(2,5) equal-rank split 4462 = 2*2231 (transcription anchor, disclosed)")
 
 # ============ Y4: the synthetic-break controls ============
-planted = [(1, 0, 0, 0, 0, 1), (2, 1, 0, 0, 1, 0), (0, 0, 1, 1, 0, 0),
+# The former third control (0,0,1,1,0,0) is in the Gr25 model's Q-span!
+# It is retained as a negative control: an integer index must not fake a
+# rational missing direction. The replacement has a component outside every
+# listed rational source subspace; membership is checked, not assumed.
+old_control = (0,0,1,1,0,0)
+assert in_rational_span_E(CENSUS_E['Gr25'],old_control)
+assert combo(G_L,(Fr(10,37),Fr(9,37),Fr(-4,37))) == old_control
+planted = [(1, 0, 0, 0, 0, 1), (2, 1, 0, 0, 1, 0), (1, 1, 1, 1, 1, 1),
            (1, 0, 0, 3, 0, 0), (2, 1, 1, 0, 0, 2)]
-detect = sum(1 for pw in planted if all(not in_lattice_E(CENSUS_E[name], pw) for (name, L, R, named) in census))
+detect = sum(1 for pw in planted if all(not in_rational_span_E(CENSUS_E[name], pw) for (name, L, R, named) in census))
 ok(detect == len(planted), "Y4 the planted-witness detection: every off-lattice injection is rejected at every census world (the sweep has teeth)")
 
 pers = True
@@ -548,8 +570,8 @@ for d0 in defect_inputs:
             pers = False
 ok(pers, "Y4 the synthetic defects persist under towers (the break law is live on constructed inputs, expelled from the census)")
 
-expel = all(in_lattice_E(CENSUS_E[name], v) for (name, L, R, named) in census for (lbl, v) in named) and \
-        all(not in_lattice_E(CENSUS_E["P2-seed"], pw) for pw in planted)
+expel = all(in_rational_span_E(CENSUS_E[name], v) for (name, L, R, named) in census for (lbl, v) in named) and \
+        all(not in_rational_span_E(CENSUS_E["P2-seed"], pw) for pw in planted)
 ok(expel, "Y4 the expel-receipt: the census is clean and the planted witnesses are off-lattice (branch B lives only in the synthetic controls)")
 
 # ============ Y5: the meta-law chain ============
@@ -562,7 +584,7 @@ test_inputs += [(2, 1, 0, 1, 0, 0), (1, 1, 1, 0, 2, 0), (3, 0, 0, 1, 1, 1),
                 (-2, 1, 0, 0, -1, 2), (0, 2, 1, 2, 0, 0), (5, -1, 2, 1, 0, 0)]
 chain12 = True
 for v in test_inputs:
-    branch_A = in_lattice_E(CLASS_E, v)        # the branch, computed by membership
+    branch_A = in_rational_span_E(CLASS_E, v)        # the branch, computed by membership
     delta_zero = (v[3:] == (0, 0, 0))          # the defect sign, computed by the coordinate read
     if branch_A != delta_zero:
         chain12 = False
@@ -609,7 +631,7 @@ pair_ok = True
 for v in test_inputs:
     if v[0] != 0:      # Hodge-type inputs only (rank-zero classes)
         continue
-    inrange = in_lattice_E(CLASS_E, v)
+    inrange = in_rational_span_E(CLASS_E, v)
     has_pair = False
     for m in (1, 2, 3, 4):
         if tuple(m * x for x in v[3:]) == (0, 0, 0) and inrange:
@@ -626,14 +648,14 @@ def pair_exists(v):
         return False
     for m in (1, 2, 3, 4):
         if tuple(m * x for x in v[3:]) == (0, 0, 0):
-            return in_lattice_E(CLASS_E, tuple(m * x for x in v))
+            return in_rational_span_E(CLASS_E, tuple(m * x for x in v))
     return False
 
 comp_ok = True
 for v in test_inputs:
     if v[0] != 0:
         continue
-    branch_A = in_lattice_E(CLASS_E, v)
+    branch_A = in_rational_span_E(CLASS_E, v)
     delta_zero = (v[3:] == (0, 0, 0))
     pair_wit = pair_exists(v)
     if not (branch_A == delta_zero == pair_wit):
@@ -646,13 +668,13 @@ s1 = any(tau_bad(p - 1, GAMMA) != (2 * p, p, p) for p in range(1, 41))
 ok(s1, "Y6 S1 orbit corruption detected (the tampered fold breaks the orbit law)")
 
 seed_bad = (2, 1, 0, 0, 1, 0)
-s2 = any(not in_lattice_E(CLASS_E, matvec(F, seed_bad)) for F in FOLDS[:8])
+s2 = any(not in_rational_span_E(CLASS_E, matvec(F, seed_bad)) for F in FOLDS[:8])
 ok(s2, "Y6 S2 seed tampering detected (the off-block seed leaves the class lattice under folds)")
 
-s3 = not in_lattice_E(CENSUS_E["P2-seed"], planted[0])
+s3 = not in_rational_span_E(CENSUS_E["P2-seed"], planted[0])
 ok(s3, "Y6 S3 sweep masking detected (the planted witness fails the membership test -- the hunt is not masking)")
 
-s4 = not in_lattice_E(lattice_echelon(P2_L[:2]), P2_pl)
+s4 = not in_rational_span_E(lattice_echelon(P2_L[:2]), P2_pl)
 ok(s4, "Y6 S4 chain-link flip detected (the truncated lattice rejects a true member)")
 
 def seal_fn(c, pinned): return c == pinned
@@ -671,11 +693,11 @@ for i in range(6):
     bad2[i][i] = 1
 bad2[4][0] = 1     # a defect row seeing the class input
 bad2 = tuple(tuple(r) for r in bad2)
-s6b = matvec(bad2, (1, 0, 0, 0, 0, 0))[4] != 0 and not in_lattice_E(CLASS_E, matvec(bad2, (1, 0, 0, 0, 0, 0)))
+s6b = matvec(bad2, (1, 0, 0, 0, 0, 0))[4] != 0 and not in_rational_span_E(CLASS_E, matvec(bad2, (1, 0, 0, 0, 0, 0)))
 ok(s6b, "Y6 S6 broken-fold rejection detected (a defect-row coupling violates admission)")
 
 # ============ Y7: the seal ============
-PINNED = 72
+PINNED = 74
 PRE = CHECKS[0]
 ok(PRE == PINNED, f"Y7 THE SEAL: pre-seal count = {PRE} == pinned {PINNED} (a removed check breaks the run)")
 

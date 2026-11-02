@@ -28,6 +28,11 @@ import GSTCausalFoldDefect
   Zero proof gaps, zero axiom declarations, zero native decide calls
   (ledger-108: no gap tokens; three shape-record parts discharged by
   hypothesis records, content in the derivation).
+
+  2026-11-03 correction: the old 2Z-versus-Z avatar is an INTEGRAL
+  index test. It has no rational break after saturation. The corrected
+  experiment and the full-fiber continuation below supersede that reading.
+  The seed-orbit law in PART A is an ADDRESS law, not class-vector coverage.
 -/
 
 -- ============ PART A — the cell algebra and the orbit law ============
@@ -158,6 +163,74 @@ theorem rides_always_gives_constructively
   nativeCycleTower_class P world step n seed
 
 #print axioms rides_always_gives_constructively
+
+/-- Finite branching returns an explicit cycle, retaining class multiplicity.
+Coverage of a prescribed fiber is not supplied by the address-orbit theorem. -/
+theorem rides_branching_constructively
+    {G : GeneralSpace} {N H : Type*}
+    [AddCommGroup N] [Module ℚ N] [AddCommGroup H] [Module ℚ H]
+    (P : CyclePathRealization G N H) (world : ℕ → G.Point)
+    (step : ∀ n, G.Path (world n) (world (n+1)))
+    (ts : List (ℚ × (ℕ × N))) :
+    P.cycleClass (nativeCycleCombination P world step ts) =
+      hodgeCombination P world step ts :=
+  nativeCycleCombination_class P world step ts
+
+/-! Actual diagnostic geometry: H²(P¹×P¹,Q) in the two ruling classes.
+The coordinates encode Betti/Chow coefficients, not an arbitrary-X scheme
+instance. The hand derivation constructs the two algebraic projectors and
+the cycle a[ruling1]+b[ruling2]. All these classes have the SAME GST address.
+-/
+def rulingSeed : ℚ × ℚ := (1,1)
+def rulingLeft (v : ℚ × ℚ) : ℚ × ℚ := (v.1,0)
+def rulingRight (v : ℚ × ℚ) : ℚ × ℚ := (0,v.2)
+def rulingPairing (v w : ℚ × ℚ) : ℚ := v.1*w.2+v.2*w.1
+
+theorem labeled_rulings_reconstruct (a b : ℚ) :
+    a • rulingLeft rulingSeed + b • rulingRight rulingSeed = (a,b) := by
+  apply Prod.ext <;> simp [rulingLeft, rulingRight, rulingSeed]
+
+theorem one_unlabeled_seed_misses_primitive :
+    ¬ ∃ a : ℚ, a • rulingSeed = (1,-1) := by
+  rintro ⟨a,ha⟩
+  have hl := congrArg Prod.fst ha
+  have hr := congrArg Prod.snd ha
+  simp [rulingSeed] at hl hr
+  linarith
+
+theorem primitive_ruling_norm :
+    rulingPairing (1,-1) (1,-1) = -2 := by norm_num [rulingPairing]
+
+theorem primitive_ruling_orthogonal :
+    rulingPairing (1,-1) rulingSeed = 0 := by norm_num [rulingPairing,rulingSeed]
+
+/-- A rational deficiency control; unlike 2Z in Z, this has a missing
+direction. No claim that this linear model is a projective HC counterexample. -/
+def rationalControlClass : ℚ →ₗ[ℚ] (ℚ × ℚ) where
+  toFun := fun a => (a,0)
+  map_add' := by intro a b; apply Prod.ext <;> simp
+  map_smul' := by intro a b; apply Prod.ext <;> simp
+
+theorem rational_control_range (a b : ℚ) :
+    (a,b) ∈ LinearMap.range rationalControlClass ↔ b=0 := by
+  constructor
+  · rintro ⟨z,hz⟩
+    have h := congrArg Prod.snd hz
+    simpa [rationalControlClass] using h.symm
+  · intro hb
+    subst b
+    exact ⟨a,rfl⟩
+
+theorem rational_control_break_survives_scale (a b m : ℚ)
+    (hb : b ≠ 0) (hm : m ≠ 0) :
+    m • (a,b) ∉ LinearMap.range rationalControlClass := by
+  intro h
+  have hbase := (rational_range_saturated rationalControlClass (a,b) m hm).mp h
+  exact hb ((rational_control_range a b).mp hbase)
+
+#print axioms rides_branching_constructively
+#print axioms one_unlabeled_seed_misses_primitive
+#print axioms rational_control_break_survives_scale
 end GSTLawStackRound51Actual
 
 -- ============ PART C — the break-hunt census verdict ============

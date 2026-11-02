@@ -115,6 +115,71 @@ theorem nativeCycleTower_class (P : CyclePathRealization G N H)
 
 end NativeTower
 
+/-! ## Rational branching with the cycle itself retained
+
+Terms may have different seeds and depths. They share the same realized
+cycle carrier; a geometric instance must respect the intended grading and
+world summands. A sum equality to alpha is checked data, never assumed from
+the common causal address.
+-/
+section NativeBranching
+open GSTGeneralSpace GSTGeneralSpace.NativeCycleRecoordination
+variable {G : GeneralSpace} {N H : Type*}
+  [AddCommGroup N] [Module ℚ N] [AddCommGroup H] [Module ℚ H]
+
+def nativeCycleCombination (P : CyclePathRealization G N H)
+    (world : ℕ → G.Point) (step : ∀ n, G.Path (world n) (world (n+1))) :
+    List (ℚ × (ℕ × N)) → N
+  | [] => 0
+  | (a,n,z) :: ts => a • nativeCycleTower P world step n z +
+      nativeCycleCombination P world step ts
+
+def hodgeCombination (P : CyclePathRealization G N H)
+    (world : ℕ → G.Point) (step : ∀ n, G.Path (world n) (world (n+1))) :
+    List (ℚ × (ℕ × N)) → H
+  | [] => 0
+  | (a,n,z) :: ts => a • causalTowerHodgeState P world step n (P.cycleClass z) +
+      hodgeCombination P world step ts
+
+theorem nativeCycleCombination_class (P : CyclePathRealization G N H)
+    (world : ℕ → G.Point) (step : ∀ n, G.Path (world n) (world (n+1)))
+    (ts : List (ℚ × (ℕ × N))) :
+    P.cycleClass (nativeCycleCombination P world step ts) =
+      hodgeCombination P world step ts := by
+  induction ts with
+  | nil => simp [nativeCycleCombination, hodgeCombination]
+  | cons t ts ih =>
+      rcases t with ⟨a,n,z⟩
+      simp only [nativeCycleCombination, hodgeCombination, map_add,
+        map_smul, nativeCycleTower_class, ih]
+
+theorem prescribed_class_from_branching (P : CyclePathRealization G N H)
+    (world : ℕ → G.Point) (step : ∀ n, G.Path (world n) (world (n+1)))
+    (ts : List (ℚ × (ℕ × N))) (alpha : H)
+    (hexact : hodgeCombination P world step ts = alpha) :
+    P.cycleClass (nativeCycleCombination P world step ts) = alpha :=
+  (nativeCycleCombination_class P world step ts).trans hexact
+
+/-- A nonzero scale is explicitly inverted in the native cycle carrier. -/
+theorem normalized_cycle_class (cl : N →ₗ[ℚ] H)
+    (z : N) (alpha : H) (m : ℚ) (hm : m ≠ 0)
+    (hz : cl z=m • alpha) : cl (m⁻¹ • z)=alpha := by
+  rw [map_smul, hz, smul_smul, inv_mul_cancel₀ hm, one_smul]
+
+theorem rational_range_saturated (cl : N →ₗ[ℚ] H)
+    (alpha : H) (m : ℚ) (hm : m ≠ 0) :
+    m • alpha ∈ LinearMap.range cl ↔ alpha ∈ LinearMap.range cl := by
+  constructor
+  · rintro ⟨z,hz⟩
+    exact ⟨m⁻¹ • z, normalized_cycle_class cl z alpha m hm hz⟩
+  · rintro ⟨z,hz⟩
+    exact ⟨m • z, by rw [map_smul, hz]⟩
+
+#print axioms nativeCycleCombination_class
+#print axioms prescribed_class_from_branching
+#print axioms rational_range_saturated
+end NativeBranching
+
 #print axioms word_defect_exact
 #print axioms endpoint_break_has_bad_edge
 #print axioms causal_path_defect

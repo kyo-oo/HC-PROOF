@@ -1,5 +1,15 @@
 # GST Round 51 — THE SEED-ORBIT LAW, THE BREAK-HUNT, AND THE META-LAW (2026-11-09)
 
+**Correction appended 3 November 2026, based on `b403d3a`:** the historical
+73-check run and audit below do not validate the rational interpretation of
+the `Z u / 2Z u` avatar. Its ten odd-multiple rejections are integral indices;
+all are represented rationally. One planted Gr25 control is also already in
+the rational source span. The source script and theorem are corrected in
+place, with a genuine two-direction rational control and explicit native
+cycle combinations. See the [current source/monodromy record](2026-11-03-gst-selected-cluster-rational-fiber.md).
+The original narrative is retained below as history; its filename date is
+inherited. The seed orbit covers addresses, not every vector in each fiber.
+
 ## TARGET
 
 The operator's order (verbatim essence): "No, you didn't understand

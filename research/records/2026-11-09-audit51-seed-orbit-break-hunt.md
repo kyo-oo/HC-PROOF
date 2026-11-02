@@ -1,5 +1,13 @@
 # AUDIT-51 — Round 51: The Seed-Orbit Law, the Break-Hunt, the Meta-Law (2026-11-09)
 
+**Subsequent correction, 3 November 2026:** this is the historical audit of
+its pinned source, not a fresh review of the corrected files. It missed the
+integral-versus-rational error in the later `Z u / 2Z u` avatar, and a planted
+control that is rationally represented. The [current correction and hand
+proofs](2026-11-03-gst-selected-cluster-rational-fiber.md) supersede those
+interpretations. Prior independent-review provenance is not transferred to
+the current self-reviewed changes.
+
 Auditor: PTS adversarial auditor (fresh agent, general-purpose dispatch, AUDIT-51). The auditor did
 NOT author any round-51 artifact. Corpus clone verified at HEAD
 `1fdd62faa13dfc511d620204b302a6808025ceab` (ROUND 50 commit); 743 tracked Lean files (recounted).

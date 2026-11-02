@@ -82,4 +82,79 @@ theorem mixed_product_exact (x y u v : R)
 #print axioms anti_square_exact_defect
 #print axioms anti_square_in_boundary_ideal
 #print axioms all_power_sums_neutral
+
+/-! ## Selected eigenclusters: rank-three monodromy identities
+
+Here x,y,z are first CHERN classes, rather than the K0 line classes used
+above. These exact identities are the low-rank part of the all-rank Chow
+transfer proof in GST_selected_cluster_transfer_and_rational_fiber_2026_11_03.tex.
+Elementary symmetric relations come from a trivial ambient bundle. We do not
+impose them on a nontrivial bundle or across an unexamined discriminant.
+-/
+
+def cyclicCubic (x y z : R) : R := x^2*y+y^2*z+z^2*x
+def orientationClass (x y z : R) : R := (x-y)*(x-z)*(y-z)
+
+theorem cluster_pair_square_trace (x y z : R) :
+    (x+y)^2+(x+z)^2+(y+z)^2 =
+      2*(x+y+z)^2-2*(x*y+x*z+y*z) := by ring
+
+theorem cluster_pair_square_trace_zero (x y z : R)
+    (h1 : x+y+z=0) (h2 : x*y+x*z+y*z=0) :
+    (x+y)^2+(x+z)^2+(y+z)^2=0 := by
+  rw [cluster_pair_square_trace, h1, h2]
+  ring
+
+theorem cyclic_cubic_rotation (x y z : R) :
+    cyclicCubic y z x = cyclicCubic x y z := by
+  unfold cyclicCubic
+  ring
+
+theorem cyclic_cubic_difference (x y z : R) :
+    cyclicCubic x y z-cyclicCubic y x z=orientationClass x y z := by
+  unfold cyclicCubic orientationClass
+  ring
+
+theorem cyclic_cubic_full_trace (x y z : R) :
+    cyclicCubic x y z+cyclicCubic y x z =
+      (x+y+z)*(x*y+x*z+y*z)-3*(x*y*z) := by
+  unfold cyclicCubic
+  ring
+
+theorem cyclic_cubic_trace_zero (x y z : R)
+    (h1 : x+y+z=0) (h3 : x*y*z=0) :
+    cyclicCubic x y z+cyclicCubic y x z=0 := by
+  rw [cyclic_cubic_full_trace, h1, h3]
+  ring
+
+/-- Integral numerator: no division by two is smuggled into a ring. -/
+theorem cyclic_cubic_orientation_numerator (x y z : R)
+    (h1 : x+y+z=0) (h3 : x*y*z=0) :
+    2*cyclicCubic x y z=orientationClass x y z := by
+  have hs := cyclic_cubic_trace_zero x y z h1 h3
+  have hd := cyclic_cubic_difference x y z
+  linear_combination hs + hd
+
+theorem orientation_reverses (x y z : R) :
+    orientationClass y x z = -orientationClass x y z := by
+  unfold orientationClass
+  ring
+
+theorem orientation_square_discriminant (x y z : R) :
+    (orientationClass x y z)^2 =
+      (x+y+z)^2*(x*y+x*z+y*z)^2-4*(x*y+x*z+y*z)^3
+      -4*(x+y+z)^3*(x*y*z)-27*(x*y*z)^2
+      +18*(x+y+z)*(x*y+x*z+y*z)*(x*y*z) := by
+  unfold orientationClass
+  ring
+
+/-- Square zero does not assert that the orientation class itself is zero. -/
+theorem orientation_square_zero (x y z : R)
+    (h1 : x+y+z=0) (h2 : x*y+x*z+y*z=0) (h3 : x*y*z=0) :
+    (orientationClass x y z)^2=0 := by
+  rw [orientation_square_discriminant, h1, h2, h3]
+  ring
+
+#print axioms cyclic_cubic_orientation_numerator
+#print axioms orientation_square_zero
 end GSTSpectralBoundaryDefect

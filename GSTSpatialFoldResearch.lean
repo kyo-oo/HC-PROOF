@@ -5,6 +5,7 @@ import GSTVariableFoldIntegrability
 import GSTGraphV2GeneralSpaceRealization
 import GSTLawStackRound51
 import GSTCMFiniteGeometricDegreeDescent
+import GSTSpectralBoundaryDefect
 
 /-!
 GST spatial-fold continuation, 2026-11-02. Algebraic proof drafts, with the
@@ -19,7 +20,14 @@ its geometric input is not silently manufactured for an arbitrary original X.
 #check GSTCausalFoldDefect.word_defect_exact
 #check GSTCausalFoldDefect.endpoint_break_has_bad_edge
 #check GSTCausalFoldDefect.nativeCycleTower_class
+#check GSTCausalFoldDefect.nativeCycleCombination_class
+#check GSTCausalFoldDefect.rational_range_saturated
 #check GSTLawStackRound51Actual.rides_always_gives_constructively
+#check GSTLawStackRound51Actual.rides_branching_constructively
+#check GSTLawStackRound51Actual.labeled_rulings_reconstruct
+#check GSTLawStackRound51Actual.rational_control_break_survives_scale
+#check GSTSpectralBoundaryDefect.cyclic_cubic_orientation_numerator
+#check GSTSpectralBoundaryDefect.orientation_square_zero
 #check GSTGraphV2GeneralSpaceRealization.forward_pair_defect
 #check GSTVariableFoldIntegrability.variableFold_square
 #check GSTVariableFoldIntegrability.nijenhuisCoefficient_zero_iff

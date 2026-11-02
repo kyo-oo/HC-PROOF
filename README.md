@@ -1,5 +1,17 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Selected-cluster return and rational-fiber correction — 2026-11-03
+
+[Research record](research/records/2026-11-03-gst-selected-cluster-rational-fiber.md):
+the actual alpha-dependent invariant-subspace incidence has zero complete
+positive-degree tautological Chow return after a small general perturbation,
+including its discriminant fibers. Monodromy determines when an individual
+component can differ. Round 51's integer-index avatar is corrected for
+rational coefficients, and finite causal branching retains actual cycle
+witnesses and full class multiplicity. Four existing Lean files strengthened,
+21 theorem drafts; exact independent computations agree. The original-X
+universal source is not established; compilation remains with the owner.
+
 ## Spatial folds: polarization and integrability — 2026-11-02
 
 [Research record](research/records/2026-11-02-gst-fold-polarization-integrability-causal-transfer.md):

@@ -1,5 +1,17 @@
 # GST Hodge — Locked Execution Contract
 
+**Selected-cluster continuation from `b403d3a` (2026-11-03):**
+[actual global incidence return and rational-fiber correction](records/2026-11-03-gst-selected-cluster-rational-fiber.md).
+The target-dependent invariant-subspace source is now constructed globally,
+including discriminant fibers. The complete regular incidence source returns
+zero in positive Chow degree; actual monodromy controls component selection.
+Round 51's `Z/2Z` avatar and one planted control were only integrally missing,
+and are corrected for rational coefficients. Constructed finite native-cycle
+branching retains the full class fiber. The remaining source route requires
+an independently selected component or nongeneric excess with computed target
+class, beyond complete-incidence cancellation. The immutable target stands;
+the owner continues to handle Lean compilation.
+
 **Spatial-fold continuation, reconciled through `05a2758` (2026-11-02):**
 [polarization, integrability and constructed causal-cycle record](records/2026-11-02-gst-fold-polarization-integrability-causal-transfer.md).
 Constant integral folds now have an explicit chosen polarization and CM-torus
