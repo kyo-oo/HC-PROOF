@@ -95,8 +95,8 @@ theorem safe_forward_pair
     (hSecond : defect K L (P.operator (forwardEdgePath hvw)) = 0) :
     defect J L (P.operator (graphV2GeneralSpace.compPath
       (forwardEdgePath huv) (forwardEdgePath hvw))) = 0 := by
-  rw [forward_pair_defect, hFirst, hSecond]
-  simp
+  rw [forward_pair_defect P huv hvw J K L, hFirst, hSecond]
+  ring
 
 #print axioms forward_pair_defect
 #print axioms safe_forward_pair

@@ -87,19 +87,14 @@ theorem tau_sector (j : Int) (c : CausalHodgeCell) :
 theorem tau_sector_reflects (j : Int) (c : CausalHodgeCell) :
     inHodgeSector (tau j c) → inHodgeSector c := by
   intro h
-  constructor
-  · rw [tau_charge] at h; exact h.1
-  · rw [tau_purityGap] at h; exact h.2
+  simp only [inHodgeSector, tau_charge, tau_purityGap] at h ⊢
+  exact h
 
 -- THE ORBIT LAW (Thm 1): coverage, freeness, the boundary
 theorem orbit_coverage (p : Nat) (hp : p ≥ 1) :
     tau (Int.ofNat p - 1) generator = ⟨2 * Int.ofNat p, Int.ofNat p, Int.ofNat p⟩ := by
-  have hshift : Int.ofNat p - 1 = Int.ofNat (p - 1) := by omega
-  rw [hshift]
-  have hsub : (Int.ofNat (p - 1) : Int) = Int.ofNat p - 1 :=
-    Int.ofNat_sub (by omega)
-  rw [hsub]
   simp [tau, generator_eq]
+  omega
 
 theorem orbit_freeness (j k : Int) :
     tau j generator = tau k generator → j = k := by
@@ -137,7 +132,7 @@ theorem genPow_eq (m : Nat) (hm : m ≥ 1) :
       · have hstep : genPow (m' + 1 + 1) = tensorCell (genPow (m' + 1)) generator :=
           genPow_succ_succ m'
         rw [hstep, ih (by omega)]
-        simp [tensorCell, generator_eq, Int.ofNat_add]
+        simp [tensorCell, generator_eq, Nat.cast_add]
 
 -- ============ PART B — the rides / the always-gives equation ============
 -- [Shape record: content in the derivation §3]
