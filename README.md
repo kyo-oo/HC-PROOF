@@ -1,5 +1,16 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Nonlinear relative folds: complete pure-model classification — 2026-11-03
+
+[Proof and evidence](research/records/2026-11-03-gst-nonlinear-relative-fold-classification.md):
+the marked original-base curvature ideal and graded pair counts now classify
+pure paired models even under arbitrary nonlinear relative quasi-isomorphisms.
+The update derives the full one-curvature cohomology ring, executes a genuine
+nonlinear fold, and computes a nonzero secondary operation. Two existing
+Lean modules gain 13 theorem drafts; 7,204 Python and 1,318 Wolfram assertions
+agree on their shared cases. Compilation stays with the owner. These are
+topological model results, with the universal original-X Chow target retained.
+
 ## Complete finite curvature-fold reduction — 2026-11-03
 
 [Proof and evidence](research/records/2026-11-03-gst-complete-minimal-curvature-normal-form.md):

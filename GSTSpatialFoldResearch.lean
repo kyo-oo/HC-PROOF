@@ -80,3 +80,12 @@ end GSTSpatialFoldResearch
 #check GSTGradedWorldAlgebra.simultaneousCupClear_preserves_submodule
 #check GSTGradedWorldAlgebra.nilpotent_cup_clearing_zero_iff
 #check GSTGradedWorldAlgebra.augmentation_zero_row_not_unimodular
+
+-- Marked-base kernels survive nonlinear coordinate changes on full cochains.
+-- Hand derived-fiber classification and secondary operations are separate.
+#check GSTGradedWorldAlgebra.baseBoundaryModule_eq_of_chainEquiv
+#check GSTGradedWorldAlgebra.baseBoundaryModule_eq_curvatureRange
+#check GSTGradedWorldAlgebra.nonzero_base_boundary_forbids_retraction
+#check GSTGradedWorldAlgebra.twoCurvature_base_boundary_iff
+#check GSTGradedWorldAlgebra.coupled_annihilator_cycle
+#check GSTGradedWorldAlgebra.coupled_nonzero_u_not_boundary

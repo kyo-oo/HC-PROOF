@@ -1142,4 +1142,169 @@ theorem augmentation_zero_row_not_unimodular {K : Type*} [Semiring K]
 #print axioms augmentation_zero_row_not_unimodular
 end FiniteCupClearing
 
+/-! ## Marked-base invariants beyond linear changes of handles
+
+Hand source: GST_nonlinear_relative_fold_classification_2026_11_03.tex.
+These are linear maps on the *entire* cochain module. A nonlinear map of
+the algebra generators still induces such a map; no linearity in handle
+coordinates is assumed. The first-coefficient hypotheses below are explicit
+data, verified by exterior word length in the hand model. They do not supply
+a Chow cycle or assert a formalized derived-fiber classification.
+-/
+section MarkedBaseBoundaries
+variable {R V W Z C : Type*} [CommRing R]
+  [AddCommGroup V] [Module R V] [AddCommGroup W] [Module R W]
+  [AddCommGroup Z] [Module R Z] [AddCommGroup C] [Module R C]
+
+/-- Base classes whose chosen representatives are actual boundaries.
+The map to cohomology additionally needs d squared zero and d on the base
+zero; the submodule itself is defined without hiding those obligations. -/
+def baseBoundaryModule (base : R →ₗ[R] V) (d : V →ₗ[R] V) : Submodule R R :=
+  (LinearMap.range d).comap base
+
+theorem mem_baseBoundaryModule_iff (base : R →ₗ[R] V)
+    (d : V →ₗ[R] V) (a : R) :
+    a ∈ baseBoundaryModule base d ↔ ∃ x, d x=base a := Iff.rfl
+
+/-- Any relative chain map preserves base boundaries, even if it is
+nonlinear in the original algebra generators. -/
+theorem baseBoundaryModule_mono_of_chainMap
+    (bV : R →ₗ[R] V) (bW : R →ₗ[R] W)
+    (dV : V →ₗ[R] V) (dW : W →ₗ[R] W) (F : V →ₗ[R] W)
+    (hbase : ∀ a,F (bV a)=bW a)
+    (hchain : ∀ x,dW (F x)=F (dV x)) :
+    baseBoundaryModule bV dV ≤ baseBoundaryModule bW dW := by
+  intro a ha
+  rcases ha with ⟨x,hx⟩
+  exact ⟨F x,by rw [hchain,hx,hbase]⟩
+
+theorem baseBoundaryModule_eq_of_chainEquiv
+    (bV : R →ₗ[R] V) (bW : R →ₗ[R] W)
+    (dV : V →ₗ[R] V) (dW : W →ₗ[R] W) (F : V ≃ₗ[R] W)
+    (hbase : ∀ a,F (bV a)=bW a)
+    (hchain : ∀ x,dW (F x)=F (dV x)) :
+    baseBoundaryModule bV dV=baseBoundaryModule bW dW := by
+  ext a
+  change (∃ x,dV x=bV a) ↔ ∃ y,dW y=bW a
+  constructor
+  · rintro ⟨x,hx⟩
+    exact ⟨F x,by rw [hchain,hx,hbase]⟩
+  · rintro ⟨y,hy⟩
+    refine ⟨F.symm y,?_⟩
+    apply F.injective
+    rw [←hchain,F.apply_symm_apply,hy,hbase]
+
+/-- A chain retraction onto the closed original base forces its boundary
+kernel to vanish; simply deleting generator base terms is insufficient. -/
+theorem baseBoundaryModule_eq_bot_of_retraction
+    (base : R →ₗ[R] V) (d : V →ₗ[R] V) (ret : V →ₗ[R] R)
+    (hbase : ∀ a,ret (base a)=a) (hd : ∀ x,ret (d x)=0) :
+    baseBoundaryModule base d=⊥ := by
+  apply le_antisymm
+  · intro a ha
+    rcases ha with ⟨x,hx⟩
+    have hz : a=0 := by
+      calc
+        a=ret (base a) := (hbase a).symm
+        _=ret (d x) := congrArg ret hx.symm
+        _=0 := hd x
+    exact Submodule.mem_bot.mpr hz
+  · exact bot_le
+
+/-- The zero-handle coefficient of d is the curvature combination of
+the one-handle coefficients. Its section constructs every ideal boundary.
+This separates an actually supplied word-length calculation from invariance. -/
+theorem baseBoundaryModule_eq_curvatureRange
+    (base : R →ₗ[R] V) (d : V →ₗ[R] V) (ret : V →ₗ[R] R)
+    (first : V →ₗ[R] C) (lift : C →ₗ[R] V) (cup : C →ₗ[R] R)
+    (hbase : ∀ a,ret (base a)=a)
+    (hfirst : ∀ x,ret (d x)=cup (first x))
+    (hlift : ∀ c,d (lift c)=base (cup c)) :
+    baseBoundaryModule base d=LinearMap.range cup := by
+  ext a
+  change (∃ x,d x=base a) ↔ ∃ c,cup c=a
+  constructor
+  · rintro ⟨x,hx⟩
+    refine ⟨first x,?_⟩
+    calc
+      cup (first x)=ret (d x) := (hfirst x).symm
+      _=a := by rw [hx,hbase]
+  · rintro ⟨c,hc⟩
+    exact ⟨lift c,by rw [hlift,hc]⟩
+
+theorem nonzero_base_boundary_forbids_retraction
+    (base : R →ₗ[R] V) (d : V →ₗ[R] V) (a : R) (ha : a≠0)
+    (haB : a ∈ baseBoundaryModule base d) :
+    ¬ ∃ ret : V →ₗ[R] R,
+      (∀ b,ret (base b)=b) ∧ (∀ x,ret (d x)=0) := by
+  rintro ⟨ret,hbase,hd⟩
+  rw [baseBoundaryModule_eq_bot_of_retraction base d ret hbase hd] at haB
+  exact ha (Submodule.mem_bot.mp haB)
+
+/-- The invariant also composes through arbitrarily chosen full-module
+chain maps; the intermediate model need not have pure curvatures. -/
+theorem baseBoundaryModule_mono_two_steps
+    (bV : R →ₗ[R] V) (bW : R →ₗ[R] W) (bZ : R →ₗ[R] Z)
+    (dV : V →ₗ[R] V) (dW : W →ₗ[R] W) (dZ : Z →ₗ[R] Z)
+    (F : V →ₗ[R] W) (G : W →ₗ[R] Z)
+    (hFb : ∀ a,F (bV a)=bW a) (hFd : ∀ x,dW (F x)=F (dV x))
+    (hGb : ∀ a,G (bW a)=bZ a) (hGd : ∀ x,dZ (G x)=G (dW x)) :
+    baseBoundaryModule bV dV ≤ baseBoundaryModule bZ dZ := by
+  exact (baseBoundaryModule_mono_of_chainMap bV bW dV dW F hFb hFd).trans
+    (baseBoundaryModule_mono_of_chainMap bW bZ dW dZ G hGb hGd)
+
+#print axioms baseBoundaryModule_eq_of_chainEquiv
+#print axioms baseBoundaryModule_eq_curvatureRange
+#print axioms nonzero_base_boundary_forbids_retraction
+end MarkedBaseBoundaries
+
+section ConcreteBaseKernel
+variable {R : Type*} [CommRing R]
+
+def baseOnlyPacket (a : R) : CoupledPacket R := ⟨a,0,0,0⟩
+
+theorem coupled_base_boundary_iff (c a : R) :
+    (∃ x : CoupledPacket R,coupledBoundary c x=baseOnlyPacket a) ↔
+      ∃ b : R,c*b=a := by
+  constructor
+  · rintro ⟨x,hx⟩
+    exact ⟨x.curved,congrArg CoupledPacket.base hx⟩
+  · rintro ⟨b,hb⟩
+    exact ⟨⟨0,b,0,0⟩,by simp [coupledBoundary,baseOnlyPacket,hb]⟩
+
+theorem twoCurvature_base_boundary_iff (c e a : R) :
+    (∃ x : CoupledPacket R,twoCurvatureBoundary c e x=baseOnlyPacket a) ↔
+      ∃ b f : R,c*b+e*f=a := by
+  constructor
+  · rintro ⟨x,hx⟩
+    exact ⟨x.curved,x.flat,congrArg CoupledPacket.base hx⟩
+  · rintro ⟨b,f,hbf⟩
+    exact ⟨⟨0,b,f,0⟩,by simp [twoCurvatureBoundary,baseOnlyPacket,hbf]⟩
+
+theorem coupled_base_boundary_self (c : R) :
+    ∃ x : CoupledPacket R,coupledBoundary c x=baseOnlyPacket c := by
+  apply (coupled_base_boundary_iff c c).2
+  exact ⟨1,mul_one c⟩
+
+/-- Actual annihilator cycles occupy the u component. -/
+theorem coupled_annihilator_cycle (c b : R) (hb : c*b=0) :
+    coupledBoundary c (⟨0,b,0,0⟩ : CoupledPacket R)=baseOnlyPacket 0 := by
+  simp [coupledBoundary,baseOnlyPacket,hb]
+
+/-- No boundary has a u component. This is the injective annihilator
+summand in the hand cohomology-ring formula, without a false formality claim. -/
+theorem coupled_nonzero_u_not_boundary (c b : R) (hb : b≠0) :
+    ¬ ∃ x : CoupledPacket R,coupledBoundary c x=⟨0,b,0,0⟩ := by
+  rintro ⟨x,hx⟩
+  have h : (0 : R)=b := congrArg CoupledPacket.curved hx
+  exact hb h.symm
+
+theorem twoCurvature_shear_fixes_base (t a : R) :
+    curvatureShear t (baseOnlyPacket a)=baseOnlyPacket a := by
+  simp [curvatureShear,baseOnlyPacket]
+
+#print axioms twoCurvature_base_boundary_iff
+#print axioms coupled_nonzero_u_not_boundary
+end ConcreteBaseKernel
+
 end GSTGradedWorldAlgebra

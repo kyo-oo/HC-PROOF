@@ -1,5 +1,16 @@
 # GST Hodge — Locked Execution Contract
 
+**Nonlinear relative classification from `2e0324f` (2026-11-03):**
+[Complete pure-model classification, full ring and secondary memory](records/2026-11-03-gst-nonlinear-relative-fold-classification.md).
+The marked-base kernel is exactly the curvature ideal and survives arbitrary
+relative nonlinear quasi-isomorphisms. Pure paired models are classified by
+that ideal and their graded pair counts; the sharp minimum dim_Q(I/mI)
+therefore extends beyond linear handle changes. The complete one-curvature
+cohomology ring and a nonzero Massey coset are derived. Two existing modules
+gain 13 uncompiled theorem drafts; all shared Python/Wolfram evidence agrees.
+The nonlinear-coordinate erasure recipe is closed at its stated scope;
+the canonical original-X cycle constructor is not supplied by these results.
+
 **Completed finite reduction from `fde04bf` (2026-11-03):**
 [Minimal mixed-degree curvature normal form](records/2026-11-03-gst-complete-minimal-curvature-normal-form.md).
 For every original X, the exact number of active curvature handles in each
