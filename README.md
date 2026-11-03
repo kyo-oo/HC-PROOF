@@ -1,5 +1,15 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Complete finite curvature-fold reduction — 2026-11-03
+
+[Proof and evidence](research/records/2026-11-03-gst-complete-minimal-curvature-normal-form.md):
+for every original X, mixed-degree cup folds now have a terminating normal
+form, an exact sharp minimum dim_Q(I/mI), and a complete cohomology factor
+for every redundant handle pair. The update includes actual torsor maps,
+prescribed-target conservation and a nonunit-syzygy safeguard. Two existing
+Lean modules gain 15 theorem drafts; Python/Wolfram exact checks agree.
+Compilation stays with the owner; topology is kept distinct from a Chow lift.
+
 ## Complete GST whole-space proof plan — 2026-11-03
 
 [Read the full plan](research/GST_WHOLE_SPACE_PROOF_PLAN.md): the owner's

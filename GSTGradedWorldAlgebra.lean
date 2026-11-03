@@ -993,4 +993,153 @@ theorem dependent_curvature_exposes_flat_handle (c t : A) (hct : Commute c t)
 #print axioms twoCurvatureBoundary_shear
 end CoupledExteriorPackets
 
+
+/-! ## Finite simultaneous cup clearing and the minimality guards
+
+Hand source: GST_minimal_curvature_fold_normal_form_2026_11_03.tex.
+The model's coefficients are closed even Hodge classes. These module laws
+encode the explicit row operations, not an algebraic cycle constructor or
+formalization of the complete graded Nakayama theorem. Compilation is left
+to the owner. A closed row with only augmentation-zero coefficients is not
+silently promoted to an invertible change of handles.
+-/
+section FiniteCupClearing
+open scoped BigOperators
+variable {R M ι κ : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+  [Fintype ι]
+
+noncomputable def finiteCupCombination (a : ι → R) (x : ι → M) : M :=
+  ∑ i, a i • x i
+
+theorem finiteCupCombination_add (a b : ι → R) (x : ι → M) :
+    finiteCupCombination (a+b) x=
+      finiteCupCombination a x+finiteCupCombination b x := by
+  simp [finiteCupCombination,add_smul,Finset.sum_add_distrib]
+
+theorem finiteCupCombination_zero (x : ι → M) :
+    finiteCupCombination (0 : ι → R) x=0 := by
+  simp [finiteCupCombination]
+
+theorem finiteCupCombination_mem (P : Submodule R M) (a : ι → R)
+    (x : ι → M) (hx : ∀ i,x i ∈ P) : finiteCupCombination a x ∈ P := by
+  exact P.sum_mem (fun i _ => P.smul_mem (a i) (hx i))
+
+noncomputable def simultaneousCupClear (a : κ → ι → R)
+    (x : (ι → M) × (κ → M)) : (ι → M) × (κ → M) :=
+  (x.1,fun j => x.2 j-finiteCupCombination (a j) x.1)
+
+noncomputable def simultaneousCupRestore (a : κ → ι → R)
+    (x : (ι → M) × (κ → M)) : (ι → M) × (κ → M) :=
+  (x.1,fun j => x.2 j+finiteCupCombination (a j) x.1)
+
+theorem simultaneousCupClear_retains_sources (a : κ → ι → R)
+    (x : (ι → M) × (κ → M)) : (simultaneousCupClear a x).1=x.1 := rfl
+
+theorem simultaneousCupRestore_clear (a : κ → ι → R)
+    (x : (ι → M) × (κ → M)) :
+    simultaneousCupRestore a (simultaneousCupClear a x)=x := by
+  apply Prod.ext
+  · rfl
+  · funext j
+    exact sub_add_cancel (x.2 j) (finiteCupCombination (a j) x.1)
+
+theorem simultaneousCupClear_restore (a : κ → ι → R)
+    (x : (ι → M) × (κ → M)) :
+    simultaneousCupClear a (simultaneousCupRestore a x)=x := by
+  apply Prod.ext
+  · rfl
+  · funext j
+    exact add_sub_cancel_right (x.2 j) (finiteCupCombination (a j) x.1)
+
+theorem simultaneousCupClear_comp (a b : κ → ι → R)
+    (x : (ι → M) × (κ → M)) :
+    simultaneousCupClear a (simultaneousCupClear b x)=
+      simultaneousCupClear (a+b) x := by
+  apply Prod.ext
+  · rfl
+  · funext j
+    change x.2 j-finiteCupCombination (b j) x.1-finiteCupCombination (a j) x.1=
+      x.2 j-finiteCupCombination (a j+b j) x.1
+    rw [finiteCupCombination_add]
+    abel
+
+theorem simultaneousCupClear_commute (a b : κ → ι → R)
+    (x : (ι → M) × (κ → M)) :
+    simultaneousCupClear a (simultaneousCupClear b x)=
+      simultaneousCupClear b (simultaneousCupClear a x) := by
+  rw [simultaneousCupClear_comp,simultaneousCupClear_comp,add_comm a b]
+
+theorem simultaneousCupClear_zero (x : (ι → M) × (κ → M)) :
+    simultaneousCupClear (0 : κ → ι → R) x=x := by
+  apply Prod.ext
+  · rfl
+  · funext j
+    simp [simultaneousCupClear,finiteCupCombination]
+
+theorem simultaneousCupClear_target_zero_iff (a : κ → ι → R)
+    (x : (ι → M) × (κ → M)) (j : κ) :
+    (simultaneousCupClear a x).2 j=0 ↔
+      x.2 j=finiteCupCombination (a j) x.1 := by
+  exact sub_eq_zero
+
+theorem simultaneousCupClear_all_redundant (a : κ → ι → R)
+    (x : ι → M) :
+    simultaneousCupClear a (x,fun j => finiteCupCombination (a j) x)=
+      (x,0) := by
+  apply Prod.ext
+  · rfl
+  · funext j
+    exact sub_self _
+
+theorem simultaneousCupClear_preserves_submodule (P : Submodule R M)
+    (a : κ → ι → R) (x : (ι → M) × (κ → M))
+    (hx : ∀ i,x.1 i ∈ P) :
+    (∀ j,(simultaneousCupClear a x).2 j ∈ P) ↔ ∀ j,x.2 j ∈ P := by
+  constructor
+  · intro h j
+    have hc := finiteCupCombination_mem P (a j) x.1 hx
+    have he : x.2 j=(simultaneousCupClear a x).2 j+
+        finiteCupCombination (a j) x.1 := (sub_add_cancel _ _).symm
+    rw [he]
+    exact P.add_mem (h j) hc
+  · intro h j
+    exact P.sub_mem (h j) (finiteCupCombination_mem P (a j) x.1 hx)
+
+/-- Positive-degree multiplication is nilpotent in the finite Hodge ring.
+Thus a nonzero prescribed target cannot be its own positive-degree multiple. -/
+theorem nilpotent_cup_fixed_point_zero (b : R) (n : ℕ) (hn : b^n=0)
+    (x : M) (hx : b • x=x) : x=0 := by
+  have hiter : ∀ k : ℕ,b^k • x=x := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih => rw [pow_succ,mul_smul,hx,ih]
+  have hz : b^n • x=0 := by rw [hn,zero_smul]
+  exact (hiter n).symm.trans hz
+
+theorem nilpotent_cup_clearing_zero_iff (b : R) (n : ℕ) (hn : b^n=0)
+    (x : M) : x-b • x=0 ↔ x=0 := by
+  constructor
+  · intro h
+    exact nilpotent_cup_fixed_point_zero b n hn x (sub_eq_zero.mp h).symm
+  · rintro rfl
+    simp
+
+/-- The guard is over any nontrivial residue semiring, not just the Hodge
+augmentation. It bars promoting a closed nonunit syzygy to a basis row. -/
+theorem augmentation_zero_row_not_unimodular {K : Type*} [Semiring K]
+    [Nontrivial K] (epsilon : R →+* K) (a : ι → R)
+    (ha : ∀ i,epsilon (a i)=0) :
+    ¬ ∃ b : ι → R,∑ i,a i*b i=1 := by
+  rintro ⟨b,hb⟩
+  have hz : epsilon (∑ i,a i*b i)=0 := by simp [map_sum,ha]
+  have he : (0 : K)=1 := hz.symm.trans (by rw [hb]; exact map_one epsilon)
+  exact zero_ne_one he
+
+#print axioms simultaneousCupClear_all_redundant
+#print axioms simultaneousCupClear_preserves_submodule
+#print axioms nilpotent_cup_clearing_zero_iff
+#print axioms augmentation_zero_row_not_unimodular
+end FiniteCupClearing
+
 end GSTGradedWorldAlgebra

@@ -73,3 +73,10 @@ theorem central_N_channels_pure_split_iff (s t : NShape)
 
 #print axioms central_N_channels_pure_split_iff
 end GSTSpatialFoldResearch
+
+-- Complete finite mixed-degree clearing and minimality guards; uncompiled.
+#check GSTGradedWorldAlgebra.simultaneousCupClear_all_redundant
+#check GSTGradedWorldAlgebra.simultaneousCupClear_comp
+#check GSTGradedWorldAlgebra.simultaneousCupClear_preserves_submodule
+#check GSTGradedWorldAlgebra.nilpotent_cup_clearing_zero_iff
+#check GSTGradedWorldAlgebra.augmentation_zero_row_not_unimodular

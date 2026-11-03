@@ -1,5 +1,17 @@
 # GST Hodge — Locked Execution Contract
 
+**Completed finite reduction from `fde04bf` (2026-11-03):**
+[Minimal mixed-degree curvature normal form](records/2026-11-03-gst-complete-minimal-curvature-normal-form.md).
+For every original X, the exact number of active curvature handles in each
+weight is dim_Q(I/mI). A terminating invertible reduction splits every
+redundant pair from the full cohomology model and proves the minimum sharp.
+Closed nonunit syzygies cannot be treated as extra free handles. The actual
+prescribed-alpha cup-amplification construction retains precisely one active
+curvature when alpha is nonzero. Two existing Lean modules gain 15 uncompiled
+theorem drafts; Python and Wolfram exact evidence agrees. This completes the
+stated finite reduction problem, with the canonical original-X cycle target
+and the higher-topology/Chow distinction retained.
+
 **Owner-requested extension from `b2de3bd` (2026-11-03):**
 [Base-coupled quotients, higher target transgression and cup-coefficient folds](records/2026-11-03-gst-base-coupled-higher-transgression-extension.md).
 The construction now twists genuine elliptic bundles over arbitrary original
