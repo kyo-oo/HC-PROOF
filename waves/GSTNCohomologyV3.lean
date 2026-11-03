@@ -385,4 +385,58 @@ def complexCurvatureLinear (s t : NShape)
     intro i hi
     ring
 
+/-! ## Curvature valued in the original base, in any even degree
+
+Unlike a fixed coordinate matrix, alpha i is an actual base-cohomology
+vector. In degree 2p its transpose measures the first affected degree
+2p-1 of the higher transgression model. These algebraic statements do not
+assign a complex manifold or an algebraic cycle to that model.
+-/
+section BaseValuedCurvature
+variable {W : Type*} [AddCommGroup W] [Module ℚ W]
+
+def targetCurvatureLinear (s : NShape) (alpha : Fin s.holes → W) :
+    HoleCoordinates s →ₗ[ℚ] W where
+  toFun c := ∑ i, c i • alpha i
+  map_add' c d := by simp [add_smul,Finset.sum_add_distrib]
+  map_smul' a c := by simp [Finset.smul_sum,smul_smul]
+
+theorem targetCurvature_basis (s : NShape) (alpha : Fin s.holes → W)
+    (i : Fin s.holes) :
+    targetCurvatureLinear s alpha (independentHoleBasis s i)=alpha i := by
+  classical
+  simp [targetCurvatureLinear,independentHoleBasis,ite_smul]
+
+theorem targetCurvature_zero_iff (s : NShape) (alpha : Fin s.holes → W) :
+    targetCurvatureLinear s alpha=0 ↔ ∀ i,alpha i=0 := by
+  constructor
+  · intro h i
+    have hi := congrArg (fun T : HoleCoordinates s →ₗ[ℚ] W =>
+      T (independentHoleBasis s i)) h
+    simpa [targetCurvature_basis] using hi
+  · intro h
+    ext c
+    simp [targetCurvatureLinear,h]
+
+theorem targetCurvature_fusion (s : NShape) (alpha beta : Fin s.holes → W) :
+    targetCurvatureLinear s (alpha+beta)=
+      targetCurvatureLinear s alpha+targetCurvatureLinear s beta := by
+  ext c
+  simp [targetCurvatureLinear,smul_add,Finset.sum_add_distrib]
+
+theorem targetCurvature_inverse_fusion (s : NShape) (alpha : Fin s.holes → W) :
+    targetCurvatureLinear s (alpha+(-alpha))=0 := by
+  apply (targetCurvature_zero_iff s (alpha+(-alpha))).mpr
+  intro i
+  simp
+
+theorem targetCurvature_detects_prescribed_input (s : NShape)
+    (alpha : Fin s.holes → W) (i : Fin s.holes) (hi : alpha i ≠ 0) :
+    targetCurvatureLinear s alpha ≠ 0 := by
+  intro h
+  exact hi ((targetCurvature_zero_iff s alpha).mp h i)
+
+#print axioms targetCurvature_zero_iff
+end BaseValuedCurvature
+
 end GSTNCohomologyV3

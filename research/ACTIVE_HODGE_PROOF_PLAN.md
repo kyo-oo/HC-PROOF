@@ -1,5 +1,17 @@
 # GST Hodge — Locked Execution Contract
 
+**Owner-requested extension from `b2de3bd` (2026-11-03):**
+[Base-coupled quotients, higher target transgression and cup-coefficient folds](records/2026-11-03-gst-base-coupled-higher-transgression-extension.md).
+The construction now twists genuine elliptic bundles over arbitrary original
+X and uses its full cup algebra. A maximal restoring quotient collapses
+exactly the Chern-map rank; a separate torsor relation subgroup retains
+holomorphic gluing after curvature cancellation. Actual higher rational
+torsors use the prescribed alpha in every codimension, and an invertible
+filtered cup-coefficient substitution links different degrees. The higher
+filtration is a specified model, not an asserted compact complex realization.
+Four existing modules gain 16 uncompiled theorem drafts; the owner retains
+Lean compilation. The universal original-X cycle target remains the owner.
+
 **Owner's whole-space experiment executed from `ef1a452` (2026-11-03):**
 [Actual causal central-fold results and custom-module implementation](records/2026-11-03-gst-requested-whole-space-fold-results.md).
 The owner corrected the previous diversion into cycle-source selection.

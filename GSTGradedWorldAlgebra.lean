@@ -912,4 +912,85 @@ theorem centralIndependent_opposedness_add (m r rho m' r' rho' : ℕ) :
   simp
 
 #print axioms centralFold_opposedness_defect
+/-! ## Coupled exterior packets, with the two-handle sign retained
+
+For two odd generators the four coefficients represent a + u*b + v*c + u*v*d.
+Their degrees may differ. Curvatures and the shear coefficient lie in even
+degree. Only their stated pairwise commutation is required: the coefficient
+ring may contain odd cohomology and need not be commutative.
+The geometric and higher-topological realizations are distinguished in the
+companion derivation. This packet is not a Chow carrier.
+-/
+section CoupledExteriorPackets
+variable {A : Type*} [Ring A]
+
+structure CoupledPacket (A : Type*) where
+  base : A
+  curved : A
+  flat : A
+  mixed : A
+deriving DecidableEq
+
+def coupledBoundary (c : A) (x : CoupledPacket A) : CoupledPacket A :=
+  ⟨c*x.curved,0,c*x.mixed,0⟩
+
+theorem coupledBoundary_squared (c : A) (x : CoupledPacket A) :
+    coupledBoundary c (coupledBoundary c x)=⟨0,0,0,0⟩ := by
+  simp [coupledBoundary]
+
+theorem coupledPacket_closed_iff (c : A) (x : CoupledPacket A) :
+    coupledBoundary c x=⟨0,0,0,0⟩ ↔ c*x.curved=0 ∧ c*x.mixed=0 := by
+  constructor
+  · intro h
+    exact ⟨congrArg CoupledPacket.base h,congrArg CoupledPacket.flat h⟩
+  · rintro ⟨hb,hd⟩
+    simp [coupledBoundary,hb,hd]
+
+def twoCurvatureBoundary (c e : A) (x : CoupledPacket A) : CoupledPacket A :=
+  ⟨c*x.curved+e*x.flat,-e*x.mixed,c*x.mixed,0⟩
+
+theorem twoCurvatureBoundary_squared (c e : A) (hce : Commute c e)
+    (x : CoupledPacket A) :
+    twoCurvatureBoundary c e (twoCurvatureBoundary c e x)=⟨0,0,0,0⟩ := by
+  have h : c*(-e*x.mixed)+e*(c*x.mixed)=0 := by
+    calc
+      c*(-e*x.mixed)+e*(c*x.mixed)=(-(c*e)+e*c)*x.mixed := by noncomm_ring
+      _ = 0 := by rw [hce.eq]; simp
+  simp only [twoCurvatureBoundary,mul_zero]
+  rw [h]
+
+def curvatureShear (t : A) (x : CoupledPacket A) : CoupledPacket A :=
+  ⟨x.base,x.curved-t*x.flat,x.flat,x.mixed⟩
+
+theorem curvatureShear_inverse (t : A) (x : CoupledPacket A) :
+    curvatureShear (-t) (curvatureShear t x)=x := by
+  cases x with
+  | mk a b c d =>
+      simp only [curvatureShear]
+      have h : b-t*c-(-t)*c=b := by noncomm_ring
+      rw [h]
+
+theorem twoCurvatureBoundary_shear (c e t : A) (hct : Commute c t)
+    (x : CoupledPacket A) :
+    twoCurvatureBoundary c e (curvatureShear t x)=
+      curvatureShear t (twoCurvatureBoundary c (e-t*c) x) := by
+  have hbase : c*(x.curved-t*x.flat)+e*x.flat=
+      c*x.curved+(e-t*c)*x.flat := by
+    calc
+      c*(x.curved-t*x.flat)+e*x.flat=c*x.curved+(e-c*t)*x.flat := by noncomm_ring
+      _ = c*x.curved+(e-t*c)*x.flat := by rw [hct.eq]
+  have hcurved : -e*x.mixed= -(e-t*c)*x.mixed-t*(c*x.mixed) := by noncomm_ring
+  simp only [twoCurvatureBoundary,curvatureShear]
+  rw [hbase,hcurved]
+
+theorem dependent_curvature_exposes_flat_handle (c t : A) (hct : Commute c t)
+    (x : CoupledPacket A) :
+    twoCurvatureBoundary c (t*c) (curvatureShear t x)=
+      curvatureShear t (coupledBoundary c x) := by
+  rw [twoCurvatureBoundary_shear c (t*c) t hct]
+  simp [twoCurvatureBoundary,coupledBoundary,curvatureShear]
+
+#print axioms twoCurvatureBoundary_shear
+end CoupledExteriorPackets
+
 end GSTGradedWorldAlgebra

@@ -234,4 +234,63 @@ theorem nonzero_missing_mode_refuses_pure_split (L : V →ₗ[ℂ] W) (u v : V)
 #print axioms pure_split_iff_missing_mode_zero
 end WholeSpaceOpposedness
 
+/-! ## Universal relation factorization for base-coupled quotient folds
+
+For geometry, C sends a vertical handle to its actual Chern class. A
+quotient's pullback on vertical coefficients is I. Every restoring I has
+one and only one factorization through ker C. No cycle selector is involved.
+-/
+section RestoringRelations
+variable {𝕜 U V W : Type*} [Field 𝕜]
+  [AddCommGroup U] [Module 𝕜 U] [AddCommGroup V] [Module 𝕜 V]
+  [AddCommGroup W] [Module 𝕜 W]
+
+def restoringLift (C : V →ₗ[𝕜] W) (I : U →ₗ[𝕜] V)
+    (h : C.comp I=0) : U →ₗ[𝕜] C.ker where
+  toFun u := ⟨I u, by
+    have hu := congrArg (fun T : U →ₗ[𝕜] W => T u) h
+    simpa using hu⟩
+  map_add' u v := by apply Subtype.ext; exact I.map_add u v
+  map_smul' a u := by apply Subtype.ext; exact I.map_smul a u
+
+theorem restoringLift_underlying (C : V →ₗ[𝕜] W) (I : U →ₗ[𝕜] V)
+    (h : C.comp I=0) : C.ker.subtype.comp (restoringLift C I h)=I := by
+  ext u
+  rfl
+
+theorem restoring_iff_factors_through_relations
+    (C : V →ₗ[𝕜] W) (I : U →ₗ[𝕜] V) :
+    C.comp I=0 ↔ ∃ J : U →ₗ[𝕜] C.ker, C.ker.subtype.comp J=I := by
+  constructor
+  · intro h
+    exact ⟨restoringLift C I h,restoringLift_underlying C I h⟩
+  · rintro ⟨J,rfl⟩
+    ext u
+    exact (J u).property
+
+theorem restoring_factorization_unique (C : V →ₗ[𝕜] W)
+    (I : U →ₗ[𝕜] V) (h : C.comp I=0) :
+    ∃! J : U →ₗ[𝕜] C.ker, C.ker.subtype.comp J=I := by
+  refine ⟨restoringLift C I h,restoringLift_underlying C I h,?_⟩
+  intro J hJ
+  apply LinearMap.ext
+  intro u
+  apply Subtype.ext
+  exact congrArg (fun T : U →ₗ[𝕜] V => T u) hJ
+
+theorem restoringLift_injective (C : V →ₗ[𝕜] W)
+    (I : U →ₗ[𝕜] V) (h : C.comp I=0) (hinj : Function.Injective I) :
+    Function.Injective (restoringLift C I h) := by
+  intro u v huv
+  apply hinj
+  exact congrArg Subtype.val huv
+
+theorem relation_inclusion_restores (C : V →ₗ[𝕜] W) :
+    C.comp C.ker.subtype=0 := by
+  ext u
+  exact u.property
+
+#print axioms restoring_factorization_unique
+end RestoringRelations
+
 end GSTCausalFoldDefect

@@ -51,6 +51,12 @@ its geometric input is not silently manufactured for an arbitrary original X.
 #check GSTCausalFoldDefect.pure_split_iff_missing_mode_zero
 #check GSTNCohomologyV3.all_channels_closed_iff_zero_curvature
 #check GSTGradedWorldAlgebra.centralFold_opposedness_defect
+#check GSTCausalFoldDefect.restoring_factorization_unique
+#check GSTCausalFoldDefect.restoringLift_injective
+#check GSTGradedWorldAlgebra.twoCurvatureBoundary_shear
+#check GSTGradedWorldAlgebra.dependent_curvature_exposes_flat_handle
+#check GSTNCohomologyV3.targetCurvature_zero_iff
+#check GSTNCohomologyV3.targetCurvature_detects_prescribed_input
 
 namespace GSTSpatialFoldResearch
 open GSTNCohomology GSTNCohomologyV3
