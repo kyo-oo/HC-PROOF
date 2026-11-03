@@ -428,4 +428,132 @@ theorem projective_relation_factorization_unique (theta : Λ →+ T) (I : U →+
 #print axioms projective_relation_factorization_unique
 end ProjectiveRestoringRelations
 
+/-! ## Transfer through arbitrary projective folds and actual boundary sources
+
+The companion hand derivation constructs the raw transfer geometrically as
+f_*(h^r * -), of positive generic degree d. These algebraic drafts take that
+actual transfer and its comparison equations as inputs. They do not assert
+the existence of a cycle for an arbitrary Hodge class or of an algebraic
+compactification of its topological nullhomotopy. Compilation is owner-run.
+-/
+section ProjectiveFoldTransfer
+variable {V W Z NX NY : Type*}
+  [AddCommGroup V] [Module ℚ V] [AddCommGroup W] [Module ℚ W]
+  [AddCommGroup Z] [Module ℚ Z]
+  [AddCommGroup NX] [Module ℚ NX] [AddCommGroup NY] [Module ℚ NY]
+
+def normalizedFoldReturn (tr : W →ₗ[ℚ] V) (d : ℚ) : W →ₗ[ℚ] V := d⁻¹ • tr
+
+theorem normalizedFoldReturn_pullback (pull : V →ₗ[ℚ] W)
+    (tr : W →ₗ[ℚ] V) (d : ℚ) (hd : d ≠ 0)
+    (htr : ∀ a, tr (pull a) = d • a) (a : V) :
+    normalizedFoldReturn tr d (pull a) = a := by
+  simp only [normalizedFoldReturn, LinearMap.smul_apply, htr, smul_smul]
+  rw [inv_mul_cancel₀ hd, one_smul]
+
+theorem fold_pullback_injective (pull : V →ₗ[ℚ] W)
+    (tr : W →ₗ[ℚ] V) (d : ℚ) (hd : d ≠ 0)
+    (htr : ∀ a, tr (pull a) = d • a) : Function.Injective pull := by
+  intro a b hab
+  calc
+    a = normalizedFoldReturn tr d (pull a) :=
+      (normalizedFoldReturn_pullback pull tr d hd htr a).symm
+    _ = normalizedFoldReturn tr d (pull b) := congrArg _ hab
+    _ = b := normalizedFoldReturn_pullback pull tr d hd htr b
+
+theorem projective_fold_nullifier_zero (pull : V →ₗ[ℚ] W)
+    (tr : W →ₗ[ℚ] V) (d : ℚ) (hd : d ≠ 0)
+    (htr : ∀ a, tr (pull a) = d • a) (a : V) (ha : pull a = 0) :
+    a = 0 := by
+  apply fold_pullback_injective pull tr d hd htr
+  simpa using ha
+
+theorem projective_fold_retains_nonzero (pull : V →ₗ[ℚ] W)
+    (tr : W →ₗ[ℚ] V) (d : ℚ) (hd : d ≠ 0)
+    (htr : ∀ a, tr (pull a) = d • a) (a : V) :
+    pull a ≠ 0 ↔ a ≠ 0 := by
+  constructor
+  · intro h ha; exact h (by rw [ha, map_zero])
+  · intro h ha; exact h (projective_fold_nullifier_zero pull tr d hd htr a ha)
+
+/-- Raw degrees multiply under composition; both maps retain the marked base. -/
+theorem foldTransfer_composite (f : V →ₗ[ℚ] W) (g : W →ₗ[ℚ] Z)
+    (rf : W →ₗ[ℚ] V) (rg : Z →ₗ[ℚ] W) (d e : ℚ)
+    (hf : ∀ a, rf (f a) = d • a) (hg : ∀ b, rg (g b) = e • b)
+    (a : V) :
+    (rf.comp rg) ((g.comp f) a) = (e*d) • a := by
+  simp only [LinearMap.comp_apply, hg, map_smul, hf, smul_smul]
+
+theorem normalizedFoldReturn_composite (rf : W →ₗ[ℚ] V)
+    (rg : Z →ₗ[ℚ] W) (d e : ℚ) :
+    normalizedFoldReturn (rf.comp rg) (e*d) =
+      (normalizedFoldReturn rf d).comp (normalizedFoldReturn rg e) := by
+  ext a
+  simp only [normalizedFoldReturn, LinearMap.smul_apply, LinearMap.comp_apply,
+    map_smul, smul_smul, mul_inv_rev]
+
+theorem foldReturn_projector_idempotent (pull : V →ₗ[ℚ] W)
+    (tr : W →ₗ[ℚ] V) (d : ℚ) (hd : d ≠ 0)
+    (htr : ∀ a, tr (pull a) = d • a) (b : W) :
+    pull (normalizedFoldReturn tr d (pull (normalizedFoldReturn tr d b))) =
+      pull (normalizedFoldReturn tr d b) := by
+  rw [normalizedFoldReturn_pullback pull tr d hd htr]
+
+theorem foldReturn_remainder_killed (pull : V →ₗ[ℚ] W)
+    (tr : W →ₗ[ℚ] V) (d : ℚ) (hd : d ≠ 0)
+    (htr : ∀ a, tr (pull a) = d • a) (b : W) :
+    normalizedFoldReturn tr d (b - pull (normalizedFoldReturn tr d b)) = 0 := by
+  rw [map_sub, normalizedFoldReturn_pullback pull tr d hd htr, sub_self]
+
+/-- Applies an actual cycle transfer; the canonical comparison is explicit. -/
+theorem transferred_cycle_class (clX : NX →ₗ[ℚ] V) (clY : NY →ₗ[ℚ] W)
+    (pull : V →ₗ[ℚ] W) (tr : W →ₗ[ℚ] V) (cycleTr : NY →ₗ[ℚ] NX)
+    (d : ℚ) (hd : d ≠ 0) (htr : ∀ a, tr (pull a) = d • a)
+    (hcompare : ∀ z, clX (cycleTr z) = tr (clY z))
+    (a : V) (z : NY) (hz : clY z = pull a) :
+    clX (d⁻¹ • cycleTr z) = a := by
+  rw [map_smul, hcompare, hz]
+  exact normalizedFoldReturn_pullback pull tr d hd htr a
+
+/-- A genuine source-image statement, not a surjectivity assumption. -/
+theorem fold_cycle_image_iff (clX : NX →ₗ[ℚ] V) (clY : NY →ₗ[ℚ] W)
+    (pull : V →ₗ[ℚ] W) (tr : W →ₗ[ℚ] V)
+    (cyclePull : NX →ₗ[ℚ] NY) (cycleTr : NY →ₗ[ℚ] NX)
+    (d : ℚ) (hd : d ≠ 0) (htr : ∀ a, tr (pull a) = d • a)
+    (hpush : ∀ z, clX (cycleTr z) = tr (clY z))
+    (hpull : ∀ z, clY (cyclePull z) = pull (clX z)) (a : V) :
+    pull a ∈ LinearMap.range clY ↔ a ∈ LinearMap.range clX := by
+  constructor
+  · rintro ⟨z, hz⟩
+    exact ⟨d⁻¹ • cycleTr z,
+      transferred_cycle_class clX clY pull tr cycleTr d hd htr hpush a z hz⟩
+  · rintro ⟨z, hz⟩
+    exact ⟨cyclePull z, by rw [hpull, hz]⟩
+
+/-- The finite boundary combination itself is retained, before its return. -/
+theorem boundary_combination_return {ι : Type*} [Fintype ι]
+    (clX : NX →ₗ[ℚ] V) (clY : NY →ₗ[ℚ] W)
+    (pull : V →ₗ[ℚ] W) (tr : W →ₗ[ℚ] V) (cycleTr : NY →ₗ[ℚ] NX)
+    (d : ℚ) (hd : d ≠ 0) (htr : ∀ a, tr (pull a) = d • a)
+    (hcompare : ∀ z, clX (cycleTr z) = tr (clY z))
+    (a : V) (coeff : ι → ℚ) (boundary : ι → NY)
+    (hboundary : (∑ i, coeff i • clY (boundary i)) = pull a) :
+    clX (d⁻¹ • cycleTr (∑ i, coeff i • boundary i)) = a := by
+  apply transferred_cycle_class clX clY pull tr cycleTr d hd htr hcompare
+  simpa only [map_sum, map_smul] using hboundary
+
+/-- Different boundary solutions need agree only after the Betti map. -/
+theorem boundary_solution_difference_nullhomologous
+    (clX : NX →ₗ[ℚ] V) (clY : NY →ₗ[ℚ] W)
+    (tr : W →ₗ[ℚ] V) (cycleTr : NY →ₗ[ℚ] NX) (d : ℚ)
+    (hcompare : ∀ z, clX (cycleTr z) = tr (clY z))
+    (z w : NY) (hzw : clY z = clY w) :
+    clX (d⁻¹ • cycleTr z - d⁻¹ • cycleTr w) = 0 := by
+  rw [map_sub, map_smul, map_smul, hcompare, hcompare, hzw, sub_self]
+
+#print axioms projective_fold_nullifier_zero
+#print axioms fold_cycle_image_iff
+#print axioms boundary_combination_return
+end ProjectiveFoldTransfer
+
 end GSTCausalFoldDefect

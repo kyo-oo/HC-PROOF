@@ -97,3 +97,10 @@ end GSTSpatialFoldResearch
 #check GSTCausalFoldDefect.isogeny_kernel_torsion
 #check GSTCausalFoldDefect.finite_torsion_common_annihilator
 #check GSTCausalFoldDefect.projective_relation_factorization_unique
+
+-- General projective folds retain every original-base rational class.
+-- The actual geometric return and boundary-support theorem are hand proofs.
+#check GSTCausalFoldDefect.projective_fold_nullifier_zero
+#check GSTCausalFoldDefect.foldTransfer_composite
+#check GSTCausalFoldDefect.fold_cycle_image_iff
+#check GSTCausalFoldDefect.boundary_combination_return

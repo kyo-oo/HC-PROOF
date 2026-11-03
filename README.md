@@ -1,5 +1,17 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Curvature proof and higher realization test — 2026-11-03
+
+[Proof audit and new construction results](research/records/2026-11-03-gst-curvature-realization-return-audit.md):
+the stated central-fold curvature theorem is established at hand-proof level.
+A new actual return works for every smooth projective surjective fold;
+it rules out direct projective realization of the nonzero-alpha nullifying
+model. An open algebraic boundary of codimension p gives an explicit
+original-X cycle, with a sharp boundary threshold. Two existing Lean modules
+gain 12 uncompiled theorem drafts; Python and Wolfram agree on 21 targeted
+exact checks. Universal construction of that boundary or another prescribed
+alpha source remains unresolved; compilation stays with the owner.
+
 ## Projective fold algebraization and actual multisection return — 2026-11-03
 
 [Proof and evidence](research/records/2026-11-03-gst-projective-fold-algebraization.md):

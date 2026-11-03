@@ -1,5 +1,19 @@
 # GST Hodge — Locked Execution Contract
 
+**Curvature proof audit and higher realization test from `6c78f4d` (2026-11-03):**
+[General projective return, nullifier obstruction and actual boundary cycle](records/2026-11-03-gst-curvature-realization-return-audit.md).
+The central-fold curvature theorem remains established at its stated scope.
+Every smooth projective surjective fold now has an explicit rational Chow
+and all-degree Betti retraction. Thus the prescribed-alpha homotopy fiber,
+which kills alpha, cannot have a compatible projective realization when
+alpha is nonzero, even through finite projective compositions. An actual
+boundary of codimension at least p yields the exact original-X cycle via
+its codimension-p components; greater codimension cannot kill the input.
+Universal existence of such a boundary is equivalent to algebraicity and
+is not supplied or assumed. Ordinary divisorial compactifications for p>1
+require new source geometry. Twelve uncompiled Lean theorem drafts are
+added to an existing module; 21 targeted Python/Wolfram assertions agree.
+
 **Projective algebraization from `e699dbe` (2026-11-03):**
 [Exact torsor criterion, finite-cover construction and multisection return](records/2026-11-03-gst-projective-fold-algebraization.md).
 The projective-torus subconstruction is now completed at hand-proof level:
