@@ -4,6 +4,18 @@ Date: 3 November 2026, Asia/Calcutta. Starting revision:
 `2b678dc20beb81807a2c576e2d95c639900171ae`.
 Branch: `research/gpt6-native-point-primitive-span-20261017`.
 
+**Executed continuation from `feb0a99` (3 November 2026):**
+[Full mathematical derivation](derivations/GST_selected_block_excess_and_integrability_2026_11_03.tex)
+and [proof audit / evidence](records/2026-11-03-mathbox-plan-to-mathematics-selected-block.md).
+The filtered nerve comparison of Section 4 now has an actual good-cover
+realization. Section 7 now has a proved matched-factor coherent-source
+construction, exact local-block and global-package return coefficients,
+root-transitive cancellation, a nonzero-Hodge-input descent obstruction,
+and calculated polarized excess and nonlinear integrability tests. None
+forces the independent algebraic source for every prescribed input; the
+universal proof remains incomplete at that implication. No Lean work or
+compilation is claimed by this continuation.
+
 This is the requested **entire proof plan**, organized around the owner's
 sequence: arbitrary X; provisional Hodge assumption; emergent N dimensions;
 spatial folds; graph complex; causality; full N-cohomology; preserving or
@@ -203,6 +215,15 @@ assumption to that marked class. Recompute the class/fold or change the
 realization. Retain the failure equation as information about that route.
 
 ## 7. The geometric work that turns the experiment into a proof
+
+The [executed selected-block derivation](derivations/GST_selected_block_excess_and_integrability_2026_11_03.tex)
+implements these routes: a matched root factor returns a genuine cycle even
+with resultant boundary; a component package returns the explicit binomial
+coefficient sum, which vanishes under root-transitive monodromy; correlated
+excess and its projective polarization are computed; and the specified
+first-order source direction has a nonzero second-order obstruction.
+The unproved existence of a suitable source is retained below. A completed
+conditional construction is not substituted for that existence statement.
 
 Keep every explicit construction and return from Section 6. Replace the
 single use of provisional Hodge algebraicity by a proved geometric source

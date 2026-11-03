@@ -1,5 +1,18 @@
 # GST Hodge — Locked Execution Contract
 
+**Plan executed into mathematics from `feb0a99` (2026-11-03):**
+[Mathbox cochain, selected-block, excess and integrability proofs](records/2026-11-03-mathbox-plan-to-mathematics-selected-block.md).
+The actual filtered nerve--de Rham comparison is constructed for every
+smooth projective realized world. A matched characteristic factor now gives
+a coherent-kernel perfect complex and a complete canonical original-X cycle
+return, including resultant boundary. Individual incidence blocks have exact
+integral coefficients; actual component packages return their computed sum.
+Root-transitive packages cancel. A nonzero-Hodge-input example disproves
+automatic contour descent, polarized excess has a computed return, and a
+specific source deformation has an explicit second-order obstruction.
+The universal source-existence implication is still unproved. This checkpoint
+contains hand mathematics and exact evidence; the owner retains the Lean side.
+
 **Owner-requested complete proof plan (2026-11-03, base `2b678dc`):**
 [Whole-space GST dependency and execution plan](GST_WHOLE_SPACE_PROOF_PLAN.md).
 Follow the requested order: arbitrary X, provisional Hodge assumption,
