@@ -172,6 +172,7 @@ roots = [
   "waves.GSTWaveCohomologyV2",
   "waves.GSTNCohomology",
   "waves.GSTNCohomologyV2",
+  "waves.GSTNCohomologyV3",
   "waves.GSTVortexSingularity",
   "waves.GSTVortexSingularityV2",
   "waves.CardinalWorldsPostulateLaw",
