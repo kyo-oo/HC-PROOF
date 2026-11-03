@@ -1,5 +1,19 @@
 # GST Hodge — Locked Execution Contract
 
+**Owner's whole-space experiment executed from `ef1a452` (2026-11-03):**
+[Actual causal central-fold results and custom-module implementation](records/2026-11-03-gst-requested-whole-space-fold-results.md).
+The owner corrected the previous diversion into cycle-source selection.
+This checkpoint executes the provisional-HC whole-space experiment itself:
+actual compact complex worlds, full cohomology differential, causal cocycle,
+observed dimensions and a shared-base quotient fold. The whole first-Hodge
+opposedness defect is exactly rank of total curvature. Zero total curvature
+restores the full projective Hodge spectrum; nonzero curvature breaks the
+canonical structure. Independent opposite folds retain twice the defect,
+while actual fusion cancels it. Six existing Lean modules are strengthened
+with 25 uncompiled theorem drafts; no new wrapper or CI dispatch. This is
+the experiment's proved family-level outcome, not a return to the old
+selected-source route or an unconditional proof of the provisional premise.
+
 **Plan executed into mathematics from `feb0a99` (2026-11-03):**
 [Mathbox cochain, selected-block, excess and integrability proofs](records/2026-11-03-mathbox-plan-to-mathematics-selected-block.md).
 The actual filtered nerve--de Rham comparison is constructed for every

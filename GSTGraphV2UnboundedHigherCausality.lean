@@ -1009,4 +1009,62 @@ theorem centeredPower_shift_invariant
 
 end CausalProjectiveChern
 
+/-! ## Central causal folds: the commutator has an actual cocycle
+
+This is the central part of the whole-space realization in
+GST_whole_space_central_causal_fold_2026_11_03.tex. An extra closed central
+factor supplies V in the geometric model. These algebraic drafts do not
+assert that the manifold comparison has been instantiated in Lean.
+-/
+namespace CentralCausalFold
+variable {m r : ℕ}
+
+def pairing (K : Fin r → Fin m → ℚ) (x y : Fin m → ℚ) : Fin r → ℚ :=
+  fun a => ∑ j, K a j*x j*y j
+
+theorem pairing_add_left (K : Fin r → Fin m → ℚ) (x x' y : Fin m → ℚ) :
+    pairing K (x+x') y=pairing K x y+pairing K x' y := by
+  funext a
+  simp [pairing,add_mul,mul_add,Finset.sum_add_distrib]
+
+theorem pairing_add_right (K : Fin r → Fin m → ℚ) (x y y' : Fin m → ℚ) :
+    pairing K x (y+y')=pairing K x y+pairing K x y' := by
+  funext a
+  simp [pairing,add_mul,mul_add,Finset.sum_add_distrib]
+
+theorem pairing_curvature_add (K L : Fin r → Fin m → ℚ) (x y : Fin m → ℚ) :
+    pairing (K+L) x y=pairing K x y+pairing L x y := by
+  funext a
+  simp [pairing,add_mul,Finset.sum_add_distrib]
+
+@[ext] structure CentralPoint (m r : ℕ) where
+  x : Fin m → ℚ
+  y : Fin m → ℚ
+  z : Fin r → ℚ
+
+def centralMul (K : Fin r → Fin m → ℚ) (p q : CentralPoint m r) :
+    CentralPoint m r := ⟨p.x+q.x,p.y+q.y,p.z+q.z+pairing K p.x q.y⟩
+
+theorem cocycle_coherence (K : Fin r → Fin m → ℚ)
+    (x x' y' y'' : Fin m → ℚ) :
+    pairing K x y'+pairing K (x+x') y'' =
+      pairing K x' y''+pairing K x (y'+y'') := by
+  rw [pairing_add_left,pairing_add_right]
+  abel
+
+theorem centralMul_assoc (K : Fin r → Fin m → ℚ) (p q s : CentralPoint m r) :
+    centralMul K (centralMul K p q) s=centralMul K p (centralMul K q s) := by
+  ext a <;> simp [centralMul,pairing_add_left,pairing_add_right] <;> ring
+
+theorem commutator_readout (K : Fin r → Fin m → ℚ) (p q : CentralPoint m r) :
+    (centralMul K p q).z-(centralMul K q p).z =
+      pairing K p.x q.y-pairing K q.x p.y := by
+  funext a
+  simp only [centralMul,Pi.sub_apply,Pi.add_apply]
+  ring
+
+#print axioms cocycle_coherence
+#print axioms centralMul_assoc
+end CentralCausalFold
+
 end GSTGraphV2UnboundedHigherCausality

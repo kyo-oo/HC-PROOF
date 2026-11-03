@@ -184,4 +184,54 @@ end NativeBranching
 #print axioms endpoint_break_has_bad_edge
 #print axioms causal_path_defect
 #print axioms nativeCycleTower_class
+/-! ## Whole-space opposedness: explicit missing-mode decomposition
+
+L is instantiated by the actual curvature transpose, not a cycle-class map.
+The manifold proof identifies ker L as the closed vertical holomorphic modes.
+-/
+section WholeSpaceOpposedness
+variable {V W : Type*} [AddCommGroup V] [Module ℂ V]
+  [AddCommGroup W] [Module ℂ W]
+
+def centralPlus (u v : V) : V := (1/2 : ℂ) • (u-Complex.I • v)
+def centralMinus (u v : V) : V := (1/2 : ℂ) • (u+Complex.I • v)
+
+theorem central_parts_sum (u v : V) : centralPlus u v+centralMinus u v=u := by
+  unfold centralPlus centralMinus
+  module
+
+theorem central_parts_difference (u v : V) :
+    Complex.I • (centralPlus u v-centralMinus u v)=v := by
+  calc
+    Complex.I • (centralPlus u v-centralMinus u v)=
+        (-Complex.I*Complex.I) • v := by
+          unfold centralPlus centralMinus
+          module
+    _ = v := by simp [neg_mul,Complex.I_mul_I]
+
+theorem closed_parts_of_zero_missing_mode (L : V →ₗ[ℂ] W) (u v : V)
+    (hu : L u=0) (hv : L v=0) :
+    L (centralPlus u v)=0 ∧ L (centralMinus u v)=0 := by
+  simp [centralPlus,centralMinus,map_smul,map_sub,map_add,hu,hv]
+
+theorem pure_split_iff_missing_mode_zero (L : V →ₗ[ℂ] W) (u v : V)
+    (hu : L u=0) :
+    (∃ a b : V,L a=0 ∧ L b=0 ∧ u=a+b ∧ v=Complex.I • (a-b)) ↔ L v=0 := by
+  constructor
+  · rintro ⟨a,b,ha,hb,_,rfl⟩
+    simp [map_smul,map_sub,ha,hb]
+  · intro hv
+    have h := closed_parts_of_zero_missing_mode L u v hu hv
+    exact ⟨centralPlus u v,centralMinus u v,h.1,h.2,
+      (central_parts_sum u v).symm,(central_parts_difference u v).symm⟩
+
+theorem nonzero_missing_mode_refuses_pure_split (L : V →ₗ[ℂ] W) (u v : V)
+    (hu : L u=0) (hv : L v ≠ 0) :
+    ¬ ∃ a b : V,L a=0 ∧ L b=0 ∧ u=a+b ∧ v=Complex.I • (a-b) := by
+  rw [pure_split_iff_missing_mode_zero L u v hu]
+  exact hv
+
+#print axioms pure_split_iff_missing_mode_zero
+end WholeSpaceOpposedness
+
 end GSTCausalFoldDefect

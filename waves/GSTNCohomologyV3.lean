@@ -314,4 +314,75 @@ theorem twoChannelDiagonal_not_one_tensor :
 #print axioms doubleCausalHoleTensor_minor_zero
 #print axioms separated_channel_sum_reconstruct
 #print axioms twoChannelDiagonal_not_one_tensor
+/-! ## The central causal fold has a full vector boundary
+
+The degree-one boundary of the realized space is minus this curvature
+transpose. Its kernel is identical. Every source and target channel is kept.
+-/
+def causalCurvatureBoundary (s t : NShape)
+    (K : Fin s.holes → Fin t.holes → ℚ) (c : HoleCoordinates s) :
+    HoleCoordinates t := fun j => ∑ i, K i j*c i
+
+theorem causalCurvatureBoundary_add (s t : NShape)
+    (K : Fin s.holes → Fin t.holes → ℚ) (c d : HoleCoordinates s) :
+    causalCurvatureBoundary s t K (c+d)=
+      causalCurvatureBoundary s t K c+causalCurvatureBoundary s t K d := by
+  funext j
+  simp [causalCurvatureBoundary,mul_add,Finset.sum_add_distrib]
+
+theorem causalCurvatureBoundary_basis (s t : NShape)
+    (K : Fin s.holes → Fin t.holes → ℚ) (i : Fin s.holes) (j : Fin t.holes) :
+    causalCurvatureBoundary s t K (independentHoleBasis s i) j=K i j := by
+  classical
+  simp [causalCurvatureBoundary,independentHoleBasis,mul_ite]
+
+theorem all_channels_closed_iff_zero_curvature (s t : NShape)
+    (K : Fin s.holes → Fin t.holes → ℚ) :
+    (∀ c : HoleCoordinates s,causalCurvatureBoundary s t K c=0) ↔ K=0 := by
+  constructor
+  · intro h
+    funext i j
+    have hi := congrFun (h (independentHoleBasis s i)) j
+    simpa [causalCurvatureBoundary_basis] using hi
+  · rintro rfl c
+    simp [causalCurvatureBoundary]
+
+theorem nonzero_curvature_detects_a_basis_channel (s t : NShape)
+    (K : Fin s.holes → Fin t.holes → ℚ) (i : Fin s.holes) (j : Fin t.holes)
+    (h : K i j ≠ 0) :
+    causalCurvatureBoundary s t K (independentHoleBasis s i) ≠ 0 := by
+  intro hz
+  apply h
+  have hj := congrFun hz j
+  simpa [causalCurvatureBoundary_basis] using hj
+
+/-- A zero collapsed scalar misses the two nonzero opposite channels. -/
+theorem zero_total_is_not_zero_vector :
+    (1 : ℚ)+(-1)=0 ∧ (![1,-1] : Fin 2 → ℚ) ≠ 0 := by
+  constructor
+  · norm_num
+  · intro h
+    have hi := congrFun h 0
+    norm_num at hi
+
+#print axioms all_channels_closed_iff_zero_curvature
+
+/-- The same actual rational curvature matrix, extended to complex channels. -/
+def complexCurvatureLinear (s t : NShape)
+    (K : Fin s.holes → Fin t.holes → ℚ) :
+    (Fin s.holes → ℂ) →ₗ[ℂ] (Fin t.holes → ℂ) where
+  toFun c := fun j => ∑ i, (K i j : ℂ)*c i
+  map_add' := by
+    intro c d
+    funext j
+    simp [mul_add,Finset.sum_add_distrib]
+  map_smul' := by
+    intro a c
+    funext j
+    simp only [Pi.smul_apply,smul_eq_mul]
+    rw [Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro i hi
+    ring
+
 end GSTNCohomologyV3

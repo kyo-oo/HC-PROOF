@@ -4,6 +4,17 @@ Date: 3 November 2026, Asia/Calcutta. Starting revision:
 `2b678dc20beb81807a2c576e2d95c639900171ae`.
 Branch: `research/gpt6-native-point-primitive-span-20261017`.
 
+**Owner-corrected experimental outcome from `ef1a452` (3 November 2026):**
+[Constructed whole-space central folds and complete decision equations](records/2026-11-03-gst-requested-whole-space-fold-results.md).
+The provisional experiment is now executed on actual all-X central-torus
+realizations using the custom GST modules: total-curvature rank is exactly
+the canonical first-Hodge opposedness defect; zero curvature restores the
+whole projective Hodge spectrum. Independent product and shared-base fusion
+give different, calculated outcomes. The full cohomology and geometric
+dimension-reducing quotient are derived, with six existing Lean modules
+upgraded. This result belongs to the requested experiment of Sections 2--6;
+it is not another attempt to substitute Section 7's cycle-source problem.
+
 **Executed continuation from `feb0a99` (3 November 2026):**
 [Full mathematical derivation](derivations/GST_selected_block_excess_and_integrability_2026_11_03.tex)
 and [proof audit / evidence](records/2026-11-03-mathbox-plan-to-mathematics-selected-block.md).

@@ -102,4 +102,41 @@ theorem safe_forward_pair
 #print axioms safe_forward_pair
 end OperatorDefect
 
+/-! The spatial experiment needs its own actual General Space sector.
+The arithmetic SevenAxes ForwardEdge above is not relabeled as a geometric
+curvature edge. Points here retain the full chronological word.
+-/
+def causalWordSpace (A : Type*) : GeneralSpace where
+  Point := List A
+  Path xs ys := ∃ suffix, ys=xs++suffix
+  idPath := fun xs => ⟨[],by simp⟩
+  compPath := by
+    intro xs ys zs hxy hyz
+    rcases hxy with ⟨a,rfl⟩
+    rcases hyz with ⟨b,rfl⟩
+    exact ⟨a++b,by simp [List.append_assoc]⟩
+  comp_id_left := by intros; apply Subsingleton.elim
+  comp_id_right := by intros; apply Subsingleton.elim
+  comp_assoc := by intros; apply Subsingleton.elim
+
+def appendCausalFold {A : Type*} (xs : List A) (a : A) :
+    (causalWordSpace A).Path xs (xs++[a]) := ⟨[a],rfl⟩
+
+def wordCurvature {V : Type*} [AddCommGroup V] :
+    GeneralSpace.Observable (causalWordSpace V) V := List.sum
+
+theorem wordCurvature_composition {V : Type*} [AddCommGroup V] (xs ys : List V) :
+    wordCurvature (xs++ys)=wordCurvature xs+wordCurvature ys := by
+  simp [wordCurvature,List.sum_append]
+
+theorem inverse_fold_restores_endpoint {V : Type*} [AddCommGroup V] (K : V) :
+    wordCurvature [K,-K]=0 := by simp [wordCurvature]
+
+theorem restored_endpoint_can_have_broken_prefix {V : Type*} [AddCommGroup V]
+    (K : V) (hK : K ≠ 0) :
+    wordCurvature [K] ≠ 0 ∧ wordCurvature [K,-K]=0 := by
+  simpa [wordCurvature] using (And.intro hK (add_neg_cancel K))
+
+#print axioms wordCurvature_composition
+#print axioms restored_endpoint_can_have_broken_prefix
 end GSTGraphV2GeneralSpaceRealization

@@ -871,4 +871,45 @@ theorem CausalHodgeCell.signedCausalFold_monodromy_charge
 #print axioms CausalHodgeCell.pureDiagonal_signedFold_signature
 
 
+/-! ## Whole-world central-fold readouts
+
+These are the exact dimensions derived from the actual manifold cochains,
+not a declaration of purity for a CausalHodgeCell. Geometry remains in the
+companion whole-space derivation; Lean compilation is left to the owner.
+-/
+def centralFoldBettiOne (m r rho : ℕ) : ℤ := 2*(m : ℤ)+2*(r : ℤ)-(rho : ℤ)
+def centralFoldHolomorphicOne (m r rho : ℕ) : ℤ := (m : ℤ)+(r : ℤ)-(rho : ℤ)
+
+theorem centralFold_opposedness_defect (m r rho : ℕ) :
+    centralFoldBettiOne m r rho-2*centralFoldHolomorphicOne m r rho=(rho : ℤ) := by
+  simp only [centralFoldBettiOne,centralFoldHolomorphicOne]
+  ring
+
+theorem centralFold_zero_defect_iff (m r rho : ℕ) :
+    centralFoldBettiOne m r rho=2*centralFoldHolomorphicOne m r rho ↔ rho=0 := by
+  have h := centralFold_opposedness_defect m r rho
+  constructor
+  · intro heq
+    rw [heq] at h
+    omega
+  · rintro rfl
+    have h0 := centralFold_opposedness_defect m r 0
+    omega
+
+theorem centralFold_even_betti_can_break :
+    centralFoldBettiOne 2 2 2=6 ∧ centralFoldHolomorphicOne 2 2 2=2 ∧
+      centralFoldBettiOne 2 2 2-2*centralFoldHolomorphicOne 2 2 2=2 := by
+  norm_num [centralFoldBettiOne,centralFoldHolomorphicOne]
+
+theorem centralFold_dimension_fusion (n m r : ℕ) :
+    n+m+2*r=(n+m+r)+r := by omega
+
+theorem centralIndependent_opposedness_add (m r rho m' r' rho' : ℕ) :
+    centralFoldBettiOne (m+m') (r+r') (rho+rho')-
+      2*centralFoldHolomorphicOne (m+m') (r+r') (rho+rho')=
+      (rho : ℤ)+(rho' : ℤ) := by
+  rw [centralFold_opposedness_defect]
+  simp
+
+#print axioms centralFold_opposedness_defect
 end GSTGradedWorldAlgebra

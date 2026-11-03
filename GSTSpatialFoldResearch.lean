@@ -8,6 +8,9 @@ import GSTCMFiniteGeometricDegreeDescent
 import GSTSpectralBoundaryDefect
 import GSTFoldPeriodDescent
 import GSTCausalPairingGraphs
+import GSTGraphV2UnboundedHigherCausality
+import GSTGradedWorldAlgebra
+import waves.GSTNCohomologyV3
 
 /-!
 GST spatial-fold continuation, 2026-11-02. Algebraic proof drafts, with the
@@ -39,3 +42,28 @@ its geometric input is not silently manufactured for an arbitrary original X.
 #check GSTFoldPeriodDescent.three_charge_kernels
 #check GSTCausalPairingGraphs.graph_special_linear_invariant
 #check GSTCausalPairingGraphs.normalize_handle_return
+
+-- Actual custom-module central-fold continuation; uncompiled drafts.
+#check GSTGraphV2UnboundedHigherCausality.CentralCausalFold.cocycle_coherence
+#check GSTGraphV2UnboundedHigherCausality.CentralCausalFold.centralMul_assoc
+#check GSTGraphV2GeneralSpaceRealization.causalWordSpace
+#check GSTGraphV2GeneralSpaceRealization.restored_endpoint_can_have_broken_prefix
+#check GSTCausalFoldDefect.pure_split_iff_missing_mode_zero
+#check GSTNCohomologyV3.all_channels_closed_iff_zero_curvature
+#check GSTGradedWorldAlgebra.centralFold_opposedness_defect
+
+namespace GSTSpatialFoldResearch
+open GSTNCohomology GSTNCohomologyV3
+
+/-- Instantiates the split law on the actual N-channel curvature matrix. -/
+theorem central_N_channels_pure_split_iff (s t : NShape)
+    (K : Fin s.holes → Fin t.holes → ℚ) (u v : Fin s.holes → ℂ)
+    (hu : complexCurvatureLinear s t K u=0) :
+    (∃ a b : Fin s.holes → ℂ,
+      complexCurvatureLinear s t K a=0 ∧ complexCurvatureLinear s t K b=0 ∧
+      u=a+b ∧ v=Complex.I • (a-b)) ↔ complexCurvatureLinear s t K v=0 := by
+  exact GSTCausalFoldDefect.pure_split_iff_missing_mode_zero
+    (complexCurvatureLinear s t K) u v hu
+
+#print axioms central_N_channels_pure_split_iff
+end GSTSpatialFoldResearch
