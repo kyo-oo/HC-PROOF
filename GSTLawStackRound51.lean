@@ -133,6 +133,7 @@ theorem genPow_eq (m : Nat) (hm : m ≥ 1) :
           genPow_succ_succ m'
         rw [hstep, ih (by omega)]
         simp [tensorCell, generator_eq, Nat.cast_add]
+        omega
 
 -- ============ PART B — the rides / the always-gives equation ============
 -- [Shape record: content in the derivation §3]
