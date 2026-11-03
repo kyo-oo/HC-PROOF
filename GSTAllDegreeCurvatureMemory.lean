@@ -34,27 +34,14 @@ open Polynomial
 
 theorem coeff_X_pow_mul_lt (q : Polynomial ℚ) (s n : ℕ) (h : n < s) :
     (X ^ s * q).coeff n = 0 := by
-  rw [Polynomial.coeff_mul]
-  refine Finset.sum_eq_zero ?_
-  intro i hi
-  have hne : s ≠ i := by omega
-  simp [Polynomial.coeff_X_pow, hne]
+  rw [Polynomial.coeff_X_pow_mul' q s n]
+  have hs : ¬(s ≤ n) := by omega
+  rw [if_neg hs]
 
 theorem coeff_X_pow_mul_self (q : Polynomial ℚ) (s : ℕ) :
     (X ^ s * q).coeff s = q.coeff 0 := by
-  rw [Polynomial.coeff_mul]
-  refine Finset.sum_eq_single s ?_ ?_
-  · intro b _ hb
-    have hne : s ≠ b := fun hh => hb hh.symm
-    simp [Polynomial.coeff_X_pow, hne]
-  · intro hs
-    exact absurd (Finset.mem_range_self s) hs
-  · rw [Polynomial.coeff_X_pow, if_pos rfl, one_mul, Nat.sub_self]
-
-theorem coeff_mul_zero' (p q : Polynomial ℚ) :
-    (p * q).coeff 0 = p.coeff 0 * q.coeff 0 := by
-  rw [Polynomial.coeff_mul]
-  simp
+  have h := Polynomial.coeff_X_pow_mul q s 0
+  rwa [Nat.zero_add] at h
 
 theorem coeff_one_add_X_zero : (1 + (X : Polynomial ℚ)).coeff 0 = 1 := by
   rw [Polynomial.coeff_add, Polynomial.coeff_one, Polynomial.coeff_X_zero]
@@ -62,8 +49,9 @@ theorem coeff_one_add_X_zero : (1 + (X : Polynomial ℚ)).coeff 0 = 1 := by
 
 theorem coeff_one_add_X_pow_zero (s : ℕ) (hs : 0 < s) :
     (1 + (X : Polynomial ℚ) ^ s).coeff 0 = 1 := by
-  rw [Polynomial.coeff_add, Polynomial.coeff_one, Polynomial.coeff_X_pow,
-    if_neg (Nat.pos_iff_ne_zero.mp hs)]
+  rw [Polynomial.coeff_add, Polynomial.coeff_one, Polynomial.coeff_X_pow]
+  have h0 : ¬(0 = s) := by omega
+  rw [if_neg h0]
   norm_num
 
 /-! ## The rank profile and the exact all-degree loss polynomial -/
@@ -134,9 +122,9 @@ class is lost there. -/
 theorem loss_at_shift (D : FoldRankData) :
     D.lossPoly.coeff D.shift = 1 := by
   simp only [lossPoly]
-  rw [coeff_X_pow_mul_self, coeff_mul_zero', coeff_mul_zero',
-    coeff_one_add_X_zero, coeff_one_add_X_pow_zero D.shift D.shift_pos,
-    D.cup_zero]
+  rw [coeff_X_pow_mul_self, Polynomial.mul_coeff_zero,
+    Polynomial.mul_coeff_zero, coeff_one_add_X_zero,
+    coeff_one_add_X_pow_zero D.shift D.shift_pos, D.cup_zero]
   norm_num
 
 /-- **The degree-one blindness law.** At codimension `p ≥ 2` the fold shift
