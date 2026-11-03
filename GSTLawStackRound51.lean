@@ -68,12 +68,12 @@ theorem generator_eq : generator = ⟨2, 1, 1⟩ := rfl
 -- THE FOLD LAWS (kernel-real mirrors: charge_tate :438, purityGap_tate :445)
 theorem tau_charge (j : Int) (c : CausalHodgeCell) :
     (tau j c).charge = c.charge := by
-  simp [tau, CausalHodgeCell.charge]
+  simp only [tau, CausalHodgeCell.charge]
   ring
 
 theorem tau_purityGap (j : Int) (c : CausalHodgeCell) :
     (tau j c).purityGap = c.purityGap := by
-  simp [tau, CausalHodgeCell.purityGap]
+  simp only [tau, CausalHodgeCell.purityGap]
   ring
 
 -- THE SECTOR INVARIANCE (R50 Thm 1, this shape)
@@ -94,23 +94,25 @@ theorem tau_sector_reflects (j : Int) (c : CausalHodgeCell) :
 -- THE ORBIT LAW (Thm 1): coverage, freeness, the boundary
 theorem orbit_coverage (p : Nat) (hp : p ≥ 1) :
     tau (Int.ofNat p - 1) generator = ⟨2 * Int.ofNat p, Int.ofNat p, Int.ofNat p⟩ := by
-  have : Int.ofNat p - 1 = Int.ofNat (p - 1) := by omega
-  rw [this]
+  have hshift : Int.ofNat p - 1 = Int.ofNat (p - 1) := by omega
+  rw [hshift]
+  have hsub : (Int.ofNat (p - 1) : Int) = Int.ofNat p - 1 :=
+    Int.ofNat_sub (by omega)
+  rw [hsub]
   simp [tau, generator_eq]
-  omega
 
 theorem orbit_freeness (j k : Int) :
     tau j generator = tau k generator → j = k := by
   intro h
-  have hdeg : (2:Int) + 2 * j = 2 + 2 * k := by
-    have := congrArg CausalHodgeCell.deg h; simp [tau, generator_eq] at this; exact this
+  have hdeg := congrArg CausalHodgeCell.deg h
+  simp only [tau, generator_eq] at hdeg
   omega
 
 theorem boundary_off_orbit (j : Int) (hj : j ≥ 0) :
     tau j generator ≠ ⟨0, 0, 0⟩ := by
   intro h
-  have := congrArg CausalHodgeCell.deg h
-  simp [tau, generator_eq] at this
+  have hdeg := congrArg CausalHodgeCell.deg h
+  simp only [tau, generator_eq] at hdeg
   omega
 
 -- THE GENERATOR LAW (Thm 2 of R50, the m-power form)
@@ -119,17 +121,23 @@ def genPow : Nat → CausalHodgeCell
   | 1 => generator
   | m + 1 => tensorCell (genPow m) generator
 
+theorem genPow_succ_succ (m : Nat) :
+    genPow (m + 2) = tensorCell (genPow (m + 1)) generator := by
+  rcases m with _ | m'
+  · rfl
+  · rfl
+
 theorem genPow_eq (m : Nat) (hm : m ≥ 1) :
     genPow m = ⟨2 * Int.ofNat m, Int.ofNat m, Int.ofNat m⟩ := by
   induction m with
-  | zero => omega
+  | zero => exact absurd hm (by omega)
   | succ m ih =>
-      by_cases hm0 : m = 0
-      · subst hm0; simp [genPow, generator_eq]; omega
-      · simp [genPow]
-        rw [ih (by omega)]
-        simp [tensorCell, generator_eq]
-        omega
+      rcases m with _ | m'
+      · rfl
+      · have hstep : genPow (m' + 1 + 1) = tensorCell (genPow (m' + 1)) generator :=
+          genPow_succ_succ m'
+        rw [hstep, ih (by omega)]
+        simp [tensorCell, generator_eq, Int.ofNat_add]
 
 -- ============ PART B — the rides / the always-gives equation ============
 -- [Shape record: content in the derivation §3]

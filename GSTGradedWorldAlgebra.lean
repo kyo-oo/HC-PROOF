@@ -1208,7 +1208,7 @@ theorem baseBoundaryModule_eq_bot_of_retraction
         a=ret (base a) := (hbase a).symm
         _=ret (d x) := congrArg ret hx.symm
         _=0 := hd x
-    exact Submodule.mem_bot.mpr hz
+    simpa using hz
   · exact bot_le
 
 /-- The zero-handle coefficient of d is the curvature combination of
@@ -1239,7 +1239,8 @@ theorem nonzero_base_boundary_forbids_retraction
       (∀ b,ret (base b)=b) ∧ (∀ x,ret (d x)=0) := by
   rintro ⟨ret,hbase,hd⟩
   rw [baseBoundaryModule_eq_bot_of_retraction base d ret hbase hd] at haB
-  exact ha (Submodule.mem_bot.mp haB)
+  simp only [Submodule.mem_bot] at haB
+  exact ha haB
 
 /-- The invariant also composes through arbitrarily chosen full-module
 chain maps; the intermediate model need not have pure curvatures. -/
@@ -1347,7 +1348,7 @@ theorem curvaturePair_boundary_iff (L : V →ₗ[ℚ] V) (x : V × V) :
     · exact hx.symm
 
 /-- The genuine quotient and kernel supplied by the cochain calculation. -/
-def curvatureCohomCoordinates (L : V →ₗ[ℚ] V) :=
+abbrev curvatureCohomCoordinates (L : V →ₗ[ℚ] V) :=
   (V ⧸ LinearMap.range L) × LinearMap.ker L
 
 /-- The readout is defined only on actual closed packets. -/
@@ -1373,12 +1374,14 @@ theorem curvatureCycleReadout_zero_iff (L : V →ₗ[ℚ] V)
   · intro h
     have hq : (Submodule.Quotient.mk x.1.1 : V ⧸ LinearMap.range L)=0 :=
       congrArg Prod.fst h
-    have hy : x.1.2=0 := congrArg (fun z : curvatureCohomCoordinates L =>
-      (z.2 : V)) h
-    exact ⟨Submodule.Quotient.eq_zero_iff_mem.mp hq,hy⟩
+    have hy : (⟨x.1.2,(curvaturePair_closed_iff L x.1).mp x.2⟩ :
+      LinearMap.ker L)=0 :=
+      congrArg Prod.snd h
+    exact ⟨(Submodule.Quotient.mk_eq_zero (LinearMap.range L)).mp hq,
+      congrArg Subtype.val hy⟩
   · rintro ⟨hq,hy⟩
     apply Prod.ext
-    · exact Submodule.Quotient.eq_zero_iff_mem.mpr hq
+    · exact (Submodule.Quotient.mk_eq_zero (LinearMap.range L)).mpr hq
     · apply Subtype.ext
       exact hy
 
@@ -1492,7 +1495,7 @@ open Polynomial
 
 /-- Integer coefficients, with actual ranks supplied degree by degree.
 The hand theorem proves these inputs describe the geometric cochain model. -/
-def pairedCurvaturePolynomial (s : ℕ) (P R : Polynomial ℤ) : Polynomial ℤ :=
+noncomputable def pairedCurvaturePolynomial (s : ℕ) (P R : Polynomial ℤ) : Polynomial ℤ :=
   (1+X^s)*((1+X^s)*P-(X^(s+1)+X^s)*R)
 
 theorem pairedCurvaturePolynomial_flat (s : ℕ) (P : Polynomial ℤ) :

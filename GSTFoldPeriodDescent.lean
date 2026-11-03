@@ -86,7 +86,6 @@ def normalizedExtension (u v : ℚ) : ℚ := u-v
 theorem normalized_extension_path (u v w : ℚ) :
     normalizedExtension u w=normalizedExtension u v+normalizedExtension v w := by
   simp [normalizedExtension]
-  ring
 
 theorem three_period_coefficients (A B C D n m u v : ℚ)
     (hn : n ≠ 0) (hm : m ≠ 0) :
@@ -101,10 +100,7 @@ theorem three_period_coefficients (A B C D n m u v : ℚ)
     simp only [zero_mul,zero_sub] at h1 h0
     exact ⟨rfl,by linarith,by linarith⟩
   · rintro ⟨rfl,h1,h0⟩
-    simp only [zero_mul,zero_sub]
-    constructor
-    · rfl
-    constructor <;> linarith
+    refine ⟨by norm_num, ?_, ?_⟩ <;> linarith
 
 end RationalCausality
 

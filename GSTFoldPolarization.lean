@@ -33,6 +33,7 @@ theorem form_nonnegative (x : V) : 0 ≤ b.form x x := by
 theorem metric_symmetric (x y : V) : metric b J x y = metric b J y x := by
   simp only [metric, b.symmetric x y, b.symmetric (J x) (J y)]
 
+include hJ in
 theorem metric_invariant (x y : V) :
     metric b J (J x) (J y) = metric b J x y := by
   simp only [metric, hJ, map_neg, LinearMap.neg_apply, neg_neg]
@@ -44,24 +45,29 @@ theorem metric_positive (x : V) (hx : x ≠ 0) : 0 < metric b J x x := by
   dsimp [metric]
   linarith
 
+include hJ in
 theorem skew_adjoint (x y : V) : metric b J (J x) y = -metric b J x (J y) := by
   simp only [metric, hJ, map_neg, LinearMap.neg_apply]
   ring
 
+include hJ in
 theorem alternatingForm_skew (x y : V) :
     alternatingForm b J x y = -alternatingForm b J y x := by
   unfold alternatingForm
   rw [skew_adjoint b J hJ x y, metric_symmetric b J x (J y)]
 
+include hJ in
 theorem alternatingForm_self (x : V) : alternatingForm b J x x = 0 := by
   have h := alternatingForm_skew b J hJ x x
   linarith
 
+include hJ in
 theorem alternatingForm_invariant (x y : V) :
     alternatingForm b J (J x) (J y) = alternatingForm b J x y := by
   unfold alternatingForm
   exact metric_invariant b J hJ (J x) y
 
+include hJ in
 theorem polarization_positive (x : V) (hx : x ≠ 0) :
     0 < alternatingForm b J x (J x) := by
   unfold alternatingForm

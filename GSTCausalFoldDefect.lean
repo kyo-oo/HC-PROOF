@@ -41,7 +41,9 @@ theorem word_defect_exact (J : R) (ts : List R) :
   induction ts with
   | nil => simp [transportWord, accumulatedDefect, defect]
   | cons T ts ih =>
-      simp only [transportWord, accumulatedDefect, defect_comp, ih]
+      show defect J J (transportWord ts * T) =
+        accumulatedDefect J ts * T + transportWord ts * defect J J T
+      rw [defect_comp J J J (transportWord ts) T, ih]
 
 theorem every_edge_safe_word_safe (J : R) (ts : List R)
     (h : ∀ T ∈ ts, defect J J T = 0) :
@@ -193,8 +195,8 @@ section WholeSpaceOpposedness
 variable {V W : Type*} [AddCommGroup V] [Module ℂ V]
   [AddCommGroup W] [Module ℂ W]
 
-def centralPlus (u v : V) : V := (1/2 : ℂ) • (u-Complex.I • v)
-def centralMinus (u v : V) : V := (1/2 : ℂ) • (u+Complex.I • v)
+noncomputable def centralPlus (u v : V) : V := (1/2 : ℂ) • (u-Complex.I • v)
+noncomputable def centralMinus (u v : V) : V := (1/2 : ℂ) • (u+Complex.I • v)
 
 theorem central_parts_sum (u v : V) : centralPlus u v+centralMinus u v=u := by
   unfold centralPlus centralMinus
@@ -552,7 +554,7 @@ theorem normalizedFoldReturn_composite (rf : W →ₗ[ℚ] V)
       (normalizedFoldReturn rf d).comp (normalizedFoldReturn rg e) := by
   ext a
   simp only [normalizedFoldReturn, LinearMap.smul_apply, LinearMap.comp_apply,
-    map_smul, smul_smul, mul_inv_rev]
+    map_smul, smul_smul, mul_inv_rev, mul_comm]
 
 theorem foldReturn_projector_idempotent (pull : V →ₗ[ℚ] W)
     (tr : W →ₗ[ℚ] V) (d : ℚ) (hd : d ≠ 0)

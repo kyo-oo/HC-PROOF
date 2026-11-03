@@ -10,16 +10,16 @@ Wolfram; it is not represented here as a completed Lean vector-field proof.
 
 namespace GSTVariableFoldIntegrability
 
-def variableFold (f : ℝ) (v : Fin 4 → ℝ) : Fin 4 → ℝ :=
+def symplecticPair (v w : Fin 4 → ℝ) : ℝ :=
+  v 0*w 1-v 1*w 0+v 2*w 3-v 3*w 2
+
+noncomputable def variableFold (f : ℝ) (v : Fin 4 → ℝ) : Fin 4 → ℝ :=
   ![-v 1, v 0, -(v 3)/f, f*v 2]
 
 theorem variableFold_square (f : ℝ) (hf : f ≠ 0) (v : Fin 4 → ℝ) :
     variableFold f (variableFold f v) = -v := by
   ext i
-  fin_cases i <;> simp [variableFold, hf]
-
-def symplecticPair (v w : Fin 4 → ℝ) : ℝ :=
-  v 0*w 1-v 1*w 0+v 2*w 3-v 3*w 2
+  fin_cases i <;> simp [variableFold] <;> field_simp
 
 theorem positive_energy_formula (f : ℝ) (v : Fin 4 → ℝ) :
     symplecticPair v (variableFold f v) =
@@ -33,7 +33,7 @@ theorem positive_energy_nonnegative (f : ℝ) (hf : 0 < f) (v : Fin 4 → ℝ) :
   positivity
 
 /-- The derived coefficient of N_J(partial_1,partial_3); df is f's derivative. -/
-def nijenhuisCoefficient (f df : ℝ) : ℝ := df/f
+noncomputable def nijenhuisCoefficient (f df : ℝ) : ℝ := df/f
 
 theorem nijenhuisCoefficient_zero_iff (f df : ℝ) (hf : f ≠ 0) :
     nijenhuisCoefficient f df = 0 ↔ df = 0 := by

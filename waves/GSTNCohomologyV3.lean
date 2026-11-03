@@ -344,8 +344,12 @@ theorem all_channels_closed_iff_zero_curvature (s t : NShape)
     funext i j
     have hi := congrFun (h (independentHoleBasis s i)) j
     simpa [causalCurvatureBoundary_basis] using hi
-  · rintro rfl c
-    simp [causalCurvatureBoundary]
+  · intro hK c
+    rw [hK]
+    funext j
+    show (∑ i, (0 : Fin s.holes → Fin t.holes → ℚ) i j * c i) =
+      (0 : HoleCoordinates t) j
+    simp
 
 theorem nonzero_curvature_detects_a_basis_channel (s t : NShape)
     (K : Fin s.holes → Fin t.holes → ℚ) (i : Fin s.holes) (j : Fin t.holes)
@@ -383,6 +387,7 @@ def complexCurvatureLinear (s t : NShape)
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro i hi
+    rw [RingHom.id_apply]
     ring
 
 /-! ## Curvature valued in the original base, in any even degree

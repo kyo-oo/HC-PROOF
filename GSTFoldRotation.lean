@@ -28,7 +28,7 @@ def rotate (v : H × H) : H × H := (-v.2, v.1)
 theorem rotate_add (v w : H × H) : rotate (v + w) = rotate v + rotate w := by
   rcases v with ⟨x,y⟩
   rcases w with ⟨z,t⟩
-  simp [rotate, neg_add]
+  simp [rotate, neg_add, add_comm]
 
 def door (v : H × H) : H × H := rotate v - v
 
