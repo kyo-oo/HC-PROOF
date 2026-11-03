@@ -16,7 +16,7 @@ concurrency:
 jobs:
   lean:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v5
       - name: Restore pinned Lean
@@ -55,6 +55,12 @@ jobs:
             exit 1
           fi
           if grep -E "declaration uses 'sorry'|sorryAx" native-algebraic-sheet.log; then exit 1; fi
+      - name: Save Lean build cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-native-sheet
       - name: Upload proof log
         if: always()
         uses: actions/upload-artifact@v4

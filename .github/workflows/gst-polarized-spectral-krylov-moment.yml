@@ -15,7 +15,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 95
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v5
       - uses: actions/cache/restore@v4
@@ -52,6 +52,12 @@ jobs:
             exit 1
           fi
           if grep -E "declaration uses 'sorry'|sorryAx" gst-spectral-krylov.log; then exit 1; fi
+      - name: Save Lean build cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-spectral-krylov
       - uses: actions/upload-artifact@v4
         if: always()
         with:
