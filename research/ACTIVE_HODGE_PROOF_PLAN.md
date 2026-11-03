@@ -1,5 +1,16 @@
 # GST Hodge — Locked Execution Contract
 
+**Projective algebraization from `e699dbe` (2026-11-03):**
+[Exact torsor criterion, finite-cover construction and multisection return](records/2026-11-03-gst-projective-fold-algebraization.md).
+The projective-torus subconstruction is now completed at hand-proof level:
+projectivity iff torsion gluing, explicit finite quotient and actual Chow
+multisection, with a sharp maximal projective integer-matrix quotient.
+Zero curvature retains a separate non-torsion gluing obstruction. Ten
+uncompiled theorem drafts support the relation-lattice arithmetic; all
+shared exact Python/Wolfram tables agree. The canonical return explicitly
+requires an actual cycle representing the lifted prescribed alpha; that
+higher source is not constructed by the multisection theorem.
+
 **Nonlinear relative classification from `2e0324f` (2026-11-03):**
 [Complete pure-model classification, full ring and secondary memory](records/2026-11-03-gst-nonlinear-relative-fold-classification.md).
 The marked-base kernel is exactly the curvature ideal and survives arbitrary

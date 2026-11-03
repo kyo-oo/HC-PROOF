@@ -293,4 +293,139 @@ theorem relation_inclusion_restores (C : V →ₗ[𝕜] W) :
 #print axioms restoring_factorization_unique
 end RestoringRelations
 
+/-! ## Projective restoring relations
+
+The hand theorem algebraizes a principal projective-torus torsor exactly when
+its analytic gluing class is torsion. These are the supporting group/lattice
+lemmas, not Lean instances of manifolds, Picard spaces or projective GAGA.
+In particular curvature-zero and torsor-torsion are kept separate.
+-/
+section ProjectiveRestoringRelations
+variable {Λ T W U : Type*} [AddCommGroup Λ] [AddCommGroup T]
+  [AddCommGroup W] [AddCommGroup U]
+
+/-- Saturated relations: a positive multiple of the actual gluing class vanishes. -/
+def torsionRelation (theta : Λ →+ T) : AddSubgroup Λ where
+  carrier := {m | ∃ n : ℕ, n ≠ 0 ∧ n • theta m = 0}
+  zero_mem' := ⟨1, by decide, by simp⟩
+  add_mem' := by
+    rintro x y ⟨n, hn, hx⟩ ⟨m, hm, hy⟩
+    refine ⟨n*m, Nat.mul_ne_zero hn hm, ?_⟩
+    rw [map_add, nsmul_add]
+    have hleft : (n*m) • theta x = 0 := by
+      calc
+        (n*m) • theta x = m • (n • theta x) := by
+          rw [smul_smul, Nat.mul_comm]
+        _ = 0 := by rw [hx, smul_zero]
+    have hright : (n*m) • theta y = 0 := by
+      rw [← smul_smul, hy, smul_zero]
+    rw [hleft, hright, add_zero]
+  neg_mem' := by
+    rintro x ⟨n, hn, hx⟩
+    exact ⟨n, hn, by simpa only [map_neg, smul_neg, hx, neg_zero]⟩
+
+theorem mem_torsionRelation (theta : Λ →+ T) (x : Λ) :
+    x ∈ torsionRelation theta ↔ ∃ n : ℕ, n ≠ 0 ∧ n • theta x = 0 := Iff.rfl
+
+theorem kernel_le_torsionRelation (theta : Λ →+ T) :
+    theta.ker ≤ torsionRelation theta := by
+  intro x hx
+  change theta x = 0 at hx
+  exact ⟨1, by decide, by simpa using hx⟩
+
+/-- The exact saturation equality, with a genuine finite annihilator witness. -/
+theorem torsionRelation_eq_kernel_saturation (theta : Λ →+ T) (x : Λ) :
+    x ∈ torsionRelation theta ↔
+      ∃ n : ℕ, n ≠ 0 ∧ n • x ∈ theta.ker := by
+  change (∃ n : ℕ, n ≠ 0 ∧ n • theta x = 0) ↔
+    ∃ n : ℕ, n ≠ 0 ∧ theta (n • x) = 0
+  simp only [map_nsmul]
+
+theorem torsionRelation_saturated (theta : Λ →+ T) (k : ℕ) (hk : k ≠ 0)
+    (x : Λ) : k • x ∈ torsionRelation theta ↔ x ∈ torsionRelation theta := by
+  constructor
+  · rintro ⟨n, hn, hx⟩
+    refine ⟨n*k, Nat.mul_ne_zero hn hk, ?_⟩
+    simpa only [map_nsmul, smul_smul] using hx
+  · rintro ⟨n, hn, hx⟩
+    refine ⟨n, hn, ?_⟩
+    rw [map_nsmul]
+    calc
+      n • (k • theta x) = k • (n • theta x) := by
+        rw [smul_smul, smul_smul, Nat.mul_comm]
+      _ = 0 := by rw [hx, smul_zero]
+
+theorem torsion_annihilator_maps (f : T →+ W) (x : T) (n : ℕ)
+    (hx : n • x = 0) : n • f x = 0 := by
+  rw [← map_nsmul, hx, map_zero]
+
+/-- The curvature comparison has a torsion-free target; it detects necessity only. -/
+theorem torsionRelation_le_curvatureKernel (theta : Λ →+ T)
+    (C : Λ →+ W) (curv : T →+ W) (hcomp : curv.comp theta = C)
+    (noTorsion : ∀ (n : ℕ), n ≠ 0 → ∀ w : W, n • w = 0 → w = 0) :
+    torsionRelation theta ≤ C.ker := by
+  rintro x ⟨n, hn, hx⟩
+  change C x = 0
+  have he := congrArg (fun f : Λ →+ W => f x) hcomp
+  change curv (theta x) = C x at he
+  apply noTorsion n hn (C x)
+  rw [← he]
+  exact torsion_annihilator_maps curv (theta x) n hx
+
+/-- Polarization necessity: an isogeny killing the torsor supplies a finite order. -/
+theorem isogeny_kernel_torsion (f : T →+ W) (g : W →+ T)
+    (n : ℕ) (hn : n ≠ 0) (hcomp : ∀ x, g (f x) = n • x)
+    (x : T) (hx : f x = 0) : ∃ k : ℕ, k ≠ 0 ∧ k • x = 0 := by
+  refine ⟨n, hn, ?_⟩
+  rw [← hcomp, hx, map_zero]
+
+/-- Every finite collection of torsion coordinates has a single finite cover order. -/
+theorem finite_torsion_common_annihilator (xs : List T)
+    (h : ∀ x ∈ xs, ∃ n : ℕ, n ≠ 0 ∧ n • x = 0) :
+    ∃ n : ℕ, n ≠ 0 ∧ ∀ x ∈ xs, n • x = 0 := by
+  revert h
+  induction xs with
+  | nil => intro h; exact ⟨1, by decide, by simp⟩
+  | cons x xs ih =>
+    intro h
+    obtain ⟨n, hn, hx⟩ := h x (List.mem_cons_self)
+    obtain ⟨m, hm, hxs⟩ := ih (by
+      intro y hy
+      exact h y (List.mem_cons_of_mem x hy))
+    refine ⟨n*m, Nat.mul_ne_zero hn hm, ?_⟩
+    intro y hy
+    rcases List.mem_cons.mp hy with hxy | hy
+    · subst y
+      calc
+        (n*m) • x = m • (n • x) := by rw [smul_smul, Nat.mul_comm]
+        _ = 0 := by rw [hx, smul_zero]
+    · rw [← smul_smul, hxs y hy, smul_zero]
+
+/-- A projective quotient's relation map factors through the saturated relations. -/
+def torsionRestoringLift (theta : Λ →+ T) (I : U →+ Λ)
+    (h : ∀ u, I u ∈ torsionRelation theta) : U →+ torsionRelation theta where
+  toFun u := ⟨I u, h u⟩
+  map_zero' := by apply Subtype.ext; exact I.map_zero
+  map_add' u v := by apply Subtype.ext; exact I.map_add u v
+
+theorem torsionRestoringLift_underlying (theta : Λ →+ T) (I : U →+ Λ)
+    (h : ∀ u, I u ∈ torsionRelation theta) :
+    (torsionRelation theta).subtype.comp (torsionRestoringLift theta I h) = I := by
+  ext u
+  rfl
+
+theorem projective_relation_factorization_unique (theta : Λ →+ T) (I : U →+ Λ)
+    (h : ∀ u, I u ∈ torsionRelation theta) :
+    ∃! J : U →+ torsionRelation theta, (torsionRelation theta).subtype.comp J = I := by
+  refine ⟨torsionRestoringLift theta I h, torsionRestoringLift_underlying theta I h, ?_⟩
+  intro J hJ
+  apply AddMonoidHom.ext
+  intro u
+  apply Subtype.ext
+  exact congrArg (fun F : U →+ Λ => F u) hJ
+
+#print axioms torsionRelation_saturated
+#print axioms projective_relation_factorization_unique
+end ProjectiveRestoringRelations
+
 end GSTCausalFoldDefect

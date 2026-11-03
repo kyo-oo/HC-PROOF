@@ -89,3 +89,11 @@ end GSTSpatialFoldResearch
 #check GSTGradedWorldAlgebra.twoCurvature_base_boundary_iff
 #check GSTGradedWorldAlgebra.coupled_annihilator_cycle
 #check GSTGradedWorldAlgebra.coupled_nonzero_u_not_boundary
+
+-- Projective algebraization uses actual torsor-torsion, beyond curvature zero.
+#check GSTCausalFoldDefect.torsionRelation_eq_kernel_saturation
+#check GSTCausalFoldDefect.torsionRelation_saturated
+#check GSTCausalFoldDefect.torsionRelation_le_curvatureKernel
+#check GSTCausalFoldDefect.isogeny_kernel_torsion
+#check GSTCausalFoldDefect.finite_torsion_common_annihilator
+#check GSTCausalFoldDefect.projective_relation_factorization_unique

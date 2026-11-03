@@ -1,5 +1,17 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Projective fold algebraization and actual multisection return — 2026-11-03
+
+[Proof and evidence](research/records/2026-11-03-gst-projective-fold-algebraization.md):
+a principal projective-torus fold over arbitrary original X is projective
+exactly when its analytic gluing class is torsion. An explicit finite cover
+constructs the projective quotient, an actual rational Chow multisection
+and normalized original-X return. Saturated torsor relations determine the
+sharp largest projective quotient, beyond curvature restoration. Ten group
+and lattice theorem drafts are added to an existing Lean module; Python
+and Wolfram supporting arithmetic agrees. Compilation stays with the owner.
+The universal prescribed-alpha source is not supplied by this subconstruction.
+
 ## Nonlinear relative folds: complete pure-model classification — 2026-11-03
 
 [Proof and evidence](research/records/2026-11-03-gst-nonlinear-relative-fold-classification.md):
