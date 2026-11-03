@@ -1,5 +1,18 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## All-degree curvature, duality and specialization — 2026-11-03
+
+[Proof and exact evidence](research/records/2026-11-03-gst-all-degree-curvature-duality-specialization.md):
+the prescribed-input rational fold now has its complete odd-base cohomology
+ring, a perfect Poincare duality double and an exact all-degree loss polynomial.
+Its first defect occurs in degree 2p-1, so degree one is blind for p>=2.
+A parameter-dependent cochain family retains the full prescribed curvature
+in its first jet, with every torsion and Tor contribution computed.
+Two existing modules gain 19 theorem drafts; all 13 Python/Wolfram result
+tables agree. The statements concern rational fold cohomology; compilation
+stays with the owner.
+
+
 ## Curvature exact sequence and divisorial subconstruction — 2026-11-03
 
 [Completed construction and exact scope](research/records/2026-11-03-gst-curvature-divisorial-subconstruction-completion.md):

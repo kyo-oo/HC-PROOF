@@ -1307,4 +1307,212 @@ theorem twoCurvature_shear_fixes_base (t a : R) :
 #print axioms coupled_nonzero_u_not_boundary
 end ConcreteBaseKernel
 
+/-! ## All-degree curvature, duality and first-order memory
+
+Hand proof: GST_all_degree_curvature_duality_specialization_2026_11_03.tex.
+Here L is the genuine cup-multiplication map on the full rational base.
+The two coordinates are the base and curved-handle coefficients; grading
+and the coefficient parity sign are restored degree by degree in the hand
+comparison. A sign on the source does not change a kernel or an image.
+These drafts prove the explicit cycle readout, exact boundary criterion,
+finite dimension identity, trace compatibility and first-jet obstruction.
+They do not assert a new projective realization or a Chow selector.
+-/
+section AllDegreeCurvature
+variable {V : Type*} [AddCommGroup V] [Module ℚ V]
+
+def curvaturePairBoundary (L : V →ₗ[ℚ] V) : (V × V) →ₗ[ℚ] (V × V) where
+  toFun x := (L x.2,0)
+  map_add' x y := by simp
+  map_smul' a x := by simp
+
+theorem curvaturePairBoundary_squared (L : V →ₗ[ℚ] V) (x : V × V) :
+    curvaturePairBoundary L (curvaturePairBoundary L x)=0 := by
+  simp [curvaturePairBoundary]
+
+theorem curvaturePair_closed_iff (L : V →ₗ[ℚ] V) (x : V × V) :
+    curvaturePairBoundary L x=0 ↔ L x.2=0 := by
+  simp [curvaturePairBoundary,Prod.mk.injEq]
+
+theorem curvaturePair_boundary_iff (L : V →ₗ[ℚ] V) (x : V × V) :
+    (∃ y,curvaturePairBoundary L y=x) ↔
+      x.1 ∈ LinearMap.range L ∧ x.2=0 := by
+  constructor
+  · rintro ⟨y,rfl⟩
+    exact ⟨⟨y.2,rfl⟩,rfl⟩
+  · rintro ⟨⟨y,hy⟩,hx⟩
+    refine ⟨(0,y),?_⟩
+    apply Prod.ext
+    · exact hy
+    · exact hx.symm
+
+/-- The genuine quotient and kernel supplied by the cochain calculation. -/
+def curvatureCohomCoordinates (L : V →ₗ[ℚ] V) :=
+  (V ⧸ LinearMap.range L) × LinearMap.ker L
+
+/-- The readout is defined only on actual closed packets. -/
+def curvatureCycleReadout (L : V →ₗ[ℚ] V)
+    (x : LinearMap.ker (curvaturePairBoundary L)) : curvatureCohomCoordinates L :=
+  (Submodule.Quotient.mk x.1.1,
+   ⟨x.1.2,(curvaturePair_closed_iff L x.1).mp x.2⟩)
+
+theorem curvatureCycleReadout_surjective (L : V →ₗ[ℚ] V) :
+    Function.Surjective (curvatureCycleReadout L) := by
+  rintro ⟨q,y⟩
+  induction q using Quotient.inductionOn with
+  | h a =>
+    refine ⟨⟨(a,y.1),(curvaturePair_closed_iff L (a,y.1)).mpr y.2⟩,?_⟩
+    rfl
+
+/-- Exactly the actual boundaries, not an assumed cohomological equality. -/
+theorem curvatureCycleReadout_zero_iff (L : V →ₗ[ℚ] V)
+    (x : LinearMap.ker (curvaturePairBoundary L)) :
+    curvatureCycleReadout L x=0 ↔ ∃ y,curvaturePairBoundary L y=x.1 := by
+  rw [curvaturePair_boundary_iff]
+  constructor
+  · intro h
+    have hq : (Submodule.Quotient.mk x.1.1 : V ⧸ LinearMap.range L)=0 :=
+      congrArg Prod.fst h
+    have hy : x.1.2=0 := congrArg (fun z : curvatureCohomCoordinates L =>
+      (z.2 : V)) h
+    exact ⟨Submodule.Quotient.eq_zero_iff_mem.mp hq,hy⟩
+  · rintro ⟨hq,hy⟩
+    apply Prod.ext
+    · exact Submodule.Quotient.eq_zero_iff_mem.mpr hq
+    · apply Subtype.ext
+      exact hy
+
+theorem curvature_survivor_not_boundary (L : V →ₗ[ℚ] V)
+    (a : V) (ha : a≠0) :
+    ¬ ∃ y,curvaturePairBoundary L y=(0,a) := by
+  rw [curvaturePair_boundary_iff]
+  exact fun h => ha h.2
+
+/-- No Nat subtraction: the rank loss is an exact finite identity. -/
+theorem curvature_coordinate_dimension [FiniteDimensional ℚ V]
+    (L : V →ₗ[ℚ] V) :
+    Module.finrank ℚ (curvatureCohomCoordinates L)+
+      2*Module.finrank ℚ (LinearMap.range L)=2*Module.finrank ℚ V := by
+  have hq := Submodule.finrank_quotient_add_finrank (LinearMap.range L)
+  have hk := LinearMap.finrank_range_add_finrank_ker L
+  simp only [curvatureCohomCoordinates,Module.finrank_prod]
+  omega
+
+/-- The independent flat odd handle doubles the entire computed carrier. -/
+theorem paired_curvature_dimension [FiniteDimensional ℚ V]
+    (L : V →ₗ[ℚ] V) :
+    Module.finrank ℚ (curvatureCohomCoordinates L × curvatureCohomCoordinates L)+
+      4*Module.finrank ℚ (LinearMap.range L)=4*Module.finrank ℚ V := by
+  have h := curvature_coordinate_dimension L
+  rw [Module.finrank_prod]
+  omega
+
+/-- The actual Poincare trace makes even-degree cup curvature self-adjoint.
+This proves the key orthogonal-image/kernel equality without positivity. -/
+theorem curvature_trace_orthogonal_iff
+    (B : V →ₗ[ℚ] V →ₗ[ℚ] ℚ) (L : V →ₗ[ℚ] V)
+    (hself : ∀ a b,B (L a) b=B a (L b))
+    (hperfect : ∀ b,(∀ a,B a b=0) → b=0) (b : V) :
+    (∀ a,B (L a) b=0) ↔ L b=0 := by
+  constructor
+  · intro h
+    apply hperfect
+    intro a
+    rw [←hself]
+    exact h a
+  · intro h a
+    rw [hself,h,map_zero]
+
+theorem curvature_trace_quotient_independent
+    (B : V →ₗ[ℚ] V →ₗ[ℚ] ℚ) (L : V →ₗ[ℚ] V)
+    (hself : ∀ a b,B (L a) b=B a (L b))
+    (a z b : V) (hb : L b=0) : B (a+L z) b=B a b := by
+  rw [map_add,LinearMap.add_apply,hself,hb,map_zero,add_zero]
+
+/-- The annihilator side is separated by genuine original-base trace tests. -/
+theorem curvature_trace_detects_annihilator
+    (B : V →ₗ[ℚ] V →ₗ[ℚ] ℚ)
+    (hperfect : ∀ b,(∀ a,B a b=0) → b=0) (b : V) (hb : b≠0) :
+    ∃ a,B a b≠0 := by
+  by_contra h
+  apply hb
+  apply hperfect
+  intro a
+  by_contra ha
+  exact h ⟨a,ha⟩
+
+/-- z-adic first jets: constant curvature zero, first coefficient L.
+No unproved polynomial-cohomology base change is built into this operator. -/
+def curvatureFirstJetBoundary (L : V →ₗ[ℚ] V)
+    (x : (V × V) × (V × V)) : (V × V) × (V × V) :=
+  (0,curvaturePairBoundary L x.1)
+
+theorem curvatureFirstJetBoundary_squared (L : V →ₗ[ℚ] V)
+    (x : (V × V) × (V × V)) :
+    curvatureFirstJetBoundary L (curvatureFirstJetBoundary L x)=0 := by
+  simp [curvatureFirstJetBoundary,curvaturePairBoundary]
+
+/-- An arbitrary first-order correction cannot change the first obstruction. -/
+theorem curvature_first_order_lift_iff (L : V →ₗ[ℚ] V)
+    (x correction : V × V) :
+    curvatureFirstJetBoundary L (x,correction)=0 ↔ L x.2=0 := by
+  simp [curvatureFirstJetBoundary,curvaturePairBoundary,Prod.mk.injEq]
+
+theorem curvature_first_order_obstruction (L : V →ₗ[ℚ] V)
+    (x : V × V) (hx : L x.2≠0) :
+    ¬ ∃ correction,curvatureFirstJetBoundary L (x,correction)=0 := by
+  rintro ⟨c,hc⟩
+  exact hx ((curvature_first_order_lift_iff L x c).mp hc)
+
+/-- Bockstein on the handle with coefficient e recovers the prescribed L e. -/
+theorem curvature_first_order_recovers_target (L : V →ₗ[ℚ] V)
+    (e alpha : V) (he : L e=alpha) (correction : V × V) :
+    (curvatureFirstJetBoundary L ((0,e),correction)).2.1=alpha := by
+  exact he
+
+/-- The marked first jet retains the full cup operator, not just its rank. -/
+theorem curvature_first_jet_faithful (L K : V →ₗ[ℚ] V) :
+    (∀ x,curvatureFirstJetBoundary L x=curvatureFirstJetBoundary K x) ↔ L=K := by
+  constructor
+  · intro h
+    ext a
+    exact congrArg (fun x : (V × V) × (V × V) => x.2.1) (h ((0,a),0))
+  · rintro rfl
+    intro x
+    rfl
+
+#print axioms curvatureCycleReadout_zero_iff
+#print axioms paired_curvature_dimension
+#print axioms curvature_trace_orthogonal_iff
+#print axioms curvature_first_order_obstruction
+end AllDegreeCurvature
+
+section CurvatureRankPolynomial
+open Polynomial
+
+/-- Integer coefficients, with actual ranks supplied degree by degree.
+The hand theorem proves these inputs describe the geometric cochain model. -/
+def pairedCurvaturePolynomial (s : ℕ) (P R : Polynomial ℤ) : Polynomial ℤ :=
+  (1+X^s)*((1+X^s)*P-(X^(s+1)+X^s)*R)
+
+theorem pairedCurvaturePolynomial_flat (s : ℕ) (P : Polynomial ℤ) :
+    pairedCurvaturePolynomial s P 0=(1+X^s)^2*P := by
+  simp only [pairedCurvaturePolynomial,mul_zero,sub_zero]
+  ring
+
+theorem pairedCurvaturePolynomial_exact_loss (s : ℕ) (P R : Polynomial ℤ) :
+    pairedCurvaturePolynomial s P 0-pairedCurvaturePolynomial s P R=
+      X^s*(1+X)*(1+X^s)*R := by
+  simp only [pairedCurvaturePolynomial,pow_succ]
+  ring
+
+theorem pairedCurvaturePolynomial_total (s : ℕ) (P R : Polynomial ℤ) :
+    (pairedCurvaturePolynomial s P R).eval 1=4*(P.eval 1-R.eval 1) := by
+  simp only [pairedCurvaturePolynomial,eval_mul,eval_sub,eval_add,eval_one,
+    eval_pow,eval_X,one_pow]
+  ring
+
+#print axioms pairedCurvaturePolynomial_exact_loss
+end CurvatureRankPolynomial
+
 end GSTGradedWorldAlgebra

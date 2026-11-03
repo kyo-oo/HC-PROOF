@@ -112,3 +112,14 @@ end GSTSpatialFoldResearch
 #check GSTCausalFoldDefect.corrected_boundary_lift
 #check GSTCausalFoldDefect.denominator_cleared_boundary_return
 #check GSTCausalFoldDefect.ample_primitive_survives_restriction
+
+-- Full-degree quotient/annihilator readout and first-order curvature memory.
+#check GSTGradedWorldAlgebra.curvatureCycleReadout_surjective
+#check GSTGradedWorldAlgebra.curvatureCycleReadout_zero_iff
+#check GSTGradedWorldAlgebra.paired_curvature_dimension
+#check GSTGradedWorldAlgebra.curvature_trace_orthogonal_iff
+#check GSTGradedWorldAlgebra.curvature_trace_quotient_independent
+#check GSTGradedWorldAlgebra.curvature_first_order_obstruction
+#check GSTGradedWorldAlgebra.curvature_first_order_recovers_target
+#check GSTGradedWorldAlgebra.pairedCurvaturePolynomial_exact_loss
+#check GSTGradedWorldAlgebra.curvature_first_jet_faithful

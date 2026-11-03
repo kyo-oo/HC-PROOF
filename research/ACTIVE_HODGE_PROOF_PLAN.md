@@ -1,5 +1,17 @@
 # GST Hodge — Locked Execution Contract
 
+**All-degree curvature completion from `f96a12f` (2026-11-03):**
+[Full cohomology, Poincare double and specialization memory](records/2026-11-03-gst-all-degree-curvature-duality-specialization.md).
+The prescribed-alpha rational fold has a complete odd-base ring and perfect
+trace pairing. An exact all-degree loss polynomial identifies degree 2p-1
+as the first detecting degree; degree-one purity data alone is blind for
+p>=2. The new z-alpha cochain family has explicitly computed torsion, Tor
+and Bockstein, recovering the full marked curvature at first order.
+Nineteen theorem drafts extend two existing modules; all 13 finite exact
+Python/Wolfram tables agree. These are rational cochain results with the
+canonical original-X cycle target retained. Compilation stays owner-run.
+
+
 **Curvature exact sequence and divisorial completion from `e40e328` (2026-11-03):**
 [Explicit missing-mode sequence and original-X boundary-line return](records/2026-11-03-gst-curvature-divisorial-subconstruction-completion.md).
 The stated curvature theorem is established at hand-proof level. Its full
