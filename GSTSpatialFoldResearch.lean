@@ -104,3 +104,11 @@ end GSTSpatialFoldResearch
 #check GSTCausalFoldDefect.foldTransfer_composite
 #check GSTCausalFoldDefect.fold_cycle_image_iff
 #check GSTCausalFoldDefect.boundary_combination_return
+
+-- Explicit curvature exact sequence and completed divisorial return algebra.
+#check GSTCausalFoldDefect.missingModeMap_surjective
+#check GSTCausalFoldDefect.missingMode_kernel_pure_split
+#check GSTCausalFoldDefect.missingMode_nonzero_witness
+#check GSTCausalFoldDefect.corrected_boundary_lift
+#check GSTCausalFoldDefect.denominator_cleared_boundary_return
+#check GSTCausalFoldDefect.ample_primitive_survives_restriction

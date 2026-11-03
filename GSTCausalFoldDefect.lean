@@ -234,6 +234,68 @@ theorem nonzero_missing_mode_refuses_pure_split (L : V →ₗ[ℂ] W) (u v : V)
 #print axioms pure_split_iff_missing_mode_zero
 end WholeSpaceOpposedness
 
+/-! The full missing-mode short exact sequence. Its geometric identification
+is in the central-fold hand proof; no original-X cycle source is asserted. -/
+section MissingModeExactSequence
+variable {V W : Type*} [AddCommGroup V] [Module ℂ V]
+  [AddCommGroup W] [Module ℂ W]
+
+def closedVerticalSpace (L : V →ₗ[ℂ] W) : Submodule ℂ (V × V) :=
+  (L.comp (LinearMap.fst ℂ V V)).ker
+
+def missingModeMap (L : V →ₗ[ℂ] W) :
+    closedVerticalSpace L →ₗ[ℂ] LinearMap.range L where
+  toFun z := ⟨L z.1.2, ⟨z.1.2, rfl⟩⟩
+  map_add' z w := by apply Subtype.ext; exact L.map_add _ _
+  map_smul' c z := by apply Subtype.ext; exact L.map_smul c _
+
+theorem missingModeMap_surjective (L : V →ₗ[ℂ] W) :
+    Function.Surjective (missingModeMap L) := by
+  rintro ⟨w, v, rfl⟩
+  refine ⟨⟨(0, v), ?_⟩, rfl⟩
+  change L 0 = 0
+  exact L.map_zero
+
+theorem missingModeMap_zero_iff (L : V →ₗ[ℂ] W)
+    (z : closedVerticalSpace L) : missingModeMap L z = 0 ↔ L z.1.2 = 0 := by
+  constructor
+  · intro h
+    exact congrArg Subtype.val h
+  · intro h
+    apply Subtype.ext
+    exact h
+
+theorem closed_vertical_pure_iff_zero_missing (L : V →ₗ[ℂ] W)
+    (z : closedVerticalSpace L) :
+    (∃ a b : V, L a = 0 ∧ L b = 0 ∧
+      z.1.1 = a+b ∧ z.1.2 = Complex.I • (a-b)) ↔ missingModeMap L z = 0 := by
+  have hu : L z.1.1 = 0 := z.property
+  rw [pure_split_iff_missing_mode_zero L z.1.1 z.1.2 hu,
+    missingModeMap_zero_iff]
+
+theorem missingMode_kernel_pure_split (L : V →ₗ[ℂ] W)
+    (z : closedVerticalSpace L) :
+    z ∈ (missingModeMap L).ker ↔
+      ∃ a b : V, L a = 0 ∧ L b = 0 ∧
+        z.1.1 = a+b ∧ z.1.2 = Complex.I • (a-b) := by
+  exact (closed_vertical_pure_iff_zero_missing L z).symm
+
+theorem missingMode_nonzero_witness (L : V →ₗ[ℂ] W)
+    (w : LinearMap.range L) (hw : w ≠ 0) :
+    ∃ z : closedVerticalSpace L, missingModeMap L z = w ∧
+      ¬ ∃ a b : V, L a = 0 ∧ L b = 0 ∧
+        z.1.1 = a+b ∧ z.1.2 = Complex.I • (a-b) := by
+  obtain ⟨z, hz⟩ := missingModeMap_surjective L w
+  refine ⟨z, hz, ?_⟩
+  intro hpure
+  apply hw
+  rw [← hz]
+  exact (closed_vertical_pure_iff_zero_missing L z).mp hpure
+
+#print axioms missingModeMap_surjective
+#print axioms missingMode_kernel_pure_split
+end MissingModeExactSequence
+
 /-! ## Universal relation factorization for base-coupled quotient folds
 
 For geometry, C sends a vertical handle to its actual Chern class. A
@@ -555,5 +617,79 @@ theorem boundary_solution_difference_nullhomologous
 #print axioms fold_cycle_image_iff
 #print axioms boundary_combination_return
 end ProjectiveFoldTransfer
+
+/-! ## Divisorial source extraction and the ample-boundary test
+
+The hand proof constructs rational Hodge lifts using a polarized kernel
+complement, and in codimension two constructs genuine boundary line bundles.
+These algebraic drafts retain every supplied comparison and denominator.
+No arbitrary Hodge-to-Chow surjection is postulated.
+-/
+section DivisorialBoundaryReturn
+variable {B V W NX NY : Type*}
+  [AddCommGroup B] [Module ℚ B] [AddCommGroup V] [Module ℚ V]
+  [AddCommGroup W] [Module ℚ W]
+  [AddCommGroup NX] [Module ℚ NX] [AddCommGroup NY] [Module ℚ NY]
+
+/-- A commuting rational type correction retains the exact target class.
+The hand polarization construction, rather than an arbitrary complex type
+projection, supplies such correction data when it is used geometrically. -/
+theorem corrected_boundary_lift (G : B →ₗ[ℚ] V)
+    (sourceCorrection : B →ₗ[ℚ] B) (targetCorrection : V →ₗ[ℚ] V)
+    (hcommute : G.comp sourceCorrection = targetCorrection.comp G)
+    (b : B) (a : V) (hb : G b = a) (ha : targetCorrection a = a) :
+    G (sourceCorrection b) = a := by
+  have h := congrArg (fun F : B →ₗ[ℚ] V => F b) hcommute
+  simpa only [LinearMap.comp_apply, hb, ha] using h
+
+theorem boundary_lifts_differ_by_kernel (G : B →ₗ[ℚ] V) (b c : B) :
+    G b = G c ↔ b-c ∈ G.ker := by
+  change G b = G c ↔ G (b-c) = 0
+  rw [map_sub, sub_eq_zero]
+
+theorem restriction_unchanged_by_boundary (G : B →ₗ[ℚ] V)
+    (restrict : V →ₗ[ℚ] W) (hzero : restrict.comp G = 0)
+    (a : V) (b : B) : restrict (a-G b) = restrict a := by
+  have h := congrArg (fun F : B →ₗ[ℚ] W => F b) hzero
+  have hb : restrict (G b) = 0 := by simpa using h
+  rw [map_sub, hb, sub_zero]
+
+/-- Integral boundary line bundles may represent N times the lifted input;
+the genuine generic multisection degree contributes its separate factor d. -/
+theorem denominator_cleared_boundary_return
+    (clX : NX →ₗ[ℚ] V) (clY : NY →ₗ[ℚ] W)
+    (pull : V →ₗ[ℚ] W) (tr : W →ₗ[ℚ] V) (cycleTr : NY →ₗ[ℚ] NX)
+    (d N : ℚ) (hd : d ≠ 0) (hN : N ≠ 0)
+    (htr : ∀ a, tr (pull a) = d • a)
+    (hcompare : ∀ z, clX (cycleTr z) = tr (clY z))
+    (a : V) (boundaryCycle : NY) (hboundary : clY boundaryCycle = N • pull a) :
+    clX ((N*d)⁻¹ • cycleTr boundaryCycle) = a := by
+  calc
+    clX ((N*d)⁻¹ • cycleTr boundaryCycle) =
+        (N*d)⁻¹ • (N • (d • a)) := by
+      rw [map_smul, hcompare, hboundary, map_smul, htr]
+    _ = ((N*d)⁻¹ * (N*d)) • a := by rw [smul_smul N d a, smul_smul]
+    _ = a := by rw [inv_mul_cancel₀ (mul_ne_zero hN hd), one_smul]
+
+/-- The geometric hand theorem proves ker(restrict)=range(L) for a smooth
+ample boundary. A nonzero primitive readout then survives that actual open. -/
+theorem ample_primitive_survives_restriction (L : B →ₗ[ℚ] V)
+    (restrict : V →ₗ[ℚ] W) (primitive : V →ₗ[ℚ] V)
+    (hkernel : restrict.ker = LinearMap.range L)
+    (hprimitive : primitive.comp L = 0)
+    (a : V) (ha : primitive a ≠ 0) : restrict a ≠ 0 := by
+  intro hzero
+  have hm : a ∈ LinearMap.range L := by
+    rw [← hkernel]
+    exact hzero
+  obtain ⟨b, hb⟩ := hm
+  apply ha
+  rw [← hb]
+  have h := congrArg (fun F : B →ₗ[ℚ] V => F b) hprimitive
+  simpa using h
+
+#print axioms denominator_cleared_boundary_return
+#print axioms ample_primitive_survives_restriction
+end DivisorialBoundaryReturn
 
 end GSTCausalFoldDefect

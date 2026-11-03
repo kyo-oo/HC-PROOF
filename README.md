@@ -1,5 +1,18 @@
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
+## Curvature exact sequence and divisorial subconstruction — 2026-11-03
+
+[Completed construction and exact scope](research/records/2026-11-03-gst-curvature-divisorial-subconstruction-completion.md):
+the established central-fold curvature theorem now has an explicit
+missing-mode surjection and pure kernel in the custom module. Actual SNC
+divisor complements admit exact rational Hodge lifts; in codimension two,
+boundary line bundles give the complete original-X cycle return. The direct
+smooth ample-boundary attempt removes exactly the Lefschetz-multiple sector;
+an actual resolved singular quadric boundary returns its primitive ruling
+difference. Ten uncompiled theorem drafts and 41 Python/Wolfram assertions
+support the update. Universal construction of a source for an arbitrary
+primitive input remains unresolved; compilation stays with the owner.
+
 ## Curvature proof and higher realization test — 2026-11-03
 
 [Proof audit and new construction results](research/records/2026-11-03-gst-curvature-realization-return-audit.md):

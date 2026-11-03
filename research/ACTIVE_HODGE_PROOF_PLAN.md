@@ -1,5 +1,18 @@
 # GST Hodge — Locked Execution Contract
 
+**Curvature exact sequence and divisorial completion from `e40e328` (2026-11-03):**
+[Explicit missing-mode sequence and original-X boundary-line return](records/2026-11-03-gst-curvature-divisorial-subconstruction-completion.md).
+The stated curvature theorem is established at hand-proof level. Its full
+surjection and pure kernel are now explicit in the custom Lean module.
+The ordinary divisorial continuation is completed in codimension two for
+actual nullifying algebraic opens: rational polarized Hodge lifts construct
+boundary line bundles and the actual original-X cycle. Higher p retains its
+explicit lower-degree source input. The direct arbitrary-X smooth ample
+open attempt kills exactly the Lefschetz image and leaves a nonzero primitive
+residual; a resolved singular quadric boundary demonstrates an actual primitive
+return beyond that restricted recipe. Ten uncompiled theorem drafts and
+41 shared exact Python/Wolfram assertions; the universal source is unresolved.
+
 **Curvature proof audit and higher realization test from `6c78f4d` (2026-11-03):**
 [General projective return, nullifier obstruction and actual boundary cycle](records/2026-11-03-gst-curvature-realization-return-audit.md).
 The central-fold curvature theorem remains established at its stated scope.
