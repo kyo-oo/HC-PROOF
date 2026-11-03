@@ -11,6 +11,7 @@ on:
       - 'GSTCausalFoldDefect.lean'
       - 'GSTVariableFoldIntegrability.lean'
       - 'GSTGraphV2GeneralSpaceRealization.lean'
+      - 'GSTCMFiniteGeometricDegreeDescent.lean'
       - 'GSTSpatialFoldResearch.lean'
       - 'GSTLawStackRound51.lean'
       - 'GSTGradedWorldAlgebra.lean'
@@ -58,7 +59,7 @@ jobs:
         run: |
           set -uo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          TARGETS="GSTFoldPeriodDescent GSTCausalPairingGraphs GSTFoldRotation GSTFoldPolarization GSTCausalFoldDefect GSTVariableFoldIntegrability GSTGraphV2GeneralSpaceRealization GSTLawStackRound51 GSTGradedWorldAlgebra GSTGraphV2UnboundedHigherCausality GSTSpectralBoundaryDefect GSTSpatialFoldResearch waves.GSTNCohomologyV3"
+          TARGETS="GSTFoldPeriodDescent GSTCausalPairingGraphs GSTFoldRotation GSTFoldPolarization GSTCausalFoldDefect GSTVariableFoldIntegrability GSTGraphV2GeneralSpaceRealization GSTLawStackRound51 GSTGradedWorldAlgebra GSTGraphV2UnboundedHigherCausality GSTSpectralBoundaryDefect GSTCMFiniteGeometricDegreeDescent GSTSpatialFoldResearch waves.GSTNCohomologyV3"
           : > spatial-fold-research.log
           : > spatial-fold-research.summary
           FAILED=0
@@ -80,7 +81,7 @@ jobs:
             grep -nE 'error:' spatial-fold-research.log | tail -n 200 || true
             exit 1
           fi
-          echo "LEAN GREEN: all 13 spatial-fold research modules kernel-verified, zero sorry"
+          echo "LEAN GREEN: all 14 spatial-fold research modules kernel-verified, zero sorry"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

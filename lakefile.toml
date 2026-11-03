@@ -674,7 +674,10 @@ roots = [
   "GSTOpenAISourceCorrectionUpgrade",
 ]
 
-# Owner-requested spatial-fold research. Compilation is left to the owner.
+# Owner-requested spatial-fold research. Compilation ownership taken by the
+# campaign (Round 52): every importable module of the series is registered so
+# cross-imports resolve - GSTCMFiniteGeometricDegreeDescent is imported by
+# GSTSpatialFoldResearch and must be a root for lake to build its olean.
 [[lean_lib]]
 name = "GSTSpatialFoldUpgrade"
 roots = [
@@ -685,6 +688,7 @@ roots = [
   "GSTCausalFoldDefect",
   "GSTVariableFoldIntegrability",
   "GSTGraphV2GeneralSpaceRealization",
+  "GSTCMFiniteGeometricDegreeDescent",
   "GSTSpatialFoldResearch",
   "GSTLawStackRound51",
   "GSTAllDegreeCurvatureMemory",
