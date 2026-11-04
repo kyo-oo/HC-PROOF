@@ -28,9 +28,14 @@ kernel-verified by the module's own CI lane
 the committed lakefile untouched) on the pinned toolchain
 `leanprover/lean4:v4.33.0-rc2` with Mathlib
 `51e6992efd06126df61a496bebf8f49482a4e129`. Zero `sorry`, zero axiom
-declarations, zero `native_decide`. The kernel-verification receipt
-(run id and commit) is bound by the follow-up commit on green, per the
-ledger-110 discipline. The geometric identification of the tower or of
+declarations, zero `native_decide`. THE KERNEL-VERIFICATION RECEIPT
+(bound per the ledger-110 discipline): GitHub Actions run
+41903454010 @ `2cba622` — "Build completed successfully (8699 jobs)",
+zero error lines, zero sorryAx in the artifact log, and all twenty-five
+theorem axiom receipts on exactly the three standard Mathlib axioms
+(`propext`, `Classical.choice`, `Quot.sound`) — the artifact parsed and
+verified record by record. GREEN ON THE FIRST RUN: no repair round was
+needed. The geometric identification of the tower or of
 the fold stack with actual cohomology stays hand-level; no original-X
 algebraic-source existence is claimed, assumed, or concluded.
 
