@@ -100,6 +100,7 @@ theorem towerDifferential_apply (T : JetTower V) (x y z : V) :
       (T.base x, T.base y + T.jet x, T.base z + T.second x + T.jet y) := by
   simp [towerDifferential, LinearMap.prod_apply, LinearMap.comp_apply,
     LinearMap.add_apply, LinearMap.fst_apply, LinearMap.snd_apply]
+  abel
 
 theorem base_square_apply (T : JetTower V) (x : V) :
     T.base (T.base x) = 0 := by
