@@ -1,11 +1,17 @@
 name: GST Deep Chain Cache Warmer
 on:
+  push:
+    branches:
+      - research/gpt6-native-point-primitive-span-20261017
+    paths:
+      - '.github/warm-slice.txt'
+      - '.github/workflows/gst-deep-chain-cache-warmer.yml'
   workflow_dispatch:
     inputs:
       slice:
         description: 'Union-closure slice to warm (1-6), or all'
         required: true
-        default: '1'
+        default: 'all'
 permissions:
   contents: read
 concurrency:
@@ -32,11 +38,23 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lake exe cache get
+      - name: Resolve the requested slice
+        id: slice
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            S='${{ inputs.slice }}'
+          else
+            S=$(tr -d '[:space:]' < .github/warm-slice.txt)
+          fi
+          echo "slice=$S" >> "$GITHUB_OUTPUT"
+          echo "resolved slice: $S"
       - name: Restore accumulated deep-chain cache
         uses: actions/cache/restore@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-warmer-s${{ inputs.slice }}-${{ github.run_number }}
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-warmer-s${{ steps.slice.outputs.slice }}-${{ github.run_number }}
           restore-keys: |
             hc-lean-incremental-${{ runner.os }}-
       - name: Warm the requested union-closure slice
@@ -44,7 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          SLICE='${{ inputs.slice }}'
+          SLICE='${{ steps.slice.outputs.slice }}'
           python3 - "$SLICE" <<'PY' > warm-slice-targets.txt
           import importlib.util, sys
           from pathlib import Path
@@ -85,10 +103,10 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-warmer-s${{ inputs.slice }}-${{ github.run_number }}
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-warmer-s${{ steps.slice.outputs.slice }}-${{ github.run_number }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: gst-deep-chain-warmer-s${{ inputs.slice }}-${{ github.run_number }}-log
+          name: gst-deep-chain-warmer-s${{ steps.slice.outputs.slice }}-${{ github.run_number }}-log
           path: warmer.log
           if-no-files-found: warn
