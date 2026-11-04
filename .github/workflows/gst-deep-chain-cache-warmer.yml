@@ -64,18 +64,20 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           SLICE='${{ steps.slice.outputs.slice }}'
           python3 - "$SLICE" <<'PY' > warm-slice-targets.txt
-          import importlib.util, sys
+          import contextlib, importlib.util, io, sys
           from pathlib import Path
           slice_id = sys.argv[1]
           spec = importlib.util.spec_from_file_location("roots", "scripts/gst_lean_dependency_roots.py")
           roots = importlib.util.module_from_spec(spec); spec.loader.exec_module(roots)
-          order = roots.generate(
-              "WarmUnion",
-              ["GSTClassicalHodgeGlobalSheetSaturation",
-               "GSTClassicalHodgeGSTDegreeCertifiedSource",
-               "GSTClassicalHodgeGeometricKrylovMomentDeterminant"],
-              Path("."))
-          print(f"union closure size: {len(order)}", file=sys.stderr)
+          buf = io.StringIO()
+          with contextlib.redirect_stdout(buf):
+              order = roots.generate(
+                  "WarmUnion",
+                  ["GSTClassicalHodgeGlobalSheetSaturation",
+                   "GSTClassicalHodgeGSTDegreeCertifiedSource",
+                   "GSTClassicalHodgeGeometricKrylovMomentDeterminant"],
+                  Path("."))
+          print(f"union closure size: {len(order)} (generate log: {buf.getvalue().strip()})", file=sys.stderr)
           if slice_id == "all":
               print("WarmUnion")
               sys.exit(0)
