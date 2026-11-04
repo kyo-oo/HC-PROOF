@@ -47,8 +47,15 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           python3 scripts/gst_lean_dependency_roots.py GSTNativeAlgebraicSheetRealization GSTClassicalHodgeGlobalSheetSaturation GSTClassicalHodgeGSTDegreeCertifiedSource
-          if lake build GSTNativeAlgebraicSheetRealization > native-algebraic-sheet.log 2>&1; then
+          set +e
+          timeout 3300 lake build GSTNativeAlgebraicSheetRealization > native-algebraic-sheet.log 2>&1
+          RC=$?
+          set -e
+          if [ "$RC" -eq 0 ]; then
             echo "LEAN PASSED: actual original-X native Chow address-image and degree-certified point seed bridge"
+          elif [ "$RC" -eq 124 ]; then
+            echo "SLICE WINDOW EXHAUSTED (55 min of deep-chain building banked by the always-save step; modules built this attempt: $(grep -c 'Built ' native-algebraic-sheet.log || true)) — re-dispatch to resume from the banked cache"
+            exit 1
           else
             grep -nE 'error:|sorryAx|✖' native-algebraic-sheet.log | tail -n 130 || true
             tail -n 90 native-algebraic-sheet.log
@@ -60,7 +67,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-native-sheet
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-native-sheet-${{ github.run_id }}
       - name: Upload proof log
         if: always()
         uses: actions/upload-artifact@v4
