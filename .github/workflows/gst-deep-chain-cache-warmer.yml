@@ -20,7 +20,7 @@ concurrency:
 jobs:
   warm:
     runs-on: ubuntu-24.04
-    timeout-minutes: 50
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v5
       - name: Restore pinned Lean
