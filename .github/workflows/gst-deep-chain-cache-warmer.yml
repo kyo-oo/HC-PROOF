@@ -81,12 +81,16 @@ jobs:
           if slice_id == "all":
               print("WarmUnion")
               sys.exit(0)
-          k = int(slice_id)
-          N = 6
-          per = (len(order) + N - 1) // N
-          chunk = order[(k - 1) * per: k * per]
+          if "-" in slice_id:
+              lo, hi = (int(t) for t in slice_id.split("-"))
+              chunk = order[lo - 1: hi]
+          else:
+              k = int(slice_id)
+              N = 6
+              per = (len(order) + N - 1) // N
+              chunk = order[(k - 1) * per: k * per]
           if not chunk:
-              raise SystemExit(f"slice {k} is empty")
+              raise SystemExit(f"slice {slice_id} is empty")
           for m in chunk:
               print(m)
           PY
