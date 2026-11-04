@@ -44,8 +44,15 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           python3 scripts/gst_lean_dependency_roots.py GSTSpectralKrylovMoment GSTClassicalHodgeGeometricKrylovMomentDeterminant
-          if lake build GSTSpectralKrylovMoment > gst-spectral-krylov.log 2>&1; then
+          set +e
+          timeout 3300 lake build GSTSpectralKrylovMoment > gst-spectral-krylov.log 2>&1
+          RC=$?
+          set -e
+          if [ "$RC" -eq 0 ]; then
             echo "LEAN PASSED: actual rational spectral moment determinant and geometry"
+          elif [ "$RC" -eq 124 ]; then
+            echo "SLICE WINDOW EXHAUSTED (55 min of deep-chain building banked by the always-save step; modules built this attempt: $(grep -c 'Built ' gst-spectral-krylov.log || true)) — re-dispatch to resume from the banked cache"
+            exit 1
           else
             grep -nE 'error:|sorryAx|✖' gst-spectral-krylov.log | tail -n 100 || true
             tail -n 90 gst-spectral-krylov.log
@@ -57,7 +64,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-spectral-krylov
+          key: hc-lean-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}-spectral-krylov-${{ github.run_id }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
