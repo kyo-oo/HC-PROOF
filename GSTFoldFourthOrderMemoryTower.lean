@@ -122,6 +122,40 @@ structure JetTower4 (V : Type*) [AddCommGroup V] [Module ℚ V] where
 
 namespace JetTower4
 
+/-- The first projection `p₀` of the fourth-jet space
+`(v, w, x, y, z) ↦ v`. -/
+def jet4p0 : (V × (V × (V × (V × V)))) →ₗ[ℚ] V :=
+  LinearMap.fst ℚ V (V × (V × (V × V)))
+
+/-- The second projection `p₁` of the fourth-jet space:
+`(v, w, x, y, z) ↦ w`. -/
+def jet4p1 : (V × (V × (V × (V × V)))) →ₗ[ℚ] V :=
+  (LinearMap.fst ℚ V (V × (V × V))) ∘ₗ
+    (LinearMap.snd ℚ V (V × (V × (V × V))))
+
+/-- The third projection `p₂` of the fourth-jet space:
+`(v, w, x, y, z) ↦ x`. -/
+def jet4p2 : (V × (V × (V × (V × V)))) →ₗ[ℚ] V :=
+  (LinearMap.fst ℚ V (V × V)) ∘ₗ
+    ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
+      (LinearMap.snd ℚ V (V × (V × (V × V)))))
+
+/-- The fourth projection `p₃` of the fourth-jet space:
+`(v, w, x, y, z) ↦ y`. -/
+def jet4p3 : (V × (V × (V × (V × V)))) →ₗ[ℚ] V :=
+  (LinearMap.fst ℚ V V) ∘ₗ
+    ((LinearMap.snd ℚ V (V × V)) ∘ₗ
+      ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
+        (LinearMap.snd ℚ V (V × (V × (V × V))))))
+
+/-- The fifth projection `p₄` of the fourth-jet space:
+`(v, w, x, y, z) ↦ z`. -/
+def jet4p4 : (V × (V × (V × (V × V)))) →ₗ[ℚ] V :=
+  (LinearMap.snd ℚ V V) ∘ₗ
+    ((LinearMap.snd ℚ V (V × V)) ∘ₗ
+      ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
+        (LinearMap.snd ℚ V (V × (V × (V × V))))))
+
 /-- The tower differential on fourth jets: `(v, w, x, y, z) ↦ (dv,
 dw + φv, dx + χv + φw, dy + ψv + χw + φx, dz + ωv + ψw + χx + φy)`,
 i.e. `(d + ε·φ + ε²·χ + ε³·ψ + ε⁴·ω)(v + ε·w + ε²·x + ε³·y + ε⁴·z) =
@@ -129,51 +163,22 @@ dv + ε(dw + φv) + ε²(dx + χv + φw) + ε³(dy + ψv + χw + φx) +
 ε⁴(dz + ωv + ψw + χx + φy)` up to the ε⁵ truncation. -/
 def tower4Differential (T : JetTower4 V) :
     (V × (V × (V × (V × V)))) →ₗ[ℚ] (V × (V × (V × (V × V)))) :=
-  LinearMap.prod
-    (T.base ∘ₗ LinearMap.fst ℚ V (V × (V × (V × V))))
-    (LinearMap.prod
-      (T.base ∘ₗ ((LinearMap.fst ℚ V (V × (V × V))) ∘ₗ
-          (LinearMap.snd ℚ V (V × (V × (V × V)))))
-        + T.jet ∘ₗ LinearMap.fst ℚ V (V × (V × (V × V))))
-      (LinearMap.prod
-        (T.base ∘ₗ ((LinearMap.fst ℚ V (V × V)) ∘ₗ
-            ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
-              (LinearMap.snd ℚ V (V × (V × (V × V))))))
-          + T.second ∘ₗ LinearMap.fst ℚ V (V × (V × (V × V)))
-          + T.jet ∘ₗ ((LinearMap.fst ℚ V (V × (V × V))) ∘ₗ
-              (LinearMap.snd ℚ V (V × (V × (V × V))))))
-        (LinearMap.prod
-          (T.base ∘ₗ ((LinearMap.fst ℚ V V) ∘ₗ
-              ((LinearMap.snd ℚ V (V × V)) ∘ₗ
-                ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
-                  (LinearMap.snd ℚ V (V × (V × (V × V)))))))
-            + T.third ∘ₗ LinearMap.fst ℚ V (V × (V × (V × V)))
-            + T.second ∘ₗ ((LinearMap.fst ℚ V (V × (V × V))) ∘ₗ
-                (LinearMap.snd ℚ V (V × (V × (V × V)))))
-            + T.jet ∘ₗ ((LinearMap.fst ℚ V (V × V)) ∘ₗ
-                ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
-                  (LinearMap.snd ℚ V (V × (V × (V × V)))))))
-          (T.base ∘ₗ ((LinearMap.snd ℚ V V) ∘ₗ
-              ((LinearMap.snd ℚ V (V × V)) ∘ₗ
-                ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
-                  (LinearMap.snd ℚ V (V × (V × (V × V)))))))
-            + T.fourth ∘ₗ LinearMap.fst ℚ V (V × (V × (V × V)))
-            + T.third ∘ₗ ((LinearMap.fst ℚ V (V × (V × V))) ∘ₗ
-                (LinearMap.snd ℚ V (V × (V × (V × V)))))
-            + T.second ∘ₗ ((LinearMap.fst ℚ V (V × V)) ∘ₗ
-                ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
-                  (LinearMap.snd ℚ V (V × (V × (V × V)))))))
-            + T.jet ∘ₗ ((LinearMap.fst ℚ V V) ∘ₗ
-                ((LinearMap.snd ℚ V (V × V)) ∘ₗ
-                  ((LinearMap.snd ℚ V (V × (V × V))) ∘ₗ
-                    (LinearMap.snd ℚ V (V × (V × (V × V))))))))))))
+  LinearMap.prod (T.base ∘ₗ jet4p0)
+    (LinearMap.prod (T.base ∘ₗ jet4p1 + T.jet ∘ₗ jet4p0)
+      (LinearMap.prod (T.base ∘ₗ jet4p2 + T.second ∘ₗ jet4p0
+          + T.jet ∘ₗ jet4p1)
+        (LinearMap.prod (T.base ∘ₗ jet4p3 + T.third ∘ₗ jet4p0
+            + T.second ∘ₗ jet4p1 + T.jet ∘ₗ jet4p2)
+          (T.base ∘ₗ jet4p4 + T.fourth ∘ₗ jet4p0 + T.third ∘ₗ jet4p1
+            + T.second ∘ₗ jet4p2 + T.jet ∘ₗ jet4p3))))
 
 theorem tower4Differential_apply (T : JetTower4 V) (v w x y z : V) :
     T.tower4Differential (v, w, x, y, z)
       = (T.base v, T.base w + T.jet v, T.base x + T.second v + T.jet w,
          T.base y + T.third v + T.second w + T.jet x,
          T.base z + T.fourth v + T.third w + T.second x + T.jet y) := by
-  simp [tower4Differential, LinearMap.prod_apply, LinearMap.comp_apply,
+  simp [tower4Differential, jet4p0, jet4p1, jet4p2, jet4p3, jet4p4,
+    LinearMap.prod_apply, LinearMap.comp_apply,
     LinearMap.add_apply, LinearMap.fst_apply, LinearMap.snd_apply]
 
 theorem base_square_apply (T : JetTower4 V) (x : V) :
@@ -606,14 +611,13 @@ def tower2ToTowerL (T : GSTFoldMemoryTower.JetTower V) : JetTowerL V where
   curv := tower2CurvOf T
   memory := by
     intro k hk
-    rcases k with _ | _ | _
+    interval_cases k
     · simp only [tower2JetOf_zero, tower2CurvOf_zero,
         Finset.sum_range_zero, add_zero]
       exact T.memory
     · simp only [tower2JetOf_zero, tower2JetOf_one, tower2CurvOf_one,
         Finset.sum_range_one, show (1 : ℕ) - 1 - 0 = 0 from rfl]
       exact T.second_memory
-    · exact absurd hk (by omega)
 
 /-- The jet family of Round 54's third-order tower, ℕ-indexed:
 `0 ↦ φ`, `1 ↦ χ`, `2 ↦ ψ`, zero beyond. -/
@@ -662,20 +666,23 @@ def tower3ToTowerL (T : GSTFoldChainThirdOrderMemory.JetTower3 V) :
   curv := tower3CurvOf T
   memory := by
     intro k hk
-    rcases k with _ | _ | _ | _
+    interval_cases k
     · simp only [tower3JetOf_zero, tower3CurvOf_zero,
         Finset.sum_range_zero, add_zero]
       exact T.memory
     · simp only [tower3JetOf_zero, tower3JetOf_one, tower3CurvOf_one,
         Finset.sum_range_one, show (1 : ℕ) - 1 - 0 = 0 from rfl]
       exact T.second_memory
-    · simp only [tower3JetOf_zero, tower3JetOf_one, tower3JetOf_two,
-        tower3CurvOf_two, Finset.sum_range_succ, Finset.sum_range_one,
+    · rw [show Finset.range 2 = Finset.range (1 + 1) from rfl]
+      simp only [Finset.sum_range_succ]
+      rw [show Finset.range 1 = Finset.range (0 + 1) from rfl]
+      simp only [Finset.sum_range_succ, Finset.sum_range_zero,
+        add_zero, zero_add, tower3JetOf_zero, tower3JetOf_one,
+        tower3JetOf_two, tower3CurvOf_two,
         show (2 : ℕ) - 1 - 0 = 1 from rfl,
         show (2 : ℕ) - 1 - 1 = 0 from rfl]
       rw [← T.third_memory]
       abel
-    · exact absurd hk (by omega)
 
 /-- The jet family of the new fourth-order tower, ℕ-indexed:
 `0 ↦ φ`, `1 ↦ χ`, `2 ↦ ψ`, `3 ↦ ω`, zero beyond. -/
@@ -731,28 +738,36 @@ def tower4ToTowerL (T : JetTower4 V) : JetTowerL V where
   curv := tower4CurvOf T
   memory := by
     intro k hk
-    rcases k with _ | _ | _ | _ | _
+    interval_cases k
     · simp only [tower4JetOf_zero, tower4CurvOf_zero,
         Finset.sum_range_zero, add_zero]
       exact T.memory
     · simp only [tower4JetOf_zero, tower4JetOf_one, tower4CurvOf_one,
         Finset.sum_range_one, show (1 : ℕ) - 1 - 0 = 0 from rfl]
       exact T.second_memory
-    · simp only [tower4JetOf_zero, tower4JetOf_one, tower4JetOf_two,
-        tower4CurvOf_two, Finset.sum_range_succ, Finset.sum_range_one,
+    · rw [show Finset.range 2 = Finset.range (1 + 1) from rfl]
+      simp only [Finset.sum_range_succ]
+      rw [show Finset.range 1 = Finset.range (0 + 1) from rfl]
+      simp only [Finset.sum_range_succ, Finset.sum_range_zero,
+        add_zero, zero_add, tower4JetOf_zero, tower4JetOf_one,
+        tower4JetOf_two, tower4CurvOf_two,
         show (2 : ℕ) - 1 - 0 = 1 from rfl,
         show (2 : ℕ) - 1 - 1 = 0 from rfl]
       rw [← T.third_memory]
       abel
-    · simp only [tower4JetOf_zero, tower4JetOf_one, tower4JetOf_two,
-        tower4JetOf_three, tower4CurvOf_three, Finset.sum_range_succ,
-        Finset.sum_range_one,
+    · rw [show Finset.range 3 = Finset.range (2 + 1) from rfl]
+      simp only [Finset.sum_range_succ]
+      rw [show Finset.range 2 = Finset.range (1 + 1) from rfl]
+      simp only [Finset.sum_range_succ]
+      rw [show Finset.range 1 = Finset.range (0 + 1) from rfl]
+      simp only [Finset.sum_range_succ, Finset.sum_range_zero,
+        add_zero, zero_add, tower4JetOf_zero, tower4JetOf_one,
+        tower4JetOf_two, tower4JetOf_three, tower4CurvOf_three,
         show (3 : ℕ) - 1 - 0 = 2 from rfl,
         show (3 : ℕ) - 1 - 1 = 1 from rfl,
         show (3 : ℕ) - 1 - 2 = 0 from rfl]
       rw [← T.fourth_memory]
       abel
-    · exact absurd hk (by omega)
 
 /-- **Round 52's `JetFamily` is the order-1 tower.** The first-jet
 family's memory law is the `k = 0` instance of the arbitrary-order
@@ -766,10 +781,9 @@ def familyToTowerL (F : GSTAllDegreeCurvatureMemory.JetFamily V) :
   curv := fun _ => F.curvature
   memory := by
     intro k hk
-    rcases k with _ | _
+    interval_cases k
     · simp only [Finset.sum_range_zero, add_zero]
       exact F.memory
-    · exact absurd hk (by omega)
 
 namespace JetTower4
 
@@ -784,13 +798,12 @@ theorem flat_head_of_flat_tower4 (T : JetTower4 V)
     T.base.comp T.jet + T.jet.comp T.base = 0 := by
   have hflat : (tower4ToTowerL T).IsFlat := by
     intro k hk
-    rcases k with _ | _ | _ | _ | _
+    interval_cases k
     · exact h1
     · exact h2
     · exact h3
     · exact h4
-    · exact absurd hk (by omega)
-  exact JetTowerL.flat_first (tower4ToTowerL T) hflat (by decide)
+  exact JetTowerL.flat_first (tower4ToTowerL T) hflat (Nat.succ_pos 3)
 
 end JetTower4
 
