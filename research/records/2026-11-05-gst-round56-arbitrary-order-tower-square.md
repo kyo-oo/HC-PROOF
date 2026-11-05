@@ -90,11 +90,19 @@ finite ℚ-linear-map sum identities), kernel-verified by the module's
 own CI lane (`gst-fold-tower-square.yml`, runtime lib registration —
 the committed lakefile untouched) on the pinned toolchain
 `leanprover/lean4:v4.33.0-rc2` with Mathlib. Zero `sorry`, zero axiom
-declarations, zero `native_decide`. The kernel-verification receipt
-will be bound to this record in the receipt-binding commit once the
-module's CI lane lands (the ledger-110 discipline: no receipt is
-claimed before the artifact exists; this record references only
-artifacts that exist at write time). The geometric identification of
+declarations, zero `native_decide`. THE KERNEL-VERIFICATION RECEIPT
+(bound per the ledger-110 discipline): GitHub Actions run
+42045006581 @ 5efafcdc — the lane GREEN, zero error lines, zero
+sorryAx in the run's own artifact log, every theorem axiom receipt on
+exactly the three standard Mathlib axioms (propext, Classical.choice,
+Quot.sound); green after two repair rounds, both diagnosed from the
+runs' own artifacts (the first run's ten dot-notation resolution
+failures closed by moving the square-law block into the structure's
+own namespace; the second run's four elaboration defects closed at
+5efafcdc: the instantiated computation-rule chain landing every
+expansion on term-identity, the concentrated-jet extraction's explicit
+level argument, and the fully qualified truncation return type healing
+the cascaded `intro` failure). The geometric identification of
 the tower with actual cohomology stays hand-level; no original-X
 algebraic-source existence is claimed, assumed, or concluded. The
 campaign's terminal state is the operator's Q2 verdict (Round 55's
