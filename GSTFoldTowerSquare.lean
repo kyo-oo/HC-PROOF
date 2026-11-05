@@ -104,6 +104,14 @@ theorem sum_range_sub_succ {M : Type*} [AddCommMonoid M] {n p : ℕ} (hp : p < n
   have hn : n - p = (n - 1 - p) + 1 := by omega
   rw [hn, Finset.sum_range_succ]
 
+end GSTFoldTowerSquare
+
+open GSTFoldTowerSquare
+
+namespace GSTFoldFourthOrderMemoryTower.JetTowerL
+
+variable {V : Type*} [AddCommGroup V] [Module ℚ V]
+
 /-! ## The pointwise arbitrary-order memory law -/
 
 /-- **The memory law, pointwise.** The arbitrary-order law of Round 55
@@ -297,6 +305,12 @@ theorem square_zero_iff_flat (T : JetTowerL V) :
   · intro hflat u j hj
     exact flat_tower_square T hflat u hj
 
+end GSTFoldFourthOrderMemoryTower.JetTowerL
+
+namespace GSTFoldTowerSquare
+
+variable {V : Type*} [AddCommGroup V] [Module ℚ V]
+
 /-! ## The infinite memory tower -/
 
 /-- **The infinite memory tower.** The complete formal family
@@ -390,13 +404,13 @@ end GSTFoldTowerSquare
 
 #print axioms GSTFoldTowerSquare.sum_triangle_succ
 #print axioms GSTFoldTowerSquare.sum_range_sub_succ
-#print axioms GSTFoldTowerSquare.memory_apply
-#print axioms GSTFoldTowerSquare.jetLDifferential_apply
-#print axioms GSTFoldTowerSquare.jetLDifferential_square_apply
-#print axioms GSTFoldTowerSquare.jetLDifferential_square_zero
-#print axioms GSTFoldTowerSquare.flat_tower_square
-#print axioms GSTFoldTowerSquare.curvature_of_square_zero
-#print axioms GSTFoldTowerSquare.square_zero_iff_flat
+#print axioms GSTFoldFourthOrderMemoryTower.JetTowerL.memory_apply
+#print axioms GSTFoldFourthOrderMemoryTower.JetTowerL.jetLDifferential_apply
+#print axioms GSTFoldFourthOrderMemoryTower.JetTowerL.jetLDifferential_square_apply
+#print axioms GSTFoldFourthOrderMemoryTower.JetTowerL.jetLDifferential_square_zero
+#print axioms GSTFoldFourthOrderMemoryTower.JetTowerL.flat_tower_square
+#print axioms GSTFoldFourthOrderMemoryTower.JetTowerL.curvature_of_square_zero
+#print axioms GSTFoldFourthOrderMemoryTower.JetTowerL.square_zero_iff_flat
 #print axioms GSTFoldTowerSquare.JetTowerInf.toTowerL
 #print axioms GSTFoldTowerSquare.JetTowerInf.flat_of_flat_inf
 #print axioms GSTFoldTowerSquare.JetTowerInf.flat_head_inf
