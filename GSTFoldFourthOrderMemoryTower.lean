@@ -673,10 +673,7 @@ def tower3ToTowerL (T : GSTFoldChainThirdOrderMemory.JetTower3 V) :
     · simp only [tower3JetOf_zero, tower3JetOf_one, tower3CurvOf_one,
         Finset.sum_range_one, show (1 : ℕ) - 1 - 0 = 0 from rfl]
       exact T.second_memory
-    · rw [show Finset.range 2 = Finset.range (1 + 1) from rfl]
-      simp only [Finset.sum_range_succ]
-      rw [show Finset.range 1 = Finset.range (0 + 1) from rfl]
-      simp only [Finset.sum_range_succ, Finset.sum_range_zero,
+    · simp only [Finset.sum_range_succ, Finset.sum_range_zero,
         add_zero, zero_add, tower3JetOf_zero, tower3JetOf_one,
         tower3JetOf_two, tower3CurvOf_two,
         show (2 : ℕ) - 1 - 0 = 1 from rfl,
@@ -745,22 +742,14 @@ def tower4ToTowerL (T : JetTower4 V) : JetTowerL V where
     · simp only [tower4JetOf_zero, tower4JetOf_one, tower4CurvOf_one,
         Finset.sum_range_one, show (1 : ℕ) - 1 - 0 = 0 from rfl]
       exact T.second_memory
-    · rw [show Finset.range 2 = Finset.range (1 + 1) from rfl]
-      simp only [Finset.sum_range_succ]
-      rw [show Finset.range 1 = Finset.range (0 + 1) from rfl]
-      simp only [Finset.sum_range_succ, Finset.sum_range_zero,
+    · simp only [Finset.sum_range_succ, Finset.sum_range_zero,
         add_zero, zero_add, tower4JetOf_zero, tower4JetOf_one,
         tower4JetOf_two, tower4CurvOf_two,
         show (2 : ℕ) - 1 - 0 = 1 from rfl,
         show (2 : ℕ) - 1 - 1 = 0 from rfl]
       rw [← T.third_memory]
       abel
-    · rw [show Finset.range 3 = Finset.range (2 + 1) from rfl]
-      simp only [Finset.sum_range_succ]
-      rw [show Finset.range 2 = Finset.range (1 + 1) from rfl]
-      simp only [Finset.sum_range_succ]
-      rw [show Finset.range 1 = Finset.range (0 + 1) from rfl]
-      simp only [Finset.sum_range_succ, Finset.sum_range_zero,
+    · simp only [Finset.sum_range_succ, Finset.sum_range_zero,
         add_zero, zero_add, tower4JetOf_zero, tower4JetOf_one,
         tower4JetOf_two, tower4JetOf_three, tower4CurvOf_three,
         show (3 : ℕ) - 1 - 0 = 2 from rfl,
@@ -798,6 +787,7 @@ theorem flat_head_of_flat_tower4 (T : JetTower4 V)
     T.base.comp T.jet + T.jet.comp T.base = 0 := by
   have hflat : (tower4ToTowerL T).IsFlat := by
     intro k hk
+    have hk' : k < 4 := hk
     interval_cases k
     · exact h1
     · exact h2
