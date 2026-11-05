@@ -194,10 +194,24 @@ theorem jetLDifferential_square_apply (T : JetTowerL V) (u : ℕ → V)
         + ∑ i ∈ Finset.range j, T.jet i (T.base (u (j - 1 - i)))
         + ∑ i ∈ Finset.range j, ∑ i' ∈ Finset.range (j - 1 - i),
             T.jet i (T.jet i' (u (j - 1 - i - 1 - i'))) := by
-    rw [jetLDifferential_apply, jetLDifferential_apply, map_add, map_sum]
-    rw [jetLDifferential_apply]
-    simp only [map_add, map_sum]
-    rw [Finset.sum_add_distrib]
+    have h1 := jetLDifferential_apply T (T.jetLDifferential u) j
+    have h2 := jetLDifferential_apply T u j
+    have h3 : ∀ i ∈ Finset.range j, (T.jetLDifferential u) (j - 1 - i)
+        = T.base (u (j - 1 - i))
+          + ∑ i' ∈ Finset.range (j - 1 - i), T.jet i' (u (j - 1 - i - 1 - i')) :=
+      fun i _ => jetLDifferential_apply T u (j - 1 - i)
+    have hsum : ∑ i ∈ Finset.range j, T.jet i ((T.jetLDifferential u) (j - 1 - i))
+        = ∑ i ∈ Finset.range j, T.jet i (T.base (u (j - 1 - i)))
+          + ∑ i ∈ Finset.range j, ∑ i' ∈ Finset.range (j - 1 - i),
+              T.jet i (T.jet i' (u (j - 1 - i - 1 - i'))) := by
+      have hexp : ∀ i ∈ Finset.range j, T.jet i ((T.jetLDifferential u) (j - 1 - i))
+          = T.jet i (T.base (u (j - 1 - i)))
+            + ∑ i' ∈ Finset.range (j - 1 - i),
+                T.jet i (T.jet i' (u (j - 1 - i - 1 - i'))) := by
+        intro i hi
+        rw [h3 i hi, map_add, map_sum]
+      rw [Finset.sum_congr rfl hexp, Finset.sum_add_distrib]
+    rw [h1, h2, map_add, map_sum, hsum]
     abel
   have hbb : T.base (T.base (u j)) = 0 := by
     rw [← LinearMap.comp_apply, T.base_square, LinearMap.zero_apply]
@@ -269,7 +283,7 @@ theorem curvature_of_square_zero (T : JetTowerL V)
     T.curv m x = 0 := by
   have hlevel : T.jetLDifferential
       (T.jetLDifferential (fun t => if t = 0 then x else 0)) (m + 1) = 0 :=
-    h (fun t => if t = 0 then x else 0) (by omega)
+    h (fun t => if t = 0 then x else 0) (m + 1) (by omega)
   rw [jetLDifferential_square_apply (T := T)
     (u := fun t => if t = 0 then x else 0) (j := m + 1)
     (by omega : m + 1 ≤ T.order)] at hlevel
@@ -341,7 +355,8 @@ def IsFlat (T : JetTowerInf V) : Prop := ∀ k : ℕ, T.curv k = 0
 /-- **The truncation.** Every infinite tower is an arbitrary-order tower
 at every finite order: the memory laws below the order are instances
 of the unbounded law. -/
-def toTowerL (T : JetTowerInf V) (n : ℕ) : JetTowerL V where
+def toTowerL (T : JetTowerInf V) (n : ℕ) :
+    GSTFoldFourthOrderMemoryTower.JetTowerL V where
   base := T.base
   base_square := T.base_square
   order := n
