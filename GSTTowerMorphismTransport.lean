@@ -46,6 +46,8 @@ namespace GSTFoldTowerSquare.JetTowerInf
 
 variable {V : Type*} [AddCommGroup V] [Module ℚ V]
 variable {W : Type*} [AddCommGroup W] [Module ℚ W]
+variable {T : JetTowerInf V}
+variable {T' : JetTowerInf W}
 
 /-! ## Face 1 — the tower morphism and the transports -/
 
