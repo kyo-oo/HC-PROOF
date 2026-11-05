@@ -327,9 +327,7 @@ carriers. -/
 theorem carrierTower_differential (T : JetTowerInf V) :
     (carrierTower T).jetInfDifferential
       = T.jetInfDifferential.comp T.jetInfDifferential := by
-  ext u
-  funext j
-  rw [LinearMap.comp_apply]
+  ext u j
   exact jetInfDifferential_carrier_apply T u j
 
 /-- **THE FOURTH-ORDER LADDER.** The fourth iterate of the infinite
@@ -357,7 +355,8 @@ theorem jetInfDifferential_fourth_order (T : JetTowerInf V) (u : ℕ → V) (j :
     intro m _
     show (∑ i ∈ Finset.range m, (T.curv i).comp (T.curv (m - 1 - i))) (u (j - 1 - m))
       = ∑ i ∈ Finset.range m, T.curv i (T.curv (m - 1 - i) (u (j - 1 - m)))
-    rw [LinearMap.sum_apply, LinearMap.comp_apply]
+    rw [LinearMap.sum_apply]
+    rfl
   rw [h4, Finset.sum_congr rfl hinner, Finset.sum_congr rfl hunf]
   have htri2 := sum_triangle_succ
     (fun r i => T.curv r (T.curv (i - 1 - r) (u (j - 1 - i)))) j
