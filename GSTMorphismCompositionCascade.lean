@@ -85,7 +85,8 @@ theorem map_cycles (f : TowerMorphism T T') (u : ℕ → V) (h : u ∈ cycles T)
   intro j
   rw [← jetMap_differential f u j]
   show f.map (T.jetInfDifferential u j) = 0
-  rw [mem_cycles.mp h j, map_zero]
+  rw [mem_cycles] at h
+  rw [h j, map_zero]
 
 /-- **THE BOUNDARIES TRANSFER.** A morphism carries boundaries to
 boundaries: the D-exact jets map to D'-exact jets — the boundaries of
