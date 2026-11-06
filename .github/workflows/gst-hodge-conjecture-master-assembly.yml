@@ -25,7 +25,7 @@ concurrency:
 jobs:
   lean:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v5
       - name: Restore Lean installation
@@ -62,23 +62,30 @@ jobs:
           # Rounds 52-60 modules included) as a runtime lib; the committed
           # lakefile stays untouched (the campaign's established pattern).
           python3 scripts/gst_lean_dependency_roots.py HodgeConjectureMasterLib HodgeConjecture
-          # The convergence window: 80 minutes of in-step build.  The
-          # observed runner-service kills land anywhere from ~96 minutes of
-          # total run time upward (the first assembly attempt died at
-          # 2h28m with the 150-minute window still 110 seconds from its
-          # graceful exit — the kill won the race and NOTHING was banked).
-          # An 80-minute window plus ~10 minutes of setup and save keeps
-          # the whole run under the observed kill floor, so the graceful
-          # timeout (exit 124) fires FIRST, the always-save step runs, and
-          # every completed module lands in the lane-stable bank.  The
-          # closure's hard tail (the 55M-heartbeat Krylov/Hankel monster)
-          # is attempted inside the window; if it does not complete, the
-          # next dispatch replays the bank and attacks it again.
-          if timeout 4800 lake build HodgeConjecture > hodge-conjecture-master-assembly.log 2>&1; then
+          # The convergence window: 110 minutes of in-step build.  The
+          # first assembly attempt (run 42115229560 @ 3ccf684) died at
+          # 2h28m to the external runner-service kill with the 150-minute
+          # window still 110 seconds from its graceful exit — the kill
+          # won the race and NOTHING was banked; the 80-minute window of
+          # runs 42191007114 and 42201884131 then banked the whole corpus
+          # (82 modules, [9037/9041]) but left the closure's single hard
+          # tail — the 55M-heartbeat Krylov/Hankel monster — interrupted
+          # mid-elaboration twice: the replay tax (~25 minutes) left only
+          # ~55 minutes of grind inside an 80-minute window, and the
+          # monster needs more than that in one uninterrupted stretch.
+          # The 110-minute window holds the total (~125 minutes with
+          # setup and save) under the observed kill floor of the current
+          # runner generation (the recent kills landed at 134-172
+          # minutes; both 80-minute runs banked cleanly at 84-85), so
+          # the graceful timeout still fires first, the always-save
+          # still lands, and the monster gets its ~85-minute stretch.
+          # Once the monster banks, a final dispatch (80 minutes would
+          # do: replay + R60 + the master root) closes the lane GREEN.
+          if timeout 6600 lake build HodgeConjecture > hodge-conjecture-master-assembly.log 2>&1; then
             echo "PASS HodgeConjecture master assembly"
           else
             status=$?
-            echo "BUILD EXIT $status (the 80-minute convergence window) — the lane-stable bank keeps every completed module; the frontier (the Krylov/Hankel monster and the master root) advances on the next dispatch"
+            echo "BUILD EXIT $status (the 110-minute convergence window) — the lane-stable bank keeps every completed module; the frontier (the Krylov/Hankel monster and the master root) advances on the next dispatch"
             grep -nE 'error:' hodge-conjecture-master-assembly.log | tail -n 120 || true
             tail -n 80 hodge-conjecture-master-assembly.log || true
             exit 1
