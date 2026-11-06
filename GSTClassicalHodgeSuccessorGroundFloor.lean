@@ -54,7 +54,7 @@ STATUS: meta-design level, no local Lean (AUTHORITY 002).  COMPARE notes mark
 orientation-sensitive lines for the compiling brother.
 -/
 
-set_option maxHeartbeats 60000000
+set_option maxHeartbeats 4000000
 set_option maxRecDepth 1000000
 
 noncomputable section
@@ -106,6 +106,7 @@ theorem closure_eq_univ_of_coheight_zero
   rw [hxeq]
   exact hη.def
 
+#print axioms closure_eq_univ_of_coheight_zero
 /-! ## §2. Surjectivity and order behavior of the closure inclusion -/
 
 /-- The point-closure inclusion is injective (it is an embedding of the
@@ -117,6 +118,7 @@ theorem pointClosureι_injective
     Function.Injective (pointClosureι V x) :=
   (pointClosureι V x).isEmbedding.injective
 
+#print axioms pointClosureι_injective
 /-- **THE CLOSURE INCLUSION IS SURJECTIVE AT A GROUND POINT.**
 
 When the source is a coheight-zero point of an irreducible carrier, the
@@ -131,6 +133,7 @@ theorem pointClosureι_surjective_of_coheight_zero
     trivial
   exact hrange
 
+#print axioms pointClosureι_surjective_of_coheight_zero
 /-- **ORDER CORRESPONDENCE OF THE CLOSURE INCLUSION.**
 
 The point-closure inclusion preserves and reflects the specialization order:
@@ -163,6 +166,7 @@ theorem pointClosureι_le_iff
       exact hz
     exact (specializationOrder_iff_specializes).2 hz'
 
+#print axioms pointClosureι_le_iff
 /-- **THE CLOSURE INCLUSION IS STRICTLY MONOTONE.** -/
 theorem pointClosureι_strictMono
     (x : V.X) :
@@ -172,6 +176,7 @@ theorem pointClosureι_strictMono
   intro hback
   exact hzw.2 ((pointClosureι_le_iff V x w z).2 hback)
 
+#print axioms pointClosureι_strictMono
 /-- **THE CLOSURE INCLUSION REFLECTS STRICT ORDER.**
 
 Exactly the reflection shape demanded by `LTSeries.comap`. -/
@@ -183,6 +188,7 @@ theorem pointClosureι_reflects_lt
   intro hback
   exact h.2 ((pointClosureι_le_iff V x w z).1 hback)
 
+#print axioms pointClosureι_reflects_lt
 /-! ## §3. Coheight transport at a ground point -/
 
 /-- **AMBIENT AND CLOSURE-SCHEME COHEIGHTS AGREE AT A GROUND SOURCE.**
@@ -233,6 +239,7 @@ theorem coheight_pointClosureι_eq_of_coheight_zero
     calc q.length = (LTSeries.map q (pointClosureι V x) hmono).length := rfl
       _ ≤ Order.coheight (pointClosureι V x y) := hbound
 
+#print axioms coheight_pointClosureι_eq_of_coheight_zero
 /-! ## §4. The ground floor of the coheight additivity -/
 
 /-- **THE GROUND FLOOR OF L1.**
@@ -252,12 +259,14 @@ theorem relativeSuccessorAmbientExact_of_coheight_zero
   push_cast
   rfl
 
+#print axioms relativeSuccessorAmbientExact_of_coheight_zero
 /-- **THE GROUND-FLOOR SLICE OF THE SHEET-SIEGE L1 LAW.** -/
 theorem sheetSiegeCoheightAdditivity_ground_floor
     [IrreducibleSpace V.X] :
     ∀ x : CodimensionPoint V.X 0, RelativeSuccessorAmbientExact V 0 x :=
   fun x => relativeSuccessorAmbientExact_of_coheight_zero V x
 
+#print axioms sheetSiegeCoheightAdditivity_ground_floor
 /-! ## §5. Discharged bottom-weight corollaries
 
 The four downstream consumers of `RelativeSuccessorAmbientExact`, previously
@@ -274,6 +283,7 @@ theorem successorMass_eq_relativeCard_of_ground
   successorMass_eq_relativeCard V 0 x
     (relativeSuccessorAmbientExact_of_coheight_zero V x)
 
+#print axioms successorMass_eq_relativeCard_of_ground
 /-- A nonempty ground-floor successor locus has strictly positive native
 successor mass — no exactness hypothesis. -/
 theorem successorMass_ne_zero_of_nonempty_of_ground
@@ -284,6 +294,7 @@ theorem successorMass_ne_zero_of_nonempty_of_ground
   successorMass_ne_zero_of_nonempty V 0 x
     (relativeSuccessorAmbientExact_of_coheight_zero V x) hNonempty
 
+#print axioms successorMass_ne_zero_of_nonempty_of_ground
 /-- The geometry-built successor of a ground point atom is a nonzero native
 codimension-one cycle whenever the relative cut is nonempty — no exactness
 hypothesis. -/
@@ -295,6 +306,7 @@ theorem successorNativeOperator_point_ne_zero_of_ground
   successorNativeOperator_point_ne_zero V 0 x
     (relativeSuccessorAmbientExact_of_coheight_zero V x) hNonempty
 
+#print axioms successorNativeOperator_point_ne_zero_of_ground
 /-- **GROUND-FLOOR EXACT-STRATUM CROWN.**
 The bundled bottom-weight crown: mass formula, mass positivity, and nonzero
 next-stratum point image — all with the exactness premise discharged by the
