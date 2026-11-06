@@ -25,7 +25,7 @@ concurrency:
 jobs:
   lean:
     runs-on: ubuntu-24.04
-    timeout-minutes: 150
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v5
       - name: Restore Lean installation
@@ -49,10 +49,14 @@ jobs:
           path: .lake/build
           key: hc-lean-incremental-Linux-master-assembly-${{ github.run_id }}
           restore-keys: |
-            hc-lean-incremental-Linux-master-assembly-
-            hc-lean-incremental-Linux-deep-native-sheet-
-            hc-lean-incremental-Linux-deep-spectral-krylov-
             hc-lean-incremental-Linux-
+      # THE UNIFIED BANK: a single generic restore tier. The master and the
+      # deep-chain cache warmer now form one monotone lineage — each lane
+      # restores the most recent bank under the generic prefix (whoever
+      # saved last) and every save is a superset of what was restored, so
+      # the lineage merges regardless of which lane banked the progress.
+      # The deep lanes stay dormant during the endgame (their post-cad8c88
+      # restore tier order is lane-first and would fork the lineage).
       - name: Kernel-verify the complete Hodge Conjecture master assembly
         shell: bash
         run: |
@@ -62,30 +66,27 @@ jobs:
           # Rounds 52-60 modules included) as a runtime lib; the committed
           # lakefile stays untouched (the campaign's established pattern).
           python3 scripts/gst_lean_dependency_roots.py HodgeConjectureMasterLib HodgeConjecture
-          # The convergence window: 110 minutes of in-step build.  The
-          # first assembly attempt (run 42115229560 @ 3ccf684) died at
-          # 2h28m to the external runner-service kill with the 150-minute
-          # window still 110 seconds from its graceful exit — the kill
-          # won the race and NOTHING was banked; the 80-minute window of
-          # runs 42191007114 and 42201884131 then banked the whole corpus
-          # (82 modules, [9037/9041]) but left the closure's single hard
-          # tail — the 55M-heartbeat Krylov/Hankel monster — interrupted
-          # mid-elaboration twice: the replay tax (~25 minutes) left only
-          # ~55 minutes of grind inside an 80-minute window, and the
-          # monster needs more than that in one uninterrupted stretch.
-          # The 110-minute window holds the total (~125 minutes with
-          # setup and save) under the observed kill floor of the current
-          # runner generation (the recent kills landed at 134-172
-          # minutes; both 80-minute runs banked cleanly at 84-85), so
-          # the graceful timeout still fires first, the always-save
-          # still lands, and the monster gets its ~85-minute stretch.
-          # Once the monster banks, a final dispatch (80 minutes would
-          # do: replay + R60 + the master root) closes the lane GREEN.
-          if timeout 6600 lake build HodgeConjecture > hodge-conjecture-master-assembly.log 2>&1; then
+          # The convergence window: 84 minutes of in-step build. The kill
+          # floor drifted down through the day (the observed kills: 115
+          # minutes on this very lane — run 4 lost its whole 110-minute
+          # grind with the always-save SKIPPED), so the window is sized
+          # for a ~96-minute total (setup + window + save), safely under
+          # the floor, and the job-level cap (100 minutes) holds the
+          # graceful path. The remaining frontier is the campaign's
+          # undefeated capstone chain (the 10M/30M/60M/70M/55M-heartbeat
+          # monsters — kernel-bound, not heartbeat-bound: their licenses
+          # never fired, three windows ground on them with zero
+          # completions and zero errors). The master takes the ready
+          # light capstones; the deep-chain cache warmer (its 100-minute
+          # job cap cancellation still banks — the November 4 receipts)
+          # alternates dispatches on the monster chain over the SAME
+          # unified bank. Each completed capstone lands in the bank and
+          # never replays its grind.
+          if timeout 5040 lake build HodgeConjecture > hodge-conjecture-master-assembly.log 2>&1; then
             echo "PASS HodgeConjecture master assembly"
           else
             status=$?
-            echo "BUILD EXIT $status (the 110-minute convergence window) — the lane-stable bank keeps every completed module; the frontier (the Krylov/Hankel monster and the master root) advances on the next dispatch"
+            echo "BUILD EXIT $status (the 84-minute convergence window) — the unified bank keeps every completed module; the frontier (the capstone chain and the master root) advances on the next dispatch (alternate with the deep-chain cache warmer)"
             grep -nE 'error:' hodge-conjecture-master-assembly.log | tail -n 120 || true
             tail -n 80 hodge-conjecture-master-assembly.log || true
             exit 1
