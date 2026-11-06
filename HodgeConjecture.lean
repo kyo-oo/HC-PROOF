@@ -49,7 +49,7 @@ import GSTFoldTowerSquare
 import GSTInfiniteTowerCurvatureCascade
 import GSTCarrierAlgebraFlatComplex
 import GSTTowerMorphismTransport
-import GSMorphismCompositionCascade
+import GSTMorphismCompositionCascade
 
 /-!
 # Hodge Conjecture — Unified Classical GST Landing
