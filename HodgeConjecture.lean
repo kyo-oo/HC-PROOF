@@ -1139,14 +1139,14 @@ theorem jet_family_square_assembled
 the spatial fold channel, a vector is a pure split of two flat
 solutions iff its conjugate twin is flat. -/
 theorem spatial_fold_channel_split_assembled
-    (s t : GSTSpatialFoldResearch.NShape)
+    (s t : GSTNCohomology.NShape)
     (K : Fin s.holes → Fin t.holes → ℚ) (u v : Fin s.holes → ℂ)
-    (hu : GSTSpatialFoldResearch.complexCurvatureLinear s t K u = 0) :
+    (hu : GSTNCohomologyV3.complexCurvatureLinear s t K u = 0) :
     (∃ a b : Fin s.holes → ℂ,
-        GSTSpatialFoldResearch.complexCurvatureLinear s t K a = 0 ∧
-        GSTSpatialFoldResearch.complexCurvatureLinear s t K b = 0 ∧
+        GSTNCohomologyV3.complexCurvatureLinear s t K a = 0 ∧
+        GSTNCohomologyV3.complexCurvatureLinear s t K b = 0 ∧
         u = a + b ∧ v = Complex.I • (a - b)) ↔
-      GSTSpatialFoldResearch.complexCurvatureLinear s t K v = 0 :=
+      GSTNCohomologyV3.complexCurvatureLinear s t K v = 0 :=
   GSTSpatialFoldResearch.central_N_channels_pure_split_iff s t K u v hu
 
 /-- **THE SECOND-ORDER MEMORY TOWER SQUARE (Round 53).**  The tower
