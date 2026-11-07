@@ -9,6 +9,7 @@ on:
       - 'GSTClassicalHodgeCrossCarrier*.lean'
       - 'GSTClassicalHodgeGeometric*.lean'
       - 'GSTClassicalHodgeFinalFrontier.lean'
+      - 'GSTClassicalHodgeDegreeCertifiedFrontier.lean'
       - 'HodgeConjecture.lean'
       - 'lakefile.toml'
       - '.github/workflows/hodge-research-source-lean.yml'
@@ -38,6 +39,7 @@ jobs:
           - GSTClassicalHodgeGeometricKrylovMomentDeterminant
           - HodgeConjecture
           - GSTClassicalHodgeFinalFrontier
+          - GSTClassicalHodgeDegreeCertifiedFrontier
     steps:
       - uses: actions/checkout@v5
       - name: Restore pinned Lean toolchain
@@ -71,7 +73,7 @@ jobs:
           # tower modules are not in the committed registry) so every
           # matrix target resolves; the committed lakefile stays untouched.
           # The FinalFrontier root adds itself on top of the master closure.
-          python3 scripts/gst_lean_dependency_roots.py HodgeResearchLib HodgeConjecture GSTClassicalHodgeFinalFrontier
+          python3 scripts/gst_lean_dependency_roots.py HodgeResearchLib HodgeConjecture GSTClassicalHodgeFinalFrontier GSTClassicalHodgeDegreeCertifiedFrontier
           # THE SEQUENTIAL CAPSTONE MACHINE: one module per job, the jobs
           # strictly ordered by the dependency chain (the ledger and the
           # basis-cycle bridge first, then the ground floor, the trace, the
