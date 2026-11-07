@@ -88,6 +88,7 @@ open GSTClassicalHodgeRelativeSuccessorNonempty
 open GSTClassicalHodgeHeightOneProjectiveRelevance
 open GSTClassicalHodgeLimitlessTowerOrbitCrown
 open GSTClassicalHodgeNativeMassBridgeAudit
+open GSTClassicalHodgeFinalFrontier
 
 variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
@@ -108,7 +109,7 @@ theorem bigradedBettiHodge_of_seed_family_projective_generators
         ProjectiveTwoGenerator (V := V) (H := H) (S q).sourceIndex j) :
     BigradedBettiHodgeStatement V H := by
   intro q alpha halpha
-  exact (S q).hodge_weight (fun j => (R q j).toGeometryFirst) alpha halpha
+  exact (S q).hodge_weight (fun j => (R q j).toGeometryFirst) halpha
 
 /-- The old green frontier manufactures exactly such a seed family through the
 native-mass orbit seed; recorded as the compatibility witness. -/
@@ -131,6 +132,7 @@ theorem bigradedBettiHodge_of_finalFrontier_via_seed_family
 /-! ## The base nonvanishing law converted into a theorem
 -/
 
+open Classical in
 /-- Exact coefficient shape of the canonical codimension-zero presentation. -/
 theorem codimensionZeroPresentation_apply
     (V : SmoothProjectiveComplexScheme)
@@ -138,7 +140,7 @@ theorem codimensionZeroPresentation_apply
     codimensionZeroPresentation V x =
       (if x ∈ codimensionZeroPointFinset V then (1 : ℚ) else 0) := by
   classical
-  simp [codimensionZeroPresentation, Finsupp.finset_sum_apply,
+  simp [codimensionZeroPresentation, Finsupp.finsetSum_apply,
     Finsupp.single_apply, Finset.sum_ite_eq']
 
 /-- Every coefficient of the canonical base presentation is nonnegative. -/
@@ -146,8 +148,12 @@ theorem codimensionZeroPresentation_nonneg
     (V : SmoothProjectiveComplexScheme)
     (x : CodimensionPoint V.X 0) :
     0 ≤ codimensionZeroPresentation V x := by
-  rw [codimensionZeroPresentation_apply]
-  split <;> simp
+  classical
+  by_cases hx : x ∈ codimensionZeroPointFinset V
+  · rw [codimensionZeroPresentation_apply V x, if_pos hx]
+    norm_num
+  · rw [codimensionZeroPresentation_apply V x, if_neg hx]
+    norm_num
 
 /-- A nonempty component locus makes the canonical base presentation nonzero. -/
 theorem codimensionZeroPresentation_ne_zero
@@ -157,7 +163,7 @@ theorem codimensionZeroPresentation_ne_zero
   obtain ⟨x, hx⟩ := hne
   intro h0
   have h1 : codimensionZeroPresentation V x = 1 := by
-    rw [codimensionZeroPresentation_apply, if_pos hx]
+    rw [codimensionZeroPresentation_apply V x, if_pos hx]
   rw [h0] at h1
   simp at h1
 
@@ -251,8 +257,8 @@ theorem hodge_weight_one_of_ground_degree
 conserved mass; the global charge is not needed anywhere. -/
 noncomputable def horizonSpineSeed
     (G : GeometricCycleClassSpine V H)
-    (M : FiniteHorizonNativeMassBridge V H q)
-    (q : Nat) :
+    (q : Nat)
+    (M : FiniteHorizonNativeMassBridge V H q) :
     NativeHodgeOrbitSeed (V := V) (H := H) (p := q) where
   cycle := spineNativeTower G q
   hodge := spineHodgeSeed G q
@@ -270,10 +276,10 @@ theorem bigradedBettiHodge_of_horizon_family_projective_generators
     (R : ∀ q : Nat,
       ∀ j : ClassicalHodgeBasisIndex V H q,
         ProjectiveTwoGenerator (V := V) (H := H)
-          (horizonSpineSeed G (M q) q).sourceIndex j) :
+          (horizonSpineSeed G q (M q)).sourceIndex j) :
     BigradedBettiHodgeStatement V H :=
   bigradedBettiHodge_of_seed_family_projective_generators
-    (fun q => horizonSpineSeed G (M q) q) R
+    (fun q => horizonSpineSeed G q (M q)) R
 
 /-! ## The corrected frontier and its crowns
 -/
@@ -357,7 +363,7 @@ theorem ground_successor_crown_of_live
     relativeCodimensionOneFinset_nonempty V x.1 hlive
   have hcrown := relative_successor_exact_stratum_crown_of_ground (V := V) x hne
   have hcardEq := exactRelativeSuccessorFinset_eq_relative_of_ground V x
-  refine ⟨hcardEq, ?_, hcrown.2.1, hcrown.2.2⟩
+  refine ⟨by rw [hcardEq], ?_, hcrown.2.1, hcrown.2.2⟩
   rw [hcardEq]
   exact Finset.card_pos.mpr hne
 
