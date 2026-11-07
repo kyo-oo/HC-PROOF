@@ -206,36 +206,17 @@ theorem coheight_pointClosureι_eq_of_coheight_zero
     pointClosureι_surjective_of_coheight_zero (V := V) x hx
   have hmono : StrictMono (pointClosureι V x) :=
     pointClosureι_strictMono (V := V) x
-  have hrefl : ∀ ⦃z w : pointClosureScheme V x⦄,
+  have hrefl : ∀ {z w : pointClosureScheme V x},
       pointClosureι V x z < pointClosureι V x w → z < w :=
     pointClosureι_reflects_lt (V := V) x
-  apply le_antisymm
-  · -- Every ambient strict chain from the image has length at most the
-    -- closure-scheme coheight: pull it back with `LTSeries.comap`.
-    refine Order.coheight_le ?_
-    intro p hp
-    have q := LTSeries.comap p (pointClosureι V x) hrefl hsurj
-    have hql : q.length = p.length := rfl
-    have hqh : q.head = y := by
-      have hspec : pointClosureι V x ((hsurj p.head).choose) = p.head :=
-        (hsurj p.head).choose_spec
-      exact pointClosureι_injective (V := V) x (hspec.trans hp)
-    calc p.length = q.length := hql.symm
-      _ ≤ Order.coheight y := by
-          refine Order.length_le_coheight ?_
-          rw [hqh]
-  · -- Every closure-scheme strict chain from `y` has length at most the
-    -- ambient coheight: push it out with `LTSeries.map`.
-    refine Order.coheight_le ?_
-    intro q hq
-    have hphead : (LTSeries.map q (pointClosureι V x) hmono).head
-        = pointClosureι V x y := by
-      rw [LTSeries.head_map, hq]
-    have hbound : (LTSeries.map q (pointClosureι V x) hmono).length
-        ≤ Order.coheight (pointClosureι V x y) :=
-      Order.length_le_coheight (by rw [hphead])
-    calc q.length = (LTSeries.map q (pointClosureι V x) hmono).length := rfl
-      _ ≤ Order.coheight (pointClosureι V x y) := hbound
+  -- The closure inclusion is a surjective strictly monotone order
+  -- reflection; Mathlib's own coheight transport under a strict
+  -- monotone map with a surjective strict-lift witness closes the
+  -- theorem directly (replacing the hand-rolled LTSeries transport).
+  refine (Order.coheight_eq_of_strictMono (pointClosureι V x) hmono ?_ y).symm
+  intro a b hab
+  obtain ⟨a', ha'⟩ := hsurj b
+  exact ⟨a', hrefl (by rw [ha']; exact hab), ha'⟩
 
 #print axioms coheight_pointClosureι_eq_of_coheight_zero
 /-! ## §4. The ground floor of the coheight additivity -/
