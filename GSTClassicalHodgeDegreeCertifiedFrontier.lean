@@ -113,7 +113,7 @@ theorem bigradedBettiHodge_of_seed_family_projective_generators
 
 /-- The old green frontier manufactures exactly such a seed family through the
 native-mass orbit seed; recorded as the compatibility witness. -/
-theorem seed_of_finalFrontier
+noncomputable def seed_of_finalFrontier
     (F : FinalFrontierNativeGeometry (V := V) (H := H))
     (q : Nat) :
     NativeHodgeOrbitSeed (V := V) (H := H) (p := q) :=
@@ -153,7 +153,6 @@ theorem codimensionZeroPresentation_nonneg
   · rw [codimensionZeroPresentation_apply V x, if_pos hx]
     norm_num
   · rw [codimensionZeroPresentation_apply V x, if_neg hx]
-    norm_num
 
 /-- A nonempty component locus makes the canonical base presentation nonzero. -/
 theorem codimensionZeroPresentation_ne_zero
