@@ -272,8 +272,8 @@ theorem hodgeOperator_pow_orbit
         C.hodgeOperator
           ((C.hodgeOperator ^ i) (C.hodgeOrbit j)) =
             C.hodgeOrbit (Nat.succ i + j)
-      rw [ih]
-      rfl
+      rw [ih, Nat.succ_add, Nat.succ_eq_add_one]
+      rw [RealizedCorrespondenceKrylovCertificate.hodgeOrbit.eq_2]
 
 #print axioms hodgeOperator_pow_orbit
 /-- Hankel matrix of actual projective-degree moments of ONE genuinely
@@ -317,7 +317,7 @@ projective-degree positivity proves an algebraic seed is NOT zero, but
 it cannot by itself prove that a higher-dimensional orbit is cyclic.
 
 If a genuine geometric correspondence acts on the projective-degree
-functional by a single rational scalar λ, then every scalar moment
+functional by a single rational scalar lam, then every scalar moment
 obeys a geometric progression. Its 2x2 moment minor is ZERO.
 
 The following are proved statements about the ACTUAL existing GST
@@ -330,14 +330,14 @@ when the actual correspondence has degree as a left eigenfunctional. -/
 theorem projectiveDegreeMoment_geometric_progression
     (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
     (C : RealizedCorrespondenceKrylovCertificate V H p)
-    (λ : ℚ)
+    (lam : ℚ)
     (hDegreeEigen :
       ∀ a : ClassicalHodgeFiber V H p,
         projectiveDegreeHodgeTrace D (C.hodgeOperator a) =
-          λ * projectiveDegreeHodgeTrace D a) :
+          lam * projectiveDegreeHodgeTrace D a) :
     ∀ i j : Nat,
       projectiveDegreeHodgeTrace D (C.hodgeOrbit (i + j)) =
-        λ ^ i * projectiveDegreeHodgeTrace D (C.hodgeOrbit j) := by
+        lam ^ i * projectiveDegreeHodgeTrace D (C.hodgeOrbit j) := by
   intro i
   induction i with
   | zero =>
@@ -349,7 +349,7 @@ theorem projectiveDegreeMoment_geometric_progression
       change
         projectiveDegreeHodgeTrace D
             (C.hodgeOperator (C.hodgeOrbit (i + j))) =
-          λ ^ (i + 1) *
+          lam ^ (i + 1) *
             projectiveDegreeHodgeTrace D (C.hodgeOrbit j)
       rw [hDegreeEigen, ih j, pow_succ]
       ring
@@ -362,22 +362,22 @@ at the very first nontrivial Hodge multiplicity. -/
 theorem projectiveDegreeMoment_first_minor_zero_of_degree_eigen
     (D : GSTClassicalHodgeProjectiveDegreeTrace.ProjectiveDegreeTraceSemantics V H)
     (C : RealizedCorrespondenceKrylovCertificate V H p)
-    (λ : ℚ)
+    (lam : ℚ)
     (hDegreeEigen :
       ∀ a : ClassicalHodgeFiber V H p,
         projectiveDegreeHodgeTrace D (C.hodgeOperator a) =
-          λ * projectiveDegreeHodgeTrace D a) :
+          lam * projectiveDegreeHodgeTrace D a) :
     projectiveDegreeHodgeTrace D (C.hodgeOrbit 0) *
         projectiveDegreeHodgeTrace D (C.hodgeOrbit 2) -
       projectiveDegreeHodgeTrace D (C.hodgeOrbit 1) *
         projectiveDegreeHodgeTrace D (C.hodgeOrbit 1) = 0 := by
   have h1 :
       projectiveDegreeHodgeTrace D (C.hodgeOrbit 1) =
-        λ * projectiveDegreeHodgeTrace D (C.hodgeOrbit 0) :=
+        lam * projectiveDegreeHodgeTrace D (C.hodgeOrbit 0) :=
     hDegreeEigen (C.hodgeOrbit 0)
   have h2 :
       projectiveDegreeHodgeTrace D (C.hodgeOrbit 2) =
-        λ * projectiveDegreeHodgeTrace D (C.hodgeOrbit 1) :=
+        lam * projectiveDegreeHodgeTrace D (C.hodgeOrbit 1) :=
     hDegreeEigen (C.hodgeOrbit 1)
   rw [h2, h1]
   ring
