@@ -139,7 +139,7 @@ theorem trace_positive_of_effective_presentation
   have hxm : x ∈ φ.support := Finsupp.mem_support_iff.mpr hx
   have hxp : 0 < φ x := lt_of_le_of_ne (hcoeff x) hx.symm
   change 0 < ∑ y ∈ φ.support, φ y * D.pointDegree q y
-  apply Finset.sum_pos
+  apply Finset.sum_pos'
   · intro y hy
     exact mul_nonneg (hcoeff y) (le_of_lt (D.pointDegree_pos q y))
   · exact ⟨x, hxm, mul_pos hxp (D.pointDegree_pos q x)⟩
@@ -255,8 +255,6 @@ theorem trace_successor_positive_of_one_exact
   · intro y hy
     by_cases hExact : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1
     · rw [dif_pos hExact]
-      exact le_of_lt (D.pointDegree_pos (p + 1)
-        (⟨ambientSuccessorPoint V x.1 y, hExact⟩ : CodimensionPoint V.X (p + 1)))
     · rw [dif_neg hExact]
       simp
   · refine ⟨y0, hy0Mem, ?_⟩
@@ -294,7 +292,7 @@ theorem separator_successor_cycleClass_ne_zero
 /-- Projective degree upgrades the separator successor directly to the
 nonzero algebraic Hodge seed consumed by the synchronized limitless orbit
 machine. -/
-theorem separator_successor_nativeHodgeSeed
+def separator_successor_nativeHodgeSeed
     (G : GeometricCycleClassSpine V H)
     (D : ProjectiveDegreeTraceSemantics V H)
     (p : Nat)
@@ -377,8 +375,8 @@ theorem trace_successor_positive_of_ground
     relativeHeightOneSeparatorSuccessor_mem_finset V x.1 hlive
   have hexact :
       Order.coheight (ambientSuccessorPoint V x.1 y) = 0 + 1 :=
-    (GSTClassicalHodgeSuccessorGroundFloor.
-      relativeSuccessorAmbientExact_of_coheight_zero V x) y hmem
+    (GSTClassicalHodgeSuccessorGroundFloor.relativeSuccessorAmbientExact_of_coheight_zero
+      (V := V) x) y hmem
   exact D.trace_successor_positive_of_one_exact 0 x y hmem hexact
 
 #print axioms trace_successor_positive_of_ground
