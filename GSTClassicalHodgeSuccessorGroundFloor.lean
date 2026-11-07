@@ -54,7 +54,7 @@ STATUS: meta-design level, no local Lean (AUTHORITY 002).  COMPARE notes mark
 orientation-sensitive lines for the compiling brother.
 -/
 
-set_option maxHeartbeats 4000000
+set_option maxHeartbeats 60000000
 set_option maxRecDepth 1000000
 
 noncomputable section
@@ -73,8 +73,6 @@ open GSTClassicalHodgePrincipalCutSuccessorOperator
 open GSTClassicalHodgeRelativeSuccessorExactStratum
 open GSTClassicalHodgeProperCutCodimensionOne
 open GSTClassicalHodgeNativeCycleCosmicShadow
-open GSTClassicalHodgeLimitlessSpinePropagation
-open GSTClassicalHodgeLimitlessTowerOrbitCrown
 
 attribute [local instance] specializationOrder
 
@@ -129,7 +127,7 @@ theorem pointClosureι_surjective_of_coheight_zero
     Function.Surjective (pointClosureι V x) := by
   intro w
   have hrange : w ∈ Set.range (pointClosureι V x) := by
-    rw [range_pointClosureι, closure_eq_univ_of_coheight_zero V x hx]
+    rw [range_pointClosureι, closure_eq_univ_of_coheight_zero (V := V) x hx]
     trivial
   exact hrange
 
@@ -172,9 +170,9 @@ theorem pointClosureι_strictMono
     (x : V.X) :
     StrictMono (pointClosureι V x) := by
   intro z w hzw
-  refine ⟨(pointClosureι_le_iff V x z w).1 hzw.1, ?_⟩
+  refine ⟨(pointClosureι_le_iff (V := V) x z w).1 hzw.1, ?_⟩
   intro hback
-  exact hzw.2 ((pointClosureι_le_iff V x w z).2 hback)
+  exact hzw.2 ((pointClosureι_le_iff (V := V) x w z).2 hback)
 
 #print axioms pointClosureι_strictMono
 /-- **THE CLOSURE INCLUSION REFLECTS STRICT ORDER.**
@@ -184,9 +182,9 @@ theorem pointClosureι_reflects_lt
     (x : V.X) {z w : pointClosureScheme V x}
     (h : pointClosureι V x z < pointClosureι V x w) :
     z < w := by
-  refine ⟨(pointClosureι_le_iff V x z w).2 h.1, ?_⟩
+  refine ⟨(pointClosureι_le_iff (V := V) x z w).2 h.1, ?_⟩
   intro hback
-  exact h.2 ((pointClosureι_le_iff V x w z).1 hback)
+  exact h.2 ((pointClosureι_le_iff (V := V) x w z).1 hback)
 
 #print axioms pointClosureι_reflects_lt
 /-! ## §3. Coheight transport at a ground point -/
@@ -205,12 +203,12 @@ theorem coheight_pointClosureι_eq_of_coheight_zero
     (y : pointClosureScheme V x) :
     Order.coheight (pointClosureι V x y) = Order.coheight y := by
   have hsurj : Function.Surjective (pointClosureι V x) :=
-    pointClosureι_surjective_of_coheight_zero V x hx
+    pointClosureι_surjective_of_coheight_zero (V := V) x hx
   have hmono : StrictMono (pointClosureι V x) :=
-    pointClosureι_strictMono V x
+    pointClosureι_strictMono (V := V) x
   have hrefl : ∀ ⦃z w : pointClosureScheme V x⦄,
       pointClosureι V x z < pointClosureι V x w → z < w :=
-    pointClosureι_reflects_lt V x
+    pointClosureι_reflects_lt (V := V) x
   apply le_antisymm
   · -- Every ambient strict chain from the image has length at most the
     -- closure-scheme coheight: pull it back with `LTSeries.comap`.
@@ -221,7 +219,7 @@ theorem coheight_pointClosureι_eq_of_coheight_zero
     have hqh : q.head = y := by
       have hspec : pointClosureι V x ((hsurj p.head).choose) = p.head :=
         (hsurj p.head).choose_spec
-      exact pointClosureι_injective V x (hspec.trans hp)
+      exact pointClosureι_injective (V := V) x (hspec.trans hp)
     calc p.length = q.length := hql.symm
       _ ≤ Order.coheight y := by
           refine Order.length_le_coheight ?_
@@ -255,7 +253,7 @@ theorem relativeSuccessorAmbientExact_of_coheight_zero
     RelativeSuccessorAmbientExact V 0 x := by
   intro y _hy
   show Order.coheight (pointClosureι V x.1 y.1) = 0 + 1
-  rw [coheight_pointClosureι_eq_of_coheight_zero V x.1 x.2 y.1, y.2]
+  rw [coheight_pointClosureι_eq_of_coheight_zero (V := V) x.1 x.2 y.1, y.2]
   push_cast
   rfl
 
@@ -264,7 +262,7 @@ theorem relativeSuccessorAmbientExact_of_coheight_zero
 theorem sheetSiegeCoheightAdditivity_ground_floor
     [IrreducibleSpace V.X] :
     ∀ x : CodimensionPoint V.X 0, RelativeSuccessorAmbientExact V 0 x :=
-  fun x => relativeSuccessorAmbientExact_of_coheight_zero V x
+  fun x => relativeSuccessorAmbientExact_of_coheight_zero (V := V) x
 
 #print axioms sheetSiegeCoheightAdditivity_ground_floor
 /-! ## §5. Discharged bottom-weight corollaries
@@ -281,7 +279,7 @@ theorem successorMass_eq_relativeCard_of_ground
     successorMass V 0 x =
       (relativeCodimensionOneFinset V x.1).card :=
   successorMass_eq_relativeCard V 0 x
-    (relativeSuccessorAmbientExact_of_coheight_zero V x)
+    (relativeSuccessorAmbientExact_of_coheight_zero (V := V) x)
 
 #print axioms successorMass_eq_relativeCard_of_ground
 /-- A nonempty ground-floor successor locus has strictly positive native
@@ -292,7 +290,7 @@ theorem successorMass_ne_zero_of_nonempty_of_ground
     (hNonempty : (relativeCodimensionOneFinset V x.1).Nonempty) :
     successorMass V 0 x ≠ 0 :=
   successorMass_ne_zero_of_nonempty V 0 x
-    (relativeSuccessorAmbientExact_of_coheight_zero V x) hNonempty
+    (relativeSuccessorAmbientExact_of_coheight_zero (V := V) x) hNonempty
 
 #print axioms successorMass_ne_zero_of_nonempty_of_ground
 /-- The geometry-built successor of a ground point atom is a nonzero native
@@ -304,7 +302,7 @@ theorem successorNativeOperator_point_ne_zero_of_ground
     (hNonempty : (relativeCodimensionOneFinset V x.1).Nonempty) :
     successorNativeOperator V 0 (codimensionPointCycle V.X 0 x) ≠ 0 :=
   successorNativeOperator_point_ne_zero V 0 x
-    (relativeSuccessorAmbientExact_of_coheight_zero V x) hNonempty
+    (relativeSuccessorAmbientExact_of_coheight_zero (V := V) x) hNonempty
 
 #print axioms successorNativeOperator_point_ne_zero_of_ground
 /-- **GROUND-FLOOR EXACT-STRATUM CROWN.**
@@ -320,7 +318,7 @@ theorem relative_successor_exact_stratum_crown_of_ground
       ∧ successorNativeOperator V 0
           (codimensionPointCycle V.X 0 x) ≠ 0 :=
   relative_successor_exact_stratum_crown V 0 x
-    (relativeSuccessorAmbientExact_of_coheight_zero V x) hNonempty
+    (relativeSuccessorAmbientExact_of_coheight_zero (V := V) x) hNonempty
 
 #check closure_eq_univ_of_coheight_zero
 #check pointClosureι_surjective_of_coheight_zero

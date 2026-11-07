@@ -38,7 +38,7 @@ the preceding reduction is therefore impossible for separator successors once
 this standard projective-degree semantics is materialized.
 -/
 
-set_option maxHeartbeats 70000000
+set_option maxHeartbeats 4000000
 set_option maxRecDepth 1000000
 
 noncomputable section
@@ -102,6 +102,7 @@ theorem trace_realize_presentation
   intro x a
   rw [D.trace_point_cycleClass]
 
+#print axioms trace_realize_presentation
 /-! ## Effective native cycles — exact positive Betti detection
 
 The existing projective degree semantics evaluates the class of EVERY finite
@@ -143,6 +144,7 @@ theorem trace_positive_of_effective_presentation
     exact mul_nonneg (hcoeff y) (le_of_lt (D.pointDegree_pos q y))
   · exact ⟨x, hxm, mul_pos hxp (D.pointDegree_pos q x)⟩
 
+#print axioms trace_positive_of_effective_presentation
 /-- **NO EFFECTIVE NATIVE CYCLE CAN BE BETTI-INVISIBLE.**
 Nonzero effective codimension-q native cycles cannot be killed by the
 actual cycle-class map when its projective degree semantics is realized.
@@ -161,6 +163,7 @@ theorem cycleClass_ne_zero_of_effective_presentation
   rw [hzero, map_zero] at hpos
   exact lt_irrefl 0 hpos
 
+#print axioms cycleClass_ne_zero_of_effective_presentation
 /-- The restriction of genuine cycle class to the positive cone has
 trivial zero fiber.  This is NOT an injectivity claim on arbitrary signed
 cycles: rational equivalences can cancel positive and negative classes. -/
@@ -176,6 +179,7 @@ theorem effective_presentation_eq_zero_of_cycleClass_zero
   exact (D.cycleClass_ne_zero_of_effective_presentation
     q φ hcoeff hnz) hzero
 
+#print axioms effective_presentation_eq_zero_of_cycleClass_zero
 /-- Trace contribution of one relative successor candidate: exact survivors
 contribute their strictly positive projective degree, while wrong ambient
 strata contribute zero. -/
@@ -199,6 +203,7 @@ theorem trace_successorAtomPresentation
   · rw [successorAtomPresentation_eq_zero V p x y hy]
     simp [hy]
 
+#print axioms trace_successorAtomPresentation
 /-- Exact formula for the Betti trace of the whole geometry-built successor of
 one source point atom. -/
 theorem trace_successorNativeOperator_point
@@ -229,6 +234,7 @@ theorem trace_successorNativeOperator_point
   · rw [successorAtomPresentation_eq_zero V p x y hy]
     simp [hy]
 
+#print axioms trace_successorNativeOperator_point
 /-- One exact relative successor forces strictly positive projective Betti
 trace for the complete successor cycle because every surviving contribution is
 positive and no negative coefficient occurs. -/
@@ -258,6 +264,7 @@ theorem trace_successor_positive_of_one_exact
     exact D.pointDegree_pos (p + 1)
       (⟨ambientSuccessorPoint V x.1 y0, hy0Exact⟩ : CodimensionPoint V.X (p + 1))
 
+#print axioms trace_successor_positive_of_one_exact
 /-- **PROJECTIVE DEGREE EXCLUDES SEPARATOR HOMOLOGY ESCAPE.**
 The canonical separator successor cannot have zero genuine Betti cycle class
 once its single relative height-one successor is known to have the exact
@@ -283,6 +290,7 @@ theorem separator_successor_cycleClass_ne_zero
   rw [hzero, map_zero] at hpos
   exact lt_irrefl 0 hpos
 
+#print axioms separator_successor_cycleClass_ne_zero
 /-- Projective degree upgrades the separator successor directly to the
 nonzero algebraic Hodge seed consumed by the synchronized limitless orbit
 machine. -/
@@ -313,6 +321,7 @@ theorem separator_successor_nativeHodgeSeed
   exact separator_successor_cycleClass_ne_zero D p x hlive hExact
     (by simpa [Z] using hval)
 
+#print axioms separator_successor_nativeHodgeSeed
 /-- Once the two geometry-first GST primitives are available from that source
 sheet, the projective-degree-certified successor closes the entire Hodge
 weight p+1. -/
@@ -335,6 +344,7 @@ theorem hodge_weight_of_separator_successor
       LinearMap.range (H.cycleClass (p + 1)) := by
   exact (separator_successor_nativeHodgeSeed G D p x hlive hExact).hodge_weight R
 
+#print axioms hodge_weight_of_separator_successor
 /-! ## Ground-floor projective geometric realization
 
 The repository's native coheight transport theorem ALREADY establishes the
@@ -371,6 +381,7 @@ theorem trace_successor_positive_of_ground
       relativeSuccessorAmbientExact_of_coheight_zero V x) y hmem
   exact D.trace_successor_positive_of_one_exact 0 x y hmem hexact
 
+#print axioms trace_successor_positive_of_ground
 /-- **GROUND-FLOOR NONVANISHING OF GENUINE BETTI CLASS.**
 For the canonical principal-cut native cycle at weight one, the former
 separate ambient-exactness hypothesis is now discharged internally. -/
@@ -388,6 +399,7 @@ theorem separator_successor_cycleClass_ne_zero_of_ground
   rw [hzero, map_zero] at hpos
   exact lt_irrefl 0 hpos
 
+#print axioms separator_successor_cycleClass_ne_zero_of_ground
 /-- **GROUNDED WEIGHT-ONE HODGE SEED.**
 One actual projective ground-point cut yields an actual algebraic Hodge
 seed at weight one, with no independently supplied exact-stratum

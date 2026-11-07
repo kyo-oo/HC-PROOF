@@ -49,7 +49,7 @@ operator is indispensable.
 NEEDS CI RUN LATER.
 -/
 
-set_option maxHeartbeats 55000000
+set_option maxHeartbeats 4000000
 set_option maxRecDepth 900000
 
 noncomputable section
@@ -146,6 +146,7 @@ theorem native_cycle_of_nonzero_krylov_hankel_determinant
   refine ⟨Z, ?_⟩
   exact hZ.trans (congrArg Subtype.val hreconstruct)
 
+#print axioms native_cycle_of_nonzero_krylov_hankel_determinant
 /-- Universal target at all codimensions using ONE genuine realized
 correspondence, ONE algebraic seed, and ONE rational trace per weight.
 Everything is in HC-PROOF's pre-existing strict correspondence language. -/
@@ -171,6 +172,7 @@ theorem full_hodge_of_universal_Krylov_Hankel_geometry
     C trace hDet ⟨alpha, halpha⟩
 
 
+#print axioms full_hodge_of_universal_Krylov_Hankel_geometry
 /-! ## GST POLARIZED SPECTRAL-MOMENT FACTORIZATION
 
 The old universal Hodge Krylov law asks for a nonzero Hankel
@@ -218,6 +220,7 @@ theorem gstSpectralMoment_det_factor
   rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, Matrix.det_diagonal]
   ring
 
+#print axioms gstSpectralMoment_det_factor
 /-- True positive primitive spectral energy and a nondegenerate
 spectral power matrix FORCE the full Hankel test to pass; no
 uninterpreted determinant hypothesis remains. -/
@@ -236,6 +239,7 @@ theorem gstSpectralMoment_det_nonzero
 #check gstSpectralMoment_det_nonzero
 #print axioms gstSpectralMoment_det_nonzero
 
+#print axioms gstSpectralMoment_det_nonzero
 /-! ## Genuine projective-degree specialization
 
 Use the already developed GSTProjectiveDegreeTraceSemantics, whose
@@ -271,6 +275,7 @@ theorem hodgeOperator_pow_orbit
       rw [ih]
       rfl
 
+#print axioms hodgeOperator_pow_orbit
 /-- Hankel matrix of actual projective-degree moments of ONE genuinely
 realized closed correspondence acting on ONE genuine native cycle. -/
 noncomputable def projectiveDegreeKrylovHankel
@@ -304,6 +309,7 @@ theorem projectiveDegreeKrylovHankel_apply
   rw [hodgeOperator_pow_orbit C i.val j.val]
   rw [C.nativeOrbit_cycleClass]
 
+#print axioms projectiveDegreeKrylovHankel_apply
 /-! ## GST degree-eigenfunctional obstruction
 
 An important distinction in the native correspondence route:
@@ -348,6 +354,7 @@ theorem projectiveDegreeMoment_geometric_progression
       rw [hDegreeEigen, ih j, pow_succ]
       ring
 
+#print axioms projectiveDegreeMoment_geometric_progression
 /-- Even with a nonzero projective-degree source, a correspondence that
 scales that degree cannot yield an invertible 2x2 moment matrix.
 The one-seed, one-degree-functional nonvanishing shortcut is obstructed
@@ -375,6 +382,7 @@ theorem projectiveDegreeMoment_first_minor_zero_of_degree_eigen
   rw [h2, h1]
   ring
 
+#print axioms projectiveDegreeMoment_first_minor_zero_of_degree_eigen
 /-- The determinant of the geometric projective-degree Hankel matrix
 is a sufficient NUMERICAL PROOF CERTIFICATE for every rational (p,p)
 Hodge class to possess an explicitly constructed native algebraic cycle. -/
@@ -389,6 +397,7 @@ theorem native_cycle_of_projective_degree_krylov_det
   native_cycle_of_nonzero_krylov_hankel_determinant
     C (projectiveDegreeHodgeTrace D) hDet alpha
 
+#print axioms native_cycle_of_projective_degree_krylov_det
 /-- Universal Hodge-level target with ONE ordinary projective-degree
 trace, rather than an arbitrarily chosen functional per weight. -/
 def UniversalProjectiveDegreeKrylovNondegeneracy
@@ -418,4 +427,5 @@ theorem full_hodge_of_projective_degree_Krylov_nonvanishing
 #check full_hodge_of_universal_Krylov_Hankel_geometry
 #print axioms full_hodge_of_universal_Krylov_Hankel_geometry
 
+#print axioms full_hodge_of_projective_degree_Krylov_nonvanishing
 end GSTClassicalHodgeGeometricKrylovMomentDeterminant
