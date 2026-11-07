@@ -255,8 +255,9 @@ theorem trace_successor_positive_of_one_exact
   · intro y hy
     by_cases hExact : Order.coheight (ambientSuccessorPoint V x.1 y) = p + 1
     · rw [dif_pos hExact]
+      exact le_of_lt (D.pointDegree_pos (p + 1)
+        (⟨ambientSuccessorPoint V x.1 y, hExact⟩ : CodimensionPoint V.X (p + 1)))
     · rw [dif_neg hExact]
-      simp
   · refine ⟨y0, hy0Mem, ?_⟩
     rw [dif_pos hy0Exact]
     exact D.pointDegree_pos (p + 1)
