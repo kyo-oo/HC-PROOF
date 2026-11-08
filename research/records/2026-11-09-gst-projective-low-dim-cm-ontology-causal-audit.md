@@ -91,6 +91,19 @@ A Hodge realization must satisfy actual smooth algebraic geometry and canonical 
 
 The older `docs/GST_V2_OPERATING_MANUAL.md` stated 'seven coordinates and nothing else' as if it characterized the ontology. It has been **scoped to the original arithmetic realization**, with pointers to the abstract core and this new component construction. The original arithmetic theorems were retained.
 
+
+### Additional audit: recursive world-birth is already stronger than a graph analogy
+
+Full source of `GSTGraphV2SelfExpandingCosmology.lean` (2,484 lines) contains a genuinely important internal interface:
+
+- `NativeGeometryBirth.TwoSourceBirth` carries **actual typed** native source maps and Hodge assembly maps, plus a `decompose` field asserting every target Hodge state is a sum of two source Hodge images. Its `every_newborn_hodge_class_has_native_cycle` theorem proves target cycle completeness **if both source cycle-class maps are surjective**. This is a correct conditional forward-transfer law; it does **not** construct a suitable decomposition on arbitrary X.
+- `NativeGeometryBirth.GeometricCycleBirthRealization` handles **arbitrary arity** and dependent state types across worlds. It includes `assembleNative`, `assembleHodge`, their commuting-square law, and the very strong `allHodgeFromSources` field. `generated_worlds_have_native_cycles` proves arbitrary generated-world completeness from complete root worlds and those assembly hypotheses. The mathematical challenge is to prove `allHodgeFromSources` from genuine geometry, to construct an actual projective/Chow functor for each event, and to demonstrate arbitrary original X arises among the admissible generated worlds. The graph alone does not discharge these obligations.
+- `arbitrary_world_birth_constructs_fresh_native_direction` is an independent, useful **conditional novelty detector**: when a geometric linear functional vanishes on all old native images but does not vanish on a genuinely assembled newborn cycle, that newborn class is not in the old native span. Nonzero detector values must be obtained from actual geometry.
+- `GSTInfiniteWorldClassification.lean` implements a distinct, concrete coherent infinite realization: `WindowTower ≃ (Nat → Fin 3)`, with a homeomorphism. This is genuine infinite stream topology within a specific model, not a proof every GST universe is infinite.
+- `GSTGraphV2CanonicalInfiniteCycle.lean` describes exact repeated cycle/period structure of one historical arithmetic controller; “cycle” here is dynamical periodicity, **not** automatically a Chow algebraic cycle on a projective variety.
+
+**GST research route identified:** use the world-birth algebra as an honest generator of candidate source cycles, but prove the geometric birth/embedding/compatibility independently. Preserve a strict distinction between an **event-generated** world and the **original arbitrary X** on which the canonical Hodge representative is required. This avoids both ontology→algebraicity type leakage and collapsing all birth events into trivial invertible coordinate changes.
+
 ## V. What this changes and what is NOT yet done
 
 **Established mathematical facts independent of GST:** Lefschetz (1,1), hard Lefschetz, rational HC for all smooth projective complex dimensions ≤3, and the validity of genuine algebraic correspondences. These supply non-negotiable test cases for every proposed fold birth.
