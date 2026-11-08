@@ -162,6 +162,68 @@ pair. The gate is a 12-hour clock.
 
 ---
 
+### 3A. NEW EXACT NO-ERASURE LAW (9 November 2026)
+
+The seven axes remain **dimensionless information observations**. The local
+base-3 output digit **alone** does not preserve the whole input, but the
+regenerated carry and output digit **together** do. For physical cell
+`(C,d)∈Fin 4×Fin 3` the original rule is
+
+```
+F(C,d) = ((C + 4*d)/3, (C + 4*d)%3)
+F⁻¹(C',d') = ((d' + 3*C')%4, (d' + 3*C')/4).
+```
+
+The Lean-kernel-verified theorem `GSTGraphV2InformationRecovery.shuffle_five`
+proves `F^5=id` on all 12 cells; the permutation has two length-five orbits
+and fixed cells `(0,0)`, `(3,2)`. A separate theorem proves exact recovery
+of the entire infinite information stream `Nat → Fin 4 × Fin 3`, without a
+cutoff. This is rigorous **information transformation, not destruction**;
+it is not a claim that multiplication of the global energy by four is periodic.
+
+The stronger general-radix law, also Lean-checked in
+`GSTGraphV2GeneralRadixConservation.lean`, is
+
+```
+F_mn(t) = t/n + m*(t%n)
+F_mn(t) + (m*n-1)*(t/n) = m*t,
+therefore F_mn(t) ≡ m*t (mod m*n-1).
+```
+
+At `(m,n)=(4,3)`, this becomes multiplication by 4 modulo 11,
+whose order is 5. No Euclidean or spatial dimension has been assigned.
+
+### 3B. NEW CM FOLD CURVATURE / INFINITE MEMORY OBSERVATION
+
+The existing three-sector arithmetic graph, the existing true CM/NM native
+algebraic-cycle graph and the pre-existing infinite curvature tower are
+connected in `GSTGraphV2CMInfiniteCurvatureBridge.lean`. For any rational
+CM structure `J²=-I`, a fold operator A has even/odd components
+
+```
+E_J(A) = A - J*A*J
+O_J(A) = A + J*A*J
+[J,A] = J*O_J(A).
+```
+
+The Lean-verified even/odd product laws and noncommutative Bianchi identity
+give the exact operator-curvature algebra at every finite memory order.
+For a graph cell potential P, the sum of local CM defects
+`[J,P(F(s))-P(s)]` around a full fivefold information cycle is zero.
+**That does not imply the ordered product of fold transports is trivial.**
+The exact Wolfram packet at
+`research/computations/gst_seven_axis_cm_curvature_holonomy_20261109.wl`
+shows nonzero second-order memory and invertible, nonidentity ordered
+holonomy.
+
+A further connected theorem `GSTGraphV2NativeCurvatureBirth.lean`
+constructs the genuine original-X algebraic-cycle commutator
+`N_A N_B(Z) - N_B N_A(Z)` for actual native correspondence operators.
+It proves the exact corresponding cohomological commutator and a
+source-mixing detector criterion. This is the research route joining
+the non-destructive information dynamics to geometrically generated
+Hodge directions.
+
 ## 4. HOW WAVES PROPAGATE — the certified chain
 
 A **wave** is a packet of digit-two information moving through the graph.
