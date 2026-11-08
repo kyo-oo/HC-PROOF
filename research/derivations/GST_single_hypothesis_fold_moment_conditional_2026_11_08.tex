@@ -183,4 +183,67 @@ canonical Betti push--pull naturality before importing it into
 the kernel-verified Krylov orbit theorem. This positive family
 does NOT prove the universal all-X determinant hypothesis.
 
+
+\section{GST full indexed spatial combinations in every codimension}
+The preceding product-family proof extends from the divisor sector
+to an EXPLICIT native geometric sector at EVERY codimension.
+Let \(X=\prod_{r=1}^{m}E_r\) and \(0\le p\le m\).
+For every subset \(I\subseteq\{1,\ldots,m\}\) with \(|I|=p\),
+let \(D_I=\prod_{r\in I}d_r\in\CH^p(X)_\Q\).
+There are \(n=\binom mp\) such indexed native cycles.
+Their complement cycles \(D_{I^c}\) have codimension \(m-p\).
+Their full rational intersection pairing is EXACTLY
+\[
+\int_X D_I D_{J^c}=\delta_{IJ},
+\quad |I|=|J|=p.
+\]
+Indeed if \(I=J\) every factor occurs exactly once, giving
+one; if \(I\ne J\) then at least one divisor appears twice,
+so the product is zero because \(d_r^2=0\).
+This proves that the \(D_I\) form an independent indexed
+native subspace \(W_p^{\mathrm{native}}\), of rank \(\binom mp\).
+
+Define the actual codimension-\(m\) product correspondence
+\[
+\Gamma_{JI}:=\pi_1^*D_{I^c}\cdot\pi_2^*D_J
+\quad\in\CH^m(X\times X)_\Q.
+\]
+The genuine Chow push--pull formula is
+\[
+(\Gamma_{JI})_*D_K
+=\left(\int_X D_KD_{I^c}\right)D_J
+=\delta_{IK}D_J.
+\]
+Thus the ENTIRE \(\binom mp\times\binom mp\) rational
+matrix-unit algebra is realized in the native codimension-\(p\)
+subspace from one consistent GST family of indexed cycles.
+
+Order the \(p\)-subsets cyclically as
+\(I_0,\ldots,I_{n-1}\), form
+\(\Gamma=\sum_{j=0}^{n-1}\Gamma_{I_{j+1},I_j}\)
+with subscripts modulo \(n\), take seed \(Z_0=D_{I_0}\),
+and detector \(\ell(\beta)=\int_X\beta D_{I_0^c}\).
+Its induced cycle-class action shifts the geometric basis,
+so the full Hankel determinant is
+\[
+\boxed{\det M=(-1)^{(n-1)(n-2)/2}\ne0,
+\qquad n=\binom mp.}
+\]
+The uniform proof is the same permutation-matrix argument.
+The exact Wolfram test checked the complement-intersection
+Gram identity and all Hankel determinants for every pair
+\(1\le m\le6,\ 0\le p\le m\): 27 tested (m,p) combinations,
+zero failures, exact integers.
+
+Scope: this proves the full one-operator GST fold-Hankel
+condition for the explicitly constructed NATIVE divisor-product
+sector \(W_p^{\mathrm{native}}\). To claim the FULL Hodge fiber
+in higher codimension, a separate proof that the full rational
+Hodge space equals this sector is necessary. The construction
+does not use such a hypothesis, and does not silently promote
+a native-span calculation to arbitrary-X Hodge algebraicity.
+The new general indexed source is a useful positive fixture
+for extending GST N-cohomology and fold geometry beyond the
+current self-map/bi-finite correspondence interfaces.
+
 \end{document}
