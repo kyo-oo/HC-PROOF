@@ -244,8 +244,8 @@ theorem cmGraphPotential_second_change (J K : R) :
       ((1 : Fin 4), (1 : Fin 3)) = K := by
   have hstep : shuffle ((1 : Fin 4), (1 : Fin 3)) =
       ((1 : Fin 4), (2 : Fin 3)) := by decide
-  simp [informationChange, hstep, cmGraphPotential, two_nsmul]
-  abel
+  simp [informationChange, hstep, cmGraphPotential, neg_one_smul]
+  noncomm_ring
 
 /-- The second-order noncommutative curvature of the first two
 information fold differences is exactly [J,K], even though the
