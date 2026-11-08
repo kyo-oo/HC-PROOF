@@ -319,8 +319,9 @@ noncomputable def unguarded_generator_demand_vacuous_at_deadWeight
     {q : Nat}
     (hq : rationalHodgeSubspace (H.hodgeBigrading q) = ⊥)
     (i : ClassicalHodgeBasisIndex V H q) :
-    ProjectiveTwoGenerator (V := V) (H := H) (p := q) i i :=
-  (isEmptyElim i).elim
+    ProjectiveTwoGenerator (V := V) (H := H) (p := q) i i := by
+  exfalso
+  exact (classicalHodgeBasisIndex_isEmpty_of_deadWeight hq).elim i
 
 /-! ## Part V — the converted landings under the guarded interface
 -/
@@ -332,9 +333,9 @@ noncomputable def guarded_seed_zero_of_degree
     (G : GeometricCycleClassSpine V H)
     (D : ProjectiveDegreeTraceSemantics V H)
     (hne : (codimensionZeroPointFinset V).Nonempty) :
-    ∀ hq : rationalHodgeSubspace (H.hodgeBigrading 0) ≠ ⊥,
+    ∀ _hq : rationalHodgeSubspace (H.hodgeBigrading 0) ≠ ⊥,
       NativeHodgeOrbitSeed (V := V) (H := H) (p := 0) :=
-  fun _hq => fundamentalClassDegreeSeed G D hne
+  fun _ => fundamentalClassDegreeSeed G D hne
 
 /-- **WEIGHT ONE, GUARDED FORM.**  On an irreducible carrier with a
 projectively live ground point, the green ground-floor discharge
@@ -346,9 +347,9 @@ noncomputable def guarded_seed_one_of_ground
     (x : CodimensionPoint V.X 0)
     (hlive : ProjectivelyLiveSource V.projective.n
       (V.projective.immersion x.1)) :
-    ∀ hq : rationalHodgeSubspace (H.hodgeBigrading 1) ≠ ⊥,
+    ∀ _hq : rationalHodgeSubspace (H.hodgeBigrading 1) ≠ ⊥,
       NativeHodgeOrbitSeed (V := V) (H := H) (p := 1) :=
-  fun _hq => D.separator_successor_nativeHodgeSeed_of_ground G x hlive
+  fun _ => D.separator_successor_nativeHodgeSeed_of_ground G x hlive
 
 #check exists_nonzeroCycleClass_of_nativeHodgeOrbitSeed
 #check nativeHodgeOrbitSeed_forces_liveWeight
