@@ -29,7 +29,16 @@ jobs:
         run: |
           set -euo pipefail
           if [ ! -x "$HOME/.elan/bin/lake" ]; then
-            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+            installed=0
+            for attempt in 1 2 3 4 5; do
+              if curl --retry 3 --retry-all-errors --retry-delay 5 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2; then
+                installed=1
+                break
+              fi
+              echo "elan install attempt $attempt failed; retrying"
+              sleep $((attempt * 10))
+            done
+            test "$installed" -eq 1
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
@@ -39,6 +48,12 @@ jobs:
           roots = ["GSTUniversalResidualSourceBirth"]
           EOF
           lake exe cache get
+      - name: Save Lean toolchain cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
       - name: Restore verified Lean dependency cache
         uses: actions/cache/restore@v4
         with:
