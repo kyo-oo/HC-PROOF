@@ -2,7 +2,7 @@
 
 Source: [OpenAI's mathematics catalogue](https://github.com/openai/math/blob/main/CONTENTS.md), inspected 13 October 2026.
 
-This is a **title-and-source inventory**, not a claim that every manuscript has been validated or machine-checked. The collection was published with uneven formal verification. Specifically, there is no `lean/docs/032.md` upstream at this inspection. Individual claims, and especially Hodge conjecture claims, must be checked independently before they become GST axioms or theorems.
+This is a **title-and-source inventory**, not a claim that every manuscript has been validated or machine-checked. The collection was published with uneven formal verification. **Historical Oct 13 inspection:** the formalization scope file `lean/docs/032.md` was not then available. **Updated Nov 9, 2026:** [the upstream scope document](https://github.com/openai/math/blob/main/lean/docs/032.md) now exists (verified blob `e3d9dc0b863a9a8fecc849f77dcbbe2d194c94ed`); it explicitly scopes the formalized statement to complex **CM abelian varieties**, in every dimension and codimension. This update does not extend the theorem to arbitrary smooth projective complex `X`, nor make CM a direct import of `GSTHodgeSingleHypothesisConditional.lean`. Individual claims, and especially Hodge conjecture claims, must be checked independently before they become GST axioms or theorems.
 
 ## Priority geometric inputs already read at source level
 
