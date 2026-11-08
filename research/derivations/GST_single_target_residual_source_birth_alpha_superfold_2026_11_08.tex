@@ -382,6 +382,51 @@ The graded-world boundary identity
 \]
 is likewise exact but limited to the declared cup-generated boundary family. It does not automatically produce primitive algebraic sources outside that range. The codimension-two resolved-boundary construction is a genuine special return; the higher-codimension source must not be inferred from the divisorial case without an additional all-degree construction.
 
+\subsection*{5.2. The rank-free matrix-unit route: the strongest existing GST conditional theorem}
+
+The repository already contains a sharper algebraic route than a generic appeal to correspondence irreducibility. In \texttt{GSTClassicalHodgeRankFreeArsenalIrreducibility.lean}, the genuine rational Hodge fiber has an unrestricted basis \(e_i\), coordinate functionals \(\lambda_i\), and rank-free matrix units
+\[
+E_{ij}(x)=\lambda_i(x)e_j.
+\]
+They satisfy
+\[
+E_{ij}(e_k)=\delta_{ik}e_j.
+\]
+The module proves the exact irreducibility statement:
+\[
+S\ne0,\qquad E_{ij}(S)\subseteq S\ \text{for all }i,j
+\quad\Longrightarrow\quad S=B_p(X).
+\]
+
+The proof is constructive and finite-support. Choose \(0\ne x\in S\). Some coordinate \(\lambda_i(x)\ne0\). For every basis index \(j\),
+\[
+E_{ij}(x)=\lambda_i(x)e_j\in S.
+\]
+Since the scalar is invertible in \(\mathbb Q\), every \(e_j\in S\), and the basis spans the whole Hodge fiber.
+
+Apply this with \(S=A_p(X)\), the actual cycle-class image. Once a nonzero native seed is available, the one GST law to establish is
+\[
+\boxed{
+\mathsf{NativeMatrixUnitInvariance}_p:
+\quad
+E_{ij}\bigl(A_p(X)\bigr)\subseteq A_p(X)
+\quad\text{for every pair }i,j.
+}
+\tag{MI}
+\]
+The existing theorem \texttt{bigradedBettiHodge\_of\_rankFree\_arsenal} already proves the conditional Hodge conclusion from (MI) and a nonzero seed at every live weight. The nonzero seed is a standard projective input (for an actual ample class, \(h^p\ne0\) in the relevant range); the abstract Stage-2G interface still needs to encode that geometric seed explicitly.
+
+Condition (MI) is the concrete GST route to the dual source-birth law (GST-SB). If the cycle image is the whole Hodge fiber, it is automatically invariant under every endomorphism. Conversely, a nonzero cycle image invariant under all the \(E_{ij}\) is the whole fiber by the rank-free irreducibility theorem. Thus, with the live-weight seed, (MI) is an exact reformulation of the Hodge target.
+
+The important distinction is that \(E_{ij}\) are currently abstract linear endomorphisms defined from a chosen Hodge basis. Their construction does not make them algebraic correspondences. The source-generation task is to materialize their action on native cycles. The existing finite-window arsenal theorem supplies the algebraic pattern (sheet projectors, Lefschetz operations, and Poincare duality); the actual noncommutative native-frame and arbitrary-rank charge-frame modules are attempts to realize those operators by genuine cycle operations. Their finite correspondence-word certificates are sufficient when their determinant is nonzero, but universal nonvanishing is not yet proved.
+
+This yields the most actionable GST target:
+\[
+\text{construct actual native cycle operations realizing the full }E_{ij}
+\text{ action on }A_p(X).
+\]
+The alpha-indexed projector algebra and the N-channel central fold should be used to build these operations. The failed self-map externalization must not be reused as the universal realization theorem; general algebraic correspondences or the alpha-superfold are the appropriate geometric category.
+
 \subsection*{6. What the existing GST constructions do and do not supply}
 
 \begin{enumerate}
