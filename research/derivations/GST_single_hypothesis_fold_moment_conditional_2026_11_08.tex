@@ -1,0 +1,113 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,geometry}
+\geometry{margin=1in}
+\newtheorem{theorem}{Theorem}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CH}{\operatorname{CH}}
+\newcommand{\cl}{\operatorname{cl}}
+\title{GST Hodge: one fold hypothesis and moment-only reconstruction}
+\author{GPT-6 mathematical handoff to GLM}
+\date{8 November 2026}
+\begin{document}
+\maketitle
+\section{Exact target}
+Fix any smooth projective complex variety X, any codimension p, and a prescribed rational Hodge class alpha. Let W be the rational (p,p) Hodge space of X, with dimension n. The desired output is a rational algebraic cycle on the ORIGINAL X with canonical Betti class alpha. The zero Hodge fiber is solved by the zero cycle.
+
+\section{Single GST fold-Hankel hypothesis}
+At each live weight assume there is ONE verified geometric package:
+a genuine native-cycle operator N arising from a GST fold correspondence, a rational Hodge operator T, a genuine codimension-p algebraic seed Z0, and a rational linear fold detector ell. Their cycle-class square must satisfy
+\[
+\cl_X(NZ)=T\cl_X(Z)\quad\text{for all native cycles }Z.
+\]
+Write \(v_0=\cl_X(Z_0)\). The ONE scalar condition is
+\[
+M_{ij}=\ell(T^{i+j}v_0),\qquad 0\le i,j<n,\qquad \boxed{\det M\neq0}.
+\]
+The fold, native operator, canonical comparison, and nondegenerate detector are NOT supplied by the current corpus for all original X; their universal realization is the named unproved hypothesis.
+
+\section{Exact conditional cycle construction}
+\begin{theorem}
+If the above native fold-Hankel package exists for every original X and every live p, the rational Hodge conjecture holds for all such X.
+\end{theorem}
+\begin{proof}
+For each j let \(Z_j=N^jZ_0\) and \(v_j=T^jv_0\).
+Naturality inductively proves \(\cl_X(Z_j)=v_j\).
+Define rational linear maps
+\[
+ C:\Q^n\to W,\quad C(e_j)=v_j,\qquad
+ O:W\to\Q^n,\quad (O\beta)_i=\ell(T^i\beta).
+\]
+By construction \(M=OC\). Since \(\det M\neq0\) and
+both the domain and codomain of C and O have dimension n,
+C and O are isomorphisms. For ANY prescribed class alpha,
+form the target-only moment vector and its coefficients:
+\[
+ b_i(\alpha)=\ell(T^i\alpha),\qquad c(\alpha)=M^{-1}b(\alpha).
+\]
+The EXPLICIT original-X native cycle is
+\[
+ \boxed{Z_\alpha=\sum_{j=0}^{n-1}c_j(\alpha)N^j Z_0.}
+\]
+All coefficients are rational and all summands are actual algebraic
+cycles. Apply O to the class:
+\[
+ O\cl_X(Z_\alpha)=OCM^{-1}b(\alpha)
+ =MM^{-1}O\alpha=O\alpha.
+\]
+Injectivity of O proves \(\cl_X(Z_\alpha)=\alpha\).
+\end{proof}
+
+\section{Wolfram exact computation and limitations}
+For symbolic rational 2-by-2 T, arbitrary seed s, detector ell
+and target alpha, Wolfram simplified
+\[
+ C(OC)^{-1}O\alpha-\alpha=(0,0)^t
+\]
+under nonzero determinant. The rational fixture
+\(T=\left(\begin{smallmatrix}0&1\\1&1\end{smallmatrix}\right)\),
+\(v_0=e_1\), \(\ell=e_1^t\) gave M=identity and
+reconstructed alpha=(7/3,-5/2) exactly.
+These results check the MATRIX IDENTITY, not the existence of a
+geometric correspondence on arbitrary X.
+
+When \(\ell T=\lambda\ell\), one has
+\(M_{ij}=\lambda^{i+j}\ell(v_0)\), rank at most one.
+Thus a pure projective degree eigen-trace cannot give a nonzero
+higher-rank determinant: the GST fold must MIX actual detectors.
+
+\section{Geometric compatibility correction}
+For \(X=E_1\times E_2\) with nonisogenous elliptic curves,
+self-maps act diagonally on the two factor-divisor Hodge directions.
+They cannot realize the off-diagonal matrix units required by the
+old universal ProjectiveTwoGenerator self-map interface.
+However the genuine product correspondence
+\[
+\Gamma=d_2\boxtimes d_2\in\CH^2(X\times X)_\Q
+\]
+sends \(d_1\mapsto d_2\) and \(d_2\mapsto0\), by the
+push-pull intersection formula. The correspondence need not be
+finite over either projection, so it must NOT be silently inserted
+into the existing bi-finite RealizedFiniteClosedCorrespondence type.
+
+\section{Excluded shortcut and exact research obligation}
+Two rational operators
+\(F=\left(\begin{smallmatrix}1&0\\0&0\end{smallmatrix}\right)\)
+and \(G=\left(\begin{smallmatrix}0&1\\0&0\end{smallmatrix}\right)\)
+have scalar common commutant, as Wolfram verified, but preserve
+the proper invariant line \(\Q e_1\). Therefore scalar commutant
+alone does not imply cyclicity absent proved semisimplicity or
+adjoint stability.
+
+The GST sector charges, causal fold commutator and infinite curvature
+tower are established for their specified types and serve as
+compatibility checks. None by itself constructs the new original-X
+native geometric fold package with full Hankel determinant.
+
+The branch already contains the kernel-proved conditional
+cyclic and determinant theorems in
+GSTClassicalHodgeRealizedCorrespondenceKrylovFinale.lean and
+GSTClassicalHodgeGeometricKrylovMomentDeterminant.lean.
+The new moment-only WITNESS FORMULA is a hand-proof extension
+to that implication, not a newly proved universal source mechanism.
+
+\end{document}
