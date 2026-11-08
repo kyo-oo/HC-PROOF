@@ -119,8 +119,8 @@ def worldMap (F : OmniversalGraph.EventHom G G) :
       (by
         intro x y h
         apply Quotient.sound
-        exact ⟨OmniversalGraph.reachable_map G F h.1,
-               OmniversalGraph.reachable_map G F h.2⟩)
+        exact ⟨OmniversalGraph.EventHom.reachable_map G F h.1,
+               OmniversalGraph.EventHom.reachable_map G F h.2⟩)
 
 /-- A GST causal fold cannot reverse the induced component order when
 the fold transports every primitive event. -/
@@ -131,7 +131,7 @@ theorem worldMap_monotone (F : OmniversalGraph.EventHom G G)
   | h x =>
     induction b using Quotient.inductionOn with
     | h y =>
-      exact OmniversalGraph.reachable_map G F hab
+      exact OmniversalGraph.EventHom.reachable_map G F hab
 
 /-- An infinite successor realization, independent of geometry or radix. -/
 def infiniteSuccessorCosmos : OmniversalGraph where
@@ -151,7 +151,7 @@ theorem infiniteSuccessor_reachable (n k : Nat) :
       have step : infiniteSuccessorCosmos.Event (n + k) (n + k + 1) := rfl
       have reach := OmniversalGraph.reachable_trans infiniteSuccessorCosmos ih
         (OmniversalGraph.reachable_of_event infiniteSuccessorCosmos step)
-      simpa [Nat.add_succ, Nat.add_assoc] using reach
+      simpa only [Nat.add_succ, Nat.succ_eq_add_one] using reach
 
 theorem infiniteSuccessor_no_terminal_node (n : Nat) :
     ∃ m : Nat, n < m ∧
@@ -169,8 +169,8 @@ def reversibleTwoStateCosmos : OmniversalGraph where
 theorem reversibleTwoState_mutual :
     MutualReachability reversibleTwoStateCosmos true false := by
   constructor
-  · exact OmniversalGraph.reachable_of_event reversibleTwoStateCosmos (by decide)
-  · exact OmniversalGraph.reachable_of_event reversibleTwoStateCosmos (by decide)
+  · exact OmniversalGraph.reachable_of_event reversibleTwoStateCosmos (by change (true : Bool) ≠ false; decide)
+  · exact OmniversalGraph.reachable_of_event reversibleTwoStateCosmos (by change (false : Bool) ≠ true; decide)
 
 /-- Distinct states can belong to one causal world; this is not a proof of
 an inconsistent proposition such as True = False. -/
