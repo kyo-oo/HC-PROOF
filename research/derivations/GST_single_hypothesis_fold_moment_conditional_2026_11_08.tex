@@ -110,4 +110,77 @@ GSTClassicalHodgeGeometricKrylovMomentDeterminant.lean.
 The new moment-only WITNESS FORMULA is a hand-proof extension
 to that implication, not a newly proved universal source mechanism.
 
+
+\section{Positive all-rank construction on actual original varieties}
+There is a concrete successful geometric family of the single-fold
+Hankel criterion; the calculation is not limited to formal rational
+matrices. Fix any integer \(m\ge1\) and pairwise nonisogenous complex
+elliptic curves \(E_1,\ldots,E_m\). Let
+\[
+ X=\prod_{r=1}^{m}E_r,\qquad
+ d_r=\operatorname{pr}_r^*[\mathrm{point}]\in\CH^1(X)_\Q.
+\]
+The degree-two rational Hodge space equals
+\(\bigoplus_{r=1}^m\Q\,\cl(d_r)\); the nonisogeny assumption
+eliminates cross-factor divisor directions. The intersection rules
+are exact: \(d_r^2=0\) and \(\int_Xd_1\cdots d_m=1\).
+
+For every ordered pair \((j,i)\), construct the actual codimension-m
+correspondence in the original \(X\times X\),
+\[
+ \Gamma_{ji}
+ =\pi_1^*\!\left(\prod_{k\ne i}d_k\right)
+    \cdot\pi_2^*d_j\in\CH^m(X\times X)_\Q.
+\]
+The genuine push--pull action on the divisor classes satisfies
+\[
+(\Gamma_{ji})_*(d_r)
+=\left(\int_Xd_r\prod_{k\ne i}d_k\right)d_j
+=\delta_{ir}d_j.
+\]
+Thus \(\Gamma_{ji}\) is precisely the rational matrix unit
+\(E_{ji}\) on the FULL Hodge fiber in degree two. Now let
+\[
+\Gamma=\Gamma_{2,1}+\Gamma_{3,2}+\cdots+
+\Gamma_{m,m-1}+\Gamma_{1,m},\quad
+Z_0=d_1,\quad
+\ell(\beta)=\int_X\beta\prod_{k\ne1}d_k.
+\]
+The associated operator \(T=\Gamma_*\) rotates the geometric
+divisor basis: \(T(d_i)=d_{i+1}\) for \(i<m\) and
+\(T(d_m)=d_1\). The detector reads the coefficient of \(d_1\).
+Consequently the ENTIRE Hankel matrix has the literal integer form
+\[
+M_{ij}=\begin{cases}1&(i+j)\equiv0\pmod m,\\0&\text{otherwise},
+\end{cases}
+\quad 0\le i,j<m.
+\]
+It is a permutation matrix; row zero fixes coordinate zero and
+the remaining \(m-1\) coordinates are reversed. Therefore the exact
+all-rank determinant is
+\[
+\boxed{\det M=(-1)^{(m-1)(m-2)/2}\ne0.}
+\]
+The single native orbit is \(d_1,d_2,\ldots,d_m\) and the
+moment-only reconstruction supplies every rational divisor
+Hodge class by ACTUAL algebraic cycles on the original product X.
+There is no assumption of Hodge algebraicity in higher codimension.
+
+The Wolfram check enumerated every \(m=1,\ldots,15\);
+for each size the matrix formula, full rank and claimed determinant
+agreed exactly, with integer arithmetic and zero tolerance. The
+proof above is uniform in m and is what establishes the result
+for arbitrary m; finite computation serves only as an independent
+consistency check.
+
+\emph{Crucial representation boundary}: these product
+correspondences are genuine Chow correspondences but not generally
+bi-finite correspondences and not graphs of actual self-maps.
+The existing finite-closed-correspondence Lean interface is not a
+faithful type for this construction. A future scheme-level adapter
+must accept all codimension-m Chow correspondences and prove
+canonical Betti push--pull naturality before importing it into
+the kernel-verified Krylov orbit theorem. This positive family
+does NOT prove the universal all-X determinant hypothesis.
+
 \end{document}
