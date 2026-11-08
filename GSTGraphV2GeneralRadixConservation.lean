@@ -31,7 +31,7 @@ The quotient is retained, not erased. -/
 theorem reshuffle_mass_balance (m n t : Nat)
     (hm : 0 < m) (hn : 0 < n) :
     reshuffleCode m n t + (m*n - 1)*(t/n) = m*t := by
-  have hmn : 1 ≤ m*n := Nat.one_le_mul hm hn
+  have hmn : 1 ≤ m*n := by exact Nat.mul_pos hm hn
   have hprod : (m*n - 1)+1 = m*n := Nat.sub_add_cancel hmn
   unfold reshuffleCode
   calc
@@ -48,9 +48,11 @@ theorem reshuffle_modulus (m n t : Nat)
     reshuffleCode m n t % (m*n - 1) =
       (m*t) % (m*n - 1) := by
   have h := reshuffle_mass_balance m n t hm hn
-  have hmod := congrArg (fun q : Nat => q % (m*n - 1)) h
-  simpa only [Nat.add_mod, Nat.mul_mod, Nat.mod_self, Nat.mul_zero,
-    Nat.zero_mod, Nat.add_zero, Nat.mod_mod] using hmod
+  calc
+    reshuffleCode m n t % (m*n - 1) =
+        (reshuffleCode m n t + (m*n - 1)*(t/n)) % (m*n - 1) := by
+          simp [Nat.add_mod, Nat.mul_mod]
+    _ = (m*t) % (m*n - 1) := by rw [h]
 
 /-- The original x4/base3 GST graph is multiplication by four modulo 11
 at the level of the rearranged information code. -/
