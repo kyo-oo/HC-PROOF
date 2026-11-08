@@ -12,7 +12,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: gst-universal-residual-source-birth-\${{ github.ref }}
+  group: gst-universal-residual-source-birth-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/cache/restore@v4
         with:
           path: ~/.elan
-          key: hc-lean-toolchain-\${{ runner.os }}-\${{ hashFiles('lean-toolchain') }}
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
       - name: Install pinned Lean and Mathlib
         shell: bash
         run: |
@@ -33,25 +33,25 @@ jobs:
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
-          lake exe cache get
-      - name: Restore verified Lean dependency cache
-        uses: actions/cache/restore@v4
-        with:
-          path: .lake/build
-          key: gst-residual-source-birth-\${{ runner.os }}-\${{ github.sha }}
-          restore-keys: |
-            gst-residual-source-birth-\${{ runner.os }}-
-            hc-lean-incremental-\${{ runner.os }}-
-      - name: Kernel-verify the single residual source-birth conditional theorem
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
           cat >> lakefile.toml <<'EOF'
           [[lean_lib]]
           name = "GSTResidualSourceBirth"
           roots = ["GSTUniversalResidualSourceBirth"]
           EOF
+          lake exe cache get
+      - name: Restore verified Lean dependency cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: gst-residual-source-birth-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            gst-residual-source-birth-${{ runner.os }}-
+            hc-lean-incremental-${{ runner.os }}-
+      - name: Kernel-verify the single residual source-birth conditional theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
           if lake build GSTResidualSourceBirth > gst-residual-source-birth.log 2>&1; then
             echo "LEAN PASSED: residual source-birth iff cycle-class surjectivity; conditional Stage-2G Hodge theorem"
           else
@@ -66,7 +66,7 @@ jobs:
         if: always()
         with:
           path: .lake/build
-          key: gst-residual-source-birth-\${{ runner.os }}-\${{ github.sha }}
+          key: gst-residual-source-birth-${{ runner.os }}-${{ github.sha }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
