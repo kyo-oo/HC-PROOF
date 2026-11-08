@@ -4,12 +4,12 @@
 **Repository:** kyo-oo/HC-PROOF  
 **Work branch:** research/gpt6-native-point-primitive-span-20261017  
 **Scope:** new mathematical reduction, adversarial source-geometry audit, and GLM handoff. This document neither asserts unconditional HC nor makes unverified Lean claims.  
-**Companion native Lean module:** \`GSTHodgeFoldGaugeMomentRigidity.lean\` (GitHub Actions verification is separate).  
-**Existing kernel-green conditional root:** \`GSTHodgeSingleHypothesisConditional.lean\` (run 42471196881).
+**Companion native Lean module:** `GSTHodgeFoldGaugeMomentRigidity.lean` (GitHub Actions verification is separate).  
+**Existing kernel-green conditional root:** `GSTHodgeSingleHypothesisConditional.lean` (run 42471196881).
 
 ## 1. The exact single GST hypothesis, with its genuine geometry boundary
 
-For a smooth projective complex original variety X and p, put
+For a connected, pure-dimensional smooth projective complex original variety X of dimension d and a codimension p, put
 
 \[
 W_p(X)=H^{2p}(X,\mathbb Q)\cap H^{p,p}(X,\mathbb C),\qquad
@@ -18,9 +18,9 @@ A_p(X)=\operatorname{im}\bigl(\mathrm{cl}^{\mathrm{can}}_{X,p}\bigr)\subseteq W_
 
 The *candidate single geometric target* is **GST Canonical Native Fold Orbit Birth**:
 
-> For every X and p with nonzero W_p(X), the fixed, independently specified GST geometric fold-birth procedure constructs: (i) a genuinely algebraic cycle S in CH^p(X)_Q; (ii) an actual algebraic correspondence \Gamma in CH^d(X×X)_Q of degree zero, with a canonical whole-Betti operator T_\Gamma obtained from the push-pull kernel and the genuine native operator N_\Gamma on rational algebraic cycles; and (iii) an orbit with \operatorname{span}_{\mathbb Q}\{T_\Gamma^j\mathrm{cl}^{can}(S):j\ge0\}=W_p(X). The procedure must not take a previously known algebraic representative of the desired Hodge class or a pre-existing algebraic Hodge basis as an input.
+> For every such X and p with nonzero W_p(X), the fixed, independently specified GST geometric fold-birth procedure constructs: (i) a genuinely algebraic cycle S in CH^p(X)_Q; (ii) an actual algebraic correspondence \Gamma in CH^d(X×X)_Q of degree zero, with a canonical whole-Betti operator T_\Gamma obtained from the push-pull kernel and the genuine native operator N_\Gamma on rational algebraic cycles; and (iii) an orbit with \operatorname{span}_{\mathbb Q}\{T_\Gamma^j\mathrm{cl}^{can}(S):j\ge0\}=W_p(X). The procedure must not take a previously known algebraic representative of the desired Hodge class or a pre-existing algebraic Hodge basis as an input.
 
-For zero Hodge fibers the zero cycle is the complete answer; a nonzero seed is not required. A full semantic adapter must identify the *actual canonical* cycle class with the historical Stage-2G supplied \`H.cycleClass\` before this is promoted to a statement about classical Hodge geometry.
+For zero Hodge fibers the zero cycle is the complete answer; a nonzero seed is not required. For disconnected or non-equidimensional smooth projective schemes, handle the finitely many connected pure-dimensional components separately. A full semantic adapter must identify the *actual canonical* cycle class with the historical Stage-2G supplied `H.cycleClass` before this is promoted to a statement about classical Hodge geometry.
 
 This is ONE named universal GST construction law, but it is *not yet proved*. Its orbit saturation content is necessarily HC-strength without a restrictive, independently defined geometric construction procedure. A rename does not make the logical implication easier.
 
@@ -72,7 +72,7 @@ Then \ell'((T')^k v')=\ell(T^kv) for every k. In particular
 M(T',v',\ell')=M(T,v,\ell),\quad \det M'=\det M.
 \]
 
-The new \`GSTHodgeFoldGaugeMomentRigidity.lean\` implements and proves this identity over arbitrary rational modules, along with the following obstruction:
+The new `GSTHodgeFoldGaugeMomentRigidity.lean` implements and proves this identity over arbitrary rational modules, along with the following obstruction:
 
 If \ell(Tx)=lambda\,\ell(x) for all x, then \ell(T^kv)=lambda^k\ell(v). The 2×2 moment minor satisfies
 \[
@@ -86,16 +86,16 @@ Thus a degree trace acting as a left eigenfunctional cannot by itself certify cy
 
 | GST root | Valid supplied ingredient | Do not silently infer |
 | --- | --- | --- |
-| \`GSTClassicalHodgeExactClayStatement\` + \`GSTGeometricRealizationStage2G\` | exact rational Hodge target in supplied Stage-2G data | canonical analytification, actual Hodge decomposition or canonical Betti class maps automatically constructed |
-| \`GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra\` | genuine left-finite closed correspondence carrier, native point operators and specified Betti actions | the Betti action is forced on off-algebraic classes by the point equality alone |
-| \`GSTClassicalHodgeCorrespondenceSemanticFirewall\` | internal countermodel to falsely free Betti action | that a chosen action is canonical |
-| \`GSTClassicalHodgeAmbientCorrespondenceKernelAction\` + \`GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale\` | kernel action from full Betti cup and Gysin, with explicit intersection/point-class inputs | construction of those inputs for every arbitrary X inside the pinned Mathlib or all Chow correspondences supported by finite-fiber API |
-| \`GSTClassicalHodgeRealizedCorrespondenceKrylovFinale\` + \`GSTClassicalHodgeGeometricKrylovMomentDeterminant\` | exact native orbit, conditional span and moment-matrix inversion | universal geometric cyclicity/nonzero moment |
-| \`GSTHodgeSingleHypothesisConditional\` | **kernel-green** conditional exact-Hodge and finite-sum theorem | unconditional Hodge |
-| \`GSTCausalFoldDefect\`, \`GSTFoldPeriodDescent\`, \`GSTSpatialFoldResearch\` | charge, full period and fold-defect compatibility tests | algebraic source birth from formal Hodge purity |
-| \`GSTFoldTowerSquare\` + \`GSTInfiniteTowerCurvatureCascade\` + \`GSTCarrierAlgebraFlatComplex\` + \`GSTMorphismCompositionCascade\` | all-order differential/curvature and functoriality machinery | target-dependent canonical Chow source |
-| \`GSTClassicalHodgeGradedFiniteClosedCorrespondence\` | graded native point transport | a full Chow correspondence push-pull package |
-| \`GSTClassicalHodgeStage2GSemanticRigidity\` | formal zero-cycle-class countermodel | an unconditional classical theorem over arbitrary Stage-2G H |
+| `GSTClassicalHodgeExactClayStatement` + `GSTGeometricRealizationStage2G` | exact rational Hodge target in supplied Stage-2G data | canonical analytification, actual Hodge decomposition or canonical Betti class maps automatically constructed |
+| `GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra` | genuine left-finite closed correspondence carrier, native point operators and specified Betti actions | the Betti action is forced on off-algebraic classes by the point equality alone |
+| `GSTClassicalHodgeCorrespondenceSemanticFirewall` | internal countermodel to falsely free Betti action | that a chosen action is canonical |
+| `GSTClassicalHodgeAmbientCorrespondenceKernelAction` + `GSTClassicalHodgeStrictCorrespondenceGeometricTransferFinale` | kernel action from full Betti cup and Gysin, with explicit intersection/point-class inputs | construction of those inputs for every arbitrary X inside the pinned Mathlib or all Chow correspondences supported by finite-fiber API |
+| `GSTClassicalHodgeRealizedCorrespondenceKrylovFinale` + `GSTClassicalHodgeGeometricKrylovMomentDeterminant` | exact native orbit, conditional span and moment-matrix inversion | universal geometric cyclicity/nonzero moment |
+| `GSTHodgeSingleHypothesisConditional` | **kernel-green** conditional exact-Hodge and finite-sum theorem | unconditional Hodge |
+| `GSTCausalFoldDefect`, `GSTFoldPeriodDescent`, `GSTSpatialFoldResearch` | charge, full period and fold-defect compatibility tests | algebraic source birth from formal Hodge purity |
+| `GSTFoldTowerSquare` + `GSTInfiniteTowerCurvatureCascade` + `GSTCarrierAlgebraFlatComplex` + `GSTMorphismCompositionCascade` | all-order differential/curvature and functoriality machinery | target-dependent canonical Chow source |
+| `GSTClassicalHodgeGradedFiniteClosedCorrespondence` | graded native point transport | a full Chow correspondence push-pull package |
+| `GSTClassicalHodgeStage2GSemanticRigidity` | formal zero-cycle-class countermodel | an unconditional classical theorem over arbitrary Stage-2G H |
 
 The older global native-mass branch has a terminal-successor counterexample; unguarded nonzero seeds demand nonzero Hodge fibers at dead weights; the self-map-only two-generator action is too narrow. The new single-fold target requires NONE of those as separate assumptions.
 
@@ -110,7 +110,7 @@ For X=∏_{i=1}^m E_i (pairwise nonisogenous elliptic curves), the existing 2026
 
 Here I,J,K index p-subsets and D_I are genuine products of factor point divisors. This realizes the GST matrix units on the explicit native sector of rank binomial(m,p) and yields a cyclic orbit with nonsingular Hankel matrix **for that sector**. It does not claim to exhaust every rational Hodge direction at p>1.
 
-The product correspondences generally fail the branch's finite-left-fiber interface. Do not treat them as \`FiniteClosedCorrespondence\` or \`SchemeBiFiniteClosedCorrespondence\`. A real full-Chow adapter requires:
+The product correspondences generally fail the branch's finite-left-fiber interface. Do not treat them as `FiniteClosedCorrespondence` or `SchemeBiFiniteClosedCorrespondence`. A real full-Chow adapter requires:
 1. a source type of genuine rational codimension-d cycles on X×X, including products of cycles;
 2. construction of native Chow push-pull on every codimension-p cycle, not only point-finite incidence;
 3. the corresponding *whole-Betti* action induced by the same geometric class with correct degree;
@@ -132,5 +132,5 @@ These are **typed implementation/geometry tasks**, not five new HC-strength assu
 - Existing isolated one-hypothesis conditional Lean root: **GitHub Actions run 42471196881 SUCCESS**, separate from this note.
 - Companion fold-gauge and eigen-detector Lean module: committed separately and scheduled for its own GitHub Actions run; its verification status must be read from that actual run, not inferred from prior successes.
 - Wolfram symbolic companion-vector tests: dimension 2 determinant −1, dimension 3 determinant −1, dimension 4 determinant +1.
-- Corpus mapping: GLM's \`research/records/2026-11-08-gpt6-hc-764-lean-module-inventory.md\` inventories **all 764 tracked Lean paths**, using prior 701-file lexical catalog plus 63 post-catalog full-source fetches. This is NOT an independent line-by-line review of all 764 proof bodies.
+- Corpus mapping: GLM's `research/records/2026-11-08-gpt6-hc-764-lean-module-inventory.md` inventories **all 764 tracked Lean paths**, using prior 701-file lexical catalog plus 63 post-catalog full-source fetches. This is NOT an independent line-by-line review of all 764 proof bodies.
 - No changes to GLM's active files or original universal-Hodge public root were made in this audit. All new arguments are isolated in new artifacts.
