@@ -431,6 +431,73 @@ This yields the most actionable GST target:
 \]
 The alpha-indexed projector algebra and the N-channel central fold should be used to build these operations. The failed self-map externalization must not be reused as the universal realization theorem; general algebraic correspondences or the alpha-superfold are the appropriate geometric category.
 
+\subsection*{5.3. The arbitrary-rank charged frame: a finite explicit certificate}
+
+A second, more economical realization route is already implemented in
+\texttt{GSTClassicalHodgeArbitraryRankChargeFrames.lean}. At a fixed weight
+\(p\), let \(s=\operatorname{cl}_p(Z_{\mathrm{spine}})\ne0\) be a native
+spine seed and let \(\ell:B_p(X)\to\mathbb Q\) be a rational charge. For a
+finite family of genuine realized correspondence expressions \(E_j\), form
+the actual native cycles
+\[
+Z_0=Z_{\mathrm{spine}},\qquad
+Z_j=
+\ell(s)\,E_j^{\mathrm{cyc}}(Z_{\mathrm{spine}})
+-\ell(E_j^{\mathrm{coh}}s)\,Z_{\mathrm{spine}}
+\quad(j>0).
+\]
+The construction uses only native cycle operators and rational linear
+combinations. Its Hodge coordinate matrix is
+\[
+M_{ij}=\lambda_i(\operatorname{cl}_p(Z_j)),
+\qquad
+M\in M_n(\mathbb Q),\quad n=\dim_{\mathbb Q}B_p(X).
+\]
+If \(\det M\ne0\), the inverse-matrix cycle
+\[
+Z_\alpha=\sum_{j=0}^{n-1}(M^{-1}[\alpha])_jZ_j
+\]
+is an explicit native rational cycle satisfying
+\[
+\operatorname{cl}_p(Z_\alpha)=\alpha.
+\]
+This is not an abstract choice of a cycle preimage: every column was built
+from a genuine spine cycle and an actual correspondence expression.
+
+The module proves the inverse-cycle specification and the conditional
+Hodge theorem. It deliberately does not prove the universal existence of
+the nonzero determinant. Its exact finite certificate is
+\[
+\mathsf{FrameGen}_p:
+\quad
+\exists\,\ell,\ E_0,\ldots,E_{n-1}
+\text{ genuine realized correspondence expressions}:
+\det M(\ell,E_0,\ldots,E_{n-1})\ne0.
+\]
+The family over all \(p\) is
+\texttt{UniversalGSTChargedGeometricFrameGeneration}. It is a strong,
+constructive sufficient route to (GST-SB), not asserted to be necessary.
+It may be a better attack target than realizing every abstract matrix unit:
+one nonsingular frame gives all classes at that weight in a single
+matrix-inversion step.
+
+The exact hierarchy is therefore:
+\[
+\begin{array}{c}
+\text{dual residual source-birth (exactly equivalent to Hodge)}
+\\[2mm]
+\Downarrow\ \text{possible GST constructions}
+\\[2mm]
+\text{full native matrix-unit invariance}
+\quad\text{or}\quad
+\text{closed-correspondence matrix-unit reachability}
+\\[2mm]
+\text{or a finite nonsingular charged geometric frame}.
+\end{array}
+\]
+The last three are constructive routes/certificates. They must not be
+misreported as already proved universal existence statements.
+
 \subsection*{6. What the existing GST constructions do and do not supply}
 
 \begin{enumerate}
