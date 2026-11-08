@@ -108,7 +108,7 @@ Full source of `GSTGraphV2SelfExpandingCosmology.lean` (2,484 lines) contains a 
 
 **Established mathematical facts independent of GST:** Lefschetz (1,1), hard Lefschetz, rational HC for all smooth projective complex dimensions ≤3, and the validity of genuine algebraic correspondences. These supply non-negotiable test cases for every proposed fold birth.
 
-**Repository development:** new strongly connected causal-world quotient, component reachability, compatibility with event-preserving folds, two different explicit consistent realizations (infinite acyclic chain and finite feedback loop). The new Lean declarations are source code until an observed compiler run passes; do not infer CI success from a commit alone.
+**Repository development:** new strongly connected causal-world quotient, component reachability, compatibility with event-preserving folds, two different explicit consistent realizations (infinite acyclic chain and finite feedback loop). **Compiler verification completed:** GitHub Actions run [42531926951](https://github.com/kyo-oo/HC-PROOF/actions/runs/42531926951), at source commit `1d06d3c213e6ff6c2aade7b75e524f9d9ba91129`, has conclusion **SUCCESS**. The pinned Lean/Mathlib kernel compiled `GSTGraphV2CausalComponents.lean`; checked job log prints `LEAN PASSED: GSTGraphV2CausalComponents` and the sorry guard passed. Earlier attempts failed on routine namespace and simp rewrite issues and were repaired, not used as evidence of theorem invalidity.
 
 **Continuing research obligations:**
 1. Build the canonical Chow / whole-Betti correspondence adapter on arbitrary smooth projective X without limiting to point-finite correspondences.
