@@ -1,0 +1,75 @@
+name: GST Universal Residual Source Birth
+on:
+  push:
+    branches:
+      - research/gpt6-residual-source-birth-conditional-20261108
+    paths:
+      - GSTUniversalResidualSourceBirth.lean
+      - GSTClassicalHodgeGeometricCycleClassSpine.lean
+      - GSTClassicalHodgeExactClayStatement.lean
+      - .github/workflows/gst-universal-residual-source-birth.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gst-universal-residual-source-birth-\${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-\${{ runner.os }}-\${{ hashFiles('lean-toolchain') }}
+      - name: Install pinned Lean and Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Restore verified Lean dependency cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: gst-residual-source-birth-\${{ runner.os }}-\${{ github.sha }}
+          restore-keys: |
+            gst-residual-source-birth-\${{ runner.os }}-
+            hc-lean-incremental-\${{ runner.os }}-
+      - name: Kernel-verify the single residual source-birth conditional theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          cat >> lakefile.toml <<'EOF'
+          [[lean_lib]]
+          name = "GSTResidualSourceBirth"
+          roots = ["GSTUniversalResidualSourceBirth"]
+          EOF
+          if lake build GSTResidualSourceBirth > gst-residual-source-birth.log 2>&1; then
+            echo "LEAN PASSED: residual source-birth iff cycle-class surjectivity; conditional Stage-2G Hodge theorem"
+          else
+            grep -nE 'error:|sorryAx|✖' gst-residual-source-birth.log | tail -n 150 || true
+            tail -n 150 gst-residual-source-birth.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-residual-source-birth.log; then
+            exit 1
+          fi
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: .lake/build
+          key: gst-residual-source-birth-\${{ runner.os }}-\${{ github.sha }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gst-residual-source-birth-lean-log
+          path: gst-residual-source-birth.log
+          if-no-files-found: warn
