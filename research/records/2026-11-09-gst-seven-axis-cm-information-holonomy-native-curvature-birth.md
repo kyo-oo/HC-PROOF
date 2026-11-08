@@ -258,3 +258,69 @@ Use the established GST graph information-orbit and **genuine original-X curvatu
 4. Iterate across the CM parity-graded infinite curvature carrier and cosmological multiworld birth rules, preserving actual algebraic-cycle semantics, to seek a covering orbit for the prescribed Hodge directions.
 
 This is a concrete source-generation route. The thing to calculate next is the geometric *off-diagonal curvature block* \(\operatorname{pr}_{W_{old}^{\perp}}[T_A,T_B]|_{W_{old}}\), on a specified smooth projective source with actual Chow correspondences, rather than another arbitrary moment determinant on an already-algebraic model.
+
+
+## 8. GENUINE HIGHER-CODIMENSION CURVATURE SOURCE: A CM ABELIAN FOURFOLD
+
+This section is a **new composition** of the existing exact elliptic-product Chow matrix-unit construction in `research/derivations/GST_single_hypothesis_fold_moment_conditional_2026_11_08.tex` (lines 188–219), the new original-X curvature cycle theorem, and a fixed geometric detector.
+
+Let `X=E₁×E₂×E₃×E₄` for pairwise nonisogenous **CM elliptic curves**. It is a smooth projective complex **fourfold**. Let `d_i` be the pullback of the point-divisor class from factor `E_i`; for any 2-subset I of {1,2,3,4}, define the actual codimension-two algebraic cycle `D_I = ∏_{i∈I} d_i`.
+
+The six `D_I` have independent rational Betti classes. The exact geometric intersection law is
+
+\[
+\int_X D_I\,D_{J^c}=\delta_{IJ}
+\]
+
+for |I|=|J|=2, because \(d_i^2=0\) and \(\prod_i d_i\) has degree one. Hence the actual algebraic correspondences on `X×X`
+
+\[
+\Gamma_{JI}:=\pi_1^*D_{I^c}\cdot\pi_2^*D_J\in\CH^4(X\times X)_\mathbb Q
+\]
+
+satisfy \((\Gamma_{JI})_*D_K=\delta_{IK}D_J\).
+
+Choose distinct labels `I₀={1,2}`, `I₁={1,3}`, and put
+
+\[
+A=\Gamma_{I_0 I_0},\quad B=\Gamma_{I_1 I_0},\quad Z=D_{I_0}.
+\]
+
+Then A is the native projector to the first divisor-product direction and B maps that direction into the second:
+
+\[
+A Z=Z,\quad B Z=D_{I_1},\quad A(BZ)=0,\quad B(AZ)=D_{I_1}.
+\]
+
+The **actual original-X codimension-two curvature cycle** is
+
+\[
+\boxed{Z_{AB}=A(BZ)-B(AZ)=-D_{I_1}.}
+\]
+
+The geometric detector `ℓ(α)=∫_X α·cl(D_{I₁^c})` is fixed by the actual intersection pairing. It annihilates the old span `W_old=Q·cl(D_{I₀})`, but
+
+\[
+\boxed{\ell(\mathrm{cl}(Z_{AB}))=-1\ne0.}
+\]
+
+Thus the commutator produces a new actual middle-degree algebraic Hodge direction outside the initial one-dimensional sector, in complex dimension four and codimension two. In the six-dimensional divisor-product sector, the exact Wolfram 6×6 test outputs
+
+```
+curvatureAppliedToD_12 = {0,-1,0,0,0,0}
+geometricDetectorOld = 0
+geometricDetectorNew = -1
+rank(old, curvature) = 2
+```
+
+**Scope:** These are explicitly known algebraic divisor-product classes, not every rational primitive (2,2) Hodge direction on an arbitrary fourfold. The new contribution of this example is a nontrivial **genuine algebraic correspondence curvature birth mechanism** beyond a purely linear-matrix analogy. It is an exact geometric benchmark for stronger GST/CM source constructions.
+
+## 9. Verified implementation and computation receipts
+
+- `GSTGraphV2InformationRecovery.lean`: exact physical inversion, order-five and all-depth stream recovery — GitHub Actions [42534272752](https://github.com/kyo-oo/HC-PROOF/actions/runs/42534272752) **SUCCESS**.
+- `GSTGraphV2GeneralRadixConservation.lean`: arbitrary positive-radix mass balance and modulus — GitHub Actions [42535812117](https://github.com/kyo-oo/HC-PROOF/actions/runs/42535812117) **SUCCESS**.
+- `GSTGraphV2CMInfiniteCurvatureBridge.lean`: CM parity splitting and product grading, Jacobi/Bianchi, zero fivefold additive curvature, nonzero consecutive fold commutator, and JetTowerInf readout — the **same** GitHub Actions [42535812117](https://github.com/kyo-oo/HC-PROOF/actions/runs/42535812117) **SUCCESS**.
+- `GSTGraphV2NativeCurvatureBirth.lean`: actual original-X commutator cycle with exact cycle-class identity and geometric rank escape/invariance tests — GitHub Actions [42535736525](https://github.com/kyo-oo/HC-PROOF/actions/runs/42535736525) **SUCCESS**.
+- Exact Wolfram script `research/computations/gst_seven_axis_cm_curvature_holonomy_20261109.wl` was fetched back from the committed GitHub file and executed unchanged in Wolfram Language; results: all logical checks True, rational ordered holonomy as in Section 3, and six-dimensional fourfold middle-sector rank gain as in Section 8.
+
+The two original source files `GSTCanonicalSevenAxisBridge.lean` and `GSTGraphV2NonEuclidean.lean` were **not** rewritten; their fundamental laws and dimensionless seven axes remain intact. The older `docs/GST_V2_OPERATING_MANUAL.md` has instead been upgraded to explicitly record the new conservation and curvature theorems.
