@@ -35,7 +35,20 @@ whose associated map
 \qquad
 r\longmapsto Q_p(r,-)
 \]
-is an isomorphism. For the genuine projective Hodge fiber, this is the positive form obtained by applying the Hodge--Riemann signs on the Lefschetz-primitive pieces and summing the primitive pairings.
+is an isomorphism. For the genuine projective Hodge fiber, write the Lefschetz decomposition
+\[
+\alpha=\sum_{j=0}^{p}L^{p-j}\alpha_j,
+\qquad
+\alpha_j\in P^{2j}(X)\cap H^{j,j}(X),
+\]
+and similarly for \(\beta\). The Hodge--Riemann signs give the rational positive form
+\[
+Q_p(\alpha,\beta)
+=
+\sum_{j=0}^{p}(-1)^j
+\int_X\alpha_j\cup\beta_j\cup h^{d-2j}.
+\]
+The primitive summands are orthogonal and each signed primitive pairing is positive definite on its rational \((j,j)\)-part. Thus \(\mathcal Q_p\) is an isomorphism.
 
 The single GST source-birth law is
 \[
@@ -313,6 +326,61 @@ N\,d\bar z_1\wedge d\bar z_2\ne0,
 \operatorname{tr}(\bar\partial A+A\wedge A)=0.
 \]
 Thus a trace-zero curvature can still have a nonzero endomorphism-valued \((0,2)\) component. This is not a counterexample to the GST tower; it is a counterexample to the invalid inference from scalar trace/period identities to bundle integrability. The GST representation must retain the full noncommutative endomorphism-valued curvature.
+
+\subsection*{5.1. The actual N-channel module and the missing original-X instantiation}
+
+The current N-channel implementation is more specific than a generic appeal to many channels and also has a precise limitation.
+
+In \texttt{waves/GSTNCohomologyV3.lean}, an \texttt{NChannelComplex} has a coefficient space \(W\), a finite hole index set, a complex structure on the doubled carrier \(W\oplus W\), and a target-curvature map. Its canonical target-curvature map is the diagonal embedding
+\[
+\Theta_s:(W^{\mathrm{holes}})\longrightarrow
+(W^{\mathrm{holes}\times\mathrm{holes}}),
+\qquad
+\Theta_s(a)_{ij}=
+\begin{cases}
+a_i,&i=j,\\
+0,&i\ne j.
+\end{cases}
+\]
+The Lean theorem \texttt{targetCurvature\_zero\_iff} proves
+\[
+\Theta_s(a)=0\quad\Longleftrightarrow\quad a=0.
+\]
+The same module proves that its declared channel-closure condition is equivalent to vanishing of the declared curvature matrix. These are exact, kernel-verified detection statements on the N-channel carrier.
+
+The spatial-fold module then gives the central pure-split criterion. In its notation, if \(K u=0\), a pure split of the pair \((u,v)\) is equivalent to \(K v=0\). The causal-fold-defect module separately identifies the missing-mode map and its boundary image. The all-degree curvature-memory and graded-world modules prove the corresponding coefficient, first-jet, and boundary-range identities.
+
+The missing step is not another matrix identity. It is the original-X realization:
+\[
+W\ \stackrel{?}{\cong}\ D_p(X)
+\quad\text{or a canonically faithful carrier built from }D_p(X),
+\]
+together with a proof that the curvature matrix used by the central fold is the actual geometric obstruction map on that carrier and that the original-X fold is pure-split. Only then does the diagonal detection theorem kill every nonzero residual.
+
+In particular, the current \texttt{NChannelComplex} complex structure acts on \(W\oplus W\), not intrinsically on \(D_p(X)\). It is not yet a pair of anticommuting endomorphisms \(J,K\) on the Hodge obstruction quotient. The Kuga--Satake/Clifford module proves an action on its own Clifford carrier; it does not by itself supply an action on \(D_p(X)\). Therefore a quaternionic or unbounded matrix-algebra dimension argument is a possible route, but its required intrinsic representation has not been constructed.
+
+The concrete GST combination to pursue is:
+\[
+\begin{aligned}
+&\text{actual residual }r\in D_p(X)
+\\
+&\xrightarrow{\ \text{alpha-indexed N-channel coordinates}\ }
+a(r)\in W^{\mathrm{holes}}
+\\
+&\xrightarrow{\ \Theta_s\ }
+\text{full target-curvature matrix}
+\\
+&\xrightarrow{\ \text{original-X central fold}\ }
+\text{pure-split / zero-curvature law}.
+\end{aligned}
+\]
+If the first arrow is faithful and the final zero-curvature law is proved for the actual original-X fold, then \(a(r)=0\), hence \(r=0\). The first and last arrows are the geometric source-birth bridge. The middle diagonal injection and the abstract pure-split equivalence are already present.
+
+The graded-world boundary identity
+\[
+\operatorname{BaseBoundaryModule}(b,d)=\operatorname{range}(\mathrm{cup})
+\]
+is likewise exact but limited to the declared cup-generated boundary family. It does not automatically produce primitive algebraic sources outside that range. The codimension-two resolved-boundary construction is a genuine special return; the higher-codimension source must not be inferred from the divisorial case without an additional all-degree construction.
 
 \subsection*{6. What the existing GST constructions do and do not supply}
 
