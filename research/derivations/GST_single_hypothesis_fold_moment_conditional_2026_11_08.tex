@@ -282,4 +282,57 @@ rather than only change coordinates. This is a route-specific
 no-go theorem, NOT a statement that all noninvertible geometric
 folds or singular source-birth mechanisms fail.
 
+
+\section{Logical strength audit: a full correspondence FH law is HC-equivalent}
+To prevent another disguised Hodge-to-Chow assumption, we identify
+the exact logical strength of the UNIVERSAL hypothesis when
+arbitrary genuine rational Chow correspondences are allowed.
+For simplicity take $X$ connected, smooth, projective,
+pure of complex dimension $d$. Assume the rational Hodge conjecture
+holds on $X$ in ALL codimensions $0,\dots,d$.
+Choose an arbitrary $\Q$-basis $v_0,\dots,v_{n-1}$ of the
+rational $(p,p)$ Hodge space $W_p$.
+By Poincare duality and the pure Hodge decomposition, the pairing
+\[
+W_p\times W_{d-p}\longrightarrow\Q,\quad
+(v,w)\longmapsto\int_X v\smile w
+\]
+is perfect. There are hence rational $(d-p,d-p)$ Hodge
+classes $u_0,\dots,u_{n-1}$ dual to the $v_i$,
+with $\int_X v_i u_j=\delta_{ij}$.
+By the assumed Hodge conjecture in these TWO codimensions,
+choose genuine algebraic cycles $Z_i\in\CH^p(X)_\Q$,
+$U_i\in\CH^{d-p}(X)_\Q$ representing $v_i,u_i$.
+The actual Chow correspondences
+\[
+\Gamma_{ji}=\pi_1^*U_i\cdot\pi_2^*Z_j
+\quad\in\CH^d(X\times X)_\Q
+\]
+implement all matrix units on $W_p$.
+Select $T=\sum_{i=0}^{n-1}(\Gamma_{i+1,i})_*$
+with subscripts modulo $n$, seed $Z_0$, and
+detector $\ell(\beta)=\int_X\beta\,u_0$.
+Then $M_{ij}$ is the same reversal permutation matrix and
+$\det M=(-1)^{(n-1)(n-2)/2}\ne0$.
+
+Therefore, with arbitrary rational Chow correspondences,
+canonical Betti push--pull and the full Hodge fibers,
+the all-varieties/all-weights FH existence statement is
+EQUIVALENT to the rational Hodge conjecture:
+\[
+\boxed{\mathsf{HC}_{\rm rational}\quad\Longleftrightarrow\quad
+\mathsf{GST\!-\!FH}_{\rm unrestricted\ Chow}.}
+\]
+In the reverse direction the direct moment-reconstruction theorem
+above supplies actual original-$X$ cycles.
+This equivalence is a precise CONDITIONAL REDUCTION,
+not an unconditional discovery that solves the conjecture.
+The dedicated research goal must be STRICTER:
+derive the required geometric fold and detector by an independent
+and UNIFORMLY SPECIFIED GST birth rule that does not take
+a preselected algebraic basis or dual cycles as input.
+Our positive elliptic-product constructions give a real model of
+such an explicit rule in the stated native sectors; universal
+source birth remains the hard hypothesis.
+
 \end{document}
