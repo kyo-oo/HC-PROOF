@@ -1,5 +1,14 @@
 # GST Hodge — Locked Execution Contract
 
+## 2026-11-08 — Single live Hodge target: universal residual source-birth
+
+The F/G/D/R frontier packages are no longer the preferred final interface. The exact one-law target is universal residual source-birth: for every nonzero rational Hodge residual r, construct an actual original-X codimension-p cycle Z with nonzero polarized coupling Q_p(r, cl_p(Z)). Under finite-dimensionality and a perfect positive Hodge pairing, this law is equivalent to surjectivity of the canonical cycle-class map. It is not weaker than Hodge; it is the exact dual source-generation formulation.
+
+The conditional theorem is formalized in GSTUniversalResidualSourceBirth.lean. The accompanying derivation is research/derivations/GST_single_target_residual_source_birth_alpha_superfold_2026_11_08.tex. The theorem remains conditional on the Stage-2G cycle-class map being the canonical geometric map and on the supplied finite-dimensional polarized Hodge semantics.
+
+The next attack is to construct a multiplicative, graded, differential-compatible GST representation on the alpha-selected bundle E_alpha, so that the full GST curvature-memory operator is represented by End(E_alpha)-valued Dolbeault curvature. Scalar trace identities alone do not imply Dolbeault integrability. The exact plus/minus alpha-superfold condition is an equivalent geometric target; one-fold integrability is only a sufficient route.
+
+
 **All-degree curvature completion from `f96a12f` (2026-11-03):**
 [Full cohomology, Poincare double and specialization memory](records/2026-11-03-gst-all-degree-curvature-duality-specialization.md).
 The prescribed-alpha rational fold has a complete odd-base ring and perfect
