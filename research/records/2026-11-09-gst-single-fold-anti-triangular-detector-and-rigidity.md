@@ -4,7 +4,7 @@
 **Repository:** kyo-oo/HC-PROOF  
 **Work branch:** research/gpt6-native-point-primitive-span-20261017  
 **Scope:** new mathematical reduction, adversarial source-geometry audit, and GLM handoff. This document neither asserts unconditional HC nor makes unverified Lean claims.  
-**Companion native Lean module:** `GSTHodgeFoldGaugeMomentRigidity.lean` (GitHub Actions verification is separate).  
+**Companion native Lean module:** `GSTHodgeFoldGaugeMomentRigidity.lean` (kernel-compiled on pinned Lean, GitHub Actions run 42520460148, SUCCESS).  
 **Existing kernel-green conditional root:** `GSTHodgeSingleHypothesisConditional.lean` (run 42471196881).
 
 ## 1. The exact single GST hypothesis, with its genuine geometry boundary
@@ -130,7 +130,7 @@ These are **typed implementation/geometry tasks**, not five new HC-strength assu
 ## 7. Verification and source-integrity record
 
 - Existing isolated one-hypothesis conditional Lean root: **GitHub Actions run 42471196881 SUCCESS**, separate from this note.
-- Companion fold-gauge and eigen-detector Lean module: committed separately and scheduled for its own GitHub Actions run; its verification status must be read from that actual run, not inferred from prior successes.
+- Companion fold-gauge and eigen-detector Lean module: **GitHub Actions run 42520460148 SUCCESS** at commit `7327f8e10d82cb0e8fd764de38a91a3643384757`. The job completed its kernel compilation step and its `sorryAx`/`sorry` guard; the retrieved job log explicitly reports `LEAN PASSED: GSTHodgeFoldGaugeMomentRigidity`.
 - Wolfram symbolic companion-vector tests: dimension 2 determinant −1, dimension 3 determinant −1, dimension 4 determinant +1.
 - Corpus mapping: GLM's `research/records/2026-11-08-gpt6-hc-764-lean-module-inventory.md` inventories **all 764 tracked Lean paths**, using prior 701-file lexical catalog plus 63 post-catalog full-source fetches. This is NOT an independent line-by-line review of all 764 proof bodies.
 - No changes to GLM's active files or original universal-Hodge public root were made in this audit. All new arguments are isolated in new artifacts.
