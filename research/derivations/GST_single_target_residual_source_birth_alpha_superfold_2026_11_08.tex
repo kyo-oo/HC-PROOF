@@ -1,0 +1,346 @@
+\section*{GST single-target reduction: universal residual source-birth and the alpha-superfold}
+
+\subsection*{0. Scope and exact status}
+
+This note consolidates the original-\(X\) residual projection, the alpha-indexed finite-pole projector construction, the polarized residual-energy mechanism, and the spatial-fold / all-degree-curvature program.
+
+The purpose is not to rename the Hodge conjecture as an easy lemma. The purpose is to replace the old collection of independent frontier packages by one exact source-generation law, prove the conditional theorem from that law, and state the precise GST-to-geometry bridge that must be constructed to establish the law.
+
+Throughout, \(X\) is a smooth projective complex variety of dimension \(d\), \(0\leq p\leq d\), and
+\[
+B_p(X)=H^{2p}(X,\mathbb Q)\cap H^{p,p}(X)
+\]
+is the rational Hodge space. Let
+\[
+\operatorname{cl}_p:\operatorname{CH}^p(X)_{\mathbb Q}\longrightarrow B_p(X)
+\]
+be the canonical cycle-class map, and write
+\[
+A_p(X)=\operatorname{im}(\operatorname{cl}_p),\qquad
+D_p(X)=B_p(X)/A_p(X).
+\]
+The target is \(A_p(X)=B_p(X)\).
+
+The formal Stage-2G Lean interface still stores its cycle-class map as supplied data. Every theorem below that is specialized to Stage-2G is conditional on using that supplied map; it becomes the classical Hodge statement only after the map is instantiated by the canonical geometric cycle-class construction.
+
+\subsection*{1. The one hypothesis: universal polarized residual source-birth}
+
+Choose a rational positive-definite polarization
+\[
+Q_p:B_p(X)\times B_p(X)\longrightarrow\mathbb Q
+\]
+whose associated map
+\[
+\mathcal Q_p:B_p(X)\xrightarrow{\;\sim\;}B_p(X)^\vee,
+\qquad
+r\longmapsto Q_p(r,-)
+\]
+is an isomorphism. For the genuine projective Hodge fiber, this is the positive form obtained by applying the Hodge--Riemann signs on the Lefschetz-primitive pieces and summing the primitive pairings.
+
+The single GST source-birth law is
+\[
+\boxed{
+\mathsf{SB}_p(X):
+\quad
+\forall\,0\ne r\in B_p(X),\
+\exists\,Z\in\operatorname{CH}^p(X)_{\mathbb Q}
+\text{ such that }
+Q_p\bigl(r,\operatorname{cl}_p(Z)\bigr)\ne0.
+}
+\tag{SB}
+\]
+
+This says that no nonzero Hodge residual is invisible to every actual native algebraic cycle. It is not an assumption that a cycle represents the residual. It is a detection statement: a nonzero residual must couple to at least one genuine source.
+
+\paragraph{Theorem 1 (exact equivalence).}
+Assume \(B_p(X)\) is finite-dimensional and \(Q_p\) is perfect. Then
+\[
+\mathsf{SB}_p(X)
+\quad\Longleftrightarrow\quad
+A_p(X)=B_p(X).
+\]
+
+\paragraph{Proof.}
+If \(A_p(X)=B_p(X)\), take any nonzero \(r\in B_p(X)\). There is \(Z\) with \(\operatorname{cl}_p(Z)=r\), and positivity gives
+\[
+Q_p(r,\operatorname{cl}_p(Z))=Q_p(r,r)>0.
+\]
+Thus (SB) holds.
+
+Conversely, suppose \(A_p(X)\subsetneq B_p(X)\). Since \(B_p(X)\) is finite-dimensional and \(Q_p\) is nondegenerate, the orthogonal complement \(A_p(X)^\perp\) contains a nonzero vector \(r\). By definition,
+\[
+Q_p(r,\operatorname{cl}_p(Z))=0
+\quad\text{for every }Z\in\operatorname{CH}^p(X)_{\mathbb Q},
+\]
+contradicting (SB). Therefore \(A_p(X)=B_p(X)\). \(\square\)
+
+Consequently, the one remaining open mathematical target can be written in exactly one line:
+\[
+\boxed{
+\forall X,p,\ \forall\,0\ne r\in B_p(X),\
+\exists Z\in\operatorname{CH}^p(X)_{\mathbb Q}:
+Q_p(r,\operatorname{cl}_p(Z))\ne0.
+}
+\tag{GST-SB}
+\]
+The finite-dimensionality and perfect polarization are structural projective-Hodge inputs. The source-birth law is the Hodge-strength content.
+
+\subsection*{2. Why this is the correct collapse of the residual machinery}
+
+Let \(S\subseteq\operatorname{CH}^p(X)_{\mathbb Q}\) be any finite family of native cycles whose classes are independent, and let \(W_S\) be their rational span in \(B_p(X)\). The GST residual projection constructs the component
+\[
+r_S(\alpha)=\alpha-\operatorname{proj}_{W_S}(\alpha)
+\]
+using the Gram matrix of the selected sources and their geometric dual detectors.
+
+The already formalized local birth calculation has the following shape:
+\[
+Q_p(r_S(\alpha),\operatorname{cl}_p(Z_{\mathrm{new}}))\ne0
+\quad\Longrightarrow\quad
+\dim\bigl(W_S+\mathbb Q\operatorname{cl}_p(Z_{\mathrm{new}})\bigr)
+=\dim W_S+1.
+\]
+This is the exact role of the polarized residual-energy and Gram-birth lemmas: a nonzero coupling creates a genuinely new native cycle direction.
+
+The global law (GST-SB) supplies such a source whenever the residual is nonzero. Finite-dimensionality then terminates the process after at most \(\dim_{\mathbb Q}B_p(X)\) births. No separate finiteness package, global mass package, all-weights seed package, or two-generator package is needed in this argument.
+
+In dual language, the same residual \(r\) defines
+\[
+\psi_r=Q_p(r,-)\in B_p(X)^\vee.
+\]
+If the current source span is proper, \(\psi_r\) annihilates that span. A fresh GST source is precisely a cycle \(Z\) for which
+\[
+\langle\psi_r,\operatorname{cl}_p(Z)\rangle\ne0.
+\]
+This is the finite-pole projector program's dual-witness formulation. The two formulations are related by the perfect polarization; they are not two independent remaining conjectures.
+
+\subsection*{3. Connection to the alpha-indexed finite-pole projector algebra}
+
+Fix a prescribed rational Hodge class \(\alpha\in B_p(X)\), and choose a closed algebraic differential representative
+\[
+\eta_\alpha\in\Gamma(X,\Omega_X^{2p})
+\]
+of its algebraic de Rham class.
+
+The alpha-indexed projector construction uses finite matrix sizes and pole orders, with regular idempotents
+\[
+A_+^2=A_+,\qquad A_-^2=A_-,
+\]
+and a finite polynomial curvature equation of the form
+\[
+\Omega_p(A_+)-\Omega_p(A_-)-\mu\eta_\alpha=dB.
+\tag{P}
+\]
+The Fitting/Newton construction turns a genuine solution of (P) into an actual rational Chow source \(Z_{A,p}\) on the original \(X\). The Chern-character/Newton normalization is
+\[
+\operatorname{ch}_p(E)
+=\frac{1}{p!}\sum_i x_i^p,
+\]
+where the \(x_i\) are the formal Chern roots. The Newton recurrence converts the power sums into the integral Chern-polynomial data used by the Fitting construction.
+
+The dual version of source-birth is therefore:
+\[
+\boxed{
+\begin{gathered}
+\text{for every nonzero dual residual }\psi
+\text{ annihilating the current native source span,}\\
+\text{some finite regular alpha-projector certificate produces }
+Z_{A,p}\text{ with }
+\langle\psi,\operatorname{cl}_p(Z_{A,p})\rangle\ne0.
+\end{gathered}}
+\tag{P-SB}
+\]
+The projector source must be a genuine Fitting/Newton cycle on \(X\), not an abstract vector chosen in the cohomology fiber.
+
+The existing alpha-indexed derivation supplies the finite algebraic source mechanism and its exact period readout. The universal statement (P-SB), not the local Fitting/Newton conversion, is the remaining source-birth problem. If the finite projector inventory is shown to exhaust the relevant algebraic \(K_0\)/Chow source span, (P-SB) is the same global law as (GST-SB).
+
+\subsection*{4. The alpha-superfold: an exact geometric conditional theorem}
+
+There are two distinct integrability statements, and they must not be conflated.
+
+\paragraph{4.1 One-fold sufficient condition.}
+For any rational Hodge class \(\alpha\), topological \(K\)-theory gives, after clearing denominators, a topological complex vector bundle \(E_\alpha\) of rank \(r\ge p+1\) such that
+\[
+\operatorname{ch}(E_\alpha)=r+m\alpha,\qquad m>0,
+\]
+with all positive Chern-character components other than degree \(p\) equal to zero.
+
+Newton's identities imply
+\[
+c_j(E_\alpha)=0\quad(1\le j<p)
+\]
+in rational Betti cohomology and
+\[
+c_p(E_\alpha)=(-1)^{p-1}m(p-1)!\,\alpha.
+\tag{C}
+\]
+The higher Chern classes need not vanish; they are irrelevant to the codimension-\(p\) formula below.
+
+Suppose the same topological bundle admits an integrable Dolbeault operator
+\[
+\bar\partial_{E_\alpha}:
+\mathcal A^{0,q}(X,E_\alpha)\longrightarrow
+\mathcal A^{0,q+1}(X,E_\alpha),
+\qquad
+\boxed{\bar\partial_{E_\alpha}^{\,2}=0.}
+\tag{I}
+\]
+GAGA makes \(E_\alpha\) algebraic. Let \(L\) be very ample and take \(k\gg0\) so \(E_\alpha\otimes L^k\) is globally generated. A generic map
+\[
+\mathcal O_X^{\,r-p+1}\longrightarrow E_\alpha\otimes L^k
+\]
+has the expected codimension-\(p\) rank-drop locus \(D_{\alpha,k}\), and Thom--Porteous gives
+\[
+[D_{\alpha,k}]=c_p(E_\alpha\otimes L^k)
+\quad\text{in }\operatorname{CH}^p(X).
+\]
+The Chern-root identity is
+\[
+c_p(E\otimes L^k)
+=
+\sum_{j=0}^{p}
+\binom{r-j}{p-j}c_j(E)(kh)^{p-j},
+\qquad h=c_1(L).
+\]
+Using (C), its Betti class is
+\[
+\operatorname{cl}_p[D_{\alpha,k}]
+=
+(-1)^{p-1}m(p-1)!\,\alpha
++\binom rp k^p h^p.
+\]
+The complete intersection \(H^p\) of \(p\) general divisors in \(|L^k|\) has Betti class \(k^p h^p\). Therefore
+\[
+Z_\alpha=
+\frac{(-1)^{p-1}}{m(p-1)!}
+\left(
+[D_{\alpha,k}]-\binom rp H^p
+\right)
+\]
+is an actual rational algebraic cycle on the original \(X\) and
+\[
+\operatorname{cl}_p(Z_\alpha)=\alpha.
+\]
+
+Thus (I) is a sufficient single target for the prescribed-class source. It is a particularly concrete target for the GST fold program.
+
+\paragraph{4.2 The exact plus/minus pair-fold condition.}
+The same-bundle condition (I) for one arbitrarily selected topological representative is sufficient, but should not be advertised as an if-and-only-if criterion without a stable-representative argument.
+
+The exact condition is the virtual, or \(\mathbb Z/2\)-graded, pair-fold:
+\[
+\boxed{
+\begin{gathered}
+\exists\,m>0,\ E_+,E_-\text{ topological complex vector bundles on }X,\\
+\bar\partial_{E_+}^{\,2}=0,\qquad
+\bar\partial_{E_-}^{\,2}=0,\\
+\operatorname{ch}(E_+)-\operatorname{ch}(E_-)=m\alpha
+\quad\text{in every cohomological degree.}
+\end{gathered}}
+\tag{PF}
+\]
+Equivalently, one asks for an integrable Dolbeault structure on a \(\mathbb Z/2\)-graded super-bundle whose super-Chern character is \(m\alpha\).
+
+Condition (PF) is exactly equivalent to algebraicity of \(\alpha\). In one direction, GAGA makes both bundles algebraic, and their degree-\(p\) Chern-character difference supplies a rational Chow class with Betti class \(\alpha\). In the other direction, an algebraic cycle representing \(\alpha\) gives a class in \(\operatorname{CH}^p(X)_{\mathbb Q}\); the rational Chern-character isomorphism
+\[
+K_0^{\mathrm{alg}}(X)_{\mathbb Q}
+\simeq
+\bigoplus_j\operatorname{CH}^j(X)_{\mathbb Q}
+\]
+produces a virtual algebraic bundle class whose Chern character is concentrated in degree \(p\). Clearing denominators and writing the virtual class as a difference of honest bundles gives (PF).
+
+Therefore (PF) is an exact geometric form of the Hodge target, while (I) is a stronger one-fold route. The GST program should attack (PF) directly or construct the more concrete same-bundle integrability (I); it must not silently treat them as interchangeable.
+
+\subsection*{5. The missing GST-to-Dolbeault representation}
+
+The all-degree GST curvature tower is real formal progress. Its differential has the schematic form
+\[
+\mathcal D_{\mathrm{GST}}
+=d_0+\varepsilon\phi_0+\varepsilon^2\phi_1+\cdots,
+\qquad
+\mathcal D_{\mathrm{GST}}^{\,2}
+=K_0+\varepsilon K_1+\varepsilon^2K_2+\cdots.
+\]
+The tower modules establish algebraic identities for these curvature-memory coefficients on their own rational cochain/tower carrier. The fold-defect modules establish identities such as
+\[
+D_e=Q_wT_e-T_eQ_v
+\]
+and characterize the pure-split condition in that abstract carrier.
+
+The conclusion
+\[
+\mathcal D_{\mathrm{GST}}^{\,2}=0
+\quad\Longrightarrow\quad
+\bar\partial_{E_\alpha}^{\,2}=0
+\]
+does not follow merely because the scalar or rational cohomological curvature is zero. It requires a multiplicative, graded, differential-compatible representation
+\[
+\rho_\alpha:
+\mathcal A_{\mathrm{GST}}
+\longrightarrow
+\operatorname{End}(E_\alpha)\otimes
+\mathcal A^{0,*}(X)
+\]
+such that:
+\[
+\rho_\alpha(ab)=\rho_\alpha(a)\rho_\alpha(b),
+\qquad
+\rho_\alpha(d_{\mathrm{GST}}a)
+=d_{\mathrm{Dol}}\rho_\alpha(a),
+\]
+and the degree-one component of the represented differential is the actual
+\(\bar\partial_{E_\alpha}\) on the alpha-selected bundle. The represented constant curvature coefficient must then be
+\[
+\rho_\alpha(K_0)=\bar\partial_{E_\alpha}^{\,2}.
+\]
+If the GST flatness theorem gives all curvature coefficients zero and this representation is constructed, integrability follows coefficientwise.
+
+This is the precise missing bridge. The existing Lean tower files do not define \(E_\alpha\), a Dolbeault complex on it, or a representation of the GST carrier into its endomorphism-valued forms. The representation must be built; it cannot be inserted as a field whose content already says that \(\bar\partial^2=0\).
+
+\paragraph{A necessary noncommutative check.}
+Scalar trace data cannot replace this representation. On the trivial rank-two bundle over \(\mathbb C^2\), let
+\[
+N=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+\qquad
+A=\bar z_1N\,d\bar z_2.
+\]
+Then \(N^2=0\), \(\operatorname{tr}(N)=0\), and
+\[
+\bar\partial A+A\wedge A
+=
+N\,d\bar z_1\wedge d\bar z_2\ne0,
+\qquad
+\operatorname{tr}(\bar\partial A+A\wedge A)=0.
+\]
+Thus a trace-zero curvature can still have a nonzero endomorphism-valued \((0,2)\) component. This is not a counterexample to the GST tower; it is a counterexample to the invalid inference from scalar trace/period identities to bundle integrability. The GST representation must retain the full noncommutative endomorphism-valued curvature.
+
+\subsection*{6. What the existing GST constructions do and do not supply}
+
+\begin{enumerate}
+\item The residual Gram/energy modules prove the local rank-birth implication once a new cycle with nonzero residual coupling is given. They do not prove the universal existence of that cycle.
+\item The alpha-indexed finite-pole projector derivation constructs genuine Fitting/Newton sources from a genuine finite regular idempotent solution. It does not yet prove that every nonzero dual residual has a projector source with nonzero period.
+\item The spatial-fold topological construction supplies \(E_\alpha\), its Chern-character normalization, and a smooth determinantal representative. The algebraic return still requires (I), or the exact pair-fold condition (PF).
+\item The all-degree curvature-memory, tower-square, flat-complex, and morphism-cascade Lean modules prove identities on their declared abstract carrier. They do not by themselves provide the representation \(\rho_\alpha\) on \(E_\alpha\).
+\item The doubled-carrier fold rotation is an internal complex-structure operation. Its own representability equivalence shows that disjoint doubling alone does not create a new original-\(X\) cycle class.
+\item The GraphV2 general-space realization requires a cycle-path realization as input; the self-expanding cosmology package similarly carries source-realization data. Those fields are not source-construction theorems.
+\item The projective two-generator externalization through scheme self-maps is too restrictive as a universal interface. On a product of nonisogenous elliptic curves, actual self-map actions on the two factor divisor directions are diagonal, whereas the GST two-slot matrix unit is off-diagonal. General algebraic correspondences are more flexible than self-maps.
+\item The current realized-correspondence word algebra is built from finite closed correspondences. It must not be silently identified with the full algebra of arbitrary proper algebraic correspondences.
+\item Stage-2G permits a supplied cycle-class map that can be zero. The geometric-spine laws alone do not establish canonical semantics. The final classical theorem must use the actual canonical cycle-class map, not an arbitrary linear map satisfying selected naturality equations.
+\end{enumerate}
+
+\subsection*{7. The one research target and the immediate GST attack}
+
+The single remaining source-generation law is (GST-SB). The alpha-indexed projector form (P-SB) is its finite algebraic realization route. The pair-fold condition (PF) is its exact geometric algebraization form. The Dolbeault representation \(\rho_\alpha\) is the specific GST-to-bundle bridge that could turn the all-degree curvature tower into an integrability proof.
+
+The next mathematical task is therefore not to add another independent hypothesis to the master assembly. It is to construct \(\rho_\alpha\) from the existing GST N-channel fold and carrier algebra, with the following non-negotiable tests:
+
+\begin{enumerate}
+\item The carrier on which the tower acts must be the alpha-selected topological \(K\)-class or its explicitly defined graded bundle representative.
+\item The representation must preserve multiplication, grading, and the differential, not merely the scalar trace or the induced cohomology class.
+\item The degree-one represented operator must satisfy the Dolbeault Leibniz rule on the original \(X\).
+\item The full represented curvature must be endomorphism-valued and must agree with the GST curvature-memory coefficients.
+\item The flatness conclusion must be obtained from the proved GST pure-split/curvature law, not assumed as an extra field.
+\item The resulting integrable pair must retain the exact super-Chern-character normalization \(m\alpha\), so GAGA and the two-centre/Fitting return produce an actual cycle on the original \(X\).
+\end{enumerate}
+
+This is one coherent target. It preserves the successful GST curvature and fold mathematics, prevents the abstract tower from being confused with an original-\(X\) algebraic source, and gives a precise conditional Hodge theorem. The only Hodge-strength hypothesis left is universal residual source-birth; proving the GST Dolbeault representation and using it to establish that law is the next research phase.
