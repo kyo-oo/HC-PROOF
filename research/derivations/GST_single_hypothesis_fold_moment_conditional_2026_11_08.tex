@@ -246,4 +246,40 @@ The new general indexed source is a useful positive fixture
 for extending GST N-cohomology and fold geometry beyond the
 current self-map/bi-finite correspondence interfaces.
 
+
+\section{The GST fold-gauge invariance theorem}
+There is a useful exact principle about which fold operations can change
+the Hankel condition. Let \(W\) be any finite-dimensional rational Hodge
+representation, \(T\in\operatorname{End}_{\Q}(W)\), \(v\in W\) and
+\(\ell\in W^*\). Let \(U:W\to W\) be an invertible rational change
+of GST fold coordinates, with
+\[
+T'=U^{-1}TU,\qquad v'=U^{-1}v,\qquad \ell'=\ell U.
+\]
+Then for ALL \(i,j\ge0\),
+\[
+\ell'((T')^{i+j}v')
+ = \ell U (U^{-1}T^{i+j}U)U^{-1}v
+ = \ell(T^{i+j}v).
+\]
+Consequently the entire Hankel matrix, rank, and determinant are exactly
+UNCHANGED by invertible GST fold recoordination:
+\[
+\boxed{M(T',v',\ell')=M(T,v,\ell).}
+\]
+Wolfram checked the full symbolic \(2\times2\) rational-matrix
+identity with arbitrary invertible \(U\), giving the zero difference
+matrix and zero determinant difference; the proof here applies in
+every dimension.
+
+Interpretation: coordinate folding, gauge transformation, and
+invertible transport of the SAME native source and detector cannot
+turn a degenerate Hankel certificate into a nondegenerate one.
+A successful all-X GST construction must alter the supply of
+genuine native algebraic source correspondences, the genuinely
+available detector sector, or the geometric realization data,
+rather than only change coordinates. This is a route-specific
+no-go theorem, NOT a statement that all noninvertible geometric
+folds or singular source-birth mechanisms fail.
+
 \end{document}
