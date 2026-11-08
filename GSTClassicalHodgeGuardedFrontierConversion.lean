@@ -94,7 +94,7 @@ theorem exists_nonzeroCycleClass_of_nativeHodgeOrbitSeed
     ∃ Z : codimensionCycles V.X q, H.cycleClass q Z ≠ 0 := by
   refine ⟨S.cycle, fun h0 => S.hodge_ne_zero (Subtype.ext ?_)⟩
   rw [S.class_eq] at h0
-  simpa using h0
+  exact h0
 
 /-- **THE LIVE-WEIGHT FORCING.**  A native Hodge orbit seed at weight `q`
 exists only when the rational Hodge subspace at `q` is nonzero: the
@@ -112,7 +112,7 @@ theorem nativeHodgeOrbitSeed_forces_liveWeight
           Submodule ℚ (RationalSingularCohomology H.analytification (2 * q))) :=
     S.hodge.2
   rw [hsub] at hmem
-  simpa using Submodule.mem_bot.mp hmem
+  exact (Submodule.mem_bot (R := ℚ)).mp hmem
 
 /-- **THE DEGREE-CERTIFIED FRONTIER FORCES ALL WEIGHTS LIVE.**  The
 unguarded `∀ q` seed family of the degree-certified frontier secretly
@@ -167,7 +167,7 @@ theorem bigradedBettiHodge_of_guarded_seed_family
   intro p alpha halpha
   by_cases hp : rationalHodgeSubspace (H.hodgeBigrading p) = ⊥
   · rw [hp] at halpha
-    have h0 : alpha = 0 := Submodule.mem_bot.mp halpha
+    have h0 : alpha = 0 := (Submodule.mem_bot (R := ℚ)).mp halpha
     subst h0
     exact ⟨0, by simp⟩
   · exact (S p hp).hodge_weight (fun j => (R p hp j).toGeometryFirst) halpha
@@ -175,7 +175,8 @@ theorem bigradedBettiHodge_of_guarded_seed_family
 /-- **THE GUARDED FRONTIER.**  The corrected residual interface: the seed
 family and the one-live-source projective two-generators, both confined to
 live weights.  No all-live demand anywhere. -/
-structure GuardedDegreeCertifiedFrontier where
+structure GuardedDegreeCertifiedFrontier
+    (V : SmoothProjectiveComplexScheme) (H : HodgeBigradedBettiData V) where
   seed :
     ∀ q : Nat,
     rationalHodgeSubspace (H.hodgeBigrading q) ≠ ⊥ →
@@ -284,21 +285,20 @@ theorem classicalHodgeBasisIndex_isEmpty_of_deadWeight
     intro x y
     have hx :
         (x : RationalSingularCohomology H.analytification (2 * q)) = 0 := by
-      apply Submodule.mem_bot.mp
+      apply (Submodule.mem_bot (R := ℚ)).mp
       rw [← hq]
       exact x.2
     have hy :
         (y : RationalSingularCohomology H.analytification (2 * q)) = 0 := by
-      apply Submodule.mem_bot.mp
+      apply (Submodule.mem_bot (R := ℚ)).mp
       rw [← hq]
       exact y.2
     exact Subtype.ext (by rw [hx, hy])
   refine (not_nonempty_iff).mp (fun hne => ?_)
   obtain ⟨i⟩ := hne
   have h1 : (Finsupp.single i (1 : ℚ) :
-      ClassicalHodgeBasisIndex V H q →₀ ℚ) ≠ 0 := by
-    intro h0
-    exact one_ne_zero (Finsupp.single_eq_zero_iff.mp h0)
+      ClassicalHodgeBasisIndex V H q →₀ ℚ) ≠ 0 :=
+    Finsupp.single_ne_zero.mpr one_ne_zero
   apply h1
   have h2 : (classicalHodgeBasis V H q).repr.symm
       (Finsupp.single i (1 : ℚ)) = 0 :=
@@ -312,8 +312,9 @@ theorem classicalHodgeBasisIndex_isEmpty_of_deadWeight
     _ = 0 := map_zero _
 
 /-- **THE UNGUARDED GENERATOR DEMAND IS VACUOUS AT DEAD WEIGHTS.**  Any
-generator statement over the empty basis index holds outright. -/
-theorem unguarded_generator_demand_vacuous_at_deadWeight
+generator value over the empty basis index exists outright — the demand
+there carried no content. -/
+noncomputable def unguarded_generator_demand_vacuous_at_deadWeight
     {V : SmoothProjectiveComplexScheme} {H : HodgeBigradedBettiData V}
     {q : Nat}
     (hq : rationalHodgeSubspace (H.hodgeBigrading q) = ⊥)
@@ -327,7 +328,7 @@ theorem unguarded_generator_demand_vacuous_at_deadWeight
 /-- **WEIGHT ZERO, GUARDED FORM.**  The degree-certified fundamental seed
 manufactures the guarded seed family at weight zero — the guard is ignored
 because the seed exists unconditionally there. -/
-theorem guarded_seed_zero_of_degree
+noncomputable def guarded_seed_zero_of_degree
     (G : GeometricCycleClassSpine V H)
     (D : ProjectiveDegreeTraceSemantics V H)
     (hne : (codimensionZeroPointFinset V).Nonempty) :
@@ -338,7 +339,7 @@ theorem guarded_seed_zero_of_degree
 /-- **WEIGHT ONE, GUARDED FORM.**  On an irreducible carrier with a
 projectively live ground point, the green ground-floor discharge
 manufactures the guarded seed family at weight one. -/
-theorem guarded_seed_one_of_ground
+noncomputable def guarded_seed_one_of_ground
     [IrreducibleSpace V.X]
     (G : GeometricCycleClassSpine V H)
     (D : ProjectiveDegreeTraceSemantics V H)
