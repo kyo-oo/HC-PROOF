@@ -151,7 +151,7 @@ theorem infiniteSuccessor_reachable (n k : Nat) :
       have step : infiniteSuccessorCosmos.Event (n + k) (n + k + 1) := rfl
       have reach := OmniversalGraph.reachable_trans infiniteSuccessorCosmos ih
         (OmniversalGraph.reachable_of_event infiniteSuccessorCosmos step)
-      simpa only [Nat.add_succ, Nat.succ_eq_add_one] using reach
+      simpa only [Nat.add_succ] using reach
 
 theorem infiniteSuccessor_no_terminal_node (n : Nat) :
     ∃ m : Nat, n < m ∧
