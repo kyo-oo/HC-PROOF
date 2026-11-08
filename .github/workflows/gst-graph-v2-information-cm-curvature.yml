@@ -6,6 +6,7 @@ on:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTGraphV2InformationRecovery.lean'
+      - 'GSTGraphV2GeneralRadixConservation.lean'
       - 'GSTGraphV2CMInfiniteCurvatureBridge.lean'
       - '.github/workflows/gst-graph-v2-information-cm-curvature.yml'
   workflow_dispatch:
@@ -64,6 +65,23 @@ jobs:
           if grep -E "declaration uses 'sorry'|sorryAx" gst-graph-information.log; then
             echo "Unexpected sorry axiom" && exit 1
           fi
+      - name: Kernel compile generalized radix conservation
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTGraphRadixLib GSTGraphV2GeneralRadixConservation
+          if timeout 9900 lake build GSTGraphV2GeneralRadixConservation > gst-general-radix.log 2>&1; then
+            echo "LEAN PASSED: GSTGraphV2GeneralRadixConservation"
+          else
+            grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-general-radix.log | tail -n 100 || true
+            tail -n 75 gst-general-radix.log || true
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-general-radix.log; then
+            echo "Unexpected sorry axiom" && exit 1
+          fi
       - name: Kernel compile integrated CM curvature
         if: success()
         shell: bash
@@ -92,5 +110,6 @@ jobs:
           name: gst-graph-information-cm-curvature
           path: |
             gst-graph-information.log
+            gst-general-radix.log
             gst-cm-curvature.log
           if-no-files-found: warn
