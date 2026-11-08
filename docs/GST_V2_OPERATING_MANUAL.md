@@ -1,14 +1,29 @@
 # GST GRAPH V2 — THE OPERATING MANUAL
 
-*Layer 0 of the Wave Mechanics program (Task 4). This document is the complete
-law book of GST Graph V2 as installed in this universe: every axis, every
-space, every law, and the two emergence mechanisms (waves and digits). Every
+*Layer 0 of the original Wave Mechanics arithmetic realization (Task 4).
+This document records that realization's axes, sectors, and arithmetic
+emergence mechanisms. It is **not** an exhaustive definition of the newer
+carrier-independent GST ontology. Every
 claim below is grounded in a named, machine-verified theorem of the HC-PROOF
 universe (commit 5eecc25, comparator PASS, 0 errors, 0 sorries) or in the
 monolith source it was extracted from. Where a statement is Task-4 new theory
 (not yet machine-checked), it is marked **[WAVE-SPEC]**.*
 
 ---
+
+> **Ontology-scope correction, 9 November 2026.** General Space Theory is not
+> defined by seven natural-number axes, by base-3 digits, or by a fixed
+> Euclidean/non-Euclidean manifold. Those are valid *observations* of a wider
+> carrier-independent causal ontology. See `GSTGeneralSpace.lean`,
+> `GSTGraphV2OmniversalCore.lean`,
+> `GSTGraphV2ArithmeticOmniversalRealization.lean`, and
+> `GSTGraphV2CausalComponents.lean`. The last module separates mutually
+> reachable causal states into components and equips those components with
+> antisymmetric directed reachability; this is compatible with feedback
+> loops in the underlying ontology without assuming logical contradictions.
+> A concrete smooth complex projective realization still needs its own
+> algebraic and cohomological compatibility data. No analogy from carry
+> arithmetic to Hodge algebraicity constitutes that bridge automatically.
 
 ## 0. One-paragraph answer to "do you understand GST Graph V2?"
 
@@ -29,7 +44,7 @@ why the Wave Mechanics program (Task 4) is possible at all.
 
 ## 1. THE SEVEN NON-DIMENSIONAL AXES
 
-A GST vertex is **seven coordinates and nothing else**:
+In the **historical arithmetic realization**, a vertex is encoded by **seven coordinates**. These are *not* mandatory coordinates of a general GST node:
 
 ```
 ( x,  x',  y,  y',  z,  z',  n → n' )
