@@ -148,6 +148,28 @@ theorem nativeSingleFold_cycles_orbit
       (extendedGeometricCyclicFrame F z read hOld hNew).atomOrbit (k+1) := by
   exact (extendedGeometricCyclicFrame F z read hOld hNew).nativeFold_atomOrbit_succ k
 
+/-- Integrated finite-rank theorem: the newly curvature-augmented
+geometric wave frame builds ONE native cyclic fold with a commuting
+Betti action AND an explicit original-carrier cycle for any rational
+class, once the geometric full-frame rank is checked. -/
+theorem augmented_cyclic_fold_constructs_all_classes_of_rank
+    (F : GeometricWaveFrame s cl) (z : A)
+    (read : B →ₗ[ℚ] ℚ)
+    (hOld : ∀ i : Fin s.holes, read (cl (F.atom i)) = 0)
+    (hNew : read (cl z) ≠ 0)
+    [FiniteDimensional ℚ B]
+    (hRank : Module.finrank ℚ B = s.holes + 1)
+    (alpha : B) :
+    ∃ native : A →ₗ[ℚ] A, ∃ betti : B →ₗ[ℚ] B,
+      (∀ w : A, cl (native w) = betti (cl w)) ∧
+      (∃ Z : A, cl Z = alpha) := by
+  refine ⟨nativeSingleFold F z read hOld hNew,
+    bettiSingleFold F z read hOld hNew, ?_, ?_⟩
+  · intro w
+    exact nativeSingleFold_cycleClass F z read hOld hNew w
+  · exact ⟨waveCurvatureCycle F z read alpha,
+      waveCurvature_exact_of_rank_succ F z read hOld hNew hRank alpha⟩
+
 #check extendedGeometricCyclicFrame
 #check nativeSingleFold_cycleClass
 #check nativeSingleFold_cycles_orbit
