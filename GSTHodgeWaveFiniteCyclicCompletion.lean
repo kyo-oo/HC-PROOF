@@ -59,7 +59,7 @@ def rotateFold (n : ℕ)
     simp only [map_add, add_smul, Finset.sum_add_distrib]
   map_smul' := by
     intro r x
-    simp only [map_smul, smul_smul, Finset.smul_sum]
+    simp [map_smul, smul_smul, Finset.smul_sum, smul_eq_mul]
 
 @[simp] theorem rotateFold_apply (n : ℕ)
     (atoms : Fin (n+1) → A)
