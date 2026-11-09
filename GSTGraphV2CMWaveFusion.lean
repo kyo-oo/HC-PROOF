@@ -1,5 +1,6 @@
 import GSTGraphV2InformationRecovery
 import waves.GSTNCohomologyV3
+import GSTGraphV2CMInfiniteCurvatureBridge
 import waves.GSTWaveCohomologyV2
 
 /-!
