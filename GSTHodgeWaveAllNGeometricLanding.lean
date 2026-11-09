@@ -206,7 +206,7 @@ abbrev OriginalXFrame :=
 /-- A single native/Betti correspondence pair derived explicitly from
 Wave I+II+CM and independent actual Chow cycles, with no extra
 intertwining assumption. -/
-def OriginalXFrame.toCycleClassOperatorPair
+noncomputable def OriginalXFrame.toCycleClassOperatorPair
     (F : OriginalXFrame (V := V) (H := H) (p := p) (s := s)) :
     CycleClassOperatorPair V H p where
   cycleOperator := F.nativeFold
@@ -216,7 +216,7 @@ def OriginalXFrame.toCycleClassOperatorPair
 /-- The existing WaveNativeCompiler can now be built without assuming
 its intertwining field: the geometric frame + all-N fixed-cell
 eigen-readout PROVES that field. -/
-def OriginalXFrame.toWaveNativeCompiler
+noncomputable def OriginalXFrame.toWaveNativeCompiler
     (F : OriginalXFrame (V := V) (H := H) (p := p) (s := s)) :
     GSTHodgeGSTWaveGeometricCompiler.WaveNativeCompiler V H p s where
   nativeFamily := F.nativeWaveSource
