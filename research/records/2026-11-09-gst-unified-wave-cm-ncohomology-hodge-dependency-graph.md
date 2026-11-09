@@ -23,7 +23,9 @@ flowchart TB
     FW["Genuine original-X N-wave dual Chow frame"]
     PR["Actual Hard Lefschetz primitive residual"]
     CR["Native wave+curvature residual elimination: Lean green"]
-    SIX["(P1)^6 genuine primitive source ladder: rank 2 to 9"]
+    SIX["(P1)^6 genuine curvature source ladder: rank 2 to 9"]
+    CYCL["One native cyclic fold from augmented wave/curvature frame"]
+    RANK["Rank n+1 source certificate and original-X Hodge construction"]
     EX["Exceptional Weil-fourfold primitive source, geometry needed"]
     A --> B
     A --> W
@@ -55,6 +57,9 @@ flowchart TB
     I --> CR
     T --> CR
     CR --> SIX
+    CR --> CYCL
+    CYCL --> RANK
+    SIX --> RANK
     CR -. "additional geometric source-birth direction" .-> EX
     SIX -->|"exact full-rank example"| BIRTH
     EX -. "construct non-divisor primitive source"| BIRTH
@@ -80,7 +85,7 @@ flowchart TB
 | Actual original-X native words | The existing algebraic image | **Lean kernel proved**: cannot produce a missing quotient direction by replaying only those words |
 | Genuine N-wave dual Chow frame | Primitive Hodge residual | **Lean kernel established in prior modules**; original-X frame map with actual native cycles |
 | Native geometric curvature cycle | Wave residual detector | **New Lean kernel green [42679545127](https://github.com/kyo-oo/HC-PROOF/actions/runs/42679545127)**: every old N-hole detector and one independent curvature probe vanish on the residual |
-| Original-X primitive codimension-two wave+curvature | Primitive residual | New module `GSTHodgePrimitiveWaveCurvatureLanding.lean` pending latest targeted CI verification |
+| Original-X primitive codimension-two wave+curvature | Primitive residual | **Lean green** [42683458742](https://github.com/kyo-oo/HC-PROOF/actions/runs/42683458742) including a rank n+1 original-X primitive reconstruction |
 | (P¹)^6 original-X primitive sector | Seven successive curvature corrections | **Exact rational Wolfram**: ranks 2→3→4→5→6→7→8→9, all detector equations true, final residual zero |
 | Weil-type discriminant-one fourfolds | Non-divisor exceptional primitive classes | Floccari–Fu arXiv:2504.13607v2 uses OG6/Kuga–Satake geometry; GST realization of exceptional source is the next test |
 | Geometry-specific primitive source-birth | Arbitrary-X GST cyclic hypothesis | **The genuine target of the proof attempt**: construct new correspondence source for each primitive direction independent of knowing its Chow representative |
@@ -96,6 +101,8 @@ The new 10-dimensional model uses an actual **fivefold**, not a 5D assignment to
 On `GSTGraphV2CMNMCoupledUniverse`, arithmetic transitions leave the geometry node unchanged, while certified geometric transitions preserve existing algebraic witnesses. Hence the currently implemented *product coupling* by itself does not show that an arithmetic information period generates a new geometric Hodge direction. The new verified `combinedWaveCM` and `word_cycleClass` theorems correctly define how a geometric wave operator WOULD interact when constructed, and the fivefold genuine Chow example shows that nontrivial geometric realization is possible. The required new general GST map must be **interaction-bearing**, not merely a Cartesian product of independent graphs.
 
 Source conservation is a theorem, not pessimism: every actual original-X Chow correspondence word sends the existing cycle-class image into itself. To make the orbit complete, the geometric construction must cover all primitive Hodge directions by actual new native sources.
+
+| Added curvature source + genuine augmented wave frame | One native cyclic fold | **Lean green** [42683986245](https://github.com/kyo-oo/HC-PROOF/actions/runs/42683986245): one native/Betti cycle-class-compatible operator, exact cyclic orbit, all Hodge fiber classes when geometric rank = n+1 |
 
 ## Updated exact source-birth formula and the missing arrow
 
@@ -114,8 +121,10 @@ Full derivation: `research/records/2026-11-10-gst-wave-cm-cosmology-geometric-cu
 ## Key artifacts
 
 - `GSTHodgeWaveCurvatureResidualStep.lean`: exact native wave-plus-curvature residual-killing theorem, CI 42679545127 SUCCESS.
-- `GSTHodgePrimitiveWaveCurvatureLanding.lean`: original-X p=2 specialization, status subject to targeted CI.
+- `GSTHodgePrimitiveWaveCurvatureLanding.lean`: original-X p=2 specialization and rank n+1 reconstruction, CI 42683458742 SUCCESS.
 - `research/computations/gst_wave_curvature_full_primitive_sixfold_ladder_20261110.wl`: exact 9D primitive rank completion via 7 original-X geometric curvature cycles.
+- `GSTHodgeWaveCurvatureCyclicAugmentation.lean`: one native cycle-class-compatible fold from appended genuine curvature source, CI 42683986245 SUCCESS.
+- `research/computations/gst_sixfold_curvature_born_nine_cycle_single_fold_20261110.wl`: original-X nine-primitive cyclic fold, orbit/moment determinants both 1.
 - `GSTGraphV2IntegratedWaveCMGate.lean`: mixed words and single combined fold, rank-one CM compatibility boundary; run 42663099970 **SUCCESS**.
 - `research/computations/gst_cm_wave_single_fold_cyclotomic8_20261109.wl`: exact 8D field/cyclic generator.
 - `research/computations/gst_cm_wave_chow_fivefold_codim2_20261109.wl`: actual 10-subset intersection matrix, exact rank-10 operator.
