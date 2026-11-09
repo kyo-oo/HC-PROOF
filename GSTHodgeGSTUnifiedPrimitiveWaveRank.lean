@@ -184,112 +184,86 @@ def primitiveCycleClass :
     exact map_smul (nativeToHodgeFiberLinear G) c x.1
 
 
-/-- The GST-Wave/CM primitive residual identity for ANY dimension and
-ANY existing geometrically legitimate partial native wave frame.
+/-- Exact GST Wave I/II/CM source decomposition on the ORIGINAL X.
 
-For every rational codimension-two Hodge class alpha, there is an
-EXPLICIT actual original-X algebraic cycle Z and a primitive residual
-r, with no remaining component detectable by the frame's intersection
-readouts:
-
-    alpha = cl_X(Z) + r,  L^(d-3) r = 0,
-    all Wave-II geometric detectors of r = 0.
-
-This is the precise transformation of the proof target into a
-source-birth residual problem; r need not be assumed nonalgebraic. -/
+Unlike a frame of the primitive subtype, this uses the ACTUAL ambient
+rational Betti cycle-class map and a geometric primitive property for
+each independently supplied atom.  This avoids ungrounded source-world
+type identifications.  Every rational Hodge class is a known algebraic
+Lefschetz correction + an actual wave-produced primitive algebraic cycle
++ a primitive residual invisible to all supplied geometric frame detectors. -/
 theorem originalX_wave_primitive_residual_decomposition
     (s : NShape)
-    (F : GeometricWaveFrame s (primitiveCycleClass G P))
+    (F : OriginalXFrame (V := V) (H := H) (p := 2) (s := s))
+    (hAtoms : ∀ i : Fin s.holes,
+      P.primitiveTest (nativeToHodgeFiberLinear G (F.atom i)) = 0)
     (alpha : ClassicalHodgeFiber V H 2) :
     ∃ Z : codimensionCycles V.X 2,
-      ∃ r : ↥(PrimitiveHodgeFiber G P),
-        alpha = nativeToHodgeFiberLinear G Z + r.1 ∧
-        F.bettiCoordinates r = 0 := by
-  let beta : ↥(PrimitiveHodgeFiber G P) :=
-    ⟨primitiveHodgeRemainder G P h11 alpha,
-      LinearMap.mem_ker.mpr
-        (primitiveHodgeRemainder_primitive G P h11 alpha)⟩
-  let w : ↥(NativePrimitiveCycles G P) :=
-    F.nativeWaveSource (holeReadoutLift s (F.bettiCoordinates beta))
-  let r : ↥(PrimitiveHodgeFiber G P) :=
-    beta - primitiveCycleClass G P w
-  refine ⟨w.1 + algebraicLefschetzCorrection G P h11 alpha, r, ?_, ?_⟩
-  · have hWave :
-        beta.1 =
-          (primitiveCycleClass G P w).1 + r.1 := by
-      dsimp [r]
+      ∃ r : ClassicalHodgeFiber V H 2,
+        alpha = nativeToHodgeFiberLinear G Z + r ∧
+        P.primitiveTest r = 0 ∧
+        F.bettiCoordinates r.1 = 0 := by
+  let beta := primitiveHodgeRemainder G P h11 alpha
+  let v := F.bettiCoordinates beta.1
+  let z := F.nativeWaveSource (holeReadoutLift s v)
+  have hzclass : H.cycleClass 2 z = F.bettiCombination v := by
+    dsimp [z, GeometricWaveFrame.nativeWaveSource]
+    rw [holeReadout_lift, F.cl_nativeCombination]
+  have hzPrimitive : P.primitiveTest (nativeToHodgeFiberLinear G z) = 0 := by
+    have hZ : z = ∑ i : Fin s.holes, (v i) • F.atom i := by
+      dsimp [z, GeometricWaveFrame.nativeWaveSource]
+      rw [holeReadout_lift]
+      rfl
+    rw [hZ]
+    simp only [map_sum, map_smul]
+    simp [hAtoms]
+  let residual := beta - nativeToHodgeFiberLinear G z
+  refine ⟨z + algebraicLefschetzCorrection G P h11 alpha, residual, ?_, ?_, ?_⟩
+  · have hb : beta = nativeToHodgeFiberLinear G z + residual := by
+      dsimp [residual]
       abel
     calc
-      alpha =
-          beta.1 +
+      alpha = beta + nativeToHodgeFiberLinear G
+        (algebraicLefschetzCorrection G P h11 alpha) :=
+           Hodge_class_eq_primitive_plus_native_cycle G P h11 alpha
+      _ = (nativeToHodgeFiberLinear G z + residual) +
             nativeToHodgeFiberLinear G
-              (algebraicLefschetzCorrection G P h11 alpha) :=
-        Hodge_class_eq_primitive_plus_native_cycle G P h11 alpha
-      _ =
-          ((primitiveCycleClass G P w).1 + r.1) +
-            nativeToHodgeFiberLinear G
-              (algebraicLefschetzCorrection G P h11 alpha) := by
-        rw [hWave]
-      _ =
-          nativeToHodgeFiberLinear G
-            (w.1 + algebraicLefschetzCorrection G P h11 alpha) +
-            r.1 := by
-        rw [map_add]
-        change
-          (nativeToHodgeFiberLinear G w.1 + r.1) +
-              nativeToHodgeFiberLinear G
-                (algebraicLefschetzCorrection G P h11 alpha) =
-          (nativeToHodgeFiberLinear G w.1 +
-              nativeToHodgeFiberLinear G
-                (algebraicLefschetzCorrection G P h11 alpha)) + r.1
-        abel
-  · have hClass :
-        primitiveCycleClass G P w =
-          F.bettiCombination (F.bettiCoordinates beta) := by
-      change
-        primitiveCycleClass G P
-          (F.nativeCombination
-            (holeReadout s (holeReadoutLift s (F.bettiCoordinates beta)))) =
-          F.bettiCombination (F.bettiCoordinates beta)
-      rw [holeReadout_lift, F.cl_nativeCombination]
-    change F.bettiCoordinates
-      (beta - primitiveCycleClass G P w) = 0
-    rw [hClass]
-    exact waveResidual_coordinates_zero F beta
+              (algebraicLefschetzCorrection G P h11 alpha) := by rw [hb]
+      _ = nativeToHodgeFiberLinear G
+          (z + algebraicLefschetzCorrection G P h11 alpha) + residual := by
+          rw [map_add]
+          abel
+  · dsimp [residual]
+    rw [map_sub, primitiveHodgeRemainder_primitive, hzPrimitive, sub_self]
+  · dsimp [residual]
+    change F.bettiCoordinates (beta.1 -
+      (nativeToHodgeFiberLinear G z).1) = 0
+    rw [map_sub]
+    have hval : (nativeToHodgeFiberLinear G z).1 = H.cycleClass 2 z := rfl
+    rw [hval,hzclass, bettiCoordinates_bettiCombination]
+    exact sub_self _
 
-/-- The full arbitrary-dimension, codimension-two GST synthesis.
-
-The original Wave I fixed-cell source, CM coupling, arbitrary Wave-II
-N-hole quotient, genuine original-X primitive cycles, rational
-intersection duals, hard Lefschetz and the codimension-one theorem
-are ALL used in one constructive primitive Hodge cycle.
-
-The geometric challenge is narrowed to constructing a primitive native
-frame with size exactly the true primitive rank; it is not silently
-assumed that the frame's cycles represent a given alpha. -/
-theorem originalX_hodge_two_cycle_of_primitive_wave_rank
+/-- The exact geometric source-birth target after joining BOTH original
+GST waves, CM, native algebraic cycles, and hard Lefschetz:
+a detector-separating family of primitive wave cycles produces an
+actual representative of EVERY rational codimension-two Hodge class. -/
+theorem originalX_hodge_two_cycle_of_primitive_wave_separation
     (s : NShape)
-    (F : GeometricWaveFrame s (primitiveCycleClass G P))
-    [FiniteDimensional ℚ ↥(PrimitiveHodgeFiber G P)]
-    (hRank : Module.finrank ℚ ↥(PrimitiveHodgeFiber G P) = s.holes)
+    (F : OriginalXFrame (V := V) (H := H) (p := 2) (s := s))
+    (hAtoms : ∀ i : Fin s.holes,
+      P.primitiveTest (nativeToHodgeFiberLinear G (F.atom i)) = 0)
+    (hSeparate : ∀ r : ClassicalHodgeFiber V H 2,
+       P.primitiveTest r = 0 →
+       F.bettiCoordinates r.1 = 0 → r = 0)
     (alpha : ClassicalHodgeFiber V H 2) :
     ∃ Z : codimensionCycles V.X 2,
-        nativeToHodgeFiberLinear G Z = alpha := by
-  let remainder : ↥(PrimitiveHodgeFiber G P) :=
-    ⟨primitiveHodgeRemainder G P h11 alpha,
-      LinearMap.mem_ker.mpr
-        (primitiveHodgeRemainder_primitive G P h11 alpha)⟩
-  let born : ↥(NativePrimitiveCycles G P) :=
-    F.nativeWaveSource (holeReadoutLift s (F.bettiCoordinates remainder))
-  have bornClass : primitiveCycleClass G P born = remainder :=
-    wave_native_class_of_full_rank F hRank remainder
-  have hprim :
-      nativeToHodgeFiberLinear G born.1 =
-        primitiveHodgeRemainder G P h11 alpha :=
-    congrArg Subtype.val bornClass
-  refine ⟨born.1 + algebraicLefschetzCorrection G P h11 alpha, ?_⟩
-  exact reconstruct_from_algebraic_primitive_remainder
-    G P h11 alpha born.1 hprim
+       nativeToHodgeFiberLinear G Z = alpha := by
+  obtain ⟨Z,r,heq,hprim,hdet⟩ :=
+    originalX_wave_primitive_residual_decomposition G P h11 s F hAtoms alpha
+  have hr : r = 0 := hSeparate r hprim hdet
+  refine ⟨Z, ?_⟩
+  rw [hr, add_zero] at heq
+  exact heq.symm
 
 /-- Retain the existing exact threefold benchmark in the SAME source
 chain. At dimension three the primitive test is identity and the
@@ -313,7 +287,7 @@ end PrimitiveHodgeLanding
 #check GSTHodgeWaveAllNHoleReadout.holeReadout_orbit
 #check GSTHodgeWaveAllNGeometricLanding.GeometricWaveFrame.nativeWaveSource_intertwines
 #check GSTGraphV2NativeCurvatureBirth.nativeCurvature_cycleClass
-#check originalX_hodge_two_cycle_of_primitive_wave_rank
+#check originalX_hodge_two_cycle_of_primitive_wave_separation
 #print axioms originalX_hodge_two_cycle_of_primitive_wave_rank
 #print axioms wave_native_class_of_full_rank
 
