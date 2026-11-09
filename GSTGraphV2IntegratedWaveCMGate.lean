@@ -163,6 +163,21 @@ theorem combinedWaveCM_iterates_remain_algebraic
   exact word_in_cycleClass_range (combinedWaveCM A B) B
     (List.replicate n Mode.wave) Z
 
+/-- Parity constraint for the ACTUAL rational Hodge universe:
+a CM complex structure J²=-1 cannot act on a rank-one rational
+Hodge fiber. The genuine zero and top degrees of connected
+projective X are rank one. Therefore a universal GST + CM action
+must allow a trivial/non-CM summand, and restrict J to compatible
+even-dimensional rational components; otherwise its requirements
+would already fail in complex dimension zero. -/
+theorem cm_complex_structure_impossible_on_rational_line
+    (J : Module.End ℚ ℚ)
+    (hJ : ∀ x : ℚ, J (J x) = -x) : False := by
+  exact
+    GSTMathboxCMGeometricComplexStructure.complex_structure_moves_nonzero_off_line
+      J hJ (1 : ℚ) (by norm_num) (J 1) (by simp)
+
+#check cm_complex_structure_impossible_on_rational_line
 #check word_cycleClass
 #check word_in_cycleClass_range
 #check originalX_cycle_of_prescribed_reachable_target
