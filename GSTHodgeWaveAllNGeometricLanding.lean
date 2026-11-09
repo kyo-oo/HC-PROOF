@@ -1,5 +1,6 @@
 import GSTHodgeWaveAllNHoleReadout
 import GSTClassicalHodgeCycleOperatorNaturality
+import GSTHodgeGSTWaveGeometricCompiler
 
 /-!
 # GST arbitrary-N Wave I/II/CM -> original-X native algebraic cycles
