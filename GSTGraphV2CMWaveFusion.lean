@@ -67,12 +67,14 @@ def cmSign (s : Cell) : ℚ :=
 
 theorem cmSign_shuffle (s : Cell) : cmSign (shuffle s) = cmSign s := by
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    norm_num [cmSign, positiveCMChannel, shuffle]
 
 theorem cmSign_mirror_product (s : Cell) :
     cmSign s * cmSign (mirrorCell s) = -1 := by
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    norm_num [cmSign, positiveCMChannel, mirrorCell]
 
 /-- Rationalized Wave I cochains: twelve independent signal coordinates. -/
 abbrev WaveSignal := Cell → ℚ
@@ -140,7 +142,7 @@ def seed : WaveSignal :=
 theorem source_on_positive_fixed :
     sourceMultiplicity ((3 : Fin 4), (2 : Fin 3)) = 2 := by
   norm_num [sourceMultiplicity, surviveI, midDigit,
-    finalMicroDigit, microOutput, highBit, lowBit]
+    finalMicroDigit, microOutput, highBit, lowBit, twoI]
 
 theorem source_on_null_fixed :
     sourceMultiplicity ((0 : Fin 4), (0 : Fin 3)) = 0 := by
@@ -202,7 +204,7 @@ theorem channel_value (s : NShape) (i : Fin s.holes)
   simp [channel]
 
 #check GSTNCohomologyV3.independentHoleBasis_reconstruct
-#check GSTWaveCohomologyV2.weighted_interference_decomposition
+#check GSTNCohomologyV2.weighted_interference_decomposition
 #check GSTGraphV2InformationRecovery.canonical_vertex_information_step
 #check GSTGraphV2CMInfiniteCurvatureBridge.informationCMCurvature_five_sum_zero
 #check J_square
