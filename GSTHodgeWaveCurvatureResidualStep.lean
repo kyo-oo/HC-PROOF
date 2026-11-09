@@ -264,7 +264,7 @@ theorem waveCurvature_exact_of_rank_succ
   intro r hcoords hread
   apply hinj
   apply Prod.ext
-  · exact hcoords
-  · exact hread
+  · simpa [augmentedWaveCurvatureReadout] using hcoords
+  · simpa [augmentedWaveCurvatureReadout] using hread
 
 end GSTHodgeWaveCurvatureResidualStep
