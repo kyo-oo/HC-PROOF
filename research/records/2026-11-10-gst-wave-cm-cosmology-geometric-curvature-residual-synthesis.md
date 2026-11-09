@@ -12,7 +12,7 @@ Date: 2026-11-10 (IST). Repo `kyo-oo/HC-PROOF`, branch `research/gpt6-native-poi
 6. **All-order fold memory:** `GSTFoldFourthOrderMemoryTower`, `GSTFoldTowerSquare.JetTowerInf`, and `GSTInfiniteTowerCurvatureCascade` prove the formal all-index square/convolution curvature tower. Each coefficient is an exact finite expression; no analytic convergence requirement was silently added.
 7. **Canonical geometric landing:** `GSTClassicalHodgeCycleOperatorNaturality.CycleClassOperatorPair` and `GSTGraphV2NativeCurvatureBirth.nativeCurvatureCycle` define actual rational algebraic original-X cycle operators and the exact commuting square `cl_X([N_A,N_B]Z)=[T_A,T_B]cl_X(Z)`. `GSTHodgeWaveAllNGeometricLanding.GeometricWaveFrame` defines actual independently algebraic frame cycles and geometric intersection readouts; `GSTHodgeGSTWaveGeometricCompiler` constructs a primitive wave seed and primitive curvature cycle under true primitive-preserving operations.
 8. **Low-dimensional Hodge bridge:** `GSTUniversalCodimensionTwoPrimitiveExtraction` already implements the correct Lefschetz divisor correction for p=2 and isolates the primitive remainder; `GSTHodgeGSTUnifiedPrimitiveWaveRank` gives the original-X wave-born algebraic part plus the primitive residual. The classical d=3 case is discharged by the divisor theorem and actual hard Lefschetz, not by artificially choosing N wave holes.
-9. **New composite residual-elimination mathematics:** `GSTHodgeWaveCurvatureResidualStep.lean` derives an explicit second native correction and proves the residual is annihilated both by all old wave coordinates and by the genuinely geometric curvature detector. `GSTHodgePrimitiveWaveCurvatureLanding.lean` instantiates this to native primitive codimension-two Chow cycles on the original X and the existing wave+CM+primitive curvature constructor. The abstract module is Lean-green at [42679545127](https://github.com/kyo-oo/HC-PROOF/actions/runs/42679545127). The primitive landing source's verification must be checked from its actual CI logs before recording it as proved.
+9. **New composite residual-elimination mathematics:** `GSTHodgeWaveCurvatureResidualStep.lean` derives an explicit second native correction and proves the residual is annihilated both by all old wave coordinates and by the genuinely geometric curvature detector. `GSTHodgePrimitiveWaveCurvatureLanding.lean` instantiates this to native primitive codimension-two Chow cycles on the original X and the existing wave+CM+primitive curvature constructor. The abstract module is Lean-green at [42679545127](https://github.com/kyo-oo/HC-PROOF/actions/runs/42679545127). The primitive original-X landing passed the pinned Lean kernel at GitHub Actions [42680885128](https://github.com/kyo-oo/HC-PROOF/actions/runs/42680885128), after resolving missing namespace imports, with no sorryAx.
 
 ## B. Exact NEW transformed proof equation, beyond the previous wave-only residual
 
@@ -138,3 +138,51 @@ This is a typed and now tested **iterative constructive attack**, rather than an
 - Primitive specialization: `GSTHodgePrimitiveWaveCurvatureLanding.lean` maps the generic theorem to actual `codimensionCycles`, primitive corrected native wave seeds and `primitiveBornCurvature`. Verify its **latest** GitHub Actions run: do not rely on the filename or a submitted workflow alone.
 - Wolfram exact scripts: `research/computations/gst_wave_curvature_primitive_sixfold_residual_20261110.wl` and `research/computations/gst_wave_curvature_full_primitive_sixfold_ladder_20261110.wl`. Both were fetched back after commit and executed unchanged in Wolfram; all exact booleans true, no floating arithmetic.
 - Source audit: exact authenticated primary PDF pages from alphaXiv for the three arXiv preprints named above. Application to arbitrary projective original X remains the specified correspondence-realization question.
+
+## G. Rank-plus-one source completeness and true single-fold connection (subsequent burst)
+
+The enhanced `GSTHodgeWaveCurvatureResidualStep.lean` now proves that the augmented detector
+
+\[
+R:B\longrightarrow\mathbb Q^n\oplus\mathbb Q,\qquad
+R(\alpha)=(D(\alpha),\ell(\alpha))
+\]
+
+is **surjective** from an independently generated actual native curvature class with \(\ell(g)\ne0\) and the existing genuine wave frame. If \(\dim_{\mathbb Q}B=n+1\), rank-nullity forces \(R\) injective, so the exact residual vanishes for **every** target. The Lean theorem is `waveCurvature_exact_of_rank_succ`, verified in [Actions 42682777206](https://github.com/kyo-oo/HC-PROOF/actions/runs/42682777206). This replaces the earlier abstract residual separation field by a checkable actual Betti rank equality.
+
+The strengthened `GSTHodgePrimitiveWaveCurvatureLanding.lean` then specializes this rank equality to the **actual primitive original-X codimension-two Hodge fiber**, without requiring `hSeparate`; it uses the native Hard Lefschetz divisor correction. Verification of this latest appended corollary must be read from its **new** CI run, not inferred from the older source's green run.
+
+A new **one-fold construction** `GSTHodgeWaveCurvatureCyclicAugmentation.lean` uses Mathlib `Fin.snoc` to extend the *true original geometric dual frame* by the corrected curvature cycle, adds a normalized geometric dual readout, proves all old-new and new-old cross pairings zero, then applies the PRE-EXISTING `GSTHodgeWaveFiniteCyclicCompletion.GeometricCyclicFrame` to get **one cyclic native operator** and a Betti-compatible action. This supplies the proper structural arrow
+
+\[
+\boxed{\text{n actual wave atoms + one detected native curvature atom}
+\longrightarrow \text{n+1 dual Chow frame}
+\longrightarrow \text{one genuine cyclic source fold}.}
+\]
+
+The required element is a geometrically realized new source, not the mere cardinality of an N-hole wave channel.
+
+### Exact closed-loop single-fold test on a projective sixfold
+
+On \(X=(\mathbb P^1)^6\), construct 9 actual primitive cycles K₁,...,K₉ as in Section C: K₁,K₂ are the old wave frame; K₃,...,K₉ are seven genuine original-X geometric commutator products. The actual rational complementary-intersection dual matrix D obeys DK=I₉. Define the cyclic shift S on \(\mathbb Q^9\), and the *single original-X Chow-representable* cohomological/native operator
+
+\[
+\boxed{T=KSD\quad\text{on the primitive middle-degree sector}.}
+\]
+
+The full 15×15 matrix T is not invertible on all H⁴, but its restricted 9×9 action is cyclic and preserves the primitive kernel. Take seed K₁, then
+
+\[
+\boxed{\operatorname{span}_{\mathbb Q}\{K_1,TK_1,\dots,T^8K_1\}
+=\ker(L^3),}
+\quad
+\det\bigl(D[K_1,TK_1,\dots,T^8K_1]\bigr)=1.
+\]
+
+The actual last-coordinate intersection detector has a 9×9 Hankel moment determinant **1**. All identities, including `T K = K S`, were checked by exact rational Wolfram arithmetic and saved as `research/computations/gst_sixfold_curvature_born_nine_cycle_single_fold_20261110.wl`, fetched from GitHub and re-executed verbatim.
+
+This is a **full nine-direction original-X primitive geometric instance of the one-fold route** for that projective sixfold, not just a numerical abstract cyclic model. It is not a novel exceptional Hodge class: toric projective products have an independently known algebraic basis, and the K_i were constructed using it.
+
+### Remaining original-X source gate
+
+For genuinely exceptional rational primitive Hodge directions (e.g. Hodge–Weil classes on generic Weil fourfolds) `GSTGraphV2CMWaveFusion` supplies rational wave information and the above curvature mechanism supplies **correct algebraic push-pull conditional on actual geometric input**. The current construction does not produce the needed exceptional primitive Chow cycle or fixed geometric detector independently of one already-known via OG6/Kuga–Satake geometry. This is the live, sharply localized geometric birth test for the universal GST hypothesis, not a reason to repeat generic graph laws.
