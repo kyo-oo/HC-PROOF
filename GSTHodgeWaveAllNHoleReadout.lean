@@ -134,8 +134,11 @@ theorem holeReadout_intertwines (s : NShape) (u : HoleWaveSignals s) :
 /-- The fixed-cell evaluation of the original mixed axial+rotating
 Wave-I seed equals exactly one, no adjustable coefficient. -/
 theorem waveReadout_seed : waveReadoutLinear seed = 1 := by
-  norm_num [waveReadoutLinear, nativeWaveReadout, seed,
-    nullCell, maximumCell]
+  have h0 : seed nullCell = 1 := by decide
+  have h3 : seed maximumCell = 0 := by decide
+  change seed nullCell - seed maximumCell = 1
+  rw [h0, h3]
+  norm_num
 
 /-- Every original N-hole uniform source produces an all-one coefficient
 seed in the quotient, at any number of holes. -/
