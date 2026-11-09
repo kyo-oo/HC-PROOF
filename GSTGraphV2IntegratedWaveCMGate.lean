@@ -117,6 +117,52 @@ theorem every_geometric_word_is_algebraic
       LinearMap.range (H.cycleClass p) := by
   exact word_in_cycleClass_range A B (program n) (sources n)
 
+/-- Genuine native single-fold mixing of the two physically realized
+information-wave and CM actions. This is the exact geometric counterpart
+of the rational cyclicity experiment with T = S + J. -/
+def combinedWaveCM (A B : CycleClassOperatorPair V H p) :
+    CycleClassOperatorPair V H p where
+  cycleOperator := A.cycleOperator + B.cycleOperator
+  cohomologyOperator := A.cohomologyOperator + B.cohomologyOperator
+  cycleClass_natural := by
+    ext Z
+    simp only [LinearMap.comp_apply, LinearMap.add_apply, map_add]
+    rw [A.cycleClass_cycleOperator, B.cycleClass_cycleOperator]
+
+/-- The algebraic combined-fold operator has exactly the expected
+whole-cohomology action. No special commutativity assumption is needed. -/
+theorem combinedWaveCM_cycleClass
+    (A B : CycleClassOperatorPair V H p)
+    (Z : codimensionCycles V.X p) :
+    H.cycleClass p ((combinedWaveCM A B).cycleOperator Z) =
+      (A.cohomologyOperator + B.cohomologyOperator)
+        (H.cycleClass p Z) := by
+  exact (combinedWaveCM A B).cycleClass_cycleOperator Z
+
+/-- Any arbitrary Krylov orbit power of the ONE combined fold
+is realized by actual original-X algebraic cycles. -/
+theorem combinedWaveCM_iterated_cycleClass
+    (A B : CycleClassOperatorPair V H p)
+    (n : Nat) (Z : codimensionCycles V.X p) :
+    H.cycleClass p
+        (nativeWord (combinedWaveCM A B) B
+          (List.replicate n Mode.wave) Z) =
+      hodgeWord (combinedWaveCM A B) B
+        (List.replicate n Mode.wave) (H.cycleClass p Z) := by
+  exact word_cycleClass (combinedWaveCM A B) B
+    (List.replicate n Mode.wave) Z
+
+/-- The exact all-order source-image gate on the combined single-fold
+trajectory, the algebraic side of the rational eight-dimensional model. -/
+theorem combinedWaveCM_iterates_remain_algebraic
+    (A B : CycleClassOperatorPair V H p)
+    (n : Nat) (Z : codimensionCycles V.X p) :
+    hodgeWord (combinedWaveCM A B) B
+        (List.replicate n Mode.wave) (H.cycleClass p Z) ∈
+      LinearMap.range (H.cycleClass p) := by
+  exact word_in_cycleClass_range (combinedWaveCM A B) B
+    (List.replicate n Mode.wave) Z
+
 #check word_cycleClass
 #check word_in_cycleClass_range
 #check originalX_cycle_of_prescribed_reachable_target
