@@ -229,3 +229,10 @@ Wolfram exact block-matrix verification:
 So the global GST correspondence is **rationally invertible on the full Betti cohomology**. In fact the inverse operator is also realized by a rational algebraic correspondence on this X using the same matrix units (take \(M_p^{-1}\) for each block). This is true algebraic-source information preservation at the whole-Betti correspondence level, not just the original local twelve-cell permutation. It is NOT asserted to be an isomorphism of schemes or to preserve cup product: an invertible Chow correspondence on cohomology is more general than a geometric automorphism.
 
 This complete one-correspondence construction uses actual known Chow bases of the special toric product. It does not infer their existence from a dimensionless graph on arbitrary X.
+
+
+### Complete all-weight verification packet
+
+The committed exact Wolfram packet `research/computations/gst_single_global_chow_operator_fivefold_allweights_20261109.wl` was fetched from GitHub and executed verbatim. It reports the full sequence of Hodge ranks `{1,5,10,10,5,1}`, all six complementary Chow intersection pairing matrices exactly identity, **all six** cyclic-seed Krylov ranks `{1,5,10,10,5,1}`, all six Krylov determinants `{1,1,10292525,10292525,1,1}`, and the single full Betti correspondence matrix of dimension 32 with determinant **4** and rank **32**. Every check is exact rational/integer, with no floating tolerance.
+
+The companion `GSTGraphV2IntegratedWaveCMGate.lean` has a completed kernel-green run [42663099970](https://github.com/kyo-oo/HC-PROOF/actions/runs/42663099970) at commit `9095fd43a772042faca6b01a34ecb5e0ec2d86ec`; it covers arbitrary mixed native wave/CM/curvature words, single-fold sum and iterates, exact cycle-class naturality, and rank-one CM incompatibility. The **particular 32-dimensional toric Chow action** is proved in the mathematical derivation via Künneth and intersection products, and its finite matrix algebra is exact Wolfram-verified; it has not been encoded as a full Chow-correspondence instance in Lean.
