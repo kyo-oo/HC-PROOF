@@ -190,4 +190,81 @@ theorem waveCurvature_exact_of_joint_detection
   rw [hz, add_zero] at hdecomp
   exact hdecomp.symm
 
+
+/-- The old N-hole GST wave coordinates and one independently
+geometric curvature detector as a SINGLE rational linear map. -/
+def augmentedWaveCurvatureReadout
+    (F : GeometricWaveFrame s cl)
+    (read : B →ₗ[ℚ] ℚ) :
+    B →ₗ[ℚ] ((Fin s.holes → ℚ) × ℚ) where
+  toFun x := (F.bettiCoordinates x, read x)
+  map_add' := by
+    intro x y
+    apply Prod.ext <;> simp [map_add, Pi.add_apply]
+  map_smul' := by
+    intro c x
+    apply Prod.ext <;> simp [map_smul, Pi.smul_apply]
+
+/-- The augmented detector is SURJECTIVE once an actual extra
+geometric curvature source has nonzero readout outside the old wave
+frame. This requires no assumed Hodge basis. -/
+theorem augmentedWaveCurvatureReadout_surjective
+    (F : GeometricWaveFrame s cl)
+    (z : A) (read : B →ₗ[ℚ] ℚ)
+    (hOld : ∀ i : Fin s.holes, read (cl (F.atom i)) = 0)
+    (hNew : read (cl z) ≠ 0) :
+    Function.Surjective (augmentedWaveCurvatureReadout F read) := by
+  intro y
+  refine ⟨F.bettiCombination y.1 +
+      (y.2 / read (cl z)) • waveResidual F (cl z), ?_⟩
+  apply Prod.ext
+  · change F.bettiCoordinates
+      (F.bettiCombination y.1 +
+        (y.2 / read (cl z)) • waveResidual F (cl z)) = y.1
+    rw [map_add, map_smul, bettiCoordinates_bettiCombination,
+      waveResidual_coordinates_zero]
+    simp
+  · change read
+      (F.bettiCombination y.1 +
+        (y.2 / read (cl z)) • waveResidual F (cl z)) = y.2
+    rw [map_add, map_smul, read_waveFrame_zero F read hOld]
+    have hz : read (waveResidual F (cl z)) = read (cl z) := by
+      unfold waveResidual
+      rw [map_sub, read_waveFrame_zero F read hOld]
+      simp
+    rw [hz, zero_add, smul_eq_mul]
+    field_simp [hNew]
+
+/-- FINITE-RANK CLOSURE: when the actual rational Hodge fiber has
+exactly n+1 dimensions, an n-channel genuinely geometric GST wave
+frame plus one independent genuine curvature source construct a
+native cycle for EVERY class in that fiber. No universal target
+surjectivity is a field of the input data. -/
+theorem waveCurvature_exact_of_rank_succ
+    (F : GeometricWaveFrame s cl)
+    (z : A) (read : B →ₗ[ℚ] ℚ)
+    (hOld : ∀ i : Fin s.holes, read (cl (F.atom i)) = 0)
+    (hNew : read (cl z) ≠ 0)
+    [FiniteDimensional ℚ B]
+    (hRank : Module.finrank ℚ B = s.holes + 1)
+    (alpha : B) :
+    cl (waveCurvatureCycle F z read alpha) = alpha := by
+  have hdim :
+      Module.finrank ℚ B =
+      Module.finrank ℚ ((Fin s.holes → ℚ) × ℚ) := by
+    simpa only [Module.finrank_prod, Module.finrank_fin_fun,
+      Module.finrank_self] using hRank
+  have hinj :
+      Function.Injective (augmentedWaveCurvatureReadout F read) :=
+    (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
+      hdim).2 (augmentedWaveCurvatureReadout_surjective
+        F z read hOld hNew)
+  apply waveCurvature_exact_of_joint_detection
+    F z read hOld hNew
+  intro r hcoords hread
+  apply hinj
+  apply Prod.ext
+  · exact hcoords
+  · exact hread
+
 end GSTHodgeWaveCurvatureResidualStep
