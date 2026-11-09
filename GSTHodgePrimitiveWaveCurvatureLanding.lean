@@ -161,6 +161,65 @@ theorem originalX_primitive_wave_curvature_complete_of_detection
   rw [hr, Submodule.coe_zero, add_zero] at hdec
   exact hdec.symm
 
+/-- Rank-exact original-X higher-dimensional Hodge bridge: the
+classical algebraic Lefschetz correction plus a true N-hole wave frame
+and ONE independent primitive curvature-born cycle construct the
+desired codimension-two Chow cycle whenever the primitive Betti rank
+is exactly the number of these independently detected sources.
+
+No separate primitive Hodge-surjectivity postulate or target-cycle
+preimage is used: the augmented geometric detector is surjective and
+equal finite Betti rank makes it injective. -/
+theorem originalX_primitive_wave_curvature_complete_of_rank_succ
+    (G : GeometricCycleClassSpine V H)
+    (P : GeometricHigherLefschetzData G d)
+    (h11 : DivisorsRepresentHodge11 H)
+    (C : WaveNativeCompiler V H 2 t)
+    (A B : CycleClassOperatorPair V H 2)
+    (hA : ∀ Z : codimensionCycles V.X 2,
+      P.primitiveTest (nativeToHodgeFiberLinear G Z) = 0 →
+      P.primitiveTest (nativeToHodgeFiberLinear G (A.cycleOperator Z)) = 0)
+    (hB : ∀ Z : codimensionCycles V.X 2,
+      P.primitiveTest (nativeToHodgeFiberLinear G Z) = 0 →
+      P.primitiveTest (nativeToHodgeFiberLinear G (B.cycleOperator Z)) = 0)
+    (F : GeometricWaveFrame s (primitiveCycleClass G P))
+    (read : ↥(PrimitiveHodgeFiber G P) →ₗ[ℚ] ℚ)
+    (hOld : ∀ i : Fin s.holes,
+      read (primitiveCycleClass G P (F.atom i)) = 0)
+    (hNew : read (primitiveCycleClass G P
+      (primitiveWaveCurvatureCycle G P h11 C A B hA hB)) ≠ 0)
+    [FiniteDimensional ℚ (↥(PrimitiveHodgeFiber G P))]
+    (hRank : Module.finrank ℚ (↥(PrimitiveHodgeFiber G P)) = s.holes + 1)
+    (alpha : ClassicalHodgeFiber V H 2) :
+    ∃ Z : codimensionCycles V.X 2,
+      nativeToHodgeFiberLinear G Z = alpha := by
+  let beta : ↥(PrimitiveHodgeFiber G P) :=
+    ⟨primitiveHodgeRemainder G P h11 alpha,
+     primitiveHodgeRemainder_primitive G P h11 alpha⟩
+  let born := primitiveWaveCurvatureCycle G P h11 C A B hA hB
+  let waveZ := waveCurvatureCycle F born read beta
+  have hwave : (primitiveCycleClass G P) waveZ = beta :=
+    waveCurvature_exact_of_rank_succ F born read hOld hNew hRank beta
+  have hbeta :
+      beta.1 = nativeToHodgeFiberLinear G waveZ.1 := by
+    exact congrArg Subtype.val hwave.symm
+  refine ⟨waveZ.1 + algebraicLefschetzCorrection G P h11 alpha, ?_⟩
+  have hbase :
+      alpha = beta.1 +
+        nativeToHodgeFiberLinear G
+          (algebraicLefschetzCorrection G P h11 alpha) :=
+    Hodge_class_eq_primitive_plus_native_cycle G P h11 alpha
+  calc
+    nativeToHodgeFiberLinear G
+        (waveZ.1 + algebraicLefschetzCorrection G P h11 alpha) =
+      nativeToHodgeFiberLinear G waveZ.1 +
+        nativeToHodgeFiberLinear G
+          (algebraicLefschetzCorrection G P h11 alpha) := by rw [map_add]
+    _ = beta.1 +
+        nativeToHodgeFiberLinear G
+          (algebraicLefschetzCorrection G P h11 alpha) := by rw [hbeta]
+    _ = alpha := hbase.symm
+
 #check primitiveWaveCurvatureCycle
 #check originalX_primitive_wave_curvature_residual
 #check originalX_primitive_wave_curvature_complete_of_detection
