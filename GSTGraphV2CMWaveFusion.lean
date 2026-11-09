@@ -63,18 +63,20 @@ def positiveCMChannel (s : Cell) : Prop :=
 
 /-- A rational CM phase, constant under F and reversed by mirror. -/
 def cmSign (s : Cell) : ℚ :=
-  if positiveCMChannel s then 1 else -1
+  match s.1.val + 4 * s.2.val with
+  | 0 | 1 | 3 | 4 | 5 | 9 => 1
+  | _ => -1
 
 theorem cmSign_shuffle (s : Cell) : cmSign (shuffle s) = cmSign s := by
   rcases s with ⟨c, d⟩
   fin_cases c <;> fin_cases d <;>
-    norm_num [cmSign, positiveCMChannel, shuffle]
+    norm_num [cmSign, shuffle]
 
 theorem cmSign_mirror_product (s : Cell) :
     cmSign s * cmSign (mirrorCell s) = -1 := by
   rcases s with ⟨c, d⟩
   fin_cases c <;> fin_cases d <;>
-    norm_num [cmSign, positiveCMChannel, mirrorCell]
+    norm_num [cmSign, mirrorCell]
 
 /-- Rationalized Wave I cochains: twelve independent signal coordinates. -/
 abbrev WaveSignal := Cell → ℚ
@@ -155,7 +157,7 @@ rather than merely assuming a noncommuting operator exists. -/
 theorem wave_source_CM_curvature_nonzero :
     (J (M seed)) ((3 : Fin 4), (2 : Fin 3)) -
        (M (J seed)) ((3 : Fin 4), (2 : Fin 3)) = 2 := by
-  norm_num [J, M, seed, cmSign, positiveCMChannel, mirrorCell,
+  norm_num [J, M, seed, cmSign, mirrorCell,
     sourceMultiplicity, surviveI, midDigit,
     finalMicroDigit, microOutput, highBit, lowBit, twoI]
 
