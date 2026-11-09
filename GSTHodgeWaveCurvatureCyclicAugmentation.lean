@@ -94,7 +94,12 @@ def extendedGeometricCyclicFrame
     · refine Fin.lastCases ?_ (fun j => ?_) j
       · simpa only [Fin.snoc_last, if_pos] using
           newNativeDual_corrected_one F z read hOld hNew
-      · simpa [Fin.snoc_castSucc] using
+      · have hneq : (Fin.last s.holes) ≠ j.castSucc := by
+          intro hEq
+          have hval : s.holes = j.val := by
+            simpa using congrArg Fin.val hEq
+          omega
+        simpa [Fin.snoc_castSucc, hneq] using
           newNativeDual_old_zero F z read hOld j
     · refine Fin.lastCases ?_ (fun j => ?_) j
       · simpa [Fin.snoc_castSucc, Fin.snoc_last] using
