@@ -137,7 +137,7 @@ Betti cycle-class map; neither the original cycle nor its cohomology
 are replaced by abstract coordinate vectors. -/
 def primitiveCycleClass :
     ↥(NativePrimitiveCycles G P) →ₗ[ℚ]
-      ↥(PrimitiveHodgeFiber P) where
+      ↥(PrimitiveHodgeFiber G P) where
   toFun Z :=
     ⟨nativeToHodgeFiberLinear G Z.1,
       by
@@ -165,12 +165,12 @@ assumed that the frame's cycles represent a given alpha. -/
 theorem originalX_hodge_two_cycle_of_primitive_wave_rank
     (s : NShape)
     (F : GeometricWaveFrame s (primitiveCycleClass G P))
-    [FiniteDimensional ℚ ↥(PrimitiveHodgeFiber P)]
-    (hRank : Module.finrank ℚ ↥(PrimitiveHodgeFiber P) = s.holes)
+    [FiniteDimensional ℚ ↥(PrimitiveHodgeFiber G P)]
+    (hRank : Module.finrank ℚ ↥(PrimitiveHodgeFiber G P) = s.holes)
     (alpha : ClassicalHodgeFiber V H 2) :
     ∃ Z : codimensionCycles V.X 2,
         nativeToHodgeFiberLinear G Z = alpha := by
-  let remainder : ↥(PrimitiveHodgeFiber P) :=
+  let remainder : ↥(PrimitiveHodgeFiber G P) :=
     ⟨primitiveHodgeRemainder G P h11 alpha,
       LinearMap.mem_ker.mpr
         (primitiveHodgeRemainder_primitive G P h11 alpha)⟩
@@ -190,6 +190,7 @@ theorem originalX_hodge_two_cycle_of_primitive_wave_rank
 chain. At dimension three the primitive test is identity and the
 hard-Lefschetz/divisor construction already supplies the cycle. -/
 theorem originalX_threefold_hodge_two_cycle
+    (h11 : DivisorsRepresentHodge11 H)
     (P3 : GeometricHigherLefschetzData G 3)
     (hId : P3.primitiveTest = LinearMap.id)
     (alpha : ClassicalHodgeFiber V H 2) :
@@ -203,7 +204,7 @@ end PrimitiveHodgeLanding
 #check GSTGraphV2CMWaveFusion.wave_source_CM_curvature_nonzero
 #check GSTGraphV2CMInfiniteCurvatureBridge.cm_odd_product_double
 #check GSTGraphV2SelfExpandingCosmology.NativeGeometryBirth.generated_worlds_have_native_cycles
-#check GSTInfiniteTowerCurvatureCascade
+#check GSTFoldTowerSquare.JetTowerInf.jetInfDifferential_square_apply
 #check GSTHodgeWaveAllNHoleReadout.holeReadout_orbit
 #check GSTHodgeWaveAllNGeometricLanding.GeometricWaveFrame.nativeWaveSource_intertwines
 #check GSTGraphV2NativeCurvatureBirth.nativeCurvature_cycleClass
