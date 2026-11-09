@@ -179,3 +179,53 @@ This result does not assume a complex CM endomorphism on odd-dimensional rationa
 Note that the toric product X already has its Chow and Hodge classes completely understood; this construction is a real GST-family mechanism/benchmark and a proof of the target law for this family, not evidence that arbitrary primitive X has such a geometric generator.
 
 **Extra Wolfram verification:** exact 5×5 cyclic shift satisfies S₅^5=I₅; its seed orbit determinant is 1; the binomial ranks were computed as {1,5,10,10,5,1}.
+
+
+## 8. Even stronger: ONE AND THE SAME actual GST correspondence works in EVERY weight on X
+
+The six weight-specific operators above may be assembled into **one single algebraic correspondence on X×X** rather than six independent operators. This works because the product-of-projective-lines Chow ring contains actual **degree-selective** Künneth matrix units.
+
+For each p=0,..,5, use the actual rational matrix \(M_p\) from Section 7:
+\(M_0=M_5=[1]\),
+\(M_1=M_4=S_5\),
+\(M_2=M_3=T_{10}=S_{10}+J_{10}\).
+
+Define the single codimension-five original-X algebraic correspondence
+
+\[
+\boxed{
+\Gamma_{\mathrm{GST}}=
+\sum_{p=0}^{5}\;
+\sum_{|I|=|J|=p}
+(M_p)_{J,I}\;
+\pi_1^*D_{I^c}\cdot\pi_2^*D_J
+\ \in \mathrm{CH}^{5}(X\times X)_{\mathbb Q}.
+}
+\]
+
+Because \(D_{I^c}\) has cohomological degree \(2(5-p)\), its push-pull integral against a class of degree \(2q\) is zero unless \(q=p\). Therefore \(\Gamma_{\mathrm{GST}}\) acts on all rational Betti cohomology by the exact BLOCK-DIAGONAL linear operator
+
+\[
+\boxed{
+T_{\mathrm{GST}}=
+\operatorname{diag}(1,S_5,T_{10},T_{10},S_5,1)
+}
+\]
+
+in the canonical even-degree Chow/Hodge monomial basis. Here all odd Betti degrees vanish. Every Hodge weight has the explicit native seed from Section 7, and powers of the SAME correspondence generate the ENTIRE rational (p,p) fiber at that weight.
+
+**This is exactly a concrete all-weight instance of the one-correspondence GST fold-orbit law on X=(P1)^5.** It is stronger than the law's requirement \(\forall p\,\exists\Gamma_p\): we exhibit one \(\Gamma_{\mathrm{GST}}\) that works simultaneously across all weights, with one seed chosen separately per weight.
+
+Wolfram exact block-matrix verification:
+
+\[
+\boxed{
+\dim H^{\mathrm{even}}(X,Q)=32,\quad
+\operatorname{rank}T_{\mathrm{GST}}=32,\quad
+\det T_{\mathrm{GST}}=4\ne0.
+}
+\]
+
+So the global GST correspondence is **rationally invertible on the full Betti cohomology**. In fact the inverse operator is also realized by a rational algebraic correspondence on this X using the same matrix units (take \(M_p^{-1}\) for each block). This is true algebraic-source information preservation at the whole-Betti correspondence level, not just the original local twelve-cell permutation. It is NOT asserted to be an isomorphism of schemes or to preserve cup product: an invertible Chow correspondence on cohomology is more general than a geometric automorphism.
+
+This complete one-correspondence construction uses actual known Chow bases of the special toric product. It does not infer their existence from a dimensionless graph on arbitrary X.
