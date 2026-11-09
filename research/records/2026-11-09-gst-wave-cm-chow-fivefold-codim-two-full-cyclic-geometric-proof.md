@@ -1,0 +1,156 @@
+# New GST single-fold geometric construction: wave plus CM phase on a smooth projective complex fivefold
+
+**Date:** 2026-11-09. **Branch:** `research/gpt6-native-point-primitive-span-20261017`. **Focus:** the actual GST hypothesis; constructive original-X geometry rather than another abstract graph law. This record extends `2026-11-09-gst-entire-wave-cm-curvature-ncohomology-hypothesis-attack.md`.
+
+## 1. The exact original-X target
+
+Let
+
+\[
+X=(\mathbb P^1_{\mathbb C})^5,\qquad
+h_i=\operatorname{pr}_i^*c_1(\mathcal O_{\mathbb P^1}(1)).
+\]
+
+Künneth/cohomology and the intersection ring give
+
+\[
+H^*(X,\mathbb Q)=\mathbb Q[h_1,\ldots,h_5]/(h_1^2,\ldots,h_5^2),
+\qquad \deg h_i=2.
+\]
+
+Every class in H^4 is (2,2). The rational Hodge fiber
+
+\[
+W=H^4(X,\mathbb Q)\cap H^{2,2}(X)
+\]
+
+has dimension \(\binom52=10\). For each two-subset \(I\subseteq\{1,2,3,4,5\}\), let
+
+\[
+D_I=\prod_{i\in I}h_i\in\mathrm{CH}^2(X)_{\mathbb Q}.
+\]
+
+These are ten ACTUAL original-X algebraic codimension-two cycles. Their algebraic duals are the complementary degree-three classes \(D_{I^c}\in \mathrm{CH}^3(X)\) and satisfy the exact *geometric* intersection law
+
+\[
+\boxed{\int_XD_K D_{I^c}=\delta_{KI}}.
+\]
+
+Thus for each ordered pair of two-subsets I,J, define a **genuine algebraic Chow correspondence** of codimension five on the original product \(X\times X\):
+
+\[
+\boxed{\Gamma_{JI}=\pi_1^*D_{I^c}\cdot \pi_2^*D_J
+\in\mathrm{CH}^{5}(X\times X)_{\mathbb Q}}.
+\]
+
+Via true proper pushforward and intersection product,
+
+\[
+(\Gamma_{JI})_*(D_K)
+=(\pi_2)_*\big(\pi_1^*D_K\cdot
+  \pi_1^*D_{I^c}\cdot\pi_2^*D_J\big)
+=\delta_{IK}D_J.
+\]
+
+So \(\Gamma_{JI}\) realizes the entire ten-by-ten rational matrix-unit algebra on the true rational (2,2) sector. This is actual algebraic geometry, not a free cohomology operator. These correspondences are not asserted to be finite over the projections; the current `FiniteClosedCorrespondence` Lean interface alone does not cover them. Full-Chow canonical push-pull is standard mathematics; its formal Lean adapter is an additional implementation task.
+
+## 2. Actual GST wave + Gaussian CM-like correspondence law
+
+Order the ten algebraic cycles as
+
+\[
+D_{12},D_{13},D_{14},D_{15},D_{23},D_{24},D_{25},D_{34},D_{35},D_{45}.
+\]
+
+Let C be the four-by-four rational companion matrix of \(\Phi_5(t)=t^4+t^3+t^2+t+1\), and set
+
+\[
+S_8=\operatorname{diag}(C,C),\quad
+J_8=\begin{pmatrix}0&-I_4\\I_4&0\end{pmatrix},\quad
+J_2=\begin{pmatrix}0&-1\\1&0\end{pmatrix}.
+\]
+
+Extend to the ten-dimensional ACTUAL rational Hodge sector:
+
+\[
+S=\operatorname{diag}(S_8,I_2),\quad
+J=\operatorname{diag}(J_8,J_2),\quad
+\boxed{T=S+J}.
+\]
+
+The equations
+
+\[
+\boxed{S^5=I_{10},\quad J^2=-I_{10},\quad SJ=JS}
+\]
+
+hold exactly, and the matrices S,J,T are each **realized by true algebraic Chow correspondences** on X×X: for any M put \(\Gamma_M=\sum_{I,J}M_{JI}\Gamma_{JI}\). Thus \(T\) is the genuine Betti action on W of the codimension-five algebraic correspondence \(\Gamma_T=\Gamma_S+\Gamma_J\). On the entire Betti cohomology, these particular correspondences act zero on degrees other than four; the displayed order-five and CM laws are assertions about W, NOT the whole Betti ring.
+
+The label "Gaussian CM-like" here refers to the **actual rational correspondence algebra action J²=-I on W**. It does NOT assert that the product of projective lines is a classical CM abelian variety, nor that J comes from a CM self-isogeny; the algebraic action is still genuine and exact.
+
+## 3. One original-X algebraic seed, full orbit, explicit determinant
+
+Let
+
+\[
+\boxed{Z=D_{12}+D_{35}\in\mathrm{CH}^2(X)_{\mathbb Q}}.
+\]
+
+In the ordered basis, its rational Hodge class is \(v=e_1+e_9\). The exact ten-by-ten Krylov matrix
+
+\[
+\mathcal K=
+\big[v,\ Tv,\ T^2v,\ldots,T^9v\big]
+\]
+
+has determinant
+
+\[
+\boxed{\det\mathcal K=10,292,525\ne0.}
+\]
+
+This was calculated with Wolfram using **exact integer/rational arithmetic**, not floating tolerances. The companion+CM block has irreducible degree-eight polynomial
+
+\[
+P_8(x)=x^8+2x^7+7x^6+10x^5+16x^4
+ +10x^3-2x^2-4x+1.
+\]
+
+The other block has \(P_2(x)=x^2-2x+2\), and \(\gcd(P_8,P_2)=1\), furnishing an independent Chinese-remainder explanation of why the single seed cycles through all ten directions.
+
+**Therefore** the actual native Chow orbit
+
+\[
+Z,\ \Gamma_{T*}Z,\ \Gamma_{T*}^2Z,\ldots,
+\Gamma_{T*}^9Z
+\]
+
+is a rational basis of every rational (2,2) Hodge class on this **specified smooth projective complex fivefold**. For each target \(\alpha\in W\), solve \(c=\mathcal K^{-1} [\alpha]\), and the explicit cycle \(Z_\alpha=\sum_{r=0}^9 c_r(\Gamma_T)_*^r Z\) satisfies \(cl_X(Z_\alpha)=\alpha\).
+
+This is a **genuine geometric instantiation of the one-fold cyclicity condition in codimension two** with GST order-five information dynamics and a rational CM-like phase operator. It is a proof for this particular X and p, not a universal construction on arbitrary X.
+
+## 4. Why this cannot simply be repeated for arbitrary X
+
+The geometry of X=(P¹)^5 is special: all ten Hodge basis cycles and their algebraic intersection duals are explicitly available. They give the full matrix-unit Chow correspondence algebra *before* selecting a fold.
+
+For arbitrary X and primitive rational Hodge class alpha not already represented by known cycles, using this matrix-unit construction would require a complete algebraic Hodge basis and its duals. Supplying those is already the deep algebraic-source problem.
+
+Hence the valuable generalizable piece is the **cyclotomic plus rational complex structure one-seed cyclicity mechanism**, while the missing general construction is a GST-derived source/return correspondence and primitive detector on X **without** pre-supplying basis cycles for missing Hodge classes.
+
+Another precise distinction: `GSTGraphV2InformationRecovery.shuffle_five` is a local information-cell identity; the S action above is *modeled after* its \(\Phi_5\) cyclotomic sector. It is not proved to be the image of the **entire** seven-axis causal event graph under a geometry-preserving functor. That comparison is a further theorem to develop.
+
+## 5. Reproducibility
+
+The exact script `research/computations/gst_cm_wave_chow_fivefold_codim2_20261109.wl` was committed, fetched from GitHub, and executed verbatim using connected Wolfram Language. Outputs:
+- 10 explicitly enumerated two-subsets, independent intersection table = \(I_{10}\): True;
+- \(S^5=I\), \(J^2=-I\), \(SJ=JS\): all True;
+- \(\gcd(P_8,P_2)=1\): True;
+- Krylov determinant \(10,292,525\) and exact rank 10.
+
+New Lean `GSTGraphV2IntegratedWaveCMGate.lean` (separate abstract native adapter) proves every arbitrary finite wave/CM/curvature word and every power of a mixed sum of **supplied genuine native cycle operators** commutes with the cycle-class map, plus the rank-one CM impossibility boundary. Its kernel verification is tracked at `https://github.com/kyo-oo/HC-PROOF/actions/workflows/gst-integrated-wave-cm-gate.yml`. This does **not** yet instantiate the full Chow correspondences \(\Gamma_M\) as a Lean data type.
+
+## 6. The source-birth experiment that can now discriminate the hypothesis
+
+On an original fourfold X, codimension two, isolate the primitive rational Hodge sector \(P^{2,2}(X)\). Build a GST/CM wave family of genuine Chow correspondences **without** an unknown basis-vector cycle as input. Compute canonical whole-Betti actions and test whether the spectral primitive projection of its real native seed orbit is cyclic. Use actual Hodge classes/periods and algebraic incidence/kernels; mere coordinate rephasing, CM period equalities, infinite formal wave rank, and abstract matrix-unit actions are not substitutes.
+
+If that nontrivial original-X primitive test can be solved geometrically, it would establish a real new instance of the birth principle beyond explicit Tate/divisor-product sectors. That is the precise next point where new GST mathematics is required.
