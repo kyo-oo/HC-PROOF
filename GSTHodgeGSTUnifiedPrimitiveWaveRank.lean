@@ -111,6 +111,37 @@ theorem wave_native_class_of_full_rank
   rw [holeReadout_lift, F.cl_nativeCombination]
   exact betti_synthesis_of_rank F hRank alpha
 
+
+/-- Exact information-to-geometry residual after assembling the
+existing genuine native wave frame. It is not postulated zero. -/
+def waveResidual (F : GeometricWaveFrame s cl) (alpha : B) : B :=
+  alpha - F.bettiCombination (F.bettiCoordinates alpha)
+
+/-- Every residual is invisible to ALL genuinely geometric frame
+readouts: this is a precise remaining source-birth test. -/
+theorem waveResidual_coordinates_zero
+    (F : GeometricWaveFrame s cl) (alpha : B) :
+    F.bettiCoordinates (waveResidual F alpha) = 0 := by
+  unfold waveResidual
+  rw [map_sub, bettiCoordinates_bettiCombination]
+  exact sub_self _
+
+/-- The actual full GST wave builds its algebraic component on the
+original carrier, and the residual is the exact complementary term.
+This holds for ANY existing partial frame, without rank assumptions. -/
+theorem wave_native_plus_residual
+    (F : GeometricWaveFrame s cl) (alpha : B) :
+    alpha =
+      cl (F.nativeWaveSource
+        (holeReadoutLift s (F.bettiCoordinates alpha))) +
+      waveResidual F alpha := by
+  change alpha =
+    cl (F.nativeCombination
+      (holeReadout s (holeReadoutLift s (F.bettiCoordinates alpha)))) +
+      (alpha - F.bettiCombination (F.bettiCoordinates alpha))
+  rw [holeReadout_lift, F.cl_nativeCombination]
+  abel
+
 end CompleteInformationToNative
 
 section PrimitiveHodgeLanding
@@ -151,6 +182,80 @@ def primitiveCycleClass :
     intro c x
     apply Subtype.ext
     exact map_smul (nativeToHodgeFiberLinear G) c x.1
+
+
+/-- The GST-Wave/CM primitive residual identity for ANY dimension and
+ANY existing geometrically legitimate partial native wave frame.
+
+For every rational codimension-two Hodge class alpha, there is an
+EXPLICIT actual original-X algebraic cycle Z and a primitive residual
+r, with no remaining component detectable by the frame's intersection
+readouts:
+
+    alpha = cl_X(Z) + r,  L^(d-3) r = 0,
+    all Wave-II geometric detectors of r = 0.
+
+This is the precise transformation of the proof target into a
+source-birth residual problem; r need not be assumed nonalgebraic. -/
+theorem originalX_wave_primitive_residual_decomposition
+    (s : NShape)
+    (F : GeometricWaveFrame s (primitiveCycleClass G P))
+    (alpha : ClassicalHodgeFiber V H 2) :
+    ∃ Z : codimensionCycles V.X 2,
+      ∃ r : ↥(PrimitiveHodgeFiber G P),
+        alpha = nativeToHodgeFiberLinear G Z + r.1 ∧
+        F.bettiCoordinates r = 0 := by
+  let beta : ↥(PrimitiveHodgeFiber G P) :=
+    ⟨primitiveHodgeRemainder G P h11 alpha,
+      LinearMap.mem_ker.mpr
+        (primitiveHodgeRemainder_primitive G P h11 alpha)⟩
+  let w : ↥(NativePrimitiveCycles G P) :=
+    F.nativeWaveSource (holeReadoutLift s (F.bettiCoordinates beta))
+  let r : ↥(PrimitiveHodgeFiber G P) :=
+    beta - primitiveCycleClass G P w
+  refine ⟨w.1 + algebraicLefschetzCorrection G P h11 alpha, r, ?_, ?_⟩
+  · have hWave :
+        beta.1 =
+          (primitiveCycleClass G P w).1 + r.1 := by
+      dsimp [r]
+      abel
+    calc
+      alpha =
+          beta.1 +
+            nativeToHodgeFiberLinear G
+              (algebraicLefschetzCorrection G P h11 alpha) :=
+        Hodge_class_eq_primitive_plus_native_cycle G P h11 alpha
+      _ =
+          ((primitiveCycleClass G P w).1 + r.1) +
+            nativeToHodgeFiberLinear G
+              (algebraicLefschetzCorrection G P h11 alpha) := by
+        rw [hWave]
+      _ =
+          nativeToHodgeFiberLinear G
+            (w.1 + algebraicLefschetzCorrection G P h11 alpha) +
+            r.1 := by
+        rw [map_add]
+        change
+          (nativeToHodgeFiberLinear G w.1 + r.1) +
+              nativeToHodgeFiberLinear G
+                (algebraicLefschetzCorrection G P h11 alpha) =
+          (nativeToHodgeFiberLinear G w.1 +
+              nativeToHodgeFiberLinear G
+                (algebraicLefschetzCorrection G P h11 alpha)) + r.1
+        abel
+  · have hClass :
+        primitiveCycleClass G P w =
+          F.bettiCombination (F.bettiCoordinates beta) := by
+      change
+        primitiveCycleClass G P
+          (F.nativeCombination
+            (holeReadout s (holeReadoutLift s (F.bettiCoordinates beta)))) =
+          F.bettiCombination (F.bettiCoordinates beta)
+      rw [holeReadout_lift, F.cl_nativeCombination]
+    change F.bettiCoordinates
+      (beta - primitiveCycleClass G P w) = 0
+    rw [hClass]
+    exact waveResidual_coordinates_zero F beta
 
 /-- The full arbitrary-dimension, codimension-two GST synthesis.
 
