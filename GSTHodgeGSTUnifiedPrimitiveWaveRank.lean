@@ -193,6 +193,7 @@ type identifications.  Every rational Hodge class is a known algebraic
 Lefschetz correction + an actual wave-produced primitive algebraic cycle
 + a primitive residual invisible to all supplied geometric frame detectors. -/
 theorem originalX_wave_primitive_residual_decomposition
+    (h11 : DivisorsRepresentHodge11 H)
     (s : NShape)
     (F : OriginalXFrame (V := V) (H := H) (p := 2) (s := s))
     (hAtoms : ∀ i : Fin s.holes,
@@ -248,6 +249,7 @@ GST waves, CM, native algebraic cycles, and hard Lefschetz:
 a detector-separating family of primitive wave cycles produces an
 actual representative of EVERY rational codimension-two Hodge class. -/
 theorem originalX_hodge_two_cycle_of_primitive_wave_separation
+    (h11 : DivisorsRepresentHodge11 H)
     (s : NShape)
     (F : OriginalXFrame (V := V) (H := H) (p := 2) (s := s))
     (hAtoms : ∀ i : Fin s.holes,
@@ -288,7 +290,7 @@ end PrimitiveHodgeLanding
 #check GSTHodgeWaveAllNGeometricLanding.GeometricWaveFrame.nativeWaveSource_intertwines
 #check GSTGraphV2NativeCurvatureBirth.nativeCurvature_cycleClass
 #check originalX_hodge_two_cycle_of_primitive_wave_separation
-#print axioms originalX_hodge_two_cycle_of_primitive_wave_rank
+#print axioms originalX_hodge_two_cycle_of_primitive_wave_separation
 #print axioms wave_native_class_of_full_rank
 
 end GSTHodgeGSTUnifiedPrimitiveWaveRank
