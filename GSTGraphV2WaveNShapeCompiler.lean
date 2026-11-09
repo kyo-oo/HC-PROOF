@@ -67,7 +67,7 @@ def nShapeOrbit (s : NShape) : ℕ → HoleWaveSignals s
 
 /-- Exact all-hole fold recurrence at any channel and information cell. -/
 theorem nShapeOrbit_succ (s : NShape) (k : ℕ)
-    (i : Fin s.holes) (c : Cell) :
+    (i : Fin s.holes) (c : GSTGraphV2InformationRecovery.Cell) :
     nShapeOrbit s (k+1) i c =
       T (nShapeOrbit s k i) c +
         channelShift s i * nShapeOrbit s k i c := rfl
