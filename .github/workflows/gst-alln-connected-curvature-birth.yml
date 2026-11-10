@@ -6,6 +6,7 @@ on:
       - research/gpt6-gst-wave-curvature-spectral-birth-20261110
     paths:
       - 'GSTAllNConnectedCurvatureBirth.lean'
+      - 'GSTAllNConnectedCurvatureGeometricClosure.lean'
       - '.github/workflows/gst-alln-connected-curvature-birth.yml'
   workflow_dispatch:
 
@@ -53,8 +54,8 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           python3 scripts/gst_lean_dependency_roots.py GSTConnectedCurvatureBirthLib GSTAllNConnectedCurvatureBirth
-          if timeout 9900 lake build GSTAllNConnectedCurvatureBirth > gst-connected-curvature.log 2>&1; then
-            echo "LEAN PASSED: GSTAllNConnectedCurvatureBirth"
+          if timeout 9900 lake build GSTAllNConnectedCurvatureGeometricClosure > gst-connected-curvature.log 2>&1; then
+            echo "LEAN PASSED: GSTAllNConnectedCurvatureGeometricClosure"
           else
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-connected-curvature.log | tail -n 100 || true
             tail -n 95 gst-connected-curvature.log || true
