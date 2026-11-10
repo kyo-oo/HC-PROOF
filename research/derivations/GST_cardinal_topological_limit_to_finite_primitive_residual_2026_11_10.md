@@ -160,3 +160,53 @@ Each rational projection was verified orthogonal to its current old span. The ne
 **New proved results:** arbitrary-cardinal convergent native Chow source sums with a RATIONAL Hodge limit automatically yield a FINITE Chow representative; exact rational polarized minimum-error / Schur-complement source-birth criterion; exact sufficient topological-density/Hodge landing criterion; product-topology linear landing's finite-coordinate dependence theorem.
 
 **Still open original-X result:** generate such approximating native sources with arbitrarily small Hodge residual energy from the author's true GST cardinal-topological wave, curvature, Hodge-star, N-cohomology and world-birth laws, for EVERY rational Hodge class on EVERY smooth projective complex X. The actual native Chow realization and full density are nontrivial geometric hypotheses, not consequences of signal-space cyclicity or cardinal arithmetic alone. No unconditional Hodge proof is claimed.
+
+
+## 9. DIRECT realization inside the author's EXISTING GSTWorldCosmology
+
+The pre-existing owner's GSTWorldCosmology.lean defines
+CompletedCosmos = (Nat times Nat) -> Int
+and CompactCosmos = (Nat times Nat) ->_0 Int, with exact finite
+observation operators and reconstruction from compatible windows.
+This is already a precise infinite-coordinate native GST carrier.
+Equip EACH integer coordinate with discrete topology and the
+CompletedCosmos with the PRODUCT topology.
+
+**Unconditional GST topological density theorem:**
+\[
+\boxed{\overline{\operatorname{CompactCosmos}}^{\,\operatorname{CompletedCosmos}}
+=\operatorname{CompletedCosmos}.}
+\]
+
+**Proof:** Every basic product-topology neighborhood of any completed
+configuration f constrains only a FINITE set F of its information cells.
+Define g=f on F and g=0 everywhere else. This g is FINITELY
+SUPPORTED, hence a genuine CompactCosmos source, and it belongs
+to the given neighborhood. Thus every open neighborhood of every
+completed GST state contains a compact state. No Hodge or Chow
+conjecture is assumed.
+
+For an arbitrary-cardinal coordinate set I in place of Nat times Nat,
+the EXACT SAME proof gives density of finite-support integer/rational
+GST packets in the full topological product carrier. Thus the
+author's all-cardinal topology has a rigorous natural extension
+of the existing GSTWorldCosmology finite-window laws.
+
+**Exact original-X geometric dependency:** to turn this into a proof
+of the author's Hodge hypothesis, it remains necessary to construct
+a continuous, Hodge-surjective landing from THIS completed GST
+topological carrier to the canonical W_p(X) realification such that
+every COMPACT finite-support native signal lands as the canonical
+class of an ACTUAL codimension-p rational Chow cycle on X. Then
+the preceding density and limit-to-finite Chow extraction would
+prove full Hodge algebraicity on original X, without first
+assuming target Chow preimages.
+
+Neither the pre-existing observation theorems nor this topological
+density identity constructs that landing. In fact under linear
+continuous product-topology landing, the earlier finite-coordinate
+factorization theorem shows the resulting geometric proof must
+already exhibit finitely many independent native classes.
+The remaining prospect for nontrivial cardinal interaction is the
+author's certified arbitrary-arity geometric world-birth/curvature
+construction, not a mere coordinate-limit relabelling.
