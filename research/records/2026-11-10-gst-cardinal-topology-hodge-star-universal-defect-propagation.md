@@ -80,3 +80,87 @@ Prior GST modules directly relevant: GSTGeneralSpace (dimension-free ontology), 
 **Evidence status:** Cardinal world formalism and naturality proved (Lean); all-finite-d cyclic correspondence on the P1-product family proved in usual Chow geometry (Wolfram corroboration); original-X Pascal algebraicity-deficit theorem proved via projective bundle formula (Wolfram corroboration); arbitrary original-X genuine source-birth/full cyclicity remains open.
 
 **Expanded LaTeX/PDF deliverable:** GST_Hypothesis_Part_I_Cardinal_Topology_Upgrade.tex/pdf in current conversation artifacts. All previous repo proof files remain unchanged; this record and scripts are additive.
+
+
+## 7. Direct actual geometric Lie-curvature source on every product family weight
+
+For X_d=(P1)^d, the true matrix-unit Chow correspondences
+E_{I,J}=pr_1^* h_{I^c} pr_2^* h_J in CH^d(X_d x X_d)_Q
+satisfy, *already as Chow correspondences*,
+E_{I,J} o E_{K,L} = delta_(I,L) E_{K,J}.
+The genuine GST commutator-curvature law is therefore
+[E_{I,J},E_{K,L}] =
+ delta_(I,L) E_{K,J} - delta_(K,J) E_{I,L}.
+For Hodge rank r=binomial(d,p)>=2, the rational span of actual Chow
+commutators acts as the full traceless Lie algebra sl_r(Q), of dimension
+r^2-1. Together with the diagonal Chow identity this recovers the entire
+matrix algebra End_Q(W_p(X_d)).
+
+This is a verified geometric realization of the owner's GST noncommutative
+curvature algebra, Hodge star, graded cycle sources, and navigator in EVERY
+finite dimension of the product family (not arbitrary original X).
+A separate exact committed Wolfram file:
+research/computations/GST_cardinal_product_Chow_curvature_lie_algebra_20261110.wl
+was fetched after commit and executed verbatim; it checked all matrix-unit
+bracket quadruples for r=2,3,4 and commutator ranks 3,8,15. allPassed -> True.
+The general theorem follows from algebraic Chow composition and matrix-unit
+basis calculations.
+
+## 8. The requested new F-function is a typed native-to-Hodge operator
+
+The new genuine source-bearing cardinal GST function is
+ F_(kappa,tau)(a,n,z) = cl_a(N_a^n z),
+where a is a world tag in any cardinal-indexed family, n in Nat is
+the finite-iteration count, and z is an ACTUAL native cycle of world a.
+It satisfies F_(kappa,tau)(a,n,z)=T_a^n cl_a(z) by the already proved
+fiberwise commuting square. It is not an assumed Hodge-to-cycle inverse.
+It is newly defined in the additive Lean module as cardinalHodgeF,
+and its exact transport theorem is cardinalHodgeF_exact. It works at any
+index a, even one whose index set has uncountable cardinality, without
+inventing a limit-ordinal operator power.
+
+## 9. Actual original GST module wiring inspected in this revision
+
+- GSTGeneralSpace.lean — no built-in metric/dimension; optional geometry.
+- GSTGeneralSpaceCohomology.lean — true cycle-class image invariant under
+  reversible geometric transport and split causal folds.
+- GSTWorldCosmology.lean — CompactCosmos finite support versus
+  CompletedCosmos all-coordinate functions. The latter is a different
+  completion and cannot be substituted for rational Chow sums.
+- GSTGradedWorldAlgebra.lean — degree/charge projectors and finite worlds;
+  the product-family h_I monomials implement a true geometric grading
+  rather than merely an abstract world coordinate.
+- GSTSquarePureHodgeDuality.lean — integer-linear diagonal coordinate
+  reversal in square worlds; the actual product-family Hodge star
+  h_I -> h_(I^c) supplies a concrete geometric duality realization.
+- waves/GSTNCohomologyV3.lean — independent finite N-hole Kronecker basis,
+  finite channel projections, and signed mass firewall; no automatic
+  arbitrary-aleph number of independent geometric Hodge sources.
+- GSTGraphV2CMInfiniteCurvatureBridge.lean — noncommutative CM defect
+  Leibniz and Jacobi/Bianchi identities, realized geometrically on the
+  product-family Chow matrix-unit algebra.
+- GSTGraphV2SelfExpandingCosmology.lean — world-birth structure over
+  arbitrary index types but birth data still require certificates;
+  original X cohomology/Chow landing must be provided.
+- GSTGraphV2UnboundedHigherCausality.lean — higher cells graded over Nat;
+  this is not transfinite ordinal power of a native Chow fold.
+- GSTClassicalHodgeSupportCardinalityBridge.lean — finite basis-support
+  cardinalities; supports the finite-rank extraction at each original X,p.
+- GSTCausalFoldDefect.lean and GSTAllDegreeCurvatureMemory.lean — exact
+  defect/collapse formulas, which require canonical geometric realization
+  when interpreted as actual Hodge/Chow source births.
+- CardinalWorlds.lean — the existing arithmetic 2-world, 3-world,
+  mixed 6-world framework. Its usage of "cardinal" does NOT by itself
+  establish set-theoretic aleph cardinal-indexed algebraic geometry;
+  the new typed world family is an additive new construction.
+
+**Upgraded manuscript:** the complete detailed LaTeX/PDF
+GST_Hypothesis_Part_I_Cardinal_Topology_Upgrade, nine pages, built and
+render-reviewed in this conversation; all full derivations remain there
+alongside these permanent research records.
+
+**Remaining open original goal:** a true original-X native cycle birth
+mechanism to kill every canonical Hodge algebraicity deficit, for all smooth
+projective complex X and p. This is necessary to prove the geometric GST
+single-fold antecedent. No algebraicity claim is made just from cardinal
+indices, wave ranks, abstract star, or finite-dimensional product cases.
