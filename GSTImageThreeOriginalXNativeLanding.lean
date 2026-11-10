@@ -100,7 +100,7 @@ theorem geometricF_native_CM_defect
   simp only [geometricF, LinearMap.add_apply,
     LinearMap.smul_apply, map_add, map_smul]
   rw [hJU z, smul_sub]
-  abel
+  abel_nf
 
 /-- The corresponding ORIGINAL-X rational Hodge cohomological curvature
 is the class of the REAL native cycle, not a symbolic source claim. -/
