@@ -35,7 +35,7 @@ gstTBlock=ArrayFlatten[{
 }];
 gstQAdjoint=Inverse[gstGram].Transpose[gstTBlock].gstGram;
 gstPositive=<|
- "Qpositive"->(And@@(Diagonal[gstGram]>0)),
+ "Qpositive"->(And@@(Positive /@ Diagonal[gstGram])),
  "rationalOrthogonalProjectorIdempotent"->(gstPA.gstPA==gstPA),
  "rationalOrthogonalProjectorSelfAdjoint"->(Transpose[gstPA].gstGram==gstGram.gstPA),
  "subspaceAndOrthogonalComplementInvariant"->(
