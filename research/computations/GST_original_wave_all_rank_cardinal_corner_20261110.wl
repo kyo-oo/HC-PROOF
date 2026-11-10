@@ -10,9 +10,10 @@
   All calculations are exact rational. These are information operators,
   NOT automatically actual Chow correspondences on arbitrary original X.
 *)
-ClearAll[cells,loc,two,mid,last,survive,pos,uuu,jjj,mmm,ttt,
+ClearAll[cells,loc,two,mid,last,survive,pos,uuu,jjj,mmm,ttt,powerNat,
  seed,kk,kinv,gmat,ginv,sourceP,matunit,rankCase,
  cases,expressionCheck,result];
+powerNat[m_,n_Integer?NonNegative]:=If[n==0,IdentityMatrix[Length[m]],MatrixPower[m,n]];
 cells=Flatten[Table[{c,d},{c,0,3},{d,0,2}],1];
 loc[a_]:=First[FirstPosition[cells,a]];
 two[z_]:=Boole[z==2];
@@ -38,16 +39,17 @@ sourceP=Outer[Times,seed,seed];
 matunit[i_,j_]:=Outer[Times,kk[[All,i]],kinv[[j]]];
 expressionCheck=Module[{i=5,j=9,byNativeWords},
  byNativeWords=Sum[ginv[[j,k]]*
-  MatrixPower[ttt,i-1].sourceP.MatrixPower[Transpose[ttt],k-1],
+  powerNat[ttt,i-1].sourceP.powerNat[Transpose[ttt],k-1],
   {k,1,12}];
  byNativeWords==matunit[i,j]];
 rankCase[r_Integer?Positive]:=Module[
  {proj,cyc,orbit,read,hank,anti,unitRank,zero12=ConstantArray[0,{12,12}]},
  proj=Sum[matunit[i,i],{i,1,r}];
  cyc=Sum[matunit[Mod[i,r]+1,i],{i,1,r}];
- orbit=Transpose[Table[MatrixPower[cyc,j].seed,{j,0,r-1}]];
+ orbit=Transpose[NestList[cyc.#&,seed,r-1]];
  read=kinv[[r]];
- hank=Table[read.MatrixPower[cyc,i+j].seed,{i,0,r-1},{j,0,r-1}];
+ With[{mom=read.#&/@NestList[cyc.#&,seed,2r-2]},
+ hank=Table[mom[[i+j+1]],{i,0,r-1},{j,0,r-1}]];
  anti=And@@Flatten[Table[
   If[i+j<r-1,hank[[i+1,j+1]]==0,
    If[i+j==r-1,hank[[i+1,j+1]]==1,True]],
@@ -73,7 +75,7 @@ result=<|"originalGSTBaseKrylovDet"->Det[kk],
  "KrylovGramInvertible"->(Det[gmat]!=0),
  "nativeWordMatrixUnitReconstruction"->expressionCheck,
  "ranksTested"->Length[cases],
- "adaptiveCorners"->cases,
+ "adaptiveCorners"->(KeyTake[# ,{"r","cornerRank","cyclicOrder","cornerOrbitRank","HankelDet","expectedSign","pass"}]&/@cases),
  "allPassed"->(Det[kk]!=0 && expressionCheck &&
   And@@(Lookup[#,"pass"]&/@cases))|>;
 Print[result];result
