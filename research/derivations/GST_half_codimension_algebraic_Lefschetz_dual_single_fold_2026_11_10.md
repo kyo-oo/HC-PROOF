@@ -143,12 +143,15 @@ For any prescribed rank r, choose N with 12N>=r and take the rank-r corner P_r M
 The lower-half source theorem above produces a full original-X native basis a_i in CH^p(X)_Q and TRUE complementary Chow duals b_i in CH^(d-p)(X)_Q with degree(a_k b_i)=delta_ki. Define
   R_X : Mat_r(Q) -> CH^d(X x X)_Q
 by
-  R_X(E_ij) = pr_1^*b_i * pr_2^*a_j
-for the row/column convention E_ij sends basis vector i to j.
+  R_X(E^GST_ij) = pr_1^*b_j * pr_2^*a_i,
+where the STANDARD E^GST_ij=K e_i e_j^T K^(-1) sends basis vector j to i.
+This swaps the indices relative to the E_ij notation in the preceding
+push-pull proof, ensuring EXACT agreement with the original GST wave.
 
 **Exact CHOW algebra assertion:** By the ordinary algebraic correspondence composition formula, NOT just Betti matrix multiplication,
-  R_X(E_ij) o R_X(E_kl) = delta_(i,l) R_X(E_kj).
-Hence the assignment realizes the corresponding matrix-unit algebra (after matching the chosen index and composition convention). Because its canonical Betti action on the FULL Hodge basis {cl(a_i)} is the faithful matrix-unit action, any rational linear relation between these Chow correspondences would induce the same relation between independent matrix units and is therefore trivial. So R_X is a genuine injective rational algebra homomorphism from the rank-r GST corner (with the coordinate convention fixed) to the ORIGINAL-X rational Chow correspondence algebra; its unit is the algebraic Chow idempotent
+  R_X(E^GST_ij) o R_X(E^GST_kl) = delta_(j,k) R_X(E^GST_il).
+Hence the assignment realizes the STANDARD matrix-unit composition exactly,
+with the same convention as original E^GST_ij=K e_i e_j^T K^(-1). Because its canonical Betti action on the FULL Hodge basis {cl(a_i)} is the faithful matrix-unit action, any rational linear relation between these Chow correspondences would induce the same relation between independent matrix units and is therefore trivial. So R_X is a genuine injective rational algebra homomorphism from the rank-r GST corner (with the coordinate convention fixed) to the ORIGINAL-X rational Chow correspondence algebra; its unit is the algebraic Chow idempotent
   P_X = sum_i pr_1^* b_i * pr_2^* a_i
 rather than necessarily the whole diagonal Delta_X.
 
