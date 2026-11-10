@@ -45,8 +45,7 @@ gstSmall=<|
  "twoDivisorClassRank"->MatrixRank[IdentityMatrix[2]],
  "oneScalarCompressionRank"->MatrixRank[gstCompress],
  "nonzeroKernelOfCompression"->(gstCompress.{1,-1}=={0}),
- "finiteIterate0_1_2_onInfiniteShift"->{{1,0,0,0},{0,1,0,0},{0,0,1,0}},
- "ordinalLimitCannotBeReachedFromFinitePowers"->True|>;
+ "finiteIterate0_1_2_onInfiniteShift"->{{1,0,0,0},{0,1,0,0},{0,0,1,0}}|>;
 gstAll=<|
  "familiesChecked"->Length[gstRuns],
  "allProductFiniteDimensionCasesPassed"->And@@(Lookup[#,"pass"]&/@gstRuns),
