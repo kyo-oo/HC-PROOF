@@ -53,7 +53,7 @@ Navigation gate, provided all three roots activate it and every
 CERTIFIED cardinal-arity birth preserves activation. This is a
 mathematical source-birth induction on the owner's true cosmos. -/
 theorem all_generated_navigation_active
-    (hRoots : ∀ sector : Sector,
+    (hRoots : ∀ sector : GSTGraphV2OmniversalCore.Sector,
       Navigation (physicalAddress (C.root sector)))
     (hBirth : BirthPreservesNavigation C physicalAddress)
     {W : C.World} (hW : C.Generated W) :
@@ -65,7 +65,7 @@ theorem all_generated_navigation_active
 /-- Because every generated world activates the ORIGINAL source,
 the actual full U+J+SURVIVE fold is its F-operation. -/
 theorem generated_native_F_is_original_full
-    (hRoots : ∀ sector : Sector,
+    (hRoots : ∀ sector : GSTGraphV2OmniversalCore.Sector,
       Navigation (physicalAddress (C.root sector)))
     (hBirth : BirthPreservesNavigation C physicalAddress)
     {W : C.World} (hW : C.Generated W)
@@ -79,7 +79,7 @@ theorem generated_native_F_is_original_full
 in EVERY generated original-GST world whose birth preserves Navigation.
 This remains a NATIVE information-phase theorem, not an X Chow cycle. -/
 theorem generated_native_CM_source_birth_two
-    (hRoots : ∀ sector : Sector,
+    (hRoots : ∀ sector : GSTGraphV2OmniversalCore.Sector,
       Navigation (physicalAddress (C.root sector)))
     (hBirth : BirthPreservesNavigation C physicalAddress)
     {W : C.World} (hW : C.Generated W) :
