@@ -30,7 +30,7 @@ case[k_Integer?Positive] := Module[{bb=sourceMatrix[k],pp,rr},
    "rationalResidual"->rr,
    "minimumResidualEnergy"->energy[rr],
    "projectionOrthogonal"->(Transpose[bb].Qmat.rr==ConstantArray[0,k]),
-   "rationalProjection"->And@@(RationalQ/@pp)|>];
+   "rationalProjection"->And@@(MatchQ[#, _Integer | _Rational] & /@ pp)|>];
 runs=Table[case[k],{k,1,4}];
 b=sourceMatrix[2];
 gram=Transpose[b].Qmat.b;
@@ -56,6 +56,9 @@ res=<|
  "allPassed"->(And@@Table[Det[Qmat[[1;;j,1;;j]]]>0,{j,1,4}] &&
    Det[Transpose[sourceMatrix[3]].Qmat.sourceMatrix[3]]==Det[gram]*schur &&
    runs[[4]]["minimumResidualEnergy"]==0 &&
-   And@@(Lookup[#,"projectionOrthogonal"]&/@runs))
+   And@@(Lookup[#,"projectionOrthogonal"]&/@runs) &&
+   And@@(Lookup[#,"rationalProjection"]&/@runs) &&
+   And@@Table[runs[[i]]["minimumResidualEnergy"] >
+     runs[[i+1]]["minimumResidualEnergy"],{i,1,3}])
 |>;
 Print[res];res
