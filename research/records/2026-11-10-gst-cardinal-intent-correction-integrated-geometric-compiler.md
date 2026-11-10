@@ -185,3 +185,47 @@ F-function:
   -> nontrivial true algebraic-source rank growth
   -> finite cyclic/Hankel certificate.
 It is a dependency chain, NOT a claim that these arrows have all been proved.
+
+
+## 9. Important further correction: the owner's N means ALL-CARDINAL INPUTS simultaneously
+
+The prompt does not merely ask for paths between cardinal-tagged worlds.
+It says "take N be the infinity set of inputs", and subsequently supplies
+ALL cardinal/topology/Hodge/N-cohomology/CM/curvature outputs to the
+same N+N^2 geometric stage. Therefore a connected finite-path module
+is necessary structural groundwork but still not the full proposed
+simultaneous GST compiler.
+
+A faithful target separates two carriers:
+
+(1) The TOPOLOGICALLY COMPLETED GST SIGNAL INPUT
+  Hhat_tau = product_(a in I) V_a
+with an explicitly defined compatible product/limit topology and all-index
+navigation/CM/curvature operations. This can accept infinite or arbitrary-
+cardinal simultaneous data, provided the operator is actually defined.
+Its topological structure and world-birth laws may be non-linear.
+
+(2) The ACTUAL ALGEBRAIC CYCLE OUTPUT
+  CH^p(X)_Q, whose elements are finite rational combinations of integral
+algebraic subvarieties on the original finite-type smooth projective X.
+The simultaneous F-function must construct a legitimate FINITE algebraic
+correspondence in CH^d(X x X)_Q from those possibly infinite inputs, via
+a certified finite-dependence or justified geometric limit/convergence
+mechanism. An unrestricted infinite sum of arbitrary Chow cycles is not
+automatically an element of CH.
+
+Thus the live program is not merely "directsum of independent X_a".
+It is:
+  all-cardinal structured GST state + topological operations + certified
+  multi-source world births
+      -> ACTUAL finite original-X correspondence and source cycles
+      -> canonical Betti action and kernel-stable descent
+      -> independent new original-X Hodge source
+      -> full orbit rank and moment certificate.
+
+The old original project's GSTGraphV2SelfExpandingCosmology already permits
+Birth with input family I of arbitrary type. Such a Birth is a CERTIFIED
+operation to be constructed, not a result implied by the existence of a
+large I. The new additive Lean CrossWorldEdge/Route module checks finite
+composition; a true arbitrary-arity birth and verified limit-stage
+Chow realization remain the additional, explicit proof targets.
