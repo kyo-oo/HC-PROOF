@@ -76,7 +76,8 @@ theorem canonical_square :
       simp [native, hodge]
   | _, _, .extend route edge, z => by
       simp only [native, hodge]
-      rw [edge.class_natural, canonical_square C route z]
+      rw [edge.class_natural]
+      exact congrArg edge.hodgeMap (canonical_square C route z)
 
 end Route
 
