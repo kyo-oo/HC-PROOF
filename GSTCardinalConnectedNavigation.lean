@@ -72,10 +72,10 @@ theorem canonical_square :
     ∀ {a b : ι} (route : Route C a b) (z : C.Native a),
       C.cycleClass b (native C route z) =
         hodge C route (C.cycleClass a z)
-  | _, _, .refl _, _ => rfl
+  | _, _, .refl _, _ => by
+      simp [native, hodge]
   | _, _, .extend route edge, z => by
-      change C.cycleClass _ (edge.nativeMap (Route.native C route z)) =
-        edge.hodgeMap (hodge C route (C.cycleClass _ z))
+      simp only [native, hodge]
       rw [edge.class_natural, canonical_square C route z]
 
 end Route
