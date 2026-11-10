@@ -162,3 +162,37 @@ returned \`allPassed=True\`, with native curvature ranks 12 for h=2 and 18 for h
 Find an original-X **genuine** algebraic correspondence realization of the new all-N companion source/navigation operators, with one actual rational algebraic seed Z0 and a faithful or surjective *intertwining* map from the ORIGINAL native GST wave modes to the canonical rational Hodge space W_p(X). Prove that the source transfer does not annihilate any primitive or CM Hodge residual; preferably establish full quotient coverage without presupposing Chow preimages for unknown Hodge classes. The established native 12h cyclicity and unit Hankel then produce the full actual geometric original-X source span and yield the existing unconditional conclusion through the owner's proved conditional \`exactHodge_of_one_GST_fold_determinant\`, **IF** the universal geometric landing is established.
 
 No old Hilbert/K3 product diversion is used; this is the author's actual U/J/SURVIVE, N-cohomology, limitless cardinal world and CM curvature machinery.
+
+
+## Rank-adaptive native correction and theorem (same research campaign)
+
+The strongest zero-local-SURVIVE companion source cyclicity theorem in the previous sections gives full rank 12h for every h>=2. A new crucial observation is that NOT every cyclic 12h-dimensional rational module has a 1-dimensional rational equivariant quotient: it needs a rational eigenvalue. The earlier **small-strength** companion choices \(\lambda=\pm1/400\) or \(\pm1/2\) have original fixed two-cell spectral quadratic with negative discriminant, so the user's universal geometric target cannot simply assume a quotient of every dimension. This is a genuine distinction in the source-to-Hodge rank-matching problem.
+
+**New stronger all-finite-r construction:** for arbitrary target native quotient dimension r>=1 choose h=2r source worlds, paired rational strengths
+\[
+\lambda_{2i-1}=\tfrac12(a_i+a_i^{-1}),\quad
+\lambda_{2i}=-\tfrac12(a_i+a_i^{-1}),\quad
+a_i=i+2,\quad1\le i\le r.
+\]
+They are rational, distinct, neither 0 nor -1 and sum zero; their Frobenius companion C_h has zero diagonal. Give eigenmode addresses L_r(k-1), with \(L_r=20(r+5)\), via rational polynomial B_h=f(C_h), so all 12-state native block spectra are separated. The single-root original wave fold remains cyclic rank 12h=24r by exact original rational-strength theorem and CRT.
+
+In the original two U-fixed, J-mirrored GST physical cells, the full source strength has **actual** invariant 2x2 block
+\[
+F_\lambda^{\rm fixed}=\begin{pmatrix}1&1\\-1&1+2\lambda\end{pmatrix}.
+\]
+The fixed-block characteristic polynomial is \(x^2-(2+2\lambda)x+(2+2\lambda)\). At \(\lambda=\pm(a+a^{-1})/2\) this splits rationally as the two eigenvalues \(1\pm a\) and \(1\pm1/a\). Choose one rational mode from every positive strength block, giving r distinct rational eigenvalues
+\[
+\mu_i=L_r(2i-2)+1+a_i.
+\]
+The FULL native 24r-dimensional cyclic Q[t]-module has a canonical quotient to Q[t]/Product_i(t-mu_i), a cyclic **r-dimensional rational quotient** with explicit Vandermonde full rank. Its rational Hankel determinant is \((-1)^{r(r-1)/2}\ne0\) (NOT necessarily +1 for general r). This repairs the native 12-divisibility/quotient-rank flexibility obstruction while retaining the **zero-local-original-SURVIVE** condition.
+
+The rigorous algebraic derivation is
+\`research/derivations/GST_image3_rank_adaptive_rational_CM_zero_local_companion_2026_11_11.md\`.
+The exact committed Wolfram reproduction source
+\`research/computations/GST_image3_rank_adaptive_companion_original_CM_20261111.wl\`
+was fetched and executed \`allPassed=True\`:
+r=1 source h=2, strengths ±5/3, original native Krylov determinant nonzero modulo1009 residue 205, chosen rank-one rational quotient mode 4; r=2 source h=4, strengths ±5/3,±17/8, original native Krylov determinant residue706 modulo1009, rank-two quotient selected eigenmodes 4,285 with Vandermonde det281. Actual original 12-state charpolys were checked to contain the predicted rational fixed-pair quadratic factors in all source blocks.
+
+**Geometric anti-circularity:** a native cyclic quotient of dimension matching any \(\dim W_p(X)\) is STILL NOT a genuine original-X algebraic source without a canonical Chow–Betti realization and surjectivity established independently of a preselected Chow lift. Do not silently promote to Hodge proof.
+
+**Verification:** previously green Lean true original-X geometry modules remain green in their matching run commit. New all-N Lean source modules and synchronized Image-3 Native F are in independent long-running CI jobs at this checkpoint; do not mark them green without exact GitHub conclusions. The full arbitrary-N rational cyclicity and rank-adaptive quotient theorems are proved in the linked derivation as mathematical algebra, independently audited via Wolfram examples but have NOT been completely ported to Lean.
