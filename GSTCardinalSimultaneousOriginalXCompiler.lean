@@ -505,4 +505,36 @@ theorem image3FullF_add
 #print axioms image3FullF_cycleClass
 #print axioms image3FullF_basis
 
+
+/-- The precise combined Image-3 GST => Hodge bridge.
+
+If the native ORIGINAL-X F compiler has geometrically established that
+its full N-cohomology/CM/navigation source vectors span the entire
+rational Hodge target (the Betti F map is surjective), then the ACTUAL
+canonical rational cycle-class map is surjective.
+
+The geometric FULL-RANK antecedent must be PROVED, not inserted by
+the use of arbitrary cardinal inputs, information-space full rank,
+or the abstract definition of the F-function. This theorem combines
+Image-3 construction with the already-existing conditional GST route
+without smuggling target Chow inverses. -/
+theorem image3Hodge_of_fullF_geometric_rank
+    (F : NativeGeometricFamily ι A B)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
+    (address : ManyCausalHoleIndex m s → ι)
+    (nav : ι → ι) (kappa : Nat)
+    (hfull :
+      Function.Surjective
+        (fun c : ManyCausalHoleCoordinates m s =>
+          image3BettiFullF F m s c address nav kappa)) :
+    Function.Surjective F.cycleClass := by
+  intro alpha
+  obtain ⟨c, hc⟩ := hfull alpha
+  refine ⟨image3NativeFullF F m s c address nav kappa, ?_⟩
+  rw [image3FullF_cycleClass]
+  exact hc
+
+#check image3Hodge_of_fullF_geometric_rank
+#print axioms image3Hodge_of_fullF_geometric_rank
+
 end GSTCardinalSimultaneousOriginalXCompiler
