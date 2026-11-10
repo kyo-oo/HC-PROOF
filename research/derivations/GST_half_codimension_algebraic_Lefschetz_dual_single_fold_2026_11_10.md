@@ -130,3 +130,30 @@ would close the above explicit single-fold compiler and the rational Hodge conje
 ## Current source-provenance and originality caution
 
 Hard Lefschetz, rational Poincare, the Hilbert cycle classes and external product Chow correspondences are established classical facts. The low-half reduction and cyclic compiler are consequences of those theorems under the given source-rank antecedent. We have not performed an independent priority/novelty audit of the particular GST packaging; do not claim any historical first or a proven Millennium Prize solution.
+
+
+## Further integration: realize a rank-adaptive corner of the ORIGINAL U+J+SURVIVE GST wave as TRUE original-X Chow correspondences
+
+This is a constructive correspondence-algebra result, conditional only on the same genuine source-basis premise already stated, not on a separate Hodge-star input.
+
+The prior proved original GST wave, at any positive finite N, has original seed v_N and invertible 12N-dimensional Krylov matrix, hence genuine ORIGINAL-WAVE rational matrix units E^GST_ij written as finite rational combinations of ORIGINAL U,J,SURVIVE, wave shifts, source coupling and transpose words; see
+research/derivations/GST_connected_cardinal_native_source_full_rank_compiler_2026_11_10.md.
+For any prescribed rank r, choose N with 12N>=r and take the rank-r corner P_r Mat_(12N)(Q) P_r isomorphic to Mat_r(Q), without incorrectly assuming a unital Mat_(12N) representation on an arbitrary r-dimensional Hodge space.
+
+The lower-half source theorem above produces a full original-X native basis a_i in CH^p(X)_Q and TRUE complementary Chow duals b_i in CH^(d-p)(X)_Q with degree(a_k b_i)=delta_ki. Define
+  R_X : Mat_r(Q) -> CH^d(X x X)_Q
+by
+  R_X(E_ij) = pr_1^*b_i * pr_2^*a_j
+for the row/column convention E_ij sends basis vector i to j.
+
+**Exact CHOW algebra assertion:** By the ordinary algebraic correspondence composition formula, NOT just Betti matrix multiplication,
+  R_X(E_ij) o R_X(E_kl) = delta_(i,l) R_X(E_kj).
+Hence the assignment realizes the corresponding matrix-unit algebra (after matching the chosen index and composition convention). Because its canonical Betti action on the FULL Hodge basis {cl(a_i)} is the faithful matrix-unit action, any rational linear relation between these Chow correspondences would induce the same relation between independent matrix units and is therefore trivial. So R_X is a genuine injective rational algebra homomorphism from the rank-r GST corner (with the coordinate convention fixed) to the ORIGINAL-X rational Chow correspondence algebra; its unit is the algebraic Chow idempotent
+  P_X = sum_i pr_1^* b_i * pr_2^* a_i
+rather than necessarily the whole diagonal Delta_X.
+
+The ORIGINAL full-N GST source-cyclic shift C_r=sum_i E^GST_(i+1 mod r),i consequently maps to the TRUE original-X algebraic cyclic correspondence Gamma_p from the prior theorem, preserving its commutators and all MATRIX-UNIT identities. This is a direct native geometric LANDING of the user's original 12-state/all-N information corner once the topological original-X source components have full Hodge rank. The correspondence action commutes with the canonical Betti cycleClass by genuine Chow functoriality.
+
+**Important semantic firewall:** The corner projections P_r need not commute individually with the original U,J,M operators. Thus compressed operators P_r U P_r, P_r J P_r etc. do NOT automatically satisfy U^5=I or J^2=-I. Only actually verified relations of the rank-r GST CORNER algebra are inherited by its original-X Chow representation. Do not falsely assert that all uncompressed wave/CM laws have been realized unchanged on arbitrary X.
+
+**Key remaining original-X geometric birth problem** remains existence of actual cycles a_i spanning W_q for q<=d/2. The algebra homomorphism R_X is a constructive output of that premise, NOT a proof of the premise.
