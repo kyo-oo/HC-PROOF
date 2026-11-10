@@ -45,9 +45,9 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           python3 scripts/gst_lean_dependency_roots.py GSTImage3NativeFusionLib \
             GSTSquarePureHodgeDuality \
-            waves/GSTNCohomologyV3 \
+            waves.GSTNCohomologyV3 \
             GSTCardinalSimultaneousOriginalXCompiler
-          if timeout 6500 lake build GSTSquarePureHodgeDuality GSTNCohomologyV3 GSTCardinalSimultaneousOriginalXCompiler > gst-image3-fusion.log 2>&1; then
+          if timeout 6500 lake build GSTSquarePureHodgeDuality waves.GSTNCohomologyV3 GSTCardinalSimultaneousOriginalXCompiler > gst-image3-fusion.log 2>&1; then
             echo "LEAN PASSED: all three original native GST files"
           else
             grep -nE 'error:|sorryAx|unknown identifier|unsolved goals|failed to synthesize|type mismatch' gst-image3-fusion.log | tail -n 130 || true
