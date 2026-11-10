@@ -444,4 +444,73 @@ theorem targetCurvature_detects_prescribed_input (s : NShape)
 #print axioms targetCurvature_zero_iff
 end BaseValuedCurvature
 
+
+/-! ## Image-3 navigation constant on the ORIGINAL independent N-holes
+
+The natural navigation count kappa is distinct from cardinal-index sets
+and from the ternary HappyCell Navigation predicate. At each finite step
+the navigation of a hole coordinate is an EXACT permutation, preserving
+all independent N-cohomology channels instead of summing them away.
+The actual GEOMETRIC correspondence implementing the permutation on X
+is a separate realization theorem, not silently assumed here.
+-/
+
+/-- Recoordination of one original GST N-hole vector through a genuine
+bijection of its independent channel addresses. -/
+def navigateHole (s : NShape)
+    (nav : Fin s.holes ≃ Fin s.holes)
+    (a : HoleCoordinates s) : HoleCoordinates s :=
+  fun i => a (nav.symm i)
+
+/-- The native navigation constant counts successive moves on the
+original N-cohomology basis without collapsing channels. -/
+def navigateHoleConstant (s : NShape)
+    (nav : Fin s.holes ≃ Fin s.holes) :
+    Nat → HoleCoordinates s → HoleCoordinates s
+  | 0, a => a
+  | k + 1, a => navigateHole s nav (navigateHoleConstant s nav k a)
+
+/-- Pure navigation preserves complete N-hole coordinates exactly. -/
+theorem navigateHole_injective (s : NShape)
+    (nav : Fin s.holes ≃ Fin s.holes) :
+    Function.Injective (navigateHole s nav) := by
+  intro a b hab
+  funext i
+  have h := congrFun hab (nav i)
+  simpa [navigateHole] using h
+
+/-- Any finite navigation constant remains injective on the user's
+full rational N-cohomology vector, independent of its hole count. -/
+theorem navigateHoleConstant_injective (s : NShape)
+    (nav : Fin s.holes ≃ Fin s.holes) (kappa : Nat) :
+    Function.Injective (navigateHoleConstant s nav kappa) := by
+  induction kappa with
+  | zero =>
+      intro a b h
+      exact h
+  | succ k ih =>
+      intro a b h
+      exact ih (navigateHole_injective s nav h)
+
+/-- The original multi-causal tensor is exactly equivariant under
+independent navigation of every constituent GST N-cohomology world. -/
+theorem manyCausalHoleTensor_navigation
+    (m : Nat) (s : Fin m → NShape)
+    (nav : ∀ i : Fin m, Fin ((s i).holes) ≃ Fin ((s i).holes))
+    (a : ∀ i : Fin m, HoleCoordinates (s i))
+    (j : ManyCausalHoleIndex m s) :
+    manyCausalHoleTensor m s
+        (fun i => navigateHole (s i) (nav i) (a i)) j =
+      manyCausalHoleTensor m s a
+        (fun i => (nav i).symm (j i)) := by
+  rfl
+
+#check navigateHole
+#check navigateHoleConstant
+#check navigateHole_injective
+#check navigateHoleConstant_injective
+#check manyCausalHoleTensor_navigation
+#print axioms navigateHoleConstant_injective
+#print axioms manyCausalHoleTensor_navigation
+
 end GSTNCohomologyV3
