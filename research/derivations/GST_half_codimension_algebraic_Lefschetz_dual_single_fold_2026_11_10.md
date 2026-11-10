@@ -37,9 +37,13 @@ Define the RATIONAL GRAM matrix
        = integral_X v_i cup v_j cup h^s  in Q.
 
 **Crucial lemma: det M !=0.**
-The rational Poincare pairing
-  H^{2q}(X,Q) x H^{2d-2q}(X,Q) -> Q
-is perfect. Composing its second argument with Hard Lefschetz L^s gives a rational nondegenerate bilinear form on H^{2q}(X,Q). Its complex Hodge decomposition is orthogonal between H^{a,b} and H^{c,d} unless (a+c+s,b+d+s)=(d,d). In particular the (q,q) summand pairs only with itself (after L^s). Hence its restriction to W_q is also nondegenerate, as W_q is the rational Hodge subspace of the complex (q,q) summand and the rational form is nondegenerate after complexification. Since v_i form a rational basis, det M !=0.
+Poincare duality combined with rational Hard Lefschetz makes
+  B_q(x,y)=integral_X x*y*h^s
+a rational nondegenerate form on H^{2q}(X,Q). But we must NOT infer nondegeneracy on the rational (q,q) subspace merely from nondegeneracy on the full complex (q,q) summand: an arbitrary rational subspace of an indefinite bilinear space could be isotropic.
+
+The correct stronger argument uses the full rational Lefschetz decomposition and HODGE–RIEMANN bilinear relations. The rational primitive Lefschetz decomposition of H^{2q}(X,Q) is preserved by rational (q,q) Hodge type; thus W_q decomposes as a rational orthogonal direct sum of L^j P^{2q-2j}(X,Q) intersect the respective rational Tate/Hodge summands. On each primitive REAL (q-j,q-j) piece, the Lefschetz intersection pairing B_q is positive definite or negative definite up to an explicit sign by Hodge–Riemann. The restriction to ANY rational subspace within a definite primitive summand is therefore nondegenerate. Different Lefschetz summands are B_q-orthogonal; hence B_q restricted to the entire rational W_q is nondegenerate. Since v_i is a rational basis of W_q, det M !=0.
+
+This additional Hodge–Riemann step is essential; Hard Lefschetz + full Poincare pairing alone would NOT justify the rational-subspace restriction.
 
 Let
   z_i^dual = sum_j (M^(-1))_{ji} z_j in CH^q(X)_Q.
