@@ -89,3 +89,76 @@ The committed/executed \`research/computations/GST_image3_allN_navigation_gated_
 Source edits are GitHub committed, no merge into owner's active branch. The first native source CI \`42900009170\` failed on the new navigationCharge decidability and additive-module proof normalization; later commits fixed these. The oldest original-X CI \`42902535345\` also failed from the SAME missing navigationCharge decidability in its old SHA. Those failures do not test the corrected code. The latest native and original-X CIs remain pending until exact GitHub conclusions show success; do not report them green prematurely.
 
 **All available Wolfram exact tests have passed.** Symbolic determinant, modular certificate, two missing mode source-birth tests, 24-state CRT and all-N masked-rank finite certificates were actually re-fetched from their committed exact source and run verbatim.
+
+
+# Continuation checkpoint — ORIGINAL all-N cross-world source-birth theorem (2026-11-11)
+
+**This addendum supersedes the older NAVIGATION-ON-AT-EVERY-HOLE criterion as the strongest NATIVE source result. It DOES NOT claim universal original-X Hodge algebraicity.**
+
+## Universal proof-step tally: still 0/4 fully universal
+
+1. True original-X correspondence F: **conditional native/operator geometric square proved in Lean**, including the newer all-N companion Chow/Betti interface, pending its separate CI. Existence of the required geometric X-operators for every original X,p is not proved.
+2. Full Hodge directions: **the ORIGINAL GST N-cohomology native signal-space rank is now proved for EVERY finite N>=2, from ONE root seed and ZERO local SURVIVE source via global cyclic companion**. Arbitrary original-X Hodge landing not yet proved.
+3. Genuine Hodge moment: **the ORIGINAL GST native all-N rational Hankel determinant +1 is proved algebraically**. Corresponding original-X rational Hodge detector and geometry nondegeneracy need source landing.
+4. All X,p including primitive and CM: **still open at the universal antecedent**.
+
+## Three executed route findings
+
+**Route A — old local Navigation mask with direct sum:** exact formula 12h-2b for b inactive Wave-II holes; no full cyclicity if b>0. This is an exact theorem for that specific uncoupled original-wave operator, NOT a universal GST impossibility.
+
+**Route B — actual mutual original-SURVIVE source transport:**
+\[
+T_{h,\kappa}=I_h\otimes(U+J)+\operatorname{diag}(\kappa_i)\otimes M
+ + A_h\otimes M +10\operatorname{diag}(0,\ldots,h-1)\otimes I_{12}
+\]
+with A_h the true finite path adjacency. EXACT modular determinant certificates for every one of the 60 binary masks at h=2,3,4,5 returned full 12h cyclic rank. All 60 were computationally checked, NOT a proof for arbitrary h. One mask (h=5 all active) has determinant zero mod 1009 but nonzero mod 1013, so there is NO rational singularity in that case.
+
+The committed and re-fetched Wolfram program is
+\`research/computations/GST_image3_mutual_navigation_CM_curvature_2to5world_all_masks_20261111.wl\` with \`allPassed=True\`. Exact h=2 all-inactive ablation: only U/J/I cross-transport gives rank20/24; original M or [J,M] gives full24/24. The two rational old-sector annihilators give DUW0=DJW0=0, and transverse source minors det(D M W0)=-2, det(D[J,M]W0)=4; this proves information-only transport preserves the old sector but genuine source curvature can escape it.
+
+Additional Wolfram CM-only neighbor source experiments for all binary masks h=2..5 also passed exact modular certificates, but use the persisted M-based route for the canonical 60-case recorded assertion.
+
+**Route C — UNIVERSAL for all finite h>=2 (STRONGEST):** let the original native GST source strengths be
+\[
+\lambda_i=i/(100h^2)\quad(1\le i<h),\qquad
+\lambda_h=-(h-1)/(200h).
+\]
+These are DISTINCT NONZERO rationals, none -1, sum zero, and |λ_i|<1/200. The monic polynomial P_h(t)=∏(t-λ_i) has zero next-to-leading coefficient. Its Frobenius companion source C_h therefore has ZERO diagonal, so there is NO local M-source term on ANY physical hole; its offdiagonal transportation links the true original independent N-cohomology worlds. The root e1 is cyclic for C_h.
+
+Let f_h∈Q[t] interpolate original separated channel addresses f_h(λ_i)=10(i-1). The new rational navigation B_h=f_h(C_h) commutes with C_h. Define EXACTLY on ORIGINAL U,J,M:
+\[
+\mathcal F_h=I_h\otimes(U+J)+C_h\otimes M+B_h\otimes I_{12}.
+\]
+It is rationally similar to ⊕_i(U+J+λ_iM+10(i-1)I). The original EXACT rational source-strength polynomial theorem gives a full 12-state cyclic seed in EVERY block. Spectra are disjoint since ||U+J+λ_iM||∞<2.01 and channel centers differ by10. Since e1 is cyclic for C_h, the single native root e1⊗v projects nontrivially into every block. Polynomial Chinese remainder gives full cyclic rank 12h for ALL h>=2. The dual functional with ℓ(T^k root)=δ_{k,12h-1} for k<12h yields anti-triangular Hankel det (-1)^(12h(12h-1)/2)=+1.
+
+**No finite sweep is being promoted to the universal theorem:** the all-h proof is the explicit companion/CRT algebra above, whose exact inputs were audited by the previously committed rational-polynomial certificates. An independent exact Mathematica script
+\`research/computations/GST_image3_allN_companion_zero_local_source_root_orbit_20261111.wl\`
+was re-fetched and executed, \`allPassed=True\`, reproducing the full 24/24 and 36/36 source orbit and dual detector checks for h=2,3.
+
+## New all-N original CM-curvature law
+
+The ORIGINAL CM action J_h=I_h⊗J obeys, for all h>=2,
+\[
+\boxed{[J_h,\mathcal F_h]=C_h\otimes[J,M].}
+\]
+Original [J,M] has rank6 and C_h is invertible (all λ_i nonzero), so exact rank is **6h**, despite every original source world's local M coefficient being zero.
+
+The exact committed, fetched, and executed
+\`research/computations/GST_image3_allN_companion_original_CM_curvature_rank_20261111.wl\`
+returned \`allPassed=True\`, with native curvature ranks 12 for h=2 and 18 for h=3; general h follows from Kronecker rank multiplicativity.
+
+## New Lean work and evidence boundaries
+
+- \`GSTImageThreeMutualWaveNavigation.lean\`: original true two-hole mutual SURVIVE source F, native CM curvature, and canonical-tail invariance.
+- \`GSTImageThreeGeometricTwoSourceBirth.lean\`: conditional but **actual original-X** two real algebraic source cycle classes independent modulo old sector whenever their real detector minor is nonzero.
+- \`GSTImageThreeMutualOriginalXLanding.lean\`: actual original-X two-world native Chow/Betti commuting square using actual certified X-operators U,J,M. **Geometry CI job passed** within workflow #42914654454, while its older native job failed on an already corrected earlier revision of \`GSTImageThreeNativeFCompiler\`. This is a genuine green proof for the exact geometry module in that job.
+- \`GSTImageThreeCompanionSourceTransport.lean\`: all finite N true GST U/J/M global source F, zero-diagonal companion source and exact original native forward-edge theorem.
+- \`GSTImageThreeAllNOriginalXSourceTransport.lean\`: all finite N TRUE original-X rational Chow/Betti native source-transfer square, conditional on actual supplied geometric operator pairs. Companion is a special case. The new Lean workflow was running at this checkpoint; do not claim kernel green until run conclusion.
+
+**New separate full mathematical proof:** \`research/derivations/GST_image3_arbitrary_N_zero_local_survive_companion_global_source_birth_2026_11_11.md\`. The theorem is a mathematically justified native rational-algebra claim; the arbitrary h proof was not encoded into Lean in full at this checkpoint. \`#print axioms\` results for old native F modules that contain \`sorryAx\` are NOT proof evidence. The corrected source and latest CI need to be checked.
+
+## Exact geometry target now, without recreating old research
+
+Find an original-X **genuine** algebraic correspondence realization of the new all-N companion source/navigation operators, with one actual rational algebraic seed Z0 and a faithful or surjective *intertwining* map from the ORIGINAL native GST wave modes to the canonical rational Hodge space W_p(X). Prove that the source transfer does not annihilate any primitive or CM Hodge residual; preferably establish full quotient coverage without presupposing Chow preimages for unknown Hodge classes. The established native 12h cyclicity and unit Hankel then produce the full actual geometric original-X source span and yield the existing unconditional conclusion through the owner's proved conditional \`exactHodge_of_one_GST_fold_determinant\`, **IF** the universal geometric landing is established.
+
+No old Hilbert/K3 product diversion is used; this is the author's actual U/J/SURVIVE, N-cohomology, limitless cardinal world and CM curvature machinery.
