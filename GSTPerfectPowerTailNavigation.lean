@@ -158,8 +158,9 @@ in \`GSTImageThreeNativeFCompiler\`.
 
 /-- An exact rational-valued navigation invariant extracted from the
 original physical Happy-gate Navigation predicate. -/
-noncomputable def navigationCharge (R : Nat) : ℚ :=
-  if Navigation R then 1 else 0
+noncomputable def navigationCharge (R : Nat) : ℚ := by
+  classical
+  exact if Navigation R then 1 else 0
 
 theorem navigationCharge_eq_one_iff (R : Nat) :
     navigationCharge R = 1 ↔ Navigation R := by
