@@ -175,4 +175,63 @@ theorem square_pure_hodge_duality_crown :
 #print axioms pureCoordinates_squarePureDual
 #print axioms square_pure_hodge_duality_crown
 
+
+/-! ## Image-3 navigation constant and original GST Hodge-star conjugacy
+
+The proposed geometric navigation constant is distinct from the EXISTING
+arithmetic Navigation predicate in GSTCanonicalTailStateIso.
+Here kappa is the number of typed navigation steps; it is not cardinal
+multiplication with a topology. Duality is the PREEXISTING exact
+squarePureDual / pureCoordinateReverse law, not a new Hodge-star axiom.
+-/
+
+/-- A candidate navigation operator on the owner's complete pure-Hodge
+coordinate system. A geometric realization must specify nav. -/
+def pureNavigate {N : Nat}
+    (nav : PureHodgeCoordinates N N → PureHodgeCoordinates N N) :
+    Nat → PureHodgeCoordinates N N → PureHodgeCoordinates N N
+  | 0, a => a
+  | k + 1, a => nav (pureNavigate nav k a)
+
+/-- Hodge-star-conjugated navigation: mirror -> navigate -> mirror.
+This is the exact information-space dual action, not an assumed
+algebraic correspondence on an arbitrary original projective variety. -/
+def dualNavigate {N : Nat}
+    (nav : PureHodgeCoordinates N N → PureHodgeCoordinates N N)
+    (a : PureHodgeCoordinates N N) :
+    PureHodgeCoordinates N N :=
+  pureCoordinateReverse (nav (pureCoordinateReverse a))
+
+/-- Dualizing a mirrored navigation returns original navigation. -/
+theorem dualNavigate_dual_involutive {N : Nat}
+    (nav : PureHodgeCoordinates N N → PureHodgeCoordinates N N)
+    (a : PureHodgeCoordinates N N) :
+    dualNavigate (dualNavigate nav) a = nav a := by
+  simp [dualNavigate]
+
+/-- Exact GST navigation-constant / Hodge-star law at EVERY
+finite kappa: J nav^k = (J nav J)^k J. -/
+theorem pureHodgeDual_navigationConstant
+    {N : Nat} (kappa : Nat)
+    (nav : PureHodgeCoordinates N N → PureHodgeCoordinates N N)
+    (a : PureHodgeCoordinates N N) :
+    pureCoordinateReverse (pureNavigate nav kappa a) =
+      pureNavigate (dualNavigate nav) kappa
+        (pureCoordinateReverse a) := by
+  induction kappa with
+  | zero => rfl
+  | succ k ih =>
+      change
+        pureCoordinateReverse (nav (pureNavigate nav k a)) =
+        dualNavigate nav
+          (pureNavigate (dualNavigate nav) k (pureCoordinateReverse a))
+      rw [← ih]
+      simp [dualNavigate]
+
+#check pureNavigate
+#check dualNavigate
+#check dualNavigate_dual_involutive
+#check pureHodgeDual_navigationConstant
+#print axioms pureHodgeDual_navigationConstant
+
 end GSTSquarePureHodgeDuality
