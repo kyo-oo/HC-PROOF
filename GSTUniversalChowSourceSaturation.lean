@@ -98,7 +98,7 @@ theorem commonReadoutOrbit_in_two_source_span
           ell (commonReadoutOrbit ell target seed n) • target ∈
         Submodule.span ℚ ({seed, target} : Set A)
       apply add_mem ih
-      apply smul_mem
+      apply (Submodule.span ℚ ({seed, target} : Set A)).smul_mem
       apply Submodule.subset_span
       simp
 
