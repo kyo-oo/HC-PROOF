@@ -252,7 +252,7 @@ theorem navigationControlledF_CM_defect (k : ℚ) (u : WaveSignal) :
     simp only [navigationControlledF, J_add, J_smul]
   rw [hJ]
   simp only [navigationControlledF]
-  rw [J_commutes_U u]
+  rw [J_commutes_U u, smul_sub]
   abel
 
 /-- The verified original curvature birth is scaled by the navigation
