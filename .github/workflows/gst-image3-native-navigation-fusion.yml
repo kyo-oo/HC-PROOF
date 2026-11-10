@@ -1,0 +1,66 @@
+name: GST Image-3 native navigation and F-function fusion
+
+on:
+  push:
+    branches:
+      - research/gpt6-image3-native-gst-navigation-fusion-20261111
+    paths:
+      - 'GSTSquarePureHodgeDuality.lean'
+      - 'waves/GSTNCohomologyV3.lean'
+      - 'GSTCardinalSimultaneousOriginalXCompiler.lean'
+      - '.github/workflows/gst-image3-native-navigation-fusion.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lean kernel — original GST Image 3 unified F/N/cohomology/dual/curvature
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore Lean toolchain
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-Linux-gst-image3
+          restore-keys: |
+            hc-lean-toolchain-Linux-
+      - name: Install pinned Lean and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Kernel check all upgraded ORIGINAL GST laws
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTImage3NativeFusionLib \
+            GSTSquarePureHodgeDuality \
+            waves/GSTNCohomologyV3 \
+            GSTCardinalSimultaneousOriginalXCompiler
+          if timeout 6500 lake build GSTSquarePureHodgeDuality GSTNCohomologyV3 GSTCardinalSimultaneousOriginalXCompiler > gst-image3-fusion.log 2>&1; then
+            echo "LEAN PASSED: all three original native GST files"
+          else
+            grep -nE 'error:|sorryAx|unknown identifier|unsolved goals|failed to synthesize|type mismatch' gst-image3-fusion.log | tail -n 130 || true
+            tail -n 110 gst-image3-fusion.log || true
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-image3-fusion.log; then
+            echo "Unexpected sorry axiom" && exit 1
+          fi
+      - name: Upload proof diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-image3-lean-diagnostics
+          path: gst-image3-fusion.log
+          if-no-files-found: warn
