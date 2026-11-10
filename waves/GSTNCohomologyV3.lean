@@ -444,4 +444,66 @@ theorem targetCurvature_detects_prescribed_input (s : NShape)
 #print axioms targetCurvature_zero_iff
 end BaseValuedCurvature
 
+
+/-! ## GST IMAGE-3 NAVIGATION-CONTROLLED N-COHOMOLOGY
+
+The actual V3 independent N-hole basis is retained. Navigation does
+not create extra phantom holes: it scales the original independent
+channels. The exact reconstruction below isolates what survives
+a simultaneous navigation gate at every hole.
+-/
+
+/-- Pointwise simultaneous navigation gate on every ORIGINAL
+independent N-hole cohomology amplitude. -/
+def navigationGatedHoles
+    (s : NShape) (κ : Fin s.holes → ℚ)
+    (v : HoleCoordinates s) : HoleCoordinates s :=
+  fun i => κ i * v i
+
+/-- The original independent source attached to hole i survives only
+in that hole, with the EXACT navigation amplitude κ_i. -/
+theorem navigationGatedHoleBasis_apply
+    (s : NShape) (κ : Fin s.holes → ℚ)
+    (i j : Fin s.holes) :
+    navigationGatedHoles s κ (independentHoleBasis s i) j =
+      if i = j then κ j else 0 := by
+  by_cases h : i = j
+  · subst j
+    simp [navigationGatedHoles, independentHoleBasis]
+  · simp [navigationGatedHoles, independentHoleBasis, h]
+
+/-- Every simultaneous cardinal/finite N-wave packet is reconstructed
+exactly after the navigation gate: not a claim that unknown Hodge
+directions have acquired algebraic representatives. -/
+theorem navigationGatedHoleBasis_reconstruct
+    (s : NShape) (κ : Fin s.holes → ℚ)
+    (v : HoleCoordinates s) (j : Fin s.holes) :
+    (∑ i : Fin s.holes,
+      v i * navigationGatedHoles s κ (independentHoleBasis s i) j)
+      = κ j * v j := by
+  simp [navigationGatedHoles, independentHoleBasis, mul_comm]
+
+/-- The all-on navigation constant preserves every true N-hole
+cohomological input, including zero-hole worlds. -/
+theorem navigationGatedHoles_one
+    (s : NShape) (v : HoleCoordinates s) :
+    navigationGatedHoles s (fun _ => 1) v = v := by
+  funext i
+  simp [navigationGatedHoles]
+
+/-- The all-off navigation constant extinguishes the independent
+N-hole signal without relabelling any cohomological basis. -/
+theorem navigationGatedHoles_zero
+    (s : NShape) (v : HoleCoordinates s) :
+    navigationGatedHoles s (fun _ => 0) v = 0 := by
+  funext i
+  simp [navigationGatedHoles]
+
+#check navigationGatedHoles
+#check navigationGatedHoleBasis_apply
+#check navigationGatedHoleBasis_reconstruct
+#check navigationGatedHoles_one
+#check navigationGatedHoles_zero
+#print axioms navigationGatedHoleBasis_reconstruct
+
 end GSTNCohomologyV3
