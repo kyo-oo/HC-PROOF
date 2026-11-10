@@ -90,8 +90,8 @@ theorem generated_native_CM_source_birth_two
     C physicalAddress hRoots hBirth hW seed,
     generated_native_F_is_original_full
       C physicalAddress hRoots hBirth hW (J seed)]
-  simpa [T] using
-    GSTGraphV2CMWaveFusion.wave_source_CM_curvature_nonzero
+  simpa only [navigationControlledF_one, mul_one] using
+    (GSTGraphV2CMWaveFusion.navigationControlledF_curvature_fixed 1)
 
 #check BirthPreservesNavigation
 #check all_generated_navigation_active
