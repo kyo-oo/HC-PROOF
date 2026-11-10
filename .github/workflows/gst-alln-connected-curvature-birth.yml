@@ -53,7 +53,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTConnectedCurvatureBirthLib GSTAllNConnectedCurvatureBirth
+          python3 scripts/gst_lean_dependency_roots.py GSTConnectedCurvatureBirthLib GSTAllNConnectedCurvatureGeometricClosure
           if timeout 9900 lake build GSTAllNConnectedCurvatureGeometricClosure > gst-connected-curvature.log 2>&1; then
             echo "LEAN PASSED: GSTAllNConnectedCurvatureGeometricClosure"
           else
