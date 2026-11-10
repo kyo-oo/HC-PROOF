@@ -314,4 +314,60 @@ end CoupledInfiniteTower
 #print axioms cmDefect_zero_iff_odd_zero
 #print axioms informationCMCurvature_five_sum_zero
 
+
+/-! ## Image-3 cyclic complex structure versus original GST Hodge star
+
+The CM complex operator satisfies J_CM squared = -I, while the
+PRE-EXISTING square pure-Hodge mirror satisfies J_star squared = I.
+They are NOT the same mathematical operation. An arbitrary rational
+Hodge space need not support a CM square-root of -I (odd rank is an
+obstruction); its doubled GST information carrier ALWAYS does.
+
+The following native rational algebra law constructs that doubled
+CM action and its exact Hodge-star anti-commutation. This is NOT,
+by itself, a Chow-correspondence action on every original X.
+-/
+
+section Image3CyclicComplex
+
+variable {V : Type*} [AddCommGroup V] [Module ℚ V]
+
+/-- Exact rational CM structure on an arbitrary DOUBLED GST source. -/
+def image3DoubledCM (v : V × V) : V × V := (-v.2,v.1)
+
+/-- Native swap duality (the 2-slot Hodge-star model), not analytic
+Hodge star on arbitrary smooth projective X. -/
+def image3DoubledStar (v : V × V) : V × V := (v.2,v.1)
+
+theorem image3DoubledCM_square (v : V × V) :
+    image3DoubledCM (image3DoubledCM v) = -v := by
+  ext <;> simp [image3DoubledCM]
+
+theorem image3DoubledStar_square (v : V × V) :
+    image3DoubledStar (image3DoubledStar v) = v := by
+  rfl
+
+/-- The original cyclic CM and native Hodge-dual SWAP anticommute. -/
+theorem image3DoubledStar_CM_anticommute (v : V × V) :
+    image3DoubledStar (image3DoubledCM v) =
+      -image3DoubledCM (image3DoubledStar v) := by
+  ext <;> simp [image3DoubledCM,image3DoubledStar]
+
+/-- Fourfold cyclic return of the ORIGINAL doubled CM structure. -/
+theorem image3DoubledCM_four (v : V × V) :
+    image3DoubledCM
+      (image3DoubledCM
+        (image3DoubledCM
+          (image3DoubledCM v))) = v := by
+  ext <;> simp [image3DoubledCM]
+
+#check image3DoubledCM_square
+#check image3DoubledStar_square
+#check image3DoubledStar_CM_anticommute
+#check image3DoubledCM_four
+#print axioms image3DoubledCM_four
+#print axioms image3DoubledStar_CM_anticommute
+
+end Image3CyclicComplex
+
 end GSTGraphV2CMInfiniteCurvatureBridge
