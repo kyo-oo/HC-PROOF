@@ -80,15 +80,7 @@ theorem geometricF_canonicalTail
     (s b : Nat) (hs : 1 ≤ s) :
     geometricF U J M (4^(3^s*b)) =
       geometricF U J M (canonicalTail s b) := by
-  have h := navigationCharge_canonicalTail s b hs
-  cases U with
-  | mk ucu uco hU =>
-    cases J with
-    | mk jcu jco hJ =>
-      cases M with
-      | mk mcu mco hM =>
-        simp only [geometricF]
-        rw [h]
+  simp only [geometricF, navigationCharge_canonicalTail s b hs]
 
 /-- CM curvature of a REAL original-X native F operation is exactly
 the owner's genuine source curvature scaled by Navigation, PROVIDED
@@ -107,7 +99,7 @@ theorem geometricF_native_CM_defect
          M.cycleOperator (J.cycleOperator z)) := by
   simp only [geometricF, LinearMap.add_apply,
     LinearMap.smul_apply, map_add, map_smul]
-  rw [hJU z]
+  rw [hJU z, smul_sub]
   abel
 
 /-- The corresponding ORIGINAL-X rational Hodge cohomological curvature
