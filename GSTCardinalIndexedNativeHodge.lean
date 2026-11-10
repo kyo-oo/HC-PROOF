@@ -68,6 +68,25 @@ theorem cardinal_family_orbit_natural {ι : Type u}
         C.hodgeFold a (hodgeOrbit C a (C.cycleClass a z) n)
       rw [C.fold_natural, ih]
 
+
+/-- The user's new GST F-function:
+a cardinal-indexed world, a NATURAL iteration input and an actual
+native seed produce a typed Hodge/cohomology state. This is a finite-
+iterate construction; it does NOT insert a target-to-native inverse. -/
+def cardinalHodgeF {ι : Type u}
+    (C : IndexedSpace.{u,v,w} ι)
+    (a : ι) (z : C.Native a) (n : ℕ) : C.Hodge a :=
+  C.cycleClass a (nativeOrbit C a z n)
+
+/-- The new F-function is exactly the BETTI/Hodge fold orbit of the
+canonical native source, uniformly at every cardinal tag. -/
+theorem cardinalHodgeF_exact {ι : Type u}
+    (C : IndexedSpace.{u,v,w} ι)
+    (a : ι) (z : C.Native a) (n : ℕ) :
+    cardinalHodgeF C a z n =
+      hodgeOrbit C a (C.cycleClass a z) n :=
+  cardinal_family_orbit_natural C a z n
+
 section NativeRetract
 
 variable {A B A' B' : Type*}
@@ -136,6 +155,8 @@ theorem finite_correspondence_sum_natural
 
 end FiniteCorrespondenceFamily
 
+#check cardinalHodgeF
+#check cardinalHodgeF_exact
 #check IndexedSpace
 #check FinitePacket
 #check cardinal_family_orbit_natural
@@ -143,6 +164,7 @@ end FiniteCorrespondenceFamily
 #check missing_native_class_survives_retract
 #check finite_correspondence_sum_natural
 
+#print axioms cardinalHodgeF_exact
 #print axioms cardinal_family_orbit_natural
 #print axioms native_retraction_reflects_algebraicity
 #print axioms missing_native_class_survives_retract
