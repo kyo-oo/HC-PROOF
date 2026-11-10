@@ -121,7 +121,11 @@ theorem proposed_double_source_class
     (z0 : A) :
     cl (N (z0 + N z0)) =
       T (cl z0) + T (T (cl z0)) := by
-  rw [map_add, hcompat, map_add, hcompat, hcompat]
+  calc
+    cl (N (z0 + N z0)) = T (cl (z0 + N z0)) := hcompat _
+    _ = T (cl z0 + cl (N z0)) := by rw [map_add]
+    _ = T (cl z0 + T (cl z0)) := by rw [hcompat]
+    _ = T (cl z0) + T (T (cl z0)) := by rw [map_add]
 
 /-- Genuine algebraic curvature commutators preserve the canonical
 native-to-Betti square when each constituent action does. -/
