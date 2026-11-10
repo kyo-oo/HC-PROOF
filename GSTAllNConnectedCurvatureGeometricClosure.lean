@@ -135,9 +135,8 @@ theorem all_channels_have_native_cycles
       rw [C.source_class i.val (Nat.lt_succ_iff.mp i.isLt)]
     _ = alpha := by
       funext j
-      change (∑ i : Fin (m+1),
-        alpha i * (if j.val = i.val then (1 : ℚ) else 0)) = alpha j
-      simp [Fin.val_inj, mul_ite]
+      simp [channelUnit, Finset.sum_apply, Pi.smul_apply,
+        Fin.val_inj, smul_eq_mul]
 
 /-- ONE finite cyclic native fold is now compiled FROM THE BORN
 SOURCE CHAIN using the original GST GeometricCyclicFrame machinery. -/
