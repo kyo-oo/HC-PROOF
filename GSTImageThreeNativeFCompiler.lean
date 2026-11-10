@@ -43,6 +43,8 @@ open GSTPerfectPowerTailNavigation
 open GSTGraphV2CMWaveFusion
 open GSTNCohomologyV3
 open GSTSquarePureHodgeDuality
+open GSTGlobalPureHodgeCosmology
+open GSTDimensionFreeHodgeDiagonal
 open GSTWorldCosmology
 
 /-- The user's new F-function based on the ACTUAL canonical navigation
@@ -79,7 +81,7 @@ theorem F_two_curvature :
     (J (F 2 seed) - F 2 (J seed))
       ((3 : Fin 4), (2 : Fin 3)) = 2 := by
   rw [F, navigationCharge_two]
-  simpa using navigationControlledF_curvature_fixed 1
+  simpa only [mul_one] using navigationControlledF_curvature_fixed 1
 
 /-- At R=0 the exact native source-curvature is extinguished. -/
 theorem F_zero_curvature (u : WaveSignal) :
