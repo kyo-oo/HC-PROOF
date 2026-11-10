@@ -34,6 +34,7 @@ namespace GSTAllNConnectedCurvatureBirth
 open GSTHodgeWaveAllNHoleReadout
 open GSTGraphV2WaveNShapeCompiler
 open GSTNCohomology
+open GSTGraphV2CMWaveFusion
 
 /-- The original Wave-II channel labels are dimensionless information
 addresses. Neighboring labels are an additional explicit channel-coupler,
