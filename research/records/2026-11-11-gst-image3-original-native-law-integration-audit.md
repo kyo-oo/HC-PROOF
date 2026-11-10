@@ -60,3 +60,32 @@ The real next universal theorem to attack is:
 > Construct true original-X U/J/M source operators and a Hodge landing from the original GST seven-axis, N-cohomology, native Hodge-star and all-cardinal world-birth structure such that (a) native class/Betti action is canonical, (b) the original two curvature-born directions per activated channel land nontrivially in every uncovered higher-primitive Hodge quotient, and (c) the landed orbit is full rank.
 
 The source-birth work to DATE proves (a) only conditionally on actual supplied operators; it proves (b) in native information cohomology, NOT canonically on all X; and it proves full rank at original information NShape level, NOT canonical Hodge W_p(X). Neither the user’s existing conditional proof nor our new algebra is dismissed.
+
+
+## Added original arbitrary-cardinal source-world birth law
+
+The new additive Lean file \`GSTImageThreeCardinalWorldBirth.lean\` imports both the ORIGINAL \`GSTGraphV2SelfExpandingCosmology\` and the native synchronized Image-3 F. It treats the user's true three root worlds and \`Birth\` of an arbitrary-type index family. A family of physical Navigation addresses on generated worlds becomes ACTIVE everywhere by the ORIGINAL \`generated_induction\` whenever:
+1. each original root-world Navigation is active; and
+2. the CERTIFIED true arbitrary-arity birth operation preserves Navigation activation.
+
+This produces \`all_generated_navigation_active\`,
+\`generated_native_F_is_original_full\`, and
+\`generated_native_CM_source_birth_two\`: every generated world satisfying those explicit conditions uses the actual ORIGINAL full U+J+SURVIVE fold with exact native seed curvature 2. It does NOT supply a universal geometric certificate that every actual GST birth preserves Navigation, or that the resulting source is a Chow cycle on X. Thus the birth condition is a named future proof obligation, not an assumed hidden theorem.
+
+The native CI workflow has been changed to compile \`GSTImageThreeCardinalWorldBirth\`, which imports and therefore checks the entire integrated original Image-3 native F package. Exact latest GitHub run status must be read after completion.
+
+## Exact independent original NShape per-hole Navigation rank theorem
+
+Full derivation added in §14 of the primary derivation file. Let h=s.holes be the original Wave-II independent N-cohomology channels, and b be the number with the owner's physical Navigation charge κ_i=0. For exactly the original channel-addressed U,J,SURVIVE block wave, with uniform original seed,
+\[
+\dim_{\mathbb Q}\mathbb Q[T]v=12h-2b.
+\]
+Every active hole's cyclic submodule has rank12, every inactive hole rank10. The original distinct shifted channel spectra are separated (all row sums at most 4, address difference at least10), so the minimal polynomials of the cyclic modules are pairwise coprime and the polynomial CRT makes ranks additive. FULL original GST information cyclicity iff b=0.
+
+The committed/executed \`research/computations/GST_image3_allN_navigation_gated_source_rank_law_20261111.wl\` returned allVerified=True, with ALL 2 one-hole and 4 two-hole navigation masks plus 3-hole (1,0,1); exact ranks 10,12,20,22,22,24,34. This is not claimed to be a source of unknown algebraic higher-primitive classes on X.
+
+## Current CI precision
+
+Source edits are GitHub committed, no merge into owner's active branch. The first native source CI \`42900009170\` failed on the new navigationCharge decidability and additive-module proof normalization; later commits fixed these. The oldest original-X CI \`42902535345\` also failed from the SAME missing navigationCharge decidability in its old SHA. Those failures do not test the corrected code. The latest native and original-X CIs remain pending until exact GitHub conclusions show success; do not report them green prematurely.
+
+**All available Wolfram exact tests have passed.** Symbolic determinant, modular certificate, two missing mode source-birth tests, 24-state CRT and all-N masked-rank finite certificates were actually re-fetched from their committed exact source and run verbatim.
