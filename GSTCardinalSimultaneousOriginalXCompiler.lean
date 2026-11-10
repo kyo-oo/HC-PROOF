@@ -240,7 +240,7 @@ def image3NavigateIndex (nav : ι → ι) : Nat → ι → ι
 
 /-- Hodge-star-dual N-cohomology coefficients using the OWNER'S exact
 square-world pure Hodge mirror, not an invented geometric Hodge star. -/
-def image3DualHoleWeights (s : NShape)
+def image3DualHoleWeights (s : GSTNCohomology.NShape)
     (a : PureHodgeCoordinates s.holes s.holes) :
     HoleCoordinates s :=
   fun i =>
@@ -252,7 +252,7 @@ independent GST N-hole amplitudes, and actual original-X native Chow
 correspondences produce ONE genuine finite original-X source packet. -/
 noncomputable def image3NativeF
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, HoleCoordinates (s k))
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat) : A := by
@@ -265,7 +265,7 @@ noncomputable def image3NativeF
 N-cohomology channel retained, rather than a scalar compression. -/
 noncomputable def image3BettiF
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, HoleCoordinates (s k))
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat) : B := by
@@ -279,7 +279,7 @@ noncomputable def image3BettiF
 cycle-class commuting square, at any cardinality of navigation inputs. -/
 theorem image3F_cycleClass
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, HoleCoordinates (s k))
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat) :
@@ -295,7 +295,7 @@ theorem image3F_cycleClass
 before summing every N-cohomology tensor contribution. -/
 noncomputable def image3NativeCurvatureF
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, HoleCoordinates (s k))
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat)
@@ -311,7 +311,7 @@ noncomputable def image3NativeCurvatureF
 /-- Hodge/Betti curvature exactly matching the native CM commutator. -/
 noncomputable def image3BettiCurvatureF
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, HoleCoordinates (s k))
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat)
@@ -331,7 +331,7 @@ The Hodge-star/CM action J must itself have a TRUE native Chow lift;
 an information-space mirror by itself does not grant that. -/
 theorem image3CurvatureF_cycleClass
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, HoleCoordinates (s k))
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat)
@@ -357,7 +357,7 @@ amplitudes to the single original-X F compiler, without identifying
 an arbitrary information mirror with an algebraic Hodge-star operator. -/
 noncomputable def image3DualNativeF
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, PureHodgeCoordinates (s k).holes (s k).holes)
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat) : A :=
@@ -370,7 +370,7 @@ old Hodge sector merely by increasing navigation count, index cardinality,
 or inserting a Hodge-dual commutator. Actual geometric mixing is required. -/
 theorem image3Curvature_no_escape
     (F : NativeGeometricFamily ι A B)
-    (m : Nat) (s : Fin m → NShape)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
     (a : ∀ k : Fin m, HoleCoordinates (s k))
     (address : ManyCausalHoleIndex m s → ι)
     (nav : ι → ι) (kappa : Nat)
