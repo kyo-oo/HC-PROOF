@@ -215,3 +215,66 @@ Replace the previous *locally every navigation charge active* condition by the f
 4. Feed that universal geometric construction into the preexisting exact Lean implication \`GSTHodgeSingleHypothesisConditional.exactHodge_of_one_GST_fold_determinant\`.
 
 This is a concrete replacement of the stronger local-navigation hypothesis by a global source-mixing mechanism; it does not assume the geometric bridge into existence.
+
+
+## 7. NEW arbitrary-N universal original CM curvature rank theorem
+
+The owner's ORIGINAL rational CM involutive complex-structure action J satisfies
+\(J^2=-I\) and \(JU=UJ\) on the true 12-cell Wave-I signal.
+Define the true all-h CM action
+\[
+\mathcal J_h=I_h\otimes J.
+\]
+Using the previous exact companion source/navigation F and the tensor
+product multiplication law, WITHOUT assuming any new projective
+geometric correspondence, the exact original native CM curvature is
+\[
+\begin{aligned}
+[\mathcal J_h,\mathcal F_h]
+&=[I_h\otimes J,\ I_h\otimes(U+J)+C_h\otimes M
+      +f_h(C_h)\otimes I_{12}]\\
+&=\boxed{C_h\otimes [J,M].}
+\end{aligned}
+\]
+The first and last terms commute with the true original J because
+\([J,U]=0\) and scalar N-hole address transport commutes with J.
+
+The ORIGINAL arithmetic SURVIVE source's exact 12-state commutator
+has rational rank
+\[
+\rank_{\mathbb Q}[J,M]=6
+\]
+(from the previously independently executed original-wave Wolfram
+certificate; its fixed seed readout is 2). For EVERY h>=2, all
+rational source eigenvalues \(\lambda_i\ne0\), so \(C_h\) is invertible:
+\(\rank C_h=h\). By rank multiplicativity of the Kronecker product,
+\[
+\boxed{
+\rank_{\mathbb Q}[\mathcal J_h,\mathcal F_h]
+=h\cdot6=6h,\qquad h\ge2.
+}
+\]
+
+Thus the ALL-h original-native information CM curvature never
+disappears, despite the ENTIRE local original-SURVIVE diagonal
+being zero: it lives in and is distributed by the genuine CROSS-WORLD
+source navigation. This is a truly noncommutative original-GST
+CM-curvature theorem, not a re-coordination artifact. Its rank grows
+linearly at every finite N, with NO fixed twelve-cell ceiling.
+
+Exact independent Wolfram checks at h=2 and h=3 using the original
+U,J,M and rational companion source report:
+- diagonal(C)=0 and det C !=0;
+- \([I_h\otimes J,\mathcal F_h]=C_h\otimes[J,M]\) EXACTLY;
+- original curvature rank 6;
+- full coupled CM curvature rank 12 at h=2 and 18 at h=3.
+
+**The real X firewall remains:** the symbolic rank \(6h\)
+does not assert that an original-X Hodge residual of dimension 6h is
+generated algebraically. The genuine cycle-level version must use
+actual certified native Chow correspondences, and its detectors must
+be taken on the canonical rational Betti Hodge space of X. The
+original-X all-N commuting square is expressed in the separately
+added Lean module
+\`GSTImageThreeAllNOriginalXSourceTransport.lean\`, pending kernel CI
+at this checkpoint.
