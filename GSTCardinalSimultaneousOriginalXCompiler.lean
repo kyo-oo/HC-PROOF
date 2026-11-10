@@ -153,12 +153,57 @@ theorem nativeCurvature_fresh_of_detector
     exact LinearMap.mem_ker.mpr (hOld k)
   exact hNew (LinearMap.mem_ker.mp (hle hspan))
 
+
+/-- UNIFORM GEOMETRIC GST REDUCTION FOR THE HODGE ANTECEDENT.
+
+If the ORIGINAL-X cardinal-indexed family of ACTUAL Chow correspondences
+has no proper nonzero invariant rational Hodge subspace, then the TRUE
+canonical cycle-class map is surjective. The ample seed supplies
+the required NONZERO algebraic Hodge vector.
+
+This proves a source-birth conclusion WITHOUT assuming an inverse for
+any target Hodge class, using only invariance of native algebraic
+image under the genuinely realized operators.
+
+The only remaining geometric input is to PROVE the specified
+irreducibility of the native correspondence action for EVERY X,p;
+abstract GST wave operators are not automatically correspondences. -/
+theorem hodge_surjective_of_native_irreducibility
+    (F : NativeGeometricFamily ι A B)
+    (hseed : F.cycleClass F.seed ≠ 0)
+    (hirr : ∀ S : Submodule ℚ B,
+      (∀ i : ι, ∀ x : B, x ∈ S → F.betti i x ∈ S) →
+      S = ⊥ ∨ S = ⊤) :
+    Function.Surjective F.cycleClass := by
+  let S : Submodule ℚ B := LinearMap.range F.cycleClass
+  have hstable : ∀ i : ι, ∀ x : B,
+      x ∈ S → F.betti i x ∈ S := by
+    intro i x hx
+    obtain ⟨Z, rfl⟩ := hx
+    change F.betti i (F.cycleClass Z) ∈
+      LinearMap.range F.cycleClass
+    exact ⟨F.native i Z, F.square i Z⟩
+  have hsource : F.cycleClass F.seed ∈ S := ⟨F.seed, rfl⟩
+  rcases hirr S hstable with hzero | hfull
+  · have hz : F.cycleClass F.seed = 0 := by
+      rw [hzero] at hsource
+      simpa using hsource
+    exact (hseed hz).elim
+  · intro alpha
+    have ha : alpha ∈ S := by
+      rw [hfull]
+      trivial
+    change alpha ∈ LinearMap.range F.cycleClass at ha
+    exact ha
+
+#check hodge_surjective_of_native_irreducibility
 #check nativeWord_class
 #check nativePacket_class
 #check nativeCurvature_class
 #check nativeWord_fresh_of_detector
 #check nativeCurvature_fresh_of_detector
 
+#print axioms hodge_surjective_of_native_irreducibility
 #print axioms nativeWord_class
 #print axioms nativePacket_class
 #print axioms nativeCurvature_class
