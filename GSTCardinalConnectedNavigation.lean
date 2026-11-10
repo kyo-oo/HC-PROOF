@@ -58,25 +58,25 @@ namespace Route
 /-- Actual native source transport along a finite GST navigation route. -/
 def native : {a b : ι} → Route C a b → C.Native a → C.Native b
   | _, _, .refl _ => id
-  | _, _, .extend route edge => fun z => edge.nativeMap (native route z)
+  | _, _, .extend route edge => fun z => edge.nativeMap (native C route z)
 
 /-- Corresponding transported Hodge/cohomological data. -/
 def hodge : {a b : ι} → Route C a b → C.Hodge a → C.Hodge b
   | _, _, .refl _ => id
-  | _, _, .extend route edge => fun x => edge.hodgeMap (hodge route x)
+  | _, _, .extend route edge => fun x => edge.hodgeMap (hodge C route x)
 
 /-- The REAL algebraic compatibility equation composes along EVERY
 finite path in the cardinal-indexed world graph, not only within
 independently folded fibers. -/
 theorem canonical_square :
     ∀ {a b : ι} (route : Route C a b) (z : C.Native a),
-      C.cycleClass b (native route z) =
-        hodge route (C.cycleClass a z)
+      C.cycleClass b (native C route z) =
+        hodge C route (C.cycleClass a z)
   | _, _, .refl _, _ => rfl
   | _, _, .extend route edge, z => by
       change C.cycleClass _ (edge.nativeMap (native route z)) =
-        edge.hodgeMap (hodge route (C.cycleClass _ z))
-      rw [edge.class_natural, canonical_square route z]
+        edge.hodgeMap (hodge C route (C.cycleClass _ z))
+      rw [edge.class_natural, canonical_square C route z]
 
 end Route
 
