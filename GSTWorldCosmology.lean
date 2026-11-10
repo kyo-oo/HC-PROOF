@@ -476,4 +476,71 @@ theorem compactTranslate_completed (m n : ℕ) (f : CompactCosmos) :
 #print axioms compact_exact_recovery
 #print axioms constant_one_not_compact
 
+
+/-! ## Image-3 navigation constant on original limitless GST coordinates
+
+The owner's carry and digit shifts are proven independent and commuting.
+We now make a clearly labelled *candidate* navigation constant kappa:
+the SAME input depth is shifted in both original world axes, without
+assigning an infinite-cardinal value to a finite iteration exponent.
+
+The full CompletedCosmos and each finite window are connected by an
+EXACT observation/naturality law, so this is grounded in ORIGINAL GST.
+-/
+
+/-- Simultaneous GST navigation by kappa on the unbounded 2-axis space. -/
+def cosmicNavigationConstant (kappa : Nat)
+    (f : CompletedCosmos) : CompletedCosmos :=
+  cosmicCarryShift kappa (cosmicDigitShift kappa f)
+
+/-- Native finite rectangular navigation from the original two GST
+independent axes, retaining all coordinates and the real boundary. -/
+def worldNavigationConstant
+    {carryDepth digitDepth : Nat} (kappa : Nat)
+    (g : WorldCoef carryDepth digitDepth) :
+    WorldCoef carryDepth digitDepth :=
+  carryShiftN kappa (digitShiftN kappa g)
+
+/-- The proposed navigation constant has genuine additive composition
+on ORIGINAL completed GST cosmos, not just on the twelve-cell chart. -/
+theorem cosmicNavigationConstant_add
+    (m n : Nat) (f : CompletedCosmos) :
+    cosmicNavigationConstant m (cosmicNavigationConstant n f) =
+      cosmicNavigationConstant (m+n) f := by
+  unfold cosmicNavigationConstant
+  rw [cosmic_axes_commute n m (cosmicDigitShift n f)]
+  rw [cosmicCarryShift_add, cosmicDigitShift_add]
+
+/-- Each observed rectangular native world inherits EXACTLY the same
+navigation from the limitless completed cosmos. -/
+theorem observe_cosmicNavigationConstant
+    (A B kappa : Nat) (f : CompletedCosmos) :
+    observe A B (cosmicNavigationConstant kappa f) =
+      worldNavigationConstant kappa (observe A B f) := by
+  simp only [cosmicNavigationConstant, worldNavigationConstant,
+    observe_cosmicCarryShift, observe_cosmicDigitShift]
+
+/-- Native-world navigation composes additively at every finite
+carry/digit shape; the proof is the EXISTING global observation law. -/
+theorem worldNavigationConstant_add
+    {A B : Nat} (m n : Nat) (g : WorldCoef A B) :
+    worldNavigationConstant m (worldNavigationConstant n g) =
+      worldNavigationConstant (m+n) g := by
+  unfold worldNavigationConstant
+  rw [axes_commute n m (digitShiftN n g)]
+  rw [carryShiftN_add, digitShiftN_add]
+
+/-- Image-3 navigation at zero is identity in every real GST chart. -/
+theorem worldNavigationConstant_zero
+    {A B : Nat} (g : WorldCoef A B) :
+    worldNavigationConstant 0 g = g := by
+  simp [worldNavigationConstant, carryShiftN_zero, digitShiftN_zero]
+
+#check cosmicNavigationConstant_add
+#check observe_cosmicNavigationConstant
+#check worldNavigationConstant_add
+#check worldNavigationConstant_zero
+#print axioms cosmicNavigationConstant_add
+#print axioms worldNavigationConstant_add
+
 end GSTWorldCosmology
