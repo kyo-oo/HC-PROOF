@@ -143,4 +143,71 @@ theorem canonical_tail_navigation_crown :
   exact ⟨perfect_power_happy_position_ge_cut,
     canonical_tail_navigation_iff⟩
 
+
+/-! ## GST IMAGE-3 UPGRADE: CANONICAL NAVIGATION CHARGE
+
+This is a NEW numerical encoding of the OWNER'S EXISTING proposition
+\`Navigation : Nat → Prop\`, not a claim that the old repository already
+contained a scalar named "Navigation Constant". The encoding takes
+values exactly 0 and 1. Its invariance under the original canonical
+tail transport is a proved theorem, not an assigned axiom.
+
+The charge will control the original CM/Survive native wave source
+in \`GSTImageThreeNativeFCompiler\`.
+-/
+
+/-- An exact rational-valued navigation invariant extracted from the
+original physical Happy-gate Navigation predicate. -/
+noncomputable def navigationCharge (R : Nat) : ℚ :=
+  if Navigation R then 1 else 0
+
+theorem navigationCharge_eq_one_iff (R : Nat) :
+    navigationCharge R = 1 ↔ Navigation R := by
+  by_cases h : Navigation R <;>
+    simp [navigationCharge, h]
+
+theorem navigationCharge_eq_zero_iff (R : Nat) :
+    navigationCharge R = 0 ↔ ¬ Navigation R := by
+  by_cases h : Navigation R <;>
+    simp [navigationCharge, h]
+
+theorem navigationCharge_canonicalTail
+    (s b : Nat) (hs : 1 ≤ s) :
+    navigationCharge (4^(3^s * b)) =
+      navigationCharge (canonicalTail s b) := by
+  by_cases h : Navigation (4^(3^s * b))
+  · have ht : Navigation (canonicalTail s b) :=
+      (canonical_tail_navigation_iff s b hs).mp h
+    simp [navigationCharge, h, ht]
+  · have ht : ¬ Navigation (canonicalTail s b) := by
+      intro ht
+      exact h ((canonical_tail_navigation_iff s b hs).mpr ht)
+    simp [navigationCharge, h, ht]
+
+/-- The first actual physical Happy-gate number activates the
+navigation charge. -/
+theorem navigationCharge_two : navigationCharge 2 = 1 := by
+  have h : Navigation 2 := by
+    refine ⟨0, ?_⟩
+    norm_num [HappyCell, carry4, digit3]
+  simp [navigationCharge, h]
+
+/-- The zero arithmetic state has no Happy gate and does not activate
+the native wave source. -/
+theorem navigationCharge_zero : navigationCharge 0 = 0 := by
+  have h : ¬ Navigation 0 := by
+    rintro ⟨p, hp⟩
+    have hd := hp.1
+    simp [digit3] at hd
+  simp [navigationCharge, h]
+
+#check navigationCharge
+#check navigationCharge_eq_one_iff
+#check navigationCharge_eq_zero_iff
+#check navigationCharge_canonicalTail
+#check navigationCharge_two
+#check navigationCharge_zero
+
+#print axioms navigationCharge_canonicalTail
+
 end GSTPerfectPowerTailNavigation
