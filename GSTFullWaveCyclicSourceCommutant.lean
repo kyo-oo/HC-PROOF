@@ -109,7 +109,9 @@ theorem scalar_commutant_of_source_cyclic
     rw [hcyclic]
     trivial
   change R x = 0 at hx
-  simpa [R] using hx
+  have hdiff : S x - c • x = 0 := by
+    simpa [R] using hx
+  exact sub_eq_zero.mp hdiff
 
 #check sourceOrbit
 #check IsSourceCyclic
