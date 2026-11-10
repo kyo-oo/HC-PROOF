@@ -10,6 +10,7 @@ on:
       - 'waves/GSTNCohomologyV3.lean'
       - 'GSTSquarePureHodgeDuality.lean'
       - 'GSTImageThreeNativeFCompiler.lean'
+      - 'GSTImageThreeCardinalWorldBirth.lean'
       - '.github/workflows/gst-image3-native-navigation-fusion.yml'
   workflow_dispatch:
 
@@ -44,9 +45,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTImageThreeNativeLib GSTImageThreeNativeFCompiler
-          if timeout 6800 lake build GSTImageThreeNativeFCompiler > gst-image3-native.log 2>&1; then
-            echo "LEAN PASSED: image3 source-integrated native GST F"
+          python3 scripts/gst_lean_dependency_roots.py GSTImageThreeNativeLib GSTImageThreeCardinalWorldBirth
+          if timeout 6800 lake build GSTImageThreeCardinalWorldBirth > gst-image3-native.log 2>&1; then
+            echo "LEAN PASSED: image3 source-integrated native GST F + arbitrary-arity original cosmos births"
           else
             grep -nE 'error:|sorryAx|unknown identifier|unsolved goals|failed to synthesize' gst-image3-native.log | tail -n 100 || true
             tail -n 120 gst-image3-native.log || true
