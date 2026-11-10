@@ -138,4 +138,26 @@ theorem navigationConstantRoute_cycleClass
 #check navigationConstantRoute_cycleClass
 #print axioms navigationConstantRoute_cycleClass
 
+
+/-- Image-3 CARDINAL/TOPOLOGICAL NAVIGATION:
+for any topology tau on an arbitrarily-cardinal world-address type,
+a CONTINUOUS one-step navigation has continuous kappa-step action.
+An algebraic correspondence is separately certified by NavigationSystem;
+continuity alone never supplies a native Chow realization. -/
+theorem navigationConstantIndex_continuous
+    [TopologicalSpace ι]
+    (nav : ι → ι)
+    (hnav : Continuous nav) (kappa : Nat) :
+    Continuous (navigationConstantIndex nav kappa) := by
+  induction kappa with
+  | zero =>
+      change Continuous (id : ι → ι)
+      exact continuous_id
+  | succ k ih =>
+      change Continuous (nav ∘ navigationConstantIndex nav k)
+      exact hnav.comp ih
+
+#check navigationConstantIndex_continuous
+#print axioms navigationConstantIndex_continuous
+
 end GSTCardinalConnectedNavigation
