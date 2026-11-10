@@ -158,6 +158,46 @@ theorem square_pure_hodge_duality_crown :
     fun N a => pureCoordinateReverse_involutive a,
     fun N f => pureHodgeLinearEquiv_conjugates_duality f⟩
 
+
+/-! ## GST IMAGE-3 NAVIGATION-CONTROLLED PURE HODGE STAR
+
+The old native Hodge dual is kept EXACTLY as constructed: under
+pureHodgeLinearEquiv it is reversal of all pure diagonal coordinates.
+Here a Boolean navigation gate enables/disables this genuine native
+duality. This Boolean will be the truth value of the original
+canonical physical Navigation predicate, not a new spatial dimension.
+-/
+
+/-- Navigation-dependent pure Hodge duality on the original coordinate
+carrier. It does not assume an algebraic Hodge-star correspondence on X. -/
+def navigationStar
+    {N : Nat} (active : Bool) (a : PureHodgeCoordinates N N) :
+    PureHodgeCoordinates N N :=
+  if active then pureCoordinateReverse a else a
+
+/-- The controlled GST pure-Hodge navigation star is an involution at
+every N, including zero-width and unbounded families of finite charts. -/
+theorem navigationStar_involutive
+    {N : Nat} (active : Bool) (a : PureHodgeCoordinates N N) :
+    navigationStar active (navigationStar active a) = a := by
+  cases active <;> simp [navigationStar]
+
+/-- The navigation-controlled coordinate star is EXACTLY the
+existing geometrically defined square-world pure Hodge duality,
+with no information loss under the original Hodge coordinates. -/
+theorem navigationStar_world_duality
+    {N : Nat} (active : Bool) (f : PureWorldHodge N N) :
+    pureHodgeLinearEquiv N N
+      (if active then squarePureDual f else f) =
+      navigationStar active (pureHodgeLinearEquiv N N f) := by
+  cases active <;>
+    simp [navigationStar, pureHodgeLinearEquiv_conjugates_duality]
+
+#check navigationStar
+#check navigationStar_involutive
+#check navigationStar_world_duality
+#print axioms navigationStar_world_duality
+
 #check pureMirror
 #check worldDual_pureDiagonalState
 #check squarePureDual
