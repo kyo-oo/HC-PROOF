@@ -162,6 +162,86 @@ theorem pureHodgeF_world
   · simp [pureHodgeF, h, pureHodgeLinearEquiv_conjugates_duality]
   · simp [pureHodgeF, h]
 
+
+/-! ## GST IMAGE-3 LIMITLESS COORDINATES + GRAPH CURVATURE
+
+These are the OWNER'S exact existing general-world and physical
+fivefold information-curvature laws, not an imported spatial Hodge
+manifold model.
+-/
+
+/-- A real GST complete infinite information world restricted to ANY
+finite N-cohomology observation window has the EXACT transport of
+the original carry and digit navigation. -/
+theorem limitless_navigation_observation
+    (A B m n : Nat) (f : CompletedCosmos) :
+    observe A B (cosmicDigitShift n (cosmicCarryShift m f)) =
+      digitShiftN n (carryShiftN m (observe A B f)) := by
+  rw [observe_cosmicDigitShift, observe_cosmicCarryShift]
+
+/-- Original limitless carry/digit navigation remains commuting at
+EVERY natural depth, independently of its finite chart. -/
+theorem limitless_navigation_axes
+    (m n : Nat) (f : CompletedCosmos) :
+    cosmicDigitShift n (cosmicCarryShift m f) =
+      cosmicCarryShift m (cosmicDigitShift n f) :=
+  cosmic_axes_commute m n f
+
+/-- The original seven-axis CM FIRST-ORDER fivefold curvature
+cancellation remains exact after applying the numerical navigation
+charge. The LOCAL source curvature from F_curvature is still allowed
+to be nonzero (and is 2 when navigation is on at the seed). -/
+theorem navigation_information_five_curvature_cancel
+    (R : Nat)
+    (P : GSTGraphV2InformationRecovery.Cell → ℚ)
+    (s : GSTGraphV2InformationRecovery.Cell) :
+    GSTGraphV2CMInfiniteCurvatureBridge.orbitFiveSum
+      (GSTGraphV2CMInfiniteCurvatureBridge.informationCMCurvature
+        (navigationCharge R) P) s = 0 :=
+  GSTGraphV2CMInfiniteCurvatureBridge.informationCMCurvature_five_sum_zero
+    (navigationCharge R) P s
+
+/-! ## THE USER'S ONE SYNCHRONIZED NEW F-FUNCTION
+
+This is the first exact single native F which outputs the
+ORIGINAL true wave/CM source, ORIGINAL independent N-cohomology holes,
+and ORIGINAL square-world pure Hodge-star coordinates at once.
+-/
+
+/-- One synchronized, navigation-controlled GST structural F result.
+The large cardinal hierarchy can index arbitrary families of these
+typed exact results, while the NShape remains original finite-hole
+cohomology at each local source. -/
+def unifiedImageThreeF
+    (s : GSTNCohomology.NShape) (R : Nat)
+    (u : WaveSignal) (v : HoleCoordinates s)
+    {N : Nat} (a : PureHodgeCoordinates N N) :
+    WaveSignal × HoleCoordinates s × PureHodgeCoordinates N N :=
+  (F R u, cohomologyF s (fun _ => R) v, pureHodgeF R a)
+
+/-- The WHOLE owner's synchronized Image-3 GST F, not only a
+single arithmetic component, is invariant under the exact canonical
+tail navigation isomorphism. -/
+theorem unifiedImageThreeF_canonicalTail
+    (s : GSTNCohomology.NShape) (stage b : Nat) (hstage : 1 ≤ stage)
+    (u : WaveSignal) (v : HoleCoordinates s)
+    {N : Nat} (a : PureHodgeCoordinates N N) :
+    unifiedImageThreeF s (4^(3^stage*b)) u v a =
+      unifiedImageThreeF s (canonicalTail stage b) u v a := by
+  have hF := F_canonicalTail stage b hstage u
+  have hH := cohomologyF_canonicalTail s
+    (fun _ => stage) (fun _ => b) (by intro i; exact hstage) v
+  have hS := pureHodgeF_canonicalTail stage b hstage a
+  simp only [unifiedImageThreeF]
+  rw [hF, hH, hS]
+
+#check limitless_navigation_observation
+#check limitless_navigation_axes
+#check navigation_information_five_curvature_cancel
+#check unifiedImageThreeF
+#check unifiedImageThreeF_canonicalTail
+#print axioms unifiedImageThreeF_canonicalTail
+
 #check F
 #check F_curvature
 #check F_two_curvature
