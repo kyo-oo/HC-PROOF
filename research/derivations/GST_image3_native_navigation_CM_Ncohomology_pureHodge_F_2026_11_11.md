@@ -147,3 +147,188 @@ Lean modified original files (on isolated branch only):
 New integrated Lean module \`GSTImageThreeNativeFCompiler.lean\`, with CI \`.github/workflows/gst-image3-native-navigation-fusion.yml\`. **Do not declare kernel green unless the exact latest workflow conclusion is SUCCESS**. The symbolic determinant is Mathematica verified and hand-certifiable with the modular root proof, but a dedicated full symbolic determinant Lean proof has NOT yet been implemented.
 
 Mathbox attempt verdict: mathematically proved exact native symbolic conditional strength statement with Wolfram certificate and modular rational-root argument; geometric Hodge antecedent STILL unproved. No claims of historical novelty or Millennium solution.
+
+
+## 9. NEW strong native **two-missing-mode source birth** theorem
+
+Take EXACTLY the original 12 physical cells in the canonical order
+\[
+(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),
+(2,0),(2,1),(2,2),(3,0),(3,1),(3,2).
+\]
+Put \(T_{\mathrm{off}}=U+J\), \(T_{\mathrm{on}}=U+J+M\) with the ORIGINAL seed
+\(v=e_{(0,0)}+e_{(0,1)}\). Their exact Krylov ranks are \(10\) and \(12\).
+
+Two EXPLICIT independent linear forms annihilate the entire
+source-OFF Krylov orbit:
+\[
+\begin{aligned}
+d_1(u)&=-u_{(0,2)}-u_{(2,0)}-u_{(2,1)}-u_{(2,2)}
+-u_{(3,1)}+u_{(3,2)},\\
+d_2(u)&=-u_{(0,0)}+u_{(0,1)}
++u_{(1,0)}+u_{(1,1)}+u_{(1,2)}+u_{(3,0)}.
+\end{aligned}
+\]
+An exact matrix computation verifies for EVERY \(0\le n<12\),
+\(d_i(T_{\mathrm{off}}^n v)=0\). By Cayley–Hamilton, these functionals
+annihilate the FULL source-off orbit for ALL \(n\ge0\); they span its
+two-dimensional rational annihilator.
+
+The ORIGINAL source-on orbit produces
+\[
+\begin{array}{c|rr}
+n & d_1(T_{\mathrm{on}}^n v) & d_2(T_{\mathrm{on}}^n v)\\\hline
+0&0&0\\1&0&0\\2&-2&0\\3&-8&2
+\end{array}
+\]
+and hence the **exact source-birth minor**
+\[
+\boxed{\det\begin{pmatrix}-2&-8\\0&2\end{pmatrix}=-4\ne0}.
+\]
+Therefore the two actual vectors
+\(T_{\mathrm{on}}^2 v,T_{\mathrm{on}}^3 v\) have independent images in
+\(\mathbb Q^{12}/\mathrm{span}\{T_{\mathrm{off}}^n v:n\ge0\}\), so together
+with the ten old source-off directions they span ALL TWELVE original
+GST information directions. No new native Hodge-class basis was assumed
+in this *information-space* statement.
+
+Further the ORIGINAL CM/SURVIVE curvature has exact detector signature
+\[
+(d_1([J,M]v),d_2([J,M]v))=(2,0).
+\]
+Thus the TRUE original curvature directly excites the first missing
+information mode; subsequent mixed folding produces the second at
+depth 3. This is a concrete mechanism for the owner's requested
+"cyclic algebraic complex structures + navigation constant + curvature
+source birth" at the original GST signal level.
+
+The exact committed Wolfram file
+\`research/computations/GST_image3_two_missing_native_source_birth_detectors_20261111.wl\`
+was fetched after commit and executed verbatim; all checks passed,
+including \(d_i K(T_{\mathrm{off}})=0\), rank 10/12, determinant \(-4\),
+and curvature signature \((2,0)\).
+
+**Critical distinction:** The original GST information quotient having
+two born directions does NOT automatically make them *algebraic Hodge
+classes of the original smooth projective X*. That requires the actual
+native-to-Chow/Betti geometry constructed in the next subsection.
+
+## 10. NEW original-X native geometric F-operator pair
+
+The new **ADDITIVE Lean file**
+\`GSTImageThreeOriginalXNativeLanding.lean\` uses the OWNER'S EXISTING
+\`GSTClassicalHodgeCycleOperatorNaturality.CycleClassOperatorPair\` and
+\`GSTGraphV2NativeCurvatureBirth\` semantics. For any FIXED original
+smooth projective complex X, codimension p, and three ACTUAL certified
+cycle-class operator pairs \(\mathcal U,\mathcal J,\mathcal M\) on X,
+define the corresponding TRUE native Chow-cycle and Betti operators:
+\[
+\begin{aligned}
+N_F&=N_U+N_J+\kappa(R)\,N_M,\\
+T_F&=T_U+T_J+\kappa(R)\,T_M.
+\end{aligned}
+\]
+The exact original-X canonical Betti commuting square follows
+\[
+\boxed{\mathrm{cl}_X\circ N_F=T_F\circ\mathrm{cl}_X}
+\]
+without any assumption of Hodge surjectivity or preimages for unknown
+Hodge classes. If the TRUE native U,J commute on X, the REAL cycle
+CM-curvature law is
+\[
+\boxed{[N_J,N_F]=\kappa(R)[N_J,N_M].}
+\]
+The corresponding REAL canonical Betti curvature is the cycle class
+of this actual native Chow cycle. The entire original-X operator pair
+is invariant under the ORIGINAL canonical-tail navigation equivalence.
+
+This constructs the F-combination **ON REAL ORIGINAL-X CHOW CYCLES**
+from supplied actual geometry, but does not supply a universal theorem
+that the particular U,J,M information matrices are genuine algebraic
+correspondences on EVERY X. The actual existence and faithful full
+Hodge-rank landing remain the high-value geometric GST hypothesis,
+not something added axiomatically.
+
+A second workflow \`.github/workflows/gst-image3-original-x-native-landing.yml\`
+kernel checks this separate geometric F compiler. Exact CI status
+must be read from the specific SHA before claiming success.
+
+## 11. Full original NShape positive-source CRT verification
+
+For true original shifted \(24\times24\) two-hole GST Wave-II folds with
+distinct channel addresses 0 and 10, independent exact Wolfram
+computation at rational strengths \(\lambda=\frac12\) and \(1\)
+returned base Krylov rank 12/12 and two-hole Krylov rank 24/24;
+the exact characteristic-polynomial resultant identity
+\[
+\det K_{24}(\lambda)=\det K_{12}(\lambda)^2
+\,\mathrm{Res}(\chi_\lambda(x),\chi_\lambda(x-10))
+\]
+passed in both instances; the exact maximum absolute row sum was
+\(3\) at \(\lambda=\frac12\) and \(4\) at \(\lambda=1\).
+The executed committed file is
+\`research/computations/GST_image3_navigation_fullN_half_strength_CRT_20261111.wl\`.
+The all-finite-N theorem for any rational \(0<\lambda\le1\)
+is proved by the separated-spectra and polynomial CRT argument in §5,
+not extrapolated from the two-hole tests.
+
+## 12. Full synchronized original native GST Image-3 F
+
+The integrated Lean file \`GSTImageThreeNativeFCompiler.lean\` now
+additionally proves the exact limitless native-coordinate observation
+\[
+\mathrm{observe}_{A,B}
+(\mathrm{cosmicDigitShift}_n\circ\mathrm{cosmicCarryShift}_m f)
+=\mathrm{digitShiftN}_n\circ\mathrm{carryShiftN}_m
+(\mathrm{observe}_{A,B} f),
+\]
+the original infinite axes commutation, and the original graph's
+five-period FIRST-ORDER CM-curvature cancellation after physical
+navigation gating. The local source-curvature \([J,M]v\ne0\) is
+compatible with that exact five-period first-difference cancellation.
+
+A new **ONE synchronized structural native F**, rather than three
+unrelated functions, returns the triple
+\[
+\boxed{
+\mathcal F_{\rm Image3}(R;s,u,v,a)
+=\bigl(
+  F_{\kappa(R)}u,\quad
+  (\kappa(R)v_i)_{i\in\mathrm{NShape}(s)},\quad
+  \star_R a
+\bigr).
+}
+\]
+Its exact navigation canonical-tail invariance is
+\[
+\mathcal F_{\rm Image3}(4^{3^t b};s,u,v,a)
+=\mathcal F_{\rm Image3}(\mathrm{canonicalTail}(t,b);s,u,v,a)
+\quad(t\ge1).
+\]
+For arbitrary cardinal input sets I, \`cardinalF\` applies the SAME true
+F simultaneously pointwise; ordinary finite-rank original Hodge
+fiber conclusions must still be established at each original X.
+
+## 13. Image-3 Hodge-hypothesis dependency verdict
+
+- GST native step 01, symbolic phase: original navigation-gated F,
+  N-cohomology, cyclic complex structure and pure Hodge star now have
+  explicit combined native laws and kernel-checkable source statements.
+  Original-X naturality is derived conditionally on **genuine**
+  original-X \(U,J,M\) correspondence pairs, with no assumed Hodge
+  surjectivity.
+- GST native step 02, symbolic phase: full rational source-strength
+  cyclicity is proved by exact symbolic factorization, and the two
+  previously invisible modes are precisely born at depths 2 and 3.
+  All-finite-N positive rational strength range follows by CRT.
+- GST native step 03, symbolic phase: nonzero Krylov gives a rational
+  anti-diagonal moment detector, as in the previous full-N original-wave
+  derivation.
+- Actual original-X step 02: the native original-signal modes must be
+  realized as genuine new **higher-primitive algebraic Hodge directions
+  on each X**; abstract navigation charge or direct-sum rank does not
+  prove this. This remains the decisive unproved GST hypothesis needed
+  before the existing conditional proof implies the Hodge conjecture.
+
+Never promote a checked finite/symbolic operator identity to an
+unconditional universal-X Hodge theorem.
