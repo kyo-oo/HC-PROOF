@@ -80,7 +80,7 @@ strict curvature birth, with native value TWO. -/
 theorem F_two_curvature :
     (J (F 2 seed) - F 2 (J seed))
       ((3 : Fin 4), (2 : Fin 3)) = 2 := by
-  rw [F, navigationCharge_two]
+  simp only [F, navigationCharge_two]
   simpa only [mul_one] using navigationControlledF_curvature_fixed 1
 
 /-- At R=0 the exact native source-curvature is extinguished. -/
@@ -133,13 +133,24 @@ theorem cohomologyF_canonicalTail
 
 /-- Use the ORIGINAL true square-world pure Hodge involution.
 Navigation selects between the Hodge dual and the identity. -/
-def pureHodgeF (R : Nat) {N : Nat}
-    (a : PureHodgeCoordinates N N) : PureHodgeCoordinates N N :=
-  if Navigation R then pureCoordinateReverse a else a
+noncomputable def pureHodgeF (R : Nat) {N : Nat}
+    (a : PureHodgeCoordinates N N) : PureHodgeCoordinates N N := by
+  classical
+  exact if Navigation R then pureCoordinateReverse a else a
+
+/-- The original native square-world dual gated by the same
+physical Navigation predicate, with classical decidability
+kept EXPLICITLY INSIDE the construction rather than inserted as
+a sorry-valued implicit instance in theorem statements. -/
+noncomputable def pureHodgeWorldF (R : Nat) {N : Nat}
+    (f : PureWorldHodge N N) : PureWorldHodge N N := by
+  classical
+  exact if Navigation R then squarePureDual f else f
 
 theorem pureHodgeF_involutive
     (R : Nat) {N : Nat} (a : PureHodgeCoordinates N N) :
     pureHodgeF R (pureHodgeF R a) = a := by
+  classical
   by_cases h : Navigation R
   · simp [pureHodgeF, h]
   · simp [pureHodgeF, h]
@@ -149,20 +160,27 @@ theorem pureHodgeF_canonicalTail
     {N : Nat} (a : PureHodgeCoordinates N N) :
     pureHodgeF (4^(3^s * b)) a =
       pureHodgeF (canonicalTail s b) a := by
-  have h := propext (canonical_tail_navigation_iff s b hs)
-  simp only [pureHodgeF]
-  rw [h]
+  classical
+  by_cases h : Navigation (4^(3^s * b))
+  · have ht : Navigation (canonicalTail s b) :=
+      (canonical_tail_navigation_iff s b hs).mp h
+    simp [pureHodgeF, h, ht]
+  · have ht : ¬ Navigation (canonicalTail s b) := by
+      intro ht
+      exact h ((canonical_tail_navigation_iff s b hs).mpr ht)
+    simp [pureHodgeF, h, ht]
 
 /-- The gated Hodge coordinate function corresponds exactly to the
 old true native GST square-world dual, not a new algebraic star on X. -/
 theorem pureHodgeF_world
     (R : Nat) {N : Nat} (f : PureWorldHodge N N) :
-    pureHodgeLinearEquiv N N
-      (if Navigation R then squarePureDual f else f) =
+    pureHodgeLinearEquiv N N (pureHodgeWorldF R f) =
       pureHodgeF R (pureHodgeLinearEquiv N N f) := by
+  classical
   by_cases h : Navigation R
-  · simp [pureHodgeF, h, pureHodgeLinearEquiv_conjugates_duality]
-  · simp [pureHodgeF, h]
+  · simpa [pureHodgeWorldF, pureHodgeF, h] using
+      pureHodgeLinearEquiv_conjugates_duality f
+  · simp [pureHodgeWorldF, pureHodgeF, h]
 
 
 /-! ## GST IMAGE-3 LIMITLESS COORDINATES + GRAPH CURVATURE
