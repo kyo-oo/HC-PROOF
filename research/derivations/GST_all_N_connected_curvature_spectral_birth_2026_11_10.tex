@@ -149,4 +149,59 @@ For all dimensions, no exceptional Picard-rank or CM-only stratum is inserted: $
 
 \section{Exact computational certificate and scope}
 The committed Wolfram source \texttt{research/computations/gst_connected_curvature_spectral_birth_20261110.wl} checks the literal rational Lagrange projectors, connected paths, explicit synthesized one-fold shift and Hankel determinant for n=1,...,8, plus the connected-versus-block-split n=4 full-rank-commutator discriminator. These finite computations are \emph{checks} of equations (1)--(8), not a demonstration of universal Chow realization.
+
+\section{Full twelve-cell information curvature: no quotient-only substitution}
+The first coefficient operator (8) acts on the N-hole \emph{readout quotient}, whose
+kernel on the genuine twelve-cell signal carrier has dimension $11n$.
+To prevent quotient completeness from being passed off as full GST information
+completeness, construct an additional fold directly on
+\(\mathscr S_s=(\Q^{12})^n\), retaining EVERY original carry/trit cell.
+
+Let $T_0$ be the \emph{actual} original twelve-cell combined GST
+$U+J+M$ wave matrix, let \(D=\operatorname{diag}(10\operatorname{channel}(i))\),
+and let \(A_n\) be the nearest-neighbor adjacency matrix on N-hole labels.
+The preexisting shifted wave operator and the NEW full-cell source-preserving
+cross-hole coupling are exactly
+\[
+ \mathcal T_s=I_n\otimes T_0+D\otimes I_{12},\qquad
+ \mathcal B_s=A_n\otimes I_{12}.
+\]
+These are exact rational linear maps of the original \emph{all-cell} GST
+signal carrier, with no new physical dimension assumed. The exact
+noncommutative curvature equation is
+\[
+ \boxed{
+ [\mathcal T_s,\mathcal B_s]
+   =[D,A_n]\otimes I_{12}.
+ }\tag{10}
+\]
+Proof: the term $I_n\otimes T_0$ commutes with $A_n\otimes I_{12}$,
+while the scalar-shift term contributes precisely the commutator on
+the index factor. In coordinates,
+\[
+ ([\mathcal T_s,\mathcal B_s]u)_i(c)
+ =\sum_{j:|i-j|=1}10
+   (\operatorname{channel}(i)-\operatorname{channel}(j))u_j(c).
+\]
+Every original cell $c$ survives this operator and every information
+edge has nonzero rational weight. Because the original wave readout is
+linear, it induces exactly (8) on the N-hole quotient.
+
+The quotient-section coupling (9) \emph{kills} all $11n$ invisible
+directions, whereas $\mathcal B_s$ does not. An explicit detector-kernel
+state (nonzero equal entries in the two fixed cells, zero elsewhere)
+has vanishing readout but nonzero full-cell neighbor image. Wolfram
+independently checked (10) for a fully symbolic $3\times3$ base
+matrix and four unevenly shifted channels, obtaining a zero
+$12\times12$ difference and full curvature rank twelve. The equation
+holds for arbitrary $T_0$, arbitrary N and arbitrary injective GST
+channel shifts by the Kronecker-product proof.
+
+The full-cell operator still preserves the original fixed-cell versus
+five-cycle decomposition when paired only with U, J, and diagonal M;
+thus (10) does NOT establish irreducibility on all $12n$ coordinates.
+That issue is a different internal GST mixing requirement from the
+all-original-X Chow correspondence realization. Neither is silently
+identified with the Hodge conjecture.
+
 \end{document}
