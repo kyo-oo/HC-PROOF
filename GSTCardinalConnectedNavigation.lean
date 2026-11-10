@@ -86,4 +86,56 @@ end Route
 #check Route.canonical_square
 #print axioms Route.canonical_square
 
+
+/-! ## Image-3 CARDINAL world navigation constant and graph causality
+
+The user's proposed navigation constant is now a typed count of steps in
+an ORIGINAL connected GST world graph of ANY cardinal index type.
+An edge is a CERTIFIED native-to-Hodge correspondence; arbitrary
+topological adjacency is not mistaken for an algebraic morphism.
+This all-step graph theorem combines the previous original GST route
+compositional law with independent navigation constants.
+-/
+
+/-- Actual next-world address under kappa certified world navigations. -/
+def navigationConstantIndex (nav : ι → ι) : Nat → ι → ι
+  | 0, a => a
+  | k + 1, a => nav (navigationConstantIndex nav k a)
+
+/-- A certified navigation generator on a cardinal-sized world graph. -/
+structure NavigationSystem (nav : ι → ι) where
+  step : ∀ a : ι, CrossWorldEdge C a (nav a)
+
+/-- Construct an ACTUAL finite route in the original GST causal graph
+by using the same certified navigation generator kappa times. -/
+def navigationConstantRoute (nav : ι → ι)
+    (S : NavigationSystem C nav) :
+    (kappa : Nat) → (a : ι) →
+      Route C a (navigationConstantIndex nav kappa a)
+  | 0, a => Route.refl a
+  | k + 1, a =>
+      Route.extend (navigationConstantRoute nav S k a)
+        (S.step (navigationConstantIndex nav k a))
+
+/-- Image-3 geometric NATURALITY after ALL kappa navigation steps,
+for any cardinal collection of worlds and every genuine native source.
+The original-X source-birth/rank requirement remains an independent
+GEOMETRIC obligation on the certified navigation edges. -/
+theorem navigationConstantRoute_cycleClass
+    (nav : ι → ι)
+    (S : NavigationSystem C nav)
+    (kappa : Nat) (a : ι) (z : C.Native a) :
+    C.cycleClass (navigationConstantIndex nav kappa a)
+      (Route.native C (navigationConstantRoute C nav S kappa a) z) =
+    Route.hodge C (navigationConstantRoute C nav S kappa a)
+      (C.cycleClass a z) := by
+  exact Route.canonical_square
+    (navigationConstantRoute C nav S kappa a) z
+
+#check navigationConstantIndex
+#check NavigationSystem
+#check navigationConstantRoute
+#check navigationConstantRoute_cycleClass
+#print axioms navigationConstantRoute_cycleClass
+
 end GSTCardinalConnectedNavigation
