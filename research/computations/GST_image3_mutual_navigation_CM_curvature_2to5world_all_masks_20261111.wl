@@ -60,12 +60,13 @@ noGo=<|"oldRank"->MatrixRank[baseK],
  "JStable"->(read.JJ.baseK==ConstantArray[0,{2,12}]),
  "MTransverseMinor"->Det[(read.MM.baseK)[[All,{2,5}]]],
  "CMCurvatureTransverseMinor"->Det[(read.curv.baseK)[[All,{1,2}]]]|>;
-ablation=Table[
- Module[{T=physicalFold[{0,0},op],v=Join[seed,seed]},
+ablation=Map[Function[pair,
+ Module[{name=pair[[1]],op=pair[[2]],T,v},
+  T=physicalFold[{0,0},op];v=Join[seed,seed];
   <|"cross"->name,"rankMod1009"->
-    MatrixRank[kr[T,v,1009],Modulus->1009]|>],
- {{name,op},{{"none",z},{"I",id},{"U",UU},{"J",JJ},
- {"U+J",UU+JJ},{"M",MM},{"CM",curv}}}];
+    MatrixRank[kr[T,v,1009],Modulus->1009]|>]],
+ {{"none",z},{"I",id},{"U",UU},{"J",JJ},
+ {"U+J",UU+JJ},{"M",MM},{"CM",curv}}];
 
 summary=<|"countMasks"->Length[records],
  "certifiedAll"->And@@(Lookup[records,"certified"]),
