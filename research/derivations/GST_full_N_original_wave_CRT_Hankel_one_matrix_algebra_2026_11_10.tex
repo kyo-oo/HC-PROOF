@@ -101,6 +101,30 @@ Thus the shifted monic polynomials $\chi_i$ are pairwise coprime over $\Q$. Chin
 so the orbit map is invertible. Its determinant is the product of the block Krylov determinants $\Delta_{12}^N$ and the determinant of the polynomial Chinese-remainder coefficient map. The latter equals the product of pairwise resultants with sign $(-1)^{12^2\binom N2}=+1$ under the stated ordered power and hole bases. This proves (4) and (3).
 \end{proof}
 
+
+\begin{corollary}[Quantitative full-N spectral separation]
+The exact nonvanishing is uniform, not a finite-N coincidence:
+\[
+ \boxed{
+ |\Res(\chi_i,\chi_j)|\ge 2^{144}\quad(i\ne j),\qquad
+ |\det\mathcal K_N|\ge
+ (1\,149\,656\,584\,000)^N\,
+ 2^{144\binom N2}.}
+\tag{9}
+\]
+\end{corollary}
+\begin{proof}
+Every eigenvalue of the original twelve-cell $T_0$ lies in the closed
+complex disk of radius $4$ by the exact absolute-row-sum bound.
+For distinct integer GST addresses, $|\delta_i-\delta_j|\ge10$.
+Therefore every difference between an eigenvalue in the $i$th and
+one in the $j$th shifted spectrum has absolute value at least
+$10-4-4=2$. Each characteristic polynomial is monic of degree
+twelve, so each pairwise resultant is the product of $12^2=144$
+such differences counted with multiplicity. Apply the exact
+factorization (4).
+\end{proof}
+
 \section{The exact full-N GST Hankel hypothesis on the native information carrier}
 \begin{theorem}[Full-space single fold determinant is exactly one]
 Let $r=12N$, and define the rational linear functional
