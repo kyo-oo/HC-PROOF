@@ -126,3 +126,62 @@ The old GSTCardinalIndexedNativeHodge.lean is a valid partial fiberwise formal t
 - Is the conditional implication Hodge of GST source-birth + genuine canonical geometry valid? **Yes, by the explicit basis/matrix-unit/dual correspondence construction above.**
 
 **Next exact research obligation:** choose one specific original smooth projective X with higher primitive rational Hodge sector and explicitly instantiate the cardinal-world source compiler to produce a genuinely algebraic native cycle whose class is independent of the currently known algebraic sources, WITHOUT assuming an unknown target's algebraicity. Extend that mechanism to all X only with a verified uniform geometric argument. No unnecessary return to K3/CM-only illustrative cases as a substitute for universal X.
+
+
+## 8. NEW decisive GST-to-Hodge fold descent gate: stability of the landing kernel
+
+This is the first typed geometric question hidden in the user's original
+C=aleph_topological hierarchy, not an unrelated product-variety example.
+
+Let V be the global (possibly cardinal-indexed) GST rational signal space
+and let W=W_p(X) be the finite-dimensional rational Hodge target of a FIXED
+original variety X. Suppose a rational linear **Hodge landing** map
+q:V->W is SURJECTIVE (as an abstract quotient, not asserted to have a
+Chow-cycle lifting). Let F:V->V be the connected global GST fold.
+
+**Exact descent theorem:** there exists a UNIQUE rational endomorphism
+T:W->W satisfying
+ q F = T q
+if and only if
+ F(ker q) subset ker q.
+PROOF: the condition makes T(qv)=q(Fv) independent of representative v;
+surjectivity gives all W and uniqueness. Conversely qF=Tq implies every
+v in ker q has qFv=0, proving invariance.
+
+If the descended orbit of qv0 has full rank r=dim W, then a rational
+Hankel detector exists and the finite-rank steps 02 and 03 are satisfied
+**on the Hodge signal**, but only as rational linear algebra.
+To get the original-X true native hypothesis we additionally require a
+TRUE Chow source Z0 and a TRUE Chow correspondence Gamma such that
+qv0=cl_X(Z0) and T is the CANONICAL Betti action of Gamma.
+
+**Critical anti-circularity:** one must NOT assume a surjective native
+lift Psi:V->CH^p(X)_Q with cl_X Psi=q. Combining such a lift with
+surjective q already IS universal algebraicity and would simply assume
+Hodge. The proposed F_GST compiler must instead produce true algebraic
+sources noncircularly and certify rank growth.
+
+**Existing-owner-law connection:** GSTHodgeWaveAllNHoleReadout proves
+holeReadout_kernel_stable for the ORIGINAL N-wave quotient. This is
+a concrete precedent for the descent gate inside the user's own GST.
+It does not automatically prove kernel stability for the new
+cardinal/topological landing on W_p(X).
+
+**Executed Wolfram exact test:** In
+research/computations/GST_cardinal_integrated_landing_kernel_stability_20261110.wl,
+q:Q^3->Q^2 drops the final coordinate. A connected global F_good
+preserves ker q, yields descended 2x2 swap, orbit rank 2 and Hankel
+determinant 1. Another globally full-rank F_bad maps the kernel vector
+to a visible q-direction, hence CANNOT descend despite its global
+rank being 3. The file was fetched from GitHub and executed verbatim,
+giving allPassed=True.
+
+This identifies a sharp new engineering goal for the actual user's
+F-function:
+  global GST native/cosmic operation
+  -> stable Hodge landing kernel
+  -> descended original-X Hodge fold T
+  -> independently proved actual Chow correspondence Gamma
+  -> nontrivial true algebraic-source rank growth
+  -> finite cyclic/Hankel certificate.
+It is a dependency chain, NOT a claim that these arrows have all been proved.
