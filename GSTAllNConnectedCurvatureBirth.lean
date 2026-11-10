@@ -146,6 +146,92 @@ theorem adjacent_curvature_nonzero
   rw [adjacentWeight_one i j hadj]
   simpa using (sub_ne_zero.mpr hshift)
 
+
+/-! ## Full twelve-cell GST wave, not only the readout quotient -/
+
+/-- Mix all original Wave-I carry/trit cells across neighboring Wave-II
+holes. Unlike the quotient-only operator this does NOT collapse the
+11-dimensional per-hole kernel of the original fixed-cell detector. -/
+def fullCellNeighbor (s : NShape)
+    (u : HoleWaveSignals s) : HoleWaveSignals s :=
+  fun i c => ∑ j : Fin s.holes, adjacentWeight i j * u j c
+
+/-- Full information coupling reduces to the already established GST
+N-hole coefficient coupling after the original fixed-cell readout. -/
+theorem fullCellNeighbor_readout (s : NShape)
+    (u : HoleWaveSignals s) :
+    holeReadout s (fullCellNeighbor s u) =
+      coefficientNeighbor s (holeReadout s u) := by
+  funext i
+  change
+    (∑ j : Fin s.holes, adjacentWeight i j * u j nullCell) -
+      (∑ j : Fin s.holes, adjacentWeight i j * u j maximumCell) =
+    ∑ j : Fin s.holes,
+      adjacentWeight i j * (u j nullCell - u j maximumCell)
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro j hj
+  ring
+
+/-- Original twelve-state U+J+M is linear on finite weighted sums
+of the genuinely full Wave-II hole signals. -/
+private theorem fullCell_base_fold_sum
+    (s : NShape) (u : HoleWaveSignals s)
+    (i : Fin s.holes) (c : GSTGraphV2InformationRecovery.Cell) :
+    GSTGraphV2CMWaveFusion.T
+      (fun a => ∑ j : Fin s.holes, adjacentWeight i j * u j a) c =
+      ∑ j : Fin s.holes, adjacentWeight i j *
+        GSTGraphV2CMWaveFusion.T (u j) c := by
+  change
+    (∑ j : Fin s.holes,
+      adjacentWeight i j * u j (GSTGraphV2InformationRecovery.shuffle c)) +
+    GSTGraphV2CMWaveFusion.cmSign c *
+      (∑ j : Fin s.holes,
+        adjacentWeight i j * u j (GSTGraphV2CMWaveFusion.mirrorCell c)) +
+    GSTGraphV2CMWaveFusion.sourceMultiplicity c *
+      (∑ j : Fin s.holes, adjacentWeight i j * u j c) =
+    ∑ j : Fin s.holes,
+      adjacentWeight i j *
+        (u j (GSTGraphV2InformationRecovery.shuffle c) +
+          GSTGraphV2CMWaveFusion.cmSign c *
+            u j (GSTGraphV2CMWaveFusion.mirrorCell c) +
+          GSTGraphV2CMWaveFusion.sourceMultiplicity c * u j c)
+  simp only [Finset.mul_sum, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro j hj
+  ring
+
+/-- EXACT commutator on the ENTIRE 12-hole GST signal, not a scalar
+quotient: base U+J+M terms cancel by full signal linearity and the
+remaining coefficient is the channel spectral gap. -/
+theorem fullCellNeighbor_curvature_exact
+    (s : NShape) (u : HoleWaveSignals s)
+    (i : Fin s.holes)
+    (c : GSTGraphV2InformationRecovery.Cell) :
+    shiftedNShapeFold s (fullCellNeighbor s u) i c -
+      fullCellNeighbor s (shiftedNShapeFold s u) i c =
+      ∑ j : Fin s.holes,
+        ((channelShift s i - channelShift s j) *
+          adjacentWeight i j) * u j c := by
+  change
+    GSTGraphV2CMWaveFusion.T
+      (fun a => ∑ j : Fin s.holes, adjacentWeight i j * u j a) c +
+      channelShift s i *
+        (∑ j : Fin s.holes, adjacentWeight i j * u j c) -
+      (∑ j : Fin s.holes,
+        adjacentWeight i j *
+          (GSTGraphV2CMWaveFusion.T (u j) c +
+            channelShift s j * u j c)) =
+    ∑ j : Fin s.holes,
+      ((channelShift s i - channelShift s j) *
+        adjacentWeight i j) * u j c
+  rw [fullCell_base_fold_sum]
+  rw [Finset.mul_sum, ← Finset.sum_add_distrib,
+    ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro j hj
+  ring
+
 /-! ## Genuine native source propagation along a realized curvature edge -/
 
 section OriginalXNativeSource
@@ -180,10 +266,14 @@ theorem native_source_of_realized_spectral_edge
 
 end OriginalXNativeSource
 
+#check fullCellNeighbor_readout
+#check fullCellNeighbor_curvature_exact
 #check crossHoleSignal_exact_readout
 #check quotientCurvature_exact
 #check adjacent_curvature_nonzero
 #check native_source_of_realized_spectral_edge
+#print axioms fullCellNeighbor_readout
+#print axioms fullCellNeighbor_curvature_exact
 #print axioms crossHoleSignal_exact_readout
 #print axioms quotientCurvature_exact
 #print axioms adjacent_curvature_nonzero
