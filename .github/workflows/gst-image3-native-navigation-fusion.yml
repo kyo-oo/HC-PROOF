@@ -5,6 +5,7 @@ on:
     branches:
       - research/gpt6-image3-native-gst-navigation-fusion-20261111
     paths:
+      - 'GSTGraphV2CMInfiniteCurvatureBridge.lean'
       - 'GSTWorldCosmology.lean'
       - 'GSTSquarePureHodgeDuality.lean'
       - 'waves/GSTNCohomologyV3.lean'
@@ -45,12 +46,13 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           python3 scripts/gst_lean_dependency_roots.py GSTImage3NativeFusionLib \
+            GSTGraphV2CMInfiniteCurvatureBridge \
             GSTWorldCosmology \
             GSTSquarePureHodgeDuality \
             waves.GSTNCohomologyV3 \
             GSTCardinalSimultaneousOriginalXCompiler
-          if timeout 6500 lake build GSTWorldCosmology GSTSquarePureHodgeDuality waves.GSTNCohomologyV3 GSTCardinalSimultaneousOriginalXCompiler > gst-image3-fusion.log 2>&1; then
-            echo "LEAN PASSED: all four upgraded original GST files"
+          if timeout 6500 lake build GSTGraphV2CMInfiniteCurvatureBridge GSTWorldCosmology GSTSquarePureHodgeDuality waves.GSTNCohomologyV3 GSTCardinalSimultaneousOriginalXCompiler > gst-image3-fusion.log 2>&1; then
+            echo "LEAN PASSED: all five upgraded original GST files"
           else
             grep -nE 'error:|sorryAx|unknown identifier|unsolved goals|failed to synthesize|type mismatch' gst-image3-fusion.log | tail -n 130 || true
             tail -n 110 gst-image3-fusion.log || true
