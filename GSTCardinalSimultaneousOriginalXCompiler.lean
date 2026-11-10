@@ -399,4 +399,110 @@ theorem image3Curvature_no_escape
 #print axioms image3CurvatureF_cycleClass
 #print axioms image3Curvature_no_escape
 
+
+/-! ## Image-3 full N-cohomology reconstruction (not one pure tensor)
+
+The previous F-function can use one tensor of m independent amplitudes,
+which is a SEPARABLE rank-one tensor. The user's actual Hodge-valued sum
+requires every independent N-cohomology coordinate, not only separable
+inputs. The ORIGINAL manyCausalHoleBasis reconstruction gives an exact
+finite independent basis; the upgraded F below accepts its full vector.
+
+The arbitrary cardinal world family remains available through the
+correspondence address type iota; the current native Chow packet has
+finite support, as required for a rational algebraic cycle.
+-/
+
+/-- The full Image-3 F-function compiles EVERY original independent
+N-cohomology coordinate into genuine original-X native cycles. -/
+noncomputable def image3NativeFullF
+    (F : NativeGeometricFamily ι A B)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
+    (coeff : ManyCausalHoleCoordinates m s)
+    (address : ManyCausalHoleIndex m s → ι)
+    (nav : ι → ι) (kappa : Nat) : A := by
+  classical
+  exact ∑ j : ManyCausalHoleIndex m s,
+    coeff j •
+      F.native (image3NavigateIndex nav kappa (address j)) F.seed
+
+noncomputable def image3BettiFullF
+    (F : NativeGeometricFamily ι A B)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
+    (coeff : ManyCausalHoleCoordinates m s)
+    (address : ManyCausalHoleIndex m s → ι)
+    (nav : ι → ι) (kappa : Nat) : B := by
+  classical
+  exact ∑ j : ManyCausalHoleIndex m s,
+    coeff j •
+      F.betti (image3NavigateIndex nav kappa (address j))
+        (F.cycleClass F.seed)
+
+/-- Full nonseparable native GST N-cohomology expansion obeys EXACT
+canonical original-X Betti compatibility, no unknown class preimage. -/
+theorem image3FullF_cycleClass
+    (F : NativeGeometricFamily ι A B)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
+    (coeff : ManyCausalHoleCoordinates m s)
+    (address : ManyCausalHoleIndex m s → ι)
+    (nav : ι → ι) (kappa : Nat) :
+    F.cycleClass (image3NativeFullF F m s coeff address nav kappa) =
+      image3BettiFullF F m s coeff address nav kappa := by
+  classical
+  simp only [image3NativeFullF, image3BettiFullF, map_sum]
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [map_smul, F.square]
+
+/-- A pure N-cohomology tensor is one special case of the FULL F
+compiler. In particular it is not a proof of full independent rank. -/
+theorem image3TensorF_is_FullF
+    (F : NativeGeometricFamily ι A B)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
+    (a : ∀ k : Fin m, HoleCoordinates (s k))
+    (address : ManyCausalHoleIndex m s → ι)
+    (nav : ι → ι) (kappa : Nat) :
+    image3NativeF F m s a address nav kappa =
+      image3NativeFullF F m s
+        (manyCausalHoleTensor m s a) address nav kappa := by
+  rfl
+
+/-- Each of the user's fully independent causal N-cohomology basis
+channels produces its own specific native correspondence word. -/
+theorem image3FullF_basis
+    (F : NativeGeometricFamily ι A B)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
+    (j : ManyCausalHoleIndex m s)
+    (address : ManyCausalHoleIndex m s → ι)
+    (nav : ι → ι) (kappa : Nat) :
+    image3NativeFullF F m s
+        (manyCausalHoleBasis m s j) address nav kappa =
+      F.native (image3NavigateIndex nav kappa (address j)) F.seed := by
+  classical
+  simp [image3NativeFullF, manyCausalHoleBasis, ite_smul]
+
+/-- The F-function is rational-linear in all independent N-cohomology
+channels, so arbitrary FINITE Hodge-valued sums are represented rather
+than scalar-compressed. -/
+theorem image3FullF_add
+    (F : NativeGeometricFamily ι A B)
+    (m : Nat) (s : Fin m → GSTNCohomology.NShape)
+    (c d : ManyCausalHoleCoordinates m s)
+    (address : ManyCausalHoleIndex m s → ι)
+    (nav : ι → ι) (kappa : Nat) :
+    image3NativeFullF F m s (c+d) address nav kappa =
+      image3NativeFullF F m s c address nav kappa +
+        image3NativeFullF F m s d address nav kappa := by
+  classical
+  simp [image3NativeFullF, Pi.add_apply, add_smul,
+    Finset.sum_add_distrib]
+
+#check image3NativeFullF
+#check image3FullF_cycleClass
+#check image3FullF_basis
+#check image3TensorF_is_FullF
+#check image3FullF_add
+#print axioms image3FullF_cycleClass
+#print axioms image3FullF_basis
+
 end GSTCardinalSimultaneousOriginalXCompiler
