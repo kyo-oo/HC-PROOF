@@ -82,4 +82,52 @@ $T=\mathrm{diag}(1,0)$ and $S=E_{12}$, the commutant is scalar although $\Q e_1$
 
 \section{Status and falsifiable universal target}
 This is a proved **conditional geometric criterion** and a proved unconditional linear-algebra identity for all-N GST information channels. It makes the universal-X source obstruction visible as a rational, nontrivial commutant projector, and removes the requirement of distinct rational Hodge eigenvalues from the \emph{geometric} criterion (PC). It does not by itself produce algebraic realization of $T,S$ or their polarization adjoints on every smooth projective original X. In the universal Hodge setting, that is a substantive new geometric obligation, not a cosmetic lemma or an established theorem. The proof is checked independently by symbolic exact commutant calculations in the companion Wolfram script; no new Lean compilation or Clay-level result is asserted.
+
+\section{A genuinely universal original-X realization of the GST source coupler}
+The new full-N GST word-algebra theorem also introduces the rank-one information source operator $P_N=v_Nv_N^\top$. We can realize its \emph{rank-one source-projector mechanism} by a GENUINE Chow correspondence on EVERY original smooth projective complex variety, without presupposing any unknown Hodge algebraicity.
+
+Let $h\in\CH^1(X)_\Q$ be any ample divisor and $q=\int_Xh^d>0$. For any $0\le p\le d$ define the actual codimension-$d$ correspondence
+\[
+ \boxed{
+ \Gamma_{h,p}=
+ \frac{1}{q}\operatorname{pr}_1^*(h^{d-p})
+              \cdot\operatorname{pr}_2^*(h^p)
+ \in\CH^d(X\times X)_\Q.}
+\tag{9}
+\]
+No unknown class is involved. Its literal rational Chow push--pull operator is
+\[
+ \boxed{
+ N_{h,p}(Z)=\left(\frac1q\int_X Z\,h^{d-p}\right)h^p,
+ \qquad N_{h,p}^2=N_{h,p},
+ \qquad N_{h,p}(h^p)=h^p.}
+\tag{10}
+\]
+The canonical Betti action is exactly
+\[
+ \boxed{
+ P_{h,p}(\beta)=\left(\frac1q\int_X\beta\cup h^{d-p}\right)h^p,
+ \qquad
+ c_pN_{h,p}=P_{h,p}c_p.}
+\tag{11}
+\]
+The integral pairing is rational and the Chow degree map supplies the equality on the native side. Thus a normalized rank-one source coupler of the kind used in the NEW full-N GST algebra has a concrete universally existing original-X algebraic-geometric instance. This is not an arbitrary linear operator claimed to be a correspondence.
+
+For any second actual Hodge-compatible Chow correspondence with native action $N$ and Betti action $T$, the exact GST noncommutative curvature of the two genuine operators satisfies the universal identity
+\[
+ \boxed{
+ [T,P_{h,p}](\beta)
+ =\left(\frac1q\int_X\beta h^{d-p}\right)T(h^p)
+  -\left(\frac1q\int_XT(\beta)h^{d-p}\right)h^p.}
+\tag{12}
+\]
+In particular, at the single algebraic seed $h^p$,
+\[
+ \boxed{[T,P_{h,p}](h^p)=T(h^p)-P_{h,p}(T(h^p)),}
+ \tag{13}
+\]
+which is an \emph{actual independently constructed algebraic cycle class} orthogonal (for the canonical top pairing) to $h^p$. In codimension $p$ it is a genuine native-cycle rank-one residual correction built only from $h^p$ and the actual correspondence $N$. This unifies \texttt{GSTGraphV2NativeCurvatureBirth} with the polarized native residual-source operation without requiring a separate guessed readout.
+
+The remaining crucial arrow for universal Hodge algebraicity is \emph{not} (9)--(11), which are already unconditional and universal: it is to produce, for each prescribed higher-primitive residual on the original X, additional actual Chow operators $N$ whose curvature words act nontrivially in that residual's direction, or a proven scalar-commutant realization of the full GST wave/source algebra. If $T$ comes solely from the rank-one source projector and the identity, then (13) is zero; such a fixed-source commutant cannot supply primitive birth. This accurately locates the new geometry while retaining the truly established original-X construction.
+
 \end{document}
