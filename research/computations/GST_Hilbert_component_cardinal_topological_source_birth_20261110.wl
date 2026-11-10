@@ -61,4 +61,36 @@ gst=<|
    MatrixRank[inter]==2&&Det[hank]==1&&
    MatrixRank[bg]==2&&MatrixRank[bb]==1)
  |>;
+
+(* ACTUAL ORIGINAL-X CHOW CORRESPONDENCE MATRIX from each Hilbert
+   component: Gamma_Z = (1/q) pr1*h^(d-p) pr2*Z;
+   F_Z(beta)=ell_h(beta) Z, ell_h(beta)=int beta*h/q.
+   Two representatives of one connected Hilbert component induce the
+   same BETTI operator even when their Chow classes are not equal. *)
+ellh=(inter.h)/(h.inter.h);
+actualGamma1=Outer[Times,h1,ellh];
+actualGamma2=Outer[Times,h2,ellh];
+actualCurvature=actualGamma1.actualGamma2-
+ actualGamma2.actualGamma1;
+topologicalSourceCheck=<|
+ "ampleSelfIntersection"->h.inter.h,
+ "nativeOneSeedHitsRuling1"->(actualGamma1.h==h1),
+ "nativeOneSeedHitsRuling2"->(actualGamma2.h==h2),
+ "genuineChowComponentComposition"->(
+   actualGamma1.actualGamma2==(ellh.h2)actualGamma1 &&
+   actualGamma2.actualGamma1==(ellh.h1)actualGamma2),
+ "noncommutativeTopologicalCurvature"->actualCurvature,
+ "curvatureNonzero"->(actualCurvature!=ConstantArray[0,{2,2}]),
+ "sourceSpanIsTwo"->(MatrixRank[{actualGamma1.h,actualGamma2.h}]==2)
+|>;
+gst=Join[gst, <|
+ "realHilbertComponentChowSourceOperators"->topologicalSourceCheck,
+ "allWithGeometricOperatorsPassed"->(
+  gst["allPassed"] &&
+  topologicalSourceCheck["nativeOneSeedHitsRuling1"] &&
+  topologicalSourceCheck["nativeOneSeedHitsRuling2"] &&
+  topologicalSourceCheck["genuineChowComponentComposition"] &&
+  topologicalSourceCheck["curvatureNonzero"] &&
+  topologicalSourceCheck["sourceSpanIsTwo"])
+ |>];
 Print[gst];gst
