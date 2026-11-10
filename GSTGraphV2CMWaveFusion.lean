@@ -205,6 +205,79 @@ theorem channel_value (s : NShape) (i : Fin s.holes)
     channel s i u i = u := by
   simp [channel]
 
+
+/-! ## GST IMAGE 3: NATIVE CONTROLLED F FOLD + CM CURVATURE
+
+This extends the ORIGINAL Wave-I U, true CM J and original SURVIVE
+source M. It does not replace the canonical 12 cells or source.
+The parameter will be set to the canonical navigation charge in the
+integrated image-3 compiler.
+-/
+
+theorem J_add (a b : WaveSignal) :
+    J (a + b) = J a + J b := by
+  funext s
+  simp [J, mul_add]
+
+theorem J_smul (k : ℚ) (a : WaveSignal) :
+    J (k • a) = k • J a := by
+  funext s
+  simp [J, smul_eq_mul, mul_comm, mul_left_comm]
+
+/-- Native F-function: the original U and J operators together with a
+navigation-controlled coefficient of the ACTUAL SURVIVE mass source. -/
+def navigationControlledF (k : ℚ) (u : WaveSignal) : WaveSignal :=
+  U u + J u + k • M u
+
+/-- Full original source is recovered exactly at navigation charge 1. -/
+theorem navigationControlledF_one (u : WaveSignal) :
+    navigationControlledF 1 u = T u := by
+  funext s
+  simp [navigationControlledF, T]
+
+/-- At zero charge the CM-compatible U+J fold remains. -/
+theorem navigationControlledF_zero (u : WaveSignal) :
+    navigationControlledF 0 u = U u + J u := by
+  simp [navigationControlledF]
+
+/-- Exact general native GST curvature law: the navigation coefficient
+scales precisely the preexisting J/M source curvature, because
+the original U and J already commute. -/
+theorem navigationControlledF_CM_defect (k : ℚ) (u : WaveSignal) :
+    J (navigationControlledF k u) - navigationControlledF k (J u) =
+      k • (J (M u) - M (J u)) := by
+  have hJ :
+      J (navigationControlledF k u) =
+        J (U u) + J (J u) + k • J (M u) := by
+    simp only [navigationControlledF, J_add, J_smul]
+  rw [hJ]
+  simp only [navigationControlledF]
+  rw [J_commutes_U u]
+  abel
+
+/-- The verified original curvature birth is scaled by the navigation
+charge, at the very same existing fixed cell and actual original seed. -/
+theorem navigationControlledF_curvature_fixed (k : ℚ) :
+    (J (navigationControlledF k seed) -
+      navigationControlledF k (J seed))
+      ((3 : Fin 4), (2 : Fin 3)) = 2 * k := by
+  rw [navigationControlledF_CM_defect]
+  have h := wave_source_CM_curvature_nonzero
+  have h' :
+      (J (M seed) - M (J seed))
+        ((3 : Fin 4), (2 : Fin 3)) = 2 := by
+    simpa using h
+  simp only [Pi.smul_apply]
+  rw [h']
+  ring
+
+#check navigationControlledF
+#check navigationControlledF_one
+#check navigationControlledF_zero
+#check navigationControlledF_CM_defect
+#check navigationControlledF_curvature_fixed
+#print axioms navigationControlledF_CM_defect
+
 #check GSTNCohomologyV3.independentHoleBasis_reconstruct
 #check GSTNCohomologyV2.weighted_interference_decomposition
 #check GSTGraphV2InformationRecovery.canonical_vertex_information_step
