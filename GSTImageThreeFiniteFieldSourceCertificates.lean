@@ -49,8 +49,9 @@ theorem originalP12Mod11_no_roots :
 /-- For EVERY modulo-eleven direct-source strength, both ORIGINAL
 independent factors survive, so their product is a unit. -/
 theorem originalCMSourceProductMod11_nonzero (a : ZMod 11) :
-    originalP8Mod11 a * originalP12Mod11 a ≠ 0 :=
-  mul_ne_zero (originalP8Mod11_no_roots a)
+    originalP8Mod11 a * originalP12Mod11 a ≠ 0 := by
+  letI : Fact (Nat.Prime 11) := ⟨by decide⟩
+  exact mul_ne_zero (originalP8Mod11_no_roots a)
     (originalP12Mod11_no_roots a)
 
 /-- Rational root reduction is legitimate because neither leading
