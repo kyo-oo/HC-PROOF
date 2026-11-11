@@ -40,7 +40,6 @@ is data on a carrier type, not a number multiplied by a cardinal. -/
 structure WorldTopologies (I : Type u) where
   carrier : I → Type v
   topology : (i : I) → TopologicalSpace (carrier i)
-  cardinalLabel : I → Cardinal
 
 variable {I : Type u}
 variable {A : Type v} [AddCommGroup A] [Module ℚ A]
@@ -60,6 +59,8 @@ structure OriginalXCardinalFolds (I : Type u) (A : Type v) (B : Type w)
     cycleClass (native i z) = betti i (cycleClass z)
 
 variable (W : OriginalXCardinalFolds I A B)
+
+namespace OriginalXCardinalFolds
 
 /-- ORIGINAL PDF Part 1: Z = Z0 + N(Z0), then NZ = NZ0 + N²Z0.
 At cohomology this is (T+T²)cl(Z0), with N an operator, not an aleph. -/
@@ -128,6 +129,8 @@ theorem finiteCardinalSuperposition_is_canonical
     c q • W.nativeWord q.1 (W.seed q.2)), ?_⟩
   simp only [map_sum, map_smul]
 
+end OriginalXCardinalFolds
+
 /-- REAL original GST two-cell Hodge Star model on the null/maximum pair:
 swap the coordinates. Its degree-two Hodge Star interpretation requires
 the equal-area product Kahler metric on X=P1 times P1. -/
@@ -156,24 +159,24 @@ native signal coordinates. -/
 theorem originalGST_physical_curvature_increment (a : ℚ)
     (u : WaveSignal) :
     fixedPair (curvatureFold a 1 u) =
-      (fixedPair (curvatureFold a 0 u)).1 +
+      ((fixedPair (curvatureFold a 0 u)).1 +
         2 * (twoCellHodgeStar (fixedPair u)).1,
-      (fixedPair (curvatureFold a 0 u)).2 +
-        2 * (twoCellHodgeStar (fixedPair u)).2 := by
+       (fixedPair (curvatureFold a 0 u)).2 +
+        2 * (twoCellHodgeStar (fixedPair u)).2) := by
   simp only [fixedPair_curvatureFold, fixedPair, twoCellHodgeStar]
-  constructor <;> ring
+  apply Prod.ext <;> dsimp <;> ring
 
 #check WorldTopologies
 #check OriginalXCardinalFolds
-#check owner_part1_N_plus_Nsquare
-#check cardinalWord_natural
-#check cardinalWords_span_le_canonicalRange
-#check finiteCardinalSuperposition_is_canonical
+#check OriginalXCardinalFolds.owner_part1_N_plus_Nsquare
+#check OriginalXCardinalFolds.cardinalWord_natural
+#check OriginalXCardinalFolds.cardinalWords_span_le_canonicalRange
+#check OriginalXCardinalFolds.finiteCardinalSuperposition_is_canonical
 #check originalGST_CM_curvature_twice_star
 #check originalGST_physical_curvature_increment
 
-#print axioms owner_part1_N_plus_Nsquare
-#print axioms cardinalWords_span_le_canonicalRange
+#print axioms OriginalXCardinalFolds.owner_part1_N_plus_Nsquare
+#print axioms OriginalXCardinalFolds.cardinalWords_span_le_canonicalRange
 #print axioms originalGST_CM_curvature_twice_star
 
 end GSTCardinalWorldHodgeStarPart1
