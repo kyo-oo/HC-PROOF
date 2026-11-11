@@ -89,8 +89,8 @@ noncomputable def originalXSourceFrame
     IntersectionChowFrame κ A B where
   cycleClass := D.cycleClass
   source := fun i => D.nativeCycle (src i)
-  nativeIntersection := D.dualNativeReadout src detIdx inv
-  bettiIntersection := D.dualBettiReadout src detIdx inv
+  nativeIntersection := D.dualNativeReadout detIdx inv
+  bettiIntersection := D.dualBettiReadout detIdx inv
   intersection_natural := by
     intro i z
     simp only [dualNativeReadout, dualBettiReadout,
