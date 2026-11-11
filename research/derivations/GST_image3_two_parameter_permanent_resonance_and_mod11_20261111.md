@@ -15,10 +15,10 @@ CM commutator, and `v=e_(0,0)+e_(0,1)` the actual original seed.
 
 For independent rational strengths `a,b`, set
 
-[
-F_{a,b}=U+J+aM+bC,qquad
-D(a,b)=det[v,Fv,ldots,F^{11}v]inmathbb Z[a,b].
-]
+\[
+F_{a,b}=U+J+aM+bC,\qquad
+D(a,b)=\det[v,Fv,\ldots,F^{11}v]\\in\\mathbb Z[a,b].
+\]
 
 All matrices, signs and seed positions in the exact Wolfram script are
 reconstructed from these original operators; no chosen Hodge basis or
@@ -34,10 +34,10 @@ At exactly `b=1/2`, `D(a,1/2)=0` for every rational `a`.
 
 Equivalently,
 
-[
-oxed{{binmathbb Q:orall ainmathbb Q,,
-D(a,b)=0}={	frac12}.}
-]
+\[
+\boxed{{b\\in\\mathbb Q:\\forall a\\in\\mathbb Q,,
+D(a,b)=0}={\tfrac12}.}
+\]
 
 For `b≠1/2`, infinitely many rational direct-source strengths `a`
 give a cyclic ORIGINAL 12-state GST wave source.
@@ -46,10 +46,10 @@ give a cyclic ORIGINAL 12-state GST wave source.
 curvature strengths.**
 For every integer `k` and every rational direct strength `a`,
 
-[
-oxed{D(a,1+11k)
+\[
+\boxed{D(a,1+11k)
 e0.}
-]
+\]
 
 Thus **all** rational direct strengths preserve complete 12-state
 native cyclicity at every integer curvature strength in the arithmetic
@@ -60,24 +60,24 @@ For every cyclic pair `a,b` satisfying `D(a,b) != 0`, every
 positive finite hole count `h` has a full rank `12h` native GST
 direct-sum fold by the explicit adaptive rational navigation spacing
 
-[
-R(a,b)=2+2|a|+2|b|,qquad
+\[
+R(a,b)=2+2|a|+2|b|,\qquad
 S(a,b)=2R(a,b)+1=5+4|a|+4|b|,
-]
+\]
 
-[
-T_{a,b,h}=igoplus_{i=0}^{h-1}(F_{a,b}+i S(a,b)I_{12}),quad
-v_h=(v,ldots,v).
-]
+\[
+T_{a,b,h}=\bigoplus_{i=0}^{h-1}(F_{a,b}+i S(a,b)I_{12}),\quad
+v_h=(v,\ldots,v).
+\]
 
 In particular this holds for **every** rational `a`, **every**
 integer `b≡1 mod 11`, and **every** `h≥1`:
 
-[
-oxed{
-dim_{mathbb Q}langle v_h,Tv_h,ldots,T^{12h-1}v_hangle=12h.
+\[
+\boxed{
+dim_{\\mathbb Q}\langle v_h,Tv_h,\ldots,T^{12h-1}v_h\\rangle=12h.
 }
-]
+\]
 
 Here `h` is the number of finite independent N-hole *native*
 GST channels. No claim is made that arbitrary cardinal topology
@@ -91,39 +91,39 @@ two-cell subspace; its 10-cell complement is also invariant. With
 the actual seed `(1,0)` in the fixed pair, the source block and
 its Krylov determinant are
 
-[
+\[
 A_{a,b}=
-egin{pmatrix}1&1+2b\\2b-1&1+2aend{pmatrix},
-qquad
+\begin{pmatrix}1&1+2b\\2b-1&1+2aend{pmatrix},
+\qquad
 D_2(a,b)=2b-1.
-]
+\]
 
 Write `D_{10}(a,b)` for the cyclic determinant of the 10-cell
 block, and `R(a,b)` for the resultant of the two characteristic
 polynomials. The general block-Krylov determinant identity proved
 in the preceding derivation gives exactly
 
-[
+\[
 D(a,b)=(2b-1)D_{10}(a,b)R(a,b).
-]
+\]
 
 The new fully symbolic **two-variable** exact-arithmetic computation
 establishes the following polynomial coefficient identities:
 
-[
-deg_a D_{10}=8,qquad [a^8]D_{10}=64(b-2)^2,
-]
+\[
+deg_a D_{10}=8,\qquad [a^8]D_{10}=64(b-2)^2,
+\]
 
-[
-deg_a R=12,qquad [a^{12}]R=2560.
-]
+\[
+deg_a R=12,\qquad [a^{12}]R=2560.
+\]
 
 Thus the coefficient of `a^20` in `D(a,b)` is
 
-[
-oxed{[a^{20}]D(a,b)
+\[
+\boxed{[a^{20}]D(a,b)
 =163840(2b-1)(b-2)^2.}
-]
+\]
 
 For every rational `b≠1/2,2`, this coefficient is nonzero, so
 `D(·,b)` has degree exactly 20 and at most 20 rational roots.
@@ -132,10 +132,10 @@ At the exceptional second specialization `b=2`, that leading
 coefficient vanishes, so we cannot infer nonzero polynomial from
 its leading term. Instead the exact ORIGINAL full determinant gives
 
-[
+\[
 D(0,2)=-10365615590204736
 e0.
-]
+\]
 
 Hence `D(·,2)` is a nonzero polynomial of degree at most 20.
 The exact prior computation even found degree 17, though the
@@ -155,24 +155,24 @@ Let `b=1+11k` be an arbitrary integer. Since `D(a,b)` is an
 **integer** polynomial in both variables, coefficientwise reduction
 modulo 11 yields
 
-[
-D(a,1+11k)equiv D(a,1)pmod{11}.
-]
+\[
+D(a,1+11k)equiv D(a,1)\\pmod{11}.
+\]
 
 The complete exact table, independently verified by matrix-based
 finite-field Gaussian elimination, is
 
-[
-ig(D(0,1),D(1,1),ldots,D(10,1)ig)mod11
+\[
+\\big(D(0,1),D(1,1),\ldots,D(10,1)\\big)\bmod11
 =(6,2,1,8,6,4,8,9,3,9,5).
-]
+\]
 
 Every entry is nonzero. Moreover the integer polynomial in `a`
 has degree exactly 20 because its leading coefficient satisfies
 
-[
-163840(2b-1)(b-2)^2equiv 6pmod{11},
-]
+\[
+163840(2b-1)(b-2)^2equiv 6\\pmod{11},
+\]
 
 and hence is not divisible by 11.
 
@@ -195,9 +195,9 @@ signed CM mirror J contributes <=1, the diagonal SURVIVE M
 contributes <=2, and C=[J,M] contributes <=2. Therefore, for
 all rational a,b,
 
-[
-\|F_{a,b}\|_\infty\le 2+2|a|+2|b|=R(a,b).
-]
+\[
+\|F_{a,b}\|_\\infty\\le 2+2|a|+2|b|=R(a,b).
+\]
 
 Every complex eigenvalue of F lies in the closed disc of radius
 R(a,b). The shifted block `F+iS I` consequently has spectrum
@@ -244,15 +244,15 @@ witnesses or a class selector for unknown rational Hodge directions.
 
 The analogous **complete 29-element-field exact certificate** yields
 
-[
-oxed{
-binmathbb Z,quad
-bmod29in{9,14,21,27}
+\[
+\boxed{
+b\\in\\mathbb Z,\quad
+b\bmod29\\in{9,14,21,27}
 Longrightarrow
-orall ainmathbb Q: D(a,b)
+\\forall a\\in\\mathbb Q: D(a,b)
 e0.
 }
-]
+\]
 
 Exact source:
 `research/computations/GST_image3_mod29_curvature_classes_all_rational_source_20261111.wl`.
@@ -265,15 +265,15 @@ Python finite-field elimination agreed with the selected classes.
 
 The leading coefficient of `a^20` is, for any `b`,
 
-[
+\[
 163840(2b-1)(b-2)^2,
-]
+\]
 
 and its reductions mod29 on those classes are, respectively,
 
-[
+\[
 (22,9,6,17),
-]
+\]
 
 all invertible. Therefore for ANY integer `b` in one of these
 four infinite progressions, the integer polynomial
