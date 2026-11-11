@@ -72,7 +72,7 @@ one[r_Integer?Positive,p_Integer?Positive]:=
     {idx[{0,0}],idx[{3,2}]}]];
  eigen=Table[
    Module[{a=aa[[i]],lam=lams[[2i-1]],shift=addr[[2i-1]]},
-   (CharacteristicPolynomial[fix/.y->lam,z]/.
+   (CharacteristicPolynomial[(fix/.y->lam)+shift IdentityMatrix[2],z]/.
      z->shift+1+(a-1/a)/2)==0],{i,r}];
  km=kr[Map[ratmod[#,p]&,t,{2}],Map[ratmod[#,p]&,seed],12h];
  detmod=Det[km,Modulus->p];
