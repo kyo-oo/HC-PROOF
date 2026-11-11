@@ -86,6 +86,30 @@ theorem curvatureSource_maximum (u : WaveSignal) :
   rw [max_J, null_M, max_M, max_J]
   ring
 
+
+/-! ## ORIGINAL CM ODD-PARITY SOURCE LAW
+
+The curvature [J,M] has odd CM parity under the author's actual
+rational complex operator J²=-I, independent of Hodge realizability.
+-/
+
+theorem J_sub (u v : WaveSignal) : J (u - v) = J u - J v := by
+  funext s
+  simp [J, mul_sub]
+
+theorem M_neg (u : WaveSignal) : M (-u) = -M u := by
+  funext s
+  simp [M]
+
+theorem curvatureSource_CM_odd (u : WaveSignal) :
+    J (curvatureSource u) + curvatureSource (J u) = 0 := by
+  simp only [curvatureSource, J_sub, J_square, M_neg]
+  abel
+
+#check curvatureSource_CM_odd
+#print axioms curvatureSource_CM_odd
+
+
 /-- **EXACT GST NAVIGATION RESONANCE LAW**.
 The direct SURVIVE contribution affects only the coefficient of the
 existing maximum-cell signal. The CM curvature contributes a NEW
