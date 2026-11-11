@@ -238,3 +238,51 @@ author's original GST **native** cyclicity and arbitrary finite N-hole
 navigation substantially; they do not manufacture a canonical
 original-X Hodge-to-Chow surjection, missing `X×X` correspondence
 witnesses or a class selector for unknown rational Hodge directions.
+
+
+## Theorem D — Four further infinitely many all-rational source strengths mod 29
+
+The analogous **complete 29-element-field exact certificate** yields
+
+[
+oxed{
+binmathbb Z,quad
+bmod29in{9,14,21,27}
+Longrightarrow
+orall ainmathbb Q: D(a,b)
+e0.
+}
+]
+
+Exact source:
+`research/computations/GST_image3_mod29_curvature_classes_all_rational_source_20261111.wl`.
+
+For each of the four residue classes, the certificate constructs
+`D(a,b)` from the unchanged ORIGINAL 4×3 U/J/M source,
+computes all **29** values for `a=0,...,28`, and verifies that
+EVERY value is NONZERO in F29. The independent original-matrix
+Python finite-field elimination agreed with the selected classes.
+
+The leading coefficient of `a^20` is, for any `b`,
+
+[
+163840(2b-1)(b-2)^2,
+]
+
+and its reductions mod29 on those classes are, respectively,
+
+[
+(22,9,6,17),
+]
+
+all invertible. Therefore for ANY integer `b` in one of these
+four infinite progressions, the integer polynomial
+`D(a,b)` has degree20 with unit leading coefficient mod29.
+A hypothetical reduced rational root `m/n` has denominator `n`
+dividing this coefficient, so `29∤n`; reducing `m/n` modulo29
+contradicts the exhaustive nonzero table. This proves the
+quantified all-rational-a theorem, not just the finite 116 cases.
+
+This extends Theorem B and does not require changing the owner's
+original CM source operators. It makes no claim about canonical
+algebraic Hodge cycle-class surjectivity on arbitrary X.
