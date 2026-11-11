@@ -17,7 +17,7 @@ Module[{x,y,z,a,b,c,d,e,f,ell,mm,first,eq,sol,rem,checks},
  ell=a*x+b*y+c*z;
  mm=d*x+e*y+f*z;
  first=Expand[y*ell+x*mm+z^2];
- eq=Table[Coefficient[first,{x,y,z},idx]==0,
+ eq=Table[Coefficient[Coefficient[Coefficient[first,x,idx[[1]]],y,idx[[2]]],z,idx[[3]]]==0,
   {idx,{{2,0,0},{1,1,0},{0,2,0},{1,0,1},{0,1,1},{0,0,2}}}];
  sol=Reduce[And@@eq,{a,b,c,d,e,f},Rationals];
  rem=PolynomialReduce[z^2,{x,y},{x,y,z}][[2]];
