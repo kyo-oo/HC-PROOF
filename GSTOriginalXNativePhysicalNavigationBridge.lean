@@ -66,7 +66,6 @@ theorem physical_max_from_null (R : Nat) :
     (fun s => if s = nullCell then 1 else 0) maximumCell = _
   rw [curvatureFold_maximum]
   simp [nullCell, maximumCell]
-  ring
 
 /-- The same original physical matrix has a truly nonvanishing
 null-to-maximum channel for every arithmetic state R. -/
