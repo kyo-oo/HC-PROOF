@@ -5,6 +5,7 @@ on:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTCardinalWorldHodgeStarPart1.lean'
+      - 'GSTAllDegreeHodgeStarCMFold.lean'
       - '.github/workflows/gst-owner-cardinal-hodgestar-part1.yml'
   workflow_dispatch:
 permissions:
@@ -30,9 +31,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTOwnerCardinalPart1Lib GSTCardinalWorldHodgeStarPart1
-          if lake build GSTCardinalWorldHodgeStarPart1 > gst-cardinal-part1-proof.log 2>&1; then
-            echo "LEAN PASSED: original GST cardinal-world N+N² + original CM Hodge Star"
+          python3 scripts/gst_lean_dependency_roots.py GSTOwnerCardinalPart1Lib GSTAllDegreeHodgeStarCMFold
+          if lake build GSTAllDegreeHodgeStarCMFold > gst-cardinal-part1-proof.log 2>&1; then
+            echo "LEAN PASSED: cardinal-world Part1 + true all-degree GST CM Hodge Star fold"
           else
             tail -n 160 gst-cardinal-part1-proof.log
             exit 1
