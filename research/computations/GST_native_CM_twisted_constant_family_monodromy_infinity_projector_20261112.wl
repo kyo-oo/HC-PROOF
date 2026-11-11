@@ -1,6 +1,6 @@
 (* GST native curvature-twisted constant family and all-cardinal finite monodromy energy projector.
    Exact integer/rational tests only; no assertion of generic algebraicity.
-   ACTUAL geometric family is (P1xP1xC*)/<(swap,t->-t)> -> C*, s=t^2.
+   ACTUAL geometric family is (P1xP1xCstar)/<(swap,t->-t)> -> C*, s=t^2.
    The genuine algebraic factor-swap operator on H2(P1xP1,Q)
    agrees with original GST fixed-null/max [J,M]/2 and equal-area Hodge Star.
    More general 5-d polarized rational model tests Picard-Lefschetz-type
