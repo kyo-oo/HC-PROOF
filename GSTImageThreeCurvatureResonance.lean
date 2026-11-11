@@ -370,6 +370,71 @@ theorem fixedPair_independent_off_resonance
   apply hb
   linarith
 
+/-! ## UNIVERSAL SECOND-ORDER CM FIXED-CELL LAW
+
+The original two fixed cells satisfy a closed Cayley-Hamilton recurrence
+at EVERY strength a,b and for every seed, independently of the other
+ten original world cells. This is the actual source mechanism behind the
+two-cell spectral discriminant, not a chosen Hodge target coordinate.
+-/
+
+/-- Second-fold recurrence at the ORIGINAL null cell. -/
+theorem fixedPair_second_order_null (a b : ℚ) (u : WaveSignal) :
+    curvatureFold a b (curvatureFold a b u) nullCell =
+      (2+2*a) * curvatureFold a b u nullCell -
+      (2+2*a-4*b*b) * u nullCell := by
+  simp only [curvatureFold_null, curvatureFold_maximum]
+  ring
+
+/-- Second-fold recurrence at the ORIGINAL maximum-information cell. -/
+theorem fixedPair_second_order_maximum (a b : ℚ) (u : WaveSignal) :
+    curvatureFold a b (curvatureFold a b u) maximumCell =
+      (2+2*a) * curvatureFold a b u maximumCell -
+      (2+2*a-4*b*b) * u maximumCell := by
+  simp only [curvatureFold_maximum, curvatureFold_null]
+  ring
+
+/-- First fixed-cell response to the ORIGINAL mixed seed is ALWAYS one;
+the second cell is the only source of two-step rank collapse. -/
+theorem curvatureFold_seed_null (a b : ℚ) :
+    curvatureFold a b seed nullCell = 1 := by
+  rw [curvatureFold_null, seed_nullCell, seed_maximumCell]
+  ring
+
+theorem fixedPair_seed_next (a b : ℚ) :
+    fixedPair (curvatureFold a b seed) = ((1 : ℚ),2*b-1) := by
+  apply Prod.ext
+  · exact curvatureFold_seed_null a b
+  · exact curvatureFold_seed_maximum a b
+
+/-- Concrete inverse coordinates: for ANY target original fixed pair
+(x,y), the first TWO original fold iterates reconstruct it exactly
+whenever the actual CM strength is nonresonant. This proves actual
+two-dimensional controllability, not just a nonzero determinant. -/
+theorem fixedPair_two_step_reconstruct
+    (a b x y : ℚ) (hb : b ≠ (1/2 : ℚ)) :
+    ∃ s t : ℚ,
+      s * seed nullCell + t * curvatureFold a b seed nullCell = x ∧
+      s * seed maximumCell +
+        t * curvatureFold a b seed maximumCell = y := by
+  have hden : 2*b-1 ≠ (0 : ℚ) := by
+    intro hz
+    apply hb
+    linarith
+  refine ⟨x-y/(2*b-1), y/(2*b-1), ?_, ?_⟩
+  · rw [seed_nullCell, curvatureFold_seed_null]
+    field_simp [hden]
+    ring
+  · rw [seed_maximumCell, curvatureFold_seed_maximum]
+    field_simp [hden]
+    ring
+
+#check fixedPair_second_order_null
+#check fixedPair_second_order_maximum
+#check fixedPair_two_step_reconstruct
+#print axioms fixedPair_second_order_null
+#print axioms fixedPair_two_step_reconstruct
+
 /-- Native maximum-cell evaluation as an honest rational linear functional. -/
 def maximumCoordinate : WaveSignal →ₗ[ℚ] ℚ where
   toFun := fun u => u maximumCell
