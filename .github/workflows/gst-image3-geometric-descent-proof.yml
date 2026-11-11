@@ -6,6 +6,7 @@ on:
       - research/gpt6-gst-image3-geometric-descent-20261111
     paths:
       - 'GSTImageThreeCMDescentFirewall.lean'
+      - 'GSTImageThreeAllRectangularCMStar.lean'
       - 'GSTImageThreeRealizedWordGeometry.lean'
       - 'GSTImageThreeTwoModeGeometricBirth.lean'
       - '.github/workflows/gst-image3-geometric-descent-proof.yml'
@@ -44,9 +45,11 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           python3 scripts/gst_lean_dependency_roots.py GSTImage3GeomDescentLib \
             GSTImageThreeCMDescentFirewall \
+            GSTImageThreeAllRectangularCMStar \
             GSTImageThreeRealizedWordGeometry \
             GSTImageThreeTwoModeGeometricBirth
           if timeout 6800 lake build GSTImageThreeCMDescentFirewall \
+              GSTImageThreeAllRectangularCMStar \
               GSTImageThreeRealizedWordGeometry \
               GSTImageThreeTwoModeGeometricBirth \
               > gst-image3-geometric-descent.log 2>&1; then
