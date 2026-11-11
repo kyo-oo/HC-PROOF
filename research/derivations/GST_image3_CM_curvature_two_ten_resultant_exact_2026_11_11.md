@@ -404,3 +404,203 @@ rational Hodge group of every smooth projective X has an actual
 algebraic class represented by each of these directions. The true
 original-X geometric landing and actual Chow source of each
 independent target direction require independent construction.
+
+
+## 12. NAVIGATION-OFF ORIGINAL GST: exact complete rational-strength classification
+
+Physical `Navigation R = false` gives `navigationCharge R = 0` by the
+previously proved original GST navigation law. Its source is therefore
+`F_(a,0)=U+J+aM`, not the half-strength interpolation `b=1/2`.
+The same ORIGINAL two fixed null/max cells form an invariant block
+with `det K2=-1` for every rational a.
+
+Exact restriction to the other ORIGINAL ten cells, and the exact
+resultant of their characteristic polynomial with the two-cell
+characteristic polynomial, give
+
+[
+det K_{10}=Q_8(a),qquad
+operatorname{Res}(chi_2,chi_{10})=4a^2(a+1)Q_9(a).
+]
+
+The integer polynomials are
+
+[
+egin{aligned}
+Q_8(a)={}&411701+899200a-342272a^2-123812a^3
+ -14492a^4-25296a^5\\
+ &+4672a^6-832a^7+256a^8,\\
+Q_9(a)={}&12176+45312a+72685a^2+59539a^3+
+ 15088a^4\\
+ &-15320a^5-13120a^6-1376a^7+
+ 1984a^8+640a^9.
+end{aligned}
+]
+
+Thus EXACTLY
+
+[
+det K_{12}(F_{a,0},v)=-4a^2(a+1)Q_8(a)Q_9(a).
+]
+
+The genuinely exhaustive mod-19 computations give
+
+[
+Q_8(0),ldots,Q_8(18)pmod{19}
+=(9,10,7,10,6,4,11,3,11,4,10,3,14,11,4,13,11,10,1),
+]
+
+[
+Q_9(0),ldots,Q_9(18)pmod{19}
+=(16,15,15,5,2,1,18,5,7,8,10,16,13,7,10,18,12,13,18).
+]
+
+Every residue is nonzero, and both leading coefficients are units:
+`256 mod19=9`, `640 mod19=13`. Exactly as in section 8,
+the rational-root reduction shows that no rational root of either
+integer polynomial exists. The remaining factor is zero only
+at a=0 or a=-1. Therefore
+
+[
+oxed{
+orall ainmathbb Q,quad
+dim_mathbb Qoperatorname{span}
+  (v,F_{a,0}v,ldots,F_{a,0}^{11}v)=12
+iff a
+otin{0,-1}.
+}
+]
+
+The exact native orbit ranks at the exceptions are 10 for a=0 and
+11 for a=-1; at a=1 the rank is 12 and the determinant is
+`-1149656584000`. The **rank exceptions are a source-native
+spectral resonance**, not a statement about projective geometry or
+Hodge classes.
+
+Reproducibility:
+`research/computations/GST_image3_navigation_off_exact_rational_cyclicity_mod19_20261111.wl`
+builds the 12x12 operators from the original 4x3 cell rules and
+returned `allPassed -> True`. The kernel-checkable finite-field
+leaf is in
+`GSTImageThreeNavigationOffSourceCertificates.lean`;
+its CI result remains distinct from the Wolfram certificate.
+
+## 13. All physical navigation states: exact NATIVE 12-state criterion
+
+For any original arithmetic `R`, the physical charge is
+`b=navigationCharge R∈{0,1}`. Combine the all-rational
+unit-curvature theorem (section 8) with the navigation-off
+classification (section 12):
+
+[
+oxed{
+orall Rinmathbb N, orall ainmathbb Q,quad
+operatorname{rank}_mathbb Q
+K_{12}(F_{a,operatorname{navigationCharge}(R)},v)=12
+iff
+ig(operatorname{Navigation}(R)lor(a
+e0land a
+e-1)ig).
+}
+]
+
+Here `Navigation(R)` is the actual ORIGINAL arithmetic predicate,
+not a user-selected new gate. The biconditional follows from:
+- Navigation on: b=1, full source rank for every rational a;
+- Navigation off: b=0, full source rank iff a is neither 0 nor -1.
+
+This equation is a theorem about the owner's original twelve-cell
+native information source; it is **not** an algebraic-cycle
+construction on the original variety X.
+
+## 14. Single GLOBAL Krylov orbit for MIXED physical navigation N-holes
+
+Let `h>0` and choose one true physical state `R_i:Nat` and one
+rational direct source strength `a_i:Q` for EACH actual N-hole
+`i=0,...,h-1`. Set `b_i=navigationCharge(R_i)∈{0,1}`, and
+assume exactly the genuinely necessary native single-hole condition
+
+[
+orall i<h,quad
+operatorname{Navigation}(R_i) lor(a_i
+e0land a_i
+e-1).
+]
+
+The previous result gives a full cyclic original `12`-state source
+at EACH hole even when physical navigation states differ.
+
+Define the finite rational amplitude bound and adaptive original
+N-hole spectral navigation spacing
+
+[
+L=max_{i<h}|a_i|,quad B=4+2L,quad S=9+4L=2B+1.
+]
+
+The original input `U` is a one-entry permutation per row,
+`J` a one-entry signed mirror per row, `M` a diagonal source
+bounded by 2, and `[J,M]` one entry of magnitude at most 2
+per row. Thus
+
+[
+|F_{a_i,b_i}|_inftyle B
+quad	ext{for each true }b_iin{0,1}.
+]
+
+The single global native N-hole fold is
+
+[
+T=igoplus_{i<h}ig(F_{a_i,b_i}+iS,I_{12}ig)
+]
+
+on the **original** `h` independent twelve-cell sources, with ONE
+shared starting signal `v_h=(v,ldots,v)`.
+
+Because every block is cyclic and all its complex eigenvalues lie
+within radius `B` of zero, the shifted eigenvalue discs centered at
+`iS` are strictly disjoint (`S>2B`). Hence the minimal
+polynomials of the block restrictions are pairwise coprime in
+`Q[x]`. By the polynomial Chinese remainder theorem, the
+annihilator ideal of the one common seed `v_h` is the product of
+the individual degree-twelve annihilators. Its degree is therefore
+`12h`, and this yields the STRONGER global result
+
+[
+oxed{
+dim_mathbb Qoperatorname{span}
+{v_h,Tv_h,ldots,T^{12h-1}v_h}=12h.
+}
+]
+
+The case h=0 is the zero-dimensional vacuum source and has rank0.
+
+**This does not silently exchange independent holewise coefficients
+for one global orbit:** the original independent real N-hole source
+space receives an explicit exact rational channel separation and
+CRT proof, which is precisely the additional mechanism needed for
+global simultaneous cyclicity. It generalizes previous fixed-20
+or uniform-a results to heterogeneous **actual physical Navigation
+states** and arbitrary finite rational strengths without artificial
+new Hodge basis coordinates.
+
+The independently reconstructed source matrices in
+`research/computations/GST_image3_mixed_physical_N_holes_global_Krylov_20261111.wl`
+passed full rank24 checks for three genuinely different mixed
+2-hole input families:
+`(a,b)=((1,0),(1,1))`, `((2,0),(-3,1))`, and
+`((0,1),(-1,1))`. This validates nontrivial examples but is not
+the all-h proof; the CRT argument is.
+
+The formal Lean module `GSTImageThreePhysicalNCohoFusion.lean`
+proves the different, genuine pointwise theorem: ALL physical
+N-cohomology hole readout pairs are reconstructed without
+assumed off-resonance gates, and the full original wave respects
+each hole's independent canonical perfect-power tail. It does not
+yet kernel-formalize the global spectral CRT statement.
+
+**Remaining geometric condition (not a reworded source proof):**
+construct algebraic correspondences on arbitrary original X whose
+canonical rational Betti action realizes this specific source in
+the relevant Hodge fiber, and establish the honest surjective
+comparison/coverage without assuming it. Native dimension 12h by
+itself does not perform the required algebraic Chow realization.
