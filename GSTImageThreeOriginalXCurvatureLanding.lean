@@ -6,20 +6,21 @@ import Mathlib
 /-!
 # GST image-3 — original-X cycle-class operator compiler; geometric witnesses separate
 
-This extension faithfully uses the OWNER'S ORIGINAL geometric
-CycleClassOperatorPair and nativeCurvatureCycle semantics, plus its
-new original 12-state [J,M] curvature-only source theorem.
+This extension uses the OWNER'S previously defined abstract
+CycleClassOperatorPair and nativeCurvatureCycle naturality laws, alongside
+the original 12-state [J,M] curvature source theorem. A supplied pair is
+NOT by itself a geometric X×X correspondence.
 
 The two-parameter ORIGINAL-X cycle F is
   F_(a,b) = U + J + a M + b (J o M - M o J)
-on ACTUAL rational native cycles of the SAME ORIGINAL X.
-Every operation has an actual cycle operator and its corresponding
-canonical rational Betti operator, with an exactly proved commuting
-cycle-class square. No basis of unknown rational Hodge classes or
-nonexistent Chow inverse is supplied.
+on rational native cycles of the SAME ORIGINAL X, with GIVEN
+cycle-operator/Betti-operator pairs satisfying exact commuting squares.
+The HodgeBigradedBettiData H is supplied: its cycleClass must be separately
+instantiated as the canonical analytic Betti cycle-class map.
+No basis of unknown rational Hodge classes or Chow inverse is supplied.
 
-This compiler is CONDITIONAL on the independent construction of
-TRUE original-X U,J,M pairs. The 12-state native determinant does
+This compiler is CONDITIONAL on independently constructed original-X
+U,J,M pairs and their actual geometric correspondence witnesses. The 12-state native determinant does
 not automatically transfer to the target Betti Hodge space.
 -/
 
@@ -85,9 +86,9 @@ def geometricCurvatureOnlyF
     CycleClassOperatorPair V H p :=
   geometricCurvatureF U J M 0 1
 
-/-- The actual original-X rational Betti class of the new
-CM/source curvature is the Betti commutator, never a formal
-synthetic vector or unverified class inverse. -/
+/-- Under the GIVEN H cycle-class map, the rational class of the new
+CM/source curvature is the supplied Betti commutator, not an invented
+Hodge basis direction or unverified class inverse. -/
 theorem cmSourcePair_canonicalClass
     (J M : CycleClassOperatorPair V H p)
     (Z : codimensionCycles V.X p) :
@@ -97,8 +98,9 @@ theorem cmSourcePair_canonicalClass
   simpa [cmSourcePair] using
     (nativeCurvature_cycleClass J M Z)
 
-/-- Entire original-X two-parameter F satisfies the canonical
-geometric cycle-class square. -/
+/-- Entire original-X two-parameter F satisfies the exact commuting
+square for the supplied H data. Canonicality requires independent
+instantiation of H with the actual Betti cycle-class geometry. -/
 theorem geometricCurvatureF_canonicalClass
     (U J M : CycleClassOperatorPair V H p)
     (a b : ℚ) (Z : codimensionCycles V.X p) :
@@ -120,13 +122,14 @@ theorem geometricCurvatureOnlyF_canonicalClass
 
 /-! ## SOURCE-IMAGE SATURATION FIREWALL
 
-A genuine cycle-class square preserves the EXISTING algebraic cycle-class
-image, including under all original CM curvature commutators. This blocks
+A supplied cycle-class square preserves the FULL range of its cycleClass,
+including under all original CM curvature commutators. When H is canonical
+this becomes the actual algebraic cycle-class image and blocks
 the incorrect promotion of a 12-state native rank calculation into a new
 original-X algebraic Hodge direction.
 -/
 
-/-- The CM commutator preserves the full actual algebraic cycle-class range
+/-- The CM commutator preserves the entire supplied cycle-class range
 for every supplied original-X naturality pair J,M. -/
 theorem cmSourcePair_preserves_algebraic_range
     (J M : CycleClassOperatorPair V H p) :
@@ -136,8 +139,8 @@ theorem cmSourcePair_preserves_algebraic_range
         LinearMap.range (H.cycleClass p) :=
   (cmSourcePair J M).cycleClass_range_stable
 
-/-- The ENTIRE two-parameter F family preserves the same full algebraic
-image, for every rational direct strength a and curvature strength b.
+/-- The ENTIRE two-parameter F family preserves the same cycle-class
+image of H, for every rational direct strength a and curvature strength b.
 It may enlarge an earlier finite algebraic frame, but cannot escape the
 full current algebraic cycle-class range by operator iteration alone. -/
 theorem geometricCurvatureF_preserves_algebraic_range
