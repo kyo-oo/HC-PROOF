@@ -203,3 +203,75 @@ NEW Lean targets, on independent branch:
 - \`GSTImageThreeStarCMCurvatureFusion.lean\`
 
 CI \`.github/workflows/gst-image3-geometric-descent-proof.yml\` checks all six local modules plus imports. Do not mark new Lean green unless the exact SHA workflow SUCCESS is observed. All code changes are confined to new files on the independent branch, preserving the owner's original Lean proof and source.
+
+
+## IX. NEW THEOREM — the OWNER'S transformed Image-1 seed is cyclic for EVERY original zero-local-SURVIVE companion GST N-world fold
+
+This is a new, NONTRIVIAL connection of the ORIGINAL handwritten \(Z_0+NZ_0\) formula to the owner's all-finite-N Image-3 *single-root* wave/CM/source construction. It does NOT replace the source with independently supplied Hodge basis cycles.
+
+Recall from the already derived original companion source transport theorem that for every h>=2:
+- the source companion \(C_h\) has distinct nonzero rationals \(\lambda_i\) with sum zero and all diagonal entries zero (therefore no local original SURVIVE M term);
+- the navigation-address operator \(B_h=f_h(C_h)\) has source eigenmode addresses \(10(i-1)\);
+- the true original U,J,M global fold is
+\[
+\mathcal F_h=I_h\otimes(U+J)+C_h\otimes M+B_h\otimes I_{12};
+\]
+- the ONE initial original GST source \(w_h=e_1\otimes v\), \(v=e_{(0,0)}+e_{(0,1)}\), has full cyclic orbit rank \(12h\);
+- choose the small rational source strengths \(\lambda_i=i/(100h^2)\) for i<h and \(\lambda_h=-(h-1)/(200h)\), which are all nonzero, distinct, sum zero, and have absolute value below 1/200.
+
+Now apply the author's ACTUAL Part-I transform:
+\[
+\boxed{w'_h=w_h+\mathcal F_h w_h.}
+\]
+
+**THEOREM (all finite h>=2).**
+\[
+\boxed{
+\rank_\mathbb Q[w'_h,\mathcal F_h w'_h,\ldots,\mathcal F_h^{12h-1}w'_h]=12h.
+}
+\]
+The transformed source has an exactly anti-diagonal rational moment detector, with
+\[
+\boxed{\det H_h=+1.}
+\]
+
+**Proof.** Since \(\mathcal F_h\) is rationally similar to the block sum
+\[
+\bigoplus_{i=1}^{h}
+ \left(U+J+\lambda_i M+10(i-1)I_{12}\right),
+\]
+we can test invertibility of \(I_{12h}+\mathcal F_h\) block by block.
+
+Block 1 has address zero. Its determinant is EXACTLY
+\[
+\det(I_{12}+U+J+\lambda_1M)
+=(5+4\lambda_1)\left[6(\lambda_1+2)^2+1\right]\ne0
+\]
+because \(0<\lambda_1<1/200\), and the bracket is positive for every real value.
+
+Each other block has address \(10(i-1)\) with i>=2. The exact original matrix maximum absolute row-sum bound is
+\(\|U+J+\lambda_i M\|_\infty\le 2+2|\lambda_i|<2.01\). Every complex eigenvalue of that original block thus has modulus <2.01, whereas \(-1-10(i-1)\) has modulus >=11; hence no other block of \(I+\mathcal F_h\) is singular. Consequently \(I_{12h}+\mathcal F_h\) is invertible over Q (rational nonzero determinant).
+
+The Krylov identity holds at ALL native-world dimensions:
+\[
+K(\mathcal F_h,w'_h)
+=(I_{12h}+\mathcal F_h)K(\mathcal F_h,w_h).
+\]
+Both factors are invertible for EVERY h>=2, proving the full 12h rank. Define \(\ell_h\) to read 1 on the LAST of the transformed orbit basis vectors and 0 on its first 12h-1. The associated Hankel matrix is zero below its anti-diagonal and one along the anti-diagonal, so
+\(\det H_h=(-1)^{12h(12h-1)/2}=+1\). QED.
+
+This is a genuine ALL finite N native source theorem; the proof works uniformly because of the original source strengths and source navigation addresses, not by extrapolation from a few finite cases.
+
+### Independently executed exact computation
+
+The additional committed \`research/computations/GST_image1_image3_allN_transformed_single_root_companion_20261111.wl\` was fetched back and executed with Wolfram after correcting its local variable names. It tested the full original 24x24 and 36x36 native operators, in both cases:
+- diagonal of C exactly zero (ZERO local original SURVIVE term);
+- original root cyclic rank = required 12h;
+- transformed root cyclic rank = required 12h;
+- exact equality of all entries of the transformed Krylov matrix with \((I+\mathcal F_h)K(\mathcal F_h,w_h)\);
+- exact nonzero determinant of \(I+\mathcal F_h\), and equality to product of all individual shifted original 12x12 determinants;
+- a rational dual readout with first 12h-1 moments 0, last moment 1.
+
+The exact tests passed for h2 strengths (1/2,-1/2) and h3 strengths (1/2,1/3,-5/6), allPassed=True. These examples use larger source strengths than the chosen universal proof family but satisfy the same nonzero/spectral separation criteria. The all-h claim comes from the uniform proof above, not the finite checks.
+
+**Hodge hypothesis boundary:** This now proves EXACTLY the original transformed seed part of Steps02/03 on all finite GST native N-cohomology wave worlds. A proof that it yields a truly full-rank *canonical original-X* Chow/Hodge fold on every X,p still requires the actual universal geometric source/birth compiler and the target cohomological landing; do not silently treat native rank as canonical Hodge rank.
