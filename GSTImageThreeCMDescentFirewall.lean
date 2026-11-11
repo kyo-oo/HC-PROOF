@@ -42,7 +42,7 @@ theorem no_rational_CM_on_rank_one
   have ha : a * a = -1 := by
     have h := hj 1
     rw [hs] at h
-    simpa only [a, neg_one] using h
+    simpa [a] using h
   nlinarith [sq_nonneg a]
 
 /-- The ORIGINAL owner's J²=-I cannot be faithfully transported
