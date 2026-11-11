@@ -306,4 +306,74 @@ cross-dimension correspondences; the
 single-curve specialization theorem applies
 to any one fixed-dimensional stratum.
 
+
+\section{General base-dimension upgrade: a countable union of closed algebraic source loci}
+The same relative Chow argument proves the following
+stronger original-X geometry principle, useful when
+the owner's GST world base has arbitrary FINITE
+complex dimension rather than a curve.
+
+\begin{theorem}[Global source locus is countably algebraic]
+Let B be any irreducible smooth finite-type
+complex algebraic VARIETY, let
+f:calX->B be smooth projective, and let
+alpha be a GLOBAL FLAT rational section of
+R^{2p}f_*Q. Then the fiberwise
+algebraicity locus
+\[
+L_\alpha=\{b\in B(C):
+ \alpha_b\in \mathrm{cl}_{X_b}
+           (CH^p(X_b)_Q)\}
+\]
+is a COUNTABLE UNION of Zariski-closed
+algebraic subsets of B. Consequently,
+if a set of source-bearing GST worlds is
+not contained in ANY countable union of
+PROPER closed algebraic subvarieties of B,
+then L_alpha=B, so the prescribed original
+fiber also has an actual algebraic source.
+For an irreducible CURVE B, the locus
+L_alpha is either at most COUNTABLE or
+equal to all of B(C).
+\end{theorem}
+
+\begin{proof}
+Every rational algebraic cycle representation
+has an integral denominator m and a
+positive-minus-negative effective cycle
+degree pair (r,s), giving countably
+many natural-number profiles.
+For each profile, its relative Chow
+pair parameter C_(r,s)->B is projective
+and finite type, hence has finitely
+many connected components.
+On each component, its actual relative
+cycle class has a locally constant
+Gauss-Manin label; the subset on which
+the label equals m alpha is therefore
+a union of entire connected components.
+Images of these good components are
+Zariski closed because the parameter
+space is projective over B.
+Their union over countably many (m,r,s)
+is EXACTLY L_alpha, proving the first
+claim. On irreducible B, a set not
+contained in a countable union of
+proper closed subsets forces one of
+these good closed images to equal B.
+If B is a curve, all proper closed
+subsets are finite, hence a countable
+union of proper closed sets is
+countable. This gives the dichotomy.
+\end{proof}
+
+The theorem's hypotheses impose a genuine
+global rational transport class and ACTUAL
+nearby algebraic cycles. It does not assert
+that every arbitrary original-X Hodge
+class has such a family. The proof
+generalizes the specific aleph-one
+CURVE theorem above and makes the exact
+role of the cardinal topology explicit.
+
 \end{document}
