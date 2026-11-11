@@ -41,14 +41,14 @@ def originalM (x : ℚ × ℚ) : ℚ × ℚ := (0, 2 * x.2)
 
 /-- Genuine GST CM commutator on the original native two-cell coordinates. -/
 def originalCMCurvature (x : ℚ × ℚ) : ℚ × ℚ :=
-  (originalJ (originalM x)).1 - (originalM (originalJ x)).1,
-  (originalJ (originalM x)).2 - (originalM (originalJ x)).2
+  ((originalJ (originalM x)).1 - (originalM (originalJ x)).1,
+   (originalJ (originalM x)).2 - (originalM (originalJ x)).2)
 
 theorem originalCMCurvature_twice_algebraicSwap (x : ℚ × ℚ) :
     originalCMCurvature x =
       (2 * (originalSwap x).1, 2 * (originalSwap x).2) := by
   rcases x with ⟨a, b⟩
-  apply Prod.ext <;> norm_num [originalCMCurvature, originalJ, originalM, originalSwap]
+  apply Prod.ext <;> dsimp [originalCMCurvature, originalJ, originalM, originalSwap] <;> ring
 
 theorem originalSwap_involutive (x : ℚ × ℚ) :
     originalSwap (originalSwap x) = x := by
@@ -104,8 +104,8 @@ theorem monodromy_fixed_has_constructed_source_coordinates
 section NoNewSourceFromInduction
 
 variable {A : Type*} {B : Type*}
-  [AddCommGroup A] [Module ℚ A]
-  [AddCommGroup B] [Module ℚ B]
+variable [AddCommGroup A] [Module ℚ A]
+variable [AddCommGroup B] [Module ℚ B]
 
 /-- The actual native-to-Betti cycle-class interface on original X. -/
 variable (cl : A →ₗ[ℚ] B)
