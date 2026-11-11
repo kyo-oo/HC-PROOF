@@ -53,13 +53,13 @@ cert=<|
  "resultantEqualsP12"->TrueQ[Expand[res-GSTDirectP12[a]]===0],
  "full12EqualsProduct"->TrueQ[Expand[dglobal-GSTDirectP8[a]*GSTDirectP12[a]]===0],
  "F11NoRoots"->(FreeQ[r8,0]&&FreeQ[r12,0]),
- "validRationalRootReduction"->And@@(leading!=0),
+ "validRationalRootReduction"->AllTrue[leading,#!=0&],
  "balancedA1Det"->(GSTDirectP8[1]*GSTDirectP12[1]),
  "allPassed"->(d2===1&&Exponent[d10,a]===8&&Exponent[res,a]===12&&
   TrueQ[Expand[d10-GSTDirectP8[a]]===0]&&
   TrueQ[Expand[res-GSTDirectP12[a]]===0]&&
   TrueQ[Expand[dglobal-GSTDirectP8[a]*GSTDirectP12[a]]===0]&&
-  FreeQ[r8,0]&&FreeQ[r12,0]&&And@@(leading!=0)&&
+  FreeQ[r8,0]&&FreeQ[r12,0]&&AllTrue[leading,#!=0&]&&
   GSTDirectP8[1]*GSTDirectP12[1]==-445265540949)|>;
 Print[cert];cert
 ]
