@@ -319,3 +319,21 @@ without guessing missing Hodge-to-Chow cycle lifts.
 Building these five witnesses and a canonical rank-preserving
 landing on every arbitrary original X remains mathematically
 distinct from the fully solved native source strength question.
+
+
+## 10. Independent implementation check (not a copied Wolfram matrix)
+
+The new standard-library Python computation at
+`research/computations/gst_image3_direct_survive_mod11_independent.py`
+reconstructs the ORIGINAL twelve source cells from scratch and performs
+Gaussian elimination directly in `F_11` on the **Krylov** matrices,
+not just on the source operators. The eleven resulting determinants are
+
+[
+(6,2,1,8,6,4,8,9,3,9,5)
+]
+
+for direct source strengths `a=0,...,10`, exactly matching the
+product of the independently specified `Q8(a)*Q12(a)` at every residue.
+This is a separate finite-field implementation check and does not
+replace the integer polynomial derivation or rational-root argument.
