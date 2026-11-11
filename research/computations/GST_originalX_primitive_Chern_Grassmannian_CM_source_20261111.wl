@@ -1,6 +1,6 @@
 (* GST original-X higher primitive Chern source discriminating test.
    X=Gr(2,4), Picard rank1, dim4, p=2.
-   True tautological bundles S,Q: sigma2=c2(Q), sigma11=c2(S*).
+   True tautological bundles S,Q: sigma2=c2(Q), sigma11=c2(dual tautological subbundle S).
    The rational Schubert ring is represented by Chern roots x,y
    modulo complete symmetric relations h3=h4=0.
    Primitive P=sigma2-sigma11 is an ACTUAL algebraic Chow class
