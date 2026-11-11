@@ -77,15 +77,28 @@ correspondence acts by the column k of the rational source matrix. -/
 theorem nativeMatrixFold_source (T : Matrix ι ι ℚ) (k : ι) :
     nativeMatrixFold F T (F.source k) =
       ∑ j : ι, T j k • F.source j := by
-  simp [nativeMatrixFold, nativeRankOne,
-    F.intersection_delta, Finset.sum_comm, smul_smul]
+  calc
+    nativeMatrixFold F T (F.source k) =
+        ∑ i : ι, ∑ j : ι,
+          T j i • (F.nativeIntersection i (F.source k) • F.source j) := by
+            simp only [nativeMatrixFold, LinearMap.sum_apply, LinearMap.smul_apply]
+            rfl
+    _ = ∑ i : ι,
+          (if i = k then ∑ j : ι, T j i • F.source j else 0) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [F.intersection_delta]
+          split_ifs with h
+          · simp [h]
+          · simp
+    _ = ∑ j : ι, T j k • F.source j := by simp
 
 /-- The original-X canonical Betti action agrees with that column on
 the ACTUAL divisor-Lefschetz source classes. -/
 theorem bettiMatrixFold_source (T : Matrix ι ι ℚ) (k : ι) :
     bettiMatrixFold F T (F.cycleClass (F.source k)) =
       ∑ j : ι, T j k • F.cycleClass (F.source j) := by
-  rw [← F.nativeMatrixFold_class T, F.nativeMatrixFold_source T k]
+  rw [← nativeMatrixFold_class F T (F.source k), nativeMatrixFold_source F T k]
   simp only [map_sum, map_smul]
 
 /-- All true ORIGINAL-X rational matrix source actions preserve the
@@ -96,7 +109,7 @@ theorem matrixFold_preserves_algebraic_range
     bettiMatrixFold F T beta ∈ LinearMap.range F.cycleClass := by
   rcases hbeta with ⟨z, rfl⟩
   exact ⟨nativeMatrixFold F T z,
-    F.nativeMatrixFold_class T z⟩
+    nativeMatrixFold_class F T z⟩
 
 #check nativeMatrixFold
 #check bettiMatrixFold
