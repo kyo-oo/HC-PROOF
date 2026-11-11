@@ -27,6 +27,7 @@ namespace GSTImageThreePhysicalNavigationControl
 open GSTPerfectPowerTailNavigation
 open GSTCanonicalTailStateIso
 open GSTImageThreeCurvatureResonance
+open GSTGraphV2CMWaveFusion
 
 /-- Exact physical GST source; the SAME original navigation truth value
 controls original source curvature, without a new spatial dimension. -/
