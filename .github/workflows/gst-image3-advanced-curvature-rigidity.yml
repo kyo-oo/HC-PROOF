@@ -8,6 +8,7 @@ on:
       - 'GSTImageThreeOriginalXCurvatureLanding.lean'
       - 'GSTImageThreeAdvancedGeometricSource.lean'
       - 'GSTImageThreeFiniteFieldSourceCertificates.lean'
+      - 'GSTImageThreeNavigationOffSourceCertificates.lean'
       - 'GSTImageThreeIndependentNCohoSource.lean'
       - 'GSTImageThreePhysicalNavigationControl.lean'
       - 'GSTImageThreePhysicalNCohoFusion.lean'
