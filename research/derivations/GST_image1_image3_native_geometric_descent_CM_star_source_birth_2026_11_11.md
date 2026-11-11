@@ -275,3 +275,31 @@ The additional committed \`research/computations/GST_image1_image3_allN_transfor
 The exact tests passed for h2 strengths (1/2,-1/2) and h3 strengths (1/2,1/3,-5/6), allPassed=True. These examples use larger source strengths than the chosen universal proof family but satisfy the same nonzero/spectral separation criteria. The all-h claim comes from the uniform proof above, not the finite checks.
 
 **Hodge hypothesis boundary:** This now proves EXACTLY the original transformed seed part of Steps02/03 on all finite GST native N-cohomology wave worlds. A proof that it yields a truly full-rank *canonical original-X* Chow/Hodge fold on every X,p still requires the actual universal geometric source/birth compiler and the target cohomological landing; do not silently treat native rank as canonical Hodge rank.
+
+
+## X. Cardinal \(\aleph\)-worlds × true dimensionless GST N-cohomology × native CM star
+
+The owner's second and third images call for all-cardinality indexing, independently variable world dimensions/topologies and an original native Hodge Star, rather than conflating \(\aleph_\omega\) with a natural-number polynomial power.
+
+New Lean file \`GSTImageThreeCardinalRectangularCM.lean\` establishes a genuinely dependent-index geometry. Let I be ANY Lean type, of any cardinality. Give each i∈I its own finite information world \(W_i=\mathrm{WorldCell}(A_i,B_i)\), amplitudes \(u_i:W_i\to\mathbb Q\), and the ORIGINAL \`GSTWorldPoincareDuality.worldDual\` on each rectangle. The entire indexed native Hodge-like star is
+\[
+(D_Iu)_i(c)=u_i(D_i c),
+\qquad D_I^2=I.
+\]
+If every A_i is even (with B_i unconstrained), use the actual ORIGINAL \`evenCarryWorldJ\` sign-twist from the previous section on EACH independently indexed geometry:
+\[
+(\mathcal J_Iu)_i(c)=
+\sigma_i(c)\,u_i(D_i c),
+\qquad
+\boxed{\mathcal J_I^2=-I}
+\]
+for ALL I. No finite upper bound on |I|, no artificial 12-cell terminal universe, no invalid infinite Chow sum and no unproved transfinite power are involved.
+
+This exactly marries the three owner ideas:
+- cardinal \(\aleph\) indexes SOURCE WORLDS, preserving the topology \(\tau_i\) and finite coordinates of each;
+- original GST Hodge/dual is the owner's genuine worldDual, extended pointwise across the cardinal family;
+- rational CM structure and curvature are defined natively on even-axis source worlds, including the actual original 4x3 chart.
+
+This DOES NOT automatically give a compatible rational J action on the complete original-X Hodge space W_p(X) when its dimension is odd (see the explicit rank-one obstruction above), nor does it assert \(\mathcal J_I\) is algebraically realizable as an original-X Chow correspondence. The universal original-X F-algebraic source-birth hypothesis remains to be constructed.
+
+**Kernel-check status:** The new Lean module is included in the same GitHub workflow as the six previous modules. Treat the new theorem as submitted for Lean verification until its exact successful run is observed.
