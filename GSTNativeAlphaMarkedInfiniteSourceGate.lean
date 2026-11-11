@@ -60,7 +60,6 @@ theorem prescribed_alpha_isolated_period
   · intro h
     have hu : -u / v = 0 := congrArg Prod.fst h
     have hvone : 1 / v - 1 = 0 := congrArg Prod.snd h
-    dsimp [prescribedAlphaPeriodDefect] at hu hvone
     field_simp [hv] at hu hvone
     constructor <;> linarith
   · rintro ⟨rfl, rfl⟩
@@ -77,6 +76,7 @@ the Hodge type equation forces the unchanged original t=1. -/
 theorem original_integral_cross_class_only_at_one (t : ℚ) :
     crossHodgeEquation t 0 1 (-1) 0 ↔ t = 1 := by
   simp [crossHodgeEquation]
+  exact eq_comm
 
 /-- General set-theoretic heart of the ONE VERY-GENERAL fiber theorem.
 Actual relative Chow sources are encoded by countably many CLOSED
