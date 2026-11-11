@@ -1,0 +1,52 @@
+name: GST native CM monodromy infinite-control theorem
+on:
+  push:
+    branches:
+      - research/gpt6-native-point-primitive-span-20261017
+    paths:
+      - 'GSTNativeCMMonodromyTwistedConstantFamily.lean'
+      - '.github/workflows/gst-native-monodromy-infinity-control.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gst-native-cm-monodromy-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare pinned Lean toolchain and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Verify exact original-GST CM and geometric monodromy native control
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTNativeCMMonodromyLib GSTNativeCMMonodromyTwistedConstantFamily
+          if lake build GSTNativeCMMonodromyTwistedConstantFamily > gst-native-monodromy.log 2>&1; then
+            echo "LEAN PASSED: original CM Hodge-Star twisted family and native infinity-source invariants"
+          else
+            tail -n 160 gst-native-monodromy.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-native-monodromy.log; then
+            echo "Forbidden sorry detected" && exit 1
+          fi
+      - name: Upload native theorem diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-native-monodromy-lean
+          path: gst-native-monodromy.log
+          if-no-files-found: warn
