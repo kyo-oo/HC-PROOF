@@ -107,7 +107,7 @@ variable {A : Type*} {B : Type*}
 variable [AddCommGroup A] [Module ℚ A]
 variable [AddCommGroup B] [Module ℚ B]
 
-/-- The actual native-to-Betti cycle-class interface on original X. -/
+/- The actual native-to-Betti cycle-class interface on original X. -/
 variable (cl : A →ₗ[ℚ] B)
 
 /-- The diagonal class of two induced/monodromy-permuted worlds
