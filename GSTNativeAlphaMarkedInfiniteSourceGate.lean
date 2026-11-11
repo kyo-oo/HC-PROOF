@@ -1,6 +1,4 @@
 import Mathlib
-import GSTCardinalWorldHodgeStarPart1
-import GSTCardinalAlephOneChowDescent
 
 /-!
 # GST infinite source-birth: alpha-marked period, rationality and Chow gates
