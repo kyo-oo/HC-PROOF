@@ -236,12 +236,11 @@ def shiftedBalancedFold (z : ℚ) (u : WaveSignal) : WaveSignal :=
 
 theorem zeroReadout_shiftedBalanced (z : ℚ) (u : WaveSignal) :
     zeroReadout (shiftedBalancedFold z u) = z * zeroReadout u := by
-  simp only [zeroReadout, shiftedBalancedFold]
+  dsimp [zeroReadout, shiftedBalancedFold]
   simp only [Pi.add_apply, Pi.smul_apply]
   have h := zeroReadout_balancedFold u
   dsimp [zeroReadout] at h
-  rw [sub_add_sub_cancel, h]
-  ring
+  linear_combination h
 
 /-- Arbitrarily many independent original N-hole Wave-II packets,
 each shifted by its ORIGINAL 10-address spacing doubled to 20
