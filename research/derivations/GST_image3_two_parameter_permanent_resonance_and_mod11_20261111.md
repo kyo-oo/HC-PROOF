@@ -17,7 +17,7 @@ For independent rational strengths `a,b`, set
 
 \[
 F_{a,b}=U+J+aM+bC,\qquad
-D(a,b)=\det[v,Fv,\ldots,F^{11}v]\\in\\mathbb Z[a,b].
+D(a,b)=\det[v,Fv,\ldots,F^{11}v]\in\mathbb Z[a,b].
 \]
 
 All matrices, signs and seed positions in the exact Wolfram script are
@@ -35,7 +35,7 @@ At exactly `b=1/2`, `D(a,1/2)=0` for every rational `a`.
 Equivalently,
 
 \[
-\boxed{{b\\in\\mathbb Q:\\forall a\\in\\mathbb Q,,
+\boxed{{b\in\mathbb Q:\forall a\in\mathbb Q,,
 D(a,b)=0}={\tfrac12}.}
 \]
 
@@ -75,7 +75,7 @@ integer `b≡1 mod 11`, and **every** `h≥1`:
 
 \[
 \boxed{
-dim_{\\mathbb Q}\langle v_h,Tv_h,\ldots,T^{12h-1}v_h\\rangle=12h.
+dim_{\mathbb Q}\langle v_h,Tv_h,\ldots,T^{12h-1}v_h\rangle=12h.
 }
 \]
 
@@ -156,14 +156,14 @@ Let `b=1+11k` be an arbitrary integer. Since `D(a,b)` is an
 modulo 11 yields
 
 \[
-D(a,1+11k)equiv D(a,1)\\pmod{11}.
+D(a,1+11k)equiv D(a,1)\pmod{11}.
 \]
 
 The complete exact table, independently verified by matrix-based
 finite-field Gaussian elimination, is
 
 \[
-\\big(D(0,1),D(1,1),\ldots,D(10,1)\\big)\bmod11
+\big(D(0,1),D(1,1),\ldots,D(10,1)\big)\bmod11
 =(6,2,1,8,6,4,8,9,3,9,5).
 \]
 
@@ -171,7 +171,7 @@ Every entry is nonzero. Moreover the integer polynomial in `a`
 has degree exactly 20 because its leading coefficient satisfies
 
 \[
-163840(2b-1)(b-2)^2equiv 6\\pmod{11},
+163840(2b-1)(b-2)^2equiv 6\pmod{11},
 \]
 
 and hence is not divisible by 11.
@@ -196,7 +196,7 @@ contributes <=2, and C=[J,M] contributes <=2. Therefore, for
 all rational a,b,
 
 \[
-\|F_{a,b}\|_\\infty\\le 2+2|a|+2|b|=R(a,b).
+\|F_{a,b}\|_\infty\le 2+2|a|+2|b|=R(a,b).
 \]
 
 Every complex eigenvalue of F lies in the closed disc of radius
@@ -246,10 +246,10 @@ The analogous **complete 29-element-field exact certificate** yields
 
 \[
 \boxed{
-b\\in\\mathbb Z,\quad
-b\bmod29\\in{9,14,21,27}
+b\in\mathbb Z,\quad
+b\bmod29\in{9,14,21,27}
 Longrightarrow
-\\forall a\\in\\mathbb Q: D(a,b)
+\forall a\in\mathbb Q: D(a,b)
 e0.
 }
 \]
