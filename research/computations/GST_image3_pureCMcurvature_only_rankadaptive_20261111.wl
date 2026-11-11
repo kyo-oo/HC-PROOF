@@ -28,7 +28,7 @@ This exact finite evidence tests r=1,2 companion construction.
 No extrapolation from finite r is used for universal-r theorem.
 *)
 ClearAll[cells,idx,sh,mir,sign,source,UU,JJ,MM,curv,
- originalSeed,id12,p10,q16,kr,ratmod,rootsForRank,one,all,result];
+ originalSeed,id12,p10,q16,kr,ratmod,rootsForRank,one,all,result,det12];
 cells=Flatten[Table[{c,d},{c,0,3},{d,0,2}],1];
 idx[a_]:=First[FirstPosition[cells,a]];
 sh[{c_,d_}]:={Quotient[c+4d,3],Mod[c+4d,3]};
@@ -93,11 +93,16 @@ one[r_Integer?Positive,p_Integer?Positive]:=
      CharacteristicPolynomial[co,x]===sourcePoly&&
      And@@eigen&&detmod!=0)|>
  ];
+det12=Det[kr[UU+JJ+tt curv,originalSeed,12]];
 all={one[1,1009],one[2,1009]};
 result=<|"old12CurvatureRank"->MatrixRank[curv],
+  "exact12CurvatureDeterminantFactor"->(Expand[det12-tt^4(2tt-1)p10[tt]q16[tt]]===0),
   "CManticommutation"->(JJ.curv+curv.JJ==ConstantArray[0,{12,12}]),
   "P10CauchyBound"->1+Max[Abs[Most[CoefficientList[p10[t],t]]]]/36900,
   "Q16CauchyBound"->1+Max[Abs[Most[CoefficientList[q16[t],t]]]]/331776,
   "sourcePolynomialCases"->all,
-  "allPassed"->And@@(Lookup[#,"allPassed"]&/@all)|>;
+  "allPassed"->(And@@(Lookup[#,"allPassed"]&/@all) &&
+      Expand[det12-tt^4(2tt-1)p10[tt]q16[tt]]===0 &&
+      1+Max[Abs[Most[CoefficientList[p10[tt],tt]]]]/36900<100 &&
+      1+Max[Abs[Most[CoefficientList[q16[tt],tt]]]]/331776<100)|>;
 Print[result];result
