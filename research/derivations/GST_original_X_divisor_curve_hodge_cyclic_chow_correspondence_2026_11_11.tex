@@ -1,0 +1,163 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\title{GST single-fold hypothesis: unconditional original-$X$ Chow construction in divisor and curve weights}
+\date{11 November 2026}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\begin{document}
+\maketitle
+
+\section{The actual universal original-$X$ input and output}
+Let $X$ be any smooth connected projective variety over $\mathbb C$ of complex dimension $d\ge 2$, with ample integral divisor class $h\in CH^1(X)_{\mathbb Q}$.
+Let
+\[
+W_p(X)=H^{2p}(X,\mathbb Q)\cap H^{p,p}(X,\mathbb C),
+\qquad cl_X^p:CH^p(X)_{\mathbb Q}\longrightarrow W_p(X)
+\]
+be the genuine canonical Betti cycle class.
+No algebraic lift of an arbitrary prescribed Hodge class is used as input.
+
+\begin{theorem}[Unconditional original-$X$ GST orbit construction in the outer middle weights]
+For every such $X$ and each $p\in\{1,d-1\}$ there exist an \emph{actual rational codimension-$d$ algebraic Chow correspondence}
+$\Gamma_{X,p}\in CH^d(X\times X)_{\mathbb Q}$ and an actual
+$Z_{X,p}\in CH^p(X)_{\mathbb Q}$ such that:
+\begin{enumerate}
+\item $\Gamma_{X,p}$ acts by ordinary Chow push-pull $N_{\Gamma}$ and its canonical Betti action $T_\Gamma$ satisfies
+$cl_X^p(N_\Gamma z)=T_\Gamma(cl_X^p(z))$ for every $z$;
+\item $T_\Gamma$ preserves $W_p(X)$;
+\item the single orbit $\{cl_X^p(Z_{X,p}),T_\Gamma cl_X^p(Z_{X,p}),\ldots\}$ spans the entire rational Hodge fiber $W_p(X)$.
+\end{enumerate}
+In particular the \emph{actual original-$X$} GST
+\texttt{NativeGSTSingleFoldOrbitLaw} holds for these two weights when the
+abstract Stage-2G Hodge data are instantiated by canonical Betti/Hodge theory
+and correspondences are interpreted in full Chow intersection theory.
+This does not assert all weights of the hypothesis.
+\end{theorem}
+
+\begin{proof}
+Write $r=\rho(X)=\dim_{\mathbb Q}NS(X)_{\mathbb Q}\ge1$.
+By the Lefschetz $(1,1)$ theorem,
+\[
+NS(X)_{\mathbb Q}\xrightarrow{\sim}W_1(X).
+\]
+Choose actual rational divisors $D_0,\ldots,D_{r-1}$ whose
+canonical classes form a rational basis of $W_1(X)$.
+The intersection form
+\[
+G_{ij}=\int_X cl_X(D_i)\cup cl_X(D_j)\cup cl_X(h)^{d-2}
+\]
+is a nondegenerate rational matrix by the Hodge index theorem.
+Let $(g^{ij})=G^{-1}\in M_r(\mathbb Q)$.
+
+For $p=1$, define genuine algebraic cycle classes
+\[
+Z_i=D_i\in CH^1(X)_{\mathbb Q},\qquad
+Y_i=\sum_{j=0}^{r-1}g^{ij}\,D_jh^{d-2}
+  \in CH^{d-1}(X)_{\mathbb Q}.
+\]
+For $p=d-1$, instead define
+\[
+Z_i=D_ih^{d-2}\in CH^{d-1}(X)_{\mathbb Q},\qquad
+Y_i=\sum_{j=0}^{r-1}g^{ij}D_j\in CH^1(X)_{\mathbb Q}.
+\]
+In both cases the projection formula and the definition of $G$ give
+\[
+\deg_X(Y_i\cdot Z_j)
+=\int_X cl_X(Y_i)\cup cl_X(Z_j)=\delta_{ij}.
+\]
+For $p=d-1$, rational hard Lefschetz yields a rational Hodge
+isomorphism $L^{d-2}:W_1(X)\cong W_{d-1}(X)$;
+therefore the $cl_X(Z_i)$ form a basis also in this weight.
+The case $d=2$ has the same construction for both choices.
+
+For all $i,j$ the genuine codimension-$d$ product correspondence
+\[
+E_{ij}:=pr_1^*Y_i\cdot pr_2^*Z_j
+\in CH^d(X\times X)_{\mathbb Q}
+\]
+is defined \emph{scheme-theoretically}. Its rational Chow action is
+\[
+N_{E_{ij}}(z)
+=pr_{2*}\bigl(pr_1^*z\cdot E_{ij}\bigr)
+=\deg_X(z\cdot Y_i)\,Z_j.
+\]
+The corresponding canonical rational Betti action is
+$T_{E_{ij}}(\beta)=
+\bigl(\int_X\beta\cup cl_X(Y_i)\bigr)\,cl_X(Z_j)$.
+Proper Gysin functoriality and multiplicativity of the canonical
+cycle map give
+$cl_X\circ N_{E_{ij}}=T_{E_{ij}}\circ cl_X$,
+with \emph{no Hodge surjectivity assumption}.
+Thus the $T_{E_{ij}}$ restrict to the full rational Hodge fiber
+as the ordinary rational matrix units.
+
+Let $\sigma(i)=i+1\pmod r$ (where $\sigma(0)=0$ when $r=1$) and form
+\[
+\boxed{\Gamma_{X,p}=
+\sum_{i=0}^{r-1} E_{i,\sigma(i)}
+\in CH^d(X\times X)_{\mathbb Q},\qquad
+Z_{X,p}:=Z_0.}
+\]
+Then the EXACT original-$X$ Chow and Betti actions satisfy
+\[
+N_{\Gamma_{X,p}}(Z_j)=Z_{\sigma(j)},\qquad
+T_{\Gamma_{X,p}}(cl_X(Z_j))=cl_X(Z_{\sigma(j)}).
+\]
+It follows inductively that for $0\le k<r$,
+\[
+T_{\Gamma_{X,p}}^k(cl_X(Z_0))=cl_X(Z_k).
+\]
+These $r$ vectors form a basis of $W_p(X)$, proving all assertions.
+\end{proof}
+
+\section{Why this is a real geometric advance, not a circular formal selector}
+The input consists only of the \emph{actual algebraic divisors} whose
+existence is independently guaranteed by Lefschetz $(1,1)$.
+The complementary cycles $Y_i$ are explicit rational Chow expressions
+in $D_i$, $h$ and the computable intersection-matrix inverse;
+the correspondence $\Gamma$ is constructed directly in the original
+$CH^d(X\times X)_{\mathbb Q}$, and the canonical Betti square is
+proven by the projection formula.
+No arbitrary weight-$p$ Hodge vector is assumed to have a cycle lift.
+
+The proof crucially uses the \emph{special} fact that the Hodge fiber
+in weights $1,d-1$ is already algebraic by classical geometry.
+It does not supply new cycles for primitive $p$ with
+$2\le p\le d-2$, and no identity here can be extended to those
+weights without independent source geometry.
+
+\section{A concrete formalization bottleneck: non-finite product fibers}
+The repo's
+\texttt{FiniteClosedCorrespondence} is restricted to finite
+set-theoretic fibers of the left projection.
+A product correspondence $Y_i\times Z_j$, for instance on
+$X=\mathbb P^2$, $d=2,p=1$, and $Y_i=Z_j=$ a projective line,
+has positive-dimensional left fibers over the points of $Y_i$:
+each such fiber is the entire projective line $Z_j$.
+It therefore fails the \emph{datatype's} finite-fiber field.
+This does \emph{not} mean the codimension-$2$ algebraic cycle
+$Y_i\times Z_j$ does not exist: it is a perfectly valid Chow
+correspondence and is the correct operation for the theorem.
+Nor does it prove no other finite correspondence realizes the
+same cohomological action. It demonstrates that the existing
+finite-fiber type is too narrow to directly encode this
+explicit construction.
+
+A full formal API must implement $CH^d(X\times X)_{\mathbb Q}$
+and its refined pullback/intersection/pushforward on
+$CH^p(X)_{\mathbb Q}$, then certify the canonical Betti
+comparison. Until that layer is represented in Lean, the
+accompanying Lean file proves the complete finite rational
+matrix-unit and cyclic-action algebra with explicit native
+intersection readouts, while this section supplies the genuine
+scheme-theoretic construction.
+
+\section{Remaining universal GST hypothesis, precisely scoped}
+For an arbitrary prescribed
+$\alpha\in W_p(X)$ with $2\le p\le d-2$,
+the desired output is a genuine $Z_\alpha\in CH^p(X)_{\mathbb Q}$
+with $cl_X(Z_\alpha)=\alpha$.
+The above cyclic correspondence does not solve that middle-degree
+geometric source existence question; no rank certificate from a
+native wave model is substituted for it.
+\end{document}
