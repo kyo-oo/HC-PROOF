@@ -6,6 +6,7 @@ on:
     paths:
       - 'GSTCardinalWorldHodgeStarPart1.lean'
       - 'GSTAllDegreeHodgeStarCMFold.lean'
+      - 'GSTCardinalAlephOneChowDescent.lean'
       - '.github/workflows/gst-owner-cardinal-hodgestar-part1.yml'
   workflow_dispatch:
 permissions:
@@ -31,9 +32,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTOwnerCardinalPart1Lib GSTAllDegreeHodgeStarCMFold
-          if lake build GSTAllDegreeHodgeStarCMFold > gst-cardinal-part1-proof.log 2>&1; then
-            echo "LEAN PASSED: cardinal-world Part1 + true all-degree GST CM Hodge Star fold"
+          python3 scripts/gst_lean_dependency_roots.py GSTOwnerCardinalPart1Lib GSTAllDegreeHodgeStarCMFold GSTCardinalAlephOneChowDescent
+          if lake build GSTAllDegreeHodgeStarCMFold GSTCardinalAlephOneChowDescent > gst-cardinal-part1-proof.log 2>&1; then
+            echo "LEAN PASSED: cardinal-world Part1 + all-degree GST CM star + aleph-one Chow profile theorem"
           else
             tail -n 160 gst-cardinal-part1-proof.log
             exit 1
