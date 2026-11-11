@@ -58,9 +58,11 @@ theorem all_generated_navigation_active
     (hBirth : BirthPreservesNavigation C physicalAddress)
     {W : C.World} (hW : C.Generated W) :
     Navigation (physicalAddress W) := by
-  apply C.generated_induction hRoots
-  intro I src target birth hSrc
-  exact hBirth birth hSrc
+  have hClosed : C.WorldClosed (fun X => Navigation (physicalAddress X)) := by
+    intro I src target birth hSrc
+    exact hBirth birth hSrc
+  exact C.generated_induction
+    (P := fun X => Navigation (physicalAddress X)) hRoots hClosed hW
 
 /-- Because every generated world activates the ORIGINAL source,
 the actual full U+J+SURVIVE fold is its F-operation. -/
