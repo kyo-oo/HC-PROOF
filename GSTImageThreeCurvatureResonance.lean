@@ -160,9 +160,11 @@ theorem resonance_half_ne_maximum_basis (a : ℚ) (n : ℕ) :
         if s = maximumCell then (1 : ℚ) else 0) := by
   intro heq
   have hz := resonance_half_orbit_maximum_zero a n
-  have hval := congrArg (fun u : WaveSignal => u maximumCell) heq
-  simp at hval
-  exact (zero_ne_one : (0 : ℚ) ≠ 1) (hz.symm.trans hval)
+  have hval : curvatureOrbit a (1 / 2) n maximumCell = (1 : ℚ) := by
+    simpa only [if_pos rfl] using
+      (congrArg (fun u : WaveSignal => u maximumCell) heq)
+  have h01 : (0 : ℚ) = 1 := hz.symm.trans hval
+  norm_num at h01
 
 /-- The source-free orbital resonance is independent of navigation
 re-coordination of other cells. -/
