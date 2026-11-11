@@ -277,4 +277,185 @@ is an exact proof for the constructed low-weight sources,
 not a substitute for constructing an algebraic representative
 of a Hodge class in a genuinely unknown higher primitive fiber.
 
+
+\section{ALL original-$X$ Hodge weights: a genuine divisor-Lefschetz Chow submotive}
+
+The outer-weight theorem actually contains an unconditional
+higher-weight construction, without assuming that arbitrary higher
+Hodge classes are algebraic.
+
+\begin{theorem}[Universal rational Chow matrix-unit projector in every weight]
+Let $X$ be as above, $d\ge2$, and let
+$1\le p\le d-1$. Let $D_i$, $h$ and the
+nondegenerate divisor intersection matrix $G$ be as before.
+For every $i=0,\ldots,r-1$ construct \emph{genuine original-$X$}
+rational Chow cycles
+\[
+Z_i^{(p)}=D_i h^{p-1}\in CH^p(X)_{\mathbb Q},
+\qquad
+Y_i^{(p)}=\sum_j g^{ij}D_j h^{d-p-1}
+\in CH^{d-p}(X)_{\mathbb Q}.
+\]
+Then
+\[
+\deg_X\bigl(Z_j^{(p)}Y_i^{(p)}\bigr)=\delta_{ij}.
+\]
+The codimension-$d$ product correspondences
+\[
+E_{ij}^{(p)}=
+pr_1^*Y_i^{(p)}\cdot pr_2^*Z_j^{(p)}
+\in CH^d(X\times X)_{\mathbb Q}
+\]
+satisfy the EXACT Chow composition rule
+\[
+\boxed{
+E_{ij}^{(p)}\circ E_{k\ell}^{(p)}
+=\delta_{i\ell}\,E_{kj}^{(p)}.
+}
+\]
+Consequently
+\[
+\Pi_p=\sum_i E_{ii}^{(p)},\quad
+R_p=\Delta_X-\Pi_p,\quad
+\Gamma_p=\sum_i E_{i,\sigma(i)}^{(p)}
+\]
+are all genuine original-$X$ rational Chow correspondences,
+and in the \emph{Chow correspondence ring}, not merely after passing to Betti,
+\[
+\boxed{\Pi_p^2=\Pi_p,\quad R_p^2=R_p,\quad
+\Pi_p R_p=R_p\Pi_p=0,\quad \Gamma_p^r=\Pi_p.}
+\]
+The Betti image of $\Pi_p$ is EXACTLY the
+$r$-dimensional algebraic Lefschetz sector
+\[
+L^{p-1}NS(X)_{\mathbb Q}\subseteq W_p(X).
+\]
+This sector has dimension $r$ because the rational hard Lefschetz
+isomorphism $L^{d-2}:H^2\to H^{2d-2}$ implies
+$L^{p-1}$ is injective on $H^2$ whenever $p\le d-1$.
+The actual correspondence $\Gamma_p$ has a cyclic
+$r$-dimensional orbit on precisely this sector.
+\end{theorem}
+
+\begin{proof}
+All displayed $Z_i,Y_i,E_{ij}$ are finite algebraic
+intersections/products and genuine Chow cycles; their definition
+requires no prior higher-weight Hodge class representative.
+The complementary degrees add to $d$, and the exponent
+$(p-1)+(d-p-1)=d-2$ gives
+$\int Z_jY_i=\sum_m g^{im}G_{mj}=\delta_{ij}$.
+
+The refined Chow product on the triple product
+$X\times X\times X$ computes
+\[
+\begin{aligned}
+E_{ij}\circ E_{k\ell}
+&=pr_{13*}(pr_{12}^*E_{k\ell}\cdot pr_{23}^*E_{ij})\\
+&=pr_1^*Y_k\cdot
+  pr_3^*Z_j\cdot
+  \deg_X(Z_\ell\cdot Y_i)
+=\delta_{i\ell}E_{kj}.
+\end{aligned}
+\]
+This is an equality in Chow, using proper pushforward and
+the projection formula, with the middle 0-cycle pushed to
+$\operatorname{Spec}\mathbb C$ by its degree.
+It does \emph{not} assert that an arbitrary degree-zero 0-cycle
+on $X$ is rationally equivalent to zero.
+The matrix-unit identities imply all projector and
+cyclic identities by finite exact rational operations.
+
+To identify the Betti image, observe directly that
+$T_{\Pi_p}(\alpha)=
+\sum_i\bigl(\int_X\alpha\cup cl(Y_i)\bigr)cl(Z_i)$.
+Every output is in the displayed algebraic Lefschetz sector,
+while the Kronecker intersection formula makes it fix each
+$cl(Z_j)$, proving equality of image and sector.
+\end{proof}
+
+\section{Prescribed-$\alpha$ original-$X$ source, constructed without a lift hypothesis}
+
+Now take the exact immutable input:
+any original smooth connected projective complex $X$ of dimension
+$d\ge2$, any integer $p$ with $1\le p\le d-1$, and an
+ARBITRARY prescribed rational Hodge class
+$\alpha\in W_p(X)$.
+
+The honest alpha-selected intersection coefficients are
+\[
+c_i(\alpha)=\int_X\alpha\cup cl_X(Y_i^{(p)})\in\mathbb Q.
+\]
+\emph{Construct directly from actual original-$X$ divisors}
+the Chow cycle
+\[
+\boxed{
+Z_{\alpha,\mathrm{Lef}}
+=\sum_i c_i(\alpha)\,Z_i^{(p)}
+\in CH^p(X)_{\mathbb Q}.
+}
+\]
+This is a concrete rational algebraic cycle for every prescribed
+$\alpha$ in every weight, with the exact CANONICAL class
+\[
+\boxed{
+cl_X(Z_{\alpha,\mathrm{Lef}})
+=T_{\Pi_p}(\alpha).
+}
+\]
+The rational residual
+\[
+\alpha_{\mathrm{res}}=\alpha-cl_X(Z_{\alpha,\mathrm{Lef}})
+=(I-T_{\Pi_p})\alpha
+\]
+is a rational $(p,p)$ class satisfying
+\[
+\int_X\alpha_{\mathrm{res}}\cup cl_X(Y_i^{(p)})=0
+\quad\text{for every }i.
+\]
+
+This is not an input $Z_\alpha$ representing the unknown class:
+it is a NEW directly written Chow expression constructed from
+known divisors whose Betti class equals the \emph{explicitly computed
+Lefschetz component} of the arbitrary target.
+It is a canonical original-$X$ partial return relative to the
+chosen ample divisor and rational divisor basis, not a hypothetical
+source selector.
+
+For $p=1$ and $p=d-1$ the Lefschetz sector is the entire Hodge
+fiber by Lefschetz $(1,1)$ and hard Lefschetz, so
+$\alpha_{\mathrm{res}}=0$ UNCONDITIONALLY and the displayed cycle
+is the complete correct original-$X$ answer.
+For an unknown higher middle weight $\alpha_{\mathrm{res}}$
+can be nonzero, possibly algebraic or nonalgebraic.
+Nothing here assumes or proves that it vanishes.
+The residual, not the already constructed Lefschetz component,
+is the input to further genuine GST source-birth experiments.
+
+\section{A genuine Chow detector gives a nonzero GST Hankel moment}
+On the displayed $r$-dimensional algebraic Lefschetz sector,
+take the \emph{actual geometric complementary cycle}
+$Y_{r-1}^{(p)}$ as the rational detector
+\[
+\ell(x)=\int_X x\cup cl_X(Y_{r-1}^{(p)}).
+\]
+For the genuine cyclic fold $T=T_{\Gamma_p}$ and seed
+$v=cl_X(Z_0^{(p)})$, the Hankel moments satisfy
+\[
+M_{ij}=\ell(T^{i+j}v)
+=\delta_{(i+j)\bmod r,\;r-1},
+\qquad 0\le i,j<r.
+\]
+Since $0\le i+j\le2r-2$, the sole possible hit is
+$i+j=r-1$; the matrix is exactly the
+anti-diagonal reversal matrix. Therefore
+\[
+\boxed{\det M=(-1)^{r(r-1)/2}\ne0.}
+\]
+This constructs a \emph{geometric detector on the original X},
+not a freely chosen dual to an unknown Hodge basis.
+The moment is nondegenerate ON THE CONSTRUCTED ALGEBRAIC
+LEFSCHETZ SECTOR. When this sector equals $W_p(X)$
+(outer weights), it discharges the full GST Hankel gate;
+in other weights it does not certify the unknown residual sector.
+
 \end{document}
