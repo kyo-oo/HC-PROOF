@@ -1,20 +1,20 @@
 (* Original GST IMAGE-3: Hodge/Poincare complement, original CM
-   J, SURVIVE M, all on the owner's 4x3 physical information carrier.
+   cmMat, SURVIVE massMat, all on the owner's 4x3 physical information carrier.
 
-   D u(c)=u(worldDual(c)), worldDual(c,d)=(3-c,2-d).
-   S u(c)=original cmSign(c) u(c) (±1).
-   Original J from GSTGraphV2CMWaveFusion is exactly S.D.
+   dualMat u(c)=u(worldDual(c)), worldDual(c,d)=(3-c,2-d).
+   phaseMat u(c)=original cmSign(c) u(c) (±1).
+   Original cmMat from GSTGraphV2CMWaveFusion is exactly phaseMat.dualMat.
 
    Exact operator relations:
-   D²=I, S²=I, J²=-I, D.J=-J.D;
-   S.M=M.S;
-   [J,M]=S.[D,M].
-   Rank[S.[D,M]]=rank[D,M]=rank[J,M]=6.
+   dualMat²=I, phaseMat²=I, cmMat²=-I, dualMat.cmMat=-cmMat.dualMat;
+   phaseMat.massMat=massMat.phaseMat;
+   [cmMat,massMat]=phaseMat.[dualMat,massMat].
+   Rank[phaseMat.[dualMat,massMat]]=rank[dualMat,massMat]=rank[cmMat,massMat]=6.
 
    All matrix entries are EXACT rationals. No metric-dependent
    analytic Hodge star or unknown Chow correspondences assumed.
 *)
-ClearAll[cells,idx,shuffle,dual,sgn,src,D,S,J,M,U,comm,result];
+ClearAll[cells,idx,shuffle,dual,sgn,src,dualMat,phaseMat,cmMat,massMat,navMat,comm,result];
 cells=Flatten[Table[{a,b},{a,0,3},{b,0,2}],1];
 idx[c_]:=First@FirstPosition[cells,c];
 shuffle[{a_,b_}]:={Quotient[a+4b,3],Mod[a+4b,3]};
@@ -23,25 +23,25 @@ sgn[{a_,b_}]:=If[MemberQ[{0,1,3,4,5,9},a+4b],1,-1];
 src[{a_,b_}]:=Module[{k=Mod[Quotient[a,2]+2b,3],l},
 l=Mod[Mod[a,2]+2k,3];
 Boole[b==2]Boole[k==2]+Boole[k==2]Boole[l==2]];
-D=Table[Boole[k==idx[dual[cells[[i]]]]],{i,12},{k,12}];
-S=DiagonalMatrix[sgn/@cells];
-J=S.D;
-U=Table[Boole[k==idx[shuffle[cells[[i]]]]],{i,12},{k,12}];
-M=DiagonalMatrix[src/@cells];
+dualMat=Table[Boole[k==idx[dual[cells[[i]]]]],{i,12},{k,12}];
+phaseMat=DiagonalMatrix[sgn/@cells];
+cmMat=phaseMat.dualMat;
+navMat=Table[Boole[k==idx[shuffle[cells[[i]]]]],{i,12},{k,12}];
+massMat=DiagonalMatrix[src/@cells];
 comm[x_,y_]:=x.y-y.x;
-result=<|"originalWorldDual2"->(D.D==IdentityMatrix[12]),
-"originalCMphase2"->(S.S==IdentityMatrix[12]),
-"originalComplexJ2"->(J.J==-IdentityMatrix[12]),
-"originalDanticommutesJ"->(D.J+J.D==ConstantArray[0,{12,12}]),
-"originalUJcommute"->(U.J==J.U),
-"originalUMsource"->(M!=ConstantArray[0,{12,12}]),
-"originalCMsignMcommute"->(S.M==M.S),
+result=<|"originalWorldDual2"->(dualMat.dualMat==IdentityMatrix[12]),
+"originalCMphase2"->(phaseMat.phaseMat==IdentityMatrix[12]),
+"originalComplexJ2"->(cmMat.cmMat==-IdentityMatrix[12]),
+"originalDanticommutesJ"->(dualMat.cmMat+cmMat.dualMat==ConstantArray[0,{12,12}]),
+"originalUJcommute"->(navMat.cmMat==cmMat.navMat),
+"originalUMsource"->(massMat!=ConstantArray[0,{12,12}]),
+"originalCMsignMcommute"->(phaseMat.massMat==massMat.phaseMat),
 "CMcurvatureSignedHodgeCurvature"->(
- comm[J,M]==S.comm[D,M]),
-"unorientedStarCurvatureRank"->MatrixRank[comm[D,M]],
-"originalCMcurvatureRank"->MatrixRank[comm[J,M]],
-"allPassed"->(D.D==IdentityMatrix[12]&&S.S==IdentityMatrix[12]&&
- J.J==-IdentityMatrix[12]&&D.J+J.D==ConstantArray[0,{12,12}]&&
- U.J==J.U&&S.M==M.S&&comm[J,M]==S.comm[D,M]&&
- MatrixRank[comm[D,M]]==6&&MatrixRank[comm[J,M]]==6)|>;
+ comm[cmMat,massMat]==phaseMat.comm[dualMat,massMat]),
+"unorientedStarCurvatureRank"->MatrixRank[comm[dualMat,massMat]],
+"originalCMcurvatureRank"->MatrixRank[comm[cmMat,massMat]],
+"allPassed"->(dualMat.dualMat==IdentityMatrix[12]&&phaseMat.phaseMat==IdentityMatrix[12]&&
+ cmMat.cmMat==-IdentityMatrix[12]&&dualMat.cmMat+cmMat.dualMat==ConstantArray[0,{12,12}]&&
+ navMat.cmMat==cmMat.navMat&&phaseMat.massMat==massMat.phaseMat&&comm[cmMat,massMat]==phaseMat.comm[dualMat,massMat]&&
+ MatrixRank[comm[dualMat,massMat]]==6&&MatrixRank[comm[cmMat,massMat]]==6)|>;
 Print[result];result
