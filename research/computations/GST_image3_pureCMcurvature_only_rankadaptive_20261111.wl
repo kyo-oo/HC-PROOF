@@ -53,7 +53,7 @@ ratmod[x_,p_]:=Mod[Numerator[x]*PowerMod[Denominator[x],-1,p],p];
 one[r_Integer?Positive,p_Integer?Positive]:=
  Module[{h=2r,aa,lams,addr,sourcePoly,co,B,interpolate,
  fmatrix,t0,t,k,km,detmod,rows,seed,fix,coeff,lamOK,
- diagZero,eigen,mi,rank,ctr,pr,full},
+ diagZero,eigen,mi,rank,ctr,pr,full,mu,van,ell,hankel},
  aa=Range[501,500+r];
  lams=Flatten[Table[{(a+1/a)/4,-(a+1/a)/4},{a,aa}]];
  addr=100(r+510)Range[0,h-1];
@@ -74,6 +74,11 @@ one[r_Integer?Positive,p_Integer?Positive]:=
    Module[{a=aa[[i]],lam=lams[[2i-1]],shift=addr[[2i-1]]},
    (CharacteristicPolynomial[(fix/.y->lam)+shift IdentityMatrix[2],z]/.
      z->shift+1+(a-1/a)/2)==0],{i,r}];
+ mu=Table[addr[[2i-1]]+1+(aa[[i]]-1/aa[[i]])/2,{i,r}];
+ van=Table[mu[[k]]^j,{k,r},{j,0,r-1}];
+ ell=UnitVector[r,r].Inverse[van];
+ hankel=Table[Sum[ell[[k]]*mu[[k]]^(i+j),{k,r}],
+   {i,0,r-1},{j,0,r-1}];
  km=kr[Map[ratmod[#,p]&,t,{2}],Map[ratmod[#,p]&,seed],12h];
  detmod=Det[km,Modulus->p];
  ctr=Map[ratmod[#,p]&,co,{2}];
@@ -86,12 +91,17 @@ one[r_Integer?Positive,p_Integer?Positive]:=
    "interpolationAddressesExact"->(co.B==B.co&&
      And@@MapThread[(interpolate/.x->#1)==#2&,{lams,addr}]),
    "rankRFixedCMRationalEigenvalues"->And@@eigen,
+   "rankRQuotientVandermondeDet"->Det[van],
+   "rankRCanonicalHankelDet"->Det[hankel],
+   "rankRExpectedHankelDet"->(-1)^(r(r-1)/2),
+   "rankRHankelVerified"->(Det[van]!=0&&Det[hankel]==(-1)^(r(r-1)/2)),
    "fullNativeKrylovDetModP"->detmod,
    "fullNativeCyclicModuloP"->(detmod!=0),
    "allPassed"->(lamOK&&diagZero&&
      JJ.curv+curv.JJ==ConstantArray[0,{12,12}]&&
      CharacteristicPolynomial[co,x]===sourcePoly&&
-     And@@eigen&&detmod!=0)|>
+     And@@eigen&&detmod!=0 &&
+     Det[van]!=0&&Det[hankel]==(-1)^(r(r-1)/2))|>
  ];
 det12=Det[kr[UU+JJ+tt curv,originalSeed,12]];
 all={one[1,1009],one[2,1009]};
