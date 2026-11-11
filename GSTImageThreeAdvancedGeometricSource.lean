@@ -104,12 +104,14 @@ theorem closedCurvatureWord_betti
       G.JM.cohomologyOperator alpha =
         G.J.cohomologyOperator (G.M.cohomologyOperator alpha) := by
     have h := LinearMap.congr_fun G.JM_betti alpha
-    simpa only [LinearMap.comp_apply] using h
+    simpa only [RealizedFiniteClosedCorrespondence.operatorPair_cohomology,
+      LinearMap.comp_apply] using h
   have hMJ :
       G.MJ.cohomologyOperator alpha =
         G.M.cohomologyOperator (G.J.cohomologyOperator alpha) := by
     have h := LinearMap.congr_fun G.MJ_betti alpha
-    simpa only [LinearMap.comp_apply] using h
+    simpa only [RealizedFiniteClosedCorrespondence.operatorPair_cohomology,
+      LinearMap.comp_apply] using h
   simp [closedCurvatureWord, realizedWordPair,
     CycleClassOperatorPair.add, CycleClassOperatorPair.smul,
     CycleClassOperatorPair.zero, geometricCurvatureF, cmSourcePair,
