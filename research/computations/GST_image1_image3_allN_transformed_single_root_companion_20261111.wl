@@ -37,7 +37,7 @@ j=Table[sign[cells[[i]]]*Boole[k==idx[mir[cells[[i]]]]],{i,12},{k,12}];
 m=DiagonalMatrix[source/@cells];id12=IdentityMatrix[12];
 v=Boole[MemberQ[{{0,0},{0,1}},#]]&/@cells;
 run[lambda_List]:=Module[
- {h=Length[lambda],p,co,sourceC,addressB,F,root,expanded,n,K,Kexpanded,
+ {h=Length[lambda],p,co,sourceC,addressB,foldMat,root,expanded,n,K,expandedKrylov,
   orbitNew,probe,detI,specFactors,checked},
  p=Expand[Times@@(x-#&/@lambda)];co=CoefficientList[p,x];
  sourceC=ConstantArray[0,{h,h}];
@@ -47,23 +47,23 @@ run[lambda_List]:=Module[
    Table[(sourceC-lambda[[jj]] IdentityMatrix[h])/
       (lambda[[i]]-lambda[[jj]]),
       {jj,Complement[Range[h],{i}]}]],{i,1,h}];
- F=KroneckerProduct[IdentityMatrix[h],u+j]+
+ foldMat=KroneckerProduct[IdentityMatrix[h],u+j]+
    KroneckerProduct[sourceC,m]+
    KroneckerProduct[addressB,id12];
  root=Join[v,ConstantArray[0,12(h-1)]];
- expanded=root+F.root; n=12h;
- K=Transpose[NestList[F.#&,root,n-1]];
- Kexpanded=Transpose[NestList[F.#&,expanded,n-1]];
- detI=Det[IdentityMatrix[n]+F];
+ expanded=root+foldMat.root; n=12h;
+ K=Transpose[NestList[foldMat.#&,root,n-1]];
+ expandedKrylov=Transpose[NestList[foldMat.#&,expanded,n-1]];
+ detI=Det[IdentityMatrix[n]+foldMat];
  specFactors=Product[Det[(1+10(i-1))*id12+u+j+lambda[[i]]m],
    {i,1,h}];
- checked=(Kexpanded==(IdentityMatrix[n]+F).K);
- orbitNew=NestList[F.#&,expanded,n-1];
- probe=LinearSolve[Transpose[Kexpanded],UnitVector[n,n]];
+ checked=(expandedKrylov==(IdentityMatrix[n]+foldMat).K);
+ orbitNew=NestList[foldMat.#&,expanded,n-1];
+ probe=LinearSolve[Transpose[expandedKrylov],UnitVector[n,n]];
  <|"h"->h,"lambda"->lambda,"noLocalOriginalSurviveSource"->(
   Diagonal[sourceC]==ConstantArray[0,h]),
  "oneRootOriginalFullRank"->(MatrixRank[K]==n),
- "expandedImage1FullRank"->(MatrixRank[Kexpanded]==n),
+ "expandedImage1FullRank"->(MatrixRank[expandedKrylov]==n),
  "exactImage1KrylovMatrixIdentity"->checked,
  "detIplusNativeFullFNonzero"->(detI!=0),
  "exactSpectralBlockFactorization"->(detI==specFactors),
@@ -72,7 +72,7 @@ run[lambda_List]:=Module[
   (probe.#&/@orbitNew)==Join[ConstantArray[0,n-1],{1}]),
  "allPassed"->(Total[lambda]==0&&
   Diagonal[sourceC]==ConstantArray[0,h]&&
-  MatrixRank[K]==n&&MatrixRank[Kexpanded]==n&&checked&&
+  MatrixRank[K]==n&&MatrixRank[expandedKrylov]==n&&checked&&
   detI!=0&&detI==specFactors&&
   (probe.#&/@orbitNew)==Join[ConstantArray[0,n-1],{1}])|>];
 rows={run[{1/2,-1/2}],run[{1/2,1/3,-5/6}]};
