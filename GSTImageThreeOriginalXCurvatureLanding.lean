@@ -4,7 +4,7 @@ import GSTImageThreeCurvatureResonance
 import Mathlib
 
 /-!
-# GST image-3 — TRUE ORIGINAL-X native CM-commutator F compiler
+# GST image-3 — original-X cycle-class operator compiler; geometric witnesses separate
 
 This extension faithfully uses the OWNER'S ORIGINAL geometric
 CycleClassOperatorPair and nativeCurvatureCycle semantics, plus its
@@ -39,8 +39,9 @@ variable {V : SmoothProjectiveComplexScheme}
 variable {H : HodgeBigradedBettiData V}
 variable {p : Nat}
 
-/-- The TRUE new original-X algebraic source is the CM/source
-commutator of two already certified genuine native operators. -/
+/-- A cycle-class-compatible original-X SOURCE OPERATOR from the CM/source
+commutator of GIVEN rational native and Betti endomorphisms.
+This record does NOT by itself supply a closed geometric correspondence. -/
 def cmSourcePair
     (J M : CycleClassOperatorPair V H p) :
     CycleClassOperatorPair V H p where
@@ -57,7 +58,7 @@ def cmSourcePair
       J.cycleClass_cycleOperator, M.cycleClass_cycleOperator]
 
 /-- Original-X version of the new TWO-PARAMETER native GST source,
-with completely genuine Chow/Betti correspondence semantics. -/
+with exact cycle-class-operator naturality semantics (not a constructed correspondence cycle). -/
 def geometricCurvatureF
     (U J M : CycleClassOperatorPair V H p)
     (a b : ℚ) : CycleClassOperatorPair V H p where
@@ -76,9 +77,9 @@ def geometricCurvatureF
       M.cycleClass_cycleOperator,
       (cmSourcePair J M).cycleClass_cycleOperator]
 
-/-- The new GST curvature-only F=U+J+[J,M] has a genuine canonical
-original-X native cycle-class realization as soon as its
-geometric U,J,M inputs are supplied. -/
+/-- The new GST curvature-only F=U+J+[J,M] has an original-X
+cycle-class-compatible operator realization once U,J,M pairs are supplied.
+A separate finite closed correspondence witness is not implied. -/
 def geometricCurvatureOnlyF
     (U J M : CycleClassOperatorPair V H p) :
     CycleClassOperatorPair V H p :=
@@ -106,9 +107,9 @@ theorem geometricCurvatureF_canonicalClass
         (H.cycleClass p Z) :=
   (geometricCurvatureF U J M a b).cycleClass_cycleOperator Z
 
-/-- This is TRUE native Chow source birth, conditional on the
-existence of genuine original-X U/J/M operators, but not on
-any artificial target Hodge-class inverse. -/
+/-- Exact cycle-class naturality, CONDITIONAL on the given native U/J/M
+operator pairs; neither a new Chow correspondence nor a Hodge class basis
+is manufactured by this equality. -/
 theorem geometricCurvatureOnlyF_canonicalClass
     (U J M : CycleClassOperatorPair V H p)
     (Z : codimensionCycles V.X p) :
@@ -116,6 +117,40 @@ theorem geometricCurvatureOnlyF_canonicalClass
       (geometricCurvatureOnlyF U J M).cohomologyOperator
         (H.cycleClass p Z) :=
   (geometricCurvatureOnlyF U J M).cycleClass_cycleOperator Z
+
+/-! ## SOURCE-IMAGE SATURATION FIREWALL
+
+A genuine cycle-class square preserves the EXISTING algebraic cycle-class
+image, including under all original CM curvature commutators. This blocks
+the incorrect promotion of a 12-state native rank calculation into a new
+original-X algebraic Hodge direction.
+-/
+
+/-- The CM commutator preserves the full actual algebraic cycle-class range
+for every supplied original-X naturality pair J,M. -/
+theorem cmSourcePair_preserves_algebraic_range
+    (J M : CycleClassOperatorPair V H p) :
+    ∀ alpha,
+      alpha ∈ LinearMap.range (H.cycleClass p) →
+      (cmSourcePair J M).cohomologyOperator alpha ∈
+        LinearMap.range (H.cycleClass p) :=
+  (cmSourcePair J M).cycleClass_range_stable
+
+/-- The ENTIRE two-parameter F family preserves the same full algebraic
+image, for every rational direct strength a and curvature strength b.
+It may enlarge an earlier finite algebraic frame, but cannot escape the
+full current algebraic cycle-class range by operator iteration alone. -/
+theorem geometricCurvatureF_preserves_algebraic_range
+    (U J M : CycleClassOperatorPair V H p) (a b : ℚ) :
+    ∀ alpha,
+      alpha ∈ LinearMap.range (H.cycleClass p) →
+      (geometricCurvatureF U J M a b).cohomologyOperator alpha ∈
+        LinearMap.range (H.cycleClass p) :=
+  (geometricCurvatureF U J M a b).cycleClass_range_stable
+
+#check cmSourcePair_preserves_algebraic_range
+#check geometricCurvatureF_preserves_algebraic_range
+#print axioms geometricCurvatureF_preserves_algebraic_range
 
 #check cmSourcePair
 #check geometricCurvatureF
