@@ -17,7 +17,7 @@ SURVIVE diagonal operator `M`, and original mixed seed
 The SOURCE operation studied here is
 
 \[
-C=[J,M]=JM-MJ,\qquad F_{a,b}=U+J+aM+bC,\quad a,b\\in\\mathbb Q.
+C=[J,M]=JM-MJ,\qquad F_{a,b}=U+J+aM+bC,\quad a,b\in\mathbb Q.
 \]
 
 No outside auxiliary signal matrix or presumed Hodge-to-Chow inverse is used.
@@ -58,7 +58,7 @@ The fixed-block characteristic polynomial and discriminant are
 
 \[
 \chi_2(x)=x^2-(2+2a)x+(2+2a-4b^2),\quad
-\\Delta=4(a^2-1+4b^2).
+\Delta=4(a^2-1+4b^2).
 \]
 
 Even at repeated eigenvalues (`Delta=0`), the fixed-block cyclic
@@ -89,7 +89,7 @@ Then for **all** rational `a,b`,
 (2b-1),\det K_{10}(D_{a,b},v_{10}),
 \operatorname{Res}_x(\chi_{A_{a,b}},\chi_{D_{a,b}})
 }.
-\\tag{*}
+\tag{*}
 \]
 
 **Reason:** over an algebraic closure, on the Zariski-dense locus
@@ -220,7 +220,7 @@ Set the ORIGINAL CM source strength to `b=1` and let the direct
 SURVIVE coefficient `a` be an ARBITRARY rational number:
 
 \[
-F_a=U+J+aM+[J,M],\quad a\\in\\mathbb Q.
+F_a=U+J+aM+[J,M],\quad a\in\mathbb Q.
 \]
 
 The fixed-pair determinant is `2b-1=1` for every a.
@@ -279,10 +279,10 @@ This proves the NEW quantified native theorem:
 
 \[
 \boxed{
-\\forall a\\in\\mathbb Q,\quad
-\operatorname{rank}_{\\mathbb Q}
+\forall a\in\mathbb Q,\quad
+\operatorname{rank}_{\mathbb Q}
 [v,F_av,\ldots,F_a^{11}v]=12
-\quad\\text{for }F_a=U+J+aM+[J,M].
+\quad\text{for }F_a=U+J+aM+[J,M].
 }
 \]
 
@@ -363,7 +363,7 @@ carrier `V^h`, define
 
 \[
 T_{a,h}:=\bigoplus_{i=0}^{h-1}
-       \left(F_a+iS(a)I_{12}\\right),
+       \left(F_a+iS(a)I_{12}\right),
 \qquad v_h=(v,v,\ldots,v).
 \]
 
@@ -376,8 +376,8 @@ single all-hole seed `v_h` has degree `12h`. Therefore
 
 \[
 \boxed{
-\\forall a\\in\\mathbb Q;\\forall h\\in\\mathbb N_{>0},\quad
-dim_{\\mathbb Q}\operatorname{span}{
+\forall a\in\mathbb Q;\forall h\in\mathbb N_{>0},\quad
+dim_{\mathbb Q}\operatorname{span}{
 v_h,T_{a,h}v_h,\ldots,T_{a,h}^{12h-1}v_h
 }=12h.
 }
@@ -446,12 +446,12 @@ Thus EXACTLY
 The genuinely exhaustive mod-19 computations give
 
 \[
-Q_8(0),\ldots,Q_8(18)\\pmod{19}
+Q_8(0),\ldots,Q_8(18)\pmod{19}
 =(9,10,7,10,6,4,11,3,11,4,10,3,14,11,4,13,11,10,1),
 \]
 
 \[
-Q_9(0),\ldots,Q_9(18)\\pmod{19}
+Q_9(0),\ldots,Q_9(18)\pmod{19}
 =(16,15,15,5,2,1,18,5,7,8,10,16,13,7,10,18,12,13,18).
 \]
 
@@ -463,8 +463,8 @@ at a=0 or a=-1. Therefore
 
 \[
 \boxed{
-\\forall a\\in\\mathbb Q,\quad
-dim_\\mathbb Qoperatorname{span}
+\forall a\in\mathbb Q,\quad
+dim_\mathbb Qoperatorname{span}
   (v,F_{a,0}v,\ldots,F_{a,0}^{11}v)=12
 \iff a
 otin{0,-1}.
@@ -494,13 +494,13 @@ classification (section 12):
 
 \[
 \boxed{
-\\forall R\\in\\mathbb N, \\forall a\\in\\mathbb Q,\quad
-\operatorname{rank}_\\mathbb Q
+\forall R\in\mathbb N, \forall a\in\mathbb Q,\quad
+\operatorname{rank}_\mathbb Q
 K_{12}(F_{a,\operatorname{navigationCharge}(R)},v)=12
 \iff
-\\big(\operatorname{Navigation}(R)\lor(a
+\big(\operatorname{Navigation}(R)\lor(a
 e0land a
-e-1)\\big).
+e-1)\big).
 }
 \]
 
@@ -521,7 +521,7 @@ rational direct source strength `a_i:Q` for EACH actual N-hole
 assume exactly the genuinely necessary native single-hole condition
 
 \[
-\\forall i<h,\quad
+\forall i<h,\quad
 \operatorname{Navigation}(R_i) \lor(a_i
 e0land a_i
 e-1).
@@ -544,13 +544,13 @@ per row. Thus
 
 \[
 |F_{a_i,b_i}|_inftyle B
-\quad\\text{for each true }b_iin{0,1}.
+\quad\text{for each true }b_iin{0,1}.
 \]
 
 The single global native N-hole fold is
 
 \[
-T=\bigoplus_{i<h}\\big(F_{a_i,b_i}+iS,I_{12}\\big)
+T=\bigoplus_{i<h}\big(F_{a_i,b_i}+iS,I_{12}\big)
 \]
 
 on the **original** `h` independent twelve-cell sources, with ONE
@@ -567,7 +567,7 @@ the individual degree-twelve annihilators. Its degree is therefore
 
 \[
 \boxed{
-dim_\\mathbb Qoperatorname{span}
+dim_\mathbb Qoperatorname{span}
 {v_h,Tv_h,\ldots,T^{12h-1}v_h}=12h.
 }
 \]
