@@ -337,3 +337,70 @@ for direct source strengths `a=0,...,10`, exactly matching the
 product of the independently specified `Q8(a)*Q12(a)` at every residue.
 This is a separate finite-field implementation check and does not
 replace the integer polynomial derivation or rational-root argument.
+
+
+## 11. NEW: ALL RATIONAL SOURCE STRENGTHS, ALL FINITE N-HOLE TOWERS
+
+The all-rational unit-curvature result of section 8 is not confined to
+one 12-state Wave-II hole. For any rational `a`, define the exact
+native row-sum bound and **adaptive** rational navigation spacing
+
+[
+R(a)=4+2|a|,qquad S(a)=9+4|a|=2R(a)+1.
+]
+
+Because each row of `U` has one unit entry, each row of `J` one
+signed unit entry, `|M_(s,s)|≤2`, and the original commutator
+`[J,M]` has at most one entry of absolute value ≤2 in each row,
+the induced maximum absolute row-sum norm satisfies
+
+[
+|F_a|_inftyle R(a).
+]
+
+For **every finite h>=1**, retain the original N-hole direct-sum
+carrier `V^h`, define
+
+[
+T_{a,h}:=igoplus_{i=0}^{h-1}
+       left(F_a+iS(a)I_{12}ight),
+qquad v_h=(v,v,ldots,v).
+]
+
+Each individual block is cyclic over Q by section 8. Every complex
+eigenvalue of `F_a` obeys `|λ| ≤ R(a)`. Distinct shifted blocks
+have disjoint spectral discs because `S(a)>2R(a)`.
+Their characteristic/minimal polynomials are therefore pairwise
+coprime over Q. Polynomial CRT implies that the annihilator of the
+single all-hole seed `v_h` has degree `12h`. Therefore
+
+[
+oxed{
+orall ainmathbb Q;orall hinmathbb N_{>0},quad
+dim_{mathbb Q}operatorname{span}{
+v_h,T_{a,h}v_h,ldots,T_{a,h}^{12h-1}v_h
+}=12h.
+}
+]
+
+The vacuum h=0 is covered separately and trivially has rank0.
+
+This extends the previous fixed-spacing full-N result: the OLD
+spacing 20 was only verified at bounded direct-source amplitudes,
+whereas this adaptive formula works uniformly for UNBOUNDED rational
+`a`. The extra shift remains a rational ORIGINAL N-hole navigation
+address; no unknown Hodge basis or external source is introduced.
+
+New exact Wolfram checks recomputed the original 12×12 row norms for
+`a∈{-10,-1,0,1,13/7,100}` and found the claimed bound and
+spectral separation in every case, plus full exact 24-state rank at
+`a=0,h=2,S=9`. These computations are diagnostic; the
+**all-a, all-h assertion follows from the rational-root certificate,
+norm inequality, and polynomial CRT argument**, not from six tests.
+
+**Crucial restriction:** the rank `12h` is in the GST native N-hole
+rational source space. It is NOT a statement that the canonical
+rational Hodge group of every smooth projective X has an actual
+algebraic class represented by each of these directions. The true
+original-X geometric landing and actual Chow source of each
+independent target direction require independent construction.
