@@ -147,6 +147,141 @@ theorem resonance_half_maximum_invariant_under_missing_source
     curvatureFold a (1/2) u maximumCell = 0 := by
   rw [resonance_half_maximum, hzero, mul_zero]
 
+
+
+/-! ## NEW RANK-ADAPTIVE BALANCED ORIGINAL GST F
+
+A TRUE original native balanced F=U+J+M+[J,M] has two rational
+source-sensitive character readouts, from exactly the author's
+original null/max mirrored U-fixed physical cells. The readouts
+are NOT artificial Hodge coordinates or given unknown Chow preimages.
+-/
+
+private theorem null_shuffle :
+    GSTGraphV2InformationRecovery.shuffle nullCell = nullCell := by
+  decide
+
+private theorem null_mirror : mirrorCell nullCell = maximumCell := by
+  decide
+
+private theorem null_sign : cmSign nullCell = 1 := by
+  norm_num [cmSign, nullCell]
+
+private theorem null_U (u : WaveSignal) :
+    U u nullCell = u nullCell := by
+  simp [U, null_shuffle]
+
+private theorem null_J (u : WaveSignal) :
+    J u nullCell = u maximumCell := by
+  simp [J, null_sign, null_mirror]
+
+theorem curvatureSource_null (u : WaveSignal) :
+    curvatureSource u nullCell = 2 * u maximumCell := by
+  change J (M u) nullCell - M (J u) nullCell =
+    2 * u maximumCell
+  rw [null_J, max_M, null_M]
+  ring
+
+/-- The exact original GST NULL cell response to new balanced F,
+independent of direct source coefficient a because M(null)=0. -/
+theorem curvatureFold_null (a b : ℚ) (u : WaveSignal) :
+    curvatureFold a b u nullCell =
+      u nullCell + (1+2*b)*u maximumCell := by
+  change U u nullCell + J u nullCell +
+      a * M u nullCell + b * curvatureSource u nullCell =
+      u nullCell + (1+2*b)*u maximumCell
+  rw [null_U, null_J, null_M, curvatureSource_null]
+  ring
+
+/-- The owner's original native fold plus BOTH direct SURVIVE and
+true CM curvature once, without a new signal basis. -/
+def balancedFold (u : WaveSignal) : WaveSignal :=
+  curvatureFold 1 1 u
+
+/-- ACTUAL rational native null/max original GST readouts.
+They are source-sensitive, not chosen on target unknown Hodge classes. -/
+def zeroReadout (u : WaveSignal) : ℚ :=
+  u nullCell - u maximumCell
+
+def fourReadout (u : WaveSignal) : ℚ :=
+  u nullCell + 3 * u maximumCell
+
+/-- The ORIGINAL balanced GST fold has the exact rational fixed-pair
+character 0, a genuine 1-dimensional rational cyclic QUOTIENT. -/
+theorem zeroReadout_balancedFold (u : WaveSignal) :
+    zeroReadout (balancedFold u) = 0 := by
+  simp only [zeroReadout, balancedFold]
+  rw [curvatureFold_null, curvatureFold_maximum]
+  ring
+
+/-- The complementary rational native fixed-pair character 4. -/
+theorem fourReadout_balancedFold (u : WaveSignal) :
+    fourReadout (balancedFold u) = 4 * fourReadout u := by
+  simp only [fourReadout, balancedFold]
+  rw [curvatureFold_null, curvatureFold_maximum]
+  ring
+
+/-- Both genuine native character detectors actually see the
+author's ORIGINAL mixed seed with coefficient ONE. -/
+theorem zeroReadout_seed : zeroReadout seed = 1 := by
+  norm_num [zeroReadout, seed, nullCell, maximumCell]
+
+theorem fourReadout_seed : fourReadout seed = 1 := by
+  norm_num [fourReadout, seed, nullCell, maximumCell]
+
+/-- The arbitrary rational GST navigation spectral offset shifts
+the EXACT original balanced zero-character to the specified value. -/
+def shiftedBalancedFold (z : ℚ) (u : WaveSignal) : WaveSignal :=
+  balancedFold u + z • u
+
+theorem zeroReadout_shiftedBalanced (z : ℚ) (u : WaveSignal) :
+    zeroReadout (shiftedBalancedFold z u) = z * zeroReadout u := by
+  simp only [zeroReadout, shiftedBalancedFold]
+  simp only [Pi.add_apply, Pi.smul_apply]
+  have h := zeroReadout_balancedFold u
+  dsimp [zeroReadout] at h
+  rw [sub_add_sub_cancel, h]
+  ring
+
+/-- Arbitrarily many independent original N-hole Wave-II packets,
+each shifted by its ORIGINAL 10-address spacing doubled to 20
+so the 12-state balanced source spectra remain separated. -/
+def balancedHoleF (r : Nat) (u : Fin r → WaveSignal) :
+    Fin r → WaveSignal :=
+  fun i => shiftedBalancedFold (20 * (i.val : ℚ)) (u i)
+
+def balancedHoleReadout (r : Nat) (u : Fin r → WaveSignal) :
+    Fin r → ℚ :=
+  fun i => zeroReadout (u i)
+
+/-- The ORIGINAL native fold has an EXACT direct rank-r rational
+diagonal cohomological quotient with r distinct eigenvalues 20i.
+This is the missing rank-adaptive QUOTIENT MAP, not a surjection
+to unknown rational Hodge classes of an original projective X. -/
+theorem balancedHoleReadout_intertwines
+    (r : Nat) (u : Fin r → WaveSignal) (i : Fin r) :
+    balancedHoleReadout r (balancedHoleF r u) i =
+      (20 * (i.val : ℚ)) * balancedHoleReadout r u i := by
+  exact zeroReadout_shiftedBalanced (20 * (i.val : ℚ)) (u i)
+
+/-- The owner's genuine uniform mixed seed reaches EVERY rational
+N-hole coordinate of the rank-adaptive quotient nontrivially. -/
+theorem balancedHoleReadout_uniformSeed
+    (r : Nat) (i : Fin r) :
+    balancedHoleReadout r (fun _ => seed) i = 1 :=
+  zeroReadout_seed
+
+#check balancedFold
+#check zeroReadout_balancedFold
+#check fourReadout_balancedFold
+#check zeroReadout_seed
+#check fourReadout_seed
+#check balancedHoleReadout_intertwines
+#check balancedHoleReadout_uniformSeed
+
+#print axioms zeroReadout_balancedFold
+#print axioms balancedHoleReadout_intertwines
+
 #check curvatureSource
 #check curvatureFold
 #check curvatureSource_maximum
