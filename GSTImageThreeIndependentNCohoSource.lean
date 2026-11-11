@@ -27,6 +27,7 @@ noncomputable section
 namespace GSTImageThreeIndependentNCohoSource
 
 open GSTImageThreeCurvatureResonance
+open GSTGraphV2CMWaveFusion
 
 /-- One original twelve-cell source for EACH actual NShape hole. -/
 abbrev OriginalWaveHoles (s : GSTNCohomology.NShape) :=
