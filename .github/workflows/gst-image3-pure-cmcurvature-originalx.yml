@@ -8,6 +8,8 @@ on:
       - 'GSTImageThreePureCMCurvatureNative.lean'
       - 'GSTImageThreePureCMOriginalXLanding.lean'
       - 'GSTImageThreeCMGeometricLandingCriterion.lean'
+      - 'GSTImageThreePureCMGeometricBornDirections.lean'
+      - 'GSTImageThreePureCMGeometricFullGate.lean'
       - '.github/workflows/gst-image3-pure-cmcurvature-originalx.yml'
   workflow_dispatch:
 
@@ -42,9 +44,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTPureCMCurvatureOriginalX GSTImageThreeCMGeometricLandingCriterion
-          if timeout 6700 lake build GSTImageThreeCMGeometricLandingCriterion > gst-image3-purecm-geometry.log 2>&1; then
-            echo "LEAN PASSED: original true CM-only native source, geometric all-N class square, and exact surjective cyclic landing criterion"
+          python3 scripts/gst_lean_dependency_roots.py GSTPureCMCurvatureOriginalX GSTImageThreePureCMGeometricFullGate
+          if timeout 6700 lake build GSTImageThreePureCMGeometricFullGate > gst-image3-purecm-geometry.log 2>&1; then
+            echo "LEAN PASSED: original true CM-only native source, geometric all-N class square, first-layer source birth with geometric detectors and exact surjective cyclic landing criterion"
           else
             grep -nE 'error:|sorryAx|unknown identifier|unsolved goals|failed to synthesize' gst-image3-purecm-geometry.log | tail -n 120 || true
             tail -n 140 gst-image3-purecm-geometry.log || true
