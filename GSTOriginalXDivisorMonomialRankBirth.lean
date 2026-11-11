@@ -64,6 +64,8 @@ variable {κ : Type*} [Fintype κ] [DecidableEq κ]
 variable (D : OriginalMonomialPairing I J A B)
 variable (src : κ → I) (detIdx : κ → J)
 
+namespace OriginalMonomialPairing
+
 /-- Actual original-X intersection MINOR for selected algebraic
 codimension-p source and complementary Chow cycles. -/
 def intersectionMinor : Matrix κ κ ℚ :=
@@ -144,5 +146,7 @@ theorem prescribed_original_GST_wave_square
 #check prescribed_original_GST_wave_square
 #print axioms originalXSourceFrame
 #print axioms prescribed_original_GST_wave_square
+
+end OriginalMonomialPairing
 
 end GSTOriginalXDivisorMonomialRankBirth
