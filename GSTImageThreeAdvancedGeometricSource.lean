@@ -73,26 +73,48 @@ theorem closedCurvatureWord_cycle
     (G : ClosedCurvatureGeometry V H p) (a b : ℚ) :
     (realizedWordPair (closedCurvatureWord G a b)).cycleOperator =
       (geometricCurvatureF G.U.operatorPair G.J.operatorPair G.M.operatorPair a b).cycleOperator := by
-  ext z
+  apply LinearMap.ext
+  intro z
+  have hJM :
+      G.JM.geometry.nativeOperator p z =
+        G.J.geometry.nativeOperator p (G.M.geometry.nativeOperator p z) := by
+    have h := LinearMap.congr_fun G.JM_native z
+    simpa only [RealizedFiniteClosedCorrespondence.operatorPair_cycle,
+      LinearMap.comp_apply] using h
+  have hMJ :
+      G.MJ.geometry.nativeOperator p z =
+        G.M.geometry.nativeOperator p (G.J.geometry.nativeOperator p z) := by
+    have h := LinearMap.congr_fun G.MJ_native z
+    simpa only [RealizedFiniteClosedCorrespondence.operatorPair_cycle,
+      LinearMap.comp_apply] using h
   simp [closedCurvatureWord, realizedWordPair,
     CycleClassOperatorPair.add, CycleClassOperatorPair.smul,
     CycleClassOperatorPair.zero, geometricCurvatureF, cmSourcePair,
     LinearMap.add_apply, LinearMap.smul_apply, LinearMap.comp_apply,
-    LinearMap.sub_apply, G.JM_native, G.MJ_native,
-    neg_smul, smul_sub] <;> abel_nf
+    LinearMap.sub_apply, hJM, hMJ, neg_smul, smul_sub] <;> abel_nf
 
 /-- Independent matching rational Betti equation for the SAME geometric word. -/
 theorem closedCurvatureWord_betti
     (G : ClosedCurvatureGeometry V H p) (a b : ℚ) :
     (realizedWordPair (closedCurvatureWord G a b)).cohomologyOperator =
       (geometricCurvatureF G.U.operatorPair G.J.operatorPair G.M.operatorPair a b).cohomologyOperator := by
-  ext alpha
+  apply LinearMap.ext
+  intro alpha
+  have hJM :
+      G.JM.cohomologyOperator alpha =
+        G.J.cohomologyOperator (G.M.cohomologyOperator alpha) := by
+    have h := LinearMap.congr_fun G.JM_betti alpha
+    simpa only [LinearMap.comp_apply] using h
+  have hMJ :
+      G.MJ.cohomologyOperator alpha =
+        G.M.cohomologyOperator (G.J.cohomologyOperator alpha) := by
+    have h := LinearMap.congr_fun G.MJ_betti alpha
+    simpa only [LinearMap.comp_apply] using h
   simp [closedCurvatureWord, realizedWordPair,
     CycleClassOperatorPair.add, CycleClassOperatorPair.smul,
     CycleClassOperatorPair.zero, geometricCurvatureF, cmSourcePair,
     LinearMap.add_apply, LinearMap.smul_apply, LinearMap.comp_apply,
-    LinearMap.sub_apply, G.JM_betti, G.MJ_betti,
-    neg_smul, smul_sub] <;> abel_nf
+    LinearMap.sub_apply, hJM, hMJ, neg_smul, smul_sub] <;> abel_nf
 
 /-- True original-X cycle class naturality for the five-atom geometric F. -/
 theorem closedCurvatureWord_class
