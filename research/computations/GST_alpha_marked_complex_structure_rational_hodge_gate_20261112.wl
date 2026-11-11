@@ -10,7 +10,7 @@
 
    Independently test the 1-parameter positive-imaginary t slice,
    every rational cross-(1,1) class, and the native attempt of using
-   Hodge projection P_t=(Id+J_t^*)/2.
+   Hodge projection P_t=(Id+pullback_J_t)/2.
    EXACT rational-symbolic arithmetic, no floating point.
    This is a counterexample to AUTOMATIC infinite Hodge-preserving
    deformations, NOT a Hodge conjecture counterexample; original
