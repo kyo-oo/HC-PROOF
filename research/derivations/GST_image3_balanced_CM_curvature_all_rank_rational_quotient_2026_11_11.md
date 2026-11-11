@@ -126,3 +126,18 @@ A promising future genuinely geometric strategy is to construct canonical cycle-
 ## Evidence caveat
 
 The earlier exact Wolfram evaluation of original B computed native rank12, determinant -445265540949, fixed block {{1,3},{1,3}}, both character identities and source coefficients 1. A direct separate Wolfram Vandermonde evaluation for r=1..6 returned the exact determinants above; the r=4 case was independently checked. The committed larger combined verification file \`research/computations/GST_image3_balanced_curvature_rational_eigencharacter_all_r_20261111.wl\` encountered an internal Wolfram service error on full verbatim re-execution despite the successful smaller component computations. Do not misreport that full script as having passed; the stated mathematical identities have independent actual exact tool evidence.
+
+
+## 6. NEW necessary geometric compatibility rule: odd-rank rational Hodge spaces cannot carry the uncompressed CM J
+
+The original owner's native CM mirror satisfies J²=-I on a 12-dimensional rational signal space. A **genuine** rational representation of J with this unchanged relation on a target rational Hodge fiber W of dimension n would force n to be EVEN. Indeed
+\[
+(\det_{\mathbb Q} J)^2=\det_{\mathbb Q}(J^2)=(-1)^n.
+\]
+If n is odd, the right-hand side is -1, impossible for the square of any rational number. Thus attempting to demand a UNITAL faithful original \(J^2=-I\) representation on every possible odd-dimensional \(W_p(X)\) would be a genuine geometric obstruction **created by the type of realization**, not a refutation of the author's GST Hodge hypothesis.
+
+The NEW balanced GST rank-adaptive quotient solves this **internal algebraic** compatibility obstacle correctly: it only demands descent of the COMBINED true original \(B=U+J+M+[J,M]\). Its rational quotient has any dimension r (including odd r), while the individual native complex operator J generally does NOT descend through the \(\ell_0\)-kernel. No invalid 1-dimensional rational complex structure is required.
+
+For the universal original-X step, any attempt to use the balanced rank-r quotient must provide a geometric original-X Chow F and a canonical Betti action on \(W_p(X)\) with exactly the **combined F** compatibility, not claim that U,J,M automatically become compatible individual endomorphisms of all Hodge fibers of arbitrary rank. If actual geometric original-X J happens to be defined on a larger even-dimensional cohomology carrier, a Hodge subquotient need not retain J itself.
+
+This removes a conceptual compatibility trap in the user's arbitrary-dimensional/cardinality program but does NOT construct algebraic cycles for previously unknown rational Hodge classes.
