@@ -9,6 +9,7 @@ on:
       - 'GSTImageThreeAdvancedGeometricSource.lean'
       - 'GSTImageThreeFiniteFieldSourceCertificates.lean'
       - 'GSTImageThreeIndependentNCohoSource.lean'
+      - 'GSTImageThreePhysicalNavigationControl.lean'
       - 'GSTImageThreeAdvancedResearchKernel.lean'
       - '.github/workflows/gst-image3-advanced-curvature-rigidity.yml'
   workflow_dispatch:
