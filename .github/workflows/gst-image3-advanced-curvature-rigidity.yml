@@ -32,12 +32,12 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTCMResonanceLib GSTImageThreeCurvatureResonance
-          lake build GSTImageThreeCurvatureResonance > gst-advanced-curvature.log 2>&1 || { tail -n 130 gst-advanced-curvature.log; exit 1; }
-          python3 scripts/gst_lean_dependency_roots.py GSTCMResonanceLib GSTImageThreeOriginalXCurvatureLanding
-          lake build GSTImageThreeOriginalXCurvatureLanding >> gst-advanced-curvature.log 2>&1 || { tail -n 130 gst-advanced-curvature.log; exit 1; }
+          # One dependency root: the advanced source imports the original-X
+          # curvature landing, which imports the native resonance module.
+          # Running the root generator repeatedly appends duplicate lake_lib
+          # targets to lakefile.toml and causes an unrelated CI failure.
           python3 scripts/gst_lean_dependency_roots.py GSTCMResonanceLib GSTImageThreeAdvancedGeometricSource
-          lake build GSTImageThreeAdvancedGeometricSource >> gst-advanced-curvature.log 2>&1 || { tail -n 130 gst-advanced-curvature.log; exit 1; }
+          lake build GSTImageThreeAdvancedGeometricSource > gst-advanced-curvature.log 2>&1 || { tail -n 160 gst-advanced-curvature.log; exit 1; }
           if grep -E "declaration uses 'sorry'|sorryAx" gst-advanced-curvature.log; then
             echo "Unexpected sorry axiom" && exit 1
           fi
