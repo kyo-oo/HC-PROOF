@@ -52,8 +52,9 @@ theorem navigationOffQ9Mod19_no_roots :
 
 /-- The product never vanishes at any mod-19 direct SURVIVE source. -/
 theorem navigationOffProductMod19_nonzero (a : ZMod 19) :
-    navigationOffQ8Mod19 a * navigationOffQ9Mod19 a ≠ 0 :=
-  mul_ne_zero (navigationOffQ8Mod19_no_roots a)
+    navigationOffQ8Mod19 a * navigationOffQ9Mod19 a ≠ 0 := by
+  letI : Fact (Nat.Prime 19) := ⟨by decide⟩
+  exact mul_ne_zero (navigationOffQ8Mod19_no_roots a)
     (navigationOffQ9Mod19_no_roots a)
 
 /-- Rational-root reduction is legitimate because mod-19 denominators
