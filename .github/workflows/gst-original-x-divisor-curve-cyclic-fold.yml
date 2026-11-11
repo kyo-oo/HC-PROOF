@@ -1,0 +1,49 @@
+name: GST original-X divisor and curve cyclic Chow fold proof
+on:
+  push:
+    branches:
+      - research/gpt6-native-point-primitive-span-20261017
+    paths:
+      - 'GSTOriginalXDivisorCurveCyclicChowFold.lean'
+      - '.github/workflows/gst-original-x-divisor-curve-cyclic-fold.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare pinned Lean Mathlib toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Check exact native-original-X intersection/chow matrix unit theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTOriginalXDivisorCurveLib GSTOriginalXDivisorCurveCyclicChowFold
+          if lake build GSTOriginalXDivisorCurveCyclicChowFold > gst-original-x-divisor-curve-fold.log 2>&1; then
+            echo "LEAN PASSED: GSTOriginalXDivisorCurveCyclicChowFold"
+          else
+            tail -n 200 gst-original-x-divisor-curve-fold.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-original-x-divisor-curve-fold.log; then
+            echo "Detected forbidden sorry" && exit 1
+          fi
+      - name: Upload proof diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-original-x-divisor-curve-lean
+          path: gst-original-x-divisor-curve-fold.log
+          if-no-files-found: warn
