@@ -16,7 +16,7 @@ p16Polynomial[t_] := 255140-1606056*t^2+3096493*t^4-
   2444032*t^12-1234944*t^14+331776*t^16;
 
 Module[{cells,idx,sh,mir,sgn,surv,U,J,M,C,seed,t,tw,ids,small,
- v2,v10,tw2,tw10,d2,d10,rs,global,checks,samples,one,desc,result,x,b},
+ v2,v10,tw2,tw10,d2,d10,rs,global,checks,samples,one,result,allChecks,x,b},
  cells=Flatten[Table[{i,k},{i,0,3},{k,0,2}],1];
  idx[z_]:=First[FirstPosition[cells,z]];
  sh[{i_,k_}]:={Quotient[i+4*k,3],Mod[i+4*k,3]};
@@ -52,8 +52,8 @@ Module[{cells,idx,sh,mir,sgn,surv,U,J,M,C,seed,t,tw,ids,small,
      TrueQ[Expand[rs-b^4*p16Polynomial[b]]===0],
    "globalExactFactorization"->
      TrueQ[Expand[global-d2*d10*rs]===0],
-   "zeroCrossBlock"->And@@Thread[Flatten[t[[ids,small]]]==0] &&
-     And@@Thread[Flatten[t[[small,ids]]]==0]|>;
+   "zeroCrossBlock"->AllTrue[Flatten[t[[ids,small]]],#==0&] &&
+     AllTrue[Flatten[t[[small,ids]]],#==0&]|>;
 
  (* Independent rational specializations in the full two-parameter family. *)
  one[{aa_,bb_}]:=Module[{F,A,D,dA,dD,rD,gD,off},
@@ -70,12 +70,14 @@ Module[{cells,idx,sh,mir,sgn,surv,U,J,M,C,seed,t,tw,ids,small,
      "factorIdentity"->TrueQ[gD==dA*dD*rD],
      "globalCyclic"->(gD!=0)|>];
  samples=one/@{{0,1},{1,1},{2,1/3},{-2,5/4},{1,1/2},{0,0}};
- result=<|"symbolicOneParameter"->checks,"twoParameterExactSamples"->samples,
-  "allPassed"->(And@@(BooleanQ[#]&&#& /@
-    Lookup[checks,{"source2CellDetExact","source10IsExistingP10",
-      "resultantIsB4TimesExistingP16","globalExactFactorization",
-      "zeroCrossBlock"}])) &&
-    And@@Lookup[samples,"blockInvariant"] &&
-    And@@Lookup[samples,"factorIdentity"])|>;
+ allChecks=Join[
+  Lookup[checks,{"source2CellDetExact","source10IsExistingP10",
+    "resultantIsB4TimesExistingP16","globalExactFactorization",
+    "zeroCrossBlock"}],
+  Lookup[samples,"blockInvariant"],
+  Lookup[samples,"factorIdentity"]];
+ result=<|"symbolicOneParameter"->checks,
+   "twoParameterExactSamples"->samples,
+   "allPassed"->And@@allChecks|>;
  Print[result];result
 ]
