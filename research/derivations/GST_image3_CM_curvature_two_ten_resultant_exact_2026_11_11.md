@@ -16,9 +16,9 @@ SURVIVE diagonal operator `M`, and original mixed seed
 
 The SOURCE operation studied here is
 
-[
-C=[J,M]=JM-MJ,qquad F_{a,b}=U+J+aM+bC,quad a,binmathbb Q.
-]
+\[
+C=[J,M]=JM-MJ,\qquad F_{a,b}=U+J+aM+bC,\quad a,b\\in\\mathbb Q.
+\]
 
 No outside auxiliary signal matrix or presumed Hodge-to-Chow inverse is used.
 
@@ -30,19 +30,19 @@ Consequently both the two-cell subspace and the complementary **ten**
 original cells are invariant under every `F_(a,b)`. Under the order
 `(s,t)`, the fixed-cell block is
 
-[
+\[
 A_{a,b}=
-egin{pmatrix}
+\begin{pmatrix}
 1&1+2b\\
 2b-1&1+2a
-end{pmatrix}, quad v_2=inom 10 .
-]
+\end{pmatrix}, \quad v_2=\binom 10 .
+\]
 
 The two-step Krylov determinant is **exactly**
 
-[
-det[v_2,A_{a,b}v_2]=2b-1.
-]
+\[
+\det[v_2,A_{a,b}v_2]=2b-1.
+\]
 
 Therefore the **two-cell projection** of the original GST orbit is cyclic
 if and only if `b != 1/2`, uniformly for all rational `a`. This does
@@ -56,10 +56,10 @@ old single-iterate statement into a global linear-span no-go.
 
 The fixed-block characteristic polynomial and discriminant are
 
-[
-chi_2(x)=x^2-(2+2a)x+(2+2a-4b^2),quad
-Delta=4(a^2-1+4b^2).
-]
+\[
+\chi_2(x)=x^2-(2+2a)x+(2+2a-4b^2),\quad
+\\Delta=4(a^2-1+4b^2).
+\]
 
 Even at repeated eigenvalues (`Delta=0`), the fixed-block cyclic
 seed criterion is still simply `2b-1 != 0`: it is a Krylov determinant,
@@ -75,22 +75,22 @@ so this permutation has sign +1. The original mixed seed has components
 Let `D_(a,b)` be the restriction of the same original `F_(a,b)`
 to the remaining ten cells. Let
 
-[
-K_2=[v_2,A v_2],quad
-K_{10}=[v_{10},Dv_{10},ldots,D^9v_{10}].
-]
+\[
+K_2=[v_2,A v_2],\quad
+K_{10}=[v_{10},Dv_{10},\ldots,D^9v_{10}].
+\]
 
 Then for **all** rational `a,b`,
 
-[
-oxed{
-det K_{12}(F_{a,b},v)
+\[
+\boxed{
+\det K_{12}(F_{a,b},v)
 =
-(2b-1),det K_{10}(D_{a,b},v_{10}),
-operatorname{Res}_x(chi_{A_{a,b}},chi_{D_{a,b}})
+(2b-1),\det K_{10}(D_{a,b},v_{10}),
+\operatorname{Res}_x(\chi_{A_{a,b}},\chi_{D_{a,b}})
 }.
-	ag{*}
-]
+\\tag{*}
+\]
 
 **Reason:** over an algebraic closure, on the Zariski-dense locus
 where `A` and `D` have disjoint, simple eigenvalues, express each
@@ -119,19 +119,19 @@ smaller typed Lean targets.
 
 The earlier work reported
 
-[
-det K_{12}(U+J+b[J,M],v)
+\[
+\det K_{12}(U+J+b[J,M],v)
 =b^4(2b-1)P_{10}(b)P_{16}(b).
-]
+\]
 
 The new exact split identifies the three factors **geometrically in
 the original information carrier**, rather than merely symbolically:
 
-[
-det K_2=2b-1,qquad
-det K_{10}=P_{10}(b),qquad
-operatorname{Res}(chi_2,chi_{10})=b^4P_{16}(b).
-]
+\[
+\det K_2=2b-1,\qquad
+\det K_{10}=P_{10}(b),\qquad
+\operatorname{Res}(\chi_2,\chi_{10})=b^4P_{16}(b).
+\]
 
 Both `P10` and `P16` are the exact committed integer polynomials in
 `GST_image3_CM_curvature_all_rational_strength_mod7_20261111.wl`.
@@ -219,22 +219,22 @@ not an assumption that those geometric targets already exist.
 Set the ORIGINAL CM source strength to `b=1` and let the direct
 SURVIVE coefficient `a` be an ARBITRARY rational number:
 
-[
-F_a=U+J+aM+[J,M],quad ainmathbb Q.
-]
+\[
+F_a=U+J+aM+[J,M],\quad a\\in\\mathbb Q.
+\]
 
 The fixed-pair determinant is `2b-1=1` for every a.
 Exact construction of the original ten-cell block and its
 characteristic-polynomial resultant gives
 
-[
-det K_{12}(F_a,v)=Q_8(a)Q_{12}(a),
-]
+\[
+\det K_{12}(F_a,v)=Q_8(a)Q_{12}(a),
+\]
 
 where
 
-[
-egin{aligned}
+\[
+\begin{aligned}
 Q_8(a)={}&-130491-27750a-25120a^2-31800a^3
 +7068a^4-3304a^5\\
 &+1520a^6-80a^7+64a^8,\\
@@ -242,8 +242,8 @@ Q_{12}(a)={}&-10623+474348a+710952a^2+141208a^3
 +696720a^4\\
 &-249912a^5+418988a^6-196384a^7+166048a^8\\
 &-59264a^9+33664a^{10}-6912a^{11}+2560a^{12}.
-end{aligned}
-]
+\end{aligned}
+\]
 
 The exact NEW certificate in
 `research/computations/GST_image3_all_rational_direct_strength_CM_curvature_mod11_20261111.wl`
@@ -253,15 +253,15 @@ and the full 12-cell determinant.
 
 Exhaustive evaluation on **all eleven elements** of `F_11` yields:
 
-[
-Q_8(0),ldots,Q_8(10)pmod {11}
+\[
+Q_8(0),\ldots,Q_8(10)\pmod {11}
 =(2,9,2,8,10,10,9,6,9,8,4),
-]
+\]
 
-[
-Q_{12}(0),ldots,Q_{12}(10)pmod {11}
+\[
+Q_{12}(0),\ldots,Q_{12}(10)\pmod {11}
 =(3,10,6,1,5,7,7,7,4,8,4).
-]
+\]
 
 Neither array contains zero. The leading coefficients reduce to
 `64 mod 11=9` and `2560 mod 11=8`, both invertible.
@@ -277,14 +277,14 @@ are nonzero for **every rational** `a`.
 
 This proves the NEW quantified native theorem:
 
-[
-oxed{
-orall ainmathbb Q,quad
-operatorname{rank}_{mathbb Q}
-[v,F_av,ldots,F_a^{11}v]=12
-quad	ext{for }F_a=U+J+aM+[J,M].
+\[
+\boxed{
+\\forall a\\in\\mathbb Q,\quad
+\operatorname{rank}_{\\mathbb Q}
+[v,F_av,\ldots,F_a^{11}v]=12
+\quad\\text{for }F_a=U+J+aM+[J,M].
 }
-]
+\]
 
 It is not just a six-case finite experiment: the exact symbolic
 factorization plus finite-field argument covers ALL rational `a`.
@@ -329,9 +329,9 @@ reconstructs the ORIGINAL twelve source cells from scratch and performs
 Gaussian elimination directly in `F_11` on the **Krylov** matrices,
 not just on the source operators. The eleven resulting determinants are
 
-[
+\[
 (6,2,1,8,6,4,8,9,3,9,5)
-]
+\]
 
 for direct source strengths `a=0,...,10`, exactly matching the
 product of the independently specified `Q8(a)*Q12(a)` at every residue.
@@ -345,27 +345,27 @@ The all-rational unit-curvature result of section 8 is not confined to
 one 12-state Wave-II hole. For any rational `a`, define the exact
 native row-sum bound and **adaptive** rational navigation spacing
 
-[
-R(a)=4+2|a|,qquad S(a)=9+4|a|=2R(a)+1.
-]
+\[
+R(a)=4+2|a|,\qquad S(a)=9+4|a|=2R(a)+1.
+\]
 
 Because each row of `U` has one unit entry, each row of `J` one
 signed unit entry, `|M_(s,s)|≤2`, and the original commutator
 `[J,M]` has at most one entry of absolute value ≤2 in each row,
 the induced maximum absolute row-sum norm satisfies
 
-[
+\[
 |F_a|_inftyle R(a).
-]
+\]
 
 For **every finite h>=1**, retain the original N-hole direct-sum
 carrier `V^h`, define
 
-[
-T_{a,h}:=igoplus_{i=0}^{h-1}
-       left(F_a+iS(a)I_{12}ight),
-qquad v_h=(v,v,ldots,v).
-]
+\[
+T_{a,h}:=\bigoplus_{i=0}^{h-1}
+       \left(F_a+iS(a)I_{12}\\right),
+\qquad v_h=(v,v,\ldots,v).
+\]
 
 Each individual block is cyclic over Q by section 8. Every complex
 eigenvalue of `F_a` obeys `|λ| ≤ R(a)`. Distinct shifted blocks
@@ -374,14 +374,14 @@ Their characteristic/minimal polynomials are therefore pairwise
 coprime over Q. Polynomial CRT implies that the annihilator of the
 single all-hole seed `v_h` has degree `12h`. Therefore
 
-[
-oxed{
-orall ainmathbb Q;orall hinmathbb N_{>0},quad
-dim_{mathbb Q}operatorname{span}{
-v_h,T_{a,h}v_h,ldots,T_{a,h}^{12h-1}v_h
+\[
+\boxed{
+\\forall a\\in\\mathbb Q;\\forall h\\in\\mathbb N_{>0},\quad
+dim_{\\mathbb Q}\operatorname{span}{
+v_h,T_{a,h}v_h,\ldots,T_{a,h}^{12h-1}v_h
 }=12h.
 }
-]
+\]
 
 The vacuum h=0 is covered separately and trivially has rank0.
 
@@ -418,15 +418,15 @@ Exact restriction to the other ORIGINAL ten cells, and the exact
 resultant of their characteristic polynomial with the two-cell
 characteristic polynomial, give
 
-[
-det K_{10}=Q_8(a),qquad
-operatorname{Res}(chi_2,chi_{10})=4a^2(a+1)Q_9(a).
-]
+\[
+\det K_{10}=Q_8(a),\qquad
+\operatorname{Res}(\chi_2,\chi_{10})=4a^2(a+1)Q_9(a).
+\]
 
 The integer polynomials are
 
-[
-egin{aligned}
+\[
+\begin{aligned}
 Q_8(a)={}&411701+899200a-342272a^2-123812a^3
  -14492a^4-25296a^5\\
  &+4672a^6-832a^7+256a^8,\\
@@ -434,26 +434,26 @@ Q_9(a)={}&12176+45312a+72685a^2+59539a^3+
  15088a^4\\
  &-15320a^5-13120a^6-1376a^7+
  1984a^8+640a^9.
-end{aligned}
-]
+\end{aligned}
+\]
 
 Thus EXACTLY
 
-[
-det K_{12}(F_{a,0},v)=-4a^2(a+1)Q_8(a)Q_9(a).
-]
+\[
+\det K_{12}(F_{a,0},v)=-4a^2(a+1)Q_8(a)Q_9(a).
+\]
 
 The genuinely exhaustive mod-19 computations give
 
-[
-Q_8(0),ldots,Q_8(18)pmod{19}
+\[
+Q_8(0),\ldots,Q_8(18)\\pmod{19}
 =(9,10,7,10,6,4,11,3,11,4,10,3,14,11,4,13,11,10,1),
-]
+\]
 
-[
-Q_9(0),ldots,Q_9(18)pmod{19}
+\[
+Q_9(0),\ldots,Q_9(18)\\pmod{19}
 =(16,15,15,5,2,1,18,5,7,8,10,16,13,7,10,18,12,13,18).
-]
+\]
 
 Every residue is nonzero, and both leading coefficients are units:
 `256 mod19=9`, `640 mod19=13`. Exactly as in section 8,
@@ -461,15 +461,15 @@ the rational-root reduction shows that no rational root of either
 integer polynomial exists. The remaining factor is zero only
 at a=0 or a=-1. Therefore
 
-[
-oxed{
-orall ainmathbb Q,quad
-dim_mathbb Qoperatorname{span}
-  (v,F_{a,0}v,ldots,F_{a,0}^{11}v)=12
-iff a
+\[
+\boxed{
+\\forall a\\in\\mathbb Q,\quad
+dim_\\mathbb Qoperatorname{span}
+  (v,F_{a,0}v,\ldots,F_{a,0}^{11}v)=12
+\iff a
 otin{0,-1}.
 }
-]
+\]
 
 The exact native orbit ranks at the exceptions are 10 for a=0 and
 11 for a=-1; at a=1 the rank is 12 and the determinant is
@@ -492,17 +492,17 @@ For any original arithmetic `R`, the physical charge is
 unit-curvature theorem (section 8) with the navigation-off
 classification (section 12):
 
-[
-oxed{
-orall Rinmathbb N, orall ainmathbb Q,quad
-operatorname{rank}_mathbb Q
-K_{12}(F_{a,operatorname{navigationCharge}(R)},v)=12
-iff
-ig(operatorname{Navigation}(R)lor(a
+\[
+\boxed{
+\\forall R\\in\\mathbb N, \\forall a\\in\\mathbb Q,\quad
+\operatorname{rank}_\\mathbb Q
+K_{12}(F_{a,\operatorname{navigationCharge}(R)},v)=12
+\iff
+\\big(\operatorname{Navigation}(R)\lor(a
 e0land a
-e-1)ig).
+e-1)\\big).
 }
-]
+\]
 
 Here `Navigation(R)` is the actual ORIGINAL arithmetic predicate,
 not a user-selected new gate. The biconditional follows from:
@@ -520,12 +520,12 @@ rational direct source strength `a_i:Q` for EACH actual N-hole
 `i=0,...,h-1`. Set `b_i=navigationCharge(R_i)∈{0,1}`, and
 assume exactly the genuinely necessary native single-hole condition
 
-[
-orall i<h,quad
-operatorname{Navigation}(R_i) lor(a_i
+\[
+\\forall i<h,\quad
+\operatorname{Navigation}(R_i) \lor(a_i
 e0land a_i
 e-1).
-]
+\]
 
 The previous result gives a full cyclic original `12`-state source
 at EACH hole even when physical navigation states differ.
@@ -533,25 +533,25 @@ at EACH hole even when physical navigation states differ.
 Define the finite rational amplitude bound and adaptive original
 N-hole spectral navigation spacing
 
-[
-L=max_{i<h}|a_i|,quad B=4+2L,quad S=9+4L=2B+1.
-]
+\[
+L=max_{i<h}|a_i|,\quad B=4+2L,\quad S=9+4L=2B+1.
+\]
 
 The original input `U` is a one-entry permutation per row,
 `J` a one-entry signed mirror per row, `M` a diagonal source
 bounded by 2, and `[J,M]` one entry of magnitude at most 2
 per row. Thus
 
-[
+\[
 |F_{a_i,b_i}|_inftyle B
-quad	ext{for each true }b_iin{0,1}.
-]
+\quad\\text{for each true }b_iin{0,1}.
+\]
 
 The single global native N-hole fold is
 
-[
-T=igoplus_{i<h}ig(F_{a_i,b_i}+iS,I_{12}ig)
-]
+\[
+T=\bigoplus_{i<h}\\big(F_{a_i,b_i}+iS,I_{12}\\big)
+\]
 
 on the **original** `h` independent twelve-cell sources, with ONE
 shared starting signal `v_h=(v,ldots,v)`.
@@ -565,12 +565,12 @@ annihilator ideal of the one common seed `v_h` is the product of
 the individual degree-twelve annihilators. Its degree is therefore
 `12h`, and this yields the STRONGER global result
 
-[
-oxed{
-dim_mathbb Qoperatorname{span}
-{v_h,Tv_h,ldots,T^{12h-1}v_h}=12h.
+\[
+\boxed{
+dim_\\mathbb Qoperatorname{span}
+{v_h,Tv_h,\ldots,T^{12h-1}v_h}=12h.
 }
-]
+\]
 
 The case h=0 is the zero-dimensional vacuum source and has rank0.
 
