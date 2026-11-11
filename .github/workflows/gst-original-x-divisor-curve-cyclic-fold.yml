@@ -7,6 +7,7 @@ on:
       - 'GSTOriginalXDivisorCurveCyclicChowFold.lean'
       - 'GSTOriginalXAllWeightsLefschetzResidual.lean'
       - 'GSTOriginalXWaveChowMatrixCompiler.lean'
+      - 'GSTOriginalXNativePhysicalNavigationBridge.lean'
       - '.github/workflows/gst-original-x-divisor-curve-cyclic-fold.yml'
   workflow_dispatch:
 permissions:
@@ -32,9 +33,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTOriginalXDivisorCurveLib GSTOriginalXWaveChowMatrixCompiler
-          if lake build GSTOriginalXWaveChowMatrixCompiler > gst-original-x-divisor-curve-fold.log 2>&1; then
-            echo "LEAN PASSED: GSTOriginalXWaveChowMatrixCompiler + prescribed-alpha Chow residual"
+          python3 scripts/gst_lean_dependency_roots.py GSTOriginalXDivisorCurveLib GSTOriginalXNativePhysicalNavigationBridge
+          if lake build GSTOriginalXNativePhysicalNavigationBridge > gst-original-x-divisor-curve-fold.log 2>&1; then
+            echo "LEAN PASSED: real GST physical Navigation, original-X Chow matrix compiler and prescribed-alpha residual"
           else
             tail -n 200 gst-original-x-divisor-curve-fold.log
             exit 1
