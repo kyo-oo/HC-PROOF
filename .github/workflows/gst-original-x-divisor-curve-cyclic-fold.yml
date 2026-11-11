@@ -5,6 +5,7 @@ on:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTOriginalXDivisorCurveCyclicChowFold.lean'
+      - 'GSTOriginalXAllWeightsLefschetzResidual.lean'
       - '.github/workflows/gst-original-x-divisor-curve-cyclic-fold.yml'
   workflow_dispatch:
 permissions:
@@ -30,9 +31,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTOriginalXDivisorCurveLib GSTOriginalXDivisorCurveCyclicChowFold
-          if lake build GSTOriginalXDivisorCurveCyclicChowFold > gst-original-x-divisor-curve-fold.log 2>&1; then
-            echo "LEAN PASSED: GSTOriginalXDivisorCurveCyclicChowFold"
+          python3 scripts/gst_lean_dependency_roots.py GSTOriginalXDivisorCurveLib GSTOriginalXAllWeightsLefschetzResidual
+          if lake build GSTOriginalXAllWeightsLefschetzResidual > gst-original-x-divisor-curve-fold.log 2>&1; then
+            echo "LEAN PASSED: GSTOriginalXAllWeightsLefschetzResidual + dependencies"
           else
             tail -n 200 gst-original-x-divisor-curve-fold.log
             exit 1
