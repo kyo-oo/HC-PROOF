@@ -407,3 +407,117 @@ native sublemmas and the original-X naturality conditional are proved.
 The Hodge implication is proved if the missing universal antecedent
 is established. This research route has advanced the native necessary
 construction and made the remaining geometric target exact.
+
+
+## 9. Sharper exact native source-birth witness: one CM-curvature layer produces BOTH missing original directions
+
+The old ORIGINAL GST source-free cyclic orbit
+\(W_0=\operatorname{span}_\mathbb Q\{v,(U+J)v,\ldots\}\)
+has dimension exactly 10, with explicit independent rational
+annihilators on the ORIGINAL 12 physical carry/trit cells
+(in lexicographic order 00,01,02,10,11,12,20,21,22,30,31,32):
+\[
+d_1=(0,0,-1,0,0,0,-1,-1,-1,0,-1,1),
+\quad
+d_2=(-1,1,0,1,1,1,0,0,0,1,0,0).
+\]
+Both vanish on all 12 old orbit columns, hence on all of W0.
+Apply the GENUINE original CM-curvature K=[J,M] ONCE to two
+independent old source states \(v\) and \((U+J)v\).
+The exact detector matrix is
+\[
+\boxed{
+\begin{pmatrix}
+d_1(Kv)&d_1(K(U+J)v)\\
+d_2(Kv)&d_2(K(U+J)v)
+\end{pmatrix}
+=\begin{pmatrix}2&1\\0&2\end{pmatrix},
+\qquad\det=4\ne0.
+}
+\]
+Consequently the two curvature-born classes
+\(Kv, K(U+J)v\) are genuinely independent modulo
+the OLD 10-dimensional GST wave sector,
+and span its complete 2-dimensional native quotient.
+There is no need to wait to fold depth 3 if one uses the true
+CM curvature as a source operation instead of M itself.
+
+The result is strictly **native wave information**, not an
+assertion about an unproved original-X Hodge class. When true
+native original-X correspondences and TWO ACTUAL Hodge-space
+detectors with this matrix are constructed, the preexisting Lean
+theorem \`GSTImageThreeGeometricTwoSourceBirth.originalX_two_native_source_directions_independent\`
+gives the corresponding genuine geometric two-direction source
+birth. Its premises are not supplied by the information-wave
+calculation automatically.
+
+**Reproducible exact source:**
+\`research/computations/GST_image3_pureCM_two_direction_first_birth_20261111.wl\`;
+committed, fetched back and executed verbatim with Wolfram,
+\`allPassed=True\`, full old annihilator check, CM anti-commutation
+and exact minor 4.
+
+## 10. Native-to-original-X cyclic landing theorem makes the last geometric gate exact
+
+The new \`GSTImageThreeCMGeometricLandingCriterion.lean\` formalizes
+the following theorem with NO assumed Hodge surjectivity:
+Let V be an arbitrary rational native GST cyclic module with fold
+\(T\), seed v, and \(\mathbb Q[T]v=V\).
+Let \(C\) be the ACTUAL original-X Chow-cycle module, \(W\)
+the CANONICAL Hodge target, \(\mathrm{cl}:C\to W\) the cycle-class
+map, and \(N,B\) compatible native Chow/Betti operators
+\(\mathrm{cl}N=B\mathrm{cl}\).
+Let \(L:V\to W\) satisfy \(LT=BL\) and
+\(L(v)=\mathrm{cl}(Z_0)\) for an ACTUAL native cycle \(Z_0\).
+THEN:
+\[
+\boxed{
+L(V)\subseteq\operatorname{im}(\mathrm{cl}).
+}
+\]
+Proof by induction:
+\(L(T^n v)=\mathrm{cl}(N^n Z_0)\) for all n,
+then linear span/cyclicity extends from all orbit powers to every
+element of V. No selected inverse of cl is used.
+
+**If and only if the geometric landing L is surjective**, the
+conclusion implies
+\(\mathrm{cl}:C\to W\) surjective, hence original-X rational
+Hodge algebraicity for the target. In fact, surjectivity of L is
+sufficient; its existence has NOT been proved universally.
+
+This precisely identifies the missing step from Image-3 native
+source to original-X Hodge: constructing a **surjective,
+natural, projectively realized landing L with actual cyclic
+Chow seed**, not merely proving all-r information rank.
+The theorem also says that if the original-X canonical Hodge
+algebraicity deficit is nonzero, NO such surjective landing can
+exist while all honest naturality requirements hold.
+
+### Structural CM parity safety
+
+Do NOT demand that the full native J separately descend to a
+square-minus-identity operator on every target W_p(X).
+For odd r this is impossible over Q:
+\(\det(J)^2=\det(-I_r)=(-1)^r=-1\).
+A rational complex structure cannot exist on a 1-dimensional
+Hodge space such as Hdg^1(P^2). The new rank-r quotient preserves
+the COMBINED native F, not J individually; that is why arbitrary
+rank r can be addressed without violating the original CM law
+inside the larger native information carrier.
+
+## 11. Updated proof-count calibration
+
+Steps 02 and 03 are solved algebraically for all native GST
+finite ranks by this new derived-CM construction.
+Step 01 genuine Chow–Betti algebra/naturality is proved as a
+conditional Lean theorem for actual supplied original-X operators.
+The universal EXISTENCE of those operators and the surjective
+full-Hodge target landing is not established. Step 04 is the
+universal quantification over all X,p of that existence, not an
+extra independent analytic condition.
+
+Thus the universal geometric antecedent is NOT yet proved,
+even though the symbolic native cyclicity and detector target
+has advanced substantially. The native cyclicity itself is
+not counted as a solved geometric Hodge step.
