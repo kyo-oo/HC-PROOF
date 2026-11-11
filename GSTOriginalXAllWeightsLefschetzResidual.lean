@@ -79,7 +79,7 @@ theorem nativeLefschetzProjector_idempotent_apply (z : A) :
           nativeLefschetzProjector F (F.source i) := by
             change F.nativeCycleFold id
               (∑ i : ι, F.nativeIntersection i z • F.source i) = _
-            simp only [map_sum, map_smul]
+            simp only [nativeLefschetzProjector, map_sum, map_smul]
     _ = ∑ i : ι, F.nativeIntersection i z • F.source i := by
           simp [nativeLefschetzProjector, F.nativeCycleFold_source]
     _ = nativeLefschetzProjector F z := rfl
@@ -103,7 +103,7 @@ theorem bettiLefschetzProjector_idempotent_apply (alpha : B) :
             change F.bettiCyclicFold id
               (∑ i : ι,
                 F.bettiIntersection i alpha • F.cycleClass (F.source i)) = _
-            simp only [map_sum, map_smul]
+            simp only [bettiLefschetzProjector, map_sum, map_smul]
     _ = ∑ i : ι, F.bettiIntersection i alpha • F.cycleClass (F.source i) := by
           simp [bettiLefschetzProjector, F.bettiCyclicFold_source]
     _ = bettiLefschetzProjector F alpha := rfl
