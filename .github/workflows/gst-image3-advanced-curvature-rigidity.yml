@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - research/gpt6-image3-advanced-curvature-rigidity-20261111
+      - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTImageThreeCurvatureResonance.lean'
       - 'GSTImageThreeOriginalXCurvatureLanding.lean'
