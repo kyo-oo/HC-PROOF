@@ -212,3 +212,110 @@ directions, and (iii) their spectral coupling, with separately
 certified actual algebraic correspondences and canonical Hodge rank.
 The division is an analytic reduction of the source bottleneck,
 not an assumption that those geometric targets already exist.
+
+
+## 8. NEW ALL-RATIONAL DIRECT SURVIVE THEOREM AT UNIT CURVATURE
+
+Set the ORIGINAL CM source strength to `b=1` and let the direct
+SURVIVE coefficient `a` be an ARBITRARY rational number:
+
+[
+F_a=U+J+aM+[J,M],quad ainmathbb Q.
+]
+
+The fixed-pair determinant is `2b-1=1` for every a.
+Exact construction of the original ten-cell block and its
+characteristic-polynomial resultant gives
+
+[
+det K_{12}(F_a,v)=Q_8(a)Q_{12}(a),
+]
+
+where
+
+[
+egin{aligned}
+Q_8(a)={}&-130491-27750a-25120a^2-31800a^3
++7068a^4-3304a^5\\
+&+1520a^6-80a^7+64a^8,\\
+Q_{12}(a)={}&-10623+474348a+710952a^2+141208a^3
++696720a^4\\
+&-249912a^5+418988a^6-196384a^7+166048a^8\\
+&-59264a^9+33664a^{10}-6912a^{11}+2560a^{12}.
+end{aligned}
+]
+
+The exact NEW certificate in
+`research/computations/GST_image3_all_rational_direct_strength_CM_curvature_mod11_20261111.wl`
+constructs these polynomials DIRECTLY from the unchanged original
+U,J,M wave operators, and independently checks both factor equality
+and the full 12-cell determinant.
+
+Exhaustive evaluation on **all eleven elements** of `F_11` yields:
+
+[
+Q_8(0),ldots,Q_8(10)pmod {11}
+=(2,9,2,8,10,10,9,6,9,8,4),
+]
+
+[
+Q_{12}(0),ldots,Q_{12}(10)pmod {11}
+=(3,10,6,1,5,7,7,7,4,8,4).
+]
+
+Neither array contains zero. The leading coefficients reduce to
+`64 mod 11=9` and `2560 mod 11=8`, both invertible.
+
+**Rigorous rational-root argument:** If a nonzero integer polynomial
+`Q` has a rational root `m/n` in lowest terms, its denominator
+`n` divides the leading coefficient of `Q`. Since 11 does NOT
+divide either leading coefficient, any hypothetical rational root
+of either `Q` has denominator invertible mod 11 and so reduces
+to an actual root in `F_11`. The complete residue enumerations
+exclude every such root. Therefore `Q_8(a)` and `Q_12(a)`
+are nonzero for **every rational** `a`.
+
+This proves the NEW quantified native theorem:
+
+[
+oxed{
+orall ainmathbb Q,quad
+operatorname{rank}_{mathbb Q}
+[v,F_av,ldots,F_a^{11}v]=12
+quad	ext{for }F_a=U+J+aM+[J,M].
+}
+]
+
+It is not just a six-case finite experiment: the exact symbolic
+factorization plus finite-field argument covers ALL rational `a`.
+The certificate passed all exact Wolfram assertions, including the
+original balanced `a=1` determinant `-445265540949`.
+
+**Verification status:** the polynomial factorization, residue table,
+and mathematical rational-root proof were checked with Wolfram exact
+arithmetic; the universal quantified polynomial non-root lemma has
+NOT yet been promoted to a Lean kernel theorem. Separate formal Lean
+upgrades prove the underlying two-cell controllability and resonance
+hyperplane statements. These are SOURCE-LEVEL theorems, not a
+surjectivity theorem on canonical original-X Hodge classes.
+
+## 9. Mathematical source-to-geometric gap isolated without circularity
+
+The original-X compiler has an explicit new
+`cmSourcePair_preserves_algebraic_range` and
+`geometricCurvatureF_preserves_algebraic_range` theorem in
+`GSTImageThreeOriginalXCurvatureLanding.lean`. Therefore the
+true original-X algebraic image is invariant under this source
+algebra, even while the native 12-state orbit is uniformly cyclic
+in the preceding theorem. In particular the new all-rational
+source theorem cannot, on its own, force full geometric Hodge rank.
+
+The new `ClosedCurvatureGeometry` has FIVE actual geometrically
+realized finite closed correspondences and explicit
+`JM_native`, `MJ_native`, `JM_betti`, `MJ_betti`
+composition certificates. Their rational five-atom word
+constructs a genuine geometry-typed source operator expression
+without guessing missing Hodge-to-Chow cycle lifts.
+Building these five witnesses and a canonical rank-preserving
+landing on every arbitrary original X remains mathematically
+distinct from the fully solved native source strength question.
