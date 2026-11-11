@@ -105,7 +105,7 @@ noncomputable def originalXSourceFrame
     simp only [dualNativeReadout, LinearMap.sum_apply, LinearMap.smul_apply,
       smul_eq_mul]
     have h := congrArg (fun Q : Matrix κ κ ℚ => Q i j) hinv
-    simpa [Matrix.mul_apply, intersectionMinor] using h
+    simpa [Matrix.mul_apply, intersectionMinor, Matrix.one_apply] using h
 
 /-- An arbitrary prescribed alpha has a DIRECT genuine native cycle
 representing its actual divisor-monomial SOURCE PROJECTION.
