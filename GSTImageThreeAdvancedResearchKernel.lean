@@ -1,0 +1,36 @@
+import GSTImageThreeAdvancedGeometricSource
+import GSTImageThreeFiniteFieldSourceCertificates
+
+/-!
+# GST Image-3 advanced source proof checkpoint
+
+One Lean build target that kernel-checks:
+1. original 12-cell CM / SURVIVE / curvature resonance laws;
+2. exact second-order original fixed-pair source recurrence and
+   constructive two-step controllability off half-curvature;
+3. genuine original-X cycle-class operator naturality;
+4. actual five-atom closed-geometric-correspondence conditional compiler;
+5. exhaustive finite-field F11 no-root source factors.
+
+No unconditional algebraic Hodge coverage is claimed by importing
+these modules. The whole dependency root is checked in ONE lake build.
+-/
+
+namespace GSTImageThreeAdvancedResearchKernel
+
+#check GSTImageThreeCurvatureResonance.fixedPair_second_order_null
+#check GSTImageThreeCurvatureResonance.fixedPair_second_order_maximum
+#check GSTImageThreeCurvatureResonance.fixedPair_two_step_reconstruct
+#check GSTImageThreeCurvatureResonance.resonanceOrbitSpan_ne_top
+#check GSTImageThreeOriginalXCurvatureLanding.geometricCurvatureF_preserves_algebraic_range
+#check GSTImageThreeAdvancedGeometricSource.closedCurvatureWord_cycle
+#check GSTImageThreeAdvancedGeometricSource.closedCurvatureWord_betti
+#check GSTImageThreeAdvancedGeometricSource.closedCurvatureWord_algebraic_range_stable
+#check GSTImageThreeFiniteFieldSourceCertificates.originalCMSourceProductMod11_nonzero
+
+#print axioms GSTImageThreeCurvatureResonance.fixedPair_second_order_null
+#print axioms GSTImageThreeCurvatureResonance.fixedPair_two_step_reconstruct
+#print axioms GSTImageThreeAdvancedGeometricSource.closedCurvatureWord_cycle
+#print axioms GSTImageThreeFiniteFieldSourceCertificates.originalCMSourceProductMod11_nonzero
+
+end GSTImageThreeAdvancedResearchKernel
