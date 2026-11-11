@@ -79,12 +79,12 @@ theorem owner_part1_N_plus_Nsquare
 
 /-- Any finite word in the original GST native endomorphisms. The index
 type I has NO finiteness condition, and may have arbitrarily high cardinality. -/
-def nativeWord : List I → A → A
+def nativeWord (W : OriginalXCardinalFolds I A B) : List I → A → A
   | [], z => z
   | i :: word, z => W.native i (W.nativeWord word z)
 
 /-- Matching finite Betti word, with the SAME cardinal-stage indices. -/
-def bettiWord : List I → B → B
+def bettiWord (W : OriginalXCardinalFolds I A B) : List I → B → B
   | [], beta => beta
   | i :: word, beta => W.betti i (W.bettiWord word beta)
 
@@ -102,7 +102,7 @@ theorem cardinalWord_natural (word : List I) (z : A) :
 
 /-- The total image of ALL finite cardinal-GST words from ACTUAL
 original-X algebraic seeds. -/
-def generatedClasses : Set B :=
+def generatedClasses (W : OriginalXCardinalFolds I A B) : Set B :=
   Set.range (fun q : List I × I =>
     W.cycleClass (W.nativeWord q.1 (W.seed q.2)))
 
@@ -163,8 +163,15 @@ theorem originalGST_physical_curvature_increment (a : ℚ)
         2 * (twoCellHodgeStar (fixedPair u)).1,
        (fixedPair (curvatureFold a 0 u)).2 +
         2 * (twoCellHodgeStar (fixedPair u)).2) := by
-  simp only [fixedPair_curvatureFold, fixedPair, twoCellHodgeStar]
-  apply Prod.ext <;> dsimp <;> ring
+  apply Prod.ext
+  · change curvatureFold a 1 u nullCell =
+      curvatureFold a 0 u nullCell + 2 * u maximumCell
+    rw [curvatureFold_null, curvatureFold_null]
+    ring
+  · change curvatureFold a 1 u maximumCell =
+      curvatureFold a 0 u maximumCell + 2 * u nullCell
+    rw [curvatureFold_maximum, curvatureFold_maximum]
+    ring
 
 #check WorldTopologies
 #check OriginalXCardinalFolds
