@@ -63,6 +63,8 @@ structure IntersectionChowFrame
 
 variable (F : IntersectionChowFrame ι A B)
 
+namespace IntersectionChowFrame
+
 /-- The actual rational Chow matrix-unit sum
   N_sigma(z)=sum_i degree(z . Y_i) Z_(sigma i)
 at the level of the original native cycle module. -/
@@ -204,5 +206,7 @@ theorem source_span_eq_orbit_span (sigma : ι → ι) (j : ι)
 #print axioms nativeCycleFold_class
 #print axioms nativeCycleFold_source
 #print axioms source_span_eq_orbit_span
+
+end IntersectionChowFrame
 
 end GSTOriginalXDivisorCurveCyclicChowFold
