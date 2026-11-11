@@ -161,7 +161,7 @@ theorem resonance_half_ne_maximum_basis (a : ℚ) (n : ℕ) :
   intro heq
   have hz := resonance_half_orbit_maximum_zero a n
   have hval : curvatureOrbit a (1 / 2) n maximumCell = (1 : ℚ) := by
-    simpa only [if_pos rfl] using
+    simpa [maximumCell] using
       (congrArg (fun u : WaveSignal => u maximumCell) heq)
   have h01 : (0 : ℚ) = 1 := hz.symm.trans hval
   norm_num at h01
@@ -250,10 +250,10 @@ theorem fourReadout_balancedFold (u : WaveSignal) :
 /-- Both genuine native character detectors actually see the
 author's ORIGINAL mixed seed with coefficient ONE. -/
 theorem zeroReadout_seed : zeroReadout seed = 1 := by
-  norm_num [zeroReadout, seed, nullCell, maximumCell]
+  norm_num [zeroReadout, seed, nullCell, maximumCell] <;> decide
 
 theorem fourReadout_seed : fourReadout seed = 1 := by
-  norm_num [fourReadout, seed, nullCell, maximumCell]
+  norm_num [fourReadout, seed, nullCell, maximumCell] <;> decide
 
 /-- The arbitrary rational GST navigation spectral offset shifts
 the EXACT original balanced zero-character to the specified value. -/
@@ -262,8 +262,10 @@ def shiftedBalancedFold (z : ℚ) (u : WaveSignal) : WaveSignal :=
 
 theorem zeroReadout_shiftedBalanced (z : ℚ) (u : WaveSignal) :
     zeroReadout (shiftedBalancedFold z u) = z * zeroReadout u := by
-  dsimp [zeroReadout, shiftedBalancedFold]
-  simp only [Pi.add_apply, Pi.smul_apply]
+  change
+    (balancedFold u nullCell + z * u nullCell) -
+      (balancedFold u maximumCell + z * u maximumCell) =
+      z * (u nullCell - u maximumCell)
   have h := zeroReadout_balancedFold u
   dsimp [zeroReadout] at h
   linear_combination h
@@ -306,6 +308,109 @@ theorem balancedHoleReadout_uniformSeed
 
 #print axioms zeroReadout_balancedFold
 #print axioms balancedHoleReadout_intertwines
+
+/-! ## ADVANCED SOURCE-SENSITIVE FIXED-CELL CONTROLLABILITY
+
+This isolates the ORIGINAL two U-fixed CM mirror cells as a genuine
+two-dimensional factor for EVERY rational a,b. The fixed pair never
+depends on signals in the other ten cells. This is a strict structural
+extension of the old single-coordinate half-strength obstruction.
+-/
+
+/-- True original fixed-pair observation, not an invented Hodge vector. -/
+def fixedPair (u : WaveSignal) : ℚ × ℚ :=
+  (u nullCell, u maximumCell)
+
+/-- Exact simultaneous native 2x2 CM/Survive curvature block.
+The lower-left entry is 2b-1 and the upper-right is 1+2b. -/
+theorem fixedPair_curvatureFold (a b : ℚ) (u : WaveSignal) :
+    fixedPair (curvatureFold a b u) =
+      (u nullCell + (1+2*b)*u maximumCell,
+       (1+2*a)*u maximumCell+(2*b-1)*u nullCell) := by
+  apply Prod.ext
+  · exact curvatureFold_null a b u
+  · exact curvatureFold_maximum a b u
+
+/-- Original mixed seed has the fixed-pair coordinates (1,0). -/
+theorem seed_nullCell : seed nullCell = 1 := by
+  norm_num [seed, nullCell, maximumCell] <;> decide
+
+theorem seed_maximumCell : seed maximumCell = 0 := by
+  norm_num [seed, nullCell, maximumCell] <;> decide
+
+theorem fixedPair_seed : fixedPair seed = ((1 : ℚ), (0 : ℚ)) := by
+  simp [fixedPair, seed_nullCell, seed_maximumCell]
+
+/-- The MAXIMUM-cell source born after exactly one F has the coefficient
+2b-1, independently of the direct SURVIVE strength a. -/
+theorem curvatureFold_seed_maximum (a b : ℚ) :
+    curvatureFold a b seed maximumCell = 2*b-1 := by
+  rw [curvatureFold_maximum, seed_nullCell, seed_maximumCell]
+  ring
+
+/-- The fixed-pair two-step controllability determinant of the
+ORIGINAL mixed seed and its first native curvature orbit is EXACTLY 2b-1.
+This establishes the unique fixed-pair rank collapse b=1/2 for all a;
+it does not assert full 12-state cyclicity. -/
+theorem fixedPair_controllability_det (a b : ℚ) :
+    seed nullCell * curvatureFold a b seed maximumCell -
+      seed maximumCell * curvatureFold a b seed nullCell =
+        2*b-1 := by
+  rw [seed_nullCell, seed_maximumCell, curvatureFold_seed_maximum]
+  ring
+
+/-- Away from resonance the original fixed two-cell modes are provably
+independent in two iterates, without using a native 12x12 determinant. -/
+theorem fixedPair_independent_off_resonance
+    (a b : ℚ) (hb : b ≠ (1/2 : ℚ)) :
+    seed nullCell * curvatureFold a b seed maximumCell -
+      seed maximumCell * curvatureFold a b seed nullCell ≠ 0 := by
+  rw [fixedPair_controllability_det]
+  intro hzero
+  apply hb
+  linarith
+
+/-- Native maximum-cell evaluation as an honest rational linear functional. -/
+def maximumCoordinate : WaveSignal →ₗ[ℚ] ℚ where
+  toFun := fun u => u maximumCell
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+/-- The span of ALL natural-number iterates at the resonance. -/
+def resonanceOrbitSpan (a : ℚ) : Submodule ℚ WaveSignal :=
+  Submodule.span ℚ (Set.range (curvatureOrbit a (1/2)))
+
+/-- STRONG resonance: not only is every individual orbit missing the
+maximum coordinate; its ENTIRE rational linear span lies in the
+proper native hyperplane ker(maximumCoordinate). -/
+theorem resonanceOrbitSpan_le_kernel (a : ℚ) :
+    resonanceOrbitSpan a ≤ LinearMap.ker maximumCoordinate := by
+  apply Submodule.span_le.mpr
+  rintro _ ⟨n, rfl⟩
+  change curvatureOrbit a (1/2) n maximumCell = 0
+  exact resonance_half_orbit_maximum_zero a n
+
+theorem resonanceOrbitSpan_ne_top (a : ℚ) :
+    resonanceOrbitSpan a ≠ ⊤ := by
+  intro htop
+  let e : WaveSignal := fun s => if s = maximumCell then 1 else 0
+  have he : e ∈ resonanceOrbitSpan a := by
+    rw [htop]
+    exact Submodule.mem_top
+  have hk : maximumCoordinate e = 0 :=
+    LinearMap.mem_ker.mp (resonanceOrbitSpan_le_kernel a he)
+  have hone : maximumCoordinate e = (1 : ℚ) := by
+    simp [maximumCoordinate, e]
+  rw [hone] at hk
+  norm_num at hk
+
+#check fixedPair_curvatureFold
+#check fixedPair_controllability_det
+#check fixedPair_independent_off_resonance
+#check resonanceOrbitSpan_le_kernel
+#check resonanceOrbitSpan_ne_top
+#print axioms fixedPair_controllability_det
+#print axioms resonanceOrbitSpan_ne_top
 
 #check curvatureSource
 #check curvatureFold
