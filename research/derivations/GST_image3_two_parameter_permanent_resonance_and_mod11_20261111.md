@@ -47,8 +47,7 @@ curvature strengths.**
 For every integer `k` and every rational direct strength `a`,
 
 \[
-\boxed{D(a,1+11k)
-e0.}
+\boxed{D(a,1+11k)\ne 0.}
 \]
 
 Thus **all** rational direct strengths preserve complete 12-state
@@ -133,8 +132,7 @@ coefficient vanishes, so we cannot infer nonzero polynomial from
 its leading term. Instead the exact ORIGINAL full determinant gives
 
 \[
-D(0,2)=-10365615590204736
-e0.
+D(0,2)=-10365615590204736\ne 0.
 \]
 
 Hence `D(·,2)` is a nonzero polynomial of degree at most 20.
@@ -156,7 +154,7 @@ Let `b=1+11k` be an arbitrary integer. Since `D(a,b)` is an
 modulo 11 yields
 
 \[
-D(a,1+11k)equiv D(a,1)\pmod{11}.
+D(a,1+11k)\equiv D(a,1)\pmod{11}.
 \]
 
 The complete exact table, independently verified by matrix-based
@@ -171,7 +169,7 @@ Every entry is nonzero. Moreover the integer polynomial in `a`
 has degree exactly 20 because its leading coefficient satisfies
 
 \[
-163840(2b-1)(b-2)^2equiv 6\pmod{11},
+163840(2b-1)(b-2)^2\equiv 6\pmod{11},
 \]
 
 and hence is not divisible by 11.
@@ -249,8 +247,7 @@ The analogous **complete 29-element-field exact certificate** yields
 b\in\mathbb Z,\quad
 b\bmod29\in{9,14,21,27}
 Longrightarrow
-\forall a\in\mathbb Q: D(a,b)
-e0.
+\forall a\in\mathbb Q: D(a,b)\ne 0.
 }
 \]
 
