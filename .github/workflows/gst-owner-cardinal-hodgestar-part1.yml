@@ -1,0 +1,49 @@
+name: GST owner cardinal worlds, Part1 operator, CM curvature Hodge Star
+on:
+  push:
+    branches:
+      - research/gpt6-native-point-primitive-span-20261017
+    paths:
+      - 'GSTCardinalWorldHodgeStarPart1.lean'
+      - '.github/workflows/gst-owner-cardinal-hodgestar-part1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare pinned Lean toolchain and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Verify full cardinal-world and true GST CM/Hodge Star proof root
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTOwnerCardinalPart1Lib GSTCardinalWorldHodgeStarPart1
+          if lake build GSTCardinalWorldHodgeStarPart1 > gst-cardinal-part1-proof.log 2>&1; then
+            echo "LEAN PASSED: original GST cardinal-world N+N² + original CM Hodge Star"
+          else
+            tail -n 160 gst-cardinal-part1-proof.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-cardinal-part1-proof.log; then
+            echo "Detected forbidden sorry" && exit 1
+          fi
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-owner-cardinal-part1-lean
+          path: gst-cardinal-part1-proof.log
+          if-no-files-found: warn
