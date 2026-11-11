@@ -8,6 +8,7 @@ on:
       - 'GSTImageThreeCMDescentFirewall.lean'
       - 'GSTImageThreeAllRectangularCMStar.lean'
       - 'GSTImageThreeOwnerPolynomialFold.lean'
+      - 'GSTImageThreeStarCMCurvatureFusion.lean'
       - 'GSTImageThreeRealizedWordGeometry.lean'
       - 'GSTImageThreeTwoModeGeometricBirth.lean'
       - '.github/workflows/gst-image3-geometric-descent-proof.yml'
@@ -48,11 +49,13 @@ jobs:
             GSTImageThreeCMDescentFirewall \
             GSTImageThreeAllRectangularCMStar \
             GSTImageThreeOwnerPolynomialFold \
+            GSTImageThreeStarCMCurvatureFusion \
             GSTImageThreeRealizedWordGeometry \
             GSTImageThreeTwoModeGeometricBirth
           if timeout 6800 lake build GSTImageThreeCMDescentFirewall \
               GSTImageThreeAllRectangularCMStar \
               GSTImageThreeOwnerPolynomialFold \
+              GSTImageThreeStarCMCurvatureFusion \
               GSTImageThreeRealizedWordGeometry \
               GSTImageThreeTwoModeGeometricBirth \
               > gst-image3-geometric-descent.log 2>&1; then
