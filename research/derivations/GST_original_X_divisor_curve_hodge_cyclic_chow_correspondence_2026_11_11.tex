@@ -458,4 +458,127 @@ LEFSCHETZ SECTOR. When this sector equals $W_p(X)$
 (outer weights), it discharges the full GST Hankel gate;
 in other weights it does not certify the unknown residual sector.
 
+
+\section{Embedding the ORIGINAL twelve-cell GST $U,J,M,[J,M]$ into actual original-$X$ Chow}
+
+This is the first explicit comparison of the \emph{owner's genuine
+twelve-cell} GST matrices with \emph{actual} self-correspondences
+on a general original smooth projective $X$, rather than merely
+an abstract rational module mimicking its orbit.
+
+For the original divisor-Lefschetz sector of dimension
+$r=\rho(X)$, the preceding genuine Chow matrix units
+$E_{ij}^{(p)}$ give an algebra map
+\[
+\boxed{
+\Phi_{X,p}:M_r(\mathbb Q)\longrightarrow
+CH^d(X\times X)_{\mathbb Q},\qquad
+A\longmapsto\sum_{i,j=0}^{r-1} A_{ji}E_{ij}^{(p)}.
+}
+\]
+Here $M_r(\mathbb Q)$ carries ordinary matrix multiplication
+and $CH^d(X\times X)_{\mathbb Q}$ carries refined
+correspondence composition. The matrix-unit identity proves
+\[
+\Phi(A)\circ\Phi(B)=\Phi(AB),\qquad
+\Phi(I_r)=\Pi_p,
+\]
+and $\Phi$ is \emph{injective}: if $\Phi(A)=0$ as Chow,
+apply it to every true source class $Z_i$ and pair with
+the genuine complementary classes $Y_j$ to recover every
+matrix entry $A_{ji}=0$.
+Thus the complete rational endomorphism algebra of the
+r-dimensional divisor-Lefschetz motive occurs as
+an actual rational \emph{Chow correspondence} subalgebra.
+This is a unital subalgebra with unit $\Pi_p$ (not with
+unit $\Delta_X$ unless the complementary Chow motive is zero).
+
+Suppose the original $X$ has $\rho(X)\ge12$. Choose a
+rational divisor basis, with any distinguished first
+twelve indices identified with the actual GST carry/trit
+cells $(i,k)\in\operatorname{Fin}(4)\times\operatorname{Fin}(3)$.
+Extend the owner's exact $12\times12$ rational operators
+$U,J,M$ by zero to the remaining $r-12$ divisor-basis
+coordinates, denoting these matrices
+$\widehat U,\widehat J,\widehat M\in M_r(\mathbb Q)$.
+Define \emph{genuine original-$X$} Chow correspondences
+\[
+\Gamma_U=\Phi(\widehat U),\quad
+\Gamma_J=\Phi(\widehat J),\quad
+\Gamma_M=\Phi(\widehat M),
+\]
+each explicitly a finite rational sum of actual
+$pr_1^*Y_i\cdot pr_2^*Z_j$ product cycles on $X\times X$.
+
+The full original GST commutator is now a **true Chow algebra identity**:
+\[
+\Gamma_J\circ\Gamma_M-\Gamma_M\circ\Gamma_J
+=\Phi([\widehat J,\widehat M]).
+\]
+For all rational direct/curvature strengths $a,b$, the true
+algebraic correspondence
+\[
+\boxed{
+\Gamma_{a,b}=
+\Gamma_U+\Gamma_J+a\Gamma_M+
+b(\Gamma_J\circ\Gamma_M-\Gamma_M\circ\Gamma_J)
+=\Phi\bigl(\widehat{U+J+aM+b[J,M]}\bigr)
+}
+\]
+has the **same exact** 12-state action as the original
+GST $F_{a,b}$ on the embedded original-X Chow source
+basis $\{Z_0^{(p)},\ldots,Z_{11}^{(p)}\}$.
+Its actual canonical Betti realization acts by the
+same exact rational matrix on the twelve independent
+$cl_X(Z_i)$ and maps all remaining divisor-Lefschetz
+source basis classes to zero. It kills the
+$\Pi_p$-complement in rational cohomology.
+
+In particular for the owner's genuine seed
+\[
+Z_{\mathrm{GST}}=
+Z^{(p)}_{(0,0)}+Z^{(p)}_{(0,1)}
+\in CH^p(X)_{\mathbb Q},
+\]
+the twelve first genuine ORIGINAL-X rational Betti orbit
+vectors under balanced curvature
+$\Gamma_{1,1}$ have the exact previously checked determinant
+\[
+\boxed{
+\det\left[
+cl_X(Z_{\mathrm{GST}}),
+T_{\Gamma_{1,1}}cl_X(Z_{\mathrm{GST}}),
+\ldots,T_{\Gamma_{1,1}}^{11}cl_X(Z_{\mathrm{GST}})
+\right]_{\{cl(Z_0),\ldots,cl(Z_{11})\}}
+=-445265540949\ne0.
+}
+\]
+The determinant is the native exact integer source
+certificate already recorded in the project; now
+\emph{the entire matrix, not just its rank, has a constructed
+genuine rational Chow correspondence realization on original $X$}
+whenever $\rho(X)\ge12$.
+
+This is an unconditional original-$X$ geometric SOURCE-LANDING
+theorem at EVERY codimension $1\le p\le d-1$
+for varieties with at least twelve independent divisor classes.
+No Hodge-to-Chow inverse or arbitrarily prescribed middle-primitive
+cycle is assumed. It does NOT make the twelve-dimensional
+algebraic sector equal to the entire rational Hodge fiber
+when that fiber has additional algebraic or unknown Hodge
+directions. The canonical all-weight conjecture requires
+independently constructing further classes in the
+complement; embedding finite native waves by algebraic
+matrix units does not make that complement vanish.
+
+The narrower repository datatype
+$\texttt{FiniteClosedCorrespondence}$ requires
+finite left fibers and does not accept these ordinary
+positive-dimensional product-correspondence carriers
+in general. Consequently formalization of this genuine
+full-Chow algebra map is currently given
+by the mathematical proof here, while the matching
+rational module compiler and exact original Hodge source
+naturality are checked in Lean separately.
+
 \end{document}
