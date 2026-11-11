@@ -7,6 +7,7 @@ on:
     paths:
       - 'GSTImageThreeCMDescentFirewall.lean'
       - 'GSTImageThreeAllRectangularCMStar.lean'
+      - 'GSTImageThreeOwnerPolynomialFold.lean'
       - 'GSTImageThreeRealizedWordGeometry.lean'
       - 'GSTImageThreeTwoModeGeometricBirth.lean'
       - '.github/workflows/gst-image3-geometric-descent-proof.yml'
@@ -46,10 +47,12 @@ jobs:
           python3 scripts/gst_lean_dependency_roots.py GSTImage3GeomDescentLib \
             GSTImageThreeCMDescentFirewall \
             GSTImageThreeAllRectangularCMStar \
+            GSTImageThreeOwnerPolynomialFold \
             GSTImageThreeRealizedWordGeometry \
             GSTImageThreeTwoModeGeometricBirth
           if timeout 6800 lake build GSTImageThreeCMDescentFirewall \
               GSTImageThreeAllRectangularCMStar \
+              GSTImageThreeOwnerPolynomialFold \
               GSTImageThreeRealizedWordGeometry \
               GSTImageThreeTwoModeGeometricBirth \
               > gst-image3-geometric-descent.log 2>&1; then
