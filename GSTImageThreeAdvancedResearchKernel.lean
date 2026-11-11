@@ -2,6 +2,7 @@ import GSTImageThreeAdvancedGeometricSource
 import GSTImageThreeFiniteFieldSourceCertificates
 import GSTImageThreeIndependentNCohoSource
 import GSTImageThreePhysicalNavigationControl
+import GSTImageThreePhysicalNCohoFusion
 
 /-!
 # GST Image-3 advanced source proof checkpoint
@@ -39,6 +40,8 @@ namespace GSTImageThreeAdvancedResearchKernel
 #check GSTImageThreeIndependentNCohoSource.holewise_two_step_reconstruct
 #check GSTImageThreePhysicalNavigationControl.physicalNavigationCharge_ne_half
 #check GSTImageThreePhysicalNavigationControl.physicalCurvature_two_step_reconstruct
+#check GSTImageThreePhysicalNCohoFusion.physicalHolewise_two_step_reconstruct
+#check GSTImageThreePhysicalNCohoFusion.physicalHolewise_pair_evolution
 
 #print axioms GSTImageThreeCurvatureResonance.fixedPair_second_order_null
 #print axioms GSTImageThreeCurvatureResonance.fixedPair_two_step_reconstruct
@@ -47,5 +50,6 @@ namespace GSTImageThreeAdvancedResearchKernel
 #print axioms GSTImageThreeFiniteFieldSourceCertificates.halfCurvatureP8Mod13_no_roots
 #print axioms GSTImageThreeIndependentNCohoSource.holewise_two_step_reconstruct
 #print axioms GSTImageThreePhysicalNavigationControl.physicalCurvature_two_step_reconstruct
+#print axioms GSTImageThreePhysicalNCohoFusion.physicalHolewise_two_step_reconstruct
 
 end GSTImageThreeAdvancedResearchKernel
