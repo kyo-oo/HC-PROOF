@@ -160,4 +160,121 @@ with $cl_X(Z_\alpha)=\alpha$.
 The above cyclic correspondence does not solve that middle-degree
 geometric source existence question; no rank certificate from a
 native wave model is substituted for it.
+
+\section{The owner's Part-1 two-birth seed: exact parity resonance and its universal rational repair}
+
+The original user-supplied source formula is
+$Z=Z_0+N(Z_0)$ followed by $N(Z)=NZ_0+N^2Z_0$.
+This is a valid equality of genuine Chow cycles once $N$ is the
+actual Chow correspondence constructed above. It does \emph{not}
+automatically preserve the full cyclic rank of $Z_0$.
+
+On the actual $r$-dimensional rational Hodge fiber of the preceding
+theorem, $T=T_\Gamma$ is the cyclic shift of a genuine algebraic
+basis $b_0,\ldots,b_{r-1}$. Thus $T^r=I$, and
+$b_0$ has a full $r$-dimensional orbit.
+For a rational coefficient $\lambda$ put
+\[
+Z_\lambda=Z_0+\lambda N Z_0\in CH^p(X)_{\mathbb Q},
+\quad b_\lambda=cl_X(Z_\lambda)=(I+\lambda T)b_0.
+\]
+The $r$ Krylov vectors of the new seed are the image under
+$I+\lambda T$ of the old basis-Krylov vectors, so
+\[
+\boxed{
+\det K_r(T,b_\lambda)
+=
+\bigl(1-(-\lambda)^r\bigr)\det K_r(T,b_0).
+}
+\]
+Indeed $\det(I+\lambda T)=\prod_{\zeta^r=1}
+(1+\lambda\zeta)=1-(-\lambda)^r$.
+
+At $\lambda=1$, this multiplier vanishes exactly when $r$ is even.
+For even $r$ the polynomial $1+x$ has
+$\gcd(1+x,x^r-1)=1+x$ and the new orbit has rank exactly $r-1$;
+for odd $r$ the orbit has rank exactly $r$.
+Applying $T$ once again to $b_\lambda$ does not repair the
+defect, because $T$ is invertible. This is the precise mathematical
+parity obstruction for the initial $N(Z_0+NZ_0)$ construction.
+
+At $\lambda=2$, by contrast,
+\[
+\det K_r(T,b_2)
+=\bigl(1-(-2)^r\bigr)\det K_r(T,b_0)\ne0
+\qquad (r\ge1).
+\]
+Thus the \emph{actual original-$X$ algebraic cycle}
+\[
+\boxed{Z_{\mathrm{safe}}=Z_0+2N Z_0}
+\]
+is a full native/Betti cyclic seed for \emph{every} Picard rank
+and every $X,p$ in the theorem.
+This correction is independent of unknown Hodge cycles or
+postulated surjectivity.
+
+There is also an explicit inverse witness in the genuine
+rational correspondence algebra:
+\[
+(I+2T)\sum_{k=0}^{r-1}(-2T)^k
+=I-(-2T)^r
+=\bigl(1-(-2)^r\bigr)I.
+\]
+Since the final scalar is nonzero in $\mathbb Q$,
+$I+2T$ is invertible by a finite rational word in the actual
+geometrically realized correspondence. Consequently the repaired
+seed does not merely have a nonzero tested determinant: it has
+a uniform exact finite-geometric inverse for all ranks.
+
+The exact independent Wolfram matrix check (see associated
+\texttt{GST\_original\_X\_cyclic\_seed\_parity\_resonance\_20261111.wl})
+verified $r=1,\ldots,10$, including the rank-$r-1$ even
+resonances and the repaired full ranks.
+The all-$r$ proof is the geometric-series identity above.
+
+\section{Every weight in dimensions at most three}
+For a connected smooth projective $X$ of complex dimension $d$,
+the original rational Hodge fibers in weights $p=0$ and $p=d$
+have dimension one, with actual algebraic generators $[X]$
+and a closed point $[x]$, respectively. The diagonal correspondence
+$\Delta_X$ and either generator realize a one-dimensional cyclic orbit.
+Weights $p>d$ have zero rational cohomology and the zero-cycle
+and diagonal trivially span their zero Hodge fiber.
+
+For $d=1$, every weight is outer. For $d=2$, the only middle
+weight is $p=1$. For $d=3$, the only middle weights are
+$p=1$ and $p=d-1=2$. Combining these elementary cases with
+the actual correspondence of the main theorem gives:
+
+\begin{theorem}[Full GST single-fold hypothesis in dimensions $d\le3$]
+For every connected smooth projective complex variety $X$ with
+$d\le3$ and every integer $p\ge0$, there exists a genuine
+original-$X$ rational Chow correspondence $\Gamma\in
+CH^d(X\times X)_{\mathbb Q}$ and genuine $Z\in CH^p(X)_{\mathbb Q}$
+whose canonical rational Betti orbit spans $W_p(X)$.
+This is an unconditional original-$X$ statement in every weight
+for these dimensions. It makes no claim about the higher middle
+weights of arbitrary-dimensional varieties.
+\end{theorem}
+
+\section{Formalization audit and hypothesis scope}
+The source finite-dimensional matrix-unit and cyclic-orbit algebra
+is implemented in
+\texttt{GSTOriginalXDivisorCurveCyclicChowFold.lean}, with
+its own exact-SHA GitHub Actions gate.
+The full refined Chow product/push-pull theorem is proved
+geometrically in the present manuscript and is not falsely
+ascribed to the repo's \texttt{FiniteClosedCorrespondence}
+type; a new full Chow-correspondence API is required to
+instantiate the exact existing Lean
+\texttt{RealizedCorrespondenceKrylovCertificate}
+with these positive-dimensional-fiber algebraic cycles.
+
+The middle-codimension universal target for every original $X$
+and prescribed $\alpha\in W_p(X)$, $2\le p\le d-2$,
+remains the source-existence question. The two-birth seed repair
+is an exact proof for the constructed low-weight sources,
+not a substitute for constructing an algebraic representative
+of a Hodge class in a genuinely unknown higher primitive fiber.
+
 \end{document}
