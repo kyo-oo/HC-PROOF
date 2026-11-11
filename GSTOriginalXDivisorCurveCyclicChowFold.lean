@@ -162,6 +162,9 @@ theorem orbit_span_le_source_span (sigma : ι → ι) (j : ι) :
       (Set.range (fun i : ι => F.cycleClass (F.source i))) := by
   apply Submodule.span_le.mpr
   rintro x ⟨n, rfl⟩
+  change F.cycleClass (F.nativeOrbit sigma j n) ∈
+    Submodule.span ℚ
+      (Set.range (fun i : ι => F.cycleClass (F.source i)))
   rw [F.nativeOrbit_eq_source sigma j n]
   exact Submodule.subset_span (Set.mem_range_self (indexOrbit sigma j n))
 
@@ -183,7 +186,9 @@ theorem source_span_le_orbit_span (sigma : ι → ι) (j : ι)
           (Set.range (fun m : ℕ => F.cycleClass (F.nativeOrbit sigma j m))) := by
     apply Submodule.subset_span
     refine ⟨n, ?_⟩
-    rw [F.nativeOrbit_eq_source sigma j]
+    change F.cycleClass (F.nativeOrbit sigma j n) =
+      F.cycleClass (F.source (indexOrbit sigma j n))
+    rw [F.nativeOrbit_eq_source sigma j n]
   simpa [hn] using hmem
 
 theorem source_span_eq_orbit_span (sigma : ι → ι) (j : ι)
