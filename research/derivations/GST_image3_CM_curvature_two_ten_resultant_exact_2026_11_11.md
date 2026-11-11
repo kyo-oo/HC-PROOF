@@ -35,7 +35,7 @@ A_{a,b}=
 \begin{pmatrix}
 1&1+2b\\
 2b-1&1+2a
-\end{pmatrix}, \quad v_2=\binom 10 .
+\end{pmatrix}, \quad v_2=\binom{1}{0} .
 \]
 
 The two-step Krylov determinant is **exactly**
@@ -464,10 +464,9 @@ at a=0 or a=-1. Therefore
 \[
 \boxed{
 \forall a\in\mathbb Q,\quad
-dim_\mathbb Qoperatorname{span}
+\dim_{\mathbb Q}\operatorname{span}
   (v,F_{a,0}v,\ldots,F_{a,0}^{11}v)=12
-\iff a
-otin{0,-1}.
+\iff a\notin\{0,-1\}.
 }
 \]
 
@@ -498,9 +497,7 @@ classification (section 12):
 \operatorname{rank}_\mathbb Q
 K_{12}(F_{a,\operatorname{navigationCharge}(R)},v)=12
 \iff
-\big(\operatorname{Navigation}(R)\lor(a
-e0land a
-e-1)\big).
+\big(\operatorname{Navigation}(R)\lor(a\ne 0\land a\ne -1)\big).
 }
 \]
 
@@ -522,9 +519,7 @@ assume exactly the genuinely necessary native single-hole condition
 
 \[
 \forall i<h,\quad
-\operatorname{Navigation}(R_i) \lor(a_i
-e0land a_i
-e-1).
+\operatorname{Navigation}(R_i) \lor(a_i\ne 0\land a_i\ne -1).
 \]
 
 The previous result gives a full cyclic original `12`-state source
@@ -567,7 +562,7 @@ the individual degree-twelve annihilators. Its degree is therefore
 
 \[
 \boxed{
-dim_\mathbb Qoperatorname{span}
+\dim_{\mathbb Q}\operatorname{span}
 {v_h,Tv_h,\ldots,T^{12h-1}v_h}=12h.
 }
 \]
