@@ -1,0 +1,49 @@
+name: GST original native two-world infinite controllability and original-X source gate
+on:
+  push:
+    branches:
+      - research/gpt6-native-point-primitive-span-20261017
+    paths:
+      - 'GSTNativeTwoWorldUnimodularBirth.lean'
+      - '.github/workflows/gst-native-two-world-unimodular-birth.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Pin Lean toolchain and prepare Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Build corrected original GST exact two-native-world source law
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTNativeTwoWorldUnimodularBirthLib GSTNativeTwoWorldUnimodularBirth
+          if lake build GSTNativeTwoWorldUnimodularBirth > gst-two-world-native-birth.log 2>&1; then
+            echo "LEAN PASSED: two independent Smith native birth coordinates and fourteen-clone original-source gate"
+          else
+            tail -n 180 gst-two-world-native-birth.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-two-world-native-birth.log; then
+            echo "Forbidden sorryAx" && exit 1
+          fi
+      - name: Preserve exact compiler proof log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-two-world-native-birth
+          path: gst-two-world-native-birth.log
+          if-no-files-found: warn
