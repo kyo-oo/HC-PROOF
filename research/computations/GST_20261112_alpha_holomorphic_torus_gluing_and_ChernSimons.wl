@@ -1,8 +1,8 @@
 (* Exact user-correction checks:
    1. An actual nontrivial holomorphic line bundle on affine
-      (C*)^2 via an integer automorphy cocycle.
+      the two-dimensional complex algebraic torus via an integer automorphy cocycle.
    2. Its Chern period is integral one.
-   3. An algebraic Laurant-polynomial differential has zero
+   3. An algebraic Laurent-polynomial differential has zero
       (x^-1 y^-1) residue when exact, so dlog x wedge dlog y
       is not exact.
    4. The all-degree ABELIAN Chern-Simons telescoping
