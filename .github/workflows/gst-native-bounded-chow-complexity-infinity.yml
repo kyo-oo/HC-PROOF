@@ -5,6 +5,7 @@ on:
       - research/gpt6-native-point-primitive-span-20261017
     paths:
       - 'GSTNativeBoundedChowComplexityInfinityGate.lean'
+      - 'GSTNativeQuantizedApproximateSource.lean'
       - '.github/workflows/gst-native-bounded-chow-complexity-infinity.yml'
   workflow_dispatch:
 permissions:
@@ -30,9 +31,9 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/gst_lean_dependency_roots.py GSTNativeComplexityInfinityLib GSTNativeBoundedChowComplexityInfinityGate
-          if lake build GSTNativeBoundedChowComplexityInfinityGate > gst-native-complexity-infinity.log 2>&1; then
-            echo "LEAN PASSED: exact native physical CM Jordan and bounded-profile infinite worlds"
+          python3 scripts/gst_lean_dependency_roots.py GSTNativeComplexityInfinityLib GSTNativeBoundedChowComplexityInfinityGate GSTNativeQuantizedApproximateSource
+          if lake build GSTNativeBoundedChowComplexityInfinityGate GSTNativeQuantizedApproximateSource > gst-native-complexity-infinity.log 2>&1; then
+            echo "LEAN PASSED: full native complexity and exact epsilon-quantized approximate Hodge target gate"
           else
             tail -n 150 gst-native-complexity-infinity.log
             exit 1
