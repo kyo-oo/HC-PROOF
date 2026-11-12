@@ -86,3 +86,32 @@ full=<|
   Det[gram]==2&&restored=={a,b,c})|>;
 full
 ]
+
+(* SECOND independent ORIGINAL-X Hodge-star algebraic source check.
+   On a real smooth projective threefold (P1)^3, the Kahler
+   Hodge star maps alpha=a x1x2+b x1x3+c x2x3 to
+   beta=c x1+b x2+a x3.
+   The genuine original-X Chow output
+     -beta*h +(3/2)*tr(beta)*h^2
+   reproduces alpha as a CHOW ring identity, not just periods.
+   The rational factorial identity is tested for d=2,...,12,
+   while its general proof is elementary factorial algebra. *)
+Module[{a,b,c,x1,x2,x3,h,alpha,beta,t,reduction,
+  starBorn,facTests},
+h=x1+x2+x3;
+alpha=a*x1*x2+b*x1*x3+c*x2*x3;
+beta=c*x1+b*x2+a*x3;
+t=(a+b+c)/3;
+reduction[z_]:=Expand[z]/.{x1^2->0,x2^2->0,x3^2->0};
+starBorn=reduction[-beta*h+(3/2)*t*h^2];
+facTests=Table[
+ FullSimplify[-1/Factorial[d-2]+d/Factorial[d-1]-1/Factorial[d-1]],
+ {d,2,12}];
+<|"metricStarOfGivenOriginalAlpha"->beta,
+  "rationalKahlerTrace"->t,
+  "actualChowCycleFromGSTHodgeStar"->starBorn,
+  "exactChowTargetDifference"->Simplify[starBorn-alpha],
+  "allStarFactorialTestsD2Through12"->facTests,
+  "allPassed"->(
+    Simplify[starBorn-alpha]==0&&And@@(#==0&/@facTests))|>
+]
