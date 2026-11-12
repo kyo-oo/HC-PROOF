@@ -38,11 +38,17 @@ theorem infinite_native_worlds_finite_chow_profile
   push_neg at h
   have hFinite : (⋃ j : J, worlds ∩ profile ⁻¹' {j}).Finite :=
     Set.finite_iUnion h
-  apply hInfinite
-  apply hFinite.mono
-  intro w hw
-  apply Set.mem_iUnion.mpr
-  exact ⟨profile w, ⟨hw, rfl⟩⟩
+  have hCover : (⋃ j : J, worlds ∩ profile ⁻¹' {j}) = worlds := by
+    ext w
+    constructor
+    · intro hw
+      rcases Set.mem_iUnion.mp hw with ⟨j, hj⟩
+      exact hj.1
+    · intro hw
+      apply Set.mem_iUnion.mpr
+      exact ⟨profile w, ⟨hw, rfl⟩⟩
+  rw [hCover] at hFinite
+  exact hInfinite hFinite
 
 /-- Exact owner's original physical null/maximum CM factor at
 DIRECT SURVIVE strength one, Navigation OFF. -/
