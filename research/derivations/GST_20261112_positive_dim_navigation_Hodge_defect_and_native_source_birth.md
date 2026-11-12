@@ -122,3 +122,48 @@ This is an actual original-X Chow cycle, not merely an auxiliary-world source. I
 - An exact Wolfram reconstruction of the literal source U/J/M/CM found both 16x16 mixed-seed Krylov determinants nonzero and verified exact inverse reconstruction of a sample prescribed rational sixteen-coordinate alpha in both physical Navigation states.
 - The source theorem for EVERY m>=2 follows from the real projective-bundle and blowup Chow formulas, not from extrapolating m=7.
 - No Lean theorem claiming arbitrary-X Hodge surjectivity is asserted. The remaining universal question is an independent algebraic source-birth mechanism on arbitrary original X where no suitable Navigation fixed-component tower exists.
+
+
+## The exact GST Hodge-width invariant and a sharp all-world obstruction
+
+The motivic theorem controls not only algebraic source images but the ENTIRE
+Hodge bigrading. Put H_X(u,v)=sum_{a,b} h^{a,b}(X)u^a v^b. The ACTUAL
+Bialynicki-Birula motivic decomposition gives the exact polynomial identity
+
+\[
+\boxed{H_X(u,v)=\sum_i (uv)^{a_i}H_{F_i}(u,v).}
+\]
+
+Define the Hodge-width invariant
+\[
+w(X)=\max\{|a-b|:h^{a,b}(X)\ne0\}
+\]
+(with w=0 for the zero variety, if necessary). All coefficients
+in the Hodge-polynomial identity are nonnegative integers. Shifting by
+(uv)^{a_i} leaves a-b unchanged, so there is NO cancellation and
+
+\[
+\boxed{w(X)=\max_i w(F_i).}
+\]
+
+The same identity holds at EVERY finite level of the owner's actual
+algebraic Navigation tower. Therefore a tower whose terminal fixed
+components all have dimension at most three necessarily has w(X)<=3.
+
+This sharply limits the stated complete low-dimensional fixed-world
+constructor. For example X=S x S with S ANY smooth projective K3
+surface has h^{4,0}(X)=1 and hence w(X)=4. It CANNOT possess a finite
+tower of algebraic multiplicative Navigation flows whose terminal
+fixed components all have complex dimension <=3. This does NOT claim
+that Hodge conjecture fails for S x S; it only proves that THIS low-fixed-
+dimension Navigation proof mechanism is inapplicable.
+
+In contrast X_m=Bl_12(E x P1) x P^m above has w(X_m)=1 and h10=1,
+so the positive-dimensional fixed-world theorem genuinely advances
+past isolated-fixed-point cellular varieties while retaining
+precisely the original non-diagonal Hodge information.
+
+The next genuinely new arbitrary-X construction would have to handle
+fixed components of Hodge-width >=4 OR create algebraic geometry
+without an algebraic G_m action. Repeating a constant-world torus
+action cannot reduce either the width or the original Chow-image defect.
