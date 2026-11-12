@@ -27,7 +27,7 @@ Module[{readouts,gram,coeff,expected,cells,u,j,m,comm,f0,f1,
  gram[[1,2]]=5;gram[[2,1]]=5;
  coeff=Simplify[Inverse[gram].readouts];
  expected=Join[{(2 readouts[[1]]-readouts[[2]])/15,
-   (-readouts[[1]]+2q[[2]])/15},
+   (-readouts[[1]]+2 readouts[[2]])/15},
    Table[readouts[[i]]/10,{i,3,8}]];
  cells=Flatten[Table[{i,k},{i,0,3},{k,0,2}],1];
  u=ConstantArray[0,{12,12}];
