@@ -87,4 +87,14 @@ for charge in (0,1):
 assert [r['originalDet'] for r in results] == [16,0]
 assert [r['N14OriginalSeedKrylovDet'] for r in results] == [
     -823658646480,14979092529]
-print({'states':results,'allPassed':True})
+# Independent exact ALL-parameter symbolic determinant, not sampling.
+AA, BB = sp.symbols("AA BB")
+Fsymbolic = U+J+AA*M+BB*CURVATURE
+Gsymbolic = Fsymbolic.row_join(B).col_join(
+    C.row_join(sp.zeros(2)))
+symbolic_determinant = sp.factor(Gsymbolic.det(method='domain-ge'))
+assert sp.simplify(symbolic_determinant-(AA+BB*(BB-1)**2))==0
+
+print({'states':results,
+       'symbolic14det':str(symbolic_determinant),
+       'allParameterPolynomialVerified':True,'allPassed':True})
