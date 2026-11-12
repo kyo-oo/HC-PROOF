@@ -74,13 +74,11 @@ theorem approximate_native_rational_target_is_exact
       _ = ((b * (D : ℤ) - a * (M : ℤ)) : ℚ) := by
         push_cast
         ring
-  have hScaledCast :
-      (D : ℚ) * (M : ℚ) * (beta-alpha) =
-        ((b * (D : ℤ) - a * (M : ℤ)) : ℚ) := by
-    simpa only [Int.cast_sub, Int.cast_mul, Int.cast_natCast] using hScaled
   have hZero := integer_gap_for_scaled_native_error
     (beta-alpha) (b * (D : ℤ) - a * (M : ℤ)) D M C
-    hD hM hMC hScaledCast hClose
+    hD hM hMC (by
+      push_cast
+      exact hScaled) hClose
   exact sub_eq_zero.mp hZero
 
 /-- The exact 1/(d*C) boundary is strictly necessary:
