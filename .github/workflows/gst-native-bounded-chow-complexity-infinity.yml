@@ -1,0 +1,49 @@
+name: GST native infinity complexity and original physical Jordan proof
+on:
+  push:
+    branches:
+      - research/gpt6-native-point-primitive-span-20261017
+    paths:
+      - 'GSTNativeBoundedChowComplexityInfinityGate.lean'
+      - '.github/workflows/gst-native-bounded-chow-complexity-infinity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare pinned Lean and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Compile native cardinal complexity profile and physical Jordan proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTNativeComplexityInfinityLib GSTNativeBoundedChowComplexityInfinityGate
+          if lake build GSTNativeBoundedChowComplexityInfinityGate > gst-native-complexity-infinity.log 2>&1; then
+            echo "LEAN PASSED: exact native physical CM Jordan and bounded-profile infinite worlds"
+          else
+            tail -n 150 gst-native-complexity-infinity.log
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-native-complexity-infinity.log; then
+            echo "Forbidden sorryAx" && exit 1
+          fi
+      - name: Upload exact Lean diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-native-complexity-infinity
+          path: gst-native-complexity-infinity.log
+          if-no-files-found: warn
