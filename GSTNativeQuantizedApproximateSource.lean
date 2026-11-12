@@ -44,6 +44,8 @@ theorem integer_gap_for_scaled_native_error
     have h := lt_of_le_of_lt hLE hBound
     simpa only [abs_mul, abs_of_pos hd, abs_of_pos hm] using h
   have hkInt : |k| < 1 := by exact_mod_cast hkLt
+  have hkPos : k < 1 := lt_of_le_of_lt (le_abs_self k) hkInt
+  have hkNeg : -k < 1 := lt_of_le_of_lt (neg_le_abs k) hkInt
   have hkZero : k = 0 := by omega
   have hProd : (D : ℚ) * (M : ℚ) * x = 0 := by
     simpa [hkZero] using hScaled
@@ -72,9 +74,13 @@ theorem approximate_native_rational_target_is_exact
       _ = ((b * (D : ℤ) - a * (M : ℤ)) : ℚ) := by
         push_cast
         ring
+  have hScaledCast :
+      (D : ℚ) * (M : ℚ) * (beta-alpha) =
+        ((b * (D : ℤ) - a * (M : ℤ)) : ℚ) := by
+    simpa only [Int.cast_sub, Int.cast_mul, Int.cast_natCast] using hScaled
   have hZero := integer_gap_for_scaled_native_error
     (beta-alpha) (b * (D : ℤ) - a * (M : ℤ)) D M C
-    hD hM hMC hScaled hClose
+    hD hM hMC hScaledCast hClose
   exact sub_eq_zero.mp hZero
 
 /-- The exact 1/(d*C) boundary is strictly necessary:
