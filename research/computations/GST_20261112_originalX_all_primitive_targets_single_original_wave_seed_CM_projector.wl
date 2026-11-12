@@ -20,15 +20,15 @@
    No assumption of a preexisting alpha Chow class.
    The full universal Hodge conjecture for arbitrary X is not proved. *)
 
-Module[{q,G,coeff,expected,cells,u,j,m,comm,f0,f1,
+Module[{readouts,gram,coeff,expected,cells,u,j,m,comm,f0,f1,
  seed,k0,k1,target0,coeff0,coeff1,witness,return0,return1,ok},
- q=Array[q,8];
- G=DiagonalMatrix[{10,10,10,10,10,10,10,10}];
- G[[1,2]]=5;G[[2,1]]=5;
- coeff=Simplify[Inverse[G].q];
- expected=Join[{(2 q[[1]]-q[[2]])/15,
-   (-q[[1]]+2q[[2]])/15},
-   Table[q[[i]]/10,{i,3,8}]];
+ readouts=Table[Symbol["hodgeReadout"<>ToString[i]],{i,1,8}];
+ gram=DiagonalMatrix[{10,10,10,10,10,10,10,10}];
+ gram[[1,2]]=5;gram[[2,1]]=5;
+ coeff=Simplify[Inverse[gram].readouts];
+ expected=Join[{(2 readouts[[1]]-readouts[[2]])/15,
+   (-readouts[[1]]+2q[[2]])/15},
+   Table[readouts[[i]]/10,{i,3,8}]];
  cells=Flatten[Table[{i,k},{i,0,3},{k,0,2}],1];
  u=ConstantArray[0,{12,12}];
  j=ConstantArray[0,{12,12}];
@@ -51,24 +51,24 @@ Module[{q,G,coeff,expected,cells,u,j,m,comm,f0,f1,
  coeff0=Simplify[Inverse[k0].target0];
  coeff1=Simplify[Inverse[k1].target0];
  witness=Range[1,8];
- return0=k0.(coeff0/.Thread[q->witness]);
- return1=k1.(coeff1/.Thread[q->witness]);
- ok=(Simplify[G.coeff-q]==ConstantArray[0,8]&&
+ return0=k0.(coeff0/.Thread[readouts->witness]);
+ return1=k1.(coeff1/.Thread[readouts->witness]);
+ ok=(Simplify[gram.coeff-readouts]==ConstantArray[0,8]&&
     Simplify[coeff-expected]==ConstantArray[0,8]&&
-    Det[G]==75000000&&
+    Det[gram]==75000000&&
     Det[k0]==-1149656584000&&
     Det[k1]==-445265540949&&
     Simplify[k0.coeff0-target0]==ConstantArray[0,12]&&
     Simplify[k1.coeff1-target0]==ConstantArray[0,12]&&
-    return0==Join[(coeff/.Thread[q->witness]),ConstantArray[0,4]]&&
-    return1==Join[(coeff/.Thread[q->witness]),ConstantArray[0,4]]);
+    return0==Join[(coeff/.Thread[readouts->witness]),ConstantArray[0,4]]&&
+    return1==Join[(coeff/.Thread[readouts->witness]),ConstantArray[0,4]]);
  <|"originalX"->"P_{E_CM^3}(O+L), codim2 primitive",
    "allPrimitiveHodgeDimensions"->8,
-   "actualEightChowSourceGramDet"->Det[G],
-   "arbitraryPrescribedTargetIntersectionSymbols"->q,
+   "actualEightChowSourceGramDet"->Det[gram],
+   "arbitraryPrescribedTargetIntersectionSymbols"->readouts,
    "exactOriginalXChowCoefficients"->coeff,
    "fullPrimitiveTargetReturn"->
-     Simplify[G.coeff-q]==ConstantArray[0,8],
+     Simplify[gram.coeff-readouts]==ConstantArray[0,8],
    "originalPhysicalGSTOffKrylovDet"->Det[k0],
    "originalPhysicalGSTOnKrylovDet"->Det[k1],
    "everyRationalPrimitiveTargetOneSeedOff"->TrueQ[
