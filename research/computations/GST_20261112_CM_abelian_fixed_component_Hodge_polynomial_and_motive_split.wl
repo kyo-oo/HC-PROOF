@@ -10,7 +10,7 @@
    and does not pretend BB decomposition is derived by finite
    coefficient computations. *)
 Module[{u,v,ha,hx,hBB,hodd,diag,offdiag,diff,
-  sourceDefect,p0,p1,nonzero,B0,B1,check},
+  check},
 ha=Expand[(1+u)^3(1+v)^3];
 hx=Expand[(1+u v)ha];
 hBB=Expand[ha+u v ha];
@@ -19,8 +19,6 @@ offdiag=Coefficient[Coefficient[hx,u,1],v,0];
 diff=Expand[hx-hBB];
 (* Original CM abelian fixed source known in all codim<=3,
    so Hdg image defect zero in each, hence zero in X. *)
-B0={1,9,9,1};
-B1={0,1,9,9,1};
 check=(diag=={1,10,18,10,1}&&offdiag==3&&
  diff==0&&Factor[ha]==(1+u)^3(1+v)^3);
 <|"fixedComponentHodgePolynomial"->ha,
