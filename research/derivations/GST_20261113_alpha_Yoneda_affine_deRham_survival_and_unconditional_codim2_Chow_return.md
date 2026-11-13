@@ -122,3 +122,35 @@ The Yoneda extension \(e_\alpha\) and its rank-one matrix-unit projector in the 
 **Evidence status:** Theorem A is affine coherent vanishing; B follows from genuine middle Lefschetz/Gysin; C is algebraic de Rham comparison; D is an unconditional explicit *return operation* from a supplied affine algebraic source to the original X, using semisimple polarizable Hodge structures and Lefschetz \((1,1)\). These are standard-mathematical hand proofs, self-reviewed, not Lean kernel formalizations. In the first central codimension-two case the ONLY unresolved arrow in this route is existence of the affine algebraic \(K_0\) representative for the prescribed projective-origin \(\beta\). This is not a proof of the unrestricted rational Hodge conjecture.
 
 **Repository source interfaces:** earlier original-X projective primitive thimble survival, 2026-11-13 affine Clifford Oka birth, 2026-10-21 boundary Deligne construction, GSTUniversalChowRetractToTarget.lean, GSTHodgeSingleHypothesisConditional.lean, and the companion algebraic Yoneda file. No unrelated finite test varieties were substituted.
+
+
+## 7. Stronger exact result: conservation of the ENTIRE codimension-two Hodge defect under the affine fold
+
+Write
+\[
+W_X=Hdg^2(X)_{\mathbb Q}
+=H^4(X,\mathbb Q)\cap H^{2,2}(X),\quad
+A_X=\operatorname{im}(\operatorname{cl}_X^{\rm can}:CH^2(X)_{\mathbb Q}\to W_X),
+\]
+and let \(r=j^*:W_X\to H^4(U,\mathbb Q)\). Put \(A_U=\operatorname{im}(\operatorname{cl}_U^{\rm can}:CH^2(U)_{\mathbb Q}\to H^4(U,\mathbb Q))\).
+
+**Theorem E (exact affine-defect conservation for arbitrary original X).** Theorem D implies both
+\[
+\boxed{\ker(r)\subseteq A_X,\qquad r(W_X)\cap A_U=r(A_X).}
+\tag{8}
+\]
+Consequently restriction induces an ACTUAL isomorphism of rational vector spaces
+\[
+\boxed{
+\frac{W_X}{A_X}\ \xrightarrow{\ \sim\ }\
+\frac{r(W_X)}{r(W_X)\cap A_U}.
+}
+\tag{9}
+\]
+The same statement holds in codimension \(p\) whenever the Hodge conjecture is established in codimension \(p-1\) for the smooth boundary \(D\).
+
+**Proof.** Since zero is an algebraic class on \(U\), Theorem D applied to any \(w\in\ker r\) proves \(w\in A_X\). Since the restriction of an original-X algebraic cycle is algebraic on \(U\), \(r(A_X)\subseteq r(W_X)\cap A_U\). Conversely if \(r(w)\in A_U\) for \(w\in W_X\), Theorem D constructs an ACTUAL original-X cycle representing \(w\), whence \(w\in A_X\) and \(r(w)\in r(A_X)\). These establish (8). The induced quotient map is surjective by definition, and injective because \(r(w)\in r(A_X)\) means \(r(w-a)=0\) for some \(a\in A_X\); then \(w-a\in\ker r\subseteq A_X\), hence \(w\in A_X\). QED.
+
+**Exact research consequence.** The earlier original-X algebraic Yoneda extension \(e_\alpha\) dies on affine \(U\) for EVERY positive codimension, whereas the whole *nonalgebraic rational Hodge defect* in codimension two is preserved by the affine fold exactly. Thus the correct projective-origin GST affine world must retain the rational Betti/algebraic de Rham \(\beta=j^*\alpha\) as the nonzero source marker and force its ACTUAL affine algebraic \(K_0\) realization. No arithmetic scalar mass, flat Ext-cone, or unrestricted holomorphic Oka map is a substitute for this exact motivic charge.
+
+Theorem E is a general localization-and-Hodge-theory deduction, **not** the missing proof that the quotient in (9) vanishes. It provides a direct equivalence between the original projective defect and the precise affine source-existence defect, with the boundary reconstruction already proved in Theorem D.
