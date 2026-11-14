@@ -57,8 +57,8 @@ twelvePointAnalytification 0 ≃ₗ[ℚ] (Fin 12 → ℚ)`,
 `deadFiber_subsingleton : ∀ p, 0 < p → Subsingleton (ClassicalHodgeFiber … p)`,
 `twelvePointFoldWord : RealizedCorrespondenceWord twelvePointWorld
 twelvePointHodgeData 0`, `twelvePointFoldWord_hodge`,
-`twelvePointFoldMatrix : Matrix (Fin 12) (Fin 12) ℚ` (definitionally `Twave`),
-and `foldWord_op`.  These are assumed at ROOT namespace, as the wave's task
+`twelvePointFoldMatrix : Matrix (Fin 12) (Fin 12) ℚ` (equal to `Twave`
+entrywise, proved below), and `twelvePointFoldWord_op`.  These are assumed at ROOT namespace, as the wave's task
 sheets spell them; the merge wave only adds `open`s if the carrier wave
 namespaces them.
 
@@ -92,6 +92,11 @@ open GSTClassicalHodgeExactClayStatement
 open GSTHodgeSingleHypothesisConditional
 open GSTHypothesisSpanningCompilerFace
 open GSTNativeSingleFoldOrbitLawLanding
+open GSTTwelvePointWorldCarrier
+open GSTTwelvePointAnalytification
+open GSTTwelvePointCohomology
+open GSTTwelvePointHodgeData
+open GSTTwelvePointFoldWord
 
 namespace GSTTwelvePointLawLanding
 
@@ -176,18 +181,20 @@ noncomputable def twelvePointCertificate :
 
 Under the H⁰ iso, the underlying classes of the certificate's Hodge orbit
 are exactly Face 2's coordinate Krylov orbit `C` — by induction on the step
-equation, since the word's operator IS the wave matrix (`foldWord_op`). -/
+equation, since the word's operator IS the wave matrix (`twelvePointFoldWord_op`). -/
 
-/-- AUDIT (contract): the fold matrix IS the owner's `Twave`, definitionally
-(`GSTTwelvePointFoldWord` sets `twelvePointFoldMatrix := Twave`).  If the
-parallel wave instead proves the matrix equality as a theorem, replace `rfl`
-by that theorem's name. -/
+/-- AUDIT (contract): the fold matrix IS the owner's `Twave`.  The parallel
+wave assembles `twelvePointFoldMatrix` as the letter-data sum (not
+definitionally `Twave`), so the equality is proved entrywise: every one of
+the 144 `Fin 12 × Fin 12` entries is discharged by `fin_cases` + `decide`
+(the same entrywise kernel sweep as `Twave_bridge`), through `Matrix.ext`. -/
 theorem twelvePointFoldMatrix_eq_Twave :
-    twelvePointFoldMatrix = Twave := rfl
+    twelvePointFoldMatrix = Twave :=
+  Matrix.ext fun r c => by fin_cases r <;> fin_cases c <;> decide
 
 /-- **THE ORBIT IS THE KR YLOV TABLE.**  `iso (hodgeOrbit n) = C n` for every
 `n`: the orbit starts at the seed (`C 0 = coordSeed`) and every step is one
-`Twave.mulVec` on both sides (`foldWord_op` vs `C_succ`). -/
+`Twave.mulVec` on both sides (`twelvePointFoldWord_op` vs `C_succ`). -/
 theorem twelvePointHodgeOrbit_coords (n : Nat) :
     twelvePointCohomologyIso ((twelvePointCertificate.hodgeOrbit n).1) = C n := by
   induction n with
@@ -196,7 +203,7 @@ theorem twelvePointHodgeOrbit_coords (n : Nat) :
       have hstep : (twelvePointCertificate.hodgeOrbit (n + 1)).1 =
           (realizedWordPair twelvePointFoldWord).cohomologyOperator
             (twelvePointCertificate.hodgeOrbit n).1 := rfl
-      rw [hstep, foldWord_op, ih, C_succ, twelvePointFoldMatrix_eq_Twave]
+      rw [hstep, twelvePointFoldWord_op, ih, C_succ, twelvePointFoldMatrix_eq_Twave]
 
 /-- The underlying class of the n-th Hodge-orbit vector is the inverse-iso
 image of the n-th Face-2 Krylov value (the coordinate theorem read through
@@ -249,17 +256,17 @@ theorem twelvePoint_orbitUnderlying_span :
 
 /-- **CYCLICITY.**  The certificate is Krylov-cyclic: the rational span of its
 Hodge orbit is the whole weight-0 fiber.  Route: the subtype-span statement
-transports through `span_range_subtype_eq_top_iff` (the landing file's own
+transports through `Submodule.span_range_subtype_eq_top_iff` (the landing file's own
 `§7` bridge pattern, here in the `.mpr` direction) to the ambient span of the
 underlying classes, which is `twelvePoint_orbitUnderlying_span` at the
 `⊤`-fiber `zeroFiber_eq_top`.
 
-AUDIT (API): `span_range_subtype_eq_top_iff` is consumed with named
+AUDIT (API): `Submodule.span_range_subtype_eq_top_iff` is consumed with named
 implicit arguments `p`/`s` and the membership witness, mirroring the landing
 file's `.mp` usage; the `.mpr` direction supplies the ambient span. -/
 theorem twelvePointCertificate_isKrylovCyclic :
     twelvePointCertificate.IsKrylovCyclic :=
-  (span_range_subtype_eq_top_iff
+  (Submodule.span_range_subtype_eq_top_iff
     (p := rationalHodgeSubspace (twelvePointHodgeData.hodgeBigrading 0))
     (s := fun n : Nat => (twelvePointCertificate.hodgeOrbit n).1)
     (fun n => (twelvePointCertificate.hodgeOrbit n).2)).mpr

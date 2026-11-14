@@ -67,7 +67,7 @@ diagonal `Spec.map (algebraMap ℂ (Fin 12 → ℂ))`.
    transported to the homogeneous charts through `Polynomial.homogenize` (degree ≤ 11) +
    `aeval_homogenize_of_eq_one`.
 3. **Dimension zero** — every point has coheight 0: `ℂ¹²` is Artinian, all primes maximal,
-   each prime `ker (eval i)` (`PrimeSpectrum.exists_commap_evalRingHom_eq`,
+   each prime `ker (eval i)` (`PrimeSpectrum.exists_comap_evalRingHom_eq`,
    `Mathlib/RingTheory/Spectrum/Prime/RingHom.lean:164`).  Twelve closed points, no
    positive-dimensional local geometry anywhere.
 
@@ -78,7 +78,7 @@ diagonal `Spec.map (algebraMap ℂ (Fin 12 → ℂ))`.
    discrete 12-point space.  `ComplexPoint V₀ ≃ Fin 12`: sections over `Spec ℂ` are the twelve
    evaluation algebra maps `ℂ¹² →ₐ ℂ`, classified through `Spec.homEquiv`
    (`Mathlib/AlgebraicGeometry/GammaSpecAdjunction.lean:579`) + kernel-maximality +
-   `exists_commap_evalRingHom_eq`.
+   `exists_comap_evalRingHom_eq`.
 5. **The singular cohomology — the first computation of the corpus's
    `RationalSingularCohomology` of an actual concrete space.**  Chains ≅
    `ChainComplex.alternatingConst.obj (∐₁₂ ℚ)` by
@@ -196,9 +196,10 @@ correspondences on a native world — the first time the typed twelve-cell cycli
   1972211392251/287414146000, −222341135573/57482829200, −2561034108797/287414146000,
   1495609060489/114965658400, −1534796826903/143707073000, 4537167712259/574828292000,
   −139786417941/28741414600, 132586088003/57482829200, −30218089597/35926768250,
-  88913498431/574828292000`.  Largest coefficient `4537167712259/574828292000` (row 4,
-  column 7); largest denominator `574828292000 = |det|/2` (adjugate/Cramer: every
-  denominator divides the determinant).
+  88913498431/574828292000`.  Largest-magnitude coefficient
+  `1495609060489/114965658400` (row 4, column 5); largest numerator
+  `4537167712259/574828292000` (row 4, column 7); largest denominator `574828292000 =
+  |det|/2` (adjugate/Cramer: every denominator divides the determinant).
 * **Cross-checks**: all 144 fractions kernel-checked in Lean (`eIdx_eq_cert`,
   `fin_cases <;> fin_cases <;> norm_num`); the two Lean orbit tables (Face 1's `Kvec`/
   `worldOrbit` and Face 2's `Cvec`) are the same table in two indexings; the 26 Twave

@@ -5,6 +5,7 @@ import GSTTwelvePointCohomology
 import GSTGeometricRealizationStage2G
 import GSTGeometricRealizationStage2D
 import GSTNativeCodimensionCyclePresentation
+import GSTClassicalHodgeFiberedCosmology
 
 /-!
 # GST TWELVE-POINT HODGE DATA
@@ -42,9 +43,11 @@ open CategoryTheory
 open AlgebraicGeometry
 open TensorProduct
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2C
 open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeFiberedCosmology
 open GSTNativeCodimensionCyclePresentation
 open GSTTwelvePointWorldCarrier
 open GSTTwelvePointAnalytification
@@ -55,14 +58,19 @@ namespace GSTTwelvePointHodgeData
 /-! ## §1 SUBSINGLETON HELPERS -/
 
 /-- In a subsingleton module every pair of submodules coincides. -/
-theorem subsingleton_submodules_eq {M : Type} [AddCommGroup M] [Module ℚ M]
-    [Subsingleton M] (P Q : Submodule ℚ M) : P = Q :=
+theorem subsingleton_submodules_eq {R : Type} [CommSemiring R] {M : Type}
+    [AddCommGroup M] [Module R M] [Subsingleton M] (P Q : Submodule R M) :
+    P = Q :=
   Submodule.ext fun m => by
     constructor
-    · intro hm
-      exact Subsingleton.elim (P.mem m) m
-    · intro hm
-      exact Subsingleton.elim (Q.mem m) m
+    · intro _
+      have h : m = 0 := Subsingleton.elim m 0
+      subst h
+      exact Q.zero_mem
+    · intro _
+      have h : m = 0 := Subsingleton.elim m 0
+      subst h
+      exact P.zero_mem
 
 /-- The complexification of a subsingleton ℚ-module is subsingleton:
 every pure tensor has a zero left factor. -/
@@ -122,9 +130,12 @@ noncomputable def deadBigrading (p : Nat) (hp : 0 < p) :
     where
   component := fun _ => ⊥
   independent := by
-    have hsub : Subsingleton
+    haveI hsub : Subsingleton
         (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=
       twelvePointCohomology_subsingleton _ (by omega)
+    haveI hcomp : Subsingleton (Complexification
+        (RationalSingularCohomology twelvePointAnalytification (2 * p))) :=
+      subsingleton_complexification
     haveI hlat : Subsingleton (Submodule ℂ (Complexification
         (RationalSingularCohomology twelvePointAnalytification (2 * p)))) :=
       ⟨fun P Q => subsingleton_submodules_eq P Q⟩
@@ -137,9 +148,12 @@ noncomputable def deadBigrading (p : Nat) (hp : 0 < p) :
     rw [hsup]
     exact (disjoint_self ⊥).mpr rfl
   spans := by
-    have hsub : Subsingleton
+    haveI hsub : Subsingleton
         (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=
       twelvePointCohomology_subsingleton _ (by omega)
+    haveI hcomp : Subsingleton (Complexification
+        (RationalSingularCohomology twelvePointAnalytification (2 * p))) :=
+      subsingleton_complexification
     haveI hlat : Subsingleton (Submodule ℂ (Complexification
         (RationalSingularCohomology twelvePointAnalytification (2 * p)))) :=
       ⟨fun P Q => subsingleton_submodules_eq P Q⟩
@@ -170,7 +184,7 @@ noncomputable def zeroCycleClass :
       rw [← map_add]
       congr 1
       funext i
-      simp [Function.locallyFinsuppWithin.add_apply]
+      simp [Function.locallyFinsuppWithin.coe_add, Pi.add_apply]
     map_smul' := by
       intro q Z
       show twelvePointCohomologyIso.symm
@@ -196,9 +210,11 @@ theorem zeroCycleClass_point (i : Fin 12) :
       (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
         (twelvePointPt i))) =
       Pi.single i (1 : ℚ) := by
-  show (fun i => (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
-      AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv i).1)) =
-      Pi.single i (1 : ℚ)
+  show twelvePointCohomologyIso (twelvePointCohomologyIso.symm
+      (fun j => (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
+        AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv j).1))) =
+    Pi.single i (1 : ℚ)
+  rw [LinearEquiv.apply_symm_apply]
   funext j
   have hval : (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
       AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv j).1) =
@@ -234,17 +250,6 @@ theorem zeroFiber_eq_top :
   have hpp : zeroBigrading.ppComponent = ⊤ := rfl
   exact rationalHodgeSubspace_of_top zeroBigrading hpp
 
-/-- The weight-`p` rational Hodge fiber of the assembled Hodge data. -/
-theorem twelvePointHodgeData_bigrading_zero :
-    twelvePointHodgeData.hodgeBigrading 0 = zeroBigrading := rfl
-
-/-- **THE DEAD FIBERS ARE SUBSINGLETONS.**  At every positive weight the
-rational Hodge fiber of the twelve-point world is a subsingleton: the
-ambient module `H^{2p}` vanishes. -/
-theorem deadFiber_subsingleton (p : Nat) (hp : 0 < p) :
-    Subsingleton (ClassicalHodgeFiber twelvePointWorld twelvePointHodgeData p) :=
-  ⟨fun a b => Subtype.ext (Subsingleton.elim a.1 b.1)⟩
-
 /-! ## §6 THE ASSEMBLY -/
 
 /-- The genuine cycle-class map at a dead weight: any linear map into the
@@ -253,8 +258,18 @@ noncomputable def deadCycleClass (p : Nat) (hp : 0 < p) :
     codimensionCycles twelvePointWorld.X p →ₗ[ℚ]
       RationalSingularCohomology twelvePointAnalytification (2 * p) :=
   { toFun := fun _ => 0
-    map_add' := fun Z W => Subsingleton.elim _ _
-    map_smul' := fun q Z => Subsingleton.elim _ _ }
+    map_add' := by
+      intro Z W
+      haveI hsub : Subsingleton
+          (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=
+        twelvePointCohomology_subsingleton _ (by omega)
+      exact Subsingleton.elim _ _
+    map_smul' := by
+      intro q Z
+      haveI hsub : Subsingleton
+          (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=
+        twelvePointCohomology_subsingleton _ (by omega)
+      exact Subsingleton.elim _ _ }
 
 /-- **THE FIRST GENUINE HODGE DATA.**  The twelve-point world's Hodge
 structure: the discrete analytification, the honest `(0, 0)`-bigrading at
@@ -273,6 +288,20 @@ noncomputable def twelvePointHodgeData :
       match p with
       | 0 => zeroCycleClass
       | q + 1 => deadCycleClass (q + 1) (by omega)
+
+/-- The weight-`p` rational Hodge fiber of the assembled Hodge data. -/
+theorem twelvePointHodgeData_bigrading_zero :
+    twelvePointHodgeData.hodgeBigrading 0 = zeroBigrading := rfl
+
+/-- **THE DEAD FIBERS ARE SUBSINGLETONS.**  At every positive weight the
+rational Hodge fiber of the twelve-point world is a subsingleton: the
+ambient module `H^{2p}` vanishes. -/
+theorem deadFiber_subsingleton (p : Nat) (hp : 0 < p) :
+    Subsingleton (ClassicalHodgeFiber twelvePointWorld twelvePointHodgeData p) := by
+  have hsub : Subsingleton
+      (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=
+    twelvePointCohomology_subsingleton _ (by omega)
+  exact ⟨fun a b => Subtype.ext (@Subsingleton.elim _ hsub a.1 b.1)⟩
 
 theorem twelvePointHodgeData_cycleClass_zero :
     twelvePointHodgeData.cycleClass 0 = zeroCycleClass := rfl

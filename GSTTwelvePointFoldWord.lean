@@ -52,6 +52,7 @@ namespace GSTTwelvePointFoldWord
 
 open GSTProjectiveOverC
 open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTNativeCodimensionCyclePresentation
 open GSTClassicalHodgeProjectiveSelfCorrespondences
@@ -60,6 +61,10 @@ open GSTClassicalHodgeFiniteClosedCorrespondence.FiniteClosedCorrespondence
 open GSTClassicalHodgeFiniteClosedCorrespondenceOperator
 open GSTClassicalHodgeProjectivePointTransport
 open GSTClassicalHodgeRealizedClosedCorrespondenceAlgebra
+open GSTClassicalHodgeFiberedCosmology
+open GSTTwelvePointWorldCarrier
+open GSTTwelvePointCohomology
+open GSTTwelvePointHodgeData
 
 /-! ## The twelve points and their classes
 
@@ -504,7 +509,7 @@ theorem pointPairGeometry_realizes (r c : Fin 12) :
           LinearEquiv.symm_apply_apply _ _
   · have hne : (twelvePointEquiv c).1 ≠ (twelvePointEquiv i).1 := by
       intro h
-      exact hic (twelvePointEquiv.injective (Subtype.ext h))
+      exact hic (twelvePointEquiv.injective (Subtype.ext h)).symm
     have himg := pointPair_nativePointImage_eq_zero r c (twelvePointEquiv i) hne
     show twelvePointHodgeData.cycleClass 0
         ((pointPairGeometry r c).nativePointImage 0 (twelvePointEquiv i)) = _
@@ -597,6 +602,13 @@ theorem cohomologyIso_zero :
       RationalSingularCohomology twelvePointHodgeData.analytification 0) = 0 :=
   map_zero twelvePointCohomologyIso.toLinearMap
 
+/-- Additivity of the cohomology iso through its linear-map structure. -/
+theorem cohomologyIso_add (v w : RationalSingularCohomology
+      twelvePointHodgeData.analytification 0) :
+    twelvePointCohomologyIso (v + w) =
+      twelvePointCohomologyIso v + twelvePointCohomologyIso w :=
+  map_add twelvePointCohomologyIso.toLinearMap v w
+
 /-- The word operator acts on point classes by the letter data matrix. -/
 theorem wordOp_pointClass (L : List (Fin 12 × Fin 12 × ℚ)) (i : Fin 12) :
     twelvePointCohomologyIso ((realizedWordPair (lettersOf L)).cohomologyOperator
@@ -637,8 +649,14 @@ theorem foldWord_op_pointClass (c : Fin 12) :
     twelvePointCohomologyIso ((realizedWordPair twelvePointFoldWord).cohomologyOperator
         (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
           (twelvePointPt c)))) =
-      fun j => twelvePointFoldMatrix j c :=
-    wordOp_pointClass foldWordData c
+      fun j => twelvePointFoldMatrix j c := by
+  rw [show realizedWordPair twelvePointFoldWord
+      = realizedWordPair (lettersOf foldWordData) from rfl]
+  rw [wordOp_pointClass foldWordData c]
+  funext j
+  -- AUDIT (guard orientation): the word lemma's inner guard is `j = d.1`,
+  -- the fold matrix's is `d.1 = j`; `eq_comm` normalizes both sides.
+  simp only [twelvePointFoldMatrix, eq_comm]
 
 /-- Every H⁰ class is the sum of its coordinates times point classes. -/
 theorem module_decomp (u : RationalSingularCohomology
@@ -652,7 +670,7 @@ theorem module_decomp (u : RationalSingularCohomology
           (twelvePointPt k)))) = twelvePointCohomologyIso u := by
     rw [cohomologyIso_sum]
     simp only [cohomologyIso_smul]
-    rw [zeroCycleClass_point] at hpts ⊢ -- AUDIT-6: contract lemma rewriting
+    simp only [zeroCycleClass_point] -- AUDIT-6: contract lemma rewriting
     funext j
     rw [Finset.sum_apply] -- AUDIT-8
     simp [Pi.single_apply]

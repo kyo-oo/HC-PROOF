@@ -489,7 +489,7 @@ theorem span_orbitClasses_eq_hodgeFiber
   have hcyc' : Submodule.span ℚ (Set.range fun n : Nat =>
       (⟨(C.hodgeOrbit n).1, (C.hodgeOrbit n).2⟩ :
         rationalHodgeSubspace (H.hodgeBigrading p))) = ⊤ := hcyc
-  exact (span_range_subtype_eq_top_iff
+  exact (Submodule.span_range_subtype_eq_top_iff
     (p := rationalHodgeSubspace (H.hodgeBigrading p))
     (s := fun n : Nat => (C.hodgeOrbit n).1)
     (fun n => (C.hodgeOrbit n).2)).mp hcyc'
@@ -625,7 +625,7 @@ end FrameWire
 #check master_package_of_dead_or_monogenic_weights
 #check twelve_cell_world_FS_law
 #check every_frame_FS_law
-#check span_range_subtype_eq_top_iff
+#check Submodule.span_range_subtype_eq_top_iff
 
 #print axioms certFold_nativeOrbit
 #print axioms certFold_orbitClass_eq_hodgeOrbit

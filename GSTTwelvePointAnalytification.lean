@@ -80,10 +80,12 @@ theorem eval_comp_algebraMap (i : Fin 12) :
       RingHom.id ℂ := by
   ext r
   show twelvePointEvalRingHom i ((algebraMap ℂ (Fin 12 → ℂ)) r) = r
-  -- AUDIT-1: `Pi.algebraMap_apply` reduces the Pi algebra map to the
-  -- constant-function embedding, and the component algebra map of `ℂ`
-  -- over itself is the identity (`algebraMap_id`, `map_id`).
-  simp [Pi.algebraMap_apply, algebraMap_id, map_id]
+  -- AUDIT-1: the evaluation homomorphism is `Function.eval` (reducible at
+  -- the pin), the Pi algebra map at a component is the component algebra
+  -- map (`Pi.algebraMap_apply`, proved by `rfl` at the pin), and the self
+  -- algebra map of `ℂ` is the identity (`Algebra.algebraMap_self`, proved
+  -- by `rfl` at the pin): the goal is definitional.
+  rfl
 
 /-- The `i`-th section as a scheme morphism `Spec ℂ ⟶ Spec (ℂ¹²)`. -/
 def pointSectionHom (i : Fin 12) : complexBase ⟶ twelvePointWorld.X :=
@@ -139,10 +141,10 @@ theorem pi_decomp (x : Fin 12 → ℂ) :
         (if i = k then x k else 0) := by
     intro k
     rw [Pi.mul_apply, Pi.single_apply]
-    -- AUDIT-3: the Pi algebra map at a component is the scalar
-    -- (`Pi.algebraMap_apply` + the self-algebra-map of `ℂ`).
-    have hconst : (algebraMap ℂ (Fin 12 → ℂ) (x k)) i = x k := by
-      simp [Pi.algebraMap_apply, algebraMap_id, map_id]
+    -- AUDIT-3: the Pi algebra map at a component is the component algebra
+    -- map (`Pi.algebraMap_apply`, `rfl` at the pin), and the self algebra
+    -- map of `ℂ` is the identity (`Algebra.algebraMap_self`, `rfl`).
+    have hconst : (algebraMap ℂ (Fin 12 → ℂ) (x k)) i = x k := rfl
     by_cases hik : i = k
     · rw [hconst, if_pos hik, mul_one]
     · rw [hconst, if_neg hik, mul_zero]
@@ -152,7 +154,7 @@ theorem pi_decomp (x : Fin 12 → ℂ) :
   · intro b _ hb
     rw [if_neg (fun h => hb h.symm)]
   · intro hli
-    exact absurd rfl hli
+    exact absurd (Finset.mem_univ i) hli
 
 /-- The ring homomorphism underlying a section, recovered through the
 `Spec` preimage — the `Spec.homEquiv` of the pinned Mathlib adjunction. -/
@@ -198,9 +200,10 @@ theorem sectionRingHom_comp_algebraMap (f : ComplexPoint twelvePointWorld) :
     -- AUDIT-4: bundled-hom composite unfolds to the `RingHom` composite
     -- (`ConcreteCategory.hom_comp`, `ConcreteCategory.ofHom_hom`).
     rfl
-  rw [h2, ← h]
-  -- AUDIT-5: the identity morphism's underlying `RingHom`.
-  exact CommRingCat.id_hom _
+  rw [h2, h]
+  -- AUDIT-5: the identity morphism's underlying `RingHom`
+  -- (`CommRingCat.hom_id`, proved by `rfl` at the pin).
+  exact CommRingCat.hom_id
 
 /-- The scalar bookkeeping: a section ring homomorphism maps the algebra-map
 image of a scalar to the scalar itself. -/
@@ -231,12 +234,11 @@ theorem single_mul_single_ne {k j : Fin 12} (hkj : k ≠ j) :
 theorem sum_single_eq_one :
     ∑ k : Fin 12, Pi.single k (1 : ℂ) = 1 := by
   have h := pi_decomp (fun _ => (1 : ℂ))
-  rw [show (∑ k : Fin 12, Pi.single k (1 : ℂ)) =
-      ∑ k : Fin 12, algebraMap ℂ (Fin 12 → ℂ) ((1 : ℂ)) * Pi.single k (1 : ℂ) from by
-        refine Finset.sum_congr rfl ?_
-        intro k _
-        rw [map_one, one_mul]] at h
-  simpa using h
+  -- AUDIT: the instantiated decomposition has summands
+  -- `algebraMap ℂ (Fin 12 → ℂ) ((fun _ => (1 : ℂ)) k) * Pi.single k (1 : ℂ)`;
+  -- `map_one` and `one_mul` reduce them to `Pi.single k (1 : ℂ)`, and the
+  -- function `fun _ => (1 : ℂ)` is definitionally the Pi-one.
+  simpa only [map_one, one_mul] using h
 
 /-- A section ring homomorphism sends exactly one basis idempotent to `1`. -/
 theorem sectionRingHom_single_one (f : ComplexPoint twelvePointWorld) :
@@ -250,7 +252,7 @@ theorem sectionRingHom_single_one (f : ComplexPoint twelvePointWorld) :
         = sectionRingHom f (Pi.single k (1 : ℂ)) :=
       congrArg (sectionRingHom f) (single_mul_single_self k)
     rw [map_mul] at hmul
-    rw [← hmul]
+    rw [pow_two, hmul]
   -- the sum of the twelve values is one
   have hsum : ∑ k : Fin 12, sectionRingHom f (Pi.single k (1 : ℂ)) = 1 := by
     have h : sectionRingHom f (∑ k : Fin 12, Pi.single k (1 : ℂ)) = 1 := by
@@ -265,7 +267,7 @@ theorem sectionRingHom_single_one (f : ComplexPoint twelvePointWorld) :
     have hprod : sectionRingHom f (Pi.single k (1 : ℂ) * Pi.single j (1 : ℂ)) = 0 := by
       rw [single_mul_single_ne hkj, map_zero]
     rw [map_mul, hk1, hcontra, one_mul] at hprod
-    exact zero_ne_one hprod
+    exact absurd hprod.symm zero_ne_one
   -- at least one value is one (else the sum would be zero)
   obtain ⟨k₀, hk₀⟩ : ∃ k : Fin 12, sectionRingHom f (Pi.single k (1 : ℂ)) = 1 := by
     by_contra hnone
@@ -292,6 +294,10 @@ theorem complexPoint_eq (f : ComplexPoint twelvePointWorld) :
     have hdx : x = ∑ k : Fin 12,
         algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) :=
       (pi_decomp x).symm
+    have hsrw : sectionRingHom f x =
+        sectionRingHom f (∑ k : Fin 12,
+          algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ)) :=
+      congrArg (fun s => sectionRingHom f s) hdx
     have hvals : ∀ k : Fin 12,
         sectionRingHom f (Pi.single k (1 : ℂ)) = (if k = k₀ then 1 else 0) := by
       intro k
@@ -304,7 +310,7 @@ theorem complexPoint_eq (f : ComplexPoint twelvePointWorld) :
         = ∑ k : Fin 12,
             sectionRingHom f
               (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ)) := by
-          rw [← hdx, map_sum]
+          rw [hsrw, map_sum]
       _ = ∑ k : Fin 12,
             x k * sectionRingHom f (Pi.single k (1 : ℂ)) := by
           refine Finset.sum_congr rfl ?_
@@ -325,7 +331,7 @@ theorem complexPoint_eq (f : ComplexPoint twelvePointWorld) :
           · intro b _ hb
             rw [if_neg (fun h => hb h.symm)]
           · intro hli
-            exact absurd rfl hli
+            exact absurd (Finset.mem_univ k₀) hli
   -- transport back to the scheme level
   have hhom : (Spec.preimage (R := CommRingCat.of (Fin 12 → ℂ))
       (S := CommRingCat.of ℂ) f.1) =
@@ -335,33 +341,35 @@ theorem complexPoint_eq (f : ComplexPoint twelvePointWorld) :
     exact heq
   have hmap : f.1 = Spec.map (Spec.preimage
       (R := CommRingCat.of (Fin 12 → ℂ)) (S := CommRingCat.of ℂ) f.1) :=
-    Spec.map_preimage _
+    (Spec.map_preimage _).symm
   rw [hmap, hhom]
-  rfl
+  exact ⟨k₀, rfl⟩
 
 /-- The twelve sections are pairwise distinct. -/
 theorem pointSection_injective :
     Function.Injective (fun i => pointSection i) := by
   intro i j hij
   have h : pointSectionHom i = pointSectionHom j := congrArg (·.1) hij
-  rw [pointSectionHom, pointSectionHom, Spec.map_injective] at h
-  -- AUDIT-7: the `ofHom` wrapper's underlying `RingHom`
-  have h2 : twelvePointEvalRingHom i = twelvePointEvalRingHom j := by
-    have hh := congrArg (fun g => g.hom) h
-    exact hh
+  -- AUDIT-7: the `ofHom` wrapper's underlying `RingHom`, recovered through
+  -- `Spec.map_inj` (the pinned iff-form; `Spec.map_injective` is a plain
+  -- `Function.Injective` fact, not a rewrite rule).
+  have h2 : twelvePointEvalRingHom i = twelvePointEvalRingHom j :=
+    congrArg (fun g => g.hom) (Spec.map_inj.mp h)
   have hv : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) =
       twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) := by rw [h2]
   have hli : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) = 1 := by
-    simp [Pi.evalRingHom_apply, Pi.single_apply]
+    show (Pi.single i (1 : ℂ)) i = 1
+    exact Pi.single_eq_same i (1 : ℂ)
   have hrj : twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) =
       (if j = i then (1 : ℂ) else 0) := by
-    simp [Pi.evalRingHom_apply, Pi.single_apply]
+    show (Pi.single i (1 : ℂ)) j = if j = i then (1 : ℂ) else 0
+    exact Pi.single_apply i (1 : ℂ) j
   rw [hli, hrj] at hv
   by_cases hij' : i = j
   · exact hij'
   · have hne : ¬(j = i) := fun hcon => hij' hcon.symm
     rw [if_neg hne] at hv
-    exact absurd hv zero_ne_one
+    exact absurd hv.symm zero_ne_one
 
 /-- **THE POINT EQUIVALENCE.**  The complex points of the twelve-point world
 are exactly the twelve evaluation sections. -/
@@ -371,7 +379,7 @@ noncomputable def twelvePointSectionEquiv :
     ⟨fun i j => pointSection_injective i j,
      fun f => by
        obtain ⟨i, hi⟩ := complexPoint_eq f
-       exact ⟨i, Subtype.ext hi⟩⟩
+       exact ⟨i, Subtype.ext hi.symm⟩⟩
 
 /-- **THE FIRST GENUINE ANALYTIFICATION.**  The discrete twelve-point space
 with the genuine point classification. -/

@@ -148,20 +148,26 @@ noncomputable def twelvePointDualIso :
 -- AUDIT(2): pinned `alternatingConst_obj_d` simps lemma and branch shape. -/
 theorem altChain_d_odd (k : ℕ) :
     (ChainComplex.alternatingConst.obj twelvePointE).d (2*k+1) (2*k) = 0 := by
-  rw [ChainComplex.alternatingConst_obj_d]
-  have h : (2*k+1) % 2 = 1 := by omega
-  rw [h]
-  simp
+  have heven : ¬ Even (2*k+1) := by
+    rw [Nat.even_iff]
+    omega
+  simp only [ChainComplex.alternatingConst_obj, HomologicalComplex.alternatingConst_d]
+  split_ifs with hij hi
+  · exact absurd hi heven
+  · rfl
+  · rfl
 
 /-- The alternating constant complex has `d (2*k+2) (2*k+1) = 𝟙`.
 -- AUDIT(2): pinned `alternatingConst_obj_d` simps lemma and branch shape. -/
 theorem altChain_d_even (k : ℕ) :
     (ChainComplex.alternatingConst.obj twelvePointE).d (2*k+2) (2*k+1) =
       𝟙 twelvePointE := by
-  rw [ChainComplex.alternatingConst_obj_d]
-  have h : (2*k+2) % 2 = 0 := by omega
-  rw [h]
-  simp
+  have heven : Even (2*k+2) := ⟨k+1, by omega⟩
+  simp only [ChainComplex.alternatingConst_obj, HomologicalComplex.alternatingConst_d]
+  split_ifs with hij hi
+  · rfl
+  · exact absurd heven hi
+  · exact absurd (rfl : (ComplexShape.down ℕ).Rel (2*k+2) (2*k+1)) hij
 
 /-- The dual differential on even indices is zero.
 -- AUDIT(3): pinned `linearYonedaObj_d` simps lemma, `Linear.leftComp_apply`,
@@ -194,10 +200,10 @@ theorem dualCochains_d_zero_one : twelvePointDualCochains.d 0 1 = 0 :=
 
 -- AUDIT(4): cochain shape facts for `up ℕ` at index zero.
 theorem upNext_zero : (ComplexShape.up ℕ).next 0 = 1 := by
-  rw [ComplexShape.up_next]
+  exact CochainComplex.next ℕ 0
 
 theorem upPrev_zero : (ComplexShape.up ℕ).prev 0 = 0 := by
-  simp [ComplexShape.up_prev]
+  exact CochainComplex.prev_nat_zero
 
 theorem upNotRel_zero_zero : ¬ (ComplexShape.up ℕ).Rel 0 0 := by
   simp [ComplexShape.up_Rel]
@@ -299,22 +305,30 @@ noncomputable def twelvePointCohomologyIso :
 -- and the `up` shape simp lemmas are the three pinned bridges. -/
 theorem dualSc_exact_odd (k : ℕ) :
     ShortComplex.Exact (twelvePointDualCochains.sc (2*k+1)) := by
-  rw [ShortComplex.ModuleCat.exact_iff]
-  simp only [HomologicalComplex.sc_f, HomologicalComplex.sc_g,
-    ComplexShape.up_prev, ComplexShape.up_next]
-  norm_num
-  rw [dualCochains_d_even k, dualCochains_d_odd k]
+  rw [ShortComplex.moduleCat_exact_iff_range_eq_ker]
+  simp only [HomologicalComplex.shortComplexFunctor_obj_f,
+    HomologicalComplex.shortComplexFunctor_obj_g]
+  have hprev : (ComplexShape.up ℕ).prev (2*k+1) = 2*k :=
+    CochainComplex.prev_nat_succ (2*k)
+  have hnext : (ComplexShape.up ℕ).next (2*k+1) = 2*k+2 :=
+    CochainComplex.next ℕ (2*k+1)
+  rw [hprev, hnext, dualCochains_d_even k, dualCochains_d_odd k]
   simp [LinearMap.ker_id, LinearMap.range_zero]
 
 /-- Exactness of the dual alternating short complex at a positive even index.
 -- AUDIT(10): same three pinned bridges as `dualSc_exact_odd`. -/
 theorem dualSc_exact_even (k : ℕ) :
     ShortComplex.Exact (twelvePointDualCochains.sc (2*k+2)) := by
-  rw [ShortComplex.ModuleCat.exact_iff]
-  simp only [HomologicalComplex.sc_f, HomologicalComplex.sc_g,
-    ComplexShape.up_prev, ComplexShape.up_next]
-  norm_num
-  rw [dualCochains_d_odd k, dualCochains_d_even (k+1)]
+  rw [ShortComplex.moduleCat_exact_iff_range_eq_ker]
+  simp only [HomologicalComplex.shortComplexFunctor_obj_f,
+    HomologicalComplex.shortComplexFunctor_obj_g]
+  have hprev : (ComplexShape.up ℕ).prev (2*k+2) = 2*k+1 :=
+    CochainComplex.prev_nat_succ (2*k+1)
+  have hnext : (ComplexShape.up ℕ).next (2*k+2) = 2*k+3 :=
+    CochainComplex.next ℕ (2*k+2)
+  have hg : twelvePointDualCochains.d (2*k+2) (2*k+3) = 0 :=
+    dualCochains_d_even (k+1)
+  rw [hprev, hnext, dualCochains_d_odd k, hg]
   simp [LinearMap.ker_zero, LinearMap.range_id]
 
 /-- Parity splitting of nonzero naturals. -/
@@ -348,7 +362,11 @@ theorem twelvePointCohomology_subsingleton (n : ℕ) (hn : n ≠ 0) :
     twelvePointDualCochomology_isZero n hn
   refine ⟨fun a b => ?_⟩
   calc a = e.symm (e a) := (e.symm_apply_apply a).symm
-    _ = e.symm (e b) := by congr 1; exact IsZero.eq hD _ _
+    _ = e.symm (e b) := by
+      congr 1
+      haveI : Subsingleton (twelvePointDualCochains.homology n) :=
+        ModuleCat.subsingleton_of_isZero hD
+      exact Subsingleton.elim (e a) (e b)
     _ = b := e.symm_apply_apply b
 
 end GSTTwelvePointCohomology
