@@ -107,7 +107,8 @@ classical analysis, no new theory, no external theorems.
 
 ## Restoration note (2026-11-14, later round)
 
-Rebuilt on the fresh corpus clone; the file count is 889 lines and the
-FS-lock citation corrected to `fslock_round49` per the bridge round's
-record corrections.  No CI run exists at any SHA of this tree from this
+Rebuilt on the fresh corpus clone; the restored file is 888 lines by
+`wc -l` (the original final tree's 889 count is the trailing-newline
+convention of the same content) and the FS-lock citation corrected to
+`fslock_round49` per the bridge round's record corrections.  No CI run exists at any SHA of this tree from this
 sandbox; the kernel verdict belongs to GitHub CI at the pushed SHA.
