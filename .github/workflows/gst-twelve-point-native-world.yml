@@ -1,0 +1,78 @@
+name: GST Twelve-Point Native Geometric World
+
+on:
+  push:
+    branches:
+      - main
+      - research/gpt6-gst-hypothesis-part1-chow-square-20261110
+    paths:
+      - 'GSTTwelvePointLawLanding.lean'
+      - 'GSTTwelvePointFoldWord.lean'
+      - 'GSTTwelvePointHodgeData.lean'
+      - 'GSTTwelvePointCohomology.lean'
+      - 'GSTTwelvePointAnalytification.lean'
+      - 'GSTTwelvePointWorldCarrier.lean'
+      - '.github/workflows/gst-twelve-point-native-world.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gst-twelve-point-native-world
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Kernel check the twelve-point native geometric world
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore pinned Lean toolchain
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-Linux-twelve-point-native-world
+          restore-keys: |
+            hc-lean-toolchain-Linux-
+      - name: Install pinned Lean and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Restore compiled GST corpus
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-twelve-point-native-world
+          restore-keys: |
+            hc-lean-incremental-Linux-
+      - name: Compile native GST twelve-point native geometric world
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTTwelvePointNativeWorldLib GSTTwelvePointLawLanding
+          if timeout 16800 lake build GSTTwelvePointLawLanding > gst-twelve-point-native-world.log 2>&1; then
+            echo "LEAN PASSED: GSTTwelvePointLawLanding"
+          else
+            grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-twelve-point-native-world.log | tail -n 100 || true
+            tail -n 75 gst-twelve-point-native-world.log || true
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-twelve-point-native-world.log; then
+            echo "Unexpected axiom or sorry found" && exit 1
+          fi
+      - name: Upload exact Lean compiler diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-twelve-point-native-world-lean
+          path: gst-twelve-point-native-world.log
+          if-no-files-found: warn

@@ -933,3 +933,16 @@ roots = [
   "GSTNativeSingleFoldOrbitLawLanding",
   "GSTHodgeSingleHypothesisConditional",
 ]
+
+# GST twelve-point native geometric world (2026-11-14) — the first genuine
+# (V, H) pair: the live rank-12 discharge of the native single-fold orbit law.
+[[lean_lib]]
+name = "GSTTwelvePointNativeWorldUpgrade"
+roots = [
+  "GSTTwelvePointLawLanding",
+  "GSTTwelvePointFoldWord",
+  "GSTTwelvePointHodgeData",
+  "GSTTwelvePointCohomology",
+  "GSTTwelvePointAnalytification",
+  "GSTTwelvePointWorldCarrier",
+]
