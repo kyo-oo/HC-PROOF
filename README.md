@@ -1,3 +1,41 @@
+## The GST hypothesis spanning proof — the campaign's final assault, restored — 2026-11-14
+
+[Proof and exact evidence](research/records/2026-11-14-gst-hypothesis-spanning-proof-owner-world-complete.md):
+the orbit-spanning law (the GST hypothesis's single falsifiable line) is
+proved unconditionally for the owner's twelve-cell wave world — the exact
+Gauss-Jordan Krylov certificate, det -1149656584000 ≠ 0 — and transported
+to every certified IntersectionChowFrame by the rational wave compiler.
+The native single-fold orbit law is discharged for the entire cheap class
+with the no-free-lunch boundary theorem, and the native-to-typed bridge
+(native to typed only) is constructed in the landing file. Round-49's FS
+lock is superseded. The campaign's final tree was restored onto the
+pinned upstream corpus after the sandbox transfer loss; the kernel
+verdict belongs to GitHub CI at the pushed SHA. The next frontier — the
+first genuine geometric world (the 12-point carrier with the twelve-cell
+fold realized) — is fully mapped with pinned-Mathlib proof terms in
+[the frontier map](research/records/2026-11-14-gst-first-genuine-geometric-world-frontier-map.md).
+
+## The complete GST hypothesis fold-law package — 2026-11-14
+
+[Proof and exact evidence](research/records/2026-11-14-gst-hypothesis-complete-lean-fold-law-package.md):
+the complete typed fold-law system (the all-n orbit transport, the
+two-projector closed spectral forms, the cumulative fold, the formal
+infinity-control germ, the twelve-cell wave package, the P1xP1 rational
+coordinate witness) with the hypothesis data, the landing reduction, and
+the 8-conjunct capstone. The master records were corrected and
+re-registered during the restoration round.
+
+## The native single-fold orbit law landing — 2026-11-14
+
+[Proof and exact evidence](research/records/2026-11-14-gst-native-single-fold-orbit-law-landing.md):
+the cost classification of every Hodge weight — dead weights are free,
+monogenic weights are free, live weights of rank >= 2 carry forced content
+(the no-free-lunch theorem: cyclicity there forces a nonzero algebraic
+Hodge class). The law is discharged unconditionally for the entire cheap
+class; the native-to-typed bridge (see
+[the bridge record](research/records/2026-11-14-gst-native-law-to-fs-hypothesis-bridge.md))
+runs native to typed only; no typed-to-native transport exists.
+
 # HC PROOF — THE COMPLETE MATHEMATICAL UNIVERSE
 
 ## All-degree curvature, duality and specialization — 2026-11-03

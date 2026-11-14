@@ -908,3 +908,28 @@ roots = [
   "GSTClassicalHodgeRankFreeLefschetzPoincareGeneration",
   "GSTClassicalHodgeGlobalSheetSaturation",
 ]
+
+# GST hypothesis completion campaign (2026-11-14) — the spanning-proof
+# chain registration. GSTHypothesisPart1ChowAlgebraTransfer is imported by
+# GSTHypothesisComplete (the statement file); the two spanning faces build
+# on it; the native orbit-law landing closes the chain.
+[[lean_lib]]
+name = "GSTHypothesisCompleteUpgrade"
+roots = [
+  "GSTHypothesisPart1ChowAlgebraTransfer",
+  "GSTHypothesisComplete",
+]
+
+[[lean_lib]]
+name = "GSTHypothesisSpanningUpgrade"
+roots = [
+  "GSTHypothesisSpanningProof",
+  "GSTHypothesisSpanningCompilerFace",
+]
+
+[[lean_lib]]
+name = "GSTNativeOrbitLawUpgrade"
+roots = [
+  "GSTNativeSingleFoldOrbitLawLanding",
+  "GSTHodgeSingleHypothesisConditional",
+]

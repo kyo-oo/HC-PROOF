@@ -20,6 +20,17 @@ Parts:
            packet-equivalence receipts.
 -/
 
+-- SUPERSESSION NOTE (bridge round, 2026-11-14; see the record
+-- research/records/2026-11-14-gst-native-law-to-fs-hypothesis-bridge.md):
+-- this draft's nine sorries remain shape-only ledger-108 records by design.
+-- The FS-lock carrier of this draft (P6's falsifiable line) is superseded by
+-- the sorry-free, CI-enforced bridge in GSTNativeSingleFoldOrbitLawLanding.lean
+-- (gst_FS_of_native_law).  P6's FSLaw_at_every_input ↔
+-- EveryHodgeClassIsRationalAlgebraic is the open frontier line itself and is
+-- not discharged there.  See the record
+-- research/records/2026-11-14-gst-native-law-to-fs-hypothesis-bridge.md.
+--
+
 -- [R49-P1] THE DEATH CERTIFICATE -------------------------------------------
 --
 -- The instantiation hypothesis (C2): every variety's extracted input is a

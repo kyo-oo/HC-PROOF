@@ -1,0 +1,84 @@
+name: GST hypothesis spanning proof
+
+on:
+  push:
+    branches:
+      - main
+      - research/gpt6-gst-hypothesis-part1-chow-square-20261110
+    paths:
+      - 'GSTHypothesisSpanningProof.lean'
+      - 'GSTHypothesisSpanningCompilerFace.lean'
+      - 'GSTHypothesisComplete.lean'
+      - 'GSTHypothesisPart1ChowAlgebraTransfer.lean'
+      - 'GSTOriginalXWaveChowMatrixCompiler.lean'
+      - 'GSTOriginalXAllWeightsLefschetzResidual.lean'
+      - 'GSTOriginalXDivisorCurveCyclicChowFold.lean'
+      - '.github/workflows/gst-hypothesis-spanning-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lean kernel — the spanning proof over the complete package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore pinned toolchain
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-Linux-gst-hypothesis-spanning
+          restore-keys: |
+            hc-lean-toolchain-Linux-
+      - name: Prepare toolchain and Mathlib cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan_init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
+      - name: Kernel compile the spanning proof (owner's twelve-cell world)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTHypothesisSpanningLib GSTHypothesisSpanningProof
+          if timeout 9500 lake build GSTHypothesisSpanningProof > gst-hypothesis-spanning.log 2>&1; then
+            echo "LEAN PASSED: GSTHypothesisSpanningProof"
+          else
+            grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-hypothesis-spanning.log | tail -n 100 || true
+            tail -n 100 gst-hypothesis-spanning.log || true
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-hypothesis-spanning.log; then
+            echo "Unexpected sorry axiom" && exit 1
+          fi
+      - name: Kernel compile the compiler face
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/gst_lean_dependency_roots.py GSTHypothesisSpanningFaceLib GSTHypothesisSpanningCompilerFace
+          if timeout 9500 lake build GSTHypothesisSpanningCompilerFace >> gst-hypothesis-spanning.log 2>&1; then
+            echo "LEAN PASSED: GSTHypothesisSpanningCompilerFace"
+          else
+            grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-hypothesis-spanning.log | tail -n 100 || true
+            tail -n 100 gst-hypothesis-spanning.log || true
+            exit 1
+          fi
+          if grep -E "declaration uses 'sorry'|sorryAx" gst-hypothesis-spanning.log; then
+            echo "Unexpected sorry axiom" && exit 1
+          fi
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-hypothesis-spanning-lean
+          path: gst-hypothesis-spanning.log
+          if-no-files-found: warn
