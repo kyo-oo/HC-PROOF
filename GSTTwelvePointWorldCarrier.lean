@@ -267,7 +267,6 @@ private theorem chartRingMap_le (j : Fin 2) :
     Submonoid.powers (MvPolynomial.X j) ≤
       (Submonoid.powers (sectionRingHom (MvPolynomial.X j))).comap sectionRingHom := by
   rw [← Submonoid.map_le_iff_le_comap, Submonoid.map_powers]
-  simp
 
 /-- The ring-level chart map at the variable `X j`: the `IsLocalization.map`
 composite inside `Proj.toBasicOpenOfGlobalSections` (pinned
@@ -280,7 +279,8 @@ private noncomputable def chartRingMap (j : Fin 2) :
   -- Mathlib's own goal-driven elaboration of the composite: the term-mode
   -- type ascription leaves the away-localization instance search stuck,
   -- while the refine spine elaborates every instance against the goal.
-  refine RingHom.comp ?_ (algebraMap _ (Localization.Away (MvPolynomial.X j)))
+  refine RingHom.comp ?_
+    (algebraMap (MvPolynomial (Fin 2) ℂ) (Localization.Away (MvPolynomial.X j)))
   refine IsLocalization.map (M := .powers (MvPolynomial.X j))
     (T := .powers (sectionRingHom (MvPolynomial.X j))) _ sectionRingHom ?_
   exact chartRingMap_le j
@@ -302,7 +302,11 @@ private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
         (Localization.Away (sectionRingHom (MvPolynomial.X j))) sectionRingHom
         (chartRingMap_le j))
         ((algebraMap (MvPolynomial (Fin 2) ℂ)
-          (Localization.Away (MvPolynomial.X j))) p) := rfl
+          (Localization.Away (MvPolynomial.X j))) p) := by
+    first
+    | rfl
+    | (unfold chartRingMap; rfl)
+    | (simp only [chartRingMap]; rfl)
   rw [h1, IsLocalization.map_eq]
   -- AUDIT: `IsLocalization.map_eq` (Localization/Defs.lean:613): the image
   -- of an `algebraMap`-element is the `algebraMap` of the image; the
@@ -377,8 +381,8 @@ private theorem chartRingMap_surjective (j : Fin 2) :
       rw [hpw i]
       by_cases h0 : i = 0
       · subst h0
-        simp [nodeValues, w, zero_pow (Nat.succ_pos N)]
-      · rw [w, if_neg h0]
+        simp [nodeValues, w]
+      · rw [show w i = y' i / (nodeValues i) ^ N from if_neg h0]
         have hvne : (nodeValues i) ^ N ≠ 0 := by
           have hv0 : nodeValues i ≠ 0 := by
             intro hc
@@ -393,19 +397,18 @@ private theorem chartRingMap_surjective (j : Fin 2) :
       simpa [Pi.mul_apply] using hpt i
     have hΓ : sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ (N + 1) =
         y * sectionRingHom (MvPolynomial.X 0) := by
-      show (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
-          (evalRingHom12 p) *
-            (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
-              (evalRingHom12 (MvPolynomial.X 0)) ^ (N + 1) =
-        y * (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
-          (evalRingHom12 (MvPolynomial.X 0))
-      rw [eval_X_zero]
-      rw [← map_mul, ← map_pow, ← map_mul, ← hy']
+      have e1 : sectionRingHom p =
+          (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
+            (evalRingHom12 p) := rfl
+      have e2 : sectionRingHom (MvPolynomial.X 0) =
+          (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
+            (evalRingHom12 (MvPolynomial.X 0)) := rfl
+      rw [e1, e2, eval_X_zero, ← map_pow, ← map_mul, ← hy', ← map_mul]
       exact congrArg _ hvec
     refine ⟨p, ?_⟩
     refine ((IsLocalization.mk'_eq_iff_eq_mul
       (x := y) (y := ⟨sectionRingHom (MvPolynomial.X 0) ^ N, ht⟩)
-      (z := chartRingMap _ p)).mp ?_).symm
+      (z := chartRingMap _ p)).mpr ?_).symm
     rw [chartRingMap_apply, Subtype.coe_mk, ← map_mul]
     refine (IsLocalization.eq_iff_exists
       (x := y) (y := sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ N)).mpr
@@ -427,12 +430,12 @@ private theorem chartRingMap_surjective (j : Fin 2) :
     have hΓ : sectionRingHom p = y := by
       show (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
           (evalRingHom12 p) = y
-      rw [hy']
+      rw [← hy']
       exact congrArg _ (funext hpeval)
     refine ⟨p, ?_⟩
     refine ((IsLocalization.mk'_eq_iff_eq_mul
       (x := y) (y := ⟨sectionRingHom (MvPolynomial.X 1) ^ N, ht⟩)
-      (z := chartRingMap _ p)).mp ?_).symm
+      (z := chartRingMap _ p)).mpr ?_).symm
     rw [chartRingMap_apply, hΓ, Subtype.coe_mk, map_pow, section_X_one,
       map_one, one_pow, mul_one]
   -- AUDIT: the `mk'`-bookkeeping is the pinned
@@ -490,10 +493,12 @@ private theorem chart_closed (j : Fin 2) :
         section_hf zero_lt_one hXj)).hom) _).mpr ?_
   refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
     ((Scheme.isoOfEq twelvePointScheme
-      (Scheme.toSpecΓ_preimage_basicOpen
+      (Scheme.toSpecΓ_preimage_basicOpen twelvePointScheme
         (sectionRingHom (MvPolynomial.X j)))).inv) _).mpr ?_
-  refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)).mpr ?_
-  refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)).mpr ?_
+  refine ((MorphismProperty.cancel_left_of_respectsIso
+    (P := @IsClosedImmersion) _ _)).mpr ?_
+  refine ((MorphismProperty.cancel_left_of_respectsIso
+    (P := @IsClosedImmersion) _ _)).mpr ?_
   exact IsClosedImmersion.spec_of_surjective
     (CommRingCat.ofHom (chartRingMap j)) (chartRingMap_surjective j)
 
@@ -571,7 +576,7 @@ theorem twelvePoint_over_base :
           (algebraMap ℂ ↥(ProjectiveGrading 1 0)))) =
       Spec.map (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv ≫
         Spec.map (CommRingCat.ofHom (algebraMap ℂ (Fin 12 → ℂ))) from by
-      rw [congrArg CommRingCat.ofHom hcomp,
+      rw [hcomp,
         show CommRingCat.ofHom
           ((Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom.comp
             (algebraMap ℂ (Fin 12 → ℂ))) =
