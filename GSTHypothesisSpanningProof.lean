@@ -204,67 +204,133 @@ theorem N12_Kvec_step_0 : N12 (Kvec 0) = Kvec 1 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_1 : N12 (Kvec 1) = Kvec 2 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_2 : N12 (Kvec 2) = Kvec 3 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_3 : N12 (Kvec 3) = Kvec 4 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_4 : N12 (Kvec 4) = Kvec 5 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_5 : N12 (Kvec 5) = Kvec 6 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_6 : N12 (Kvec 6) = Kvec 7 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_7 : N12 (Kvec 7) = Kvec 8 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_8 : N12 (Kvec 8) = Kvec 9 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_9 : N12 (Kvec 9) = Kvec 10 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 theorem N12_Kvec_step_10 : N12 (Kvec 10) = Kvec 11 := by
   funext s
   rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;> decide
+  fin_cases c <;> fin_cases d <;>
+    simp [Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 /-! ### The orbit values are the table -/
 theorem orbit_val_0 : worldOrbit ((0 : Fin 12) : ℕ) = Kvec 0 := rfl
@@ -374,7 +440,8 @@ theorem eCell_eq_cert (s : TwelveCell) :
   rcases s with ⟨cs, ds⟩
   rcases t with ⟨ct, dt⟩
   fin_cases cs <;> fin_cases ds <;> fin_cases ct <;> fin_cases dt <;>
-    decide
+    simp [eCell, certRowOf, Kvec, seed12] <;>
+    norm_num
 
 /-! ## §5 THE SPANNING LAW -/
 

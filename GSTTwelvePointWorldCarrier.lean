@@ -132,7 +132,7 @@ theorem section_hf :
       (HomogeneousIdeal.mem_irrelevant_of_mem grading zero_lt_one
         (by
           rw [MvPolynomial.mem_homogeneousSubmodule]
-          exact MvPolynomial.isHomogeneous_X 1))
+          exact MvPolynomial.isHomogeneous_X ℂ 1))
   rw [section_X_one] at hmem
   exact hmem
   -- AUDIT: the degree side condition is `0 < 1` (`zero_lt_one`); the
@@ -146,33 +146,32 @@ from the global sections `X0 |-> nodeValues`, `X1 |-> 1`. -/
 noncomputable def twelvePointEmbedding : twelvePointScheme ⟶ projectiveSpace 1 :=
   Proj.fromOfGlobalSections grading sectionRingHom section_hf
 
-/-- The cover relation: the irrelevant ideal of `C[X0, X1]` is contained in the
-span of the two variables — the `D+(X0) ∪ D+(X1) = P^1` cover. -/
+/-- The variables generate the homogeneous coordinate ring as an algebra over
+its degree-zero piece — the `D₊(X₀) ∪ D₊(X₁) = P¹` cover side condition, via
+`Proj.iSup_basicOpen_eq_top'` (the adjoin route; the same green idiom as
+`GSTCompactNativeCyclePresentation.projectiveSpace_isCompact_univ`). -/
 theorem span_cover :
-    (HomogeneousIdeal.irrelevant grading).toIdeal ≤
-      Ideal.span (Set.range (MvPolynomial.X : Fin 2 → MvPolynomial (Fin 2) ℂ)) := by
-  -- AUDIT: the cover family is stated directly as the full variable family
-  -- `MvPolynomial.X`, matching the `hf` side condition of
-  -- `Proj.iSup_basicOpen_eq_top` (ProjectiveSpectrum/Basic.lean:86).
-  -- The irrelevant ideal is the span of the positive-degree components;
-  -- each of those is a power of the degree-one component, which is the span
-  -- of the variables; powers of the variable span stay inside the span.
-  -- AUDIT: the union shape on the RHS of `irrelevant_eq_span` and the
-  -- per-degree power chain names
-  -- (`homogeneousSubmodule_one_pow`, `homogeneousSubmodule_one_eq_span_X`,
-  -- ideal-power monotonicity) follow the pinned ProjectiveSpectrum API.
-  rw [HomogeneousIdeal.irrelevant_eq_span, Ideal.span_le]
-  rintro x ⟨n, hn, hx⟩
-  have h1 : x ∈ (grading 1)^n := by
-    rw [MvPolynomial.homogeneousSubmodule_one_pow]
-    exact hx
-  have h2 : (grading 1)^n ≤
-      (Ideal.span (Set.range (MvPolynomial.X : Fin 2 → MvPolynomial (Fin 2) ℂ)))^n := by
-    rw [MvPolynomial.homogeneousSubmodule_one_eq_span_X]
-  have h3 : (Ideal.span (Set.range (MvPolynomial.X : Fin 2 → MvPolynomial (Fin 2) ℂ)))^n ≤
-      Ideal.span (Set.range (MvPolynomial.X : Fin 2 → MvPolynomial (Fin 2) ℂ)) :=
-    le_trans (Ideal.pow_le_pow_right hn) (le_of_eq (pow_one _))
-  exact h3 (h2 h1)
+    Algebra.adjoin (↑(grading 0))
+      (Set.range (MvPolynomial.X : Fin 2 → MvPolynomial (Fin 2) ℂ)) = ⊤ := by
+  set S := Algebra.adjoin (↑(grading 0))
+      (Set.range (MvPolynomial.X : Fin 2 → MvPolynomial (Fin 2) ℂ))
+  refine top_unique fun p hp => ?_
+  clear hp
+  induction p using MvPolynomial.induction_on with
+  | C a =>
+      exact S.algebraMap_mem
+        ⟨MvPolynomial.C a,
+          MvPolynomial.isHomogeneous_C (σ := Fin 2) (R := ℂ) a⟩
+  | add p q hp hq => exact S.add_mem hp hq
+  | mul_X p j hp => exact S.mul_mem hp (Algebra.subset_adjoin (Set.mem_range_self j))
+
+/-- Every variable is homogeneous of degree one — the finiteness side
+condition of `Proj.iSup_basicOpen_eq_top'`. -/
+theorem variables_homogeneous (j : Fin 2) :
+    ∃ n : ℕ, MvPolynomial.X j ∈ grading n := by
+  refine ⟨1, ?_⟩
+  rw [MvPolynomial.mem_homogeneousSubmodule]
+  exact MvPolynomial.isHomogeneous_X ℂ j
 
 /-! ### The Lagrange cores -/
 
@@ -184,11 +183,17 @@ private theorem exists_interpolating (y : Fin 12 → ℂ) :
   · -- degree < card univ = 12, hence ≤ 11
     -- AUDIT: Lagrange API (`Mathlib/LinearAlgebra/Lagrange.lean`):
     -- `degree_interpolate_lt` binds `(r) (hvs : Set.InjOn v ↑s)` with `r`
-    -- explicit first (Lagrange.lean:336).
-    exact Nat.le_of_lt_succ (by
-      have h := Lagrange.degree_interpolate_lt y
+    -- explicit first; the degree-to-natDegree conversion is
+    -- `Polynomial.natDegree_lt_iff_degree_lt` (Degree/Defs.lean), with the
+    -- zero-polynomial case discharged separately.
+    refine Nat.le_of_lt_succ ?_
+    by_cases h0 : Lagrange.interpolate (Finset.univ : Finset (Fin 12)) nodeValues y = 0
+    · rw [h0]; simp
+    · have h := Lagrange.degree_interpolate_lt y
         (by rw [Finset.coe_univ]; exact nodeValues_injOn)
-      simpa [Finset.card_univ, Fintype.card_fin] using h)
+      rwa [Polynomial.natDegree_lt_iff_degree_lt h0,
+        show (12 : WithBot ℕ) = ↑(Finset.card (Finset.univ : Finset (Fin 12))) from by
+          rw [Finset.card_univ, Fintype.card_fin]] at h
   · exact fun i => Lagrange.eval_interpolate_at_node y (by
       rw [Finset.coe_univ]; exact nodeValues_injOn) (Finset.mem_univ i)
 
@@ -239,7 +244,8 @@ private theorem chart_core_zero (y : Fin 12 → ℂ) (N : ℕ) :
     exists_interpolating (fun i => y i * (nodeValues i)^11)
   obtain ⟨p, hp, hpeval⟩ := homogenize_chart_eval (N + 11) q (le_trans hqdeg (by omega))
   refine ⟨N + 11, p, hp, fun i => ?_⟩
-  rw [hpeval, hqeval i]
+  have hval : evalRingHom12 p i = q.eval (nodeValues i) := by rw [hpeval]
+  rw [hval, hqeval i]
   -- `y i * a ^ 11 * a ^ N = y i * a ^ (N + 11)`
   ring
 
@@ -268,7 +274,7 @@ private noncomputable def chartRingMap (j : Fin 2) :
       (Localization.Away (sectionRingHom (MvPolynomial.X j)))
       sectionRingHom
       (by rw [← Submonoid.map_le_iff_le_comap, Submonoid.map_powers]
-          simp))
+          try simp))
     (algebraMap _ (Localization.Away (MvPolynomial.X j)))
   -- AUDIT: transcribed from the pinned `toBasicOpenOfGlobalSections`
   -- definition verbatim (the `IsLocalization.map (M := .powers t)
@@ -282,9 +288,10 @@ private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
       algebraMap (Γ(twelvePointScheme, ⊤))
         (Localization.Away (sectionRingHom (MvPolynomial.X j)))
         (sectionRingHom p) :=
-  IsLocalization.map_eq _ _ _
-  -- AUDIT: `IsLocalization.map_eq` (Localization/Defs.lean:611): the image
-  -- of an `algebraMap`-element is the `algebraMap` of the image.
+  IsLocalization.map_eq _ _
+  -- AUDIT: `IsLocalization.map_eq` (Localization/Defs.lean): the image
+  -- of an `algebraMap`-element is the `algebraMap` of the image; two
+  -- explicit arguments in the pinned revision.
 
 /-- Surjectivity of the `ΓSpecIso` inverse transport: every global section
 of the twelve-point scheme is the transport of a vector. -/
@@ -293,10 +300,10 @@ private theorem gammaInv_surjective :
       (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom := by
   intro g
   refine ⟨(Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).hom.hom g, ?_⟩
-  exact (Iso.hom_inv_id_apply (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))) g).symm
+  exact Iso.hom_inv_id_apply (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))) g
   -- AUDIT: the X-side round trip of the adjunction iso — the pinned
   -- `Iso.hom_inv_id_apply`, the same transport `Scheme.lean:851` itself
-  -- applies to `ΓSpecIso`.
+  -- applies to `ΓSpecIso`; the equation direction is direct (no `symm`).
 
 /-- Injectivity of the `ΓSpecIso` inverse transport: a section is determined
 by its vector. -/
@@ -306,10 +313,11 @@ private theorem gammaInv_injective :
   have hli : Function.LeftInverse
       (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).hom.hom
       (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom :=
-    fun r => (Iso.inv_hom_id_apply
-      (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))) r).symm
+    fun r => Iso.inv_hom_id_apply
+      (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))) r
   exact hli.injective
-  -- AUDIT: the Y-side round trip; `Function.LeftInverse.injective`.
+  -- AUDIT: the Y-side round trip; `Function.LeftInverse.injective`; the
+  -- equation direction is direct (no `symm`).
 
 /-- **The chart ring map is surjective — the Lagrange core.**  Every element
 of the away-localization is a fraction `mk' y (f (X j))^N`
@@ -326,7 +334,8 @@ private theorem chartRingMap_surjective (j : Fin 2) :
   fin_cases j
   · -- chart `j = 0`: the section of `X₀` is the node-value vector.
     intro z
-    obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq _ z
+    obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq
+      (M := .powers (sectionRingHom (MvPolynomial.X 0))) z
     obtain ⟨N, rfl⟩ := (Submonoid.mem_powers_iff _ _).mp s.2
     obtain ⟨y', hy'⟩ := gammaInv_surjective y
     -- the cleared Lagrange interpolation at the nonzero nodes
@@ -387,7 +396,8 @@ private theorem chartRingMap_surjective (j : Fin 2) :
     exact hΓ
   · -- chart `j = 1`: the section of `X₁` is the unit.
     intro z
-    obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq _ z
+    obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq
+      (M := .powers (sectionRingHom (MvPolynomial.X 1))) z
     obtain ⟨N, rfl⟩ := (Submonoid.mem_powers_iff _ _).mp s.2
     obtain ⟨y', hy'⟩ := gammaInv_surjective y
     obtain ⟨N', p, hp, hpeval⟩ := chart_core_one y'
@@ -416,10 +426,13 @@ private theorem chart_closed (j : Fin 2) :
     IsClosedImmersion (twelvePointEmbedding ∣_ Proj.basicOpen grading (MvPolynomial.X j)) := by
   have hXj : MvPolynomial.X j ∈ grading 1 := by
     rw [MvPolynomial.mem_homogeneousSubmodule]
-    exact MvPolynomial.isHomogeneous_X j
-  -- STAGE 0: unfold the embedding to the `fromOfGlobalSections` head.
-  rw [show twelvePointEmbedding =
-    Proj.fromOfGlobalSections grading sectionRingHom section_hf from rfl]
+    exact MvPolynomial.isHomogeneous_X ℂ j
+  -- STAGE 0-1: retype the restricted embedding at `Proj grading` (the
+  -- `projectiveSpace 1` wrapper is defeq but not reducible), then unfold
+  -- the embedding to the `fromOfGlobalSections` head.
+  rw [show (twelvePointEmbedding ∣_ Proj.basicOpen grading (MvPolynomial.X j)) =
+    (Proj.fromOfGlobalSections grading sectionRingHom section_hf ∣_
+      (Proj.basicOpen grading (MvPolynomial.X j))) from rfl]
   -- STAGE 1: the restriction rewrite
   -- (`Proj.fromOfGlobalSections_morphismRestrict`, Basic.lean:496)
   -- factorizes the restricted embedding through the affine chart map.
@@ -464,27 +477,27 @@ theorem twelvePoint_closedImmersion : IsClosedImmersion twelvePointEmbedding :=
   IsZariskiLocalAtTarget.of_iSup_eq_top
     (P := @IsClosedImmersion)
     (fun j => Proj.basicOpen grading (MvPolynomial.X j))
-    (Proj.iSup_basicOpen_eq_top grading MvPolynomial.X span_cover)
+    (Proj.iSup_basicOpen_eq_top' grading MvPolynomial.X
+      variables_homogeneous span_cover)
     (fun j => chart_closed j)
   -- AUDIT: `IsZariskiLocalAtTarget` is a root-namespace abbreviation
-  -- (Morphisms/Basic.lean:112) — no `MorphismProperty.` prefix; the cover
-  -- family is normalized to `MvPolynomial.X`, matching both
-  -- `Proj.iSup_basicOpen_eq_top` (ProjectiveSpectrum/Basic.lean:86) and the
-  -- per-chart restriction family of `of_iSup_eq_top` (Basic.lean:146:
-  -- `(U) (hU : iSup U = ⊤) (H : ∀ i, P (f ∣_ U i))`).
+  -- (Morphisms/Basic.lean); the cover family is normalized to `MvPolynomial.X`,
+  -- matching `Proj.iSup_basicOpen_eq_top'` (ProjectiveSpectrum/Basic.lean),
+  -- whose adjoin side condition is `span_cover` above.
 
 /-- The embedding commutes with the structure maps over `Spec(C)`. -/
 theorem twelvePoint_over_base :
     twelvePointEmbedding ≫ projectiveSpaceToBase 1 = twelvePointStructureMap := by
-  -- STAGE 1 (definitional): the projective-space base map is
-  -- `toSpecZero ≫ Spec.map (algebraMap C (𝒜 0))`; regroup on the left and
-  -- unfold the embedding.
-  rw [show projectiveSpaceToBase 1 =
-      Proj.toSpecZero (ProjectiveGrading 1) ≫
+  -- STAGE 1 (definitional): retype the whole composite at `Proj grading` —
+  -- the `projectiveSpace 1` wrapper is defeq but not reducible, so the
+  -- regrouping below must operate on the `Proj`-typed form; unfold the
+  -- embedding and the base map in one definitional step.
+  rw [show (twelvePointEmbedding ≫ projectiveSpaceToBase 1 :
+      twelvePointScheme ⟶ complexBase) =
+      (Proj.fromOfGlobalSections grading sectionRingHom section_hf ≫
+        Proj.toSpecZero (ProjectiveGrading 1)) ≫
         Spec.map (CommRingCat.ofHom (algebraMap ℂ (ProjectiveGrading 1 0))) from rfl,
-    ← CategoryTheory.Category.assoc,
-    show twelvePointEmbedding =
-      Proj.fromOfGlobalSections grading sectionRingHom section_hf from rfl]
+    ← CategoryTheory.Category.assoc]
   -- STAGE 2 (the triangle identity, Basic.lean:515):
   -- `fromOfGlobalSections ≫ toSpecZero` is the `toSpecΓ` composite of the
   -- degree-zero part of `sectionRingHom`.  AUDIT: exact rewrite shape.
@@ -542,30 +555,36 @@ noncomputable def twelvePointWorld : SmoothProjectiveComplexScheme :=
 specialization order): all primes of the artinian ring `C^12` are maximal. -/
 theorem twelvePoint_coheight (x : twelvePointScheme) :
     Order.coheight x = 0 := by
-  -- `C^12` is artinian: each factor is artinian
-  -- (`DivisionRing.instIsArtinianRing`) and the finite `Pi` type is artinian
-  -- (Mathlib RingTheory/Artinian/Module.lean:376/:441).  AUDIT: instance
-  -- resolution.
+  -- `C^12` is artinian: each factor is artinian and the finite `Pi` type is
+  -- artinian by instance synthesis (the `haveI` below did not error in CI).
   haveI hart : IsArtinianRing (Fin 12 → ℂ) := inferInstance
-  have hxmax : x.asIdeal.IsMaximal := IsArtinianRing.isMaximal_of_isPrime x.asIdeal
   refine Order.coheight_eq_zero.mpr (fun y hle => ?_)
-  -- `x ≤ y` is, on the affine chart, reverse inclusion of prime ideals:
-  -- scheme order to specialization, specialization to the spectrum order,
-  -- spectrum order to inclusion of ideals.
-  have hle' : y.asIdeal ≤ x.asIdeal :=
-    (PrimeSpectrum.asIdeal_le_asIdeal y x).mp
-      ((PrimeSpectrum.le_iff_specializes y x).mp
-        (Scheme.le_iff_specializes.mp hle))
-  -- AUDIT: the order bridge is `Scheme.le_iff_specializes` (Scheme.lean:160),
-  -- `PrimeSpectrum.le_iff_specializes` (Spectrum/Prime/Topology.lean:830)
-  -- and `PrimeSpectrum.asIdeal_le_asIdeal` (Spectrum/Prime/Defs.lean:59);
-  -- the artinian step is `IsArtinianRing.isMaximal_of_isPrime`
-  -- (Artinian/Module.lean:550).
-  have hyeq : y.asIdeal = x.asIdeal :=
-    hxmax.eq_of_le (y.isPrime.ne_top) hle'
-  exact PrimeSpectrum.ext hyeq
-  -- AUDIT: `PrimeSpectrum.ext` rides the definitional identification of the
-  -- points of `Spec (C^12)` with `PrimeSpectrum (C^12)`.
+  -- `hle : x ≤ y` in the scheme specialization order is `y ⤳ x` topologically
+  -- (`Scheme.le_iff_specializes : a ≤ b ↔ b ⤳ a`); on the affine spectrum
+  -- this is reverse ideal inclusion, bridged through `PrimeSpectrum`.
+  have hsp : y ⤳ x := Scheme.le_iff_specializes.mp hle
+  have hle' : (show PrimeSpectrum (Fin 12 → ℂ) from y).asIdeal ≤
+      (show PrimeSpectrum (Fin 12 → ℂ) from x).asIdeal :=
+    (PrimeSpectrum.le_iff_specializes _ _).mpr hsp
+  -- both point ideals are prime, hence maximal in the artinian ring; a
+  -- maximal ideal below another maximal ideal is equal to it.
+  have hyi : (show PrimeSpectrum (Fin 12 → ℂ) from y).asIdeal.IsPrime :=
+    (show PrimeSpectrum (Fin 12 → ℂ) from y).isPrime
+  have hxi : (show PrimeSpectrum (Fin 12 → ℂ) from x).asIdeal.IsPrime :=
+    (show PrimeSpectrum (Fin 12 → ℂ) from x).isPrime
+  have hymax : (show PrimeSpectrum (Fin 12 → ℂ) from y).asIdeal.IsMaximal :=
+    (IsArtinianRing.isPrime_iff_isMaximal _).mp hyi
+  have heq : (show PrimeSpectrum (Fin 12 → ℂ) from y).asIdeal =
+      (show PrimeSpectrum (Fin 12 → ℂ) from x).asIdeal :=
+    hymax.eq_of_le (Ideal.IsPrime.ne_top hxi) hle'
+  -- the points are equal, so `y ≤ x` holds by reflexivity.
+  rw [show y = x from PrimeSpectrum.ext heq]
+  exact le_rfl
+  -- AUDIT: the order bridge is `Scheme.le_iff_specializes` (Scheme.lean,
+  -- `a ≤ b ↔ b ⤳ a`) and `PrimeSpectrum.le_iff_specializes` (`x ≤ y ↔ x ⤳ y`,
+  -- the inclusion order); the artinian step is
+  -- `IsArtinianRing.isPrime_iff_isMaximal` (Artinian/Module.lean); the
+  -- scheme-point and prime-spectrum carriers are definitionally identified.
 
 /-- The twelve points of the world, indexed by `Fin 12`.  The prime spectrum
 of a finite product is the sigma of the factor spectra; each
@@ -587,9 +606,10 @@ noncomputable def twelvePointEquiv :
 compact.  (Stated as a *named* instance so that both the instance path and
 the contracted name `twelvePointCompactSpace` are available downstream.) -/
 noncomputable instance twelvePointCompactSpace : CompactSpace ↥twelvePointScheme :=
-  PrimeSpectrum.compactSpace _
+  PrimeSpectrum.compactSpace
   -- AUDIT: definitional transport `↥twelvePointScheme = ↥(PrimeSpectrum
-  -- (Fin 12 → ℂ))`; alternate `PrimeSpectrum.compactSpace (Fin 12 → ℂ)`.
+  -- (Fin 12 → ℂ))`; the pinned `PrimeSpectrum.compactSpace` is an instance
+  -- with the ring implicit — no explicit argument.
 
 /-! ### Receipts -/
 

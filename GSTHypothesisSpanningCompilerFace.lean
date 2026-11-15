@@ -230,7 +230,8 @@ theorem eIdx_eq_cert (s : Fin 12) :
   rw [C_val_0, C_val_1, C_val_2, C_val_3, C_val_4, C_val_5, C_val_6, C_val_7, C_val_8, C_val_9, C_val_10, C_val_11]
   funext t
   fin_cases s <;> fin_cases t <;>
-    decide
+    simp [eIdx, certRow, Cvec] <;>
+    norm_num
 
 theorem eIdx_mem_span (s : Fin 12) :
     eIdx s ∈ Submodule.span ℚ (Set.range C) := by
