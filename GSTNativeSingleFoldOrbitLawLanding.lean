@@ -292,13 +292,13 @@ theorem hodgeOrbit_zero_ne_zero_of_isKrylovCyclic
     refine Submodule.span_le.mpr ?_
     rintro x ⟨n, rfl⟩
     rw [hzero n]
-    exact Submodule.mem_bot.mpr rfl
+    exact (Submodule.mem_bot ℚ).mpr rfl
   obtain ⟨a, ha⟩ := hlive
   have hmem : a ∈ (⊤ : Submodule ℚ (ClassicalHodgeFiber V H p)) :=
-    Submodule.mem_top a
+    Submodule.mem_top
   have hcyc' : Submodule.span ℚ (Set.range C.hodgeOrbit) = ⊤ := hcyc
   rw [← hcyc', hspanbot] at hmem
-  exact ha (Submodule.mem_bot.mp hmem)
+  exact ha ((Submodule.mem_bot ℚ).mp hmem)
 
 /-- **NO FREE LUNCH.**  If a certificate is Krylov-cyclic at a LIVE weight
 (some rational Hodge class is nonzero), then some genuine algebraic cycle has
@@ -469,7 +469,7 @@ theorem certFold_orbitClass_eq_hodgeOrbit
     orbitClassSet (certFold C) C.seedCycle =
       Set.range fun n : Nat => (C.hodgeOrbit n).1 := by
   have hf : (fun n : Nat =>
-      H.cycleClass p (nativeOrbit (certFold C) C.seedCycle n)) =
+      (certFold C).cycleClass (nativeOrbit (certFold C) C.seedCycle n)) =
       (fun n : Nat => (C.hodgeOrbit n).1) := by
     funext n
     rw [certFold_nativeOrbit C n]
@@ -504,7 +504,6 @@ theorem gst_hypothesis_complete_of_isKrylovCyclic
   show rationalHodgeSubspace (H.hodgeBigrading p) ≤
     Submodule.span ℚ (orbitClassSet (certFold C) C.seedCycle)
   rw [span_orbitClasses_eq_hodgeFiber C hcyc]
-  exact le_rfl
 
 /-- **THE NATIVE-TO-TYPED BRIDGE (the FS law from the native law).**
 For every weight, the native single-fold orbit law produces a genuine
