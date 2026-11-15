@@ -191,9 +191,9 @@ private theorem exists_interpolating (y : Fin 12 → ℂ) :
     · rw [h0]; simp
     · have h := Lagrange.degree_interpolate_lt y
         (by rw [Finset.coe_univ]; exact nodeValues_injOn)
-      rwa [Polynomial.natDegree_lt_iff_degree_lt h0,
-        show (12 : WithBot ℕ) = ↑(Finset.card (Finset.univ : Finset (Fin 12))) from by
-          rw [Finset.card_univ, Fintype.card_fin]] at h
+      rw [Finset.card_univ, Fintype.card_fin,
+        ← Polynomial.natDegree_lt_iff_degree_lt h0] at h
+      exact h
   · exact fun i => Lagrange.eval_interpolate_at_node y (by
       rw [Finset.coe_univ]; exact nodeValues_injOn) (Finset.mem_univ i)
 
@@ -268,13 +268,15 @@ private noncomputable def chartRingMap (j : Fin 2) :
     MvPolynomial (Fin 2) ℂ →+*
       Localization.Away (sectionRingHom (MvPolynomial.X j)) :=
   RingHom.comp
-    (IsLocalization.map
-      (M := .powers (MvPolynomial.X j))
-      (T := .powers (sectionRingHom (MvPolynomial.X j)))
-      (Localization.Away (sectionRingHom (MvPolynomial.X j)))
-      sectionRingHom
-      (by rw [← Submonoid.map_le_iff_le_comap, Submonoid.map_powers]
-          try simp))
+    ((IsLocalization.map
+        (M := .powers (MvPolynomial.X j))
+        (T := .powers (sectionRingHom (MvPolynomial.X j)))
+        (Localization.Away (sectionRingHom (MvPolynomial.X j)))
+        sectionRingHom
+        (by rw [← Submonoid.map_le_iff_le_comap, Submonoid.map_powers]
+            try simp)) :
+      Localization.Away (MvPolynomial.X j) →+*
+        Localization.Away (sectionRingHom (MvPolynomial.X j)))
     (algebraMap _ (Localization.Away (MvPolynomial.X j)))
   -- AUDIT: transcribed from the pinned `toBasicOpenOfGlobalSections`
   -- definition verbatim (the `IsLocalization.map (M := .powers t)
@@ -331,13 +333,17 @@ interpolating form at the eleven nonzero nodes (chart `k = 1`:
 vanish, at the others it is the cleared Lagrange identity). -/
 private theorem chartRingMap_surjective (j : Fin 2) :
     Function.Surjective (chartRingMap j) := by
-  fin_cases j
-  · -- chart `j = 0`: the section of `X₀` is the node-value vector.
-    intro z
-    obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq
-      (M := .powers (sectionRingHom (MvPolynomial.X 0))) z
-    obtain ⟨N, rfl⟩ := (Submonoid.mem_powers_iff _ _).mp s.2
-    obtain ⟨y', hy'⟩ := gammaInv_surjective y
+  -- The fraction decomposition is obtained at GENERIC `j` (no embedded
+  -- literal forms), then the two charts are dispatched by `Fin 2`'s
+  -- two-element structure.
+  intro z
+  obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq
+    (M := .powers (sectionRingHom (MvPolynomial.X j))) z
+  obtain ⟨N, rfl⟩ := (Submonoid.mem_powers_iff _ _).mp s.2
+  obtain ⟨y', hy'⟩ := gammaInv_surjective y
+  by_cases hj : j = 0
+  · subst hj
+    -- chart `j = 0`: the section of `X₀` is the node-value vector.
     -- the cleared Lagrange interpolation at the nonzero nodes
     let w : Fin 12 → ℂ := fun i =>
       if i = 0 then 0 else y' i / (nodeValues i) ^ N
@@ -394,12 +400,12 @@ private theorem chartRingMap_surjective (j : Fin 2) :
       sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ (N + 1) from by ring,
       mul_comm]
     exact hΓ
-  · -- chart `j = 1`: the section of `X₁` is the unit.
-    intro z
-    obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq
-      (M := .powers (sectionRingHom (MvPolynomial.X 1))) z
-    obtain ⟨N, rfl⟩ := (Submonoid.mem_powers_iff _ _).mp s.2
-    obtain ⟨y', hy'⟩ := gammaInv_surjective y
+  · have hj1 : j = 1 := Fin.ext (by
+      have h := j.isLt
+      have hne : j.val ≠ 0 := fun h0 => hj (Fin.ext h0)
+      omega)
+    subst hj1
+    -- chart `j = 1`: the section of `X₁` is the unit.
     obtain ⟨N', p, hp, hpeval⟩ := chart_core_one y'
     have hΓ : sectionRingHom p = y := by
       show (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
@@ -457,7 +463,7 @@ private theorem chart_closed (j : Fin 2) :
   -- criterion with the Lagrange surjectivity of the chart ring map.
   simp only [← CategoryTheory.Category.assoc]
   rw [MorphismProperty.cancel_right_of_respectsIso (P := @IsClosedImmersion)
-    _ (Proj.basicOpenIsoSpec grading (MvPolynomial.X j) zero_lt_one hXj).symm.hom]
+    _ (Proj.basicOpenIsoSpec grading (MvPolynomial.X j) hXj zero_lt_one).inv]
   simp only [CategoryTheory.Category.assoc]
   rw [MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
     ((Scheme.isoOfEq twelvePointScheme
@@ -496,8 +502,7 @@ theorem twelvePoint_over_base :
       twelvePointScheme ⟶ complexBase) =
       (Proj.fromOfGlobalSections grading sectionRingHom section_hf ≫
         Proj.toSpecZero (ProjectiveGrading 1)) ≫
-        Spec.map (CommRingCat.ofHom (algebraMap ℂ (ProjectiveGrading 1 0))) from rfl,
-    ← CategoryTheory.Category.assoc]
+        Spec.map (CommRingCat.ofHom (algebraMap ℂ (ProjectiveGrading 1 0))) from rfl]
   -- STAGE 2 (the triangle identity, Basic.lean:515):
   -- `fromOfGlobalSections ≫ toSpecZero` is the `toSpecΓ` composite of the
   -- degree-zero part of `sectionRingHom`.  AUDIT: exact rewrite shape.
@@ -577,9 +582,9 @@ theorem twelvePoint_coheight (x : twelvePointScheme) :
   have heq : (show PrimeSpectrum (Fin 12 → ℂ) from y).asIdeal =
       (show PrimeSpectrum (Fin 12 → ℂ) from x).asIdeal :=
     hymax.eq_of_le (Ideal.IsPrime.ne_top hxi) hle'
-  -- the points are equal, so `y ≤ x` holds by reflexivity.
+  -- the points are equal, so `y ≤ x` holds by reflexivity (the `rw` closes
+  -- the goal through `le_refl`).
   rw [show y = x from PrimeSpectrum.ext heq]
-  exact le_rfl
   -- AUDIT: the order bridge is `Scheme.le_iff_specializes` (Scheme.lean,
   -- `a ≤ b ↔ b ⤳ a`) and `PrimeSpectrum.le_iff_specializes` (`x ≤ y ↔ x ⤳ y`,
   -- the inclusion order); the artinian step is
