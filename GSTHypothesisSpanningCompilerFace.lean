@@ -230,8 +230,7 @@ theorem eIdx_eq_cert (s : Fin 12) :
   rw [C_val_0, C_val_1, C_val_2, C_val_3, C_val_4, C_val_5, C_val_6, C_val_7, C_val_8, C_val_9, C_val_10, C_val_11]
   funext t
   fin_cases s <;> fin_cases t <;>
-    simp only [eIdx, certRow, Cvec, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-  all_goals norm_num
+    decide
 
 theorem eIdx_mem_span (s : Fin 12) :
     eIdx s ∈ Submodule.span ℚ (Set.range C) := by
@@ -242,8 +241,8 @@ theorem w12_decompose (u : Fin 12 → ℚ) :
     u = u (0 : Fin 12) • eIdx (0 : Fin 12) + u (1 : Fin 12) • eIdx (1 : Fin 12) + u (2 : Fin 12) • eIdx (2 : Fin 12) + u (3 : Fin 12) • eIdx (3 : Fin 12) + u (4 : Fin 12) • eIdx (4 : Fin 12) + u (5 : Fin 12) • eIdx (5 : Fin 12) + u (6 : Fin 12) • eIdx (6 : Fin 12) + u (7 : Fin 12) • eIdx (7 : Fin 12) + u (8 : Fin 12) • eIdx (8 : Fin 12) + u (9 : Fin 12) • eIdx (9 : Fin 12) + u (10 : Fin 12) • eIdx (10 : Fin 12) + u (11 : Fin 12) • eIdx (11 : Fin 12) := by
   funext s
   fin_cases s <;>
-    simp only [eIdx, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-  all_goals norm_num
+    simp [eIdx, Pi.add_apply, Pi.smul_apply, smul_eq_mul, mul_one, mul_zero,
+      add_zero, zero_add]
 
 /-- **THE COORDINATE SPANNING LAW.** The fold orbit of the seed spans the
 entire coordinate world. -/

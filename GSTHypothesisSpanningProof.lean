@@ -99,19 +99,25 @@ theorem M12_smul (srcf : TwelveCell → ℚ) (k : ℚ) (a : WaveSignal12) :
     M12 srcf (k • a) = k • M12 srcf a := by
   funext s; simp only [M12, Pi.smul_apply, smul_eq_mul]; ring
 
+/-- The fold is additive in the wave argument. Pointwise exact. -/
+theorem F12_add (src : TwelveCell → ℚ) (b : ℚ) (u v : WaveSignal12) :
+    F12 src b (u + v) = F12 src b u + F12 src b v := by
+  funext s
+  simp only [F12, U12, J12, M12, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  ring
+
+/-- The fold is homogeneous in the wave argument. Pointwise exact. -/
+theorem F12_smul (src : TwelveCell → ℚ) (b k : ℚ) (u : WaveSignal12) :
+    F12 src b (k • u) = k • F12 src b u := by
+  funext s
+  simp only [F12, U12, J12, M12, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  ring
+
 /-- The owner's full combined fold `F₁ = U + J + M` as a `Module.End`. -/
 def N12 : Module.End ℚ WaveSignal12 where
   toFun u := F12 ownerSource 1 u
-  map_add' u v := by
-    funext s
-    simp only [N12, LinearMap.coe_mk, AddHom.coe_mk, F12, U12_add, J12_add,
-      M12_add, LinearMap.add_apply, Pi.add_apply, Pi.smul_apply, smul_add]
-    ring
-  map_smul' k u := by
-    funext s
-    simp only [N12, LinearMap.coe_mk, AddHom.coe_mk, F12, U12_smul, J12_smul,
-      M12_smul, LinearMap.smul_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    ring
+  map_add' u v := F12_add ownerSource 1 u v
+  map_smul' k u := F12_smul ownerSource 1 k u
 
 /-- Pointwise shape of the fold. -/
 theorem N12_val (u : WaveSignal12) (s : TwelveCell) :
@@ -196,69 +202,69 @@ theorem cmSign_val_3_2 : cmSign ((3 : Fin 4), (2 : Fin 3)) = (-1 : ℚ) := by de
 /-! ### The fold steps: `N12 (Kvec k) = Kvec (k + 1)` -/
 theorem N12_Kvec_step_0 : N12 (Kvec 0) = Kvec 1 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_1 : N12 (Kvec 1) = Kvec 2 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_2 : N12 (Kvec 2) = Kvec 3 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_3 : N12 (Kvec 3) = Kvec 4 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_4 : N12 (Kvec 4) = Kvec 5 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_5 : N12 (Kvec 5) = Kvec 6 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_6 : N12 (Kvec 6) = Kvec 7 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_7 : N12 (Kvec 7) = Kvec 8 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_8 : N12 (Kvec 8) = Kvec 9 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_9 : N12 (Kvec 9) = Kvec 10 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 theorem N12_Kvec_step_10 : N12 (Kvec 10) = Kvec 11 := by
   funext s
+  rw [N12_val]
   rcases s with ⟨c, d⟩
-  fin_cases c <;> fin_cases d <;>
-    norm_num [N12_val, Kvec, seed12, shuffleCell, mirrorCell, cmSign, ownerSource, GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI, GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit, GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit, GST2DMixedEmergence.lowBit]
+  fin_cases c <;> fin_cases d <;> decide
 
 /-! ### The orbit values are the table -/
 theorem orbit_val_0 : worldOrbit ((0 : Fin 12) : ℕ) = Kvec 0 := rfl
@@ -368,9 +374,7 @@ theorem eCell_eq_cert (s : TwelveCell) :
   rcases s with ⟨cs, ds⟩
   rcases t with ⟨ct, dt⟩
   fin_cases cs <;> fin_cases ds <;> fin_cases ct <;> fin_cases dt <;>
-    simp only [eCell, certRowOf, Kvec, seed12, Pi.add_apply, Pi.smul_apply,
-      smul_eq_mul]
-  all_goals norm_num
+    decide
 
 /-! ## §5 THE SPANNING LAW -/
 
@@ -384,8 +388,8 @@ theorem wave_decompose (u : WaveSignal12) :
   funext s
   rcases s with ⟨c, d⟩
   fin_cases c <;> fin_cases d <;>
-    simp only [eCell, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-  all_goals norm_num
+    simp [eCell, Pi.add_apply, Pi.smul_apply, smul_eq_mul, mul_one, mul_zero,
+      add_zero, zero_add]
 
 /-- **THE SPANNING LAW.** The rational span of the full fold orbit of the
 owner's seed is the entire twelve-cell world. -/
@@ -417,7 +421,6 @@ theorem gst_hypothesis_complete_world :
   show (⊤ : Submodule ℚ WaveSignal12) ≤
     Submodule.span ℚ (orbitClassSet worldFold seed12)
   rw [orbitClassSet_world_eq, span_range_worldOrbit_eq_top]
-  exact le_rfl
 
 /-- **THE LANDING FOR THE OWNER'S WORLD** — a formality on this face (the
 world cycle-class map is the identity, so `z := β` witnesses it). Recorded
