@@ -307,7 +307,8 @@ def phiNat : (Fin 12 → ℚ) →ₗ[ℚ] A where
   map_add' c d := by
     simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
   map_smul' k c := by
-    simp only [Pi.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum]
+    simp only [Pi.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum,
+      RingHom.id_apply]
 
 /-- The Betti source-class map. -/
 def sourceClassMap : (Fin 12 → ℚ) →ₗ[ℚ] B where
@@ -315,7 +316,8 @@ def sourceClassMap : (Fin 12 → ℚ) →ₗ[ℚ] B where
   map_add' c d := by
     simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
   map_smul' k c := by
-    simp only [Pi.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum]
+    simp only [Pi.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum,
+      RingHom.id_apply]
 
 /-- The compiler fold: the owner's wave matrix acting through the frame. -/
 def compilerFold : GSTFold A B where
@@ -335,7 +337,7 @@ theorem phiNat_eIdx (i : Fin 12) : phiNat Fr (eIdx i) = Fr.source i := by
 
 theorem phiNat_coordSeed : phiNat Fr coordSeed = worldSeedNative Fr := by
   have h : coordSeed = eIdx 0 + eIdx 1 := by
-    funext i; fin_cases i <;> simp [coordSeed, eIdx] <;> norm_num
+    funext i; fin_cases i <;> simp [coordSeed, eIdx]
   rw [h, map_add, phiNat_eIdx, phiNat_eIdx]
   rfl
 
