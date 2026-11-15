@@ -697,7 +697,7 @@ theorem twelvePointFoldWord_op (u : RationalSingularCohomology
   simp only [foldWord_op_pointClass]
   funext j
   rw [Finset.sum_apply]
-  simp [Matrix.mulVec, Matrix.dotProduct, mul_comm] -- AUDIT-8: matrix API
+  simp [Matrix.mulVec, dotProduct, mul_comm] -- AUDIT-8: matrix API
 
 /-- The fold word preserves the rational Hodge fiber at weight zero (the
 fiber is maximal on the twelve-point world). -/

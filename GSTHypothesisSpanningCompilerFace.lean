@@ -129,57 +129,57 @@ theorem coordSeed_eq_Cvec0 : coordSeed = Cvec 0 := by
 unrolled by `Fin.sum_univ_castSucc` and evaluated cellwise. -/
 theorem C_step_0 : ∀ i, (Twave.mulVec (Cvec (0 : Fin 12))) i = Cvec (1 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_1 : ∀ i, (Twave.mulVec (Cvec (1 : Fin 12))) i = Cvec (2 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_2 : ∀ i, (Twave.mulVec (Cvec (2 : Fin 12))) i = Cvec (3 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_3 : ∀ i, (Twave.mulVec (Cvec (3 : Fin 12))) i = Cvec (4 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_4 : ∀ i, (Twave.mulVec (Cvec (4 : Fin 12))) i = Cvec (5 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_5 : ∀ i, (Twave.mulVec (Cvec (5 : Fin 12))) i = Cvec (6 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_6 : ∀ i, (Twave.mulVec (Cvec (6 : Fin 12))) i = Cvec (7 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_7 : ∀ i, (Twave.mulVec (Cvec (7 : Fin 12))) i = Cvec (8 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_8 : ∀ i, (Twave.mulVec (Cvec (8 : Fin 12))) i = Cvec (9 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_9 : ∀ i, (Twave.mulVec (Cvec (9 : Fin 12))) i = Cvec (10 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 theorem C_step_10 : ∀ i, (Twave.mulVec (Cvec (10 : Fin 12))) i = Cvec (11 : Fin 12) i := by
   intro i; fin_cases i <;>
-    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, dotProduct,
       Fin.sum_univ_castSucc, mul_comm] <;>
     norm_num
 
