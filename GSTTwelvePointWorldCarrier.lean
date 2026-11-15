@@ -259,6 +259,16 @@ private theorem eval_X_zero : evalRingHom12 (MvPolynomial.X 0) = nodeValues := b
 
 /-! ### The closed immersion -/
 
+/-- The submonoid side condition of the localization transport: the powers
+of `X j` map into the powers of its section.  Stated standalone so the
+definition and the computation below ride the same proof (proof
+irrelevance makes the two uses definitionally equal). -/
+private theorem chartRingMap_le (j : Fin 2) :
+    Submonoid.powers (MvPolynomial.X j) ≤
+      (Submonoid.powers (sectionRingHom (MvPolynomial.X j))).comap sectionRingHom := by
+  rw [← Submonoid.map_le_iff_le_comap, Submonoid.map_powers]
+  simp
+
 /-- The ring-level chart map at the variable `X j`: the `IsLocalization.map`
 composite inside `Proj.toBasicOpenOfGlobalSections` (pinned
 ProjectiveSpectrum/Basic.lean:369), carrying a form to its away-localized
@@ -266,18 +276,14 @@ section.  Surjectivity of this ring map is the Lagrange interpolation core of
 the embedding. -/
 private noncomputable def chartRingMap (j : Fin 2) :
     MvPolynomial (Fin 2) ℂ →+*
-      Localization.Away (sectionRingHom (MvPolynomial.X j)) :=
-  RingHom.comp
-    ((IsLocalization.map
-        (M := .powers (MvPolynomial.X j))
-        (T := .powers (sectionRingHom (MvPolynomial.X j)))
-        (Localization.Away (sectionRingHom (MvPolynomial.X j)))
-        sectionRingHom
-        (by rw [← Submonoid.map_le_iff_le_comap, Submonoid.map_powers]
-            try simp)) :
-      Localization.Away (MvPolynomial.X j) →+*
-        Localization.Away (sectionRingHom (MvPolynomial.X j)))
-    (algebraMap _ (Localization.Away (MvPolynomial.X j)))
+      Localization.Away (sectionRingHom (MvPolynomial.X j)) := by
+  -- Mathlib's own goal-driven elaboration of the composite: the term-mode
+  -- type ascription leaves the away-localization instance search stuck,
+  -- while the refine spine elaborates every instance against the goal.
+  refine RingHom.comp ?_ (algebraMap _ (Localization.Away (MvPolynomial.X j)))
+  refine IsLocalization.map (M := .powers (MvPolynomial.X j))
+    (T := .powers (sectionRingHom (MvPolynomial.X j))) _ sectionRingHom ?_
+  exact chartRingMap_le j
   -- AUDIT: transcribed from the pinned `toBasicOpenOfGlobalSections`
   -- definition verbatim (the `IsLocalization.map (M := .powers t)
   -- (T := .powers x) _ f h` composite composed with the `algebraMap`); the
@@ -289,11 +295,19 @@ private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
     chartRingMap j p =
       algebraMap (Γ(twelvePointScheme, ⊤))
         (Localization.Away (sectionRingHom (MvPolynomial.X j)))
-        (sectionRingHom p) :=
-  IsLocalization.map_eq _ _
-  -- AUDIT: `IsLocalization.map_eq` (Localization/Defs.lean): the image
-  -- of an `algebraMap`-element is the `algebraMap` of the image; two
-  -- explicit arguments in the pinned revision.
+        (sectionRingHom p) := by
+  have h1 : chartRingMap j p =
+      (IsLocalization.map (M := .powers (MvPolynomial.X j))
+        (T := .powers (sectionRingHom (MvPolynomial.X j)))
+        (Localization.Away (sectionRingHom (MvPolynomial.X j))) sectionRingHom
+        (chartRingMap_le j))
+        ((algebraMap (MvPolynomial (Fin 2) ℂ)
+          (Localization.Away (MvPolynomial.X j))) p) := rfl
+  rw [h1, IsLocalization.map_eq]
+  -- AUDIT: `IsLocalization.map_eq` (Localization/Defs.lean:613): the image
+  -- of an `algebraMap`-element is the `algebraMap` of the image; the
+  -- composite is exposed by a definitional `rfl` (the two side-condition
+  -- proofs agree by proof irrelevance).
 
 /-- Surjectivity of the `ΓSpecIso` inverse transport: every global section
 of the twelve-point scheme is the transport of a vector. -/
@@ -339,7 +353,10 @@ private theorem chartRingMap_surjective (j : Fin 2) :
   intro z
   obtain ⟨y, s, rfl⟩ := IsLocalization.exists_mk'_eq
     (M := .powers (sectionRingHom (MvPolynomial.X j))) z
-  obtain ⟨N, rfl⟩ := (Submonoid.mem_powers_iff _ _).mp s.2
+  -- `s` is destructured first so that the power equation's side is a bare
+  -- local (`subst` cannot eliminate the coercion `↑s`).
+  obtain ⟨t, ht⟩ := s
+  obtain ⟨N, rfl⟩ := (Submonoid.mem_powers_iff _ _).mp ht
   obtain ⟨y', hy'⟩ := gammaInv_surjective y
   by_cases hj : j = 0
   · subst hj
@@ -386,20 +403,20 @@ private theorem chartRingMap_surjective (j : Fin 2) :
       rw [← map_mul, ← map_pow, ← map_mul, ← hy']
       exact congrArg _ hvec
     refine ⟨p, ?_⟩
-    rw [chartRingMap_apply]
     refine ((IsLocalization.mk'_eq_iff_eq_mul
-      (x := y) (y := ⟨sectionRingHom (MvPolynomial.X 0) ^ N, s.2⟩)
+      (x := y) (y := ⟨sectionRingHom (MvPolynomial.X 0) ^ N, ht⟩)
       (z := chartRingMap _ p)).mp ?_).symm
-    rw [map_pow]
+    rw [chartRingMap_apply, Subtype.coe_mk, ← map_mul]
     refine (IsLocalization.eq_iff_exists
       (x := y) (y := sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ N)).mpr
       ⟨⟨sectionRingHom (MvPolynomial.X 0),
         Submonoid.mem_powers _⟩, ?_⟩
+    simp only [Subtype.coe_mk]
     rw [show sectionRingHom (MvPolynomial.X 0) * (sectionRingHom p *
         sectionRingHom (MvPolynomial.X 0) ^ N) =
       sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ (N + 1) from by ring,
       mul_comm]
-    exact hΓ
+    exact hΓ.symm
   · have hj1 : j = 1 := Fin.ext (by
       have h := j.isLt
       have hne : j.val ≠ 0 := fun h0 => hj (Fin.ext h0)
@@ -413,12 +430,11 @@ private theorem chartRingMap_surjective (j : Fin 2) :
       rw [hy']
       exact congrArg _ (funext hpeval)
     refine ⟨p, ?_⟩
-    rw [chartRingMap_apply, section_X_one]
     refine ((IsLocalization.mk'_eq_iff_eq_mul
-      (x := y) (y := ⟨(1 : Γ(twelvePointScheme, ⊤)) ^ N, s.2⟩)
+      (x := y) (y := ⟨sectionRingHom (MvPolynomial.X 1) ^ N, ht⟩)
       (z := chartRingMap _ p)).mp ?_).symm
-    rw [one_pow, map_one, mul_one, map_mul, map_pow, mul_one]
-    exact congrArg _ hΓ
+    rw [chartRingMap_apply, hΓ, Subtype.coe_mk, map_pow, section_X_one,
+      map_one, one_pow, mul_one]
   -- AUDIT: the `mk'`-bookkeeping is the pinned
   -- `IsLocalization.mk'_eq_iff_eq_mul` (Localization/Defs.lean:287) with
   -- the localization-equality criterion `IsLocalization.eq_iff_exists`
@@ -461,20 +477,23 @@ private theorem chart_closed (j : Fin 2) :
   -- the twelve-point scheme is affine), and `basicOpenIsoSpecAway`
   -- (Restrict.lean:520) — then close by the affine closed-immersion
   -- criterion with the Lagrange surjectivity of the chart ring map.
+  -- The peeling rides the `.mpr` direction of the cancel lemmas so that
+  -- every factor match is definitional (proof-irrelevant iso arguments),
+  -- not syntactic.
   simp only [← CategoryTheory.Category.assoc]
-  rw [MorphismProperty.cancel_right_of_respectsIso (P := @IsClosedImmersion)
-    _ (Proj.basicOpenIsoSpec grading (MvPolynomial.X j) hXj zero_lt_one).inv]
+  refine (MorphismProperty.cancel_right_of_respectsIso (P := @IsClosedImmersion)
+    _ (Proj.basicOpenIsoSpec grading (MvPolynomial.X j) hXj zero_lt_one).inv).mpr ?_
   simp only [CategoryTheory.Category.assoc]
-  rw [MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
+  refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
     ((Scheme.isoOfEq twelvePointScheme
       (Proj.fromOfGlobalSections_preimage_basicOpen grading sectionRingHom
-        section_hf zero_lt_one hXj)).hom) _]
-  rw [MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
+        section_hf zero_lt_one hXj)).hom) _).mpr ?_
+  refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
     ((Scheme.isoOfEq twelvePointScheme
       (Scheme.toSpecΓ_preimage_basicOpen
-        (sectionRingHom (MvPolynomial.X j)))).inv) _]
-  rw [MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)]
-  rw [MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)]
+        (sectionRingHom (MvPolynomial.X j)))).inv) _).mpr ?_
+  refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)).mpr ?_
+  refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)).mpr ?_
   exact IsClosedImmersion.spec_of_surjective
     (CommRingCat.ofHom (chartRingMap j)) (chartRingMap_surjective j)
 
@@ -507,31 +526,52 @@ theorem twelvePoint_over_base :
   -- `fromOfGlobalSections ≫ toSpecZero` is the `toSpecΓ` composite of the
   -- degree-zero part of `sectionRingHom`.  AUDIT: exact rewrite shape.
   rw [Proj.fromOfGlobalSections_toSpecZero]
-  -- STAGE 3: cancel the affine `ΓSpecIso`; the remaining ring identity is
-  -- "constants stay constant" (`hconst`).  The chart map factors through
-  -- the `ΓSpecIso` inverse; the unit triangle
-  -- `toSpecΓ ≫ Spec.map (ΓSpecIso _).inv = 𝟙` then cancels it.
+  -- STAGE 3: constants stay constant through the degree-zero transport.
+  -- The pinned lemma `fromOfGlobalSections_toSpecZero` produces the
+  -- composite with the DEGREE-ZERO algebra map `A₀ → A` (not the constants
+  -- `C → A`), so the ring identity is stated for the doubly-embedded
+  -- constant and bridged by `IsScalarTower` (the definitional route is
+  -- tried first).
   have hconst : ∀ c : ℂ,
       evalRingHom12 (algebraMap ℂ (MvPolynomial (Fin 2) ℂ) c) =
         (algebraMap ℂ (Fin 12 → ℂ) c) :=
     fun c => (MvPolynomial.aeval ![nodeValues, fun _ => 1]).commutes c
-  have hcomp : sectionRingHom.comp (algebraMap ℂ (MvPolynomial (Fin 2) ℂ)) =
+  have hzero : ∀ c : ℂ,
+      evalRingHom12 ((algebraMap ↥(ProjectiveGrading 1 0)
+          (MvPolynomial (Fin 2) ℂ))
+          ((algebraMap ℂ ↥(ProjectiveGrading 1 0)) c)) =
+        (algebraMap ℂ (Fin 12 → ℂ) c) := by
+    intro c
+    first
+    | exact hconst c
+    | (rw [IsScalarTower.algebraMap_apply]; exact hconst c)
+    | (simp only [IsScalarTower.algebraMap_apply]; exact hconst c)
+    | simp
+  have hcomp : (sectionRingHom.comp (algebraMap ↥(ProjectiveGrading 1 0)
+        (MvPolynomial (Fin 2) ℂ))).comp
+      (algebraMap ℂ ↥(ProjectiveGrading 1 0)) =
       (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom.comp
         (algebraMap ℂ (Fin 12 → ℂ)) := by
     ext c
     show (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
-        (evalRingHom12 (algebraMap ℂ (MvPolynomial (Fin 2) ℂ) c)) =
+        (evalRingHom12 ((algebraMap ↥(ProjectiveGrading 1 0)
+          (MvPolynomial (Fin 2) ℂ))
+          ((algebraMap ℂ ↥(ProjectiveGrading 1 0)) c))) =
       (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
         (algebraMap ℂ (Fin 12 → ℂ) c)
-    rw [hconst c]
+    rw [hzero c]
+  -- STAGE 4: merge the two spectral factors into the single transported
+  -- map, then cancel the adjunction inverse by the unit triangle
+  -- `toSpecΓ ≫ Spec.map (ΓSpecIso _).inv = 𝟙`.
+  rw [CategoryTheory.Category.assoc, ← Spec.map_comp,
+    ← CommRingCat.ofHom_comp]
   rw [show Spec.map (CommRingCat.ofHom
-        (sectionRingHom.comp (algebraMap ℂ (MvPolynomial (Fin 2) ℂ)))) =
+        ((sectionRingHom.comp (algebraMap ↥(ProjectiveGrading 1 0)
+          (MvPolynomial (Fin 2) ℂ))).comp
+          (algebraMap ℂ ↥(ProjectiveGrading 1 0)))) =
       Spec.map (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv ≫
         Spec.map (CommRingCat.ofHom (algebraMap ℂ (Fin 12 → ℂ))) from by
-      rw [show CommRingCat.ofHom
-          (sectionRingHom.comp (algebraMap ℂ (MvPolynomial (Fin 2) ℂ))) =
-        CommRingCat.ofHom ((Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom.comp
-          (algebraMap ℂ (Fin 12 → ℂ))) from congrArg CommRingCat.ofHom hcomp,
+      rw [congrArg CommRingCat.ofHom hcomp,
         show CommRingCat.ofHom
           ((Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom.comp
             (algebraMap ℂ (Fin 12 → ℂ))) =
