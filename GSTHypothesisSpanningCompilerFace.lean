@@ -81,10 +81,16 @@ of the j-th cell basis vector, evaluated at the i-th cell. -/
 theorem Twave_bridge (i j : Fin 12) :
     Twave i j =
       N12 (eCell (⟨(j : ℕ) / 3, by have := j.isLt; omega⟩ : Fin 4)
-        ⟨(j : ℕ) % 3, by have := j.isLt; omega⟩ : Fin 3)
+          (⟨(j : ℕ) % 3, by have := j.isLt; omega⟩ : Fin 3))
         ((⟨(i : ℕ) / 3, by have := i.isLt; omega⟩ : Fin 4),
-          ⟨(i : ℕ) % 3, by have := i.isLt; omega⟩ : Fin 3) := by
-  fin_cases i <;> fin_cases j <;> decide
+          (⟨(i : ℕ) % 3, by have := i.isLt; omega⟩ : Fin 3)) := by
+  fin_cases i <;> fin_cases j <;>
+    simp [Twave, N12_val, eCell, shuffleCell, mirrorCell, cmSign, ownerSource,
+      GST2DMixedEmergence.surviveI, GST2DMixedEmergence.twoI,
+      GST2DMixedEmergence.midDigit, GST2DMixedEmergence.finalMicroDigit,
+      GST2DMixedEmergence.microOutput, GST2DMixedEmergence.highBit,
+      GST2DMixedEmergence.lowBit] <;>
+    norm_num
 
 /-! ## §2 The coordinate certificate in `Fin 12 → ℚ` -/
 
@@ -117,32 +123,65 @@ def Cvec : Fin 12 → (Fin 12 → ℚ) :=
     else 0
 
 theorem coordSeed_eq_Cvec0 : coordSeed = Cvec 0 := by
-  funext i; fin_cases i <;> decide
+  funext i; fin_cases i <;> simp [coordSeed, Cvec] <;> norm_num
 
-/-! The fold steps of the coordinate table: one `mulVec` each (cheap
-kernel `decide`s — no iterated recursion is ever evaluated). -/
+/-! The fold steps of the coordinate table: one `mulVec` each — the sum is
+unrolled by `Fin.sum_univ_castSucc` and evaluated cellwise. -/
 theorem C_step_0 : ∀ i, (Twave.mulVec (Cvec (0 : Fin 12))) i = Cvec (1 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_1 : ∀ i, (Twave.mulVec (Cvec (1 : Fin 12))) i = Cvec (2 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_2 : ∀ i, (Twave.mulVec (Cvec (2 : Fin 12))) i = Cvec (3 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_3 : ∀ i, (Twave.mulVec (Cvec (3 : Fin 12))) i = Cvec (4 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_4 : ∀ i, (Twave.mulVec (Cvec (4 : Fin 12))) i = Cvec (5 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_5 : ∀ i, (Twave.mulVec (Cvec (5 : Fin 12))) i = Cvec (6 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_6 : ∀ i, (Twave.mulVec (Cvec (6 : Fin 12))) i = Cvec (7 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_7 : ∀ i, (Twave.mulVec (Cvec (7 : Fin 12))) i = Cvec (8 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_8 : ∀ i, (Twave.mulVec (Cvec (8 : Fin 12))) i = Cvec (9 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_9 : ∀ i, (Twave.mulVec (Cvec (9 : Fin 12))) i = Cvec (10 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 theorem C_step_10 : ∀ i, (Twave.mulVec (Cvec (10 : Fin 12))) i = Cvec (11 : Fin 12) i := by
-  decide
+  intro i; fin_cases i <;>
+    simp [Twave, Cvec, coordSeed, Matrix.mulVec, Matrix.dotProduct,
+      Fin.sum_univ_castSucc, mul_comm] <;>
+    norm_num
 
 theorem C_val_0 : C ((0 : Fin 12) : ℕ) = Cvec 0 := by
   show C 0 = Cvec 0
@@ -266,21 +305,17 @@ variable (Fr : IntersectionChowFrame (Fin 12) A B)
 def phiNat : (Fin 12 → ℚ) →ₗ[ℚ] A where
   toFun c := ∑ j : Fin 12, c j • Fr.source j
   map_add' c d := by
-    simp only [phiNat, LinearMap.coe_mk, AddHom.coe_mk, Pi.add_apply,
-      add_smul, Finset.sum_add_distrib]
+    simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
   map_smul' k c := by
-    simp only [phiNat, LinearMap.coe_mk, AddHom.coe_mk, Pi.smul_apply,
-      smul_eq_mul, mul_smul, ← Finset.smul_sum]
+    simp only [Pi.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum]
 
 /-- The Betti source-class map. -/
 def sourceClassMap : (Fin 12 → ℚ) →ₗ[ℚ] B where
   toFun c := ∑ j : Fin 12, c j • Fr.cycleClass (Fr.source j)
   map_add' c d := by
-    simp only [sourceClassMap, LinearMap.coe_mk, AddHom.coe_mk, Pi.add_apply,
-      add_smul, Finset.sum_add_distrib]
+    simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
   map_smul' k c := by
-    simp only [sourceClassMap, LinearMap.coe_mk, AddHom.coe_mk, Pi.smul_apply,
-      smul_eq_mul, mul_smul, ← Finset.smul_sum]
+    simp only [Pi.smul_apply, smul_eq_mul, mul_smul, Finset.smul_sum]
 
 /-- The compiler fold: the owner's wave matrix acting through the frame. -/
 def compilerFold : GSTFold A B where
@@ -295,13 +330,14 @@ def worldSeedNative : A := Fr.source 0 + Fr.source 1
 theorem phiNat_eIdx (i : Fin 12) : phiNat Fr (eIdx i) = Fr.source i := by
   simp only [phiNat, LinearMap.coe_mk, AddHom.coe_mk]
   rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ i)
-    (fun j _ hj => by simp [eIdx, hj.symm])]
-  simp
+    (fun j _ hj => by simp [eIdx, hj])]
+  simp [eIdx]
 
 theorem phiNat_coordSeed : phiNat Fr coordSeed = worldSeedNative Fr := by
   have h : coordSeed = eIdx 0 + eIdx 1 := by
-    funext i; fin_cases i <;> decide
+    funext i; fin_cases i <;> simp [coordSeed, eIdx] <;> norm_num
   rw [h, map_add, phiNat_eIdx, phiNat_eIdx]
+  rfl
 
 theorem cycleClass_phiNat (c : Fin 12 → ℚ) :
     Fr.cycleClass (phiNat Fr c) = sourceClassMap Fr c := by
@@ -361,7 +397,7 @@ theorem span_orbitClasses_eq_sourceClassSpan :
         (orbitClassSet (compilerFold Fr) (worldSeedNative Fr))
       = LinearMap.range (sourceClassMap Fr) := by
   have hf : (fun n : ℕ =>
-      Fr.cycleClass (nativeOrbit (compilerFold Fr) (worldSeedNative Fr) n))
+      (compilerFold Fr).cycleClass (nativeOrbit (compilerFold Fr) (worldSeedNative Fr) n))
     = (fun n : ℕ => sourceClassMap Fr (C n)) := by
     funext n
     exact orbit_class_eq Fr n
@@ -388,7 +424,6 @@ theorem gst_hypothesis_complete_compiler :
   show LinearMap.range (sourceClassMap Fr) ≤
     Submodule.span ℚ (orbitClassSet (compilerFold Fr) (worldSeedNative Fr))
   rw [span_orbitClasses_eq_sourceClassSpan]
-  exact le_rfl
 
 /-- **THE COMPILER LANDING** — a formality on this face (every
 source-class combination is `cl (phiNat c)` by linearity). Recorded to
