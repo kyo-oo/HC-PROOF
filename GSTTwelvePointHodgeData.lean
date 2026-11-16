@@ -272,9 +272,28 @@ theorem zeroCycleClass_point (i : Fin 12) :
     Pi.single i (1 : ℚ)
   rw [LinearEquiv.apply_symm_apply]
   funext j
+  -- WAVE 26 (run-26 residual at :277:79 — the last HodgeData error): the
+  -- hval is GENERALIZED over a variable point y at the cycle's own
+  -- `twelvePointWorld.X` spelling — the green PointNormalForm:66-71 idiom
+  -- VERBATIM (their x and y are variables; our two runs proved the
+  -- concrete-eval-point spelling `(twelvePointEquiv j).1` poisons every
+  -- evaluation lemma's pattern match: the run-25 full-error showed the
+  -- point type spelled `twelvePointWorld.X` on the cycle side vs
+  -- `twelvePointScheme` on the equiv side — default-defeq only, dead at
+  -- simp's matching; with y a variable there is no second spelling and
+  -- `single_apply` fires exactly as the green adjudicates).
+  have hev : ∀ y : twelvePointWorld.X,
+      (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
+        AlgebraicCycle twelvePointWorld.X ℚ) y =
+      (if y = (twelvePointPt i).1 then (1 : ℚ) else 0) := by
+    intro y
+    -- the green's exact simp set: both sides at the single's own point
+    -- spelling, y a variable — no twelvePointPt unfolding, no coe race.
+    simp [codimensionPointCycle, Function.locallyFinsuppWithin.single_apply]
   have hval : (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
       AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv j).1) =
-      (if (twelvePointEquiv j).1 = (twelvePointPt i).1 then (1 : ℚ) else 0) := by
+      (if (twelvePointEquiv j).1 = (twelvePointPt i).1 then (1 : ℚ) else 0) :=
+    hev ((twelvePointEquiv j).1)
     -- WAVE 23: the green's EXACT idiom -- the ite stated at the SINGLE'S OWN
     -- point spelling `(twelvePointPt i).1` (no `twelvePointPt` in the simp
     -- set: the attempt-2 residual proved the extra equation de-synced the
@@ -283,13 +302,6 @@ theorem zeroCycleClass_point (i : Fin 12) :
     -- argument-first ite with both sides at the identical spelling -- the
     -- verbatim PointNormalForm:66-71 close, now under the same
     -- `open Classical in` regime.
-    -- WAVE 25 (run-25 residual at :277:79): the default-simp `coe_single`
-    -- normalizes the coe application to the BARE `Pi.single` spelling PAST
-    -- `locallyFinsuppWithin.single_apply`'s coe-pattern (the linter's
-    -- "unused" receipt, twice) -- the evaluation lemma for the residual
-    -- `Pi.single a 1 b = if b = a then 1 else 0` is `Pi.single_apply`
-    -- (argument-first, [DecidableEq ι] synthesizing under `open Classical in`).
-    simp [codimensionPointCycle, Pi.single_apply]
   rw [hval, Pi.single_apply]
   by_cases hj : j = i
   · -- WAVE 25 (run-25 errors at :296/:298): both arms rebuilt SUBST-FREE
