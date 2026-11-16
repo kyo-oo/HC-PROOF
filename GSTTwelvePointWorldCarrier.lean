@@ -47,8 +47,12 @@ namespace GSTTwelvePointWorldCarrier
 /-! ### The affine carrier and its smooth structure -/
 
 /-- The twelve-point world: the spectrum of twelve copies of the complex
-numbers. -/
-def twelvePointScheme : Scheme := Spec (CommRingCat.of (Fin 12 → ℂ))
+numbers.  An `abbrev` (reducible alias), like `complexBase` and
+`ProjectiveGrading` before it: `rw` pattern matching and instance synthesis
+run at `.instances` transparency, where a plain `def` is opaque — the
+`Γ(twelvePointScheme, ⊤)` / `Γ(Spec (CommRingCat.of (Fin 12 → ℂ)), ⊤)`
+boundary bled five CI errors (run 43767848609) before this. -/
+abbrev twelvePointScheme : Scheme := Spec (CommRingCat.of (Fin 12 → ℂ))
 
 /-- The structure morphism to the complex base, induced by the diagonal
 `C -> C^12` (constant families). -/
@@ -275,20 +279,27 @@ section.  Surjectivity of this ring map is the Lagrange interpolation core of
 the embedding. -/
 private noncomputable def chartRingMap (j : Fin 2) :
     MvPolynomial (Fin 2) ℂ →+*
-      Localization.Away (sectionRingHom (MvPolynomial.X j)) := by
-  -- Mathlib's own goal-driven elaboration of the composite: the term-mode
-  -- type ascription leaves the away-localization instance search stuck,
-  -- while the refine spine elaborates every instance against the goal.
-  refine RingHom.comp ?_
-    (algebraMap (MvPolynomial (Fin 2) ℂ) (Localization.Away (MvPolynomial.X j)))
-  refine IsLocalization.map (M := .powers (MvPolynomial.X j))
-    (T := .powers (sectionRingHom (MvPolynomial.X j))) _ sectionRingHom ?_
-  exact chartRingMap_le j
-  -- AUDIT: transcribed from the pinned `toBasicOpenOfGlobalSections`
-  -- definition verbatim (the `IsLocalization.map (M := .powers t)
-  -- (T := .powers x) _ f h` composite composed with the `algebraMap`); the
-  -- side condition is Mathlib's own closing sequence there, with
-  -- `H : f t = x` definitional here (`x := f t` literally).
+      Localization.Away (sectionRingHom (MvPolynomial.X j)) :=
+  RingHom.comp
+    (IsLocalization.map
+      (R := MvPolynomial (Fin 2) ℂ)
+      (S := Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ))
+      (M := Submonoid.powers (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ))
+      (P := Γ(twelvePointScheme, ⊤))
+      (T := Submonoid.powers (sectionRingHom (MvPolynomial.X j)))
+      (Q := Localization.Away (sectionRingHom (MvPolynomial.X j)))
+      sectionRingHom (chartRingMap_le j))
+    (algebraMap (MvPolynomial (Fin 2) ℂ)
+      (Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ)))
+  -- AUDIT: term-mode transcription of the pinned `toBasicOpenOfGlobalSections`
+  -- composite (ProjectiveSpectrum/Basic.lean:369-377): the
+  -- `IsLocalization.map (M := .powers t) (T := .powers x) _ f h` ring hom
+  -- composed after `algebraMap _ (Localization.Away t)`.  All of `R S M P T Q`
+  -- are given so every instance resolves against a concrete type, and each
+  -- `MvPolynomial.X j` feeding an `Away`/`powers` head carries a type
+  -- ascription pinning the coefficient ring to `ℂ`: a bare
+  -- `Localization.Away (MvPolynomial.X j)` leaves `X`'s implicit
+  -- `CommSemiring R` stuck on a metavariable (CI 43767848609 errors 1-2).
 
 /-- The chart ring map on a plain form is the localized section. -/
 private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
@@ -297,12 +308,19 @@ private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
         (Localization.Away (sectionRingHom (MvPolynomial.X j)))
         (sectionRingHom p) := by
   have h1 : chartRingMap j p =
-      (IsLocalization.map (M := .powers (MvPolynomial.X j))
-        (T := .powers (sectionRingHom (MvPolynomial.X j)))
-        (Localization.Away (sectionRingHom (MvPolynomial.X j))) sectionRingHom
-        (chartRingMap_le j))
+      (IsLocalization.map
+        (R := MvPolynomial (Fin 2) ℂ)
+        (S := Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ))
+        (M := Submonoid.powers (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ))
+        (P := Γ(twelvePointScheme, ⊤))
+        (T := Submonoid.powers (sectionRingHom (MvPolynomial.X j)))
+        (Q := Localization.Away (sectionRingHom (MvPolynomial.X j)))
+        sectionRingHom (chartRingMap_le j))
         ((algebraMap (MvPolynomial (Fin 2) ℂ)
-          (Localization.Away (MvPolynomial.X j))) p) := by
+          (Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ))) p) := by
+    -- the definition IS this composite: `RingHom.comp` is built with
+    -- `toFun x := g (f x)` (`RingHom.comp_apply` is `rfl`), so the
+    -- unfolding is definitional.
     first
     | rfl
     | (unfold chartRingMap; rfl)
@@ -411,6 +429,8 @@ private theorem chartRingMap_surjective (j : Fin 2) :
       (z := chartRingMap _ p)).mpr ?_).symm
     rw [chartRingMap_apply, Subtype.coe_mk, ← map_mul]
     refine (IsLocalization.eq_iff_exists
+      (M := Submonoid.powers (sectionRingHom (MvPolynomial.X 0)))
+      (S := Localization.Away (sectionRingHom (MvPolynomial.X 0)))
       (x := y) (y := sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ N)).mpr
       ⟨⟨sectionRingHom (MvPolynomial.X 0),
         Submonoid.mem_powers _⟩, ?_⟩
@@ -495,6 +515,20 @@ private theorem chart_closed (j : Fin 2) :
     ((Scheme.isoOfEq twelvePointScheme
       (Scheme.toSpecΓ_preimage_basicOpen twelvePointScheme
         (sectionRingHom (MvPolynomial.X j)))).inv) _).mpr ?_
+  -- STAGE 5: the next left factor is `toSpecΓ ∣_ D(section)`, the
+  -- restriction of the affine `toSpecΓ`; its `IsIso` side condition is the
+  -- restriction instance (`instance (f) [IsIso f] (U) : IsIso (f ∣_ U)`,
+  -- Restrict.lean:639) fed by `IsAffine.affine`
+  -- (AffineScheme.lean:59).  Instance synthesis cannot find it through the
+  -- def-alias alone: the chain is supplied explicitly; this is independent
+  -- of the alias's reducibility.
+  haveI haff : IsAffine twelvePointScheme :=
+    inferInstanceAs (IsAffine (Spec (CommRingCat.of (Fin 12 → ℂ))))
+  haveI hΓ : IsIso (twelvePointScheme.toSpecΓ) :=
+    @IsAffine.affine twelvePointScheme haff
+  haveI hΓU : IsIso (twelvePointScheme.toSpecΓ ∣_
+      PrimeSpectrum.basicOpen (sectionRingHom (MvPolynomial.X j))) :=
+    inferInstance
   refine ((MorphismProperty.cancel_left_of_respectsIso
     (P := @IsClosedImmersion) _ _)).mpr ?_
   refine ((MorphismProperty.cancel_left_of_respectsIso
@@ -567,28 +601,23 @@ theorem twelvePoint_over_base :
     rw [hzero c]
   -- STAGE 4: merge the two spectral factors into the single transported
   -- map, then cancel the adjunction inverse by the unit triangle
-  -- `toSpecΓ ≫ Spec.map (ΓSpecIso _).inv = 𝟙`.
+  -- `toSpecΓ ≫ Spec.map (ΓSpecIso _).inv = 𝟙`
+  -- (GammaSpecAdjunction.lean:487-490).  AUDIT: every rewrite operates at
+  -- the raw ring / `Spec (of C^12)` level (`ofHom`-composites split by
+  -- `CommRingCat.ofHom_comp`, `Spec.map_comp`); the `twelvePointScheme`
+  -- alias is bridged exactly once by the `show` below (pure defeq), never
+  -- by cross-level syntactic matching inside a rewrite.
   rw [CategoryTheory.Category.assoc, ← Spec.map_comp,
     ← CommRingCat.ofHom_comp]
-  rw [show Spec.map (CommRingCat.ofHom
-        ((sectionRingHom.comp (algebraMap ↥(ProjectiveGrading 1 0)
-          (MvPolynomial (Fin 2) ℂ))).comp
-          (algebraMap ℂ ↥(ProjectiveGrading 1 0)))) =
-      Spec.map (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv ≫
-        Spec.map (CommRingCat.ofHom (algebraMap ℂ (Fin 12 → ℂ))) from by
-      rw [hcomp,
-        show CommRingCat.ofHom
-          ((Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom.comp
-            (algebraMap ℂ (Fin 12 → ℂ))) =
-        CommRingCat.ofHom (algebraMap ℂ (Fin 12 → ℂ)) ≫
-          (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv from rfl,
-        Spec.map_comp],
-    show twelvePointScheme.toSpecΓ =
-      Spec.map (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).hom from
-      (SpecMap_ΓSpecIso_hom (CommRingCat.of (Fin 12 → ℂ))).symm,
-    ← CategoryTheory.Category.assoc, ← Spec.map_comp, Iso.inv_hom_id,
-    Spec.map_id, CategoryTheory.Category.id_comp]
-  rfl
+  rw [hcomp]
+  rw [CommRingCat.ofHom_comp, Spec.map_comp]
+  show (Spec (CommRingCat.of (Fin 12 → ℂ))).toSpecΓ ≫
+      (Spec.map (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv ≫
+        Spec.map (CommRingCat.ofHom (algebraMap ℂ (Fin 12 → ℂ)))) =
+      Spec.map (CommRingCat.ofHom (algebraMap ℂ (Fin 12 → ℂ)))
+  rw [← CategoryTheory.Category.assoc,
+    toSpecΓ_SpecMap_ΓSpecIso_inv (CommRingCat.of (Fin 12 → ℂ)),
+    CategoryTheory.Category.id_comp]
 
 /-! ### The world -/
 
