@@ -124,7 +124,13 @@ the fiber is the whole `H⁰` (upstream `zeroFiber_eq_top`). -/
 theorem twelvePointSeed_hodge :
     twelvePointHodgeData.cycleClass 0 twelvePointSeedCycle ∈
       rationalHodgeSubspace (twelvePointHodgeData.hodgeBigrading 0) := by
-  rw [zeroFiber_eq_top]
+  -- W2-D D4 (wave 15): `zeroFiber_eq_top` is stated over the constant
+  -- `zeroBigrading` (HodgeData:248); the goal spells the projection
+  -- `twelvePointHodgeData.hodgeBigrading 0`.  The dead-export bridge
+  -- `twelvePointHodgeData_bigrading_zero` (HodgeData:293, `= zeroBigrading`
+  -- by rfl) rewrites the projection syntactically first; then the fiber
+  -- lemma fires on the constant.
+  rw [twelvePointHodgeData_bigrading_zero, zeroFiber_eq_top]
   exact Submodule.mem_top _
 
 /-- **THE SEED COORDINATES.**  Under the H⁰ iso the seed's class is exactly
@@ -143,9 +149,30 @@ theorem twelvePointSeed_coords :
   have hseed : twelvePointSeedCycle =
       codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 0) +
         codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 1) := rfl
-  rw [hseed, map_add, map_add, zeroCycleClass_point, zeroCycleClass_point]
+  -- W2-D D3 (wave 15): `zeroCycleClass_point` is stated over the constant
+  -- `zeroCycleClass` (HodgeData:208); after the two `map_add`s the goal
+  -- spells the projection `twelvePointHodgeData.cycleClass 0`.  The
+  -- dead-export bridge `twelvePointHodgeData_cycleClass_zero`
+  -- (HodgeData:306, `= zeroCycleClass` by rfl) rewrites the projection
+  -- syntactically; the two point-class rewrites are then fed through
+  -- `show … from` bridges so their LHS is elaborated in THIS file's
+  -- `twelvePointPt` scope (elaborator-level defeq on the from-term,
+  -- syntactic match on the rewrite — no kabstract key mismatch across
+  -- the HodgeData/LawLanding `twelvePointPt` def/abbrev seam).
+  rw [hseed, map_add, map_add, twelvePointHodgeData_cycleClass_zero]
+  rw [show twelvePointCohomologyIso (zeroCycleClass
+        (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 0))) =
+      Pi.single 0 (1 : ℚ) from zeroCycleClass_point 0,
+    show twelvePointCohomologyIso (zeroCycleClass
+        (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 1))) =
+      Pi.single 1 (1 : ℚ) from zeroCycleClass_point 1]
+  -- W2-D D1 (wave 15): the ℚ-valued cell goals are closed by the
+  -- corpus-green `simp […] <;> norm_num` idiom (the exact green twin of
+  -- this computation is Face 2's `coordSeed_eq_Cvec0`:
+  -- `funext i; fin_cases i <;> simp [coordSeed, Cvec] <;> norm_num`);
+  -- `decide` cannot reduce ℚ arithmetic at the pin.
   funext i
-  fin_cases i <;> simp only [Pi.add_apply, Pi.single_apply] <;> decide
+  fin_cases i <;> simp [coordSeed, Pi.add_apply, Pi.single_apply] <;> norm_num
 
 /-- **THE SEED CLASS IS NONZERO.**  The seed's Hodge class is nonzero: its
 coordinate vector is `coordSeed`, whose 0-th entry is `1 ≠ 0`.  This is the
@@ -186,11 +213,21 @@ equation, since the word's operator IS the wave matrix (`twelvePointFoldWord_op`
 /-- AUDIT (contract): the fold matrix IS the owner's `Twave`.  The parallel
 wave assembles `twelvePointFoldMatrix` as the letter-data sum (not
 definitionally `Twave`), so the equality is proved entrywise: every one of
-the 144 `Fin 12 × Fin 12` entries is discharged by `fin_cases` + `decide`
-(the same entrywise kernel sweep as `Twave_bridge`), through `Matrix.ext`. -/
+the 144 `Fin 12 × Fin 12` entries is discharged by `fin_cases` + `simp` +
+`norm_num` (the same entrywise sweep as `Twave_bridge`), through
+`Matrix.ext`. -/
 theorem twelvePointFoldMatrix_eq_Twave :
-    twelvePointFoldMatrix = Twave :=
-  Matrix.ext fun r c => by fin_cases r <;> fin_cases c <;> decide
+    twelvePointFoldMatrix = Twave := by
+  -- W2-D D2 (wave 15): the 144-entry sweep mirrors the corpus-green
+  -- `Twave_bridge` idiom (`fin_cases i <;> fin_cases j <;>
+  -- simp [Twave, N12_val, eCell, …] <;> norm_num`) — `decide` cannot
+  -- reduce the ℚ-valued `List.sum` arithmetic at the pin; simp's
+  -- ite/decide simprocs evaluate the Fin-literal guards and `norm_num`
+  -- closes the rational sums.
+  Matrix.ext fun r c => by
+    fin_cases r <;> fin_cases c <;>
+      simp [twelvePointFoldMatrix, Twave, foldWordData] <;>
+      norm_num
 
 /-- **THE ORBIT IS THE KR YLOV TABLE.**  `iso (hodgeOrbit n) = C n` for every
 `n`: the orbit starts at the seed (`C 0 = coordSeed`) and every step is one
@@ -243,13 +280,13 @@ theorem twelvePoint_orbitUnderlying_span :
       rcases hx with ⟨n, rfl⟩
       rw [← twelvePointHodgeOrbit_symm n]
       exact Submodule.subset_span (Set.mem_range_self n)
-    · rw [twelvePointCohomologyIso.symm.map_zero]
+    · rw [map_zero]
       exact Submodule.zero_mem _
     · intro x _ y _ hx hy
-      rw [twelvePointCohomologyIso.symm.map_add]
+      rw [map_add]
       exact Submodule.add_mem _ hx hy
     · intro a x _ hx
-      rw [twelvePointCohomologyIso.symm.map_smul]
+      rw [map_smul]
       exact Submodule.smul_mem _ _ hx
   rw [twelvePointCohomologyIso.symm_apply_apply u] at key
   exact key
@@ -270,7 +307,14 @@ theorem twelvePointCertificate_isKrylovCyclic :
     (p := rationalHodgeSubspace (twelvePointHodgeData.hodgeBigrading 0))
     (s := fun n : Nat => (twelvePointCertificate.hodgeOrbit n).1)
     (fun n => (twelvePointCertificate.hodgeOrbit n).2)).mpr
-      (by rw [zeroFiber_eq_top]; exact twelvePoint_orbitUnderlying_span)
+      (by
+        -- W2-D D4 (wave 15): the iff's RHS (pinned Span/Basic.lean:462) is
+        -- `span R (Set.range s) = p` with `p` the submodule itself — the
+        -- goal spells the projection `twelvePointHodgeData.hodgeBigrading
+        -- 0`; the bridge rewrites it to the constant `zeroBigrading`
+        -- first, then the fiber lemma fires.
+        rw [twelvePointHodgeData_bigrading_zero, zeroFiber_eq_top]
+        exact twelvePoint_orbitUnderlying_span)
 
 /-! ## §5 THE LAW — every weight of the first genuine world -/
 

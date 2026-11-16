@@ -413,7 +413,11 @@ theorem pointSection_injective :
     -- `(i : ι) (x : M i)` both explicit) then unifies against the clean
     -- application.
     show ((Pi.single i (1 : ℂ) : Fin 12 → ℂ)) i = 1
-    exact Pi.single_eq_same i (1 : ℂ)
+    -- WAVE 16 (run-15 error at 416:30): the lemma call's own family binder is
+    -- a bare metavariable `?m.88 i` against `1 : ℂ` — pinned by the named
+    -- implicit `M`, Mathlib's own idiom at the pin (Finsupp/Single.lean,
+    -- `single_eq_same`'s proof: `exact Pi.single_eq_same (M := fun _ ↦ M) a b`).
+    exact Pi.single_eq_same (M := fun _ : Fin 12 => ℂ) i (1 : ℂ)
   have hrj : twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) =
       (if j = i then (1 : ℂ) else 0) :=
     Pi.single_apply i (1 : ℂ) j

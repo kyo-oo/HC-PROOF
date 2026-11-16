@@ -213,11 +213,18 @@ theorem dualCochains_d_zero_zero : twelvePointDualCochains.d 0 0 = 0 :=
   twelvePointDualCochains.shape 0 0 upNotRel_zero_zero
 
 /-- The zeroth homology of the dual alternating complex is its degree-zero
-term. -- AUDIT(5): `isoHomologyι` / `pOpcyclesIso` names and argument shapes. -/
+term. -- AUDIT(5) (wave 15): `isoHomologyι` / `pOpcyclesIso` take FOUR
+explicit index/proof arguments at the pin (ShortComplex/HomologicalComplex.lean:534/:581:
+`isoHomologyι (i) (j) (hj : c.next i = j) (h : K.d i j = 0) [K.HasHomology i]`,
+`pOpcyclesIso (i) (j) (hi : c.prev j = i) (h : K.d i j = 0) [K.HasHomology j]`;
+in-file usage `K.isoHomologyι i j hj h` at :563/:590) — the two-index call
+`isoHomologyι 0 1 upNext_zero dualCochains_d_zero_one` composes with
+`(pOpcyclesIso 0 0 upPrev_zero dualCochains_d_zero_zero).symm`:
+`homology 0 ≅ opcycles 0 ≪≫ opcycles 0 ≅ X 0`. -/
 noncomputable def twelvePointHomologyZero :
     twelvePointDualCochains.homology 0 ≅ twelvePointDualCochains.X 0 :=
-  twelvePointDualCochains.isoHomologyι upNext_zero dualCochains_d_zero_one ≪≫
-    (twelvePointDualCochains.pOpcyclesIso upPrev_zero
+  twelvePointDualCochains.isoHomologyι 0 1 upNext_zero dualCochains_d_zero_one ≪≫
+    (twelvePointDualCochains.pOpcyclesIso 0 0 upPrev_zero
       dualCochains_d_zero_zero).symm
 
 /-! ## §5. The object-level identification with `Fin 12 → ℚ` -/
