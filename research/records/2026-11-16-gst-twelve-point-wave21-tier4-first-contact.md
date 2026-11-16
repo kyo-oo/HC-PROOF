@@ -301,3 +301,19 @@ landing lane (`43750693353` at `2378003`), the spanning lane (`43747935402` at
 11; tier 2 (analytification) closed at run 15; tier 3 (cohomology) closed at run 20;
 tier 4 (HodgeData) is this wave's kill — 8 errors, all mapped, all owned; tiers 5-6 have
 never been elaborated by any run.
+
+
+---
+
+## CORRECTION (wave 22, the W22-D audit find)
+
+The record's D7/D8 claim that the two HodgeData `mem_top` sites
+(`rationalHodgeSubspace_of_top`, old :253/:256) were fixed is **FALSE** — the
+wave-21 commit db8feaed carries NO change at those sites (the W21-A/W21-C
+ownership gap: W21-A's brief booked them to W21-C's sweep, W21-C's brief
+restricted it to Landing+FoldWord). The wave-21 push was 6-of-8, not 8-of-8;
+CI attempt 2 on db8feaed died/will die at exactly those two sites. The
+two-line emergency repair (`exact Submodule.mem_top` bare, the element
+implicit at the pin) plus this correction ride the wave-22 push together with
+the toolchain-install hardening (the run-22 attempt-1 elan 403 —
+infrastructure, not mathematics).

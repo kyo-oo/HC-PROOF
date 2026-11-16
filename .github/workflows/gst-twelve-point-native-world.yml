@@ -41,7 +41,31 @@ jobs:
         run: |
           set -euo pipefail
           if [ ! -x "$HOME/.elan/bin/lake" ]; then
-            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2 || curl -sSf https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+            ELAN_TAG="v4.2.4"
+            ELAN_ASSET="elan-x86_64-unknown-linux-gnu.tar.gz"
+            ELAN_TMP="$(mktemp -d)"
+            ELAN_SRC=""
+            for url in \
+              "https://github.com/leanprover/elan/releases/download/${ELAN_TAG}/${ELAN_ASSET}" \
+              "https://github.com/leanprover/elan/releases/latest/download/${ELAN_ASSET}"; do
+              for attempt in 1 2 3; do
+                echo "elan fetch: attempt ${attempt}/3 via ${url}"
+                if curl -sSfL --connect-timeout 30 -o "${ELAN_TMP}/${ELAN_ASSET}" "$url"; then
+                  ELAN_SRC="$url"
+                  break 2
+                fi
+                echo "elan fetch failed via ${url}; sleeping 10s before retry" >&2
+                sleep 10
+              done
+            done
+            if [ -z "$ELAN_SRC" ]; then
+              echo "FATAL: elan installer download failed on every mirror and attempt" >&2
+              exit 1
+            fi
+            echo "elan installer fetched from ${ELAN_SRC}"
+            tar -xzf "${ELAN_TMP}/${ELAN_ASSET}" -C "${ELAN_TMP}"
+            chmod u+x "${ELAN_TMP}/elan-init"
+            "${ELAN_TMP}/elan-init" -y --default-toolchain leanprover/lean4:v4.33.0-rc2
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"

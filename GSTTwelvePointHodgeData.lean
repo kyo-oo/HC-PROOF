@@ -298,10 +298,17 @@ theorem rationalHodgeSubspace_of_top
   Submodule.ext fun m => by
     constructor
     · intro _
-      exact Submodule.mem_top m
+      -- WAVE 22 (emergency, W22-D audit find): the run-20 arity disease --
+      -- `Submodule.mem_top` takes its element IMPLICIT at the pin
+      -- (Submodule/Lattice.lean:143: `@[simp] lemma mem_top {x : M} :
+      -- x ∈ ⊤`) -- the wave-21 commit claimed this fix but the edit
+      -- never landed (the W21-A/W21-C ownership gap); the argument is
+      -- dropped, the element unifies from the goal at default transparency.
+      exact Submodule.mem_top
     · intro _
       rw [mem_rationalHodgeSubspace_iff, htop]
-      exact Submodule.mem_top _
+      -- WAVE 22 (emergency): the same arity fix.
+      exact Submodule.mem_top
 
 /-- **THE WEIGHT-ZERO FIBER IS LIVE.**  The rational Hodge fiber of the
 twelve-point world at weight zero is the entire `H⁰` — a live rank-12
