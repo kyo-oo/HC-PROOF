@@ -56,13 +56,19 @@ def twelvePointSpace : TopCat := TopCat.discrete.obj (Fin 12)
 (`TopCat.coe_of` is `rfl` at the pin). -/
 theorem twelvePointSpace_coe : ↥twelvePointSpace = Fin 12 := rfl
 
-/-- The discrete twelve-point space is totally disconnected: the instance
-chain `TopCat.str` (the `⊥` topology of `TopCat.discrete.obj`) →
-`DiscreteTopology` → `TotallySeparatedSpace.of_discrete` →
-`TotallySeparatedSpace.totallyDisconnectedSpace` is all global instances at
-the pinned Mathlib. -/
+/-- The discrete twelve-point space is totally disconnected.  The chain is
+`TopCat.str` (the space's carrier topology is literally `⊥`) →
+`DiscreteTopology` → `TotallySeparatedSpace.of_discrete`
+(Topology/Connected/TotallyDisconnected.lean:223) →
+`TotallySeparatedSpace.totallyDisconnectedSpace` (:218).  The
+`DiscreteTopology` link does not fire from bare instance search: Mathlib's
+global `DiscreteTopology (TopCat.discrete.obj X)` (TopCat/Basic.lean:187)
+cannot see through the non-reducible `def twelvePointSpace`, so it is
+provisioned explicitly with the same `⟨rfl⟩` Mathlib uses there (CI
+43793762987, error at 66:2); the two pinned instances then close the chain. -/
 instance twelvePointSpace_totallyDisconnected :
-    TotallyDisconnectedSpace ↥twelvePointSpace :=
+    TotallyDisconnectedSpace ↥twelvePointSpace := by
+  haveI : DiscreteTopology ↥twelvePointSpace := ⟨rfl⟩
   inferInstance
 
 /-! ## §2 THE TWELVE SECTIONS -/
@@ -127,13 +133,15 @@ function is the sum of its scalar-weighted basis idempotents, expressed
 through the algebra map (the constant-function embedding) to avoid any
 smul-instance ambiguity. -/
 theorem pi_decomp (x : Fin 12 → ℂ) :
-    ∑ k : Fin 12,
-        algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) = x := by
+    (∑ k : Fin 12,
+        algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) : Fin 12 → ℂ) =
+      x := by
   funext i
   have hsum : (∑ k : Fin 12,
-      algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ)) i =
+      (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) :
+        Fin 12 → ℂ)) i =
       ∑ k : Fin 12,
-        (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ)) i :=
+        (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) : Fin 12 → ℂ)) i :=
     Finset.sum_apply _ _ _
   rw [hsum]
   have hval : ∀ k : Fin 12,
@@ -146,8 +154,8 @@ theorem pi_decomp (x : Fin 12 → ℂ) :
     -- map of `ℂ` is the identity (`Algebra.algebraMap_self`, `rfl`).
     have hconst : (algebraMap ℂ (Fin 12 → ℂ) (x k)) i = x k := rfl
     by_cases hik : i = k
-    · rw [hconst, if_pos hik, mul_one]
-    · rw [hconst, if_neg hik, mul_zero]
+    · rw [hconst, if_pos hik, mul_one, if_pos hik]
+    · rw [hconst, if_neg hik, mul_zero, if_neg hik]
   simp only [hval]
   rw [Finset.sum_eq_single i]
   · rw [if_pos rfl]
@@ -181,7 +189,8 @@ theorem section_h_algebraMap (f : ComplexPoint twelvePointWorld) :
       = Spec.preimage (twelvePointWorld.structureMap) ≫
           Spec.preimage (R := CommRingCat.of (Fin 12 → ℂ))
             (S := CommRingCat.of ℂ) f.1 := by
-        rw [hs, Spec.preimage_map]
+        simp only [hs, Spec.preimage_map]
+        all_goals rfl
     _ = Spec.preimage (f.1 ≫ twelvePointWorld.structureMap) :=
           (Spec.preimage_comp _ _).symm
     _ = Spec.preimage (𝟙 complexBase) := by rw [h0]
@@ -215,30 +224,39 @@ theorem sectionRingHom_algebraMap_apply
 /-- The basis idempotents multiply trivially: equal indices persist,
 distinct indices annihilate. -/
 theorem single_mul_single_self (k : Fin 12) :
-    Pi.single k (1 : ℂ) * Pi.single k (1 : ℂ) = Pi.single k (1 : ℂ) := by
+    (Pi.single k (1 : ℂ) * Pi.single k (1 : ℂ) : Fin 12 → ℂ) =
+      Pi.single k (1 : ℂ) := by
   funext i
-  rw [Pi.mul_apply, Pi.single_apply, Pi.single_apply]
+  rw [Pi.mul_apply, Pi.single_apply]
   by_cases hik : i = k
-  · rw [if_pos hik, if_pos hik, if_pos hik, one_mul]
-  · rw [if_neg hik, if_neg hik, if_neg hik]
+  · rw [if_pos hik, one_mul]
+  · rw [if_neg hik, mul_zero]
+  -- AUDIT: with the summand type pinned, the three `Pi.single`-applications
+  -- become the SAME term, so ONE `Pi.single_apply` rewrites all three and a
+  -- single `if_pos`/`if_neg` closes each branch (the two-rewrite form of the
+  -- original over-fires — the run-11 masked defect M1).
 
 theorem single_mul_single_ne {k j : Fin 12} (hkj : k ≠ j) :
-    Pi.single k (1 : ℂ) * Pi.single j (1 : ℂ) = 0 := by
+    (Pi.single k (1 : ℂ) * Pi.single j (1 : ℂ) : Fin 12 → ℂ) = 0 := by
   funext i
   rw [Pi.mul_apply, Pi.single_apply, Pi.single_apply]
   by_cases hik : i = k
-  · rw [if_pos hik, if_neg (fun h => hkj h.symm), mul_zero]
+  · rw [if_pos hik, if_neg (fun h => hkj (hik.symm.trans h)), mul_zero]
   · rw [if_neg hik, zero_mul]
 
 /-- The sum of the twelve basis idempotents is the multiplicative unit. -/
 theorem sum_single_eq_one :
     ∑ k : Fin 12, Pi.single k (1 : ℂ) = 1 := by
-  have h := pi_decomp (fun _ => (1 : ℂ))
+  have h' : (∑ k : Fin 12, Pi.single k (1 : ℂ) : Fin 12 → ℂ) =
+      (fun _ : Fin 12 => (1 : ℂ)) := by
+    simpa only [map_one, one_mul] using pi_decomp (fun _ => (1 : ℂ))
+  exact h'
   -- AUDIT: the instantiated decomposition has summands
   -- `algebraMap ℂ (Fin 12 → ℂ) ((fun _ => (1 : ℂ)) k) * Pi.single k (1 : ℂ)`;
   -- `map_one` and `one_mul` reduce them to `Pi.single k (1 : ℂ)`, and the
-  -- function `fun _ => (1 : ℂ)` is definitionally the Pi-one.
-  simpa only [map_one, one_mul] using h
+  -- function `fun _ => (1 : ℂ)` is definitionally the Pi-one (the `exact`
+  -- closes across the `Pi.one` seam at default transparency — CI 43793762987
+  -- error at 241:2 was the `simpa`-normalized `fun x => 1` vs `1` mismatch).
 
 /-- A section ring homomorphism sends exactly one basis idempotent to `1`. -/
 theorem sectionRingHom_single_one (f : ComplexPoint twelvePointWorld) :
@@ -281,7 +299,7 @@ theorem sectionRingHom_single_one (f : ComplexPoint twelvePointWorld) :
     exact zero_ne_one hsum
   refine ⟨k₀, hk₀, fun j hj => ?_⟩
   by_contra hkj
-  exact hatmost k₀ j hkj hk₀ hj
+  exact hatmost k₀ j (Ne.symm hkj) hk₀ hj
 
 /-- **THE CLASSIFICATION.**  Every complex point (section) of the twelve
 point world is exactly one of the twelve evaluation sections. -/
@@ -291,8 +309,8 @@ theorem complexPoint_eq (f : ComplexPoint twelvePointWorld) :
   -- the section ring homomorphism is the evaluation at k₀
   have heq : sectionRingHom f = twelvePointEvalRingHom k₀ := by
     ext x
-    have hdx : x = ∑ k : Fin 12,
-        algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) :=
+    have hdx : x = (∑ k : Fin 12,
+        algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) : Fin 12 → ℂ) :=
       (pi_decomp x).symm
     have hsrw : sectionRingHom f x =
         sectionRingHom f (∑ k : Fin 12,
@@ -357,13 +375,16 @@ theorem pointSection_injective :
     congrArg (fun g => g.hom) (Spec.map_inj.mp h)
   have hv : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) =
       twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) := by rw [h2]
-  have hli : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) = 1 := by
-    show (Pi.single i (1 : ℂ)) i = 1
-    exact Pi.single_eq_same i (1 : ℂ)
+  have hli : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) = 1 :=
+    Pi.single_eq_same i (1 : ℂ)
   have hrj : twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) =
-      (if j = i then (1 : ℂ) else 0) := by
-    show (Pi.single i (1 : ℂ)) j = if j = i then (1 : ℂ) else 0
-    exact Pi.single_apply i (1 : ℂ) j
+      (if j = i then (1 : ℂ) else 0) :=
+    Pi.single_apply i (1 : ℂ) j
+  -- AUDIT: the `show`-normalizations of the original put `Pi.single` in
+  -- application-head position with no expected type (the implicit-β seam,
+  -- CI 43793762987 errors at 361/365); the defeq
+  -- `twelvePointEvalRingHom i g ≡ g i` is kernel-proven by the clean receipt
+  -- `eval_comp_algebraMap`, so the pinned lemmas close directly.
   rw [hli, hrj] at hv
   by_cases hij' : i = j
   · exact hij'
@@ -376,7 +397,7 @@ are exactly the twelve evaluation sections. -/
 noncomputable def twelvePointSectionEquiv :
     Fin 12 ≃ ComplexPoint twelvePointWorld :=
   Equiv.ofBijective (fun i => pointSection i)
-    ⟨fun i j => pointSection_injective i j,
+    ⟨pointSection_injective,
      fun f => by
        obtain ⟨i, hi⟩ := complexPoint_eq f
        exact ⟨i, Subtype.ext hi.symm⟩⟩
@@ -426,6 +447,8 @@ noncomputable def twelvePointAnalytification :
 #print axioms sectionRingHom_single_one
 #print axioms complexPoint_eq
 #print axioms pointSection_injective
+#print axioms twelvePointSectionEquiv
+#print axioms twelvePointAnalytification
 
 end GSTTwelvePointAnalytification
 
