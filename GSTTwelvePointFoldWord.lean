@@ -228,7 +228,14 @@ theorem isOpenImmersion_spec_map_eval (r : Fin 12) :
     apply le_antisymm
     · intro f hf
       rw [RingHom.mem_ker] at hf -- AUDIT-4: `RingHom.mem_ker`
-      refine (Ideal.mem_span_singleton f _).mpr ⟨f, ?_⟩ -- AUDIT-4: span API
+      -- WAVE 21 (run-20 arity disease): `Ideal.mem_span_singleton` takes NO
+      -- explicit args at the pin (RingTheory/Ideal/Span.lean:181, `{x y : α}`
+      -- implicit, iff-RHS `y ∣ x`); the existential reader is the PRIMED
+      -- `Ideal.mem_span_singleton'` (Ideal/Span.lean:94,
+      -- `x ∈ span {y} ↔ ∃ a, a * y = x`) — named x/y, same witness `f`, the
+      -- residual goal `f * (1 - Pi.single r 1) = f` is unchanged.
+      refine (Ideal.mem_span_singleton' (x := f)
+        (y := 1 - Pi.single r 1)).mpr ⟨f, ?_⟩ -- AUDIT-4: span API
       funext i
       by_cases hi : i = r
       · simp [hi, Pi.single_apply, hf]
@@ -322,13 +329,20 @@ noncomputable def pointPairGeometry (r c : Fin 12) :
   carrier := Spec (CommRingCat.of ℂ)
   intoProduct := pointPairMap r c
   closedImmersion := by
-    have h1 : IsClosedImmersion (Spec.map
+    -- WAVE 21 (run-20 arity disease): `IsClosedImmersion.comp` at the pin is
+    -- an INSTANCE (AlgebraicGeometry/Morphisms/ClosedImmersion.lean:86,
+    -- `comp (f : X ⟶ Y) (g : Y ⟶ Z) [IsClosedImmersion f]
+    -- [IsClosedImmersion g]`) — the two closed-immersion facts are
+    -- INSTANCE-implicit, not positional: `comp h1 h2` would land the proofs
+    -- in the morphism slots.  Hoist h1 into the instance cache (haveI, like
+    -- h2) and let the two `_`s unify from the goal.
+    haveI h1 : IsClosedImmersion (Spec.map
         (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom)) :=
       IsClosedImmersion.spec_of_surjective _
         (pointPairAlgHom_surjective r c)
     haveI h2 : IsClosedImmersion
         ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv) := inferInstance
-    exact IsClosedImmersion.comp h1 h2 -- AUDIT-2: composition instance name
+    exact IsClosedImmersion.comp _ _ -- AUDIT-2: composition instance name
   leftFiber_finite := by
     intro x
     rw [pointPair_leftFiberSet_eq r c x]
@@ -786,7 +800,10 @@ theorem twelvePointFoldWord_hodge
     zeroFiber_eq_top -- AUDIT-6: contract lemma (`ClassicalHodgeFiber` is the
   -- `rationalHodgeSubspace` abbreviation at weight zero)
   rw [htop]
-  exact Submodule.mem_top _
+  -- WAVE 21 (run-20 arity disease): mem_top's element is implicit at the
+  -- pin (Submodule/Lattice.lean:143, `lemma mem_top {x : M}`) — the term is
+  -- already the full proposition; the `_` was a "Function expected".
+  exact Submodule.mem_top
 
 #check twelvePointFoldWord
 #check twelvePointFoldMatrix

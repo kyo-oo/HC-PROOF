@@ -142,13 +142,20 @@ noncomputable def deadBigrading (p : Nat) (hp : 0 < p) :
         (RationalSingularCohomology twelvePointAnalytification (2 * p)))) :=
       ⟨fun P Q => subsingleton_submodules_eq P Q⟩
     intro i
-    -- WAVE 19 (pre-emptive, W1-D R6): the goal after `intro i` is the
-    -- submodule-lattice `Disjoint` (`P ⊓ Q = ⊥`) of the dead fiber, which
-    -- `hlat` collapses directly — the `⨆ j ∈ {j | j ≠ i}` setOf-form of
-    -- `iSupIndep` never has to match `hsup`'s `⨆ (j) (_ : j ≠ i)` spelling
-    -- (membership-stuck at instances transparency), and the untested
-    -- `(disjoint_self (a := ⊥)).mpr rfl` route disappears with it.
-    exact Subsingleton.elim _ _
+    -- WAVE 21 (run-20 error at :151): `Subsingleton.elim _ _` synthesizes its
+    -- instance `[Subsingleton ?α]` BEFORE α is assigned from the goal, and this
+    -- goal can never assign it: `iSupIndep` unfolds (Order/SupIndep.lean:329)
+    -- to `∀ i, Disjoint (component i) (⨆ (j) (_ : j ≠ i), component j)`, and
+    -- `Disjoint` at the pin is the ORDER-form `∀ ⦃x⦄, x ≤ a → x ≤ b → x ≤ ⊥`
+    -- (Order/Disjoint.lean:48), NOT `P ⊓ Q = ⊥` — so even the instance-explicit
+    -- `@Subsingleton.elim _ hlat _ _` (an `Eq` between submodules) cannot match
+    -- a ∀-shaped goal.  Mathlib's own packaged collapse `disjoint_of_subsingleton`
+    -- (Order/Disjoint.lean:52, body `fun x _ _ ↦ le_of_eq (Subsingleton.elim x ⊥)`)
+    -- has the right ∀-shape: the goal assigns α (with its PartialOrder/OrderBot
+    -- args) by first-order unification, and the `[Subsingleton α]` instance
+    -- resolves from `hlat` — the elaboration shape of the run-20-green
+    -- `iSupIndep_subsingleton` at :116 above.
+    exact disjoint_of_subsingleton
   spans := by
     haveI hsub : Subsingleton
         (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=
@@ -159,7 +166,14 @@ noncomputable def deadBigrading (p : Nat) (hp : 0 < p) :
     haveI hlat : Subsingleton (Submodule ℂ (Complexification
         (RationalSingularCohomology twelvePointAnalytification (2 * p)))) :=
       ⟨fun P Q => subsingleton_submodules_eq P Q⟩
-    exact Subsingleton.elim _ _
+    -- WAVE 21 (run-20 error at :151, the spans twin hardened by the same
+    -- discipline): unlike `independent`'s `Disjoint` goal, the spans goal
+    -- `(⨆ a, component a) = ⊤` IS an `Eq` between submodules, so run 20's
+    -- `Subsingleton.elim _ _` here already resolved (the goal assigns α, the
+    -- pending instance found `hlat`) — the `@`-form makes it synthesis-free:
+    -- `hlat` passed as the instance term itself, α fixed from `hlat`'s type,
+    -- `a`/`b` from the goal's two sides by first-order unification.
+    exact @Subsingleton.elim _ hlat _ _
 
 /-! ## §4 THE GENUINE DEGREE MAP AT WEIGHT ZERO -/
 
@@ -187,9 +201,12 @@ noncomputable def zeroCycleClass :
           (fun i => (W : AlgebraicCycle twelvePointWorld.X ℚ)
             ((twelvePointEquiv i).1))
       rw [← map_add]
+      -- WAVE 21 (run-20 errors at :191/:205): `congr 1` closed the goal —
+      -- the funext/simp tails were dead (run 20 adjudicated: zero goals
+      -- remained after `congr 1`; the residual function-level additivity is
+      -- instance-defeq through `Pi.add` and the Submodule coe-addition, no
+      -- metavariables, no search — deterministic for the pinned toolchain).
       congr 1
-      funext i
-      simp [Function.locallyFinsuppWithin.coe_add, Pi.add_apply]
     map_smul' := by
       intro q Z
       -- WAVE 17 (pre-exposure D5): the same carrier-level ascription; the
@@ -201,10 +218,10 @@ noncomputable def zeroCycleClass :
           (fun i => (Z : AlgebraicCycle twelvePointWorld.X ℚ)
             ((twelvePointEquiv i).1))
       rw [← map_smul]
-      congr 1
-      funext i
-      rw [Submodule.coe_smul]
-      simp [algebraicCycleRatSMul_apply, Pi.smul_apply, smul_eq_mul] }
+      -- WAVE 21 (run-20 errors at :191/:205, the map_smul' twin): `congr 1`
+      -- closed the goal — the funext/rw/simp tail was dead, the same
+      -- instance-defeq closure through `Pi.smul` and the Submodule coe-smul.
+      congr 1 }
 
 /-- The `i`-th point cycle as a codimension point of the world. -/
 def twelvePointPt (i : Fin 12) : CodimensionPoint twelvePointWorld.X 0 :=
@@ -218,6 +235,27 @@ theorem zeroCycleClass_point (i : Fin 12) :
       (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
         (twelvePointPt i))) =
       Pi.single i (1 : ℚ) := by
+  -- WAVE 21 (run-20 errors at :229:7, :229:82, :235:2): the `hval` have
+  -- compared the two COERCED SUBTYPE POINTS in its `if` — the twelve-point
+  -- carrier has no `Decidable`/`DecidableEq` instance, so the have's
+  -- statement failed to synthesize (:229:7), its RHS degraded to `sorry ()`,
+  -- and the cascade killed everything downstream (:229:82 — the
+  -- point-indexed `Pi.single` was never evaluated, `single_apply` reported
+  -- unused because the default-simp `coe_single` had already normalized the
+  -- coe application into the bare `Pi.single` spelling past its pattern, and
+  -- no rewrite can meet an opaque `sorry`; :235:2 — the case-pos residue
+  -- `sorry () = 1`).  THE ROUTE, green-mirrored: (1) `classical` first — the
+  -- same low-priority `Classical.propDecidable` the CI-green
+  -- `codimensionPointCycle` def (NativeCodimensionCyclePresentation:40) and
+  -- PointNormalForm:71 run under, so the point-equality `if` elaborates;
+  -- (2) the evaluation simp gains the `twelvePointPt` equation, so the
+  -- single's point and the hval's if-point meet at the SAME
+  -- `(twelvePointEquiv i).1` spelling (PointNormalForm:71's both-sides-`x.1`
+  -- shape); (3) both by_cases arms close by the deterministic pinned core
+  -- chain `if_pos rfl` / `if_neg` (the CardinalWorlds-green
+  -- `rw [eq-form, if_pos rfl, if_neg h]` idiom) instead of bare `simp` on a
+  -- classically-decided reflexive `ite`.
+  classical
   show twelvePointCohomologyIso (twelvePointCohomologyIso.symm
       (fun j => (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
         AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv j).1))) =
@@ -227,13 +265,23 @@ theorem zeroCycleClass_point (i : Fin 12) :
   have hval : (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
       AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv j).1) =
       (if (twelvePointEquiv j).1 = (twelvePointEquiv i).1 then (1 : ℚ) else 0) := by
-    -- WAVE 17 (pre-exposure D8): the CI-green simp form (PointNormalForm:71)
-    -- instead of the term-mode `single_apply _ _ _` arity guess.
-    simp [codimensionPointCycle, Function.locallyFinsuppWithin.single_apply]
+    -- WAVE 21: `twelvePointPt` joins the simp set.  Without its equation the
+    -- single's point stays `(twelvePointPt i).1` — a plain-def delta seam
+    -- away from the hval's `(twelvePointEquiv i).1` spelling — and the
+    -- normal form cannot meet the stated if syntactically.  With it, the
+    -- post-`single_apply` left side and the stated right side carry the
+    -- identical point spelling, the exact shape PointNormalForm:71 closes
+    -- (same `codimensionPointCycle` equation, same baked `DecidableEq`, same
+    -- `propDecidable`-decided side).
+    simp [codimensionPointCycle, twelvePointPt,
+      Function.locallyFinsuppWithin.single_apply]
   rw [hval, Pi.single_apply]
   by_cases hj : j = i
   · subst hj
-    simp
+    -- WAVE 21: run 20 died here as `sorry () = 1`; both ite conditions are
+    -- now reflexive, and the pinned core pair reduces them without any simp
+    -- race on the classically-decided diagonal.
+    rw [if_pos rfl, if_pos rfl]
   · rw [if_neg (fun hcon =>
         hj (twelvePointEquiv.injective (Subtype.ext hcon))),
       if_neg hj]

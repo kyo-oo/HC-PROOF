@@ -139,7 +139,10 @@ theorem twelvePointSeed_hodge :
     rw [twelvePointHodgeData_bigrading_zero]
     exact zeroFiber_eq_top
   rw [hfib]
-  exact Submodule.mem_top _
+  -- WAVE 21 (run-20 arity disease): mem_top's element is implicit at the
+  -- pin (Submodule/Lattice.lean:143, `lemma mem_top {x : M}`) — the term is
+  -- already the full proposition; the `_` was a "Function expected".
+  exact Submodule.mem_top
 
 /-- **THE SEED COORDINATES.**  Under the H⁰ iso the seed's class is exactly
 the Face-2 coordinate seed `coordSeed`: two point classes `Pi.single 0 1` and
@@ -292,7 +295,9 @@ theorem twelvePoint_orbitUnderlying_span :
   intro u _
   have hEu : twelvePointCohomologyIso u ∈ Submodule.span ℚ (Set.range C) := by
     rw [span_range_C_eq_top]
-    exact Submodule.mem_top _
+    -- WAVE 21 (run-20 arity disease): mem_top's element is implicit at the
+    -- pin (Submodule/Lattice.lean:143) — drop the argument.
+    exact Submodule.mem_top
   have key : twelvePointCohomologyIso.symm (twelvePointCohomologyIso u) ∈
       Submodule.span ℚ
         (Set.range fun n : Nat => (twelvePointCertificate.hodgeOrbit n).1) := by
@@ -300,7 +305,11 @@ theorem twelvePoint_orbitUnderlying_span :
     · intro x hx
       rcases hx with ⟨n, rfl⟩
       rw [← twelvePointHodgeOrbit_symm n]
-      exact Submodule.subset_span (Set.mem_range_self n)
+      -- WAVE 21 (run-20 arity disease): `Submodule.subset_span` takes NO
+      -- explicit args at the pin (LinearAlgebra/Span/Defs.lean:77,
+      -- `subset_span : s ⊆ span R s`); the one-arg membership reader is
+      -- `Submodule.mem_span_of_mem` (Span/Defs.lean:80, `(hx : x ∈ s)`).
+      exact Submodule.mem_span_of_mem (Set.mem_range_self n)
     · rw [map_zero]
       exact Submodule.zero_mem _
     · intro x _ y _ hx hy
