@@ -283,21 +283,36 @@ theorem zeroCycleClass_point (i : Fin 12) :
     -- argument-first ite with both sides at the identical spelling -- the
     -- verbatim PointNormalForm:66-71 close, now under the same
     -- `open Classical in` regime.
-    simp [codimensionPointCycle,
-      Function.locallyFinsuppWithin.single_apply]
+    -- WAVE 25 (run-25 residual at :277:79): the default-simp `coe_single`
+    -- normalizes the coe application to the BARE `Pi.single` spelling PAST
+    -- `locallyFinsuppWithin.single_apply`'s coe-pattern (the linter's
+    -- "unused" receipt, twice) -- the evaluation lemma for the residual
+    -- `Pi.single a 1 b = if b = a then 1 else 0` is `Pi.single_apply`
+    -- (argument-first, [DecidableEq ι] synthesizing under `open Classical in`).
+    simp [codimensionPointCycle, Pi.single_apply]
   rw [hval, Pi.single_apply]
   by_cases hj : j = i
-  · subst hj
-    -- WAVE 23: the LHS condition is defeq-reflexive but not syntactic
-    -- (`(twelvePointEquiv i).1` vs `(twelvePointPt i).1` -- twelvePointPt's
-    -- constructor projection); the `have hd ... := rfl` proves it at default
-    -- transparency (the exact-style defeq the campaign's green closers
-    -- ride), then the two if_pos rewrites are deterministic.
-    have hd : (twelvePointEquiv i).1 = (twelvePointPt i).1 := rfl
-    rw [if_pos hd, if_pos rfl]
-  · rw [if_neg (fun hcon =>
-        hj (twelvePointEquiv.injective (Subtype.ext hcon))),
-      if_neg hj]
+  · -- WAVE 25 (run-25 errors at :296/:298): both arms rebuilt SUBST-FREE
+    -- with explicitly-typed have anchors -- the wave-23/24 pos arm died
+    -- twice (the `subst hj` eliminated `i` leaving the hd-have's `i`
+    -- unknown; the wave-24 neg arm's lambda elaboration pinned the if_neg
+    -- pattern at the `twelvePointEquiv i` spelling against the goal's
+    -- `twelvePointPt i` -- not syntactic, kabstract-dead).  Now: hd's TYPE
+    -- is stated at the goal's own condition spelling, proven by rw [hj]
+    -- (j → i on the left) + rfl (the constructor-projection defeq at
+    -- default transparency); both if_pos patterns are then syntactic.
+    have hd : (twelvePointEquiv j).1 = (twelvePointPt i).1 := by
+      rw [hj]
+      rfl
+    rw [if_pos hd, if_pos hj]
+  · -- WAVE 25: the same have-anchor discipline for the negative side --
+    -- hiff's type stated at the goal's own condition, the injectivity
+    -- chain (Subtype.ext + twelvePointEquiv.injective over the
+    -- structure-eta defeq twelvePointPt i ≡ twelvePointEquiv i) elaborated
+    -- INSIDE the have where the expected type is already concrete.
+    have hiff : ¬((twelvePointEquiv j).1 = (twelvePointPt i).1) := fun hcon =>
+      hj (twelvePointEquiv.injective (Subtype.ext hcon))
+    rw [if_neg hiff, if_neg hj]
 
 /-! ## §5 THE FIBER FACTS -/
 
