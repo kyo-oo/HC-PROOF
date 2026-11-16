@@ -230,6 +230,14 @@ def twelvePointPt (i : Fin 12) : CodimensionPoint twelvePointWorld.X 0 :=
 /-- **THE POINT-CLASS EQUATION.**  The class of the `i`-th point cycle is
 the `i`-th indicator vector under the H⁰ iso — by construction of the
 degree map. -/
+open Classical in
+-- WAVE 23 (attempt-2 survivor at :267:82): the green PointNormalForm regime
+-- mirrored EXACTLY -- `open Classical in` at theorem level is the half the
+-- wave-21 rebuild missed: the `classical` tactic alone adds only
+-- `propDecidable`, and `single_apply`'s [DecidableEq X] then cannot
+-- synthesize -- the linter's "single_apply unused" was the receipt. Under
+-- `open Classical in` the scoped instance provides it (the green
+-- PointNormalForm:38-47 runs BOTH).
 theorem zeroCycleClass_point (i : Fin 12) :
     twelvePointCohomologyIso
       (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
@@ -264,24 +272,27 @@ theorem zeroCycleClass_point (i : Fin 12) :
   funext j
   have hval : (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
       AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv j).1) =
-      (if (twelvePointEquiv j).1 = (twelvePointEquiv i).1 then (1 : ℚ) else 0) := by
-    -- WAVE 21: `twelvePointPt` joins the simp set.  Without its equation the
-    -- single's point stays `(twelvePointPt i).1` — a plain-def delta seam
-    -- away from the hval's `(twelvePointEquiv i).1` spelling — and the
-    -- normal form cannot meet the stated if syntactically.  With it, the
-    -- post-`single_apply` left side and the stated right side carry the
-    -- identical point spelling, the exact shape PointNormalForm:71 closes
-    -- (same `codimensionPointCycle` equation, same baked `DecidableEq`, same
-    -- `propDecidable`-decided side).
-    simp [codimensionPointCycle, twelvePointPt,
+      (if (twelvePointEquiv j).1 = (twelvePointPt i).1 then (1 : ℚ) else 0) := by
+    -- WAVE 23: the green's EXACT idiom -- the ite stated at the SINGLE'S OWN
+    -- point spelling `(twelvePointPt i).1` (no `twelvePointPt` in the simp
+    -- set: the attempt-2 residual proved the extra equation de-synced the
+    -- rewrite), so `codimensionPointCycle`'s equation deposits
+    -- `single (twelvePointPt i).1 1` and `single_apply` fires on the
+    -- argument-first ite with both sides at the identical spelling -- the
+    -- verbatim PointNormalForm:66-71 close, now under the same
+    -- `open Classical in` regime.
+    simp [codimensionPointCycle,
       Function.locallyFinsuppWithin.single_apply]
   rw [hval, Pi.single_apply]
   by_cases hj : j = i
   · subst hj
-    -- WAVE 21: run 20 died here as `sorry () = 1`; both ite conditions are
-    -- now reflexive, and the pinned core pair reduces them without any simp
-    -- race on the classically-decided diagonal.
-    rw [if_pos rfl, if_pos rfl]
+    -- WAVE 23: the LHS condition is defeq-reflexive but not syntactic
+    -- (`(twelvePointEquiv i).1` vs `(twelvePointPt i).1` -- twelvePointPt's
+    -- constructor projection); the `have hd ... := rfl` proves it at default
+    -- transparency (the exact-style defeq the campaign's green closers
+    -- ride), then the two if_pos rewrites are deterministic.
+    have hd : (twelvePointEquiv i).1 = (twelvePointPt i).1 := rfl
+    rw [if_pos hd, if_pos rfl]
   · rw [if_neg (fun hcon =>
         hj (twelvePointEquiv.injective (Subtype.ext hcon))),
       if_neg hj]
