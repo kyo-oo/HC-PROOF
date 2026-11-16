@@ -317,9 +317,11 @@ private theorem chartRingMap_apply (j : Fin 2) {d : ℕ}
     (p : MvPolynomial (Fin 2) ℂ) (hp : p ∈ grading (k • d)) :
     chartRingMap j (HomogeneousLocalization.Away.mk grading hXj k p hp) =
       IsLocalization.mk'
-        (Localization.Away (sectionRingHom (MvPolynomial.X j)))
+        (M := Submonoid.powers (sectionRingHom (MvPolynomial.X j)))
+        (S := Localization.Away (sectionRingHom (MvPolynomial.X j)))
         (sectionRingHom p)
-        ⟨sectionRingHom (MvPolynomial.X j) ^ k, Submonoid.mem_powers _⟩ := by
+        ⟨sectionRingHom (MvPolynomial.X j) ^ k,
+          (Submonoid.mem_powers_iff _ _).mpr ⟨k, rfl⟩⟩ := by
   have h1 : chartRingMap j (HomogeneousLocalization.Away.mk grading hXj k p hp) =
       (IsLocalization.map
         (R := MvPolynomial (Fin 2) ℂ)
@@ -461,18 +463,20 @@ private theorem chartRingMap_surjective (j : Fin 2) :
       rw [← hy']
       exact congrArg _ (funext hpeval)
     refine ⟨HomogeneousLocalization.Away.mk grading hXj M p hpnsm, ?_⟩
-    rw [chartRingMap_apply, section_X_one, one_pow, one_pow]
+    rw [chartRingMap_apply]
     refine (IsLocalization.mk'_eq_iff_eq'
       (S := Localization.Away (sectionRingHom (MvPolynomial.X 1)))
       (M := Submonoid.powers (sectionRingHom (MvPolynomial.X 1)))).mpr ?_
-    simp only [Subtype.coe_mk, mul_one]
+    simp only [Subtype.coe_mk]
     refine (IsLocalization.eq_iff_exists
       (M := Submonoid.powers (sectionRingHom (MvPolynomial.X 1)))
       (S := Localization.Away (sectionRingHom (MvPolynomial.X 1)))
-      (x := sectionRingHom p) (y := y)).mpr
+      (x := sectionRingHom p * sectionRingHom (MvPolynomial.X 1) ^ N)
+      (y := y * sectionRingHom (MvPolynomial.X 1) ^ M)).mpr
       ⟨⟨sectionRingHom (MvPolynomial.X 1),
         Submonoid.mem_powers _⟩, ?_⟩
-    simp only [Subtype.coe_mk, section_X_one, one_mul, mul_one]
+    -- the section of `X₁` is the unit: the clearing multiplier collapses
+    simp only [Subtype.coe_mk, section_X_one, one_pow, one_mul, mul_one]
     exact hΓ
   -- AUDIT: the `mk'`-bookkeeping rides the pinned
   -- `IsLocalization.mk'_eq_iff_eq'` (Localization/Defs.lean:326) with the
