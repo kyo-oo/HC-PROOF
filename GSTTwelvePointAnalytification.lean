@@ -69,7 +69,7 @@ provisioned explicitly with the same `⟨rfl⟩` Mathlib uses there (CI
 instance twelvePointSpace_totallyDisconnected :
     TotallyDisconnectedSpace ↥twelvePointSpace := by
   haveI : DiscreteTopology ↥twelvePointSpace := ⟨rfl⟩
-  inferInstance
+  infer_instance
 
 /-! ## §2 THE TWELVE SECTIONS -/
 
@@ -145,7 +145,8 @@ theorem pi_decomp (x : Fin 12 → ℂ) :
     Finset.sum_apply _ _ _
   rw [hsum]
   have hval : ∀ k : Fin 12,
-      (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ)) i =
+      ((algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) :
+        Fin 12 → ℂ)) i =
         (if i = k then x k else 0) := by
     intro k
     rw [Pi.mul_apply, Pi.single_apply]
@@ -241,8 +242,9 @@ theorem single_mul_single_ne {k j : Fin 12} (hkj : k ≠ j) :
   funext i
   rw [Pi.mul_apply, Pi.single_apply, Pi.single_apply]
   by_cases hik : i = k
-  · rw [if_pos hik, if_neg (fun h => hkj (hik.symm.trans h)), mul_zero]
-  · rw [if_neg hik, zero_mul]
+  · rw [if_pos hik, if_neg (fun h => hkj (hik.symm.trans h)), mul_zero,
+      Pi.zero_apply]
+  · rw [if_neg hik, zero_mul, Pi.zero_apply]
 
 /-- The sum of the twelve basis idempotents is the multiplicative unit. -/
 theorem sum_single_eq_one :
@@ -308,22 +310,46 @@ theorem complexPoint_eq (f : ComplexPoint twelvePointWorld) :
   obtain ⟨k₀, hk₀, huniq⟩ := sectionRingHom_single_one f
   -- the section ring homomorphism is the evaluation at k₀
   have heq : sectionRingHom f = twelvePointEvalRingHom k₀ := by
-    ext x
+    -- AUDIT-8: `ext` picks `RingHom.pi_ext` from the registry, which
+    -- decomposes at `Pi.single x x✝` (two levels, CI 43800560334 errors at
+    -- 313:35/317:37/330:42 — `x : Fin 12` applied at `k`); the proof is
+    -- written for the full-function variable, so the extensionality is
+    -- pinned to the one-level generic `DFunLike.ext` (Mathlib's own idiom at
+    -- the pin, Data/FunLike/Ring.lean:32).
+    apply DFunLike.ext
+    intro x
     have hdx : x = (∑ k : Fin 12,
         algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) : Fin 12 → ℂ) :=
       (pi_decomp x).symm
     have hsrw : sectionRingHom f x =
         sectionRingHom f (∑ k : Fin 12,
-          algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ)) :=
+          (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) :
+            Fin 12 → ℂ)) :=
       congrArg (fun s => sectionRingHom f s) hdx
+    -- AUDIT-9: the 0-or-1 dichotomy of the basis idempotents' values, the
+    -- same `eq_zero_or_one_of_sq_eq_self` spine that carries
+    -- `sectionRingHom_single_one` (CI 43800560334 error at 326:27 — the
+    -- by_contra had only `¬ = 0`, which does not produce the `= 1` that
+    -- `huniq` consumes).
+    have hval01 : ∀ k : Fin 12,
+        sectionRingHom f (Pi.single k (1 : ℂ)) = 0 ∨
+        sectionRingHom f (Pi.single k (1 : ℂ)) = 1 := by
+      intro k
+      apply eq_zero_or_one_of_sq_eq_self
+      have hmul : sectionRingHom f (Pi.single k (1 : ℂ) * Pi.single k (1 : ℂ))
+          = sectionRingHom f (Pi.single k (1 : ℂ)) :=
+        congrArg (sectionRingHom f) (single_mul_single_self k)
+      rw [map_mul] at hmul
+      rw [pow_two, hmul]
     have hvals : ∀ k : Fin 12,
         sectionRingHom f (Pi.single k (1 : ℂ)) = (if k = k₀ then 1 else 0) := by
       intro k
       by_cases hkk : k = k₀
       · rw [hkk, if_pos rfl, hk₀]
       · rw [if_neg hkk]
-        by_contra hk1
-        exact hkk (huniq k hk1)
+        rcases hval01 k with h0 | h1
+        · exact h0
+        · exact absurd (huniq k h1) hkk
     calc sectionRingHom f x
         = ∑ k : Fin 12,
             sectionRingHom f
@@ -341,13 +367,13 @@ theorem complexPoint_eq (f : ComplexPoint twelvePointWorld) :
             intro k
             rw [hvals k]
             by_cases hkk : k = k₀
-            · rw [if_pos hkk, mul_one]
-            · rw [if_neg hkk, mul_zero]
+            · rw [if_pos hkk, mul_one, if_pos hkk]
+            · rw [if_neg hkk, mul_zero, if_neg hkk]
           simp only [hterm]
           rw [Finset.sum_eq_single k₀]
           · rw [if_pos rfl]
           · intro b _ hb
-            rw [if_neg (fun h => hb h.symm)]
+            rw [if_neg hb]
           · intro hli
             exact absurd (Finset.mem_univ k₀) hli
   -- transport back to the scheme level
@@ -375,8 +401,14 @@ theorem pointSection_injective :
     congrArg (fun g => g.hom) (Spec.map_inj.mp h)
   have hv : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) =
       twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) := by rw [h2]
-  have hli : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) = 1 :=
-    Pi.single_eq_same i (1 : ℂ)
+  have hli : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) = 1 := by
+    -- AUDIT-10: the defeq `twelvePointEvalRingHom i g ≡ g i` exposed by a
+    -- `show`, so the pinned `Pi.single_eq_same` unifies against a clean
+    -- function application (CI 43800560334 errors at 379:4/379:24 — the
+    -- bare term elaborates the lemma's implicit `π` against the
+    -- ring-hom head first).
+    show (Pi.single i (1 : ℂ)) i = 1
+    exact Pi.single_eq_same i (1 : ℂ)
   have hrj : twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) =
       (if j = i then (1 : ℂ) else 0) :=
     Pi.single_apply i (1 : ℂ) j
