@@ -77,27 +77,29 @@ every pure tensor has a zero left factor. -/
 theorem subsingleton_complexification {VQ : Type}
     [AddCommGroup VQ] [Module ℚ VQ] [Subsingleton VQ] :
     Subsingleton (Complexification VQ) := by
+  -- WAVE 17 (pre-exposure D1): the original induction motive `fun z => z = y`
+  -- was unsound in the add-branches (from `x₁ = y` and `x₂ = y` one gets
+  -- `y + y = y`, false); everything is zero in a subsingleton module — prove
+  -- both sides zero separately.
   constructor
   intro x y
-  induction x using TensorProduct.induction_on with
-  | zero => induction y using TensorProduct.induction_on with
+  have hx : x = 0 := by
+    induction x using TensorProduct.induction_on with
     | zero => rfl
-    | tmul b₁ v₁ => exact (smul_zero b₁).symm
-    | add y₁ y₂ ih₁ ih₂ => rw [add_zero]; exact ih₁
-  | tmul b v =>
-    rw [show v = 0 from Subsingleton.elim v 0, TensorProduct.tmul_zero]
-    rw [smul_zero]
+    | tmul b v =>
+      rw [show v = 0 from Subsingleton.elim v 0, TensorProduct.tmul_zero]
+    | add x₁ x₂ ih₁ ih₂ => rw [ih₁, ih₂, add_zero]
+  have hy : y = 0 := by
     induction y using TensorProduct.induction_on with
     | zero => rfl
-    | tmul b₁ v₁ => rw [smul_zero]
-    | add y₁ y₂ ih₁ ih₂ => rw [add_zero]; exact ih₁
-  | add x₁ x₂ ih₁ ih₂ =>
-    rw [add_zero]
-    exact ih₁
+    | tmul b v =>
+      rw [show v = 0 from Subsingleton.elim v 0, TensorProduct.tmul_zero]
+    | add y₁ y₂ ih₁ ih₂ => rw [ih₁, ih₂, add_zero]
+  rw [hx, hy]
 
 /-- `Fin 1` is a subsingleton index type. -/
 theorem fin1_subsingleton : Subsingleton (Fin 1) :=
-  ⟨fun a b => Fin.ext (by omega)⟩
+  ⟨fun a b => Fin.ext (by have := a.2; have := b.2; omega)⟩
 
 /-! ## §2 THE HONEST (0, 0)-BIGRADING AT WEIGHT ZERO -/
 
@@ -172,9 +174,12 @@ noncomputable def zeroCycleClass :
         (fun i => (Z : AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv i).1))
     map_add' := by
       intro Z W
+      -- WAVE 17 (pre-exposure D5): ascribe at the CARRIER level first (the
+      -- CI-green PointNormalForm idiom) — the ambient-level `Z + W` show is
+      -- not definitional (Submodule.coe_add is propositional).
       show twelvePointCohomologyIso.symm
-          (fun i => (Z + W : AlgebraicCycle twelvePointWorld.X ℚ)
-            ((twelvePointEquiv i).1)) =
+          (fun i => ((Z + W : codimensionCycles twelvePointWorld.X 0) :
+            AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv i).1)) =
         twelvePointCohomologyIso.symm
           (fun i => (Z : AlgebraicCycle twelvePointWorld.X ℚ)
             ((twelvePointEquiv i).1)) +
@@ -187,16 +192,19 @@ noncomputable def zeroCycleClass :
       simp [Function.locallyFinsuppWithin.coe_add, Pi.add_apply]
     map_smul' := by
       intro q Z
+      -- WAVE 17 (pre-exposure D5): the same carrier-level ascription; the
+      -- `Submodule.coe_smul` bridge plus the green reference's simp set.
       show twelvePointCohomologyIso.symm
-          (fun i => (q • Z : AlgebraicCycle twelvePointWorld.X ℚ)
-            ((twelvePointEquiv i).1)) =
+          (fun i => ((q • Z : codimensionCycles twelvePointWorld.X 0) :
+            AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv i).1)) =
         q • twelvePointCohomologyIso.symm
           (fun i => (Z : AlgebraicCycle twelvePointWorld.X ℚ)
             ((twelvePointEquiv i).1))
       rw [← map_smul]
       congr 1
       funext i
-      simp [algebraicCycleRatSMul_apply] }
+      rw [Submodule.coe_smul]
+      simp [algebraicCycleRatSMul_apply, Pi.smul_apply, smul_eq_mul] }
 
 /-- The `i`-th point cycle as a codimension point of the world. -/
 def twelvePointPt (i : Fin 12) : CodimensionPoint twelvePointWorld.X 0 :=
@@ -218,12 +226,17 @@ theorem zeroCycleClass_point (i : Fin 12) :
   funext j
   have hval : (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i) :
       AlgebraicCycle twelvePointWorld.X ℚ) ((twelvePointEquiv j).1) =
-      (if (twelvePointEquiv j).1 = (twelvePointEquiv i).1 then (1 : ℚ) else 0) :=
-    Function.locallyFinsuppWithin.single_apply _ _ _
+      (if (twelvePointEquiv j).1 = (twelvePointEquiv i).1 then (1 : ℚ) else 0) := by
+    -- WAVE 17 (pre-exposure D8): the CI-green simp form (PointNormalForm:71)
+    -- instead of the term-mode `single_apply _ _ _` arity guess.
+    simp [codimensionPointCycle, Function.locallyFinsuppWithin.single_apply]
   rw [hval, Pi.single_apply]
   by_cases hj : j = i
-  · rw [hj, if_pos rfl]
-  · rw [if_neg (fun hcon => by apply hj; exact hcon), if_neg hj]
+  · subst hj
+    simp
+  · rw [if_neg (fun hcon =>
+        hj (twelvePointEquiv.injective (Subtype.ext hcon))),
+      if_neg hj]
 
 /-! ## §5 THE FIBER FACTS -/
 
@@ -246,9 +259,13 @@ theorem rationalHodgeSubspace_of_top
 twelve-point world at weight zero is the entire `H⁰` — a live rank-12
 fiber: the honest Hodge structure of the zero-dimensional world. -/
 theorem zeroFiber_eq_top :
-    rationalHodgeSubspace (zeroBigrading) = ⊤ := by
-  have hpp : zeroBigrading.ppComponent = ⊤ := rfl
-  exact rationalHodgeSubspace_of_top zeroBigrading hpp
+    rationalHodgeSubspace (p := 0) zeroBigrading = ⊤ := by
+  -- WAVE 17 (pre-exposure D9): force the weight-0 implicit explicitly — the
+  -- `2 * ?p =?= 0` nonlinear unification from the literal-0 index is not
+  -- solvable; the resulting term is unchanged (tier-6's rw-pattern
+  -- `rationalHodgeSubspace zeroBigrading` is preserved).
+  have hpp : (HodgeBigrading.ppComponent (p := 0)) zeroBigrading = ⊤ := rfl
+  exact rationalHodgeSubspace_of_top (p := 0) zeroBigrading hpp
 
 /-! ## §6 THE ASSEMBLY -/
 
@@ -311,9 +328,11 @@ theorem twelvePointHodgeData_analytification_eq :
 
 theorem twelvePointHodgeData_bigrading_pos (p : Nat) (hp : 0 < p) :
     twelvePointHodgeData.hodgeBigrading p = deadBigrading p hp := by
-  match p with
-  | 0 => exact absurd hp (by omega)
-  | q + 1 => rfl
+  -- WAVE 17 (pre-exposure D11): rcases guarantees the dependent-hypothesis
+  -- substitution the tactic-position match could not.
+  rcases p with _ | q
+  · exact absurd hp (by omega)
+  · rfl
 
 /-! ## Receipts -/
 
