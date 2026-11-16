@@ -141,7 +141,7 @@ theorem pi_decomp (x : Fin 12 → ℂ) :
       (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) :
         Fin 12 → ℂ)) i =
       ∑ k : Fin 12,
-        (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) : Fin 12 → ℂ)) i :=
+        (algebraMap ℂ (Fin 12 → ℂ) (x k) * Pi.single k (1 : ℂ) : Fin 12 → ℂ) i :=
     Finset.sum_apply _ _ _
   rw [hsum]
   have hval : ∀ k : Fin 12,
