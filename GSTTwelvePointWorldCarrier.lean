@@ -343,14 +343,20 @@ private theorem chartRingMap_apply (j : Fin 2) {d : ℕ}
     | (simp only [chartRingMap]; rfl)
   rw [h1, HomogeneousLocalization.algebraMap_apply,
     HomogeneousLocalization.Away.val_mk,
-    Localization.mk_eq_mk'_apply, IsLocalization.map_mk',
-    Subtype.coe_mk, map_pow]
-  rfl
-  -- AUDIT: the four-step spine is pinned verbatim from Mathlib's own
-  -- computation of this composite (ProjectiveSpectrum/Basic.lean:481-484);
-  -- the two `mk'`-denominator membership proofs agree by proof irrelevance
-  -- (the final `rfl`), and `map_pow` normalizes the transported denominator
-  -- `sectionRingHom ((X j)^k)` to `(sectionRingHom (X j))^k`.
+    Localization.mk_eq_mk'_apply, IsLocalization.map_mk']
+  simp only [Subtype.coe_mk, map_pow]
+  all_goals rfl
+  -- AUDIT: the first five rewrites are the pinned spine of Mathlib's own
+  -- computation of this composite (ProjectiveSpectrum/Basic.lean:481-485).
+  -- The last two normalizations are PROOF-DEPENDENT — the transported
+  -- denominator's membership proof mentions the coerced constructor — so
+  -- `rw` cannot cross them (motive not type correct: CI 43790217021,
+  -- error at 347:4); `simp only`'s congruence machinery rebuilds the
+  -- Subtype and discharges the proof difference by proof irrelevance —
+  -- the same idiom that carried the four `Subtype.coe_mk`
+  -- simp-normalizations in the chart branches below (CI-proven in the
+  -- same run).  The closer `all_goals rfl` is zero-goal-safe (vacuous if
+  -- the simp already closed the goal by proof irrelevance).
 
 /-- Surjectivity of the `ΓSpecIso` inverse transport: every global section
 of the twelve-point scheme is the transport of a vector. -/
