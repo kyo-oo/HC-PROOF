@@ -246,6 +246,18 @@ theorem dualCochains_d_odd (k : ℕ) :
     unfold twelvePointDualCochains
     exact ChainComplex.linearYonedaObj_d _ _ _ _ _
   rw [hd, altChain_d_even k]
+  -- WAVE 20 (run-19 error at :256 — the sole survivor, 7-for-8 green):
+  -- `rw [hid]` died because hid's `leftComp` implicit objects elaborated
+  -- at the BARE {twelvePointE, twelvePointE} spelling (the 𝟙's own
+  -- argument type fixes them before the ascription can act) while the
+  -- goal's occurrence carries hd's d-slot spelling
+  -- {X (2*k+2), X (2*k+1)} — kabstract cannot bridge the two spellings
+  -- (alternatingConst is a plain def, default-transparency defeq only).
+  -- The congrArg transport elaborates at hid's OWN spelling; the `.trans`
+  -- with `ModuleCat.ofHom_id` (ModuleCat/Basic.lean:176, rfl) and the
+  -- final unification against the goal run at default transparency —
+  -- the exact-defeq discipline run 19 validated GREEN at all four
+  -- Cluster-B sites.
   have hid : Linear.leftComp ℚ rationalCoefficient
       (𝟙 twelvePointE :
         (ChainComplex.alternatingConst.obj twelvePointE).X (2*k+2) ⟶
@@ -253,8 +265,7 @@ theorem dualCochains_d_odd (k : ℕ) :
       LinearMap.id := by
     ext g
     simp [Linear.leftComp_apply, Category.id_comp]
-  rw [hid]
-  exact ModuleCat.ofHom_id
+  exact (congrArg ModuleCat.ofHom hid).trans ModuleCat.ofHom_id
 
 /-- Degree zero differential of the dual complex. -/
 theorem dualCochains_d_zero_one : twelvePointDualCochains.d 0 1 = 0 :=

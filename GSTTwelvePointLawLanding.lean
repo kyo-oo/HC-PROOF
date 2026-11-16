@@ -130,7 +130,15 @@ theorem twelvePointSeed_hodge :
   -- `twelvePointHodgeData_bigrading_zero` (HodgeData:293, `= zeroBigrading`
   -- by rfl) rewrites the projection syntactically first; then the fiber
   -- lemma fires on the constant.
-  rw [twelvePointHodgeData_bigrading_zero, zeroFiber_eq_top]
+  -- WAVE 20 (W4-B R1 hardening): the fiber equation is hoisted as a ground
+  -- have at the goal's own projection spelling — the interior `rw` is
+  -- syntactic, the `exact zeroFiber_eq_top` unifies at default
+  -- transparency, and the outer `rw [hfib]` is purely syntactic — every
+  -- step green under both rw-matching models.
+  have hfib : rationalHodgeSubspace (twelvePointHodgeData.hodgeBigrading 0) = ⊤ := by
+    rw [twelvePointHodgeData_bigrading_zero]
+    exact zeroFiber_eq_top
+  rw [hfib]
   exact Submodule.mem_top _
 
 /-- **THE SEED COORDINATES.**  Under the H⁰ iso the seed's class is exactly
@@ -326,7 +334,13 @@ theorem twelvePointCertificate_isKrylovCyclic :
         -- goal spells the projection `twelvePointHodgeData.hodgeBigrading
         -- 0`; the bridge rewrites it to the constant `zeroBigrading`
         -- first, then the fiber lemma fires.
-        rw [twelvePointHodgeData_bigrading_zero, zeroFiber_eq_top]
+        -- WAVE 20 (W4-B R1 hardening): the same ground-have hoist as the
+        -- seed-membership site — syntactic in, default-transparency
+        -- exact inside, syntactic out.
+        have hfib : rationalHodgeSubspace (twelvePointHodgeData.hodgeBigrading 0) = ⊤ := by
+          rw [twelvePointHodgeData_bigrading_zero]
+          exact zeroFiber_eq_top
+        rw [hfib]
         exact twelvePoint_orbitUnderlying_span)
 
 /-! ## §5 THE LAW — every weight of the first genuine world -/
