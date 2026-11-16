@@ -227,17 +227,19 @@ noncomputable def zeroCycleClass :
 def twelvePointPt (i : Fin 12) : CodimensionPoint twelvePointWorld.X 0 :=
   ⟨(twelvePointEquiv i).1, (twelvePointEquiv i).2⟩
 
+-- WAVE 23 (attempt-2 survivor at :267:82, restructured after the run-24
+-- parse break at :232: a module docstring must attach DIRECTLY to the
+-- declaration, so the `open Classical in` sits ABOVE the docstring): the
+-- green PointNormalForm regime mirrored EXACTLY -- `open Classical in` at
+-- theorem level is the half the wave-21 rebuild missed: the `classical`
+-- tactic alone adds only `propDecidable`, and `single_apply`'s
+-- [DecidableEq X] then cannot synthesize -- the linter's "single_apply
+-- unused" was the receipt. Under `open Classical in` the scoped instance
+-- provides it (the green PointNormalForm:38-47 runs BOTH).
+open Classical in
 /-- **THE POINT-CLASS EQUATION.**  The class of the `i`-th point cycle is
 the `i`-th indicator vector under the H⁰ iso — by construction of the
 degree map. -/
-open Classical in
--- WAVE 23 (attempt-2 survivor at :267:82): the green PointNormalForm regime
--- mirrored EXACTLY -- `open Classical in` at theorem level is the half the
--- wave-21 rebuild missed: the `classical` tactic alone adds only
--- `propDecidable`, and `single_apply`'s [DecidableEq X] then cannot
--- synthesize -- the linter's "single_apply unused" was the receipt. Under
--- `open Classical in` the scoped instance provides it (the green
--- PointNormalForm:38-47 runs BOTH).
 theorem zeroCycleClass_point (i : Fin 12) :
     twelvePointCohomologyIso
       (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
