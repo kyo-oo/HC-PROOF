@@ -148,7 +148,10 @@ noncomputable def deadBigrading (p : Nat) (hp : 0 < p) :
             (RationalSingularCohomology twelvePointAnalytification (2 * p))))) j) = ⊥ :=
       Subsingleton.elim _ _
     rw [hsup]
-    exact (disjoint_self ⊥).mpr rfl
+    -- WAVE 18 (B4 pin-probe): `disjoint_self`'s `a` is IMPLICIT at the pin
+    -- (Order/Disjoint.lean:99-101) — the positional `⊥` is ill-typed; the
+    -- named-argument form (or the bare `disjoint_bot_right`) is the fix.
+    exact (disjoint_self (a := ⊥)).mpr rfl
   spans := by
     haveI hsub : Subsingleton
         (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=

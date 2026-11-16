@@ -168,7 +168,7 @@ theorem altChain_d_odd (k : ℕ) :
   -- WAVE 17 (run-16 errors at :169/:171): split_ifs bound `hi` in a different
   -- subgoal than the bullet that used it; the deterministic dite rewrites
   -- close the parity ite without any case-split bookkeeping.
-  rw [dif_pos (rfl : (ComplexShape.down ℕ).Rel (2*k+1) (2*k)), dif_neg heven]
+  rw [dif_pos (show (ComplexShape.down ℕ).Rel (2*k+1) (2*k) from rfl), dif_neg heven]
 
 /-- The alternating constant complex has `d (2*k+2) (2*k+1) = 𝟙`.
 -- WAVE 16: the RHS is stated at the projected term (the bare `𝟙 twelvePointE`
@@ -191,26 +191,29 @@ theorem altChain_d_even (k : ℕ) :
     (𝟙 twelvePointE :
       (ChainComplex.alternatingConst.obj twelvePointE).X (2*k+2) ⟶
       (ChainComplex.alternatingConst.obj twelvePointE).X (2*k+1))
-  rw [dif_pos (rfl : (ComplexShape.down ℕ).Rel (2*k+2) (2*k+1)), dif_pos heven]
+  rw [dif_pos (show (ComplexShape.down ℕ).Rel (2*k+2) (2*k+1) from rfl), dif_pos heven]
 
 /-- The dual differential on even indices is zero.
 -- AUDIT(3): pinned `linearYonedaObj_d` simps lemma, `Linear.leftComp_apply`,
 -- and module hom extensionality. -/
 theorem dualCochains_d_even (k : ℕ) :
     twelvePointDualCochains.d (2*k) (2*k+1) = 0 := by
-  ext g
-  unfold twelvePointDualCochains
-  rw [ChainComplex.linearYonedaObj_d]
-  rw [altChain_d_odd k]
-  -- WAVE 17 (run-16 error at :194): the `ModuleCat.Hom.hom (ofHom …)` wrapper
-  -- blocked `Linear.leftComp_apply` (both simp args were reported unused);
-  -- strip the wrapper by a definitional element-level show, then the
-  -- leftComp/zero_comp chain fires.
-  show (Linear.leftComp ℚ rationalCoefficient
-      (0 : (ChainComplex.alternatingConst.obj twelvePointE).X (2*k+1) ⟶
-        (ChainComplex.alternatingConst.obj twelvePointE).X (2*k))) g =
-    (0 : ↥(twelvePointDualCochains.X (2*k+1)))
-  simp [Linear.leftComp_apply, CategoryTheory.Limits.zero_comp]
+  -- WAVE 18 (run-17 error at :213): the element-level route (ext g +
+  -- linearYonedaObj_d) died THREE times on the coe/instance friction
+  -- (↑(dual.X i) vs the hom-module at instances transparency — runs 15, 16,
+  -- 17).  Everything now runs at the MORPHISM level: linearYonedaObj_d first
+  -- (via the have's `exact` with defeq — no rfl-form guessing), then
+  -- ModuleCat.Hom.ext, then the LinearMap-level zero via Mathlib's own
+  -- `CategoryTheory.Linear.comp` (whose toFun IS leftComp — map_zero closes).
+  have hd : twelvePointDualCochains.d (2*k) (2*k+1) =
+      ModuleCat.ofHom (Linear.leftComp ℚ rationalCoefficient
+        ((ChainComplex.alternatingConst.obj twelvePointE).d (2*k+1) (2*k))) := by
+    unfold twelvePointDualCochains
+    exact ChainComplex.linearYonedaObj_d _ _ _ _ _
+  rw [hd, altChain_d_odd k]
+  refine ModuleCat.Hom.ext (by
+    rw [ModuleCat.hom_ofHom, ModuleCat.hom_zero,
+      ← CategoryTheory.Linear.comp_apply, map_zero])
 
 /-- The dual differential on odd indices is the identity.
 -- AUDIT(3): pinned `linearYonedaObj_d` simps lemma, `Linear.leftComp_apply`,
@@ -218,19 +221,25 @@ theorem dualCochains_d_even (k : ℕ) :
 theorem dualCochains_d_odd (k : ℕ) :
     twelvePointDualCochains.d (2*k+1) (2*k+2) =
       𝟙 (twelvePointDualCochains.X (2*k+1)) := by
-  ext g
-  unfold twelvePointDualCochains
-  rw [ChainComplex.linearYonedaObj_d]
-  rw [altChain_d_even k]
-  -- WAVE 17 (run-16 error at :218): with the slot-shaped altChain_d_even
-  -- ascription the transport is type-correct; strip the ofHom wrapper by a
-  -- definitional show before leftComp_apply can fire.
-  show (Linear.leftComp ℚ rationalCoefficient
+  -- WAVE 18 (run-17 error at :220): the same morphism-level route; the
+  -- identity case rides a self-contained leftComp-id lemma proved at its
+  -- own natural types (where leftComp_apply fires cleanly — no coe).
+  have hd : twelvePointDualCochains.d (2*k+1) (2*k+2) =
+      ModuleCat.ofHom (Linear.leftComp ℚ rationalCoefficient
+        ((ChainComplex.alternatingConst.obj twelvePointE).d (2*k+2) (2*k+1))) := by
+    unfold twelvePointDualCochains
+    exact ChainComplex.linearYonedaObj_d _ _ _ _ _
+  rw [hd, altChain_d_even k]
+  have hid : Linear.leftComp ℚ rationalCoefficient
       (𝟙 twelvePointE :
         (ChainComplex.alternatingConst.obj twelvePointE).X (2*k+2) ⟶
-        (ChainComplex.alternatingConst.obj twelvePointE).X (2*k+1))) g =
-    (𝟙 (twelvePointDualCochains.X (2*k+1))) g
-  simp [Linear.leftComp_apply, Category.id_comp, ModuleCat.hom_id]
+        (ChainComplex.alternatingConst.obj twelvePointE).X (2*k+1)) =
+      LinearMap.id := by
+    ext g
+    simp [Linear.leftComp_apply, Category.id_comp]
+  refine ModuleCat.Hom.ext (by
+    rw [ModuleCat.hom_ofHom, ModuleCat.hom_id]
+    exact hid)
 
 /-- Degree zero differential of the dual complex. -/
 theorem dualCochains_d_zero_one : twelvePointDualCochains.d 0 1 = 0 :=
@@ -321,7 +330,7 @@ noncomputable def fin12DualEquiv :
             (map_sum φ
               (fun i => x i • (Pi.single i 1 : Fin 12 → ℚ))
               Finset.univ).symm
-      _ = φ x := by rw [hx]
+      _ = φ x := (congrArg φ hx).symm
   right_inv c := by
     funext j
     simp [Finset.sum_apply, Pi.single_apply, mul_one, mul_zero, mul_ite,
@@ -339,15 +348,15 @@ noncomputable def homToLinearMap :
     (ModuleCat.of ℚ (Fin 12 → ℚ) ⟶ rationalCoefficient) ≃ₗ[ℚ]
       ((Fin 12 → ℚ) →ₗ[ℚ] ℚ) where
   toFun φ := φ.hom
-  map_add' φ ψ := rfl
-  map_smul' r φ := rfl
+  map_add' _φ _ψ := rfl
+  map_smul' _r _φ := rfl
   invFun f := ModuleCat.ofHom f
   -- WAVE 17 (run-16 errors at :325): both triangle fields are `rfl` by
   -- structure eta (`ofHom φ.hom = φ`, `Hom.hom (ofHom f) = f`); the
   -- polymorphic `ModuleCat.homEquiv` cannot synthesize its module
   -- parameters from the LinearMap-side argument.
-  left_inv φ := rfl
-  right_inv f := rfl
+  left_inv _φ := rfl
+  right_inv _f := rfl
 
 /-- The degree-zero term of the dual complex, i.e. the internal Hom from
 `twelvePointE`, as the function space `Fin 12 → ℚ`. -- AUDIT(8):
@@ -403,11 +412,18 @@ theorem dualSc_exact_odd (k : ℕ) :
       HomologicalComplex.shortComplexFunctor
     rw [hprev, hnext]
   rw [hsc, ShortComplex.moduleCat_exact_iff_range_eq_ker]
-  simp only [HomologicalComplex.shortComplexFunctor'_obj_f,
-    HomologicalComplex.shortComplexFunctor'_obj_g]
-  rw [dualCochains_d_even k, dualCochains_d_odd k]
-  simp [ModuleCat.hom_zero, ModuleCat.hom_id, LinearMap.range_zero,
-    LinearMap.ker_id]
+  -- WAVE 18 (run-17 error at :409): the d→0/𝟙 rewrite inside the .hom-slot
+  -- clashed with the sc' X₁/X₂-projection types at instances transparency;
+  -- the f/g-hom equations are now self-contained haves at their own types.
+  have hf : (twelvePointDualCochains.sc' (2*k) (2*k+1) (2*k+2)).f.hom = 0 := by
+    rw [HomologicalComplex.shortComplexFunctor'_obj_f, dualCochains_d_even k,
+      ModuleCat.hom_zero]
+  have hg : (twelvePointDualCochains.sc' (2*k) (2*k+1) (2*k+2)).g.hom =
+      LinearMap.id := by
+    rw [HomologicalComplex.shortComplexFunctor'_obj_g, dualCochains_d_odd k,
+      ModuleCat.hom_id]
+  rw [hf, hg]
+  simp [LinearMap.range_zero, LinearMap.ker_id]
 
 /-- Exactness of the dual alternating short complex at a positive even index.
 -- WAVE 16: same direct sc-field route as `dualSc_exact_odd`. -/
@@ -427,11 +443,20 @@ theorem dualSc_exact_even (k : ℕ) :
       HomologicalComplex.shortComplexFunctor
     rw [hprev, hnext]
   rw [hsc, ShortComplex.moduleCat_exact_iff_range_eq_ker]
-  simp only [HomologicalComplex.shortComplexFunctor'_obj_f,
-    HomologicalComplex.shortComplexFunctor'_obj_g]
-  rw [dualCochains_d_odd k, dualCochains_d_even (k+1)]
-  simp [ModuleCat.hom_zero, ModuleCat.hom_id, LinearMap.range_id,
-    LinearMap.ker_zero]
+  -- WAVE 18 (run-17 error at :432): the (k+1)-spelled lemma LHS never
+  -- matched the 2*k+2-form in the goal (Nat.mul vs Nat.add spelling — not
+  -- syntactic); the show-restatement fixes the spelling at defeq.
+  have hf : (twelvePointDualCochains.sc' (2*k+1) (2*k+2) (2*k+3)).f.hom =
+      LinearMap.id := by
+    rw [HomologicalComplex.shortComplexFunctor'_obj_f, dualCochains_d_odd k,
+      ModuleCat.hom_id]
+  have hg : (twelvePointDualCochains.sc' (2*k+1) (2*k+2) (2*k+3)).g.hom = 0 := by
+    rw [HomologicalComplex.shortComplexFunctor'_obj_g,
+      show twelvePointDualCochains.d (2*k+2) (2*k+3) = 0 from
+        dualCochains_d_even (k+1),
+      ModuleCat.hom_zero]
+  rw [hf, hg]
+  simp [LinearMap.range_id, LinearMap.ker_zero]
 
 /-- Parity splitting of nonzero naturals.
 -- WAVE 16 (run-15 error at :343): `omega` cannot discharge the existential
