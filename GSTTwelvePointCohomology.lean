@@ -74,7 +74,10 @@ noncomputable def dualChainIso (e : K ≅ L) :
       show (G.map e.inv).op ≫ (G.map e.hom).op
           = (G.map e.hom ≫ G.map e.inv).op from rfl,
       ← G.map_comp, e.hom_inv_id, G.map_id,
-      show (𝟙 (G.obj L)).op = 𝟙 (Opposite.op (G.obj L)) from rfl,
+      -- WAVE 16 (run-15 errors at :77/:89): the two `show` rewrites had their
+      -- variables SWAPPED — `hom_inv_id` reduces through
+      -- `e.hom ≫ e.inv = 𝟙 K`, so the op-identity is at `G.obj K`.
+      show (𝟙 (G.obj K)).op = 𝟙 (Opposite.op (G.obj K)) from rfl,
       F.map_id]
   inv_hom_id := by
     let F := (HomologicalComplex.unopFunctor (ModuleCat ℚ) (ComplexShape.down ℕ))
@@ -86,7 +89,8 @@ noncomputable def dualChainIso (e : K ≅ L) :
       show (G.map e.hom).op ≫ (G.map e.inv).op
           = (G.map e.inv ≫ G.map e.hom).op from rfl,
       ← G.map_comp, e.inv_hom_id, G.map_id,
-      show (𝟙 (G.obj K)).op = 𝟙 (Opposite.op (G.obj K)) from rfl,
+      -- WAVE 16: `inv_hom_id` reduces through `e.inv ≫ e.hom = 𝟙 L`.
+      show (𝟙 (G.obj L)).op = 𝟙 (Opposite.op (G.obj L)) from rfl,
       F.map_id]
 
 /-- Homology transport along an isomorphism of cochain complexes, via the
@@ -145,25 +149,39 @@ noncomputable def twelvePointDualIso :
 /-! ## §3. The alternating differential pattern -/
 
 /-- The alternating constant complex has `d (2*k+1) (2*k) = 0`.
--- AUDIT(2): pinned `alternatingConst_obj_d` simps lemma and branch shape. -/
+-- WAVE 16: the d-component is definitionally the parity ite (the functor's
+-- obj is `HomologicalComplex.alternatingConst X` with φ := 𝟙, ψ := 0 at the
+-- pin — AlternatingConst.lean:55/:159, the identities supplied through
+-- `Category.id_comp 0` / `Category.comp_id 0`); the `show` states the ite
+-- directly (checked at default transparency where the functor and complex
+-- projections reduce), replacing the simps-unfolding that made no progress
+-- (run-15 error at :154 — the generated `alternatingConst_obj` equation is
+-- backward-oriented by `set_option backward.defeqAttrib.useBackward true`). -/
 theorem altChain_d_odd (k : ℕ) :
     (ChainComplex.alternatingConst.obj twelvePointE).d (2*k+1) (2*k) = 0 := by
   have heven : ¬ Even (2*k+1) := by
     rw [Nat.even_iff]
     omega
-  simp only [ChainComplex.alternatingConst_obj, HomologicalComplex.alternatingConst_d]
+  show (if _ : (ComplexShape.down ℕ).Rel (2*k+1) (2*k) then
+      if _ : Even (2*k+1) then (𝟙 twelvePointE) else (0 : twelvePointE ⟶ twelvePointE)
+      else 0) = 0
   split_ifs with hij hi
   · exact absurd hi heven
   · rfl
   · rfl
 
 /-- The alternating constant complex has `d (2*k+2) (2*k+1) = 𝟙`.
--- AUDIT(2): pinned `alternatingConst_obj_d` simps lemma and branch shape. -/
+-- WAVE 16: the RHS is stated at the projected term (the bare `𝟙 twelvePointE`
+-- fails the equation's implicit-transparency typecheck — run-15 error at
+-- :166 — the X-projection through the functor is semireducible); the body
+-- mirrors `altChain_d_odd`'s direct ite route. -/
 theorem altChain_d_even (k : ℕ) :
     (ChainComplex.alternatingConst.obj twelvePointE).d (2*k+2) (2*k+1) =
-      𝟙 twelvePointE := by
+      𝟙 ((ChainComplex.alternatingConst.obj twelvePointE).X (2*k+2)) := by
   have heven : Even (2*k+2) := ⟨k+1, by omega⟩
-  simp only [ChainComplex.alternatingConst_obj, HomologicalComplex.alternatingConst_d]
+  show (if _ : (ComplexShape.down ℕ).Rel (2*k+2) (2*k+1) then
+      if _ : Even (2*k+2) then (𝟙 twelvePointE) else (0 : twelvePointE ⟶ twelvePointE)
+      else 0) = 𝟙 ((ChainComplex.alternatingConst.obj twelvePointE).X (2*k+2))
   split_ifs with hij hi
   · rfl
   · exact absurd heven hi
@@ -178,7 +196,11 @@ theorem dualCochains_d_even (k : ℕ) :
   unfold twelvePointDualCochains
   rw [ChainComplex.linearYonedaObj_d]
   rw [altChain_d_odd k]
-  simp [Linear.leftComp_apply, zero_comp]
+  -- WAVE 16 (run-15 error at :181): `zero_comp` is
+  -- `CategoryTheory.Limits.zero_comp` at the pin
+  -- (Limits/Shapes/ZeroMorphisms.lean:66) — the unqualified name does not
+  -- resolve under `open CategoryTheory` alone.
+  simp [Linear.leftComp_apply, CategoryTheory.Limits.zero_comp]
 
 /-- The dual differential on odd indices is the identity.
 -- AUDIT(3): pinned `linearYonedaObj_d` simps lemma, `Linear.leftComp_apply`,
@@ -190,7 +212,10 @@ theorem dualCochains_d_odd (k : ℕ) :
   unfold twelvePointDualCochains
   rw [ChainComplex.linearYonedaObj_d]
   rw [altChain_d_even k]
-  simp [Linear.leftComp_apply, id_comp]
+  -- WAVE 16 (run-15 error at :193): `id_comp` is `Category.id_comp` at the
+  -- pin (accessed through the `CategoryTheory.Category` namespace, the
+  -- form Mathlib's own `Linear.homCongr` proof uses).
+  simp [Linear.leftComp_apply, Category.id_comp]
 
 /-- Degree zero differential of the dual complex. -/
 theorem dualCochains_d_zero_one : twelvePointDualCochains.d 0 1 = 0 :=
@@ -238,24 +263,27 @@ noncomputable def twelvePointEIso :
       (fun _ : Fin 12 ↦ ModuleCat.of ℚ ℚ)).symm ≪≫
     ModuleCat.biproductIsoPi (fun _ : Fin 12 ↦ ModuleCat.of ℚ ℚ)
 
-/-- The canonical coordinate identification of the dual of `Fin 12 → ℚ`:
+/-- The coordinate identification of the dual of `Fin 12 → ℚ`:
 a functional is its list of values on the standard single-point vectors.
--- AUDIT(7): the `Pi.single` / `Finset.sum_ite` simp set. -/
+-- WAVE 16 (run-15 error at :250): the invFun's anonymous `⟨...⟩` constructor
+-- does not elaborate against the post-refactor LinearMap structure (which
+-- extends AddHom); the named-field structure-instance syntax is the
+corpus-standard idiom. -/
 noncomputable def fin12DualEquiv :
     ((Fin 12 → ℚ) →ₗ[ℚ] ℚ) ≃ₗ[ℚ] (Fin 12 → ℚ) where
   toFun φ := fun i => φ (Pi.single i 1)
   map_add' φ ψ := by funext i; simp
   map_smul' r φ := by funext i; simp
   invFun c :=
-    ⟨fun x => ∑ i, c i * x i,
-      by
+    { toFun := fun x => ∑ i, c i * x i
+      map_add' := by
         intro x y
         simp [Pi.add_apply, mul_add, Finset.sum_add_distrib,
-          add_mul, Finset.sum_mul],
-      by
+          add_mul, Finset.sum_mul]
+      map_smul' := by
         intro r x
         simp [Pi.smul_apply, smul_eq_mul, mul_comm, mul_assoc,
-          mul_left_comm, Finset.sum_mul]⟩
+          mul_left_comm, Finset.sum_mul] }
   left_inv φ := by
     ext x
     have hx : x = ∑ i, x i • (Pi.single i 1 : Fin 12 → ℚ) := by
@@ -275,8 +303,26 @@ noncomputable def fin12DualEquiv :
       _ = φ x := by rw [hx]
   right_inv c := by
     funext j
-    simp [Finset.sum_apply, Pi.single_apply, Finset.sum_ite_eq,
-      Finset.sum_ite_eq']
+    simp [Finset.sum_apply, Pi.single_apply, mul_one, mul_zero, mul_ite,
+      Finset.sum_ite_eq, Finset.sum_ite_eq']
+
+/-- The bridge from the `ModuleCat` hom-type to the linear map type: the
+underlying `Hom.hom`, linear in the hom-module structure, with the inverse
+`ModuleCat.ofHom`. -- WAVE 16 (run-15 error at :289): the homCongr's
+codomain is the `ModuleCat.Hom` STRUCTURE type, not the `LinearMap` type —
+`ModuleCat.Hom` is a one-field wrapper (ModuleCat/Basic.lean:94) — so
+`fin12DualEquiv` cannot compose with it directly; this bridge (built on
+Mathlib's own `ModuleCat.homEquiv`, ModuleCat/Basic.lean:195) closes the
+commuting square. -/
+noncomputable def homToLinearMap :
+    (ModuleCat.of ℚ (Fin 12 → ℚ) ⟶ rationalCoefficient) ≃ₗ[ℚ]
+      ((Fin 12 → ℚ) →ₗ[ℚ] ℚ) where
+  toFun φ := φ.hom
+  map_add' φ ψ := rfl
+  map_smul' r φ := rfl
+  invFun f := ModuleCat.ofHom f
+  left_inv φ := ModuleCat.homEquiv.left_inv φ
+  right_inv f := ModuleCat.homEquiv.right_inv f
 
 /-- The degree-zero term of the dual complex, i.e. the internal Hom from
 `twelvePointE`, as the function space `Fin 12 → ℚ`. -- AUDIT(8):
@@ -285,8 +331,9 @@ noncomputable def fin12DualEquiv :
 noncomputable def twelvePointXZeroIso :
     twelvePointDualCochains.X 0 ≅ ModuleCat.of ℚ (Fin 12 → ℚ) :=
   LinearEquiv.toModuleIso
-    (CategoryTheory.Linear.homCongr ℚ twelvePointEIso
-        (Iso.refl rationalCoefficient) |>.trans fin12DualEquiv)
+    ((Linear.homCongr ℚ twelvePointEIso
+        (Iso.refl rationalCoefficient)).trans
+      (homToLinearMap.trans fin12DualEquiv))
 
 /-! ## §6. Assembly: the degree-zero rational cohomology -/
 
@@ -308,39 +355,44 @@ noncomputable def twelvePointCohomologyIso :
 /-! ## §7. Vanishing in nonzero degree -/
 
 /-- Exactness of the dual alternating short complex at an odd index.
--- AUDIT(10): `ShortComplex.ModuleCat.exact_iff`, the `sc` field simps lemmas,
--- and the `up` shape simp lemmas are the three pinned bridges. -/
+-- WAVE 16 (run-15 errors at :323/:339): the `shortComplexFunctor_obj_f/g`
+simps lemmas do not fire on the bare `sc` abbrev (the wave-7 corpus idiom:
+the sc's f/g fields are DEFEQ on the d-components; state them directly
+through a `show`, then close with the pinned `ModuleCat.hom_zero` /
+`ModuleCat.hom_id` simp lemmas — both used by Mathlib's own
+`ModuleCat.subsingleton_of_isZero` proof at ModuleCat/Basic.lean:379). -/
 theorem dualSc_exact_odd (k : ℕ) :
     ShortComplex.Exact (twelvePointDualCochains.sc (2*k+1)) := by
   rw [ShortComplex.moduleCat_exact_iff_range_eq_ker]
-  simp only [HomologicalComplex.shortComplexFunctor_obj_f,
-    HomologicalComplex.shortComplexFunctor_obj_g]
-  have hprev : (ComplexShape.up ℕ).prev (2*k+1) = 2*k :=
-    CochainComplex.prev_nat_succ (2*k)
-  have hnext : (ComplexShape.up ℕ).next (2*k+1) = 2*k+2 :=
-    CochainComplex.next ℕ (2*k+1)
-  rw [hprev, hnext, dualCochains_d_even k, dualCochains_d_odd k]
-  simp [LinearMap.ker_id, LinearMap.range_zero]
+  show LinearMap.range (twelvePointDualCochains.d (2*k) (2*k+1)).hom =
+      LinearMap.ker (twelvePointDualCochains.d (2*k+1) (2*k+2)).hom
+  rw [dualCochains_d_even k, dualCochains_d_odd k]
+  simp [ModuleCat.hom_zero, ModuleCat.hom_id, LinearMap.range_zero,
+    LinearMap.ker_id]
 
 /-- Exactness of the dual alternating short complex at a positive even index.
--- AUDIT(10): same three pinned bridges as `dualSc_exact_odd`. -/
+-- WAVE 16: same direct sc-field route as `dualSc_exact_odd`. -/
 theorem dualSc_exact_even (k : ℕ) :
     ShortComplex.Exact (twelvePointDualCochains.sc (2*k+2)) := by
   rw [ShortComplex.moduleCat_exact_iff_range_eq_ker]
-  simp only [HomologicalComplex.shortComplexFunctor_obj_f,
-    HomologicalComplex.shortComplexFunctor_obj_g]
-  have hprev : (ComplexShape.up ℕ).prev (2*k+2) = 2*k+1 :=
-    CochainComplex.prev_nat_succ (2*k+1)
-  have hnext : (ComplexShape.up ℕ).next (2*k+2) = 2*k+3 :=
-    CochainComplex.next ℕ (2*k+2)
+  show LinearMap.range (twelvePointDualCochains.d (2*k+1) (2*k+2)).hom =
+      LinearMap.ker (twelvePointDualCochains.d (2*k+2) (2*k+3)).hom
   have hg : twelvePointDualCochains.d (2*k+2) (2*k+3) = 0 :=
     dualCochains_d_even (k+1)
-  rw [hprev, hnext, dualCochains_d_odd k, hg]
-  simp [LinearMap.ker_zero, LinearMap.range_id]
+  rw [dualCochains_d_odd k, hg]
+  simp [ModuleCat.hom_zero, ModuleCat.hom_id, LinearMap.range_id,
+    LinearMap.ker_zero]
 
-/-- Parity splitting of nonzero naturals. -/
+/-- Parity splitting of nonzero naturals.
+-- WAVE 16 (run-15 error at :343): `omega` cannot discharge the existential
+goal directly; split on `Nat.even_or_odd` first. -/
 theorem parity_split (n : ℕ) (hn : n ≠ 0) :
-    (∃ k, n = 2*k + 1) ∨ (∃ k, n = 2*k + 2) := by omega
+    (∃ k, n = 2*k + 1) ∨ (∃ k, n = 2*k + 2) := by
+  rcases Nat.even_or_odd n with ⟨k, hk⟩ | ⟨k, hk⟩
+  · rcases k with _ | k'
+    · exact absurd (by omega) hn
+    · exact Or.inr ⟨k', by omega⟩
+  · exact Or.inl ⟨k, hk.symm⟩
 
 /-- The dual alternating complex is exact in every positive degree.
 -- AUDIT(11): `ExactAt n` is definitionally `(C.sc n).Exact` in pinned
@@ -354,10 +406,15 @@ theorem twelvePointDualCochains_exactAt (n : ℕ) (hn : n ≠ 0) :
   · rw [hk]; exact dualSc_exact_even k
 
 /-- The dual alternating cohomology objects vanish in positive degree.
-`ExactAt.isZero_homology` is the name verified in the pinned
-`SingularHomology/Basic.lean` (line 131). -/
+`ExactAt n` is definitionally `(C.sc n).Exact` in pinned
+Mathlib (it is consumed there via `.of_iso` / `.isZero_homology` in
+`Mathlib/AlgebraicTopology/SingularHomology/Basic.lean`).
+-- WAVE 16 (run-15 errors at :360/:368): `IsZero` is
+-- `CategoryTheory.Limits.IsZero` at the pin
+-- (Limits/Shapes/ZeroObjects.lean:44) — the unqualified name does not
+-- resolve under `open CategoryTheory` alone. -/
 theorem twelvePointDualCochomology_isZero (n : ℕ) (hn : n ≠ 0) :
-    IsZero (twelvePointDualCochains.homology n) :=
+    CategoryTheory.Limits.IsZero (twelvePointDualCochains.homology n) :=
   (twelvePointDualCochains_exactAt n hn).isZero_homology
 
 /-- **THE VANISHING TARGET**: rational singular cohomology of the twelve-point
@@ -365,7 +422,7 @@ world is trivial in every nonzero degree. -- AUDIT(12): `IsZero.eq`. -/
 theorem twelvePointCohomology_subsingleton (n : ℕ) (hn : n ≠ 0) :
     Subsingleton (RationalSingularCohomology twelvePointAnalytification n) := by
   let e := (homologyIsoOfIso twelvePointDualIso n).toLinearEquiv
-  have hD : IsZero (twelvePointDualCochains.homology n) :=
+  have hD : CategoryTheory.Limits.IsZero (twelvePointDualCochains.homology n) :=
     twelvePointDualCochomology_isZero n hn
   refine ⟨fun a b => ?_⟩
   calc a = e.symm (e a) := (e.symm_apply_apply a).symm
