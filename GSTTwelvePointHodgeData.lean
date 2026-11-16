@@ -142,16 +142,13 @@ noncomputable def deadBigrading (p : Nat) (hp : 0 < p) :
         (RationalSingularCohomology twelvePointAnalytification (2 * p)))) :=
       ⟨fun P Q => subsingleton_submodules_eq P Q⟩
     intro i
-    have hsup : (⨆ (j) (_ : j ≠ i),
-        (fun _ : Fin (2 * p + 1) =>
-          (⊥ : Submodule ℂ (Complexification
-            (RationalSingularCohomology twelvePointAnalytification (2 * p))))) j) = ⊥ :=
-      Subsingleton.elim _ _
-    rw [hsup]
-    -- WAVE 18 (B4 pin-probe): `disjoint_self`'s `a` is IMPLICIT at the pin
-    -- (Order/Disjoint.lean:99-101) — the positional `⊥` is ill-typed; the
-    -- named-argument form (or the bare `disjoint_bot_right`) is the fix.
-    exact (disjoint_self (a := ⊥)).mpr rfl
+    -- WAVE 19 (pre-emptive, W1-D R6): the goal after `intro i` is the
+    -- submodule-lattice `Disjoint` (`P ⊓ Q = ⊥`) of the dead fiber, which
+    -- `hlat` collapses directly — the `⨆ j ∈ {j | j ≠ i}` setOf-form of
+    -- `iSupIndep` never has to match `hsup`'s `⨆ (j) (_ : j ≠ i)` spelling
+    -- (membership-stuck at instances transparency), and the untested
+    -- `(disjoint_self (a := ⊥)).mpr rfl` route disappears with it.
+    exact Subsingleton.elim _ _
   spans := by
     haveI hsub : Subsingleton
         (RationalSingularCohomology twelvePointAnalytification (2 * p)) :=

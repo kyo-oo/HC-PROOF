@@ -452,7 +452,12 @@ theorem matrixUnitOp_apply (r c : Fin 12)
   show twelvePointCohomologyIso
       (twelvePointCohomologyIso.symm
         (matrixUnitIndicator r c (twelvePointCohomologyIso u))) = _
-  rw [LinearEquiv.symm_apply_apply]
+  -- WAVE 19 (pre-emptive, W1-D R1): the post-show goal is
+  -- `iso (iso.symm X) = X`-shaped (the symm is applied FIRST) — the correct
+  -- lemma is `LinearEquiv.apply_symm_apply : e (e.symm x) = x`;
+  -- `symm_apply_apply : e.symm (e x) = x` is the wrong direction and its
+  -- `e.symm`-headed pattern can never match.
+  rw [LinearEquiv.apply_symm_apply]
   rfl
 
 /-- The matrix unit sends the `i`-th point class to the `r`-th indicator when
@@ -463,8 +468,15 @@ theorem matrixUnitOp_pointClass (r c i : Fin 12) :
           (twelvePointPt i)))) =
       if c = i then Pi.single r (1 : ℚ) else 0 := by
   rw [matrixUnitOp_apply]
-  rw [zeroCycleClass_point] -- AUDIT-6: contract lemma, defeq to the
-  -- `twelvePointHodgeData.cycleClass 0` view of the argument
+  -- WAVE 19 (pre-emptive, W1-D R2): the AUDIT-6 contract lemma's LHS is
+  -- stated over HodgeData's `def twelvePointPt` (stuck at instances
+  -- transparency) while this goal carries the FoldWord `abbrev
+  -- twelvePointPt` — bridge it with a `show … from` restatement at the
+  -- abbrev spelling (elaborator-level defeq on the from-term, syntactic
+  -- match on the rewrite).
+  rw [show twelvePointCohomologyIso (zeroCycleClass (codimensionPointCycle
+      twelvePointWorld.X 0 (twelvePointPt i))) = Pi.single i (1 : ℚ) from
+    zeroCycleClass_point i]
   funext k
   by_cases hk : k = r <;> by_cases hi : c = i <;>
     simp [hk, hi, Pi.single_apply]
@@ -493,7 +505,12 @@ theorem pointPairGeometry_realizes (r c : Fin 12) :
           (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r))) := by
       rw [matrixUnitOp_pointClass r c c]
       rw [if_pos rfl]
-      rw [zeroCycleClass_point]
+      -- WAVE 19 (pre-emptive, W1-D R2): same HodgeData `def`/FoldWord `abbrev`
+      -- `twelvePointPt` seam as matrixUnitOp_pointClass's proof — restate the
+      -- contract lemma at the abbrev spelling.
+      rw [show twelvePointCohomologyIso (zeroCycleClass (codimensionPointCycle
+          twelvePointWorld.X 0 (twelvePointPt r))) = Pi.single r (1 : ℚ) from
+        zeroCycleClass_point r]
     calc twelvePointHodgeData.cycleClass 0
         (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r))
         = twelvePointCohomologyIso.symm (twelvePointCohomologyIso
@@ -503,7 +520,14 @@ theorem pointPairGeometry_realizes (r c : Fin 12) :
       _ = twelvePointCohomologyIso.symm (twelvePointCohomologyIso
             (matrixUnitOp r c (zeroCycleClass
               (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c))))) :=
-          by rw [key]
+          by
+            rw [key]
+            -- WAVE 19 (audit F2, W3-B): after the rewrite the two sides
+            -- agree only by default-transparency defeq (the cycleClass-0
+            -- match-iota to zeroCycleClass); rw's auto-rfl runs at
+            -- reducible and leaves the step open — the explicit rfl
+            -- closes at default transparency.
+            rfl
       _ = matrixUnitOp r c (zeroCycleClass
             (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c))) :=
           LinearEquiv.symm_apply_apply _ _
@@ -629,12 +653,33 @@ theorem wordOp_pointClass (L : List (Fin 12 × Fin 12 × ℚ)) (i : Fin 12) :
   | cons d L ih =>
     have hword : lettersOf (d :: L) =
         (d.2.2, pointPairLetter d.1 d.2.1) :: lettersOf L := rfl
+    -- WAVE 19 (pre-emptive, W1-D R3): the word operator's field type spells
+    -- the fiber as `twelvePointHodgeData.analytification (2 * 0)` while the
+    -- iso-side lemmas (`cohomologyIso_add`, `cohomologyIso_smul`, and
+    -- `matrixUnitOp_pointClass` behind the old projection transport) are
+    -- typed at the 0 spelling — the def-projection and the unreduced `2 * 0`
+    -- are stuck at instances transparency, so the plain `rw`s cannot match.
+    -- Hoist the three equations as ground haves at the goal's own `(2 * 0)`
+    -- spelling; each application elaborates at default transparency and the
+    -- `rw` chain is purely syntactic.
+    have hiso : ∀ X Y : RationalSingularCohomology
+        twelvePointHodgeData.analytification (2 * 0),
+        twelvePointCohomologyIso (X + Y) =
+          twelvePointCohomologyIso X + twelvePointCohomologyIso Y :=
+      fun X Y => cohomologyIso_add X Y
+    have hisosmul : ∀ (t : ℚ) (X : RationalSingularCohomology
+        twelvePointHodgeData.analytification (2 * 0)),
+        twelvePointCohomologyIso (t • X) = t • twelvePointCohomologyIso X :=
+      fun t X => cohomologyIso_smul t X
+    have hletter : twelvePointCohomologyIso
+        ((pointPairLetter d.1 d.2.1).cohomologyOperator
+          (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
+            (twelvePointPt i)))) =
+        if d.2.1 = i then Pi.single d.1 (1 : ℚ) else 0 :=
+      matrixUnitOp_pointClass d.1 d.2.1 i
     rw [hword, realizedWordPair_cohomologyOperator_cons]
     rw [LinearMap.add_apply, LinearMap.smul_apply] -- AUDIT-8: apply lemmas
-    rw [cohomologyIso_add, cohomologyIso_smul]
-    rw [show (pointPairLetter d.1 d.2.1).cohomologyOperator =
-      matrixUnitOp d.1 d.2.1 from rfl]
-    rw [matrixUnitOp_pointClass]
+    rw [hiso, hisosmul, hletter]
     rw [ih]
     funext j
     simp only [List.map_cons, List.sum_cons]
@@ -668,9 +713,32 @@ theorem module_decomp (u : RationalSingularCohomology
       (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
         (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
           (twelvePointPt k)))) = twelvePointCohomologyIso u := by
-    rw [cohomologyIso_sum]
-    simp only [cohomologyIso_smul]
-    simp only [zeroCycleClass_point] -- AUDIT-6: contract lemma rewriting
+    -- WAVE 19 (pre-emptive, W1-D R2+R3): the summands live at the
+    -- `zeroCycleClass` codomain spelling `twelvePointAnalytification 0`
+    -- while `cohomologyIso_sum`/`cohomologyIso_smul` are stated at the
+    -- projection spelling `twelvePointHodgeData.analytification 0` (stuck
+    -- at instances transparency), and the AUDIT-6 contract lemma
+    -- additionally sits across the HodgeData `def`/FoldWord `abbrev`
+    -- `twelvePointPt` seam — hoist all three as ground haves at the
+    -- summands' own spelling.
+    have hsummap : twelvePointCohomologyIso
+        (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
+          (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
+            (twelvePointPt k)))) =
+        ∑ k : Fin 12, twelvePointCohomologyIso
+          ((twelvePointCohomologyIso u k) •
+            (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
+              (twelvePointPt k)))) :=
+      cohomologyIso_sum _ _
+    have hsmulmap : ∀ (t : ℚ) (X : RationalSingularCohomology
+        twelvePointAnalytification 0),
+        twelvePointCohomologyIso (t • X) = t • twelvePointCohomologyIso X :=
+      fun t X => cohomologyIso_smul t X
+    have hpt : ∀ k : Fin 12, twelvePointCohomologyIso (zeroCycleClass
+        (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt k))) =
+        Pi.single k (1 : ℚ) := fun k => zeroCycleClass_point k
+    rw [hsummap]
+    simp only [hsmulmap, hpt]
     funext j
     rw [Finset.sum_apply] -- AUDIT-8
     simp [Pi.single_apply]
@@ -691,10 +759,18 @@ theorem twelvePointFoldWord_op (u : RationalSingularCohomology
     twelvePointCohomologyIso
         ((realizedWordPair twelvePointFoldWord).cohomologyOperator u) =
       twelvePointFoldMatrix.mulVec (twelvePointCohomologyIso u) := by
-  rw [module_decomp u]
+  -- WAVE 19 (audit F1, W3-B): the old script's `rw [module_decomp u]`
+  -- rewrote `u` on BOTH sides of the goal, leaving the RHS's
+  -- `iso (∑ …)` never sum-pulled — the single `map_sum` fired inside the
+  -- LHS (`f := wordOp`), `foldWord_op_pointClass`'s pattern never
+  -- appeared on the un-pulled RHS, and `Finset.sum_apply` could not
+  -- match a coe-application.  The `conv_lhs` transport keeps the RHS
+  -- intact (`M.mulVec (iso u)` — no sum on that side to pull); the LHS
+  -- then runs module_decomp → map_sum → map_smul → pointClass exactly
+  -- as module_decomp's own proof does.
+  conv_lhs => rw [module_decomp u]
   rw [map_sum]
-  simp only [map_smul]
-  simp only [foldWord_op_pointClass]
+  simp only [map_smul, foldWord_op_pointClass]
   funext j
   rw [Finset.sum_apply]
   simp [Matrix.mulVec, dotProduct, mul_comm] -- AUDIT-8: matrix API

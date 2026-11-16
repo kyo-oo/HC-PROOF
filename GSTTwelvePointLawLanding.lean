@@ -149,23 +149,28 @@ theorem twelvePointSeed_coords :
   have hseed : twelvePointSeedCycle =
       codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 0) +
         codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 1) := rfl
-  -- W2-D D3 (wave 15): `zeroCycleClass_point` is stated over the constant
-  -- `zeroCycleClass` (HodgeData:208); after the two `map_add`s the goal
-  -- spells the projection `twelvePointHodgeData.cycleClass 0`.  The
-  -- dead-export bridge `twelvePointHodgeData_cycleClass_zero`
-  -- (HodgeData:306, `= zeroCycleClass` by rfl) rewrites the projection
-  -- syntactically; the two point-class rewrites are then fed through
-  -- `show … from` bridges so their LHS is elaborated in THIS file's
-  -- `twelvePointPt` scope (elaborator-level defeq on the from-term,
-  -- syntactic match on the rewrite — no kabstract key mismatch across
-  -- the HodgeData/LawLanding `twelvePointPt` def/abbrev seam).
-  rw [hseed, map_add, map_add, twelvePointHodgeData_cycleClass_zero]
-  rw [show twelvePointCohomologyIso (zeroCycleClass
-        (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 0))) =
-      Pi.single 0 (1 : ℚ) from zeroCycleClass_point 0,
-    show twelvePointCohomologyIso (zeroCycleClass
-        (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt 1))) =
-      Pi.single 1 (1 : ℚ) from zeroCycleClass_point 1]
+  -- WAVE 19 (pre-emptive, W1-D R2+R3): supersedes the wave-15 bridge
+  -- design.  The seed's class carries the cycleClass field spelling
+  -- `twelvePointHodgeData.analytification (2 * 0)`; the iso-side rewrites
+  -- are stuck against it at instances transparency — the second `map_add`'s
+  -- pattern pins the iso's `twelvePointAnalytification 0` domain, and after
+  -- the `twelvePointHodgeData_cycleClass_zero` projection transport the
+  -- point-class application would still sit at the `(2 * 0)`-spelled
+  -- functor while `zeroCycleClass_point` is stated at the `zeroCycleClass`
+  -- codomain (plus the HodgeData `def`/LawLanding `abbrev` `twelvePointPt`
+  -- seam).  Hoist both facts as ground haves at the fiber's own `(2 * 0)`
+  -- spelling; elaborator-level defeq on the from-terms, syntactic match on
+  -- every subsequent rewrite.
+  have hiso : ∀ X Y : RationalSingularCohomology
+      twelvePointHodgeData.analytification (2 * 0),
+      twelvePointCohomologyIso (X + Y) =
+        twelvePointCohomologyIso X + twelvePointCohomologyIso Y :=
+    fun X Y => cohomologyIso_add X Y
+  have hpt : ∀ i : Fin 12, twelvePointCohomologyIso
+      (twelvePointHodgeData.cycleClass 0
+        (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i))) =
+      Pi.single i (1 : ℚ) := fun i => zeroCycleClass_point i
+  rw [hseed, map_add, hiso, hpt 0, hpt 1]
   -- W2-D D1 (wave 15): the ℚ-valued cell goals are closed by the
   -- corpus-green `simp […] <;> norm_num` idiom (the exact green twin of
   -- this computation is Face 2's `coordSeed_eq_Cvec0`:
@@ -186,7 +191,15 @@ theorem twelvePointSeed_class_ne_zero :
     twelvePointHodgeData.cycleClass 0 twelvePointSeedCycle ≠ 0 := by
   intro h0
   have hcoords := twelvePointSeed_coords
-  rw [h0, map_zero] at hcoords
+  -- WAVE 19 (pre-emptive, W1-D R3): `map_zero`'s pattern pins the iso's
+  -- `twelvePointAnalytification 0` domain while the zero h0 supplies is at
+  -- the cycleClass field spelling `twelvePointHodgeData.analytification
+  -- (2 * 0)` (stuck at instances transparency) — hoist the zero image as a
+  -- ground have at the fiber's own spelling; the rewrite is then syntactic.
+  have hz : twelvePointCohomologyIso
+      (0 : RationalSingularCohomology twelvePointHodgeData.analytification (2 * 0)) = 0 :=
+    map_zero twelvePointCohomologyIso.toLinearMap
+  rw [h0, hz] at hcoords
   exact one_ne_zero
     (show (1 : ℚ) = (0 : ℚ) from congrFun hcoords.symm (0 : Fin 12))
 
