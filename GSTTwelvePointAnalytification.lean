@@ -402,12 +402,17 @@ theorem pointSection_injective :
   have hv : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) =
       twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) := by rw [h2]
   have hli : twelvePointEvalRingHom i (Pi.single i (1 : ℂ)) = 1 := by
-    -- AUDIT-10: the defeq `twelvePointEvalRingHom i g ≡ g i` exposed by a
-    -- `show`, so the pinned `Pi.single_eq_same` unifies against a clean
-    -- function application (CI 43800560334 errors at 379:4/379:24 — the
-    -- bare term elaborates the lemma's implicit `π` against the
-    -- ring-hom head first).
-    show (Pi.single i (1 : ℂ)) i = 1
+    -- AUDIT-10 (wave 14): the defeq `twelvePointEvalRingHom i g ≡ g i` exposed
+    -- by a `show` whose `Pi.single` dependent family is pinned by an explicit
+    -- type ascription — the corpus's own battle-tested idiom (the ascription
+    -- sites at :137/:141/:144/:148/:228/:241/:252 all elaborated clean in run
+    -- 43832523181).  The bare `show (Pi.single i (1 : ℂ)) i = 1` leaves the
+    -- family a bare metavariable `?m.76` with no expected type, and `1 : ℂ`
+    -- collides with `?m.76 i` (CI 43832523181, error at 410:22); the pinned
+    -- `Pi.single_eq_same` (Algebra/Notation/Pi/Basic.lean:32 at the pin, args
+    -- `(i : ι) (x : M i)` both explicit) then unifies against the clean
+    -- application.
+    show ((Pi.single i (1 : ℂ) : Fin 12 → ℂ)) i = 1
     exact Pi.single_eq_same i (1 : ℂ)
   have hrj : twelvePointEvalRingHom j (Pi.single i (1 : ℂ)) =
       (if j = i then (1 : ℂ) else 0) :=
