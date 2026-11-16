@@ -274,11 +274,13 @@ private theorem chartRingMap_le (j : Fin 2) :
 
 /-- The ring-level chart map at the variable `X j`: the `IsLocalization.map`
 composite inside `Proj.toBasicOpenOfGlobalSections` (pinned
-ProjectiveSpectrum/Basic.lean:369), carrying a form to its away-localized
-section.  Surjectivity of this ring map is the Lagrange interpolation core of
-the embedding. -/
+ProjectiveSpectrum/Basic.lean:369-377), from the degree-`0` homogeneous
+localization `HomogeneousLocalization.Away grading (MvPolynomial.X j)` (the
+`D₊(X j)` chart ring — the domain forced by `basicOpenIsoSpec`'s target) to
+the away-localization of its section.  Surjectivity of this ring map is the
+Lagrange interpolation core of the embedding. -/
 private noncomputable def chartRingMap (j : Fin 2) :
-    MvPolynomial (Fin 2) ℂ →+*
+    HomogeneousLocalization.Away grading (MvPolynomial.X j) →+*
       Localization.Away (sectionRingHom (MvPolynomial.X j)) :=
   RingHom.comp
     (IsLocalization.map
@@ -289,25 +291,36 @@ private noncomputable def chartRingMap (j : Fin 2) :
       (T := Submonoid.powers (sectionRingHom (MvPolynomial.X j)))
       (Q := Localization.Away (sectionRingHom (MvPolynomial.X j)))
       sectionRingHom (chartRingMap_le j))
-    (algebraMap (MvPolynomial (Fin 2) ℂ)
+    (algebraMap (HomogeneousLocalization.Away grading (MvPolynomial.X j))
       (Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ)))
   -- AUDIT: term-mode transcription of the pinned `toBasicOpenOfGlobalSections`
-  -- composite (ProjectiveSpectrum/Basic.lean:369-377): the
-  -- `IsLocalization.map (M := .powers t) (T := .powers x) _ f h` ring hom
-  -- composed after `algebraMap _ (Localization.Away t)`.  All of `R S M P T Q`
-  -- are given so every instance resolves against a concrete type, and each
-  -- `MvPolynomial.X j` feeding an `Away`/`powers` head carries a type
-  -- ascription pinning the coefficient ring to `ℂ`: a bare
-  -- `Localization.Away (MvPolynomial.X j)` leaves `X`'s implicit
-  -- `CommSemiring R` stuck on a metavariable (CI 43767848609 errors 1-2).
+  -- composite (ProjectiveSpectrum/Basic.lean:369-377), where the FIRST-applied
+  -- factor is the `homogeneousLocalizationAlgebra` algebraMap
+  -- (definitionally `HomogeneousLocalization.val`,
+  -- GradedAlgebra/HomogeneousLocalization.lean:477-490) and the second is
+  -- `IsLocalization.map` (Localization/Defs.lean:604).  The domain is the
+  -- degree-0 homogeneous localization — CI run 43778820813 error 2 exposed
+  -- the true composite (every earlier wave transcribed the wrong source
+  -- ring).  All of `R S M P T Q` are given so every instance resolves
+  -- against a concrete type, and each `MvPolynomial.X j` feeding an
+  -- `Away`/`powers` head carries a type ascription pinning the coefficient
+  -- ring to `ℂ`.
 
-/-- The chart ring map on a plain form is the localized section. -/
-private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
-    chartRingMap j p =
-      algebraMap (Γ(twelvePointScheme, ⊤))
+/-- The chart ring map on a homogeneous fraction `p / (X j)^k` is the
+transported `mk'` fraction.  The proof is Mathlib's own computation spine of
+this exact composite (ProjectiveSpectrum/Basic.lean:481-484): the away
+`algebraMap` forgets the same-degree structure (`val`), `val_mk` exposes the
+plain `Localization.mk` fraction, `mk_eq_mk'` rewrites it to `mk'` form, and
+`map_mk'` transports numerator and denominator. -/
+private theorem chartRingMap_apply (j : Fin 2) {d : ℕ}
+    (hXj : MvPolynomial.X j ∈ grading d) (k : ℕ)
+    (p : MvPolynomial (Fin 2) ℂ) (hp : p ∈ grading (k • d)) :
+    chartRingMap j (HomogeneousLocalization.Away.mk grading hXj k p hp) =
+      IsLocalization.mk'
         (Localization.Away (sectionRingHom (MvPolynomial.X j)))
-        (sectionRingHom p) := by
-  have h1 : chartRingMap j p =
+        (sectionRingHom p)
+        ⟨sectionRingHom (MvPolynomial.X j) ^ k, Submonoid.mem_powers _⟩ := by
+  have h1 : chartRingMap j (HomogeneousLocalization.Away.mk grading hXj k p hp) =
       (IsLocalization.map
         (R := MvPolynomial (Fin 2) ℂ)
         (S := Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ))
@@ -316,8 +329,9 @@ private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
         (T := Submonoid.powers (sectionRingHom (MvPolynomial.X j)))
         (Q := Localization.Away (sectionRingHom (MvPolynomial.X j)))
         sectionRingHom (chartRingMap_le j))
-        ((algebraMap (MvPolynomial (Fin 2) ℂ)
-          (Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ))) p) := by
+        ((algebraMap (HomogeneousLocalization.Away grading (MvPolynomial.X j))
+          (Localization.Away (MvPolynomial.X j : MvPolynomial (Fin 2) ℂ)))
+          (HomogeneousLocalization.Away.mk grading hXj k p hp)) := by
     -- the definition IS this composite: `RingHom.comp` is built with
     -- `toFun x := g (f x)` (`RingHom.comp_apply` is `rfl`), so the
     -- unfolding is definitional.
@@ -325,11 +339,16 @@ private theorem chartRingMap_apply (j : Fin 2) (p : MvPolynomial (Fin 2) ℂ) :
     | rfl
     | (unfold chartRingMap; rfl)
     | (simp only [chartRingMap]; rfl)
-  rw [h1, IsLocalization.map_eq]
-  -- AUDIT: `IsLocalization.map_eq` (Localization/Defs.lean:613): the image
-  -- of an `algebraMap`-element is the `algebraMap` of the image; the
-  -- composite is exposed by a definitional `rfl` (the two side-condition
-  -- proofs agree by proof irrelevance).
+  rw [h1, HomogeneousLocalization.algebraMap_apply,
+    HomogeneousLocalization.Away.val_mk,
+    Localization.mk_eq_mk'_apply, IsLocalization.map_mk',
+    Subtype.coe_mk, map_pow]
+  rfl
+  -- AUDIT: the four-step spine is pinned verbatim from Mathlib's own
+  -- computation of this composite (ProjectiveSpectrum/Basic.lean:481-484);
+  -- the two `mk'`-denominator membership proofs agree by proof irrelevance
+  -- (the final `rfl`), and `map_pow` normalizes the transported denominator
+  -- `sectionRingHom ((X j)^k)` to `(sectionRingHom (X j))^k`.
 
 /-- Surjectivity of the `ΓSpecIso` inverse transport: every global section
 of the twelve-point scheme is the transport of a vector. -/
@@ -360,13 +379,12 @@ private theorem gammaInv_injective :
 /-- **The chart ring map is surjective — the Lagrange core.**  Every element
 of the away-localization is a fraction `mk' y (f (X j))^N`
 (`IsLocalization.exists_mk'_eq`, Localization/Defs.lean:305; the power
-extraction is `Submonoid.mem_powers_iff`, Membership.lean:322).  On chart
-`j = 1` the section of `X₁` is the unit, so the fraction is the plain section
-and the interpolating form of `chart_core_one` hits it.  On chart `j = 0` the
-`mk'`-cancellation multiplier is the cross-multiplied identity of the
-interpolating form at the eleven nonzero nodes (chart `k = 1`:
-`p(v) * v^(N+1) = y * v` holds at every node — at node `0` both sides
-vanish, at the others it is the cleared Lagrange identity). -/
+extraction is `Submonoid.mem_powers_iff`).  On chart `j = 0` the cleared
+Lagrange identity of `chart_core_zero` (`p(v) · v^N = y · v^M` pointwise,
+with `p` homogeneous of degree `M`) supplies the numerator, the homogeneous
+fraction `p / X₀^M` the preimage, and one more factor of `v` the
+`mk'`-clearing multiplier.  On chart `j = 1` the section of `X₁` is the
+unit, so the interpolating form of `chart_core_one` is the preimage. -/
 private theorem chartRingMap_surjective (j : Fin 2) :
     Function.Surjective (chartRingMap j) := by
   -- The fraction decomposition is obtained at GENERIC `j` (no embedded
@@ -382,87 +400,88 @@ private theorem chartRingMap_surjective (j : Fin 2) :
   obtain ⟨y', hy'⟩ := gammaInv_surjective y
   by_cases hj : j = 0
   · subst hj
-    -- chart `j = 0`: the section of `X₀` is the node-value vector.
-    -- the cleared Lagrange interpolation at the nonzero nodes
-    let w : Fin 12 → ℂ := fun i =>
-      if i = 0 then 0 else y' i / (nodeValues i) ^ N
-    obtain ⟨q, hqdeg, hqeval⟩ := exists_interpolating w
-    obtain ⟨p, hp, hpeval⟩ := homogenize_chart_eval 11 q hqdeg
-    have hpw : ∀ i : Fin 12, evalRingHom12 p i = w i := by
-      intro i
-      rw [show evalRingHom12 p = fun i => q.eval (nodeValues i) from hpeval]
-      exact hqeval i
-    -- the pointwise cancellation identity
-    have hpt : ∀ i : Fin 12,
-        evalRingHom12 p i * (nodeValues i) ^ (N + 1) = y' i * nodeValues i := by
-      intro i
-      rw [hpw i]
-      by_cases h0 : i = 0
-      · subst h0
-        simp [nodeValues, w]
-      · rw [show w i = y' i / (nodeValues i) ^ N from if_neg h0]
-        have hvne : (nodeValues i) ^ N ≠ 0 := by
-          have hv0 : nodeValues i ≠ 0 := by
-            intro hc
-            exact h0 (Fin.ext (by
-              simpa [nodeValues] using hc))
-          exact pow_ne_zero _ hv0
-        field_simp
-        ring
-    -- the vector identity, lifted through the transport to the section ring
-    have hvec : evalRingHom12 p * nodeValues ^ (N + 1) = y' * nodeValues := by
+    -- chart `j = 0`: the cleared Lagrange identity at all twelve nodes.
+    obtain ⟨M, p, hp, hpt⟩ := chart_core_zero y' N
+    have hXj : MvPolynomial.X 0 ∈ grading 1 := by
+      rw [MvPolynomial.mem_homogeneousSubmodule]
+      exact MvPolynomial.isHomogeneous_X ℂ 0
+    have hpnsm : p ∈ grading (M • 1) := by rwa [nsmul_one]
+    -- the vector identity, one node-value higher than `hpt`
+    have hvec : evalRingHom12 p * nodeValues ^ (N + 1) =
+        y' * nodeValues ^ (M + 1) := by
       funext i
-      simpa [Pi.mul_apply] using hpt i
+      simp only [Pi.mul_apply, Pi.pow_apply]
+      rw [pow_succ, ← mul_assoc, pow_succ, ← mul_assoc, hpt i]
+    -- the section-level identity (the `ΓSpecIso` transport)
     have hΓ : sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ (N + 1) =
-        y * sectionRingHom (MvPolynomial.X 0) := by
+        y * sectionRingHom (MvPolynomial.X 0) ^ (M + 1) := by
       have e1 : sectionRingHom p =
           (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
             (evalRingHom12 p) := rfl
       have e2 : sectionRingHom (MvPolynomial.X 0) =
           (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
             (evalRingHom12 (MvPolynomial.X 0)) := rfl
-      rw [e1, e2, eval_X_zero, ← map_pow, ← map_mul, ← hy', ← map_mul]
+      rw [e1, e2, eval_X_zero, ← map_pow, ← map_mul, ← hy', ← map_pow, ← map_mul]
       exact congrArg _ hvec
-    refine ⟨p, ?_⟩
-    refine ((IsLocalization.mk'_eq_iff_eq_mul
-      (x := y) (y := ⟨sectionRingHom (MvPolynomial.X 0) ^ N, ht⟩)
-      (z := chartRingMap _ p)).mpr ?_).symm
-    rw [chartRingMap_apply, Subtype.coe_mk, ← map_mul]
+    refine ⟨HomogeneousLocalization.Away.mk grading hXj M p hpnsm, ?_⟩
+    rw [chartRingMap_apply]
+    refine (IsLocalization.mk'_eq_iff_eq'
+      (S := Localization.Away (sectionRingHom (MvPolynomial.X 0)))
+      (M := Submonoid.powers (sectionRingHom (MvPolynomial.X 0)))).mpr ?_
+    simp only [Subtype.coe_mk]
     refine (IsLocalization.eq_iff_exists
       (M := Submonoid.powers (sectionRingHom (MvPolynomial.X 0)))
       (S := Localization.Away (sectionRingHom (MvPolynomial.X 0)))
-      (x := y) (y := sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ N)).mpr
+      (x := sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ N)
+      (y := y * sectionRingHom (MvPolynomial.X 0) ^ M)).mpr
       ⟨⟨sectionRingHom (MvPolynomial.X 0),
         Submonoid.mem_powers _⟩, ?_⟩
     simp only [Subtype.coe_mk]
     rw [show sectionRingHom (MvPolynomial.X 0) * (sectionRingHom p *
         sectionRingHom (MvPolynomial.X 0) ^ N) =
       sectionRingHom p * sectionRingHom (MvPolynomial.X 0) ^ (N + 1) from by ring,
-      mul_comm]
-    exact hΓ.symm
+      show sectionRingHom (MvPolynomial.X 0) * (y *
+        sectionRingHom (MvPolynomial.X 0) ^ M) =
+      y * sectionRingHom (MvPolynomial.X 0) ^ (M + 1) from by ring]
+    exact hΓ
   · have hj1 : j = 1 := Fin.ext (by
       have h := j.isLt
       have hne : j.val ≠ 0 := fun h0 => hj (Fin.ext h0)
       omega)
     subst hj1
     -- chart `j = 1`: the section of `X₁` is the unit.
-    obtain ⟨N', p, hp, hpeval⟩ := chart_core_one y'
+    obtain ⟨M, p, hp, hpeval⟩ := chart_core_one y'
+    have hXj : MvPolynomial.X 1 ∈ grading 1 := by
+      rw [MvPolynomial.mem_homogeneousSubmodule]
+      exact MvPolynomial.isHomogeneous_X ℂ 1
+    have hpnsm : p ∈ grading (M • 1) := by rwa [nsmul_one]
     have hΓ : sectionRingHom p = y := by
       show (Scheme.ΓSpecIso (CommRingCat.of (Fin 12 → ℂ))).inv.hom
           (evalRingHom12 p) = y
       rw [← hy']
       exact congrArg _ (funext hpeval)
-    refine ⟨p, ?_⟩
-    refine ((IsLocalization.mk'_eq_iff_eq_mul
-      (x := y) (y := ⟨sectionRingHom (MvPolynomial.X 1) ^ N, ht⟩)
-      (z := chartRingMap _ p)).mpr ?_).symm
-    rw [chartRingMap_apply, hΓ, Subtype.coe_mk, map_pow, section_X_one,
-      map_one, one_pow, mul_one]
-  -- AUDIT: the `mk'`-bookkeeping is the pinned
-  -- `IsLocalization.mk'_eq_iff_eq_mul` (Localization/Defs.lean:287) with
-  -- the localization-equality criterion `IsLocalization.eq_iff_exists`
-  -- (Localization/Defs.lean:165); the multiplier is a single power of the
-  -- chart section (`Submonoid.mem_powers`, Membership.lean:316).
+    refine ⟨HomogeneousLocalization.Away.mk grading hXj M p hpnsm, ?_⟩
+    rw [chartRingMap_apply, section_X_one, one_pow, one_pow]
+    refine (IsLocalization.mk'_eq_iff_eq'
+      (S := Localization.Away (sectionRingHom (MvPolynomial.X 1)))
+      (M := Submonoid.powers (sectionRingHom (MvPolynomial.X 1)))).mpr ?_
+    simp only [Subtype.coe_mk, mul_one]
+    refine (IsLocalization.eq_iff_exists
+      (M := Submonoid.powers (sectionRingHom (MvPolynomial.X 1)))
+      (S := Localization.Away (sectionRingHom (MvPolynomial.X 1)))
+      (x := sectionRingHom p) (y := y)).mpr
+      ⟨⟨sectionRingHom (MvPolynomial.X 1),
+        Submonoid.mem_powers _⟩, ?_⟩
+    simp only [Subtype.coe_mk, section_X_one, one_mul, mul_one]
+    exact hΓ
+  -- AUDIT: the `mk'`-bookkeeping rides the pinned
+  -- `IsLocalization.mk'_eq_iff_eq'` (Localization/Defs.lean:326) with the
+  -- localization-equality criterion `IsLocalization.eq_iff_exists`
+  -- (Localization/Defs.lean:165); the clearing multiplier is a single power
+  -- of the chart section (`Submonoid.mem_powers`).  The j=0 branch needs
+  -- the multiplier `f₀` (node 0 makes `f₀` a zero divisor — the identity is
+  -- the CLEARED Lagrange form `chart_core_zero`, never a division); the j=1
+  -- branch's multiplier is the unit.
 
 /-- Per-chart closed immersion: restricted to each basic open `D+(X_j)`, the
 twelve-point embedding is a closed immersion, because the chart ring map is
@@ -527,8 +546,15 @@ private theorem chart_closed (j : Fin 2) :
   haveI hΓ : IsIso (twelvePointScheme.toSpecΓ) :=
     @IsAffine.affine twelvePointScheme haff
   haveI hΓU : IsIso (twelvePointScheme.toSpecΓ ∣_
-      PrimeSpectrum.basicOpen (sectionRingHom (MvPolynomial.X j))) :=
-    inferInstance
+      PrimeSpectrum.basicOpen (sectionRingHom (MvPolynomial.X j))) := by
+    -- Mathlib's own instance body (Restrict.lean:639-640): unfold the
+    -- restriction to its pullback composite and let instance synthesis find
+    -- the iso structure there — the direct `inferInstance` on the
+    -- restriction form gets stuck at the `Opens`-type seam (CI
+    -- 43778820813 error 1), while the post-`delta` search works on the
+    -- already-elaborated composite.
+    delta AlgebraicGeometry.morphismRestrict
+    infer_instance
   refine ((MorphismProperty.cancel_left_of_respectsIso
     (P := @IsClosedImmersion) _ _)).mpr ?_
   refine ((MorphismProperty.cancel_left_of_respectsIso
