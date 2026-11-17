@@ -113,49 +113,36 @@ theorem comap_evalRingHom_default (i : Fin 12) :
   -- `Unique (PrimeSpectrum ℂ)` instance).
   have hdfl : ∀ x y : PrimeSpectrum ℂ, x = y :=
     fun _ _ => Subsingleton.elim _ _
-  -- WAVE 29 (run-28 :127 receipt): the U1 chain is exhausted — the rw list
-  -- (F1) and the simp-only normalizer (F2) both died on the
-  -- twelvePointScheme-abbrev vs PrimeSpectrum spelling seam (the unfolded
-  -- chain's `.trans` application is not even type-correct at implicit
-  -- transparency).  The W8 U1-F3 mechanism (the no-re-roll law's next in
-  -- chain): `PrimeSpectrum.ext` reduces the point equation to an IDEAL
-  -- equation (Defs.lean:33, the one-hypothesis form Mathlib itself rides at
-  -- :56 via PartialOrder.lift); the equiv chain is then evaluated INSIDE the
-  -- asIdeal argument, and the terminal is one constructor-projection iota +
-  -- the Subsingleton transport — no `Equiv.symm` delta, no coe delta.
-  apply PrimeSpectrum.ext
-  -- WAVE 31 (run-30 :133 receipt): the show-based re-spelling died on the
-  -- default-instance seam -- the goal's own default elaborates via
-  -- `Scheme.instUniqueCarrierCarrierCommRingCatSpecOf` while
-  -- `(default : PrimeSpectrum ℂ)` synthesizes
-  -- `PrimeSpectrum.unique_of_ringKrullDimLE_zero`, and the two `default`
-  -- terms are not definitionally equal, so the `show` pattern can never
-  -- match (the full-error receipt).  THE RESTRUCTURE (no re-roll of the dead
-  -- show mechanism): the equiv side is rewritten INTO comap form inside a
-  -- `have hrw` whose own left-hand side is clean -- no default inside any
-  -- comap on the equation's left -- so the battle-tested seven-rewrite chain
-  -- runs on a well-typed motive; the chain's output point and the
-  -- `PrimeSpectrum ℂ`-spelled default are then killed by the one-point
-  -- Subsingleton INSIDE the have.  The main goal's own Spec-typed default is
-  -- never re-spelled and never enters any rewrite motive; the final
-  -- transport is pure term-mode congrArg on the one-point Subsingleton.
-  have hrw : (twelvePointEquiv i).1 = PrimeSpectrum.comap
+  -- WAVE 32 (run-31 :146 receipt): the rewrite-chain family is DEAD — the
+  -- no-re-roll law fires.  Three waves died on successive seams of the same
+  -- mechanism (run-29: the LHS Spec-default at implicit; run-30: the show's
+  -- default-instance mismatch; run-31: the goal-level type parameter forced
+  -- to the PrimeSpectrum spelling, making the carrier-typed equiv chain
+  -- ill-typed at implicit — the full-error receipt).  THE ACTUAL TRUTH: any
+  -- equation mixing carrier-spelled and PrimeSpectrum-spelled terms is
+  -- ill-typed at implicit transparency, so NO rewrite can ever cross the
+  -- seam — the crossing must happen in TERM MODE at default transparency.
+  -- THE MECHANISM: the equiv-point's comap-nature is DEFINITIONAL — the
+  -- equiv was BUILT from the sigmaToPi-comap factorization
+  -- (WorldCarrier:709: (sigmaUnique.symm.trans sigmaToPiHomeo.toEquiv).trans
+  -- (subtypeUnivEquiv _).symm), so the bridge equation below is provable by
+  -- the definitional iota-chain (rfl) with simp-normalization as the second
+  -- shot; the statement's own mixed equation is then closed by ONE term-mode
+  -- Eq.trans — the comap-congruence of the one-point Subsingleton composed
+  -- with the bridge — no rewrite ever touches the mixed statement, no
+  -- motive is ever built, the sigmaUnique section's default and the
+  -- statement's default are never instance-compared (Subsingleton kills
+  -- them without looking).
+  have h1 : (twelvePointEquiv i).1 = PrimeSpectrum.comap
       (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i)
-      (default : PrimeSpectrum ℂ) := by
-    unfold twelvePointEquiv
-    rw [Equiv.trans_apply, Equiv.trans_apply, Equiv.sigmaUnique_symm_apply,
-      Homeomorph.coe_toEquiv, PrimeSpectrum.sigmaToPiHomeo_apply,
-      PrimeSpectrum.sigmaToPi_apply, Equiv.subtypeUnivEquiv_symm_apply]
-    exact congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
-      (hdfl _ _)
-  rw [hrw]
-  -- WAVE-31 audit fix: after `PrimeSpectrum.ext` the goal is the IDEAL
-  -- equation — the transport must wrap `asIdeal` on the outside (the
-  -- original W8 terminal's own shape); the bare point-level congrArg
-  -- produces the wrong equation type.
-  exact congrArg (fun P : PrimeSpectrum (Fin 12 → ℂ) => P.asIdeal)
-    (congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
-      (hdfl _ _))
+      ((Equiv.sigmaUnique (Fin 12) (fun _ => PrimeSpectrum ℂ)).symm i).2 := by
+    first
+    | rfl
+    | simp only [Equiv.trans_apply, Equiv.sigmaUnique_symm_apply,
+        Homeomorph.coe_toEquiv, PrimeSpectrum.sigmaToPiHomeo_apply,
+        PrimeSpectrum.sigmaToPi_apply, Equiv.subtypeUnivEquiv_symm_apply]
+  exact (congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
+    (hdfl _ _)).trans h1.symm
 
 /-! ## The letter geometry: the point-pair subscheme -/
 
