@@ -73,7 +73,7 @@ acceptance test, not the Hodge conjecture.  No `sorry`, no new axioms; the
 GitHub CI lane `gst-twelve-point-native-world` owns the kernel check.
 -/
 
-set_option maxHeartbeats 100000000
+set_option maxHeartbeats 200000000
 set_option maxRecDepth 1000000
 
 noncomputable section
@@ -248,10 +248,15 @@ theorem twelvePointFoldMatrix_eq_Twave :
   -- reduce the ℚ-valued `List.sum` arithmetic at the pin; simp's
   -- ite/decide simprocs evaluate the Fin-literal guards and `norm_num`
   -- closes the rational sums.
-  Matrix.ext fun r c => by
-    fin_cases r <;> fin_cases c <;>
-      simp [twelvePointFoldMatrix, Twave, foldWordData] <;>
-      norm_num
+  -- WAVE 33 (run-32 :251 receipt): `Matrix.ext fun r c => by …` is a TERM
+  -- in tactic position — "unknown tactic"; the refine-form fixes it
+  -- (Matrix.ext is the @[ext]-registered lemma, applied with a fun
+  -- hypothesis).
+  refine Matrix.ext fun r c => ?_
+  fin_cases r <;> fin_cases c <;>
+    simp [twelvePointFoldMatrix, Twave, foldWordData, N12_val, eCell,
+      shuffleCell, mirrorCell, cmSign, ownerSource] <;>
+    norm_num
 
 /-- **THE ORBIT IS THE KR YLOV TABLE.**  `iso (hodgeOrbit n) = C n` for every
 `n`: the orbit starts at the seed (`C 0 = coordSeed`) and every step is one
@@ -301,6 +306,14 @@ theorem twelvePoint_orbitUnderlying_span :
   have key : twelvePointCohomologyIso.symm (twelvePointCohomologyIso u) ∈
       Submodule.span ℚ
         (Set.range fun n : Nat => (twelvePointCertificate.hodgeOrbit n).1) := by
+    -- WAVE 33 (run-32 :312 receipt): the postposed `Module ℚ
+    -- (RationalSingularCohomology twelvePointAnalytification 0)`
+    -- synthesis died inside `mem_span_of_mem`'s elaboration — the
+    -- Stage-2F instance (GeometricRealizationStage2F.lean:110) fires on
+    -- the def-spelled goal; provide it locally so every later synthesis
+    -- in the region finds it first.
+    haveI hmod : Module ℚ (RationalSingularCohomology twelvePointAnalytification 0) :=
+      inferInstance
     refine Submodule.span_induction ?_ ?_ ?_ ?_ hEu
     · intro x hx
       rcases hx with ⟨n, rfl⟩
@@ -378,13 +391,17 @@ weight — a genuine typed `GSTHypothesisData` over the native cycle module
 and the rational singular cohomology whose complete GST hypothesis holds
 with the GENUINE rational Hodge fiber of that weight.
 
-AUDIT (contract): the statement is spelled with `twelvePointAnalytification`,
-definitional for `twelvePointHodgeData.analytification` upstream; the bridge
-term below checks through that defeq. -/
+AUDIT (contract): WAVE 33 (run-32 :375 receipt) — the statement is now spelled
+with `twelvePointHodgeData.analytification`, the bridge `gst_FS_of_native_law`'s
+OWN result spelling — the previous def-spelled statement forced a projection-vs-
+def isDefEq that burned the full 100M-heartbeat budget; the respell eliminates
+the comparison entirely (the term provides the type syntactically).  The master
+package's third conjunct is respelled identically so the ⟨…, twelvePoint_FS, …⟩
+component also checks syntactically. -/
 theorem twelvePoint_FS : ∀ p : Nat,
     ∃ D : GSTHypothesisComplete.GSTHypothesisData
         (codimensionCycles twelvePointWorld.X p)
-        (RationalSingularCohomology twelvePointAnalytification (2 * p)),
+        (RationalSingularCohomology twelvePointHodgeData.analytification (2 * p)),
       GSTHypothesisComplete.GSTHypothesisComplete D ∧
       D.hodgeFiber = rationalHodgeSubspace (twelvePointHodgeData.hodgeBigrading p) :=
   gst_FS_of_native_law twelvePoint_law
@@ -421,7 +438,7 @@ theorem the_twelve_point_native_world_package :
     (∀ p : Nat,
       ∃ D : GSTHypothesisComplete.GSTHypothesisData
         (codimensionCycles twelvePointWorld.X p)
-        (RationalSingularCohomology twelvePointAnalytification (2 * p)),
+        (RationalSingularCohomology twelvePointHodgeData.analytification (2 * p)),
         GSTHypothesisComplete.GSTHypothesisComplete D ∧
         D.hodgeFiber = rationalHodgeSubspace (twelvePointHodgeData.hodgeBigrading p)) ∧
     Subsingleton (ClassicalHodgeFiber twelvePointWorld twelvePointHodgeData 1) ∧
