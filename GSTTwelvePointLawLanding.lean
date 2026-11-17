@@ -302,8 +302,8 @@ these names is absent in the pinned Mathlib, the generic `map_zero` /
 replacement. -/
 theorem twelvePoint_orbitUnderlying_span :
     Submodule.span ℚ
-      (Set.range fun n : Nat => ((twelvePointCertificate.hodgeOrbit n).1 :
-        RationalSingularCohomology twelvePointAnalytification 0)) = ⊤ := by
+      (Set.range fun n : Nat => @id (RationalSingularCohomology
+        twelvePointAnalytification 0) (twelvePointCertificate.hodgeOrbit n).1) = ⊤ := by
   apply top_unique
   intro u _
   have hEu : twelvePointCohomologyIso u ∈ Submodule.span ℚ (Set.range C) := by
@@ -338,8 +338,8 @@ theorem twelvePoint_orbitUnderlying_span :
   -- carried three latent corrupted lines `rw ap_zero]`/`rw ap_add]`/
   -- `rw ap_smul]` — a wave-20-era edit casualty, never exposed because
   -- the block always died above them — deleted with the block.)
-  have himg : Set.range (fun n : Nat => ((twelvePointCertificate.hodgeOrbit n).1 :
-        RationalSingularCohomology twelvePointAnalytification 0)) =
+  have himg : Set.range (fun n : Nat => @id (RationalSingularCohomology
+          twelvePointAnalytification 0) (twelvePointCertificate.hodgeOrbit n).1) =
       twelvePointCohomologyIso.symm.toLinearMap '' Set.range C := by
     ext y
     constructor
