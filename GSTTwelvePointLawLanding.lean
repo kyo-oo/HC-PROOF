@@ -338,7 +338,7 @@ theorem twelvePoint_orbitUnderlying_span :
   -- `rw ap_smul]` — a wave-20-era edit casualty, never exposed because
   -- the block always died above them — deleted with the block.)
   have himg : Set.range (fun n : Nat => (twelvePointCertificate.hodgeOrbit n).1) =
-      (twelvePointCohomologyIso.symm : (Fin 12 → ℚ) →ₗ[ℚ] _) '' Set.range C := by
+      twelvePointCohomologyIso.symm.toLinearMap '' Set.range C := by
     ext y
     constructor
     · rintro ⟨n, rfl⟩
