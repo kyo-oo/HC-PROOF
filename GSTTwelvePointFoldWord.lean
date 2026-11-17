@@ -124,6 +124,15 @@ theorem comap_evalRingHom_default (i : Fin 12) :
   -- asIdeal argument, and the terminal is one constructor-projection iota +
   -- the Subsingleton transport — no `Equiv.symm` delta, no coe delta.
   apply PrimeSpectrum.ext
+  -- WAVE 30 (run-29 :128 receipt): the ext-goal's LHS carries the
+  -- statement's `Spec (CommRingCat.of ℂ)`-typed default inside the
+  -- comap's `PrimeSpectrum ℂ` point slot — not type-correct at implicit
+  -- transparency (the full-error receipt), so every keyed rewrite on the
+  -- target dies.  The show re-elaborates the LHS once at the
+  -- `PrimeSpectrum ℂ` spelling; the RHS stays at the equiv-chain form.
+  show (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i)
+      (default : PrimeSpectrum ℂ)).asIdeal =
+    ((twelvePointEquiv i).1).asIdeal
   unfold twelvePointEquiv
   rw [Equiv.trans_apply, Equiv.trans_apply, Equiv.sigmaUnique_symm_apply,
     Homeomorph.coe_toEquiv, PrimeSpectrum.sigmaToPiHomeo_apply,
@@ -360,9 +369,16 @@ theorem residueDegree_spec_map_eval (r : Fin 12) :
       (Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
       (default : Spec (CommRingCat.of ℂ))) :=
     (ConcreteCategory.bijective_of_isIso _).2
+  -- WAVE 30 (run-29 :394 receipt): the dsimp-unfolded goal's scalar field
+  -- is at the MAP-APPLICATION point spelling ((Spec.map …) default) — the
+  -- residueDegree body's own `Y.residueField (f x)` form; the algebra
+  -- instance is therefore stated at that same spelling (the term's own
+  -- type — residueFieldMap's f x — is the map-spelling), so the calc's
+  -- HSMul synthesis finds it without crossing the comap seam.
   haveI : Algebra
       ((Spec (CommRingCat.of (Fin 12 → ℂ))).residueField
-        (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)
+        ((Spec.map (CommRingCat.ofHom
+          (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
           (default : Spec (CommRingCat.of ℂ))))
       ((Spec (CommRingCat.of ℂ)).residueField
         (default : Spec (CommRingCat.of ℂ))) :=
@@ -389,8 +405,10 @@ theorem residueDegree_spec_map_eval (r : Fin 12) :
   refine ⟨a, ?_⟩
   -- AUDIT-5 + WAVE 27: the smul_def/mul_one rewrite leaves
   -- `algebraMap … a = residueFieldMap … a` — RingHom.toAlgebra's
-  -- algebraMap — closed by rfl at default.  Continuation-LHS at col 9 ≥
-  -- the first-LHS column 8 (the colGe law, corpus-verified).
+  -- algebraMap — closed by rfl at default.  WAVE 30 (run-29 :402 receipt):
+  -- the continuation-LHS sits at col 8 — AT the first step's LHS column
+  -- (the colGe law) and BELOW the by-block's tactic column 9 (the parser
+  -- ate the col-9 continuation as an unknown tactic); `= w := ha` closes.
   calc a • (1 : (Spec (CommRingCat.of ℂ)).residueField
         (default : Spec (CommRingCat.of ℂ)))
       = Scheme.Hom.residueFieldMap
@@ -399,10 +417,10 @@ theorem residueDegree_spec_map_eval (r : Fin 12) :
           (default : Spec (CommRingCat.of ℂ)) a := by
         rw [Algebra.smul_def, mul_one]
         rfl
-        Scheme.Hom.residueFieldMap
-            (Spec.map (CommRingCat.ofHom
-              (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
-            (default : Spec (CommRingCat.of ℂ)) a
+       Scheme.Hom.residueFieldMap
+           (Spec.map (CommRingCat.ofHom
+             (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
+           (default : Spec (CommRingCat.of ℂ)) a
       = w := ha
 
 /-- The right-leg residue weight at the unique carrier point is `1`. -/
@@ -566,7 +584,12 @@ theorem pointPair_transition_eq (r c : Fin 12)
     pointPair_right_coheight r c
   show ((pointPairGeometry r c).leftFiberFinset x.1).sum
       ((pointPairGeometry r c).targetAtomPresentation 0) = _
-  rw [hfin]
+  -- WAVE 30 (run-29 :576 receipt): the outer rw [hfin] consumed the
+  -- leftFiberFinset pattern before rw [hsum] could fire (the receipt's
+  -- goal was already the scheme-spelled singleton — not type-correct at
+  -- implicit).  The hsum rewrite alone carries the goal from the show's
+  -- own spelling straight to the carrier-spelled atom — well-typed
+  -- throughout.
   have hsum : ((pointPairGeometry r c).leftFiberFinset x.1).sum
       ((pointPairGeometry r c).targetAtomPresentation 0) =
       (pointPairGeometry r c).targetAtomPresentation 0
