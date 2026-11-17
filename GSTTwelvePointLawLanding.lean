@@ -321,6 +321,19 @@ theorem twelvePoint_orbitUnderlying_span :
     -- in the region finds it first.
     haveI hmod : Module ℚ (RationalSingularCohomology twelvePointAnalytification 0) :=
       inferInstance
+    -- WAVE 35 (run-34 :332/:339/:340 receipts): the region's ACTUAL
+    -- internal spelling is the PROJECTION form — the certificate's
+    -- hodgeOrbit elements are typed at
+    -- `RationalSingularCohomology twelvePointHodgeData.analytification
+    -- (2 * 0)` (the error body's own AddCommGroup instance path is the
+    -- receipt), so the def-spelled haveI above does not match
+    -- syntactically and the mem_span_of_mem / MulActionHomClass (the
+    -- iso's linear-class) / smul_mem syntheses all re-run and die.
+    -- Provide the projection-spelled Module locally — instance synthesis
+    -- is syntactic; both spellings in scope, both found first.
+    haveI hmod' : Module ℚ
+        (RationalSingularCohomology twelvePointHodgeData.analytification (2 * 0)) :=
+      inferInstance
     refine Submodule.span_induction ?_ ?_ ?_ ?_ hEu
     · intro x hx
       rcases hx with ⟨n, rfl⟩
