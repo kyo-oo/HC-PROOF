@@ -252,10 +252,17 @@ theorem twelvePointFoldMatrix_eq_Twave :
   -- in tactic position — "unknown tactic"; the refine-form fixes it
   -- (Matrix.ext is the @[ext]-registered lemma, applied with a fun
   -- hypothesis).
+  -- WAVE 34 (run-33 :257 receipt): the six green-twin names
+  -- (N12_val, eCell, shuffleCell, mirrorCell, cmSign, ownerSource) live in
+  -- the SpanningProof/Complete namespaces (not opened here — unknown
+  -- identifiers) AND were never needed: THIS file's `Twave` is the
+  -- CompilerFace's DIRECT ite-literal matrix (the N12-form lives only in
+  -- the twin's own statement), and `twelvePointFoldMatrix` is the explicit
+  -- foldWordData map-sum — both sides reduce to rational literals through
+  -- the three-name simp-set + norm_num.
   refine Matrix.ext fun r c => ?_
   fin_cases r <;> fin_cases c <;>
-    simp [twelvePointFoldMatrix, Twave, foldWordData, N12_val, eCell,
-      shuffleCell, mirrorCell, cmSign, ownerSource] <;>
+    simp [twelvePointFoldMatrix, Twave, foldWordData] <;>
     norm_num
 
 /-- **THE ORBIT IS THE KR YLOV TABLE.**  `iso (hodgeOrbit n) = C n` for every
