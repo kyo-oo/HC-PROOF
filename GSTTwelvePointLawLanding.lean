@@ -345,7 +345,7 @@ theorem twelvePoint_orbitUnderlying_span :
       exact ⟨C n, ⟨n, rfl⟩, (twelvePointHodgeOrbit_symm n).symm⟩
     · rintro ⟨c, ⟨n, rfl⟩, rfl⟩
       exact ⟨n, twelvePointHodgeOrbit_symm n⟩
-  rw [himg, span_image]
+  rw [himg, Submodule.span_image]
   exact Submodule.mem_map.mpr ⟨twelvePointCohomologyIso u, hEu,
     twelvePointCohomologyIso.symm_apply_apply u⟩
 
