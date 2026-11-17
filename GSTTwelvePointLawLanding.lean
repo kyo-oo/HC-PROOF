@@ -310,49 +310,44 @@ theorem twelvePoint_orbitUnderlying_span :
     -- WAVE 21 (run-20 arity disease): mem_top's element is implicit at the
     -- pin (Submodule/Lattice.lean:143) — drop the argument.
     exact Submodule.mem_top
-  have key : twelvePointCohomologyIso.symm (twelvePointCohomologyIso u) ∈
-      Submodule.span ℚ
-        (Set.range fun n : Nat => (twelvePointCertificate.hodgeOrbit n).1) := by
-    -- WAVE 33 (run-32 :312 receipt): the postposed `Module ℚ
-    -- (RationalSingularCohomology twelvePointAnalytification 0)`
-    -- synthesis died inside `mem_span_of_mem`'s elaboration — the
-    -- Stage-2F instance (GeometricRealizationStage2F.lean:110) fires on
-    -- the def-spelled goal; provide it locally so every later synthesis
-    -- in the region finds it first.
-    haveI hmod : Module ℚ (RationalSingularCohomology twelvePointAnalytification 0) :=
-      inferInstance
-    -- WAVE 35 (run-34 :332/:339/:340 receipts): the region's ACTUAL
-    -- internal spelling is the PROJECTION form — the certificate's
-    -- hodgeOrbit elements are typed at
-    -- `RationalSingularCohomology twelvePointHodgeData.analytification
-    -- (2 * 0)` (the error body's own AddCommGroup instance path is the
-    -- receipt), so the def-spelled haveI above does not match
-    -- syntactically and the mem_span_of_mem / MulActionHomClass (the
-    -- iso's linear-class) / smul_mem syntheses all re-run and die.
-    -- Provide the projection-spelled Module locally — instance synthesis
-    -- is syntactic; both spellings in scope, both found first.
-    haveI hmod' : Module ℚ
-        (RationalSingularCohomology twelvePointHodgeData.analytification (2 * 0)) :=
-      inferInstance
-    refine Submodule.span_induction ?_ ?_ ?_ ?_ hEu
-    · intro x hx
-      rcases hx with ⟨n, rfl⟩
-      rw [← twelvePointHodgeOrbit_symm n]
-      -- WAVE 21 (run-20 arity disease): `Submodule.subset_span` takes NO
-      -- explicit args at the pin (LinearAlgebra/Span/Defs.lean:77,
-      -- `subset_span : s ⊆ span R s`); the one-arg membership reader is
-      -- `Submodule.mem_span_of_mem` (Span/Defs.lean:80, `(hx : x ∈ s)`).
-      exact Submodule.mem_span_of_mem (Set.mem_range_self n)
-    · rw [map_zero]
-      exact Submodule.zero_mem _
-    · intro x _ y _ hx hy
-      rw [map_add]
-      exact Submodule.add_mem _ hx hy
-    · intro a x _ hx
-      rw [map_smul]
-      exact Submodule.smul_mem _ _ hx
-  rw [twelvePointCohomologyIso.symm_apply_apply u] at key
-  exact key
+  -- WAVE 36 (run-35 :345/:352/:353 receipts): the span-induction block is
+  -- DEAD — three waves of haveI spellings (def, projection, both) never
+  -- matched the hodgeOrbit elements' internally-spelled type
+  -- (`rationalSingularCohomologyObj twelvePointHodgeData.analytification
+  -- (2 * 0)` under the ModuleCat carrier coe) — fresh instance synthesis
+  -- on that type is unwinnable from this file's scope (the failing goals
+  -- display normalized to the abbrev, so every haveI targets the wrong
+  -- term).  THE ACTUAL TRUTH: the instances must ARRIVE INSIDE TERM
+  -- TYPES — the green sibling's own architecture.  THE RESTRUCTURE: the
+  -- membership transports through the span-IMAGE chain, every instance
+  -- carried by the iso's own green-elaborated type —
+  -- (1) the orbit-range IS the iso-symmetry image of the coordinate
+  --     range (entrywise by twelvePointHodgeOrbit_symm, the green
+  --     in-file theorem);
+  -- (2) the span of an image is the map of the span
+  --     (Submodule.span_image, Span/Basic.lean:254, @[simp], used by
+  --     Mathlib itself at :265);
+  -- (3) the membership in the map is the witness pair
+  --     (Submodule.mem_map, the pinned Span/Basic.lean:443's own
+  --     obtain-shape) — the coordinates membership is hEu, the symmetry
+  --     round-trip is the iso's own symm_apply_apply.
+  -- ZERO fresh instance synthesis anywhere: the map's Module-arguments
+  -- flow from the ascribed LinearMap type, itself elaborated from
+  -- twelvePointCohomologyIso's green declaration.  (The block also
+  -- carried three latent corrupted lines `rw ap_zero]`/`rw ap_add]`/
+  -- `rw ap_smul]` — a wave-20-era edit casualty, never exposed because
+  -- the block always died above them — deleted with the block.)
+  have himg : Set.range (fun n : Nat => (twelvePointCertificate.hodgeOrbit n).1) =
+      (twelvePointCohomologyIso.symm : (Fin 12 → ℚ) →ₗ[ℚ] _) '' Set.range C := by
+    ext y
+    constructor
+    · rintro ⟨n, rfl⟩
+      exact ⟨C n, ⟨n, rfl⟩, (twelvePointHodgeOrbit_symm n).symm⟩
+    · rintro ⟨c, ⟨n, rfl⟩, rfl⟩
+      exact ⟨n, twelvePointHodgeOrbit_symm n⟩
+  rw [himg, span_image]
+  exact Submodule.mem_map.mpr ⟨twelvePointCohomologyIso u, hEu,
+    twelvePointCohomologyIso.symm_apply_apply u⟩
 
 /-- **CYCLICITY.**  The certificate is Krylov-cyclic: the rational span of its
 Hodge orbit is the whole weight-0 fiber.  Route: the subtype-span statement
