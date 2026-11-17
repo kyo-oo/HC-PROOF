@@ -124,19 +124,35 @@ theorem comap_evalRingHom_default (i : Fin 12) :
   -- asIdeal argument, and the terminal is one constructor-projection iota +
   -- the Subsingleton transport — no `Equiv.symm` delta, no coe delta.
   apply PrimeSpectrum.ext
-  -- WAVE 30 (run-29 :128 receipt): the ext-goal's LHS carries the
-  -- statement's `Spec (CommRingCat.of ℂ)`-typed default inside the
-  -- comap's `PrimeSpectrum ℂ` point slot — not type-correct at implicit
-  -- transparency (the full-error receipt), so every keyed rewrite on the
-  -- target dies.  The show re-elaborates the LHS once at the
-  -- `PrimeSpectrum ℂ` spelling; the RHS stays at the equiv-chain form.
-  show (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i)
-      (default : PrimeSpectrum ℂ)).asIdeal =
-    ((twelvePointEquiv i).1).asIdeal
-  unfold twelvePointEquiv
-  rw [Equiv.trans_apply, Equiv.trans_apply, Equiv.sigmaUnique_symm_apply,
-    Homeomorph.coe_toEquiv, PrimeSpectrum.sigmaToPiHomeo_apply,
-    PrimeSpectrum.sigmaToPi_apply, Equiv.subtypeUnivEquiv_symm_apply]
+  -- WAVE 31 (run-30 :133 receipt): the show-based re-spelling died on the
+  -- default-instance seam -- the goal's own default elaborates via
+  -- `Scheme.instUniqueCarrierCarrierCommRingCatSpecOf` while
+  -- `(default : PrimeSpectrum ℂ)` synthesizes
+  -- `PrimeSpectrum.unique_of_ringKrullDimLE_zero`, and the two `default`
+  -- terms are not definitionally equal, so the `show` pattern can never
+  -- match (the full-error receipt).  THE RESTRUCTURE (no re-roll of the dead
+  -- show mechanism): the equiv side is rewritten INTO comap form inside a
+  -- `have hrw` whose own left-hand side is clean -- no default inside any
+  -- comap on the equation's left -- so the battle-tested seven-rewrite chain
+  -- runs on a well-typed motive; the chain's output point and the
+  -- `PrimeSpectrum ℂ`-spelled default are then killed by the one-point
+  -- Subsingleton INSIDE the have.  The main goal's own Spec-typed default is
+  -- never re-spelled and never enters any rewrite motive; the final
+  -- transport is pure term-mode congrArg on the one-point Subsingleton.
+  have hrw : (twelvePointEquiv i).1 = PrimeSpectrum.comap
+      (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i)
+      (default : PrimeSpectrum ℂ) := by
+    unfold twelvePointEquiv
+    rw [Equiv.trans_apply, Equiv.trans_apply, Equiv.sigmaUnique_symm_apply,
+      Homeomorph.coe_toEquiv, PrimeSpectrum.sigmaToPiHomeo_apply,
+      PrimeSpectrum.sigmaToPi_apply, Equiv.subtypeUnivEquiv_symm_apply]
+    exact congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
+      (hdfl _ _)
+  rw [hrw]
+  -- WAVE-31 audit fix: after `PrimeSpectrum.ext` the goal is the IDEAL
+  -- equation — the transport must wrap `asIdeal` on the outside (the
+  -- original W8 terminal's own shape); the bare point-level congrArg
+  -- produces the wrong equation type.
   exact congrArg (fun P : PrimeSpectrum (Fin 12 → ℂ) => P.asIdeal)
     (congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
       (hdfl _ _))
@@ -369,13 +385,18 @@ theorem residueDegree_spec_map_eval (r : Fin 12) :
       (Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
       (default : Spec (CommRingCat.of ℂ))) :=
     (ConcreteCategory.bijective_of_isIso _).2
-  -- WAVE 30 (run-29 :394 receipt): the dsimp-unfolded goal's scalar field
-  -- is at the MAP-APPLICATION point spelling ((Spec.map …) default) — the
-  -- residueDegree body's own `Y.residueField (f x)` form; the algebra
-  -- instance is therefore stated at that same spelling (the term's own
-  -- type — residueFieldMap's f x — is the map-spelling), so the calc's
-  -- HSMul synthesis finds it without crossing the comap seam.
-  haveI : Algebra
+  -- WAVE 31 (run-30 :402/:412 receipts): the local Algebra instance was a
+  -- `haveI` -- an OPAQUE local hypothesis -- so `Algebra.toModule this`
+  -- could never unfold to the goal's canonical
+  -- `(CommRingCat.Hom.hom (residueFieldMap …)).toAlgebra`, and both the
+  -- `.mpr` instance check (:402) and the calc's HSMul elaboration (:412)
+  -- died on the diamond.  `letI` makes the local definition TRANSPARENT
+  -- (zeta-unfoldable): `this` is now syntactically the canonical term --
+  -- exactly the instance `residueDegree`'s own body binds (ResidueField.lean
+  -- :148, `letI := (f.residueFieldMap x).hom.toAlgebra`) -- and the same
+  -- lesson the Wave-7 audit recorded for the Fa/Fb/eCounit seams: instances
+  -- that must reduce are `letI`, never `haveI`.
+  letI : Algebra
       ((Spec (CommRingCat.of (Fin 12 → ℂ))).residueField
         ((Spec.map (CommRingCat.ofHom
           (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
@@ -607,8 +628,27 @@ theorem pointPair_transition_eq (r c : Fin 12)
   have hr : (pointPairGeometry r c).right
       (default : ↥(pointPairGeometry r c).carrier) = (twelvePointEquiv r).1 :=
     pointPair_right_apply r c default
-  rw [hr]
-  rfl
+  -- WAVE 31 (run-30 :610 receipt): `rw [hr]` dies because the goal's fun₀
+  -- pattern `| ⟨pt, hz⟩ => 1` carries `hz` in its second slot and hz's TYPE
+  -- mentions the very point being rewritten, so the abstracted motive
+  -- `fun _a => fun₀ | ⟨_a, hz⟩ => 1 = _` is not type correct (the receipt's
+  -- `coheight _a = ↑0`; the OfNat-0 vs Nat.cast-↑0 seam only masks the
+  -- deeper point-dependence -- no re-spelling of hz repairs it).  But the
+  -- fun₀ display IS `Finsupp.single` (Finsupp/Notation.lean: the single-arm
+  -- `fun₀ | i => a` sugar elaborates to `Finsupp.single i a`, and single
+  -- itself takes NO DecidableEq argument, Finsupp/Single.lean:47), so the
+  -- WHOLE subtype element `⟨pt, hz⟩` is one subterm of the goal: the goal is
+  -- `Finsupp.single ⟨pt, hz⟩ 1 = Finsupp.single (twelvePointPt r) 1`.
+  -- Rewrite the whole element at once -- hz travels INSIDE the rewritten
+  -- subterm, so the congrArg motive `fun _e => Finsupp.single _e 1 = _` is
+  -- well-typed by construction.  `Subtype.ext hr` is a pure term-mode seam:
+  -- `(twelvePointPt r).1` is the abbrev's `.1`, definitionally
+  -- `(twelvePointEquiv r).1`, exactly hr's right-hand side.
+  have hsub : (⟨(pointPairGeometry r c).right
+      (default : ↥(pointPairGeometry r c).carrier), hz⟩ :
+      CodimensionPoint twelvePointWorld.X 0) = twelvePointPt r :=
+    Subtype.ext hr
+  exact congrArg (fun k => Finsupp.single k (1 : ℚ)) hsub
 
 /-- Over the column point, the native image is exactly the row point cycle. -/
 theorem pointPair_nativePointImage_eq (r c : Fin 12)
