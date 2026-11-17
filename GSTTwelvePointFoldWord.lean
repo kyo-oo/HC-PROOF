@@ -113,31 +113,24 @@ theorem comap_evalRingHom_default (i : Fin 12) :
   -- `Unique (PrimeSpectrum ℂ)` instance).
   have hdfl : ∀ x y : PrimeSpectrum ℂ, x = y :=
     fun _ _ => Subsingleton.elim _ _
-  -- Step 1: the carrier's equiv chain evaluates `i` to `comap (eval i)` of the
-  -- `default` baked into `Equiv.sigmaUnique`.  The chain is unfolded with its
-  -- baked instance arguments (`unfold`, never a fresh `show`, so nothing is
-  -- re-synthesized); each rewrite is a pinned rfl-level simp lemma.
-  have hq : (twelvePointEquiv i).1 =
-      PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i)
-        (default : PrimeSpectrum ℂ) := by
-    unfold twelvePointEquiv
-    -- WAVE 28 (run-27 :124 receipt): rw's keyed matching died on the
-    -- elaborated coe's instance args; simp only normalizes them first.
-    -- Every lemma is a pinned rfl-level simp lemma (W1-A; W8 §6).
-    simp only [Equiv.trans_apply, Equiv.trans_apply, Equiv.sigmaUnique_symm_apply,
-      Homeomorph.coe_toEquiv, PrimeSpectrum.sigmaToPiHomeo_apply,
-      PrimeSpectrum.sigmaToPi_apply, Equiv.subtypeUnivEquiv_symm_apply]
-    -- the two `Spec ℂ` `default`s (different instance paths) agree by
-    -- uniqueness; simp may already have closed the goal — try both closers.
-    first
-    | exact congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
-        (hdfl _ _)
-    | rfl
-  -- Step 2: rewrite the goal's RHS into comap form, then match the LHS's
-  -- scheme-level `default` with the same unique point.
-  rw [hq]
-  exact congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
-    (hdfl (default : Spec (CommRingCat.of ℂ)) (default : PrimeSpectrum ℂ))
+  -- WAVE 29 (run-28 :127 receipt): the U1 chain is exhausted — the rw list
+  -- (F1) and the simp-only normalizer (F2) both died on the
+  -- twelvePointScheme-abbrev vs PrimeSpectrum spelling seam (the unfolded
+  -- chain's `.trans` application is not even type-correct at implicit
+  -- transparency).  The W8 U1-F3 mechanism (the no-re-roll law's next in
+  -- chain): `PrimeSpectrum.ext` reduces the point equation to an IDEAL
+  -- equation (Defs.lean:33, the one-hypothesis form Mathlib itself rides at
+  -- :56 via PartialOrder.lift); the equiv chain is then evaluated INSIDE the
+  -- asIdeal argument, and the terminal is one constructor-projection iota +
+  -- the Subsingleton transport — no `Equiv.symm` delta, no coe delta.
+  apply PrimeSpectrum.ext
+  unfold twelvePointEquiv
+  rw [Equiv.trans_apply, Equiv.trans_apply, Equiv.sigmaUnique_symm_apply,
+    Homeomorph.coe_toEquiv, PrimeSpectrum.sigmaToPiHomeo_apply,
+    PrimeSpectrum.sigmaToPi_apply, Equiv.subtypeUnivEquiv_symm_apply]
+  exact congrArg (fun P : PrimeSpectrum (Fin 12 → ℂ) => P.asIdeal)
+    (congrArg (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) i))
+      (hdfl _ _))
 
 /-! ## The letter geometry: the point-pair subscheme -/
 
@@ -214,68 +207,71 @@ theorem pointPair_right_hom (r c : Fin 12) :
 theorem pointPair_left (r c : Fin 12) :
     pointPairMap r c ≫ fst twelvePointWorld =
       Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) c)) := by
-  -- WAVE 28 (run-27 :229 receipt): the rw chain died on the comp's
-  -- instance args through the unfold.  Zero-rw term-mode chain: a `show`
-  -- pins the goal to the unfolded composite, then every calc step is a
-  -- lemma application or congrArg unifying at default transparency.
+  -- WAVE 29 (run-28 :228 receipt): the calc's Trans synthesis died on the
+  -- continuation geometry (the step-2 LHS at col 5 under the step-1 LHS at
+  -- col 8 — the colGe law).  Mechanism switch per the no-re-roll law: the
+  -- run-27-green `happ` discipline — ground haves at the goal's own
+  -- spelling, each closed by ONE term-mode application, composed by
+  -- Eq.trans.  No calc parser anywhere in the chain.
   show (Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
       (pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv) ≫ fst twelvePointWorld = _
-  calc (Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-        (pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv) ≫ fst twelvePointWorld
-      = Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ fst twelvePointWorld) :=
-        CategoryTheory.Category.assoc _ _ _
-    Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ fst twelvePointWorld)
-      = Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          Spec.map (CommRingCat.ofHom (algebraMap (Fin 12 → ℂ)
-            ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ)))) :=
-        congrArg _ (pullbackSpecIso_inv_fst' ℂ (Fin 12 → ℂ) (Fin 12 → ℂ))
-    Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          Spec.map (CommRingCat.ofHom (algebraMap (Fin 12 → ℂ)
-            ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ))))
-      = Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
-          (algebraMap (Fin 12 → ℂ) ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ))))) :=
-        (Spec.map_comp _ _).symm
-    Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
-          (algebraMap (Fin 12 → ℂ) ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ)))))
-      = Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) c)) :=
-        congrArg Spec.map (congrArg CommRingCat.ofHom (pointPair_left_hom r c))
+  have h1 : (Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        (pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv) ≫ fst twelvePointWorld =
+      Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ fst twelvePointWorld) :=
+    CategoryTheory.Category.assoc _ _ _
+  have h2 : Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ fst twelvePointWorld) =
+      Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        Spec.map (CommRingCat.ofHom (algebraMap (Fin 12 → ℂ)
+          ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ)))) :=
+    congrArg _ (pullbackSpecIso_inv_fst' ℂ (Fin 12 → ℂ) (Fin 12 → ℂ))
+  have h3 : Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        Spec.map (CommRingCat.ofHom (algebraMap (Fin 12 → ℂ)
+          ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ)))) =
+      Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
+        (algebraMap (Fin 12 → ℂ) ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ))))) :=
+    (Spec.map_comp _ _).symm
+  have h4 : Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
+        (algebraMap (Fin 12 → ℂ) ((Fin 12 → ℂ) ⊗[ℂ] (Fin 12 → ℂ))))) =
+      Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) c)) :=
+    congrArg Spec.map (congrArg CommRingCat.ofHom (pointPair_left_hom r c))
+  exact h1.trans (h2.trans (h3.trans h4))
 
 /-- The right leg of the point pair is evaluation at the row point. -/
 theorem pointPair_right (r c : Fin 12) :
     pointPairMap r c ≫ snd twelvePointWorld =
       Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)) := by
-  -- WAVE 28 (run-27 :247 receipt): as `pointPair_left` above — zero-rw
-  -- term-mode chain (the snd leg, Pullbacks.lean:756, feeding the
-  -- includeRight slot of `pointPair_right_hom`).
+  -- WAVE 29 (run-28 :259 receipt): the snd twin of pointPair_left's
+  -- Trans death — same mechanism switch (have-chain + Eq.trans).
   show (Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
       (pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv) ≫ snd twelvePointWorld = _
-  calc (Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-        (pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv) ≫ snd twelvePointWorld
-      = Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ snd twelvePointWorld) :=
-        CategoryTheory.Category.assoc _ _ _
-    Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ snd twelvePointWorld)
-      = Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          Spec.map (CommRingCat.ofHom
-            (Algebra.TensorProduct.includeRight
-              (R := ℂ) (A := Fin 12 → ℂ) (B := Fin 12 → ℂ)).toRingHom) :=
-        congrArg _ (pullbackSpecIso_inv_snd ℂ (Fin 12 → ℂ) (Fin 12 → ℂ))
-    Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
-          Spec.map (CommRingCat.ofHom
-            (Algebra.TensorProduct.includeRight
-              (R := ℂ) (A := Fin 12 → ℂ) (B := Fin 12 → ℂ)).toRingHom)
-      = Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
+  have h1 : (Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        (pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv) ≫ snd twelvePointWorld =
+      Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ snd twelvePointWorld) :=
+    CategoryTheory.Category.assoc _ _ _
+  have h2 : Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        ((pullbackSpecIso ℂ (Fin 12 → ℂ) (Fin 12 → ℂ)).inv ≫ snd twelvePointWorld) =
+      Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        Spec.map (CommRingCat.ofHom
+          (Algebra.TensorProduct.includeRight
+            (R := ℂ) (A := Fin 12 → ℂ) (B := Fin 12 → ℂ)).toRingHom) :=
+    congrArg _ (pullbackSpecIso_inv_snd ℂ (Fin 12 → ℂ) (Fin 12 → ℂ))
+  have h3 : Spec.map (CommRingCat.ofHom (pointPairAlgHom r c).toRingHom) ≫
+        Spec.map (CommRingCat.ofHom
+          (Algebra.TensorProduct.includeRight
+            (R := ℂ) (A := Fin 12 → ℂ) (B := Fin 12 → ℂ)).toRingHom) =
+      Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
           (Algebra.TensorProduct.includeRight
             (R := ℂ) (A := Fin 12 → ℂ) (B := Fin 12 → ℂ)).toRingHom)) :=
-        (Spec.map_comp _ _).symm
-    Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
+    (Spec.map_comp _ _).symm
+  have h4 : Spec.map (CommRingCat.ofHom ((pointPairAlgHom r c).toRingHom.comp
           (Algebra.TensorProduct.includeRight
-            (R := ℂ) (A := Fin 12 → ℂ) (B := Fin 12 → ℂ)).toRingHom))
-      = Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)) :=
-        congrArg Spec.map (congrArg CommRingCat.ofHom (pointPair_right_hom r c))
+            (R := ℂ) (A := Fin 12 → ℂ) (B := Fin 12 → ℂ)).toRingHom)) =
+      Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)) :=
+    congrArg Spec.map (congrArg CommRingCat.ofHom (pointPair_right_hom r c))
+  exact h1.trans (h2.trans (h3.trans h4))
 
 /-- Point-level action of the left leg: every carrier point lands on the
 column point. -/
@@ -373,56 +369,41 @@ theorem residueDegree_spec_map_eval (r : Fin 12) :
     (Scheme.Hom.residueFieldMap
       (Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
       (default : Spec (CommRingCat.of ℂ))).hom.toAlgebra
-  have hfinrank : Module.finrank
-      ((Spec (CommRingCat.of (Fin 12 → ℂ))).residueField
-        (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)
-          (default : Spec (CommRingCat.of ℂ))))
-      ((Spec (CommRingCat.of ℂ)).residueField
-        (default : Spec (CommRingCat.of ℂ))) = 1 := by
-    -- WAVE 27 (run-26 :280/:292): the finrank_eq_one_iff_of_nonzero' class
-    -- binders hard-code DivisionRing/AddCommGroup projection paths into its
-    -- statement; the residue-field goal's instances ride
-    -- CommRing.toCommSemiring/Field.toSemifield…/Algebra.toModule — defeq
-    -- only at default transparency, so `rw` can never match.  Term-mode
-    -- application unifies at default (pinned FiniteDimensional/Basic.lean:605).
-    -- WAVE 28 (run-27 :357 receipt): the bare `1` elaborated at ℕ before
-    -- unification; pin K and V by name so the witness elaborates at V.
-    refine (finrank_eq_one_iff_of_nonzero'
-      (K := (Spec (CommRingCat.of (Fin 12 → ℂ))).residueField
-        (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)
-          (default : Spec (CommRingCat.of ℂ))))
-      (V := (Spec (CommRingCat.of ℂ)).residueField
+  -- WAVE 29 (run-28 :390/:397/:419 receipts): the (K := …)(V := …) pin died
+  -- at the pin's own elaboration — the DivisionRing class binder of
+  -- finrank_eq_one_iff_of_nonzero' (FiniteDimensional/Basic.lean:605,
+  -- section vars :53 `[DivisionRing K] [AddCommGroup V] [Module K V]`)
+  -- could not synthesize on the pinned comap-residueField type, and the
+  -- show-bridge (U2-F2) died on the residueDegree delta+zeta.  The W8
+  -- U2-F3 restructure (the no-re-roll law's next in chain): `dsimp only`
+  -- unfolds residueDegree ON THE GOAL itself — Mathlib's own green idiom
+  -- for this def (ResidueField.lean:152-155, residueDegree_id: `dsimp
+  -- [residueDegree]`) — so the finrank proof re-elaborates directly on the
+  -- unfolded goal: the lemma's class binders resolve against the goal's own
+  -- elaborated instances, and the `1` witness is typed by the postponed
+  -- OfNat once unification assigns V.
+  dsimp only [Scheme.Hom.residueDegree]
+  refine (finrank_eq_one_iff_of_nonzero' 1 one_ne_zero).mpr ?_
+  intro w
+  obtain ⟨a, ha⟩ := hsurj w
+  refine ⟨a, ?_⟩
+  -- AUDIT-5 + WAVE 27: the smul_def/mul_one rewrite leaves
+  -- `algebraMap … a = residueFieldMap … a` — RingHom.toAlgebra's
+  -- algebraMap — closed by rfl at default.  Continuation-LHS at col 9 ≥
+  -- the first-LHS column 8 (the colGe law, corpus-verified).
+  calc a • (1 : (Spec (CommRingCat.of ℂ)).residueField
         (default : Spec (CommRingCat.of ℂ)))
-      1 one_ne_zero).mpr ?_
-    intro w
-    obtain ⟨a, ha⟩ := hsurj w
-    refine ⟨a, ?_⟩
-    -- WAVE 27: explicit-LHS calc (the `_`-LHS colGe risk, the :534 receipt);
-    -- the smul_def/num_one rewrite leaves `algebraMap … a = residueFieldMap … a`
-    -- which is RingHom.toAlgebra's algebraMap — closed by rfl at default.
-    calc a • (1 : (Spec (CommRingCat.of ℂ)).residueField
-          (default : Spec (CommRingCat.of ℂ)))
-        = Scheme.Hom.residueFieldMap
-            (Spec.map (CommRingCat.ofHom
-              (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
-            (default : Spec (CommRingCat.of ℂ)) a := by
-          rw [Algebra.smul_def, mul_one] -- AUDIT-5: `RingHom.toAlgebra` algebraMap
-          rfl
-      Scheme.Hom.residueFieldMap
+      = Scheme.Hom.residueFieldMap
+          (Spec.map (CommRingCat.ofHom
+            (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
+          (default : Spec (CommRingCat.of ℂ)) a := by
+        rw [Algebra.smul_def, mul_one]
+        rfl
+        Scheme.Hom.residueFieldMap
             (Spec.map (CommRingCat.ofHom
               (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)))
             (default : Spec (CommRingCat.of ℂ)) a
-        = w := ha
-  -- WAVE 28 (run-27 :377 receipt): the exact must delta-unfold
-  -- `residueDegree` (a def with a letI algebra); the show performs that
-  -- unfolding once at default transparency, then the exact is syntactic.
-  show Module.finrank
-      ((Spec (CommRingCat.of (Fin 12 → ℂ))).residueField
-        (PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin 12 => ℂ) r)
-          (default : Spec (CommRingCat.of ℂ))))
-      ((Spec (CommRingCat.of ℂ)).residueField
-        (default : Spec (CommRingCat.of ℂ))) = 1
-  exact hfinrank
+      = w := ha
 
 /-- The right-leg residue weight at the unique carrier point is `1`. -/
 theorem pointPair_residueWeight (r c : Fin 12) :
@@ -534,8 +515,12 @@ theorem pointPair_leftFiberFinset_eq_singleton (r c : Fin 12)
   ext z
   simp only [mem_leftFiberFinset, Finset.mem_singleton]
   rw [← h]
+  -- WAVE 29 (run-28 :538 receipt): the goal's RHS is Finset-membership
+  -- `z ∈ {default}` (Finset.mem_singleton never fired as a rewrite — the
+  -- unused-arg receipt); the second iff_of_true argument must be a TERM of
+  -- exactly that membership type, built by mem_singleton's .mpr.
   exact iff_of_true (pointPair_left_apply r c z)
-    (Subsingleton.elim z default)
+    (Finset.mem_singleton.mpr (Subsingleton.elim z default))
 
 /-- The left fiber over any other source point is empty. -/
 theorem pointPair_leftFiberFinset_eq_empty (r c : Fin 12)
@@ -568,29 +553,36 @@ theorem pointPair_transition_eq (r c : Fin 12)
   have hfin : (pointPairGeometry r c).leftFiberFinset x.1 =
       {(default : Spec (CommRingCat.of ℂ))} :=
     pointPair_leftFiberFinset_eq_singleton r c x h
+  -- WAVE 29 (run-28 :588 receipt): the whole atom chain was frankensteined
+  -- across the two default spellings — the scheme-level `default` inside a
+  -- carrier-typed slot left the post-rw goal not type-correct at implicit
+  -- transparency (the full-error note), killing the targetAtomPresentation
+  -- rewrite.  Every term of the chain is now stated at the CARRIER type
+  -- (the pointPairGeometry_carrier_inhabited default), each seam crossing
+  -- done once in term mode inside its own have.
   have hz : Order.coheight
-      ((pointPairGeometry r c).right (default : Spec (CommRingCat.of ℂ))) = 0 :=
+      ((pointPairGeometry r c).right
+        (default : ↥(pointPairGeometry r c).carrier)) = 0 :=
     pointPair_right_coheight r c
   show ((pointPairGeometry r c).leftFiberFinset x.1).sum
       ((pointPairGeometry r c).targetAtomPresentation 0) = _
   rw [hfin]
-  -- WAVE 28 (run-27 :515 receipt): rw [Finset.sum_singleton] died on the
-  -- sum's instance args; the term-mode have (stated at the post-hfin
-  -- goal's own spelling, `Finset.sum_singleton` applied as a term)
-  -- unifies at default transparency, then the rw is purely syntactic.
-  have hsum : ({(default : Spec (CommRingCat.of ℂ))} :
-      Finset ↥(pointPairGeometry r c).carrier).sum
+  have hsum : ((pointPairGeometry r c).leftFiberFinset x.1).sum
       ((pointPairGeometry r c).targetAtomPresentation 0) =
       (pointPairGeometry r c).targetAtomPresentation 0
-        (default : Spec (CommRingCat.of ℂ)) :=
-    Finset.sum_singleton _ _
+        (default : ↥(pointPairGeometry r c).carrier) := by
+    rw [hfin]
+    exact Finset.sum_singleton _ _
   rw [hsum]
   rw [FiniteClosedCorrespondence.targetAtomPresentation_eq_single
-    (pointPairGeometry r c) 0 default hz]
-  rw [pointPair_residueWeight r c]
+    (pointPairGeometry r c) 0 (default : ↥(pointPairGeometry r c).carrier) hz]
+  have hrw : pointResidueWeight (pointPairGeometry r c).right
+      (default : ↥(pointPairGeometry r c).carrier) = 1 :=
+    pointPair_residueWeight r c
+  rw [hrw]
   -- the atom point is the row twelve-point
   have hr : (pointPairGeometry r c).right
-      (default : Spec (CommRingCat.of ℂ)) = (twelvePointEquiv r).1 :=
+      (default : ↥(pointPairGeometry r c).carrier) = (twelvePointEquiv r).1 :=
     pointPair_right_apply r c default
   rw [hr]
   rfl
@@ -733,33 +725,35 @@ theorem pointPairGeometry_realizes (r c : Fin 12) :
       rw [show twelvePointCohomologyIso (zeroCycleClass (codimensionPointCycle
           twelvePointWorld.X 0 (twelvePointPt r))) = Pi.single r (1 : ℚ) from
         zeroCycleClass_point r]
-    -- WAVE 27 (run-26 :534:6, W1-C §9 -- the calc colGe law): the old calc's
-    -- continuation steps sat at column 6 while step 1's LHS starts at column
-    -- 9; the calc parser (`colGe`) requires every later step's LHS at column
-    -- >= the first step's LHS column.  All steps now carry their FULL
-    -- explicit LHS (copied from the previous step's RHS) at column 9 -- zero
-    -- `_`-parse ambiguity.  The WAVE-19 audit-F2 explicit `rfl` after
-    -- `rw [key]` is kept (the post-rewrite sides agree only by
-    -- default-transparency defeq; rw's auto-rfl runs at reducible).
-    calc twelvePointHodgeData.cycleClass 0
-         (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r))
-        = twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-            (twelvePointHodgeData.cycleClass 0
-              (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r)))) :=
-          (LinearEquiv.symm_apply_apply _ _).symm
-         twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-            (twelvePointHodgeData.cycleClass 0
-              (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r))))
-        = twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-            (matrixUnitOp r c (zeroCycleClass
-              (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c))))) :=
-          by rw [key]; rfl
-         twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-            (matrixUnitOp r c (zeroCycleClass
-              (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c)))))
-        = matrixUnitOp r c (zeroCycleClass
-            (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c))) :=
-          LinearEquiv.symm_apply_apply _ _
+    -- WAVE 29 (run-28 :745/:746 receipts): the calc mechanism died on this
+    -- chain in two consecutive waves (wave 27 :534, wave 28 :745/:746 — the
+    -- parser's `true : Bool` phantom and the cycleClass-application type
+    -- mismatch).  The no-re-roll law: mechanism switch — three ground haves,
+    -- each stated at the previous have's own RHS spelling, each closed by a
+    -- single term-mode application; composed by Eq.trans.  The WAVE-19
+    -- audit-F2 explicit `rfl` inside s2 is kept (the post-rewrite sides
+    -- agree only by default-transparency defeq; rw's auto-rfl runs at
+    -- reducible).
+    have s1 : twelvePointHodgeData.cycleClass 0
+          (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r)) =
+        twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+          (twelvePointHodgeData.cycleClass 0
+            (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r)))) :=
+      (LinearEquiv.symm_apply_apply _ _).symm
+    have s2 : twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+          (twelvePointHodgeData.cycleClass 0
+            (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt r)))) =
+        twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+          (matrixUnitOp r c (zeroCycleClass
+            (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c))))) :=
+      by rw [key]; rfl
+    have s3 : twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+          (matrixUnitOp r c (zeroCycleClass
+            (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c))))) =
+        matrixUnitOp r c (zeroCycleClass
+          (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt c))) :=
+      LinearEquiv.symm_apply_apply _ _
+    exact s1.trans (s2.trans s3)
   · have hne : (twelvePointEquiv c).1 ≠ (twelvePointEquiv i).1 := by
       intro h
       exact hic (twelvePointEquiv.injective (Subtype.ext h)).symm
@@ -769,27 +763,32 @@ theorem pointPairGeometry_realizes (r c : Fin 12) :
     rw [himg, map_zero]
     have hzero : matrixUnitOp r c (zeroCycleClass
         (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i))) = 0 := by
-      -- WAVE 27: same colGe law -- explicit full LHS terms at column 11
-      -- (step 1's LHS column); one-line by-proofs (no by-column hazards);
-      -- step 4 closed by the PINNED Mathlib lemma (Module/Equiv/Defs.lean:501,
-      -- protected, e explicit) instead of `simp` (the OfNat instances differ
-      -- across the analytification clans and simp's rfl-close is unattested).
-      calc matrixUnitOp r c (zeroCycleClass
-            (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i)))
-          = twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-              (matrixUnitOp r c (zeroCycleClass
-                (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i))))) :=
-            (LinearEquiv.symm_apply_apply _ _).symm
-           twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-              (matrixUnitOp r c (zeroCycleClass
-                (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i)))))
-          = twelvePointCohomologyIso.symm
-              (if c = i then Pi.single r (1 : ℚ) else 0) := by rw [matrixUnitOp_pointClass r c i]
-           twelvePointCohomologyIso.symm
-              (if c = i then Pi.single r (1 : ℚ) else 0)
-          = twelvePointCohomologyIso.symm 0 := by rw [if_neg (fun h => hic h.symm)]
-           twelvePointCohomologyIso.symm 0
-          = 0 := LinearEquiv.map_zero twelvePointCohomologyIso.symm
+      -- WAVE 29 (run-28 :783 receipt): the calc's Trans synthesis died;
+      -- mechanism switch as in the first arm -- ground haves at the
+      -- goal's own spelling, one term-mode application each, Eq.trans
+      -- composition.  Step 4 closed by the PINNED Mathlib lemma
+      -- (Module/Equiv/Defs.lean:501, protected, e explicit) instead of
+      -- `simp` (the OfNat instances differ across the analytification
+      -- clans and simp's rfl-close is unattested).
+      have z1 : matrixUnitOp r c (zeroCycleClass
+            (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i))) =
+          twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+            (matrixUnitOp r c (zeroCycleClass
+              (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i))))) :=
+        (LinearEquiv.symm_apply_apply _ _).symm
+      have z2 : twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+            (matrixUnitOp r c (zeroCycleClass
+              (codimensionPointCycle twelvePointWorld.X 0 (twelvePointPt i))))) =
+          twelvePointCohomologyIso.symm
+            (if c = i then Pi.single r (1 : ℚ) else 0) :=
+        by rw [matrixUnitOp_pointClass r c i]
+      have z3 : twelvePointCohomologyIso.symm
+            (if c = i then Pi.single r (1 : ℚ) else 0) =
+          twelvePointCohomologyIso.symm 0 :=
+        by rw [if_neg (fun h => hic h.symm)]
+      have z4 : twelvePointCohomologyIso.symm 0 = 0 :=
+        LinearEquiv.map_zero twelvePointCohomologyIso.symm
+      exact z1.trans (z2.trans (z3.trans z4))
     -- WAVE 27 (seam hardening, W1-D R5): the goal's RHS carries the projection
     -- spellings (`twelvePointHodgeData.cycleClass 0`, `twelvePointEquiv i`)
     -- while hzero's LHS carries the constant/abbrev spellings
@@ -1027,22 +1026,27 @@ theorem module_decomp (u : RationalSingularCohomology
     funext j
     rw [Finset.sum_apply] -- AUDIT-8
     simp [Pi.single_apply]
-  calc u = twelvePointCohomologyIso.symm (twelvePointCohomologyIso u) :=
-        (LinearEquiv.symm_apply_apply _ _).symm
-    twelvePointCohomologyIso.symm (twelvePointCohomologyIso u) =
-        twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-          (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
-            (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
-              (twelvePointPt k))))) :=
-      congrArg _ hsum.symm
-    twelvePointCohomologyIso.symm (twelvePointCohomologyIso
-          (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
-            (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
-              (twelvePointPt k))))) =
-        ∑ k : Fin 12, (twelvePointCohomologyIso u k) •
+  -- WAVE 29 (run-28 :1032 receipt): the calc's Trans synthesis died on the
+  -- continuation geometry (the step-2 LHS at col 5 under the first LHS
+  -- `u` at col 8 — the colGe law).  Mechanism switch: the have-chain,
+  -- composed by Eq.trans.
+  have c1 : u = twelvePointCohomologyIso.symm (twelvePointCohomologyIso u) :=
+    (LinearEquiv.symm_apply_apply _ _).symm
+  have c2 : twelvePointCohomologyIso.symm (twelvePointCohomologyIso u) =
+      twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+        (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
+          (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
+            (twelvePointPt k))))) :=
+    congrArg _ hsum.symm
+  have c3 : twelvePointCohomologyIso.symm (twelvePointCohomologyIso
+        (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
+          (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
+            (twelvePointPt k))))) =
+      ∑ k : Fin 12, (twelvePointCohomologyIso u k) •
           (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
             (twelvePointPt k))) :=
-      LinearEquiv.symm_apply_apply _ _
+    LinearEquiv.symm_apply_apply _ _
+  exact c1.trans (c2.trans c3)
 
 /-- **THE OPERATOR THEOREM**: under the H⁰ cohomology iso, the fold word's
 cohomology operator IS the fold matrix. -/
@@ -1087,7 +1091,13 @@ theorem twelvePointFoldWord_op (u : RationalSingularCohomology
             (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
               (zeroCycleClass (codimensionPointCycle twelvePointWorld.X 0
                 (twelvePointPt k))))) :=
-      congrArg _ hd
+      -- WAVE 29 (run-28 :1090 receipt): the congrArg hole was assigned
+      -- `⇑twelvePointCohomologyIso` by higher-order unification (the
+      -- receipt: hd expected `op u = op ∑` while hd : `u = ∑`); the
+      -- function is now EXPLICIT — the iso-wrapped operator congruence
+      -- h1's own TYPE demands.
+      congrArg (fun x => twelvePointCohomologyIso
+        ((realizedWordPair twelvePointFoldWord).cohomologyOperator x)) hd
     have h2 : twelvePointCohomologyIso
         ((realizedWordPair twelvePointFoldWord).cohomologyOperator
           (∑ k : Fin 12, (twelvePointCohomologyIso u k) •
