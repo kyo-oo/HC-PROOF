@@ -121,7 +121,7 @@ theorem exists_complex_retraction :
     obtain ⟨q, hq⟩ := Submodule.mem_span_singleton.mp y.2
     refine ⟨q, Subtype.ext ?_⟩
     rw [LinearMap.codRestrict_apply, Algebra.linearMap_apply,
-      ← Algebra.algebraMap_eq_smul_one]
+      Algebra.algebraMap_eq_smul_one]
     exact hq
   set e : ℚ ≃ₗ[ℚ] ↥p₁ := LinearEquiv.ofBijective g ⟨hginj, hgsurj⟩ with hedef
   obtain ⟨r, hr⟩ := LinearMap.exists_extend (V := ℂ) (p := p₁) e.symm.toLinearMap
@@ -151,7 +151,8 @@ theorem complexificationMapQ_injective {VQ : Type} [AddCommGroup VQ] [Module ℚ
         apply LinearMap.ext
         intro v
         show ((r (z₁ + z₂)) • (LinearMap.id : VQ →ₗ[ℚ] VQ)) v = _ + _
-        simp only [map_add, add_smul, LinearMap.smul_apply, LinearMap.id_apply]
+        simp only [LinearMap.add_apply, LinearMap.smul_apply,
+          LinearMap.id_apply, map_add, add_smul]
       map_smul' := by
         intro q z
         apply LinearMap.ext
@@ -163,7 +164,7 @@ theorem complexificationMapQ_injective {VQ : Type} [AddCommGroup VQ] [Module ℚ
   have hleft : ∀ v : VQ, ρ (complexificationMapQ VQ v) = v := by
     intro v
     have h1 : complexificationMapQ VQ v = (1 : ℂ) ⊗ₜ[ℚ] v := rfl
-    rw [h1, TensorProduct.lift_tmul]
+    rw [h1, TensorProduct.lift.tmul]
     show (r 1) • v = v
     rw [hr, one_smul]
   exact Function.LeftInverse.injective hleft
@@ -188,29 +189,20 @@ theorem stashComponents_ne_zero {n : ℕ} {j : Fin (n + 1)} (hj : j ≠ 0) :
 
 private theorem stashComponents_indep (n : ℕ) :
     iSupIndep (stashComponents VQ n) := by
-  rw [iSupIndep_iff_pairwiseDisjoint]
-  intro i j hij
+  rw [iSupIndep_def]
+  intro i
   by_cases hi : i = 0
   · subst hi
-    by_cases hj : j = 0
-    · exact absurd hj hij
-    · show Disjoint (if (0 : Fin (n + 1)) = 0 then
-          (⊤ : Submodule ℂ (Complexification VQ)) else ⊥)
-          (if j = 0 then (⊤ : Submodule ℂ (Complexification VQ)) else ⊥)
-      rw [if_pos rfl, if_neg hj]
-      exact disjoint_iff.mpr (by simp)
-  · by_cases hj : j = 0
-    · subst hj
-      show Disjoint (if i = 0 then
-          (⊤ : Submodule ℂ (Complexification VQ)) else ⊥)
-          (if (0 : Fin (n + 1)) = 0 then (⊤ : Submodule ℂ (Complexification VQ)) else ⊥)
-      rw [if_neg hi, if_pos rfl]
-      exact disjoint_iff.mpr (by simp)
-    · show Disjoint (if i = 0 then
-          (⊤ : Submodule ℂ (Complexification VQ)) else ⊥)
-          (if j = 0 then (⊤ : Submodule ℂ (Complexification VQ)) else ⊥)
-      rw [if_neg hi, if_neg hj]
-      exact disjoint_iff.mpr (by simp)
+    rw [stashComponents_zero n]
+    have hle : (⨆ (j) (_ : j ≠ 0), stashComponents VQ n j) ≤
+        (⊥ : Submodule ℂ (Complexification VQ)) := by
+      refine iSup₂_le fun j hj => ?_
+      rw [stashComponents_ne_zero hj]
+      exact le_bot
+    rw [disjoint_iff, top_inf_eq]
+    exact le_bot_iff.mp hle
+  · rw [stashComponents_ne_zero hi]
+    exact disjoint_bot_left
 
 private theorem stashComponents_spans (n : ℕ) :
     (⨆ a, stashComponents VQ n a) = ⊤ := by
@@ -225,8 +217,8 @@ group. -/
 def stashBigrading (VQ : Type) [AddCommGroup VQ] [Module ℚ VQ] (n : ℕ) :
     HodgeBigrading VQ n where
   component := stashComponents VQ n
-  independent := stashComponents_indep VQ n
-  spans := stashComponents_spans VQ n
+  independent := stashComponents_indep n
+  spans := stashComponents_spans n
 
 theorem stashBigrading_component (n : ℕ) (j : Fin (n + 1)) :
     (stashBigrading VQ n).component j = stashComponents VQ n j := rfl
@@ -248,8 +240,8 @@ vanishing of `H^{2p}` was used. -/
 theorem rationalHodgeSubspace_stash_eq_bot (p : ℕ) (hp : 0 < p) :
     rationalHodgeSubspace (stashBigrading VQ (2 * p)) = ⊥ := by
   have hpp : (stashBigrading VQ (2 * p)).ppComponent = ⊥ :=
-    stashBigrading_ppComponent_eq_bot VQ p hp
-  apply Submodule.eq_bot_iff.mpr
+    stashBigrading_ppComponent_eq_bot p hp
+  apply (Submodule.eq_bot_iff _).mpr
   intro v hv
   have hv' : complexificationMapQ VQ v ∈ (stashBigrading VQ (2 * p)).ppComponent :=
     (mem_rationalHodgeSubspace_iff (stashBigrading VQ (2 * p)) v).mp hv
@@ -323,32 +315,34 @@ theorem spanComponents_other {M : ℕ} (c : Fin M → VQ) (p : ℕ) (hp : 0 < p)
 
 private theorem spanComponents_indep {M : ℕ} (c : Fin M → VQ) (p : ℕ)
     (hp : 0 < p) : iSupIndep (spanComponents c p hp) := by
-  rw [iSupIndep_iff_pairwiseDisjoint]
-  intro i j hij
+  rw [iSupIndep_def]
+  intro i
   have hW : IsCompl (spanSlot c) (spanComplement c) := isCompl_spanSlot c
   by_cases hpp : i = (⟨p, by omega⟩ : Fin (2 * p + 1))
   · subst hpp
     rw [spanComponents_pp c p hp]
-    by_cases h0 : j = 0
-    · subst h0
-      rw [spanComponents_zero c p hp]
-      exact hW.disjoint
-    · have hjpp : j ≠ (⟨p, by omega⟩ : Fin (2 * p + 1)) := fun h => hij h
-      rw [spanComponents_other c p hp j hjpp h0]
-      exact disjoint_iff.mpr (by simp)
+    have hle : (⨆ (j) (_ : j ≠ (⟨p, by omega⟩ : Fin (2 * p + 1))),
+        spanComponents c p hp j) ≤ spanComplement c := by
+      refine iSup₂_le fun j hj => ?_
+      by_cases h0 : j = 0
+      · subst h0
+        exact le_of_eq (spanComponents_zero c p hp).symm
+      · rw [spanComponents_other c p hp j (fun h => hj h) h0]
+        exact le_bot
+    exact hW.disjoint.mono_right hle
   · by_cases h0i : i = 0
     · subst h0i
       rw [spanComponents_zero c p hp]
-      by_cases hppj : j = (⟨p, by omega⟩ : Fin (2 * p + 1))
-      · subst hppj
-        rw [spanComponents_pp c p hp]
-        exact hW.disjoint.symm
-      · have h0j : j ≠ 0 := fun h => hij h
-        rw [spanComponents_other c p hp j hppj h0j]
-        exact disjoint_iff.mpr (by simp)
-    · have hipp : i ≠ (⟨p, by omega⟩ : Fin (2 * p + 1)) := hpp
-      rw [spanComponents_other c p hp i hipp h0i]
-      exact disjoint_iff.mpr (by simp)
+      have hle : (⨆ (j) (_ : j ≠ 0), spanComponents c p hp j) ≤ spanSlot c := by
+        refine iSup₂_le fun j hj => ?_
+        by_cases hppj : j = (⟨p, by omega⟩ : Fin (2 * p + 1))
+        · subst hppj
+          exact le_of_eq (spanComponents_pp c p hp).symm
+        · rw [spanComponents_other c p hp j hppj hj]
+          exact le_bot
+      exact hW.disjoint.symm.mono_right hle
+    · rw [spanComponents_other c p hp i hpp h0i]
+      exact disjoint_bot_left
 
 private theorem spanComponents_spans {M : ℕ} (c : Fin M → VQ) (p : ℕ)
     (hp : 0 < p) : (⨆ a, spanComponents c p hp a) = ⊤ := by
@@ -404,7 +398,8 @@ theorem rationalHodgeSubspace_span_eq {M : ℕ} (c : Fin M → VQ) (p : ℕ)
       (Submodule.span ℚ (Set.range c))
     -- The W-projection along A: every u decomposes as ↑q.1 + ↑q.2.
     set e : (↥(Submodule.span ℚ (Set.range c)) × ↥W) ≃ₗ[ℚ] VQ :=
-      Submodule.prodEquivOfIsCompl hW with hedef
+      Submodule.prodEquivOfIsCompl
+        (p := Submodule.span ℚ (Set.range c)) (q := W) hW with hedef
     set πW : VQ →ₗ[ℚ] VQ := W.subtype.comp ((LinearMap.snd ℚ
       ↥(Submodule.span ℚ (Set.range c)) ↥W).comp e.symm.toLinearMap) with hπWdef
     have hsplit : ∀ u : VQ, ∃ q : ↥(Submodule.span ℚ (Set.range c)) × ↥W,
@@ -473,16 +468,16 @@ theorem rationalHodgeSubspace_span_eq {M : ℕ} (c : Fin M → VQ) (p : ℕ)
     intro v hv
     rw [mem_rationalHodgeSubspace_iff (spanBigrading c p hp) v, hpp]
     refine Submodule.span_induction ?_ ?_ ?_ ?_ hv
+    · rintro x ⟨i, rfl⟩
+      exact Submodule.subset_span ⟨i, rfl⟩
     · rw [map_zero]
       exact Submodule.zero_mem _
-    · intro x y hx hy _ _
+    · intro x y _ _ hx hy
       rw [map_add]
       exact Submodule.add_mem _ hx hy
-    · intro q x hx _
+    · intro q x _ hx
       rw [map_smul]
-      exact Submodule.smul_mem _ q hx
-    · intro v hv'
-      exact Submodule.subset_span ⟨v, hv'⟩
+      exact Submodule.smul_mem _ (q : ℂ) hx
 
 end SpanLive
 
@@ -514,8 +509,7 @@ theorem native_GST_single_fold_orbit_law_of_stashed_positive_weights
   · have hpos : 0 < p := Nat.pos_of_ne_zero hp
     have hbot : rationalHodgeSubspace (H.hodgeBigrading p) = ⊥ := by
       rw [hstash p hpos]
-      exact rationalHodgeSubspace_stash_eq_bot
-        (RationalSingularCohomology H.analytification (2 * p)) p hpos
+      exact rationalHodgeSubspace_stash_eq_bot p hpos
     have hsub : Subsingleton (ClassicalHodgeFiber V H p) :=
       subsingleton_hodgeFiber_of_eq_bot hbot
     exact ⟨emptyWordKrylovCertificate 0 (zeroCycleClass_mem_hodgeFiber H p),
