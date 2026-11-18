@@ -198,7 +198,6 @@ private theorem stashComponents_indep (n : ℕ) :
         (⊥ : Submodule ℂ (Complexification VQ)) := by
       refine iSup₂_le fun j hj => ?_
       rw [stashComponents_ne_zero hj]
-      exact le_bot
     rw [disjoint_iff, top_inf_eq]
     exact le_bot_iff.mp hle
   · rw [stashComponents_ne_zero hi]
@@ -326,9 +325,9 @@ private theorem spanComponents_indep {M : ℕ} (c : Fin M → VQ) (p : ℕ)
       refine iSup₂_le fun j hj => ?_
       by_cases h0 : j = 0
       · subst h0
-        exact le_of_eq (spanComponents_zero c p hp).symm
+        exact le_of_eq (spanComponents_zero c p hp)
       · rw [spanComponents_other c p hp j (fun h => hj h) h0]
-        exact le_bot
+        exact bot_le
     exact hW.disjoint.mono_right hle
   · by_cases h0i : i = 0
     · subst h0i
@@ -337,9 +336,9 @@ private theorem spanComponents_indep {M : ℕ} (c : Fin M → VQ) (p : ℕ)
         refine iSup₂_le fun j hj => ?_
         by_cases hppj : j = (⟨p, by omega⟩ : Fin (2 * p + 1))
         · subst hppj
-          exact le_of_eq (spanComponents_pp c p hp).symm
+          exact le_of_eq (spanComponents_pp c p hp)
         · rw [spanComponents_other c p hp j hppj hj]
-          exact le_bot
+          exact bot_le
       exact hW.disjoint.symm.mono_right hle
     · rw [spanComponents_other c p hp i hpp h0i]
       exact disjoint_bot_left
@@ -415,7 +414,9 @@ theorem rationalHodgeSubspace_span_eq {M : ℕ} (c : Fin M → VQ) (p : ℕ)
       have heq : (q.1 : VQ) + (q.2 : VQ) = u := by
         rw [← hqu]
         rfl
-      have hsub : (q.2 : VQ) = u - (q.1 : VQ) := by omega
+      have hsub : (q.2 : VQ) = u - (q.1 : VQ) := by
+        rw [← heq]
+        abel
       have hwA : (q.2 : VQ) ∈ Submodule.span ℚ (Set.range c) := by
         rw [hsub]
         exact Submodule.sub_mem hu h1
@@ -445,17 +446,30 @@ theorem rationalHodgeSubspace_span_eq {M : ℕ} (c : Fin M → VQ) (p : ℕ)
       have hcf : complexifiedFamily c i = (1 : ℂ) ⊗ₜ[ℚ] (c i) := rfl
       rw [hcf, hTdef, TensorProduct.map_tmul, hkill (c i) hci,
         TensorProduct.tmul_zero]
-    have hTspan : spanSlot c ≤ LinearMap.ker T := by
-      rw [spanSlot, Submodule.span_le]
-      rintro z ⟨i, rfl⟩
-      exact hTgen i
+    have hTsmul : ∀ (a : ℂ) (z : Complexification VQ), T (a • z) = a • T z := by
+      intro a z
+      induction z using TensorProduct.induction_on with
+      | zero => simp
+      | tmul b v =>
+          rw [TensorProduct.smul_tmul', hTdef, TensorProduct.map_tmul,
+            TensorProduct.smul_tmul', hTdef, TensorProduct.map_tmul]
+          rfl
+      | add z₁ z₂ ih₁ ih₂ => simp [map_add, ih₁, ih₂]
     have hvT : T (complexificationMapQ VQ v) = 0 := by
-      have hkermem := hTspan hmem
-      rw [LinearMap.mem_ker] at hkermem
-      exact hkermem
+      have hmem2 : complexificationMapQ VQ v ∈
+          Submodule.span ℂ (Set.range (complexifiedFamily c)) := hmem
+      refine Submodule.span_induction ?_ ?_ ?_ ?_ hmem2
+      · rintro z ⟨i, rfl⟩
+        exact hTgen i
+      · rw [map_zero]
+      · intro z₁ z₂ _ _ h₁ h₂
+        rw [map_add, h₁, h₂, add_zero]
+      · intro a z _ hz
+        rw [hTsmul a z, hz, smul_zero]
     have hunravel : T (complexificationMapQ VQ v) =
         complexificationMapQ VQ (πW v) := by
-      rw [hTdef, TensorProduct.map_tmul]
+      have hcv : complexificationMapQ VQ v = (1 : ℂ) ⊗ₜ[ℚ] v := rfl
+      rw [hcv, hTdef, TensorProduct.map_tmul]
       rfl
     have hfinal : complexificationMapQ VQ (πW v) = 0 := by
       rw [← hunravel]
