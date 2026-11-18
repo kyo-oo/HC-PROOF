@@ -1309,7 +1309,7 @@ theorem shiftWord_op_ptClass :
                 lettersOf N (shiftLettersDownTo N k (Nat.lt_of_succ_lt hk)) := rfl
           have hcol : ¬((⟨k + 1, hk⟩ : Fin N) = i) := by
             intro hc
-            have hiv : i.val = k + 1 := by rw [← hc]; rfl
+            have hiv : i.val = k + 1 := by rw [← hc]
             omega
           have hkill : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator
               (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
