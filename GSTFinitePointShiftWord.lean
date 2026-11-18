@@ -1187,7 +1187,7 @@ theorem shiftWord_op_ptClass_not :
               pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩)] := rfl
         have hcol : ¬((⟨0, hk⟩ : Fin N) = i) := by
           intro hc
-          have hiv : i.val = 0 := by rw [← hc]; rfl
+          have hiv : i.val = 0 := by rw [← hc]
           omega
         have hkill : (pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩).cohomologyOperator
             (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
@@ -1216,7 +1216,7 @@ theorem shiftWord_op_ptClass_not :
               lettersOf N (shiftLettersDownTo N k (Nat.lt_of_succ_lt hk)) := rfl
         have hcol : ¬((⟨k + 1, hk⟩ : Fin N) = i) := by
           intro hc
-          have hiv : i.val = k + 1 := by rw [← hc]; rfl
+          have hiv : i.val = k + 1 := by rw [← hc]
           omega
         have hkill : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator
             (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
@@ -1269,12 +1269,12 @@ theorem shiftWord_op_ptClass :
           (finitePointHodgeData N).analytification (2 * 0),
           (finitePointCohomologyIso N) (X + Y) =
             (finitePointCohomologyIso N) X + (finitePointCohomologyIso N) Y :=
-        fun X Y => cohomologyIso_add X Y
+        fun X Y => cohomologyIso_add N X Y
       have hisosmul : ∀ (t : ℚ) (X : RationalSingularCohomology
           (finitePointHodgeData N).analytification (2 * 0)),
           (finitePointCohomologyIso N) (t • X) =
             t • (finitePointCohomologyIso N) X :=
-        fun t X => cohomologyIso_smul t X
+        fun t X => cohomologyIso_smul N t X
       rw [hiso, hisosmul]
       rw [zeroCycleClass_point N ⟨0 + 1, h1⟩]
       have hiso0 : (finitePointCohomologyIso N)
@@ -1350,12 +1350,12 @@ theorem shiftWord_op_ptClass :
             (finitePointHodgeData N).analytification (2 * 0),
             (finitePointCohomologyIso N) (X + Y) =
               (finitePointCohomologyIso N) X + (finitePointCohomologyIso N) Y :=
-          fun X Y => cohomologyIso_add X Y
+          fun X Y => cohomologyIso_add N X Y
         have hisosmul : ∀ (t : ℚ) (X : RationalSingularCohomology
             (finitePointHodgeData N).analytification (2 * 0)),
             (finitePointCohomologyIso N) (t • X) =
               t • (finitePointCohomologyIso N) X :=
-          fun t X => cohomologyIso_smul t X
+          fun t X => cohomologyIso_smul N t X
         rw [hiso, hisosmul]
         rw [zeroCycleClass_point N ⟨k + 1 + 1, hk2⟩]
         have hiso0 : (finitePointCohomologyIso N)
