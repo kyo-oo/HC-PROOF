@@ -419,7 +419,7 @@ theorem rationalHodgeSubspace_span_eq {M : ℕ} (c : Fin M → VQ) (p : ℕ)
         abel
       have hwA : (q.2 : VQ) ∈ Submodule.span ℚ (Set.range c) := by
         rw [hsub]
-        exact Submodule.sub_mem hu h1
+        exact Submodule.sub_mem (p := Submodule.span ℚ (Set.range c)) hu h1
       have hbot : (q.2 : VQ) ∈ (⊥ : Submodule ℚ VQ) := by
         rw [← hW.inf_eq_bot]
         exact Submodule.mem_inf.mpr ⟨hwA, h2⟩
@@ -452,8 +452,8 @@ theorem rationalHodgeSubspace_span_eq {M : ℕ} (c : Fin M → VQ) (p : ℕ)
       | zero => simp
       | tmul b v =>
           rw [TensorProduct.smul_tmul', hTdef, TensorProduct.map_tmul,
-            TensorProduct.smul_tmul', hTdef, TensorProduct.map_tmul]
-          rfl
+            TensorProduct.map_tmul, TensorProduct.smul_tmul']
+          simp only [LinearMap.id_apply]
       | add z₁ z₂ ih₁ ih₂ => simp [map_add, ih₁, ih₂]
     have hvT : T (complexificationMapQ VQ v) = 0 := by
       have hmem2 : complexificationMapQ VQ v ∈
