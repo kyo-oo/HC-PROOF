@@ -946,3 +946,17 @@ roots = [
   "GSTTwelvePointAnalytification",
   "GSTTwelvePointWorldCarrier",
 ]
+
+# GST finite-point native geometric world (2026-11-18) — the general-N
+# family: the live weight-0 discharge of the native single-fold orbit law
+# at every N >= 1 (the twelve-point world is the motivating N = 12 instance).
+[[lean_lib]]
+name = "GSTFinitePointNativeWorldUpgrade"
+roots = [
+  "GSTFinitePointLawLanding",
+  "GSTFinitePointShiftWord",
+  "GSTFinitePointHodgeData",
+  "GSTFinitePointCohomology",
+  "GSTFinitePointAnalytification",
+  "GSTFinitePointWorldCarrier",
+]

@@ -1,3 +1,10 @@
+## 2026-11-18 — THE FINITE-POINT NATIVE GEOMETRIC WORLD: THE GENERAL-N LAW LANDING (LANE OPENED)
+- Record: 2026-11-18-gst-finite-point-native-geometric-world.md (the third concrete lane of the NativeGSTSingleFoldOrbitLaw program: six new modules, the general-N finite-point world family, the nilpotent-shift certificate, the law at every N >= 1)
+- The wave-41 recon corrections (audit-mandated): the weight-0 rational Hodge fiber is FORCED full for ANY HodgeBigradedBettiData (Fin 1 index type; the generic lemma rationalHodgeSubspace_eq_top_of_degree_zero); the for-every-H form is FALSE (the unconstrained cycleClass countermodel); the honest target is the canonical discrete Hodge data at every N
+- The certificate: the nilpotent shift word (N-1 unit point-pair letters; S e_i = e_{i+1}, S^N = 0); the Krylov orbit of the point-0 seed IS the standard basis e_0 -> ... -> e_{N-1} -> 0 — cyclicity with NO Krylov determinant at any N
+- The discharges: finitePoint_law (weight 0 live rank N by the shift certificate; p >= 1 dead by the empty word), finitePoint_everyHodge through the repository conditional chain, the 5-fold master package; the letter machinery and the four lower modules are CI-green twelve-point twin ports (rename map + N threading, proofs verbatim, PORT RISK sites documented)
+- Registration: lakefile lib GSTFinitePointNativeWorldUpgrade (6 roots) + the hardened CI lane gst-finite-point-native-world.yml; static verification only from this sandbox — the kernel verdict belongs to GitHub CI at the pushed SHA
+
 ## 2026-11-16 — THE TWELVE-POINT WAVE 22: THE EMERGENCY MEM_TOP PAIR + THE TOOLCHAIN HARDENING
 - Record: 2026-11-16-gst-twelve-point-wave22-emergency-memtop-hardening.md (the W22-D audit find shipped: the wave-21 commit claimed the HodgeData mem_top pair but never landed it — 6-of-8 not 8-of-8; the two-line bare-form repair + the elan-install hardening + the wave-21 record correction)
 - The find: rationalHodgeSubspace_of_top's two closers (exact Submodule.mem_top m/_) are the verbatim run-20 arity killers, unshipped through the W21-A/W21-C ownership gap; the structural gate gains a claim-vs-diff clause from this wave on
