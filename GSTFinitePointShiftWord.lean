@@ -1287,10 +1287,13 @@ theorem shiftWord_op_ptClass :
               ((finitePointPt N) i)))) = 0 := by
         show (finitePointCohomologyIso N)
           (0 : RationalSingularCohomology (finitePointAnalytification N) 0) = 0
-        exact cohomologyIso_zero
+        exact cohomologyIso_zero N
       rw [hiso0, add_zero]
-      exact congrArg (fun x : Fin N => Pi.single x (1 : ℚ))
-        (Fin.ext (by rw [h0]))
+      have hfin : (⟨0 + 1, h1⟩ : Fin N) = ⟨i.val + 1, hi⟩ := by
+        apply Fin.ext
+        show (0 + 1 : ℕ) = i.val + 1
+        omega
+      exact congrArg (fun x : Fin N => Pi.single x (1 : ℚ)) hfin
   | succ k ih =>
       intro hk i hik hi
       by_cases hik1 : i.val ≤ k
@@ -1370,10 +1373,13 @@ theorem shiftWord_op_ptClass :
             (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
               ((finitePointPt N) i)))) = 0 := by
           rw [htail]
-          exact cohomologyIso_zero
+          exact cohomologyIso_zero N
         rw [hiso0, add_zero]
-        exact congrArg (fun x : Fin N => Pi.single x (1 : ℚ))
-          (Fin.ext (by rw [hik']))
+        have hfin : (⟨k + 1 + 1, hk2⟩ : Fin N) = ⟨i.val + 1, hi⟩ := by
+          apply Fin.ext
+          show (k + 1 + 1 : ℕ) = i.val + 1
+          omega
+        exact congrArg (fun x : Fin N => Pi.single x (1 : ℚ)) hfin
 
 /-- **THE ORBIT ENGINE**: the shift word's operator carries the `i`-th
 coordinate basis vector to the `(i+1)`-st. -/
