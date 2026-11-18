@@ -146,7 +146,7 @@ noncomputable def finitePointSeedCycle : codimensionCycles (finitePointWorld N).
 zero the fiber is the whole `H⁰` — FORCED for any Hodge data on any
 smooth projective complex world. -/
 theorem finitePointSeed_hodge :
-    (finitePointHodgeData N).cycleClass 0 finitePointSeedCycle ∈
+    (finitePointHodgeData N).cycleClass 0 (finitePointSeedCycle N) ∈
       rationalHodgeSubspace ((finitePointHodgeData N).hodgeBigrading 0) := by
   -- PORT NOTE(n12): the ancestor's route bridges the fiber equation
   -- through the bigrading-constant rewrite
@@ -172,13 +172,13 @@ level defeq on the from-terms, syntactic match on every subsequent
 rewrite). -/
 theorem finitePointSeed_coords :
     (finitePointCohomologyIso N)
-      ((finitePointHodgeData N).cycleClass 0 finitePointSeedCycle) =
+      ((finitePointHodgeData N).cycleClass 0 (finitePointSeedCycle N)) =
       Pi.single ⟨0, NeZero.pos N⟩ (1 : ℚ) := by
   -- PORT NOTE(n12): the ancestor's seed is a SUM of two point classes
   -- and its coords proof is the map_add/iso-additivity chain; the
   -- one-cell seed needs no additivity — the single point-class equation
   -- closes directly.
-  have hseed : (finitePointHodgeData N).cycleClass 0 finitePointSeedCycle =
+  have hseed : (finitePointHodgeData N).cycleClass 0 (finitePointSeedCycle N) =
       zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
         (finitePointPt N ⟨0, NeZero.pos N⟩)) := rfl
   rw [hseed]
@@ -196,7 +196,7 @@ the rewrite inside `hcoords` is syntactic); the final defeq closure runs
 the same ite/decide reductions at `Fin N` the ancestor ran at its
 literal cells. -/
 theorem finitePointSeed_class_ne_zero :
-    (finitePointHodgeData N).cycleClass 0 finitePointSeedCycle ≠ 0 := by
+    (finitePointHodgeData N).cycleClass 0 (finitePointSeedCycle N) ≠ 0 := by
   intro h0
   have hcoords := finitePointSeed_coords N
   have hz : (finitePointCohomologyIso N)
@@ -255,10 +255,11 @@ word's operator is the cell translation (`shiftWord_op_single`). -/
 -- `n < N` from `n + 1 < N` by omega).
 /-- **THE ORBIT IS THE INDICATOR FAMILY.**  For every `n < N`, the n-th
 Hodge-orbit vector is the n-th cell's indicator under the H⁰ iso. -/
-theorem finitePointHodgeOrbit_coords (n : Nat) (hn : n < N) :
-    (finitePointCohomologyIso N) ((finitePointCertificate N).hodgeOrbit n).1 =
-      Pi.single ⟨n, hn⟩ (1 : ℚ) := by
-  induction n generalizing hn with
+theorem finitePointHodgeOrbit_coords (n : Nat) :
+    ∀ hn : n < N,
+      (finitePointCohomologyIso N) ((finitePointCertificate N).hodgeOrbit n).1 =
+        Pi.single ⟨n, hn⟩ (1 : ℚ) := by
+  induction n with
   | zero =>
       intro hn
       -- the orbit's start is the seed; its class is the 0-th point class
