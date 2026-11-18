@@ -143,7 +143,7 @@ theorem pointPairAlgHom_surjective (r c : Fin N) :
   refine ⟨Pi.single c x ⊗ₜ[ℂ] 1, ?_⟩
   show pointPairAlgHom N r c (Pi.single c x ⊗ₜ[ℂ] 1) = x
   -- AUDIT-2 (tensor API): `map_tmul`/`rid_tmul`/`Pi.single_apply` names.
-  simp [pointPairAlgHom N, Algebra.TensorProduct.map_tmul,
+  simp [pointPairAlgHom, Algebra.TensorProduct.map_tmul,
     Algebra.TensorProduct.rid_tmul, Pi.single_apply, mul_one]
 
 /-- The closed point-pair subscheme `Spec ℂ ⟶ X ×_ℂ X` selecting
@@ -171,7 +171,7 @@ theorem pointPair_left_hom (r c : Fin N) :
   -- (Algebra/Ring/Pi.lean:170, @[simps!]-generated — pin-verified W1-B §2)
   -- normalizes the show's RHS `↑(eval c) a` to `a c` so the close is
   -- syntactic (no terminal-defeq gamble).
-  simp [pointPairAlgHom N, Algebra.TensorProduct.map_tmul,
+  simp [pointPairAlgHom, Algebra.TensorProduct.map_tmul,
     Algebra.TensorProduct.rid_tmul, Pi.evalAlgHom_apply, Pi.evalRingHom_apply,
     mul_one]
 
@@ -192,7 +192,7 @@ theorem pointPair_right_hom (r c : Fin N) :
   rw [htm]
   -- AUDIT-2 + W2-A: as the left leg (R1-8); `one_mul` covers the
   -- `rid_tmul` smul `(a r) • 1 → (a r) * 1` spelling.
-  simp [pointPairAlgHom N, Algebra.TensorProduct.map_tmul,
+  simp [pointPairAlgHom, Algebra.TensorProduct.map_tmul,
     Algebra.TensorProduct.rid_tmul, Pi.evalAlgHom_apply, Pi.evalRingHom_apply,
     one_mul]
 
@@ -273,7 +273,7 @@ theorem pointPair_left_apply (r c : Fin N) (z : Spec (CommRingCat.of ℂ)) :
   rw [pointPair_left N]
   show PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin N => ℂ) c) z = _
   rw [Subsingleton.elim z default]
-  exact comap_evalRingHom_default c
+  exact comap_evalRingHom_default N c
 
 /-- Point-level action of the right leg: the unique carrier point lands on
 the row point. -/
@@ -282,7 +282,7 @@ theorem pointPair_right_apply (r c : Fin N) (z : Spec (CommRingCat.of ℂ)) :
   rw [pointPair_right N]
   show PrimeSpectrum.comap (Pi.evalRingHom (fun _ : Fin N => ℂ) r) z = _
   rw [Subsingleton.elim z default]
-  exact comap_evalRingHom_default r
+  exact comap_evalRingHom_default N r
 
 /-! ## The residue degree of the right leg -/
 
@@ -672,7 +672,7 @@ noncomputable def matrixUnitOp (r c : Fin N) :
 
 theorem matrixUnitOp_apply (r c : Fin N)
     (u : RationalSingularCohomology (finitePointHodgeData N).analytification 0) :
-    (finitePointCohomologyIso N) (matrixUnitOp r c u) =
+    (finitePointCohomologyIso N) (matrixUnitOp N r c u) =
       fun k => if k = r then (finitePointCohomologyIso N) u c else 0 := by
   show (finitePointCohomologyIso N)
       ((finitePointCohomologyIso N).symm
@@ -688,7 +688,7 @@ theorem matrixUnitOp_apply (r c : Fin N)
 /-- The matrix unit sends the `i`-th point class to the `r`-th indicator when
 `i` is the column, and to zero otherwise. -/
 theorem matrixUnitOp_pointClass (r c i : Fin N) :
-    (finitePointCohomologyIso N) (matrixUnitOp r c
+    (finitePointCohomologyIso N) (matrixUnitOp N r c
         (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
           ((finitePointPt N) i)))) =
       if c = i then Pi.single r (1 : ℚ) else 0 := by
@@ -701,7 +701,7 @@ theorem matrixUnitOp_pointClass (r c i : Fin N) :
   -- ground have whose TYPE is the goal's own spelling (the application
   -- elaborates once, at default transparency, in term mode) and rewrite
   -- with the have -- the match is then purely syntactic.
-  have happ : (finitePointCohomologyIso N) (matrixUnitOp r c
+  have happ : (finitePointCohomologyIso N) (matrixUnitOp N r c
       (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
         ((finitePointPt N) i)))) =
       fun k => if k = r then (finitePointCohomologyIso N)
@@ -727,7 +727,7 @@ theorem matrixUnitOp_pointClass (r c i : Fin N) :
 /-- The point pair realizes exactly its matrix unit on all point classes. -/
 theorem pointPairGeometry_realizes (r c : Fin N) :
     (pointPairGeometry N r c).RealizesAmbientOnPoints
-        (H := (finitePointHodgeData N)) (p := 0) (matrixUnitOp r c) := by
+        (H := (finitePointHodgeData N)) (p := 0) (matrixUnitOp N r c) := by
   intro x
   -- every codimension-0 point is one of the twelve
   obtain ⟨i, hi⟩ := (finitePointEquiv N).surjective x -- AUDIT-7: `(finitePointEquiv N)`
@@ -744,9 +744,9 @@ theorem pointPairGeometry_realizes (r c : Fin N) :
         ((pointPairGeometry N r c).nativePointImage 0 ((finitePointEquiv N) c)) = _
     rw [himg]
     have key : (finitePointCohomologyIso N)
-        (matrixUnitOp r c (zeroCycleClass
+        (matrixUnitOp N r c (zeroCycleClass N
           (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) c)))) =
-        (finitePointCohomologyIso N) (zeroCycleClass
+        (finitePointCohomologyIso N) (zeroCycleClass N
           (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) r))) := by
       rw [matrixUnitOp_pointClass N r c c]
       rw [if_pos rfl]
@@ -775,13 +775,13 @@ theorem pointPairGeometry_realizes (r c : Fin N) :
           ((finitePointHodgeData N).cycleClass 0
             (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) r)))) =
         (finitePointCohomologyIso N).symm ((finitePointCohomologyIso N)
-          (matrixUnitOp r c (zeroCycleClass
+          (matrixUnitOp N r c (zeroCycleClass N
             (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) c))))) :=
       by rw [key]; rfl
     have s3 : (finitePointCohomologyIso N).symm ((finitePointCohomologyIso N)
-          (matrixUnitOp r c (zeroCycleClass
+          (matrixUnitOp N r c (zeroCycleClass N
             (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) c))))) =
-        matrixUnitOp r c (zeroCycleClass
+        matrixUnitOp N r c (zeroCycleClass N
           (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) c))) :=
       LinearEquiv.symm_apply_apply _ _
     exact s1.trans (s2.trans s3)
@@ -792,7 +792,7 @@ theorem pointPairGeometry_realizes (r c : Fin N) :
     show (finitePointHodgeData N).cycleClass 0
         ((pointPairGeometry N r c).nativePointImage 0 ((finitePointEquiv N) i)) = _
     rw [himg, map_zero]
-    have hzero : matrixUnitOp r c (zeroCycleClass
+    have hzero : matrixUnitOp N r c (zeroCycleClass N
         (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) i))) = 0 := by
       -- WAVE 29 (run-28 :783 receipt): the calc's Trans synthesis died;
       -- mechanism switch as in the first arm -- ground haves at the
@@ -801,14 +801,14 @@ theorem pointPairGeometry_realizes (r c : Fin N) :
       -- (Module/Equiv/Defs.lean:501, protected, e explicit) instead of
       -- `simp` (the OfNat instances differ across the analytification
       -- clans and simp's rfl-close is unattested).
-      have z1 : matrixUnitOp r c (zeroCycleClass
+      have z1 : matrixUnitOp N r c (zeroCycleClass N
             (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) i))) =
           (finitePointCohomologyIso N).symm ((finitePointCohomologyIso N)
-            (matrixUnitOp r c (zeroCycleClass
+            (matrixUnitOp N r c (zeroCycleClass N
               (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) i))))) :=
         (LinearEquiv.symm_apply_apply _ _).symm
       have z2 : (finitePointCohomologyIso N).symm ((finitePointCohomologyIso N)
-            (matrixUnitOp r c (zeroCycleClass
+            (matrixUnitOp N r c (zeroCycleClass N
               (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) i))))) =
           (finitePointCohomologyIso N).symm
             (if c = i then Pi.single r (1 : ℚ) else 0) :=
@@ -837,7 +837,7 @@ operator plus the pointwise realization theorem. -/
 noncomputable def pointPairLetter (r c : Fin N) :
     RealizedFiniteClosedCorrespondence (finitePointWorld N) (finitePointHodgeData N) 0 where
   geometry := pointPairGeometry N r c
-  cohomologyOperator := matrixUnitOp r c
+  cohomologyOperator := matrixUnitOp N r c
   realizes_on_points := pointPairGeometry_realizes N r c
 /-- The realized correspondence word induced by letter data. -/
 noncomputable def lettersOf (L : List (Fin N × Fin N × ℚ)) :
@@ -894,7 +894,7 @@ theorem wordOp_pointClass (L : List (Fin N × Fin N × ℚ)) (i : Fin N) :
         (fun d => if d.2.1 = i then (if j = d.1 then d.2.2 else 0) else 0)).sum := by
   induction L with
   | nil =>
-    simp only [lettersOf N, List.map_nil, List.sum_nil]
+    simp only [lettersOf, List.map_nil, List.sum_nil]
     -- W2-D (run-26 :665 receipt, W1-D R4/R5): the old `show` ascribed the zero
     -- operator at the PROJECTION clan (`(finitePointHodgeData N).analytification 0`)
     -- while the argument `zeroCycleClass …` lives at the CONSTANT clan
@@ -1010,7 +1010,7 @@ theorem module_decomp (u : RationalSingularCohomology
         (finitePointAnalytification N) 0),
         (finitePointCohomologyIso N) (t • X) = t • (finitePointCohomologyIso N) X :=
       fun t X => cohomologyIso_smul N t X
-    have hpt : ∀ k : Fin N, (finitePointCohomologyIso N) (zeroCycleClass
+    have hpt : ∀ k : Fin N, (finitePointCohomologyIso N) (zeroCycleClass N
         (codimensionPointCycle (finitePointWorld N).X 0 ((finitePointPt N) k))) =
         Pi.single k (1 : ℚ) := fun k => zeroCycleClass_point N k
     rw [hsummap]
@@ -1042,63 +1042,23 @@ theorem module_decomp (u : RationalSingularCohomology
 
 /-! ## The nilpotent shift word -/
 
-/-- The letter data of the nilpotent shift: one unit letter `(i+1, i, 1)`
-per point whose successor exists — `N − 1` letters in all. -/
-def shiftWordData (N : ℕ) [NeZero N] : List (Fin N × Fin N × ℚ) :=
-  (List.finRange N).filterMap fun i =>
-    if hi : i.val + 1 < N then some (⟨i.val + 1, hi⟩, i, (1 : ℚ)) else none
+/-- The shift letters for columns `0 … k`, built downward from `k` (given
+`k < N`): the letter `(k+1, k, 1)` rides in front whenever the successor
+`k+2` exists in `Fin N`.  Structural recursion on `k`. -/
+def shiftLettersDownTo (N : ℕ) : (k : ℕ) → k < N → List (Fin N × Fin N × ℚ)
+  | 0, h0 => if h : 0 + 1 < N then [(⟨0 + 1, h⟩, ⟨0, h0⟩, (1 : ℚ))] else []
+  | k + 1, hk =>
+      if h : k + 1 + 1 < N then
+        (⟨k + 1 + 1, h⟩, ⟨k + 1, hk⟩, (1 : ℚ)) ::
+          shiftLettersDownTo N k (Nat.lt_of_succ_lt hk)
+      else shiftLettersDownTo N k (Nat.lt_of_succ_lt hk)
 
-/-- Every letter of the shift data is a unit step. -/
-theorem shiftWordData_spec {d : Fin N × Fin N × ℚ}
-    (h : d ∈ shiftWordData N) :
-    d.2.2 = (1 : ℚ) ∧ d.1.val = d.2.1.val + 1 ∧ d.2.1.val + 1 < N := by
-  simp only [shiftWordData, List.mem_filterMap] at h
-  obtain ⟨i, -, hd⟩ := h
-  by_cases hi : i.val + 1 < N
-  · rw [dif_pos hi] at hd
-    have htri : d = (⟨i.val + 1, hi⟩, i, (1 : ℚ)) := (Option.some.inj hd).symm
-    subst htri
-    exact ⟨rfl, rfl, hi⟩
-  · rw [dif_neg hi] at hd
-    exact absurd hd (by simp)
-
-/-- The step letter at `i` is in the data whenever the successor exists. -/
-theorem shiftWordData_mem (i : Fin N) (hi : i.val + 1 < N) :
-    (⟨i.val + 1, hi⟩, i, (1 : ℚ)) ∈ shiftWordData N := by
-  simp only [shiftWordData, List.mem_filterMap]
-  refine ⟨i, List.mem_finRange.mpr (Nat.lt_succ_of_lt i.isLt), ?_⟩
-  rw [dif_pos hi]
-
-/-- Two letters of the shift data with the same column are the same
-letter. -/
-theorem shiftWordData_eq_of_col_eq {d d' : Fin N × Fin N × ℚ}
-    (h : d ∈ shiftWordData N) (h' : d' ∈ shiftWordData N)
-    (hcol : d.2.1 = d'.2.1) : d = d' := by
-  have hd := shiftWordData_spec N h
-  have hd' := shiftWordData_spec N h'
-  have h1 : d.1 = d'.1 := by
-    apply Fin.ext
-    rw [hd.2.1, hd'.2.1, hcol]
-  have h3 : d.2.2 = d'.2.2 := by rw [hd.1, hd'.1]
-  show (d.1, d.2.1, d.2.2) = (d'.1, d'.2.1, d'.2.2)
-  rw [h1, hcol, h3]
-
-/-- The column-sum of the shift data at column `i` is the successor
-indicator. -/
-theorem shiftWordData_sum (i : Fin N) (hi : i.val + 1 < N) (j : Fin N) :
-    (((shiftWordData N).map
-        (fun d => if d.2.1 = i then (if j = d.1 then d.2.2 else 0) else 0)).sum : ℚ) =
-      if j = ⟨i.val + 1, hi⟩ then (1 : ℚ) else 0 := by
-  have hmem : (⟨i.val + 1, hi⟩, i, (1 : ℚ)) ∈ shiftWordData N :=
-    shiftWordData_mem N i hi
-  refine List.sum_eq_single_of_mem _ hmem ?_ ?_
-  · show (if j = ⟨i.val + 1, hi⟩ then (1 : ℚ) else 0)
-      = if j = ⟨i.val + 1, hi⟩ then (1 : ℚ) else 0
-    rfl
-  · intro x hx xne
-    by_cases hxc : x.2.1 = i
-    · exact absurd (shiftWordData_eq_of_col_eq N hx hmem hxc) xne
-    · simp [hxc]
+/-- **THE SHIFT LETTER DATA**: one unit letter `(i+1, i, 1)` per point
+whose successor exists — `N − 1` letters in all, assembled downward from
+the last column. -/
+def shiftWordData : (N : ℕ) → List (Fin N × Fin N × ℚ)
+  | 0 => []
+  | M + 1 => shiftLettersDownTo (M + 1) M (Nat.lt_succ_self M)
 
 /-- The shift matrix: one unit at `(i+1, i)` per step (`S e_i = e_{i+1}`,
 nilpotent, `S^N = 0`).  Recorded as the word's matrix; the orbit engine
@@ -1111,6 +1071,263 @@ correspondence word of `N − 1` weighted point-pair letters. -/
 noncomputable def finitePointShiftWord (N : ℕ) [NeZero N] :
     RealizedCorrespondenceWord (finitePointWorld N) (finitePointHodgeData N) 0 :=
   lettersOf N (shiftWordData N)
+
+/-- Cons-unfolding of the word operator at an arbitrary vector. -/
+theorem wordOp_cons_apply (q : ℚ)
+    (R : RealizedFiniteClosedCorrespondence (finitePointWorld N)
+      (finitePointHodgeData N) 0)
+    (W : RealizedCorrespondenceWord (finitePointWorld N)
+      (finitePointHodgeData N) 0)
+    (u : RationalSingularCohomology (finitePointAnalytification N) 0) :
+    (realizedWordPair ((q, R) :: W)).cohomologyOperator u =
+      q • R.cohomologyOperator u +
+        (realizedWordPair W).cohomologyOperator u := by
+  rw [realizedWordPair_cohomologyOperator_cons,
+    LinearMap.add_apply, LinearMap.smul_apply]
+
+/-- A matrix-unit letter kills every point class off its column. -/
+theorem matrixUnitOp_ptClass_eq_zero (r c i : Fin N) (h : c ≠ i) :
+    (matrixUnitOp N r c)
+      (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+        ((finitePointPt N) i))) = 0 := by
+  have z2 : (finitePointCohomologyIso N)
+      ((matrixUnitOp N r c)
+        (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+          ((finitePointPt N) i)))) =
+      (finitePointCohomologyIso N).symm
+        (if c = i then Pi.single r (1 : ℚ) else 0) := by
+    rw [matrixUnitOp_pointClass N r c i]
+  have z1 : (matrixUnitOp N r c)
+      (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+        ((finitePointPt N) i))) =
+      (finitePointCohomologyIso N).symm
+        ((finitePointCohomologyIso N)
+          ((matrixUnitOp N r c)
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) i))))) :=
+    (LinearEquiv.symm_apply_apply _ _).symm
+  have z3 : (finitePointCohomologyIso N).symm
+      (if c = i then Pi.single r (1 : ℚ) else 0) =
+      (finitePointCohomologyIso N).symm 0 := by
+    rw [if_neg h]
+  have z4 : (finitePointCohomologyIso N).symm 0 = 0 :=
+    LinearEquiv.map_zero _
+  exact z1.trans (z2.trans (z3.trans z4))
+
+/-- A matrix-unit letter carries the point class of its column to the
+point class of its row. -/
+theorem matrixUnitOp_ptClass_eq (r c i : Fin N) (h : c = i) :
+    (matrixUnitOp N r c)
+      (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+        ((finitePointPt N) i))) =
+      zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+        ((finitePointPt N) r)) := by
+  have key : (finitePointCohomologyIso N)
+      ((matrixUnitOp N r c)
+        (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+          ((finitePointPt N) i)))) =
+      (finitePointCohomologyIso N)
+        (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+          ((finitePointPt N) r))) := by
+    rw [matrixUnitOp_pointClass N r c i, if_pos h,
+      zeroCycleClass_point N r]
+  have s1 : zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+        ((finitePointPt N) r)) =
+      (finitePointCohomologyIso N).symm
+        ((finitePointCohomologyIso N)
+          (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+            ((finitePointPt N) r)))) :=
+    (LinearEquiv.symm_apply_apply _ _).symm
+  have s2 : (finitePointCohomologyIso N).symm
+        ((finitePointCohomologyIso N)
+          (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+            ((finitePointPt N) r)))) =
+      (finitePointCohomologyIso N).symm
+        ((finitePointCohomologyIso N)
+          ((matrixUnitOp N r c)
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) i))))) := by
+    rw [key]; rfl
+  have s3 : (finitePointCohomologyIso N).symm
+        ((finitePointCohomologyIso N)
+          ((matrixUnitOp N r c)
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) i))))) =
+      (matrixUnitOp N r c)
+        (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+          ((finitePointPt N) i))) :=
+    LinearEquiv.symm_apply_apply _ _
+  exact s1.trans (s2.trans s3)
+
+/-- **ABOVE THE LEVEL**: the level-`k` shift word kills every point class
+of a column beyond `k`. -/
+theorem shiftWord_op_ptClass_not (N : ℕ) :
+    ∀ (k : ℕ) (hk : k < N) (i : Fin N), k < i.val →
+    (realizedWordPair (lettersOf N (shiftLettersDownTo N k hk))).cohomologyOperator
+      (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+        ((finitePointPt N) i))) = 0 := by
+  intro k
+  induction k with
+  | zero =>
+      intro hk i hgt
+      by_cases h1 : 0 + 1 < N
+      · have hun : shiftLettersDownTo N 0 hk =
+            [(⟨0 + 1, h1⟩, ⟨0, hk⟩, (1 : ℚ))] := by
+          simp only [shiftLettersDownTo, dif_pos h1]
+        have hword : lettersOf N [(⟨0 + 1, h1⟩, ⟨0, hk⟩, (1 : ℚ))] =
+            [((1 : ℚ),
+              pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩)] := rfl
+        have hcol : ¬((⟨0, hk⟩ : Fin N) = i) := by
+          intro hc
+          rw [hc] at hgt
+          exact absurd hgt (by omega)
+        have hkill : (pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩).cohomologyOperator
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) i))) = 0 := by
+          have : (pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩).cohomologyOperator =
+              matrixUnitOp N ⟨0 + 1, h1⟩ ⟨0, hk⟩ := rfl
+          rw [this]
+          exact matrixUnitOp_ptClass_eq_zero N ⟨0 + 1, h1⟩ ⟨0, hk⟩ i hcol
+        rw [hun, hword]
+        rw [wordOp_cons_apply, hkill, smul_zero]
+        have hnil : (realizedWordPair
+            (lettersOf N ([] : List (Fin N × Fin N × ℚ)))).cohomologyOperator =
+            0 := rfl
+        rw [hnil]
+        rfl
+      · have hun : shiftLettersDownTo N 0 hk = [] := by
+          simp only [shiftLettersDownTo, dif_neg h1]
+        rw [hun]
+        have hnil : (realizedWordPair
+            (lettersOf N ([] : List (Fin N × Fin N × ℚ)))).cohomologyOperator =
+            0 := rfl
+        rw [hnil]
+        rfl
+  | succ k ih =>
+      intro hk i hgt
+      by_cases hk2 : k + 1 + 1 < N
+      · have hun : shiftLettersDownTo N (k + 1) hk =
+            (⟨k + 1 + 1, hk2⟩, ⟨k + 1, hk⟩, (1 : ℚ)) ::
+              shiftLettersDownTo N k (Nat.lt_of_succ_lt hk) := by
+          simp only [shiftLettersDownTo, dif_pos hk2]
+        have hcol : ¬((⟨k + 1, hk⟩ : Fin N) = i) := by
+          intro hc
+          rw [hc] at hgt
+          exact absurd hgt (by omega)
+        have hkill : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) i))) = 0 := by
+          have : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator =
+              matrixUnitOp N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩ := rfl
+          rw [this]
+          exact matrixUnitOp_ptClass_eq_zero N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩ i hcol
+        rw [hun, wordOp_cons_apply, hkill, smul_zero, add_zero]
+        exact ih (Nat.lt_of_succ_lt hk) i (by omega)
+      · have hun : shiftLettersDownTo N (k + 1) hk =
+            shiftLettersDownTo N k (Nat.lt_of_succ_lt hk) := by
+          simp only [shiftLettersDownTo, dif_neg hk2]
+        rw [hun]
+        exact ih (Nat.lt_of_succ_lt hk) i (by omega)
+
+/-- **THE POINT-CLASS ORBIT ENGINE.**  The level-`k` shift word carries
+the `i`-th point class to the `(i+1)`-st whenever `i ≤ k` and the
+successor exists. -/
+theorem shiftWord_op_ptClass (N : ℕ) :
+    ∀ (k : ℕ) (hk : k < N) (i : Fin N) (hik : i.val ≤ k) (hi : i.val + 1 < N),
+    (finitePointCohomologyIso N)
+      ((realizedWordPair (lettersOf N (shiftLettersDownTo N k hk))).cohomologyOperator
+        (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+          ((finitePointPt N) i)))) =
+      Pi.single ⟨i.val + 1, hi⟩ (1 : ℚ) := by
+  intro k
+  induction k with
+  | zero =>
+      intro hk i hik hi
+      have h0 : i.val = 0 := by omega
+      have h1 : 0 + 1 < N := by omega
+      have hun : shiftLettersDownTo N 0 hk =
+          [(⟨0 + 1, h1⟩, ⟨0, hk⟩, (1 : ℚ))] := by
+        simp only [shiftLettersDownTo, dif_pos h1]
+      have hword : lettersOf N [(⟨0 + 1, h1⟩, ⟨0, hk⟩, (1 : ℚ))] =
+          [((1 : ℚ), pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩)] := rfl
+      have hci : (⟨0, hk⟩ : Fin N) = i := Fin.ext (by omega)
+      have hhead : (pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩).cohomologyOperator
+          (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+            ((finitePointPt N) i))) =
+          zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+            ((finitePointPt N) ⟨0 + 1, h1⟩)) := by
+        have : (pointPairLetter N ⟨0 + 1, h1⟩ ⟨0, hk⟩).cohomologyOperator =
+            matrixUnitOp N ⟨0 + 1, h1⟩ ⟨0, hk⟩ := rfl
+        rw [this]
+        exact matrixUnitOp_ptClass_eq N ⟨0 + 1, h1⟩ ⟨0, hk⟩ i hci
+      rw [hun, hword, wordOp_cons_apply, hhead]
+      rw [one_smul]
+      have hnil : (realizedWordPair
+          (lettersOf N ([] : List (Fin N × Fin N × ℚ)))).cohomologyOperator =
+          0 := rfl
+      rw [hnil]
+      have hz : (finitePointCohomologyIso N)
+          (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+            ((finitePointPt N) ⟨0 + 1, h1⟩))) =
+          Pi.single ⟨0 + 1, h1⟩ (1 : ℚ) :=
+        zeroCycleClass_point N ⟨0 + 1, h1⟩
+      rw [hz, add_zero]
+      exact congrArg (fun x : Fin N => Pi.single x (1 : ℚ)) (Fin.ext (by omega))
+  | succ k ih =>
+      intro hk i hik hi
+      by_cases hik1 : i.val ≤ k
+      · by_cases hk2 : k + 1 + 1 < N
+        · have hun : shiftLettersDownTo N (k + 1) hk =
+              (⟨k + 1 + 1, hk2⟩, ⟨k + 1, hk⟩, (1 : ℚ)) ::
+                shiftLettersDownTo N k (Nat.lt_of_succ_lt hk) := by
+            simp only [shiftLettersDownTo, dif_pos hk2]
+          have hcol : ¬((⟨k + 1, hk⟩ : Fin N) = i) := by
+            intro hc
+            rw [hc] at hik1
+            exact absurd hik1 (by omega)
+          have hkill : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator
+              (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+                ((finitePointPt N) i))) = 0 := by
+            have : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator =
+                matrixUnitOp N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩ := rfl
+            rw [this]
+            exact matrixUnitOp_ptClass_eq_zero N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩ i hcol
+          rw [hun, wordOp_cons_apply, hkill, smul_zero, add_zero]
+          exact ih (Nat.lt_of_succ_lt hk) i hik1 hi
+        · have hun : shiftLettersDownTo N (k + 1) hk =
+              shiftLettersDownTo N k (Nat.lt_of_succ_lt hk) := by
+            simp only [shiftLettersDownTo, dif_neg hk2]
+          rw [hun]
+          exact ih (Nat.lt_of_succ_lt hk) i hik1 hi
+      · have hik' : i.val = k + 1 := by omega
+        have hk2 : k + 1 + 1 < N := by omega
+        have hun : shiftLettersDownTo N (k + 1) hk =
+            (⟨k + 1 + 1, hk2⟩, ⟨k + 1, hk⟩, (1 : ℚ)) ::
+              shiftLettersDownTo N k (Nat.lt_of_succ_lt hk) := by
+          simp only [shiftLettersDownTo, dif_pos hk2]
+        have hci : (⟨k + 1, hk⟩ : Fin N) = i := Fin.ext (by omega)
+        have hhead : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) i))) =
+            zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) ⟨k + 1 + 1, hk2⟩)) := by
+          have : (pointPairLetter N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩).cohomologyOperator =
+              matrixUnitOp N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩ := rfl
+          rw [this]
+          exact matrixUnitOp_ptClass_eq N ⟨k + 1 + 1, hk2⟩ ⟨k + 1, hk⟩ i hci
+        have htail : (realizedWordPair
+            (lettersOf N (shiftLettersDownTo N k (Nat.lt_of_succ_lt hk)))).cohomologyOperator
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) i))) = 0 :=
+          shiftWord_op_ptClass_not N k (Nat.lt_of_succ_lt hk) i (by omega)
+        rw [hun, wordOp_cons_apply, hhead]
+        have hiso : (finitePointCohomologyIso N)
+            (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+              ((finitePointPt N) ⟨k + 1 + 1, hk2⟩))) =
+            Pi.single ⟨k + 1 + 1, hk2⟩ (1 : ℚ) :=
+          zeroCycleClass_point N ⟨k + 1 + 1, hk2⟩
+        rw [one_smul, hiso, htail, cohomologyIso_zero, add_zero]
+        exact congrArg (fun x : Fin N => Pi.single x (1 : ℚ)) (Fin.ext (by omega))
 
 /-- **THE ORBIT ENGINE**: the shift word's operator carries the `i`-th
 coordinate basis vector to the `(i+1)`-st. -/
@@ -1127,9 +1344,13 @@ theorem shiftWord_op_single (N : ℕ) [NeZero N] (i : Fin N) (hi : i.val + 1 < N
     exact LinearEquiv.symm_apply_apply _ _
   rw [hpt]
   have hword : finitePointShiftWord N = lettersOf N (shiftWordData N) := rfl
-  rw [hword, wordOp_pointClass N (shiftWordData N) i]
-  funext j
-  rw [shiftWordData_sum N i hi j, Pi.single_apply]
+  rw [hword]
+  obtain ⟨M, rfl⟩ : ∃ M, N = M + 1 := ⟨N - 1, by omega⟩
+  have hsd : shiftWordData (M + 1) =
+      shiftLettersDownTo (M + 1) M (Nat.lt_succ_self M) := rfl
+  rw [hsd]
+  exact shiftWord_op_ptClass (M + 1) M (Nat.lt_succ_self M) i
+    (Nat.lt_succ_iff.mp i.isLt) hi
 
 #check (finitePointShiftWord)
 #check (shiftWord_op_single)
