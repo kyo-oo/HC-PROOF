@@ -93,12 +93,15 @@ over the field ℚ: the identity on `ℚ • 1` extends to a functional on all o
 theorem exists_complex_retraction :
     ∃ r : ℂ →ₗ[ℚ] ℚ, r 1 = 1 := by
   have himg : Function.Injective (Algebra.linearMap ℚ ℂ) := by
-    intro q hq
-    have hz : q • (1 : ℂ) = 0 := by
-      have h1 : (Algebra.linearMap ℚ ℂ) q = 0 := hq
-      rwa [Algebra.linearMap_apply, ← algebraMap_eq_smul_one] at h1
-    rcases (smul_eq_zero (R := ℚ) (M := ℂ)).mp hz with hq' | h1
-    · exact hq'
+    intro q q' hqq
+    have h1 : q • (1 : ℂ) = q' • (1 : ℂ) := by
+      rw [← Algebra.algebraMap_eq_smul_one, ← Algebra.algebraMap_eq_smul_one,
+        ← Algebra.linearMap_apply, ← Algebra.linearMap_apply]
+      exact hqq
+    have hz : (q - q') • (1 : ℂ) = 0 := by
+      rw [sub_smul, h1, sub_self]
+    rcases (smul_eq_zero (R := ℚ) (M := ℂ)).mp hz with h | h1
+    · exact sub_eq_zero.mp h
     · exact absurd h1 one_ne_zero
   set p₁ : Submodule ℚ ℂ := Submodule.span ℚ ({1} : Set ℂ) with hp₁def
   have hone : (1 : ℂ) ∈ p₁ :=
@@ -106,7 +109,7 @@ theorem exists_complex_retraction :
   set g : ℚ →ₗ[ℚ] ↥p₁ :=
     LinearMap.codRestrict p₁ (Algebra.linearMap ℚ ℂ)
       (fun q => Submodule.mem_span_singleton.mpr ⟨q, by
-        rw [Algebra.linearMap_apply, ← algebraMap_eq_smul_one]⟩) with hgdef
+        rw [Algebra.linearMap_apply, ← Algebra.algebraMap_eq_smul_one]⟩) with hgdef
   have hginj : Function.Injective g := by
     intro q q' hqq
     refine himg ?_
@@ -118,10 +121,10 @@ theorem exists_complex_retraction :
     obtain ⟨q, hq⟩ := Submodule.mem_span_singleton.mp y.2
     refine ⟨q, Subtype.ext ?_⟩
     rw [LinearMap.codRestrict_apply, Algebra.linearMap_apply,
-      ← algebraMap_eq_smul_one]
+      ← Algebra.algebraMap_eq_smul_one]
     exact hq
   set e : ℚ ≃ₗ[ℚ] ↥p₁ := LinearEquiv.ofBijective g ⟨hginj, hgsurj⟩ with hedef
-  obtain ⟨r, hr⟩ := LinearMap.exists_extend (V := ℂ) (p := p₁) e.symm
+  obtain ⟨r, hr⟩ := LinearMap.exists_extend (V := ℂ) (p := p₁) e.symm.toLinearMap
   refine ⟨r, ?_⟩
   have hval1 : ((e 1 : ↥p₁) : ℂ) = 1 := by
     show ((g 1 : ↥p₁) : ℂ) = 1
@@ -131,14 +134,14 @@ theorem exists_complex_retraction :
   rw [hrw]
   have hrw2 : r (p₁.subtype ⟨1, hone⟩) = (r.comp p₁.subtype) ⟨1, hone⟩ := rfl
   rw [hrw2, hr]
-  show (e.symm ⟨1, hone⟩) = 1
-  rw [← hee]
+  show (e.symm.toLinearMap ⟨1, hone⟩) = 1
+  rw [show (e.symm.toLinearMap ⟨1, hone⟩) = e.symm ⟨1, hone⟩ from rfl, ← hee]
   exact e.symm_apply_apply 1
 
 /-- The complexification map `v ↦ 1 ⊗ v` is injective: the retraction
 contracts the first tensor factor to a left inverse.  The keystone of the
 dead-positive-weight engine. -/
-theorem complexificationMapQ_injective {VQ : Type*} [AddCommGroup VQ] [Module ℚ VQ] :
+theorem complexificationMapQ_injective {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ] :
     Function.Injective (complexificationMapQ VQ) := by
   obtain ⟨r, hr⟩ := exists_complex_retraction
   set Λ : ℂ →ₗ[ℚ] (VQ →ₗ[ℚ] VQ) :=
@@ -148,15 +151,14 @@ theorem complexificationMapQ_injective {VQ : Type*} [AddCommGroup VQ] [Module �
         apply LinearMap.ext
         intro v
         show ((r (z₁ + z₂)) • (LinearMap.id : VQ →ₗ[ℚ] VQ)) v = _ + _
-        rw [map_add, smul_add, LinearMap.smul_apply, LinearMap.smul_apply,
-          LinearMap.id_apply, LinearMap.id_apply]
+        simp only [map_add, add_smul, LinearMap.smul_apply, LinearMap.id_apply]
       map_smul' := by
         intro q z
         apply LinearMap.ext
         intro v
         show ((r (q • z)) • (LinearMap.id : VQ →ₗ[ℚ] VQ)) v = _
-        rw [map_smul, LinearMap.smul_apply, smul_smul, LinearMap.smul_apply,
-          LinearMap.id_apply, smul_smul] } with hΛdef
+        simp only [map_smul, LinearMap.smul_apply, LinearMap.id_apply,
+          RingHom.id_apply, smul_eq_mul, smul_smul] } with hΛdef
   set ρ : Complexification VQ →ₗ[ℚ] VQ := TensorProduct.lift Λ with hρdef
   have hleft : ∀ v : VQ, ρ (complexificationMapQ VQ v) = v := by
     intro v
@@ -171,10 +173,10 @@ vanishing proofs) -/
 
 section Stash
 
-variable {VQ : Type*} [AddCommGroup VQ] [Module ℚ VQ]
+variable {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ]
 
 /-- The stash component family: everything in slot 0, nothing elsewhere. -/
-def stashComponents (VQ : Type*) [AddCommGroup VQ] [Module ℚ VQ] (n : ℕ) :
+def stashComponents (VQ : Type) [AddCommGroup VQ] [Module ℚ VQ] (n : ℕ) :
     Fin (n + 1) → Submodule ℂ (Complexification VQ) :=
   fun j => if j = 0 then ⊤ else ⊥
 
@@ -186,7 +188,7 @@ theorem stashComponents_ne_zero {n : ℕ} {j : Fin (n + 1)} (hj : j ≠ 0) :
 
 private theorem stashComponents_indep (n : ℕ) :
     iSupIndep (stashComponents VQ n) := by
-  rw [CompleteLattice.iSupIndep_iff_pairwiseDisjoint]
+  rw [iSupIndep_iff_pairwiseDisjoint]
   intro i j hij
   by_cases hi : i = 0
   · subst hi
@@ -220,7 +222,7 @@ private theorem stashComponents_spans (n : ℕ) :
 bigrading: slot 0 absorbs the whole complexification, all other slots are
 zero.  Legal for EVERY `n`, with NO condition on the underlying rational
 group. -/
-def stashBigrading (VQ : Type*) [AddCommGroup VQ] [Module ℚ VQ] (n : ℕ) :
+def stashBigrading (VQ : Type) [AddCommGroup VQ] [Module ℚ VQ] (n : ℕ) :
     HodgeBigrading VQ n where
   component := stashComponents VQ n
   independent := stashComponents_indep VQ n
@@ -233,8 +235,9 @@ theorem stashBigrading_ppComponent_eq_bot (p : ℕ) (hp : 0 < p) :
     (stashBigrading VQ (2 * p)).ppComponent = ⊥ := by
   have hne : (ppIndex p : Fin (2 * p + 1)) ≠ 0 := by
     intro h
-    have hval := congrArg Fin.val h
-    simp only [ppIndex, Fin.val_mk, Fin.zero_val] at hval
+    have h1 : (ppIndex p : Fin (2 * p + 1)).val = (0 : Fin (2 * p + 1)).val :=
+      congrArg Fin.val h
+    simp only [ppIndex, Fin.val_mk, Fin.val_zero] at h1
     omega
   show (stashBigrading VQ (2 * p)).component (ppIndex p) = ⊥
   rw [stashBigrading_component, stashComponents_ne_zero hne]
@@ -264,7 +267,7 @@ of classes) -/
 
 section SpanLive
 
-variable {VQ : Type*} [AddCommGroup VQ] [Module ℚ VQ]
+variable {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ]
 
 /-- The complexified class family. -/
 def complexifiedFamily {M : ℕ} (c : Fin M → VQ) : Fin M → Complexification VQ :=
@@ -283,6 +286,14 @@ theorem isCompl_spanSlot {M : ℕ} (c : Fin M → VQ) :
     IsCompl (spanSlot c) (spanComplement c) :=
   Classical.choose_spec (Submodule.exists_isCompl (spanSlot c))
 
+/-- The component family of the span bigrading: the `(p,p)`-slot is the
+complex span of the complexified family; slot 0 is a complement; all other
+slots are zero. -/
+def spanComponents {M : ℕ} (c : Fin M → VQ) (p : ℕ) (hp : 0 < p) :
+    Fin (2 * p + 1) → Submodule ℂ (Complexification VQ) :=
+  fun j => if j = (⟨p, by omega⟩ : Fin (2 * p + 1)) then spanSlot c
+    else if j = 0 then spanComplement c else ⊥
+
 theorem spanComponents_pp {M : ℕ} (c : Fin M → VQ) (p : ℕ) (hp : 0 < p) :
     spanComponents c p hp (⟨p, by omega⟩ : Fin (2 * p + 1)) = spanSlot c := by
   show (if (⟨p, by omega⟩ : Fin (2 * p + 1)) =
@@ -295,7 +306,7 @@ theorem spanComponents_zero {M : ℕ} (c : Fin M → VQ) (p : ℕ) (hp : 0 < p) 
   have hne : (0 : Fin (2 * p + 1)) ≠ (⟨p, by omega⟩ : Fin (2 * p + 1)) := by
     intro h
     have hval := congrArg Fin.val h
-    simp only [Fin.zero_val, Fin.val_mk] at hval
+    simp only [Fin.val_zero, Fin.val_mk] at hval
     omega
   show (if (0 : Fin (2 * p + 1)) = (⟨p, by omega⟩ : Fin (2 * p + 1))
       then spanSlot c
@@ -310,17 +321,9 @@ theorem spanComponents_other {M : ℕ} (c : Fin M → VQ) (p : ℕ) (hp : 0 < p)
       else if j = 0 then spanComplement c else ⊥) = ⊥
   rw [if_neg h1, if_neg h2]
 
-/-- The component family of the span bigrading: the `(p,p)`-slot is the
-complex span of the complexified family; slot 0 is a complement; all other
-slots are zero. -/
-def spanComponents {M : ℕ} (c : Fin M → VQ) (p : ℕ) (hp : 0 < p) :
-    Fin (2 * p + 1) → Submodule ℂ (Complexification VQ) :=
-  fun j => if j = (⟨p, by omega⟩ : Fin (2 * p + 1)) then spanSlot c
-    else if j = 0 then spanComplement c else ⊥
-
 private theorem spanComponents_indep {M : ℕ} (c : Fin M → VQ) (p : ℕ)
     (hp : 0 < p) : iSupIndep (spanComponents c p hp) := by
-  rw [CompleteLattice.iSupIndep_iff_pairwiseDisjoint]
+  rw [iSupIndep_iff_pairwiseDisjoint]
   intro i j hij
   have hW : IsCompl (spanSlot c) (spanComplement c) := isCompl_spanSlot c
   by_cases hpp : i = (⟨p, by omega⟩ : Fin (2 * p + 1))
@@ -515,7 +518,7 @@ theorem native_GST_single_fold_orbit_law_of_stashed_positive_weights
         (RationalSingularCohomology H.analytification (2 * p)) p hpos
     have hsub : Subsingleton (ClassicalHodgeFiber V H p) :=
       subsingleton_hodgeFiber_of_eq_bot hbot
-    exact ⟨emptyWordKrylovCertificate 0 zeroCycleClass_mem_hodgeFiber,
+    exact ⟨emptyWordKrylovCertificate 0 (zeroCycleClass_mem_hodgeFiber H p),
       isKrylovCyclic_of_subsingleton hsub _⟩
 
 end Frontier
