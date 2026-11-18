@@ -960,3 +960,14 @@ roots = [
   "GSTFinitePointAnalytification",
   "GSTFinitePointWorldCarrier",
 ]
+
+# GST positive-dimensional live-core kit (2026-11-18, Wave 44) — the
+# algebraic engines of the positive-dimensional frontier: complexification
+# injectivity, the stash dead-weight bigrading, the span gated-live-weight
+# bigrading, and the frontier reduction corollary of the native single-fold
+# orbit law.
+[[lean_lib]]
+name = "GSTPositiveDimensionalLiveCoreLib"
+roots = [
+  "GSTPositiveDimensionalLiveCoreKit",
+]
