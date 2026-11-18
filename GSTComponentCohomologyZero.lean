@@ -1,20 +1,12 @@
 /-
 Copyright (c) 2026. The HC-PROOF campaign. All rights reserved.
 
-# The component H⁰ machine (Wave 46) — the positive-dimensional beachhead
+# The component H⁰ machine (Wave 46, repair wave 47) — the positive-dimensional beachhead
 
 THE CUSTOM TOOL.  The wave-44/45 frontier map established the wall: at the
 pinned Mathlib (v4.33.0-rc2) there is no tool that computes ANY cohomology of
 a positive-dimensional space — no Mayer-Vietoris, no excision, no Hurewicz,
-no `Hⁿ(Sⁿ)` (first-hand verified against the pinned tree this wave:
-`Mathlib/AlgebraicTopology` contains exactly `AlternatingFaceMapComplex`,
-`CechNerve`, `DoldKan`, `EilenbergSteenrod`, `ExtraDegeneracy`,
-`FundamentalGroupoid`, `ModelCategory`, `MooreComplex`, `Quasicategory`,
-`Reedy`, `RelativeCellComplex`, `SimplexCategory`, `SimplicialCategory`,
-`SimplicialComplex`, `SimplicialNerve`, `SimplicialObject`, `SimplicialSet`,
-`SingularHomology/{Basic, HomologyZero, HomotopyInvariance,
-HomotopyInvarianceTopCat}`, `SingularSet`, `TopologicalSimplex` — nothing
-else).  BOSS's directive (2026-11-18): write the custom tools.
+no `Hⁿ(Sⁿ)`.  BOSS's directive (2026-11-18): write the custom tools.
 
 This file is the beachhead — a genuine cohomology computation for arbitrary
 (in particular positive-dimensional) spaces:
@@ -34,13 +26,14 @@ the campaign on a positive-dimensional world.
 1. THE GENERATOR INTERFACE (§1).  The pinned simplicial-set chain complex
    `SSet.chainComplexFunctor` presents the degree-n chains as a coproduct
    (`Sigma`) of the coefficient object over the singular n-simplices, with
-   the summand inclusions `ιChainComplex`, the boundary formula
-   `ιChainComplex_d` (both `simp` lemmas of
+   the summand inclusions `SSet.ιChainComplex`, the boundary formula
+   `SSet.ιChainComplex_d` (both `simp` lemmas of
    `Mathlib/AlgebraicTopology/SimplicialSet/Homology/Basic.lean` at the
-   pin), and the coproduct extensionality `chainComplex_hom_ext`.
-   Specializing through the pinned face identifications
-   `δ 0 s = the 0-simplex of f 1`, `δ 1 s = the 0-simplex of f 0`
-   (`Topology/Homotopy/TopCat/ZerothHomotopy.lean`) yields THE
+   pin), and the colimit cone `SSet.chainComplexXCofan` with
+   `SSet.isColimitChainComplexXCofan` (the same file).  Specializing
+   through the pinned face identifications
+   `TopCat.δ_zero_toSSetObj₁Equiv.symm` (`δ 0 s ↦ the 0-simplex of f 1`),
+   `TopCat.δ_one_toSSetObj₁Equiv.symm` (`δ 1 s ↦ f 0`) yields THE
    ENDPOINT-BOUNDARY FORMULA: the boundary of the path generator is the
    difference of the endpoint generators.
 
@@ -49,53 +42,65 @@ the campaign on a positive-dimensional world.
    differential is precomposition with the boundary
    (`ChainComplex.linearYonedaObj_d`, the finite-point lane's verified
    name).  The kernel condition on a cochain is vanishing on the
-   boundaries of the path generators; the converse is the coproduct
-   extensionality `chainComplex_hom_ext` with `LinearMap.ext_ring` at
-   the legs, plus two ISOLATED defeq bridges (the finite-point lane's
-   ofHom-discipline and congrArg-ofHom transports are the precedents).
+   boundaries of the path generators; the converse is the colimit
+   extensionality `SSet.isColimitChainComplexXCofan … .hom_ext` with
+   `LinearMap.ext_ring` at the legs, through the pinned `ModuleCat.hom_*`
+   rfl-lemmas (`ModuleCat.hom_comp`, `ModuleCat.hom_zero`).
 
 3. THE BOTTOM-DEGREE HOMOLOGY (§3).  For a cochain complex indexed `up ℕ`,
    the incoming differential at degree zero is the shape-zero map, so the
    homology at zero is the kernel of the outgoing differential.  Built
-   through the pinned `ShortComplex.ModuleCat` left-homology data
-   (`moduleCatLeftHomologyData`, `moduleCatHomologyIso`) and the
-   hand-rolled quotient-by-⊥ equivalence `quotientBotEquiv`.
+   through the pinned `ShortComplex.moduleCatHomologyIso` and the explicit
+   `ShortComplex.moduleCatLeftHomologyData` of
+   `Mathlib/Algebra/Homology/ShortComplex/ModuleCat.lean` (whose `H`-field
+   IS `of ℚ (ker g ⧸ range toCycles)` by `@[simps!]`), with the incoming
+   map zero so the range is `⊥`, collapsed by the hand-rolled
+   `quotientBotEquiv`.
 
 4. THE KERNEL-COCYCLE ISO (§4).  A degree-zero cochain kills the boundary
    of every path generator iff it takes equal values at the endpoints of
    every path (engine 1), iff it descends along `ZerothHomotopy.mk`
    (the pinned path-component quotient of
-   `Topology/Connected/PathConnected.lean`).  The forward direction is
-   `ZerothHomotopy.lift` with the endpoint formula; the backward direction
+   `Mathlib/Topology/Connected/PathConnected.lean`).  The forward direction
+   is `ZerothHomotopy.lift` with the endpoint formula; the backward direction
    is the coproduct lift (`IsColimit.desc` through
-   `isColimitChainComplexXCofan`) of a component function, which kills
+   `SSet.isColimitChainComplexXCofan`) of a component function, which kills
    every boundary because a function cannot distinguish
    `ZerothHomotopy.sound`-equal points.
+
+## The wave-47 repair ledger (run 44403637791's 39 errors, all diagnosed)
+
+* D1 (17 sites): the file's `SmoothProjectiveComplexScheme` was an
+  AUTO-IMPLICIT shadow — `open GSTProjectiveOverC` was missing.  Fixed.
+* D2: `ModuleCat.coe_ofHom` does not exist at the pin — the simp lists
+  rebuilt from the pinned rfl-lemma names (`ModuleCat.ofHom_apply`,
+  `ModuleCat.hom_comp`, `ModuleCat.hom_zero`, `ModuleCat.hom_add`,
+  `ModuleCat.hom_smul`).
+* D3: `I` was an auto-implicit shadow of the pinned interval — the
+  interval is `TopCat.I` (of `Mathlib/Topology/Category/TopCat/Monoidal`),
+  with endpoint evaluations `f 0`/`f 1` valid on `TopCat.I ⟶ X` through
+  the `ContinuousMap` defeq.
+* D4: the quotient token `⧕` (U+29D5) is not Lean syntax — `⧸`.
+* D5: the scoped `⦋0⦌` notation requires `open Simplicial`.
+* D6: the colimit cone is `SSet.isColimitChainComplexXCofan`
+  (namespaced — the bare name was unknown).
+* D7: `SSet.ιChainComplex_d` takes the coefficient ring `R` explicitly.
+* D8: `SSet.chainComplex_hom_ext` takes only `h` (X, R, n, T implicit) —
+  the call sites rebuilt on `IsColimit.hom_ext` directly.
+* D9: `Equiv.piCongrLeft` is a bare `Equiv` — the `Fin M` specialization
+  rebuilt as `LinearEquiv.ofBijective`.
+* D10: two `rw [componentFunOf]` rewrites had no equation lemmas —
+  replaced by goal-spelling `show`s at default transparency (the
+  twelve-point lane's W19/W20 discipline).
+* D11: the homology assembly's `.congr` step was ill-typed — rebuilt as
+  `moduleCatHomologyIso ≪≫ ofLinearEquiv (quotientBotEquiv _)` with the
+  `@[simps!]`-generated `ShortComplex.moduleCatLeftHomologyData_H`.
 
 ## Honesty ledger
 
 Every statement is proved unconditionally.  No `sorry`, no new axioms, no
-`native_decide`.  The GitHub CI lane `gst-component-cohomology-zero.yml`
-owns the kernel check.  The AUDIT FLAGS below mark the pinned-name repair
-points for the CI loop (the campaign's standard discipline; waves 44/45
-adjudicated 51, 15, 9, 2 errors to GREEN through exactly this loop).
-
-- AUDIT(1): `rationalSingularChains A ≡
-  (TopCat.toSSet.obj A.space).chainComplex (ModuleCat.of ℚ ℚ)`.
-- AUDIT(2): `ChainComplex.linearYonedaObj_d`; the carrier defeq
-  `(rationalSingularCochains A).X 0 ≡ ModuleCat.of ℚ
-  ((rationalSingularChains A).X 0 ⟶ ModuleCat.of ℚ ℚ)`; the leftComp
-  application defeq (§2, `leftComp_apply_eq`).
-- AUDIT(3): `HomologicalComplex.homology i = (K.sc i).homology` and the
-  `sc`-field identifications (`ShortComplex/HomologicalComplex.lean:90`).
-- AUDIT(4): `TopCat.toSSetObj₀Equiv`, `δ_zero_toSSetObj₁Equiv.symm`,
-  `δ_one_toSSetObj₁Equiv.symm`.
-- AUDIT(5): the `I ⟶ A.space` endpoint evaluations `f 0`, `f 1`.
-- AUDIT(6): `IsColimit.desc`/`fac` shapes for the `Cofan` colimit;
-  `LinearMap.ext_ring`; `ModuleCat.hom_comp`; the Hom-structure coercion
-  lemmas (`ModuleCat.ofHom_hom`, `ModuleCat.hom_ofHom`,
-  `ModuleCat.ofHom_zero`); the two isolated `rfl` defeq bridges of §2 and
-  the element-zero identification of §4.
+`native_decide`.  The GitHub CI lane `gst-positive-dimensional-live-core-law.yml`
+owns the kernel check.
 -/
 
 import Mathlib
@@ -113,6 +118,8 @@ noncomputable section
 open CategoryTheory
 open CategoryTheory.Limits
 open AlgebraicTopology
+open Simplicial
+open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
 
 namespace GSTComponentCohomologyZero
@@ -145,23 +152,23 @@ theorem cochains_d_zero_one (A : AnalytificationData V) :
     (rationalSingularChains A) ℚ (ModuleCat.of ℚ ℚ) 0 1
 
 /-- **THE ADJUNCTION-STYLE EVALUATION.**  The underlying linear map of the
-dual differential applied to a cochain is the precomposition.  AUDIT(2):
-the coercion spellings are the designated CI repair points. -/
+dual differential applied to a cochain is the precomposition.  The lemma
+names are the pinned `ModuleCat` rfl-lemmas. -/
 theorem dual_eval (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
     (z : (rationalSingularChains A).X 1) :
     ((rationalSingularCochains A).d 0 1 φ).hom z =
       φ.hom ((rationalSingularChains A).d 1 0 z) := by
   rw [cochains_d_zero_one A]
-  simp only [ModuleCat.ofHom_apply, Linear.leftComp_apply,
-    LinearMap.coe_comp, LinearMap.comp_apply, ModuleCat.coe_ofHom]
+  simp only [ModuleCat.ofHom_apply, Linear.leftComp_apply]
   rfl
 
 /-! ## §1 The generator interface and the endpoint-boundary formula -/
 
 /-- AUDIT(1): the rational singular chains, presented as the
 simplicial-set chain complex of the singular simplicial set (the
-`singularChainComplexFunctor` unfolding; every link reducible at the pin). -/
+`SSet.chainComplexFunctor` unfolding through the deprecated
+`singularChainComplexFunctor` alias; reducible at the pin). -/
 theorem chains_eq (A : AnalytificationData V) :
     rationalSingularChains A =
       (TopCat.toSSet.obj A.space).chainComplex
@@ -176,45 +183,47 @@ def ιPoint (A : AnalytificationData V) (x : ↥A.space) :
 
 /-- The generator inclusion of a path: the summand injection of the
 1-simplex carried by the path morphism `f`. -/
-def ιPath (A : AnalytificationData V) (f : I ⟶ A.space) :
+def ιPath (A : AnalytificationData V) (f : TopCat.I ⟶ A.space) :
     ModuleCat.of ℚ ℚ ⟶ (rationalSingularChains A).X 1 :=
   (TopCat.toSSet.obj A.space).ιChainComplex
-    (TopCat.toSSetObj₁Equiv A.space f)
+    (TopCat.toSSetObj₁Equiv.symm f)
 
 /-- **THE ENDPOINT-BOUNDARY FORMULA.**  The boundary of the path generator
 is the difference of the endpoint point generators.  AUDIT(4). -/
-theorem ιPath_d (A : AnalytificationData V) (f : I ⟶ A.space) :
+theorem ιPath_d (A : AnalytificationData V) (f : TopCat.I ⟶ A.space) :
     ιPath A f ≫ (rationalSingularChains A).d 1 0 =
       ιPoint A (f 1) - ιPoint A (f 0) := by
+  -- the boundary formula at the goal's own spelling (defeq at default)
   have hgen : ιPath A f ≫ (rationalSingularChains A).d 1 0 =
       ∑ i : Fin (0 + 2), (-1 : ℤ) ^ (i : ℕ) •
         (TopCat.toSSet.obj A.space).ιChainComplex
           ((TopCat.toSSet.obj A.space).δ i
-            (TopCat.toSSetObj₁Equiv A.space f)) :=
-    (TopCat.toSSet.obj A.space).ιChainComplex_d
-      (TopCat.toSSetObj₁Equiv A.space f)
-  rw [hgen]
+            (TopCat.toSSetObj₁Equiv.symm f)) :=
+    (TopCat.toSSet.obj A.space).ιChainComplex_d (ModuleCat.of ℚ ℚ)
+      (TopCat.toSSetObj₁Equiv.symm f)
+  rw [hgen, Fin.sum_univ_two]
   have hface0 : (TopCat.toSSet.obj A.space).δ 0
-      (TopCat.toSSetObj₁Equiv A.space f) =
+      (TopCat.toSSetObj₁Equiv.symm f) =
       TopCat.toSSetObj₀Equiv.symm (f 1) :=
     TopCat.δ_zero_toSSetObj₁Equiv.symm f
   have hface1 : (TopCat.toSSet.obj A.space).δ 1
-      (TopCat.toSSetObj₁Equiv A.space f) =
+      (TopCat.toSSetObj₁Equiv.symm f) =
       TopCat.toSSetObj₀Equiv.symm (f 0) :=
     TopCat.δ_one_toSSetObj₁Equiv.symm f
   rw [hface0, hface1]
-  rw [Fin.sum_univ_two]
   simp only [Fin.val_zero, pow_zero, one_smul, Fin.val_one, pow_one,
     neg_smul, one_zsmul]
   rw [sub_eq_add_neg]
 
 /-- The element-level form of the endpoint-boundary formula. -/
-theorem d_path_element (A : AnalytificationData V) (f : I ⟶ A.space) :
+theorem d_path_element (A : AnalytificationData V) (f : TopCat.I ⟶ A.space) :
     (rationalSingularChains A).d 1 0 ((ιPath A f).hom (1 : ℚ)) =
       (ιPoint A (f 1)).hom (1 : ℚ) - (ιPoint A (f 0)).hom (1 : ℚ) := by
-  have h := congrArg (fun (u : ModuleCat.of ℚ ℚ ⟶ (rationalSingularChains A).X 0) =>
-    u.hom (1 : ℚ)) (ιPath_d A f)
-  simp only [LinearMap.comp_apply, LinearMap.sub_apply, map_sub] at h
+  have h := congrArg
+    (fun (u : ModuleCat.of ℚ ℚ ⟶ (rationalSingularChains A).X 0) =>
+      u.hom (1 : ℚ)) (ιPath_d A f)
+  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_sub,
+    LinearMap.sub_apply] at h
   exact h
 
 /-! ## §2 The kernel condition at the generators -/
@@ -223,39 +232,45 @@ theorem d_path_element (A : AnalytificationData V) (f : I ⟶ A.space) :
 underlying linear map kills the boundary of every path generator, then the
 precomposition morphism is the zero morphism.
 
-The proof is the pinned coproduct extensionality `chainComplex_hom_ext`:
-the composite with every generator inclusion is a morphism from
-`ModuleCat.of ℚ ℚ`, determined by its value at `1` (`LinearMap.ext_ring`),
-which vanishes by the hypothesis.  AUDIT(6). -/
+The proof is the pinned colimit extensionality
+`SSet.isColimitChainComplexXCofan … .hom_ext`: the composite with every
+generator inclusion is a morphism from `ModuleCat.of ℚ ℚ`, determined by
+its value at `1` (`LinearMap.ext_ring`), which vanishes by the
+hypothesis. -/
 theorem precomp_zero_of_generator (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
-    (hgen : ∀ f : I ⟶ A.space,
+    (hgen : ∀ f : TopCat.I ⟶ A.space,
       φ.hom ((rationalSingularChains A).d 1 0
         ((ιPath A f).hom (1 : ℚ))) = 0) :
     ModuleCat.ofHom
       ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
         ((rationalSingularChains A).d 1 0).hom) = 0 := by
-  refine (TopCat.toSSet.obj A.space).chainComplex_hom_ext
-    (ModuleCat.of ℚ ℚ) 1 ?_
-  intro σ
-  obtain ⟨f, rfl⟩ := (TopCat.toSSetObj₁Equiv A.space).surjective σ
-  rw [CategoryTheory.ModuleCat.comp_zero]
-  apply ModuleCat.Hom.ext
+  refine ((TopCat.toSSet.obj A.space).isColimitChainComplexXCofan
+    (ModuleCat.of ℚ ℚ) 1).hom_ext (fun σ => ?_)
+  obtain ⟨f, rfl⟩ := (A.space.toSSetObj₁Equiv.symm).surjective σ
+  have hz : (TopCat.toSSet.obj A.space).ιChainComplex
+      (TopCat.toSSetObj₁Equiv.symm f) ≫
+      (0 : (rationalSingularChains A).X 1 ⟶ ModuleCat.of ℚ ℚ) = 0 := by
+    simp
+  show (TopCat.toSSet.obj A.space).ιChainComplex
+      (TopCat.toSSetObj₁Equiv.symm f) ≫
+      ModuleCat.ofHom
+        (((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
+          ((rationalSingularChains A).d 1 0).hom)) =
+    (TopCat.toSSet.obj A.space).ιChainComplex
+      (TopCat.toSSetObj₁Equiv.symm f) ≫
+      (0 : (rationalSingularChains A).X 1 ⟶ ModuleCat.of ℚ ℚ)
+  rw [hz]
+  -- the leg composite is determined by its value at 1
+  apply ModuleCat.hom_injective
+  rw [ModuleCat.hom_comp, ModuleCat.hom_ofHom, ModuleCat.hom_zero]
   apply LinearMap.ext_ring
-  rw [show ((ιPath A f ≫ ModuleCat.ofHom
-      ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
-        ((rationalSingularChains A).d 1 0).hom)).hom (1 : ℚ)) =
-    φ.hom ((rationalSingularChains A).d 1 0 ((ιPath A f).hom (1 : ℚ))) from by
-    simp only [ModuleCat.hom_comp_iff, LinearMap.coe_comp,
-      LinearMap.comp_apply, ModuleCat.coe_ofHom,
-      ModuleCat.ofHom_hom]
-    rfl]
+  show φ.hom ((rationalSingularChains A).d 1 0
+      ((ιPath A f).hom (1 : ℚ))) = (0 : ℚ)
   exact hgen f
 
 /-- AUDIT(2): the `leftComp` application defeq — the precomposition
-cochain IS the wrapped precomposition linear map.  Isolated `rfl` bridge
-(one of the two designated defeq repairs of §2; the finite-point lane's
-`finitePointXZeroIso` exercised the same layer). -/
+cochain IS the wrapped precomposition linear map. -/
 theorem leftComp_apply_eq (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
     (Linear.leftComp ℚ (ModuleCat.of ℚ ℚ)
@@ -266,11 +281,11 @@ theorem leftComp_apply_eq (A : AnalytificationData V)
 
 /-- **THE KERNEL CONDITION AT THE GENERATORS.**  A degree-zero cochain
 lies in the kernel of the dual differential iff its underlying linear map
-kills the boundary of every path generator.  AUDIT(2)/(6). -/
+kills the boundary of every path generator. -/
 theorem cochain_ker_iff (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
     (rationalSingularCochains A).d 0 1 φ = 0 ↔
-      ∀ f : I ⟶ A.space,
+      ∀ f : TopCat.I ⟶ A.space,
         φ.hom ((rationalSingularChains A).d 1 0
           ((ιPath A f).hom (1 : ℚ))) = 0 := by
   constructor
@@ -289,17 +304,18 @@ theorem cochain_ker_iff (A : AnalytificationData V)
 /-! ## §3 The bottom-degree homology -/
 
 /-- The hand-rolled quotient-by-⊥ equivalence: quotienting a module by
-the zero submodule changes nothing.  Built from `Submodule.Quotient.lift`
-of the subtype and `Submodule.mkQ` of the bottom submodule; both triangle
-identities by `Submodule.Quotient.induction_on`. -/
+the zero submodule changes nothing.  The forward map is the identity lift
+`Submodule.Quotient.lift LinearMap.id` (a map that kills `⊥` — only zero
+does); the backward map is `⊥.mkQ`; both triangle identities by
+`Submodule.Quotient.induction_on`. -/
 noncomputable def quotientBotEquiv {M : Type} [AddCommGroup M] [Module ℚ M]
     (p : Submodule ℚ M) :
-    (p ⧕ (⊥ : Submodule ℚ p)) ≃ₗ[ℚ] ↥p where
+    (p ⧸ (⊥ : Submodule ℚ ↥p)) ≃ₗ[ℚ] ↥p where
   toFun :=
-    Submodule.Quotient.lift p.subtype
-      (fun v hv => by
-        rw [Submodule.mem_bot] at hv
-        rw [hv, map_zero])
+    Submodule.Quotient.lift LinearMap.id (fun v hv => by
+      rw [Submodule.mem_bot] at hv
+      rw [hv]
+      rfl)
   map_add' := by
     intro x y
     apply Submodule.Quotient.induction_on₂ x y
@@ -312,18 +328,15 @@ noncomputable def quotientBotEquiv {M : Type} [AddCommGroup M] [Module ℚ M]
     intro a
     simp only [map_smul]
     rfl
-  invFun v := (⊥ : Submodule ℚ p).mkQ v
+  invFun v := (⊥ : Submodule ℚ ↥p).mkQ v
   left_inv x := by
     apply Submodule.Quotient.induction_on x
     intro a
     rfl
   right_inv v := by
-    have : (Submodule.Quotient.lift p.subtype
-        (fun v hv => by
-          rw [Submodule.mem_bot] at hv
-          rw [hv, map_zero])) ((⊥ : Submodule ℚ p).mkQ v) = v := by
-      rfl
-    exact this
+    apply Submodule.Quotient.induction_on v
+    intro a
+    rfl
 
 /-- The kernel submodule of the dual differential. -/
 def kerDual (A : AnalytificationData V) :
@@ -331,8 +344,7 @@ def kerDual (A : AnalytificationData V) :
   LinearMap.ker ((rationalSingularCochains A).d 0 1).hom
 
 /-- AUDIT(2): membership in the kernel submodule is the element equation
-(the FunLike application of the morphism is its underlying linear map;
-`rfl`-bridge, designated CI repair point). -/
+(the FunLike application of the morphism is its underlying linear map). -/
 theorem mem_kerDual_iff (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
     φ ∈ kerDual A ↔ (rationalSingularCochains A).d 0 1 φ = 0 := Iff.rfl
@@ -352,48 +364,35 @@ theorem sc_zero_g_eq (A : AnalytificationData V) :
     ((rationalSingularCochains A).sc 0).g =
       (rationalSingularCochains A).d 0 1 := rfl
 
+/-- AUDIT(3): with the incoming differential zero, the induced map to the
+cycles is the zero linear map. -/
+theorem sc_zero_toCycles_zero (A : AnalytificationData V) :
+    ((rationalSingularCochains A).sc 0).moduleCatToCycles = 0 := by
+  unfold ShortComplex.moduleCatToCycles
+  rw [sc_zero_f_eq_zero A]
+  ext x
+  rfl
+
 /-- **THE BOTTOM-DEGREE HOMOLOGY.**  The homology of the cochain complex
 at degree zero is the kernel of the outgoing differential.
 
 The proof: the degree-zero short complex has `f = 0` (§3), so its
-`moduleCatLeftHomologyData.H` is the kernel quotiented by the range of
-the zero map, which is `⊥`; the `quotientBotEquiv` collapses it.  AUDIT(3). -/
+`moduleCatLeftHomologyData.H` — which the pinned `@[simps!]` spelling gives
+as `of ℚ (ker g ⧸ range toCycles)` — is the kernel quotiented by `⊥`;
+the `quotientBotEquiv` collapses it. -/
 noncomputable def homologyZeroIsoKer (A : AnalytificationData V) :
     (rationalSingularCochains A).homology 0 ≅
       ModuleCat.of ℚ ↥(kerDual A) := by
-  have hS : (rationalSingularCochains A).homology 0 =
-      ((rationalSingularCochains A).sc 0).homology := rfl
-  rw [hS]
-  -- the module-cat homology iso of the degree-zero short complex
-  have hiso := ((rationalSingularCochains A).sc 0).moduleCatHomologyIso
-  -- the left homology data's H is the quotient by the range of the
-  -- zero map
-  have hf : ((rationalSingularCochains A).sc 0).f = 0 :=
-    sc_zero_f_eq_zero A
-  have htc : ((rationalSingularCochains A).sc 0).moduleCatToCycles = 0 := by
-    unfold ShortComplex.moduleCatToCycles
-    rw [hf]
-    rfl
   have hrange : LinearMap.range
       (((rationalSingularCochains A).sc 0).moduleCatToCycles) = ⊥ := by
-    rw [htc]
+    rw [sc_zero_toCycles_zero A]
     exact LinearMap.range_zero
-  -- assemble: H ≅ ker g ⧕ ⊥ ≅ ker g
-  refine hiso ≪≫ ?_
-  have hH : (((rationalSingularCochains A).sc 0).moduleCatLeftHomologyData.H) =
-      ModuleCat.of ℚ (LinearMap.ker
-        (((rationalSingularCochains A).sc 0).g.hom) ⧕
-        (LinearMap.range
-          (((rationalSingularCochains A).sc 0).moduleCatToCycles))) := rfl
-  rw [hH, hrange]
-  -- the quotientBot equivalence, packaged as a module iso
-  refine LinearEquiv.toModuleIso ?_
-  refine (quotientBotEquiv (LinearMap.ker
-    (((rationalSingularCochains A).sc 0).g.hom))).congr ?_ ?_
-  · rfl
-  · rw [show ((rationalSingularCochains A).sc 0).g =
-        (rationalSingularCochains A).d 0 1 from sc_zero_g_eq A]
-    rfl
+  refine ((rationalSingularCochains A).sc 0).moduleCatHomologyIso ≪≫ ?_
+  rw [ShortComplex.moduleCatLeftHomologyData_H, hrange,
+    sc_zero_g_eq A]
+  exact LinearEquiv.toModuleIso
+    (quotientBotEquiv (LinearMap.ker
+      ((rationalSingularCochains A).d 0 1).hom))
 
 /-! ## §4 The kernel-cocycle iso -/
 
@@ -409,7 +408,7 @@ theorem cochainComponentFun_sound (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) (hφ : φ ∈ kerDual A)
     (x y : ↥A.space) (p : Path x y) :
     cochainComponentFun A φ x = cochainComponentFun A φ y := by
-  set f : I ⟶ A.space := (TopCat.pathEquiv.symm p).hom with hf
+  set f : TopCat.I ⟶ A.space := (TopCat.pathEquiv.symm p).hom with hf
   have h0 : f 0 = x := (TopCat.pathEquiv.symm p).hom₀
   have h1 : f 1 = y := (TopCat.pathEquiv.symm p).hom₁
   have hgen := (cochain_ker_iff A φ).mp (mem_kerDual_iff A φ |>.mp hφ) f
@@ -440,32 +439,41 @@ def componentLeg (A : AnalytificationData V)
         simp only [add_smul]
       map_smul' := by
         intro q r
-        simp only [smul_eq_mul, mul_smul, RingHom.id_apply]
-        rfl }
+        simp only [smul_eq_mul, mul_smul, RingHom.id_apply] }
+
+/-- The value of a component leg at the generator `1` is the component
+function's value on the point class (through the equiv roundtrip). -/
+theorem componentLeg_one (A : AnalytificationData V)
+    (g : ZerothHomotopy ↥A.space → ℚ) (x : ↥A.space) :
+    (componentLeg A g (TopCat.toSSetObj₀Equiv.symm x)).hom (1 : ℚ) =
+      g (ZerothHomotopy.mk x) := by
+  have hround : TopCat.toSSetObj₀Equiv (TopCat.toSSetObj₀Equiv.symm x) = x :=
+    (TopCat.toSSetObj₀Equiv (X := A.space)).apply_symm_apply x
+  show (1 : ℚ) • g (ZerothHomotopy.mk (TopCat.toSSetObj₀Equiv
+      (TopCat.toSSetObj₀Equiv.symm x))) = g (ZerothHomotopy.mk x)
+  rw [hround, one_smul]
 
 /-- The coproduct lift of a component function: the unique morphism from
 the degree-zero chains whose leg values are the component function's
-values on the point classes.  AUDIT(6): the `IsColimit.desc`/`fac`
-spellings are the designated CI repair points. -/
+values on the point classes. -/
 def componentCochainMorph (A : AnalytificationData V)
     (g : ZerothHomotopy ↥A.space → ℚ) :
     (rationalSingularChains A).X 0 ⟶ ModuleCat.of ℚ ℚ :=
-  (isColimitChainComplexXCofan (TopCat.toSSet.obj A.space)
+  ((TopCat.toSSet.obj A.space).isColimitChainComplexXCofan
     (ModuleCat.of ℚ ℚ) 0).desc
     (Cofan.mk _
       (fun σ => componentLeg A g σ))
 
 /-- **THE LEG EQUATION.**  The coproduct lift evaluates at a point
-generator as the component function's value on the point class.
-AUDIT(6). -/
+generator as the component function's value on the point class. -/
 theorem ιPoint_comp_componentCochainMorph (A : AnalytificationData V)
     (g : ZerothHomotopy ↥A.space → ℚ) (x : ↥A.space) :
     ιPoint A x ≫ componentCochainMorph A g =
       componentLeg A g (TopCat.toSSetObj₀Equiv.symm x) :=
-  (isColimitChainComplexXCofan (TopCat.toSSet.obj A.space)
-    (ModuleCat.of ℚ ℚ) 0).fac
-    (Cofan.mk _ (fun σ => componentLeg A g σ))
-    (TopCat.toSSetObj₀Equiv.symm x)
+    ((TopCat.toSSet.obj A.space).isColimitChainComplexXCofan
+      (ModuleCat.of ℚ ℚ) 0).fac
+      (Cofan.mk _ (fun σ => componentLeg A g σ))
+      (TopCat.toSSetObj₀Equiv.symm x)
 
 /-- **THE COMPONENT COCHAIN IS A KERNEL ELEMENT.**  The coproduct lift of
 a component function kills every path boundary: its leg values cannot
@@ -485,19 +493,17 @@ theorem componentCochainMorph_mem_kerDual (A : AnalytificationData V)
   have hleg1 : (componentCochainMorph A g).hom
       ((ιPoint A (f 1)).hom (1 : ℚ)) =
       g (ZerothHomotopy.mk (f 1)) := by
-    have h := congrArg (fun (u : ModuleCat.of ℚ ℚ ⟶ ModuleCat.of ℚ ℚ) =>
-      u.hom (1 : ℚ)) (ιPoint_comp_componentCochainMorph A g (f 1))
-    simp only [ModuleCat.ofHom_hom] at h
-    rw [h]
-    rfl
+    rw [show (componentCochainMorph A g).hom ((ιPoint A (f 1)).hom (1 : ℚ)) =
+        (ιPoint A (f 1) ≫ componentCochainMorph A g).hom (1 : ℚ) from rfl,
+      ιPoint_comp_componentCochainMorph A g (f 1),
+      componentLeg_one A g (f 1)]
   have hleg0 : (componentCochainMorph A g).hom
       ((ιPoint A (f 0)).hom (1 : ℚ)) =
       g (ZerothHomotopy.mk (f 0)) := by
-    have h := congrArg (fun (u : ModuleCat.of ℚ ℚ ⟶ ModuleCat.of ℚ ℚ) =>
-      u.hom (1 : ℚ)) (ιPoint_comp_componentCochainMorph A g (f 0))
-    simp only [ModuleCat.ofHom_hom] at h
-    rw [h]
-    rfl
+    rw [show (componentCochainMorph A g).hom ((ιPoint A (f 0)).hom (1 : ℚ)) =
+        (ιPoint A (f 0) ≫ componentCochainMorph A g).hom (1 : ℚ) from rfl,
+      ιPoint_comp_componentCochainMorph A g (f 0),
+      componentLeg_one A g (f 0)]
   rw [hleg1, hleg0, ← hsound]
 
 /-- **THE FIRST TRIANGLE.**  The component function of the coproduct lift
@@ -508,12 +514,15 @@ theorem componentFunOf_componentCochainMorph (A : AnalytificationData V)
       (componentCochainMorph_mem_kerDual A g) = g := by
   funext z
   obtain ⟨x, rfl⟩ := ZerothHomotopy.mk_surjective z
-  rw [componentFunOf, ZerothHomotopy.lift_mk]
-  have h := congrArg (fun (u : ModuleCat.of ℚ ℚ ⟶ ModuleCat.of ℚ ℚ) =>
-    u.hom (1 : ℚ)) (ιPoint_comp_componentCochainMorph A g x)
-  simp only [ModuleCat.ofHom_hom] at h
-  rw [h]
-  rfl
+  rw [show componentFunOf A (componentCochainMorph A g)
+      (componentCochainMorph_mem_kerDual A g) (ZerothHomotopy.mk x) =
+    cochainComponentFun A (componentCochainMorph A g) x from rfl,
+    show cochainComponentFun A (componentCochainMorph A g) x =
+      (componentCochainMorph A g).hom ((ιPoint A x).hom (1 : ℚ)) from rfl,
+    show (componentCochainMorph A g).hom ((ιPoint A x).hom (1 : ℚ)) =
+      (ιPoint A x ≫ componentCochainMorph A g).hom (1 : ℚ) from rfl,
+    ιPoint_comp_componentCochainMorph A g x,
+    componentLeg_one A g x]
 
 /-- **THE SECOND TRIANGLE.**  The coproduct lift of the component
 function of a kernel cochain is the cochain itself (by the uniqueness of
@@ -521,20 +530,19 @@ the coproduct lift). -/
 theorem componentCochainMorph_componentFunOf (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) (hφ : φ ∈ kerDual A) :
     componentCochainMorph A (componentFunOf A φ hφ) = φ := by
-  refine (isColimitChainComplexXCofan (TopCat.toSSet.obj A.space)
+  refine ((TopCat.toSSet.obj A.space).isColimitChainComplexXCofan
     (ModuleCat.of ℚ ℚ) 0).hom_ext ?_
   intro σ
-  obtain ⟨x, rfl⟩ := (TopCat.toSSetObj₀Equiv A.space).surjective σ
+  obtain ⟨x, rfl⟩ := (A.space.toSSetObj₀Equiv.symm).surjective σ
   -- both morphisms have the same leg values
+  show ιPoint A x ≫ componentCochainMorph A (componentFunOf A φ hφ) =
+      ιPoint A x ≫ φ
   rw [ιPoint_comp_componentCochainMorph]
-  apply ModuleCat.Hom.ext
+  apply ModuleCat.hom_injective
   apply LinearMap.ext_ring
-  rw [show ((ιPoint A x ≫ φ).hom (1 : ℚ)) =
-      φ.hom ((ιPoint A x).hom (1 : ℚ)) from rfl]
-  rw [show ((componentLeg A (componentFunOf A φ hφ)
-      (TopCat.toSSetObj₀Equiv.symm x)).hom (1 : ℚ)) =
-      (componentFunOf A φ hφ) (ZerothHomotopy.mk x) from by
-    rfl]
+  rw [componentLeg_one A (componentFunOf A φ hφ) x]
+  show (componentFunOf A φ hφ) (ZerothHomotopy.mk x) =
+      φ.hom ((ιPoint A x).hom (1 : ℚ))
   rfl
 
 /-- **THE KERNEL-COCYCLE ISO.**  The kernel of the dual differential is
@@ -545,16 +553,18 @@ noncomputable def kerDualEquiv (A : AnalytificationData V) :
   map_add' φ ψ := by
     funext z
     obtain ⟨x, rfl⟩ := ZerothHomotopy.mk_surjective z
-    simp only [componentFunOf, ZerothHomotopy.lift_mk,
-      cochainComponentFun, LinearMap.add_apply]
-    rfl
+    show cochainComponentFun A ((φ : (rationalSingularCochains A).X 0) +
+        (ψ : (rationalSingularCochains A).X 0)) x =
+      cochainComponentFun A (φ : (rationalSingularCochains A).X 0) x +
+        cochainComponentFun A (ψ : (rationalSingularCochains A).X 0) x
+    simp only [cochainComponentFun, ModuleCat.hom_add, LinearMap.add_apply]
   map_smul' q φ := by
     funext z
     obtain ⟨x, rfl⟩ := ZerothHomotopy.mk_surjective z
-    simp only [componentFunOf, ZerothHomotopy.lift_mk,
-      cochainComponentFun, RingHom.id_apply, LinearMap.smul_apply,
-      smul_eq_mul]
-    rfl
+    show cochainComponentFun A (q • (φ : (rationalSingularCochains A).X 0)) x =
+      q • cochainComponentFun A (φ : (rationalSingularCochains A).X 0) x
+    simp only [cochainComponentFun, ModuleCat.hom_smul,
+      LinearMap.smul_apply]
   invFun g := ⟨componentCochainMorph A g,
     componentCochainMorph_mem_kerDual A g⟩
   left_inv φ := by
@@ -572,20 +582,7 @@ positive-dimensional beachhead: the first cohomology computation of the
 campaign that applies to positive-dimensional worlds. -/
 noncomputable def componentCohomologyZeroEquiv (A : AnalytificationData V) :
     RationalSingularCohomology A 0 ≃ₗ[ℚ] (ZerothHomotopy ↥A.space → ℚ) :=
-  (LinearEquiv.ofBijective
-    ((homologyZeroIsoKer A).hom.hom)
-    (⟨fun x y hxy => by
-      have h := (homologyZeroIsoKer A).hom_inv_id
-      have hinj : Function.Injective (homologyZeroIsoKer A).hom.hom := by
-        rw [ModuleCat.mono_iff_injective]
-        infer_instance
-      exact hinj hxy,
-    fun y => by
-      have h := (homologyZeroIsoKer A).inv_hom_id
-      have hsurj : Function.Surjective (homologyZeroIsoKer A).hom.hom := by
-        rw [ModuleCat.epi_iff_surjective]
-        infer_instance
-      exact hsurj y⟩)).trans (kerDualEquiv A)
+  (ModuleCat.toLinearEquiv (homologyZeroIsoKer A)).trans (kerDualEquiv A)
 
 /-- **THE FINITE-RANK SPECIALIZATION.**  With a component identification
 against `Fin M`, the degree-zero cohomology is the free rank-M function
@@ -595,7 +592,32 @@ noncomputable def componentCohomologyZeroEquivFinM
     (A : AnalytificationData V) (M : ℕ)
     (e : ZerothHomotopy ↥A.space ≃ Fin M) :
     RationalSingularCohomology A 0 ≃ₗ[ℚ] (Fin M → ℚ) :=
-  (componentCohomologyZeroEquiv A).trans
-    (e.piCongrLeft (fun _ => ℚ))
+  LinearEquiv.ofBijective
+    { toFun := fun x i => componentCohomologyZeroEquiv A x (e.symm i)
+      map_add' := by
+        intro x y
+        funext i
+        simp only [map_add, Pi.add_apply]
+      map_smul' := by
+        intro q x
+        funext i
+        simp only [map_smul, Pi.smul_apply, smul_eq_mul] }
+    (by
+      constructor
+      · intro x y hxy
+        have h : ∀ z : ZerothHomotopy ↥A.space,
+            componentCohomologyZeroEquiv A x z =
+              componentCohomologyZeroEquiv A y z := by
+          intro z
+          have hz := congrFun hxy (e z)
+          simpa using hz
+        exact (componentCohomologyZeroEquiv A).injective (funext h)
+      · intro f
+        refine ⟨(componentCohomologyZeroEquiv A).symm
+          (fun z => f (e z)), ?_⟩
+        funext i
+        have h := (componentCohomologyZeroEquiv A).apply_symm_apply
+          (fun z => f (e z))
+        simpa using congrFun h (e.symm i))
 
 end GSTComponentCohomologyZero

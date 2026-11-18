@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026. The HC-PROOF campaign. All rights reserved.
 
-# The sphere-union component machine (Wave 46)
+# The sphere-union component machine (Wave 46, repair wave 47)
 
 THE SECOND CUSTOM TOOL of the wave.  The planned positive-dimensional world
 of the wave-45 frozen design (`finiteLineWorld M`, the disjoint union of
@@ -19,13 +19,18 @@ The proof has two engines:
    slice; the pinned `isOpen_range_sigmaMk` of
    `Topology/Constructions.lean`), and a continuous map from a connected
    space to a discrete space is constant (the hand-rolled
-   `exists_const_of_continuous_discrete`, through the clopen-separation
-   definition of connectedness).
+   `exists_const_of_continuous_discrete`, through the pinned
+   `isClopen_iff` of `Topology/Connected/Clopen.lean` under
+   `ConnectedSpace.toPreconnectedSpace` and the pinned instance
+   `ConnectedSpace.toNonempty`).
 
 2. THE SLICE PATH-CONNECTEDNESS (§2).  Each 2-sphere slice is
-   path-connected (the pinned `isPathConnected_sphere`), and the slice
-   inclusion is continuous (the pinned `continuous_sigmaMk`), so any two
-   points in the same slice are joined by a path in the union.
+   path-connected (the pinned `isPathConnected_sphere` of
+   `Analysis/Normed/Module/Connected.lean` — a ROOT-LEVEL lemma, applied
+   at `EuclideanSpace ℝ (Fin 3)` with `Module.rank = 3 > 1` through
+   `Module.finrank_eq_rank` and `finrank_euclideanSpace_fin`), and the
+   slice inclusion is continuous (the pinned `continuous_sigmaMk`), so
+   any two points in the same slice are joined by a path in the union.
 
 Together: the path-component quotient of the union is exactly the index
 set (§3).  Composed with the component H⁰ machine of
@@ -33,23 +38,26 @@ set (§3).  Composed with the component H⁰ machine of
 rank-M weight-0 fiber computation for the analytification of the planned
 finite-line world (§4) — the input the wave-45 frozen design demanded.
 
+## The wave-47 repair ledger (run 44403637791)
+
+* the import `Mathlib.Topology.Separation` is not a file at the pin
+  (the `import Mathlib` of this file already covers everything) —
+  removed;
+* `Metric.isPathConnected_sphere` is not the pinned name — the lemma is
+  root-level `isPathConnected_sphere` in
+  `Mathlib/Analysis/Normed/Module/Connected.lean`, taking the rank
+  hypothesis `1 < Module.rank ℝ E` explicitly;
+* the `isConnected_univ …` destructuring was not a pinned shape — the
+  clopen separation now runs through `isClopen_iff`
+  (`IsClopen s ↔ s = ∅ ∨ s = univ` under `PreconnectedSpace`).
+
 Honesty ledger: every statement is proved unconditionally.  No `sorry`,
 no new axioms, no `native_decide`.  The GitHub CI lane
-`gst-sphere-union-components.yml` owns the kernel check.
-
-AUDIT FLAGS:
-- AUDIT(7): `isConnected_Icc` (the connectedness of the path domain) and
-  the `IsConnected`-definition application shape.
-- AUDIT(8): `isPathConnected_sphere` (the exact hypothesis shape: the
-  positive-dimension condition on the ambient normed space; instantiated
-  at `EuclideanSpace ℝ (Fin 3)`, `finrank = 3 > 0`).
-- AUDIT(9): `Path.map` and the `JoinedIn`-destruction of
-  `IsPathConnected`.
+`gst-positive-dimensional-live-core-law.yml` owns the kernel check.
 -/
 
 import Mathlib
 import Mathlib.Topology.Constructions
-import Mathlib.Topology.Separation
 import Mathlib.Topology.Connected.PathConnected
 import GSTComponentCohomologyZero
 
@@ -68,33 +76,33 @@ namespace GSTSphereUnionComponents
 /-! ## §1 The index-constancy of paths -/
 
 /-- A continuous map from a connected space to a discrete space is
-constant.  Hand-rolled through the clopen-separation definition of
-connectedness: the preimage of any point is clopen, and a connected space
-admits no nontrivial clopen partition.  AUDIT(7). -/
+constant: the preimage of the value at any point is clopen (continuity +
+discreteness), and a preconnected space admits no nontrivial clopen set
+(the pinned `isClopen_iff`). -/
 theorem exists_const_of_continuous_discrete {X Y : Type*}
     [TopologicalSpace X] [ConnectedSpace X] [TopologicalSpace Y]
     [DiscreteTopology Y] {f : X → Y} (hf : Continuous f) :
     ∃ b : Y, f = fun _ => b := by
-  by_contra hcon
-  push_neg at hcon
-  obtain ⟨x₁, x₂, hne⟩ := hcon
-  -- the clopen preimage of the value at x₁ separates the space
-  set U : Set X := f ⁻¹' {f x₁} with hU
+  obtain ⟨x₀⟩ : Nonempty X := inferInstance
+  set U : Set X := f ⁻¹' {f x₀} with hU
   have hUopen : IsOpen U := hf.isOpen_preimage _ (isOpen_discrete _)
-  have hUclosed : IsClosed U := by
-    rw [hU, isClosed_preimage, isClosed_discrete]
+  have hUcomplopen : IsOpen Uᶜ := by
+    have hcompl : Uᶜ = f ⁻¹' ({f x₀} : Set Y)ᶜ := by
+      rw [hU, Set.preimage_compl]
+      rfl
+    rw [hcompl]
+    exact hf.isOpen_preimage _ (isOpen_discrete _)
+  have hUclosed : IsClosed U := isClosed_compl_iff.mpr hUcomplopen
   have hUclopen : IsClopen U := ⟨hUopen, hUclosed⟩
-  have hx₁U : x₁ ∈ U := Set.mem_preimage.mpr rfl
-  have hx₂U : x₂ ∉ U := fun h => hne (by
-    exact Set.mem_singleton_iff.mp (Set.mem_preimage.mp h))
-  -- the separation contradicts connectedness
-  have hcover : (Set.univ : Set X) ⊆ U ∪ Uᶜ := fun _ _ => Or.inr rfl
-  have hdisj : ((Set.univ : Set X) ∩ (U ∩ Uᶜ)) = ∅ := by
-    rw [Set.inter_comm, Set.inter_compl_self, Set.inter_empty]
-  obtain hsub | hsub :=
-    isConnected_univ U Uᶜ hUclopen.1 hUclopen.2.isOpen_compl hcover hdisj
-  · exact hx₂U (hsub (Set.mem_univ x₂))
-  · exact hx₁U (fun h => (hsub (Set.mem_univ x₁)) h)
+  have hx₀U : x₀ ∈ U := Set.mem_preimage.mpr rfl
+  rcases (isClopen_iff.mp hUclopen) with hUe | hUu
+  · rw [hUe] at hx₀U
+    exact absurd hx₀U (Set.not_mem_empty x₀)
+  · refine ⟨f x₀, funext fun x => ?_⟩
+    have hxU : x ∈ U := by
+      rw [hUu]
+      exact Set.mem_univ x
+    exact Set.mem_singleton_iff.mp (Set.mem_preimage.mp hxU)
 
 /-- The first projection of a sigma-typed disjoint union is continuous
 into the discrete index type: the preimage of any subset is a union of
@@ -104,20 +112,19 @@ theorem continuous_sigma_fst_discrete {ι : Type*} {X : ι → Type*}
     Continuous (fun z : Sigma X => z.1) := by
   rw [continuous_iff_isOpen_preimage]
   intro U _
-  have : (fun z : Sigma X => z.1) ⁻¹' U =
+  have hpre : (fun z : Sigma X => z.1) ⁻¹' U =
       ⋃ i ∈ U, Set.range (Sigma.mk (X := X) i) := by
     apply Set.eq_univ_of_forall
     intro z
     simp only [Set.mem_preimage, Set.mem_iUnion, exists_prop,
       Set.mem_range]
     exact ⟨z.1, Set.mem_of_mem_of_subset (rfl : z.1 ∈ {z.1}) U, z, rfl⟩
-  rw [this]
+  rw [hpre]
   exact isOpen_iUnion fun i =>
     isOpen_iUnion_iff.mpr fun _ => isOpen_range_sigmaMk
 
 /-- **THE INDEX-CONSTANCY OF PATHS.**  A path in a sigma-typed disjoint
-union has constant index.  AUDIT(7): the connectedness spelling of the
-path domain. -/
+union has constant index. -/
 theorem sigma_path_index_const {ι : Type*} {X : ι → Type*}
     [∀ i, TopologicalSpace (X i)] [DiscreteTopology ι]
     {x y : Sigma X} (p : Path x y) :
@@ -162,38 +169,54 @@ abbrev sphereUnionSpace (M : ℕ) : Type :=
 instance (M : ℕ) : TopologicalSpace (sphereUnionSpace M) :=
   inferInstanceAs (TopologicalSpace (Sigma (fun _ : Fin M => unitSphereType)))
 
-/-- AUDIT(8): the 2-sphere is path-connected. -/
-theorem unitSphere_pathConnected :
-    IsPathConnected (Set.univ : Set unitSphereType) := by
-  have h : IsPathConnected (Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1) :=
-    Metric.isPathConnected_sphere (x := (0 : EuclideanSpace ℝ (Fin 3)))
-  simpa using h
+/-- The rank bookkeeping for the pinned sphere path-connectedness: the
+3-dimensional Euclidean space has rank 3. -/
+theorem euclideanRank_three :
+    1 < Module.rank ℝ (EuclideanSpace ℝ (Fin 3)) := by
+  rw [← Module.finrank_eq_rank, finrank_euclideanSpace_fin]
+  exact_mod_cast (by norm_num : (1 : ℕ) < 3)
+
+/-- AUDIT(8): the 2-sphere is path-connected — the pinned
+`isPathConnected_sphere` (root level, `Analysis/Normed/Module/
+Connected.lean`) at the 3-dimensional Euclidean space. -/
+theorem unitSphere_isPathConnected :
+    IsPathConnected (Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1) :=
+  isPathConnected_sphere euclideanRank_three
+    (0 : EuclideanSpace ℝ (Fin 3)) (by norm_num)
 
 /-- The sphere is nonempty (through path-connectedness). -/
-theorem unitSphere_nonempty : Nonempty unitSphereType :=
-  (unitSphere_pathConnected.nonempty).some ⟨⟩ ▸ ⟨_⟩
+theorem unitSphere_nonempty : Nonempty unitSphereType := by
+  obtain ⟨hub, hhub, -⟩ := unitSphere_isPathConnected
+  exact ⟨⟨hub, hhub⟩⟩
+
+/-- Any two points of the sphere are joined by a path in the sphere —
+the ambient joinedness transported through the pinned
+`joinedIn_iff_joined` (joined in the set ↔ joined in the subtype). -/
+theorem unitSphere_joined (s t : unitSphereType) :
+    ∃ p : Path s t, True := by
+  obtain ⟨hub, hhub, hj⟩ := unitSphere_isPathConnected
+  have hs : (s : EuclideanSpace ℝ (Fin 3)) ∈
+      Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 := s.2
+  have ht : (t : EuclideanSpace ℝ (Fin 3)) ∈
+      Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 := t.2
+  obtain ⟨γs⟩ := (joinedIn_iff_joined hhub hs).mp (hj _ hs)
+  obtain ⟨γt⟩ := (joinedIn_iff_joined hhub ht).mp (hj _ ht)
+  exact ⟨γs.symm.trans γt, trivial⟩
 
 /-- Any two points of the same sphere slice are joined by a path inside
 the slice, which is also a path in the union (the slice inclusion is
-continuous: the pinned `continuous_sigmaMk`).  AUDIT(9). -/
+continuous: the pinned `continuous_sigmaMk`). -/
 theorem sphere_slice_joined (M : ℕ) (i : Fin M) (s t : unitSphereType) :
     ∃ p : Path (Sigma.mk (X := fun _ : Fin M => unitSphereType) i s)
         (Sigma.mk i t), True := by
-  -- the sphere is path-connected: obtain paths through a hub point
-  obtain ⟨hub, _, hj⟩ := unitSphere_pathConnected
-  have hs : (s : unitSphereType) ∈ (Set.univ : Set unitSphereType) := trivial
-  have ht : (t : unitSphereType) ∈ (Set.univ : Set unitSphereType) := trivial
-  obtain ⟨γ₁⟩ := hj s hs
-  obtain ⟨γ₂⟩ := hj t ht
-  -- the slice inclusion lifts paths into the union
+  obtain ⟨γ, -⟩ := unitSphere_joined s t
   have hcont : Continuous
       (fun u : unitSphereType =>
         (Sigma.mk (X := fun _ : Fin M => unitSphereType) i) u) :=
     continuous_sigmaMk
-  refine ⟨(γ₂.symm.trans γ₁).map
-    { toFun := fun u =>
-        (Sigma.mk (X := fun _ : Fin M => unitSphereType) i) u
-      continuous_toFun := hcont }, trivial⟩
+  exact ⟨γ.map { toFun := fun u =>
+      (Sigma.mk (X := fun _ : Fin M => unitSphereType) i) u
+    continuous_toFun := hcont }, trivial⟩
 
 /-! ## §3 The component equivalence -/
 
