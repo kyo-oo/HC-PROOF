@@ -967,7 +967,7 @@ roots = [
 # bigrading, and the frontier reduction corollary of the native single-fold
 # orbit law.
 [[lean_lib]]
-name = "GSTPositiveDimensionalLiveCoreLib"
+name = "GSTPositiveDimensionalLiveCoreUpgrade"
 roots = [
   "GSTPositiveDimensionalLiveCoreKit",
 ]
