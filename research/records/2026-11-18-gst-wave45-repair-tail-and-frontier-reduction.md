@@ -85,3 +85,37 @@ then the H⁰ kernel machine (route certified by the council: `ker d⁰` =
 component-constant functions, no UCT), then the HodgeData assembly (span/stash
 instantiation of THIS kit), then the CycleWord + LawLanding (the finite-point
 twin's attested architecture).
+
+## THE VERDICT (post-script, same day)
+
+**GREEN.** Run 44382896351 at `a6ceb54`: SUCCESS — "LEAN PASSED:
+GSTPositiveDimensionalLiveCoreKit", the sorryAx gate silent, all steps green,
+the 268-module closure built on v4.33.0-rc2.
+
+The repair arc of the kit (the finite-point lane's convergence signature,
+replayed): 51 errors -> 15 -> 9 -> 2 -> GREEN, four CI waves.
+
+THE CERTIFIED ENGINES (the general live rank >= 2 core's algebraic half,
+kernel-checked at a6ceb54):
+
+- `exists_complex_retraction` / `complexificationMapQ_injective` — the keystone
+- `stashComponents` / `stashBigrading` / `rationalHodgeSubspace_stash_eq_bot`
+  — dead positive weights with NO vanishing proof
+- `complexifiedFamily` / `spanSlot` / `spanComponents` / `spanBigrading` /
+  `rationalHodgeSubspace_span_eq` — the gated-live fiber is EXACTLY the
+  rational span of the supplied classes (the tensor-projection argument, with
+  the C-linearity engine `hTsmul` and the span_induction membership route)
+- `native_GST_single_fold_orbit_law_of_stashed_positive_weights` — THE
+  FRONTIER REDUCTION: weight-0 cyclicity + stashed positive weights =>
+  the full `NativeGSTSingleFoldOrbitLaw` on any world
+
+The wave-45.2/.3 repairs (all zero-mathematics): the rw-auto-close cascade,
+the le_of_eq direction, bot_le (le_bot absent at the pin), the latent
+omega-on-VQ (abel), THE RING MISMATCH (spanSlot is a C-submodule, ker T only
+Q-linear — replaced by the C-linearity engine), the tmul-case rewrite order
+(the second map_tmul must fire on the RHS instance), and the sub_mem
+elaboration-postponement (the implicit submodule pinned by named argument).
+
+The lane's remaining cost is concentrated in the carrier campaign (the world
+construction); the H^0 kernel machine route is certified by the council
+(ker d^0 = component-constant functions, no UCT needed).
