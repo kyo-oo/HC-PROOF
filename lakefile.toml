@@ -970,4 +970,7 @@ roots = [
 name = "GSTPositiveDimensionalLiveCoreUpgrade"
 roots = [
   "GSTPositiveDimensionalLiveCoreKit",
+  "GSTComponentCohomologyZero",
+  "GSTSphereUnionComponents",
+  "GSTPositiveDimensionalLiveCoreLaw",
 ]
