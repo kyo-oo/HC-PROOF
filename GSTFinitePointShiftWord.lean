@@ -1082,18 +1082,26 @@ theorem wordOp_cons_apply (q : ℚ)
     (realizedWordPair ((q, R) :: W)).cohomologyOperator u =
       q • R.cohomologyOperator u +
         (realizedWordPair W).cohomologyOperator u := by
-  rw [realizedWordPair_cohomologyOperator_cons,
-    LinearMap.add_apply, LinearMap.smul_apply]
+  have hsplit : (q • R.cohomologyOperator +
+      (realizedWordPair W).cohomologyOperator) u =
+      (q • R.cohomologyOperator) u +
+        (realizedWordPair W).cohomologyOperator u :=
+    LinearMap.add_apply _ _ _
+  have hsmulsplit : (q • R.cohomologyOperator) u =
+      q • R.cohomologyOperator u :=
+    LinearMap.smul_apply _ _ _
+  rw [realizedWordPair_cohomologyOperator_cons, hsplit, hsmulsplit]
 
 /-- A matrix-unit letter kills every point class off its column. -/
 theorem matrixUnitOp_ptClass_eq_zero (r c i : Fin N) (h : c ≠ i) :
     (matrixUnitOp N r c)
       (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
         ((finitePointPt N) i))) = 0 := by
-  have z2 : (finitePointCohomologyIso N)
-      ((matrixUnitOp N r c)
-        (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
-          ((finitePointPt N) i)))) =
+  have z2 : (finitePointCohomologyIso N).symm
+      ((finitePointCohomologyIso N)
+        ((matrixUnitOp N r c)
+          (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
+            ((finitePointPt N) i))))) =
       (finitePointCohomologyIso N).symm
         (if c = i then Pi.single r (1 : ℚ) else 0) := by
     rw [matrixUnitOp_pointClass N r c i]
@@ -1147,7 +1155,7 @@ theorem matrixUnitOp_ptClass_eq (r c i : Fin N) (h : c = i) :
           ((matrixUnitOp N r c)
             (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
               ((finitePointPt N) i))))) := by
-    rw [key]; rfl
+    rw [key]
   have s3 : (finitePointCohomologyIso N).symm
         ((finitePointCohomologyIso N)
           ((matrixUnitOp N r c)
@@ -1157,11 +1165,11 @@ theorem matrixUnitOp_ptClass_eq (r c i : Fin N) (h : c = i) :
         (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
           ((finitePointPt N) i))) :=
     LinearEquiv.symm_apply_apply _ _
-  exact s1.trans (s2.trans s3)
+  exact (s1.trans (s2.trans s3)).symm
 
 /-- **ABOVE THE LEVEL**: the level-`k` shift word kills every point class
 of a column beyond `k`. -/
-theorem shiftWord_op_ptClass_not (N : ℕ) :
+theorem shiftWord_op_ptClass_not :
     ∀ (k : ℕ) (hk : k < N) (i : Fin N), k < i.val →
     (realizedWordPair (lettersOf N (shiftLettersDownTo N k hk))).cohomologyOperator
       (zeroCycleClass N (codimensionPointCycle (finitePointWorld N).X 0
@@ -1232,7 +1240,7 @@ theorem shiftWord_op_ptClass_not (N : ℕ) :
 /-- **THE POINT-CLASS ORBIT ENGINE.**  The level-`k` shift word carries
 the `i`-th point class to the `(i+1)`-st whenever `i ≤ k` and the
 successor exists. -/
-theorem shiftWord_op_ptClass (N : ℕ) :
+theorem shiftWord_op_ptClass :
     ∀ (k : ℕ) (hk : k < N) (i : Fin N) (hik : i.val ≤ k) (hi : i.val + 1 < N),
     (finitePointCohomologyIso N)
       ((realizedWordPair (lettersOf N (shiftLettersDownTo N k hk))).cohomologyOperator
