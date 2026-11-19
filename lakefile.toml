@@ -974,8 +974,6 @@ roots = [
   "GSTSphereUnionComponents",
   "GSTPositiveDimensionalLiveCoreLaw",
 ]
-
-[[lean_lib]]
 name = "GSTSingularCohomologyMapsLib"
 roots = [
   "GSTProjectiveOverC",
