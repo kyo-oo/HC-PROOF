@@ -255,16 +255,21 @@ This is the statement the wave-45 frozen design demanded as the input of
 the finite-line lane's weight-0 core: the analytification-side half is
 now COMPLETE; the remaining construction is the scheme carrier
 (`finiteLineWorld M`), the next wave's frozen kill. -/
-theorem sphereUnion_cohomology_zero
+/-- **THE UNCONDITIONAL COMPONENT IDENTIFICATION OF THE SPHERE-UNION
+ANALYTIFICATION.**  For any world whose analytification carries the
+sphere-union space, the path-component identification against `Fin M`.
+WAVE 54: stated as a DEF returning the equiv DIRECTLY — the previous
+∃-wrapper cannot be consumed (destructuring an `∃` into a `Sort`-valued
+goal is illegal: `Exists.casesOn` eliminates into `Prop` only); the goal
+is rewritten by `hspace` first so both sides elaborate at `TopCat.of`'s
+canonical instance (the Sort-coe on `TopCat.of` is definitionally the
+identity carrier). -/
+noncomputable def sphereUnion_cohomology_zero
     {V : SmoothProjectiveComplexScheme}
     {A : AnalytificationData V} {M : ℕ}
     (hspace : A.space = TopCat.of (sphereUnionSpace M)) :
-    ∃ e : ZerothHomotopy ↥A.space ≃ Fin M, True := by
-  -- WAVE 51: rewrite the GOAL by hspace first — the ▸-transport on the
-  -- equiv leaves the goal's topology instance at `A.space.str`, which
-  -- is not definitionally the canonical sigma instance; after the goal
-  -- rewrite both sides elaborate at `TopCat.of`'s canonical instance
+    ZerothHomotopy ↥A.space ≃ Fin M := by
   rw [hspace]
-  exact ⟨sphereUnionZerothHomotopyEquiv M, trivial⟩
+  exact sphereUnionZerothHomotopyEquiv M
 
 end GSTSphereUnionComponents

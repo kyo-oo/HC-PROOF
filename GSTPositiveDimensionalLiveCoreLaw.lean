@@ -103,18 +103,20 @@ the whole of `H⁰`.  (The kit's `rationalHodgeSubspace_stash_eq_bot`
 covers `0 < p`; this is the `p = 0` companion.) -/
 theorem rationalHodgeSubspace_stash_zero {VQ : Type}
     [AddCommGroup VQ] [Module ℚ VQ] :
-    rationalHodgeSubspace (stashBigrading VQ 0) = ⊤ := by
+    rationalHodgeSubspace (p := 0) (stashBigrading VQ 0) = ⊤ := by
   have hidx : (ppIndex 0 : Fin (2 * 0 + 1)) = 0 := by
     apply Fin.ext
     simp only [ppIndex, Fin.val_mk, Fin.val_zero]
     omega
-  have hpp : (stashBigrading VQ 0).ppComponent = ⊤ := by
+  -- WAVE 54: every consumer of the 2*p-degree slot gets (p := 0) —
+  -- the unifier cannot invert `2 * ?p =?= 0`
+  have hpp : (stashBigrading VQ 0).ppComponent (p := 0) = ⊤ := by
     show (stashBigrading VQ 0).component (ppIndex 0) = ⊤
     rw [hidx]
     exact stashComponents_zero VQ 0
   apply le_antisymm le_top
   intro v _
-  exact (mem_rationalHodgeSubspace_iff (stashBigrading VQ 0) v).mpr
+  exact (mem_rationalHodgeSubspace_iff (p := 0) (stashBigrading VQ 0) v).mpr
     (by rw [hpp]; exact Submodule.mem_top)
 
 /-! ## §2 THE LIVE RANK-M WEIGHT-0 FIBER, COMPUTED -/
@@ -276,9 +278,7 @@ theorem weightZero_live_fiber_of_sphereUnion
         Submodule.span ℚ (Set.range c) =
           rationalHodgeSubspace (H.hodgeBigrading 0) :=
   weightZero_live_fiber_of_components hM
-    (by
-      obtain ⟨e, -⟩ := sphereUnion_cohomology_zero (V := V) (A := H.analytification)
-        (M := M) hspace
-      exact e) hzero
+    (sphereUnion_cohomology_zero (V := V) (A := H.analytification) (M := M)
+      hspace) hzero
 
 end GSTPositiveDimensionalLiveCoreLaw
