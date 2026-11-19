@@ -107,13 +107,14 @@ theorem rationalHodgeSubspace_stash_zero {VQ : Type}
   have hidx : (ppIndex 0 : Fin (2 * 0 + 1)) = 0 := by
     apply Fin.ext
     simp only [ppIndex, Fin.val_mk, Fin.val_zero]
-    omega
   -- WAVE 54: every consumer of the 2*p-degree slot gets (p := 0) —
   -- the unifier cannot invert `2 * ?p =?= 0`
   have hpp : (stashBigrading VQ 0).ppComponent (p := 0) = ⊤ := by
     show (stashBigrading VQ 0).component (ppIndex 0) = ⊤
     rw [hidx]
-    exact stashComponents_zero VQ 0
+    -- WAVE 56: the kit's stashComponents_zero carries VQ IMPLICIT (a
+    -- section variable) — the explicit VQ was landing in the n-slot
+    exact stashComponents_zero (VQ := VQ) 0
   apply le_antisymm le_top
   intro v _
   exact (mem_rationalHodgeSubspace_iff (p := 0) (stashBigrading VQ 0) v).mpr
