@@ -82,6 +82,7 @@ theorem incl_pointClass_self (M : ℕ)
       (cohomologyPullbackOf (sphereCollapse M i) 2) ω from rfl,
     pullback_pair (sphereIncl M i) (sphereCollapse M i) 2 ω,
     incl_comp_collapse M i, cohomologyPullbackOf_id]
+  rfl
 
 /-- **THE OFF-SLICE RESTRICTION.**  Restricting the i-th point class to a
 different slice is ZERO: the off-slice composite is the constant map,
@@ -119,6 +120,7 @@ theorem spherePointClass_indep (M : ℕ)
       (∑ i ∈ s, g i • spherePointClass M ω i) = 0 := by
     rw [hg, map_zero]
   rw [map_sum] at hsum
+  simp only [map_smul] at hsum
   have hsingle : ∑ i ∈ s, g i • (cohomologyPullbackOf (sphereIncl M j) 2)
       (spherePointClass M ω i) = g j • ω := by
     rw [Finset.sum_eq_single_of_mem j hj]
