@@ -102,6 +102,9 @@ variable {V : SmoothProjectiveComplexScheme} (A : AnalytificationData V)
 
 /-! ## §0 Pinned shape facts for the up-ℕ bottom degree -/
 
+theorem upNext_zero : (ComplexShape.up ℕ).next 0 = 1 :=
+  CochainComplex.next ℕ 0
+
 theorem upPrev_zero : (ComplexShape.up ℕ).prev 0 = 0 :=
   CochainComplex.prev_nat_zero
 
@@ -222,8 +225,6 @@ theorem precomp_zero_of_generator (A : AnalytificationData V)
   obtain ⟨f, rfl⟩ := (A.space.toSSetObj₁Equiv.symm).surjective σ
   apply ModuleCat.hom_injective
   apply LinearMap.ext_ring
-  show φ.hom ((rationalSingularChains A).d 1 0
-      ((ιPath A f).hom (1 : ℚ))) = (0 : ℚ)
   exact hgen f
 
 /-- AUDIT(2): the `leftComp` application defeq — the precomposition
@@ -271,6 +272,17 @@ theorem mem_kerDual_iff (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
     φ ∈ kerDual A ↔ (rationalSingularCochains A).d 0 1 φ = 0 := Iff.rfl
 
+/-- The `g`-field of the degree-zero short complex is the outgoing
+differential — through the pinned `@[simps]` equations of the
+`shortComplexFunctor'` construction (the defeq is behind two
+semireducible functor layers and a `next 0` arithmetic step, so it is
+bridged by rewriting instead). -/
+theorem sc_zero_g (A : AnalytificationData V) :
+    ((rationalSingularCochains A).sc 0).g =
+      (rationalSingularCochains A).d 0 1 := by
+  rw [HomologicalComplex.shortComplexFunctor_obj,
+    HomologicalComplex.shortComplexFunctor'_obj, upNext_zero]
+
 /-- **THE BOTTOM-DEGREE HOMOLOGY.**  The homology of the cochain complex
 at degree zero is the kernel of the outgoing differential.
 
@@ -293,10 +305,7 @@ noncomputable def homologyZeroIsoKer (A : AnalytificationData V) :
   refine ((rationalSingularCochains A).isoHomologyπ 0 0 upPrev_zero
       ((rationalSingularCochains A).shape 0 0 upNotRel_zero_zero)).symm ≪≫ ?_
   refine ((rationalSingularCochains A).sc 0).moduleCatCyclesIso ≪≫ ?_
-  rw [ShortComplex.moduleCatLeftHomologyData_K]
-  show ModuleCat.of ℚ ↥(LinearMap.ker
-      ((rationalSingularCochains A).d 0 1).hom) ≅
-    ModuleCat.of ℚ ↥(kerDual A)
+  rw [ShortComplex.moduleCatLeftHomologyData_K, sc_zero_g A]
   exact LinearEquiv.toModuleIso (LinearEquiv.refl ℚ ↥(kerDual A))
 
 /-! ## §4 The kernel-cocycle iso -/
@@ -389,9 +398,7 @@ distinguish `ZerothHomotopy.sound`-equal points. -/
 theorem componentCochainMorph_mem_kerDual (A : AnalytificationData V)
     (g : ZerothHomotopy ↥A.space → ℚ) :
     componentCochainMorph A g ∈ kerDual A := by
-  show (componentCochainMorph A g :
-      (rationalSingularCochains A).X 0) ∈ kerDual A
-  rw [mem_kerDual_iff A]
+  refine (mem_kerDual_iff A (componentCochainMorph A g)).mpr ?_
   refine (cochain_ker_iff A (componentCochainMorph A g)).mpr ?_
   intro f
   rw [d_path_element A f, map_sub, sub_eq_zero]
