@@ -48,7 +48,9 @@ theorem cyclicSucc_cyclicPred (M : ℕ) (j : Fin M) :
   show ((j.val + (M - 1)) % M + 1) % M = j.val
   rw [Nat.mod_add_mod]
   have hadd : j.val + (M - 1) + 1 = j.val + M := by omega
-  rw [hadd, Nat.add_mod_left]
+  -- WAVE 58.1: the pin's `Nat.add_mod_left` is `(m + n) % m = n % m`
+  -- (modulus = LEFT summand); the needed form is `add_mod_right`.
+  rw [hadd, Nat.add_mod_right]
   exact Nat.mod_eq_of_lt hj
 
 /-- The roundtrip: the predecessor of the successor is the identity. -/
@@ -60,7 +62,7 @@ theorem cyclicPred_cyclicSucc (M : ℕ) (j : Fin M) :
   show ((j.val + 1) % M + (M - 1)) % M = j.val
   rw [Nat.mod_add_mod]
   have hadd : j.val + 1 + (M - 1) = j.val + M := by omega
-  rw [hadd, Nat.add_mod_left]
+  rw [hadd, Nat.add_mod_right]
   exact Nat.mod_eq_of_lt hj
 
 /-- The successor is injective (through the predecessor roundtrip). -/
