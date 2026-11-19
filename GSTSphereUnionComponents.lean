@@ -68,6 +68,8 @@ noncomputable section
 
 open CategoryTheory
 open AlgebraicTopology
+open unitInterval
+open GSTProjectiveOverC
 open GSTGeometricRealizationStage2F
 open GSTComponentCohomologyZero
 
@@ -109,17 +111,16 @@ open slices (the pinned `isOpen_range_sigmaMk`). -/
 theorem continuous_sigma_fst_discrete {ι : Type*} {X : ι → Type*}
     [TopologicalSpace ι] [∀ i, TopologicalSpace (X i)]
     [DiscreteTopology ι] :
-    Continuous (fun z : Sigma X => z.1) := by
-  rw [continuous_iff_isOpen_preimage]
-  intro U _
-  have hpre : (fun z : Sigma X => z.1) ⁻¹' U =
-      ⋃ i ∈ U, Set.range (Sigma.mk (β := X) i) := by
-    ext z
-    simp only [Set.mem_preimage, Set.mem_iUnion, exists_prop, Set.mem_range]
-    exact ⟨fun h => ⟨z.1, h, z.2, rfl⟩, fun ⟨i, hi, w, rfl⟩ => hi⟩
-  rw [hpre]
-  exact isOpen_iUnion fun i =>
-    isOpen_iUnion_iff.mpr fun _ => isOpen_range_sigmaMk
+    Continuous (fun z : Sigma X => z.1 :=
+  ⟨fun U _ => by
+    have hpre : (fun z : Sigma X => z.1) ⁻¹' U =
+        ⋃ i ∈ U, Set.range (Sigma.mk (β := X) i) := by
+      ext z
+      simp only [Set.mem_preimage, Set.mem_iUnion, exists_prop, Set.mem_range]
+      exact ⟨fun h => ⟨z.1, h, z.2, rfl⟩, fun ⟨i, hi, w, rfl⟩ => hi⟩
+    rw [hpre]
+    exact isOpen_iUnion fun i =>
+      isOpen_iUnion_iff.mpr fun _ => isOpen_range_sigmaMk⟩
 
 /-- **THE INDEX-CONSTANCY OF PATHS.**  A path in a sigma-typed disjoint
 union has constant index.  WAVE 48: rewritten on the pinned `Path` API —
@@ -148,20 +149,20 @@ theorem sigma_path_index_const {ι : Type*} {X : ι → Type*}
 /-! ## §2 The sphere-union space and its slices -/
 
 /-- The concrete 2-sphere model: the unit sphere in the 3-dimensional
-Euclidean space. -/
+Euclidean space.  WAVE 50: NO custom instance — the abbrev lets TC find
+the canonical induced subtype topology (a hand-rolled `inferInstance`
+copy would shadow it and break instance unification against pinned
+lemmas like `continuous_sigmaMk`). -/
 abbrev unitSphereType : Type :=
   ↥(Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1)
 
-instance : TopologicalSpace unitSphereType := inferInstance
-
 /-- The sphere-union space: the sigma-typed disjoint union of M copies of
 the 2-sphere, with the pinned sigma (disjoint-union) topology.  This is
-the honest analytification shape of the planned `finiteLineWorld M`. -/
+the honest analytification shape of the planned `finiteLineWorld M`.
+WAVE 50: NO custom instance — same shadowing discipline as
+`unitSphereType`. -/
 abbrev sphereUnionSpace (M : ℕ) : Type :=
   Sigma (fun _ : Fin M => unitSphereType)
-
-instance (M : ℕ) : TopologicalSpace (sphereUnionSpace M) :=
-  inferInstanceAs (TopologicalSpace (Sigma (fun _ : Fin M => unitSphereType)))
 
 /-- The rank bookkeeping for the pinned sphere path-connectedness: the
 3-dimensional Euclidean space has rank 3. -/
