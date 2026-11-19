@@ -337,13 +337,13 @@ theorem sphereUnionCertificateOne_hodgeOrbit (M : ℕ) (hM : 0 < M)
       rw [hZ₁]
       rfl
   | succ n ih =>
-      have hstep : ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁)
-          .hodgeOrbit (n + 1)).1 =
-          R₁.cohomologyOperator ((sphereUnionCertificateOne M hM hspace ω hone
-            R₁ hR₁ Z₁ hZ₁).hodgeOrbit n).1 := by
+      -- WAVE 60.4 (run 44634998857): the projection must sit on the SAME
+      -- line as the certificate-term's closing paren — a line-broken
+      -- `… hZ₁)\n  .hodgeOrbit` parses as an application to a dot-term.
+      have hstep : ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁).hodgeOrbit (n + 1)).1 =
+          R₁.cohomologyOperator ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁).hodgeOrbit n).1 := by
         show (realizedWordPair [( (1 : ℚ), R₁)]).cohomologyOperator
-          ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁)
-            .hodgeOrbit n).1 = _
+          ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁).hodgeOrbit n).1 = _
         rw [realizedWordPair_single_cohomologyOperator]
       rw [hstep, ih, hR₁ ((cyclicPred M)^[n] ⟨0, hM⟩),
         ← Function.iterate_succ_apply']
@@ -373,8 +373,7 @@ theorem sphereUnionCertificateOne_isKrylovCyclic (M : ℕ) (hM : 0 < M)
       ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁).hodgeOrbit n).2)).mpr
     (by
       have hfam : (fun n : Nat =>
-          ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁)
-            .hodgeOrbit n).1) =
+          ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁).hodgeOrbit n).1) =
           fun n : Nat => spherePointClassWorld M hspace ω
             ((cyclicPred M)^[n] ⟨0, hM⟩) :=
         funext fun n =>
@@ -438,13 +437,11 @@ theorem sphereUnionCertificateZero_hodgeOrbit (M : ℕ) (hM : 0 < M)
       rw [hZ₀]
       rfl
   | succ n ih =>
-      have hstep : ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀)
-          .hodgeOrbit (n + 1)).1 =
-          R₀.cohomologyOperator ((sphereUnionCertificateZero M hM hspace R₀ hR₀
-            Z₀ hZ₀).hodgeOrbit n).1 := by
+      -- WAVE 60.4: same-line projection discipline as the weight-1 orbit.
+      have hstep : ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀).hodgeOrbit (n + 1)).1 =
+          R₀.cohomologyOperator ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀).hodgeOrbit n).1 := by
         show (realizedWordPair [( (1 : ℚ), R₀)]).cohomologyOperator
-          ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀)
-            .hodgeOrbit n).1 = _
+          ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀).hodgeOrbit n).1 = _
         rw [realizedWordPair_single_cohomologyOperator]
       rw [hstep, ih, hR₀ ((cyclicPred M)^[n] ⟨0, hM⟩),
         ← Function.iterate_succ_apply']
@@ -470,8 +467,7 @@ theorem sphereUnionCertificateZero_isKrylovCyclic (M : ℕ) (hM : 0 < M)
       ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀).hodgeOrbit n).2)).mpr
     (by
       have hfam : (fun n : Nat =>
-          ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀)
-            .hodgeOrbit n).1) =
+          ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀).hodgeOrbit n).1) =
           fun n : Nat => sphereComponentClass M hM hspace
             ((cyclicPred M)^[n] ⟨0, hM⟩) :=
         funext fun n =>
@@ -562,12 +558,24 @@ theorem spherePointClass_pair_ne (M : ℕ) (hM : 2 ≤ M)
       (fun i => if i = (⟨0, by omega⟩ : Fin M) then (1 : ℚ) else (-1 : ℚ)) i •
       spherePointClass M ω i = 0 := by
     rw [Finset.sum_cons, Finset.sum_cons]
+    -- WAVE 60.4: the empty-sum closes at the TERM level (both the
+    -- rewrite-level and the simp-level matches stall on the
+    -- lambda-spelling of the summand).
+    have hempty : ∑ x ∈ Finset.empty,
+        (fun i => if i = (⟨0, by omega⟩ : Fin M) then (1 : ℚ) else (-1 : ℚ)) x •
+        spherePointClass M ω x = 0 := Finset.sum_empty _
+    rw [hempty]
     simp [h]
-  have h0 := hindep _ _ hsum
+  -- WAVE 60.4: the independence statement takes the INDEX and then the
+  -- membership (the wave-60 application dropped the index).
+  have h0 := hindep _ _ hsum (⟨0, by omega⟩ : Fin M)
     (Finset.mem_cons.mpr (Or.inl rfl))
-  -- the beta-redex and the self-equality ite both reduce in the empty
-  -- simp-only pass; the residue is the coefficient contradiction.
-  simp only [] at h0
+  have hgv0 : (fun i => if i = (⟨0, by omega⟩ : Fin M) then (1 : ℚ) else (-1 : ℚ))
+      (⟨0, by omega⟩ : Fin M) = (1 : ℚ) := by
+    show (if (⟨0, by omega⟩ : Fin M) = (⟨0, by omega⟩ : Fin M)
+        then (1 : ℚ) else (-1 : ℚ)) = (1 : ℚ)
+    rw [if_pos rfl]
+  rw [hgv0] at h0
   exact absurd h0 one_ne_zero
 
 /-- **THE WORLD POINT CLASSES ARE PAIRWISE DISTINCT.**  The transport is
@@ -609,9 +617,14 @@ theorem sphereComponentClass_pair_ne (M : ℕ) (hM : 2 ≤ M) (hM' : 0 < M)
       (sphereUnion_cohomology_zero hspace)) x) h
   rw [hu0, hu1, LinearEquiv.apply_symm_apply,
     LinearEquiv.apply_symm_apply] at hcongr
+  have h01 : (⟨0, by omega⟩ : Fin M) ≠ (⟨1, by omega⟩ : Fin M) := by
+    intro hh
+    exact absurd (congrArg Fin.val hh) (by simp)
   have h0 := congrFun hcongr (⟨0, by omega⟩ : Fin M)
   simp only [Pi.single_apply] at h0
-  simp only [] at h0
+  -- WAVE 60.4: the ite-residue closes by the DIRECTED rewrites (the
+  -- empty simp-only pass stalls on the byContradiction instances).
+  rw [if_pos rfl, if_neg h01] at h0
   exact absurd h0 one_ne_zero
 
 /-- **THE WEIGHT-0 FIBER IS LIVE.**  With at least two components, the
@@ -709,7 +722,15 @@ theorem positive_dimensional_package_of_sphereUnion_gate
   · exact weightOne_fiber_not_subsingleton M hM hspace ω hω hone
   · have hns : ¬ Subsingleton (ClassicalHodgeFiber V H 1) :=
       weightOne_fiber_not_subsingleton M hM hspace ω hω hone
-    obtain ⟨a, b, hne⟩ := exists_pair_ne (ClassicalHodgeFiber V H 1) hns
+    -- WAVE 60.4: the pin's `exists_pair_ne` spelling does not take the
+    -- hypothesis positionally — the pair is constructed directly from the
+    -- ¬Subsingleton statement by classical contraposition.
+    have hpair : ∃ a b : ClassicalHodgeFiber V H 1, a ≠ b := by
+      by_contra hcon
+      exact hns ⟨fun a b => by
+        by_contra hne
+        exact hcon ⟨a, b, hne⟩⟩
+    obtain ⟨a, b, hne⟩ := hpair
     have hlive : ∃ a : ClassicalHodgeFiber V H 1, a ≠ 0 := by
       by_cases ha : a = 0
       · exact ⟨b, fun hb => hne (ha.trans hb.symm)⟩
