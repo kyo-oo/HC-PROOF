@@ -111,13 +111,14 @@ noncomputable def cochainPullbackOf {X Y : TopCat} (f : X ⟶ Y) :
 
 theorem cochainPullbackOf_id (X : TopCat) :
     cochainPullbackOf (𝟙 X) = 𝟙 (singularCochainsOf X) := by
-  simp [cochainPullbackOf, chainMapOf_id]
+  simp [cochainPullbackOf, chainMapOf_id, Quiver.Hom.op_id,
+    Functor.map_id]
   rfl
 
 theorem cochainPullbackOf_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) :
     cochainPullbackOf (f ≫ g) = cochainPullbackOf g ≫ cochainPullbackOf f := by
-  simp [cochainPullbackOf, chainMapOf_comp]
-  rfl
+  simp [cochainPullbackOf, chainMapOf_comp, Quiver.Hom.op_comp,
+    Functor.map_comp]
 
 /-- The induced map on the genuine rational singular cohomology objects. -/
 noncomputable def cohomologyPullbackObjOf {X Y : TopCat} (f : X ⟶ Y) (n : ℕ) :
@@ -131,11 +132,12 @@ noncomputable def cohomologyPullbackOf {X Y : TopCat} (f : X ⟶ Y) (n : ℕ) :
   (cohomologyPullbackObjOf f n).hom
 
 /-- Contravariant functoriality on cohomology (the corpus's green proof,
-verbatim port). -/
+ported; NOTE the order: category composition `f ≫ g` acts on functions as
+`g ∘ f`, so the induced linear maps compose `f* ∘ g*`). -/
 theorem cohomologyPullbackOf_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z)
     (n : ℕ) :
     cohomologyPullbackOf (f ≫ g) n =
-      (cohomologyPullbackOf g n).comp (cohomologyPullbackOf f n) := by
+      (cohomologyPullbackOf f n).comp (cohomologyPullbackOf g n) := by
   ext x
   unfold cohomologyPullbackOf cohomologyPullbackObjOf
   have hcochain :
@@ -144,16 +146,16 @@ theorem cohomologyPullbackOf_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z)
     cochainPullbackOf_comp f g
   have hcomp :
     HomologicalComplex.homologyMap (cochainPullbackOf (f ≫ g)) n =
-      (HomologicalComplex.homologyMap (cochainPullbackOf g) n) ≫
-        (HomologicalComplex.homologyMap (cochainPullbackOf f) n) := by
+      (HomologicalComplex.homologyMap (cochainPullbackOf f) n) ≫
+        (HomologicalComplex.homologyMap (cochainPullbackOf g) n) := by
     rw [hcochain, HomologicalComplex.homologyMap_comp]
   show (ModuleCat.Hom.hom
       (HomologicalComplex.homologyMap
         (cochainPullbackOf (f ≫ g)) n)) x =
     ((ModuleCat.Hom.hom
-      (HomologicalComplex.homologyMap (cochainPullbackOf g) n)).comp
+      (HomologicalComplex.homologyMap (cochainPullbackOf f) n)).comp
       (ModuleCat.Hom.hom
-        (HomologicalComplex.homologyMap (cochainPullbackOf f) n))) x
+        (HomologicalComplex.homologyMap (cochainPullbackOf g) n))) x
   rw [hcomp]
   simp
 
@@ -185,14 +187,16 @@ abbrev StdOneSimplex : Type :=
   stdSimplex ℝ (Fin 2)
 
 /-- The pinned affine coface map between the concrete simplex models (the
-`stdSimplex.continuous_map` of the `SimplexCategory.δ` coface). -/
+`stdSimplex.continuous_map` of the `SimplexCategory.δ` coface; the index
+`n := 1` : the coface `⦋1⦌ ⟶ ⦋2⦌` takes its skip-position in
+`Fin (1 + 2)`). -/
 def stdFace (k : Fin 3) : C(StdOneSimplex, StdTwoSimplex) :=
-  stdSimplex.continuous_map (SimplexCategory.δ (n := 2) k)
+  stdSimplex.continuous_map (SimplexCategory.δ (n := 1) k)
 
 /-- The injection of a concrete 2-simplex map into the singular set (the
 pinned `toSSetObjEquiv`, reversed). -/
 def twoSimplexInject {X : TopCat} (σ : C(StdTwoSimplex, X)) :
-    (TopCat.toSSet.obj X).obj (SimplexCategory.mk 2) :=
+    (TopCat.toSSet.obj X).obj (Opposite.op (SimplexCategory.mk 2)) :=
   (TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).symm σ
 
 /-- AUDIT(FACE-NAT): **THE DEGREE-TWO FACE FORMULA.**  The k-th face of an
@@ -209,21 +213,14 @@ dance at default transparency. -/
 theorem toSSetObj₂_face {X : TopCat} (σ : C(StdTwoSimplex, X)) (k : Fin 3) :
     X.toSSetObj₁Equiv
         ((TopCat.toSSet.obj X).δ k (twoSimplexInject σ)) =
-      ContinuousMap.ofHom
+      TopCat.ofHom
         ((σ.comp (stdFace k)).comp
-          (TopCat.stdSimplexHomeomorphI.symm : C(I, StdOneSimplex))) := by
-  simp only [TopCat.toSSetObj₁Equiv, Equiv.trans_apply,
-    twoSimplexInject, Equiv.symm_apply_apply]
-  have hnat :
-      (TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 1)))
-        ((TopCat.toSSet.obj X).δ k
-          ((TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).symm σ)) =
-      σ.comp (stdFace k) := by
-    simp [TopCat.toSSetObjEquiv, TopCat.toSSet, SimplexCategory.toTop,
-      stdFace]
-    rfl
-  rw [hnat]
-  rfl
+          (Homeomorph.toContinuousMap
+            (TopCat.stdSimplexHomeomorphI.symm :
+              StdOneSimplex ≃ₜ I))) := by
+  ext t
+  simp [TopCat.toSSetObj₁Equiv, TopCat.toSSetObjEquiv, TopCat.toSSet,
+    SimplexCategory.toTop, stdFace, twoSimplexInject]
 
 /-! ## §4 The sphere-union leg maps -/
 
@@ -233,13 +230,55 @@ variable (M : ℕ)
 
 /-- The cyclic successor on `Fin M` (the M-cycle's index map). -/
 def cyclicSucc (k : Fin M) : Fin M :=
-  ⟨(k.val + 1) % M, by omega⟩
+  ⟨(k.val + 1) % M,
+    Nat.mod_lt (k.val + 1)
+      (Nat.lt_of_le_of_lt (Nat.zero_le k.val) k.isLt)⟩
 
 /-- The base point of the 2-sphere (the corpus's own nonempty-sphere point
 of the green sphere-union file — any point serves the constant filler of
 the collapse). -/
 def sphereBase : unitSphereType :=
   unitSphere_nonempty.some
+
+theorem sphereCollapse_continuous (i : Fin M) :
+    Continuous (fun z : sphereUnionSpace M =>
+      if z.1 = i then z.2 else sphereBase) := by
+  refine ⟨fun U hU => ?_⟩
+  rw [isOpen_sigma_iff]
+  intro j
+  by_cases hj : j = i
+  · subst hj
+    have hset : {a : unitSphereType |
+        (Sigma.mk (β := fun _ : Fin M => unitSphereType) j) a ∈
+          (fun z : sphereUnionSpace M =>
+            if z.1 = j then z.2 else sphereBase) ⁻¹' U} = U := by
+      ext a
+      simp only [Set.mem_preimage, Set.mem_setOfEq]
+      show (if (Sigma.mk (β := fun _ : Fin M => j) a).1 = j
+          then (Sigma.mk (β := fun _ : Fin M => j) a).2
+          else sphereBase) ∈ U ↔ a ∈ U
+      simp only [if_pos rfl]
+    rw [hset]
+    exact hU
+  · have hset : {a : unitSphereType |
+        (Sigma.mk (β := fun _ : Fin M => unitSphereType) j) a ∈
+          (fun z : sphereUnionSpace M =>
+            if z.1 = j then z.2 else sphereBase) ⁻¹' U} =
+          (if sphereBase ∈ U then Set.univ else ∅) := by
+      ext a
+      simp only [Set.mem_preimage, Set.mem_setOfEq]
+      show (if (Sigma.mk (β := fun _ : Fin M => j) a).1 = j
+          then (Sigma.mk (β := fun _ : Fin M => j) a).2
+          else sphereBase) ∈ U ↔
+        (if sphereBase ∈ U then Set.univ else ∅)
+      simp only [if_neg (fun h => hj h.symm)]
+      by_cases hb : sphereBase ∈ U
+      · simp [hb]
+      · simp [hb]
+    rw [hset]
+    by_cases hb : sphereBase ∈ U
+    · exact isOpen_univ
+    · exact isOpen_empty
 
 /-- The inclusion of the i-th sphere slice (the green sphere file's
 Continuous-STRUCTURE constructor route with the pinned
@@ -253,46 +292,12 @@ def sphereIncl (i : Fin M) :
 
 /-- AUDIT(COLLAPSE-CONT): the collapse of the union onto the i-th slice
 (identity there, constant filler elsewhere; the constant family makes the
-second component's type index-independent — no transport needed).
-Continuity by the pinned `isOpen_sigma_iff` with a per-component case
-split. -/
+second component's type index-independent — no transport needed). -/
 def sphereCollapse (i : Fin M) :
     TopCat.of (sphereUnionSpace M) ⟶ TopCat.of unitSphereType :=
   TopCat.ofHom
-    ⟨fun z => if z.1 = i then z.2 else sphereBase M, by
-      refine ⟨fun U hU => ?_⟩
-      rw [isOpen_sigma_iff]
-      intro j
-      by_cases hj : j = i
-      · subst hj
-        have hset : {a : unitSphereType |
-            (Sigma.mk (β := fun _ : Fin M => unitSphereType) j) a ∈
-              (fun z => if z.1 = j then z.2 else sphereBase M) ⁻¹' U} =
-            U := by
-          ext a
-          simp only [Set.mem_preimage, Set.mem_setOfEq]
-          show (if (Sigma.mk (β := fun _ : Fin M => j) a).1 = j
-              then a else sphereBase M) ∈ U ↔ a ∈ U
-          simp only [if_pos rfl]
-        rw [hset]
-        exact hU
-      · have hset : {a : unitSphereType |
-            (Sigma.mk (β := fun _ : Fin M => unitSphereType) j) a ∈
-              (fun z => if z.1 = j then z.2 else sphereBase M) ⁻¹' U} =
-            (if sphereBase M ∈ U then Set.univ else ∅) := by
-          ext a
-          simp only [Set.mem_preimage, Set.mem_setOfEq]
-          show (if (Sigma.mk (β := fun _ : Fin M => j) a).1 = j
-              then a else sphereBase M) ∈ U ↔
-            (if sphereBase M ∈ U then Set.univ else ∅)
-          simp only [if_neg (fun h => hj h.symm)]
-          by_cases hb : sphereBase M ∈ U
-          · simp [hb]
-          · simp [hb]
-        rw [hset]
-        by_cases hb : sphereBase M ∈ U
-        · exact isOpen_univ
-        · exact isOpen_empty⟩
+    ⟨fun z => if z.1 = i then z.2 else sphereBase,
+      sphereCollapse_continuous M i⟩
 
 /-- The M-cycle permutation of the slices.  Continuity by the pinned
 `isOpen_sigma_iff`: the preimage's j-component is the (cyclicSucc j)-slice
@@ -313,10 +318,10 @@ def sphereCycle :
 theorem incl_comp_collapse (i : Fin M) :
     sphereIncl M i ≫ sphereCollapse M i = 𝟙 (TopCat.of unitSphereType) := by
   apply TopCat.hom_ext
-  intro x
+  funext x
   show (if (Sigma.mk (β := fun _ : Fin M => unitSphereType) i x).1 = i
       then (Sigma.mk (β := fun _ : Fin M => unitSphereType) i x).2
-      else sphereBase M) = x
+      else sphereBase) = x
   simp only [if_pos rfl]
 
 /-- The M-cycle permutes the slices. -/
@@ -324,7 +329,7 @@ theorem cycle_comp_incl (j : Fin M) :
     sphereIncl M j ≫ sphereCycle M =
       sphereIncl M (cyclicSucc M j) := by
   apply TopCat.hom_ext
-  intro x
+  funext x
   rfl
 
 /-! ## §6 The cohomology-level leg calculus -/
@@ -337,9 +342,8 @@ the union. -/
 theorem incl_collapse_section (i : Fin M) (n : ℕ) :
     (cohomologyPullbackOf (sphereIncl M i) n).comp
       (cohomologyPullbackOf (sphereCollapse M i) n) = LinearMap.id := by
-  have h := cohomologyPullbackOf_comp (sphereIncl M i) (sphereCollapse M i) n
-  rw [incl_comp_collapse M i] at h
-  rw [h, cohomologyPullbackOf_id]
+  rw [← cohomologyPullbackOf_comp (sphereIncl M i) (sphereCollapse M i) n,
+    incl_comp_collapse M i, cohomologyPullbackOf_id]
 
 /-- **THE CYCLIC PERMUTATION ACTION ON SLICE RESTRICTIONS.**  Pulling back
 along the M-cycle and then restricting to slice j equals restricting to
@@ -348,9 +352,8 @@ theorem cycle_incl_calculus (j : Fin M) (n : ℕ) :
     (cohomologyPullbackOf (sphereIncl M j) n).comp
       (cohomologyPullbackOf (sphereCycle M) n) =
         cohomologyPullbackOf (sphereIncl M (cyclicSucc M j)) n := by
-  have h := cohomologyPullbackOf_comp (sphereIncl M j) (sphereCycle M) n
-  rw [cycle_comp_incl M j] at h
-  exact h.symm
+  rw [← cohomologyPullbackOf_comp (sphereIncl M j) (sphereCycle M) n,
+    cycle_comp_incl M j]
 
 end Legs
 
