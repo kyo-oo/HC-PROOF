@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026. The HC-PROOF campaign. All rights reserved.
 
-# The component H⁰ machine (Wave 46, repair wave 47) — the positive-dimensional beachhead
+# The component H⁰ machine (Wave 46, repair waves 47.x) — the positive-dimensional beachhead
 
 THE CUSTOM TOOL.  The wave-44/45 frontier map established the wall: at the
 pinned Mathlib (v4.33.0-rc2) there is no tool that computes ANY cohomology of
@@ -30,12 +30,12 @@ the campaign on a positive-dimensional world.
    `SSet.ιChainComplex_d` (both `simp` lemmas of
    `Mathlib/AlgebraicTopology/SimplicialSet/Homology/Basic.lean` at the
    pin), and the colimit cone `SSet.chainComplexXCofan` with
-   `SSet.isColimitChainComplexXCofan` (the same file).  Specializing
-   through the pinned face identifications
-   `TopCat.δ_zero_toSSetObj₁Equiv.symm` (`δ 0 s ↦ the 0-simplex of f 1`),
-   `TopCat.δ_one_toSSetObj₁Equiv.symm` (`δ 1 s ↦ f 0`) yields THE
-   ENDPOINT-BOUNDARY FORMULA: the boundary of the path generator is the
-   difference of the endpoint generators.
+   `SSet.isColimitChainComplexXCofan` and the PLAIN-INDEXED extensionality
+   `SSet.chainComplex_hom_ext` (the same file).  Specializing through the
+   pinned face identifications `TopCat.δ_zero_toSSetObj₁Equiv.symm`
+   (`δ 0 s ↦ the 0-simplex of f 1`) and `TopCat.δ_one_toSSetObj₁Equiv.symm`
+   (`δ 1 s ↦ f 0`) yields THE ENDPOINT-BOUNDARY FORMULA: the boundary of
+   the path generator is the difference of the endpoint generators.
 
 2. THE DUAL DIFFERENTIAL (§2).  The cochain complex is the linear-Yoneda
    dual of the chain complex (the Stage-2F definition); its degree-0
@@ -43,19 +43,18 @@ the campaign on a positive-dimensional world.
    (`ChainComplex.linearYonedaObj_d`, the finite-point lane's verified
    name).  The kernel condition on a cochain is vanishing on the
    boundaries of the path generators; the converse is the colimit
-   extensionality `SSet.isColimitChainComplexXCofan … .hom_ext` with
-   `LinearMap.ext_ring` at the legs, through the pinned `ModuleCat.hom_*`
-   rfl-lemmas (`ModuleCat.hom_comp`, `ModuleCat.hom_zero`).
+   extensionality `SSet.chainComplex_hom_ext` with `LinearMap.ext_ring`
+   at the legs, through the pinned `ModuleCat.hom_*` rfl-lemmas.
 
 3. THE BOTTOM-DEGREE HOMOLOGY (§3).  For a cochain complex indexed `up ℕ`,
    the incoming differential at degree zero is the shape-zero map, so the
-   homology at zero is the kernel of the outgoing differential.  Built
-   through the pinned `ShortComplex.moduleCatHomologyIso` and the explicit
-   `ShortComplex.moduleCatLeftHomologyData` of
-   `Mathlib/Algebra/Homology/ShortComplex/ModuleCat.lean` (whose `H`-field
-   IS `of ℚ (ker g ⧸ range toCycles)` by `@[simps!]`), with the incoming
-   map zero so the range is `⊥`, collapsed by the hand-rolled
-   `quotientBotEquiv`.
+   pinned canonical isomorphism `HomologicalComplex.isoHomologyπ 0 0`
+   identifies `homology 0` with `cycles 0` — no quotient by boundaries
+   appears at all.  The cycles of the degree-zero short complex of modules
+   are the kernel of the outgoing map `g` — the pinned
+   `ShortComplex.moduleCatCyclesIso` and the `@[simps!]` `K`-field
+   `ShortComplex.moduleCatLeftHomologyData_K`.  The kernel submodule is
+   DEFINED at the same `g`-spelling, so the final assembly is syntactic.
 
 4. THE KERNEL-COCYCLE ISO (§4).  A degree-zero cochain kills the boundary
    of every path generator iff it takes equal values at the endpoints of
@@ -68,33 +67,30 @@ the campaign on a positive-dimensional world.
    every boundary because a function cannot distinguish
    `ZerothHomotopy.sound`-equal points.
 
-## The wave-47 repair ledger (run 44403637791's 39 errors, all diagnosed)
+## The wave-47 repair ledger (runs 44403637791 → 44416500684 → 44424279364)
 
-* D1 (17 sites): the file's `SmoothProjectiveComplexScheme` was an
-  AUTO-IMPLICIT shadow — `open GSTProjectiveOverC` was missing.  Fixed.
-* D2: `ModuleCat.coe_ofHom` does not exist at the pin — the simp lists
-  rebuilt from the pinned rfl-lemma names (`ModuleCat.ofHom_apply`,
-  `ModuleCat.hom_comp`, `ModuleCat.hom_zero`, `ModuleCat.hom_add`,
-  `ModuleCat.hom_smul`).
-* D3: `I` was an auto-implicit shadow of the pinned interval — the
-  interval is `TopCat.I` (of `Mathlib/Topology/Category/TopCat/Monoidal`),
-  with endpoint evaluations `f 0`/`f 1` valid on `TopCat.I ⟶ X` through
-  the `ContinuousMap` defeq.
-* D4: the quotient token `⧕` (U+29D5) is not Lean syntax — `⧸`.
-* D5: the scoped `⦋0⦌` notation requires `open Simplicial`.
-* D6: the colimit cone is `SSet.isColimitChainComplexXCofan`
-  (namespaced — the bare name was unknown).
-* D7: `SSet.ιChainComplex_d` takes the coefficient ring `R` explicitly.
-* D8: `SSet.chainComplex_hom_ext` takes only `h` (X, R, n, T implicit) —
-  the call sites rebuilt on `IsColimit.hom_ext` directly.
-* D9: `Equiv.piCongrLeft` is a bare `Equiv` — the `Fin M` specialization
-  rebuilt as `LinearEquiv.ofBijective`.
-* D10: two `rw [componentFunOf]` rewrites had no equation lemmas —
-  replaced by goal-spelling `show`s at default transparency (the
-  twelve-point lane's W19/W20 discipline).
-* D11: the homology assembly's `.congr` step was ill-typed — rebuilt as
-  `moduleCatHomologyIso ≪≫ ofLinearEquiv (quotientBotEquiv _)` with the
-  `@[simps!]`-generated `ShortComplex.moduleCatLeftHomologyData_H`.
+The three-run repair arc (39 → 31 → 8 errors) adjudicated:
+
+* the auto-implicit shadow of `SmoothProjectiveComplexScheme` (17 sites) —
+  `open GSTProjectiveOverC`;
+* the interval `TopCat.I` (not a bare `I`); the endpoint evaluations
+  `f 0`/`f 1` through the `ContinuousMap` defeq;
+* the quotient token `⧸`; the scoped `⦋0⦌` notation (`open Simplicial`);
+* the colimit cone namespaced `SSet.isColimitChainComplexXCofan`, with the
+  `Discrete`-indexed cocone legs accessed through the PLAIN-INDEXED
+  `SSet.chainComplex_hom_ext` and the `Discrete.mk`-wrapped `fac` index;
+* the strict-implicit binders of `ZerothHomotopy.lift`'s path-constancy
+  (`fun _ _ p => …`);
+* the ⟶-instance war: never ascribe a zero at a self-chosen spelling —
+  the colimit legs' composites are handled at the goal's own instances
+  (E1/E2 of run 44424279364);
+* the W33 spelling discipline: no cross-spelling isDefEq is ever forced at
+  statement level — the bottom-degree homology rides the canonical
+  `isoHomologyπ`/`moduleCatCyclesIso` isomorphisms, and `kerDual` is
+  defined at the short-complex `g`-spelling so the final composition is
+  syntactic (E4/E6 of the earlier runs);
+* the element-level bridges (`show … from rfl`) are safe at default
+  transparency inside tactics; statement-level cross-spellings are not.
 
 ## Honesty ledger
 
@@ -152,8 +148,7 @@ theorem cochains_d_zero_one (A : AnalytificationData V) :
     (rationalSingularChains A) ℚ (ModuleCat.of ℚ ℚ) 0 1
 
 /-- **THE ADJUNCTION-STYLE EVALUATION.**  The underlying linear map of the
-dual differential applied to a cochain is the precomposition.  The lemma
-names are the pinned `ModuleCat` rfl-lemmas. -/
+dual differential applied to a cochain is the precomposition. -/
 theorem dual_eval (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
     (z : (rationalSingularChains A).X 1) :
@@ -234,10 +229,11 @@ underlying linear map kills the boundary of every path generator, then the
 precomposition morphism is the zero morphism.
 
 The proof is the pinned colimit extensionality
-`SSet.isColimitChainComplexXCofan … .hom_ext`: the composite with every
-generator inclusion is a morphism from `ModuleCat.of ℚ ℚ`, determined by
-its value at `1` (`LinearMap.ext_ring`), which vanishes by the
-hypothesis. -/
+`SSet.chainComplex_hom_ext`: the composite with every generator inclusion
+is a morphism from `ModuleCat.of ℚ ℚ`, determined by its value at `1`
+(`LinearMap.ext_ring`), which vanishes by the hypothesis.  All composites
+are handled at the goal's own instances; no zero is ever ascribed at a
+self-chosen spelling. -/
 theorem precomp_zero_of_generator (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
     (hgen : ∀ f : TopCat.I ⟶ A.space,
@@ -249,22 +245,9 @@ theorem precomp_zero_of_generator (A : AnalytificationData V)
   refine SSet.chainComplex_hom_ext (X := TopCat.toSSet.obj A.space)
     (R := ModuleCat.of ℚ ℚ) (fun σ => ?_)
   obtain ⟨f, rfl⟩ := (A.space.toSSetObj₁Equiv.symm).surjective σ
-  have hz : (TopCat.toSSet.obj A.space).ιChainComplex
-      (TopCat.toSSetObj₁Equiv.symm f) ≫
-      (0 : (rationalSingularChains A).X 1 ⟶ ModuleCat.of ℚ ℚ) = 0 := by
-    simp
-  show (TopCat.toSSet.obj A.space).ιChainComplex
-      (TopCat.toSSetObj₁Equiv.symm f) ≫
-      ModuleCat.ofHom
-        (((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
-          ((rationalSingularChains A).d 1 0).hom)) =
-    (TopCat.toSSet.obj A.space).ιChainComplex
-      (TopCat.toSSetObj₁Equiv.symm f) ≫
-      (0 : (rationalSingularChains A).X 1 ⟶ ModuleCat.of ℚ ℚ)
-  rw [hz]
-  -- the leg composite is determined by its value at 1
   apply ModuleCat.hom_injective
-  rw [ModuleCat.hom_comp, ModuleCat.hom_ofHom, ModuleCat.hom_zero]
+  rw [ModuleCat.hom_comp, ModuleCat.hom_comp, ModuleCat.hom_zero,
+    LinearMap.zero_comp]
   apply LinearMap.ext_ring
   show φ.hom ((rationalSingularChains A).d 1 0
       ((ιPath A f).hom (1 : ℚ))) = (0 : ℚ)
@@ -298,22 +281,23 @@ theorem cochain_ker_iff (A : AnalytificationData V)
     rw [dual_eval] at h0
     exact h0
   · intro hgen
-    have hA := precomp_zero_of_generator A φ hgen
-    rw [cochains_d_zero_one A, ModuleCat.ofHom_apply, leftComp_apply_eq]
-    exact hA
+    show ModuleCat.ofHom
+      ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
+        ((rationalSingularChains A).d 1 0).hom) = 0
+    exact precomp_zero_of_generator A φ hgen
 
 /-! ## §3 The bottom-degree homology -/
 
-/-- The kernel submodule of the dual differential. -/
+/-- The kernel submodule of the dual differential, at the short-complex
+`g`-spelling (so that the canonical assembly below is syntactic). -/
 def kerDual (A : AnalytificationData V) :
-    Submodule ℚ ((rationalSingularCochains A).X 0) :=
-  LinearMap.ker ((rationalSingularCochains A).d 0 1).hom
+    Submodule ℚ ((rationalSingularCochains A).sc 0).X₂ :=
+  LinearMap.ker ((rationalSingularCochains A).sc 0).g.hom
 
-/-- AUDIT(2): membership in the kernel submodule is the element equation
-(the FunLike application of the morphism is its underlying linear map). -/
+/-- AUDIT(2): membership in the kernel submodule is the element equation. -/
 theorem mem_kerDual_iff (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
-    φ ∈ kerDual A ↔ (rationalSingularCochains A).d 0 1 φ = 0 := Iff.rfl
+    φ ∈ kerDual A ↔ (rationalSingularCochains A).sc 0 |>.g φ = 0 := Iff.rfl
 
 /-- **THE BOTTOM-DEGREE HOMOLOGY.**  The homology of the cochain complex
 at degree zero is the kernel of the outgoing differential.
@@ -329,7 +313,9 @@ forced):
 
 * `ShortComplex.moduleCatCyclesIso` — the cycles of the degree-zero
   short complex of modules are the kernel of `g`, explicitly
-  `of ℚ ↥(ker g.hom)` through the pinned `@[simps!]` data. -/
+  `of ℚ ↥(ker g.hom)` through the pinned `@[simps!]` data; the kernel
+  submodule `kerDual` is defined at the same spelling, so the final
+  leg is syntactic. -/
 noncomputable def homologyZeroIsoKer (A : AnalytificationData V) :
     (rationalSingularCochains A).homology 0 ≅
       ModuleCat.of ℚ ↥(kerDual A) := by
@@ -356,7 +342,9 @@ theorem cochainComponentFun_sound (A : AnalytificationData V)
   set f : TopCat.I ⟶ A.space := (TopCat.pathEquiv.symm p).hom with hf
   have h0 : f 0 = x := (TopCat.pathEquiv.symm p).hom₀
   have h1 : f 1 = y := (TopCat.pathEquiv.symm p).hom₁
-  have hgen := (cochain_ker_iff A φ).mp (mem_kerDual_iff A φ |>.mp hφ) f
+  have hgen := (cochain_ker_iff A φ).mp
+    (show (rationalSingularCochains A).d 0 1 φ = 0 from
+      (mem_kerDual_iff A φ).mp hφ) f
   rw [d_path_element A f, map_sub, sub_eq_zero] at hgen
   calc cochainComponentFun A φ x = φ.hom ((ιPoint A x).hom (1 : ℚ)) := rfl
     _ = φ.hom ((ιPoint A (f 0)).hom (1 : ℚ)) := by rw [h0]
@@ -410,7 +398,8 @@ def componentCochainMorph (A : AnalytificationData V)
       (fun σ => componentLeg A g σ))
 
 /-- **THE LEG EQUATION.**  The coproduct lift evaluates at a point
-generator as the component function's value on the point class. -/
+generator as the component function's value on the point class.  The
+cocone index is `Discrete`-wrapped (the pinned colimit cocone API). -/
 theorem ιPoint_comp_componentCochainMorph (A : AnalytificationData V)
     (g : ZerothHomotopy ↥A.space → ℚ) (x : ↥A.space) :
     ιPoint A x ≫ componentCochainMorph A g =
@@ -418,7 +407,7 @@ theorem ιPoint_comp_componentCochainMorph (A : AnalytificationData V)
     ((TopCat.toSSet.obj A.space).isColimitChainComplexXCofan
       (ModuleCat.of ℚ ℚ) 0).fac
       (Cofan.mk _ (fun σ => componentLeg A g σ))
-      ⟳TopCat.toSSetObj₀Equiv.symm x⟵
+      ⟨TopCat.toSSetObj₀Equiv.symm x⟩
 
 /-- **THE COMPONENT COCHAIN IS A KERNEL ELEMENT.**  The coproduct lift of
 a component function kills every path boundary: its leg values cannot
@@ -427,7 +416,7 @@ theorem componentCochainMorph_mem_kerDual (A : AnalytificationData V)
     (g : ZerothHomotopy ↥A.space → ℚ) :
     componentCochainMorph A g ∈ kerDual A := by
   show (componentCochainMorph A g :
-      ↑((rationalSingularCochains A).X 0)) ∈ kerDual A
+      (rationalSingularCochains A).X 0) ∈ kerDual A
   rw [mem_kerDual_iff A]
   refine (cochain_ker_iff A (componentCochainMorph A g)).mpr ?_
   intro f
@@ -477,8 +466,8 @@ the coproduct lift). -/
 theorem componentCochainMorph_componentFunOf (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) (hφ : φ ∈ kerDual A) :
     componentCochainMorph A (componentFunOf A φ hφ) = φ := by
-  refine ((TopCat.toSSet.obj A.space).isColimitChainComplexXCofan
-    (ModuleCat.of ℚ ℚ) 0).hom_ext ?_
+  refine SSet.chainComplex_hom_ext (X := TopCat.toSSet.obj A.space)
+    (R := ModuleCat.of ℚ ℚ) ?_
   intro σ
   obtain ⟨x, rfl⟩ := (A.space.toSSetObj₀Equiv.symm).surjective σ
   -- both morphisms have the same leg values
