@@ -117,10 +117,11 @@ theorem continuous_sigma_fst_discrete {ι : Type*} {X : ι → Type*}
         ⋃ i ∈ U, Set.range (Sigma.mk (β := X) i) := by
       ext z
       simp only [Set.mem_preimage, Set.mem_iUnion, exists_prop, Set.mem_range]
-      exact ⟨fun h => ⟨z.1, h, z.2, rfl⟩, fun ⟨i, hi, w, rfl⟩ => hi⟩
+      exact ⟨fun h => ⟨z.1, h, z.2, rfl⟩, fun ⟨i, hi, w, hw⟩ => by
+        rw [← hw]; exact hi⟩
     rw [hpre]
     exact isOpen_iUnion fun i =>
-      isOpen_iUnion_iff.mpr fun _ => isOpen_range_sigmaMk⟩
+      isOpen_iUnion fun _ => isOpen_range_sigmaMk⟩
 
 /-- **THE INDEX-CONSTANCY OF PATHS.**  A path in a sigma-typed disjoint
 union has constant index.  WAVE 48: rewritten on the pinned `Path` API —
@@ -136,8 +137,11 @@ theorem sigma_path_index_const {ι : Type*} {X : ι → Type*}
     {x y : Sigma X} (p : Path x y) :
     x.1 = y.1 := by
   -- the index map along the path is continuous into the discrete ι
+  -- WAVE 52: the @-form with CONCRETE ι X — the plain elaboration leaves
+  -- the lemma's [DiscreteTopology ?ι] as a metavar-synthesis that the
+  -- comp-unification assigns to ↑I before the retry
   have hcont : Continuous (fun t : I => ((p t : Sigma X)).1) :=
-    p.continuous.comp continuous_sigma_fst_discrete
+    (p.continuous).comp (@continuous_sigma_fst_discrete ι X _ _ _)
   -- the pinned unit interval is connected (the `unitInterval` instance
   -- rides the abbrev `I = Set.Icc 0 1`, so TC finds it at `↥I`)
   obtain ⟨b, hb⟩ := exists_const_of_continuous_discrete hcont
@@ -206,14 +210,14 @@ theorem sphere_slice_joined (M : ℕ) (i : Fin M) (s t : unitSphereType) :
     ∃ p : Path (Sigma.mk (β := fun _ : Fin M => unitSphereType) i s)
         (Sigma.mk i t), True := by
   obtain ⟨γ, -⟩ := unitSphere_joined s t
-  -- WAVE 51: the implicit arguments supplied explicitly — the deferred
-  -- instance synthesis on `?σ ?i` metavars cannot unify against the
-  -- expected type's concrete `instTopologicalSpaceSubtype`
+  -- WAVE 52: the Continuous-STRUCTURE constructor + the pinned
+  -- `isOpen_sigma_iff` (σ inferred from hU's concrete type — no deferred
+  -- instance synthesis, no named-argument parsing)
   have hcont : Continuous
       (fun u : unitSphereType =>
-        (Sigma.mk (β := fun _ : Fin M => unitSphereType) i) u) :=
-    continuous_sigmaMk (ι := Fin M) (σ := fun _ : Fin M => unitSphereType)
-      (i := i)
+        (Sigma.mk (β := fun _ : Fin M => unitSphereType) i) u) := by
+    refine ⟨fun U hU => ?_⟩
+    exact isOpen_sigma_iff.mp hU i
   exact ⟨γ.map hcont, trivial⟩
 
 /-! ## §3 The component equivalence -/
