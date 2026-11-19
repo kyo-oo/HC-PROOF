@@ -89,6 +89,7 @@ noncomputable section
 
 open CategoryTheory
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
 open GSTClassicalHodgeFiberedCosmology
@@ -204,7 +205,7 @@ theorem span_range_sphereComponentClass (M : ℕ) (hM : 0 < M)
       (sphereUnion_cohomology_zero hspace)).symm.toLinearMap ''
       (Set.range fun i : Fin M => (Pi.single i (1 : ℚ) : Fin M → ℚ)) ⊆
       Set.range (sphereComponentClass M hM hspace) := by
-    rintro _ ⟨i, rfl⟩
+    rintro _ ⟨_, ⟨i, rfl⟩, rfl⟩
     exact ⟨i, rfl⟩
   have hmem : u ∈ Submodule.span ℚ
       ((componentCohomologyZeroEquivFinM H.analytification M
@@ -240,9 +241,9 @@ one unweighted letter acts by that letter's cohomological operator (the
 word algebra's add/smul/zero chain: `1 • T + 0 = T`). -/
 theorem realizedWordPair_single_cohomologyOperator (p : ℕ)
     (R : RealizedFiniteClosedCorrespondence V H p) :
-    (realizedWordPair [(1 : ℚ, R)]).cohomologyOperator =
+    (realizedWordPair [( (1 : ℚ), R)]).cohomologyOperator =
       R.cohomologyOperator := by
-  have hrw : realizedWordPair [(1 : ℚ, R)] =
+  have hrw : realizedWordPair [( (1 : ℚ), R)] =
       CycleClassOperatorPair.add (CycleClassOperatorPair.smul 1 R.operatorPair)
         CycleClassOperatorPair.zero := rfl
   rw [hrw]
@@ -264,7 +265,7 @@ theorem sphereUnionWordOne_hodge (M : ℕ) (hM : 0 < M)
         (spherePointClassWorld M hspace ω j) =
       spherePointClassWorld M hspace ω (cyclicPred M j)) :
     ∀ alpha : ClassicalHodgeFiber V H 1,
-      (realizedWordPair [(1 : ℚ, R₁)]).cohomologyOperator alpha.1 ∈
+      (realizedWordPair [( (1 : ℚ), R₁)]).cohomologyOperator alpha.1 ∈
         rationalHodgeSubspace (H.hodgeBigrading 1) := by
   intro alpha
   rw [realizedWordPair_single_cohomologyOperator]
@@ -308,7 +309,7 @@ noncomputable def sphereUnionCertificateOne (M : ℕ) (hM : 0 < M)
     (Z₁ : codimensionCycles V.X 1)
     (hZ₁ : H.cycleClass 1 Z₁ = spherePointClassWorld M hspace ω ⟨0, hM⟩) :
     RealizedCorrespondenceKrylovCertificate V H 1 where
-  word := [(1 : ℚ, R₁)]
+  word := [( (1 : ℚ), R₁)]
   word_hodge := sphereUnionWordOne_hodge M hM hspace ω hone R₁ hR₁
   seedCycle := Z₁
   seed_hodge := sphereUnionSeedOne_hodge M hM hspace ω hone Z₁ hZ₁
@@ -340,7 +341,7 @@ theorem sphereUnionCertificateOne_hodgeOrbit (M : ℕ) (hM : 0 < M)
           .hodgeOrbit (n + 1)).1 =
           R₁.cohomologyOperator ((sphereUnionCertificateOne M hM hspace ω hone
             R₁ hR₁ Z₁ hZ₁).hodgeOrbit n).1 := by
-        show (realizedWordPair [(1 : ℚ, R₁)]).cohomologyOperator
+        show (realizedWordPair [( (1 : ℚ), R₁)]).cohomologyOperator
           ((sphereUnionCertificateOne M hM hspace ω hone R₁ hR₁ Z₁ hZ₁)
             .hodgeOrbit n).1 = _
         rw [realizedWordPair_single_cohomologyOperator]
@@ -390,7 +391,7 @@ complex world (the 0-dim lane's green weight-zero fiber law). -/
 theorem sphereUnionWordZero_hodge (M : ℕ)
     (R₀ : RealizedFiniteClosedCorrespondence V H 0) :
     ∀ alpha : ClassicalHodgeFiber V H 0,
-      (realizedWordPair [(1 : ℚ, R₀)]).cohomologyOperator alpha.1 ∈
+      (realizedWordPair [( (1 : ℚ), R₀)]).cohomologyOperator alpha.1 ∈
         rationalHodgeSubspace (H.hodgeBigrading 0) := by
   intro alpha
   rw [rationalHodgeSubspace_eq_top_of_degree_zero H]
@@ -414,7 +415,7 @@ noncomputable def sphereUnionCertificateZero (M : ℕ) (hM : 0 < M)
     (Z₀ : codimensionCycles V.X 0)
     (hZ₀ : H.cycleClass 0 Z₀ = sphereComponentClass M hM hspace ⟨0, hM⟩) :
     RealizedCorrespondenceKrylovCertificate V H 0 where
-  word := [(1 : ℚ, R₀)]
+  word := [( (1 : ℚ), R₀)]
   word_hodge := sphereUnionWordZero_hodge M R₀
   seedCycle := Z₀
   seed_hodge := sphereUnionSeedZero_hodge M Z₀
@@ -441,7 +442,7 @@ theorem sphereUnionCertificateZero_hodgeOrbit (M : ℕ) (hM : 0 < M)
           .hodgeOrbit (n + 1)).1 =
           R₀.cohomologyOperator ((sphereUnionCertificateZero M hM hspace R₀ hR₀
             Z₀ hZ₀).hodgeOrbit n).1 := by
-        show (realizedWordPair [(1 : ℚ, R₀)]).cohomologyOperator
+        show (realizedWordPair [( (1 : ℚ), R₀)]).cohomologyOperator
           ((sphereUnionCertificateZero M hM hspace R₀ hR₀ Z₀ hZ₀)
             .hodgeOrbit n).1 = _
         rw [realizedWordPair_single_cohomologyOperator]
@@ -542,24 +543,31 @@ theorem spherePointClass_pair_ne (M : ℕ) (hM : 2 ≤ M)
     intro hh
     exact absurd (congrArg Fin.val hh) (by simp)
   have hv10 : (⟨1, by omega⟩ : Fin M) ≠ (⟨0, by omega⟩ : Fin M) := Ne.symm hv01
-  have hv0mem : (⟨1, by omega⟩ : Fin M) ∉
-      Finset.cons (⟨0, by omega⟩ : Fin M) Finset.empty
+  -- WAVE 60.3 (run 44629232343): the outer cons's membership proof is
+  -- `v0 ∉ {v1}` for the v0-first arrangement (the wave-60 spelling had the
+  -- two proofs swapped); the cons-case equations close by the named
+  -- hypotheses (rcases-with-rfl cannot subst Fin-literal equalities); the
+  -- empty-sum and the two ite-conditions reduce inside simp (the
+  -- Fin-literal equalities are decidable by reduction).
+  have hv0not : (⟨0, by omega⟩ : Fin M) ∉
+      Finset.cons (⟨1, by omega⟩ : Fin M) Finset.empty
         (Finset.notMem_empty _) := by
     intro hmem
-    rcases Finset.mem_cons.mp hmem with rfl | h2
-    · exact hv10 rfl
+    rcases Finset.mem_cons.mp hmem with hh | h2
+    · exact hv01 hh
     · exact absurd h2 (Finset.notMem_empty _)
   have hsum : ∑ i ∈ Finset.cons (⟨0, by omega⟩ : Fin M)
       (Finset.cons (⟨1, by omega⟩ : Fin M) Finset.empty
-        (Finset.notMem_empty _)) hv0mem,
+        (Finset.notMem_empty _)) hv0not,
       (fun i => if i = (⟨0, by omega⟩ : Fin M) then (1 : ℚ) else (-1 : ℚ)) i •
       spherePointClass M ω i = 0 := by
-    rw [Finset.sum_cons, Finset.sum_cons, Finset.sum_empty,
-      if_pos rfl, if_neg hv10, h]
-    simp
+    rw [Finset.sum_cons, Finset.sum_cons]
+    simp [h]
   have h0 := hindep _ _ hsum
     (Finset.mem_cons.mpr (Or.inl rfl))
-  rw [if_pos rfl] at h0
+  -- the beta-redex and the self-equality ite both reduce in the empty
+  -- simp-only pass; the residue is the coefficient contradiction.
+  simp only [] at h0
   exact absurd h0 one_ne_zero
 
 /-- **THE WORLD POINT CLASSES ARE PAIRWISE DISTINCT.**  The transport is
@@ -599,11 +607,11 @@ theorem sphereComponentClass_pair_ne (M : ℕ) (hM : 2 ≤ M) (hM' : 0 < M)
       (sphereComponentClass M hM' hspace ⟨1, by omega⟩) :=
     congrArg (fun x => (componentCohomologyZeroEquivFinM H.analytification M
       (sphereUnion_cohomology_zero hspace)) x) h
-  rw [hu0, hu1, LinearEquiv.symm_apply_apply,
-    LinearEquiv.symm_apply_apply] at hcongr
+  rw [hu0, hu1, LinearEquiv.apply_symm_apply,
+    LinearEquiv.apply_symm_apply] at hcongr
   have h0 := congrFun hcongr (⟨0, by omega⟩ : Fin M)
   simp only [Pi.single_apply] at h0
-  simp only [if_pos rfl] at h0
+  simp only [] at h0
   exact absurd h0 one_ne_zero
 
 /-- **THE WEIGHT-0 FIBER IS LIVE.**  With at least two components, the
@@ -613,14 +621,17 @@ theorem weightZero_fiber_not_subsingleton (M : ℕ) (hM : 2 ≤ M) (hM' : 0 < M)
     (hspace : H.analytification.space = TopCat.of (sphereUnionSpace M)) :
     ¬ Subsingleton (ClassicalHodgeFiber V H 0) := by
   intro hsub
+  haveI hsubI : Subsingleton (ClassicalHodgeFiber V H 0) := hsub
   have hmem : ∀ j : Fin M, sphereComponentClass M hM' hspace j ∈
       rationalHodgeSubspace (H.hodgeBigrading 0) := by
     intro j
     rw [rationalHodgeSubspace_eq_top_of_degree_zero H]
     exact Submodule.mem_top
-  have heq := hsub
-    ⟨sphereComponentClass M hM' hspace ⟨0, by omega⟩, hmem _⟩
-    ⟨sphereComponentClass M hM' hspace ⟨1, by omega⟩, hmem _⟩
+  have heq := @Subsingleton.elim (ClassicalHodgeFiber V H 0) hsubI
+    (⟨sphereComponentClass M hM' hspace ⟨0, by omega⟩, hmem _⟩ :
+      ClassicalHodgeFiber V H 0)
+    (⟨sphereComponentClass M hM' hspace ⟨1, by omega⟩, hmem _⟩ :
+      ClassicalHodgeFiber V H 0)
   exact sphereComponentClass_pair_ne M hM hM' hspace
     (congrArg Subtype.val heq)
 
@@ -636,14 +647,17 @@ theorem weightOne_fiber_not_subsingleton (M : ℕ) (hM : 2 ≤ M)
       spanBigrading (spherePointClassWorld M hspace ω) 1 (by omega)) :
     ¬ Subsingleton (ClassicalHodgeFiber V H 1) := by
   intro hsub
+  haveI hsubI : Subsingleton (ClassicalHodgeFiber V H 1) := hsub
   have hmem : ∀ j : Fin M, spherePointClassWorld M hspace ω j ∈
       rationalHodgeSubspace (H.hodgeBigrading 1) := by
     intro j
     rw [rationalHodgeSubspace_one_eq_span M hspace ω hone]
     exact Submodule.subset_span ⟨j, rfl⟩
-  have heq := hsub
-    ⟨spherePointClassWorld M hspace ω ⟨0, by omega⟩, hmem _⟩
-    ⟨spherePointClassWorld M hspace ω ⟨1, by omega⟩, hmem _⟩
+  have heq := @Subsingleton.elim (ClassicalHodgeFiber V H 1) hsubI
+    (⟨spherePointClassWorld M hspace ω ⟨0, by omega⟩, hmem _⟩ :
+      ClassicalHodgeFiber V H 1)
+    (⟨spherePointClassWorld M hspace ω ⟨1, by omega⟩, hmem _⟩ :
+      ClassicalHodgeFiber V H 1)
   exact spherePointClassWorld_pair_ne M hM hspace ω hω
     (congrArg Subtype.val heq)
 
