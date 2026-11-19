@@ -95,7 +95,8 @@ theorem chainMapOf_id (X : TopCat) :
 
 theorem chainMapOf_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) :
     chainMapOf (f ≫ g) = chainMapOf f ≫ chainMapOf g := by
-  simp [chainMapOf]
+  unfold chainMapOf singularChainsOf
+  exact Functor.map_comp f g
 
 /-- The contravariant singular-cochain map: the linear-Yoneda dual of the
 chain map (the corpus's `singularCochainPullback` expression, verbatim,
@@ -111,14 +112,13 @@ noncomputable def cochainPullbackOf {X Y : TopCat} (f : X ⟶ Y) :
 
 theorem cochainPullbackOf_id (X : TopCat) :
     cochainPullbackOf (𝟙 X) = 𝟙 (singularCochainsOf X) := by
-  simp [cochainPullbackOf, chainMapOf_id, Quiver.Hom.op_id,
-    Functor.map_id]
+  simp [cochainPullbackOf, chainMapOf_id]
   rfl
 
 theorem cochainPullbackOf_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) :
     cochainPullbackOf (f ≫ g) = cochainPullbackOf g ≫ cochainPullbackOf f := by
-  simp [cochainPullbackOf, chainMapOf_comp, Quiver.Hom.op_comp,
-    Functor.map_comp]
+  simp [cochainPullbackOf, chainMapOf_comp]
+  rfl
 
 /-- The induced map on the genuine rational singular cohomology objects. -/
 noncomputable def cohomologyPullbackObjOf {X Y : TopCat} (f : X ⟶ Y) (n : ℕ) :
@@ -146,8 +146,8 @@ theorem cohomologyPullbackOf_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z)
     cochainPullbackOf_comp f g
   have hcomp :
     HomologicalComplex.homologyMap (cochainPullbackOf (f ≫ g)) n =
-      (HomologicalComplex.homologyMap (cochainPullbackOf f) n) ≫
-        (HomologicalComplex.homologyMap (cochainPullbackOf g) n) := by
+      (HomologicalComplex.homologyMap (cochainPullbackOf g) n) ≫
+        (HomologicalComplex.homologyMap (cochainPullbackOf f) n) := by
     rw [hcochain, HomologicalComplex.homologyMap_comp]
   show (ModuleCat.Hom.hom
       (HomologicalComplex.homologyMap
@@ -186,12 +186,15 @@ abbrev StdTwoSimplex : Type :=
 abbrev StdOneSimplex : Type :=
   stdSimplex ℝ (Fin 2)
 
-/-- The pinned affine coface map between the concrete simplex models (the
-`stdSimplex.continuous_map` of the `SimplexCategory.δ` coface; the index
-`n := 1` : the coface `⦋1⦌ ⟶ ⦋2⦌` takes its skip-position in
-`Fin (1 + 2)`). -/
+/-- The k-th coface between the concrete simplex models: the pinned
+fiber-sum map `stdSimplex.map` of the skip-injection `k.succAbove`
+(`Fin 2 → Fin 3`), with its pinned continuity proof
+`stdSimplex.continuous_map` (a LEMMA supplying `Continuous (map f)`, not a
+map itself — the wave-57.3 type mismatch, root-caused).  This is exactly
+the coface of the pinned `TopCat.toSSetObjEquiv_δ_apply` face formula. -/
 def stdFace (k : Fin 3) : C(StdOneSimplex, StdTwoSimplex) :=
-  stdSimplex.continuous_map (SimplexCategory.δ (n := 1) k)
+  ⟨stdSimplex.map (Fin.succAbove k),
+    stdSimplex.continuous_map (Fin.succAbove k)⟩
 
 /-- The injection of a concrete 2-simplex map into the singular set (the
 pinned `toSSetObjEquiv`, reversed). -/
@@ -200,27 +203,34 @@ def twoSimplexInject {X : TopCat} (σ : C(StdTwoSimplex, X)) :
   (TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).symm σ
 
 /-- AUDIT(FACE-NAT): **THE DEGREE-TWO FACE FORMULA.**  The k-th face of an
-injected 2-simplex, read as an I-path through the pinned
-`toSSetObj₁Equiv`, is the precomposition of the simplex map with the
-pinned affine coface, transported along the pinned
-`stdSimplexHomeompressI`.
+injected 2-simplex, read through the pinned `toSSetObjEquiv`, is the
+precomposition of the simplex map with the affine coface `stdFace k`.
 
-The proof is the Yoneda naturality of the pinned `toSSetObjEquiv` (whose
-construction is `Equiv.ulift.trans (homEquiv.trans (continuousMapCongr
-...))` — the presheaf map action IS precomposition).  Designated CI
-repair point: the `simp` set + the closing `rfl` run the ULift-congruence
-dance at default transparency. -/
-theorem toSSetObj₂_face {X : TopCat} (σ : C(StdTwoSimplex, X)) (k : Fin 3) :
-    X.toSSetObj₁Equiv
-        ((TopCat.toSSet.obj X).δ k (twoSimplexInject σ)) =
-      TopCat.ofHom
-        ((σ.comp (stdFace k)).comp
-          (Homeomorph.toContinuousMap
-            (TopCat.stdSimplexHomeomorphI.symm :
-              StdOneSimplex ≃ₜ I))) := by
-  ext t
-  simp [TopCat.toSSetObj₁Equiv, TopCat.toSSetObjEquiv, TopCat.toSSet,
-    SimplexCategory.toTop, stdFace, twoSimplexInject]
+The proof is the pinned `TopCat.toSSetObjEquiv_δ_apply` (itself `rfl` at
+the pin) composed with the equiv roundtrip, bridged by `calc` so every
+step elaborates at definitional equality (the `dsimp%`-marked pinned
+statement never passes through `rw`). -/
+theorem toSSetObj₂_face {X : TopCat} (σ : C(StdTwoSimplex, X)) (k : Fin 3)
+    (z : StdOneSimplex) :
+    X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 1))
+        ((TopCat.toSSet.obj X).δ k (twoSimplexInject σ)) z =
+      σ (stdFace k z) := by
+  have h1 := TopCat.toSSetObjEquiv_δ_apply (X := X) (n := 1)
+    (twoSimplexInject σ) k z
+  have h2 : X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 2))
+      (twoSimplexInject σ)
+      (stdSimplex.map (Fin.succAbove k) z) = σ (stdFace k z) := by
+    show X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 2))
+        ((TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).symm σ)
+        (stdSimplex.map (Fin.succAbove k) z) = σ (stdFace k z)
+    exact congrArg σ
+      ((TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).apply_symm_apply σ
+        (stdSimplex.map (Fin.succAbove k) z)).symm
+  calc X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 1))
+        ((TopCat.toSSet.obj X).δ k (twoSimplexInject σ)) z
+        = X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 2)) (twoSimplexInject σ)
+          (stdSimplex.map (Fin.succAbove k) z) := h1
+    _ = σ (stdFace k z) := h2
 
 /-! ## §4 The sphere-union leg maps -/
 
@@ -240,7 +250,7 @@ the collapse). -/
 def sphereBase : unitSphereType :=
   unitSphere_nonempty.some
 
-theorem sphereCollapse_continuous (i : Fin M) :
+theorem sphereCollapse_continuous (M : ℕ) (i : Fin M) :
     Continuous (fun z : sphereUnionSpace M =>
       if z.1 = i then z.2 else sphereBase) := by
   refine ⟨fun U hU => ?_⟩
@@ -248,37 +258,49 @@ theorem sphereCollapse_continuous (i : Fin M) :
   intro j
   by_cases hj : j = i
   · subst hj
-    have hset : {a : unitSphereType |
-        (Sigma.mk (β := fun _ : Fin M => unitSphereType) j) a ∈
+    -- WAVE 57.4: the setOf bodies carry FULL `Sigma.mk j a` applications
+    -- (the wave-57.3 partial-application spelling `(Sigma.mk … j) a`
+    -- broke the elaborator: "Function expected at"); the ascriptions
+    -- keep the slice-membership types canonical.
+    have hset : {a | (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a :
+        sphereUnionSpace M) ∈
           (fun z : sphereUnionSpace M =>
             if z.1 = j then z.2 else sphereBase) ⁻¹' U} = U := by
       ext a
       simp only [Set.mem_preimage, Set.mem_setOfEq]
-      show (if (Sigma.mk (β := fun _ : Fin M => j) a).1 = j
-          then (Sigma.mk (β := fun _ : Fin M => j) a).2
+      show (if (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = j
+          then (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).2
           else sphereBase) ∈ U ↔ a ∈ U
-      simp only [if_pos rfl]
+      have hone : (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = j :=
+        rfl
+      rw [if_pos hone]
+      rfl
     rw [hset]
     exact hU
-  · have hset : {a : unitSphereType |
-        (Sigma.mk (β := fun _ : Fin M => unitSphereType) j) a ∈
+  · have hset : {a | (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a :
+        sphereUnionSpace M) ∈
           (fun z : sphereUnionSpace M =>
-            if z.1 = j then z.2 else sphereBase) ⁻¹' U} =
+            if z.1 = i then z.2 else sphereBase) ⁻¹' U} =
           (if sphereBase ∈ U then Set.univ else ∅) := by
       ext a
       simp only [Set.mem_preimage, Set.mem_setOfEq]
-      show (if (Sigma.mk (β := fun _ : Fin M => j) a).1 = j
-          then (Sigma.mk (β := fun _ : Fin M => j) a).2
+      show (if (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = i
+          then (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).2
           else sphereBase) ∈ U ↔
         (if sphereBase ∈ U then Set.univ else ∅)
-      simp only [if_neg (fun h => hj h.symm)]
+      have hne : ¬ ((Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = i) := by
+        show ¬ (j = i)
+        exact hji
+      rw [if_neg hne]
       by_cases hb : sphereBase ∈ U
       · simp [hb]
       · simp [hb]
     rw [hset]
     by_cases hb : sphereBase ∈ U
-    · exact isOpen_univ
-    · exact isOpen_empty
+    · rw [if_pos hb]
+      exact isOpen_univ
+    · rw [if_neg hb]
+      exact isOpen_empty
 
 /-- The inclusion of the i-th sphere slice (the green sphere file's
 Continuous-STRUCTURE constructor route with the pinned
@@ -314,22 +336,31 @@ def sphereCycle :
 
 /-! ## §5 The leg identities -/
 
-/-- The collapse is a left inverse of the inclusion on the slice. -/
+/-- The collapse is a left inverse of the inclusion on the slice.
+WAVE 57.4: the pinned `TopCat.ext` (the POINTWISE extensionality lemma,
+`Mathlib/Topology/Category/TopCat/Basic.lean:129`); `TopCat.hom_ext`
+takes a `.hom`-equality (Basic.lean:125) and is the WRONG lemma here —
+after `apply TopCat.ext` the goal is `∀ x, … x = … x`, so the binder
+intro is `intro`, not `funext` (the wave-57.3 misdiagnosis, root-caused
+against the pin). -/
 theorem incl_comp_collapse (i : Fin M) :
     sphereIncl M i ≫ sphereCollapse M i = 𝟙 (TopCat.of unitSphereType) := by
-  apply TopCat.hom_ext
-  funext x
+  apply TopCat.ext
+  intro x
   show (if (Sigma.mk (β := fun _ : Fin M => unitSphereType) i x).1 = i
       then (Sigma.mk (β := fun _ : Fin M => unitSphereType) i x).2
       else sphereBase) = x
-  simp only [if_pos rfl]
+  have hone : (Sigma.mk (β := fun _ : Fin M => unitSphereType) i x).1 = i :=
+    rfl
+  rw [if_pos hone]
+  rfl
 
 /-- The M-cycle permutes the slices. -/
 theorem cycle_comp_incl (j : Fin M) :
     sphereIncl M j ≫ sphereCycle M =
       sphereIncl M (cyclicSucc M j) := by
-  apply TopCat.hom_ext
-  funext x
+  apply TopCat.ext
+  intro x
   rfl
 
 /-! ## §6 The cohomology-level leg calculus -/
