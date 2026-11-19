@@ -280,14 +280,14 @@ theorem sphereCollapse_continuous (M : ℕ) (i : Fin M) :
           ((fun z : sphereUnionSpace M =>
             if z.1 = i then z.2 else sphereBase) ⁻¹' U) = Set.univ := by
         ext a
-        simp [hji, hb]
+        simp [hj, hb]
       rw [hset]
       exact isOpen_univ
     · have hset : Sigma.mk (β := fun _ : Fin M => unitSphereType) j ⁻¹'
           ((fun z : sphereUnionSpace M =>
             if z.1 = i then z.2 else sphereBase) ⁻¹' U) = ∅ := by
         ext a
-        simp [hji, hb]
+        simp [hj, hb]
       rw [hset]
       exact isOpen_empty
 
