@@ -96,7 +96,10 @@ theorem chainMapOf_id (X : TopCat) :
 theorem chainMapOf_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) :
     chainMapOf (f ≫ g) = chainMapOf f ≫ chainMapOf g := by
   unfold chainMapOf singularChainsOf
-  exact Functor.map_comp f g
+  -- WAVE 57.5: the pin's `Functor.map_comp` takes the FUNCTOR as an
+  -- explicit leading argument (run 44595996727: f was consumed into the
+  -- `C ⥤ D` slot); the underscore lets the goal's own functor unify.
+  exact Functor.map_comp _ f g
 
 /-- The contravariant singular-cochain map: the linear-Yoneda dual of the
 chain map (the corpus's `singularCochainPullback` expression, verbatim,
@@ -223,9 +226,8 @@ theorem toSSetObj₂_face {X : TopCat} (σ : C(StdTwoSimplex, X)) (k : Fin 3)
     show X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 2))
         ((TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).symm σ)
         (stdSimplex.map (Fin.succAbove k) z) = σ (stdFace k z)
-    exact congrArg σ
-      ((TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).apply_symm_apply σ
-        (stdSimplex.map (Fin.succAbove k) z)).symm
+    rw [(TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 2))).apply_symm_apply]
+    rfl
   calc X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 1))
         ((TopCat.toSSet.obj X).δ k (twoSimplexInject σ)) z
         = X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 2)) (twoSimplexInject σ)
@@ -256,50 +258,37 @@ theorem sphereCollapse_continuous (M : ℕ) (i : Fin M) :
   refine ⟨fun U hU => ?_⟩
   rw [isOpen_sigma_iff]
   intro j
+  -- WAVE 57.5 (run 44595996727): the pinned `isOpen_sigma_iff`'s RHS is
+  -- PREIMAGE-spelled (`IsOpen (Sigma.mk j ⁻¹' s)`), the wave-57.4 setOf
+  -- spelling could never rw-match it; `Set.mem_setOfEq` does not exist at
+  -- the pin; and the ite-over-`sphereBase ∈ U` demanded a Classical
+  -- decidability the bare statement cannot supply — the branch is split
+  -- into two classically-free hset shapes, each closed by plain `simp`
+  -- (which reduces the Fin-decidable `j = j` propositionally, the
+  -- transparency the 57.4 `show` could not bridge).
   by_cases hj : j = i
   · subst hj
-    -- WAVE 57.4: the setOf bodies carry FULL `Sigma.mk j a` applications
-    -- (the wave-57.3 partial-application spelling `(Sigma.mk … j) a`
-    -- broke the elaborator: "Function expected at"); the ascriptions
-    -- keep the slice-membership types canonical.
-    have hset : {a | (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a :
-        sphereUnionSpace M) ∈
-          (fun z : sphereUnionSpace M =>
-            if z.1 = j then z.2 else sphereBase) ⁻¹' U} = U := by
+    have hset : Sigma.mk (β := fun _ : Fin M => unitSphereType) j ⁻¹'
+        ((fun z : sphereUnionSpace M =>
+            if z.1 = j then z.2 else sphereBase) ⁻¹' U) = U := by
       ext a
-      simp only [Set.mem_preimage, Set.mem_setOfEq]
-      show (if (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = j
-          then (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).2
-          else sphereBase) ∈ U ↔ a ∈ U
-      have hone : (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = j :=
-        rfl
-      rw [if_pos hone]
-      rfl
+      simp
     rw [hset]
     exact hU
-  · have hset : {a | (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a :
-        sphereUnionSpace M) ∈
-          (fun z : sphereUnionSpace M =>
-            if z.1 = i then z.2 else sphereBase) ⁻¹' U} =
-          (if sphereBase ∈ U then Set.univ else ∅) := by
-      ext a
-      simp only [Set.mem_preimage, Set.mem_setOfEq]
-      show (if (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = i
-          then (Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).2
-          else sphereBase) ∈ U ↔
-        (if sphereBase ∈ U then Set.univ else ∅)
-      have hne : ¬ ((Sigma.mk (β := fun _ : Fin M => unitSphereType) j a).1 = i) := by
-        show ¬ (j = i)
-        exact hji
-      rw [if_neg hne]
-      by_cases hb : sphereBase ∈ U
-      · simp [hb]
-      · simp [hb]
-    rw [hset]
-    by_cases hb : sphereBase ∈ U
-    · rw [if_pos hb]
+  · by_cases hb : sphereBase ∈ U
+    · have hset : Sigma.mk (β := fun _ : Fin M => unitSphereType) j ⁻¹'
+          ((fun z : sphereUnionSpace M =>
+            if z.1 = i then z.2 else sphereBase) ⁻¹' U) = Set.univ := by
+        ext a
+        simp [hji, hb]
+      rw [hset]
       exact isOpen_univ
-    · rw [if_neg hb]
+    · have hset : Sigma.mk (β := fun _ : Fin M => unitSphereType) j ⁻¹'
+          ((fun z : sphereUnionSpace M =>
+            if z.1 = i then z.2 else sphereBase) ⁻¹' U) = ∅ := by
+        ext a
+        simp [hji, hb]
+      rw [hset]
       exact isOpen_empty
 
 /-- The inclusion of the i-th sphere slice (the green sphere file's
@@ -353,7 +342,6 @@ theorem incl_comp_collapse (i : Fin M) :
   have hone : (Sigma.mk (β := fun _ : Fin M => unitSphereType) i x).1 = i :=
     rfl
   rw [if_pos hone]
-  rfl
 
 /-- The M-cycle permutes the slices. -/
 theorem cycle_comp_incl (j : Fin M) :
