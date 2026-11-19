@@ -256,7 +256,7 @@ theorem cochain_ker_iff (A : AnalytificationData V)
     exact h0
   · intro hgen
     show ModuleCat.ofHom
-      ((φ.hom : (rationalSingularCochains A).X 0 →ₗ[ℚ] ℚ).comp
+      ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
         ((rationalSingularChains A).d 1 0).hom) = 0
     exact precomp_zero_of_generator A φ hgen
 

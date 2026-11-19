@@ -155,10 +155,18 @@ theorem weightZero_live_fiber_of_components
       rwa [show (fun i => (Pi.basisFun ℚ (Fin M)) i : Fin M → (Fin M → ℚ))
         = fun i => Pi.single i (1 : ℚ) from by
         funext i
-        exact (Pi.basisFun_apply ℚ (Fin M) i).symm] at hbf
-    exact hbasis.comp E.symm E.symm.injective
+        exact Pi.basisFun_apply ℚ (Fin M) i] at hbf
+    -- the transport along the bijective linear equivalence: the pinned
+    -- `LinearIndependent.map'` (ker-form) — `LinearIndependent.comp` is
+    -- the INDEX-reindexing lemma, not the value-map one
+    exact hbasis.map'
+      (↑E.symm : (Fin M → ℚ) →ₗ[ℚ]
+        RationalSingularCohomology H.analytification 0)
+      (LinearMap.ker_eq_bot.mpr (EquivLike.injective E.symm))
   · -- the span: the surjective transport of the full span, matched with
-    -- the top fiber of §1
+    -- the top fiber of §1.  WAVE 48: the membership route — no image/coe
+    -- rewriting (the `E.symm ''` vs `↑E.symm ''` kabstract trap the
+    -- finite-point lane died on); every step is an exact-level defeq.
     have hspan : Submodule.span ℚ
         (Set.range (fun i => Pi.single i (1 : ℚ) : Fin M → (Fin M → ℚ))) = ⊤ := by
       have hbf : Submodule.span ℚ
@@ -170,13 +178,22 @@ theorem weightZero_live_fiber_of_components
         Set.range (fun i => Pi.single i (1 : ℚ) : Fin M → (Fin M → ℚ)) from by
         congr 1
         funext i
-        exact (Pi.basisFun_apply ℚ (Fin M) i).symm] at hbf
+        exact Pi.basisFun_apply ℚ (Fin M) i] at hbf
     rw [hzero, rationalHodgeSubspace_stash_zero]
-    -- the range of the transported family is the image of the range
-    have hrange : Set.range (fun i => E.symm (Pi.single i (1 : ℚ))) =
-        E.symm '' Set.range (fun i => Pi.single i (1 : ℚ)) := rfl
-    rw [hrange, ← Submodule.map_span, hspan,
-      Submodule.map_eq_top_of_surjective E.symm.surjective]
+    apply Submodule.eq_top_iff'.2
+    intro v
+    have hv : E.symm (E v) = v := E.symm_apply_apply v
+    have hwmem : E v ∈ Submodule.span ℚ
+        (Set.range fun i => Pi.single i (1 : ℚ)) := by
+      rw [hspan]; exact Submodule.mem_top
+    have himg := Submodule.apply_mem_span_image_of_mem_span
+      (↑E.symm : (Fin M → ℚ) →ₗ[ℚ]
+        RationalSingularCohomology H.analytification 0) hwmem
+    rw [← hv]
+    refine (Submodule.span_le.2 ?_) himg
+    rintro y ⟨x, hx, rfl⟩
+    obtain ⟨i, rfl⟩ := hx
+    exact Submodule.subset_span ⟨i, rfl⟩
 
 /-! ## §3 THE MERGED LAW -/
 

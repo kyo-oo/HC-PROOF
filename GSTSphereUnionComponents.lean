@@ -114,42 +114,35 @@ theorem continuous_sigma_fst_discrete {ι : Type*} {X : ι → Type*}
   intro U _
   have hpre : (fun z : Sigma X => z.1) ⁻¹' U =
       ⋃ i ∈ U, Set.range (Sigma.mk (X := X) i) := by
-    apply Set.eq_univ_of_forall
-    intro z
-    simp only [Set.mem_preimage, Set.mem_iUnion, exists_prop,
-      Set.mem_range]
-    exact ⟨z.1, Set.mem_of_mem_of_subset (rfl : z.1 ∈ {z.1}) U, z, rfl⟩
+    ext z
+    simp only [Set.mem_preimage, Set.mem_iUnion, exists_prop, Set.mem_range]
+    exact ⟨fun h => ⟨z.1, h, z.2, rfl⟩, fun ⟨i, hi, w, rfl⟩ => hi⟩
   rw [hpre]
   exact isOpen_iUnion fun i =>
     isOpen_iUnion_iff.mpr fun _ => isOpen_range_sigmaMk
 
 /-- **THE INDEX-CONSTANCY OF PATHS.**  A path in a sigma-typed disjoint
-union has constant index. -/
+union has constant index.  WAVE 48: rewritten on the pinned `Path` API —
+`Path` has NO `.hom` field (it extends `C(I, X)` directly, its FunLike
+coe IS the evaluation); the endpoints come from `Path.source` /
+`Path.target` (`p 0 = x`, `p 1 = y` at `Mathlib/Topology/Path.lean:96-100`);
+the constancy is evaluated by `congrFun` at the two pinned endpoints
+(beta-checked haves — no `⟨0, _⟩`-spelling rewrites, no `Set.Icc`-level
+instance archaeology). -/
 theorem sigma_path_index_const {ι : Type*} {X : ι → Type*}
     [∀ i, TopologicalSpace (X i)] [DiscreteTopology ι]
     {x y : Sigma X} (p : Path x y) :
     x.1 = y.1 := by
   -- the index map along the path is continuous into the discrete ι
-  have hcont : Continuous (fun t => (p.hom t : Sigma X).1) := by
-    exact p.continuous.comp (continuous_sigma_fst_discrete (ι := ι) (X := X))
-  -- the path domain is connected
-  have hconn : ConnectedSpace ↥(Set.Icc (0 : ℝ) 1) := by
-    have : IsConnected (Set.Icc (0 : ℝ) 1) := isConnected_Icc 0 1
-    exact this.connectedSpace
+  have hcont : Continuous (fun t : I => ((p t : Sigma X)).1) :=
+    p.continuous.comp continuous_sigma_fst_discrete
+  -- the pinned unit interval is connected (the `unitInterval` instance
+  -- rides the abbrev `I = Set.Icc 0 1`, so TC finds it at `↥I`)
   obtain ⟨b, hb⟩ := exists_const_of_continuous_discrete hcont
-  have h0 : (p.hom (0 : ↥(Set.Icc (0 : ℝ) 1)) : Sigma X).1 = x.1 := by
-    rw [show p.hom (0 : ↥(Set.Icc (0 : ℝ) 1)) = x from by
-      have := p.source
-      exact this]
-    rfl
-  have h1 : (p.hom (1 : ↥(Set.Icc (0 : ℝ) 1)) : Sigma X).1 = y.1 := by
-    rw [show p.hom (1 : ↥(Set.Icc (0 : ℝ) 1)) = y from by
-      have := p.target
-      exact this]
-    rfl
-  rw [show (0 : ↥(Set.Icc (0 : ℝ) 1)) = ⟨0, by norm_num⟩ from rfl] at h0
-  rw [show (1 : ↥(Set.Icc (0 : ℝ) 1)) = ⟨1, by norm_num⟩ from rfl] at h1
-  rw [← h0, ← h1, hb ⟨0, by norm_num⟩, hb ⟨1, by norm_num⟩]
+  have h0 : ((p (0 : I) : Sigma X)).1 = b := congrFun hb 0
+  have h1 : ((p (1 : I) : Sigma X)).1 = b := congrFun hb 1
+  rw [p.source, p.target] at h0 h1
+  exact h0.trans h1.symm
 
 /-! ## §2 The sphere-union space and its slices -/
 
@@ -214,9 +207,7 @@ theorem sphere_slice_joined (M : ℕ) (i : Fin M) (s t : unitSphereType) :
       (fun u : unitSphereType =>
         (Sigma.mk (X := fun _ : Fin M => unitSphereType) i) u) :=
     continuous_sigmaMk
-  exact ⟨γ.map { toFun := fun u =>
-      (Sigma.mk (X := fun _ : Fin M => unitSphereType) i) u
-    continuous_toFun := hcont }, trivial⟩
+  exact ⟨γ.map hcont, trivial⟩
 
 /-! ## §3 The component equivalence -/
 
@@ -226,7 +217,7 @@ noncomputable def sphereUnionZerothHomotopyEquiv (M : ℕ) :
     ZerothHomotopy (sphereUnionSpace M) ≃ Fin M where
   toFun :=
     ZerothHomotopy.lift (fun z : sphereUnionSpace M => z.1)
-      (fun p => (sigma_path_index_const p).symm)
+      (fun _ _ p => sigma_path_index_const p)
   invFun i :=
     ZerothHomotopy.mk
       ⟨i, (unitSphere_nonempty).some⟩
