@@ -1,6 +1,27 @@
 # 2026-11-19 — Waves 57-59: the sphere point-class gate lane (F1-F3) + the war council's sphere-machine verdict
 
+## THE VERDICT (final, end of round)
+
+* **Wave 57 — `GSTSingularCohomologyMaps.lean` — GREEN** (run 44601531424,
+  the six-adjudication arc 44574228416 → 44578135994 → 44595996727 →
+  44599387094 → 44601531424 complete: zero errors, zero sorry).
+* **Waves 58-59 — F1 `GSTSphereCycleLegs.lean` + F2
+  `GSTSpherePointSpaceCohomology.lean` + F3
+  `GSTSphereUnionPointClassGate.lean` — GREEN** (run 44604829367, the
+  two-adjudication arc 44603065326 → 44604829367: zero errors, zero
+  sorry; F1/F2 built clean on their FIRST compile after 58.1's two
+  mod-arithmetic diseases, F3 after 59.1's two).
+
+**THE WEIGHT-1 GATE'S ENTIRE CARRIER-FREE CALCULUS IS NOW CERTIFIED.**
+Given the honest sphere class `ω ∈ H²(S²; ℚ)`, `ω ≠ 0` (the single fenced
+hypothesis), the certified lane delivers: the honest point-class family
+`(spherePointClass M ω i)_i`, the on-slice restriction (= ω), the
+off-slice restriction (= 0), nonzero, linear independence, and the
+M-cycle equivariance — every input the final law-landing consumes at
+weight 1 except the carrier-side assembly.
+
 ## THE ROUND'S TWO FRONTS
+
 
 BOSS's directive: the FULL unconditional `NativeGSTSingleFoldOrbitLaw` on a
 positive-dimensional world — the two last parts (the weight-1 honest point
@@ -109,15 +130,15 @@ excision) — the final law assembles by discharging one hypothesis.
 | The sphere-union component machine | GREEN (run 44545624743) |
 | THE UNCONDITIONAL LIVE RANK-M ≥ 2 CORE | GREEN (run 44545624743) |
 | The merged law + the sphere-union plug-point | GREEN (run 44545624743) |
-| The maps module (wave 57) | this round's pushes (adjudicating) |
-| The point-class gate calculus (F1-F3) | this round's pushes (adjudicating) |
+| The maps module (wave 57) | **GREEN (run 44601531424, this round)** |
+| The point-class gate calculus (F1-F3) | **GREEN (run 44604829367, this round)** |
 | The honest sphere class ω ≠ 0 | THE FENCED CORE — research-grade at the pin (the comparison theorem), the war council's verified verdict |
 | The scheme carrier `finiteLineWorld M` | the priced 6-10-wave battle (Route A, the Strategist's map) |
 | The final assembly (F7-F9) | the plug-in design frozen (the gate + the green merged law) |
 
 ## NEXT WAVES (the frozen order)
 
-1. Land F1-F3 green (adjudicate the current pushes).
+1. ~~Land F1-F3 green~~ — DONE (runs 44601531424 + 44604829367).
 2. The carrier recon's two research points → the carrier waves (F4-F6,
    Route A: scheme+smooth+cycle → residueDegree → projectivity → points
    classification → analytification+receipts).
