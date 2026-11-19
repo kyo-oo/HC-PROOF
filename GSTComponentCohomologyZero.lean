@@ -131,8 +131,8 @@ theorem dual_eval (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
     (z : (rationalSingularChains A).X 1) :
     ((rationalSingularCochains A).d 0 1 φ).hom z =
-      (φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ)
-        ((rationalSingularChains A).d 1 0 z) := by
+      ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
+        ((rationalSingularChains A).d 1 0).hom) z := by
   rw [cochains_d_zero_one A]
   simp only [ModuleCat.ofHom_apply, Linear.leftComp_apply]
   rfl
@@ -216,9 +216,9 @@ at default transparency — no `≫`-composite is ever rewritten. -/
 theorem precomp_zero_of_generator (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
     (hgen : ∀ f : TopCat.I ⟶ A.space,
-      (φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ)
-        ((rationalSingularChains A).d 1 0
-        ((ιPath A f).hom (1 : ℚ))) = 0) :
+      ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
+        ((rationalSingularChains A).d 1 0).hom)
+        ((ιPath A f).hom (1 : ℚ)) = 0) :
     ModuleCat.ofHom
       ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
         ((rationalSingularChains A).d 1 0).hom) = 0 := by
@@ -246,9 +246,9 @@ theorem cochain_ker_iff (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
     (rationalSingularCochains A).d 0 1 φ = 0 ↔
       ∀ f : TopCat.I ⟶ A.space,
-        (φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ)
-          ((rationalSingularChains A).d 1 0
-          ((ιPath A f).hom (1 : ℚ))) = 0 := by
+        ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
+          ((rationalSingularChains A).d 1 0).hom)
+          ((ιPath A f).hom (1 : ℚ)) = 0 := by
   constructor
   · intro hφ f
     have h0 : ((rationalSingularCochains A).d 0 1 φ).hom
@@ -300,6 +300,7 @@ noncomputable def homologyZeroIsoKer (A : AnalytificationData V) :
   rw [ShortComplex.moduleCatLeftHomologyData_K]
   unfold HomologicalComplex.sc HomologicalComplex.shortComplexFunctor
   unfold HomologicalComplex.shortComplexFunctor'
+  rw [upNext_zero]
   rfl
 
 /-! ## §4 The kernel-cocycle iso -/
@@ -322,6 +323,11 @@ theorem cochainComponentFun_sound (A : AnalytificationData V)
   have hd : (rationalSingularCochains A).d 0 1 φ = 0 :=
     (mem_kerDual_iff A φ).mp hφ
   have hgen := (cochain_ker_iff A φ).mp hd f
+  rw [show ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
+        ((rationalSingularChains A).d 1 0).hom)
+        ((iιPath A f).hom (1 : ℚ)) =
+    φ.hom ((rationalSingularChains A).d 1 0
+        ((iιPath A f).hom (1 : ℚ))) from rfl] at hgen
   rw [d_path_element A f, map_sub, sub_eq_zero] at hgen
   calc cochainComponentFun A φ x = φ.hom ((ιPoint A x).hom (1 : ℚ)) := rfl
     _ = φ.hom ((ιPoint A (f 0)).hom (1 : ℚ)) := by rw [h0]
