@@ -298,7 +298,7 @@ noncomputable def homologyZeroIsoKer (A : AnalytificationData V) :
       ((rationalSingularCochains A).shape 0 0 upNotRel_zero_zero)).symm ≪≫ ?_
   refine ((rationalSingularCochains A).sc 0).moduleCatCyclesIso ≪≫ ?_
   rw [ShortComplex.moduleCatLeftHomologyData_K]
-  unfold HomologicalComplex.shortComplexFunctor
+  unfold HomologicalComplex.sc HomologicalComplex.shortComplexFunctor
   unfold HomologicalComplex.shortComplexFunctor'
   rfl
 
