@@ -132,7 +132,7 @@ theorem dual_eval (A : AnalytificationData V)
     (z : (rationalSingularChains A).X 1) :
     ((rationalSingularCochains A).d 0 1 φ).hom z =
       (φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ)
-        ((rationalSingularChains A).d 1 0
+        ((rationalSingularChains A).d 1 0 z) := by
   rw [cochains_d_zero_one A]
   simp only [ModuleCat.ofHom_apply, Linear.leftComp_apply]
   rfl
