@@ -242,19 +242,18 @@ noncomputable def sphereUnionZerothHomotopyEquiv (M : ℕ) :
     exact (ZerothHomotopy.sound p).symm
   right_inv i := rfl
 
-/-! ## §4 The connection to the component H⁰ machine -/
+/-! ## §4 The connection to the component H⁰ machine
 
-/-- **THE UNCONDITIONAL LIVE RANK-M WEIGHT-0 FIBER OF THE SPHERE-UNION
+**THE UNCONDITIONAL LIVE RANK-M WEIGHT-0 FIBER OF THE SPHERE-UNION
 ANALYTIFICATION.**  For any world whose analytification carries the
 sphere-union space, the degree-zero rational singular cohomology is the
 free rank-M function space, computed unconditionally by the component H⁰
 machine of `GSTComponentCohomologyZero.lean` composed with this file's
-component equivalence.
+component equivalence.  This is the statement the wave-45 frozen design
+demanded as the input of the finite-line lane's weight-0 core: the
+analytification-side half is now COMPLETE; the remaining construction is
+the scheme carrier (`finiteLineWorld M`), the next wave's frozen kill. -/
 
-This is the statement the wave-45 frozen design demanded as the input of
-the finite-line lane's weight-0 core: the analytification-side half is
-now COMPLETE; the remaining construction is the scheme carrier
-(`finiteLineWorld M`), the next wave's frozen kill. -/
 /-- **THE UNCONDITIONAL COMPONENT IDENTIFICATION OF THE SPHERE-UNION
 ANALYTIFICATION.**  For any world whose analytification carries the
 sphere-union space, the path-component identification against `Fin M`.
