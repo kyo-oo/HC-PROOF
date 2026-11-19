@@ -111,7 +111,7 @@ open slices (the pinned `isOpen_range_sigmaMk`). -/
 theorem continuous_sigma_fst_discrete {ι : Type*} {X : ι → Type*}
     [TopologicalSpace ι] [∀ i, TopologicalSpace (X i)]
     [DiscreteTopology ι] :
-    Continuous (fun z : Sigma X => z.1 :=
+    Continuous (fun z : Sigma X => z.1) :=
   ⟨fun U _ => by
     have hpre : (fun z : Sigma X => z.1) ⁻¹' U =
         ⋃ i ∈ U, Set.range (Sigma.mk (β := X) i) := by
@@ -143,7 +143,8 @@ theorem sigma_path_index_const {ι : Type*} {X : ι → Type*}
   obtain ⟨b, hb⟩ := exists_const_of_continuous_discrete hcont
   have h0 : ((p (0 : I) : Sigma X)).1 = b := congrFun hb 0
   have h1 : ((p (1 : I) : Sigma X)).1 = b := congrFun hb 1
-  rw [p.source, p.target] at h0 h1
+  rw [p.source] at h0
+  rw [p.target] at h1
   exact h0.trans h1.symm
 
 /-! ## §2 The sphere-union space and its slices -/
@@ -205,10 +206,14 @@ theorem sphere_slice_joined (M : ℕ) (i : Fin M) (s t : unitSphereType) :
     ∃ p : Path (Sigma.mk (β := fun _ : Fin M => unitSphereType) i s)
         (Sigma.mk i t), True := by
   obtain ⟨γ, -⟩ := unitSphere_joined s t
+  -- WAVE 51: the implicit arguments supplied explicitly — the deferred
+  -- instance synthesis on `?σ ?i` metavars cannot unify against the
+  -- expected type's concrete `instTopologicalSpaceSubtype`
   have hcont : Continuous
       (fun u : unitSphereType =>
         (Sigma.mk (β := fun _ : Fin M => unitSphereType) i) u) :=
-    continuous_sigmaMk
+    continuous_sigmaMk (ι := Fin M) (σ := fun _ : Fin M => unitSphereType)
+      (i := i)
   exact ⟨γ.map hcont, trivial⟩
 
 /-! ## §3 The component equivalence -/
@@ -250,13 +255,12 @@ theorem sphereUnion_cohomology_zero
     {V : SmoothProjectiveComplexScheme}
     {A : AnalytificationData V} {M : ℕ}
     (hspace : A.space = TopCat.of (sphereUnionSpace M)) :
-    ∃ e : ZerothHomotopy ↥A.space ≃ Fin M, True :=
-  ⟨by
-    -- the carrier identification: congrArg on the Sort-coe, closed by a
-    -- TERM-level rfl (the `TopCat.of`-carrier coe is definitionally the
-    -- identity — no rw auto-close ambiguity)
-    have hc : ↥A.space = sphereUnionSpace M :=
-      (congrArg (fun S : TopCat => ↥S) hspace).trans rfl
-    exact hc ▸ sphereUnionZerothHomotopyEquiv M, trivial⟩
+    ∃ e : ZerothHomotopy ↥A.space ≃ Fin M, True := by
+  -- WAVE 51: rewrite the GOAL by hspace first — the ▸-transport on the
+  -- equiv leaves the goal's topology instance at `A.space.str`, which
+  -- is not definitionally the canonical sigma instance; after the goal
+  -- rewrite both sides elaborate at `TopCat.of`'s canonical instance
+  rw [hspace]
+  exact ⟨sphereUnionZerothHomotopyEquiv M, trivial⟩
 
 end GSTSphereUnionComponents
