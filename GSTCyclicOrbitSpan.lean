@@ -69,9 +69,12 @@ private theorem arith_key (M t : ℕ) (ht : t < M) :
   have hu : 0 < M - t := by omega
   obtain ⟨w, hw⟩ : ∃ w, M - t = w + 1 := ⟨M - t - 1, by omega⟩
   have hM1 : M - 1 = t + w := by omega
-  have hsub : M - t - 1 = w := by omega
   have hMsucc : M = t + w + 1 := by omega
-  rw [hw, hM1, hsub, hMsucc]
+  -- WAVE 60.1: the successor split consumes the `M - t` occurrences (the
+  -- wave-60 `hsub`-rewrite could never fire after `hw`); the residual
+  -- `w + 1 - 1` closes by the pin's `Nat.add_sub_cancel`, and no truncated
+  -- subtraction survives into the `ring` step.
+  rw [hw, hM1, hMsucc, Nat.add_sub_cancel]
   ring
 
 /-- **THE ORBIT SURJECTIVITY.**  Every index of `Fin M` lies on the orbit of
@@ -93,7 +96,10 @@ theorem exists_iterate_cyclicPred (M : ℕ) (hM : 0 < M) (i : Fin M) :
     have hval := cyclicPred_iterate_val M hM (M - i.val)
     rw [hval]
     show ((M - i.val) * (M - 1)) % M = i.val
-    rw [arith_key M i.val i.isLt, Nat.add_mul_mod_self_left]
+    -- WAVE 60.1: the pin's `Nat.add_mul_mod_self_left` is
+    -- `(a + b * n) % n = a % n` (the mul on the SECOND addend) — the
+    -- arithmetic key's `(X * M + t)`-shape needs the addend commute first.
+    rw [arith_key M i.val i.isLt, Nat.add_comm, Nat.add_mul_mod_self_left]
     exact Nat.mod_eq_of_lt i.isLt
 
 /-! ## §3 The span law -/
@@ -117,6 +123,10 @@ theorem span_range_cyclicIterate {W : Type*} [AddCommGroup W] [Module ℚ W]
     rintro w ⟨i, rfl⟩
     obtain ⟨n, hn⟩ := exists_iterate_cyclicPred M hM i
     refine Submodule.subset_span ⟨n, ?_⟩
+    -- WAVE 60.1: the range-membership goal sits under a beta-redex
+    -- (`(fun n => …) n`); the `show` bridge beta-reduces it so the
+    -- iterate-pattern surfaces for the rewrite.
+    show c ((cyclicPred M)^[n] ⟨0, hM⟩) = c i
     rw [hn]
 
 end GSTCyclicOrbitSpan
