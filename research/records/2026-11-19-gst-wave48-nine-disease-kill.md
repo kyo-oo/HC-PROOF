@@ -175,3 +175,30 @@ and polynomial/localization formal smoothness
 (`instFormallySmoothMvPolynomial` + `Localization`-instance, RingTheory/
 Smooth/Basic.lean:112/:497).  The quotient-graded-ring fight is AVOIDABLE:
 the lean carrier is `∐ (Fin M) P¹` with the index-rotation M-cycle.
+
+## WAVE 50 ADDENDUM (run 44517591925, 0f64bf8 — the adjudication)
+
+The sphere machine's remaining three ROOT diseases (all first-hand
+pin-verified before the fix):
+
+1. **`Continuous` is a STRUCTURE at the pin** (Topology/Defs/Basic.lean:153,
+   `structure Continuous (f : X → Y) : Prop where isOpen_preimage : …`) —
+   `continuous_iff_isOpen_preimage` does not exist in this form; the
+   preimage computation rebuilt on the structure constructor.
+2. **The scoped `I`-notation** (`scoped[unitInterval] notation "I" =>
+   unitInterval`, UnitInterval.lean:36) — `open unitInterval` added
+   (Mathlib's own idiom, Topology/Path.lean:51).
+3. **THE INSTANCE-SHADOW DISEASE** — the file's hand-rolled
+   `inferInstance`-copies (`instTopologicalSpaceUnitSphereType`,
+   `instTopologicalSpaceSphereUnionSpace`) shadowed the canonical
+   subtype/sigma instances and broke elaboration-unification against
+   `continuous_sigmaMk` (instance-defs cannot unfold at instances
+   transparency) — BOTH DELETED; the abbrevs let TC find the canonical
+   instances directly.
+4. **The missing `open GSTProjectiveOverC`** — the file's
+   `SmoothProjectiveComplexScheme` binder resolved to a foreign root-level
+   homonym, mismatching `AnalytificationData`'s expectation — the green
+   component file's open-list restored verbatim.
+
+Run 44521065517 (cb2739b, wave 50) is the first run in which the sphere
+machine and the merged-law file are expected to elaborate end-to-end.
