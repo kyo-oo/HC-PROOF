@@ -137,11 +137,11 @@ theorem sigma_path_index_const {ι : Type*} {X : ι → Type*}
     {x y : Sigma X} (p : Path x y) :
     x.1 = y.1 := by
   -- the index map along the path is continuous into the discrete ι
-  -- WAVE 52: the @-form with CONCRETE ι X — the plain elaboration leaves
-  -- the lemma's [DiscreteTopology ?ι] as a metavar-synthesis that the
-  -- comp-unification assigns to ↑I before the retry
+  -- WAVE 52/53: the @-form with CONCRETE ι X; the pinned `Continuous.comp`
+  -- takes the OUTER function FIRST (Continuous.lean:113 —
+  -- `Continuous.comp (hg : Continuous g) (hf : Continuous f) : Continuous (g ∘ f)`)
   have hcont : Continuous (fun t : I => ((p t : Sigma X)).1) :=
-    (p.continuous).comp (@continuous_sigma_fst_discrete ι X _ _ _)
+    (@continuous_sigma_fst_discrete ι X _ _ _).comp (p.continuous)
   -- the pinned unit interval is connected (the `unitInterval` instance
   -- rides the abbrev `I = Set.Icc 0 1`, so TC finds it at `↥I`)
   obtain ⟨b, hb⟩ := exists_const_of_continuous_discrete hcont
