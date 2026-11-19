@@ -131,7 +131,8 @@ theorem dual_eval (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
     (z : (rationalSingularChains A).X 1) :
     ((rationalSingularCochains A).d 0 1 φ).hom z =
-      φ.hom ((rationalSingularChains A).d 1 0 z) := by
+      (φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ)
+        ((rationalSingularChains A).d 1 0
   rw [cochains_d_zero_one A]
   simp only [ModuleCat.ofHom_apply, Linear.leftComp_apply]
   rfl
@@ -215,7 +216,8 @@ at default transparency — no `≫`-composite is ever rewritten. -/
 theorem precomp_zero_of_generator (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0)
     (hgen : ∀ f : TopCat.I ⟶ A.space,
-      φ.hom ((rationalSingularChains A).d 1 0
+      (φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ)
+        ((rationalSingularChains A).d 1 0
         ((ιPath A f).hom (1 : ℚ))) = 0) :
     ModuleCat.ofHom
       ((φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ).comp
@@ -244,7 +246,8 @@ theorem cochain_ker_iff (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
     (rationalSingularCochains A).d 0 1 φ = 0 ↔
       ∀ f : TopCat.I ⟶ A.space,
-        φ.hom ((rationalSingularChains A).d 1 0
+        (φ.hom : (rationalSingularChains A).X 0 →ₗ[ℚ] ℚ)
+          ((rationalSingularChains A).d 1 0
           ((ιPath A f).hom (1 : ℚ))) = 0 := by
   constructor
   · intro hφ f
@@ -272,17 +275,6 @@ theorem mem_kerDual_iff (A : AnalytificationData V)
     (φ : (rationalSingularCochains A).X 0) :
     φ ∈ kerDual A ↔ (rationalSingularCochains A).d 0 1 φ = 0 := Iff.rfl
 
-/-- The `g`-field of the degree-zero short complex is the outgoing
-differential — through the pinned `@[simps]` equations of the
-`shortComplexFunctor'` construction (the defeq is behind two
-semireducible functor layers and a `next 0` arithmetic step, so it is
-bridged by rewriting instead). -/
-theorem sc_zero_g (A : AnalytificationData V) :
-    ((rationalSingularCochains A).sc 0).g =
-      (rationalSingularCochains A).d 0 1 := by
-  rw [HomologicalComplex.shortComplexFunctor_obj,
-    HomologicalComplex.shortComplexFunctor'_obj, upNext_zero]
-
 /-- **THE BOTTOM-DEGREE HOMOLOGY.**  The homology of the cochain complex
 at degree zero is the kernel of the outgoing differential.
 
@@ -305,8 +297,10 @@ noncomputable def homologyZeroIsoKer (A : AnalytificationData V) :
   refine ((rationalSingularCochains A).isoHomologyπ 0 0 upPrev_zero
       ((rationalSingularCochains A).shape 0 0 upNotRel_zero_zero)).symm ≪≫ ?_
   refine ((rationalSingularCochains A).sc 0).moduleCatCyclesIso ≪≫ ?_
-  rw [ShortComplex.moduleCatLeftHomologyData_K, sc_zero_g A]
-  exact LinearEquiv.toModuleIso (LinearEquiv.refl ℚ ↥(kerDual A))
+  rw [ShortComplex.moduleCatLeftHomologyData_K]
+  unfold HomologicalComplex.shortComplexFunctor
+  unfold HomologicalComplex.shortComplexFunctor'
+  rfl
 
 /-! ## §4 The kernel-cocycle iso -/
 
