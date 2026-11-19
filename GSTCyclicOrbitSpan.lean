@@ -96,10 +96,11 @@ theorem exists_iterate_cyclicPred (M : ℕ) (hM : 0 < M) (i : Fin M) :
     have hval := cyclicPred_iterate_val M hM (M - i.val)
     rw [hval]
     show ((M - i.val) * (M - 1)) % M = i.val
-    -- WAVE 60.1: the pin's `Nat.add_mul_mod_self_left` is
-    -- `(a + b * n) % n = a % n` (the mul on the SECOND addend) — the
-    -- arithmetic key's `(X * M + t)`-shape needs the addend commute first.
-    rw [arith_key M i.val i.isLt, Nat.add_comm, Nat.add_mul_mod_self_left]
+    -- WAVE 60.2 (run 44624313890): the pin's `Nat.add_mul_mod_self_left`
+    -- is `(a + n * b) % n`-spelled (modulus = the product's FIRST factor);
+    -- the arithmetic key's `(t + X * M)`-shape — modulus SECOND — is
+    -- `Nat.add_mul_mod_self_right`.
+    rw [arith_key M i.val i.isLt, Nat.add_comm, Nat.add_mul_mod_self_right]
     exact Nat.mod_eq_of_lt i.isLt
 
 /-! ## §3 The span law -/
