@@ -142,3 +142,36 @@ Every suspect API was verified first-hand against the pin:
 | The merged law file | four fixes pushed this wave (first compile) |
 | Weight-1 honest point classes (sphere machine) | OPEN (fenced gate — the disclosed hypothesis) |
 | The scheme carrier `finiteLineWorld M` | OPEN (the frozen next kill) |
+
+## WAVE 49 ADDENDUM (run 44513557276, 5c6d671 — the adjudication)
+
+**THE COMPONENT H⁰ MACHINE IS GREEN**: `Built GSTComponentCohomologyZero`
+(warnings only) — the one-word bidual fix landed; the custom
+positive-dimensional cohomology tool
+(`componentCohomologyZeroEquiv : H⁰(A) ≃ₗ (ZerothHomotopy ↥A.space → ℚ)`,
+computed through the genuine singular chain complex) is now CI-certified.
+
+The sphere file's 13 latent diseases surfaced on its first compile (all
+pre-hunted against the pin within the hour):
+
+| # | Site | Disease | Fix |
+|---|------|---------|-----|
+| 1 | :92 | trailing `rfl` after a rw that auto-closed syntactically | deleted |
+| 2 | :95 | `isClosed_compl_iff.mpr` (wrong direction) | `⟨hUcomplopen⟩` — `IsClosed`'s own constructor (`class IsClosed where isOpen_compl : IsOpen sᶜ`, Topology/Defs/Basic.lean:107) |
+| 3 | :96 | `IsClopen` field order | `⟨hUclosed, hUopen⟩` (`def IsClopen := IsClosed s ∧ IsOpen s`, Topology/Defs/Basic.lean:111 — closed FIRST) |
+| 4 | :100 | `Set.not_mem_empty` (renamed) | `Set.notMem_empty` (Data/Set/Basic.lean:321) |
+| 5 | :111/:133 | `[DiscreteTopology ι]` without the superclass-parameter binder | `[TopologicalSpace ι]` added before it (DiscreteTopology takes TopologicalSpace as a class-parameter — must be synthesizable at the binder) |
+| 6 | :195/:196 | `hj _ hs` — the `_` consumed the membership (both binders implicit-before-explicit) | `hj hs` |
+| 7 | :116/:203-209 | `Sigma.mk (X := …)` — the parameter is named `β` | `(β := …)` |
+| 8 | :229-230 | rw+rfl auto-close ambiguity in left_inv | `exact (ZerothHomotopy.sound p).symm` (the lift-eval/invFun-beta chains are rfl at default) |
+| 9 | :250 | `∃ e : T :=` — missing the exists-body | `∃ e : … ≃ Fin M, True` + `⟨…, trivial⟩`; the law file's `obtain ⟨e⟩` → `⟨e, -⟩` |
+
+The carrier battle map (reconnaissanced this round against the pin):
+Mathlib HAS scheme coproducts (`CoproductsOfShapeDisjoint`, Limits.lean:224;
+`Sigma.ι`, `Sigma.desc`, `isOpenImmersion_sigmaDesc`, "Spec preserves finite
+coproducts"), a rich Proj API (`Proj.map` for graded ring homs + `map_comp`/
+`map_id` for the M-cycle, `affineOpenCover`, `basicOpenIsoSpec`, `stalkIso`),
+and polynomial/localization formal smoothness
+(`instFormallySmoothMvPolynomial` + `Localization`-instance, RingTheory/
+Smooth/Basic.lean:112/:497).  The quotient-graded-ring fight is AVOIDABLE:
+the lean carrier is `∐ (Fin M) P¹` with the index-rotation M-cycle.

@@ -277,7 +277,7 @@ theorem weightZero_live_fiber_of_sphereUnion
           rationalHodgeSubspace (H.hodgeBigrading 0) :=
   weightZero_live_fiber_of_components hM
     (by
-      obtain ⟨e⟩ := sphereUnion_cohomology_zero (V := V) (A := H.analytification)
+      obtain ⟨e, -⟩ := sphereUnion_cohomology_zero (V := V) (A := H.analytification)
         (M := M) hspace
       exact e) hzero
 

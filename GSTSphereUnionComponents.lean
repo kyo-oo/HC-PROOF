@@ -89,15 +89,14 @@ theorem exists_const_of_continuous_discrete {X Y : Type*}
   have hUcomplopen : IsOpen Uᶜ := by
     have hcompl : Uᶜ = f ⁻¹' ({f x₀} : Set Y)ᶜ := by
       rw [hU, Set.preimage_compl]
-      rfl
     rw [hcompl]
     exact hf.isOpen_preimage _ (isOpen_discrete _)
-  have hUclosed : IsClosed U := isClosed_compl_iff.mpr hUcomplopen
-  have hUclopen : IsClopen U := ⟨hUopen, hUclosed⟩
+  have hUclosed : IsClosed U := ⟨hUcomplopen⟩
+  have hUclopen : IsClopen U := ⟨hUclosed, hUopen⟩
   have hx₀U : x₀ ∈ U := Set.mem_preimage.mpr rfl
   rcases (isClopen_iff.mp hUclopen) with hUe | hUu
   · rw [hUe] at hx₀U
-    exact absurd hx₀U (Set.not_mem_empty x₀)
+    exact absurd hx₀U (Set.notMem_empty x₀)
   · refine ⟨f x₀, funext fun x => ?_⟩
     have hxU : x ∈ U := by
       rw [hUu]
@@ -108,12 +107,13 @@ theorem exists_const_of_continuous_discrete {X Y : Type*}
 into the discrete index type: the preimage of any subset is a union of
 open slices (the pinned `isOpen_range_sigmaMk`). -/
 theorem continuous_sigma_fst_discrete {ι : Type*} {X : ι → Type*}
-    [∀ i, TopologicalSpace (X i)] [DiscreteTopology ι] :
+    [TopologicalSpace ι] [∀ i, TopologicalSpace (X i)]
+    [DiscreteTopology ι] :
     Continuous (fun z : Sigma X => z.1) := by
   rw [continuous_iff_isOpen_preimage]
   intro U _
   have hpre : (fun z : Sigma X => z.1) ⁻¹' U =
-      ⋃ i ∈ U, Set.range (Sigma.mk (X := X) i) := by
+      ⋃ i ∈ U, Set.range (Sigma.mk (β := X) i) := by
     ext z
     simp only [Set.mem_preimage, Set.mem_iUnion, exists_prop, Set.mem_range]
     exact ⟨fun h => ⟨z.1, h, z.2, rfl⟩, fun ⟨i, hi, w, rfl⟩ => hi⟩
@@ -130,7 +130,8 @@ the constancy is evaluated by `congrFun` at the two pinned endpoints
 (beta-checked haves — no `⟨0, _⟩`-spelling rewrites, no `Set.Icc`-level
 instance archaeology). -/
 theorem sigma_path_index_const {ι : Type*} {X : ι → Type*}
-    [∀ i, TopologicalSpace (X i)] [DiscreteTopology ι]
+    [TopologicalSpace ι] [∀ i, TopologicalSpace (X i)]
+    [DiscreteTopology ι]
     {x y : Sigma X} (p : Path x y) :
     x.1 = y.1 := by
   -- the index map along the path is continuous into the discrete ι
@@ -192,20 +193,20 @@ theorem unitSphere_joined (s t : unitSphereType) :
       Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 := s.2
   have ht : (t : EuclideanSpace ℝ (Fin 3)) ∈
       Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 := t.2
-  obtain ⟨γs⟩ := (joinedIn_iff_joined hhub hs).mp (hj _ hs)
-  obtain ⟨γt⟩ := (joinedIn_iff_joined hhub ht).mp (hj _ ht)
+  obtain ⟨γs⟩ := (joinedIn_iff_joined hhub hs).mp (hj hs)
+  obtain ⟨γt⟩ := (joinedIn_iff_joined hhub ht).mp (hj ht)
   exact ⟨γs.symm.trans γt, trivial⟩
 
 /-- Any two points of the same sphere slice are joined by a path inside
 the slice, which is also a path in the union (the slice inclusion is
 continuous: the pinned `continuous_sigmaMk`). -/
 theorem sphere_slice_joined (M : ℕ) (i : Fin M) (s t : unitSphereType) :
-    ∃ p : Path (Sigma.mk (X := fun _ : Fin M => unitSphereType) i s)
+    ∃ p : Path (Sigma.mk (β := fun _ : Fin M => unitSphereType) i s)
         (Sigma.mk i t), True := by
   obtain ⟨γ, -⟩ := unitSphere_joined s t
   have hcont : Continuous
       (fun u : unitSphereType =>
-        (Sigma.mk (X := fun _ : Fin M => unitSphereType) i) u) :=
+        (Sigma.mk (β := fun _ : Fin M => unitSphereType) i) u) :=
     continuous_sigmaMk
   exact ⟨γ.map hcont, trivial⟩
 
@@ -223,11 +224,12 @@ noncomputable def sphereUnionZerothHomotopyEquiv (M : ℕ) :
       ⟨i, (unitSphere_nonempty).some⟩
   left_inv z := by
     obtain ⟨x, rfl⟩ := ZerothHomotopy.mk_surjective z
-    -- same index: the slice path identifies the classes
+    -- same index: the slice path identifies the classes (the lift
+    -- evaluations and the invFun-beta are all rfl at default; the sound
+    -- equation closes the residual, no rewrite-auto-close ambiguity)
     obtain ⟨i, s⟩ := x
-    obtain ⟨p, _⟩ := sphere_slice_joined M i s (unitSphere_nonempty).some
-    rw [ZerothHomotopy.sound p]
-    rfl
+    obtain ⟨p, -⟩ := sphere_slice_joined M i s (unitSphere_nonempty).some
+    exact (ZerothHomotopy.sound p).symm
   right_inv i := rfl
 
 /-! ## §4 The connection to the component H⁰ machine -/
@@ -247,11 +249,13 @@ theorem sphereUnion_cohomology_zero
     {V : SmoothProjectiveComplexScheme}
     {A : AnalytificationData V} {M : ℕ}
     (hspace : A.space = TopCat.of (sphereUnionSpace M)) :
-    ∃ e : ZerothHomotopy ↥A.space ≃ Fin M :=
+    ∃ e : ZerothHomotopy ↥A.space ≃ Fin M, True :=
   ⟨by
-    have hspace' : ↥A.space = sphereUnionSpace M := by
-      rw [hspace]
-      rfl
-    hspace' ▸ sphereUnionZerothHomotopyEquiv M⟩
+    -- the carrier identification: congrArg on the Sort-coe, closed by a
+    -- TERM-level rfl (the `TopCat.of`-carrier coe is definitionally the
+    -- identity — no rw auto-close ambiguity)
+    have hc : ↥A.space = sphereUnionSpace M :=
+      (congrArg (fun S : TopCat => ↥S) hspace).trans rfl
+    exact hc ▸ sphereUnionZerothHomotopyEquiv M, trivial⟩
 
 end GSTSphereUnionComponents
