@@ -222,8 +222,8 @@ theorem positive_dimensional_live_weight_bearing (M : ℕ) (hM : 0 < M)
   obtain ⟨c, hcne, hcind⟩ :=
     positive_dimensional_live_weight_family M A hspace ω hω
   obtain ⟨f, hf⟩ := exists_cycle_functional (X := codimensionCycles V.X 1) Z₁ hZ₁
-  set c₀ : RationalSingularCohomology A 2 := c ⟨0, hM⟩ with hc₀
-  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] RationalSingularCohomology A 2 :=
+  set c₀ : singularCohomologyOf A.space 2 := c ⟨0, hM⟩ with hc₀
+  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] singularCohomologyOf A.space 2 :=
     { toFun := fun Z => (f Z) • c₀
       map_add' := by
         intro Z Z'
@@ -232,7 +232,7 @@ theorem positive_dimensional_live_weight_bearing (M : ℕ) (hM : 0 < M)
       map_smul' := by
         intro q Z
         show (f (q • Z)) • c₀ = q • ((f Z) • c₀)
-        rw [map_smul, smul_smul] } with hcl₁
+        rw [map_smul, smul_smul, ← smul_eq_mul] } with hcl₁
   have hcl₁_Z₁ : cl₁ Z₁ = c₀ := by
     show (f Z₁) • c₀ = c₀
     rw [hf, one_smul]
@@ -248,12 +248,13 @@ theorem positive_dimensional_live_weight_bearing (M : ℕ) (hM : 0 < M)
         | 0 => 0
         | 1 => cl₁
         | (p + 2) => 0 } with hH
-  have hfiber1 : rationalHodgeSubspace (H.hodgeBigrading 1) =
-      Submodule.span ℚ (Set.range c) := by
-    exact rationalHodgeSubspace_span_eq c 1 (by norm_num)
-  refine ⟨H, c, hcne, hcind, ?_, ?_, ?_, ?_, ?_⟩
+  have hfiber1 : rationalHodgeSubspace (spanBigrading c 1 (by norm_num)) =
+      Submodule.span ℚ (Set.range c) :=
+    rationalHodgeSubspace_span_eq c 1 (by norm_num)
+  refine ⟨H, c, hcne, hcind, ?_, ?_, ?_, ?_⟩
   · exact hfiber1
-  · rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁, hfiber1]
+  · rw [show H.hodgeBigrading 1 = spanBigrading c 1 (by norm_num) from rfl,
+      show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁, hfiber1]
     exact Submodule.subset_span ⟨⟨0, hM⟩, rfl⟩
   · exact rationalHodgeSubspace_eq_top_of_degree_zero H
   · intro p hp
@@ -293,12 +294,12 @@ theorem positive_dimensional_live_weight_law
     (X := codimensionCycles V.X 1) Z₁ hZ₁
   obtain ⟨f₀, hf₀⟩ := exists_cycle_functional
     (X := codimensionCycles V.X 0) Z₀ hZ₀
-  set c₀ : RationalSingularCohomology A 2 := c ⟨0, (by norm_num : 0 < 1)⟩
+  set c₀ : singularCohomologyOf A.space 2 := c ⟨0, (by norm_num : 0 < 1)⟩
     with hc₀
   set E : RationalSingularCohomology A 0 ≃ₗ[ℚ] (Fin 1 → ℚ) :=
     componentCohomologyZeroEquivFinM A 1
       (sphereUnion_cohomology_zero (M := 1) hspace) with hE
-  set c₀w : RationalSingularCohomology A 0 := E.symm (fun _ => (1 : ℚ))
+  set c₀w : singularCohomologyOf A.space 0 := E.symm (fun _ => (1 : ℚ))
     with hc₀w
   have hc₀w_ne : c₀w ≠ 0 := by
     intro h0
@@ -309,7 +310,7 @@ theorem positive_dimensional_live_weight_law
     rw [← hc₀w] at hround
     rw [h0, hE0] at hround
     exact one_ne_zero (congrFun hround.symm ⟨0, (by norm_num : 0 < 1)⟩)
-  set cl₀ : codimensionCycles V.X 0 →ₗ[ℚ] RationalSingularCohomology A 0 :=
+  set cl₀ : codimensionCycles V.X 0 →ₗ[ℚ] singularCohomologyOf A.space 0 :=
     { toFun := fun Z => (f₀ Z) • c₀w
       map_add' := by
         intro Z Z'
@@ -318,11 +319,11 @@ theorem positive_dimensional_live_weight_law
       map_smul' := by
         intro q Z
         show (f₀ (q • Z)) • c₀w = q • ((f₀ Z) • c₀w)
-        rw [map_smul, smul_smul] } with hcl₀
+        rw [map_smul, smul_smul, ← smul_eq_mul] } with hcl₀
   have hcl₀_Z₀ : cl₀ Z₀ = c₀w := by
     show (f₀ Z₀) • c₀w = c₀w
     rw [hf₀, one_smul]
-  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] RationalSingularCohomology A 2 :=
+  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] singularCohomologyOf A.space 2 :=
     { toFun := fun Z => (f₁ Z) • c₀
       map_add' := by
         intro Z Z'
@@ -331,7 +332,7 @@ theorem positive_dimensional_live_weight_law
       map_smul' := by
         intro q Z
         show (f₁ (q • Z)) • c₀ = q • ((f₁ Z) • c₀)
-        rw [map_smul, smul_smul] } with hcl₁
+        rw [map_smul, smul_smul, ← smul_eq_mul] } with hcl₁
   have hcl₁_Z₁ : cl₁ Z₁ = c₀ := by
     show (f₁ Z₁) • c₀ = c₀
     rw [hf₁, one_smul]
@@ -347,14 +348,14 @@ theorem positive_dimensional_live_weight_law
         | 0 => cl₀
         | 1 => cl₁
         | (p + 2) => 0 } with hH
-  have hfiber1 : rationalHodgeSubspace (H.hodgeBigrading 1) =
-      Submodule.span ℚ (Set.range c) := by
-    exact rationalHodgeSubspace_span_eq c 1 (by norm_num)
+  have hfiber1 : rationalHodgeSubspace (spanBigrading c 1 (by norm_num)) =
+      Submodule.span ℚ (Set.range c) :=
+    rationalHodgeSubspace_span_eq c 1 (by norm_num)
   have htop0 : rationalHodgeSubspace (H.hodgeBigrading 0) = ⊤ :=
     rationalHodgeSubspace_eq_top_of_degree_zero H
   -- the weight-zero monogenic generator: every H⁰ element is a multiple
   -- of the honest transported constant-one function
-  have hmono₀ : ∀ x : RationalSingularCohomology A 0,
+  have hmono₀ : ∀ x : singularCohomologyOf A.space 0,
       ∃ r : ℚ, x = r • c₀w := by
     intro x
     have hxE : E x = (E x ⟨0, (by norm_num : 0 < 1)⟩) •
@@ -365,20 +366,19 @@ theorem positive_dimensional_live_weight_law
     refine ⟨E x ⟨0, (by norm_num : 0 < 1)⟩, ?_⟩
     calc x = E.symm (E x) := (E.symm_apply_apply x).symm
       _ = E.symm ((E x ⟨0, (by norm_num : 0 < 1)⟩) •
-            (fun _ => (1 : ℚ))) := by
-            congr 1
-            exact hxE
+            (fun _ => (1 : ℚ))) := congrArg E.symm hxE
       _ = (E x ⟨0, (by norm_num : 0 < 1)⟩) •
             E.symm (fun _ => (1 : ℚ)) := by
             rw [map_smul]
       _ = (E x ⟨0, (by norm_num : 0 < 1)⟩) • c₀w := rfl
   -- the weight-one monogenic generator: every fiber element is a multiple
   -- of the honest sphere class
-  have hmono₁ : ∀ x : RationalSingularCohomology A 2,
+  have hmono₁ : ∀ x : singularCohomologyOf A.space 2,
       x ∈ rationalHodgeSubspace (H.hodgeBigrading 1) →
       ∃ r : ℚ, x = r • c₀ := by
     intro x hx
-    rw [hfiber1] at hx
+    rw [show H.hodgeBigrading 1 = spanBigrading c 1 (by norm_num) from rfl,
+      hfiber1] at hx
     refine Submodule.span_induction ?_ ?_ ?_ ?_ hx
     · rintro z ⟨i, rfl⟩
       rw [Subsingleton.elim i ⟨0, (by norm_num : 0 < 1)⟩]
@@ -404,8 +404,8 @@ theorem positive_dimensional_live_weight_law
             rw [show H.cycleClass 0 Z₀ = cl₀ Z₀ from rfl, hcl₀_Z₀]
             exact hmono₀ x
         · refine Or.inr ⟨Z₁, ?_, ?_⟩
-          · rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁,
-              hfiber1]
+          · rw [show H.hodgeBigrading 1 = spanBigrading c 1 (by norm_num) from rfl,
+              show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁, hfiber1]
             exact Submodule.subset_span ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
           · intro x hx
             rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁]
@@ -418,7 +418,8 @@ theorem positive_dimensional_live_weight_law
             exact rationalHodgeSubspace_stash_eq_bot (q + 2) (by omega)
           exact subsingleton_hodgeFiber_of_eq_bot hbot)
   refine ⟨H, hlaw, ⟨c₀, ?_, ?_⟩, ?_⟩
-  · rw [hfiber1]
+  · rw [show H.hodgeBigrading 1 = spanBigrading c 1 (by norm_num) from rfl,
+      hfiber1]
     exact Submodule.subset_span ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
   · exact hcne ⟨0, (by norm_num : 0 < 1)⟩
   · exact exactHodge_of_one_GST_fold_orbit hlaw
