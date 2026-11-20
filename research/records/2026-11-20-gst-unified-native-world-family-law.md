@@ -110,19 +110,36 @@ reflection engines the green lanes already certified).
   (the ARSENAL §W.2.1 `/home/z/bag/extracted/...` path is stale — noted for
   the worklog).
 
-## STATE
+## STATE — THE KERNEL VERDICT: GREEN
 
-The capstone's first push (35e34e5) ran the lane (run 44753585732): in the
-15,338-line log exactly ONE error — `:246:2 No goals to be solved` — the
-`injection h with h'` at the pin already closes the fin-injectivity goal
-(the derived equation IS the goal; the tactic's assumption-close fires),
-so the trailing `exact h'` was a dead line. Everything else was GREEN in
-that log: every theorem type-checked (all `#check` receipts printed) and
-all eight `#print axioms` receipts printed CLEAN —
-`[propext, Classical.choice, Quot.sound]` on the seven main theorems,
-`NativeGSTWorld_fin_injective` axiom-free. The wave-62.1 repair deleted
-the dead `exact h'`; the kernel verdict on the repaired SHA is the final
-word.
+**Run 44756915591 — completed success at 4188c31 (the wave-62.1 repair
+SHA): `Build completed successfully (8980 jobs)`** — the lane's full
+284-module closure + Mathlib, zero errors, zero sorryAx.  The eight axiom
+receipts, verbatim from the kernel log:
+
+* `native_gst_unified_world_family_orbit_law` → `[propext,
+  Classical.choice, Quot.sound]`;
+* `native_gst_unified_world_family_exactHodge` → `[propext,
+  Classical.choice, Quot.sound]`;
+* `native_gst_unified_world_family_FS` → `[propext, Classical.choice,
+  Quot.sound]`;
+* `native_gst_unified_world_family_dead_weight_one` → `[propext,
+  Classical.choice, Quot.sound]`;
+* `native_gst_unified_world_family_nonzero_seed` → `[propext,
+  Classical.choice, Quot.sound]`;
+* `NativeGSTWorld_fin_injective` → **does not depend on any axioms**;
+* `native_gst_unified_family_live_core_extension` → `[propext,
+  Classical.choice, Quot.sound]`;
+* `the_unified_native_world_family_package` → `[propext,
+  Classical.choice, Quot.sound]`.
+
+The first push (35e34e5, run 44753585732) died on exactly ONE line in
+15,338 — `:246:2 No goals to be solved`: the `injection h with h'` at
+the pin already closes the fin-injectivity goal (the derived equation IS
+the goal; the tactic's assumption-close fires), so the trailing
+`exact h'` was a dead line — deleted in the wave-62.1 repair.  Even in
+that failed log every theorem type-checked and every axiom receipt
+printed clean.  THE UNIFIED NATIVE WORLD FAMILY LAW IS CI-GREEN.
 
 ## NEXT KILL (frozen — the wave-61 order)
 
