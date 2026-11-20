@@ -72,3 +72,50 @@ First push of F0 — the kernel verdict arrives from CI on push. The battle
 continues: F1 (the world carrier) — the smoothness/projectivity/automorphism
 construction, then F2 (the analytification classification), F3 (the Hodge
 data + letters + seeds + the final theorem instantiation).
+
+## UPDATE — THE VICTORY (end of round)
+
+**`GSTFiniteLineRing.lean` — GREEN** (run 44744364603, commit 3ddf33b, the
+seven-adjudication arc 44738293242 → 44739109997 → 44741006709 →
+44741755205 → 44742716832 → 44743233653 → 44744364603): zero errors, zero
+sorry; the gradedMonoid, the isInternal, and the gradedAlgebra all depend
+only on `[propext, Classical.choice, Quot.sound]`.
+
+**THE HAND-BUILT QUOTIENT GRADING IS KERNEL-CERTIFIED** — the highest-risk
+unlock of the Route-A carrier battle. Mathlib at the pin has NO
+quotient-grading constructor anywhere; this module is the campaign's own,
+and the CI has spoken.
+
+### The root-cause ledger of the arc's six repair waves
+
+* 61.1 (44739109997): the DirectSum binder application form (⨁ n, lineGrading M n);
+  mem_homogeneousSubmodule applied before .mpr; the mkₐ/mk definitional bridge;
+  the homogeneous_span rintro form; the component congr via map_sub/map_add;
+  the Algebra instance; set d without the type ascription.
+* 61.2 (44741006709): `open DirectSum` (the scoped ⨁ notation — the parse
+  failures); the corpus-proven positional `isHomogeneous_X ℂ a`; the named
+  𝒜 binder for homogeneous_span (the stuck instance); the mkₐ-API bridges;
+  one_mem via SetLike.one_mem_graded; the hsplit forward rewrite.
+* 61.3 (44741755205): the IsHomogeneousElem existential form; mkₐ's explicit
+  R₁ binder; `open scoped Classical` + the DecidableEq instance for the
+  DFinsupp support machinery; the show-anchored sum_eq_single h₀.
+* 61.4 (44742716832): surjectivity via the ascribed have + the mk-bridge;
+  the ext branches closed at the coercion level; the hgen ascription
+  reparenthesized; the surjectivity tail as the calc chain.
+* 61.5 (44743233653): the calc's multi-line lhs parenthesized.
+* 61.6 (44743786154): the set-abbreviated witness (the ∑ binder cut).
+* 61.7 (44744364603 — GREEN): the calc replaced by the have-based trans
+  chain (the `:= by` after a sum-RHS breaks the calc parser).
+
+### The state of the carrier lane (end of round)
+
+| Component | State |
+|---|---|
+| F0 — the ring + the quotient GradedRing | **GREEN (run 44744364603)** |
+| F1 — the world carrier (Proj, smoothness, the M-cycle automorphism, projectivity) | next wave |
+| F2 — the analytification classification (ℂ-points ≃ ⊔ M S²) | next |
+| F3 — the Hodge data + letters + seeds + the final theorem | next |
+
+The gradedMonoid/isInternal/gradedAlgebra receipts are the substrate every
+next file imports: `Proj (lineGrading M)` is now a well-formed scheme-side
+object. The battle continues on F1.
