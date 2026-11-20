@@ -295,9 +295,11 @@ private theorem surjective_coeAddMonoidHom (M : ℕ) :
     rw [hd]
     exact DirectSum.Decomposition.left_inv r
   -- its image: the graded generator sum of the image pieces
-  refine ⟨∑ n ∈ d.support, DirectSum.of (fun n => lineGrading M n) n
-    ⟨lineQuotientMap M (d n : lineRing M),
-      lineQuotientMap_mem_lineGrading M n (d n : lineRing M) (d n).2⟩, ?_⟩
+  set w : ⨁ n, lineGrading M n :=
+    ∑ n ∈ d.support, DirectSum.of (fun n => lineGrading M n) n
+      ⟨lineQuotientMap M (d n : lineRing M),
+        lineQuotientMap_mem_lineGrading M n (d n : lineRing M) (d n).2⟩ with hw
+  refine ⟨w, ?_⟩
   -- each generator's coe is the image piece
   have hgen : ∀ n ∈ d.support,
       DirectSum.coeAddMonoidHom (lineGrading M)
@@ -308,17 +310,10 @@ private theorem surjective_coeAddMonoidHom (M : ℕ) :
     intro n _
     exact DirectSum.coeAddMonoidHom_of (fun n => lineGrading M n) n _
   -- the image sum is the image of the full ring's decomposition coe
-  calc (DirectSum.coeAddMonoidHom (lineGrading M)
-      (∑ n ∈ d.support, DirectSum.of (fun n => lineGrading M n) n
-        ⟨lineQuotientMap M (d n : lineRing M),
-          lineQuotientMap_mem_lineGrading M n (d n : lineRing M) (d n).2⟩)) =
-    ∑ n ∈ d.support, DirectSum.coeAddMonoidHom (lineGrading M)
-      (DirectSum.of (fun n => lineGrading M n) n
-        ⟨lineQuotientMap M (d n : lineRing M),
-          lineQuotientMap_mem_lineGrading M n (d n : lineRing M) (d n).2⟩) :=
-      map_sum _ _ _
-  _ = ∑ n ∈ d.support, lineQuotientMap M (d n : lineRing M) :=
-      Finset.sum_congr rfl (fun n hn => hgen n hn)
+  calc DirectSum.coeAddMonoidHom (lineGrading M) w =
+    ∑ n ∈ d.support, lineQuotientMap M (d n : lineRing M) := by
+      rw [hw, map_sum]
+      exact Finset.sum_congr rfl (fun n hn => hgen n hn)
   _ = lineQuotientMap M (∑ n ∈ d.support, (d n : lineRing M)) :=
       (map_sum _ _ _).symm
   _ = lineQuotientMap M r := by
