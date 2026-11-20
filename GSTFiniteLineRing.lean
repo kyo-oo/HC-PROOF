@@ -308,10 +308,10 @@ private theorem surjective_coeAddMonoidHom (M : ℕ) :
     intro n _
     exact DirectSum.coeAddMonoidHom_of (fun n => lineGrading M n) n _
   -- the image sum is the image of the full ring's decomposition coe
-  calc DirectSum.coeAddMonoidHom (lineGrading M)
+  calc (DirectSum.coeAddMonoidHom (lineGrading M)
       (∑ n ∈ d.support, DirectSum.of (fun n => lineGrading M n) n
         ⟨lineQuotientMap M (d n : lineRing M),
-          lineQuotientMap_mem_lineGrading M n (d n : lineRing M) (d n).2⟩) =
+          lineQuotientMap_mem_lineGrading M n (d n : lineRing M) (d n).2⟩)) =
     ∑ n ∈ d.support, DirectSum.coeAddMonoidHom (lineGrading M)
       (DirectSum.of (fun n => lineGrading M n) n
         ⟨lineQuotientMap M (d n : lineRing M),
