@@ -88,7 +88,7 @@ theorem crossMonomials_homogeneous {M : ℕ}
     {p : lineRing M} (hp : p ∈ crossMonomials M) :
     ∃ n, p ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n := by
   obtain ⟨a, b, -, rfl⟩ := hp
-  exact ⟨2, mem_homogeneousSubmodule.mpr
+  exact ⟨2, (mem_homogeneousSubmodule 2 (X a * X b)).mpr
     (IsHomogeneous.mul (isHomogeneous_X a) (isHomogeneous_X b))⟩
 
 /-- **THE CROSS-MONOMIAL IDEAL** — the ideal of `ℙ^{2M-1}` cutting out
@@ -99,9 +99,11 @@ def crossIdeal (M : ℕ) : Ideal (lineRing M) :=
 /-- The cross-monomial ideal is homogeneous for the degree grading (the
 pin's `Ideal.homogeneous_span` over the degree-2 generators). -/
 theorem crossIdeal_isHomogeneous (M : ℕ) :
-    (crossIdeal M).IsHomogeneous (MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ) :=
-  Ideal.homogeneous_span _
-    (fun p hp => let ⟨n, hn⟩ := crossMonomials_homogeneous hp; hn)
+    (crossIdeal M).IsHomogeneous (MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ) := by
+  refine Ideal.homogeneous_span (crossMonomials M) ?_
+  rintro p hp
+  obtain ⟨n, hn⟩ := crossMonomials_homogeneous hp
+  exact hn
 
 /-! ## §2 The quotient grading -/
 
@@ -112,20 +114,30 @@ abbrev lineQuotient (M : ℕ) : Type :=
 
 instance (M : ℕ) : CommRing (lineQuotient M) := inferInstance
 
-instance (M : ℕ) : Algebra ℂ (lineQuotient M) := inferInstance
+instance (M : ℕ) : Algebra ℂ (lineQuotient M) :=
+  Ideal.Quotient.algebra
 
 /-- The quotient map, as a `ℂ`-algebra homomorphism (the grading's
 carrier). -/
 def lineQuotientMap (M : ℕ) : lineRing M →ₐ[ℂ] lineQuotient M :=
   Ideal.Quotient.mkₐ (crossIdeal M)
 
+/-- The definitional bridge: the algebra quotient map IS the ring
+quotient map (the `mkₐ` carrier is `mk`). -/
+theorem lineQuotientMap_mk (M : ℕ) (x : lineRing M) :
+    lineQuotientMap M x = Ideal.Quotient.mk (crossIdeal M) x :=
+  rfl
+
 theorem lineQuotientMap_surjective (M : ℕ) :
-    Function.Surjective (lineQuotientMap M) :=
-  fun a => Ideal.Quotient.mk_surjective a
+    Function.Surjective (lineQuotientMap M) := by
+  intro a
+  obtain ⟨r, hr⟩ := Ideal.Quotient.mk_surjective (I := crossIdeal M) a
+  exact ⟨r, by rw [lineQuotientMap_mk M r]; exact hr⟩
 
 theorem lineQuotientMap_eq_zero_iff (M : ℕ) (x : lineRing M) :
-    lineQuotientMap M x = 0 ↔ x ∈ crossIdeal M :=
-  Ideal.Quotient.eq_zero_iff_mem
+    lineQuotientMap M x = 0 ↔ x ∈ crossIdeal M := by
+  rw [lineQuotientMap_mk M x]
+  exact Ideal.Quotient.eq_zero_iff_mem
 
 /-- **THE QUOTIENT GRADING**: the image of the n-th homogeneous
 submodule of the full coordinate ring under the quotient map.  This is
@@ -159,7 +171,7 @@ instance lineGrading_gradedMonoid (M : ℕ) :
     SetLike.GradedMonoid (lineGrading M) where
   one_mem := by
     refine (mem_lineGrading M 0 _).mpr ⟨1, ?_, map_one _⟩
-    exact mem_homogeneousSubmodule.mpr (isHomogeneous_C (1 : ℂ))
+    exact (mem_homogeneousSubmodule 0 1).mpr (isHomogeneous_C (1 : ℂ))
   mul_mem := by
     intro i j gi gj hi hj
     obtain ⟨a, ha, rfl⟩ := (mem_lineGrading M i _).mp hi
@@ -178,24 +190,21 @@ theorem lineQuotient_component_congr (M : ℕ)
     (n : ℕ) :
     lineQuotientMap M (homogeneousComponent n r) =
       lineQuotientMap M (homogeneousComponent n r') := by
-  have hmem : r - r' ∈ crossIdeal M := by
-    refine (lineQuotientMap_eq_zero_iff M (r - r')).mp ?_
-    rw [map_sub, h, map_sub]
-    simp
+  have hmem : r - r' ∈ crossIdeal M :=
+    (lineQuotientMap_eq_zero_iff M (r - r')).mp (by rw [map_sub, h, sub_self])
   have hcomp := homogeneousComponent_mem_of_mem
     (crossIdeal_isHomogeneous M) hmem n
   have hzero : lineQuotientMap M (homogeneousComponent n (r - r')) = 0 :=
     (lineQuotientMap_eq_zero_iff M _).mpr hcomp
-  have hlinear : homogeneousComponent n r - homogeneousComponent n r' =
-      homogeneousComponent n (r - r') := by
-    rw [homogeneousComponent, ← LinearMap.sub_apply]
-    rfl
-  calc lineQuotientMap M (homogeneousComponent n r) =
-        lineQuotientMap M (homogeneousComponent n (r - r')) +
-        lineQuotientMap M (homogeneousComponent n r') := by
-        rw [← map_sub, ← hlinear]
-    _ = lineQuotientMap M (homogeneousComponent n r') := by
-        rw [hzero, zero_add]
+  -- the linearity of the component map
+  have hlin : homogeneousComponent n (r - r') =
+      homogeneousComponent n r - homogeneousComponent n r' := by
+    rw [map_sub]
+  -- the component of the representative splits through the difference
+  have hsplit : homogeneousComponent n r =
+      homogeneousComponent n (r - r') + homogeneousComponent n r' := by
+    rw [← hlin, sub_add_cancel]
+  rw [hsplit, map_add, hzero, zero_add]
 
 /-! ## §5 The internal decomposition -/
 
@@ -204,13 +213,13 @@ elements equals the quotient map applied to the representative sum:
 each graded piece lifts along the quotient map, and the coe-sum is the
 map of the lifted sum. -/
 theorem coeAddMonoidHom_eq_lineQuotientMap_sum (M : ℕ)
-    (s : ⨁ n, lineGrading M) :
+    (s : ⨁ n, lineGrading M n) :
     DirectSum.coeAddMonoidHom (lineGrading M) s =
       ∑ n ∈ s.support, (s n : lineQuotient M) := by
   rw [DirectSum.coeAddMonoidHom_eq_dfinsuppSum]
   rfl
 
-private theorem zero_of_coe_zero (M : ℕ) (s : ⨁ n, lineGrading M)
+private theorem zero_of_coe_zero (M : ℕ) (s : ⨁ n, lineGrading M n)
     (h : DirectSum.coeAddMonoidHom (lineGrading M) s = 0) : s = 0 := by
   -- the graded lifts: every graded piece lifts along the quotient map
   have hlift : ∀ n : ℕ, ∃ t : lineRing M,
@@ -263,8 +272,7 @@ private theorem surjective_coeAddMonoidHom (M : ℕ) :
   intro a
   obtain ⟨r, rfl⟩ := lineQuotientMap_surjective M a
   -- the full ring's decomposition of the representative
-  set d : ⨁ n, MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n :=
-    DirectSum.Decomposition.decompose' r with hd
+  set d := DirectSum.Decomposition.decompose' r with hd
   -- the full ring's decomposition coe is the representative itself
   have hfull : DirectSum.coeAddMonoidHom
       (MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ) d = r := by
