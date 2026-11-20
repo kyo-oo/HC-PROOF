@@ -113,6 +113,24 @@ namespace GSTPositiveDimensionalLiveWeightLaw
 
 variable {V : SmoothProjectiveComplexScheme}
 
+/-- The Module-structure bridge: the world's degree-n rational singular
+cohomology's Module structure, provided locally at high priority through
+the wave-57 raw-space family (the two families are definitionally
+identical — the rfl bridge of
+`GSTSingularCohomologyMaps.singularCohomologyOf_eq`). -/
+local instance (priority := high) instLWModule
+    {V : SmoothProjectiveComplexScheme}
+    (A : AnalytificationData V) (n : Nat) :
+    Module ℚ (RationalSingularCohomology A n) :=
+  inferInstanceAs (Module ℚ (singularCohomologyOf A.space n))
+
+/-- The AddCommGroup-structure bridge, same discipline. -/
+local instance (priority := high) instLWAddCommGroup
+    {V : SmoothProjectiveComplexScheme}
+    (A : AnalytificationData V) (n : Nat) :
+    AddCommGroup (RationalSingularCohomology A n) :=
+  inferInstanceAs (AddCommGroup (singularCohomologyOf A.space n))
+
 /-! ## §1 The honest point-class family at the world ## -/
 
 /-- **THE WORLD'S HONEST POINT-CLASS FAMILY.**  For a world whose
