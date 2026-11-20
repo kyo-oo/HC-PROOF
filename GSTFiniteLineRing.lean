@@ -310,17 +310,20 @@ private theorem surjective_coeAddMonoidHom (M : ℕ) :
     intro n _
     exact DirectSum.coeAddMonoidHom_of (fun n => lineGrading M n) n _
   -- the image sum is the image of the full ring's decomposition coe
-  calc DirectSum.coeAddMonoidHom (lineGrading M) w =
-    ∑ n ∈ d.support, lineQuotientMap M (d n : lineRing M) := by
-      rw [hw, map_sum]
-      exact Finset.sum_congr rfl (fun n hn => hgen n hn)
-  _ = lineQuotientMap M (∑ n ∈ d.support, (d n : lineRing M)) :=
-      (map_sum _ _ _).symm
-  _ = lineQuotientMap M r := by
-      have h2 : ∑ n ∈ d.support, (d n : lineRing M) = r := by
-        rw [← hfull, DirectSum.coeAddMonoidHom_eq_dfinsuppSum]
-        rfl
-      rw [h2]
+  have step1 : DirectSum.coeAddMonoidHom (lineGrading M) w =
+      ∑ n ∈ d.support, lineQuotientMap M (d n : lineRing M) := by
+    rw [hw, map_sum]
+    exact Finset.sum_congr rfl (fun n hn => hgen n hn)
+  have step2 : ∑ n ∈ d.support, lineQuotientMap M (d n : lineRing M) =
+      lineQuotientMap M (∑ n ∈ d.support, (d n : lineRing M)) :=
+    (map_sum _ _ _).symm
+  have step3 : lineQuotientMap M (∑ n ∈ d.support, (d n : lineRing M)) =
+      lineQuotientMap M r := by
+    have h2 : ∑ n ∈ d.support, (d n : lineRing M) = r := by
+      rw [← hfull, DirectSum.coeAddMonoidHom_eq_dfinsuppSum]
+      rfl
+    rw [h2]
+  exact step1.trans (step2.trans step3)
 
 /-- **THE INTERNAL DECOMPOSITION LAW.**  The quotient grading is an
 internal direct sum: every quotient element decomposes uniquely into
