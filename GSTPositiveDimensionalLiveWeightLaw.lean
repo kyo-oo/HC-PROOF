@@ -272,7 +272,7 @@ theorem positive_dimensional_live_weight_bearing (M : ℕ) (hM : 0 < M)
   refine ⟨H, c, hcne, hcind, ?_, ?_, ?_, ?_⟩
   · exact hfiber1
   · rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁]
-    exact hfiber1 ▸ Submodule.subset_span ⟨⟨0, hM⟩, rfl⟩
+    exact hfiber1.symm ▸ Submodule.subset_span ⟨⟨0, hM⟩, rfl⟩
   · exact rationalHodgeSubspace_eq_top_of_degree_zero H
   · intro p hp
     rcases p with _ | _ | p
@@ -320,7 +320,7 @@ theorem positive_dimensional_live_weight_law
     with hc₀w
   have hc₀w_ne : c₀w ≠ 0 := by
     intro h0
-    have hE0 : E (0 : RationalSingularCohomology A 0) = 0 :=
+    have hE0 : E (0 : singularCohomologyOf A.space 0) = 0 :=
       map_zero E.toLinearMap
     have hround : E (E.symm (fun _ => (1 : ℚ))) = (fun _ => (1 : ℚ)) :=
       E.apply_symm_apply (fun _ => (1 : ℚ))
@@ -387,6 +387,7 @@ theorem positive_dimensional_live_weight_law
     have hC : E.symm ((E x ⟨0, (by norm_num : 0 < 1)⟩) •
         (fun _ => (1 : ℚ))) = (E x ⟨0, (by norm_num : 0 < 1)⟩) • c₀w := by
       rw [map_smul]
+      rfl
     exact hA.trans (hB.trans hC)
   -- the weight-one monogenic generator: every fiber element is a multiple
   -- of the honest sphere class
@@ -421,7 +422,7 @@ theorem positive_dimensional_live_weight_law
             exact hmono₀ x
         · refine Or.inr ⟨Z₁, ?_, ?_⟩
           · rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁]
-            exact hfiber1 ▸ Submodule.subset_span
+            exact hfiber1.symm ▸ Submodule.subset_span
               ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
           · intro x hx
             rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁]
@@ -434,7 +435,7 @@ theorem positive_dimensional_live_weight_law
             exact rationalHodgeSubspace_stash_eq_bot (q + 2) (by omega)
           exact subsingleton_hodgeFiber_of_eq_bot hbot)
   refine ⟨H, hlaw, ⟨c₀, ?_, ?_⟩, ?_⟩
-  · exact hfiber1 ▸ Submodule.subset_span
+  · exact hfiber1.symm ▸ Submodule.subset_span
       ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
   · exact hcne ⟨0, (by norm_num : 0 < 1)⟩
   · exact exactHodge_of_one_GST_fold_orbit hlaw
