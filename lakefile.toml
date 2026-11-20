@@ -974,3 +974,12 @@ roots = [
   "GSTSphereUnionComponents",
   "GSTPositiveDimensionalLiveCoreLaw",
 ]
+
+# GST finite-line ring (2026-11-20, Wave 61) — the cross-monomial graded
+# ring substrate of the finite-line world carrier: the hand-built quotient
+# grading (the highest-risk unlock of the Route-A battle).
+[[lean_lib]]
+name = "GSTFiniteLineRingLib"
+roots = [
+  "GSTFiniteLineRing",
+]
