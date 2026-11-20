@@ -63,6 +63,8 @@ set_option maxRecDepth 1000000
 
 attribute [local instance] MvPolynomial.gradedAlgebra
 
+open scoped Classical
+
 noncomputable section
 
 namespace GSTFiniteLineRing
@@ -104,7 +106,7 @@ theorem crossIdeal_isHomogeneous (M : ℕ) :
     (𝒜 := MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ) (crossMonomials M) ?_
   rintro p hp
   obtain ⟨n, hn⟩ := crossMonomials_homogeneous hp
-  exact hn
+  exact ⟨n, hn⟩
 
 /-! ## §2 The quotient grading -/
 
@@ -117,10 +119,12 @@ instance (M : ℕ) : CommRing (lineQuotient M) := inferInstance
 
 instance (M : ℕ) : Algebra ℂ (lineQuotient M) := inferInstance
 
+instance (M : ℕ) : DecidableEq (lineQuotient M) := Classical.decEq _
+
 /-- The quotient map, as a `ℂ`-algebra homomorphism (the grading's
 carrier). -/
 def lineQuotientMap (M : ℕ) : lineRing M →ₐ[ℂ] lineQuotient M :=
-  Ideal.Quotient.mkₐ (crossIdeal M)
+  Ideal.Quotient.mkₐ ℂ (crossIdeal M)
 
 /-- The definitional bridge: the algebra quotient map IS the ring
 quotient map (the pin's `Quotient.mkₐ_eq_mk`). -/
@@ -230,7 +234,9 @@ private theorem zero_of_coe_zero (M : ℕ) (s : ⨁ n, lineGrading M n)
     intro n
     by_cases hn : n ∈ s.support
     · exact (mem_lineGrading M n _).mp (s n).2
-    · exact ⟨0, Submodule.zero_mem _, by rw [DFinsupp.notMem_support_iff.mp hn]⟩
+    · refine ⟨0, Submodule.zero_mem _, ?_⟩
+      rw [DFinsupp.notMem_support_iff.mp hn]
+      exact map_zero _
   choose t ht hmk using hlift
   -- the quotient sum vanishes: the lifted representative lies in the ideal
   have hsum : ∑ n ∈ s.support, t n ∈ crossIdeal M := by
@@ -251,12 +257,14 @@ private theorem zero_of_coe_zero (M : ℕ) (s : ⨁ n, lineGrading M n)
     have hcollapse : homogeneousComponent n₀ (∑ n ∈ s.support, t n) = t n₀ := by
       rw [map_sum]
       rw [Finset.sum_eq_single_of_mem n₀ hn (fun b _ hne => by
+        show homogeneousComponent n₀ (t b) = 0
         rw [homogeneousComponent_of_mem (ht b)]
         exact if_neg (Ne.symm hne))]
       rw [homogeneousComponent_of_mem (ht n₀), if_pos rfl]
     have hzero : lineQuotientMap M (t n₀) = 0 :=
       (lineQuotientMap_eq_zero_iff M _).mpr (by rw [← hcollapse]; exact hcomp n₀)
     have hval : (s n₀ : lineQuotient M) = 0 := by rw [← hmk n₀, hzero]
+    show (s n₀ : ↥(lineGrading M n₀)) = 0
     exact Subtype.ext hval
   · -- off the support the graded piece is already zero
     exact DFinsupp.notMem_support_iff.mp hn
