@@ -240,8 +240,8 @@ theorem positive_dimensional_live_weight_bearing (M : ℕ) (hM : 0 < M)
   obtain ⟨c, hcne, hcind⟩ :=
     positive_dimensional_live_weight_family M A hspace ω hω
   obtain ⟨f, hf⟩ := exists_cycle_functional (X := codimensionCycles V.X 1) Z₁ hZ₁
-  set c₀ : RationalSingularCohomology A 2 := c ⟨0, hM⟩ with hc₀
-  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] RationalSingularCohomology A 2 :=
+  set c₀ : singularCohomologyOf A.space 2 := c ⟨0, hM⟩ with hc₀
+  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] singularCohomologyOf A.space 2 :=
     { toFun := fun Z => (f Z) • c₀
       map_add' := by
         intro Z Z'
@@ -311,12 +311,12 @@ theorem positive_dimensional_live_weight_law
     (X := codimensionCycles V.X 1) Z₁ hZ₁
   obtain ⟨f₀, hf₀⟩ := exists_cycle_functional
     (X := codimensionCycles V.X 0) Z₀ hZ₀
-  set c₀ : RationalSingularCohomology A 2 := c ⟨0, (by norm_num : 0 < 1)⟩
+  set c₀ : singularCohomologyOf A.space 2 := c ⟨0, (by norm_num : 0 < 1)⟩
     with hc₀
   set E : RationalSingularCohomology A 0 ≃ₗ[ℚ] (Fin 1 → ℚ) :=
     componentCohomologyZeroEquivFinM A 1
       (sphereUnion_cohomology_zero (M := 1) hspace) with hE
-  set c₀w : RationalSingularCohomology A 0 := E.symm (fun _ => (1 : ℚ))
+  set c₀w : singularCohomologyOf A.space 0 := E.symm (fun _ => (1 : ℚ))
     with hc₀w
   have hc₀w_ne : c₀w ≠ 0 := by
     intro h0
@@ -327,7 +327,7 @@ theorem positive_dimensional_live_weight_law
     rw [← hc₀w] at hround
     rw [h0, hE0] at hround
     exact one_ne_zero (congrFun hround.symm ⟨0, (by norm_num : 0 < 1)⟩)
-  set cl₀ : codimensionCycles V.X 0 →ₗ[ℚ] RationalSingularCohomology A 0 :=
+  set cl₀ : codimensionCycles V.X 0 →ₗ[ℚ] singularCohomologyOf A.space 0 :=
     { toFun := fun Z => (f₀ Z) • c₀w
       map_add' := by
         intro Z Z'
@@ -340,7 +340,7 @@ theorem positive_dimensional_live_weight_law
   have hcl₀_Z₀ : cl₀ Z₀ = c₀w := by
     show (f₀ Z₀) • c₀w = c₀w
     rw [hf₀, one_smul]
-  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] RationalSingularCohomology A 2 :=
+  set cl₁ : codimensionCycles V.X 1 →ₗ[ℚ] singularCohomologyOf A.space 2 :=
     { toFun := fun Z => (f₁ Z) • c₀
       map_add' := by
         intro Z Z'
@@ -372,7 +372,7 @@ theorem positive_dimensional_live_weight_law
     rationalHodgeSubspace_eq_top_of_degree_zero H
   -- the weight-zero monogenic generator: every H⁰ element is a multiple
   -- of the honest transported constant-one function
-  have hmono₀ : ∀ x : RationalSingularCohomology A 0,
+  have hmono₀ : ∀ x : singularCohomologyOf A.space 0,
       ∃ r : ℚ, x = r • c₀w := by
     intro x
     have hxE : E x = (E x ⟨0, (by norm_num : 0 < 1)⟩) •
@@ -390,7 +390,7 @@ theorem positive_dimensional_live_weight_law
     exact hA.trans (hB.trans hC)
   -- the weight-one monogenic generator: every fiber element is a multiple
   -- of the honest sphere class
-  have hmono₁ : ∀ x : RationalSingularCohomology A 2,
+  have hmono₁ : ∀ x : singularCohomologyOf A.space 2,
       x ∈ rationalHodgeSubspace (H.hodgeBigrading 1) →
       ∃ r : ℚ, x = r • c₀ := by
     intro x hx
