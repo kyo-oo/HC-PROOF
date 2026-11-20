@@ -95,8 +95,10 @@ noncomputable section
 open CategoryTheory
 open AlgebraicTopology
 open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
 open GSTGeometricRealizationStage2F
 open GSTGeometricRealizationStage2G
+open GSTClassicalHodgeExactClayStatement
 open GSTSphereUnionComponents
 open GSTComponentCohomologyZero
 open GSTSingularCohomologyMaps
@@ -425,7 +427,7 @@ theorem positive_dimensional_live_weight_law
 
 /-- **THE POSITIVE-DIMENSIONAL LIVE-WEIGHT PACKAGE.**  The complete receipt:
 the law on the one-line positive-dimensional world, the live weight-one
-witness, and the general-M live-weight family record. -/
+witness, and the one-line live-weight family record. -/
 theorem the_positive_dimensional_live_weight_package
     (A : AnalytificationData V)
     (hspace : A.space = TopCat.of (sphereUnionSpace 1))
@@ -435,13 +437,12 @@ theorem the_positive_dimensional_live_weight_package
     (∃ H : HodgeBigradedBettiData V, NativeGSTSingleFoldOrbitLaw V H) ∧
     (∃ H : HodgeBigradedBettiData V,
       ∃ x ∈ rationalHodgeSubspace (H.hodgeBigrading 1), x ≠ 0) ∧
-    (∀ M : ℕ, 0 < M →
-      ∃ c : Fin M → singularCohomologyOf A.space 2,
-        (∀ i, c i ≠ 0) ∧ LinearIndependent ℚ c) := by
+    (∃ c : Fin 1 → singularCohomologyOf A.space 2,
+      (∀ i, c i ≠ 0) ∧ LinearIndependent ℚ c) := by
   obtain ⟨H, hlaw, ⟨x, hx, hxne⟩, _⟩ :=
     positive_dimensional_live_weight_law A hspace ω hω Z₀ hZ₀ Z₁ hZ₁
   exact ⟨⟨H, hlaw⟩, ⟨H, x, hx, hxne⟩,
-    fun M hM => positive_dimensional_live_weight_family M A hspace ω hω⟩
+    positive_dimensional_live_weight_family 1 A hspace ω hω⟩
 
 end GSTPositiveDimensionalLiveWeightLaw
 
