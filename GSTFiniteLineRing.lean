@@ -67,7 +67,7 @@ noncomputable section
 
 namespace GSTFiniteLineRing
 
-open MvPolynomial
+open MvPolynomial DirectSum
 
 /-! ## §1 The coordinate ring and the cross-monomial ideal -/
 
@@ -89,7 +89,7 @@ theorem crossMonomials_homogeneous {M : ℕ}
     ∃ n, p ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n := by
   obtain ⟨a, b, -, rfl⟩ := hp
   exact ⟨2, (mem_homogeneousSubmodule 2 (X a * X b)).mpr
-    (IsHomogeneous.mul (isHomogeneous_X a) (isHomogeneous_X b))⟩
+    (IsHomogeneous.mul (isHomogeneous_X ℂ a) (isHomogeneous_X ℂ b))⟩
 
 /-- **THE CROSS-MONOMIAL IDEAL** — the ideal of `ℙ^{2M-1}` cutting out
 the `M` disjoint coordinate lines. -/
@@ -100,7 +100,8 @@ def crossIdeal (M : ℕ) : Ideal (lineRing M) :=
 pin's `Ideal.homogeneous_span` over the degree-2 generators). -/
 theorem crossIdeal_isHomogeneous (M : ℕ) :
     (crossIdeal M).IsHomogeneous (MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ) := by
-  refine Ideal.homogeneous_span (crossMonomials M) ?_
+  refine Ideal.homogeneous_span
+    (𝒜 := MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ) (crossMonomials M) ?_
   rintro p hp
   obtain ⟨n, hn⟩ := crossMonomials_homogeneous hp
   exact hn
@@ -114,8 +115,7 @@ abbrev lineQuotient (M : ℕ) : Type :=
 
 instance (M : ℕ) : CommRing (lineQuotient M) := inferInstance
 
-instance (M : ℕ) : Algebra ℂ (lineQuotient M) :=
-  Ideal.Quotient.algebra
+instance (M : ℕ) : Algebra ℂ (lineQuotient M) := inferInstance
 
 /-- The quotient map, as a `ℂ`-algebra homomorphism (the grading's
 carrier). -/
@@ -123,16 +123,17 @@ def lineQuotientMap (M : ℕ) : lineRing M →ₐ[ℂ] lineQuotient M :=
   Ideal.Quotient.mkₐ (crossIdeal M)
 
 /-- The definitional bridge: the algebra quotient map IS the ring
-quotient map (the `mkₐ` carrier is `mk`). -/
+quotient map (the pin's `Quotient.mkₐ_eq_mk`). -/
 theorem lineQuotientMap_mk (M : ℕ) (x : lineRing M) :
-    lineQuotientMap M x = Ideal.Quotient.mk (crossIdeal M) x :=
-  rfl
+    lineQuotientMap M x = Ideal.Quotient.mk (crossIdeal M) x := by
+  show (⇑(Ideal.Quotient.mkₐ ℂ (crossIdeal M))) x =
+    Ideal.Quotient.mk (crossIdeal M) x
+  rw [Ideal.Quotient.mkₐ_eq_mk]
 
 theorem lineQuotientMap_surjective (M : ℕ) :
     Function.Surjective (lineQuotientMap M) := by
-  intro a
-  obtain ⟨r, hr⟩ := Ideal.Quotient.mk_surjective (I := crossIdeal M) a
-  exact ⟨r, by rw [lineQuotientMap_mk M r]; exact hr⟩
+  show Function.Surjective (⇑(Ideal.Quotient.mkₐ ℂ (crossIdeal M)))
+  exact Ideal.Quotient.mkₐ_surjective (crossIdeal M)
 
 theorem lineQuotientMap_eq_zero_iff (M : ℕ) (x : lineRing M) :
     lineQuotientMap M x = 0 ↔ x ∈ crossIdeal M := by
@@ -151,8 +152,9 @@ def lineGrading (M : ℕ) (n : ℕ) :
 theorem mem_lineGrading (M : ℕ) (n : ℕ) (x : lineQuotient M) :
     x ∈ lineGrading M n ↔ ∃ t : lineRing M,
       t ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n ∧
-      lineQuotientMap M t = x :=
-  Submodule.mem_map
+      lineQuotientMap M t = x := by
+  unfold lineGrading
+  exact Submodule.mem_map
 
 theorem lineQuotientMap_mem_lineGrading (M : ℕ) (n : ℕ)
     (t : lineRing M)
@@ -171,7 +173,7 @@ instance lineGrading_gradedMonoid (M : ℕ) :
     SetLike.GradedMonoid (lineGrading M) where
   one_mem := by
     refine (mem_lineGrading M 0 _).mpr ⟨1, ?_, map_one _⟩
-    exact (mem_homogeneousSubmodule 0 1).mpr (isHomogeneous_C (1 : ℂ))
+    exact SetLike.one_mem_graded (MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ)
   mul_mem := by
     intro i j gi gj hi hj
     obtain ⟨a, ha, rfl⟩ := (mem_lineGrading M i _).mp hi
@@ -203,7 +205,7 @@ theorem lineQuotient_component_congr (M : ℕ)
   -- the component of the representative splits through the difference
   have hsplit : homogeneousComponent n r =
       homogeneousComponent n (r - r') + homogeneousComponent n r' := by
-    rw [← hlin, sub_add_cancel]
+    rw [hlin, sub_add_cancel]
   rw [hsplit, map_add, hzero, zero_add]
 
 /-! ## §5 The internal decomposition -/
@@ -272,7 +274,8 @@ private theorem surjective_coeAddMonoidHom (M : ℕ) :
   intro a
   obtain ⟨r, rfl⟩ := lineQuotientMap_surjective M a
   -- the full ring's decomposition of the representative
-  set d := DirectSum.Decomposition.decompose' r with hd
+  set d : ⨁ n, MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n :=
+    DirectSum.Decomposition.decompose' r with hd
   -- the full ring's decomposition coe is the representative itself
   have hfull : DirectSum.coeAddMonoidHom
       (MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ) d = r := by
