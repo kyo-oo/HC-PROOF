@@ -243,7 +243,6 @@ theorem NativeGSTWorld_fin_injective :
     Function.Injective (NativeGSTWorld.fin) := by
   intro a b h
   injection h with h'
-  exact h'
 
 /-! ## §6 THE LIVE-CORE EXTENSION — the family law is not a cage -/
 

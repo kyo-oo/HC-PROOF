@@ -112,12 +112,17 @@ reflection engines the green lanes already certified).
 
 ## STATE
 
-The capstone's push is this wave's cargo: the module, the lane, the
-lakefile lib, this record, and the INDEX entry. Static verification only
-from this sandbox (the audit council's GREEN FIRST TRY prediction on the
-elaboration content, the one flagged residual being the first-in-corpus
-`NeZero (n + 1)` auto-synthesis at the four `fin`-branch sites). The
-kernel verdict and the eight axiom receipts arrive from CI on push.
+The capstone's first push (35e34e5) ran the lane (run 44753585732): in the
+15,338-line log exactly ONE error — `:246:2 No goals to be solved` — the
+`injection h with h'` at the pin already closes the fin-injectivity goal
+(the derived equation IS the goal; the tactic's assumption-close fires),
+so the trailing `exact h'` was a dead line. Everything else was GREEN in
+that log: every theorem type-checked (all `#check` receipts printed) and
+all eight `#print axioms` receipts printed CLEAN —
+`[propext, Classical.choice, Quot.sound]` on the seven main theorems,
+`NativeGSTWorld_fin_injective` axiom-free. The wave-62.1 repair deleted
+the dead `exact h'`; the kernel verdict on the repaired SHA is the final
+word.
 
 ## NEXT KILL (frozen — the wave-61 order)
 
