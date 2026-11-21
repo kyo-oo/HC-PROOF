@@ -1595,3 +1595,19 @@ roots = [
   "GSTPositiveDimensionalLawLanding",
   "GSTCyclicOrbitSpan",
 ]
+
+# GST complete single-fold orbit law (2026-11-22) — THE FINAL COMPOSITION
+# CAPSTONE: the four-route complete discharge of NativeGSTSingleFoldOrbitLaw
+# (the unified world family + the live-core extension + the one-line world +
+# the general-M finite-line body), the complete consequence chain, and the
+# master package.
+[[lean_lib]]
+name = "GSTCompleteSingleFoldOrbitLawLib"
+roots = [
+  "GSTCompleteSingleFoldOrbitLaw",
+  "GSTUnifiedNativeWorldFamilyLaw",
+  "GSTPositiveDimensionalLiveWeightLaw",
+  "GSTFiniteLineGeneralMLaw",
+  "GSTPositiveDimensionalLawLanding",
+  "GSTCyclicOrbitSpan",
+]
