@@ -282,14 +282,13 @@ theorem blockEval_mem_ker (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     crossIdeal M ≤ RingHom.ker (blockEval M j).toRingHom := by
   rw [show crossIdeal M = Ideal.span (crossMonomials M) from rfl, Ideal.span_le]
   intro p hp
-  exact (RingHom.mem_ker (blockEval M j).toRingHom).mpr
-    (blockEval_crossMonomials M j p hp)
+  exact RingHom.mem_ker.mpr (blockEval_crossMonomials M j p hp)
 
 /-- **T5 (pointwise, ideal-level)** — every cross-ideal element evaluates to
 zero on the block projection (the `hI` shape of `liftₐ`). -/
 theorem blockEval_mem_crossIdeal (M : ℕ) [NeZero M] (j : Fin (2 * M))
     {p : lineRing M} (hp : p ∈ crossIdeal M) : blockEval M j p = 0 :=
-  (RingHom.mem_ker (blockEval M j).toRingHom).mp (blockEval_mem_ker M j hp)
+  RingHom.mem_ker.mp (blockEval_mem_ker M j hp)
 
 /-- **THE BLOCK PROJECTION'S DESCENT (T5)** — the retraction of the
 cross-monomial quotient onto `ℂ[t]`: the universal property of the quotient
@@ -406,19 +405,46 @@ noncomputable def chartRingHom (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     (algebraMap ℂ (lineGrading M 0))
 
 /-- The induced ℂ-algebra structure on the chart ring (the pin's own
-`RingHom.toAlgebra`, the same structure `RingHom.Smooth` unfolds against). -/
-instance (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
+`RingHom.toAlgebra`, the same structure `RingHom.Smooth` unfolds against).
+Registered through `@[instance] def` — the `j` binder lives inside the
+`lineQuotientMap M (MvPolynomial.X j)` spine of the type, which instance
+synthesis unifies first-order but the declaration lint cannot see. -/
+@[instance]
+noncomputable def chartAlgebra (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     Algebra ℂ (HomogeneousLocalization.Away (lineGrading M)
       (lineQuotientMap M (MvPolynomial.X j))) :=
   (chartRingHom M j).toAlgebra
 
+/-! ## §6.5 The smul-form memberships (the Away.mk degree discipline) -/
+
+/-- Every variable's quotient image is homogeneous of degree one (the
+cover twin at every index — the per-variable form of T2'). -/
+theorem lineX_mem_one (M : ℕ) [NeZero M] (a : Fin (2 * M)) :
+    lineQuotientMap M (MvPolynomial.X a) ∈ lineGrading M 1 :=
+  lineCoverHomogeneousOneQ M a
+
+/-- The homogeneous membership at the smul-form `n • 1` (the degree shape
+`Away.mk` demands; `n • 1 = n` by `one_nsmul`). -/
+theorem lineQuotientMap_mem_lineGrading_smul (M : ℕ) (n : ℕ) (t : lineRing M)
+    (ht : t ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n) :
+    lineQuotientMap M t ∈ lineGrading M (n • 1) := by
+  have h := lineQuotientMap_mem_lineGrading M n t ht
+  rwa [show n • 1 = n from one_nsmul n] at h
+
+/-- **THE PARTNER'S SMUL-MEMBERSHIP** — the partner variable's image is
+homogeneous of degree `1 • 1` (the `hx` argument of `chartRatio`'s
+`Away.mk`). -/
+theorem linePartner_mem_smul_one (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
+    lineQuotientMap M (MvPolynomial.X (linePartner M j)) ∈ lineGrading M (1 • 1) :=
+  lineQuotientMap_mem_lineGrading_smul M 1 (MvPolynomial.X (linePartner M j))
+    ((MvPolynomial.mem_homogeneousSubmodule 1
+        (MvPolynomial.X (linePartner M j))).mpr
+      (MvPolynomial.isHomogeneous_X ℂ (linePartner M j)))
+
 /-! ## §7 THE SMOOTHNESS BATTLE — the chart ring is ℂ[T] -/
 
 /-- **THE PARTNER RATIO** — the chart's transcendental generator: the
-fraction `q (X j') / q (X j)` where `j'` is `j`'s block partner.  The
-`Away.mk` shape: numerator `q (X j')` of degree `1 • 1` (the partner's
-homogeneity at the smul-form, the shape `Away.mk` demands), denominator
-`q (X j)` of degree `1` (the cover twin `lineCoverHomogeneousOneQ`). -/
+fraction `q (X j') / q (X j)` where `j'` is `j`'s block partner. -/
 noncomputable def chartRatio (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     HomogeneousLocalization.Away (lineGrading M)
       (lineQuotientMap M (MvPolynomial.X j)) :=
@@ -426,14 +452,6 @@ noncomputable def chartRatio (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     (lineCoverHomogeneousOneQ M j) 1
     (lineQuotientMap M (MvPolynomial.X (linePartner M j)))
     (linePartner_mem_smul_one M j)
-
-/-- **THE CHART MAP** — the polynomial evaluation at the partner ratio:
-`T ↦ ρ`.  The forward half of the chart equivalence. -/
-noncomputable def chartMap (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
-    MvPolynomial (Fin 1) ℂ →ₐ[ℂ]
-      HomogeneousLocalization.Away (lineGrading M)
-        (lineQuotientMap M (MvPolynomial.X j)) :=
-  MvPolynomial.aeval (chartRatio M j)
 
 /-- The `val` of the chart ratio is the plain localization fraction
 `f' / f` (the `Away.val_mk` rfl). -/
@@ -445,61 +463,735 @@ theorem chartRatio_val (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
         (S := Localization.Away (lineQuotientMap M (MvPolynomial.X j)))
         (lineQuotientMap M (MvPolynomial.X (linePartner M j)))
         ⟨lineQuotientMap M (MvPolynomial.X j),
-          (Submonoid.mem_powers_iff _ _).mpr ⟨1, rfl⟩⟩ := by
+          (Submonoid.mem_powers_iff _ _).mpr ⟨1, pow_one _⟩⟩ := by
   rw [chartRatio, HomogeneousLocalization.Away.val_mk]
   rfl
 
+/-- **THE CHART MAP** — the polynomial evaluation at the partner ratio:
+`T ↦ ρ` (the constant ratio assignment on the one-variable index). -/
+noncomputable def chartMap (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
+    MvPolynomial (Fin 1) ℂ →ₐ[ℂ]
+      HomogeneousLocalization.Away (lineGrading M)
+        (lineQuotientMap M (MvPolynomial.X j)) :=
+  MvPolynomial.aeval (fun _ : Fin 1 => chartRatio M j)
+
+/-! ### §7.A The away-fraction arithmetic (the val calculus)
+
+Every fraction identity is proved through the localization embedding
+`val` (`val_injective`), where it is the standard `Localization.mk`
+arithmetic. -/
+
+section AwayArithmetic
+
+variable (M : ℕ) [NeZero M] (j : Fin (2 * M))
+
+/-- **THE SAME-DENOMINATOR PRODUCT** — the product of the fractions
+`x / f ^ n` and `y / f ^ e` is the fraction `x * y / f ^ (n + e)`. -/
+private theorem away_mk_mul (n e : ℕ) (x y : lineQuotient M)
+    (hx : x ∈ lineGrading M (n • 1)) (hy : y ∈ lineGrading M (e • 1)) :
+    HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) n x hx *
+      HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) e y hy =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) (n + e) (x * y)
+      (by
+        have h := SetLike.mul_mem_graded hx hy
+        rwa [show n • 1 + e • 1 = (n + e) • 1 from by rw [add_nsmul]] at h) := by
+  apply HomogeneousLocalization.val_injective
+    (𝒜 := lineGrading M)
+    (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+  rw [HomogeneousLocalization.val_mul,
+    HomogeneousLocalization.Away.val_mk, HomogeneousLocalization.Away.val_mk,
+    HomogeneousLocalization.Away.val_mk, Localization.mk_mul]
+  congr 1
+  · rfl
+  · simp only [Submonoid.coe_mul, pow_add]
+
+/-- **THE SAME-DENOMINATOR SUM** — the sum of two fractions with the same
+denominator `f ^ n` is the fraction of the sum. -/
+private theorem away_mk_add (n : ℕ) (x y : lineQuotient M)
+    (hx : x ∈ lineGrading M (n • 1)) (hy : y ∈ lineGrading M (n • 1)) :
+    HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) n x hx +
+      HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) n y hy =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) n (x + y)
+      (by
+        exact (lineGrading M (n • 1)).add_mem hx hy) := by
+  apply HomogeneousLocalization.val_injective
+    (𝒜 := lineGrading M)
+    (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+  rw [HomogeneousLocalization.val_add,
+    HomogeneousLocalization.Away.val_mk, HomogeneousLocalization.Away.val_mk,
+    HomogeneousLocalization.Away.val_mk, Localization.add_mk,
+    Localization.mk_eq_mk_iff]
+  refine ⟨1, Submonoid.one_mem _, ?_⟩
+  simp only [Submonoid.coe_mul, Submonoid.coe_one, mul_one]
+  noncomm_ring
+
+end AwayArithmetic
+
+/-! ### §7.B The away-fraction cast and sum discipline -/
+
+/-- **THE DEGREE-CAST** — the fraction is invariant under the transport of
+the membership proof along an equality of degrees. -/
+private theorem away_mk_cast (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    {m n : ℕ} (hmn : m = n) (e : ↥(lineGrading M (m • 1))) :
+    HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) m (e : lineQuotient M) e.2 =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) n (e : lineQuotient M)
+      ((hmn ▸ e : ↥(lineGrading M (n • 1))).2) := by
+  subst hmn
+  rfl
+
+/-- **THE SAME-DENOMINATOR FINITE SUM** — a finite sum of fractions with
+the common denominator `f ^ n` is the fraction of the sum. -/
+private theorem sum_mk_eq (M : ℕ) [NeZero M] (j : Fin (2 * M)) (n : ℕ)
+    {ι : Type*} (T : Finset ι) (x : ι → ↥(lineGrading M (n • 1))) :
+    ∑ d ∈ T, HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) n (x d : lineQuotient M) (x d).2 =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) n (∑ d ∈ T, (x d : lineQuotient M))
+      (Submodule.sum_mem (lineGrading M (n • 1))
+        (fun d _ => (x d).2)) := by
+  classical
+  induction T using Finset.induction_on with
+  | empty =>
+      simp only [Finset.sum_empty]
+      apply HomogeneousLocalization.val_injective
+        (𝒜 := lineGrading M)
+        (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+      rw [HomogeneousLocalization.Away.val_mk,
+        HomogeneousLocalization.val_zero, Localization.mk_zero]
+  | insert d T hdT ih =>
+      rw [Finset.sum_insert hdT, Finset.sum_insert hdT,
+        away_mk_add M j n _ _ (x d).2
+          (Submodule.sum_mem (lineGrading M (n • 1)) (fun d' _ => (x d').2)),
+        ih]
+      rfl
+
+/-! ### §7.C The per-monomial evaluation (the Finsupp induction) -/
+
+/-- The per-variable ratio assignment `a ↦ q (X a) / f` (the mk-one form). -/
+private noncomputable def chartAssign (M : ℕ) [NeZero M] (j a : Fin (2 * M)) :
+    HomogeneousLocalization.Away (lineGrading M)
+      (lineQuotientMap M (MvPolynomial.X j)) :=
+  HomogeneousLocalization.Away.mk (lineGrading M)
+    (lineCoverHomogeneousOneQ M j) 1
+    (lineQuotientMap M (MvPolynomial.X a))
+    (lineQuotientMap_mem_lineGrading_smul M 1 (MvPolynomial.X a)
+      ((MvPolynomial.mem_homogeneousSubmodule 1 (MvPolynomial.X a)).mpr
+        (MvPolynomial.isHomogeneous_X ℂ a)))
+
+/-- **THE CONSTANT CASE** — the evaluation of a constant is the chart ring
+hom, which IS the fraction `constant / 1`. -/
+private theorem const_eval (M : ℕ) [NeZero M] (j : Fin (2 * M)) (c : ℂ) :
+    MvPolynomial.aeval (chartAssign M j) (MvPolynomial.C c) =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) 0 (lineQuotientMap M (MvPolynomial.C c))
+      (lineQuotientMap_mem_lineGrading_smul M 0 (MvPolynomial.C c)
+        ((MvPolynomial.mem_homogeneousSubmodule 0 (MvPolynomial.C c)).mpr
+          (MvPolynomial.isHomogeneous_C (σ := Fin (2 * M)) (R := ℂ) c))) := by
+  rw [MvPolynomial.aeval_C]
+  show chartRingHom M j c = _
+  rw [chartRingHom]
+  apply HomogeneousLocalization.val_injective
+    (𝒜 := lineGrading M)
+    (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+  show HomogeneousLocalization.val
+      (HomogeneousLocalization.fromZeroRingHom (lineGrading M)
+        (Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+        (algebraMap ℂ (lineGrading M 0) c)) =
+    HomogeneousLocalization.val _
+  have hconst : (algebraMap ℂ (lineGrading M 0) c : lineQuotient M) =
+      lineQuotientMap M (MvPolynomial.C c) := by
+    rw [show MvPolynomial.C c = algebraMap ℂ (lineRing M) c from rfl,
+      (lineQuotientMap M).commutes c]
+  conv_lhs => rw [show HomogeneousLocalization.fromZeroRingHom (lineGrading M)
+      (Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+      (algebraMap ℂ (lineGrading M 0) c) =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) 0
+      (algebraMap ℂ (lineGrading M 0) c : lineQuotient M)
+      (SetLike.GradeZero.algebraMap_mem (lineGrading M) c) from rfl]
+  rw [HomogeneousLocalization.Away.val_mk,
+    HomogeneousLocalization.Away.val_mk, hconst]
+  simp
+
+/-- **THE POWER OF A FRACTION** — the `e`-th power of the fraction
+`x / f` is the fraction `x ^ e / f ^ e`. -/
+private theorem mk_pow (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    (x : lineQuotient M) (hx : x ∈ lineGrading M (1 • 1)) (e : ℕ) :
+    (HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) 1 x hx) ^ e =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) e (x ^ e)
+      (SetLike.pow_mem_graded e (lineCoverHomogeneousOneQ M j)) := by
+  induction e with
+  | zero =>
+      apply HomogeneousLocalization.val_injective
+        (𝒜 := lineGrading M)
+        (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+      rw [HomogeneousLocalization.Away.val_mk, pow_zero, pow_zero, map_one,
+        HomogeneousLocalization.val_one]
+      simp
+  | succ e ih =>
+      rw [pow_succ, ih,
+        away_mk_mul M j e 1 (x ^ e) x
+          (SetLike.pow_mem_graded e (lineCoverHomogeneousOneQ M j)) hx]
+      rfl
+
+/-- **THE PER-MONOMIAL EVALUATION** — evaluating a monomial at the ratio
+assignment is the single fraction `q (monomial d c) / f ^ (d.sum id)`,
+by the Finsupp induction: the base is the constant case, the step is
+the same-denominator product. -/
+private theorem monomial_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    (d : Fin (2 * M) →₀ ℕ) (c : ℂ) :
+    MvPolynomial.aeval (chartAssign M j) (MvPolynomial.monomial d c) =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) (d.sum fun _ e => e)
+      (lineQuotientMap M (MvPolynomial.monomial d c))
+      (lineQuotientMap_mem_lineGrading_smul M (d.sum fun _ e => e)
+        (MvPolynomial.monomial d c)
+        ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+          (MvPolynomial.isHomogeneous_monomial c
+            (by
+              rw [Finsupp.degree_eq_weight_one]
+              exact Finsupp.ext fun _ => one_mul _)))) := by
+  induction d using Finsupp.induction with
+  | zero =>
+      show MvPolynomial.aeval (chartAssign M j)
+          (MvPolynomial.monomial (0 : Fin (2 * M) →₀ ℕ) c) = _
+      rw [show MvPolynomial.monomial (0 : Fin (2 * M) →₀ ℕ) c =
+          MvPolynomial.C c from rfl]
+      rw [const_eval M j c, Finsupp.sum_zero]
+      rfl
+  | add d' a e _ ih =>
+      have hsplit : MvPolynomial.monomial (d' + Finsupp.single a e) c =
+          MvPolynomial.monomial d' c * MvPolynomial.X a ^ e := by
+        rw [MvPolynomial.monomial_add, ← MvPolynomial.X_pow_eq_monomial]
+      have hdeg : (d' + Finsupp.single a e).sum (fun _ e => e) =
+          d'.sum (fun _ e => e) + e := by
+        rw [Finsupp.sum_add_index (by simp) (by simp) (by simp)]
+        simp
+      have hmem : MvPolynomial.monomial d' c ∈
+          MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ
+            (d'.sum fun _ e => e) :=
+        (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+          (MvPolynomial.isHomogeneous_monomial c
+            (by
+              rw [Finsupp.degree_eq_weight_one]
+              exact Finsupp.ext fun _ => one_mul _))
+      rw [hsplit, map_mul, map_pow, MvPolynomial.aeval_X, ih,
+        mk_pow M j (lineQuotientMap M (MvPolynomial.X a))
+          (lineQuotientMap_mem_lineGrading_smul M 1 (MvPolynomial.X a)
+            ((MvPolynomial.mem_homogeneousSubmodule 1 (MvPolynomial.X a)).mpr
+              (MvPolynomial.isHomogeneous_X ℂ a))) e,
+        away_mk_mul M j (d'.sum fun _ e => e) e
+          (lineQuotientMap M (MvPolynomial.monomial d' c))
+          (lineQuotientMap M (MvPolynomial.X a) ^ e)
+          (lineQuotientMap_mem_lineGrading_smul M _ _ hmem)
+          (SetLike.pow_mem_graded e (lineCoverHomogeneousOneQ M j)),
+        hdeg, ← map_mul, ← map_pow, ← hsplit]
+      rfl
+
+/-! ### §7.D The homogeneous evaluation (the battle's core) -/
+
 /-- **THE HOMOGENEOUS EVALUATION LEMMA (the battle's core)** — for a
 homogeneous polynomial `s` of degree `n`, the polynomial evaluation of
-`s` at the ratio-assignment `a ↦ q (X a) / f` equals the fraction
-`q (s) / f ^ n`.  The proof: both sides are additive in `s` (the `as_sum`
-decomposition over the support, `map_sum` on the left, the localization
-same-denominator add on the right), and on each monomial the two sides
-agree by the block trichotomy:
-* a monomial with support outside `{j, j'}` contains a cross pair with
-  `X j`, so its quotient annihilates `f` (`q (X a) * f = 0`), and BOTH
-  sides are zero (the evaluation factor is zero by the localization
-  zero-criterion; the fraction is zero by the same criterion);
-* a monomial supported inside `{j, j'}` evaluates to `ρ ^ (v j')` on the
-  left, and to `f ^ (v j) * f' ^ (v j') / f ^ n = ρ ^ (v j')` on the right
-  (`Localization.mk_mul`, `Localization.mk_self`, the homogeneity
-  `v j + v j' = n`). -/
+`s` at the ratio-assignment `a ↦ q (X a) / f` equals the single fraction
+`q (s) / f ^ n`.  The proof: the monomial-sum decomposition, the
+per-monomial evaluation with the support-degree discipline, and the
+same-denominator sum. -/
 private theorem homogeneous_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
     (n : ℕ) (s : MvPolynomial (Fin (2 * M)) ℂ)
     (hs : s ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n) :
-    (MvPolynomial.aeval (fun a =>
-        HomogeneousLocalization.Away.mk (lineGrading M)
-          (lineCoverHomogeneousOneQ M j) 1
-          (lineQuotientMap M (MvPolynomial.X a))
-          (by
-            have h1 := lineX_mem_one M a
-            have hn : (1 : ℕ) • (1 : ℕ) = 1 := one_nsmul 1
-            rwa [← hn] at h1)) : MvPolynomial (Fin (2 * M)) ℂ →ₐ[ℂ]
+    (MvPolynomial.aeval (chartAssign M j) :
+        MvPolynomial (Fin (2 * M)) ℂ →ₐ[ℂ]
           HomogeneousLocalization.Away (lineGrading M)
             (lineQuotientMap M (MvPolynomial.X j))) s =
       HomogeneousLocalization.Away.mk (lineGrading M)
         (lineCoverHomogeneousOneQ M j) n (lineQuotientMap M s)
-        (lineQuotientMap_mem_lineGrading M n s hs) := by
-  sorry_marker_eval
+        (lineQuotientMap_mem_lineGrading_smul M n s hs) := by
+  have hdeg : ∀ d ∈ s.support, d.sum (fun _ e => e) = n := by
+    intro d hd
+    have hs' := hs
+    rw [MvPolynomial.homogeneousSubmodule_eq_finsupp_supported] at hs'
+    have hsub : s.support ⊆ {d : Fin (2 * M) →₀ ℕ | d.degree = n} := by
+      simpa [Finsupp.supported] using hs'
+    have hdf : d.degree = n := hsub hd
+    rw [Finsupp.degree_eq_weight_one, weight] at hdf
+    simpa using hdf.symm
+  -- the graded subtype family: the monomial images at degree n
+  classical
+  have hxmem : ∀ d : Fin (2 * M) →₀ ℕ, lineQuotientMap M
+      (MvPolynomial.monomial d (MvPolynomial.coeff d s)) ∈
+      lineGrading M (n • 1) := by
+    intro d
+    by_cases hd : d ∈ s.support
+    · exact lineQuotientMap_mem_lineGrading_smul M n _
+        ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+          (MvPolynomial.isHomogeneous_monomial _ (by
+            rw [Finsupp.degree_eq_weight_one, weight]
+            simpa using hdeg d hd)))
+    · have hc : MvPolynomial.coeff d s = 0 :=
+        by
+        intro hcon
+        exact hd (MvPolynomial.mem_support_iff.mpr hcon)
+      rw [hc]
+      simpa using (lineGrading M (n • 1)).zero_mem
+  set x : (Fin (2 * M) →₀ ℕ) → ↥(lineGrading M (n • 1)) := fun d =>
+    ⟨lineQuotientMap M (MvPolynomial.monomial d (MvPolynomial.coeff d s)),
+      hxmem d⟩ with hx
+  rw [MvPolynomial.as_sum s, map_sum,
+    Finset.sum_congr rfl (fun d hd =>
+      by
+        rw [monomial_eval M j d (MvPolynomial.coeff d s),
+          away_mk_cast M j (hdeg d hd)
+            ⟨lineQuotientMap M
+              (MvPolynomial.monomial d (MvPolynomial.coeff d s)),
+              lineQuotientMap_mem_lineGrading_smul M (d.sum fun _ e => e)
+                (MvPolynomial.monomial d (MvPolynomial.coeff d s))
+                ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+                  (MvPolynomial.isHomogeneous_monomial _ (by
+                    rw [Finsupp.degree_eq_weight_one]
+                    exact Finsupp.ext fun _ => one_mul _)))⟩)]),
+    sum_mk_eq M j n s.support x]
+  congr 2
+  rw [Finset.sum_congr rfl (fun d _ => rfl), map_sum,
+    ← MvPolynomial.as_sum s]
+
+/-! ### §7.E The per-variable identities (the block trichotomy) -/
+
+/-- **THE SELF-FRACTION** — `f / f = 1` in the chart ring. -/
+private theorem mk_self_frac (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) 1
+      (lineQuotientMap M (MvPolynomial.X j))
+      (lineCoverHomogeneousOneQ M j) = 1 := by
+  apply HomogeneousLocalization.val_injective
+    (𝒜 := lineGrading M)
+    (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+  rw [HomogeneousLocalization.Away.val_mk, HomogeneousLocalization.val_one]
+  exact Localization.mk_self _
+
+/-- The off-block variables annihilate `f`: `q (X a) * f = 0` whenever `a`
+is outside `j`'s coordinate block. -/
+private theorem offblock_mul_eq_zero (M : ℕ) [NeZero M] (j a : Fin (2 * M))
+    (haj : a ≠ j) (haj' : a ≠ linePartner M j) :
+    lineQuotientMap M (MvPolynomial.X a) *
+      lineQuotientMap M (MvPolynomial.X j) = 0 := by
+  have hblk : a.val / 2 ≠ j.val / 2 := by
+    intro hcon
+    by_cases hj : j.val % 2 = 0
+    · have hp : (linePartner M j).val = j.val + 1 := linePartner_val_even M j hj
+      have ha' : a.val = j.val ∨ a.val = j.val + 1 := by omega
+      rcases ha' with h | h
+      · exact haj (Fin.ext h)
+      · exact haj' (Fin.ext (by rw [hp]; omega))
+    · have hp : (linePartner M j).val = j.val - 1 := linePartner_val_odd M j hj
+      have ha' : a.val = j.val ∨ a.val = j.val - 1 := by omega
+      rcases ha' with h | h
+      · exact haj (Fin.ext h)
+      · exact haj' (Fin.ext (by rw [hp]; omega))
+  rw [← map_mul]
+  apply lineQuotientMap_eq_zero_iff.mpr
+  exact Ideal.subset_span ⟨a, j, hblk, rfl⟩
+
+/-- **THE OFF-BLOCK ZERO** — the fraction `q (X a) / f` vanishes for
+off-block `a`. -/
+private theorem offblock_assign_eq_zero (M : ℕ) [NeZero M] (j a : Fin (2 * M))
+    (haj : a ≠ j) (haj' : a ≠ linePartner M j) :
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) 1
+      (lineQuotientMap M (MvPolynomial.X a))
+      (lineQuotientMap_mem_lineGrading_smul M 1 (MvPolynomial.X a)
+        ((MvPolynomial.mem_homogeneousSubmodule 1 (MvPolynomial.X a)).mpr
+          (MvPolynomial.isHomogeneous_X ℂ a))) = 0 := by
+  apply HomogeneousLocalization.val_injective
+    (𝒜 := lineGrading M)
+    (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+  rw [HomogeneousLocalization.Away.val_mk, HomogeneousLocalization.val_zero,
+    Localization.mk_eq_zero_iff]
+  refine ⟨1, Submonoid.one_mem _, ?_⟩
+  rw [one_mul]
+  rw [offblock_mul_eq_zero M j a haj haj']
+
+/-- **THE PER-VARIABLE IDENTITY** — the chart map reads the block
+projection of every variable exactly as the ratio assignment does. -/
+private theorem block_identity_var (M : ℕ) [NeZero M] (j a : Fin (2 * M)) :
+    chartMap M j (blockEval M j (MvPolynomial.X a)) =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) 1
+      (lineQuotientMap M (MvPolynomial.X a))
+      (lineQuotientMap_mem_lineGrading_smul M 1 (MvPolynomial.X a)
+        ((MvPolynomial.mem_homogeneousSubmodule 1 (MvPolynomial.X a)).mpr
+          (MvPolynomial.isHomogeneous_X ℂ a))) := by
+  by_cases haj : a = j
+  · subst haj
+    rw [blockEval_X, if_pos rfl, map_one, mk_self_frac M j]
+  · by_cases haj' : a = linePartner M j
+    · subst haj'
+      rw [blockEval_X, if_neg haj, if_pos rfl]
+      show (chartMap M j) (MvPolynomial.X (0 : Fin 1)) = _
+      rw [chartMap, MvPolynomial.aeval_X]
+      rfl
+    · rw [blockEval_X, if_neg haj, if_neg haj',
+        offblock_assign_eq_zero M j a haj haj', map_zero]
+
+/-- **THE BLOCK IDENTITY** — the chart map of the block projection is the
+ratio-assignment evaluation (the polynomial induction over the per-variable
+identity). -/
+private theorem block_identity (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    (t : lineRing M) :
+    chartMap M j (blockEval M j t) =
+    MvPolynomial.aeval (chartAssign M j) t := by
+  induction t using MvPolynomial.induction_on with
+  | C c =>
+      simp only [blockEval, chartMap, MvPolynomial.aeval_C]
+  | add p q hp hq =>
+      simp only [map_add]
+      rw [hp, hq]
+  | mul_X p a hp =>
+      simp only [map_mul]
+      rw [block_identity_var M j a, hp, MvPolynomial.aeval_X]
+      rfl
+
+/-! ### §7.F THE CHART MAP IS SURJECTIVE -/
 
 /-- **THE CHART MAP IS SURJECTIVE** — every chart element is a polynomial
 in the partner ratio: `z = mk (q s) / f ^ n` (mk-surjectivity + the
 piece-level lift), and the homogeneous evaluation lemma identifies the
-fraction with `chartMap` applied to the block projection of `s`
-(`blockEvalQuot`, whose cross-block content is killed and whose same-block
-content is the polynomial in `T = ρ`). -/
+fraction with the ratio-assignment evaluation of `s`, which by the block
+identity is the chart map of the block projection of `s`. -/
 theorem chartMap_surjective (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     Function.Surjective (chartMap M j) := by
-  sorry_marker_surj
+  intro z
+  obtain ⟨n, a, ha, rfl⟩ := HomogeneousLocalization.Away.mk_surjective
+    (lineGrading M) (lineCoverHomogeneousOneQ M j) z
+  have han : a ∈ lineGrading M n := by
+    rwa [show n • 1 = n from one_nsmul n] at ha
+  obtain ⟨t, ht, rfl⟩ := (mem_lineGrading M n a).mp han
+  refine ⟨blockEvalQuot M j (lineQuotientMap M t), ?_⟩
+  show chartMap M j (blockEval M j t) = _
+  rw [block_identity M j t, homogeneous_eval M j n t ht]
 
-/-- **THE CHART MAP IS INJECTIVE** — the clearing + retraction: if
-`chartMap P = 0`, apply `val` (the localization embedding), clear the
-denominators (`f ^ N` with `N = P.natDegree`-exponent), transport to the
-same-block polynomial identity, and apply `blockEvalQuot` — which reads
-off `P` itself — against `0`. -/
+/-- **THE RESCALE** — a fraction `y / f ^ v` equals the fraction
+`f ^ (N - v) * y / f ^ N` whenever `v ≤ N`. -/
+private theorem away_mk_rescale (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    (v N : ℕ) (hvn : v ≤ N) (y : lineQuotient M)
+    (hy : y ∈ lineGrading M (v • 1)) :
+    HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) v y hy =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) N
+      (lineQuotientMap M (MvPolynomial.X j) ^ (N - v) * y)
+      (by
+        have h1 := SetLike.pow_mem_graded (N - v) (lineCoverHomogeneousOneQ M j)
+        have h2 := SetLike.mul_mem_graded h1 hy
+        rwa [show (N - v) • 1 + v • 1 = N • 1 from by
+          rw [← add_nsmul, Nat.sub_add_cancel hvn]] at h2) := by
+  apply HomogeneousLocalization.val_injective
+    (𝒜 := lineGrading M)
+    (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+  rw [HomogeneousLocalization.Away.val_mk,
+    HomogeneousLocalization.Away.val_mk, Localization.mk_eq_mk_iff]
+  refine ⟨1, Submonoid.one_mem _, ?_⟩
+  simp only [Submonoid.coe_mul, Submonoid.coe_one, mul_one]
+  noncomm_ring
+
+/-! ### §7.G The monomial chart evaluation and the retraction -/
+
+/-- The monomial chart evaluation: the chart map of a one-variable
+monomial is the fraction of the partner-power lift. -/
+private theorem chartMap_monomial (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    (m : Fin 1 →₀ ℕ) (c : ℂ) :
+    chartMap M j (MvPolynomial.monomial m c) =
+    HomogeneousLocalization.Away.mk (lineGrading M)
+      (lineCoverHomogeneousOneQ M j) (m.sum fun _ e => e)
+      (lineQuotientMap M (MvPolynomial.C c *
+        MvPolynomial.X (linePartner M j) ^ (m.sum fun _ e => e)))
+      (lineQuotientMap_mem_lineGrading_smul M (m.sum fun _ e => e)
+        (MvPolynomial.C c * MvPolynomial.X (linePartner M j) ^ (m.sum fun _ e => e))
+        (by
+          have hc : MvPolynomial.C c ∈
+              MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ 0 :=
+            (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+              (MvPolynomial.isHomogeneous_C (σ := Fin (2 * M)) (R := ℂ) c)
+          have hp : MvPolynomial.X (linePartner M j) ^ (m.sum fun _ e => e) ∈
+              MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ
+                (m.sum fun _ e => e) := by
+            refine (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+              (MvPolynomial.isHomogeneous_monomial 1 ?_)
+            rw [show MvPolynomial.X (linePartner M j) ^ (m.sum fun _ e => e) =
+                MvPolynomial.monomial (Finsupp.single (linePartner M j)
+                  (m.sum fun _ e => e)) 1 from
+              (MvPolynomial.X_pow_eq_monomial _ _).symm]
+            rw [Finsupp.degree_eq_weight_one]
+            exact Finsupp.ext fun _ => one_mul _
+          have hmul := Submodule.mul_mem_mul hc hp
+          have hle := MvPolynomial.homogeneousSubmodule_mul (Fin (2 * M)) ℂ 0
+            (m.sum fun _ e => e) hmul
+          rwa [zero_add] at hle)) := by
+  induction m using Finsupp.induction with
+  | zero =>
+      rw [show MvPolynomial.monomial (0 : Fin 1 →₀ ℕ) c =
+          MvPolynomial.C c from rfl, Finsupp.sum_zero, pow_zero, mul_one,
+        MvPolynomial.aeval_C]
+      have hce := const_eval M j c
+      rw [MvPolynomial.aeval_C] at hce
+      exact hce
+  | add m' i e _ ih =>
+      have hsplit : MvPolynomial.monomial (m' + Finsupp.single i e) c =
+          MvPolynomial.monomial m' c * MvPolynomial.X i ^ e := by
+        rw [MvPolynomial.monomial_add, ← MvPolynomial.X_pow_eq_monomial]
+      have hdeg : (m' + Finsupp.single i e).sum (fun _ e => e) =
+          m'.sum (fun _ e => e) + e := by
+        rw [Finsupp.sum_add_index (by simp) (by simp) (by simp)]
+        simp
+      have hmem : MvPolynomial.C c *
+          MvPolynomial.X (linePartner M j) ^ m'.sum (fun _ e => e) ∈
+          MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ
+            (m'.sum fun _ e => e) := by
+        have hc : MvPolynomial.C c ∈
+            MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ 0 :=
+          (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+            (MvPolynomial.isHomogeneous_C (σ := Fin (2 * M)) (R := ℂ) c)
+        have hp : MvPolynomial.X (linePartner M j) ^ m'.sum (fun _ e => e) ∈
+            MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ
+              (m'.sum fun _ e => e) := by
+          refine (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+            (MvPolynomial.isHomogeneous_monomial 1 ?_)
+          rw [show MvPolynomial.X (linePartner M j) ^ m'.sum (fun _ e => e) =
+              MvPolynomial.monomial (Finsupp.single (linePartner M j)
+                (m'.sum fun _ e => e)) 1 from
+            (MvPolynomial.X_pow_eq_monomial _ _).symm]
+          rw [Finsupp.degree_eq_weight_one]
+          exact Finsupp.ext fun _ => one_mul _
+        have hmul := Submodule.mul_mem_mul hc hp
+        have hle := MvPolynomial.homogeneousSubmodule_mul (Fin (2 * M)) ℂ 0
+          (m'.sum fun _ e => e) hmul
+        rwa [zero_add] at hle
+      have hnum : lineQuotientMap M
+          (MvPolynomial.C c * MvPolynomial.X (linePartner M j) ^
+            (m'.sum (fun _ e => e) + e)) =
+          lineQuotientMap M
+            (MvPolynomial.C c *
+              MvPolynomial.X (linePartner M j) ^ m'.sum (fun _ e => e)) *
+            lineQuotientMap M (MvPolynomial.X (linePartner M j)) ^ e := by
+        rw [pow_add, map_mul, mul_assoc]
+      rw [hsplit, map_mul, map_pow, MvPolynomial.aeval_X, ih,
+        show (chartRatio M j) ^ e =
+          HomogeneousLocalization.Away.mk (lineGrading M)
+            (lineCoverHomogeneousOneQ M j) e
+            (lineQuotientMap M (MvPolynomial.X (linePartner M j)) ^ e)
+            (SetLike.pow_mem_graded e (lineCoverHomogeneousOneQ M j)) from
+          mk_pow M j (lineQuotientMap M (MvPolynomial.X (linePartner M j)))
+            (linePartner_mem_smul_one M j) e,
+        away_mk_mul M j (m'.sum fun _ e => e) e
+          (lineQuotientMap M
+            (MvPolynomial.C c *
+              MvPolynomial.X (linePartner M j) ^ m'.sum (fun _ e => e)))
+          (lineQuotientMap M (MvPolynomial.X (linePartner M j)) ^ e)
+          (lineQuotientMap_mem_lineGrading_smul M _ _ hmem)
+          (SetLike.pow_mem_graded e (lineCoverHomogeneousOneQ M j)),
+        hdeg, hnum]
+      rfl
+
+
+/-- The same-block lift: the monomial `c * T ^ v` lifts to the degree-`N`
+same-block polynomial `c * X j ^ (N - v) * X j' ^ v`. -/
+private def blockLift (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    (R : MvPolynomial (Fin 1) ℂ) (N : ℕ) : lineRing M :=
+  ∑ m ∈ R.support, MvPolynomial.coeff m R *
+    (MvPolynomial.X j ^ (N - m.sum fun _ e => e) *
+     MvPolynomial.X (linePartner M j) ^ (m.sum fun _ e => e))
+
+/-- **THE RETRACTION** — the block projection of the lift reads the
+polynomial back. -/
+private theorem blockEval_blockLift (M : ℕ) [NeZero M] (j : Fin (2 * M))
+    (R : MvPolynomial (Fin 1) ℂ) (N : ℕ) :
+    blockEval M j (blockLift M j R N) = R := by
+  classical
+  rw [blockLift, map_sum]
+  rw [Finset.sum_congr rfl (fun m _ =>
+    by
+      have hm0 : m = Finsupp.single (0 : Fin 1) (m 0) := by
+        refine Finsupp.ext fun i => ?_
+        have hi : i = 0 := Subsingleton.elim _ _
+        subst hi
+        by_cases h : m 0 = 0
+        · simp [h]
+        · simp [h]
+      have hmsum : m.sum (fun _ e => e) = m 0 := by
+        rw [hm0, Finsupp.sum_single_index]
+        simp
+      have hmono : MvPolynomial.monomial m (MvPolynomial.coeff m R) =
+          MvPolynomial.C (MvPolynomial.coeff m R) *
+            MvPolynomial.X (0 : Fin 1) ^ m.sum (fun _ e => e) := by
+        rw [hm0, MvPolynomial.monomial_single]
+      simp only [map_mul, map_pow, blockEval_X]
+      rw [if_pos rfl, if_neg (linePartner_ne M j), if_pos rfl, one_pow]
+      rw [hmsum, ← hmono])
+  exact (MvPolynomial.as_sum R).symm
+
+/-- **THE CHART MAP IS INJECTIVE** — the clearing + retraction: rescale
+every monomial evaluation to the common degree `N`, sum to the fraction of
+the lift, clear the denominator through the localization zero-criterion,
+and retract through the block projection. -/
 theorem chartMap_injective (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     Function.Injective (chartMap M j) := by
-  sorry_marker_inj
+  have hz : ∀ R : MvPolynomial (Fin 1) ℂ, chartMap M j R = 0 → R = 0 := by
+    intro R hR
+    classical
+    set N : ℕ := R.support.sup fun m => m.sum fun _ e => e with hN
+    have hle : ∀ m ∈ R.support, m.sum (fun _ e => e) ≤ N :=
+      fun m hm => Finset.le_sup hm
+    -- the graded family: the rescaled numerators at degree N
+    set y : (Fin 1 →₀ ℕ) → lineQuotient M := fun m =>
+      lineQuotientMap M (MvPolynomial.X j ^ (N - m.sum (fun _ e => e)) *
+        (MvPolynomial.C (MvPolynomial.coeff m R) *
+          MvPolynomial.X (linePartner M j) ^ m.sum (fun _ e => e))) with hy
+    have hymem : ∀ m ∈ R.support, y m ∈ lineGrading M (N • 1) := by
+      intro m hm
+      apply lineQuotientMap_mem_lineGrading_smul M N _
+      have hc : MvPolynomial.C (MvPolynomial.coeff m R) ∈
+          MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ 0 :=
+        (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+          (MvPolynomial.isHomogeneous_C (σ := Fin (2 * M)) (R := ℂ) _)
+      have hjp : MvPolynomial.X j ^ (N - m.sum (fun _ e => e)) ∈
+          MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ
+            (N - m.sum (fun _ e => e)) := by
+        refine (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+          (MvPolynomial.isHomogeneous_monomial 1 ?_)
+        rw [show MvPolynomial.X j ^ (N - m.sum (fun _ e => e)) =
+            MvPolynomial.monomial (Finsupp.single j
+              (N - m.sum (fun _ e => e))) 1 from
+          (MvPolynomial.X_pow_eq_monomial _ _).symm]
+        rw [Finsupp.degree_eq_weight_one]
+        exact Finsupp.ext fun _ => one_mul _
+      have hpp : MvPolynomial.X (linePartner M j) ^ m.sum (fun _ e => e) ∈
+          MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ
+            (m.sum fun _ e => e) := by
+        refine (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+          (MvPolynomial.isHomogeneous_monomial 1 ?_)
+        rw [show MvPolynomial.X (linePartner M j) ^ m.sum (fun _ e => e) =
+            MvPolynomial.monomial (Finsupp.single (linePartner M j)
+              (m.sum fun _ e => e)) 1 from
+          (MvPolynomial.X_pow_eq_monomial _ _).symm]
+        rw [Finsupp.degree_eq_weight_one]
+        exact Finsupp.ext fun _ => one_mul _
+      have hstep1 := Submodule.mul_mem_mul hc hjp
+      have hstep2 := Submodule.mul_mem_mul hstep1 hpp
+      have hstep3 := MvPolynomial.homogeneousSubmodule_mul (Fin (2 * M)) ℂ
+        (0 + (N - m.sum (fun _ e => e))) (m.sum fun _ e => e) hstep2
+      rw [zero_add, ← add_nsmul, Nat.sub_add_cancel (hle m hm)] at hstep3
+      exact hstep3
+    -- the rescaling: every monomial evaluation is the degree-N fraction
+    have hrescale : ∀ m ∈ R.support, chartMap M j
+          (MvPolynomial.monomial m (MvPolynomial.coeff m R)) =
+        HomogeneousLocalization.Away.mk (lineGrading M)
+          (lineCoverHomogeneousOneQ M j) N (y m) (hymem m (by assumption)) := by
+      intro m hm
+      have hm' : m ∈ R.support := hm
+      rw [chartMap_monomial M j m (MvPolynomial.coeff m R),
+        away_mk_rescale M j (m.sum (fun _ e => e)) N (hle m hm)
+          (lineQuotientMap M (MvPolynomial.C (MvPolynomial.coeff m R) *
+            MvPolynomial.X (linePartner M j) ^ m.sum (fun _ e => e)))
+          (lineQuotientMap_mem_lineGrading_smul M _ _
+            (by
+              have hc : MvPolynomial.C (MvPolynomial.coeff m R) ∈
+                  MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ 0 :=
+                (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+                  (MvPolynomial.isHomogeneous_C (σ := Fin (2 * M)) (R := ℂ) _)
+              have hpp : MvPolynomial.X (linePartner M j) ^
+                  m.sum (fun _ e => e) ∈
+                  MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ
+                    (m.sum fun _ e => e) := by
+                refine (MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+                  (MvPolynomial.isHomogeneous_monomial 1 ?_)
+                rw [show MvPolynomial.X (linePartner M j) ^
+                    m.sum (fun _ e => e) =
+                    MvPolynomial.monomial (Finsupp.single (linePartner M j)
+                      (m.sum fun _ e => e)) 1 from
+                  (MvPolynomial.X_pow_eq_monomial _ _).symm]
+                rw [Finsupp.degree_eq_weight_one]
+                exact Finsupp.ext fun _ => one_mul _
+              have hstep1 := Submodule.mul_mem_mul hc hpp
+              have hstep2 := MvPolynomial.homogeneousSubmodule_mul
+                (Fin (2 * M)) ℂ 0 (m.sum fun _ e => e) hstep1
+              rwa [zero_add] at hstep2))]
+      rw [hy]
+      rfl
+    -- the total graded family (the subtype carrier)
+    set x : (Fin 1 →₀ ℕ) → ↥(lineGrading M (N • 1)) := fun m =>
+      ⟨y m, by
+        by_cases hm : m ∈ R.support
+        · exact hymem m hm
+        · have hc : MvPolynomial.coeff m R = 0 := by
+            intro hcon
+            exact hm (MvPolynomial.mem_support_iff.mpr hcon)
+          have hy0 : y m = 0 := by
+            rw [hy]
+            simp [hc]
+          rw [hy0]
+          exact (lineGrading M (N • 1)).zero_mem⟩ with hx
+    -- the rescaling in the subtype spelling (proof irrelevance identifies
+    -- the membership proofs)
+    have hrescale' : ∀ m ∈ R.support, chartMap M j
+          (MvPolynomial.monomial m (MvPolynomial.coeff m R)) =
+        HomogeneousLocalization.Away.mk (lineGrading M)
+          (lineCoverHomogeneousOneQ M j) N (x m : lineQuotient M) (x m).2 :=
+      fun m hm => hrescale m hm
+    -- the sum: the chart map of R is the fraction of the summed family
+    have hsum : HomogeneousLocalization.Away.mk (lineGrading M)
+        (lineCoverHomogeneousOneQ M j) N (∑ m ∈ R.support, (x m : lineQuotient M))
+        (Submodule.sum_mem (lineGrading M (N • 1))
+          (fun m hm => (x m).2)) = 0 := by
+      rw [← sum_mk_eq M j N R.support x,
+        Finset.sum_congr rfl (fun m hm => hrescale' m hm),
+        ← MvPolynomial.as_sum R, map_sum, hR]
+    -- the numerator is the lift's image
+    have hnum : ∑ m ∈ R.support, (x m : lineQuotient M) =
+        lineQuotientMap M (blockLift M j R N) := by
+      have hcoe : ∀ m : Fin 1 →₀ ℕ, (x m : lineQuotient M) = y m := fun m => rfl
+      rw [Finset.sum_congr rfl (fun m _ => hcoe m), hy, blockLift, map_sum]
+      rw [Finset.sum_congr rfl (fun m _ =>
+        by
+          simp only [map_mul]
+          noncomm_ring)]
+    -- the clearing: zero fraction, denominator cleared, retract
+    have hv : Localization.mk (lineQuotientMap M (blockLift M j R N))
+        ⟨(lineQuotientMap M (MvPolynomial.X j)) ^ N,
+          (Submonoid.mem_powers_iff _ _).mpr ⟨N, rfl⟩⟩ = 0 := by
+      have h0 := congrArg HomogeneousLocalization.val hsum
+      rw [HomogeneousLocalization.Away.val_mk,
+        HomogeneousLocalization.val_zero] at h0
+      rw [show lineQuotientMap M (blockLift M j R N) =
+          ∑ m ∈ R.support, (x m : lineQuotient M) from hnum.symm]
+      exact h0
+    rw [Localization.mk_eq_zero_iff] at hv
+    obtain ⟨t, ht, htz⟩ := hv
+    obtain ⟨k, hk⟩ := (Submonoid.mem_powers_iff _ _).mp ht
+    -- clear: q (X j ^ k * lift) = 0
+    have hmul : lineQuotientMap M
+        (MvPolynomial.X j ^ k * blockLift M j R N) = 0 := by
+      rw [map_mul, ← map_pow, ← hk]
+      exact htz
+    have hcross : MvPolynomial.X j ^ k * blockLift M j R N ∈ crossIdeal M :=
+      lineQuotientMap_eq_zero_iff.mp hmul
+    have hbe := blockEval_mem_crossIdeal M j hcross
+    rw [map_mul, map_pow, blockEval_X, if_pos rfl, one_pow, one_mul] at hbe
+    rw [blockEval_blockLift M j R N] at hbe
+    exact hbe
+  intro P Q hPQ
+  have hP : P - Q = 0 := by
+    refine hz (P - Q) ?_
+    rw [map_sub, hPQ, sub_self]
+  exact sub_eq_zero.mp hP
 
 /-- **THE CHART EQUIVALENCE** — the chart ring IS the polynomial algebra. -/
 noncomputable def chartEquiv (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
@@ -511,8 +1203,7 @@ noncomputable def chartEquiv (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
 
 /-- The polynomial algebra is a smooth ℂ-algebra (the pin's
 `FormallySmooth` MvPolynomial instance + finite presentation). -/
-instance (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
-    Algebra.Smooth ℂ (MvPolynomial (Fin 1) ℂ) :=
+instance : Algebra.Smooth ℂ (MvPolynomial (Fin 1) ℂ) :=
   ⟨inferInstance, inferInstance⟩
 
 /-- **THE CHART RING IS SMOOTH** — the F3 battle's kill: the chart ring is
