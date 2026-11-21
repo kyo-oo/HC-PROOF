@@ -258,7 +258,7 @@ theorem chart_closed (M : ℕ) [NeZero M] (j : Fin (2 * M - 1 + 1)) :
       ((Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
         (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))) ≫
       (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι) :=
-      (CategoryTheory.Category.assoc _ _ _).symm
+      CategoryTheory.Category.assoc _ _ _
     have e2 : (Proj.basicOpenIsoSpec (lineGrading M)
         ((lineGradedQuotientHom M) (MvPolynomial.X j))
         ((lineGradedQuotientHom M).2 hXj) zero_lt_one).inv ≫
@@ -289,7 +289,7 @@ theorem chart_closed (M : ℕ) [NeZero M] (j : Fin (2 * M - 1 + 1)) :
       (Proj.basicOpenIsoSpec (ProjectiveGrading (2 * M - 1))
         (MvPolynomial.X j) hXj zero_lt_one).inv) ≫
       (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι :=
-      CategoryTheory.Category.assoc _ _ _
+      (CategoryTheory.Category.assoc _ _ _).symm
     -- the middle defeq (e2's preimage-open ι vs h's chart-open ι) closes at
     -- default transparency by the rfl-lemma `map_preimage_basicOpen`:
     exact e1.trans (e2.trans (h.trans e4))
