@@ -84,7 +84,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout 16800 lake build GSTFiniteLineGeneralMLaw > gst-finite-line-general-M-law.log 2>&1; then
+          if timeout 16800 lake build GSTFiniteLineGeneralMLaw GSTPositiveDimensionalLawLanding > gst-finite-line-general-M-law.log 2>&1; then
             echo "LEAN PASSED: the finite-line general-M law module (THE CAPSTONE)"
           else
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-general-M-law.log | tail -n 100 || true
