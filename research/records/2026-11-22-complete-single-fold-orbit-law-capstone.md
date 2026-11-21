@@ -124,8 +124,29 @@ a green combination; no two-namespace ambiguity is consumed anywhere
   and `research/gpt6-gst-hypothesis-part1-chow-square-20261110` plus
   manual dispatch; job timeout 300 min).
 
-## CI status
+## CI status — THE KERNEL VERDICT: GREEN
 
-No Lean compilation is claimed from this sandbox.  The lane owns the
-kernel check; per the campaign law, no green run is cited until the run
-exists at the pushed SHA.
+**Run 44943810713 — completed success at 0399f08: `Build completed
+successfully (8992 jobs)`** — zero errors, the sorry-gate silent, every
+step green (checkout → toolchain → Mathlib cache → corpus restore →
+THE COMPILE → artifact upload).  A second run (44943817514, the manual
+dispatch at the same SHA) followed per the concurrency group.
+
+The seven axiom receipts, verbatim from the kernel log (all the Lean
+standard three — the corpus convention):
+
+* `complete_route_one_family` → `[propext, Classical.choice, Quot.sound]`;
+* `complete_route_two_live_core` → `[propext, Classical.choice,
+  Quot.sound]`;
+* `complete_route_three_one_line` → `[propext, Classical.choice,
+  Quot.sound]`;
+* `complete_route_four_general_M` → `[propext, Classical.choice,
+  Quot.sound]`;
+* `native_gst_single_fold_orbit_law_complete` → `[propext,
+  Classical.choice, Quot.sound]`;
+* `native_gst_single_fold_orbit_law_complete_consequences` → `[propext,
+  Classical.choice, Quot.sound]`;
+* `the_complete_single_fold_orbit_law_package` → `[propext,
+  Classical.choice, Quot.sound]`.
+
+THE COMPLETE SINGLE-FOLD ORBIT LAW IS KERNEL-CERTIFIED.
