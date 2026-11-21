@@ -1607,6 +1607,17 @@ roots = [
   "GSTFiniteLineSmoothness",
 ]
 
+# GST finite-line over-base + world (2026-11-22, the unconditional round Wave 1)
+# — R3+R1: the base-naturality of Proj.map over toSpecZero (the missing
+# pin lemma, proved by the chart interchange + the ring square + cover
+# hom_ext), the embedding's over-base square, the cycle's over-base
+# square, and THE ACTUAL WORLD BUNDLE finiteLineWorld (F1+F2+F3).
+[[lean_lib]]
+name = "GSTFiniteLineOverBaseLib"
+roots = [
+  "GSTFiniteLineOverBase",
+]
+
 # GST complete single-fold orbit law (2026-11-22) — THE FINAL COMPOSITION
 # CAPSTONE: the four-route complete discharge of NativeGSTSingleFoldOrbitLaw
 # (the unified world family + the live-core extension + the one-line world +
