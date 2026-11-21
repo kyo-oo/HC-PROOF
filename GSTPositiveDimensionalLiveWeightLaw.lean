@@ -272,7 +272,9 @@ theorem positive_dimensional_live_weight_bearing (M : ℕ) (hM : 0 < M)
   refine ⟨H, c, hcne, hcind, ?_, ?_, ?_, ?_⟩
   · exact hfiber1
   · rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁]
-    exact hfiber1.symm ▸ Submodule.subset_span ⟨⟨0, hM⟩, rfl⟩
+    have hmem : c₀ ∈ rationalHodgeSubspace (H.hodgeBigrading 1) :=
+      hfiber1.symm ▸ Submodule.subset_span ⟨⟨0, hM⟩, rfl⟩
+    exact hmem
   · exact rationalHodgeSubspace_eq_top_of_degree_zero H
   · intro p hp
     rcases p with _ | _ | p
@@ -422,8 +424,10 @@ theorem positive_dimensional_live_weight_law
             exact hmono₀ x
         · refine Or.inr ⟨Z₁, ?_, ?_⟩
           · rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁]
-            exact hfiber1.symm ▸ Submodule.subset_span
-              ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
+            have hmem : c₀ ∈ rationalHodgeSubspace (H.hodgeBigrading 1) :=
+              hfiber1.symm ▸ Submodule.subset_span
+                ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
+            exact hmem
           · intro x hx
             rw [show H.cycleClass 1 Z₁ = cl₁ Z₁ from rfl, hcl₁_Z₁]
             exact hmono₁ x hx
@@ -435,8 +439,10 @@ theorem positive_dimensional_live_weight_law
             exact rationalHodgeSubspace_stash_eq_bot (q + 2) (by omega)
           exact subsingleton_hodgeFiber_of_eq_bot hbot)
   refine ⟨H, hlaw, ⟨c₀, ?_, ?_⟩, ?_⟩
-  · exact hfiber1.symm ▸ Submodule.subset_span
-      ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
+  · have hmem : c₀ ∈ rationalHodgeSubspace (H.hodgeBigrading 1) :=
+      hfiber1.symm ▸ Submodule.subset_span
+        ⟨⟨0, (by norm_num : 0 < 1)⟩, rfl⟩
+    exact hmem
   · exact hcne ⟨0, (by norm_num : 0 < 1)⟩
   · exact exactHodge_of_one_GST_fold_orbit hlaw
 
