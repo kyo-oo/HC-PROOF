@@ -230,16 +230,69 @@ theorem chart_closed (M : ℕ) [NeZero M] (j : Fin (2 * M - 1 + 1)) :
     simp only [CategoryTheory.Category.assoc] at h
     -- h : isoℬ.inv ≫ ((basicOpen ℬ (f (X j))).ι ≫ map) =
     --     Spec.map ≫ (iso𝒜.inv ≫ U𝒜.ι)
-    -- The pin's own two-step goal reduction (Basic.lean:500, reversed):
-    rw [← CategoryTheory.Iso.inv_comp_eq,
-      ← CategoryTheory.cancel_mono
-        (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι,
-      ← CategoryTheory.Category.assoc,
-      AlgebraicGeometry.morphismRestrict_ι]
-    -- goal : isoℬ.inv ≫ ((map ⁻¹ᵁ U𝒜).ι ≫ map) =
-    --         Spec.map ≫ (iso𝒜.inv ≫ U𝒜.ι)
-    -- the two LHS opens are rfl-equal (`map_preimage_basicOpen`, Functor.lean:160)
-    exact h
+    -- The pin's own two-step goal reduction (Basic.lean:500), in TERM MODE
+    -- (default transparency): the equation's type rides the rfl-defeq of the
+    -- two open spellings (preimage vs chart open — `map_preimage_basicOpen`
+    -- is rfl), which `rw`'s implicit-transparency pattern matching cannot
+    -- see, but `refine`/`congrArg`/`Eq.trans`/`exact` elaborate at default
+    -- transparency where the defeq IS found.  (The wave-66.2 lesson: any
+    -- `rw` against this goal shape dies at implicit transparency.)
+    refine (CategoryTheory.Iso.inv_comp_eq
+      (Proj.basicOpenIsoSpec (lineGrading M)
+        ((lineGradedQuotientHom M) (MvPolynomial.X j))
+        ((lineGradedQuotientHom M).2 hXj) zero_lt_one)).mp ?_
+    refine (CategoryTheory.cancel_mono
+      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι).mp ?_
+    -- goal : (isoℬ.inv ≫ (map ∣_ U𝒜)) ≫ U𝒜.ι = (Spec.map ≫ iso𝒜.inv) ≫ U𝒜.ι
+    -- the four-step Eq.trans chain (assoc-symm, the restriction square,
+    -- h at the defeq spelling, assoc):
+    have e1 : ((Proj.basicOpenIsoSpec (lineGrading M)
+        ((lineGradedQuotientHom M) (MvPolynomial.X j))
+        ((lineGradedQuotientHom M).2 hXj) zero_lt_one).inv ≫
+      (Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
+        (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)))) ≫
+      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι =
+      (Proj.basicOpenIsoSpec (lineGrading M)
+        ((lineGradedQuotientHom M) (MvPolynomial.X j))
+        ((lineGradedQuotientHom M).2 hXj) zero_lt_one).inv ≫
+      ((Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
+        (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))) ≫
+      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι) :=
+      (CategoryTheory.Category.assoc _ _ _).symm
+    have e2 : (Proj.basicOpenIsoSpec (lineGrading M)
+        ((lineGradedQuotientHom M) (MvPolynomial.X j))
+        ((lineGradedQuotientHom M).2 hXj) zero_lt_one).inv ≫
+      ((Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
+        (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))) ≫
+      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι) =
+      (Proj.basicOpenIsoSpec (lineGrading M)
+        ((lineGradedQuotientHom M) (MvPolynomial.X j))
+        ((lineGradedQuotientHom M).2 hXj) zero_lt_one).inv ≫
+      ((Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ⁻¹ᵁ
+        (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))).ι ≫
+      Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M)) :=
+      congrArg (fun t => (Proj.basicOpenIsoSpec (lineGrading M)
+          ((lineGradedQuotientHom M) (MvPolynomial.X j))
+          ((lineGradedQuotientHom M).2 hXj) zero_lt_one).inv ≫ t)
+        (AlgebraicGeometry.morphismRestrict_ι
+          (Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M))
+          (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)))
+    have e4 : Spec.map (CommRingCat.ofHom
+        (HomogeneousLocalization.Away.map (lineGradedQuotientHom M)
+          (MvPolynomial.X j))) ≫
+      ((Proj.basicOpenIsoSpec (ProjectiveGrading (2 * M - 1))
+        (MvPolynomial.X j) hXj zero_lt_one).inv ≫
+      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι) =
+      (Spec.map (CommRingCat.ofHom
+          (HomogeneousLocalization.Away.map (lineGradedQuotientHom M)
+            (MvPolynomial.X j))) ≫
+      (Proj.basicOpenIsoSpec (ProjectiveGrading (2 * M - 1))
+        (MvPolynomial.X j) hXj zero_lt_one).inv) ≫
+      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι :=
+      CategoryTheory.Category.assoc _ _ _
+    -- the middle defeq (e2's preimage-open ι vs h's chart-open ι) closes at
+    -- default transparency by the rfl-lemma `map_preimage_basicOpen`:
+    exact e1.trans (e2.trans (h.trans e4))
   rw [hfac]
   -- STAGE 3-5 (the peels + the affine closer; the green :603-643 shape):
   -- left-associate first (the green's own `simp only [← Category.assoc]`
@@ -257,6 +310,21 @@ theorem chart_closed (M : ℕ) [NeZero M] (j : Fin (2 * M - 1 + 1)) :
     (CommRingCat.ofHom
       (HomogeneousLocalization.Away.map (lineGradedQuotientHom M)
         (MvPolynomial.X j))) hsurj
+
+/-! ## §4 THE ASSEMBLY — the closed immersion -/
+
+/-- **THE CLOSED IMMERSION OF THE FINITE-LINE WORLD** — the embedding of
+`Proj (lineGrading M)` into `P^{2M-1}` is a closed immersion: chartwise on
+the ambient `D+(X j)` cover (§1), each restriction is a closed immersion
+(§3), so `IsZariskiLocalAtTarget.of_iSup_eq_top`
+(Mathlib/AlgebraicGeometry/Morphisms/Basic.lean:146) assembles the global
+property. The F2 gate of the frozen order — CLOSED. -/
+theorem finiteLine_closedImmersion (M : ℕ) [NeZero M] :
+    IsClosedImmersion (finiteLineEmbedding M) :=
+  IsZariskiLocalAtTarget.of_iSup_eq_top (P := @IsClosedImmersion)
+    (fun j => Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))
+    (lineCover_iSup M)
+    (fun j => chart_closed M j)
 
 /-! ## Receipts -/
 
