@@ -38,7 +38,9 @@ set_option maxRecDepth 1000000
 
 noncomputable section
 
+open AlgebraicGeometry CategoryTheory
 open GSTProjectiveOverC GSTFiniteLineRing GSTFiniteLineWorldCarrier
+open MvPolynomial DirectSum
 
 attribute [local instance] MvPolynomial.gradedAlgebra
 
