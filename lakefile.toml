@@ -1562,3 +1562,14 @@ roots = [
   "GSTFinitePointHodgeData",
   "GSTPositiveDimensionalLiveWeightLaw",
 ]
+
+# GST finite-line world carrier (2026-11-21, Wave 65) — F1's algebraic
+# core on the green ring substrate: the Proj carrier scheme, the structure
+# map, the M-cycle automorphism (graded-ring atlas, IsIso), and the
+# closed embedding into P^{2M-1} (the Proj.map of the graded quotient
+# presentation over the arity bridge).
+[[lean_lib]]
+name = "GSTFiniteLineWorldCarrierLib"
+roots = [
+  "GSTFiniteLineWorldCarrier",
+]
