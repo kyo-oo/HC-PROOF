@@ -1573,3 +1573,13 @@ name = "GSTFiniteLineWorldCarrierLib"
 roots = [
   "GSTFiniteLineWorldCarrier",
 ]
+
+# GST finite-line closed immersion (2026-11-21, Wave 66) — F2: the chartwise
+# closed-immersion certification of the embedding (cover twins + Away-lift
+# surjectivity + the five-stage per-chart cascade + the of_iSup_eq_top
+# assembly) on the green carrier substrate.
+[[lean_lib]]
+name = "GSTFiniteLineClosedImmersionLib"
+roots = [
+  "GSTFiniteLineClosedImmersion",
+]
