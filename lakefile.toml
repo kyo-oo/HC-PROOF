@@ -1583,3 +1583,13 @@ name = "GSTFiniteLineClosedImmersionLib"
 roots = [
   "GSTFiniteLineClosedImmersion",
 ]
+
+# GST finite-line general-M law (2026-11-21, Wave 68) — THE CAPSTONE: the
+# general-M NativeGSTSingleFoldOrbitLaw on the finite-line world (gate-form:
+# the world/analytification/letters as inputs), discharged through the green
+# wave-60 sphere-union engine with the wave-64 identity-Krylov certificates.
+[[lean_lib]]
+name = "GSTFiniteLineGeneralMLawLib"
+roots = [
+  "GSTFiniteLineGeneralMLaw",
+]
