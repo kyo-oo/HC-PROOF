@@ -182,55 +182,44 @@ theorem chart_closed (M : ℕ) [NeZero M] (j : Fin (2 * M - 1 + 1)) :
     IsClosedImmersion
       (finiteLineEmbedding M ∣_
         Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)) := by
-  -- W66-B PLUG: the Away-surjectivity of the chart ring map — Agent B's kill
-  -- (wave66_B_away.lean, spliced above this module).  INTERFACE CONTRACT:
-  -- `awayMap_surjective (M : ℕ) [NeZero M] (j : Fin (2 * M - 1 + 1)) :
-  --     Function.Surjective
-  --       (HomogeneousLocalization.Away.map (lineGradedQuotientHom M)
-  --         (MvPolynomial.X j))`
-  -- (see the header: the index type is the AMBIENT `Fin (2 * M - 1 + 1)`).
+  -- W66-B PLUG: the Away-surjectivity of the chart ring map (§2 above).
   have hsurj : Function.Surjective
       (HomogeneousLocalization.Away.map (lineGradedQuotientHom M) (MvPolynomial.X j)) :=
     awayMap_surjective M j
   -- The chart section's degree-1 certificate (the green :571-573 two-liner):
-  -- `X j` is homogeneous of degree `1` in the ambient grading.
   have hXj : MvPolynomial.X j ∈ ProjectiveGrading (2 * M - 1) 1 := by
     rw [MvPolynomial.mem_homogeneousSubmodule]
     exact MvPolynomial.isHomogeneous_X ℂ j
   -- STAGE 0 (the retype; green :577-579): restate the restricted embedding at
   -- `Proj (lineGrading M) ⟶ Proj (ProjectiveGrading (2 * M - 1))` — the
-  -- `finiteLineScheme M` / `projectiveSpace (2 * M - 1)` wrappers are defeq
-  -- but not reducible, and `finiteLineEmbedding M` delta-unfolds to its
-  -- `Proj.map` body (carrier :654-656).
+  -- wrappers are defeq but not reducible, and `finiteLineEmbedding M`
+  -- delta-unfolds to its `Proj.map` body.
   rw [show (finiteLineEmbedding M ∣_
       Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)) =
     (Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
       (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))) from rfl]
-  -- STAGE 1 (the restriction key): the restriction law
-  -- (`morphismRestrict_ι`, Restrict.lean:581) with the preimage chart
-  -- rewritten by `map_preimage_basicOpen` (Functor.lean:160, `rfl`): the
-  -- preimage of the target's `D+(X j)` chart IS the domain's
-  -- `D+(f (X j))` chart.  `hmr` is consumed inside STAGE 2.
-  have hmr := AlgebraicGeometry.morphismRestrict_ι
-    (Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M))
-    (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))
-  rw [Proj.map_preimage_basicOpen] at hmr
-  -- STAGE 2 (the per-chart square): the `awayι_comp_map` square
-  -- (Functor.lean:192), both `awayι` unfolded through their definition
-  -- (`basicOpenIsoSpec_inv_ι`, Basic.lean:190, `rfl`), spliced with STAGE 1,
-  -- and the chart inclusion `U𝒜.ι` cancelled (`cancel_mono`,
-  -- Category/Basic.lean:337) — giving the chart square
-  -- `isoℬ.inv ≫ (embedding ∣_ U𝒜) = Spec.map (Away.map) ≫ iso𝒜.inv`.
-  have hsq : (Proj.basicOpenIsoSpec (lineGrading M)
+  -- STAGE 2 (THE FACTORIZATION — the pin's own
+  -- `fromOfGlobalSections_morphismRestrict` pattern, Basic.lean:499-502,
+  -- transposed to the `Proj.map` chart square): the restricted embedding
+  -- factors as the source chart isomorphism, the Spec of the chart ring
+  -- map, and the inverse target chart isomorphism.  Every rewrite below
+  -- abstracts a CLOSED morphism term (motive-safe); the final defeq — the
+  -- preimage open `map ⁻¹ᵁ U` vs the chart open `basicOpen ℬ (f s)`,
+  -- `map_preimage_basicOpen` being rfl — is discharged by `exact h` at
+  -- default transparency.
+  have hfac : (Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
+      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))) =
+      (Proj.basicOpenIsoSpec (lineGrading M)
         ((lineGradedQuotientHom M) (MvPolynomial.X j))
-        ((lineGradedQuotientHom M).2 hXj) zero_lt_one).inv ≫
-      (Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
-        (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))) =
-      Spec.map (CommRingCat.ofHom
+        ((lineGradedQuotientHom M).2 hXj) zero_lt_one).hom ≫
+      (Spec.map (CommRingCat.ofHom
         (HomogeneousLocalization.Away.map (lineGradedQuotientHom M)
           (MvPolynomial.X j))) ≫
-        (Proj.basicOpenIsoSpec (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)
-          hXj zero_lt_one).inv := by
+        (Proj.basicOpenIsoSpec (ProjectiveGrading (2 * M - 1))
+          (MvPolynomial.X j) hXj zero_lt_one).inv) := by
+    -- the per-chart square (Functor.lean:192), both `awayι` unfolded through
+    -- their definition (`basicOpenIsoSpec_inv_ι`, Basic.lean:190, rfl),
+    -- right-associated by `Category.assoc`:
     have h := Proj.awayι_comp_map (lineGradedQuotientHom M) (line_irrelevant_le M)
       zero_lt_one (MvPolynomial.X j) hXj
     rw [← Proj.basicOpenIsoSpec_inv_ι (lineGrading M)
@@ -238,69 +227,36 @@ theorem chart_closed (M : ℕ) [NeZero M] (j : Fin (2 * M - 1 + 1)) :
         ((lineGradedQuotientHom M).2 hXj) zero_lt_one,
       ← Proj.basicOpenIsoSpec_inv_ι (ProjectiveGrading (2 * M - 1))
         (MvPolynomial.X j) hXj zero_lt_one] at h
-    -- `h : (isoℬ.inv ≫ Uℬ.ι) ≫ map = Spec.map ≫ (iso𝒜.inv ≫ U𝒜.ι)`
     simp only [CategoryTheory.Category.assoc] at h
-    -- `h : isoℬ.inv ≫ (Uℬ.ι ≫ map) = Spec.map ≫ (iso𝒜.inv ≫ U𝒜.ι)`
-    rw [← hmr] at h
-    -- `h : isoℬ.inv ≫ ((map ∣_ U𝒜) ≫ U𝒜.ι) = Spec.map ≫ (iso𝒜.inv ≫ U𝒜.ι)`
-    simp only [← CategoryTheory.Category.assoc] at h
-    -- `h : (isoℬ.inv ≫ (map ∣_ U𝒜)) ≫ U𝒜.ι = (Spec.map ≫ iso𝒜.inv) ≫ U𝒜.ι`
-    exact (CategoryTheory.cancel_mono
-      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι).mp h
-  -- STAGE 2b (the factorization): invert the left chart isomorphism
-  -- (`Iso.inv_comp_eq`, Iso.lean:186) — the restricted embedding IS
-  -- `isoℬ.hom ≫ Spec.map (Away.map) ≫ iso𝒜.inv` on the chart.
-  have hfac : (Proj.map (lineGradedQuotientHom M) (line_irrelevant_le M) ∣_
-      (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))) =
-      (Proj.basicOpenIsoSpec (lineGrading M) ((lineGradedQuotientHom M)
-          (MvPolynomial.X j))
-        ((lineGradedQuotientHom M).2 hXj) zero_lt_one).hom ≫
-      (Spec.map (CommRingCat.ofHom
-          (HomogeneousLocalization.Away.map (lineGradedQuotientHom M)
-            (MvPolynomial.X j))) ≫
-        (Proj.basicOpenIsoSpec (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)
-          hXj zero_lt_one).inv) :=
-    (CategoryTheory.Iso.inv_comp_eq
-      (Proj.basicOpenIsoSpec (lineGrading M) ((lineGradedQuotientHom M)
-          (MvPolynomial.X j))
-        ((lineGradedQuotientHom M).2 hXj) zero_lt_one)).mp hsq
+    -- h : isoℬ.inv ≫ ((basicOpen ℬ (f (X j))).ι ≫ map) =
+    --     Spec.map ≫ (iso𝒜.inv ≫ U𝒜.ι)
+    -- The pin's own two-step goal reduction (Basic.lean:500, reversed):
+    rw [← CategoryTheory.Iso.inv_comp_eq,
+      ← CategoryTheory.cancel_mono
+        (Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j)).ι,
+      ← CategoryTheory.Category.assoc,
+      AlgebraicGeometry.morphismRestrict_ι]
+    -- goal : isoℬ.inv ≫ ((map ⁻¹ᵁ U𝒜).ι ≫ map) =
+    --         Spec.map ≫ (iso𝒜.inv ≫ U𝒜.ι)
+    -- the two LHS opens are rfl-equal (`map_preimage_basicOpen`, Functor.lean:160)
+    exact h
   rw [hfac]
-  -- STAGE 3 (the right peel; green :606-607 shape): cancel the TARGET chart
-  -- isomorphism `iso𝒜.inv` — the affine chart of the ambient projective
-  -- target.  `.mpr` so every factor match is definitional
-  -- (proof-irrelevant iso arguments), not syntactic — the green law.
+  -- STAGE 3-5 (the peels + the affine closer; the green :603-643 shape):
+  -- left-associate first (the green's own `simp only [← Category.assoc]`
+  -- before the right peel), then cancel the target chart iso (right), the
+  -- source chart iso (left), and close by the affine criterion.
+  simp only [← CategoryTheory.Category.assoc]
   refine (MorphismProperty.cancel_right_of_respectsIso (P := @IsClosedImmersion) _
     (Proj.basicOpenIsoSpec (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j) hXj
       zero_lt_one).inv).mpr ?_
-  -- STAGE 4 (the left peel; green :609-641 collapsed to one peel): cancel the
-  -- SOURCE chart isomorphism `isoℬ.hom` — the affine chart of the line world.
-  -- (Green needed two further `cancel_left` peels for its `Scheme.isoOfEq`
-  -- transports; the pin's `map_preimage_basicOpen` is `rfl`, so the source
-  -- chart needs no transport here.)
   refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
     (Proj.basicOpenIsoSpec (lineGrading M) ((lineGradedQuotientHom M)
         (MvPolynomial.X j))
       ((lineGradedQuotientHom M).2 hXj) zero_lt_one).hom _).mpr ?_
-  -- STAGE 5 (the affine closer; green :642-643 shape): the chart ring map is
-  -- Agent-B-surjective, so its `Spec` is a closed immersion.
   exact IsClosedImmersion.spec_of_surjective
     (CommRingCat.ofHom
       (HomogeneousLocalization.Away.map (lineGradedQuotientHom M)
         (MvPolynomial.X j))) hsurj
-
-/-! ## §4 THE ASSEMBLY — the closed immersion -/
-/-- **THE CLOSED IMMERSION OF THE FINITE-LINE WORLD** — the embedding of
-`Proj (lineGrading M)` into `P^{2M-1}` is a closed immersion: chartwise on
-the ambient `D+(X j)` cover (§1), each restriction is a closed immersion
-(§3), so `IsZariskiLocalAtTarget.of_iSup_eq_top`
-(Mathlib/AlgebraicGeometry/Morphisms/Basic.lean:146) assembles the global
-property. The F2 gate of the frozen order — CLOSED. -/
-theorem finiteLine_closedImmersion (M : ℕ) [NeZero M] :
-    IsClosedImmersion (finiteLineEmbedding M) :=
-  IsZariskiLocalAtTarget.of_iSup_eq_top (P := @IsClosedImmersion)
-    (fun j => Proj.basicOpen (ProjectiveGrading (2 * M - 1)) (MvPolynomial.X j))
-    (lineCover_iSup M)
-    (fun j => chart_closed M j)
 
 /-! ## Receipts -/
 
