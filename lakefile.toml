@@ -1592,4 +1592,6 @@ roots = [
 name = "GSTFiniteLineGeneralMLawLib"
 roots = [
   "GSTFiniteLineGeneralMLaw",
+  "GSTPositiveDimensionalLawLanding",
+  "GSTCyclicOrbitSpan",
 ]
