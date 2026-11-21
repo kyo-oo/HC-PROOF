@@ -1596,6 +1596,17 @@ roots = [
   "GSTCyclicOrbitSpan",
 ]
 
+# GST finite-line smoothness (2026-11-22, Wave 67-B certification) — F3:
+# the chartwise smoothness substrate (Stage 0 + Stage 2) and the crown
+# theorem finiteLine_smoothness: the finite-line structure morphism is
+# Smooth over ℂ, via the locality cascade on the D+(q (X j)) charts and
+# the affine criterion on the chart ring hom.
+[[lean_lib]]
+name = "GSTFiniteLineSmoothnessLib"
+roots = [
+  "GSTFiniteLineSmoothness",
+]
+
 # GST complete single-fold orbit law (2026-11-22) — THE FINAL COMPOSITION
 # CAPSTONE: the four-route complete discharge of NativeGSTSingleFoldOrbitLaw
 # (the unified world family + the live-core extension + the one-line world +
