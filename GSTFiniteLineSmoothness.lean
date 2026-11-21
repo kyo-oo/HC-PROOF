@@ -669,7 +669,7 @@ private theorem monomial_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
           MvPolynomial.C c from rfl]
       rw [const_eval M j c, Finsupp.sum_zero]
       rfl
-  | add d' a e _ ih =>
+  | single_add d' a e _ ih =>
       have hsplit : MvPolynomial.monomial (d' + Finsupp.single a e) c =
           MvPolynomial.monomial d' c * MvPolynomial.X a ^ e := by
         rw [MvPolynomial.monomial_add, ← MvPolynomial.X_pow_eq_monomial]
@@ -763,7 +763,7 @@ private theorem homogeneous_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
               (MvPolynomial.monomial d (MvPolynomial.coeff d s))
               ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
                 (MvPolynomial.isHomogeneous_monomial _ (by
-                  rw [Finsupp.degree_eq_weight_one, hdeg d hd])))))],
+                  rw [Finsupp.degree_eq_weight_one, hdeg d hd])))),
     sum_mk_eq M j n s.support x]
   congr 2
   rw [Finset.sum_congr rfl (fun d _ => rfl), map_sum,
@@ -804,7 +804,7 @@ private theorem offblock_mul_eq_zero (M : ℕ) [NeZero M] (j a : Fin (2 * M))
       · exact haj (Fin.ext h)
       · exact haj' (Fin.ext (by rw [hp]; omega))
   rw [← map_mul]
-  apply lineQuotientMap_eq_zero_iff.mpr
+  apply (lineQuotientMap_eq_zero_iff M _).mpr
   exact Ideal.subset_span ⟨a, j, hblk, rfl⟩
 
 /-- **THE OFF-BLOCK ZERO** — the fraction `q (X a) / f` vanishes for
@@ -839,11 +839,9 @@ private theorem block_identity_var (M : ℕ) [NeZero M] (j a : Fin (2 * M)) :
         ((MvPolynomial.mem_homogeneousSubmodule 1 (MvPolynomial.X a)).mpr
           (MvPolynomial.isHomogeneous_X ℂ a))) := by
   by_cases haj : a = j
-  · subst haj
-    rw [blockEval_X, if_pos rfl, map_one, mk_self_frac M j]
+  · rw [blockEval_X, if_pos haj, map_one, mk_self_frac M j]
   · by_cases haj' : a = linePartner M j
-    · subst haj'
-      rw [blockEval_X, if_neg haj, if_pos rfl]
+    · rw [blockEval_X, if_neg haj, if_pos haj']
       show (chartMap M j) (MvPolynomial.X (0 : Fin 1)) = _
       rw [chartMap, MvPolynomial.aeval_X]
       rfl
@@ -958,7 +956,7 @@ private theorem chartMap_monomial (M : ℕ) [NeZero M] (j : Fin (2 * M))
       have hce := const_eval M j c
       rw [MvPolynomial.aeval_C] at hce
       exact hce
-  | add m' i e _ ih =>
+  | single_add m' i e _ ih =>
       have hsplit : MvPolynomial.monomial (m' + Finsupp.single i e) c =
           MvPolynomial.monomial m' c * MvPolynomial.X i ^ e := by
         rw [MvPolynomial.monomial_add, ← MvPolynomial.X_pow_eq_monomial]
