@@ -78,7 +78,6 @@ noncomputable def finiteLineStructureMap (M : ℕ) :
     finiteLineScheme M ⟶ complexBase :=
   Proj.toSpecZero (lineGrading M) ≫
     Spec.map (CommRingCat.ofHom (algebraMap ℂ (lineGrading M 0)))
-
 /-! ## §2 The block rotation on the coordinate indices -/
 
 /-- **THE BLOCK ROTATION FUNCTION** — `a ↦ (a + 2) mod 2M`: rotates the `M`
@@ -123,27 +122,32 @@ def blockRot (M : ℕ) : Fin (2 * M) ≃ Fin (2 * M) where
 theorem blockRot_val (M : ℕ) (a : Fin (2 * M)) :
     (blockRot M a).val = (a.val + 2) % (2 * M) := rfl
 
+/-- The function-level value bridge (the rotation function applied). -/
+theorem blockRotFn_val (M : ℕ) (a : Fin (2 * M)) :
+    (blockRotFn M a).val = (a.val + 2) % (2 * M) := rfl
+
 /-- The iterate law: `n` rotations shift the index by `2n`. -/
 theorem blockRotFn_iterate_val (M : ℕ) (n : ℕ) (a : Fin (2 * M)) :
-    (blockRotFn M^[n] a).val = (a.val + 2 * n) % (2 * M) := by
+    ((blockRotFn M)^[n] a).val = (a.val + 2 * n) % (2 * M) := by
   induction n generalizing a with
-  | zero => exact (Nat.mod_eq_of_lt (by omega)).symm
+  | zero =>
+      show a.val = (a.val + 2 * 0) % (2 * M)
+      exact (Nat.mod_eq_of_lt a.isLt).symm
   | succ n ih =>
-      rw [Function.iterate_succ_apply, ih (blockRotFn M a), blockRot_val,
-        Nat.mod_add_mod]
-      congr 1
-      omega
+      rw [Function.iterate_succ_apply', blockRotFn_val, ih a, Nat.mod_add_mod]
+      have hA : a.val + 2 * n + 2 = a.val + 2 * (n + 1) := by omega
+      rw [hA]
 
 /-- **THE M-TH POWER IS THE IDENTITY** — the cycle law at the index level. -/
 theorem blockRotFn_pow (M : ℕ) (a : Fin (2 * M)) :
-    blockRotFn M^[M] a = a := by
-  refine Fin.ext ?_
+    (blockRotFn M)^[M] a = a := by
+  apply Fin.ext
   have h := blockRotFn_iterate_val M M a
   rw [Nat.add_mod_right, Nat.mod_eq_of_lt a.isLt] at h
   exact h
 
 /-- The function-level form of the cycle law. -/
-theorem blockRotFn_pow' (M : ℕ) : blockRotFn M^[M] = id :=
+theorem blockRotFn_pow' (M : ℕ) : (blockRotFn M)^[M] = id :=
   funext (blockRotFn_pow M)
 
 /-- The two faces of the rotation value: the no-wrap and the wrap case,
@@ -156,10 +160,15 @@ theorem blockRot_val_cases (M : ℕ) (c : Fin (2 * M)) :
   rcases Nat.lt_or_ge (c.val + 2) (2 * M) with h | h
   · exact Or.inl ⟨Nat.mod_eq_of_lt h, h⟩
   · refine Or.inr ⟨?_, h⟩
-    have h1 : c.val + 2 = 2 * M + (c.val + 2 - 2 * M) := by omega
+    have hX : c.val + 2 - 2 * M + 2 * M = c.val + 2 := by omega
+    have hlt : c.val + 2 - 2 * M < 2 * M := by omega
+    have hmod : (c.val + 2 - 2 * M + 2 * M) % (2 * M) = c.val + 2 - 2 * M := by
+      rw [Nat.add_mod_right]
+      exact Nat.mod_eq_of_lt hlt
+    have hbr : (c.val + 2) % (2 * M) =
+        (c.val + 2 - 2 * M + 2 * M) % (2 * M) := by rw [hX]
     show (c.val + 2) % (2 * M) = c.val + 2 - 2 * M
-    rw [h1, Nat.add_mod_left]
-    exact Nat.mod_eq_of_lt (by omega)
+    rw [hbr, hmod]
 
 /-- **SAME-BLOCK PRESERVATION** — the block structure is preserved in both
 directions (the iff, not the equality: the rotation moves every block). -/
@@ -175,41 +184,44 @@ theorem blockRot_sameBlock (M : ℕ) (a b : Fin (2 * M)) :
 theorem blockRot_symm_sameBlock (M : ℕ) (a b : Fin (2 * M)) :
     ((blockRot M).symm a).val / 2 = ((blockRot M).symm b).val / 2 ↔
       a.val / 2 = b.val / 2 := by
+  have ea : blockRot M ((blockRot M).symm a) = a :=
+    Equiv.apply_symm_apply (blockRot M) a
+  have eb : blockRot M ((blockRot M).symm b) = b :=
+    Equiv.apply_symm_apply (blockRot M) b
   constructor
   · intro h
-    have h' := (blockRot_sameBlock M ((blockRot M).symm a) ((blockRot M).symm b)).mp h
-    rwa [show blockRot M ((blockRot M).symm a) = a from Equiv.apply_symm_apply _,
-      show blockRot M ((blockRot M).symm b) = b from Equiv.apply_symm_apply _] at h'
+    have h2 := (blockRot_sameBlock M ((blockRot M).symm a) ((blockRot M).symm b)).mpr h
+    rwa [ea, eb] at h2
   · intro h
-    have h' := (blockRot_sameBlock M a b).mpr h
-    rwa [show a = blockRot M ((blockRot M).symm a) from (Equiv.apply_symm_apply _).symm,
-      show b = blockRot M ((blockRot M).symm b) from (Equiv.apply_symm_apply _).symm,
-      (blockRot_sameBlock M ((blockRot M).symm a) ((blockRot M).symm b)).mp rfl] at h'
+    have h2 : (blockRot M ((blockRot M).symm a)).val / 2
+        = (blockRot M ((blockRot M).symm b)).val / 2 := by
+      rw [ea, eb]
+      exact h
+    exact (blockRot_sameBlock M ((blockRot M).symm a) ((blockRot M).symm b)).mp h2
 
 /-! ## §3 The rotation on the coordinate ring and its descent -/
 
-/-- The application bridge: `renameEquiv` is definitionally `rename`. -/
-theorem renameEquiv_apply' {σ τ : Type*} (e : σ ≃ τ) (p : MvPolynomial σ ℂ) :
-    MvPolynomial.renameEquiv e p = MvPolynomial.rename (⇑e) p := rfl
-
 /-- **THE ROTATION AT THE COORDINATE-RING LEVEL.** -/
 def lineRename (M : ℕ) : lineRing M ≃ₐ[ℂ] lineRing M :=
-  MvPolynomial.renameEquiv (blockRot M)
+  MvPolynomial.renameEquiv ℂ (blockRot M)
 
 /-- The application bridge: the rotation is definitionally `rename`. -/
 theorem lineRename_apply (M : ℕ) (p : lineRing M) :
-    lineRename M p = MvPolynomial.rename (blockRotFn M) p := rfl
+    lineRename M p = MvPolynomial.rename (blockRotFn M) p :=
+  MvPolynomial.renameEquiv_apply ℂ (blockRot M) p
 
 theorem lineRename_X (M : ℕ) (a : Fin (2 * M)) :
     lineRename M (X a : lineRing M) = X (blockRot M a) := by
-  rw [lineRename, renameEquiv_apply', rename_X]
+  show lineRename M (X a : lineRing M) = X (blockRotFn M a)
+  rw [lineRename_apply, rename_X]
 
 /-- **DEGREE PRESERVATION**: the rotation of a degree-`n` homogeneous
 polynomial is degree-`n` homogeneous. -/
 theorem lineRename_mem_homogeneousSubmodule (M : ℕ) (n : ℕ) (t : lineRing M)
     (ht : t ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n) :
-    lineRename M t ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n :=
-  (mem_homogeneousSubmodule _ _).mpr
+    lineRename M t ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n := by
+  rw [lineRename_apply]
+  exact (mem_homogeneousSubmodule _ _).mpr
     (IsHomogeneous.rename_isHomogeneous
       ((mem_homogeneousSubmodule _ _).mp ht))
 
@@ -217,39 +229,48 @@ theorem lineRename_mem_homogeneousSubmodule (M : ℕ) (n : ℕ) (t : lineRing M)
 theorem lineRename_crossMonomials_mem (M : ℕ) {p : lineRing M}
     (hp : p ∈ crossMonomials M) : lineRename M p ∈ crossMonomials M := by
   obtain ⟨a, b, hab, rfl⟩ := hp
-  refine ⟨blockRot M a, blockRot M b, fun hcon => hab ((blockRot_sameBlock M a b).mp hcon), ?_⟩
-  show MvPolynomial.renameEquiv (blockRot M) (X a * X b) = X (blockRot M a) * X (blockRot M b)
-  rw [map_mul, renameEquiv_apply', renameEquiv_apply', rename_X, rename_X]
+  refine ⟨blockRot M a, blockRot M b,
+    fun hcon => hab ((blockRot_sameBlock M a b).mp hcon), ?_⟩
+  show MvPolynomial.renameEquiv ℂ (blockRot M) (X a * X b) =
+    X (blockRot M a) * X (blockRot M b)
+  rw [map_mul, MvPolynomial.renameEquiv_apply, MvPolynomial.renameEquiv_apply,
+    rename_X, rename_X]
 
 /-- The ideal-level invariance (the `≤` direction — all the descent needs). -/
 theorem lineRename_crossIdeal_map_le (M : ℕ) :
-    (crossIdeal M).map (lineRename M).toRingHom ≤ crossIdeal M := by
+    (crossIdeal M).map (lineRename M).toRingEquiv.toRingHom ≤ crossIdeal M := by
   show Ideal.map _ (Ideal.span (crossMonomials M)) ≤ crossIdeal M
   rw [Ideal.map_span, Ideal.span_le]
   rintro _ ⟨p, hp, rfl⟩
-  exact Ideal.subset_span (lineRename_crossMonomials_mem hp)
+  exact Ideal.subset_span (lineRename_crossMonomials_mem M hp)
 
 /-- The elementwise invariance, from the ideal-level map lemma. -/
 theorem lineRename_mem_crossIdeal (M : ℕ) {p : lineRing M}
-    (hp : p ∈ crossIdeal M) : lineRename M p ∈ crossIdeal M :=
-  lineRename_crossIdeal_map_le M (Ideal.mem_map_of_mem hp)
+    (hp : p ∈ crossIdeal M) : lineRename M p ∈ crossIdeal M := by
+  have h : lineRename M p ∈
+      (crossIdeal M).map (lineRename M).toRingEquiv.toRingHom :=
+    Ideal.mem_map_of_mem (lineRename M).toRingEquiv.toRingHom hp
+  exact lineRename_crossIdeal_map_le M h
 
 /-- The symm-rotation preserves the cross ideal (from the iff + the
 involution character of the same-block predicate). -/
 theorem lineRenameSymm_mem_crossIdeal (M : ℕ) {p : lineRing M}
     (hp : p ∈ crossIdeal M) :
-    MvPolynomial.renameEquiv (blockRot M).symm p ∈ crossIdeal M := by
+    MvPolynomial.renameEquiv ℂ (blockRot M).symm p ∈ crossIdeal M := by
   have hmap : (crossIdeal M).map
-      (MvPolynomial.renameEquiv (blockRot M).symm).toRingHom ≤ crossIdeal M := by
+      (MvPolynomial.renameEquiv ℂ (blockRot M).symm).toRingEquiv.toRingHom ≤
+      crossIdeal M := by
     show Ideal.map _ (Ideal.span (crossMonomials M)) ≤ crossIdeal M
     rw [Ideal.map_span, Ideal.span_le]
     rintro _ ⟨q, hq, rfl⟩
     obtain ⟨a, b, hab, rfl⟩ := hq
-    refine ⟨(blockRot M).symm a, (blockRot M).symm b, fun hcon => hab ?_, ?_⟩
-    · exact (blockRot_symm_sameBlock M a b).mp hcon
-    · show MvPolynomial.renameEquiv (blockRot M).symm (X a * X b) = _
-      rw [map_mul, renameEquiv_apply', renameEquiv_apply', rename_X, rename_X]
-  exact hmap (Ideal.mem_map_of_mem hp)
+    refine Ideal.subset_span ⟨(blockRot M).symm a, (blockRot M).symm b, ?_, ?_⟩
+    · exact fun hcon => hab ((blockRot_symm_sameBlock M a b).mp hcon)
+    · show MvPolynomial.renameEquiv ℂ (blockRot M).symm (X a * X b) = _
+      rw [map_mul, MvPolynomial.renameEquiv_apply, MvPolynomial.renameEquiv_apply,
+        rename_X, rename_X]
+  exact hmap (Ideal.mem_map_of_mem
+    (MvPolynomial.renameEquiv ℂ (blockRot M).symm).toRingEquiv.toRingHom hp)
 
 /-- The rotation precomposed with the quotient map. -/
 def lineRotateLift₀ (M : ℕ) : lineRing M →ₐ[ℂ] lineQuotient M :=
@@ -263,7 +284,8 @@ cross-monomial quotient (the universal property of the quotient algebra:
 `Ideal.Quotient.liftₐ`). -/
 def lineRotateHom (M : ℕ) : lineQuotient M →ₐ[ℂ] lineQuotient M :=
   Ideal.Quotient.liftₐ (crossIdeal M) (lineRotateLift₀ M)
-    (fun p hp => lineQuotientMap_eq_zero_iff.mpr (lineRename_mem_crossIdeal hp))
+    (fun p hp => (lineQuotientMap_eq_zero_iff M (lineRename M p)).mpr
+      (lineRename_mem_crossIdeal M hp))
 
 /-- **THE COMMUTATION SQUARE**: rotate-then-quotient = quotient-then-rotate. -/
 theorem lineRotateHom_mk (M : ℕ) (t : lineRing M) :
@@ -275,22 +297,23 @@ theorem lineRotateHom_comp_map (M : ℕ) :
 
 /-- The inverse rotation, precomposed with the quotient map. -/
 def lineRotateInvLift₀ (M : ℕ) : lineRing M →ₐ[ℂ] lineQuotient M :=
-  (lineQuotientMap M).comp (MvPolynomial.renameEquiv (blockRot M).symm).toAlgHom
+  (lineQuotientMap M).comp (MvPolynomial.renameEquiv ℂ (blockRot M).symm).toAlgHom
 
 theorem lineRotateInvLift₀_mk (M : ℕ) (t : lineRing M) :
     lineRotateInvLift₀ M t =
-      lineQuotientMap M (MvPolynomial.renameEquiv (blockRot M).symm t) :=
+      lineQuotientMap M (MvPolynomial.renameEquiv ℂ (blockRot M).symm t) :=
   rfl
 
 /-- The inverse descent. -/
 def lineRotateInvHom (M : ℕ) : lineQuotient M →ₐ[ℂ] lineQuotient M :=
   Ideal.Quotient.liftₐ (crossIdeal M) (lineRotateInvLift₀ M)
-    (fun p hp => lineQuotientMap_eq_zero_iff.mpr
-      (lineRenameSymm_mem_crossIdeal hp))
+    (fun p hp => (lineQuotientMap_eq_zero_iff M
+      (MvPolynomial.renameEquiv ℂ (blockRot M).symm p)).mpr
+      (lineRenameSymm_mem_crossIdeal M hp))
 
 theorem lineRotateInvHom_mk (M : ℕ) (t : lineRing M) :
     lineRotateInvHom M (lineQuotientMap M t) =
-      lineQuotientMap M (MvPolynomial.renameEquiv (blockRot M).symm t) := rfl
+      lineQuotientMap M (MvPolynomial.renameEquiv ℂ (blockRot M).symm t) := rfl
 
 theorem lineRotateInvHom_comp_map (M : ℕ) :
     (lineRotateInvHom M).comp (lineQuotientMap M) = lineRotateInvLift₀ M :=
@@ -299,31 +322,32 @@ theorem lineRotateInvHom_comp_map (M : ℕ) :
 /-- The roundtrip: rotate after unrotate is the identity on the quotient. -/
 theorem lineRotateHom_comp_inv (M : ℕ) :
     (lineRotateHom M).comp (lineRotateInvHom M) = AlgHom.id ℂ (lineQuotient M) := by
-  refine Ideal.Quotient.algHom_ext (I := crossIdeal M) ?_
-  calc (lineRotateHom M).comp (lineRotateInvHom M) |>.comp (lineQuotientMap M)
+  refine Ideal.Quotient.algHom_ext (R₁ := ℂ) (I := crossIdeal M) ?_
+  calc ((lineRotateHom M).comp (lineRotateInvHom M)).comp (lineQuotientMap M)
       = (lineRotateHom M).comp ((lineRotateInvHom M).comp (lineQuotientMap M)) :=
-        (AlgHom.comp_assoc _ _ _).symm
+        AlgHom.comp_assoc _ _ _
     _ = (lineRotateHom M).comp (lineRotateInvLift₀ M) := by
         rw [lineRotateInvHom_comp_map]
     _ = (lineQuotientMap M).comp (AlgHom.id ℂ (lineRing M)) := by
         ext t
         show lineRotateHom M (lineQuotientMap M
-            (MvPolynomial.renameEquiv (blockRot M).symm t)) = lineQuotientMap M t
+            (MvPolynomial.renameEquiv ℂ (blockRot M).symm t)) = lineQuotientMap M t
         rw [lineRotateHom_mk]
         congr 1
-        show MvPolynomial.renameEquiv (blockRot M)
-            (MvPolynomial.renameEquiv (blockRot M).symm t) = t
-        rw [renameEquiv_apply', renameEquiv_apply', rename_rename,
-          Equiv.self_comp_symm, rename_id_apply]
-    _ = (AlgHom.id ℂ (lineQuotient M)).comp (lineQuotientMap M) := rfl
+        show MvPolynomial.renameEquiv ℂ (blockRot M)
+            (MvPolynomial.renameEquiv ℂ (blockRot M).symm t) = t
+        rw [MvPolynomial.renameEquiv_apply, MvPolynomial.renameEquiv_apply,
+          rename_rename, Equiv.self_comp_symm, rename_id_apply]
+    _ = (AlgHom.id ℂ (lineQuotient M)).comp (lineQuotientMap M) := by
+        rw [AlgHom.comp_id, AlgHom.id_comp]
 
 /-- The roundtrip: unrotate after rotate is the identity on the quotient. -/
 theorem lineRotateInvHom_comp (M : ℕ) :
     (lineRotateInvHom M).comp (lineRotateHom M) = AlgHom.id ℂ (lineQuotient M) := by
-  refine Ideal.Quotient.algHom_ext (I := crossIdeal M) ?_
-  calc (lineRotateInvHom M).comp (lineRotateHom M) |>.comp (lineQuotientMap M)
+  refine Ideal.Quotient.algHom_ext (R₁ := ℂ) (I := crossIdeal M) ?_
+  calc ((lineRotateInvHom M).comp (lineRotateHom M)).comp (lineQuotientMap M)
       = (lineRotateInvHom M).comp ((lineRotateHom M).comp (lineQuotientMap M)) :=
-        (AlgHom.comp_assoc _ _ _).symm
+        AlgHom.comp_assoc _ _ _
     _ = (lineRotateInvHom M).comp (lineRotateLift₀ M) := by
         rw [lineRotateHom_comp_map]
     _ = (lineQuotientMap M).comp (AlgHom.id ℂ (lineRing M)) := by
@@ -331,25 +355,31 @@ theorem lineRotateInvHom_comp (M : ℕ) :
         show lineRotateInvHom M (lineQuotientMap M (lineRename M t)) = lineQuotientMap M t
         rw [lineRotateInvHom_mk]
         congr 1
-        show MvPolynomial.renameEquiv (blockRot M).symm
-            (MvPolynomial.renameEquiv (blockRot M) t) = t
-        rw [renameEquiv_apply', renameEquiv_apply', rename_rename,
-          Equiv.symm_comp_self, rename_id_apply]
-    _ = (AlgHom.id ℂ (lineQuotient M)).comp (lineQuotientMap M) := rfl
+        show MvPolynomial.renameEquiv ℂ (blockRot M).symm
+            (MvPolynomial.renameEquiv ℂ (blockRot M) t) = t
+        rw [MvPolynomial.renameEquiv_apply, MvPolynomial.renameEquiv_apply,
+          rename_rename, Equiv.symm_comp_self, rename_id_apply]
+    _ = (AlgHom.id ℂ (lineQuotient M)).comp (lineQuotientMap M) := by
+        rw [AlgHom.comp_id, AlgHom.id_comp]
 
 theorem lineRotateHom_bijective (M : ℕ) : Function.Bijective (lineRotateHom M) := by
   constructor
   · intro x y h
-    have hx : lineRotateInvHom M (lineRotateHom M x) = x :=
+    have hx : (lineRotateInvHom M) ((lineRotateHom M) x) = x :=
       DFunLike.congr_fun (lineRotateInvHom_comp M) x
-    rw [← hx, ← DFunLike.congr_fun (lineRotateInvHom_comp M) y, h]
+    have hy : (lineRotateInvHom M) ((lineRotateHom M) y) = y :=
+      DFunLike.congr_fun (lineRotateInvHom_comp M) y
+    calc x = (lineRotateInvHom M) ((lineRotateHom M) x) := hx.symm
+      _ = (lineRotateInvHom M) ((lineRotateHom M) y) :=
+          congrArg (⇑(lineRotateInvHom M)) h
+      _ = y := hy
   · intro y
-    exact ⟨lineRotateInvHom M y, DFunLike.congr_fun (lineRotateHom_comp_inv M) y⟩
+    exact ⟨(lineRotateInvHom M) y, DFunLike.congr_fun (lineRotateHom_comp_inv M) y⟩
 
 /-- The iterate law at the quotient level. -/
 theorem lineRotateHom_iterate (M : ℕ) (n : ℕ) (t : lineRing M) :
     (lineRotateHom M)^[n] (lineQuotientMap M t) =
-      lineQuotientMap M (MvPolynomial.rename (blockRotFn M^[n]) t) := by
+      lineQuotientMap M (MvPolynomial.rename ((blockRotFn M)^[n]) t) := by
   induction n with
   | zero =>
       show lineQuotientMap M t = lineQuotientMap M (MvPolynomial.rename id t)
@@ -363,6 +393,7 @@ theorem lineRotateHom_pow (M : ℕ) : (lineRotateHom M)^[M] = id := by
   funext y
   obtain ⟨t, rfl⟩ := lineQuotientMap_surjective M y
   rw [lineRotateHom_iterate M M t, blockRotFn_pow' M, rename_id_apply]
+  rfl
 
 /-! ## §4 The graded rotation and the M-cycle automorphism -/
 
@@ -386,7 +417,7 @@ noncomputable def lineRotateInvGraded (M : ℕ) : lineGrading M →+*ᵍ lineGra
     obtain ⟨t, ht, hxt⟩ := (mem_lineGrading M i x).mp hx
     subst hxt
     show lineRotateInvHom M (lineQuotientMap M t) ∈ lineGrading M i
-    rw [lineRotateInvHom_mk]
+    rw [lineRotateInvHom_mk, MvPolynomial.renameEquiv_apply]
     exact lineQuotientMap_mem_lineGrading M i _
       ((mem_homogeneousSubmodule _ _).mpr
         (IsHomogeneous.rename_isHomogeneous
@@ -411,8 +442,12 @@ theorem lineRotateGraded_surjective (M : ℕ) :
   (lineRotateHom_bijective M).surjective
 
 theorem lineRotateInvGraded_surjective (M : ℕ) :
-    Function.Surjective (lineRotateInvGraded M).toRingHom :=
-  (lineRotateHom_bijective M).injective.surjective
+    Function.Surjective (lineRotateInvGraded M).toRingHom := by
+  intro z
+  refine ⟨(lineRotateGraded M) z, ?_⟩
+  show (lineRotateInvGraded M) ((lineRotateGraded M) z) = z
+  rw [← GradedRingHom.comp_apply, lineRotateInvGraded_comp,
+    GradedRingHom.id_apply]
 
 /-- **THE M-TH POWER OF THE GRADED ROTATION IS THE IDENTITY** — the
 cycle law receipt at the graded-ring level (the geometric scheme-level
@@ -423,6 +458,7 @@ theorem lineRotateGraded_pow (M : ℕ) :
   rw [GradedRingHom.coe_pow]
   show (lineRotateHom M)^[M] x = x
   rw [lineRotateHom_pow]
+  rfl
 
 /-- **THE IRRELEVANT-IDEAL HYPOTHESIS** for the rotation's `Proj.map`:
 the quotient's irrelevant ideal lies in the image of the ambient one
@@ -484,15 +520,39 @@ noncomputable def finiteLineCycleInv (M : ℕ) :
     finiteLineScheme M ⟶ finiteLineScheme M :=
   Proj.map (lineRotateInvGraded M) (lineRotate_inv_irrelevant_le M)
 
+/-- **THE TRANSPORT BRIDGE for `Proj.map`**: if a graded hom is (on the nose)
+the identity, then its `Proj.map` is the identity — the dependent
+second argument of `Proj.map` (the `ℬ₊ ≤ 𝒜₊.map f` hypothesis, whose
+type mentions `f`) is transported by `subst` (which eliminates the binder
+`f`, transporting `hf`'s type with it), and the resulting
+`Proj.map (GradedRingHom.id 𝒜) hf'` is closed by `Proj.map_id`: its
+hardcoded `(by simp)` proof and the transported `hf'` inhabit the very
+same proposition, so proof irrelevance identifies them definitionally.
+This is the whole point the plain `rw [h, Proj.map_id]` chain cannot do:
+rewriting `f` inside `Proj.map f hf` breaks the motive because `hf`'s
+type mentions `f`. -/
+private theorem map_id_of_eq {A σ : Type u} [CommRing A] [SetLike σ A]
+    [AddSubgroupClass σ A] {𝒜 : ℕ → σ} [GradedRing 𝒜] {f : 𝒜 →+*ᵍ 𝒜}
+    (h : f = GradedRingHom.id 𝒜)
+    (hf : HomogeneousIdeal.irrelevant 𝒜 ≤
+      HomogeneousIdeal.map f (HomogeneousIdeal.irrelevant 𝒜)) :
+    Proj.map f hf = 𝟙 (Proj 𝒜) := by
+  subst h
+  exact Proj.map_id
+
 /-- **THE M-CYCLE AUTOMORPHISM IS AN ISOMORPHISM** — the flat `IsIso`
-constructor with the graded roundtrips (map_comp + map_id). -/
+constructor with the graded roundtrips (map_comp + map_id).  The two
+composition goals are reduced by `← Proj.map_comp` to `Proj.map` of the
+two graded roundtrips (`(lineRotateGraded M).comp (lineRotateInvGraded M)`
+and its mirror), which equal `GradedRingHom.id` by the graded comp laws;
+the `map_id_of_eq` bridge then transports each to `𝟙` via `Proj.map_id`. -/
 theorem finiteLineCycle_isIso (M : ℕ) : IsIso (finiteLineCycle M) :=
   ⟨finiteLineCycleInv M, by
-    rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp,
-      lineRotateGraded_comp_inv, Proj.map_id],
+    rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
+    exact map_id_of_eq (lineRotateGraded_comp_inv M) _,
   by
-    rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp,
-      lineRotateInvGraded_comp, Proj.map_id]⟩
+    rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
+    exact map_id_of_eq (lineRotateInvGraded_comp M) _⟩
 
 /-! ## §5 The arity bridge and the closed embedding into ℙ^{2M-1} -/
 
@@ -502,22 +562,24 @@ bridge). -/
 def lineFinEquiv (M : ℕ) [NeZero M] : Fin (2 * M - 1 + 1) ≃ Fin (2 * M) :=
   Equiv.ofBijective
     (fun a => ⟨a.val, Nat.lt_of_lt_of_le a.isLt (by
-      have hM : 0 < M := Nat.pos_of_neZero ‹_›; omega)⟩)
-    ⟨fun a b h => Fin.val_injective h,
+      have hM : 0 < M := Nat.pos_of_neZero ‹_›
+      omega)⟩)
+    ⟨fun a b h => Fin.val_injective (congrArg Fin.val h),
      fun b => ⟨⟨b.val, by
-       have hM : 0 < M := Nat.pos_of_neZero ‹_›; omega⟩, rfl⟩⟩⟩
+       have hM : 0 < M := Nat.pos_of_neZero ‹_›
+       omega⟩, rfl⟩⟩⟩
 
 /-- **THE AMBIENT QUOTIENT HOM** — the frozen `lineQuotientMap` transported
 along the rename of the arity bridge. -/
 noncomputable def ambientQuotientHom (M : ℕ) [NeZero M] :
     ProjectiveCoordinateRing (2 * M - 1) →ₐ[ℂ] lineQuotient M :=
-  (lineQuotientMap M).comp (MvPolynomial.renameEquiv (lineFinEquiv M)).toAlgHom
+  (lineQuotientMap M).comp (MvPolynomial.renameEquiv ℂ (lineFinEquiv M)).toAlgHom
 
 theorem ambientQuotientHom_mem (M : ℕ) [NeZero M]
     (t : ProjectiveCoordinateRing (2 * M - 1)) {n : ℕ}
     (ht : t ∈ ProjectiveGrading (2 * M - 1) n) :
     ambientQuotientHom M t ∈ lineGrading M n := by
-  show lineQuotientMap M (MvPolynomial.renameEquiv (lineFinEquiv M) t) ∈ lineGrading M n
+  show lineQuotientMap M (MvPolynomial.rename ⇑(lineFinEquiv M) t) ∈ lineGrading M n
   exact lineQuotientMap_mem_lineGrading M n _
     ((mem_homogeneousSubmodule _ _).mpr
       (IsHomogeneous.rename_isHomogeneous
@@ -529,15 +591,15 @@ piece-preservation field). -/
 noncomputable def lineGradedQuotientHom (M : ℕ) [NeZero M] :
     ProjectiveGrading (2 * M - 1) →+*ᵍ lineGrading M where
   toRingHom := (ambientQuotientHom M).toRingHom
-  map_mem := fun {i x} hx => ambientQuotientHom_mem M x hx
+  map_mem := fun {_ x} hx => ambientQuotientHom_mem M x hx
 
 private theorem ambientQuotient_surjective (M : ℕ) [NeZero M] :
     Function.Surjective (lineGradedQuotientHom M).toRingHom := by
   intro z
   obtain ⟨t, rfl⟩ := lineQuotientMap_surjective M z
-  refine ⟨MvPolynomial.renameEquiv (lineFinEquiv M).symm t, ?_⟩
-  show lineQuotientMap M (MvPolynomial.rename (⇑(lineFinEquiv M))
-    (MvPolynomial.rename (⇑((lineFinEquiv M).symm)) t)) = z
+  refine ⟨MvPolynomial.renameEquiv ℂ (lineFinEquiv M).symm t, ?_⟩
+  show lineQuotientMap M (MvPolynomial.rename ⇑(lineFinEquiv M)
+    (MvPolynomial.rename ⇑((lineFinEquiv M).symm) t)) = z
   rw [rename_rename, Equiv.self_comp_symm, rename_id_apply]
 
 /-- **THE IRRELEVANT-IDEAL HYPOTHESIS** for the embedding's `Proj.map`:
@@ -551,8 +613,10 @@ theorem line_irrelevant_le (M : ℕ) [NeZero M] :
     HomogeneousIdeal.irrelevant (lineGrading M) ≤
       HomogeneousIdeal.map (lineGradedQuotientHom M)
         (HomogeneousIdeal.irrelevant (ProjectiveGrading (2 * M - 1))) := by
-  rw [← HomogeneousIdeal.toIdeal_le_toIdeal_iff, HomogeneousIdeal.toIdeal_map,
-    HomogeneousIdeal.toIdeal_irrelevant_le]
+  show (HomogeneousIdeal.irrelevant (lineGrading M)).toIdeal ≤
+    (HomogeneousIdeal.map (lineGradedQuotientHom M)
+      (HomogeneousIdeal.irrelevant (ProjectiveGrading (2 * M - 1)))).toIdeal
+  rw [HomogeneousIdeal.toIdeal_map, HomogeneousIdeal.toIdeal_irrelevant_le]
   intro i hi
   rw [SetLike.le_def]
   intro y hy
@@ -562,17 +626,18 @@ theorem line_irrelevant_le (M : ℕ) [NeZero M] :
   show y ∈ Ideal.map (lineGradedQuotientHom M).toRingHom
     (HomogeneousIdeal.irrelevant (ProjectiveGrading (2 * M - 1))).toIdeal
   refine (Ideal.mem_map_iff_of_surjective _ hsurj).mpr
-    ⟨MvPolynomial.renameEquiv (lineFinEquiv M).symm t, ?_, ?_⟩
-  · show MvPolynomial.renameEquiv (lineFinEquiv M).symm t ∈
+    ⟨MvPolynomial.renameEquiv ℂ (lineFinEquiv M).symm t, ?_, ?_⟩
+  · show MvPolynomial.renameEquiv ℂ (lineFinEquiv M).symm t ∈
       HomogeneousIdeal.irrelevant (ProjectiveGrading (2 * M - 1))
+    rw [MvPolynomial.renameEquiv_apply]
     exact HomogeneousIdeal.mem_irrelevant_of_mem hi
       ((mem_homogeneousSubmodule _ _).mpr
         (IsHomogeneous.rename_isHomogeneous
           ((mem_homogeneousSubmodule _ _).mp ht)))
   · show (lineGradedQuotientHom M)
-      (MvPolynomial.renameEquiv (lineFinEquiv M).symm t) = y
-    show lineQuotientMap M (MvPolynomial.rename (⇑(lineFinEquiv M))
-      (MvPolynomial.rename (⇑((lineFinEquiv M).symm)) t)) = y
+      (MvPolynomial.renameEquiv ℂ (lineFinEquiv M).symm t) = y
+    show lineQuotientMap M (MvPolynomial.rename ⇑(lineFinEquiv M)
+      (MvPolynomial.rename ⇑((lineFinEquiv M).symm) t)) = y
     rw [rename_rename, Equiv.self_comp_symm, rename_id_apply]
     exact hty
 
@@ -606,6 +671,10 @@ noncomputable def finiteLineEmbedding (M : ℕ) [NeZero M] :
 #print axioms finiteLineCycle
 #print axioms finiteLineCycle_isIso
 #print axioms finiteLineEmbedding
+
+end GSTFiniteLineWorldCarrier
+
+end
 
 end GSTFiniteLineWorldCarrier
 
