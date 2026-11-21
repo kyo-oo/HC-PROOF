@@ -142,6 +142,10 @@ theorem blockRotFn_pow (M : ℕ) (a : Fin (2 * M)) :
   rw [Nat.add_mod_right, Nat.mod_eq_of_lt a.isLt] at h
   exact h
 
+/-- The function-level form of the cycle law. -/
+theorem blockRotFn_pow' (M : ℕ) : blockRotFn M^[M] = id :=
+  funext (blockRotFn_pow M)
+
 /-- The two faces of the rotation value: the no-wrap and the wrap case,
 with their wrap conditions (the case lemma carries its bound — required
 for the same-block preservation below). -/
@@ -191,6 +195,10 @@ theorem renameEquiv_apply' {σ τ : Type*} (e : σ ≃ τ) (p : MvPolynomial σ 
 /-- **THE ROTATION AT THE COORDINATE-RING LEVEL.** -/
 def lineRename (M : ℕ) : lineRing M ≃ₐ[ℂ] lineRing M :=
   MvPolynomial.renameEquiv (blockRot M)
+
+/-- The application bridge: the rotation is definitionally `rename`. -/
+theorem lineRename_apply (M : ℕ) (p : lineRing M) :
+    lineRename M p = MvPolynomial.rename (blockRotFn M) p := rfl
 
 theorem lineRename_X (M : ℕ) (a : Fin (2 * M)) :
     lineRename M (X a : lineRing M) = X (blockRot M a) := by
@@ -343,16 +351,18 @@ theorem lineRotateHom_iterate (M : ℕ) (n : ℕ) (t : lineRing M) :
     (lineRotateHom M)^[n] (lineQuotientMap M t) =
       lineQuotientMap M (MvPolynomial.rename (blockRotFn M^[n]) t) := by
   induction n with
-  | zero => rfl
+  | zero =>
+      show lineQuotientMap M t = lineQuotientMap M (MvPolynomial.rename id t)
+      rw [rename_id_apply]
   | succ n ih =>
-      rw [Function.iterate_succ_apply', ih, lineRotateHom_mk, rename_rename,
-        ← Function.iterate_succ']
+      rw [Function.iterate_succ_apply', ih, lineRotateHom_mk, lineRename_apply,
+        rename_rename, ← Function.iterate_succ']
 
 /-- **THE M-TH POWER OF THE ROTATION IS THE IDENTITY** (quotient level). -/
 theorem lineRotateHom_pow (M : ℕ) : (lineRotateHom M)^[M] = id := by
   funext y
   obtain ⟨t, rfl⟩ := lineQuotientMap_surjective M y
-  rw [lineRotateHom_iterate M M t, blockRotFn_pow, rename_id_apply]
+  rw [lineRotateHom_iterate M M t, blockRotFn_pow' M, rename_id_apply]
 
 /-! ## §4 The graded rotation and the M-cycle automorphism -/
 
@@ -413,7 +423,6 @@ theorem lineRotateGraded_pow (M : ℕ) :
   rw [GradedRingHom.coe_pow]
   show (lineRotateHom M)^[M] x = x
   rw [lineRotateHom_pow]
-  rfl
 
 /-- **THE IRRELEVANT-IDEAL HYPOTHESIS** for the rotation's `Proj.map`:
 the quotient's irrelevant ideal lies in the image of the ambient one
@@ -480,10 +489,10 @@ constructor with the graded roundtrips (map_comp + map_id). -/
 theorem finiteLineCycle_isIso (M : ℕ) : IsIso (finiteLineCycle M) :=
   ⟨finiteLineCycleInv M, by
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp,
-      lineRotateInvGraded_comp, Proj.map_id],
+      lineRotateGraded_comp_inv, Proj.map_id],
   by
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp,
-      lineRotateGraded_comp_inv, Proj.map_id]⟩
+      lineRotateInvGraded_comp, Proj.map_id]⟩
 
 /-! ## §5 The arity bridge and the closed embedding into ℙ^{2M-1} -/
 
