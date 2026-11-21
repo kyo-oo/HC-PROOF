@@ -331,13 +331,13 @@ theorem lineRotateHom_comp_inv (M : ℕ) :
     _ = (lineQuotientMap M).comp (AlgHom.id ℂ (lineRing M)) := by
         ext t
         show lineRotateHom M (lineQuotientMap M
-            (MvPolynomial.renameEquiv ℂ (blockRot M).symm t)) = lineQuotientMap M t
+            (MvPolynomial.renameEquiv ℂ (blockRot M).symm (X t))) = lineQuotientMap M (X t)
         rw [lineRotateHom_mk]
         congr 1
         show MvPolynomial.renameEquiv ℂ (blockRot M)
-            (MvPolynomial.renameEquiv ℂ (blockRot M).symm t) = t
+            (MvPolynomial.renameEquiv ℂ (blockRot M).symm (X t)) = X t
         rw [MvPolynomial.renameEquiv_apply, MvPolynomial.renameEquiv_apply,
-          rename_rename, Equiv.self_comp_symm, rename_id_apply]
+          rename_X, rename_X, Equiv.apply_symm_apply]
     _ = (AlgHom.id ℂ (lineQuotient M)).comp (lineQuotientMap M) := by
         rw [AlgHom.comp_id, AlgHom.id_comp]
 
@@ -352,13 +352,14 @@ theorem lineRotateInvHom_comp (M : ℕ) :
         rw [lineRotateHom_comp_map]
     _ = (lineQuotientMap M).comp (AlgHom.id ℂ (lineRing M)) := by
         ext t
-        show lineRotateInvHom M (lineQuotientMap M (lineRename M t)) = lineQuotientMap M t
+        show lineRotateInvHom M (lineQuotientMap M (lineRename M (X t))) =
+          lineQuotientMap M (X t)
         rw [lineRotateInvHom_mk]
         congr 1
         show MvPolynomial.renameEquiv ℂ (blockRot M).symm
-            (MvPolynomial.renameEquiv ℂ (blockRot M) t) = t
+            (MvPolynomial.renameEquiv ℂ (blockRot M) (X t)) = X t
         rw [MvPolynomial.renameEquiv_apply, MvPolynomial.renameEquiv_apply,
-          rename_rename, Equiv.symm_comp_self, rename_id_apply]
+          rename_X, rename_X, Equiv.symm_apply_apply]
     _ = (AlgHom.id ℂ (lineQuotient M)).comp (lineQuotientMap M) := by
         rw [AlgHom.comp_id, AlgHom.id_comp]
 
@@ -559,15 +560,19 @@ theorem finiteLineCycle_isIso (M : ℕ) : IsIso (finiteLineCycle M) :=
 /-- **THE ARITY BRIDGE** — `Fin (2M-1+1) ≃ Fin (2M)` (equal cardinalities;
 `Nat.sub_add_cancel` — not defeq for variable `M`, hence the explicit
 bridge). -/
-def lineFinEquiv (M : ℕ) [NeZero M] : Fin (2 * M - 1 + 1) ≃ Fin (2 * M) :=
-  Equiv.ofBijective
-    (fun a => ⟨a.val, Nat.lt_of_lt_of_le a.isLt (by
-      have hM : 0 < M := Nat.pos_of_neZero ‹_›
-      omega)⟩)
-    ⟨fun a b h => Fin.val_injective (congrArg Fin.val h),
-     fun b => ⟨⟨b.val, by
-       have hM : 0 < M := Nat.pos_of_neZero ‹_›
-       omega⟩, rfl⟩⟩⟩
+def lineFinEquiv (M : ℕ) [NeZero M] : Fin (2 * M - 1 + 1) ≃ Fin (2 * M) where
+  toFun a := ⟨a.val, Nat.lt_of_lt_of_le a.isLt (by
+    have hM : 0 < M := Nat.pos_of_neZero ‹_›
+    omega)⟩
+  invFun b := ⟨b.val, Nat.lt_of_lt_of_le b.isLt (by
+    have hM : 0 < M := Nat.pos_of_neZero ‹_›
+    omega)⟩
+  left_inv a := by
+    apply Fin.ext
+    rfl
+  right_inv b := by
+    apply Fin.ext
+    rfl
 
 /-- **THE AMBIENT QUOTIENT HOM** — the frozen `lineQuotientMap` transported
 along the rename of the arity bridge. -/
@@ -599,7 +604,7 @@ private theorem ambientQuotient_surjective (M : ℕ) [NeZero M] :
   obtain ⟨t, rfl⟩ := lineQuotientMap_surjective M z
   refine ⟨MvPolynomial.renameEquiv ℂ (lineFinEquiv M).symm t, ?_⟩
   show lineQuotientMap M (MvPolynomial.rename ⇑(lineFinEquiv M)
-    (MvPolynomial.rename ⇑((lineFinEquiv M).symm) t)) = z
+    (MvPolynomial.rename ⇑((lineFinEquiv M).symm) t)) = lineQuotientMap M t
   rw [rename_rename, Equiv.self_comp_symm, rename_id_apply]
 
 /-- **THE IRRELEVANT-IDEAL HYPOTHESIS** for the embedding's `Proj.map`:
@@ -630,7 +635,7 @@ theorem line_irrelevant_le (M : ℕ) [NeZero M] :
   · show MvPolynomial.renameEquiv ℂ (lineFinEquiv M).symm t ∈
       HomogeneousIdeal.irrelevant (ProjectiveGrading (2 * M - 1))
     rw [MvPolynomial.renameEquiv_apply]
-    exact HomogeneousIdeal.mem_irrelevant_of_mem hi
+    exact HomogeneousIdeal.mem_irrelevant_of_mem (ProjectiveGrading (2 * M - 1)) hi
       ((mem_homogeneousSubmodule _ _).mpr
         (IsHomogeneous.rename_isHomogeneous
           ((mem_homogeneousSubmodule _ _).mp ht)))
@@ -671,10 +676,6 @@ noncomputable def finiteLineEmbedding (M : ℕ) [NeZero M] :
 #print axioms finiteLineCycle
 #print axioms finiteLineCycle_isIso
 #print axioms finiteLineEmbedding
-
-end GSTFiniteLineWorldCarrier
-
-end
 
 end GSTFiniteLineWorldCarrier
 
