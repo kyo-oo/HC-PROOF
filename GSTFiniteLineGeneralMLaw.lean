@@ -219,16 +219,6 @@ theorem finiteLineWorldGate_identifications (M : ℕ) [NeZero M]
       hWX ▸ V.structureMap = finiteLineStructureMap M :=
   ⟨hWX, hWmap⟩
 
-/-- **THE WORLD-GATE CYCLE RECEIPT.**  The gated world's honest cycle
-modules ARE the finite-line carrier's cycle modules (the `hWX`
-transport):  the seeds and letters of the law below live on the genuine
-cycles of `Proj (lineGrading M)`. -/
-theorem finiteLineWorldGate_cycles (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme)
-    (hWX : V.X = finiteLineScheme M) (p : ℕ) :
-    codimensionCycles V.X p = codimensionCycles (finiteLineScheme M) p := by
-  rw [hWX]
-
 /-! ## §0.5 The local instance bridges (the wave-63 §0 discipline)
 
 The world's degree-n rational singular cohomology's ℚ-structures, provided
@@ -499,7 +489,9 @@ noncomputable def finiteLineCycleClassZero (M : ℕ) [NeZero M]
     map_smul' := by
       intro q Z
       show ((exists_cycle_functional (X := codimensionCycles V.X 0) Z₀ hZ₀).choose
-          (q • Z)) • finiteLineSeedClassZero M V A hspace = _
+          (q • Z)) • finiteLineSeedClassZero M V A hspace =
+        q • (((exists_cycle_functional (X := codimensionCycles V.X 0) Z₀ hZ₀).choose Z) •
+          finiteLineSeedClassZero M V A hspace)
       rw [map_smul, smul_smul, ← smul_eq_mul] }
 
 /-- **THE WEIGHT-ZERO SEED EQUATION.**  The honest seed cycle's class IS
@@ -536,7 +528,9 @@ noncomputable def finiteLineCycleClassOne (M : ℕ) [NeZero M]
     map_smul' := by
       intro q Z
       show ((exists_cycle_functional (X := codimensionCycles V.X 1) Z₁ hZ₁).choose
-          (q • Z)) • finiteLineSeedClassOne M V A hspace ω = _
+          (q • Z)) • finiteLineSeedClassOne M V A hspace ω =
+        q • (((exists_cycle_functional (X := codimensionCycles V.X 1) Z₁ hZ₁).choose Z) •
+          finiteLineSeedClassOne M V A hspace ω)
       rw [map_smul, smul_smul, ← smul_eq_mul] }
 
 /-- **THE WEIGHT-ONE SEED EQUATION.**  The honest seed cycle's class IS
