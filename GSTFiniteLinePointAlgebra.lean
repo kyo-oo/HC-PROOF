@@ -73,6 +73,7 @@ theorem crossMul_eq_zero (M : ℕ) {a b : Fin (2 * M)}
   rw [← map_mul, lineQuotientMap_eq_zero_iff]
   exact Ideal.subset_span ⟨a, b, hab, rfl⟩
 
+/-- The block-characterization arithmetic: the two index tests are the
 block membership. -/
 theorem mem_block_iff (M : ℕ) (i : Fin M) (a : Fin (2 * M)) :
     (a.val = 2 * i.val ∨ a.val = 2 * i.val + 1) ↔ a.val / 2 = i.val := by
@@ -101,7 +102,7 @@ theorem blockVarRight_val (M : ℕ) (i : Fin M) :
 
 theorem blockVarLeft_block (M : ℕ) (i : Fin M) :
     (blockVarLeft M i).val / 2 = i.val := by
-  rw [blockVarLeft_val, Nat.mul_div_cancel_left _ two_ne_zero]
+  rw [blockVarLeft_val, Nat.mul_div_cancel_left _ two_pos]
 
 theorem blockVarRight_block (M : ℕ) (i : Fin M) :
     (blockVarRight M i).val / 2 = i.val := by
@@ -110,9 +111,13 @@ theorem blockVarRight_block (M : ℕ) (i : Fin M) :
 
 theorem not_mem_block_left (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
     (ha : a.val / 2 ≠ i.val) : a.val ≠ 2 * i.val ∧ a.val ≠ 2 * i.val + 1 := by
-  constructor <;> intro h <;> [rw [h, Nat.mul_div_cancel_left _ two_ne_zero] at ha;
-      exact absurd rfl ha;
-    apply ha; omega]
+  constructor
+  · intro h
+    rw [h] at ha
+    exact ha (Nat.mul_div_cancel_left _ two_pos)
+  · intro h
+    apply ha
+    omega
 
 /-! ## §1 The block retractions and the kernel laws -/
 
@@ -139,23 +144,44 @@ def blockInclAt (M : ℕ) (i : Fin M) :
     MvPolynomial (Fin 2) ℂ →ₐ[ℂ] lineRing M :=
   MvPolynomial.aeval (blockInclFamily M i)
 
+/-- The family values at the three index classes. -/
+theorem blockVarFamily_left (M : ℕ) (i : Fin M) :
+    blockVarFamily M i (blockVarLeft M i) = (X ⟨0, by omega⟩ : MvPolynomial (Fin 2) ℂ) := by
+  rw [blockVarFamily, if_pos (rfl : (blockVarLeft M i).val = 2 * i.val)]
+
+theorem blockVarFamily_right (M : ℕ) (i : Fin M) :
+    blockVarFamily M i (blockVarRight M i) = (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) := by
+  have hne : (blockVarRight M i).val ≠ 2 * i.val := by
+    rw [blockVarRight_val]; omega
+  rw [blockVarFamily, if_neg hne, if_pos (rfl : (blockVarRight M i).val = 2 * i.val + 1)]
+
+theorem blockVarFamily_outside (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
+    (ha : a.val / 2 ≠ i.val) :
+    blockVarFamily M i a = 0 := by
+  have hne1 : a.val ≠ 2 * i.val := by
+    intro h
+    exact ha (by rw [h]; exact Nat.mul_div_cancel_left _ two_pos)
+  have hne2 : a.val ≠ 2 * i.val + 1 := by
+    intro h
+    apply ha
+    omega
+  rw [blockVarFamily, if_neg hne1, if_neg hne2]
+
 theorem blockProjAt_X_left (M : ℕ) (i : Fin M) :
     blockProjAt M i (X (blockVarLeft M i)) = (X ⟨0, by omega⟩ : MvPolynomial (Fin 2) ℂ) := by
-  rw [blockProjAt, aeval_X, blockVarFamily, if_pos blockVarLeft_val]
+  rw [blockProjAt, aeval_X, blockVarFamily_left]
 
 theorem blockProjAt_X_right (M : ℕ) (i : Fin M) :
     blockProjAt M i (X (blockVarRight M i)) = (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) := by
-  rw [blockProjAt, aeval_X, blockVarFamily, if_neg (not_mem_block_left M i
-    (blockVarRight_block M i)).1, if_pos blockVarRight_val]
+  rw [blockProjAt, aeval_X, blockVarFamily_right]
 
 theorem blockProjAt_X_outside (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
     (ha : a.val / 2 ≠ i.val) :
     blockProjAt M i (X a) = 0 := by
-  rw [blockProjAt, aeval_X, blockVarFamily,
-    if_neg (not_mem_block_left M i ha).1, if_neg (not_mem_block_left M i ha).2]
+  rw [blockProjAt, aeval_X, blockVarFamily_outside M i ha]
 
 theorem blockInclAt_X (M : ℕ) (i : Fin M) (a : Fin 2) :
-    blockInclAt M i (X a) = blockInclFamily M a := by
+    blockInclAt M i (X a) = blockInclFamily M i a := by
   rw [blockInclAt, aeval_X]
 
 theorem blockProjAt_comp_blockInclAt (M : ℕ) (i : Fin M) :
@@ -164,17 +190,14 @@ theorem blockProjAt_comp_blockInclAt (M : ℕ) (i : Fin M) :
   rw [AlgHom.coe_comp, DFunLike.coe_fn_eq, AlgHom.coe_id, id_eq,
     blockInclAt_X]
   cases a.val with
-  | zero => rw [blockInclFamily, if_pos rfl]
-    show blockProjAt M i (X (blockVarLeft M i)) = _
-    rw [blockProjAt_X_left]
-    rfl
+  | zero =>
+      show blockProjAt M i (X (blockVarLeft M i)) = _
+      rw [blockProjAt_X_left]
+      rfl
   | succ av =>
-    have hval : (⟨av + 1, by omega⟩ : Fin 2).val = 1 := by omega
-    show blockProjAt M i (X ⟨2 * i.val + (av + 1), _⟩) = _
-    rw [show (2 * i.val + (av + 1) : ℕ) = 2 * i.val + 1 from by omega]
-    show blockProjAt M i (X (blockVarRight M i)) = _
-    rw [blockProjAt_X_right]
-    rfl
+      show blockProjAt M i (X (blockVarRight M i)) = _
+      rw [blockProjAt_X_right]
+      rfl
 
 /-- **THE OUTSIDE-VARIABLE IDEAL** (ring level): the span of the
 variables outside block i. -/
@@ -201,7 +224,7 @@ theorem sub_projector_mem (M : ℕ) (i : Fin M) (q : lineRing M) :
   have hagree : (Ideal.Quotient.mkₐ ℂ (projectorIdeal M i)).comp
       ((blockInclAt M i).comp (blockProjAt M i)) =
       (Ideal.Quotient.mkₐ ℂ (projectorIdeal M i)) := by
-    refine MvPolynomial.algHom_ext' fun a => ?_
+    refine MvPolynomial.algHom_ext fun a => ?_
     have hgen : (X a : lineRing M) - blockInclAt M i (blockProjAt M i (X a)) ∈
         projectorIdeal M i := Ideal.subset_span ⟨a, rfl⟩
     have hq := (Ideal.Quotient.eq (I := projectorIdeal M i)).mpr hgen
@@ -438,7 +461,7 @@ theorem blockProjClosed_X_ne_zero (M : ℕ) {a : Fin (2 * M)}
 theorem blockProjClosed_comp_blockInclClosed (M : ℕ) :
     (blockProjClosed M).comp (blockInclClosed M) =
       AlgHom.id ℂ (MvPolynomial (Fin 1) ℂ) := by
-  refine MvPolynomial.algHom_ext' fun a => ?_
+  refine MvPolynomial.algHom_ext fun a => ?_
   rw [AlgHom.coe_comp, DFunLike.coe_fn_eq, AlgHom.coe_id, id_eq,
     blockInclClosed, aeval_X, closedInclFamily]
   have ha0 : (⟨0, by omega⟩ : Fin (2 * M)).val = 0 := rfl
@@ -469,7 +492,7 @@ theorem sub_closedProjector_mem (M : ℕ) (q : lineRing M) :
   have hagree : (Ideal.Quotient.mkₐ ℂ (closedProjectorIdeal M)).comp
       ((blockInclClosed M).comp (blockProjClosed M)) =
       (Ideal.Quotient.mkₐ ℂ (closedProjectorIdeal M)) := by
-    refine MvPolynomial.algHom_ext' fun a => ?_
+    refine MvPolynomial.algHom_ext fun a => ?_
     have hgen : (X a : lineRing M) - blockInclClosed M (blockProjClosed M (X a)) ∈
         closedProjectorIdeal M := Ideal.subset_span ⟨a, rfl⟩
     have hq := (Ideal.Quotient.eq (I := closedProjectorIdeal M)).mpr hgen
@@ -927,7 +950,7 @@ theorem no_intermediate_point (M : ℕ) (y : finiteLineScheme M)
     intro g
     have hcomp : (blockProjQuotAt M 0).comp (blockInclAt M 0) =
         AlgHom.id ℂ (MvPolynomial (Fin 2) ℂ) := by
-      refine MvPolynomial.algHom_ext' fun a => ?_
+      refine MvPolynomial.algHom_ext fun a => ?_
       rw [AlgHom.coe_comp, DFunLike.coe_fn_eq, AlgHom.coe_id, id_eq,
         blockInclAt_X]
       cases a.val with
