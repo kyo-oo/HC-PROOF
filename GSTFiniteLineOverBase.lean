@@ -135,8 +135,8 @@ theorem fromZeroRingHom_comp_awayMap (g : 𝒜 →+*ᵍ ℬ) {i : ℕ} (hi : 0 <
     (Away.map g s).comp (fromZeroRingHom 𝒜 (Submonoid.powers s)) =
       (fromZeroRingHom ℬ (Submonoid.powers (g s))).comp (gradedZeroHom g) := by
   ext a
-  show (Away.map g s) ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a) =
-    (fromZeroRingHom ℬ (Submonoid.powers (g s))) (gradedZeroHom g a)
+  show val ((Away.map g s) ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a)) =
+    val ((fromZeroRingHom ℬ (Submonoid.powers (g s))) (gradedZeroHom g a))
   have h1 : (fromZeroRingHom 𝒜 (Submonoid.powers s)) a
       = Away.mk 𝒜 hs 0 a a.2 := rfl
   rw [h1, Away.map_mk g s hs 0 a a.2]
@@ -158,7 +158,6 @@ theorem Proj_map_comp_toSpecZero (g : 𝒜 →+*ᵍ ℬ)
       Proj.toSpecZero ℬ ≫
         Spec.map (CommRingCat.ofHom (gradedZeroHom g)) := by
   refine (Proj.mapAffineOpenCover g hg).openCover.hom_ext _ _ fun s ↦ ?_
-  simp only [Scheme.AffineOpenCover.openCover_f, Proj.mapAffineOpenCover_f]
   have hL : (Proj.awayι ℬ (g s.2) (g.2 s.2.2) s.1.2) ≫
       (Proj.map g hg ≫ Proj.toSpecZero 𝒜) =
       Spec.map (CommRingCat.ofHom
@@ -208,9 +207,7 @@ theorem lineGradedQuotientHom_gradedZero_algebraMap (M : ℕ) [NeZero M] :
       MvPolynomial.algebraMap_eq,
       SetLike.GradeZero.coe_algebraMap (lineGrading M) c]
     exact (ambientQuotientHom M).commutes c
-  first
-  | exact hb
-  | exact Subtype.ext hb
+  exact hb
 
 /-- **THE ROTATION FIXES THE CONSTANTS** — the degree-zero restriction of
 the graded M-cycle rotation is the identity on the algebra map (the
@@ -227,9 +224,7 @@ theorem lineRotateGraded_gradedZero_algebraMap (M : ℕ) :
       ((algebraMap ℂ (lineGrading M 0) c : lineQuotient M)) := by
     rw [SetLike.GradeZero.coe_algebraMap (lineGrading M) c]
     exact (lineRotateHom M).commutes c
-  first
-  | exact hb
-  | exact Subtype.ext hb
+  exact hb
 
 /-! ## §2 THE OVER-BASE SQUARES -/
 
@@ -253,7 +248,7 @@ theorem finiteLineEmbedding_over_base (M : ℕ) [NeZero M] :
   rw [← CategoryTheory.Category.assoc,
     Proj_map_comp_toSpecZero (lineGradedQuotientHom M) (line_irrelevant_le M),
     CategoryTheory.Category.assoc,
-    ← Spec.map_comp, CommRingCat.ofHom_comp,
+    ← Spec.map_comp, ← CommRingCat.ofHom_comp,
     lineGradedQuotientHom_gradedZero_algebraMap M]
 
 /-- **R1 — THE CYCLE'S OVER-BASE SQUARE.**  The M-cycle automorphism
@@ -272,7 +267,7 @@ theorem finiteLineCycle_over_base (M : ℕ) :
   rw [← CategoryTheory.Category.assoc,
     Proj_map_comp_toSpecZero (lineRotateGraded M) (lineRotate_irrelevant_le M),
     CategoryTheory.Category.assoc,
-    ← Spec.map_comp, CommRingCat.ofHom_comp,
+    ← Spec.map_comp, ← CommRingCat.ofHom_comp,
     lineRotateGraded_gradedZero_algebraMap M]
 
 /-! ## §3 THE ACTUAL WORLD BUNDLE -/
