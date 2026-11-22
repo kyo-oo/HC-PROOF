@@ -12,6 +12,23 @@ import GSTFiniteLineSmoothness
 The unconditional round's R3+R1 battle: the two over-base compatibility
 squares that the world gate demands, and the world bundle they complete.
 
+WAVE 3-B (the nine-error repair of run 44975856431, all sites diagnosed):
+(1) the surplus `rfl`s after `rw [map_add]`/`rw [map_mul]` (the rewrite's
+auto-close — the "No goals" disease); (2) `fromZeroRingHom_comp_awayMap`
+REBUILT on the pin's own NumDenSameDeg shape (`HomogeneousLocalization.mk`
+takes ONE explicit argument — the NumDenSameDeg — never the grading family;
+the subtype-pairing `⟨g a, g.2 a.2⟩` rides `gradedZeroHom`); (3) THE
+UNIVERSE UNIFICATION — `CommRingCat.ofHom (gradedZeroHom g)` demands both
+degree-zero pieces at ONE universe, so the General section pins `A B : Type u`
+(the two applications live at `u := 0`); (4) the ambient-instance
+re-provision `attribute [local instance] MvPolynomial.gradedAlgebra` (the
+carrier files' own discipline — `GradedRing (ProjectiveGrading …)` is a
+LOCAL instance in GSTProjectiveOverC, invisible without re-provision);
+(5) the two constants-triangles rebuilt on the green receipts
+`SetLike.GradeZero.coe_algebraMap` (GSTFiniteLineSmoothness.lean:330-337)
+and the `.commutes` of the two algebra maps; (6) the two over-base squares
+cascade on the corrected pin lemma + the triangles.
+
 ## Contents
 
 * `gradedZeroHom` — the degree-zero restriction of a graded ring hom
@@ -19,12 +36,18 @@ squares that the world gate demands, and the world bundle they complete.
 * `fromZeroRingHom_comp_awayMap` — THE RING SQUARE: pushing a degree-zero
   element into the away-localization commutes with the away-map of a
   graded hom (the ring-level heart of the base-naturality);
-* `Proj_map_comp_toSpecZero` — THE BASE-NATURALITY (the missing pin
-  lemma): `Proj.map g ≫ Proj.toSpecZero 𝒜 = Proj.toSpecZero ℬ ≫
-  Spec.map (gradedZeroHom g)` for every graded hom `g` — proved by the
-  chart interchange (`awayι_comp_map`), the chart's structure-map square
+* `Proj_map_comp_toSpecZero` — THE BASE-NATURALITY (the pin lemma):
+  `Proj.map g ≫ Proj.toSpecZero 𝒜 = Proj.toSpecZero ℬ ≫
+  Spec.map (gradedZeroHom g)` for every graded hom `g : 𝒜 →+*ᵍ ℬ` (note
+  `Proj.map g : Proj ℬ ⟶ Proj 𝒜`, the contravariant pin direction) —
+  proved on the `mapAffineOpenCover` charts by the chart interchange
+  (`awayι_comp_map`), the chart's structure-map square
   (`awayι_toSpecZero`), the ring square, and open-cover `hom_ext`
   (the `map_comp` doctrine of the pin, Functor.lean);
+* `lineGradedQuotientHom_gradedZero_algebraMap` — the constants triangle
+  of the quotient presentation;
+* `lineRotateGraded_gradedZero_algebraMap` — the constants triangle of
+  the rotation (a ℂ-algebra automorphism);
 * `finiteLineEmbedding_over_base` — R3: the closed embedding commutes
   with the projective-space structure map (the `ProjectiveOverC` field);
 * `finiteLineCycle_over_base` — R1: the M-cycle automorphism is a
@@ -51,15 +74,22 @@ open GSTFiniteLineClosedImmersion GSTFiniteLineSmoothness
 open MvPolynomial DirectSum
 open HomogeneousLocalization
 
+-- The ambient-grading GradedRing instance is provisioned LOCALLY in
+-- GSTProjectiveOverC (its `attribute [local instance]` does not export);
+-- every finite-line carrier file re-provisions it — the same discipline.
+attribute [local instance] MvPolynomial.gradedAlgebra
+
 namespace GSTFiniteLineOverBase
 
 /-! ## §0 The degree-zero restriction of a graded ring hom -/
 
 section General
 
-variable {A : Type*} [CommRing A] {σ : Type*} [SetLike σ A]
+universe u
+
+variable {A : Type u} [CommRing A] {σ : Type u} [SetLike σ A]
   [AddSubgroupClass σ A] {𝒜 : ℕ → σ} [GradedRing 𝒜]
-variable {B : Type*} [CommRing B] {τ : Type*} [SetLike τ B]
+variable {B : Type u} [CommRing B] {τ : Type u} [SetLike τ B]
   [AddSubgroupClass τ B] {ℬ : ℕ → τ} [GradedRing ℬ]
 
 /-- **THE DEGREE-ZERO RESTRICTION.**  A graded ring hom restricts to a
@@ -77,12 +107,10 @@ def gradedZeroHom (g : 𝒜 →+*ᵍ ℬ) : (𝒜 0) →+* (ℬ 0) where
     apply Subtype.ext
     show g (x + y) = g x + g y
     rw [map_add]
-    rfl
   map_mul' x y := by
     apply Subtype.ext
     show g (x * y) = g x * g y
     rw [map_mul]
-    rfl
 
 theorem gradedZeroHom_apply (g : 𝒜 →+*ᵍ ℬ) (x : 𝒜 0) :
     gradedZeroHom g x = ⟨g x, g.2 x.2⟩ := rfl
@@ -91,28 +119,38 @@ theorem gradedZeroHom_apply (g : 𝒜 →+*ᵍ ℬ) (x : 𝒜 0) :
 away-localization commutes with the away-map of a graded hom: the two
 roads from `(𝒜 0)` to `Away ℬ (g s)` — localize first then push the
 localization, or restrict to degree zero first then localize — agree.
-This is the ring-level heart of the base-naturality. -/
+This is the ring-level heart of the base-naturality.
+
+Proof: the `RingHom.ext` point (normalized by the comp-coe `show`), the
+`rfl`-identification of the source road with the away-fraction
+`Away.mk 𝒜 hs 0 a a.2` (the pin's own `fromZeroRingHom` toFun is the
+fraction `a/1` and `Away.mk 𝒜 hs 0 a a.2` is the same fraction — `f⁰ = 1`
+and `0 • i = 0` are definitional), the pin's `Away.map_mk` computation
+rule, and the terminal `rfl` (the target road `fromZeroRingHom ℬ _
+(gradedZeroHom g a)` is the fraction `⟨g a, g.2 a.2⟩/1`, the away-image
+is the same fraction — degrees, numerators, denominators and the
+Prop-memberships all agree definitionally). -/
 theorem fromZeroRingHom_comp_awayMap (g : 𝒜 →+*ᵍ ℬ) {i : ℕ} (hi : 0 < i)
     (s : A) (hs : s ∈ 𝒜 i) :
     (Away.map g s).comp (fromZeroRingHom 𝒜 (Submonoid.powers s)) =
       (fromZeroRingHom ℬ (Submonoid.powers (g s))).comp (gradedZeroHom g) := by
   ext a
-  have hL : (Away.map g s) ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a)
-      = HomogeneousLocalization.mk ℬ ⟨0, g (a : A), 1, one_mem _⟩ := by
-    have h1 : (fromZeroRingHom 𝒜 (Submonoid.powers s)) a
-        = Away.mk 𝒜 hs 0 a a.2 := rfl
-    rw [h1, Away.map_mk g s hs 0 a a.2]
-  have hR : (fromZeroRingHom ℬ (Submonoid.powers (g s))) (gradedZeroHom g a)
-      = HomogeneousLocalization.mk ℬ ⟨0, g (a : A), 1, one_mem _⟩ := rfl
-  rw [hL, hR]
+  show (Away.map g s) ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a) =
+    (fromZeroRingHom ℬ (Submonoid.powers (g s))) (gradedZeroHom g a)
+  have h1 : (fromZeroRingHom 𝒜 (Submonoid.powers s)) a
+      = Away.mk 𝒜 hs 0 a a.2 := rfl
+  rw [h1, Away.map_mk g s hs 0 a a.2]
+  rfl
 
-/-- **THE BASE-NATURALITY OF `Proj.map`** — the missing pin lemma (the
+/-- **THE BASE-NATURALITY OF `Proj.map`** — the pin lemma (the
 architecture's R3 core): the Proj map of a graded hom commutes with the
-structure maps to the degree-zero spectra.  The proof is the pin's own
-`map_comp` doctrine (Functor.lean): open-cover `hom_ext` on the
+structure maps to the degree-zero spectra.  Note the pin's contravariant
+direction: `Proj.map g hg : Proj ℬ ⟶ Proj 𝒜` for `g : 𝒜 →+*ᵍ ℬ`, so both
+sides below are morphisms `Proj ℬ ⟶ Spec (𝒜 0)`.  The proof is the pin's
+own `map_comp` doctrine (Functor.lean): open-cover `hom_ext` on the
 `mapAffineOpenCover` charts, the chart interchange `awayι_comp_map`, the
 chart's structure-map square `awayι_toSpecZero` on both sides, the
-`Spec.map` merge, and the ring square. -/
+`Spec.map` fusion, and the ring square. -/
 theorem Proj_map_comp_toSpecZero (g : 𝒜 →+*ᵍ ℬ)
     (hg : HomogeneousIdeal.irrelevant ℬ ≤
       HomogeneousIdeal.map g (HomogeneousIdeal.irrelevant 𝒜)) :
@@ -121,25 +159,26 @@ theorem Proj_map_comp_toSpecZero (g : 𝒜 →+*ᵍ ℬ)
         Spec.map (CommRingCat.ofHom (gradedZeroHom g)) := by
   refine (Proj.mapAffineOpenCover g hg).openCover.hom_ext _ _ fun s ↦ ?_
   simp only [Scheme.AffineOpenCover.openCover_f, Proj.mapAffineOpenCover_f]
-  have hL : (awayι ℬ (g s.2) (g.2 s.2.2) s.1.2) ≫
+  have hL : (Proj.awayι ℬ (g s.2) (g.2 s.2.2) s.1.2) ≫
       (Proj.map g hg ≫ Proj.toSpecZero 𝒜) =
       Spec.map (CommRingCat.ofHom
-        ((Away.map g s).comp
-          (fromZeroRingHom 𝒜 (Submonoid.powers s)))) := by
+        ((Away.map g s.2).comp
+          (fromZeroRingHom 𝒜 (Submonoid.powers s.2)))) := by
     rw [← CategoryTheory.Category.assoc,
       Proj.awayι_comp_map g hg s.1.2 s.2 s.2.2,
       CategoryTheory.Category.assoc,
-      Proj.awayι_toSpecZero 𝒜 s.2 s.2.2 s.1.2]
-    exact (Spec.map_comp _ _).symm
-  have hR : (awayι ℬ (g s.2) (g.2 s.2.2) s.1.2) ≫
+      Proj.awayι_toSpecZero 𝒜 s.2 s.2.2 s.1.2,
+      ← CategoryTheory.Category.assoc, ← Spec.map_comp,
+      CommRingCat.ofHom_comp]
+  have hR : (Proj.awayι ℬ (g s.2) (g.2 s.2.2) s.1.2) ≫
       (Proj.toSpecZero ℬ ≫
         Spec.map (CommRingCat.ofHom (gradedZeroHom g))) =
       Spec.map (CommRingCat.ofHom
         ((fromZeroRingHom ℬ (Submonoid.powers (g s.2))).comp
           (gradedZeroHom g))) := by
     rw [← CategoryTheory.Category.assoc,
-      Proj.awayι_toSpecZero ℬ (g s.2) (g.2 s.2.2) s.1.2]
-    exact (Spec.map_comp _ _).symm
+      Proj.awayι_toSpecZero ℬ (g s.2) (g.2 s.2.2) s.1.2,
+      ← Spec.map_comp, CommRingCat.ofHom_comp]
   rw [hL, hR]
   exact congrArg (Spec.map ∘ CommRingCat.ofHom)
     (fromZeroRingHom_comp_awayMap g s.1.2 s.2 s.2.2)
@@ -151,58 +190,57 @@ end General
 /-- **THE QUOTIENT FIXES THE CONSTANTS** — the degree-zero restriction of
 the graded quotient presentation carries the ambient algebra map to the
 line algebra map (both degree-zero pieces are the constants, and the
-quotient fixes them). -/
+quotient fixes them).  The two `SetLike.GradeZero.coe_algebraMap`
+receipts (GSTFiniteLineSmoothness.lean:330-337 — the pinned
+`@[simp, norm_cast]` lemma of DirectSum/Internal.lean) reduce both sides
+to the ambient constants, and the `→ₐ[ℂ]` `.commutes` of the ambient
+quotient hom closes. -/
 theorem lineGradedQuotientHom_gradedZero_algebraMap (M : ℕ) [NeZero M] :
     (gradedZeroHom (lineGradedQuotientHom M)).comp
         (algebraMap ℂ (ProjectiveGrading (2 * M - 1) 0)) =
       algebraMap ℂ (lineGrading M 0) := by
   ext c
-  apply Subtype.ext
-  have hA : algebraMap ℂ (ProjectiveGrading (2 * M - 1) 0) c
-      = ⟨MvPolynomial.C c, by
-          rw [mem_homogeneousSubmodule]
-          exact isHomogeneous_C⟩ := rfl
-  have hB : algebraMap ℂ (lineGrading M 0) c
-      = ⟨algebraMap ℂ (lineQuotient M) c, by
-          exact lineQuotientMap_mem_lineGrading M 0 _
-            (by
-              rw [mem_homogeneousSubmodule]
-              exact isHomogeneous_C)⟩ := rfl
-  show (lineGradedQuotientHom M)
-      ((algebraMap ℂ (ProjectiveGrading (2 * M - 1) 0)) c) =
-    (algebraMap ℂ (lineGrading M 0)) c
-  rw [hA, hB]
-  show (ambientQuotientHom M) (MvPolynomial.C c) = algebraMap ℂ (lineQuotient M) c
-  exact (ambientQuotientHom M).commutes c
+  have hb : (ambientQuotientHom M)
+      ((algebraMap ℂ (ProjectiveGrading (2 * M - 1) 0) c :
+        ProjectiveCoordinateRing (2 * M - 1))) =
+      ((algebraMap ℂ (lineGrading M 0) c : lineQuotient M)) := by
+    rw [SetLike.GradeZero.coe_algebraMap (ProjectiveGrading (2 * M - 1)) c,
+      MvPolynomial.algebraMap_eq,
+      SetLike.GradeZero.coe_algebraMap (lineGrading M) c]
+    exact (ambientQuotientHom M).commutes c
+  first
+  | exact hb
+  | exact Subtype.ext hb
 
 /-- **THE ROTATION FIXES THE CONSTANTS** — the degree-zero restriction of
 the graded M-cycle rotation is the identity on the algebra map (the
-rotation is a ℂ-algebra automorphism). -/
+rotation is a ℂ-algebra automorphism).  Same receipt structure: the
+`coe_algebraMap` transport on both sides, then `.commutes` of the green
+`lineRotateHom`. -/
 theorem lineRotateGraded_gradedZero_algebraMap (M : ℕ) :
     (gradedZeroHom (lineRotateGraded M)).comp
         (algebraMap ℂ (lineGrading M 0)) =
       algebraMap ℂ (lineGrading M 0) := by
   ext c
-  apply Subtype.ext
-  have hB : algebraMap ℂ (lineGrading M 0) c
-      = ⟨algebraMap ℂ (lineQuotient M) c, by
-          exact lineQuotientMap_mem_lineGrading M 0 _
-            (by
-              rw [mem_homogeneousSubmodule]
-              exact isHomogeneous_C)⟩ := rfl
-  show (lineRotateGraded M) ((algebraMap ℂ (lineGrading M 0)) c) =
-    (algebraMap ℂ (lineGrading M 0)) c
-  rw [hB]
-  show (lineRotateHom M) (algebraMap ℂ (lineQuotient M) c) =
-    algebraMap ℂ (lineQuotient M) c
-  exact (lineRotateHom M).commutes c
+  have hb : (lineRotateHom M)
+      ((algebraMap ℂ (lineGrading M 0) c : lineQuotient M)) =
+      ((algebraMap ℂ (lineGrading M 0) c : lineQuotient M)) := by
+    rw [SetLike.GradeZero.coe_algebraMap (lineGrading M) c]
+    exact (lineRotateHom M).commutes c
+  first
+  | exact hb
+  | exact Subtype.ext hb
 
 /-! ## §2 THE OVER-BASE SQUARES -/
 
 /-- **R3 — THE EMBEDDING'S OVER-BASE SQUARE.**  The closed embedding into
 `ℙ^{2M-1}` commutes with the projective-space structure map: the world's
 `ProjectiveOverC` field.  The base-naturality instantiated at the graded
-quotient presentation, with the constants triangle closing the base maps. -/
+quotient presentation, with the constants triangle closing the base maps:
+the definitional `show` (both structure maps unfolded through their own
+`Proj.toSpecZero` shapes — the green rfl receipt of
+GSTFiniteLineSmoothness.lean:383), the associativity regroup, the pin
+lemma, the `Spec.map` fusion, and the quotient triangle. -/
 theorem finiteLineEmbedding_over_base (M : ℕ) [NeZero M] :
     finiteLineEmbedding M ≫ projectiveSpaceToBase (2 * M - 1) =
       finiteLineStructureMap M := by
@@ -214,13 +252,15 @@ theorem finiteLineEmbedding_over_base (M : ℕ) [NeZero M] :
       Spec.map (CommRingCat.ofHom (algebraMap ℂ (lineGrading M 0)))
   rw [← CategoryTheory.Category.assoc,
     Proj_map_comp_toSpecZero (lineGradedQuotientHom M) (line_irrelevant_le M),
-    CategoryTheory.Category.assoc, Spec.map_comp]
-  exact congrArg (Spec.map ∘ CommRingCat.ofHom)
-    (lineGradedQuotientHom_gradedZero_algebraMap M)
+    CategoryTheory.Category.assoc,
+    ← Spec.map_comp, CommRingCat.ofHom_comp,
+    lineGradedQuotientHom_gradedZero_algebraMap M]
 
 /-- **R1 — THE CYCLE'S OVER-BASE SQUARE.**  The M-cycle automorphism
 commutes with the structure map: it is a complex-scheme endomorphism of
-the finite-line world. -/
+the finite-line world.  Same cascade at the rotation (source and target
+gradings coincide, so the pin lemma closes both `toSpecZero` sides
+identically). -/
 theorem finiteLineCycle_over_base (M : ℕ) :
     finiteLineCycle M ≫ finiteLineStructureMap M =
       finiteLineStructureMap M := by
@@ -231,9 +271,9 @@ theorem finiteLineCycle_over_base (M : ℕ) :
       Spec.map (CommRingCat.ofHom (algebraMap ℂ (lineGrading M 0)))
   rw [← CategoryTheory.Category.assoc,
     Proj_map_comp_toSpecZero (lineRotateGraded M) (lineRotate_irrelevant_le M),
-    CategoryTheory.Category.assoc, Spec.map_comp]
-  exact congrArg (Spec.map ∘ CommRingCat.ofHom)
-    (lineRotateGraded_gradedZero_algebraMap M)
+    CategoryTheory.Category.assoc,
+    ← Spec.map_comp, CommRingCat.ofHom_comp,
+    lineRotateGraded_gradedZero_algebraMap M]
 
 /-! ## §3 THE ACTUAL WORLD BUNDLE -/
 
@@ -295,3 +335,5 @@ theorem finiteLineWorld_projective (M : ℕ) [NeZero M] :
 #print axioms finiteLineWorld_hWmap
 
 end GSTFiniteLineOverBase
+
+end -- noncomputable section
