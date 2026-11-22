@@ -1,9 +1,15 @@
-.name: GST Finite Line Riemann
+name: GST Finite Line Riemann
+
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - research/gpt6-gst-hypothesis-part1-chow-square-20261110
+    paths:
+      - 'GSTFiniteLineRiemann.lean'
+      - 'GSTSphereUnionComponents.lean'
+      - 'GSTProjectiveOverC.lean'
+      - '.github/workflows/gst-finite-line-riemann.yml'
   workflow_dispatch:
 
 jobs:
