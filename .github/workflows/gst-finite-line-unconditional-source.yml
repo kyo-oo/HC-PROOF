@@ -31,7 +31,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Kernel check the unconditional-source module (THE UNCONDITIONAL LAW + universal primitive-X source)
+    name: "Kernel check the unconditional-source module (THE UNCONDITIONAL LAW + universal primitive-X source)"
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:

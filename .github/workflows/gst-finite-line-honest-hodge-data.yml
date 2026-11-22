@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Kernel check the honest Hodge-data module (canonical cycle-class maps)
+    name: "Kernel check the honest Hodge-data module (canonical cycle-class maps)"
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:

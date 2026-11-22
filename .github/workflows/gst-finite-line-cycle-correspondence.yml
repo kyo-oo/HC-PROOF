@@ -29,7 +29,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Kernel check the M-cycle correspondence module (GATE-L: the two realized letters)
+    name: "Kernel check the M-cycle correspondence module (GATE-L: the two realized letters)"
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
