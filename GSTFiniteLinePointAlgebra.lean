@@ -1118,7 +1118,7 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
     intro g hg
     obtain ⟨t, ht, htsup⟩ := Finset.exists_mem_eq_sup
       (MvPolynomial.support g) (MvPolynomial.support_nonempty_iff.mpr hg)
-      (fun s => s.sum fun _ e => e)
+      (fun s : Fin (2 * M) →₀ ℕ => s.sum fun _ e => e)
     have hmem : (Finsupp.single (⟨1, by omega⟩ : Fin 2) 1 + t) ∈
         MvPolynomial.support ((X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) * g) := by
       rw [MvPolynomial.mem_support_iff,
@@ -1127,11 +1127,10 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
         MvPolynomial.coeff_monomial_mul, one_mul]
       exact (MvPolynomial.mem_support_iff.mp ht)
     have hwt : (Finsupp.single (⟨1, by omega⟩ : Fin 2) 1 + t).sum (fun _ e => e) =
-        1 + t.sum (fun _ e => e) := by
-      rw [Finsupp.sum_add, Finsupp.sum_single_index]
-      rfl
+        t.sum (fun _ e => e) + 1 := by
+      simp
     rw [show MvPolynomial.totalDegree g = t.sum (fun _ e => e) from htsup]
-    calc 1 + t.sum (fun _ e => e) =
+    calc t.sum (fun _ e => e) + 1 =
           (Finsupp.single (⟨1, by omega⟩ : Fin 2) 1 + t).sum (fun _ e => e) := hwt.symm
       _ ≤ MvPolynomial.totalDegree
             ((X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) * g) :=
@@ -1168,7 +1167,7 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
               rw [← hgf] at h1
               omega) h2, mul_zero]
   have hybarbot : ybar = ⊥ := by
-    refine Submodule.eq_bot_iff.mpr ?_
+    refine (Submodule.eq_bot_iff _).mpr ?_
     intro f hmem
     exact hkill f (MvPolynomial.totalDegree f) (Nat.le_refl _) hmem
   exact hybarne hybarbot
@@ -1252,7 +1251,7 @@ theorem lineClosedPointAt_coheight (M : ℕ) (i : Fin M) :
   rw [← hn] at hupper hlower ⊢
   have hn1 : n ≤ 1 := ENat.natCast_le_natCast.mp hupper
   have hn2 : 1 ≤ n := ENat.natCast_le_natCast.mp hlower
-  rw [← ENat.coe_one]
+  rw [show (1 : ℕ∞) = ((1 : ℕ) : ℕ∞) from rfl]
   exact congrArg ((↑) : ℕ → ℕ∞) (le_antisymm (α := ℕ) hn1 hn2)
 
 /-! ## §5 The component machinery -/
@@ -1341,6 +1340,7 @@ theorem exists_unique_generic_above (M : ℕ)
     (Order.coe_lt_coheight_iff (x := x.1) (n := 0) hfin).mp hlt
   refine ⟨⟨η, hη⟩, hxη, ?_⟩
   rintro ⟨η'v, hη'⟩ hxη'
+  have hxη'' : x.1 < η'v := hxη'
   obtain ⟨k, hk⟩ := exists_eq_lineGenericPoint M η hη
   obtain ⟨k', hk'⟩ := exists_eq_lineGenericPoint M η'v hη'
   have hkx : lineGenericIdeal M k ≤ x.1.asHomogeneousIdeal.toIdeal := by
@@ -1348,9 +1348,9 @@ theorem exists_unique_generic_above (M : ℕ)
     rw [← lineGenericPoint_asIdeal]
     exact (le_iff_ideal M x.1 (lineGenericPoint M k)).mp (le_of_lt hxη)
   have hkx' : lineGenericIdeal M k' ≤ x.1.asHomogeneousIdeal.toIdeal := by
-    rw [hk'] at hxη'
+    rw [hk'] at hxη''
     rw [← lineGenericPoint_asIdeal]
-    exact (le_iff_ideal M x.1 (lineGenericPoint M k')).mp (le_of_lt hxη')
+    exact (le_iff_ideal M x.1 (lineGenericPoint M k')).mp (le_of_lt hxη'')
   have hkk : k = k' := by
     by_contra hne
     apply x.1.not_irrelevant_le
