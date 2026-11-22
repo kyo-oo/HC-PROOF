@@ -138,8 +138,11 @@ theorem fromZeroRingHom_comp_awayMap (g : 𝒜 →+*ᵍ ℬ) {i : ℕ} (hi : 0 <
   show val ((Away.map g s) ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a)) =
     val ((fromZeroRingHom ℬ (Submonoid.powers (g s))) (gradedZeroHom g a))
   have ha : (a : A) ∈ 𝒜 (0 • i) := by rw [zero_smul]; exact a.2
-  have h1 : (fromZeroRingHom 𝒜 (Submonoid.powers s)) a
-      = Away.mk 𝒜 hs 0 (a : A) ha := rfl
+  have h1 : ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a) =
+      Away.mk 𝒜 hs 0 (a : A) ha := by
+    apply HomogeneousLocalization.val_injective
+    simp [HomogeneousLocalization.val_mk,
+      HomogeneousLocalization.Away.val_mk]
   rw [h1, Away.map_mk g s hs 0 (a : A) ha]
   rfl
 
@@ -170,24 +173,56 @@ theorem Proj_map_comp_toSpecZero (g : 𝒜 →+*ᵍ ℬ)
       Spec.map (CommRingCat.ofHom
         ((Away.map g (s.2 : A)).comp
           (fromZeroRingHom 𝒜 (Submonoid.powers (s.2 : A))))) := by
-    rw [← CategoryTheory.Category.assoc,
-      Proj.awayι_comp_map g hg s.1.2 (s.2 : A) s.2.2,
-      CategoryTheory.Category.assoc,
-      Proj.awayι_toSpecZero 𝒜 (s.2 : A) s.2.2 s.1.2,
-      ← CategoryTheory.Category.assoc, ← Spec.map_comp,
-      ← CommRingCat.ofHom_comp]
+    calc (Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2) ≫
+          (Proj.map g hg ≫ Proj.toSpecZero 𝒜)
+        = ((Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2) ≫
+            Proj.map g hg) ≫ Proj.toSpecZero 𝒜 := by
+              rw [← CategoryTheory.Category.assoc]
+      _ = (Spec.map (CommRingCat.ofHom (Away.map g (s.2 : A))) ≫
+            Proj.awayι 𝒜 (s.2 : A) s.2.2 s.1.2) ≫
+            Proj.toSpecZero 𝒜 := by
+              congr 1
+              exact Proj.awayι_comp_map g hg s.1.2 (s.2 : A) s.2.2
+      _ = Spec.map (CommRingCat.ofHom (Away.map g (s.2 : A))) ≫
+          (Proj.awayι 𝒜 (s.2 : A) s.2.2 s.1.2 ≫
+            Proj.toSpecZero 𝒜) := by
+              rw [CategoryTheory.Category.assoc]
+      _ = Spec.map (CommRingCat.ofHom (Away.map g (s.2 : A))) ≫
+          Spec.map (CommRingCat.ofHom
+            (fromZeroRingHom 𝒜 (Submonoid.powers (s.2 : A)))) := by
+              congr 1
+              exact Proj.awayι_toSpecZero 𝒜 (s.2 : A) s.2.2 s.1.2
+      _ = Spec.map (CommRingCat.ofHom
+          ((Away.map g (s.2 : A)).comp
+            (fromZeroRingHom 𝒜 (Submonoid.powers (s.2 : A))))) := by
+              rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
   have hR : (Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2) ≫
       (Proj.toSpecZero ℬ ≫
         Spec.map (CommRingCat.ofHom (gradedZeroHom g))) =
       Spec.map (CommRingCat.ofHom
         ((fromZeroRingHom ℬ (Submonoid.powers (g (s.2 : A)))).comp
           (gradedZeroHom g))) := by
-    rw [← CategoryTheory.Category.assoc,
-      Proj.awayι_toSpecZero ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2,
-      ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-  rw [hL, hR]
-  exact congrArg (Spec.map ∘ CommRingCat.ofHom)
-    (fromZeroRingHom_comp_awayMap g s.1.2 (s.2 : A) s.2.2)
+    calc (Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2) ≫
+          (Proj.toSpecZero ℬ ≫
+            Spec.map (CommRingCat.ofHom (gradedZeroHom g)))
+        = ((Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2) ≫
+            Proj.toSpecZero ℬ) ≫
+            Spec.map (CommRingCat.ofHom (gradedZeroHom g)) := by
+              rw [← CategoryTheory.Category.assoc]
+      _ = Spec.map (CommRingCat.ofHom
+            (fromZeroRingHom ℬ (Submonoid.powers (g (s.2 : A))))) ≫
+            Spec.map (CommRingCat.ofHom (gradedZeroHom g)) := by
+              congr 1
+              exact Proj.awayι_toSpecZero ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2
+      _ = Spec.map (CommRingCat.ofHom
+          ((fromZeroRingHom ℬ (Submonoid.powers (g (s.2 : A)))).comp
+            (gradedZeroHom g))) := by
+              rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
+  -- the assembly, pure term mode (no pattern matching)
+  exact hL.trans
+    ((congrArg (Spec.map ∘ CommRingCat.ofHom)
+      (fromZeroRingHom_comp_awayMap g s.1.2 (s.2 : A) s.2.2)).trans
+      hR.symm)
 
 end General
 
