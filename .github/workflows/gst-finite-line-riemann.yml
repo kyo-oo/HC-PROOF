@@ -1,0 +1,55 @@
+.name: GST Finite Line Riemann
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v5
+      with:
+        ref: research/gpt6-gst-hypothesis-part1-chow-square-20261110
+    - name: install elan
+      run: |
+        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+    - name: get cache
+      uses: actions/cache/restore@v4
+      with:
+        path: |
+          ~/.elan
+          .lake/build
+        key: hc-lean-incremental-Linux-finite-line-riemann
+        restore-keys: |
+          hc-lean-incremental-Linux-finite-line-smoothness
+          hc-lean-incremental-Linux-finite-line-world
+          hc-lean-incremental-Linux-finite-line-closed-immersion
+          hc-lean-incremental-Linux-finite-line-world-carrier
+          hc-lean-incremental-Linux-finite-line-ring
+          hc-lean-incremental-Linux-
+    - name: Compile the Riemann-sphere coordinate equivalence module
+      shell: bash
+      run: |
+        set -euo pipefail
+        if timeout 16800 lake build GSTFiniteLineRiemann > gst-finite-line-riemann.log 2>&1; then
+          echo "LEAN PASSED: the Riemann-sphere coordinate equivalence — riemannSphereEquiv kernel-certified"
+        else
+          grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-riemann.log | tail -n 100 || true
+          tail -n 75 gst-finite-line-riemann.log || true
+          exit 1
+        fi
+        if grep -E "declaration uses 'sorry'|sorryAx" gst-finite-line-riemann.log; then
+          echo "Unexpected axiom or sorry found" && exit 1
+        fi
+    - name: Upload exact Lean compiler diagnostics
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: gst-finite-line-riemann-lean
+        path: gst-finite-line-riemann.log
+        if-no-files-found: warn

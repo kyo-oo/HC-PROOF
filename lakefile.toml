@@ -1633,3 +1633,9 @@ roots = [
   "GSTPositiveDimensionalLawLanding",
   "GSTCyclicOrbitSpan",
 ]
+
+[[lean_lib]]
+name = "GSTFiniteLineRiemannLib"
+roots = [
+  "GSTFiniteLineRiemann",
+]
