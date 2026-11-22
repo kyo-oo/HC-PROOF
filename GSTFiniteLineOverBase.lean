@@ -148,6 +148,10 @@ theorem fromZeroRingHom_comp_awayMap (g : 𝒜 →+*ᵍ ℬ) {i : ℕ} (hi : 0 <
   show _ = (HomogeneousLocalization.mk ⟨0, (gradedZeroHom g) a, 1, one_mem _⟩).val
   simp [HomogeneousLocalization.val_mk,
     HomogeneousLocalization.Away.val_mk]
+  -- the residual: Localization.mk (g ↑a) ⟨1, ⋯⟩ = Localization.mk ↑((gradedZeroHom g) a) ⟨1, ⋯⟩
+  -- pure defeq (gradedZeroHom's structure-delta + Subtype.eta on the
+  -- numerator, proof irrelevance on the denominator-witness)
+  rfl
 
 /-- **THE BASE-NATURALITY OF `Proj.map`** — the pin lemma (the
 architecture's R3 core): the Proj map of a graded hom commutes with the
