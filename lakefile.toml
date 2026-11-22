@@ -1589,8 +1589,9 @@ roots = [
 # the world/analytification/letters as inputs), discharged through the green
 # wave-60 sphere-union engine with the wave-64 identity-Krylov certificates.
 [[lean_lib]]
-name = "GSTFiniteLineGeneralMLawLib"
+name = "GSTFiniteLineWorldDischargeLib"
 roots = [
+  "GSTFiniteLineWorldDischarge",
   "GSTFiniteLineGeneralMLaw",
   "GSTPositiveDimensionalLawLanding",
   "GSTCyclicOrbitSpan",
