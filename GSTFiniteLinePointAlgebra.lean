@@ -1116,8 +1116,9 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
       MvPolynomial.totalDegree g + 1 ≤
         MvPolynomial.totalDegree ((X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) * g) := by
     intro g hg
-    have hsupp : (Finsupp.support g).Nonempty := by
-      rw [Finsupp.support_nonempty_iff]
+    have hsupp : (MvPolynomial.support g).Nonempty := by
+      rw [show MvPolynomial.support g = Finsupp.support g from rfl,
+        Finsupp.support_nonempty_iff]
       exact hg
     obtain ⟨t, ht, htsup⟩ := Finset.exists_mem_eq_sup
       (MvPolynomial.support g) hsupp
