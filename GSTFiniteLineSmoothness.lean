@@ -442,14 +442,18 @@ theorem lineX_mem_one (M : ℕ) [NeZero M] (a : Fin (2 * M)) :
 
 /-- The homogeneous membership at the smul-form `n • 1` (the degree shape
 `Away.mk` demands; `n • 1 = n` by `one_nsmul`). -/
+/-- The smul-degree collapse, proved once in isolation (the in-theorem
+induction captured the theorem's own hypothesis into the motive — the
+context-free form is immune). -/
+private theorem nsmul_one_eq (n : ℕ) : n • 1 = n := by
+  induction n with
+  | zero => rfl
+  | succ m ih => rw [succ_nsmul, ih]
+
 theorem lineQuotientMap_mem_lineGrading_smul (M : ℕ) (n : ℕ) (t : lineRing M)
     (ht : t ∈ MvPolynomial.homogeneousSubmodule (Fin (2 * M)) ℂ n) :
     lineQuotientMap M t ∈ lineGrading M (n • 1) := by
-  have hn : n • 1 = n := by
-    induction n with
-    | zero => rfl
-    | succ m ih => rw [succ_nsmul, ih]
-  rw [hn]
+  rw [nsmul_one_eq]
   exact lineQuotientMap_mem_lineGrading M n t ht
 
 theorem linePartner_mem_smul_one (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
@@ -633,7 +637,7 @@ private theorem mk_pow (M : ℕ) [NeZero M] (j : Fin (2 * M))
   | succ e ih =>
       rw [pow_succ, ih,
         away_mk_mul M j e 1 (x ^ e) x
-          (SetLike.pow_mem_graded e (lineCoverHomogeneousOneQ M j)) hx]
+          (SetLike.pow_mem_graded e hx) hx]
       rfl
 
 /-! ### §7.C′ The per-monomial evaluation (the degree-indexed Finsupp induction) -/
@@ -673,7 +677,8 @@ private theorem monomial_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
         lineQuotientMap_mem_lineGrading_smul M 1 (MvPolynomial.X a)
           ((MvPolynomial.mem_homogeneousSubmodule 1 (MvPolynomial.X a)).mpr
             (MvPolynomial.isHomogeneous_X ℂ a))
-      rw [hsplit, map_mul, map_pow, MvPolynomial.aeval_X, hX, ih,
+      conv_lhs => rw [hsplit]
+      rw [map_mul, map_pow, MvPolynomial.aeval_X, hX, ih,
         mk_pow M j (lineQuotientMap M (MvPolynomial.X a)) hXmem e,
         away_mk_mul M j d'.degree e
           (lineQuotientMap M (MvPolynomial.monomial d' c))
@@ -710,19 +715,16 @@ private theorem homogeneous_eval_aux (M : ℕ) [NeZero M] (j : Fin (2 * M))
       apply HomogeneousLocalization.val_injective
         (𝒜 := lineGrading M)
         (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
-      rw [HomogeneousLocalization.val_zero, HomogeneousLocalization.Away.val_mk]
-      refine Eq.trans ?_ (Localization.mk_zero _)
-      exact congrArg (fun a => Localization.mk a
-        ⟨(lineQuotientMap M (MvPolynomial.X j)) ^ n, _⟩)
-        (map_zero (lineQuotientMap M))
+      rw [HomogeneousLocalization.val_zero, HomogeneousLocalization.Away.val_mk,
+        map_zero (lineQuotientMap M), Localization.mk_zero]
   | add p q hp hq ihp ihq =>
-      rw [map_add, ihp, ihq,
-        away_mk_add M j n (lineQuotientMap M p) (lineQuotientMap M q)
-          (lineQuotientMap_mem_lineGrading_smul M n p
-            ((MvPolynomial.mem_homogeneousSubmodule n p).mpr hp))
-          (lineQuotientMap_mem_lineGrading_smul M n q
-            ((MvPolynomial.mem_homogeneousSubmodule n q).mpr hq)),
-        ← map_add]
+      rw [map_add, ihp, ihq]
+      apply HomogeneousLocalization.val_injective
+        (𝒜 := lineGrading M)
+        (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+      rw [HomogeneousLocalization.val_add, HomogeneousLocalization.Away.val_mk,
+        HomogeneousLocalization.Away.val_mk, HomogeneousLocalization.Away.val_mk,
+        Localization.add_mk_self, map_add]
   | monomial d r hr =>
       have hdn : d.degree = n := by
         rw [Finsupp.degree_eq_weight_one]
@@ -772,7 +774,8 @@ private theorem mk_self_frac (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
       (Submonoid.mem_powers_iff _ _).mpr ⟨1, rfl⟩⟩ :
       Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))) =
       (1 : Submonoid.powers (lineQuotientMap M (MvPolynomial.X j))) from
-      Subtype.ext (pow_one _),
+      Subtype.ext (show (lineQuotientMap M (MvPolynomial.X j)) ^ 1 = 1 from
+        pow_one _),
     Localization.mk_one]
 
 /-- The off-block variables annihilate `f`: `q (X a) * f = 0` whenever `a`
@@ -885,12 +888,7 @@ theorem chartMap_surjective (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
   intro z
   obtain ⟨n, a, ha, rfl⟩ := HomogeneousLocalization.Away.mk_surjective
     (lineGrading M) (lineCoverHomogeneousOneQ M j) z
-  have han : a ∈ lineGrading M n := by
-    have hn : n • 1 = n := by
-      induction n with
-      | zero => rfl
-      | succ m ih => rw [succ_nsmul, ih]
-    rwa [hn] at ha
+  have han : a ∈ lineGrading M n := by rwa [nsmul_one_eq] at ha
   obtain ⟨t, ht, rfl⟩ := (mem_lineGrading M n a).mp han
   refine ⟨blockEvalQuot M j (lineQuotientMap M t), ?_⟩
   show chartMap M j (blockEval M j t) = _
@@ -971,7 +969,6 @@ theorem chart_retract (M : ℕ) [NeZero M] (j : Fin (2 * M))
           show MvPolynomial.aeval (fun _ : Fin 1 => chartRatio M j)
               (MvPolynomial.X (0 : Fin 1)) = chartRatio M j
           rw [MvPolynomial.aeval_X]
-          rfl,
         show chartRatio M j = HomogeneousLocalization.Away.mk (lineGrading M)
             (lineCoverHomogeneousOneQ M j) 1
             (lineQuotientMap M (MvPolynomial.X (linePartner M j)))
@@ -1025,12 +1022,17 @@ source-locality at the variable cover (`iSup_basicOpen_eq_top'`), the
 per-chart `basicOpenIsoSpec` retype, the §5 chart square, and the affine
 criterion `HasRingHomProperty.Spec_iff`. -/
 theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
-    Smooth (finiteLineStructureMap M) :=
-  -- TERM MODE: the goal's expected type pins P's universe BEFORE the
-  -- [IsZariskiLocalAtSource @Smooth] instance synthesis fires (the
-  -- rw-mode elaborated the lemma with a floating universe meta — the
-  -- diagnosed disease of runs 44963149127/44968228948).
-  (IsZariskiLocalAtSource.iff_of_iSup_eq_top (P := @Smooth) _
+    Smooth (finiteLineStructureMap M) := by
+  -- THE LOCAL-INSTANCE FORK: the universe is pinned explicitly (the
+  -- diagnostic receipt: Quiver.Hom.{0,1} — the world lives at Scheme.{0}),
+  -- so the locality instance is synthesized ONCE at the concrete universe
+  -- and found locally by every downstream elaboration (the floating-
+  -- universe synthesis disease of runs 44963149127/44968228948/44969325482).
+  haveI hloc : IsZariskiLocalAtSource
+      (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
+  haveI hriso : MorphismProperty.RespectsIso
+      (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
+  exact (IsZariskiLocalAtSource.iff_of_iSup_eq_top (P := @Smooth) _
     (Proj.iSup_basicOpen_eq_top' (lineGrading M)
       (fun j : Fin (2 * M) => lineQuotientMap M (MvPolynomial.X j))
       (lineCoverHomogeneousQ M) (lineCoverAdjoin M))).mr fun j => by
