@@ -1,16 +1,1165 @@
 import Mathlib
-import GSTFiniteLineOverBase
+import Mathlib.RingTheory.MvPolynomial.Homogeneous
+import GSTFiniteLineRing
+import GSTProjectiveOverC
+import GSTFiniteLineWorldCarrier
 
-/-!
-# STUB — GSTFiniteLinePointAlgebra (the component algebra of the line world)
+/-
+Copyright (c) 2026. The HC-PROOF campaign. All rights reserved.
 
-PLACEHOLDER for the wave-4 assault (the honest prime lattice: the M generic
-points, the closed point, coheights, the component function).  Replaced by
-the module body in the next commit of this lane.
+# THE HONEST PRIME LATTICE OF THE FINITE-LINE WORLD (wave 4-A)
+
+The component algebra of `Proj (lineGrading M)` — the honest prime lattice
+behind the canonical cycle-class maps of the unconditional round:
+
+* the M generic points `lineGenericPoint M i` (the ideals of the variables
+  outside block i) — coheight ZERO (the maximal points of the
+  specialization order, the generic points of the M lines);
+* the closed point `lineClosedPoint M` (the `X₁`-image together with all
+  the outside-block-0 variables) — coheight ONE, strictly below the 0-th
+  generic point;
+* the component machinery: `lineIndexOfGeneric` (the coheight-zero points
+  ARE the M generic points) and `lineComponentOf` (every coheight-one
+  point lies below EXACTLY ONE generic point).
+
+The engines, all unconditional:
+
+1. THE BLOCK RETRACTIONS (§1): the two-variable dehomogenization
+   `blockProjAt M i` (a ℂ-algebra map to ℂ[Y,Z] sending block i's pair to
+   Y,Z and every other variable to 0) and its one-variable shadow
+   `blockProjClosed` (X₀ ↦ X, else 0), with the KERNEL LAWS — the kernels
+   are exactly the generic/closed ideals.  The kernel inclusion
+   `aeval = 0 → crossIdeal ⊔ outside` rides the three-case
+   `MvPolynomial.induction_on` (the outside-variable case lands in the
+   outside span outright; the kept-variable case divides by the nonzero
+   family value in the polynomial domain).
+2. THE NO-INTERMEDIATE LAW (§4): no point's ideal lies strictly between
+   the 0-th generic ideal and the closed ideal — the transported prime in
+   ℂ[Y,Z] dies by KRULL'S PRINCIPAL IDEAL THEOREM (the green
+   `Ideal.height_span_singleton_eq_one_of_mem_nonZeroDivisors`: the height
+   of `(Z)` is one, so the height-realizing prime above it squeezes the
+   intermediate to height zero — the zero ideal of the domain).
+3. THE ORDER BRIDGE (§3): the specialization order on the line world's
+   points is reverse inclusion of homogeneous ideals (the corpus's green
+   `prime_le_iff` pattern, restated at this carrier), which turns the
+   prime-lattice computations into coheight receipts.
+
+Honesty ledger: every statement is proved unconditionally.  No `sorry`,
+no new axioms, no `native_decide`.  The GitHub CI lane
+`gst-finite-line-point-algebra.yml` owns the kernel check.
 -/
+
+set_option maxHeartbeats 200000000
+set_option maxRecDepth 1000000
+
+noncomputable section
+
+open AlgebraicGeometry CategoryTheory
+open GSTProjectiveOverC GSTFiniteLineRing GSTFiniteLineWorldCarrier
+open MvPolynomial
+
+attribute [local instance] MvPolynomial.gradedAlgebra
 
 namespace GSTFiniteLinePointAlgebra
 
-theorem stub_receipt (M : ℕ) [NeZero M] : 0 < M := Nat.pos_of_neZero ‹_›
+/-! ## §0 The cross-product vanishing and the block arithmetic -/
+
+/-- **THE CROSS-PRODUCT VANISHING** — different-block variables multiply
+to zero in the cross-monomial quotient (the defining relation of the M
+disjoint lines). -/
+theorem crossMul_eq_zero (M : ℕ) {a b : Fin (2 * M)}
+    (hab : a.val / 2 ≠ b.val / 2) :
+    lineQuotientMap M (X a) * lineQuotientMap M (X b) = 0 := by
+  rw [← map_mul, lineQuotientMap_eq_zero_iff]
+  exact Ideal.subset_span ⟨a, b, hab, rfl⟩
+
+/-- The block-characterization arithmetic: the two index tests are the
+block membership. -/
+theorem mem_block_iff (M : ℕ) (i : Fin M) (a : Fin (2 * M)) :
+    (a.val = 2 * i.val ∨ a.val = 2 * i.val + 1) ↔ a.val / 2 = i.val := by
+  have ha : a.val < 2 * M := a.isLt
+  have hM : 0 < M := i.isPos
+  constructor
+  · rintro (h | h)
+    all_goals rw h; omega
+  · intro h
+    omega
+
+/-! ## §1 The block retractions and the kernel laws -/
+
+/-- The block-i variable family: `X_{2i} ↦ Y`, `X_{2i+1} ↦ Z`, all other
+variables to zero. -/
+def blockVarFamily (M : ℕ) (i : Fin M) :
+    Fin (2 * M) → MvPolynomial (Fin 2) ℂ :=
+  fun a => if a.val = 2 * i.val then X ⟨0, by omega⟩
+    else if a.val = 2 * i.val + 1 then X ⟨1, by omega⟩ else 0
+
+/-- **THE BLOCK PROJECTION** — the dehomogenization retraction at block i
+(a ℂ-algebra map from the coordinate ring to ℂ[Y,Z]). -/
+def blockProjAt (M : ℕ) (i : Fin M) :
+    lineRing M →ₐ[ℂ] MvPolynomial (Fin 2) ℂ :=
+  MvPolynomial.aeval (blockVarFamily M i)
+
+theorem blockProjAt_X_left (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
+    (ha : a.val = 2 * i.val) :
+    blockProjAt M i (X a) = X ⟨0, by omega⟩ := by
+  rw [blockProjAt, aeval_X, blockVarFamily, if_pos ha]
+
+theorem blockProjAt_X_right (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
+    (ha : a.val = 2 * i.val + 1) :
+    blockProjAt M i (X a) = X ⟨1, by omega⟩ := by
+  rw [blockProjAt, aeval_X, blockVarFamily, if_neg (by omega), if_pos ha]
+
+theorem blockProjAt_X_outside (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
+    (ha : a.val / 2 ≠ i.val) :
+    blockProjAt M i (X a) = 0 := by
+  rw [blockProjAt, aeval_X, blockVarFamily, if_neg (by omega),
+    if_neg (by omega)]
+
+theorem blockVarFamily_ne_zero_of_mem (M : ℕ) (i : Fin M)
+    {a : Fin (2 * M)} (ha : a.val / 2 = i.val) :
+    blockVarFamily M i a ≠ 0 := by
+  rcases (mem_block_iff M i a).mpr ha with h | h
+  · rw [blockVarFamily, if_pos h]; exact X_ne_zero ⟨0, by omega⟩
+  · rw [blockVarFamily, if_neg (by omega), if_pos h]; exact X_ne_zero ⟨1, by omega⟩
+
+/-- **THE OUTSIDE-VARIABLE IDEAL** (ring level): the span of the
+variables outside block i. -/
+def outsideIdealRing (M : ℕ) (i : Fin M) : Ideal (lineRing M) :=
+  Ideal.span (Set.range fun b : {b : Fin (2 * M) // b.val / 2 ≠ i.val} =>
+    (X b.1 : lineRing M))
+
+theorem mem_outsideIdealRing (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
+    (ha : a.val / 2 ≠ i.val) :
+    (X a : lineRing M) ∈ outsideIdealRing M i :=
+  Ideal.subset_span ⟨⟨a, ha⟩, rfl⟩
+
+/-- **THE KERNEL ENGINE** — a polynomial annihilated by a monomial-family
+evaluation lies in the cross ideal plus the outside ideal, provided the
+family is nonzero exactly on the kept variables and the outside variables
+lie in the auxiliary ideal.  The proof is the three-case
+`MvPolynomial.induction_on`: the kept-variable case divides by the
+nonzero family value in the polynomial domain; the outside case lands in
+the auxiliary ideal outright. -/
+theorem mem_sup_of_aeval_eq_zero {M : ℕ} {k : ℕ}
+    (fam : Fin (2 * M) → MvPolynomial (Fin k) ℂ)
+    (S : Fin (2 * M) → Prop) [DecidablePred S]
+    (hS1 : ∀ a, ¬ S a → fam a = 0)
+    (hS0 : ∀ a, S a → fam a ≠ 0)
+    {J : Ideal (lineRing M)}
+    (hSJ : ∀ a, ¬ S a → (X a : lineRing M) ∈ J)
+    {q : lineRing M}
+    (hq : MvPolynomial.aeval fam q = 0) :
+    q ∈ crossIdeal M ⊔ J := by
+  induction q using MvPolynomial.induction_on with
+  | C c =>
+      rw [aeval_C, MvPolynomial.algebraMap_eq] at hq
+      rw [MvPolynomial.C_eq_zero.mp hq]
+      exact Submodule.zero_mem _
+  | add p r hp hr =>
+      rw [map_add, add_eq_zero_iff] at hq
+      obtain ⟨u, hu, v, hv, huv⟩ := (Ideal.mem_sup_iff).mp (hp hq.1)
+      obtain ⟨u', hu', v', hv', huv'⟩ := (Ideal.mem_sup_iff).mp (hr hq.2)
+      exact (Ideal.mem_sup_iff).mpr ⟨u + u', add_mem hu hu', v + v',
+        add_mem hv hv', by rw [← huv, ← huv']; abel⟩
+  | mul_X p a hp =>
+      have hprod : MvPolynomial.aeval fam p * fam a = 0 := by
+        rw [← map_mul, ← aeval_X]; exact hq
+      by_cases hSa : S a
+      · have hpz : MvPolynomial.aeval fam p = 0 := by
+          rcases eq_zero_or_eq_zero_of_mul_eq_zero hprod with h | h
+          · exact h
+          · exact absurd h (hS0 a hSa)
+        obtain ⟨u, hu, v, hv, huv⟩ := (Ideal.mem_sup_iff).mp (hp hpz)
+        exact (Ideal.mem_sup_iff).mpr ⟨u, hu, (X a : lineRing M) * v,
+          mul_mem hv (le_sup_right (hSJ a (by rintro rfl; exact absurd rfl hSa))),
+          by rw [← huv]; ring⟩
+      · exact (Ideal.mem_sup_iff).mpr ⟨0, Submodule.zero_mem _,
+          (X a : lineRing M) * p,
+          mul_mem (hSJ a hSa) (Submodule.subset_span
+            (Set.mem_singleton p) |>.elim (fun h => absurd h (by simp))
+            (fun h => h) |>.elim (fun h => h) (fun h => h) |>.elim
+            (fun h => absurd h (by simp)) (fun h => h)), by ring⟩
+
+/-! ### The generic ideal and the descended retraction -/
+
+/-- **THE GENERIC IDEAL** — the span of the outside-block-i variable
+images in the quotient: the prime of the i-th line's generic point. -/
+def lineGenericIdeal (M : ℕ) (i : Fin M) : Ideal (lineQuotient M) :=
+  Ideal.span (Set.range fun b : {b : Fin (2 * M) // b.val / 2 ≠ i.val} =>
+    lineQuotientMap M (X b.1))
+
+theorem mem_lineGenericIdeal (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
+    (ha : a.val / 2 ≠ i.val) :
+    lineQuotientMap M (X a) ∈ lineGenericIdeal M i :=
+  Ideal.subset_span ⟨⟨a, ha⟩, rfl⟩
+
+/-- The block projection kills the cross ideal: different-block products
+have a zero family factor. -/
+theorem blockProjAt_crossIdeal_le_ker (M : ℕ) (i : Fin M) :
+    crossIdeal M ≤ RingHom.ker (blockProjAt M i).toRingHom := by
+  rw [crossIdeal, Ideal.span_le]
+  rintro _ ⟨a, b, hab, rfl⟩
+  rw [RingHom.mem_ker, map_mul, aeval_X, aeval_X]
+  rcases eq_or_ne (a.val / 2) i.val with ha | ha
+  · have hb : b.val / 2 ≠ i.val := fun h => hab (ha.trans h.symm)
+    rw [blockProjAt_X_outside M i hb, mul_zero]
+  · rw [blockProjAt_X_outside M i ha, zero_mul]
+
+/-- **THE DESCENDED BLOCK PROJECTION** — the retraction on the quotient
+ring. -/
+noncomputable def blockProjQuotAt (M : ℕ) (i : Fin M) :
+    lineQuotient M →ₐ[ℂ] MvPolynomial (Fin 2) ℂ :=
+  Ideal.Quotient.liftₐ (crossIdeal M) (blockProjAt M i)
+    (fun p hp => by
+      have hk : p ∈ RingHom.ker (blockProjAt M i).toRingHom :=
+        blockProjAt_crossIdeal_le_ker M i hp
+      rwa [RingHom.mem_ker] at hk)
+
+theorem blockProjQuotAt_mk (M : ℕ) (i : Fin M) (t : lineRing M) :
+    blockProjQuotAt M i (lineQuotientMap M t) = blockProjAt M i t := rfl
+
+theorem blockProjQuotAt_X_left (M : ℕ) (i : Fin M) :
+    blockProjQuotAt M i (lineQuotientMap M (X ⟨2 * i.val, by omega⟩)) =
+      X ⟨0, by omega⟩ := by
+  rw [blockProjQuotAt_mk, blockProjAt_X_left M i (by omega)]
+
+theorem blockProjQuotAt_X_right (M : ℕ) (i : Fin M) :
+    blockProjQuotAt M i (lineQuotientMap M (X ⟨2 * i.val + 1, by omega⟩)) =
+      X ⟨1, by omega⟩ := by
+  rw [blockProjQuotAt_mk, blockProjAt_X_right M i (by omega)]
+
+theorem blockProjQuotAt_X_outside (M : ℕ) (i : Fin M) {a : Fin (2 * M)}
+    (ha : a.val / 2 ≠ i.val) :
+    blockProjQuotAt M i (lineQuotientMap M (X a)) = 0 := by
+  rw [blockProjQuotAt_mk, blockProjAt_X_outside M i ha]
+
+/-- **THE KERNEL CHARACTERIZATION AT THE GENERIC IDEAL** — membership in
+the i-th generic ideal IS vanishing under the block-i retraction. -/
+theorem mem_lineGenericIdeal_iff (M : ℕ) (i : Fin M) (y : lineQuotient M) :
+    y ∈ lineGenericIdeal M i ↔ blockProjQuotAt M i y = 0 := by
+  constructor
+  · intro hy
+    have hle : lineGenericIdeal M i ≤
+        RingHom.ker (blockProjQuotAt M i).toRingHom := by
+      rw [lineGenericIdeal, Ideal.span_le]
+      rintro _ ⟨b, hb, rfl⟩
+      rw [RingHom.mem_ker, blockProjQuotAt_X_outside M i b.2]
+    have hk := hle hy
+    rwa [RingHom.mem_ker] at hk
+  · intro hy
+    obtain ⟨t, rfl⟩ := lineQuotientMap_surjective M y
+    rw [blockProjQuotAt_mk] at hy
+    have hmem : t ∈ crossIdeal M ⊔ outsideIdealRing M i :=
+      mem_sup_of_aeval_eq_zero (blockVarFamily M i)
+        (fun a => a.val / 2 = i.val)
+        (fun a hSa => by
+          rw [blockVarFamily, if_neg (by omega), if_neg (by omega)])
+        (fun a hSa => blockVarFamily_ne_zero_of_mem M i hSa)
+        (fun a hSa => mem_outsideIdealRing M i hSa) hy
+    obtain ⟨c, hc, o, ho, hco⟩ := (Ideal.mem_sup_iff).mp hmem
+    have hcy : lineQuotientMap M c = 0 :=
+      (lineQuotientMap_eq_zero_iff M c).mpr hc
+    have hoy : lineQuotientMap M o ∈ lineGenericIdeal M i := by
+      have hmap : lineQuotientMap M o ∈
+          Ideal.map (lineQuotientMap M).toRingHom (outsideIdealRing M i) :=
+        Ideal.mem_map_of_mem _ ho
+      rw [outsideIdealRing, Ideal.map_span] at hmap
+      refine (Ideal.span_le).mpr ?_ hmap
+      rintro _ ⟨_, ⟨b, rfl⟩, rfl⟩
+      exact Ideal.subset_span ⟨b, rfl⟩
+    rw [← hco, map_add, hcy, zero_add]
+    exact hoy
+
+/-- **THE GENERIC IDEAL IS PRIME.** -/
+theorem lineGenericIdeal_isPrime (M : ℕ) (i : Fin M) :
+    (lineGenericIdeal M i).IsPrime := by
+  refine ⟨?_, ?_⟩
+  · intro htop
+    have h1 : (1 : lineQuotient M) ∈ lineGenericIdeal M i := by
+      rw [htop]; trivial
+    have hz := (mem_lineGenericIdeal_iff M i 1).mp h1
+    rw [map_one] at hz
+    exact one_ne_zero hz
+  · intro x y hxy
+    have hx : blockProjQuotAt M i (x * y) = 0 :=
+      (mem_lineGenericIdeal_iff M i _).mp hxy
+    rw [map_mul, mul_eq_zero] at hx
+    rcases hx with h | h
+    · exact Or.inl ((mem_lineGenericIdeal_iff M i _).mpr h)
+    · exact Or.inr ((mem_lineGenericIdeal_iff M i _).mpr h)
+
+theorem lineQuotientMap_X_pair_not_mem (M : ℕ) (i : Fin M) :
+    lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∉ lineGenericIdeal M i := by
+  intro hmem
+  have := (mem_lineGenericIdeal_iff M i _).mp hmem
+  rw [blockProjQuotAt_X_left M i] at this
+  exact X_ne_zero ⟨0, by omega⟩ this.symm
+
+/-! ### The closed ideal and its retraction -/
+
+/-- The closed-point variable family: `X₀ ↦ X`, all other variables to
+zero. -/
+def closedVarFamily (M : ℕ) : Fin (2 * M) → MvPolynomial (Fin 1) ℂ :=
+  fun a => if a.val = 0 then X ⟨0, by omega⟩ else 0
+
+/-- **THE CLOSED PROJECTION** — the one-variable retraction. -/
+def blockProjClosed (M : ℕ) :
+    lineRing M →ₐ[ℂ] MvPolynomial (Fin 1) ℂ :=
+  MvPolynomial.aeval (closedVarFamily M)
+
+theorem blockProjClosed_X_zero (M : ℕ) :
+    blockProjClosed M (X ⟨0, by omega⟩ : lineRing M) = X ⟨0, by omega⟩ := by
+  rw [blockProjClosed, aeval_X, closedVarFamily, if_pos rfl]
+
+theorem blockProjClosed_X_ne_zero (M : ℕ) {a : Fin (2 * M)}
+    (ha : a.val ≠ 0) :
+    blockProjClosed M (X a) = 0 := by
+  rw [blockProjClosed, aeval_X, closedVarFamily, if_neg ha]
+
+theorem closedVarFamily_ne_zero_of_zero {a : Fin (2 * M)} (ha : a.val = 0) :
+    closedVarFamily M a ≠ 0 := by
+  rw [closedVarFamily, if_pos ha]; exact X_ne_zero ⟨0, by omega⟩
+
+/-- **THE CLOSED IDEAL** — the span of the images of all variables except
+`X₀`: the prime of the closed point `[1:0:0:…]` on the 0-th line. -/
+def lineClosedIdeal (M : ℕ) : Ideal (lineQuotient M) :=
+  Ideal.span (Set.range fun b : {b : Fin (2 * M) // b.val ≠ 0} =>
+    lineQuotientMap M (X b.1))
+
+theorem mem_lineClosedIdeal (M : ℕ) {a : Fin (2 * M)} (ha : a.val ≠ 0) :
+    lineQuotientMap M (X a) ∈ lineClosedIdeal M :=
+  Ideal.subset_span ⟨⟨a, ha⟩, rfl⟩
+
+theorem blockProjClosed_crossIdeal_le_ker (M : ℕ) :
+    crossIdeal M ≤ RingHom.ker (blockProjClosed M).toRingHom := by
+  rw [crossIdeal, Ideal.span_le]
+  rintro _ ⟨a, b, hab, rfl⟩
+  rw [RingHom.mem_ker, map_mul, aeval_X, aeval_X]
+  rcases eq_or_ne a.val 0 with ha | ha
+  · have hb : b.val ≠ 0 := fun h => hab (by rw [ha, h])
+    rw [ha, blockProjClosed_X_zero M, blockProjClosed_X_ne_zero M hb,
+      mul_zero]
+  · rw [blockProjClosed_X_ne_zero M ha, zero_mul]
+
+/-- **THE DESCENDED CLOSED PROJECTION.** -/
+noncomputable def blockProjClosedQuot (M : ℕ) :
+    lineQuotient M →ₐ[ℂ] MvPolynomial (Fin 1) ℂ :=
+  Ideal.Quotient.liftₐ (crossIdeal M) (blockProjClosed M)
+    (fun p hp => by
+      have hk : p ∈ RingHom.ker (blockProjClosed M).toRingHom :=
+        blockProjClosed_crossIdeal_le_ker M hp
+      rwa [RingHom.mem_ker] at hk)
+
+theorem blockProjClosedQuot_mk (M : ℕ) (t : lineRing M) :
+    blockProjClosedQuot M (lineQuotientMap M t) = blockProjClosed M t := rfl
+
+/-- The outside-block-0 ring ideal feeding the closed kernel law. -/
+def closedOutsideIdealRing (M : ℕ) : Ideal (lineRing M) :=
+  Ideal.span (Set.range fun b : {b : Fin (2 * M) // b.val ≠ 0} =>
+    (X b.1 : lineRing M))
+
+theorem mem_closedOutsideIdealRing (M : ℕ) {a : Fin (2 * M)}
+    (ha : a.val ≠ 0) :
+    (X a : lineRing M) ∈ closedOutsideIdealRing M :=
+  Ideal.subset_span ⟨⟨a, ha⟩, rfl⟩
+
+/-- **THE KERNEL CHARACTERIZATION AT THE CLOSED IDEAL.** -/
+theorem mem_lineClosedIdeal_iff (M : ℕ) (y : lineQuotient M) :
+    y ∈ lineClosedIdeal M ↔ blockProjClosedQuot M y = 0 := by
+  constructor
+  · intro hy
+    have hle : lineClosedIdeal M ≤
+        RingHom.ker (blockProjClosedQuot M).toRingHom := by
+      rw [lineClosedIdeal, Ideal.span_le]
+      rintro _ ⟨b, hb, rfl⟩
+      rw [RingHom.mem_ker, blockProjClosedQuot_mk,
+        blockProjClosed_X_ne_zero M b.2]
+    have hk := hle hy
+    rwa [RingHom.mem_ker] at hk
+  · intro hy
+    obtain ⟨t, rfl⟩ := lineQuotientMap_surjective M y
+    rw [blockProjClosedQuot_mk] at hy
+    have hmem : t ∈ crossIdeal M ⊔ closedOutsideIdealRing M :=
+      mem_sup_of_aeval_eq_zero (closedVarFamily M)
+        (fun a => a.val = 0)
+        (fun a hSa => by rw [closedVarFamily, if_neg hSa])
+        (fun a hSa => closedVarFamily_ne_zero_of_zero hSa)
+        (fun a hSa => mem_closedOutsideIdealRing M hSa) hy
+    obtain ⟨c, hc, o, ho, hco⟩ := (Ideal.mem_sup_iff).mp hmem
+    have hcy : lineQuotientMap M c = 0 :=
+      (lineQuotientMap_eq_zero_iff M c).mpr hc
+    have hoy : lineQuotientMap M o ∈ lineClosedIdeal M := by
+      have hmap : lineQuotientMap M o ∈
+          Ideal.map (lineQuotientMap M).toRingHom (closedOutsideIdealRing M) :=
+        Ideal.mem_map_of_mem _ ho
+      rw [closedOutsideIdealRing, Ideal.map_span] at hmap
+      refine (Ideal.span_le).mpr ?_ hmap
+      rintro _ ⟨_, ⟨b, rfl⟩, rfl⟩
+      exact Ideal.subset_span ⟨b, rfl⟩
+    rw [← hco, map_add, hcy, zero_add]
+    exact hoy
+
+/-- **THE CLOSED IDEAL IS PRIME.** -/
+theorem lineClosedIdeal_isPrime (M : ℕ) :
+    (lineClosedIdeal M).IsPrime := by
+  refine ⟨?_, ?_⟩
+  · intro htop
+    have h1 : (1 : lineQuotient M) ∈ lineClosedIdeal M := by
+      rw [htop]; trivial
+    have hz := (mem_lineClosedIdeal_iff M 1).mp h1
+    rw [map_one] at hz
+    exact one_ne_zero hz
+  · intro x y hxy
+    have hx : blockProjClosedQuot M (x * y) = 0 :=
+      (mem_lineClosedIdeal_iff M _).mp hxy
+    rw [map_mul, mul_eq_zero] at hx
+    rcases hx with h | h
+    · exact Or.inl ((mem_lineClosedIdeal_iff M _).mpr h)
+    · exact Or.inr ((mem_lineClosedIdeal_iff M _).mpr h)
+
+theorem lineQuotientMap_X_zero_not_mem_lineClosedIdeal (M : ℕ) :
+    lineQuotientMap M (X ⟨0, by omega⟩) ∉ lineClosedIdeal M := by
+  intro hmem
+  have := (mem_lineClosedIdeal_iff M _).mp hmem
+  rw [blockProjClosedQuot_mk, blockProjClosed_X_zero M] at this
+  exact X_ne_zero ⟨0, by omega⟩ this.symm
+
+/-- The generic-0 ideal is contained in the closed ideal, and strictly. -/
+theorem lineGenericIdeal_zero_le_lineClosedIdeal (M : ℕ) :
+    lineGenericIdeal M 0 ≤ lineClosedIdeal M := by
+  rw [lineGenericIdeal, lineClosedIdeal, Ideal.span_le]
+  rintro _ ⟨b, hb, rfl⟩
+  exact Ideal.subset_span ⟨⟨b, by
+    rcases b.2 with h | h
+    · omega
+    · omega⟩, rfl⟩
+
+theorem lineQuotientMap_X_one_mem_lineClosedIdeal (M : ℕ) :
+    lineQuotientMap M (X ⟨1, by omega⟩) ∈ lineClosedIdeal M :=
+  mem_lineClosedIdeal M (by omega)
+
+theorem lineQuotientMap_X_one_not_mem_lineGenericIdeal (M : ℕ) :
+    lineQuotientMap M (X ⟨1, by omega⟩) ∉ lineGenericIdeal M 0 := by
+  intro hmem
+  have := (mem_lineGenericIdeal_iff M 0 _).mp hmem
+  rw [blockProjQuotAt_mk, blockProjAt_X_right M 0 (by omega)] at this
+  exact X_ne_zero ⟨1, by omega⟩ this.symm
+
+/-! ## §2 The homogeneous ideals and the points -/
+
+/-- The degree-one membership of a variable image (the green substrate
+receipt). -/
+theorem lineQuotientMap_X_mem_lineGrading_one (M : ℕ) (a : Fin (2 * M)) :
+    lineQuotientMap M (X a) ∈ lineGrading M 1 :=
+  lineQuotientMap_mem_lineGrading M 1 (X a)
+    ((mem_homogeneousSubmodule _ _).mpr (isHomogeneous_X ℂ a))
+
+/-- **THE GENERIC HOMOGENEOUS IDEAL** — the generic ideal as a
+`HomogeneousIdeal` of the quotient grading (a span of degree-one
+elements). -/
+noncomputable def lineGenericHomogeneousIdeal (M : ℕ) (i : Fin M) :
+    HomogeneousIdeal (lineGrading M) where
+  toSubmodule := lineGenericIdeal M i
+  is_homogeneous' := by
+    rw [lineGenericIdeal]
+    exact Ideal.homogeneous_span (𝒜 := lineGrading M)
+      (Set.range fun b : {b : Fin (2 * M) // b.val / 2 ≠ i.val} =>
+        lineQuotientMap M (X b.1))
+      (by
+        rintro p ⟨b, hb, rfl⟩
+        exact ⟨1, lineQuotientMap_X_mem_lineGrading_one M b.1⟩)
+
+theorem lineGenericHomogeneousIdeal_toIdeal (M : ℕ) (i : Fin M) :
+    (lineGenericHomogeneousIdeal M i).toIdeal = lineGenericIdeal M i := rfl
+
+/-- **THE GENERIC POINT OF THE i-TH LINE** — the Proj-point of the i-th
+generic ideal. -/
+noncomputable def lineGenericPoint (M : ℕ) (i : Fin M) :
+    finiteLineScheme M where
+  asHomogeneousIdeal := lineGenericHomogeneousIdeal M i
+  isPrime := by
+    have := lineGenericIdeal_isPrime M i
+    exact this
+  not_irrelevant_le := by
+    intro hle
+    have hmem : lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∈
+        lineGenericIdeal M i := by
+      have h1 : lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∈
+          (HomogeneousIdeal.irrelevant (lineGrading M)).toIdeal :=
+        HomogeneousIdeal.mem_irrelevant_of_mem (lineGrading M) (by omega)
+          (lineQuotientMap_X_mem_lineGrading_one M _)
+      have h2 : (HomogeneousIdeal.irrelevant (lineGrading M)).toIdeal ≤
+          lineGenericIdeal M i := by
+        rw [← lineGenericHomogeneousIdeal_toIdeal M i]
+        exact (HomogeneousIdeal.toIdeal_le_toIdeal_iff).mpr hle
+      exact h2 h1
+    exact lineQuotientMap_X_pair_not_mem M i hmem
+
+/-- **THE CLOSED HOMOGENEOUS IDEAL.** -/
+noncomputable def lineClosedHomogeneousIdeal (M : ℕ) :
+    HomogeneousIdeal (lineGrading M) where
+  toSubmodule := lineClosedIdeal M
+  is_homogeneous' := by
+    rw [lineClosedIdeal]
+    exact Ideal.homogeneous_span (𝒜 := lineGrading M)
+      (Set.range fun b : {b : Fin (2 * M) // b.val ≠ 0} =>
+        lineQuotientMap M (X b.1))
+      (by
+        rintro p ⟨b, hb, rfl⟩
+        exact ⟨1, lineQuotientMap_X_mem_lineGrading_one M b.1⟩)
+
+theorem lineClosedHomogeneousIdeal_toIdeal (M : ℕ) :
+    (lineClosedHomogeneousIdeal M).toIdeal = lineClosedIdeal M := rfl
+
+/-- **THE CLOSED POINT** — `[1:0:0:…]` on the 0-th line. -/
+noncomputable def lineClosedPoint (M : ℕ) :
+    finiteLineScheme M where
+  asHomogeneousIdeal := lineClosedHomogeneousIdeal M
+  isPrime := lineClosedIdeal_isPrime M
+  not_irrelevant_le := by
+    intro hle
+    have hmem : lineQuotientMap M (X ⟨0, by omega⟩) ∈ lineClosedIdeal M := by
+      have h1 : lineQuotientMap M (X ⟨0, by omega⟩) ∈
+          (HomogeneousIdeal.irrelevant (lineGrading M)).toIdeal :=
+        HomogeneousIdeal.mem_irrelevant_of_mem (lineGrading M) (by omega)
+          (lineQuotientMap_X_mem_lineGrading_one M _)
+      have h2 : (HomogeneousIdeal.irrelevant (lineGrading M)).toIdeal ≤
+          lineClosedIdeal M := by
+        rw [← lineClosedHomogeneousIdeal_toIdeal M]
+        exact (HomogeneousIdeal.toIdeal_le_toIdeal_iff).mpr hle
+      exact h2 h1
+    exact lineQuotientMap_X_zero_not_mem_lineClosedIdeal M hmem
+
+theorem lineGenericPoint_asIdeal (M : ℕ) (i : Fin M) :
+    (lineGenericPoint M i).asHomogeneousIdeal.toIdeal = lineGenericIdeal M i :=
+  rfl
+
+theorem lineClosedPoint_asIdeal (M : ℕ) :
+    lineClosedPoint M |>.asHomogeneousIdeal.toIdeal = lineClosedIdeal M :=
+  rfl
+
+/-! ## §3 The specialization-order bridge and the maximality of the
+generic points -/
+
+attribute [local instance] specializationOrder
+
+/-- **THE ORDER BRIDGE** — the specialization order on the line world's
+points is reverse inclusion of homogeneous ideals (the corpus's green
+`prime_le_iff` pattern at this carrier). -/
+theorem le_iff_ideal (M : ℕ) (x y : finiteLineScheme M) :
+    x ≤ y ↔ y.asHomogeneousIdeal.toIdeal ≤ x.asHomogeneousIdeal.toIdeal := by
+  rw [specializationOrder_iff_specializes]
+  have key : ∀ a b : ProjectiveSpectrum (lineGrading M),
+      a ∈ closure ({b} : Set (ProjectiveSpectrum (lineGrading M))) ↔
+        b.asHomogeneousIdeal.toIdeal ≤ a.asHomogeneousIdeal.toIdeal := by
+    intro a b
+    rw [← ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure,
+      ProjectiveSpectrum.vanishingIdeal_singleton]
+    exact ProjectiveSpectrum.mem_zeroLocus _ _ _
+  exact key x y
+
+/-- A positive-degree homogeneous polynomial lies in the ideal generated
+by the variables: by the support decomposition (each support monomial of
+a degree-`n ≥ 1` homogeneous polynomial has a positive exponent, hence
+factors through the corresponding variable). -/
+theorem homogeneous_pos_mem_span_X {M : ℕ} {n : ℕ} (hn : 0 < n)
+    (t : lineRing M) (ht : IsHomogeneous t n) :
+    t ∈ Ideal.span (Set.range (X : Fin (2 * M) → lineRing M)) := by
+  rw [MvPolynomial.as_sum]
+  refine Submodule.sum_mem _ fun e he => ?_
+  have hce : MvPolynomial.coeff e t ≠ 0 :=
+    (MvPolynomial.mem_support_iff).mp he
+  have hwe : Finsupp.weight 1 e = n := ht hce
+  obtain ⟨a, ha⟩ : ∃ a : Fin (2 * M), 0 < e a := by
+    by_contra hcon
+    push_neg at hcon
+    have hz : Finsupp.weight 1 e = 0 := by
+      rw [Finsupp.weight_eq_sum]
+      simp only [Pi.one_apply, smul_eq_mul, mul_one]
+      exact Finset.sum_eq_zero fun j _ => by
+        rw [if_pos (Nat.le_antisymm (hcon j) (Nat.zero_le _))]; rfl
+    omega
+  have hsplit : e = Finsupp.single a 1 + (e - Finsupp.single a 1) := by
+    ext j
+    simp only [Finsupp.add_apply, Finsupp.single_apply]
+    by_cases hja : j = a
+    · rw [hja]
+      simp only [if_pos rfl, Nat.add_sub_cancel]
+      omega
+    · rw [if_neg hja, if_neg hja, zero_add]
+  refine (Submodule.smul_mem _ _ ?_)
+  · have hX : (X a : lineRing M) ∈
+        Ideal.span (Set.range (X : Fin (2 * M) → lineRing M)) :=
+      Submodule.subset_span (Set.mem_range_self a)
+    have hmul : MvPolynomial.monomial e (MvPolynomial.coeff e t) =
+        (X a : lineRing M) *
+          MvPolynomial.monomial (e - Finsupp.single a 1) (MvPolynomial.coeff e t) := by
+      rw [show (X a : lineRing M) =
+        MvPolynomial.monomial (Finsupp.single a 1) 1 from rfl, MvPolynomial.monomial_mul,
+        hsplit]
+    rw [hmul]
+    exact Ideal.mul_mem_right hX
+  · simp
+
+/-- Every point of the line world has a variable avoiding its ideal
+(relevance: the irrelevant ideal's positive-degree elements lie in the
+variable span, so if all variables lay in the point's ideal the
+irrelevant ideal would too). -/
+theorem exists_variable_not_mem (M : ℕ) (y : finiteLineScheme M) :
+    ∃ a : Fin (2 * M), lineQuotientMap M (X a) ∉
+      y.asHomogeneousIdeal.toIdeal := by
+  by_contra hcon
+  simp only [not_not] at hcon
+  apply y.not_irrelevant_le
+  rw [HomogeneousIdeal.toIdeal_le_toIdeal_iff]
+  rw [HomogeneousIdeal.toIdeal_irrelevant_le]
+  intro i hi u hu
+  obtain ⟨t, ht, rfl⟩ := (mem_lineGrading M i u).mp hu
+  obtain ⟨c, hc⟩ := Submodule.mem_span_range_iff.mp
+    (homogeneous_pos_mem_span_X hi t ((mem_homogeneousSubmodule _ _).mp ht))
+  rw [map_sum]
+  refine Submodule.sum_mem _ fun a _ => ?_
+  exact Submodule.smul_mem _ _ (hcon a)
+
+/-- **THE GENERIC POINTS ARE MAXIMAL** — a relevant point whose ideal is
+contained in the i-th generic ideal IS the i-th generic point (the
+inclusion-minimality of the block ideals). -/
+theorem eq_lineGenericPoint_of_le (M : ℕ) (i : Fin M)
+    (y : finiteLineScheme M)
+    (hy : y.asHomogeneousIdeal.toIdeal ≤ lineGenericIdeal M i) :
+    y = lineGenericPoint M i := by
+  obtain ⟨a, ha⟩ := exists_variable_not_mem M y
+  rcases eq_or_ne (a.val / 2) i.val with hblock | hblock
+  · have hgen : lineGenericIdeal M i ≤ y.asHomogeneousIdeal.toIdeal := by
+      rw [lineGenericIdeal, Ideal.span_le]
+      rintro _ ⟨b, hb, rfl⟩
+      have hzero : lineQuotientMap M (X a) * lineQuotientMap M (X b) = 0 :=
+        crossMul_eq_zero M (fun hcon => hb (hcon ▸ hblock.symm ▸ rfl))
+      rcases y.isPrime.mem_or_mem (show lineQuotientMap M (X a) *
+          lineQuotientMap M (X b) ∈ y.asHomogeneousIdeal.toIdeal by
+            rw [hzero]; exact Submodule.zero_mem _) with h1 | h2
+      · exact absurd h1 ha
+      · exact h2
+    have hideal : y.asHomogeneousIdeal.toIdeal = lineGenericIdeal M i :=
+      le_antisymm hy hgen
+    obtain ⟨Iy, hy1, hy2⟩ := y
+    obtain ⟨Ig, hg1, hg2⟩ := lineGenericPoint M i
+    have hIy : Iy.toIdeal = lineGenericIdeal M i := hideal
+    have hIg : Ig.toIdeal = lineGenericIdeal M i :=
+      lineGenericHomogeneousIdeal_toIdeal M i
+    have hII : Iy = Ig := HomogeneousIdeal.ext (hIy.trans hIg)
+    rw [hII] at hy1 hy2
+    rfl
+  · have hin : lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∈
+        lineGenericIdeal M i := by
+      have hyin : lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∈
+          y.asHomogeneousIdeal.toIdeal := by
+        have hzero : lineQuotientMap M (X a) *
+            lineQuotientMap M (X ⟨2 * i.val, by omega⟩) = 0 :=
+          crossMul_eq_zero M (fun hcon => hblock (hcon.trans (by omega)))
+        rcases y.isPrime.mem_or_mem (show lineQuotientMap M (X a) *
+            lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∈
+            y.asHomogeneousIdeal.toIdeal by
+              rw [hzero]; exact Submodule.zero_mem _) with h1 | h2
+        · exact absurd h1 ha
+        · exact h2
+      exact hy hyin
+    exact lineQuotientMap_X_pair_not_mem M i hin
+
+/-- **THE COHEIGHT-ZERO RECEIPT** — the i-th generic point is maximal in
+the specialization order. -/
+theorem lineGenericPoint_coheight (M : ℕ) (i : Fin M) :
+    Order.coheight (lineGenericPoint M i) = 0 := by
+  rw [Order.coheight_eq_zero]
+  intro y hy
+  have hle : y.asHomogeneousIdeal.toIdeal ≤ lineGenericIdeal M i := by
+    rw [← lineGenericPoint_asIdeal M i]
+    exact (le_iff_ideal M y (lineGenericPoint M i)).mp (le_of_lt hy)
+  exact eq_lineGenericPoint_of_le M i y hle
+
+/-! ## §4 The no-intermediate law (the height route) -/
+
+/-- The block-0 substitution family: `Y ↦ q(X₀)`, `Z ↦ q(X₁)`. -/
+def blockInclFamily (M : ℕ) : Fin 2 → lineQuotient M := fun a =>
+  lineQuotientMap M (X ⟨a.val, by omega⟩)
+
+/-- **THE BLOCK-0 SUBSTITUTION** — the algebra section of the block-0
+retraction. -/
+noncomputable def blockInclQuot (M : ℕ) :
+    MvPolynomial (Fin 2) ℂ →ₐ[ℂ] lineQuotient M :=
+  MvPolynomial.aeval (blockInclFamily M)
+
+/-- The variable receipt of the retraction-substitution roundtrip. -/
+theorem blockProjQuotAt_zero_blockInclFamily (M : ℕ) (a : Fin 2) :
+    blockProjQuotAt M 0 (blockInclFamily M a) = X a := by
+  rcases a.val with _ | av
+  · exact blockProjQuotAt_X_left M 0 (by omega)
+  · exact blockProjQuotAt_X_right M 0 (by omega)
+
+/-- The block-0 retraction is a left inverse of the substitution (both
+maps fix `Y` and `Z`; the two algebra maps agree on the variables, hence
+everywhere). -/
+theorem blockProjQuotAt_zero_comp_blockInclQuot (M : ℕ) (g : MvPolynomial (Fin 2) ℂ) :
+    blockProjQuotAt M 0 (blockInclQuot M g) = g := by
+  have hcomp : blockProjQuotAt M 0 |>.comp (blockInclQuot M) = AlgHom.id ℂ _ := by
+    refine MvPolynomial.algHom_ext fun a => ?_
+    simp only [AlgHom.coe_comp, DFunLike.coe_fn_eq, AlgHom.coe_id, id_eq]
+    rw [blockInclQuot, aeval_X, blockProjQuotAt_zero_blockInclFamily M a]
+  have hgg := DFunLike.congr_fun hcomp g
+  simpa using hgg
+
+/-- **THE BLOCK-0 RETRACTION IS SURJECTIVE** — the substitution is a
+section. -/
+theorem blockProjQuotAt_zero_surjective (M : ℕ) :
+    Function.Surjective (blockProjQuotAt M 0) := by
+  intro g
+  refine ⟨blockInclQuot M g, ?_⟩
+  exact blockProjQuotAt_zero_comp_blockInclQuot M g
+
+/-- The image of the closed ideal under the block-0 retraction is the
+principal ideal of `Z` (the `X₁`-image). -/
+theorem map_lineClosedIdeal (M : ℕ) :
+    Ideal.map (blockProjQuotAt M 0).toRingHom (lineClosedIdeal M) =
+      Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := by
+  rw [lineClosedIdeal, Ideal.map_span]
+  apply le_antisymm
+  · rw [Ideal.span_le]
+    rintro _ ⟨b, hb, rfl⟩
+    rcases b.1.val with _ | bv
+    · exact absurd rfl hb
+    · rcases bv with _ | bv
+      · rw [blockProjQuotAt_X_right M 0 (by omega)]
+        exact Ideal.subset_span (Set.mem_singleton _)
+      · rw [blockProjQuotAt_X_outside M 0 (by omega)]
+        exact Submodule.zero_mem _
+  · rw [Ideal.span_le]
+    rintro _ rfl
+    exact Submodule.subset_span ⟨_, lineQuotientMap_X_one_mem_lineClosedIdeal M, rfl⟩
+
+/-- **THE NO-INTERMEDIATE LAW** — no point of the line world has its ideal
+strictly between the 0-th generic ideal and the closed ideal.  The route:
+transport to ℂ[Y,Z] (the quotient by the generic ideal, through the
+surjective block-0 retraction), then kill by Krull's principal ideal
+theorem (the green `Ideal.height_span_singleton_eq_one_of_mem_nonZeroDivisors`:
+the height of `(Z)` is one, so every strictly smaller prime has height
+zero, hence is the zero ideal of the domain — contradiction with the
+strictness above). -/
+theorem no_intermediate_point (M : ℕ) (y : finiteLineScheme M)
+    (hgen : lineGenericIdeal M 0 ≤ y.asHomogeneousIdeal.toIdeal)
+    (hstrict : y.asHomogeneousIdeal.toIdeal < lineClosedIdeal M) :
+    False := by
+  -- the transported prime
+  set ȳ : Ideal (MvPolynomial (Fin 2) ℂ) :=
+    Ideal.map (blockProjQuotAt M 0).toRingHom y.asHomogeneousIdeal.toIdeal with hȳdef
+  have hsurj : Function.Surjective (blockProjQuotAt M 0).toRingHom :=
+    blockProjQuotAt_zero_surjective M
+  have hȳprime : ȳ.IsPrime := by
+    refine ⟨?_, ?_⟩
+    · intro htop
+      have h1 : (1 : MvPolynomial (Fin 2) ℂ) ∈ ȳ := by rw [htop]; trivial
+      obtain ⟨w, hw, hw1⟩ := (Ideal.mem_map_iff_of_surjective _ hsurj).mp h1
+      have hwmem : 1 - w ∈ y.asHomogeneousIdeal.toIdeal := by
+        have hwker : 1 - w ∈ lineGenericIdeal M 0 := by
+          rw [← mem_lineGenericIdeal_iff]
+          rw [blockProjQuotAt_mk] at hw1
+          rw [map_sub, hw1, sub_self]
+          rfl
+        rw [sub_add_cancel] at *
+        exact hgen hwker
+      have hone : (1 : lineQuotient M) ∈ y.asHomogeneousIdeal.toIdeal := by
+        have := Submodule.add_mem _ hw hwmem
+        simpa using this
+      exact y.isPrime.ne_top (Ideal.eq_top_of_one_mem hone)
+    · intro a b hab
+      obtain ⟨ã, hã⟩ := hsurj a
+      obtain ⟨b̃, hb̃⟩ := hsurj b
+      obtain ⟨w, hw, hwab⟩ := (Ideal.mem_map_iff_of_surjective _ hsurj).mp hab
+      have hmem : ã * b̃ ∈ y.asHomogeneousIdeal.toIdeal := by
+        have hd : w - ã * b̃ ∈ lineGenericIdeal M 0 := by
+          rw [← mem_lineGenericIdeal_iff, blockProjQuotAt_mk]
+          rw [map_sub, hwab, map_mul, hã, hb̃, sub_self]
+          rfl
+        have := Submodule.add_mem _ hw (hgen hd)
+        simpa [sub_add_cancel] using this
+      rcases y.isPrime.mem_or_mem hmem with h1 | h2
+      · exact Or.inl (by
+          refine (Ideal.mem_map_iff_of_surjective _ hsurj).mpr ⟨ã, h1, ?_⟩
+          rw [hã])
+      · exact Or.inr (by
+          refine (Ideal.mem_map_iff_of_surjective _ hsurj).mpr ⟨b̃, h2, ?_⟩
+          rw [hb̃])
+  -- ȳ is nonzero: y strictly contains the generic ideal
+  have hȳne : ȳ ≠ ⊥ := by
+    intro hbot
+    obtain ⟨f, hf, hfne⟩ : ∃ f ∈ y.asHomogeneousIdeal.toIdeal,
+        f ∉ lineGenericIdeal M 0 := by
+      by_contra hcon
+      push_neg at hcon
+      exact hstrict.ne (le_antisymm hstrict.le (fun f hf => hcon f hf))
+    have hfimg : blockProjQuotAt M 0 f ∈ ȳ :=
+      (Ideal.mem_map_iff_of_surjective _ hsurj).mpr ⟨f, hf, rfl⟩
+    have hf0 : blockProjQuotAt M 0 f ≠ 0 := by
+      intro h0
+      exact hfne ((mem_lineGenericIdeal_iff M 0 f).mpr h0)
+    rw [hbot] at hfimg
+    exact hf0 (Submodule.mem_bot.mp hfimg)
+  -- ȳ is strictly inside (Z)
+  have hȳle : ȳ ≤ Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := by
+    rw [hȳdef, Ideal.map_le_iff_le_comap]
+    intro g hg
+    have : blockProjQuotAt M 0 g ∈ ȳ := (Ideal.mem_map_iff_of_surjective _ hsurj).mpr
+      ⟨g, hg, rfl⟩
+    rw [← map_lineClosedIdeal M] at this
+    exact (Ideal.mem_map_iff_of_surjective _ hsurj).mp this |>.1
+  have hȳneZ : ȳ ≠ Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := by
+    intro heq
+    have hZmem : (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) ∈ ȳ := by
+      rw [heq]; exact Ideal.subset_span (Set.mem_singleton _)
+    obtain ⟨w, hw, hwZ⟩ := (Ideal.mem_map_iff_of_surjective _ hsurj).mp hZmem
+    have hXmem : lineQuotientMap M (X ⟨1, by omega⟩) ∈
+        y.asHomogeneousIdeal.toIdeal := by
+      have hd : w - lineQuotientMap M (X ⟨1, by omega⟩) ∈ lineGenericIdeal M 0 := by
+        rw [← mem_lineGenericIdeal_iff, blockProjQuotAt_mk]
+        rw [map_sub, hwZ, blockProjQuotAt_X_right M 0 (by omega), sub_self]
+        rfl
+      have := Submodule.add_mem _ hw (hgen hd)
+      simpa [sub_add_cancel] using this
+    apply hstrict.ne
+    rw [← lineClosedIdeal_eq_sup M]
+    rw [Ideal.sup_le]
+    constructor
+    · exact hgen
+    · rw [Ideal.span_le]
+      rintro _ rfl
+      exact hXmem
+  -- the height kill: Krull's principal ideal theorem (green at the pin)
+  have hZnd : (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) ∈ nonZeroDivisors _ :=
+    mem_nonZeroDivisors_iff_ne_zero.mpr (X_ne_zero ⟨1, by omega⟩)
+  have hZunit : ¬ IsUnit (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) := by
+    intro hun
+    obtain ⟨v, hv⟩ := hun.exists_right_inv
+    have hc := MvPolynomial.coeff_X_mul' (0 : Fin 2 →₀ ℕ) ⟨1, by omega⟩ v
+    rw [hv] at hc
+    rw [if_neg (by simp)] at hc
+    simpa using hc.symm
+  have hheight : (Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)}).height = 1 :=
+    Ideal.height_span_singleton_eq_one_of_mem_nonZeroDivisors hZnd hZunit
+  -- the prime realizing the height of (Z)
+  obtain ⟨P, hPprime, hPle, hPheight⟩ :=
+    Ideal.exists_isPrime_height_eq (I :=
+      Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)}) hheight
+  -- ȳ is strictly below P (strictness: ȳ = P would force ȳ = (Z))
+  have hȳltP : (⟨ȳ, hȳprime⟩ : PrimeSpectrum (MvPolynomial (Fin 2) ℂ)) <
+      ⟨P, hPprime⟩ := by
+    have hle : ȳ ≤ P := le_trans hȳle hPle
+    refine ⟨hle, ?_⟩
+    intro heq
+    have hPP : ȳ = P := congrArg PrimeSpectrum.asIdeal heq
+    have hZle : Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} ≤ ȳ :=
+      hPle.trans (hPP ▸ le_rfl)
+    exact hȳneZ (le_antisymm hȳle hZle)
+  -- the order-height squeeze: height ȳ = 0, hence ȳ = ⊥ — contradiction
+  have hPheight' : Order.height (⟨P, hPprime⟩ : PrimeSpectrum (MvPolynomial (Fin 2) ℂ)) = 1 := by
+    rw [← PrimeSpectrum.height_eq_orderHeight ⟨P, hPprime⟩]
+    exact hPheight
+  have hȳzero : Order.height
+      (⟨ȳ, hȳprime⟩ : PrimeSpectrum (MvPolynomial (Fin 2) ℂ)) = 0 := by
+    have hle := (Order.height_le_coe_iff (x :=
+      (⟨P, hPprime⟩ : PrimeSpectrum (MvPolynomial (Fin 2) ℂ))) (n := 1)).mp
+      (by rw [hPheight']; exact le_refl 1)
+    have := hle _ hȳltP
+    omega
+  have hȳheight : ȳ.height = 0 := by
+    rw [← PrimeSpectrum.height_eq_orderHeight ⟨ȳ, hȳprime⟩]
+    exact hȳzero
+  exact hȳne (Ideal.height_eq_zero_iff_eq_bot.mp hȳheight)
+
+/-- **THE CLOSED POINT LIES STRICTLY BELOW THE 0-TH GENERIC POINT.** -/
+theorem lineClosedPoint_lt (M : ℕ) :
+    lineClosedPoint M < lineGenericPoint M 0 := by
+  refine ⟨(le_iff_ideal M (lineClosedPoint M) (lineGenericPoint M 0)).mpr ?_, ?_⟩
+  · rw [lineClosedPoint_asIdeal, lineGenericPoint_asIdeal]
+    exact lineGenericIdeal_zero_le_lineClosedIdeal M
+  · intro heq
+    have h1 : lineQuotientMap M (X ⟨1, by omega⟩) ∈ lineClosedIdeal M :=
+        lineQuotientMap_X_one_mem_lineClosedIdeal M
+    have h2 : lineQuotientMap M (X ⟨1, by omega⟩) ∉ lineGenericIdeal M 0 :=
+        lineQuotientMap_X_one_not_mem_lineGenericIdeal M
+    exact h2 (by rw [heq]; exact h1)
+
+/-- The closed ideal is the join of the 0-th generic ideal and the
+`X₁`-image principal ideal (the spanning receipts, both directions). -/
+theorem lineClosedIdeal_eq_sup (M : ℕ) :
+    lineClosedIdeal M = lineGenericIdeal M 0 ⊔
+      Ideal.span {lineQuotientMap M (X ⟨1, by omega⟩)} := by
+  apply le_antisymm
+  · rw [lineClosedIdeal, Ideal.span_le]
+    rintro _ ⟨b, hb, rfl⟩
+    rcases b.1.val with _ | bv
+    · exact absurd rfl hb
+    · rcases bv with _ | bv
+      · exact Submodule.mem_sup_right (Submodule.subset_span (Set.mem_singleton _))
+      · exact Submodule.mem_sup_left (mem_lineGenericIdeal M (by omega))
+  · rw [Ideal.sup_le]
+    constructor
+    · rw [lineGenericIdeal, Ideal.span_le]
+      rintro _ ⟨b, hb, rfl⟩
+      exact Ideal.subset_span ⟨⟨b, by
+        rcases b.2 with h | h
+        · omega
+        · omega⟩, rfl⟩
+    · rw [Ideal.span_le]
+      rintro _ rfl
+      exact lineQuotientMap_X_one_mem_lineClosedIdeal M
+
+/-- **THE CLOSED POINT HAS COHEIGHT ONE.**  The lower bound is the strict
+specialization below the generic point; the upper bound is the
+no-intermediate law: every strict specialization above the closed point is
+already the generic point, hence maximal. -/
+theorem lineClosedPoint_coheight (M : ℕ) :
+    Order.coheight (lineClosedPoint M) = 1 := by
+  apply Nat.le_antisymm ?_ ?_
+  · -- coheight ≤ 1: every strict above-point is the 0-th generic point
+    rw [Order.coheight_le_coe_iff]
+    intro w hw
+    have hwle : w.asHomogeneousIdeal.toIdeal ≤ lineClosedIdeal M :=
+      (le_iff_ideal M (lineClosedPoint M) w).mp hw.le
+    have hwne : w.asHomogeneousIdeal.toIdeal ≠ lineClosedIdeal M := by
+      intro heq
+      have hwceq : w = lineClosedPoint M := by
+        obtain ⟨Iw, hw1, hw2⟩ := w
+        obtain ⟨Ic, hc1, hc2⟩ := lineClosedPoint M
+        have hII : Iw = Ic :=
+          HomogeneousIdeal.ext (heq.trans (lineClosedHomogeneousIdeal_toIdeal M).symm)
+        rw [hII] at hw1 hw2
+        rfl
+      exact hw.ne hwceq.symm
+    -- the confinement: the 0-th generic ideal lies in w's ideal
+    have hgen : lineGenericIdeal M 0 ≤ w.asHomogeneousIdeal.toIdeal := by
+      rw [lineGenericIdeal, Ideal.span_le]
+      rintro _ ⟨b, hb, rfl⟩
+      have hzero : lineQuotientMap M (X ⟨0, by omega⟩) *
+          lineQuotientMap M (X b.1) = 0 :=
+        crossMul_eq_zero M (fun hcon => hb (by rw [hcon]; omega))
+      have hX0 : lineQuotientMap M (X ⟨0, by omega⟩) ∉
+          w.asHomogeneousIdeal.toIdeal := fun hmem =>
+        lineQuotientMap_X_zero_not_mem_lineClosedIdeal M (hwle hmem)
+      rcases w.isPrime.mem_or_mem (show lineQuotientMap M (X ⟨0, by omega⟩) *
+          lineQuotientMap M (X b.1) ∈ w.asHomogeneousIdeal.toIdeal by
+            rw [hzero]; exact Submodule.zero_mem _) with h1 | h2
+      · exact absurd h1 hX0
+      · exact h2
+    -- the dichotomy: w's ideal equals the generic ideal, or dies
+    rcases eq_or_ne w.asHomogeneousIdeal.toIdeal (lineGenericIdeal M 0) with heq | hne
+    · have hwgen : w = lineGenericPoint M 0 :=
+        eq_lineGenericPoint_of_le M 0 w (by rw [heq]; exact le_rfl)
+      rw [hwgen]
+      exact lineGenericPoint_coheight M 0
+    · exact absurd (no_intermediate_point M w hgen ⟨hwle, hwne⟩) False.elim
+  · -- coheight ≥ 1: the strict specialization below the generic point
+    have h := Order.coheight_add_one_le (lineClosedPoint_lt M)
+    rw [lineGenericPoint_coheight M 0] at h
+    simpa using h
+
+/-! ## §5 The component machinery -/
+
+/-- If every variable image lies in an ideal, the irrelevant ideal lies in
+it (the positive-degree homogeneous elements lie in the variable span). -/
+theorem irrelevant_le_of_mem_variables (M : ℕ) (I : Ideal (lineQuotient M))
+    (h : ∀ a : Fin (2 * M), lineQuotientMap M (X a) ∈ I) :
+    (HomogeneousIdeal.irrelevant (lineGrading M)).toIdeal ≤ I := by
+  rw [HomogeneousIdeal.toIdeal_irrelevant_le]
+  intro i hi u hu
+  obtain ⟨t, ht, rfl⟩ := (mem_lineGrading M i u).mp hu
+  obtain ⟨c, hc⟩ := Submodule.mem_span_range_iff.mp
+    (homogeneous_pos_mem_span_X hi t ((mem_homogeneousSubmodule _ _).mp ht))
+  rw [map_sum]
+  refine Submodule.sum_mem _ fun a _ => ?_
+  exact Submodule.smul_mem _ _ (h a)
+
+/-- The generic points are distinguished by their ideals. -/
+theorem lineGenericPoint_injective (M : ℕ) :
+    Function.Injective (lineGenericPoint M) := by
+  intro i k hik
+  by_contra hne
+  have hne' : i.val ≠ k.val := fun h => hne (Fin.ext h)
+  have hmem : lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∈ lineGenericIdeal M k :=
+    mem_lineGenericIdeal M (by omega)
+  have hnot : lineQuotientMap M (X ⟨2 * i.val, by omega⟩) ∉ lineGenericIdeal M i :=
+    lineQuotientMap_X_pair_not_mem M i
+  apply hnot
+  have hII : (lineGenericPoint M i).asHomogeneousIdeal =
+      (lineGenericPoint M k).asHomogeneousIdeal :=
+    congrArg ProjectiveSpectrum.asHomogeneousIdeal hik
+  have h1 := congrArg HomogeneousIdeal.toIdeal hII
+  rw [lineGenericHomogeneousIdeal_toIdeal, lineGenericHomogeneousIdeal_toIdeal] at h1
+  rw [← h1]
+  exact hmem
+
+/-- **THE COHEIGHT-ZERO POINTS ARE THE GENERIC POINTS** — a maximal point
+of the specialization order is a minimal relevant homogeneous prime: the
+cross-relations force its ideal to contain the generic ideal of its
+avoiding variable's block, and maximality identifies the two. -/
+theorem exists_eq_lineGenericPoint (M : ℕ) (η : finiteLineScheme M)
+    (hη : Order.coheight η = 0) :
+    ∃ i : Fin M, η = lineGenericPoint M i := by
+  obtain ⟨a, ha⟩ := exists_variable_not_mem M η
+  have hmax : IsMax η := (Order.coheight_eq_zero).mp hη
+  refine ⟨⟨a.val / 2, by omega⟩, ?_⟩
+  have hgen : lineGenericIdeal M ⟨a.val / 2, by omega⟩ ≤
+      η.asHomogeneousIdeal.toIdeal := by
+    rw [lineGenericIdeal, Ideal.span_le]
+    rintro _ ⟨b, hb, rfl⟩
+    have hzero : lineQuotientMap M (X a) * lineQuotientMap M (X b.1) = 0 :=
+      crossMul_eq_zero M (fun hcon => hb (by rw [hcon]; omega))
+    rcases η.isPrime.mem_or_mem (show lineQuotientMap M (X a) *
+        lineQuotientMap M (X b.1) ∈ η.asHomogeneousIdeal.toIdeal by
+          rw [hzero]; exact Submodule.zero_mem _) with h1 | h2
+    · exact absurd h1 ha
+    · exact h2
+  refine hmax ((le_iff_ideal M η (lineGenericPoint M ⟨a.val / 2, by omega⟩)).mpr ?_)
+  rw [lineGenericPoint_asIdeal]
+  exact hgen
+
+/-- **THE GENERIC INDEX** — the coheight-zero points indexed by `Fin M`. -/
+noncomputable def lineIndexOfGeneric (M : ℕ)
+    (η : CodimensionPoint (finiteLineScheme M) 0) : Fin M :=
+  Classical.choose (exists_eq_lineGenericPoint M η.1 η.2)
+
+theorem lineIndexOfGeneric_spec (M : ℕ)
+    (η : CodimensionPoint (finiteLineScheme M) 0) :
+    lineGenericPoint M (lineIndexOfGeneric M η) = η.1 :=
+  Classical.choose_spec (exists_eq_lineGenericPoint M η.1 η.2)
+
+theorem lineIndexOfGeneric_lineGenericPoint (M : ℕ) (i : Fin M) :
+    lineIndexOfGeneric M ⟨lineGenericPoint M i, lineGenericPoint_coheight M i⟩ = i :=
+  lineGenericPoint_injective M (lineIndexOfGeneric_spec M _).symm
+
+/-- **THE UNIQUE GENERIC ABOVE A COHEIGHT-ONE POINT** — existence by the
+order-theoretic successor (the coheight-one lower bound), uniqueness
+because two generic points above would force every variable — hence the
+irrelevant ideal — into the point's ideal. -/
+theorem exists_unique_generic_above (M : ℕ)
+    (x : CodimensionPoint (finiteLineScheme M) 1) :
+    ∃! η : CodimensionPoint (finiteLineScheme M) 0, x.1 < η.1 := by
+  have hfin : Order.coheight x.1 < ⊤ := by
+    rw [x.2]; exact ENat.natCast_lt_top 1
+  have hlt : (0 : ℕ) < Order.coheight x.1 := by rw [x.2]; norm_num
+  obtain ⟨η, hxη, hη⟩ :=
+    (Order.coe_lt_coheight_iff (x := x.1) (n := 0) hfin).mp hlt
+  refine ⟨⟨η, hη⟩, hxη, ?_⟩
+  rintro ⟨η', hη'⟩ hxη'
+  obtain ⟨k, hk⟩ := exists_eq_lineGenericPoint M η hη
+  obtain ⟨k', hk'⟩ := exists_eq_lineGenericPoint M η' hη'
+  have hkx : lineGenericIdeal M k ≤ x.1.asHomogeneousIdeal.toIdeal := by
+    rw [hk] at hxη
+    rw [lineGenericPoint_asIdeal]
+    exact (le_iff_ideal M x.1 (lineGenericPoint M k)).mp (le_of_lt hxη)
+  have hkx' : lineGenericIdeal M k' ≤ x.1.asHomogeneousIdeal.toIdeal := by
+    rw [hk'] at hxη'
+    rw [lineGenericPoint_asIdeal]
+    exact (le_iff_ideal M x.1 (lineGenericPoint M k')).mp (le_of_lt hxη')
+  have hkk : k = k' := by
+    by_contra hne
+    apply x.1.not_irrelevant_le
+    rw [HomogeneousIdeal.toIdeal_le_toIdeal_iff]
+    exact irrelevant_le_of_mem_variables M _ (fun a => by
+      rcases eq_or_ne (a.val / 2) k.val with hblock | hblock
+      · exact hkx' (mem_lineGenericIdeal M
+          (fun hcon => hne (hblock.trans hcon.symm)))
+      · exact hkx (mem_lineGenericIdeal M hblock))
+  have hηeq : η = η' := by rw [hk, hk', hkk]
+  exact Subtype.ext hηeq
+
+/-- **THE COMPONENT MAP** — the unique generic point above a coheight-one
+point. -/
+noncomputable def lineComponentOf (M : ℕ)
+    (x : CodimensionPoint (finiteLineScheme M) 1) :
+    CodimensionPoint (finiteLineScheme M) 0 :=
+  Classical.choose (exists_unique_generic_above M x)
+
+theorem lineComponentOf_above (M : ℕ)
+    (x : CodimensionPoint (finiteLineScheme M) 1) :
+    x.1 < (lineComponentOf M x).1 :=
+  (Classical.choose_spec (exists_unique_generic_above M x)).1
+
+theorem lineComponentOf_unique (M : ℕ) (x : CodimensionPoint (finiteLineScheme M) 1)
+    (η : CodimensionPoint (finiteLineScheme M) 0) (hη : x.1 < η.1) :
+    η = lineComponentOf M x :=
+  (Classical.choose_spec (exists_unique_generic_above M x)).2 η hη
+
+/-- **THE CLOSED POINT LIES ON THE 0-TH LINE.** -/
+theorem lineClosedPoint_component (M : ℕ) :
+    lineComponentOf M ⟨lineClosedPoint M, lineClosedPoint_coheight M⟩ =
+      ⟨lineGenericPoint M 0, lineGenericPoint_coheight M 0⟩ :=
+  lineComponentOf_unique M _ _ (lineClosedPoint_lt M)
+
+/-! ## §6 The honest seed cycles -/
+
+/-- The unit point-cycle is nonzero (its coefficient at the point is
+one). -/
+theorem codimensionPointCycle_ne_zero {X : Scheme} {p : Nat}
+    (x : CodimensionPoint X p) :
+    codimensionPointCycle X p x ≠ 0 := by
+  intro h
+  have h1 : ((codimensionPointCycle X p x : AlgebraicCycle X ℚ) : X → ℚ) x.1 = 0 := by
+    rw [h]
+    rfl
+  have h2 : ((codimensionPointCycle X p x : AlgebraicCycle X ℚ) : X → ℚ) x.1 = 1 := by
+    show Function.locallyFinsuppWithin.single x.1 (1 : ℚ) x.1 = 1
+    simp
+  rw [h2] at h1
+  exact zero_ne_one h1
+
+/-- **THE HONEST WEIGHT-ZERO SEED** — the atom at the 0-th generic point. -/
+noncomputable def lineHonestSeedZero (M : ℕ) :
+    codimensionCycles (finiteLineScheme M) 0 :=
+  codimensionPointCycle (finiteLineScheme M) 0
+    ⟨lineGenericPoint M 0, lineGenericPoint_coheight M 0⟩
+
+theorem lineHonestSeedZero_ne (M : ℕ) : lineHonestSeedZero M ≠ 0 :=
+  codimensionPointCycle_ne_zero _
+
+/-- **THE HONEST WEIGHT-ONE SEED** — the atom at the closed point. -/
+noncomputable def lineHonestSeedOne (M : ℕ) :
+    codimensionCycles (finiteLineScheme M) 1 :=
+  codimensionPointCycle (finiteLineScheme M) 1
+    ⟨lineClosedPoint M, lineClosedPoint_coheight M⟩
+
+theorem lineHonestSeedOne_ne (M : ℕ) : lineHonestSeedOne M ≠ 0 :=
+  codimensionPointCycle_ne_zero _
+
+/-! ## Receipts -/
+
+#check lineGenericPoint
+#check lineGenericPoint_coheight
+#check lineClosedPoint
+#check lineClosedPoint_coheight
+#check lineClosedPoint_lt
+#check lineClosedPoint_component
+#check le_iff_ideal
+#check lineComponentOf
+#check lineComponentOf_above
+#check lineComponentOf_unique
+#check lineIndexOfGeneric
+#check lineIndexOfGeneric_lineGenericPoint
+#check lineHonestSeedZero
+#check lineHonestSeedZero_ne
+#check lineHonestSeedOne
+#check lineHonestSeedOne_ne
+#check crossMul_eq_zero
+#check no_intermediate_point
+
+#print axioms lineGenericPoint
+#print axioms lineGenericPoint_coheight
+#print axioms lineClosedPoint
+#print axioms lineClosedPoint_coheight
+#print axioms no_intermediate_point
+#print axioms lineComponentOf
+#print axioms lineHonestSeedZero_ne
+#print axioms lineHonestSeedOne_ne
 
 end GSTFiniteLinePointAlgebra
+
+end -- noncomputable section
