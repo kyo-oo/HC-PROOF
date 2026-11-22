@@ -1069,7 +1069,7 @@ theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
   -- from the AtTarget instance's own parent projection (IsLocalAtTarget
   -- extends RespectsIso).
   haveI hriso : MorphismProperty.RespectsIso
-      (@Smooth : MorphismProperty (Scheme.{0})) := httl.toRespectsIso
+      (@Smooth : MorphismProperty (Scheme.{0})) := httl.toRespects
   haveI hloc : IsZariskiLocalAtSource
       (@Smooth : MorphismProperty (Scheme.{0})) :=
     @HasRingHomProperty.instIsZariskiLocalAtSource.{0} _ _ inferInstance
