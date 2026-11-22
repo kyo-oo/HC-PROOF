@@ -1058,17 +1058,16 @@ theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
   -- (0), bypassing the TC engine's rejected conclusion unification; the
   -- bottom-layer HasRingHomProperty argument is synthesized in place (and
   -- its failure, if any, is now the ONLY remaining unknown).
-  set_option pp.universes true in
-  #check (inferInstance : HasRingHomProperty
-    (@Smooth : MorphismProperty (Scheme.{0})) RingHom.Smooth)
+  -- (run 44973828547: the bottom layer GREEN — inferInstance : HasRingHomProperty.{0}
+  -- @Smooth.{0} RingHom.Smooth synthesized; the only error was the bare 0
+  -- landing in the P-argument slot instead of the universe — the .{0}
+  -- notation fixes it)
   haveI httl : IsZariskiLocalAtTarget
       (@Smooth : MorphismProperty (Scheme.{0})) :=
-    @HasRingHomProperty.instIsZariskiLocalAtTarget 0 _ RingHom.Smooth
-      inferInstance
+    @HasRingHomProperty.instIsZariskiLocalAtTarget.{0} _ _ inferInstance
   haveI hloc : IsZariskiLocalAtSource
       (@Smooth : MorphismProperty (Scheme.{0})) :=
-    @HasRingHomProperty.instIsZariskiLocalAtSource 0 _ RingHom.Smooth
-      inferInstance
+    @HasRingHomProperty.instIsZariskiLocalAtSource.{0} _ _ inferInstance
   exact (IsZariskiLocalAtSource.iff_of_iSup_eq_top (P := @Smooth) _
     (Proj.iSup_basicOpen_eq_top' (lineGrading M)
       (fun j : Fin (2 * M) => lineQuotientMap M (MvPolynomial.X j))
