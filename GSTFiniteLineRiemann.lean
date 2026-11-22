@@ -17,20 +17,29 @@ point at infinity on the second chart).
 
 This is the self-contained arithmetic component of the analytification
 bridge (the unconditional round's Task 2): the scheme-side point
-classification (`ComplexPoint (finitePointWorld`-style, on the finite-line
-world) is assembled on top in the follow-up waves, and the assembled
+classification (`ComplexPoint`-style, on the finite-line world) is
+assembled on top in the follow-up waves, and the assembled
 `AnalytificationData`'s `pointsEquiv` rides this equivalence slice-by-slice.
 
-The arithmetic is pure real algebra on the coordinates: the sphere equation
-`x² + y² + z² = 1` transports the chart identity
+WAVE 3-B (the repair of run 44969885834, every site diagnosed): the
+COORDINATE-COERCION DISCIPLINE — `unitSphereType` is a `Subtype`, NOT a
+function type, so every coordinate application is the explicit
+`(v : EuclideanSpace ℝ (Fin 3)) k` coercion (the wave-3-A draft applied
+`v k` bare — the "Function expected" family); the `sq_eq_one_iff`
+mis-application replaced by the deterministic factorization route
+(`(1 - x) * (1 + x) = 0`, `linear_combination` + `mul_eq_zero`); the
+`sq_nonneg t.re`-vs-`t.re * t.re` mismatches replaced by
+`mul_self_nonneg`; the north-pole membership proof gets the
+`PiLp.toLp_apply` + `Matrix.cons` normalizations before `norm_num`; the
+`pow_eq_zero_iff` sites replaced by `sq_eq_zero_iff`; the pole/non-pole
+denominators get `div_eq_one_iff_eq` instead of bare `field_simp`.
+
+The arithmetic is pure real algebra on the coordinates: the sphere
+equation `x² + y² + z² = 1` transports the chart identity
 `(2a)² + (2b)² + (s-1)² = (s+1)²` at `s = a² + b²`, and the two
 cancellation laws are field cancellations at the non-pole `z ≠ 1`.
 
-Honesty ledger: zero `sorry`, zero new axioms, zero `native_decide`.  Every
-non-local name is pin-verified at Mathlib 51e6992efd06126df61a496bebf8f49482a4e129
-(`EuclideanSpace.real_norm_sq_eq`, `PiLp.toLp_apply` (rfl), the `Matrix`
-cons family, `mem_sphere_zero_iff_norm`, `sq_eq_one_iff`) or CI-green in
-the corpus.
+Honesty ledger: zero `sorry`, zero new axioms, zero `native_decide`.
 -/
 
 set_option maxHeartbeats 100000000
@@ -46,14 +55,17 @@ namespace GSTFiniteLineRiemann
 /-! ## §0 The coordinate form of the sphere equation -/
 
 /-- The norm-square of a 3-vector in coordinate form (the pinned
-`EuclideanSpace.real_norm_sq_eq` + `Fin.sum_univ_three`, isolated once). -/
+`EuclideanSpace.real_norm_sq_eq` + `Fin.sum_univ_three`, isolated once;
+the two rewrites close the goal definitionally — no residual `ring`). -/
 theorem sphere_norm_sq (v : EuclideanSpace ℝ (Fin 3)) :
     ‖v‖ ^ 2 = (v 0) ^ 2 + (v 1) ^ 2 + (v 2) ^ 2 := by
   rw [EuclideanSpace.real_norm_sq_eq, Fin.sum_univ_three]
-  ring
 
 /-- **THE SPHERE EQUATION IN COORDINATES** — the metric-sphere membership
-is the unit equation on the three coordinates. -/
+is the unit equation on the three coordinates.  The backward direction is
+the deterministic factorization route: `‖v‖² = 1` with `0 ≤ ‖v‖` gives
+`(1 - ‖v‖) * (1 + ‖v‖) = 0` (a `linear_combination` of the equation), the
+second factor is positive, so `‖v‖ = 1`. -/
 theorem mem_sphere_iff_coord (v : EuclideanSpace ℝ (Fin 3)) :
     v ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 ↔
       (v 0) ^ 2 + (v 1) ^ 2 + (v 2) ^ 2 = 1 := by
@@ -65,9 +77,12 @@ theorem mem_sphere_iff_coord (v : EuclideanSpace ℝ (Fin 3)) :
   · intro h
     have hn : 0 ≤ ‖v‖ := norm_nonneg v
     have h2 : ‖v‖ ^ 2 = 1 := by rw [sphere_norm_sq, h]
-    rcases (sq_eq_one_iff hn).mp h2 with h1 | h1
-    · exact h1
-    · linarith
+    have hfac : (1 - ‖v‖) * (1 + ‖v‖) = 0 := by
+      linear_combination -h2
+    have hpos : (0 : ℝ) < 1 + ‖v‖ := by linarith
+    have hz : (1 : ℝ) - ‖v‖ = 0 :=
+      (mul_eq_zero.mp hfac).resolve_right (ne_of_gt hpos)
+    linarith
 
 /-! ## §1 The forward coordinate map -/
 
@@ -75,6 +90,8 @@ theorem mem_sphere_iff_coord (v : EuclideanSpace ℝ (Fin 3)) :
 def northPole : unitSphereType :=
   ⟨WithLp.toLp 2 ![0, 0, 1], by
     rw [mem_sphere_iff_coord]
+    simp only [PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.head_cons, Matrix.cons_val_two]
     norm_num⟩
 
 /-- The coordinates of the forward stereographic image of `t ∈ ℂ`. -/
@@ -86,8 +103,8 @@ def stereoCoord (t : ℂ) : Fin 3 → ℝ :=
 /-- The denominator positivity of the stereographic image. -/
 theorem stereoCoord_denom_pos (t : ℂ) :
     0 < t.re * t.re + t.im * t.im + 1 := by
-  have h1 : 0 ≤ t.re * t.re := sq_nonneg t.re
-  have h2 : 0 ≤ t.im * t.im := sq_nonneg t.im
+  have h1 : 0 ≤ t.re * t.re := mul_self_nonneg t.re
+  have h2 : 0 ≤ t.im * t.im := mul_self_nonneg t.im
   linarith
 
 /-- **THE STEREOGRAPHIC IMAGE IS ON THE SPHERE** — the chart identity
@@ -118,48 +135,61 @@ def coordToSphere : Option ℂ → unitSphereType
 /-! ## §2 The inverse coordinate map -/
 
 /-- **THE INVERSE COORDINATE MAP** — `v ↦ none` at the north pole;
-`v ↦ some ⟨v 0 / (1 - v 2), v 1 / (1 - v 2)⟩` elsewhere. -/
+`v ↦ some ⟨v₀ / (1 - v₂), v₁ / (1 - v₂)⟩` elsewhere (the coordinates
+read through the explicit subtype coercion). -/
 def sphereToCoord (v : unitSphereType) : Option ℂ :=
-  if v 2 = 1 then none
-  else some ⟨v 0 / (1 - v 2), v 1 / (1 - v 2)⟩
+  if (v : EuclideanSpace ℝ (Fin 3)) 2 = 1 then none
+  else some ⟨(v : EuclideanSpace ℝ (Fin 3)) 0 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2),
+    (v : EuclideanSpace ℝ (Fin 3)) 1 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)⟩
 
 /-- The non-pole denominator positivity. -/
-theorem sphere_denom_pos {v : unitSphereType} (hv : v 2 ≠ 1) :
-    0 < 1 - v 2 := by
-  have hs : (v 0) ^ 2 + (v 1) ^ 2 + (v 2) ^ 2 = 1 :=
+theorem sphere_denom_pos {v : unitSphereType}
+    (hv : (v : EuclideanSpace ℝ (Fin 3)) 2 ≠ 1) :
+    0 < 1 - (v : EuclideanSpace ℝ (Fin 3)) 2 := by
+  have hs : ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 +
+      ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 +
+      ((v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 = 1 :=
     (mem_sphere_iff_coord _).mp v.2
-  have h0 : 0 ≤ (v 0) ^ 2 := sq_nonneg _
-  have h1 : 0 ≤ (v 1) ^ 2 := sq_nonneg _
-  have h2 : 0 ≤ (v 2) ^ 2 := sq_nonneg _
-  have hle : v 2 ≤ 1 := by
+  have h0 : 0 ≤ ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 := sq_nonneg _
+  have h1 : 0 ≤ ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 := sq_nonneg _
+  have h2 : 0 ≤ ((v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 := sq_nonneg _
+  have hle : (v : EuclideanSpace ℝ (Fin 3)) 2 ≤ 1 := by
     by_contra hcon
     push_neg at hcon
-    have : 1 < (v 2) ^ 2 := by nlinarith
     nlinarith
   rcases lt_or_eq_of_le hle with h | h
   · linarith
   · exact absurd h hv
 
-/-- The pole case: `v 2 = 1` forces the first two coordinates to vanish
+/-- The pole case: `v₂ = 1` forces the first two coordinates to vanish
 (the sphere equation), so `v` IS the north pole. -/
-theorem eq_northPole_of_pole {v : unitSphereType} (hv : v 2 = 1) :
+theorem eq_northPole_of_pole {v : unitSphereType}
+    (hv : (v : EuclideanSpace ℝ (Fin 3)) 2 = 1) :
     v = northPole := by
-  have hs : (v 0) ^ 2 + (v 1) ^ 2 + (v 2) ^ 2 = 1 :=
+  have hs : ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 +
+      ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 +
+      ((v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 = 1 :=
     (mem_sphere_iff_coord _).mp v.2
-  rw [hv] at hs
-  have h0 : v 0 = 0 := by
-    have : (v 0) ^ 2 = 0 := by nlinarith
-    exact pow_eq_zero_iff two_ne_zero |>.mp this
-  have h1 : v 1 = 0 := by
-    have : (v 1) ^ 2 = 0 := by nlinarith
-    exact pow_eq_zero_iff two_ne_zero |>.mp this
+  rw [show ((v : EuclideanSpace ℝ (Fin 3)) 2) = 1 from hv] at hs
+  have hp0 : 0 ≤ ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 := sq_nonneg _
+  have hp1 : 0 ≤ ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 := sq_nonneg _
+  have h0 : ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 = 0 := by linarith
+  have h1 : ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 = 0 := by linarith
+  have h0' : (v : EuclideanSpace ℝ (Fin 3)) 0 = 0 := by
+    exact sq_eq_zero_iff.mp h0
+  have h1' : (v : EuclideanSpace ℝ (Fin 3)) 1 = 0 := by
+    exact sq_eq_zero_iff.mp h1
   ext i
   fin_cases i
-  · simp [northPole, h0, Matrix.cons_val_zero, PiLp.toLp_apply]
-  · simp [northPole, h1, Matrix.cons_val_one, Matrix.head_cons,
-      Matrix.cons_val_succ, PiLp.toLp_apply]
-  · simp [northPole, hv, Matrix.cons_val_two, Matrix.head_cons,
-      Matrix.cons_val_succ, PiLp.toLp_apply]
+  · simp only [northPole, Subtype.coe_mk, PiLp.toLp_apply,
+      Matrix.cons_val_zero]
+    rw [h0']
+  · simp only [northPole, Subtype.coe_mk, PiLp.toLp_apply,
+      Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_succ]
+    rw [h1']
+  · simp only [northPole, Subtype.coe_mk, PiLp.toLp_apply,
+      Matrix.cons_val_two, Matrix.head_cons, Matrix.cons_val_succ]
+    rw [hv]
 
 /-! ## §3 The two cancellation laws -/
 
@@ -174,16 +204,16 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
       rw [if_pos rfl]
   | some t =>
       simp only [coordToSphere, sphereToCoord]
-      have hz : (⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-          unitSphereType) 2 ≠ 1 := by
+      have hz : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2 ≠ 1 := by
         intro hcon
         have hd := stereoCoord_denom_pos t
-        have hx : (⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-            unitSphereType) 2
+        have hx : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+            unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2
             = (t.re * t.re + t.im * t.im - 1) /
                 (t.re * t.re + t.im * t.im + 1) := rfl
         rw [hx] at hcon
-        field_simp at hcon
+        rw [div_eq_one_iff_eq (by linarith : (t.re * t.re + t.im * t.im + 1 : ℝ) ≠ 0)] at hcon
         linarith
       rw [if_neg hz]
       congr 1
@@ -192,11 +222,11 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
         have hd0 := stereoCoord_denom_pos t
         field_simp
         linarith
-      have hx : (⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-          unitSphereType) 0
+      have hx : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 0
           = 2 * t.re / (t.re * t.re + t.im * t.im + 1) := rfl
-      have hy : (⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-          unitSphereType) 1
+      have hy : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 1
           = 2 * t.im / (t.re * t.re + t.im * t.im + 1) := rfl
       rw [hx, hy]
       simp only [Complex.ext_iff, Complex.ofReal_re, Complex.ofReal_im,
@@ -212,54 +242,52 @@ point is the original sphere point (the pole case by the pole lemma, the
 non-pole case by the sphere-equation field cancellations). -/
 theorem coordToSphere_sphereToCoord (v : unitSphereType) :
     coordToSphere (sphereToCoord v) = v := by
-  by_cases hv : v 2 = 1
+  by_cases hv : (v : EuclideanSpace ℝ (Fin 3)) 2 = 1
   · rw [sphereToCoord, if_pos hv, coordToSphere]
     exact (eq_northPole_of_pole hv).symm
-  · have hs : (v 0) ^ 2 + (v 1) ^ 2 + (v 2) ^ 2 = 1 :=
+  · have hs : ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 +
+      ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 +
+      ((v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 = 1 :=
       (mem_sphere_iff_coord _).mp v.2
-    have hsq : (v 0) ^ 2 + (v 1) ^ 2 = 1 - (v 2) ^ 2 := by ring_nf; linarith
-    have hz1 : 1 - v 2 ≠ 0 := by
+    have h0 : 0 ≤ ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 := sq_nonneg _
+    have h1 : 0 ≤ ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 := sq_nonneg _
+    have hsq : ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 +
+        ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 =
+        1 - ((v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 := by
+      ring_nf
+      linarith
+    have hz1 : 1 - (v : EuclideanSpace ℝ (Fin 3)) 2 ≠ 0 := by
       have := sphere_denom_pos hv
       linarith
     rw [sphereToCoord, if_neg hv]
     simp only [coordToSphere]
-    have hd : (v 0 / (1 - v 2)) * (v 0 / (1 - v 2)) +
-        (v 1 / (1 - v 2)) * (v 1 / (1 - v 2)) + 1 ≠ 0 := by
-      have h0 : 0 ≤ (v 0) ^ 2 := sq_nonneg _
-      have h1 : 0 ≤ (v 1) ^ 2 := sq_nonneg _
-      have hp : 0 < 1 - v 2 := sphere_denom_pos hv
+    have hd : ((v : EuclideanSpace ℝ (Fin 3)) 0 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) *
+        ((v : EuclideanSpace ℝ (Fin 3)) 0 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) +
+        ((v : EuclideanSpace ℝ (Fin 3)) 1 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) *
+        ((v : EuclideanSpace ℝ (Fin 3)) 1 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) + 1 ≠ 0 := by
+      have hp : 0 < 1 - (v : EuclideanSpace ℝ (Fin 3)) 2 := sphere_denom_pos hv
       field_simp
       nlinarith
     ext i
     fin_cases i
-    · have hx : (coordToSphere (some ⟨v 0 / (1 - v 2), v 1 / (1 - v 2)⟩ :
-          unitSphereType)) 0
-          = 2 * (v 0 / (1 - v 2)) /
-              ((v 0 / (1 - v 2)) * (v 0 / (1 - v 2)) +
-                (v 1 / (1 - v 2)) * (v 1 / (1 - v 2)) + 1) := rfl
+    · have hx : (coordToSphere some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩ : EuclideanSpace ℝ (Fin 3)) 0
+          = 2 * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) / ((((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + 1) := rfl
       rw [hx]
-      simp only [PiLp.toLp_apply, Matrix.cons_val_zero]
+      simp only [Subtype.coe_mk, PiLp.toLp_apply, Matrix.cons_val_zero]
       field_simp
       ring
-    · have hy : (coordToSphere (some ⟨v 0 / (1 - v 2), v 1 / (1 - v 2)⟩ :
-          unitSphereType)) 1
-          = 2 * (v 1 / (1 - v 2)) /
-              ((v 0 / (1 - v 2)) * (v 0 / (1 - v 2)) +
-                (v 1 / (1 - v 2)) * (v 1 / (1 - v 2)) + 1) := rfl
+    · have hy : (coordToSphere some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩ : EuclideanSpace ℝ (Fin 3)) 1
+          = 2 * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) / ((((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + 1) := rfl
       rw [hy]
-      simp only [PiLp.toLp_apply, Matrix.cons_val_one, Matrix.head_cons,
-        Matrix.cons_val_succ]
+      simp only [Subtype.coe_mk, PiLp.toLp_apply, Matrix.cons_val_one,
+        Matrix.head_cons, Matrix.cons_val_succ]
       field_simp
       ring
-    · have hzc : (coordToSphere (some ⟨v 0 / (1 - v 2), v 1 / (1 - v 2)⟩ :
-          unitSphereType)) 2
-          = ((v 0 / (1 - v 2)) * (v 0 / (1 - v 2)) +
-              (v 1 / (1 - v 2)) * (v 1 / (1 - v 2)) - 1) /
-              ((v 0 / (1 - v 2)) * (v 0 / (1 - v 2)) +
-                (v 1 / (1 - v 2)) * (v 1 / (1 - v 2)) + 1) := rfl
+    · have hzc : (coordToSphere some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩ : EuclideanSpace ℝ (Fin 3)) 2
+          = ((((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) - 1) / ((((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + 1) := rfl
       rw [hzc]
-      simp only [PiLp.toLp_apply, Matrix.cons_val_two, Matrix.head_cons,
-        Matrix.cons_val_succ]
+      simp only [Subtype.coe_mk, PiLp.toLp_apply, Matrix.cons_val_two,
+        Matrix.head_cons, Matrix.cons_val_succ]
       field_simp
       ring
 
