@@ -1640,3 +1640,33 @@ name = "GSTFiniteLineRiemannLib"
 roots = [
   "GSTFiniteLineRiemann",
 ]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointAlgebraLib"
+roots = [
+  "GSTFiniteLinePointAlgebra",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLineHonestHodgeDataLib"
+roots = [
+  "GSTFiniteLineHonestHodgeData",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLineCycleCorrespondenceLib"
+roots = [
+  "GSTFiniteLineCycleCorrespondence",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLineAnalytificationLib"
+roots = [
+  "GSTFiniteLineAnalytification",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLineUnconditionalSourceLib"
+roots = [
+  "GSTFiniteLineUnconditionalSource",
+]
