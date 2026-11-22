@@ -338,7 +338,6 @@ theorem blockProjAt_crossIdeal_le_ker (M : ℕ) (i : Fin M) :
     crossIdeal M ≤ RingHom.ker (blockProjAt M i).toRingHom := by
   rw [crossIdeal, Ideal.span_le]
   rintro _ ⟨a, b, hab, rfl⟩
-  simp only [RingHom.mem_ker]
   show blockProjAt M i (X a * X b) = 0
   rw [map_mul]
   rcases eq_or_ne (a.val / 2) i.val with ha | ha
@@ -574,7 +573,6 @@ theorem blockProjClosedAt_crossIdeal_le_ker (M : ℕ) (i : Fin M) :
     crossIdeal M ≤ RingHom.ker (blockProjClosedAt M i).toRingHom := by
   rw [crossIdeal, Ideal.span_le]
   rintro _ ⟨a, b, hab, rfl⟩
-  simp only [RingHom.mem_ker]
   show blockProjClosedAt M i (X a * X b) = 0
   rw [map_mul]
   rcases eq_or_ne a.val (2 * i.val) with ha | ha
@@ -813,7 +811,7 @@ theorem le_iff_ideal (M : ℕ) (x y : finiteLineScheme M) :
   · intro h
     have hc : x ∈ closure ({y} : Set (finiteLineScheme M)) :=
       (specializes_iff_mem_closure (x := y) (y := x)).mp h
-    exact key x y hc
+    exact (key x y).mp hc
   · intro h
     have hc : x ∈ closure ({y} : Set (finiteLineScheme M)) := (key x y).mpr h
     exact (specializes_iff_mem_closure (x := y) (y := x)).mpr hc
@@ -839,27 +837,19 @@ theorem homogeneous_pos_mem_span_X {M : ℕ} {n : ℕ} (hn : 0 < n)
       omega
     rw [he0, map_zero] at hwe
     omega
-  have hsplit : e = Finsupp.single a 1 + (e - Finsupp.single a 1) := by
-    ext j
-    simp only [Finsupp.add_apply, Finsupp.coe_sub, Pi.sub_apply,
-      Finsupp.single_apply]
-    by_cases hja : j = a
-    · subst hja
-      simp only [if_pos rfl]
-      omega
-    · simp only [if_neg hja]
-      omega
-  refine Submodule.smul_mem _ _ ?_
+  have hsplit : e = Finsupp.erase a e + Finsupp.single a (e a) :=
+    (Finsupp.erase_add_single e a).symm
+  have hmul : MvPolynomial.monomial e (MvPolynomial.coeff e t) =
+      (X a ^ (e a - 1) *
+        MvPolynomial.monomial (Finsupp.erase a e) (MvPolynomial.coeff e t)) *
+        (X a : lineRing M) := by
+    rw [hsplit, MvPolynomial.monomial_add_single]
+    conv_lhs => rw [← Nat.sub_add_cancel ha, pow_succ]
+    ring
   have hX : (X a : lineRing M) ∈
       Ideal.span (Set.range (X : Fin (2 * M) → lineRing M)) :=
     Submodule.subset_span (Set.mem_range_self a)
-  have hmul : MvPolynomial.monomial e (MvPolynomial.coeff e t) =
-      (X a : lineRing M) *
-        MvPolynomial.monomial (e - Finsupp.single a 1) (MvPolynomial.coeff e t) := by
-    rw [show (X a : lineRing M) =
-      MvPolynomial.monomial (Finsupp.single a 1) 1 from rfl, MvPolynomial.monomial_mul,
-      hsplit]
-  rw [hmul, mul_comm]
+  rw [Algebra.smul_def, hmul, ← mul_assoc]
   exact Submodule.smul_mem _ _ hX
 
 /-- If every variable image lies in an ideal, the irrelevant ideal lies in
@@ -1007,7 +997,7 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
         have hsum : w - (w - 1) = (1 : lineQuotient M) := by ring
         rw [hsum] at hsub
         exact hsub
-      exact y.isPrime.ne_top (Ideal.eq_top_iff_one.mpr hgoal)
+      exact y.isPrime.ne_top ((Ideal.eq_top_iff_one _).mpr hgoal)
     · intro a b hab
       obtain ⟨ã, hã⟩ := hsurj a
       obtain ⟨bbar, hbbar⟩ := hsurj b
@@ -1024,8 +1014,8 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
           ((Ideal.mem_map_iff_of_surjective _ hsurj).mpr ⟨ã, h1, hã⟩)
       · exact Or.inr
           ((Ideal.mem_map_iff_of_surjective _ hsurj).mpr ⟨bbar, h2, hbbar⟩)
-  -- ȳ is nonzero: y strictly contains the generic ideal
-  have hȳne : ybar ≠ ⊥ := by
+  -- ybar is nonzero: y strictly contains the generic ideal
+  have hybarne : ybar ≠ ⊥ := by
     intro hbot
     obtain ⟨f, hf, hfne⟩ : ∃ f ∈ y.asHomogeneousIdeal.toIdeal,
         f ∉ lineGenericIdeal M i := by
@@ -1071,15 +1061,15 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
       rw [blockProjQuotAt_mk, blockProjAt_X_right, lineClosedIdealAt,
         Ideal.map_span] at hmem
       exact hmem
-  -- ȳ lies inside (Z)
-  have hȳle : ybar ≤ Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := by
+  -- ybar lies inside (Z)
+  have hybarle : ybar ≤ Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := by
     rw [hybardef]
     calc Ideal.map (blockProjQuotAt M i).toRingHom y.asHomogeneousIdeal.toIdeal ≤
         Ideal.map (blockProjQuotAt M i).toRingHom (lineClosedIdealAt M i) :=
           Ideal.map_mono hstrict.le
       _ = Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := hmapclosed
-  -- ȳ is strictly below (Z) (else the closed ideal would lie in y's)
-  have hȳneZ : ybar ≠ Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := by
+  -- ybar is strictly below (Z) (else the closed ideal would lie in y's)
+  have hybarneZ : ybar ≠ Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} := by
     intro heq
     have hZmem : (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) ∈ ybar := by
       rw [heq]; exact Ideal.subset_span (Set.mem_singleton _)
@@ -1103,13 +1093,13 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
         rw [Ideal.span_le]
         rintro _ rfl
         exact hqmem))
-  -- Z is not in ȳ (else ȳ = (Z))
+  -- Z is not in ybar (else ybar = (Z))
   have hZnotin : ¬ ((X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) ∈ ybar) := by
     intro hZ
     have hZle : Ideal.span {(X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ)} ≤ ybar :=
       Submodule.span_singleton_le_iff.mpr hZ
-    exact hȳneZ (le_antisymm hȳle hZle)
-  -- THE ELEMENTARY DESCENT: every element of ȳ is zero
+    exact hybarneZ (le_antisymm hybarle hZle)
+  -- THE ELEMENTARY DESCENT: every element of ybar is zero
   have hkill : ∀ n : ℕ, ∀ f : MvPolynomial (Fin 2) ℂ,
       MvPolynomial.totalDegree f = n → f ∈ ybar → f = 0 := by
     intro n
@@ -1117,7 +1107,7 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
     | zero =>
         intro f hfD hmem
         obtain ⟨g, hgf⟩ :=
-          (Ideal.mem_span_singleton.mp (hȳle hmem) :
+          (Ideal.mem_span_singleton.mp (hybarle hmem) :
             (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) ∣ f)
         by_cases hg0 : g = 0
         · rw [← hgf, hg0, mul_zero]
@@ -1128,7 +1118,7 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
     | succ m ih =>
         intro f hfD hmem
         obtain ⟨g, hgf⟩ :=
-          (Ideal.mem_span_singleton.mp (hȳle hmem) :
+          (Ideal.mem_span_singleton.mp (hybarle hmem) :
             (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) ∣ f)
         have hmem' : (X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) * g ∈ ybar := by
           rw [hgf]; exact hmem
@@ -1150,7 +1140,7 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
     refine Submodule.eq_bot_iff.mpr ?_
     intro f hmem
     exact hkill f (MvPolynomial.totalDegree f) rfl hmem
-  exact hȳne hybarbot
+  exact hybarne hybarbot
 
 /-- **THE CLOSED POINT AT LINE i LIES STRICTLY BELOW THE i-TH GENERIC
 POINT.** -/
@@ -1165,16 +1155,15 @@ theorem lineClosedPointAt_lt (M : ℕ) (i : Fin M) :
     have h2 : lineQuotientMap M (X (blockVarRight M i)) ∉ lineGenericIdeal M i :=
       lineQuotientMap_X_pair_not_mem' M i
     apply h2
-    have hle : lineClosedPointAt M i ≤ lineGenericPoint M i :=
-      (le_iff_ideal M (lineClosedPointAt M i) (lineGenericPoint M i)).mpr
-        (by rw [lineClosedPointAt_asIdeal, lineGenericPoint_asIdeal];
-            exact lineGenericIdeal_le_lineClosedIdealAt M i)
-    have hII : (lineClosedPointAt M i).asHomogeneousIdeal =
-        (lineGenericPoint M i).asHomogeneousIdeal :=
-      congrArg ProjectiveSpectrum.asHomogeneousIdeal (le_antisymm hle heq)
-    have h1' := congrArg HomogeneousIdeal.toIdeal hII
-    rw [lineClosedPointAt_asIdeal, lineGenericPoint_asIdeal] at h1'
-    rw [← h1']
+    have hI : (lineClosedPointAt M i).asHomogeneousIdeal.toIdeal =
+        (lineGenericPoint M i).asHomogeneousIdeal.toIdeal :=
+      le_antisymm ((le_iff_ideal M (lineGenericPoint M i) (lineClosedPointAt M i)).mp heq)
+        ((le_iff_ideal M (lineClosedPointAt M i) (lineGenericPoint M i)).mp
+          ((le_iff_ideal M (lineClosedPointAt M i) (lineGenericPoint M i)).mpr
+            (by rw [lineClosedPointAt_asIdeal, lineGenericPoint_asIdeal];
+                exact lineGenericIdeal_le_lineClosedIdealAt M i)))
+    rw [lineClosedPointAt_asIdeal, lineGenericPoint_asIdeal] at hI
+    rw [← hI]
     exact h1
 
 /-- **THE LINE-i CLOSED POINT HAS COHEIGHT ONE.**  The lower bound is the
@@ -1217,19 +1206,21 @@ theorem lineClosedPointAt_coheight (M : ℕ) (i : Fin M) :
       · exact h2
     rcases eq_or_ne w.asHomogeneousIdeal.toIdeal (lineGenericIdeal M i) with heq | hne
     · have hwgen : w = lineGenericPoint M i :=
-        eq_lineGenericPoint_of_le M i w (by rw [heq]; exact le_rfl)
+        eq_lineGenericPoint_of_le M i w (by rw [heq])
       rw [hwgen, lineGenericPoint_coheight M i]
-      exact_mod_cast (by norm_num : (0 : ℕ) < (1 : ℕ))
-    · exact absurd (no_intermediate_pointAt M i w ⟨hgen, hne.symm⟩ ⟨hwle, hwne⟩)
-        False.elim
+      by norm_num
+    · exact absurd
+        (no_intermediate_pointAt M i w
+          ⟨hgen, fun hle => hne (le_antisymm hle hgen)⟩
+          ⟨hwle, fun hle => hwne (le_antisymm hwle hle)⟩) False.elim
   have hne : Order.coheight (lineClosedPointAt M i) ≠ ⊤ := by
     intro htop
     rw [htop] at hupper
     exact absurd hupper (by simp)
   obtain ⟨n, hn⟩ := ENat.ne_top_iff_exists.mp hne
   rw [← hn] at hupper hlower ⊢
-  have hn1 : n ≤ 1 := ENat.coe_le_coe.mp hupper
-  have hn2 : 1 ≤ n := ENat.coe_le_coe.mp hlower
+  have hn1 : n ≤ 1 := ENat.natCast_le_natCast.mp hupper
+  have hn2 : 1 ≤ n := ENat.natCast_le_natCast.mp hlower
   rw [← ENat.coe_one]
   exact congrArg ((↑) : ℕ → ℕ∞) (le_antisymm (α := ℕ) hn1 hn2)
 
@@ -1280,11 +1271,8 @@ theorem exists_eq_lineGenericPoint (M : ℕ) (η : finiteLineScheme M)
     rcases η.isPrime.mem_or_mem hmem with h1 | h2
     · exact absurd h1 ha
     · exact h2
-  have hle : η ≤ lineGenericPoint M ⟨a.val / 2, by have := a.isLt; omega⟩ :=
-    (le_iff_ideal M η (lineGenericPoint M ⟨a.val / 2, by have := a.isLt; omega⟩)).mpr hgen
-  rcases lt_or_eq_of_le hle with hlt | heq
-  · exact (hmax hlt).elim
-  · exact heq
+  exact hmax ((le_iff_ideal M η
+    (lineGenericPoint M ⟨a.val / 2, by have := a.isLt; omega⟩)).mpr hgen)
 
 /-- **THE GENERIC INDEX** — the coheight-zero points indexed by `Fin M`. -/
 noncomputable def lineIndexOfGeneric (M : ℕ)
@@ -1294,11 +1282,11 @@ noncomputable def lineIndexOfGeneric (M : ℕ)
 theorem lineIndexOfGeneric_spec (M : ℕ)
     (η : CodimensionPoint (finiteLineScheme M) 0) :
     lineGenericPoint M (lineIndexOfGeneric M η) = η.1 :=
-  Classical.choose_spec (exists_eq_lineGenericPoint M η.1 η.2)
+  (Classical.choose_spec (exists_eq_lineGenericPoint M η.1 η.2)).symm
 
 theorem lineIndexOfGeneric_lineGenericPoint (M : ℕ) (i : Fin M) :
     lineIndexOfGeneric M ⟨lineGenericPoint M i, lineGenericPoint_coheight M i⟩ = i :=
-  lineGenericPoint_injective M (lineIndexOfGeneric_spec M _).symm
+  lineGenericPoint_injective M (lineIndexOfGeneric_spec M _)
 
 /-- **THE UNIQUE GENERIC ABOVE A COHEIGHT-ONE POINT.** -/
 theorem exists_unique_generic_above (M : ℕ)
@@ -1308,7 +1296,7 @@ theorem exists_unique_generic_above (M : ℕ)
   have hfin : Order.coheight x.1 < ⊤ := by
     rw [x.2]
     first
-    | exact ENat.coe_lt_top 1
+    | exact ENat.natCast_lt_top 1
     | simp
   have hlt : (0 : ℕ) < Order.coheight x.1 := by
     rw [x.2]
@@ -1321,7 +1309,7 @@ theorem exists_unique_generic_above (M : ℕ)
   refine ⟨⟨η, hη⟩, hxη, ?_⟩
   rintro ⟨η', hη'⟩ hxη'
   obtain ⟨k, hk⟩ := exists_eq_lineGenericPoint M η hη
-  obtain ⟨k', hk'⟩ := exists_eq_lineGenericPoint M η' hη'
+  obtain ⟨k', hk'⟩ := exists_eq_lineGenericPoint M (η'.1) η'.2
   have hkx : lineGenericIdeal M k ≤ x.1.asHomogeneousIdeal.toIdeal := by
     rw [hk] at hxη
     rw [← lineGenericPoint_asIdeal]
@@ -1341,20 +1329,14 @@ theorem exists_unique_generic_above (M : ℕ)
           (fun hcon => hne (Fin.ext (hcon.symm.trans hblock).symm)))
       · exact hkx (mem_lineGenericIdeal M k hblock))
   have hηeq : η = η' := by rw [hk, hk', hkk]
-  exact Subtype.ext hηeq
+  exact Subtype.ext hηeq.symm
 
 /-- **THE COMPONENT MAP** — the unique generic point above a coheight-one
 point. -/
 noncomputable def lineComponentOf (M : ℕ)
     (x : CodimensionPoint (finiteLineScheme M) 1) :
     CodimensionPoint (finiteLineScheme M) 0 :=
-  ⟨Classical.choose (exists_unique_generic_above M x),
-    by
-      obtain ⟨η₀, hlt, huniq⟩ := exists_unique_generic_above M x
-      have hch : Classical.choose (exists_unique_generic_above M x) = η₀ :=
-        huniq _ (Classical.choose_spec (exists_unique_generic_above M x)).1
-      rw [hch]
-      exact η₀.2⟩
+  Classical.choose (exists_unique_generic_above M x)
 
 theorem lineComponentOf_above (M : ℕ)
     (x : CodimensionPoint (finiteLineScheme M) 1) :
@@ -1370,7 +1352,7 @@ theorem lineComponentOf_unique (M : ℕ) (x : CodimensionPoint (finiteLineScheme
 theorem lineClosedPointAt_component (M : ℕ) (i : Fin M) :
     lineComponentOf M ⟨lineClosedPointAt M i, lineClosedPointAt_coheight M i⟩ =
       ⟨lineGenericPoint M i, lineGenericPoint_coheight M i⟩ :=
-  (lineComponentOf_unique M _ _ (lineClosedPointAt_lt M)).symm
+  (lineComponentOf_unique M _ _ (lineClosedPointAt_lt M i)).symm
 
 /-! ## §6 The honest seed cycles -/
 
