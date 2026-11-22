@@ -440,11 +440,10 @@ theorem lineX_mem_one (M : ℕ) [NeZero M] (a : Fin (2 * M)) :
     lineQuotientMap M (MvPolynomial.X a) ∈ lineGrading M 1 :=
   lineCoverHomogeneousOneQ M a
 
-/-- The homogeneous membership at the smul-form `n • 1` (the degree shape
-`Away.mk` demands; `n • 1 = n` by `one_nsmul`). -/
 /-- The smul-degree collapse, proved once in isolation (the in-theorem
 induction captured the theorem's own hypothesis into the motive — the
-context-free form is immune). -/
+context-free form is immune); the homogeneous membership at the smul-form
+`n • 1` (the degree shape `Away.mk` demands). -/
 private theorem nsmul_one_eq (n : ℕ) : n • 1 = n := by
   induction n with
   | zero => rfl
@@ -638,7 +637,11 @@ private theorem mk_pow (M : ℕ) [NeZero M] (j : Fin (2 * M))
       rw [pow_succ, ih,
         away_mk_mul M j e 1 (x ^ e) x
           (SetLike.pow_mem_graded e hx) hx]
-      rfl
+      apply HomogeneousLocalization.val_injective
+        (𝒜 := lineGrading M)
+        (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+      rw [HomogeneousLocalization.Away.val_mk,
+        HomogeneousLocalization.Away.val_mk, pow_succ]
 
 /-! ### §7.C′ The per-monomial evaluation (the degree-indexed Finsupp induction) -/
 
@@ -680,16 +683,20 @@ private theorem monomial_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
       conv_lhs => rw [hsplit]
       rw [map_mul, map_pow, MvPolynomial.aeval_X, hX, ih,
         mk_pow M j (lineQuotientMap M (MvPolynomial.X a)) hXmem e,
-        away_mk_mul M j d'.degree e
-          (lineQuotientMap M (MvPolynomial.monomial d' c))
+        away_mk_mul M j e d'.degree
           (lineQuotientMap M (MvPolynomial.X a) ^ e)
+          (lineQuotientMap M (MvPolynomial.monomial d' c))
+          (SetLike.pow_mem_graded e hXmem)
           (lineQuotientMap_mem_lineGrading_smul M _ _
             ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
-              (MvPolynomial.isHomogeneous_monomial c rfl)))
-          (SetLike.pow_mem_graded e hXmem),
-        Nat.add_comm d'.degree e, ← map_mul,
-        mul_comm (MvPolynomial.monomial d' c) (MvPolynomial.X a ^ e),
-        ← hsplit, hdeg]
+              (MvPolynomial.isHomogeneous_monomial c rfl))),
+        hdeg]
+      apply HomogeneousLocalization.val_injective
+        (𝒜 := lineGrading M)
+        (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
+      rw [HomogeneousLocalization.Away.val_mk,
+        HomogeneousLocalization.Away.val_mk,
+        ← map_mul, ← map_pow, ← hsplit]
 
 /-! ### §7.D The homogeneous evaluation (the battle's core) -/
 
@@ -770,13 +777,13 @@ private theorem mk_self_frac (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
     (𝒜 := lineGrading M)
     (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
   rw [HomogeneousLocalization.Away.val_mk, HomogeneousLocalization.val_one]
-  rw [show ((⟨(lineQuotientMap M (MvPolynomial.X j)) ^ 1,
+  refine Eq.trans ?_ (Localization.mk_self
+    (⟨(lineQuotientMap M (MvPolynomial.X j)) ^ 1,
       (Submonoid.mem_powers_iff _ _).mpr ⟨1, rfl⟩⟩ :
-      Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))) =
-      (1 : Submonoid.powers (lineQuotientMap M (MvPolynomial.X j))) from
-      Subtype.ext (show (lineQuotientMap M (MvPolynomial.X j)) ^ 1 = 1 from
-        pow_one _),
-    Localization.mk_one]
+      Submonoid.powers (lineQuotientMap M (MvPolynomial.X j))))
+  exact congrArg (fun a => Localization.mk a
+    ⟨(lineQuotientMap M (MvPolynomial.X j)) ^ 1,
+      (Submonoid.mem_powers_iff _ _).mpr ⟨1, rfl⟩⟩) (pow_one _).symm
 
 /-- The off-block variables annihilate `f`: `q (X a) * f = 0` whenever `a`
 is outside `j`'s coordinate block. -/
@@ -964,11 +971,12 @@ theorem chart_retract (M : ℕ) [NeZero M] (j : Fin (2 * M))
   | mul_X p k hp =>
       have hk : k = (0 : Fin 1) := Subsingleton.elim k 0
       subst hk
-      rw [map_mul, map_mul, hp,
-        show chartMap M j (MvPolynomial.X (0 : Fin 1)) = chartRatio M j from by
-          show MvPolynomial.aeval (fun _ : Fin 1 => chartRatio M j)
-              (MvPolynomial.X (0 : Fin 1)) = chartRatio M j
-          rw [MvPolynomial.aeval_X]
+      have hchartX : chartMap M j (MvPolynomial.X (0 : Fin 1)) =
+          chartRatio M j := by
+        show MvPolynomial.aeval (fun _ : Fin 1 => chartRatio M j)
+            (MvPolynomial.X (0 : Fin 1)) = chartRatio M j
+        rw [MvPolynomial.aeval_X]
+      rw [map_mul, map_mul, hp, hchartX,
         show chartRatio M j = HomogeneousLocalization.Away.mk (lineGrading M)
             (lineCoverHomogeneousOneQ M j) 1
             (lineQuotientMap M (MvPolynomial.X (linePartner M j)))
@@ -1028,14 +1036,18 @@ theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
   -- so the locality instance is synthesized ONCE at the concrete universe
   -- and found locally by every downstream elaboration (the floating-
   -- universe synthesis disease of runs 44963149127/44968228948/44969325482).
-  haveI hloc : IsZariskiLocalAtSource
+  -- THE INSTANCE EXPERIMENT LADDER: each synthesis isolated so the CI
+  -- verdict localizes exactly which locality layer fires (the AtTarget
+  -- layer is the AG_Smooth.lean:328 receipt — Mathlib's own successful
+  -- synthesis shape).
+  haveI httl : IsZariskiLocalAtTarget
       (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
-  haveI hriso : MorphismProperty.RespectsIso
+  haveI hloc : IsZariskiLocalAtSource
       (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
   exact (IsZariskiLocalAtSource.iff_of_iSup_eq_top (P := @Smooth) _
     (Proj.iSup_basicOpen_eq_top' (lineGrading M)
       (fun j : Fin (2 * M) => lineQuotientMap M (MvPolynomial.X j))
-      (lineCoverHomogeneousQ M) (lineCoverAdjoin M))).mr fun j => by
+      (lineCoverHomogeneousQ M) (lineCoverAdjoin M))).mpr fun j => by
     rw [← MorphismProperty.cancel_left_of_respectsIso (P := @Smooth)
       (Proj.basicOpenIsoSpec (lineGrading M)
         (lineQuotientMap M (MvPolynomial.X j))
