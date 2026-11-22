@@ -691,7 +691,15 @@ private theorem monomial_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
           (lineQuotientMap_mem_lineGrading_smul M _ _
             ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
               (MvPolynomial.isHomogeneous_monomial c rfl))),
-        hdeg]
+        away_mk_cast M j hdeg
+          (lineQuotientMap M (MvPolynomial.monomial (Finsupp.single a e + d') c))
+          (lineQuotientMap_mem_lineGrading_smul M _ _
+            ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+              (MvPolynomial.isHomogeneous_monomial c rfl)))
+          (lineQuotientMap_mem_lineGrading_smul M (e + Finsupp.degree d')
+            (MvPolynomial.monomial (Finsupp.single a e + d') c)
+            ((MvPolynomial.mem_homogeneousSubmodule _ _).mpr
+              (MvPolynomial.isHomogeneous_monomial c hdeg)))]
       apply HomogeneousLocalization.val_injective
         (𝒜 := lineGrading M)
         (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
@@ -1042,14 +1050,19 @@ theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
   -- so the locality instance is synthesized ONCE at the concrete universe
   -- and found locally by every downstream elaboration (the floating-
   -- universe synthesis disease of runs 44963149127/44968228948/44969325482).
-  -- THE INSTANCE EXPERIMENT LADDER + THE SYNTH TRACE: the CI verdict of
-  -- run 44971713541 showed ALL THREE locality layers failing to synthesize
-  -- (AtTarget, AtSource, RespectsIso) even at the pinned universe — the
-  -- trace below (in the uploaded log) localizes the exact failing step.
-  set_option trace.Meta.synthInstance true in
+  -- THE SIGNATURE DIAGNOSTICS: run 44972601838's trace showed the two
+  -- locality instances FOUND by name (@HasAffineProperty.instIsZariskiLocalTarget,
+  -- HasRingHomProperty.instIsZariskiLocalAtTarget) but their conclusion
+  -- unification (@Smooth ≟ ?m) rejected — the signatures below (with
+  -- universe annotations in the log) expose the exact parameter shape.
+  set_option pp.universes true in
+  #check @HasRingHomProperty.instIsZariskiLocalAtTarget
+  set_option pp.universes true in
+  #check @HasAffineProperty.instIsZariskiLocalAtTarget
+  set_option pp.universes true in
+  #check fun (X Y : Scheme) (f : X ⟶ Y) => @Smooth X Y f
   haveI httl : IsZariskiLocalAtTarget
       (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
-  set_option trace.Meta.synthInstance true in
   haveI hloc : IsZariskiLocalAtSource
       (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
   exact (IsZariskiLocalAtSource.iff_of_iSup_eq_top (P := @Smooth) _
