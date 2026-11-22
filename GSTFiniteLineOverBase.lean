@@ -141,10 +141,13 @@ theorem fromZeroRingHom_comp_awayMap (g : 𝒜 →+*ᵍ ℬ) {i : ℕ} (hi : 0 <
   have h1 : ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a) =
       Away.mk 𝒜 hs 0 (a : A) ha := by
     apply HomogeneousLocalization.val_injective
+    show (HomogeneousLocalization.mk ⟨0, a, 1, one_mem _⟩).val = _
     simp [HomogeneousLocalization.val_mk,
       HomogeneousLocalization.Away.val_mk]
   rw [h1, Away.map_mk g s hs 0 (a : A) ha]
-  rfl
+  show _ = (HomogeneousLocalization.mk ⟨0, (gradedZeroHom g) a, 1, one_mem _⟩).val
+  simp [HomogeneousLocalization.val_mk,
+    HomogeneousLocalization.Away.val_mk]
 
 /-- **THE BASE-NATURALITY OF `Proj.map`** — the pin lemma (the
 architecture's R3 core): the Proj map of a graded hom commutes with the
