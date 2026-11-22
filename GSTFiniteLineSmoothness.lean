@@ -641,7 +641,8 @@ private theorem mk_pow (M : ℕ) [NeZero M] (j : Fin (2 * M))
         (𝒜 := lineGrading M)
         (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
       rw [HomogeneousLocalization.Away.val_mk,
-        HomogeneousLocalization.Away.val_mk, pow_succ]
+        HomogeneousLocalization.Away.val_mk,
+        show x ^ (e + 1) = x ^ e * x from pow_succ x e]
 
 /-! ### §7.C′ The per-monomial evaluation (the degree-indexed Finsupp induction) -/
 
@@ -695,8 +696,13 @@ private theorem monomial_eval (M : ℕ) [NeZero M] (j : Fin (2 * M))
         (𝒜 := lineGrading M)
         (x := Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
       rw [HomogeneousLocalization.Away.val_mk,
-        HomogeneousLocalization.Away.val_mk,
-        ← map_mul, ← map_pow, ← hsplit]
+        HomogeneousLocalization.Away.val_mk]
+      have hnum : lineQuotientMap M (MvPolynomial.X a) ^ e *
+          lineQuotientMap M (MvPolynomial.monomial d' c) =
+          lineQuotientMap M
+            (MvPolynomial.monomial (Finsupp.single a e + d') c) := by
+        rw [← map_pow, ← map_mul, ← hsplit]
+      rw [hnum]
 
 /-! ### §7.D The homogeneous evaluation (the battle's core) -/
 
@@ -1036,12 +1042,14 @@ theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
   -- so the locality instance is synthesized ONCE at the concrete universe
   -- and found locally by every downstream elaboration (the floating-
   -- universe synthesis disease of runs 44963149127/44968228948/44969325482).
-  -- THE INSTANCE EXPERIMENT LADDER: each synthesis isolated so the CI
-  -- verdict localizes exactly which locality layer fires (the AtTarget
-  -- layer is the AG_Smooth.lean:328 receipt — Mathlib's own successful
-  -- synthesis shape).
+  -- THE INSTANCE EXPERIMENT LADDER + THE SYNTH TRACE: the CI verdict of
+  -- run 44971713541 showed ALL THREE locality layers failing to synthesize
+  -- (AtTarget, AtSource, RespectsIso) even at the pinned universe — the
+  -- trace below (in the uploaded log) localizes the exact failing step.
+  set_option trace.Meta.synthInstance true in
   haveI httl : IsZariskiLocalAtTarget
       (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
+  set_option trace.Meta.synthInstance true in
   haveI hloc : IsZariskiLocalAtSource
       (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
   exact (IsZariskiLocalAtSource.iff_of_iSup_eq_top (P := @Smooth) _
