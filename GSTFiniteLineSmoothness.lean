@@ -1065,6 +1065,11 @@ theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
   haveI httl : IsZariskiLocalAtTarget
       (@Smooth : MorphismProperty (Scheme.{0})) :=
     @HasRingHomProperty.instIsZariskiLocalAtTarget.{0} _ _ inferInstance
+  -- THE LAST LAYER: the RespectsIso for the per-chart iso-cancellation,
+  -- from the AtTarget instance's own parent projection (IsLocalAtTarget
+  -- extends RespectsIso).
+  haveI hriso : MorphismProperty.RespectsIso
+      (@Smooth : MorphismProperty (Scheme.{0})) := httl.toRespectsIso
   haveI hloc : IsZariskiLocalAtSource
       (@Smooth : MorphismProperty (Scheme.{0})) :=
     @HasRingHomProperty.instIsZariskiLocalAtSource.{0} _ _ inferInstance
