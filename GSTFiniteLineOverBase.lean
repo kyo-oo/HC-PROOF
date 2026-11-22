@@ -137,9 +137,10 @@ theorem fromZeroRingHom_comp_awayMap (g : 𝒜 →+*ᵍ ℬ) {i : ℕ} (hi : 0 <
   ext a
   show val ((Away.map g s) ((fromZeroRingHom 𝒜 (Submonoid.powers s)) a)) =
     val ((fromZeroRingHom ℬ (Submonoid.powers (g s))) (gradedZeroHom g a))
+  have ha : (a : A) ∈ 𝒜 (0 • i) := by rw [zero_smul]; exact a.2
   have h1 : (fromZeroRingHom 𝒜 (Submonoid.powers s)) a
-      = Away.mk 𝒜 hs 0 a a.2 := rfl
-  rw [h1, Away.map_mk g s hs 0 a a.2]
+      = Away.mk 𝒜 hs 0 (a : A) ha := rfl
+  rw [h1, Away.map_mk g s hs 0 (a : A) ha]
   rfl
 
 /-- **THE BASE-NATURALITY OF `Proj.map`** — the pin lemma (the
@@ -158,29 +159,35 @@ theorem Proj_map_comp_toSpecZero (g : 𝒜 →+*ᵍ ℬ)
       Proj.toSpecZero ℬ ≫
         Spec.map (CommRingCat.ofHom (gradedZeroHom g)) := by
   refine (Proj.mapAffineOpenCover g hg).openCover.hom_ext _ _ fun s ↦ ?_
-  have hL : (Proj.awayι ℬ (g s.2) (g.2 s.2.2) s.1.2) ≫
+  -- the cover's chart, normalized definitionally to the awayι form
+  -- (the openCover's f at s is the affine cover's f at the upgraded
+  -- index; Sigma-eta and the awayι definition close the gap by rfl)
+  have hchart : (Proj.mapAffineOpenCover g hg).openCover.f s =
+      Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2 := rfl
+  rw [hchart]
+  have hL : (Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2) ≫
       (Proj.map g hg ≫ Proj.toSpecZero 𝒜) =
       Spec.map (CommRingCat.ofHom
-        ((Away.map g s.2).comp
-          (fromZeroRingHom 𝒜 (Submonoid.powers s.2)))) := by
+        ((Away.map g (s.2 : A)).comp
+          (fromZeroRingHom 𝒜 (Submonoid.powers (s.2 : A))))) := by
     rw [← CategoryTheory.Category.assoc,
-      Proj.awayι_comp_map g hg s.1.2 s.2 s.2.2,
+      Proj.awayι_comp_map g hg s.1.2 (s.2 : A) s.2.2,
       CategoryTheory.Category.assoc,
-      Proj.awayι_toSpecZero 𝒜 s.2 s.2.2 s.1.2,
+      Proj.awayι_toSpecZero 𝒜 (s.2 : A) s.2.2 s.1.2,
       ← CategoryTheory.Category.assoc, ← Spec.map_comp,
-      CommRingCat.ofHom_comp]
-  have hR : (Proj.awayι ℬ (g s.2) (g.2 s.2.2) s.1.2) ≫
+      ← CommRingCat.ofHom_comp]
+  have hR : (Proj.awayι ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2) ≫
       (Proj.toSpecZero ℬ ≫
         Spec.map (CommRingCat.ofHom (gradedZeroHom g))) =
       Spec.map (CommRingCat.ofHom
-        ((fromZeroRingHom ℬ (Submonoid.powers (g s.2))).comp
+        ((fromZeroRingHom ℬ (Submonoid.powers (g (s.2 : A)))).comp
           (gradedZeroHom g))) := by
     rw [← CategoryTheory.Category.assoc,
-      Proj.awayι_toSpecZero ℬ (g s.2) (g.2 s.2.2) s.1.2,
-      ← Spec.map_comp, CommRingCat.ofHom_comp]
+      Proj.awayι_toSpecZero ℬ (g (s.2 : A)) (g.2 s.2.2) s.1.2,
+      ← Spec.map_comp, ← CommRingCat.ofHom_comp]
   rw [hL, hR]
   exact congrArg (Spec.map ∘ CommRingCat.ofHom)
-    (fromZeroRingHom_comp_awayMap g s.1.2 s.2 s.2.2)
+    (fromZeroRingHom_comp_awayMap g s.1.2 (s.2 : A) s.2.2)
 
 end General
 
