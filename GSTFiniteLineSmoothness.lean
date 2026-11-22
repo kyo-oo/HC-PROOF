@@ -1050,21 +1050,25 @@ theorem finiteLine_smoothness (M : ℕ) [NeZero M] :
   -- so the locality instance is synthesized ONCE at the concrete universe
   -- and found locally by every downstream elaboration (the floating-
   -- universe synthesis disease of runs 44963149127/44968228948/44969325482).
-  -- THE SIGNATURE DIAGNOSTICS: run 44972601838's trace showed the two
-  -- locality instances FOUND by name (@HasAffineProperty.instIsZariskiLocalTarget,
-  -- HasRingHomProperty.instIsZariskiLocalAtTarget) but their conclusion
-  -- unification (@Smooth ≟ ?m) rejected — the signatures below (with
-  -- universe annotations in the log) expose the exact parameter shape.
+  -- THE BY-NAME KILL: run 44973162527's signature diagnostics delivered
+  -- the exact parameter shape:
+  --   HasRingHomProperty.instIsZariskiLocalAtTarget.{u} (P) {Q}
+  --     [HasRingHomProperty.{u} P Q] : IsZariskiLocalAtTarget.{u} P
+  -- The instance is applied BY NAME in @-mode with the universe explicit
+  -- (0), bypassing the TC engine's rejected conclusion unification; the
+  -- bottom-layer HasRingHomProperty argument is synthesized in place (and
+  -- its failure, if any, is now the ONLY remaining unknown).
   set_option pp.universes true in
-  #check @HasRingHomProperty.instIsZariskiLocalAtTarget
-  set_option pp.universes true in
-  #check @HasAffineProperty.instIsZariskiLocalAtTarget
-  set_option pp.universes true in
-  #check fun (X Y : Scheme) (f : X ⟶ Y) => @Smooth X Y f
+  #check (inferInstance : HasRingHomProperty
+    (@Smooth : MorphismProperty (Scheme.{0})) RingHom.Smooth)
   haveI httl : IsZariskiLocalAtTarget
-      (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
+      (@Smooth : MorphismProperty (Scheme.{0})) :=
+    @HasRingHomProperty.instIsZariskiLocalAtTarget 0 _ RingHom.Smooth
+      inferInstance
   haveI hloc : IsZariskiLocalAtSource
-      (@Smooth : MorphismProperty (Scheme.{0})) := inferInstance
+      (@Smooth : MorphismProperty (Scheme.{0})) :=
+    @HasRingHomProperty.instIsZariskiLocalAtSource 0 _ RingHom.Smooth
+      inferInstance
   exact (IsZariskiLocalAtSource.iff_of_iSup_eq_top (P := @Smooth) _
     (Proj.iSup_basicOpen_eq_top' (lineGrading M)
       (fun j : Fin (2 * M) => lineQuotientMap M (MvPolynomial.X j))
