@@ -1118,7 +1118,8 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
     intro g hg
     obtain ⟨t, ht, htsup⟩ := Finset.exists_mem_eq_sup
       (MvPolynomial.support g) (MvPolynomial.support_nonempty_iff.mpr hg)
-      (fun s : Fin (2 * M) →₀ ℕ => s.sum fun _ e => e)
+      (fun s : Fin (2 * M) →₀ ℕ => s.sum fun _ e => e :
+        (Fin (2 * M) →₀ ℕ) → ℕ)
     have hmem : (Finsupp.single (⟨1, by omega⟩ : Fin 2) 1 + t) ∈
         MvPolynomial.support ((X ⟨1, by omega⟩ : MvPolynomial (Fin 2) ℂ) * g) := by
       rw [MvPolynomial.mem_support_iff,
@@ -1128,7 +1129,10 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
       exact (MvPolynomial.mem_support_iff.mp ht)
     have hwt : (Finsupp.single (⟨1, by omega⟩ : Fin 2) 1 + t).sum (fun _ e => e) =
         t.sum (fun _ e => e) + 1 := by
-      simp
+      rw [Finsupp.sum_add_index' (fun _ => rfl) (fun _ _ _ => rfl),
+        Finsupp.sum_single_index]
+      · omega
+      · rfl
     rw [show MvPolynomial.totalDegree g = t.sum (fun _ e => e) from htsup]
     calc t.sum (fun _ e => e) + 1 =
           (Finsupp.single (⟨1, by omega⟩ : Fin 2) 1 + t).sum (fun _ e => e) := hwt.symm
@@ -1169,7 +1173,7 @@ theorem no_intermediate_pointAt (M : ℕ) (i : Fin M) (y : finiteLineScheme M)
   have hybarbot : ybar = ⊥ := by
     refine (Submodule.eq_bot_iff _).mpr ?_
     intro f hmem
-    exact hkill f (MvPolynomial.totalDegree f) (Nat.le_refl _) hmem
+    exact hkill (MvPolynomial.totalDegree f) f (Nat.le_refl _) hmem
   exact hybarne hybarbot
 
 /-- **THE CLOSED POINT AT LINE i LIES STRICTLY BELOW THE i-TH GENERIC
