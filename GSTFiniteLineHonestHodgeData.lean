@@ -1,6 +1,7 @@
 import Mathlib
 import GSTFiniteLinePointAlgebra
 import GSTFiniteLineGeneralMLaw
+import GSTFiniteLineOverBase
 
 /-
 Copyright (c) 2026. The HC-PROOF campaign. All rights reserved.
@@ -58,6 +59,8 @@ open GSTNativeSingleFoldOrbitLawLanding
 open GSTNativeCodimensionCyclePresentation
 open GSTCompactNativeCyclePresentation
 open GSTClassicalHodgePointKernelOperatorLift
+open GSTSingularCohomologyMaps
+open GSTPositiveDimensionalLiveCoreKit
 
 namespace GSTFiniteLineHonestHodgeData
 
