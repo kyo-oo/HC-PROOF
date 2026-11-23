@@ -285,7 +285,7 @@ theorem finiteLinePointLineIndex_of_avoids (M : ℕ) [NeZero M]
       y.asHomogeneousIdeal.toIdeal) :
     a.val / 2 = (finiteLinePointLineIndex M y).val := by
   rw [finiteLinePointLineIndex_val]
-  exact (finiteLinePoint_avoids_same_block M y
+  exact (@finiteLinePoint_avoids_same_block M _ y
     (Classical.choose (exists_variable_not_mem M y)) a
     (finiteLinePointLineIndex_choose M y) ha).symm
 
@@ -301,7 +301,7 @@ theorem finiteLinePoint_lineGenericIdeal_le (M : ℕ) [NeZero M]
       y.asHomogeneousIdeal.toIdeal := by
   rw [lineGenericIdeal, Ideal.span_le]
   rintro _ ⟨b, rfl⟩
-  refine finiteLinePoint_avoids_crossBlock_mem M y
+  refine @finiteLinePoint_avoids_crossBlock_mem M _ y
     (Classical.choose (exists_variable_not_mem M y)) (b : Fin (2 * M))
     (finiteLinePointLineIndex_choose M y) ?_
   intro hcon
@@ -315,8 +315,9 @@ theorem finiteLinePoint_on_line (M : ℕ) [NeZero M]
     y ≤ lineGenericPoint M (finiteLinePointLineIndex M y) :=
   (le_iff_ideal M y
     (lineGenericPoint M (finiteLinePointLineIndex M y))).mpr
-    (by rw [lineGenericPoint_asIdeal]
-       exact finiteLinePoint_lineGenericIdeal_le M y)
+    (by
+      rw [lineGenericPoint_asIdeal]
+      exact finiteLinePoint_lineGenericIdeal_le M y)
 
 /-- **THE EXACTLY-ONE-LINE LAW** — a point cannot lie on two distinct
 lines: if the point were below two generic points, then every variable
