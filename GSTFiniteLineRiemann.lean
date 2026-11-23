@@ -195,8 +195,8 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
   cases t with
   | none =>
       have hpole : ((northPole : unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2 = 1 := by
-        simp [northPole, PiLp.toLp_apply, Matrix.cons_val_two, Matrix.head_cons,
-          Matrix.head_finqueue]
+        simp [northPole, PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.cons_val_two]
       rw [sphereToCoord, coordToSphere, if_pos hpole]
   | some t =>
       have hz : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
@@ -214,9 +214,12 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
       congr 1
       have hd : 1 - (t.re * t.re + t.im * t.im - 1) /
           (t.re * t.re + t.im * t.im + 1) ≠ 0 := by
-        have hd0 := stereoCoord_denom_pos t
-        field_simp
-        linarith
+        have hsub : 1 - (t.re * t.re + t.im * t.im - 1) /
+            (t.re * t.re + t.im * t.im + 1)
+            = 2 / (t.re * t.re + t.im * t.im + 1) := by
+          ring
+        rw [hsub]
+        positivity
       have hx : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
           unitSphereType) : EuclideanSpace ℝ (Fin 3)) 0
           = 2 * t.re / (t.re * t.re + t.im * t.im + 1) := rfl
@@ -224,12 +227,25 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
           unitSphereType) : EuclideanSpace ℝ (Fin 3)) 1
           = 2 * t.im / (t.re * t.re + t.im * t.im + 1) := rfl
       rw [hx, hy]
-      simp only [Complex.ext_iff, Complex.ofReal_re, Complex.ofReal_im,
-        Complex.add_re, Complex.add_im, Complex.mk_re, Complex.mk_im]
+      simp only [Complex.ext_iff]
       constructor
-      · field_simp
+      · have hz2 : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2
+              = (t.re * t.re + t.im * t.im - 1) /
+                (t.re * t.re + t.im * t.im + 1) := rfl
+        have hdS : (t.re * t.re + t.im * t.im + 1 : ℝ) ≠ 0 :=
+          ne_of_gt (stereoCoord_denom_pos t)
+        rw [hz2]
+        field_simp
         ring
-      · field_simp
+      · have hz2 : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2
+              = (t.re * t.re + t.im * t.im - 1) /
+                (t.re * t.re + t.im * t.im + 1) := rfl
+        have hdS : (t.re * t.re + t.im * t.im + 1 : ℝ) ≠ 0 :=
+          ne_of_gt (stereoCoord_denom_pos t)
+        rw [hz2]
+        field_simp
         ring
 
 /-- **THE SECOND CANCELLATION** — the coordinate map's image of any sphere
