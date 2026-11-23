@@ -52,7 +52,7 @@ const TASKS = [
     state: "IN BATTLE",
     detail:
       "GATE-L's six point-action lemmas spliced (wave 6-C: the ideal-level §2a + the order-level §2b). Wave 6-D rebuilt §1's residue-degree receipt on the pinned CONTRAvariant residue-field API — the two ill-typed RingHom.id roundtrips replaced by the transported congruence-composites closing at Iso.inv_hom_id/hom_inv_id — and re-bridged the §2a/§2b mem_comap rewrites through explicit show-anchors. The letters (§3) ride these plus the green graph machinery.",
-    runs: "in adjudication at 36bcdf4 — run 45105003211",
+    runs: "in-flight at 36bcdf4 — run 45105003211 (the 6-D §1/§2 rebuild verdict pending; last completed: failure at 6c9bc8a — run 45097543257)",
   },
   {
     id: "TASK 4",
@@ -75,8 +75,8 @@ const TASKS = [
     name: "The universal original-X source",
     state: "STAGED",
     detail:
-      "The capstone module (GSTFiniteLineUnconditionalSource) is armed and firing: the route-H architecture crystallized — native_GST_single_fold_orbit_law_of_sphereUnion_gate instantiated at finiteLineHodgeDataHonest with the honest seeds, the two M-cycle letters, and the analytification gate. The lane's path-filter repaired; the battle order frozen.",
-    runs: "in adjudication at 36bcdf4 — run 45105003219",
+      "The capstone module (GSTFiniteLineUnconditionalSource) is armed and firing: the route-H architecture crystallized — native_GST_single_fold_orbit_law_of_sphereUnion_gate instantiated at finiteLineHodgeDataHonest with the honest seeds, the two M-cycle letters, and the analytification gate. The lane's path-filter repaired; the battle order frozen. The analytification gate input is now kernel-certified GREEN (run 45107965587 at 115f96f) — the lane rides certified dependencies only.",
+    runs: "in-flight at 115f96f — run 45107965612 (verdict pending; last completed: failure at 36bcdf4 — run 45105003219)",
   },
 ];
 
@@ -128,6 +128,24 @@ const WAVES = [
     title: "The CI verdict repairs at 6c9bc8a",
     body:
       "Riemann: the two split-failures killed by the rw [sphereToCoord, coordToSphere, if_pos/if_neg] route (the def-fold never yields an ite to split), the hfrac orphan ring dropped, the three ext-bullet closers rebuilt as linear_combination coefficients against the sphere equation. Cycle correspondence: §1's residue-degree receipt rebuilt on the pinned CONTRAvariant residue-field API (the two transported congruence-composites closing at Iso.inv_hom_id/hom_inv_id — the RingHom.id statements were unstatable), the §2a/§2b mem_comap rewrites show-bridged, strictMono/strictReflect rebuilt on the reflect-mono routes. All four lanes re-fired at 36bcdf4.",
+  },
+  {
+    id: "6-E",
+    title: "The 36bcdf4 verdict — five sites killed",
+    body:
+      "The hpole simp-set rebuilt on the def-site-validated lemma names (Matrix.head_finqueue does not exist at the pinned Mathlib 51e6992 — the def's own cons_val_zero/one + head_cons + cons_val_two set is the CI-validated one); the hd nonzero closed by the sub-identity 1 - (s-1)/(s+1) = 2/(s+1) + positivity on the quotient; the two constructor bullets' z-atom bridged by the hz2 rfl + the explicit S ≠ 0 receipt before field_simp; the ext-decomposition's simp-set reduced to Complex.ext_iff alone.",
+  },
+  {
+    id: "6-F",
+    title: "The 9555112 verdict's four sites killed",
+    body:
+      "The hd nonzero by the intro + field_simp at h0 + linarith route (the quotient cleared in the hypothesis, not the goal); the two constructor bullets' z-atom restated at the BARE spelling (the ext_iff-simp normalizes the coe-application to 'stereoCoord t 2' — the coe-form hz2 pattern could never match the normalized goal) with the rfl validated by the same defeq chain; the closers' orphan-insurance via try ring (field_simp may close the cleared identity outright — the hfrac precedent).",
+  },
+  {
+    id: "6-G",
+    title: "THE RIEMANN MODULE IS GREEN (115f96f)",
+    body:
+      "The analytification lane's 76df4d8 verdict advanced PAST Riemann for the first time — the whole arithmetic core compiled. The module's own single residual killed: polyEval_ext's hand-rolled induction (the ext p overreached into the MvPolynomial coefficient-ext — p : ℂ could never be an induction target) replaced by the PINNED Mathlib lemma it was reinventing: MvPolynomial.ringHom_ext (constants + variables determine the ring hom), with the Fin-1 index collapsed by Subsingleton.elim. Run 45107965587 — SUCCESS at 115f96f.",
   },
 ];
 
