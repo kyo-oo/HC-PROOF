@@ -288,8 +288,10 @@ theorem finiteLineHodgeDataHonest_seed_zero (M : ℕ) [NeZero M]
       (codimensionPointCycle (finiteLineWorld M).X 0
         ⟨lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩,
           lineGenericPoint_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩) = _
-  rw [hatom, hidx]
-  exact honest_componentClass_eq_world M A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩
+  rw [hatom]
+  exact (congrArg (finiteLineComponentClass M (finiteLineWorld M) A hspace)
+    hidx).trans
+    (honest_componentClass_eq_world M A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩)
 
 /-- **THE HONEST SEED EQUATION AT WEIGHT ONE** — the atom at the closed
 point maps to the 0-th point class. -/
@@ -322,8 +324,10 @@ theorem finiteLineHodgeDataHonest_seed_one (M : ℕ) [NeZero M]
       (codimensionPointCycle (finiteLineWorld M).X 1
         ⟨lineClosedPointAt M ⟨0, Nat.pos_of_neZero ‹_›⟩,
           lineClosedPointAt_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩) = _
-  rw [hatom, hidx]
-  exact honest_pointClass_eq_world M A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩
+  rw [hatom]
+  exact (congrArg (finiteLinePointClass M (finiteLineWorld M) A hspace ω)
+    hidx).trans
+    (honest_pointClass_eq_world M A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩)
 
 /-- **THE DEAD WEIGHTS** — every weight `p ≥ 2` of the honest data has a
 subsingleton rational Hodge fiber (the stash receipt, identical to the
@@ -346,6 +350,21 @@ theorem finiteLineHodgeDataHonest_deadWeights (M : ℕ) [NeZero M]
           (stashBigrading _ (2 * (q + 2))) = ⊥
         exact rationalHodgeSubspace_stash_eq_bot (q + 2) (by omega)
   exact subsingleton_hodgeFiber_of_eq_bot hbot
+
+/-- **THE STASH BIGRADING AT THE DEAD WEIGHTS** (the equality-form clone
+of the wave-63 pattern — the wave-60 engine's `hstash` gate input for the
+route-H capstone instantiation). -/
+theorem finiteLineHodgeDataHonest_hstash (M : ℕ) [NeZero M]
+    (A : AnalytificationData (finiteLineWorld M))
+    (hspace : A.space = TopCat.of (sphereUnionSpace M))
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2)
+    (p : ℕ) (hp : 1 < p) :
+    (finiteLineHodgeDataHonest M A hspace ω).hodgeBigrading p =
+      stashBigrading (RationalSingularCohomology A (2 * p)) (2 * p) := by
+  rcases p with _ | _ | p
+  · exact absurd hp (by omega)
+  · exact absurd hp (by omega)
+  · rfl
 
 /-! ## Receipts -/
 

@@ -18,6 +18,11 @@ on:
       - 'GSTFiniteLineHonestHodgeData.lean'
       - 'GSTFiniteLinePointAlgebra.lean'
       - 'GSTFiniteLineAnalytification.lean'
+      - 'GSTFiniteLineRiemann.lean'
+      - 'GSTGeometricRealizationStage2F.lean'
+      - 'GSTCompleteSingleFoldOrbitLaw.lean'
+      - 'GSTHodgeSingleHypothesisConditional.lean'
+      - 'GSTFiniteLineGeneralMLaw.lean'
       - '.github/workflows/gst-finite-line-unconditional-source.yml'
       - 'lakefile.toml'
   workflow_dispatch:
