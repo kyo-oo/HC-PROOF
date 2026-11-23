@@ -214,12 +214,11 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
       congr 1
       have hd : 1 - (t.re * t.re + t.im * t.im - 1) /
           (t.re * t.re + t.im * t.im + 1) ≠ 0 := by
-        have hsub : 1 - (t.re * t.re + t.im * t.im - 1) /
-            (t.re * t.re + t.im * t.im + 1)
-            = 2 / (t.re * t.re + t.im * t.im + 1) := by
-          ring
-        rw [hsub]
-        positivity
+        have hdS : (t.re * t.re + t.im * t.im + 1 : ℝ) ≠ 0 :=
+          ne_of_gt (stereoCoord_denom_pos t)
+        intro h0
+        field_simp at h0
+        linarith
       have hx : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
           unitSphereType) : EuclideanSpace ℝ (Fin 3)) 0
           = 2 * t.re / (t.re * t.re + t.im * t.im + 1) := rfl
@@ -229,24 +228,20 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
       rw [hx, hy]
       simp only [Complex.ext_iff]
       constructor
-      · have hz2 : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2
-              = (t.re * t.re + t.im * t.im - 1) /
-                (t.re * t.re + t.im * t.im + 1) := rfl
+      · have hz2 : stereoCoord t 2 = (t.re * t.re + t.im * t.im - 1) /
+              (t.re * t.re + t.im * t.im + 1) := rfl
         have hdS : (t.re * t.re + t.im * t.im + 1 : ℝ) ≠ 0 :=
           ne_of_gt (stereoCoord_denom_pos t)
         rw [hz2]
         field_simp
-        ring
-      · have hz2 : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2
-              = (t.re * t.re + t.im * t.im - 1) /
-                (t.re * t.re + t.im * t.im + 1) := rfl
+        try ring
+      · have hz2 : stereoCoord t 2 = (t.re * t.re + t.im * t.im - 1) /
+              (t.re * t.re + t.im * t.im + 1) := rfl
         have hdS : (t.re * t.re + t.im * t.im + 1 : ℝ) ≠ 0 :=
           ne_of_gt (stereoCoord_denom_pos t)
         rw [hz2]
         field_simp
-        ring
+        try ring
 
 /-- **THE SECOND CANCELLATION** — the coordinate map's image of any sphere
 point is the original sphere point (the pole case by the pole lemma, the
