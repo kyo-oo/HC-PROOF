@@ -1683,3 +1683,9 @@ roots = [
   "GSTFiniteLinePointsGateDischarge",
   "GSTFiniteLinePointsGateCore",
 ]
+
+[[lean_lib]]
+name = "GSTFiniteLinePrimitiveXSourceLib"
+roots = [
+  "GSTFiniteLinePrimitiveXSource",
+]

@@ -91,17 +91,13 @@ jobs:
           path: .lake/build
           key: hc-lean-incremental-Linux-finite-line-general-M-law
           restore-keys: |
-            hc-lean-incremental-Linux-finite-line-points-gate-discharge
-            hc-lean-incremental-Linux-finite-line-closed-immersion
-            hc-lean-incremental-Linux-finite-line-world-carrier
-            hc-lean-incremental-Linux-finite-line-ring
             hc-lean-incremental-Linux-
       - name: Compile the gate-discharge module
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout 1500 lake build GSTFiniteLinePointsGateDischarge > gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout 1200 lake build GSTFiniteLinePointsGateDischarge > gst-finite-line-points-gate-discharge.log 2>&1; then
             echo "LEAN PASSED: Kernel check the gate-discharge module (GATE-A FULL DISCHARGE: the points-classification equiv, the unconditional law)"
           else
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-points-gate-discharge.log | tail -n 100 || true

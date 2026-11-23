@@ -88,16 +88,13 @@ jobs:
           path: .lake/build
           key: hc-lean-incremental-Linux-finite-line-general-M-law
           restore-keys: |
-            hc-lean-incremental-Linux-finite-line-closed-immersion
-            hc-lean-incremental-Linux-finite-line-world-carrier
-            hc-lean-incremental-Linux-finite-line-ring
             hc-lean-incremental-Linux-
       - name: Compile the finite-line world carrier module
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout 1500 lake build GSTFiniteLineUnconditionalSource > gst-finite-line-unconditional-source.log 2>&1; then
+          if timeout 1200 lake build GSTFiniteLineUnconditionalSource > gst-finite-line-unconditional-source.log 2>&1; then
             echo "LEAN PASSED: Kernel check the unconditional-source module (THE UNCONDITIONAL LAW + universal primitive-X source)"
           else
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-unconditional-source.log | tail -n 100 || true
