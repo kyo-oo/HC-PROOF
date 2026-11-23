@@ -236,11 +236,31 @@ theorem chartLeg_awayι (M : ℕ) [NeZero M] (j : Fin (2 * M))
     chartLeg M j p hpre ≫
       Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
         (lineCoverHomogeneousOneQ M j) zero_lt_one = p.1 := by
-  simp only [chartLeg, CategoryTheory.Category.assoc,
-    ← Proj.basicOpenIsoSpec_inv_ι, Iso.hom_inv_id,
-    CategoryTheory.Category.id_comp]
-  exact sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
-    (lineQuotientMap M (MvPolynomial.X j))) hpre
+  calc chartLeg M j p hpre ≫
+      Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
+        (lineCoverHomogeneousOneQ M j) zero_lt_one
+      = (sectionInto p.1 (Proj.basicOpen (lineGrading M)
+          (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
+          (Proj.basicOpenIsoSpec (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X j))
+            (lineCoverHomogeneousOneQ M j) zero_lt_one).hom) ≫
+          ((Proj.basicOpenIsoSpec (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X j))
+            (lineCoverHomogeneousOneQ M j) zero_lt_one).inv ≫
+          (Proj.basicOpen (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X j))).ι) := rfl
+    _ = sectionInto p.1 (Proj.basicOpen (lineGrading M)
+          (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
+          ((Proj.basicOpenIsoSpec (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X j))
+            (lineCoverHomogeneousOneQ M j) zero_lt_one).hom ≫
+          (Proj.basicOpen (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X j))).ι) := by
+          rw [← Proj.basicOpenIsoSpec_inv_ι, Iso.hom_inv_id]
+    _ = p.1 := by
+          rw [← CategoryTheory.Category.assoc]
+          exact sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X j))) hpre
 
 /-! ## §3 THE READING + THE CHART-POINT MEMBERSHIP -/
 
@@ -323,11 +343,7 @@ theorem chartReading_mem (M : ℕ) [NeZero M] (j : Fin (2 * M))
         = Spec.preimage (chartLeg M j p hpre ≫
             Spec.map (CommRingCat.ofHom (chartRingHom M j))) := by
           rw [Spec.preimage_comp, Spec.preimage_map]
-      _ = Spec.preimage (𝟙 complexBase) :=
-          (congrArg (fun φ => Spec.preimage (R := CommRingCat.of
-            (HomogeneousLocalization.Away (lineGrading M)
-              (lineQuotientMap M (MvPolynomial.X j)))) (S := CommRingCat.of ℂ) φ)
-            hsq).symm
+      _ = Spec.preimage (𝟙 complexBase) := by rw [← hsq]
       _ = 𝟙 (CommRingCat.of ℂ) := Spec.preimage_id
   -- The RingHom-level composite (the green AUDIT-4 rfl class,
   -- GSTFinitePointAnalytification.lean:252-258):
@@ -343,6 +359,7 @@ theorem chartReading_mem (M : ℕ) [NeZero M] (j : Fin (2 * M))
   have hc : (RingHom.comp (chartReading M j p hpre) (chartRingHom M j)) c =
       chartReading M j p hpre (chartRingHom M j c) := rfl
   rw [← hc, hring]
+  rfl
 
 /-- **THE COORDINATE IDENTITY RECEIPT** — the reading of a genuine section
 is the chart evaluation at its own coordinate (the value on the chart
@@ -502,7 +519,7 @@ private theorem away_membership_iff (M : ℕ) [NeZero M] (j : Fin (2 * M))
         (g_deg := lineCoverHomogeneousOneQ M (linePartner M j))
         (hm' := zero_lt_one)] at hq₀
     by_contra hne
-    rw [← isLocElem_eq_chartRatio M j] at hne
+    rw [isLocElem_eq_chartRatio M j] at hne hq₀
     have hiff := psMem_basicOpen q₀ (chartRatio M j)
     exact hq₀ (hiff.mpr hne)
   · intro hmem
@@ -538,6 +555,17 @@ private theorem away_membership_iff (M : ℕ) [NeZero M] (j : Fin (2 * M))
           (lineQuotientMap M (MvPolynomial.X (linePartner M j)))) := by
       intro hq
       apply h2
+      rw [← show (Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
+          (lineCoverHomogeneousOneQ M j) zero_lt_one) ⁻¹ᵁ
+          (Proj.basicOpen (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X (linePartner M j)))) =
+          PrimeSpectrum.basicOpen (HomogeneousLocalization.Away.isLocalizationElem
+          (lineCoverHomogeneousOneQ M j) (lineCoverHomogeneousOneQ M (linePartner M j))) from
+        Proj.awayι_preimage_basicOpen (𝒜 := lineGrading M)
+          (f := lineQuotientMap M (MvPolynomial.X j))
+          (f_deg := lineCoverHomogeneousOneQ M j) (hm := zero_lt_one)
+          (g_deg := lineCoverHomogeneousOneQ M (linePartner M j))
+          (hm' := zero_lt_one)]
       simp only [TopologicalSpace.Opens.map_coe, Set.mem_preimage, SetLike.mem_coe]
       exact hq
     have h4 : ¬(lineQuotientMap M (MvPolynomial.X (linePartner M j)) ∉
@@ -680,19 +708,10 @@ theorem chartPoint_right_zero_mem (M : ℕ) [NeZero M] (i : Fin M) (x : complexB
     (PrimeSpectrum.comap (chartEvalRingHom M (lineRightChart M i) 0) x)).mpr hker
   -- The partner index identification closes the statement's left-variable
   -- form:
-  rw [show lineQuotientMap M (MvPolynomial.X (linePartner M (lineRightChart M i))) =
-      lineQuotientMap M (MvPolynomial.X (lineLeftChart M i)) from
+  rw [show lineQuotientMap M (MvPolynomial.X (lineLeftChart M i)) =
+      lineQuotientMap M (MvPolynomial.X (linePartner M (lineRightChart M i))) from
     congrArg (fun a => lineQuotientMap M (MvPolynomial.X a))
-      (linePartner_right_eq_left M i)]
-  rw [show (Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X (lineRightChart M i)))
-      (lineCoverHomogeneousOneQ M (lineRightChart M i)) zero_lt_one
-      (PrimeSpectrum.comap (chartEvalRingHom M (lineRightChart M i) 0) x)) =
-      finiteLineComplexPointImage M (chartPoint M (lineRightChart M i) 0) x from
-    (show (Spec.map (CommRingCat.ofHom (chartEvalRingHom M (lineRightChart M i) 0)) ≫
-        Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X (lineRightChart M i)))
-          (lineCoverHomogeneousOneQ M (lineRightChart M i)) zero_lt_one) x =
-        finiteLineComplexPointImage M (chartPoint M (lineRightChart M i) 0) x from
-      himg.symm.trans (by rw [specMap_ofHom_base_apply])).symm]
+      (linePartner_right_eq_left M i).symm]
   exact haway
 
 /-! ## §5 THE GATE STATUS (the residual interface, re-checked) -/
