@@ -1676,3 +1676,10 @@ name = "GSTFiniteLinePointsGateLib"
 roots = [
   "GSTFiniteLinePointsGate",
 ]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointsGateDischargeLib"
+roots = [
+  "GSTFiniteLinePointsGateDischarge",
+  "GSTFiniteLinePointsGateCore",
+]

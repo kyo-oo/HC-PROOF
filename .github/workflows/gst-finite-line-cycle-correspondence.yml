@@ -90,7 +90,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout 16800 lake build GSTFiniteLineCycleCorrespondence > gst-finite-line-cycle-correspondence.log 2>&1; then
+          if timeout 2100 lake build GSTFiniteLineCycleCorrespondence > gst-finite-line-cycle-correspondence.log 2>&1; then
             echo "LEAN PASSED: Kernel check the M-cycle correspondence module (GATE-L: the two realized letters)"
           else
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-cycle-correspondence.log | tail -n 100 || true
