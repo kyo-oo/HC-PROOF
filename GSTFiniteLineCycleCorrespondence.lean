@@ -1,6 +1,7 @@
 import Mathlib
 import GSTFiniteLineHonestHodgeData
 import GSTFiniteLineGeneralMLaw
+import GSTFiniteLineAnalytification
 
 /-
 Copyright (c) 2026. The HC-PROOF campaign. All rights reserved.
@@ -58,6 +59,8 @@ open GSTFiniteLineOverBase
 open GSTFiniteLineGeneralMLaw
 open GSTFiniteLinePointAlgebra
 open GSTFiniteLineHonestHodgeData
+open GSTComponentCohomologyZero
+open GSTFiniteLineAnalytification
 
 namespace GSTFiniteLineCycleCorrespondence
 
@@ -534,6 +537,449 @@ theorem finiteLineCycle_componentIndex (M : ℕ) [NeZero M]
   exact (congrArg (lineIndexOfGeneric M) hcomp).symm.trans
     (lineIndexOfGeneric_lineGenericPoint M
       (cyclicPred M (lineIndexOfGeneric M (lineComponentOf M x))))
+
+/-! ## §3 The two M-cycle letters (GATE-L, wave 7-A)
+
+The two genuine realized closed correspondences of the M-cycle endomorphism,
+stated at the GATE-FORM analytification (`finiteLineAnalytificationOfGate`,
+whose space `finiteLineSpace M` is definitionally `TopCat.of (sphereUnionSpace
+M)` — GSTFiniteLineAnalytification.lean:111-112, the space receipt :423-426
+an `rfl`): at this analytification every type-level transport between the
+world's `RationalSingularCohomology` and the raw sphere-union's
+`singularCohomologyOf` is definitional (the delta chain
+`finiteLineAnalytificationOfGate` → the record's `space` field →
+`finiteLineSpace` → `TopCat.of`), so the letter operators ARE the green
+corpus operators, definitionally:
+
+* **the weight-one letter** `finiteLineCycleLetterOne` — its cohomology
+  operator IS `cohomologyPullbackOf (sphereCycle M) 2` (the M-cycle
+  pullback at the live degree, GSTSingularCohomologyMaps.lean:133-135),
+  the rotation equation rides the green derived letter equation
+  `spherePointClassWorld_rotate_of_pullback`
+  (GSTPositiveDimensionalLawLanding.lean:148-161) through the definitional
+  transport receipt, and the pointwise realization rides the graph
+  machinery (`graphCorrespondence_nativePointImage_eq`,
+  GSTClassicalHodgeFiniteClosedCorrespondenceOperator.lean:191-198) with
+  §1's residue-weight-one and §2b's coheight preservation feeding
+  `nativePointPushforward_eq` (GSTClassicalHodgeProjectivePointTransport
+  .lean:141-151), the honest atom formula at weight one
+  (GSTFiniteLineHonestHodgeData.lean:170-193), L6's component-index
+  rotation (:508-536), and the honest world bridge
+  `honest_pointClass_eq_world` (:255-265);
+
+* **the weight-zero letter** `finiteLineCycleLetterZero` — its cohomology
+  operator is the component-iso index shift (the component H⁰ machine
+  `componentCohomologyZeroEquivFinM`,
+  GSTComponentCohomologyZero.lean:500-506, precomposed with the cyclic
+  successor — the degree-0 rotation is pure linear algebra, no cohomology
+  machinery: the singleton-vector rotation `Pi.single j ↦ Pi.single
+  (cyclicPred j)` closes by `cyclicSucc_cyclicPred`/
+  `cyclicPred_cyclicSucc`), the pointwise realization rides the same
+  graph-pushforward chain with the honest atom formula at weight zero
+  (:120-140), L3's generic-point action (:378-383) read through
+  `lineIndexOfGeneric_spec` (GSTFiniteLinePointAlgebra.lean:1321-1324),
+  and the honest world bridge `honest_componentClass_eq_world` (:241-252).
+
+The letters are gate-formed: `FiniteLinePointsGate M`
+(GSTFiniteLineAnalytification.lean:403-404) stays a parameter — the frozen
+architecture's own discipline (the unconditional
+`finiteLineAnalytification` name stays reserved for the gate-discharge
+wave; the letters need ONLY the gate-form's space, which is
+definitionally the sphere-union regardless of the gate's content).
+
+Honesty ledger: every statement is proved unconditionally given the gate
+parameter.  No `sorry`, no new axioms, no `native_decide`.  The GitHub CI
+lane `gst-finite-line-cycle-correspondence.yml` owns the kernel check.
+-/
+
+/-! ## §3a The weight-one operator and its rotation -/
+
+/-- **THE DEFEQ RECEIPT** — at the gate form, the world's degree-two
+rational singular cohomology IS the raw sphere-union's (the delta chain:
+the record's `space` field is `finiteLineSpace M`, which is
+`TopCat.of (sphereUnionSpace M)`; `RationalSingularCohomology` is
+abbrev-transparent to `singularCohomologyOf A.space` — the `rfl` at
+GSTSingularCohomologyMaps.lean:79-81).  THE designated CI repair point of
+§3: if the elaborator stalls on any §3 unification, this receipt is the
+contract every other proof rides. -/
+theorem finiteLineGate_cohomology_two_defeq (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M) :
+    RationalSingularCohomology (finiteLineAnalytificationOfGate M gate) 2 =
+      singularCohomologyOf (TopCat.of (sphereUnionSpace M)) 2 := rfl
+
+/-- **THE WEIGHT-ONE LETTER OPERATOR** — the M-cycle pullback at the live
+degree, definitionally: at the gate-form analytification the operator's
+declared type (the world's `RationalSingularCohomology`) unifies with the
+pullback's own type (the sphere-union's `singularCohomologyOf`) by the
+delta chain of `finiteLineGate_cohomology_two_defeq`. -/
+noncomputable def finiteLineCycleLetterOpOne (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M) :
+    RationalSingularCohomology (finiteLineAnalytificationOfGate M gate) 2 →ₗ[ℚ]
+      RationalSingularCohomology (finiteLineAnalytificationOfGate M gate) 2 :=
+  cohomologyPullbackOf (sphereCycle M) 2
+
+/-- **THE TRANSPORT RECEIPT** — the operator applied at a
+`sphereUnionCoe`-transported value is the transport of the pullback's
+value: at the gate form the cast transports ride `rfl`-provable type
+equalities (the space receipt :423-426 is `rfl`), so the equation is
+definitional.  This is exactly the `hRop` hypothesis the green derived
+letter equation consumes. -/
+theorem finiteLineCycleLetterOpOne_transport (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M)
+    (u : singularCohomologyOf (TopCat.of (sphereUnionSpace M)) 2) :
+    finiteLineCycleLetterOpOne M gate
+        (sphereUnionCoe M (finiteLineAnalytificationOfGate_space M gate) u) =
+      sphereUnionCoe M (finiteLineAnalytificationOfGate_space M gate)
+        ((cohomologyPullbackOf (sphereCycle M) 2) u) := rfl
+
+/-- **THE WEIGHT-ONE ROTATION** — the operator rotates the honest world
+point-class family by the cyclic predecessor: the green derived letter
+equation (`spherePointClassWorld_rotate_of_pullback`, whose proof is
+`cycle_pointClass` — GSTSphereUnionPointClassGate.lean:140-148 — consumed
+through the transport receipt). -/
+theorem finiteLineCycleLetterOpOne_rotate (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M)
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) (j : Fin M) :
+    finiteLineCycleLetterOpOne M gate
+      (spherePointClassWorld (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+          (finiteLineAnalytificationOfGate_space M gate) ω)
+        M (finiteLineAnalytificationOfGate_space M gate) ω j) =
+    spherePointClassWorld (V := finiteLineWorld M)
+      (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω)
+      M (finiteLineAnalytificationOfGate_space M gate) ω (cyclicPred M j) := by
+  show finiteLineCycleLetterOpOne M gate
+      (sphereUnionCoe M (finiteLineAnalytificationOfGate_space M gate)
+        (spherePointClass M ω j)) =
+    sphereUnionCoe M (finiteLineAnalytificationOfGate_space M gate)
+      (spherePointClass M ω (cyclicPred M j))
+  rw [finiteLineCycleLetterOpOne_transport M gate (spherePointClass M ω j),
+    cycle_pointClass M ω j]
+
+/-! ## §3b The weight-zero operator and its rotation -/
+
+/-- **THE INDEX-SHIFT OPERATOR** — the precomposition with the cyclic
+successor on the free rank-M function space (the degree-0 rotation as
+pure linear algebra). -/
+noncomputable def finiteLineCyclePrecompSucc (M : ℕ) [NeZero M] :
+    (Fin M → ℚ) →ₗ[ℚ] (Fin M → ℚ) where
+  toFun := fun v k => v (cyclicSucc M k)
+  map_add' := by
+    intro v w
+    funext k
+    show (v + w) (cyclicSucc M k) =
+      v (cyclicSucc M k) + w (cyclicSucc M k)
+    rfl
+  map_smul' := by
+    intro q v
+    funext k
+    show (q • v) (cyclicSucc M k) = q • v (cyclicSucc M k)
+    rfl
+
+/-- **THE SINGLETON ROTATION** — the index-shift operator carries the
+j-th indicator vector to the `cyclicPred j`-th one (the two if-conditions
+are the same equation: `cyclicSucc k = j` iff `k = cyclicPred j`, by the
+green successor/predecessor roundtrips). -/
+theorem finiteLineCyclePrecompSucc_single (M : ℕ) [NeZero M] (j : Fin M) :
+    finiteLineCyclePrecompSucc M (Pi.single j (1 : ℚ)) =
+      Pi.single (cyclicPred M j) (1 : ℚ) := by
+  funext k
+  show (Pi.single j (1 : ℚ)) (cyclicSucc M k) =
+      (Pi.single (cyclicPred M j) (1 : ℚ)) k
+  rw [Pi.single_apply, Pi.single_apply]
+  by_cases hk : cyclicSucc M k = j
+  · rw [if_pos hk]
+    have hk' : k = cyclicPred M j := by
+      have h := congrArg (cyclicPred M) hk
+      rwa [cyclicPred_cyclicSucc M k] at h
+    rw [if_pos hk']
+  · rw [if_neg hk, if_neg (fun hcon =>
+      hk (by rw [hcon, cyclicSucc_cyclicPred M j]))]
+
+/-- **THE WEIGHT-ZERO LETTER OPERATOR** — the component-iso conjugate of
+the index shift: through the component H⁰ machine, conjugate by the
+degree-zero iso, the operator is the precomposition with the cyclic
+successor (the honest degree-0 action of the M-cycle). -/
+noncomputable def finiteLineCycleLetterOpZero (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M) :
+    RationalSingularCohomology (finiteLineAnalytificationOfGate M gate) 0 →ₗ[ℚ]
+      RationalSingularCohomology (finiteLineAnalytificationOfGate M gate) 0 :=
+  { toFun := fun u =>
+      (componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+        (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate))).symm
+        (finiteLineCyclePrecompSucc M
+          ((componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+            (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate))) u))
+    map_add' := by
+      intro u v
+      show (componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+          (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate))).symm
+          (finiteLineCyclePrecompSucc M
+            ((componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+              (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate)))
+              (u + v))) = _ + _
+      rw [LinearEquiv.map_add, LinearMap.map_add, LinearEquiv.map_add]
+    map_smul' := by
+      intro q u
+      show (componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+          (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate))).symm
+          (finiteLineCyclePrecompSucc M
+            ((componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+              (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate)))
+              (q • u))) = _
+      rw [LinearEquiv.map_smul, LinearMap.map_smul, LinearEquiv.map_smul] }
+
+/-- **THE WEIGHT-ZERO ROTATION** — the operator rotates the honest world
+component-class family by the cyclic predecessor: the component-class
+family IS the component iso's inverse of the indicator vectors
+(definitionally — `sphereComponentClass`,
+GSTPositiveDimensionalLawLanding.lean:168-173, whose `H`-dependence is
+only through `H.analytification`, definitionally the gate form here),
+the operator conjugates the indicator rotation, and the singleton
+rotation is `finiteLineCyclePrecompSucc_single`. -/
+theorem finiteLineCycleLetterOpZero_rotate (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M)
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) (j : Fin M) :
+    finiteLineCycleLetterOpZero M gate
+      (sphereComponentClass (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+          (finiteLineAnalytificationOfGate_space M gate) ω)
+        M (Nat.pos_of_neZero ‹_›) (finiteLineAnalytificationOfGate_space M gate) j) =
+    sphereComponentClass (V := finiteLineWorld M)
+      (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω)
+      M (Nat.pos_of_neZero ‹_›) (finiteLineAnalytificationOfGate_space M gate)
+        (cyclicPred M j) := by
+  have hEq : sphereComponentClass (V := finiteLineWorld M)
+      (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω)
+      M (Nat.pos_of_neZero ‹_›) (finiteLineAnalytificationOfGate_space M gate) j =
+      (componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+        (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate))).symm
+        (Pi.single j (1 : ℚ)) := rfl
+  show (componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+        (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate))).symm
+      (finiteLineCyclePrecompSucc M
+        ((componentCohomologyZeroEquivFinM (finiteLineAnalytificationOfGate M gate) M
+          (sphereUnion_cohomology_zero (finiteLineAnalytificationOfGate_space M gate)))
+          (sphereComponentClass (V := finiteLineWorld M)
+            (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+              (finiteLineAnalytificationOfGate_space M gate) ω)
+            M (Nat.pos_of_neZero ‹_›) (finiteLineAnalytificationOfGate_space M gate) j))) = _
+  rw [hEq, LinearEquiv.apply_symm_apply, finiteLineCyclePrecompSucc_single M j]
+  rfl
+
+/-! ## §3c The weight-one letter -/
+
+/-- **THE WEIGHT-ONE M-CYCLE LETTER** — the graph correspondence of the
+M-cycle endomorphism (the geometry: the graph, a closed immersion with
+singleton left fibers — GSTClassicalHodgeFiniteClosedCorrespondence
+.lean:231-244) with the M-cycle pullback as the cohomological operator,
+realized on points: the class of the graph's native image of any closed
+point is the pullback of the point's class.  The realization chain: the
+graph's native image is the native point pushforward
+(`graphCorrespondence_nativePointImage_eq`); the pushforward of a
+codimension-one point under the cycle is its image atom (§1's residue
+weight one + §2b's coheight preservation inside
+`nativePointPushforward_eq`); the honest atom formula at weight one
+evaluates the image atom's class as the point class of its line; L6
+rotates the line index; the world bridge lands the honest family; on the
+other side, the same atom formula and bridge evaluate the source point's
+class, and the operator's rotation
+(`finiteLineCycleLetterOpOne_rotate`) closes the equation. -/
+noncomputable def finiteLineCycleLetterOne (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M)
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
+    RealizedFiniteClosedCorrespondence (finiteLineWorld M)
+      (finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω) 1 where
+  geometry := FiniteClosedCorrespondence.graphCorrespondence (finiteLineCycleEndo M)
+  cohomologyOperator := finiteLineCycleLetterOpOne M gate
+  realizes_on_points := by
+    intro x
+    -- the coheight of the image (L5 + the packaging's own proof)
+    have hco : Order.coheight ((finiteLineCycle M) x.1) = 1 :=
+      (finiteLineCycle_coheight M x.1).trans x.2
+    -- the graph's native image is the pushforward, then the image atom
+    have himg : (FiniteClosedCorrespondence.graphCorrespondence (finiteLineCycleEndo M)).nativePointImage 1 x =
+        nativePointPushforward (finiteLineCycle M) 1 x :=
+      FiniteClosedCorrespondence.graphCorrespondence_nativePointImage_eq
+        (finiteLineCycleEndo M) 1 x
+    have hpush : nativePointPushforward (finiteLineCycle M) 1 x =
+        pointResidueWeight (finiteLineCycle M) x.1 •
+          codimensionPointCycle (finiteLineWorld M).X 1 ⟨(finiteLineCycle M) x.1, hco⟩ :=
+      nativePointPushforward_eq (finiteLineCycle M) 1 x hco
+    have hw : pointResidueWeight (finiteLineCycle M) x.1 = 1 :=
+      finiteLineCycle_pointResidueWeight M x.1
+    -- the honest atom formulas at the image and at the source
+    have hatomImg := honestCycleClassOne_atom M (finiteLineWorld M)
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate) ω
+      ⟨(finiteLineCycle M) x.1, hco⟩
+    have hatom := honestCycleClassOne_atom M (finiteLineWorld M)
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate) ω x
+    -- L6: the image's line index is the predecessor of the source's
+    have hidx := finiteLineCycle_componentIndex M x
+    -- the honest world bridges at both indices
+    have hbridgeImg := honest_pointClass_eq_world M
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate) ω
+      (cyclicPred M (lineIndexOfGeneric M (lineComponentOf M x)))
+    have hbridge := honest_pointClass_eq_world M
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate) ω
+      (lineIndexOfGeneric M (lineComponentOf M x))
+    -- the operator's rotation at the source's index
+    have hrot := finiteLineCycleLetterOpOne_rotate M gate ω
+      (lineIndexOfGeneric M (lineComponentOf M x))
+    -- the goal, restated at the honest data's unfolded cycle-class maps
+    show honestCycleClassOne M (finiteLineWorld M)
+        (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω
+        ((FiniteClosedCorrespondence.graphCorrespondence (finiteLineCycleEndo M)).nativePointImage 1 x) =
+      finiteLineCycleLetterOpOne M gate
+        (honestCycleClassOne M (finiteLineWorld M)
+          (finiteLineAnalytificationOfGate M gate)
+          (finiteLineAnalytificationOfGate_space M gate) ω
+          (codimensionPointCycle (finiteLineWorld M).X 1 x))
+    rw [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
+      hbridge, hrot]
+
+/-! ## §3d The weight-zero letter -/
+
+/-- **THE WEIGHT-ZERO M-CYCLE LETTER** — the graph correspondence of the
+M-cycle endomorphism with the component-iso index shift as the
+cohomological operator, realized on points: the class of the graph's
+native image of any generic point is the operator's value at the point's
+class.  The realization chain mirrors the weight-one letter's: the graph
+pushforward and the residue weight reduce the image to the image atom;
+the honest atom formula at weight zero evaluates it as the component
+class of its line; L3's generic-point action (read through
+`lineIndexOfGeneric_spec`) rotates the line index; the world bridge and
+the operator's rotation (`finiteLineCycleLetterOpZero_rotate`) close the
+equation on the other side. -/
+noncomputable def finiteLineCycleLetterZero (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M)
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
+    RealizedFiniteClosedCorrespondence (finiteLineWorld M)
+      (finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω) 0 where
+  geometry := FiniteClosedCorrespondence.graphCorrespondence (finiteLineCycleEndo M)
+  cohomologyOperator := finiteLineCycleLetterOpZero M gate
+  realizes_on_points := by
+    intro η
+    -- the coheight of the image (L5 + the packaging's own proof)
+    have hco : Order.coheight ((finiteLineCycle M) η.1) = 0 :=
+      (finiteLineCycle_coheight M η.1).trans η.2
+    -- the graph's native image is the pushforward, then the image atom
+    have himg : (FiniteClosedCorrespondence.graphCorrespondence (finiteLineCycleEndo M)).nativePointImage 0 η =
+        nativePointPushforward (finiteLineCycle M) 0 η :=
+      FiniteClosedCorrespondence.graphCorrespondence_nativePointImage_eq
+        (finiteLineCycleEndo M) 0 η
+    have hpush : nativePointPushforward (finiteLineCycle M) 0 η =
+        pointResidueWeight (finiteLineCycle M) η.1 •
+          codimensionPointCycle (finiteLineWorld M).X 0 ⟨(finiteLineCycle M) η.1, hco⟩ :=
+      nativePointPushforward_eq (finiteLineCycle M) 0 η hco
+    have hw : pointResidueWeight (finiteLineCycle M) η.1 = 1 :=
+      finiteLineCycle_pointResidueWeight M η.1
+    -- the honest atom formulas at the image and at the source
+    have hatomImg := honestCycleClassZero_atom M (finiteLineWorld M)
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate)
+      ⟨(finiteLineCycle M) η.1, hco⟩
+    have hatom := honestCycleClassZero_atom M (finiteLineWorld M)
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate) η
+    -- L3 read through the spec: the image's line index is the
+    -- predecessor of the source's
+    have hspecImg := lineIndexOfGeneric_spec M
+      ⟨(finiteLineCycle M) η.1, hco⟩
+    have hspec := lineIndexOfGeneric_spec M η
+    have hpt : (finiteLineCycle M) η.1 =
+        lineGenericPoint M (cyclicPred M (lineIndexOfGeneric M η)) := by
+      rw [← hspec]
+      exact finiteLineCycle_genericPoint M (lineIndexOfGeneric M η)
+    have hidx : lineIndexOfGeneric M
+        ⟨(finiteLineCycle M) η.1, hco⟩ =
+        cyclicPred M (lineIndexOfGeneric M η) :=
+      lineGenericPoint_injective M (hspecImg.trans hpt)
+    -- the honest world bridges at both indices
+    have hbridgeImg := honest_componentClass_eq_world M
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate) ω
+      (cyclicPred M (lineIndexOfGeneric M η))
+    have hbridge := honest_componentClass_eq_world M
+      (finiteLineAnalytificationOfGate M gate) (finiteLineAnalytificationOfGate_space M gate) ω
+      (lineIndexOfGeneric M η)
+    -- the operator's rotation at the source's index
+    have hrot := finiteLineCycleLetterOpZero_rotate M gate ω
+      (lineIndexOfGeneric M η)
+    -- the goal, restated at the honest data's unfolded cycle-class maps
+    show honestCycleClassZero M (finiteLineWorld M)
+        (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate)
+        ((FiniteClosedCorrespondence.graphCorrespondence (finiteLineCycleEndo M)).nativePointImage 0 η) =
+      finiteLineCycleLetterOpZero M gate
+        (honestCycleClassZero M (finiteLineWorld M)
+          (finiteLineAnalytificationOfGate M gate)
+          (finiteLineAnalytificationOfGate_space M gate)
+          (codimensionPointCycle (finiteLineWorld M).X 0 η))
+    rw [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
+      hbridge, hrot]
+
+/-! ## §3e The rotation equations in the engine's spelling -/
+
+/-- **THE WEIGHT-ONE ROTATION, LETTER-SPELLED** — the letter's own
+cohomology operator rotates the world point-class family by the cyclic
+predecessor (the engine's `hR₁` form: the field projection is
+definitionally the operator). -/
+theorem finiteLineCycleLetterOne_rotate (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M)
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) (j : Fin M) :
+    (finiteLineCycleLetterOne M gate ω).cohomologyOperator
+      (spherePointClassWorld (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+          (finiteLineAnalytificationOfGate_space M gate) ω)
+        M (finiteLineAnalytificationOfGate_space M gate) ω j) =
+    spherePointClassWorld (V := finiteLineWorld M)
+      (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω)
+      M (finiteLineAnalytificationOfGate_space M gate) ω (cyclicPred M j) :=
+  finiteLineCycleLetterOpOne_rotate M gate ω j
+
+/-- **THE WEIGHT-ZERO ROTATION, LETTER-SPELLED** — the letter's own
+cohomology operator rotates the world component-class family by the
+cyclic predecessor (the engine's `hR₀` form). -/
+theorem finiteLineCycleLetterZero_rotate (M : ℕ) [NeZero M]
+    (gate : FiniteLinePointsGate M)
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) (j : Fin M) :
+    (finiteLineCycleLetterZero M gate ω).cohomologyOperator
+      (sphereComponentClass (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+          (finiteLineAnalytificationOfGate_space M gate) ω)
+        M (Nat.pos_of_neZero ‹_›) (finiteLineAnalytificationOfGate_space M gate) j) =
+    sphereComponentClass (V := finiteLineWorld M)
+      (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω)
+      M (Nat.pos_of_neZero ‹_›) (finiteLineAnalytificationOfGate_space M gate)
+        (cyclicPred M j) :=
+  finiteLineCycleLetterOpZero_rotate M gate ω j
+
+/-! ## §3 Receipts -/
+
+#check finiteLineGate_cohomology_two_defeq
+#check finiteLineCycleLetterOpOne
+#check finiteLineCycleLetterOpOne_transport
+#check finiteLineCycleLetterOpOne_rotate
+#check finiteLineCycleLetterOne
+#check finiteLineCycleLetterOne_rotate
+#check finiteLineCyclePrecompSucc
+#check finiteLineCyclePrecompSucc_single
+#check finiteLineCycleLetterOpZero
+#check finiteLineCycleLetterOpZero_rotate
+#check finiteLineCycleLetterZero
+#check finiteLineCycleLetterZero_rotate
+
+#print axioms finiteLineCycleLetterOpOne_rotate
+#print axioms finiteLineCycleLetterOne
+#print axioms finiteLineCycleLetterZero
+#print axioms finiteLineCycleLetterOne_rotate
+#print axioms finiteLineCycleLetterZero_rotate
 
 end GSTFiniteLineCycleCorrespondence
 

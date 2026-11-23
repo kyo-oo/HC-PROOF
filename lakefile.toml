@@ -1670,3 +1670,9 @@ name = "GSTFiniteLineUnconditionalSourceLib"
 roots = [
   "GSTFiniteLineUnconditionalSource",
 ]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointsGateLib"
+roots = [
+  "GSTFiniteLinePointsGate",
+]
