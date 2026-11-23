@@ -72,6 +72,17 @@ noncomputable def finiteLineCycleEndo (M : ℕ) [NeZero M] :
 
 /-! ## §1 The residue-degree receipt -/
 
+/-- The map_id transport (the wave-65 carrier's private helper, localized
+for this module — private declarations do not export across files). -/
+private theorem map_id_of_eq {A σ : Type u} [CommRing A] [SetLike σ A]
+    [AddSubgroupClass σ A] {𝒜 : ℕ → σ} [GradedRing 𝒜] {f : 𝒜 →+*ᵍ 𝒜}
+    (h : f = GradedRingHom.id 𝒜)
+    (hf : HomogeneousIdeal.irrelevant 𝒜 ≤
+      HomogeneousIdeal.map f (HomogeneousIdeal.irrelevant 𝒜)) :
+    Proj.map f hf = 𝟙 (Proj 𝒜) := by
+  subst h
+  exact Proj.map_id
+
 /-- The point-level roundtrips of the M-cycle. -/
 theorem finiteLineCycleInv_apply (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
     finiteLineCycleInv M (finiteLineCycle M x) = x := by
@@ -103,19 +114,23 @@ theorem finiteLineCycle_residueFieldMap_bijective (M : ℕ) [NeZero M]
     have := finiteLineCycle_isIso M
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateInvGraded_comp M) _
-  have hcomp : Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-      (finiteLineCycle M x) ≫
-      Scheme.Hom.residueFieldMap (finiteLineCycle M) x = 𝟙 _ := by
-    rw [← Scheme.Hom.residueFieldMap_comp, hinv, Scheme.Hom.residueFieldMap_id]
   have hinv' : finiteLineCycle M ≫ finiteLineCycleInv M = 𝟙 (finiteLineScheme M) := by
     have := finiteLineCycle_isIso M
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateGraded_comp_inv M) _
+  have hcomp : Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
+      (finiteLineCycle M x) ≫
+      Scheme.Hom.residueFieldMap (finiteLineCycle M) x =
+      RingHom.id ((finiteLineScheme M).residueField x) := by
+    rw [← Scheme.Hom.residueFieldMap_comp, hinv']
+    exact Scheme.Hom.residueFieldMap_id _
   have hcomp2 : Scheme.Hom.residueFieldMap (finiteLineCycle M)
       (finiteLineCycleInv M (finiteLineCycle M x)) ≫
       Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-        (finiteLineCycle M x) = 𝟙 _ := by
-    rw [← Scheme.Hom.residueFieldMap_comp, hinv', Scheme.Hom.residueFieldMap_id]
+        (finiteLineCycle M x) =
+      RingHom.id ((finiteLineScheme M).residueField (finiteLineCycle M x)) := by
+    rw [← Scheme.Hom.residueFieldMap_comp, hinv]
+    exact Scheme.Hom.residueFieldMap_id _
   rw [finiteLineCycleInv_apply] at hcomp2
   constructor
   · intro a b hab
@@ -145,9 +160,10 @@ theorem finiteLineCycle_pointResidueWeight (M : ℕ) [NeZero M]
     (Scheme.Hom.residueFieldMap (finiteLineCycle M) x).hom.toAlgebra
   show (Scheme.Hom.residueDegree (finiteLineCycle M) x : ℚ) = 1
   rw [Scheme.Hom.residueDegree]
-  have : (finrank ((finiteLineScheme M).residueField (finiteLineCycle M x))
+  have : (Module.finrank ((finiteLineScheme M).residueField (finiteLineCycle M x))
       ((finiteLineScheme M).residueField x)) = 1 := by
-    refine (finrank_eq_one_iff_of_nonzero' 1 one_ne_zero).mpr ?_
+    refine (finrank_eq_one_iff_of_nonzero'
+      (1 : (finiteLineScheme M).residueField x) one_ne_zero).mpr ?_
     intro w
     obtain ⟨a, ha⟩ := hsurj w
     refine ⟨a, ?_⟩
