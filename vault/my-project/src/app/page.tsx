@@ -43,16 +43,16 @@ const TASKS = [
     name: "The analytification identification",
     state: "IN BATTLE",
     detail:
-      "The Riemann arithmetic core repaired (wave 5-C: split-ite, parenthesized applications, the Equiv field order). The module body landed (wave 6-B, 581 lines): the space, the coordinate model, the chart arithmetic, the constructive half of GATE-A, the gate-form assembly with the hspace receipt. The full points-classification remains as the gate.",
-    runs: "in adjudication at 3fdc504",
+      "The Riemann arithmetic core repaired twice (wave 5-C split-ite; wave 6-D killed the six residuals: the two split-failures re-routed through the empirically-green rw [sphereToCoord, if_pos/if_neg] pattern, the hfrac orphan ring, and the three ext-bullet closers rebuilt as hand-computed linear_combination coefficients against the sphere equation). The module body (581 lines, wave 6-B) stands. The full points-classification remains as the gate.",
+    runs: "in adjudication at 36bcdf4 — runs 45105003249 / 45105003233",
   },
   {
     id: "TASK 3",
     name: "The genuine GST correspondences",
     state: "IN BATTLE",
     detail:
-      "The cycle module's own six defects killed (wave 6-A: the private-helper localization, the RingHom-category restatement, the swapped roundtrips, Module.finrank). The GATE-L battle map frozen: the graph correspondence is green machinery; the six point-action lemmas staged (repairs/wave6_sec2a + sec2b); the two letters ride the conjugation pattern.",
-    runs: "in adjudication at d80f71d",
+      "GATE-L's six point-action lemmas spliced (wave 6-C: the ideal-level §2a + the order-level §2b). Wave 6-D rebuilt §1's residue-degree receipt on the pinned CONTRAvariant residue-field API — the two ill-typed RingHom.id roundtrips replaced by the transported congruence-composites closing at Iso.inv_hom_id/hom_inv_id — and re-bridged the §2a/§2b mem_comap rewrites through explicit show-anchors. The letters (§3) ride these plus the green graph machinery.",
+    runs: "in adjudication at 36bcdf4 — run 45105003211",
   },
   {
     id: "TASK 4",
@@ -76,7 +76,7 @@ const TASKS = [
     state: "STAGED",
     detail:
       "The capstone module (GSTFiniteLineUnconditionalSource) is armed and firing: the route-H architecture crystallized — native_GST_single_fold_orbit_law_of_sphereUnion_gate instantiated at finiteLineHodgeDataHonest with the honest seeds, the two M-cycle letters, and the analytification gate. The lane's path-filter repaired; the battle order frozen.",
-    runs: "in adjudication at 3fdc504",
+    runs: "in adjudication at 36bcdf4 — run 45105003219",
   },
 ];
 
@@ -116,6 +116,18 @@ const WAVES = [
     title: "The analytification body",
     body:
       "581 lines, 26 declarations: the space identification, the coordinate model over the repaired Riemann equivalence, the chart arithmetic (verbatim transplants of the CI-green chart_retract chains), the constructive half of GATE-A (the section-calculus chart-point liftings), and the gate-form assembly with the hspace rfl-receipt.",
+  },
+  {
+    id: "6-C",
+    title: "GATE-L §2 spliced — the six point-action lemmas",
+    body:
+      "The ideal-level §2a (the comapFun show-bridge, the block-ideal permutation through the span receipts, the generic-point action L1–L3) and the order-level §2b (mono, reflection, strict mono, coheight transport, the component-index law L4–L6) — the entire remaining mathematical content of GATE-L per the wave-2 battle map.",
+  },
+  {
+    id: "6-D",
+    title: "The CI verdict repairs at 6c9bc8a",
+    body:
+      "Riemann: the two split-failures killed by the rw [sphereToCoord, coordToSphere, if_pos/if_neg] route (the def-fold never yields an ite to split), the hfrac orphan ring dropped, the three ext-bullet closers rebuilt as linear_combination coefficients against the sphere equation. Cycle correspondence: §1's residue-degree receipt rebuilt on the pinned CONTRAvariant residue-field API (the two transported congruence-composites closing at Iso.inv_hom_id/hom_inv_id — the RingHom.id statements were unstatable), the §2a/§2b mem_comap rewrites show-bridged, strictMono/strictReflect rebuilt on the reflect-mono routes. All four lanes re-fired at 36bcdf4.",
   },
 ];
 
