@@ -41,10 +41,10 @@ const TASKS = [
   {
     id: "TASK 2",
     name: "The analytification identification",
-    state: "IN BATTLE",
+    state: "GREEN (gated)",
     detail:
-      "The Riemann arithmetic core repaired twice (wave 5-C split-ite; wave 6-D killed the six residuals: the two split-failures re-routed through the empirically-green rw [sphereToCoord, if_pos/if_neg] pattern, the hfrac orphan ring, and the three ext-bullet closers rebuilt as hand-computed linear_combination coefficients against the sphere equation). The module body (581 lines, wave 6-B) stands. The full points-classification remains as the gate.",
-    runs: "in adjudication at 36bcdf4 — runs 45105003249 / 45105003233",
+      "KERNEL-CERTIFIED GREEN — run 45107965587 at 115f96f. The Riemann arithmetic core killed through seven repair waves (5-C split-ite; 6-D the six residuals — split-failures re-routed through the rw [sphereToCoord, if_pos/if_neg] pattern, the linear_combination coordinate closers; 6-E the validated simp-set; 6-F the bare-atom z-bridge; 6-G polyEval_ext replaced by the pinned MvPolynomial.ringHom_ext). The 581-line module body stands: the space, the coordinate model, the chart arithmetic, the constructive half of GATE-A, the gate-form assembly with the hspace receipt.",
+    runs: "45107965587 — SUCCESS at 115f96f",
   },
   {
     id: "TASK 3",
