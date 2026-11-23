@@ -251,14 +251,14 @@ theorem chartLeg_awayι (M : ℕ) [NeZero M] (j : Fin (2 * M))
             (lineQuotientMap M (MvPolynomial.X j))).ι) := rfl
     _ = sectionInto p.1 (Proj.basicOpen (lineGrading M)
           (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
-          ((Proj.basicOpenIsoSpec (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))
-            (lineCoverHomogeneousOneQ M j) zero_lt_one).hom ≫
           (Proj.basicOpen (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))).ι) := by
-          rw [← Proj.basicOpenIsoSpec_inv_ι, Iso.hom_inv_id]
+            (lineQuotientMap M (MvPolynomial.X j))).ι := by
+          rw [CategoryTheory.Category.assoc, Iso.hom_inv_id_assoc]
     _ = p.1 := by
-          rw [← CategoryTheory.Category.assoc]
+          show sectionInto p.1 (Proj.basicOpen (lineGrading M)
+            (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
+            (Proj.basicOpen (lineGrading M)
+              (lineQuotientMap M (MvPolynomial.X j))).ι = p.1
           exact sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
             (lineQuotientMap M (MvPolynomial.X j))) hpre
 
@@ -519,7 +519,7 @@ private theorem away_membership_iff (M : ℕ) [NeZero M] (j : Fin (2 * M))
         (g_deg := lineCoverHomogeneousOneQ M (linePartner M j))
         (hm' := zero_lt_one)] at hq₀
     by_contra hne
-    rw [isLocElem_eq_chartRatio M j] at hne hq₀
+    rw [isLocElem_eq_chartRatio M j] at hq₀
     have hiff := psMem_basicOpen q₀ (chartRatio M j)
     exact hq₀ (hiff.mpr hne)
   · intro hmem
@@ -555,19 +555,7 @@ private theorem away_membership_iff (M : ℕ) [NeZero M] (j : Fin (2 * M))
           (lineQuotientMap M (MvPolynomial.X (linePartner M j)))) := by
       intro hq
       apply h2
-      rw [← show (Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
-          (lineCoverHomogeneousOneQ M j) zero_lt_one) ⁻¹ᵁ
-          (Proj.basicOpen (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X (linePartner M j)))) =
-          PrimeSpectrum.basicOpen (HomogeneousLocalization.Away.isLocalizationElem
-          (lineCoverHomogeneousOneQ M j) (lineCoverHomogeneousOneQ M (linePartner M j))) from
-        Proj.awayι_preimage_basicOpen (𝒜 := lineGrading M)
-          (f := lineQuotientMap M (MvPolynomial.X j))
-          (f_deg := lineCoverHomogeneousOneQ M j) (hm := zero_lt_one)
-          (g_deg := lineCoverHomogeneousOneQ M (linePartner M j))
-          (hm' := zero_lt_one)]
-      simp only [TopologicalSpace.Opens.map_coe, Set.mem_preimage, SetLike.mem_coe]
-      exact hq
+      exact Opens.mem_preimage.mpr hq
     have h4 : ¬(lineQuotientMap M (MvPolynomial.X (linePartner M j)) ∉
         (Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
           (lineCoverHomogeneousOneQ M j) zero_lt_one q₀).asHomogeneousIdeal) := by
