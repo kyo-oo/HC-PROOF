@@ -13,6 +13,8 @@ on:
       - 'GSTFiniteLineWorldCarrier.lean'
       - 'GSTFiniteLineRing.lean'
       - 'GSTProjectiveOverC.lean'
+      - 'GSTFiniteLineRiemann.lean'
+      - 'GSTGeometricRealizationStage2F.lean'
       - 'GSTFiniteLineAnalytification.lean'
       - '.github/workflows/gst-finite-line-analytification.yml'
       - 'lakefile.toml'
