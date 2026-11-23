@@ -194,15 +194,11 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
     sphereToCoord (coordToSphere t) = t := by
   cases t with
   | none =>
-      simp only [coordToSphere, sphereToCoord]
-      split
-      · rfl
-      · exfalso
-        rename_i h
-        exact h (by simp [northPole, PiLp.toLp_apply, Matrix.cons_val_two,
-          Matrix.head_cons, Matrix.head_finqueue])
+      have hpole : ((northPole : unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2 = 1 := by
+        simp [northPole, PiLp.toLp_apply, Matrix.cons_val_two, Matrix.head_cons,
+          Matrix.head_finqueue]
+      rw [sphereToCoord, coordToSphere, if_pos hpole]
   | some t =>
-      simp only [coordToSphere, sphereToCoord]
       have hz : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
           unitSphereType) : EuclideanSpace ℝ (Fin 3)) 2 ≠ 1 := by
         intro hcon
@@ -214,30 +210,27 @@ theorem sphereToCoord_coordToSphere (t : Option ℂ) :
         rw [hx] at hcon
         rw [div_eq_one_iff_eq (by linarith : (t.re * t.re + t.im * t.im + 1 : ℝ) ≠ 0)] at hcon
         linarith
-      split
-      · exfalso
-        rename_i h
-        exact h hz
-      · congr 1
-        have hd : 1 - (t.re * t.re + t.im * t.im - 1) /
-            (t.re * t.re + t.im * t.im + 1) ≠ 0 := by
-          have hd0 := stereoCoord_denom_pos t
-          field_simp
-          linarith
-        have hx : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-            unitSphereType) : EuclideanSpace ℝ (Fin 3)) 0
-            = 2 * t.re / (t.re * t.re + t.im * t.im + 1) := rfl
-        have hy : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
-            unitSphereType) : EuclideanSpace ℝ (Fin 3)) 1
-            = 2 * t.im / (t.re * t.re + t.im * t.im + 1) := rfl
-        rw [hx, hy]
-        simp only [Complex.ext_iff, Complex.ofReal_re, Complex.ofReal_im,
-          Complex.add_re, Complex.add_im, Complex.mk_re, Complex.mk_im]
-        constructor
-        · field_simp
-          ring
-        · field_simp
-          ring
+      rw [sphereToCoord, coordToSphere, if_neg hz]
+      congr 1
+      have hd : 1 - (t.re * t.re + t.im * t.im - 1) /
+          (t.re * t.re + t.im * t.im + 1) ≠ 0 := by
+        have hd0 := stereoCoord_denom_pos t
+        field_simp
+        linarith
+      have hx : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 0
+          = 2 * t.re / (t.re * t.re + t.im * t.im + 1) := rfl
+      have hy : ((⟨WithLp.toLp 2 (stereoCoord t), stereoCoord_mem t⟩ :
+          unitSphereType) : EuclideanSpace ℝ (Fin 3)) 1
+          = 2 * t.im / (t.re * t.re + t.im * t.im + 1) := rfl
+      rw [hx, hy]
+      simp only [Complex.ext_iff, Complex.ofReal_re, Complex.ofReal_im,
+        Complex.add_re, Complex.add_im, Complex.mk_re, Complex.mk_im]
+      constructor
+      · field_simp
+        ring
+      · field_simp
+        ring
 
 /-- **THE SECOND CANCELLATION** — the coordinate map's image of any sphere
 point is the original sphere point (the pole case by the pole lemma, the
@@ -280,7 +273,6 @@ theorem coordToSphere_sphereToCoord (v : unitSphereType) :
         nlinarith
       have hfrac : (((v : EuclideanSpace ℝ (Fin 3)) 0 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) * ((v : EuclideanSpace ℝ (Fin 3)) 0 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) + ((v : EuclideanSpace ℝ (Fin 3)) 1 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) * ((v : EuclideanSpace ℝ (Fin 3)) 1 / (1 - (v : EuclideanSpace ℝ (Fin 3)) 2)) + 1) = (((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 + ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 + ((1 : ℝ) - (v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2) / ((1 : ℝ) - (v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 := by
         field_simp
-        ring
       rw [hfrac]
       exact div_ne_zero (ne_of_gt hnum) hd2
     ext i
@@ -290,25 +282,25 @@ theorem coordToSphere_sphereToCoord (v : unitSphereType) :
       show ((coordToSphere (some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩)) : EuclideanSpace ℝ (Fin 3)) 0 = ((v : EuclideanSpace ℝ (Fin 3)) 0)
       rw [hx]
       field_simp
-      first
-      | ring
-      | (ring_nf; nlinarith [hs])
+      have hs1 : (1 : ℝ) = ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 +
+          ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 +
+          ((v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 := hs.symm
+      linear_combination ((v : EuclideanSpace ℝ (Fin 3)) 0) * hs1
     · have hy : ((coordToSphere (some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩)) : EuclideanSpace ℝ (Fin 3)) 1
           = 2 * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) / ((((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + 1) := rfl
       show ((coordToSphere (some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩)) : EuclideanSpace ℝ (Fin 3)) 1 = ((v : EuclideanSpace ℝ (Fin 3)) 1)
       rw [hy]
       field_simp
-      first
-      | ring
-      | (ring_nf; nlinarith [hs])
+      have hs1 : (1 : ℝ) = ((v : EuclideanSpace ℝ (Fin 3)) 0) ^ 2 +
+          ((v : EuclideanSpace ℝ (Fin 3)) 1) ^ 2 +
+          ((v : EuclideanSpace ℝ (Fin 3)) 2) ^ 2 := hs.symm
+      linear_combination ((v : EuclideanSpace ℝ (Fin 3)) 1) * hs1
     · have hzc : ((coordToSphere (some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩)) : EuclideanSpace ℝ (Fin 3)) 2
           = ((((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) - 1) / ((((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) * (((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))) + 1) := rfl
       show ((coordToSphere (some ⟨((v : EuclideanSpace ℝ (Fin 3)) 0) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2)), ((v : EuclideanSpace ℝ (Fin 3)) 1) / (1 - ((v : EuclideanSpace ℝ (Fin 3)) 2))⟩)) : EuclideanSpace ℝ (Fin 3)) 2 = ((v : EuclideanSpace ℝ (Fin 3)) 2)
       rw [hzc]
       field_simp
-      first
-      | ring
-      | (ring_nf; nlinarith [hs])
+      linear_combination (1 - (v : EuclideanSpace ℝ (Fin 3)) 2) * hs
 
 /-! ## §4 The bundled equivalence -/
 

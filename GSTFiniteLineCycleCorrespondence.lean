@@ -104,8 +104,15 @@ theorem finiteLineCycle_apply_inv (M : ℕ) [NeZero M] (x : finiteLineScheme M) 
   rw [Scheme.Hom.comp_apply] at h
   simpa using h
 
-/-- The residue field maps of the M-cycle are bijective (the inverse
-composition roundtrips through the identity lemmas). -/
+/-- The residue field maps of the M-cycle are bijective — the roundtrips
+through the Inv-cycle in the pinned residue-field API's CONTRAVariant
+direction (`ResidueField.lean`:
+`Hom.residueFieldMap f x : κ (f x) ⟶ κ x`): the inverse rides the
+point-equality transport `residueFieldCongr` (`residueFieldMap_congr'`
+moves the point of the cycle's own map; `residueFieldMap_congr` rewrites
+the roundtripped composite through the identity), and the two composite
+roundtrips close by `Iso.inv_hom_id`/`Iso.hom_inv_id` at the transported
+congruences. -/
 theorem finiteLineCycle_residueFieldMap_bijective (M : ℕ) [NeZero M]
     (x : finiteLineScheme M) :
     Function.Bijective
@@ -118,32 +125,54 @@ theorem finiteLineCycle_residueFieldMap_bijective (M : ℕ) [NeZero M]
     have := finiteLineCycle_isIso M
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateGraded_comp_inv M) _
-  have hcomp : Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-      (finiteLineCycle M x) ≫
-      Scheme.Hom.residueFieldMap (finiteLineCycle M) x =
-      RingHom.id ((finiteLineScheme M).residueField x) := by
-    rw [← Scheme.Hom.residueFieldMap_comp, hinv']
-    exact Scheme.Hom.residueFieldMap_id _
-  have hcomp2 : Scheme.Hom.residueFieldMap (finiteLineCycle M)
-      (finiteLineCycleInv M (finiteLineCycle M x)) ≫
-      Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-        (finiteLineCycle M x) =
-      RingHom.id ((finiteLineScheme M).residueField (finiteLineCycle M x)) := by
-    rw [← Scheme.Hom.residueFieldMap_comp, hinv]
-    exact Scheme.Hom.residueFieldMap_id _
-  rw [finiteLineCycleInv_apply] at hcomp2
+  have eInv : finiteLineCycleInv M (finiteLineCycle M x) = x :=
+    finiteLineCycleInv_apply M x
+  -- THE RIGHT-INVERSE EQUATION (surjectivity side): the transported
+  -- composite L ≫ φ, where L := (congr eInv).symm.hom ≫ inv.rFM (cyc x).
+  have hLφ : ((finiteLineScheme M).residueFieldCongr eInv).symm.hom ≫
+      (Scheme.Hom.residueFieldMap (finiteLineCycleInv M) (finiteLineCycle M x) ≫
+        Scheme.Hom.residueFieldMap (finiteLineCycle M) x) =
+      𝟙 ((finiteLineScheme M).residueField x) := by
+    rw [← Scheme.residueFieldMap_comp,
+      Scheme.Hom.residueFieldMap_congr hinv' x, Scheme.residueFieldMap_id,
+      Category.id_comp]
+    exact Iso.inv_hom_id ((finiteLineScheme M).residueFieldCongr eInv)
+  -- THE LEFT-INVERSE EQUATION (injectivity side): φ ≫ L.
+  have hφL : (Scheme.Hom.residueFieldMap (finiteLineCycle M) x ≫
+      ((finiteLineScheme M).residueFieldCongr eInv).symm.hom) ≫
+      Scheme.Hom.residueFieldMap (finiteLineCycleInv M) (finiteLineCycle M x) =
+      𝟙 ((finiteLineScheme M).residueField (finiteLineCycle M x)) := by
+    rw [Scheme.residueFieldCongr_symm,
+      Scheme.Hom.residueFieldMap_congr' eInv.symm, Category.assoc,
+      ← Scheme.residueFieldMap_comp,
+      Scheme.Hom.residueFieldMap_congr hinv (finiteLineCycle M x),
+      Scheme.residueFieldMap_id, Category.id_comp]
+    exact Iso.hom_inv_id
+      ((finiteLineScheme M).residueFieldCongr
+        (congrArg (finiteLineCycle M) eInv.symm))
   constructor
   · intro a b hab
-    have ha := DFunLike.congr_fun hcomp a
-    have hb := DFunLike.congr_fun hcomp b
-    simp only at hab
-    rw [← hb, ← ha]
-    exact congrArg _ hab
-  · intro b
+    have ha : Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
+        (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
+          (Scheme.Hom.residueFieldMap (finiteLineCycle M) x a)) = a := by
+      simpa using DFunLike.congr_fun hφL a
+    have hb : Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
+        (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
+          (Scheme.Hom.residueFieldMap (finiteLineCycle M) x b)) = b := by
+      simpa using DFunLike.congr_fun hφL b
+    calc a = Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
+          (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
+            (Scheme.Hom.residueFieldMap (finiteLineCycle M) x a)) := ha.symm
+      _ = Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
+          (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
+            (Scheme.Hom.residueFieldMap (finiteLineCycle M) x b)) := by
+          rw [hab]
+      _ = b := hb
+  · intro w
     refine ⟨Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-      (finiteLineCycle M x) b, ?_⟩
-    have hb := DFunLike.congr_fun hcomp2 b
-    simpa using hb
+        (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom w),
+      ?_⟩
+    simpa using DFunLike.congr_fun hLφ w
 
 /-- **THE M-CYCLE'S RESIDUE WEIGHT IS ONE** — the isomorphism's residue
 field maps are bijective, so the induced residue extension has rank one
@@ -197,7 +226,6 @@ private theorem blockRot_blockVarLeft (M : ℕ) [NeZero M] (i : Fin M) :
   · have heq : 2 * i.val + 2 = 2 * M := by omega
     have hiM : i.val + 1 = M := by omega
     rw [heq, hiM, Nat.mod_self, Nat.mod_self]
-    omega
 
 /-- **THE SPAN RECEIPT (+2 SHIFT)** — every generator of the i-th generic
 ideal maps, under the graded rotation, into the `cyclicSucc i`-th one: the
@@ -210,6 +238,8 @@ private theorem lineGenericIdeal_le_comap_rotate (M : ℕ) [NeZero M] (i : Fin M
       (lineRotateGraded M) := by
   rw [lineGenericIdeal, Ideal.span_le]
   rintro _ ⟨b, rfl⟩
+  show lineQuotientMap M (MvPolynomial.X (b : Fin (2 * M))) ∈
+      Ideal.comap (lineRotateGraded M) (lineGenericIdeal M (cyclicSucc M i))
   rw [Ideal.mem_comap]
   show lineRotateHom M (lineQuotientMap M (MvPolynomial.X (b : Fin (2 * M)))) ∈
       lineGenericIdeal M (cyclicSucc M i)
@@ -235,6 +265,8 @@ private theorem lineGenericIdeal_le_comap_rotateInv (M : ℕ) [NeZero M] (i : Fi
       (lineRotateInvGraded M) := by
   rw [lineGenericIdeal, Ideal.span_le]
   rintro _ ⟨b, rfl⟩
+  show lineQuotientMap M (MvPolynomial.X (b : Fin (2 * M))) ∈
+      Ideal.comap (lineRotateInvGraded M) (lineGenericIdeal M (cyclicPred M i))
   rw [Ideal.mem_comap]
   show lineRotateInvHom M (lineQuotientMap M (MvPolynomial.X (b : Fin (2 * M)))) ∈
       lineGenericIdeal M (cyclicPred M i)
@@ -435,20 +467,22 @@ theorem finiteLineCycleInv_mono (M : ℕ) [NeZero M] {x y : finiteLineScheme M}
     exact h
   exact finiteLineCycle_reflect M h'
 
-/-- The cycle is strictly monotone (the mono plus the injectivity). -/
+/-- The cycle is strictly monotone (the mono plus the reflection). -/
 theorem finiteLineCycle_strictMono (M : ℕ) [NeZero M] :
     StrictMono (finiteLineCycle M) := by
   intro a b hab
   refine ⟨finiteLineCycle_mono M hab.le, ?_⟩
   intro hcon
-  exact ne_of_lt hab (finiteLineCycle_inj M hcon)
+  exact absurd (finiteLineCycle_reflect M hcon) (not_le_of_lt hab)
 
 /-- The cycle reflects the strict order (the reflection plus its own
 strictness). -/
 theorem finiteLineCycle_strictReflect (M : ℕ) [NeZero M]
     {x y : finiteLineScheme M}
-    (h : finiteLineCycle M x < finiteLineCycle M y) : x < y :=
-  ⟨finiteLineCycle_reflect M h.le, ne_of_lt h⟩
+    (h : finiteLineCycle M x < finiteLineCycle M y) : x < y := by
+  refine ⟨finiteLineCycle_reflect M h.le, ?_⟩
+  intro hle
+  exact absurd (finiteLineCycle_mono M hle) (not_le_of_lt h)
 
 /-- **L5 — THE M-CYCLE PRESERVES COHEIGHT.**  The cycle is a strictly
 monotone order reflection whose strict-lift witness is the Inv-cycle
