@@ -97,7 +97,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout 2100 lake build GSTFiniteLineUnconditionalSource > gst-finite-line-unconditional-source.log 2>&1; then
+          if timeout 1500 lake build GSTFiniteLineUnconditionalSource > gst-finite-line-unconditional-source.log 2>&1; then
             echo "LEAN PASSED: Kernel check the unconditional-source module (THE UNCONDITIONAL LAW + universal primitive-X source)"
           else
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-unconditional-source.log | tail -n 100 || true

@@ -101,7 +101,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout 2100 lake build GSTFiniteLinePointsGateDischarge > gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout 1500 lake build GSTFiniteLinePointsGateDischarge > gst-finite-line-points-gate-discharge.log 2>&1; then
             echo "LEAN PASSED: Kernel check the gate-discharge module (GATE-A FULL DISCHARGE: the points-classification equiv, the unconditional law)"
           else
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-points-gate-discharge.log | tail -n 100 || true
