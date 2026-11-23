@@ -189,17 +189,9 @@ theorem polyEval_ext (f g : MvPolynomial (Fin 1) ℂ →+* ℂ)
     (hC : ∀ a : ℂ, f (MvPolynomial.C a) = g (MvPolynomial.C a))
     (hX : f (MvPolynomial.X (0 : Fin 1)) = g (MvPolynomial.X (0 : Fin 1))) :
     f = g := by
-  ext p
-  induction p using MvPolynomial.induction_on with
-  | C a => exact hC a
-  | add p q hp hq =>
-      simp only [map_add]
-      rw [hp, hq]
-  | mul_X p k hp =>
-      have hk : k = (0 : Fin 1) := Subsingleton.elim k 0
-      subst hk
-      simp only [map_mul]
-      rw [hp, hX]
+  refine MvPolynomial.ringHom_ext hC fun i => ?_
+  rw [Subsingleton.elim i 0]
+  exact hX
 
 /-! ## §4 THE CHART POINT-SECTIONS AND THE AFFINE CLASSIFICATION -/
 
