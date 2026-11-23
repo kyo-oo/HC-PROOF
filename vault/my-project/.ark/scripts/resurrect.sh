@@ -60,11 +60,12 @@ fi
 for D in src skills scripts sandbox-data; do
   if [ ! -d "/home/z/my-project/$D" ]; then
     NEWEST=$(ls -t "$FALLBACK/snapshots"/sandbox-*.tar.gz 2>/dev/null | head -1)
-    if [ -n "$NEWEST" ]; then
-      tar -xzf "$NEWEST" -C /home/z/my-project my-project/$D 2>/dev/null \
-        || tar -xzf "$NEWEST" -C /home/z 2>/dev/null
-      report "my-project/$D (from snapshot $NEWEST)"
+    if [ -n "$NEWEST" ] && tar -tzf "$NEWEST" "my-project/$D" >/dev/null 2>&1; then
+      if tar -xzf "$NEWEST" -C /home/z "my-project/$D" 2>/dev/null && [ -d "/home/z/my-project/$D" ]; then
+        report "my-project/$D (from snapshot $NEWEST)"
+      fi
     fi
+    [ -d "/home/z/my-project/$D" ] || mkdir -p "/home/z/my-project/$D"
   fi
 done
 
