@@ -27,6 +27,17 @@ proved by the atom formulas, not by choice.  The assembled
 `HodgeBigradedBettiData` keeps the frozen bigrading design (stash at 0,
 the span bigrading on the honest point-class family at 1, stash above).
 
+WAVE 5-B (run-receipt repair): the assembled data and every downstream
+theorem restated at the CONCRETE world `V := finiteLineWorld M` (the
+polymorphic-V statement was the type-mismatch family — the honest maps
+live at the actual world); the atom proofs rebuilt on the green
+`presentationOfNativeCycle_point` receipt (killing the `Finsupp.ext`
+DecidableEq disease) through show-bridges that unfold
+`honestCycleClassZero`/`honestComponentLinear` definitionally; the seed
+theorems restated on the At-family (`lineClosedPointAt`,
+`lineClosedPointAt_coheight`, `lineClosedPointAt_component` — the wave-4-A
+renamed closed-point family).
+
 Honesty ledger: every statement is proved unconditionally.  No `sorry`,
 no new axioms, no `native_decide`.  The GitHub CI lane
 `gst-finite-line-honest-hodge-data.yml` owns the kernel check.
@@ -113,20 +124,20 @@ theorem honestCycleClassZero_atom (M : ℕ) [NeZero M]
     honestCycleClassZero M V A hspace
         (codimensionPointCycle (finiteLineWorld M).X 0 η) =
       finiteLineComponentClass M V A hspace (lineIndexOfGeneric M η) := by
-  have hcomp : (presentationOfNativeCycleLinear (finiteLineWorld M).X 0)
+  have hcomp : presentationOfNativeCycleLinear (finiteLineWorld M).X 0
       (codimensionPointCycle (finiteLineWorld M).X 0 η) =
-      Finsupp.single η (1 : ℚ) := by
-    apply Finsupp.ext
-    intro ξ
+      Finsupp.single η 1 := by
     rw [presentationOfNativeCycleLinear_apply]
-    show Function.locallyFinsuppWithin.single η.1 (1 : ℚ) ξ.1 = _
-    by_cases hξ : ξ.1 = η.1
-    · rw [if_pos hξ]
-      simp only [Finsupp.single_apply, if_pos (congrArg (fun z => z = η) hξ.symm)]
-    · rw [if_neg hξ]
-      simp only [Finsupp.single_apply, if_neg (fun hcon => hξ hcon)]
-  rw [honestCycleClassZero, LinearMap.comp_apply, hcomp,
-    Finsupp.linearCombination_single, one_smul]
+    exact presentationOfNativeCycle_point (finiteLineWorld M).X 0 η
+  show (LinearMap.comp (honestComponentLinear M V A hspace)
+      (presentationOfNativeCycleLinear (finiteLineWorld M).X 0))
+      (codimensionPointCycle (finiteLineWorld M).X 0 η) = _
+  rw [LinearMap.comp_apply, hcomp]
+  show (Finsupp.linearCombination ℚ
+      (fun ξ : CodimensionPoint (finiteLineWorld M).X 0 =>
+        finiteLineComponentClass M V A hspace (lineIndexOfGeneric M ξ)))
+      (Finsupp.single η 1) = _
+  rw [Finsupp.linearCombination_single, one_smul]
 
 /-! ## §2 The honest weight-one cycle-class map -/
 
@@ -165,149 +176,168 @@ theorem honestCycleClassOne_atom (M : ℕ) [NeZero M]
         (codimensionPointCycle (finiteLineWorld M).X 1 x) =
       finiteLinePointClass M V A hspace ω
         (lineIndexOfGeneric M (lineComponentOf M x)) := by
-  have hcomp : (presentationOfNativeCycleLinear (finiteLineWorld M).X 1)
+  have hcomp : presentationOfNativeCycleLinear (finiteLineWorld M).X 1
       (codimensionPointCycle (finiteLineWorld M).X 1 x) =
-      Finsupp.single x (1 : ℚ) := by
-    apply Finsupp.ext
-    intro ξ
+      Finsupp.single x 1 := by
     rw [presentationOfNativeCycleLinear_apply]
-    show Function.locallyFinsuppWithin.single x.1 (1 : ℚ) ξ.1 = _
-    by_cases hξ : ξ.1 = x.1
-    · rw [if_pos hξ]
-      simp only [Finsupp.single_apply, if_pos (congrArg (fun z => z = x) hξ.symm)]
-    · rw [if_neg hξ]
-      simp only [Finsupp.single_apply, if_neg (fun hcon => hξ hcon)]
-  rw [honestCycleClassOne, LinearMap.comp_apply, hcomp,
-    Finsupp.linearCombination_single, one_smul]
+    exact presentationOfNativeCycle_point (finiteLineWorld M).X 1 x
+  show (LinearMap.comp (honestPointLinear M V A hspace ω)
+      (presentationOfNativeCycleLinear (finiteLineWorld M).X 1))
+      (codimensionPointCycle (finiteLineWorld M).X 1 x) = _
+  rw [LinearMap.comp_apply, hcomp]
+  show (Finsupp.linearCombination ℚ
+      (fun ξ : CodimensionPoint (finiteLineWorld M).X 1 =>
+        finiteLinePointClass M V A hspace ω
+          (lineIndexOfGeneric M (lineComponentOf M ξ))))
+      (Finsupp.single x 1) = _
+  rw [Finsupp.linearCombination_single, one_smul]
 
 /-! ## §3 The assembled honest Hodge data -/
 
 /-- **THE ASSEMBLED HONEST HODGE DATA** — the frozen bigrading design
 (stash at 0, span on the honest point-class family at 1, stash above)
-with the honest canonical cycle-class maps. -/
+with the honest canonical cycle-class maps, at the CONCRETE world
+`finiteLineWorld M` (the wave-5-B discipline: the honest maps live at the
+actual world, so the data does too). -/
 noncomputable def finiteLineHodgeDataHonest (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
-    HodgeBigradedBettiData V where
+    HodgeBigradedBettiData (finiteLineWorld M) where
   analytification := A
   hodgeBigrading := fun p =>
     match p with
     | 0 => stashBigrading _ 0
-    | 1 => spanBigrading (finiteLinePointClass M V A hspace ω) 1 (by omega)
+    | 1 => spanBigrading (finiteLinePointClass M (finiteLineWorld M) A hspace ω) 1 (by omega)
     | (p + 2) => stashBigrading _ (2 * (p + 2))
   cycleClass := fun p =>
     match p with
-    | 0 => honestCycleClassZero M V A hspace
-    | 1 => honestCycleClassOne M V A hspace ω
+    | 0 => honestCycleClassZero M (finiteLineWorld M) A hspace
+    | 1 => honestCycleClassOne M (finiteLineWorld M) A hspace ω
     | (p + 2) => 0
 
 /-- The analytification receipt. -/
 theorem finiteLineHodgeDataHonest_analytification (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
-    (finiteLineHodgeDataHonest M V A hspace ω).analytification = A :=
+    (finiteLineHodgeDataHonest M A hspace ω).analytification = A :=
   rfl
 
 /-- **THE SPAN BIGRADING RECEIPT** — the weight-one slot is the span
 bigrading on the world-typed point-class family (the green rfl-bridge
 pattern). -/
 theorem finiteLineHodgeDataHonest_hone (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
-    (finiteLineHodgeDataHonest M V A hspace ω).hodgeBigrading 1 =
-      spanBigrading (spherePointClassWorld (V := V)
-        (H := finiteLineHodgeDataHonest M V A hspace ω) M hspace ω) 1 (by omega) :=
+    (finiteLineHodgeDataHonest M A hspace ω).hodgeBigrading 1 =
+      spanBigrading (spherePointClassWorld (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M A hspace ω) M hspace ω) 1 (by omega) :=
   rfl
 
 /-- The component-family bridge at the honest data (the family term is
 independent of the Hodge data; the green bridge transports by defeq). -/
 theorem honest_componentClass_eq_world (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2)
     (j : Fin M) :
-    finiteLineComponentClass M V A hspace j =
-      sphereComponentClass (V := V)
-        (H := finiteLineHodgeDataHonest M V A hspace ω) M
+    finiteLineComponentClass M (finiteLineWorld M) A hspace j =
+      sphereComponentClass (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M A hspace ω) M
         (Nat.pos_of_neZero ‹_›) hspace j :=
-  finiteLineComponentClass_eq_world (M := M) (V := V) A hspace ω
+  finiteLineComponentClass_eq_world (M := M) (V := finiteLineWorld M) A hspace ω
     (lineHonestSeedZero M) (lineHonestSeedZero_ne M)
     (lineHonestSeedOne M) (lineHonestSeedOne_ne M) j
 
 /-- The point-family bridge at the honest data. -/
 theorem honest_pointClass_eq_world (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2)
     (j : Fin M) :
-    finiteLinePointClass M V A hspace ω j =
-      spherePointClassWorld (V := V)
-        (H := finiteLineHodgeDataHonest M V A hspace ω) M hspace ω j :=
-  finiteLinePointClass_eq_world (M := M) (V := V) A hspace ω
+    finiteLinePointClass M (finiteLineWorld M) A hspace ω j =
+      spherePointClassWorld (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M A hspace ω) M hspace ω j :=
+  finiteLinePointClass_eq_world (M := M) (V := finiteLineWorld M) A hspace ω
     (lineHonestSeedZero M) (lineHonestSeedZero_ne M)
     (lineHonestSeedOne M) (lineHonestSeedOne_ne M) j
 
 /-- **THE HONEST SEED EQUATION AT WEIGHT ZERO** — the atom at the 0-th
 generic point maps to the 0-th component class. -/
 theorem finiteLineHodgeDataHonest_seed_zero (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
-    (finiteLineHodgeDataHonest M V A hspace ω).cycleClass 0
+    (finiteLineHodgeDataHonest M A hspace ω).cycleClass 0
         (codimensionPointCycle (finiteLineWorld M).X 0
-          ⟨lineGenericPoint M 0, lineGenericPoint_coheight M 0⟩) =
-      sphereComponentClass (V := V)
-        (H := finiteLineHodgeDataHonest M V A hspace ω)
+          ⟨lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+            lineGenericPoint_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩) =
+      sphereComponentClass (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M A hspace ω)
         M (Nat.pos_of_neZero ‹_›) hspace ⟨0, Nat.pos_of_neZero ‹_›⟩ := by
-  have hatom := honestCycleClassZero_atom M V A hspace
-    ⟨lineGenericPoint M 0, lineGenericPoint_coheight M 0⟩
+  have hatom := honestCycleClassZero_atom M (finiteLineWorld M) A hspace
+    ⟨lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+      lineGenericPoint_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩
   have hidx : lineIndexOfGeneric M
-      ⟨lineGenericPoint M 0, lineGenericPoint_coheight M 0⟩ = 0 :=
-    lineIndexOfGeneric_lineGenericPoint M 0
+      ⟨lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+        lineGenericPoint_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩ = 0 :=
+    lineIndexOfGeneric_lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩
+  show honestCycleClassZero M (finiteLineWorld M) A hspace
+      (codimensionPointCycle (finiteLineWorld M).X 0
+        ⟨lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+          lineGenericPoint_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩) = _
   rw [hatom, hidx]
-  exact honest_componentClass_eq_world M V A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩
+  exact honest_componentClass_eq_world M A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩
 
 /-- **THE HONEST SEED EQUATION AT WEIGHT ONE** — the atom at the closed
 point maps to the 0-th point class. -/
 theorem finiteLineHodgeDataHonest_seed_one (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
-    (finiteLineHodgeDataHonest M V A hspace ω).cycleClass 1
+    (finiteLineHodgeDataHonest M A hspace ω).cycleClass 1
         (codimensionPointCycle (finiteLineWorld M).X 1
-          ⟨lineClosedPoint M, lineClosedPoint_coheight M⟩) =
-      spherePointClassWorld (V := V)
-        (H := finiteLineHodgeDataHonest M V A hspace ω) M hspace ω
+          ⟨lineClosedPointAt M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+            lineClosedPointAt_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩) =
+      spherePointClassWorld (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M A hspace ω) M hspace ω
         ⟨0, Nat.pos_of_neZero ‹_›⟩ := by
-  have hatom := honestCycleClassOne_atom M V A hspace ω
-    ⟨lineClosedPoint M, lineClosedPoint_coheight M⟩
+  have hatom := honestCycleClassOne_atom M (finiteLineWorld M) A hspace ω
+    ⟨lineClosedPointAt M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+      lineClosedPointAt_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩
   have hcomp : lineComponentOf M
-      ⟨lineClosedPoint M, lineClosedPoint_coheight M⟩ =
-      ⟨lineGenericPoint M 0, lineGenericPoint_coheight M 0⟩ :=
-    lineClosedPoint_component M
+      ⟨lineClosedPointAt M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+        lineClosedPointAt_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩ =
+      ⟨lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+        lineGenericPoint_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩ :=
+    lineClosedPointAt_component M ⟨0, Nat.pos_of_neZero ‹_›⟩
   have hidx : lineIndexOfGeneric M
-      (lineComponentOf M ⟨lineClosedPoint M, lineClosedPoint_coheight M⟩) = 0 := by
+      (lineComponentOf M ⟨lineClosedPointAt M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+        lineClosedPointAt_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩) = 0 := by
     rw [hcomp]
-    exact lineIndexOfGeneric_lineGenericPoint M 0
+    exact lineIndexOfGeneric_lineGenericPoint M ⟨0, Nat.pos_of_neZero ‹_›⟩
+  show honestCycleClassOne M (finiteLineWorld M) A hspace ω
+      (codimensionPointCycle (finiteLineWorld M).X 1
+        ⟨lineClosedPointAt M ⟨0, Nat.pos_of_neZero ‹_›⟩,
+          lineClosedPointAt_coheight M ⟨0, Nat.pos_of_neZero ‹_›⟩⟩) = _
   rw [hatom, hidx]
-  exact honest_pointClass_eq_world M V A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩
+  exact honest_pointClass_eq_world M A hspace ω ⟨0, Nat.pos_of_neZero ‹_›⟩
 
 /-- **THE DEAD WEIGHTS** — every weight `p ≥ 2` of the honest data has a
 subsingleton rational Hodge fiber (the stash receipt, identical to the
 green §9). -/
 theorem finiteLineHodgeDataHonest_deadWeights (M : ℕ) [NeZero M]
-    (V : SmoothProjectiveComplexScheme) (A : AnalytificationData V)
+    (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (ω : singularCohomologyOf (TopCat.of unitSphereType) 2) :
     ∀ p : ℕ, 1 < p →
-      Subsingleton (ClassicalHodgeFiber V
-        (finiteLineHodgeDataHonest M V A hspace ω) p) := by
+      Subsingleton (ClassicalHodgeFiber (finiteLineWorld M)
+        (finiteLineHodgeDataHonest M A hspace ω) p) := by
   intro p hp
   have hbot : rationalHodgeSubspace
-      ((finiteLineHodgeDataHonest M V A hspace ω).hodgeBigrading p) = ⊥ := by
+      ((finiteLineHodgeDataHonest M A hspace ω).hodgeBigrading p) = ⊥ := by
     match p with
     | 0 => exact absurd hp (by omega)
     | 1 => exact absurd hp (by omega)
@@ -332,4 +362,4 @@ theorem finiteLineHodgeDataHonest_deadWeights (M : ℕ) [NeZero M]
 
 end GSTFiniteLineHonestHodgeData
 
-end -- noncomputable section
+end

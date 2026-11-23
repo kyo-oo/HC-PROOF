@@ -63,6 +63,9 @@ open GSTFiniteLineClosedImmersion
 open GSTFiniteLineGeneralMLaw
 open GSTFiniteLineOverBase
 open GSTCompleteSingleFoldOrbitLaw
+open GSTSingularCohomologyMaps
+open GSTSphereCycleLegs
+open GSTHodgeSingleHypothesisConditional
 
 namespace GSTFiniteLineWorldDischarge
 
