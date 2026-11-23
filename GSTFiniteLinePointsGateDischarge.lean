@@ -228,7 +228,7 @@ private theorem awayι_mem_basicOpen_self (M : ℕ) [NeZero M] (j : Fin (2 * M))
     (q₀ : Spec (CommRingCat.of (HomogeneousLocalization.Away (lineGrading M)
       (lineQuotientMap M (MvPolynomial.X j))))) :
     (Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
-      (lineCoverHomogeneousOneQ M j) zero_lit_one) q₀ ∈
+      (lineCoverHomogeneousOneQ M j) zero_lt_one) q₀ ∈
       Proj.basicOpen (lineGrading M) (lineQuotientMap M (MvPolynomial.X j)) := by
   have hpre : q₀ ∈ (Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
       (lineCoverHomogeneousOneQ M j) zero_lt_one) ⁻¹ᵁ
@@ -274,7 +274,7 @@ private theorem chartPoint_avoids (M : ℕ) [NeZero M] (j : Fin (2 * M))
       Proj.basicOpen (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
     show (Spec.map (CommRingCat.ofHom (chartEvalRingHom M j c)) ≫
         Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
-          (lineCoverHomogeneousOneQ M j) zero_lit_one) x ∈
+          (lineCoverHomogeneousOneQ M j) zero_lt_one) x ∈
       Proj.basicOpen (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
     rw [Scheme.Hom.comp_apply]
     exact awayι_mem_basicOpen_self M j

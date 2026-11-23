@@ -134,6 +134,7 @@ open GSTNativeCodimensionCyclePresentation
 open GSTFiniteLineWorldCarrier
 open GSTFiniteLineRing
 open GSTFiniteLineOverBase
+open GSTFiniteLineSmoothness
 open GSTFiniteLineAnalytification
 open GSTFiniteLinePointAlgebra
 open GSTFiniteLinePointsGate
@@ -291,7 +292,7 @@ theorem chartReading_mem (M : ℕ) [NeZero M] (j : Fin (2 * M))
   -- defeq is the green `show`-bridge class of
   -- GSTFiniteLineAnalytification.lean:297-300):
   have h0 : 𝟙 complexBase = p.1 ≫ finiteLineStructureMap M :=
-    show 𝟙 complexBase = p.1 ≫ finiteLineStructureMap M from p.2
+    show 𝟙 complexBase = p.1 ≫ finiteLineStructureMap M from p.2.symm
   -- The reverse chartPointHomOf_section calc: the section property,
   -- §2's factorization, the chart square:
   have hsq : 𝟙 complexBase =
@@ -372,7 +373,7 @@ PrimeSpectrum.comap (Pi.evalRingHom …) z` of `pointPair_left_apply`,
 — the coercion chain `coe f := f.base` → `comap`'s `toFun` documented at
 `GSTFiniteLineCycleCorrespondence.lean:298`).  Designated CI repair point. -/
 private theorem specMap_ofHom_base_apply {A : Type*} [CommRing A]
-    (g : ℂ →+* A) (z : complexBase) :
+    (g : A →+* ℂ) (z : complexBase) :
     (Spec.map (CommRingCat.ofHom g)) z = PrimeSpectrum.comap g z := by
   show PrimeSpectrum.comap g z = PrimeSpectrum.comap g z
   rfl
@@ -409,7 +410,7 @@ private theorem chartLeg_apply_ideal_comap (M : ℕ) [NeZero M] (j : Fin (2 * M)
     ((chartLeg M j p hpre) x).asIdeal =
       Ideal.comap (chartReading M j p hpre) x.asIdeal := by
   rw [chartLeg_map M j p hpre]
-  show (PrimeSpectrum.comap (chartReading M j p hpre) x).asIdeal =
+  exact show (PrimeSpectrum.comap (chartReading M j p hpre) x).asIdeal =
     Ideal.comap (chartReading M j p hpre) x.asIdeal from rfl
 
 /-- **AUTHORED BRIDGE 4 (the affine basicOpen membership)** — the affine twin
@@ -639,8 +640,7 @@ green coordinate receipt `chartEvalRingHom_chartRatio`
 (`GSTFiniteLineAnalytification.lean:224-229`) at the coordinate 0. -/
 theorem chartPoint_right_zero_mem (M : ℕ) [NeZero M] (i : Fin M) (x : complexBase) :
     lineQuotientMap M (MvPolynomial.X (lineLeftChart M i)) ∈
-      (finiteLineComplexPointImage M (chartPoint M (lineRightChart M i) 0) x)
-        .asHomogeneousIdeal.toIdeal := by
+      (finiteLineComplexPointImage M (chartPoint M (lineRightChart M i) 0) x).asHomogeneousIdeal.toIdeal := by
   -- The constructed point's underlying morphism, definitionally:
   have hcp : (chartPoint M (lineRightChart M i) 0).1 =
       chartPointHomOf M (lineRightChart M i)
@@ -659,7 +659,7 @@ theorem chartPoint_right_zero_mem (M : ℕ) [NeZero M] (i : Fin M) (x : complexB
       (Spec.map (CommRingCat.ofHom (chartEvalRingHom M (lineRightChart M i) 0)) ≫
         Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X (lineRightChart M i)))
           (lineCoverHomogeneousOneQ M (lineRightChart M i)) zero_lt_one) x := by
-    rw [finiteLineComplexPointImage, hcp, hcomp]
+    rw [finiteLineComplexPointImage_eq, hcp, hcomp]
   rw [himg, Scheme.Hom.comp_apply, specMap_ofHom_base_apply]
   -- The reciprocal transport (bridge 6, the ← direction), fed by the green
   -- coordinate receipt:
