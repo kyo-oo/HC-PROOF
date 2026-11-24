@@ -150,7 +150,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p1
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p1
       - name: "Ladder 2/5: GSTFiniteLineCycleCorrespondenceAction"
         id: p2
         continue-on-error: true
@@ -177,7 +177,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p2
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p2
       - name: "Ladder 3/5: GSTFiniteLineCycleCorrespondenceOperators"
         id: p3
         continue-on-error: true
@@ -204,7 +204,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p3
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p3
       - name: "Ladder 4/5: GSTFiniteLineCycleCorrespondence"
         id: p4
         continue-on-error: true
@@ -231,7 +231,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p4
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p4
       - name: "Ladder 5/5: GSTFiniteLineUnconditionalSource"
         id: p5
         continue-on-error: true
@@ -258,7 +258,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p5
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p5
       - name: Verdict (full-target rebuild + the sorryAx hard-fail)
         shell: bash
         run: |
@@ -290,7 +290,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-final
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-final
       - name: Upload exact Lean compiler diagnostics
         if: always()
         uses: actions/upload-artifact@v4
