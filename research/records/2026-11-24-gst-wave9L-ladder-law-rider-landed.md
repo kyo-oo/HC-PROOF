@@ -121,7 +121,44 @@ prose order.  The green receipts, verified LIVE this session:
   consumers CoreTransport:392 / DischargeInverseB:368/:429 untouched) —
   its kernel test is the first healthy Core-chain cycle.
 
-## The honesty ledger
+## THE 9-L2 ADDENDUM (the same session, ~45 min later — the hang kill)
+
+The first ladder cycle's receipts (runs 45493361302/77/87 + the re-dispatch
+45499291338) exposed the disease the ladder inherited from the single-step
+design: **pieces hanging PAST their 1500s bells** (discharge/unconditional
+L2 in-step 30+ min, cycle-corr L1 40+ min — the same "frozen zombie"
+signature 9-K documented without the mechanism).  THE MECHANISM (finally
+named): `timeout --kill-after=30s` SIGKILLs `lake`, but lake's orphaned
+`lean` children inherit the `| tee` pipe's file descriptors and hold them
+open — `tee` never sees EOF, the step NEVER concludes, the lane freezes
+until the infra reaper (~62 min) or a runner murder collects it.  Every
+timed-out piece cost 30-60 min of lane time AND the rider correctly skipped
+the "in_progress" lane.
+
+THE SAME CYCLE'S POSITIVE RECEIPTS: primitive-x was murdered at 26-min
+job-time while compiling piece 2 — **the ladder held exactly as designed**
+(piece 1 was a replay from the 19:40 bank: nothing lost, the murder cost
+only the in-flight piece); the 19:40 banks CONTAIN CycleCorrespondenceBasic
+(the ratchet's earlier progress, now confirmed); the rider's skip logic and
+the manual re-dispatch path (HTTP 204) both verified live.
+
+THE THREE KILLS (all four lanes regenerated at `cf5d9a18`):
+
+1. **NO PIPES** — every `lake build` invocation redirects to the log file
+   (`>> log 2>&1`); bash regains control the instant timeout kills lake.
+2. **ORPHAN CLEANUP** — `pkill -KILL -x lean` in every timeout branch.
+3. **THE LADDER-STOP CHAIN** — a timed-out piece `touch`es `.ladder-stop`;
+   every subsequent piece AND the verdict step fast-exit on it (pieces
+   after a gap are doomed windows: lake would rebuild the missing upstream
+   first, burning the whole window re-attempting a piece that already
+   timed out).  The chain stops the bleeding; the rider re-dispatches and
+   the next cycle retries the gap piece on a fresh runner.
+
+Verdict-step semantics: a ladder-stop cycle exits 1 — the honest
+timeout-cycle RED (no false green, the AGENTS discipline); the rider
+re-dispatches any completed lane regardless of conclusion.
+
+## The honesty ledger (final, at 9-L2)
 
 No green is claimed for any ladder lane at any SHA by this record (the
 AGENTS discipline) — the ladders were LIVE and climbing at write time
