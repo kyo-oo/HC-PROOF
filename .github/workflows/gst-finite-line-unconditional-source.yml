@@ -98,15 +98,16 @@ jobs:
           key: hc-lean-incremental-Linux-finite-line-general-M-law
           restore-keys: |
             hc-lean-incremental-Linux-
-      - name: "Ladder 1/5: CycleCorrespondenceBasic"
+      - name: "Ladder 1/5: GSTFiniteLineCycleCorrespondenceBasic"
         id: p1
         continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          if [ -f .ladder-stop ]; then echo "LADDER 1: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceBasic 2>&1 | tee -a gst-finite-line-unconditional-source.log; then
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceBasic >> gst-finite-line-unconditional-source.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceBasic.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceBasic.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 1 COMPILED FRESH — banking"
@@ -114,23 +115,26 @@ jobs:
               echo "LADDER PIECE 1 already banked — replay only"
             fi
           else
-            echo "LADDER PIECE 1 timeout/failure — continuing ladder (bank unchanged)"
+            pkill -KILL -x lean 2>/dev/null || true
+            touch .ladder-stop
+            echo "LADDER PIECE 1 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
           fi
       - name: "Bank after ladder 1"
         if: always() && steps.p1.outputs.dirty == 'true'
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p1
-      - name: "Ladder 2/5: CycleCorrespondenceAction"
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p1
+      - name: "Ladder 2/5: GSTFiniteLineCycleCorrespondenceAction"
         id: p2
         continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          if [ -f .ladder-stop ]; then echo "LADDER 2: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceAction 2>&1 | tee -a gst-finite-line-unconditional-source.log; then
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceAction >> gst-finite-line-unconditional-source.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceAction.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceAction.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 2 COMPILED FRESH — banking"
@@ -138,23 +142,26 @@ jobs:
               echo "LADDER PIECE 2 already banked — replay only"
             fi
           else
-            echo "LADDER PIECE 2 timeout/failure — continuing ladder (bank unchanged)"
+            pkill -KILL -x lean 2>/dev/null || true
+            touch .ladder-stop
+            echo "LADDER PIECE 2 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
           fi
       - name: "Bank after ladder 2"
         if: always() && steps.p2.outputs.dirty == 'true'
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p2
-      - name: "Ladder 3/5: CycleCorrespondenceOperators"
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p2
+      - name: "Ladder 3/5: GSTFiniteLineCycleCorrespondenceOperators"
         id: p3
         continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          if [ -f .ladder-stop ]; then echo "LADDER 3: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceOperators 2>&1 | tee -a gst-finite-line-unconditional-source.log; then
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceOperators >> gst-finite-line-unconditional-source.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceOperators.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceOperators.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 3 COMPILED FRESH — banking"
@@ -162,23 +169,26 @@ jobs:
               echo "LADDER PIECE 3 already banked — replay only"
             fi
           else
-            echo "LADDER PIECE 3 timeout/failure — continuing ladder (bank unchanged)"
+            pkill -KILL -x lean 2>/dev/null || true
+            touch .ladder-stop
+            echo "LADDER PIECE 3 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
           fi
       - name: "Bank after ladder 3"
         if: always() && steps.p3.outputs.dirty == 'true'
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p3
-      - name: "Ladder 4/5: CycleCorrespondence"
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p3
+      - name: "Ladder 4/5: GSTFiniteLineCycleCorrespondence"
         id: p4
         continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          if [ -f .ladder-stop ]; then echo "LADDER 4: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondence 2>&1 | tee -a gst-finite-line-unconditional-source.log; then
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondence >> gst-finite-line-unconditional-source.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondence.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondence.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 4 COMPILED FRESH — banking"
@@ -186,23 +196,26 @@ jobs:
               echo "LADDER PIECE 4 already banked — replay only"
             fi
           else
-            echo "LADDER PIECE 4 timeout/failure — continuing ladder (bank unchanged)"
+            pkill -KILL -x lean 2>/dev/null || true
+            touch .ladder-stop
+            echo "LADDER PIECE 4 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
           fi
       - name: "Bank after ladder 4"
         if: always() && steps.p4.outputs.dirty == 'true'
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p4
-      - name: "Ladder 5/5: UnconditionalSource (the verdict piece)"
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p4
+      - name: "Ladder 5/5: GSTFiniteLineUnconditionalSource"
         id: p5
         continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          if [ -f .ladder-stop ]; then echo "LADDER 5: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineUnconditionalSource 2>&1 | tee -a gst-finite-line-unconditional-source.log; then
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineUnconditionalSource >> gst-finite-line-unconditional-source.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineUnconditionalSource.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineUnconditionalSource.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 5 COMPILED FRESH — banking"
@@ -210,26 +223,37 @@ jobs:
               echo "LADDER PIECE 5 already banked — replay only"
             fi
           else
-            echo "LADDER PIECE 5 timeout/failure — continuing ladder (bank unchanged)"
+            pkill -KILL -x lean 2>/dev/null || true
+            touch .ladder-stop
+            echo "LADDER PIECE 5 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
           fi
       - name: "Bank after ladder 5"
         if: always() && steps.p5.outputs.dirty == 'true'
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-p5
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-p5
       - name: Verdict (full-target rebuild + the sorryAx hard-fail)
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineUnconditionalSource 2>&1 | tee -a gst-finite-line-unconditional-source.log; then
+          if [ -f .ladder-stop ]; then
+            pkill -KILL -x lean 2>/dev/null || true
+            echo "LADDER TIMED OUT THIS CYCLE (every finished piece is banked; the rider re-dispatches)"
+            exit 1
+          fi
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineUnconditionalSource >> gst-finite-line-unconditional-source.log 2>&1; then
             echo "LEAN PASSED: Kernel check the unconditional-source module (THE UNCONDITIONAL LAW + universal primitive-X source)"
           else
             pkill -KILL -x lean 2>/dev/null || true
             sleep 1
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-unconditional-source.log | tail -n 100 || true
             tail -n 75 gst-finite-line-unconditional-source.log || true
+            if grep -qE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-unconditional-source.log; then
+              exit 1
+            fi
+            echo "VERDICT WINDOW TIMEOUT (the ladder banked every finished piece above; the rider re-dispatches to continue)"
             exit 1
           fi
           if grep -E "declaration uses 'sorry'|sorryAx" gst-finite-line-unconditional-source.log; then
@@ -240,7 +264,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${{ github.run_id }}-final
+          key: hc-lean-incremental-Linux-finite-line-unconditional-source-${ github.run_id }-final
       - name: Upload exact Lean compiler diagnostics
         if: always()
         uses: actions/upload-artifact@v4
