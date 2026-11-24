@@ -87,9 +87,11 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout 1200 lake build GSTFiniteLinePrimitiveXSource > gst-finite-line-primitive-x-source.log 2>&1; then
+          if timeout --kill-after=30s 2400 lake build GSTFiniteLinePrimitiveXSource 2>&1 | tee gst-finite-line-primitive-x-source.log; then
             echo "LEAN PASSED: Kernel check the universal primitive-X source package (the source-basis: independence, span, compiler, the forall-M master)"
           else
+            pkill -KILL -x lean 2>/dev/null || true
+            sleep 1
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-primitive-x-source.log | tail -n 100 || true
             tail -n 75 gst-finite-line-primitive-x-source.log || true
             if grep -qE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-primitive-x-source.log; then
