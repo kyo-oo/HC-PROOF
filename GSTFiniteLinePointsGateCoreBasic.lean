@@ -231,20 +231,29 @@ morphism: the chart-iso cancellation (`basicOpenIsoSpec_inv_ι`,
 through its away chart — the piece the wave-7 residual disclosed as open
 (`GSTFiniteLinePointsGate.lean:554-567`).
 
-Wave-9-I route note (the run-45456987872 receipt: the wave-9-E single
-rw-chain died at its `Category.assoc` step — the chartLeg-unfold brings
-the def-body's `sectionInto`/`basicOpenIsoSpec` elaborations whose middle
-`U.toScheme` spellings are defeq at default transparency but not visible
-at the rewrite engine's implicit-transparency check, the exact
-"target expression is not type-correct under the implicit transparency
-level" class).  The kill: the iso-triangle `hom ≫ awayι = ι` is proved
-FIRST on the pure Proj side (no `sectionInto`, no world-typed factor —
-the pin's own lemma + `Iso.hom_inv_id_assoc`, both green at the pin),
-and the seam-crossing associativity is performed by a FULLY-EXPLICIT
-term-mode `have` (`CategoryTheory.Category.assoc _ _ _` against a
-statement elaborated at default transparency — no rewrite-engine
-pattern surgery at the sick seam).  Every `rw` step matches byte-equal
-explicit spellings. -/
+Wave-9-I/9-J route note (the run-45456987872 receipt: the wave-9-E single
+rw-chain died at its `Category.assoc` step; the run-45463962435 receipt:
+the wave-9-I `rw [htri]` step ALSO died — the iso-triangle MATCH was
+visible in the goal, but the post-replacement composite
+`sectionInto ≫ (Proj.basicOpen …).ι` is itself the sick seam (the
+`U.toScheme` spellings defeq at default transparency only), and the
+rewrite engine's implicit-transparency typecheck rolls the rewrite back
+before reporting the match — the "target expression is not type-correct
+under the implicit transparency level" class, twice).  The kill: NO
+rewrite-engine surgery at the seam AT ALL.  (1) htri — the iso-triangle
+`(basicOpenIsoSpec).hom ≫ Proj.awayι = (Proj.basicOpen).ι` proved on the
+pure Proj side (the pin's own rfl-lemma + `Iso.hom_inv_id_assoc`, no
+`sectionInto`, no world-typed factor); (2) hassoc — the seam-crossing
+associativity as a FULLY-EXPLICIT term-mode have
+(`CategoryTheory.Category.assoc _ _ _` at default transparency — its
+elaboration CONFIRMED GREEN by the 9-I run: the error came after it);
+(3) the main chain stops at `rw [chartLeg, hassoc]` (both steps
+CONFIRMED GREEN by the 9-I run) and closes by TERM-MODE
+`Eq.trans (congrArg (fun w => sectionInto … ≫ w) htri) (sectionInto_ι …)`
+— the congrArg/Eq.trans assembly elaborates at DEFAULT transparency
+(the lambda's two applications and the trans's middle type are all
+default-transparency checks; no kabstract, no implicit-transparency
+rollback).  The theorem's SIGNATURE unchanged. -/
 theorem chartLeg_awayι (M : ℕ) [NeZero M] (j : Fin (2 * M))
     (p : ComplexPoint (finiteLineWorld M))
     (hpre : p.1 ⁻¹ᵁ (Proj.basicOpen (lineGrading M)
@@ -273,9 +282,12 @@ theorem chartLeg_awayι (M : ℕ) [NeZero M] (j : Fin (2 * M))
       Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
         (lineCoverHomogeneousOneQ M j) zero_lt_one) :=
     CategoryTheory.Category.assoc _ _ _
-  rw [chartLeg, hassoc, htri]
-  exact sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
-    (lineQuotientMap M (MvPolynomial.X j))) hpre
+  rw [chartLeg, hassoc]
+  exact Eq.trans
+    (congrArg (fun w => sectionInto p.1 (Proj.basicOpen (lineGrading M)
+      (lineQuotientMap M (MvPolynomial.X j))) hpre ≫ w) htri)
+    (sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
+      (lineQuotientMap M (MvPolynomial.X j))) hpre)
 
 /-! ## §3 THE READING + THE CHART-POINT MEMBERSHIP -/
 
