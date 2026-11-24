@@ -236,31 +236,18 @@ theorem chartLeg_awayι (M : ℕ) [NeZero M] (j : Fin (2 * M))
     chartLeg M j p hpre ≫
       Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
         (lineCoverHomogeneousOneQ M j) zero_lt_one = p.1 := by
-  calc chartLeg M j p hpre ≫
+  have hstep : chartLeg M j p hpre ≫
       Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
-        (lineCoverHomogeneousOneQ M j) zero_lt_one
-      = (sectionInto p.1 (Proj.basicOpen (lineGrading M)
-          (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
-          (Proj.basicOpenIsoSpec (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))
-            (lineCoverHomogeneousOneQ M j) zero_lt_one).hom) ≫
-          ((Proj.basicOpenIsoSpec (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))
-            (lineCoverHomogeneousOneQ M j) zero_lt_one).inv ≫
-          (Proj.basicOpen (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))).ι) := rfl
-    _ = sectionInto p.1 (Proj.basicOpen (lineGrading M)
-          (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
-          (Proj.basicOpen (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))).ι := by
-          rw [CategoryTheory.Category.assoc, Iso.hom_inv_id_assoc]
-    _ = p.1 := by
-          show sectionInto p.1 (Proj.basicOpen (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
-            (Proj.basicOpen (lineGrading M)
-              (lineQuotientMap M (MvPolynomial.X j))).ι = p.1
-          exact sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
-            (lineQuotientMap M (MvPolynomial.X j))) hpre
+        (lineCoverHomogeneousOneQ M j) zero_lt_one =
+      sectionInto p.1 (Proj.basicOpen (lineGrading M)
+        (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
+      (Proj.basicOpen (lineGrading M)
+        (lineQuotientMap M (MvPolynomial.X j))).ι := by
+    rw [chartLeg, ← Proj.basicOpenIsoSpec_inv_ι,
+      CategoryTheory.Category.assoc, Iso.hom_inv_id_assoc]
+  rw [hstep]
+  exact sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
+    (lineQuotientMap M (MvPolynomial.X j))) hpre
 
 /-! ## §3 THE READING + THE CHART-POINT MEMBERSHIP -/
 
@@ -555,7 +542,9 @@ private theorem away_membership_iff (M : ℕ) [NeZero M] (j : Fin (2 * M))
           (lineQuotientMap M (MvPolynomial.X (linePartner M j)))) := by
       intro hq
       apply h2
-      exact Opens.mem_preimage.mpr hq
+      rw [← SetLike.mem_coe, ← Set.mem_preimage,
+        ← TopologicalSpace.Opens.map_coe] at hq
+      exact hq
     have h4 : ¬(lineQuotientMap M (MvPolynomial.X (linePartner M j)) ∉
         (Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
           (lineCoverHomogeneousOneQ M j) zero_lt_one q₀).asHomogeneousIdeal) := by
