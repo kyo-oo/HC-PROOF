@@ -101,6 +101,32 @@ jobs:
           key: hc-lean-incremental-Linux-finite-line-general-M-law
           restore-keys: |
             hc-lean-incremental-Linux-
+      - name: "Ladder 0: the replay warmup (pay the corpus-validation tax in its own window)"
+        id: p0
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineRing >> gst-finite-line-points-gate-discharge.log 2>&1; then
+            if [ -f ".lake/build/lib/GSTFiniteLineRing.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineRing.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "WARMUP compiled Ring fresh — banking"
+            else
+              echo "WARMUP replayed the universe clean — the piece steps get warm windows"
+            fi
+          else
+            pkill -KILL -x lean 2>/dev/null || true
+            touch .ladder-stop
+            echo "WARMUP timed out (the corpus re-validation on a slow runner) — ladder stopped; the rider re-dispatches"
+          fi
+      - name: "Bank after warmup"
+        if: always() && steps.p0.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-points-gate-discharge-${{ github.run_id }}-p0
       - name: "Ladder 1/12: GSTFiniteLineCycleCorrespondenceBasic"
         id: p1
         continue-on-error: true
