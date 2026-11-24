@@ -16,6 +16,15 @@ on:
       - 'GSTFiniteLineCycleCorrespondence.lean'
       - 'GSTFiniteLineHonestHodgeData.lean'
       - 'GSTFiniteLinePointAlgebra.lean'
+      - 'GSTFiniteLineCycleCorrespondenceBasic.lean'
+      - 'GSTFiniteLineCycleCorrespondenceAction.lean'
+      - 'GSTFiniteLineCycleCorrespondenceOperators.lean'
+      - 'GSTFiniteLinePointsGateCoreBasic.lean'
+      - 'GSTFiniteLinePointsGateCoreTransport.lean'
+      - 'GSTFiniteLinePointsGateDischargeBridges.lean'
+      - 'GSTFiniteLinePointsGateDischargeInverseA.lean'
+      - 'GSTFiniteLinePointsGateDischargeInverseB.lean'
+      - 'GSTFiniteLinePrimitiveXSourceFamilies.lean'
       - '.github/workflows/gst-finite-line-cycle-correspondence.yml'
       - 'lakefile.toml'
   workflow_dispatch:
@@ -87,7 +96,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout --kill-after=30s 2400 lake build GSTFiniteLineCycleCorrespondence 2>&1 | tee gst-finite-line-cycle-correspondence.log; then
+          if timeout --kill-after=30s 600 lake build GSTFiniteLineCycleCorrespondence 2>&1 | tee gst-finite-line-cycle-correspondence.log; then
             echo "LEAN PASSED: Kernel check the M-cycle correspondence module (GATE-L: the two realized letters)"
           else
             pkill -KILL -x lean 2>/dev/null || true

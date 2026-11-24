@@ -1689,3 +1689,57 @@ name = "GSTFiniteLinePrimitiveXSourceLib"
 roots = [
   "GSTFiniteLinePrimitiveXSource",
 ]
+
+[[lean_lib]]
+name = "GSTFiniteLineCycleCorrespondenceBasicLib"
+roots = [
+  "GSTFiniteLineCycleCorrespondenceBasic",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLineCycleCorrespondenceActionLib"
+roots = [
+  "GSTFiniteLineCycleCorrespondenceAction",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLineCycleCorrespondenceOperatorsLib"
+roots = [
+  "GSTFiniteLineCycleCorrespondenceOperators",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointsGateCoreBasicLib"
+roots = [
+  "GSTFiniteLinePointsGateCoreBasic",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointsGateCoreTransportLib"
+roots = [
+  "GSTFiniteLinePointsGateCoreTransport",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointsGateDischargeBridgesLib"
+roots = [
+  "GSTFiniteLinePointsGateDischargeBridges",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointsGateDischargeInverseALib"
+roots = [
+  "GSTFiniteLinePointsGateDischargeInverseA",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLinePointsGateDischargeInverseBLib"
+roots = [
+  "GSTFiniteLinePointsGateDischargeInverseB",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLinePrimitiveXSourceFamiliesLib"
+roots = [
+  "GSTFiniteLinePrimitiveXSourceFamilies",
+]
