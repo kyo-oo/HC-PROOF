@@ -96,7 +96,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout --kill-after=30s 1800 lake build GSTFiniteLineCycleCorrespondence 2>&1 | tee gst-finite-line-cycle-correspondence.log; then
+          if timeout --kill-after=30s 1260 lake build GSTFiniteLineCycleCorrespondence 2>&1 | tee gst-finite-line-cycle-correspondence.log; then
             echo "LEAN PASSED: Kernel check the M-cycle correspondence module (GATE-L: the two realized letters)"
           else
             pkill -KILL -x lean 2>/dev/null || true
