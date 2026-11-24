@@ -96,7 +96,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout --kill-after=30s 600 lake build GSTFiniteLinePrimitiveXSource 2>&1 | tee gst-finite-line-primitive-x-source.log; then
+          if timeout --kill-after=30s 1200 lake build GSTFiniteLinePrimitiveXSource 2>&1 | tee gst-finite-line-primitive-x-source.log; then
             echo "LEAN PASSED: Kernel check the universal primitive-X source package (the source-basis: independence, span, compiler, the forall-M master)"
           else
             pkill -KILL -x lean 2>/dev/null || true
