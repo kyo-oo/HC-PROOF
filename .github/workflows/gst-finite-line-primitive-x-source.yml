@@ -40,7 +40,7 @@ jobs:
   verify:
     name: "Kernel check the universal primitive-X source package (the source-basis: independence, span, compiler, the forall-M master)"
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v5
       - name: Restore pinned Lean toolchain
@@ -90,23 +90,355 @@ jobs:
           path: .lake/build
           key: hc-lean-incremental-Linux-finite-line-general-M-law
           restore-keys: |
-            hc-lean-incremental-Linux-finite-line-
-      - name: Compile the universal primitive-X source package
+            hc-lean-incremental-Linux-
+      - name: "Ladder 1/14: CycleCorrespondenceBasic"
+        id: p1
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout --kill-after=30s 1800 lake build GSTFiniteLinePrimitiveXSource 2>&1 | tee gst-finite-line-primitive-x-source.log; then
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceBasic 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceBasic.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceBasic.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 1 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 1 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 1 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 1"
+        if: always() && steps.p1.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p1
+      - name: "Ladder 2/14: CycleCorrespondenceAction"
+        id: p2
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceAction 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceAction.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceAction.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 2 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 2 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 2 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 2"
+        if: always() && steps.p2.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p2
+      - name: "Ladder 3/14: CycleCorrespondenceOperators"
+        id: p3
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceOperators 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceOperators.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceOperators.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 3 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 3 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 3 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 3"
+        if: always() && steps.p3.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p3
+      - name: "Ladder 4/14: CycleCorrespondence"
+        id: p4
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondence 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondence.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondence.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 4 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 4 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 4 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 4"
+        if: always() && steps.p4.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p4
+      - name: "Ladder 5/14: UnconditionalSource"
+        id: p5
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLineUnconditionalSource 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLineUnconditionalSource.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineUnconditionalSource.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 5 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 5 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 5 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 5"
+        if: always() && steps.p5.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p5
+      - name: "Ladder 6/14: PointsGateCoreBasic"
+        id: p6
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateCoreBasic 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePointsGateCoreBasic.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateCoreBasic.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 6 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 6 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 6 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 6"
+        if: always() && steps.p6.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p6
+      - name: "Ladder 7/14: PointsGateCoreTransport"
+        id: p7
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateCoreTransport 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePointsGateCoreTransport.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateCoreTransport.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 7 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 7 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 7 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 7"
+        if: always() && steps.p7.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p7
+      - name: "Ladder 8/14: PointsGateCore"
+        id: p8
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateCore 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePointsGateCore.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateCore.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 8 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 8 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 8 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 8"
+        if: always() && steps.p8.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p8
+      - name: "Ladder 9/14: DischargeBridges"
+        id: p9
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischargeBridges 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischargeBridges.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischargeBridges.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 9 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 9 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 9 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 9"
+        if: always() && steps.p9.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p9
+      - name: "Ladder 10/14: DischargeInverseA"
+        id: p10
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischargeInverseA 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischargeInverseA.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischargeInverseA.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 10 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 10 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 10 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 10"
+        if: always() && steps.p10.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p10
+      - name: "Ladder 11/14: DischargeInverseB"
+        id: p11
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischargeInverseB 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischargeInverseB.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischargeInverseB.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 11 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 11 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 11 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 11"
+        if: always() && steps.p11.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p11
+      - name: "Ladder 12/14: PointsGateDischarge"
+        id: p12
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischarge 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischarge.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischarge.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 12 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 12 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 12 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 12"
+        if: always() && steps.p12.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p12
+      - name: "Ladder 13/14: PrimitiveXSourceFamilies"
+        id: p13
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePrimitiveXSourceFamilies 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePrimitiveXSourceFamilies.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePrimitiveXSourceFamilies.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 13 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 13 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 13 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 13"
+        if: always() && steps.p13.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p13
+      - name: "Ladder 14/14: PrimitiveXSource (the verdict piece)"
+        id: p14
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          BEFORE=$(date +%s)
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePrimitiveXSource 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
+            if [ -f ".lake/build/lib/GSTFiniteLinePrimitiveXSource.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePrimitiveXSource.olean)" -ge "$BEFORE" ]; then
+              echo "dirty=true" >> "$GITHUB_OUTPUT"
+              echo "LADDER PIECE 14 COMPILED FRESH — banking"
+            else
+              echo "LADDER PIECE 14 already banked — replay only"
+            fi
+          else
+            echo "LADDER PIECE 14 timeout/failure — continuing ladder (bank unchanged)"
+          fi
+      - name: "Bank after ladder 14"
+        if: always() && steps.p14.outputs.dirty == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-p14
+      - name: Verdict (full-target rebuild + the sorryAx hard-fail)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePrimitiveXSource 2>&1 | tee -a gst-finite-line-primitive-x-source.log; then
             echo "LEAN PASSED: Kernel check the universal primitive-X source package (the source-basis: independence, span, compiler, the forall-M master)"
           else
             pkill -KILL -x lean 2>/dev/null || true
             sleep 1
             grep -nE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-primitive-x-source.log | tail -n 100 || true
             tail -n 75 gst-finite-line-primitive-x-source.log || true
-            if grep -qE 'error:|sorryAx|unknown constant|unknown identifier' gst-finite-line-primitive-x-source.log; then
-              exit 1
-            fi
-            echo "BUILD TIMEOUT (the cache-bank cycle: partial progress saved below; re-dispatch to continue)"
             exit 1
           fi
           if grep -E "declaration uses 'sorry'|sorryAx" gst-finite-line-primitive-x-source.log; then
@@ -117,7 +449,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .lake/build
-          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}
+          key: hc-lean-incremental-Linux-finite-line-primitive-x-source-${{ github.run_id }}-final
       - name: Upload exact Lean compiler diagnostics
         if: always()
         uses: actions/upload-artifact@v4
