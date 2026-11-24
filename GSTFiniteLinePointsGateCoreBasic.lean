@@ -229,7 +229,22 @@ morphism: the chart-iso cancellation (`basicOpenIsoSpec_inv_ι`,
 `research/pin/mathlib-51e6992/Basic.lean:190-191`, `rfl`-form) followed by
 §1's triangle receipt.  This is the decomposition of an arbitrary section
 through its away chart — the piece the wave-7 residual disclosed as open
-(`GSTFiniteLinePointsGate.lean:554-567`). -/
+(`GSTFiniteLinePointsGate.lean:554-567`).
+
+Wave-9-I route note (the run-45456987872 receipt: the wave-9-E single
+rw-chain died at its `Category.assoc` step — the chartLeg-unfold brings
+the def-body's `sectionInto`/`basicOpenIsoSpec` elaborations whose middle
+`U.toScheme` spellings are defeq at default transparency but not visible
+at the rewrite engine's implicit-transparency check, the exact
+"target expression is not type-correct under the implicit transparency
+level" class).  The kill: the iso-triangle `hom ≫ awayι = ι` is proved
+FIRST on the pure Proj side (no `sectionInto`, no world-typed factor —
+the pin's own lemma + `Iso.hom_inv_id_assoc`, both green at the pin),
+and the seam-crossing associativity is performed by a FULLY-EXPLICIT
+term-mode `have` (`CategoryTheory.Category.assoc _ _ _` against a
+statement elaborated at default transparency — no rewrite-engine
+pattern surgery at the sick seam).  Every `rw` step matches byte-equal
+explicit spellings. -/
 theorem chartLeg_awayι (M : ℕ) [NeZero M] (j : Fin (2 * M))
     (p : ComplexPoint (finiteLineWorld M))
     (hpre : p.1 ⁻¹ᵁ (Proj.basicOpen (lineGrading M)
@@ -237,16 +252,28 @@ theorem chartLeg_awayι (M : ℕ) [NeZero M] (j : Fin (2 * M))
     chartLeg M j p hpre ≫
       Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
         (lineCoverHomogeneousOneQ M j) zero_lt_one = p.1 := by
-  have hstep : chartLeg M j p hpre ≫
+  have htri : (Proj.basicOpenIsoSpec (lineGrading M)
+      (lineQuotientMap M (MvPolynomial.X j)) (lineCoverHomogeneousOneQ M j)
+      zero_lt_one).hom ≫
+    Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
+      (lineCoverHomogeneousOneQ M j) zero_lt_one =
+    (Proj.basicOpen (lineGrading M)
+      (lineQuotientMap M (MvPolynomial.X j))).ι := by
+    rw [← Proj.basicOpenIsoSpec_inv_ι, Iso.hom_inv_id_assoc]
+  have hassoc : (sectionInto p.1 (Proj.basicOpen (lineGrading M)
+      (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
+    (Proj.basicOpenIsoSpec (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
+      (lineCoverHomogeneousOneQ M j) zero_lt_one).hom) ≫
+    Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
+      (lineCoverHomogeneousOneQ M j) zero_lt_one =
+    sectionInto p.1 (Proj.basicOpen (lineGrading M)
+      (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
+    ((Proj.basicOpenIsoSpec (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
+      (lineCoverHomogeneousOneQ M j) zero_lt_one).hom ≫
       Proj.awayι (lineGrading M) (lineQuotientMap M (MvPolynomial.X j))
-        (lineCoverHomogeneousOneQ M j) zero_lt_one =
-      sectionInto p.1 (Proj.basicOpen (lineGrading M)
-        (lineQuotientMap M (MvPolynomial.X j))) hpre ≫
-      (Proj.basicOpen (lineGrading M)
-        (lineQuotientMap M (MvPolynomial.X j))).ι := by
-    rw [chartLeg, ← Proj.basicOpenIsoSpec_inv_ι,
-      CategoryTheory.Category.assoc, Iso.hom_inv_id_assoc]
-  rw [hstep]
+        (lineCoverHomogeneousOneQ M j) zero_lt_one) :=
+    CategoryTheory.Category.assoc _ _ _
+  rw [chartLeg, hassoc, htri]
   exact sectionInto_ι p.1 (Proj.basicOpen (lineGrading M)
     (lineQuotientMap M (MvPolynomial.X j))) hpre
 
