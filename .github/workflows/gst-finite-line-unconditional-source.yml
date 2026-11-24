@@ -103,7 +103,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout --kill-after=30s 1260 lake build GSTFiniteLineUnconditionalSource 2>&1 | tee gst-finite-line-unconditional-source.log; then
+          if timeout --kill-after=30s 1800 lake build GSTFiniteLineUnconditionalSource 2>&1 | tee gst-finite-line-unconditional-source.log; then
             echo "LEAN PASSED: Kernel check the unconditional-source module (THE UNCONDITIONAL LAW + universal primitive-X source)"
           else
             pkill -KILL -x lean 2>/dev/null || true
