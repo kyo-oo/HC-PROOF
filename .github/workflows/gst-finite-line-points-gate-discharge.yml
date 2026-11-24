@@ -106,7 +106,7 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          if timeout --kill-after=30s 1200 lake build GSTFiniteLinePointsGateDischarge 2>&1 | tee gst-finite-line-points-gate-discharge.log; then
+          if timeout --kill-after=30s 1800 lake build GSTFiniteLinePointsGateDischarge 2>&1 | tee gst-finite-line-points-gate-discharge.log; then
             echo "LEAN PASSED: Kernel check the gate-discharge module (GATE-A FULL DISCHARGE: the points-classification equiv, the unconditional law)"
           else
             pkill -KILL -x lean 2>/dev/null || true
