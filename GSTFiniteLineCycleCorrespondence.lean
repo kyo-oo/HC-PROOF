@@ -136,7 +136,7 @@ noncomputable def finiteLineCycleLetterOne (M : ℕ) [NeZero M]
           (finiteLineAnalytificationOfGate M gate)
           (finiteLineAnalytificationOfGate_space M gate) ω
           (codimensionPointCycle (finiteLineWorld M).X 1 x))
-    rw [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
+    simp only [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
       hbridge, hrot]
 
 /-! ## §3d The weight-zero letter -/
@@ -215,7 +215,7 @@ noncomputable def finiteLineCycleLetterZero (M : ℕ) [NeZero M]
           (finiteLineAnalytificationOfGate M gate)
           (finiteLineAnalytificationOfGate_space M gate)
           (codimensionPointCycle (finiteLineWorld M).X 0 η))
-    rw [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
+    simp only [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
       hbridge, hrot]
 
 /-! ## §3e The rotation equations in the engine's spelling -/
