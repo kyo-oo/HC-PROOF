@@ -142,11 +142,11 @@ theorem finiteLine_universal_primitive_X_source_zero (M : ℕ) [NeZero M]
       = ∑ i, (componentCohomologyZeroEquivFinM A M
         (sphereUnion_cohomology_zero hspace)) α i •
         finiteLineComponentClass M (finiteLineWorld M) A hspace i :=
-    Finset.sum_congr rfl fun i _ =>
-      by rw [finiteLineSourceZero_class M A hspace ω i]
+    Finset.sum_congr rfl fun i _ => by
+      rw [finiteLineSourceZero_class M A hspace ω i]
+      rfl
   rw [hsum]
-  exact (finiteLineComponentClass_decompose M (finiteLineWorld M) A
-    hspace α).symm
+  exact (finiteLineComponentClass_decompose M A hspace α).symm
 
 /-- **THE SOURCE THEOREM AT WEIGHT ONE** — every rational Hodge class of
 the honest weight-one fiber (the span bigrading's own rational fiber: the
@@ -167,15 +167,21 @@ theorem finiteLine_universal_primitive_X_source_one (M : ℕ) [NeZero M]
       = spanBigrading (finiteLinePointClass M (finiteLineWorld M) A hspace ω)
         1 (by omega) := rfl
   rw [hun] at hmem
-  rw [rationalHodgeSubspace_span_eq] at hmem
+  have hsub : rationalHodgeSubspace (spanBigrading
+        (finiteLinePointClass M (finiteLineWorld M) A hspace ω) 1 (by omega))
+      = Submodule.span ℚ
+        (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω)) :=
+    rationalHodgeSubspace_span_eq _ 1 (by omega)
+  rw [hsub] at hmem
   rw [Submodule.mem_span_range_iff_exists_fun] at hmem
   obtain ⟨q, hq⟩ := hmem
   refine ⟨q, ?_⟩
   have hsum : ∑ i, q i • (finiteLineHodgeDataHonest M A hspace ω).cycleClass 1
         (finiteLineSourceOne M i)
       = ∑ i, q i • finiteLinePointClass M (finiteLineWorld M) A hspace ω i :=
-    Finset.sum_congr rfl fun i _ =>
-      by rw [finiteLineSourceOne_class M A hspace ω i]
+    Finset.sum_congr rfl fun i _ => by
+      rw [finiteLineSourceOne_class M A hspace ω i]
+      rfl
   rw [hsum]
   exact hq.symm
 
@@ -194,7 +200,10 @@ theorem finiteLine_universal_primitive_X_source_above (M : ℕ) [NeZero M]
           α = 0 := by
   intro p hp α hmem
   rw [finiteLineHodgeDataHonest_hstash M A hspace ω p hp] at hmem
-  rw [rationalHodgeSubspace_stash_eq_bot p (by omega)] at hmem
+  have hsub : rationalHodgeSubspace
+        (stashBigrading (RationalSingularCohomology A (2 * p)) (2 * p)) = ⊥ :=
+    rationalHodgeSubspace_stash_eq_bot p (by omega)
+  rw [hsub] at hmem
   exact (Submodule.mem_bot (R := ℚ)).mp hmem
 
 /-! ## §6 The compiler (the uniform witness map) -/
@@ -242,7 +251,7 @@ theorem finiteLineSourceCompilerZero_correct (M : ℕ) [NeZero M]
         finiteLineComponentClass M (finiteLineWorld M) A hspace i :=
     Finset.sum_congr rfl fun i _ => by rw [hcls i]
   rw [hsum]
-  exact finiteLineComponentClass_decompose M (finiteLineWorld M) A hspace α
+  exact finiteLineComponentClass_decompose M A hspace α
 
 /-- **THE WEIGHT-ONE COMPILER** — the witness map: for every class of the
 honest weight-one fiber, the cycle assembled from the §5-witness
@@ -281,9 +290,8 @@ theorem finiteLineSourceCompilerOne_correct (M : ℕ) [NeZero M]
         finiteLineSourceOne M i) = α
   rw [map_sum]
   simp only [map_smul]
-  rw [Classical.choose_spec
-    (finiteLine_universal_primitive_X_source_one M A hspace ω α hmem)]
-  exact Finset.sum_congr rfl fun i _ => rfl
+  exact (Classical.choose_spec
+    (finiteLine_universal_primitive_X_source_one M A hspace ω α hmem)).symm
 
 /-! ## §7 The master package (the ∀M claim) -/
 
