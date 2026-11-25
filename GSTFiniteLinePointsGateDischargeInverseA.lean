@@ -200,6 +200,7 @@ theorem right_preimage_of_left_mem (M : ℕ) [NeZero M]
       finiteLineComplexPointImage M p (default : complexBase) from rfl]
   exact basicOpen_of_avoids M _ havoidR
 
+open Classical in
 /-- **THE OPTION BRANCH OF THE FORWARD MAP** — the second component: by the
 left-chart branch decision (avoids the left chart variable of the section's
 own line ⇒ the left-chart coordinate through FILE 1's reading; else `none`,
@@ -208,7 +209,6 @@ the point at infinity of the left chart).  The branch is a `dite` under
 `split`; the laws below reduce it only through explicit `dif_pos`/`dif_neg`
 with the decided receipts).  The preimage input rides FILE 1's §0 preimage
 law through the `left_preimage_of_avoids` bridge. -/
-open Classical in
 noncomputable def finiteLinePointsGateForwardOption (M : ℕ) [NeZero M]
     (i : Fin M) (p : ComplexPoint (finiteLineWorld M)) : Option ℂ :=
   if h : lineQuotientMap M (MvPolynomial.X (lineLeftChart M i)) ∉

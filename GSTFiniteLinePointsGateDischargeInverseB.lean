@@ -209,6 +209,7 @@ theorem chartPoint_forwardIndex_lineRightChart (M : ℕ) [NeZero M]
   have hv : (lineRightChart M i).val = 2 * i.val + 1 := rfl
   omega
 
+open Classical in
 /-- **LAW-R (the right-inverse)** — every two-chart coordinate round-trips:
 the `some`-coordinates through the left chart at the coordinate (the index
 receipt, the branch receipt `chartPoint_avoids`, the reading receipt
@@ -219,7 +220,6 @@ FILE 1's branch-decision receipt `chartPoint_right_zero_mem`
 (`GSTFiniteLinePointsGateCore.lean:640` — the constructed `[0 : 1]`-point
 swallows its left chart variable).  The dite reductions are explicit
 `simp only [dif_pos …]` / `[dif_neg …]` (beta-reducing, never `split`). -/
-open Classical in
 theorem finiteLinePointsGateForward_coordPoint (M : ℕ) [NeZero M] :
     ∀ z : (Sigma (fun _ : Fin M => Option ℂ)),
       finiteLinePointsGateForward M (coordPoint M z) = z := by
@@ -274,6 +274,7 @@ theorem finiteLinePointsGateForward_coordPoint (M : ℕ) [NeZero M] :
       simp only [dif_neg (fun hmem => hmem
         (chartPoint_right_zero_mem M i (default : complexBase)))]
 
+open Classical in
 /-- **LAW-L (the left-inverse)** — every section IS the chart point of its
 own forward coordinate: `Subtype.ext` reduces to the underlying morphisms,
 and the morphism chain is FILE 1's factorization `chartLeg_awayι` (the section
@@ -288,7 +289,6 @@ the left chart variable reads the right chart's ratio as `0`).  The full
 spellings are used throughout (the wave-68 full-spelling discipline: no
 `have`-bound locals in matching positions — a `have`-bound local is opaque to
 defeq). -/
-open Classical in
 theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
     ∀ p : ComplexPoint (finiteLineWorld M),
       coordPoint M (finiteLinePointsGateForward M p) = p := by
