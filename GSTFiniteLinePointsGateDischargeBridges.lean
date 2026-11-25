@@ -211,7 +211,7 @@ private theorem isLocElem_self (M : ℕ) [NeZero M] (j : Fin (2 * M)) :
   exact Localization.mk_self
     (⟨(lineQuotientMap M (MvPolynomial.X j)) ^ 1,
       (Submonoid.mem_powers_iff _ _).mpr ⟨1, rfl⟩⟩ :
-      Submonoid.powers (lineQuotientMap M (MvPolynomial.X j))))
+      Submonoid.powers (lineQuotientMap M (MvPolynomial.X j)))
 
 /-- **THE CRUX OF THE CONSTRUCTIVE HALF** — the away-extension of ANY point of
 the chart's affine spectrum lies in the chart's own basic open `D₊(f)`: the
