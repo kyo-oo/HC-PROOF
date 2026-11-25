@@ -138,6 +138,9 @@ noncomputable def finiteLineCycleLetterOne (M : ℕ) [NeZero M]
           (codimensionPointCycle (finiteLineWorld M).X 1 x))
     simp only [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
       hbridge, hrot]
+    exact (congrArg (fun i => finiteLinePointClass M (finiteLineWorld M)
+        (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) ω i) hidx).trans hbridgeImg
 
 /-! ## §3d The weight-zero letter -/
 
@@ -217,6 +220,9 @@ noncomputable def finiteLineCycleLetterZero (M : ℕ) [NeZero M]
           (codimensionPointCycle (finiteLineWorld M).X 0 η))
     simp only [himg, hpush, hw, one_smul, hatomImg, hidx, hbridgeImg, hatom,
       hbridge, hrot]
+    exact (congrArg (fun i => finiteLineComponentClass M (finiteLineWorld M)
+        (finiteLineAnalytificationOfGate M gate)
+        (finiteLineAnalytificationOfGate_space M gate) i) hidx).trans hbridgeImg
 
 /-! ## §3e The rotation equations in the engine's spelling -/
 
