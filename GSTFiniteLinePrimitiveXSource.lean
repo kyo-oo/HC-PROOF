@@ -116,6 +116,26 @@ open GSTFiniteLinePointsGateDischarge
 
 namespace GSTFiniteLinePrimitiveXSource
 
+/-! ## §4.5 The seam-safe membership transport (the green wrapper discipline:
+`subsingleton_hodgeFiber_of_eq_bot`'s own architecture — the equation and the
+membership share the lemma's opaque spelling inside, so the rewrite is
+syntactic; the A-vs-analytification seam is crossed only at the application,
+at default transparency — NEVER by `kabstract`). -/
+
+/-- **MEMBERSHIP TRANSPORT ACROSS A FIBER EQUATION** — the seam-safe
+consumer of a `rationalHodgeSubspace` equation: the goal-side `rw [← h]` +
+`exact` interior of the green `subsingleton_hodgeFiber_of_eq_bot`
+(GSTNativeSingleFoldOrbitLawLanding.lean:180-182), stated for any target
+submodule. -/
+private theorem mem_of_rationalHodgeSubspace_eq
+    {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ] {p : Nat}
+    {D : HodgeBigrading VQ (2 * p)} {S : Submodule ℚ VQ}
+    (h : rationalHodgeSubspace D = S) {v : VQ}
+    (hv : v ∈ rationalHodgeSubspace D) :
+    v ∈ S := by
+  rw [← h]
+  exact hv
+
 /-! ## §5 The span (the source theorem proper) -/
 
 /-- **THE SOURCE THEOREM AT WEIGHT ZERO** — every rational Hodge class of
@@ -163,18 +183,19 @@ theorem finiteLine_universal_primitive_X_source_one (M : ℕ) [NeZero M]
           α = ∑ i, q i • (finiteLineHodgeDataHonest M A hspace ω).cycleClass 1
             (finiteLineSourceOne M i) := by
   intro α hmem
-  have hun : (finiteLineHodgeDataHonest M A hspace ω).hodgeBigrading 1
-      = spanBigrading (finiteLinePointClass M (finiteLineWorld M) A hspace ω)
-        1 (by omega) := rfl
-  rw [hun] at hmem
-  have hsub : rationalHodgeSubspace (spanBigrading
-        (finiteLinePointClass M (finiteLineWorld M) A hspace ω) 1 (by omega))
-      = Submodule.span ℚ
-        (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω)) :=
-    rationalHodgeSubspace_span_eq _ 1 (by omega)
-  rw [hsub] at hmem
-  rw [Submodule.mem_span_range_iff_exists_fun] at hmem
-  obtain ⟨q, hq⟩ := hmem
+  have hfib : rationalHodgeSubspace
+      ((finiteLineHodgeDataHonest M A hspace ω).hodgeBigrading 1) =
+      Submodule.span ℚ
+        (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω)) := by
+    rw [show (finiteLineHodgeDataHonest M A hspace ω).hodgeBigrading 1 =
+        spanBigrading (finiteLinePointClass M (finiteLineWorld M) A hspace ω)
+          1 (by omega) from rfl]
+    exact rationalHodgeSubspace_span_eq _ 1 (by omega)
+  have hmem' : α ∈ Submodule.span ℚ
+      (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω)) :=
+    mem_of_rationalHodgeSubspace_eq hfib hmem
+  rw [Submodule.mem_span_range_iff_exists_fun] at hmem'
+  obtain ⟨q, hq⟩ := hmem'
   refine ⟨q, ?_⟩
   have hsum : ∑ i, q i • (finiteLineHodgeDataHonest M A hspace ω).cycleClass 1
         (finiteLineSourceOne M i)
@@ -200,11 +221,11 @@ theorem finiteLine_universal_primitive_X_source_above (M : ℕ) [NeZero M]
           α = 0 := by
   intro p hp α hmem
   rw [finiteLineHodgeDataHonest_hstash M A hspace ω p hp] at hmem
-  have hsub : rationalHodgeSubspace
+  have hbot : rationalHodgeSubspace
         (stashBigrading (RationalSingularCohomology A (2 * p)) (2 * p)) = ⊥ :=
     rationalHodgeSubspace_stash_eq_bot p (by omega)
-  rw [hsub] at hmem
-  exact (Submodule.mem_bot (R := ℚ)).mp hmem
+  apply (Submodule.mem_bot (R := ℚ)).mp
+  exact mem_of_rationalHodgeSubspace_eq hbot hmem
 
 /-! ## §6 The compiler (the uniform witness map) -/
 
