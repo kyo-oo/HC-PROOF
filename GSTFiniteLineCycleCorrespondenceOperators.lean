@@ -230,10 +230,9 @@ theorem finiteLineCyclePrecompSucc_single (M : ℕ) [NeZero M] (j : Fin M) :
   show (Pi.single j (1 : ℚ)) (cyclicSucc M k) =
       (Pi.single (cyclicPred M j) (1 : ℚ)) k
   have hL : (Pi.single j (1 : ℚ)) (cyclicSucc M k) =
-      if cyclicSucc M k = j then (1 : ℚ) else 0 := Pi.single_apply j (cyclicSucc M k)
+      if cyclicSucc M k = j then (1 : ℚ) else 0 := rfl
   have hR : (Pi.single (cyclicPred M j) (1 : ℚ)) k =
-      if k = cyclicPred M j then (1 : ℚ) else 0 :=
-    Pi.single_apply (cyclicPred M j) k
+      if k = cyclicPred M j then (1 : ℚ) else 0 := rfl
   rw [hL, hR]
   by_cases hk : cyclicSucc M k = j
   · rw [if_pos hk]
