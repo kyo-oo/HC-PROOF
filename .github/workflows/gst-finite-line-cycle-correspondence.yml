@@ -107,9 +107,18 @@ jobs:
               echo "WARMUP replayed the universe clean — the piece steps get warm windows"
             fi
           else
+            rc=$?
             pkill -KILL -x lean 2>/dev/null || true
+            if [ "$rc" -eq 124 ]; then
             touch .ladder-stop
             echo "WARMUP timed out (the corpus re-validation on a slow runner) — ladder stopped; the rider re-dispatches"
+            else
+            touch .ladder-stop .ladder-error
+            echo "::error::COMPILE ERROR (exit $rc) — deterministic; the rider must NOT re-dispatch without a fix"
+            echo "--- the Lean error tail (grep) ---"
+            grep -nE "error:|unknown identifier|unknown constant|declaration uses" gst-finite-line-cycle-correspondence.log | tail -n 25 || true
+            exit 1
+            fi
           fi
       - name: "Bank after warmup"
         if: always() && steps.p0.outputs.dirty == 'true'
@@ -134,9 +143,18 @@ jobs:
               echo "LADDER PIECE 1 already banked — replay only"
             fi
           else
+            rc=$?
             pkill -KILL -x lean 2>/dev/null || true
+            if [ "$rc" -eq 124 ]; then
             touch .ladder-stop
             echo "LADDER PIECE 1 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
+            else
+            touch .ladder-stop .ladder-error
+            echo "::error::COMPILE ERROR (exit $rc) — deterministic; the rider must NOT re-dispatch without a fix"
+            echo "--- the Lean error tail (grep) ---"
+            grep -nE "error:|unknown identifier|unknown constant|declaration uses" gst-finite-line-cycle-correspondence.log | tail -n 25 || true
+            exit 1
+            fi
           fi
       - name: "Bank after ladder 1"
         if: always() && steps.p1.outputs.dirty == 'true'
@@ -161,9 +179,18 @@ jobs:
               echo "LADDER PIECE 2 already banked — replay only"
             fi
           else
+            rc=$?
             pkill -KILL -x lean 2>/dev/null || true
+            if [ "$rc" -eq 124 ]; then
             touch .ladder-stop
             echo "LADDER PIECE 2 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
+            else
+            touch .ladder-stop .ladder-error
+            echo "::error::COMPILE ERROR (exit $rc) — deterministic; the rider must NOT re-dispatch without a fix"
+            echo "--- the Lean error tail (grep) ---"
+            grep -nE "error:|unknown identifier|unknown constant|declaration uses" gst-finite-line-cycle-correspondence.log | tail -n 25 || true
+            exit 1
+            fi
           fi
       - name: "Bank after ladder 2"
         if: always() && steps.p2.outputs.dirty == 'true'
@@ -188,9 +215,18 @@ jobs:
               echo "LADDER PIECE 3 already banked — replay only"
             fi
           else
+            rc=$?
             pkill -KILL -x lean 2>/dev/null || true
+            if [ "$rc" -eq 124 ]; then
             touch .ladder-stop
             echo "LADDER PIECE 3 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
+            else
+            touch .ladder-stop .ladder-error
+            echo "::error::COMPILE ERROR (exit $rc) — deterministic; the rider must NOT re-dispatch without a fix"
+            echo "--- the Lean error tail (grep) ---"
+            grep -nE "error:|unknown identifier|unknown constant|declaration uses" gst-finite-line-cycle-correspondence.log | tail -n 25 || true
+            exit 1
+            fi
           fi
       - name: "Bank after ladder 3"
         if: always() && steps.p3.outputs.dirty == 'true'
@@ -215,9 +251,18 @@ jobs:
               echo "LADDER PIECE 4 already banked — replay only"
             fi
           else
+            rc=$?
             pkill -KILL -x lean 2>/dev/null || true
+            if [ "$rc" -eq 124 ]; then
             touch .ladder-stop
             echo "LADDER PIECE 4 timed out — orphans killed, ladder stopped (the rider re-dispatches; the bank keeps every earlier piece)"
+            else
+            touch .ladder-stop .ladder-error
+            echo "::error::COMPILE ERROR (exit $rc) — deterministic; the rider must NOT re-dispatch without a fix"
+            echo "--- the Lean error tail (grep) ---"
+            grep -nE "error:|unknown identifier|unknown constant|declaration uses" gst-finite-line-cycle-correspondence.log | tail -n 25 || true
+            exit 1
+            fi
           fi
       - name: "Bank after ladder 4"
         if: always() && steps.p4.outputs.dirty == 'true'
@@ -230,6 +275,11 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          if [ -f .ladder-error ]; then
+            pkill -KILL -x lean 2>/dev/null || true
+            echo "LADDER COMPILE ERROR THIS CYCLE (deterministic Lean error — a fix is required; re-dispatch has no value)"
+            exit 1
+          fi
           if [ -f .ladder-stop ]; then
             pkill -KILL -x lean 2>/dev/null || true
             echo "LADDER TIMED OUT THIS CYCLE (every finished piece is banked; the rider re-dispatches)"

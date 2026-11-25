@@ -193,8 +193,7 @@ theorem chartPoint_forwardIndex_lineRightChart (M : ℕ) [NeZero M]
     (i : Fin M) :
     finiteLinePointsGateForwardIndex M (chartPoint M (lineRightChart M i) 0) = i := by
   apply Fin.ext
-  have havoid : lineQuotientMap M (MvPolynomial.X (lineRightChart M i)) ∨
-      lineQuotientMap M (MvPolynomial.X (lineRightChart M i)) ∉
+  have havoid : lineQuotientMap M (MvPolynomial.X (lineRightChart M i)) ∉
       (finiteLineComplexPointImage M (chartPoint M (lineRightChart M i) 0)
         (default : complexBase)).asHomogeneousIdeal.toIdeal :=
     chartPoint_avoids M (lineRightChart M i) 0 (default : complexBase)

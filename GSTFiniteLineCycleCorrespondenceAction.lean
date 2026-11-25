@@ -20,9 +20,10 @@ correspondences on the honest Hodge data:
 * the point-action receipt — the M-cycle acts on the generic points by
   `cyclicPred` (the comap of the graded rotation permutes the block
   ideals);
-* the two letters `finiteLineCycleRot₁` (weight one) and
-  `finiteLineCycleRot₀` (weight zero): the graph correspondence of the
-  M-cycle endomorphism with the transported sphere-cycle pullback as the
+* the two letters `finiteLineCycleLetterOne` (weight one) and
+  `finiteLineCycleLetterZero` (weight zero): the graph correspondence of the
+  M-cycle endomorphism with the transported sphere-cycle pullback (letter one)/the
+  component-iso conjugate of the index shift (letter zero) as the
   cohomological operator, rotating the honest point/component families.
 
 Honesty ledger: every statement is proved unconditionally.  No `sorry`,

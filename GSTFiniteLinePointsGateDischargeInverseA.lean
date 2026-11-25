@@ -178,7 +178,7 @@ image point at the base contains the left chart variable of its own line
 (the branch decision's `none` side) avoids the right chart variable (the
 `right_avoids_of_left_mem` bridge) and hence pulls the right chart's basic
 open back to everything (the same FILE 1 §0 + one-point route). -/
-private theorem right_preimage_of_left_mem (M : ℕ) [NeZero M]
+theorem right_preimage_of_left_mem (M : ℕ) [NeZero M]
     (p : ComplexPoint (finiteLineWorld M))
     (hmem : lineQuotientMap M (MvPolynomial.X
         (lineLeftChart M (finiteLinePointsGateForwardIndex M p))) ∈
@@ -239,7 +239,7 @@ ARBITRARY section is the `Spec.map` of its own reading: the green counit
 `:252-258` (the `CommRingCat.hom_ext` + `rfl` step).  This is FILE 1's
 private bridge-2 re-derived locally — the law the FILE 2 decomposition needs
 for an arbitrary section.  Designated CI repair point. -/
-private theorem chartLeg_map (M : ℕ) [NeZero M] (j : Fin (2 * M))
+theorem chartLeg_map (M : ℕ) [NeZero M] (j : Fin (2 * M))
     (p : ComplexPoint (finiteLineWorld M))
     (hpre : p.1 ⁻¹ᵁ (Proj.basicOpen (lineGrading M)
       (lineQuotientMap M (MvPolynomial.X j))) = ⊤) :

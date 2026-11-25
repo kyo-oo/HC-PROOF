@@ -19,9 +19,10 @@ correspondences on the honest Hodge data:
 * the point-action receipt — the M-cycle acts on the generic points by
   `cyclicPred` (the comap of the graded rotation permutes the block
   ideals);
-* the two letters `finiteLineCycleRot₁` (weight one) and
-  `finiteLineCycleRot₀` (weight zero): the graph correspondence of the
-  M-cycle endomorphism with the transported sphere-cycle pullback as the
+* the two letters `finiteLineCycleLetterOne` (weight one) and
+  `finiteLineCycleLetterZero` (weight zero): the graph correspondence of the
+  M-cycle endomorphism with the transported sphere-cycle pullback (letter one)/the
+  component-iso conjugate of the index shift (letter zero) as the
   cohomological operator, rotating the honest point/component families.
 
 Honesty ledger: every statement is proved unconditionally.  No `sorry`,
@@ -91,7 +92,6 @@ private theorem map_id_of_eq {A σ : Type u} [CommRing A] [SetLike σ A]
 theorem finiteLineCycleInv_apply (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
     finiteLineCycleInv M (finiteLineCycle M x) = x := by
   have hinv' : finiteLineCycle M ≫ finiteLineCycleInv M = 𝟙 (finiteLineScheme M) := by
-    have := finiteLineCycle_isIso M
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateGraded_comp_inv M) _
   have h := congrArg (fun f => f x) hinv'
@@ -101,7 +101,6 @@ theorem finiteLineCycleInv_apply (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
 theorem finiteLineCycle_apply_inv (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
     finiteLineCycle M (finiteLineCycleInv M x) = x := by
   have hinv : finiteLineCycleInv M ≫ finiteLineCycle M = 𝟙 (finiteLineScheme M) := by
-    have := finiteLineCycle_isIso M
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateInvGraded_comp M) _
   have h := congrArg (fun f => f x) hinv
@@ -122,11 +121,9 @@ theorem finiteLineCycle_residueFieldMap_bijective (M : ℕ) [NeZero M]
     Function.Bijective
       (Scheme.Hom.residueFieldMap (finiteLineCycle M) x) := by
   have hinv : finiteLineCycleInv M ≫ finiteLineCycle M = 𝟙 (finiteLineScheme M) := by
-    have := finiteLineCycle_isIso M
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateInvGraded_comp M) _
   have hinv' : finiteLineCycle M ≫ finiteLineCycleInv M = 𝟙 (finiteLineScheme M) := by
-    have := finiteLineCycle_isIso M
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateGraded_comp_inv M) _
   have eInv : finiteLineCycleInv M (finiteLineCycle M x) = x :=

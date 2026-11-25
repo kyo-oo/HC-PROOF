@@ -270,7 +270,7 @@ explicit combination of the component source family with its OWN
 standard-basis expansion (the machine's linearity both ways, the
 `symm_apply_apply` round trip).  This is the weight-zero compiler's
 correctness engine. -/
-private theorem finiteLineComponentClass_decompose (M : ℕ) [NeZero M]
+theorem finiteLineComponentClass_decompose (M : ℕ) [NeZero M]
     (A : AnalytificationData (finiteLineWorld M))
     (hspace : A.space = TopCat.of (sphereUnionSpace M))
     (α : RationalSingularCohomology A 0) :

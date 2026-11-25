@@ -168,7 +168,7 @@ space: the green instance route of the finite-point lane
 `GSTFinitePointShiftWord.lean:511-513`, resolved through the field structure
 of `ℂ` — the dossier's R6 law: the instances are provided through the
 `inferInstanceAs` spelling, never a bare-`rfl` default equation). -/
-private theorem complexBase_subsingleton : Subsingleton ↥complexBase :=
+theorem complexBase_subsingleton : Subsingleton ↥complexBase :=
   inferInstanceAs (Subsingleton ↥(Spec (CommRingCat.of ℂ)))
 
 /-- **THE `D₊`-MEMBERSHIP BRIDGE** — a non-vanishing variable puts the point
@@ -177,7 +177,7 @@ private bridge (`GSTFiniteLinePointsGate.lean:228-235`, itself the pinned
 `Proj.mem_basicOpen` `Iff.rfl` simp lemma `Basic.lean:58` plus the pinned
 `HomogeneousIdeal.mem_iff` degree-cast
 `GradedAlgebra_Homogeneous_Ideal.lean:102`). -/
-private theorem basicOpen_of_avoids (M : ℕ) [NeZero M] (y : finiteLineScheme M)
+theorem basicOpen_of_avoids (M : ℕ) [NeZero M] (y : finiteLineScheme M)
     {j : Fin (2 * M)} (hj : lineQuotientMap M (MvPolynomial.X j) ∉
       y.asHomogeneousIdeal.toIdeal) :
     y ∈ Proj.basicOpen (lineGrading M) (lineQuotientMap M (MvPolynomial.X j)) := by
@@ -265,7 +265,7 @@ above puts it in the chart's own basic open, which the pinned
 `Proj.mem_basicOpen` (`Basic.lean:58`) and `HomogeneousIdeal.mem_iff`
 (`GradedAlgebra_Homogeneous_Ideal.lean:102`) read back as ideal
 non-membership. -/
-private theorem chartPoint_avoids (M : ℕ) [NeZero M] (j : Fin (2 * M))
+theorem chartPoint_avoids (M : ℕ) [NeZero M] (j : Fin (2 * M))
     (c : ℂ) (x : complexBase) :
     lineQuotientMap M (MvPolynomial.X j) ∉
       (finiteLineComplexPointImage M (chartPoint M j c) x).asHomogeneousIdeal.toIdeal := by
@@ -294,7 +294,7 @@ the witness sits in the index's two-element block; the parity trichotomy
 (`omega`) and the left-membership then force the witness to be the right
 chart index.  The shape is the chart-pair territory law's own parity split
 (`finiteLinePoint_avoids_chartPair`, `GSTFiniteLinePointsGate.lean:368`). -/
-private theorem right_avoids_of_left_mem (M : ℕ) [NeZero M]
+theorem right_avoids_of_left_mem (M : ℕ) [NeZero M]
     (y : finiteLineScheme M)
     (hmem : lineQuotientMap M (MvPolynomial.X
         (lineLeftChart M (finiteLinePointLineIndex M y))) ∈
@@ -340,7 +340,7 @@ back to everything: FILE 1's §0 preimage law
 `basicOpen_of_avoids`, the point transport riding the one-point receipt
 (bridge 1; every `x' = x` by `Subsingleton.elim`, never a bare `rfl` — the
 dossier's R6 law). -/
-private theorem left_preimage_of_avoids (M : ℕ) [NeZero M]
+theorem left_preimage_of_avoids (M : ℕ) [NeZero M]
     (p : ComplexPoint (finiteLineWorld M)) (x : complexBase) (i : Fin M)
     (hmem : lineQuotientMap M (MvPolynomial.X (lineLeftChart M i)) ∉
       (finiteLineComplexPointImage M p x).asHomogeneousIdeal.toIdeal) :
