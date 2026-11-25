@@ -244,9 +244,11 @@ private theorem awayι_mem_basicOpen_self (M : ℕ) [NeZero M] (j : Fin (2 * M))
         (f := lineQuotientMap M (MvPolynomial.X j))
         (f_deg := lineCoverHomogeneousOneQ M j) (hm := zero_lt_one)
         (g_deg := lineCoverHomogeneousOneQ M j) (hm' := zero_lt_one)]
-    rw [isLocElem_self M j, psMem_basicOpen]
-    intro h1
-    exact q₀.isPrime.ne_top ((Ideal.eq_top_iff_one q₀.asIdeal).mpr h1)
+    rw [isLocElem_self M j]
+    have hmem : ¬(1 : HomogeneousLocalization.Away (lineGrading M)
+        (lineQuotientMap M (MvPolynomial.X j))) ∈ q₀.asIdeal :=
+      fun h1 => q₀.isPrime.ne_top ((Ideal.eq_top_iff_one q₀.asIdeal).mpr h1)
+    exact hmem
   first
   | rw [← SetLike.mem_coe] at hpre
     simp only [TopologicalSpace.Opens.map_coe, Set.mem_preimage,
