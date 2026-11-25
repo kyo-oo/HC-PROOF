@@ -111,8 +111,8 @@ private theorem lineGenericIdeal_le_comap_rotate (M : ℕ) [NeZero M] (i : Fin M
       = (blockRot M (blockVarLeft M i)).val / 2 := by
     rw [blockRot_blockVarLeft M i]
     exact hcon
-  exact b.2 ((blockRot_sameBlock M (b : Fin (2 * M)) (blockVarLeft M i)).mp h1).trans
-    (blockVarLeft_block M i)
+  exact b.2 (((blockRot_sameBlock M (b : Fin (2 * M)) (blockVarLeft M i)).mp h1).trans
+    (blockVarLeft_block M i))
 
 /-- **THE SPAN RECEIPT (−2 SHIFT)** — the Inv-mirror: every generator of the
 i-th generic ideal maps, under the inverse graded rotation, into the
@@ -334,7 +334,7 @@ theorem finiteLineCycle_strictMono (M : ℕ) [NeZero M] :
   intro a b hab
   refine ⟨finiteLineCycle_mono M hab.le, ?_⟩
   intro hcon
-  exact absurd (finiteLineCycle_reflect M hcon) (not_le_of_lt hab)
+  exact absurd (finiteLineCycle_reflect M hcon) (not_le_of_gt hab)
 
 /-- The cycle reflects the strict order (the reflection plus its own
 strictness). -/
@@ -343,7 +343,7 @@ theorem finiteLineCycle_strictReflect (M : ℕ) [NeZero M]
     (h : finiteLineCycle M x < finiteLineCycle M y) : x < y := by
   refine ⟨finiteLineCycle_reflect M h.le, ?_⟩
   intro hle
-  exact absurd (finiteLineCycle_mono M hle) (not_le_of_lt h)
+  exact absurd (finiteLineCycle_mono M hle) (not_le_of_gt h)
 
 /-- **L5 — THE M-CYCLE PRESERVES COHEIGHT.**  The cycle is a strictly
 monotone order reflection whose strict-lift witness is the Inv-cycle
