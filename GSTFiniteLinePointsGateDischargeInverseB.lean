@@ -329,7 +329,7 @@ theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
           (left_preimage_of_avoids M p (default : complexBase)
             (finiteLinePointsGateForwardIndex M p) hcond)
           (chartRatio M (lineLeftChart M
-            (finiteLinePointsGateForwardIndex M p)))).1
+            (finiteLinePointsGateForwardIndex M p))))).1
         = Spec.map (CommRingCat.ofHom (chartEvalRingHom M
             (lineLeftChart M (finiteLinePointsGateForwardIndex M p))
             (chartReading M (lineLeftChart M (finiteLinePointsGateForwardIndex M p)) p
