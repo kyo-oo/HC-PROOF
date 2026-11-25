@@ -191,7 +191,7 @@ theorem finiteLine_universal_primitive_X_source_one (M : ℕ) [NeZero M]
         spanBigrading (finiteLinePointClass M (finiteLineWorld M) A hspace ω)
           1 (by omega) from rfl]
     exact rationalHodgeSubspace_span_eq _ 1 (by omega)
-  have hmem' : α ∈ Submodule.span ℚ
+  have hmem' : (α : singularCohomologyOf A.space 2) ∈ Submodule.span ℚ
       (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω)) :=
     mem_of_rationalHodgeSubspace_eq hfib hmem
   obtain ⟨q, hq⟩ := (Submodule.mem_span_range_iff_exists_fun ℚ).mp hmem'
