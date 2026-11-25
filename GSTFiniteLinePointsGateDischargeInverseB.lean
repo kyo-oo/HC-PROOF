@@ -155,12 +155,6 @@ open GSTFiniteLineUnconditionalSource
 
 namespace GSTFiniteLinePointsGateDischarge
 
-/-- **THE LEFT-CHART LINE-INDEX RECEIPT** — the forward index of the
-constructed left-chart point is the line: the image point avoids the chart's
-own variable (the `chartPoint_avoids` bridge), so the green well-definedness
-receipt `finiteLinePointLineIndex_of_avoids` pins the index to the chart's
-block, `(2 * i) / 2 = i` closing by `omega`. -/
-
 variable (M : ℕ) [NeZero M]
 -- Lane binder discipline (the finite-point template's own law): every
 -- declaration below that mentions `M` re-binds `(M : ℕ) [NeZero M]`
@@ -168,6 +162,11 @@ variable (M : ℕ) [NeZero M]
 -- law and shadowed by the explicit binders, so the shipped signatures are
 -- fully deterministic).
 
+/-- **THE LEFT-CHART LINE-INDEX RECEIPT** — the forward index of the
+constructed left-chart point is the line: the image point avoids the chart's
+own variable (the `chartPoint_avoids` bridge), so the green well-definedness
+receipt `finiteLinePointLineIndex_of_avoids` pins the index to the chart's
+block, `(2 * i) / 2 = i` closing by `omega`. -/
 theorem chartPoint_forwardIndex_lineLeftChart (M : ℕ) [NeZero M]
     (i : Fin M) (c : ℂ) :
     finiteLinePointsGateForwardIndex M (chartPoint M (lineLeftChart M i) c) = i := by
@@ -271,8 +270,11 @@ theorem finiteLinePointsGateForward_coordPoint (M : ℕ) [NeZero M] :
                 (default : complexBase) i h)
               (chartRatio M (lineLeftChart M i)))
             else none) from rfl]
-      simp only [dif_neg (fun hmem => hmem
-        (chartPoint_right_zero_mem M i (default : complexBase)))]
+      have hneg : ¬(lineQuotientMap M (MvPolynomial.X (lineLeftChart M i)) ∉
+          (finiteLineComplexPointImage M (chartPoint M (lineRightChart M i) 0)
+            (default : complexBase)).asHomogeneousIdeal.toIdeal) :=
+        fun hmem => hmem (chartPoint_right_zero_mem M i (default : complexBase))
+      simp only [dif_neg hneg]
 
 open Classical in
 /-- **LAW-L (the left-inverse)** — every section IS the chart point of its
@@ -340,7 +342,7 @@ theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
               (lineLeftChart M (finiteLinePointsGateForwardIndex M p))))
             (lineCoverHomogeneousOneQ M
               (lineLeftChart M (finiteLinePointsGateForwardIndex M p))) zero_lt_one := rfl
-      _ = Spec.map (CommRingCat.ofHom (chartReading M
+         _ = Spec.map (CommRingCat.ofHom (chartReading M
             (lineLeftChart M (finiteLinePointsGateForwardIndex M p)) p
             (left_preimage_of_avoids M p (default : complexBase)
               (finiteLinePointsGateForwardIndex M p) hcond))) ≫
@@ -353,7 +355,7 @@ theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
               (finiteLinePointsGateForwardIndex M p)) p
             (left_preimage_of_avoids M p (default : complexBase)
               (finiteLinePointsGateForwardIndex M p) hcond)]
-      _ = chartLeg M (lineLeftChart M (finiteLinePointsGateForwardIndex M p)) p
+         _ = chartLeg M (lineLeftChart M (finiteLinePointsGateForwardIndex M p)) p
           (left_preimage_of_avoids M p (default : complexBase)
             (finiteLinePointsGateForwardIndex M p) hcond) ≫
           Proj.awayι (lineGrading M)
@@ -364,7 +366,7 @@ theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
           rw [chartLeg_map M (lineLeftChart M (finiteLinePointsGateForwardIndex M p)) p
             (left_preimage_of_avoids M p (default : complexBase)
               (finiteLinePointsGateForwardIndex M p) hcond)]
-      _ = p.1 :=
+         _ = p.1 :=
           chartLeg_awayι M (lineLeftChart M (finiteLinePointsGateForwardIndex M p)) p
             (left_preimage_of_avoids M p (default : complexBase)
               (finiteLinePointsGateForwardIndex M p) hcond)
@@ -403,7 +405,7 @@ theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
               (lineRightChart M (finiteLinePointsGateForwardIndex M p))))
             (lineCoverHomogeneousOneQ M
               (lineRightChart M (finiteLinePointsGateForwardIndex M p))) zero_lt_one := rfl
-      _ = Spec.map (CommRingCat.ofHom (chartReading M
+         _ = Spec.map (CommRingCat.ofHom (chartReading M
             (lineRightChart M (finiteLinePointsGateForwardIndex M p)) p
             (right_preimage_of_left_mem M p hmem))) ≫
           Proj.awayι (lineGrading M)
@@ -416,7 +418,7 @@ theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
             chartReading_ratio_eq_zero_of_mem M
               (finiteLinePointsGateForwardIndex M p) p (default : complexBase) hmem
               (right_preimage_of_left_mem M p hmem)]
-      _ = chartLeg M (lineRightChart M (finiteLinePointsGateForwardIndex M p)) p
+         _ = chartLeg M (lineRightChart M (finiteLinePointsGateForwardIndex M p)) p
           (right_preimage_of_left_mem M p hmem) ≫
           Proj.awayι (lineGrading M)
             (lineQuotientMap M (MvPolynomial.X
@@ -425,7 +427,7 @@ theorem coordPoint_finiteLinePointsGateForward (M : ℕ) [NeZero M] :
               (lineRightChart M (finiteLinePointsGateForwardIndex M p))) zero_lt_one := by
           rw [chartLeg_map M (lineRightChart M (finiteLinePointsGateForwardIndex M p)) p
             (right_preimage_of_left_mem M p hmem)]
-      _ = p.1 :=
+         _ = p.1 :=
           chartLeg_awayι M (lineRightChart M (finiteLinePointsGateForwardIndex M p)) p
             (right_preimage_of_left_mem M p hmem)
 

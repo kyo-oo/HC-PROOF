@@ -292,19 +292,19 @@ theorem finiteLineComponentClass_decompose (M : ℕ) [NeZero M]
         = ∑ i, E (E α i •
             finiteLineComponentClass M (finiteLineWorld M) A hspace i) := by
           rw [map_sum]
-      _ = ∑ i, E α i • E (finiteLineComponentClass M
+         _ = ∑ i, E α i • E (finiteLineComponentClass M
             (finiteLineWorld M) A hspace i) := by
           refine Finset.sum_congr rfl fun i _ => ?_
           rw [map_smul]
-      _ = ∑ i, E α i • Pi.single i (1 : ℚ) :=
+         _ = ∑ i, E α i • Pi.single i (1 : ℚ) :=
           Finset.sum_congr rfl fun i _ => by rw [hper i]
-      _ = E α := pi_single_sum_eq M (E α)
+         _ = E α := pi_single_sum_eq M (E α)
   calc ∑ i, E α i • finiteLineComponentClass M (finiteLineWorld M) A hspace i
       = E.symm (E (∑ i, E α i •
           finiteLineComponentClass M (finiteLineWorld M) A hspace i)) := by
         rw [E.symm_apply_apply]
-    _ = E.symm (E α) := by rw [hfwd]
-    _ = α := by rw [E.symm_apply_apply]
+       _ = E.symm (E α) := by rw [hfwd]
+       _ = α := by rw [E.symm_apply_apply]
 
 
 end GSTFiniteLinePrimitiveXSource
