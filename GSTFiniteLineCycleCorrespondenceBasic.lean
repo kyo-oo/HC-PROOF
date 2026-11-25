@@ -67,7 +67,31 @@ open GSTFiniteLineAnalytification
 
 namespace GSTFiniteLineCycleCorrespondence
 
-/-! ## §0 The M-cycle endomorphism -/
+/-! ## §0 THE WAVE 9-Q INTEL SWEEP — the true signatures of the pinned
+residue-field API as this Mathlib (v4.33.0-rc2) actually states them.
+The pre-split chains were written against source-reading guesses and never
+kernel-tested (the 04:52/06:25/07:50 batches' receipts: the chains' rewrite
+patterns fire wrongly or not at all); these #checks make the exact forms a
+log receipt for the receipt-guided rebuild. Unknown-constant #checks are
+harmless command-level diagnostics — the sweep prints what EXISTS. -/
+
+#check @Scheme.Hom.residueFieldMap
+#check @Scheme.residueFieldMap_comp
+#check @Scheme.Hom.residueFieldMap_congr
+#check @Scheme.Hom.residueFieldMap_congr'
+#check @Scheme.residueFieldMap_id
+#check @Scheme.residueFieldCongr
+#check @Scheme.residueFieldCongr_symm
+#check @Scheme.Hom.residueDegree
+#check @Scheme.Hom.comp_apply
+#check @Scheme.Hom.id_apply
+#check @Scheme.id_apply
+#check @CategoryStruct.id_apply
+#check @ConcreteCategory.id_apply
+#check @ConcreteCategory.bijective_of_isIso
+#check @IsOpenImmersion.of_isIso
+
+/-! ## §0.5 The M-cycle endomorphism -/
 
 /-- **THE M-CYCLE ENDOMORPHISM** — the M-cycle automorphism as a complex
 scheme endomorphism (the over-base square is green). -/
@@ -89,19 +113,20 @@ private theorem map_id_of_eq {A σ : Type u} [CommRing A] [SetLike σ A]
   subst h
   exact Proj.map_id
 
-/-- The point-level roundtrips of the M-cycle (the wave 9-P surgery: the
-`congrArg (fun φ => φ x)` descent + `Scheme.Hom.comp_apply`/`id_apply`
-normalization — the green receipt `GSTFiniteLinePointsGateCoreTransport`
-:389-394 — replaces the untested `simpa` finishers that strangled the
-runners for sixty silent minutes per cycle). -/
+/-- The point-level roundtrips of the M-cycle (the wave 9-Q step: the
+`congrArg (fun φ => φ x)` descent + `Scheme.Hom.comp_apply` normalization —
+the green receipt `GSTFiniteLinePointsGateCoreTransport:389-394` — with
+the id-application closed by `rfl` (the defeq test: `Scheme.Hom.id_apply`
+does not exist in this Mathlib — the 07:50 receipt, unknown constant — and
+the original `simpa` ground for an hour on exactly this normalization). -/
 theorem finiteLineCycleInv_apply (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
     finiteLineCycleInv M (finiteLineCycle M x) = x := by
   have hinv' : finiteLineCycle M ≫ finiteLineCycleInv M = 𝟙 (finiteLineScheme M) := by
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateGraded_comp_inv M) _
   have h := congrArg (fun f => f x) hinv'
-  rw [Scheme.Hom.comp_apply, Scheme.Hom.id_apply] at h
-  exact h
+  rw [Scheme.Hom.comp_apply] at h
+  exact h.trans rfl
 
 theorem finiteLineCycle_apply_inv (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
     finiteLineCycle M (finiteLineCycleInv M x) = x := by
@@ -109,68 +134,27 @@ theorem finiteLineCycle_apply_inv (M : ℕ) [NeZero M] (x : finiteLineScheme M) 
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateInvGraded_comp M) _
   have h := congrArg (fun f => f x) hinv
-  rw [Scheme.Hom.comp_apply, Scheme.Hom.id_apply] at h
-  exact h
+  rw [Scheme.Hom.comp_apply] at h
+  exact h.trans rfl
 
-/-- The residue field maps of the M-cycle are bijective — the roundtrips
-through the Inv-cycle in the pinned residue-field API's CONTRAVariant
-direction (`ResidueField.lean`:
-`Hom.residueFieldMap f x : κ (f x) ⟶ κ x`): the inverse rides the
-point-equality transport `residueFieldCongr` (`residueFieldMap_congr'`
-moves the point of the cycle's own map; `residueFieldMap_congr` rewrites
-the roundtripped composite through the identity), and the two composite
-roundtrips close by `Iso.inv_hom_id`/`Iso.hom_inv_id` at the transported
-congruences. -/
+/-- The residue field maps of the M-cycle are bijective — THE WAVE 9-Q
+ROUTE: the M-cycle is an isomorphism (`finiteLineCycle_isIso`, the green
+receipt `GSTFiniteLineWorldCarrier:550`), and Mathlib's residue-field API
+makes the residue map of an open immersion an isomorphism (the green
+receipt `GSTFinitePointShiftWord:349-355`: `haveI hoi : IsOpenImmersion`
+then `(ConcreteCategory.bijective_of_isIso _).2` with NO further witness)
+— this theorem tests the instance chain LIVE at the plain-`IsIso` case.
+The pre-split hand-rolled transport chains (hLφ/hφL through
+`residueFieldCongr`/`residueFieldMap_congr`) are RETIRED to git history:
+the 07:50 receipt proved their rewrite patterns fire wrongly or not at
+all (never kernel-tested in the pre-split era; the :144/:155 pattern
+mismatches). If the instance chain misses, the §0 #check sweep's
+signature receipts feed the receipt-guided rebuild next cycle. -/
 theorem finiteLineCycle_residueFieldMap_bijective (M : ℕ) [NeZero M]
     (x : finiteLineScheme M) :
     Function.Bijective
       (Scheme.Hom.residueFieldMap (finiteLineCycle M) x) := by
-  have hinv : finiteLineCycleInv M ≫ finiteLineCycle M = 𝟙 (finiteLineScheme M) := by
-    rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
-    exact map_id_of_eq (lineRotateInvGraded_comp M) _
-  have hinv' : finiteLineCycle M ≫ finiteLineCycleInv M = 𝟙 (finiteLineScheme M) := by
-    rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
-    exact map_id_of_eq (lineRotateGraded_comp_inv M) _
-  have eInv : finiteLineCycleInv M (finiteLineCycle M x) = x :=
-    finiteLineCycleInv_apply M x
-  -- THE RIGHT-INVERSE EQUATION (surjectivity side): the transported
-  -- composite L ≫ φ, where L := (congr eInv).symm.hom ≫ inv.rFM (cyc x).
-  have hLφ : ((finiteLineScheme M).residueFieldCongr eInv).symm.hom ≫
-      (Scheme.Hom.residueFieldMap (finiteLineCycleInv M) (finiteLineCycle M x) ≫
-        Scheme.Hom.residueFieldMap (finiteLineCycle M) x) =
-      𝟙 ((finiteLineScheme M).residueField x) := by
-    rw [← Scheme.residueFieldMap_comp,
-      Scheme.Hom.residueFieldMap_congr hinv' x, Scheme.residueFieldMap_id,
-      Category.id_comp]
-    exact Iso.inv_hom_id ((finiteLineScheme M).residueFieldCongr eInv)
-  -- THE LEFT-INVERSE EQUATION (injectivity side): φ ≫ L.
-  have hφL : (Scheme.Hom.residueFieldMap (finiteLineCycle M) x ≫
-      ((finiteLineScheme M).residueFieldCongr eInv).symm.hom) ≫
-      Scheme.Hom.residueFieldMap (finiteLineCycleInv M) (finiteLineCycle M x) =
-      𝟙 ((finiteLineScheme M).residueField (finiteLineCycle M x)) := by
-    rw [Scheme.residueFieldCongr_symm,
-      Scheme.Hom.residueFieldMap_congr' eInv.symm, Category.assoc,
-      ← Scheme.residueFieldMap_comp,
-      Scheme.Hom.residueFieldMap_congr hinv (finiteLineCycle M x),
-      Scheme.residueFieldMap_id, Category.id_comp]
-    exact Iso.hom_inv_id
-      ((finiteLineScheme M).residueFieldCongr
-        (congrArg (finiteLineCycle M) eInv.symm))
-  -- THE ISISO PACKAGE (the wave 9-P surgery: the two composite roundtrips
-  -- hφL/hLφ become the anonymous-constructor `IsIso` witness — the green
-  -- receipt `GSTFiniteLineWorldCarrier:550` (`finiteLineCycle_isIso`) —
-  -- under the associativity reparenthesization, and the bijectivity is
-  -- read off categorically via `ConcreteCategory.bijective_of_isIso`
-  -- (the green receipt `GSTFinitePointShiftWord:355`).  The entire
-  -- function-level descent — three `simpa using DFunLike.congr_fun`
-  -- calls on residue-field coercions, zero green receipts, the
-  -- sixty-minute silent strangulation of runs 45560472045/2226/2161/
-  -- 2149 and the whole 04:52 batch before them — is DELETED.)
-  haveI hiso : IsIso (Scheme.Hom.residueFieldMap (finiteLineCycle M) x) :=
-    ⟨((finiteLineScheme M).residueFieldCongr eInv).symm.hom ≫
-        Scheme.Hom.residueFieldMap (finiteLineCycleInv M) (finiteLineCycle M x),
-      by rw [← Category.assoc]; exact hφL,
-      by rw [Category.assoc]; exact hLφ⟩
+  haveI := finiteLineCycle_isIso M
   exact ConcreteCategory.bijective_of_isIso _
 
 /-- **THE M-CYCLE'S RESIDUE WEIGHT IS ONE** — the isomorphism's residue
