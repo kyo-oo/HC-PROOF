@@ -31,7 +31,7 @@ no new axioms, no `native_decide`.  The GitHub CI lane
 `gst-finite-line-cycle-correspondence.yml` owns the kernel check.
 -/
 
-set_option maxHeartbeats 70000000
+set_option maxHeartbeats 2000000
 set_option maxRecDepth 20000
 set_option trace.profiler true
 
@@ -134,7 +134,9 @@ contract every other proof rides. -/
 theorem finiteLineGate_cohomology_two_defeq (M : ℕ) [NeZero M]
     (gate : FiniteLinePointsGate M) :
     RationalSingularCohomology (finiteLineAnalytificationOfGate M gate) 2 =
-      singularCohomologyOf (TopCat.of (sphereUnionSpace M)) 2 := rfl
+      singularCohomologyOf (TopCat.of (sphereUnionSpace M)) 2 := by
+  rw [← singularCohomologyOf_eq (finiteLineAnalytificationOfGate M gate) 2,
+    finiteLineAnalytificationOfGate_space M gate]
 
 /-- **THE WEIGHT-ONE LETTER OPERATOR** — the M-cycle pullback at the live
 degree, definitionally: at the gate-form analytification the operator's
