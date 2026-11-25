@@ -226,10 +226,11 @@ green successor/predecessor roundtrips). -/
 theorem finiteLineCyclePrecompSucc_single (M : ℕ) [NeZero M] (j : Fin M) :
     finiteLineCyclePrecompSucc M (Pi.single j (1 : ℚ)) =
       Pi.single (cyclicPred M j) (1 : ℚ) := by
+  have hcoe : ∀ (v : Fin M → ℚ) (k : Fin M),
+      ⇑(finiteLineCyclePrecompSucc M) v k = v (cyclicSucc M k) :=
+    fun _ _ => rfl
   funext k
-  rw [show ⇑(finiteLineCyclePrecompSucc M) (Pi.single j (1 : ℚ)) k =
-      (Pi.single j (1 : ℚ)) (cyclicSucc M k) from rfl,
-    Pi.single_apply, Pi.single_apply]
+  rw [hcoe (Pi.single j (1 : ℚ)) k, Pi.single_apply, Pi.single_apply]
   by_cases hk : cyclicSucc M k = j
   · rw [if_pos hk]
     have hk' : k = cyclicPred M j := by
