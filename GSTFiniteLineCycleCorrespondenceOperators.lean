@@ -157,14 +157,23 @@ definitional.  This is exactly the `hRop` hypothesis the green derived
 letter equation consumes. -/
 theorem finiteLineCycleLetterOpOne_transport (M : ℕ) [NeZero M]
     (gate : FiniteLinePointsGate M)
+    (ω : singularCohomologyOf (TopCat.of unitSphereType) 2)
     (u : singularCohomologyOf (TopCat.of (sphereUnionSpace M)) 2) :
     finiteLineCycleLetterOpOne M gate
-        (sphereUnionCoe M (finiteLineAnalytificationOfGate_space M gate) u) =
-      sphereUnionCoe M (finiteLineAnalytificationOfGate_space M gate)
+        (sphereUnionCoe (V := finiteLineWorld M)
+          (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+            (finiteLineAnalytificationOfGate_space M gate) ω)
+          M (finiteLineAnalytificationOfGate_space M gate) u) =
+      sphereUnionCoe (V := finiteLineWorld M)
+        (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
+          (finiteLineAnalytificationOfGate_space M gate) ω)
+        M (finiteLineAnalytificationOfGate_space M gate)
         ((cohomologyPullbackOf (sphereCycle M) 2) u) := by
   unfold sphereUnionCoe
   rw [show rationalSingularCohomology_two_eq M (finiteLineAnalytificationOfGate_space M gate)
-        = (rfl : RationalSingularCohomology (finiteLineAnalytificationOfGate M gate) 2 =
+        = (rfl : RationalSingularCohomology (finiteLineHodgeDataHonest M
+            (finiteLineAnalytificationOfGate M gate)
+            (finiteLineAnalytificationOfGate_space M gate) ω).analytification 2 =
             singularCohomologyOf (TopCat.of (sphereUnionSpace M)) 2) from
       ProofIrrel.proofIrrel _ _]
   rfl
@@ -186,7 +195,7 @@ theorem finiteLineCycleLetterOpOne_rotate (M : ℕ) [NeZero M]
       (H := finiteLineHodgeDataHonest M (finiteLineAnalytificationOfGate M gate)
         (finiteLineAnalytificationOfGate_space M gate) ω)
       M (finiteLineAnalytificationOfGate_space M gate) ω (cyclicPred M j) := by
-  have h1 := finiteLineCycleLetterOpOne_transport M gate (spherePointClass M ω j)
+  have h1 := finiteLineCycleLetterOpOne_transport M gate ω (spherePointClass M ω j)
   rw [cycle_pointClass M ω j] at h1
   exact h1
 
@@ -218,8 +227,9 @@ theorem finiteLineCyclePrecompSucc_single (M : ℕ) [NeZero M] (j : Fin M) :
     finiteLineCyclePrecompSucc M (Pi.single j (1 : ℚ)) =
       Pi.single (cyclicPred M j) (1 : ℚ) := by
   funext k
-  show (if cyclicSucc M k = j then (1 : ℚ) else 0) =
-      (if k = cyclicPred M j then (1 : ℚ) else 0)
+  show (Pi.single j (1 : ℚ)) (cyclicSucc M k) =
+      (Pi.single (cyclicPred M j) (1 : ℚ)) k
+  rw [Pi.single_apply j (cyclicSucc M k), Pi.single_apply (cyclicPred M j) k]
   by_cases hk : cyclicSucc M k = j
   · rw [if_pos hk]
     have hk' : k = cyclicPred M j := by
