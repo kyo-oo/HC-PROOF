@@ -75,8 +75,9 @@ The GitHub CI lane `gst-finite-line-primitive-x-source.yml` owns the kernel
 check.
 -/
 
-set_option maxHeartbeats 200000000
+set_option maxHeartbeats 70000000
 set_option maxRecDepth 1000000
+set_option trace.profiler true
 
 noncomputable section
 

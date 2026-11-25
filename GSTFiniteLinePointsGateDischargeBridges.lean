@@ -126,8 +126,9 @@ corpus's own discipline for Prop-indexed data).  The GitHub CI lane of this
 module owns the kernel check.
 -/
 
-set_option maxHeartbeats 200000000
+set_option maxHeartbeats 70000000
 set_option maxRecDepth 1000000
+set_option trace.profiler true
 set_option autoImplicit false
 
 noncomputable section
