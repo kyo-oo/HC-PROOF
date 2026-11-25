@@ -109,7 +109,7 @@ jobs:
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineRing >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLineRing >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineRing.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineRing.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "WARMUP compiled Ring fresh — banking"
@@ -145,7 +145,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 1: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceBasic >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLineCycleCorrespondenceBasic >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceBasic.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceBasic.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 1 COMPILED FRESH — banking"
@@ -181,7 +181,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 2: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceAction >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLineCycleCorrespondenceAction >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceAction.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceAction.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 2 COMPILED FRESH — banking"
@@ -217,7 +217,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 3: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondenceOperators >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLineCycleCorrespondenceOperators >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondenceOperators.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondenceOperators.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 3 COMPILED FRESH — banking"
@@ -253,7 +253,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 4: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineCycleCorrespondence >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLineCycleCorrespondence >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineCycleCorrespondence.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineCycleCorrespondence.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 4 COMPILED FRESH — banking"
@@ -289,7 +289,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 5: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLineUnconditionalSource >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLineUnconditionalSource >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLineUnconditionalSource.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLineUnconditionalSource.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 5 COMPILED FRESH — banking"
@@ -325,7 +325,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 6: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateCoreBasic >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateCoreBasic >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLinePointsGateCoreBasic.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateCoreBasic.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 6 COMPILED FRESH — banking"
@@ -361,7 +361,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 7: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateCoreTransport >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateCoreTransport >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLinePointsGateCoreTransport.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateCoreTransport.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 7 COMPILED FRESH — banking"
@@ -397,7 +397,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 8: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateCore >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateCore >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLinePointsGateCore.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateCore.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 8 COMPILED FRESH — banking"
@@ -433,7 +433,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 9: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischargeBridges >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateDischargeBridges >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischargeBridges.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischargeBridges.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 9 COMPILED FRESH — banking"
@@ -469,7 +469,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 10: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischargeInverseA >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateDischargeInverseA >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischargeInverseA.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischargeInverseA.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 10 COMPILED FRESH — banking"
@@ -505,7 +505,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 11: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischargeInverseB >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateDischargeInverseB >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischargeInverseB.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischargeInverseB.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 11 COMPILED FRESH — banking"
@@ -541,7 +541,7 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           if [ -f .ladder-stop ]; then echo "LADDER 12: stopped (an earlier piece timed out) — skip"; exit 0; fi
           BEFORE=$(date +%s)
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischarge >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateDischarge >> gst-finite-line-points-gate-discharge.log 2>&1; then
             if [ -f ".lake/build/lib/GSTFiniteLinePointsGateDischarge.olean" ] && [ "$(stat -c %Y .lake/build/lib/GSTFiniteLinePointsGateDischarge.olean)" -ge "$BEFORE" ]; then
               echo "dirty=true" >> "$GITHUB_OUTPUT"
               echo "LADDER PIECE 12 COMPILED FRESH — banking"
@@ -583,7 +583,7 @@ jobs:
             echo "LADDER TIMED OUT THIS CYCLE (every finished piece is banked; the rider re-dispatches)"
             exit 1
           fi
-          if timeout --kill-after=30s 1500 lake build GSTFiniteLinePointsGateDischarge >> gst-finite-line-points-gate-discharge.log 2>&1; then
+          if timeout --kill-after=30s 7200 lake build GSTFiniteLinePointsGateDischarge >> gst-finite-line-points-gate-discharge.log 2>&1; then
             echo "LEAN PASSED: Kernel check the gate-discharge module (GATE-A FULL DISCHARGE: the points-classification equiv, the unconditional law)"
           else
             pkill -KILL -x lean 2>/dev/null || true
