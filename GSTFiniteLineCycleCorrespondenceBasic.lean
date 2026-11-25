@@ -30,8 +30,9 @@ no new axioms, no `native_decide`.  The GitHub CI lane
 `gst-finite-line-cycle-correspondence.yml` owns the kernel check.
 -/
 
-set_option maxHeartbeats 200000000
+set_option maxHeartbeats 70000000
 set_option maxRecDepth 1000000
+set_option trace.profiler true
 
 noncomputable section
 
@@ -88,15 +89,19 @@ private theorem map_id_of_eq {A σ : Type u} [CommRing A] [SetLike σ A]
   subst h
   exact Proj.map_id
 
-/-- The point-level roundtrips of the M-cycle. -/
+/-- The point-level roundtrips of the M-cycle (the wave 9-P surgery: the
+`congrArg (fun φ => φ x)` descent + `Scheme.Hom.comp_apply`/`id_apply`
+normalization — the green receipt `GSTFiniteLinePointsGateCoreTransport`
+:389-394 — replaces the untested `simpa` finishers that strangled the
+runners for sixty silent minutes per cycle). -/
 theorem finiteLineCycleInv_apply (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
     finiteLineCycleInv M (finiteLineCycle M x) = x := by
   have hinv' : finiteLineCycle M ≫ finiteLineCycleInv M = 𝟙 (finiteLineScheme M) := by
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateGraded_comp_inv M) _
   have h := congrArg (fun f => f x) hinv'
-  rw [Scheme.Hom.comp_apply] at h
-  simpa using h
+  rw [Scheme.Hom.comp_apply, Scheme.Hom.id_apply] at h
+  exact h
 
 theorem finiteLineCycle_apply_inv (M : ℕ) [NeZero M] (x : finiteLineScheme M) :
     finiteLineCycle M (finiteLineCycleInv M x) = x := by
@@ -104,8 +109,8 @@ theorem finiteLineCycle_apply_inv (M : ℕ) [NeZero M] (x : finiteLineScheme M) 
     rw [finiteLineCycle, finiteLineCycleInv, ← Proj.map_comp]
     exact map_id_of_eq (lineRotateInvGraded_comp M) _
   have h := congrArg (fun f => f x) hinv
-  rw [Scheme.Hom.comp_apply] at h
-  simpa using h
+  rw [Scheme.Hom.comp_apply, Scheme.Hom.id_apply] at h
+  exact h
 
 /-- The residue field maps of the M-cycle are bijective — the roundtrips
 through the Inv-cycle in the pinned residue-field API's CONTRAVariant
@@ -151,29 +156,22 @@ theorem finiteLineCycle_residueFieldMap_bijective (M : ℕ) [NeZero M]
     exact Iso.hom_inv_id
       ((finiteLineScheme M).residueFieldCongr
         (congrArg (finiteLineCycle M) eInv.symm))
-  constructor
-  · intro a b hab
-    have ha : Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-        (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
-          (Scheme.Hom.residueFieldMap (finiteLineCycle M) x a)) = a := by
-      simpa using DFunLike.congr_fun hφL a
-    have hb : Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-        (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
-          (Scheme.Hom.residueFieldMap (finiteLineCycle M) x b)) = b := by
-      simpa using DFunLike.congr_fun hφL b
-    calc a = Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-          (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
-            (Scheme.Hom.residueFieldMap (finiteLineCycle M) x a)) := ha.symm
-      _ = Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-          (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom
-            (Scheme.Hom.residueFieldMap (finiteLineCycle M) x b)) := by
-          rw [hab]
-      _ = b := hb
-  · intro w
-    refine ⟨Scheme.Hom.residueFieldMap (finiteLineCycleInv M)
-        (finiteLineCycle M x) (((finiteLineScheme M).residueFieldCongr eInv).symm.hom w),
-      ?_⟩
-    simpa using DFunLike.congr_fun hLφ w
+  -- THE ISISO PACKAGE (the wave 9-P surgery: the two composite roundtrips
+  -- hφL/hLφ become the anonymous-constructor `IsIso` witness — the green
+  -- receipt `GSTFiniteLineWorldCarrier:550` (`finiteLineCycle_isIso`) —
+  -- under the associativity reparenthesization, and the bijectivity is
+  -- read off categorically via `ConcreteCategory.bijective_of_isIso`
+  -- (the green receipt `GSTFinitePointShiftWord:355`).  The entire
+  -- function-level descent — three `simpa using DFunLike.congr_fun`
+  -- calls on residue-field coercions, zero green receipts, the
+  -- sixty-minute silent strangulation of runs 45560472045/2226/2161/
+  -- 2149 and the whole 04:52 batch before them — is DELETED.)
+  haveI hiso : IsIso (Scheme.Hom.residueFieldMap (finiteLineCycle M) x) :=
+    ⟨((finiteLineScheme M).residueFieldCongr eInv).symm.hom ≫
+        Scheme.Hom.residueFieldMap (finiteLineCycleInv M) (finiteLineCycle M x),
+      by rw [← Category.assoc]; exact hφL,
+      by rw [Category.assoc]; exact hLφ⟩
+  exact ConcreteCategory.bijective_of_isIso _
 
 /-- **THE M-CYCLE'S RESIDUE WEIGHT IS ONE** — the isomorphism's residue
 field maps are bijective, so the induced residue extension has rank one
@@ -188,8 +186,13 @@ theorem finiteLineCycle_pointResidueWeight (M : ℕ) [NeZero M]
       ((finiteLineScheme M).residueField (finiteLineCycle M x))
       ((finiteLineScheme M).residueField x) :=
     (Scheme.Hom.residueFieldMap (finiteLineCycle M) x).hom.toAlgebra
-  show (Scheme.Hom.residueDegree (finiteLineCycle M) x : ℚ) = 1
-  rw [Scheme.Hom.residueDegree]
+  -- THE WAVE 9-P SURGERY: the `show`-bridge + `rw [Scheme.Hom.residueDegree]`
+  -- delta (the pattern the TwelvePoint/ShiftWord run-26..29 receipts PROVED
+  -- dies on the residueDegree delta+zeta) replaced by the green idiom
+  -- `dsimp only [Scheme.Hom.residueDegree]` (ResidueField.lean's own
+  -- `residueDegree_id` route), with the `pointResidueWeight` wrapper
+  -- unfolded alongside it.
+  dsimp only [pointResidueWeight, Scheme.Hom.residueDegree]
   have : (Module.finrank ((finiteLineScheme M).residueField (finiteLineCycle M x))
       ((finiteLineScheme M).residueField x)) = 1 := by
     refine (finrank_eq_one_iff_of_nonzero'
