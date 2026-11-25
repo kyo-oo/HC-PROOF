@@ -84,9 +84,6 @@ harmless command-level diagnostics — the sweep prints what EXISTS. -/
 #check @Scheme.residueFieldCongr_symm
 #check @Scheme.Hom.residueDegree
 #check @Scheme.Hom.comp_apply
-#check @Scheme.Hom.id_apply
-#check @Scheme.id_apply
-#check @CategoryStruct.id_apply
 #check @ConcreteCategory.id_apply
 #check @ConcreteCategory.bijective_of_isIso
 #check @IsOpenImmersion.of_isIso
