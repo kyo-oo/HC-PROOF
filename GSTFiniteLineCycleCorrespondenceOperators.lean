@@ -32,7 +32,7 @@ no new axioms, no `native_decide`.  The GitHub CI lane
 -/
 
 set_option maxHeartbeats 70000000
-set_option maxRecDepth 1000000
+set_option maxRecDepth 20000
 set_option trace.profiler true
 
 noncomputable section
