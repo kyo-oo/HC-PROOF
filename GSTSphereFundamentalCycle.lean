@@ -353,7 +353,12 @@ theorem faceChain_d (i : Fin 4) :
         (twoSimplexInject (faceSimplex i)) :
         ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2) ≫
         (singularChainsOf (TopCat.of unitSphereType)).d 2 1)) (1 : ℚ) := rfl
-  exact e1.trans e2
+  rw [e1, hgen]
+  -- the hom-sum distribution, by the pin's rfl-lemmas as explicit rewrites:
+  simp only [ModuleCat.hom_add, LinearMap.add_apply, ModuleCat.hom_neg,
+    LinearMap.neg_apply, sub_eq_add_neg]
+  unfold edgeChain
+  rfl
 
 
 /-- The six vertex-pairing facts (each tetrahedron edge, read through
