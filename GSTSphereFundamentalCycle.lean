@@ -353,25 +353,8 @@ theorem faceChain_d (i : Fin 4) :
         (twoSimplexInject (faceSimplex i)) :
         ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2) ≫
         (singularChainsOf (TopCat.of unitSphereType)).d 2 1)) (1 : ℚ) := rfl
-  -- the hom-sum distribution at the value 1:
-  have e3 : ModuleCat.Hom.hom
-      ((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 0
-            (twoSimplexInject (faceSimplex i))) :
-          ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 1) +
-        -((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 1
-            (twoSimplexInject (faceSimplex i))) :
-          ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 1))) +
-        (((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 2
-            (twoSimplexInject (faceSimplex i))) :
-          ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 1))) (1 : ℚ) =
-      edgeChain i 0 - edgeChain i 1 + edgeChain i 2 := by
-    rw [ModuleCat.hom_add, LinearMap.add_apply, ModuleCat.hom_add,
-      LinearMap.add_apply, ModuleCat.hom_neg, LinearMap.neg_apply]
-    rfl
-  exact e1.trans (e2.trans e3)
+  exact e1.trans e2
+
 
 /-- The six vertex-pairing facts (each tetrahedron edge, read through
 the two faces containing it, visits the same vertices in the same
