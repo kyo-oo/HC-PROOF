@@ -92,7 +92,7 @@ theorem tetraFaceBary_vertex (i : Fin 4) (m : Fin 3) :
   · simp
   · intro j _hj him
     have hzero : ((stdSimplex.vertex (S := ℝ) m : Fin 3 → ℝ)) j = 0 := by
-      simp [stdSimplex.vertex, him, Ne.symm him]
+      simp [stdSimplex.vertex, him]
     rw [hzero, zero_smul]
   · intro hm
     exact absurd (Finset.mem_univ m) hm
@@ -124,11 +124,8 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
   have hread : ∀ k : Fin 3,
       ∑ j, μ j * ((faceVert i j : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) k = 0 := by
     intro k
-    have hc := congrArg
+    exact congrArg
       (fun v : EuclideanSpace ℝ (Fin 3) => ((v : Fin 3 → ℝ)) k) h
-    simp only [Finset.sum_apply, PiLp.smul_apply, smul_eq_mul,
-      Pi.zero_apply] at hc
-    exact hc
   fin_cases i
   · -- face 0 = [w₁, w₂, w₃] = (1,-1,-1), (-1,1,-1), (-1,-1,1)
     have h0 := hread 0
@@ -137,7 +134,7 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have s0 : (0 : Fin 4).succAbove (0 : Fin 3) = 1 := by decide
     have s1 : (0 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
     have s2 : (0 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-    rw [Finset.sum_univ_three, Finset.sum_univ_three, Finset.sum_univ_three,
+    rw [Fin.sum_univ_three, Fin.sum_univ_three, Fin.sum_univ_three,
       s0, s1, s2] at h0 h1 h2
     simp only [faceVert, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
@@ -153,7 +150,7 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have s0 : (1 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
     have s1 : (1 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
     have s2 : (1 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-    rw [Finset.sum_univ_three, Finset.sum_univ_three, Finset.sum_univ_three,
+    rw [Fin.sum_univ_three, Fin.sum_univ_three, Fin.sum_univ_three,
       s0, s1, s2] at h0 h1 h2
     simp only [faceVert, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
@@ -169,7 +166,7 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have s0 : (2 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
     have s1 : (2 : Fin 4).succAbove (1 : Fin 3) = 1 := by decide
     have s2 : (2 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-    rw [Finset.sum_univ_three, Finset.sum_univ_three, Finset.sum_univ_three,
+    rw [Fin.sum_univ_three, Fin.sum_univ_three, Fin.sum_univ_three,
       s0, s1, s2] at h0 h1 h2
     simp only [faceVert, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
@@ -204,13 +201,11 @@ theorem tetraFaceBary_ne_zero (i : Fin 4) (x : stdSimplex ℝ (Fin 3)) :
   obtain ⟨hnonneg, hsumone⟩ :
       (∀ j, 0 ≤ (x : Fin 3 → ℝ) j) ∧ ∑ j, (x : Fin 3 → ℝ) j = 1 := x.2
   intro h
-  have hzero : ∀ j, (x : Fin 3 → ℝ) j = 0 := by
-    exact face_indep i (x : Fin 3 → ℝ) h
-  rw [Funext_iff] at hzero
-  have : ∑ j, (x : Fin 3 → ℝ) j = 0 := by
-    rw [hzero]
-    simp
-  rw [this] at hsumone
+  have hzero : ∀ j, (x : Fin 3 → ℝ) j = 0 :=
+    face_indep i (x : Fin 3 → ℝ) h
+  have hsum : ∑ j, (x : Fin 3 → ℝ) j = 0 := by
+    simp [hzero]
+  rw [hsum] at hsumone
   exact zero_ne_one hsumone
 
 /-! ## §3 The center-radial face maps -/
@@ -274,7 +269,7 @@ theorem faceBary_coface (i : Fin 4) (k : Fin 3) (z : stdSimplex ℝ (Fin 2)) :
     _ = ∑ m : Fin 3, ∑ j : Fin 2,
           ((if k.succAbove j = m then ((z : Fin 2 → ℝ) j) else 0)) •
           tetraW (i.succAbove m) := by
-        exact Finset.sum_congr rfl fun m _ => Finset.sum_smul _ _
+        exact Finset.sum_congr rfl fun m _ => by rw [Finset.sum_smul]
     _ = ∑ j : Fin 2, ∑ m : Fin 3,
           ((if k.succAbove j = m then ((z : Fin 2 → ℝ) j) else 0)) •
           tetraW (i.succAbove m) := Finset.sum_comm
@@ -284,8 +279,7 @@ theorem faceBary_coface (i : Fin 4) (k : Fin 3) (z : stdSimplex ℝ (Fin 2)) :
         rw [Finset.sum_eq_single (k.succAbove j)]
         · rw [if_pos rfl]
         · intro m _hm hne
-          rw [if_neg hne]
-          simp
+          rw [if_neg (fun hh => hne hh.symm), zero_smul]
         · intro hmem
           exact absurd (Finset.mem_univ _) hmem
 
@@ -299,11 +293,13 @@ theorem edgeSimplex_eq (i : Fin 4) (k : Fin 3) (i' : Fin 4) (k' : Fin 3)
         (twoSimplexInject (faceSimplex i)) =
       (TopCat.toSSet.obj (TopCat.of unitSphereType)).δ k'
         (twoSimplexInject (faceSimplex i')) := by
-  refine (Equiv.injective
-    ((TopCat.of unitSphereType).toSSetObjEquiv
-      (Opposite.op (SimplexCategory.mk 1)))) ?_
-  ext z
+  apply (TopCat.toSSetObjEquiv (TopCat.of unitSphereType)
+    (Opposite.op (SimplexCategory.mk 1))).injective
+  refine ContinuousMap.ext (fun z => ?_)
   rw [toSSetObj₂_face (faceSimplex i) k z, toSSetObj₂_face (faceSimplex i') k' z]
+  -- the two C-applications reduce to the raw face values (the
+  -- green `tetraFace_vertex_zero` show-pattern, one layer at a time):
+  show faceMap i ((stdFace k) z) = faceMap i' ((stdFace k') z)
   show faceMap i (stdSimplex.map (Fin.succAbove k) z)
       = faceMap i' (stdSimplex.map (Fin.succAbove k') z)
   exact sphereNormalize_eq_of_eq _ _
@@ -360,10 +356,29 @@ theorem faceChain_d (i : Fin 4) :
     Fin.val_two, pow_two, neg_mul_neg, one_mul] at hgen
   have h := congrArg
     (fun u : ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 1 =>
-      u.hom (1 : ℚ)) hgen
-  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_add,
-    LinearMap.add_apply, ModuleCat.hom_sub, LinearMap.sub_apply] at h
-  exact h
+      ModuleCat.Hom.hom u (1 : ℚ)) hgen
+  calc ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2 1)
+        (faceChain i)
+      = ModuleCat.Hom.hom
+          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+            (twoSimplexInject (faceSimplex i)) ≫
+            (singularChainsOf (TopCat.of unitSphereType)).d 2 1) (1 : ℚ) := by
+        rw [ModuleCat.hom_comp]
+        rfl
+    _ = ModuleCat.Hom.hom
+          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+              ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 0
+                (twoSimplexInject (faceSimplex i))) +
+            -((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+              ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 1
+                (twoSimplexInject (faceSimplex i)))) +
+          (TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+            ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 2
+              (twoSimplexInject (faceSimplex i)))) (1 : ℚ) := h
+    _ = edgeChain i 0 - edgeChain i 1 + edgeChain i 2 := by
+        rw [ModuleCat.hom_add, LinearMap.add_apply, ModuleCat.hom_add,
+          LinearMap.add_apply, ModuleCat.hom_neg, LinearMap.neg_apply]
+        rfl
 
 /-- The six vertex-pairing facts (each tetrahedron edge, read through
 the two faces containing it, visits the same vertices in the same
