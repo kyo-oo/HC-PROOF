@@ -115,21 +115,6 @@ theorem tetraFaceBary_continuous (i : Fin 4) :
 
 /-! ## §2 The rank-three nonvanishing (the center misses every face) -/
 
-/-! ### The succAbove literal table (decide-evaluated) -/
-
-@[simp] theorem succAbove_0_0 : (0 : Fin 4).succAbove (0 : Fin 3) = 1 := by decide
-@[simp] theorem succAbove_0_1 : (0 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
-@[simp] theorem succAbove_0_2 : (0 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-@[simp] theorem succAbove_1_0 : (1 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
-@[simp] theorem succAbove_1_1 : (1 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
-@[simp] theorem succAbove_1_2 : (1 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-@[simp] theorem succAbove_2_0 : (2 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
-@[simp] theorem succAbove_2_1 : (2 : Fin 4).succAbove (1 : Fin 3) = 1 := by decide
-@[simp] theorem succAbove_2_2 : (2 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-@[simp] theorem succAbove_3_0 : (3 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
-@[simp] theorem succAbove_3_1 : (3 : Fin 4).succAbove (1 : Fin 3) = 1 := by decide
-@[simp] theorem succAbove_3_2 : (3 : Fin 4).succAbove (2 : Fin 3) = 2 := by decide
-
 /-- **THE FACE-VERTICES ARE INDEPENDENT.**  Every three of the four
 alternating tetrahedron vertices are linearly independent (the 3×3
 coordinate matrix of each face is a ±1 matrix with determinant ±4). -/
@@ -146,7 +131,7 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    simp only [Fin.sum_univ_three, faceVert, succAbove_0_0, succAbove_0_1, succAbove_0_2, tetraW,
+    simp [Fin.sum_univ_three, faceVert, Fin.succAbove, tetraW,
       PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
       Fin.val_two] at h0 h1 h2
@@ -155,7 +140,7 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    simp only [Fin.sum_univ_three, faceVert, succAbove_1_0, succAbove_1_1, succAbove_1_2, tetraW,
+    simp [Fin.sum_univ_three, faceVert, Fin.succAbove, tetraW,
       PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
       Fin.val_two] at h0 h1 h2
@@ -164,7 +149,7 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    simp only [Fin.sum_univ_three, faceVert, succAbove_2_0, succAbove_2_1, succAbove_2_2, tetraW,
+    simp [Fin.sum_univ_three, faceVert, Fin.succAbove, tetraW,
       PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
       Fin.val_two] at h0 h1 h2
@@ -173,8 +158,7 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    simp only [Fin.sum_univ_three, faceVert, succAbove_3_0, succAbove_3_1,
-      succAbove_3_2, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
+    simp [Fin.sum_univ_three, faceVert, Fin.succAbove, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
       Fin.val_zero, Fin.val_one, Fin.val_two] at h0 h1 h2
     intro j; fin_cases j <;> linarith
