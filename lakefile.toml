@@ -1743,3 +1743,21 @@ name = "GSTFiniteLinePrimitiveXSourceFamiliesLib"
 roots = [
   "GSTFiniteLinePrimitiveXSourceFamilies",
 ]
+
+[[lean_lib]]
+name = "GSTSphereTetrahedronCycleLib"
+roots = [
+  "GSTSphereTetrahedronCycle",
+]
+
+[[lean_lib]]
+name = "GSTSphereNonzeroClassLib"
+roots = [
+  "GSTSphereNonzeroClass",
+]
+
+[[lean_lib]]
+name = "GSTFiniteLineFenceDischargeLib"
+roots = [
+  "GSTFiniteLineFenceDischarge",
+]
