@@ -229,7 +229,8 @@ theorem tetraMap_continuous : Continuous tetraMap := by
       continuousAt_sphereNormalize (tetraBary_ne_camera x₀)
     have hf : ContinuousAt (fun x : stdSimplex ℝ (Fin 4) => tetraBary x - tetraCamera) x₀ :=
       (tetraBary_continuous.continuousAt).sub continuous_const.continuousAt
-    exact hg.comp hf
+    exact ContinuousAt.comp
+      (f := fun x : stdSimplex ℝ (Fin 4) => tetraBary x - tetraCamera) (x := x₀) hg hf
   exact Continuous.subtype_mk hco _
 
 /-- The singular 3-simplex of the projected tetrahedron. -/
@@ -351,12 +352,10 @@ theorem sphereNormalize_w0_ne_w1 :
       EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) :=
     congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ)) (congrArg Subtype.val heq)
   have hw0 : (((tetraW 0 : EuclideanSpace ℝ (Fin 3)) - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 0 = -9 := by
-    simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.head_cons]
+    simp [tetraW, tetraCamera, Matrix.cons_val_zero, Matrix.head_cons]
     norm_num
   have hw1 : (((tetraW 1 : EuclideanSpace ℝ (Fin 3)) - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 0 = -9 := by
-    simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.head_cons]
+    simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero]
     norm_num
   have hw0' : (((tetraW 0 : EuclideanSpace ℝ (Fin 3)) - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 = -9 := by
     simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero,
