@@ -1506,6 +1506,79 @@ research front.  No green is claimed beyond what CI certified at the
 pushed SHAs.
 \end{remark}
 
+\subsection{The formal correction begun: the center-radial cycle in
+Lean}
+
+The boundary above stated the front as of wave 10.  Wave 11 (the
+module \texttt{GSTSphereFundamentalCycle.lean}, the fence-discharge
+lane's fifth ladder piece) constructs the classical generator itself
+in the honest singular chain complex of the sphere --- the corrected
+route's first certified half:
+
+\begin{construction}[The fundamental cycle, formalized]
+\label{con:fund-cycle-lean}
+The four vertices of the alternating tetrahedron (the corpus's
+\texttt{tetraW}) have the origin as barycenter --- the sphere's own
+center.  For each face $F_i$ (the three vertices other than $i$, in
+increasing order), the center-radial projection $y \mapsto
+\|y\|^{-1} y$ is well defined on the whole closed face: any three of
+the four vertices are linearly independent (each face's coordinate
+matrix is a $\pm 1$ matrix with determinant $\pm 4$), so no closed
+face meets the origin --- while the solid does, which is exactly why
+the projected boundary of the \emph{camera} tetrahedron bounds
+(\S\ref{sec:correction}) and this cycle does not.  Let $\sigma_i :
+\Delta^2 \to S^2$ be the composition (a singular $2$-simplex of the
+sphere) and
+\[
+\texttt{fundCycle} \;=\; \iota(\sigma_0) - \iota(\sigma_1) +
+  \iota(\sigma_2) - \iota(\sigma_3) \;\in\;
+  C_2^{\mathrm{sing}}(S^2;\Q)
+\]
+the alternating sum of the injected face chains.
+\end{construction}
+
+\begin{theorem}[The cycle law, machine-checked]
+\label{thm:fund-cycle-d}
+$d_2(\texttt{fundCycle}) = 0$ (\texttt{fundCycle\_d}), by the
+twelve-term edge cancellation: each of the six tetrahedron edges
+appears in exactly two faces with opposite total sign and the
+\emph{same} parametrized singular $1$-simplex --- the affine coface
+calculus (the pushed-forward point's coordinates are the fiber sums
+of the pinned \texttt{stdSimplex.map}, and both visits of an edge
+compose to the same affine parametrization of the same vertex pair)
+--- so the six pairs cancel term by term.
+\end{theorem}
+
+\begin{construction}[The corrected separator shape]
+\label{con:fund-separator}
+The route correction (\S\ref{sec:correction}) proved the separator
+shape false at the camera cycle.  Restated at the fundamental cycle:
+\[
+\texttt{FundSeparator} \;:\;\;
+  \exists\, \varphi : C_2^{\mathrm{sing}}(S^2;\Q) \to_\Q \Q,\;
+  \bigl(\forall w,\ \varphi(d_3 w) = 0\bigr) \;\wedge\;
+  \varphi(\texttt{fundCycle}) = 1 ,
+\]
+with the consistency receipt \texttt{no\_separator\_of\_boundary}: if
+the fundamental cycle bounded, the shape would be false --- the shape
+lives exactly as long as the cycle is non-bounding.  Classically
+(Theorem~\ref{thm:sphere-h2}) the cycle is non-bounding, so the shape
+holds (extend the degree-one functional on the line it spans, modulo
+the boundary submodule, to all of $C_2$).
+\end{construction}
+
+The remaining formalization step --- frozen as the campaign's next
+wave, not claimed here --- is the realization: every separator is a
+cocycle of the dual cochain complex (the boundary-vanishing is the
+cocycle law), and its class is nonzero, since a coboundary $\psi
+\circ d_2$ reads $\psi(d_2\,\texttt{fundCycle}) = \psi(0) = 0$ on the
+cycle by Theorem~\ref{thm:fund-cycle-d} and so cannot be the
+separator that reads $1$.  That single step discharges $(\Omega)$;
+with the exists-flip master it then discharges the two stashed
+sectors of the honest data (the weight-one spanning at a nonzero
+family index, the higher-weight vanishing), completing the
+topological upgrade of the point arithmetic.
+
 % ======================================================================
 \section{The certification receipts}\label{sec:certification}
 % ======================================================================
