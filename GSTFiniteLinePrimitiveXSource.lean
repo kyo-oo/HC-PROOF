@@ -194,7 +194,11 @@ theorem finiteLine_universal_primitive_X_source_one (M : ℕ) [NeZero M]
   have hmem' : (α : singularCohomologyOf A.space 2) ∈ Submodule.span ℚ
       (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω)) :=
     mem_of_rationalHodgeSubspace_eq hfib hmem
-  rw [Submodule.mem_span_range_iff_exists_fun] at hmem'
+  rw [show ((α : singularCohomologyOf A.space 2) ∈ Submodule.span ℚ
+      (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω))) ↔
+      (∃ q : Fin M → ℚ, ∑ i, q i •
+        (finiteLinePointClass M (finiteLineWorld M) A hspace ω) i = α) from
+    Submodule.mem_span_range_iff_exists_fun ℚ] at hmem'
   obtain ⟨q, hq⟩ := hmem'
   refine ⟨q, ?_⟩
   have hsum : ∑ i, q i • (finiteLineHodgeDataHonest M A hspace ω).cycleClass 1
