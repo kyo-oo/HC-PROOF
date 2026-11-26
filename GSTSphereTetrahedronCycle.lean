@@ -188,7 +188,7 @@ theorem tetraBary_continuous :
     have hap : Continuous fun x : stdSimplex ℝ (Fin 4) => ((x : Fin 4 → ℝ) i : ℝ) :=
       (continuous_apply i).comp hcoe
     exact hap.smul continuous_const
-  exact continuous_finset_sum _ fun i _ => hterm i
+  exact continuous_finsetSum _ fun i _ => hterm i
 
 /-! ## §2 The central projection and the singular simplex -/
 
@@ -224,8 +224,12 @@ theorem tetraMap_continuous : Continuous tetraMap := by
       (‖tetraBary x - tetraCamera‖⁻¹ : ℝ) • (tetraBary x - tetraCamera) := by
     rw [continuous_iff_continuousAt]
     intro x₀
-    exact ContinuousAt.comp (continuousAt_sphereNormalize (tetraBary_ne_camera x₀))
-      ((tetraBary_continuous.continuousAt).sub continuous_const.continuousAt)
+    have hg : ContinuousAt (fun y : EuclideanSpace ℝ (Fin 3) => (‖y‖⁻¹ : ℝ) • y)
+        (tetraBary x₀ - tetraCamera) :=
+      continuousAt_sphereNormalize (tetraBary_ne_camera x₀)
+    have hf : ContinuousAt (fun x : stdSimplex ℝ (Fin 4) => tetraBary x - tetraCamera) x₀ :=
+      (tetraBary_continuous.continuousAt).sub continuous_const.continuousAt
+    exact hg.comp hf
   exact Continuous.subtype_mk hco _
 
 /-- The singular 3-simplex of the projected tetrahedron. -/
@@ -321,7 +325,7 @@ theorem tetraW0_sub_camera_ne : tetraW 0 - tetraCamera ≠ 0 := by
       ((tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 0 = 0 := by
     have hc := congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ) 0) h
     simpa using hc
-  simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.head_cons] at hz
+  simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero] at hz
   norm_num at hz
 
 /-- The camera offset of `w₁` is nonzero (first coordinate `1 - 10`). -/
@@ -331,7 +335,7 @@ theorem tetraW1_sub_camera_ne : tetraW 1 - tetraCamera ≠ 0 := by
       ((tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 0 = 0 := by
     have hc := congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ) 0) h
     simpa using hc
-  simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.head_cons] at hz
+  simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero] at hz
   norm_num at hz
 
 /-- The projected camera offsets of `w₀` and `w₁` differ: the
