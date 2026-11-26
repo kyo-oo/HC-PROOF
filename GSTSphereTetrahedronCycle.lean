@@ -123,7 +123,9 @@ theorem tetraBary_vertex (m : Fin 4) :
   rw [Finset.sum_eq_single m]
   · simp
   · intro i _hi him
-    rw [Pi.single_apply, if_neg him, zero_smul]
+    have hzero : ((stdSimplex.vertex (S := ℝ) m : Fin 4 → ℝ)) i = 0 := by
+      simp [stdSimplex.vertex, him, Ne.symm him]
+    rw [hzero, zero_smul]
   · intro hm
     exact absurd (Finset.mem_univ m) hm
 
@@ -199,12 +201,15 @@ def sphereNormalize {y : EuclideanSpace ℝ (Fin 3)} (hy : y ≠ 0) :
     rw [Real.norm_eq_abs, abs_of_pos hpos,
       inv_mul_cancel₀ (norm_ne_zero_iff.mpr hy)]⟩
 
-/-- The central projection is continuous at every nonzero point. -/
+/-- The central projection is continuous at every nonzero point (the
+scalar factor via the pinned `continuousAt_inv₀`, composed with the norm). -/
 theorem continuousAt_sphereNormalize {y₀ : EuclideanSpace ℝ (Fin 3)}
     (hy₀ : y₀ ≠ 0) :
-    ContinuousAt (fun y : EuclideanSpace ℝ (Fin 3) => (‖y‖⁻¹ : ℝ) • y) y₀ :=
-  ((continuous_norm.continuousAt).inv (norm_ne_zero_iff.mpr hy₀)).smul
-    continuous_id.continuousAt
+    ContinuousAt (fun y : EuclideanSpace ℝ (Fin 3) => (‖y‖⁻¹ : ℝ) • y) y₀ := by
+  have hscalar : ContinuousAt (fun y : EuclideanSpace ℝ (Fin 3) => (‖y‖⁻¹ : ℝ)) y₀ :=
+    ContinuousAt.comp (continuousAt_inv₀ (norm_ne_zero_iff.mpr hy₀))
+      continuous_norm.continuousAt
+  exact hscalar.smul continuous_id.continuousAt
 
 /-- The projected singular map of the tetrahedron. -/
 def tetraMap : stdSimplex ℝ (Fin 4) → unitSphereType :=
@@ -216,12 +221,11 @@ projection, continuous at every point; the subtype lift is the green
 `Continuous.subtype_mk` route. -/
 theorem tetraMap_continuous : Continuous tetraMap := by
   have hco : Continuous fun x : stdSimplex ℝ (Fin 4) =>
-      ((tetraMap x : unitSphereType) : EuclideanSpace ℝ (Fin 3)) := by
+      (‖tetraBary x - tetraCamera‖⁻¹ : ℝ) • (tetraBary x - tetraCamera) := by
     rw [continuous_iff_continuousAt]
     intro x₀
-    have hmid : ContinuousAt (fun x : stdSimplex ℝ (Fin 4) => tetraBary x - tetraCamera) x₀ :=
-      (tetraBary_continuous.continuousAt).sub continuous_const.continuousAt
-    exact ContinuousAt.comp (continuousAt_sphereNormalize (tetraBary_ne_camera x₀)) hmid
+    exact ContinuousAt.comp (continuousAt_sphereNormalize (tetraBary_ne_camera x₀))
+      ((tetraBary_continuous.continuousAt).sub continuous_const.continuousAt)
   exact Continuous.subtype_mk hco _
 
 /-- The singular 3-simplex of the projected tetrahedron. -/
@@ -263,11 +267,13 @@ theorem toSSetObj₃_face {X : TopCat} (σ : C(stdSimplex ℝ (Fin 4), X)) (k : 
 
 /-- The generator: the singular 3-chain of the projected tetrahedron
 (the coefficient object is implicit at the pin — the green `ιPoint`
-spelling of `GSTComponentCohomologyZero.lean`). -/
+spelling of `GSTComponentCohomologyZero.lean`; the ascription resolves
+it exactly as `ιPoint`'s declaration type does). -/
 def tetraGen : (singularChainsOf (TopCat.of unitSphereType)).X 3 :=
-  ModuleCat.Hom.hom
-    ((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-      (threeSimplexInject tetraSimplex)) (1 : ℚ)
+  (((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+      (threeSimplexInject tetraSimplex) :
+      ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 3)).hom
+    (1 : ℚ)
 
 /-- **THE PROJECTED TETRAHEDRON BOUNDARY CYCLE.**  The alternating sum of
 the four projected 2-faces. -/
