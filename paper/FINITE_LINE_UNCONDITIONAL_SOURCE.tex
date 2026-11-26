@@ -720,9 +720,10 @@ rational preimage of $0$ is $0$.
 (1) is the design of the bottom stash.  (2) is the span-bigrading
 fiber receipt: the complex span of the complexified family, pulled
 back along the injective complexification, returns the rational span
-(\texttt{rational\_fiber\_spanBigrading}).  (3) is the dead-fiber
-receipt: $(p,p)$-component $= \bot$ for $p \ge 1$ in the stash
-(\texttt{stashBigrading\_ppComponent\_eq\_bot}), so
+(\texttt{rationalHodgeSubspace\_span\_eq}, instantiated at the world as
+\texttt{finiteLineHodgeData\_fiber\_one\_'}).  (3) is the dead-fiber
+receipt: the rational Hodge subspace of the stash bigrading is $\bot$
+for $p \ge 1$ (\texttt{rationalHodgeSubspace\_stash\_eq\_bot}), so
 $\alpha_\C \in \bot$ forces $\alpha_\C = 0$ and injectivity forces
 $\alpha = 0$.  \emph{No positive-degree cohomology vanishing is
 claimed or used anywhere in the package: the emptiness of the higher
@@ -942,7 +943,8 @@ $Z$, and the operator $W$ preserves algebraicity --- the
 correspondence action on cycle classes is the push-pull along the
 projections of the graph, and pushforwards and pullbacks of algebraic
 cycles along algebraic correspondences are algebraic (the orbit
-algebraicity receipt, \texttt{hodgeOrbit\_algebraic}; realized on
+algebraicity receipt, the certificate's own \texttt{exists\_cycle}
+method of \texttt{RealizedCorrespondenceKrylovCertificate}; realized on
 points by Theorem~\ref{thm:realized} at the two live weights).  So
 $W^n\cl_p(Z) = \cl_p(Z_n)$ for an actual cycle $Z_n$, and by
 linearity of $\cl_p$:
