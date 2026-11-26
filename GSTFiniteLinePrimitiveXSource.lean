@@ -136,6 +136,21 @@ private theorem mem_of_rationalHodgeSubspace_eq
   rw [← h]
   exact hv
 
+/-- **THE SPAN-DECOMPOSITION, SEAM-SAFE** — the exists-form of the green
+bridge: the decomposition runs at the lemma's own single spelling (the
+Module instance is a binder, the membership is the lemma's own), so no
+instance synthesis and no kabstract ever see the A-vs-analytification seam;
+the conclusion's spelling is driven purely by the application. -/
+private theorem exists_decomp_of_fiber_eq
+    {VQ : Type} [AddCommGroup VQ] [Module ℚ VQ] {ι : Type} [Fintype ι]
+    {p : Nat} {D : HodgeBigrading VQ (2 * p)} {c : ι → VQ}
+    (h : rationalHodgeSubspace D = Submodule.span ℚ (Set.range c)) {x : VQ}
+    (hx : x ∈ rationalHodgeSubspace D) :
+    ∃ q : ι → ℚ, x = ∑ i, q i • c i := by
+  rw [h] at hx
+  obtain ⟨q, hq⟩ := (Submodule.mem_span_range_iff_exists_fun ℚ).mp hx
+  exact ⟨q, hq.symm⟩
+
 /-! ## §5 The span (the source theorem proper) -/
 
 /-- **THE SOURCE THEOREM AT WEIGHT ZERO** — every rational Hodge class of
@@ -191,15 +206,7 @@ theorem finiteLine_universal_primitive_X_source_one (M : ℕ) [NeZero M]
         spanBigrading (finiteLinePointClass M (finiteLineWorld M) A hspace ω)
           1 (by omega) from rfl]
     exact rationalHodgeSubspace_span_eq _ 1 (by omega)
-  have hmem' : (α : singularCohomologyOf A.space 2) ∈ Submodule.span ℚ
-      (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω)) :=
-    mem_of_rationalHodgeSubspace_eq hfib hmem
-  rw [show ((α : singularCohomologyOf A.space 2) ∈ Submodule.span ℚ
-      (Set.range (finiteLinePointClass M (finiteLineWorld M) A hspace ω))) ↔
-      (∃ q : Fin M → ℚ, ∑ i, q i •
-        (finiteLinePointClass M (finiteLineWorld M) A hspace ω) i = α) from
-    Submodule.mem_span_range_iff_exists_fun ℚ] at hmem'
-  obtain ⟨q, hq⟩ := hmem'
+  obtain ⟨q, hq⟩ := exists_decomp_of_fiber_eq hfib hmem
   refine ⟨q, ?_⟩
   have hsum : ∑ i, q i • (finiteLineHodgeDataHonest M A hspace ω).cycleClass 1
         (finiteLineSourceOne M i)
@@ -208,7 +215,7 @@ theorem finiteLine_universal_primitive_X_source_one (M : ℕ) [NeZero M]
       rw [finiteLineSourceOne_class M A hspace ω i]
       rfl
   rw [hsum]
-  exact hq.symm
+  exact hq
 
 /-- **THE SOURCE THEOREM ABOVE** — the vacuity: every rational Hodge class
 of every weight `p ≥ 2` of the honest data is ZERO (the stash design's
