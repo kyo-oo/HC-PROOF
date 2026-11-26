@@ -78,14 +78,14 @@ THAT witness, at every `M ≥ 1`, at the constructed unconditional
 analytification — the hω-guarded conjunct of the apex package with the
 guard discharged by fixing the witness. -/
 theorem finiteLineSourceOne_independent_of_exists
-    (h∃ : ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2, ω ≠ 0) :
+    (hex : ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2, ω ≠ 0) :
     ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2,
       ∀ (M : ℕ) (hM : NeZero M),
         LinearIndependent ℚ (fun i : Fin M =>
           (finiteLineHodgeDataHonest M (finiteLineAnalytificationUnconditional M)
             (finiteLineAnalytificationUnconditional_space M) ω).cycleClass 1
             (finiteLineSourceOne M i)) := by
-  obtain ⟨ω₀, hω₀⟩ := h∃
+  obtain ⟨ω₀, hω₀⟩ := hex
   refine ⟨ω₀, fun M hM => ?_⟩
   haveI : NeZero M := hM
   exact finiteLineSourceOne_independent M
@@ -101,7 +101,7 @@ family, every weight-`p ≥ 2` rational Hodge class zero, both compilers
 correct, AND the gate-free law itself — the unconditional-package
 theorem of record. -/
 theorem the_unconditional_source_package_of_exists
-    (h∃ : ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2, ω ≠ 0) :
+    (hex : ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2, ω ≠ 0) :
     ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2,
       (∀ (M : ℕ) (hM : NeZero M),
         LinearIndependent ℚ (fun i : Fin M =>
@@ -166,7 +166,7 @@ theorem the_unconditional_source_package_of_exists
         NativeGSTSingleFoldOrbitLaw (finiteLineWorld M)
           (finiteLineHodgeDataHonest M (finiteLineAnalytificationUnconditional M)
             (finiteLineAnalytificationUnconditional_space M) ω)) := by
-  obtain ⟨ω₀, hω₀⟩ := h∃
+  obtain ⟨ω₀, hω₀⟩ := hex
   refine ⟨ω₀, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro M hM
     haveI : NeZero M := hM
