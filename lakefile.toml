@@ -1761,3 +1761,9 @@ name = "GSTFiniteLineFenceDischargeLib"
 roots = [
   "GSTFiniteLineFenceDischarge",
 ]
+
+[[lean_lib]]
+name = "GSTSphereRouteCorrectionLib"
+roots = [
+  "GSTSphereRouteCorrection",
+]
