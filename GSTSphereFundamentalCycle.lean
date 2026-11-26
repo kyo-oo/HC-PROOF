@@ -135,7 +135,11 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
       PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
       Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j <;> linarith
+    have keys : μ 0 = 0 ∧ μ 1 = 0 ∧ μ 2 = 0 := ⟨by linarith, by linarith, by linarith⟩
+    intro j; fin_cases j
+    · exact keys.1
+    · exact keys.2.1
+    · exact keys.2.2
   · -- face 1 = [w₀, w₂, w₃] = (1,1,1), (-1,1,-1), (-1,-1,1)
     have h0 := hread 0
     have h1 := hread 1
@@ -144,7 +148,11 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
       PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
       Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j <;> linarith
+    have keys : μ 0 = 0 ∧ μ 1 = 0 ∧ μ 2 = 0 := ⟨by linarith, by linarith, by linarith⟩
+    intro j; fin_cases j
+    · exact keys.1
+    · exact keys.2.1
+    · exact keys.2.2
   · -- face 2 = [w₀, w₁, w₃] = (1,1,1), (1,-1,-1), (-1,-1,1)
     have h0 := hread 0
     have h1 := hread 1
@@ -153,7 +161,11 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
       PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
       Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
       Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j <;> linarith
+    have keys : μ 0 = 0 ∧ μ 1 = 0 ∧ μ 2 = 0 := ⟨by linarith, by linarith, by linarith⟩
+    intro j; fin_cases j
+    · exact keys.1
+    · exact keys.2.1
+    · exact keys.2.2
   · -- face 3 = [w₀, w₁, w₂] = (1,1,1), (1,-1,-1), (-1,1,-1)
     have h0 := hread 0
     have h1 := hread 1
@@ -161,7 +173,11 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     simp [Fin.sum_univ_three, faceVert, Fin.succAbove, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
       Fin.val_zero, Fin.val_one, Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j <;> linarith
+    have keys : μ 0 = 0 ∧ μ 1 = 0 ∧ μ 2 = 0 := ⟨by linarith, by linarith, by linarith⟩
+    intro j; fin_cases j
+    · exact keys.1
+    · exact keys.2.1
+    · exact keys.2.2
 
 /-- **THE CENTER MISSES EVERY FACE.**  The barycentric image of any
 point of the i-th closed face is nonzero — the origin (the tetrahedron
