@@ -115,6 +115,21 @@ theorem tetraFaceBary_continuous (i : Fin 4) :
 
 /-! ## §2 The rank-three nonvanishing (the center misses every face) -/
 
+/-! ### The succAbove literal table (decide-evaluated) -/
+
+@[simp] theorem succAbove_0_0 : (0 : Fin 4).succAbove (0 : Fin 3) = 1 := by decide
+@[simp] theorem succAbove_0_1 : (0 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
+@[simp] theorem succAbove_0_2 : (0 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
+@[simp] theorem succAbove_1_0 : (1 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
+@[simp] theorem succAbove_1_1 : (1 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
+@[simp] theorem succAbove_1_2 : (1 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
+@[simp] theorem succAbove_2_0 : (2 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
+@[simp] theorem succAbove_2_1 : (2 : Fin 4).succAbove (1 : Fin 3) = 1 := by decide
+@[simp] theorem succAbove_2_2 : (2 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
+@[simp] theorem succAbove_3_0 : (3 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
+@[simp] theorem succAbove_3_1 : (3 : Fin 4).succAbove (1 : Fin 3) = 1 := by decide
+@[simp] theorem succAbove_3_2 : (3 : Fin 4).succAbove (2 : Fin 3) = 2 := by decide
+
 /-- **THE FACE-VERTICES ARE INDEPENDENT.**  Every three of the four
 alternating tetrahedron vertices are linearly independent (the 3×3
 coordinate matrix of each face is a ±1 matrix with determinant ±4). -/
@@ -131,66 +146,38 @@ theorem face_indep (i : Fin 4) (μ : Fin 3 → ℝ)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    have s0 : (0 : Fin 4).succAbove (0 : Fin 3) = 1 := by decide
-    have s1 : (0 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
-    have s2 : (0 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-    rw [Fin.sum_univ_three, Fin.sum_univ_three, Fin.sum_univ_three,
-      s0, s1, s2] at h0 h1 h2
-    simp only [faceVert, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
-      Fin.val_zero, Fin.val_one, Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
+    simp only [Fin.sum_univ_three, faceVert, succAbove_0_0, succAbove_0_1, succAbove_0_2, tetraW,
+      PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
+      Fin.val_two] at h0 h1 h2
+    intro j; fin_cases j <;> linarith
   · -- face 1 = [w₀, w₂, w₃] = (1,1,1), (-1,1,-1), (-1,-1,1)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    have s0 : (1 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
-    have s1 : (1 : Fin 4).succAbove (1 : Fin 3) = 2 := by decide
-    have s2 : (1 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-    rw [Fin.sum_univ_three, Fin.sum_univ_three, Fin.sum_univ_three,
-      s0, s1, s2] at h0 h1 h2
-    simp only [faceVert, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
-      Fin.val_zero, Fin.val_one, Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
+    simp only [Fin.sum_univ_three, faceVert, succAbove_1_0, succAbove_1_1, succAbove_1_2, tetraW,
+      PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
+      Fin.val_two] at h0 h1 h2
+    intro j; fin_cases j <;> linarith
   · -- face 2 = [w₀, w₁, w₃] = (1,1,1), (1,-1,-1), (-1,-1,1)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    have s0 : (2 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
-    have s1 : (2 : Fin 4).succAbove (1 : Fin 3) = 1 := by decide
-    have s2 : (2 : Fin 4).succAbove (2 : Fin 3) = 3 := by decide
-    rw [Fin.sum_univ_three, Fin.sum_univ_three, Fin.sum_univ_three,
-      s0, s1, s2] at h0 h1 h2
-    simp only [faceVert, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
-      Fin.val_zero, Fin.val_one, Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
+    simp only [Fin.sum_univ_three, faceVert, succAbove_2_0, succAbove_2_1, succAbove_2_2, tetraW,
+      PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_two, Matrix.head_cons, Fin.val_zero, Fin.val_one,
+      Fin.val_two] at h0 h1 h2
+    intro j; fin_cases j <;> linarith
   · -- face 3 = [w₀, w₁, w₂] = (1,1,1), (1,-1,-1), (-1,1,-1)
     have h0 := hread 0
     have h1 := hread 1
     have h2 := hread 2
-    have s0 : (3 : Fin 4).succAbove (0 : Fin 3) = 0 := by decide
-    have s1 : (3 : Fin 4).succAbove (1 : Fin 3) = 1 := by decide
-    have s2 : (3 : Fin 4).succAbove (2 : Fin 3) = 2 := by decide
-    rw [Finset.sum_univ_three, Finset.sum_univ_three, Finset.sum_univ_three,
-      s0, s1, s2] at h0 h1 h2
-    simp only [faceVert, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
+    simp only [Fin.sum_univ_three, faceVert, succAbove_3_0, succAbove_3_1,
+      succAbove_3_2, tetraW, PiLp.toLp_apply, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons,
       Fin.val_zero, Fin.val_one, Fin.val_two] at h0 h1 h2
-    intro j; fin_cases j
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
-    · linarith [h0, h1, h2]
+    intro j; fin_cases j <;> linarith
 
 /-- **THE CENTER MISSES EVERY FACE.**  The barycentric image of any
 point of the i-th closed face is nonzero — the origin (the tetrahedron
@@ -360,21 +347,25 @@ theorem faceChain_d (i : Fin 4) :
   calc ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2 1)
         (faceChain i)
       = ModuleCat.Hom.hom
-          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-            (twoSimplexInject (faceSimplex i)) ≫
-            (singularChainsOf (TopCat.of unitSphereType)).d 2 1) (1 : ℚ) := by
+          ((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+            (twoSimplexInject (faceSimplex i)) :
+            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2) ≫
+            (singularChainsOf (TopCat.of unitSphereType)).d 2 1)) (1 : ℚ) := by
         rw [ModuleCat.hom_comp]
         rfl
     _ = ModuleCat.Hom.hom
-          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+          ((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
               ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 0
-                (twoSimplexInject (faceSimplex i))) +
-            -((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+                (twoSimplexInject (faceSimplex i))) :
+            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2) +
+            -((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
               ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 1
-                (twoSimplexInject (faceSimplex i)))) +
-          (TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+                (twoSimplexInject (faceSimplex i))) :
+            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2))) +
+          (((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
             ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 2
-              (twoSimplexInject (faceSimplex i)))) (1 : ℚ) := h
+              (twoSimplexInject (faceSimplex i))) :
+            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2))) (1 : ℚ) := h
     _ = edgeChain i 0 - edgeChain i 1 + edgeChain i 2 := by
         rw [ModuleCat.hom_add, LinearMap.add_apply, ModuleCat.hom_add,
           LinearMap.add_apply, ModuleCat.hom_neg, LinearMap.neg_apply]
