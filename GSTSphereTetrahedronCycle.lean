@@ -14,8 +14,8 @@ THE CONSTRUCTION (fully explicit):
 * the tetrahedron `T = conv{w₀,w₁,w₂,w₃}` with `w₀=(1,1,1)`,
   `w₁=(1,-1,-1)`, `w₂=(-1,1,-1)`, `w₃=(-1,-1,1)` in `EuclideanSpace ℝ (Fin 3)`;
 * the camera `c = (10,10,10)`, OUTSIDE `T` (every barycentric coordinate
-  combination has each coordinate in `[-1,1]` — `Finset.abs_sum_le_sum_of_abs_le`
-  against `|wᵢⱼ| = 1`, `xᵢ ≥ 0`, `∑ xᵢ = 1`);
+  of the image is a convex combination of `±1`-coordinates, hence `≤ 1`,
+  while the camera's coordinates are `10`);
 * the central projection `F(y) = (‖y‖⁻¹ : ℝ) • y`, continuous at every
   nonzero point, valued in the unit sphere;
 * the singular 3-simplex `tetraSimplex : Δ³ → S²`, `x ↦ F(bary(x) - c)`;
@@ -43,6 +43,44 @@ HONESTY LEDGER. Every statement proved here is unconditional. No `sorry`,
 no new axioms, no `native_decide`. Designated CI repair points are the
 PORT NOTES at the end of the file. The GitHub CI lane
 `gst-sphere-fence-discharge.yml` owns the kernel check.
+
+WAVE 10-B-REPAIR (run 45766418207, every site of the tail-25 diagnosed
+against the pin and the green corpus):
+* `Matrix.head_tail` is not pinned — dropped from the `tetraW_coord_abs`
+  simp set (the cons lemmas alone evaluate the matrix literals), and the
+  statement restated at the goal's own coercion spelling;
+* `Finset.abs_sum_le_sum_of_abs_le` is not pinned — the whole
+  camera-separation argument is rebuilt on the UPPER BOUND only (the
+  contradiction needs `coord ≤ 1` against `coord = 10` — no absolute
+  value of a sum anywhere): the per-term bound
+  `x i * w i 1 ≤ x i` by `mul_le_mul_of_nonneg_left` + `le_abs_self`
+  through `tetraW_coord_abs`, summed by `Finset.sum_le_sum`, closed by
+  the stdSimplex sum property;
+* `Metric.mem_sphere_zero_iff_norm` is not the pinned name — the lemma
+  is root-level `mem_sphere_zero_iff_norm` (the green Riemann spelling);
+* `rationalCoefficient` is not visible without the namespace — the
+  coefficient of `ιChainComplex` is IMPLICIT at the pin (the green
+  `ιPoint`/`ιPath` call shape of `GSTComponentCohomologyZero.lean`),
+  inferred from the expected type — the argument is simply dropped;
+* `HomologicalComplex.d_comp_d` at the pin takes `(C i j k)` with NO
+  `Rel` hypotheses (the 2026 shape, pin-verified) — the two `(by simp)`
+  arguments removed;
+* `ContinuousAt.comp` at the pin is two-argument with the point
+  implicit (pin-verified); `tetraMap_continuous` rebuilt on the green
+  `Continuous.subtype_mk (h) (_)` route (the corpus-green
+  strict-correspondence spelling) over the coerced global continuity;
+* `ContinuousAt.smul`'s second argument must be `ContinuousAt` —
+  `continuous_id.continuousAt`, not `continuous_id`;
+* the numeric residue of the coordinate simp normalizations
+  (`1 - 10 = -9` etc.) is closed by `norm_num` (the green Riemann
+  discipline: simp normalizes the shape, `norm_num` finishes the
+  arithmetic);
+* `inv_eq_inv_iff` is not pinned — the inversion equality is obtained
+  directly by right-cancellation of `-9`;
+* `toSSetObj₃_face`: at the 3-simplex the `rw`'s post-rewrite `rfl`
+  closes the goal (both sides syntactically identical), so the explicit
+  `rfl` had "no goals" — removed; `tetraFace_vertex_zero` gains the
+  `show`+`rfl` closer for the bundled-map beta residue.
 -/
 
 set_option maxHeartbeats 70000000
@@ -91,46 +129,64 @@ theorem tetraBary_vertex (m : Fin 4) :
 
 /-- The absolute value of every coordinate of every vertex. -/
 theorem tetraW_coord_abs (i : Fin 4) (j : Fin 3) :
-    |(tetraW i : Fin 3 → ℝ) j| = 1 := by
+    |((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) j| = 1 := by
   fin_cases i <;> fin_cases j <;>
     simp [tetraW, PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.head_cons, Matrix.head_tail]
+      Matrix.cons_val_two, Matrix.head_cons]
 
-/-- The barycentric image never meets the camera: every coordinate of
-`tetraBary x` lies in `[-1,1]` (the convex combination bound), while the
-camera's coordinates are `10`. -/
+/-- Every first coordinate of every vertex is at most `1`. -/
+theorem tetraW_coord_le_one (i : Fin 4) :
+    ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 ≤ 1 := by
+  rw [← tetraW_coord_abs i 1]
+  exact le_abs_self _
+
+/-- The barycentric image never meets the camera: the first coordinate of
+`tetraBary x` is a convex combination of coordinates each `≤ 1` with
+weights summing to `1`, hence `≤ 1`, while the camera's first coordinate
+is `10`. -/
 theorem tetraBary_ne_camera (x : stdSimplex ℝ (Fin 4)) :
     tetraBary x - tetraCamera ≠ 0 := by
   intro h
-  have hcoord : ((tetraBary x - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 = 0 := by
-    have hc := congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ) 1) h
-    simpa using hc
+  obtain ⟨hnonneg, hsumone⟩ :
+      (∀ i, 0 ≤ (x : Fin 4 → ℝ) i) ∧ ∑ i, (x : Fin 4 → ℝ) i = 1 := x.2
+  have hbc : tetraBary x = tetraCamera := eq_of_sub_eq_zero h
+  -- the first coordinate of the barycentric image, as an explicit sum:
+  have hsum : ((tetraBary x : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1
+      = ∑ i, (x : Fin 4 → ℝ) i * ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 := by
+    simp [tetraBary]
+  have hle : ((tetraBary x : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 ≤ 1 := by
+    rw [hsum]
+    have hstep : ∀ i : Fin 4,
+        (x : Fin 4 → ℝ) i * ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1
+          ≤ (x : Fin 4 → ℝ) i := by
+      intro i
+      have hmul := mul_le_mul_of_nonneg_left (tetraW_coord_le_one i) (hnonneg i)
+      simpa using hmul
+    calc ∑ i, (x : Fin 4 → ℝ) i * ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1
+        ≤ ∑ i, (x : Fin 4 → ℝ) i := Finset.sum_le_sum fun i _ => hstep i
+      _ = 1 := hsumone
+  -- the camera's first coordinate is 10:
   have hcam : ((tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 = 10 := by
-    simp [tetraCamera, PiLp.toLp_apply, Matrix.cons_val_one, Matrix.head_cons]
-  have hbx : |((tetraBary x : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1| ≤ 1 := by
-    have habs : |((tetraBary x : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1| ≤
-        ∑ i, |(x : Fin 4 → ℝ) i * ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1| := by
-      calc |((tetraBary x : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1|
-          = |∑ i, (x : Fin 4 → ℝ) i * ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1| := by
-              simp only [tetraBary, Finset.sum_apply, smul_eq_mul]
-        _ ≤ ∑ i, |(x : Fin 4 → ℝ) i * ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1| :=
-              Finset.abs_sum_le_sum_of_abs_le _ _ fun i _ => abs_mul _ _
-    refine le_trans habs ?_
-    calc ∑ i, |(x : Fin 4 → ℝ) i * ((tetraW i : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1|
-        = ∑ i, (x : Fin 4 → ℝ) i := by
-            refine Finset.sum_congr rfl fun i _ => ?_
-            rw [abs_mul, abs_of_nonneg (x.2.1 i), tetraW_coord_abs, mul_one]
-      _ = 1 := x.2.2
-  rw [sub_apply, hcam] at hcoord
-  rw [sub_eq_zero] at hcoord
-  rw [abs_le] at hbx
-  linarith
+    simp [tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.head_cons]
+  have hc := congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ) 1) hbc
+  simp only [hcam] at hc
+  rw [hc] at hle
+  norm_num at hle
 
 /-- The barycentric parametrization is continuous. -/
 theorem tetraBary_continuous :
     Continuous tetraBary := by
-  refine continuous_finset_sum _ fun i _ => ?_
-  exact ((continuous_apply i).comp continuous_induced_dom).smul continuous_const
+  have hcoe : Continuous fun x : stdSimplex ℝ (Fin 4) => (x : Fin 4 → ℝ) :=
+    continuous_induced_dom
+  have hterm : ∀ i : Fin 4,
+      Continuous fun x : stdSimplex ℝ (Fin 4) =>
+        ((x : Fin 4 → ℝ) i : ℝ) • (tetraW i : EuclideanSpace ℝ (Fin 3)) := by
+    intro i
+    have hap : Continuous fun x : stdSimplex ℝ (Fin 4) => ((x : Fin 4 → ℝ) i : ℝ) :=
+      (continuous_apply i).comp hcoe
+    exact hap.smul continuous_const
+  exact continuous_finset_sum _ fun i _ => hterm i
 
 /-! ## §2 The central projection and the singular simplex -/
 
@@ -138,29 +194,35 @@ theorem tetraBary_continuous :
 def sphereNormalize {y : EuclideanSpace ℝ (Fin 3)} (hy : y ≠ 0) :
     unitSphereType :=
   ⟨(‖y‖⁻¹ : ℝ) • y, by
-    rw [Metric.mem_sphere_zero_iff_norm, norm_smul,
-      inv_mul_cancel₀ (norm_ne_zero_iff.mpr hy)]
-    simp⟩
+    rw [mem_sphere_zero_iff_norm, norm_smul]
+    have hpos : (0 : ℝ) < (‖y‖⁻¹ : ℝ) := inv_pos.mpr (norm_pos_iff.mpr hy)
+    rw [Real.norm_eq_abs, abs_of_pos hpos,
+      inv_mul_cancel₀ (norm_ne_zero_iff.mpr hy)]⟩
 
 /-- The central projection is continuous at every nonzero point. -/
 theorem continuousAt_sphereNormalize {y₀ : EuclideanSpace ℝ (Fin 3)}
     (hy₀ : y₀ ≠ 0) :
-    ContinuousAt (fun y : EuclideanSpace ℝ (Fin 3) => (‖y‖⁻¹ : ℝ) • y) y₀ := by
-  refine ContinuousAt.smul ?_ continuous_id
-  exact (continuous_norm.continuousAt).inv (norm_ne_zero_iff.mpr hy₀)
+    ContinuousAt (fun y : EuclideanSpace ℝ (Fin 3) => (‖y‖⁻¹ : ℝ) • y) y₀ :=
+  ((continuous_norm.continuousAt).inv (norm_ne_zero_iff.mpr hy₀)).smul
+    continuous_id.continuousAt
 
 /-- The projected singular map of the tetrahedron. -/
 def tetraMap : stdSimplex ℝ (Fin 4) → unitSphereType :=
   fun x => sphereNormalize (tetraBary_ne_camera x)
 
-/-- The projected singular map is continuous. -/
+/-- The projected singular map is continuous: the coerced map is the
+composition of the (never-zero) camera offset with the central
+projection, continuous at every point; the subtype lift is the green
+`Continuous.subtype_mk` route. -/
 theorem tetraMap_continuous : Continuous tetraMap := by
-  rw [continuous_iff_continuousAt]
-  intro x₀
-  have hmid : ContinuousAt (fun x : stdSimplex ℝ (Fin 4) => tetraBary x - tetraCamera) x₀ := by
-    exact (tetraBary_continuous.continuousAt).sub continuous_const.continuousAt
-  refine (continuousAt_sphereNormalize (tetraBary_ne_camera x₀)).comp ?_
-  exact hmid
+  have hco : Continuous fun x : stdSimplex ℝ (Fin 4) =>
+      ((tetraMap x : unitSphereType) : EuclideanSpace ℝ (Fin 3)) := by
+    rw [continuous_iff_continuousAt]
+    intro x₀
+    have hmid : ContinuousAt (fun x : stdSimplex ℝ (Fin 4) => tetraBary x - tetraCamera) x₀ :=
+      (tetraBary_continuous.continuousAt).sub continuous_const.continuousAt
+    exact ContinuousAt.comp (continuousAt_sphereNormalize (tetraBary_ne_camera x₀)) hmid
+  exact Continuous.subtype_mk hco _
 
 /-- The singular 3-simplex of the projected tetrahedron. -/
 def tetraSimplex : C(stdSimplex ℝ (Fin 4), TopCat.of unitSphereType) :=
@@ -191,7 +253,6 @@ theorem toSSetObj₃_face {X : TopCat} (σ : C(stdSimplex ℝ (Fin 4), X)) (k : 
         ((TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 3))).symm σ)
         (stdSimplex.map (Fin.succAbove k) z) = σ (stdSimplex.map (Fin.succAbove k) z)
     rw [(TopCat.toSSetObjEquiv X (Opposite.op (SimplexCategory.mk 3))).apply_symm_apply]
-    rfl
   calc X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 2))
         ((TopCat.toSSet.obj X).δ k (threeSimplexInject σ)) z
         = X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 3)) (threeSimplexInject σ)
@@ -200,11 +261,13 @@ theorem toSSetObj₃_face {X : TopCat} (σ : C(stdSimplex ℝ (Fin 4), X)) (k : 
 
 /-! ## §3 The cycle and its properties -/
 
-/-- The generator: the singular 3-chain of the projected tetrahedron. -/
+/-- The generator: the singular 3-chain of the projected tetrahedron
+(the coefficient object is implicit at the pin — the green `ιPoint`
+spelling of `GSTComponentCohomologyZero.lean`). -/
 def tetraGen : (singularChainsOf (TopCat.of unitSphereType)).X 3 :=
   ModuleCat.Hom.hom
     ((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-      rationalCoefficient (threeSimplexInject tetraSimplex)) (1 : ℚ)
+      (threeSimplexInject tetraSimplex)) (1 : ℚ)
 
 /-- **THE PROJECTED TETRAHEDRON BOUNDARY CYCLE.**  The alternating sum of
 the four projected 2-faces. -/
@@ -212,13 +275,14 @@ def tetraCycle : (singularChainsOf (TopCat.of unitSphereType)).X 2 :=
   ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 3 2) tetraGen
 
 /-- **THE CYCLE LAW.**  `d₂(tetraCycle) = 0` — the boundary of the
-boundary vanishes (the complex law `d ≫ d = 0`). -/
+boundary vanishes (the complex law `d ≫ d = 0`, the pinned four-argument
+`HomologicalComplex.d_comp_d`). -/
 theorem tetraCycle_d :
     ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2 1)
       tetraCycle = 0 := by
   have hcomp : ((singularChainsOf (TopCat.of unitSphereType)).d 3 2) ≫
       ((singularChainsOf (TopCat.of unitSphereType)).d 2 1) = 0 :=
-    HomologicalComplex.d_comp_d _ 3 2 1 (by simp) (by simp)
+    HomologicalComplex.d_comp_d _ 3 2 1
   show ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2 1)
       (ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 3 2) tetraGen) = 0
   have hbr : ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2 1)
@@ -240,6 +304,9 @@ theorem tetraFace_vertex_zero (k : Fin 4) :
           (threeSimplexInject tetraSimplex)) tetraFaceVertexZero =
       tetraMap (stdSimplex.map (Fin.succAbove k) tetraFaceVertexZero) := by
   rw [toSSetObj₃_face tetraSimplex k tetraFaceVertexZero]
+  show tetraMap (stdSimplex.map (Fin.succAbove k) tetraFaceVertexZero)
+      = tetraMap (stdSimplex.map (Fin.succAbove k) tetraFaceVertexZero)
+  rfl
 
 /-- The camera offset of `w₀` is nonzero (first coordinate `1 - 10`). -/
 theorem tetraW0_sub_camera_ne : tetraW 0 - tetraCamera ≠ 0 := by
@@ -249,6 +316,7 @@ theorem tetraW0_sub_camera_ne : tetraW 0 - tetraCamera ≠ 0 := by
     have hc := congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ) 0) h
     simpa using hc
   simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.head_cons] at hz
+  norm_num at hz
 
 /-- The camera offset of `w₁` is nonzero (first coordinate `1 - 10`). -/
 theorem tetraW1_sub_camera_ne : tetraW 1 - tetraCamera ≠ 0 := by
@@ -258,6 +326,7 @@ theorem tetraW1_sub_camera_ne : tetraW 1 - tetraCamera ≠ 0 := by
     have hc := congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ) 0) h
     simpa using hc
   simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero, Matrix.head_cons] at hz
+  norm_num at hz
 
 /-- The projected camera offsets of `w₀` and `w₁` differ: the
 two-coordinate contradiction
@@ -273,25 +342,28 @@ theorem sphereNormalize_w0_ne_w1 :
     congrArg (fun v : EuclideanSpace ℝ (Fin 3) => (v : Fin 3 → ℝ)) (congrArg Subtype.val heq)
   have hw0 : (((tetraW 0 : EuclideanSpace ℝ (Fin 3)) - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 0 = -9 := by
     simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.head_cons, sub_apply]
+      Matrix.head_cons]
+    norm_num
   have hw1 : (((tetraW 1 : EuclideanSpace ℝ (Fin 3)) - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 0 = -9 := by
     simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.head_cons, sub_apply]
+      Matrix.head_cons]
+    norm_num
   have hw0' : (((tetraW 0 : EuclideanSpace ℝ (Fin 3)) - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 = -9 := by
     simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.cons_val_one, Matrix.head_cons, sub_apply]
+      Matrix.cons_val_one, Matrix.head_cons]
+    norm_num
   have hw1' : (((tetraW 1 : EuclideanSpace ℝ (Fin 3)) - tetraCamera : EuclideanSpace ℝ (Fin 3)) : Fin 3 → ℝ) 1 = -11 := by
     simp [tetraW, tetraCamera, PiLp.toLp_apply, Matrix.cons_val_zero,
-      Matrix.cons_val_one, Matrix.head_cons, sub_apply]
+      Matrix.cons_val_one, Matrix.head_cons]
+    norm_num
   have hn0 : (‖tetraW 0 - tetraCamera‖ : ℝ) ≠ 0 := norm_ne_zero_iff.mpr tetraW0_sub_camera_ne
   have hn1 : (‖tetraW 1 - tetraCamera‖ : ℝ) ≠ 0 := norm_ne_zero_iff.mpr tetraW1_sub_camera_ne
   have hc0 := congrFun hvec 0
   have hc1 := congrFun hvec 1
   simp only [PiLp.smul_apply, hw0, hw1] at hc0
   simp only [PiLp.smul_apply, hw0', hw1'] at hc1
-  have hr : (‖tetraW 0 - tetraCamera‖⁻¹ : ℝ) = (‖tetraW 1 - tetraCamera‖⁻¹ : ℝ) := by
-    rw [inv_eq_inv_iff]
-    exact mul_right_cancel₀ (by norm_num) hc0
+  have hr : (‖tetraW 0 - tetraCamera‖⁻¹ : ℝ) = (‖tetraW 1 - tetraCamera‖⁻¹ : ℝ) :=
+    mul_right_cancel₀ (by norm_num) hc0
   rw [hr] at hc1
   have hfin := mul_left_cancel₀ (inv_ne_zero hn1) hc1
   norm_num at hfin
@@ -301,29 +373,33 @@ end GSTSphereTetrahedronCycle
 end -- noncomputable section
 
 /-
-PORT NOTES (the designated CI repair points of this file):
+PORT NOTES (the designated CI repair points of this file — updated by the
+wave-10-B repair round, run 45766418207's tail-25 fully executed):
 
-* (TET-1) `tetraBary_ne_camera`: the convex-combination bound uses the
-  pinned `Finset.abs_sum_le_sum_of_abs_le` + `x.2.1`/`x.2.2` (the
-  stdSimplex membership destructuring — the pinned `Set.mem_inter_iff`
-  shape `⟨fun i => 0 ≤ f i, ∑ = 1⟩`); the `norm_num`-closure of the
-  final numeric contradiction may need `abs_of_nonneg`-preprocessing.
-* (TET-2) `sphereNormalize` membership: the pinned
-  `Metric.mem_sphere_zero_iff_norm`; fallback: the corpus's own
-  `mem_sphere_iff_coord` (GSTFiniteLineRiemann.lean:69).
-* (TET-3) the smul-coordinate lemma `smul_apply` for `PiLp`: if the
-  name stalls, the Riemann simp set (`PiLp.toLp_apply` +
-  `Matrix.cons_val_*` + `WithLp.smul_...`) is the corpus-green route.
-* (TET-4) `tetraGen`/`tetraCycle`: the `ModuleCat.Hom.hom` application
-  spelling and the `SSet.ιChainComplex` argument order
-  (`X.ιChainComplex R x` with `R := rationalCoefficient`); the defeq
-  between `singularChainsOf X` and `(TopCat.toSSet.obj X).chainComplex R`
-  is at reducible transparency (the `singularChainComplexFunctor` =
-  `chainComplexFunctor ⋙ whiskeringLeft` composition).
-* (TET-5) `tetraCycle_d`: the `ModuleCat.coe_comp` spelling of the
-  composition; fallback: the `show` + `LinearMap.comp_apply` route with
-  `HomologicalComplex.d_comp_d` restated through
-  `ModuleCat.Hom.hom_comp` if that is the pinned name.
+* (TET-1) EXECUTED: the camera-separation bound no longer needs any
+  absolute-value-of-sum lemma (the unpinned
+  `Finset.abs_sum_le_sum_of_abs_le` is gone entirely) — the argument is
+  the UPPER-BOUND route: `tetraW_coord_le_one` (via `le_abs_self`
+  through `tetraW_coord_abs`) + `mul_le_mul_of_nonneg_left` +
+  `Finset.sum_le_sum` + the stdSimplex sum property, destructured once
+  by `obtain` into `hnonneg`/`hsumone`; the numeric residue closes by
+  `norm_num at hle`.
+* (TET-2) EXECUTED: the sphere membership is the green Riemann spelling
+  `mem_sphere_zero_iff_norm` (root-level at the pin), with
+  `norm_smul` + `Real.norm_eq_abs` + `abs_of_pos` + `inv_mul_cancel₀`.
+* (TET-3) EXECUTED: the coordinate simp sets are the Riemann discipline
+  (`PiLp.toLp_apply` + the `Matrix.cons_val_*` family + `norm_num`
+  finishers); the four offset-coordinate haves of
+  `sphereNormalize_w0_ne_w1` carry the `norm_num` closer.
+* (TET-4) EXECUTED: `tetraGen` drops the coefficient argument — the pin's
+  `ιChainComplex` takes the coefficient implicitly (the green
+  `ιPoint`/`ιPath` spelling of `GSTComponentCohomologyZero.lean`), the
+  `ModuleCat.of ℚ ℚ` inferred from the `(1 : ℚ)` application; the
+  `singularChainsOf`-vs-`chainComplex` defeq rides the elaborator's
+  default transparency, as at `chains_eq`.
+* (TET-5) EXECUTED: `tetraCycle_d` uses the pinned four-argument
+  `HomologicalComplex.d_comp_d _ 3 2 1` (no `Rel` hypotheses at the
+  pin); the `ModuleCat.Hom.hom` composition bridge stays `rfl`.
 * (TET-6) `tetraCycle_ne_zero` (the coordinate-functional theorem, to be
   appended after CI arbitrates §1-§3): `Limits.Sigma.desc` on the
   coproduct family + `Sigma.ι_desc`; the element-level
@@ -331,4 +407,12 @@ PORT NOTES (the designated CI repair points of this file):
   lemmas; the distinctness of the four faces from
   `tetraFace_vertex_zero` + `sphereNormalize_w0_ne_w1` +
   `stdSimplex.map_vertex`.
+* (TET-7) EXECUTED (the repair round's additions): the continuity block
+  is the `Continuous.subtype_mk (h) (_)` route (corpus-green) over the
+  coerced composition, with the pin's two-argument `ContinuousAt.comp`;
+  `continuous_id.continuousAt` (not `continuous_id`) as the smul's
+  second argument; `toSSetObj₃_face`'s `rw` closes syntactically at the
+  3-simplex (no residual `rfl`); `tetraFace_vertex_zero` closes its
+  bundled-map beta residue by `show` + `rfl`; `inv_eq_inv_iff` replaced
+  by the direct `mul_right_cancel₀`.
 -/
