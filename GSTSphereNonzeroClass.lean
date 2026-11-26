@@ -84,9 +84,9 @@ def TetraSeparator : Prop :=
     (∀ w : sphereChainsThree, φ (sphereBoundaryThree w) = 0) ∧
     φ tetraCycle = 1
 
-/-! ## §2 The realization (the frozen statement of the next wave) -/
+/-! ## §2 The realization (the frozen statement of the next wave)
 
-/-- **THE SEPARATOR REALIZES TO A NONZERO CLASS** — the frozen target
+**THE SEPARATOR REALIZES TO A NONZERO CLASS** — the frozen target
 statement of this lane's next wave (the full design in the module header
 and the PORT NOTES): every separator is a cocycle of the honest sphere's
 rational singular cochain complex (the boundary-vanishing is the cocycle
