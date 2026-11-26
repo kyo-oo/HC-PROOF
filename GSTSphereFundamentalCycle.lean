@@ -341,35 +341,36 @@ theorem faceChain_d (i : Fin 4) :
   rw [Fin.sum_univ_three] at hgen
   simp only [Fin.val_zero, pow_zero, one_smul, Fin.val_one, pow_one, neg_smul,
     Fin.val_two, pow_two, neg_mul_neg, one_mul] at hgen
-  have h := congrArg
+  -- the element-level reading of hgen at the value 1:
+  have e2 := congrArg
     (fun u : ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 1 =>
       ModuleCat.Hom.hom u (1 : ℚ)) hgen
-  calc ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2 1)
-        (faceChain i)
-      = ModuleCat.Hom.hom
-          ((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-            (twoSimplexInject (faceSimplex i)) :
-            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2) ≫
-            (singularChainsOf (TopCat.of unitSphereType)).d 2 1)) (1 : ℚ) := by
-        rw [ModuleCat.hom_comp]
-        rfl
-    _ = ModuleCat.Hom.hom
-          ((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-              ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 0
-                (twoSimplexInject (faceSimplex i))) :
-            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2) +
-            -((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-              ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 1
-                (twoSimplexInject (faceSimplex i))) :
-            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2))) +
-          (((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
-            ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 2
-              (twoSimplexInject (faceSimplex i))) :
-            ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2))) (1 : ℚ) := h
-    _ = edgeChain i 0 - edgeChain i 1 + edgeChain i 2 := by
-        rw [ModuleCat.hom_add, LinearMap.add_apply, ModuleCat.hom_add,
-          LinearMap.add_apply, ModuleCat.hom_neg, LinearMap.neg_apply]
-        rfl
+  -- the composite-hom application bridge:
+  have e1 : ModuleCat.Hom.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2 1)
+      (faceChain i) =
+    ModuleCat.Hom.hom
+      ((((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+        (twoSimplexInject (faceSimplex i)) :
+        ModuleCat.of ℚ ℚ ⟶ (singularChainsOf (TopCat.of unitSphereType)).X 2) ≫
+        (singularChainsOf (TopCat.of unitSphereType)).d 2 1)) (1 : ℚ) := by
+    rw [ModuleCat.hom_comp]
+    rfl
+  -- the hom-sum distribution at the value 1:
+  have e3 : ModuleCat.Hom.hom
+      (((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 0
+            (twoSimplexInject (faceSimplex i))) +
+        -((TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 1
+            (twoSimplexInject (faceSimplex i)))) +
+        (TopCat.toSSet.obj (TopCat.of unitSphereType)).ιChainComplex
+          ((TopCat.toSSet.obj (TopCat.of unitSphereType)).δ 2
+            (twoSimplexInject (faceSimplex i))))) (1 : ℚ) =
+      edgeChain i 0 - edgeChain i 1 + edgeChain i 2 := by
+    rw [ModuleCat.hom_add, LinearMap.add_apply, ModuleCat.hom_add,
+      LinearMap.add_apply, ModuleCat.hom_neg, LinearMap.neg_apply]
+    rfl
+  exact e1.trans (e2.trans e3)
 
 /-- The six vertex-pairing facts (each tetrahedron edge, read through
 the two faces containing it, visits the same vertices in the same
