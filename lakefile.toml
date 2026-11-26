@@ -1767,3 +1767,9 @@ name = "GSTSphereRouteCorrectionLib"
 roots = [
   "GSTSphereRouteCorrection",
 ]
+
+[[lean_lib]]
+name = "GSTSphereFundamentalCycleLib"
+roots = [
+  "GSTSphereFundamentalCycle",
+]
