@@ -65,8 +65,14 @@ consequently the frozen unconditional exports
 `finiteLineAnalytificationUnconditional` /
 `finiteLineAnalytificationUnconditional_space` — is NOT stated in this
 module, per the honesty law (a stated-but-unproved declaration is a
-death penalty; the piece that is out of reach is not stated).  What
-remains open, against the prior wave's battle map:
+death penalty; the piece that is out of reach is not stated).
+STATUS RECEIPT (wave 8, superseding the prior wave's battle map): the
+gate named below was subsequently CONSTRUCTED and DISCHARGED in
+`GSTFiniteLinePointsGateDischarge.lean` -- the explicit `Equiv.mk`
+of that file, CI-green at `2152f70` and `26e0c81` (all eight
+finite-line lanes SUCCESS, zero sorry).  The residual list below is
+the pre-wave-8 honesty ledger, retained verbatim; it carries no
+current status.  The pre-wave-8 residual was:
 
 * **battle-map step (2) TWO-CHART CONSISTENCY and step (3) ASSEMBLY**
   both require the DECOMPOSITION direction: reading an arbitrary
@@ -566,7 +572,9 @@ strike; the first assault on the last open gate of Task 2):
   converse, and the corpus has never decomposed an arbitrary section
   (its only `complexBase ⟶ (finiteLineWorld M).X` constructions are
   the chart-side `chartPointHomOf` — verified by repo-wide grep).
-  Concretely still open: (i) the section's chart-coordinate reading
+  Concretely, the pre-wave-8 residual (DISCHARGED by the wave-8 gate
+  construction in `GSTFiniteLinePointsGateDischarge.lean`, CI-green
+  at `2152f70`/`26e0c81`): (i) the section's chart-coordinate reading
   (the second component of the gate's forward map, i.e. pulling the
   section back through the away chart); (ii) the per-line two-chart
   coordinate consistency (reciprocal coordinates at the partner

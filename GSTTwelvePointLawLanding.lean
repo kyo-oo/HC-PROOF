@@ -67,9 +67,13 @@ namespaces them.
 The world is zero-dimensional: the discharge's content is the twelve-cell
 spanning at weight 0; the Hodge conclusion is honest but elementary (every
 class of a 0-dimensional space is (0,0)-type and every 0-class is the class of
-a genuine 0-cycle).  The positive-dimensional live core (`p ≥ 1` with
-`H^{2p} ≠ 0`) remains open; this is a restricted lemma under the AGENTS.md
-acceptance test, not the Hodge conjecture.  No `sorry`, no new axioms; the
+a genuine 0-cycle).  This is a restricted lemma under the AGENTS.md
+acceptance test, not the Hodge conjecture; the campaign's
+positive-dimensional worlds were subsequently CONSTRUCTED and
+kernel-certified (the one-line positive-dimensional world, CI run
+44844378079; the general-M finite-line family, run 44928010015; both
+merged in the capstone `the_complete_single_fold_orbit_law_package`,
+run 44943810713).  No `sorry`, no new axioms; the
 GitHub CI lane `gst-twelve-point-native-world` owns the kernel check.
 -/
 
