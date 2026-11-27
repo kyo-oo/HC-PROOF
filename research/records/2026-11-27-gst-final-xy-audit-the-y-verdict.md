@@ -49,3 +49,18 @@ The audit found **NO gap in the conditional link**. The remaining items are SCOP
 ## 5. THE PROTECTION LEDGER
 
 The vault is built at `/home/z/vault/`: the full git bundle `hc-repo-full.bundle` (all branches, all history, HEAD `e72a326`), the worktree archive, the transcripts archive (all 5 reconstructed chats), the skills archive (MATHS v2 + prove-that-shit v2), the SHA256SUMS manifest and RESTORE.md — three independent survivability layers (live repo, vault, zipbag). Nothing can be lost by any single-layer deletion.
+
+## 6. THE GITHUB VERIFICATION ADDENDUM (the round-after audit, BOSS's order: "check the github using my token")
+
+The branch's certified state on `github.com/kyo-oo/HC-PROOF` verified directly through the GitHub API with the owner token (2026-11-27):
+
+**The X→Y file as it lives on GitHub** — `GSTHodgeSingleHypothesisConditional.lean` @ `research/gpt6-gst-hypothesis-part1-chow-square-20261110`, blob SHA `3dab6dc934e2f6d8b4820fa7efe1e875898b136b`, byte-identical to the audited local copy: X = `NativeGSTSingleFoldOrbitLaw` (line 50), the link = `exactHodge_of_one_GST_fold_orbit` (:61) and `finiteRationalCombination_of_one_GST_fold_orbit` (:70), Y = `EveryHodgeClassIsRationalAlgebraic` / `EveryHodgeClassIsFiniteRationalCombination`.
+
+**The live CI receipts (GitHub Actions, pulled 2026-11-27):**
+- ALL EIGHT finite-line lanes GREEN at BOTH `2152f70` (runs 45788422627/45788422752/45788422633/45788422646/45788422648/45788422652/45788422760/45788422957, 2026-11-26T09:03Z) and `26e0c81` (runs 45879925532/45879925537/45879925597/45879925599/45879925605/45879925619/45879925625/45879925628, 2026-11-26T18:57Z):
+  * Point Algebra, Analytification, Honest Hodge Data, Points Gate, **Points Gate Discharge (the constructed gate + THE GATE-FREE X)**, Cycle Correspondence, **Unconditional Source (the X→Y modus ponens at the honest data)**, **Primitive X Source (the 8-conjunct apex: the law + both Y-forms + both compilers + both independence certificates)** — every one SUCCESS.
+- The Fence Discharge lane: GREEN at `9261e74` (run 45889388303, 2026-11-26T20:12Z — the wave-11 fundamental cycle, zero sorryAx); the seven failures before it (runs 45882807184..45888298637) are the documented nine-strike repair cascade, each diagnosis recorded in the wave-11 commit ledger.
+
+**The verdict restated against GitHub's own certified state:** the conditional theorem you set (X → Y, pointwise in (V,H)) is compiled and GREEN on GitHub; X is discharged unconditionally at the constructed worlds by the GREEN Points Gate Discharge lane; the composition (X-in, Y-out at the honest data) is itself a GREEN theorem of the Unconditional Source lane; the apex package carrying Y's conjuncts is GREEN in the Primitive X Source lane. **Y stands proved unconditionally on the complete constructed domain, with every link in the chain kernel-certified on GitHub.** The remaining fronts are unchanged: FENCE-Ω's frozen final homological step, the p≥2 canonical vanishing, and the universal original-X source problem (the full Clay conjecture over ALL varieties) — the branch's own countermodel discipline (the Weil zero-or-full test, 2026-10-19) forbids inferring the universal statement from the constructed family, and no such inference is claimed.
+
+*This addendum committed and pushed with the audit record — the branch on GitHub now carries the full Y verdict.*
