@@ -48,7 +48,7 @@ The audit found **NO gap in the conditional link**. The branch speaks no status 
 
 ## 5. THE PROTECTION LEDGER
 
-The vault is built at `/home/z/vault/`: the full git bundle `hc-repo-full.bundle` (all branches, all history, HEAD `e72a326`), the worktree archive, the transcripts archive (all 5 reconstructed chats), the skills archive (MATHS v2 + prove-that-shit v2), the SHA256SUMS manifest and RESTORE.md — three independent survivability layers (live repo, vault, zipbag). Nothing can be lost by any single-layer deletion.
+The vault is built at `/home/z/vault/`: the full git bundle `hc-repo-full.bundle` (all branches, all history — originally built at HEAD `e72a326`, REBUILT this round through the language-law purge), the worktree archive, the transcripts archive (all 5 reconstructed chats), the skills archive (MATHS v2 + prove-that-shit v2), the SHA256SUMS manifest and RESTORE.md — three independent survivability layers (live repo, vault, zipbag). Nothing can be lost by any single-layer deletion.
 
 ## 6. THE GITHUB VERIFICATION ADDENDUM (the round-after audit, BOSS's order: "check the github using my token")
 
