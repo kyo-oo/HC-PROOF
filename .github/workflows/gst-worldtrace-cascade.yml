@@ -1,0 +1,95 @@
+name: GST Worldtrace Cascade (406 lane)
+
+on:
+  push:
+    branches:
+      - research/gpt6-gst-hypothesis-part1-chow-square-20261110
+    paths:
+      - '.github/workflows/gst-worldtrace-cascade.yml'
+      - 'GSTWorldtraceArithmetic.lean'
+      - 'GSTTowerFire.lean'
+      - 'GSTTheActConstruction.lean'
+      - 'GSTFourPowerDirectResidue.lean'
+      - 'GSTClimbInfiniteFamily.lean'
+      - 'GSTTheAct.lean'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gst-worldtrace-cascade-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  worldtrace-cascade:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore cached Lean toolchain
+        id: lean-toolchain-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Install pinned Lean and Mathlib cache once
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/lake" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2 || curl -sSf https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.33.0-rc2
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          for i in 1 2 3; do lake exe cache get && break; echo "CACHE_GET_RETRY attempt=$i"; sleep 15; done
+      - name: Save cached Lean toolchain
+        if: steps.lean-toolchain-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.elan
+          key: hc-lean-toolchain-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}
+      - name: Reuse compiled project dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: hc-worldtrace-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+          restore-keys: |
+            hc-worldtrace-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+      - name: "Kernel: THE EIGHTH CASCADE LEVEL (BOSS order S098: use MY maths, the main repo, the latest branch - the worldtrace arithmetic one storey deeper): the six-term ladder, THE QUINTIC BLADE mod 59049 (4^(1+3m) = 4 + 252m + 15876C(m,2) + 1000188C(m,3) + 63011844C(m,4) + 3969746172C(m,5)), the row-nine read, THE UNIFORM ENGINE at level eight (fire_of_mod19683 via the green feedback_fire_of_class 8), the 128 dead classes (dust_fire_row_nine - the level-7 survivor class 40 KILLED at row nine, an infinite family), the kill chain (no22_of_cascade_eight), the survivor map DOUBLED to 256 (cantarian_dust_mod_19683 - the structural law 2,4,8,16,32,64,128,256 holds without exception), and THE LEVEL-EIGHT RECEIPT"
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          : > gst-worldtrace-cascade.log
+          set +e
+          lake build GSTWorldtraceArithmetic 2>&1 | tee -a gst-worldtrace-cascade.log
+          RC=${PIPESTATUS[0]}
+          set -e
+          if [ "$RC" -ne 0 ]; then echo "WORLDTRACE_BUILD_FAILED_RC=$RC"; exit 1; fi
+          if grep -qE 'error[:(]|sorryAx|unknown identifier|unsolved goals|declaration uses .sorry.' gst-worldtrace-cascade.log; then
+            echo "WORLDTRACE_NEGATIVE_GATE_TRIPPED"
+            grep -E 'error[:(]|sorryAx|unknown identifier|unsolved goals|declaration uses .sorry.' gst-worldtrace-cascade.log | head -30
+            exit 1
+          fi
+          for SYM in "one_add_pow_six_term" "wt_quintic_mod59049" "wt_row_nine_read" "wt_quintic_fire_demo" "fire_of_mod19683" "dust_fire_row_nine" "no22_of_cascade_eight" "cantarian_dust_mod_19683" "the_worldtrace_receipt_eight"; do
+            if ! grep -q "'GSTWorldtraceArithmetic.${SYM}' depends on axioms" gst-worldtrace-cascade.log; then
+              echo "WORLDTRACE_RECEIPT_MISSING: ${SYM}"
+              exit 1
+            fi
+          done
+          echo "WORLDTRACE CASCADE RECEIPTS: 9/9"
+          echo WORLDTRACE_CASCADE_GREEN=1
+      - name: Save incremental build products
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: hc-worldtrace-incremental-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+      - name: Upload compiler diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gst-worldtrace-cascade-log
+          path: gst-worldtrace-cascade.log
+          if-no-files-found: warn
