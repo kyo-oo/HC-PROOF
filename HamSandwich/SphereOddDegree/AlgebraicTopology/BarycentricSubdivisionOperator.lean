@@ -271,25 +271,42 @@ theorem singularBoundary_chainGenerator_formula (R : Type) [CommRing R] (X : Top
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_sum, LinearMap.sum_apply,
     ModuleCat.hom_zsmul, LinearMap.smul_apply] at h2
   refine h2.trans ?_
-  -- STRIKE 7: the goal-side `simp only [ModuleCat.hom_sum, …]` died on the
-  -- same cross-space instance seam (every lemma unused, the hom-of-sum shape
-  -- untouched), so the `apply Finset.sum_congr rfl` below it had no
-  -- sum-of-applications shape to unify with.  The standalone `hompush`
-  -- re-elaborates the push-through at a uniform type (the strike-5
-  -- extracted-lemma recipe); the outer refine then rides the defeq back
-  -- into the goal's instance paths.
-  have hompush :
-      (ModuleCat.Hom.hom (∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) •
-          Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
-            (AlexanderWhitney.faceSimplex X n i σ))) (1 : R)
-        = ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) •
-            (ModuleCat.Hom.hom (Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
-              (AlexanderWhitney.faceSimplex X n i σ))) (1 : R) := by
-    rw [ModuleCat.hom_sum, LinearMap.sum_apply]
-    exact Finset.sum_congr rfl fun i _ => by
-      rw [ModuleCat.hom_zsmul]
-      simp
-  refine hompush.trans ?_
+  -- STRIKE 8 (the strike-7 receipt, run 46152217576: the standalone
+  -- `hompush` have died at its own LHS — a bare have must synthesize
+  -- `AddCommMonoid ((ModuleCat.of R R).Hom (∐ fun x => ModuleCat.of R R))`
+  -- from the summand alone, an instance search the original statement's
+  -- elaboration path never performs, and the search fails).  The repair:
+  -- instantiate every push-through lemma as a TERM — each lemma's own
+  -- pre-elaborated statement carries all the instances, so no fresh
+  -- Hom-sum elaboration ever happens — and compose with congrArg/trans;
+  -- the outer refine then rides the defeq back into the goal's paths.
+  have hsum := ModuleCat.hom_sum (fun i : Fin (n + 2) =>
+      (-1 : ℤ) ^ (i : ℕ) •
+        Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+          (AlexanderWhitney.faceSimplex X n i σ)) Finset.univ
+  have step1 := congrArg (fun g => g (1 : R)) hsum
+  have hsa := LinearMap.sum_apply Finset.univ (fun i : Fin (n + 2) =>
+      ((-1 : ℤ) ^ (i : ℕ) •
+        Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+          (AlexanderWhitney.faceSimplex X n i σ)).hom) (1 : R)
+  have step2 := step1.trans hsa
+  have hper : ∀ i : Fin (n + 2),
+      (((-1 : ℤ) ^ (i : ℕ) •
+        Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+          (AlexanderWhitney.faceSimplex X n i σ)).hom) (1 : R)
+        = (-1 : ℤ) ^ (i : ℕ) •
+            ((Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+              (AlexanderWhitney.faceSimplex X n i σ)).hom) (1 : R) := by
+    intro i
+    have hz := ModuleCat.hom_zsmul ((-1 : ℤ) ^ (i : ℕ))
+      (Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+        (AlexanderWhitney.faceSimplex X n i σ))
+    have hstep := congrArg (fun g => g (1 : R)) hz
+    have hsm := LinearMap.smul_apply ((-1 : ℤ) ^ (i : ℕ))
+      ((Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+        (AlexanderWhitney.faceSimplex X n i σ)).hom) (1 : R)
+    exact hstep.trans hsm
+  refine (step2.trans (Finset.sum_congr rfl (fun i _ => hper i))).trans ?_
   apply Finset.sum_congr rfl
   intro i _
   rw [← Int.cast_smul_eq_zsmul R ((-1 : ℤ) ^ (i : ℕ))]
