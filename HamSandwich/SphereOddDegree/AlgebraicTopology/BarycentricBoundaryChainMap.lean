@@ -67,6 +67,11 @@ theorem barycentricSubdivisionLinearMap_commutes_boundary
   intro σ
   ext
   convert (boundary_barycentricSubdivision_generator R X n σ).symm using 1
+  -- STRIKE 14 (run 46158379696 receipt: the convert left the hom_comp
+  -- normalization goals — the strike-6 ledger's own family: the composite's
+  -- hom applied IS the nested application).
+  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
+  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
 
 /-- **Pointwise boundary commutation.** For every singular chain `c`,
 ```text
@@ -83,6 +88,10 @@ theorem boundary_barycentricSubdivision_apply
     (barycentricSubdivisionLinearMap R X n).hom
         ((singularBoundary R X n).hom c) := by
   convert congr_arg ( fun f => f.hom c ) ( barycentricSubdivisionLinearMap_commutes_boundary R X n ) using 1
+  -- STRIKE 14 (run 46158379696 receipt: same family — the convert's leftover
+  -- hom_comp normalizations).
+  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
+  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
 
 end AffineBarycentricSubdivision
 end SphereOddDegree
