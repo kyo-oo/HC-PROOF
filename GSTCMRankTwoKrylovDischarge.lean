@@ -173,18 +173,6 @@ theorem isKrylovCyclic_of_rank_two_CM_word
     (hZhodge : H.cycleClass p Z ∈ rationalHodgeSubspace (H.hodgeBigrading p))
     (hZ : H.cycleClass p Z ≠ 0) :
     (cmWordCertificate R hR Z hZhodge).IsKrylovCyclic := by
-  -- The certificate's operator satisfies the same CM polynomial on the fiber
-  -- (the elaborator already reduces the single-letter word's operator to R's
-  -- form at default transparency — the strike-9 receipt: the rw-transfer of
-  -- strike 7 found no pattern because the have's own type had already
-  -- reduced — the exact rides the defeq directly).
-  have hMinC : ∀ z : ClassicalHodgeFiber V H p,
-      (cmWordCertificate R hR Z hZhodge).hodgeOperator
-          ((cmWordCertificate R hR Z hZhodge).hodgeOperator z) -
-        (2*a) • (cmWordCertificate R hR Z hZhodge).hodgeOperator z +
-        (a^2+b^2) • z = 0 := by
-    intro z
-    exact hMin z
   -- The seed orbit vector is nonzero: its underlying class is Z's class.
   have horb0ne : (cmWordCertificate R hR Z hZhodge).hodgeOrbit 0 ≠ 0 := by
     intro h0
@@ -218,11 +206,23 @@ theorem isKrylovCyclic_of_rank_two_CM_word
       have hrepr : (cmWordCertificate R hR Z hZhodge).hodgeOrbit 1
           = (-(b'⁻¹ * a' : ℚ)) • (cmWordCertificate R hR Z hZhodge).hodgeOrbit 0 := by
         rw [hstep2, smul_neg, smul_smul, neg_smul]
-      -- The seed would be a rational eigenvector of the CM word — forbidden.
+      -- STRIKE 10 (the strike-9 receipt: the hMinC transfer is unnecessary —
+      -- and its defeq does not ride — because the single-letter word's
+      -- operator only PROPOSITIONALLY equals R's, via the §1 lemma, while the
+      -- orbit's successor step IS definitionally the certificate's operator).
+      -- The repair: bridge the orbit term to R's operator through the
+      -- pointwise identity (backwards rewrite), then fire the CM eigenline
+      -- elimination DIRECTLY at R's operator with hMin unchanged.
+      have hrepr' : R.hodgeOperator hR
+            ((cmWordCertificate R hR Z hZhodge).hodgeOrbit 0)
+          = (-(b'⁻¹ * a' : ℚ)) •
+              (cmWordCertificate R hR Z hZhodge).hodgeOrbit 0 := by
+        rw [← cmWordCertificate_hodgeOperator_apply R hR Z hZhodge]
+        exact hrepr
       exact imaginary_quadratic_CM_no_rational_eigenline
-        ((cmWordCertificate R hR Z hZhodge).hodgeOperator) a b hb hMinC
+        (R.hodgeOperator hR) a b hb hMin
         ((cmWordCertificate R hR Z hZhodge).hodgeOrbit 0) horb0ne
-        (-(b'⁻¹ * a' : ℚ)) hrepr
+        (-(b'⁻¹ * a' : ℚ)) hrepr'
   -- Two independent vectors in a two-dimensional fiber span everything.
   have htop : Submodule.span ℚ
       (Set.range (![(cmWordCertificate R hR Z hZhodge).hodgeOrbit 0,

@@ -126,7 +126,13 @@ theorem factor_lastFace_of_faceData {n : ℕ}
   convert Equiv.ext ?_;
   intro x; by_cases hx : x = lastVertex n <;> simp_all +decide ;
   · unfold extendLastPerm; simp +decide ;
-    unfold Equiv.Perm.viaFintypeEmbedding; simp +decide ;
+    -- STRIKE 10 (run 46154695393 receipt): the `unfold
+    -- Equiv.Perm.viaFintypeEmbedding; simp +decide` died — the semireducible
+    -- unfold poisoned the goal (the note's own diagnosis: not type-correct
+    -- under implicit transparency) and decide could not evaluate the
+    -- OrderEmbedding coercion's inj' proof-term.  The API route instead:
+    -- the apply-image lemma, no unfold.
+    rw [Equiv.Perm.viaFintypeEmbedding_apply_image];
     simp +decide [ Equiv.Perm.extendDomain ];
   · convert hρ ( x.castPred hx ) |> Eq.symm using 1;
     convert insertLastPerm_castSucc _ _ using 2;
