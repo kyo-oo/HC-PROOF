@@ -222,7 +222,7 @@ theorem fundCochain_mem_ker (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
   have h1 : (sphereDualShortComplexTwo.g).hom (fundCochain φ) = 0 := by
     rw [sc_two_g]
     exact fundCochain_d_indexed φ hvan
-  exact (LinearMap.mem_ker _).mp h1
+  exact LinearMap.mem_ker.mp h1
 
 /-! ## §3 The realization (the NZC-3/NZC-4 seams) -/
 
@@ -290,8 +290,8 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
   -- (NZC-4) the quotient-zero is the boundary-membership (the mkQ/mk
   -- defeq is rfl — Submodule.mkQ_apply; the memberships extracted by
   -- direct iff-application, no keyed rewrites)
-  obtain ⟨ψ, hψ⟩ := (LinearMap.mem_range _).mp
-    ((Submodule.Quotient.mk_eq_zero _ _).mp hzero')
+  obtain ⟨ψ, hψ⟩ := LinearMap.mem_range.mp
+    ((Submodule.Quotient.mk_eq_zero _).mp hzero')
   -- the coboundary equation at the shape-indexed differential spelling
   have hval : (sphereDualShortComplexTwo.f).hom ψ = fundCochain φ :=
     congrArg Subtype.val hψ
