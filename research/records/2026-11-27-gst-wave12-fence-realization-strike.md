@@ -45,12 +45,24 @@ The FROZEN statement, now claimed and proved. The proof (classical, over ℚ):
 
 Supporting seams authored: `sc_two_f`/`sc_two_g` (the short-complex legs, rfl), `cochains_d_two_three`/`cochains_d_one_two` (the dual differential presentation, both degrees), `dual_eval_two_three`/`dual_eval_one_two` (the adjunction evaluations), `fundCochain`/`fundCochain_hom` (the wrapped separator), `fundCochain_mem_ker` (the kernel membership).
 
-## 4. THE WIRING AND THE STRIKE
+## 4. THE WIRING AND THE STRIKE — CLOSED GREEN AT STRIKE 10
 
 - **Lakefile:** `GSTSphereFenceRealizationLib` registered (lakefile.toml).
-- **CI lane:** `gst-sphere-fence-discharge.yml` — the new file added to the path triggers; **Ladder 6/6: FENCE-REALIZATION** added (the `lake build GSTSphereFenceRealizationLib` kernel check + the sorryAx audit).
-- **Static discipline (pre-push):** paren balance 0/0, zero sorry/admit/axioms, namespace/end pairing, all declaration names fresh.
-- **Strike 1: pushed this round** — the CI run arbitrates; the repair cascade follows the wave discipline if any seam mis-elaborates (the designated repair points: the sc-leg rfl's, the coercion defeqs at the `exact` bridges, the `DFunLike.congr_fun` roundtrip, the witness's type-defeq at the refine).
+- **CI lane:** `gst-sphere-fence-discharge.yml` — **Ladder 6/6: FENCE-REALIZATION** — **RUN 46093265298 COMPLETED SUCCESS: ALL SIX LADDERS GREEN** (TETRAHEDRON, SEPARATOR, FENCE-DISCHARGE, ROUTE-CORRECTION, FUNDAMENTAL-CYCLE, **FENCE-REALIZATION**), zero sorry, zero errors — the lane's sorryAx-audit gate passed with the job.
+- **THE FROZEN STATEMENT IS KERNEL-CERTIFIED:** `exists_nonzero_sphere_cohomology_two_of_fundseparator (hsep : FundSeparator) : ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2, ω ≠ 0`.
+
+### The strike ledger (the ten-strike repair cascade, each diagnosis from the CI artifact)
+
+1. **Strike 1** (run 46088645263): the dual-differential receipts (`ChainComplex.linearYonedaObj_d` at BOTH degrees), both adjunction evaluations, the wrapped separator, and the witness's type-checking ALL GREEN first compile; red on the sc-leg bridges (rfl defeated by the shape indices) and a calc parse break.
+2. **Strike 2** (46089788973): the bridges' show-bridge failed — the X-defeq unavailable pre-rewrite; the tactic-order in the cocycle law repaired; the roundtrip moved off `DFunLike`.
+3. **Strike 3** (46090238511): the bridge STATEMENTS could not elaborate at the literal indices — the `up ℕ` shape's `prev`/`next` are CHOICE-DERIVED (opaque to defeq, `Exists.choose`-extracted from `Rel`).
+4. **Strike 4** (46090934814): THE CHOICE-OPAQUENESS KILL — the bridges restated at their own shape-indexed spelling (`d ((up ℕ).prev 2) 2`, `d 2 ((up ℕ).next 2)`), the rewrites fix the indices inside the proofs — BRIDGES GREEN; the roundtrip's in-lambda instance-synthesis red.
+5. **Strike 5** (46091451678): the index-rewrite inside the type-dependent ker-context broke the motive — the iff-extractions moved to direct application.
+6. **Strike 6** (46091784191): the standalone transport (`fundCochain_d_indexed`) + the explicit lambda domain.
+7. **Strike 7** (46092173253): the iff-lemmas' argument arities (`mem_ker`/`mem_range` all-implicit, `mk_eq_zero` one explicit).
+8. **Strike 8** (46092741809): the calc's `Trans`-synthesis defeated by defeq-mixed spellings — dissolved into the explicit `Eq.trans` chain with `congrArg`; the indexed dual-evaluation (`dual_eval_one_two_indexed` + its own `linearYonedaObj_d` receipt at the shape-indexed degrees).
+9. **Strike 9** (46093030115): the last rewrite's keyed-matching on ψ's defeq-type — direct application.
+10. **Strike 10** (46093265298): the last arity (`map_zero` takes one explicit argument). **GREEN.**
 
 ## 5. WHAT THIS CLOSES WHEN CI GOES GREEN
 
