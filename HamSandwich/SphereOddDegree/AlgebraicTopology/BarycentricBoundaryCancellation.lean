@@ -125,6 +125,10 @@ theorem faceSimplex_continuousMap (X : TopCat.{0}) (n : ℕ) (k : Fin (n + 2))
   rw [singularSimplexAsContinuousMap, singularSimplexAsContinuousMap,
     AlexanderWhitney.faceSimplex,
     toSSetObjEquiv_map_op_naturality X n (n + 1) (SimplexCategory.δ k) σ, cofaceTop_eq]
+  -- STRIKE 13 (run 46157549577 receipt: the rw's auto-rfl refused the
+  -- trivially-identical sides at the poisoned implicit transparency — the
+  -- explicit rfl closes the syntactic identity).
+  rfl
 
 /-! ## 2. Singular-simplex equality and the subdivision summand as a map -/
 
@@ -169,8 +173,14 @@ theorem faceSimplex_internal_swap_eq (X : TopCat.{0}) (n : ℕ)
 /-- `extendLastPerm ρ` sends `castSucc t` to `castSucc (ρ t)`. -/
 theorem extendLastPerm_castSucc {n : ℕ} (ρ : Equiv.Perm (Fin (n + 1))) (t : Fin (n + 1)) :
     extendLastPerm ρ (Fin.castSucc t) = Fin.castSucc (ρ t) := by
-  have h := Equiv.Perm.viaFintypeEmbedding_apply_image ρ Fin.castSuccOrderEmb.toEmbedding t
-  simpa [extendLastPerm] using h
+  -- STRIKE 13 (run 46157549577 receipt: the simpa's simp normalized the
+  -- hypothesis to True but not the goal — the anonymous-embedding poison.
+  -- The explicit route (the strike-12 receipted pattern): unfold + the
+  -- apply-image API, the embedding-application defeq rides at default
+  -- transparency).
+  unfold extendLastPerm
+  exact Equiv.Perm.viaFintypeEmbedding_apply_image ρ
+    Fin.castSuccOrderEmb.toEmbedding t
 
 /-- `extendLastPerm ρ` fixes the last vertex. -/
 theorem extendLastPerm_lastVertex {n : ℕ} (ρ : Equiv.Perm (Fin (n + 1))) :
