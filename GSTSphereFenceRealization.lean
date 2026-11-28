@@ -330,14 +330,15 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
     rw [fundCochain_hom]
     exact hone
   -- but a coboundary reads 0 on every cycle (THE CYCLE LAW — the
-  -- indexed evaluation, the cycle law transported to the prev-2 world)
+  -- indexed evaluation applied directly, the cycle law transported)
+  have hcy : (singularChainsOf (TopCat.of unitSphereType)).d 2
+      ((ComplexShape.up ℕ).prev 2) fundCycle = 0 := by
+    rw [upPrev_two]
+    exact fundCycle_d
   have hzero'' : (fundCochain φ).hom fundCycle = 0 := by
-    rw [← hval', dual_eval_one_two_indexed]
-    have hcy : (singularChainsOf (TopCat.of unitSphereType)).d 2
-        ((ComplexShape.up ℕ).prev 2) fundCycle = 0 := by
-      rw [upPrev_two]
-      exact fundCycle_d
-    rw [hcy, map_zero]
+    rw [← hval']
+    exact (dual_eval_one_two_indexed ψ fundCycle).trans (by
+      rw [hcy]; exact map_zero _ _)
   exact zero_ne_one (hzero''.symm.trans hone')
 
 end GSTSphereFenceRealization
