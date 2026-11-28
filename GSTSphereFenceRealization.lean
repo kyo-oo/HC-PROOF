@@ -224,6 +224,34 @@ theorem fundCochain_mem_ker (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
     exact fundCochain_d_indexed φ hvan
   exact LinearMap.mem_ker.mp h1
 
+/-- AUDIT: the degree `prev 2`→2 differential, the pinned receipt at the
+shape-indexed degrees. -/
+theorem cochains_d_prev_two :
+    (singularCochainsOf (TopCat.of unitSphereType)).d
+        ((ComplexShape.up ℕ).prev 2) 2 =
+      ModuleCat.ofHom
+        (Linear.leftComp ℚ (ModuleCat.of ℚ ℚ)
+          ((singularChainsOf (TopCat.of unitSphereType)).d 2
+            ((ComplexShape.up ℕ).prev 2))) := by
+  unfold singularCochainsOf
+  exact ChainComplex.linearYonedaObj_d
+    (singularChainsOf (TopCat.of unitSphereType)) ℚ (ModuleCat.of ℚ ℚ)
+    ((ComplexShape.up ℕ).prev 2) 2
+
+/-- **THE ADJUNCTION-STYLE EVALUATION at `prev 2`→2** — the indexed
+form, for the coboundary equation's own world. -/
+theorem dual_eval_one_two_indexed
+    (ψ : (singularCochainsOf (TopCat.of unitSphereType)).X
+      ((ComplexShape.up ℕ).prev 2))
+    (z : (singularChainsOf (TopCat.of unitSphereType)).X 2) :
+    ((singularCochainsOf (TopCat.of unitSphereType)).d
+        ((ComplexShape.up ℕ).prev 2) 2 ψ).hom z =
+      ψ.hom ((singularChainsOf (TopCat.of unitSphereType)).d 2
+        ((ComplexShape.up ℕ).prev 2) z) := by
+  rw [cochains_d_prev_two]
+  simp only [ModuleCat.ofHom_apply, Linear.leftComp_apply]
+  rfl
+
 /-! ## §3 The realization (the NZC-3/NZC-4 seams) -/
 
 /-- **THE SEPARATOR REALIZES TO A NONZERO CLASS** — the frozen statement
@@ -276,17 +304,15 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
       Submodule.mkQ
         (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
         ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩ = 0 := by
-    calc (Submodule.mkQ
-        (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
-        ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩) =
+    have h2 :
         (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom
           ((sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom
             (Submodule.mkQ
               (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
-              ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩)) := hround.symm
-      _ = (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom 0 := by
-          rw [hzero]
-      _ = 0 := LinearMap.map_zero _
+              ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩)) =
+        (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom 0 :=
+      congrArg _ hzero
+    exact (hround.symm.trans h2).trans (LinearMap.map_zero _)
   -- (NZC-4) the quotient-zero is the boundary-membership (the mkQ/mk
   -- defeq is rfl — Submodule.mkQ_apply; the memberships extracted by
   -- direct iff-application, no keyed rewrites)
@@ -303,11 +329,14 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
   have hone' : (fundCochain φ).hom fundCycle = 1 := by
     rw [fundCochain_hom]
     exact hone
-  -- but a coboundary reads 0 on every cycle (THE CYCLE LAW)
+  -- but a coboundary reads 0 on every cycle (THE CYCLE LAW — the
+  -- indexed evaluation, the cycle law transported to the prev-2 world)
   have hzero'' : (fundCochain φ).hom fundCycle = 0 := by
-    rw [← hval', upPrev_two, dual_eval_one_two]
-    have hcy : (singularChainsOf (TopCat.of unitSphereType)).d 2 1
-        fundCycle = 0 := fundCycle_d
+    rw [← hval', dual_eval_one_two_indexed]
+    have hcy : (singularChainsOf (TopCat.of unitSphereType)).d 2
+        ((ComplexShape.up ℕ).prev 2) fundCycle = 0 := by
+      rw [upPrev_two]
+      exact fundCycle_d
     rw [hcy, map_zero]
   exact zero_ne_one (hzero''.symm.trans hone')
 
