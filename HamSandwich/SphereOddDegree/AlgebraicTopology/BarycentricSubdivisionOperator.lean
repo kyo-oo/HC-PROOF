@@ -138,9 +138,11 @@ noncomputable def barycentricSubdivisionGeneratorHom (R : Type) [CommRing R]
       map_add' := by
         intro r s
         simp [add_smul]
+        rfl
       map_smul' := by
         intro a r
-        simp [mul_smul] }
+        simp [mul_smul]
+        rfl }
 
 /-- The degree-`n` barycentric subdivision operator on singular chains.  It is
 obtained from the coproduct universal property by prescribing its value on each
@@ -228,7 +230,8 @@ theorem singularBoundary_sigma_ι_formula (R : Type) [CommRing R] (X : TopCat.{0
   rw [singularBoundary,
     show (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).d (n + 1) n
         = (AlternatingFaceMapComplex.obj (singularChainSimplicialModule R X)).d (n + 1) n from rfl,
-    AlternatingFaceMapComplex.obj_d_eq, Preadditive.comp_sum]
+    AlternatingFaceMapComplex.obj_d_eq]
+  refine (Preadditive.comp_sum _ _ _).trans ?_
   apply Finset.sum_congr rfl
   intro i _
   rw [Preadditive.comp_zsmul]
@@ -261,6 +264,8 @@ theorem singularBoundary_chainGenerator_formula (R : Type) [CommRing R] (X : Top
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_sum, LinearMap.sum_apply,
     ModuleCat.hom_zsmul, LinearMap.smul_apply] at h2
   refine h2.trans ?_
+  simp only [ModuleCat.hom_sum, LinearMap.sum_apply, ModuleCat.hom_zsmul,
+    LinearMap.smul_apply]
   apply Finset.sum_congr rfl
   intro i _
   rw [← Int.cast_smul_eq_zsmul R ((-1 : ℤ) ^ (i : ℕ))]
