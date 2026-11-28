@@ -130,7 +130,13 @@ theorem factor_lastFace_of_faceData {n : ℕ}
     simp +decide [ Equiv.Perm.extendDomain ];
   · convert hρ ( x.castPred hx ) |> Eq.symm using 1;
     convert insertLastPerm_castSucc _ _ using 2;
-    convert Equiv.Perm.viaFintypeEmbedding_apply_image ρ ( Fin.castSuccOrderEmb.toEmbedding ) ( x.castPred hx ) using 1
+    -- STRIKE 9 (run 46153568071 receipt): the explicit
+    -- `Fin.castSuccOrderEmb.toEmbedding` argument died at implicit
+    -- transparency (the v4.33 OrderEmbedding→Embedding coercion's
+    -- RelEmbedding proof-term vs the Embedding inj' field).  The
+    -- metavariable route: the embedding is unified FROM the goal's own
+    -- term — no fresh elaboration ever happens.
+    convert Equiv.Perm.viaFintypeEmbedding_apply_image ρ _ ( x.castPred hx ) using 1
 
 /-- Unit-valued last-face sign identity, in the face-data form used by the
 last-face affine identity. -/

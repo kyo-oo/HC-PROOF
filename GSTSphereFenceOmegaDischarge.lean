@@ -1,6 +1,9 @@
 import Mathlib
 import GSTSphereFenceRealization
 import GSTFiniteLineFenceDischarge
+import GSTFiniteLineHonestHodgeData
+import GSTFiniteLinePointsGateDischarge
+import GSTFiniteLinePrimitiveXSourceFamilies
 
 /-
 Copyright (c) 2026. The HC-PROOF campaign. All rights reserved.
@@ -55,6 +58,14 @@ noncomputable section
 open CategoryTheory
 open AlgebraicTopology
 open Simplicial
+open AlgebraicGeometry
+open GSTProjectiveOverC
+open GSTGeometricRealizationStage2D
+open GSTGeometricRealizationStage2F
+open GSTGeometricRealizationStage2G
+open GSTFiniteLineHonestHodgeData
+open GSTFiniteLinePointsGateDischarge
+open GSTFiniteLinePrimitiveXSource
 open GSTSphereUnionComponents
 open GSTSingularCohomologyMaps
 open GSTSphereNonzeroClass

@@ -173,16 +173,17 @@ theorem isKrylovCyclic_of_rank_two_CM_word
     (hZhodge : H.cycleClass p Z ∈ rationalHodgeSubspace (H.hodgeBigrading p))
     (hZ : H.cycleClass p Z ≠ 0) :
     (cmWordCertificate R hR Z hZhodge).IsKrylovCyclic := by
-  -- The certificate's operator satisfies the same CM polynomial on the fiber.
+  -- The certificate's operator satisfies the same CM polynomial on the fiber
+  -- (the elaborator already reduces the single-letter word's operator to R's
+  -- form at default transparency — the strike-9 receipt: the rw-transfer of
+  -- strike 7 found no pattern because the have's own type had already
+  -- reduced — the exact rides the defeq directly).
   have hMinC : ∀ z : ClassicalHodgeFiber V H p,
       (cmWordCertificate R hR Z hZhodge).hodgeOperator
           ((cmWordCertificate R hR Z hZhodge).hodgeOperator z) -
         (2*a) • (cmWordCertificate R hR Z hZhodge).hodgeOperator z +
         (a^2+b^2) • z = 0 := by
     intro z
-    rw [cmWordCertificate_hodgeOperator_apply R hR Z hZhodge,
-      cmWordCertificate_hodgeOperator_apply R hR Z hZhodge,
-      cmWordCertificate_hodgeOperator_apply R hR Z hZhodge]
     exact hMin z
   -- The seed orbit vector is nonzero: its underlying class is Z's class.
   have horb0ne : (cmWordCertificate R hR Z hZhodge).hodgeOrbit 0 ≠ 0 := by
@@ -205,11 +206,12 @@ theorem isKrylovCyclic_of_rank_two_CM_word
     · exfalso
       -- Isolate the second orbit vector.
       have hbt : b' • (cmWordCertificate R hR Z hZhodge).hodgeOrbit 1
-          = -(a' • (cmWordCertificate R hR Z hZhodge).hodgeOrbit 0) :=
-        eq_neg_of_add_eq_zero_left hab
+          = -(a' • (cmWordCertificate R hR Z hZhodge).hodgeOrbit 0) := by
+        rw [add_comm] at hab
+        exact eq_neg_of_add_eq_zero_left hab
       have hscale : (cmWordCertificate R hR Z hZhodge).hodgeOrbit 1
           = b'⁻¹ • (b' • (cmWordCertificate R hR Z hZhodge).hodgeOrbit 1) := by
-        rw [smul_smul, mul_inv_cancel₀ hb0, one_smul]
+        rw [smul_smul, inv_mul_cancel₀ hb0, one_smul]
       have hstep2 : (cmWordCertificate R hR Z hZhodge).hodgeOrbit 1
           = b'⁻¹ • (-(a' • (cmWordCertificate R hR Z hZhodge).hodgeOrbit 0)) := by
         rw [hscale, hbt]
@@ -241,7 +243,10 @@ theorem isKrylovCyclic_of_rank_two_CM_word
   have hle : ⊤ ≤ Submodule.span ℚ
       (Set.range (cmWordCertificate R hR Z hZhodge).hodgeOrbit) := by
     rw [← htop]
-    exact Submodule.span_le.mpr (hsub.trans (Submodule.subset_span _))
+    exact Submodule.span_le.mpr
+      (hsub.trans
+        (Submodule.subset_span
+          (s := Set.range (cmWordCertificate R hR Z hZhodge).hodgeOrbit)))
   exact top_le_iff.mp hle
 
 /-! ## §4 The law at dead-or-rank-two-CM worlds -/
