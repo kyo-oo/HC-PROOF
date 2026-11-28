@@ -202,14 +202,27 @@ theorem fundCochain_d (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
   rw [dual_eval_two_three, fundCochain_hom]
   exact hvan w
 
+/-- **THE COCYCLE LAW at the shape-indexed differential** — the
+`next 2`-indexed form, transported from `fundCochain_d` by the
+index rewrite in a standalone statement (where the motive is
+type-correct). -/
+theorem fundCochain_d_indexed (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
+    (hvan : ∀ w : sphereChainsThree, φ (sphereBoundaryThree w) = 0) :
+    (singularCochainsOf (TopCat.of unitSphereType)).d 2
+      ((ComplexShape.up ℕ).next 2) (fundCochain φ) = 0 := by
+  rw [upNext_two]
+  exact fundCochain_d φ hvan
+
 /-- The kernel-membership spelling of the cocycle law, at the short
 complex's outgoing leg. -/
 theorem fundCochain_mem_ker (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
     (hvan : ∀ w : sphereChainsThree, φ (sphereBoundaryThree w) = 0) :
     fundCochain φ ∈ LinearMap.ker
       (sphereDualShortComplexTwo.g).hom := by
-  rw [sc_two_g, upNext_two]
-  exact (LinearMap.mem_ker _).mp (fundCochain_d φ hvan)
+  have h1 : (sphereDualShortComplexTwo.g).hom (fundCochain φ) = 0 := by
+    rw [sc_two_g]
+    exact fundCochain_d_indexed φ hvan
+  exact (LinearMap.mem_ker _).mp h1
 
 /-! ## §3 The realization (the NZC-3/NZC-4 seams) -/
 
@@ -238,14 +251,17 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
         = LinearMap.id :=
     congrArg ModuleCat.Hom.hom
       (sphereDualShortComplexTwo.moduleCatHomologyIso.inv_hom_id)
-  -- the roundtrip at the quotient element (the ∀-intro keeps the
-  -- congrArg-lambda's elaboration away from the mkQ-instance synthesis)
+  -- the roundtrip at the quotient element (the congrArg-lambda's domain
+  -- spelled explicitly — no instance synthesis against metavariables)
   have hgen : ∀ Q : ↥(LinearMap.ker (sphereDualShortComplexTwo.g).hom) ⧸
       LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles,
       (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom
         ((sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom Q) = Q := by
     intro Q
-    exact congrArg (fun L : _ →ₗ[ℚ] _ => L Q) hcomp
+    exact congrArg (fun L : ↥(LinearMap.ker (sphereDualShortComplexTwo.g).hom) ⧸
+        LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles →ₗ[ℚ]
+        ↥(LinearMap.ker (sphereDualShortComplexTwo.g).hom) ⧸
+        LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles => L Q) hcomp
   have hround :
       (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom
         ((sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom
