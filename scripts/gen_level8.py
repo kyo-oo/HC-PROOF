@@ -194,7 +194,7 @@ A("keeping exactly two alive children (`unique_dead_child`). -/")
 A("theorem dust_fire_row_nine (K : Nat)")
 A("    (hK : " + " ∨ ".join(f"K % 19683 = {c}" for c in dead_sorted) + ") :")
 A("    digit3 (4^K) 9 = 2 := by")
-A("  rcases hK with " + " ".join(f"h{c}" for c in dead_sorted))
+A("  rcases hK with " + " | ".join(f"h{c}" for c in dead_sorted))
 for c in dead_sorted:
     r, t = dead_by_class[c]
     A(f"  · exact fire_of_mod19683 K {r} {t} (by decide) (by decide) (by rw [show ({r}:Nat) = 1 + 3*{m0(r)} from by decide, wt_row_nine_read]; decide) (by omega)")
@@ -220,14 +220,16 @@ A("    K % 19683 = " + " ∨ K % 19683 = ".join(str(c) for c in survivors_sorted
 A("  have h6561 := cantarian_dust_mod_6561 K hd hc")
 A("  have hrow := hc 9 (by omega)")
 for i, c in enumerate(dead_sorted):
-    # the level-7 idiom: the exclusion uses the LAMBDA's own variable h,
-    # nested into the disjunction position of this dead class
-    term = "(Or.inl h)"
+    # the level-7 idiom: the exclusion uses the LAMBDA's own variable h;
+    # base (Or.inl h) for every position EXCEPT the last disjunct, which
+    # has no trailing disjunction to feed Or.inl — plain h (the receipt:
+    # 'Or.inl h has type ... but is expected to have type K % 19683 = 18967')
+    term = "h" if i == len(dead_sorted) - 1 else "(Or.inl h)"
     for _ in range(i):
         term = f"(Or.inr {term})"
     A(f"  have hd{i} : K % 19683 ≠ {c} :=")
     A(f"    fun h => absurd (dust_fire_row_nine K {term}) hrow")
-A("  rcases h6561 with " + " ".join(f"h{p}" for p in parents) + " <;> omega")
+A("  rcases h6561 with " + " | ".join(f"h{p}" for p in parents) + " <;> omega")
 A("")
 # the receipt
 A("/-- **THE LEVEL-EIGHT RECEIPT.**  The worldtrace transformation, one")
