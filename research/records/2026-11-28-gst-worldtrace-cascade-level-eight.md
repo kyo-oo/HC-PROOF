@@ -75,3 +75,41 @@ blade — the transformation now operating at order five, the pattern
 established for every further storey.
 
 The engine never stops; it never lies. In English, always.
+
+---
+
+## THE GREEN SEAL (the round's close)
+
+Run **46120408702** at **ff18d0e**: `worldtrace-cascade` job **SUCCESS** —
+**WORLDTRACE CASCADE RECEIPTS: 9/9**, every new theorem's axiom print
+`[propext, Classical.choice, Quot.sound]` (the standard three only,
+zero sorryAx), the negative gates clean. **The eighth cascade level is
+kernel-certified.**
+
+The repair ledger (five waves, every fix receipt-decoded): 17 → 4 → 1
+→ runner-reaped → **GREEN**.
+
+1. r1: the false demo (parent 1 is TRUE Cantorian — the demo now fires
+   at the self-dead parent 40, m = 13); the rw bracket repair; the
+   lambda-variable repair (the exclusion haves use the lambda's own h).
+2. r2: the pipe repair (both rcases alternative lists); the
+   last-disjunct base repair (the 128th exclusion nests to PLAIN h —
+   the last disjunct feeds Or.inr directly, no Or.inl).
+3. r3: the heartbeat bump — WRONG MEDICINE: the 20M monolithic omega
+   (128 bullets each chewing the full 256-way goal) reaped the runner
+   at 62+ minutes (no log at all — the same never-green defect class
+   the S096 council named for this repo's 85-minute builds).
+4. r4 THE SPLIT RESTRUCTURE: `cantarian_dust_mod_19683` decomposed into
+   **128 per-parent micro-lemmas** (`dust_survivor_mod19683_of_r`: one
+   exclusion + a two-way omega — four hypotheses per omega) and the
+   main theorem as **pure term nesting** (each bullet positions its
+   survivor pair into the 256-way goal by explicit `Or.inr^k (Or.inl h)`
+   — zero omega in the main theorem). Elaboration profile: the level-7
+   shape times a cheap constant — the whole job green in ~15 minutes.
+
+**The lesson (L98, THE GIANT-DISJUNCTION OMEGA LAW):** never let omega
+see an n-way disjunction goal inside an n-case rcases — the cost is
+n² per bullet and the runner dies before the receipt exists. Split to
+micro-lemmas with two-way goals; nest the survivors as terms.
+
+The engine never stops; it never lies. In English, always.
