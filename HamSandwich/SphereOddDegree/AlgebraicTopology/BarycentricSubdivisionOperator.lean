@@ -1,6 +1,5 @@
 import HamSandwich.SphereOddDegree.AlgebraicTopology.AffineBarycentricSubdivision
-import HamSandwich.SphereOddDegree.AlgebraicTopology.CupProduct
-import HamSandwich.SphereOddDegree.AlgebraicTopology.AlexanderWhitneyChainMap
+import HamSandwich.SphereOddDegree.AlgebraicTopology.SingularFaces
 
 /-!
 # Degree-wise barycentric subdivision operator on singular chains

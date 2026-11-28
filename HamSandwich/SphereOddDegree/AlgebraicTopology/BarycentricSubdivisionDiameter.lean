@@ -111,6 +111,7 @@ theorem dist_vertex_step_le (n : ℕ) (V : Fin (n + 1) → E)
   rw [ dist_eq_norm, h_step, norm_smul, Real.norm_of_nonneg ( by positivity ) ];
   refine' le_trans ( mul_le_mul_of_nonneg_left h_norm ( inv_nonneg.2 ( by positivity : 0 ≤ ( l : ℝ ) + 1 ) ) ) _;
   field_simp
+  all_goals exact le_rfl
 
 /-
 Distance between two new barycenters `stepVertices … l` and `stepVertices … l'`

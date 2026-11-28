@@ -135,7 +135,8 @@ theorem prefixBarycenter_zero (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
     apply stdSimplex.ext
     funext i
     fin_cases i
-    simp [stdSimplex.barycenter, stdSimplex.vertex]
+    simp [stdSimplex.barycenter, stdSimplex.vertex, Pi.single_apply]
+    rfl
   rw [prefixBarycenter, hb, stdSimplex.map_vertex]
   rfl
 
