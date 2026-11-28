@@ -52,10 +52,26 @@ THE REALIZATION ARGUMENT (classical, over the field ℚ):
   `1 = φ(fundCycle) = ψ(d₂ fundCycle) = ψ(0) = 0` by THE CYCLE LAW
   `fundCycle_d` — contradiction.
 
+STRIKE LEDGER.  Strike 1 (run 46088645263): the dual-differential
+receipts, both adjunction evaluations, the wrapped separator, and the
+witness's type-checking ALL GREEN on first compile; red on (i) the two
+sc-leg bridges (rfl defeated by the `prev 2`/`next 2` shape indices —
+repaired with the `GSTComponentCohomologyZero.homologyZeroIsoKer`
+unfold recipe + `CochainComplex.prev_nat_succ`/`CochainComplex.next`),
+(ii) the cocycle law's tactic order (the pre-unfolding broke the
+`dual_eval` pattern match — repaired by evaluating AFTER
+`ModuleCat.hom_injective` + `LinearMap.ext`), (iii) the iso roundtrip
+(`DFunLike.congr_fun` does not apply to `ModuleCat.Hom` — the
+application goes through the `ConcreteCategory` coercion — repaired
+with `CategoryTheory.congr_hom` + `comp_apply` + `id_apply`), (iv) a
+calc parse break at an anonymous constructor — repaired by
+parenthesization.
+
 With this theorem the fence chain is: the separator's EXISTENCE at the
-corrected cycle (FENCE-S, the `Basis.extend` extension route) ⟹ THIS
-MODULE ⟹ FENCE-Ω (`∃ ω ≠ 0`) ⟹ `GSTFiniteLineFenceDischarge` ⟹ the
-unconditional wave-9 package with the independence conjunct unguarded.
+corrected cycle (FENCE-S, the `Basis.extend` extension route, the next
+wave) ⟹ THIS MODULE ⟹ FENCE-Ω (`∃ ω ≠ 0`) ⟹
+`GSTFiniteLineFenceDischarge` ⟹ the unconditional wave-9 package with
+the independence conjunct unguarded.
 
 HONESTY LEDGER. Every statement proved here is unconditional. No `sorry`,
 no new axioms, no `native_decide`. The GitHub CI lane
@@ -85,16 +101,33 @@ namespace GSTSphereFenceRealization
 abbrev sphereDualShortComplexTwo : ShortComplex (ModuleCat ℚ) :=
   (singularCochainsOf (TopCat.of unitSphereType)).sc 2
 
+/-- The `up ℕ` shape index at an interior degree: `prev 2 = 1`. -/
+theorem upPrev_two : (ComplexShape.up ℕ).prev 2 = 1 :=
+  CochainComplex.prev_nat_succ 1
+
+/-- The `up ℕ` shape index at an interior degree: `next 2 = 3`. -/
+theorem upNext_two : (ComplexShape.up ℕ).next 2 = 3 :=
+  CochainComplex.next ℕ 2
+
 /-- AUDIT: the incoming leg of the degree-2 short complex IS the
-degree 1→2 dual differential (the `up ℕ` shape at an interior degree). -/
+degree 1→2 dual differential (the `GSTComponentCohomologyZero.
+homologyZeroIsoKer` unfold recipe at the interior degree). -/
 theorem sc_two_f :
     sphereDualShortComplexTwo.f =
-      (singularCochainsOf (TopCat.of unitSphereType)).d 1 2 := rfl
+      (singularCochainsOf (TopCat.of unitSphereType)).d 1 2 := by
+  show ((singularCochainsOf (TopCat.of unitSphereType)).sc 2).f = _
+  unfold HomologicalComplex.sc HomologicalComplex.shortComplexFunctor
+  unfold HomologicalComplex.shortComplexFunctor'
+  rw [upPrev_two]
 
 /-- AUDIT: the outgoing leg IS the degree 2→3 dual differential. -/
 theorem sc_two_g :
     sphereDualShortComplexTwo.g =
-      (singularCochainsOf (TopCat.of unitSphereType)).d 2 3 := rfl
+      (singularCochainsOf (TopCat.of unitSphereType)).d 2 3 := by
+  show ((singularCochainsOf (TopCat.of unitSphereType)).sc 2).g = _
+  unfold HomologicalComplex.sc HomologicalComplex.shortComplexFunctor
+  unfold HomologicalComplex.shortComplexFunctor'
+  rw [upNext_two]
 
 /-! ## §1 The dual differential presentation (the NZC-2 seam) -/
 
@@ -161,14 +194,10 @@ theorem fundCochain_d (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
     (hvan : ∀ w : sphereChainsThree, φ (sphereBoundaryThree w) = 0) :
     (singularCochainsOf (TopCat.of unitSphereType)).d 2 3
       (fundCochain φ) = 0 := by
-  rw [cochains_d_two_three]
-  simp only [ModuleCat.ofHom_apply, Linear.leftComp_apply]
   apply ModuleCat.hom_injective
-  rw [fundCochain_hom]
   refine LinearMap.ext fun w => ?_
+  rw [dual_eval_two_three, fundCochain_hom]
   exact hvan w
-
-/-! ## §3 The realization (the NZC-3/NZC-4 seams) -/
 
 /-- The kernel-membership spelling of the cocycle law, at the short
 complex's outgoing leg. -/
@@ -178,6 +207,8 @@ theorem fundCochain_mem_ker (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
       (sphereDualShortComplexTwo.g).hom := by
   rw [sc_two_g, LinearMap.mem_ker]
   exact fundCochain_d φ hvan
+
+/-! ## §3 The realization (the NZC-3/NZC-4 seams) -/
 
 /-- **THE SEPARATOR REALIZES TO A NONZERO CLASS** — the frozen statement
 of `GSTSphereFundamentalCycle.lean:454-456`, proved: every separator is
@@ -196,7 +227,7 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
       ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩), ?_⟩
   intro hzero
   -- the roundtrip: the iso's inverse followed by the iso is the
-  -- identity on the quotient, so the quotient class itself is zero
+  -- identity on the quotient (the ConcreteCategory application route)
   have hround :
       (sphereDualShortComplexTwo.moduleCatHomologyIso.hom)
         (sphereDualShortComplexTwo.moduleCatHomologyIso.inv
@@ -206,15 +237,16 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
         Submodule.mkQ
           (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
           ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩ := by
-    simpa using DFunLike.congr_fun
+    rw [← CategoryTheory.comp_apply, ← CategoryTheory.id_apply]
+    exact CategoryTheory.congr_hom
       (sphereDualShortComplexTwo.moduleCatHomologyIso.inv_hom_id) _
   have hzero' :
       Submodule.mkQ
         (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
         ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩ = 0 := by
-    calc Submodule.mkQ
+    calc (Submodule.mkQ
         (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
-        ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩ =
+        ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩) =
         (sphereDualShortComplexTwo.moduleCatHomologyIso.hom)
           (sphereDualShortComplexTwo.moduleCatHomologyIso.inv
             (Submodule.mkQ
@@ -222,7 +254,7 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
               ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩)) := hround.symm
       _ = (sphereDualShortComplexTwo.moduleCatHomologyIso.hom) 0 := by
           rw [hzero]
-      _ = 0 := map_zero _ _
+      _ = 0 := by simp
   -- (NZC-4) the quotient-zero is the boundary-membership
   rw [Submodule.Quotient.mk_eq_zero] at hzero'
   obtain ⟨ψ, hψ⟩ := LinearMap.mem_range.mp hzero'
