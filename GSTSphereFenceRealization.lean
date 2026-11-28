@@ -208,8 +208,8 @@ theorem fundCochain_mem_ker (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
     (hvan : ∀ w : sphereChainsThree, φ (sphereBoundaryThree w) = 0) :
     fundCochain φ ∈ LinearMap.ker
       (sphereDualShortComplexTwo.g).hom := by
-  rw [sc_two_g, LinearMap.mem_ker, upNext_two]
-  exact fundCochain_d φ hvan
+  rw [sc_two_g, upNext_two]
+  exact (LinearMap.mem_ker _).mp (fundCochain_d φ hvan)
 
 /-! ## §3 The realization (the NZC-3/NZC-4 seams) -/
 
@@ -238,6 +238,14 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
         = LinearMap.id :=
     congrArg ModuleCat.Hom.hom
       (sphereDualShortComplexTwo.moduleCatHomologyIso.inv_hom_id)
+  -- the roundtrip at the quotient element (the ∀-intro keeps the
+  -- congrArg-lambda's elaboration away from the mkQ-instance synthesis)
+  have hgen : ∀ Q : ↥(LinearMap.ker (sphereDualShortComplexTwo.g).hom) ⧸
+      LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles,
+      (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom
+        ((sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom Q) = Q := by
+    intro Q
+    exact congrArg (fun L : _ →ₗ[ℚ] _ => L Q) hcomp
   have hround :
       (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom
         ((sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom
@@ -247,9 +255,7 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
         Submodule.mkQ
           (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
           ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩ :=
-    congrArg (fun L : _ →ₗ[ℚ] _ => L (Submodule.mkQ
-      (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
-      ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩)) hcomp
+    hgen _
   have hzero' :
       Submodule.mkQ
         (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
@@ -265,9 +271,11 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
       _ = (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom 0 := by
           rw [hzero]
       _ = 0 := LinearMap.map_zero _
-  -- (NZC-4) the quotient-zero is the boundary-membership
-  rw [Submodule.Quotient.mk_eq_zero] at hzero'
-  obtain ⟨ψ, hψ⟩ := LinearMap.mem_range.mp hzero'
+  -- (NZC-4) the quotient-zero is the boundary-membership (the mkQ/mk
+  -- defeq is rfl — Submodule.mkQ_apply; the memberships extracted by
+  -- direct iff-application, no keyed rewrites)
+  obtain ⟨ψ, hψ⟩ := (LinearMap.mem_range _).mp
+    ((Submodule.Quotient.mk_eq_zero _ _).mp hzero')
   -- the coboundary equation at the shape-indexed differential spelling
   have hval : (sphereDualShortComplexTwo.f).hom ψ = fundCochain φ :=
     congrArg Subtype.val hψ
