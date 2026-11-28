@@ -207,32 +207,59 @@ A("    (h : " + " ∨ ".join(f"K % 19683 = {c}" for c in dead_sorted) + ") :")
 A("    noTernaryTwo (4^K) = false :=")
 A("  no22_of_digit_two K 9 (dust_fire_row_nine K h)")
 A("")
-# cantarian_dust_mod_19683: the exclusion haves + final rcases
+# cantarian_dust_mod_19683: the SPLIT structure (the r3 receipt: the
+# runner reaps the giant <;> omega — 128 omegas each chewing the full
+# 256-way disjunction goal; the restructure: 128 micro-lemmas, each ONE
+# exclusion + a TWO-way omega, and the main theorem pure term nesting)
+surv_pos = {c: i for i, c in enumerate(survivors_sorted)}
+dead_pos = {c: i for i, c in enumerate(dead_sorted)}
+
+
+def or_nest(var, depth, last):
+    """The proof of `var`'s disjunct at position depth (0-based) of an
+    n-way right-nested disjunction."""
+    t = var if last else f"(Or.inl {var})"
+    for _ in range(depth):
+        t = f"(Or.inr {t})"
+    return t
+
+
+A("/-- **THE PER-PARENT SURVIVOR MICRO-LEMMAS.**  For each level-seven")
+A("survivor parent: one exclusion (the deterministic dead child) and a")
+A("two-way omega — the survivor pair is forced.  (The r3 receipt: the")
+A("monolithic 128-parent omega reaps the runner; the split keeps every")
+A("omega tiny.) -/")
+for r in parents:
+    d = next(c for (pr, t, c) in dead if pr == r)
+    s1, s2 = sorted(x for x in (r, r + 6561, r + 13122) if x != d)
+    dn = or_nest("h", dead_pos[d], dead_pos[d] == len(dead_sorted) - 1)
+    A(f"theorem dust_survivor_mod19683_of_{r} (K : Nat)")
+    A("    (hc : CantorianPower K) (hp : K % 6561 = " + str(r) + ") :")
+    A(f"    K % 19683 = {s1} ∨ K % 19683 = {s2} := by")
+    A("  have hrow := hc 9 (by omega)")
+    A(f"  have hdead : K % 19683 ≠ {d} :=")
+    A(f"    fun h => absurd (dust_fire_row_nine K {dn}) hrow")
+    A("  omega")
+    A("")
 A("/-- **THE DUST PINNED AT LEVEL EIGHT — THE MAP DOUBLES AGAIN.**  A")
 A("Cantorian dust exponent (`K ≡ 1 mod 3`) lives in one of TWO HUNDRED")
 A("FIFTY-SIX surviving residues mod 19683.  The structural law, fifth")
 A("stroke: `2, 4, 8, 16, 32, 64, 128, 256` — the alive set doubles")
 A("level by level without exception, every node keeping exactly two")
 A("children by the blade's one-of-three. -/")
-A("-- (the r2 receipt: the 128-parent rcases with the 256-way goal")
-A("-- disjunction needs ten times the file's global heartbeat budget)")
-A("set_option maxHeartbeats 20000000 in")
 A("theorem cantarian_dust_mod_19683 (K : Nat)")
 A("    (hd : K % 3 = 1) (hc : CantorianPower K) :")
 A("    K % 19683 = " + " ∨ K % 19683 = ".join(str(c) for c in survivors_sorted) + " := by")
 A("  have h6561 := cantarian_dust_mod_6561 K hd hc")
-A("  have hrow := hc 9 (by omega)")
-for i, c in enumerate(dead_sorted):
-    # the level-7 idiom: the exclusion uses the LAMBDA's own variable h;
-    # base (Or.inl h) for every position EXCEPT the last disjunct, which
-    # has no trailing disjunction to feed Or.inl — plain h (the receipt:
-    # 'Or.inl h has type ... but is expected to have type K % 19683 = 18967')
-    term = "h" if i == len(dead_sorted) - 1 else "(Or.inl h)"
-    for _ in range(i):
-        term = f"(Or.inr {term})"
-    A(f"  have hd{i} : K % 19683 ≠ {c} :=")
-    A(f"    fun h => absurd (dust_fire_row_nine K {term}) hrow")
-A("  rcases h6561 with " + " | ".join(f"h{p}" for p in parents) + " <;> omega")
+A("  rcases h6561 with " + " | ".join(f"hp{p}" for p in parents))
+for r in parents:
+    d = next(c for (pr, t, c) in dead if pr == r)
+    s1, s2 = sorted(x for x in (r, r + 6561, r + 13122) if x != d)
+    A(f"  · rcases dust_survivor_mod19683_of_{r} K hc hp{r} with h | h")
+    p1 = or_nest("h", surv_pos[s1], surv_pos[s1] == len(survivors_sorted) - 1)
+    p2 = or_nest("h", surv_pos[s2], surv_pos[s2] == len(survivors_sorted) - 1)
+    A(f"    · exact {p1}")
+    A(f"    · exact {p2}")
 A("")
 # the receipt
 A("/-- **THE LEVEL-EIGHT RECEIPT.**  The worldtrace transformation, one")
