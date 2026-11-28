@@ -159,9 +159,9 @@ A("  rw [← h59049] at h")
 A("  exact digit3_eq_of_mod_next _ _ _ h")
 A("")
 A("/-- **THE QUINTIC KILL DEMO.**  The quintic blade reads digit two at")
-A("row nine on the first firing parent, without computing any deep")
-A("power of four. -/")
-DEMO_R, DEMO_T, _ = dead[0]
+A("row nine on the first self-firing parent (its dead child is itself," )
+A("`t = 0`), without computing any deep power of four. -/")
+DEMO_R = next(r for (r, t, c) in dead if t == 0)
 A(f"theorem wt_quintic_fire_demo : digit3 (4^(1+3*{m0(DEMO_R)})) 9 = 2 := by")
 A("  rw [wt_row_nine_read]")
 A("  decide")
@@ -177,10 +177,10 @@ A("    digit3 (4^K) 9 = 2 := by")
 A("  have h19683 : (3:Nat)^(8+1) = 19683 := by decide")
 A("  have h6561 : (3:Nat)^8 = 6561 := by decide")
 A("  have hK : K % 3^(8+1) = r + 3^8 * t := by")
-A("    rw 19683, h6561]")
+A("    rw [h19683, h6561]")
 A("    exact hclass")
 A("  have hr' : r < 3^8 := by")
-A("    rw 6561]")
+A("    rw [h6561]")
 A("    exact hr")
 A("  exact feedback_fire_of_class 8 r t K hr' ht hnoise hK")
 A("")
@@ -220,15 +220,11 @@ A("    K % 19683 = " + " ∨ K % 19683 = ".join(str(c) for c in survivors_sorted
 A("  have h6561 := cantarian_dust_mod_6561 K hd hc")
 A("  have hrow := hc 9 (by omega)")
 for i, c in enumerate(dead_sorted):
-    ors = "".join(["Or.inr " * i, "Or.inl" if i == 0 else "Or.inl"])
-    # build the term: nested Or.inr ... Or.inl h{c}
-    term = f"h{c}"
-    depth = i
-    while depth > 0:
+    # the level-7 idiom: the exclusion uses the LAMBDA's own variable h,
+    # nested into the disjunction position of this dead class
+    term = "(Or.inl h)"
+    for _ in range(i):
         term = f"(Or.inr {term})"
-        depth -= 1
-    if i == 0:
-        term = f"(Or.inl h{c})"
     A(f"  have hd{i} : K % 19683 ≠ {c} :=")
     A(f"    fun h => absurd (dust_fire_row_nine K {term}) hrow")
 A("  rcases h6561 with " + " ".join(f"h{p}" for p in parents) + " <;> omega")
