@@ -111,22 +111,23 @@ theorem upNext_two : (ComplexShape.up ℕ).next 2 = 3 :=
 
 /-- AUDIT: the incoming leg of the degree-2 short complex IS the
 degree 1→2 dual differential (the `GSTComponentCohomologyZero.
-homologyZeroIsoKer` unfold recipe at the interior degree). -/
+homologyZeroIsoKer` unfold recipe at the interior degree — the unfolds
+expose the `prev 2` shape index, the rewrite fixes it at `1`). -/
 theorem sc_two_f :
     sphereDualShortComplexTwo.f =
       (singularCochainsOf (TopCat.of unitSphereType)).d 1 2 := by
-  show ((singularCochainsOf (TopCat.of unitSphereType)).sc 2).f = _
-  unfold HomologicalComplex.sc HomologicalComplex.shortComplexFunctor
-  unfold HomologicalComplex.shortComplexFunctor'
+  unfold sphereDualShortComplexTwo HomologicalComplex.sc
+    HomologicalComplex.shortComplexFunctor
+    HomologicalComplex.shortComplexFunctor'
   rw [upPrev_two]
 
 /-- AUDIT: the outgoing leg IS the degree 2→3 dual differential. -/
 theorem sc_two_g :
     sphereDualShortComplexTwo.g =
       (singularCochainsOf (TopCat.of unitSphereType)).d 2 3 := by
-  show ((singularCochainsOf (TopCat.of unitSphereType)).sc 2).g = _
-  unfold HomologicalComplex.sc HomologicalComplex.shortComplexFunctor
-  unfold HomologicalComplex.shortComplexFunctor'
+  unfold sphereDualShortComplexTwo HomologicalComplex.sc
+    HomologicalComplex.shortComplexFunctor
+    HomologicalComplex.shortComplexFunctor'
   rw [upNext_two]
 
 /-! ## §1 The dual differential presentation (the NZC-2 seam) -/
