@@ -52,7 +52,7 @@ theorem singularChainSimplicialModule_map_generator (R : Type) [CommRing R] (X :
         ((TopCat.toSSet.obj X).map g σ) := by
     simp [singularChainSimplicialModule, SimplicialObject.whiskering, Limits.sigmaConst]
   have := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom key) (1 : R)
-  simpa [ModuleCat.hom_comp, LinearMap.comp_apply] using this
+  exact this
 
 /-! ## 2. The boundary-face extraction (the Alexander-Whitney namespace) -/
 

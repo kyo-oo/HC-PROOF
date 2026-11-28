@@ -51,8 +51,9 @@ theorem prefixBarycenter_castSucc_eq_map_of_prefix {n : ℕ}
     exact lt_of_lt_of_le i.2 ( Nat.succ_le_of_lt k.2 )⟩) := by
     ext i; simp +decide [ prefixVertex, hιρ ] ;
   generalize_proofs at *;
-  convert congr_arg ( fun f => stdSimplex.map f ( stdSimplex.barycenter ( X := Fin ( k.val + 1 ) ) ( 𝕜 := ℝ ) ) ) h_prefixVertex using 1;
-  convert stdSimplex.map_comp_apply _ _ _ using 2
+  unfold prefixBarycenter
+  rw [h_prefixVertex, stdSimplex.map_comp_apply]
+  rfl
 
 /-
 Last-face affine identity, in coordinate-face form.
