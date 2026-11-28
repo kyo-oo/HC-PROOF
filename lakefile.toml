@@ -1779,3 +1779,18 @@ name = "GSTSphereFenceRealizationLib"
 roots = [
   "GSTSphereFenceRealization",
 ]
+
+# ---------------------------------------------------------------------------
+# THE HAMSANDWICH PORT (wave 13) — the vendored sphere-homology machine.
+# Provenance: github.com/akopjan/HamSandwich @ 76202db (Apache-2.0, license
+# copied as HamSandwich/LICENSE.HamSandwich), forward-ported from Mathlib
+# v4.28.0 to this repo's pin v4.33.0-rc2 (51e6992e).  The port delivers
+# sphereTopHomologyIso_unconditional : H_n(S^n;Z) = Z on Mathlib's own
+# singularChainComplexFunctor — the machine input of the FENCE-OMEGA
+# discharge (wave 13's design; see research/records/2026-11-28-*).
+# ---------------------------------------------------------------------------
+[[lean_lib]]
+name = "HamSandwichLib"
+globs = [
+  "HamSandwich.+",
+]
