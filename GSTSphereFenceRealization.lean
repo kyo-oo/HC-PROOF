@@ -338,7 +338,7 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
   have hzero'' : (fundCochain φ).hom fundCycle = 0 := by
     rw [← hval']
     exact (dual_eval_one_two_indexed ψ fundCycle).trans (by
-      rw [hcy]; exact map_zero _ _)
+      rw [hcy]; exact map_zero _)
   exact zero_ne_one (hzero''.symm.trans hone')
 
 end GSTSphereFenceRealization
