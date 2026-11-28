@@ -1794,3 +1794,15 @@ name = "HamSandwichLib"
 globs = [
   "HamSandwich.+",
 ]
+
+[[lean_lib]]
+name = "GSTSphereFenceOmegaDischargeLib"
+roots = [
+  "GSTSphereFenceOmegaDischarge",
+]
+
+[[lean_lib]]
+name = "GSTSphereFenceFinalAssemblyLib"
+roots = [
+  "GSTSphereFenceFinalAssembly",
+]
