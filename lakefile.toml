@@ -1773,3 +1773,9 @@ name = "GSTSphereFundamentalCycleLib"
 roots = [
   "GSTSphereFundamentalCycle",
 ]
+
+[[lean_lib]]
+name = "GSTSphereFenceRealizationLib"
+roots = [
+  "GSTSphereFenceRealization",
+]
