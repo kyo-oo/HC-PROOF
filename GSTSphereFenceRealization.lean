@@ -109,22 +109,24 @@ theorem upPrev_two : (ComplexShape.up ℕ).prev 2 = 1 :=
 theorem upNext_two : (ComplexShape.up ℕ).next 2 = 3 :=
   CochainComplex.next ℕ 2
 
-/-- AUDIT: the incoming leg of the degree-2 short complex IS the
-degree 1→2 dual differential (the `GSTComponentCohomologyZero.
-homologyZeroIsoKer` unfold recipe at the interior degree — the unfolds
-expose the `prev 2` shape index, the rewrite fixes it at `1`). -/
+/-- AUDIT: the incoming leg of the degree-2 short complex, at its own
+shape-indexed differential spelling (the `up ℕ` shape's `prev` is
+choice-derived — opaque to defeq — so the bridge is stated at the
+`prev 2` index and fixed at `1` by the rewrite). -/
 theorem sc_two_f :
     sphereDualShortComplexTwo.f =
-      (singularCochainsOf (TopCat.of unitSphereType)).d 1 2 := by
+      (singularCochainsOf (TopCat.of unitSphereType)).d
+        ((ComplexShape.up ℕ).prev 2) 2 := by
   unfold sphereDualShortComplexTwo HomologicalComplex.sc
     HomologicalComplex.shortComplexFunctor
     HomologicalComplex.shortComplexFunctor'
   rw [upPrev_two]
 
-/-- AUDIT: the outgoing leg IS the degree 2→3 dual differential. -/
+/-- AUDIT: the outgoing leg at its own `next 2`-indexed spelling. -/
 theorem sc_two_g :
     sphereDualShortComplexTwo.g =
-      (singularCochainsOf (TopCat.of unitSphereType)).d 2 3 := by
+      (singularCochainsOf (TopCat.of unitSphereType)).d
+        2 ((ComplexShape.up ℕ).next 2) := by
   unfold sphereDualShortComplexTwo HomologicalComplex.sc
     HomologicalComplex.shortComplexFunctor
     HomologicalComplex.shortComplexFunctor'
@@ -206,7 +208,7 @@ theorem fundCochain_mem_ker (φ : sphereChainsTwo →ₗ[ℚ] ℚ)
     (hvan : ∀ w : sphereChainsThree, φ (sphereBoundaryThree w) = 0) :
     fundCochain φ ∈ LinearMap.ker
       (sphereDualShortComplexTwo.g).hom := by
-  rw [sc_two_g, LinearMap.mem_ker]
+  rw [sc_two_g, LinearMap.mem_ker, upNext_two]
   exact fundCochain_d φ hvan
 
 /-! ## §3 The realization (the NZC-3/NZC-4 seams) -/
@@ -221,26 +223,33 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
     ∃ ω : singularCohomologyOf (TopCat.of unitSphereType) 2, ω ≠ 0 := by
   obtain ⟨φ, hvan, hone⟩ := hsep
   -- (NZC-3) the witness: the separator's class, through the explicit
-  -- quotient presentation of the degree-2 homology
-  refine ⟨sphereDualShortComplexTwo.moduleCatHomologyIso.inv
+  -- quotient presentation of the degree-2 homology (the LinearMap-level
+  -- spelling — every application below is a core linear-map lemma)
+  refine ⟨(sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom
     (Submodule.mkQ
       (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
       ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩), ?_⟩
   intro hzero
-  -- the roundtrip: the iso's inverse followed by the iso is the
-  -- identity on the quotient (the ConcreteCategory application route)
+  -- the roundtrip: the iso's underlying linear maps compose to the
+  -- identity (the `inv_hom_id` homology transported to LinearMap-land)
+  have hcomp :
+      (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom.comp
+        (sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom
+        = LinearMap.id :=
+    congrArg ModuleCat.Hom.hom
+      (sphereDualShortComplexTwo.moduleCatHomologyIso.inv_hom_id)
   have hround :
-      (sphereDualShortComplexTwo.moduleCatHomologyIso.hom)
-        (sphereDualShortComplexTwo.moduleCatHomologyIso.inv
+      (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom
+        ((sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom
           (Submodule.mkQ
             (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
             ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩)) =
         Submodule.mkQ
           (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
-          ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩ := by
-    rw [← CategoryTheory.comp_apply, ← CategoryTheory.id_apply]
-    exact CategoryTheory.congr_hom
-      (sphereDualShortComplexTwo.moduleCatHomologyIso.inv_hom_id) _
+          ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩ :=
+    congrArg (fun L : _ →ₗ[ℚ] _ => L (Submodule.mkQ
+      (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
+      ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩)) hcomp
   have hzero' :
       Submodule.mkQ
         (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
@@ -248,22 +257,22 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
     calc (Submodule.mkQ
         (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
         ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩) =
-        (sphereDualShortComplexTwo.moduleCatHomologyIso.hom)
-          (sphereDualShortComplexTwo.moduleCatHomologyIso.inv
+        (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom
+          ((sphereDualShortComplexTwo.moduleCatHomologyIso.inv).hom
             (Submodule.mkQ
               (LinearMap.range sphereDualShortComplexTwo.moduleCatToCycles)
               ⟨fundCochain φ, fundCochain_mem_ker φ hvan⟩)) := hround.symm
-      _ = (sphereDualShortComplexTwo.moduleCatHomologyIso.hom) 0 := by
+      _ = (sphereDualShortComplexTwo.moduleCatHomologyIso.hom).hom 0 := by
           rw [hzero]
-      _ = 0 := by simp
+      _ = 0 := LinearMap.map_zero _
   -- (NZC-4) the quotient-zero is the boundary-membership
   rw [Submodule.Quotient.mk_eq_zero] at hzero'
   obtain ⟨ψ, hψ⟩ := LinearMap.mem_range.mp hzero'
-  -- the coboundary equation at the differential spelling
+  -- the coboundary equation at the shape-indexed differential spelling
   have hval : (sphereDualShortComplexTwo.f).hom ψ = fundCochain φ :=
     congrArg Subtype.val hψ
-  have hval' : (singularCochainsOf (TopCat.of unitSphereType)).d 1 2 ψ
-      = fundCochain φ := by
+  have hval' : (singularCochainsOf (TopCat.of unitSphereType)).d
+      ((ComplexShape.up ℕ).prev 2) 2 ψ = fundCochain φ := by
     rw [← sc_two_f]
     exact hval
   -- the separator reads 1 on the fundamental cycle
@@ -272,7 +281,7 @@ theorem exists_nonzero_sphere_cohomology_two_of_fundseparator
     exact hone
   -- but a coboundary reads 0 on every cycle (THE CYCLE LAW)
   have hzero'' : (fundCochain φ).hom fundCycle = 0 := by
-    rw [← hval', dual_eval_one_two]
+    rw [← hval', upPrev_two, dual_eval_one_two]
     have hcy : (singularChainsOf (TopCat.of unitSphereType)).d 2 1
         fundCycle = 0 := fundCycle_d
     rw [hcy, map_zero]
