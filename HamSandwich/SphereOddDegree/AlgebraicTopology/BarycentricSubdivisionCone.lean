@@ -133,7 +133,8 @@ theorem affineConeMap_vertex_succ {n k : ℕ} (v : Delta n) (τ : Delta k → De
 `coneTail` is continuous away from the apex.
 -/
 theorem continuousOn_coneTail {k : ℕ} :
-    ContinuousOn (coneTail (k := k)) {x : Delta (k + 1) | x 0 ≠ (1 : ℝ)} := by
+    ContinuousOn (coneTail (k := k))
+      (setOf fun x : Delta (k + 1) => x 0 ≠ (1 : ℝ)) := by
   -- Write `S := {x : Delta (k+1) | (x:_) 0 ≠ 1}`.
   set S : Set (Delta (k + 1)) := {x | x 0 ≠ 1};
   have h_cont_tail : ContinuousOn (fun x : Delta (k + 1) => (coneTail x : Fin (k + 1) → ℝ)) S := by
