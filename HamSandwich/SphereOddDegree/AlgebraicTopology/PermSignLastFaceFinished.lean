@@ -125,15 +125,30 @@ theorem factor_lastFace_of_faceData {n : ℕ}
   classical
   convert Equiv.ext ?_;
   intro x; by_cases hx : x = lastVertex n <;> simp_all +decide ;
-  · unfold extendLastPerm; simp +decide ;
-    -- STRIKE 10 (run 46154695393 receipt): the `unfold
-    -- Equiv.Perm.viaFintypeEmbedding; simp +decide` died — the semireducible
-    -- unfold poisoned the goal (the note's own diagnosis: not type-correct
-    -- under implicit transparency) and decide could not evaluate the
-    -- OrderEmbedding coercion's inj' proof-term.  The API route instead:
-    -- the apply-image lemma, no unfold.
-    rw [Equiv.Perm.viaFintypeEmbedding_apply_image];
-    simp +decide [ Equiv.Perm.extendDomain ];
+  · -- STRIKE 11 (run 46155760811 receipt: the goal state fully visible — the
+    -- lastVertex case needs the fixed-point fact the corpus itself proved in
+    -- the green sibling BarycentricBoundaryCancellation.extendLastPerm_lastVertex;
+    -- inlined here — the import would be circular).  The `show` normalizes
+    -- the entry goal (whose embedding the earlier simps unfolded to the
+    -- anonymous form) back to the clean `extendLastPerm` shape — the defeq
+    -- rides — then the corpus's own pattern: the last vertex is outside
+    -- castSucc's range, the extension fixes it, the insertion's last-vertex
+    -- simp lemma closes.
+    show π (lastVertex n) = insertLastPerm (π (lastVertex n))
+        ((extendLastPerm ρ) (lastVertex n))
+    have hmem : lastVertex n ∉ Set.range (Fin.castSuccOrderEmb.toEmbedding) := by
+      rw [Set.mem_range]
+      rintro ⟨t, ht⟩
+      have hcast : (Fin.castSucc t : Fin (n + 2)) = lastVertex n := ht
+      have hval := congrArg Fin.val hcast
+      simp [lastVertex] at hval
+      omega
+    have hfix : (extendLastPerm ρ) (lastVertex n) = lastVertex n := by
+      unfold extendLastPerm
+      exact Equiv.Perm.viaFintypeEmbedding_apply_notMem_range ρ
+        Fin.castSuccOrderEmb.toEmbedding hmem
+    rw [hfix]
+    simp
   · convert hρ ( x.castPred hx ) |> Eq.symm using 1;
     convert insertLastPerm_castSucc _ _ using 2;
     -- STRIKE 9 (run 46153568071 receipt): the explicit
