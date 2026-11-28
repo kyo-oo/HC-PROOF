@@ -234,15 +234,22 @@ theorem singularBoundary_sigma_ι_formula (R : Type) [CommRing R] (X : TopCat.{0
   refine (Preadditive.comp_sum _ _ _).trans ?_
   apply Finset.sum_congr rfl
   intro i _
-  rw [Preadditive.comp_zsmul]
-  congr 1
   have key : Sigma.ι (fun (_ : singularSimplices X (n + 1)) => ModuleCat.of R R) σ
       ≫ (singularChainSimplicialModule R X).δ i
       = Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R)
         (AlexanderWhitney.faceSimplex X n i σ) := by
     simp [singularChainSimplicialModule, SimplicialObject.whiskering, Limits.sigmaConst,
       AlexanderWhitney.faceSimplex, SimplicialObject.δ]
-  exact key
+  -- STRIKE 7 (the strike-6 receipt's own mechanism, applied to this seam):
+  -- `rw [Preadditive.comp_zsmul]` re-elaborates `?f ≫ (?n • ?g)` at implicit
+  -- transparency and dies on the cross-space seam (the sigma-injection's
+  -- coproduct space vs the AFM complex's degree space — the same keyed-match
+  -- defeat as the strike-6 `Preadditive.comp_sum` site above).  The term-mode
+  -- refine unifies at default transparency, the defeq rides, and congrArg
+  -- carries the generator key through the integer scaling.
+  first
+  | exact (Preadditive.comp_zsmul _ _ _).trans (congrArg ((-1 : ℤ) ^ (i : ℕ) • ·) key)
+  | exact (Preadditive.comp_zsmul _ _).trans (congrArg ((-1 : ℤ) ^ (i : ℕ) • ·) key)
 
 /-- **Singular boundary on a generator.** The differential `∂` of the singular
 chain complex acts on a basis chain `[σ]` by the classical alternating sum over
@@ -264,8 +271,25 @@ theorem singularBoundary_chainGenerator_formula (R : Type) [CommRing R] (X : Top
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_sum, LinearMap.sum_apply,
     ModuleCat.hom_zsmul, LinearMap.smul_apply] at h2
   refine h2.trans ?_
-  simp only [ModuleCat.hom_sum, LinearMap.sum_apply, ModuleCat.hom_zsmul,
-    LinearMap.smul_apply]
+  -- STRIKE 7: the goal-side `simp only [ModuleCat.hom_sum, …]` died on the
+  -- same cross-space instance seam (every lemma unused, the hom-of-sum shape
+  -- untouched), so the `apply Finset.sum_congr rfl` below it had no
+  -- sum-of-applications shape to unify with.  The standalone `hompush`
+  -- re-elaborates the push-through at a uniform type (the strike-5
+  -- extracted-lemma recipe); the outer refine then rides the defeq back
+  -- into the goal's instance paths.
+  have hompush :
+      (ModuleCat.Hom.hom (∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) •
+          Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+            (AlexanderWhitney.faceSimplex X n i σ))) (1 : R)
+        = ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) •
+            (ModuleCat.Hom.hom (Sigma.ι (fun _ : singularSimplices X n => ModuleCat.of R R)
+              (AlexanderWhitney.faceSimplex X n i σ))) (1 : R) := by
+    rw [ModuleCat.hom_sum, LinearMap.sum_apply]
+    exact Finset.sum_congr rfl fun i _ => by
+      rw [ModuleCat.hom_zsmul]
+      simp
+  refine hompush.trans ?_
   apply Finset.sum_congr rfl
   intro i _
   rw [← Int.cast_smul_eq_zsmul R ((-1 : ℤ) ^ (i : ℕ))]
