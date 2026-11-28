@@ -66,7 +66,6 @@ theorem singularHomologyMap_eq_of_singularChainHomotopy
     (H : Homotopy (singularChainℤ.map f) (singularChainℤ.map g)) (n : ℕ) :
     (singularHomologyℤ n).map f = (singularHomologyℤ n).map g := by
   have h := H.homologyMap_eq n
-  simpa [singularHomologyℤ, singularChainℤ, singularHomologyFunctor,
-    HomologicalComplex.homologyFunctor_map] using h
+  exact h
 
 end SphereOddDegree

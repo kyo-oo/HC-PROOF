@@ -139,7 +139,7 @@ jobs:
             grep -nE "error:|unknown identifier|unknown constant|declaration uses" ham-sandwich-port.log | tail -n 25 || true
             exit 1
           fi
-      - name: "Ladder 5/5: the axiom audit (the expected three axioms, zero sorryAx)"
+      - name: "Ladder 5/6: the axiom audit (the expected three axioms, zero sorryAx)"
         id: p5
         shell: bash
         run: |
@@ -156,6 +156,28 @@ jobs:
           else
             rc=$?
             echo "::error::AXIOM-AUDIT RED (exit $rc)"
+            echo "--- the Lean error tail ---"
+            grep -nE "error:|unknown identifier|unknown constant|declaration uses" ham-sandwich-port.log | tail -n 25 || true
+            exit 1
+          fi
+      - name: "Ladder 6/6: the Q-endpoint (the rational suspension tower, the corpus-spelling nontriviality)"
+        id: p6
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if timeout --kill-after=30s 7200 lake build HamSandwich.H2SphereQ >> ham-sandwich-port.log 2>&1; then
+            echo "Q-ENDPOINT GREEN"
+            echo "--- the sorryAx audit ---"
+            if grep -nE "error:|sorryAx|declaration uses 'sorry'" ham-sandwich-port.log; then
+              echo "::error::SORRY DETECTED"
+              exit 1
+            fi
+            echo "--- the axioms of the Q-endpoint ---"
+            grep -n "axioms" ham-sandwich-port.log | tail -n 10 || true
+          else
+            rc=$?
+            echo "::error::Q-ENDPOINT RED (exit $rc)"
             echo "--- the Lean error tail ---"
             grep -nE "error:|unknown identifier|unknown constant|declaration uses" ham-sandwich-port.log | tail -n 25 || true
             exit 1

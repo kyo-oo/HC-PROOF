@@ -108,9 +108,9 @@ theorem dist_vertex_step_le (n : ℕ) (V : Fin (n + 1) → E)
       · simp +decide [ Finset.card_sdiff, * ];
     refine' le_trans ( le_trans ( norm_sum_le _ _ ) _ ) h_norm;
     simp +decide [ Finset.sum_eq_sum_sdiff_singleton_add ( show i ∈ Finset.Iic l from Finset.mem_Iic.mpr hi ) ];
-  convert mul_le_mul_of_nonneg_left h_norm ( inv_nonneg.2 ( by positivity : 0 ≤ ( l : ℝ ) + 1 ) ) using 1;
-  · rw [ dist_eq_norm, h_step, norm_smul, Real.norm_of_nonneg ( by positivity ) ];
-  · ring
+  rw [ dist_eq_norm, h_step, norm_smul, Real.norm_of_nonneg ( by positivity ) ];
+  refine' le_trans ( mul_le_mul_of_nonneg_left h_norm ( inv_nonneg.2 ( by positivity : 0 ≤ ( l : ℝ ) + 1 ) ) ) _;
+  field_simp
 
 /-
 Distance between two new barycenters `stepVertices … l` and `stepVertices … l'`
@@ -149,8 +149,9 @@ theorem dist_step_step_le (n : ℕ) (V : Fin (n + 1) → E)
   by_cases h : l ≤ l';
   · refine' le_trans ( dist_step_step_le_aux _ _ _ _ _ h ) _;
     exact mul_le_mul_of_nonneg_right ( ratio_le_contractionFactor ( Nat.le_of_lt_succ ( Fin.is_lt l' ) ) ) ( Metric.diam_nonneg );
-  · convert dist_step_step_le_aux n V π l' l ( le_of_not_ge h ) |> le_trans <| mul_le_mul_of_nonneg_right ( ratio_le_contractionFactor <| Nat.le_of_lt_succ l.2 ) ( Metric.diam_nonneg ) using 1;
-    exact dist_comm _ _
+  · rw [ dist_comm ( stepVertices n V π l ) ( stepVertices n V π l' ) ];
+    refine' le_trans ( dist_step_step_le_aux n V π l' l ( le_of_not_ge h ) ) _;
+    exact mul_le_mul_of_nonneg_right ( ratio_le_contractionFactor ( Nat.le_of_lt_succ ( Fin.is_lt l ) ) ) ( Metric.diam_nonneg )
 
 /-
 **One-step contraction.** One barycentric subdivision shrinks the diameter of
@@ -196,7 +197,7 @@ theorem iterVertices_diam_le (n N : ℕ)
       ≤ (contractionFactor n) ^ N * Metric.diam (Set.range V) := by
   induction' N with N ih;
   · simp +decide [ iterVertices ];
-  · convert le_trans ( stepVertices_diam_le n ( iterVertices n N ( fun i => πs ( Fin.castSucc i ) ) V ) ( πs ( Fin.last N ) ) ) ?_ using 1;
+  · refine' le_trans ( stepVertices_diam_le n ( iterVertices n N ( fun i => πs ( Fin.castSucc i ) ) V ) ( πs ( Fin.last N ) ) ) ?_;
     simpa only [ pow_succ', mul_assoc ] using mul_le_mul_of_nonneg_left ( ih _ ) ( contractionFactor_nonneg n )
 
 end Normed
