@@ -133,7 +133,7 @@ theorem affineConeMap_vertex_succ {n k : ℕ} (v : Delta n) (τ : Delta k → De
 `coneTail` is continuous away from the apex.
 -/
 theorem continuousOn_coneTail {k : ℕ} :
-    ContinuousOn (coneTail (k := k)) {x : Delta (k + 1) | (x : Fin (k + 1 + 1) → ℝ) 0 ≠ 1} := by
+    ContinuousOn (coneTail (k := k)) {x : Delta (k + 1) | x 0 ≠ (1 : ℝ)} := by
   -- Write `S := {x : Delta (k+1) | (x:_) 0 ≠ 1}`.
   set S : Set (Delta (k + 1)) := {x | x 0 ≠ 1};
   have h_cont_tail : ContinuousOn (fun x : Delta (k + 1) => (coneTail x : Fin (k + 1) → ℝ)) S := by
@@ -167,7 +167,7 @@ theorem continuous_affineConeMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delt
         · exact Continuous.continuousAt ( by continuity );
         · refine' ContinuousAt.comp _ _;
           · exact τ.continuous.continuousAt;
-          · exact continuousOn_coneTail.continuousAt ( IsOpen.mem_nhds ( isOpen_compl_singleton.preimage ( continuous_apply 0 |> Continuous.comp <| continuous_subtype_val ) ) hx );
+          · exact ContinuousOn.continuousAt continuousOn_coneTail ( IsOpen.mem_nhds ( isOpen_compl_singleton.preimage ( continuous_apply 0 |> Continuous.comp <| continuous_subtype_val ) ) hx );
   convert Continuous.add ( Continuous.mul ( continuous_apply 0 |> Continuous.comp <| continuous_subtype_val ) continuous_const ) hB_cont using 1
 
 /-- **The bundled continuous cone map** `Cone_v(τ) : C(Δᵏ⁺¹, Δⁿ)`. -/
