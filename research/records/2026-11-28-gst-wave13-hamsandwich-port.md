@@ -159,3 +159,63 @@ run 46093265298) remains green and standing; the port route is COMPLEMENTARY
   on the route); the recon artifacts: `/tmp/ham` (the upstream clone),
   `/tmp/ml4` (the pinned Mathlib oracle), `/home/z/recon-13A2/` (the
   extension-lemma artifact).
+
+## §7 THE STRIKE LEDGER (the CI-arbitrated cascade)
+
+* **Strike 1** (push `fd94ecf`, run 46114758283): the first build of the
+  vendored tree.  11 error lines, 3 files, ONE root mechanism — v4.33's
+  `convert … using 1` emits an extra `Real.instLE = Real.instPreorder.toLE`
+  instance-equality goal (the LE-instance diamond on ℝ shifted between v4.28
+  and the pin), scrambling every convert-based endgame.  Red: HomotopyToChainHomotopy (the simpa's comp/whiskering normal forms),
+  AffineBarycentricSubdivision (an index-spelling keyed-match failure:
+  `X := Fin 1` vs the goal's `Fin ((0 : Fin (n+1)).val + 1)`),
+  BarycentricSubdivisionDiameter (three convert endgames + the sdiff
+  rewrite's tail).
+* **Strike 2** (push `4e3ee3b`, run 46118138201): the three re-kicks —
+  HomotopyToChainHomotopy closed by the definitional `exact h` (the
+  @[simps] `homologyFunctor.map = homologyMap` projection); the Diameter
+  convert endgames replaced by explicit `rw` + `le_trans` + `field_simp` /
+  `simpa only [pow_succ', mul_assoc]` chains; the Affine `hb` restated at
+  the goal's own index spelling.  The build advanced deep into the tree —
+  the whole prism/invariance stack GREEN.  Red: three files — the Affine
+  residual (one `fin_cases` case, rfl-closable), the Diameter `field_simp`
+  residual (the trivial `a ≤ a` after the division-clearing), and a NEW
+  break deeper: CupProductScaffolding (the `Multiplicative ℕ` migration of
+  `TensorSigns.ε'` + the `MonoidHom.mk'` index monoid).
+* **Strike 4** (push `1c1a442`, run 46119473989, in flight at this
+  record): **THE CUP-PRODUCT INCISION** — the recon's designated dead-weight
+  cut, executed after a machine-verified usage map (the kept files consume
+  only `singularSimplices`, `singularChainSimplicialModule` + its generator
+  lemma, and `AlexanderWhitney.faceSimplex` — zero other AW/cup/tensor
+  usage): six files deleted (~1.6k lines: CupProductScaffolding, CupProduct,
+  AlexanderWhitney, AlexanderWhitneyFaceMaps, AlexanderWhitneyChainMap,
+  SingularCohomology), the four consumed declarations extracted verbatim
+  into `SingularFaces.lean` under their original namespaces, the imports
+  re-pointed, the closure re-verified (69 files, zero gaps).  The incision
+  kills the `Multiplicative` migration breaks in one stroke (they lived in
+  the deleted file).  Plus the two residual closers: `Pi.single_apply` +
+  `rfl` (Affine), `all_goals exact le_rfl` (Diameter).
+* **Strike 3 — THE CORPUS SIDE** (push `6800a63`, the fence lane's run
+  46118868607, in flight): the composition file
+  `GSTSphereFenceOmegaDischarge.lean` (the chain-side sc bridges, the cycle
+  extraction, the extension lemma, the wave-12 replay, the master
+  instantiation) + the final assembly `GSTSphereFenceFinalAssembly.lean` +
+  the Q-endpoint files (landed by the wave's author agent before its
+  context death: SingularH0Q, SingularHomologyQ, SubChainSubspaceBridgeQ,
+  SphereHomologyMVStepQ, SphereHomologyS1BaseMVQ, SphereSuspensionTowerFromMVQ,
+  SphereHomologyQ, H2SphereQ — 1452 lines, the ℚ tower + the corpus-spelling
+  endpoint `nontrivial_sphereHomology_two`) + the ladders 6 (port lane) and
+  7-8 (fence lane).
+
+## §8 THE VAULT (rebuilt at this wave)
+
+The sandbox was reset before this session (the previous vault wiped with
+it) — the full restoration executed from the surviving layers: the token
+recovered from the zip bag (Google Drive `1ZCY5hbZyId7AWeBD-o0yOiRFlxGmKnW-`),
+the repo re-cloned from the remote (which had advanced past the last
+session's HEAD `1e019ef` — the parallel campaign's S098 worldtrace cascade),
+the vault REBUILT through `1c1a442`: `hc-repo-full.bundle` (verified
+complete history), `vault-hc-repo-worktree.tar.gz`, `vault-download.tar.gz`
+(the chat archives + the restoration tooling), `vault-skills.tar.gz` (the
+MATHS v2 + prove-that-shit activation chain), `SHA256SUMS.txt`, and the
+updated `RESTORE.md` (the campaign-state snapshot + the restore checklist).
