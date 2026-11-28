@@ -29,6 +29,18 @@ away from `t = 1`, and `= v` at `t = 1` (the apex).
 
 This file does **not** assert the barycentric subdivision homotopy itself; it only
 builds the cone operator and its boundary formula.
+
+STRIKE 18 (run 46161630202 receipt): the v4.28-era proofs of ten theorems of this
+file died at the v4.33-rc2 pin through coe-display drift in `simpa`, ambiguous
+`|·|` elaboration, `convert`-leftover metavariables, filter/setOf pattern drift
+in `rw`, and `Fin.sum_univ_*` rewrites firing on non-normalized numerals.  The
+rebuilds below follow the campaign's pin discipline: every name pin-verified
+(`stdSimplex.map_coe`, `FunOnFinite.linearMap_apply_apply`,
+`Fin.succ_succAbove_succ`, `Fin.succ_succAbove_zero`, `Sigma.ι_desc`,
+`ModuleCat.hom_comp`-family rfl-bridges), every fiber computation in the
+coordinate style of the green sibling `BarycentricBoundaryCancellation.lean`,
+and the generator-level lifts in the green sibling's `Sigma.hom_ext` +
+`convert … using 1` + `rfl` shape (the strike-15 receipt, run 46159201696).
 -/
 
 open scoped BigOperators
@@ -53,9 +65,17 @@ theorem coneTailFun_mem {k : ℕ} (x : Delta (k + 1))
     (hx : (x : Fin (k + 1 + 1) → ℝ) 0 ≠ 1) :
     coneTailFun x ∈ stdSimplex ℝ (Fin (k + 1)) := by
   refine' ⟨ fun i => _, _ ⟩;
-  · exact div_nonneg ( x.2.1 _ ) ( sub_nonneg.2 ( x.2.2 ▸ Finset.single_le_sum ( fun a _ => x.2.1 a ) ( Finset.mem_univ 0 ) ) );
+  · exact div_nonneg ( x.2.1 _ ) ( sub_nonneg.2 ( by
+      have hle := Finset.single_le_sum (fun a _ => x.2.1 a) (Finset.mem_univ (0 : Fin (k + 1 + 1)))
+      have hsum : ∑ i : Fin (k + 1 + 1), (x : Fin (k + 1 + 1) → ℝ) i = 1 := x.2.2
+      rw [Fin.sum_univ_succ] at hsum
+      linarith ) );
   · have h_sum : ∑ i : Fin (k + 1), (x : Fin (k + 1 + 1) → ℝ) i.succ = 1 - (x : Fin (k + 1 + 1) → ℝ) 0 := by
-      exact eq_sub_of_add_eq' ( by simpa [ Fin.sum_univ_succ ] using x.2.2 );
+      have hsum : (x : Fin (k + 1 + 1) → ℝ) 0 + ∑ i : Fin (k + 1), (x : Fin (k + 1 + 1) → ℝ) i.succ = 1 := by
+        have h := x.2.2
+        rw [Fin.sum_univ_succ] at h
+        exact h
+      linarith
     unfold coneTailFun;
     rw [ ← Finset.sum_div, h_sum, div_self ( sub_ne_zero_of_ne <| Ne.symm hx ) ]
 
@@ -152,15 +172,26 @@ theorem continuous_affineConeMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delt
     Continuous (affineConeMap v (⇑τ)) := by
   refine' continuous_induced_rng.mpr _;
   refine' continuous_pi fun j => _;
-  -- The function $B(x) = (1 - x 0) * ((τ (coneTail x)) j)$ is continuous because it is a product of continuous functions.
+  -- The function $B(x) = (1 - x 0) * ((τ (coneTail x)) j)$ is continuous because
+  -- it is a product of continuous functions.
   have hB_cont : Continuous (fun x : Delta (k + 1) => (1 - x 0) * ((τ (coneTail x)) j)) := by
     refine' continuous_iff_continuousAt.mpr _;
     intro x;
     by_cases hx : x 0 = 1;
     · refine' tendsto_iff_norm_sub_tendsto_zero.mpr _;
-      refine' squeeze_zero ( fun _ => norm_nonneg _ ) ( fun e => _ ) ( Continuous.tendsto' ( show Continuous fun e : Delta ( k + 1 ) => |1 - e 0| from Continuous.abs <| continuous_const.sub <| continuous_apply 0 |> Continuous.comp <| continuous_subtype_val ) _ _ <| by aesop );
-      simp +decide [ hx ];
-      exact mul_le_of_le_one_right ( abs_nonneg _ ) ( abs_le.mpr ⟨ by linarith [ stdSimplex.zero_le ( τ ( coneTail e ) ) j ], by linarith [ stdSimplex.le_one ( τ ( coneTail e ) ) j ] ⟩ );
+      -- STRIKE 18: the ambiguous `|1 - e 0|` elaboration (SSet.toTop.obj vs
+      -- ℝ-abs) is eliminated by the named continuity `have` with fully-ascribed
+      -- subterms, and the `Continuous.tendsto'` metavars are supplied
+      -- explicitly (x and 0), so the apex-value proof is `rw [hx]; simp`.
+      have h_abs : Continuous fun e : Delta (k + 1) =>
+          |(1 : ℝ) - (e : Fin (k + 1 + 1) → ℝ) 0| :=
+        Continuous.abs (continuous_const.sub
+          ((continuous_apply 0).comp continuous_subtype_val))
+      refine' squeeze_zero (fun _ => norm_nonneg _) (fun e => _) ?_;
+      · exact mul_le_of_le_one_right ( abs_nonneg _ ) ( abs_le.mpr ⟨ by linarith [ stdSimplex.zero_le ( τ ( coneTail e ) ) j ], by linarith [ stdSimplex.le_one ( τ ( coneTail e ) ) j ] ⟩ );
+      · have hT := h_abs.tendsto x
+        rw [hx] at hT
+        simpa using hT
     · refine' ContinuousAt.mul _ _;
       · exact ContinuousAt.sub continuousAt_const ( continuousAt_subtype_val.comp continuousAt_id |> ContinuousAt.comp ( continuousAt_apply _ _ ) );
       · refine' ContinuousAt.comp ( continuous_apply j |> Continuous.continuousAt ) _;
@@ -169,7 +200,12 @@ theorem continuous_affineConeMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delt
         · refine' ContinuousAt.comp _ _;
           · exact τ.continuous.continuousAt;
           · exact ContinuousOn.continuousAt continuousOn_coneTail ( IsOpen.mem_nhds ( isOpen_compl_singleton.preimage ( continuous_apply 0 |> Continuous.comp <| continuous_subtype_val ) ) hx );
-  convert Continuous.add ( Continuous.mul ( continuous_apply 0 |> Continuous.comp <| continuous_subtype_val ) continuous_const ) hB_cont using 1
+  -- STRIKE 18: the `convert … using 1` (which left a `?m` metavariable plus a
+  -- bare `ℝ` goal at the pin) is replaced by the defeq `exact`: the goal's
+  -- coordinate function is pointwise-`rfl` to the cone-coordinate formula
+  -- (`affineConeMap_coord` is `rfl`), so `exact` unifies at default
+  -- transparency.
+  exact Continuous.add ( Continuous.mul ( continuous_apply 0 |> Continuous.comp <| continuous_subtype_val ) continuous_const ) hB_cont
 
 /-- **The bundled continuous cone map** `Cone_v(τ) : C(Δᵏ⁺¹, Δⁿ)`. -/
 noncomputable def affineConeContinuousMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delta n)) :
@@ -206,18 +242,76 @@ normalized tail of `y`.
 theorem coneTail_cofaceTop_succ {k : ℕ} (j : Fin (k + 1 + 1)) (y : Delta (k + 1))
     (hy : (y : Fin (k + 1 + 1) → ℝ) 0 ≠ 1) :
     coneTail (cofaceTop (k + 1) j.succ y) = cofaceTop k j (coneTail y) := by
-  unfold cofaceTop;
-  ext i; simp +decide [ coneTail_apply, Fin.succ_succAbove_succ, Fin.succ_succAbove_zero ] ;
-  by_cases h : ( stdSimplex.map j.succ.succAbove y : Fin ( k + 1 + 1 + 1 ) → ℝ ) 0 = 1 <;> simp_all +decide [ coneTail_apply, Fin.succ_succAbove_succ, Fin.succ_succAbove_zero ];
-  · simp_all +decide [ FunOnFinite.linearMap_apply_apply ];
-    rw [ Finset.sum_eq_single 0 ] at h <;> simp_all +decide [ Fin.succ_succAbove_zero ];
-    intro b hb hb'; rw [ Fin.succAbove ] at hb; aesop;
-  · simp +decide [ FunOnFinite.linearMap_apply_apply, coneTail_apply y hy ] at *;
-    rw [ ← Finset.sum_div _ _ _, show ( Finset.filter ( fun x => j.succ.succAbove x = 0 ) Finset.univ : Finset ( Fin ( k + 1 + 1 ) ) ) = { 0 } from ?_, show ( Finset.filter ( fun x => j.succ.succAbove x = i.succ ) Finset.univ : Finset ( Fin ( k + 1 + 1 ) ) ) = Finset.image ( fun x => x.succ ) ( Finset.filter ( fun x => j.succAbove x = i ) Finset.univ ) from ?_ ] <;> norm_num;
-    · ext x; simp +decide [ Fin.succ_succAbove_succ ] ;
-      cases x using Fin.inductionOn <;> simp +decide [ Fin.succ_succAbove_succ ];
-      exact ne_of_lt ( Fin.succ_pos _ );
-    · grind +suggestions
+  -- STRIKE 18: the whole coordinate computation is rebuilt in the green
+  -- sibling's fiber style (`stdSimplex.map_coe` +
+  -- `FunOnFinite.linearMap_apply_apply` + `Finset.sum_eq_single`), replacing
+  -- the v4.28 filter/setOf `rw` chain that no longer matches the pin's
+  -- `Finset.filter` elaboration.
+  -- The `0`-coordinate of the `(j+1)`-coface of `y` is `y 0`: the fiber of
+  -- `j.succ.succAbove` over `0` is exactly `{0}`.
+  have h0 : (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) 0
+      = (y : Fin (k + 1 + 1) → ℝ) 0 := by
+    show (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) 0
+      = (y : Fin (k + 1 + 1) → ℝ) 0
+    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply,
+      Finset.sum_eq_single (0 : Fin (k + 1 + 1))]
+    · rw [Fin.succ_succAbove_zero j]
+    · intro b hb hbt
+      have hb2 : j.succ.succAbove b = 0 := (Finset.mem_filter.mp hb).2
+      simp only [Fin.succAbove] at hb2
+      split at hb2
+      · exact (Fin.succ_ne_zero _ hb2).elim
+      · exact hbt (Fin.val_eq_zero.mp (by
+          have hb3 := congrArg Fin.val hb2
+          simpa using hb3))
+    · intro h
+      exact (h (Finset.mem_filter.mpr ⟨Finset.mem_univ _, Fin.succ_succAbove_zero j⟩)).elim
+  -- The fiber of `j.succ.succAbove` over `i.succ` reindexes, through
+  -- `Fin.succ_succAbove_succ`, to the fiber of `j.succAbove` over `i`.
+  have hfib : ∑ m ∈ Finset.univ.filter
+        (fun m : Fin (k + 1 + 1) => j.succ.succAbove m = i.succ), (y : Fin (k + 1 + 1) → ℝ) m
+      = ∑ m ∈ Finset.univ.filter
+        (fun m : Fin (k + 1) => j.succAbove m = i), (y : Fin (k + 1 + 1) → ℝ) m.succ := by
+    refine' (Finset.sum_bij
+      (fun (m : Fin (k + 1)) (_ : m ∈ Finset.univ.filter
+        (fun m : Fin (k + 1) => j.succAbove m = i)) => m.succ) ?_ ?_ ?_ ?_).symm
+    · intro m hm
+      rw [Finset.mem_filter] at hm ⊢
+      refine' ⟨Finset.mem_univ _, ?_⟩
+      rw [Fin.succ_succAbove_succ]
+      exact congrArg Fin.succ hm.2
+    · intro m hm
+      rfl
+    · intro m₁ _ m₂ _ h
+      exact Fin.succ_injective h
+    · intro b hb
+      rw [Finset.mem_filter] at hb
+      have hb0 : b ≠ 0 := by
+        intro h
+        rw [h, Fin.succ_succAbove_zero] at hb
+        exact (Fin.succ_ne_zero i hb.2).elim
+      rcases Fin.exists_eq_succ_of_ne_zero hb0 with ⟨m, rfl⟩
+      refine' ⟨m, Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩, rfl⟩
+      rw [Fin.succ_succAbove_succ] at hb
+      exact Fin.succ_injective hb.2
+  ext i
+  rw [coneTail_apply _ (by rw [h0]; exact hy), h0]
+  have hL : (cofaceTop (k + 1) j.succ y : Fin (k + 1 + 1 + 1) → ℝ) i.succ
+      = ∑ m ∈ Finset.univ.filter
+        (fun m : Fin (k + 1 + 1) => j.succ.succAbove m = i.succ), (y : Fin (k + 1 + 1) → ℝ) m := by
+    show (stdSimplex.map (S := ℝ) (Fin.succAbove j.succ) y : Fin (k + 1 + 1 + 1) → ℝ) i.succ = _
+    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  have hR : (cofaceTop k j (coneTail y) : Fin (k + 1 + 1) → ℝ) i
+      = ∑ m ∈ Finset.univ.filter
+        (fun m : Fin (k + 1) => j.succAbove m = i),
+        ((y : Fin (k + 1 + 1) → ℝ) m.succ / (1 - (y : Fin (k + 1 + 1) → ℝ) 0)) := by
+    show (stdSimplex.map (S := ℝ) (Fin.succAbove j) (coneTail y) : Fin (k + 1 + 1) → ℝ) i = _
+    rw [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    refine' Finset.sum_congr rfl fun m _ => _
+    exact coneTail_apply y hy m
+  rw [hL, hR, ← Finset.sum_div]
+  congr 1
+  exact hfib
 
 /-
 **Every other face.** Restricting the cone along the `(j+1)`-th coface gives
@@ -235,7 +329,7 @@ theorem cone_face_succ {n k : ℕ} (v : Delta n) (τ : Delta (k + 1) → Delta n
     intro b hb hb'; rw [ Fin.succAbove ] at hb; aesop;
   · rw [ show ( cofaceTop ( k + 1 ) j.succ ) y 0 = y 0 from ?_, coneTail_cofaceTop_succ j y hy ];
     unfold cofaceTop; simp +decide [ stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succ_succAbove_zero ] ;
-    rw [ Finset.sum_eq_single 0 ] <;> simp +decide [ Fin.succ_succAbove_zero ];
+    rw [ Finset.sum_eq_single 0 ] <;> simp_all +decide [ Fin.succ_succAbove_zero ];
     intro b hb hb'; rw [ Fin.succAbove ] at hb; aesop;
 
 /-! ## 6. The cone on singular simplices and chains of `Δⁿ` -/
@@ -269,11 +363,16 @@ is `σ`.
 theorem coneSimplex_face_zero (n k : ℕ) (v : Delta n)
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
     AlexanderWhitney.faceSimplex (TopCat.of (Delta n)) k 0 (coneSimplex n k v σ) = σ := by
-  have h_cont : (singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) (coneSimplex n k v σ)).comp (cofaceTop k 0) = singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ := by
-    ext y;
-    convert congr_fun ( cone_face_zero v ( fun y => singularSimplexAsContinuousMap ( TopCat.of ( Delta n ) ) k σ y ) ) y |> congr_arg ( fun f => f ‹_› ) using 1;
-  apply singularSimplices_ext;
-  convert h_cont using 1
+  -- STRIKE 18: the `convert congr_fun … |> congr_arg … using 1` scaffold (which
+  -- left an unassigned-metavariable goal at the pin) is replaced by the
+  -- green sibling's lift shape: rewrite through the pin-verified
+  -- `faceSimplex_continuousMap`/`coneSimplex_continuousMap`, then close
+  -- pointwise by `cone_face_zero` through the defeq comp/coe bridges.
+  apply singularSimplices_ext
+  rw [faceSimplex_continuousMap, coneSimplex_continuousMap]
+  refine' ContinuousMap.ext fun a => _
+  have h := cone_face_zero v (fun y => singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ y)
+  exact congrFun h a
 
 /-
 **Internal faces of `coneSimplex`.** The `(j+1)`-th boundary face of the cone
@@ -283,9 +382,15 @@ theorem coneSimplex_face_succ (n k : ℕ) (v : Delta n)
     (σ : singularSimplices (TopCat.of (Delta n)) (k + 1)) (j : Fin (k + 1 + 1)) :
     AlexanderWhitney.faceSimplex (TopCat.of (Delta n)) (k + 1) j.succ (coneSimplex n (k + 1) v σ)
       = coneSimplex n k v (AlexanderWhitney.faceSimplex (TopCat.of (Delta n)) k j σ) := by
-  apply singularSimplices_ext; simp [faceSimplex_continuousMap, coneSimplex_continuousMap];
-  ext y; simp [affineConeContinuousMap_apply, ContinuousMap.comp_apply];
-  convert congr_arg ( fun f => f ‹_› ) ( congrFun ( cone_face_succ v ( singularSimplexAsContinuousMap { carrier := ↑(Delta n), str := instTopologicalSpaceSubtype } (k + 1) σ ) j ) y ) using 1
+  -- STRIKE 18: same rebuild as `coneSimplex_face_zero`, through
+  -- `cone_face_succ` pointwise.
+  apply singularSimplices_ext
+  rw [faceSimplex_continuousMap, coneSimplex_continuousMap, coneSimplex_continuousMap,
+    faceSimplex_continuousMap]
+  refine' ContinuousMap.ext fun a => _
+  have h := cone_face_succ v
+    (fun z => singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) σ z) j
+  exact congrFun h a
 
 /-
 **The second face of a 1-dimensional cone.** The `1`-st boundary face of the
@@ -316,8 +421,19 @@ noncomputable def coneGeneratorHom (R : Type) [CommRing R] (n k : ℕ) (v : Delt
     ModuleCat.of R R ⟶ singularChainGroup R (TopCat.of (Delta n)) (k + 1) :=
   ModuleCat.ofHom
     { toFun := fun r => r • coneGenerator R n k v σ
-      map_add' := by intro r s; simp [add_smul]
-      map_smul' := by intro a r; simp [mul_smul] }
+      -- STRIKE 18: the green sibling's own receipt
+      -- (`BarycentricSubdivisionOperator.lean`, file 8704 of run 46161630202):
+      -- the trailing `rfl` closes the instance-mismatched reflexive leftover
+      -- that `simp [add_smul]` / `simp [mul_smul]` normalize to but do not
+      -- close at the pin.
+      map_add' := by
+        intro r s
+        simp [add_smul]
+        rfl
+      map_smul' := by
+        intro a r
+        simp [mul_smul]
+        rfl }
 
 /-- **The cone operator on chains** `Cone_v : C_k(Δⁿ; R) → C_{k+1}(Δⁿ; R)`. -/
 noncomputable def coneLinearMap (R : Type) [CommRing R] (n k : ℕ) (v : Delta n) :
@@ -332,8 +448,21 @@ theorem coneLinearMap_generator (R : Type) [CommRing R] (n k : ℕ) (v : Delta n
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
     (coneLinearMap R n k v).hom (chainGenerator R (TopCat.of (Delta n)) k σ)
       = coneGenerator R n k v σ := by
-  convert one_smul _ _;
-  convert congr_arg ( fun f : ModuleCat.of R R ⟶ singularChainGroup R { carrier := ( Delta n ), str := instTopologicalSpaceSubtype } ( k + 1 ) => f.hom 1 ) ( Sigma.ι_desc ( fun σ => coneGeneratorHom R n k v σ ) σ ) using 1
+  -- STRIKE 18: the double `convert … using 1` (which left type-class
+  -- metavariables `Type ?u`, `Monoid ?convert_1` at the pin) is replaced by the
+  -- explicit `Sigma.ι_desc` chain: the desc/ι applications ride the pin-rfl
+  -- ModuleCat comp-bridge, and the final `1 • X = X` is `one_smul`.
+  have h := Sigma.ι_desc
+    (fun τ : singularSimplices (TopCat.of (Delta n)) k => coneGeneratorHom R n k v τ) σ
+  have h1 := congrArg
+    (fun f : ModuleCat.of R R ⟶ singularChainGroup R (TopCat.of (Delta n)) (k + 1) => f.hom (1 : R)) h
+  have h2 : (coneLinearMap R n k v).hom (chainGenerator R (TopCat.of (Delta n)) k σ)
+      = ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) k => ModuleCat.of R R) σ
+          ≫ Sigma.desc (fun τ : singularSimplices (TopCat.of (Delta n)) k =>
+            coneGeneratorHom R n k v τ)).hom) (1 : R) := rfl
+  rw [h2, h1]
+  show (1 : R) • coneGenerator R n k v σ = coneGenerator R n k v σ
+  exact one_smul R (coneGenerator R n k v σ)
 
 /-! ## 8. The boundary formula -/
 
@@ -346,9 +475,16 @@ theorem singularBoundary_coneGenerator_zero (R : Type) [CommRing R] (n : ℕ) (v
     (singularBoundary R (TopCat.of (Delta n)) 0).hom (coneGenerator R n 0 v σ)
       = chainGenerator R (TopCat.of (Delta n)) 0 σ
         - chainGenerator R (TopCat.of (Delta n)) 0 (constSimplex0 n v) := by
-  convert singularBoundary_chainGenerator_formula R { carrier := ( Delta n ), str := instTopologicalSpaceSubtype } 0 ( coneSimplex n 0 v σ ) using 1;
-  rw [ Fin.sum_univ_two ] ; norm_num [ sub_eq_add_neg ];
-  rw [ coneSimplex_face_zero, coneSimplex_face_one_zero ]
+  -- STRIKE 18: the `convert … using 1` + `rw [Fin.sum_univ_two]` scaffold (the
+  -- rw died: the convert had consumed the goal into a generator-mismatch and
+  -- no `∑` pattern remained) is replaced by the explicit rfl-unfold of
+  -- `coneGenerator` followed by the formula-rewrite and a two-face split.
+  have hL : coneGenerator R n 0 v σ
+      = chainGenerator R (TopCat.of (Delta n)) (0 + 1) (coneSimplex n 0 v σ) := rfl
+  rw [hL, singularBoundary_chainGenerator_formula R (TopCat.of (Delta n)) 0 (coneSimplex n 0 v σ)]
+  simp only [Fin.sum_univ_two]
+  rw [coneSimplex_face_zero, coneSimplex_face_one_zero]
+  simp [Fin.val_zero, Fin.val_one, pow_zero, one_smul, pow_one, neg_one_smul, sub_eq_add_neg]
 
 /-
 **Boundary of the cone (successor degree).** For `σ` of degree `m+1`,
@@ -361,11 +497,27 @@ theorem singularBoundary_coneGenerator_succ (R : Type) [CommRing R] (n m : ℕ) 
         - (coneLinearMap R n m v).hom
             ((singularBoundary R (TopCat.of (Delta n)) m).hom
               (chainGenerator R (TopCat.of (Delta n)) (m + 1) σ)) := by
-  convert singularBoundary_chainGenerator_formula R { carrier := ( Delta n ), str := instTopologicalSpaceSubtype } ( m + 1 ) ( coneSimplex n ( m + 1 ) v σ ) using 1;
-  rw [ Fin.sum_univ_succ ];
-  simp +decide [ singularBoundary_chainGenerator_formula, coneSimplex_face_zero, coneSimplex_face_succ, coneLinearMap_generator ];
-  simp +decide [ pow_succ', neg_smul, Finset.sum_neg_distrib, sub_eq_add_neg ];
-  rfl
+  -- STRIKE 18: rebuilt explicitly — rfl-unfold the generator, rewrite by the
+  -- boundary formula at both degrees, split the alternating sum by
+  -- `Fin.sum_univ_succ`, identify the two faces by the cone face lemmas,
+  -- distribute the cone operator through the boundary sum by linearity
+  -- (`LinearMap.map_sum`/`map_smul` + `coneLinearMap_generator`), and close by
+  -- the sign flip `(-1)^(i+1) = -(-1)^i`.
+  have hL : coneGenerator R n (m + 1) v σ
+      = chainGenerator R (TopCat.of (Delta n)) (m + 1 + 1) (coneSimplex n (m + 1) v σ) := rfl
+  rw [hL, singularBoundary_chainGenerator_formula R (TopCat.of (Delta n)) (m + 1)
+    (coneSimplex n (m + 1) v σ)]
+  rw [Fin.sum_univ_succ]
+  rw [coneSimplex_face_zero]
+  simp only [Fin.val_zero, pow_zero, one_smul]
+  rw [singularBoundary_chainGenerator_formula R (TopCat.of (Delta n)) m σ]
+  rw [LinearMap.map_sum]
+  simp only [LinearMap.map_smul, coneLinearMap_generator]
+  simp only [coneGenerator]
+  rw [← Finset.sum_neg_distrib]
+  refine' (Finset.sum_congr rfl fun i _ => ?_).trans ?_
+  · rw [pow_succ', mul_smul, neg_one_smul]
+  · rw [sub_eq_add_neg]
 
 /-
 **The cone chain-homotopy identity (successor degree).**
@@ -375,13 +527,41 @@ theorem singularBoundary_coneLinearMap (R : Type) [CommRing R] (n m : ℕ) (v : 
     coneLinearMap R n (m + 1) v ≫ singularBoundary R (TopCat.of (Delta n)) (m + 1)
         + singularBoundary R (TopCat.of (Delta n)) m ≫ coneLinearMap R n m v
       = 𝟙 (singularChainGroup R (TopCat.of (Delta n)) (m + 1)) := by
-  apply Sigma.hom_ext;
-  intro σ; ext; simp +decide [ ModuleCat.hom_comp, ModuleCat.hom_add, LinearMap.add_apply ] ;
-  convert congr_arg ( fun x => x + ( coneLinearMap R n m v ).hom ( ( singularBoundary R { carrier := ( Delta n ), str := instTopologicalSpaceSubtype } m ).hom ( chainGenerator R { carrier := ( Delta n ), str := instTopologicalSpaceSubtype } ( m + 1 ) σ ) ) ) ( singularBoundary_coneGenerator_succ R n m v σ ) using 1 ; ring!;
-  · convert rfl;
-    convert coneLinearMap_generator R n ( m + 1 ) v σ |> Eq.symm;
-  · simp +decide [ chainGenerator ];
+  -- STRIKE 18: the green sibling's lift (`BarycentricBoundaryChainMap.lean:66`,
+  -- strike-15 receipt run 46159201696): prove the ι-component generator
+  -- identity explicitly, then `Sigma.hom_ext` + `ext` + `convert … using 1`
+  -- with rfl-bridges.
+  apply Sigma.hom_ext
+  intro σ
+  have hgen : ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) (m + 1) => ModuleCat.of R R) σ
+      ≫ (coneLinearMap R n (m + 1) v ≫ singularBoundary R (TopCat.of (Delta n)) (m + 1)
+        + singularBoundary R (TopCat.of (Delta n)) m ≫ coneLinearMap R n m v)).hom) (1 : R)
+      = ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) (m + 1) => ModuleCat.of R R) σ
+          ≫ 𝟙 (singularChainGroup R (TopCat.of (Delta n)) (m + 1))).hom) (1 : R) := by
+    have e3 : ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) (m + 1) => ModuleCat.of R R) σ
+        ≫ (coneLinearMap R n (m + 1) v ≫ singularBoundary R (TopCat.of (Delta n)) (m + 1)
+          + singularBoundary R (TopCat.of (Delta n)) m ≫ coneLinearMap R n m v)).hom) (1 : R)
+        = ((coneLinearMap R n (m + 1) v ≫ singularBoundary R (TopCat.of (Delta n)) (m + 1)).hom)
+            ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) (m + 1) => ModuleCat.of R R) σ).hom (1 : R))
+          + ((singularBoundary R (TopCat.of (Delta n)) m ≫ coneLinearMap R n m v).hom)
+            ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) (m + 1) => ModuleCat.of R R) σ).hom (1 : R)) := rfl
+    have e1 : ((coneLinearMap R n (m + 1) v ≫ singularBoundary R (TopCat.of (Delta n)) (m + 1)).hom)
+        ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) (m + 1) => ModuleCat.of R R) σ).hom (1 : R))
+      = (singularBoundary R (TopCat.of (Delta n)) (m + 1)).hom (coneGenerator R n (m + 1) v σ) := by
+      show (singularBoundary R (TopCat.of (Delta n)) (m + 1)).hom
+          ((coneLinearMap R n (m + 1) v).hom (chainGenerator R (TopCat.of (Delta n)) (m + 1) σ)) = _
+      rw [coneLinearMap_generator]
+    have e2 : ((singularBoundary R (TopCat.of (Delta n)) m ≫ coneLinearMap R n m v).hom)
+        ((Sigma.ι (fun τ : singularSimplices (TopCat.of (Delta n)) (m + 1) => ModuleCat.of R R) σ).hom (1 : R))
+      = (coneLinearMap R n m v).hom ((singularBoundary R (TopCat.of (Delta n)) m).hom
+          (chainGenerator R (TopCat.of (Delta n)) (m + 1) σ)) := rfl
+    rw [e3, e1, e2, singularBoundary_coneGenerator_succ, sub_add_cancel]
     rfl
+  ext
+  first
+  | exact hgen
+  | (convert hgen using 1 <;> rfl)
+  | (convert hgen.symm using 1 <;> rfl)
 
 end AffineBarycentricSubdivision
 end SphereOddDegree
