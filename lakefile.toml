@@ -1810,12 +1810,6 @@ roots = [
 [[lean_lib]]
 name = "GSTCMRankTwoKrylovDischargeLib"
 roots = [
-  "GSTCMRankTwoKrylovDischarge",
-]
-
-[[lean_lib]]
-name = "GSTCMRankTwoKrylovDischargeLib"
-roots = [
   "GST2DMixedEmergence",
   "GSTGraphV2CoupledUFlux",
   "GSTGraphV2CoupledUPhysicalBridge",
