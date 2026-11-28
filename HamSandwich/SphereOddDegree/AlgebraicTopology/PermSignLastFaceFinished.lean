@@ -149,15 +149,24 @@ theorem factor_lastFace_of_faceData {n : ℕ}
         Fin.castSuccOrderEmb.toEmbedding hmem
     rw [hfix]
     simp
-  · convert hρ ( x.castPred hx ) |> Eq.symm using 1;
-    convert insertLastPerm_castSucc _ _ using 2;
-    -- STRIKE 9 (run 46153568071 receipt): the explicit
-    -- `Fin.castSuccOrderEmb.toEmbedding` argument died at implicit
-    -- transparency (the v4.33 OrderEmbedding→Embedding coercion's
-    -- RelEmbedding proof-term vs the Embedding inj' field).  The
-    -- metavariable route: the embedding is unified FROM the goal's own
-    -- term — no fresh elaboration ever happens.
-    convert Equiv.Perm.viaFintypeEmbedding_apply_image ρ _ ( x.castPred hx ) using 1
+  · -- STRIKE 12 (run 46156696357 receipt: the convert chain left three goals
+    -- with the embedding metavar unassigned).  The direct computation,
+    -- normalized by show: x = castSucc (castPred x), the extension acts by
+    -- castSucc-after-ρ (the viaFintypeEmbedding apply-image API, inlined
+    -- circular-free), the insertion by succAbove (this file's own simp
+    -- lemma), and hρ closes.
+    show π x = insertLastPerm (π (lastVertex n)) ((extendLastPerm ρ) x)
+    have hxc : x = Fin.castSucc (x.castPred hx) := by
+      ext
+      simp [Fin.castPred]
+    rw [hxc]
+    have hext : (extendLastPerm ρ) (Fin.castSucc (x.castPred hx))
+        = Fin.castSucc (ρ (x.castPred hx)) := by
+      unfold extendLastPerm
+      exact Equiv.Perm.viaFintypeEmbedding_apply_image ρ
+        Fin.castSuccOrderEmb.toEmbedding (x.castPred hx)
+    rw [hext, insertLastPerm_castSucc]
+    exact (hρ (x.castPred hx)).symm
 
 /-- Unit-valued last-face sign identity, in the face-data form used by the
 last-face affine identity. -/
