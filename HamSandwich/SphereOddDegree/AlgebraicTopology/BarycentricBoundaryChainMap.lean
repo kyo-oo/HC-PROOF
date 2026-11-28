@@ -67,11 +67,13 @@ theorem barycentricSubdivisionLinearMap_commutes_boundary
   intro σ
   ext
   convert (boundary_barycentricSubdivision_generator R X n σ).symm using 1
-  -- STRIKE 14 (run 46158379696 receipt: the convert left the hom_comp
-  -- normalization goals — the strike-6 ledger's own family: the composite's
-  -- hom applied IS the nested application).
-  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
-  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
+  -- STRIKE 15 (run 46159201696 receipt: the hom_comp simp made no progress on
+  -- the leftover goals — the same implicit-transparency poison; the strike-6
+  -- ledger's receipt: the ModuleCat hom_comp bridge is rfl at the pin — the
+  -- composite's hom applied IS the nested application, the associativity of
+  -- function composition is definitional).
+  · rfl
+  · rfl
 
 /-- **Pointwise boundary commutation.** For every singular chain `c`,
 ```text
@@ -88,10 +90,9 @@ theorem boundary_barycentricSubdivision_apply
     (barycentricSubdivisionLinearMap R X n).hom
         ((singularBoundary R X n).hom c) := by
   convert congr_arg ( fun f => f.hom c ) ( barycentricSubdivisionLinearMap_commutes_boundary R X n ) using 1
-  -- STRIKE 14 (run 46158379696 receipt: same family — the convert's leftover
-  -- hom_comp normalizations).
-  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
-  · simp only [ModuleCat.hom_comp, LinearMap.comp_apply]
+  -- STRIKE 15 (run 46159201696 receipt: same family — rfl at the pin).
+  · rfl
+  · rfl
 
 end AffineBarycentricSubdivision
 end SphereOddDegree
